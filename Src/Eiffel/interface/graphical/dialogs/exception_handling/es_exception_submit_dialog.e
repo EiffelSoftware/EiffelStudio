@@ -59,16 +59,16 @@ feature {NONE} -- Initialization
 		do
 			a_container.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
-			create login_frame.make_with_text ("Account access")
+			create login_frame.make_with_text (locale_formatter.translation (t_account_access))
 			create l_vbox
 			l_vbox.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 			l_vbox.set_border_width ({ES_UI_CONSTANTS}.frame_border)
 			login_frame.extend (l_vbox)
 
 				-- Username and password
-			create l_user_label.make_with_text ("Username: ")
+			create l_user_label.make_with_text (locale_formatter.translation (lb_username))
 			l_user_label.align_text_right
-			create l_pass_label.make_with_text ("Password: ")
+			create l_pass_label.make_with_text (locale_formatter.translation (lb_password))
 			l_pass_label.align_text_right
 			l_width := l_user_label.width.max (l_pass_label.width)
 			l_user_label.set_minimum_width (l_width)
@@ -76,6 +76,7 @@ feature {NONE} -- Initialization
 
 				-- Username
 			create l_hbox
+			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			l_hbox.extend (l_user_label)
 			l_hbox.disable_item_expand (l_user_label)
 			create username_text
@@ -89,6 +90,7 @@ feature {NONE} -- Initialization
 
 				-- Password
 			create l_hbox
+			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			l_hbox.extend (l_pass_label)
 			l_hbox.disable_item_expand (l_pass_label)
 			create password_text
@@ -103,8 +105,9 @@ feature {NONE} -- Initialization
 
 				-- Remember me check
 			create l_hbox
+			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			l_hbox.extend (create {EV_CELL})
-			create remember_me_check.make_with_text ("Remember me")
+			create remember_me_check.make_with_text (locale_formatter.translation (lb_remember_me))
 			register_action (remember_me_check.select_actions, agent on_remember_me_toggled)
 			l_hbox.extend (remember_me_check)
 			l_hbox.disable_item_expand (remember_me_check)
@@ -115,7 +118,7 @@ feature {NONE} -- Initialization
 				remember_me_check.hide
 			end
 
-			create login_button.make_with_text ("Login...")
+			create login_button.make_with_text (locale_formatter.translation (b_login))
 			login_button.set_minimum_width ({ES_UI_CONSTANTS}.dialog_button_width)
 			register_action (login_button.select_actions, agent on_login)
 			suppress_confirmation_key_close (login_button)
@@ -127,15 +130,15 @@ feature {NONE} -- Initialization
 
 				-- Register
 			create l_hbox
-			create l_text.make_with_text ("If you do not already have an account, please register ")
+			create l_text.make_with_text (locale_formatter.translation (lb_register_account))
 			l_text.align_text_left
-			create l_link.make_with_text ("here")
+			create l_link.make_with_text (locale_formatter.translation (b_here))
 			l_link.select_actions.extend (agent
 				local
 					l_launcher: EB_PROCESS_LAUNCHER
 				do
 					l_launcher := (create {EB_SHARED_MANAGERS}).external_launcher
-					l_launcher.open_url_in_web_browser ("https://www2.eiffel.com/login/secure/register.aspx")
+					l_launcher.open_url_in_web_browser (register_url)
 				end)
 			l_link.align_text_left
 			l_hbox.extend (l_text)
@@ -163,7 +166,7 @@ feature {NONE} -- Initialization
 			logged_in_label.align_text_left
 			logged_in_label.hide
 
-			create log_out_link.make_with_text ("log out...")
+			create log_out_link.make_with_text (locale_formatter.translation (b_log_out))
 			log_out_link.select_actions.extend (agent on_logout)
 			log_out_link.align_text_left
 			log_out_link.hide
@@ -180,7 +183,7 @@ feature {NONE} -- Initialization
 				--
 				-- More bug information
 				--
-			create report_frame.make_with_text ("Bug information")
+			create report_frame.make_with_text (locale_formatter.translation (t_bug_information))
 			create l_vbox
 			l_vbox.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 			l_vbox.set_border_width ({ES_UI_CONSTANTS}.frame_border)
@@ -192,7 +195,7 @@ feature {NONE} -- Initialization
 			create synopsis_text
 			synopsis_text.set_text (synopsis)
 			register_action (synopsis_text.focus_in_actions, agent on_text_component_focused (synopsis_text))
-			register_action (synopsis_text.focus_out_actions, agent on_text_component_focused_out (synopsis_text, default_synopsis))
+			register_action (synopsis_text.focus_out_actions, agent on_text_component_focused_out (synopsis_text, locale_formatter.translation (lb_enter_synopsis)))
 			suppress_confirmation_key_close (synopsis_text)
 			l_vbox.extend (synopsis_text)
 			l_vbox.disable_item_expand (synopsis_text)
@@ -206,22 +209,23 @@ feature {NONE} -- Initialization
 			l_vbox.extend (description_text)
 
 				-- Public bug
-			create make_public_check.make_with_text ("Make bug publicly available")
+			create make_public_check.make_with_text (locale_formatter.translation (lb_make_public))
 			l_vbox.extend (make_public_check)
 			l_vbox.disable_item_expand (make_public_check)
 
 				-- Severity
 			create l_hbox
-			create severity_label.make_with_text ("Severity: ")
+			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+			create severity_label.make_with_text (locale_formatter.translation (lb_severity))
 			l_hbox.extend (severity_label)
 			l_hbox.disable_item_expand (severity_label)
-			create severity_critical_radio.make_with_text ("Critical")
+			create severity_critical_radio.make_with_text (locale_formatter.translation (i_critical))
 			l_hbox.extend (severity_critical_radio)
 			l_hbox.disable_item_expand (severity_critical_radio)
-			create severity_serious_radio.make_with_text ("Serious")
+			create severity_serious_radio.make_with_text (locale_formatter.translation (i_serious))
 			l_hbox.extend (severity_serious_radio)
 			l_hbox.disable_item_expand (severity_serious_radio)
-			create severity_non_critical_radio.make_with_text ("Non-critical")
+			create severity_non_critical_radio.make_with_text (locale_formatter.translation (i_non_critical))
 			l_hbox.extend (severity_non_critical_radio)
 			l_hbox.disable_item_expand (severity_non_critical_radio)
 			l_vbox.extend (l_hbox)
@@ -232,7 +236,7 @@ feature {NONE} -- Initialization
 			--login_context_item.force_last (l_frame)
 
 				-- Enable content items based on login state.
-			on_text_component_focused_out (synopsis_text, default_synopsis)
+			on_text_component_focused_out (synopsis_text, locale_formatter.translation (lb_enter_synopsis))
 			on_text_component_focused_out (description_text, default_description)
 			enable_login
 			enable_login_content_widget (False)
@@ -350,16 +354,13 @@ feature {NONE} -- Implementation: access
 			result_attached: Result /= Void
 		end
 
-	default_synopsis: STRING = "Enter synopsis"
-			-- Default text for the bug report synopsis
-
 	default_description: attached STRING
 			-- Default text for the bug report description
 		do
 			if last_description /= Void then
 				create Result.make_from_string (last_description)
 			else
-				Result := "Enter supplementary bug information"
+				Result := locale_formatter.translation (lb_enter_bug_information)
 			end
 		end
 
@@ -387,7 +388,7 @@ feature {NONE} -- Status report
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 		do
-			Result := synopsis_text.text /= Void and then not synopsis_text.text.is_empty and then not synopsis_text.text.is_equal (default_synopsis)
+			Result := synopsis_text.text /= Void and then not synopsis_text.text.is_empty and then synopsis_text.text /~ (locale_formatter.translation (lb_enter_synopsis))
 		end
 
 	is_description_available: BOOLEAN
@@ -935,10 +936,30 @@ feature {NONE} -- Reporting
 
 feature {NONE} -- Internationalization
 
+	t_account_access: STRING = "Account Access"
+	t_bug_information: STRING = "Bug Information"
+
 	tt_thank_you: STRING = "Thank you for the bug report"
 
-	lb_submitting: STRING = "Submitting bug report, please wait..."
+	lb_enter_bug_information: STRING = "Enter supplementary bug information"
+	lb_enter_synopsis: STRING = "Enter synopsis"
+	lb_make_public: STRING = "Make bug publicly available"
+	lb_password: STRING = "Password:"
+	lb_remember_me: STRING = "Remember me"
+	lb_severity: STRING = "Severity:"
 	lb_submitted: STRING = "The submitted report is now available at http://support.eiffel.com."
+	lb_submitting: STRING = "Submitting bug report, please wait..."
+	lb_register_account: STRING = "If you do not already have an account, please register "
+	lb_username: STRING = "Username:"
+
+	b_here: STRING = "here"
+	b_login: STRING = "Login"
+	b_log_out: STRING = "Log out"
+	b_submit: STRING = "Submit"
+
+	i_critical: STRING = "Critical"
+	i_serious: STRING = "Serious"
+	i_non_critical: STRING = "Non Critical"
 
 	w_no_description: STRING = "No bug description has been supplied. Submitting a report without additional details can make it hard to repoduce.%N%NDo you want to continue submitting a bug report?"
 	e_submit_error: STRING = "There was a problem submitting the problem report. Please retry or submit it manually at http://support.eiffel.com."
@@ -948,6 +969,8 @@ feature {NONE} -- Constants
 	username_session_id: STRING_8 = "com.eiffel.exception_submit_dialog.username"
 	password_session_id: STRING_8 = "com.eiffel.exception_submit_dialog.password"
 	remembered_session_id: STRING_8 = "com.eiffel.exception_submit_dialog.remembered"
+
+	register_url: STRING = "https://www2.eiffel.com/login/secure/register.aspx"
 
 invariant
 	support_reporter: support_login /= Void

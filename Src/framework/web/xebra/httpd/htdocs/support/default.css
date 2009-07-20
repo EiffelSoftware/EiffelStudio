@@ -205,6 +205,60 @@ td#pr_status_change {
 
 /* ----- CLASSES ----- */
 
+.status_closed {
+	background-image: url("/support/images/support/status_closed.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.status_open {
+	background-image: url("/support/images/support/status_open.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.status_suspended {
+	background-image: url("/support/images/support/status_suspended.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.priority_high {
+	background-image: url("/support/images/support/priority_high.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.priority_medium {
+	background-image: url("/support/images/support/priority_medium.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.priority_low {
+	background-image: url("/support/images/support/priority_low.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.severity_serious {
+	background-image: url("/support/images/support/severity_serious.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.severity_critical {
+	background-image: url("/support/images/support/severity_critical.gif");
+	width: 16px;
+	height: 16px;
+}
+
+.severity_non_critical {
+	background-image: url("/support/images/support/severity_non_critical.gif");
+	width: 16px;
+	height: 16px;
+}
+
 .active_page {
 	font-weight: bold;
 	font-size: 80%;
@@ -452,17 +506,6 @@ div.tooltip {
 	position: absolute;
 }
 
-div.status_closed {
-	background-image: support/images/support/status_closed.gif
-}
-
-div.status_open {
-	background-image: support/images/support/status_open.gif
-}
-
-div.status_suspended {
-	background-image: /support/images/support/status_suspended.gif
-}
 
 .tooltip_container {
 	position: relative;

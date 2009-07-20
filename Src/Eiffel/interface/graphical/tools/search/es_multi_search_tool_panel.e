@@ -1996,9 +1996,13 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 
 	update_combo_box_specific (box: EV_COMBO_BOX; word: STRING_32)
 			-- Add word to combo box list.
+		require
+			box_not_void: box /= Void
+			word_not_void: word /= Void
 		local
 			l: LIST [STRING_32]
 		do
+			box.change_actions.block
 			l := box.strings
 			if l /= Void then
 				l.compare_objects
@@ -2013,6 +2017,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			if box.text.is_empty or else not word.is_equal (box.text) then
 				box.set_text (word)
 			end
+			box.change_actions.resume
 		end
 
 

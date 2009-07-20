@@ -76,7 +76,7 @@ feature -- Html code generation
 		do
 			Result := ""
 			if has_refresh then
-				Result.append ("<meta http-equiv=%"refresh%" content=%"5%">")
+				Result.append ("<meta http-equiv=%"refresh%" content=%"100%">")
 			end
 		ensure
 			result_attached: Result /= Void

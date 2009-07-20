@@ -110,7 +110,7 @@ feature -- Basic Functionality
 			l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
 			l_filename.set_file_name (Generator_Prefix.as_lower + webapp_name.as_lower + "_application.e")
 
-			create l_util.make
+			create l_util
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				create l_buf.make (l_file)
 				create l_application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
@@ -126,7 +126,7 @@ feature -- Basic Functionality
 			l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
 			l_filename.set_file_name (Generator_Prefix.as_lower + "shared_" + webapp_name.as_lower + "_global_state.e")
 
-			create l_util.make
+			create l_util
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				create l_buf.make (l_file)
 				create l_application_class.make (Generator_Prefix.as_upper + "SHARED_" + webapp_name.as_upper + "_GLOBAL_STATE")

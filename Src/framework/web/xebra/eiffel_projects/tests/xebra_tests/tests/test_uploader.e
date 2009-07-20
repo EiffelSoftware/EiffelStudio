@@ -26,27 +26,26 @@ feature -- Test routines
 			l_test_tmpfilename: STRING
 			l_buf: STRING
 			l_res: STRING
+			i: INTEGER
 		do
 			l_test_tmpfilename := "test.tmp"
 			l_test_filename := "hallo.text"
-			l_test_filecontent := "This is a testfile%NAnd this is a new line."
+			l_test_filecontent := "Blabliblu%NBlaBliaBli%N"
+
+			from
+				i := 0
+			until
+				i = 254
+			loop
+				l_test_filecontent.append_character (i.to_character_8)
+				i := i + 1
+			end
+			l_test_filecontent.append_character ('%N')
 
 			create l_f_utils
 			if attached {PLAIN_TEXT_FILE} l_f_utils.plain_text_file_write (l_test_tmpfilename) as l_tmp then
-				l_tmp.put_string ("-----------------------------172158860518773611771834400137")
-				l_tmp.new_line
-				l_tmp.put_string ("Content-Disposition: form-data; name=%"file%"; filename=%""+l_test_filename+"%"")
-				l_tmp.new_line
-				l_tmp.put_string ("Content-Type: text/plain")
-				l_tmp.new_line
-				l_tmp.new_line
-				l_tmp.put_string (l_test_filecontent)
-				l_tmp.new_line
-				l_tmp.new_line
-				l_tmp.put_string ("-----------------------------172158860518773611771834400137")
+				l_tmp.put_string ("-----------------------------13689473967984000952010704750%R%NContent-Disposition: form-data; name=%"file%"; filename=%"" + l_test_filename + "%"%R%NContent-Type: text/plain%R%N%R%N" + l_test_filecontent + "%R%N-----------------------------13689473967984000952010704750--%R%N")
 				l_tmp.close
-
-
 
 				if not process_upload_single_file (l_test_tmpfilename, create {FILE_NAME}.make_from_string ("")) then
 					assert ("Error processing", False)
@@ -55,13 +54,14 @@ feature -- Test routines
 				if attached {PLAIN_TEXT_FILE} l_f_utils.plain_text_file_read (l_test_filename) as l_target then
 					from
 						l_buf := ""
+						l_target.start
+						l_target.read_character
 					until
-						l_target.after
+						l_target.after or l_target.last_character.is_equal ( (255).to_character_8)
 					loop
-						l_target.read_line
-						l_buf.append (l_target.last_string + "%N")
+						l_buf.append_character (l_target.last_character)
+						l_target.read_character
 					end
-					l_buf.remove_tail (2)
 
 					assert ("Content is equal", l_buf.is_equal (l_test_filecontent))
 					l_target.close

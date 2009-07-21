@@ -247,16 +247,90 @@ feature -- Drawing
 
 feature -- Displaying
 
+feature -- Displaying
+
+	set_needs_display (a_flag: BOOLEAN)
+			-- Controls whether the receiver`s entire bounds is marked as needing display.
+		do
+			{NS_VIEW_API}.set_needs_display (item, a_flag.item)
+		end
+
+	set_needs_display_in_rect (a_invalid_rect: NS_RECT)
+			-- Marks the region of the receiver within the specified rectangle as needing display, increasing the receiver`s existing invalid region to include it.
+		do
+			{NS_VIEW_API}.set_needs_display_in_rect (item, a_invalid_rect.item)
+		end
+
+	needs_display: BOOLEAN
+			-- Returns <code>YES</code> if the receiver needs to be displayed, as indicated using <code>setNeedsDisplay:</code> and <code>setNeedsDisplayInRect:</code>; returns <code>NO</code> otherwise.
+		do
+			Result := {NS_VIEW_API}.needs_display (item)
+		end
+
 	display
-			-- Displays the receiver and all its subviews if possible, invoking each the NSView methods lockFocus, drawRect:, and unlockFocus as necessary.
+			-- Displays the receiver and all its subviews if possible, invoking each the <code>NSView</code> methods <code>lockFocus</code>, <code>drawRect:</code>, and <code>unlockFocus</code> as necessary.
 		do
 			{NS_VIEW_API}.display (item)
 		end
 
-	set_needs_display (a_flag: BOOLEAN)
-			-- Controls whether the receiver's entire bounds is marked as needing display.
+	display_rect (a_rect: NS_RECT)
+			-- Acts as <code>display</code>, but confining drawing to a rectangular region of the receiver.
 		do
-			{NS_VIEW_API}.set_needs_display (item, a_flag)
+			{NS_VIEW_API}.display_rect (item, a_rect.item)
+		end
+
+	display_rect_ignoring_opacity (a_rect: NS_RECT)
+			-- Displays the receiver but confines drawing to a specified region and does not back up to the first opaque ancestor--it simply causes the receiver and its descendants to execute their drawing code.
+		do
+			{NS_VIEW_API}.display_rect_ignoring_opacity (item, a_rect.item)
+		end
+
+	display_rect_ignoring_opacity_in_context (a_rect: NS_RECT; a_context: NS_GRAPHICS_CONTEXT)
+			-- Causes the receiver and its descendants to be redrawn to the specified graphics context.
+		do
+			{NS_VIEW_API}.display_rect_ignoring_opacity_in_context (item, a_rect.item, a_context.item)
+		end
+
+	display_if_needed
+			-- Displays the receiver and all its subviews if any part of the receiver has been marked as needing display with a <code>setNeedsDisplay:</code> or <code>setNeedsDisplayInRect:</code> message.
+		do
+			{NS_VIEW_API}.display_if_needed (item)
+		end
+
+	display_if_needed_in_rect (a_rect: NS_RECT)
+			-- Acts as <code>displayIfNeeded</code>, confining drawing to a specified region of the receiver..
+		do
+			{NS_VIEW_API}.display_if_needed_in_rect (item, a_rect.item)
+		end
+
+	display_if_needed_ignoring_opacity
+			-- Acts as <code>displayIfNeeded</code>, except that this method doesn`t back up to the first opaque ancestor--it simply causes the receiver and its descendants to execute their drawing code.
+		do
+			{NS_VIEW_API}.display_if_needed_ignoring_opacity (item)
+		end
+
+	display_if_needed_in_rect_ignoring_opacity (a_rect: NS_RECT)
+			-- Acts as <code>displayIfNeeded</code>, but confining drawing to <em>aRect</em> and not backing up to the first opaque ancestor--it simply causes the receiver and its descendants to execute their drawing code.
+		do
+			{NS_VIEW_API}.display_if_needed_in_rect_ignoring_opacity (item, a_rect.item)
+		end
+
+	translate_rects_needing_display_in_rect_by (a_clip_rect: NS_RECT; a_delta: NS_SIZE)
+			-- Translates the display rectangles by the specified delta.
+		do
+			{NS_VIEW_API}.translate_rects_needing_display_in_rect_by (item, a_clip_rect.item, a_delta.item)
+		end
+
+	is_opaque: BOOLEAN
+			-- Overridden by subclasses to return <code>YES</code> if the receiver is opaque, <code>NO</code> otherwise.
+		do
+			Result := {NS_VIEW_API}.is_opaque (item)
+		end
+
+	view_will_draw
+			-- Informs the receiver that it will be required to draw content.
+		do
+			{NS_VIEW_API}.view_will_draw (item)
 		end
 
 feature -- Examining Coordinate System Modifications

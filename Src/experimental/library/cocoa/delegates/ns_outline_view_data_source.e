@@ -9,6 +9,11 @@ deferred class
 
 feature {NONE}
 
+--	make
+--		do
+--			item := outline_view_data_source_class.create_instance.item
+--		end
+
 	make
 			-- Must be called for initialization
 		do
@@ -51,7 +56,37 @@ feature {NS_OUTLINE_VIEW}
 			"return [(DSItem*)$an_item eiffelObject];"
 		end
 
-feature {NS_OBJECT} -- Should be used by classes in native only
+feature {NS_OBJECT} -- Implementation
+
+--	outline_view_data_source_class: OBJC_CLASS
+--			-- An Objective-C class which has the selectors of the data source
+--		do
+--			create Result.make_with_name (generate_name)
+--			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSObject"))
+--			Result.add_method ("outlineView:numberOfChildrenOfItem:", outline_view_number_of_children_of_item)
+--			Result.add_method ("outlineView:isItemExpandable:", agent (a_ptr: POINTER) do window_did_move end)
+--			Result.add_method ("outlineView:child:ofItem:", agent (a_ptr: POINTER) do window_did_move end)
+--			Result.add_method ("outlineView:objectValueForTableColumn:byItem:", agent (a_ptr: POINTER) do window_did_move end)
+--			Result.register
+--		end
+
+--	outline_view_number_of_children_of_item (a_outline_view: POINTER; a_item: POINTER)
+
+--		do
+
+--		end
+
+--	counter: SPECIAL [INTEGER]
+--		once
+--			create Result.make_empty (1)
+--			Result.extend (0)
+--		end
+
+--	generate_name: STRING
+--		do
+--			Result := "EiffelWrapperOutlineViewDataSource" + counter.item (0).out
+--			counter.put (counter.item (0) + 1, 0)
+--		end
 
 	item: POINTER
 	 	-- The C-pointer to the Cocoa object

@@ -27,7 +27,7 @@ feature {NONE} -- Creation
 			insert_in_table
 		end
 
-feature -- Access
+feature -- Configuring Buttons
 
 	set_button_type (a_button_type: INTEGER)
 			-- Sets how the receiver button highlights while pressed and how it shows its state.
@@ -38,18 +38,6 @@ feature -- Access
 			valid_button_type: valid_button_type (a_button_type)
 		do
 			{NS_BUTTON_API}.set_button_type (item, a_button_type)
-		end
-
-	set_key_equivalent (a_string: STRING_GENERAL)
-			-- Sets the key equivalent character of the receiver to the given character.
-			-- This method redraws the button's interior if it displays a key equivalent instead of an image.
-			-- The key equivalent isn't displayed if the image position is set to NSNoImage, NSImageOnly, or NSImageOverlaps; that is,
-			-- the button must display both its title and its "image" (the key equivalent in this case), and they must not overlap.
-			-- To display a key equivalent on a button, set the image and alternate image to nil, then set the key equivalent, then set the image position.
-		do
-			{NS_BUTTON_API}.set_key_equivalent (item, (create {NS_STRING}.make_with_string (a_string)).item)
-		ensure
-			key_equivalent_set: -- TODO
 		end
 
 	set_title (a_title: STRING_GENERAL)
@@ -72,7 +60,23 @@ feature -- Access
 			result_not_void: Result /= void
 		end
 
-feature -- Access
+feature -- Configuring Button Images
+
+	image_position: INTEGER
+			-- Returns the position of the image relative to the title.
+		do
+			Result := {NS_BUTTON_API}.image_position (item)
+		end
+
+	set_image_position (a_position: INTEGER)
+			-- Sets the position of the button's image relative to its title.
+		require
+			valid_position:
+		do
+			{NS_BUTTON_API}.set_image_position (item, a_position)
+		ensure
+			position_set: a_position = image_position
+		end
 
 	image: detachable NS_IMAGE
 			-- Returns the image that appears on the receiver when it's in its normal state, Void if there is no such image.
@@ -135,6 +139,24 @@ feature -- Managing the button state
 		ensure
 			state_set: state = a_state
 		end
+
+feature -- Accessing Key Equivalents
+
+	set_key_equivalent (a_string: STRING_GENERAL)
+			-- Sets the key equivalent character of the receiver to the given character.
+			-- This method redraws the button's interior if it displays a key equivalent instead of an image.
+			-- The key equivalent isn't displayed if the image position is set to NSNoImage, NSImageOnly, or NSImageOverlaps; that is,
+			-- the button must display both its title and its "image" (the key equivalent in this case), and they must not overlap.
+			-- To display a key equivalent on a button, set the image and alternate image to nil, then set the key equivalent, then set the image position.
+		do
+			{NS_BUTTON_API}.set_key_equivalent (item, (create {NS_STRING}.make_with_string (a_string)).item)
+		ensure
+			key_equivalent_set: -- TODO
+		end
+
+feature -- Handling Keyboard Events
+
+
 
 feature -- Contract support
 

@@ -16,6 +16,8 @@ create
 	make,
 	make_with_title,
 	separator_item
+create {NS_OBJECT}
+	share_from_pointer
 
 feature {NONE} -- Creation
 

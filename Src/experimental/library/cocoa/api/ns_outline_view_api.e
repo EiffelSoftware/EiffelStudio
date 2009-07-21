@@ -57,4 +57,86 @@ feature -- Access
 		alias
 			"[(NSOutlineView*) $an_outline_view sizeToFit];"
 		end
+
+feature -- Expanding and Collapsing the Outline
+
+	frozen outline_view_should_expand_item (a_ns_outline_view: POINTER; a_outline_view: POINTER; a_item: POINTER): BOOLEAN
+			-- - (BOOL)outlineView: (NSOutlineView *) outlineView shouldExpandItem: (NSOutlineView *) item
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSOutlineView*)$a_ns_outline_view outlineView: $a_outline_view shouldExpandItem: *(id*)$a_item];"
+		end
+
+	frozen outline_view_item_will_expand (a_ns_outline_view: POINTER; a_notification: POINTER)
+			-- - (void)outlineViewItemWillExpand: (NSNotification *) notification
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSOutlineView*)$a_ns_outline_view outlineViewItemWillExpand: $a_notification];"
+		end
+
+	frozen expand_item (a_ns_outline_view: POINTER; a_item: POINTER)
+			-- - (void)expandItem: (id) item
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSOutlineView*)$a_ns_outline_view expandItem: *(id*)$a_item];"
+		end
+
+	frozen expand_item_expand_children (a_ns_outline_view: POINTER; a_item: POINTER; a_expand_children: BOOLEAN)
+			-- - (void)expandItem: (id) item expandChildren: (id) expandChildren
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSOutlineView*)$a_ns_outline_view expandItem: *(id*)$a_item expandChildren: $a_expand_children];"
+		end
+
+	frozen outline_view_item_did_expand (a_ns_outline_view: POINTER; a_notification: POINTER)
+			-- - (void)outlineViewItemDidExpand: (NSNotification *) notification
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSOutlineView*)$a_ns_outline_view outlineViewItemDidExpand: $a_notification];"
+		end
+
+	frozen outline_view_should_collapse_item (a_ns_outline_view: POINTER; a_outline_view: POINTER; a_item: POINTER): BOOLEAN
+			-- - (BOOL)outlineView: (NSOutlineView *) outlineView shouldCollapseItem: (NSOutlineView *) item
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSOutlineView*)$a_ns_outline_view outlineView: $a_outline_view shouldCollapseItem: *(id*)$a_item];"
+		end
+
+	frozen outline_view_item_will_collapse (a_ns_outline_view: POINTER; a_notification: POINTER)
+			-- - (void)outlineViewItemWillCollapse: (NSNotification *) notification
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSOutlineView*)$a_ns_outline_view outlineViewItemWillCollapse: $a_notification];"
+		end
+
+	frozen collapse_item (a_ns_outline_view: POINTER; a_item: POINTER)
+			-- - (void)collapseItem: (id) item
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSOutlineView*)$a_ns_outline_view collapseItem: *(id*)$a_item];"
+		end
+
+	frozen collapse_item_collapse_children (a_ns_outline_view: POINTER; a_item: POINTER; a_collapse_children: BOOLEAN)
+			-- - (void)collapseItem: (id) item collapseChildren: (id) collapseChildren
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSOutlineView*)$a_ns_outline_view collapseItem: *(id*)$a_item collapseChildren: $a_collapse_children];"
+		end
+
+	frozen outline_view_item_did_collapse (a_ns_outline_view: POINTER; a_notification: POINTER)
+			-- - (void)outlineViewItemDidCollapse: (NSNotification *) notification
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSOutlineView*)$a_ns_outline_view outlineViewItemDidCollapse: $a_notification];"
+		end
 end

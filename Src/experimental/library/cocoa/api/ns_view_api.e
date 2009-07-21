@@ -174,19 +174,119 @@ feature -- Focusing
 
 feature -- Displaying
 
-	frozen display (a_view: POINTER)
+	frozen set_needs_display (a_ns_view: POINTER; a_flag: BOOLEAN)
+			-- - (void)setNeedsDisplay: (BOOL) flag
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"[(NSView*)$a_view display];"
+			"[(NSView*)$a_ns_view setNeedsDisplay: $a_flag];"
 		end
 
-	frozen set_needs_display (a_view: POINTER; a_flag: BOOLEAN)
+	frozen set_needs_display_in_rect (a_ns_view: POINTER; a_invalid_rect: POINTER)
+			-- - (void)setNeedsDisplayInRect: (NSRect) invalidRect
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"[(NSView*)$a_view setNeedsDisplay: $a_flag];"
+			"[(NSView*)$a_ns_view setNeedsDisplayInRect: *(NSRect*)$a_invalid_rect];"
 		end
+
+	frozen needs_display (a_ns_view: POINTER): BOOLEAN
+			-- - (BOOL)needsDisplay
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_ns_view needsDisplay];"
+		end
+
+	frozen display (a_ns_view: POINTER)
+			-- - (void)display
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view display];"
+		end
+
+	frozen display_rect (a_ns_view: POINTER; a_rect: POINTER)
+			-- - (void)displayRect: (NSRect) rect
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view displayRect: *(NSRect*)$a_rect];"
+		end
+
+	frozen display_rect_ignoring_opacity (a_ns_view: POINTER; a_rect: POINTER)
+			-- - (void)displayRectIgnoringOpacity: (NSRect) rect
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view displayRectIgnoringOpacity: *(NSRect*)$a_rect];"
+		end
+
+	frozen display_rect_ignoring_opacity_in_context (a_ns_view: POINTER; a_rect: POINTER; a_context: POINTER)
+			-- - (void)displayRectIgnoringOpacity: (NSRect) aRect inContext: (NSRect) context
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view displayRectIgnoringOpacity: *(NSRect*)$a_rect inContext: $a_context];"
+		end
+
+	frozen display_if_needed (a_ns_view: POINTER)
+			-- - (void)displayIfNeeded
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view displayIfNeeded];"
+		end
+
+	frozen display_if_needed_in_rect (a_ns_view: POINTER; a_rect: POINTER)
+			-- - (void)displayIfNeededInRect: (NSRect) rect
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view displayIfNeededInRect: *(NSRect*)$a_rect];"
+		end
+
+	frozen display_if_needed_ignoring_opacity (a_ns_view: POINTER)
+			-- - (void)displayIfNeededIgnoringOpacity
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view displayIfNeededIgnoringOpacity];"
+		end
+
+	frozen display_if_needed_in_rect_ignoring_opacity (a_ns_view: POINTER; a_rect: POINTER)
+			-- - (void)displayIfNeededInRectIgnoringOpacity: (NSRect) rect
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view displayIfNeededInRectIgnoringOpacity: *(NSRect*)$a_rect];"
+		end
+
+	frozen translate_rects_needing_display_in_rect_by (a_ns_view: POINTER; a_clip_rect: POINTER; a_delta: POINTER)
+			-- - (void)translateRectsNeedingDisplayInRect: (NSRect) clipRect by: (NSRect) delta
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view translateRectsNeedingDisplayInRect: *(NSRect*)$a_clip_rect by: *(NSSize*)$a_delta];"
+		end
+
+	frozen is_opaque (a_ns_view: POINTER): BOOLEAN
+			-- - (BOOL)isOpaque
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSView*)$a_ns_view isOpaque];"
+		end
+
+	frozen view_will_draw (a_ns_view: POINTER)
+			-- - (void)viewWillDraw
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSView*)$a_ns_view viewWillDraw];"
+		end
+
+feature -- XXX
 
 	frozen convert_point_to_base (a_view: POINTER; a_point: POINTER; res: POINTER)
 		external

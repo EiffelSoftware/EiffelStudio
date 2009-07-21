@@ -100,7 +100,11 @@ feature -- Basic Functionality
 			a_string_attached: attached a_string
 		do
 			if o.debug_level >= 10 then
-				o.dprint (internal_debug_info + "###" + a_string.out, 10)
+				if a_string.count > 0 then
+					o.dprint (internal_debug_info + "##" + a_string [1].to_character_8.out + "##" + a_string.out, 10)
+				else
+					o.dprint (internal_debug_info + "####" + a_string.out, 10)
+				end
 			end
 			Result := internal_parse (a_string)
 		ensure

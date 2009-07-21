@@ -39,11 +39,14 @@ feature -- Operation
 			l_translator: XP_TRANSLATOR
 			l_dir: FILE_NAME
 			l_error_count: INTEGER
+			l_generation_file_name: FILE_NAME
+			l_generation_file: XU_FILE_UTILITIES
 		do
 			o.set_name ("XEBTRANS")
 			o.set_debug_level (a_arg_parser.debug_level)
 			create l_translator.make (a_arg_parser.project_name, a_arg_parser.force)
 			create l_dir.make_from_string (a_arg_parser.input_path)
+			l_generation_file_name := l_dir.twin
 
 			l_translator.set_output_path (a_arg_parser.output_path)
 
@@ -60,6 +63,12 @@ feature -- Operation
 				o.iprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N")
 				{EXCEPTIONS}.die (-1)
 			else
+				create l_generation_file
+				l_generation_file_name.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
+				if attached {PLAIN_TEXT_FILE} l_generation_file.plain_text_file_write (l_generation_file_name) as l_file then
+					l_file.put_string ("System translated.")
+					l_generation_file.close
+				end
 				o.iprint ("Output generated to '" + l_translator.output_path + "'")
 				o.iprint ("System translated.")
 			end

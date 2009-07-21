@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			            	Result := (create {XER_BAD_RESPONSE}.make (webapp.app_config.name.out)).render_to_command_response
 			            end
 				   else
-				   		Result := create {XCCR_NO_RESPONSE}.make
+				   		Result := create {XCCR_NO_RESPONSE}
 				   end
 
 		        else

@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+			The command response that contains the list of webapp beans.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -9,7 +9,7 @@ note
 
 class
 	XCCR_GET_WEBAPPS
-	
+
 inherit
 	XC_COMMAND_RESPONSE
 

@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		The error command response that occurs if the server cannot load the config file.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -13,32 +13,11 @@ class
 inherit
 	XCCR_ERROR
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
-		do
-		end
-
 feature -- Access
-
-	name: STRING
 
 	description: STRING
 			-- Describes the error
 		do
 			Result := "There was an error while loading the configuration file."
 		end
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
-
 end

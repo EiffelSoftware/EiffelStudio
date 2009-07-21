@@ -20,18 +20,15 @@ feature -- Status Change
 
 	upload: STRING
 			-- Process the uploaded file
-		local
-			l_util: XU_FILE_UTILITIES
 		do
-			if attached current_request.upload_filename as l_fn then
-				create l_util
-				if	process_upload_single_file (l_fn, create {FILE_NAME}.make_from_string ("upload")) then
-					Result := "Success!"
+			if attached current_request.upload_filename as l_tfn then
+				if attached {STRING} process_upload_single_file (l_tfn, "$XEBRA_DEV/httpd/htdocs/demoapplication/upload") as l_fn then
+					Result := "Success! File was uploaded to " + l_fn
 				else
-					Result := "Error while processing!"
+					Result := "Error while processing uploaded file!"
 				end
 			else
-				Result := "No uploaded file found!"
+				Result := "Error, no uploaded file found!"
 			end
 		end
 end

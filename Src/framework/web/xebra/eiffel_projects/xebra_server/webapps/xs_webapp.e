@@ -23,17 +23,24 @@ feature {NONE} -- Initialization
 
 	make (a_webapp_config: XC_WEBAPP_CONFIG)
 			-- Initialization for `Current'.
+			--
+			-- Initializes the actions. The action chain is:
+			-- TRANSLATE -> COMPILE_SERVLET_GENERATOR -> GENERATE -> COMPILE_WEBAPP -> RUN -> SEND
 		do
 			Precursor (a_webapp_config)
 
-			create translate_action.make (current)
-			create compile_action.make (current)
-			create run_action.make (current)
-			create send_action.make (current)
+			create action_translate.make (current)
+			create action_compile_sgen.make (current)
+			create action_generate.make (current)
+			create action_compile_webapp.make (current)
+			create action_run.make (current)
+			create action_send.make (current)
 
-			translate_action.set_next_action (compile_action)
-			compile_action.set_next_action (run_action)
-			run_action.set_next_action (send_action)
+			action_translate.set_next_action (action_compile_sgen)
+			action_compile_sgen.set_next_action (action_generate)
+			action_generate.set_next_action (action_compile_webapp)
+			action_compile_webapp.set_next_action (action_run)
+			action_run.set_next_action (action_send)
 
 			current_request := create {XCWC_EMPTY}.make
 			needs_cleaning := False
@@ -42,29 +49,37 @@ feature {NONE} -- Initialization
 
 		ensure then
 			config_attached: config /= Void
-			translate_action_attached: translate_action /= Void
-			compile_action_attached: compile_action /= Void
-			run_action_attached: run_action /= Void
-			send_action_attached: send_action /= Void
-
+			action_translate_attached: action_translate /= Void
+			action_compile_webapp_attached: action_compile_webapp /= Void
+			action_compile_sgen_attached: action_compile_sgen /= Void
+			action_generate_attached: action_generate /= Void
+			action_run_attached: action_run /= Void
+			action_send_attached: action_send /= Void
 		end
 
 feature  -- Access
 
 
-	translate_action: XSWA_TRANSLATE
+	action_translate: XSWA_TRANSLATE
 		-- The action to translate the webapp
 
-	compile_action: XSWA_COMPILE
+	action_compile_sgen: XSWA_COMPILE_SGEN
+		-- The action to compile the servlet_generator		
+
+	action_compile_webapp: XSWA_COMPILE_WEBAPP
 		-- The action to compile the webapp
 
-	run_action: XSWA_RUN
+	action_generate: XSWA_GENERATE
+		-- The action to generate the webapp
+
+	action_run: XSWA_RUN
 		-- The action to run the webapp
 
-	send_action: XSWA_SEND
+	action_send: XSWA_SEND
 		-- The action to send the request to the webapp
 
-	current_request: XC_WEBAPP_COMMAND --assign set_current_request
+	current_request: XC_WEBAPP_COMMAND
+		-- The last request received from the mod_xebra
 
 	needs_cleaning: BOOLEAN assign set_needs_cleaning
 		-- Can be used to force a clean on the next translation/compilation	
@@ -78,15 +93,15 @@ feature -- Actions
 		do
 			current_request := a_request
 			if config.args.assume_webapps_are_running.value then
-				Result := send_action.execute
+				Result := action_send.execute
 			else
 				if is_disabled then
 					Result := (create {XER_DISABLED}.make(app_config.name)).render_to_command_response
 				else
 					if dev_mode then
-						Result := translate_action.execute
+						Result := action_translate.execute
 					else
-						Result := run_action.execute
+						Result := action_run.execute
 					end
 
 				end
@@ -98,8 +113,8 @@ feature -- Actions
 	force_translate
 			-- Forces to retranslate the webapp
 		do
-			translate_action.force := True
-			translate_action.execute.do_nothing
+			action_translate.force := True
+			action_translate.execute.do_nothing
 		end
 
 	get_sessions: BOOLEAN
@@ -108,7 +123,7 @@ feature -- Actions
 			Result := True
 			if is_running then
 				current_request :=  create {XCWC_GET_SESSIONS}.make
-				if attached {XCCR_GET_SESSIONS} send_action.execute as l_response then
+				if attached {XCCR_GET_SESSIONS} action_send.execute as l_response then
 					sessions := l_response.sessions
 				else
 					Result := False
@@ -147,11 +162,11 @@ feature  -- Status Setting
 	shutdown
 			-- Initiates shutdown and waits for termination.
 		do
-			if run_action.is_running then
+			if action_run.is_running then
 				o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", 4)
 				current_request := 	create {XCWC_SHUTDOWN}.make
-				send_action.execute.do_nothing
-				run_action.wait_for_exit
+				action_send.execute.do_nothing
+				action_run.wait_for_exit
 			end
 		end
 
@@ -160,22 +175,25 @@ feature  -- Status Setting
 		do
 			o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", 4)
 			current_request := 	create {XCWC_SHUTDOWN}.make
-			send_action.execute.do_nothing
+			action_send.execute.do_nothing
 		end
 
 	shutdown_all
 			-- Shuts the application down and all process (compile and translate).
 		do
 			shutdown
-			compile_action.stop
-			translate_action.stop
+			action_compile_webapp.stop
+			action_generate.stop
+			action_compile_sgen.stop
+			action_translate.stop
 		end
 
 invariant
 	config_attached: config /= Void
-	translate_action_attached: translate_action /= Void
-	compile_action_attached: compile_action /= Void
-	run_action_attached: run_action /= Void
-	send_action_attached: send_action /= Void
-
+	action_translate_attached: action_translate /= Void
+	action_compile_webapp_attached: action_compile_webapp /= Void
+	action_compile_sgen_attached: action_compile_sgen /= Void
+	action_generate_attached: action_generate /= Void
+	action_run_attached: action_run /= Void
+	action_send_attached: action_send /= Void
 end

@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		The framework class for a server error command response.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -13,9 +13,6 @@ deferred class
 inherit
 	XC_COMMAND_RESPONSE
 
-
-feature {NONE} -- Initialization
-
 feature -- Access
 
 	description: STRING
@@ -24,18 +21,6 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 		end
-
-
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
-
-invariant
 
 end
 

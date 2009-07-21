@@ -113,7 +113,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Forcing retranslation off webapp '" + a_name + "'")
 				l_w.force_translate
-				create {XCCR_OK}Result.make
+				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -134,10 +134,10 @@ feature {XS_SERVER_MODULE} -- Status setting
 
 				if not l_webapp.app_config.name.value.is_equal (a_name) then
 					if l_webapp.get_sessions then
-						create {XCCR_OK}Result.make
+						create {XCCR_OK}Result
 					else
 						--todo: error
-						create {XCCR_OK}Result.make
+						create {XCCR_OK}Result
 					end
 				end
 				config.file.webapps.forth
@@ -150,7 +150,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Fireing off webapp '" + a_name + "'")
 				l_w.fire_off
-				create {XCCR_OK}Result.make
+				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -168,7 +168,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 				config.file.webapps.item_for_iteration.dev_mode := True
 				config.file.webapps.forth
 			end
-			create {XCCR_OK}Result.make
+			create {XCCR_OK}Result
 		end
 
 	dev_mode_off_global: XC_COMMAND_RESPONSE
@@ -183,7 +183,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 				config.file.webapps.item_for_iteration.dev_mode := False
 				config.file.webapps.forth
 			end
-			create {XCCR_OK}Result.make
+			create {XCCR_OK}Result
 		end
 
 	dev_mode_on_webapp (a_name: STRING): XC_COMMAND_RESPONSE
@@ -192,7 +192,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Setting dev_mode of webapp '" + a_name + "' to on.")
 				l_w.dev_mode := True
-				create {XCCR_OK}Result.make
+				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -204,7 +204,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 		if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Setting dev_mode of webapp '" + a_name + "' to off.")
 				l_w.dev_mode := False
-				create {XCCR_OK}Result.make
+				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -217,7 +217,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Launching webapp '" + a_name + "'...")
 				l_w.send (create {XCWC_EMPTY}.make).do_nothing
-				create {XCCR_OK}Result.make
+				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -229,7 +229,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Shutting down webapp '" + a_name + "'...")
 				l_w.shutdown_all
-				create {XCCR_OK}Result.make
+				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -260,7 +260,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				l_w.is_disabled := False
 				o.iprint ("Enabling webapp '" + a_name + "'...")
-				create {XCCR_OK}Result.make
+				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -272,7 +272,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w  then
 				l_w.is_disabled := True
 				o.iprint ("Disabling webapp '" + a_name + "'...")
-				create {XCCR_OK}Result.make
+				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -285,7 +285,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 				l_webapp.needs_cleaning := True
 				o.iprint ("Cleaning webapp '" + a_name + "'...")
 				l_webapp.send (create {XCWC_EMPTY}.make).do_nothing
-				Result := create {XCCR_OK}.make
+				Result := create {XCCR_OK}
 			else
 				Result := create {XCCR_WEBAPP_NOT_FOUND}.make (a_name)
 			end
@@ -299,7 +299,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			o.iprint ("Terminating Web Applications...")
 			create l_webapp_handler.make
 			l_webapp_handler.stop_apps
-			Result := create {XCCR_OK}.make
+			Result := create {XCCR_OK}
 		end
 
 	shutdown_module (a_name: STRING): XC_COMMAND_RESPONSE
@@ -312,7 +312,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			else
 				o.iprint ("No module '" + a_name + "' found.")
 			end
-			Result := create {XCCR_OK}.make
+			Result := create {XCCR_OK}
 		end
 
 	relaunch_module (a_name: STRING): XC_COMMAND_RESPONSE
@@ -325,7 +325,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			else
 				o.iprint ("No module '" + a_name + "' found.")
 			end
-			Result := create {XCCR_OK}.make
+			Result := create {XCCR_OK}
 		end
 
 	load_config: XC_COMMAND_RESPONSE
@@ -344,9 +344,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 				o.dprint (config.file.print_configuration, 2)
 			end
 			if handle_errors then
-				Result := create {XCCR_OK}.make
+				Result := create {XCCR_OK}
 			else
-				Result := create {XCCR_CONFIG_ERROR}.make
+				Result := create {XCCR_CONFIG_ERROR}
 			end
 		end
 
@@ -354,7 +354,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>
 		do
 			stop := True
-			Result := create {XCCR_OK}.make
+			Result := create {XCCR_OK}
 		end
 
 	get_modules: XC_COMMAND_RESPONSE

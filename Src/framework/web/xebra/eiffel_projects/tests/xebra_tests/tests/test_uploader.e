@@ -47,7 +47,7 @@ feature -- Test routines
 				l_tmp.put_string ("-----------------------------13689473967984000952010704750%R%NContent-Disposition: form-data; name=%"file%"; filename=%"" + l_test_filename + "%"%R%NContent-Type: text/plain%R%N%R%N" + l_test_filecontent + "%R%N-----------------------------13689473967984000952010704750--%R%N")
 				l_tmp.close
 
-				if not process_upload_single_file (l_test_tmpfilename, create {FILE_NAME}.make_from_string ("")) then
+				if not attached process_upload_single_file (l_test_tmpfilename, create {FILE_NAME}.make_from_string ("")) then
 					assert ("Error processing", False)
 				end
 

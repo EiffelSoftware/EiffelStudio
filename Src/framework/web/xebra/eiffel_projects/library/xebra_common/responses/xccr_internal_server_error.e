@@ -1,6 +1,6 @@
 note
 	description: "[
-		The error command response that occurs if the server cannot send a command to the webapp.
+		The error command response that occurs if there was an internal server error.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	XCCR_CANNOT_SEND
+	XCCR_INTERNAL_SERVER_ERROR
 
 inherit
 	XCCR_ERROR
@@ -16,9 +16,9 @@ inherit
 feature -- Access
 
 	description: STRING
-			-- Describes the error
+			-- <Precursor>
 		do
-			Result := "There was a problem transmitting the command to the server."
+			Result := "Internal Server Error."
 		end
 
 end

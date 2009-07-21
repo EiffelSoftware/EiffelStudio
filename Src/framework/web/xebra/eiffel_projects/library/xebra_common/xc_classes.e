@@ -38,7 +38,7 @@ feature -- Other
 			if attached {XCCR_GET_WEBAPPS} l then end
 			if attached {XCCR_HTTP_REQUEST} l then end
 			if attached {XCCR_OK} l then end
-			if attached {XCCR_UNKNOWN_ERROR} l then end
+			if attached {XCCR_INTERNAL_SERVER_ERROR} l then end
 			if attached {XCCR_WEBAPP_NOT_FOUND} l then end
 
 				-- Server Commands

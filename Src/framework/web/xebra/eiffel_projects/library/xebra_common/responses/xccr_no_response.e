@@ -13,15 +13,4 @@ class
 inherit
 	XC_COMMAND_RESPONSE
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
-		do
-		end
-
-
 end

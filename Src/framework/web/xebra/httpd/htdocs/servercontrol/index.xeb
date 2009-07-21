@@ -60,9 +60,7 @@
 		<th>Status </th>
 		<th>Sessions </th> 
 		<th>Disabled</th>
-		<th>Running</th>
-		<th>Translating</th>
-		<th>Compiling</th>		
+		
 		<th>Development Mode</th>
 		
 	</tr>
@@ -75,9 +73,6 @@
 			<td><xeb:display text="#{webapp.status}" /></td>
 			<td><xeb:display text="#{webapp.sessions.out}" /></td>
 			<td><xeb:display text="#{webapp.is_disabled.out}" /> (<f:command_link text="on" action="disable_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link text="off" action="enable_webapp" variable="webapp.app_config.name.value.out" />)</td>
-			<td><xeb:display text="#{webapp.is_running.out}" /> (<f:command_link text="stop" action="shutdown_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link text="restart" action="relaunch_webapp" variable="webapp.app_config.name.value.out" />)</td>
-			<td><xeb:display text="#{webapp.is_translating.out}" /> (<f:command_link text="force" action="force_translate" variable="webapp.app_config.name.value.out" />)</td>
-			<td><xeb:display text="#{webapp.is_compiling.out}" /> (<f:command_link text="clean" action="clean_webapp" variable="webapp.app_config.name.value.out" />)</td>
 			<td><xeb:display text="#{webapp.dev_mode.out}" /> (<f:command_link text="on" action="dev_mode_on_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link text="off" action="dev_mode_off_webapp" variable="webapp.app_config.name.value.out" />)</td>
 	
 		</tr>

@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		The error command response that occurs if the server cannot find a given webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -38,14 +38,6 @@ feature -- Access
 		do
 			Result := "Webapp '" + name + "' could not be found."
 		end
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
 
 invariant
 	name_attached: name /= Void

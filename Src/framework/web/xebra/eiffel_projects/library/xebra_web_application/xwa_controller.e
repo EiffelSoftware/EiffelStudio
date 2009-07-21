@@ -62,8 +62,13 @@ feature -- Status Change
 
 feature -- Operations
 
-	process_upload_single_file (a_source_file: STRING; a_target_file_dir: FILE_NAME): BOOLEAN
+	process_upload_single_file (a_source_file: STRING; a_target_file_dir: STRING): detachable STRING
 			-- Copies the uploaded and encoded (single) file to a new place and removes header and footer from it
+			--
+			-- `a_source_file': The path to the tmp file that was created by mod_xebra.
+			-- `a_target_file_dir': The path to the folder where the file should be written. Can contain environment vars.
+			-- `Result': Returns the file name of the create file on success, void otherwise.
+			--
 			-- The uploaded temp file is expected to be in the following format. Other formats will likely result in endless loops!
 			-- -----------------------------13689473967984000952010704750%R%N
 			-- Content-Disposition: form-data; name=%"file%"; filename=%"{FILENAME}%"%R%N
@@ -75,6 +80,7 @@ feature -- Operations
 			a_source_file_attached_and_not_empty: a_source_file /= Void and then not a_source_file.is_empty
 			a_target_file_dir_attached: a_target_file_dir /= Void
 		local
+			l_util: XU_FILE_UTILITIES
 			l_s_file: RAW_FILE
 			l_t_file: RAW_FILE
 			l_modulo, l_read, l_nb: INTEGER_32
@@ -84,8 +90,8 @@ feature -- Operations
 			l_start: INTEGER
 			l_block_size: INTEGER
 			l_buf: STRING
+			l_t_fn: FILE_NAME
 		do
-			Result := False
 				create l_s_file.make (a_source_file)
 				if l_s_file.exists and l_s_file.is_readable and l_s_file.is_access_readable then
 					l_s_file.open_read
@@ -93,30 +99,17 @@ feature -- Operations
 					l_s_file.read_line
 					if l_s_file.last_string.has ('"') then
 						if attached l_s_file.last_string.split ('"').i_th (4) as l_up_filename then
-							a_target_file_dir.set_file_name (l_up_filename)
-							create l_t_file.make (a_target_file_dir)
+							create l_util
+							create l_t_fn.make_from_string (l_util.resolve_env_vars (a_target_file_dir, true))
+							l_t_fn.set_file_name (l_up_filename)
+							create l_t_file.make (l_t_fn)
 							if l_t_file.exists and l_t_file.is_writable and l_t_file.is_access_writable then
 								l_t_file.delete
 							end
 							if l_t_file.is_creatable then
 								l_t_file.create_read_write
 								if l_t_file.is_access_readable and l_t_file.is_readable and l_t_file.is_access_writable and l_t_file.is_writable then
-
-
-
-------									--debug read whole file
---									l_buf := ""
---									from
---										l_s_file.start
---									until
---										l_s_file.after
---									loop
---										l_s_file.read_character
---										l_buf.append_character (l_s_file.last_character)
---									end
-
 										-- Find end of target file
-
 									from
 										l_s_file.finish
 										i := 1
@@ -136,12 +129,7 @@ feature -- Operations
 										end
 										i := i + 1
 									end
-
 									l_end := l_s_file.position
-
-
-
-
 										-- Find start of target file
 									from
 										i := 0
@@ -160,7 +148,6 @@ feature -- Operations
 										i := i +1
 									end
 									l_start := l_s_file.position
-
 
 									from
 										l_block_size := 51200
@@ -182,24 +169,23 @@ feature -- Operations
 											l_read := l_read + l_modulo
 										end
 									end
-
-									Result := True
+									Result := l_t_file.name
 								else
-									o.eprint ("File upload: Created file is not readable or writable??", generating_type)
+									o.eprint ("File upload: Created file is not readable or writable?? " + l_t_file.name, generating_type)
 								end
 								l_t_file.close
 							else
-								o.eprint ("File upload: Create file.", generating_type)
+								o.eprint ("File upload: Target file is not creatable! " + l_t_file.name, generating_type)
 							end
 						else
-							o.eprint ("File upload: Invalid file format.", generating_type)
+							o.eprint ("File upload: Invalid file format. " + l_s_file.name , generating_type)
 						end
 					else
-						o.eprint ("File upload: Invalid file format.", generating_type)
+						o.eprint ("File upload: Invalid file format. " + l_s_file.name , generating_type)
 					end
 					l_s_file.close
 				else
-					o.eprint ("File upload: Cannot read tmp file.", generating_type)
+					o.eprint ("File upload: Cannot read tmp file. " + l_s_file.name , generating_type)
 				end
 		end
 

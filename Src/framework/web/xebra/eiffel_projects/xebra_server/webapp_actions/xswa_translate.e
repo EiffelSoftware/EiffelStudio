@@ -193,7 +193,7 @@ feature -- Agents
 			-- Launch compiling of servlet_gen in gen_compile_process
 		do
 			set_running (False)
-			if translate_process.exit_code >= 0 and not is_necessary then
+			if translate_process.exit_code = 0  then
 				execute_next_action.do_nothing
 			else
 				o.eprint ("TRANSLATION FAILED", generating_type)

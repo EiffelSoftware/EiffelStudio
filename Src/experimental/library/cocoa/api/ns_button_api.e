@@ -58,6 +58,22 @@ feature -- Configuring Button Images
 			"[(NSButton*)$a_button setImage: $a_image];"
 		end
 
+	frozen image_position (a_ns_button: POINTER): INTEGER
+			-- - (NSCellImagePosition)imagePosition
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSButton*)$a_ns_button imagePosition];"
+		end
+
+	frozen set_image_position (a_ns_button: POINTER; a_position: INTEGER)
+			-- - (void)setImagePosition: (NSCellImagePosition) aPosition
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSButton*)$a_ns_button setImagePosition: $a_position];"
+		end
+
 	frozen set_bezel_style (a_button: POINTER; a_style: INTEGER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"

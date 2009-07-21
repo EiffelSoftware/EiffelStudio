@@ -44,6 +44,38 @@ feature -- Access
 			menu_add_item (item, a_menu_item.item)
 		end
 
+feature -- Finding Menu Items
+
+	item_with_tag (a_tag: INTEGER): NS_MENU_ITEM
+			-- Returns the first menu item in the receiver with the specified tag.
+		do
+			create Result.share_from_pointer ({NS_MENU_API}.item_with_tag (item, a_tag.item))
+		end
+
+	item_with_title (a_title: NS_STRING): NS_MENU_ITEM
+			-- Returns the first menu item in the receiver with a specified title.
+		do
+			create Result.share_from_pointer ({NS_MENU_API}.item_with_title (item, a_title.item))
+		end
+
+	item_at_index (a_index: INTEGER): NS_MENU_ITEM
+			-- Returns the menu item at a specific location of the receiver.
+		do
+			create Result.share_from_pointer ({NS_MENU_API}.item_at_index (item, a_index))
+		end
+
+	number_of_items: INTEGER
+			-- Returns the number of menu items in the receiver, including separator items.
+		do
+			Result := {NS_MENU_API}.number_of_items (item)
+		end
+
+	item_array: NS_ARRAY [NS_MENU_ITEM]
+			-- Returns an array containing the receiver's menu items.
+		do
+			create Result.share_from_pointer ({NS_MENU_API}.item_array (item))
+		end
+
 feature {NONE} -- Objective-C implementation
 
 	frozen menu_new: POINTER is

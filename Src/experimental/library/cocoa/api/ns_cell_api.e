@@ -172,6 +172,14 @@ feature -- Managing Focus Rings
 
 feature -- Determining Cell Size
 
+	frozen cell_size (a_cell: POINTER; a_res: POINTER)
+			-- - (NSSize)cellSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSSize size = [(NSCell*)$a_cell cellSize]; memcpy($a_res, &size, sizeof(NSSize));"
+		end
+
 feature -- Drawing and Highlighting
 
 	frozen draw_with_frame_in_view (a_cell: POINTER; a_cell_frame: POINTER; a_control_view: POINTER)

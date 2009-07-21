@@ -151,6 +151,13 @@ feature -- Managing Focus Rings
 
 feature -- Determining Cell Size
 
+	cell_size: NS_SIZE
+			-- Returns the minimum size needed to display the receiver.
+		do
+			create Result.make
+			{NS_CELL_API}.cell_size (item, Result.item)
+		end
+
 feature -- Drawing and Highlighting
 
 	draw (a_cell_frame: NS_RECT; a_control_view: NS_VIEW)
@@ -168,7 +175,6 @@ feature -- Drawing and Highlighting
 feature -- Editing and Selecting Text
 
 feature -- Managing Expansion Frames
-
 
 --	compare (a_other_cell: NS_OBJECT): NS_COMPARISON_RESULT
 --		do
@@ -214,4 +220,47 @@ feature -- Cell States (NSCellStateValue)
 			"NSOnState"
 		end
 
+feature -- Image Position
+
+	frozen no_image: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSNoImage"
+		end
+
+	frozen image_only: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSImageOnly"
+		end
+
+	frozen image_left: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSImageLeft"
+		end
+
+	frozen image_right: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSImageRight"
+		end
+
+	frozen image_below: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSImageBelow"
+		end
+
+	frozen image_above: INTEGER
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSImageAbove"
+		end
 end

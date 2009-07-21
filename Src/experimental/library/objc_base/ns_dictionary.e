@@ -15,7 +15,8 @@ create
 	make_with_object_for_key,
 	make_with_objects_for_keys
 create {NS_OBJECT}
-	make_from_pointer
+	make_from_pointer,
+	share_from_pointer
 
 feature -- Creation
 

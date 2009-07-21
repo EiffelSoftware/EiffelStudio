@@ -11,6 +11,7 @@ indexing
 
 #include <eif_eiffel.h>
 #include <objc/runtime.h>
+#include <Foundation/NSMethodSignature.h>
 
 void bridge_void (id self, SEL name);
 BOOL bridge_bool (id self, SEL name);
@@ -21,11 +22,13 @@ typedef void (*voidCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER);
 typedef EIF_BOOLEAN (*boolCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER);
 typedef void (*voidPtrCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER);
 typedef void (*voidPtrPtrCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_POINTER);
+typedef void (*voidGeneralCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER);
 
 void connect_callbacks (EIF_OBJECT a_callback_object,
 			voidCallbackTYPE a_callback_void,
 			boolCallbackTYPE a_callback_bool,
 			voidPtrCallbackTYPE a_callback_void_ptr,
-			voidPtrPtrCallbackTYPE a_callback_void_ptr_ptr);
+			voidPtrPtrCallbackTYPE a_callback_void_ptr_ptr,
+			voidGeneralCallbackTYPE a_callback_void_general);
 
 #endif

@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		The command response that contains the list of module beans.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

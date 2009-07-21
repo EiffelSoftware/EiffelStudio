@@ -15,15 +15,27 @@
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities-voidunsafe.ecf"/>
-		<library name="xebra_common" location="$XEBRA_DEV\eiffel_projects\library\xebra_common\xebra_common-voidunsafe.ecf"/>
+		<library name="xebra_common" location="$XEBRA_DEV\eiffel_projects\library\xebra_common\xebra_common-voidunsafe.ecf" readonly="false"/>
 		<library name="xebra_error" location="$XEBRA_DEV\eiffel_projects\library\xebra_error\xebra_error-voidunsafe.ecf"/>
 		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses-voidunsafe.ecf"/>
 		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf"/>
 		<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf"/>
 		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
 		<library name="xebra_webapp" location="$XEBRA_DEV\eiffel_projects\library\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>
-		<cluster name="tests" location="tests\" recursive="true"/>
-		<cluster name="xebra_server" location="$XEBRA_DEV\eiffel_projects\xebra_server\" recursive="true"/>
+		<cluster name="tests" location="tests\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="xebra_server" location="$XEBRA_DEV\eiffel_projects\xebra_server\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
 		<cluster name="xebra_tests" location=".\">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

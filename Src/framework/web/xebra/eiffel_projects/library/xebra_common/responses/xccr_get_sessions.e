@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		The command response that contains the number of sessions.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	sessions: NATURAL
-
 
 end
 

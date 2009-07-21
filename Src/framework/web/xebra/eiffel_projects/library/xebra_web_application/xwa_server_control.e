@@ -45,7 +45,7 @@ feature -- Operations
 		local
 			l_socket: NETWORK_STREAM_SOCKET
 		do
-			Result := create {XCCR_UNKNOWN_ERROR}.make
+			Result := create {XCCR_INTERNAL_SERVER_ERROR}
 
 			create l_socket.make_client_by_port (default_cmd_server_port, default_cmd_server_host)
 			o.dprint ("Connecting...", 3)
@@ -62,13 +62,13 @@ feature -- Operations
 						o.dprint ("Response retrieved", 2)
 		            	Result := l_response
 		            else
-		            	Result := create {XCCR_CANNOT_SEND}.make
+		            	Result := create {XCCR_CANNOT_SEND}
 	            	end
 		        else
-		        	Result := create {XCCR_NO_RESPONSE}.make
+		        	Result := create {XCCR_NO_RESPONSE}
 		        end
 	        else
-	        	Result := create {XCCR_CANNOT_SEND}.make
+	        	Result := create {XCCR_CANNOT_SEND}
 	        end
 		ensure
 			result_attached: Result /= Void

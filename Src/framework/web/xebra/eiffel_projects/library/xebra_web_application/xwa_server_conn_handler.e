@@ -137,7 +137,7 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 			if attached {XH_REQUEST} l_parser.request (a_request) as l_request then
 				create {XCCR_HTTP_REQUEST}Result.make (l_request_handler.process_servlet (session_manager, l_request, Current))
 			else
-				create {XCCR_UNKNOWN_ERROR}Result.make -- FIXME
+				create {XCCR_INTERNAL_SERVER_ERROR}Result
 			end
 
 		end
@@ -155,7 +155,7 @@ feature -- Basic Operations
 		do
 			o.dprint ("Shutting down...", 1)
 			stop := True
-			Result := create {XCCR_OK}.make
+			Result := create {XCCR_OK}
 		end
 
 invariant

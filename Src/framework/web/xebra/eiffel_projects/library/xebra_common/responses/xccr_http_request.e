@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		The command response that contains a XH_RESPONSE.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

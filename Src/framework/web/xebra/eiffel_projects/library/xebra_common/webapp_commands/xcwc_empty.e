@@ -29,6 +29,6 @@ feature -- Basic operations
 	execute (a_webapp: XC_WEBAPP_INTERFACE): XC_COMMAND_RESPONSE
 			-- <Precursor>	
 		do
-			Result := create {XCCR_OK}.make
+			Result := create {XCCR_OK}
 		end
 end

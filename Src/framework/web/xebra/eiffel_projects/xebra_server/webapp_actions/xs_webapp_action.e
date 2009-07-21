@@ -46,7 +46,7 @@ feature -- Access
 		end
 
 	next_action: detachable XS_WEBAPP_ACTION
-		-- Is executed after the action has executed
+		-- Is executed after the action has executed (if not void)
 
 feature -- Paths
 
@@ -96,6 +96,65 @@ feature -- Paths
 			Result_attached: Result /= Void
 		end
 
+	servlet_gen_path: FILE_NAME
+			-- The path to the servlet_gen
+		do
+			Result := app_dir.twin
+			Result.extend ({XU_CONSTANTS}.generated_folder_name)
+			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
+		ensure
+			Result_attached: Result /= void
+		end
+
+	servlet_gen_exe: FILE_NAME
+			-- The path to the servlet_gen executable
+		do
+			Result := servlet_gen_path.twin
+			Result.extend ("EIFGENs")
+			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
+			Result.extend ("W_code")
+			if {PLATFORM}.is_windows then
+				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + ".exe")
+			else
+					Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name)
+			end
+
+		ensure
+			Result_attached: Result /= void
+		end
+
+	servlet_gen_melted_file_path: FILE_NAME
+		-- The path to the servlet_gen melted file
+		do
+			Result := servlet_gen_path.twin
+			Result.extend ("EIFGENs")
+			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
+			Result.extend ("W_code")
+
+			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + ".melted")
+		ensure
+			Result_attached: Result /= void
+		end
+
+	servlet_gen_ecf: FILE_NAME
+			-- The path to the servlet_gen executable
+		do
+			Result := servlet_gen_path.twin
+			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + ".ecf")
+		ensure
+			Result_attached: Result /= void
+		end
+
+	servlet_gen_executed_file: FILE_NAME
+				-- The path to the servlet_gen executed_at_time-file
+		do
+			Result := app_dir.twin
+			Result.extend ({XU_CONSTANTS}.Generated_folder_name)
+			Result.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
+		ensure
+			Result_attached: Result /= void
+		end
+
 feature -- Operations
 
 --	config_outputter
@@ -106,17 +165,28 @@ feature -- Operations
 --		end
 
 	execute: XC_COMMAND_RESPONSE
-			-- Executes the action if necessary and stops the stop_action if attached.
-			-- Returns a
+			-- Executes the action if necessary or else executes the next action
 		do
 			if is_necessary then
 				Result := internal_execute
 			else
-				Result := next_action.execute
+				Result := execute_next_action
 			end
 		ensure
 			Result_attached: Result /= Void
 		end
+
+	execute_next_action: XC_COMMAND_RESPONSE
+			--	Executes the next action if attached
+		do
+			if attached next_action as l_action then
+				Result := l_action.execute
+			else
+				Result := create {XCCR_INTERNAL_SERVER_ERROR}
+			end
+		end
+
+
 
 feature  -- Status report internal
 
@@ -137,7 +207,7 @@ feature -- Status setting
 --			action_set: stop_action = a_action
 --		end
 
-	set_next_action (a_action: XS_WEBAPP_ACTION)
+	set_next_action (a_action: like next_action)
 			-- Setts a next action
 		do
 			next_action := a_action
@@ -152,9 +222,7 @@ feature -- Status setting
 			not_running: is_running = False
 		end
 
-
-
-feature {NONE} -- Implementation
+feature {TEST_WEBAPPS} -- Implementation
 
 	internal_execute: XC_COMMAND_RESPONSE
 			-- The actual implementation of an action
@@ -162,6 +230,8 @@ feature {NONE} -- Implementation
 		ensure
 			Result_attached: Result /= Void
 		end
+
+feature {NONE} -- Implementation
 
 	can_launch_process (a_exe: FILE_NAME; a_dir: FILE_NAME): BOOLEAN
 			-- Tests if the files and dirs exist

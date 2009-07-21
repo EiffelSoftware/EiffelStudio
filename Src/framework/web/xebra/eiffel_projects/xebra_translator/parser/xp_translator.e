@@ -124,19 +124,19 @@ feature -- Processing
 			l_translation_config_path: FILE_NAME
 		do
 			l_translation_config_path := output_path.twin
-			o.iprint ("********************$Revision$**********************")
-			o.iprint ("************************************************************")
-			o.iprint ("*                  .taglib processing start...             *")
-			o.iprint ("************************************************************")
+			o.dprint ("********************$Revision$**********************", 0)
+			o.dprint ("************************************************************", 1)
+			o.dprint ("*                  .taglib processing start...             *", 1)
+			o.dprint ("************************************************************", 1)
 			l_translation_config_path.set_file_name (Translation_config_name)
 			process_file (l_translation_config_path, agent parse_translation_conf (?, ?, registry))
 			if not attached registry.taglib_configuration then
 				o.dprint ("Taglib configuration either not existing or corrupted! Aborting translation.", 1)
 			else
 				parse_taglibs (a_taglib_folder, registry)
-				o.iprint ("************************************************************")
-				o.iprint ("*                    .xeb processing start...              *")
-				o.iprint ("************************************************************")
+				o.dprint ("************************************************************", 1)
+				o.dprint ("*                    .xeb processing start...              *", 1)
+				o.dprint ("************************************************************", 1)
 				from
 					a_files.start
 				until
@@ -149,7 +149,7 @@ feature -- Processing
 					end
 					a_files.forth
 				end
-				o.iprint ("Processing done.")
+				o.dprint ("Processing done.", 2)
 				registry.resolve_all_templates
 
 				create l_generator_app_generator.make (registry)
@@ -181,7 +181,7 @@ feature -- Processing
 			a_path: attached a_path
 			a_file_name: attached a_file_name
 		do
-			o.iprint ("Processing '" + a_path + "'...")
+			o.dprint ("Processing '" + a_path + "'...", 2)
 			add_template_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
 		end
 
@@ -191,7 +191,7 @@ feature -- Processing
 			a_path: attached a_path
 			a_file_name: attached a_file_name
 		do
-			o.iprint ("Processing '" + a_path + "'...")
+			o.dprint ("Processing '" + a_path + "'...", 2)
 			add_xrpc_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
 		end
 
@@ -302,7 +302,7 @@ feature -- Processing
 			l_taglib := l_parser.parse (a_source)
 
 			if attached l_taglib then
-				o.iprint ("Successfully parsed taglib: " + l_taglib.id)
+				o.dprint ("Successfully parsed taglib: " + l_taglib.id, 2)
 				a_registry.put_tag_lib (l_taglib.id, l_taglib)
 			else
 				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing a taglib: " + a_file.name]), False)

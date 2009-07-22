@@ -22,7 +22,6 @@ inherit
         redefine
         	make,
             internal_recycle,
-            internal_detach_entities,
             build_mini_toolbar,
             icon,
             icon_pixmap,
@@ -81,12 +80,24 @@ feature {NONE} -- Initialization
         	register_action (content.focus_in_actions, agent
         		do
         			if is_interface_usable and then is_initialized and then is_shown then
+        				if attached {HELP_CONTEXT_I} Current as l_help_context and then develop_window.is_interface_usable then
+        					if is_shown then
+	        						-- Push the help context for context sensitive help.
+	        					develop_window.help_context := l_help_context
+        					end
+        				end
         				on_focus_in
         			end
         		end)
         	register_action (content.focus_out_actions, agent
         		do
         			if is_interface_usable and then is_initialized then
+        				if attached {HELP_CONTEXT_I} Current as l_help_context and then develop_window.is_interface_usable then
+        						-- Pop the help context for context sensitive help.
+        					--if develop_window.help_context = l_help_context then
+        						develop_window.help_context := Void
+        					--end
+        				end
         				on_focus_out
         			end
         		end)
@@ -96,7 +107,9 @@ feature {NONE} -- Initialization
         			-- We need a widget that is parented to a window so we need to wait until after the
         			-- docking content is attached to the window.
         		do
-		        	if attached {EV_WINDOW} helpers.widget_top_level_window (user_widget, False) as l_window then
+		        	if attached {SD_WINDOW} helpers.widget_top_level_window (user_widget, False) as l_window then
+		        			-- Only set up for floating windows because the IDE window handles help.
+
 		        			-- Set up help shortcut binding
 		        		bind_help_shortcut (l_window)
 		        	end
@@ -211,12 +224,6 @@ feature {NONE} -- Clean up
 
             Precursor
         end
-
-	internal_detach_entities
-			-- <Precursor>
-		do
-			Precursor
-		end
 
 feature -- Access
 
@@ -338,13 +345,6 @@ feature {NONE} -- Access
 			-- Note: Please not use this timer for anything else
 
 feature {NONE} -- Helpers
-
-    frozen preferences: EB_PREFERENCES
-        once
-            Result := (create {EB_SHARED_PREFERENCES}).preferences
-        ensure
-            result_attached: Result /= Void
-        end
 
     frozen pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
             -- Factory for generating pixmaps for class data

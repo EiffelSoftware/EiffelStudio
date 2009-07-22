@@ -24,13 +24,6 @@ inherit
 			standard_default_cancel_button
 		end
 
-	EB_SHARED_PREFERENCES
-		rename
-			preferences as shared_preferences
-		export
-			{NONE} all
-		end
-
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

@@ -61,14 +61,14 @@ feature -- Basic operations
 						stream.put_string ("l_result := agent {")
 						stream.put_string (a_test.class_name)
 						stream.put_string ("}.")
-						stream.put_line (a_test.name)
+						stream.put_line (a_test.routine_name.as_string_8)
 					end, False)
 			create l_type.make_from_string ("READABLE_STRING_8")
 			put_query ("test_name", l_type, a_list,
 				agent (a_test: TEST_I; a_index: NATURAL)
 					do
 						stream.put_string ("l_result := %"")
-						stream.put_string (a_test.name)
+						stream.put_string (a_test.routine_name.as_string_8)
 						stream.put_line ("%"")
 					end, False)
 

@@ -37,7 +37,7 @@ feature {NONE} -- Events
 			-- <Precursor>
 		do
 			if attached {EIFFEL_CLASS_I} a_class as l_class and then test_suite.is_service_available then
-				test_suite.service.synchronize_with_class (l_class)
+				--test_suite.service.synchronize_with_class (l_class)
 			end
 		end
 
@@ -66,10 +66,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

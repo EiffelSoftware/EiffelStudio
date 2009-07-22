@@ -304,7 +304,7 @@ feature {NONE} -- Query
 		local
 			l_done: BOOLEAN
 		do
-			l_done := tag_matches_regexes (an_item.name, negative_matchers)
+			l_done := tag_matches_regexes (an_item.name.as_string_8, negative_matchers)
 			from
 				an_item.tags.start
 			until
@@ -321,7 +321,7 @@ feature {NONE} -- Query
 					until
 						positive_matchers.after or not Result
 					loop
-						Result := positive_matchers.item_for_iteration.matches (an_item.name)
+						Result := positive_matchers.item_for_iteration.matches (an_item.name.as_string_8)
 						if not Result then
 							Result := tags_match_regex (an_item.tags, positive_matchers.item_for_iteration)
 						end

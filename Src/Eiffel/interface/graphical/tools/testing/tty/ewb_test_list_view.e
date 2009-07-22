@@ -49,7 +49,7 @@ feature {NONE} -- Query
 					agent (a_test1, a_test2: TEST_I): BOOLEAN
 						do
 							if a_test1.class_name.same_string (a_test2.class_name) then
-								Result := a_test1.name < a_test2.name
+								Result := a_test1.routine_name < a_test2.routine_name
 							else
 								Result := a_test1.class_name < a_test2.class_name
 							end

@@ -16,11 +16,13 @@ feature {NONE} -- Access
 			-- Access to a test suite service {TEST_SUITE_S} consumer
 		local
 			l_test_suite: detachable like test_suite
+			l_etest_suite: like etest_suite
 		do
 			l_test_suite := test_suite_cell.item
 			if l_test_suite = Void then
 				create l_test_suite
 				test_suite_cell.put (l_test_suite)
+				l_etest_suite := etest_suite
 			end
 
 			Result := l_test_suite
@@ -32,6 +34,13 @@ feature {NONE} -- Access
 			create Result.put (Void)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	etest_suite: ETEST_SUITE
+			-- Once instance of `{ETEST_SUITE}
+		once
+			create Result.make (create {EC_PROJECT_ACCESS}.make (
+				(create {SHARED_EIFFEL_PROJECT}).eiffel_project))
 		end
 
 	background_executor_type: TYPE [TEST_BACKGROUND_EXECUTOR_I]

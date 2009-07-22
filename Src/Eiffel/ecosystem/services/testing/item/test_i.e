@@ -11,33 +11,47 @@ deferred class
 
 inherit
 	TAG_ITEM
-		rename
-			name as tag_name
-		end
+
+-- OBSOLETE ANCESTORS
 
 	TAGABLE_I
+		rename
+			name as routine_name
+		export
+			{TEST_SUITE_S} clear_changes
 		redefine
 			memento
 		end
 
 feature -- Access
 
-	name: STRING
-			-- Name of the test routine
-		deferred
+	frozen name: IMMUTABLE_STRING_8
+			-- <Precursor>
+			--
+			-- Note: this will be replaced by `routine_name'
+		local
+			l_name: STRING
+			l_cache: like name_cache
+		do
+			l_cache := name_cache
+			if l_cache = Void then
+				create l_name.make (class_name.count + routine_name.count + 1)
+				l_name.append (class_name)
+				l_name.append_character ('.')
+				l_name.append (routine_name.as_string_8)
+				l_cache := l_name
+				name_cache := l_cache
+			end
+			Result := l_cache
 		end
 
-	class_name: STRING
-			-- Name of class in which `Current' is defined
-		require
-			usable: is_interface_usable
-		deferred
-		end
+feature -- Access
 
-	outcomes: DS_BILINEAR [like last_outcome]
-			-- Test results from passed executions where the last is the most recent one.
-		require
-			usable: is_interface_usable
+	routine_name: READABLE_STRING_GENERAL
+			-- Unique name for `Current'.
+			--
+			-- Note: since name is used for `hash_code' and also to identify tests in {TEST_SUITE_S} it
+			--       should remain constant for `Current'.
 		deferred
 		end
 
@@ -52,61 +66,14 @@ feature -- Access
 			result_is_last: Result = outcomes.last
 		end
 
-	executor: TEST_EXECUTOR_I
-			-- Executor running `Current' or having `Current' queued.
+	outcomes: DS_BILINEAR [like last_outcome]
+			-- Test results from passed executions where the last is the most recent one.
 		require
-			queued_or_running: is_queued or is_running
+			usable: is_interface_usable
 		deferred
 		end
-
-	memento: TEST_MEMENTO_I
-			-- <Precursor>
-		deferred
-		end
-
-feature -- Access
-
-	frozen tag_name: STRING
-			-- <Precursor>
-		local
-			l_cache: like tag_name_cache
-		do
-			l_cache := tag_name_cache
-			if l_cache = Void then
-				create l_cache.make (class_name.count + name.count + 1)
-				l_cache.append (class_name)
-				l_cache.append_character ('.')
-				l_cache.append (name)
-				tag_name_cache := l_cache
-			end
-			Result := l_cache
-		end
-
-feature {NONE} -- Access
-
-	tag_name_cache: detachable like tag_name
-			-- Cache for `tag_name'
-
 
 feature -- Status report
-
-	is_queued: BOOLEAN
-			-- Is some implementation about to be tested by `Current'?
-		require
-			usable: is_interface_usable
-		deferred
-		ensure
-			result_implies_not_running: Result implies not is_running
-		end
-
-	is_running: BOOLEAN
-			-- Is some implementation beeing tested by `Current'?
-		require
-			usable: is_interface_usable
-		deferred
-		ensure
-			result_implies_not_queued: Result implies not is_queued
-		end
 
 	is_outcome_available: BOOLEAN
 			-- Has `Current' been executed yet?
@@ -136,17 +103,47 @@ feature -- Status report
 			Result := outcomes.last.is_fail
 		end
 
-feature {TEST_PROJECT_I} -- Status setting
+-- OBSOLETE FEATURES
 
-	set_explicit_tags (a_list: like tags)
-			-- Set tags in list to be explicit tags of `Current'
+feature -- Access
+
+	class_name: STRING
+			-- Name of class in which `Current' is defined
 		require
 			usable: is_interface_usable
-			a_list_valid: a_list.for_all (agent is_valid_tag)
-			not_a_list_has_empty: not a_list.there_exists (agent {STRING}.is_empty)
+		deferred
+		end
+
+	executor: TEST_EXECUTOR_I
+			-- Executor running `Current' or having `Current' queued.
+		require
+			queued_or_running: is_queued or is_running
+		deferred
+		end
+
+feature {NONE} -- Access
+
+	name_cache: detachable like name
+			-- Cache for `tag_name'
+
+feature -- Status report
+
+	is_queued: BOOLEAN
+			-- Is some implementation about to be tested by `Current'?
+		require
+			usable: is_interface_usable
 		deferred
 		ensure
-			tags_contains_list: a_list.for_all (agent tags.has)
+			result_implies_not_running: Result implies not is_running
+		end
+
+	is_running: BOOLEAN
+			-- Is some implementation beeing tested by `Current'?
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			result_implies_not_queued: Result implies not is_queued
 		end
 
 feature {TEST_SUITE_S} -- Status setting

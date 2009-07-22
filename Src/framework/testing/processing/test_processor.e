@@ -20,9 +20,6 @@ inherit
 		end
 
 	TEST_SUITE_OBSERVER
-		redefine
-			on_test_changed
-		end
 
 feature {NONE} -- Initialization
 

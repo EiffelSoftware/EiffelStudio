@@ -211,13 +211,14 @@ feature {NONE} -- Basic operations
 			-- Synchronize `a_class' with test suite and add any new tests to `created_tests'.
 		do
 			is_adding_tests := True
-			test_suite.synchronize_with_class (a_class)
+			check implemented: False end
+			--test_suite.synchronize_with_class (a_class)
 			is_adding_tests := False
 		end
 
 feature {NONE} -- Events
 
-	on_test_added (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_item: TEST_I)
+	on_test_added (a_collection: TEST_SUITE_S; a_item: TEST_I)
 			-- <Precursor>
 		do
 			if is_adding_tests then
@@ -227,7 +228,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_test_removed (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_item: TEST_I)
+	on_test_removed (a_collection: TEST_SUITE_S; a_item: TEST_I)
 			-- <Precursor>
 		do
 			internal_created_tests.search (a_item)

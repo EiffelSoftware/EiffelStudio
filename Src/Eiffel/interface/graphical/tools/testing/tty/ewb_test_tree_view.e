@@ -78,7 +78,7 @@ feature {NONE} -- Access
 				create l_comparator.make (
 					agent (a_test1, a_test2: TEST_I): BOOLEAN
 						do
-							Result := a_test1.name < a_test2.name
+							Result := a_test1.routine_name < a_test2.routine_name
 						end)
 				create l_sorter.make (l_comparator)
 				item_sorter_cache := l_sorter

@@ -157,8 +157,7 @@ feature {NONE} -- Query
 			-- <Precursor>
 		do
 			if a_conf.is_specific then
-				Result := test_suite.is_subset (a_conf.tests) and
-					a_conf.tests.for_all (agent is_test_executable)
+				Result := a_conf.tests.for_all (agent is_test_executable)
 			else
 				Result := test_suite.tests.for_all (agent is_test_executable)
 			end
@@ -448,7 +447,7 @@ feature {NONE} -- Basic functionality
 									log_file.put_character ('{')
 									log_file.put_string (l_test.class_name)
 									log_file.put_string ("}.")
-									log_file.put_string (l_test.name)
+									log_file.put_string (l_test.routine_name.as_string_8)
 									log_file.put_string (": ")
 									if
 										assigner.is_aborted (result_cursor.key) or else
@@ -543,7 +542,7 @@ feature {NONE} -- Basic functionality
 
 feature {TEST_SUITE_S} -- Events
 
-	on_test_removed (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_test: TEST_I)
+	on_test_removed (a_collection: TEST_SUITE_S; a_test: TEST_I)
 			-- <Precursor>
 			--
 			-- Note: if `a_test' is part of active tests, we abort its execution

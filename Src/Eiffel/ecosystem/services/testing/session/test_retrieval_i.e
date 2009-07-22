@@ -1,63 +1,21 @@
 note
 	description: "[
-		Class tree folder item that only displayed test classes.
+		Interface of a {TEST_SESSION_I} responsible for finding existing tests and adding them to the
+		test suite.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM
+deferred class
+	TEST_RETRIEVAL_I
 
 inherit
-	EB_CLASSES_TREE_FOLDER_ITEM
-		redefine
-			create_folder_item_with_options,
-			create_folder_item,
-			is_valid_class
-		end
-
-	SHARED_TEST_SERVICE
-		undefine
-			default_create,
-			is_equal,
-			copy
-		end
-
-create
-	make_with_option,
-	make_with_all_options
-
-feature {NONE} -- Query
-
-	is_valid_class (a_class: CLASS_I): BOOLEAN
-			-- <Precursor>
-		do
-			if Precursor {EB_CLASSES_TREE_FOLDER_ITEM} (a_class) then
-				if test_suite.is_service_available and attached {EIFFEL_CLASS_I} a_class as l_class then
-					check not_implemented: False end
-					--Result := test_suite.service.is_test_class (l_class)
-				end
-			end
-		end
-
-feature {NONE} -- Factory
-
-	create_folder_item_with_options (a_cluster: EB_SORTED_CLUSTER; a_path: STRING_8): ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM
-			-- Create new folder item.
-		do
-			create Result.make_with_all_options (a_cluster, a_path, is_show_classes)
-		end
-
-	create_folder_item (a_cluster: EB_SORTED_CLUSTER): ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM
-			-- Create new folder item.
-		do
-			create Result.make_with_option (a_cluster, is_show_classes)
-		end
+	TEST_SESSION_I
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

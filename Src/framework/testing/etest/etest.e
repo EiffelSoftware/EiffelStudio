@@ -7,37 +7,37 @@ note
 	revision: "$Revision$"
 
 class
-	TEST
+	ETEST
 
 inherit
 	TEST_I
 
-	TEST_MEMENTO_I
+	TAGABLE_MEMENTO_I
 
-create {TEST_PROJECT_I}
+create {TEST_PROJECT_I, ETEST_CLASS_SYNCHRONIZER}
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_class_name: like class_name)
+	make (a_name: like routine_name; a_class_name: like class_name)
 			-- Initialize `Current'
 			--
 			-- `a_name': name of test routine
 			-- `a_parent_name': name of class in which routine `a_name' is defined
 		do
-			name := a_name
+			routine_name := a_name
 			class_name := a_class_name
 			internal_tags := new_hash_set (0)
 			create {DS_ARRAYED_LIST [EQA_TEST_RESULT]} internal_outcomes.make (0)
 		ensure
-			name_set: name = a_name
+			name_set: routine_name = a_name
 			class_name_set: class_name = a_class_name
 			not_has_changed: not has_changed
 		end
 
 feature -- Access
 
-	name: STRING
+	routine_name: STRING
 			-- <Precursor>
 
 	class_name: STRING
@@ -65,7 +65,7 @@ feature -- Access
 			Result := l_executor
 		end
 
-	memento: TEST_MEMENTO_I
+	memento: TAGABLE_MEMENTO_I
 			-- <Precursor>
 		do
 			Result := Current
@@ -180,7 +180,7 @@ feature {ACTIVE_COLLECTION_I} -- Status setting
 			has_execution_status_changed := False
 		end
 
-feature {TEST_SUITE_S} -- Status setting
+feature {TEST_PROJECT_I} -- Status setting
 
 	set_explicit_tags (a_list: DS_LINEAR [STRING])
 			-- <Precursor>

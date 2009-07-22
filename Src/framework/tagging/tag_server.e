@@ -69,7 +69,7 @@ feature -- Access
 			create Result.make_from_linear (tag_table.keys)
 		end
 
-	tags_of_item (an_item: G): DS_ARRAYED_LIST [READABLE_STRING_GENERAL]
+	tags_of_item (an_item: G): DS_HASH_SET [READABLE_STRING_GENERAL]
 			-- All tags with which an item is tagged
 			--
 			-- `an_item': Tagged item.
@@ -80,8 +80,7 @@ feature -- Access
 		local
 			l_list: DS_LINEAR [READABLE_STRING_GENERAL]
 		do
-			l_list := item_to_tags_table.item (an_item)
-			create Result.make_from_linear (l_list)
+			Result := item_to_tags_table.item (an_item).twin
 		ensure
 			result_attached: Result /= Void
 			results_attached: not Result.has_void

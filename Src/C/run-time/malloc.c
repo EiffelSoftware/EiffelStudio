@@ -631,7 +631,9 @@ doc:	</attribute>
 rt_shared EIF_LW_MUTEX_TYPE *trigger_gc_mutex = NULL;
 #define TRIGGER_GC_LOCK		EIF_ASYNC_SAFE_LW_MUTEX_LOCK(trigger_gc_mutex, "Could not lock trigger gc mutex");
 #define TRIGGER_GC_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(trigger_gc_mutex, "Could not unlock trigger gc mutex");
+#endif
 
+#ifdef EIF_THREADS
 /*
 doc:	<attribute name="eif_type_set_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
 doc:		<summary>Mutex used to guarantee unique access to `rt_type_set'.</summary>

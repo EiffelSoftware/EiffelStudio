@@ -12,7 +12,7 @@ class
 inherit
 	EVENT_OBSERVER_I
 
-feature -- Events
+feature {ROTA_S} -- Events
 
 	on_task_run (a_rota: ROTA_S; a_task: ROTA_TIMED_TASK_I)
 			-- Events called when task is run through a {ROTA_S}.

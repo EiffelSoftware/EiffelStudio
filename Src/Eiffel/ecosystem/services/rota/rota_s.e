@@ -18,6 +18,13 @@ inherit
 
 	EVENT_CONNECTION_POINT_I [ROTA_OBSERVER, ROTA_S]
 
+feature {NONE} -- Access
+
+	connection_cache: detachable like connection
+			-- Cache for `connection'
+			--
+			-- Note: do not use directly, use `connection' instead.
+
 feature -- Query
 
 	has_task (a_task: ROTA_TIMED_TASK_I): BOOLEAN
@@ -52,6 +59,28 @@ feature -- Basic operations
 
 feature -- Events
 
+	connection: EVENT_CONNECTION_I [ROTA_OBSERVER, ROTA_S]
+			-- <Precursor>
+		local
+			l_result: like connection_cache
+		do
+			l_result := connection_cache
+			if l_result = Void then
+				l_result := create {EVENT_CONNECTION [ROTA_OBSERVER, ROTA_S]}.make (
+					agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := <<
+									[task_run_event, agent an_observer.on_task_run],
+									[task_finished_event, agent an_observer.on_task_finished],
+									[task_removed_event, agent an_observer.on_task_remove]
+								>>
+						end)
+			end
+			Result := l_result
+		end
+
+feature {NONE} -- Events
+
 	task_run_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
 			-- Events called when a task is run.
 			--
@@ -82,33 +111,7 @@ feature -- Events
 		deferred
 		end
 
-	connection: EVENT_CONNECTION_I [ROTA_OBSERVER, ROTA_S]
-			-- <Precursor>
-		local
-			l_result: like connection_cache
-		do
-			l_result := connection_cache
-			if l_result = Void then
-				l_result := create {EVENT_CONNECTION [ROTA_OBSERVER, ROTA_S]}.make (
-					agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
-						do
-							Result := <<
-									[task_run_event, agent an_observer.on_task_run],
-									[task_finished_event, agent an_observer.on_task_finished],
-									[task_removed_event, agent an_observer.on_task_remove]
-								>>
-						end)
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	connection_cache: detachable like connection
-			-- Cache for `connection'
-			--
-			-- Note: do not use directly, use `connection' instead.
-
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

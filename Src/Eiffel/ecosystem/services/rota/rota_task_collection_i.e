@@ -88,8 +88,6 @@ feature {NONE} -- Basic operations
 			else
 				remove_task
 			end
-		ensure
-			tasks_cursor_moved: tasks.index /= old tasks.index
 		end
 
 	perform_step

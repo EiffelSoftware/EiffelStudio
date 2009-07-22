@@ -19,7 +19,7 @@ feature -- Access
 			-- Shared access to the server dispatcher
 		once
 			if {PLATFORM}.is_thread_capable then
-				check threading_not_yet_supported: False end
+				--check threading_not_yet_supported: False end
 				create Result.make
 			else
 				create Result.make

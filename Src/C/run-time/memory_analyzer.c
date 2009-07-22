@@ -109,11 +109,13 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 				o_ref = *(EIF_REFERENCE *) *object;
 #endif
 #else
+#ifdef ISE_GC
 				if (l_thread_once_set){
 					o_ref = *object;
 				} else {
 					o_ref = *(EIF_REFERENCE *) *object;
 				}
+#endif
 #endif
 				if (o_ref) {
 					l_found.index = l_found.index + 1;

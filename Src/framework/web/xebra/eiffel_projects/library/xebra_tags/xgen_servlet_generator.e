@@ -153,8 +153,8 @@ feature -- Basic Functionality
 				o.iprint ("done.")
 			end
 			l_executed_filename := path.twin
-			l_executed_filename.extend (".generated")
-			l_executed_filename.set_file_name (executed_filename)
+			l_executed_filename.extend ({XU_CONSTANTS}.Generated_folder_name) 
+			l_executed_filename.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
 			if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_write (l_executed_filename) as l_file then
 				l_file.put_string ("File generated for server xebra server")
 				l_util.close
@@ -163,15 +163,14 @@ feature -- Basic Functionality
 
 feature --Constants
 
-	Stateful_servlet_class: STRING = "XWA_STATEFUL_SERVLET"
-	Stateless_servlet_class: STRING = "XWA_STATELESS_SERVLET"
-	servlet_class_name: STRING = "XWA_SERVLET"
+	Stateful_servlet_class: STRING = "XWA_STATEFUL_SERVLET" -- FIXME -> XU_CONSTANTS
+	Stateless_servlet_class: STRING = "XWA_STATELESS_SERVLET" -- FIXME -> XU_CONSTANTS
+	servlet_class_name: STRING = "XWA_SERVLET" -- FIXME -> XU_CONSTANTS
 
-	Executed_filename: STRING = "executed_at_time"
 
-	Constructor_name: STRING = "make"
-	Response_name: STRING = "response"
-	Generator_Prefix: STRING = "g_"
+	Constructor_name: STRING = "make" -- FIXME -> XU_CONSTANTS
+	Response_name: STRING = "response" -- FIXME -> XU_CONSTANTS
+	Generator_Prefix: STRING = "g_" -- FIXME -> XU_CONSTANTS
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

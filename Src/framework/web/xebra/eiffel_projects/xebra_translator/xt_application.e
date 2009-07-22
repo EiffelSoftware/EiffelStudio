@@ -40,7 +40,7 @@ feature -- Operation
 			l_dir: FILE_NAME
 			l_error_count: INTEGER
 			l_generation_file_name: FILE_NAME
-			l_generation_file: XU_FILE_UTILITIES
+			l_util: XU_FILE_UTILITIES
 		do
 			o.set_name ("XEBTRANS")
 			o.set_debug_level (a_arg_parser.debug_level)
@@ -63,12 +63,21 @@ feature -- Operation
 				o.iprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N")
 				{EXCEPTIONS}.die (-1)
 			else
-				create l_generation_file
-				l_generation_file_name.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
-				if attached {PLAIN_TEXT_FILE} l_generation_file.plain_text_file_write (l_generation_file_name) as l_file then
+				create l_util
+				l_generation_file_name.extend ({XU_CONSTANTS}.Generated_folder_name)
+				l_generation_file_name.set_file_name ({XU_CONSTANTS}.Translator_executed_file)
+				if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_write (l_generation_file_name) as l_file then
 					l_file.put_string ("System translated.")
-					l_generation_file.close
+					l_file.close
+					o.dprint ("Translator_executed_file written to " + l_generation_file_name, 3)
+				else
+					o.eprint ("Could not write Translator_executed file!", generating_type)
 				end
+				if not error_manager.is_successful then
+					error_manager.trace_errors (l_printer)
+				end
+
+
 				o.iprint ("Output generated to '" + l_translator.output_path + "'")
 				o.iprint ("System translated.")
 			end

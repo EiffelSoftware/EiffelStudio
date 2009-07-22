@@ -39,22 +39,25 @@ feature -- Access
 	output_handler: XSOH_COMPILE
 			-- Handles output from process	
 
+	needs_cleaning: BOOLEAN assign set_needs_cleaning
+			-- Can be used to force the action to execute and add -clean option to compilation
+
 	compiler_args: STRING
 			-- The arguments that are passed to compile the webapp
 		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
 			create l_f_utils
-			Result  := " -config " + webapp.app_config.name.out + ".ecf -target " + webapp.app_config.name.out + " -c_compile -stop"
+			Result  := " -config %"" + webapp.app_config.name.out + ".ecf%" -target %"" + webapp.app_config.name.out + "%" -c_compile -stop"
 			if config.file.finalize_webapps.value then
 				Result := Result + " -finalize"
 			end
-			if webapp.needs_cleaning then
+			if needs_cleaning then
 				Result.append (" -clean")
 			end
-			if not l_f_utils.is_readable_file (webapp_exe) then
-				Result.append (" -clean")
-			end
+--			if not l_f_utils.is_readable_file (webapp_exe) then
+--				Result.append (" -clean")
+--			end
 
 			if {XU_CONSTANTS}.experiment_library then
 				Result.append (" -experiment")
@@ -67,7 +70,8 @@ feature -- Status report
 
 	is_necessary: BOOLEAN
 			-- <Precursor>
-			-- Necessary if:
+			--
+			-- Returns true if:
 			--	- There is a .e or .ecf file somewhere in app_dir (recursively) that is newer than the melted file
 			--	- The executable is missing
 			--	- The webapp needs cleaning
@@ -84,21 +88,21 @@ feature -- Status report
 
 
 
-			Result := l_melted_file_is_old or l_executable_does_not_exist or webapp.needs_cleaning
+			Result := l_melted_file_is_old or l_executable_does_not_exist or needs_cleaning
 
 
 			if Result then
 				o.dprint ("Compiling webapp is necessary", 3)
 				if l_melted_file_is_old then
-					o.dprint ("Compiling webapp is necessary because: " + webapp_melted_file_path + " is older than .e files or .ecf file.", 5)
+					o.dprint ("Compiling webapp is necessary because: " + webapp_melted_file_path + " is older than .e files or .ecf file or does not exist.", 5)
 				end
 
 				if l_executable_does_not_exist then
 					o.dprint ("Compiling webapp is necessary because: " + webapp_exe + " does not exist or is not executable", 5)
 				end
 
-					if webapp.needs_cleaning then
-					o.dprint ("Compiling webapp is necessary because: webapp needs cleaning.", 5)
+					if needs_cleaning then
+					o.dprint ("Compiling webapp is necessary because: webapp compilation cleaning not yet performed", 5)
 				end
 
 			else
@@ -108,6 +112,14 @@ feature -- Status report
 
 
 feature -- Status setting
+
+	set_needs_cleaning (a_needs_cleaning: like needs_cleaning)
+			-- Setts needs_cleaning
+		do
+			needs_cleaning := a_needs_cleaning
+		ensure
+			needs_cleaning_set: equal (needs_cleaning, a_needs_cleaning)
+		end
 
 	stop
 			-- <Precursor>
@@ -166,9 +178,8 @@ feature -- Agent
 			-- Sets
 		do
 			set_running (False)
-			--if output_handler.has_successfully_terminated then
+			set_needs_cleaning (False)
 			if not is_necessary then
-				webapp.needs_cleaning := False
 				execute_next_action.do_nothing
 			else
 				o.eprint ("COMPILATION OF WEBAPP FAILED", generating_type)

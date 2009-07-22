@@ -46,14 +46,17 @@ feature -- Access
 			Result_attached: Result /= void
 		end
 
+	needs_cleaning: BOOLEAN assign set_needs_cleaning
+			-- Can be used to force the action to execute and add -clean option to compilation	
 
 feature -- Status report
 
 	is_necessary: BOOLEAN
 			-- <Precursor>
-			-- Check if the webapps has to be (re)generated		
-			-- Returns True iff:
-			--		- There is a xeb file that is newer than servlet_gen_executed_file in app_dir
+			--
+			-- Returns true if:
+			--  - There is a xeb file that is newer than servlet_gen_executed_file in app_dir
+			--  - Needs cleaning
 		local
 			l_servlet_gen_not_executed: BOOLEAN
 			l_f_utils: XU_FILE_UTILITIES
@@ -63,16 +66,16 @@ feature -- Status report
 									app_dir,
 									"\w+\.xeb")
 
-			Result :=  	webapp.needs_cleaning or l_servlet_gen_not_executed
+			Result :=  	needs_cleaning or l_servlet_gen_not_executed
 
 			if Result then
 
 				if l_servlet_gen_not_executed then
-					o.dprint ("Generating is necessary because: Servlet_gen has not been executed (recently enough).", 5)
+					o.dprint ("Generating is necessary because: Servlet_gen_executed file is older than xeb files in app_dir or does not exist.", 5)
 				end
 
-				if webapp.needs_cleaning then
-					o.dprint ("Generating is necessary because: webapp needs cleaning.", 5)
+				if needs_cleaning then
+					o.dprint ("Generating is necessary because: generate cleaning not yet performed.", 5)
 				end
 			else
 				o.dprint ("Generating is not necessary", 3)
@@ -80,6 +83,14 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_needs_cleaning (a_needs_cleaning: like needs_cleaning)
+			-- Setts needs_cleaning
+		do
+			needs_cleaning := a_needs_cleaning
+		ensure
+			needs_cleaning_set: equal (needs_cleaning, a_needs_cleaning)
+		end
 
 	stop
 			-- <Precursor>
@@ -136,6 +147,7 @@ feature -- Agents
 			-- Sets is_running := False and executes next action
 		do
 			set_running (False)
+			set_needs_cleaning (False)
 			if not is_necessary then
 				execute_next_action.do_nothing
 			else

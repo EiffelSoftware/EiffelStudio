@@ -46,12 +46,12 @@ feature -- Access
 	translator_args: STRING
 			-- The arguments that are passed to the translator
 		do
-			Result := " -n " + webapp.app_config.name.out
+			Result := " -n %"" + webapp.app_config.name.out + "%""
 			Result.append ( " -i . ")
 			Result.append (" -o . ")
-			Result.append (" -t " + config.file.taglib.out)
+			Result.append (" -t %"" + config.file.taglib.out + "%"")
 			Result.append (" -d " + config.args.debug_level.out)
-			if force or webapp.needs_cleaning then
+			if force then
 				Result.append (" -f")
 			end
 		ensure
@@ -63,61 +63,45 @@ feature -- Status report
 
 	is_necessary: BOOLEAN
 			-- <Precursor>
-			-- Check if the webapps has to be (re)translated
-			-- (which includes, executing translator, compiling servlet_gen and executing servlet_gen)
-			-- Returns True iff:
-			--		- There is a *.xeb file in app_dir (recursively) which is newer than app_dir/.generated/g_name_application.e
-			--		- The servlet_gen exe does not exist
-			--		- The servlet_gen ecf does not exist
-			--		- The webapp has set to need cleaning
-			--		- If execute_file from servlet_gen is older than ... (not yet implemented)
-			--		- If forced			
-			--		- servlet_gen has not been executed (recently enough)
+			--
+			-- Returns True if:
+			--  - The translated-file is older than any xeb file in app_dir.
+			--  - The servlet_gen_exf file does not exist.
+			--  - Forced.
 		local
-			l_application_file: FILE_NAME
+			translator_executed_file: FILE_NAME
 			l_f_utils: XU_FILE_UTILITIES
-			l_g_application_is_old: BOOLEAN
+			translator_executed_file_old: BOOLEAN
 			l_servlet_gen_exe_not_exist: BOOLEAN
 			l_servet_gen_ecf_not_exist: BOOLEAN
 			l_servlet_gen_not_executed: BOOLEAN
 		do
 			create l_f_utils
-			l_application_file := app_dir.twin
-			l_application_file.extend ({XU_CONSTANTS}.Generated_folder_name)
-			l_application_file.set_file_name ("g_" + webapp.app_config.name.out + "_application.e")
+			translator_executed_file := app_dir.twin
+			translator_executed_file.extend ({XU_CONSTANTS}.Generated_folder_name)
+			translator_executed_file.set_file_name ({XU_CONSTANTS}.Translator_executed_file)
 
-			l_g_application_is_old := l_f_utils.file_is_newer (l_application_file,
+			translator_executed_file_old := l_f_utils.file_is_newer (translator_executed_file,
 									app_dir,
 									"\w+\.xeb")
 
 			l_servet_gen_ecf_not_exist := not  l_f_utils.is_readable_file (servlet_gen_ecf)
 
-
-			Result := l_g_application_is_old or
-						l_servlet_gen_exe_not_exist or
+			Result := translator_executed_file_old or
 						l_servet_gen_ecf_not_exist or
-					 	webapp.needs_cleaning or
-					 	force or
-					 	l_servlet_gen_not_executed
+					 	force
 
 			if Result then
 				o.dprint ("Translating is necessary", 3)
-				if l_g_application_is_old then
-					o.dprint ("Translating is necessary because: g_" + webapp.app_config.name.out + "_application.e is old", 5)
+				if translator_executed_file_old then
+					o.dprint ("Translating is necessary because: Translator_executed file is older than xeb files in app_dir or does not exist.", 5)
 				end
-
 				if l_servet_gen_ecf_not_exist then
 					o.dprint ("Translating is necessary because: servlet_gen ecf does not exist.", 5)
 				end
-
-				if webapp.needs_cleaning then
-					o.dprint ("Translating is necessary because: webapp needs cleaning.", 5)
-				end
-
 				if force then
 					o.dprint ("Translating is necessary because: force.", 5)
 				end
-
 			else
 				o.dprint ("Translating is not necessary", 3)
 			end
@@ -180,8 +164,6 @@ feature {TEST_WEBAPPS} -- Implementation
 															agent output_handler_translate.handle_output,
 															agent output_handler_translate.handle_output)
 					set_running (True)
-						-- Set force back to false (for next time)
-					force := False
 				end
 			end
 			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_command_response
@@ -193,7 +175,8 @@ feature -- Agents
 			-- Launch compiling of servlet_gen in gen_compile_process
 		do
 			set_running (False)
-			if translate_process.exit_code = 0  then
+			set_force (False)
+			if not is_necessary then
 				execute_next_action.do_nothing
 			else
 				o.eprint ("TRANSLATION FAILED", generating_type)

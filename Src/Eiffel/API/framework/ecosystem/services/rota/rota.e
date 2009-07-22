@@ -60,9 +60,11 @@ feature -- Query
 			-- <Precursor>
 		local
 			l_tasks: like tasks
+			l_cursor: INTEGER
 		do
 			from
 				l_tasks := tasks
+				l_cursor := l_tasks.index
 				l_tasks.start
 			until
 				l_tasks.after or Result
@@ -70,6 +72,7 @@ feature -- Query
 				Result := l_tasks.item_for_iteration.task = a_task
 				l_tasks.forth
 			end
+			l_tasks.go_i_th (l_cursor)
 		end
 
 feature -- Basic operations

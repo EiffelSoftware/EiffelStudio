@@ -391,24 +391,6 @@ rt_public struct stack memory_set =
 };
 
 /*
-doc:	<attribute name="rt_type_set" return_type="EIF_REFERENCE *" export="public">
-doc:		<summary>Mapping between dynamic type and TYPE instances of size `rt_type_set_count'.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Through `eif_type_set_mutex'</synchronization>
-doc:	</attribute>
-*/
-rt_public EIF_REFERENCE *rt_type_set = NULL;
-
-/*
-doc:	<attribute name="rt_type_set_count" return_type="EIF_REFERENCE *" export="public">
-doc:		<summary>Number of elements in `rt_type_set'.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Through `eif_type_set_mutex'</synchronization>
-doc:	</attribute>
-*/
-rt_public rt_uint_ptr volatile rt_type_set_count = 0;
-
-/*
 doc:	<attribute name="overflow_stack_set" return_type="struct stack" export="private">
 doc:		<summary>Stack containing objects that are not yet traversed because it could generate a stack overflow during a GC cycle.</summary>
 doc:		<thread_safety>Safe</thread_safety>
@@ -473,6 +455,24 @@ rt_private struct stack c_stack_object_set = {
 typedef EIF_REFERENCE (*MARKER) (EIF_REFERENCE *);
 
 #endif
+
+/*
+doc:	<attribute name="rt_type_set" return_type="EIF_REFERENCE *" export="public">
+doc:		<summary>Mapping between dynamic type and TYPE instances of size `rt_type_set_count'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_type_set_mutex'</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REFERENCE *rt_type_set = NULL;
+
+/*
+doc:	<attribute name="rt_type_set_count" return_type="EIF_REFERENCE *" export="public">
+doc:		<summary>Number of elements in `rt_type_set'.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_type_set_mutex'</synchronization>
+doc:	</attribute>
+*/
+rt_public rt_uint_ptr volatile rt_type_set_count = 0;
 
 #ifdef EIF_THREADS
 /*

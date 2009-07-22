@@ -1371,6 +1371,18 @@ end
 			end
 		end
 
+	is_class_referenced (a_class: CLASS_I): BOOLEAN
+			-- Is given class either (indirectly) referenced by a root class or added to `unref_classes'?
+			--
+			-- Note: first property is with respect to last degree 5 traversal.
+			--
+			-- `a_class': Class of system.
+		require
+			a_class_attached: a_class /= Void
+		do
+			Result := a_class.is_valid or unref_classes.has (a_class)
+		end
+
 feature -- ANY.default_rescue routine id
 
 	default_rescue_rout_id: INTEGER

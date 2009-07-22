@@ -54,8 +54,8 @@
 #endif
 
 /* Are we using ISE GC? By default, yes. */
-/* DEFINE_BOEHM_GC */
-/* DEFINE_NO_GC */
+/* #define BOEHM_GC */
+/* #define NO_ISE_GC */
 
 #ifdef BOEHM_GC 
 #define NO_ISE_GC

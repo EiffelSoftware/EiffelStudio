@@ -19,13 +19,6 @@ inherit
 			on_before_initialize
 		end
 
-	EB_SHARED_PREFERENCES
-		rename
-			preferences as shared_preferences
-		export
-			{NONE} all
-		end
-
 create
 	make,
 	make_with_window

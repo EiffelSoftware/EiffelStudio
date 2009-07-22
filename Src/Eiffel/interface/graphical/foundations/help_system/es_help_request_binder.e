@@ -16,6 +16,11 @@ deferred class
 inherit
 	USABLE_I
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	bind_help_shortcut (a_window: EV_WINDOW)
@@ -26,9 +31,37 @@ feature {NONE} -- Initialization
 			is_interface_usable: is_interface_usable
 			a_window_attached: a_window /= Void
 			not_a_window_is_destoryed: not a_window.is_destroyed
+		local
+			l_action: PROCEDURE [ANY, TUPLE]
+			l_shortcut: SHORTCUT_PREFERENCE
+			l_acc: EV_ACCELERATOR
 		do
-			if not a_window.accelerators.has (create_help_request_shortcut) then
-				a_window.accelerators.extend (create_help_request_shortcut)
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("show_context_help")
+			check l_shortcut_attached: attached l_shortcut end
+
+			create l_acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			if not a_window.accelerators.has (l_acc) then
+				l_acc.actions.extend (agent show_help)
+				a_window.accelerators.extend (l_acc)
+					-- Set up call back action when the preference is changed.
+					-- This simply rebinds the accelerator to the new preference.
+				l_action := agent (ia_accel: EV_ACCELERATOR; ia_window: EV_WINDOW)
+					require
+						ia_accel_attached: attached ia_accel
+						ia_window_attached: attached ia_window
+					do
+						if is_interface_usable and then attached ia_window and then not ia_window.is_destroyed then
+							ia_window.accelerators.prune_all (ia_accel)
+
+								-- Rebind
+							bind_help_shortcut (ia_window)
+						end
+					end (l_acc, a_window)
+				if attached {EB_RECYCLABLE} Current as l_recyclable then
+					l_recyclable.register_kamikaze_action (l_shortcut.change_actions, l_action)
+				else
+					check needs_to_be_recycable: False end
+				end
 			end
 		end
 
@@ -71,21 +104,8 @@ feature {NONE} -- Action handlers
 			help_providers.service.show_help (a_context)
 		end
 
-feature {NONE} -- Factory
-
-	frozen create_help_request_shortcut: attached EV_ACCELERATOR
-			-- Help request shortcut accelerator key
-		require
-			is_interface_usable: is_interface_usable
-		do
-			create Result.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f1), False, False, False)
-			Result.actions.extend (agent show_help)
-		ensure
-			not_result_is_destroyed: not Result.is_destroyed
-		end
-
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -98,22 +118,22 @@ feature {NONE} -- Factory
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

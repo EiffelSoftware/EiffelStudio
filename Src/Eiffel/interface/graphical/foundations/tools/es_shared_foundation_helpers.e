@@ -10,22 +10,18 @@ note
 class
 	ES_SHARED_FOUNDATION_HELPERS
 
+inherit
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Helpers
 
 	frozen tool_utilities: attached ES_TOOL_UTILITIES
 			-- Shared access to the tool utilities.
 		once
 			create Result
-		end
-
-feature {NONE} -- Helpers: Preferences
-
-	frozen preferences: attached EB_PREFERENCES
-			-- Access to environment preferences
-		require
-			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences /= Void
-		once
-			Result := (create {EB_SHARED_PREFERENCES}).preferences.as_attached
 		end
 
 feature {NONE} -- Helpers: User interface

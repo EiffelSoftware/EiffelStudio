@@ -13,9 +13,6 @@ inherit
 		end
 
 	ES_EIS_NOTE_PICKER
-		rename
-			preferences as preferences_picker
-		end
 
 create
 	make_with_target

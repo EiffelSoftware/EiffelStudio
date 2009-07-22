@@ -144,9 +144,10 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
 		do
 			create Result.make (1)
-			create l_hash.make (2)
+			create l_hash.make (3)
 			l_hash.put ([False, False, False, key_strings.item (Key_f6).twin.as_string_8], "focus_on_class_address")
 			l_hash.put ([False, True, False, key_strings.item (Key_f4).twin.as_string_8], "close_focusing_docking_tool_or_editor")
+			l_hash.put ([False, False, False, key_strings.item (Key_f1).twin.as_string_8], "show_context_help")
 			Result.extend ([l_hash, main_window_group])
 		end
 

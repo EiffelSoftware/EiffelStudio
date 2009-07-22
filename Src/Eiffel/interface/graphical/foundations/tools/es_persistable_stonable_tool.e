@@ -139,9 +139,9 @@ feature -- Query
 			l_count := a_id.count
 			i := a_id.last_index_of ('.', l_count)
 			if i > 1 and i < l_count then
-				l_result := a_id.substring (1, i - 1) + "." + generating_type.as_lower + "." + a_id.substring (i + 1, l_count)
+				l_result := a_id.substring (1, i - 1) + "." + generating_type.out.as_lower + "." + a_id.substring (i + 1, l_count)
 			else
-				l_result := a_id + "." + generating_type.as_lower
+				l_result := a_id + "." + generating_type.out.as_lower
 			end
 			check l_result /= Void end
 			Result := l_result
@@ -283,7 +283,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -307,11 +307,11 @@ feature {NONE} -- Internal implementation cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

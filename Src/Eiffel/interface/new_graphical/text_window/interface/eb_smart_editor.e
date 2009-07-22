@@ -69,6 +69,7 @@ inherit
 	ES_HELP_REQUEST_BINDER
 		export
 			{NONE} all
+			{EB_DEVELOPMENT_WINDOW} show_help
 		undefine
 			default_create
 		redefine
@@ -94,9 +95,8 @@ feature {NONE} -- Initialize
 			set_completion_possibilities_provider (text_displayed)
 			text_displayed.set_code_completable (Current)
 
-			if attached {EV_WINDOW} a_dev_window as l_window then
-				bind_help_shortcut (l_window)
-			end
+			-- Note: Help binding is done through the IDE window and help is shown for the editor through
+			--       delegation. See {EB_DEVELOPMENT_WINDOW}.show_help for more info.
 		end
 
 feature {NONE} -- Access
@@ -128,7 +128,7 @@ feature {NONE} -- Access
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
-feature {NONE} -- Basic operations
+feature {EB_DEVELOPMENT_WINDOW} -- Basic operations
 
 	show_help
 			-- Attempts to show help given the current help context implemented on Current.
@@ -1036,12 +1036,7 @@ feature {NONE} -- Autocomplete implementation
 	on_key_down (ev_key: EV_KEY)
 		do
 			completion_timeout.actions.block
-			if ev_key.code = {EV_KEY_CONSTANTS}.key_f1 then
-				show_help
-			else
-				Precursor (ev_key)
-			end
-
+			Precursor (ev_key)
 		end
 
 	auto_point: BOOLEAN

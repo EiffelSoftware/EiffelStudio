@@ -389,11 +389,7 @@ feature -- Inlining
 						-- Create new byte node and process it instead of the current one
 					Result := byte_node (f, type_i).inlined_byte_code
 				else
-						-- Creation of a special node for the entire
-						-- feature (descendant of STD_BYTE_CODE)
-					inliner.set_current_feature_inlined
-
-						-- Adapt current to the appropriate context.
+						-- Adapt context type `cl_type' to the appropriate context.
 						-- For example, inlining SPECIAL [G#2] from HASH_TABLE [G#1, G#2] when
 						-- the class is generated for HASH_TABLE [G#1, INTEGER] should yield
 						-- SPECIAL [INTEGER].
@@ -408,46 +404,60 @@ feature -- Inlining
 						-- If it is not the case, we have to do inlining differently (see the `else'
 						-- part of the following if statement to see the explanation why doing
 						-- it the same would yield a wrong result) by not really inlining, but
-						-- by generating the code from the context in which it is defined.
+						-- by generating the code from the context in which it is defined (see eweasel test#final048
+						-- for an example of the `else' part).
 					if
 						cl_type.associated_class.simple_conform_to (f.written_class) or
 						f.written_class.simple_conform_to (cl_type.associated_class)
 					then
-							-- Evaluate the type of `cl_type' in the descendant class `entry.class_id'.
-							-- Note that if `cl_type.class_id = entry.class_id' we still do that
-							-- because `cl_type' might not be a valid generic type on its own, see
-							-- eweasel test#final056 where `cl_type' is `CACHE [G#2]' but it should
-							-- be transformed as `CACHE [G#1]' to be a valid context type.
+							-- Now try to find a proper descendant type for the candidate for inlining.
 						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
 
-							-- We should now have conformance the other way around or the same class.
-						check cl_type.associated_class.simple_conform_to (f.written_class) end
-
-							-- Get the CLASS_TYPE from `cl_type'.
-						context_class_type := cl_type.associated_class_type (context.context_cl_type)
-							-- Get the CLASS_TYPE for the class defining `f'.
-						written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
-
-							-- Get the actual type for code generation.
-							-- Below, optimization if `f' is written in `cl_type'.
-						if cl_type.class_id = f.written_in then
-							written_cl_type := cl_type
+						if cl_type = Void then
+								-- No valid descendant was found, therefore we cancel inlining (see
+								-- eweasel test#final083).
+								-- Note: This case means that the descendant is adding some new formal
+								-- generic parameters that cannot be guessed in the current context.
+								-- If the routine being inlined had no reference to the new formals
+								-- then we could ideally allow it, but this is quite difficult at this
+								-- time to perform this check.
+							inline := False
 						else
-							written_cl_type := cl_type.find_class_type (f.written_class)
-								-- Ensured that formal generics in `written_cl_type' are valid for `f.written_class'.
-							written_cl_type := written_cl_type.find_descendant_type (f.written_class)
-						end
+								-- We could find a descendant type, thus we can try to inline.
 
-							-- We have to limit the inlining here because of eweasel test#final062 and test#final061
-							-- where if the ancestor and the written class do not share the same number of formal
-							-- generic, or if they are not the same generic parameters, then it causes the compiler
-							-- to fail during finalization.
-						if
-							(cl_type.has_formal_generic or written_cl_type.has_formal_generic) and
-							not same_for_generics (cl_type.associated_class, written_cl_type.associated_class)
-						then
-							context_class_type := written_class_type
-							cl_type := written_cl_type
+								-- Get the CLASS_TYPE from `cl_type'.
+							context_class_type := cl_type.associated_class_type (context.context_cl_type)
+
+								-- If `cl_type' has some formals, then they are formals that make sense for
+								-- `context.context_class_type', but clearly not for `context_class_type'
+								-- (see eweasel test#fina061 when inlining `set_value' in TEST1 [G]). In this
+								-- scenario, we have no choice to take the least optimized type from `context_class_type.
+							if cl_type.has_formal_generic then
+								cl_type := context_class_type.type
+							end
+
+								-- Get the CLASS_TYPE for the class defining `f'.
+							written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
+
+								-- Get the actual type for code generation.
+								-- Below, optimization if `f' is written in `cl_type'.
+							if cl_type.class_id = f.written_in then
+								written_cl_type := cl_type
+							else
+								written_cl_type := cl_type.find_class_type (f.written_class)
+							end
+
+								-- We have to limit the inlining here because of eweasel test#final060 or
+								-- test#final062 when we have formal generics. In this case we do as if
+								-- the code was actually coming from `written_class_type'.
+							if
+								(cl_type.has_formal_generic or written_cl_type.has_formal_generic) and
+								not same_for_generics (cl_type.associated_class, written_cl_type.associated_class)
+							then
+								written_cl_type := written_class_type.type
+								context_class_type := written_class_type
+								cl_type := written_cl_type
+							end
 						end
 					else
 							-- We are going to perform the inlining as if we were generating the class in
@@ -474,59 +484,67 @@ feature -- Inlining
 						check cl_type.class_id /= entry.class_id end
 							-- Using the example above, we get `C [G]'
 						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
-							-- `f' cannot be implemented in the descendant version for which the first
-							-- implementation of `f' appears, otherwise we would go via the `then' part
-							-- of the current if then else.
-						check cl_type.class_id /= f.written_in end
-							-- Get the CLASS_TYPE corresponding to `C [G#1]'.
-						context_class_type := cl_type.associated_class_type (context.context_cl_type)
-							-- Get the CLASS_TYPE where `g' is coming from, that is to say `B [G#1]'.
-						written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
-							-- The actual type during code generation, i.e. B [X].
-						check cl_type.associated_class.simple_conform_to (f.written_class) end
-						written_cl_type := cl_type.find_class_type (f.written_class)
+						if cl_type = Void then
+							inline := False
+						else
+								-- `f' cannot be implemented in the descendant version for which the first
+								-- implementation of `f' appears, otherwise we would go via the `then' part
+								-- of the current if then else.
+							check cl_type.class_id /= f.written_in end
+								-- Get the CLASS_TYPE corresponding to `C [G#1]'.
+							context_class_type := cl_type.associated_class_type (context.context_cl_type)
+								-- Get the CLASS_TYPE where `g' is coming from, that is to say `B [G#1]'.
+							written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
+								-- The actual type during code generation, i.e. B [X].
+							check cl_type.associated_class.simple_conform_to (f.written_class) end
+							written_cl_type := cl_type.find_class_type (f.written_class)
 
-							-- Here we are going to do the inlining, but we are going to use written_cl_type
-							-- all the time.
-						context_class_type := written_class_type
-						cl_type := written_cl_type
+								-- Here we are going to do the inlining, but we are going to use written_cl_type
+								-- all the time.
+							context_class_type := written_class_type
+							cl_type := written_cl_type
+						end
 					end
 
-						-- When types involved a generic formal parameter,
-						-- then we cannot use a type adapted from the original
-						-- current context. See eweasel test#final061.
-					cl_type := normalized (cl_type, context_class_type)
-					written_cl_type := normalized (written_cl_type, written_class_type)
+					if inline then
+							-- We can safely inline.
+							-- Creation of a special node for the entire
+							-- feature (descendant of STD_BYTE_CODE)
+						inliner.set_current_feature_inlined
 
-						-- Create inlined byte node.
-					if cl_type.associated_class.is_special then
-						create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
-					else
-						create inlined_feat_b
+							-- Create inlined byte node.
+						if cl_type.associated_class.is_special then
+							create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
+						else
+							create inlined_feat_b
+						end
+						inlined_feat_b.fill_from (Current)
+
+							-- Change context type before evaluating inlined feature byte code.
+						Context.change_class_type_context (context_class_type, cl_type, written_class_type, written_cl_type)
+						inlined_feat_b.set_context_type (context_class_type, cl_type, written_class_type, written_cl_type)
+
+						bc ?= Byte_server.disk_item (l_body_index)
+						check bc_not_void: bc /= Void end
+
+							-- We set the `byte_code' of `inlined_feat_b' because we need to be set
+							-- when handling in `pre_inlined_code' the type of attributes which relies
+							-- on the type of the arguments of the inlined routine.
+							-- This works because `bc' and `bc.pre_inlined_code' are the same object although
+							-- the content is modified.
+						inlined_feat_b.set_inlined_byte_code (bc)
+						inliner.set_inlined_feature (inlined_feat_b)
+						bc := bc.pre_inlined_code
+						check same_bc: bc = inlined_feat_b.byte_code end
+						Context.restore_class_type_context
+
+						Result := inlined_feat_b
 					end
-					inlined_feat_b.fill_from (Current)
-
-						-- Change context type before evaluating inlined feature byte code.
-					Context.change_class_type_context (context_class_type, cl_type, written_class_type, written_cl_type)
-					inlined_feat_b.set_context_type (context_class_type, cl_type, written_class_type, written_cl_type)
-
-					bc ?= Byte_server.disk_item (l_body_index)
-					check bc_not_void: bc /= Void end
-
-						-- We set the `byte_code' of `inlined_feat_b' because we need to be set
-						-- when handling in `pre_inlined_code' the type of attributes which relies
-						-- on the type of the arguments of the inlined routine.
-						-- This works because `bc' and `bc.pre_inlined_code' are the same object although
-						-- the content is modified.
-					inlined_feat_b.set_inlined_byte_code (bc)
-					inliner.set_inlined_feature (inlined_feat_b)
-					bc := bc.pre_inlined_code
-					check same_bc: bc = inlined_feat_b.byte_code end
-					Context.restore_class_type_context
-
-					Result := inlined_feat_b
 				end
-			else
+			end
+
+			if not inline then
+					-- We could not inline, we perform a simple call as usual.
 				Result := Current
 				if parameters /= Void then
 					parameters := parameters.inlined_byte_code
@@ -535,45 +553,6 @@ feature -- Inlining
 		end
 
 feature {NONE} -- Normalization of types
-
-	normalized (a_type: CL_TYPE_A; a_class_type: CLASS_TYPE): CL_TYPE_A
-			-- Replace all formals of `a_type' with formals of `a_class_type'.
-		require
-			a_type_not_void: a_type /= Void
-			a_class_type_not_void: a_class_type /= Void
-			a_class_type_valid: a_class_type.associated_class = a_type.associated_class
-		local
-			l_generics: ARRAY [TYPE_A]
-			l_type: TYPE_A
-			i, nb: INTEGER
-		do
-			Result := a_type
-			l_generics := a_type.generics
-			if l_generics /= Void then
-				from
-					i := l_generics.lower
-					nb := l_generics.upper
-				until
-					i > nb
-				loop
-					l_type := l_generics.item (i)
-					if l_type.has_formal_generic then
-							-- If it is a generic at the right position, no need to duplicate
-							-- the generics.
-						if not (l_type.is_formal and then attached {FORMAL_A} l_type as l_formal and then l_formal.position = i) then
-							if l_generics = a_type.generics then
-								Result := a_type.duplicate
-								l_generics := Result.generics
-							end
-							l_generics.put (a_class_type.type.generics.item (i), i)
-						end
-					end
-					i := i + 1
-				end
-			end
-		ensure
-			normalized: Result /= Void
-		end
 
 	same_for_generics (a_current_class, a_class: CLASS_C): BOOLEAN
 			-- Is `a_current_class' using the same sets of generics as `a_class'.

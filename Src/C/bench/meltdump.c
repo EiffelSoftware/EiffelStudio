@@ -142,7 +142,7 @@ int main (int argc, char **argv)
 static  void    prepare_types (void)
 
 {
-	long    count, acount, i, ctype;
+	long    count, acount, pers_acount, i, ctype;
 	short   slen, dtype;
 	char    *dname;
 
@@ -177,7 +177,7 @@ static  void    prepare_types (void)
 		memset (ctype_names, 0, ctype_size * sizeof (char *));
 	}
 
-	count = rlong ();
+	count = rlong ();	/* Number of feature table update. */
 	if ((count < 0) || (count >= dtype_size)) {
 		panic ();
 	}
@@ -224,29 +224,33 @@ static  void    prepare_types (void)
 
 		dtype_names [dtype] = dname;
 
-		acount = rlong ();
+		acount = rlong (); /* Number of attributes. */
+		pers_acount = rlong (); /* Number of persistent attributes. */
 
 		i = acount;
 
-		while (i--)
-		{
+			/* Read attribute name. */
+		while (i--) {
 			slen = rshort ();
-
 			while (slen--)
 				(void) rchar ();
 		}
 
 		i = acount;
-
-		while (i--)
-		{
+			/* Read attribute types. */
+		while (i--)	{
 			(void) ruint32 ();
 		}
 
 		i = acount;
+			/* Read attribute flags. */
+		while (i--)	{
+			(void) rshort ();
+		}
 
-		while (i--)
-		{
+		i = acount;
+			/* Read attribute full types. */
+		while (i--) {
 			if (rshort ()) {
 				while (rshort() != -1)
 					;
@@ -254,16 +258,17 @@ static  void    prepare_types (void)
 		}
 
 		(void) rshort(); /* Skeleton flags */
+		
 		i = acount;
-
+			/* Read attribute routine ID array. */
 		while (i--)
 			(void) ruint32 ();
 
-		(void) rlong ();
-		(void) rlong ();
-		(void) ruint32 ();
+		(void) rlong ();	/* Number of references. */
+		(void) rlong ();	/* Size of node. */
+		(void) ruint32 ();	/* Creation feature ID. */
 		
-		ctype = rlong ();
+		ctype = rlong ();	/* Static ID of class. */
 
 		if (ctype > ctype_max)
 			ctype_max = ctype;
@@ -329,7 +334,7 @@ static  void    analyze_file (void)
 static  void    analyze_cnodes (void)
 
 {
-	long    count, acount, i, ctype;
+	long    count, acount, pers_acount, i, ctype;
 	short   slen, dtype;
 	char    *dname;
 
@@ -372,8 +377,10 @@ static  void    analyze_cnodes (void)
 		fprintf (mfp,"\n");
 
 		acount = rlong ();
+		pers_acount = rlong ();
 
 		fprintf (mfp,"Nr. of attributes  : %ld\n", acount);
+		fprintf (mfp,"Nr. of persistent attributes  : %ld\n", pers_acount);
 
 		i = acount;
 
@@ -398,6 +405,14 @@ static  void    analyze_cnodes (void)
 			fprintf (mfp, "\n");
 		}
 
+			/* Read attribute flags. */
+		i = acount;
+		while (i--) {
+			fprintf (mfp,"   Attribute flags: ");
+			fprintf (mfp, "%d ", (int) rshort());
+		}
+		fprintf (mfp, "\n");
+
 		i = acount;
 
 		while (i--)
@@ -420,7 +435,7 @@ static  void    analyze_cnodes (void)
 			fprintf (mfp, "\n");
 		}
 
-		fprintf (mfp,"Flags are          : 0x%x\n", (int) rshort ());
+		fprintf (mfp,"Skeleton flags are : 0x%x\n", (int) rshort ());
 
 		fprintf (mfp,"Attribute ids      : %ld\n", acount);
 

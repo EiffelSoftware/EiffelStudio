@@ -660,7 +660,12 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 			case SK_POINTER: *(EIF_POINTER *)(ip.address) = new_value->it_ptr; break;
 			case SK_STRING: *(EIF_REFERENCE *)(ip.address) = RTMS(new_value->it_ref); break;
 			case SK_REF:
+#ifdef ISE_GC
 				new_object = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref)))));
+#else
+				new_object = (EIF_REFERENCE) new_value->it_ref;
+#endif
+
 				*(EIF_REFERENCE *)(ip.address) = new_object;
 				break;
 			case SK_BIT:

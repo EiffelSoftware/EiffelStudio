@@ -72,26 +72,56 @@ feature -- Access
 
 	add_feature (a_feature: XEL_FEATURE_ELEMENT)
 			-- Adds a feature to the class.
+		require
+			a_feature_attached: attached a_feature
 		do
 			features.extend (a_feature)
 			a_feature.parent_class := Current
+		ensure
+			feature_added: features.count = old features.count + 1
 		end
 
 	add_variable (a_variable: XEL_VARIABLE_ELEMENT)
 			-- Adds a variable to the class.
+		require
+			a_variable_attached: attached a_variable
 		do
 			variables.extend (a_variable)
+		ensure
+			variable_added: variables.count = old variables.count + 1
 		end
 
 	add_variable_by_name_type (a_name, a_type: STRING)
 			-- Adds a access feature to the class
+		require
+			a_name_valid: attached a_name and then not a_name.is_empty
+			a_type_valid: attached a_type and then not a_type.is_empty
 		do
 			add_variable (create {XEL_VARIABLE_ELEMENT}.make (a_name, a_type))
 		end
 
+	new_variable (a_type: STRING): STRING
+			-- Adds a new access feature to the class and selects the name itself
+		require
+			a_type_attached: attached a_type and then not a_type.is_empty
+		do
+			Result := get_unique_identifier
+			add_variable_by_name_type (Result, a_type)
+		ensure
+			Result_attached: attached Result
+			variable_added: variables.count = old variables.count + 1
+		end
+
 	add_const_variable_by_name_type (a_name, a_type, a_value: STRING)
+			-- Adds a constant to the class
+		require
+			a_name_valid: attached a_name and then not a_name.is_empty
+			a_type_valid: attached a_type and then not a_type.is_empty
+			a_value_valid: attached a_value and then not a_value.is_empty
 		do
 			add_variable (create {XEL_VARIABLE_ELEMENT}.make_const (a_name, a_type, a_value))
+		ensure
+			variable_added: variables.count = old variables.count + 1
 		end
 
 	get_unique_identifier: STRING
@@ -99,6 +129,9 @@ feature -- Access
 		do
 			Result := "class_temp_" + ui_count.out
 			ui_count := ui_count + 1
+		ensure
+			Result_attached: attached Result
+			ui_count_changed: ui_count /= old ui_count
 		end
 
 feature -- Implementation

@@ -188,7 +188,7 @@ feature -- Loading
 				else
 						-- Now we have to find `a_target_name' in this configuration file
 						-- if one is specified.
-					find_target_name (a_target_name, l_load_config.last_system.compilable_targets)
+					find_target_name (a_target_name, l_load_config.last_system)
 					if not has_error then
 						if not is_project_creation_or_opening_not_requested then
 							lace.set_conf_system (l_load_config.last_system)
@@ -815,19 +815,25 @@ feature {NONE} -- Settings
 		deferred
 		end
 
-	find_target_name (a_proposed_target: STRING; a_targets: HASH_TABLE [CONF_TARGET, STRING])
+	find_target_name (a_proposed_target: STRING; a_system: CONF_SYSTEM)
 			-- Given `a_proposed_target', try to find it in `a_targets'. If not found or if `a_proposed_target'
 			-- is not valid, ask the user to choose a target among `a_targets'.
 		require
-			a_targets_not_void: a_targets /= Void
+			a_system_not_void: a_system /= Void
 		local
 			l_not_found: BOOLEAN
 			l_list: DS_ARRAYED_LIST [STRING]
+			l_targets: HASH_TABLE [CONF_TARGET, STRING]
+			l_user_options_factory: USER_OPTIONS_FACTORY
+			l_last_target: STRING
+			l_last_target_matched: BOOLEAN
 		do
+			l_targets := a_system.compilable_targets
 			if a_proposed_target /= Void then
 				target_name := a_proposed_target.as_lower
-				a_targets.search (target_name)
-				if not a_targets.found then
+
+				l_targets.search (target_name)
+				if not l_targets.found then
 					l_not_found := True
 					target_name := Void
 				end
@@ -835,17 +841,35 @@ feature {NONE} -- Settings
 				l_not_found := True
 			end
 			if l_not_found then
-					-- Order targets in alphabetical order.
+					-- Try and find the previously used target.
+				create l_user_options_factory
+				l_user_options_factory.load (a_system.file_name)
+				if l_user_options_factory.successful then
+					l_last_target := l_user_options_factory.last_options.target_name
+				else
+					l_last_target := ""
+				end
+
+					-- Order targets in alphabetical order after last selected target (if any)
 				from
-					create l_list.make_equal (a_targets.count)
-					a_targets.start
+					create l_list.make_equal (l_targets.count)
+					l_targets.start
 				until
-					a_targets.after
+					l_targets.after
 				loop
-					l_list.put_last (a_targets.key_for_iteration)
-					a_targets.forth
+					if l_last_target ~ l_targets.key_for_iteration then
+							-- We want the last target first in the list.
+						l_last_target_matched := True
+					else
+						l_list.put_last (l_targets.key_for_iteration)
+					end
+					l_targets.forth
 				end
 				l_list.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+				if l_last_target_matched then
+						-- Set the last used target as first in the list.
+					l_list.put_first (l_last_target)
+				end
 				ask_for_target_name (a_proposed_target, l_list)
 			end
 		ensure

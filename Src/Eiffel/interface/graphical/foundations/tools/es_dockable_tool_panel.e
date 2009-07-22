@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
         		end)
 
 				-- Show actions
-        	register_kamikaze_action (content.show_actions, agent
+        	register_action (content.show_actions, agent
         			-- We need a widget that is parented to a window so we need to wait until after the
         			-- docking content is attached to the window.
         		do
@@ -112,6 +112,10 @@ feature {NONE} -- Initialization
 
 		        			-- Set up help shortcut binding
 		        		bind_help_shortcut (l_window)
+		        	end
+
+		        	if not attached last_focused_widget then
+		        		last_focused_widget := user_widget
 		        	end
         		end)
 

@@ -2219,7 +2219,7 @@ rt_private void exception(int how)
 	if ((echval == EN_FAIL || echval == EN_OSTK) || (echval == EN_RES)) {
 		return;
 	}
-#ifdef EIF_THREADS
+#if defined(EIF_THREADS) && defined(ISE_GC)
 		/* Stop execution only if not under the thread launching a GC. */
 	dbreak(how, gc_thread_status != EIF_THREAD_GC_RUNNING);
 #else

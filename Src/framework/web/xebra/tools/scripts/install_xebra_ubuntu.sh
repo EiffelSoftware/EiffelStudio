@@ -58,6 +58,7 @@ echo "AddHandler mod_xebra .xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf
 echo "AddHandler mod_xebra .xrpc" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "XebraServer_port \"55001\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "XebraServer_host \"localhost\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
+echo "XebraServer_max_upload_size 10000000" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "LogLevel debug" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo "DirectoryIndex index.xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 echo '<Files ~ "\.(ini|e|ecf)$">' >> $XEBRA_DEV/httpd/conf/httpd.conf 

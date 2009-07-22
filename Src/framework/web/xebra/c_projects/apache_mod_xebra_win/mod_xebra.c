@@ -24,124 +24,152 @@ static void* create_srv_cfg (apr_pool_t* pool, char* x)
 	xebra_svr_cfg* svr_cfg = apr_palloc (pool, sizeof(xebra_svr_cfg));
 	svr_cfg->port = "9999";
 	svr_cfg->port = "0.0.0.0";
+	svr_cfg->max_upload_size = 10000;
 	return svr_cfg;
 }
 
 static const char *set_srv_cfg_port (cmd_parms *parms, void *mconfig,
-									 const char *arg)
+		const char *arg)
 {
 	xebra_svr_cfg* svr_cfg = ap_get_module_config (
-		parms->server->module_config, &xebra_module);
+			parms->server->module_config, &xebra_module);
 	svr_cfg->port = (char *) arg;
 	return NULL;
 }
 
 static const char *set_srv_cfg_host (cmd_parms *parms, void *mconfig,
-									 const char *arg)
+		const char *arg)
 {
 	xebra_svr_cfg* svr_cfg = ap_get_module_config (
-		parms->server->module_config, &xebra_module);
+			parms->server->module_config, &xebra_module);
 	svr_cfg->host = (char *) arg;
 	return NULL;
 }
 
-static int read_from_POST (request_rec* r, char **buf)
+static const char *set_srv_cfg_max_upload_size (cmd_parms *parms,
+		void *mconfig, const char *arg)
 {
-	int max_loops = 1000; /* hack to prevent endless loops*/
-	int bytes, eos;
-	apr_size_t count;
+	xebra_svr_cfg* svr_cfg = ap_get_module_config (
+			parms->server->module_config, &xebra_module);
+	svr_cfg->max_upload_size = atoi (arg);
+	return NULL;
+}
+
+static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
+		int save_file)
+{
+	const char *bbuf;
+/*	apr_off_t blen; */
+/*	apr_size_t bsize; */
+	apr_size_t nbytes;
+	int bytes;
 	apr_status_t rv;
 	apr_bucket_brigade *bb;
-	apr_bucket_brigade *bbin;
-	char *baf;
 	apr_bucket *b;
-	const char *clen = apr_table_get (r->headers_in, "Content-Length");
+	const char *clen;
+	apr_file_t * tmpfile;
+	char* tmpname;
+	int eos;
 
+	/* Check if content-length does not exceed max_upload_size */
+	clen = apr_table_get (r->headers_in, "Content-Length");
 	if (clen != NULL) {
 		bytes = strtol (clen, NULL, 0);
-		if (bytes >= MAX_POST_SIZE) {
+		if (bytes >= max_upload_size) {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
-				"Request too big (%d bytes; limit %d)", bytes,
-				MAX_POST_SIZE);
+					"Request too big (%d bytes; limit %d)", bytes,
+					max_upload_size);
 			return HTTP_REQUEST_ENTITY_TOO_LARGE;
 		}
-	} else {
-		bytes = MAX_POST_SIZE;
 	}
+	DEBUG ("Content-Length: %d bytes", bytes);
 
-	bb = apr_brigade_create (r->pool, r->connection->bucket_alloc);
-	bbin = apr_brigade_create (r->pool, r->connection->bucket_alloc);
-	count = 0;
+	/* Prepare buffer */
+	(*buf) = apr_palloc (r->pool, 1);
+	(*buf)[0] = 0;
 
-	do {
+	if (save_file) {
+		/* Prepare tmp file */
+		tmpname = apr_pstrdup (r->pool, UP_FN);
+		rv = apr_file_mktemp (&tmpfile, tmpname, KEEPONCLOSE, r->pool);
+		DEBUG ("Creating file... '%s'", tmpname);
 
-		rv = ap_get_brigade (r->input_filters, bbin, AP_MODE_READBYTES,
-			APR_BLOCK_READ, bytes);
-
+		(*buf) = apr_pstrcat (r->pool, KEY_FILE_UPLOAD, tmpname, NULL);
 		if (rv != APR_SUCCESS) {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-				"failed to read form input");
+					"Failed to create temp file");
+			return HTTP_INTERNAL_SERVER_ERROR;
+		}
+		apr_pool_cleanup_register (r->pool, tmpfile, (void*) apr_file_close,
+				apr_pool_cleanup_null);
+	}
+
+	/* Iterate over brigades */
+	eos = 0;
+	do {
+		/* Get brigade from input filters */
+		bb = apr_brigade_create (r->pool, r->connection->bucket_alloc);
+		rv = ap_get_brigade (r->input_filters, bb, AP_MODE_READBYTES,
+				APR_BLOCK_READ, bytes);
+		if (rv != APR_SUCCESS) {
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
+					"Failed to get brigade from input filters");
 			return HTTP_INTERNAL_SERVER_ERROR;
 		}
 
-		for (b = APR_BRIGADE_FIRST (bbin); b != APR_BRIGADE_SENTINEL (bbin); b
-			= APR_BUCKET_NEXT (b)) {
+		/* Iterate over brigade and read buckets*/
+		for (b = APR_BRIGADE_FIRST (bb); b != APR_BRIGADE_SENTINEL (bb); b
+				= APR_BUCKET_NEXT (b)) {
+			DEBUG ("BUCKET>> data_type: %s, type: %s, length: %" APR_SIZE_T_FMT " bytes",
+					(APR_BUCKET_IS_METADATA(b)) ? "metadata" : "data",
+					b->type->name,
+					b->length);
 
-				max_loops--;
-				if (max_loops < 0) {
-					return HTTP_REQUEST_ENTITY_TOO_LARGE;
-				}
-
-				/*=======hack to prevent endless loops*/
-				if ((b == NULL) || (b->length < 0) || b->length > 10000) {
-					break;
-				}
-				/*=======very strange */
-
-				if (APR_BUCKET_IS_EOS (b)) {
-					eos = 1;
-				}
-
-				if (!APR_BUCKET_IS_METADATA (b)) {
-					if (b->length != (apr_size_t) (-1)) {
-						count += b->length;
-						if (count > MAX_POST_SIZE) {
-							/* More data than we accept, murder the request, but mop up first */
-							apr_bucket_delete (b);
-						}
+			if (APR_BUCKET_IS_EOS (b)) {
+				eos = 1;
+				break;
+			}
+			if (!(APR_BUCKET_IS_METADATA (b))) {
+				rv = apr_bucket_read (b, &bbuf, &nbytes, APR_BLOCK_READ);
+				if (rv == APR_SUCCESS) {
+					DEBUG2 ("Bucket content: '%s'", bbuf);
+					if (save_file) {
+						apr_file_write (tmpfile, bbuf, &nbytes);
+					} else {
+						(*buf) = apr_pstrcat (r->pool, (*buf), bbuf, NULL);
 					}
+				} else {
+					ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
+							"(%s, %s): Failed to read bucket",
+							(APR_BUCKET_IS_METADATA (b)) ? "metadata" : "data",
+							b->type->name);
+					return HTTP_INTERNAL_SERVER_ERROR;
 				}
-
-				if (count <= MAX_POST_SIZE) {
-					APR_BUCKET_REMOVE (b);
-					APR_BRIGADE_INSERT_TAIL (bb, b);
-				}
+			}
 		}
 	} while (!eos);
 
-	/* done with data, kill request if too much data */
-	if (count > MAX_POST_SIZE) {
-		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-			"Request too big (%d bytes; limit %d)", bytes, MAX_POST_SIZE);
-		return HTTP_REQUEST_ENTITY_TOO_LARGE;
-	}
+	if (save_file)
+		apr_file_flush (tmpfile);
 
-	(*buf) = apr_palloc (r->pool, count + 1);
-	rv = apr_brigade_flatten (bb, (*buf), &count);
-	if (rv != APR_SUCCESS) {
-		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
-			"Error (flatten) reading form data");
-		return HTTP_INTERNAL_SERVER_ERROR;
-	}
-	(*buf)[count] = '\0';
 	return OK;
+
+	/*		apr_brigade_length(bb, 1, &blen);
+	 DEBUG ("Brigade length: %d", (int) blen);
+	 bsize = (apr_size_t) blen;
+	 (*buf) = apr_palloc(r->pool, bsize + 1);
+	 apr_brigade_flatten(bb, (*buf), &bsize);
+	 (*buf)[blen] = 0;
+
+	 apr_file_write(tmpfile, (*buf), &bsize);
+	 */
 }
 
 static int print_item (void* rec, const char *key, const char *value)
 {
 	request_rec* r = rec;
 	table_buf = apr_pstrcat (r->pool, table_buf, TABLECSEP, key, TABLERSEP,
-		value, NULL);
+			value, NULL);
 	return 1;
 }
 
@@ -156,10 +184,12 @@ static int xebra_handler (request_rec* r)
 	int numbytes; /* numcber of bytes recieved from server */
 	char* rmsg_buf; /* buffer for receiving message */
 	char* post_buf;
+	char* tmp_ctype;
 	char* srv_hostname;
 	char* srv_port;
 	int srv_port_int;
-	char* cctype;
+/*	char* cctype;*/
+	int srv_max_upload_size; /* the max upload size read from config */
 	char* ctype;
 	xebra_svr_cfg *srvc;
 	SOCKADDR_IN clientService;
@@ -173,6 +203,10 @@ static int xebra_handler (request_rec* r)
 	if ((r->method_number != M_GET) && (r->method_number != M_POST)) {
 		return HTTP_METHOD_NOT_ALLOWED;
 	}
+	/* Reading config file */
+	srv_hostname = apr_pstrcat (r->pool, srvc->host, NULL);
+	srv_port = apr_pstrcat (r->pool, srvc->port, NULL);
+	srv_max_upload_size = srvc->max_upload_size;
 
 	/* Set a default content-type */
 	ap_set_content_type (r, "text/html;charset=ascii");
@@ -207,6 +241,7 @@ static int xebra_handler (request_rec* r)
 	}
 
 	DEBUG ("===============NEW REQUEST===============");
+	DEBUG ("%s", r->the_request)
 	DEBUG ("Reading input...");
 
 	
@@ -232,40 +267,43 @@ static int xebra_handler (request_rec* r)
 	table_buf = apr_pstrcat (r->pool, table_buf, TABLEEND, NULL);
 	message = apr_pstrcat (r->pool, message, table_buf, NULL);
 
-	/* If there are, read POST parameters into message buffer */
+	/* If there are, read POST or GET parameters into message buffer */
 	if (r->method_number == M_POST) {
-		DEBUG2 ("Reading POST parameters...");
-	
-		rv = read_from_POST (r, &post_buf);
+		DEBUG ("Reading POST parameters...");
+		ctype = apr_table_get (r->headers_in, "Content-Type");
+		DEBUG ("Content-Type: %s", ctype);
+		tmp_ctype = apr_palloc (r->pool, 1);
+		apr_cpystrn(tmp_ctype, ctype, strlen(CT_MULTIPART_FORM_DATA) +1);
+		/* If the Content-Type is CT_MULTIPART_FORM_DATA save the post data to a file and don't append it to the message */
+		if (tmp_ctype && (strcasecmp (tmp_ctype, CT_MULTIPART_FORM_DATA) == 0))
+			rv = read_from_POST (r, &post_buf, srv_max_upload_size, 1);
+		else
+			rv = read_from_POST (r, &post_buf, srv_max_upload_size, 0);
 
-		if (rv != OK)
-		{
+		if (rv == HTTP_REQUEST_ENTITY_TOO_LARGE) {
+			message = apr_pstrcat (r->pool, message, ARG, POST_TOO_BIG, NULL);
+		} else if (rv != OK) {
 			PRINT_ERROR ("Error reading POST data");
 			return OK;
-		} else {			
-				
-			ctype = apr_table_get (r->headers_in, "Content-Type");
-			if (ctype && (strcasecmp (ctype, "application/x-www-form-urlencoded")== 0))                               
-                        {
-				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf, NULL);					
+		} else {
+			/* If the Content-Type is CT_APP_FORM_URLENCODED put a & betweeen ARG and the post data */
+			if (ctype && (strcasecmp (ctype, CT_APP_FORM_URLENCODED) == 0)) {
+				message = apr_pstrcat (r->pool, message, ARG, "&", post_buf,
+						NULL);
 			} else {
-				message = apr_pstrcat (r->pool, message, ARG, post_buf, NULL);	
-			}		
-		}	
+				message = apr_pstrcat (r->pool, message, ARG, post_buf, NULL);
+			}
+		}
 
 	} else if (r->args != NULL) {
-		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, 
-				NULL);
+	    /* If its not a POST request, simply append the (GET) args to the message */
+		message = apr_pstrcat (r->pool, message, ARG, "&", r->args, NULL);
 	} else {
-		message = apr_pstrcat (r->pool, message, ARG,  NULL);
+		message = apr_pstrcat (r->pool, message, ARG, NULL);
 	}
 
-	/* set up connection to server */
+	/* Set up connection to server */
 	DEBUG ("Setting up connection.");
-
-	srv_hostname = apr_pstrcat (r->pool, srvc->host, NULL);
-	srv_port = apr_pstrcat (r->pool, srvc->port, NULL);
-
 	DEBUG ("Using server host %s and port %s", srv_hostname, srv_port);
 	
 	m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -324,13 +362,24 @@ static int xebra_handler (request_rec* r)
 	return OK;
 }
 
+
+
+
+
+
+
+
+
+
+
 apr_status_t handle_response_message (request_rec* r, char* message)
 {
 	char* msg_copy;
+	char* content_type;
 	char* cookie_order_start;
 	char* cookie_order_end;
 	char* html;
-	char* content_type;
+
 
 	/* Extract cookie orders */
 	msg_copy = apr_pstrdup (r->pool, message);
@@ -449,9 +498,7 @@ int send_message_fraged (char * message, SOCKET sockfd,
 	DEBUG ("About to send message. Length is %i bytes", (int) strlen (message));
 
 	/* Create fragment */
-	DEBUG2 ("   ---trying malloc...frag_msg     ");
 	frag_msg = (char*) malloc (sizeof(char) * FRAG_SIZE + 1);
-	DEBUG2 ("ok");
 
 	if (frag_msg == NULL) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "Error mallocating!");
@@ -506,8 +553,6 @@ int send_message_fraged (char * message, SOCKET sockfd,
 			return 0;
 		}
 
-		//free (encoded_msg_length_byte); ap does it
-
 		/* send message */
 		numbytes = send (sockfd, frag_msg, strlen (frag_msg) * sizeof(char), 0);
 
@@ -543,26 +588,16 @@ int receive_message_fraged (char **msg_buf, SOCKET sockfd,
 
 	DEBUG ("Receiving message...");
 
-	//DEBUG2 ("   ---trying apr_palloc...*msg_buf        ");
-	//(*msg_buf) = (char*) malloc (1);
 	(*msg_buf) = apr_palloc (r->pool, 1);
-	//DEBUG2 ("ok");
 
 	/* resetting *msg_buf */
 	*msg_buf[0] = '\0';
 	msg_buf_strlength = 0;
 
 	/* create buffer to receive message fragment */
-	//DEBUG2 ("   ---trying malloc...*frag_buf          ");
-	//frag_buf = (char*) malloc (sizeof(char) * FRAG_SIZE + 1);
+
 	frag_buf = apr_palloc (r->pool, 1);
 	frag_buf[0] = '\0';
-	//DEBUG2 ("ok");
-
-	//if ((frag_buf) == NULL) {
-	//	ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "Error pallocating frag_buf!");
-	//	return 0;
-	//}
 
 	/* loop until we recieve a fragment with flag=0 */
 	do {
@@ -586,7 +621,6 @@ int receive_message_fraged (char **msg_buf, SOCKET sockfd,
 
 		DEBUG ("Incoming frag, %i bytes, flag is %i", frag_length, flag);
 
-		//strcpy (frag_buf, "");
 		bytes_recv = 0;
 
 		/* loop to recieve whole fragement */
@@ -621,16 +655,10 @@ int receive_message_fraged (char **msg_buf, SOCKET sockfd,
 		DEBUG2 ("'%s'", frag_buf);
 
 		/* extend *msg_buf and copy frag to end of it */
-		//*msg_buf
-		//		= (char *) realloc (*msg_buf, msg_buf_strlength + numbytes + 1);
-		//memcpy (*msg_buf + msg_buf_strlength, frag_buf, numbytes);
-
 		(*msg_buf) = apr_pstrcat (r->pool, (*msg_buf), frag_buf, NULL);
 
 		msg_buf_strlength += numbytes;
 	} while (flag == 1);
-
-	//free (frag_buf);
 
 	DEBUG ("Completed recieving message.");
 
@@ -659,7 +687,7 @@ apr_status_t cookie_write (request_rec * r, const char *name, const char *val,
 
 	/* handle expiry */
 	buffer = "";
-	sprintf (maxagestr, "%i", maxage);
+	/*sprintf (maxagestr, "%i", maxage);*/
 	if (maxage) {
 		buffer = apr_pstrcat (r->pool, "Max-Age=", maxagestr,
 			";", NULL);

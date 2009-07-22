@@ -234,7 +234,6 @@ static int xebra_handler (request_rec* r)
 	table_buf = apr_pstrcat (r->pool, HEADERS_IN, NULL);
 	apr_table_do (print_item, r, r->headers_in, NULL);
 	table_buf = apr_pstrcat (r->pool, table_buf, TABLEEND, HEADERS_OUT, NULL);
-	DEBUG2 (table_buf);
 	apr_table_do (print_item, r, r->headers_out, NULL);
 	table_buf = apr_pstrcat (r->pool, table_buf, TABLEEND, SUBP_ENV, NULL);
 	apr_table_do (print_item, r, r->subprocess_env, NULL);

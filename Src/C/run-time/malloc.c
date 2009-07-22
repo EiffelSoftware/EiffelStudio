@@ -1454,9 +1454,11 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 
 		/* Update special attributes count and element size at the end */
 	if (egc_has_old_special_semantic) {
-		RT_SPECIAL_COUNT(object) = nbitems;		/* New count equal to capacity. */
+			/* New count equal to capacity. */
+		RT_SPECIAL_COUNT(object) = nbitems;
 	} else {
-		RT_SPECIAL_COUNT(object) = count;		/* We preserve the count. */
+			/* We preserve the count if smaller than new capacity, otherwise new capacity. */
+		RT_SPECIAL_COUNT(object) = (nbitems < count ? nbitems : count);
 	}
 	RT_SPECIAL_ELEM_SIZE(object) = elem_size; 	/* New item size */
 	RT_SPECIAL_CAPACITY(object) = nbitems;		/* New capacity */

@@ -27,21 +27,12 @@ feature {NONE} -- User interface initialization
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
 		local
-			l_box: EV_HORIZONTAL_BOX
-			l_cell: EV_CELL
 			l_col: EV_GRID_COLUMN
+			l_border: ES_BORDERED_WIDGET [EV_WIDGET]
 		do
-			create l_box
-
-				-- Left border
-			create l_cell
-			l_cell.set_background_color (colors.stock_colors.black)
-			l_cell.set_minimum_width (1)
-			l_box.extend (l_cell)
-			l_box.disable_item_expand (l_cell)
-
 				-- Help documents grid
 			create help_documents_grid
+			help_documents_grid.enable_border
 			help_documents_grid.set_minimum_size (400, 120)
 			help_documents_grid.set_column_count_to (doc_type_column_index)
 			help_documents_grid.enable_auto_size_best_fit_column (document_column_index)
@@ -52,7 +43,20 @@ feature {NONE} -- User interface initialization
 			help_documents_grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
 			help_documents_grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
 			register_action (help_documents_grid.row_select_actions, agent on_row_selected)
-			l_box.extend (help_documents_grid)
+				-- Set up ENTER key.
+			suppress_confirmation_key_close (help_documents_grid)
+			register_action (help_documents_grid.key_release_actions, agent (ia_key: EV_KEY)
+				do
+					if ia_key.code = {EV_KEY_CONSTANTS}.key_enter then
+						check sekected: not help_documents_grid.selected_rows.is_empty end
+						on_confirm_dialog
+					end
+				end)
+			register_action (help_documents_grid.pointer_double_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32; ia_item: EV_GRID_ITEM)
+				do
+					check selected: ia_item.row.is_selected end
+					on_confirm_dialog
+				end)
 
 			l_col := help_documents_grid.column (document_column_index)
 			l_col.set_title ("Document")
@@ -62,23 +66,8 @@ feature {NONE} -- User interface initialization
 			l_col.set_title ("Type")
 			l_col.set_width (100)
 
-			set_button_text (dialog_buttons.ok_button, "Show Help")
-
-				-- Right border
-			create l_cell
-			l_cell.set_background_color (colors.stock_colors.black)
-			l_cell.set_minimum_width (1)
-			l_box.extend (l_cell)
-			l_box.disable_item_expand (l_cell)
-
-			a_container.extend (l_box)
-
-				-- Bottom border
-			create l_cell
-			l_cell.set_background_color (colors.stock_colors.black)
-			l_cell.set_minimum_height (1)
-			a_container.extend (l_cell)
-			a_container.disable_item_expand (l_cell)
+			create l_border.make (help_documents_grid)
+			a_container.extend (l_border)
 
 				-- Close on check button
 			create close_on_launch_check
@@ -88,6 +77,8 @@ feature {NONE} -- User interface initialization
 
 			a_container.extend (close_on_launch_check)
 			a_container.disable_item_expand (close_on_launch_check)
+
+			set_button_text (dialog_buttons.ok_button, "Show Help")
 
 				-- Disable launch help button (requires selection)
 			dialog_window_buttons.item (dialog_buttons.ok_button).disable_sensitive
@@ -264,6 +255,10 @@ feature {NONE} -- Basic operations
 					populate_help_document_row (l_cursor.item, l_row)
 				end
 				l_cursor.forth
+			end
+
+			if l_grid.row_count > 0 then
+				l_grid.row (1).enable_select
 			end
 		end
 

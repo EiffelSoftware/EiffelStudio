@@ -71,7 +71,7 @@ feature -- Access
 
 	locals: EIFFEL_LIST [TYPE_DEC_AS]
 		local
-			routine_as: ROUTINE_AS
+			routine_as: detachable ROUTINE_AS
 		do
 			routine_as := associated_routine_as
 			if routine_as /= Void then
@@ -82,7 +82,7 @@ feature -- Access
 	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
 		local
-			routine_as: ROUTINE_AS
+			routine_as: detachable ROUTINE_AS
 		do
 			routine_as := associated_routine_as
 			if routine_as /= Void then
@@ -110,28 +110,37 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	associated_routine_as: ROUTINE_AS
+	associated_routine_as: detachable ROUTINE_AS
 			-- Associated routine as used to find out locals and object test locals
+		local
+			is_retrying: BOOLEAN
 		do
-			if is_inline_agent then
-				if attached {FEATURE_AS} Body_server.item (enclosing_body_id) as inl_agt_feat_as then
-					Result ?= inline_agent_lookup.lookup_inline_agent_of_feature (
-							inl_agt_feat_as, inline_agent_nr).content
+			if not is_retrying then
+				if is_inline_agent then
+					if attached {FEATURE_AS} Body_server.item (enclosing_body_id) as inl_agt_feat_as then
+						Result ?= inline_agent_lookup.lookup_inline_agent_of_feature (
+								inl_agt_feat_as, inline_agent_nr).content
+					end
+				elseif body_index > 0 then
+					if attached {FEATURE_AS} Body_server.item (body_index) as feat_as then
+							--| feature_as can be Void for invariant routine
+						Result ?= feat_as.body.content
+					end
 				end
-			elseif body_index > 0 then
-				if attached {FEATURE_AS} Body_server.item (body_index) as feat_as then
-						--| feature_as can be Void for invariant routine
-					Result ?= feat_as.body.content
-				end
-			end
-			if Result /= Void then
-				if Result.is_built_in then
-					if attached {BUILT_IN_AS} Result.routine_body as built_in_as then
-						if attached {FEATURE_AS} built_in_as.body as feature_as then
-							Result ?= feature_as.body.content
+				if Result /= Void then
+					if Result.is_built_in then
+						if attached {BUILT_IN_AS} Result.routine_body as built_in_as then
+							if attached {FEATURE_AS} built_in_as.body as feature_as then
+								Result ?= feature_as.body.content
+							end
 						end
 					end
 				end
+			end
+		rescue
+			if not is_retrying then
+				is_retrying := True
+				retry
 			end
 		end
 
@@ -219,7 +228,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -232,22 +241,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class E_ROUTINE

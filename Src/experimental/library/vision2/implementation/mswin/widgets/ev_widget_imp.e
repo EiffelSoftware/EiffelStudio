@@ -938,11 +938,11 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			l_top := top_level_window_imp
 			if l_top /= Void then
 				hwnd := next_dlgtabitem (l_top.wel_item, wel_item, direction)
-			end
-			if hwnd /= l_null then
-				window := window_of_item (hwnd)
-				if window /= Void then
-					window.set_focus
+				if hwnd /= l_null then
+					window := window_of_item (hwnd)
+					if window /= Void then
+						window.set_focus
+					end
 				end
 			end
 		end
@@ -1479,16 +1479,24 @@ feature -- Deferred features
 		local
 			l_parent_index, l_search_index: INTEGER
 			l_parent_imp: like parent_imp
+			l_result: detachable EV_WIDGET_IMP
 		do
 			l_parent_imp := parent_imp
-			check l_parent_imp /= Void end
-			l_parent_index := l_parent_imp.index_of_child (Current)
-			if forwards then
-				l_search_index := l_parent_index + 1
+			if l_parent_imp /= Void then
+				l_parent_index := l_parent_imp.index_of_child (Current)
+				if forwards then
+					l_search_index := l_parent_index + 1
+				else
+					l_search_index := l_parent_index - 1
+				end
+				l_result := l_parent_imp.next_tabstop_widget (start_widget, l_search_index, forwards)
 			else
-				l_search_index := l_parent_index - 1
+					-- If parent is void then return `start_widget', it is possible for latent messages to
+					-- indirectly call this routine
+				l_result ?= start_widget.implementation
+				check l_result /= Void end
 			end
-			Result := l_parent_imp.next_tabstop_widget (start_widget, l_search_index, forwards)
+			Result := l_result
 		ensure
 			Result_not_void: Result /= Void
 				-- If there is no next tabstop widget, then simply return `start_widget'.

@@ -35,7 +35,7 @@ feature -- Initialization
 feature {NONE} -- Access
 
 	text: XTAG_TAG_ARGUMENT
-			-- The text displayed beneath the checkbox
+			-- The text displayed near the checkbox
 	
 	is_checked: XTAG_TAG_ARGUMENT
 			-- Is the checkbox checked?
@@ -63,8 +63,16 @@ feature -- Implementation
 				l_checked := "checked=%%%"checked%%%""
 			else
 				l_checked := ""
-			end
-			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<input type=%%%"checkbox%%%"" + a_name + l_checked + "/>%")")
+			end			
+			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<input type=%%%"checkbox%%%"" +
+				a_name + l_checked + "/>%")")
+			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"" +text.value (current_controller_id) + "%")")
+		end
+		
+	transform_to_correct_type (a_variable_name, a_argument_name: STRING): STRING
+			-- <Precursor>
+		do
+			Result := a_variable_name + " := " + a_argument_name + ".as_lower.is_equal (%"checked%")"
 		end
 
 end

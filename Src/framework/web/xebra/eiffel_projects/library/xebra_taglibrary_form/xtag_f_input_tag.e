@@ -9,7 +9,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	XTAG_F_INPUT_TAG
 
 inherit
@@ -19,6 +19,9 @@ inherit
 			internal_put_attribute
 		end
 
+create
+	make
+
 feature -- Initialization
 
 	make
@@ -26,9 +29,11 @@ feature -- Initialization
 			Precursor
 			create {XTAG_TAG_VALUE_ARGUMENT} text.make_default
 			create {XTAG_TAG_VALUE_ARGUMENT} size.make ("20")
+			create {XTAG_TAG_VALUE_ARGUMENT} input_type.make ("input")
 		ensure then
 			text_attached: attached text
 			size_attached: attached size
+			input_type_attached: attached input_type
 		end
 
 feature -- Access
@@ -41,6 +46,9 @@ feature -- Access
 			
 	max_length: XTAG_TAG_ARGUMENT
 			-- The maximal length of the field
+			
+	input_type: XTAG_TAG_ARGUMENT
+			-- The type of the input (input, password, etc.)
 
 feature -- Implementation
 
@@ -57,6 +65,9 @@ feature -- Implementation
 			if a_id.is_equal ("max_length") then
 				max_length := a_attribute
 			end
+			if a_id.is_equal ("input_type") then
+				input_type := a_attribute
+			end
 		end
 		
 	html_representation (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING)
@@ -69,14 +80,13 @@ feature -- Implementation
 			else
 				l_max_length := ""
 			end
-			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<input type=%%%"" + input_type + "%%%" value=%%%"" + text.value (current_controller_id) +  "%%%"" + "size=%%%"" + size.value (current_controller_id) + "%%%"" + a_name + " " + l_max_length + "/>%")")
+			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<input type=%%%"" + input_type.value (current_controller_id) + "%%%" value=%%%"" + text.value (current_controller_id) +  "%%%"" + "size=%%%"" + size.value (current_controller_id) + "%%%"" + a_name + " " + l_max_length + "/>%")")
 		end
-	
-	input_type: STRING
-			-- What type of input is this?
-		deferred
-		ensure
-			Result_attached: attached Result
-		end	
+
+	transform_to_correct_type (a_variable_name, a_argument_name: STRING): STRING
+			-- <Precursor>
+		do
+			Result := a_variable_name + " := " + a_argument_name
+		end
 
 end

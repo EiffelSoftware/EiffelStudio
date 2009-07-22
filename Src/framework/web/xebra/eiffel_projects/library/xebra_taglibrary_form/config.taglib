@@ -11,7 +11,8 @@
 		<attribute id="width" />
 		<attribute id="on_click"/>
 	</tag>
-	<tag id="input_text" class="XTAG_F_INPUT_TEXT_TAG">
+	<tag id="input_text" class="XTAG_F_INPUT_TAG">
+		<attribute id="type"/>
 		<attribute id="id"/>
 		<attribute id="value"/>
 		<attribute id="name"/>
@@ -23,18 +24,6 @@
 		<attribute id="on_text_changed" />
 		<attribute id="text_mode" />
 		<attribute id="size" />
-	</tag>
-	<tag id="input_secret" class="XTAG_F_INPUT_SECRET_TAG">
-		<attribute id="id"/>
-		<attribute id="value"/>
-		<attribute id="name"/>
-		<attribute id="text" />
-		<attribute id="max_length" />
-		<attribute id="auto_post_back"/>
-		<attribute id="columns" />
-		<attribute id="rows" />
-		<attribute id="on_text_changed" />
-		<attribute id="text_mode" />
 	</tag>
 	<tag id="text_area" class="XTAG_F_TEXTAREA_TAG">
 		<attribute id="id"/>

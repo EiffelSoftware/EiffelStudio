@@ -69,5 +69,11 @@ feature -- Implementation
 				rows := a_attribute
 			end
 		end
+		
+	transform_to_correct_type (a_variable_name, a_argument_name: STRING): STRING
+			-- <Precursor>
+		do
+			Result := a_variable_name + " := " + a_argument_name
+		end
 
 end

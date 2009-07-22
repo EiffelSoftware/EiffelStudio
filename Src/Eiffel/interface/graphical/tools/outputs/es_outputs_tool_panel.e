@@ -233,6 +233,7 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 			l_old_output: like output
 			l_widget: ES_WIDGET [EV_WIDGET]
 			l_window: EB_DEVELOPMENT_WINDOW
+			l_had_focus: BOOLEAN
 			l_done: BOOLEAN
 		do
 			if not is_initialized then
@@ -287,6 +288,9 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 				l_window := develop_window.as_attached
 				if attached l_old_output then
 					l_widget := l_old_output.widget_from_window (l_window)
+						-- Check if the old output has focus, so we can refocus set the last focused widget to be
+						-- the new output widget.
+					l_had_focus := l_widget.widget = last_focused_widget
 					if l_widget.is_interface_usable then
 						l_widget.widget.hide
 					end
@@ -298,6 +302,14 @@ feature {ES_OUTPUTS_COMMANDER_I} -- Element change
 				l_widget := a_output.widget_from_window (l_window)
 				if l_widget.is_interface_usable then
 					l_widget.widget.show
+					if l_had_focus then
+							-- Set the last focused widget, because if the output is switched
+						set_last_focused_widget (l_widget)
+						if is_shown then
+								-- The tool is shown, so reset focus.
+							l_widget.widget.set_focus
+						end
+					end
 				else
 						-- Why is the new widget not usable?
 					check False end

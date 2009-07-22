@@ -117,17 +117,17 @@ feature {TAG_TREE_NODE} -- Basic operations
 					if attached l_class and then l_class.is_compiled then
 						l_classc := l_class.compiled_representation
 						if l_classc.has_feature_table then
-							l_feature := l_classc.feature_with_name (l_test.name)
+							l_feature := l_classc.feature_with_name (l_test.routine_name.as_string_8)
 						end
 					end
 				end
 
 				if attached l_feature then
-					token_writer.add_feature (l_feature, l_test.name)
+					token_writer.add_feature (l_feature, l_test.routine_name.as_string_8)
 				elseif attached l_class then
-					token_writer.add_classi (l_class, l_test.name)
+					token_writer.add_classi (l_class, l_test.routine_name.as_string_8)
 				else
-					token_writer.process_basic_text (l_test.name)
+					token_writer.process_basic_text (l_test.routine_name.as_string_8)
 				end
 
 				if

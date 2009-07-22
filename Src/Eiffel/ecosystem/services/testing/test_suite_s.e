@@ -16,17 +16,173 @@ deferred class
 inherit
 	SERVICE_I
 
-	TEST_PROJECT_I
-		select
-			active_collection_connection
-		end
-
 	EVENT_CONNECTION_POINT_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
 		rename
 			connection as test_suite_connection
 		end
 
 feature -- Access
+
+	tag_tree: TAG_TREE [like test]
+			-- Tag tree containing tagging structure for all tests in `Current'.
+		require
+			usable: is_interface_usable
+			initialized: is_project_initialized
+		deferred
+		end
+
+	test (an_identifier: READABLE_STRING_GENERAL): TEST_I
+			-- Test for given identifier
+			--
+			-- `an_identifier': Indentifier for which corresponding test should be returned.
+			-- `Result': Test for `an_identifier'.
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_usable: Result.is_interface_usable
+		end
+
+	tests: DS_LINEAR [like test]
+			-- All tests in `Current'
+			--
+			-- Note: this will be replaced by an arrayed list soon.
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Query
+
+	has_test (an_identifier: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does `Current' have a test for given identifier?
+			--
+			-- `an_identifier': Name of a test.
+			-- `Result': True if `Current' contains a test with that name, False otherwise.
+		require
+			usable: is_interface_usable
+			an_identifier_attached: an_identifier /= Void
+		deferred
+		end
+
+feature -- Status setting: tests
+
+	add_test (a_test: like test)
+			-- Add test to `Current'.
+			--
+			-- `a_test': Test to be added.
+		require
+			a_test_attached: a_test /= Void
+			usable: is_interface_usable
+			a_test_usable: a_test.is_interface_usable
+			test_not_added: not has_test (a_test.name)
+		deferred
+		end
+
+	remove_test (a_test: like test)
+			-- Remove test from `Current'.
+			--
+			-- Note: there is no need to remove tags from `tag_tree' since that is done automatically.
+			--
+			-- `a_test': Test to be removed.
+		require
+			a_test_attached: a_test /= Void
+			usable: is_interface_usable
+			a_test_usable: a_test.is_interface_usable
+			test_added: has_test (a_test.name) and then test (a_test.name) = a_test
+		deferred
+		end
+
+feature -- Status setting: sessions
+
+	launch_session (a_session: TEST_SESSION_I)
+			-- Launch new testing related session.
+			--
+			-- `a_session': Session to be launched.
+		require
+			a_session_attached: a_session /= Void
+			usable: is_interface_usable
+			a_session_usable: a_session.is_interface_usable
+			not_running: not a_session.has_next_step
+		deferred
+		end
+
+feature -- Events
+
+	test_added_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
+			-- Events called after a test was added to `Current'.
+			--
+			-- test_suite: `Current'
+			-- test: Test added to `Current'
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	test_removed_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
+			-- Events called after an item was removed from `items'.
+			--
+			-- test_suite: `Current'
+			-- test: Test removed from `Current'
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	test_result_added_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test; test_result: EQA_TEST_RESULT]]
+			-- Events called after a new result has been added to a test.
+			--
+			-- test_suite: `Current'
+			-- test: Test which received new result
+			-- test_result: Last result added to test
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	session_launched_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; session: TEST_SESSION_I]]
+			-- Events called when a session is launched through `launch_session'.
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	session_finished_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; session: TEST_SESSION_I]]
+			-- Events called when a session is finished.
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+
+
+
+-- OBSOLETE FEATURES
+
+
+feature -- Access
+
+	eiffel_project_helper: TEST_PROJECT_HELPER_I
+			-- Project helper for compiling, debugging and adding new classes.
+		require
+			usable: is_interface_usable
+			initialized: is_project_initialized
+		deferred
+		end
+
+	eiffel_project: E_PROJECT
+			-- Project containing actual eiffel classes
+		require
+			usable: is_interface_usable
+			initialized: is_project_initialized
+		deferred
+		ensure
+			project_initialized: Result.initialized and Result.workbench.universe_defined and
+			                     Result.system_defined and then Result.universe.target /= Void
+		end
 
 	executor (a_type: TYPE [TEST_EXECUTOR_I]): TEST_EXECUTOR_I
 			-- Test executor registered under `a_type'.
@@ -87,6 +243,11 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_project_initialized: BOOLEAN
+			-- Has `eiffel_project' been successfully compiled yet?
+		deferred
+		end
 
 	count_executed: NATURAL
 			-- Number of tests in `test' which have been executed
@@ -248,21 +409,27 @@ feature -- Event: Connection point
 		do
 			l_result := internal_test_suite_connection
 			if l_result = Void then
-				create {EVENT_CHAINED_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S, ACTIVE_COLLECTION_OBSERVER [TEST_I], ACTIVE_COLLECTION_I [TEST_I]]}
-					Result.make (
-						agent (ia_observer: TEST_SUITE_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
-							do
-								Result := << [processor_launched_event, agent ia_observer.on_processor_launched],
-									[processor_proceeded_event, agent ia_observer.on_processor_proceeded],
-									[processor_finished_event, agent ia_observer.on_processor_finished],
-									[processor_stopped_event, agent ia_observer.on_processor_stopped],
-									[processor_error_event, agent ia_observer.on_processor_error] >>
-							end, active_collection_connection)
-				automation.auto_dispose (Result)
-				internal_test_suite_connection := Result
-			else
-				Result := l_result
+				create {EVENT_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S]} l_result.make (
+					agent (an_observer: TEST_SUITE_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := <<
+									[test_added_event, agent an_observer.on_test_added],
+									[test_removed_event, agent an_observer.on_test_removed],
+									[test_result_added_event, agent an_observer.on_test_result_added],
+									[session_launched_event, agent an_observer.on_session_launched],
+									[session_finished_event, agent an_observer.on_session_finished],
+									[processor_launched_event, agent an_observer.on_processor_launched],
+									[processor_proceeded_event, agent an_observer.on_processor_proceeded],
+									[processor_finished_event, agent an_observer.on_processor_finished],
+									[processor_stopped_event, agent an_observer.on_processor_stopped],
+									[processor_error_event, agent an_observer.on_processor_error]
+								>>
+						end
+					)
+				internal_test_suite_connection := l_result
+				automation.auto_dispose (l_result)
 			end
+			Result := l_result
 		end
 
 feature {NONE} -- Implementation: Internal cache
@@ -271,4 +438,35 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `test_suite_connection'.
 			-- Note: Do not use directly!
 
+;note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

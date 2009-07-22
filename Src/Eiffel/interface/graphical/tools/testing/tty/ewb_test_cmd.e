@@ -55,14 +55,15 @@ feature {NONE} -- Access
 		local
 			l_cache: detachable like filtered_tests
 		do
+			check not_implemented: False end
 			l_cache := filtered_tests_cell.item
 			if l_cache = Void or else
 			   not l_cache.is_interface_usable or else
-			   not l_cache.is_connected or else
-			   l_cache.collection /= a_test_suite
+			   not l_cache.is_connected --or else
+			   --l_cache.collection /= a_test_suite
 			then
 				create l_cache.make
-				l_cache.connect (a_test_suite)
+				--l_cache.connect (a_test_suite)
 				filtered_tests_cell.put (l_cache)
 			end
 			Result := l_cache
@@ -70,7 +71,7 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 			result_usable: Result.is_interface_usable
 			result_connected: Result.is_connected
-			result_uses_test_suite: Result.collection = a_test_suite
+			--result_uses_test_suite: Result.collection = a_test_suite
 		end
 
 	tree_view (a_test_suite: TEST_SUITE_S): TAG_BASED_TREE [TEST_I]
@@ -237,10 +238,10 @@ feature {NONE} -- Basic operations
 			l_name: STRING
 			l_count: INTEGER
 		do
-			l_count := a_test.name.count + a_prefix.count
+			l_count := a_test.routine_name.count + a_prefix.count
 			create l_name.make (l_count)
 			l_name.append (a_prefix)
-			l_name.append (a_test.name)
+			l_name.append (a_test.routine_name.as_string_8)
 
 			if a_tab_count = -1 then
 				print_string (" ")

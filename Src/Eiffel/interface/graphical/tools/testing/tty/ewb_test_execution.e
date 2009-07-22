@@ -12,7 +12,7 @@ class
 inherit
 	EWB_TEST_CMD
 		redefine
-			on_test_changed
+			on_test_result_added
 		end
 
 	EXCEPTION_CODE_MEANING
@@ -61,15 +61,13 @@ feature {NONE} -- Basic operations
 
 feature -- Events
 
-	on_test_changed (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_test: TEST_I)
+	on_test_result_added (a_test_suite: TEST_SUITE_S; a_test: TEST_I; a_result: EQA_TEST_RESULT)
 			-- <Precursor>
 		do
-			if a_test.memento.is_outcome_added then
-				print_test (a_test, a_test.class_name + ".", tab_count)
-				if not a_test.passed then
-					print_outcome (a_test.last_outcome)
-					print_string ("%N")
-				end
+			print_test (a_test, a_test.class_name + ".", tab_count)
+			if not a_test.passed then
+				print_outcome (a_result)
+				print_string ("%N")
 			end
 		end
 

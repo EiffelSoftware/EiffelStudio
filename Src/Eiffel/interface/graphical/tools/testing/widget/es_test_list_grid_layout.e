@@ -237,20 +237,20 @@ feature {NONE} -- Implementation
 		do
 			token_writer.new_line
 			if test_suite.is_service_available and then test_suite.service.is_project_initialized then
-				l_class := test_suite.service.class_for_test (a_test)
+				--l_class := test_suite.service.class_for_test (a_test)
 			end
 			if l_class /= Void then
 				if l_class.is_compiled and then l_class.compiled_class.has_feature_table then
-					l_feature := l_class.compiled_class.feature_with_name (a_test.name)
+					l_feature := l_class.compiled_class.feature_with_name (a_test.routine_name.as_string_8)
 					if l_feature /= Void then
-						token_writer.add_feature (l_feature, a_test.name)
+						token_writer.add_feature (l_feature, a_test.routine_name.as_string_8)
 					end
 				end
 				if token_writer.last_line.empty then
-					token_writer.add_classi (l_class, a_test.name)
+					token_writer.add_classi (l_class, a_test.routine_name.as_string_8)
 				end
 			else
-				token_writer.add (a_test.name)
+				token_writer.add (a_test.routine_name.as_string_8)
 			end
 
 			append_class_name (a_test)
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			l_tooltip.append (a_test.class_name)
 			l_tooltip.append_character ('}')
 			l_tooltip.append_character ('.')
-			l_tooltip.append (a_test.name)
+			l_tooltip.append (a_test.routine_name.as_string_8)
 			l_eitem.set_tooltip (l_tooltip)
 			Result := l_eitem
 		end
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 		do
 			token_writer.add_space
 			token_writer.add_char ('(')
-			l_class := test_suite.service.class_for_test (a_test)
+			--l_class := test_suite.service.class_for_test (a_test)
 			if l_class /= Void then
 				token_writer.add_class (l_class)
 			else

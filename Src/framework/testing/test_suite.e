@@ -12,33 +12,198 @@ class
 inherit
 	TEST_SUITE_S
 
+	DISPOSABLE_SAFE
+
+	ROTA_OBSERVER
+		redefine
+			on_task_finished
+		end
+
+
+
+-- OBSOLETE
+
 	TEST_PROCESSOR_REGISTRAR_I
 		redefine
 			is_valid_processor
 		end
 
-	DISPOSABLE_SAFE
-		redefine
-			is_interface_usable
-		end
-
-	TEST_PROJECT
-		redefine
-			is_interface_usable,
-			remove_test
-		end
+--	TEST_COLLECTION
+--		rename
+--			make as make_collection,
+--			are_tests_available as is_project_initialized
+--		redefine
+--			is_interface_usable
+--		end
 
 create
 	make
+
+feature -- Access
+
+	tests: DS_LINEAR [TEST_I]
+			-- <Precursor>
+		do
+			Result := test_map
+		end
+
+	test (an_identifier: READABLE_STRING_GENERAL): TEST_I
+			-- <Precursor>
+		do
+			Result := test_map.item (an_identifier)
+		end
+
+feature -- Access: tagging
+
+	tag_tree: TAG_TREE [like test]
+			-- <Precursor>
+
+feature {NONE} -- Access
+
+	test_map: DS_HASH_TABLE [like test, READABLE_STRING_GENERAL]
+			-- Table mapping test names to their instances
+			--
+			-- key: Test name
+			-- value: Test instance
+
+	frozen rota: SERVICE_CONSUMER [ROTA_S]
+			-- Access to rota service {ROTA_S}
+		do
+			create Result
+		end
+
+feature -- Query
+
+	has_test (an_identifier: READABLE_STRING_GENERAL): BOOLEAN
+			-- <Precursor>
+		do
+			Result := test_map.has (an_identifier)
+		end
+
+feature -- Status setting: tests
+
+	add_test (a_test: like test)
+			-- <Precursor>
+		do
+			test_map.force (a_test, a_test.name)
+			test_added_event.publish ([Current, a_test])
+		end
+
+	remove_test (a_test: like test)
+			-- <Precursor>
+		do
+			test_map.remove (a_test.name)
+			if tag_tree.has_item (a_test) then
+				tag_tree.remove_all_tags (a_test)
+			end
+			test_removed_event.publish ([Current, a_test])
+		end
+
+feature -- Status setting: sessions
+
+	launch_session (a_session: TEST_SESSION_I)
+			-- <Precursor>
+		local
+			l_rota: ROTA_S
+		do
+			a_session.start
+			session_launched_event.publish ([Current, a_session])
+			if rota.is_service_available then
+				l_rota := rota.service
+				if l_rota.is_interface_usable and not l_rota.has_task (a_session) then
+					l_rota.run_task (a_session)
+				end
+			end
+		end
+
+feature -- Events
+
+
+	test_added_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
+			-- <Precursor>
+
+	test_removed_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
+			-- <Precursor>
+
+	test_result_added_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test; test_result: EQA_TEST_RESULT]]
+			-- <Precursor>
+
+	session_launched_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; session: TEST_SESSION_I]]
+			-- <Precursor>
+
+	session_finished_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; session: TEST_SESSION_I]]
+			-- <Precursor>
+
+feature {ROTA_S} -- Events: rota
+
+	on_task_finished (a_rota: ROTA_S; a_task: ROTA_TIMED_TASK_I)
+			-- <Precursor>
+		do
+			if
+				attached {TEST_SESSION_I} a_task as l_session and then
+				l_session.test_suite = Current
+			then
+				session_finished_event.publish ([Current, l_session])
+			end
+		end
+
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		local
+			l_rota: ROTA_S
+		do
+			if a_explicit then
+				if rota.is_service_available then
+					l_rota := rota.service
+					if l_rota.is_interface_usable then
+						l_rota.connection.disconnect_events (Current)
+					end
+				end
+			end
+		end
+
+
+
+
+
+
+-- OBSOLETE FEATURES
 
 feature {NONE} -- Initialization
 
 	make (a_project_helper: like eiffel_project_helper)
 			-- Initialize `Current'.
 		local
+			l_rota: ROTA_S
+
+
 			l_project: E_PROJECT
 			l_project_factory: SHARED_EIFFEL_PROJECT
 		do
+			create test_map.make_default
+			test_map.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_GENERAL]})
+
+				-- Events
+			create test_added_event
+			create test_removed_event
+			create test_result_added_event
+			create session_launched_event
+			create session_finished_event
+
+			if rota.is_service_available then
+				l_rota := rota.service
+				if l_rota.is_interface_usable then
+					l_rota.connection.connect_events (Current)
+				end
+			end
+
+
+
+			-- OBOLETE CREATIONS
+			--make_collection
+
 				-- Create registrar
 			create internal_processors.make
 
@@ -50,12 +215,8 @@ feature {NONE} -- Initialization
 			create processor_error_event
 
 			create l_project_factory
-			l_project := l_project_factory.eiffel_project
-			check l_project /= Void end
-			make_with_project (l_project, a_project_helper)
-
-			register_locator (create {TEST_COMPILED_LOCATOR})
-			register_locator (create {TEST_UNCOMPILED_LOCATOR}.make)
+			internal_project := l_project_factory.eiffel_project
+			eiffel_project_helper := a_project_helper
 
 			if (create {SHARED_FLAGS}).is_gui then
 				create {EV_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
@@ -63,10 +224,22 @@ feature {NONE} -- Initialization
 				create {TTY_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
 			end
 
-			synchronize
+				-- Create tree
+			create tag_tree.make (create {TAG_DIRECTORY_FORMATTER},
+			                      create {EC_TAG_TREE_NODE_FACTORY [TEST_I]})
+
 		end
 
 feature -- Access
+
+	eiffel_project_helper: TEST_PROJECT_HELPER_I
+			-- <Precursor>
+
+	eiffel_project: E_PROJECT
+			-- <Precursor>
+		do
+			Result := internal_project
+		end
 
 	processor_registrar: TEST_PROCESSOR_REGISTRAR_I
 			-- <Precursor>
@@ -89,6 +262,8 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	internal_project: like eiffel_project
+
 	internal_processors: DS_LINKED_LIST [TEST_PROCESSOR_I]
 			-- Internal storage for `processor_instances'
 
@@ -100,10 +275,13 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_interface_usable: BOOLEAN
+	is_project_initialized: BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor {DISPOSABLE_SAFE} and then Precursor {TEST_PROJECT}
+			Result := 	internal_project.initialized and then
+				internal_project.workbench.universe_defined and then
+				internal_project.system_defined and then
+				internal_project.system.universe.target /= Void
 		end
 
 	is_registered (a_processor: TEST_PROCESSOR_I): BOOLEAN
@@ -136,18 +314,12 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			-- <Precursor>
 		do
 			a_test.set_queued (a_executor)
-				-- Note: replace `as_attached' with Current when compiler treats Current as attached
-			test_changed_event.publish ([as_attached, a_test.as_attached])
-			a_test.clear_changes
 		end
 
 	set_test_running (a_test: TEST_I)
 			-- <Precursor>
 		do
 			a_test.set_running
-				-- Note: replace `as_attached' with Current when compiler treats Current as attached
-			test_changed_event.publish ([as_attached, a_test.as_attached])
-			a_test.clear_changes
 		end
 
 	add_outcome_to_test (a_test: TEST_I; a_outcome: EQA_TEST_RESULT)
@@ -175,7 +347,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			end
 			a_test.add_outcome (a_outcome)
 				-- Note: replace `as_attached' with Current when compiler treats Current as attached
-			test_changed_event.publish ([as_attached, a_test.as_attached])
+			test_result_added_event.publish ([Current, a_test, a_outcome])
 			a_test.clear_changes
 		end
 
@@ -183,9 +355,6 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			-- <Precursor>
 		do
 			a_test.abort
-				-- Note: replace `as_attached' with Current when compiler treats Current as attached
-			test_changed_event.publish ([as_attached, a_test.as_attached])
-			a_test.clear_changes
 		end
 
 feature -- Query
@@ -265,23 +434,6 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	remove_test (a_id: STRING)
-			-- <Precursor>
-		local
-			l_test: TEST_I
-		do
-			l_test := test_routine_map.item (a_id)
-			if l_test.is_outcome_available then
-				count_executed := count_executed - 1
-				if l_test.passed then
-					count_passing := count_passing - 1
-				elseif l_test.failed then
-					count_failing := count_failing - 1
-				end
-			end
-			Precursor (a_id)
-		end
-
 feature -- Events
 
 	processor_launched_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I]]
@@ -300,6 +452,11 @@ feature -- Events
 			-- <Precursor>
 
 invariant
+	test_map_attached: test_map /= Void
+	test_map_contains_usables: test_map.for_all (agent {TEST_I}.is_interface_usable)
+
+-- OBSOLETE INVARIANTS
+
 	internal_processors_usable: internal_processors.for_all (agent {attached TEST_PROCESSOR_I}.is_interface_usable)
 
 note

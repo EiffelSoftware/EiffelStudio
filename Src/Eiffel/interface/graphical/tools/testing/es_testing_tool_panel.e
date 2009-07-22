@@ -12,7 +12,6 @@ class
 inherit
 	ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
-			on_before_initialize,
 			on_after_initialized,
 			create_right_tool_bar_items
 		end
@@ -32,8 +31,8 @@ inherit
 	TEST_SUITE_OBSERVER
 		redefine
 			on_test_added,
-			on_test_changed,
 			on_test_removed,
+			on_test_result_added,
 			on_processor_launched,
 			on_processor_stopped,
 			on_processor_error
@@ -57,84 +56,28 @@ inherit
 create {ES_TESTING_TOOL}
 	make
 
-feature {NONE} -- Initialization
-
-	on_before_initialize
-			-- <Precursor>
-		local
-			l_et: KL_STRING_EQUALITY_TESTER_A [STRING]
-		do
-			Precursor
-			create l_et
-			create view_templates.make (5)
-			view_templates.set_equality_tester (l_et)
-			create view_template_descriptions.make (5)
-			view_template_descriptions.set_equality_tester (l_et)
-			create view_history.make
-			view_history.set_equality_tester (l_et)
-			create tag_filter.make
-		end
-
 feature {NONE} -- Initialization: widgets
 
 	build_tool_interface (a_widget: like create_widget)
 			-- <Precursor>
 		do
-			build_view_bar (a_widget)
 			create split_area
-			build_tree_view
+			build_test_tree
 			build_notebook
 			a_widget.extend (split_area)
 		end
 
-	build_view_bar (a_widget: like create_widget)
-			-- Build tool bar containing view and filter box
+	build_test_tree
+			-- Initialize `test_tree' and show it in `Current'.
 		local
-			l_tool_bar: SD_TOOL_BAR
-			l_hbox: EV_HORIZONTAL_BOX
-			l_label: EV_LABEL
+			l_tag_tree: ES_TAG_TREE_GRID [TEST_I]
 		do
-			create l_hbox
-			l_hbox.set_padding (10)
-			l_hbox.set_border_width (5)
+			create test_tree.make (develop_window, Current)
+			l_tag_tree := test_tree.tag_tree
 
-				-- Create and add `filter_box' with label
-			create l_label.make_with_text (locale_formatter.translation (l_filter))
-			l_hbox.extend (l_label)
-			l_hbox.disable_item_expand (l_label)
-			create filter_box
-			register_action (filter_box.return_actions, agent on_return_filter)
-			register_action (filter_box.select_actions, agent on_select_filter)
-			l_hbox.extend (filter_box)
-
-			create clear_filter_button.make
-			clear_filter_button.set_pixel_buffer (stock_pixmaps.general_reset_icon_buffer)
-			clear_filter_button.set_pixmap (stock_pixmaps.general_reset_icon)
-			clear_filter_button.set_tooltip (locale_formatter.translation (tt_clear_filter))
-			register_action (clear_filter_button.select_actions, agent on_clear_filter)
-			create l_tool_bar.make
-			l_tool_bar.extend (clear_filter_button)
-			l_tool_bar.compute_minimum_size
-			l_hbox.extend (l_tool_bar)
-			l_hbox.disable_item_expand (l_tool_bar)
-
-			a_widget.extend (l_hbox)
-			a_widget.disable_item_expand (l_hbox)
-		end
-
-	build_tree_view
-			-- Create `tree_view' and add it to `split_area'.
-		do
-				-- Note: for now hacking the second tree in
-			create tag_tree.make (develop_window,
-			                      tag_filter,
-			                      create {ES_TEST_TAG_TREE_GRID_LAYOUT}.make (Current))
-			tag_tree.set_hide_outside_nodes (True)
-			tag_tree.set_update_timer (2)
-
-			split_area.set_first (tag_tree.widget)
-			register_action (tag_tree.node_selected_actions, agent on_selection_change (?, True))
-			register_action (tag_tree.node_deselected_actions, agent on_selection_change (?, False))
+			split_area.set_first (test_tree.widget)
+			register_action (l_tag_tree.node_selected_actions, agent on_selection_change (?, True))
+			register_action (l_tag_tree.node_deselected_actions, agent on_selection_change (?, False))
 		end
 
 	build_notebook
@@ -158,38 +101,23 @@ feature {NONE} -- Initialization: widget status
 			-- <Precursor>
 		local
 			l_app: EV_APPLICATION
+			l_test_suite: TEST_SUITE_S
 		do
 			Precursor
 			if test_suite.is_service_available then
-				test_suite.service.test_suite_connection.connect_events (Current)
-				tag_tree.connect (test_suite.service.tag_tree)
+				l_test_suite := test_suite.service
+				if l_test_suite.is_interface_usable then
+					l_test_suite.test_suite_connection.connect_events (Current)
+				end
 			end
 			propagate_drop_actions (Void)
 
-			initialize_view_bar
 			update_run_labels
 
 			l_app := (create {EV_SHARED_APPLICATION}).ev_application
 			l_app.add_idle_action_kamikaze (agent split_area.set_proportion (0.5))
 		end
 
-	initialize_view_bar
-			-- Initialize view bar combo boxes
-		do
-			view_templates.force_last ("")
-			view_template_descriptions.force_last ("")
-			view_templates.force_last ("^class/")
-			view_template_descriptions.force_last (locale_formatter.translation (c_class))
-			view_templates.force_last ("^covers/")
-			view_template_descriptions.force_last (locale_formatter.translation (c_covers))
-			view_templates.force_last ("^result/")
-			view_template_descriptions.force_last (locale_formatter.translation (c_results))
-			view_templates.force_last ("^type/")
-			view_template_descriptions.force_last (locale_formatter.translation (c_types))
-
-			update_filter_box
-			filter_box.i_th (2).enable_select
-		end
 
 feature -- Access: help
 
@@ -201,26 +129,19 @@ feature -- Access: help
 
 feature {NONE} -- Access
 
-	tag_tree: ES_TAG_TREE_GRID [TEST_I]
-	tag_filter: TAG_REGEX_FILTER [TEST_I]
-
 	outcome_tab: ES_TESTING_TOOL_OUTCOME_WIDGET
 			-- Tab showing details of a selected test
 
 	current_window: EV_WINDOW
 			-- <Precursor>
-		local
-			l_window: EV_WINDOW
 		do
-			l_window := develop_window.window
-			check l_window /= Void end
-			Result := l_window
+			Result := develop_window.window
 		end
 
 feature {NONE} -- Access: widgets
 
-	filter_box: EV_COMBO_BOX
-			-- Combo box containing pattern for filtering tests
+	test_tree: ES_TEST_TREE
+			-- Tree showing tag tree for tests
 
 	split_area: EV_VERTICAL_SPLIT_AREA
 			-- Splitting area for grid and notebook
@@ -236,17 +157,6 @@ feature {NONE} -- Access: widgets
 
 	errors_pixmap: EV_PIXMAP
 
-feature {NONE} -- Access: view
-
-	view_templates: DS_ARRAYED_LIST [STRING]
-			-- List of predefined tags to be used in `tree_view'
-
-	view_template_descriptions: DS_ARRAYED_LIST [STRING]
-			-- List of readable descriptions for each tag in `view_templates'
-
-	view_history: DS_LINKED_LIST [STRING]
-			-- List of tags user has entered recently
-
 feature {NONE} -- Access: buttons
 
 	wizard_button: SD_TOOL_BAR_BUTTON
@@ -260,9 +170,6 @@ feature {NONE} -- Access: buttons
 
 	stop_button: SD_TOOL_BAR_BUTTON
 			-- Button for stopping any current test execution
-
-	clear_filter_button: SD_TOOL_BAR_BUTTON
-			-- Button for clearing any filter
 
 feature {NONE} -- Access: menus
 
@@ -278,118 +185,6 @@ feature {NONE} -- Access: menus
 	debug_filtered_menu: EV_MENU_ITEM
 			-- Menu items for debugging tests
 
-feature {NONE} -- Status report
-
-	is_updating_filter_box: BOOLEAN
-			-- Is `filter_box' currently being updated?
-
-feature {NONE} -- Status setting: view
-
-	on_return_filter
-			-- Called when user presses enter in `filter_box'.
-		local
-			l_expr: STRING
-		do
-			l_expr := filter_box.text.as_string_8
-			if not l_expr.is_empty then
-				if not view_templates.has (l_expr) then
-					view_history.start
-					view_history.search_forth (l_expr)
-					if not view_history.after then
-						view_history.remove_at
-					end
-					view_history.put_first (l_expr)
-					if view_history.count > 3 then
-						view_history.remove_last
-					end
-					update_filter_box
-					filter_box.set_text (l_expr)
-				end
-			end
-			execute_with_busy_cursor (agent update_tag_tree)
-		end
-
-	on_select_filter
-			-- Called when a view new view is selected
-		do
-			if
-				not is_updating_filter_box and
-				attached filter_box.selected_item as l_item and then
-				attached {STRING} l_item.data as l_tag
-			then
-				filter_box.set_text (l_tag)
-				execute_with_busy_cursor (agent update_tag_tree)
-			end
-		end
-
-	on_clear_filter
-			-- Called when `clear_filter_button' is pressed.
-		do
-			filter_box.set_text ("")
-			execute_with_busy_cursor (agent update_tag_tree)
-		end
-
-	update_filter_box
-			-- Update proposal list for `view_box'
-		require
-			not_updating: not is_updating_filter_box
-		local
-			l_cursor: DS_LINEAR_CURSOR [STRING]
-			i: INTEGER
-			l_item: EV_LIST_ITEM
-		do
-			is_updating_filter_box := True
-			filter_box.wipe_out
-			from
-				l_cursor := view_history.new_cursor
-				l_cursor.start
-			until
-				l_cursor.after
-			loop
-				create l_item.make_with_text (l_cursor.item)
-				l_item.set_data (l_cursor.item)
-				filter_box.extend (l_item)
-				l_cursor.forth
-			end
-			from
-				i := 1
-			until
-				i > view_templates.count
-			loop
-				create l_item.make_with_text (view_template_descriptions.item (i))
-				l_item.set_data (view_templates.item (i))
-				filter_box.extend (l_item)
-				i := i + 1
-			end
-			is_updating_filter_box := False
-		ensure
-			not_updating: not is_updating_filter_box
-		end
-
-	update_tag_tree
-			-- Refresh `tree_view' according to current view definition.
-		local
-			l_expr: STRING
-		do
-			develop_window.lock_update
-			if test_suite.is_service_available then
-				l_expr := filter_box.text.to_string_8
-				check l_expr /= Void end
-				if not l_expr.is_empty then
-					tag_filter.set_expression (l_expr)
-					tag_tree.reset
-				elseif tag_filter.has_expression then
-					tag_filter.remove_expression
-					tag_tree.reset
-				end
-			else
-				if tag_tree.is_connected then
-					tag_tree.disconnect
-				end
-			end
-			develop_window.unlock_update
-		end
-
 feature {NONE} -- Status setting: stones
 
 	on_stone_changed (a_old_stone: detachable like stone)
@@ -400,10 +195,6 @@ feature {NONE} -- Status setting: stones
 		do
 			if not is_in_stone_synchronization then
 				if attached {CLASSI_STONE} stone as l_class_stone and then attached {EIFFEL_CLASS_I} l_class_stone.class_i as l_class then
-					if test_suite.is_service_available then
-						test_suite.service.synchronize_with_class (l_class)
-						l_is_test_class := test_suite.service.is_test_class (l_class)
-					end
 					create l_filter_text.make (40)
 					if l_is_test_class then
 						l_filter_text.append ("^class")
@@ -430,8 +221,7 @@ feature {NONE} -- Status setting: stones
 					l_filter_text.append (l_cluster.group.name)
 				end
 				if l_filter_text /= Void then
-					filter_box.set_text (l_filter_text)
-					update_tag_tree
+					test_tree.set_filter (l_filter_text)
 				end
 			end
 		end
@@ -493,7 +283,7 @@ feature {NONE} -- Events: test execution
 	on_run_current (a_type: TYPE [TEST_EXECUTOR_I])
 			-- Called when user presses `run_button' or `debug_button' directly.
 		do
-			if tag_tree.selected_nodes.is_empty then
+			if test_tree.tag_tree.selected_nodes.is_empty then
 				on_run_filtered (a_type)
 			else
 				on_run_selected (a_type)
@@ -539,7 +329,7 @@ feature {NONE} -- Events: test execution
 			l_set: DS_HASH_SET [TEST_I]
 		do
 			create l_set.make_default
-			tag_tree.append_items_recursive (l_set)
+			test_tree.tag_tree.append_items_recursive (l_set)
 			launch_executor (l_set, a_type)
 		end
 
@@ -549,7 +339,7 @@ feature {NONE} -- Events: test execution
 			l_set: DS_HASH_SET [TEST_I]
 		do
 			create l_set.make_default
-			tag_tree.selected_nodes.do_all (agent {TAG_TREE_NODE [TEST_I]}.append_items_recursive (l_set))
+			test_tree.tag_tree.selected_nodes.do_all (agent {TAG_TREE_NODE [TEST_I]}.append_items_recursive (l_set))
 			launch_executor (l_set, a_type)
 		end
 
@@ -592,26 +382,24 @@ feature {NONE} -- Events: labels
 	on_run_label_select (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tile, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER)
 			-- Called when user clicks on `runs_label'.
 		do
-			filter_box.set_text (l_outcome_view)
-			update_tag_tree
+			test_tree.set_filter (l_outcome_view)
 		end
 
 	on_error_label_select (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tile, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER)
 			-- Called when user clicks on `errors_label'.
 		do
-			filter_box.set_text (l_filter_not_passing)
-			update_tag_tree
+			test_tree.set_filter (l_filter_not_passing)
 		end
 
 feature {TEST_SUITE_S} -- Events: test suite
 
-	on_test_added (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_item: TEST_I)
+	on_test_added (a_collection: TEST_SUITE_S; a_item: TEST_I)
 			-- <Precursor>
 		do
 			update_run_labels
 		end
 
-	on_test_changed (a_test_suite: ACTIVE_COLLECTION_I [TEST_I]; a_test: TEST_I)
+	on_test_result_added (a_test_suite: TEST_SUITE_S; a_test: TEST_I; a_result: EQA_TEST_RESULT)
 			-- <Precursor>
 		do
 			if outcome_tab.is_active and then outcome_tab.test = a_test then
@@ -620,7 +408,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			update_run_labels
 		end
 
-	on_test_removed (a_collection: ACTIVE_COLLECTION_I [TEST_I]; a_item: TEST_I)
+	on_test_removed (a_collection: TEST_SUITE_S; a_item: TEST_I)
 			-- <Precursor>
 		do
 			if outcome_tab.is_active and then outcome_tab.test = a_item then
@@ -702,7 +490,7 @@ feature {NONE} -- Events: tree view
 	on_selection_change (a_node: TAG_TREE_NODE [TEST_I]; a_is_selected: BOOLEAN)
 			-- Called when item is selected or deselected.
 		do
-			if tag_tree.selected_nodes.is_empty then
+			if test_tree.tag_tree.selected_nodes.is_empty then
 				run_selected_menu.disable_sensitive
 				debug_selected_menu.disable_sensitive
 			else
@@ -890,7 +678,6 @@ feature {NONE} -- Internationalization
 	f_run_button: STRING = "Run all tests in background"
 	f_debug_button: STRING = "Debug all tests in EiffelStudio"
 	f_stop_button: STRING = "Stop all execution"
-	tt_clear_filter: STRING = "Clear filter"
 
 	m_run_all: STRING = "Run all"
 	m_run_failing: STRING = "Run failing"
@@ -901,21 +688,12 @@ feature {NONE} -- Internationalization
 	m_debug_filtered: STRING = "Debug filtered"
 	m_debug_selected: STRING = "Debug selected"
 
-	l_view: STRING = "View"
-	l_filter: STRING = "Filter"
-
-	c_class: STRING = "Test classes"
-	c_covers: STRING = "Classes under test"
-	c_results: STRING = "Results"
-	c_types: STRING = "Type of test"
-
 feature {NONE} -- Constants
 
 	l_outcome_view: STRING = "^outcome/"
 	l_filter_not_passing: STRING = "^outcome/ -^outcome/passes/"
 
 invariant
-	predefined_view_count_correct: view_template_descriptions.count = view_templates.count
 	details_tab_valid: is_initialized implies notebook.has (outcome_tab.widget)
 
 note

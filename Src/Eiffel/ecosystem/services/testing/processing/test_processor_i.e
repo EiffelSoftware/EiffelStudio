@@ -41,7 +41,6 @@ feature -- Access
 			-- <Precursor>
 		deferred
 		ensure then
-			subset_of_test_suite: test_suite.is_subset (Result)
 		end
 
 feature -- Status report

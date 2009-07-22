@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	TEST_INHERITANCE_AST_FACTORY
+	ETEST_INHERITANCE_AST_FACTORY
 
 inherit
 	AST_NULL_FACTORY

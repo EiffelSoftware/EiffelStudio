@@ -58,7 +58,7 @@ feature -- Status report
 			-- Can `eiffel_project' be accessed?
 		do
 			if is_initialized then
-				Result := not project.is_compiling and project.successful
+				Result := not project.workbench.is_compiling and then project.successful
 			end
 		ensure
 			result_implies_initialized: Result implies is_initialized

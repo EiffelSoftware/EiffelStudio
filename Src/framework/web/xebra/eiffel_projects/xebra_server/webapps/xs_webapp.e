@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 			action_run.set_next_action (action_send)
 
 			current_request := create {XCWC_EMPTY}.make
-			needs_cleaning := False
 
 			dev_mode := True
 
@@ -81,8 +80,7 @@ feature  -- Access
 	current_request: XC_WEBAPP_COMMAND
 		-- The last request received from the mod_xebra
 
-	needs_cleaning: BOOLEAN assign set_needs_cleaning
-		-- Can be used to force a clean on the next translation/compilation	
+
 
 feature -- Actions
 
@@ -151,12 +149,13 @@ feature  -- Status Setting
 --			request_message_set: request_message = a_request_message
 --		end
 
-	set_needs_cleaning (a_cleaned: like needs_cleaning)
-			-- Sets needs_cleaning.
+	set_needs_cleaning
+			-- Sets needs_cleaning to all cleanable actions.
 		do
-			needs_cleaning := a_cleaned
-		ensure
-			cleaned_set: needs_cleaning = a_cleaned
+			action_translate.set_force (True)
+			action_compile_webapp.set_needs_cleaning (True)
+			action_compile_sgen.set_needs_cleaning (True)
+			action_generate.set_needs_cleaning (True)
 		end
 
 	shutdown

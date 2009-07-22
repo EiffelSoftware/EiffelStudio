@@ -282,7 +282,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>.
 		do
 			if attached {XS_WEBAPP} config.file.webapps[a_name] as l_webapp then
-				l_webapp.needs_cleaning := True
+				l_webapp.set_needs_cleaning
 				o.iprint ("Cleaning webapp '" + a_name + "'...")
 				l_webapp.send (create {XCWC_EMPTY}.make).do_nothing
 				Result := create {XCCR_OK}

@@ -38,6 +38,8 @@ feature -- Access
 	gen_compile_process: detachable PROCESS
 			-- Used to compile the servlet_gen			
 
+	needs_cleaning: BOOLEAN assign set_needs_cleaning
+			-- Can be used to force the action to execute and add -clean option to compilation
 
 	gen_compiler_args: STRING
 			-- The arguments that are passed to compile the servlet_gen	
@@ -45,13 +47,13 @@ feature -- Access
 			l_f_utils: XU_FILE_UTILITIES
 		do
 			create l_f_utils
-			Result  := " -config " + servlet_gen_ecf.string + " -target servlet_gen -c_compile -stop"
-			if webapp.needs_cleaning then
+			Result  := " -config %"" + servlet_gen_ecf.string + "%" -target servlet_gen -c_compile -stop"
+			if needs_cleaning then
 				Result.append (" -clean")
 			end
-			if not l_f_utils.is_readable_file (servlet_gen_exe) then
-				Result.append (" -clean")
-			end
+--			if not l_f_utils.is_readable_file (servlet_gen_exe) then
+--				Result.append (" -clean")
+--			end
 			if {XU_CONSTANTS}.experiment_library then
 				Result.append (" -experiment")
 			end
@@ -62,9 +64,14 @@ feature -- Access
 
 feature -- Status report
 
-	is_necessary: BOOLEAN
-		--
 
+	is_necessary: BOOLEAN
+		-- <Precursor>
+		--
+		-- Returns true if:
+		--	- There is a e or ecf file in servlet_gen_path that is newer than servlet_gen_melted_file
+		--  - servlet_gen_exe does not exist or is not executable
+		--  - Needs cleaning
 
 		local
 			l_f_util: XU_FILE_UTILITIES
@@ -77,20 +84,20 @@ feature -- Status report
 												"\w+\.(e|ecf)")
 			l_executable_does_not_exist := not l_f_util.is_executable_file (servlet_gen_exe)
 
-			Result := l_melted_file_is_old or l_executable_does_not_exist or webapp.needs_cleaning
+			Result := l_melted_file_is_old or l_executable_does_not_exist or needs_cleaning
 
 			if Result then
 				o.dprint ("Compiling servlet_gen is necessary", 3)
 				if l_melted_file_is_old then
-					o.dprint ("Compiling servlet_gen is necessary because: " + servlet_gen_melted_file_path + " is older than .e files or .ecf file.", 5)
+					o.dprint ("Compiling servlet_gen is necessary because: " + servlet_gen_melted_file_path + " is older than .e files or .ecf file or does not exist.", 5)
 				end
 
 				if l_executable_does_not_exist then
-					o.dprint ("Compiling servlet_gen is necessary because: " + servlet_gen_exe + " does not exist or is not executable", 5)
+					o.dprint ("Compiling servlet_gen is necessary because: " + servlet_gen_exe + " does not exist or is not executable.", 5)
 				end
 
-					if webapp.needs_cleaning then
-					o.dprint ("Compiling servlet_gen is necessary because: webapp needs cleaning.", 5)
+					if needs_cleaning then
+					o.dprint ("Compiling servlet_gen is necessary because: servlet_gen compilation cleaning not yet performed.", 5)
 				end
 
 			else
@@ -99,6 +106,14 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_needs_cleaning (a_needs_cleaning: like needs_cleaning)
+			-- Setts needs_cleaning
+		do
+			needs_cleaning := a_needs_cleaning
+		ensure
+			needs_cleaning_set: equal (needs_cleaning, a_needs_cleaning)
+		end
 
 	stop
 			-- <Precursor>
@@ -160,6 +175,7 @@ feature -- Agents
 			-- Launch executing of servlet_gen in genrate_process
 		do
 			set_running (False)
+			set_needs_cleaning (False)
 			if not is_necessary then
 				execute_next_action.do_nothing
 			else

@@ -31,7 +31,7 @@ feature -- Access
 		do
 			l_f := app_dir.twin
 			l_f.set_file_name ("config.ini")
-			Result := l_f.string + " -d " + config.args.debug_level.out
+			Result := "%"" + l_f.string + "%" -d " + config.args.debug_level.out + ""
 						--webapp_debug_level.out
 		ensure
 			Result_attached: Result /= Void
@@ -46,6 +46,12 @@ feature -- Status report
 			--	- The action is not running
 		do
 			Result := not is_running
+
+			if Result then
+				o.dprint ("Run is necessary.", 5)
+			else
+				o.dprint ("Run is not necessary", 3)
+			end
 		end
 
 	wait_for_exit
@@ -54,6 +60,7 @@ feature -- Status report
 			if attached {PROCESS} run_process as p  and then p.is_running then
 				o.dprint ("Waiting for run_process to exit...", 3)
 				p.wait_for_exit
+				set_running (False)
 			end
 		end
 
@@ -78,7 +85,7 @@ feature {NONE} -- Implementation
 		do
 			if  not is_running then
 				if can_launch_process (webapp_exe, run_workdir) then
-					o.dprint("-=-=-=--=-=LAUNCHING WEBAPP (1) -=-=-=-=-=-=", 6)
+					o.dprint("-=-=-=--=-=LAUNCHING WEBAPP  -=-=-=-=-=-=", 6)
 					run_process := launch_process (webapp_exe,
 												run_args,
 												run_workdir,

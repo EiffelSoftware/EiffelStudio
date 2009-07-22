@@ -243,6 +243,11 @@ feature -- Status report
 	hide_outside_nodes: BOOLEAN
 			-- Are nodes for which `is_inside_node' and `is_parent_node' returns False shown in grid?
 
+feature {NONE} -- Status report
+
+	is_redrawing_rows: BOOLEAN
+			-- Are we currently redrawing rows?
+
 feature -- Status setting
 
 	connect (a_tree: like tree)
@@ -409,7 +414,7 @@ feature {NONE} -- Events
 	on_select_row (a_row: EV_GRID_ROW)
 			-- Called when row is selected.
 		do
-			if attached {like new_child} a_row.data as l_data then
+			if not is_redrawing_rows and attached {like new_child} a_row.data as l_data then
 				internal_selected_nodes.force (l_data.node)
 				node_selected_actions.call ([l_data.node])
 			end
@@ -418,7 +423,7 @@ feature {NONE} -- Events
 	on_deselect_row (a_row: EV_GRID_ROW)
 			-- Called when row is deselected.
 		do
-			if attached {like new_child} a_row.data as l_data then
+			if not is_redrawing_rows and attached {like new_child} a_row.data as l_data then
 				internal_selected_nodes.remove (l_data.node)
 				node_deselected_actions.call ([l_data.node])
 			end
@@ -501,6 +506,7 @@ feature {NONE} -- Implementation
 			l_selected: BOOLEAN
 		do
 			if grid.is_displayed then
+				is_redrawing_rows := True
 				from
 					l_list := grid.visible_row_indexes
 					l_list.start
@@ -516,6 +522,7 @@ feature {NONE} -- Implementation
 					end
 					l_list.forth
 				end
+				is_redrawing_rows := False
 			end
 		end
 

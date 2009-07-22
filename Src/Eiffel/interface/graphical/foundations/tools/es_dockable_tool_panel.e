@@ -114,6 +114,12 @@ feature {NONE} -- Initialization
 		        		bind_help_shortcut (l_window)
 		        	end
         		end)
+
+				-- Propagate actions to set the last focused widget, for better widget/focus handling when the tool is shown.
+			propagate_action (user_widget, agent (ia_widget: EV_WIDGET)
+				do
+					register_action (ia_widget.focus_in_actions, agent set_last_focused_widget (ia_widget))
+				end, Void)
         end
 
 feature {ES_TOOL} -- Initialization: User interface
@@ -339,6 +345,9 @@ feature {NONE} -- Access
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
+	last_focused_widget: detachable EV_WIDGET
+			-- Last focused widget the user selected.
+
 	show_polling_timer: EV_TIMEOUT
 			-- A timer used to poll the true display of a user widget.
 			-- See `on_shown' for usage.
@@ -414,6 +423,21 @@ feature -- Element change
         ensure
             icon_set: icon = a_buffer
         end
+
+feature {NONE} -- Element change
+
+	set_last_focused_widget (a_widget: EV_WIDGET)
+			-- Set last focused widget, used when the content recieves focus.
+			--
+			-- `a_widget': Last focused widget.
+		require
+			is_interface_usable: is_interface_usable
+			is_shown: is_shown
+			a_widget_attached: attached a_widget
+			not_a_widget_is_destroyed: not a_widget.is_destroyed
+		do
+			last_focused_widget := a_widget
+		end
 
 feature -- Basic operations
 
@@ -852,6 +876,9 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			is_shown: is_shown
 		do
+			if attached last_focused_widget as l_widget and then not l_widget.has_focus then
+				l_widget.set_focus
+			end
 		end
 
 	on_focus_out

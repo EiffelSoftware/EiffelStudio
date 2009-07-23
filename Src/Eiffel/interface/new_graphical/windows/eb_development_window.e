@@ -24,6 +24,7 @@ inherit
 				Ev_application
 			{ANY} auto_recycle, delayed_auto_recycle
 		redefine
+			show,
 			refresh,
 			refresh_all_commands,
 			refresh_external_commands,
@@ -124,6 +125,19 @@ inherit
 	HASHABLE
 
 	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
+		-- Used to bind context sensitive help
+	ES_HELP_REQUEST_BINDER
+		export
+			{NONE} all
+		redefine
+			show_help
+		end
+
+	ES_HELP_CONTEXT
 		export
 			{NONE} all
 		end
@@ -398,6 +412,12 @@ feature -- Access
 		ensure
 			selected_formatter_not_void: Result /= Void
 		end
+
+feature -- Access: Help
+
+	help_context_id: STRING = "E34647C8-840E-159D-74B3-07353A27472E"
+			-- Id linked to Eiffel Studio help documentation book.
+			-- <Precursor>
 
 feature {NONE} -- Access
 
@@ -1155,6 +1175,14 @@ feature -- Resource Update
 
 feature -- Window management
 
+	show
+			-- <Precursor>
+		do
+				-- Bind help
+			bind_help_shortcut (window)
+			Precursor
+		end
+
 	give_focus
 			-- Give the focus to the address manager.
 		do
@@ -1308,6 +1336,38 @@ feature -- Tools & Controls
 
 	managed_dependency_formatters: ARRAYED_LIST [EB_DEPENDENCY_FORMATTER]
 			-- All formatters to display dependency relationship of a target/group/folder/class
+
+feature -- Help system
+
+	help_context: detachable HELP_CONTEXT_I assign set_help_context
+			-- Context sensitive help context.
+			-- Call `set_help_context' when tools gain and lose focus to set correct context.
+
+	set_help_context (a_context: detachable HELP_CONTEXT_I)
+			-- Pushes a help context on the help context stack.
+			--
+			-- `a_context': Help context to push on the stack.
+		require
+			not_a_context_is_interface_usable: attached a_context implies a_context.is_interface_usable
+		do
+			help_context := a_context
+		ensure
+			help_context_set: help_context = a_context
+		end
+
+	show_help
+			-- <Precursor>
+		do
+			if help_providers.is_service_available then
+				if attached help_context as l_help_context and then l_help_context.is_help_available then
+					help_providers.service.show_help (l_help_context)
+				elseif attached editors_manager.current_editor as l_editor and then l_editor.has_focus then
+					l_editor.show_help
+				elseif is_help_available then
+					help_providers.service.show_help (Current)
+				end
+			end
+		end
 
 feature -- Multiple editor management
 

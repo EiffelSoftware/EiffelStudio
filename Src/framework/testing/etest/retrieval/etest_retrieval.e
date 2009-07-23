@@ -151,7 +151,7 @@ feature {NONE} -- Access
 	common_ancestor: detachable EIFFEL_CLASS_I
 			-- Common ancestor of all test classes, Void if testing library is not included yet.
 		require
-			project_available: project_access.is_available
+			project_available: project_access.is_initialized
 		local
 			l_uuid: UUID
 			l_lib_list: LIST [CONF_LIBRARY]
@@ -198,7 +198,7 @@ feature {TEST_SUITE_S} -- Status report
 		local
 			l_formatter: TEXT_FORMATTER
 		do
-			if project_access.is_available then
+			if project_access.is_initialized then
 
 				if attached test_suite.output (Current) as l_output then
 					l_output.lock
@@ -224,7 +224,7 @@ feature {NONE} -- Status setting
 			l_sub_task: like sub_task
 		do
 				-- If `project' is being compiled we abort
-			if project_access.is_available then
+			if project_access.is_initialized then
 
 					-- Note: Replace following with Precursor call below once bug #16017 is fixed.
 				l_sub_task := sub_task

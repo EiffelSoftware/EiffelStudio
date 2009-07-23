@@ -91,7 +91,7 @@ feature -- Status setting
 			l_cursor := cursor
 			check cursor_attached: l_cursor /= Void end
 			if
-				session.project_access.is_available and
+				session.project_access.is_initialized and
 				attached cluster.classes as l_ht and then
 				l_ht.valid_cursor (l_cursor)
 			 then
@@ -131,7 +131,7 @@ feature {NONE} -- Query
 			--            `traversed_helpers'. This should be False for actual test classes, since they are
 			--            generally not parents of other test classes.
 		require
-			project_available: session.project_access.is_available
+			project_initialized: session.project_access.is_initialized
 		local
 			l_parents: like parents_of_class
 		do
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			-- `a_class': Class for which we want to retreive ancestors
 			-- `Result': List of direct ancestors of `a_class'.
 		require
-			project_available: session.project_access.is_available
+			project_initialized: session.project_access.is_initialized
 			factory_reset: session.inheritance_ast_factory.is_reset
 		local
 			l_universe: UNIVERSE_I

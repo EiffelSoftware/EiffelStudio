@@ -173,7 +173,7 @@ feature {NONE} -- Events: project
 				finalize_retrieval (False)
 			end
 
-			if test_suite.is_service_available and project_access.is_available then
+			if test_suite.is_service_available and project_access.is_initialized then
 				l_test_suite := test_suite.service
 				if l_test_suite.is_interface_usable then
 					create l_retrieval.make (Current, l_test_suite, project_access.project.universe.target)

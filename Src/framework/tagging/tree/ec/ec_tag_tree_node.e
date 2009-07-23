@@ -56,7 +56,7 @@ feature -- Access
 		do
 			Result := item_cache
 			if Result = Void or a_project.revision /= revision then
-				if a_project.is_available then
+				if a_project.is_initialized then
 					Result := retrieve_item (a_project)
 					revision := a_project.revision
 				end
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			a_project_attached: a_project /= Void
 			active: is_active
 			not_root: not is_root
-			a_project_available: a_project.is_available
+			a_project_available: a_project.is_initialized
 		deferred
 		end
 

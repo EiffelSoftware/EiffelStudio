@@ -360,7 +360,7 @@ feature {NONE} -- Implementation: tags
 			l_test_class := test_class
 			check l_test_class /= Void end
 
-			if project_access.is_available then
+			if project_access.is_initialized then
 				l_group := l_test_class.eiffel_class.cluster
 				if attached {EIFFEL_CLASS_I} project_access.class_from_name (a_class_name, l_group) as l_ec then
 					l_class := l_ec

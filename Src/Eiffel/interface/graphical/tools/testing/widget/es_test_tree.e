@@ -338,7 +338,7 @@ feature {TEST_SUITE_S} -- Events
 				a_session.connection.connect_events (Current)
 				on_proceeded (a_session)
 			end
-			status_label.set_text ("searching tests")
+			status_label.set_text ("Searching tests")
 		end
 
 	on_session_finished (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)

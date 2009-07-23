@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 			l_manager := project_access.project.manager
 			l_manager.load_agents.extend (agent on_compilation_done)
-			l_manager.compile_start_agents.extend (agent update_root_class)
+			l_manager.compile_start_agents.extend (agent force_test_class_compilation)
 			l_manager.compile_stop_agents.extend (agent on_compilation_done)
 
 			if test_suite.is_service_available then
@@ -87,6 +87,27 @@ feature {NONE} -- Access
 			-- Access to test suite service {TEST_SUITE_S}.
 		once
 			create Result
+		end
+
+	testing_library_class (a_name: STRING): detachable EIFFEL_CLASS_I
+			--
+		require
+			project_available: project_access.is_initialized
+		local
+			l_uuid: UUID
+			l_lib_list: LIST [CONF_LIBRARY]
+			l_lib: CONF_LIBRARY
+			l_universe: UNIVERSE_I
+		do
+			create l_uuid.make_from_string ("B77B3A44-A1A9-4050-8DF9-053598561C33")
+			l_universe := project_access.project.system.universe
+			l_lib_list := l_universe.library_of_uuid (l_uuid, False)
+			if not l_lib_list.is_empty then
+				l_lib := l_lib_list.first
+				if attached {EIFFEL_CLASS_I} project_access.class_from_name (a_name, l_lib) as l_ec then
+					Result := l_ec
+				end
+			end
 		end
 
 feature {NONE} -- Status report
@@ -175,8 +196,11 @@ feature {NONE} -- Events: project
 
 			if test_suite.is_service_available and project_access.is_initialized then
 				l_test_suite := test_suite.service
-				if l_test_suite.is_interface_usable then
-					create l_retrieval.make (Current, l_test_suite, project_access.project.universe.target)
+				if
+					l_test_suite.is_interface_usable and
+					attached testing_library_class ({TEST_CONSTANTS}.common_test_class_ancestor_name) as l_class
+				then
+					create l_retrieval.make (Current, l_test_suite, project_access.project.universe.target, l_class)
 					retrieval := l_retrieval
 					old_class_map := class_map
 					class_map := new_class_map
@@ -219,7 +243,7 @@ feature {NONE} -- Implementation
 			not_retrieving: not is_retrieving
 		end
 
-	update_root_class
+	force_test_class_compilation
 			-- If test classes have changed since last time `udpate_root_class' has been called, write
 			-- new class referencing all test classes and register it as root clas in system.
 		local
@@ -240,8 +264,25 @@ feature {NONE} -- Implementation
 				end
 				l_cursor.forth
 			end
+
+				-- Forcing the compilation of important library classes for which compilation can be long and
+				-- require C-compilation.
+			if
+				attached testing_library_class ({TEST_CONSTANTS}.evaluator_name) as l_lib_class and then
+				not l_system.is_class_referenced (l_lib_class)
+			then
+				l_system.add_unref_class (l_lib_class)
+			end
+			if
+				attached testing_library_class ({TEST_CONSTANTS}.interpreter_name) as l_lib_class and then
+				not l_system.is_class_referenced (l_lib_class)
+			then
+				l_system.add_unref_class (l_lib_class)
+			end
+
 			l_system.set_rebuild (True)
 		end
+
 
 feature {NONE} -- Factory
 

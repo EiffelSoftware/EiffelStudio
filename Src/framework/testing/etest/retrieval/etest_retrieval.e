@@ -30,14 +30,21 @@ create {ETEST_SUITE}
 
 feature {NONE} -- Initialization
 
-	make (an_etest_suite: like etest_suite; a_test_suite: like test_suite; a_target: like target)
+	make (an_etest_suite: like etest_suite;
+	      a_test_suite: like test_suite;
+	      a_target: like target;
+	      an_ancestor: like common_ancestor)
 			-- Initialize `Current'.
 			--
+			-- `an_etest_suite': Test suite for which classes should be traversed.
+			-- `a_test_suite': {TEST_SUITE_S} running `Current'.
 			-- `a_target': Target in which Eiffel tests should be retrieved.
+			-- `an_ancestor': Class from which all test classes must inherit.
 		require
 			an_etest_suite_attached: an_etest_suite /= Void
 			a_target_attached: a_target /= Void
 			a_test_suite_attached: a_test_suite /= Void
+			an_ancestor_attached: an_ancestor /= Void
 		local
 			l_conf_items: like conf_items
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
@@ -45,6 +52,7 @@ feature {NONE} -- Initialization
 			test_suite := a_test_suite
 			target := a_target
 			etest_suite := an_etest_suite
+			common_ancestor := an_ancestor
 			create conf_items.make_default
 			create traversed_descendants.make_default
 			create traversed_helpers.make_default
@@ -148,37 +156,8 @@ feature {NONE} -- Access
 			-- total: Total child items added to `conf_items'
 			-- remaining: Remaining items in `conf_items'
 
-	common_ancestor: detachable EIFFEL_CLASS_I
+	common_ancestor: EIFFEL_CLASS_I
 			-- Common ancestor of all test classes, Void if testing library is not included yet.
-		require
-			project_available: project_access.is_initialized
-		local
-			l_uuid: UUID
-			l_lib_list: LIST [CONF_LIBRARY]
-			l_lib: CONF_LIBRARY
-			l_universe: UNIVERSE_I
-			l_cache: like common_ancestor_cache
-		do
-			l_cache := common_ancestor_cache
-			if l_cache = Void then
-				create l_uuid.make_from_string ("B77B3A44-A1A9-4050-8DF9-053598561C33")
-				l_universe := project_access.project.system.universe
-				l_lib_list := l_universe.library_of_uuid (l_uuid, False)
-				if not l_lib_list.is_empty then
-					l_lib := l_lib_list.first
-					if attached {EIFFEL_CLASS_I} l_universe.safe_class_named ({TEST_CONSTANTS}.common_test_class_ancestor_name, l_lib) as l_ec then
-						l_cache := l_ec
-					end
-				end
-				common_ancestor_cache := l_cache
-			end
-			Result := l_cache
-		end
-
-	common_ancestor_cache: like common_ancestor
-			-- Cache for `common_ancestor'
-			--
-			-- Note: do not use directly, use `common_ancestor' instead!
 
 	current_library: detachable CONF_LIBRARY
 			-- Library for which its clusters are currently being processed

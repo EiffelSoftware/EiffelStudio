@@ -13,6 +13,9 @@ feature -- Access
 
 	common_test_class_ancestor_name: STRING = "EQA_TEST_SET"
 	system_level_test_ancestor_name: STRING = "EQA_SYSTEM_LEVEL_TEST_SET"
+	evaluator_name: STRING = "EQA_EVALUATOR"
+	interpreter_name: STRING = "ITP_INTERPRETER"
+	
 
 	indexing_clause_tag_name: STRING = "testing"
 	prepare_routine_name: STRING = "on_prepare"

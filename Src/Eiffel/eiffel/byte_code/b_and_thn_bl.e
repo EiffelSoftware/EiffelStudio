@@ -47,18 +47,22 @@ feature
 			-- Propagate register `r' throughout the expression
 		do
 			if has_call then
-				if 	not context.propagated
-					and register = Void
-					and r /= No_register
+					-- Do not propagate local or result in workbench mode as it would change its value
+					-- in the debugger before evaluating the expression (bug#14220).
+				if
+					not context.propagated
+					and then register = Void
+					and then r /= No_register
 					and then not used (r)
+					and then (context.final_mode or else not r.is_local and then not r.is_result)
 				then
-					register := r;
-					context.set_propagated;
-				end;
+					register := r
+					context.set_propagated
+				end
 			else
-				Precursor {B_AND_THEN_B} (r);
-			end;
-		end;
+				Precursor {B_AND_THEN_B} (r)
+			end
+		end
 
 	analyze
 			-- Analyze expression
@@ -123,7 +127,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -136,22 +140,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

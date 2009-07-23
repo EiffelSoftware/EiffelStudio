@@ -55,6 +55,20 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+feature -- Access: output
+
+	output (a_session: TEST_SESSION_I): detachable OUTPUT_I
+			-- Output for printing log messages for given session.
+			--
+			-- `a_session': A running session.
+		require
+			a_session_attached: a_session /= Void
+			a_session_usable: a_session.is_interface_usable
+		deferred
+		ensure
+			result_attached_implies_usable: Result /= Void implies Result.is_interface_usable
+		end
+
 feature -- Query
 
 	has_test (an_identifier: READABLE_STRING_GENERAL): BOOLEAN

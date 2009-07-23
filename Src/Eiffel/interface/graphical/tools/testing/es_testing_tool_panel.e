@@ -102,6 +102,10 @@ feature {NONE} -- Initialization: widget status
 		local
 			l_app: EV_APPLICATION
 			l_test_suite: TEST_SUITE_S
+			l_service_consumer: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+			l_service: OUTPUT_MANAGER_S
+			l_key: UUID
+			l_output: ES_EDITOR_OUTPUT_PANE
 		do
 			Precursor
 			if test_suite.is_service_available then
@@ -113,6 +117,21 @@ feature {NONE} -- Initialization: widget status
 			propagate_drop_actions (Void)
 
 			update_run_labels
+
+				-- Initialize testing output
+			create l_service_consumer
+			if l_service_consumer.is_service_available then
+				l_service := l_service_consumer.service
+				l_key := (create {OUTPUT_MANAGER_KINDS}).testing
+				if
+					l_service.is_interface_usable and then
+					l_service.is_valid_registration_key (l_key) and then
+					not l_service.is_output_available (l_key)
+				then
+					create l_output.make (locale.translation (t_testing_output))
+					l_service.register (l_output, l_key)
+				end
+			end
 
 			l_app := (create {EV_SHARED_APPLICATION}).ev_application
 			l_app.add_idle_action_kamikaze (agent split_area.set_proportion (0.5))
@@ -673,6 +692,8 @@ feature {NONE} -- Factory
 		end
 
 feature {NONE} -- Internationalization
+
+	t_testing_output: STRING = "Testing"
 
 	tt_wizard: STRING = "Create new tests"
 	f_run_button: STRING = "Run all tests in background"

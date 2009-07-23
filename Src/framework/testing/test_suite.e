@@ -28,14 +28,6 @@ inherit
 			is_valid_processor
 		end
 
---	TEST_COLLECTION
---		rename
---			make as make_collection,
---			are_tests_available as is_project_initialized
---		redefine
---			is_interface_usable
---		end
-
 create
 	make
 
@@ -51,6 +43,22 @@ feature -- Access
 			-- <Precursor>
 		do
 			Result := test_map.item (an_identifier)
+		end
+
+feature -- Access: output
+
+	output (a_session: TEST_SESSION_I): detachable OUTPUT_I
+			-- <Precursor>
+			--
+			-- Note: the session does not have to care about clearing the output when launching, since this
+			--       is done by `Current'.
+		local
+			l_output_manager: OUTPUT_MANAGER_S
+			l_output: OUTPUT_I
+		do
+			if a_session = current_output_session then
+				Result := internal_output
+			end
 		end
 
 feature -- Access: tagging
@@ -71,6 +79,44 @@ feature {NONE} -- Access
 		do
 			create Result
 		end
+
+	frozen output_manager: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+			-- Access to output manager service {OUTPUT_MANAGER_S}
+		do
+			create Result
+		end
+
+	internal_output: like output
+			-- Usable OUTPUT_I instance for `output'
+		local
+			l_output_manager: OUTPUT_MANAGER_S
+			l_output: OUTPUT_I
+		do
+			if output_manager.is_service_available then
+				l_output_manager := output_manager.service
+				if
+					l_output_manager.is_interface_usable and then
+					l_output_manager.is_valid_registration_key (output_key) and then
+					l_output_manager.is_output_available (output_key)
+				then
+					l_output := l_output_manager.output (output_key)
+					if l_output.is_interface_usable then
+						Result := l_output
+					end
+				end
+			end
+		ensure
+			result_attached_implies_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	output_key: UUID
+			-- Key for testing output
+		once
+			Result := (create {OUTPUT_MANAGER_KINDS}).testing
+		end
+
+	current_output_session: detachable TEST_SESSION_I
+			-- Session currently using the testing output
 
 feature -- Query
 
@@ -106,6 +152,13 @@ feature -- Status setting: sessions
 		local
 			l_rota: ROTA_S
 		do
+			if current_output_session = Void then
+				current_output_session := a_session
+				if attached internal_output as l_output then
+					l_output.clear
+					l_output.activate (False)
+				end
+			end
 			a_session.start
 			session_launched_event.publish ([Current, a_session])
 			if rota.is_service_available then
@@ -117,7 +170,6 @@ feature -- Status setting: sessions
 		end
 
 feature -- Events
-
 
 	test_added_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
 			-- <Precursor>
@@ -143,6 +195,9 @@ feature {ROTA_S} -- Events: rota
 				attached {TEST_SESSION_I} a_task as l_session and then
 				l_session.test_suite = Current
 			then
+				if current_output_session = l_session then
+					current_output_session := Void
+				end
 				session_finished_event.publish ([Current, l_session])
 			end
 		end

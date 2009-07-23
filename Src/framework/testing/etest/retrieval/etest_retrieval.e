@@ -76,7 +76,7 @@ feature -- Access
 		local
 			i: INTEGER
 			l_invert: like progress
-			l_progress: TUPLE [name: STRING; total, remaining: INTEGER]
+			l_progress: TUPLE [conf_item: CONF_VISITABLE; total, remaining: INTEGER]
 			l_sub_task: like sub_task
 		do
 			from
@@ -136,7 +136,7 @@ feature {NONE} -- Access
 	traversed_libraries: DS_HASH_SET [UUID]
 			-- UUID of libraries which have already been visited by `Current'
 
-	progress_list: DS_ARRAYED_LIST [TUPLE [name: STRING; total, remaining: INTEGER]]
+	progress_list: DS_ARRAYED_LIST [TUPLE [conf_item: CONF_VISITABLE; total, remaining: INTEGER]]
 			-- List containing progress of current library/cluster depth
 			--
 			-- Note: `progress_list' uses the fact that `conf_items' has a stack structure and basically
@@ -144,7 +144,7 @@ feature {NONE} -- Access
 			--       `append_table' and how many of these elements still remain on the stack. That way the
 			--       progress can be computed quite simple.
 			--
-			-- name: Name of target/library/cluster
+			-- conf_item: CONF_[TARGET/GROUP]
 			-- total: Total child items added to `conf_items'
 			-- remaining: Remaining items in `conf_items'
 
@@ -180,6 +180,9 @@ feature {NONE} -- Access
 			--
 			-- Note: do not use directly, use `common_ancestor' instead!
 
+	current_library: detachable CONF_LIBRARY
+			-- Library for which its clusters are currently being processed
+
 feature -- Status report
 
 	is_interface_usable: BOOLEAN = True
@@ -192,8 +195,22 @@ feature {TEST_SUITE_S} -- Status report
 
 	start
 			-- <Precursor>
+		local
+			l_formatter: TEXT_FORMATTER
 		do
 			if project_access.is_available then
+
+				if attached test_suite.output (Current) as l_output then
+					l_output.lock
+					l_formatter := l_output.formatter
+					l_formatter.process_basic_text ("Synchronizing test suite with project")
+					l_formatter.add_new_line
+					l_formatter.add_new_line
+					l_formatter.process_basic_text ("Parsing classes in cluster:")
+					l_formatter.add_new_line
+					l_output.unlock
+				end
+
 				target.process (Current)
 				initialize_sub_task
 			end
@@ -235,6 +252,7 @@ feature {NONE} -- Status setting
 				traversed_helpers.wipe_out
 				traversed_libraries.wipe_out
 				progress_list.wipe_out
+				current_library := Void
 			end
 		end
 
@@ -245,7 +263,7 @@ feature {NONE} -- Status setting
 		local
 			l_conf_items: like conf_items
 			l_item: CONF_VISITABLE
-			l_progress: TUPLE [name: STRING; total, remaining: INTEGER]
+			l_progress: TUPLE [conf_item: CONF_VISITABLE; total, remaining: INTEGER]
 			l_progress_list: like progress_list
 		do
 			from
@@ -289,12 +307,12 @@ feature -- Basis operations
 
 					-- Add clusters to `conf_items'
 				l_old_count := conf_items.count
-				append_table (a_target.clusters)
 				append_table (a_target.libraries)
+				append_table (a_target.clusters)
 				l_count := conf_items.count
 				if l_count > l_old_count then
 					l_total := l_count - l_old_count
-					progress_list.force_last ([a_target.name, l_total, l_total])
+					progress_list.force_last ([a_target, l_total, l_total])
 				end
 			end
 		end
@@ -302,6 +320,7 @@ feature -- Basis operations
 	process_library (a_library: CONF_LIBRARY)
 			-- <Precursor>
 		do
+			current_library := a_library
 			process_target (a_library.library_target)
 		end
 
@@ -309,8 +328,12 @@ feature -- Basis operations
 			-- <Precursor>
 		local
 			l_old_count, l_count, l_total: INTEGER
+			l_plist: like progress_list
+			l_formatter: TEXT_FORMATTER
+			l_appending: BOOLEAN
 		do
 			if attached common_ancestor as l_class_i then
+				l_plist := progress_list
 
 					-- Add sub clusters to `conf_items' which will be processed next
 				if attached a_cluster.children as l_ht then
@@ -320,12 +343,43 @@ feature -- Basis operations
 					if l_count > l_old_count then
 							-- We add one to account for current cluster
 						l_total := l_count - l_old_count
-						progress_list.force_last ([a_cluster.name, l_total + 1, l_total])
+						l_plist.force_last ([a_cluster, l_total + 1, l_total])
 					end
 				end
 
 				create sub_task.make (Current, a_cluster, l_class_i)
+				if attached test_suite.output (Current) as l_output then
+					l_output.lock
+					l_formatter := l_output.formatter
+					print_cluster (l_formatter, a_cluster)
+					l_formatter.add_new_line
+					l_output.unlock
+				end
 			end
+		end
+
+feature {NONE} -- Basic operations
+
+	print_cluster (a_formatter: TEXT_FORMATTER; a_cluster: CONF_CLUSTER)
+			-- Recursively print cluster path to given formatter.
+			--
+			-- `a_formatter': Formatter for printing groups.
+			-- `a_cluster': Cluster for which path should be printed to `a_formatter'.
+		require
+			a_formatter_attached: a_formatter /= Void
+			a_cluster_attached: a_cluster /= Void
+		do
+			if attached a_cluster.parent as l_parent then
+				print_cluster (a_formatter, l_parent)
+				a_formatter.process_basic_text ("/")
+			else
+				a_formatter.process_basic_text ("%T")
+				if attached current_library as l_library then
+					a_formatter.add_group (l_library, l_library.name)
+					a_formatter.process_basic_text ("/")
+				end
+			end
+			a_formatter.add_group (a_cluster, a_cluster.name)
 		end
 
 feature -- Events

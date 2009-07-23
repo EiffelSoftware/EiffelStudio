@@ -1380,7 +1380,10 @@ end
 		require
 			a_class_attached: a_class /= Void
 		do
-			Result := a_class.is_valid or unref_classes.has (a_class)
+			-- TODO: check if `a_class' is referenced through one of the root classes.
+			--
+			--Result := a_class.is_valid or unref_classes.has (a_class)
+			Result := unref_classes.has (a_class)
 		end
 
 feature -- ANY.default_rescue routine id

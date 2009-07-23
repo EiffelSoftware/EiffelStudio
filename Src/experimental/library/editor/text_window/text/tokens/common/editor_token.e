@@ -119,6 +119,51 @@ feature -- Status Setting
 			value_set: is_fake = b
 		end
 
+	set_text_color (a_color: like userset_text_color)
+			-- Set `text_color' with `a_color'.
+			-- Void to use color from preferences.
+		do
+			userset_text_color := a_color
+		ensure
+			userset_text_color_set: userset_text_color = a_color
+		end
+
+	set_background_color (a_color: like userset_background_color)
+			-- Set `background_color' with `a_color'.
+			-- Void to use color from preferences.
+		do
+			userset_background_color := a_color
+		ensure
+			userset_background_color_set: userset_background_color = a_color
+		end
+
+	set_selected_text_color (a_color: like userset_selected_text_color)
+			-- Set `selected_text_color' with `a_color'.
+			-- Void to use color from preferences.
+		do
+			userset_selected_text_color := a_color
+		ensure
+			userset_selected_text_color_set: userset_selected_text_color = a_color
+		end
+
+	set_selected_background_color (a_color: like userset_selected_background_color)
+			-- Set `selected_background_color' with `a_color'.
+			-- Void to use color from preferences.
+		do
+			userset_selected_background_color := a_color
+		ensure
+			userset_selected_background_color_set: userset_selected_background_color = a_color
+		end
+
+	set_focus_out_selected_background_color (a_color: like userset_focus_out_selected_background_color)
+			-- Set `focus_out_selected_background_color' with `a_color'.
+			-- Void to use color from preferences.
+		do
+			userset_focus_out_selected_background_color := a_color
+		ensure
+			userset_focus_out_selected_background_color_set: userset_focus_out_selected_background_color = a_color
+		end
+
 feature -- Visitor
 
 	process (a_visitor: TOKEN_VISITOR)
@@ -252,27 +297,47 @@ feature -- Color
 
 	text_color: EV_COLOR
 		do
-			Result := editor_preferences.color_of_id (text_color_id)
+			if attached userset_text_color as l_color then
+				Result := l_color
+			else
+				Result := editor_preferences.color_of_id (text_color_id)
+			end
 		end
 
 	background_color: EV_COLOR
 		do
-			Result := editor_preferences.color_of_id (background_color_id)
+			if attached userset_background_color as l_color then
+				Result := l_color
+			else
+				Result := editor_preferences.color_of_id (background_color_id)
+			end
 		end
 
 	selected_text_color: EV_COLOR
 		do
-			Result := editor_preferences.color_of_id (selected_text_color_id)
+			if attached userset_selected_text_color as l_color then
+				Result := l_color
+			else
+				Result := editor_preferences.color_of_id (selected_text_color_id)
+			end
 		end
 
 	selected_background_color: EV_COLOR
 		do
-			Result := editor_preferences.color_of_id (selected_background_color_id)
+			if attached userset_background_color as l_color then
+				Result := l_color
+			else
+				Result := editor_preferences.color_of_id (selected_background_color_id)
+			end
 		end
 
 	focus_out_selected_background_color: EV_COLOR
 		do
-			Result := editor_preferences.color_of_id (focus_out_selected_background_color_id)
+			if attached userset_focus_out_selected_background_color as l_color then
+				Result := l_color
+			else
+				Result := editor_preferences.color_of_id (focus_out_selected_background_color_id)
+			end
 		end
 
 feature -- Color ids
@@ -416,13 +481,7 @@ feature {TEXT_PANEL, VIEWER_LINE}
 			userset_data_set: userset_data = a_data
 		end
 
-feature {NONE} -- Userset Implementation
-
-	setup_userset_properties (panel: TEXT_PANEL)
-			-- Setup various userset properties specialized to current token from the editor.
-		do
-			userset_data := panel.userset_data
-		end
+feature {NONE} -- Userset Implementation, text panel wide attributes
 
 	userset_data: TEXT_PANEL_BUFFERED_DATA;
 			-- Userset editor data
@@ -453,6 +512,18 @@ feature {NONE} -- Userset Implementation
 				Result := l_userset_data.font_width
 			end
 		end
+
+feature {NONE} -- Userset Implementation, token wide attributes
+
+	userset_text_color: detachable EV_COLOR
+
+	userset_background_color: detachable EV_COLOR
+
+	userset_selected_text_color: detachable EV_COLOR
+
+	userset_selected_background_color: detachable EV_COLOR
+
+	userset_focus_out_selected_background_color: detachable EV_COLOR
 
 invariant
 	wide_image_not_void: wide_image /= Void

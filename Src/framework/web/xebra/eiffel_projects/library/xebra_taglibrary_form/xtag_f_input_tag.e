@@ -65,7 +65,7 @@ feature -- Implementation
 			if a_id.is_equal ("max_length") then
 				max_length := a_attribute
 			end
-			if a_id.is_equal ("input_type") then
+			if a_id.is_equal ("type") then
 				input_type := a_attribute
 			end
 		end

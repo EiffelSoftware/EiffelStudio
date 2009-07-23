@@ -15,16 +15,12 @@ create
 	
 feature {NONE} -- Access
 
-	logged_in: BOOLEAN 
-		-- Is the user logged in?
-
 feature -- Access
 
 	is_logged_in: BOOLEAN
 			-- Is a user logged in?
 		do
-			-- TODO
-			Result := logged_in
+			Result := attached current_session and then attached current_session.get (authentication_key)
 		end
 		
 	is_not_logged_in: BOOLEAN
@@ -35,17 +31,26 @@ feature -- Access
 
 	login
 		do
-			logged_in := True
+			--if attached {USER} global_state.db.valid_login (a_login.name, a_login.password) as user then
+				--if attached current_session as session then
+					--session.put (user, "auth")
+				--end
+			--end
+			current_session.put ("user", authentication_key)
 		end
 
 	logout
 		do
-			logged_in := False
+			current_session.remove (authentication_key)
 		end
 
 	user_name: STRING
 		do
-			Result := "Sandro"
+			Result := "UserTodo"
 		end
+
+feature -- Constants
+
+	authentication_key: STRING = "auth"
 
 end

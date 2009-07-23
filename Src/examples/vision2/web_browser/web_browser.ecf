@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="web_browser" uuid="16463688-3B9F-47D5-B90B-430AD9A8B8AC">
+	<description>Vision2 web browser widget example</description>
+	<target name="vision2_project">
+		<description>This configuration file has been generated for you by EiffelBuild.</description>
+		<root cluster="root_cluster" class="VISION2_APPLICATION" feature="make_and_launch"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true"/>
+		</option>
+		<setting name="multithreaded" value="true"/>
+		<external_include location="/usr/include/webkit-1.0">
+			<condition>
+				<platform value="unix"/>
+			</condition>
+			<condition>
+			</condition>
+		</external_include>
+		<external_include location="/usr/include/libsoup-2.4">
+			<condition>
+				<platform value="unix"/>
+			</condition>
+		</external_include>
+		<external_object location="/usr/local/lib/libsoup-2.4.a">
+			<condition>
+				<platform value="unix"/>
+			</condition>
+		</external_object>
+		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
+		<cluster name="root_cluster" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="vision2_project_dotnet" extends="vision2_project">
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true"/>
+		</option>
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

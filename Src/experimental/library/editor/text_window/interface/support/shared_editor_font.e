@@ -63,19 +63,19 @@ feature {EDITOR_DATA} -- Implementation
 			create Result.put (Void)
 		end
 
-	keyword_font_cell: CELL [FONT_PREFERENCE]
+	keyword_font_cell: CELL [detachable FONT_PREFERENCE]
 			-- Cached version of `font' for keywords.
 		once
 			create Result.put (Void)
 		end
 
-	font_zoom_factor_cell: CELL [INTEGER_PREFERENCE]
+	font_zoom_factor_cell: CELL [detachable INTEGER_PREFERENCE]
 			-- Cached version of font factory for `font' and `keyword_font'
 		once
 			create Result.put (Void)
 		end
 
-	header_font_cell: CELL [FONT_PREFERENCE]
+	header_font_cell: CELL [detachable FONT_PREFERENCE]
 			-- Cached version of `font' for header panel.
 		once
 			create Result.put (Void)

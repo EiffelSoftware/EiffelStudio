@@ -287,7 +287,7 @@ feature {NONE} -- Updates
 		do
 			is_notifying := True
 			cur := edition_observer_list.cursor
-			from 
+			from
 				edition_observer_list.start
 			until
 				edition_observer_list.after
@@ -429,16 +429,16 @@ feature -- Memory management
 
 feature {TEXT_PANEL} -- Implementation
 
-	edition_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
+	edition_observer_list: detachable ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.
 
 	cursor_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of cursor observers.
 
-	selection_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
+	selection_observer_list: detachable ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.
 
-	lines_observer_list: ARRAYED_LIST [TEXT_OBSERVER];
+	lines_observer_list: detachable ARRAYED_LIST [TEXT_OBSERVER];
 		-- List of editor observers.
 
 note

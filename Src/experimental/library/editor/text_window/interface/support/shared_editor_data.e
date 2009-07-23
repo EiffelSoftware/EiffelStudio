@@ -34,7 +34,7 @@ feature -- Query
 
 feature {NONE} -- Implementation		
 
-	editor_preferences_cell: CELL [EDITOR_DATA]
+	editor_preferences_cell: CELL [detachable EDITOR_DATA]
 			--
 		once
 			create Result.put (Void)

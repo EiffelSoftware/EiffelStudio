@@ -111,10 +111,10 @@ feature -- Access
 	curr_token: EDITOR_TOKEN
 			-- Current token analysed
 
-	end_token: EDITOR_TOKEN
+	end_token: detachable EDITOR_TOKEN
 			-- Last token analysed.
 
-	first_token: EDITOR_TOKEN
+	first_token: detachable EDITOR_TOKEN
 			-- First token analysed.
 
 	last_value: ANY

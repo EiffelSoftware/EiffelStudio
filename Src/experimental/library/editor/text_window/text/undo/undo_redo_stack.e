@@ -484,7 +484,7 @@ feature {EDITABLE_TEXT} -- Mark management
 	has_mark: BOOLEAN
 			-- Has a position in the stack been marked?
 
-	marked_cmd: UNDO_CMD
+	marked_cmd: detachable UNDO_CMD
 			-- Marked command.
 
 	notify_text_of_mark_reached

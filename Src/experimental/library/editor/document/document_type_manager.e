@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	  	    Result.compare_objects
 	  	end
 
-	current_class_cell: CELL [DOCUMENT_CLASS]
+	current_class_cell: CELL [detachable DOCUMENT_CLASS]
 	        -- Cell containing active document class
 		once
 		    create Result.put (Void)

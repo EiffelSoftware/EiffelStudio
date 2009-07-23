@@ -112,7 +112,7 @@ feature {TAG_TREE_NODE} -- Basic operations
 			if a_node.is_leaf then
 				l_test := a_node.item
 					-- TODO: the CLASS_I instance should be stored in the test.
-				if project_access.is_available then
+				if project_access.is_initialized then
 					l_class := project_access.class_from_name (l_test.class_name, Void)
 					if attached l_class and then l_class.is_compiled then
 						l_classc := l_class.compiled_representation

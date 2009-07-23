@@ -54,16 +54,6 @@ feature -- Status report
 				l_project.system.universe.target /= Void
 		end
 
-	is_available: BOOLEAN
-			-- Can `eiffel_project' be accessed?
-		do
-			if is_initialized then
-				Result := not project.workbench.is_compiling and then project.successful
-			end
-		ensure
-			result_implies_initialized: Result implies is_initialized
-		end
-
 feature -- Status setting
 
 	increase_build
@@ -83,7 +73,7 @@ feature -- Element retrival
 		require
 			a_name_attached: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
-			project_available: is_available
+			project_initialized: is_initialized
 		local
 			l_group: CONF_GROUP
 			l_list: LIST [CLASS_I]

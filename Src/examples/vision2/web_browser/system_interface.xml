@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
+ <item type="Constants">
+ </item>
+ <item type="EV_TITLED_WINDOW">
+  <Internal_properties>
+   <id>1</id>
+   <name>main_window</name>
+   <Expanded>1</Expanded>
+   <Is_root_window>True</Is_root_window>
+  </Internal_properties>
+  <EV_COLORIZABLE>
+  </EV_COLORIZABLE>
+  <EV_SENSITIVE>
+  </EV_SENSITIVE>
+  <EV_WIDGET>
+  </EV_WIDGET>
+  <EV_WINDOW>
+   <Title>Display window</Title>
+  </EV_WINDOW>
+  <EV_PIXMAPABLE>
+  </EV_PIXMAPABLE>
+  <EV_CONTAINER>
+  </EV_CONTAINER>
+ </item>
+</application>

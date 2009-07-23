@@ -220,6 +220,8 @@ feature {NONE} -- Status setting
 
 	remove_task (a_task: attached like sub_task; a_cancel: BOOLEAN)
 			-- <Precursor>
+		local
+			l_formatter: TEXT_FORMATTER
 		do
 			sub_task := Void
 			if not a_cancel then
@@ -232,6 +234,15 @@ feature {NONE} -- Status setting
 				traversed_libraries.wipe_out
 				progress_list.wipe_out
 				current_library := Void
+
+				if attached test_suite.output (Current) as l_output then
+					l_output.lock
+					l_formatter := l_output.formatter
+					l_formatter.add_new_line
+					l_formatter.process_basic_text ("Synchronization complete")
+					l_formatter.add_new_line
+					l_output.unlock
+				end
 			end
 		end
 

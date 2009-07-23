@@ -71,6 +71,8 @@ echo " Deny from all" >> $XEBRA_DEV/httpd/conf/httpd.conf
 echo "</Directory>" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 sed -e 's/Listen 80/Listen 55000/' -i $XEBRA_DEV/httpd/conf/httpd.conf 
 
+
+
 $XEBRA_DEV/httpd/bin/apachectl start
 
 

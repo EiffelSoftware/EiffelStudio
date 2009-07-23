@@ -1,77 +1,230 @@
 <page:include template="support_plain">
-<page:controller class="problem_report_search_controller"/>
-<page:define_region id="main_content">
-	<div>
-	<div id="title_box"><h1>Problem Report Edition</h1></div>
-	<f:validation_result header_text="Please correct the following error(s):" id="validation_summary"/>
-	<xeb:display css_class="error" id="error_label"/>
-	<table>
-		<tr>
-			<td valign="top">
-				<efa:report_selection error_label_id="error_label" on_select="on_report_select" on_change_display="on_change_display" id="report_selection" />
-			</td>
-			<td valign="top">
-				<efa:report_search columns="40" on_click="on_search" id="report_search" />
-			</td>
-		</tr>
-	</table>
-	<efa:collapsible_table  collapsible="true" title="Problem Reports" div_id="reports_div" id="reports_table" />
-	<div id="reports_div">
-		<div  id="no_result_div" class="message">
-			<b>The search returned no results.</b><br />
-			Try changing the search text, changing the filters or click the reset button.
-		</div>
-		<div  id="no_pr_div" class="message">
-			<b>There are no problem reports corresponding to the current filter settings.</b><br />
-		</div>
-		<div  id="no_submit_div" class="message">
-			No problem report has been submitted, you can 
-			submit one <a id="A1"  href="~/protected/problem_report_form.xeb">here</a>.
-		</div>
-
-		<div  class="pager_div" id="pager_div">
-			<efa:pager_sorter  grid_id="responsible_reports" id="pager" />
-		</div>
-		<!-- 35 + 16 + 16 + 16 + 333 + 100 + 85 + 105 + 65 + 66 + 10 * (3 + 3)  = 897 -->
-		<table class="responsible_grid" style="width: 897px; border-collapse: collapse; display: block;" border="0" cellspacing="0">
-			<xeb:iterate css_class="responsible_grid" list="%=problem_reports%" variable="problem_report" type="PROBLEM_REPORT_BEAN">			
-				<tbody>
+	<page:controller class="problem_report_search_controller"/>
+	<page:define_region id="main_content">
+		<div>
+			<div id="title_box">
+				<h1>
+					Problem Report Edition
+				</h1>
+			</div>		
+			<xeb:display css_class="error" id="error_label"/>			
+			<f:form variable="query" class="PROBLEM_REPORT_QUERY">
+				<table id="responsible_filter">
+					<tbody>
+						<tr>
+							<td class="field_name" valign="top">
+								<span>
+									Submitter:
+								</span>
+								<div class="tooltip_container" width="400px">
+								</div>
+							</td>
+							<td valign="top">
+								<f:input_text name="submitter_input" value="submitter" max_length="101" size="15"/>
+							</td>
+							<td class="field_name" valign="top">
+								Category:
+							</td>
+							<td valign="top">
+								<f:drop_down_list items="%=categories%" value="category"/>
+								<f:check_box value="open" name="a_open" text="Open" />
+							</td>
+						</tr>
+						<tr>
+							<td class="field_name" valign="top">
+							
+								<a href="">Responsible:</a>
+								<div class="tooltip_container" width="400px"></div>
+							</td>
+							<td valign="top">
+								<f:input_text max_length="101" value="responsible" />
+							</td>
+							<td class="field_name" valign="top">
+						
+								Severity:
+								<div class="tooltip_container" width="135px"></div>
+							</td>
+							<td valign="top">
+								<f:drop_down_list items="%=severities%" value="severity"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="field_name" valign="top">
+								Page Size:
+							</td>
+							<td valign="top">
+								<f:input_text max_length="4" size="3" value="page_size" />
+								<span class="error" style="color: Red; visibility: hidden;">*</span>
+							</td>
+							<td class="field_name" valign="top">
+								Priority:
+								<div class="tooltip_container" width="135px"></div>
+							</td>
+							<td valign="top">
+								<f:drop_down_list items="%=priorities%" value="priority" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</f:form>
+			<div id="reports_div">
+				<div  class="pager_div" id="pager_div">
+				</div>
+				<div id="ctl00_ctl00_default_main_content_main_content_pager_pager" class="pager">
+					<div class="pager_label">
+						<span>
+							<xeb:display text="%=problem_reports.count.out%"/>
+							Reports
+						</span>
+					</div>
+					<div class="pager_buttons">
+						<table width="374px" style="table-layout:fixed;" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="37px" align="left">
+									<input type="image" disabled="disabled" src="https://www2.eiffel.com/images/grid/first_inactive.gif" style="border-width:0px;" />
+									<input type="image" disabled="disabled" src="https://www2.eiffel.com/images/grid/previous_inactive.gif" style="border-width:0px;" />
+								</td>
+								<td align="center">
+									<div width="300px">
+										<span class="active_page">1 </span>
+										<a class="pager_buttons" href="">2 </a>
+										<a class="pager_buttons" href="">3 </a>
+										<a class="pager_buttons" href="">4 </a>
+										<a class="pager_buttons" href="">5 </a>
+										<a class="pager_buttons" href="">6 </a>
+										<a class="pager_buttons" href="">7 </a>
+										<a class="pager_buttons" href="">8 </a>
+										<a class="pager_buttons" href="">9 </a>
+										<a class="pager_buttons" href="">10 </a>
+										<a class="pager_buttons" href="">11 </a>
+									</div>
+								</td>
+								<td align="right" width="37px">
+									<input type="image"  src="https://www2.eiffel.com/images/grid/next_active.gif" style="border-width:0px;" />
+									<input type="image" name="ctl00$ctl00$default_main_content$main_content$pager$last_button" id="ctl00_ctl00_default_main_content_main_content_pager_last_button" src="https://www2.eiffel.com/images/grid/last_active.gif" style="border-width:0px;" />
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<table class="responsible_grid" style="width: 897px; border-collapse: collapse; display: block;" border="0" cellspacing="0">
 					<tr>
-						<td>
-							<a href=""><xeb:display text="#{problem_report.number}" /></a>
-						</td>
-						<td>
-							<div class="centered">
-								<div class="#{problem_report.status}"/>
-								<!--img src="support/images/support/status_closed.gif" style="border-width: 0px;"/-->
-							</div>
-						</td><td>
-							<div class="centered">
-								<div class="#{problem_report.priority}"/>
-								<!--img src="support/images/support/priority_high.gif" style="border-width: 0px;" /-->
-							</div>
-						</td><td>
-							<div class="centered">
-								<div class="#{problem_report.severity}"/>
-								<!--img src="support/images/support/severity_critical.gif" style="border-width: 0px;"/-->
-							</div>
-						</td><td><xeb:display text="#{problem_report.synopsis}" /></td><td>
-							<a disabled="disabled" class="disabled"><xeb:display text="#{problem_report.submitter}"/></a>
-						</td><td>
-							<f:form>
-								<f:drop_down_list items="%=all_responsibles%" name="responsibles" value="responsibles"/>
-							</f:form>
-						</td><td><xeb:display text="#{problem_report.category}" /></td><td><xeb:display text="#{problem_report.release}" /></td><td><xeb:display text="#{problem_report.date}" />
-						</td>
+						<th scope="col" style="width:35px;">
+							#
+						</th>
+						<th class="image_header" scope="col">
+							<input type="image" src="https://www2.eiffel.com/images/grid/grid_header.gif" style="border-width:0px;" />
+						</th>
+						<th class="image_header" scope="col">
+							<input type="image" src="https://www2.eiffel.com/images/grid/grid_header.gif" style="border-width:0px;" />
+						</th>
+						<th class="image_header" scope="col">
+							<input type="image" src="https://www2.eiffel.com/images/grid/grid_header.gif" style="border-width:0px;" />
+						</th>
+						<th scope="col" style="width:333px;">
+							Synopsis
+						</th>
+						<th scope="col" style="width:100px;">
+							Submitter
+						</th>
+						<th scope="col" style="width:85px;">
+							Responsible
+						</th>
+						<th scope="col" style="width:105px;">
+							Category
+						</th>
+						<th scope="col" style="width:65px;">
+							Release
+						</th>
+						<th scope="col" style="width:66px;">
+							Date
+							<img class="sort_glyph" src="https://www2.eiffel.com/images/grid/down.gif" alt="Descending Order" style="border-width:0px;" />
+						</th>
 					</tr>
-				</tbody>
-			</xeb:iterate>
-		</table>
-		<div  class="pager_div" id="bottom_pager_div">
-			<efa:pager_sorter grid_id="responsible_reports" secondary="true" id="bottom_pager" />
+					<xeb:iterate css_class="responsible_grid" list="%=problem_reports%" variable="problem_report" type="PROBLEM_REPORT_BEAN">			
+						<tbody>
+							<tr>
+								<td>
+									<a href=""><xeb:display text="#{problem_report.number}" /></a>
+								</td>
+								<td>
+									<div class="centered">
+										<div class="#{problem_report.status}"/>
+										<!--img src="support/images/support/status_closed.gif" style="border-width: 0px;"/-->
+									</div>
+								</td>
+								<td>
+									<div class="centered">
+										<div class="#{problem_report.priority}"/>
+										<!--img src="support/images/support/priority_high.gif" style="border-width: 0px;" /-->
+									</div>
+								</td>
+								<td>
+									<div class="centered">
+										<div class="#{problem_report.severity}"/>
+										<!--img src="support/images/support/severity_critical.gif" style="border-width: 0px;"/-->
+									</div>
+								</td>
+								<td>
+									<xeb:display text="#{problem_report.synopsis}" />
+								</td>
+								<td>
+									<a disabled="disabled" class="disabled">
+										<xeb:display text="#{problem_report.submitter}"/>
+									</a>
+								</td>
+								<td>
+									<f:form variable="drop_down_temp" class="PROBLEM_REPORT_BEAN">
+										<f:drop_down_list items="%=all_responsibles%" name="responsible" value="responsible"/>
+									</f:form>
+								</td>
+								<td>
+									<xeb:display text="#{problem_report.category}" />
+								</td>
+								<td>
+									<xeb:display text="#{problem_report.release}" />
+								</td>
+								<td>
+									<xeb:display text="#{problem_report.date}" />
+								</td>
+							</tr>
+						</tbody>
+					</xeb:iterate>
+				</table>
+				<div class="pager">
+					<div id="ctl00_ctl00_default_main_content_main_content_pager_pager_label" class="pager_label">
+						<span>
+							<xeb:display text="%=problem_reports.count.out%"/>
+							Reports
+						</span>
+					</div>
+					<div class="pager_buttons">
+						<table width="374px" style="table-layout:fixed;" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="37px" align="left">
+									<input type="image" disabled="disabled" src="https://www2.eiffel.com/images/grid/first_inactive.gif" style="border-width:0px;" />
+									<input type="image" disabled="disabled" src="https://www2.eiffel.com/images/grid/previous_inactive.gif" style="border-width:0px;" />
+								</td>
+								<td align="center">
+									<div width="300px">
+										<span class="active_page">1 </span>
+										<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_1" class="pager_buttons" href="">2 </a>
+										<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_2" class="pager_buttons" href="">3 </a>
+										<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_3" class="pager_buttons" href="">4 </a>
+										<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_4" class="pager_buttons" href="">5 </a>
+									</div>
+								</td>
+								<td align="right" width="37px">
+									<input type="image" src="https://www2.eiffel.com/images/grid/next_active.gif" style="border-width:0px;" />
+									<input type="image" src="https://www2.eiffel.com/images/grid/last_active.gif" style="border-width:0px;" />
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div  class="pager_div" id="bottom_pager_div">
+				</div>
+			</div>
 		</div>
-		<efa:window_namer  id="window_namer" />
-	</div>
-</div>
-</page:define_region>
+	</page:define_region>
 </page:include>

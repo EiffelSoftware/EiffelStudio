@@ -34,6 +34,7 @@ feature -- Initialization
 			submitter := "default_submitter"
 			date := "default_date"
 			status := "status_suspended"
+			responsible := "god"
 		end
 		
 feature -- Access	
@@ -45,6 +46,13 @@ feature -- Access
 	number: STRING
 	
 	submitter: STRING
+	
+	responsible: STRING assign set_responsible
+	
+	set_responsible (a_responsible: STRING)
+		do
+			responsible := a_responsible
+		end
 	
 	release: STRING assign set_release
 	

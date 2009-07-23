@@ -45,7 +45,7 @@ feature -- Access
 	children: ARRAY [like Current]
 		-- children of Current
 
-	keys: ARRAY [like item]
+	keys: ARRAY [detachable like item]
 		-- keys contained by Current
 
 	item (i: INTEGER): TREE_KEY [G]

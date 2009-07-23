@@ -13,7 +13,7 @@ create
 
 feature -- Creation
 
-	make (a_name, a_filetype, a_syntax_definition_file: STRING)
+	make (a_name, a_filetype: STRING a_syntax_definition_file: detachable STRING)
 	        -- Make new document class with `a_filetype'
 	   	require
 	   	    filetype_not_void: a_filetype /= Void

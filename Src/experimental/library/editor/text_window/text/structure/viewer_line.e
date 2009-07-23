@@ -53,10 +53,12 @@ feature -- Access
 			end
 		end
 
-	number_token: EDITOR_TOKEN_LINE_NUMBER
+	number_token: detachable EDITOR_TOKEN_LINE_NUMBER
 			-- Token containing the line number information for the line.
 		do
-			Result ?= real_first_token
+			if attached {EDITOR_TOKEN_LINE_NUMBER}real_first_token as l_line_number then
+				Result := l_line_number
+			end
 		end
 
 	eol_token: EDITOR_TOKEN_EOL

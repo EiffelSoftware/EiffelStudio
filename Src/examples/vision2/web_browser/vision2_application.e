@@ -22,8 +22,6 @@ feature {NONE} -- Initialization
 	make_and_launch is
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
-		local
-			l_test: INTEGER
 		do
 			default_create
 			create main_window

@@ -319,7 +319,17 @@ feature -- Basis operations
 
 	process_library (a_library: CONF_LIBRARY)
 			-- <Precursor>
+		local
+			l_formatter: TEXT_FORMATTER
 		do
+			if attached test_suite.output (Current) as l_output then
+				l_output.lock
+				l_formatter := l_output.formatter
+				l_formatter.add_group (a_library, a_library.name)
+				l_formatter.process_basic_text (" (library)")
+				l_formatter.add_new_line
+				l_output.unlock
+			end
 			current_library := a_library
 			process_target (a_library.library_target)
 		end
@@ -373,10 +383,8 @@ feature {NONE} -- Basic operations
 				print_cluster (a_formatter, l_parent)
 				a_formatter.process_basic_text ("/")
 			else
-				a_formatter.process_basic_text ("%T")
 				if attached current_library as l_library then
-					a_formatter.add_group (l_library, l_library.name)
-					a_formatter.process_basic_text ("/")
+					a_formatter.add_indent
 				end
 			end
 			a_formatter.add_group (a_cluster, a_cluster.name)

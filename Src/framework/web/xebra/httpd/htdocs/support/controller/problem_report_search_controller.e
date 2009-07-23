@@ -41,7 +41,22 @@ feature -- Basic Functionality
 			Result := internal_problem_reports
 		end
 
-	all_reponsibles: LIST [STRING]
+	priorities: LIST [STRING]
+		do
+			Result := all_responsibles
+		end
+
+	severities: LIST [STRING]
+		do
+			Result := all_responsibles
+		end
+
+	categories: LIST [STRING]
+		do
+			Result := all_responsibles
+		end
+
+	all_responsibles: LIST [STRING]
 		do
 			Result := responsibles
 		end

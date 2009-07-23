@@ -223,6 +223,12 @@ td#pr_status_change {
 	height: 16px;
 }
 
+.status_analyzed {
+	background-image: url("/support/images/support/status_analyzed.gif");
+	width: 16px;
+	height: 16px;
+}
+
 .priority_high {
 	background-image: url("/support/images/support/priority_high.gif");
 	width: 16px;

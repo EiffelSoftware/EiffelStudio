@@ -1,0 +1,30 @@
+<div id="ctl00_ctl00_default_main_content_main_content_pager_pager" class="pager">
+<page:fragment />
+			<div id="ctl00_ctl00_default_main_content_main_content_pager_pager_label" class="pager_label">
+				<span><xeb:display text="%=problem_reports.count.out%"/> Reports</span></div><div id="ctl00_ctl00_default_main_content_main_content_pager_pager_buttons" class="pager_buttons">
+		
+		
+		<table width="374px" style="table-layout:fixed;" cellpadding="0" cellspacing="0">
+
+	<tr>
+		<td width="37px" align="left"><input type="image" disabled="disabled" src="https://www2.eiffel.com/images/grid/first_inactive.gif" style="border-width:0px;" /><input type="image" disabled="disabled" src="https://www2.eiffel.com/images/grid/previous_inactive.gif" style="border-width:0px;" /></td>
+	<td align="center"><div width="300px">
+		<span class="active_page">1 </span>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_1" class="pager_buttons" href="">2 </a>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_2" class="pager_buttons" href="">3 </a>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_3" class="pager_buttons" href="">4 </a>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_4" class="pager_buttons" href="">5 </a>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_5" class="pager_buttons" href="">6 </a>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_6" class="pager_buttons" href="">7 </a>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_7" class="pager_buttons" href="">8 </a>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_8" class="pager_buttons" href="">9 </a>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_9" class="pager_buttons" href="">10 </a>
+		<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_10" class="pager_buttons" href="">11 </a>
+		</div>
+	</td>
+
+		<td align="right" width="37px"><input type="image" name="ctl00$ctl00$default_main_content$main_content$pager$next_button" id="ctl00_ctl00_default_main_content_main_content_pager_next_button" src="https://www2.eiffel.com/images/grid/next_active.gif" style="border-width:0px;" /><input type="image" name="ctl00$ctl00$default_main_content$main_content$pager$last_button" id="ctl00_ctl00_default_main_content_main_content_pager_last_button" src="https://www2.eiffel.com/images/grid/last_active.gif" style="border-width:0px;" /></td>
+	</tr>
+</table>
+	</div>
+		</div>

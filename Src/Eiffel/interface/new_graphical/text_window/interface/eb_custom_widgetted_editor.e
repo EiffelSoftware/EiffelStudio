@@ -21,7 +21,8 @@ inherit
 			internal_detach_entities,
 			on_mouse_move,
 			on_mouse_button_down,
-			on_key_down
+			on_key_down,
+			on_text_fully_loaded
 		end
 
 create
@@ -761,6 +762,21 @@ feature {NONE} -- Implementation
 	first_result_reached_action: PROCEDURE [ANY, TUPLE]
 	bottom_reached_action: PROCEDURE [ANY, TUPLE];
 			-- Actions to recycle
+
+	on_text_fully_loaded
+			-- Reset all marks
+		do
+			Precursor {EB_EDITOR}
+			reset_search_bar_marks
+		end
+
+	reset_search_bar_marks
+			-- Reset colors and the bottom/start item reach marks
+		do
+			search_bar.trigger_bottom_reached_pixmap (False)
+			search_bar.trigger_first_reached_pixmap (False)
+			search_bar.keyword_field.set_background_color (search_tool.normal_bgcolor)
+		end
 
 feature {NONE} -- Internal implentation cache
 

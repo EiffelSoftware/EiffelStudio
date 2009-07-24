@@ -18,16 +18,14 @@ deferred class
 inherit
 	EV_TITLED_WINDOW
 		redefine
-			initialize, is_in_default_state
+			is_in_default_state
 		end
 
 feature {NONE}-- Initialization
 
-	initialize
-			-- Initialize `Current'.
+	build_initialize
+			-- Initialize `Current' from Eiffel Build
 		do
-			Precursor {EV_TITLED_WINDOW}
-
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)

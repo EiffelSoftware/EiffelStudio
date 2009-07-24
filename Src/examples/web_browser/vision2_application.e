@@ -19,12 +19,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		do
 			default_create
-			create main_window
+			create main_window.make
 
 			main_window.show
 			launch

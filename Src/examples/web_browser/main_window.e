@@ -13,8 +13,17 @@ class
 inherit
 	MAIN_WINDOW_IMP
 
+create
+	make
 
 feature {NONE} -- Initialization
+
+	make
+			-- Creation method
+		do
+			default_create
+			build_initialize
+		end
 
 	user_initialization
 			-- Called by `initialize'.

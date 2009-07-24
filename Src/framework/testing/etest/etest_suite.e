@@ -120,6 +120,9 @@ feature {NONE} -- Status report
 			result_implies_old_class_map_attached: Result implies old_class_map /= Void
 		end
 
+	has_class_map_changed: BOOLEAN
+			-- Have keys of `class_map' changed since last call to `force_test_class_compilation'
+
 feature {ETEST_CLUSTER_RETRIEVAL} -- Basic operations
 
 	synchronize_test_class (a_class: EIFFEL_CLASS_I)
@@ -129,7 +132,7 @@ feature {ETEST_CLUSTER_RETRIEVAL} -- Basic operations
 			a_class_attached: a_class /= Void
 		local
 			l_class_map: like old_class_map
-			l_is_old: BOOLEAN
+			l_is_old, l_new: BOOLEAN
 			l_name: READABLE_STRING_8
 			l_etest_class: detachable ETEST_CLASS
 		do
@@ -153,16 +156,26 @@ feature {ETEST_CLUSTER_RETRIEVAL} -- Basic operations
 				synchronizer.synchronize (l_etest_class, False)
 			else
 					-- Before we create a new `l_etest_class', we check that `class_map' has not already retrieved
-					-- a {ETEST_CLASS} from `old_class_map' with the same name.
+					-- a {ETEST_CLASS} with the same name.
 				if not (l_is_old and class_map.has (l_name)) then
 					create l_etest_class.make (a_class)
 					synchronizer.synchronize (l_etest_class, False)
 					l_name := l_etest_class.name
+					l_new := True
 				end
 			end
 
-			if l_etest_class /= Void and then not l_etest_class.test_map.is_empty then
-				class_map.force_last (l_etest_class, l_name)
+			if l_etest_class /= Void then
+				if l_etest_class.test_map.is_empty then
+					if not l_new then
+						has_class_map_changed := True
+					end
+				else
+					if l_new then
+						has_class_map_changed := True
+					end
+					class_map.force_last (l_etest_class, l_name)
+				end
 			end
 		end
 
@@ -232,6 +245,7 @@ feature {NONE} -- Implementation
 				l_test_class := l_old_map.item_for_iteration
 				if a_remove then
 					synchronizer.synchronize (l_test_class, True)
+					has_class_map_changed := True
 				else
 					class_map.force_last (l_test_class, l_old_map.key_for_iteration)
 				end
@@ -247,40 +261,52 @@ feature {NONE} -- Implementation
 			-- If test classes have changed since last time `udpate_root_class' has been called, write
 			-- new class referencing all test classes and register it as root clas in system.
 		local
-			l_system: SYSTEM_I
+			l_class_writer: ETEST_EVALUATOR_ROOT_WRITER
+			l_class_map: like class_map
+			l_list: DS_ARRAYED_LIST [EIFFEL_CLASS_I]
 			l_class: EIFFEL_CLASS_I
-			l_cursor: DS_HASH_TABLE_CURSOR [ETEST_CLASS, READABLE_STRING_8]
+			l_dir_NAME: DIRECTORY_NAME
+			l_file_name: FILE_NAME
+			l_file: KL_TEXT_OUTPUT_FILE
+			l_system: SYSTEM_I
 		do
-			l_system := project_access.project.system.system
-			l_cursor := class_map.new_cursor
-			from
-				l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_class := l_cursor.item.eiffel_class
-				if not l_system.is_class_referenced (l_class) then
-					l_system.add_unref_class (l_class)
+			if has_class_map_changed and project_access.is_initialized then
+				l_system := project_access.project.system.system
+				has_class_map_changed := False
+				create l_class_writer
+				l_dir_name := l_system.project_location.eifgens_cluster_path
+				if not file_system.directory_exists (l_dir_name) then
+					file_system.create_directory (l_dir_name)
 				end
-				l_cursor.forth
+				create l_file_name.make_from_string (l_dir_name)
+				l_file_name.extend (l_class_writer.class_name.as_lower)
+				l_file_name.add_extension ("e")
+				create l_file.make (l_file_name)
+				if not l_file.exists then
+					l_system.force_rebuild
+				end
+				l_file.open_write
+				if l_file.is_open_write then
+					l_class_map := class_map
+					create l_list.make (l_class_map.count)
+					from
+						l_class_map.start
+					until
+						l_class_map.after
+					loop
+						l_class := l_class_map.item_for_iteration.eiffel_class
+						if file_system.file_exists (l_class.file_name) then
+							l_list.force_last (l_class)
+						end
+						l_class_map.forth
+					end
+					l_class_writer.write_source (l_file, l_list)
+					l_file.close
+					if not l_system.is_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name) then
+						l_system.add_explicit_root (Void, l_class_writer.class_name, l_class_writer.root_feature_name)
+					end
+				end
 			end
-
-				-- Forcing the compilation of important library classes for which compilation can be long and
-				-- require C-compilation.
-			if
-				attached testing_library_class ({TEST_CONSTANTS}.evaluator_name) as l_lib_class and then
-				not l_system.is_class_referenced (l_lib_class)
-			then
-				l_system.add_unref_class (l_lib_class)
-			end
-			if
-				attached testing_library_class ({TEST_CONSTANTS}.interpreter_name) as l_lib_class and then
-				not l_system.is_class_referenced (l_lib_class)
-			then
-				l_system.add_unref_class (l_lib_class)
-			end
-
-			l_system.set_rebuild (True)
 		end
 
 

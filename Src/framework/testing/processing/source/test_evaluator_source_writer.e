@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	class_name: STRING = "EQA_EVALUATOR_ROOT"
+	class_name: STRING = "EQA_OBSOLETE_EVALUATOR_ROOT"
 			-- <Precursor>
 
 	ancestor_names: ARRAY [STRING]

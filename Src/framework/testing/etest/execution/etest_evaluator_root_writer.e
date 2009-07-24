@@ -9,7 +9,7 @@ note
 	revision: "$Revision$"
 
 class
-	TEST_ANCHOR_ROOT_SOURCE_WRITER
+	ETEST_EVALUATOR_ROOT_WRITER
 
 inherit
 	TEST_CLASS_SOURCE_WRITER
@@ -19,7 +19,7 @@ feature -- Access
 	class_name: STRING
 			-- Name of class
 		do
-			Result := "EQA_CLASS_ANCHOR_ROOT"
+			Result := "EQA_EVALUATOR_ROOT"
 		end
 
 	root_feature_name: STRING = "make"

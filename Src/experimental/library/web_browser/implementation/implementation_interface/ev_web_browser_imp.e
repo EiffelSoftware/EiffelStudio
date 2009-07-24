@@ -23,23 +23,24 @@ inherit
 			destroy
 		redefine
 			interface,
-			initialize,
 			default_process_message,
-			on_size
+			on_size,
+			make
 		end
 
 	EV_SIZEABLE_PRIMITIVE_IMP
 		redefine
-			interface
+			interface,
+			make
 		end
 
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize,
 			default_process_message,
 			on_size,
-			destroy
+			destroy,
+			make
 		end
 
 	WEL_WINDOW
@@ -98,22 +99,31 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
+	make
 			-- Create `Current' with interface `an_interface'
 		do
-			base_make (an_interface)
+			Precursor
 			register_class
 			internal_window_make (default_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
+			initialize
 		end
+
+	old_make (an_interface: like interface)
+			-- Create underlying native toolkit objects.
+			-- Every descendant should exactly one a creation procedure `make'.
+			-- Must call `base_make'.
+		do
+			check never_used: False end -- Just because {EV_ANY_I} has it as deferred feature
+		end
+
+feature {EV_WEB_BROWSER} -- Initialization
 
 	initialize
 			-- Initialize `Current'
 		local
 			l_ole_ie_hwnd: POINTER
 		do
-			Precursor {EV_PRIMITIVE_IMP}
 			-- We must create a HWND for OLE IE object and can't share with current `wel_item', otherwise `window_process_message' will not be called
-
 			create ole_ie_window.make (Current, "IE OLE")
 			l_ole_ie_hwnd := ole_ie_window.item
 
@@ -283,7 +293,7 @@ feature {NONE} -- Implementation
 			-- Handle OLE IE resize actions
 		do
 			Precursor {EV_PRIMITIVE_IMP}(size_type, a_width, a_height)
-			if ole_ie_window /= Void then
+			if is_displayed and then ole_ie_window /= Void then
 
 				-- We must resize both `ole_ie_window' and `ole_ie_window.item'
 				ole_ie_window.resize (a_width, a_height)

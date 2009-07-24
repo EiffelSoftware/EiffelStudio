@@ -1,7 +1,7 @@
 note
 	description: "[
 					Eiffel Vision2 Internet Web Browser Widget
-					
+
 																		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'
 		do
-			create {EV_WEB_BROWSER_IMP} implementation.make (Current)
+			create {EV_WEB_BROWSER_IMP} implementation.make
 		end
 
 feature -- Command

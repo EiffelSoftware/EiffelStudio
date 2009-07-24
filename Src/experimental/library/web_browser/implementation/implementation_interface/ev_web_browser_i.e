@@ -1,6 +1,7 @@
 note
 	description: "[
-					Eiffel Vision web browser. Implementation interface.
+					Eiffel Vision web browser
+					Implementation interface
 																			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

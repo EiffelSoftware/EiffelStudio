@@ -17,7 +17,7 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 create
@@ -25,22 +25,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)
-			-- Create `Current' with interface `an_interface'
+	make
+			-- <Precursor>
 		local
 			l_browser_window: POINTER
 		do
-			base_make (an_interface)
 			l_browser_window := {EV_GTK_EXTERNALS}.gtk_event_box_new
 			set_c_object (l_browser_window)
+
+			initialize
+
+			Precursor {EV_PRIMITIVE_IMP}
+		end
+
+	old_make (an_interface: like interface)
+			-- <Precursor>
+		do
+			check never_used: False end -- Just because {EV_ANY_I} has it as deferred
 		end
 
 	initialize
 			-- Initialize `Current'
-		local
-
 		do
-			Precursor {EV_PRIMITIVE_IMP}
 			{EV_GTK_EXTERNALS}.gdk_init (default_pointer, default_pointer)
 			{EV_GTK_EXTERNALS}.gdk_threads_init
 			if not {EV_GTK_EXTERNALS}.g_thread_supported then
@@ -83,7 +89,7 @@ feature -- Command
 	home
 			-- <Precursor>
 		do
-			check not_implemented: False end 
+			check not_implemented: False end
 		end
 
 	search

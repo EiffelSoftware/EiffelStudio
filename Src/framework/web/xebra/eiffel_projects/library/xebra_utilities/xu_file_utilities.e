@@ -20,11 +20,12 @@ feature {NONE} -- Access
 
 feature {NONE} -- Internal
 
+	Max_file_replace_size: INTEGER_32 = 1000000
 
 feature -- Basic Opertaions
 
 	resolve_env_vars (a_path: STRING; a_keep: BOOLEAN): STRING
-			-- Resolves a path containing environment variables
+			-- Resolves a path containing environment variables.
 			--
 			-- `a_path'    : The string to expand.
 			-- `a_keep'    : True to retain any unmatched variables in the result; False otherwise.
@@ -40,8 +41,57 @@ feature -- Basic Opertaions
 			result_attached: Result /= Void
 		end
 
+	replace_in_file (a_file: FILE_NAME; a_replacee: STRING; a_replacer: STRING)
+			-- Opens a_file if it exists and replaces all occurrences of a_replacee with a_replacer
+			-- Reads the whole file into a string. This feature should only be used on 'small' text files.
+			-- Adds errors to ERROR_SHARED_MULTI_ERROR_MANAGER, don't forget to handle errors afterwards.
+			--
+			-- `a_file': The file to be edited
+			-- `a_replacee': The string that will be replaced by a_replacer
+			-- `a_replacer': The string that will replacer a_replacee
+		require
+			a_file_attached: a_file /= Void
+			a_replacee_not_empty: a_replacee /= Void and then not a_replacee.is_empty
+			a_replacer_not_empty: a_replacer /= Void and then not a_replacer.is_empty
+		local
+			l_buf: STRING
+		do
+				-- Open the file in read mode first
+			if attached {PLAIN_TEXT_FILE} plain_text_file_read (a_file) as l_file then
+					-- Make sure the file is not too big
+				if l_file.count > Max_file_replace_size then
+					error_manager.add_error (create {XERROR_FILE_TOO_BIG}.make (l_file.name), False)
+				else
+						-- Read the file into buffer
+					from
+						l_buf := ""
+						l_file.start
+					until
+						l_file.after
+					loop
+						l_file.read_stream (50000)
+						l_buf.append (l_file.last_string)
+					end
+					l_file.close
+						-- Replace
+					l_buf.replace_substring_all (a_replacee, a_replacer)
+						-- Write back to file	
+					if attached {PLAIN_TEXT_FILE} plain_text_file_open_write (a_file) as ll_file then
+						ll_file.start
+						ll_file.put_string (l_buf)
+						ll_file.close
+					end
+				end
+			end
+
+		end
+
 	plain_text_file_read (a_file_name: STRING): detachable PLAIN_TEXT_FILE
-			-- Opens a plain text file for reading
+			-- Opens a plain text file for reading. Does not create the file if it doesn't exsist.
+			-- Adds errors to ERROR_SHARED_MULTI_ERROR_MANAGER, don't forget to handle errors afterwards.
+			--
+			-- `a_file_name': The file name.
+			-- `Result': Returns a file if there were no errors, Void otherwise.
 		require
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
@@ -64,7 +114,11 @@ feature -- Basic Opertaions
 
 
 	plain_text_file_open_write (a_file_name: STRING): detachable PLAIN_TEXT_FILE
-			-- Opens a plain text file for writing
+			-- Opens a plain text file for writing. Does not create the file if it doesn't exsist.
+			-- Adds errors to ERROR_SHARED_MULTI_ERROR_MANAGER, don't forget to handle errors afterwards.
+			--
+			-- `a_file_name': The file name.
+			-- `Result': Returns a file if there were no errors, Void otherwise.
 		require
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
@@ -86,7 +140,11 @@ feature -- Basic Opertaions
 		end
 
 	plain_text_file_write (a_file_name: STRING): detachable PLAIN_TEXT_FILE
-			-- Opens a plain text file for writing or creates one
+			-- Opens a plain text file for writing or creates one.
+			-- Adds errors to ERROR_SHARED_MULTI_ERROR_MANAGER, don't forget to handle errors afterwards.
+			--
+			-- `a_file_name': The file name.
+			-- `Result': Returns a file if there were no errors, Void otherwise.
 		require
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
@@ -108,7 +166,11 @@ feature -- Basic Opertaions
 		end
 
 	plain_text_file_append (a_file_name: STRING): detachable PLAIN_TEXT_FILE
-			-- Opens a plain text file for appending
+			-- Opens a plain text file for appending. Does not create the file if it doesn't exsist.
+			-- Adds errors to ERROR_SHARED_MULTI_ERROR_MANAGER, don't forget to handle errors afterwards.
+			--
+			-- `a_file_name': The file name.
+			-- `Result': Returns a file if there were no errors, Void otherwise.
 		require
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
@@ -130,7 +192,11 @@ feature -- Basic Opertaions
 		end
 
 	plain_text_file_append_create (a_file_name: STRING): detachable PLAIN_TEXT_FILE
-			-- Opens a plain text file for appending or creates one
+			-- Opens a plain text file for appending or creates one.
+			-- Adds errors to ERROR_SHARED_MULTI_ERROR_MANAGER, don't forget to handle errors afterwards.
+			--
+			-- `a_file_name': The file name.
+			-- `Result': Returns a file if there were no errors, Void otherwise.
 		require
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
@@ -162,7 +228,12 @@ feature -- Basic Opertaions
 
 
 	scan_for_files (a_folder: STRING; a_levels: INTEGER; a_include_pattern: STRING; a_exclude_pattern: STRING): ARRAYED_LIST [FILE_NAME]
-		-- See FILE_UTILITIES.scan_for_files
+			-- Scans a folder for matching folders.
+			--
+			-- `a_folder': Folder location to scan.
+			-- `a_levels': Number of levels to recursively scan. 0 to scan the specified folder only, -1 to scan all folders.
+			-- `a_include': Regular expression used to progressively include files/folders.
+			-- `a_exclude': Regulat expression used to exclude files/folders.
 		local
 			l_include: RX_PCRE_MATCHER
 			l_exclude: RX_PCRE_MATCHER
@@ -213,7 +284,7 @@ feature -- Basic Opertaions
 		end
 
 	file_is_newer (a_file, a_dir: FILE_NAME; a_maching_files_expr: STRING): BOOLEAN
-				-- Returns True iff there is a file in a_dir (recursively)  that matches a_maching_files_expr
+				-- Returns True if there is a file in a_dir (recursively) that matches a_maching_files_expr
 				-- that is newer than a_file or a_file does not exist
 		require
 			not_a_file_is_detached_or_empty: a_file /= Void and then not a_file.is_empty
@@ -234,24 +305,19 @@ feature -- Basic Opertaions
 				until
 					l_files.after or Result
 				loop
-				--	if l_files.item_for_iteration.ends_with (a_ext1) or l_files.item_for_iteration.ends_with (a_ext2) then
 						create l_file.make (l_files.item_for_iteration)
-
 						if (l_file.date > l_exec_access_date) then
 							Result := True
-						--o.dprint ("File '" + l_file.name + "' is newer (" + l_file.date.out + ")  than  (" + l_exec_access_date.out + ")",5)
 						end
-				--	end
 					l_files.forth
 				end
 			else
 				Result := True
-				--o.dprint ("File '" + a_file + "' does not exist.", 5)
 			end
 		end
 
 	file_is_older_than (a_file: FILE_NAME; a_date: INTEGER): BOOLEAN
-				-- Returns False iff the file exists and it is newer than `a_date'
+				-- Returns False if the file exists and it is newer than `a_date'
 		require
 			not_a_file_is_detached_or_empty: a_file /= Void and then not a_file.is_empty
 			a_date_positive: a_date >= 0
@@ -268,7 +334,6 @@ feature -- Basic Opertaions
 			end
 		end
 
-
 feature {NONE} -- Internal
 
 	replacer: FUNCTION [ANY, TUPLE [READABLE_STRING_8], detachable STRING]
@@ -279,7 +344,5 @@ feature {NONE} -- Internal
 					Result := ia_exec.get (a_name.as_string_8)
 				end (create {EXECUTION_ENVIRONMENT}, ?)
 		end
-
-
 end
 

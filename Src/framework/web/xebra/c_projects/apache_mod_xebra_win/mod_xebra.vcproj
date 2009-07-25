@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\httpd-2.2.11\srclib\apr-util\include&quot;;&quot;C:\httpd-2.2.11\srclib\apr\include&quot;;&quot;C:\httpd-2.2.11\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\apache_src\srclib\apr-util\include&quot;;C:\apache_src\srclib\apr\include;C:\apache_src\include"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS"
 				MinimalRebuild="false"
 				RuntimeLibrary="3"

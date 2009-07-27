@@ -59,6 +59,16 @@ feature {NONE} -- Initialization
 				type_class_c := cl_i.compiled_class
 			end
 
+			cl_i := class_i_by_name ("READABLE_STRING_8")
+			if cl_i /= Void then
+				readable_string_8_class_c := cl_i.compiled_class
+			end
+
+			cl_i := class_i_by_name ("READABLE_STRING_32")
+			if cl_i /= Void then
+				readable_string_32_class_c := cl_i.compiled_class
+			end
+
 			cl_i := sys.string_8_class
 			if cl_i /= Void then
 				string_8_class_c := cl_i.compiled_class
@@ -178,6 +188,8 @@ feature -- Access
 	special_class_c: CLASS_C
 	tuple_class_c: CLASS_C
 	type_class_c: CLASS_C
+	readable_string_8_class_c: CLASS_C
+	readable_string_32_class_c: CLASS_C
 	string_8_class_c: CLASS_C
 	string_32_class_c: CLASS_C
 	natural_8_class_c: CLASS_C
@@ -200,6 +212,31 @@ feature -- Access
 
 feature -- Specific access
 
+	class_i_by_name (a_class_name: STRING_8): detachable CLASS_I
+			-- Instance of CLASS_I related to `a_name'
+		local
+			lst: LIST [CLASS_I]
+		do
+			lst := eiffel_universe.classes_with_name (a_class_name)
+			if lst.count = 1 then
+				Result := lst.first
+			else
+				Result := eiffel_universe.class_named (a_class_name, eiffel_universe.group_of_name (base_cluster_name))
+			end
+		end
+
+	class_c_by_name (a_class_name: STRING_8): detachable CLASS_C
+			-- Instance of CLASS_C related to `a_name'
+		local
+			lst: LIST [CLASS_I]
+			l_cli: detachable CLASS_I
+		do
+			l_cli :=  class_i_by_name (a_class_name)
+			if l_cli /= Void then
+				Result := l_cli.compiled_class
+			end
+		end
+
 	internal_class_c: CLASS_C
 			--
 		local
@@ -208,15 +245,7 @@ feature -- Specific access
 		do
 			Result := opo_internal_class_c
 			if Result = Void then
-				lst := eiffel_universe.classes_with_name ("INTERNAL")
-				if lst.count = 1 then
-					l_cli := lst.first
-				else
-					l_cli := eiffel_universe.class_named ("INTERNAL", eiffel_universe.group_of_name ("base"))
-				end
-				if l_cli /= Void then
-					Result := l_cli.compiled_class
-				end
+				Result := class_c_by_name ("INTERNAL")
 				opo_internal_class_c := Result
 			end
 		ensure
@@ -231,15 +260,7 @@ feature -- Specific access
 		do
 			Result := opo_ise_runtime_class_c
 			if Result = Void then
-				lst := eiffel_universe.classes_with_name ("ISE_RUNTIME")
-				if lst.count = 1 then
-					l_cli := lst.first
-				else
-					l_cli := eiffel_universe.class_named ("ISE_RUNTIME", eiffel_universe.group_of_name ("base"))
-				end
-				if l_cli /= Void then
-					Result := l_cli.compiled_class
-				end
+				Result := class_c_by_name ("ISE_RUNTIME")
 				opo_ise_runtime_class_c := Result
 			end
 		end
@@ -251,6 +272,8 @@ feature -- IL Access
 	native_array_class_c: CLASS_C;
 
 feature {NONE} -- Once per object
+
+	base_cluster_name: STRING_8 = "base"
 
 	opo_internal_class_c: like internal_class_c
 	opo_ise_runtime_class_c: like ise_runtime_class_c

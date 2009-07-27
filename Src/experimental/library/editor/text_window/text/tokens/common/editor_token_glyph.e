@@ -41,7 +41,7 @@ feature -- Access
 	width: INTEGER
 			-- Width in pixel of the entire token.
 		do
-			Result := glyph.width
+			Result := glyph.width + (padding * 2)
 		end
 
 	height: INTEGER
@@ -50,13 +50,21 @@ feature -- Access
 			Result := glyph.height
 		end
 
+	padding: INTEGER
+			-- Padding of glyph
+		do
+			Result := 2
+		end
+
 feature -- Query
 
 	frozen get_substring_width (n: INTEGER): INTEGER
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		do
-			Result := width
+			if n = 1 then
+				Result := width
+			end
 		end
 
 	frozen retrieve_position_by_width(a_width: INTEGER): INTEGER
@@ -72,14 +80,18 @@ feature -- Display
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do
-			device.clear_rectangle (position, d_y, width, height)
-			device.draw_sub_pixel_buffer (position, d_y, glyph, create {EV_RECTANGLE}.make (1, 1, width, height))
+			display_with_offset (2, d_y, device, panel)
 		end
 
-	display_with_offset (x, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
-			-- Display the current token on device context `dc' at the coordinates (`x',`d_y')
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
+			-- <Precursor>
+		local
+			l_width: INTEGER
 		do
-			device.draw_sub_pixel_buffer (x, d_y, glyph, create {EV_RECTANGLE}.make (1, 1, width, height))
+			l_width := width - (padding * 2)
+			check l_width_positive: l_width > 0 end
+			device.clear_rectangle (position + x_offset, d_y, l_width, height)
+			device.draw_sub_pixel_buffer (position + x_offset, d_y, glyph, create {EV_RECTANGLE}.make (0, 0, l_width, height))
 		end
 
 feature -- Visitor

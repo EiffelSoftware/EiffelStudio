@@ -79,6 +79,14 @@ feature -- Windows
 			"return (EIF_POINTER) GetFocus();"
 		end
 
+	get_parent (a_hwnd: POINTER): POINTER
+			-- SDK GetParent
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_POINTER) GetParent((HWND) $a_hwnd);"
+		end
+
 	destroy_window (hwnd: POINTER): BOOLEAN
 			-- SDK DestroyWindow
 		external
@@ -350,7 +358,7 @@ feature -- Scrolling
 		alias
 			"return GetScrollInfo((HWND) $a_hwnd, (int) $a_bar, (LPSCROLLINFO) $a_info);"
 		end
-		
+
 feature -- Shell
 
 	shell_notify_icon (a_message: INTEGER; a_notify_icon_data_ptr: POINTER): INTEGER

@@ -10,7 +10,7 @@ class
 	EDITOR_TOKEN_WRITER
 
 inherit
-	TEXT_FORMATTER
+	GRAPHICAL_FORMATTER
 		redefine
 			process_string_text,
 			process_assertion_tag_text, process_indexing_tag_text,
@@ -540,6 +540,15 @@ feature -- Text processing
 			process_string_text (s, Void)
 		end
 
+	add_glyph (a_glyph: EV_PIXEL_BUFFER)
+			-- <Precursor>
+		local
+			l_token: EDITOR_TOKEN_GLYPH
+		do
+			create l_token.make (a_glyph)
+			append_token (l_token)
+		end
+
 	process_folder_text (a_folder_name: STRING_GENERAL; a_path: STRING_GENERAL; a_group: CONF_GROUP)
 			-- Process folder text.
 			-- `a_folder_name' is the name of the folder,
@@ -661,7 +670,7 @@ feature {NONE} -- Initialisations and File status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -685,10 +694,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EDITOR_TOKEN_WRITER

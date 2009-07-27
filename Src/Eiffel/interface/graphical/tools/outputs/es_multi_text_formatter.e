@@ -11,7 +11,7 @@ class
 	ES_MULTI_TEXT_FORMATTER
 
 inherit
-	TEXT_FORMATTER
+	GRAPHICAL_FORMATTER
 		redefine
 			start_processing,
 			end_processing,
@@ -777,6 +777,23 @@ feature -- Process
 			from l_formatters.start until l_formatters.after loop
 				if attached l_formatters.item as l_formatter then
 					l_formatter.process_class_menu_text (a_text, a_link)
+				end
+				l_formatters.forth
+			end
+		end
+
+feature -- Basic operations: Extension
+
+	add_glyph (a_glyph: EV_PIXEL_BUFFER)
+			-- <Precursor>
+		local
+			l_formatters: like managed_formatters
+		do
+			process_new_lines_cache
+			l_formatters := managed_formatters
+			from l_formatters.start until l_formatters.after loop
+				if attached {GRAPHICAL_FORMATTER} l_formatters.item as l_formatter then
+					l_formatter.add_glyph (a_glyph)
 				end
 				l_formatters.forth
 			end

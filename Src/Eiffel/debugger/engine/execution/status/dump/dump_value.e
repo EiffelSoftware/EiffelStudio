@@ -281,8 +281,8 @@ feature -- Status report
 			elseif is_type_object and not is_void then
 				if dynamic_class /= Void then
 					comp_data := debugger_manager.compiler_data
-					string_c := comp_data.string_8_class_c
-					string_32_c := comp_data.string_32_class_c
+					string_c := comp_data.readable_string_8_class_c
+					string_32_c := comp_data.readable_string_32_class_c
 					system_string_c := comp_data.system_string_class_c
 					if
 						string_c /= Void
@@ -497,24 +497,29 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			area_attribute: SPECIAL_VALUE
 			count_attribute: DEBUG_BASIC_VALUE [INTEGER]
 			l_count: INTEGER
-			sc, sc8, sc32: CLASS_C
+			sc, sc8, sc32, rsc8, rsc32: CLASS_C
 			l_area_name, l_count_name: STRING
 			l_slice_max: INTEGER
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
 		do
 			if dynamic_class /= Void then
 				comp_data := debugger_manager.compiler_data
+				rsc8 := comp_data.readable_string_8_class_c
+				rsc32 := comp_data.readable_string_32_class_c
 				sc8 := comp_data.string_8_class_c
 				sc32 := comp_data.string_32_class_c
-				if dynamic_class = sc8 or dynamic_class = sc32 then
+				if
+					dynamic_class = sc8
+					or dynamic_class = sc32
+				then
 					sc := dynamic_class
 					l_area_name := area_name
 					l_count_name := count_name
 				else
-					if dynamic_class.simple_conform_to (sc8) then
-						sc := sc8
-					elseif dynamic_class.simple_conform_to (sc32) then
-						sc := sc32
+					if dynamic_class.simple_conform_to (rsc8) then
+						sc := rsc8
+					elseif dynamic_class.simple_conform_to (rsc32) then
+						sc := rsc32
 					end
 					if sc /= Void then
 							--| Take name of `area' and `count' from STRING or STRING_32 in descendant version.

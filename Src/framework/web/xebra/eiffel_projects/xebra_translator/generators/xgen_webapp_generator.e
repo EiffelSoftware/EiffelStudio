@@ -116,7 +116,7 @@ feature -- Basic Functionality
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				create l_buf.make (l_file)
 				create l_application_class.make (Generator_Prefix.as_upper + webapp_name.as_upper + "_APPLICATION")
-				l_application_class.set_inherit ("KL_SHARED_ARGUMENTS%NXWA_APPLICATION")
+				l_application_class.set_inherit ("XWA_APPLICATION")
 				l_application_class.set_constructor_name ("make")
 				l_application_class.add_feature (generate_contructor_for_application)
 				l_application_class.serialize (l_buf)

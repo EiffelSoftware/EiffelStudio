@@ -167,7 +167,7 @@ feature -- from ENTRY
 			--| We exclude expanded types since they are by default attached and thus only have
 			--| one type at runtime.
 		do
-			Result := attached {GEN_TYPE_A} type as l_gtype or else not type.is_explicit or else
+			Result := type.has_generics or else not type.is_explicit or else
 				(attached {ATTACHABLE_TYPE_A} type as l_attached_type and then not type.is_expanded and then l_attached_type.is_attached)
 		end
 

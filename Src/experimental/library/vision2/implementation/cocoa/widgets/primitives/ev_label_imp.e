@@ -57,17 +57,6 @@ feature {NONE} -- Initialization
 			disable_tabable_to
 		end
 
-feature -- Access
-
-	angle: REAL
-		-- Amount text is rotated counter-clockwise from horizontal plane in radians.
-
-	set_angle (a_angle: REAL)
-			--
-		do
-			angle := a_angle
-		end
-
 feature -- Minimum size
 
 	set_default_minimum_size
@@ -84,17 +73,10 @@ feature -- Minimum size
 		local
 			t: TUPLE [width: INTEGER; height: INTEGER]
 			a_width, a_height: INTEGER
-			l_angle: REAL
 		do
 			t := font.string_size (a_text)
 			a_width := t.width
 			a_height := t.height
-
-			l_angle := angle
-			if l_angle /= 0.0 then
-				a_height := (a_width * sine (l_angle) + a_height * cosine (l_angle)).rounded
-				a_width := (a_width * cosine (l_angle) + a_height * sine (l_angle)).rounded
-			end
 			internal_set_minimum_size (a_width.abs + 5, a_height.abs + 5)
 		end
 

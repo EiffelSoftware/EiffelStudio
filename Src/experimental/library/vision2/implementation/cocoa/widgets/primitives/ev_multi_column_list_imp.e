@@ -68,6 +68,7 @@ feature {NONE} -- Initialization
 		do
 			create previous_selection.make (1)
 
+			set_is_initialized (True)
 			Precursor {EV_MULTI_COLUMN_LIST_I}
 
 			create scroll_view.make

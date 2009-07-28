@@ -26,7 +26,6 @@ inherit
 			screen_y,
 			width,
 			height,
-			on_key_event,
 			destroy,
 			client_height,
 			client_width,
@@ -35,7 +34,6 @@ inherit
 			interface,
 			make,
 			is_sensitive,
-			on_key_event,
 			hide,
 			destroy,
 			has_focus,
@@ -54,26 +52,12 @@ inherit
 			interface
 		end
 
-	NS_WINDOW
-		rename
-			set_background_color as cocoa_set_background_color,
-			background_color as cocoa_background_color,
-			make as cocoa_make,
-			screen as cocoa_screen,
-			item as window_item,
-			title as cocoa_title,
-			set_title as cocoa_set_title,
-			copy as cocoa_copy
+	EV_NS_WINDOW
 		redefine
-			dispose
-		end
-
-	NS_WINDOW_DELEGATE
-		rename
-			make as create_delegate,
-			item as delegate
-		redefine
-			window_did_resize
+			dispose,
+			set_size,
+			window_did_resize,
+			window_did_move
 		end
 
 create
@@ -93,7 +77,6 @@ feature {NONE} -- Initialization
 			make_key_and_order_front
 			order_out
 			allow_resize
-			create_delegate
 
 			set_accepts_mouse_moved_events (True)
 
@@ -105,8 +88,9 @@ feature {NONE} -- Initialization
 
 			cocoa_view := content_view
 			init_bars
---			window := current
-			set_delegate (current)
+--			create_delegate
+--			set_delegate (current)
+			init_delegate
 			app_implementation.windows_imp.extend (current)
 
 			internal_is_border_enabled := True
@@ -139,6 +123,7 @@ feature {NONE} -- Initialization
 feature -- Delegate
 
 	window_did_resize
+			-- <Precursor>
 		local
 			bar_imp: detachable EV_VERTICAL_BOX_IMP
 		do
@@ -170,6 +155,14 @@ feature -- Delegate
 			display
 		end
 
+	window_did_move
+			-- <Precursor>
+		do
+			if move_actions_internal /= Void then
+				move_actions_internal.call ([screen_x, screen_y, width, height])
+			end
+		end
+
 	execute_resize_actions (a_width, a_height: INTEGER)
 			-- execute `resize_actions_internal' if not Void.
 		do
@@ -181,19 +174,10 @@ feature -- Delegate
 
 feature {EV_ANY_I} -- Implementation
 
-	enable_modal
-			-- Set `is_modal' to `True'.
-		do
-		end
-
-	disable_modal
-			-- Set `is_modal' to `False'.
-		do
-		end
-
 	show_relative_to_window (a_parent: EV_WINDOW)
 			-- Show `Current' with respect to `a_parent'.
 		do
+			show
 		end
 
 feature -- Measurement
@@ -253,75 +237,11 @@ feature -- Measurement
  	 		Result := Result.min (height)
  	 	end
 
-	width: INTEGER
-			-- Horizontal size measured in pixels.
-		do
-			Result := frame.size.width
-		end
-
-	height: INTEGER
-			-- Vertical size measured in pixels.
-		do
-			Result := frame.size.height
-		end
-
-	set_width (a_width: INTEGER)
-			-- Set the horizontal size to `a_width'.
-		do
-			set_size (a_width, height)
-		end
-
-	set_height (a_height: INTEGER)
-			-- Set the vertical size to `a_height'.
-		do
-			set_size(width, a_height)
-		end
-
 	set_size (a_width, a_height: INTEGER)
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
 		do
 			ev_apply_new_size (x_position, y_position, a_width.max (minimum_width), a_height.max (minimum_height), True)
-		end
-
-	x_position, screen_x: INTEGER
-			-- X coordinate of `Current'
-		do
-			Result := frame.origin.x
-		end
-
-	y_position, screen_y: INTEGER
-			-- Y coordinate of `Current'
-		local
-			l_frame: NS_RECT
-		do
-			l_frame := frame
-			Result := screen.frame.size.height - l_frame.origin.y - l_frame.size.height
-		end
-
-	set_x_position (a_x: INTEGER)
-			-- Set horizontal offset to parent to `a_x'.
-		do
-			set_position (a_x, y_position)
-		end
-
-	set_y_position (a_y: INTEGER)
-			-- Set vertical offset to parent to `a_y'.
-		do
-			set_position (x_position, a_y)
-		end
-
-	set_position (a_x, a_y: INTEGER)
-			-- Set horizontal offset to parent to `a_x'.
-			-- Set vertical offset to parent to `a_y'.
-		do
-			set_frame_top_left_point_flipped (create {NS_POINT}.make_point (a_x, a_y))
-		end
-
-	screen: NS_SCREEN
-			-- Window coordinates are relative to the main screen
-		once
-			create Result.main_screen
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
@@ -381,7 +301,7 @@ feature -- Measurement
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER)
 			-- The given y-coordinate is in the vision-coordinate system
 		do
-			set_frame (create {NS_RECT}.make_rect (a_x_position, screen.frame.size.height - a_y_position - a_height, a_width, a_height), True)
+			set_frame (create {NS_RECT}.make_rect (a_x_position, zero_screen.frame.size.height - a_y_position - a_height, a_width, a_height), True)
 		end
 
 feature -- Layout implementation
@@ -431,18 +351,18 @@ feature -- Layout implementation
 			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 				mw := mw + l_item_imp.minimum_width
 			end
-			mw := mw.max (attached_interface.upper_bar.minimum_width).max
-				(attached_interface.lower_bar.minimum_width)
+			mw := mw.max (upper_bar.minimum_width).max
+				(lower_bar.minimum_width)
 
 			mh := 0
-			if not attached_interface.upper_bar.is_empty then
-				mh := mh + attached_interface.upper_bar.minimum_height + 1
+			if not upper_bar.is_empty then
+				mh := mh + upper_bar.minimum_height + 1
 			end
 			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 				mh := mh + l_item_imp.minimum_height
 			end
-			if not attached_interface.lower_bar.is_empty then
-				mh := mh + attached_interface.lower_bar.minimum_height + 1
+			if not lower_bar.is_empty then
+				mh := mh + lower_bar.minimum_height + 1
 			end
 			l_size := frame_rect_for_content_rect (create {NS_RECT}.make_rect (0, 0, mw, mh)).size
 			internal_set_minimum_size (l_size.width, l_size.height)
@@ -557,20 +477,6 @@ feature -- Status setting
 			allow_resize
 		end
 
-	forbid_resize
-			-- Forbid the resize of `Current'.
-		do
-			set_shows_resize_indicator (False)
-			standdard_window_button ({NS_WINDOW}.window_zoom_button).set_enabled (False)
-		end
-
-	allow_resize
-			-- Allow the resize of `Current'.
-		do
-			set_shows_resize_indicator (True)
-			standdard_window_button ({NS_WINDOW}.window_zoom_button).set_enabled (True)
-		end
-
 	show
 		do
 			-- FIXME: only do this stuff when the window was not displayed before
@@ -588,25 +494,6 @@ feature -- Status setting
 			order_out
 			--is_show_requested := False
 		end
-
-	set_title (a_title: STRING_GENERAL)
-			-- <Precursor>
-		do
-			cocoa_set_title (create {NS_STRING}.make_with_string (a_title))
-			internal_title := a_title.as_string_32
-		end
-
-	title: STRING_32
-			-- <Precursor>-
-		do
-			if attached internal_title as l_title then
-				Result := l_title.twin
-			else
-				create Result.make_empty
-			end
-		end
-
-	internal_title: detachable STRING_32
 
 feature -- Element change
 
@@ -685,27 +572,7 @@ feature {EV_ANY_IMP} -- Implementation
 	dispose
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
-			Precursor {NS_WINDOW}
-		end
-
-feature {NONE} -- Implementation
-
-	set_focused_widget (a_widget: EV_WIDGET_IMP)
-			-- Set currently focused widget to `a_widget'.
-		do
-		end
-
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
-			-- Used for key event actions sequences.
-		do
-		end
-
-feature {EV_INTERMEDIARY_ROUTINES}
-
-	call_close_request_actions
-			-- Call the close request actions.
-		do
-			close_request_actions.call ([])
+			Precursor {EV_NS_WINDOW}
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

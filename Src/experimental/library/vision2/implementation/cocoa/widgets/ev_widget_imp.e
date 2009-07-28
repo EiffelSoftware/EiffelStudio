@@ -65,27 +65,48 @@ inherit
 			interface
 		end
 
+	NS_ENVIRONEMENT
+
 feature {NONE} -- Initialization
 
 	initialize
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
-		local
-			l_notification_center: NS_NOTIFICATION_CENTER
 		do
 			is_show_requested := True
 			set_expandable (True)
 			set_is_initialized (True)
 
---			create l_notification_center.default_center
---			l_notification_center.add_observer (agent on_size_change, void, cocoa_view)
+			default_center.add_observer (agent on_size_change, void, cocoa_view)
 		end
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
 	on_size_change (a_sender: NS_OBJECT)
+			-- Notification sent to the Cocoa view
+		local
+			l_width, l_height: INTEGER
 		do
-			--io.put_string ("Size change: " + a_sender.debug_output + "%N")
+			if attached cocoa_view then
+				l_width := width
+				l_height := height
+				if l_width /= last_width or l_height /= last_height then
+					if not in_resize_event and attached resize_actions_internal as l_actions then
+						in_resize_event := True
+						io.put_string ("Size change: " + current.generator + " " + object_id.out + "  " + width.out + "x" + height.out + "%N")
+						l_actions.call ([screen_x, screen_y, width, height])
+						in_resize_event := False
+					end
+					on_size (l_width, l_height)
+					last_width := l_width
+					last_height := l_height
+				end
+			end
+		end
+
+	on_size (a_width, a_height: INTEGER)
+		do
+
 		end
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
@@ -249,8 +270,9 @@ feature -- Widget relationships
 
 feature {NONE} -- Minimum size
 
-	last_width, last_height: INTEGER -- TODO: remove?
-			-- Dimenions during last "size-allocate".
+	last_width, last_height: INTEGER
+			-- Dimenions during last resize message.
+			-- Used for optimizing callbacks
 
 	in_resize_event: BOOLEAN -- TODO: remove?
 			-- Is `interface.resize_actions' being executed?

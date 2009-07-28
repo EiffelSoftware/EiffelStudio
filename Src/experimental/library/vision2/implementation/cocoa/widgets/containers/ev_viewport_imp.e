@@ -24,7 +24,8 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
-			ev_apply_new_size
+			ev_apply_new_size,
+			on_size
 		end
 
 create
@@ -123,18 +124,14 @@ feature -- Layout
 
 				l_item_imp.ev_apply_new_size (0, 0, width, height, True)
 			end
---			if a_width > 0 then -- Hack because I want to get EV_GAUGE working. TODO How/where/when should the resize actions be called?
---				on_size (a_width, a_height)
---			end
---			resize_actions.call ([screen_x, screen_y, a_width, a_height])
 		end
 
---	on_size (a_width, a_height: INTEGER)
---		do
---			if resize_actions_internal /= Void then
---				resize_actions_internal.call ([screen_x, screen_y, a_width, a_height])
---			end
---		end
+	on_size (a_width, a_height: INTEGER)
+		do
+			if resize_actions_internal /= Void then
+				resize_actions_internal.call ([screen_x, screen_y, a_width, a_height])
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 

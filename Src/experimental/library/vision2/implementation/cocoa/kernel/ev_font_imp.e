@@ -42,9 +42,10 @@ feature {NONE} -- Initialization
 			set_family ({EV_FONT_CONSTANTS}.family_screen)
 			--preferred_families.internal_add_actions.extend (agent update_preferred_faces)
 			--preferred_families.internal_remove_actions.extend (preferred_families.internal_add_actions.first)
-			height := 10
-			height_in_points := 10
+			height := {NS_FONT_API}.system_font_size.rounded
+			height_in_points := height
 			set_is_initialized (True)
+			shape := {EV_FONT_CONSTANTS}.Shape_regular
 		end
 
 feature -- Access

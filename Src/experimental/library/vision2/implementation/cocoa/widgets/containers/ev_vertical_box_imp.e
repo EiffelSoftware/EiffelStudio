@@ -104,7 +104,7 @@ feature -- Basic operation
 						y := border_width
 						ev_children.start
 					until
-						ev_children.after
+						ev_children.after or not ev_children.valid_index (ev_children.index)
 					loop
 						litem := ev_children.item
 						if litem.is_show_requested then
@@ -117,12 +117,6 @@ feature -- Basic operation
 								end
 							else
 								item_height := litem.minimum_height
-							end
-							check
-							--	y_inv >= 0
-							end
-							if y = -323 then
-								io.put_boolean (True)
 							end
 							if originator then
 								litem.ev_move_and_resize (border_width, y, item_width, item_height, True)

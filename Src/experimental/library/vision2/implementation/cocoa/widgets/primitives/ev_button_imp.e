@@ -96,11 +96,6 @@ feature {NONE} -- Initialization
 			set_action (agent select_actions.call ([]))
 		end
 
---	cocoa_view: NS_VIEW
---		do
---			Result := current
---		end
-
 feature -- Access
 
 	is_default_push_button: BOOLEAN
@@ -167,7 +162,7 @@ feature -- Status Setting
 					accomodate_text (a_text)
 				end
 				Precursor {EV_TEXTABLE_IMP} (a_text)
-				set_title (a_text)
+				set_title (a_text.as_string_8)
 			end
 		end
 

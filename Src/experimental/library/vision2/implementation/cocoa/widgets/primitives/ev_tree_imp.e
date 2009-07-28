@@ -69,6 +69,11 @@ feature {NONE} -- Initialization
 			scroll_view.set_autohides_scrollers (True)
 			create table_column.make
 			table_column.set_editable (False)
+			table_column.set_data_cell (create {NS_IMAGE_CELL}.make)
+			table_column.set_width (20.0)
+			outline_view.add_table_column (table_column)
+			create table_column.make
+			table_column.set_editable (False)
 			outline_view.add_table_column (table_column)
 			outline_view.set_outline_table_column (table_column)
 			outline_view.set_header_view (default_pointer)
@@ -142,8 +147,19 @@ feature -- DataSource
 		end
 
 	object_value_for_table_column_by_item (a_table_column: POINTER; a_node: EV_TREE_NODE): POINTER
+		local
+			l_pixmap_imp: detachable EV_PIXMAP_IMP
 		do
-			Result := (create {NS_STRING}.make_with_string (a_node.text)).item
+			-- FIXME: do proper reverse mapping from the a_table_column pointer to the eiffel object
+			if attached outline_view.table_columns.item (0) as l_item and then l_item.item = a_table_column then
+				if attached a_node.pixmap as l_pixmap then
+					l_pixmap_imp ?= l_pixmap.implementation
+					check l_pixmap_imp /= Void end
+					Result := l_pixmap_imp.image.item
+				end
+			else
+				Result := (create {NS_STRING}.make_with_string (a_node.text)).item
+			end
 		end
 
 feature -- Status report
@@ -161,13 +177,16 @@ feature -- Status report
 
 	selected: BOOLEAN
 			-- Is one item selected?
+		do
+			Result := outline_view.selected_row /= -1
+		end
 
 feature -- Implementation
 
 	ensure_item_visible (an_item: EV_TREE_NODE)
 
 		do
-			-- reveal_data_browser_item_external
+			--outline_view
 		end
 
 	set_to_drag_and_drop: BOOLEAN

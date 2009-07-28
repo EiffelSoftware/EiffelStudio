@@ -104,23 +104,10 @@ feature {EV_ANY_I} -- Status setting
 
 	set_expand (a_flag: BOOLEAN)
 			-- Expand the item if `flag', collapse it otherwise.
-		local
-			i: INTEGER
 		do
-			internal_is_expanded := a_flag
-			if a_flag = true then
-				-- Make sure all children are expanded if needed
-				from
-					i := 1
-				until
-					i >= count
-				loop
---					if i_th (i).is_expanded then
---TODO						i_th (i).implementation.set_expand (true)
---					end
-					i := i + 1
-				end
-			else
+			-- TODO: expands all the children recursively?
+			if attached parent_tree_imp as l_tree then
+				--l_tree.outline_view.expand_item ()
 			end
 		end
 
@@ -128,7 +115,8 @@ feature {EV_ANY_I} -- Status setting
 			-- Set 'text' to 'a_text'
 		do
 			internal_text := a_text -- .twin??
-			if parent_tree_imp /= Void then
+			if attached parent_tree_imp as l_tree then
+				l_tree.outline_view.reload_item_reload_children (default_pointer, True)
 			end
 		end
 

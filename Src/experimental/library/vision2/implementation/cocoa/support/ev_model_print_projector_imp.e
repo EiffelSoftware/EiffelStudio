@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 	make_with_context (a_world: EV_MODEL_WORLD; a_context: EV_PRINT_CONTEXT)
 			-- Create with `a_world' and `a_context'.
 		do
-			if interface.context.output_to_file then
-				create filename.make_from_string (interface.context.file_name.as_string_8)
+			if a_context.output_to_file then
+				create filename.make_from_string (a_context.file_name.as_string_8)
 			else -- Printing via lpr
 				-- Printing directly using lpr spooler
 				create filename.make_from_string (tmp_print_job_name)
@@ -60,7 +60,7 @@ feature {EV_ANY_I} -- Access
 			i: INTEGER
 			a_cs: C_STRING
 		do
-			if not interface.context.output_to_file then
+			if not attached_interface.context.output_to_file then
 				-- Create the named pipe
 				create a_cs.make (filename)
 				i := mkfifo (a_cs.item, S_IRWXU)
@@ -100,9 +100,9 @@ feature {NONE} -- Implementation
 			"S_IRWXU"
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_MODEL_PRINT_PROJECTOR;
+	interface: detachable EV_MODEL_PRINT_PROJECTOR note option: stable attribute end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

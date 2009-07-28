@@ -45,6 +45,7 @@ feature -- initialization
 			create box.make
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_border_type ({NS_BOX}.no_border)
+			box.set_content_view_margins (0, 0)
 			cocoa_view := box
 			set_expandable (True) -- Check: is this correct??
 			is_show_requested := True

@@ -14,12 +14,12 @@ inherit
 	EV_STANDARD_DIALOG_IMP
 		redefine
 			interface,
-			initialize
+			make
 		end
 
 feature {NONE} -- Initialization
 
-	initialize
+	make
 			-- Setup action sequences.
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			filter := "*.*"
 			create filters.make (5)
 			internal_filename := ""
+			create start_directory.make_empty
 
 			set_is_initialized (True)
 		end
@@ -131,6 +132,8 @@ feature {NONE} -- Implementation
 
 	save_panel: NS_SAVE_PANEL
 
-	interface: EV_FILE_DIALOG;
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
 end -- class EV_FILE_DIALOG_IMP

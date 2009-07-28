@@ -16,19 +16,19 @@ create
 
 feature {NONE} -- Initialization
 
+	old_make (an_interface: EV_PIXEL_BUFFER)
+			-- Creation method.
+		do
+			assign_interface (an_interface)
+			make_with_size (1, 1)
+		end
+
 	make_with_size (a_width, a_height: INTEGER)
 			-- Create with size.
 		do
 			create image.make_with_size (create {NS_SIZE}.make_size (1000, 1000))
 			width := a_width
 			height := a_height
-		end
-
-	old_make (an_interface: EV_PIXEL_BUFFER)
-			-- Creation method.
-		do
-			assign_interface (an_interface)
-			make_with_size (1, 1)
 		end
 
 	make_with_pixmap (a_pixmap: EV_PIXMAP)
@@ -73,7 +73,14 @@ feature -- Command
 
 	save_to_named_file (a_file_name: STRING)
 			-- Save pixel data to file `a_file_name'.
+		local
+			data: NS_DATA
+			image_rep: NS_BITMAP_IMAGE_REP
 		do
+			data := image.tiff_representation
+			create image_rep.make_with_data (data)
+			--data := bits.representation_using_type (NS_PNG_FILE, void)
+			--data.write_to_file_atomically (a_file_name, False)
 			io.put_string ("EV_PIXEL_BUFFER_IMP: Not implemented")
 		end
 
@@ -93,8 +100,6 @@ feature -- Command
 				create {NS_RECT}.make_rect (a_area.x, l_area_y, a_area.width, a_area.height),
 				{NS_IMAGE}.composite_source_over, 1)
 			l_pixmap_imp.image.unlock_focus
---			Result.set_background_color (create {EV_COLOR}.make_with_rgb (0.0, 1.0, 0.0))
---			Result.clear
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
@@ -133,7 +138,17 @@ feature -- Command
 
 	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE)
 			-- Draw `a_pixel_buffer' to current at `a_rect'.
+		local
+			pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
+			image.lock_focus
+			pixel_buffer_imp ?= a_pixel_buffer.implementation
+			check pixel_buffer_imp /= Void end
+			pixel_buffer_imp.image.draw_at_point (
+				create {NS_POINT}.make_point (a_rect.x, height - a_rect.y - a_rect.height),
+				create {NS_RECT}.make_rect (0, 0, a_rect.width, a_rect.height),
+				{NS_IMAGE}.composite_source_over, 1)
+			image.unlock_focus
 		end
 
 feature -- Query
@@ -146,13 +161,26 @@ feature -- Query
 
 	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
+		local
+			pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
+			image.lock_focus
+			pixel_buffer_imp ?= a_pixel_buffer.implementation
+			check pixel_buffer_imp /= Void end
+			pixel_buffer_imp.image.draw_at_point (
+				create {NS_POINT}.make_point (a_x, height - a_y - a_pixel_buffer.height),
+				create {NS_RECT}.make_rect (0, 0, a_pixel_buffer.width, a_pixel_buffer.height),
+				{NS_IMAGE}.composite_source_over, 1)
+			image.unlock_focus
 		end
 
 	image: NS_IMAGE
 
 	data_ptr: POINTER
 		-- A pointer to the byte-data. Accessed by classes in the Smart Docking library
+		do
+			--image
+		end
 
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementation
 

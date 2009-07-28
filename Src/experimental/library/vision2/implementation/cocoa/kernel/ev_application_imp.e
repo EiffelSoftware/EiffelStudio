@@ -50,11 +50,18 @@ feature {NONE} -- Initialization
 
 	make
 			-- Set up the callback marshalL.... TODO
+		local
+			menu: NS_MENU
 		do
 			Precursor {EV_APPLICATION_I}
 			create windows_imp.make
 			make_application_cocoa
 			set_is_initialized (True)
+
+			-- Fix the menu because we are not loading from a nib
+			create menu.make
+			menu.insert_item_at_index (default_application_menu, 0)
+			set_main_menu (menu)
 		end
 
 feature -- Access
@@ -112,9 +119,6 @@ feature -- Basic operation
 			pointer_motion_action: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			point: NS_POINT
 		do
-			-- Fix the menu because we are not loading from a nib
-			--main_menu.insert_item_at_index (default_application_menu, 0)
-
 			from
 				event := next_event (0, default_pointer, 0, true)
 			until

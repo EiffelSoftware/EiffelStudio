@@ -62,7 +62,8 @@ feature -- Status setting
 			check
 				w_imp_not_void : w_imp /= Void
 			end
-			w_imp.parent_ask_resize (a_width, a_height)
+			--w_imp.ev parent_ask_resize (a_width, a_height)
+			w_imp.ev_apply_new_size (x_position, y_position, a_width, a_height, True)
 			notify_change (Nc_minsize, w_imp)
 		end
 

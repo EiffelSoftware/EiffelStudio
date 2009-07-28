@@ -21,7 +21,8 @@ inherit
 			interface,
 			make,
 			width,
-			height
+			height,
+			is_flipped
 		end
 
 	EV_PRIMITIVE_IMP
@@ -252,13 +253,14 @@ feature -- Duplication
 			end
 		end
 
-
 feature {EV_PIXMAP_IMP} -- Implementation
 
 	internal_height: INTEGER
 	internal_width: INTEGER
 
 feature {NONE} -- Constants
+
+	is_flipped: Boolean = False
 
 	Default_color_depth: INTEGER = -1
 			-- Default color depth.

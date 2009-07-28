@@ -39,6 +39,7 @@ inherit
 			dispose
 		select
 			cocoa_panel_ptr,
+			cocoa_screen,
 			make_panel_window
 		end
 

@@ -319,20 +319,20 @@ feature -- Element change
 			l_widget_imp: detachable EV_WIDGET_IMP
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			from
-				tabs.start
-			until
-				tabs.after
-			loop
-				l_tab_imp ?= tabs.item.implementation
-				check l_tab_imp /= Void end
-				l_widget ?= l_tab_imp.widget
-				check l_widget /= Void end
-				l_widget_imp ?= l_widget.implementation
-				check l_widget_imp /= Void end
-				l_widget_imp.ev_apply_new_size (a_x_position, a_y_position, client_width, a_height, True)
-				tabs.forth
-			end
+--			from
+--				tabs.start
+--			until
+--				tabs.after
+--			loop
+--				l_tab_imp ?= tabs.item.implementation
+--				check l_tab_imp /= Void end
+--				l_widget ?= l_tab_imp.widget
+--				check l_widget /= Void end
+--				l_widget_imp ?= l_widget.implementation
+--				check l_widget_imp /= Void end
+--				l_widget_imp.ev_apply_new_size (a_x_position, a_y_position, client_width, a_height, True)
+--				tabs.forth
+--			end
 		end
 
 feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change

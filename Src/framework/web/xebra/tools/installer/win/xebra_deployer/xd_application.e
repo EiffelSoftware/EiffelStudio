@@ -40,7 +40,7 @@ feature -- Paths
 			-- Read from argument
 
 	dir_apache_conf: FILE_NAME
-			-- The directory to config files of apache
+			-- The path to config files of apache
 		do
 			Result := dir_apache.twin
 			Result.extend ("conf")
@@ -49,7 +49,7 @@ feature -- Paths
 		end
 
 	dir_apache: FILE_NAME
-			-- The directory to apache
+			-- The path to apache
 		do
 			Result := install_dir.twin
 			Result.extend ("apache")
@@ -58,7 +58,7 @@ feature -- Paths
 		end
 
 	dir_www: FILE_NAME
-			-- The directory to the www folder
+			-- The path to the www folder
 		do
 			Result := install_dir.twin
 			Result.extend ("www")
@@ -67,7 +67,7 @@ feature -- Paths
 		end
 
 	dir_library: FILE_NAME
-			-- The directory to the framework library folder
+			-- The path to the framework library folder
 		do
 			Result := install_dir.twin
 			Result.extend ("library")
@@ -76,7 +76,7 @@ feature -- Paths
 		end
 
 	dir_conf: FILE_NAME
-			-- The directory to the xebra conf folder
+			-- The path to the xebra conf folder
 		do
 			Result := install_dir.twin
 			Result.extend ("conf")
@@ -84,7 +84,19 @@ feature -- Paths
 			result_attached: Result /= Void
 		end
 
+	dir_utilities: FILE_NAME
+			-- The path  to xebra_utilities library
+		do
+			Result := dir_library.twin
+			Result.extend ("xebra_utilities")
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Constants
+
+	File_xu_constants: STRING = "xu_constants\.e"
+		-- The xu_constants.e file
 
 	File_httpd_conf: STRING = "httpd\.conf"
 		-- The http.conf file (in xebra/apache/conf)
@@ -101,8 +113,16 @@ feature -- Constants
 	Key_server_root: STRING = "_SERVER_ROOT_"
 		-- A key inside httpd.conf that will be replaced
 
-	Key_eiffel_projects: STRING  = "$XEBRA_DEV\eiffel_projects"
-		-- A key inside ecf files that will be replaced
+	Key_xebra_root: STRING = "$XEBRA_DEV"
+		-- A key inside various files that will be replaced
+
+	Key_eiffel_projects: STRING
+			-- A key inside ecf files that will be replaced
+		do
+			Result :=  Key_xebra_root + "\eiffel_projects"
+		ensure
+			result_attached: Result /= Void
+		end
 
 	Key_eiffel_src: STRING = "$EIFFEL_SRC"
 		-- A key inside ecf files that will be replaced
@@ -130,6 +150,7 @@ feature -- Basic Operations
 				process_httpd
 				process_ecfs_xml
 				process_server_ini
+				process_xu_constants
 			else
 				error_manager.add_error (create {XERROR_DIR_NOT_FOUND}.make (install_dir), false)
 			end
@@ -143,10 +164,30 @@ feature -- Basic Operations
 
 feature -- Replacement Tasks
 
+	process_xu_constants
+			-- Replaces in xu_constants.e file all occurrences of
+			--	Key_xebra_root 	with 	install_dir
+		local
+			l_util: XU_FILE_UTILITIES
+			l_files: LIST [FILE_NAME]
+		do
+			create l_util
+			o.dprint ("Scanning for " + file_xu_constants + " file in " + dir_utilities, 1)
+			l_files := l_util.scan_for_files (dir_utilities, 0, file_xu_constants, "\.svn")
+			from
+				l_files.start
+			until
+				l_files.after
+			loop
+				o.dprint ("Replacing  in " + l_files.item_for_iteration,1)
+				l_util.replace_in_file (l_files.item_for_iteration, Key_xebra_root, install_dir)
+				l_files.forth
+			end
+		end
+
 	process_ecfs_xml
 			-- Replaces in all ecf and xml files all occurrences of
 			--	Key_eiffel_projects 	with 	install_dir
-			--  Key_eiffel_src			with	dir_library
 		local
 			l_util: XU_FILE_UTILITIES
 			l_files: LIST [FILE_NAME]

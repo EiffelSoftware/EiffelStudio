@@ -17,12 +17,13 @@ void bridge_void (id self, SEL name);
 BOOL bridge_bool (id self, SEL name);
 void bridge_void_ptr (id self, SEL name, void* arg1);
 void bridge_void_ptr_ptr (id self, SEL name, void* arg1, void* arg2);
+void bridge_void_general (id self, SEL name, ...);
 
 typedef void (*voidCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER);
 typedef EIF_BOOLEAN (*boolCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER);
 typedef void (*voidPtrCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER);
 typedef void (*voidPtrPtrCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_POINTER);
-typedef void (*voidGeneralCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER);
+typedef void (*voidGeneralCallbackTYPE) (EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_INTEGER);
 
 void connect_callbacks (EIF_OBJECT a_callback_object,
 			voidCallbackTYPE a_callback_void,

@@ -1,11 +1,14 @@
 note
-	description: "Representation of an objective C method at runtime."
+	description: "Representation of an Objective-C method at runtime."
 	status: "Not completed"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	OBJC_METHOD
+
+inherit
+	DEBUG_OUTPUT
 
 create
 	make_from_pointer
@@ -80,6 +83,12 @@ feature -- Status Report
 			-- Can current be used?
 		do
 			Result := item /= default_pointer
+		end
+
+	debug_output: STRING
+			-- <Precursor>
+		do
+			Result := name
 		end
 
 feature {NONE} -- Implementation: Access

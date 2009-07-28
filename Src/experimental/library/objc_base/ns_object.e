@@ -23,13 +23,21 @@ inherit
 			copy
 		end
 
+	IDENTIFIED
+		undefine
+			is_equal
+		redefine
+			copy,
+			dispose
+		end
+
 create
 	share_from_pointer
 
 create {NS_OBJECT, OBJC_CLASS, OBJC_CALLBACK_MARSHAL}
 	make_from_pointer
 
-feature {NONE} -- Initialization
+feature {OBJC_CLASS} -- Initialization
 
 	make_from_pointer (a_ptr: POINTER)
 			-- Initialize Current assuming the Eiffel code initialized `a_ptr' via an external call.
@@ -86,11 +94,12 @@ feature -- Status report
 		end
 
 	debug_output: STRING
+			-- A description of the current object - using {NSObject}.description
 		local
 			l_string: NS_STRING_BASE
 		do
 			create l_string.make_from_pointer ({NS_OBJECT_API}.description (item))
-			Result := l_string.to_string
+			Result := l_string
 		end
 
 feature -- Duplication
@@ -111,10 +120,19 @@ feature -- Removal
 		local
 			l_null: POINTER
 		do
+			Precursor {IDENTIFIED}
 			if item /= l_null then
 --				{NS_OBJECT_API}.release (item)
 				item := l_null
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	callback_marshal: OBJC_CALLBACK_MARSHAL
+			-- A reference to the global Objective-C callback marshaler
+		once
+			create Result
 		end
 
 end

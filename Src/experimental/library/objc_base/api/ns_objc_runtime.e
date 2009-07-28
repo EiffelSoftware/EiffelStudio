@@ -37,6 +37,29 @@ feature -- Working with Classes
 			"return class_addProtocol((Class)$a_class, (Protocol *) $a_protocol);"
 		end
 
+	frozen class_add_method (a_class: POINTER; a_sel: POINTER; a_imp: POINTER; a_types: POINTER): BOOLEAN
+			-- BOOL class_addMethod(Class cls, SEL name, IMP imp, const char *types)
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return class_addMethod((Class)$a_class, $a_sel, $a_imp, $a_types);"
+		end
+
+	frozen class_replace_method (a_class: POINTER; a_sel: POINTER; a_imp: POINTER; a_types: POINTER): POINTER
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return class_replaceMethod((Class)$a_class, $a_sel, $a_imp, $a_types);"
+		end
+
+	frozen class_get_instance_method (a_class: POINTER; a_selector: POINTER): POINTER
+			-- Method class_getInstanceMethod(Class aClass, SEL aSelector)
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return class_getInstanceMethod((Class)$a_class, (SEL) $a_selector);"
+		end
+
 	frozen class_copy_ivar_list (a_class: POINTER; a_count: TYPED_POINTER [NATURAL_32]): POINTER
 		external
 			"C inline use <objc/runtime.h>"
@@ -178,20 +201,6 @@ feature -- Adding Classes
 			"objc_registerClassPair((Class)$a_class);"
 		end
 
-	frozen class_add_method (a_class: POINTER; a_sel: POINTER; a_imp: POINTER; a_types: POINTER): BOOLEAN
-		external
-			"C inline use <objc/runtime.h>"
-		alias
-			"return class_addMethod((Class)$a_class, $a_sel, $a_imp, $a_types);"
-		end
-
-	frozen class_replace_method (a_class: POINTER; a_sel: POINTER; a_imp: POINTER; a_types: POINTER): POINTER
-		external
-			"C inline use <objc/runtime.h>"
-		alias
-			"return class_replaceMethod((Class)$a_class, $a_sel, $a_imp, $a_types);"
-		end
-
 feature -- Instantiating Classes
 
 	frozen class_create_instance (a_class: POINTER; a_extra_bytes: INTEGER): POINTER
@@ -202,6 +211,13 @@ feature -- Instantiating Classes
 		end
 
 feature -- Working with Instances
+
+	frozen object_set_instance_variable (a_object: POINTER; a_name: POINTER; a_value: POINTER)
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return object_setInstanceVariable((id)$a_object, $a_name, $a_value);"
+		end
 
 	frozen object_get_class (a_object: POINTER): POINTER
 		external
@@ -238,7 +254,37 @@ feature -- Sending Messages
 
 feature -- Working with Selectors
 
+	frozen sel_get_name (a_selector: POINTER): POINTER
+			-- const char* sel_getName(SEL aSelector)
+			-- Returns the name of the method specified by a given selector.
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return sel_getName($a_selector);"
+		end
+
+	frozen sel_get_uid (a_name: POINTER): POINTER
+			-- SEL sel_getUid(const char *str)
+		obsolete
+			"Use sel_register_name instead."
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return sel_getUid($a_name);"
+		end
+
+	frozen sel_is_equal (a_lhs_sel, a_rhs_sel: POINTER): BOOLEAN
+			-- BOOL sel_isEqual(SEL lhs, SEL rhs)
+			-- Returns a Boolean value that indicates whether two selectors are equal.
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return sel_isEqual($a_lhs_sel, $a_rhs_sel);"
+		end
+
 	frozen sel_register_name (a_name: POINTER): POINTER
+			-- SEL sel_registerName(const char *str)
+			-- Registers a method with the Objective-C runtime system, maps the method name to a selector, and returns the selector value.
 		external
 			"C inline use <objc/runtime.h>"
 		alias

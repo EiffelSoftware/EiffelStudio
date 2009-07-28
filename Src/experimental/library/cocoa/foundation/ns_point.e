@@ -9,9 +9,8 @@ class
 
 inherit
 	MEMORY_STRUCTURE
-		redefine
-			out
-		end
+
+	DEBUG_OUTPUT
 
 create
 	make,
@@ -62,7 +61,7 @@ feature -- Measurement
 
 feature -- Output
 
-	out: STRING
+	debug_output: STRING
 		do
 			Result := "(" + x.out + ", " + y.out + ")"
 		end

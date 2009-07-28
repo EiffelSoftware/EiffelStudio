@@ -23,7 +23,7 @@ feature {NONE} -- Creation
 	make
 		do
 			make_from_pointer (tab_view_new)
-			insert_in_table
+			callback_marshal.register_object (Current)
 		end
 
 feature -- Access

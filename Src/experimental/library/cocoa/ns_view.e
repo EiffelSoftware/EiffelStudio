@@ -9,17 +9,6 @@ class
 
 inherit
 	NS_RESPONDER
-		redefine
-			dispose
-		end
-
-	IDENTIFIED
-		undefine
-			is_equal,
-			copy
-		redefine
-			dispose
-		end
 
 create
 	make,
@@ -35,7 +24,7 @@ feature {NONE} -- Creation and Initialization
 --			make_from_pointer ({NS_VIEW_API}.new)
 			make_from_pointer (view_class.create_instance.item)
  			{NS_VIEW_API}.init (item)
-			insert_in_table
+			callback_marshal.register_object (Current)
 		end
 
 	make_custom (a_draw_action: PROCEDURE [ANY, TUPLE])
@@ -44,7 +33,7 @@ feature {NONE} -- Creation and Initialization
 		do
 			draw_action := a_draw_action
 			make_from_pointer ({NS_VIEW_API}.custom_new ($current, $draw_old))
-			insert_in_table
+			callback_marshal.register_object (Current)
 		end
 
 	make_flipped
@@ -52,7 +41,7 @@ feature {NONE} -- Creation and Initialization
 		do
 			make_from_pointer (flipped_view_class.create_instance.item)
  			{NS_VIEW_API}.init (item)
-			insert_in_table
+			callback_marshal.register_object (Current)
 		end
 
 	flipped_view_class: OBJC_CLASS
@@ -60,7 +49,7 @@ feature {NONE} -- Creation and Initialization
 			create Result.make_with_name ("FlippedView")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
 			Result.add_method ("isFlipped", agent : BOOLEAN do Result := True end)
-			Result.add_method ("viewDidEndLiveResize", agent do io.put_string ("%NXXX%N") end)
+			Result.add_method ("viewDidEndLiveResize", agent do io.put_string ("%NviewDidEndLiveResize called%N") end)
 			Result.register
 		end
 
@@ -68,19 +57,8 @@ feature {NONE} -- Creation and Initialization
 		once
 			create Result.make_with_name ("EiffelWrapperView")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
-			Result.add_method ("viewDidEndLiveResize", agent do io.put_string ("XXX") end)
+			Result.add_method ("viewDidEndLiveResize", agent do io.put_string ("viewDidEndLiveResize called%N") end)
 			Result.register
-		end
-
-	object_table: HASH_TABLE [INTEGER, POINTER]
-		once
-			create Result.make (1000)
-			-- FIXME: perform cleanup after a number of insertions
-		end
-
-	insert_in_table
-		do
-			object_table.force (object_id, item)
 		end
 
 feature -- Managing the View Hierarchy
@@ -431,14 +409,8 @@ feature -- Event Handling
 		do
 			view_ptr := {NS_VIEW_API}.hit_test (item, a_point.item)
 			if view_ptr /= default_pointer then
-				object_table.search (view_ptr)
-				if object_table.found then
-					if attached {NS_VIEW} id_object (object_table.found_item) as l_view then
-						Result := l_view
-					else
-						io.put_string ("View not valid anymore. Returning new.%N")
-						create Result.share_from_pointer (view_ptr)
-					end
+				if attached {NS_VIEW} callback_marshal.get_eiffel_object (view_ptr) as l_view then
+					Result := l_view
 				else
 					create Result.share_from_pointer (view_ptr)
 					io.put_string ("View not found: " + view_ptr.out + " (" + Result.class_.name.out + ")" + " Returning new.%N")
@@ -466,13 +438,5 @@ feature {NONE} -- Callback
 		end
 
 	draw_action: detachable PROCEDURE [ANY, TUPLE]
-
-feature {NONE} -- Implementation
-
-	dispose
-		do
-			Precursor {NS_RESPONDER}
-			Precursor {IDENTIFIED}
-		end
 
 end

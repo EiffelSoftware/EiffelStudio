@@ -66,13 +66,13 @@ feature -- Replacing Text
 			{NS_TEXT_API}.replace_characters_in_range_with_string (item, a_range.item, a_string.item)
 		end
 
-	set_string (a_string: STRING_GENERAL)
+	set_string (a_string: NS_STRING)
 			-- Replaces the receiver's entire text with `a_string', applying the formatting attributes of the old first character to its new contents.
 			-- This method does not include undo support by default. Clients must invoke shouldChangeTextInRanges:replacementStrings: or shouldChangeTextInRange:replacementString: to include this method in an undoable action.
 		do
-			{NS_TEXT_API}.set_string (item, (create {NS_STRING}.make_with_string (a_string)).item)
+			{NS_TEXT_API}.set_string (item, a_string.item)
 		ensure
-			string_set: a_string.is_equal (string.to_string)
+			string_set: a_string.is_equal (string)
 		end
 
 feature -- Scrolling

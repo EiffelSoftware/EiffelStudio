@@ -14,6 +14,9 @@ inherit
 
 create
 	make
+create {NS_OBJECT}
+	make_from_pointer,
+	share_from_pointer
 
 feature {NONE} -- Creation
 

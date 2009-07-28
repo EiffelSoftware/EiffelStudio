@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			create open_panel.make
 			save_panel := open_panel
 			window_item := open_panel.item
-			initialize
+			Precursor {EV_FILE_DIALOG_IMP}
 			--set_title ("Open")
 		end
 
@@ -59,10 +59,10 @@ feature {NONE} -- Initialization
 
 			if button =  {NS_PANEL}.ok_button then
 				selected_button := internal_accept
-				interface.open_actions.call (Void)
+				attached_interface.open_actions.call (Void)
 			elseif button = {NS_PANEL}.cancel_button then
 				selected_button := ev_cancel
-				interface.cancel_actions.call (Void)
+				attached_interface.cancel_actions.call (Void)
 			end
 		end
 
@@ -78,6 +78,7 @@ feature {NONE} -- Access
 			-- List of filenames selected by user
 		local
 			l_filenames: NS_ARRAY [NS_STRING]
+			l_item: detachable NS_STRING
 			i: like ns_uinteger
 		do
 			l_filenames := open_panel.filenames
@@ -87,7 +88,9 @@ feature {NONE} -- Access
 			until
 				i > l_filenames.count
 			loop
-				Result.extend (l_filenames.item (i).to_string)
+				l_item := l_filenames.item (i)
+				check l_item /= Void end
+				Result.extend (l_item.to_string)
 				i := i + 1
 			end
 		end
@@ -110,6 +113,8 @@ feature {NONE} -- Implementation
 
 	open_panel: NS_OPEN_PANEL
 
-	interface: EV_FILE_OPEN_DIALOG;
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_FILE_OPEN_DIALOG note option: stable attribute end;
 
 end -- class EV_FILE_OPEN_DIALOG_IMP

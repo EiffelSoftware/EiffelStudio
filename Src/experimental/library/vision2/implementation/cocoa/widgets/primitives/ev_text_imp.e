@@ -69,7 +69,7 @@ feature -- Access
 	text: STRING_32
 			-- Text displayed in label.
 		do
-			Result := text_view.string.to_string.to_string_32
+			Result := text_view.string.to_string_32
 		end
 
 	line (a_line: INTEGER): STRING_32
@@ -161,7 +161,7 @@ feature -- Status setting
 			l_text := text
 			l_text.append (a_text)
 
-			create l_range.make_range (a_text.count, text_view.string.to_string.count)
+			create l_range.make_range (a_text.count, text_view.string.to_string_8.count)
 
 			range := text_view.selected_range
 --			text_view.replace_characters_in_range_with_string (l_range, create {NS_STRING}.make_with_string (a_text))

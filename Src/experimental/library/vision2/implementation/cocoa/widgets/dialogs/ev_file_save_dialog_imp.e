@@ -36,11 +36,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	interface: EV_FILE_SAVE_DIALOG
-
 	file_chooser_action: INTEGER
 			-- Action constant of the file chooser, ie: to open or save files, etc.
 		do
 		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: detachable EV_FILE_SAVE_DIALOG note option: stable attribute end;
 
 end -- class EV_FILE_SAVE_DIALOG_IMP

@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			create box.make
 			box.set_title_position ({NS_BOX}.no_title)
 			box.set_box_type ({NS_BOX}.box_custom)
+			box.set_border_type ({NS_BOX}.no_border)
 			box.set_content_view_margins (0, 0)
 			cocoa_view := box
 
@@ -127,8 +128,18 @@ feature -- Implementation
 
 	compute_minimum_width
 			-- Update the minimum-size of `Current'.
+		local
+			l_width: INTEGER
 		do
-			internal_set_minimum_width (20 * count)
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				l_width := l_width + ev_children.item.minimum_width
+				ev_children.forth
+			end
+			internal_set_minimum_width (l_width)
 		end
 
 	compute_minimum_height

@@ -69,13 +69,19 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize `Current'
---		local
---			color_imp: EV_COLOR_IMP
+		local
+			l_color: NS_COLOR
 		do
 			create focused_selection_color.make_with_rgb (1, 0, 0)
-			create non_focused_selection_color.make_with_rgb (1, 1, 0)
+
+			create l_color.selected_text_background_color
+			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
+			create non_focused_selection_color.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
+
 			create focused_selection_text_color.make_with_rgb (0, 1, 0)
-			create non_focused_selection_text_color.make_with_rgb (0, 0, 1)
+			create l_color.selected_text_color
+			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
+			create non_focused_selection_text_color.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 
 			create cocoa_view.make
 			Precursor {EV_CELL_IMP}

@@ -10,8 +10,7 @@ class
 inherit
 	EV_TEXT_FIELD_I
 		redefine
-			interface,
-			hide_border
+			interface
 		end
 
 	EV_PRIMITIVE_IMP
@@ -58,7 +57,9 @@ feature {NONE} -- Initialization
 		local
 			a_font: EV_FONT
 		do
-			create text_field.make
+			if text_field = Void then
+				create text_field.make
+			end
 			cocoa_view := text_field
 			text_field.cell.set_wraps (False)
 
@@ -77,7 +78,7 @@ feature -- Access
 	text: STRING_32
 			-- Text displayed in field.
 		do
-			Result := text_field.string_value.to_string.to_string_32
+			Result := text_field.string_value.to_string_32
 		end
 
 feature -- Status setting
@@ -158,7 +159,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	set_default_minimum_size
 			-- Called after creation. Set current size and notify parent.
 		do
-			internal_set_minimum_size (maximum_character_width * 4, 22)
+			internal_set_minimum_size (maximum_character_width * 4, text_field.cell.cell_size.height)
 		end
 
 feature -- Status report
@@ -186,10 +187,6 @@ feature -- Status report
 
 feature -- status settings
 
-	hide_border
-			-- Hide the border of `Current'.
-		do
-		end
 
 	set_editable (a_editable: BOOLEAN)
 			-- Set editable state to `a_editable'.

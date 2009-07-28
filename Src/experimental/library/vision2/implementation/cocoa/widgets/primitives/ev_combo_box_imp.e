@@ -17,6 +17,8 @@ inherit
 		end
 
 	EV_TEXT_FIELD_IMP
+		rename
+			text_field as combo_box
 		undefine
 			create_focus_in_actions,
 			create_focus_out_actions,
@@ -29,7 +31,8 @@ inherit
 			interface,
 			has_focus,
 			dispose,
-			cocoa_set_size
+			cocoa_set_size,
+			combo_box
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -63,8 +66,6 @@ feature {NONE} -- Initialization
 			create combo_box.make
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			Precursor {EV_TEXT_FIELD_IMP}
-			text_field := combo_box
-			cocoa_view := combo_box
 		end
 
 feature {NONE} -- Initialization
@@ -79,6 +80,10 @@ feature {NONE} -- Initialization
 			-- Insert `item_imp' at the one-based index `an_index'.
 		do
 			combo_box.insert_item_with_object_value_at_index (create {NS_STRING}.make_with_string (item_imp.text), pos - 1)
+			-- Select the item if it is the first:
+			if combo_box.number_of_items = 1 then
+				combo_box.select_item_at_index (0)
+			end
 		end
 
 	remove_item (item_imp: EV_LIST_ITEM_IMP)
@@ -183,7 +188,10 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	combo_box: NS_COMBO_BOX;
+	combo_box: NS_COMBO_BOX
+		attribute
+			create Result.make
+		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

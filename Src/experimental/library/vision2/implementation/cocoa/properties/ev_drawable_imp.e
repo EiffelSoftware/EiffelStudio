@@ -278,11 +278,16 @@ feature -- Drawing operations
 			l_string: NS_STRING
 			l_attributes: NS_DICTIONARY
 			l_font: detachable EV_FONT_IMP
+			l_color: detachable EV_COLOR_IMP
 		do
 			create l_string.make_with_string (a_text)
 			l_font ?= font.implementation
-			check l_font /= void end
-			create l_attributes.make_with_object_for_key (l_font.font, font_attribute_name)
+			check l_font /= Void end
+			l_color ?= foreground_color.implementation
+			check l_color /= Void end
+			create l_attributes.make_with_objects_for_keys (
+				create {NS_ARRAY[NS_OBJECT]}.make_from_array(<<l_font.font, l_color.color>>),
+				create {NS_ARRAY[NS_OBJECT]}.make_from_array(<<font_attribute_name, foreground_color_attribute_name>>))
 			prepare_drawing
 			l_string.draw_at_point_with_attributes (create {NS_POINT}.make_point (x, y), l_attributes)
 			finish_drawing
@@ -322,13 +327,20 @@ feature -- Drawing operations
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
+			y_cocoa: INTEGER
 		do
 			prepare_drawing
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= Void end
-			--pixmap_imp.image.set_flipped (True)
-			pixmap_imp.image.draw_at_point (
-				create {NS_POINT}.make_point (x, height - y - a_pixmap.height),
+
+--			if is_flipped then
+				y_cocoa := y
+--			else
+--				y_cocoa := height - y - a_pixmap.height
+--			end
+
+			pixmap_imp.image.draw_in_rect (
+				create {NS_RECT}.make_rect (x, y_cocoa, a_pixmap.height, a_pixmap.width),
 				create {NS_RECT}.make_rect (0, 0, a_pixmap.width, a_pixmap.height),
 				{NS_IMAGE}.composite_source_over, 1)
 			finish_drawing
@@ -350,18 +362,35 @@ feature -- Drawing operations
 			l_pixmap_imp.image.unlock_focus
 		end
 
-	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)
+	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; a_area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
+--			color: NS_COLOR
+--			path: NS_BEZIER_PATH
+			y_cocoa: INTEGER
 		do
 			prepare_drawing
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= void end
-			pixmap_imp.image.draw_at_point (
-				create {NS_POINT}.make_point (x, y),
-				create {NS_RECT}.make_rect (0, 0, area.width, area.height),
+--			if is_flipped then
+--				y_cocoa := a_area.y
+--			else
+				y_cocoa := pixmap_imp.image.size.height - a_area.height - a_area.y
+--			end
+
+			pixmap_imp.image.draw_in_rect (
+				create {NS_RECT}.make_rect (x, y, a_area.width, a_area.height),
+				create {NS_RECT}.make_rect (a_area.x, y_cocoa, a_area.width, a_area.height),
 				{NS_IMAGE}.composite_source_over, 1)
+
+--			create color.blue_color
+--			color.color_with_alpha_component (0.5).set
+--			create path.make_with_rect ( create {NS_RECT}.make_rect (x, y, a_area.width, a_area.height) )
+--			path.set_line_width (internal_line_width)
+--			path.fill
+--			path.stroke
+
 			finish_drawing
 		end
 
@@ -514,16 +543,23 @@ feature -- Implementation
 
 feature {EV_ANY_HANDLER} -- Implementation
 
+	is_flipped: BOOLEAN
+		do
+			Result := False
+		end
+
 	prepare_drawing
 		local
 			l_color: detachable EV_COLOR_IMP
---			trans: NS_AFFINE_TRANSFORM
+			trans: NS_AFFINE_TRANSFORM
 		do
 			image.lock_focus
---			create trans.make
---			trans.translate_by_xy (0.0, image.size.height)
---			trans.scale_by_xy (1.0, -1.0)
---			trans.concat
+			if not is_flipped then
+				create trans.make
+				trans.translate_by_xy (0.0, image.size.height)
+				trans.scale_by_xy (1.0, -1.0)
+				trans.concat
+			end
 			l_color ?= foreground_color.implementation
 			check l_color /= void end
 			l_color.color.set

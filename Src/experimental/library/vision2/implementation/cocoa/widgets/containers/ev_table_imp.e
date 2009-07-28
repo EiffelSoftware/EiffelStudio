@@ -79,9 +79,6 @@ feature -- Status report
 
 	border_width: INTEGER
 			-- Width of border around container in pixels.
-		do
-
-		end
 
 	replace (v: like item)
 			-- Replace `item' with `v'.	
@@ -127,6 +124,7 @@ feature -- Status settings
 			-- the box has the same size.
 		do
 			is_homogeneous := True
+			notify_change (Nc_minsize, Current)
 		end
 
 	disable_homogeneous
@@ -134,24 +132,28 @@ feature -- Status settings
 			-- the box has the same size.
 		do
 			is_homogeneous := False
+			notify_change (Nc_minsize, Current)
 		end
 
 	set_border_width (a_value: INTEGER)
 			-- Set the tables border width to `a_value' pixels.
 		do
-
+			border_width := a_value
+			notify_change (Nc_minsize, Current)
 		end
 
 	set_row_spacing (a_value: INTEGER)
 			-- Spacing between two rows of the table.
 		do
-
+			row_spacing := a_value
+			notify_change (Nc_minsize, Current)
 		end
 
 	set_column_spacing (a_value: INTEGER)
 			-- Spacing between two columns of the table.
 		do
-
+			column_spacing := a_value
+			notify_change (Nc_minsize, Current)
 		end
 
 	put (child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
@@ -185,12 +187,6 @@ feature -- Status settings
 
 	remove (v: EV_WIDGET)
 			-- Remove `v' from the table if present.
-		do
-
-		end
-
-	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
-			-- Move `v' to position `a_column', `a_row'.
 		do
 
 		end
@@ -264,14 +260,31 @@ feature {EV_ANY_I, EV_ANY} -- Status Settings
 	resize (a_column, a_row: INTEGER)
 		do
 			Precursor {EV_TABLE_I} (a_column, a_row)
---			initialize_columns (a_column)
---			initialize_rows (a_row)
+			initialize_columns (a_column)
+			initialize_rows (a_row)
 			notify_change (Nc_minsize, Current)
 		end
 
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
 			-- Resize 'v' to occupy column span and row span
 		do
+		end
+
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
+			-- Move `v' to position `a_column', `a_row'.
+		local
+			table_child: detachable EV_TABLE_CHILD_IMP
+			child_imp: detachable EV_WIDGET_IMP
+		do
+			Precursor {EV_TABLE_I} (v, a_column, a_row)
+			child_imp ?= v.implementation
+			check valid_child: child_imp /= Void end
+			table_child := find_widget_child (child_imp)
+			check valid_table_child: table_child /= Void end
+			table_child.set_attachment
+				(a_row - 1, a_column - 1, table_child.bottom_attachment - table_child.top_attachment + a_row - 1,
+				table_child.right_attachment - table_child.left_attachment + a_column - 1)
+			notify_change (Nc_minsize, Current)
 		end
 
 feature {NONE} -- Access features for implementation

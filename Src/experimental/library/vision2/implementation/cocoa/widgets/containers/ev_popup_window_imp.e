@@ -32,7 +32,7 @@ feature -- Implementation
 
 	make
 		do
-			Precursor
+			Precursor {EV_WINDOW_IMP}
 			disable_border
 			disable_user_resize
 		end

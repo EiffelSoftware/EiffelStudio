@@ -25,9 +25,10 @@ inherit
 
 	NS_SCREEN
 		rename
-			main_screen as make_main_screen_cocoa,
 			copy as copy_cocoa
 		end
+
+	NS_ENVIRONEMENT
 
 create
 	make
@@ -35,8 +36,9 @@ create
 feature {NONE} -- Initialization
 
 	make
+			-- Initialize Current to be the main screen
 		do
-			make_main_screen_cocoa
+			item := main_screen.item
 			Precursor {EV_DRAWABLE_IMP}
 		end
 

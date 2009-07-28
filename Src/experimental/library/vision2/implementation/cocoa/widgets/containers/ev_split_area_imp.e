@@ -63,7 +63,8 @@ feature -- Access
 --			on_new_item (l_imp)
 			l_imp.set_parent_imp (current)
 			disable_item_expand (v)
-			attached_view.add_subview (l_imp.attached_view)
+			update_subviews
+
 			--notify_change (nc_minsize, Current)
 			if second_visible then
 				set_split_position (minimum_split_position)
@@ -85,7 +86,7 @@ feature -- Access
 			v_imp.set_parent_imp (Current)
 			notify_change (Nc_minsize, Current)
 			second := v
-			attached_view.add_subview (v_imp.attached_view)
+			update_subviews
 
 			notify_change (Nc_minsize, Current)
 			if first_visible then
@@ -105,6 +106,28 @@ feature -- Access
 				--| to reflect these changes.
 			notify_change (Nc_minsize, Current)
 			new_item_actions.call ([v])
+		end
+
+	update_subviews
+		local
+			l_subviews: NS_ARRAY [NS_VIEW]
+		do
+			l_subviews := attached_view.subviews
+			from
+				l_subviews.start
+			until
+				l_subviews.after
+			loop
+				l_subviews.item_for_iteration.remove_from_superview
+				l_subviews.forth
+			end
+
+			if attached first_imp as l_imp then
+				attached_view.add_subview (l_imp.attached_view)
+			end
+			if attached second_imp as l_imp then
+				attached_view.add_subview (l_imp.attached_view)
+			end
 		end
 
 	prune (an_item: like item)

@@ -28,12 +28,12 @@ feature {NONE} -- Layout
 	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.
 		do
+			Result := 20 -- Hardcoded value
 		end
 
 	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
-			Result := 37 -- Hardcoded value
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

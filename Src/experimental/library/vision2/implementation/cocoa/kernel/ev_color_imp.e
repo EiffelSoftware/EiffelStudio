@@ -3,8 +3,7 @@ note
 		"Eiffel Vision color. Cocoa implementation%N%
 		%Both REAL and 16 bit INTEGER values are stored%N%
 		%as attributes and kept up to date."
-	legal: "See notice at end of class."
-	status: "See notice at end of class.";
+	author: "Daniel Furrer"
 	keywords: "color, pixel, rgb, 8, 16, 24"
 	date: "$Date$";
 	revision: "$Revision$"
@@ -60,7 +59,6 @@ feature -- Element change
 		do
 			red := a_red
 			red_16_bit := (a_red * 0xFFFF).rounded
-
 		end
 
 	set_green (a_green: REAL)
@@ -217,7 +215,4 @@ feature {EV_ANY_I, ANY} -- Implementation
 			create Result.color_with_calibrated_red_green_blue_alpha (red, green, blue, 1.0)
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
 end -- class EV_COLOR_IMP
-

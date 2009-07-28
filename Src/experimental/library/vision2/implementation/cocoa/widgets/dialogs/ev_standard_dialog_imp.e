@@ -12,37 +12,43 @@ inherit
 		redefine
 			interface
 		select
-			interface,
-			make
+			copy
+--			interface,
+--			make
 		end
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
+
+	EV_ANY_IMP
+		undefine
+			dispose,
+			destroy
+		redefine
+			interface
+		end
 
 	EV_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		end
 
-	EV_WINDOW_IMP
-		rename
-			interface as w_interface,
-			make as w_make
-		redefine
-			destroy,
-			call_close_request_actions
-		end
+	EV_NS_WINDOW
 
 feature {NONE} -- Implementation
 
 	make
 			-- Initialize dialog
 		do
-			create selected_button.make_empty
+			cocoa_make (create {NS_RECT}.make_rect (100, 100, 100, 100),
+				{NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask, True)
+			make_key_and_order_front
+			order_out
+			allow_resize
 		end
 
 feature -- Status report
 
-	selected_button: STRING_32
+	selected_button: detachable STRING_32
 			-- Label of the last clicked button.
 
 feature -- Status setting
@@ -56,38 +62,37 @@ feature -- Status setting
 
 			if button =  {NS_PANEL}.ok_button then
 				selected_button := internal_accept
-				interface.ok_actions.call (Void)
+				ok_actions.call (Void)
 			elseif button = {NS_PANEL}.cancel_button then
 				selected_button := ev_cancel
-				interface.cancel_actions.call (Void)
+				cancel_actions.call (Void)
 			end
 		end
 
-	blocking_window: EV_WINDOW
+	blocking_window: detachable EV_WINDOW
 		do
 
 		end
 
 feature {NONE} -- Implementation
 
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
+		do
+
+		end
+
+	minimum_width: INTEGER
+		do
+
+		end
+
+	minimum_height: INTEGER
+		do
+
+		end
+
 	enable_closeable
 			-- Set the window to be closeable by the user
-		do
-		end
-
-	call_close_request_actions
-			-- Call `on_cancel' if user wants to quit dialog.
-		do
-			on_cancel
-		end
-
-	user_clicked_ok: BOOLEAN
-		-- Has the user explicitly cancelled the dialog.
-
-	interface: EV_STANDARD_DIALOG
-
-	default_wm_decorations: INTEGER
-			-- Default Window Manager decorations of `Current'.
 		do
 		end
 
@@ -95,19 +100,8 @@ feature {NONE} -- Implementation
 		do
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_ANY, EV_ANY_I}
 
-	on_ok
-			-- Close window and call action sequence.
-		do
-			user_clicked_ok := True
-			selected_button := internal_accept
-		end
-
-	on_cancel
-			-- Close window and call action sequence.
-		do
-			selected_button := ev_cancel
-		end
+	interface: detachable EV_STANDARD_DIALOG note option: stable attribute end;
 
 end -- class EV_STANDARD_DIALOG_IMP

@@ -17,7 +17,8 @@ inherit
 
 	EV_DRAWABLE_IMP
 		undefine
-			old_make
+			old_make,
+			is_flipped
 		redefine
 			interface,
 			make,
@@ -80,7 +81,7 @@ feature -- Status setting
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw the rectangle area defined by `a_x', `a_y', `a_width', a_height'.
 		do
---			set_needs_display_in_rect (create {NS_RECT}.make_rect (a_x, a_y, a_width, a_height))
+			set_needs_display_in_rect (create {NS_RECT}.make_rect (a_x, a_y, a_width, a_height))
 		end
 
 	clear_and_redraw
@@ -102,6 +103,7 @@ feature -- Status setting
 	prepare_drawing
 		local
 			l_color: detachable EV_COLOR_IMP
+			trans: NS_AFFINE_TRANSFORM
 		do
 			if not lock_focus_if_can_draw then
 				image.lock_focus
@@ -109,6 +111,10 @@ feature -- Status setting
 			else
 				is_drawing_buffered := False
 			end
+				create trans.make
+				trans.translate_by_xy (0.0, height)
+				trans.scale_by_xy (1.0, -1.0)
+				trans.concat
 			l_color ?= foreground_color.implementation
 			check l_color /= void end
 			l_color.color.set
@@ -127,8 +133,6 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
-
-
 
 	is_drawing_buffered: BOOLEAN
 

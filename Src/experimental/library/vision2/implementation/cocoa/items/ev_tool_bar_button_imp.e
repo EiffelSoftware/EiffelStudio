@@ -22,7 +22,8 @@ inherit
 			interface,
 			make,
 			set_pixmap,
-			cocoa_view
+			cocoa_view,
+			parent_imp
 		end
 
 	EV_DOCKABLE_SOURCE_IMP
@@ -47,6 +48,11 @@ inherit
 			cocoa_view
 		end
 
+	EV_SIZEABLE_PRIMITIVE_IMP
+		redefine
+			interface
+		end
+
 create
 	make
 
@@ -57,18 +63,13 @@ feature {NONE} -- Initialization
 		do
 			set_vertical_button_style
 			create button.make
-			--button.set_bezel_style ({NS_BUTTON}.rectangular_square_bezel_style)
+			button.set_bezel_style ({NS_BUTTON}.rectangular_square_bezel_style)
+			button.set_image_position ({NS_CELL}.image_above)
 			cocoa_view := button
 			pixmapable_imp_initialize
 			button.set_action (agent select_actions.call ([]))
 			set_is_initialized (True)
 		end
-
-feature -- Measurement
-
-	minimum_height: INTEGER = 20
-
-	minimum_width: INTEGER = 20
 
 feature -- Status Report
 
@@ -88,6 +89,7 @@ feature -- Status Report
 	has_text: BOOLEAN
 			-- Does the button have a text?
 		do
+			Result := not text.is_empty
 		end
 
 	has_pixmap: BOOLEAN
@@ -120,7 +122,11 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		do
 			Precursor {EV_TEXTABLE_IMP} (a_text)
-			button.set_string_value (a_text)
+			button.set_title (a_text)
+			set_minsize
+			if attached parent_imp as l_parent then
+				l_parent.notify_change (nc_minsize, current)
+			end
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP)
@@ -132,7 +138,10 @@ feature -- Element change
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= void end
 			button.set_image (pixmap_imp.image)
-			-- TODO update minimum width
+			set_minsize
+			if attached parent_imp as l_parent then
+				l_parent.notify_change (nc_minsize, current)
+			end
 		end
 
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP)
@@ -159,11 +168,6 @@ feature -- Element change
 
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
-	text_width: INTEGER
-			-- Get the width (in pixel) of the text
-		do
-		end
-
 	call_select_actions
 			-- Call the select_actions for `Current'
 		do
@@ -186,17 +190,32 @@ feature {EV_ANY_I} -- Implementation
 			create Result
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {NONE} -- Implementation
 
-	char_length: INTEGER = 5;
-	char_height: INTEGER = 15;
-	padding: INTEGER = 10;
+	is_show_requested: BOOLEAN = True
+
+	is_displayed: BOOLEAN = True
+
+	parent_imp: detachable EV_TOOL_BAR_IMP
+
+	set_minsize
+		local
+			size: NS_SIZE
+		do
+			if text.is_equal ("") then
+				button.set_image_position ({NS_CELL}.image_only)
+			else
+				button.set_image_position ({NS_CELL}.image_above)
+			end
+			size := button.cell.cell_size
+			internal_set_minimum_size (size.width, size.height)
+		end
 
 feature -- Implementation
 
 	button: NS_BUTTON;
 
-	cocoa_view: NS_VIEW
+	cocoa_view: NS_VIEW;
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

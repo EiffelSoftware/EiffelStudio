@@ -63,8 +63,8 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is `Current' selected.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_TOOL_BAR_TOGGLE_BUTTON;
+	interface: detachable EV_TOOL_BAR_TOGGLE_BUTTON note option: stable attribute end;
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP

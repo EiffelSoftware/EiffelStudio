@@ -98,7 +98,7 @@ feature -- Measurement
 				end
 			else
 				Result := attached_view.superview.bounds.size.height
-				io.error.put_string ("Failed to calculate parent's inner height%N")
+				--io.error.put_string ("Failed to calculate parent's inner height%N")
 			end
 		end
 

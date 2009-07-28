@@ -16,8 +16,8 @@ inherit
 			enable_sensitive,
 			disable_sensitive,
 			propagate_foreground_color,
-			propagate_background_color
---			on_size,
+			propagate_background_color,
+			on_size
 --			next_tabstop_widget
 		end
 
@@ -181,14 +181,14 @@ feature {EV_ANY_I} -- WEL Implementation
 --			end
 --		end
 
-	on_size (size_type, a_width, a_height: INTEGER)
+	on_size (a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 		do
 --			if size_type /= ({WEL_WINDOW_CONSTANTS}.Size_minimized) then
 				if attached item_imp as l_item_imp then
 					l_item_imp.set_move_and_size (0, 0, client_width, client_height)
 				end
---				Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
+				Precursor {EV_CONTAINER_IMP} (a_width, a_height)
 --			end
 		end
 

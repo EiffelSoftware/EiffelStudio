@@ -1,7 +1,6 @@
 note
 	description: "Eiffel Vision timeout. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,10 +58,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 	actions_called: BOOLEAN
 		-- Are the timeout actions in the process of being called.
 
-	interface: EV_TIMEOUT
-		-- Interface object.
-
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	destroy
 			-- Render `Current' unusable.
@@ -71,7 +67,7 @@ feature {EV_ANY_I} -- Implementation
 			Precursor {EV_ANY_IMP}
 		end
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
-end -- class EV_TIMEOUT_IMP
+	interface: detachable EV_TIMEOUT note option: stable attribute end;
+		-- Interface object.
 
+end -- class EV_TIMEOUT_IMP

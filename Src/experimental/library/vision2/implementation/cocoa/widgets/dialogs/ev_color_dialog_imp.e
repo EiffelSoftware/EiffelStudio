@@ -14,7 +14,6 @@ inherit
 	EV_STANDARD_DIALOG_IMP
 		redefine
 			make,
-			show,
 			interface,
 			dispose
 		end
@@ -26,8 +25,7 @@ inherit
 			title as cocoa_title,
 			set_title as cocoa_set_title,
 			set_background_color as set_background_color_cocoa,
-			background_color as background_color_cocoa,
-			screen as cocoa_screen
+			background_color as background_color_cocoa
 		undefine
 			copy
 		redefine
@@ -51,13 +49,10 @@ feature {NONE} -- Initialization
 			Precursor {EV_STANDARD_DIALOG_IMP}
 
 			enable_closeable
+
 			forbid_resize
 			set_is_initialized (True)
-		end
-
-	show
-			--
-		do
+			create internal_set_color
 		end
 
 feature -- Access
@@ -81,13 +76,13 @@ feature {NONE} -- Implementation
 	internal_set_color: EV_COLOR
 		-- Color explicitly set with `set_color'.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	dispose
 		do
 
 		end
 
-	interface: EV_COLOR_DIALOG;
+	interface: detachable EV_COLOR_DIALOG note option: stable attribute end;
 
 end -- class EV_COLOR_DIALOG_IMP

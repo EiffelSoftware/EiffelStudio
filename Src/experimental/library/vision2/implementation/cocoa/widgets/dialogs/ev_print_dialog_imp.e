@@ -1,8 +1,6 @@
-
 note
 	description: "Eiffel Vision print dialog. Cocoa implementation."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,7 +41,8 @@ inherit
 			dispose
 		select
 			make_window,
-			cocoa_panel
+			cocoa_panel,
+			cocoa_screen
 		end
 
 create
@@ -120,24 +119,6 @@ feature -- Access
 			create pspc
 			page_constant := pspc.Letter
 
-			if page_type_combo.text.is_equal (Letter) then
-				page_constant := pspc.Letter
-			elseif page_type_combo.text.is_equal (Legal) then
-				page_constant := pspc.Legal
-			elseif page_type_combo.text.is_equal (Executive) then
-				page_constant := pspc.Executive
-			elseif page_type_combo.text.is_equal (Ledger) then
-				page_constant := pspc.Ledger
-			elseif page_type_combo.text.is_equal (A4) then
-				page_constant := pspc.A4
-			elseif page_type_combo.text.is_equal (A5) then
-				page_constant := pspc.A5
-			elseif page_type_combo.text.is_equal (B5) then
-				page_constant := pspc.B5
-			elseif page_type_combo.text.is_equal (C5) then
-				page_constant := pspc.C5envelope
-			end
-
 			Result.set_horizontal_resolution (pspc.page_width (page_constant, landscape_checked) - (2 * pspc.Default_left_margin))
 			Result.set_vertical_resolution (pspc.page_height (page_constant, landscape_checked) - (2 * pspc.Default_bottom_margin))
 		end
@@ -161,12 +142,14 @@ feature -- Access
 			-- String representation of the path to output
 			-- the printed area to.
 		do
+			create Result.make_empty
 		end
 
 	printer_name: STRING_32
 			-- String representation of the printer to output
 			-- the printed area to.
 		do
+			create Result.make_empty
 		end
 
 feature -- Status report
@@ -335,8 +318,6 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	page_type_combo: EV_COMBO_BOX
-
 	Letter: STRING = "Letter"
 	Legal: STRING = "Legal"
 	Executive: STRING = "Executive"
@@ -354,9 +335,8 @@ feature {NONE} -- Implementation
 			Precursor {EV_STANDARD_DIALOG_IMP}
 		end
 
-	interface: EV_PRINT_DIALOG;
+feature {EV_ANY, EV_ANY_I} -- Interface
 
-note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
+	interface: detachable EV_COLOR_DIALOG note option: stable attribute end;
+
 end -- class EV_PRINT_DIALOG_IMP
-

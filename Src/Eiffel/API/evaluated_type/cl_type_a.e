@@ -841,7 +841,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 							-- be "C [G, H] inherit X [H] A [H]" and if the first element of the rout_id_set
 							-- for H in C is the one coming from X, we would not find the match with A when
 							-- we should have.
-						if attached {TYPE_FEATURE_I} l_class.feature_of_rout_id_set (c.formal_at_position (i).rout_id_set) as l_type_feat then
+						if attached {TYPE_FEATURE_I} l_class.feature_of_rout_id_set (c.formal_rout_id_set_at_position (i)) as l_type_feat then
 							l_result_generics.put (l_generics.item (l_type_feat.position), i)
 						else
 								-- No match.

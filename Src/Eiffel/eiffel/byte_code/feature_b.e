@@ -576,8 +576,8 @@ feature {NONE} -- Normalization of types
 				until
 					i > nb or not Result
 				loop
-					l_id_set := a_current_class.formal_at_position (i).rout_id_set
-					l_other_id_set := a_class.formal_at_position (i).rout_id_set
+					l_id_set := a_current_class.formal_rout_id_set_at_position (i)
+					l_other_id_set := a_class.formal_rout_id_set_at_position (i)
 					from
 						j := 1
 						k := l_id_set.count

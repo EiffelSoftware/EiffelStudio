@@ -3868,6 +3868,38 @@ feature -- Genericity
 			result_not_void: Result /= Void
 		end
 
+	formal_rout_id_set_at_position (n: INTEGER): ROUT_ID_SET
+			-- Find set of routine IDs matchine `n'-th formal of Current.
+		require
+			has_formal: is_generic
+			generic_features_computed: generic_features /= Void
+		local
+			l_formals: like generic_features
+			l_formal: FORMAL_A
+			l_cursor: CURSOR
+		do
+			from
+				l_formals := generic_features
+				l_cursor := l_formals.cursor
+				l_formals.start
+				create Result.make
+			until
+				l_formals.after
+			loop
+				l_formal ?= l_formals.item_for_iteration.type
+				if
+					l_formal /= Void and then l_formal.position = n and then
+					(not l_formal.has_detachable_mark and not l_formal.has_attached_mark)
+				then
+					Result.merge (l_formals.item_for_iteration.rout_id_set)
+				end
+				l_formals.forth
+			end
+			l_formals.go_to (l_cursor)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	update_generic_features
 			-- Update `generic_features' with information of Current.
 		require

@@ -1,11 +1,16 @@
 note
-	description: "Summary description for {OBJC_CLASS}."
+	description: "Representation of an Objective-C method at runtime."
 	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	OBJC_CLASS
+
+inherit
+	INTERNAL
+
+	DEBUG_OUTPUT
 
 create
 	make_from_pointer,
@@ -58,7 +63,6 @@ feature -- High Level Eiffel Interface
 		require
 			-- The method is not already implemented in the current class (though it may be in a superclass)
 		local
-			callback_marshal: OBJC_CALLBACK_MARSHAL
 			l_sel, l_imp, l_types: POINTER
 			l_ret: BOOLEAN
 			type_encoding: STRING
@@ -71,7 +75,6 @@ feature -- High Level Eiffel Interface
 
 			l_imp := imp_for_type_encoding (type_encoding)
 
-			create callback_marshal
 			callback_marshal.store_mapping (item, l_sel, a_agent)
 
 			l_ret := {NS_OBJC_RUNTIME}.class_add_method (item, l_sel, l_imp, l_types)
@@ -92,7 +95,6 @@ feature -- High Level Eiffel Interface
 			l_imp: POINTER
 			old_imp: POINTER
 			type_encoding: STRING
-			callback_marshal: OBJC_CALLBACK_MARSHAL
 		do
 			type_encoding := type_encoding_for_agent (a_agent)
 			l_imp := imp_for_type_encoding (type_encoding)
@@ -101,7 +103,6 @@ feature -- High Level Eiffel Interface
 			l_sel := {NS_OBJC_RUNTIME}.sel_register_name ((create {C_STRING}.make (a_method_selector)).item)
 
 			-- Store the mapping (class, sel) -> a_agent
-			create callback_marshal
 			callback_marshal.store_mapping (item, l_sel, a_agent)
 
 			old_imp := {NS_OBJC_RUNTIME}.class_get_method_implementation (item, l_sel)
@@ -117,13 +118,15 @@ feature -- Instantiating Classes
 			exists
 		do
 			create Result.make_from_pointer ({NS_OBJC_RUNTIME}.class_create_instance (item, 0))
+
 			-- FIXME - should somehow create the right Eiffel subtype
+			-- new_instance_of from INTERNAL
 		end
 
 feature -- Introspection
 
 	methods: ARRAYED_LIST [OBJC_METHOD]
-			-- List of methods of Current objective C class.
+			-- List of methods of Current Objective-C class.
 		local
 			l_ptr: POINTER
 			l_count: NATURAL_32
@@ -151,8 +154,20 @@ feature -- Introspection
 			end
 		end
 
+	instance_method (a_selector: POINTER): detachable OBJC_METHOD
+			-- The method that corresponds to the implementation of the selector specified by a_selector,
+			-- or Void if the specified class or its superclasses do not contain an instance method with the specified selector.
+		local
+			l_ptr: POINTER
+		do
+			l_ptr := {NS_OBJC_RUNTIME}.class_get_instance_method (item, a_selector)
+			if l_ptr /= default_pointer then
+				create Result.make_from_pointer (l_ptr)
+			end
+		end
+
 	properties: ARRAYED_LIST [OBJC_PROPERTY]
-			-- List of properties of Current objective C class.
+			-- List of properties of Current Objective-C class.
 		local
 			l_ptr: POINTER
 			l_count: NATURAL_32
@@ -182,7 +197,7 @@ feature -- Introspection
 
 feature -- Access
 
-	get_method_implementation (a_sel: POINTER): POINTER
+	method_implementation (a_sel: POINTER): POINTER
 			-- Returns the function pointer that would be called if a particular message were sent to an instance of a class.
 			-- The function pointer that would be called if [object name] were called with an instance of the class.
 			-- class.get_method_implementation may be faster than method.get_implementation(class.get_instance_method(cls, name)).
@@ -220,6 +235,14 @@ feature -- Access
 			Result := cstring.string
 		end
 
+feature -- Status report
+
+	debug_output: STRING
+			-- <Precursor>
+		do
+			Result := name
+		end
+
 feature {NONE} -- Implementation
 
 	type_encoding_for_agent (a_agent: ROUTINE [ANY, TUPLE]): STRING
@@ -250,16 +273,24 @@ feature {NONE} -- Implementation
 		do
 			if a_type_enc.is_equal ("b@:") then
 				Result := {OBJC_CALLBACK_MARSHAL}.bridge_bool_address
-			elseif a_type_enc.is_equal ("v@:") then
-				Result := {OBJC_CALLBACK_MARSHAL}.bridge_void_address
-			elseif a_type_enc.is_equal ("v@:*") then
-				Result := {OBJC_CALLBACK_MARSHAL}.bridge_void_ptr_address
+--			elseif a_type_enc.is_equal ("v@:") then
+--				Result := {OBJC_CALLBACK_MARSHAL}.bridge_void_address
+--			elseif a_type_enc.is_equal ("v@:*") then
+--				Result := {OBJC_CALLBACK_MARSHAL}.bridge_void_ptr_address
+			elseif a_type_enc.starts_with ("v@:") then
+				Result := {OBJC_CALLBACK_MARSHAL}.bridge_void_general_address
 			else
 				check
 					not_implemented: False
 				end
 				io.error.put_string ("ERROR: No callback for your function type%N")
 			end
+		end
+
+	callback_marshal: OBJC_CALLBACK_MARSHAL
+			-- A reference to the global Objective-C callback marshaler
+		once
+			create Result
 		end
 
 feature {OBJC_CALLBACK_MARSHAL, OBJC_CLASS, NS_OBJECT} -- C Object

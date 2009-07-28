@@ -37,11 +37,6 @@ BOOL bridge_bool (id self, SEL name)
 
 void bridge_void_general (id self, SEL selector, ...) {
 	int i, nargs;
-	EIF_PROCEDURE p_make;		/* `make ' from MY_ARRAY [INTEGER] */
-	EIF_PROCEDURE p_put;			/* `put' from MY_ARRAY [INTEGER] */
-	EIF_PROCEDURE p_display;		/* `display' from MY_ARRAY [INTEGER] */
-	EIF_TYPE_ID my_array_tid;	/* MY_ARRAY [INTEGER] type id */
-	EIF_OBJECT o_array;		/* Protected indirection to an array of integers */
 
 	va_list args;
 	va_start (args, selector);
@@ -51,42 +46,29 @@ void bridge_void_general (id self, SEL selector, ...) {
 	NSMethodSignature* sig = [NSMethodSignature signatureWithObjCTypes: method_getTypeEncoding (currentMethod)];
 
 	nargs = [sig numberOfArguments];
-	printf("%s %s (%i Arguments, %s)\n",
-	class_getName (currentClass),
-	method_getName (currentMethod),
-	nargs,
-	method_getTypeEncoding (currentMethod));
+	//printf("\t%s %s (%i Arguments, %s)\n",
+	//class_getName (currentClass),
+	//method_getName (currentMethod),
+	//nargs,
+	//method_getTypeEncoding (currentMethod));
 
-	my_array_tid = eif_type_id ("MY_ARRAY[INTEGER]");	
-	if (my_array_tid == EIF_NO_TYPE) 
-			/* MY_ARRAY's type id not found. */
-		eif_panic ("No type id.");
+	void** arguments = (void**) malloc(sizeof(void*) * nargs);
 
-	p_make = eif_procedure ("make", my_array_tid);	
-	p_display = eif_procedure ("display", my_array_tid);
-	p_put = eif_procedure ("put", my_array_tid);
-
-		/* o_array is a protected indirection 
-		 * it has to be accessed with `eif_access'
-		 * and freed with `eif_wean' */	
-	o_array = eif_create (my_array_tid);
-
-		/* Call `make (1, 10)' on new array */
-	(p_make) (eif_access (o_array), 1, nargs);	
-
-	for (i= 0; i < nargs; i++) {
-		if (!strcmp("@", [sig getArgumentTypeAtIndex: i]) && i != 0) {
-			void* arg = va_arg(args, void*);
-			printf("    %i: %s  -> %x\n", i, [sig getArgumentTypeAtIndex: i], arg);
-			(p_put) (eif_access (o_array), (EIF_POINTER) arg, i+1);
-		} else if (!strcmp("i", [sig getArgumentTypeAtIndex: i])) {
-			int arg = va_arg(args, int);
-			printf("    %i: %s  -> %i\n", i, [sig getArgumentTypeAtIndex: i], arg);
-			(p_put) (eif_access (o_array), (EIF_POINTER) arg, i+1);
+	//printf("   Extracting arguments\n");
+	for (i = 2; i < nargs; i++) {
+		const char* argType = [sig getArgumentTypeAtIndex: i];
+		if ((!strcmp("@", argType) || !strcmp("*", argType)) && i != 0) {
+			void* arg = va_arg (args, void*);
+			printf("    %i: %s  -> %x\n", i-2, argType, arg);
+			arguments[i-2] = arg;
+		} else if (!strcmp("i", argType)) {
+			int arg = va_arg (args, int);
+			printf("    %i: %s  -> %i\n", i-2, argType, arg);
+			arguments[i-2] = (void*)arg;
 		}
 	}
 	
-	callback_void_general (eif_access (callback_object), self, selector, eif_access (o_array));
+	callback_void_general (eif_access (callback_object), self, selector, arguments, nargs);
 	
 	va_end(args);
 }

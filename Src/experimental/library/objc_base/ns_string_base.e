@@ -15,6 +15,10 @@ create
 	make_with_cstring
 create {NS_OBJECT}
 	make_from_pointer
+convert
+	make_with_string ({STRING_32, STRING_8, STRING_GENERAL}),
+	as_string_8: {STRING_8},
+	as_string_32: {STRING_32}
 
 feature {NONE} -- Creation
 
@@ -59,6 +63,25 @@ feature -- Access
 
 	to_string: STRING
 			-- Convert `Current' as a STRING.
+		obsolete
+			"Use to_string_8, to_string_32 or auto-conversion"
+		do
+			Result := to_string_8
+		end
+
+	as_string_8, to_string_8: STRING
+			-- Convert `Current' as a STRING_8.
+		local
+			cstring: C_STRING
+		do
+			create cstring.make_shared_from_pointer ({NS_STRING_API}.c_string_using_encoding (item, {NS_STRING_API}.UTF8_string_encoding))
+			Result := cstring.string.as_string_8
+		ensure
+			result_not_void: Result /= void
+		end
+
+	as_string_32, to_string_32: STRING_32
+			-- Convert `Current' as a STRING_32.
 		local
 			cstring: C_STRING
 		do
@@ -67,5 +90,4 @@ feature -- Access
 		ensure
 			result_not_void: Result /= void
 		end
-
 end

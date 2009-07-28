@@ -13,11 +13,11 @@ inherit
 
 feature -- Access
 
-	get_from_application (a_var, a_app: STRING): detachable STRING
+	get_from_application (a_var: STRING; a_app: detachable STRING): detachable STRING
 			-- Get `a_var' as if we were `a_app'.
 		require
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')
-			a_app_ok: a_app /= Void and then not a_app.has ('%U')
+			a_app_ok: a_app = Void or else not a_app.has ('%U')
 		local
 			l_reg: WEL_REGISTRY
 			l_key: detachable WEL_REGISTRY_KEY_VALUE
@@ -28,9 +28,13 @@ feature -- Access
 			if Result = Void then
 				l_eiffel := "\Software\ISE\Eiffel" + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out
 				create l_reg
-				l_key := l_reg.open_key_value ("hkey_current_user"+l_eiffel+"\" + a_app, a_var.as_lower)
+				if a_app /= Void then
+					l_key := l_reg.open_key_value ("hkey_current_user"+l_eiffel+"\" + a_app, a_var.as_lower)
+				end
 				if l_key = Void then
-					l_key := l_reg.open_key_value ("hkey_local_machine"+l_eiffel+"\" + a_app, a_var.as_lower)
+					if a_app /= Void then
+						l_key := l_reg.open_key_value ("hkey_local_machine"+l_eiffel+"\" + a_app, a_var.as_lower)
+					end
 					if l_key = Void then
 						l_key := l_reg.open_key_value ("hkey_current_user"+l_eiffel, a_var.as_lower)
 						if l_key = Void then

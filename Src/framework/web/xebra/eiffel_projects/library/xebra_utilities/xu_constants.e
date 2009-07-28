@@ -10,6 +10,7 @@ class
 
 feature -- Filenames
 
+	Xebra_root: STRING = "$XEBRA_DEV"
 	Servlet_gen_executed_file: STRING = "sg_executed_at_time"
 	Translator_executed_file: STRING = "t_executed_at_time"
 	Servlet_gen_name: STRING = "servlet_gen"

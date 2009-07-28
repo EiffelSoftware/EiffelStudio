@@ -318,25 +318,25 @@ feature -- Expression evaluation messages
 	msg_error_not_supported (a: ANY): STRING_32
 		require
 			a_not_void: a /= Void
-		do Result := locale.formatted_string (locale.translation ("[$1] is not supported."), [a.generating_type]) end
+		do Result := locale.formatted_string (locale.translation ("[$1] is not supported."), [a.generator]) end
 
 	msg_error_not_yet_ready (a: ANY; s: STRING_GENERAL): STRING_32
 		require
 			a_not_void: a /= Void
 			s_not_void: s /= Void
-		do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready."), [a.generating_type, s]) end
+		do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready."), [a.generator, s]) end
 
 	msg_error_not_yet_ready_for (a: ANY; s, f: STRING_GENERAL): STRING_32
 		require
 			a_not_void: a /= Void
 			s_not_void: s /= Void
 			f_not_void: f /= Void
-		do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready for `$3'."), [a.generating_type, s, f]) end
+		do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready for `$3'."), [a.generator, s, f]) end
 
 	msg_error_should_not_occur_during_evaluation (a: ANY): STRING_32
 		require
 			a_not_void: a /= Void
-		do Result := locale.formatted_string (locale.translation ("$1 => this should not occur during expression evaluation."), [a.generating_type]) end
+		do Result := locale.formatted_string (locale.translation ("$1 => this should not occur during expression evaluation."), [a.generator]) end
 
 	msg_error_unable_to_evaluate_creation_expression (tn: STRING_GENERAL): STRING_32
 		require
@@ -352,7 +352,7 @@ feature -- Expression evaluation messages
 	msg_error_evaluating_parameter (a: ANY): STRING_32
 		require
 			a_not_void: a /= Void
-		do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of parameter(s)"), [a.generating_type]) end
+		do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of parameter(s)"), [a.generator]) end
 
 	msg_error_unknown_constant_type_for (fname: STRING_GENERAL): STRING_32
 		require
@@ -363,7 +363,7 @@ feature -- Expression evaluation messages
 		require
 			a_not_void: a /= Void
 			fname_not_void: fname /= Void
-		do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of call : `$2'"), [a.generating_type, fname]) end
+		do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of call : `$2'"), [a.generator, fname]) end
 
 	msg_error_unable_to_get_valid_target_for (add: STRING_GENERAL): STRING_32
 		require
@@ -389,12 +389,12 @@ feature -- Expression evaluation messages
 	msg_error_instruction_eval_not_yet_available (a: ANY): STRING_32
 		require
 			a_not_void: a /= Void
-		do Result := locale.formatted_string (locale.translation ("$1:  Instruction evaluation not yet available."), [a.generating_type]) end
+		do Result := locale.formatted_string (locale.translation ("$1:  Instruction evaluation not yet available."), [a.generator]) end
 
 	msg_error_expression_not_yet_available (a: ANY): STRING_32
 		require
 			a_not_void: a /= Void
-		do Result := locale.formatted_string (locale.translation ("$1:  Not yet available."), [a.generating_type]) end
+		do Result := locale.formatted_string (locale.translation ("$1:  Not yet available."), [a.generator]) end
 
 	msg_error_report_to_support (s: STRING): STRING_32
 		do
@@ -404,7 +404,7 @@ feature -- Expression evaluation messages
 	msg_error_other_than_func_cst_once_not_available (a: ANY): STRING_32
 		require
 			a_not_void: a /= Void
-		do Result := locale.formatted_string (locale.translation ("$1 => ERROR : other than function, constant and once : not available."), [a.generating_type]) end
+		do Result := locale.formatted_string (locale.translation ("$1 => ERROR : other than function, constant and once : not available."), [a.generator]) end
 
 	cst_error_evaluation_side_effect_forbidden: STRING_32
 		do Result := locale.translation ("Evaluation stopped to avoid potential side effect.") end

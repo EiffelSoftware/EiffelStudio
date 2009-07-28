@@ -302,6 +302,10 @@ static int xebra_handler (request_rec* r)
 		message = apr_pstrcat (r->pool, message, ARG, NULL);
 	}
 
+#ifdef EIF_WINDOWS
+#else	 
+#endif
+
 	/* Set up connection to server */
 	DEBUG ("Setting up connection.");
 	DEBUG ("Using server host %s and port %s", srv_hostname, srv_port);

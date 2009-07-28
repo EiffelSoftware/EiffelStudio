@@ -33,10 +33,10 @@ feature -- Basic Opertaions
 		require
 			a_path_attached: a_path /= Void
 		local
-			l_exp: STRING_AGENT_EXPANDER
+			l_exp: STRING_ENVIRONMENT_EXPANDER
 		do
 			create l_exp
-			Result := l_exp.expand_string (a_path, replacer, a_keep)
+			Result := l_exp.expand_string (a_path, a_keep)
 		ensure
 			result_attached: Result /= Void
 		end

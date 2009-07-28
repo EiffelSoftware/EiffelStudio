@@ -214,7 +214,7 @@ feature {NONE} -- string_representation Implementation
 			-- String representation for dotnet value
 			-- with bounds from `min' and `max'.
 		local
-			sc, sc8, sc32: CLASS_C
+			sc, sc8, sc32, rsc8, rsc32: CLASS_C
 			l_eifnet_debugger: EIFNET_DEBUGGER
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_size: INTEGER
@@ -224,14 +224,19 @@ feature {NONE} -- string_representation Implementation
 
 			if dynamic_class /= Void then
 				comp_data := debugger_manager.compiler_data
+				rsc8 := comp_data.readable_string_8_class_c
+				rsc32 := comp_data.readable_string_32_class_c
 				sc8 := comp_data.string_8_class_c
 				sc32 := comp_data.string_32_class_c
-				if dynamic_class = sc8 or dynamic_class = sc32 then
+				if
+					dynamic_class = sc8
+					or dynamic_class = sc32
+				then
 					sc := dynamic_class
-				elseif dynamic_class.simple_conform_to (sc8) then
-					sc := sc8
-				elseif dynamic_class.simple_conform_to (sc32) then
-					sc := sc32
+				elseif dynamic_class.simple_conform_to (rsc8) then
+					sc := rsc8
+				elseif dynamic_class.simple_conform_to (rsc32) then
+					sc := rsc32
 				else
 					sc := Void
 				end
@@ -330,7 +335,7 @@ feature {NONE} -- Implementation dotnet
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -343,22 +348,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DUMP_VALUE_DOTNET

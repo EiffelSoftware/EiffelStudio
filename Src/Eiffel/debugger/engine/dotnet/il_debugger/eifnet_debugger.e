@@ -1865,7 +1865,7 @@ feature -- Specific function evaluation
 	string_value_from_string_class_value (
 				sc: CLASS_C;
 				icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE;
-				min, max: INTEGER): STRING_32
+				min, max: INTEGER): detachable STRING_32
 			-- STRING value for `icd_string_instance' with limits `min, max'
 			-- precise in `sc' if this is a STRING, or STRING_32
 		local
@@ -1883,7 +1883,7 @@ feature -- Specific function evaluation
 			end
 		end
 
-	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): STRING_32
+	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): detachable STRING_32
 			-- STRING value for `icd_string_instance' with limits `min, max'
 		local
 			l_size, l_len: NATURAL_32
@@ -1927,7 +1927,7 @@ feature -- Specific function evaluation
 
  	generating_type_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE;
  				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE;
- 				a_class_type: CLASS_TYPE; a_feat: FEATURE_I): STRING
+ 				a_class_type: CLASS_TYPE; a_feat: FEATURE_I): detachable STRING
 			-- ANY.generating_type: STRING evaluation result
 		require
 			icor_debug_object_value_not_void: a_icd_obj /= Void
@@ -1973,7 +1973,9 @@ feature -- Specific function evaluation
 					l_icdov := l_value_info.new_interface_debug_object_value
 					if l_icdov /= Void then
 							--| the result should be a STRING instance
-						Result := string_value_from_string_class_value (debugger_manager.compiler_data.string_8_class_c, l_icd, l_icdov, 0, -1)
+						if attached string_value_from_string_class_value (debugger_manager.compiler_data.string_8_class_c, l_icd, l_icdov, 0, -1) as l_s32 then
+							Result := l_s32.as_string_8
+						end
 						l_icdov.clean_on_dispose
 					end
 					l_value_info.icd_prepared_value.clean_on_dispose

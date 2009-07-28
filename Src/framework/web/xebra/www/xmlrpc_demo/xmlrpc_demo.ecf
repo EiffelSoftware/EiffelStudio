@@ -9,10 +9,7 @@
 		<setting name="multithreaded" value="true"/>
 		<precompile name="precompile" location="$XEBRA_DEV\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf"/>
 		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf" readonly="false"/>
-		<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf"/>
 		<library name="xebra_web_application" location="$XEBRA_DEV\eiffel_projects\library\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>
 		<library name="xml-rpc" location="$EIFFEL_SRC\framework\xml-rpc\xml-rpc.ecf" readonly="false"/>
 		<cluster name="xebrawebapp" location=".\" recursive="true">

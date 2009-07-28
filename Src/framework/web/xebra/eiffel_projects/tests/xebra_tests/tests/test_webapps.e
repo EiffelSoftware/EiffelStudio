@@ -12,6 +12,7 @@ class
 
 inherit
 	XS_SHARED_SERVER_CONFIG
+
 	EQA_TEST_SET
 
 feature -- Test routines
@@ -28,11 +29,11 @@ feature -- Test routines
 			internal_test ("helloworld")
 		end
 
-	test_xebrahome
-			-- Tests xebrahome
-		do
-			internal_test ("xebrahome")
-		end
+--	test_xebrahome
+--			-- Tests xebrahome
+--		do
+--			internal_test ("xebrahome")
+--		end
 
 	test_support
 			-- Tests support
@@ -77,9 +78,9 @@ feature {NONE} -- Internal
 			config.args.set_clean (False)
 			config.args.set_debug_level (9)
 			if (create {PLATFORM}).is_windows then
-					config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV\eiffel_projects\xebra_server\config.ini", False))
+					config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV\eiffel_projects\xebra_server\config.ini", True))
 			else
-				config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV/eiffel_projects/xebra_server/config.ini", False))
+				config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV/eiffel_projects/xebra_server/config.ini", True))
 			end
 
 
@@ -148,7 +149,7 @@ feature {NONE} -- Internal
 					end
 				end
 			else
-				assert ("Could not process config.ini file", False)
+				assert ("There was a problem with the server config file.", False)
 			end
 		end
 end

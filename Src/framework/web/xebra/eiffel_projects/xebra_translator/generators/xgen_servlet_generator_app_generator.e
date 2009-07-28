@@ -247,21 +247,45 @@ feature -- Constants
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 ]"
-	servlet_gen_ecf_postfix: STRING = "[
-		<library name="xebra_tags" location="$XEBRA_DEV\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
-		<library name="xebra_ast_elements" location="$XEBRA_DEV\eiffel_projects\library\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
-		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
-		<precompile name="precompile" location="$XEBRA_DEV\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf"/>
-		<cluster name="servlet_gen" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-			</file_rule>
-		</cluster>
-	</target>
-</system>
-]"
+	servlet_gen_ecf_postfix: STRING
+		do
+			Result :=
+					"[
+					<library name="xebra_tags" location="
+					]"
+					+ {XU_CONSTANTS}.Xebra_root +
+					"[
+					\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
+					<library name="xebra_ast_elements" location="
+					]"
+					+ {XU_CONSTANTS}.Xebra_root +
+					"[
+					\eiffel_projects\library\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
+					<library name="xebra_utilities" location="
+					]"
+					+ {XU_CONSTANTS}.Xebra_root + 
+					"[
+					\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
+					<precompile name="precompile" location="
+					]"
+					+ {XU_CONSTANTS}.Xebra_root + 
+					"[
+					\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf"/>
+							<cluster name="servlet_gen" location=".\" recursive="true">
+								<file_rule>
+									<exclude>/EIFGENs$</exclude>
+									<exclude>/.svn$</exclude>
+									<exclude>/CVS$</exclude>
+								</file_rule>
+							</cluster>
+						</target>
+					</system>
+					]"
+		ensure
+			result_attached: Result /= Void
+		end	
+
+
 		-- The .ecf file
 
 invariant

@@ -179,7 +179,7 @@ feature -- Replacement Tasks
 			until
 				l_files.after
 			loop
-				o.dprint ("Replacing  in " + l_files.item_for_iteration,1)
+				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_xebra_root, install_dir)
 				l_files.forth
 			end
@@ -193,14 +193,14 @@ feature -- Replacement Tasks
 			l_files: LIST [FILE_NAME]
 		do
 			create l_util
-			o.dprint ("Scanning for ecf files in " + dir_library, 1)
+			o.dprint ("Scanning for ecf and xml files in " + dir_library, 1)
 			l_files := l_util.scan_for_files (install_dir, -1, "(.+\.ecf)|(.+\.xml)", "\.svn")
 			from
 				l_files.start
 			until
 				l_files.after
 			loop
-				o.dprint ("Replacing  in " + l_files.item_for_iteration,1)
+				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_eiffel_projects, install_dir)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_eiffel_src, dir_library )
 				l_files.forth
@@ -223,7 +223,7 @@ feature -- Replacement Tasks
 			until
 				l_files.after
 			loop
-				o.dprint ("Replacing  in " + l_files.item_for_iteration,1)
+				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_document_root, dir_www)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_server_root, dir_apache)
 				l_files.forth
@@ -247,7 +247,7 @@ feature -- Replacement Tasks
 			until
 				l_files.after
 			loop
-				o.dprint ("Replacing " + Key_eiffel_projects + " in " + l_files.item_for_iteration,1)
+				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_install_path, install_dir)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_ise_eiffel, l_util.resolve_env_vars (Key_ise_eiffel, true))
 				l_util.replace_in_file (l_files.item_for_iteration, Key_ise_platform, l_util.resolve_env_vars (Key_ise_platform, true))

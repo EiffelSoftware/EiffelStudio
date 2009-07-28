@@ -4,10 +4,10 @@
 		<step action='Group'>
 			<name>Project steps</name>
 		</step>
-		<step action='Create Folder'>
+		<step action='Delete Folder'>
 			<Path>%ROOT%</Path>
 			<indent type='3'>1</indent>
-			<name>Create Root</name>
+			<name>CLEAN</name>
 		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
@@ -20,47 +20,6 @@
 			<Subcommand>export</Subcommand>
 			<indent type='3'>2</indent>
 			<name>Checkout EIFFEL_SRC/framework</name>
-		</step>
-		<step action='Group'>
-			<checked type='11'>0</checked>
-			<indent type='3'>1</indent>
-			<name>Create build folder structure</name>
-		</step>
-		<step action='Create Folder'>
-			<Path>%BUILD%</Path>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Create Root</name>
-		</step>
-		<step action='Create Folder'>
-			<Path>%BUILD%\library</Path>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Create library</name>
-		</step>
-		<step action='Create Folder'>
-			<Path>%BUILD%\library\framework</Path>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Create framework</name>
-		</step>
-		<step action='Create Folder'>
-			<Path>%BUILD%\bin</Path>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Create bin</name>
-		</step>
-		<step action='Create Folder'>
-			<Path>%BUILD%\conf</Path>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Create conf</name>
-		</step>
-		<step action='Create Folder'>
-			<Path>%BUILD%\taglibs</Path>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Create taglibs</name>
 		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
@@ -185,25 +144,6 @@
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
 			<Delay>15</Delay>
-			<DestDir>%BUILD%\www</DestDir>
-			<Empty type='11'>-1</Empty>
-			<ExclExt><![CDATA[\EIFGENs
-\.svn
-\.generated
-*.sh]]></ExclExt>
-			<Incremental type='11'>-1</Incremental>
-			<LogCopied type='11'>-1</LogCopied>
-			<ReadOnly type='11'>-1</ReadOnly>
-			<Recurse type='11'>-1</Recurse>
-			<Retries>10</Retries>
-			<SourceDir>%XEBRA_DEV%\www</SourceDir>
-			<TBD type='11'>-1</TBD>
-			<indent type='3'>2</indent>
-			<name>Copy Webapps</name>
-		</step>
-		<step action='Copy Files'>
-			<Converted type='11'>-1</Converted>
-			<Delay>15</Delay>
 			<DestDir>%BUILD%\taglibs</DestDir>
 			<Ext>*.taglib</Ext>
 			<Incremental type='11'>-1</Incremental>
@@ -228,6 +168,86 @@
 			<TBD type='11'>-1</TBD>
 			<indent type='3'>2</indent>
 			<name>Copy mod_xebra</name>
+		</step>
+		<step action='Group'>
+			<indent type='3'>1</indent>
+			<name>Copy Webapps</name>
+		</step>
+		<step action='Copy Files'>
+			<Converted type='11'>-1</Converted>
+			<Delay>15</Delay>
+			<DestDir>%BUILD%\www\helloworld</DestDir>
+			<Empty type='11'>-1</Empty>
+			<ExclExt><![CDATA[\EIFGENs
+\.svn
+\.generated
+*.sh]]></ExclExt>
+			<Incremental type='11'>-1</Incremental>
+			<LogCopied type='11'>-1</LogCopied>
+			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
+			<Retries>10</Retries>
+			<SourceDir>%XEBRA_DEV%\www\helloworld</SourceDir>
+			<TBD type='11'>-1</TBD>
+			<indent type='3'>2</indent>
+			<name>Copy hellworld</name>
+		</step>
+		<step action='Copy Files'>
+			<Converted type='11'>-1</Converted>
+			<Delay>15</Delay>
+			<DestDir>%BUILD%\www\servercontrol</DestDir>
+			<Empty type='11'>-1</Empty>
+			<ExclExt><![CDATA[\EIFGENs
+\.svn
+\.generated
+*.sh]]></ExclExt>
+			<Incremental type='11'>-1</Incremental>
+			<LogCopied type='11'>-1</LogCopied>
+			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
+			<Retries>10</Retries>
+			<SourceDir>%XEBRA_DEV%\www\servercontrol</SourceDir>
+			<TBD type='11'>-1</TBD>
+			<indent type='3'>2</indent>
+			<name>Copy servercontrol</name>
+		</step>
+		<step action='Copy Files'>
+			<Converted type='11'>-1</Converted>
+			<Delay>15</Delay>
+			<DestDir>%BUILD%\www\demoapplication</DestDir>
+			<Empty type='11'>-1</Empty>
+			<ExclExt><![CDATA[\EIFGENs
+\.svn
+\.generated
+*.sh]]></ExclExt>
+			<Incremental type='11'>-1</Incremental>
+			<LogCopied type='11'>-1</LogCopied>
+			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
+			<Retries>10</Retries>
+			<SourceDir>%XEBRA_DEV%\www\demoapplication</SourceDir>
+			<TBD type='11'>-1</TBD>
+			<indent type='3'>2</indent>
+			<name>Copy demoapp</name>
+		</step>
+		<step action='Copy Files'>
+			<Converted type='11'>-1</Converted>
+			<Delay>15</Delay>
+			<DestDir>%BUILD%\www\xmlrpc_demo</DestDir>
+			<Empty type='11'>-1</Empty>
+			<ExclExt><![CDATA[\EIFGENs
+\.svn
+\.generated
+*.sh]]></ExclExt>
+			<Incremental type='11'>-1</Incremental>
+			<LogCopied type='11'>-1</LogCopied>
+			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
+			<Retries>10</Retries>
+			<SourceDir>%XEBRA_DEV%\www\xmlrpc_demo</SourceDir>
+			<TBD type='11'>-1</TBD>
+			<indent type='3'>2</indent>
+			<name>Copy xmlrpc_demo</name>
 		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>

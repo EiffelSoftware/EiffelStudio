@@ -104,6 +104,7 @@ feature -- Constants
 	Key_eiffel_projects: STRING  = "$XEBRA_DEV\eiffel_projects"
 		-- A key inside ecf files that will be replaced
 
+
 	Key_eiffel_src: STRING = "$EIFFEL_SRC"
 		-- A key inside ecf files that will be replaced
 
@@ -119,7 +120,7 @@ feature -- Basic Operations
 			create install_dir.make_from_string (a_arg_parser.install_dir)
 			o.dprint ("Starting...",1)
 			process_httpd
-			process_ecfs
+			process_ecfs_xml
 			process_server_ini
 			if not error_manager.is_successful then
 				create l_error_printer
@@ -130,8 +131,8 @@ feature -- Basic Operations
 
 feature -- Replacement Tasks
 
-	process_ecfs
-			-- Replaces in all ECF files all occurrences of
+	process_ecfs_xml
+			-- Replaces in all ecf and xml files all occurrences of
 			--	Key_eiffel_projects 	with 	install_dir
 			--  Key_eiffel_src			with	dir_library
 		local
@@ -140,15 +141,14 @@ feature -- Replacement Tasks
 		do
 			create l_util
 			o.dprint ("Scanning for ecf files in " + dir_library, 1)
-			l_files := l_util.scan_for_files (dir_library.out, -1, ".+\.ecf", "\.svn")
+			l_files := l_util.scan_for_files (install_dir, -1, "(.+\.ecf)|(.+\.xml)", "\.svn")
 			from
 				l_files.start
 			until
 				l_files.after
 			loop
-				o.dprint ("Replacing " + Key_eiffel_projects + " in " + l_files.item_for_iteration,1)
+				o.dprint ("Replacing  in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_eiffel_projects, install_dir)
-				o.dprint ("Replacing " +Key_eiffel_src + " in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_eiffel_src, dir_library )
 				l_files.forth
 			end
@@ -170,9 +170,8 @@ feature -- Replacement Tasks
 			until
 				l_files.after
 			loop
-				o.dprint ("Replacing "+Key_document_root+" in " + l_files.item_for_iteration,1)
+				o.dprint ("Replacing  in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_document_root, dir_www)
-				o.dprint ("Replacing "+Key_server_root+" in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_server_root, dir_apache)
 				l_files.forth
 			end

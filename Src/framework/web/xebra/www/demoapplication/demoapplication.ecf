@@ -9,11 +9,7 @@
 		<setting name="multithreaded" value="true"/>
 		<precompile name="precompile" location="$XEBRA_DEV\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
-		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>
 		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf" readonly="false"/>
-		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
 		<library name="xebra_web_application" location="$XEBRA_DEV\eiffel_projects\library\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>
 		<cluster name="demoapplication" location=".\" recursive="true">
 			<file_rule>

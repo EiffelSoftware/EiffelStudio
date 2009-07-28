@@ -1,6 +1,6 @@
 <config>
-	<taglib name="xebra_taglibrary_base" ecf="xebra_taglibrary_base-voidunsafe.ecf" path="$XEBRA_DEV/eiffel_projects/library/xebra_taglibrary_base" />
-	<taglib name="xebra_taglibrary_efa" ecf="xebra_taglibrary_efa-voidunsafe.ecf" path="$XEBRA_DEV/eiffel_projects/library/xebra_taglibrary_efa" />
-	<taglib name="xebra_taglibrary_form" ecf="xebra_taglibrary_form-voidunsafe.ecf" path="$XEBRA_DEV/eiffel_projects/library/xebra_taglibrary_form" />
+	<taglib name="xebra_taglibrary_base" ecf="xebra_taglibrary_base-voidunsafe.ecf" path="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_base" />
+	<taglib name="xebra_taglibrary_efa" ecf="xebra_taglibrary_efa-voidunsafe.ecf" path="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_efa" />
+	<taglib name="xebra_taglibrary_form" ecf="xebra_taglibrary_form-voidunsafe.ecf" path="$XEBRA_DEV\eiffel_projects\library\xebra_taglibrary_form" />
 </config>
 

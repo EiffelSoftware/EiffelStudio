@@ -28,12 +28,8 @@ feature {NONE} -- Initialization
 			o.set_name ("DEPLOYER")
 			o.set_debug_level (10)
 			create install_dir.make
-			if (create {PLATFORM}).is_windows then
-				create l_arg_parser.make
-				l_arg_parser.execute (agent run (l_arg_parser))
-			else
-				o.eprint ("This application is meant to run under windows only.", generating_type)
-			end
+			create l_arg_parser.make
+			l_arg_parser.execute (agent run (l_arg_parser))
 		ensure
 			install_dir_attached: install_dir /= Void
 		end
@@ -41,6 +37,7 @@ feature {NONE} -- Initialization
 feature -- Paths
 
 	install_dir: FILE_NAME
+			-- Read from argument
 
 	dir_apache_conf: FILE_NAME
 			-- The directory to config files of apache
@@ -78,11 +75,25 @@ feature -- Paths
 			result_attached: Result /= Void
 		end
 
+	dir_conf: FILE_NAME
+			-- The directory to the xebra conf folder
+		do
+			Result := install_dir.twin
+			Result.extend ("conf")
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Constants
 
-	File_httpd_conf: STRING = "httpd.conf"
-		-- The http.conf file (in apache/conf)
+	File_httpd_conf: STRING = "httpd\.conf"
+		-- The http.conf file (in xebra/apache/conf)
+
+	File_server_ini: STRING = "server\.ini"
+		-- The server.ini file (in xebra/conf)
+
+	Key_install_path: STRING = "_INSTALL_PATH_"
+		-- A key inside server.ini that will be replaced
 
 	Key_document_root: STRING = "_DOCUMENT_ROOT_"
 		-- A key inside httpd.conf that will be replaced
@@ -96,13 +107,10 @@ feature -- Constants
 	Key_eiffel_src: STRING = "$EIFFEL_SRC"
 		-- A key inside ecf files that will be replaced
 
-
-feature -- Operations
+feature -- Basic Operations
 
 	run (a_arg_parser: XD_ARGUMENT_PARSER)
-			-- Runs the tasks
-			--
-			--  blaa
+			-- Runs the replacing tasks
 		require
 			a_arg_parser_attached_and_successfull: a_arg_parser /= Void and then a_arg_parser.is_successful
 		local
@@ -112,6 +120,7 @@ feature -- Operations
 			o.dprint ("Starting...",1)
 			process_httpd
 			process_ecfs
+			process_server_ini
 			if not error_manager.is_successful then
 				create l_error_printer
 				error_manager.trace_errors (l_error_printer)
@@ -119,8 +128,12 @@ feature -- Operations
 			o.dprint ("Done. Bye.",1)
 		end
 
+feature -- Replacement Tasks
+
 	process_ecfs
-			-- Replacesssssss
+			-- Replaces in all ECF files all occurrences of
+			--	Key_eiffel_projects 	with 	install_dir
+			--  Key_eiffel_src			with	dir_library
 		local
 			l_util: XU_FILE_UTILITIES
 			l_files: LIST [FILE_NAME]
@@ -142,13 +155,15 @@ feature -- Operations
 		end
 
 	process_httpd
-			-- Replaces all occurrences of Key_document_root and Key_server_root in File_httpd_conf with the correct file paths
+			-- Replaces in httpd.conf all occurrences of
+			--	Key_document_root 		with 	dir_www
+			--	Key_server_root			with	dir_apache
 		local
 			l_util: XU_FILE_UTILITIES
 			l_files: LIST [FILE_NAME]
 		do
 			create l_util
-			o.dprint ("Scanning for '"+ File_httpd_conf + "' in " + dir_apache_conf, 1)
+			o.dprint ("Scanning for '" + File_httpd_conf + "' in " + dir_apache_conf, 1)
 			l_files := l_util.scan_for_files (dir_apache_conf, 0, File_httpd_conf, "")
 			from
 				l_files.start
@@ -159,6 +174,27 @@ feature -- Operations
 				l_util.replace_in_file (l_files.item_for_iteration, Key_document_root, dir_www)
 				o.dprint ("Replacing "+Key_server_root+" in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_server_root, dir_apache)
+				l_files.forth
+			end
+		end
+
+	process_server_ini
+			-- Replaces in server.ini all occurrences of
+			--	Key_install_path 	with 	install_dir
+		local
+			l_util: XU_FILE_UTILITIES
+			l_files: LIST [FILE_NAME]
+		do
+			create l_util
+			o.dprint ("Scanning for '" + File_server_ini + "' files in " + dir_conf, 1)
+			l_files := l_util.scan_for_files (dir_conf, -1, File_server_ini, "\.svn")
+			from
+				l_files.start
+			until
+				l_files.after
+			loop
+				o.dprint ("Replacing " + Key_eiffel_projects + " in " + l_files.item_for_iteration,1)
+				l_util.replace_in_file (l_files.item_for_iteration, Key_install_path, install_dir)
 				l_files.forth
 			end
 		end

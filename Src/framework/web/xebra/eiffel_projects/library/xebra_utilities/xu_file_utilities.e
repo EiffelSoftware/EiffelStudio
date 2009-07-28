@@ -33,7 +33,7 @@ feature -- Basic Opertaions
 		require
 			a_path_attached: a_path /= Void
 		local
-			l_exp: STRING_ENVIRONMENT_EXPANDER
+			l_exp: XU_STRING_EXPANDER
 		do
 			create l_exp
 			Result := l_exp.expand_string (a_path, a_keep)

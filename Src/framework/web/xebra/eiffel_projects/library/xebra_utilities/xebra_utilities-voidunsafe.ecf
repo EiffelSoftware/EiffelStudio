@@ -6,6 +6,7 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
 		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>

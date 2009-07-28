@@ -144,7 +144,7 @@ feature -- Print
 --			a_msg_attached: a_msg /= Void
 			a_generating_type_attached: a_generating_type /= Void
 		do
-			print_with_name ("[ERROR in " + a_generating_type.out + "] " + a_msg)
+			print_with_name ("[ERROR in " + a_generating_type.generator + "] " + a_msg)
 		end
 
 	iprint (a_msg: STRING)

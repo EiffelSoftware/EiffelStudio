@@ -22,7 +22,7 @@ create
 create {NS_OBJECT}
 	share_from_pointer
 
-feature -- Creating Windows
+feature {NONE} -- Creating Windows
 
 	make (a_rect: NS_RECT; a_style_mask: INTEGER; a_defer: BOOLEAN)
 			-- Create a new window
@@ -31,7 +31,45 @@ feature -- Creating Windows
 			item := {NS_WINDOW_API}.init_with_control_rect_style_mask_backing_defer (item, a_rect.item, a_style_mask, a_defer)
 		end
 
-feature -- Configuring Windows
+feature -- Delegate Methods
+
+	init_delegate
+		local
+			delegate: NS_OBJECT
+		do
+			delegate := window_delegate_class.create_instance
+			{NS_WINDOW_API}.set_delegate (item, delegate.item)
+			callback_marshal.register_object_for_item (Current, delegate.item)
+		end
+
+	window_delegate_class: OBJC_CLASS
+			-- An Objective-C class which has the selectors of the delegate
+		once
+			create Result.make_with_name ("EiffelWrapperWindowDelegate")
+			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSObject"))
+			Result.add_method ("windowDidResize:", agent (a_ptr: POINTER) do window_did_resize end)
+			Result.add_method ("windowDidMove:", agent (a_ptr: POINTER) do window_did_move end)
+			-- windowDidBecomeKey:
+			-- windowDidResignKey:
+			-- windowShouldClose: / windowWillClose:
+			Result.register
+		end
+
+	window_did_resize
+			-- Sent by the default notification center immediately after an NSWindow object has been moved.
+		do
+		end
+
+	window_did_move
+		do
+		end
+
+feature --
+
+	resize_actions_X: ACTION_SEQUENCE[TUPLE [x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER]]
+		attribute
+			create Result
+		end
 
 feature -- Drawing Windows
 
@@ -203,7 +241,7 @@ feature -- Managing Titles
 
 	set_delegate (a_delegate: NS_WINDOW_DELEGATE)
 		do
-			{NS_WINDOW_API}.set_delegate (item, a_delegate.item)
+			{NS_WINDOW_API}.set_delegate (item, a_delegate.delegate_item)
 		end
 
 	convert_base_to_screen (a_point: NS_POINT): NS_POINT

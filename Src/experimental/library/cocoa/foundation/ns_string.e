@@ -21,7 +21,9 @@ create {NS_OBJECT, NS_IMAGE_CONSTANTS, NS_STRING_CONSTANTS}
 	make_from_pointer,
 	share_from_pointer
 convert
-	make_with_string ({STRING_32, STRING_8})
+	make_with_string ({STRING_32, STRING_8, STRING_GENERAL}),
+	as_string_8: {STRING_8},
+	as_string_32: {STRING_32}
 
 feature -- NSString Additions: Drawing String Objects
 

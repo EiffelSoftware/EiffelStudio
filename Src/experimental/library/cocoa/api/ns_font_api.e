@@ -7,187 +7,463 @@ note
 class
 	NS_FONT_API
 
-feature -- Access
+feature -- Creating Arbitrary Fonts
 
---/********* Factory *********/
---+ (NSFont *)fontWithName:(NSString *)fontName size:(CGFloat)fontSize;
---+ (NSFont *)fontWithName:(NSString *)fontName matrix:(const CGFloat *)fontMatrix;
---/* Instantiates an NSFont object matching fontDescriptor. If fontSize is greater than 0.0, it has precedence over NSFontSizeAttribute in fontDescriptor.
---*/
-
-	frozen font_with_descriptor (a_font_descriptor: POINTER; a_size: REAL): POINTER
-			-- + (NSFont *)fontWithDescriptor:(NSFontDescriptor *)fontDescriptor size:(CGFloat)fontSize;
+	frozen font_with_name_size (a_font_name: POINTER; a_font_size: REAL): POINTER
+			-- + (NSFont *)fontWithName: (NSString *) fontName size: (NSString *) fontSize
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [NSFont fontWithDescriptor: $a_font_descriptor size: $a_size];"
+			"return [NSFont fontWithName: $a_font_name size: $a_font_size];"
 		end
 
-
---/* Instantiates an NSFont object matching fontDescriptor. If textTransform is non-nil, it has precedence over NSFontMatrixAttribute in fontDescriptor.
---*/
---+ (NSFont *)fontWithDescriptor:(NSFontDescriptor *)fontDescriptor textTransform:(NSAffineTransform *)textTransform;
-
-	frozen font_with_name (a_font_name: POINTER; a_size: REAL): POINTER
+	frozen font_with_descriptor_size (a_font_descriptor: POINTER; a_font_size: REAL): POINTER
+			-- + (NSFont *)fontWithDescriptor: (NSFontDescriptor *) fontDescriptor size: (NSFontDescriptor *) fontSize
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [NSFont fontWithName: $a_font_name size: $a_size];"
+			"return [NSFont fontWithDescriptor: $a_font_descriptor size: $a_font_size];"
 		end
 
-
---/********* Meta Font *********/
---/* User font settings
---*/
---+ (NSFont *)userFontOfSize:(CGFloat)fontSize;	// Aqua Application font
---+ (NSFont *)userFixedPitchFontOfSize:(CGFloat)fontSize; // Aqua fixed-pitch font
---+ (void)setUserFont:(NSFont *)aFont;	// set preference for Application font.
---+ (void)setUserFixedPitchFont:(NSFont *)aFont; // set preference for fixed-pitch.
-
---/* UI font settings
---*/
-	frozen system_font_of_size (a_font_size: REAL): POINTER
-			--+ (NSFont *)systemFontOfSize:(CGFloat)fontSize;	// Aqua System font
+	frozen font_with_descriptor_text_transform (a_font_descriptor: POINTER; a_text_transform: POINTER): POINTER
+			-- + (NSFont *)fontWithDescriptor: (NSFontDescriptor *) fontDescriptor textTransform: (NSFontDescriptor *) textTransform
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [NSFont systemFontOfSize: $a_font_size];"
+			"return [NSFont fontWithDescriptor: $a_font_descriptor textTransform: $a_text_transform];"
 		end
+
+	frozen font_with_name_matrix (a_font_name: POINTER; a_font_matrix: POINTER): POINTER
+			-- + (NSFont *)fontWithName: (NSString *) fontName matrix: (NSString *) fontMatrix
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont fontWithName: $a_font_name matrix: $a_font_matrix];"
+		end
+
+feature -- Creating User Fonts
+
+	frozen user_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)userFontOfSize: (CGFloat) fontSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont userFontOfSize: $a_font_size];"
+		end
+
+	frozen user_fixed_pitch_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)userFixedPitchFontOfSize: (CGFloat) fontSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont userFixedPitchFontOfSize: $a_font_size];"
+		end
+
+feature -- Creating System Fonts
 
 	frozen bold_system_font_of_size (a_font_size: REAL): POINTER
-			--+ (NSFont *)boldSystemFontOfSize:(CGFloat)fontSize; // Aqua System font (emphasized)
+			-- + (NSFont *)boldSystemFontOfSize: (CGFloat) fontSize
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"return [NSFont boldSystemFontOfSize: $a_font_size];"
 		end
 
-	frozen label_font_of_size (a_font_size: REAL): POINTER
-			--+ (NSFont *)labelFontOfSize:(CGFloat)fontSize; // Aqua label font
-			-- Returns the Aqua label font used for standard interface labels in the specified size
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [NSFont labelFontOfSize: $a_font_size];"
-		end
-
---+ (NSFont *)titleBarFontOfSize:(CGFloat)fontSize;
---+ (NSFont *)menuFontOfSize:(CGFloat)fontSize;
---+ (NSFont *)menuBarFontOfSize:(CGFloat)fontSize;
---+ (NSFont *)messageFontOfSize:(CGFloat)fontSize;
---+ (NSFont *)paletteFontOfSize:(CGFloat)fontSize;
---+ (NSFont *)toolTipsFontOfSize:(CGFloat)fontSize;
 	frozen control_content_font_of_size (a_font_size: REAL): POINTER
-			--+ (NSFont *)controlContentFontOfSize:(CGFloat)fontSize;
+			-- + (NSFont *)controlContentFontOfSize: (CGFloat) fontSize
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"return [NSFont controlContentFontOfSize: $a_font_size];"
 		end
 
---/* UI font size settings
---*/
---+ (CGFloat)systemFontSize; // size of the standard System font.
---+ (CGFloat)smallSystemFontSize; // size of standard small System font.
---+ (CGFloat)labelFontSize;	// size of the standard Label Font.
-
---+ (CGFloat)systemFontSizeForControlSize:(NSControlSize)controlSize;
-
---/********* Core font attribute *********/
-	frozen font_name (a_font: POINTER): POINTER
-			--- (NSString *)fontName;
+	frozen label_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)labelFontOfSize: (CGFloat) fontSize
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [(NSFont*)$a_font fontName];"
+			"return [NSFont labelFontOfSize: $a_font_size];"
 		end
 
-	frozen point_size (a_font: POINTER): REAL
-			--- (CGFloat)pointSize;
+	frozen menu_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)menuFontOfSize: (CGFloat) fontSize
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [(NSFont*)$a_font pointSize];"
+			"return [NSFont menuFontOfSize: $a_font_size];"
 		end
---- (const CGFloat *)matrix;
-	frozen family_name (a_font: POINTER): POINTER
-			--- (NSString *)familyName;
+
+	frozen menu_bar_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)menuBarFontOfSize: (CGFloat) fontSize
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [(NSFont*)$a_font familyName];"
+			"return [NSFont menuBarFontOfSize: $a_font_size];"
 		end
 
-	frozen display_name (a_font: POINTER): POINTER
-			--- (NSString *)displayName;
+	frozen message_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)messageFontOfSize: (CGFloat) fontSize
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [(NSFont*)$a_font displayName];"
+			"return [NSFont messageFontOfSize: $a_font_size];"
 		end
---- (NSFontDescriptor *)fontDescriptor;
---- (NSAffineTransform *)textTransform;
 
---/********* Glyph coverage *********/
---- (NSUInteger)numberOfGlyphs;
---- (NSStringEncoding)mostCompatibleStringEncoding;
---- (NSGlyph)glyphWithName:(NSString *)aName;
---- (NSCharacterSet *)coveredCharacterSet;
-
---/********* Font instance-wide metrics *********/
---/* These methods return scaled numbers.  If the font was created with a matrix, the matrix is applied automatically; otherwise the coordinates are multiplied by size.
---*/
---- (NSRect)boundingRectForFont;
---- (NSSize)maximumAdvancement;
-
---- (CGFloat)ascender;
---- (CGFloat)descender;
---- (CGFloat)leading;
-
---- (CGFloat)underlinePosition;
---- (CGFloat)underlineThickness;
---- (CGFloat)italicAngle;
---- (CGFloat)capHeight;
---- (CGFloat)xHeight;
-	frozen is_fixed_pitch (a_font: POINTER): BOOLEAN
-			--- (BOOL)isFixedPitch;
+	frozen palette_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)paletteFontOfSize: (CGFloat) fontSize
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [(NSFont*)$a_font isFixedPitch];"
+			"return [NSFont paletteFontOfSize: $a_font_size];"
 		end
---/********* Glyph metrics *********/
---- (NSRect)boundingRectForGlyph:(NSGlyph)aGlyph;
---- (NSSize)advancementForGlyph:(NSGlyph)ag;
 
---// bulk query
---- (void)getBoundingRects:(NSRectArray)bounds forGlyphs:(const NSGlyph *)glyphs count:(NSUInteger)glyphCount;
---- (void)getAdvancements:(NSSizeArray)advancements forGlyphs:(const NSGlyph *)glyphs count:(NSUInteger)glyphCount;
---- (void)getAdvancements:(NSSizeArray)advancements forPackedGlyphs:(const void *)packedGlyphs length:(NSUInteger)length; // only supports NSNativeShortGlyphPacking
+	frozen system_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)systemFontOfSize: (CGFloat) fontSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont systemFontOfSize: $a_font_size];"
+		end
 
---/********* NSGraphicsContext-related *********/
---- (void)set;
---- (void)setInContext:(NSGraphicsContext *)graphicsContext;
+	frozen title_bar_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)titleBarFontOfSize: (CGFloat) fontSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont titleBarFontOfSize: $a_font_size];"
+		end
 
---/********* Rendering mode *********/
---- (NSFont *)printerFont;
---- (NSFont *)screenFont; // Same as screenFontWithRenderingMode:NSFontDefaultRenderingMode
---- (NSFont *)screenFontWithRenderingMode:(NSFontRenderingMode)renderingMode;
---- (NSFontRenderingMode)renderingMode;
---@end
+	frozen tool_tips_font_of_size (a_font_size: REAL): POINTER
+			-- + (NSFont *)toolTipsFontOfSize: (CGFloat) fontSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont toolTipsFontOfSize: $a_font_size];"
+		end
 
---/********* Glyph packing *********/
---/* Take a buffer of NSGlyphs, of some given length, and a packing type, and a place to put some packed glyphs.  Pack up the NSGlyphs according to the NSMultibyteGlyphPacking, null-terminate the bytes, and then put them into the output buffer.  Return the count of bytes output, including the null-terminator.  The output buffer (packedGlyphs) provided by the caller is guaranteed to be at least "count*4+1" bytes long. This function only supports NSNativeShortGlyphPacking on Mac OS X.
---*/
---APPKIT_EXTERN NSInteger NSConvertGlyphsToPackedGlyphs(NSGlyph *glBuf, NSInteger count, NSMultibyteGlyphPacking packing, char *packedGlyphs);
+feature -- Using a Font to Draw
 
---/********* Notifications *********/
---/* This notification is posted when the antialias threshold is changed by the user.
---*/
---APPKIT_EXTERN NSString *NSAntialiasThresholdChangedNotification AVAILABLE_MAC_OS_X_VERSION_10_4_AND_LATER;
+	frozen set (a_ns_font: POINTER)
+			-- - (void)set
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSFont*)$a_ns_font set];"
+		end
 
---/* This notification is posted when the available font set is modified as a result of activation/deactivation.
---*/
---APPKIT_EXTERN NSString *NSFontSetChangedNotification AVAILABLE_MAC_OS_X_VERSION_10_4_AND_LATER;
+	frozen set_in_context (a_ns_font: POINTER; a_graphics_context: POINTER)
+			-- - (void)setInContext: (NSGraphicsContext *) graphicsContext
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSFont*)$a_ns_font setInContext: $a_graphics_context];"
+		end
 
+feature -- Getting General Font Information
+
+	frozen covered_character_set (a_ns_font: POINTER): POINTER
+			-- - (NSCharacterSet *)coveredCharacterSet
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font coveredCharacterSet];"
+		end
+
+	frozen font_descriptor (a_ns_font: POINTER): POINTER
+			-- - (NSFontDescriptor *)fontDescriptor
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font fontDescriptor];"
+		end
+
+	frozen is_fixed_pitch (a_ns_font: POINTER): BOOLEAN
+			-- - (BOOL)isFixedPitch
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font isFixedPitch];"
+		end
+
+	frozen most_compatible_string_encoding (a_ns_font: POINTER): NATURAL
+			-- - (NSStringEncoding)mostCompatibleStringEncoding
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font mostCompatibleStringEncoding];"
+		end
+
+	frozen rendering_mode (a_ns_font: POINTER): INTEGER
+			-- - (NSFontRenderingMode)renderingMode
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font renderingMode];"
+		end
+
+feature -- Getting Information About Glyphs
+
+	frozen glyph_with_name (a_ns_font: POINTER; a_name: POINTER): INTEGER
+			-- - (NSGlyph)glyphWithName: (NSString *) aName
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font glyphWithName: $a_name];"
+		end
+
+feature -- Getting Metrics Information
+
+	frozen label_font_size : REAL
+			-- + (CGFloat)labelFontSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont labelFontSize];"
+		end
+
+	frozen small_system_font_size : REAL
+			-- + (CGFloat)smallSystemFontSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont smallSystemFontSize];"
+		end
+
+	frozen system_font_size : REAL
+			-- + (CGFloat)systemFontSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont systemFontSize];"
+		end
+
+	frozen system_font_size_for_control_size (a_control_size: NATURAL): REAL
+			-- + (CGFloat)systemFontSizeForControlSize: (NSControlSize) controlSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSFont systemFontSizeForControlSize: $a_control_size];"
+		end
+
+	frozen advancement_for_glyph (a_ns_font: POINTER; a_ag: INTEGER; res: POINTER)
+			-- - (NSSize)advancementForGlyph: (NSGlyph) ag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSSize size = [(NSFont*)$a_ns_font advancementForGlyph: $a_ag]; memcpy($res, &size, sizeof(NSSize));"
+		end
+
+	frozen ascender (a_ns_font: POINTER): REAL
+			-- - (CGFloat)ascender
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font ascender];"
+		end
+
+	frozen bounding_rect_for_font (a_ns_font: POINTER; res: POINTER)
+			-- - (NSRect)boundingRectForFont
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSRect rect = [(NSFont*)$a_ns_font boundingRectForFont]; memcpy($res, &rect, sizeof(NSRect));"
+		end
+
+	frozen bounding_rect_for_glyph (a_ns_font: POINTER; a_glyph: INTEGER; res: POINTER)
+			-- - (NSRect)boundingRectForGlyph: (NSGlyph) aGlyph
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSRect rect = [(NSFont*)$a_ns_font boundingRectForGlyph: $a_glyph]; memcpy($res, &rect, sizeof(NSRect));"
+		end
+
+	frozen cap_height (a_ns_font: POINTER): REAL
+			-- - (CGFloat)capHeight
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font capHeight];"
+		end
+
+	frozen descender (a_ns_font: POINTER): REAL
+			-- - (CGFloat)descender
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font descender];"
+		end
+
+	frozen get_advancements_for_glyphs_count (a_ns_font: POINTER; a_advancements: POINTER; a_glyphs: POINTER; a_glyph_count: INTEGER)
+			-- - (void)getAdvancements: (NSSizeArray) advancements forGlyphs: (NSSizeArray) glyphs count: (NSSizeArray) glyphCount
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSFont*)$a_ns_font getAdvancements: *(NSSizeArray*)$a_advancements forGlyphs: $a_glyphs count: $a_glyph_count];"
+		end
+
+	frozen get_advancements_for_packed_glyphs_length (a_ns_font: POINTER; a_advancements: POINTER; a_packed_glyphs: POINTER; a_length: INTEGER)
+			-- - (void)getAdvancements: (NSSizeArray) advancements forPackedGlyphs: (NSSizeArray) packedGlyphs length: (NSSizeArray) length
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSFont*)$a_ns_font getAdvancements: *(NSSizeArray*)$a_advancements forPackedGlyphs: $a_packed_glyphs length: $a_length];"
+		end
+
+	frozen get_bounding_rects_for_glyphs_count (a_ns_font: POINTER; a_bounds: POINTER; a_glyphs: POINTER; a_glyph_count: INTEGER)
+			-- - (void)getBoundingRects: (NSRectArray) bounds forGlyphs: (NSRectArray) glyphs count: (NSRectArray) glyphCount
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSFont*)$a_ns_font getBoundingRects: *(NSRectArray*)$a_bounds forGlyphs: $a_glyphs count: $a_glyph_count];"
+		end
+
+	frozen italic_angle (a_ns_font: POINTER): REAL
+			-- - (CGFloat)italicAngle
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font italicAngle];"
+		end
+
+	frozen leading (a_ns_font: POINTER): REAL
+			-- - (CGFloat)leading
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font leading];"
+		end
+
+	frozen matrix (a_ns_font: POINTER): POINTER
+			-- - (const CGFloat *)matrix
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font matrix];"
+		end
+
+	frozen maximum_advancement (a_ns_font: POINTER; res: POINTER)
+			-- - (NSSize)maximumAdvancement
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"NSSize size = [(NSFont*)$a_ns_font maximumAdvancement]; memcpy($res, &size, sizeof(NSSize));"
+		end
+
+	frozen number_of_glyphs (a_ns_font: POINTER): INTEGER
+			-- - (NSUInteger)numberOfGlyphs
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font numberOfGlyphs];"
+		end
+
+	frozen point_size (a_ns_font: POINTER): REAL
+			-- - (CGFloat)pointSize
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font pointSize];"
+		end
+
+	frozen text_transform (a_ns_font: POINTER): POINTER
+			-- - (NSAffineTransform *)textTransform
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font textTransform];"
+		end
+
+	frozen underline_position (a_ns_font: POINTER): REAL
+			-- - (CGFloat)underlinePosition
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font underlinePosition];"
+		end
+
+	frozen underline_thickness (a_ns_font: POINTER): REAL
+			-- - (CGFloat)underlineThickness
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font underlineThickness];"
+		end
+
+	frozen x_height (a_ns_font: POINTER): REAL
+			-- - (CGFloat)xHeight
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font xHeight];"
+		end
+
+feature -- Getting Font Names
+
+	frozen display_name (a_ns_font: POINTER): POINTER
+			-- - (NSString *)displayName
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font displayName];"
+		end
+
+	frozen family_name (a_ns_font: POINTER): POINTER
+			-- - (NSString *)familyName
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font familyName];"
+		end
+
+	frozen font_name (a_ns_font: POINTER): POINTER
+			-- - (NSString *)fontName
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font fontName];"
+		end
+
+feature -- Setting User Fonts
+
+	frozen set_user_font (a_font: POINTER)
+			-- + (void)setUserFont: (NSFont *) aFont
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[NSFont setUserFont: $a_font];"
+		end
+
+	frozen set_user_fixed_pitch_font (a_font: POINTER)
+			-- + (void)setUserFixedPitchFont: (NSFont *) aFont
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[NSFont setUserFixedPitchFont: $a_font];"
+		end
+
+feature -- Getting Corresponding Device Fonts
+
+	frozen printer_font (a_ns_font: POINTER): POINTER
+			-- - (NSFont *)printerFont
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font printerFont];"
+		end
+
+	frozen screen_font (a_ns_font: POINTER): POINTER
+			-- - (NSFont *)screenFont
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font screenFont];"
+		end
+
+	frozen screen_font_with_rendering_mode (a_ns_font: POINTER; a_rendering_mode: INTEGER): POINTER
+			-- - (NSFont *)screenFontWithRenderingMode: (NSFontRenderingMode) renderingMode
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSFont*)$a_ns_font screenFontWithRenderingMode: $a_rendering_mode];"
+		end
 end

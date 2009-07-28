@@ -24,7 +24,7 @@ feature {NONE} -- Creation
 			-- Create a new NSButton
 		do
 			make_from_pointer ({NS_BUTTON_API}.new)
-			insert_in_table
+			callback_marshal.register_object (Current)
 		end
 
 feature -- Configuring Buttons
@@ -40,13 +40,13 @@ feature -- Configuring Buttons
 			{NS_BUTTON_API}.set_button_type (item, a_button_type)
 		end
 
-	set_title (a_title: STRING_GENERAL)
+	set_title (a_title: NS_STRING)
 			-- Sets the title displayed by the receiver when in its normal state and, if necessary, redraws the button's contents.
     		-- This title is always shown on buttons that don't use their alternate contents when highlighting or displaying their alternate state.
     	do
-			{NS_BUTTON_API}.set_title (item, (create {NS_STRING}.make_with_string (a_title)).item)
+			{NS_BUTTON_API}.set_title (item, a_title.item)
 		ensure
-			title_set: a_title.as_string_8.is_equal (title.to_string)
+			title_set: a_title.is_equal (title)
 		end
 
 	title: NS_STRING

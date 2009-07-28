@@ -20,11 +20,12 @@ import traceback, sys
 # - Handling of objective C routine returning a struct was not properly handled.
 # - If a .h contains the declaration of different classes/protocols then they are all packed for the same class which is not correct.
 # - Recognize delegate methods and treat them accordingly
+# - Refactor Signature to Message (containing the Objective-C abstractions and info) and Feature (eiffel equivelent)
 
 ### Config
 
 dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
-classname = "NSColor"
+classname = "NSSplitView"
 #classname = "NSImage"
 #dirname = "/System/Library/Frameworks/Foundation.framework/Headers"
 #classname = "NSData"
@@ -50,6 +51,17 @@ class Type:
 class CType(Type):
 	def toEiffelType(self):
 		return EiffelType(EiffelTypeN(self.name))
+
+	def canDereference(self):
+		if self.name.endswith("*"):
+			return True
+		else:
+			return False
+	
+	def Dereference(self):
+		if self.canDereference():
+		   return CType(self.name[0:-1].strip())
+		raise "Can't dereference type: " + type
 
 class EiffelType(Type):
 	def canDereference(self):
@@ -107,7 +119,17 @@ class Signature:
 		return (self.EiffelReturnType().name != "")
 			
 	def isStatic(self):
+		"""True iff the signature has a + as first character."""
 		return self.is_static
+
+	def isConstructor(self):
+		""""We treat a static message as constructor if it returns an object of it's containing class"""
+		if self.is_static:
+			t = CType(self.return_type)
+			if t.canDereference():
+				if t.Dereference().name == classname:
+					return True
+		return False
 
 	def EiffelArguments(self):
 		e_sig = []
@@ -140,12 +162,14 @@ class Signature:
 	
 	def EiffelFeature(self, abstract):
 		def CallInternalFeature():
-			args = ["item"]
+			args = []
+			if not self.isStatic():
+				args.append("item")
 			for arg in self.EiffelArguments():
 				if arg.type.canDereference():
 					args.append(arg.name + ".item")
 				else:
-					if arg.type in expandedTypes:
+					if arg.type.isExpanded():
 						args.append(arg.name)
 					else: # A non expanded type that is passed by value
 						args.append(arg.name + ".item")
@@ -155,7 +179,9 @@ class Signature:
 			result = "{" + EiffelTypeN(classname) + "_API}." + self.InternalFeatureName() + " (" + ', '.join(args) +  ")"
 
 			if self.isFunction():
-				if self.EiffelReturnType().canDereference():
+				if self.isConstructor():
+					result = "make_from_pointer (" + result + ")"
+				elif self.EiffelReturnType().canDereference():
 					result = "create Result.share_from_pointer (" + result + ")"
 				else:
 					if self.EiffelReturnType().isExpanded():
@@ -178,7 +204,9 @@ class Signature:
 		
 		def Return():
 			return_type = self.EiffelReturnType()
-			if return_type.name == "":
+			if self.isConstructor():
+				return ""
+			elif return_type.name == "":
 				return ""
 			else:
 				if return_type.canDereference():
@@ -293,7 +321,12 @@ typeMap = {
 	"bitmapFormat": "BITMAP_FORMAT",
 	"bytesPerRow": "BYTES_PER_ROW",
 	"NSToolbarDisplayMode": "INTEGER",
-	"NSToolbarSizeMode": "INTEGER"
+	"NSToolbarSizeMode": "INTEGER",
+	"NSGlyph": "INTEGER",
+	"NSControlSize": "NATURAL",
+	"NSStringEncoding": "NATURAL",
+	"NSFontRenderingMode": "NATURAL",
+	"NSSplitViewDividerStyle": "INTEGER"
 	}
 	
 expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER"]
@@ -353,6 +386,15 @@ class Task:
 	def __repr__(self):
 		return "%s %r" % (self.name, self.messages)
 
+class Feature:
+	def __init__(self, name):
+		self.name = name
+		
+	def getName(self):
+		return self.name
+	
+	
+
 class Message:
 	def __init__(self, name):
 		self.name = name
@@ -369,8 +411,13 @@ class Message:
 		return self.name
 	
 	def set_signature(self, signature):
+		# TODO: Get rid of this!
 		self.signature = signature
 	
+	def get_signature(self):
+		# TODO: Get rid of this!
+		return self.signature
+
 	def get_eiffel_wrapper_feature(self):
 		if self.signature:
 			return self.signature.EiffelFeature(self.abstract)
@@ -383,6 +430,8 @@ class Message:
 		else:
 			return "-- Error generating " + self.name + ": Message signature for feature not set"
 
+	def is_constructor(self):
+		return self.signature.isConstructor();
 	
 	def __repr__(self):
 		return name
@@ -417,11 +466,10 @@ class AppleDocumentationParser(sgmllib.SGMLParser):
     def start_a (self, attributes):
     	if self.section == "Tasks" and self.last_task:
 	    	for name, value in attributes:
-	    		if name == "href" and value.count(".html#//apple_ref/occ/instm/"):
-    				self.last_message = Message (re.search(".*/(.*)$", value).group(1))
-    				#print self.last_message.name
-    				self.last_task.messages.append (self.last_message) 
-
+	    		if name == "href":
+	    			if value.count(".html#//apple_ref/occ/instm/") or value.count(".html#//apple_ref/occ/clm/"):
+	    				self.last_message = Message (re.search(".*/(.*)$", value).group(1))
+    					self.last_task.messages.append (self.last_message) 
     
     def start_img (self, attributes):
     	if self.section == "Tasks" and self.last_message:
@@ -433,10 +481,8 @@ class AppleDocumentationParser(sgmllib.SGMLParser):
         if self.task_coming_up == True:
           	self.last_task = Task (data)
           	self.tasks.append (self.last_task)
-        if data == "Tasks":
-        	self.section = "Tasks"
-        if data == "Instance Methods":
-        	self.section = "Instance Methods"
+        if data in ["Tasks", "Class Methods", "Instance Methods"]:
+        	self.section = data
             
     def end_h3(self):
         self.task_coming_up = False
@@ -469,6 +515,13 @@ class ObjC_Class:
 	   	   	   	   return message
 	   raise "Message " + name + " not found." 
        
+# Tokens which end up in the message signature when parsing but we can't deal with
+ignore_tokens = [
+	"DEPRECATED_IN_MAC_OS_X_VERSION_10_4_AND_LATER",
+	"AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER",
+	"__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)",
+	""];
+
 # Main:
 def main():
 	my_class = ObjC_Class(classname)
@@ -476,10 +529,11 @@ def main():
 	documentation = urllib2.urlopen(url).read().\
 	   replace("\xe2\x80\x99", "`").replace("&#8217;", "`").\
 	   replace("\xe2\x80\x94", "--").\
+	   replace("\xe2\x80\x93", "-").\
 	   replace("\xc2", "C2C2C2").\
 	   replace("\xa0", "A0A0A0").\
-	   replace("\xe2", "XXX").\
-	   replace("\x80", "YYY").\
+	   replace("\xe2", "E2E2E2").\
+	   replace("\x80", "808080").\
 	   replace("\xa6", "QQQ").\
 	   replace("\x93", "939393").\
 	   replace("\x94", "949494").\
@@ -488,6 +542,7 @@ def main():
 	   replace("\x9c", "9C9C9C").\
 	   replace("\x9d", "9D9D9D").\
 	   decode("ascii");
+	   # Some hacking to get rid of unicode chars
 	myparser = AppleDocumentationParser()
 	myparser.parse (documentation)
 	my_class.set_tasks (myparser.get_tasks())
@@ -512,15 +567,14 @@ def main():
 						tokens.extend(re.split(" ", name))
 					else:
 						tokens.append(name)
-			while tokens.count("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER") > 0:
-				tokens.remove("AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER")
-			while tokens.count ("__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)") > 0:
-				tokens.remove("__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)")
+			for t in ignore_tokens:
+				while tokens.count(t) > 0:
+					tokens.remove(t)
 			try:
 				isStatic = (sign == "+")
 				sig = Signature (tokens, isStatic)
 				if isStatic:
-					internal_methods.append (sig.InternalEiffelFeature())
+				    my_class.get_message_by_name (sig.MessageName()).set_signature (sig)
 				else:
 				    my_class.get_message_by_name (sig.MessageName()).set_signature (sig)
 			except:
@@ -529,22 +583,39 @@ def main():
 				print
 	
 	# Output:
+	creation_procedures = []
 	for task in my_class.get_tasks():
-	   print "feature -- " + task.name
-	   for message in task.messages:
-	   	   print message.get_eiffel_wrapper_feature()
-	   print ""
+		for message in task.messages:
+	   	    if message.is_constructor():
+	   	   	    creation_procedures.append(message.get_signature().FeatureName());
+	print "create"
+	print "\t" + (",\n\t").join(creation_procedures)
+	print "create {NS_OBJECT}"
+	print "\tmake_from_pointer,"
+	print "\tshare_from_pointer"
+	print
+
+	for task in my_class.get_tasks():
+		print "feature -- " + task.name
+		for message in task.messages:
+	   		try:
+	   	   	    print message.get_eiffel_wrapper_feature()
+		   	except:
+		   		print "Failed to generate code for " + "|".join(tokens)					
+				traceback.print_exc (file=sys.stdout)
+				print
+		print ""
 	   
 	print "-- API --"
 	for task in my_class.get_tasks():
 	   print "feature -- " + task.name
 	   for message in task.messages:
-	   	   print message.get_eiffel_api_feature()
+	   	   try:
+	   	   	    print message.get_eiffel_api_feature()
+		   except:
+				print "Failed to generate code for " + "|".join(tokens)					
+				traceback.print_exc (file=sys.stdout)
+				print
 	   print ""
-		
-	print "feature -- Static features"
-	for task in my_class.get_tasks():
-	   for method in internal_methods:
-	   	   print method
 
 main()

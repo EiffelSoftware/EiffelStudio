@@ -21,41 +21,25 @@ feature -- Managing Notification Observers
 			-- name are delivered to the observer. When `Void', the notification center doesn't use a notification's name
 			-- to decide whether to deliver it to the observer.
 		local
-			l_class: OBJC_CLASS
-			l_callback_object: NS_OBJECT
+			l_callback_object: NS_NOTIFICATION_CALLBACK
 			l_sender: POINTER
+
 		do
 			if attached a_notification_sender then
 				l_sender := a_notification_sender.item
 			end
-			-- Create a new Objective-C object with one method and use this as a callback.
-			create l_class.make_with_name (generate_name)
-			l_class.set_superclass (create {OBJC_CLASS}.make_with_name ("NSObject"))
-			l_class.add_method ("callbackMethod:", agent call_observer (a_callback, ?))
-			l_class.register
-			l_callback_object := l_class.create_instance
+			create l_callback_object.make_with_agent (a_callback)
+			observers.extend (l_callback_object)
 			notification_center_add_observer_selector_name_object (item, l_callback_object.item,
-					{NS_OBJC_RUNTIME}.sel_register_name ((create {C_STRING}.make ("callbackMethod:")).item),
+					l_callback_object.selector,
 					{NS_VIEW}.view_frame_did_change_notification, l_sender)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Internal
 
-	call_observer (a_callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]]; a_ptr: POINTER)
-		do
-			a_callback.call ([create {NS_OBJECT}.make_from_pointer (a_ptr)])
-		end
-
-	counter: SPECIAL [INTEGER]
+	observers: ARRAYED_LIST [NS_NOTIFICATION_CALLBACK]
 		once
-			create Result.make_empty (1)
-			Result.extend (0)
-		end
-
-	generate_name: STRING
-		do
-			Result := "NotificationCallback" + counter.item (0).out
-			counter.put (counter.item (0) + 1, 0)
+			create Result.make (100)
 		end
 
 feature {NS_ENVIRONEMENT} -- Objective-C interface

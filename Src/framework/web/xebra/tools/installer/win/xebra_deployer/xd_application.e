@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			l_arg_parser: XD_ARGUMENT_PARSER
 		do
 			o.set_name ("DEPLOYER")
-			o.set_debug_level (10)
+			o.set_debug_level (1)
 			create install_dir.make
 			create l_arg_parser.make
 			l_arg_parser.execute (agent run (l_arg_parser))
@@ -104,9 +104,14 @@ feature -- Constants
 	Key_eiffel_projects: STRING  = "$XEBRA_DEV\eiffel_projects"
 		-- A key inside ecf files that will be replaced
 
-
 	Key_eiffel_src: STRING = "$EIFFEL_SRC"
 		-- A key inside ecf files that will be replaced
+
+	Key_ise_eiffel: STRING = "$ISE_EIFFEL"
+		-- A key inside server.ini that will be replaced	
+
+	Key_ise_platform: STRING = "$ISE_PLATFORM"
+		-- A key inside server.ini that will be replaced		
 
 feature -- Basic Operations
 
@@ -116,12 +121,19 @@ feature -- Basic Operations
 			a_arg_parser_attached_and_successfull: a_arg_parser /= Void and then a_arg_parser.is_successful
 		local
 			l_error_printer: XU_ERROR_PRINTER
+			l_util: XU_FILE_UTILITIES
 		do
+			create l_util
 			create install_dir.make_from_string (a_arg_parser.install_dir)
-			o.dprint ("Starting...",1)
-			process_httpd
-			process_ecfs_xml
-			process_server_ini
+			if  l_util.is_dir (install_dir) then
+				o.dprint ("Starting...",1)
+				process_httpd
+				process_ecfs_xml
+				process_server_ini
+			else
+				error_manager.add_error (create {XERROR_DIR_NOT_FOUND}.make (install_dir), false)
+			end
+
 			if not error_manager.is_successful then
 				create l_error_printer
 				error_manager.trace_errors (l_error_printer)
@@ -180,6 +192,8 @@ feature -- Replacement Tasks
 	process_server_ini
 			-- Replaces in server.ini all occurrences of
 			--	Key_install_path 	with 	install_dir
+			--	Key_ise_eiffel		with 	(resolved path)
+			--	Key_ise_platform	with 	(resolved path)
 		local
 			l_util: XU_FILE_UTILITIES
 			l_files: LIST [FILE_NAME]
@@ -194,6 +208,8 @@ feature -- Replacement Tasks
 			loop
 				o.dprint ("Replacing " + Key_eiffel_projects + " in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_install_path, install_dir)
+				l_util.replace_in_file (l_files.item_for_iteration, Key_ise_eiffel, l_util.resolve_env_vars (Key_ise_eiffel, true))
+				l_util.replace_in_file (l_files.item_for_iteration, Key_ise_platform, l_util.resolve_env_vars (Key_ise_platform, true))
 				l_files.forth
 			end
 		end

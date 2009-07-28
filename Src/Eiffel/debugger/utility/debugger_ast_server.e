@@ -52,7 +52,7 @@ feature -- Acces
 feature -- Report
 
 	local_table (a_feat: E_FEATURE): detachable HASH_TABLE [LOCAL_INFO, INTEGER]
-			-- Object test locals from `a_feat' in the context of class `a_class_type'
+			-- locals from `a_feat' in the context of class `a_class_type'
 		require
 			a_feat /= Void
 		local
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			-- Visitor to get debugger's data from AST
 
 	breakable_feature_info_index (a_feat: FEATURE_I; a_cl_id: INTEGER): INTEGER
-			-- Is already computed, return index of result for `a_feat'
+			-- If already computed, return index of result for `a_feat'
 			-- from `breakable_feature_info_storage'	
 		local
 			i: INTEGER

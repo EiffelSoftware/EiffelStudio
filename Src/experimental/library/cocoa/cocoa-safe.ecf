@@ -22,6 +22,7 @@
 				<exclude>/\.svn$</exclude>
 				<exclude>/\Clib$</exclude>
 				<exclude>spec</exclude>
+				<exclude>/tests</exclude>
 			</file_rule>
 			<cluster name="objc_base" location="../objc_base/" recursive="true"/>
 		</cluster>

@@ -21,27 +21,18 @@
 			<name>Compile Xebra Bins</name>
 		</step>
 		<step action='Batch File'>
-			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf -target xebra_precompile -c_compile -precompile</CmdStr>
-			<CmdType type='3'>1</CmdType>
-			<NoEcho type='11'>-1</NoEcho>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Compile Precompile</name>
-		</step>
-		<step action='Batch File'>
-			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_server\xebra_server-voidunsafe.ecf -target xebra_server -c_compile -finalize</CmdStr>
-			<CmdType type='3'>1</CmdType>
-			<NoEcho type='11'>-1</NoEcho>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Compile Server</name>
-		</step>
-		<step action='Batch File'>
-			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_translator\xebra_translator-voidunsafe.ecf -target xebra_translator -c_compile  -finalize</CmdStr>
+			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_translator\xebra_translator-voidunsafe.ecf -target xebra_translator -c_compile  -finalize -stop</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
 			<indent type='3'>2</indent>
 			<name>Compile Translator</name>
+		</step>
+		<step action='Batch File'>
+			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_server\xebra_server-voidunsafe.ecf -target xebra_server -c_compile -finalize -stop</CmdStr>
+			<CmdType type='3'>1</CmdType>
+			<NoEcho type='11'>-1</NoEcho>
+			<indent type='3'>2</indent>
+			<name>Compile Server</name>
 		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
@@ -119,12 +110,6 @@
 			<indent type='3'>2</indent>
 			<name>Copy Apache</name>
 		</step>
-		<step action='Delete Folder'>
-			<Path>%BUILD%\apache\htdocs</Path>
-			<Recurse type='11'>-1</Recurse>
-			<indent type='3'>2</indent>
-			<name>Delete htdocs</name>
-		</step>
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
 			<Delay>15</Delay>
@@ -162,7 +147,7 @@
 			<LogCopied type='11'>-1</LogCopied>
 			<ReadOnly type='11'>-1</ReadOnly>
 			<Retries>10</Retries>
-			<SourceDir>%XEBRA_DEV%\c_projects\apache_mod_xebra_win\Debug</SourceDir>
+			<SourceDir>%XEBRA_DEV%\c_projects\apache_mod_xebra_win\</SourceDir>
 			<TBD type='11'>-1</TBD>
 			<indent type='3'>2</indent>
 			<name>Copy mod_xebra</name>
@@ -446,6 +431,36 @@
 			<indent type='3'>2</indent>
 			<name>Copy Taglibrary_xrpc</name>
 		</step>
+		<step action='Copy Files'>
+			<Converted type='11'>-1</Converted>
+			<Delay>15</Delay>
+			<DestDir>%BUILD%\library\xebra_tags</DestDir>
+			<ExclExt><![CDATA[\EIFGENs
+\.svn]]></ExclExt>
+			<Incremental type='11'>-1</Incremental>
+			<LogCopied type='11'>-1</LogCopied>
+			<ReadOnly type='11'>-1</ReadOnly>
+			<Retries>10</Retries>
+			<SourceDir>%EIFFEL_SRC%\framework\web\xebra\eiffel_projects\library\xebra_tags</SourceDir>
+			<TBD type='11'>-1</TBD>
+			<indent type='3'>2</indent>
+			<name>Copy \xebra_tags</name>
+		</step>
+		<step action='Copy Files'>
+			<Converted type='11'>-1</Converted>
+			<Delay>15</Delay>
+			<DestDir>%BUILD%\library\xebra_ast_elements</DestDir>
+			<ExclExt><![CDATA[\EIFGENs
+\.svn]]></ExclExt>
+			<Incremental type='11'>-1</Incremental>
+			<LogCopied type='11'>-1</LogCopied>
+			<ReadOnly type='11'>-1</ReadOnly>
+			<Retries>10</Retries>
+			<SourceDir>%EIFFEL_SRC%\framework\web\xebra\eiffel_projects\library\xebra_ast_elements</SourceDir>
+			<TBD type='11'>-1</TBD>
+			<indent type='3'>2</indent>
+			<name>Copy \xebra_ast_elements</name>
+		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
 			<name>Copy Framework libraries</name>
@@ -551,7 +566,7 @@
 compiler=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec.exe
 translator=$XEBRA_DEV\bin\xebra_translator.exe
 webapps_root=$XEBRA_DEV\www
-library=$XEBRA_DEV\library
+library=$XEBRA_LIBRARY
 compiler_flags=-experiment
 ]]></Text>
 			<indent type='3'>2</indent>
@@ -562,18 +577,6 @@ compiler_flags=-experiment
 			<Text>xebra_server.exe ..\conf\server.ini</Text>
 			<indent type='3'>2</indent>
 			<name>Write Test server launcher</name>
-		</step>
-		<step action='Write File'>
-			<Filename>%BUILD%\conf\server.ini</Filename>
-			<Text><![CDATA[finalize_webapps=False
-compiler=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec.exe
-translator=_INSTALL_PATH_\bin\xebra_translator.exe
-webapps_root=_INSTALL_PATH_\www
-taglib=_INSTALL_PATH_\taglibs
-]]></Text>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Write Server config.ini</name>
 		</step></steps>
 	<macros>
 		<macro name='APACHE'>
@@ -585,6 +588,8 @@ taglib=_INSTALL_PATH_\taglibs
 			<value>%ROOT%\xebra_build</value>
 		</macro>
 		<macro name='EC_FLAGS'>
+			<description><![CDATA[Can be used to pass additional arguments to ec
+]]></description>
 			<value>-experiment</value>
 		</macro>
 		<macro name='EIFFEL_SRC'>
@@ -602,5 +607,10 @@ taglib=_INSTALL_PATH_\taglibs
 			<description>Path to xebra</description>
 			<envvar type='11'>-1</envvar>
 			<value>%EIFFEL_SRC%\framework\web\xebra</value>
+		</macro>
+		<macro name='XEBRA_LIBRARY'>
+			<description>Path to xebra libraries</description>
+			<envvar type='11'>-1</envvar>
+			<value>%XEBRA_DEV%\eiffel_projects\library</value>
 		</macro></macros>
 </project>

@@ -53,7 +53,7 @@ feature -- Access
 		once
 			l_args := argument_array
 			l_count := l_args.upper
-			create Result.make (1, l_count)
+			create Result.make_filled ("", 1, l_count)
 			from i := 1 until i > l_count
 			loop
 				l_arg := l_args.item (i)

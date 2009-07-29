@@ -44,20 +44,50 @@
 			<table width="400" border="0" cellpadding="2" cellspacing="2">
 				<tr>
 					<td>Name</td>
-					<td><f:input_text value="name" name="a_name" text="#{new_reservation.name}" /></td>
+					<td>
+						<f:input_text value="name" name="a_name" text="#{new_reservation.name}">
+							<f:validator class="XWA_NOT_EMPTY_VALIDATOR"/>
+							<f:validator class="XWA_ALPHA_NUMERIC_VALIDATOR" />
+						</f:input_text>
+						<f:validation_result name="a_name" variable="name_errors">
+							<br /><xeb:display text="#{name_errors.out}" />
+						</f:validation_result>
+					</td>
 				</tr>
 				<tr>
 					<td>Date</td>
-					<td><f:input_text value="date" name="a_date" text="#{new_reservation.date}" /></td>
+					<td>
+						<f:input_text value="date" name="a_date" text="#{new_reservation.date}">
+							<f:validator class="XWA_NOT_EMPTY_VALIDATOR"/>
+						</f:input_text>
+						<f:validation_result name="a_date" variable="date_errors">
+							<br /><xeb:display text="#{date_errors.out}" />
+						</f:validation_result>
+					</td>
 				</tr>
 				<tr>
 					<td>Persons</td>
-					<td><f:input_text value="s_persons" name="a_s_persons" text="#{new_reservation.s_persons}" /></td>
+					<td>
+						<f:input_text value="s_persons" name="a_s_persons" text="#{new_reservation.s_persons}">
+							<f:validator class="XWA_NOT_EMPTY_VALIDATOR"/>
+							<f:validator class="XWA_NUMBER_VALIDATOR" />
+							<f:validator class="XWA_BIGGER_THAN_ZERO_VALIDATOR" />
+						</f:input_text>
+						<f:validation_result name="a_s_persons" variable="persons_errors">
+							<br /><xeb:display text="#{persons_errors.out}" />
+						</f:validation_result>
+					</td>
 				</tr>
 				<tr>
 					<td>Description</td>
-					<td><f:text_area value="description" name="a_description" text="#{new_reservation.description}"
-						cols="45" rows="5"/></td>
+					<td>
+						<f:text_area value="description" name="a_description" text="#{new_reservation.description}" cols="45" rows="5">
+							<f:validator class="XWA_NOT_EMPTY_VALIDATOR"/>
+						</f:text_area>
+						<f:validation_result name="a_description" variable="description_errors">
+							<br /><xeb:display text="#{description_errors.out}" />
+						</f:validation_result>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="2">

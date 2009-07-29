@@ -8,8 +8,8 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
 		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
-		<library name="xebra_error" location="$XEBRA_DEV\eiffel_projects\library\xebra_error\xebra_error-voidunsafe.ecf" readonly="false"/>
-		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-voidunsafe.ecf" readonly="false"/>
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
 		<cluster name="xebra_ini" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

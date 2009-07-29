@@ -55,6 +55,9 @@ feature -- Test routines
 
 feature {NONE} -- Internal
 
+	do_clean: BOOLEAN = True
+
+
 	internal_test (a_webapp_name: STRING)
 			-- Tests translation and compilation of 'webapp_name'
 		require
@@ -113,6 +116,7 @@ feature {NONE} -- Internal
 
 						-- Compile sgen
 					if ok then
+						l_webapp.action_compile_sgen.set_needs_cleaning (do_clean)
 						l_webapp.action_compile_sgen.internal_execute.do_nothing
 						if attached l_webapp.action_compile_sgen.gen_compile_process as l_process then
 							l_process.wait_for_exit
@@ -125,6 +129,7 @@ feature {NONE} -- Internal
 
 						-- Generate
 					if ok then
+						l_webapp.action_compile_sgen.set_needs_cleaning (do_clean)
 						l_webapp.action_generate.internal_execute.do_nothing
 						if attached l_webapp.action_generate.generate_process as l_process then
 							l_process.wait_for_exit
@@ -137,6 +142,7 @@ feature {NONE} -- Internal
 
 						-- Compile webapp
 					if ok then
+						l_webapp.action_compile_sgen.set_needs_cleaning (do_clean)
 						l_webapp.action_compile_webapp.internal_execute.do_nothing
 						if attached l_webapp.action_compile_webapp.compile_process as l_process then
 							l_process.wait_for_exit

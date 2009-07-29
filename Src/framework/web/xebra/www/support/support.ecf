@@ -8,9 +8,9 @@
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<precompile name="precompile" location="$XEBRA_DEV\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf"/>
-		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf"/>
-		<library name="xebra_web_application" location="$XEBRA_DEV\eiffel_projects\library\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>
+		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
+		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-voidunsafe.ecf"/>
+		<library name="xebra_web_application" location="$XEBRA_LIBRARY\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>
 		<cluster name="xebrawebapp" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

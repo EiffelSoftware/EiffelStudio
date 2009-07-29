@@ -56,9 +56,9 @@ feature {NONE} -- Parser
 	xml_parser: PEG_ABSTRACT_PEG
 				--
 			local
-				xeb_file, xml, plain_html_header, xeb_tag_header, plain_html,
+				xeb_file, xml, plain_html_header, xeb_tag_header,
 				namespace_identifier, l_attribute, value_attribute,
-				plain_text, plain_text_without_behaviour, close_fixed, value, taglib, config: PEG_ABSTRACT_PEG
+				plain_text, close_fixed, value, taglib, config: PEG_ABSTRACT_PEG
 			once
 					-- For graceful recovery of silly mistake: on missing '>' we assume it was there all along
 				close_fixed := char ('>')

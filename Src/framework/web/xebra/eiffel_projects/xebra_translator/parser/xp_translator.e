@@ -269,12 +269,9 @@ feature -- Processing
 			a_registry_attached: attached a_registry
 		local
 			l_taglibrary_file_name: FILE_NAME
-			l_files: LIST [FILE_NAME]
-			l_util: XU_FILE_UTILITIES
 			l_config: LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]
 		do
 			o.dprint ("Searching for tag libraries in folder: " + taglib_folder, 1)
---			create l_util
 			l_config := a_registry.taglib_configuration
 			from
 				l_config.start

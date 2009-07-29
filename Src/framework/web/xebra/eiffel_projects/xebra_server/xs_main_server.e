@@ -47,7 +47,6 @@ feature {XS_APPLICATION} -- Setup
 		require
 			a_arg_parser_attached: a_arg_parser /= Void
 		do
-			config.args.set_clean (a_arg_parser.clean)
 			config.args.set_debug_level (a_arg_parser.debug_level)
 			config.args.set_config_filename (a_arg_parser.config_filename)
 			config.args.set_assume_webapps_are_running (a_arg_parser.assume_webapps_are_running)

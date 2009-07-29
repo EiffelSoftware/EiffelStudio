@@ -115,6 +115,4 @@ feature -- Access
 
 feature -- Other
 
-
-
 end

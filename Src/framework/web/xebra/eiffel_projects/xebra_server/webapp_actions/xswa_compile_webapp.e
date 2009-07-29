@@ -1,6 +1,6 @@
 note
 	description: "[
-		The action which compiles the webapp
+		The action which compiles the webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -59,9 +59,8 @@ feature -- Access
 --				Result.append (" -clean")
 --			end
 
-			if {XU_CONSTANTS}.experiment_library then
-				Result.append (" -experiment")
-			end
+			Result.append (" " + config.file.compiler_flags.value + " ")
+
 		ensure
 			Result_attached: Result /= Void
 		end

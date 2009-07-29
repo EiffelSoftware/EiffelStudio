@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Constants
 
-	Webapp_config_filename: STRING = "config.ini"
+	Webapp_config_filename: STRING = "config\.ini"
 
 	Search_exclude: STRING = "\.svn|EIFGENs"
 

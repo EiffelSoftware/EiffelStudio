@@ -75,7 +75,6 @@ feature {NONE} -- Internal
 
 				-- Create fake server run arguments
 			config.args.set_assume_webapps_are_running (False)
-			config.args.set_clean (False)
 			config.args.set_debug_level (9)
 			if (create {PLATFORM}).is_windows then
 					config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV\eiffel_projects\xebra_server\config.ini", True))

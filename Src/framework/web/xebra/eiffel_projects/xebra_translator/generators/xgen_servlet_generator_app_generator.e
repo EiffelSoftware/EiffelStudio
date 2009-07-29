@@ -14,6 +14,7 @@ class
 
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
+	XT_SHARED_CONFIG
 
 create
 	make
@@ -253,24 +254,24 @@ feature -- Constants
 					"[
 					<library name="xebra_tags" location="
 					]"
-					+ {XU_CONSTANTS}.Xebra_root +
+					+ config.xebra_library_path.value +
 					"[
-					\eiffel_projects\library\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
+					\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
 					<library name="xebra_ast_elements" location="
 					]"
-					+ {XU_CONSTANTS}.Xebra_root +
+					+ config.xebra_library_path.value +
 					"[
-					\eiffel_projects\library\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
+					\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
 					<library name="xebra_utilities" location="
 					]"
-					+ {XU_CONSTANTS}.Xebra_root + 
+					+ config.xebra_library_path.value +
 					"[
-					\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
+					\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
 					<precompile name="precompile" location="
 					]"
-					+ {XU_CONSTANTS}.Xebra_root + 
+					+ config.xebra_library_path.value +
 					"[
-					\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf"/>
+					\xebra_precompile\xebra_precompile.ecf"/>
 							<cluster name="servlet_gen" location=".\" recursive="true">
 								<file_rule>
 									<exclude>/EIFGENs$</exclude>
@@ -283,7 +284,7 @@ feature -- Constants
 					]"
 		ensure
 			result_attached: Result /= Void
-		end	
+		end
 
 
 		-- The .ecf file

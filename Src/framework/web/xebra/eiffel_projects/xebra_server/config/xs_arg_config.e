@@ -19,12 +19,10 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			create debug_level.make_empty
-			create clean.make_empty
 			create config_filename.make_empty
 			create assume_webapps_are_running.make_empty
 		ensure
 			debug_level_attached: debug_level /= Void
-			clean_attached: clean /= Void
 			config_filename_attached: config_filename /= Void
 			assume_webapps_are_running_attached: assume_webapps_are_running /= Void
 		end
@@ -32,9 +30,6 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	debug_level: SETTABLE_INTEGER
-
-	clean: SETTABLE_BOOLEAN assign set_clean
-			-- Can be used to clean all webapps	
 
 	config_filename: SETTABLE_STRING assign set_config_filename
 
@@ -48,7 +43,6 @@ feature -- Status report
 		do
 			Result := "%N---------------- Server Arguments ----------------"
 			Result.append ( "%N-Debug Level '" + debug_level.out + "'" +
-					  "%N-Clean '" + clean.out + "'" +
 					  "%N-Assume webapps are running  '" + assume_webapps_are_running.out + "'")
 			Result.append ("%N--------------------------------------------------")
 		ensure
@@ -65,16 +59,6 @@ feature  -- Status setting
 			debug_level  := a_debug_level
 		ensure
 			debug_level_set: debug_level  = a_debug_level
-		end
-
-	set_clean (a_clean: like clean)
-			-- Sets clean.
-		require
-			a_clean_attached: a_clean /= Void
-		do
-			clean  := a_clean
-		ensure
-			clean_set: clean  = a_clean
 		end
 
 	set_config_filename (a_config_filename: like config_filename)
@@ -99,7 +83,6 @@ feature  -- Status setting
 
 invariant
 	debug_level_attached: debug_level /= Void
-	clean_attached: clean /= Void
 	config_filename_attached: config_filename /= Void
 	assume_webapps_are_running_attached: assume_webapps_are_running /= Void
 end

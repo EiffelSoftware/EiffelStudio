@@ -166,7 +166,7 @@ feature -- Replacement Tasks
 
 	process_xu_constants
 			-- Replaces in xu_constants.e file all occurrences of
-			--	Key_xebra_root 	with 	install_dir
+			--	Key_eiffel_projects 	with 	install_dir
 		local
 			l_util: XU_FILE_UTILITIES
 			l_files: LIST [FILE_NAME]
@@ -180,6 +180,7 @@ feature -- Replacement Tasks
 				l_files.after
 			loop
 				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
+				l_util.replace_in_file (l_files.item_for_iteration, Key_eiffel_projects, install_dir)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_xebra_root, install_dir)
 				l_files.forth
 			end

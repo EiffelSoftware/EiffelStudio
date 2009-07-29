@@ -49,7 +49,7 @@ feature -- Access
 			Result := " -n %"" + webapp.app_config.name.out + "%""
 			Result.append ( " -i . ")
 			Result.append (" -o . ")
-			Result.append (" -t %"" + config.file.taglib.out + "%"")
+			Result.append (" -l %"" + config.file.lib.out + "%"")
 			Result.append (" -d " + config.args.debug_level.out)
 			if force then
 				Result.append (" -f")

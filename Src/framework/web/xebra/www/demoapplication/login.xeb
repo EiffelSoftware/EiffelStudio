@@ -14,7 +14,11 @@
 		      	<f:validator class="XWA_NOT_EMPTY_VALIDATOR"/>
 		      	<f:validator class="XWA_ALPHA_NUMERIC_VALIDATOR"/>
 		      </f:input_text>
-		      <span style="color: red"><f:validation_result name="a_name"/></span>
+		      <span style="color: red">
+		      	<f:validation_result name="a_name" variable="name_error">
+		      		<br /><xeb:display text="#{name_error.out}"/>
+		      	</f:validation_result>
+		      </span>
 		      </label></td>
 		  </tr>
 		  <tr>
@@ -23,7 +27,11 @@
 		    <f:input_text type="password" value="password" name="a_password" text="">
 		    	<f:validator class="XWA_NOT_EMPTY_VALIDATOR"/>
 		    </f:input_text>
-		    <span style="color: red"><f:validation_result name="a_password"/></span>
+		    <span style="color: red">
+			    <f:validation_result name="a_password" variable="password_error">
+			    	<br /><xeb:display text="#{password_error.out}"/>
+			    </f:validation_result>
+		    </span>
 		    </td>
 		  </tr>
 		  <tr>

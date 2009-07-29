@@ -116,7 +116,7 @@ feature -- Access
 		do
 			locals.put (create {XEL_VARIABLE_ELEMENT}.make (name, type), name)
 		ensure
-			local_has_been_added: old locals.count + 1 = locals.count
+			local_has_been_added: old locals.count < locals.count
 		end
 
 	append_expression (expression: STRING)
@@ -124,9 +124,9 @@ feature -- Access
 		require
 			expression_is_valid: not expression.is_empty
 		do
-			content.extend (create {XEL_PLAIN_EXPRESSION}.make (expression))
+			append_expression_object (create {XEL_PLAIN_EXPRESSION}.make (expression))
 		ensure
-			expression_has_been_added: old content.count + 1 = content.count
+			expression_has_been_added: old content.count < content.count
 		end
 
 	append_expression_to_start (expression: STRING)
@@ -136,8 +136,18 @@ feature -- Access
 	 	do
 	 		precontent.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
 		ensure
-			expression_has_been_added: old precontent.count + 1 = precontent.count
+			expression_has_been_added: old precontent.count < precontent.count
 	 	end
+
+	append_expression_object (a_expression: XEL_EXPRESSION)
+			-- Adds an expressionobject to the content
+		require
+			a_expression_attached: attached a_expression
+		do
+			content.extend (a_expression)
+		ensure
+			expression_has_been_added: old content.count < content.count
+		end
 
 	append_expression_to_end (expression: STRING)
 			-- Appends a {XEL_PLAIN_CODE_ELEMENT} to the end of the feature
@@ -146,12 +156,13 @@ feature -- Access
 	 	do
 	 		postcontent.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
 		ensure
-			expression_has_been_added: old postcontent.count + 1 = postcontent.count
+			expression_has_been_added: old postcontent.count < postcontent.count
 	 	end
 
 	append_comment (a_comment: STRING)
 		do
 			content.extend (create {XEL_COMMENT}.make (a_comment))
+				-- Don't use append_expression_oject, otherwise you will get an endless recursion!
 		end
 
 	append_require (expression: STRING)
@@ -161,7 +172,7 @@ feature -- Access
 	 	do
 	 		requires.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
 		ensure
-			expression_has_been_added: old requires.count + 1 = requires.count
+			expression_has_been_added: old requires.count < requires.count
 	 	end
 
 	 append_ensure (expression: STRING)
@@ -171,7 +182,7 @@ feature -- Access
 	 	do
 	 		ensures.extend (create {XEL_PLAIN_CODE_ELEMENT}.make (expression))
 		ensure
-			expression_has_been_added: old ensures.count + 1 = ensures.count
+			expression_has_been_added: old ensures.count < ensures.count
 	 	end
 
 	new_uid: STRING

@@ -40,17 +40,34 @@ feature -- Initialization
 
 feature -- Access
 
-	make_feature: XEL_FEATURE_ELEMENT
+	make_feature: XEL_DEBUG_FEATURE_ELEMENT
 
-	set_all_booleans: XEL_FEATURE_ELEMENT
+	set_all_booleans: XEL_DEBUG_FEATURE_ELEMENT
 
-	clean_up_after_render: XEL_FEATURE_ELEMENT
+	clean_up_after_render: XEL_DEBUG_FEATURE_ELEMENT
 
 	render_html_page: XEL_RENDER_FEATURE_ELEMENT
 
-	handle_form_internal: XEL_FEATURE_ELEMENT
+	handle_form_internal: XEL_DEBUG_FEATURE_ELEMENT
 
-	fill_bean: XEL_FEATURE_ELEMENT
+	fill_bean: XEL_DEBUG_FEATURE_ELEMENT
+	
+	set_debug_information (a_debug_info: STRING)
+			-- Sets the debug information
+		require
+			a_debug_info_attached: attached a_debug_info
+		do
+			from
+				features.start
+			until
+				features.after
+			loop
+				if attached {XEL_DEBUG_FEATURE_ELEMENT} features.item as l_feature then
+					l_feature.set_debug_information (a_debug_info)
+				end
+				features.forth
+			end
+		end
 
 feature {NONE} -- Constants
 

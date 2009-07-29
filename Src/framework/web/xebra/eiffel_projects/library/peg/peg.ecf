@@ -7,7 +7,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
-		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-voidunsafe.ecf"/>
 		<cluster name="peg" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

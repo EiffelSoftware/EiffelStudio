@@ -24,6 +24,7 @@
 			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf -target xebra_precompile -c_compile -precompile</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Compile Precompile</name>
 		</step>
@@ -31,6 +32,7 @@
 			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_server\xebra_server-voidunsafe.ecf -target xebra_server -c_compile -finalize</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Compile Server</name>
 		</step>
@@ -49,6 +51,7 @@
 			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\tools\installer\win\xebra_deployer\xebra_deployer.ecf -target xebra_deployer -c_compile  -finalize</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Compile Deployer</name>
 		</step>
@@ -546,10 +549,29 @@
 			<Filename>%BUILD%\conf\server.ini</Filename>
 			<Text><![CDATA[finalize_webapps=False
 compiler=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec.exe
+translator=$XEBRA_DEV\bin\xebra_translator.exe
+webapps_root=$XEBRA_DEV\www
+library=$XEBRA_DEV\library
+compiler_flags=-experiment
+]]></Text>
+			<indent type='3'>2</indent>
+			<name>Write Server config.ini (NEW)</name>
+		</step>
+		<step action='Write File'>
+			<Filename>%BUILD%\bin\launch.bat</Filename>
+			<Text>xebra_server.exe ..\conf\server.ini</Text>
+			<indent type='3'>2</indent>
+			<name>Write Test server launcher</name>
+		</step>
+		<step action='Write File'>
+			<Filename>%BUILD%\conf\server.ini</Filename>
+			<Text><![CDATA[finalize_webapps=False
+compiler=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec.exe
 translator=_INSTALL_PATH_\bin\xebra_translator.exe
 webapps_root=_INSTALL_PATH_\www
 taglib=_INSTALL_PATH_\taglibs
 ]]></Text>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Write Server config.ini</name>
 		</step></steps>

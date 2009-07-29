@@ -22,17 +22,17 @@
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<library name="thread_utilities" location="$XEBRA_DEV\eiffel_projects\library\thread_utilities\thread_utilities-voidunsafe.ecf" readonly="false"/>
-		<library name="xebra_common" location="$XEBRA_DEV\eiffel_projects\library\xebra_common\xebra_common-voidunsafe.ecf" readonly="false">
+		<library name="thread_utilities" location="$XEBRA_LIBRARY\thread_utilities\thread_utilities-voidunsafe.ecf" readonly="false"/>
+		<library name="xebra_common" location="$XEBRA_LIBRARY\xebra_common\xebra_common-voidunsafe.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library>
-		<library name="xebra_error" location="$XEBRA_DEV\eiffel_projects\library\xebra_error\xebra_error-voidunsafe.ecf"/>
-		<library name="xebra_error_responses" location="$XEBRA_DEV\eiffel_projects\library\xebra_error_responses\xebra_error_responses-voidunsafe.ecf" readonly="false"/>
-		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf"/>
-		<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf"/>
-		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-voidunsafe.ecf"/>
+		<library name="xebra_error_responses" location="$XEBRA_LIBRARY\xebra_error_responses\xebra_error_responses-voidunsafe.ecf" readonly="false"/>
+		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-voidunsafe.ecf"/>
+		<library name="xebra_ini" location="$XEBRA_LIBRARY\xebra_ini\xebra_ini-voidunsafe.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
 		<library name="xml-rpc" location="$EIFFEL_SRC\framework\xml-rpc\xml-rpc.ecf" readonly="false"/>
 		<cluster name="xebra_web_application" location=".\" recursive="true">
 			<file_rule>

@@ -1,7 +1,7 @@
 note
 	description: "Eiffel Vision colorizable. Cocoa implementation."
 	author: "Daniel Furrer"
-	keywords: "colorizible"
+	keywords: "colorizable"
 	date: "$Date$"
 	revision: "$Revision$"
 

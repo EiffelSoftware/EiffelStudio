@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	generate_once_feature_for_global_state: XEL_FEATURE_ELEMENT
 			-- Builds the global state feature
 		do
-			create Result.make ("global_state: DEMOAPPLICATION_GLOBAL_STATE")
+			create Result.make ("global_state: " + webapp_name.as_upper + "_GLOBAL_STATE")
 			Result.set_once
 			Result.append_expression ("create Result.make")
 		ensure

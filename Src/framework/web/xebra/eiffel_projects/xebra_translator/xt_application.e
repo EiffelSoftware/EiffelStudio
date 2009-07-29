@@ -13,6 +13,7 @@ class
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 	XU_SHARED_OUTPUTTER
+	XT_SHARED_CONFIG
 
 create
 	make
@@ -44,13 +45,14 @@ feature -- Operation
 		do
 			o.set_name ("XEBTRANS")
 			o.set_debug_level (a_arg_parser.debug_level)
+			config.set_xebra_library_path (a_arg_parser.lib_path)
 			create l_translator.make (a_arg_parser.project_name, a_arg_parser.force)
 			create l_dir.make_from_string (a_arg_parser.input_path)
 			l_generation_file_name := l_dir.twin
 
 			l_translator.set_output_path (a_arg_parser.output_path)
 
-			l_translator.process_with_dir (l_dir, create {FILE_NAME}.make_from_string (a_arg_parser.tag_lib_path), a_arg_parser.force)
+			l_translator.process_with_dir (l_dir, a_arg_parser.force)
 
 			create l_printer.default_create
 			if error_manager.has_warnings then
@@ -60,7 +62,7 @@ feature -- Operation
 			if not error_manager.is_successful then
 				l_error_count := count_errors (error_manager.errors)
 				error_manager.trace_errors (l_printer)
-				o.iprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N")
+				o.dprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N", 3)
 				{EXCEPTIONS}.die (-1)
 			else
 				create l_util

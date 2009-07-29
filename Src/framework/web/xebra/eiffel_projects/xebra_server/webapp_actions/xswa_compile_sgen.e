@@ -1,6 +1,6 @@
 note
 	description: "[
-		No comment yet.
+		The action that compiles servlet_gen.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -48,15 +48,15 @@ feature -- Access
 		do
 			create l_f_utils
 			Result  := " -config %"" + servlet_gen_ecf.string + "%" -target servlet_gen -c_compile -stop"
+			
 			if needs_cleaning then
 				Result.append (" -clean")
 			end
 --			if not l_f_utils.is_readable_file (servlet_gen_exe) then
 --				Result.append (" -clean")
 --			end
-			if {XU_CONSTANTS}.experiment_library then
-				Result.append (" -experiment")
-			end
+
+			Result.append (" " + config.file.compiler_flags.value + " ")
 		ensure
 			Result_attached: Result /= void
 		end

@@ -53,14 +53,6 @@ feature -- Access
 			end
 		end
 
-	clean: BOOLEAN
-			-- The clean option
-		require
-			is_successful: is_successful
-		do
-			Result := has_option (clean_switch)
-		end
-
 	assume_webapps_are_running: BOOLEAN
 			-- The assume_webapps_are_running option
 		require
@@ -71,7 +63,6 @@ feature -- Access
 
 
 feature -- Status report
-
 
 
 feature {NONE} -- Access: Usage
@@ -103,7 +94,6 @@ feature {NONE} -- Access: Usage
 		once
 			create Result.make (2)
 			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make (debug_level_switch, "Specifies a debug level. 0: No debug output. 10: All debug ouput.", True, False, "debug_level", "The debug level (0-10)", False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "If set, all webapps will be cleaned", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (assume_webapps_are_running_switch, "If set, the server assumes that the webapps are already running and does not translate, compile and run them before connect to them.", True, False))
 		end
 
@@ -111,7 +101,6 @@ feature {NONE} -- Access: Usage
 feature {NONE} -- Switches
 
 	debug_level_switch: STRING = "d|debug_level"
-	clean_switch: STRING = "c|clean"
 	assume_webapps_are_running_switch: STRING = "r|assume_webapps_are_running"
 
 end

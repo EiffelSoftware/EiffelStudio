@@ -80,19 +80,17 @@ feature -- Status setting
 
 feature -- Processing
 
-	process_with_dir (a_xeb_directory: FILE_NAME; a_tag_lib_directory: FILE_NAME; a_force: BOOLEAN)
+	process_with_dir (a_xeb_directory: FILE_NAME;  a_force: BOOLEAN)
 			--`a_xeb_directory': Where are the xeb files located?
-			--`a_tag_lib_directory': Where are the taglibs located?
 			--`force': Should the servlet_generators be generated regardless if they're outdated or not?
 			-- Translates xeb files to servlet generators
 		require
 			a_xeb_directory_attached: attached a_xeb_directory
-			a_tag_lib_directory_attached: attached a_tag_lib_directory
 		local
 			l_directory: DIRECTORY
 		do
 			create l_directory.make (a_xeb_directory)
-			process_with_files (search_rec_for_xeb (l_directory), a_tag_lib_directory, a_force)
+			process_with_files (search_rec_for_xeb (l_directory), a_force)
 		end
 
 	search_rec_for_xeb (a_directory: DIRECTORY): LIST [FILE_NAME]
@@ -111,13 +109,11 @@ feature -- Processing
 			Result := l_util.scan_for_files (l_directory_name.out, -1, "(\.xeb$)|(\.xrpc$)", "EIFGENs|\.svn")
 		end
 
-	process_with_files (a_files: LIST [FILE_NAME]; a_taglib_folder: FILE_NAME; a_force: BOOLEAN)
+	process_with_files (a_files: LIST [FILE_NAME];  a_force: BOOLEAN)
 			-- `a_files': All the files of a folder with xeb files
-			-- `a_taglib_folder': Path to the folder the tag library definitions
 			-- Generates classes for all the xeb files in `a_files' using `a_taglib_folder' for the taglib
 		require
 			a_files_attached: attached a_files
-			a_taglib_folder_attached: attached a_taglib_folder
 		local
 			l_generator_app_generator: XGEN_SERVLET_GENERATOR_APP_GENERATOR
 			l_webapp_gen: XGEN_WEBAPP_GENERATOR
@@ -133,7 +129,7 @@ feature -- Processing
 			if not attached registry.taglib_configuration then
 				o.dprint ("Taglib configuration either not existing or corrupted! Aborting translation.", 1)
 			else
-				parse_taglibs (a_taglib_folder, registry)
+				parse_taglibs (registry)
 				o.dprint ("************************************************************", 1)
 				o.dprint ("*                    .xeb processing start...              *", 1)
 				o.dprint ("************************************************************", 1)
@@ -262,16 +258,16 @@ feature -- Processing
 			end
 		end
 
-	parse_taglibs (taglib_folder: STRING; a_registry: XP_SERVLET_GG_REGISTRY)
+	parse_taglibs (a_registry: XP_SERVLET_GG_REGISTRY)
 			-- Generates tag libraries from all the the *.taglib files in the directory
 		require
-			taglib_folder_valid: attached taglib_folder and not taglib_folder.is_empty
 			a_registry_attached: attached a_registry
 		local
 			l_taglibrary_file_name: FILE_NAME
+			l_files: LIST [FILE_NAME]
 			l_config: LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]
 		do
-			o.dprint ("Searching for tag libraries in folder: " + taglib_folder, 1)
+
 			l_config := a_registry.taglib_configuration
 			from
 				l_config.start

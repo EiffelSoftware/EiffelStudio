@@ -32,12 +32,11 @@ feature {NONE} -- Initialization
 			create compiler.make_empty
 			create translator.make_empty
 			create finalize_webapps.make_empty
-
-	--		create arg_config.make_empty
-			create taglib.make_empty
+			create lib.make_empty
+			create compiler_flags.make_empty
 		ensure then
-			taglib_attached: taglib /= Void
---			arg_config_attached: arg_config /= Void
+			compiler_flags_attached: compiler_flags /= Void
+			lib_attached: lib /= Void
 			webapps_attached: webapps /= Void
 			webapps_root_attached: webapps_root /= Void
 			compiler_attached: compiler /= Void
@@ -52,29 +51,26 @@ feature -- Access
 	webapps:  HASH_TABLE [XS_WEBAPP, STRING]
 			-- The webapps the server knows about
 
---	arg_config: XS_ARG_CONFIG
---			-- The config settings read from the execute arguments.		
+	webapps_root:  SETTABLE_STRING
+			-- The webapps root directory
 
-	webapps_root:  SETTABLE_STRING assign set_webapps_root
-			-- The webapps root directory. Read from config.ini
+	compiler:  SETTABLE_STRING
+			-- The compiler (ec) filename
 
-	compiler:  SETTABLE_STRING assign set_compiler
-			-- The compiler (ec) filename. Read from config.ini
+	compiler_flags: SETTABLE_STRING
+			-- Flags to compiler the webapps and servlet_gens
 
-	translator:  SETTABLE_STRING assign set_translator
-			-- The compiler (xebra_translator) filename. Read from config.ini
+	translator:  SETTABLE_STRING
+			-- The compiler (xebra_translator) filename
 
-	taglib:  SETTABLE_STRING assign set_taglib
-			-- The folder that contains the taglibs. Read from config.ini
+	lib:  SETTABLE_STRING
+			-- The folder that contains the xebra libraries
 
-	finalize_webapps:  SETTABLE_BOOLEAN assign set_finalize_webapps
-			-- Specifies whether webapps should be finalized. Read from config.ini
-
-
-
+	finalize_webapps:  SETTABLE_BOOLEAN
+			-- Specifies whether webapps should be finalized
 
 	compiler_filename: FILE_NAME
-			-- Returns 'compiler' converted to a FILE_NAME
+			-- Returns 'compiler' converted to a FILE_NAME.
 		require
 			compiler_set: compiler.is_set
 		do
@@ -84,7 +80,7 @@ feature -- Access
 		end
 
 	translator_filename: FILE_NAME
-			-- Returns 'translator' converted to a FILE_NAME
+			-- Returns 'translator' converted to a FILE_NAME.
 		require
 			translator_set: translator.is_set
 		do
@@ -94,7 +90,7 @@ feature -- Access
 		end
 
 	webapps_root_filename: FILE_NAME
-			-- Returns 'webapps_root' converted to a FILE_NAME
+			-- Returns 'webapps_root' converted to a FILE_NAME.
 		require
 			webapps_root_set: webapps_root.is_set
 		do
@@ -102,8 +98,6 @@ feature -- Access
 		ensure
 			Result_attached: Result /= Void
 		end
-
-
 
 feature -- Stauts Report
 
@@ -123,7 +117,9 @@ feature -- Stauts Report
 			end
 
 			Result.append ( "%N-Compiler in '" + compiler.out +
+							"%N-Compiler Flags '" + compiler_flags.out +
 							"%N-Translator in '" + translator.out +
+							"%N-Libraries in '" + lib.out +
 							"%N-Finalize webapps '" + finalize_webapps.out +  "'")
 			Result.append ("%N-----------------------------------------------------------")
 
@@ -139,14 +135,6 @@ feature -- Setters
 			a_webapps_attached: a_webapps /= Void
 		do
 			webapps := a_webapps
---			from
---				webapps.start
---			until
---				webapps.after
---			loop
---				webapps.item_for_iteration.set_server_config (current)
---				webapps.forth
---			end
 		ensure
 			webapps_set: equal (webapps, a_webapps)
 		end
@@ -182,14 +170,24 @@ feature -- Setters
 			translator_set: translator  = a_translator
 		end
 
-	set_taglib (a_taglib: like taglib)
-			-- Sets taglib.
+	set_lib (a_lib: like lib)
+			-- Sets lib.
 		require
-			a_taglib_attached: a_taglib /= Void
+			a_lib_attached: a_lib /= Void
 		do
-			taglib  := a_taglib
+			lib  := a_lib
 		ensure
-			taglib_set: taglib  = a_taglib
+			lib_set: lib  = a_lib
+		end
+
+	set_compiler_flags (a_compiler_flags: like compiler_flags)
+			-- Sets compiler_flags.
+		require
+			a_compiler_flags_attached: a_compiler_flags /= Void
+		do
+			compiler_flags  := a_compiler_flags
+		ensure
+			compiler_flags_set: compiler_flags  = a_compiler_flags
 		end
 
 	set_finalize_webapps (a_finalize_webapps: like finalize_webapps)
@@ -202,14 +200,12 @@ feature -- Setters
 			finalize_webapps_set: finalize_webapps = a_finalize_webapps
 		end
 
-
-
 invariant
-	taglib_attached: taglib /= Void
---	arg_config_attached: arg_config /= Void
+	lib_attached: lib /= Void
 	webapps_root_attached: webapps_root /= Void
 	webapps_attached: webapps /= Void
 	compiler_attached: compiler /= Void
 	translator_attached: translator /= Void
 	finalize_webapps_attached: finalize_webapps /= Void
+	compiler_flags_attached: compiler_flags /= Void
 end

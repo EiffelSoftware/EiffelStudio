@@ -58,13 +58,13 @@ feature -- Status report
 			end
 		end
 
-	tag_lib_path: FILE_NAME
-			-- The tag_lib_path
+	lib_path: FILE_NAME
+			-- The xebra library path
 		require
 			is_successful: is_successful
 		do
 			create Result.make
-			if attached option_of_name (tag_lib_path_switch) as l_option then
+			if attached option_of_name (lib_path_switch) as l_option then
 				create Result.make_from_string (l_option.value)
 			end
 		ensure
@@ -119,10 +119,6 @@ feature {NONE} -- Access: Usage
 	version: STRING
 			-- <Precursor>
 		once
---			create Result.make (3)
---			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
---			Result.append_character ('.')
---			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 			Result := "Pre-release"
 		end
 
@@ -134,7 +130,7 @@ feature {NONE} -- Access: Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, "Specifies if the files should be generated regardless", True, False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (input_path_switch, "Specifies the path to the directory with the input files", False, False, "input_path", "The input directory path", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (output_path_switch, "Specifies the path to the directory where the generated files will be written.", False, False, "ouput_path", "The output path", False))
-			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (tag_lib_path_switch, "Specifies the path to the directory where the tag libraries are located.", False, False, "tag_lib", "The tag libraries directory", False))
+			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (lib_path_switch, "Specifies the path to the directory where the xebra libraries are located.", False, False, "lib", "The xebra libraries directory", False))
 			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make (debug_level_switch, "Specifies a debug level. 0: No debug output. 10: All debug ouput.", True, False, "debug_level", "The debug level (0-10)", False))
 		end
 
@@ -144,7 +140,7 @@ feature {NONE} -- Switches
 	force_switch: STRING = "f|force"
 	input_path_switch: STRING = "i|input_path"
 	output_path_switch: STRING = "o|output_path"
-	tag_lib_path_switch: STRING = "t|tag_library_path"
+	lib_path_switch: STRING = "l|library_path"
 	debug_level_switch: STRING = "d|debug_level"
 
 end

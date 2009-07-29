@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
 			a_servlet_class.render_html_page.append_output_expression ("%"" + feature_name.value (current_controller_id) + "%"")

@@ -364,6 +364,7 @@ feature -- Basic Functionality
 			a_string_attached: attached a_string
 		local
 			l_result: PEG_PARSER_RESULT
+			l_index: INTEGER
 		do
 			create template.make_empty
 			l_result := xml_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
@@ -380,12 +381,12 @@ feature -- Basic Functionality
 					format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
 			end
 			from
-				l_result.error_messages.start
+				l_index := l_result.error_messages.count
 			until
-				l_result.error_messages.after
+				l_index < 1
 			loop
-				add_parse_error (source_path + ": " + l_result.error_messages.index.out + ": " + l_result.error_messages.item)
-				l_result.error_messages.forth
+				add_parse_error (source_path + ": " + l_index.out + ": " + l_result.error_messages [l_index])
+				l_index := l_index - 1
 			end
 		ensure
 			template_generated: Result implies template /= Void

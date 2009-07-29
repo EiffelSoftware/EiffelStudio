@@ -160,55 +160,22 @@ feature -- Basic implementation
 		local
 			l_render_condition_id: STRING
 		do
-				-- Generate debug information for a feature respectively
-			if generates_make then
-				append_debug_info (a_servlet_class.make_feature)
-			end
-			if generates_clean_up then
-				append_debug_info (a_servlet_class.clean_up_after_render)
-			end
-			if generates_render then
-				append_debug_info (a_servlet_class.render_html_page)
-			end
-			if generates_handle_form then
-				append_debug_info (a_servlet_class.handle_form_internal)
-			end
-			if generates_wrap then
-				append_debug_info (a_servlet_class.fill_bean)
-			end
-
+			a_servlet_class.set_debug_information (debug_information)
 				-- If the render option is set, overwrite definition of tag
-			if not render.value (current_controller_id).is_empty then
+			if not render.value (current_controller_id).is_empty then				
 				l_render_condition_id := a_servlet_class.get_unique_identifier
 				a_servlet_class.set_all_booleans.append_expression ("render_conditions [%"" + l_render_condition_id + "%"] := " + render.plain_value (current_controller_id))
-
-				if generates_clean_up then
-					a_servlet_class.clean_up_after_render.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
-				end
-				if generates_render then
-				a_servlet_class.render_html_page.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
-				end
-				if generates_handle_form then
-					a_servlet_class.handle_form_internal.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
-				end
-				if generates_wrap then
-					a_servlet_class.fill_bean.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
-				end
+				a_servlet_class.clean_up_after_render.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
+			a_servlet_class.render_html_page.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
+				a_servlet_class.handle_form_internal.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
+				a_servlet_class.fill_bean.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")				
 
 				internal_generate (a_servlet_class, a_variable_table)
 
-				if generates_clean_up then
-					a_servlet_class.clean_up_after_render.append_expression ("end")
-				end
-				if generates_render then
-					a_servlet_class.render_html_page.append_expression ("end")
-				end
-				if generates_handle_form then
-					a_servlet_class.handle_form_internal.append_expression ("end")
-				end
-				if generates_wrap then
-					a_servlet_class.fill_bean.append_expression ("end")
-				end
+				a_servlet_class.clean_up_after_render.append_expression ("end")
+				a_servlet_class.render_html_page.append_expression ("end")
+				a_servlet_class.handle_form_internal.append_expression ("end")
+				a_servlet_class.fill_bean.append_expression ("end")
 			else
 				internal_generate (a_servlet_class, a_variable_table)
 			end
@@ -228,6 +195,7 @@ feature -- Basic implementation
 				children.item.generate (a_servlet_class, a_variable_table)
 				children.forth
 			end
+			a_servlet_class.set_debug_information (debug_information)
 		end
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])

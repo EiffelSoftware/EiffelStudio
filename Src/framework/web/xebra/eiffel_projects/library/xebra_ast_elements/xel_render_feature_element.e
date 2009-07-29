@@ -11,7 +11,7 @@ class
 	XEL_RENDER_FEATURE_ELEMENT
 
 inherit
-	XEL_FEATURE_ELEMENT
+	XEL_DEBUG_FEATURE_ELEMENT
 		redefine
 			serialize
 		end
@@ -41,10 +41,10 @@ feature -- Access
 			-- Add `a_text' that should be outputed on the response (plain text/html)
 		require
 			a_text_valid: attached a_text and not a_text.is_empty
-		do
-			content.extend (create {XEL_OUTPUT_TEXT_EXPRESSION}.make (a_text))
+		do			
+			append_expression_object (create {XEL_OUTPUT_TEXT_EXPRESSION}.make (a_text))
 		ensure
-			expression_added: content.count = old content.count + 1
+			expression_added: content.count > old content.count
 		end
 
 	append_output_expression (a_expr: STRING)
@@ -52,9 +52,9 @@ feature -- Access
 		require
 			a_expr_valid: attached a_expr and not a_expr.is_empty
 		do
-			content.extend (create {XEL_OUTPUT_EXPRESSION}.make (a_expr))
+			append_expression_object (create {XEL_OUTPUT_EXPRESSION}.make (a_expr))
 		ensure
-			expression_added: content.count = old content.count + 1
+			expression_added: content.count > old content.count
 		end
 
 	serialize (a_buf: XU_INDENDATION_FORMATTER)

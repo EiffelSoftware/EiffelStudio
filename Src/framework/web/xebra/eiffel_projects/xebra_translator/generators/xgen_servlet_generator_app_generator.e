@@ -248,7 +248,29 @@ feature -- Constants
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 ]"
+
 	servlet_gen_ecf_postfix: STRING
+		do
+			Result :=
+					"[
+					<library name="xebra_tags" location="$XEBRA_LIBRARY\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
+					<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
+					<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
+					<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
+							<cluster name="servlet_gen" location=".\" recursive="true">
+								<file_rule>
+									<exclude>/EIFGENs$</exclude>
+									<exclude>/.svn$</exclude>
+									<exclude>/CVS$</exclude>
+								</file_rule>
+							</cluster>
+						</target>
+					</system>
+					]"
+		ensure
+			result_attached: Result /= Void
+		end
+	servlet_gen_ecf_postfix_TESTTEST: STRING
 		do
 			Result :=
 					"[

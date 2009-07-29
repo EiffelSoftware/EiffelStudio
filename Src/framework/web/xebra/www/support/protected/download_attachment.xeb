@@ -6,4 +6,4 @@
 	<div id="main_div">
 		<xeb:display css_class="error" id="error_label"/>
 	</div>
-</page:define_region></page:include>
+</page:define_region></page:include>

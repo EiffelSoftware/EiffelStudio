@@ -42,20 +42,21 @@ feature -- Status setting
 			-- Set `is_selected' `True'.
 		do
 			set_state ({NS_CELL}.on_state)
-			is_selected := True
 		end
 
 	disable_select
 				-- Set `is_selected' `False'.
 		do
 			set_state ({NS_CELL}.off_state)
-			is_selected := False
 		end
 
 feature -- Status report
 
 	is_selected: BOOLEAN
 			-- Is toggle button pressed?
+		do
+			Result := (state = {NS_CELL}.on_state)
+		end
 
 feature -- Element change
 

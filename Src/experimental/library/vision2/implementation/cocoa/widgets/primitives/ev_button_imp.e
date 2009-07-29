@@ -26,7 +26,8 @@ inherit
 			is_sensitive,
 			enable_sensitive,
 			disable_sensitive,
-			dispose
+			dispose,
+			set_background_color
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -94,6 +95,7 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 
 			set_action (agent select_actions.call ([]))
+			set_title ("")
 		end
 
 feature -- Access
@@ -153,7 +155,7 @@ feature -- Status Setting
 		end
 
 	set_text (a_text: STRING_GENERAL)
-			--
+			-- <Precursor>
 		do
 			if not text.is_equal (a_text) then
 				if a_text.is_empty then
@@ -163,6 +165,17 @@ feature -- Status Setting
 				end
 				Precursor {EV_TEXTABLE_IMP} (a_text)
 				set_title (a_text.as_string_8)
+			end
+		end
+
+	set_background_color (a_color: EV_COLOR)
+			-- <Precursor>
+		do
+			-- TODO: Refactor - same for all NS_CONTROLS
+			Precursor {EV_PRIMITIVE_IMP} (a_color)
+			set_bordered (False)
+			if attached {EV_COLOR_IMP} a_color.implementation as imp then
+				cell.set_background_color (imp.color)
 			end
 		end
 

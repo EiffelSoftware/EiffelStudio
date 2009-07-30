@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 			is_read_descriptor_open := True
 			is_write_descriptor_open := True
 			create shared_mptr.make (initial_buffer_size)
+			create last_string.make_empty
 		ensure then
 			read_descriptor_set: read_descriptor = read_fd
 			read_descriptor_open: is_read_descriptor_open
@@ -349,7 +350,7 @@ feature -- Input
 				l_last_string.from_c_substring (mp.item, 1, count)
 				last_string := l_last_string
 			else
-				last_string := Void
+				create last_string.make_empty
 				if count = -1 then
 					last_read_successful := False
 				end
@@ -717,11 +718,11 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

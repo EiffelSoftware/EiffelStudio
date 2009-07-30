@@ -156,6 +156,13 @@ feature -- Status setting
 					set_last_stone (fst)
 					develop_window.tools.set_last_stone (l_last_stone)
 					history_manager.extend (fst)
+				else
+						-- Even it is possibly the same feature,
+						-- we have to refresh since there maybe a change of the feature.
+						-- See bug#15998.
+					if fst /= Void then
+						refresh
+					end
 				end
 			else
 				if new_stone = Void or else (not new_stone.is_valid) then

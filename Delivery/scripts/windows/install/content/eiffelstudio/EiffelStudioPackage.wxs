@@ -154,6 +154,10 @@
 							Description="EiffelStudio development environment" Show="normal"
 							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 							/>
+						<Shortcut Id="esvars.bat" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) Command Prompt"
+							Description="EiffelStudio Command Prompt" Show="normal"
+							Target="[INSTALLDIR]studio\config\$(var.IsePlatform)\esvars.bat"
+							/>
 					</Component>
 					<Directory Id="EiffelStudio.Documentation" Name="Documentation">
 						<Component Id="Comp.studio_shortcuts.documentation" Guid="1EA184EF-4B61-4664-8959-44BCE2773F0D" Win64="$(var.IsWin64)">

@@ -8,6 +8,11 @@ note
 class
 	XU_CONSTANTS
 
+feature -- Env vars
+
+	Xebra_root_env: STRING = "XEBRA_DEV"
+	Xebra_library_env: STRING = "XEBRA_LIBRARY"
+
 feature -- Filenames
 
 	Servlet_gen_executed_file: STRING = "sg_executed_at_time"

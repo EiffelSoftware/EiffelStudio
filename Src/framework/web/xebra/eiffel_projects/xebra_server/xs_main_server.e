@@ -12,9 +12,14 @@ class
 
 inherit
 	XC_SERVER_INTERFACE
+
 	XS_SHARED_SERVER_OUTPUTTER
+
 	ERROR_SHARED_MULTI_ERROR_MANAGER
+
 	XS_SHARED_SERVER_CONFIG
+
+	EIFFEL_ENV
 
 create
     make
@@ -43,7 +48,7 @@ feature -- Constants
 feature {XS_APPLICATION} -- Setup
 
 	setup (a_arg_parser: XS_ARGUMENT_PARSER)
-			--
+			-- Sets the arguments to the config, reads the config file and launches the modules
 		require
 			a_arg_parser_attached: a_arg_parser /= Void
 		do
@@ -52,15 +57,17 @@ feature {XS_APPLICATION} -- Setup
 			config.args.set_assume_webapps_are_running (a_arg_parser.assume_webapps_are_running)
 			print("%N%N%N")
 			o.iprint ("Starting Xebra Web Application Server...")
-			o.dprint (config.args.print_configuration, 2)
-			stop := false
-			if attached {XCCR_OK} load_config then
-				modules.force (create {XS_CONSOLE_MODULE}.make (current, "mod_console"), "mod_console")
-				modules.force (create {XS_HTTP_CONN_MODULE}.make (current, "mod_http"), "mod_http")
-				modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current, "mod_cmd"), "mod_cmd")
-				o.dprint("Launching modules...",2)
-				modules.run_all
-				run
+			if check_xebra_environment_variable then
+				o.dprint (config.args.print_configuration, 2)
+				stop := false
+				if attached {XCCR_OK} load_config then
+					modules.force (create {XS_CONSOLE_MODULE}.make (current, "mod_console"), "mod_console")
+					modules.force (create {XS_HTTP_CONN_MODULE}.make (current, "mod_http"), "mod_http")
+					modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current, "mod_cmd"), "mod_cmd")
+					o.dprint("Launching modules...",2)
+					modules.run_all
+					run
+				end
 			end
 		end
 
@@ -391,6 +398,71 @@ feature {XS_SERVER_MODULE} -- Status setting
 			end
 		end
 
+
+feature -- From EIFFEL_ENV
+
+	application_name: STRING = "xebra"
+
+--	required_environment_variables: ARRAYED_LIST [TUPLE [var: STRING_8; is_directory: BOOLEAN]]
+--			-- List of required environment variables.
+--		once
+--			create Result.make (4)
+--			if not is_unix_layout then
+--			--	Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env, True])
+--		--		Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_platform_env, False])
+--				Result.extend ([{XU_CONSTANTS}.Xebra_root_env, True])
+--				Result.extend ([{XU_CONSTANTS}.Xebra_library_env, True])
+--			end
+--			if {PLATFORM}.is_windows then
+--				Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_c_compiler_env, False])
+--			end
+--		end
+
+
+	check_xebra_environment_variable: BOOLEAN
+			-- Check if needed environment variables are set up.
+			-- Returns false if a var is missing.
+		local
+			l_product_names: PRODUCT_NAMES
+			l_op_env: like operating_environment
+			l_file: RAW_FILE
+			l_dir: DIRECTORY
+			l_dir_name: DIRECTORY_NAME
+			l_value: detachable STRING_8
+			l_variables: like required_environment_variables
+			l_variable: TUPLE [var: STRING_8; is_directory: BOOLEAN]
+			l_is_valid: like is_valid_environment
+		do
+			Result := True
+			create l_variables.make (2)
+			l_op_env := operating_environment
+			l_variables.extend ([{XU_CONSTANTS}.Xebra_root_env, True])
+			l_variables.extend ([{XU_CONSTANTS}.Xebra_library_env, True])
+
+			from l_variables.start until l_variables.after loop
+				l_variable := l_variables.item
+				l_value := get_environment (l_variable.var)
+
+				if
+					l_value /= Void and then l_value.item (l_value.count) = l_op_env.directory_separator and then
+					({PLATFORM}.is_windows or else not (l_value.is_equal ("/") or l_value.is_equal ("~/")))
+				then
+						-- Remove trailing directory separator
+					l_value.prune_all_trailing (l_op_env.directory_separator)
+				end
+
+				if l_value = Void or else l_value.is_empty then
+					o.eprint ("The registry key or environment variable " + l_variable.var + " has not been set!", generating_type)
+					Result := False
+				else
+						-- Set the environment variable, as it may have come from the Windows registry.
+					set_environment (l_value, l_variable.var)
+				end
+				l_variables.forth
+			end
+		end
+
 invariant
 		modules_attached: modules /= Void
 end
+

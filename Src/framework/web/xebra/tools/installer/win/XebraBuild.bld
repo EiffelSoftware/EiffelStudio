@@ -4,7 +4,15 @@
 		<step action='Group'>
 			<name>Project steps</name>
 		</step>
+		<step action='Delete Folder'>
+			<Path>%ROOT%</Path>
+			<Recurse type='11'>-1</Recurse>
+			<checked type='11'>0</checked>
+			<indent type='3'>1</indent>
+			<name>Delete root (clean)</name>
+		</step>
 		<step action='Group'>
+			<checked type='11'>0</checked>
 			<indent type='3'>1</indent>
 			<name>Setup Eiffel</name>
 		</step>
@@ -13,12 +21,20 @@
 			<LocalPath>%EIFFEL_SRC%</LocalPath>
 			<Protocol>https</Protocol>
 			<Subcommand>export --force</Subcommand>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Checkout EIFFEL_SRC/framework</name>
 		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
 			<name>Compile Xebra Bins</name>
+		</step>
+		<step action='Batch File'>
+			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf -target xebra_precompile -c_compile  -precompile -stop</CmdStr>
+			<CmdType type='3'>1</CmdType>
+			<NoEcho type='11'>-1</NoEcho>
+			<indent type='3'>2</indent>
+			<name>Compile Precompile</name>
 		</step>
 		<step action='Batch File'>
 			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_translator\xebra_translator-voidunsafe.ecf -target xebra_translator -c_compile  -finalize -stop</CmdStr>
@@ -31,6 +47,7 @@
 			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_server\xebra_server-voidunsafe.ecf -target xebra_server -c_compile -finalize -stop</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Compile Server</name>
 		</step>
@@ -64,6 +81,7 @@
 			<Retries>10</Retries>
 			<SourceDir>%XEBRA_DEV%\tools\installer\win\xebra_deployer\EIFGENs\xebra_deployer\F_code\xebra_deployer.exe</SourceDir>
 			<TBD type='11'>-1</TBD>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Copy Deployer</name>
 		</step>
@@ -78,6 +96,7 @@
 			<Retries>10</Retries>
 			<SourceDir>%XEBRA_DEV%\eiffel_projects\xebra_server\EIFGENs\xebra_server\F_code</SourceDir>
 			<TBD type='11'>-1</TBD>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Copy Server exe</name>
 		</step>
@@ -472,6 +491,7 @@
 			<Incremental type='11'>-1</Incremental>
 			<LogCopied type='11'>-1</LogCopied>
 			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
 			<Retries>10</Retries>
 			<SourceDir>%EIFFEL_SRC%\framework\settable_types</SourceDir>
 			<TBD type='11'>-1</TBD>
@@ -485,6 +505,7 @@
 			<Incremental type='11'>-1</Incremental>
 			<LogCopied type='11'>-1</LogCopied>
 			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
 			<Retries>10</Retries>
 			<SourceDir>%EIFFEL_SRC%\framework\xml-rpc</SourceDir>
 			<TBD type='11'>-1</TBD>
@@ -494,15 +515,16 @@
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
 			<Delay>15</Delay>
-			<DestDir>%BUILD%\library\framework\base\application\error_manager</DestDir>
+			<DestDir>%BUILD%\library\framework\base\</DestDir>
 			<Incremental type='11'>-1</Incremental>
 			<LogCopied type='11'>-1</LogCopied>
 			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
 			<Retries>10</Retries>
-			<SourceDir>%EIFFEL_SRC%\framework\base\application\error_manager</SourceDir>
+			<SourceDir>%EIFFEL_SRC%\framework\base\</SourceDir>
 			<TBD type='11'>-1</TBD>
 			<indent type='3'>2</indent>
-			<name>Copy Error_manager</name>
+			<name>Copy Base</name>
 		</step>
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
@@ -511,6 +533,7 @@
 			<Incremental type='11'>-1</Incremental>
 			<LogCopied type='11'>-1</LogCopied>
 			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
 			<Retries>10</Retries>
 			<SourceDir>%EIFFEL_SRC%\framework\file_utilities</SourceDir>
 			<TBD type='11'>-1</TBD>
@@ -524,6 +547,7 @@
 			<Incremental type='11'>-1</Incremental>
 			<LogCopied type='11'>-1</LogCopied>
 			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
 			<Retries>10</Retries>
 			<SourceDir>%EIFFEL_SRC%\framework\string_expander</SourceDir>
 			<TBD type='11'>-1</TBD>
@@ -537,6 +561,7 @@
 			<Incremental type='11'>-1</Incremental>
 			<LogCopied type='11'>-1</LogCopied>
 			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
 			<Retries>10</Retries>
 			<SourceDir>%EIFFEL_SRC%\framework\xml</SourceDir>
 			<TBD type='11'>-1</TBD>
@@ -550,6 +575,7 @@
 			<Incremental type='11'>-1</Incremental>
 			<LogCopied type='11'>-1</LogCopied>
 			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
 			<Retries>10</Retries>
 			<SourceDir>%EIFFEL_SRC%\framework\file_formats</SourceDir>
 			<TBD type='11'>-1</TBD>
@@ -571,12 +597,6 @@ compiler_flags=-experiment
 ]]></Text>
 			<indent type='3'>2</indent>
 			<name>Write Server config.ini (NEW)</name>
-		</step>
-		<step action='Write File'>
-			<Filename>%BUILD%\bin\launch.bat</Filename>
-			<Text>xebra_server.exe ..\conf\server.ini</Text>
-			<indent type='3'>2</indent>
-			<name>Write Test server launcher</name>
 		</step></steps>
 	<macros>
 		<macro name='APACHE'>
@@ -601,7 +621,11 @@ compiler_flags=-experiment
 		<macro name='ROOT'>
 			<description>The root folder for the whole operation</description>
 			<envvar type='11'>-1</envvar>
-			<value>c:\virtual_box_share\xebra_build_root</value>
+			<value>c:\virtual_box_share</value>
+		</macro>
+		<macro name='RUNPROGRAM_EXITCODE'>
+			<description>The exit code of the last Run Program, Batch File, PowerShell, VisBuildPro Project, or derived action or RunProgramEx call</description>
+			<value>-1</value>
 		</macro>
 		<macro name='XEBRA_DEV'>
 			<description>Path to xebra</description>

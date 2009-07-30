@@ -436,7 +436,6 @@ feature {NONE} -- Element change
 			-- `a_widget': Last focused widget.
 		require
 			is_interface_usable: is_interface_usable
-			is_shown: is_shown
 			a_widget_attached: attached a_widget
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		do

@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class
-	ES_C_FUNCTION_MAPPER
+	ES_EIFFEL_TO_C_FUNCTION_MAPPER
 
 inherit
 	KL_SHARED_FILE_SYSTEM

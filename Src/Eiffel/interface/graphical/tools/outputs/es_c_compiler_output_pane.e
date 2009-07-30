@@ -18,15 +18,44 @@ inherit
 			new_widget
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
 	make (a_name: READABLE_STRING_GENERAL)
-			-- <Precursor>		
+			-- <Precursor>
 		do
 			make_with_icon (a_name, stock_pixmaps.tool_c_output_icon_buffer)
+
+				-- Create the analzyer for error output
+			if
+				not {PLATFORM}.is_windows or else (
+				attached eiffel_layout.get_environment (once "ISE_C_COMPILER") as l_var and then
+				l_var.is_case_insensitive_equal (once "gcc"))
+			then
+					-- Use GCC.
+				create {ES_GCC_OUTPUT_ANALYZER} analyzer.make (notifier_formatter)
+				auto_recycle (analyzer)
+			elseif {PLATFORM}.is_windows then
+					-- Use MSC.
+				create {ES_MSC_OUTPUT_ANALYZER} analyzer.make (notifier_formatter)
+				auto_recycle (analyzer)
+			end
+		end
+
+feature {NONE} -- Access
+
+	analyzer: detachable ES_C_COMPILER_OUTPUT_ANALYZER
+			-- C compiler output analyzer used to produce C compiler error messages.
+		note
+			option: stable
+		attribute
 		end
 
 feature {NONE} -- Factory

@@ -27,7 +27,21 @@ feature {PEG_ABSTRACT_PEG} -- Access
 	parser_name: STRING
 			-- The optional name for the parser
 
+	error_message_handler: PROCEDURE [ANY, TUPLE [PEG_PARSER_RESULT]] assign set_error_message_handler
+			-- If parsing is unsucessful, what should the parser do?
+			-- Detachable!
+
 feature -- Access
+
+	set_error_message_handler (a_error_message_handler: PROCEDURE [ANY, TUPLE [PEG_PARSER_RESULT]])
+			-- Sets the error message
+		require
+			a_error_message_handler_attached: attached a_error_message_handler
+		do
+			error_message_handler := a_error_message_handler
+		ensure
+			error_message_handler_set: a_error_message_handler = error_message_handler
+		end
 
 	set_name (a_name: STRING)
 		require
@@ -107,6 +121,9 @@ feature -- Basic Functionality
 				end
 			end
 			Result := internal_parse (a_string)
+			if not Result.success and attached error_message_handler then
+				error_message_handler.call ([Result])
+			end
 		ensure
 			result_attached: attached Result
 		end

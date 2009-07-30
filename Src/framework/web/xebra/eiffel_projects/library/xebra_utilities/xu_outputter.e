@@ -136,7 +136,7 @@ feature -- Print
 			end
 		end
 
-	eprint (a_msg: STRING; a_generating_type: ANY)
+	eprint (a_msg: STRING; a_generating_type: TYPE [ANY])
 			-- Prints an error message
 		require
 			outputter_configured: configured
@@ -144,7 +144,7 @@ feature -- Print
 --			a_msg_attached: a_msg /= Void
 			a_generating_type_attached: a_generating_type /= Void
 		do
-			print_with_name ("[ERROR in " + a_generating_type.generator + "] " + a_msg)
+			print_with_name ("[ERROR in " + a_generating_type.debug_output + "] " + a_msg)
 		end
 
 	iprint (a_msg: STRING)

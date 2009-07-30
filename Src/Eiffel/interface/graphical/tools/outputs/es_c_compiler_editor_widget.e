@@ -115,7 +115,7 @@ feature {NONE} -- Query
 			a_stone_is_filed_or_cluster: attached {FILED_STONE} a_stone or attached {CLUSTER_STONE} a_stone
 		local
 			l_class_type: detachable CLASS_TYPE
-			l_mapper: ES_C_FUNCTION_MAPPER
+			l_mapper: ES_EIFFEL_TO_C_FUNCTION_MAPPER
 			l_class_c: CLASS_C
 			l_shift: BOOLEAN
 			l_ctrl: BOOLEAN
@@ -192,7 +192,7 @@ feature {NONE} -- Query
 			a_stone_is_filed: attached {FILED_STONE}
 		local
 			l_class_type: detachable CLASS_TYPE
-			l_mapper: ES_C_FUNCTION_MAPPER
+			l_mapper: ES_EIFFEL_TO_C_FUNCTION_MAPPER
 			l_class_c: CLASS_C
 			l_file_name: detachable STRING
 			l_line: INTEGER

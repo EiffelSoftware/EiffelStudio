@@ -194,18 +194,23 @@ feature{NONE}  -- Actions
 			end
 
 				-- Switch back to the previous output that was activated prior to the c compilation
-			if
-				is_last_c_compilation_successful and then
-				has_output_switched and then
-				attached window_manager.last_focused_development_window as l_window and then
-				attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool and then
-				attached switched_output as l_switched_output and then
-				l_tool.output = c_compiler_output
-			then
-					-- The output was switched when starting the C compilation so now switch it back, if possible.
-					-- No switching will occur if the outputs tool is now hidden or if the user switched to a different tool.
-				l_switched_output.activate (False)
+			if attached window_manager.last_focused_development_window as l_window then
+				if
+					is_last_c_compilation_successful and then
+					has_output_switched and then
+					attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool and then
+					attached switched_output as l_switched_output and then
+					l_tool.output = c_compiler_output
+				then
+						-- The output was switched when starting the C compilation so now switch it back, if possible.
+						-- No switching will occur if the outputs tool is now hidden or if the user switched to a different tool.
+					l_switched_output.activate (False)
+				elseif not is_last_c_compilation_successful then
+						-- The C compilation failed, show the error list tool.
+					l_window.shell_tools.show_tool ({ES_ERROR_LIST_TOOL}, True)
+				end
 			end
+
 			switched_output := Void
 		ensure
 			switched_output_detached: not attached switched_output

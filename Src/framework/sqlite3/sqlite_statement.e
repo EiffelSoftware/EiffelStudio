@@ -331,6 +331,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			from
 				create l_row.make (Current)
 				l_result := sqlite3_step (l_api, l_stmt)
+				l_done := l_result = {SQLITE_RESULT_CODES}.sqlite_done
 			until
 				not sqlite_success (l_result) or l_done
 			loop

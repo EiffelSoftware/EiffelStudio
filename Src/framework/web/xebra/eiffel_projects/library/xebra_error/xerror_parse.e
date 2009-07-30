@@ -23,7 +23,7 @@ feature {NONE} -- Access
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		do
-			Result := "There is a error in the xeb file: '{1}'"
+			Result := "{1}"
 		end
 
 note

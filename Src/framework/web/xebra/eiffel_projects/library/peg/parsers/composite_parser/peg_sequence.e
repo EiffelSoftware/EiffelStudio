@@ -42,7 +42,7 @@ feature -- Implementation
 			if l_parse_result.success then
 				Result := build_result (Result)
 			else
-				create Result.make (a_string, False)
+				Result.set_success (False)
 				Result := fix_result (Result)
 			end
 		end

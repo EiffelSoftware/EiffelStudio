@@ -62,7 +62,8 @@ feature {NONE} -- Implementation
 		local
 			xeb_file, xml, plain_html_header, xeb_tag_header, plain_html, xeb_tag, doctype,
 			namespace_identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
-			plain_text, plain_text_without_behaviour, close_fixed, value: PEG_ABSTRACT_PEG
+			plain_text, plain_text_without_behaviour, close_fixed, value, plain_html_long_end,
+			xeb_tag_long_end: PEG_ABSTRACT_PEG
 		once
 				-- For graceful recovery of silly mistake: on missing '>' we assume it was there all along
 			close_fixed := char ('>')
@@ -109,24 +110,28 @@ feature {NONE} -- Implementation
 
 			create {PEG_CHOICE} xml.make
 
-			plain_html := identifier.enforce + (
+			plain_html_long_end := (close_fixed + (-xml) + open + slash + ws.optional + identifier)
+			plain_html := (open+
 							plain_html_header + ws.optional + (
-									slash |
-									(close_fixed + (-xml) + open + slash + ws.optional + identifier)
-								)
+									slash | plain_html_long_end
+								) + ws.optional+ close_fixed
 						)
 			plain_html.set_name ("plain_html")
 			plain_html.set_behaviour (agent build_plain_html)
-			xeb_tag := namespace_identifier.enforce  + (
+			plain_html.set_error_message_handler (agent handle_plain_html_error)
+
+			xeb_tag_long_end := (close_fixed + (-xml) + open + slash + ws.optional + namespace_identifier)
+			xeb_tag := (open+
 							xeb_tag_header + ws.optional + (
-									slash |
-									(close_fixed + (-xml) + open + slash + ws.optional + namespace_identifier)
-								)
+									slash | xeb_tag_long_end
+								) + ws.optional+ close_fixed
 						)
+
+			xeb_tag.set_error_message_handler (agent handle_xeb_tag_error)
 
 			xeb_tag.set_behaviour (agent build_xeb_tag)
 			xeb_tag.set_name ("xeb_tag")
-			xml := xml | (open + (xeb_tag | plain_html) + ws.optional + close_fixed) | plain_text
+			xml := xml | (xeb_tag | plain_html) | plain_text
 			xml.set_name ("xml")
 
 				-- Same as `plain_text' but no behaviour (no content tag is generated)
@@ -145,6 +150,34 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Parser error strategies
+
+	handle_xeb_tag_error (a_result: PEG_PARSER_RESULT)
+		require
+			a_result_attached: attached a_result
+		local
+			l_count: INTEGER
+		do
+			l_count := a_result.internal_result.count
+			if l_count > 1 then
+				a_result.put_error_message ("Missing end tag for start tag '" + a_result.internal_result [1].out + ":" + a_result.internal_result [2].out + "'!")
+			else
+				a_result.put_error_message ("Invalid tag!")
+			end
+		end
+
+	handle_plain_html_error (a_result: PEG_PARSER_RESULT)
+		require
+			a_result_attached: attached a_result
+		local
+			l_count: INTEGER
+		do
+			l_count := a_result.internal_result.count
+			if l_count > 0 then
+				a_result.put_error_message ("Missing end tag for start tag '" + a_result.internal_result [1].out + "'!")
+			else
+				a_result.put_error_message ("Invalid tag!")
+			end
+		end
 
 	handle_close_error (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 			-- Fixes the missing '>' by assuming it is there
@@ -377,6 +410,14 @@ feature -- Basic Functionality
 					Result := True
 				end
 			else
+				from
+				l_index := l_result.left_to_parse.longest_match.error_messages.count
+				until
+					l_index < 1
+				loop
+					add_parse_error (source_path + ": " + l_index.out + ": " + l_result.left_to_parse.longest_match.error_messages [l_index])
+					l_index := l_index - 1
+				end
 				add_parse_error ("Parsing was not successfull! Error location: " +
 					format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
 			end

@@ -185,13 +185,13 @@ feature -- Basic functionality
 		end
 
 	count: INTEGER
-			-- <Precursor>
+			-- Returns the length of the string
 		do
 			Result := end_pivot - start_pivot
 		end
 
 	is_empty: BOOLEAN
-			-- <Precursor>
+			-- Is the string empty?
 		do
 			Result := count = 0
 		end

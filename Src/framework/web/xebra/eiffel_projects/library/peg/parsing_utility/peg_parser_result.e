@@ -118,8 +118,17 @@ feature -- Element change
 
 	put_error_message (a_message: STRING)
 			-- Add an error message to the output
+		require
+			a_message_attached: attached a_message
+		local
+			l_errors: LIST [STRING]
 		do
 			error_messages.extend (a_message + " " + format_debug (left_to_parse.debug_information))
+			if left_to_parse.current_internal_position >= left_to_parse.longest_match.count-1 then
+				create {ARRAYED_LIST [STRING]} l_errors.make (1)
+				l_errors.append (error_messages)
+				left_to_parse.longest_match.set_error_message (l_errors)
+			end
 		end
 
 	format_debug (a_line_row: TUPLE [line: INTEGER; row: INTEGER]): STRING

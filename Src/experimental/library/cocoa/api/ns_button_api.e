@@ -18,7 +18,7 @@ feature -- Creating Buttons
 
 feature -- Configuring Buttons
 
-	frozen set_button_type (a_button: POINTER; a_button_type: INTEGER)
+	frozen set_button_type (a_button: POINTER; a_button_type: NATURAL)
 			-- - (void)setButtonType:(NSButtonType)aType
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -44,21 +44,39 @@ feature -- Configuring Buttons
 
 feature -- Configuring Button Images
 
-	frozen image (a_button: POINTER): POINTER
+	frozen image (a_ns_button: POINTER): POINTER
+			-- - (NSImage *)image
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [(NSButton*)$a_button image];"
+			"return [(NSButton*)$a_ns_button image];"
 		end
 
-	frozen set_image (a_button: POINTER; a_image: POINTER)
+	frozen set_image (a_ns_button: POINTER; a_image: POINTER)
+			-- - (void)setImage: (NSImage *) image
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"[(NSButton*)$a_button setImage: $a_image];"
+			"[(NSButton*)$a_ns_button setImage: $a_image];"
 		end
 
-	frozen image_position (a_ns_button: POINTER): INTEGER
+	frozen alternate_image (a_ns_button: POINTER): POINTER
+			-- - (NSImage *)alternateImage
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSButton*)$a_ns_button alternateImage];"
+		end
+
+	frozen set_alternate_image (a_ns_button: POINTER; a_image: POINTER)
+			-- - (void)setAlternateImage: (NSImage *) image
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSButton*)$a_ns_button setAlternateImage: $a_image];"
+		end
+
+	frozen image_position (a_ns_button: POINTER): NATURAL
 			-- - (NSCellImagePosition)imagePosition
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -66,7 +84,7 @@ feature -- Configuring Button Images
 			"return [(NSButton*)$a_ns_button imagePosition];"
 		end
 
-	frozen set_image_position (a_ns_button: POINTER; a_position: INTEGER)
+	frozen set_image_position (a_ns_button: POINTER; a_position: NATURAL)
 			-- - (void)setImagePosition: (NSCellImagePosition) aPosition
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -74,11 +92,68 @@ feature -- Configuring Button Images
 			"[(NSButton*)$a_ns_button setImagePosition: $a_position];"
 		end
 
-	frozen set_bezel_style (a_button: POINTER; a_style: INTEGER)
+	frozen is_bordered (a_ns_button: POINTER): BOOLEAN
+			-- - (BOOL)isBordered
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"[(NSButton*)$a_button setBezelStyle:$a_style];"
+			"return [(NSButton*)$a_ns_button isBordered];"
+		end
+
+	frozen set_bordered (a_ns_button: POINTER; a_flag: BOOLEAN)
+			-- - (void)setBordered: (BOOL) flag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSButton*)$a_ns_button setBordered: $a_flag];"
+		end
+
+	frozen is_transparent (a_ns_button: POINTER): BOOLEAN
+			-- - (BOOL)isTransparent
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSButton*)$a_ns_button isTransparent];"
+		end
+
+	frozen set_transparent (a_ns_button: POINTER; a_flag: BOOLEAN)
+			-- - (void)setTransparent: (BOOL) flag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSButton*)$a_ns_button setTransparent: $a_flag];"
+		end
+
+	frozen bezel_style (a_ns_button: POINTER): NATURAL
+			-- - (NSBezelStyle)bezelStyle
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSButton*)$a_ns_button bezelStyle];"
+		end
+
+	frozen set_bezel_style (a_ns_button: POINTER; a_bezel_style: NATURAL)
+			-- - (void)setBezelStyle: (NSBezelStyle) bezelStyle
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSButton*)$a_ns_button setBezelStyle: $a_bezel_style];"
+		end
+
+	frozen shows_border_only_while_mouse_inside (a_ns_button: POINTER): BOOLEAN
+			-- - (BOOL)showsBorderOnlyWhileMouseInside
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSButton*)$a_ns_button showsBorderOnlyWhileMouseInside];"
+		end
+
+	frozen set_shows_border_only_while_mouse_inside (a_ns_button: POINTER; a_show: BOOLEAN)
+			-- - (void)setShowsBorderOnlyWhileMouseInside: (BOOL) show
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSButton*)$a_ns_button setShowsBorderOnlyWhileMouseInside: $a_show];"
 		end
 
 feature -- Managing Button State

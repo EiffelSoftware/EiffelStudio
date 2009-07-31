@@ -222,42 +222,42 @@ feature -- Cell States (NSCellStateValue)
 
 feature -- Image Position
 
-	frozen no_image: INTEGER
+	frozen no_image: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSNoImage"
 		end
 
-	frozen image_only: INTEGER
+	frozen image_only: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSImageOnly"
 		end
 
-	frozen image_left: INTEGER
+	frozen image_left: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSImageLeft"
 		end
 
-	frozen image_right: INTEGER
+	frozen image_right: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSImageRight"
 		end
 
-	frozen image_below: INTEGER
+	frozen image_below: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSImageBelow"
 		end
 
-	frozen image_above: INTEGER
+	frozen image_above: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias

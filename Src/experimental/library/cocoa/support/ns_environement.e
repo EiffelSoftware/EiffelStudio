@@ -37,8 +37,15 @@ feature -- Getting the Notification Center
 	default_center: NS_NOTIFICATION_CENTER
 			-- The task's default notification center.
 		once
-			create Result.make_from_pointer ({NS_NOTIFICATION_CENTER}.default_center)
+			create Result.share_from_pointer ({NS_NOTIFICATION_CENTER_API}.default_center)
 		end
 
+feature -- Getting the Shared Font Manager
+
+	shared_font_manager: NS_FONT_MANAGER
+			-- Returns the shared instance of the font manager for the application, creating it if necessary.
+		once
+			create Result.share_from_pointer ({NS_FONT_MANAGER_API}.shared_font_manager)
+		end
 
 end

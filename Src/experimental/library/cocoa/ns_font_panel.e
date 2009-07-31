@@ -12,6 +12,8 @@ inherit
 
 create
 	shared_font_panel
+create {NS_OBJECT}
+	share_from_pointer
 
 feature {NONE} -- Creation
 

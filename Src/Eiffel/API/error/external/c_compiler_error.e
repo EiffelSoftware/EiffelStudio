@@ -42,9 +42,8 @@ feature {NONE} -- Initialization
 			not_a_message_is_empty: not a_message.is_empty
 		do
 			create message.make_from_string (a_message)
-			message.put (message.item (1).as_upper, 1)
 		ensure
-			message_set: message = a_message
+			message_set: message ~ a_message
 		end
 
 	make_with_file (a_message: like message; a_file_name: like file_name; a_line: like line; a_column: like column)
@@ -65,7 +64,7 @@ feature {NONE} -- Initialization
 			line := a_line
 			column := a_column
 		ensure
-			message_set: message = a_message
+			message_set: message ~ a_message
 			file_name_set: file_name = a_file_name
 			line_set: line = a_line
 			column_set: column = a_column

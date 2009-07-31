@@ -72,8 +72,11 @@ feature {NONE} -- Basic operations
 			if
 				event_list.is_service_available and then
 				attached file_name as l_file_name and then
-				attached message as l_message
+				attached message as l_message and then
+				not l_message.is_empty
 			then
+				l_message.put (l_message.item (1).as_upper, 1)
+
 					-- Create the error/warning object
 				if is_error then
 					l_error := new_c_compiler_error (l_message, l_file_name, line_number)
@@ -91,7 +94,7 @@ feature {NONE} -- Basic operations
 						-- Set an associated Eiffel feature.
 					l_error.associated_feature := l_feature
 				end
-				
+
 				event_list.service.put_event_item (c_compiler_context, l_item)
 			end
 

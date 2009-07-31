@@ -22,11 +22,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_WORKBENCH
-		export
-			{NONE} all
-		end
-
 create
 	make,
 	make_with_file

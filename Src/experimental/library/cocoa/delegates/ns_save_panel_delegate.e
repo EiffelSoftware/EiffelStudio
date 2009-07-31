@@ -27,6 +27,7 @@ feature
 
 	panel_user_entered_filename_confirmed (a_sender: NS_OBJECT; a_filename: NS_STRING; a_ok_flag: BOOLEAN): NS_STRING
 		do
+			create Result.make_empty
 		end
 
 	panel_will_expand (a_sender: NS_OBJECT; a_expanding: BOOLEAN)

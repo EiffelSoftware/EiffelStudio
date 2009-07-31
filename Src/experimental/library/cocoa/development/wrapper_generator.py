@@ -24,14 +24,13 @@ import traceback, sys
 
 ### Config
 
-dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
-classname = "NSSplitView"
-#classname = "NSImage"
-#dirname = "/System/Library/Frameworks/Foundation.framework/Headers"
-#classname = "NSData"
+dirname = "/System/Library/Frameworks/Foundation.framework/Headers"
+#dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
+classname = "NSDate"
 
 # URL schema:
-url = "http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Classes/" + classname + "_Class/Reference/Reference.html"
+url = "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/" + classname + "_Class/Reference/Reference.html"
+#url = "http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Classes/" + classname + "_Class/Reference/Reference.html"
 #url = "http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Classes/" + classname + "_Class/Reference/" + classname + ".html"
 
 ###
@@ -305,11 +304,12 @@ typeMap = {
 	"void": "",
 	"char": "CHARACTER",
 	"int": "INTEGER",
+	"unsigned int": "NATURAL",
 	"float": "REAL",
 	"double": "REAL_64",
 	"BOOL": "BOOLEAN",
 	"id": "NS_OBJECT",
-	"SEL": "SELECTOR",
+	"SEL": "OBJC_SELECTOR",
 	"NSInteger": "INTEGER",
 	"NSUInteger": "INTEGER",
 	"IBAction": "",
@@ -323,13 +323,24 @@ typeMap = {
 	"NSToolbarDisplayMode": "INTEGER",
 	"NSToolbarSizeMode": "INTEGER",
 	"NSGlyph": "INTEGER",
-	"NSControlSize": "NATURAL",
-	"NSStringEncoding": "NATURAL",
-	"NSFontRenderingMode": "NATURAL",
-	"NSSplitViewDividerStyle": "INTEGER"
+	"NSSplitViewDividerStyle": "INTEGER",
+	"Class": "POINTER"
 	}
+
+enumMap = {
+	"NSControlSize": "NSUInteger",
+	"NSStringEncoding": "NSUInteger",
+	"NSFontRenderingMode": "NSUInteger",
+	"NSCellImagePosition": "NSUInteger",
+	"NSBezelStyle": "NSUInteger",
+	"NSButtonType": "NSUInteger",
+	"NSGradientType": "NSUInteger",
+	"NSImageScaling": "NSUInteger",
+	"NSFontAction": "int",
+	"NSFontTraitMask": "unsigned int"
+}
 	
-expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER"]
+expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER", "NATURAL"]
 
 def EiffelTypeN(CTypeName):
 	if CTypeName.endswith("*"):
@@ -524,14 +535,19 @@ ignore_tokens = [
 
 # Main:
 def main():
+	for (key, value) in enumMap.items():
+		typeMap[key] = typeMap[value];
+	
 	my_class = ObjC_Class(classname)
 	
 	documentation = urllib2.urlopen(url).read().\
 	   replace("\xe2\x80\x99", "`").replace("&#8217;", "`").\
 	   replace("\xe2\x80\x94", "--").\
 	   replace("\xe2\x80\x93", "-").\
+	   replace("\xe2\x80\x9c", "\"").replace("\xe2\x80\x9d", "\"").\
 	   replace("\xc2", "C2C2C2").\
 	   replace("\xa0", "A0A0A0").\
+	   replace("\xb1", "B1B1B1").\
 	   replace("\xe2", "E2E2E2").\
 	   replace("\x80", "808080").\
 	   replace("\xa6", "QQQ").\
@@ -586,8 +602,11 @@ def main():
 	creation_procedures = []
 	for task in my_class.get_tasks():
 		for message in task.messages:
-	   	    if message.is_constructor():
-	   	   	    creation_procedures.append(message.get_signature().FeatureName());
+	   		try:
+	   			if message.is_constructor():
+	   				creation_procedures.append (message.get_signature().FeatureName());
+	   	   	except:
+	   	   		pass
 	print "create"
 	print "\t" + (",\n\t").join(creation_procedures)
 	print "create {NS_OBJECT}"

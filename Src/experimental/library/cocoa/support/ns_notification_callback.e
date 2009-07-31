@@ -46,7 +46,7 @@ feature -- Implementation
 
 	call_observer (a_ptr: POINTER)
 		do
-			callback.call ([create {NS_OBJECT}.make_from_pointer (a_ptr)])
+			callback.call ([create {NS_NOTIFICATION}.share_from_pointer (a_ptr)])
 		end
 
 	callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]]

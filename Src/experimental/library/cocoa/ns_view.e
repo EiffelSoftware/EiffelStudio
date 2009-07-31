@@ -418,16 +418,6 @@ feature -- Event Handling
 			end
 		end
 
-feature --
-
-	frozen view_frame_did_change_notification: POINTER
-			-- Posted whenever the view's frame rectangle changes, if the view is configured using setPostsFrameChangedNotifications: to post such notifications.
-		external
-			"C macro use <Cocoa/Cocoa.h>"
-		alias
-			"NSViewFrameDidChangeNotification"
-		end
-
 feature {NONE} -- Callback
 
 	draw_old (x, y, w, h: INTEGER)

@@ -10,7 +10,9 @@ class
 inherit
 	NS_CONTROL
 		redefine
-			make
+			make,
+			set_cell,
+			cell
 		end
 
 create
@@ -29,7 +31,7 @@ feature {NONE} -- Creation
 
 feature -- Configuring Buttons
 
-	set_button_type (a_button_type: INTEGER)
+	set_button_type (a_button_type: NATURAL)
 			-- Sets how the receiver button highlights while pressed and how it shows its state.
 			-- setButtonType: redisplays the button before returning.
 			-- You can configure different behavior with the NS_BUTTON_CELL methods set_highlights_by and set_shows_state_by
@@ -62,22 +64,6 @@ feature -- Configuring Buttons
 
 feature -- Configuring Button Images
 
-	image_position: INTEGER
-			-- Returns the position of the image relative to the title.
-		do
-			Result := {NS_BUTTON_API}.image_position (item)
-		end
-
-	set_image_position (a_position: INTEGER)
-			-- Sets the position of the button's image relative to its title.
-		require
-			valid_position:
-		do
-			{NS_BUTTON_API}.set_image_position (item, a_position)
-		ensure
-			position_set: a_position = image_position
-		end
-
 	image: detachable NS_IMAGE
 			-- Returns the image that appears on the receiver when it's in its normal state, Void if there is no such image.
 			-- This image is always displayed on a button that doesn't change its contents when highlighting or showing its alternate state. Buttons don't display images by default.
@@ -100,7 +86,65 @@ feature -- Configuring Button Images
 			--image_set: a_image = image -- not true for every button type it seems
 		end
 
-	set_bezel_style (a_style: INTEGER)
+	alternate_image: NS_IMAGE
+			-- Returns the image that appears on the button when it`s in its alternate state.
+		do
+			create Result.share_from_pointer ({NS_BUTTON_API}.alternate_image (item))
+		end
+
+	set_alternate_image (a_image: NS_IMAGE)
+			-- Sets the image displayed by the button when it`s in its alternate state and, if necessary, redraws the contents of the button.
+		do
+			{NS_BUTTON_API}.set_alternate_image (item, a_image.item)
+		end
+
+	image_position: NATURAL
+			-- Returns the position of the image relative to the title.
+		do
+			Result := {NS_BUTTON_API}.image_position (item)
+		end
+
+	set_image_position (a_position: NATURAL)
+			-- Sets the position of the button's image relative to its title.
+		require
+			valid_position:
+		do
+			{NS_BUTTON_API}.set_image_position (item, a_position)
+		ensure
+			position_set: a_position = image_position
+		end
+
+	is_bordered: BOOLEAN
+			-- Returns a Boolean value indicating whether the button has a border.
+		do
+			Result := {NS_BUTTON_API}.is_bordered (item)
+		end
+
+	set_bordered (a_flag: BOOLEAN)
+			-- Sets whether the receiver has a bezeled border.
+		do
+			{NS_BUTTON_API}.set_bordered (item, a_flag)
+		end
+
+	is_transparent: BOOLEAN
+			-- Returns a Boolean value indicating whether the button is transparent.
+		do
+			Result := {NS_BUTTON_API}.is_transparent (item)
+		end
+
+	set_transparent (a_flag: BOOLEAN)
+			-- Sets whether the receiver is transparent and redraws the receiver if necessary.
+		do
+			{NS_BUTTON_API}.set_transparent (item, a_flag)
+		end
+
+	bezel_style: NATURAL
+			-- Returns the appearance of the receiver`s border.
+		do
+			Result := {NS_BUTTON_API}.bezel_style (item)
+		end
+
+	set_bezel_style (a_style: NATURAL)
 			-- Sets the appearance of the border, if the receiver has one.
 			-- If the button is not bordered, the bezel style is ignored.
 			-- The button uses shading to look like it's sticking out or pushed in.
@@ -110,7 +154,19 @@ feature -- Configuring Button Images
 		do
 			{NS_BUTTON_API}.set_bezel_style (item, a_style)
 		ensure
-			bezel_style_set: -- TODO
+			bezel_style_set: a_style = bezel_style
+		end
+
+	shows_border_only_while_mouse_inside: BOOLEAN
+			-- Returns a Boolean value indicating whether the button displays its border only when the cursor is over it.
+		do
+			Result := {NS_BUTTON_API}.shows_border_only_while_mouse_inside (item)
+		end
+
+	set_shows_border_only_while_mouse_inside (a_show: BOOLEAN)
+			-- Sets whether the receiver`s border is displayed only when the cursor is over the button.
+		do
+			{NS_BUTTON_API}.set_shows_border_only_while_mouse_inside (item, a_show)
 		end
 
 feature -- Managing the button state
@@ -158,26 +214,42 @@ feature -- Handling Keyboard Events
 
 
 
-feature -- Contract support
+feature -- Setting the Control's Cell
 
-	valid_button_type (a_integer: INTEGER): BOOLEAN
+	set_cell (a_cell: NS_BUTTON_CELL)
+			-- Sets the receiver's cell
+			-- Use this method with great care as it can irrevocably damage the affected control;
+			-- specifically, you should only use this method in initializers for subclasses of NS_CONTROL.
 		do
-			Result := (<<push_on_push_off_button, toggle_button, switch_button, radio_button>>).has (a_integer)
+			{NS_CONTROL_API}.set_cell (item, a_cell.item)
 		end
 
-	valid_bezel_style (a_integer: INTEGER): BOOLEAN
+	cell: NS_BUTTON_CELL
+			-- Returns the receiver's cell object.
+		do
+			create Result.make_from_pointer ({NS_CONTROL_API}.cell (item))
+		end
+
+feature -- Contract support
+
+	valid_button_type (a_natural: NATURAL): BOOLEAN
+		do
+			Result := (<<push_on_push_off_button, toggle_button, switch_button, radio_button>>).has (a_natural)
+		end
+
+	valid_bezel_style (a_natural: NATURAL): BOOLEAN
 		do
 			Result := (<<rounded_bezel_style, rectangular_square_bezel_style, thick_square_bezel_style, thicker_square_bezel_style,
 				disclosure_bezel_style, shadowless_square_bezel_style, circular_bezel_style, textured_square_bezel_style,
 				help_button_bezel_style, small_square_bezel_style, textured_rounded_bezel_style, rounded_rect_bezel_style,
-				recessed_bezel_style, rounded_disclosure_bezel_style>>).has (a_integer)
+				recessed_bezel_style, rounded_disclosure_bezel_style>>).has (a_natural)
 		end
 
 feature -- NSButtonType Constants
 
 --    NSMomentaryLightButton		= 0,	// was NSMomentaryPushButton
 
-	frozen push_on_push_off_button: INTEGER
+	frozen push_on_push_off_button: NATURAL
 			--    NSPushOnPushOffButton
 		external
 			"C macro use <Cocoa/Cocoa.h>"
@@ -185,7 +257,7 @@ feature -- NSButtonType Constants
 			"NSPushOnPushOffButton"
 		end
 
-	frozen toggle_button: INTEGER
+	frozen toggle_button: NATURAL
     		-- NSToggleButton
 		external
 			"C macro use <Cocoa/Cocoa.h>"
@@ -193,7 +265,7 @@ feature -- NSButtonType Constants
 			"NSToggleButton"
 		end
 
-	frozen switch_button: INTEGER
+	frozen switch_button: NATURAL
 			-- NSSwitchButton
 		external
 			"C macro use <Cocoa/Cocoa.h>"
@@ -201,7 +273,7 @@ feature -- NSButtonType Constants
 			"NSSwitchButton"
 		end
 
-	frozen radio_button: INTEGER
+	frozen radio_button: NATURAL
 			-- NSRadioButton
 		external
 			"C macro use <Cocoa/Cocoa.h>"
@@ -221,7 +293,7 @@ feature -- NSButtonType Constants
 
 feature -- NSBezelStyle Constants
 
-	frozen rounded_bezel_style: INTEGER
+	frozen rounded_bezel_style: NATURAL
 			-- NSRoundedBezelStyle
 			-- A rounded rectangle button, designed for text.
 		external
@@ -230,7 +302,7 @@ feature -- NSBezelStyle Constants
 			"NSRoundedBezelStyle"
 		end
 
-	frozen rectangular_square_bezel_style: INTEGER
+	frozen rectangular_square_bezel_style: NATURAL
 			-- NSRegularSquareBezelStyle
 			-- A rectangular button with a 2 point border, designed for icons.
 		external
@@ -239,7 +311,7 @@ feature -- NSBezelStyle Constants
 			"NSRegularSquareBezelStyle"
 		end
 
-	frozen thick_square_bezel_style: INTEGER
+	frozen thick_square_bezel_style: NATURAL
 			-- NSThickSquareBezelStyle
 			-- A rectangular button with a 3 point border, designed for icons.
 		external
@@ -248,7 +320,7 @@ feature -- NSBezelStyle Constants
 			"NSThickSquareBezelStyle"
 		end
 
-	frozen thicker_square_bezel_style: INTEGER
+	frozen thicker_square_bezel_style: NATURAL
 			-- NSThickerSquareBezelStyle
 			-- A rectangular button with a 4 point border, designed for icons.
 		external
@@ -257,7 +329,7 @@ feature -- NSBezelStyle Constants
 			"NSThickerSquareBezelStyle"
 		end
 
-	frozen disclosure_bezel_style: INTEGER
+	frozen disclosure_bezel_style: NATURAL
 			-- NSDisclosureBezelStyle
 			-- A bezel style for use with a disclosure triangle.
 			-- To create the disclosure triangle, set the button bezel style to NSDisclosureBezelStyle and the button type to NSOnOffButton.
@@ -267,7 +339,7 @@ feature -- NSBezelStyle Constants
 			"NSDisclosureBezelStyle"
 		end
 
-	frozen shadowless_square_bezel_style: INTEGER
+	frozen shadowless_square_bezel_style: NATURAL
 			-- NSShadowlessSquareBezelStyle
 			-- Similar to NSRegularSquareBezelStyle, but has no shadow so you can abut the cells without overlapping shadows.
 			-- This style would be used in a tool palette, for example.
@@ -277,7 +349,7 @@ feature -- NSBezelStyle Constants
 			"NSShadowlessSquareBezelStyle"
 		end
 
-	frozen circular_bezel_style: INTEGER
+	frozen circular_bezel_style: NATURAL
 			-- NSCircularBezelStyle
 			-- A round button with room for a small icon or a single character.
 			-- This style has both regular and small variants, but the large variant is available only in gray at this time.
@@ -287,7 +359,7 @@ feature -- NSBezelStyle Constants
 			"NSCircularBezelStyle"
 		end
 
-	frozen textured_square_bezel_style: INTEGER
+	frozen textured_square_bezel_style: NATURAL
 			-- NSTexturedSquareBezelStyle
 			-- A bezel style appropriate for use with textured (metal) windows.
 		external
@@ -296,7 +368,7 @@ feature -- NSBezelStyle Constants
 			"NSTexturedSquareBezelStyle"
 		end
 
-	frozen help_button_bezel_style: INTEGER
+	frozen help_button_bezel_style: NATURAL
 			-- NSHelpButtonBezelStyle
 			-- A round button with a question mark providing the standard help button look.
 		external
@@ -305,7 +377,7 @@ feature -- NSBezelStyle Constants
 			"NSHelpButtonBezelStyle"
 		end
 
-	frozen small_square_bezel_style: INTEGER
+	frozen small_square_bezel_style: NATURAL
 			-- NSSmallSquareBezelStyle
 			-- A simple square bezel style. Buttons using this style can be scaled to any size.
 		external
@@ -314,7 +386,7 @@ feature -- NSBezelStyle Constants
 			"NSSmallSquareBezelStyle"
 		end
 
-	frozen textured_rounded_bezel_style: INTEGER
+	frozen textured_rounded_bezel_style: NATURAL
 			-- NSTexturedRoundedBezelStyle
 			-- A textured (metal) bezel style similar in appearance to the Finder's action (gear) button.
 			-- The height of this button is fixed.
@@ -324,7 +396,7 @@ feature -- NSBezelStyle Constants
 			"NSTexturedRoundedBezelStyle"
 		end
 
-	frozen rounded_rect_bezel_style: INTEGER
+	frozen rounded_rect_bezel_style: NATURAL
 			-- NSRoundRectBezelStyle
 			-- A bezel style that matches the search buttons in Finder and Mail.
 		external
@@ -333,7 +405,7 @@ feature -- NSBezelStyle Constants
 			"NSRoundRectBezelStyle"
 		end
 
-	frozen recessed_bezel_style: INTEGER
+	frozen recessed_bezel_style: NATURAL
 			-- NSRecessedBezelStyle
 			-- A bezel style that matches the recessed buttons in Mail, Finder and Safari.
 		external
@@ -342,7 +414,7 @@ feature -- NSBezelStyle Constants
 			"NSRecessedBezelStyle"
 		end
 
-	frozen rounded_disclosure_bezel_style: INTEGER
+	frozen rounded_disclosure_bezel_style: NATURAL
 			-- NSRoundedDisclosureBezelStyle
 			-- A bezel style that matches the disclosure style used in the standard Save panel.
 		external

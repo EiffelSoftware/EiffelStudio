@@ -36,25 +36,25 @@ feature -- Creating Arbitrary Fonts
 	font_with_name_size (a_font_name: NS_STRING; a_font_size: REAL)
 			-- Creates a font object for the specified font name and font size.
 		do
-			make_from_pointer ({NS_FONT_API}.font_with_name_size (a_font_name.item, a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.font_with_name_size (a_font_name.item, a_font_size.item))
 		end
 
 	font_with_descriptor (a_font_descriptor: NS_FONT_DESCRIPTOR; a_font_size: REAL)
 			-- Returns a font object for the specified font descriptor and font size.
 		do
-			make_from_pointer ({NS_FONT_API}.font_with_descriptor_size (a_font_descriptor.item, a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.font_with_descriptor_size (a_font_descriptor.item, a_font_size.item))
 		end
 
 	font_with_descriptor_text_transform (a_font_descriptor: NS_FONT_DESCRIPTOR; a_text_transform: NS_AFFINE_TRANSFORM)
 			-- Returns a font object for the specified font descriptor and text transform.
 		do
-			make_from_pointer ({NS_FONT_API}.font_with_descriptor_text_transform (a_font_descriptor.item, a_text_transform.item))
+			share_from_pointer ({NS_FONT_API}.font_with_descriptor_text_transform (a_font_descriptor.item, a_text_transform.item))
 		end
 
 	font_with_name_matrix (a_font_name: NS_STRING; a_font_matrix: POINTER)
 			-- Returns a font object for the specified font name and matrix.
 		do
-			make_from_pointer ({NS_FONT_API}.font_with_name_matrix (a_font_name.item, a_font_matrix))
+			share_from_pointer ({NS_FONT_API}.font_with_name_matrix (a_font_name.item, a_font_matrix))
 		end
 
 feature -- Creating User Fonts
@@ -62,13 +62,13 @@ feature -- Creating User Fonts
 	user_font_of_size (a_font_size: REAL)
 			-- Returns the font used by default for documents and other text under the user`s control (that is, text whose font the user can normally change), in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.user_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.user_font_of_size (a_font_size.item))
 		end
 
 	user_fixed_pitch_font_of_size (a_font_size: REAL)
 			-- Returns the font used by default for documents and other text under the user`s control (that is, text whose font the user can normally change), when that font should be fixed-pitch, in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.user_fixed_pitch_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.user_fixed_pitch_font_of_size (a_font_size.item))
 		end
 
 feature -- Creating System Fonts
@@ -76,61 +76,61 @@ feature -- Creating System Fonts
 	bold_system_font_of_size (a_font_size: REAL)
 			-- Returns the Aqua system font used for standard interface items that are rendered in boldface type in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.bold_system_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.bold_system_font_of_size (a_font_size.item))
 		end
 
 	control_content_font_of_size (a_font_size: REAL)
 			-- Returns the font used for the content of controls in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.control_content_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.control_content_font_of_size (a_font_size.item))
 		end
 
 	label_font_of_size (a_font_size: REAL)
 			-- Returns the Aqua font used for standard interface labels in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.label_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.label_font_of_size (a_font_size.item))
 		end
 
 	menu_font_of_size (a_font_size: REAL)
 			-- Returns the font used for menu items, in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.menu_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.menu_font_of_size (a_font_size.item))
 		end
 
 	menu_bar_font_of_size (a_font_size: REAL)
 			-- Returns the font used for menu bar items, in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.menu_bar_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.menu_bar_font_of_size (a_font_size.item))
 		end
 
 	message_font_of_size (a_font_size: REAL)
 			-- Returns the font used for standard interface items, such as button labels, menu items, and so on, in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.message_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.message_font_of_size (a_font_size.item))
 		end
 
 	palette_font_of_size (a_font_size: REAL)
 			-- Returns the font used for palette window title bars, in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.palette_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.palette_font_of_size (a_font_size.item))
 		end
 
 	system_font_of_size (a_font_size: REAL)
 			-- Returns the Aqua system font used for standard interface items, such as button labels, menu items, and so on, in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.system_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.system_font_of_size (a_font_size.item))
 		end
 
 	title_bar_font_of_size (a_font_size: REAL)
 			-- Returns the font used for window title bars, in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.title_bar_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.title_bar_font_of_size (a_font_size.item))
 		end
 
 	tool_tips_font_of_size (a_font_size: REAL)
 			-- Returns the font used for tool tips labels, in the specified size.
 		do
-			make_from_pointer ({NS_FONT_API}.tool_tips_font_of_size (a_font_size.item))
+			share_from_pointer ({NS_FONT_API}.tool_tips_font_of_size (a_font_size.item))
 		end
 
 feature -- Using a Font to Draw

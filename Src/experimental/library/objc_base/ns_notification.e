@@ -10,6 +10,42 @@ class
 inherit
 	NS_OBJECT
 
-feature
+create {NS_OBJECT}
+	make_from_pointer,
+	share_from_pointer
+
+feature -- Creating Notifications
+
+	make_with_name_object (a_name: NS_STRING; a_an_object: NS_OBJECT)
+			-- Returns a new notification object with a specified name and object.
+		do
+			make_from_pointer ({NS_NOTIFICATION_API}.notification_with_name_object (a_name.item, a_an_object.item))
+		end
+
+	make_with_name_object_user_info (a_name: NS_STRING; a_an_object: NS_OBJECT; a_user_info: NS_DICTIONARY)
+			-- Returns a notification object with a specified name, object, and user information.
+		do
+			make_from_pointer ({NS_NOTIFICATION_API}.notification_with_name_object_user_info (a_name.item, a_an_object.item, a_user_info.item))
+		end
+
+feature -- Getting Notification Information
+
+	name: NS_STRING
+			-- Returns the name of the notification.
+		do
+			create Result.share_from_pointer ({NS_NOTIFICATION_API}.name (item))
+		end
+
+	object: NS_OBJECT
+			-- Returns the object associated with the notification.
+		do
+			create Result.share_from_pointer ({NS_NOTIFICATION_API}.object (item))
+		end
+
+	user_info: NS_DICTIONARY
+			-- Returns the user information dictionary associated with the receiver.
+		do
+			create Result.share_from_pointer ({NS_NOTIFICATION_API}.user_info (item))
+		end
 
 end

@@ -170,7 +170,7 @@ feature -- Accessing Data
 		external
 			"C inline use <Foundation/Foundation.h>"
 		alias
-			"return [(NSData*)$a_ns_data bytes];"
+			"return (EIF_POINTER)[(NSData*)$a_ns_data bytes];"
 		end
 
 	frozen description (a_ns_data: POINTER): POINTER
@@ -178,7 +178,7 @@ feature -- Accessing Data
 		external
 			"C inline use <Foundation/Foundation.h>"
 		alias
-			"return [(NSData*)$a_ns_data description];"
+			"return (EIF_POINTER)[(NSData*)$a_ns_data description];"
 		end
 
 	frozen get_bytes (a_ns_data: POINTER; a_buffer: POINTER)

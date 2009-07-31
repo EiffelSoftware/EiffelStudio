@@ -158,22 +158,23 @@ feature {NONE}
 
 	callback_void_general (a_object: POINTER; a_selector: POINTER; args: POINTER; nargs: INTEGER): BOOLEAN
 		local
-			c_string: C_STRING
 			args_managed: MANAGED_POINTER
 			arg: TUPLE
 			argX: NS_OBJECT
 		do
+--			debug ("callback")
+				io.put_string ("Callback '" + (create {OBJC_SELECTOR}.make_from_pointer (a_selector)).name + "'%N")
+--			end
 			if attached {ROUTINE [ANY, TUPLE]} get_agent (a_object, a_selector) as l_agent then
---				io.put_string ("Callback to " + c_string.string + " %N")
 				if attached get_eiffel_object (a_object) as target then
-					io.put_string ("  -> target object: " + target.generator + " (id: " + target.object_id.out + ", item: " + target.item.out + ")%N")
-					l_agent.set_target (target)
-
 					if attached target.class_.instance_method (a_selector) as method then
-						io.put_string ("     no-args: " + method.argument_count.out + "%N")
+--						io.put_string ("  no-args: " + method.argument_count.out + "  " + nargs.out + "%N")
 					else
 						check selector_not_found: False end
 					end
+
+--					io.put_string ("  -> target object: " + target.generator + " (id: " + target.object_id.out + ", item: " + target.item.out + ")%N")
+					l_agent.set_target (target)
 				else
 					check
 						target_object_not_registered: False
@@ -183,7 +184,7 @@ feature {NONE}
 				if nargs > 2 then
 					create args_managed.own_from_pointer (args, nargs*4)
 					create argX.share_from_pointer (args_managed.read_pointer (0))
-					io.put_string ("  -> argument1: " + argX.class_.name + ": " + argX.debug_output + "%N")
+--					io.put_string ("  -> argument1: " + argX.class_.name + ": " + argX.debug_output + "%N")
 					create {TUPLE[POINTER]}arg.default_create
 					arg.put_pointer (argX.item, 1)
 					l_agent.call (arg)

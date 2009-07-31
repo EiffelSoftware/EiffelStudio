@@ -1,6 +1,6 @@
 note
 	description: "[
-		Provides features for the servlets
+		Provides features for the servlets.
 	]"
 	legal: "See notice at end of class."
 	date: "$Date$"

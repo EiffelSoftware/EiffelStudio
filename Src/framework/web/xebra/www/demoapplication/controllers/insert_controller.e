@@ -1,9 +1,11 @@
 note
-	description: "Summary description for {INSERT_CONTROLLER}."
-	author: ""
+	description: "[
+		no comment yet
+	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
-
 class
 	INSERT_CONTROLLER
 

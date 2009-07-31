@@ -1,19 +1,19 @@
-//*
-// * description: "Apache module that sends request data to xebra server and receives page to be displayed."
-// * date:		"$Date$"
-// * revision:	"$Revision$"
-// * copyright:	"Copyright (c) 1985-2007, Eiffel Software."
-// * license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
-// * licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
-// * copying: ""
-// * source: 	"[
-// * 			Eiffel Software
-// * 			5949 Hollister Ave #B, Goleta, CA 93117
-// * 			Telephone 805-685-1006, Fax 805-685-6869
-// * 			Website http://www.eiffel.com
-// * 			Customer support http://support.eiffel.com
-// * 			]"
-// */
+/*
+ * description: "Apache module that sends request data to xebra server and receives page to be displayed."
+ * date:		"$Date$"
+ * revision:	"$Revision$"
+ * copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+ * license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+ * licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+ * copying: ""
+ * source: 	"[
+ * 			Eiffel Software
+ * 			5949 Hollister Ave #B, Goleta, CA 93117
+ * 			Telephone 805-685-1006, Fax 805-685-6869
+ * 			Website http://www.eiffel.com
+ * 			Customer support http://support.eiffel.com
+ * 			]"
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,17 +27,22 @@
 #include "http_config.h"
 
 
-
-//#include <unistd.h>
-//#include <errno.h>
-//#include <string.h>
-//#include <sys/types.h>
+#ifdef _WINDOWS
 #include <winsock2.h>
+#else
 
-//#include <signal.h>
-
-//#include <time.h>
-
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <time.h>
+#endif
 
 
 #define REVISION "$Revision$"
@@ -69,8 +74,11 @@
 #define CT_APP_FORM_URLENCODED "application/x-www-form-urlencoded"
 
 #define KEY_FILE_UPLOAD "#FUP#"
+#ifdef _WINDOWS
 #define UP_FN "C:\tmp\xebra_upload.XXXXXX" 
-
+#else
+#define UP_FN "/tmp/xebra_upload.XXXXXX"	
+#endif
 /*======= SOCKET CONSTANTS =======*/
 
 /* FRAG_SIZE:
@@ -271,8 +279,11 @@ doc:            <param name="sockfd" type="int">The socket connection id</param>
 doc: 			 <return>Returns 1 on success and 0 otherwise</return>
 doc:    </routine>
 */
-int send_message_fraged (char * message, SOCKET sockfd,
-						 request_rec* r);
+#ifdef _WINDOWS
+int send_message_fraged (char * message, SOCKET sockfd, request_rec* r);
+#else
+int send_message_fraged (char * message, int sockfd, request_rec* r);
+#endif
 
 /**
 doc:    <routine name="receive_message_fraged" export="private">
@@ -282,8 +293,11 @@ doc:            <param name="sockfd" type="int">The socket connection id</param>
 doc: 			 <return>Returns 1 on success and 0 otherwise</return>
 doc:    </routine>
 */
-int receive_message_fraged (char **msg_buf, SOCKET sockfd,
-							request_rec* r);
+#ifdef _WINDOWS
+int receive_message_fraged (char **msg_buf, SOCKET sockfd, request_rec* r);
+#else
+int receive_message_fraged (char **msg_buf, int sockfd, mrequest_rec* r);
+#endif
 
 /**
 doc:    <routine name="register_hooks" export="private">

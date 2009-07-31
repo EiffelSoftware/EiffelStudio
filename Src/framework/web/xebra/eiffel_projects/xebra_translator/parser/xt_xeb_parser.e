@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 		once
 				-- For graceful recovery of silly mistake: on missing '>' we assume it was there all along
 			close_fixed := char ('>')
-			close_fixed.set_error_strategy (agent handle_close_error)
+			close_fixed.set_error_message_handler (agent handle_close_error)
 			close_fixed.fixate
 
 				-- Plain text eats all the characters until it reaches a opening tag. Will put a content
@@ -111,20 +111,20 @@ feature {NONE} -- Implementation
 			create {PEG_CHOICE} xml.make
 
 			plain_html_long_end := (close_fixed + (-xml) + open + slash + ws.optional + identifier)
-			plain_html := (open+
+			plain_html := (open + identifier.enforce +
 							plain_html_header + ws.optional + (
 									slash | plain_html_long_end
-								) + ws.optional+ close_fixed
+								) + ws.optional + close_fixed
 						)
 			plain_html.set_name ("plain_html")
 			plain_html.set_behaviour (agent build_plain_html)
 			plain_html.set_error_message_handler (agent handle_plain_html_error)
 
 			xeb_tag_long_end := (close_fixed + (-xml) + open + slash + ws.optional + namespace_identifier)
-			xeb_tag := (open+
+			xeb_tag := (open +
 							xeb_tag_header + ws.optional + (
 									slash | xeb_tag_long_end
-								) + ws.optional+ close_fixed
+								) + ws.optional + close_fixed
 						)
 
 			xeb_tag.set_error_message_handler (agent handle_xeb_tag_error)
@@ -179,16 +179,12 @@ feature -- Parser error strategies
 			end
 		end
 
-	handle_close_error (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- Fixes the missing '>' by assuming it is there
+	handle_close_error (a_result: PEG_PARSER_RESULT)
+			-- Tells you that here is a '>' missing
 		require
 			a_result_attached: attached a_result
 		do
-			Result := a_result
---			Result.put_error_message ("Missing '>'")
---			Result.success := True
-		ensure
-			Result_attached: attached Result
+			a_result.put_error_message ("Missing '>'")
 		end
 
 feature -- Parser Behaviours
@@ -432,5 +428,8 @@ feature -- Basic Functionality
 		ensure
 			template_generated: Result implies template /= Void
 		end
+
+invariant
+	registry_attached: attached registry
 
 end

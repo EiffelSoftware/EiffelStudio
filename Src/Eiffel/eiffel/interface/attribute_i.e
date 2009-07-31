@@ -500,10 +500,10 @@ feature -- Element Change
 			Precursor {ENCAPSULATED_I} (other)
 			other.set_type (type, assigner_name_id)
 			other.set_has_function_origin (has_function_origin)
-			extension := other.extension
+			other.set_extension (extension)
 			other.set_assert_id_set (assert_id_set)
-			other.set_is_transient (other.is_transient)
-			other.set_is_stable (other.is_stable)
+			other.set_is_transient (is_transient)
+			other.set_is_stable (is_stable)
 		end
 
 	transfer_from (other: like Current)
@@ -513,11 +513,11 @@ feature -- Element Change
 			type := other.type
 			assigner_name_id := other.assigner_name_id
 				-- `has_function_origin' is set in FEATURE_I
---			has_function_origin := other.has_function_origin
+			set_has_function_origin (other.has_function_origin)
 			assert_id_set := other.assert_id_set
 			extension := other.extension
-			other.set_is_transient (other.is_transient)
-			other.set_is_stable (other.is_stable)
+			set_is_transient (other.is_transient)
+			set_is_stable (other.is_stable)
 		end
 
 	melt (exec: EXECUTION_UNIT)

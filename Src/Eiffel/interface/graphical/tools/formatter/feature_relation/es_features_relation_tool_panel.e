@@ -25,6 +25,11 @@ inherit
 			{ES_FEATURE_RELATION_TOOL} all
 		end
 
+	SHARED_DEBUGGER_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -159,8 +164,8 @@ feature -- Status setting
 				else
 						-- Even it is possibly the same feature,
 						-- we have to refresh since there maybe a change of the feature.
-						-- See bug#15998.
-					if fst /= Void then
+						-- See bug#15998. But when debugging, it is not necessary.
+					if not debugger_manager.is_debugging then
 						refresh
 					end
 				end

@@ -1,8 +1,9 @@
 note
 	description: "[
-		Provides features for the servlets
+		Provides one testing feature for the servlet.
 	]"
 	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -844,8 +844,11 @@ feature {NONE} -- Settings
 					-- Try and find the previously used target.
 				create l_user_options_factory
 				l_user_options_factory.load (a_system.file_name)
-				if l_user_options_factory.successful then
-					l_last_target := l_user_options_factory.last_options.target_name
+				if
+					l_user_options_factory.successful and then
+					attached l_user_options_factory.last_options as l_options
+				then
+					l_last_target := l_options.target_name
 				else
 					l_last_target := ""
 				end

@@ -813,7 +813,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 		local
 			l_generics, l_result_generics: like generics
 			l_class: like associated_class
-			l_formal, l_new_formal: FORMAL_A
 			i, nb: INTEGER
 		do
 			if associated_class = c then

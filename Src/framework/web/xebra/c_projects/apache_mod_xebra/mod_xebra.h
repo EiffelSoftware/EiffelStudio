@@ -262,6 +262,8 @@ doc:    </routine>
 */
 int decode_flag (unsigned int i);
 
+
+#ifndef _WINDOWS
 /*
 doc:    <routine name="get_in_addr" export="private">
 doc:            <summary>Get socket address</summary>
@@ -270,6 +272,8 @@ doc: 			 <return>Returns the address</return>
 doc:    </routine>
 */
 void* get_in_addr (struct sockaddr *sa);
+#endif
+
 
 /*
 doc:    <routine name="send_message_fraged" export="private">
@@ -296,7 +300,7 @@ doc:    </routine>
 #ifdef _WINDOWS
 int receive_message_fraged (char **msg_buf, SOCKET sockfd, request_rec* r);
 #else
-int receive_message_fraged (char **msg_buf, int sockfd, mrequest_rec* r);
+int receive_message_fraged (char **msg_buf, int sockfd, request_rec* r);
 #endif
 
 /**

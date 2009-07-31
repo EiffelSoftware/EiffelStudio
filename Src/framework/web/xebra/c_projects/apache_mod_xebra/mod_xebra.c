@@ -187,6 +187,7 @@ static int xebra_handler (request_rec* r)
 	SOCKADDR_IN clientService;
 #else
 	int sockfd; /* socket id */
+	char s[INET6_ADDRSTRLEN]; /* information about connection */
 	struct addrinfo hints, *servinfo, *p; /* information about connection */
 #endif
 
@@ -539,18 +540,22 @@ int decode_flag (unsigned int i)
 {
 	return (i & 1);
 }
+#ifndef _WINDOWS
+void* get_in_addr (struct sockaddr *sa)
+{
+	if (sa->sa_family == AF_INET) {
+		return &(((struct sockaddr_in*) sa)->sin_addr);
+	}
 
-//void* get_in_addr (struct sockaddr *sa)
-//{
-//	if (sa->sa_family == AF_INET) {
-//		return &(((struct sockaddr_in*) sa)->sin_addr);
-//	}
-//
-//	return &(((struct sockaddr_in6*) sa)->sin6_addr);
-//}
+	return &(((struct sockaddr_in6*) sa)->sin6_addr);
+}
+#endif
 
-int send_message_fraged (char * message, SOCKET sockfd,
-		request_rec* r)
+#ifdef _WINDOWS
+int send_message_fraged (char * message, SOCKET sockfd,	request_rec* r)
+#else
+int send_message_fraged (char * message, int sockfd, request_rec* r)
+#endif
 {
 	int numbytes = -1; /* how much was sent in the last recv*/
 	unsigned int bytes_of_msg_sent = 0; /* how much is already sent (total) */
@@ -635,8 +640,11 @@ int send_message_fraged (char * message, SOCKET sockfd,
 	return 1;
 }
 
-int receive_message_fraged (char **msg_buf, SOCKET sockfd,
-		request_rec* r)
+#ifdef _WINDOWS
+int receive_message_fraged (char **msg_buf, SOCKET sockfd, request_rec* r)
+#else
+int receive_message_fraged (char **msg_buf, int sockfd, request_rec* r)
+#endif
 {
 	int msg_buf_strlength; /* string length of *msg_buf */
 	char* frag_buf; /* stores the frag to be received */

@@ -1,0 +1,11 @@
+test_name select-stable-attribute
+test_description Test shows that when selecting a stable attribute, it is no more stable in the class where the select is done.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result OK
+
+test_end

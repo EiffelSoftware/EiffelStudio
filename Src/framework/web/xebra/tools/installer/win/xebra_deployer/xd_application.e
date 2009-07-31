@@ -156,7 +156,7 @@ feature -- Basic Operations
 				o.dprint ("Starting...",1)
 				process_httpd
 				process_ecfs
-				process_launcher
+			--	process_launcher
 			else
 				error_manager.add_error (create {XERROR_DIR_NOT_FOUND}.make (install_dir), false)
 			end

@@ -1,5 +1,5 @@
 /*
-* description: "Apache module (windows) that sends request data to xebra server and receives page to be displayed."
+* description: "Apache module that sends request data to xebra server and receives page to be displayed."
 * date:		"$Date$"
 * revision:	"$Revision$"
 * copyright:	"Copyright (c) 1985-2007, Eiffel Software."
@@ -94,6 +94,19 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
 		rv = apr_file_mktemp (&tmpfile, tmpname, KEEPONCLOSE, r->pool);
 		DEBUG ("Creating file... '%s'", tmpname);
 
+#ifndef _WINDOWS
+		rv = apr_file_perms_set(tmpname,  APR_FPROT_UREAD | APR_FPROT_UWRITE  |
+											APR_FPROT_GREAD | APR_FPROT_GWRITE  |
+											APR_FPROT_WREAD | APR_FPROT_WWRITE);
+
+		if (rv != APR_SUCCESS)
+		{
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
+								"Failed to change permissions on temp file");
+						return HTTP_INTERNAL_SERVER_ERROR;
+		}
+#endif
+
 		(*buf) = apr_pstrcat (r->pool, KEY_FILE_UPLOAD, tmpname, NULL);
 		if (rv != APR_SUCCESS) {
 			ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r,
@@ -153,16 +166,6 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
 		apr_file_flush (tmpfile);
 
 	return OK;
-
-	/*		apr_brigade_length(bb, 1, &blen);
-	 DEBUG ("Brigade length: %d", (int) blen);
-	 bsize = (apr_size_t) blen;
-	 (*buf) = apr_palloc(r->pool, bsize + 1);
-	 apr_brigade_flatten(bb, (*buf), &bsize);
-	 (*buf)[blen] = 0;
-
-	 apr_file_write(tmpfile, (*buf), &bsize);
-	 */
 }
 
 static int print_item (void* rec, const char *key, const char *value)
@@ -175,10 +178,18 @@ static int print_item (void* rec, const char *key, const char *value)
 
 static int xebra_handler (request_rec* r)
 {	
+
+#ifdef _WINDOWS
 	WORD wVersionRequested;
 	WSADATA wsaData;
 	SOCKET m_socket;
 	int wsaerr;
+	SOCKADDR_IN clientService;
+#else
+	int sockfd; /* socket id */
+	struct addrinfo hints, *servinfo, *p; /* information about connection */
+#endif
+
 	int rv = OK; /* information about connection */
 	char * message; /* the message to be sent to the server */
 	int numbytes; /* numcber of bytes recieved from server */
@@ -188,11 +199,10 @@ static int xebra_handler (request_rec* r)
 	char* srv_hostname;
 	char* srv_port;
 	int srv_port_int;
-/*	char* cctype;*/
 	int srv_max_upload_size; /* the max upload size read from config */
 	char* ctype;
 	xebra_svr_cfg *srvc;
-	SOCKADDR_IN clientService;
+	
 
 	srvc = ap_get_module_config (r->server->module_config,
 		&xebra_module);
@@ -211,7 +221,7 @@ static int xebra_handler (request_rec* r)
 	/* Set a default content-type */
 	ap_set_content_type (r, "text/html;charset=ascii");
 
-
+#ifdef _WINDOWS
 	/* winsock stuff */
 	/* Using MAKEWORD macro, Winsock version request 2.2 */
 	wVersionRequested = MAKEWORD(2, 2);
@@ -239,6 +249,8 @@ static int xebra_handler (request_rec* r)
 		WSACleanup();
 		return 0;
 	}
+#endif
+
 
 	DEBUG ("===============NEW REQUEST===============");
 	DEBUG ("%s", r->the_request)
@@ -302,10 +314,7 @@ static int xebra_handler (request_rec* r)
 		message = apr_pstrcat (r->pool, message, ARG, NULL);
 	}
 
-#ifdef EIF_WINDOWS
-#else	 
-#endif
-
+#ifdef _WINDOWS
 	/* Set up connection to server */
 	DEBUG ("Setting up connection.");
 	DEBUG ("Using server host %s and port %s", srv_hostname, srv_port);
@@ -329,25 +338,70 @@ static int xebra_handler (request_rec* r)
 		WSACleanup();
 		return OK;
 	}
+#else
+	memset (&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+
+	if ((rv = getaddrinfo (srv_hostname, srv_port, &hints, &servinfo)) != 0) {
+		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r, "Getaddrinfo: %s",
+				gai_strerror (rv));
+
+		return OK;
+	}
+
+	/* loop through all the results and connect to the first we can */
+	for (p = servinfo; p != NULL; p = p->ai_next) {
+		if ((sockfd = socket (p->ai_family, p->ai_socktype, p->ai_protocol))
+				== -1) {
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error socket");
+			continue;
+		}
+
+		if (connect (sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+			ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "error connect");
+			continue;
+		}
+		break;
+	}
+
+	if (p == NULL) {
+		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r, "failed to connect");
+		PRINT_ERROR ("Cannot connect to Xebra Server. See apache error log.");
+		return OK;
+	}
+
+	inet_ntop (p->ai_family, get_in_addr ((struct sockaddr *) p->ai_addr), s,
+			sizeof s);
+
+	freeaddrinfo (servinfo);
+#endif
+
 
 	DEBUG ("Connected.");
 
 	DEBUG ("Sending message...");
 
+#ifdef _WINDOWS
 	if (!send_message_fraged (message, m_socket, r)) {
-		//ap_rputs ("Error sending message. See error log.", r);
+#else
+	if (!send_message_fraged (message, sockfd, r)) {
+#endif
 		PRINT_ERROR ("Error sending message. See apache error log.");
 		return OK;
 	}
 
 	DEBUG ("Messages sent. Now waiting for back message...");
 
+#ifdef _WINDOWS
 	numbytes = receive_message_fraged (&rmsg_buf, m_socket, r);
+#else
+	numbytes = receive_message_fraged (&rmsg_buf, sockfd, r);
+#endif
 
 	if (numbytes < 1) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, 0, r,
 				"error in receive_message_fraged");
-		//ap_rputs ("Error receiving message. See error log.", r);
 		PRINT_ERROR("Error receiving message. See apache error log.");
 		return OK;
 	}
@@ -357,12 +411,17 @@ static int xebra_handler (request_rec* r)
 	rv = handle_response_message (r, rmsg_buf);
 	if (rv != APR_SUCCESS)
 	{
-		//ap_rputs ("Error reading message from XEbra Server. See error log.", r);
 		PRINT_ERROR("Error reading message. See apache error log.");
 	}
 	
 	/* Close sockets and quit */
+#ifdef _WINDOWS
 	WSACleanup();
+#else
+	shutdown (sockfd, 2);
+	close (sockfd);
+#endif
+
 	return OK;
 }
 

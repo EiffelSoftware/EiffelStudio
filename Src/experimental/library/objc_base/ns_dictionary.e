@@ -4,6 +4,8 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
+	-- TODO: May make sense to add genericity if this class becomes more complete and more used
+
 class
 	NS_DICTIONARY
 

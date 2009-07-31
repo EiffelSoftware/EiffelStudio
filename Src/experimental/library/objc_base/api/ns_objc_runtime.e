@@ -216,7 +216,7 @@ feature -- Working with Instances
 		external
 			"C inline use <objc/runtime.h>"
 		alias
-			"return object_setInstanceVariable((id)$a_object, $a_name, $a_value);"
+			"object_setInstanceVariable((id)$a_object, $a_name, $a_value);"
 		end
 
 	frozen object_get_class (a_object: POINTER): POINTER
@@ -260,7 +260,7 @@ feature -- Working with Selectors
 		external
 			"C inline use <objc/runtime.h>"
 		alias
-			"return sel_getName($a_selector);"
+			"return (EIF_POINTER)sel_getName($a_selector);"
 		end
 
 	frozen sel_get_uid (a_name: POINTER): POINTER

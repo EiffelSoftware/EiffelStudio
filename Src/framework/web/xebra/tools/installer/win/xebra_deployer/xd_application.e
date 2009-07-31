@@ -84,6 +84,15 @@ feature -- Paths
 			result_attached: Result /= Void
 		end
 
+	dir_bin: FILE_NAME
+			-- The path to the xebra conf folder
+		do
+			Result := install_dir.twin
+			Result.extend ("bin")
+		ensure
+			result_attached: Result /= Void
+		end
+
 	dir_utilities: FILE_NAME
 			-- The path  to xebra_utilities library
 		do
@@ -100,6 +109,9 @@ feature -- Constants
 
 	File_httpd_conf: STRING = "httpd\.conf"
 		-- The http.conf file (in xebra/apache/conf)
+
+	File_launcher: STRING = "launch_xebra\.bat"
+		-- The launcher file (in xebra/bin)	
 
 	File_server_ini: STRING = "server\.ini"
 		-- The server.ini file (in xebra/conf)
@@ -144,6 +156,7 @@ feature -- Basic Operations
 				o.dprint ("Starting...",1)
 				process_httpd
 				process_ecfs
+				process_launcher
 			else
 				error_manager.add_error (create {XERROR_DIR_NOT_FOUND}.make (install_dir), false)
 			end
@@ -180,8 +193,8 @@ feature -- Replacement Tasks
 --		end
 
 	process_ecfs
-			-- Replaces in all ecf and xml files all occurrences of
-			--	Key_eiffel_projects 	with 	install_dir
+			-- Replaces in all ecf files all occurrences of
+			--	Key_eiffel_src 	with 	Key_library_root
 		local
 			l_util: XU_FILE_UTILITIES
 			l_files: LIST [FILE_NAME]
@@ -223,6 +236,26 @@ feature -- Replacement Tasks
 			end
 		end
 
+	process_launcher
+			-- Replaces in File_launcher all occurrences of
+			--	Key_install_path 		with 	install_dir
+		local
+			l_util: XU_FILE_UTILITIES
+			l_files: LIST [FILE_NAME]
+		do
+			create l_util
+			o.dprint ("Scanning for '" + File_launcher + "' in " + dir_bin, 1)
+			l_files := l_util.scan_for_files (dir_bin, 0, File_launcher, "")
+			from
+				l_files.start
+			until
+				l_files.after
+			loop
+				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
+				l_util.replace_in_file (l_files.item_for_iteration, Key_install_path, install_dir)
+				l_files.forth
+			end
+		end
 --	process_server_ini
 --			-- Replaces in server.ini all occurrences of
 --			--	Key_install_path 	with 	install_dir

@@ -230,8 +230,8 @@ feature -- Replacement Tasks
 				l_files.after
 			loop
 				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
-				l_util.replace_in_file (l_files.item_for_iteration, Key_document_root, dir_www)
-				l_util.replace_in_file (l_files.item_for_iteration, Key_server_root, dir_apache)
+				l_util.replace_in_file (l_files.item_for_iteration, Key_document_root, "%"" + dir_www + "%"")
+				l_util.replace_in_file (l_files.item_for_iteration, Key_server_root, "%"" + dir_apache + "%"")
 				l_files.forth
 			end
 		end
@@ -252,7 +252,7 @@ feature -- Replacement Tasks
 				l_files.after
 			loop
 				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
-				l_util.replace_in_file (l_files.item_for_iteration, Key_install_path, install_dir)
+				l_util.replace_in_file (l_files.item_for_iteration, Key_install_path, "%"" + install_dir + "%"")
 				l_files.forth
 			end
 		end

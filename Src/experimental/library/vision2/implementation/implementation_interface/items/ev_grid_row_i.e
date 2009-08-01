@@ -853,7 +853,7 @@ feature -- Status setting
 
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
-	set_item (i: INTEGER; a_item: EV_GRID_ITEM)
+	set_item (i: INTEGER; a_item: detachable EV_GRID_ITEM)
 			-- Set item at `i'-th column to be `a_item'.
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require

@@ -29,6 +29,9 @@ create
 	make_from_dib_bitmap,
 	make_from_bitmap_with_alpha
 
+create {WEL_GDIP_BITMAP}
+	make_from_pointer
+
 feature {NONE} -- Initlization
 
 	make_with_size (a_width, a_height: INTEGER)
@@ -80,6 +83,16 @@ feature {NONE} -- Initlization
 			default_create
 			item := c_gdip_create_bitmap_from_hicon  (gdi_plus_handle, a_icon.item, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	make_from_pointer (a_pointer: POINTER)
+			-- Creation method
+			-- Pointer points to an existing gdip_bitmap.
+		require
+			a_pointer_not_null: a_pointer /= default_pointer
+		do
+			default_create
+			item := a_pointer
 		end
 
 	make_from_bitmap (a_bitmap: WEL_BITMAP; a_palette: detachable WEL_PALETTE)
@@ -231,6 +244,18 @@ feature -- Command
 		do
 			c_gdip_bitmap_get_pixel (gdi_plus_handle, item, a_x, a_y, $Result, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+
+	sub_gdip_bitmap (a_x, a_y, a_width, a_height: NATURAL_32): WEL_GDIP_BITMAP
+			-- Return a new GDI+ bitmap that represents a sub-pixmap of `Current'.
+		local
+			l_result: INTEGER
+			l_bitmap_result: POINTER
+		do
+			c_gdip_clone_bitmap_area_i (gdi_plus_handle, a_x, a_y, a_width, a_height, {WEL_GDIP_PIXEL_FORMAT}.Format32bppArgb, item, $l_bitmap_result, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+			create Result.make_from_pointer (l_bitmap_result)
 		end
 
 	new_bitmap: WEL_BITMAP
@@ -528,6 +553,35 @@ feature -- C externals
 					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpBitmap*, BitmapData*)) GdipBitmapUnlockBits)
 								((GpBitmap*) $a_bitmap,
 								(BitmapData*) $a_locked_bitmap_data);				
+				}
+			}
+			]"
+		end
+
+  	c_gdip_clone_bitmap_area_i (a_gdiplus_handle: POINTER; a_x, a_y, a_width, a_height: NATURAL_32; a_pixel_format: INTEGER; a_source_pixbuf: POINTER; a_dest_pixbuf: TYPED_POINTER [POINTER]; a_result_status: TYPED_POINTER [INTEGER])
+			-- Draw `a_image' on `a_graphics'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipCloneBitmapAreaI = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipCloneBitmapAreaI) {
+					GdipCloneBitmapAreaI  = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipCloneBitmapAreaI");
+				}
+				if (GdipCloneBitmapAreaI) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (INT, INT, INT, INT, PixelFormat, GpBitmap *, GpBitmap **)) GdipCloneBitmapAreaI)
+								((INT) $a_x,
+								(INT) $a_y,
+								(INT) $a_width,
+								(INT) $a_height,
+								(PixelFormat) $a_pixel_format,
+								(GpBitmap *) $a_source_pixbuf,
+								(GpBitmap **) $a_dest_pixbuf);
 				}
 			}
 			]"

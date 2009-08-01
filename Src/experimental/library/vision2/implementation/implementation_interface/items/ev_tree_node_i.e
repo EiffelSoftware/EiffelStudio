@@ -15,8 +15,6 @@ inherit
 			interface,
 			pixmap_equal_to,
 			parent
-		select
-			interface
 		end
 
 	EV_TEXTABLE_I
@@ -25,8 +23,8 @@ inherit
 		end
 
 	EV_TREE_NODE_LIST_I
-		rename
-			interface as nl_interface
+		redefine
+			interface
 		end
 
 	EV_DESELECTABLE_I

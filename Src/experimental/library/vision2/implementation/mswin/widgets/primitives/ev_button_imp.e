@@ -12,8 +12,6 @@ inherit
 	EV_BUTTON_I
 		redefine
 			interface
-		select
-			interface
 		end
 
 	EV_PRIMITIVE_IMP
@@ -46,9 +44,8 @@ inherit
 		end
 
 	EV_FONTABLE_IMP
-		rename
-			interface as ev_fontable_interface
 		redefine
+			interface,
 			set_font
 		end
 

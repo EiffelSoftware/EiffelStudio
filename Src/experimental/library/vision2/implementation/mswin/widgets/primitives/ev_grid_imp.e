@@ -17,7 +17,6 @@ inherit
 		rename
 			item as cell_item,
 			set_item as wel_set_item,
-			interface as drawing_area_interface,
 			hide_horizontal_scroll_bar as wel_hide_horizontal_scroll_bar,
 			show_horizontal_scroll_bar as wel_show_horizontal_scroll_bar,
 			hide_vertical_scroll_bar as wel_hide_vertical_scroll_bar,
@@ -44,6 +43,7 @@ inherit
 			set_configurable_target_menu_handler
 		redefine
 			make,
+			interface,
 			destroy,
 			set_background_color,
 			set_foreground_color
@@ -51,8 +51,6 @@ inherit
 
 	EV_GRID_I
 		redefine
-			interface
-		select
 			interface
 		end
 

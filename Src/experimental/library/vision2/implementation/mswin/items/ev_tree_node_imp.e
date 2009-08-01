@@ -15,8 +15,6 @@ inherit
 		redefine
 			parent_imp,
 			interface
-		select
-			interface
 		end
 
 	EV_ITEM_IMP
@@ -53,12 +51,10 @@ inherit
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
-		rename
-			interface as il_interface
 		undefine
 			copy, is_equal
 		redefine
-			make
+			make, interface
 		end
 
 	WEL_TREE_VIEW_ITEM

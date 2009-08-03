@@ -18,10 +18,9 @@ create
 
 feature {NONE} -- Basic operations
 
-	process_line (a_line: READABLE_STRING_8)
+	process_line (a_line: READABLE_STRING_8; a_number: INTEGER)
 			-- <Precursor>
 		local
-			l_error: C_COMPILER_ERROR
 			l_file_name: STRING
 			l_position: STRING
 			l_message_type: STRING

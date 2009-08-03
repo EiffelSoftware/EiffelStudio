@@ -7,12 +7,10 @@
 		<step action='Delete Folder'>
 			<Path>%ROOT%</Path>
 			<Recurse type='11'>-1</Recurse>
-			<checked type='11'>0</checked>
 			<indent type='3'>1</indent>
 			<name>Delete root (clean)</name>
 		</step>
 		<step action='Group'>
-			<checked type='11'>0</checked>
 			<indent type='3'>1</indent>
 			<name>Setup Eiffel</name>
 		</step>
@@ -21,12 +19,10 @@
 			<LocalPath>%EIFFEL_SRC%</LocalPath>
 			<Protocol>https</Protocol>
 			<Subcommand>export --force</Subcommand>
-			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Checkout EIFFEL_SRC/framework</name>
 		</step>
 		<step action='Group'>
-			<checked type='11'>0</checked>
 			<indent type='3'>1</indent>
 			<name>Compile Xebra Bins</name>
 		</step>
@@ -34,7 +30,6 @@
 			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf -target xebra_precompile -c_compile  -precompile -stop</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
-			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Compile Precompile</name>
 		</step>
@@ -42,7 +37,6 @@
 			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_translator\xebra_translator-voidunsafe.ecf -target xebra_translator -c_compile  -finalize -stop</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
-			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Compile Translator</name>
 		</step>
@@ -50,12 +44,10 @@
 			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_server\xebra_server-voidunsafe.ecf -target xebra_server -c_compile -finalize -stop</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
-			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Compile Server</name>
 		</step>
 		<step action='Group'>
-			<checked type='11'>0</checked>
 			<indent type='3'>1</indent>
 			<name>Compile Install Helpers</name>
 		</step>
@@ -63,26 +55,12 @@
 			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\tools\installer\win\xebra_deployer\xebra_deployer.ecf -target xebra_deployer -c_compile  -finalize</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
-			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Compile Deployer</name>
 		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
 			<name>Copy Xebra Files</name>
-		</step>
-		<step action='Copy Files'>
-			<Converted type='11'>-1</Converted>
-			<Delay>15</Delay>
-			<DestDir>%BUILD%\bin</DestDir>
-			<Incremental type='11'>-1</Incremental>
-			<LogCopied type='11'>-1</LogCopied>
-			<ReadOnly type='11'>-1</ReadOnly>
-			<Retries>10</Retries>
-			<SourceDir>%XEBRA_DEV%\tools\installer\win\xebra_deployer\EIFGENs\xebra_deployer\F_code\xebra_deployer.exe</SourceDir>
-			<TBD type='11'>-1</TBD>
-			<indent type='3'>2</indent>
-			<name>Copy Deployer</name>
 		</step>
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
@@ -403,8 +381,8 @@ compiler_flags=-experiment
 		</step>
 		<step action='Write File'>
 			<Filename>%BUILD%\bin\launch_xebra.bat</Filename>
-			<Text><![CDATA[start _INSTALL_PATH_\apache\bin\httpd.exe 
-start xebra_server.exe _INSTALL_PATH_\conf\server.ini 
+			<Text><![CDATA[start ..\apache\bin\httpd.exe 
+start xebra_server.exe ..\conf\server.ini 
 start /max /wait http://localhost:55000/helloworld]]></Text>
 			<indent type='3'>2</indent>
 			<name>Write launcher</name>

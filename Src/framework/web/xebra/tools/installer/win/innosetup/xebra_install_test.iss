@@ -9,9 +9,9 @@ AppId={{7D17C9F1-11FC-4B1E-B115-572597D59C1A}
 AppName=Eiffel Xebra
 AppVerName=Eiffel Xebra Pre-Release 0.1
 AppPublisher=Eiffel Software
-AppPublisherURL=http://www.eiffel.com
-AppSupportURL=http://www.eiffel.com
-AppUpdatesURL=http://www.eiffel.com
+AppPublisherURL=http://dev.eiffel.com/Xebra
+AppSupportURL=http://dev.eiffel.com/Xebra
+AppUpdatesURL=http://dev.eiffel.com/Xebra
 DefaultDirName={pf}\Eiffel Software\Xebra
 DefaultGroupName=Eiffel Software
 LicenseFile=C:\virtual_box_share\gpl.txt
@@ -27,6 +27,7 @@ Name: english; MessagesFile: compiler:Default.isl
 
 [Files]
 Source: C:\virtual_box_share\xebra_build\*; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: C:\virtual_box_share\eiffel_src\framework\web\xebra\tools\installer\win\xebra_deployer\EIFGENs\xebra_deployer\F_code\xebra_deployer.exe; DestDir: {tmp}
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -39,4 +40,4 @@ Root: HKLM; Subkey: Software\ISE\Eiffel65; ValueType: string; ValueName: XEBRA_D
 Root: HKLM; Subkey: Software\ISE\Eiffel65; ValueType: string; ValueName: XEBRA_LIBRARY; Flags: uninsdeletevalue; Languages: ; ValueData: {app}\library
 
 [Run]
-Filename: {app}\bin\xebra_deployer.exe; Parameters: {app}; WorkingDir: {app}\bin; Languages:
+Filename: {tmp}\xebra_deployer.exe; Parameters: """{app}"""; WorkingDir: {app}\bin; Languages: 

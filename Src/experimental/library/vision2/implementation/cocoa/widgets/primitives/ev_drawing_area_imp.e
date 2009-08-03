@@ -69,7 +69,6 @@ feature {NONE} -- Initialization
 			disable_tabable_from
 		end
 
-
 feature -- Status setting
 
 	redraw
@@ -111,10 +110,10 @@ feature -- Status setting
 			else
 				is_drawing_buffered := False
 			end
-				create trans.make
-				trans.translate_by_xy (0.0, height)
-				trans.scale_by_xy (1.0, -1.0)
-				trans.concat
+--				create trans.make
+--				trans.translate_by_xy (0.0, height)
+--				trans.scale_by_xy (1.0, -1.0)
+--				trans.concat
 			l_color ?= foreground_color.implementation
 			check l_color /= void end
 			l_color.color.set

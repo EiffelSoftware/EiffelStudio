@@ -40,20 +40,14 @@ feature -- Status Report
 
 	is_closeable: BOOLEAN
 			-- Is the window closeable by the user?
-		do
-		end
 
 	is_modal: BOOLEAN
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
 			-- application can receive user events again?
-		do
-		end
 
 	is_relative: BOOLEAN
 			-- Is `Current' shown relative to another window?
-		do
-		end
 
 	blocking_window: detachable EV_WINDOW
 			-- `Result' is window `Current' is shown to if
@@ -71,8 +65,10 @@ feature -- Status Report
 		local
 			ret: INTEGER
 		do
+			is_modal := True
 			show
 			ret := app_implementation.run_modal_for_window (current)
+			is_modal := False
 		end
 
 feature -- Status Setting
@@ -80,11 +76,13 @@ feature -- Status Setting
 	enable_closeable
 			-- Set the window to be closeable by the user
 		do
+			is_closeable := True
 		end
 
 	disable_closeable
 			-- Set the window not to be closeable by the user
 		do
+			is_closeable := False
 		end
 
 feature {NONE} -- Implementation

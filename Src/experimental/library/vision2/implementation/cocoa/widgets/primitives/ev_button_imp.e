@@ -96,6 +96,8 @@ feature {NONE} -- Initialization
 
 			set_action (agent select_actions.call ([]))
 			set_title ("")
+
+			default_center.add_observer (agent on_size_change, view_frame_did_change_notification, cocoa_view)
 		end
 
 feature -- Access

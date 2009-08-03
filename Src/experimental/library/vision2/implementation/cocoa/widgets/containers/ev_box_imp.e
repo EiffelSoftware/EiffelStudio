@@ -31,13 +31,13 @@ feature -- Initialization
 	make
 			-- Initialize `Current'
 		do
-			Precursor {EV_WIDGET_LIST_IMP}
 			create box.make
+			cocoa_view := box
+			Precursor {EV_WIDGET_LIST_IMP}
 			box.set_box_type ({NS_BOX}.box_custom)
 			box.set_title_position ({NS_BOX}.no_title)
 			box.set_border_type ({NS_BOX}.no_border)
 			box.set_content_view_margins (0, 0)
-			cocoa_view := box
 
 			is_homogeneous := Default_homogeneous
 			padding := Default_spacing

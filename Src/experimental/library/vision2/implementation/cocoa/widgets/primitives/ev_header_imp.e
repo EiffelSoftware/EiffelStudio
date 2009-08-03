@@ -55,7 +55,7 @@ feature -- Initialization
 
 			create container.make
 			cocoa_view := container
-			container.set_frame (create {NS_RECT}.make_rect (0, 0, 0, 18))
+			container.set_frame (create {NS_RECT}.make_rect (0, 0, 0, header_height))
 			container.set_has_horizontal_scroller (False)
 			container.set_has_vertical_scroller (False)
 
@@ -110,7 +110,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implemnentation
 
 	set_default_minimum_size
 		do
-			internal_set_minimum_size (0, 18)
+			internal_set_minimum_size (0, header_height)
 		end
 
 feature {NONE} -- Implementation
@@ -131,6 +131,8 @@ feature {NONE} -- Implementation
 			-- changed.
 		do
 		end
+
+	header_height: INTEGER = 18
 
 	outline_view: NS_OUTLINE_VIEW
 

@@ -299,14 +299,14 @@ feature {NONE} -- Graphical view
 				add_recursive (node, l_grid.implementation.cell_item)
 			elseif attached {EV_SPLIT_AREA} a_widget as l_splitarea then
 				-- The split area needs special treatment
-				if attached l_splitarea.first then
-					node := add_element (l_splitarea.first, a_node)
-					add_recursive (node, l_splitarea.second)
+				if attached l_splitarea.first as child then
+					node := add_element (child, a_node)
+					add_recursive (node, child)
 				end
 
-				if attached l_splitarea.second then
-					node := add_element (l_splitarea.second, a_node)
-					add_recursive (node, l_splitarea.second)
+				if attached l_splitarea.second as child then
+					node := add_element (child, a_node)
+					add_recursive (node, child)
 				end
 			elseif attached {EV_WIDGET_LIST} a_widget as wlist then
 				-- Okay, we have a widget which can have several children

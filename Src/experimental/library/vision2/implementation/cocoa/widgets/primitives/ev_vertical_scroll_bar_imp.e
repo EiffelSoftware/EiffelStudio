@@ -28,10 +28,10 @@ feature -- Initialization
 	make
 		do
 			create scroller.make_with_frame (0, 0, 5, 10)
+			cocoa_view := scroller
 			Precursor {EV_SCROLL_BAR_IMP}
 			disable_tabable_from
 			disable_tabable_to
-			cocoa_view := scroller
 			scroller.set_enabled (True)
 
 			change_actions_internal := create_change_actions

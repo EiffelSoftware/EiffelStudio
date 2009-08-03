@@ -22,6 +22,8 @@ inherit
 
 	NS_STRING_CONSTANTS
 
+	EV_FONT_CONSTANTS
+
 create
 	make
 
@@ -39,13 +41,13 @@ feature {NONE} -- Initialization
 			--set_height_in_points (l_app_imp.default_font_point_height_internal)
 			set_shape (shape_regular)
 			set_weight (weight_regular)
-			set_family ({EV_FONT_CONSTANTS}.family_screen)
+			set_family (family_screen)
 			--preferred_families.internal_add_actions.extend (agent update_preferred_faces)
 			--preferred_families.internal_remove_actions.extend (preferred_families.internal_add_actions.first)
 			height := {NS_FONT_API}.system_font_size.rounded
 			height_in_points := height
 			set_is_initialized (True)
-			shape := {EV_FONT_CONSTANTS}.Shape_regular
+			shape := Shape_regular
 		end
 
 feature -- Access
@@ -222,4 +224,6 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FONT note option: stable attribute end
 
+invariant
+	shape_valid: shape = Shape_regular or shape = Shape_italic
 end -- class EV_FONT_IMP

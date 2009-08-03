@@ -67,27 +67,34 @@ inherit
 
 	NS_ENVIRONEMENT
 
+	NS_STRING_CONSTANTS
+
 feature {NONE} -- Initialization
 
 	initialize
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
+		require
+			cocoa_view /= Void
 		do
 			is_show_requested := True
 			set_expandable (True)
 			set_is_initialized (True)
 
-			default_center.add_observer (agent on_size_change, void, cocoa_view)
+			-- FIXME: should only be called once cocoa_view is set up (/= void)! otherwise we get multiple callbacks per widget
+--			default_center.remove_observers
+			default_center.add_observer (agent on_size_change, view_frame_did_change_notification, cocoa_view)
 		end
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
-	on_size_change (a_sender: NS_OBJECT)
+	on_size_change (a_notification: NS_NOTIFICATION)
 			-- Notification sent to the Cocoa view
 		local
 			l_width, l_height: INTEGER
 		do
 			if attached cocoa_view then
+				io.put_string ("Calling on_size_change of " + current.generator + " " + object_id.out + " (" + attached_view.item.out + ") with:" + a_notification.object.item.out + "%N")
 				l_width := width
 				l_height := height
 				if l_width /= last_width or l_height /= last_height then

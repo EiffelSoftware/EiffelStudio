@@ -29,11 +29,9 @@ feature -- Query
 		local
 			l_function: STRING
 			l_class_id_string: STRING
-			l_class_id: INTEGER
 			l_class_type: detachable CLASS_TYPE
 			l_class: detachable CLASS_C
 			l_feature_id_string: STRING
-			l_feature_id: STRING
 			i: INTEGER
 		do
 			l_function := a_name.string

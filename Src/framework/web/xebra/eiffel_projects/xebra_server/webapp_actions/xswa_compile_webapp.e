@@ -78,11 +78,15 @@ feature -- Status report
 			l_f_util: XU_FILE_UTILITIES
 			l_melted_file_is_old: BOOLEAN
 			l_executable_does_not_exist: BOOLEAN
+			l_inc: LINKED_LIST [STRING]
 		do
+			create l_inc.make
+			l_inc.force ("*.ecf")
+			l_inc.force ("*.e")
 			create l_f_util
 			l_melted_file_is_old := l_f_util.file_is_newer (webapp_melted_file_path,
 												app_dir,
-												"\w+\.(e|ecf)")
+												l_inc)
 			l_executable_does_not_exist := not l_f_util.is_executable_file (webapp_exe)
 
 

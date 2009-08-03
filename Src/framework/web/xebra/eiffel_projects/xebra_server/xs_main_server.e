@@ -303,7 +303,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			l_webapp_handler: XS_WEBAPP_HANDLER
 		do
 			o.iprint ("Terminating Web Applications...")
-			create l_webapp_handler.make
+			create l_webapp_handler
 			l_webapp_handler.stop_apps
 			Result := create {XCCR_OK}
 		end
@@ -345,7 +345,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			create l_config_reader.make
 			if attached l_config_reader.process_file (config.args.config_filename) as l_config then
 				config.file := l_config
-				create l_webapp_finder.make
+				create l_webapp_finder
 				config.file.set_webapps (l_webapp_finder.search_webapps (config.file.webapps_root))
 				o.dprint (config.file.print_configuration, 2)
 			end
@@ -402,22 +402,6 @@ feature {XS_SERVER_MODULE} -- Status setting
 feature -- From EIFFEL_ENV
 
 	application_name: STRING = "xebra"
-
---	required_environment_variables: ARRAYED_LIST [TUPLE [var: STRING_8; is_directory: BOOLEAN]]
---			-- List of required environment variables.
---		once
---			create Result.make (4)
---			if not is_unix_layout then
---			--	Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env, True])
---		--		Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_platform_env, False])
---				Result.extend ([{XU_CONSTANTS}.Xebra_root_env, True])
---				Result.extend ([{XU_CONSTANTS}.Xebra_library_env, True])
---			end
---			if {PLATFORM}.is_windows then
---				Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_c_compiler_env, False])
---			end
---		end
-
 
 	check_xebra_environment_variable: BOOLEAN
 			-- Check if needed environment variables are set up.

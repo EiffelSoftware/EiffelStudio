@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="xebra_common" uuid="D1C24232-9271-4C7A-BC83-BCA09E89A339" library_target="xebra_common">
+	<target name="xebra_common">
+		<root all_classes="true"/>
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-save.ecf"/>
+		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini-safe.ecf"/>		
+		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types-safe.ecf" readonly="false"/>
+		<library name="xebra_ini" location="$XEBRA_LIBRARY\xebra_ini\xebra_ini-safe.ecf"/>
+		</library>
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-safe.ecf" readonly="false" />
+		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-voidunsafe.ecf" readonly="false" />
+		<cluster name="xebra_common" location=".\" recursive="true">
+		<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

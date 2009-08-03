@@ -60,11 +60,14 @@ feature -- Status report
 		local
 			l_servlet_gen_not_executed: BOOLEAN
 			l_f_utils: XU_FILE_UTILITIES
+			l_inc: LINKED_LIST [STRING]
 		do
+			create l_inc.make
+			l_inc.force ("*.xeb")
 			create l_f_utils
 			l_servlet_gen_not_executed := l_f_utils.file_is_newer (servlet_gen_executed_file,
 									app_dir,
-									"\w+\.xeb")
+									l_inc)
 
 			Result :=  	needs_cleaning or l_servlet_gen_not_executed
 

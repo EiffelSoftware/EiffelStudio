@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	SETTABLE_TYPES [G]
+	SETTABLE_TYPES [G -> attached ANY]
 
 inherit
 	ANY

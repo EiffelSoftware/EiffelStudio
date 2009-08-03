@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {NS_ENVIRONEMENT}."
-	author: "Daniel Furrer"
+	description: "A collection of singletons which are originally Cocoa class methods."
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 

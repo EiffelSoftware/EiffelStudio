@@ -75,7 +75,10 @@ feature -- Status report
 			l_servlet_gen_exe_not_exist: BOOLEAN
 			l_servet_gen_ecf_not_exist: BOOLEAN
 			l_servlet_gen_not_executed: BOOLEAN
+			l_inc: LINKED_LIST [STRING]
 		do
+			create l_inc.make
+			l_inc.force ("*.xeb")
 			create l_f_utils
 			translator_executed_file := app_dir.twin
 			translator_executed_file.extend ({XU_CONSTANTS}.Generated_folder_name)
@@ -83,7 +86,7 @@ feature -- Status report
 
 			translator_executed_file_old := l_f_utils.file_is_newer (translator_executed_file,
 									app_dir,
-									"\w+\.xeb")
+									l_inc)
 
 			l_servet_gen_ecf_not_exist := not  l_f_utils.is_readable_file (servlet_gen_ecf)
 

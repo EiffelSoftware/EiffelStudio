@@ -10,25 +10,9 @@ note
 class
 	XS_WEBAPP_FINDER
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
-		do
-		end
-
-feature -- Access
-
 feature -- Constants
 
-	Webapp_config_filename: STRING = "config\.ini"
-
-	Search_exclude: STRING = "\.svn|EIFGENs"
-
-feature -- Status report
+	Webapp_config_filename: STRING = "config.ini"
 
 feature -- Operations
 
@@ -41,12 +25,19 @@ feature -- Operations
 			l_f_utils: XU_FILE_UTILITIES
 			l_webapp_config: XC_WEBAPP_CONFIG
 			l_webapp_config_reader: XC_WEBAPP_CONFIG_READER
+			l_ex: LINKED_LIST [STRING]
+			l_inc: LINKED_LIST [STRING]
 		do
+			create l_ex.make
+			create l_inc.make
+			l_ex.force ("EIFGENs")
+			l_ex.force (".svn")
+			l_inc.force (Webapp_config_filename)
 			create Result.make (1)
 			create l_f_utils
 			create l_webapp_config_reader.make
-			l_files := l_f_utils.scan_for_files (a_path, -1, Webapp_config_filename, Search_exclude)
 
+			l_files := l_f_utils.scan_for_files (a_path, -1, l_inc, l_ex)
 			from
 				l_files.start
 			until
@@ -59,9 +50,6 @@ feature -- Operations
 		ensure
 			Result_attached: Result /= Void
 		end
-feature -- Status setting
-
-feature {NONE} -- Implementation
 
 end
 

@@ -12,21 +12,8 @@ class
 
 inherit
 	XS_SHARED_SERVER_CONFIG
+
 	XS_SHARED_SERVER_OUTPUTTER
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-				-- Initialization for `Current'.
-		do
-		end
-
-feature -- Constants
-
-feature -- Access
 
 feature -- Status Change
 
@@ -54,7 +41,6 @@ feature  -- Basic Operations
 			l_req_buf: detachable XH_MINI_REQUEST
 		do
 			create l_request_parser.make
-		--	l_req_buf := test_request
 			l_req_buf := l_request_parser.request (a_request_message)
 	        if attached {XH_MINI_REQUEST} l_req_buf as l_request then
 				if not l_request.post_too_big then
@@ -69,13 +55,5 @@ feature  -- Basic Operations
             else
             	Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_command_response
             end
-		end
-
-	test_request: detachable XH_REQUEST
-		local
-			l_request_factory: XH_REQUEST_PARSER
-		once
-				create l_request_factory.make
-				Result := l_request_factory.request ("GET /helloworld/ HTTP/1.1#HI##$#Host#%%#localhost:55000#$#User-Agent#%%#Mozilla/5.0 (X11; U; Linux x86_64; en; rv:1.9.0.11) Gecko/20080528 Epiphany/2.22 Firefox/3.0#$#Accept#%%#text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8#$#Accept-Language#%%#en-us,en;q=0.5#$#Accept-Encoding#%%#gzip,deflate#$#Accept-Charset#%%#ISO-8859-1,utf-8;q=0.7,*;q=0.7#$#Keep-Alive#%%#300#$#Connection#%%#keep-alive#$#Cookie#%%#xuuid=928DE016-61DD-47DC-8688-EEEE0417E567#E##HO##E##SE##E##A#")
 		end
 end

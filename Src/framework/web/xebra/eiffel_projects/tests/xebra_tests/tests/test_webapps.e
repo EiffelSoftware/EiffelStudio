@@ -90,7 +90,7 @@ feature {NONE} -- Internal
 			create l_config_reader.make
 			if attached {XS_FILE_CONFIG} l_config_reader.process_file (config.args.config_filename) as l_config then
 				config.file := l_config
-				create l_webapp_finder.make
+				create l_webapp_finder
 				config.file.set_webapps (l_webapp_finder.search_webapps (config.file.webapps_root))
 				if attached {XS_WEBAPP} l_config.webapps [a_webapp_name] as l_webapp then
 

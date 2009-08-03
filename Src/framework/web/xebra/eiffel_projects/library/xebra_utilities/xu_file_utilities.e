@@ -96,19 +96,21 @@ feature -- Basic Opertaions
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			create plain_text_file.make (a_file_name)
-			if plain_text_file.exists then
-				if plain_text_file.is_readable and then plain_text_file.is_access_readable then
-					plain_text_file.open_read
-					if plain_text_file.is_open_read then
-						Result := plain_text_file
+			if attached plain_text_file as l_f then
+				if l_f.exists then
+					if l_f.is_readable and then l_f.is_access_readable then
+						l_f.open_read
+						if l_f.is_open_read then
+							Result := l_f
+						else
+							error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						end
 					else
-						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						error_manager.add_error (create {XERROR_FILE_NOT_READABLE}.make (a_file_name), False)
 					end
 				else
-					error_manager.add_error (create {XERROR_FILE_NOT_READABLE}.make (a_file_name), False)
+					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
 				end
-			else
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
 			end
 		end
 
@@ -123,19 +125,21 @@ feature -- Basic Opertaions
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			create plain_text_file.make (a_file_name)
-			if plain_text_file.exists then
-				if plain_text_file.is_writable and plain_text_file.is_access_writable then
-					plain_text_file.open_write
-					if plain_text_file.is_open_write then
-						Result := plain_text_file
+			if attached plain_text_file as l_f then
+				if l_f.exists then
+					if l_f.is_writable and l_f.is_access_writable then
+						l_f.open_write
+						if l_f.is_open_write then
+							Result := l_f
+						else
+							error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						end
 					else
-						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
 					end
 				else
-					error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
+					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
 				end
-			else
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
 			end
 		end
 
@@ -149,19 +153,21 @@ feature -- Basic Opertaions
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			create plain_text_file.make (a_file_name)
-			if plain_text_file.exists or plain_text_file.is_creatable then
-				plain_text_file.open_write
-				if plain_text_file.is_writable and plain_text_file.is_access_writable then
-					if plain_text_file.is_open_write then
-						Result := plain_text_file
+			if attached plain_text_file as l_f then
+				if l_f.exists or l_f.is_creatable then
+					l_f.open_write
+					if l_f.is_writable and l_f.is_access_writable then
+						if l_f.is_open_write then
+							Result := plain_text_file
+						else
+							error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						end
 					else
-						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
 					end
 				else
-					error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
+					error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (a_file_name), False)
 				end
-			else
-				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (a_file_name), False)
 			end
 		end
 
@@ -175,19 +181,21 @@ feature -- Basic Opertaions
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			create plain_text_file.make (a_file_name)
-			if plain_text_file.exists then
-				if plain_text_file.is_writable and plain_text_file.is_access_writable then
-					plain_text_file.open_append
-					if plain_text_file.is_open_write then
-						Result := plain_text_file
+			if attached  plain_text_file as l_f then
+				if l_f.exists then
+					if l_f.is_writable and l_f.is_access_writable then
+						l_f.open_append
+						if l_f.is_open_write then
+							Result := l_f
+						else
+							error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						end
 					else
-						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
 					end
 				else
-					error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
+					error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
 				end
-			else
-				error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (a_file_name), False)
 			end
 		end
 
@@ -201,57 +209,31 @@ feature -- Basic Opertaions
 			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			create plain_text_file.make (a_file_name)
-			if plain_text_file.exists or plain_text_file.is_creatable then
-				plain_text_file.open_append
-				if plain_text_file.is_writable and plain_text_file.is_access_writable then
-					if plain_text_file.is_open_write then
-						Result := plain_text_file
+			if attached  plain_text_file as l_f then
+				if l_f.exists or l_f.is_creatable then
+					l_f.open_append
+					if l_f.is_writable and l_f.is_access_writable then
+						if l_f.is_open_write then
+							Result := l_f
+						else
+							error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						end
 					else
-						error_manager.add_error (create {XERROR_CANNOT_OPEN_FILE}.make (a_file_name), False)
+						error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
 					end
 				else
-					error_manager.add_error (create {XERROR_FILE_NOT_WRITABLE}.make (a_file_name), False)
+					error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (a_file_name), False)
 				end
-			else
-				error_manager.add_error (create {XERROR_FILE_NOT_CREATABLE}.make (a_file_name), False)
 			end
 		end
 
 	close
 			-- Closes (all) open files
 		do
-			if attached  plain_text_file and then plain_text_file.is_open_read or plain_text_file.is_open_write then
-				plain_text_file.close
-			end
-		end
-
-
-
-	scan_for_files (a_folder: STRING; a_levels: INTEGER; a_include_pattern: STRING; a_exclude_pattern: STRING): ARRAYED_LIST [FILE_NAME]
-			-- Scans a folder for matching folders.
-			--
-			-- `a_folder': Folder location to scan.
-			-- `a_levels': Number of levels to recursively scan. 0 to scan the specified folder only, -1 to scan all folders.
-			-- `a_include': Regular expression used to progressively include files/folders.
-			-- `a_exclude': Regulat expression used to exclude files/folders.
-		local
-			l_include: RX_PCRE_MATCHER
-			l_exclude: RX_PCRE_MATCHER
-			l_list: DS_ARRAYED_LIST [STRING]
-		do
-			create Result.make (1)
-			create l_include.make
-			create l_exclude.make
-			l_include.compile (a_include_pattern)
-			l_exclude.compile (a_exclude_pattern)
-			l_list := (create {FILE_UTILITIES}).scan_for_files (a_folder, a_levels, l_include, l_exclude)
-			from
-				l_list.start
-			until
-				l_list.after
-			loop
-				Result.force (create {FILE_NAME}.make_from_string (l_list.item_for_iteration))
-				l_list.forth
+			if attached  plain_text_file as l_f then
+				if l_f.is_open_read or l_f.is_open_write then
+					l_f.close
+				end
 			end
 		end
 
@@ -283,32 +265,37 @@ feature -- Basic Opertaions
 			Result := l_file.exists and l_file.is_directory
 		end
 
-	file_is_newer (a_file, a_dir: FILE_NAME; a_maching_files_expr: STRING): BOOLEAN
+	file_is_newer (a_file, a_dir: FILE_NAME; a_include: LINKED_LIST [STRING]): BOOLEAN
 				-- Returns True if there is a file in a_dir (recursively) that matches a_maching_files_expr
 				-- that is newer than a_file or a_file does not exist
 		require
 			not_a_file_is_detached_or_empty: a_file /= Void and then not a_file.is_empty
 			not_a_dir_is_detached_or_empty: a_dir /= Void and then not a_dir.is_empty
-			not_a_maching_files_expr_is_detached_or_empty: a_maching_files_expr /= Void and then not a_maching_files_expr.is_empty
+			a_include_attached: a_include /= Void
 		local
 			l_dir: DIRECTORY
 			l_files: LIST [STRING]
 			l_file: RAW_FILE
 			l_exec_access_date: INTEGER
+			l_ex: LINKED_LIST [STRING]
 		do
+			create l_ex.make
+			l_ex.force (".svn")
+			l_ex.force ("EIFGENs")
 			Result := False
 			if is_readable_file (a_file) then
 				l_exec_access_date := (create {RAW_FILE}.make (a_file)).date
-				l_files := scan_for_files (a_dir.out, -1, a_maching_files_expr, "\.svn|EIFGENs")
+
+				l_files := scan_for_files (a_dir.out, -1, a_include, l_ex)
 				from
 					l_files.start
 				until
 					l_files.after or Result
 				loop
-						create l_file.make (l_files.item_for_iteration)
-						if (l_file.date > l_exec_access_date) then
-							Result := True
-						end
+					create l_file.make (l_files.item_for_iteration)
+					if (l_file.date > l_exec_access_date) then
+						Result := True
+					end
 					l_files.forth
 				end
 			else
@@ -334,15 +321,90 @@ feature -- Basic Opertaions
 			end
 		end
 
-feature {NONE} -- Internal
 
-	replacer: FUNCTION [ANY, TUPLE [READABLE_STRING_8], detachable STRING]
-			-- Converts get from EXECUTION_ENVIRONMENT to be usable by string expander
-		once
-			Result := agent (ia_exec: EXECUTION_ENVIRONMENT; a_name: READABLE_STRING_8): STRING
-				do
-					Result := ia_exec.get (a_name.as_string_8)
-				end (create {EXECUTION_ENVIRONMENT}, ?)
+	match (a_string: STRING; a_patterns: LIST [STRING]): BOOLEAN
+				-- Checks if a_string matches with any of the strings in a_patterns
+				--
+				-- `a_string': The string to be compared
+				-- `a_patterns': A list of strings. Usage: 'match_exact' or '*match_ending' or '*' (match any string)
+				--		Examples:
+				--				- 'EIFGENs':	Matches all strings that are equal "EIFGENs"
+				--				- '*safe.ecf':	Matches all strings that end with "safe.ecf"
+				--				- '*':			Matches all strings
+		local
+			l_pattern: STRING
+		do
+			Result := False
+			from
+				a_patterns.start
+			until
+				a_patterns.after or Result
+			loop
+				if a_patterns.item_for_iteration.starts_with ("*") then
+					if a_patterns.item_for_iteration.count < 2 then
+							-- Always match if starts with * and only one char long
+						Result := True
+					end
+					l_pattern := a_patterns.item_for_iteration.substring (2, a_patterns.item_for_iteration.count)
+					if a_string.ends_with (l_pattern) then
+						Result := True
+					end
+				else
+					if a_string.is_equal (a_patterns.item_for_iteration) then
+						Result := True
+					end
+				end
+				a_patterns.forth
+			end
+		end
+
+	scan_for_files (a_folder: STRING; a_levels: INTEGER_32; a_include_file_ext: LIST [STRING]; a_exclude_folder: LIST [STRING]): LINKED_LIST [FILE_NAME]
+			-- Recursively scans a folder for matching files.
+			--
+			-- `a_folder': Folder location to scan.
+			-- `a_levels': Number of levels to recursively scan. 0 to scan the specified folder only, -1 to scan all folders.
+			-- `a_include_file_ext': A list of patterns that match files that should be included. See XU_FILE_UTILITIES.match.
+			-- `a_exclude_folder': A list of patterns that match folders that should be excluded from the scan. See XU_FILE_UTILITIES.match.
+		require
+			not_a_folder_is_empty: not a_folder.is_empty
+			a_include_attached: a_include_file_ext /= Void
+			a_exclude_attached: a_exclude_folder /= Void
+			is_dir_ok: is_dir (a_folder)
+		local
+			l_dir: DIRECTORY
+			l_file: RAW_FILE
+			l_files: LIST [STRING]
+			l_fn: FILE_NAME
+		do
+			create Result.make
+				-- Stop if levels reach zero (ignore levels below zero)
+			if not (a_levels = 0) then
+				create l_dir.make (a_folder)
+					-- Travel through all files and folders inside a folder
+				from
+					l_files := l_dir.linear_representation
+					l_files.start
+				until
+					l_files.after
+				loop
+					create l_fn.make_from_string (a_folder)
+					l_fn.extend (l_files.item_for_iteration)
+					create l_file.make (l_fn.string)
+
+					if l_file.is_directory then
+							-- Go into subfolders if not excluded
+						if not (match (l_files.item_for_iteration, a_exclude_folder) or l_files.item_for_iteration.is_equal (".") or l_files.item_for_iteration.is_equal ("..")) then
+							Result.append (scan_for_files (l_file.name, a_levels - 1, a_include_file_ext, a_exclude_folder))
+						end
+					else
+							-- Append files if included
+						if match (l_files.item_for_iteration, a_include_file_ext) then
+							Result.force (l_fn)
+						end
+					end
+					l_files.forth
+				end
+			end
 		end
 end
 

@@ -43,10 +43,9 @@ feature -- Access
 	name: STRING
 			-- The name of the application
 		do
+			Result := "NO NAME SET"
 			if i_name.is_set then
-				Result := i_name.value
-			else
-				Result := "NO NAME SET"
+					Result := i_name.value.out
 			end
 		end
 

@@ -57,7 +57,7 @@ feature -- Inherited Features
 			if not l_http_socket.is_bound then
 				o.eprint ("Socket could not be bound on port " + default_http_server_port.out , generating_type)
 			else
-				create l_webapp_handler.make
+				create l_webapp_handler
 	 	       	l_http_socket.set_accept_timeout (500)
 				from
 	                l_http_socket.listen (max_tcp_clients.as_integer_32)
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 		do
 			create encoder.make
 			if not l_retried then
-				create l_webapp_handler.make
+				create l_webapp_handler
 				create l_msg.make
 				create l_request_factory.make
 				from

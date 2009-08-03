@@ -20,6 +20,7 @@ feature -- Initialization
 		make
 			do
 				buf := ""
+				last_string := ""
 			end
 
 feature -- Access
@@ -44,7 +45,7 @@ feature -- Basic Functionality
 	retrieved: ANY
 			-- <Precursor>
 		do
-			-- Do nothing
+			Result := False
 		end
 
 feature -- Element change

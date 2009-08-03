@@ -347,7 +347,7 @@ feature -- Access: User interface
 			is_interface_usable: is_interface_usable
 		local
 			l_result: like internal_docking_content
-			l_label: EV_LABEL
+			l_label: EVS_LINK_LABEL
 		do
 			l_result := internal_docking_content
 			if l_result = Void then
@@ -355,6 +355,17 @@ feature -- Access: User interface
 					create Result.make_with_widget (panel.widget, content_id)
 				else
 					create l_label.make_with_text ("Uh Oh!")
+						-- Note: This action is a mild hack for cases where Uh Oh! is not replaced. When shown the
+						--       user is able to click the Uh Oh message and instatiate the UI. Without this code
+						--       there would be no way to show the tool content.
+					register_kamikaze_action (l_label.select_actions, agent
+						do
+								-- Force creation on panel.
+							panel.do_nothing
+								-- Call show actions manually.
+							docking_content.show_actions.call (Void)
+						end)
+
 					l_label.set_font ((create {ES_SHARED_FONTS_AND_COLORS}).fonts.prompt_sub_title_font)
 					create Result.make_with_widget (l_label, content_id)
 				end

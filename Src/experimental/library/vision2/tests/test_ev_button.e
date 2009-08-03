@@ -9,7 +9,7 @@ class
 	TEST_EV_BUTTON
 
 inherit
-	TEST_VISION2
+	VISION2_TEST_SET
 
 feature -- Test routines
 

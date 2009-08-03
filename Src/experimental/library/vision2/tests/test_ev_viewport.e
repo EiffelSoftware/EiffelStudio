@@ -9,7 +9,7 @@ class
 	TEST_EV_VIEWPORT
 
 inherit
-	TEST_VISION2
+	VISION2_TEST_SET
 
 feature -- Test routines
 
@@ -21,7 +21,8 @@ feature -- Test routines
 			button: EV_BUTTON
 			window: EV_TITLED_WINDOW
 		do
-			create window
+			create window.make_with_title ("Test window")
+			window.set_size (100, 100)
 
 			create viewport
 			create button.make_with_text ("Button")

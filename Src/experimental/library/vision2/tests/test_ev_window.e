@@ -9,29 +9,27 @@ class
 	TEST_EV_WINDOW
 
 inherit
-	TEST_VISION2
-	
+	VISION2_TEST_SET
+
 feature -- Test routines
 
 	resize_action_called
 			-- Checks if resize actions are called correctly
+		local
+			window: EV_TITLED_WINDOW
+			flag: BOOLEAN_REF
 		do
-			run_test (agent
-			do
-				flag := False
-				window.resize_actions.extend_kamikaze (agent (x, y, width, height: INTEGER) do
-					flag := True
-				end)
+			create window
 
-				window.set_size (100, 100)
-				application.process_events
+			flag := (False).to_reference
+			window.resize_actions.extend_kamikaze (agent (a_flag: BOOLEAN_REF; x, y, width, height: INTEGER) do
+				a_flag.set_item (True)
+			end (flag, ?, ?, ?, ?))
 
-				assert ("Resize action called", flag)
+			window.set_size (100, 100)
+			application.process_events
 
-				--assert ("text_correct: '" + l_button.text + "' instead of " + "'Button'", l_button.text.is_equal ("Button"))
-			end)
+			assert ("Resize action called", flag.item)
 		end
 
-	flag: BOOLEAN
-		
 end

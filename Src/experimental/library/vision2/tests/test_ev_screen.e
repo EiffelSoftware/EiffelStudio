@@ -9,7 +9,7 @@ class
 	TEST_EV_SCREEN
 
 inherit
-	TEST_VISION2
+	VISION2_TEST_SET
 
 feature -- Test routines
 

@@ -5,17 +5,16 @@
 		<option warning="true" is_attached_by_default="true" void_safety="none" syntax="standard">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<variable name="vision_implementation" value="cocoa"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<cluster name="tests" location=".\" recursive="true">
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" readonly="false"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
+		<tests name="tests" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
 			</file_rule>
-		</cluster>
+		</tests>
 	</target>
 	<target name="vision2-tests-cocoa" extends="vision2-tests">
 		<description>Use the cocoa compilation</description>

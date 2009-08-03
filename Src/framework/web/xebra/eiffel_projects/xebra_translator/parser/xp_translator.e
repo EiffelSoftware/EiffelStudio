@@ -120,7 +120,7 @@ feature -- Processing
 			l_translation_config_path: FILE_NAME
 		do
 			l_translation_config_path := output_path.twin
-			o.dprint ("********************$Revision$**********************", 0)
+			o.dprint ("********************$Revision$**********************", 1)
 			o.dprint ("************************************************************", 1)
 			o.dprint ("*                  .taglib processing start...             *", 1)
 			o.dprint ("************************************************************", 1)

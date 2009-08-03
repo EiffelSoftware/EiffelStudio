@@ -151,9 +151,11 @@
 				<td>
 					<div  class="tooltipped" id="description_tooltip_container">
 						<a  id="description_link"><img alt="" class="info_icon" src="/support/images/problem_report/information.png" /></a>
-						Description <span style="color: red"><f:validation_result name="description_text" variable="description_errors">
-							<xeb:display text="#{description_errors.out}" />	
-						</f:validation_result></span>
+						Description <span style="color: red">
+						<f:validation_result name="description_text" variable="description_errors">
+							<xeb:display text="#{description_errors}" />	
+						</f:validation_result>
+						</span>
 					</div>
 				</td>
 			</tr>
@@ -172,7 +174,7 @@
 						To Reproduce
 						<span style="color: red">
 							<f:validation_result name="to_reproduce_text" variable="to_reproduce_text_errors">
-								<xeb:display text="#{to_reproduce_text_errors.out}" />	
+								<xeb:display text="#{to_reproduce_text_errors}" />	
 							</f:validation_result>
 						</span>
 					</div>

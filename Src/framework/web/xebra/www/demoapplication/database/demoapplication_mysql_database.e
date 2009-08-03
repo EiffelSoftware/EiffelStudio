@@ -36,8 +36,6 @@ feature -- DB access
 --	repository: DB_REPOSITORY
 --	storage: DB_STORE
 
-
-
 feature -- database control
 
 --	make  is

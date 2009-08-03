@@ -35,6 +35,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_LOCALE_FORMATTER
+		export
+			{NONE} all
+		end
+
 feature{NONE}	-- Initialization
 
 	make
@@ -59,9 +64,11 @@ feature{NONE}	-- Initialization
 feature {NONE} -- Access
 
 	c_compiler_context: UUID
-			-- Event list service context id
+			-- Event list service context id.
 		once
 			create Result.make_from_string ("E1FFE1CC-D45B-4A56-87C5-B64535BAFE1B")
+		ensure
+			result_attached: attached Result
 		end
 
 	switched_output: detachable OUTPUT_I
@@ -249,7 +256,7 @@ feature{NONE}  -- Actions
 					window_manager.display_message (Interface_names.e_c_compilation_failed)
 					display_message_on_main_output (c_compilation_failed_msg, True)
 					if event_list.is_service_available then
-						create l_error.make ("Please review the C Output Pane.")
+						create l_error.make (locale_formatter.translation (e_see_output))
 						event_list.service.put_event_item (c_compiler_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 					end
 				else
@@ -277,7 +284,7 @@ feature{NONE}  -- Actions
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
 			display_message_on_main_output (c_compilation_launch_failed_msg, True)
 			if event_list.is_service_available then
-				create l_error.make ("Could not launch C/C++ compiler.")
+				create l_error.make (locale_formatter.translation (e_could_not_launch))
 				event_list.service.put_event_item (c_compiler_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 			end
 			launch_failed_actions.call (Void)
@@ -297,7 +304,7 @@ feature{NONE}  -- Actions
 			finished_actions.call (Void)
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	c_compilation_launched_msg: STRING
 			-- Message to indicate c compilation launched successfully
@@ -373,6 +380,11 @@ feature{NONE} -- Implementation
 		once
 			create Result.put (False)
 		end
+
+feature {NONE} -- Initialization
+
+	e_see_output: STRING = "Please review the External Compilation output of the Outputs Tool."
+	e_could_not_launch: STRING = "Could not launch C/C++ compiler."
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

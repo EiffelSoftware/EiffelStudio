@@ -155,7 +155,7 @@ feature  -- Agents
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_width: INTEGER
+			l_width, l_height: INTEGER
 			l_main_container: SD_MULTI_DOCK_AREA
 		do
 			debug ("docking")
@@ -167,7 +167,10 @@ feature  -- Agents
 			internal_docking_manager.fixed_area.set_minimum_size (0, 0)
 
 			if a_width > 0 then
-				internal_docking_manager.internal_viewport.set_item_width (internal_docking_manager.internal_viewport.width)
+				l_width := internal_docking_manager.internal_viewport.width
+				if l_width > 0 then
+					internal_docking_manager.internal_viewport.set_item_width (l_width)
+				end
 
 				-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item.
 				-- Otherwise, it will cause bug#12065. This bug ONLY happens on Solaris (both CDE and JDS), not happens on Windows, Ubuntu.
@@ -177,11 +180,20 @@ feature  -- Agents
 				if l_main_container.readable and then l_main_container.item /= Void and then l_width < l_main_container.item.minimum_width then
 					l_width := l_main_container.item.minimum_width
 				end
-				internal_docking_manager.fixed_area.set_item_width (l_main_container , l_width)
+
+				if l_width > 0 then
+					internal_docking_manager.fixed_area.set_item_width (l_main_container , l_width)
+				end
 			end
 			if a_height > 0 then
-				internal_docking_manager.internal_viewport.set_item_height (internal_docking_manager.internal_viewport.height)
-				internal_docking_manager.fixed_area.set_item_height (internal_docking_manager.query.inner_container_main, internal_docking_manager.fixed_area.height)
+				l_height := internal_docking_manager.internal_viewport.height
+				if l_height > 0 then
+					internal_docking_manager.internal_viewport.set_item_height (l_height)
+				end
+				l_height := internal_docking_manager.fixed_area.height
+				if l_height > 0 then
+					internal_docking_manager.fixed_area.set_item_height (internal_docking_manager.query.inner_container_main, l_height)
+				end
 			end
 			internal_docking_manager.tool_bar_manager.on_resize (a_x, a_y, internal_docking_manager.internal_viewport.width, internal_docking_manager.internal_viewport.height, a_force)
 		end

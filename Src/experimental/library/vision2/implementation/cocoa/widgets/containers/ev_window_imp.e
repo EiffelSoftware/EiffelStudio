@@ -84,9 +84,9 @@ feature {NONE} -- Initialization
 			set_maximum_height (32000)
 			create accel_list.make (10)
 
+			cocoa_view := content_view
 			initialize
 
-			cocoa_view := content_view
 			init_bars
 --			create_delegate
 --			set_delegate (current)

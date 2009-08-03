@@ -1,6 +1,9 @@
 note
 	description: "EiffelVision application, Cocoa implementation."
 	author: "Daniel Furrer"
+	todo: "[
+		- Locking is the same as in the mswin implementation. Promote to implementation interface.
+	]"
 
 class
 	EV_APPLICATION_IMP
@@ -43,6 +46,10 @@ inherit
 			dispose
 		end
 
+	NS_ENVIRONEMENT
+
+	NS_STRING_CONSTANTS
+
 create
 	make
 
@@ -54,6 +61,9 @@ feature {NONE} -- Initialization
 			menu: NS_MENU
 		do
 			Precursor {EV_APPLICATION_I}
+			if {PLATFORM}.is_thread_capable then
+				create idle_action_mutex.make
+			end
 			create windows_imp.make
 			make_application_cocoa
 			set_is_initialized (True)
@@ -120,7 +130,7 @@ feature -- Basic operation
 			point: NS_POINT
 		do
 			from
-				event := next_event (0, default_pointer, 0, true)
+				event := next_event (0, Void, default_run_loop_mode, true)
 			until
 				event = void
 			loop
@@ -164,7 +174,7 @@ feature -- Basic operation
 				end
 				send_event (event)
 				update_windows
-				event := next_event (0, default_pointer, 0, true)
+				event := next_event (0, Void, default_run_loop_mode, true)
 			end
 			pool.release
 		end
@@ -225,7 +235,12 @@ feature -- Implementation
 
 	wait_for_input (msec: INTEGER)
 			-- Wait for at most `msec' milliseconds for an event.
+		local
+			event: detachable NS_EVENT
+			until_time: NS_DATE
 		do
+			create until_time.make_with_time_interval_since_now (msec / 1000.0)
+			event := next_event (0, until_time, default_run_loop_mode, false)
 		end
 
 	is_in_transport: BOOLEAN
@@ -255,19 +270,34 @@ feature -- Thread Handling.
 	lock
 			-- Lock the Mutex.
 		do
+			if idle_action_mutex /= Void then
+				idle_action_mutex.lock
+			end
 		end
 
 	try_lock: BOOLEAN
 			-- Try to see if we can lock, False means no lock could be attained
 		do
-			Result := True
-			-- TODO: Uhhh, this could be dangerous
+			if idle_action_mutex /= Void then
+				Result := idle_action_mutex.try_lock
+			else
+				-- Return true if mono-threaded.
+				Result := True
+			end
 		end
 
 	unlock
 			-- Unlock the Mutex.
 		do
+			if idle_action_mutex /= Void then
+				idle_action_mutex.unlock
+			end
 		end
+
+feature {NONE} -- Thread implementation
+
+	idle_action_mutex: detachable MUTEX note option: stable attribute end
+			-- Mutex used to access idle_actions.
 
 feature {NONE} -- Implementation
 
@@ -277,4 +307,6 @@ feature {NONE} -- Implementation
 			Precursor {NS_APPLICATION}
 		end
 
+invariant
+	idle_action_mutex_valid: {PLATFORM}.is_thread_capable implies idle_action_mutex /= Void
 end -- class EV_APPLICATION_IMP

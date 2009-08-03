@@ -276,7 +276,7 @@ feature -- Drawing operations
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		local
 			l_string: NS_STRING
-			l_attributes: NS_DICTIONARY
+			l_attributes: NS_MUTABLE_DICTIONARY
 			l_font: detachable EV_FONT_IMP
 			l_color: detachable EV_COLOR_IMP
 		do
@@ -285,9 +285,10 @@ feature -- Drawing operations
 			check l_font /= Void end
 			l_color ?= foreground_color.implementation
 			check l_color /= Void end
-			create l_attributes.make_with_objects_for_keys (
-				create {NS_ARRAY[NS_OBJECT]}.make_from_array(<<l_font.font, l_color.color>>),
-				create {NS_ARRAY[NS_OBJECT]}.make_from_array(<<font_attribute_name, foreground_color_attribute_name>>))
+
+			create l_attributes.make_with_capacity (2)
+			l_attributes.set_object_for_key (l_font.font, font_attribute_name)
+			l_attributes.set_object_for_key (l_color.color, foreground_color_attribute_name)
 			prepare_drawing
 			l_string.draw_at_point_with_attributes (create {NS_POINT}.make_point (x, y), l_attributes)
 			finish_drawing
@@ -318,9 +319,27 @@ feature -- Drawing operations
 		do
 		end
 
-	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
+	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; a_area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
+		local
+			pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
+			y_cocoa: INTEGER
 		do
+			prepare_drawing
+			pixel_buffer_imp ?= a_pixel_buffer.implementation
+			check pixel_buffer_imp /= void end
+--			if is_flipped then
+--				y_cocoa := a_area.y
+--			else
+				y_cocoa := pixel_buffer_imp.image.size.height - a_area.height - a_area.y
+--			end
+
+			pixel_buffer_imp.image.draw_in_rect (
+				create {NS_RECT}.make_rect (a_x, a_y, a_area.width, a_area.height),
+				create {NS_RECT}.make_rect (a_area.x, y_cocoa, a_area.width, a_area.height),
+				{NS_IMAGE}.composite_source_over, 1)
+
+			finish_drawing
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP)

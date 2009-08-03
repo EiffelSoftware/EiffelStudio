@@ -98,11 +98,13 @@ feature {NONE} -- Initialization: User interface
 				do
 						-- Updates UI based on selection and row count.
 					update_content_applicable_widgets (grid_events.row_count > 0)
+					on_row_deselected (a_row)
 				end)
 			register_action (a_widget.row_select_actions, agent (a_row: EV_GRID_ROW)
 				do
 						-- Updates UI based on selection and row count.
 					update_content_applicable_widgets (grid_events.row_count > 0)
+					on_row_selected (a_row)
 				end)
 
 				-- Enable sorting
@@ -120,8 +122,8 @@ feature {NONE} -- Initialization: User interface
 				-- We want the tool to synchronize with the event list, when first initialized.
 			is_event_list_synchronized_on_initialized := True
 
-			create managed_syntax_errors.make_default
-			managed_syntax_errors.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [EVENT_LIST_ERROR_ITEM_I]}.make (
+			create syntax_errors.make_default
+			syntax_errors.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [EVENT_LIST_ERROR_ITEM_I]}.make (
 				agent (ia_item: EVENT_LIST_ERROR_ITEM_I; ia_other: EVENT_LIST_ERROR_ITEM_I): BOOLEAN
 						-- Equality tester to ensure two like syntax errors are considered the same.
 					do
@@ -187,16 +189,14 @@ feature {NONE} -- Access
 	warning_count: NATURAL
 			-- Number of warnings
 
-	managed_syntax_errors: DS_ARRAYED_LIST [EVENT_LIST_ERROR_ITEM_I]
+	syntax_errors: DS_ARRAYED_LIST [EVENT_LIST_ERROR_ITEM_I]
 			-- List of managed syntax errors, used to perform error adoption.
+			-- Note: Adoption takes place when a compiler reports an error and then the editor it opened.
 
 feature {NONE} -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING = "62F36EFA-1D3A-9E48-3A6A-7DA40B7E2046"
 			-- <Precursor>
-		once
-			Result := "62F36EFA-1D3A-9E48-3A6A-7DA40B7E2046"
-		end
 
 feature {NONE} -- Access: User interface
 
@@ -209,7 +209,10 @@ feature {NONE} -- Access: User interface
 	expand_errors_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toogle to expanded error events automatically
 
-	delete_items_button: detachable SD_TOOL_BAR_BUTTON
+--	fix_button: detachable SD_TOOL_BAR_DUAL_POPUP_BUTTON
+--			-- Automatic fix button
+
+	delete_button: detachable SD_TOOL_BAR_BUTTON
 			-- Delete selected items button
 
 	error_info_button: detachable SD_TOOL_BAR_BUTTON
@@ -393,6 +396,16 @@ feature {NONE} -- Query
 			end
 		end
 
+--feature {NONE} -- Helpers
+
+--	fix_handlers: ES_ERROR_FIX_HANDLER
+--			-- Shared access to fix operations.
+--		once
+--			create Result
+--		ensure
+--			result_attached: attached Result
+--		end
+
 feature {ES_TOOL} -- Basic operation
 
 	show
@@ -414,7 +427,6 @@ feature {ES_TOOL} -- Basic operation
 			end
 		end
 
-
 feature {NONE} -- Basic operations
 
 	do_default_action (a_row: EV_GRID_ROW)
@@ -422,8 +434,11 @@ feature {NONE} -- Basic operations
 		do
 			if attached {EVENT_LIST_ITEM_I} a_row.data as l_event_item then
 				if attached {C_COMPILER_ERROR} l_event_item.data as l_error then
-						-- Show the C/C++ compiler output
-					if attached c_compiler_output as l_output then
+					if attached l_error.associated_feature as l_feature then
+							-- Open the corresponding feature
+						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (create {FEATURE_STONE}.make (l_feature))
+					elseif attached c_compiler_output as l_output then
+							-- Show the C/C++ compiler output
 						l_output.activate (True)
 						if attached develop_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool then
 							l_tool.show (True)
@@ -459,7 +474,7 @@ feature {NONE} -- Basic operations
 						-- Remove, multiple
 					create l_remove.make_with_text (interface_names.m_remove_all)
 					l_remove.set_pixmap (stock_pixmaps.general_delete_icon)
-					l_remove.select_actions.extend (agent on_remove_selected_rows)
+					l_remove.select_actions.extend (agent on_select_delete_button)
 					l_menu.extend (l_remove)
 				end
 				l_menu.show_at (a_item.row.parent, a_x, a_y)
@@ -497,7 +512,7 @@ feature {NONE} -- Basic operations
 			a_row.set_item (1, l_item)
 
 				-- Set expand actions
-			a_row.expand_actions.extend (agent on_expand_event_row (a_row))
+			a_row.expand_actions.extend (agent on_row_expanded (a_row))
 
 				-- Set category pixmap item
 			create l_item
@@ -595,13 +610,15 @@ feature {NONE} -- Basic operations
 
 					-- Line and column number
 				l_editor_item := Void
-				if l_error.line > 0 and then l_context_stone /= Void then
+				if l_error.line > 0 then
 						-- Created position token
 					create l_pos_token.make (l_error.line.out + ", " + l_error.column.max (1).out)
-					l_pos_token.set_is_clickable (True)
-						-- Note: We call `event_context_stone_from_row' instead of using `l_context_stone' because
-						--       it uses line position information, unlike `l_context_stone'
-					l_pos_token.set_pebble (event_context_stone_from_row (a_row))
+					if l_context_stone /= Void then
+						l_pos_token.set_is_clickable (True)
+							-- Note: We call `event_context_stone_from_row' instead of using `l_context_stone' because
+							--       it uses line position information, unlike `l_context_stone'
+						l_pos_token.set_pebble (event_context_stone_from_row (a_row))
+					end
 
 						-- Create editor item					
 					create l_line.make_empty_line
@@ -684,10 +701,11 @@ feature {NONE} -- Basic operations
 		do
 			if a_enable and grid_events.selected_rows.count >= 1 then
 				error_info_command.enable_sensitive
-				delete_items_button.enable_sensitive
+				delete_button.enable_sensitive
 			else
 				error_info_command.disable_sensitive
-				delete_items_button.disable_sensitive
+--				fix_button.disable_sensitive
+				delete_button.disable_sensitive
 			end
 		end
 
@@ -897,6 +915,92 @@ feature {NONE} -- Event handlers
 
 feature {NONE} -- Action handlers
 
+	on_row_selected (a_row: EV_GRID_ROW)
+			-- Called when a row is selected in the event list row.
+			--
+			-- `a_row': The selected row.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_row_attached: attached a_row
+			not_a_row_is_destroyed: not a_row.is_destroyed
+			a_row_has_grid_events_as_parent: a_row.parent = grid_events
+		local
+--			l_fix_handlers: like fix_handlers
+--			l_rows: ARRAYED_LIST [EV_GRID_ROW]
+--			l_first_error: ERROR
+--			l_enable: BOOLEAN
+		do
+--				-- Scan the selected errors for applicability to fix errors.
+--			l_fix_handlers := fix_handlers
+--			l_rows := grid_events.selected_rows
+--			if not l_rows.is_empty then
+--				l_enable := True
+--				from l_rows.start until l_rows.after loop
+--					if
+--						attached {EVENT_LIST_ERROR_ITEM_I} l_rows.item_for_iteration.data as l_error_item and then
+--						attached {EIFFEL_ERROR} l_error_item.data as l_error
+--					then
+--						if attached l_first_error then
+--							l_enable := l_first_error.generating_type ~ l_error.generating_type
+--						else
+--							if l_fix_handlers.is_fixable (l_error) then
+--								l_first_error := l_error
+--							else
+--								l_enable := False
+--							end
+--						end
+--					end
+--					l_rows.forth
+--				end
+--			end
+
+--			if l_enable then
+--				fix_button.enable_sensitive
+--			else
+--				fix_button.disable_sensitive
+--			end
+		end
+
+	on_row_deselected (a_row: EV_GRID_ROW)
+			-- Called when a row is deselected in the event list row.
+			--
+			-- `a_row': The deselected row.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_row_attached: attached a_row
+		local
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
+		do
+			l_rows := grid_events.selected_rows
+			if l_rows.is_empty then
+--				fix_button.disable_sensitive
+			end
+		end
+
+	on_row_expanded (a_row: EV_GRID_ROW)
+			-- Called when the expand error button is selected.
+			--
+			-- `a_row': The row that was expanded.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_row_attached: a_row /= Void
+			not_a_row_is_destroyed: not a_row.is_destroyed
+			a_row_has_grid_events_as_parent: a_row.parent = grid_events
+			a_row_is_expanded: a_row.is_expanded
+		do
+			if not is_expanding_all_errors then
+				grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
+				a_row.enable_select
+				if a_row.subrow_count > 0 then
+						-- Ensure the row is visible.
+					a_row.subrow (1).ensure_visible
+				end
+			end
+		end
+
 	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
@@ -917,17 +1021,19 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		local
+			l_grid: like grid_events
 			l_row: EV_GRID_ROW
 			l_event_item: EVENT_LIST_ITEM_I
 			l_count, i: INTEGER
 		do
+			l_grid := grid_events
 			from
 				i := 1
-				l_count := grid_events.row_count
+				l_count := l_grid.row_count
 			until
 				i > l_count
 			loop
-				l_row := grid_events.row (i)
+				l_row := l_grid.row (i)
 				l_event_item ?= l_row.data
 				if l_event_item /= Void then
 					if is_error_event (l_event_item) then
@@ -942,15 +1048,6 @@ feature {NONE} -- Action handlers
 			end
 
 			update_content_applicable_navigation_buttons
-		end
-
-	on_remove_selected_rows
-			-- Caled when the `delete_items_button' is selected.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		do
-			remove_all_selected_event_list_rows
 		end
 
 	on_toogle_warnings_button
@@ -1042,29 +1139,67 @@ feature {NONE} -- Action handlers
 			not_is_expanding_all_errors: not is_expanding_all_errors
 		end
 
-	on_expand_event_row (a_row: EV_GRID_ROW)
-			-- Called when the expand error button is selected.
-			--
-			-- `a_row': The row that was expanded.
+--	on_select_fix_button
+--			-- Caled when the `fix_errors_button' is selected.
+--		require
+--			is_interface_usable: is_interface_usable
+--			is_initialized: is_initialized
+--		local
+--			l_selected: ARRAYED_LIST [EV_GRID_ROW]
+--			l_errors: ARRAYED_LIST [EIFFEL_ERROR]
+--			l_fix_handlers: like fix_handlers
+--			l_handler: ES_JIM_ERROR_HANDLER [EIFFEL_ERROR]
+--			l_items: ARRAYED_LIST [TUPLE [title: STRING_GENERAL; action: PROCEDURE [ANY, TUPLE]]]
+--			l_menu_item: EV_MENU_ITEM
+--			l_menu: EV_MENU
+--		do
+--			l_fix_handlers := fix_handlers
+--			l_selected := grid_events.selected_rows
+--			create l_errors.make (l_selected.count)
+--			from l_selected.start until l_selected.after loop
+--				if
+--					attached {EVENT_LIST_ERROR_ITEM_I} l_selected.item_for_iteration.data as l_error_item and then
+--					attached {EIFFEL_ERROR} l_error_item.data as l_error
+--				then
+--					if l_fix_handlers.is_fixable (l_error) then
+--						l_errors.extend (l_error)
+--					end
+--				end
+--				l_selected.forth
+--			end
+
+--			if not l_errors.is_empty then
+--				l_handler := l_fix_handlers.fix_errors (l_errors)
+--				l_items := l_handler.solution_actions
+--				if attached l_items and not l_items.is_empty then
+--					if l_items.count = 1 then
+--							-- Only one item, just process the action.
+--						l_items.first.action.call (Void)
+--					else
+--							-- Multiple items, as user to select.
+--						l_menu := fix_button.menu
+--						l_menu.wipe_out
+--						from l_items.start until l_items.after loop
+--							create l_menu_item.make_with_text_and_action (l_items.item.title, l_items.item.action)
+--							l_menu.extend (l_menu_item)
+--							l_items.forth
+--						end
+--						fix_button.perform_select
+--					end
+--				end
+--			end
+--		end
+
+	on_select_delete_button
+			-- Caled when the `delete_button' is selected.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			a_row_attached: a_row /= Void
-			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_has_grid_events_as_parent: a_row.parent = grid_events
-			a_row_is_expanded: a_row.is_expanded
 		do
-			if not is_expanding_all_errors then
-				grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
-				a_row.enable_select
-				if a_row.subrow_count > 0 then
-						-- Ensure the row is visible.
-					a_row.subrow (1).ensure_visible
-				end
-			end
+			remove_all_selected_event_list_rows
 		end
 
-	on_error_info
+	on_select_error_info
 			-- Call when the error information button is clicked.
 		require
 			is_interface_usable: is_interface_usable
@@ -1180,7 +1315,7 @@ feature {NONE} -- Factory
 		local
 			l_button: SD_TOOL_BAR_BUTTON
 		do
-			create Result.make (9)
+			create Result.make (11)
 
 				-- Navigation buttons
 			l_button := go_to_next_error_command.new_sd_toolbar_item (False)
@@ -1195,12 +1330,23 @@ feature {NONE} -- Factory
 			l_button := go_to_previous_warning_command.new_sd_toolbar_item (False)
 			Result.put_last (l_button)
 
-			create delete_items_button.make
-			delete_items_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
-			delete_items_button.set_pixmap (stock_pixmaps.general_delete_icon)
-			delete_items_button.set_tooltip (locale_formatter.translation (tt_delete_items))
-			register_action (delete_items_button.select_actions, agent on_remove_selected_rows)
-			Result.put_last (delete_items_button)
+--				-- Separator
+--			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+--			create fix_button.make
+--			fix_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_fix_icon_buffer)
+--			fix_button.set_pixmap (stock_pixmaps.errors_and_warnings_fix_icon)
+--			fix_button.set_tooltip (locale_formatter.translation (tt_fix_errors))
+--			fix_button.set_menu (create {EV_MENU})
+--			register_action (fix_button.select_actions, agent on_select_fix_button)
+--			Result.put_last (fix_button)
+
+			create delete_button.make
+			delete_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
+			delete_button.set_pixmap (stock_pixmaps.general_delete_icon)
+			delete_button.set_tooltip (locale_formatter.translation (tt_delete_items))
+			register_action (delete_button.select_actions, agent on_select_delete_button)
+			Result.put_last (delete_button)
 
 				-- Separator
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
@@ -1217,7 +1363,7 @@ feature {NONE} -- Factory
 			error_info_button := error_info_command.new_sd_toolbar_item (False)
 				-- We need to do something else, like handle grid selection
 			error_info_button.select_actions.wipe_out
-			register_action (error_info_button.select_actions, agent on_error_info)
+			register_action (error_info_button.select_actions, agent on_select_error_info)
 			Result.put_last (error_info_button)
 
 				-- Filter pop up widget
@@ -1248,14 +1394,16 @@ feature {NONE} -- Constants
 feature {NONE} -- Internationalization
 
 	tt_delete_items: STRING = "Delete all the selected [completed] items"
+--	tt_fix_errors: STRING = "Automatically fix the selected errors."
 
 invariant
-	errors_button_attached: is_initialized implies errors_button /= Void
-	warnings_button_attached: is_initialized implies warnings_button /= Void
-	delete_items_button_attached: is_initialized implies delete_items_button /= Void
-	expand_errors_button_attached: is_initialized implies expand_errors_button /= Void
-	error_info_button_attached: is_initialized implies error_info_button /= Void
-	filter_button_attached: is_initialized implies filter_button /= Void
+	errors_button_attached: (is_initialized and is_interface_usable) implies attached errors_button
+	warnings_button_attached: (is_initialized and is_interface_usable) implies attached warnings_button
+--	fix_button_attached: (is_initialized and is_interface_usable) implies attached fix_button
+	deletebutton_attached: (is_initialized and is_interface_usable) implies attached delete_button
+	expand_errors_button_attached: (is_initialized and is_interface_usable) implies attached expand_errors_button
+	error_info_button_attached: (is_initialized and is_interface_usable) implies attached error_info_button
+	filter_button_attached: (is_initialized and is_interface_usable) implies attached filter_button
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
 ;note

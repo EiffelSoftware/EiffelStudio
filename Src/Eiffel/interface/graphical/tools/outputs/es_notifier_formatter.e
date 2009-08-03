@@ -91,6 +91,7 @@ feature -- Output
 	put_new_line
 			-- <Precursor>	
 		do
+			string.append_character ('%N')
 			if attached internal_text_changed_actions as l_actions then
 				l_actions.call ([Current])
 			end

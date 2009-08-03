@@ -55,14 +55,14 @@
 				 <xeb:template_field header_style_css_class="image_header" sort_expression="Statusid" >
 					 <ItemTemplate>
 						<div class="centered">
-							<xeb:image image_url="<%#status_image_url ({INTEGER} #? eval('Statusid'))%>" id="status_image" />
+							<xeb:image image_url="" id="status_image" />
 						</div>
 					 </ItemTemplate>
 				 </xeb:template_field>
 				 <xeb:bound_field data_field="Synopsis" html_encode="false" header_text="Synopsis" header_style_width="592px"  sort_expression="Synopsis"/>
 				 <xeb:template_field header_text="Date" header_style_width="80px" sort_expression="SubmissionDate">
 					 <ItemTemplate>
-						<xeb:display text="<%#({SYSTEM_DATE_TIME} #? eval ('SubmissionDate')).to_short_date_string%>" 	id="date_label" />
+						<xeb:display text="" id="date_label" />
 					 </ItemTemplate>
 				 </xeb:template_field>
 				 <xeb:bound_field data_field="CategorySynopsis" header_text="Category" header_style_width="130px" sort_expression="CategorySynopsis" />
@@ -73,7 +73,7 @@
 				<xeb:iterate list="%=legend_repeater%" variable="variable_todo" type="STRING">
 					<ItemTemplate>
 						<td valign="bottom">
-							<img src="<%#status_image_url ({INTEGER} #? eval('Statusid')) %>" alt="" />
+							<img src="" alt="" />
 						</td>
 						<td style="padding-right:10px;">
 							<!--%#eval ("StatusSynopsis") %-->

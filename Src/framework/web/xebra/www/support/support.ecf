@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="support">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="support" uuid="BA0C3F6E-9748-4C21-B095-6ABA21BCAA34">
 	<target name="support">
-		<root class="G_support_APPLICATION" feature="make"/>
+		<root class="G_SUPPORT_APPLICATION" feature="make"/>
 		<option full_class_checking="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
@@ -9,6 +9,8 @@
 		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
+		<library name="odbc" location="\home\sandrod\local\eiffel_svn\trunk\Src\experimental\library\store\dbms\rdbms\odbc\odbc.ecf"/>
+		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-voidunsafe.ecf"/>
 		<library name="xebra_web_application" location="$XEBRA_LIBRARY\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>
 		<cluster name="xebrawebapp" location=".\" recursive="true">
@@ -20,4 +22,3 @@
 		</cluster>
 	</target>
 </system>
-

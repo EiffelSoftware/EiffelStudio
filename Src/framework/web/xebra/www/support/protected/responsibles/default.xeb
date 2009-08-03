@@ -73,7 +73,7 @@
 				<div id="ctl00_ctl00_default_main_content_main_content_pager_pager" class="pager">
 					<div class="pager_label">
 						<span>
-							<xeb:display text="%=problem_reports.count.out%"/>
+							<xeb:display text="%=overall_count.out%"/>
 							Reports
 						</span>
 					</div>
@@ -194,7 +194,7 @@
 				<div class="pager">
 					<div id="ctl00_ctl00_default_main_content_main_content_pager_pager_label" class="pager_label">
 						<span>
-							<xeb:display text="%=problem_reports.count.out%"/>
+							<xeb:display text="%=overall_count.out%"/>
 							Reports
 						</span>
 					</div>

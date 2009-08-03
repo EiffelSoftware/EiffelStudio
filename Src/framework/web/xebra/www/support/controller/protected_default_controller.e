@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {LOGIN_CONTROLLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

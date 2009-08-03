@@ -1,4 +1,4 @@
-<page:include template="support">
+<page:include template="support_master">
 <page:define_region id="default_authorized_main_content">
 	<div id="sidebar">
 		<div class="vert_bar_link">

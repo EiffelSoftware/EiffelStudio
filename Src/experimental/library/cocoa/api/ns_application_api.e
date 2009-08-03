@@ -355,7 +355,7 @@ feature -- Managing the Event Loop
 
 feature -- Handling Events
 
-	frozen next_event (a_application : POINTER; matching_mask: INTEGER; until_date: POINTER; in_mode: INTEGER; dequeue: BOOLEAN): POINTER
+	frozen next_event (a_application: POINTER; matching_mask: INTEGER; until_date: POINTER; in_mode: POINTER; dequeue: BOOLEAN): POINTER
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
@@ -363,9 +363,9 @@ feature -- Handling Events
 				{
 					return [(NSApplication*)$a_application
 								nextEventMatchingMask: NSAnyEventMask
-								untilDate: [NSDate distantFuture]
-								inMode: NSDefaultRunLoopMode
-								dequeue: YES];
+								untilDate: $until_date
+								inMode: $in_mode
+								dequeue: $dequeue];
 				}
 			]"
 		end

@@ -42,7 +42,7 @@ feature -- Eiffel Extensions
 			l_event: detachable NS_EVENT
 		do
 			from
-				l_event := next_event (0, Void, 0, true)
+				l_event := next_event (0, Void, default_run_loop_mode, true)
 			until
 				l_event = void
 			loop
@@ -50,7 +50,7 @@ feature -- Eiffel Extensions
 				create pool.make
 				send_event (l_event)
 				update_windows
-				l_event := next_event(0, Void, 0, true)
+				l_event := next_event(0, Void, default_run_loop_mode, true)
 			end
 			pool.release
 		end
@@ -59,7 +59,7 @@ feature -- Eiffel Extensions
 
 feature -- Access
 
-	next_event (a_matching_mask: INTEGER; a_until_date: detachable NS_DATE; a_in_mode: INTEGER; a_dequeue: BOOLEAN): detachable NS_EVENT
+	next_event (a_matching_mask: INTEGER; a_until_date: detachable NS_DATE; a_in_mode: NS_STRING; a_dequeue: BOOLEAN): detachable NS_EVENT
 			-- Returns the next event matching a given mask, or `Void' if no such event is found before a specified expiration date.
 			-- You can use this method to short circuit normal event dispatching and get your own events. For example, you may want
 			-- to do this in response to a mouse-down event in order to track the mouse while its button is down. (In such an example,
@@ -72,7 +72,7 @@ feature -- Access
 			if attached a_until_date then
 				l_until_date := a_until_date.item
 			end
-			l_event := {NS_APPLICATION_API}.next_event (item, a_matching_mask, l_until_date, a_in_mode, a_dequeue)
+			l_event := {NS_APPLICATION_API}.next_event (item, a_matching_mask, l_until_date, a_in_mode.item, a_dequeue)
 			if l_event /= default_pointer then
 				create Result.share_from_pointer (l_event)
 			end
@@ -144,6 +144,21 @@ feature -- Managing the Event Loop
 	abort_modal
 		do
 			{NS_APPLICATION_API}.abort_modal (item)
+		end
+
+feature -- Run-Loop modes
+
+	frozen ns_default_run_loop_mode: POINTER
+			-- NSDefaultRunLoopMode
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSDefaultRunLoopMode"
+		end
+
+	default_run_loop_mode: NS_STRING
+		once
+			create Result.make_from_pointer (ns_default_run_loop_mode)
 		end
 
 feature -- Other

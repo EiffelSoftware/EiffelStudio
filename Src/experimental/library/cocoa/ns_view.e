@@ -32,8 +32,18 @@ feature {NONE} -- Creation and Initialization
 			-- require: target has been set up
 		do
 			draw_action := a_draw_action
-			make_from_pointer ({NS_VIEW_API}.custom_new ($current, $draw_old))
+--			make_from_pointer ({NS_VIEW_API}.custom_new ($current, $draw_old))
+			make_from_pointer (view_class.create_instance.item)
+ 			{NS_VIEW_API}.init (item)
 			callback_marshal.register_object (Current)
+		end
+
+	view_classXX: OBJC_CLASS
+		once
+			create Result.make_with_name ("EiffelWrapperViewXX")
+			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
+			Result.add_method ("drawRect:", agent (dirtyRect: POINTER) do io.put_string ("drawRect called%N") end)
+			Result.register
 		end
 
 	make_flipped

@@ -29,9 +29,6 @@ feature -- Implementation
 
 	class_: OBJC_CLASS
 			-- Create a new Objective-C object with one method and use this as a callback.
-		local
-			l_callback_object: NS_OBJECT
-			l_sender: POINTER
 		once
 			create Result.make_with_name ("EiffelWrapperNotificationCallback")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSObject"))

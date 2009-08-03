@@ -48,7 +48,7 @@ feature -- Access
 	non_focused_selection_color: EV_COLOR
 			-- Non focused selection color for title bar.
 		do
-			Result := normal_color
+			create Result.make_with_rgb (1.0, 0.5, 0.5)
 		end
 
 	non_focused_title_text_color: EV_COLOR
@@ -68,8 +68,9 @@ feature -- Access
 
 	active_border_color: EV_COLOR
 			-- Active border color
+			-- Used by SD_TITLE_BAR
 		do
-			Result := active_color--dark_color
+			create Result.make_with_rgb (0.0, 0.0, 0.0)
 		end
 
 	focused_title_text_color: EV_COLOR
@@ -114,37 +115,37 @@ feature {NONE} -- Cocoa text_aa colors.
 	normal_color: EV_COLOR
 			-- State during normal operation.
 		do
-			create Result
+			create Result.make_with_rgb (1.0, 1.0, 0.0)
 		end
 
 	active_color: EV_COLOR
 			-- State of a currently active widget, such as a depressed button.
 		do
-			create Result
+			create Result.make_with_rgb (1.0, 0.0, 0.0)
 		end
 
 	dark_color: EV_COLOR
 			-- Dark color of a widget.
 		do
-			create Result
+			create Result.make_with_rgb (1.0, 0.0, 1.0)
 		end
 
 	prelight_color: EV_COLOR
 			-- State indicating that the mouse pointer is over the widget and widget will respond to mouse clicks.
 		do
-			create Result
+			create Result.make_with_rgb (0.0, 1.0, 0.0)
 		end
 
 	selected_color: EV_COLOR
 			-- State of a selected item, such the selected row in a list.
 		do
-			create Result
+			create Result.make_with_rgb (0.0, 1.0, 1.0)
 		end
 
 	insesitive_color: EV_COLOR
 			-- State indicating that the widget is unresponsive to user actions.
 		do
-			create Result
+			create Result.make_with_rgb (0.0, 0.0, 1.0)
 		end
 
 note

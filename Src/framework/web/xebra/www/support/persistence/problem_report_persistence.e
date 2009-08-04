@@ -22,11 +22,8 @@ feature -- Basic functionality
 		deferred
 		end
 
-	load_skeleton_problem_reports (a_from, a_size: INTEGER): TUPLE [list: LIST [PROBLEM_REPORT_BEAN]; row_count: INTEGER]
+	load_skeleton_problem_reports (a_query: PROBLEM_REPORT_QUERY): TUPLE [list: LIST [PROBLEM_REPORT_BEAN]; row_count: INTEGER]
 			-- `a_max': Maximal number of results in List
-		require
-			a_from_valid: a_from >= 0
-			a_size_valid: a_size >= 0
 		deferred
 		ensure
 			Result_attached: attached Result

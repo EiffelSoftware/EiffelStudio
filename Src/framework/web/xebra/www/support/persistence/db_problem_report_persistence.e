@@ -195,9 +195,7 @@ feature -- Problem report specific data manipulation
 			end
 		end
 
-	load_skeleton_problem_reports (a_from, a_size: INTEGER): TUPLE [list: LIST [PROBLEM_REPORT_BEAN]; row_count: INTEGER]
-			-- `a_size': Number of results in List
-			-- `a_from': From which point on should the objects be retrieved
+	load_skeleton_problem_reports (a_query: PROBLEM_REPORT_QUERY): TUPLE [list: LIST [PROBLEM_REPORT_BEAN]; row_count: INTEGER]
 			-- Retrieves all bug reports
 		local
 			l_select_statement: STRING
@@ -206,22 +204,7 @@ feature -- Problem report specific data manipulation
 			l_result: LIST [PROBLEM_REPORT_BEAN]
 			l_count_result: LIST [STRING]
 		do
-			l_select_statement := "[
-select SQL_CALC_FOUND_ROWS Number, Synopsis, SFIrstName, SLastName, PRelease, SubmissionDate, RFirstName, RLastName, StatusSynopsis, SeveritySynopsis, PrioritySynopsis, CategorySynopsis from
-(select SeverityID, StatusID, PriorityID, CategoryID, Number, Synopsis,
-SFirstName, SLastName, PRelease, SubmissionDate, c2.FirstName as RFirstName, c2.LastName as RLastName from
-(
-(select ReportID, SeverityID, StatusID, PriorityID, CategoryID, Number, Synopsis, SubmissionDate, c1.FirstName as SFirstName, c1.LastName as SLastName, p1.Release as PRelease from problemreports p1 join contacts c1 on c1.ContactID = p1.ContactID) p2
-left join (problemreportresponsibles pr1 
-join contacts c2 on c2.ContactID = pr1.ResponsibleID) on pr1.ReportID=p2.ReportID
-)
-order by Number asc) t1
-join problemreportstatus pstat1 on (pstat1.StatusID=t1.StatusID)
-join problemreportseverities psev1 on psev1.SeverityID=t1.SeverityID
-join problemreportpriorities pprio1 on pprio1.PriorityID=t1.PriorityID
-join problemreportcategories pcat1 on pcat1.CategoryID=t1.CategoryID
-limit 20
-			]"
+			l_select_statement := generate_sql_statement_for_problem_reports (a_query)
 			create {ARRAYED_LIST [PROBLEM_REPORT_BEAN]} l_result.make (2)
 			if attached {ARRAYED_LIST [DB_RESULT]} try_select (l_select_statement) as l_res then
 				from
@@ -245,6 +228,63 @@ limit 20
 				end
 			end
 			Result := [l_result, l_count]
+		end
+
+	generate_sql_statement_for_problem_reports (a_query: PROBLEM_REPORT_QUERY): STRING
+		do
+			Result := "[
+select 
+	SQL_CALC_FOUND_ROWS Number, Synopsis, SFIrstName, SLastName, PRelease, 
+	SubmissionDate, RFirstName, RLastName, StatusSynopsis, SeveritySynopsis, PrioritySynopsis, CategorySynopsis 
+from
+	(select
+		SeverityID, StatusID, PriorityID, CategoryID, Number, Synopsis,
+		SFirstName, SLastName, PRelease, SubmissionDate, c2.FirstName as RFirstName, c2.LastName as RLastName 
+	from
+		((select 
+			ReportID, SeverityID, StatusID, PriorityID, CategoryID, Number,
+			Synopsis, SubmissionDate, c1.FirstName as SFirstName, c1.LastName as SLastName, p1.Release as PRelease
+		from 
+			problemreports p1 join contacts c1 on (c1.ContactID = p1.ContactID
+]"
+		if not a_query.submitter.is_empty then
+				Result := Result + " AND CONCAT_WS(' ', c1.FirstName, c1.LastName) LIKE '%%" + a_query.submitter + "%%'" 
+			end 
+		Result := Result +
+"[
+)) p2
+		left join 
+			(problemreportresponsibles pr1 join contacts c2 on (c2.ContactID = pr1.ResponsibleID
+]"
+			if not a_query.responsible.is_empty then
+				Result := Result + " AND CONCAT_WS(' ', c2.FirstName, c2.LastName) LIKE '%%" + a_query.responsible + "%%'" 
+			end
+			Result := Result + "[
+)) on pr1.ReportID=p2.ReportID
+)
+order by Number asc) t1
+join problemreportstatus pstat1 on (pstat1.StatusID=t1.StatusID)
+join problemreportseverities psev1 on psev1.SeverityID=t1.SeverityID
+]"
+		if not a_query.severity.is_empty then
+			Result := Result + " and psev1.SeveritySynopsis LIKE '%%" + a_query.severity + "%%'" 
+		end
+		Result := Result +
+"[
+join problemreportpriorities pprio1 on (pprio1.PriorityID=t1.PriorityID
+]"
+		if not a_query.priority.is_empty then
+			Result := Result + " and pprio1.PrioritySynopsis LIKE '%%" + a_query.priority + "%%'" 
+		end
+		Result := Result +
+"[
+) join problemreportcategories pcat1 on (pcat1.CategoryID=t1.CategoryID
+]"
+		if not a_query.category.is_empty then
+			Result := Result + " and pcat1.CategorySynopsis LIKE '%%" + a_query.category + "%%'" 
+		end
+		Result := Result  + "%N )limit " + a_query.page_size
+			print (Result + "%N")
 		end
 
 	convert_to_problem_report_bean (l_tuple: DB_TUPLE): PROBLEM_REPORT_BEAN

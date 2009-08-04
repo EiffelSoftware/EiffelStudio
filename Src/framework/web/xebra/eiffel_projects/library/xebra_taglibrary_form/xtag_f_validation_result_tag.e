@@ -25,15 +25,15 @@ feature -- Initialization
 	make
 		do
 			make_base
-			create {XTAG_TAG_VALUE_ARGUMENT} name.make_default		
+			create {XTAG_TAG_VALUE_ARGUMENT} name.make_default
 		end
 
 feature -- Access
 
 	name: XTAG_TAG_ARGUMENT
 			-- Identification of the input field for the validation mapping
-			
-	variable: XTAG_TAG_ARGUMENT
+
+	variable: detachable XTAG_TAG_ARGUMENT
 			-- Iteration variable name
 
 feature -- Implementation
@@ -54,8 +54,8 @@ feature -- Implementation
 		local
 			l_variable: STRING
 		do
-			if attached variable then
-				l_variable := variable.plain_value (current_controller_id)
+			if attached variable as ll_variable then
+				l_variable := ll_variable.plain_value (current_controller_id)
 				a_servlet_class.render_html_page.append_local (l_variable, "STRING")
 				a_servlet_class.render_html_page.append_expression ("if attached {LIST [STRING]} validation_errors [%"" + name.plain_value (current_controller_id) + "%"] as error_list then")
 				a_servlet_class.render_html_page.append_expression ("from")

@@ -37,7 +37,7 @@ feature -- Access
 	label: XTAG_TAG_ARGUMENT
 			-- The text of the link
 
-	variable: XTAG_TAG_ARGUMENT
+	variable: detachable XTAG_TAG_ARGUMENT
 			-- Variable which has to be past to the callee
 
 feature -- Implementation
@@ -69,15 +69,15 @@ feature -- Implementation
 					)
 					a_servlet_class.render_html_page.append_expression ("if attached agent_table [%"" + l_unique_form_id + "%"] as l_agent_table then")
 					a_servlet_class.render_html_page.append_expression ("l_agent_table [" + l_unique_var + "] := agent (a_request: XH_REQUEST; a_object: ANY) do")
-					
-					if attached variable then
-						a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (a_object)")			
-						a_servlet_class.render_html_page.append_expression ("end (?, " + variable.value (current_controller_id) + ") -- COMMAND_LINK_TAG")
+
+					if attached variable as l_variable then
+						a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id) + " (a_object)")
+						a_servlet_class.render_html_page.append_expression ("end (?, " + l_variable.value (current_controller_id) + ") -- COMMAND_LINK_TAG")
 
 					else
 						a_servlet_class.render_html_page.append_expression (current_controller_id + "." + action.value (current_controller_id))
 						a_servlet_class.render_html_page.append_expression ("end (?, Void) -- COMMAND_LINK_TAG")
-						
+
 					end
 					a_servlet_class.render_html_page.append_expression ("end")
 

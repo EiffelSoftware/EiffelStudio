@@ -40,13 +40,13 @@ feature -- Access
 
 	text: XTAG_TAG_ARGUMENT
 			-- Text in the input field
-		
+
 	size: XTAG_TAG_ARGUMENT
 			-- The size of the input field
-			
-	max_length: XTAG_TAG_ARGUMENT
+
+	max_length: detachable XTAG_TAG_ARGUMENT
 			-- The maximal length of the field
-			
+
 	input_type: XTAG_TAG_ARGUMENT
 			-- The type of the input (input, password, etc.)
 
@@ -69,14 +69,14 @@ feature -- Implementation
 				input_type := a_attribute
 			end
 		end
-		
+
 	html_representation (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING)
 			-- <Precursor>
 		local
 			l_max_length: STRING
 		do
-			if attached max_length then
-				l_max_length := "maxLength=%%%"" + max_length.value (current_controller_id) + "%%%""
+			if attached max_length as ll_max_length then
+				l_max_length := "maxLength=%%%"" + ll_max_length.value (current_controller_id) + "%%%""
 			else
 				l_max_length := ""
 			end

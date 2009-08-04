@@ -27,13 +27,14 @@ feature -- Initialization
 			Precursor
 			create {XTAG_TAG_VALUE_ARGUMENT} selected_index.make ("1")
 			create {XTAG_TAG_VALUE_ARGUMENT} type.make ("STRING")
+			internal_drop_down_objects := ""
 		ensure then
 			selected_index_attached: attached selected_index
 		end
 
 feature {NONE} -- Access
 
-	drop_down_items: XTAG_TAG_ARGUMENT
+	drop_down_items: detachable XTAG_TAG_ARGUMENT
 			-- The function which provides the items (can be None, then no items are displayed)
 
 	selected_index: XTAG_TAG_ARGUMENT
@@ -72,11 +73,11 @@ feature -- Implementation
 			l_drop_down_objects := a_servlet_class.new_variable ("HASH_TABLE [" + type.value (current_controller_id) + " , STRING]")
 			a_servlet_class.make_feature.append_expression ("create " + l_drop_down_objects + ".make (5)")
 			internal_drop_down_objects := l_drop_down_objects
-			if attached drop_down_items then
-				if drop_down_items.is_dynamic or drop_down_items.is_variable then
-					l_list_value := drop_down_items.plain_value (current_controller_id)
+			if attached drop_down_items as ll_drop_down_objects then
+				if ll_drop_down_objects.is_dynamic or ll_drop_down_objects.is_variable then
+					l_list_value := ll_drop_down_objects.plain_value (current_controller_id)
 				else
-					l_list_value := "%"" + drop_down_items.value (current_controller_id) + "%""
+					l_list_value := "%"" + ll_drop_down_objects.value (current_controller_id) + "%""
 				end
 
 				l_items_name := a_servlet_class.render_html_page.new_local ("LIST [STRING]")
@@ -104,7 +105,7 @@ feature -- Implementation
 			-- <Precursor>
 		do	Result := "if attached {" + type.value (current_controller_id) + "} " + internal_drop_down_objects + "[" +  a_argument_name + "] as dd_argument then "
 			Result := Result + a_variable_name + " := dd_argument "
-			Result := Result + "end" 
+			Result := Result + "end"
 		end
 
 end

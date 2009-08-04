@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_base
-			create times.make ("0")
+			create {XTAG_TAG_VALUE_ARGUMENT} times.make ("0")
 		end
 
 feature {NONE} -- Access
@@ -34,7 +34,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; variable_table: HASH_TABLE [ANY, STRING])
+	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		local
 			temp_var_name: STRING
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			a_servlet_class.render_html_page.append_expression ("until")
 			a_servlet_class.render_html_page.append_expression (temp_var_name + " > " + times.value (current_controller_id))
 			a_servlet_class.render_html_page.append_expression ("loop")
-			generate_children (a_servlet_class, variable_table)
+			generate_children (a_servlet_class, a_variable_table)
 			a_servlet_class.render_html_page.append_expression (temp_var_name + " := " + temp_var_name + " + 1")
 			a_servlet_class.render_html_page.append_expression ("end")
 		end

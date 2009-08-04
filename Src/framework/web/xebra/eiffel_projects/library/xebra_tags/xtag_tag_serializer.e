@@ -28,6 +28,7 @@ feature -- Initialization
 			create {ARRAYED_LIST [XTAG_TAG_SERIALIZER]} children.make (3)
 			create {XTAG_TAG_VALUE_ARGUMENT}render.make ("")
 			current_controller_id := ""
+			debug_information := ""
 			tag_id := ""
 		ensure
 			children_attached: attached children
@@ -162,13 +163,13 @@ feature -- Basic implementation
 		do
 			a_servlet_class.set_debug_information (debug_information)
 				-- If the render option is set, overwrite definition of tag
-			if not render.value (current_controller_id).is_empty then				
+			if not render.value (current_controller_id).is_empty then
 				l_render_condition_id := a_servlet_class.get_unique_identifier
 				a_servlet_class.set_all_booleans.append_expression ("render_conditions [%"" + l_render_condition_id + "%"] := " + render.plain_value (current_controller_id))
 				a_servlet_class.clean_up_after_render.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
 			a_servlet_class.render_html_page.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
 				a_servlet_class.handle_form_internal.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
-				a_servlet_class.fill_bean.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")				
+				a_servlet_class.fill_bean.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
 
 				internal_generate (a_servlet_class, a_variable_table)
 

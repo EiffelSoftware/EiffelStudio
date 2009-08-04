@@ -37,7 +37,7 @@ feature {NONE} -- Access
 	dollar_description: STRING
 			-- <Precursor>
 		do
-			Result := "Missing property in config file: '{1}'"
+			Result := "Missing or wrong type property in config file: '{1}'"
 		end
 
 end

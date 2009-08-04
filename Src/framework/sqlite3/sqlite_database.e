@@ -124,8 +124,10 @@ feature -- Access: Error reporting
 
 	last_exception: detachable SQLITE_EXCEPTION
 			-- Last occuring error, set from a previous interaction with the database.
+			--
 			-- Note: In multi-threaded modes, be sure to obtain a DB lock when performing an
 			--       operation and then retrieving the error
+			--
 			-- Note: This is not the last raised exception, for that use {EXCEPTION_MANAGER}
 			--       This is an exception object generated from the internals of SQLite.
 		require
@@ -283,16 +285,16 @@ feature -- Element change
 feature -- Status report
 
 	is_accessible: BOOLEAN
-			-- Indicates if the database is accessible on the current thread
+			-- Indicates if the database is accessible on the current thread.
 		do
 			if {PLATFORM}.is_thread_capable then
-				Result := internal_thread_id = get_current_thread_id.to_integer_32
+				Result := sqlite_api.is_thread_safe --internal_thread_id = get_current_thread_id.to_integer_32
 			else
 				Result := True
 			end
 		ensure
 			true_result: not {PLATFORM}.is_thread_capable implies Result
-			same_internal_thread_id: (Result and {PLATFORM}.is_thread_capable) implies internal_thread_id = get_current_thread_id.to_integer_32
+			--same_internal_thread_id: (Result and {PLATFORM}.is_thread_capable) implies internal_thread_id = get_current_thread_id.to_integer_32
 		end
 
 	is_readable: BOOLEAN
@@ -448,6 +450,7 @@ feature -- Basic operations
 	close
 			-- Closes and open database connection. If no connection is open nothing will happen. This is
 			-- for convenience.
+			--
 			-- Note: Closed connections can be reopened using one of the `open_*' routines.
 		require
 			is_interface_usable: is_interface_usable

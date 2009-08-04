@@ -28,7 +28,7 @@ feature -- Meansurement
 			is_interface_usable: is_interface_usable
 			is_compiled: is_compiled
 			is_connected: is_connected
-			database_is_accessible: database.is_accessible
+			is_accessible: is_accessible
 		do
 			Result := sqlite3_column_count (sqlite_api, internal_stmt).as_natural_32
 		end
@@ -45,7 +45,7 @@ feature -- Query
 			is_interface_usable: is_interface_usable
 			is_compiled: is_compiled
 			is_connected: is_connected
-			database_is_accessible: database.is_accessible
+			is_accessible: is_accessible
 			a_column_positive: a_column > 0
 			a_column_small_enough: a_column <= column_count
 		local
@@ -96,7 +96,7 @@ feature -- Basic operations
 			is_compiled: is_compiled
 			is_connected: is_connected
 			not_is_executing: not is_executing
-			database_is_accessible: database.is_accessible
+			is_accessible: is_accessible
 			database_is_readable: database.is_readable
 			a_callback_attached: attached a_callback
 		do
@@ -118,7 +118,7 @@ feature -- Basic operations
 			is_compiled: is_compiled
 			is_connected: is_connected
 			not_is_executing: not is_executing
-			database_is_accessible: database.is_accessible
+			is_accessible: is_accessible
 			database_is_readable: database.is_readable
 			a_callback_attached: attached a_callback
 			a_bindings_attached: attached a_bindings

@@ -10,7 +10,8 @@ class
 inherit
 	XWA_CONTROLLER
 		redefine
-			make
+			make,
+			on_load
 		end
 	G_SHARED_SUPPORT_GLOBAL_STATE
 
@@ -22,37 +23,27 @@ feature -- Initialization
 	make
 		do
 			Precursor
-			create internal_problem_reports.make (2)
-			internal_problem_reports.extend (create {PROBLEM_REPORT_BEAN}.make)
-			internal_problem_reports.extend (create {PROBLEM_REPORT_BEAN}.make)
-			internal_problem_reports.extend (create {PROBLEM_REPORT_BEAN}.make)
-			internal_problem_reports.extend (create {PROBLEM_REPORT_BEAN}.make)
-			internal_problem_reports.extend (create {PROBLEM_REPORT_BEAN}.make)
-			internal_problem_reports.extend (create {PROBLEM_REPORT_BEAN}.make)
-			create responsibles.make (3)
-			responsibles.extend ("Asterix")
-			responsibles.extend ("Obelix")
-			responsibles.extend ("idefix")
+			create {ARRAYED_LIST [PROBLEM_REPORT_BEAN]} internal_problem_reports.make (2)			
 		end
 
 feature -- Access
 
 	overall_count: INTEGER
 		-- The number of all the results
+
+feature {NONE} -- Access
+
+	internal_query: PROBLEM_REPORT_QUERY
 	
+	internal_problem_reports: LIST [PROBLEM_REPORT_BEAN]
+
 feature -- Basic Functionality
 
 	responsibles: ARRAYED_LIST [STRING]
 
-	internal_problem_reports: ARRAYED_LIST [PROBLEM_REPORT_BEAN]
-
-	problem_reports: LIST [PROBLEM_REPORT_BEAN]
-		local
-			l_tmp: TUPLE [list: LIST [PROBLEM_REPORT_BEAN]; row_count: INTEGER]
+	problem_reports: LIST [PROBLEM_REPORT_BEAN]		
 		do
-			l_tmp := global_state.persistence.load_skeleton_problem_reports (0, 20)
-			overall_count := l_tmp.row_count
-			Result := l_tmp.list
+			Result := internal_problem_reports
 		end
 
 	priorities: LIST [STRING]
@@ -73,6 +64,29 @@ feature -- Basic Functionality
 	all_responsibles: LIST [STRING]
 		do
 			Result := global_state.persistence.responsibles
+		end
+		
+	search (a_query: PROBLEM_REPORT_QUERY)
+		local
+				l_tmp: TUPLE [list: LIST [PROBLEM_REPORT_BEAN]; row_count: INTEGER]
+		do
+			internal_query := a_query
+			if attached internal_query then
+				l_tmp := global_state.persistence.load_skeleton_problem_reports (internal_query)
+				overall_count := l_tmp.row_count
+				internal_problem_reports := l_tmp.list
+			end
+			print ("search")
+		ensure
+			internal_query_set: internal_query = a_query
+		end
+		
+feature -- Preliminary processing		
+
+	on_load (a_request: XH_REQUEST; a_response: XH_RESPONSE)		
+		do
+			print ("on_load")
+			
 		end
 
 end

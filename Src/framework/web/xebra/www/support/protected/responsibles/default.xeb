@@ -20,7 +20,7 @@
 								</div>
 							</td>
 							<td valign="top">
-								<f:input_text name="submitter_input" value="submitter" max_length="101" size="15"/>
+								<f:input_text name="submitter_input" value="submitter" text="#{query.submitter}" max_length="101" size="15"/>
 							</td>
 							<td class="field_name" valign="top">
 								Category:
@@ -32,15 +32,13 @@
 						</tr>
 						<tr>
 							<td class="field_name" valign="top">
-							
 								<a href="">Responsible:</a>
 								<div class="tooltip_container" width="400px"></div>
 							</td>
 							<td valign="top">
-								<f:input_text max_length="101" value="responsible" />
+								<f:input_text max_length="101" value="responsible" text="#{query.responsible}" />
 							</td>
 							<td class="field_name" valign="top">
-						
 								Severity:
 								<div class="tooltip_container" width="135px"></div>
 							</td>
@@ -53,7 +51,7 @@
 								Page Size:
 							</td>
 							<td valign="top">
-								<f:input_text max_length="4" size="3" value="page_size" />
+								<f:input_text max_length="3" size="3" value="page_size" text="#{query.page_size}" />
 								<span class="error" style="color: Red; visibility: hidden;">*</span>
 							</td>
 							<td class="field_name" valign="top">
@@ -66,6 +64,7 @@
 						</tr>
 					</tbody>
 				</table>
+				<f:button text="Search" action="search" />
 			</f:form>
 			<div id="reports_div">
 				<div  class="pager_div" id="pager_div">

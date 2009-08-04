@@ -21,7 +21,7 @@ feature -- Initialization
 	make
 		do
 			priority := ""
-			page_size := ""
+			page_size := "20"
 			severity := ""
 			responsible := ""
 			category := ""
@@ -63,6 +63,7 @@ feature -- Access
 	
 	set_priority (a_priority: STRING)
 		do
+			priority := a_priority
 		end
 		
 	page_size: STRING assign set_page_size

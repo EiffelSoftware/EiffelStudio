@@ -339,21 +339,22 @@ feature {XS_SERVER_MODULE} -- Status setting
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
 			l_webapp_finder: XS_WEBAPP_FINDER
-			l_config_reader: XS_CONFIG_READER
+			l_config_reader: XS_JSON_CONFIG_READER
 		do
 			o.iprint ("Reading config...")
-			create l_config_reader.make
-			if attached l_config_reader.process_file (config.args.config_filename) as l_config then
+			Result := create {XCCR_CONFIG_ERROR}
+			create l_config_reader
+			if attached {XS_FILE_CONFIG} l_config_reader.process_file (config.args.config_filename) as l_config then
 				config.file := l_config
 				create l_webapp_finder
 				config.file.set_webapps (l_webapp_finder.search_webapps (config.file.webapps_root))
 				o.dprint (config.file.print_configuration, 2)
 			end
+
 			if handle_errors then
 				Result := create {XCCR_OK}
-			else
-				Result := create {XCCR_CONFIG_ERROR}
 			end
+
 		end
 
 	shutdown_server: XC_COMMAND_RESPONSE

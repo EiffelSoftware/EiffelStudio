@@ -20,7 +20,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Internal
 
-	Max_file_replace_size: INTEGER_32 = 1000000
+	Max_file_size: INTEGER_32 = 1000000
 
 feature -- Basic Opertaions
 
@@ -45,6 +45,7 @@ feature -- Basic Opertaions
 			-- Opens a_file if it exists and replaces all occurrences of a_replacee with a_replacer
 			-- Reads the whole file into a string. This feature should only be used on 'small' text files.
 			-- Adds errors to ERROR_SHARED_MULTI_ERROR_MANAGER, don't forget to handle errors afterwards.
+			-- Ignores files with more than Max_file_size characters!
 			--
 			-- `a_file': The file to be edited
 			-- `a_replacee': The string that will be replaced by a_replacer
@@ -59,7 +60,7 @@ feature -- Basic Opertaions
 				-- Open the file in read mode first
 			if attached {PLAIN_TEXT_FILE} plain_text_file_read (a_file) as l_file then
 					-- Make sure the file is not too big
-				if l_file.count > Max_file_replace_size then
+				if l_file.count > Max_file_size then
 					error_manager.add_error (create {XERROR_FILE_TOO_BIG}.make (l_file.name), False)
 				else
 						-- Read the file into buffer
@@ -84,6 +85,22 @@ feature -- Basic Opertaions
 				end
 			end
 
+		end
+
+	text_file_read_to_string (a_file_name: STRING): detachable STRING
+			-- Opens a plain text file for reading and reads the content into result. Does not create the file if it doesn't exsist.
+			-- Adds errors to ERROR_SHARED_MULTI_ERROR_MANAGER, don't forget to handle errors afterwards.
+			--
+			-- `a_file_name': The file name.
+			-- `Result': Returns a the content of the file
+		require
+			not_a_file_name_is_detached_or_empty: a_file_name /= Void and then not a_file_name.is_empty
+		do
+			if attached plain_text_file_read (a_file_name) as l_file then
+				l_file.read_stream (l_file.count)
+				Result := l_file.last_string
+				l_file.close
+			end
 		end
 
 	plain_text_file_read (a_file_name: STRING): detachable PLAIN_TEXT_FILE

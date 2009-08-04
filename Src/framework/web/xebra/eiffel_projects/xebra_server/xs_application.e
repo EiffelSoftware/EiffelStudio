@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			l_arg_parser: XS_ARGUMENT_PARSER
 			l_common_classes: XC_CLASSES
 		do
+
 			create l_common_classes.make
 			create l_arg_parser.make
 			create l_server.make

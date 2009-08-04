@@ -34,7 +34,7 @@ feature -- Initialize
 
 feature {NONE} -- Access
 
-	internal_error_messages: LIST [STRING]
+	internal_error_messages: detachable LIST [STRING]
 			-- Internal detachable error messages holder
 
 feature -- Access
@@ -45,10 +45,12 @@ feature -- Access
 	error_messages: LIST [STRING]
 			-- All the errors that resulted while parsing
 		do
-			if not attached internal_error_messages then
-				create {ARRAYED_LIST [STRING]} internal_error_messages.make (0)
+			if attached internal_error_messages as l_e_messages then
+				Result := l_e_messages
+			else
+				create {ARRAYED_LIST [STRING]} Result.make (0)
+				internal_error_messages := Result
 			end
-			Result := internal_error_messages
 		ensure
 			Result_attached: attached Result
 		end

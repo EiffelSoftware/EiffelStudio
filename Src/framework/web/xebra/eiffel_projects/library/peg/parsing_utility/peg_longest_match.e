@@ -58,6 +58,7 @@ feature -- Basic functionality
 			error_messages.wipe_out
 		ensure
 			count_reset: count = 1
+			error_messages_wiped_out: error_messages.count = 0
 		end
 
 invariant

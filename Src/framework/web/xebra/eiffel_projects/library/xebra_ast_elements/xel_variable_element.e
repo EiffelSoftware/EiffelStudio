@@ -45,18 +45,18 @@ feature -- Access
 	type: STRING
 			-- The type of the variable
 
-	value: STRING
+	value: detachable STRING
 			-- The constant value
 
 feature -- Implementation
 
-	serialize (buf:XU_INDENDATION_FORMATTER)
+	serialize (a_buf: XU_INDENDATION_FORMATTER)
 			-- <Precursor>
 		do
-			if attached value then
-				buf.put_string (name + ": " + type.as_upper + " = " + value)
+			if attached value as l_value then
+				a_buf.put_string (name + ": " + type.as_upper + " = " + l_value)
 			else
-				buf.put_string (name + ": " + type.as_upper)
+				a_buf.put_string (name + ": " + type.as_upper)
 			end
 
 		end

@@ -20,7 +20,6 @@ feature -- Initialization
 
 	make (a_signature: STRING)
 			-- `a_signature': The signature of the feature
-			-- `a_content': The feature body
 		require
 			signature_valid: not a_signature.is_empty
 		do
@@ -136,62 +135,62 @@ feature -- Access
 
 feature -- Implementation
 
-	serialize (buf: XU_INDENDATION_FORMATTER)
+	serialize (a_buf: XU_INDENDATION_FORMATTER)
 			-- <Precursor>			
 		do
-			buf.put_string (header_note)
+			a_buf.put_string (header_note)
 
-			buf.put_new_line
+			a_buf.put_new_line
 
-			buf.put_string (class_kw)
-			buf.indent
-			buf.put_string (name)
-			buf.unindent
-			buf.put_new_line
+			a_buf.put_string (class_kw)
+			a_buf.indent
+			a_buf.put_string (name)
+			a_buf.unindent
+			a_buf.put_new_line
 
-			buf.put_string (inherit_kw)
-			buf.indent
-			buf.put_string (precursor_name)
-			buf.unindent
-			buf.put_new_line
+			a_buf.put_string (inherit_kw)
+			a_buf.indent
+			a_buf.put_string (precursor_name)
+			a_buf.unindent
+			a_buf.put_new_line
 
 			if not constructor_name.is_empty then
-				buf.put_string (create_kw)
-				buf.indent
-				buf.put_string (constructor_name)
-				buf.unindent
-				buf.put_new_line
+				a_buf.put_string (create_kw)
+				a_buf.indent
+				a_buf.put_string (constructor_name)
+				a_buf.unindent
+				a_buf.put_new_line
 			end
 
-			buf.put_string (feature_kw + "-- Access")
-			buf.put_new_line
-			buf.indent
+			a_buf.put_string (feature_kw + "-- Access")
+			a_buf.put_new_line
+			a_buf.indent
 			from
 				variables.start
 			until
 				variables.after
 			loop
-				variables.item.serialize (buf)
+				variables.item.serialize (a_buf)
 				variables.forth
-				buf.put_new_line
+				a_buf.put_new_line
 			end
-			buf.unindent
+			a_buf.unindent
 
-			buf.put_string (feature_kw + "-- Implementation")
-			buf.put_new_line
-			buf.indent
+			a_buf.put_string (feature_kw + "-- Implementation")
+			a_buf.put_new_line
+			a_buf.indent
 			from
 				features.start
 			until
 				features.after
 			loop
-				features.item.serialize (buf)
+				features.item.serialize (a_buf)
 				features.forth
-				buf.put_new_line
+				a_buf.put_new_line
 			end
-			buf.unindent
-			buf.append_string (footer)
-			buf.put_string (end_kw)
+			a_buf.unindent
+			a_buf.append_string (footer)
+			a_buf.put_string (end_kw)
 
 		end
 

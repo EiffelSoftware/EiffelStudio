@@ -23,16 +23,17 @@ feature -- Initialization
 		do
 			make (a_name)
 			create make_feature.make (make_signature)
-			add_feature (make_feature)
 			create set_all_booleans.make (set_all_booleans_signature)
-			add_feature (set_all_booleans)
 			create handle_form_internal.make (handle_form_internal_signature)
-			add_feature (handle_form_internal)
 			create render_html_page.make_with_const_class (render_html_page_signature, a_const_class)
-			add_feature (render_html_page)
 			create clean_up_after_render.make (clean_up_after_render_signature)
-			add_feature (clean_up_after_render)
 			create fill_bean.make (fill_bean_signature)
+			
+			add_feature (make_feature)
+			add_feature (set_all_booleans)
+			add_feature (handle_form_internal)
+			add_feature (render_html_page)
+			add_feature (clean_up_after_render)
 			add_feature (fill_bean)
 				--Ensure that the result is always True if nothing else checked!
 			fill_bean.append_expression_to_start ("Result := True")
@@ -41,17 +42,23 @@ feature -- Initialization
 feature -- Access
 
 	make_feature: XEL_DEBUG_FEATURE_ELEMENT
+			-- The constructor feature
 
 	set_all_booleans: XEL_DEBUG_FEATURE_ELEMENT
+			-- The feature where all the variables are set
 
 	clean_up_after_render: XEL_DEBUG_FEATURE_ELEMENT
+			-- The feature which is executed after everything has been rendered
 
 	render_html_page: XEL_RENDER_FEATURE_ELEMENT
+			-- The feature in where the page is rendered
 
 	handle_form_internal: XEL_DEBUG_FEATURE_ELEMENT
+			-- The feature where the form is handled
 
 	fill_bean: XEL_DEBUG_FEATURE_ELEMENT
-	
+			-- The feature is validated and wrapped
+
 	set_debug_information (a_debug_info: STRING)
 			-- Sets the debug information
 		require

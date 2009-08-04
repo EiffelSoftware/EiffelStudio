@@ -23,8 +23,7 @@ feature -- Operations
 		local
 			l_files: LIST [STRING]
 			l_f_utils: XU_FILE_UTILITIES
-			l_webapp_config: XC_WEBAPP_CONFIG
-			l_webapp_config_reader: XC_WEBAPP_CONFIG_READER
+			l_webapp_config_reader: XC_WEBAPP_JSON_CONFIG_READER
 			l_ex: LINKED_LIST [STRING]
 			l_inc: LINKED_LIST [STRING]
 		do
@@ -35,7 +34,7 @@ feature -- Operations
 			l_inc.force (Webapp_config_filename)
 			create Result.make (1)
 			create l_f_utils
-			create l_webapp_config_reader.make
+			create l_webapp_config_reader
 
 			l_files := l_f_utils.scan_for_files (a_path, -1, l_inc, l_ex)
 			from
@@ -43,8 +42,10 @@ feature -- Operations
 			until
 				l_files.after
 			loop
-				l_webapp_config := l_webapp_config_reader.process_file (l_files.item_for_iteration)
-				Result.force (create {XS_WEBAPP}.make (l_webapp_config), l_webapp_config.name)
+				if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (l_files.item_for_iteration) as l_w then
+					Result.force (create {XS_WEBAPP}.make (l_w), l_w.name)
+				end
+
 				l_files.forth
 			end
 		ensure

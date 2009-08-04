@@ -46,7 +46,7 @@ feature -- Inherited Features
 			-- <Precursor>
 		local
 			l_response: XC_COMMAND_RESPONSE
-			l_http_socket: NETWORK_STREAM_SOCKET
+			l_http_socket: detachable NETWORK_STREAM_SOCKET
 			l_webapp_handler: XS_WEBAPP_HANDLER
 		do
 			stop := False
@@ -102,10 +102,14 @@ feature -- Inherited Features
        		o.dprint("HTTP Connection Server ends.",2)
        		rescue
        			o.eprint ("Exception occured.", generating_type)
-       			l_http_socket.cleanup
-	        	check
-	        		l_http_socket.is_closed
-	       		end
+
+				if attached {NETWORK_STREAM_SOCKET} l_http_socket as ll_http_socket then
+					ll_http_socket.cleanup
+					check
+		        		ll_http_socket.is_closed
+		       		end
+				end
+
        			retry
        	end
 

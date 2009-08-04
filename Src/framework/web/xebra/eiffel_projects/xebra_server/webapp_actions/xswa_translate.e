@@ -22,10 +22,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_webapp: XS_WEBAPP)
+	make
 			-- Initialization for `Current'.	
 		do
-			Precursor (a_webapp)
+			Precursor
 			create output_handler_translate.make
 			force := False
 		ensure then
@@ -45,14 +45,19 @@ feature -- Access
 
 	translator_args: STRING
 			-- The arguments that are passed to the translator
+		require
+			webapp_attached: webapp /= Void
 		do
-			Result := " -n %"" + webapp.app_config.name.out + "%""
-			Result.append ( " -i . ")
-			Result.append (" -o . ")
-			Result.append (" -l %"" + config.file.lib.out + "%"")
-			Result.append (" -d " + config.args.debug_level.out)
-			if force then
-				Result.append (" -f")
+			Result := ""
+			if attached webapp as l_wa then
+				Result := " -n %"" + l_wa.app_config.name.out + "%""
+				Result.append ( " -i . ")
+				Result.append (" -o . ")
+				Result.append (" -l %"" + config.file.lib.out + "%"")
+				Result.append (" -d " + config.args.debug_level.out)
+				if force then
+					Result.append (" -f")
+				end
 			end
 		ensure
 			Result_attached: Result /= void
@@ -114,13 +119,17 @@ feature -- Status setting
 
 	stop
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		do
-			if attached {PROCESS} translate_process as p and then p.is_running  then
-				o.dprint ("Terminating translate_process for " + webapp.app_config.name.out  + "", 2)
-				p.terminate
-				p.wait_for_exit
+			if attached webapp as l_wa then
+				if attached {PROCESS} translate_process as p and then p.is_running  then
+					o.dprint ("Terminating translate_process for " + l_wa.app_config.name.out  + "", 2)
+					p.terminate
+					p.wait_for_exit
+				end
+				set_running (False)
 			end
-			set_running (False)
 		end
 
 	set_force (a_force: BOOLEAN)
@@ -135,41 +144,49 @@ feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)
 			-- Sets is_running
+		require
+			webapp_attached: webapp /= Void
 		do
-			is_running := a_running
-			webapp.is_translating := a_running
+			if attached webapp as l_wa then
+				is_running := a_running
+				l_wa.is_translating := a_running
+			end
 		ensure
 			set: equal (is_running, a_running)
-			set: equal (is_running, webapp.is_translating)
 		end
 
 feature {TEST_WEBAPPS} -- Implementation
 
 	internal_execute: XC_COMMAND_RESPONSE
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		do
-			if not is_running then
-				webapp.shutdown
-				if can_launch_process (config.file.translator_filename, app_dir) then
+			create {XCCR_INTERNAL_SERVER_ERROR}Result
+			if attached webapp as l_wa then
+				if not is_running then
+					l_wa.shutdown
+					if can_launch_process (config.file.translator_filename, app_dir) then
 
-					if attached translate_process as p then
-						if p.is_running then
-							o.eprint ("About to launch translate process but it was still running... So I'm going to kill it.", generating_type)
-							p.terminate
+						if attached translate_process as p then
+							if p.is_running then
+								o.eprint ("About to launch translate process but it was still running... So I'm going to kill it.", generating_type)
+								p.terminate
+							end
 						end
-					end
 
-					o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE -=-=-=-=-=-=", 6)
-					translate_process := launch_process (config.file.translator_filename,
-															translator_args,
-															app_dir,
-															agent translate_process_exited,
-															agent output_handler_translate.handle_output,
-															agent output_handler_translate.handle_output)
-					set_running (True)
+						o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE -=-=-=-=-=-=", 6)
+						translate_process := launch_process (config.file.translator_filename,
+																translator_args,
+																app_dir,
+																agent translate_process_exited,
+																agent output_handler_translate.handle_output,
+																agent output_handler_translate.handle_output)
+						set_running (True)
+					end
 				end
+				Result := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
 			end
-			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_command_response
 		end
 
 feature -- Agents

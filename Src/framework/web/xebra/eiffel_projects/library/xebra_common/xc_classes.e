@@ -28,6 +28,8 @@ feature -- Other
 		local
 			l: ANY
 		do
+			create {STRING}l.make_empty
+
 				-- Responses
 			if attached {XCCR_CANNOT_SEND} l then end
 			if attached {XCCR_CONFIG_ERROR} l then end

@@ -55,7 +55,7 @@ feature -- Processing
 			-- Reads the values from JSON_VALUE into XS_FILE_CONFIG and checks for errors
 		local
 			l_util: XU_FILE_UTILITIES
-			l_config: XS_FILE_CONFIG
+			l_config: detachable XS_FILE_CONFIG
 			l_resolved_path: STRING
 		do
 			create l_util
@@ -68,7 +68,7 @@ feature -- Processing
 					if l_e.item.is_boolean then
 						l_config.set_finalize_webapps (l_e.item.to_boolean)
 					else
-						error_manager.add_error (create {XERROR_CONFIG_PROPERTY}.make (finalize_webapps_name), false)
+						error_manager.add_error (create {XERROR_CONFIG_PROPERTY}.make (l_e.item), false)
 					end
 				else
 					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (finalize_webapps_name), false)

@@ -39,28 +39,32 @@ feature -- Initialization
 			command_groups.force (create {HASH_TABLE [XC_SERVER_COMMAND, STRING]}.make (1), "Modules")
 			command_groups.force (create {HASH_TABLE [XC_SERVER_COMMAND, STRING]}.make (1), "Webapps")
 
-			command_groups ["Server Control"].force  (create {XCC_SHUTDOWN_SERVER}.make, "exit")
-			command_groups ["Server Control"].force  (create {XCC_LOAD_CONFIG}.make, "reload")
-			command_groups ["Server Control"].force  (create {XCC_SHUTDOWN_WEBAPPS}.make, "shutdown_webapps")
+			if attached command_groups ["Server Control"] as l_group_sc then
+				l_group_sc.force  (create {XCC_SHUTDOWN_SERVER}.make, "exit")
+				l_group_sc.force  (create {XCC_LOAD_CONFIG}.make, "reload")
+				l_group_sc.force  (create {XCC_SHUTDOWN_WEBAPPS}.make, "shutdown_webapps")
+			end
 
-			command_groups ["Modules"].force (create {XCC_RELAUNCH_MOD}.make, "mlaunch")
-			command_groups ["Modules"].force (create {XCC_SHUTDOWN_MOD}.make, "mshutdown")
-			command_groups ["Modules"].force (create {XCC_GET_MODULES}.make, "modules")
+			if attached command_groups ["Modules"] as l_group_m then
+				l_group_m.force (create {XCC_RELAUNCH_MOD}.make, "mlaunch")
+				l_group_m.force (create {XCC_SHUTDOWN_MOD}.make, "mshutdown")
+				l_group_m.force (create {XCC_GET_MODULES}.make, "modules")
+			end
 
-			command_groups ["Webapps"].force (create {XCC_CLEAN_WEBAPP}.make, "clean")
-			command_groups ["Webapps"].force (create {XCC_SHUTDOWN_WEBAPP}.make, "shutdown")
-			command_groups ["Webapps"].force (create {XCC_ENABLE_WEBAPP}.make, "enable")
-			command_groups ["Webapps"].force (create {XCC_DISABLE_WEBAPP}.make, "disable")
-			command_groups ["Webapps"].force (create {XCC_GET_WEBAPPS}.make, "webapps")
-			command_groups ["Webapps"].force (create {XCC_DEV_ON_WEBAPP}.make, "dev_on")
-			command_groups ["Webapps"].force (create {XCC_DEV_OFF_WEBAPP}.make, "dev_off")
-			command_groups ["Webapps"].force (create {XCC_DEV_ON_WEBAPP}.make, "dev")
-			command_groups ["Webapps"].force (create {XCC_DEV_OFF_GLOBAL}.make, "dev_off_all")
-			command_groups ["Webapps"].force (create {XCC_DEV_ON_GLOBAL}.make, "dev_all")
-			command_groups ["Webapps"].force (create {XCC_FIREOFF_WEBAPP}.make, "fire")
-		--	command_groups ["Webapps"].force (create {XCC_GET_SESSIONS}.make, "get_sessions")
-			command_groups ["Webapps"].force (create {XCC_TRANSLATE_WEBAPP}.make, "translate")
-
+			if attached command_groups ["Webapps"] as l_group_w then
+				l_group_w.force (create {XCC_CLEAN_WEBAPP}.make, "clean")
+				l_group_w.force (create {XCC_SHUTDOWN_WEBAPP}.make, "shutdown")
+				l_group_w.force (create {XCC_ENABLE_WEBAPP}.make, "enable")
+				l_group_w.force (create {XCC_DISABLE_WEBAPP}.make, "disable")
+				l_group_w.force (create {XCC_GET_WEBAPPS}.make, "webapps")
+				l_group_w.force (create {XCC_DEV_ON_WEBAPP}.make, "dev_on")
+				l_group_w.force (create {XCC_DEV_OFF_WEBAPP}.make, "dev_off")
+				l_group_w.force (create {XCC_DEV_ON_WEBAPP}.make, "dev")
+				l_group_w.force (create {XCC_DEV_OFF_GLOBAL}.make, "dev_off_all")
+				l_group_w.force (create {XCC_DEV_ON_GLOBAL}.make, "dev_all")
+				l_group_w.force (create {XCC_FIREOFF_WEBAPP}.make, "fire")
+				l_group_w.force (create {XCC_TRANSLATE_WEBAPP}.make, "translate")
+			end
 			-- help command is hardcoded
         ensure
         	main_server_set: equal (a_main_server, main_server)

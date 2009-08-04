@@ -21,10 +21,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_webapp: XS_WEBAPP)
+	make
 			-- Initialization for `Current'.	
 		do
-			Precursor (a_webapp)
+			Precursor
 			create output_handler_gen.make
 		ensure then
 			output_handler_gen_attached: output_handler_gen /= Void
@@ -97,51 +97,63 @@ feature -- Status setting
 
 	stop
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		do
-			if attached {PROCESS} generate_process as p and then p.is_running  then
-				o.dprint ("Terminating generate_process for " + webapp.app_config.name.out  + "", 2)
-				p.terminate
-				p.wait_for_exit
+			if attached webapp as l_wa then
+				if attached {PROCESS} generate_process as p and then p.is_running  then
+					o.dprint ("Terminating generate_process for " + l_wa.app_config.name.out  + "", 2)
+					p.terminate
+					p.wait_for_exit
+				end
+				set_running (False)
 			end
-			set_running (False)
 		end
 
 feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)
 			-- Sets is_running
+		require
+			webapp_attached: webapp /= Void
 		do
-			is_running := a_running
-			webapp.is_generating := a_running
+			if attached webapp as l_wa then
+				is_running := a_running
+				l_wa.is_generating := a_running
+			end
 		ensure
 			set: equal (is_running, a_running)
-			set: equal (is_running, webapp.is_generating)
 		end
 
 feature {TEST_WEBAPPS} -- Implementation
 
 	internal_execute: XC_COMMAND_RESPONSE
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		do
-			if not is_running then
-				if can_launch_process (servlet_gen_exe, app_dir) then
-					if attached generate_process as p then
-						if p.is_running then
-							o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
-							p.terminate
+			create {XCCR_INTERNAL_SERVER_ERROR}Result
+			if attached webapp as l_wa then
+				if not is_running then
+					if can_launch_process (servlet_gen_exe, app_dir) then
+						if attached generate_process as p then
+							if p.is_running then
+								o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
+								p.terminate
+							end
 						end
+						set_running (True)
+						o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR  -=-=-=-=-=-=", 6)
+						generate_process := launch_process (servlet_gen_exe,
+															generate_args,
+															app_dir,
+															agent generate_process_exited,
+															agent output_handler_gen.handle_output,
+															agent output_handler_gen.handle_output)
 					end
-					set_running (True)
-					o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR  -=-=-=-=-=-=", 6)
-					generate_process := launch_process (servlet_gen_exe,
-														generate_args,
-														app_dir,
-														agent generate_process_exited,
-														agent output_handler_gen.handle_output,
-														agent output_handler_gen.handle_output)
 				end
+				Result := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
 			end
-			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_command_response
 		end
 
 feature -- Agents

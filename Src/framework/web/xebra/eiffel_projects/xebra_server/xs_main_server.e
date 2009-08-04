@@ -87,8 +87,8 @@ feature {NONE} -- Operations
 			o.dprint ("Shutting down...", 1)
 			shutdown_all_modules
 			shutdown_webapps.do_nothing
-			if attached modules ["mod_input"] then
-				if modules ["mod_input"].running then
+			if attached modules ["mod_input"] as l_mi then
+				if l_mi.running then
 					o.iprint ("Remote Shutdown. Bye!");
 					(create {EXCEPTIONS}).die (1)
 				end
@@ -140,18 +140,16 @@ feature {XS_SERVER_MODULE} -- Status setting
 
 				if not l_webapp.app_config.name.value.is_equal (a_name) then
 					if l_webapp.get_sessions then
-						create {XCCR_OK}Result
-					else
-						--todo: error
-						create {XCCR_OK}Result
+						-- FIXME: Errorhandling
 					end
 				end
 				config.file.webapps.forth
 			end
+			create {XCCR_OK}Result
 		end
 
 	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
-			-- <Precursor>.
+			-- <Precursor>
 		do
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Fireing off webapp '" + a_name + "'")

@@ -12,24 +12,22 @@ deferred class
 
 inherit
 	XS_SHARED_SERVER_OUTPUTTER
+
 	XS_SHARED_SERVER_CONFIG
 
 feature {NONE} -- Initialization
 
-	make (a_webapp: XS_WEBAPP)
+	make
 			-- Initialization for `Current'.
 		require
-			a_webapp_attached: a_webapp /= Void
 		do
-			webapp := a_webapp
 		ensure
-			a_webapp_set: equal (a_webapp, webapp)
 		end
 
 feature -- Access
 
-	webapp: XS_WEBAPP
-		-- The webapp
+	webapp: detachable XS_WEBAPP
+			-- The webapp
 
 	is_running: BOOLEAN
 		-- True if the action has to wait e.g. for a process to terminate
@@ -38,8 +36,8 @@ feature -- Access
 			-- True if internal_is_running is true and
 			-- if the next action (recursively) is still running
 		do
-			if attached next_action then
-				Result := is_running or next_action.is_running_recursive
+			if attached next_action  as l_na then
+				Result := is_running or l_na.is_running_recursive
 			else
 				Result := is_running
 			end
@@ -52,32 +50,54 @@ feature -- Paths
 
 	app_dir: FILE_NAME
 			-- The directory to the application
+		require
+			webapp_attached: webapp /= Void
 		do
-			Result := config.file.webapps_root_filename.twin
-			Result.extend (webapp.app_config.name.out)
+			if attached webapp as l_wa then
+				Result := config.file.webapps_root_filename.twin
+				Result.extend (l_wa.app_config.name.out)
+			else
+				create Result.make_from_string ("")
 			end
+		ensure
+			Result_attached: Result /= Void
+		end
 
 	run_workdir : FILE_NAME
 			-- The working directory to execute the application X_CODE
+		require
+			webapp_attached: webapp /= Void
 		do
-			Result := app_dir.twin
-			Result.extend ("EIFGENs")
-			Result.extend (webapp.app_config.name.out)
-			if config.file.finalize_webapps.value then
-				Result.extend ("F_code")
+			if attached webapp as l_wa then
+				Result := app_dir.twin
+				Result.extend ("EIFGENs")
+				Result.extend (l_wa.app_config.name.out)
+				if config.file.finalize_webapps.value then
+					Result.extend ("F_code")
+				else
+					Result.extend ("W_code")
+				end
 			else
-				Result.extend ("W_code")
+				create Result.make_from_string ("")
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	webapp_melted_file_path: FILE_NAME
 			-- Returns the path to the melted file
+		require
+			webapp_attached: webapp /= Void
 		do
-			if config.file.finalize_webapps.value then
-				Result := webapp_exe
+			if attached webapp as l_wa then
+				if config.file.finalize_webapps.value then
+					Result := webapp_exe
+				else
+					Result := run_workdir.twin
+					Result.set_file_name (l_wa.app_config.name.out + ".melted")
+				end
 			else
-				Result := run_workdir.twin
-				Result.set_file_name (webapp.app_config.name.out + ".melted")
+				create Result.make_from_string ("")
 			end
 		ensure
 			Result_attached: Result /= Void
@@ -85,12 +105,18 @@ feature -- Paths
 
 	webapp_exe: FILE_NAME
 			-- Returns the path to the exe of the webapp
+		require
+			webapp_attached: webapp /= Void
 		do
-			Result := run_workdir.twin
-			if {PLATFORM}.is_windows then
-				Result.set_file_name (webapp.app_config.name.out + ".exe")
+			if attached webapp as l_wa then
+				Result := run_workdir.twin
+				if {PLATFORM}.is_windows then
+					Result.set_file_name (l_wa.app_config.name.out + ".exe")
+				else
+					Result.set_file_name (l_wa.app_config.name.out)
+				end
 			else
-				Result.set_file_name (webapp.app_config.name.out)
+				create Result.make_from_string ("")
 			end
 		ensure
 			Result_attached: Result /= Void
@@ -195,8 +221,6 @@ feature  -- Status report internal
 		deferred
 		end
 
-
-
 feature -- Status setting
 
 --	set_stop_action (a_action: XS_WEBAPP_ACTION)
@@ -207,8 +231,16 @@ feature -- Status setting
 --			action_set: stop_action = a_action
 --		end
 
+	set_webapp (a_webapp: XS_WEBAPP)
+			-- Setts webapp.
+		do
+			webapp := a_webapp
+		ensure
+			webapp_set: webapp = a_webapp
+		end
+
 	set_next_action (a_action: like next_action)
-			-- Setts a next action
+			-- Setts a next action.
 		do
 			next_action := a_action
 		ensure
@@ -256,9 +288,9 @@ feature {NONE} -- Implementation
 	launch_process (a_exe: FILE_NAME;
 					 a_args: STRING;
 					 a_dir: FILE_NAME;
-					 a_exit_handler: PROCEDURE [XS_WEBAPP_ACTION, detachable TUPLE];
-					 a_output_handler: PROCEDURE [ANY, detachable TUPLE [detachable STRING]];
-					 a_error_output_handler: PROCEDURE [ANY, detachable TUPLE [detachable STRING]]): detachable PROCESS
+					 a_exit_handler: ROUTINE [ANY, TUPLE];
+					 a_output_handler: PROCEDURE [ANY, TUPLE [STRING]];
+					 a_error_output_handler: PROCEDURE [ANY, TUPLE [STRING]]): detachable PROCESS
 			-- Launches a process
 		local
 			l_process_factory: PROCESS_FACTORY

@@ -21,10 +21,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_webapp: XS_WEBAPP)
+	make
 			-- Initialization for `Current'.	
 		do
-			Precursor (a_webapp)
+			Precursor
 			create output_handler.make
 		ensure then
 			output_handler_attached: output_handler /= Void
@@ -44,22 +44,26 @@ feature -- Access
 
 	compiler_args: STRING
 			-- The arguments that are passed to compile the webapp
+		require
+			webapp_attached: webapp /= Void
 		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
-			create l_f_utils
-			Result  := " -config %"" + webapp.app_config.name.out + ".ecf%" -target %"" + webapp.app_config.name.out + "%" -c_compile -stop"
-			if config.file.finalize_webapps.value then
-				Result := Result + " -finalize"
+			Result := ""
+			if attached webapp as l_wa then
+				create l_f_utils
+				Result  := " -config %"" + l_wa.app_config.name.out + ".ecf%" -target %"" + l_wa.app_config.name.out + "%" -c_compile -stop"
+				if config.file.finalize_webapps.value then
+					Result := Result + " -finalize"
+				end
+				if needs_cleaning then
+					Result.append (" -clean")
+				end
+	--			if not l_f_utils.is_readable_file (webapp_exe) then
+	--				Result.append (" -clean")
+	--			end
+				Result.append (" " + config.file.compiler_flags.value + " ")
 			end
-			if needs_cleaning then
-				Result.append (" -clean")
-			end
---			if not l_f_utils.is_readable_file (webapp_exe) then
---				Result.append (" -clean")
---			end
-
-			Result.append (" " + config.file.compiler_flags.value + " ")
 
 		ensure
 			Result_attached: Result /= Void
@@ -126,52 +130,64 @@ feature -- Status setting
 
 	stop
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		do
-			if attached {PROCESS} compile_process as p and then p.is_running  then
-				o.dprint ("Terminating compile_process_webapp  for " + webapp.app_config.name.out  + "", 2)
-				p.terminate
-				p.wait_for_exit
+			if attached webapp as l_wa then
+				if attached {PROCESS} compile_process as p and then p.is_running  then
+					o.dprint ("Terminating compile_process_webapp  for " + l_wa.app_config.name.out  + "", 2)
+					p.terminate
+					p.wait_for_exit
+				end
+				set_running (False)
 			end
-			set_running (False)
 		end
 
 feature {TEST_WEBAPPS} -- Implementation
 
 	internal_execute: XC_COMMAND_RESPONSE
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		do
-			if not is_running then
-				webapp.shutdown
-				if can_launch_process (config.file.compiler_filename, app_dir) then
-					if attached compile_process as p then
-						if p.is_running then
-							o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
-							p.terminate
+			create {XCCR_INTERNAL_SERVER_ERROR}Result
+			if attached webapp as l_wa then
+				if not is_running then
+					l_wa.shutdown
+					if can_launch_process (config.file.compiler_filename, app_dir) then
+						if attached compile_process as p then
+							if p.is_running then
+								o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
+								p.terminate
+							end
 						end
+						o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP -=-=-=-=-=-=", 6)
+						compile_process := launch_process (config.file.compiler_filename,
+														compiler_args,
+														app_dir,
+														agent compile_process_exited,
+														agent output_handler.handle_output ,
+														agent output_handler.handle_output)
+						set_running (True)
 					end
-					o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP -=-=-=-=-=-=", 6)
-					compile_process := launch_process (config.file.compiler_filename,
-													compiler_args,
-													app_dir,
-													agent compile_process_exited,
-													agent output_handler.handle_output ,
-													agent output_handler.handle_output)
-					set_running (True)
 				end
+				Result := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
 			end
-			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_command_response
 		end
 
 feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)
 			-- Sets is_running
+		require
+			webapp_attached: webapp /= Void
 		do
-			is_running := a_running
-			webapp.is_compiling_webapp := a_running
+			if attached webapp as l_wa then
+				is_running := a_running
+				l_wa.is_compiling_webapp := a_running
+			end
 		ensure
 			set: equal (is_running, a_running)
-			set: equal (is_running, webapp.is_compiling_webapp)
 		end
 
 

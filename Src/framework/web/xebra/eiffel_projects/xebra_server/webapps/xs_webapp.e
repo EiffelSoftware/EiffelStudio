@@ -28,22 +28,26 @@ feature {NONE} -- Initialization
 			-- TRANSLATE -> COMPILE_SERVLET_GENERATOR -> GENERATE -> COMPILE_WEBAPP -> RUN -> SEND
 		do
 			Precursor (a_webapp_config)
+			current_request := create {XCWC_EMPTY}.make
 
-			create action_translate.make (current)
-			create action_compile_sgen.make (current)
-			create action_generate.make (current)
-			create action_compile_webapp.make (current)
-			create action_run.make (current)
-			create action_send.make (current)
+			create action_translate.make
+			create action_compile_sgen.make
+			create action_generate.make
+			create action_compile_webapp.make
+			create action_run.make
+			create action_send.make
+
+			action_translate.set_webapp (current)
+			action_compile_sgen.set_webapp (current)
+			action_generate.set_webapp (current)
+			action_compile_webapp.set_webapp (current)
+			action_run.set_webapp (current)
 
 			action_translate.set_next_action (action_compile_sgen)
 			action_compile_sgen.set_next_action (action_generate)
 			action_generate.set_next_action (action_compile_webapp)
 			action_compile_webapp.set_next_action (action_run)
 			action_run.set_next_action (action_send)
-
-			current_request := create {XCWC_EMPTY}.make
-
 			dev_mode := True
 
 		ensure then

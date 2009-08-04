@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			uri := ""
 			method := ""
 			request_message := ""
+			args := ""
 			create environment_vars.make (1)
 			create headers_out.make (1)
 			create headers_in.make (1)
@@ -84,11 +85,10 @@ feature -- Access
 				args_changed := False
 			end
 
-			if attached internal_argument_table then
-				Result := internal_argument_table
+			if attached internal_argument_table as l_iat then
+				Result := l_iat
 			else
-				create internal_argument_table.make (1)
-				Result := internal_argument_table
+				create Result.make (1)
 			end
 		ensure
 			args_not_changed: args_changed = False
@@ -104,11 +104,10 @@ feature -- Access
 				headers_in_changed := False
 			end
 
-			if attached internal_cookies then
-				Result := internal_cookies
+			if attached internal_cookies as l_ic then
+				Result := l_ic
 			else
-				create internal_cookies.make (1)
-				Result := internal_cookies
+				create Result.make (1)
 			end
 		ensure
 			headers_in_not_changed: headers_in_changed = False

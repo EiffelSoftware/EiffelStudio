@@ -21,10 +21,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_webapp: XS_WEBAPP)
+	make
 			-- Initialization for `Current'.	
 		do
-			Precursor (a_webapp)
+			Precursor
 			create output_handler_compile.make
 		ensure then
 			output_handler_compile_attached: output_handler_compile /= Void
@@ -121,13 +121,17 @@ feature -- Status setting
 
 	stop
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		do
-			if attached {PROCESS} gen_compile_process as p and then p.is_running  then
-				o.dprint ("Terminating gen_compile_process for " + webapp.app_config.name.out  + "", 2)
-				p.terminate
-				p.wait_for_exit
+			if attached webapp as l_wa then
+				if attached {PROCESS} gen_compile_process as p and then p.is_running  then
+					o.dprint ("Terminating gen_compile_process for " + l_wa.app_config.name.out  + "", 2)
+					p.terminate
+					p.wait_for_exit
+				end
+				set_running (False)
 			end
-			set_running (False)
 		end
 
 
@@ -135,41 +139,49 @@ feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)
 			-- Sets is_running
+		require
+			webapp_attached: webapp /= Void
 		do
-			is_running := a_running
-			webapp.is_compiling_servlet_gen := a_running
+			if attached webapp as l_wa then
+				is_running := a_running
+				l_wa.is_compiling_servlet_gen := a_running
+			end
 		ensure
 			set: equal (is_running, a_running)
-			set: equal (is_running, webapp.is_compiling_servlet_gen)
 		end
 
 feature {TEST_WEBAPPS} -- Implementation
 
 	internal_execute: XC_COMMAND_RESPONSE
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
-			if not is_running then
-				create l_f_utils
-				if can_launch_process (config.file.compiler_filename, app_dir) and then l_f_utils.is_readable_file (servlet_gen_ecf) then
-					if attached gen_compile_process as p  then
-						if p.is_running then
-							o.eprint ("About to launch gen_compile_process but it was still running... So I'm going to kill it.", generating_type)
-							p.terminate
+			create {XCCR_INTERNAL_SERVER_ERROR}Result
+			if attached webapp as l_wa then
+				if not is_running then
+					create l_f_utils
+					if can_launch_process (config.file.compiler_filename, app_dir) and then l_f_utils.is_readable_file (servlet_gen_ecf) then
+						if attached gen_compile_process as p  then
+							if p.is_running then
+								o.eprint ("About to launch gen_compile_process but it was still running... So I'm going to kill it.", generating_type)
+								p.terminate
+							end
 						end
+						set_running (True)
+						o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN-=-=-=-=-=-=", 6)
+						gen_compile_process := launch_process (config.file.compiler_filename,
+																gen_compiler_args,
+																app_dir,
+																agent gen_compile_process_exited,
+																agent output_handler_compile.handle_output,
+																agent output_handler_compile.handle_output)
 					end
-					set_running (True)
-					o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN-=-=-=-=-=-=", 6)
-					gen_compile_process := launch_process (config.file.compiler_filename,
-															gen_compiler_args,
-															app_dir,
-															agent gen_compile_process_exited,
-															agent output_handler_compile.handle_output,
-															agent output_handler_compile.handle_output)
 				end
+				Result := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
 			end
-			Result := (create {XER_APP_COMPILING}.make (webapp.app_config.name.out)).render_to_command_response
 		end
 
 

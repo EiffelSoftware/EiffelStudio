@@ -4,17 +4,17 @@ note
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
-	date: "$Date: 2009-06-22 17:17:46 -0700 (Mon, 22 Jun 2009) $"
-	revision: "$Revision: 79413 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	XC_WEBAPP_CONFIG
 
-inherit
-	XI_CONFIG
-		redefine
-			make_empty
-		end
+--inherit
+--	XI_CONFIG
+--		redefine
+--			make_empty
+--		end
 
 create
 	make_empty

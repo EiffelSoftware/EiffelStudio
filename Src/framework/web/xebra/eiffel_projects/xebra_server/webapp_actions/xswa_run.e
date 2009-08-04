@@ -68,13 +68,17 @@ feature -- Status setting
 
 	stop
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		do
-			if attached {PROCESS} run_process as p  and then p.is_running then
-				o.dprint ("Terminating run_process for " + webapp.app_config.name.out  + "", 2)
-				p.terminate
-				p.wait_for_exit
+			if attached webapp as l_wa then
+				if attached {PROCESS} run_process as p  and then p.is_running then
+					o.dprint ("Terminating run_process for " + l_wa.app_config.name.out  + "", 2)
+					p.terminate
+					p.wait_for_exit
+				end
+				set_running (False)
 			end
-			set_running (False)
 		end
 
 
@@ -82,32 +86,41 @@ feature {NONE} -- Implementation
 
 	internal_execute: XC_COMMAND_RESPONSE
 			-- <Precursor>
+		require else
+			webapp_attached: webapp /= Void
 		do
-			if  not is_running then
-				if can_launch_process (webapp_exe, run_workdir) then
-					o.dprint("-=-=-=--=-=LAUNCHING WEBAPP  -=-=-=-=-=-=", 6)
-					run_process := launch_process (webapp_exe,
-												run_args,
-												run_workdir,
-												agent run_process_exited,
-												agent run_output_handler,
-												agent run_output_handler)
-					set_running (True)
+			if attached webapp as l_wa then
+				if  not is_running then
+					if can_launch_process (webapp_exe, run_workdir) then
+						o.dprint("-=-=-=--=-=LAUNCHING WEBAPP  -=-=-=-=-=-=", 6)
+						run_process := launch_process (webapp_exe,
+													run_args,
+													run_workdir,
+													agent run_process_exited,
+													agent run_output_handler,
+													agent run_output_handler)
+						set_running (True)
+					end
 				end
+				Result := (create {XER_APP_STARTING}.make (l_wa.app_config.name.out)).render_to_command_response
+			else
+				create {XCCR_INTERNAL_SERVER_ERROR}Result
 			end
-			Result := (create {XER_APP_STARTING}.make (webapp.app_config.name.out)).render_to_command_response
 		end
 
 feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)
 			-- Sets is_running
+		require
+			webapp_attached: webapp /= Void
 		do
-			is_running := a_running
-			webapp.is_running := a_running
+			if attached webapp as l_wa then
+				is_running := a_running
+				l_wa.is_running := a_running
+			end
 		ensure
 			set: equal (is_running, a_running)
-			set: equal (is_running, webapp.is_running)
 		end
 
 feature -- Agents
@@ -115,10 +128,13 @@ feature -- Agents
 
 	run_process_exited
 			-- Sets is_running := False
+		require
+			webapp_attached: webapp /= Void
 		do
---			config_outputter
-			set_running (False)
-			o.dprint ("Run process for " + webapp.app_config.name.out + " has exited.", 3)
+			if attached webapp as l_wa then
+				set_running (False)
+				o.dprint ("Run process for " + l_wa.app_config.name.out + " has exited.", 3)
+			end
 		end
 
 	run_output_handler (a_ouput: STRING)

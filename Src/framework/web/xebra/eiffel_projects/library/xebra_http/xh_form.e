@@ -70,6 +70,7 @@ feature	-- Basic Functionality
 			a_key_valid: attached a_key and then not a_key.is_empty
 		do
 			-- FIXME TODO
+			Result := "NOT IMPLEMENTED"
 		ensure
 			result_attached: attached Result
 		end

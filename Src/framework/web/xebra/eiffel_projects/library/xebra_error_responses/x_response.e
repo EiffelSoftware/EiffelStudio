@@ -126,21 +126,21 @@ feature -- Html code generation
 			h1 {
 				font-size: 18px;
 				background-color:
-			]" + deco_color + "[	
+			]" + deco_color + "[
 			;
 				color: #FFFFFF;
 			}
 			h3 {
 				font-size: 14px;
 				background-color:
-			]" + deco_color + "[	
+			]" + deco_color + "[
 			;
 				color: #FFFFFF;
 			}
 			.em {
 				font-size: 14px;
 				background-color:
-			]" + deco_color + "[	
+			]" + deco_color + "[
 			;
 				color: #FFFFFF;
 				margin-right: 10px;
@@ -151,13 +151,13 @@ feature -- Html code generation
 			</head>
 			<body>
 			<h1>
-			]" + producer + "[			 
+			]" + producer + "[
 			]" + title + "[
 			</h1>
 			<hr/>
 			<p><span class="em">Message:</span>
 			]" + message + "[
-			</p>					
+			</p>
 			<p>
 			]" + img + "[
 			</p>

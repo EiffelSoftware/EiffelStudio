@@ -14,10 +14,10 @@ class
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 	XS_SHARED_SERVER_OUTPUTTER
-	XI_CONFIG
-		redefine
-			make_empty
-		end
+--	XI_CONFIG
+--		redefine
+--			make_empty
+--		end
 
 create
 	 make_empty

@@ -47,6 +47,11 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_library>
+		<external_library location="-framework CoreFoundation">
+			<condition>
+				<platform value="macintosh"/>
+			</condition>
+		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>

@@ -33,14 +33,17 @@
 		<option>
 			<assertions/>
 		</option>
+		<external_library location="-ldl">
+			<description>Library required for dynamic loading.</description>
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="api_wrapper" location=".\" recursive="true">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 			</option>
 		</cluster>
-	</target>
-	<target name="api_wrapper_dotnet" extends="api_wrapper">
-		<setting name="msil_generation" value="true"/>
 	</target>
 </system>

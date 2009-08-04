@@ -63,7 +63,7 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	parent_class: XEL_CLASS_ELEMENT assign set_parent_class
+	parent_class: detachable XEL_CLASS_ELEMENT assign set_parent_class
 			-- The class in which this feature is contained
 
 	set_parent_class (a_parent_class: XEL_CLASS_ELEMENT)
@@ -207,52 +207,52 @@ feature -- Access
 
 feature -- Implementation
 
-	serialize (buf:XU_INDENDATION_FORMATTER)
+	serialize (a_buf: XU_INDENDATION_FORMATTER)
 			-- <Precursor>			
 		do
-			buf.put_string (signature)
-			buf.indent
-			buf.indent
-			buf.put_string ("--" + feature_comment)
-			buf.unindent
+			a_buf.put_string (signature)
+			a_buf.indent
+			a_buf.indent
+			a_buf.put_string ("--" + feature_comment)
+			a_buf.unindent
 			if not requires.is_empty then
-				buf.put_string ("require")
-				buf.indent
+				a_buf.put_string ("require")
+				a_buf.indent
 				from
 					requires.start
 				until
 					requires.after
 				loop
-					requires.item_for_iteration.serialize (buf)
+					requires.item_for_iteration.serialize (a_buf)
 					requires.forth
 				end
-				buf.unindent
+				a_buf.unindent
 			end
 			if not locals.is_empty then
-				buf.put_string ("local")
-				buf.indent
+				a_buf.put_string ("local")
+				a_buf.indent
 				from
 					locals.start
 				until
 					locals.after
 				loop
-					locals.item_for_iteration.serialize (buf)
+					locals.item_for_iteration.serialize (a_buf)
 					locals.forth
 				end
-				buf.unindent
+				a_buf.unindent
 			end
 			if is_once then
-				buf.put_string ("once")
+				a_buf.put_string ("once")
 			else
-				buf.put_string ("do")
+				a_buf.put_string ("do")
 			end
-			buf.indent
+			a_buf.indent
 			from
 				precontent.start
 			until
 				precontent.after
 			loop
-				precontent.item.serialize (buf)
+				precontent.item.serialize (a_buf)
 				precontent.forth
 			end
 			from
@@ -260,7 +260,7 @@ feature -- Implementation
 			until
 				content.after
 			loop
-				content.item.serialize (buf)
+				content.item.serialize (a_buf)
 				content.forth
 			end
 			from
@@ -268,25 +268,25 @@ feature -- Implementation
 			until
 				postcontent.after
 			loop
-				postcontent.item.serialize (buf)
+				postcontent.item.serialize (a_buf)
 				postcontent.forth
 			end
-			buf.unindent
+			a_buf.unindent
 			if not ensures.is_empty then
-				buf.put_string ("require")
-				buf.indent
+				a_buf.put_string ("require")
+				a_buf.indent
 				from
 					ensures.start
 				until
 					ensures.after
 				loop
-					ensures.item_for_iteration.serialize (buf)
+					ensures.item_for_iteration.serialize (a_buf)
 					ensures.forth
 				end
-				buf.unindent
+				a_buf.unindent
 			end
-			buf.put_string ("end")
-			buf.unindent
+			a_buf.put_string ("end")
+			a_buf.unindent
 		end
 
 note

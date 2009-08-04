@@ -12,15 +12,45 @@ class
 inherit
 	MAIN_WINDOW_IMP
 
+create
+	make
 
 feature {NONE} -- Initialization
+
+	make
+			-- Creation method
+		do
+			init_attributes
+			default_create
+		end
+
+	init_attributes
+			-- Create attributes
+		do
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
+
+			create content_1.make_with_widget (create {EV_RICH_TEXT}, "CONTENT_ONE")
+			create content_2.make_with_widget (create {EV_RICH_TEXT}, "CONTENT_TWO")
+		end
 
 	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
-			-- can be added here.
+			-- can be added here
 		do
 			create manager.make (Current, Current)
 			close_request_actions.extend (agent
@@ -28,7 +58,11 @@ feature {NONE} -- Initialization
 												l_env: EV_ENVIRONMENT
 											do
 												create l_env
-												l_env.application.destroy
+												if attached l_env.application as l_app then
+													l_app.destroy
+												else
+													check False end -- Implied by application is running
+												end
 											end)
 			prepare_content_1
 			prepare_content_2
@@ -40,13 +74,12 @@ feature {NONE} -- Implementation functions
 	prepare_content_1
 			-- Prepare `content 1'
 		require
-			not_prepared: content_1 = Void
+			created: content_1 /= Void
 			not_void: manager /= Void
 		do
-			create content_1.make_with_widget (create {EV_RICH_TEXT}, "CONTENT_ONE")
 			content_1.set_long_title ("Content 1 long title")
 			content_1.set_short_title ("Content 1 title")
-			manager.contents.extend (content_1)
+			attached_manager.contents.extend (content_1)
 			content_1.set_top ({SD_ENUMERATION}.top)
 		ensure
 			not_void: content_1 /= Void
@@ -55,13 +88,12 @@ feature {NONE} -- Implementation functions
 	prepare_content_2
 			-- Prepare `content_2'
 		require
-			not_prepared: content_2 = Void
+			created: content_2 /= Void
 			not_void: manager /= Void
 		do
-			create content_2.make_with_widget (create {EV_RICH_TEXT}, "CONTENT_TWO")
 			content_2.set_long_title ("Content 2 long title")
 			content_2.set_short_title ("Content 2 title")
-			manager.contents.extend (content_2)
+			attached_manager.contents.extend (content_2)
 			content_2.set_top ({SD_ENUMERATION}.top)
 		ensure
 			not_void: content_2 /= Void
@@ -76,6 +108,8 @@ feature {NONE} -- Implementation functions
 			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_BUTTON
 			l_count, l_max_count: INTEGER
+			l_tool_bar_content: like tool_bar_content
+			l_text: STRING_32
 		do
 			-- First we prepare tool bar items
 			from
@@ -85,7 +119,9 @@ feature {NONE} -- Implementation functions
 				l_count >= l_max_count
 			loop
 				create l_item.make
-				l_item.set_text ("Button " + l_count.out)
+				l_text := "Button " + l_count.out
+				l_item.set_text (l_text)
+				l_item.set_name (l_text)
 				l_item.set_pixmap ((create {EV_STOCK_PIXMAPS}).Default_window_icon)
 				l_items.extend (l_item)
 				if l_count = 2 then
@@ -94,28 +130,43 @@ feature {NONE} -- Implementation functions
 				l_count := l_count + 1
 			end
 
-			-- Then we create tool bar content, extend it to tool bar manager.
-			create tool_bar_content.make_with_items ("Tool bar one", l_items)
-			manager.tool_bar_manager.contents.extend (tool_bar_content)
-			tool_bar_content.set_top ({SD_ENUMERATION}.top)
+			-- Then we create tool bar content, extend it to tool bar manager
+			create l_tool_bar_content.make_with_items ("Tool bar one", l_items)
+			tool_bar_content := l_tool_bar_content
+			attached_manager.tool_bar_manager.contents.extend (l_tool_bar_content)
+			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
 		ensure
 			not_void: tool_bar_content /= Void
 		end
 
 feature {NONE} -- Implementation attributes
 
-	manager: SD_DOCKING_MANAGER
-			-- Docking manager.
+	attached_manager: SD_DOCKING_MANAGER
+			-- Attached `manager'
+		require
+			not_void: manager /= Void
+		local
+			l_result: like manager
+		do
+			l_result := manager
+			check l_result /= Void end -- Implied by precondition `not_void'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
+
+	manager: detachable SD_DOCKING_MANAGER
+			-- Docking manager
 
 	content_1: SD_CONTENT
-			-- Content one.
+			-- Content one
 
 	content_2: SD_CONTENT
 
-	tool_bar_content: SD_TOOL_BAR_CONTENT;
-			-- Tool bar content.
+	tool_bar_content: detachable SD_TOOL_BAR_CONTENT
+			-- Tool bar content
 
-note
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -14,25 +14,29 @@ inherit
 
 create
 	make_and_launch
-	
+
 feature {NONE} -- Initialization
 
 	make_and_launch
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
+		local
+			l_window: like main_window
 		do
 			default_create
-			create main_window
-			main_window.show
+
+			create l_window.make
+			main_window := l_window
+			l_window.show
 			launch
 		end
-		
+
 feature {NONE} -- Implementation
 
-	main_window: MAIN_WINDOW;
+	main_window: detachable MAIN_WINDOW
 		-- Main window of `Current'.
 
-note
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

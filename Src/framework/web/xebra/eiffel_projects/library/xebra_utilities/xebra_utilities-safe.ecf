@@ -14,7 +14,7 @@
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
-		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error.ecf" readonly="true"/>
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-safe.ecf" readonly="true"/>
 		<!-- <library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http.ecf" readonly="false"/> -->
 		 <cluster name="xebra_utilities" location=".\" recursive="true"> 
 			<file_rule>

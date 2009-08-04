@@ -25,7 +25,7 @@ feature -- Initialization
 		require
 			a_value_attached: attached a_value
 		do
-			internal_value := a_value			
+			internal_value := a_value
 		ensure
 			internal_value_attached: attached internal_value
 		end
@@ -51,26 +51,6 @@ feature {XTAG_TAG_SERIALIZER} -- Access
 
 	internal_value: STRING
 			-- The actual value
-
-	dynamic_attribute_regexp: RX_PCRE_MATCHER
-			-- Dynamic attribute regular expression
-		once
-			create Result.make
-			Result.compile ("^%%=(.+)%%$")
-		ensure
-			result_attached: attached Result
-			result_compiled: Result.is_compiled
-		end
-
-	variable_attribute_regexp: RX_PCRE_MATCHER
-			-- Dynamic attribute regular expression
-		once
-			create Result.make
-			Result.compile ("^#{(.+)}$")
-		ensure
-			result_attached: attached Result
-			result_compiled: Result.is_compiled
-		end
 
 feature -- Access
 

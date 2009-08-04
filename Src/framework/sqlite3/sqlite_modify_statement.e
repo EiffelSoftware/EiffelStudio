@@ -27,7 +27,7 @@ feature -- Basic operations
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
 			not_is_executing: not is_executing
-			database_is_accessible: database.is_accessible
+			is_accessible: is_accessible
 			database_is_readable: database.is_readable
 		do
 			execute_internal (Void, Void)
@@ -44,7 +44,7 @@ feature -- Basic operations
 			is_connected: is_connected
 			not_is_executing: not is_executing
 			a_bindings_attached: attached a_bindings
-			database_is_accessible: database.is_accessible
+			is_accessible: is_accessible
 			database_is_readable: database.is_readable
 			not_implemented: False
 		do

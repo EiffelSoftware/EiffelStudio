@@ -18,6 +18,9 @@ inherit
 
 --inherit {NONE}
 	SQLITE_INTERNALS
+		export
+			{NONE} all
+		end
 
 	SQLITE_API_EXTERNALS
 		export
@@ -140,7 +143,7 @@ feature {NONE} -- Measurement
 
 	initialization_count: CELL [INTEGER]
 			-- Number of times `c_sqlite3_initialize' has been called.
-			-- Note: This is retained to ensure
+			-- Note: This is retained to ensure correct clean up.
 		once
 			create Result.put (0)
 		ensure

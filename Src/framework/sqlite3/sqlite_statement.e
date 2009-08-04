@@ -57,6 +57,9 @@ feature {NONE} -- Initialization
 			create statement_string.make_from_string (a_statement)
 			create string.make_from_string (a_statement)
 			database := a_db
+			if {PLATFORM}.is_thread_capable then
+				internal_thread_id := get_current_thread_id.to_integer_32
+			end
 			compile
 		ensure
 			string_set: string.same_string (a_statement)
@@ -192,6 +195,23 @@ feature -- Status report
 				internal_db = database.internal_db)
 		end
 
+	is_accessible: BOOLEAN
+			-- Indicates if the statement is accessible on the current thread.
+		do
+			Result := is_interface_usable and then database.is_accessible
+			if Result then
+				if {PLATFORM}.is_thread_capable then
+					Result := internal_thread_id = get_current_thread_id.to_integer_32
+				else
+					Result := True
+				end
+			end
+
+		ensure
+			true_result: not {PLATFORM}.is_thread_capable implies (Result and database.is_accessible)
+			same_internal_thread_id: (Result and {PLATFORM}.is_thread_capable) implies internal_thread_id = get_current_thread_id.to_integer_32
+		end
+
 	has_error: BOOLEAN
 			-- Indicates if an error occured during the last operation.
 		do
@@ -213,7 +233,7 @@ feature -- Basic operations
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
-			is_executing: database.is_accessible implies is_executing -- Calls on the same thread can guarentee `is_executing'.
+			is_executing: is_accessible implies is_executing -- Calls on the same thread can guarentee `is_executing'.
 		do
 			is_abort_requested := True
 
@@ -236,6 +256,7 @@ feature -- Basic operations
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
 			database_is_accessible: database.is_accessible
 			database_is_readable: database.is_readable
 		do
@@ -297,7 +318,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			is_compiled: is_compiled
 			is_connected: is_connected
 			not_is_executing: not is_executing
-			database_is_accessible: database.is_accessible
+			is_accessible: is_accessible
 			database_is_readable: database.is_readable
 		local
 			l_api: like sqlite_api
@@ -534,7 +555,7 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_connected: is_connected
 			not_has_error: not has_error
-			database_is_accessible: database.is_accessible
+			is_accessible: is_accessible
 			database_is_readable: database.is_readable
 		do
 		end
@@ -544,7 +565,7 @@ feature {NONE} -- Action handlers
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
-			database_is_accessible: database.is_accessible
+			is_accessible: is_accessible
 		do
 		end
 
@@ -555,11 +576,29 @@ feature {SQLITE_INTERNALS} -- Implementation
 
 	internal_db: POINTER
 			-- The pointer to the database connection when the statement was compiled.
-			--|Used to determine if the database is the same when executing the statement.
+			--| Used to determine if the database is the same when executing the statement.
 
 	internal_changes_count: NATURAL
 			-- Mutable version of `changes_count'.
 			-- Note: Do not use directly!
+
+feature {NONE} -- Implementation
+
+	internal_thread_id: INTEGER
+			-- The thread the database was connected using.
+			--| In non multi-threaded systems this will always be 0.
+
+feature {NONE} -- Externals
+
+	get_current_thread_id: POINTER
+			-- Returns a pointer to the thread-id of the thread.
+		require
+			is_thread_capable: {PLATFORM}.is_thread_capable
+		external
+			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_thread_id"
+		end
 
 invariant
 	database_attached: attached database
@@ -569,6 +608,7 @@ invariant
 	not_string_is_empty: not string.is_empty
 	not_internal_db_is_null: internal_stmt /= default_pointer implies internal_db /= default_pointer
 	internal_db_is_null: internal_stmt = default_pointer implies internal_db = default_pointer
+	internal_thread_id_set: {PLATFORM}.is_thread_capable implies internal_thread_id /= 0
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

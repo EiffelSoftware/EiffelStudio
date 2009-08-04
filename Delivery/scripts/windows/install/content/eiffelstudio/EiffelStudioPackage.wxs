@@ -156,7 +156,7 @@
 							/>
 						<Shortcut Id="esvars.bat" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) Command Prompt"
 							Description="EiffelStudio Command Prompt" Show="normal"
-							Target="%COMSPEC%"
+							Target="[%ComSpec]"
 							Arguments="/k &quot;[INSTALLDIR]studio\config\$(var.IsePlatform)\esvars.bat&quot;"
 							/>
 					</Component>

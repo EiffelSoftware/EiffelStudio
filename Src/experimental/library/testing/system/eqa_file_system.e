@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 			-- `a_environment': Environment for current system test.
 		require
 			a_environment_attached: a_environment /= Void
-			a_environment_valid: a_environment.test_set.has_valid_name
 		do
 			environment := a_environment
 		end
@@ -321,9 +320,6 @@ feature {NONE} -- Implementation
 		do
 			environment.test_set.assert (a_tag, a_condition)
 		end
-
-invariant
-	current_test_has_name: environment.test_set.has_valid_name
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"

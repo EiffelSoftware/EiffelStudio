@@ -180,7 +180,6 @@ feature {NONE} -- Query
 		deferred
 		ensure
 			result_attached: Result /= Void
-			result_valid: test_set_instance (a_index).is_valid_name (Result)
 		end
 
 feature {NONE} -- Execution
@@ -194,7 +193,7 @@ feature {NONE} -- Execution
 			l_result: detachable EQA_TEST_RESULT
 			l_stream: like stream
 		do
-			evaluator.execute (test_set_instance (a_index), test_procedure (a_index), test_name (a_index))
+			evaluator.execute (agent test_set_instance (a_index), test_procedure (a_index), test_name (a_index))
 			l_stream := stream
 			check l_stream /= Void end
 			if l_stream.extendible then

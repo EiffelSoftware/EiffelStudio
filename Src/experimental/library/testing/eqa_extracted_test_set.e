@@ -24,6 +24,8 @@ inherit
 	INTERNAL
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 
 feature {NONE} -- Access
@@ -202,7 +204,6 @@ feature {NONE} -- Events
 			-- Called after `prepare' has performed all initialization.
 		require
 			object_cache_loaded: is_cache_loaded
-			has_valid_name: has_valid_name
 		do
 		ensure
 			prepared: is_prepared
@@ -224,7 +225,6 @@ feature {NONE} -- Events
 		do
 		ensure
 			object_cache_loaded: is_cache_loaded
-			has_valid_name: has_valid_name
 		end
 
 feature {NONE} -- Basic operations

@@ -5,7 +5,7 @@
 		<option profile="true" full_class_checking="true" syntax="transitional">			
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities-safe.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_DEV\eiffel_projects\library\xebra_utilities\xebra_utilities.ecf"/>
 		<cluster name="peg" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

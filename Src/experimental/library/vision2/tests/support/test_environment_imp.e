@@ -32,4 +32,17 @@ feature -- Access
 			Result := l_result
 		end
 
+feature {TEST_APPLICATION} -- Access
+
+	set_application_i (an_application_i: EV_APPLICATION_I)
+			-- Specify `an_application_i' as the single application object for the
+			-- system. Must be calles from TEST_APPLICATION when a new application object is created.
+		require
+			not_destroyed: not is_destroyed
+		do
+			application_cell.replace (an_application_i)
+		ensure
+			application_assigned: application_i = an_application_i
+		end
+
 end

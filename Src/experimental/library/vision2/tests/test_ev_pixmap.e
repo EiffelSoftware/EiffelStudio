@@ -23,4 +23,24 @@ feature -- Test routines
 			assert ("size_correct", pixmap.width = 123 and pixmap.height = 345)
 		end
 
+	clear
+			-- Set the text and reads it again.
+		local
+			pixmap: EV_PIXMAP
+			window: EV_WINDOW
+		do
+			create pixmap.make_with_size (100, 100)
+			pixmap.set_background_color (create {EV_COLOR}.make_with_rgb (1.0, 0.0, 0.0))
+			pixmap.clear
+
+			create window
+			window.extend (pixmap)
+			window.show
+
+--			from until False loop
+--				application.process_graphical_events
+--				application.process_events
+--			end
+		end
+
 end

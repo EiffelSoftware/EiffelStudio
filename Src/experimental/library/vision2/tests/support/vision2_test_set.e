@@ -13,13 +13,16 @@ inherit
 			run_test
 		end
 
+	EV_ANY_HANDLER
+
 feature -- Access
 
 	application: TEST_APPLICATION
 
 	run_test (a_test: PROCEDURE [ANY, TUPLE])
+			-- Run the test a_test - inside the event loop
 		do
-			create application
+			create application.make_new
 			application.post_launch_actions.extend (agent run_and_exit (a_test))
 			application.launch
 		end

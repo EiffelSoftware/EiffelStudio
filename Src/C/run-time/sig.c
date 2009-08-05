@@ -619,6 +619,16 @@ rt_shared void initsig(void)
 
 	for (sig = 1; sig < EIF_NSIG; sig++) {
 		old = SIG_IGN;
+		/* Default to be ignored before handler installation,
+		 * in order to avoid immediate signal handling after 
+		 * handler installation, when flags have not been 
+		 * correctly set. 
+		 * See bug#10736. The following commands caused runtime panic on Solaris:
+		 *  sh
+		 *  cd /
+		 *  cat /dev/null | ec
+		 */
+		sig_ign[sig] = 1; 
 
 #ifdef EIF_THREADS
 	/* In Multi-threaded mode, we do not want to call

@@ -1,8 +1,6 @@
 note
-	description: "[
-		Eiffel tests that can be executed by testing tool.
-	]"
-	author: "EiffelStudio test wizard"
+	description: "Tests for NS_FONT_MANAGER"
+	author: "Colin"
 	date: "$Date$"
 	revision: "$Revision$"
 	testing: "type/manual"

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {NS_NOTIFICATION_CALLBACK}."
+	description: "A class for objects which can be used by NS_NOTIFICATION_CENTER to deliver callbacks."
 	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"

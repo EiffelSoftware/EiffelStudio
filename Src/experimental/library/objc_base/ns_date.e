@@ -150,7 +150,7 @@ feature -- Adding a Time Interval
 
 feature -- Representing Dates as Strings
 
-	description: NS_STRING
+	description: NS_STRING_BASE
 			-- Returns a string representation of the receiver.
 		do
 			create Result.share_from_pointer ({NS_DATE_API}.description (item))
@@ -158,4 +158,14 @@ feature -- Representing Dates as Strings
 
 feature -- Converting to an NSCalendarDate Object
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

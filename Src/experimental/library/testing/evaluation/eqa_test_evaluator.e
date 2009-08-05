@@ -89,7 +89,6 @@ feature -- Execution
 			a_name_attached: a_name /= Void
 			--valid_test_set: a_test.valid_operands ([a_test_set])
 		local
-			l_tuple: TUPLE [EQA_TEST_SET]
 			l_prepare, l_test, l_clean: like last_invocation_response
 			l_work_dir, l_target: STRING
 		do
@@ -100,13 +99,7 @@ feature -- Execution
 			l_prepare := last_invocation_response
 			check l_prepare /= Void end
 			if not l_prepare.is_exceptional and then attached a_test_set.last_result as l_test_set then
-				l_tuple := a_test.empty_operands
-				check
-					valid_tuple_count: l_tuple.valid_index (1)
-					valid_for_tuple: l_tuple.valid_type_for_index (l_test_set, 1)
-				end
-				l_tuple.put (l_test_set, 1)
-				safe_execute (agent a_test.call (l_tuple), l_target)
+				safe_execute (agent l_test_set.run_test (a_test), l_target)
 				l_test := last_invocation_response
 				check l_test /= Void end
 				safe_execute (agent l_test_set.clean (l_test.is_exceptional), l_target)

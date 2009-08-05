@@ -81,6 +81,25 @@ feature -- Status setting
 
 feature {EQA_TEST_EVALUATOR} -- Status setting
 
+	run_test (a_procedure: PROCEDURE [ANY, TUPLE [like Current]])
+			-- Run the test `a_procedure' (from `Current').
+			--
+			-- Note: this routine can be redefined in order to wrap the actual test routine call.
+		require
+			a_procedure_attached: a_procedure /= Void
+			prepared: is_prepared
+		local
+			l_operands: TUPLE [like Current]
+		do
+			l_operands := a_procedure.empty_operands
+			check
+				valid_operand_count: l_operands.count = 1
+				valid_operand: l_operands.valid_type_for_index (Current, 1)
+			end
+			l_operands.put (Current, 1)
+			a_procedure.call (l_operands)
+		end
+
 	frozen clean (a_has_failed: BOOLEAN)
 			-- Release any resources allocated by `prepare'.
 			--

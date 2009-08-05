@@ -41,7 +41,8 @@ inherit
 		rename
 			make as make_application_cocoa,
 			launch as launch_cocoa,
-			copy as copy_cocoa
+			copy as copy_cocoa,
+			process_events as process_events_cocoa
 		redefine
 			dispose
 		end

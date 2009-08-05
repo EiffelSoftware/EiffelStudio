@@ -4,6 +4,8 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
+	-- TODO: Do not display a title bar
+
 class
 	EV_WINDOW_IMP
 

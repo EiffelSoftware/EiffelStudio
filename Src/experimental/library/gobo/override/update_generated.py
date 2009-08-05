@@ -20,24 +20,24 @@ def regexp_escape (a_string):
 	r = string.replace (r, '.', '\\.')
 	return r
 
-def copyfile(source, dest, buffer_size=1024*1024):
-	"""    
-	Copy a file from source to dest. source and dest    
-	can either be strings or any object with a read or    
-	write method, like StringIO for example.    
-	"""    
-	if not hasattr(source, 'read'):        
-		source = open(source, 'rb')    
-	if not hasattr(dest, 'write'):        
-		dest = open(dest, 'wb')    
-	while 1:        
-		copy_buffer = source.read(buffer_size)        
-		if copy_buffer:            
-			dest.write(copy_buffer)        
-		else:           
-			break    
-	source.close()    
-	dest.close()
+#def copyfile(source, dest, buffer_size=1024*1024):
+#	"""    
+#	Copy a file from source to dest. source and dest    
+#	can either be strings or any object with a read or    
+#	write method, like StringIO for example.    
+#	"""    
+#	if not hasattr(source, 'read'):        
+#		source = open(source, 'rb')    
+#	if not hasattr(dest, 'write'):        
+#		dest = open(dest, 'wb')    
+#	while 1:        
+#		copy_buffer = source.read(buffer_size)        
+#		if copy_buffer:            
+#			dest.write(copy_buffer)        
+#		else:           
+#			break    
+#	source.close()    
+#	dest.close()
 
 def makedirs(a_dir):
 	if not os.path.exists (a_dir):
@@ -82,7 +82,10 @@ def update_node (a_src, a_target, a_dir, a_name):
 	import shutil
 
 	makedirs (os.path.join (a_target, a_dir))
-	shutil.copy2 (os.path.join (a_src, a_dir, a_name), os.path.join (a_target, a_dir, a_name))
+	orig_fn = os.path.join (a_src, a_dir, a_name)
+	target_fn = os.path.join (a_target, a_dir, a_name)
+	shutil.copy2 (orig_fn, target_fn)
+	os.remove (orig_fn)
 #	copyfile (os.path.join (a_src, a_dir, a_name), os.path.join (a_target, a_name))
 	print "  + %s"% (os.path.join (a_dir, a_name))
 

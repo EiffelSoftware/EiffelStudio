@@ -13,6 +13,22 @@ inherit
 
 feature -- Test routines
 
+	show
+			-- Shows an empty window without title bar, 100x200px in size.
+		local
+			window: EV_WINDOW
+		do
+			create window
+			window.set_size (100, 200)
+			window.show
+			window.hide_actions.extend (agent window.destroy)
+
+			from until application.windows.is_empty loop
+				application.process_graphical_events
+				application.process_events
+			end
+		end
+
 	resize_action_called
 			-- Checks if resize actions are called correctly
 		local

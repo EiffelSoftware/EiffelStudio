@@ -24,14 +24,27 @@ import traceback, sys
 
 ### Config
 
-dirname = "/System/Library/Frameworks/Foundation.framework/Headers"
-#dirname = "/System/Library/Frameworks/AppKit.framework/Headers"
-classname = "NSDate"
+basedir = "/System/Library/Frameworks"
+
+config = {
+		  "framework": "Foundation",
+		  "dirname": basedir + "/Foundation.framework/Headers",
+		  "class": "NSTimer",
+		  "include": "Foundation/NSTimer.h"
+		  }
+"""
+config = {
+		  "framework": "ApplicationKit",
+		  "dirname": basedir + "/AppKit.framework/Headers"
+		  }"""
+
+headerpath = config["dirname"] + "/" + config["class"] + ".h"
 
 # URL schema:
-url = "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/" + classname + "_Class/Reference/Reference.html"
-#url = "http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Classes/" + classname + "_Class/Reference/Reference.html"
-#url = "http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Classes/" + classname + "_Class/Reference/" + classname + ".html"
+url = Template("http://developer.apple.com/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/$class.html").\
+        substitute (config)
+#url = Template("http://developer.apple.com/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/Reference.html").\
+#        substitute (config)
 
 ###
 
@@ -126,7 +139,7 @@ class Signature:
 		if self.is_static:
 			t = CType(self.return_type)
 			if t.canDereference():
-				if t.Dereference().name == classname:
+				if t.Dereference().name == config["class"]:
 					return True
 		return False
 
@@ -175,7 +188,7 @@ class Signature:
 			if self.isFunction() and (not self.EiffelReturnType().canDereference() and not self.EiffelReturnType().isExpanded()):
 				# Special treatment for non expanded types that are passed by value as a return type
 				args.append("Result.item")
-			result = "{" + EiffelTypeN(classname) + "_API}." + self.InternalFeatureName() + " (" + ', '.join(args) +  ")"
+			result = "{" + EiffelTypeN(config["class"]) + "_API}." + self.InternalFeatureName() + " (" + ', '.join(args) +  ")"
 
 			if self.isFunction():
 				if self.isConstructor():
@@ -230,9 +243,9 @@ class Signature:
 			if self.isFunction():
 				string += "return "
 			if self.isStatic():
-				string += "[" + classname + " "
+				string += "[" + config["class"] + " "
 			else:
-				string += "[(" + classname + "*)" + "$a_" + EiffelName(classname) + " "
+				string += "[(" + config["class"] + "*)" + "$a_" + EiffelName(config["class"]) + " "
 			string += self.method_name[0]
 			if len(self.arguments) > 0:
 				arg = self.arguments[0]
@@ -256,7 +269,7 @@ class Signature:
 		def InternalEiffelArguments():
 			arguments = []
 			if not self.isStatic():
-				arguments.append ("a_" + EiffelName(classname) + ": " + InternalEiffelTypeName(classname))
+				arguments.append ("a_" + EiffelName(config["class"]) + ": " + InternalEiffelTypeName(config["class"]))
 			for i in range(len(self.arguments)):
 				arguments.append (self.EiffelArguments()[i].name + ": " + InternalEiffelTypeName(self.arguments[i].type.name))
 		
@@ -283,7 +296,7 @@ class Signature:
 				string += ": (" + self.arguments[0].type.name + ") " + self.arguments[0].name
 				i = 1
 				while i < len(self.arguments):
-					string += " " + self.method_name[i] + ": (" + self.arguments[0].type.name + ") " + self.arguments[i].name
+					string += " " + self.method_name[i] + ": (" + self.arguments[i].type.name + ") " + self.arguments[i].name
 					i = i + 1
 			return string
 	
@@ -308,8 +321,8 @@ typeMap = {
 	"float": "REAL",
 	"double": "REAL_64",
 	"BOOL": "BOOLEAN",
-	"id": "NS_OBJECT",
-	"SEL": "OBJC_SELECTOR",
+	"id": "POINTER[NS_OBJECT]",
+	"SEL": "POINTER[OBJC_SELECTOR]",
 	"NSInteger": "INTEGER",
 	"NSUInteger": "INTEGER",
 	"IBAction": "",
@@ -324,7 +337,8 @@ typeMap = {
 	"NSToolbarSizeMode": "INTEGER",
 	"NSGlyph": "INTEGER",
 	"NSSplitViewDividerStyle": "INTEGER",
-	"Class": "POINTER"
+	"Class": "POINTER",
+	"NSTimeInterval": "REAL_64"
 	}
 
 enumMap = {
@@ -417,6 +431,9 @@ class Message:
 
 	def get_abstract(self):
 		return self.abstract
+	
+	def get_eiffel_abstract(self):
+		return self.abstract.replace("<code>", "`").replace("</code>", "'")
 		
 	def get_name(self):
 		return self.name
@@ -431,7 +448,7 @@ class Message:
 
 	def get_eiffel_wrapper_feature(self):
 		if self.signature:
-			return self.signature.EiffelFeature(self.abstract)
+			return self.signature.EiffelFeature(self.get_eiffel_abstract())
 		else:
 			return "-- Error generating " + self.name + ": Message signature for feature not set"
 	
@@ -538,27 +555,32 @@ def main():
 	for (key, value) in enumMap.items():
 		typeMap[key] = typeMap[value];
 	
-	my_class = ObjC_Class(classname)
+	my_class = ObjC_Class(config["class"])
 	
-	documentation = urllib2.urlopen(url).read().\
-	   replace("\xe2\x80\x99", "`").replace("&#8217;", "`").\
-	   replace("\xe2\x80\x94", "--").\
-	   replace("\xe2\x80\x93", "-").\
-	   replace("\xe2\x80\x9c", "\"").replace("\xe2\x80\x9d", "\"").\
-	   replace("\xc2", "C2C2C2").\
-	   replace("\xa0", "A0A0A0").\
-	   replace("\xb1", "B1B1B1").\
-	   replace("\xe2", "E2E2E2").\
-	   replace("\x80", "808080").\
-	   replace("\xa6", "QQQ").\
-	   replace("\x93", "939393").\
-	   replace("\x94", "949494").\
-	   replace("\x98", "989898").\
-	   replace("\x99", "999999").\
-	   replace("\x9c", "9C9C9C").\
-	   replace("\x9d", "9D9D9D").\
-	   decode("ascii");
-	   # Some hacking to get rid of unicode chars
+	try:
+		documentation = urllib2.urlopen(url).read().\
+		   replace("\xe2\x80\x99", "`").replace("&#8217;", "`").\
+		   replace("\xe2\x80\x94", "--").\
+		   replace("\xe2\x80\x93", "-").\
+		   replace("\xe2\x80\x9c", "\"").replace("\xe2\x80\x9d", "\"").\
+		   replace("\xc2", "C2C2C2").\
+		   replace("\xa0", "A0A0A0").\
+		   replace("\xb1", "B1B1B1").\
+		   replace("\xe2", "E2E2E2").\
+		   replace("\x80", "808080").\
+		   replace("\xa6", "QQQ").\
+		   replace("\x93", "939393").\
+		   replace("\x94", "949494").\
+		   replace("\x98", "989898").\
+		   replace("\x99", "999999").\
+		   replace("\x9c", "9C9C9C").\
+		   replace("\x9d", "9D9D9D").\
+		   decode("ascii");
+		   # Some hacking to get rid of unicode chars
+	except urllib2.HTTPError:
+		print "URL: " + url
+		traceback.print_exc (file=sys.stdout)
+		
 	myparser = AppleDocumentationParser()
 	myparser.parse (documentation)
 	my_class.set_tasks (myparser.get_tasks())
@@ -567,7 +589,7 @@ def main():
 	
 	internal_methods = []
 	
-	lines = file(dirname + "/" + classname + ".h").readlines()
+	lines = file(headerpath).readlines()
 	
 	for line in lines:
 		if line.find("//") != -1:

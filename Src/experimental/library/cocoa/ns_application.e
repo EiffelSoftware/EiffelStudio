@@ -40,9 +40,11 @@ feature -- Eiffel Extensions
 			-- Run the event loop
 		local
 			l_event: detachable NS_EVENT
+			until_date: NS_DATE
 		do
+			create until_date.distant_future
 			from
-				l_event := next_event (0, Void, default_run_loop_mode, true)
+				l_event := next_event (0, until_date, default_run_loop_mode, true)
 			until
 				l_event = void
 			loop
@@ -50,12 +52,31 @@ feature -- Eiffel Extensions
 				create pool.make
 				send_event (l_event)
 				update_windows
-				l_event := next_event(0, Void, default_run_loop_mode, true)
+				l_event := next_event(0, until_date, default_run_loop_mode, true)
 			end
 			pool.release
 		end
 
 	pool: NS_AUTORELEASE_POOL
+
+	process_events
+			-- Process all pending events
+		local
+			l_event: detachable NS_EVENT
+		do
+			from
+				l_event := next_event (0, Void, default_run_loop_mode, True)
+			until
+				l_event = void
+			loop
+				pool.release
+				create pool.make
+				send_event (l_event)
+				update_windows
+				l_event := next_event(0, Void, default_run_loop_mode, True)
+			end
+			pool.release
+		end
 
 feature -- Access
 

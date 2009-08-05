@@ -1,6 +1,6 @@
 indexing
 	description: "Wrapper for NSView. An Eiffel abstraction for a Cocoa widget"
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,8 +32,8 @@ feature {NONE} -- Creation and Initialization
 			-- require: target has been set up
 		do
 			draw_action := a_draw_action
---			make_from_pointer ({NS_VIEW_API}.custom_new ($current, $draw_old))
-			make_from_pointer (view_class.create_instance.item)
+			make_from_pointer ({NS_VIEW_API}.custom_new ($current, $draw_old))
+--			make_from_pointer (view_class.create_instance.item)
  			{NS_VIEW_API}.init (item)
 			callback_marshal.register_object (Current)
 		end

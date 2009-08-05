@@ -14,7 +14,6 @@ feature -- Access
 
 	make
 		do
-
 		end
 
 end

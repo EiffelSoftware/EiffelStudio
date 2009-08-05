@@ -9,6 +9,23 @@ note
 deferred class
 	EQA_TEST_SET
 
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	frozen default_create
+			-- <Precursor>
+		do
+			on_prepare
+		ensure then
+			prepared: is_prepared
+			not_failed: not has_failed
+		end
+
 feature -- Access
 
 	asserter: EQA_ASSERTIONS
@@ -29,25 +46,20 @@ feature -- Access
 
 feature -- Access
 
-	current_test_name: detachable READABLE_STRING_8
+	current_test_name: READABLE_STRING_8
 			-- Name of test currently being executed
+		obsolete
+			"Use {EQA_EVALUATION_INFO}.test_name"
+		do
+			Result := (create {EQA_EVALUATION_INFO}).test_name
+		end
 
 feature -- Status report
 
 	is_prepared: BOOLEAN
 			-- Is `Current' ready to execute test routines?
 		do
-			Result := has_valid_name
-		ensure
-			result_implies_test_name_attached: Result implies has_valid_name
-		end
-
-	has_valid_name: BOOLEAN
-			-- Is `current_test_name' a valid test name?
-		do
-			Result := current_test_name /= Void
-		ensure
-			result_implies_attached: Result implies current_test_name /= Void
+			Result := True
 		end
 
 feature {NONE} -- Status report
@@ -69,21 +81,6 @@ feature -- Status setting
 
 feature {EQA_TEST_EVALUATOR} -- Status setting
 
-	frozen prepare (a_name: READABLE_STRING_8)
-			-- Prepare `Current' to execute any test routine.
-			--
-			-- `a_name': Name of the test which will called after preparation.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_valid: is_valid_name (a_name)
-		do
-			current_test_name := a_name.twin
-			on_prepare
-		ensure
-			prepared: is_prepared
-			not_failed: not has_failed
-		end
-
 	frozen clean (a_has_failed: BOOLEAN)
 			-- Release any resources allocated by `prepare'.
 			--
@@ -92,9 +89,7 @@ feature {EQA_TEST_EVALUATOR} -- Status setting
 			has_failed := a_has_failed
 			on_clean
 			has_failed := False
-			current_test_name := Void
 		ensure
-			current_test_name_detached: current_test_name = Void
 			not_failed: not has_failed
 		end
 
@@ -136,8 +131,6 @@ feature {NONE} -- Events
 
 	on_prepare
 			-- Called after `prepare' has performed all initialization.
-		require
-			has_valid_name: has_valid_name
 		do
 		ensure
 			prepared: is_prepared
@@ -148,8 +141,6 @@ feature {NONE} -- Events
 		require
 			prepared: is_prepared
 		do
-		ensure
-			has_valid_name: has_valid_name
 		end
 
 feature {NONE} -- Implementation
@@ -157,10 +148,7 @@ feature {NONE} -- Implementation
 	internal_asserter: detachable like asserter
 			-- Once per object storage for `asserter'.
 
-invariant
-	valid_test_name: current_test_name /= Void implies is_valid_name (current_test_name)
-
-note
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

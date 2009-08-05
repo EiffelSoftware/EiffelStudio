@@ -70,7 +70,7 @@ feature -- Status setting
 
 feature -- Execution
 
-	frozen execute (a_test_set: EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: READABLE_STRING_8)
+	frozen execute (a_test_set: FUNCTION [ANY, TUPLE, EQA_TEST_SET]; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: READABLE_STRING_8)
 			-- Run full test sequence for given test set and test procedure. This includes invoking `set_up'
 			-- on the {TEST_SET} instance, then calling the procedure providing the test set as an operand
 			-- and finally invoking `tear_down' on the test set.
@@ -87,29 +87,29 @@ feature -- Execution
 			a_test_set_attached: a_test_set /= Void
 			a_test_attached: a_test /= Void
 			a_name_attached: a_name /= Void
-			valid_test_set: a_test.valid_operands ([a_test_set])
-			a_name_valid: a_test_set.is_valid_name (a_name)
+			--valid_test_set: a_test.valid_operands ([a_test_set])
 		local
 			l_tuple: TUPLE [EQA_TEST_SET]
 			l_prepare, l_test, l_clean: like last_invocation_response
 			l_work_dir, l_target: STRING
 		do
+			(create {EQA_EVALUATION_INFO}).set_test_name (a_name)
 			l_work_dir := current_working_directory.twin
-			l_target := a_test_set.generator
-			safe_execute (agent a_test_set.prepare (a_name), l_target)
+			l_target := type_name_of_type (generic_dynamic_type (a_test_set, 3))
+			safe_execute (a_test_set, l_target)
 			l_prepare := last_invocation_response
 			check l_prepare /= Void end
-			if not l_prepare.is_exceptional then
+			if not l_prepare.is_exceptional and then attached a_test_set.last_result as l_test_set then
 				l_tuple := a_test.empty_operands
 				check
 					valid_tuple_count: l_tuple.valid_index (1)
-					valid_for_tuple: l_tuple.valid_type_for_index (a_test_set, 1)
+					valid_for_tuple: l_tuple.valid_type_for_index (l_test_set, 1)
 				end
-				l_tuple.put (a_test_set, 1)
+				l_tuple.put (l_test_set, 1)
 				safe_execute (agent a_test.call (l_tuple), l_target)
 				l_test := last_invocation_response
 				check l_test /= Void end
-				safe_execute (agent a_test_set.clean (l_test.is_exceptional), l_target)
+				safe_execute (agent l_test_set.clean (l_test.is_exceptional), l_target)
 				l_clean := last_invocation_response
 				check l_clean /= Void end
 				create last_result.make (l_prepare, l_test, l_clean, create {DATE_TIME}.make_now)
@@ -123,7 +123,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	safe_execute (a_procedure: PROCEDURE [ANY, TUPLE]; a_target: READABLE_STRING_8)
+	safe_execute (a_procedure: ROUTINE [ANY, TUPLE]; a_target: READABLE_STRING_8)
 			-- Execute `procedure' in a protected way.
 		require
 			a_procedure_attached: a_procedure /= Void

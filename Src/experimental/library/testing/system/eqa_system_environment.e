@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			-- `a_test': Prepared system test for which environment should be initialized.
 		require
 			a_test_attached: a_test /= Void
-			a_test_has_name: a_test.has_valid_name
 		local
 			l_source_var, l_testing_var: detachable STRING
 		do
@@ -52,9 +51,11 @@ feature {NONE} -- Initialization
 			-- Initialize testing directory suffix for `test_set'
 		local
 			l_gen, l_name, l_suffix: STRING
+			l_info: EQA_EVALUATION_INFO
 		do
 			l_gen := test_set.generator
-			l_name := test_set.current_test_name
+			create l_info
+			l_name := l_info.test_name
 			create l_suffix.make (l_gen.count + l_name.count + 1)
 			l_suffix.append (l_gen)
 			l_suffix.append_character ('_')
@@ -135,7 +136,6 @@ feature {NONE} -- Constants
 		end
 
 invariant
-	test_set_has_name: test_set.has_valid_name
 	test_suffix_not_empty: not test_suffix.is_empty
 
 note

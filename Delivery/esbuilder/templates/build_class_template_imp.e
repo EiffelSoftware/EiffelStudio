@@ -25,6 +25,7 @@ feature {NONE}-- Initialization
 		do
 			<PRECURSOR>
 
+			create internal_pixmap
 			<BUILD>
 
 			<SET>
@@ -40,7 +41,6 @@ feature {NONE}-- Initialization
 			-- Create objects
 		do
 			<CREATE>
-			create internal_pixmap
 
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)

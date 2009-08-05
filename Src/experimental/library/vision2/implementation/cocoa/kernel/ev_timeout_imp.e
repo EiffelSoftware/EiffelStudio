@@ -41,10 +41,14 @@ feature -- Access
 			-- Assign `an_interval' in milliseconds to `interval'.
 			-- Zero disables.
 		do
+			if attached timer as previous_timer then
+				previous_timer.invalidate
+			end
+			create timer.scheduled_timer (an_interval / 1000.0, agent on_timeout, Void, True)
 			interval := an_interval
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
+feature -- Implementation
 
 	on_timeout
 			-- Call the timeout actions.
@@ -57,6 +61,8 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
 	actions_called: BOOLEAN
 		-- Are the timeout actions in the process of being called.
+
+	timer: detachable NS_TIMER
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

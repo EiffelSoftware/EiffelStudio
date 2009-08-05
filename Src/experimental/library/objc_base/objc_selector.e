@@ -49,7 +49,7 @@ feature -- Access
 			Result := {NS_OBJC_RUNTIME}.sel_is_equal (item, other.item)
 		end
 
-feature {OBJC_SELECTOR} -- Implementation: Access
+feature {OBJC_SELECTOR, NS_OBJECT} -- Implementation: Access
 
 	item: POINTER;
 			-- Underlying SEL pointer.

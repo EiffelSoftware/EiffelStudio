@@ -76,7 +76,6 @@ feature -- Basic Operations
 		require
 			a_session_manager_attached: attached a_session_manager
 			a_request_attached: attached a_request
-
 		local
 			l_internal_controllers: LIST [XWA_CONTROLLER]
 		do
@@ -90,20 +89,38 @@ feature -- Basic Operations
 			loop
 				l_internal_controllers.item.set_current_request (a_request)
 				l_internal_controllers.item.set_current_session (current_session)
-
 				l_internal_controllers.forth
 			end
+			execute_on_controller (l_internal_controllers, agent {XWA_CONTROLLER}.on_load (a_request, a_response))
 			set_all_booleans (a_request, a_response)
 			a_request.call_pre_handler (Current, a_response)
 			if a_response.goto_request.is_empty then
 				set_all_booleans (a_request, a_response)
+				execute_on_controller (l_internal_controllers, agent {XWA_CONTROLLER}.pre_render (a_request, a_response))
 				render_html_page (a_request, a_response)
+				execute_on_controller (l_internal_controllers, agent {XWA_CONTROLLER}.post_render (a_request, a_response))
 				if a_response.goto_request.is_empty then
 					clean_up_after_render (a_request, a_response)
 				end
 			end
 			validation_errors.wipe_out
 			uid_counter := 0
+		end
+
+	execute_on_controller (a_controllers: LIST [XWA_CONTROLLER]; a_feature: PROCEDURE [ANY, TUPLE [XWA_CONTROLLER]])
+			-- Executes a feature on all the controllers
+		require
+			a_controllers_attached: attached a_controllers
+			a_feature_attached: attached a_feature
+		do
+			from
+				a_controllers.start
+			until
+				a_controllers.after
+			loop
+				a_feature.call ([a_controllers.item])
+				a_controllers.forth
+			end
 		end
 
 	handle_form (a_request: XH_REQUEST; a_response: XH_RESPONSE)
@@ -114,6 +131,15 @@ feature -- Basic Operations
 		do
 			handle_form_internal (a_request, a_response)
 		end
+
+	internal_controllers: LIST [XWA_CONTROLLER]
+			-- The controller associated to the servlet
+		deferred
+		ensure
+			Result_attached: attached Result
+		end
+
+feature -- Children responsibility
 
 	fill_bean (a_request: XH_REQUEST): BOOLEAN
 			-- Fills the bean variables from the form arguments
@@ -150,13 +176,6 @@ feature -- Basic Operations
 			a_request_attached: attached a_request
 			a_response_attached: attached a_response
 		deferred
-		end
-
-	internal_controllers: LIST [XWA_CONTROLLER]
-			-- The controller associated to the servlet
-		deferred
-		ensure
-			Result_attached: attached Result
 		end
 
 invariant

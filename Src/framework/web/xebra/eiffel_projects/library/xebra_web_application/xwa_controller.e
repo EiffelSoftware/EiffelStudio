@@ -38,6 +38,35 @@ feature -- Access
 	current_session: detachable XH_SESSION
 		-- Represents the session that belongs to the user that has send the current request
 
+feature -- Render actions
+
+	on_load (a_request: XH_REQUEST; a_response: XH_RESPONSE)
+			-- Is called before anything happens with the request or the response.
+		require
+			a_request_attached: attached a_request
+			a_reponse_attached: attached a_response
+		do
+			-- Do nothing per default
+		end
+
+	pre_render (a_request: XH_REQUEST; a_response: XH_RESPONSE)
+			-- Is called after on_load and before the page is rendered.
+		require
+			a_request_attached: attached a_request
+			a_reponse_attached: attached a_response
+		do
+			-- Do nothing per default
+		end
+
+	post_render (a_request: XH_REQUEST; a_response: XH_RESPONSE)
+			-- Is called after the page has been rendered.
+		require
+			a_request_attached: attached a_request
+			a_reponse_attached: attached a_response
+		do
+			-- Do nothing per default
+		end
+
 feature -- Status Change
 
 	set_current_request (a_request: XH_REQUEST)

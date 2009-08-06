@@ -19,8 +19,6 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			webapp := ""
---				l_uri_webapp_name := l_request.uri.substring (2, l_request.uri.index_of ('/', 2))
---				l_uri_webapp_name.remove_tail (1)
 			post_too_big := False
 		end
 
@@ -31,8 +29,6 @@ feature -- Access
 
 	post_too_big: BOOLEAN
 		-- True if the module added the post_too_big flag to the request
-
-feature -- Status report
 
 feature -- Status setting
 
@@ -53,12 +49,6 @@ feature -- Status setting
 		ensure
 			post_too_big_set: equal (post_too_big, a_post_too_big)
 		end
-
-feature -- Basic operations
-
-feature {NONE} -- Implementation
-
-invariant
 
 end
 

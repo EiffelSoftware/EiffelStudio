@@ -1,5 +1,0 @@
-<config>
-	<taglib name="xebra_taglibrary_xrpc" ecf="xebra_taglibrary_xrpc-voidunsafe.ecf" path="$XEBRA_LIBRARY\xebra_taglibrary_xrpc" />
-	<taglib name="xebra_taglibrary_base" ecf="xebra_taglibrary_base-voidunsafe.ecf" path="$XEBRA_LIBRARY\xebra_taglibrary_base" />
-</config>
-

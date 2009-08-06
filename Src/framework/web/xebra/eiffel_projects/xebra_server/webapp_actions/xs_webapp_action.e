@@ -305,8 +305,5 @@ feature {NONE} -- Implementation
 				Result.launch
 			end
 		end
-
-invariant
-	webapp_attached: webapp /= Void
 end
 

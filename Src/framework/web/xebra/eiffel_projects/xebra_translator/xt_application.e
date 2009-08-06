@@ -43,7 +43,7 @@ feature -- Operation
 			l_generation_file_name: FILE_NAME
 			l_util: XU_FILE_UTILITIES
 		do
-			o.set_name ("XEBTRANS")
+			o.set_name ("XT")
 			o.set_debug_level (a_arg_parser.debug_level)
 			config.set_xebra_library_path (a_arg_parser.lib_path)
 			create l_translator.make (a_arg_parser.project_name, a_arg_parser.force)

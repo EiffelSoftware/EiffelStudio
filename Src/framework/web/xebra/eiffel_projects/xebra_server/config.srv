@@ -1,0 +1,8 @@
+{
+  "finalize_webapps": "false",
+  "compiler": "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec.exe",
+  "translator": "$XEBRA_DEV/eiffel_projects/xebra_translator/EIFGENs/xebra_translator/W_code/xebra_translator.exe",
+  "webapps_root": "$XEBRA_DEV/www",
+  "library": "$XEBRA_DEV/eiffel_projects/library",
+  "compiler_flags": "-experiment"
+}

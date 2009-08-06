@@ -1,0 +1,13 @@
+{
+	"name": "helloworld",
+	"port": "55011",
+	"host": "localhost",
+	"taglibs": 
+	[
+		{ 
+			"name": "xebra_taglibrary_base",
+			"ecf":  "xebra_taglibrary_form-safe.ecf",
+			"path": "$XEBRA_LIBRARY\xebra_taglibrary_base"
+		}
+	]	
+}

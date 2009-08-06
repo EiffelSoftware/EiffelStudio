@@ -13,6 +13,8 @@ class
 inherit
 	ARGUMENTS
 	XU_STOPWATCH
+	ERROR_SHARED_MULTI_ERROR_MANAGER
+
 
 create
 	make
@@ -32,4 +34,5 @@ feature {NONE} -- Initialization
 			create l_server.make
 			l_arg_parser.execute (agent l_server.setup (l_arg_parser))
 		end
+
 end

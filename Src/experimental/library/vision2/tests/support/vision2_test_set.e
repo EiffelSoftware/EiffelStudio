@@ -13,13 +13,11 @@ inherit
 			run_test
 		end
 
-	EV_ANY_HANDLER
-
 feature -- Access
 
 	application: TEST_APPLICATION
 
-	run_test (a_test: PROCEDURE [ANY, TUPLE])
+	run_test (a_test: PROCEDURE [ANY, TUPLE [like Current]])
 			-- Run the test a_test - inside the event loop
 		do
 			create application.make_new
@@ -27,9 +25,17 @@ feature -- Access
 			application.launch
 		end
 
-	run_and_exit (a_test: PROCEDURE [ANY, TUPLE])
+	run_and_exit (a_test: PROCEDURE [ANY, TUPLE [like Current]])
+		local
+			l_operands: TUPLE [like Current]
 		do
-			a_test.call ([]);
+			l_operands := a_test.empty_operands
+			check
+				valid_operand_count: l_operands.count = 1
+				valid_operand: l_operands.valid_type_for_index (Current, 1)
+			end
+			l_operands.put (Current, 1)
+			a_test.call (l_operands)
 			application.destroy
 		end
 

@@ -21,16 +21,13 @@ feature -- Access
 	run_process: detachable PROCESS
 		-- Used to run the webapp
 
---	webapp_debug_level: INTEGER = 10
---			 Sets the debug level when launching the webapp
-
 	run_args: STRING
 			-- The arguments for running the webapp
 		local
 			l_f: FILE_NAME
 		do
 			l_f := app_dir.twin
-			l_f.set_file_name ("config.ini")
+			l_f.set_file_name ({XU_CONSTANTS}.Webapp_config_file)
 			Result := "%"" + l_f.string + "%" -d " + config.args.debug_level.out + ""
 						--webapp_debug_level.out
 		ensure

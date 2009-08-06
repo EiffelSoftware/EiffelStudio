@@ -2,6 +2,8 @@ note
 	description: "[
 			Represents a webapp and provides features to translate, compile and run it
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

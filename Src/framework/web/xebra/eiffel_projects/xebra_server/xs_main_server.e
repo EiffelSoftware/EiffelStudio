@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create modules.make (1)
+			create modules.make (3)
 		ensure
 			modules_attached: modules /= Void
 		end
@@ -117,7 +117,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>.
 		do
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
-				o.iprint ("Forcing retranslation off webapp '" + a_name + "'")
+				o.iprint ("Forcing retranslation of webapp '" + a_name + "'")
 				l_w.force_translate
 				create {XCCR_OK}Result
 			else
@@ -345,11 +345,12 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_FILE_CONFIG} l_config_reader.process_file (config.args.config_filename) as l_config then
 				config.file := l_config
 				config.file.set_webapps (l_webapp_handler.search_webapps (config.file.webapps_root))
-				o.dprint (config.file.print_configuration, 2)
+
 			end
 
 			if handle_errors then
 				Result := create {XCCR_OK}
+				o.dprint (config.file.print_configuration, 2)
 			end
 
 		end

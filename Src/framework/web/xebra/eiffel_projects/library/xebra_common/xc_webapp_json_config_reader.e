@@ -15,6 +15,7 @@ inherit
 
 feature {NONE} -- Internal Access
 
+	ecf_name: STRING = "ecf"
 	name_name: STRING = "name"
 	host_name: STRING = "host"
 	port_name: STRING = "port"
@@ -39,6 +40,13 @@ feature -- Processing
 
 			if attached {JSON_OBJECT} a_value as l_v then
 				create l_config.make_empty
+
+					-- Check ecf
+				if attached {JSON_STRING} l_v.map_representation [create {JSON_STRING}.make_json (ecf_name)] as l_e then
+						l_config.set_ecf (l_e.item)
+				else
+					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + ecf_name), false)
+				end
 
 					-- Check name
 				if attached {JSON_STRING} l_v.map_representation [create {JSON_STRING}.make_json (name_name)] as l_e then
@@ -102,15 +110,12 @@ feature -- Processing
 							if not (l_buf_tl_name.is_equal ("") or l_buf_tl_ecf.is_equal ("") or l_buf_tl_path.is_equal ("") ) then
 								l_config.taglibs.force ([l_buf_tl_name, l_buf_tl_ecf, l_buf_tl_path])
 							end
-
 						end
 						l_e.array_representation.forth
 					end
-
 				else
 					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + taglibs_name), false)
 				end
-
 				if not error_manager.has_errors then
 					Result := l_config
 				end

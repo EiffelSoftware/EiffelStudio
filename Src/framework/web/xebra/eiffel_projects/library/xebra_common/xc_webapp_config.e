@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Contains configuration info about a webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -21,17 +21,22 @@ feature {NONE} -- Initialization
 			create name.make_empty
 			create port.make_empty
 			create host.make_empty
+			create ecf.make_empty
 			create arg_config.make_empty
 			create {ARRAYED_LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]} taglibs.make (3)
 		ensure then
 			arg_config_attached: arg_config /= Void
 			name_attached: name /= Void
+			ecf_attached: ecf /= Void
 			host_attached: host /= Void
 			port_attached: port /= Void
 			taglibs_attached: taglibs /= Void
 		end
 
 feature -- Access
+
+	ecf: SETTABLE_STRING assign set_ecf
+		-- The ecf file path of the application.
 
 	name: SETTABLE_STRING assign set_name
 		-- The name of the application.
@@ -46,11 +51,32 @@ feature -- Access
 		-- Specifies the taglibs the webapp is using.
 
 	arg_config: XC_WEBAPP_ARG_CONFIG
-			-- The config settings read from the execute arguments.		
+			-- The config settings read from the execute arguments.	
 
-feature -- Status report
+	is_interactive: BOOLEAN
+			-- Specifies if the webapp is executed in interactive mode. This property is not set by the file but by the execution arguements.			
 
 feature -- Status setting
+
+	set_is_interactive (a_is_interactive: like is_interactive)
+			-- Sets name
+		require
+			a_is_interactive_attached: a_is_interactive /= Void
+		do
+			is_interactive := a_is_interactive
+		ensure
+			is_interactive_set: is_interactive = a_is_interactive
+		end
+
+	set_ecf (a_ecf: like ecf)
+			-- Sets ecf
+		require
+			a_ecf_attached: a_ecf /= Void
+		do
+			ecf := a_ecf
+		ensure
+			ecf_set: ecf = a_ecf
+		end
 
 	set_name (a_name: like name)
 			-- Sets name
@@ -87,6 +113,7 @@ invariant
 	name_attached: name /= Void
 	host_attached: host /= Void
 	port_attached: port /= Void
+	ecf_attached: ecf /= Void
 	taglibs_attached: taglibs /= Void
 end
 

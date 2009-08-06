@@ -103,9 +103,8 @@ feature -- Processing
 				else
 					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + compiler_flags_name), false)
 				end
-			else
-				error_manager.add_error (create {XERROR_JSON_ERROR}.make (l_error_prefix + "Invalid structure"), false)
 			end
+
 
 			if not error_manager.has_errors then
 				Result := l_config

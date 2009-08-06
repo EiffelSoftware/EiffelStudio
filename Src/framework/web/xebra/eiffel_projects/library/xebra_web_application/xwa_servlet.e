@@ -62,11 +62,13 @@ feature -- Basic Operations
 	add_error (a_key: STRING; a_error: STRING)
 			-- Appends an error to the list of errors for the specific key
 		do
-			if attached validation_errors [a_key] as errors then
-				errors.extend (a_error)
+			if attached validation_errors [a_key] as l_errors then
+				l_errors.extend (a_error)
 			else
 				validation_errors [a_key] := create {ARRAYED_LIST [STRING]}.make(1)
-				validation_errors [a_key].extend (a_error)
+				if attached validation_errors [a_key] as l_errors then
+					l_errors.extend (a_error)
+				end
 			end
 		end
 

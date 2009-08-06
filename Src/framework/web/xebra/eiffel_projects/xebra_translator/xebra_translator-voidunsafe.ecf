@@ -11,7 +11,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
 		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
-		<library name="peg" location="$XEBRA_DEV\\eiffel_projects\library\peg\peg.ecf" readonly="false"/>
+		<library name="peg" location=$EIFFEL_SRC\framework\peg\peg.ecf" readonly="false"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf"/>
 		<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false">
 			<option>

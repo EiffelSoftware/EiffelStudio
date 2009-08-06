@@ -25,10 +25,6 @@ feature -- Access
 
 	request_handler: XRPC_REQUEST_HANDLER
 
-feature -- Status report
-
-feature -- Status setting
-
 feature -- Basic operations
 
 	handle (a_request: XH_REQUEST; a_response: XH_RESPONSE; a_dispatcher: XRPC_SERVER_DISPATCHER)
@@ -50,10 +46,6 @@ feature -- Basic operations
 				a_response.append ("invalid method") --todo  ((create {XER_INVALID_REQUEST_METHOD}.make ("")).render_to_response)
 			end
 		end
-
-feature {NONE} -- Implementation
-
-invariant
 
 end
 

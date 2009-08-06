@@ -70,35 +70,38 @@ feature -- Formatting
 			-- Refresh `widget'.
 		do
 			if
-				associated_class /= Void and then
-				associated_class.is_valid and then
 				selected and then
 				displayed and then
 				editor /= Void and then
 				editor.is_initialized and then
 				actual_veto_format_result
 			then
-				display_temp_header
-				reset_display
-				setup_viewpoint
-				generate_text
-				if not last_was_error then
-					go_to_position
-					if has_breakpoints then
-						editor.enable_has_breakable_slots
+				if
+					associated_class /= Void and then
+					associated_class.is_valid
+				then
+					display_temp_header
+					reset_display
+					setup_viewpoint
+					generate_text
+					if not last_was_error then
+						go_to_position
+						if has_breakpoints then
+							editor.enable_has_breakable_slots
+						else
+							editor.disable_has_breakable_slots
+						end
+						editor.set_read_only (not is_editable)
 					else
-						editor.disable_has_breakable_slots
+						show_error_message
 					end
-					editor.set_read_only (not is_editable)
+					display_header
+					stone.set_pos_container (Current)
+					if editor.stone /= Void then
+						editor.stone.set_pos_container (Current)
+					end
 				else
-					editor.clear_window
-					editor.put_string (Warning_messages.w_Formatter_failed)
-					editor.refresh_now
-				end
-				display_header
-				stone.set_pos_container (Current)
-				if editor.stone /= Void then
-					editor.stone.set_pos_container (Current)
+					show_error_message
 				end
 			end
 		end
@@ -150,6 +153,17 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			class_cmd /= Void
+		end
+
+	show_error_message
+			-- Put errer message in the editor.
+		require
+			editor_not_void: editor /= Void
+			editor_is_initialized: editor.is_initialized
+		do
+			editor.clear_window
+			editor.put_string (Warning_messages.w_Formatter_failed)
+			editor.refresh_now
 		end
 
 feature -- Status setting
@@ -210,7 +224,7 @@ feature -- Status setting
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -234,11 +248,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CLASS_TEXT_FORMATTER

@@ -228,6 +228,9 @@
 
 		<!-- build the command line -->
 		<local name="eccmd" value="${ecname}" />
+
+		<local name="eccmd" value="${eccmd} ${ISE_EC_FLAGS_SCRIPT}" if="${ISE_EC_FLAGS_SCRIPT}" />
+
 		<local name="eccmd" value="${eccmd} -config $a_ecf" />
 		<local name="eccmd" value="${eccmd} -target $a_target" />
 		<local name="eccmd" value="${eccmd} -project_path $a_comp_dir" />
@@ -238,8 +241,10 @@
 		<local name="eccmd" value="${eccmd} -c_compile" if="$a_c_compile=true" />
 		<local name="eccmd" value="${eccmd} -clean" if="$a_clean=true" />
 		<local name="eccmd" value="${eccmd} -batch" if="$a_batch=true" />
-		<local name="eccmd" value="${eccmd} -use_settings" if="$a_use_settings=true" />
 		<local name="eccmd" value="${eccmd} -gui" if="$a_gui=true" />
+		<!-- useless since we precise -project_path
+		<local name="eccmd" value="${eccmd} -use_settings" if="$a_use_settings=true" />
+		-->
 
 		<echo message=" DIR=${a_comp_dir}" if="$verbose=true" />
 		<echo message=" OUT=${a_output_dir}" if="$verbose=true" />

@@ -12,7 +12,6 @@ class
 inherit
 	EV_TITLED_WINDOW
 		redefine
-			initialize,
 			is_in_default_state
 		end
 
@@ -23,49 +22,58 @@ inherit
 			default_create, copy
 		end
 
-	DOCKING_MANAGER_HODLER
-		undefine
-			default_create, copy
-		end
-
 create
-	default_create
+	make
 
 feature {NONE} -- Initialization
 
-	initialize
-			-- Build the interface for this window.
+	make
+			-- Creation method
 		do
-			Precursor {EV_TITLED_WINDOW}
+			setup_widgets
 
-			build_containers
-
-			extend (main_container)
-			main_container.extend (docking_container)
+			default_create
 
 			setup_docking_attributes
+			setup_content_control_panel
 
-			build_content_control_panel
-			build_docking_editor_contents
-			build_docking_tool_contents
-			build_docking_tool_contents
+			extend (main_container)
+				-- Set the title of the window
+			set_title (Window_title)
+				-- Set the initial size of the window
+			set_size (Window_width, Window_height)
+
+
 
 				-- Execute `request_close_window' when the user clicks
 				-- on the cross in the title bar.
 			close_request_actions.extend (agent request_close_window)
 
-				-- Set the title of the window
-			set_title (Window_title)
+			show_content_control_panel
+		end
 
-				-- Set the initial size of the window
-			set_size (Window_width, Window_height)
+	setup_widgets
+			-- Build the interface for this window.
+		do
+			build_containers
+
+			main_container.extend (docking_container)
+		end
+
+	setup_content_control_panel
+			-- Setup `content_contrl_panel'
+		do
+			create internal_content_control_panel.make (docking_manager, Current)
+			build_docking_editor_contents
+			build_docking_tool_contents
+			build_docking_tool_contents
 		end
 
 	setup_docking_attributes
 			-- Setup docking attributes.
 		do
 				-- Build the Docking Manager.
-			create docking_manager.make (docking_container, Current)
+			create internal_docking_manager.make (docking_container, Current)
 		end
 
 	is_in_default_state: BOOLEAN
@@ -77,13 +85,48 @@ feature {NONE} -- Initialization
 				(title.is_equal (Window_title))
 		end
 
-feature -- Access
+feature -- Query
 
 	content_control_panel: CONTENT_CONTROL_PANEL
 			-- Content contol panel
+		require
+			set: is_content_control_panel_set
+		local
+			l_result: like internal_content_control_panel
+		do
+			l_result := internal_content_control_panel
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
 
-	toolbar_manager: SD_TOOL_BAR_MANAGER
-			-- Tool bar manager.
+	docking_manager: SD_DOCKING_MANAGER
+			-- <Precursor>
+		require
+			set: is_docking_manager_set
+		local
+			l_result: detachable like docking_manager
+		do
+			l_result := internal_docking_manager
+			check l_result /= Void end -- FIXME: Implied by...
+			Result := l_result
+		end
+
+	is_main_container_set: BOOLEAN
+			-- If main container has been set?
+
+	is_docking_manager_set: BOOLEAN
+			-- If `internal_docking_manager' has been set?
+		do
+			Result := internal_docking_manager /= Void
+		end
+
+	is_content_control_panel_set: BOOLEAN
+			-- If `internal_content_control_panel' has been set?
+		do
+			Result := attached internal_content_control_panel
+		end
 
 feature {NONE} -- Implemetation, Docking management
 
@@ -99,14 +142,13 @@ feature {NONE} -- Implemetation, Docking management
 			content_control_panel.build_docking_tool_content
 		end
 
-	build_content_control_panel
-			-- Build center control panel.
+	show_content_control_panel
+			-- Show center control panel
 		local
 			l_dialog: EV_DIALOG
 			l_title: STRING_GENERAL
 		do
 			l_title := "Control Panel"
-			create content_control_panel.make (docking_manager, Current)
 			create l_dialog.make_with_title (l_title)
 			l_dialog.extend (content_control_panel)
 			l_dialog.set_width (400)
@@ -124,14 +166,18 @@ feature {NONE} -- Implementation, Close event
 			create question_dialog.make_with_text (Label_confirm_close_window)
 			question_dialog.show_modal_to_window (Current)
 
-			if question_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if question_dialog.selected_button ~ ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 					-- Destroy the window
 				destroy;
 
 					-- End the application
 					--| TODO: Remove this line if you don't want the application
 					--|       to end when the first window is closed..
-				(create {EV_ENVIRONMENT}).application.destroy
+				if attached (create {EV_ENVIRONMENT}).application as l_app then
+					l_app.destroy
+				else
+					check False end -- Implied by application is running
+				end
 			end
 		end
 
@@ -146,12 +192,13 @@ feature {NONE} -- Implementation
 	build_containers
 			-- Create `main_container' and `docking_container'.
 		require
-			main_container_not_yet_created: main_container = Void
+			main_container_not_yet_created: not is_main_container_set
 		do
 			create main_container
+			is_main_container_set := True
 			create docking_container
 		ensure
-			main_container_created: main_container /= Void
+			main_container_created: is_main_container_set
 		end
 
 feature {NONE} -- Implementation / Constants
@@ -168,10 +215,16 @@ feature {NONE} -- Implementation / Constants
 	Window_width: INTEGER = 800
 			-- Initial width for this window.
 
-	Window_height: INTEGER = 600;
+	Window_height: INTEGER = 600
 			-- Initial height for this window.
 
-note
+	internal_docking_manager: detachable SD_DOCKING_MANAGER
+			-- Instance holder of `docking_manager'
+
+	internal_content_control_panel: detachable like content_control_panel
+			-- Instance of `content_control_panel'
+
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

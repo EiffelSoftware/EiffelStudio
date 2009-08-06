@@ -27,9 +27,15 @@ feature {NONE} -- Initialization
 		require
 			a_manager_not_void: a_manager /= Void
 		do
-			default_create
 			docking_manager := a_manager
 			window := a_window
+
+			create_all_widgets
+			create_all_actions
+
+			back_ground_color := sd_shared.default_background_color
+			
+			default_create
 		ensure
 			docking_manager_not_void: docking_manager /= Void
 			window_not_void: window /= Void
@@ -87,7 +93,77 @@ feature {NONE} -- Initialization
 			sliding_speed_spin_button.set_value (sd_shared.auto_hide_tab_slide_timer_interval)
 
 
-			back_ground_color := sd_shared.default_background_color
+		end
+
+	create_all_widgets
+			-- Create all widgets
+		do
+			create l_ev_frame_1
+			create l_ev_vertical_box_1
+			create l_ev_horizontal_box_1
+			create l_ev_button_1
+			create l_ev_vertical_separator_1
+			create l_ev_button_2
+			create l_ev_frame_2
+			create l_ev_horizontal_box_2
+			create close_place_holder_button
+			create l_ev_frame_3
+			create l_ev_vertical_box_2
+			create l_ev_horizontal_box_3
+			create l_ev_vertical_box_3
+			create show_all_indicators_check_button
+			create show_tab_stub_text_check_button
+			create l_ev_vertical_box_4
+			create l_ev_horizontal_box_4
+			create l_ev_label_1
+			create sliding_speed_spin_button
+			create l_ev_frame_4
+			create l_ev_horizontal_box_5
+			create l_ev_label_2
+			create key_field
+			create l_ev_cell_1
+			create ctrl_check_button
+			create alt_check_button
+			create shift_check_button
+			create l_ev_frame_5
+			create l_ev_horizontal_box_6
+			create lock_editors_check_button
+			create lock_tools_check_button
+			create lock_tool_bars_check_button
+			create l_ev_frame_6
+			create l_ev_horizontal_box_7
+			create background_color_drawer
+			create l_ev_cell_2
+			create chose_color_button
+			create l_ev_frame_7
+			create l_ev_horizontal_box_8
+			create l_ev_vertical_box_5
+			create save_layout_button
+			create open_layout_button
+			create l_ev_vertical_box_6
+			create save_tool_layout_button
+			create open_tool_layout_button
+			create l_ev_vertical_box_7
+			create save_editor_layout_button
+			create open_editor_layout_button
+		end
+
+	create_all_actions
+			-- Create all actions
+		do
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
 		end
 
 feature {NONE} -- Implementation
@@ -200,50 +276,68 @@ feature {NONE} -- Implementation
 
 	on_open_layout_button_selected
 			-- Called by `select_actions' of `open_layout_button'.
+		local
+			l_dialog: like open_file_dialog
 		do
-			create open_file_dialog
-			open_file_dialog.open_actions.extend (agent on_open_layout (open_file_dialog, standard_layout))
-			open_file_dialog.show_modal_to_window (window)
+			create l_dialog
+			open_file_dialog := l_dialog
+			l_dialog.open_actions.extend (agent on_open_layout (l_dialog, standard_layout))
+			l_dialog.show_modal_to_window (window)
 		end
 
 	on_open_editor_layout_button_selected
 			-- Called by `select_actions' of `open_editor_layout_button'.
+		local
+			l_dialog: like open_file_dialog
 		do
-			create open_file_dialog
-			open_file_dialog.open_actions.extend (agent on_open_layout (open_file_dialog, editor_layout))
-			open_file_dialog.show_modal_to_window (window)
+			create l_dialog
+			open_file_dialog := l_dialog
+			l_dialog.open_actions.extend (agent on_open_layout (open_file_dialog, editor_layout))
+			l_dialog.show_modal_to_window (window)
 		end
 
 	on_open_tool_layout_button_selected
 			-- Called by `select_actions' of `open_tool_layout_button'.
+		local
+			l_dialog: like open_file_dialog
 		do
-			create open_file_dialog
-			open_file_dialog.open_actions.extend (agent on_open_layout (open_file_dialog, tool_layout))
-			open_file_dialog.show_modal_to_window (window)
+			create l_dialog
+			open_file_dialog := l_dialog
+			l_dialog.open_actions.extend (agent on_open_layout (open_file_dialog, tool_layout))
+			l_dialog.show_modal_to_window (window)
 		end
 
 	on_save_layout_button_selected
 			-- Called by `select_actions' of `save_layout_button'.
+		local
+			l_dialog: like save_file_dialog
 		do
-			create save_file_dialog
-			save_file_dialog.save_actions.extend (agent on_layout_save (save_file_dialog, standard_layout))
-			save_file_dialog.show_modal_to_window (window)
+			create l_dialog
+			save_file_dialog := l_dialog
+			l_dialog.save_actions.extend (agent on_layout_save (l_dialog, standard_layout))
+			l_dialog.show_modal_to_window (window)
 		end
 
 	on_save_editor_layout_button_selected
 			-- Called by `select_actions' of `save_editor_layout_button'.
+		local
+			l_dialog: like save_file_dialog
 		do
-			create save_file_dialog
-			save_file_dialog.save_actions.extend (agent on_layout_save (save_file_dialog, editor_layout))
-			save_file_dialog.show_modal_to_window (window)
+			create l_dialog
+			save_file_dialog := l_dialog
+			l_dialog.save_actions.extend (agent on_layout_save (l_dialog, editor_layout))
+			l_dialog.show_modal_to_window (window)
 		end
 
 	on_save_tool_layout_button_selected
 			-- Called by `select_actions' of `save_tool_layout_button'.
+		local
+			l_dialog: like save_file_dialog
 		do
-			create save_file_dialog
-			save_file_dialog.save_actions.extend (agent on_layout_save (save_file_dialog, tool_layout))
-			save_file_dialog.show_modal_to_window (window)
+			create l_dialog
+			save_file_dialog := l_dialog
+			l_dialog.save_actions.extend (agent on_layout_save (l_dialog, tool_layout))
+			l_dialog.show_modal_to_window (window)
 		end
 
 	on_close_place_holder_button_selected
@@ -278,8 +372,8 @@ feature {NONE} -- Layout save
 	editor_layout: INTEGER = 2
 	tool_layout: INTEGER = 3
 
-	save_file_dialog: EV_FILE_SAVE_DIALOG
-	open_file_dialog: EV_FILE_OPEN_DIALOG
+	save_file_dialog: detachable EV_FILE_SAVE_DIALOG
+	open_file_dialog: detachable EV_FILE_OPEN_DIALOG
 
 	on_layout_save (a_dialog: like save_file_dialog; a_type: INTEGER)
 		require

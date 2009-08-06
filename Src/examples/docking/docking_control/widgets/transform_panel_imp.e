@@ -19,7 +19,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -32,42 +32,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
-			
-				-- Create all widgets.
-			create l_ev_horizontal_box_1
-			create apply_button
-			create refresh_button
-			create l_ev_frame_1
-			create l_ev_horizontal_box_2
-			create type_editor_radio_button
-			create type_tool_radio_button
-			create type_place_holder_radio_button
-			create l_ev_frame_2
-			create l_ev_horizontal_box_3
-			create l_ev_vertical_box_1
-			create top_radio_button
-			create tab_with_radio_button
-			create relative_radio_button
-			create auto_hide_radio_button
-			create float_radio_button
-			create default_editor_radio_button
-			create l_ev_vertical_box_2
-			create direction_frame
-			create l_ev_horizontal_box_4
-			create up_radio_button
-			create down_radio_button
-			create left_radio_button
-			create right_radio_button
-			create screen_position_frame
-			create l_ev_horizontal_box_5
-			create l_ev_label_1
-			create screen_x_button
-			create l_ev_cell_1
-			create l_ev_label_2
-			create screen_y_button
-			create existing_contents_frame
-			create existing_contents_list
-			
+
 				-- Build widget structure.
 			extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (apply_button)
@@ -102,20 +67,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_5.extend (screen_y_button)
 			l_ev_vertical_box_2.extend (existing_contents_frame)
 			existing_contents_frame.extend (existing_contents_list)
-			
-			create string_constant_set_procedures.make (10)
-			create string_constant_retrieval_functions.make (10)
-			create integer_constant_set_procedures.make (10)
-			create integer_constant_retrieval_functions.make (10)
-			create pixmap_constant_set_procedures.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create integer_interval_constant_retrieval_functions.make (10)
-			create integer_interval_constant_set_procedures.make (10)
-			create font_constant_set_procedures.make (10)
-			create font_constant_retrieval_functions.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create color_constant_set_procedures.make (10)
-			create color_constant_retrieval_functions.make (10)
+
 			l_ev_horizontal_box_1.disable_item_expand (apply_button)
 			l_ev_horizontal_box_1.disable_item_expand (refresh_button)
 			apply_button.set_text ("Apply Changes")
@@ -172,9 +124,9 @@ feature {NONE}-- Initialization
 			existing_contents_frame.set_text ("Existing Contents")
 			disable_item_expand (l_ev_horizontal_box_1)
 			disable_item_expand (l_ev_frame_1)
-			
+
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 			apply_button.select_actions.extend (agent on_apply)
 			refresh_button.select_actions.extend (agent refresh)
@@ -224,75 +176,75 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	on_apply
 			-- Called by `select_actions' of `apply_button'.
 		deferred
 		end
-	
+
 	refresh
 			-- Called by `select_actions' of `refresh_button'.
 		deferred
 		end
-	
+
 	type_editor_radio_button_selected
 			-- Called by `select_actions' of `type_editor_radio_button'.
 		deferred
 		end
-	
+
 	type_tool_radio_button_selected
 			-- Called by `select_actions' of `type_tool_radio_button'.
 		deferred
 		end
-	
+
 	type_place_holder_radio_button_selected
 			-- Called by `select_actions' of `type_place_holder_radio_button'.
 		deferred
 		end
-	
+
 	on_top_radio_button_selected
 			-- Called by `select_actions' of `top_radio_button'.
 		deferred
 		end
-	
+
 	on_tab_with_radio_button_selected
 			-- Called by `select_actions' of `tab_with_radio_button'.
 		deferred
 		end
-	
+
 	on_relative_radio_button_selected
 			-- Called by `select_actions' of `relative_radio_button'.
 		deferred
 		end
-	
+
 	on_auto_hide_radio_button_selected
 			-- Called by `select_actions' of `auto_hide_radio_button'.
 		deferred
 		end
-	
+
 	on_float_radio_button_selected
 			-- Called by `select_actions' of `float_radio_button'.
 		deferred
 		end
-	
+
 	on_default_editor_button_selected
 			-- Called by `select_actions' of `default_editor_radio_button'.
 		deferred
 		end
-	
-	
+
+
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: STRING_GENERAL
+			s: detachable STRING_GENERAL
 		do
 			from
 				string_constant_set_procedures.start
@@ -301,11 +253,12 @@ feature {NONE} -- Constant setting
 			loop
 				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
 				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
+				check s /= Void end -- Implied by design of EiffelBuild
 				string_constant_set_procedures.item.call ([s])
 				string_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
@@ -341,12 +294,12 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
 		local
-			p: EV_PIXMAP
+			p: detachable EV_PIXMAP
 		do
 			from
 				pixmap_constant_set_procedures.start
@@ -355,16 +308,17 @@ feature {NONE} -- Constant setting
 			loop
 				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
 				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
+				check p /= Void end -- Implied by design of EiffelBuild
 				pixmap_constant_set_procedures.item.call ([p])
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
 		local
-			f: EV_FONT
+			f: detachable EV_FONT
 		do
 			from
 				font_constant_set_procedures.start
@@ -373,16 +327,17 @@ feature {NONE} -- Constant setting
 			loop
 				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
+				check f /= Void end -- Implied by design of EiffelBuild
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
-		
+
 	set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
 		local
-			c: EV_COLOR
+			c: detachable EV_COLOR
 		do
 			from
 				color_constant_set_procedures.start
@@ -391,11 +346,12 @@ feature {NONE} -- Constant setting
 			loop
 				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
 				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
+				check c /= Void end -- Implied by design of EiffelBuild
 				color_constant_set_procedures.item.call ([c])
 				color_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
@@ -406,7 +362,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_GENERAL]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
@@ -419,7 +375,7 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
+
 	integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.

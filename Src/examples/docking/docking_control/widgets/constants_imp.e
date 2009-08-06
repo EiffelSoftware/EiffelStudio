@@ -100,8 +100,12 @@ feature -- Access
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant (a_name)
+		local
+			l_result: detachable like string_constant_by_name
 		do
-			Result := (all_constants.item (a_name)).twin
+			l_result := all_constants.item (a_name)
+			check l_result /= Void end -- Implied by design of EiffelBuild
+			Result := l_result.twin
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -114,8 +118,12 @@ feature -- Access
 			has_constant (a_name)
 		local
 			l_string: STRING
+			l_item: detachable STRING
 		do
-			l_string := (all_constants.item (a_name)).twin
+			l_item := all_constants.item (a_name)
+			check l_item /= Void end -- Implied by design of EiffelBuild
+			
+			l_string := l_item.twin
 			check
 				is_integer: l_string.is_integer
 			end

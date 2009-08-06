@@ -139,6 +139,14 @@ feature -- Element change
 			Result := "line: " + a_line_row.line.out + " row: " + a_line_row.row.out
 		end
 
+	longest_match_debug: STRING
+			-- Formats the line/row information of the longest match
+		do
+			Result := format_debug (left_to_parse.debug_information_with_index (left_to_parse.longest_match.count))
+		ensure
+			Result_attached_and_not_empty: attached Result and then not Result.is_empty
+		end
+
 	out: STRING
 			-- <Precursor>
 		do

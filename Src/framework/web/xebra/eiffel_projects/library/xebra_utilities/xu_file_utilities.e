@@ -423,5 +423,40 @@ feature -- Basic Opertaions
 				end
 			end
 		end
+
+	absolute_path (a_path: attached READABLE_STRING_GENERAL; a_compact: BOOLEAN): attached STRING
+			-- Creates an absolute compacted path (provided the path could be compacted).
+			--
+			-- `a_path': The source path to convert to an absolute path.
+			-- `a_compact': True to reduce current and parent directory path parts.
+			-- `Result': The absolute, compacted path.
+		local
+				l_path: FILE_NAME
+				l_path_string: STRING
+				l_env: ENVIRONMENT_ACCESS
+		do
+			l_path_string := a_path.out
+			if l_path_string.starts_with (".") then
+				create l_env
+				create l_path.make_from_string (l_env.current_working_directory)
+				l_path.extend (l_path_string.substring (2, l_path_string.count))
+
+
+
+
+				-- Vielleciht brauchst du das
+				if {PLATFORM}.is_windows then
+					Result := "\"
+				else
+					Result := "/"
+				end
+
+				-- Oder besser:
+				-- Am schluss machst du create {FILE_NAME} Result.make_from_String (...) und gibts FILE_NAME zuerueck anstatt STRING
+				-- Dann tuts automatisch / in \ umwandeln auf windwos...
+
+			end
+			Result := a_path.out
+		end
 end
 

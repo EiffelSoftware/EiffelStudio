@@ -1880,19 +1880,16 @@ feature -- Signature instantiation
 			old_type, new_type: TYPE_A
 			l_arguments: like arguments
 		do
+			Result := Current
 				-- Instantiation of the type
 			old_type := type
 			new_type := old_type.instantiated_in (parent_type)
 			if new_type /= old_type then
-				Result := duplicate
+				Result := twin
 				Result.set_type (new_type, assigner_name_id)
-
-					-- Set arguments to that of `Result'
-				l_arguments := Result.arguments
-			else
-					-- Use `Current' arguments.
-				l_arguments := arguments
 			end
+				-- Use `Current' arguments.
+			l_arguments := arguments
 				-- Instantiation of the arguments
 			from
 				i := 1
@@ -1905,17 +1902,16 @@ feature -- Signature instantiation
 				old_type := l_arguments.i_th (i)
 				new_type := old_type.instantiated_in (parent_type)
 				if old_type /= new_type then
-					if Result = Void then
-						Result := duplicate
+					if Result.arguments = arguments then
+						if Result = Current then
+							Result := twin
+						end
+						Result.set_arguments (arguments.twin)
 						l_arguments := Result.arguments
 					end
 					l_arguments.put_i_th (new_type, i)
 				end
 				i := i + 1
-			end
-				-- If no changes have been made then we can return `Current'
-			if Result = Void then
-				Result := Current
 			end
 		end
 
@@ -1930,17 +1926,16 @@ feature -- Signature instantiation
 			l_arguments: like arguments
 			l_written_in: like written_in
 		do
+			Result := Current
 			l_written_in := written_in
 				-- Instantiation of the type
 			old_type := type
 			new_type := old_type.instantiation_in (descendant_type, l_written_in)
 			if new_type /= old_type then
-				Result := duplicate
+				Result := twin
 				Result.set_type (new_type, assigner_name_id)
-				l_arguments := Result.arguments
-			else
-				l_arguments := arguments
 			end
+			l_arguments := arguments
 
 				-- Instantiation of the arguments
 			from
@@ -1954,18 +1949,16 @@ feature -- Signature instantiation
 				old_type := l_arguments.i_th (i)
 				new_type := old_type.instantiation_in (descendant_type, l_written_in)
 				if new_type /= old_type then
-					if Result = Void then
-						Result := duplicate
+					if Result.arguments = arguments then
+						if Result = Current then
+							Result := twin
+						end
+						Result.set_arguments (arguments.twin)
 						l_arguments := Result.arguments
 					end
 					l_arguments.put_i_th (new_type, i)
 				end
 				i := i + 1
-			end
-				-- If no changes have been made then we can return `Current'
-			if Result = Void then
-					-- Return `Current' if no changes have been made.
-				Result := Current
 			end
 		end
 

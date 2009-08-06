@@ -19,7 +19,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -32,57 +32,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
-			
-				-- Create all widgets.
-			create l_ev_frame_1
-			create l_ev_vertical_box_1
-			create l_ev_horizontal_box_1
-			create l_ev_button_1
-			create l_ev_vertical_separator_1
-			create l_ev_button_2
-			create l_ev_frame_2
-			create l_ev_horizontal_box_2
-			create close_place_holder_button
-			create l_ev_frame_3
-			create l_ev_vertical_box_2
-			create l_ev_horizontal_box_3
-			create l_ev_vertical_box_3
-			create show_all_indicators_check_button
-			create show_tab_stub_text_check_button
-			create l_ev_vertical_box_4
-			create l_ev_horizontal_box_4
-			create l_ev_label_1
-			create sliding_speed_spin_button
-			create l_ev_frame_4
-			create l_ev_horizontal_box_5
-			create l_ev_label_2
-			create key_field
-			create l_ev_cell_1
-			create ctrl_check_button
-			create alt_check_button
-			create shift_check_button
-			create l_ev_frame_5
-			create l_ev_horizontal_box_6
-			create lock_editors_check_button
-			create lock_tools_check_button
-			create lock_tool_bars_check_button
-			create l_ev_frame_6
-			create l_ev_horizontal_box_7
-			create background_color_drawer
-			create l_ev_cell_2
-			create chose_color_button
-			create l_ev_frame_7
-			create l_ev_horizontal_box_8
-			create l_ev_vertical_box_5
-			create save_layout_button
-			create open_layout_button
-			create l_ev_vertical_box_6
-			create save_tool_layout_button
-			create open_tool_layout_button
-			create l_ev_vertical_box_7
-			create save_editor_layout_button
-			create open_editor_layout_button
-			
+
 				-- Build widget structure.
 			extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_vertical_box_1)
@@ -132,20 +82,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_8.extend (l_ev_vertical_box_7)
 			l_ev_vertical_box_7.extend (save_editor_layout_button)
 			l_ev_vertical_box_7.extend (open_editor_layout_button)
-			
-			create string_constant_set_procedures.make (10)
-			create string_constant_retrieval_functions.make (10)
-			create integer_constant_set_procedures.make (10)
-			create integer_constant_retrieval_functions.make (10)
-			create pixmap_constant_set_procedures.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create integer_interval_constant_retrieval_functions.make (10)
-			create integer_interval_constant_set_procedures.make (10)
-			create font_constant_set_procedures.make (10)
-			create font_constant_retrieval_functions.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create color_constant_set_procedures.make (10)
-			create color_constant_retrieval_functions.make (10)
+
 			l_ev_frame_1.set_text ("Creation")
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_button_1)
@@ -210,9 +147,9 @@ feature {NONE}-- Initialization
 			disable_item_expand (l_ev_frame_1)
 			disable_item_expand (l_ev_frame_2)
 			disable_item_expand (l_ev_frame_3)
-			
+
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 			l_ev_button_1.select_actions.extend (agent on_create_tool_content)
 			l_ev_button_2.select_actions.extend (agent on_create_editor_content)
@@ -277,125 +214,125 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	on_create_tool_content
 			-- Called by `select_actions' of `l_ev_button_1'.
 		deferred
 		end
-	
+
 	on_create_editor_content
 			-- Called by `select_actions' of `l_ev_button_2'.
 		deferred
 		end
-	
+
 	on_close_place_holder_button_selected
 			-- Called by `select_actions' of `close_place_holder_button'.
 		deferred
 		end
-	
+
 	on_show_all_indicators_check_button_selected
 			-- Called by `select_actions' of `show_all_indicators_check_button'.
 		deferred
 		end
-	
+
 	on_show_tab_stub_text_check_button_selected
 			-- Called by `select_actions' of `show_tab_stub_text_check_button'.
 		deferred
 		end
-	
+
 	on_sliding_speed_spin_button_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `sliding_speed_spin_button'.
 		deferred
 		end
-	
+
 	on_key_field_changed
 			-- Called by `change_actions' of `key_field'.
 		deferred
 		end
-	
+
 	on_ctrl_button_selected
 			-- Called by `select_actions' of `ctrl_check_button'.
 		deferred
 		end
-	
+
 	on_alt_button_selected
 			-- Called by `select_actions' of `alt_check_button'.
 		deferred
 		end
-	
+
 	on_shift_button_selected
 			-- Called by `select_actions' of `shift_check_button'.
 		deferred
 		end
-	
+
 	on_lock_editors_button_selected
 			-- Called by `select_actions' of `lock_editors_check_button'.
 		deferred
 		end
-	
+
 	on_lock_tools_button_selected
 			-- Called by `select_actions' of `lock_tools_check_button'.
 		deferred
 		end
-	
+
 	on_lock_tool_bars_button_selected
 			-- Called by `select_actions' of `lock_tool_bars_check_button'.
 		deferred
 		end
-	
+
 	on_background_color_drawer_exposed (a_x, a_y, a_width, a_height: INTEGER)
 			-- Called by `expose_actions' of `background_color_drawer'.
 		deferred
 		end
-	
+
 	on_choose_color_button_selected
 			-- Called by `select_actions' of `chose_color_button'.
 		deferred
 		end
-	
+
 	on_save_layout_button_selected
 			-- Called by `select_actions' of `save_layout_button'.
 		deferred
 		end
-	
+
 	on_open_layout_button_selected
 			-- Called by `select_actions' of `open_layout_button'.
 		deferred
 		end
-	
+
 	on_save_tool_layout_button_selected
 			-- Called by `select_actions' of `save_tool_layout_button'.
 		deferred
 		end
-	
+
 	on_open_tool_layout_button_selected
 			-- Called by `select_actions' of `open_tool_layout_button'.
 		deferred
 		end
-	
+
 	on_save_editor_layout_button_selected
 			-- Called by `select_actions' of `save_editor_layout_button'.
 		deferred
 		end
-	
+
 	on_open_editor_layout_button_selected
 			-- Called by `select_actions' of `open_editor_layout_button'.
 		deferred
 		end
-	
-	
+
+
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: STRING_GENERAL
+			s: detachable STRING_GENERAL
 		do
 			from
 				string_constant_set_procedures.start
@@ -404,11 +341,12 @@ feature {NONE} -- Constant setting
 			loop
 				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
 				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
+				check s /= Void end -- Implied by design of EiffelBuild
 				string_constant_set_procedures.item.call ([s])
 				string_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
@@ -444,12 +382,12 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
 		local
-			p: EV_PIXMAP
+			p: detachable EV_PIXMAP
 		do
 			from
 				pixmap_constant_set_procedures.start
@@ -458,16 +396,17 @@ feature {NONE} -- Constant setting
 			loop
 				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
 				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
+				check p /= Void end -- Implied by design of EiffelBuild
 				pixmap_constant_set_procedures.item.call ([p])
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
 		local
-			f: EV_FONT
+			f: detachable EV_FONT
 		do
 			from
 				font_constant_set_procedures.start
@@ -476,16 +415,17 @@ feature {NONE} -- Constant setting
 			loop
 				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
+				check f /= Void end -- Implied by design of EiffelBuild
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
-		
+
 	set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
 		local
-			c: EV_COLOR
+			c: detachable EV_COLOR
 		do
 			from
 				color_constant_set_procedures.start
@@ -494,11 +434,12 @@ feature {NONE} -- Constant setting
 			loop
 				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
 				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
+				check c /= Void end -- Implied by design of EiffelBuild
 				color_constant_set_procedures.item.call ([c])
 				color_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
@@ -509,7 +450,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_GENERAL]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
@@ -522,7 +463,7 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
+
 	integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.

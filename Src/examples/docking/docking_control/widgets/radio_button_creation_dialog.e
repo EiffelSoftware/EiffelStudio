@@ -12,8 +12,22 @@ class
 inherit
 	RADIO_BUTTON_CREATION_DIALOG_IMP
 
+create
+	make
 
 feature {NONE} -- Initialization
+
+	make
+			-- Creation method
+		do
+			create_all_widgets
+			create_all_actions
+
+			create ok_actions
+			create cancel_actions
+
+			default_create
+		end
 
 	user_initialization
 			-- Called by `initialize'.
@@ -22,15 +36,53 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			create ok_actions
-			create cancel_actions
 			close_request_actions.extend (agent destroy)
 			normal_radio_button.enable_select
 		end
 
+	create_all_widgets
+			-- Create all widgets
+		do
+			create l_ev_vertical_box_1
+			create l_ev_horizontal_box_1
+			create l_ev_vertical_box_2
+			create normal_radio_button
+			create font_radio_button
+			create width_radio_button
+			create l_ev_vertical_box_3
+			create font_frame
+			create l_ev_horizontal_box_2
+			create font_field
+			create choose_font_button
+			create width_frame
+			create width_spin_button
+			create l_ev_horizontal_box_3
+			create l_ev_cell_1
+			create ok_button
+			create cancel_button
+		end
+
+	create_all_actions
+			-- Create all actions
+		do
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
+		end
+
 feature -- Access
 
-	font: EV_FONT
+	font: detachable EV_FONT
 			-- Selected Font.
 
 	max_width: INTEGER
@@ -68,10 +120,13 @@ feature {NONE} -- Implementation
 			-- A font is selected.
 		require
 			a_dialog_not_void: a_dialog /= Void
+		local
+			l_font: EV_FONT
 		do
-			font := a_dialog.font
-			font_field.set_text (font.name)
-			font_field.set_tooltip (font.name)
+			l_font := a_dialog.font
+			font := l_font
+			font_field.set_text (l_font.name)
+			font_field.set_tooltip (l_font.name)
 		end
 
 feature {NONE} -- Implementation

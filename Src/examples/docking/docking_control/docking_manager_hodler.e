@@ -1,23 +1,24 @@
 note
-	description: "Objects that ..."
+	description: "[
+					Docking manager holder which hold an instance of {SD_DOCKING_MANAGER}
+																							]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	DOCKING_MANAGER_HODLER
 
 feature -- Access
 
 	docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager.
+			-- Docking manager
 
-	window: MAIN_WINDOW;
+	window: MAIN_WINDOW
 			-- Related window of Current
 
-note
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

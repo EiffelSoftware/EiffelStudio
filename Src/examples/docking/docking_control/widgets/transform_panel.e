@@ -27,12 +27,72 @@ feature {NONE} -- Initialization
 		require
 			a_manager_not_void: a_manager /= Void
 		do
-			default_create
 			docking_manager := a_manager
 			window := a_window
+			
+			create_all_widgets
+			create_all_actions
+
+			default_create
 		ensure
 			docking_manager_not_void: docking_manager /= Void
 			window_not_void: window /= Void
+		end
+
+	create_all_widgets
+			-- Create all widgets
+		do
+			create l_ev_horizontal_box_1
+			create apply_button
+			create refresh_button
+			create l_ev_frame_1
+			create l_ev_horizontal_box_2
+			create type_editor_radio_button
+			create type_tool_radio_button
+			create type_place_holder_radio_button
+			create l_ev_frame_2
+			create l_ev_horizontal_box_3
+			create l_ev_vertical_box_1
+			create top_radio_button
+			create tab_with_radio_button
+			create relative_radio_button
+			create auto_hide_radio_button
+			create float_radio_button
+			create default_editor_radio_button
+			create l_ev_vertical_box_2
+			create direction_frame
+			create l_ev_horizontal_box_4
+			create up_radio_button
+			create down_radio_button
+			create left_radio_button
+			create right_radio_button
+			create screen_position_frame
+			create l_ev_horizontal_box_5
+			create l_ev_label_1
+			create screen_x_button
+			create l_ev_cell_1
+			create l_ev_label_2
+			create screen_y_button
+			create existing_contents_frame
+			create existing_contents_list
+		end
+
+	create_all_actions
+			-- Create all actions
+		do
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
 		end
 
 feature {NONE} -- Initialization
@@ -63,11 +123,11 @@ feature {NONE} -- Implementation
 	on_apply
 			-- Called by `select_actions' of `apply_button'.
 		local
-			l_content: SD_CONTENT
+			l_content: detachable SD_CONTENT
 			l_warning_dialog: EV_WARNING_DIALOG
 			l_type: INTEGER
 			l_direction: INTEGER
-			l_selected_content: SD_CONTENT
+			l_selected_content: detachable SD_CONTENT
 			l_is_left: BOOLEAN
 			l_float_x, l_float_y: INTEGER
 		do
@@ -82,8 +142,8 @@ feature {NONE} -- Implementation
 					l_content.set_top (l_direction)
 				elseif relative_radio_button.is_selected then
 					l_direction := selected_direction
-					if existing_contents_list.selected_item /= Void then
-						l_selected_content ?= existing_contents_list.selected_item.data
+					if attached existing_contents_list.selected_item as l_selected_item then
+						l_selected_content ?= l_selected_item.data
 					end
 					if l_direction /= 0 and then l_selected_content /= Void and then l_selected_content.state_value /= {SD_ENUMERATION}.auto_hide then
 						l_content.set_relative (l_selected_content, l_direction)
@@ -94,8 +154,8 @@ feature {NONE} -- Implementation
 					elseif right_radio_button.is_selected then
 						l_is_left := False
 					end
-					if existing_contents_list.selected_item /= Void then
-						l_selected_content ?= existing_contents_list.selected_item.data
+					if attached existing_contents_list.selected_item as l_selected_item_2 then
+						l_selected_content ?= l_selected_item_2.data
 					end
 					if l_selected_content /= Void and then l_content.target_content_zone_parent_exist (l_selected_content) then
 						l_content.set_tab_with (l_selected_content, l_is_left)
@@ -147,10 +207,12 @@ feature {NONE} -- Implementation
 	refresh
 			-- Called by `select_actions' of `refresh_button.'
 		local
-			l_content: SD_CONTENT
+			l_content: detachable SD_CONTENT
 		do
 			l_content := docking_manager.focused_content
-			update_by_content (l_content)
+			if l_content /= Void then
+				update_by_content (l_content)
+			end
 		end
 
 	update_by_content (a_content: SD_CONTENT)

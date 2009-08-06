@@ -29,10 +29,71 @@ feature {NONE} -- Initialization
 		do
 			docking_manager := a_manager
 			window := a_window
+
+			create_all_widgets
+			create_all_actions
+
 			default_create
 		ensure
 			docking_manager_not_void: docking_manager /= Void
 			window_not_void: window /= Void
+		end
+
+	create_all_widgets
+			-- Create all widgets.
+		do
+			create l_ev_horizontal_box_1
+			create l_ev_frame_1
+			create toolbar_list
+			create l_ev_vertical_box_1
+			create l_ev_frame_2
+			create l_ev_vertical_box_2
+			create create_toolbar_button
+			create l_ev_horizontal_box_2
+			create l_ev_vertical_box_3
+			create add_button_button
+			create add_toggle_button
+			create add_radio_button
+			create add_menu_button_button
+			create l_ev_vertical_box_4
+			create add_build_in_widget_button
+			create add_resizable_button
+			create add_separator_button
+			create l_ev_frame_3
+			create l_ev_vertical_box_5
+			create l_ev_horizontal_box_3
+			create show_button
+			create hide_button
+			create close_button
+			create l_ev_horizontal_box_4
+			create set_title_button
+			create l_ev_cell_1
+			create title_field
+			create l_ev_horizontal_box_5
+			create set_top_button
+			create l_ev_cell_2
+			create up_radio_button
+			create down_radio_button
+			create left_radio_button
+			create right_radio_button
+		end
+
+	create_all_actions
+			-- Create all actions
+		do
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
 		end
 
 feature {NONE} -- Initialization
@@ -71,10 +132,10 @@ feature {NONE} -- Implementation
 			end
 	 	end
 
-	selected_content: SD_TOOL_BAR_CONTENT
+	selected_content: detachable SD_TOOL_BAR_CONTENT
 			-- Selected content
 		local
-	 		l_item: EV_LIST_ITEM
+	 		l_item: detachable EV_LIST_ITEM
 		do
 			l_item := toolbar_list.selected_item
 			if l_item /= Void then
@@ -110,7 +171,7 @@ feature {NONE} -- Implementation
 		require
 			a_item_not_void: a_item /= Void
 		local
-			l_item: SD_TOOL_BAR_BUTTON
+			l_item: detachable SD_TOOL_BAR_BUTTON
 		do
 			l_item ?= a_item
 			if l_item /= Void then
@@ -127,10 +188,14 @@ feature {NONE} -- Implementation
 			-- On button clicked.
 		require
 			a_button_not_void: a_button /= Void
+			a_button_text_not_void: a_button.text /= Void
 		local
 			l_dialog: EV_INFORMATION_DIALOG
+			l_text: detachable STRING
 		do
-			create l_dialog.make_with_text (a_button.text.as_string_32 + " was clicked.")
+			l_text := a_button.text
+			check l_text /= Void end -- Implied by precondition `a_button_text_not_void'
+			create l_dialog.make_with_text (l_text.as_string_32 + " was clicked.")
 			l_dialog.show_modal_to_window (window)
 		end
 
@@ -147,7 +212,7 @@ feature {NONE} -- Implementation
 	on_toolbar_selected
 			-- Called by `select_actions' of `toolbar_list'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 		do
 			l_content := selected_content
 			if l_content /= Void then
@@ -172,13 +237,16 @@ feature {NONE} -- Implementation
 	on_add_button_button_selected
 			-- Called by `select_actions' of `add_button_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 	 		l_button: SD_TOOL_BAR_BUTTON
+	 		l_text: STRING_32
 		do
 			l_content := selected_content
 			if l_content /= Void then
 				create l_button.make
-				l_button.set_text ("Button #" + new_widget_number.out)
+				l_text := "Button #" + new_widget_number.out
+				l_button.set_text (l_text)
+				l_button.set_name (l_text)
 				l_button.set_pixel_buffer (sd_shared.icons.close_all)
 				l_button.select_actions.extend (agent button_clicked (l_button))
 				setup_sensitivity (l_button)
@@ -189,13 +257,16 @@ feature {NONE} -- Implementation
 	on_add_toggle_button_selected
 			-- Called by `select_actions' of `add_toggle_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 	 		l_button: SD_TOOL_BAR_TOGGLE_BUTTON
+	 		l_text: STRING_32
 		do
 			l_content := selected_content
 			if l_content /= Void then
 				create l_button.make
-				l_button.set_text ("Button #" + new_widget_number.out)
+				l_text := "Button #" + new_widget_number.out
+				l_button.set_text (l_text)
+				l_button.set_name (l_text)
 				l_button.set_pixel_buffer (sd_shared.icons.close_all)
 				l_button.select_actions.extend (agent button_clicked (l_button))
 				setup_sensitivity (l_button)
@@ -206,12 +277,12 @@ feature {NONE} -- Implementation
 	on_add_radio_button_selected
 			-- Called by `select_actions' of `add_radio_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 	 		l_dialog: RADIO_BUTTON_CREATION_DIALOG
 		do
 			l_content := selected_content
 			if l_content /= Void then
-				create l_dialog
+				create l_dialog.make
 				l_dialog.ok_actions.extend (agent on_radio_button_created (l_dialog))
 				l_dialog.show_modal_to_window (window)
 			end
@@ -220,14 +291,17 @@ feature {NONE} -- Implementation
 	on_add_menu_button_button_selected
 			-- Called by `select_actions' of `add_menu_button_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 	 		l_button: SD_TOOL_BAR_MENU_ITEM
 	 		l_menu: EV_MENU
+	 		l_text: STRING_32
 		do
 			l_content := selected_content
 			if l_content /= Void then
 				create l_button.make
-				l_button.set_text ("Button #" + new_widget_number.out)
+				l_text := "Button #" + new_widget_number.out
+				l_button.set_text (l_text)
+				l_button.set_name (l_text)
 				l_button.set_pixel_buffer (sd_shared.icons.close_all)
 				l_button.select_actions.extend (agent button_clicked (l_button))
 				setup_sensitivity (l_button)
@@ -243,10 +317,11 @@ feature {NONE} -- Implementation
 		require
 			a_dialog_not_void: a_dialog /= Void
 		local
-			l_font: EV_FONT
+			l_font: detachable EV_FONT
 			l_width: INTEGER
-			l_content: SD_TOOL_BAR_CONTENT
+			l_content: detachable SD_TOOL_BAR_CONTENT
 	 		l_button: SD_TOOL_BAR_RADIO_BUTTON
+	 		l_text: STRING_32
 	 		l_f_button: SD_TOOL_BAR_FONT_BUTTON
 	 		l_w_button: SD_TOOL_BAR_WIDTH_BUTTON
 		do
@@ -254,7 +329,9 @@ feature {NONE} -- Implementation
 			if l_content /= Void then
 				if a_dialog.is_normal then
 					create l_button.make
-					l_button.set_text ("Button #" + new_widget_number.out)
+					l_text := "Button #" + new_widget_number.out
+					l_button.set_text (l_text)
+					l_button.set_name (l_text)
 					l_button.set_pixel_buffer (sd_shared.icons.close_all)
 					l_button.select_actions.extend (agent button_clicked (l_button))
 					setup_sensitivity (l_button)
@@ -286,13 +363,13 @@ feature {NONE} -- Implementation
 	on_add_build_in_widget_button_selected
 			-- Called by `select_actions' of `add_build_in_widget_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 	 		l_widget: MINI_TOOL_BAR
 	 		l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
 			l_content := selected_content
 			if l_content /= Void then
-				create l_widget
+				create l_widget.make
 				create l_widget_item.make (l_widget)
 				l_content.items.extend (l_widget_item)
 			end
@@ -301,13 +378,13 @@ feature {NONE} -- Implementation
 	on_add_resizable_button_selected
 			-- Called by `select_actions' of `add_resizable_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 	 		l_widget: MINI_TOOL_BAR
 	 		l_widget_item: SD_TOOL_BAR_RESIZABLE_ITEM
 		do
 			l_content := selected_content
 			if l_content /= Void then
-				create l_widget
+				create l_widget.make
 				create l_widget_item.make (l_widget)
 				l_content.items.extend (l_widget_item)
 			end
@@ -316,7 +393,7 @@ feature {NONE} -- Implementation
 	on_add_separator_button_selected
 			-- Called by `select_actions' of `add_separator_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 	 		l_sep: SD_TOOL_BAR_SEPARATOR
 		do
 			l_content := selected_content
@@ -330,7 +407,7 @@ feature {NONE} -- Implementation
 	on_show_button_selected
 			-- Called by `select_actions' of `show_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 		do
 			l_content := selected_content
 			if l_content /= Void then
@@ -341,7 +418,7 @@ feature {NONE} -- Implementation
 	on_hide_button_selected
 			-- Called by `select_actions' of `hide_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 		do
 			l_content := selected_content
 			if l_content /= Void then
@@ -352,7 +429,7 @@ feature {NONE} -- Implementation
 	on_close_button_selected
 			-- Called by `select_actions' of `close_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 		do
 			l_content := selected_content
 			if l_content /= Void then
@@ -363,7 +440,7 @@ feature {NONE} -- Implementation
 	on_set_title_button_selected
 			-- Called by `select_actions' of `set_title_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 		do
 			l_content := selected_content
 			if l_content /= Void then
@@ -375,7 +452,7 @@ feature {NONE} -- Implementation
 	on_set_top_button_selected
 			-- Called by `select_actions' of `set_top_button'.
 		local
-	 		l_content: SD_TOOL_BAR_CONTENT
+	 		l_content: detachable SD_TOOL_BAR_CONTENT
 	 		l_direction: INTEGER
 		do
 			l_content := selected_content

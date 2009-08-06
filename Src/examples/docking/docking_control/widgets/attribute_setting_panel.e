@@ -27,9 +27,13 @@ feature {NONE} -- Initialization
 		require
 			a_manager_not_void: a_manager /= Void
 		do
-			default_create
 			docking_manager := a_manager
 			window := a_window
+
+			create_all_widgets
+			create_all_actions
+
+			default_create
 		ensure
 			docking_manager_not_void: docking_manager /= Void
 			window_not_void: window /= Void
@@ -45,12 +49,79 @@ feature {NONE} -- Initialization
 --			pixmap_radio_button.enable_select
 		end
 
+	create_all_widgets
+			-- Create all widgets
+		do
+			create l_ev_frame_1
+			create l_ev_horizontal_box_1
+			create apply_button
+			create l_ev_button_1
+			create l_ev_cell_1
+			create l_ev_button_2
+			create l_ev_button_3
+			create l_ev_button_4
+			create l_ev_horizontal_separator_1
+			create l_ev_horizontal_box_2
+			create l_ev_label_1
+			create short_title_field
+			create l_ev_horizontal_separator_2
+			create l_ev_horizontal_box_3
+			create l_ev_label_2
+			create long_title_field
+			create l_ev_horizontal_separator_3
+			create l_ev_horizontal_box_4
+			create l_ev_label_3
+			create tab_tooltip_field
+			create l_ev_horizontal_separator_4
+			create l_ev_horizontal_box_5
+			create l_ev_label_4
+			create description_field
+			create l_ev_horizontal_separator_5
+			create l_ev_horizontal_box_6
+			create l_ev_label_5
+			create detail_field
+			create l_ev_horizontal_separator_6
+			create l_ev_frame_2
+			create l_ev_vertical_box_1
+			create l_ev_horizontal_box_7
+			create pixmap_radio_button
+			create pixel_buffer_radio_button
+			create l_ev_horizontal_box_8
+			create l_ev_label_6
+			create pixmap_field
+			create browse_pixmap_button
+			create l_ev_horizontal_box_9
+			create l_ev_label_7
+			create pixel_buffer_field
+			create browse_pixel_buffer_button
+			create l_ev_frame_3
+			create mini_toolbar_check_button
+		end
+
+	create_all_actions
+			-- Create all actions
+		do
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
+		end
+
 feature {NONE} -- Show/Close/Hide content
 
 	close_focused_content (a_hide: BOOLEAN)
 			-- Show focused content.
 		local
-			l_content: SD_CONTENT
+			l_content: detachable SD_CONTENT
 		do
 			l_content := docking_manager.focused_content
 			if l_content /= Void then
@@ -92,9 +163,25 @@ feature -- Element Change
 		do
 			short_title_field.set_text (a_content.short_title)
 			long_title_field.set_text (a_content.long_title)
-			tab_tooltip_field.set_text (a_content.tab_tooltip)
-			detail_field.set_text (a_content.detail)
-			description_field.set_text (a_content.description)
+
+			if attached a_content.tab_tooltip as l_tooltip then
+				tab_tooltip_field.set_text (l_tooltip)
+			else
+				tab_tooltip_field.set_text ("")
+			end
+
+			if attached a_content.detail as l_detail then
+				detail_field.set_text (l_detail)
+			else
+				detail_field.set_text ("")
+			end
+
+			if attached a_content.description as l_description then
+				description_field.set_text (l_description)
+			else
+				description_field.set_text ("")
+			end
+
 			if a_content.mini_toolbar /= Void then
 				mini_toolbar_check_button.enable_select
 			else
@@ -147,7 +234,7 @@ feature {NONE} -- Implementation
 	refresh
 			-- Called by `select_actions' of l_ev_button_1.
 		local
-			l_content: SD_CONTENT
+			l_content: detachable SD_CONTENT
 		do
 			l_content := docking_manager.focused_content
 			if l_content /= Void then
@@ -158,7 +245,7 @@ feature {NONE} -- Implementation
 	on_apply
 			-- Called by `select_actions' of `apply_button'.
 		local
-			l_content: SD_CONTENT
+			l_content: detachable SD_CONTENT
 			l_warning_dialog: EV_WARNING_DIALOG
 			l_pixmap: EV_PIXMAP
 			l_pixel_buffer: EV_PIXEL_BUFFER
@@ -193,7 +280,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if is_mini_tool_bar_enabled then
-					l_content.set_mini_toolbar (create {MINI_TOOL_BAR})
+					l_content.set_mini_toolbar (create {MINI_TOOL_BAR}.make)
 				else
 						-- No way to remove.
 				end

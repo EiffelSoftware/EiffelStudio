@@ -1705,7 +1705,11 @@ end;
 				-- adapted export status specified in inheritance clause
 			l_old_export_status := inherit_info.a_feature.export_status
 			l_export_status := inherit_feat.exports (inherit_info.a_feature.feature_name_id)
-			if l_old_export_status /= l_export_status then
+			if
+				l_old_export_status /= l_export_status
+				and then not (l_old_export_status.is_all and l_export_status.is_all)
+				and then not (l_old_export_status.is_none and l_export_status.is_none)
+			then
 				inherit_info.copy_a_feature_for_feature_table
 				inherit_info.a_feature.set_export_status (l_export_status)
 			end

@@ -1,0 +1,23 @@
+{
+	"name": "support",
+	"port": "55012",
+	"host": "localhost",
+	"taglibs": 
+	[
+		{ 
+			"name": "xebra_taglibrary_base",
+			"ecf":  "xebra_taglibrary_form-safe.ecf",
+			"path": "$XEBRA_LIBRARY\xebra_taglibrary_base"
+		},
+		{
+			"name": "xebra_taglibrary_form",
+			"ecf":  "xebra_taglibrary_form-voidunsafe.ecf",
+			"path": "$XEBRA_LIBRARY\xebra_taglibrary_form"
+		},
+		{
+			"name": "xebra_taglibrary_efa",
+			"ecf":  "xebra_taglibrary_efa-voidunsafe.ecf",
+			"path": "$XEBRA_LIBRARY\xebra_taglibrary_efa"
+		}
+	]
+}

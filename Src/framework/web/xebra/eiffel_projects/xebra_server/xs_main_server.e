@@ -43,7 +43,7 @@ feature {NONE} -- Access
 
 feature -- Constants
 
-	Name: STRING = "XEBSRV"
+	Name: STRING = "XS"
 
 feature {XS_APPLICATION} -- Setup
 
@@ -336,16 +336,15 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
-			l_webapp_finder: XS_WEBAPP_FINDER
 			l_config_reader: XS_JSON_CONFIG_READER
 		do
 			o.iprint ("Reading config...")
+			create l_webapp_handler
 			Result := create {XCCR_CONFIG_ERROR}
 			create l_config_reader
 			if attached {XS_FILE_CONFIG} l_config_reader.process_file (config.args.config_filename) as l_config then
 				config.file := l_config
-				create l_webapp_finder
-				config.file.set_webapps (l_webapp_finder.search_webapps (config.file.webapps_root))
+				config.file.set_webapps (l_webapp_handler.search_webapps (config.file.webapps_root))
 				o.dprint (config.file.print_configuration, 2)
 			end
 

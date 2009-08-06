@@ -33,7 +33,7 @@ feature -- Status Change
 feature  -- Basic Operations
 
 	forward_request (a_request_message: STRING): XC_COMMAND_RESPONSE
-			-- Does the stuff. I don't bother writing much here, it's going to change tomorrow anyway....
+			-- Creates a temp request object from the request message, validates it and sends the request message to the appropriate webapplication
 		local
 			l_response: XH_RESPONSE
 			l_request_parser: XH_REQUEST_MINI_PARSER
@@ -55,5 +55,41 @@ feature  -- Basic Operations
             else
             	Result := (create {XER_CANNOT_DECODE}.make ("")).render_to_command_response
             end
+		end
+
+	search_webapps (a_path: STRING): HASH_TABLE [XS_WEBAPP, STRING]
+			-- Traverses folders to find config files which define webapps
+		require
+			not_a_path_is_detached_or_empty: a_path /= Void and then not a_path.is_empty
+		local
+			l_files: LIST [STRING]
+			l_f_utils: XU_FILE_UTILITIES
+			l_webapp_config_reader: XC_WEBAPP_JSON_CONFIG_READER
+			l_ex: LINKED_LIST [STRING]
+			l_inc: LINKED_LIST [STRING]
+		do
+			create l_ex.make
+			create l_inc.make
+			l_ex.force ("EIFGENs")
+			l_ex.force (".svn")
+			l_inc.force ({XU_CONSTANTS}.Webapp_config_file)
+			create Result.make (1)
+			create l_f_utils
+			create l_webapp_config_reader
+
+			l_files := l_f_utils.scan_for_files (a_path, -1, l_inc, l_ex)
+			from
+				l_files.start
+			until
+				l_files.after
+			loop
+				if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (l_files.item_for_iteration) as l_w then
+					Result.force (create {XS_WEBAPP}.make (l_w), l_w.name)
+				end
+
+				l_files.forth
+			end
+		ensure
+			Result_attached: Result /= Void
 		end
 end

@@ -8,9 +8,9 @@
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
 		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile-safe.ecf"/>
-		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="ejson" location="$EIFFEL_SRC\contrib\library\ejson\json-safe.ecf"/>
+		<library name="ejson" location="$EIFFEL_SRC\contrib\library\ejson\json-safe.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
@@ -20,10 +20,10 @@
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="thread_utilities" location="$XEBRA_LIBRARY\thread_utilities\thread_utilities-safe.ecf"/>
 		<library name="xebra_common" location="$XEBRA_LIBRARY\xebra_common\xebra_common-safe.ecf" readonly="false"/>
-		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-safe.ecf"/>
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-safe.ecf" readonly="false"/>
 		<library name="xebra_error_responses" location="$XEBRA_LIBRARY\xebra_error_responses\xebra_error_responses-safe.ecf" readonly="false"/>
 		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-safe.ecf" readonly="false"/>
-		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-safe.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-safe.ecf" readonly="false"/>
 		<cluster name="xebra_server" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

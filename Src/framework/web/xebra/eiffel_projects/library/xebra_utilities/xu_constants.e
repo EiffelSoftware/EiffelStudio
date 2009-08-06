@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {XU_CONSTANTS}."
+	description: "[
+		no comment yet
+	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
 	date: "$Date$"
@@ -7,6 +9,11 @@ note
 
 class
 	XU_CONSTANTS
+
+
+feature -- Files
+
+	Webapp_config_file: STRING = "config.wapp"
 
 feature -- Env vars
 

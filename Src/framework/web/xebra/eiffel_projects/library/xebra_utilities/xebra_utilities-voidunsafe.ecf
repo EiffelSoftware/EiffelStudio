@@ -12,6 +12,7 @@
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="ejson" location="$EIFFEL_SRC\contrib\library\ejson\json.ecf"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types.ecf" readonly="false"/>
 		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>

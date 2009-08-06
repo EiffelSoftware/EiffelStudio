@@ -27,7 +27,11 @@ feature {NONE} -- Initialization
 			a_registry_attached: attached a_registry
 		do
 			create {ARRAYED_LIST [XGEN_SERVLET_GENERATOR_GENERATOR]} servlet_generator_generators.make (10)
-			taglibs := a_registry.taglib_configuration
+			if attached a_registry.taglib_configuration as l_taglib_conf then
+				taglibs := 	l_taglib_conf
+			else
+				create {ARRAYED_LIST [TUPLE [name, ecf, path: STRING]]} taglibs.make (0)
+			end
 		ensure
 			servlet_generator_generators_attached: attached servlet_generator_generators
 		end
@@ -246,7 +250,6 @@ feature -- Constants
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 ]"
 
 	servlet_gen_ecf_postfix: STRING

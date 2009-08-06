@@ -13,6 +13,9 @@ class
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 
+create
+	make
+
 feature -- Initialization
 
 	make

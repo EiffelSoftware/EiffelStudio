@@ -45,7 +45,7 @@ feature -- Operation
 		do
 			o.set_name ("XT")
 			o.set_debug_level (a_arg_parser.debug_level)
-			config.set_xebra_library_path (a_arg_parser.lib_path)
+			config.set_xebra_library_path (a_arg_parser.lib_path.out)
 			create l_translator.make (a_arg_parser.project_name, a_arg_parser.force)
 			create l_dir.make_from_string (a_arg_parser.input_path)
 			l_generation_file_name := l_dir.twin

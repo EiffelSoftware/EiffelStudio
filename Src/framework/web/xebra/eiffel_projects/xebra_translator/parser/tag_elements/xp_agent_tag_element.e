@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make_with_additional_arguments (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING; a_attribute_handler: PROCEDURE [ANY, TUPLE [STRING, XP_TAG_ARGUMENT]])
+	make_with_additional_arguments (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING; a_attribute_handler: detachable PROCEDURE [ANY, TUPLE [STRING, XP_TAG_ARGUMENT]])
 			-- <Precursor>
 			-- `a_attribute_handler': Handles attributes passed to this tag
 		require
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature {XP_TAG_ELEMENT}  -- Access
 
-		attribute_handler: PROCEDURE [ANY, TUPLE [STRING, XP_TAG_ARGUMENT]]
+		attribute_handler: detachable PROCEDURE [ANY, TUPLE [STRING, XP_TAG_ARGUMENT]]
 				-- Handles the incoming attributes
 
 feature -- Access
@@ -55,9 +55,12 @@ feature -- Access
 				a_local_part_attached: a_local_part /= Void
 			do
 				Precursor  (a_local_part, a_value)
-				attribute_handler.call ([a_local_part, a_value])
+				if attached attribute_handler as l_attribute_handler then
+					l_attribute_handler.call ([a_local_part, a_value])
+				end
 			end
 
 invariant
 	attribute_handler_attached: attached attribute_handler
+	
 end

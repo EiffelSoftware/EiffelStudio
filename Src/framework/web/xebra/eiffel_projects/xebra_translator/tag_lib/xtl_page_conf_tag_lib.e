@@ -38,10 +38,18 @@ feature -- Initialization
 			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "define_region")
 			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "include")
 			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (0), "fragment")
-			allowed_tags ["controller"].extend ("class")
-			allowed_tags ["declare_region"].extend ("id")
-			allowed_tags ["define_region"].extend ("id")
-			allowed_tags ["include"].extend ("template")
+			if attached allowed_tags ["controller"] as l_controller then
+				l_controller.extend ("class")
+			end
+			if attached allowed_tags ["declare_region"] as l_declare_region then
+				l_declare_region.extend ("id")
+			end
+			if attached allowed_tags ["define_region"] as l_allowed_tags then
+				l_allowed_tags.extend ("id")
+			end
+			if attached allowed_tags ["include"] as l_include then
+				l_include.extend ("template")
+			end
 		ensure
 			id_attached: attached id
 		end
@@ -51,7 +59,7 @@ feature {NONE} -- Access
 	allowed_tags: HASH_TABLE [ARRAYED_LIST [STRING], STRING]
 			-- All the tag names which are allowed
 
-	xeb_parser: XT_XEB_PARSER assign set_parser
+	xeb_parser: detachable XT_XEB_PARSER assign set_parser
 			-- The xeb parser.
 
 feature -- Access
@@ -68,15 +76,23 @@ feature -- Access
 			if a_local_part.is_equal ("controller") then
 				create {XP_AGENT_TAG_ELEMENT} Result.make_with_additional_arguments (a_prefix, a_local_part, a_class_name, a_debug_information, agent handle_controller_attribute)
 			elseif a_local_part.is_equal ("template") then
-				xeb_parser.deactivate_render
+				if attached xeb_parser as l_xeb_parser then
+					l_xeb_parser.deactivate_render
+				end
 				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal ("declare_region") then
-				xeb_parser.deactivate_render
+				if attached xeb_parser as l_xeb_parser then
+					l_xeb_parser.deactivate_render
+				end
+
 				create {XP_REGION_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal ("include") then
 				create {XP_INCLUDE_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal ("fragment") then
-				xeb_parser.deactivate_render
+				if attached xeb_parser as l_xeb_parser then
+					l_xeb_parser.deactivate_render
+				end
+				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			else
 				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			end
@@ -131,7 +147,9 @@ feature -- Access
 			-- Handles attribute reading while parsing
 		do
 			if a_id.is_equal ("class") then
-				xeb_parser.put_class_name (a_value.value)
+				if attached xeb_parser as l_xeb_parser then
+					l_xeb_parser.put_class_name (a_value.value)
+				end
 			end
 		end
 

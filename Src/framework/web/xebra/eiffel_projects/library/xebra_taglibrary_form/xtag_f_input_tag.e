@@ -29,7 +29,7 @@ feature -- Initialization
 			Precursor
 			create {XTAG_TAG_VALUE_ARGUMENT} text.make_default
 			create {XTAG_TAG_VALUE_ARGUMENT} size.make ("20")
-			create {XTAG_TAG_VALUE_ARGUMENT} input_type.make ("input")
+			create {XTAG_TAG_VALUE_ARGUMENT} input_type.make ("text")
 		ensure then
 			text_attached: attached text
 			size_attached: attached size

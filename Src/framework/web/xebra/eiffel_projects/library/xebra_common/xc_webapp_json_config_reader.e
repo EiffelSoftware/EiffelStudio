@@ -94,7 +94,7 @@ feature -- Processing
 
 								-- Check taglib path
 							if attached {JSON_STRING} l_ti.map_representation [create {JSON_STRING}.make_json (tl_path_name)] as l_ti_i then
-								l_buf_tl_ecf := l_ti_i.item
+								l_buf_tl_path := l_ti_i.item
 							else
 								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_path_name + " in " + taglibs_name), false)
 							end

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			create port.make_empty
 			create host.make_empty
 			create arg_config.make_empty
-			create taglibs.make
+			create {ARRAYED_LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]} taglibs.make (3)
 		ensure then
 			arg_config_attached: arg_config /= Void
 			name_attached: name /= Void
@@ -42,7 +42,7 @@ feature -- Access
 	port: SETTABLE_INTEGER assign set_port
 		-- The port on which the application listens.
 
-	taglibs: LINKED_LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]
+	taglibs: LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]
 		-- Specifies the taglibs the webapp is using.
 
 	arg_config: XC_WEBAPP_ARG_CONFIG

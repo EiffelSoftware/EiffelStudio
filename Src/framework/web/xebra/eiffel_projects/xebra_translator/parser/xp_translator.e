@@ -209,10 +209,12 @@ feature -- Processing
 			l_util: XU_FILE_UTILITIES
 		do
 			create l_util
-			l_output_path := l_util.absolute_path (output_path.out, True)
-			l_file_name := l_util.absolute_path (a_file_name.out, True)
-			check not l_output_path.starts_with ("..") and not l_output_path.starts_with (".") end
-			check not l_file_name.starts_with ("..") and not l_file_name.starts_with (".") end
+--			l_output_path := l_util.absolute_path (output_path.out, True)
+--			l_file_name := l_util.absolute_path (a_file_name.out, True)
+			l_output_path := output_path.out
+			l_file_name := a_file_name.out
+			--check not l_output_path.starts_with ("..") and not l_output_path.starts_with (".") end
+			--check not l_file_name.starts_with ("..") and not l_file_name.starts_with (".") end
 			from
 				l_i := 1
 			until

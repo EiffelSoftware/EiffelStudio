@@ -77,7 +77,7 @@ feature {NONE} -- Internal
 			members, object, wso,
 			true_kw, false_kw, null_kw: PEG_ABSTRACT_PEG
 		once
-			wso := whitespace.optional
+			wso := whitespaces.optional
 			e_c := char ('e')
 			e_cc := char ('E')
 			true_kw := stringp ("true")

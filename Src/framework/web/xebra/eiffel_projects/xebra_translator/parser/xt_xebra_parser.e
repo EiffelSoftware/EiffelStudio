@@ -13,6 +13,8 @@ class
 inherit
 	ERROR_SHARED_MULTI_ERROR_MANAGER
 
+	PEG_FACTORY
+
 create
 	make
 
@@ -21,31 +23,6 @@ feature -- Initialization
 	make
 			-- Initialize parsers
 		do
-			digit := 		range ('0', '9')
-			upper_case := 	range ('A', 'Z')
-			lower_case := 	range ('a', 'z')
-			space := 		char (' ')
-			tab := 			char ('%T')
-			newline := 		char ('%N')
-			return := 		char ('%R')
-			feed := 		char ('%F')
-			quote :=  		char ('%"')
-			equals := 		char ('=')
-			open :=   		char ('<')
-			close :=  		char ('>')
-			slash :=  		char ('/')
-			colon := 		char (':')
-			dot := 			char ('.')
-			open_curly := 	char ('{')
-			close_curly :=	char ('}')
-			percent := 		char ('%%')
-			sharp := 		char ('#')
-			exclamation := 	char ('!')
-			any_char := create {PEG_ANY}.make
-			any_char.ommit_result
-			eof := any_char.negate
-			underscore := char ('_')
-			hyphen := char ('-')
 				-- A common identifier. Will put the identifier {STRING} on the stack
 			identifier_prefix := (lower_case | upper_case | hyphen | underscore)
 			identifier_prefix.fixate
@@ -55,44 +32,17 @@ feature -- Initialization
 			identifier.set_name ("identifier")
 
 				-- XML comments
-			comment := chars_without_ommit ("<!--") + (-(chars("-->").negate + any_char)) + chars_without_ommit ("-->")
+			comment := rstringp ("<!--") + (-(stringp("-->").negate + rany)) + rstringp ("-->")
 			comment.set_behaviour (agent concatenate_results)
 			comment.set_name ("comment")
 
-				-- Whitespace: Eats all the whitespace until something else appears
-			ws := create {PEG_WHITE_SPACE_CHARACTER}.make
-			ws.ommit_result
-			ws := +ws
-			ws.set_name ("whitespaces")
+			open := char ('<')
+			close := char ('>')
 
 			source_path := "No source path specified"
 		end
 
 feature {XT_XEBRA_PARSER} -- Access
-
-	digit: PEG_ABSTRACT_PEG
-	upper_case: PEG_ABSTRACT_PEG
-	lower_case: PEG_ABSTRACT_PEG
-	space: PEG_ABSTRACT_PEG
-	tab: PEG_ABSTRACT_PEG
-	newline: PEG_ABSTRACT_PEG
-	return: PEG_ABSTRACT_PEG
-	feed: PEG_ABSTRACT_PEG
-	quote: PEG_ABSTRACT_PEG
-	equals: PEG_ABSTRACT_PEG
-	open: PEG_ABSTRACT_PEG
-	close: PEG_ABSTRACT_PEG
-	slash: PEG_ABSTRACT_PEG
-	colon: PEG_ABSTRACT_PEG
-	dot: PEG_ABSTRACT_PEG
-	open_curly: PEG_ABSTRACT_PEG
-	close_curly: PEG_ABSTRACT_PEG
-	percent: PEG_ABSTRACT_PEG
-	sharp: PEG_ABSTRACT_PEG
-	exclamation: PEG_ABSTRACT_PEG
-	any_char: PEG_ABSTRACT_PEG
-	eof: PEG_ABSTRACT_PEG
-	underscore, hyphen, identifier, identifier_prefix, comment, ws: PEG_ABSTRACT_PEG
 
 	source_path: STRING
 			-- The path to the original file
@@ -110,60 +60,6 @@ feature -- Access
 		end
 
 feature {NONE} -- Convenience
-
-	range (a_first_char, a_last_char: CHARACTER): PEG_RANGE
-			-- Builds an ommiter {PEG_CHARACTER} (doesn't put any characters to the result list)
-		require
-			a_first_char_attached: attached a_first_char
-			a_last_char_attached: attached a_last_char
-		do
-			create Result.make_with_range (a_first_char, a_last_char)
-			Result.ommit_result
-		ensure
-			Result_attached: attached Result
-		end
-
-	char (a_character: CHARACTER): PEG_CHARACTER
-			-- Builds an ommiter {PEG_CHARACTER} (doesn't put any characters to the result list)
-		require
-			a_character_attached: attached a_character
-		do
-			create Result.make_with_character (a_character)
-			Result.ommit_result
-		ensure
-			Result_attached: attached result
-		end
-
-	rchar (a_character: CHARACTER): PEG_CHARACTER
-			-- Builds an ommiter {PEG_CHARACTER} (doesn't put any characters to the result list)
-		require
-			a_character_attached: attached a_character
-		do
-			create Result.make_with_character (a_character)
-		ensure
-			Result_attached: attached result
-		end
-
-	chars (a_string: STRING): PEG_SEQUENCE
-			-- Creates a parser which parses the `a_string'
-		require
-			a_string_attached: attached a_string
-			a_string_not_empty: not a_string.is_empty
-		local
-			l_i: INTEGER
-		do
-			create Result.make
-			from
-				l_i := 1
-			until
-				l_i > a_string.count
-			loop
-				Result := Result + char (a_string [l_i])
-				l_i := l_i + 1
-			end
-		ensure
-			Result_attached: attached Result
-		end
 
 	chars_without_ommit (a_string: STRING): PEG_SEQUENCE
 			-- Creates a parser which parses the `a_string'
@@ -186,22 +82,17 @@ feature {NONE} -- Convenience
 			Result_attached: attached Result
 		end
 
-	format_debug (a_line_row: TUPLE [line: INTEGER; row: INTEGER]): STRING
-			-- Formats the line/row information
-		require
-			a_line_row_attached: attached a_line_row
-		do
-			Result := "line: " + a_line_row.line.out + " row: " + a_line_row.row.out + " of file: " + source_path
-		ensure
-			Result_attached_and_not_empty: attached Result and then not Result.is_empty
-		end
-
 	add_parse_error (a_message: STRING)
 			-- Adds a parse error to the error maanager
 		do
 			error_manager.add_error (create {XERROR_PARSE}.make
 				([a_message]), False)
 		end
+
+feature {XT_XEBRA_PARSER}
+
+	identifier, comment, open, close, identifier_prefix: PEG_ABSTRACT_PEG
+			-- A xml identifier
 
 feature {XT_XEBRA_PARSER} -- Behaviours
 

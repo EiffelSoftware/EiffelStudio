@@ -37,22 +37,22 @@ feature {NONE} -- Access
 			l_taglib, l_tag, l_tags, l_attribute,
 			value, plain_text: PEG_ABSTRACT_PEG
 		once
-			plain_text := + (open.negate + any_char)
+			plain_text := + (open.negate + any)
 
-			value := quote + (-(quote.negate + any_char)).consumer + quote
+			value := quote + (-(quote.negate + any)).consumer + quote
 			value.set_behaviour (agent concatenate_results)
 
 				-- Taglib specific
-			l_attribute := open + chars ("attribute") + ws + chars ("id") + ws.optional + equals + ws.optional + value + ws.optional + slash + close
+			l_attribute := open + stringp ("attribute") + whitespaces + stringp ("id") + whitespaces.optional + equals + whitespaces.optional + value + whitespaces.optional + slash + close
 			l_attribute.fixate
 			l_attribute.set_behaviour (agent build_attribute)
-			l_tag := open + chars ("tag") + ws + chars ("id") + ws.optional + equals + ws.optional + value + ws.optional + chars("class") +
-					ws.optional + equals + ws.optional + value + ws.optional + close + (-(l_attribute | plain_text)) + open + slash + ws.optional + chars ("tag") + ws.optional + close
+			l_tag := open + stringp ("tag") + whitespaces + stringp ("id") + whitespaces.optional + equals + whitespaces.optional + value + whitespaces.optional + stringp("class") +
+					whitespaces.optional + equals + whitespaces.optional + value + whitespaces.optional + close + (-(l_attribute | plain_text)) + open + slash + whitespaces.optional + stringp ("tag") + whitespaces.optional + close
 			l_tag.fixate
 			l_tag.set_behaviour (agent build_tag)
 			l_tags := (l_tag | plain_text)
-			l_taglib := ws.optional + open + chars("taglib") + ws + chars("id") + ws.optional + equals + ws.optional + value + ws.optional + close
-							+ (-l_tags) + open + slash + ws.optional + chars("taglib") + ws.optional + close + ws.optional
+			l_taglib := whitespaces.optional + open + stringp("taglib") + whitespaces + stringp("id") + whitespaces.optional + equals + whitespaces.optional + value + whitespaces.optional + close
+							+ (-l_tags) + open + slash + whitespaces.optional + stringp("taglib") + whitespaces.optional + close + whitespaces.optional
 			l_taglib.set_behaviour (agent build_taglib)
 			Result := l_taglib
 		end
@@ -77,14 +77,12 @@ feature -- Basic functionality
 			l_result := tag_lib_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
 			if l_result.success and attached {XTL_TAG_LIBRARY} l_result.internal_result.first as l_taglib then
 				if not l_result.left_to_parse.is_empty then
-					add_parse_error ("Parsing of taglib was incomplete. " +
-						format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
+					add_parse_error ("Parsing of taglib was incomplete. " + l_result.longest_match_debug)
 				else
 					Result := l_taglib
 				end
 			else
-				add_parse_error ("Parsing of taglib was not successfull! Error location: " +
-					format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
+				add_parse_error ("Parsing of taglib was not successfull! Error location: " + l_result.longest_match_debug)
 			end
 		end
 

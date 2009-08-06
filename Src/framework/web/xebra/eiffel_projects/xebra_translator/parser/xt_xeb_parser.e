@@ -73,14 +73,14 @@ feature {NONE} -- Implementation
 
 				-- Plain text eats all the characters until it reaches a opening tag. Will put a content
 				-- tag (with the parsed text as input) on the result list.		
-			plain_text := +((open + (identifier_prefix | slash)).negate + any_char)
+			plain_text := +((open + (identifier_prefix | slash)).negate + any)
 			plain_text := plain_text.consumer
 			plain_text.set_behaviour (agent build_content_tag)
 			plain_text.set_name ("plain-text")
 
 				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}" as well
 				-- as normal xml values (plain text)
-			value_attribute := (-(quote.negate + any_char)).consumer
+			value_attribute := (-(quote.negate + any)).consumer
 			value_attribute.set_behaviour (agent build_value_attribute)
 			value_attribute.set_name ("value_attribute")
 			dynamic_attribute := (percent + equals + (identifier + (-(dot + identifier))).consumer + percent)
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			value := variable_attribute | dynamic_attribute | value_attribute
 
 				-- Tag attributes
-			l_attribute := (ws.optional + identifier + ws.optional + equals + ws.optional + quote + value + quote)
+			l_attribute := (whitespaces.optional + identifier + whitespaces.optional + equals + whitespaces.optional + quote + value + quote)
 			l_attribute.set_behaviour (agent build_attribute)
 			l_attribute.fixate
 			l_attribute.set_name ("attribute")
@@ -102,30 +102,30 @@ feature {NONE} -- Implementation
 			namespace_identifier := identifier + colon + identifier
 			namespace_identifier.fixate
 			namespace_identifier.set_name ("namespace_identifier")
-			plain_html_header := identifier + (ws + (-l_attribute)).optional
+			plain_html_header := identifier + (whitespaces + (-l_attribute)).optional
 			plain_html_header.fixate
 			plain_html_header.set_name ("plain_html")
-			xeb_tag_header := namespace_identifier + (ws + (-l_attribute)).optional
+			xeb_tag_header := namespace_identifier + (whitespaces + (-l_attribute)).optional
 			xeb_tag_header.fixate
 			xeb_tag_header.set_name ("xeb_tag_header")
 
 			create {PEG_CHOICE} xml.make
 
-			plain_html_long_end := (close_fixed + (-xml) + open + slash + ws.optional + identifier)
+			plain_html_long_end := (close_fixed + (-xml) + open + slash + whitespaces.optional + identifier)
 			plain_html := (open + identifier.enforce +
-							plain_html_header + ws.optional + (
+							plain_html_header + whitespaces.optional + (
 									slash | plain_html_long_end
-								) + ws.optional + close_fixed
+								) + whitespaces.optional + close_fixed
 						)
 			plain_html.set_name ("plain_html")
 			plain_html.set_behaviour (agent build_plain_html)
 			plain_html.set_error_message_handler (agent handle_plain_html_error)
 
-			xeb_tag_long_end := (close_fixed + (-xml) + open + slash + ws.optional + namespace_identifier)
+			xeb_tag_long_end := (close_fixed + (-xml) + open + slash + whitespaces.optional + namespace_identifier)
 			xeb_tag := (open +
-							xeb_tag_header + ws.optional + (
+							xeb_tag_header + whitespaces.optional + (
 									slash | xeb_tag_long_end
-								) + ws.optional + close_fixed
+								) + whitespaces.optional + close_fixed
 						)
 
 			xeb_tag.set_error_message_handler (agent handle_xeb_tag_error)
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			xml.set_name ("xml")
 
 				-- Same as `plain_text' but no behaviour (no content tag is generated)
-			plain_text_without_behaviour := +((open + any_char).negate + any_char)
+			plain_text_without_behaviour := +((open + any).negate + any)
 
 				-- Doctype
 			doctype := char ('<') + char ('!') + plain_text_without_behaviour
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			doctype.set_name ("doctype")
 
 				-- Xml with pre- and post-context
-			xeb_file := ws.optional + doctype.optional + ws.optional + xml + ws.optional
+			xeb_file := whitespaces.optional + doctype.optional + whitespaces.optional + xml + whitespaces.optional
 			xeb_file.set_behaviour (agent build_root_tag)
 			Result := xeb_file
 		end
@@ -239,7 +239,7 @@ feature -- Parser Behaviours
 		do
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_id then
-				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug (a_result.left_to_parse.debug_information))
+				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug (a_result.left_to_parse.debug_information, source_path))
 				from
 					l_i := 2
 				until
@@ -291,7 +291,7 @@ feature -- Parser Behaviours
 							l_taglib := create {XTL_PAGE_CONF_TAG_LIB}.make_with_arguments ("page")
 						end
 						if l_taglib.contains (l_id) then
-							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug(a_result.left_to_parse.debug_information))
+							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug (a_result.left_to_parse.debug_information, source_path))
 							from
 								l_i := 3
 							until
@@ -340,7 +340,7 @@ feature -- Parser Behaviours
 		do
 			Result := concatenate_results (a_result)
 			if attached {STRING} a_result.internal_result [1] as l_content then
-				create l_tag.make ("", "content", "XTAG_XEB_CONTENT_TAG", format_debug(a_result.left_to_parse.debug_information))
+				create l_tag.make ("", "content", "XTAG_XEB_CONTENT_TAG", format_debug (a_result.left_to_parse.debug_information, source_path))
 				l_tag.put_attribute ("text", create {XP_TAG_VALUE_ARGUMENT}.make (l_content))
 				Result.replace_result (l_tag)
 			end
@@ -356,7 +356,7 @@ feature -- Parser Behaviours
 			l_tag: XP_TAG_ELEMENT
 		do
 			Result := a_result
-			create l_tag.make ("", "html", "XTAG_XEB_CONTAINER_TAG", format_debug(a_result.left_to_parse.debug_information))
+			create l_tag.make ("", "html", "XTAG_XEB_CONTAINER_TAG", format_debug (a_result.left_to_parse.debug_information, source_path))
 			from
 				Result.internal_result.start
 			until
@@ -404,8 +404,7 @@ feature -- Basic Functionality
 			l_result := xml_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
 			if l_result.success and attached {XP_TAG_ELEMENT} l_result.internal_result.first as l_root_tag then
 				if not l_result.left_to_parse.is_empty then
-					add_parse_error ("Parsing was incomplete. " +
-						format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
+					add_parse_error ("Parsing was incomplete. " + l_result.longest_match_debug)
 				else
 					template.put_root_tag (l_root_tag)
 					Result := True
@@ -419,8 +418,7 @@ feature -- Basic Functionality
 					add_parse_error (source_path + ": " + l_index.out + ": " + l_result.left_to_parse.longest_match.error_messages [l_index])
 					l_index := l_index - 1
 				end
-				add_parse_error ("Parsing was not successfull! Error location: " +
-					format_debug (l_result.left_to_parse.debug_information_with_index (l_result.left_to_parse.longest_match.count)))
+				add_parse_error ("Parsing was not successfull! Error location: " + l_result.longest_match_debug)
 			end
 			from
 				l_index := l_result.error_messages.count

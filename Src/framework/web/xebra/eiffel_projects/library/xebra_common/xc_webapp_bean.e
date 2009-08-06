@@ -35,6 +35,12 @@ feature -- Access
 
 	is_disabled: BOOLEAN assign set_is_disabled
 		-- Disabled webapps do not translate/compile/run
+		
+	is_enabled: BOOLEAN assign set_is_enabled
+			-- Enabled webapps do translate/compile/run
+		do
+			Result := not is_disabled
+		end
 
 	is_running: BOOLEAN assign set_is_running
 		-- Is running
@@ -137,6 +143,13 @@ feature -- Status setting
 			is_disabled := a_is_disabled
 		ensure
 			set: equal (is_disabled, a_is_disabled)
+		end
+
+	set_is_enabled (a_is_enabled: BOOLEAN)
+		do
+			is_disabled := not a_is_enabled
+		ensure
+			set: equal (is_enabled, a_is_enabled)
 		end
 
 	set_dev_mode (a_dev_mode: BOOLEAN)

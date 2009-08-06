@@ -25,6 +25,7 @@ feature -- Initialization
 			make
 			registry := a_registry
 			source_path := "No source path specified."
+			create template.make_empty
 		ensure
 			registry_set: registry = a_registry
 		end
@@ -233,7 +234,7 @@ feature -- Parser Behaviours
 		require
 			a_result_attached: attached a_result
 		local
-			l_tag: XP_TAG_ELEMENT
+			l_tag: detachable XP_TAG_ELEMENT
 			l_i: INTEGER
 		do
 			Result := a_result
@@ -262,8 +263,8 @@ feature -- Parser Behaviours
 					end
 				end
 			end
-			if attached l_tag then
-				Result.replace_result (l_tag)
+			if attached l_tag as ll_tag then
+				Result.replace_result (ll_tag)
 			end
 
 		ensure
@@ -275,7 +276,7 @@ feature -- Parser Behaviours
 		require
 			a_result_attached: attached a_result
 		local
-			l_tag: XP_TAG_ELEMENT
+			l_tag: detachable XP_TAG_ELEMENT
 			l_taglib: XTL_TAG_LIBRARY
 			l_i: INTEGER
 			l_end_tag: STRING
@@ -284,7 +285,11 @@ feature -- Parser Behaviours
 			if attached {STRING} a_result.internal_result.first as l_namespace then
 				if attached {STRING} a_result.internal_result [2] as l_id then
 					if registry.contains_tag_lib (l_namespace) then
-						l_taglib := registry.retrieve_taglib (l_namespace)
+						if attached registry.retrieve_taglib (l_namespace) as ll_taglib then
+							l_taglib := ll_taglib
+						else
+							l_taglib := create {XTL_PAGE_CONF_TAG_LIB}.make_with_arguments ("page")
+						end
 						if l_taglib.contains (l_id) then
 							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug(a_result.left_to_parse.debug_information))
 							from
@@ -319,8 +324,8 @@ feature -- Parser Behaviours
 					end
 				end
 			end
-			if attached l_tag then
-				Result.replace_result (l_tag)
+			if attached l_tag as ll_tag then
+				Result.replace_result (ll_tag)
 			end
 		ensure
 			Result_attached: attached Result

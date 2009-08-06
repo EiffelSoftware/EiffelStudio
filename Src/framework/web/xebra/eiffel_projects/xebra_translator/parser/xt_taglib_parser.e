@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor
+			create template.make_empty
+			--create xeb_file.
 		end
 
 feature {NONE} -- Access
@@ -60,12 +62,12 @@ feature -- Access
 	template: XP_TEMPLATE
 			-- The resulting template
 
-	xeb_file: PEG_ABSTRACT_PEG
+	--xeb_file: PEG_ABSTRACT_PEG
 			-- The xeb parsing grammar
 
 feature -- Basic functionality
 
-	parse (a_string: STRING): XTL_TAG_LIBRARY
+	parse (a_string: STRING): detachable XTL_TAG_LIBRARY
 			-- Parses a_string and generates a template
 		require
 			a_string_attached: attached a_string
@@ -112,7 +114,7 @@ feature {NONE} -- Parser behaviours
 		require
 			a_result_attached: attached a_result
 		local
-			l_tag: XTL_TAG_DESCRIPTION
+			l_tag: detachable XTL_TAG_DESCRIPTION
 		do
 			Result := a_result
 			if attached {STRING} Result.internal_result.first as l_id then
@@ -135,8 +137,8 @@ feature {NONE} -- Parser behaviours
 				end
 			end
 			Result.internal_result.wipe_out
-			if attached l_tag then
-				Result.replace_result (l_tag)
+			if attached l_tag as ll_tag then
+				Result.replace_result (ll_tag)
 			end
 		ensure
 			Result_attached: attached Result

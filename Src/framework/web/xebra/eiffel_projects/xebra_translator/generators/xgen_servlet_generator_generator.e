@@ -59,6 +59,9 @@ feature {NONE} -- Initialization
 			-- Creates an empty {xgen_servlet_generator_generator}
 		do
 			create controller_table.make (1)
+			create path.make_from_string (".")
+			create root_tag.make_empty
+			create servlet_name.make_empty
 		ensure
 			controller_table_attached: attached controller_table
 		end

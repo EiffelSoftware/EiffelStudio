@@ -51,9 +51,11 @@ feature -- Access
 	visit_region_tag_element (a_tag: XP_REGION_TAG_ELEMENT)
 			-- Precursor
 		do
-			if attached regions [a_tag.retrieve_value ("id").value] as region then
-				a_tag.set_region (region)
-				regions.remove (a_tag.retrieve_value ("id").value)
+			if attached a_tag.retrieve_value ("id") as l_region_id then
+				if attached regions [l_region_id.value] as l_region then
+					a_tag.set_region (l_region)
+					regions.remove (l_region_id.value)
+				end
 			end
 		end
 

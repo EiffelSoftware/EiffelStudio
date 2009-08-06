@@ -60,11 +60,11 @@ feature -- Access
 	taglib_registry: HASH_TABLE [XTL_TAG_LIBRARY, STRING]
 			-- Registry for the taglibs
 
-	taglib_configuration: LIST [TUPLE [STRING, STRING, STRING]] assign set_taglibrary_config
+	taglib_configuration: detachable LIST [TUPLE [STRING, STRING, STRING]] assign set_taglibrary_config
 			-- The configuration of the taglibs
 
 	set_taglibrary_config (a_config: LIST [TUPLE [STRING, STRING, STRING]])
-			--
+			-- Sets the taglibrary configuration
 		require
 			a_config_attached: attached a_config
 		do
@@ -167,7 +167,7 @@ feature -- Access
 			result_attached: attached Result
 		end
 
-	retrieve_taglib (a_name: STRING): XTL_TAG_LIBRARY
+	retrieve_taglib (a_name: STRING): detachable XTL_TAG_LIBRARY
 			-- Returns the tag_lib with the specified name
 		require
 			a_name_valid: attached a_name and not a_name.is_empty

@@ -10,6 +10,16 @@ note
 class
 	XT_CONFIG
 
+create
+	make
+
+feature -- Initialization
+
+	make
+		do
+			create xebra_library_path.make_empty
+		end
+
 feature -- Access
 
 	xebra_library_path: SETTABLE_STRING
@@ -24,7 +34,7 @@ feature -- Status setting
 		do
 			xebra_library_path := a_xebra_library_path
 		ensure
-			xebra_library_path_set: equal (xebra_library_path, a_xebra_library_path)
+			xebra_library_path_set: a_xebra_library_path.is_equal (xebra_library_path)
 		end
 
 

@@ -15,7 +15,7 @@ feature -- Access
 		note
 			once_status: global
 		once
-			create Result
+			create Result.make
 		ensure
 			result_attached: Result /= Void
 		end

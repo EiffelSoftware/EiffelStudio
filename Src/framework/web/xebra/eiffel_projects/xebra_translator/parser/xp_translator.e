@@ -80,7 +80,7 @@ feature -- Status setting
 
 feature -- Processing
 
-	process_with_dir (a_xeb_directory: FILE_NAME;  a_force: BOOLEAN)
+	process_with_dir (a_xeb_directory: FILE_NAME; a_force: BOOLEAN)
 			--`a_xeb_directory': Where are the xeb files located?
 			--`force': Should the servlet_generators be generated regardless if they're outdated or not?
 			-- Translates xeb files to servlet generators
@@ -102,11 +102,18 @@ feature -- Processing
 		local
 			l_directory_name: FILE_NAME
 			l_util: XU_FILE_UTILITIES
+			l_includes, l_excludes: ARRAYED_LIST [STRING]
 		do
 			create {ARRAYED_LIST [FILE_NAME]}Result.make (5)
 			create l_directory_name.make_from_string (a_directory.name)
 			create l_util
-			Result := l_util.scan_for_files (l_directory_name.out, -1, "(\.xeb$)|(\.xrpc$)", "EIFGENs|\.svn")
+			create l_includes.make (2)
+			l_includes.extend ("*.xeb")
+			l_includes.extend ("*.xrpc")
+			create l_excludes.make (2)
+			l_excludes.extend ("EIFGENs")
+			l_excludes.extend (".svn")
+			Result := l_util.scan_for_files (l_directory_name.out, -1, l_includes, l_excludes)
 		end
 
 	process_with_files (a_files: LIST [FILE_NAME];  a_force: BOOLEAN)
@@ -125,14 +132,15 @@ feature -- Processing
 			o.dprint ("*                  .taglib processing start...             *", 1)
 			o.dprint ("************************************************************", 1)
 			l_translation_config_path.set_file_name (Translation_config_name)
-			process_file (l_translation_config_path, agent parse_translation_conf (?, ?, registry))
-			if not attached registry.taglib_configuration then
+			parse_translation_conf (l_translation_config_path, registry)
+			if not attached registry.taglib_configuration or error_manager.has_errors then
 				o.dprint ("Taglib configuration either not existing or corrupted! Aborting translation.", 1)
 			else
 				parse_taglibs (registry)
 				o.dprint ("************************************************************", 1)
 				o.dprint ("*                    .xeb processing start...              *", 1)
 				o.dprint ("************************************************************", 1)
+				o.dprint ("Files to process: " + a_files.count.out, 2)
 				from
 					a_files.start
 				until
@@ -157,18 +165,19 @@ feature -- Processing
 
 		end
 
-	parse_translation_conf (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_registry: XP_SERVLET_GG_REGISTRY)
-			--Parses the translation_conf.xml file to get all the date for the tag libs
+	parse_translation_conf (a_file_name: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
+			--Parses the config file to get all the date for the tag libs
 		require
-			a_source_attached: attached a_source
 			a_registry_attached: attached a_registry
 		local
-			l_config_parser: XT_CONFIG_PARSER
 			l_configuration: LIST [TUPLE [STRING, STRING, STRING]]
+			l_webapp_config_reader: XC_WEBAPP_JSON_CONFIG_READER
 		do
-			create l_config_parser.make
-			l_configuration := l_config_parser.parse (a_source)
-			a_registry.set_taglibrary_config (l_configuration)
+			create l_webapp_config_reader
+			if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (a_file_name) as l_w then
+				l_configuration := l_w.taglibs
+				a_registry.set_taglibrary_config (l_configuration)
+			end
 		end
 
 	process_xeb_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
@@ -182,6 +191,7 @@ feature -- Processing
 		end
 
 	process_xrpc_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
+			-- Processes an xrpc-file and adds it to the registry
 		require
 			a_source_attached: attached a_source
 			a_path: attached a_path
@@ -192,10 +202,11 @@ feature -- Processing
 		end
 
 	generate_name_from_file_name (a_file_name: FILE_NAME): STRING
+			-- Transforms a file name and eventual folders into a class name
 		local
 			l_output_path, l_file_name: STRING
 			l_i: INTEGER
-			l_util: FILE_UTILITIES
+			l_util: XU_FILE_UTILITIES
 		do
 			create l_util
 			l_output_path := l_util.absolute_path (output_path.out, True)
@@ -264,21 +275,21 @@ feature -- Processing
 			a_registry_attached: attached a_registry
 		local
 			l_taglibrary_file_name: FILE_NAME
-			l_files: LIST [FILE_NAME]
-			l_config: LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]
 		do
-
-			l_config := a_registry.taglib_configuration
-			from
-				l_config.start
-			until
-				l_config.after
-			loop
-				create l_taglibrary_file_name.make_from_string (l_config.item.path)
-				l_taglibrary_file_name.set_file_name (Taglib_file_name)
-				o.dprint ("Processing file: " + l_taglibrary_file_name, 1)
-				process_file (l_taglibrary_file_name, agent process_taglib_with_stream (a_registry, ?, ?))
-				l_config.forth
+			if attached {LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]} a_registry.taglib_configuration as l_config then
+				from
+					l_config.start
+				until
+					l_config.after
+				loop
+					create l_taglibrary_file_name.make_from_string (l_config.item.path)
+					l_taglibrary_file_name.set_file_name (Taglib_config_name)
+					o.dprint ("Processing file: " + l_taglibrary_file_name, 1)
+					process_file (l_taglibrary_file_name, agent process_taglib_with_stream (a_registry, ?, ?))
+					l_config.forth
+				end
+			else
+				o.dprint ("Configuration file is corrupted or missing!", 0)
 			end
 		end
 
@@ -289,7 +300,7 @@ feature -- Processing
 			a_source_attached: attached a_source
 		local
 			l_parser: XT_TAGLIB_PARSER
-			l_taglib: XTL_TAG_LIBRARY
+			l_taglib: detachable XTL_TAG_LIBRARY
 		do
 			create l_parser.make
 			l_taglib := l_parser.parse (a_source)
@@ -304,8 +315,9 @@ feature -- Processing
 
 feature -- Constants
 
-	Translation_config_name: STRING = "translation_conf.xml"
-	Taglib_file_name: STRING = "config.taglib"
+	Translation_config_name: STRING = "config.wapp"
+	Taglib_config_name: STRING = "config.taglib"
+
 
 invariant
 	output_path_attached: attached output_path

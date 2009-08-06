@@ -40,7 +40,7 @@ feature -- Access
 		local
 			l_child: XP_TAG_ELEMENT
 			l_region: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]
-			l_template: XP_TEMPLATE
+			l_template: detachable XP_TEMPLATE
 		do
 			from
 				children.start
@@ -62,15 +62,17 @@ feature -- Access
 				children.forth
 			end
 				-- Set the child of current to the resolved template (i.e. replace all the regions by the found regions)
-			l_template := a_templates [retrieve_value ("template").value]
-			if attached l_template then
-				set_child (l_template.resolve (a_templates, l_region, a_pending, a_servlet_gen))
-				if date < children [1].date then
-					date := children [1].date
+			if attached retrieve_value ("template") as l_template_arg then
+				l_template := a_templates [l_template_arg.value]
+				if attached l_template as ll_template then
+					set_child (ll_template.resolve (a_templates, l_region, a_pending, a_servlet_gen))
+					if date < children [1].date then
+						date := children [1].date
+					end
+				else
+					error_manager.add_error (create {XERROR_PARSE}.make
+						(["Template '" + l_template_arg.value + "' not found in " +  a_servlet_gen.servlet_name + "."]), False)
 				end
-			else
-				error_manager.add_error (create {XERROR_PARSE}.make
-					(["Template '" + retrieve_value ("template").value + "' not found in " +  a_servlet_gen.servlet_name + "."]), False)
 			end
 		end
 

@@ -70,7 +70,7 @@ feature -- Access
 			controller_id := a_id
 		end
 
-	retrieve_value (a_id: STRING): XP_TAG_ARGUMENT
+	retrieve_value (a_id: STRING): detachable XP_TAG_ARGUMENT
 			-- Retrieves the value of the parameter with the the id `a_id'
 		require
 			a_id_attached: a_id /= Void

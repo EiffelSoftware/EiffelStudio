@@ -2,6 +2,8 @@ note
 	description: "[
 			Implementation of ERROR_PRINTER that uses a XS_SHARED_SERVER_OUTPUTTER to print.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

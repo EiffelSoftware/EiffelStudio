@@ -12,8 +12,8 @@ deferred class
 
 inherit
 	XU_SHARED_OUTPUTTER
+	
 	ERROR_SHARED_MULTI_ERROR_MANAGER
-
 
 feature {NONE} -- Initialization
 
@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			l_arg_parser: XWA_ARGUMENT_PARSER
 			l_common_classes: XC_CLASSES
 		do
+			create config.make_empty
 			create l_common_classes.make
 			print ("%N%N%N")
 			create l_arg_parser.make
@@ -37,15 +38,15 @@ feature {NONE} -- Operations Internal
 		require
 			a_arg_parser_attached: a_arg_parser /= Void
 		local
-			l_config_reader: XC_WEBAPP_CONFIG_READER
+			l_config_reader: XC_WEBAPP_JSON_CONFIG_READER
 			l_printer: ERROR_CUI_PRINTER
 		do
-			create l_config_reader.make
+			create l_config_reader
 			if attached l_config_reader.process_file (a_arg_parser.config_filename) as l_config then
 				config := l_config
 				config.arg_config.set_debug_level (a_arg_parser.debug_level)
 				if a_arg_parser.is_interactive then
-					config.is_interactive := True
+					config.set_is_interactive (True)
 				end
 			end
 
@@ -88,7 +89,7 @@ feature {NONE} -- Operations Internal
 				else
 					server.launch
 					o.iprint ("Xebra Web Application ready to rock...")
-					if config.is_interactive.value then
+					if config.is_interactive then
 						o.iprint ("(enter 'x' to shut down)")
 						from
 						until
@@ -110,9 +111,10 @@ feature -- Access
 	server_connection_handler: detachable XWA_SERVER_CONN_HANDLER
 			-- Returns the applications server conn handler
 
-	config: XC_WEBAPP_CONFIG
+	config:  XC_WEBAPP_CONFIG
 			-- Configuration for the webapp
 
-feature -- Other
+invariant
+	config_attached: config /= Void
 
 end

@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 
 			create {ARRAYED_LIST [XWA_CONTROLLER]} internal_controllers.make (0)
 
-
 				-- Create the API object, where the XML-RPC routines will be called.
 			create api
 
@@ -63,14 +62,8 @@ feature-- Access
 
 	frozen internal_controllers: LIST [XWA_CONTROLLER]
 			-- <Precursor>
---		attribute
---			create {ARRAYED_LIST [XWA_CONTROLLER]} Result.make (0)
---		end
 
 feature-- Implementation
-
-
-
 
 	set_all_booleans (request: XH_REQUEST; response: XH_RESPONSE)
 			--<Precursor>

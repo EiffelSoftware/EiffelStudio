@@ -2,6 +2,8 @@ note
 	description: "[
 		Provides features to encode and decode messages
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

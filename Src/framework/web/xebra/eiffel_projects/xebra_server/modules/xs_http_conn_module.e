@@ -48,7 +48,9 @@ feature -- Inherited Features
 			l_response: XC_COMMAND_RESPONSE
 			l_http_socket: detachable NETWORK_STREAM_SOCKET
 			l_webapp_handler: XS_WEBAPP_HANDLER
+			full_collect_counter: INTEGER
 		do
+			full_collect_counter := 100
 			stop := False
 			launched := True
 			running := True
@@ -58,7 +60,7 @@ feature -- Inherited Features
 				o.eprint ("Socket could not be bound on port " + default_http_server_port.out , generating_type)
 			else
 				create l_webapp_handler
-	 	       	l_http_socket.set_accept_timeout (500)
+	 	       	l_http_socket.set_accept_timeout (1)
 				from
 	                l_http_socket.listen (max_tcp_clients.as_integer_32)
 	                o.dprint("HTTP Connection Server ready on port " + default_http_server_port.out,2)
@@ -66,10 +68,16 @@ feature -- Inherited Features
 	            	stop
 	            loop
 	                l_http_socket.accept
+	                if full_collect_counter >= 100 then
+						full_collect_counter := 0
+			--			{MEMORY}.full_collect
+	                else
+	                	full_collect_counter := full_collect_counter + 1
+	                end
 	                if not stop then
 			            if attached {NETWORK_STREAM_SOCKET} l_http_socket.accepted as thread_http_socket then
 
-			            	if config.args.debug_level > 9 then
+			            	if config.args.debug_level >= 7 then
 			            		start_time
 			            	end
 
@@ -81,14 +89,16 @@ feature -- Inherited Features
 
 							if attached {XCCR_HTTP_REQUEST} l_response as l_http_response then
 								send_message_to_http (l_http_response.response.render_to_string, thread_http_socket)
+							else
+								o.eprint ("Could not retrieve response from webapp", generating_type)
 							end
 
 				         	thread_http_socket.cleanup
 				            check
 				            	thread_http_socket.is_closed
 				            end
-				            if config.args.debug_level > 9 then
-			            		o.dprint ("Server Request Time: " + stop_time, 10)
+				            if config.args.debug_level >= 7 then
+			            		o.dprint ("Server Request Time: " + stop_time, 7)
 			            	end
 						end
 					end
@@ -101,7 +111,7 @@ feature -- Inherited Features
        		running := False
        		o.dprint("HTTP Connection Server ends.",2)
        		rescue
-       			o.eprint ("Exception occured.", generating_type)
+       			o.eprint ("HTTP Connection Server Module shutdown due to exception. Please relaunch manually.", generating_type)
 
 				if attached {NETWORK_STREAM_SOCKET} l_http_socket as ll_http_socket then
 					ll_http_socket.cleanup
@@ -110,7 +120,8 @@ feature -- Inherited Features
 		       		end
 				end
 
-       			retry
+				stop := True
+				running := False
        	end
 
 feature -- Access

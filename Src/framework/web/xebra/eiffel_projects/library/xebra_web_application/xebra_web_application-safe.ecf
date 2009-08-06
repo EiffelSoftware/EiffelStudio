@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="xebra_web_application" uuid="4DA691E3-8905-46B6-B1C6-537F192BD17A" library_target="xebra_web_application">
+	<target name="xebra_web_application">
+		<root all_classes="true"/>
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager-safe.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
+		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<library name="thread_utilities" location="$XEBRA_LIBRARY\thread_utilities\thread_utilities-safe.ecf" readonly="false"/>
+		<library name="xebra_common" location="$XEBRA_LIBRARY\xebra_common\xebra_common-safe.ecf" readonly="false"/>	
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-safe.ecf"/>
+		<library name="xebra_error_responses" location="$XEBRA_LIBRARY\xebra_error_responses\xebra_error_responses-safe.ecf" readonly="false"/>
+		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-safe.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-safe.ecf" readonly="false"/>	
+		<cluster name="xebra_web_application" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/xml_rpc$</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

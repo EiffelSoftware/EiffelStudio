@@ -49,10 +49,11 @@ feature -- Access
 		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
+
 			Result := ""
 			if attached webapp as l_wa then
 				create l_f_utils
-				Result  := " -config %"" + l_wa.app_config.name.out + ".ecf%" -target %"" + l_wa.app_config.name.out + "%" -c_compile -stop"
+				Result  := " -config %"" + l_wa.app_config.ecf.out + "%" -target %"" + l_wa.app_config.name.out + "%" -c_compile -stop"
 				if config.file.finalize_webapps.value then
 					Result := Result + " -finalize"
 				end

@@ -36,15 +36,18 @@ feature -- Processing
 		local
 			l_servlet: detachable XWA_SERVLET
 			l_new_request: detachable XH_REQUEST
-			l_response: XH_RESPONSE
+			l_original_uri: STRING
 			l_request_parser: XH_REQUEST_PARSER
+			l_response: XH_RESPONSE
 		do
-				-- Search corresponding servlet and let it handle the request
+			Result := (create {XER_CANNOT_FIND_PAGE}.make(a_request.uri)).render_to_response
+
 			from
 				l_new_request := a_request.twin
 			until
 				l_new_request = Void
 			loop
+				l_original_uri := l_new_request.uri
 				create l_response.make_empty
 
 				o.dprint ("Searching matching servlet...",2)
@@ -64,7 +67,7 @@ feature -- Processing
 					l_new_request := post_process_response (l_response, l_new_request)
 				else
 					o.dprint ("No matching servlet found.",2)
-					l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_new_request.uri)).render_to_response
+					l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_original_uri)).render_to_response
 					l_new_request := Void
 				end
 

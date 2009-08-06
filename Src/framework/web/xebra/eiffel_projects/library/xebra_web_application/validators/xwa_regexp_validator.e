@@ -14,18 +14,18 @@ inherit
 feature -- Intialization
 
 	make
-			--
+			-- Creation
 		do
-			create regexp.make
-			regexp.compile (regular_expression)
+--			create regexp.make
+--			regexp.compile (regular_expression)
 		ensure
-			regexp_attached: attached regexp
-			regexp_compiled: attached regexp.is_compiled
+--			regexp_attached: attached regexp
+--			regexp_compiled: attached regexp.is_compiled
 		end
 
 feature {NONE} -- Access
 
-	regexp: RX_PCRE_MATCHER
+--	regexp: RX_PCRE_MATCHER
 			-- The compiled regular expression
 
 feature -- Implementation
@@ -33,7 +33,8 @@ feature -- Implementation
 	validate (a_argument: STRING): BOOLEAN
 			-- Validates if `a_argument' is valid
 		do
-			Result := regexp.matches (a_argument)
+--			Result := regexp.matches (a_argument)
+			Result := False -- NOT IMPLEMENTED
 		end
 
 	regular_expression: STRING

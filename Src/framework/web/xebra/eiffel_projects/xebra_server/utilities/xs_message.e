@@ -2,6 +2,8 @@ note
 	description: "[
 			Represents a message that is sent from and to the http server plugin.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

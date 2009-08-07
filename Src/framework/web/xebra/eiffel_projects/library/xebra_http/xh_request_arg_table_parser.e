@@ -11,6 +11,10 @@ note
 class
 	XH_REQUEST_ARG_TABLE_PARSER
 
+inherit
+
+	PEG_FACTORY
+
 create
 	make
 
@@ -55,7 +59,6 @@ feature {NONE} -- Parser
 	parser: PEG_ABSTRACT_PEG
 			-- Creates the parser
 		local
-			any,
 			key_name,
 			key_value,
 			item_name,
@@ -64,13 +67,9 @@ feature {NONE} -- Parser
 			table: PEG_ABSTRACT_PEG
 			l_parser_result: PEG_PARSER_RESULT
 		once
-				-- Special
-			create {PEG_ANY} any.make
-			any.ommit_result
-
 				-- Constants
-			key_name := stringp ("&")
-			key_value := stringp ("=")
+			key_name := ampersand
+			key_value := equals
 
 				-- User fields
 			item_name := (-(key_value.negate + any)).consumer
@@ -129,38 +128,6 @@ feature {NONE} -- Parser
 				a_result.internal_result.forth
 			end
 			Result.replace_result (l_table_args)
-		ensure
-			Result_attached: attached Result
-		end
-
-	stringp (a_string: STRING): PEG_SEQUENCE
-			-- Generates a parser which parses `a_string'
-		require
-			a_string_valid: attached a_string and then not a_string.is_empty
-		local
-			l_i: INTEGER
-		do
-			create Result.make
-			from
-				l_i := 1
-			until
-				l_i > a_string.count
-			loop
-				Result := Result + char (a_string [l_i])
-				l_i := l_i + 1
-			end
-			Result.fixate
-		ensure
-			Result_attached: attached Result
-		end
-
-	char (a_char: CHARACTER): PEG_CHARACTER
-			-- Generates  Character Parser
-		require
-			a_char_attached: attached a_char
-		do
-			create Result.make_with_character (a_char)
-			Result.ommit_result
 		ensure
 			Result_attached: attached Result
 		end

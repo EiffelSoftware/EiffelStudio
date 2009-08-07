@@ -344,15 +344,14 @@ feature {XS_SERVER_MODULE} -- Status setting
 			create l_config_reader
 			if attached {XS_FILE_CONFIG} l_config_reader.process_file (config.args.config_filename) as l_config then
 				config.file := l_config
-				config.file.set_webapps (l_webapp_handler.search_webapps (config.file.webapps_root))
-
+				if handle_errors then
+					Result := create {XCCR_OK}
+					o.dprint (config.file.print_configuration, 2)
+					config.file.set_webapps (l_webapp_handler.search_webapps (config.file.webapps_root))
+					handle_errors.do_nothing
+					o.dprint (config.file.print_webapp_configuration, 2)
+				end
 			end
-
-			if handle_errors then
-				Result := create {XCCR_OK}
-				o.dprint (config.file.print_configuration, 2)
-			end
-
 		end
 
 	shutdown_server: XC_COMMAND_RESPONSE

@@ -98,10 +98,10 @@ feature -- Access
 
 feature -- Stauts Report
 
-	print_configuration: STRING
-			-- Renders the configuration to a string
+	print_webapp_configuration: STRING
+			-- Renders the loaded webapps config to a string
 		do
-			Result := "%N---------------- Server Configuration File ----------------"
+			Result :=      "%N-------------------------- Webapps ------------------------"
 			Result.append("%N-Webapps: " + webapps.count.out + " webapps at '" + webapps_root.out + "'")
 
 			from
@@ -112,6 +112,17 @@ feature -- Stauts Report
 				Result.append ("%N--'" + webapps.item_for_iteration.app_config.name.out + "' on "+ webapps.item_for_iteration.app_config.host.out + "@" + webapps.item_for_iteration.app_config.port.out)
 				webapps.forth
 			end
+			Result.append ("%N-----------------------------------------------------------")
+
+		ensure
+			Result_attached: Result /= Void
+		end
+
+	print_configuration: STRING
+			-- Renders the configuration to a string
+		do
+			Result := "%N---------------- Server Configuration File ----------------"
+
 
 			Result.append ( "%N-Compiler in '" + compiler.out +
 							"%N-Compiler Flags '" + compiler_flags.out +

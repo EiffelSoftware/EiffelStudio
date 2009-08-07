@@ -36,7 +36,10 @@ feature -- Processing
 			l_buf_tl_ecf: STRING
 			l_buf_tl_path: STRING
 			l_util: XU_FILE_UTILITIES
+			l_ok: BOOLEAN
 		do
+			l_ok := True
+
 			create l_util
 			l_error_prefix := "In config file '" + a_filename + "': "
 
@@ -50,10 +53,11 @@ feature -- Processing
 						l_config.set_ecf (l_resolved_path)
 					else
 						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_error_prefix + ecf_name + ":'" + l_resolved_path + "'"), false)
+						l_ok := False
 					end
-
 				else
 					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + ecf_name), false)
+					l_ok := False
 				end
 
 					-- Check name
@@ -61,6 +65,7 @@ feature -- Processing
 						l_config.set_name (l_e.item)
 				else
 					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + name_name), false)
+					l_ok := False
 				end
 
 					-- Check host
@@ -68,6 +73,7 @@ feature -- Processing
 					l_config.set_host (l_e.item)
 				else
 					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + host_name), false)
+					l_ok := False
 				end
 
 					-- Check port
@@ -76,9 +82,11 @@ feature -- Processing
 						l_config.set_port (l_e.item.to_integer_32)
 					else
 						error_manager.add_error (create {XERROR_CONFIG_PROPERTY}.make (l_error_prefix + l_e.item), false)
+					l_ok := False
 					end
 				else
 					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + port_name), false)
+					l_ok := False
 				end
 
 					-- Check taglibs
@@ -99,6 +107,7 @@ feature -- Processing
 								l_buf_tl_name := l_ti_i.item
 							else
 								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_name_name + " in " + taglibs_name), false)
+								l_ok := False
 							end
 
 								-- Check taglib ecf
@@ -106,6 +115,7 @@ feature -- Processing
 								l_buf_tl_ecf := l_ti_i.item
 							else
 								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_ecf_name + " in " + taglibs_name), false)
+								l_ok := False
 							end
 
 								-- Check taglib path
@@ -113,6 +123,7 @@ feature -- Processing
 								l_buf_tl_path := l_ti_i.item
 							else
 								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_path_name + " in " + taglibs_name), false)
+								l_ok := False
 							end
 								-- If all attributes success, add to taglibs
 							if not (l_buf_tl_name.is_equal ("") or l_buf_tl_ecf.is_equal ("") or l_buf_tl_path.is_equal ("") ) then
@@ -123,8 +134,10 @@ feature -- Processing
 					end
 				else
 					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + taglibs_name), false)
+					l_ok := False
 				end
-				if not error_manager.has_errors then
+
+				if l_ok then
 					Result := l_config
 				end
 			end

@@ -45,35 +45,41 @@ inherit
 
 feature {NONE} -- Helpers
 
-	frozen logger: attached SERVICE_CONSUMER [LOGGER_S]
+	frozen logger: SERVICE_CONSUMER [LOGGER_S]
 			-- Access to the logger service.
 		once
 			create Result
+		ensure
+			result_attached: attached Result
 		end
 
-	frozen wizard_enginer: attached SERVICE_CONSUMER [WIZARD_ENGINE_S]
+	frozen wizard_enginer: SERVICE_CONSUMER [WIZARD_ENGINE_S]
 			-- Access to the wizard engine service.
 		once
 			create Result
+		ensure
+			result_attached: attached Result
 		end
 
 feature -- Basic operatons
 
-	relicense (a_class: attached CLASS_I)
+	relicense (a_class: CLASS_I)
 			-- Initialize a class licenser for a given class.
 			--
 			-- `a_class': The class to license.
+		require
+			a_class_attached: attached a_class
 		local
-			l_mod: attached ES_CLASS_LICENSE_MODIFIER
+			l_mod: ES_CLASS_LICENSE_MODIFIER
 			l_name: detachable STRING_32
 			l_fn: detachable FILE_NAME
 			l_path: detachable STRING_32
 			l_index: INTEGER
 			l_license: detachable like load_license
-			l_libraries: attached LIST [attached CONF_LIBRARY]
-			l_library: attached CONF_LIBRARY
+			l_libraries: LIST [CONF_LIBRARY]
+			l_library: CONF_LIBRARY
 			l_uuid: UUID
-			l_parameters: attached DS_HASH_TABLE [attached ANY, attached STRING]
+			l_parameters: DS_HASH_TABLE [ANY, STRING]
 			l_use_old_syntax: BOOLEAN
 			l_load_default: BOOLEAN
 			retried: BOOLEAN
@@ -86,7 +92,7 @@ feature -- Basic operatons
 
 						-- Parsed successfully.
 					l_name := l_mod.license_name
-					if l_name /= Void then
+					if attached l_name then
 							-- Try to load the license
 						l_license := load_named_license (l_name, l_use_old_syntax)
 					else
@@ -94,7 +100,7 @@ feature -- Basic operatons
 						if a_class.target.system /~ a_class.universe.conf_system then
 								-- Libraries do not have variables so we need to load the configuration and fetch the variables.
 							l_uuid := a_class.target.system.uuid
-							if l_uuid /= Void then
+							if attached l_uuid then
 									-- Fetch the library reference and load the configuration.
 								l_libraries := a_class.universe.library_of_uuid (l_uuid, True)
 								if not l_libraries.is_empty then
@@ -109,7 +115,7 @@ feature -- Basic operatons
 						end
 
 						l_load_default := True
-						if l_path /= Void then
+						if attached l_path then
 							l_index := l_path.last_index_of ('.', l_path.count)
 							if l_index > 1 then
 								l_path.keep_head (l_index - 1)
@@ -118,7 +124,7 @@ feature -- Basic operatons
 
 									-- Try to load the license
 								l_path := l_fn.string.as_string_32
-								if l_path /= Void and then (create {RAW_FILE}.make (l_path)).exists then
+								if attached l_path and then (create {RAW_FILE}.make (l_path)).exists then
 									l_license := load_license (l_path, l_use_old_syntax)
 									l_load_default := False
 								end
@@ -126,14 +132,14 @@ feature -- Basic operatons
 						end
 
 						if l_load_default then
-							check l_license_detached: l_license = Void end
+							check l_license_detached: not attached l_license end
 
 								-- No license was loaded, try the default
 							l_license := load_named_license (create {STRING_32}.make_from_string ("default"), l_use_old_syntax)
 						end
 					end
 
-					if l_license /= Void then
+					if attached l_license then
 						if not l_license.is_empty then
 							if not l_mod.is_valid_license (l_license) then
 									-- Render the invalid license template.
@@ -151,7 +157,7 @@ feature -- Basic operatons
 								end
 							end
 
-							if l_license /= Void and then l_mod.is_valid_license (l_license) then
+							if attached l_license and then l_mod.is_valid_license (l_license) then
 								l_mod.set_license (l_license)
 								if l_mod.is_dirty then
 									l_mod.commit

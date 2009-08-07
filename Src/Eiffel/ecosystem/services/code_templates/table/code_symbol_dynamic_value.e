@@ -27,7 +27,7 @@ feature -- Access
 			end
 			create Result.make_from_string (internal_value)
 		ensure then
-			result_attached: Result /= Void
+			result_attached: attached Result
 			has_value_been_evaluated: has_value_been_evaluated
 		end
 
@@ -36,9 +36,9 @@ feature -- Status report
 	has_value_been_evaluated: BOOLEAN
 			-- Indicates if `value' has been evaluated.
 		do
-			Result := internal_value /= Void
+			Result := attached internal_value
 		ensure
-			internal_value_attached: Result implies internal_value /= Void
+			internal_value_attached: Result implies attached internal_value
 		end
 
 feature -- Status setting
@@ -49,7 +49,7 @@ feature -- Status setting
 		do
 			internal_value := Void
 		ensure
-			internal_value_detached: internal_value = Void
+			internal_value_detached: not attached internal_value
 			not_has_value_been_evaluated: not has_value_been_evaluated
 		end
 
@@ -84,7 +84,7 @@ feature {NONE} -- Basic operations
 				l_value := default_value
 			end
 
-			if l_value /= Void then
+			if attached l_value then
 				if not l_value.is_empty then
 					create l_result.make (l_value.count)
 					l_result.append_string (l_value)

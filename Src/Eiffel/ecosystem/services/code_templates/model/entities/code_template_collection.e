@@ -11,7 +11,7 @@ class
 	CODE_TEMPLATE_COLLECTION
 
 inherit
-	CODE_COLLECTION [attached CODE_TEMPLATE]
+	CODE_COLLECTION [CODE_TEMPLATE]
 
 create
 	make
@@ -24,7 +24,7 @@ feature -- Query
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
 		do
 			Result := applicable_item_with_version ((create {SYSTEM_CONSTANTS}).compiler_version_number.version)
-			if Result = Void then
+			if not attached Result then
 				Result := applicable_default_item
 			end
 		end
@@ -59,7 +59,7 @@ feature -- Query
 			-- `a_version': Version to find the most applicable template with.
 			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 			not_a_version_is_empty: not a_version.is_empty
 		local
 			l_version: CODE_VERSION
@@ -74,7 +74,7 @@ feature -- Query
 			-- `a_version': Version to find the most applicable template with.
 			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 			not_a_version_is_default: a_version /~ (create {CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
 		local
 			l_templates: like items
@@ -113,7 +113,7 @@ feature -- Query
 						from l_versioned_templates.start until l_versioned_templates.after loop
 							if attached l_versioned_templates.item_for_iteration as l_next_template then
 								if l_next_template.is_compatible_with (a_version) then
-									if l_versioned_template = Void or else l_next_template.version > l_versioned_template.version then
+									if not attached l_versioned_template or else l_next_template.version > l_versioned_template.version then
 										l_versioned_template := l_next_template
 									end
 								end
@@ -126,7 +126,7 @@ feature -- Query
 						-- Set result with a versioned template, if set.
 					Result := l_versioned_template
 
-					if Result = Void then
+					if not attached Result then
 							-- No versioned template was matched, use a non-versioned template if available.
 						Result := l_unversioned_template
 					end

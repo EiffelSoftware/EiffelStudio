@@ -35,10 +35,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	parser: attached EIFFEL_PARSER
+	parser: EIFFEL_PARSER
 			-- Eiffel code parser used to prepare the data of Current.
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_FACTORY})
+		ensure
+			result_attached: attached Result
 		end
 
 feature -- Status report
@@ -48,10 +50,10 @@ feature -- Status report
 		require
 			is_prepared: is_prepared
 		do
-			Result := ast /= Void and then ast_match_list /= Void
+			Result := attached ast and then attached ast_match_list
 		ensure
-			ast_attached: Result implies ast /= Void
-			ast_match_list_attached: Result implies ast_match_list /= Void
+			ast_attached: Result implies attached ast
+			ast_match_list_attached: Result implies attached ast_match_list
 		end
 
 feature -- Basic operations
@@ -59,9 +61,9 @@ feature -- Basic operations
 	prepare
 			-- <Precursor>
 		local
-			l_parser: attached like parser
-			l_class: attached like associated_class
-			l_wrapper: attached like eiffel_parser_wrapper
+			l_parser: like parser
+			l_class: like associated_class
+			l_wrapper: like eiffel_parser_wrapper
 			l_current_class: detachable CLASS_C
 			l_current_group: detachable CONF_GROUP
 			l_options: CONF_OPTION
@@ -100,13 +102,13 @@ feature {ES_CLASS_TEXT_MODIFIER} -- Basic operations
 			ast := Void
 			ast_match_list := Void
 		ensure then
-			ast_detached: ast = Void
-			ast_match_list_detached: ast_match_list = Void
+			ast_reset: not attached ast
+			ast_match_list_reset: not attached ast_match_list
 		end
 
 invariant
-	ast_attached: is_ast_available implies ast /= Void
-	ast_match_list_attached: is_ast_available implies ast_match_list /= Void
+	ast_attached: is_ast_available implies attached ast
+	ast_match_list_attached: is_ast_available implies attached ast_match_list
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

@@ -20,11 +20,8 @@ feature -- Access
 
 	contract_ast: detachable REQUIRE_AS
 			-- <Precursor>
-		local
-			l_routine: detachable ROUTINE_AS
 		do
-			l_routine ?= ast_feature.body.content
-			if l_routine /= Void then
+			if attached {ROUTINE_AS} ast_feature.body.content as l_routine then
 				Result := l_routine.precondition
 			end
 		end
@@ -33,21 +30,19 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_ast: like contract_ast
-			l_routine: detachable ROUTINE_AS
 			l_locals: detachable LOCAL_DEC_LIST_AS
 		do
 			l_ast := contract_ast
-			if l_ast /= Void then
+			if attached l_ast then
 				Result := ast_position (l_ast).start_position
 			else
-				l_routine ?= ast_feature.body.content
-				if l_routine /= Void then
+				if attached {ROUTINE_AS} ast_feature.body.content as l_routine then
 					l_locals := l_routine.internal_locals
-					if l_locals = Void then
+					if attached l_locals then
+						Result := ast_position (l_locals).start_position
+					else
 							-- No locals, use routine body
 						Result := ast_position (l_routine.routine_body).start_position
-					else
-						Result := ast_position (l_locals).start_position
 					end
 				end
 			end
@@ -56,7 +51,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	template_identifier: attached STRING_32
+	template_identifier: STRING_32
 			-- <Precursor>
 		once
 			create Result.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
@@ -64,17 +59,15 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	set_template_values (a_table: attached CODE_SYMBOL_TABLE)
-			-- Sets the values use in rendering a template.
-			--
-			-- `a_table': The symbol table used to render a template
+	set_template_values (a_table: CODE_SYMBOL_TABLE)
+			-- <Precursor>
 		local
 			l_parents: ARRAYED_LIST [CLASS_C]
-			l_value: attached CODE_SYMBOL_VALUE
-			l_str_value: attached STRING_32
+			l_value: CODE_SYMBOL_VALUE
+			l_str_value: STRING_32
 		do
 			l_parents := context_feature.precursors
-			if l_parents = Void or else l_parents.is_empty then
+			if not attached l_parents or else l_parents.is_empty then
 				create l_value.make_empty
 			else
 				create l_str_value.make ({EIFFEL_KEYWORD_CONSTANTS}.else_keyword.count + 1)
@@ -86,7 +79,7 @@ feature {NONE} -- Element change
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -99,22 +92,22 @@ feature {NONE} -- Element change
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

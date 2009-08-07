@@ -51,7 +51,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	modified_data: attached ES_CLASS_TEXT_AST_MODIFIER_DATA
+	modified_data: ES_CLASS_TEXT_AST_MODIFIER_DATA
 			-- <Precursor>
 
 feature -- Status report
@@ -68,15 +68,17 @@ feature -- Status report
 
 feature {NONE} -- Helpers
 
-	validating_parser: attached EIFFEL_PARSER
+	validating_parser: EIFFEL_PARSER
 			-- A parser used to validate a parse
 		once
 			create Result.make_with_factory (create {AST_NULL_FACTORY})
+		ensure
+			result_attached: attached Result
 		end
 
 feature -- Query
 
-	ast_position (a_ast: detachable AST_EIFFEL): attached TUPLE [start_position: INTEGER; end_position: INTEGER]
+	ast_position (a_ast: AST_EIFFEL): TUPLE [start_position: INTEGER; end_position: INTEGER]
 			-- Retrieve an AST node's position.
 			-- Note: The result is unadjusted! To account for ajustement, pass through `modified_data.adjusted_position'.
 			--
@@ -85,7 +87,7 @@ feature -- Query
 		require
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
-			a_ast_attached: a_ast /= Void
+			a_ast_attached: attached a_ast
 		local
 			l_data: like modified_data
 			l_first_leaf: LEAF_AS
@@ -94,7 +96,7 @@ feature -- Query
 			l_data := modified_data
 			l_first_leaf := a_ast.first_token (l_data.ast_match_list)
 			l_last_leaf := a_ast.last_token (l_data.ast_match_list)
-			if l_first_leaf /= Void and then l_last_leaf /= Void then
+			if attached l_first_leaf and then attached l_last_leaf then
 				Result := [l_first_leaf.start_position, l_last_leaf.end_position]
 			else
 					-- Invalid parser!
@@ -102,12 +104,13 @@ feature -- Query
 				Result := [0, 0]
 			end
 		ensure
+			result_attached: attached Result
 			result_start_position_small_enough: Result.start_position <= Result.end_position
 		end
 
 feature -- Basic operations
 
-	remove_ast_code (a_ast: detachable AST_EIFFEL; a_remove_ws: INTEGER)
+	remove_ast_code (a_ast: AST_EIFFEL; a_remove_ws: INTEGER)
 			-- Removes an AST node and sets `insertion_position' to the beginning of the removed AST position.
 			--
 			-- `a_ast': The AST node to remove from the code.
@@ -115,7 +118,7 @@ feature -- Basic operations
 		require
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
-			a_ast_attached: a_ast /= Void
+			a_ast_attached: attached a_ast
 		local
 			l_position: like ast_position
 			l_text: like original_text
@@ -188,16 +191,16 @@ feature -- Operation constants
 
 feature {NONE} -- Factory
 
-	new_modified_data: attached like modified_data
+	new_modified_data: like modified_data
 			-- <Precursor>
 		local
-			l_class: attached like context_class
+			l_class: like context_class
 			l_editor: like active_editor_for_class
-			l_text: attached STRING_32
+			l_text: STRING_32
 		do
 			l_class := context_class
 			l_editor := active_editor_for_class (l_class)
-			if l_editor = Void or else not is_editor_text_ready (l_editor) then
+			if not attached l_editor or else not is_editor_text_ready (l_editor) then
 					-- There's no open editor, use the class text from disk instead.
 				l_text := original_text
 			else
@@ -206,8 +209,11 @@ feature {NONE} -- Factory
 			create Result.make (l_class, l_text)
 		end
 
+invariant
+	modified_data_attached: attached modified_data
+
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -231,11 +237,11 @@ feature {NONE} -- Factory
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

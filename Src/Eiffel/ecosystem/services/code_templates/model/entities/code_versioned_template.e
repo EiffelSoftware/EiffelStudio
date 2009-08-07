@@ -28,13 +28,13 @@ feature {NONE} -- Initialization
 			-- `a_version': The minimum version of the compiler the code template will compile with.
 			-- `a_parent': Parent code node.
 		require
-			a_version_attached: a_version /= Void
-			a_parent_attached: a_parent /= Void
+			a_version_attached: attached a_version
+			a_parent_attached: attached a_parent
 		do
 			version := a_version
 			make_template (a_parent)
 		ensure
-			version_set: version = a_version
+			version_set: version ~ a_version
 		end
 
 feature -- Access
@@ -50,13 +50,13 @@ feature -- Query
 			-- `a_version': The other version to check compatibilty with.
 			-- `Result': True if Current is compatable with the supplied version.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 		do
 			Result := version.is_compatible_with (a_version)
 		end
 
 invariant
-	version_attached: version /= Void
+	version_attached: attached version
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

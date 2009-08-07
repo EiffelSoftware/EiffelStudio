@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_factory': Factory used for creating nodes.
 		require
-			a_factory_attached: a_factory /= Void
+			a_factory_attached: attached a_factory
 		do
 			code_factory := a_factory
 			build_nodes (a_factory)
@@ -71,7 +71,7 @@ feature -- Element change
 			--
 			-- `a_data': Metadata node.
 		require
-			a_data_attached: a_data /= Void
+			a_data_attached: attached a_data
 		do
 			metadata := a_data
 			a_data.parent := Current
@@ -85,7 +85,7 @@ feature -- Element change
 			--
 			-- `a_data': Declaration node.
 		require
-			a_decl_attached: a_decl /= Void
+			a_decl_attached: attached a_decl
 		do
 			declarations := a_decl
 			a_decl.parent := Current
@@ -99,7 +99,7 @@ feature -- Element change
 			--
 			-- `a_templates': Code templates.
 		require
-			a_templates_attached: a_templates /= Void
+			a_templates_attached: attached a_templates
 		do
 			templates := a_templates
 			a_templates.parent := Current
@@ -134,7 +134,7 @@ feature -- Query
 			-- `a_version': Version to find the most applicable template with.
 			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 			not_a_version_is_empty: not a_version.is_empty
 		do
 			Result := templates.applicable_item_with_version (a_version)
@@ -146,7 +146,7 @@ feature -- Query
 			-- `a_version': Version to find the most applicable template with.
 			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 			not_a_version_is_default: a_version /~ (create {attached CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
 		do
 			Result := templates.applicable_item_with_code_version (a_version)
@@ -161,13 +161,13 @@ feature -- Visitor
 		end
 
 invariant
-	metadata_attached: is_initialized implies metadata /= Void
+	metadata_attached: is_initialized implies attached metadata
 	metadata_parent_set: is_initialized implies metadata.parent = Current
-	declarations_attached: is_initialized implies declarations /= Void
+	declarations_attached: is_initialized implies attached declarations
 	declarations_parent_set: is_initialized implies declarations.parent = Current
-	templates_attached: is_initialized implies templates /= Void
+	templates_attached: is_initialized implies attached templates
 	templates_parent_set: is_initialized implies templates.parent = Current
-	code_factory_attached: is_initialized implies code_factory /= Void
+	code_factory_attached: is_initialized implies attached code_factory
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_text': A string representation of the token
 		require
-			a_text_attached: a_text /= Void
+			a_text_attached: attached a_text
 			a_text_is_valid_text: is_valid_text (a_text)
 		do
 			create text.make (a_text.count)

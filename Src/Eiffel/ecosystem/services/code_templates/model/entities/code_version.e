@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_version': A raw version string.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 			a_version: is_valid_version (a_version)
 		do
 			create version.make_from_string (deafult_version)
@@ -54,7 +54,7 @@ feature -- Element change
 			--
 			-- `a_version': Raw version string.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 			a_version: is_valid_version (a_version)
 		local
 			l_version: like version
@@ -76,7 +76,7 @@ feature -- Query
 			-- `a_version': A version string to determin validity.
 			-- `Result': True if the version string is valid; False otherwise.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 		do
 			Result := not a_version.is_empty
 		ensure
@@ -89,7 +89,7 @@ feature -- Query
 			-- `a_other': The other version to check compatibilty with.
 			-- `Result': True if Current is compatable with the supplied version
 		require
-			a_other_attached: a_other /= Void
+			a_other_attached: attached a_other
 		do
 			Result := version.is_case_insensitive_equal (a_other.version)
 		end
@@ -109,7 +109,7 @@ feature {NONE} -- Actions handlers
 			--
 			-- `a_old': The version number prior to the change.
 		require
-			a_old_attached: a_old /= Void
+			a_old_attached: attached a_old
 			a_old_is_valid_version: is_valid_version (a_old)
 		do
 		end
@@ -148,7 +148,7 @@ feature -- Constants
 			-- Default version string.
 
 invariant
-	version_attached: version /= Void
+	version_attached: attached version
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

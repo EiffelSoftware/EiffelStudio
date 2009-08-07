@@ -42,6 +42,8 @@ feature -- Element change
 			-- Sets the default value of a literal.
 			--
 			-- `a_value': A literal default value to show for in-place UI editions.
+		require
+			a_value_attached: attached a_value
 		do
 			create default_value.make_from_string (a_value)
 		ensure
@@ -74,7 +76,7 @@ feature -- Visitor
 		end
 
 invariant
-	default_value_attached: is_initialized implies default_value /= Void
+	default_value_attached: is_initialized implies attached default_value
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

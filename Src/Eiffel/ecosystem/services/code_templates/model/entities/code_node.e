@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- `a_factory': Factory used for creating nodes.
 		require
 			not_is_initialized: not is_initialized
-			a_factory_attached: a_factory /= Void
+			a_factory_attached: attached a_factory
 		do
 			initialize_nodes (a_factory)
 			is_initialized := True
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			-- `a_factory': Factory used for creating nodes.
 		require
 			not_is_initialized: not is_initialized
-			a_factory_attached: a_factory /= Void
+			a_factory_attached: attached a_factory
 		deferred
 		end
 
@@ -52,7 +52,7 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature {CODE_NODE} -- Access
@@ -61,7 +61,7 @@ feature {CODE_NODE} -- Access
 			-- Factory used for creating code nodes.
 		deferred
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature -- Status report
@@ -87,7 +87,7 @@ feature -- Visitor
 			-- `a_visitor': A code template visitor used to process the node.
 		require
 			is_interface_usable: is_interface_usable
-			a_visitor_attached: a_visitor /= Void
+			a_visitor_attached: attached a_visitor
 			a_visitor_is_interface_usable: a_visitor.is_interface_usable
 		deferred
 		end

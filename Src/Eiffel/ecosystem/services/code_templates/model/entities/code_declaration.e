@@ -25,9 +25,9 @@ feature {NONE} -- Initialization
 			-- `a_id': A declaration identifier.
 			-- `a_parent': Parent code node.
 		require
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
-			a_parent_attached: a_parent /= Void
+			a_parent_attached: attached a_parent
 		do
 			set_id (a_id.as_string_8)
 			make_sub_node (a_parent)
@@ -58,7 +58,7 @@ feature -- Element change
 			--
 			-- `a_id': A declaration identifier.
 		require
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
 		do
 			create id.make_from_string (a_id)
@@ -71,7 +71,7 @@ feature -- Element change
 			--
 			-- `a_description': A description of the identifier for UI replacement cues.
 		require
-			a_description_attached: a_description /= Void
+			a_description_attached: attached a_description
 		do
 			create description.make_from_string (a_description)
 		ensure
@@ -88,9 +88,9 @@ feature -- Status report
 		end
 
 invariant
-	id_attached: id /= Void
+	id_attached: attached id
 	not_id_is_empty: is_initialized implies not id.is_empty
-	description_attached: description /= Void
+	description_attached: attached description
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

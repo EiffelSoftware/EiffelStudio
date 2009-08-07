@@ -98,7 +98,7 @@ feature -- Status report
 	is_cataloged (a_folder: READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		do
-			Result := cataloged_folder_files.has (a_folder.as_string_8.as_attached)
+			Result := cataloged_folder_files.has (a_folder.as_string_8)
 		ensure then
 			cataloged_folder_files_has_a_folder: Result implies cataloged_folder_files.has (a_folder.as_string_8)
 		end
@@ -203,7 +203,7 @@ feature -- Events
 	catalog_changed_event: EVENT_TYPE [TUPLE]
 			-- <Precursor>
 		do
-			if (attached internal_catalog_changed_event as l_result) then
+			if attached internal_catalog_changed_event as l_result then
 				Result := l_result
 			else
 				create Result
@@ -242,6 +242,7 @@ feature {NONE} -- Helpers
 				internal_logger_service := Result
 			end
 		ensure
+			result_attached: attached Result
 			result_consistent: Result = logger_service
 		end
 
@@ -275,7 +276,7 @@ feature -- Basic operations
 			l_key: STRING
 			l_empty: BOOLEAN
 		do
-			if (attached internal_catalog_changed_event as l_events) and then (not l_events.is_suspended) then
+			if attached internal_catalog_changed_event as l_events and then not l_events.is_suspended then
 				l_empty := cataloged_folder_files.is_empty
 				l_events.perform_suspended_action (agent rescan_catalog)
 				if not l_empty or else l_empty /= cataloged_folder_files.is_empty then
@@ -317,12 +318,12 @@ feature -- Extension
 			if not l_files.is_empty then
 				l_definitions := cataloged_template_definitions
 				from l_files.start until l_files.after loop
-					if (attached l_files.item_for_iteration as l_file) then
+					if attached l_files.item_for_iteration as l_file then
 						if l_definitions.has (l_file) then
 								-- The template definition already exists, no need to build
 								-- the definition files.
 							l_definition := l_definitions.item (l_file)
-							if l_definition /= Void then
+							if attached l_definition then
 									-- Increment the reference count.
 								l_definition.ref_count := l_definition.ref_count + 1
 							end
@@ -368,10 +369,10 @@ feature -- Removal
 			l_catalog := cataloged_folder_files
 			l_folder := a_folder.as_string_8
 			l_files := l_catalog.item (l_folder)
-			if (attached l_files and then not l_files.is_empty) then
+			if attached l_files and then not l_files.is_empty then
 				l_definitions := cataloged_template_definitions
 				from l_files.start until l_files.after loop
-					if (attached l_files.item_for_iteration as l_file_item) then
+					if attached l_files.item_for_iteration as l_file_item then
 						l_file := l_file_item.as_string_8
 						if l_definitions.has (l_file) then
 								-- Decrement reference count
@@ -402,7 +403,7 @@ feature -- Removal
 				-- Remove from the folder/file catalog.
 			l_catalog.remove (l_folder)
 
-			if l_changed and then (attached internal_catalog_changed_event as l_events) then
+			if l_changed and then attached internal_catalog_changed_event as l_events then
 				l_events.publish (Void)
 			end
 		end
@@ -414,7 +415,7 @@ feature {NONE} -- Helpers
 		once
 			create Result
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	xml_parser: XM_EIFFEL_PARSER
@@ -422,7 +423,7 @@ feature {NONE} -- Helpers
 		once
 			create Result.make
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature {NONE} -- Basic operations
@@ -434,7 +435,7 @@ feature {NONE} -- Basic operations
 			-- `Result': A code template definition model or Void if the template file could not be parsed.
 		require
 			is_interface_usable: is_interface_usable
-			a_file_name_attached: a_file_name/= Void
+			a_file_name_attached: attached a_file_name
 			not_a_file_name_is_empty: not a_file_name.is_empty
 			a_file_name_exists: file_system.file_exists (a_file_name.as_string_8)
 		local
@@ -461,7 +462,7 @@ feature {NONE} -- Basic operations
 					if not l_callbacks.has_error then
 							-- Successful parse, return the template.
 						Result := l_callbacks.last_code_template_definition
-						if Result /= Void and then (not Result.is_interface_usable) then
+						if attached Result and then (not Result.is_interface_usable) then
 							Result := Void
 						end
 					else
@@ -477,7 +478,7 @@ feature {NONE} -- Basic operations
 			else
 				check l_file_name_attached: attached l_file_name end
 
-				if (attached l_resolver.last_stream as l_stream) then
+				if attached l_resolver.last_stream as l_stream then
 					l_stream.close
 				end
 
@@ -490,7 +491,7 @@ feature {NONE} -- Basic operations
 				end
 			end
 		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		rescue
 			if not retried then
 				retried := True
@@ -507,7 +508,7 @@ feature {NONE} -- Regular expressions
 			Result.set_caseless (True)
 			Result.compile ("\.code$")
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			result_is_compiled: Result.is_compiled
 			result_is_caseless: Result.is_caseless
 		end
@@ -531,8 +532,8 @@ feature {NONE} -- Implementation: Internal cached
 			-- Note: Do not use directly!
 
 invariant
-	cataloged_folder_files_attached: cataloged_folder_files /= Void
-	cataloged_template_definitions_attached: cataloged_template_definitions /= Void
+	cataloged_folder_files_attached: attached cataloged_folder_files
+	cataloged_template_definitions_attached: attached cataloged_template_definitions
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

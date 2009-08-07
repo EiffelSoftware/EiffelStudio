@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 			-- Initializes the code token reference using a code token id.
 			--
 			-- `a_token': A code token the current token references.
+		require
+			a_token_attached: attached a_token
 		do
 			code_token_id := a_token
 		ensure
@@ -82,7 +84,7 @@ feature -- Output
 		end
 
 invariant
-	code_token_id_attached: code_token_id /= Void
+	code_token_id_attached: attached code_token_id
 	not_is_editable: not is_editable
 
 ;note

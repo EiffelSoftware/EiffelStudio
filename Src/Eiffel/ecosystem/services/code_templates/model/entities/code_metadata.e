@@ -19,9 +19,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize_nodes (a_factory: like code_factory)
-			-- Initializes the default nodes for Current.
-			--
-			-- `a_factory': Factory used for creating nodes.
+			-- <Precursor>
 		do
 			set_title (create {STRING_32}.make_empty)
 			set_description (create {STRING_32}.make_empty)
@@ -54,7 +52,7 @@ feature -- Element change
 			--
 			-- `a_title': The title for the code template.
 		require
-			a_title_attached: a_title /= Void
+			a_title_attached: attached a_title
 		do
 			create title.make_from_string (a_title)
 		ensure
@@ -66,7 +64,7 @@ feature -- Element change
 			--
 			-- `a_description': A new code template description.
 		require
-			a_description_attached: a_description /= Void
+			a_description_attached: attached a_description
 		do
 			create description.make_from_string (a_description)
 		ensure
@@ -78,7 +76,7 @@ feature -- Element change
 			--
 			-- `a_author': A new author name or other moniker.
 		require
-			a_author_attached: a_author /= Void
+			a_author_attached: attached a_author
 		do
 			create author.make_from_string (a_author)
 		ensure
@@ -90,7 +88,7 @@ feature -- Element change
 			--
 			-- `a_shortcut': A shortcut string.
 		require
-			a_shortcut_attached: a_shortcut /= Void
+			a_shortcut_attached: attached a_shortcut
 		do
 			create shortcut.make_from_string (a_shortcut)
 		ensure
@@ -102,7 +100,7 @@ feature -- Element change
 			--
 			-- `a_categories': A new category collection.
 		require
-			a_categories_attached: a_categories /= Void
+			a_categories_attached: attached a_categories
 		do
 			categories := a_categories
 			a_categories.parent := Current
@@ -120,11 +118,11 @@ feature -- Visitor
 		end
 
 invariant
-	title_attached: is_initialized implies title /= Void
-	description_attached: is_initialized implies description /= Void
-	author_attached: is_initialized implies author /= Void
-	shortcut_attached: is_initialized implies shortcut /= Void
-	categories_attached: is_initialized implies categories /= Void
+	title_attached: is_initialized implies attached title
+	description_attached: is_initialized implies attached description
+	author_attached: is_initialized implies attached author
+	shortcut_attached: is_initialized implies attached shortcut
+	categories_attached: is_initialized implies attached categories
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

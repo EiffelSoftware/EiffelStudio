@@ -19,7 +19,7 @@ feature {CODE_TOKEN} -- Processing
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
-			a_value_attached: a_value /= Void
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -28,7 +28,7 @@ feature {CODE_TOKEN} -- Processing
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
-			a_value_attached: a_value /= Void
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -37,7 +37,7 @@ feature {CODE_TOKEN} -- Processing
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
-			a_value_attached: a_value /= Void
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -46,7 +46,7 @@ feature {CODE_TOKEN} -- Processing
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
-			a_value_attached: a_value /= Void
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -55,7 +55,7 @@ feature {CODE_TOKEN} -- Processing
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
-			a_value_attached: a_value /= Void
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -65,7 +65,7 @@ feature {CODE_TOKEN} -- Query
 	is_applicable_visitation_entity (a_value: ANY): BOOLEAN
 			-- Determines if object instance `a_value' is applicable for a visitation
 		require
-			a_value_attached: a_value /= Void
+			a_value_attached: attached a_value
 		do
 			Result := True
 		end

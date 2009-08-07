@@ -23,9 +23,9 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := symbol_table /= Void
+			Result := attached symbol_table
 		ensure then
-			symbol_table_attached: Result implies symbol_table /= Void
+			symbol_table_attached: Result implies attached symbol_table
 		end
 
 feature -- Basic operations
@@ -33,9 +33,9 @@ feature -- Basic operations
 	render_template (a_template: CODE_TEMPLATE; a_table: CODE_SYMBOL_TABLE)
 			-- Renders a code template.
 		require
-			a_template_attached: a_template /= Void
+			a_template_attached: attached a_template
 			a_template_is_interface_usable: a_template.is_interface_usable
-			a_table_attached: a_table /= Void
+			a_table_attached: attached a_table
 		do
 			reset
 
@@ -53,7 +53,7 @@ feature {NONE} -- Basic operations
 		do
 			symbol_table := Void
 		ensure
-			symbol_table_detached: symbol_table = Void
+			symbol_table_detached: not attached symbol_table
 		end
 
 ;note

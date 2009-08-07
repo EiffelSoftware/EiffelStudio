@@ -18,13 +18,15 @@ create
 
 feature -- Modification: Feature
 
-	modify_feature_entry (a_old_entry, a_new_entry: attached EIS_ENTRY)
+	modify_feature_entry (a_old_entry, a_new_entry: EIS_ENTRY)
 			-- Modify `a_old_entry' to `a_new_entry' in the feature.
 		require
 			is_interface_usable: is_interface_usable
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
 			is_modifiable: is_modifiable
+			a_old_entry_attached: attached a_old_entry
+			a_new_entry_attached: attached a_new_entry
 		local
 			l_insertion_code: STRING_32
 			l_output: ES_EIS_ENTRY_OUTPUT
@@ -41,13 +43,14 @@ feature -- Modification: Feature
 			is_dirty: is_dirty
 		end
 
-	write_feature_entry (a_entry: attached EIS_ENTRY)
+	write_feature_entry (a_entry: EIS_ENTRY)
 			-- Write `a_entry' into the class.
 		require
 			is_interface_usable: is_interface_usable
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
 			is_modifiable: is_modifiable
+			a_entry_attached: attached a_entry
 		local
 			l_ast: detachable FEATURE_AS
 			l_indexes: detachable INDEXING_CLAUSE_AS
@@ -56,15 +59,13 @@ feature -- Modification: Feature
 			l_insertion_code: STRING_32
 			l_output: ES_EIS_ENTRY_OUTPUT
 			l_entry: attached EIS_ENTRY
-			l_routine: detachable ROUTINE_AS
 		do
 			l_entry := a_entry
 			l_ast := ast_feature
 			l_indexes := l_ast.indexes
-			if l_indexes = Void then
+			if not attached l_indexes then
 				l_insertion_code := keyword_note_or_indexing + "%N%T%T%T"
-				l_routine ?= l_ast.body.content
-				if l_routine /= Void then
+				if attached {ROUTINE_AS} l_ast.body.content as l_routine then
 					if l_routine.precondition /= Void then
 						l_insertion_point := ast_position (l_routine.precondition).start_position
 					elseif l_routine.internal_locals /= Void then
@@ -81,7 +82,7 @@ feature -- Modification: Feature
 			create l_output
 			l_output.process (l_entry)
 			l_insertion_code.append (l_output.last_output_code)
-			if l_indexes = Void then
+			if not attached l_indexes then
 				l_insertion_code.append ("%N%T%T")
 			end
 			insert_code (l_insertion_point, l_insertion_code)
@@ -89,7 +90,7 @@ feature -- Modification: Feature
 			is_dirty: is_dirty
 		end
 
-	remove_feature_entry (a_entry: attached EIS_ENTRY; a_clean_empty_clause: BOOLEAN)
+	remove_feature_entry (a_entry: EIS_ENTRY; a_clean_empty_clause: BOOLEAN)
 			-- Remove `a_entry' from the class if exists.
 			-- `a_clean_empty_clause' to clean the leading empty clause if any.
 		require
@@ -97,6 +98,7 @@ feature -- Modification: Feature
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
 			is_modifiable: is_modifiable
+			a_entry_attached: attached a_entry
 		local
 			l_ast: detachable FEATURE_AS
 			l_indexes: detachable INDEXING_CLAUSE_AS
@@ -117,7 +119,7 @@ feature -- Modification: Feature
 				loop
 					if attached l_indexes.item as lt_index then
 						l_entry := eis_entry_from_index (lt_index, l_feature_id)
-						if l_entry /= Void and then l_entry.same_entry (a_entry) then
+						if attached l_entry and then l_entry.same_entry (a_entry) then
 							if l_indexes.count = 1 and then a_clean_empty_clause then
 									-- Remove the entire note/indexing clause
 								remove_ast_code (l_indexes, remove_white_space_trailing)
@@ -145,7 +147,7 @@ feature {NONE} -- Implementation
 
 	last_removed_position: INTEGER
 
-	keyword_note_or_indexing: attached STRING
+	keyword_note_or_indexing: STRING
 			-- Get eis container structure keyword from parser.
 			-- Either note or indexing
 		local
@@ -157,6 +159,9 @@ feature {NONE} -- Implementation
 			else
 				Result := {EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword
 			end
+		ensure
+			result_attached: attached Result
+			not_result_is_empty: not Result.is_empty
 		end
 
 note

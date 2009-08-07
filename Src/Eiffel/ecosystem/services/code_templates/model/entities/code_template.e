@@ -58,7 +58,7 @@ feature -- Access
 				check gobo_memory_leak: l_cursor.off end
 			end
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	tokens: DS_BILINEAR [CODE_TOKEN] assign set_tokens
@@ -66,10 +66,8 @@ feature -- Access
 		do
 			Result := internal_tokens
 		ensure
-			result_attached: Result /= Void
-			result_contians_attached_items:
-				(attached {DS_LINEAR [detachable ANY]} Result as l_result) and then
-				not l_result.has (Void)
+			result_attached: attached Result
+			result_contians_attached_items: not Result.has_void
 		end
 
 feature {NONE} -- Access
@@ -89,10 +87,8 @@ feature -- Element change
 			--
 			-- `a_tokens': List of tokens to set for the code template
 		require
-			a_tokens_attached: a_tokens /= Void
-			a_tokens_contains_attached_items:
-				(attached {DS_LINEAR [detachable ANY]} a_tokens as l_list) and then
-				not l_list.has (Void)
+			a_tokens_attached: attached a_tokens
+			a_tokens_contains_attached_items: not a_tokens.has_void
 		local
 			l_tokens: like internal_tokens
 		do
@@ -106,7 +102,7 @@ feature -- Element change
 			--
 			-- `a_text': Code template text.
 		require
-			a_text_attached: a_text /= Void
+			a_text_attached: attached a_text
 		do
 			if not a_text.is_empty then
 				set_tokens (tokenizer.tokenize (a_text, code_factory))
@@ -140,7 +136,7 @@ feature -- Basic operations
 			--
 			-- `a_visitor': Visitor to process all tokens with
 		require
-			a_visitor_attached: a_visitor /= Void
+			a_visitor_attached: attached a_visitor
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [CODE_TOKEN]
 		do
@@ -160,10 +156,8 @@ feature {NONE} -- Internal implementation cache
 			-- Mutable version of `tokens'
 
 invariant
-	internal_tokens_attached: is_initialized implies  internal_tokens /= Void
-	internal_tokens_contains_attached_items: is_initialized implies
-		((attached {DS_LINEAR [detachable ANY]} internal_tokens as l_tokens) and then
-		not l_tokens.has (Void))
+	internal_tokens_attached: is_initialized implies attached internal_tokens
+	internal_tokens_contains_attached_items: is_initialized implies not internal_tokens.has_void
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

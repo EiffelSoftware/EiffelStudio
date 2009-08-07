@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_text': A string representation of the token.
 		require
+			a_text_attached: attached a_text
 			a_text_is_valid_text: is_valid_text (a_text)
 		do
 			is_editable := True
@@ -77,7 +78,7 @@ feature -- Basic operations
 			--
 			-- `a_table': A code symbol table to take evaluated values from.
 		require
-			a_table_attached: a_table /= Void
+			a_table_attached: attached a_table
 		local
 			l_value: CODE_SYMBOL_VALUE
 			l_id: STRING
@@ -115,7 +116,7 @@ feature -- Output
 feature {NONE} -- Internal implementation cache
 
 	internal_printable_text: detachable like printable_text
-			-- Mutable version of `printable_text'		
+			-- Mutable version of `printable_text'.	
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

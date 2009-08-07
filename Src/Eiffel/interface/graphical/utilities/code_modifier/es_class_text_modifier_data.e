@@ -33,25 +33,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: attached like associated_class; a_text: attached like text)
+	make (a_class: like associated_class; a_text: like text)
 			-- Initializes the data required to perform class modifications.
 			--
 			-- `a_class': The associated class to perform modifications on.
 			-- `a_text': Actual class text to modify.
+		require
+			a_class_attached: attached a_class
+			a_text_attached: attached a_text
 		do
 			associated_class := a_class
 			text := a_text.twin
-			create position_adjustments.make_default
+			create position_adjustments.make (1)
 			original_count := text.count
 		ensure
 			associated_class_set: associated_class = a_class
-			text_set: text.is_equal (a_text)
+			text_set: text ~ a_text
 			original_count_set: original_count = text.count
 		end
 
 feature -- Access
 
-	text: attached STRING_32 assign set_text
+	text: STRING_32 assign set_text
 			-- Modified text.
 
 	original_count: INTEGER
@@ -59,17 +62,19 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	associated_class: attached CLASS_I
+	associated_class: CLASS_I
 			-- Class associated with Current
 
-	position_adjustments: attached DS_ARRAYED_LIST [TUPLE [position: INTEGER; adjustment: INTEGER]]
+	position_adjustments: ARRAYED_LIST [TUPLE [position: INTEGER; adjustment: INTEGER]]
 			-- Positional adjustments for batch modifications.
 
 feature {ES_CLASS_TEXT_MODIFIER} -- Element change
 
-	set_text (a_text: attached like text)
+	set_text (a_text: like text)
 			-- Sets new modifier text.
 			-- Note: Please use only when commiting changes for synchronization purposes
+		require
+			a_text_attached: attached a_text
 		do
 			text := a_text
 			original_count := text.count
@@ -173,11 +178,16 @@ feature {ES_CLASS_TEXT_MODIFIER} -- Basic operations
 				l_adjustments.forth
 			end
 				-- We save adjusted position `l_pos'.
-			position_adjustments.put_last ([l_pos, a_count])
+			position_adjustments.extend ([l_pos, a_count])
 		end
 
+invariant
+	text_attached: attached text
+	associated_class_attached: attached associated_class
+	position_adjustments_attached: attached position_adjustments
+
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -190,22 +200,22 @@ feature {ES_CLASS_TEXT_MODIFIER} -- Basic operations
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_parent': Parent code node.
 		require
-			a_parent_attached: a_parent /= Void
+			a_parent_attached: attached a_parent
 		do
 			parent := a_parent
 			make_node
@@ -43,7 +43,7 @@ feature -- Access
 			Result := parent.definition
 		end
 
-	parent: attached G assign set_parent
+	parent: G assign set_parent
 			-- Parent node of Current node.
 
 feature {CODE_NODE} -- Access
@@ -59,7 +59,9 @@ feature {CODE_NODE} -- Element change
 	set_parent (a_parent: like parent)
 			-- Set parent node of Current node.
 			--
-			--| Note: Use this feature with caution and ensure
+			--| Note: Use this feature with caution and ensure.
+		require
+			a_parent_attached: attached a_parent
 		do
 			parent := a_parent
 			if not is_initialized then
@@ -69,6 +71,9 @@ feature {CODE_NODE} -- Element change
 			parent_assigned: parent = a_parent
 			is_initialized: is_initialized
 		end
+
+invariant
+	parent_attached: attached parent
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

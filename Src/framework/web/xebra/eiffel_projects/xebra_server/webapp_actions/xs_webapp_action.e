@@ -183,13 +183,6 @@ feature -- Paths
 
 feature -- Operations
 
---	config_outputter
---			-- Has to be called in every new thread (?), also in every process_exit_handler...
---		do
---			o.set_name ({XS_MAIN_SERVER}.name)
---			o.set_debug_level (args.debug_level)
---		end
-
 	execute: XC_COMMAND_RESPONSE
 			-- Executes the action if necessary or else executes the next action
 		do
@@ -212,8 +205,6 @@ feature -- Operations
 			end
 		end
 
-
-
 feature  -- Status report internal
 
 	is_necessary: BOOLEAN
@@ -222,14 +213,6 @@ feature  -- Status report internal
 		end
 
 feature -- Status setting
-
---	set_stop_action (a_action: XS_WEBAPP_ACTION)
---			-- Sets a stop action
---		do
---			stop_action := a_action
---		ensure
---			action_set: stop_action = a_action
---		end
 
 	set_webapp (a_webapp: XS_WEBAPP)
 			-- Setts webapp.

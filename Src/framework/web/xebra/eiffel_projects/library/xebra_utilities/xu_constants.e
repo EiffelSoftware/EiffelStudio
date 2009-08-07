@@ -10,6 +10,9 @@ note
 class
 	XU_CONSTANTS
 
+feature -- Xebra
+
+	Version: STRING = "Pre-Release"
 
 feature -- Files
 

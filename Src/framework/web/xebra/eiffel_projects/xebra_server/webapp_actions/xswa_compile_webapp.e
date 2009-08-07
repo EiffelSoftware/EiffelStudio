@@ -209,9 +209,7 @@ feature -- Agent
 	compiler_output_handler (a_ouput: STRING)
 			-- Forwards output to console
 		do
-			--o.set_name ("COMPILER")
 			o.dprintn (a_ouput, 3)
-			--o.set_name ({XS_MAIN_SERVER}.name)
 		end
 
 invariant

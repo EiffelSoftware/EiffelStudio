@@ -1,6 +1,6 @@
 note
 	description: "[
-		No comment yet.
+		The action that executes the servlet_gen.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

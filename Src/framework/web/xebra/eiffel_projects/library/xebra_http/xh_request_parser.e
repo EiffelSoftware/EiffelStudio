@@ -104,7 +104,6 @@ feature {NONE} -- Parser
 			item_name := (-(key_t_value.negate + any)).consumer
 			item_value := (-((key_t_name.negate + key_end.negate) + any)).consumer
 
-
 				-- Structure
 			table_entry := key_t_name + item_name + key_t_value + item_value
 			table_entry.set_behaviour (agent build_table_item)

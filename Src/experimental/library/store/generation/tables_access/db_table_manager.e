@@ -26,7 +26,7 @@ feature -- Initialization
 			create repository_table.make (1, tables.Table_number)
 			create update_parameters_table.make (1, tables.Table_number)
 			create updater_table.make (1, tables.Table_number)
-
+			select_query_prepared := True
 			remove_order_by
 		end
 
@@ -317,7 +317,7 @@ feature -- Basic operations
 		do
 			l_select_qualifiers := select_qualifiers
 			if l_select_qualifiers = Void then
-				l_select_qualifiers := value.twin
+				select_qualifiers := value.twin
 			else
 				l_select_qualifiers.append (Space + And_operator + Space + value)
 			end

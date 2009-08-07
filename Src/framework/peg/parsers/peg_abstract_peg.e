@@ -185,6 +185,7 @@ feature {PEG_ABSTRACT_PEG} -- Serialization
 				Result := True
 			else
 				a_already_visited.extend (a_parser)
+				Result := False -- Just to be sure.
 			end
 		end
 
@@ -223,11 +224,44 @@ feature {PEG_ABSTRACT_PEG} -- Implementation
 feature -- Convenience
 
 	add alias "+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+			-- Convenience feature to add two pegs together in a sequence
 		require
 			a_other_attached: attached a_other
 		do
 			create Result.make
 			Result := (Result + Current) + a_other
+		ensure
+			Result_attached: attached Result
+		end
+
+	add_with_whitespace alias "&+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+			-- Convience feature to add two pegs together in a sequence with an arbitrary number
+			-- (at least 1) of whitespaces inbetween
+		require
+			a_other_attached: attached a_other
+		local
+			l_ws: PEG_WHITE_SPACE_CHARACTER
+		do
+			create Result.make
+			create l_ws.make
+			l_ws.ommit_result
+			Result := (Result + Current + (+l_ws) + a_other)
+		ensure
+			Result_attached: attached Result
+		end
+
+	add_with_optional_whitespace alias "|+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+			-- Convience feature to add two pegs together in a sequence with an arbitrary number
+			-- (zero or more) of whitespaces inbetween
+		require
+			a_other_attached: attached a_other
+		local
+			l_ws: PEG_WHITE_SPACE_CHARACTER
+		do
+			create Result.make
+			create l_ws.make
+			l_ws.ommit_result
+			Result := (Result + Current + (-l_ws) + a_other)
 		ensure
 			Result_attached: attached Result
 		end

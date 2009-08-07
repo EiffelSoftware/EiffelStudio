@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			value := variable_attribute | dynamic_attribute | value_attribute
 
 				-- Tag attributes
-			l_attribute := (whitespaces.optional + identifier + whitespaces.optional + equals + whitespaces.optional + quote + value + quote)
+			l_attribute := (whitespaces.optional + identifier |+ equals |+ quote + value + quote)
 			l_attribute.set_behaviour (agent build_attribute)
 			l_attribute.fixate
 			l_attribute.set_name ("attribute")
@@ -111,21 +111,21 @@ feature {NONE} -- Implementation
 
 			create {PEG_CHOICE} xml.make
 
-			plain_html_long_end := (close_fixed + (-xml) + open + slash + whitespaces.optional + identifier)
+			plain_html_long_end := (close_fixed + (-xml) + open + slash |+ identifier)
 			plain_html := (open + identifier.enforce +
-							plain_html_header + whitespaces.optional + (
+							plain_html_header |+ (
 									slash | plain_html_long_end
-								) + whitespaces.optional + close_fixed
+								) |+ close_fixed
 						)
 			plain_html.set_name ("plain_html")
 			plain_html.set_behaviour (agent build_plain_html)
 			plain_html.set_error_message_handler (agent handle_plain_html_error)
 
-			xeb_tag_long_end := (close_fixed + (-xml) + open + slash + whitespaces.optional + namespace_identifier)
+			xeb_tag_long_end := (close_fixed + (-xml) + open + slash |+ namespace_identifier)
 			xeb_tag := (open +
-							xeb_tag_header + whitespaces.optional + (
+							xeb_tag_header |+ (
 									slash | xeb_tag_long_end
-								) + whitespaces.optional + close_fixed
+								) |+ close_fixed
 						)
 
 			xeb_tag.set_error_message_handler (agent handle_xeb_tag_error)
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			doctype.set_name ("doctype")
 
 				-- Xml with pre- and post-context
-			xeb_file := whitespaces.optional + doctype.optional + whitespaces.optional + xml + whitespaces.optional
+			xeb_file := whitespaces.optional + doctype.optional |+ xml + whitespaces.optional
 			xeb_file.set_behaviour (agent build_root_tag)
 			Result := xeb_file
 		end

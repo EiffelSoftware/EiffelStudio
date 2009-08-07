@@ -43,16 +43,16 @@ feature {NONE} -- Access
 			value.set_behaviour (agent concatenate_results)
 
 				-- Taglib specific
-			l_attribute := open + stringp ("attribute") + whitespaces + stringp ("id") + whitespaces.optional + equals + whitespaces.optional + value + whitespaces.optional + slash + close
+			l_attribute := open + stringp ("attribute") &+ stringp ("id") |+ equals |+ value |+ slash + close
 			l_attribute.fixate
 			l_attribute.set_behaviour (agent build_attribute)
-			l_tag := open + stringp ("tag") + whitespaces + stringp ("id") + whitespaces.optional + equals + whitespaces.optional + value + whitespaces.optional + stringp("class") +
-					whitespaces.optional + equals + whitespaces.optional + value + whitespaces.optional + close + (-(l_attribute | plain_text)) + open + slash + whitespaces.optional + stringp ("tag") + whitespaces.optional + close
+			l_tag := open + stringp ("tag") &+ stringp ("id") |+ equals |+ value |+ stringp("class") |+
+					equals |+ value |+ close + (-(l_attribute | plain_text)) + open + slash |+ stringp ("tag") |+ close
 			l_tag.fixate
 			l_tag.set_behaviour (agent build_tag)
 			l_tags := (l_tag | plain_text)
-			l_taglib := whitespaces.optional + open + stringp("taglib") + whitespaces + stringp("id") + whitespaces.optional + equals + whitespaces.optional + value + whitespaces.optional + close
-							+ (-l_tags) + open + slash + whitespaces.optional + stringp("taglib") + whitespaces.optional + close + whitespaces.optional
+			l_taglib := whitespaces.optional + open + stringp("taglib") &+ stringp("id") |+ equals |+ value |+ close
+							+ (-l_tags) + open + slash |+ stringp("taglib") |+ close + whitespaces.optional
 			l_taglib.set_behaviour (agent build_taglib)
 			Result := l_taglib
 		end

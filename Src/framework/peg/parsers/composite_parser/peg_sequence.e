@@ -11,7 +11,9 @@ class
 inherit
 	PEG_COMPOSITE
 		redefine
-			add
+			add,
+			add_with_whitespace,
+			add_with_optional_whitespace
 		end
 
 create
@@ -48,11 +50,44 @@ feature -- Implementation
 		end
 
 	add alias "+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+			-- <Precursor>
 		do
 			if fixated then
 				Result := Precursor (a_other)
 			else
 				children.extend(a_other)
+				Result := Current
+			end
+		end
+
+	add_with_whitespace alias "&+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+			-- <Precursor>
+		local
+			l_ws: PEG_WHITE_SPACE_CHARACTER
+		do
+			if fixated then
+				Result := Precursor (a_other)
+			else
+				create l_ws.make
+				l_ws.ommit_result
+				children.extend (+l_ws)
+				children.extend (a_other)
+				Result := Current
+			end
+		end
+
+	add_with_optional_whitespace alias "|+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+				-- <Precursor>
+		local
+			l_ws: PEG_WHITE_SPACE_CHARACTER
+		do
+			if fixated then
+				Result := Precursor (a_other)
+			else
+				create l_ws.make
+				l_ws.ommit_result
+				children.extend (-l_ws)
+				children.extend (a_other)
 				Result := Current
 			end
 		end

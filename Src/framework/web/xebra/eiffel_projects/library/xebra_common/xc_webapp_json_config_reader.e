@@ -35,15 +35,23 @@ feature -- Processing
 			l_buf_tl_name: STRING
 			l_buf_tl_ecf: STRING
 			l_buf_tl_path: STRING
+			l_util: XU_FILE_UTILITIES
 		do
-			l_error_prefix := "'" + a_filename + "': "
+			create l_util
+			l_error_prefix := "In config file '" + a_filename + "': "
 
 			if attached {JSON_OBJECT} a_value as l_v then
 				create l_config.make_empty
 
 					-- Check ecf
 				if attached {JSON_STRING} l_v.map_representation [create {JSON_STRING}.make_json (ecf_name)] as l_e then
-						l_config.set_ecf (l_e.item)
+				l_resolved_path := l_util.resolve_env_vars (l_e.item, True)
+					if l_util.is_readable_file (l_resolved_path) then
+						l_config.set_ecf (l_resolved_path)
+					else
+						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_error_prefix + ecf_name + ":'" + l_resolved_path + "'"), false)
+					end
+
 				else
 					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + ecf_name), false)
 				end

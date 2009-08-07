@@ -32,7 +32,7 @@ feature -- Processing
 			l_resolved_path: STRING
 			l_error_prefix: STRING
 		do
-			l_error_prefix := "'" + a_filename + "': "
+			l_error_prefix := "In config file '" + a_filename + "': "
 			create l_util
 
 			if attached {JSON_OBJECT} a_value as l_v then

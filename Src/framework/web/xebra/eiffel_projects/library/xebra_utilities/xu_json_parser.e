@@ -74,10 +74,9 @@ feature {NONE} -- Internal
 			e_c, e_cc, e, exp, frac, int,
 			number, chars, string, value,
 			elements, array, pair,
-			members, object, wso,
+			members, object,
 			true_kw, false_kw, null_kw: PEG_ABSTRACT_PEG
 		once
-			wso := whitespaces.optional
 			e_c := char ('e')
 			e_cc := char ('E')
 			true_kw := stringp ("true")
@@ -115,22 +114,22 @@ feature {NONE} -- Internal
 			value.fixate
 			value.set_name ("value")
 			create {PEG_CHOICE} elements.make
-			elements := elements | (value + wso + comma + wso + elements) | value
+			elements := elements | (value |+ comma |+ elements) | value
 			elements.fixate
 			elements.set_name ("elements")
-			array := array + open_square + wso + elements.optional + wso + close_square
+			array := array + open_square |+ elements.optional |+ close_square
 			array.fixate
 			array.set_behaviour (agent build_array)
 			array.set_name ("array")
-			pair := string + wso + colon + wso + value
+			pair := string |+ colon |+ value
 			pair.set_name ("name")
 			pair.fixate
 			pair.set_behaviour (agent build_pair)
 			create {PEG_CHOICE} members.make
-			members := members | (pair + wso + comma + wso + members) | pair
+			members := members | (pair |+ comma |+ members) | pair
 			members.fixate
 			members.set_name ("members")
-			object := object + wso + open_curly + wso + members.optional + wso + close_curly
+			object := object |+ open_curly |+ members.optional |+ close_curly
 			object.set_name ("object")
 			object.fixate
 			object.set_behaviour (agent build_object)

@@ -1186,7 +1186,8 @@ feature {NONE} -- External features
 					 -- most likely Void?
 				end
 
-				check l_para /= Void end -- FIXME: bug?
+				l_para := para
+				check l_para_not_void: l_para /= Void end
 				if type = -1 then
 					l_para.set (Void, i)
 				else

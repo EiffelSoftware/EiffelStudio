@@ -9,12 +9,25 @@ class
 	XWA_NUMBER_VALIDATOR
 
 inherit
-	XWA_REGEXP_VALIDATOR
+	XWA_VALIDATOR
 
 create
 	make
 
+feature -- Initialization
+
+	make
+			-- Initializes 'Current'
+		do
+		end
+
 feature -- Implementation
+
+	validate (a_argument: STRING): BOOLEAN
+			-- <Precursor>
+		do
+			Result := a_argument.is_integer
+		end
 
 	message: STRING
 			-- <Precursor>
@@ -22,9 +35,4 @@ feature -- Implementation
 			Result := "Value is not a number!"
 		end
 
-	regular_expression: STRING
-			-- <Precursor>
-		do
-			Result := "^-?\d+$"
-		end
 end

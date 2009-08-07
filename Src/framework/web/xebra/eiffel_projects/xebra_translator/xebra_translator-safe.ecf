@@ -2,7 +2,8 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="xebra_translator" uuid="5261943E-A4BF-46FE-9920-DEA8B568943F">
 	<target name="xebra_translator">
 		<root class="XT_APPLICATION" feature="make"/>
-		<option profile="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		<option profile="true" debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+			<debug name="peg" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

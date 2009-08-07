@@ -2,25 +2,20 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="servercontrol" uuid="E1B22E35-B61F-4767-BB77-4B591FDED0E6">
 	<target name="servercontrol">
 		<root class="G_SERVERCONTROL_APPLICATION" feature="make"/>
-		<option full_class_checking="true">
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
-		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="xebra_common" location="$XEBRA_LIBRARY\xebra_common\xebra_common-voidunsafe.ecf" readonly="false">
+		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="xebra_common" location="$XEBRA_LIBRARY\xebra_common\xebra_common-safe.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library> 
-		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-voidunsafe.ecf"/>
-	<!--	<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false">
-			<option>
-				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
-			</option>
-		</library> -->
-		<library name="xebra_web_application" location="$XEBRA_LIBRARY\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>
+		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-safe.ecf"/>	
+		<library name="xebra_web_application" location="$XEBRA_LIBRARY\xebra_web_application\xebra_web_application-safe.ecf" readonly="false"/>
 		<cluster name="xebrawebapp" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

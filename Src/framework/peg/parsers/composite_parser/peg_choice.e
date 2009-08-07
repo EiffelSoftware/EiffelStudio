@@ -48,7 +48,7 @@ feature -- Implementation
 			if fixated then
 				Result := Precursor (a_other)
 			else
-				children.extend(a_other)
+				children.extend (a_other)
 				Result := Current
 			end
 		end

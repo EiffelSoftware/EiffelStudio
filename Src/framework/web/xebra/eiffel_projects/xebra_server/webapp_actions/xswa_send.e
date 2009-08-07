@@ -1,6 +1,6 @@
 note
 	description: "[
-		The action which sends a request to the webapp
+		The action which sends a request to the webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

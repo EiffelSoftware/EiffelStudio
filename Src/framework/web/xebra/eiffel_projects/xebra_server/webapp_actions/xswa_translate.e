@@ -1,7 +1,6 @@
 note
 	description: "[
-		The translate action which includes running the translator, 
-		compiling the servlet_gen and running the servlet_Gen
+		The action that runs the translator to translate the webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

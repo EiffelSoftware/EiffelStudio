@@ -73,7 +73,7 @@ namespace Xebra
             try
             {
                 log.Debug("Creating socket...");
-                socket = new TcpClient("localhost", 55000);
+                socket = new TcpClient("localhost", 55001);
                 log.Debug("Connected.");
                 return true;
             }

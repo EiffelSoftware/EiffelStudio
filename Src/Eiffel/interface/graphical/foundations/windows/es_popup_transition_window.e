@@ -300,7 +300,6 @@ feature {NONE} -- Basic operations
 		do
 			if not retried then
 				action.call (Void)
-				({ANY} #? void).do_nothing
 				hide
 			elseif is_interface_usable and then is_recycled_on_close then
 				recycle

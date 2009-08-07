@@ -119,7 +119,7 @@ feature {NONE} -- Access: Usage
 	version: STRING
 			-- <Precursor>
 		once
-			Result := "Pre-release"
+			Result := {XU_CONSTANTS}.Version
 		end
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]

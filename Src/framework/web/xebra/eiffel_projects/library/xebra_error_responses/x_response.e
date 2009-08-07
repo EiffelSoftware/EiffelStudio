@@ -163,7 +163,7 @@ feature -- Html code generation
 			</p>
 			<hr/>
 			<h3>
-			]" + producer +	"[
+			]" + producer +	 {XU_CONSTANTS}.Version + "[
 			</h3>
 			</body>
 			</html>

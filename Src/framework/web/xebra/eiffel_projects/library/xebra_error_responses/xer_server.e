@@ -15,6 +15,7 @@ feature -- Access
 	producer: STRING
 			-- The producer of the response
 		do
-			Result := "Xebra Server "
+			Result := "Xebra Server " 
 		end
+
 end

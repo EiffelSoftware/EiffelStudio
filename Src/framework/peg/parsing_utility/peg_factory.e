@@ -106,6 +106,11 @@ feature -- Predefined PEGs
 			Result := char ('#')
 		end
 
+	ampersand: PEG_ABSTRACT_PEG
+		do
+			Result := char ('&')
+		end
+
 	digit: PEG_ABSTRACT_PEG
 		do
 			Result := range ('0', '9')

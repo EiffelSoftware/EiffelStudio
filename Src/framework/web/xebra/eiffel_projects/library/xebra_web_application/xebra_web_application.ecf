@@ -11,12 +11,12 @@
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<library name="thread_utilities" location="$XEBRA_LIBRARY\thread_utilities\thread_utilities-safe.ecf" readonly="false"/>
-		<library name="xebra_common" location="$XEBRA_LIBRARY\xebra_common\xebra_common-safe.ecf" readonly="false"/>	
-		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-safe.ecf"/>
-		<library name="xebra_error_responses" location="$XEBRA_LIBRARY\xebra_error_responses\xebra_error_responses-safe.ecf" readonly="false"/>
-		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-safe.ecf"/>
-		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-safe.ecf" readonly="false"/>	
+		<library name="thread_utilities" location="$XEBRA_LIBRARY\thread_utilities\thread_utilities.ecf" readonly="false"/>
+		<library name="xebra_common" location="$XEBRA_LIBRARY\xebra_common\xebra_common.ecf" readonly="false"/>	
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error.ecf"/>
+		<library name="xebra_error_responses" location="$XEBRA_LIBRARY\xebra_error_responses\xebra_error_responses.ecf" readonly="false"/>
+		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities.ecf" readonly="false"/>	
 		<cluster name="xebra_web_application" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/xml_rpc$</exclude>

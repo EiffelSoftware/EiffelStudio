@@ -8,9 +8,9 @@
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager-safe.ecf"/>
-		<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements-safe.ecf" readonly="false"/>
-		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-safe.ecf"/>
-		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-safe.ecf"/>
+		<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements.ecf" readonly="false"/>
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities.ecf"/>
 		<cluster name="xebra_tags" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

@@ -59,8 +59,6 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
 		int save_file)
 {
 	const char *bbuf;
-/*	apr_off_t blen; */
-/*	apr_size_t bsize; */
 	apr_size_t nbytes;
 	int bytes;
 	apr_status_t rv;
@@ -91,7 +89,7 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
 	if (save_file) {
 		/* Prepare tmp file */
 		tmpname = apr_pstrdup (r->pool, UP_FN);
-		rv = apr_file_mktemp (&tmpfile, tmpname, KEEPONCLOSE, r->pool);
+		rv = apr_file_mktemp (&tmpfile, tmpname, APR_CREATE | APR_WRITE , r->pool);
 		DEBUG ("Creating file... '%s'", tmpname);
 
 #ifndef _WINDOWS

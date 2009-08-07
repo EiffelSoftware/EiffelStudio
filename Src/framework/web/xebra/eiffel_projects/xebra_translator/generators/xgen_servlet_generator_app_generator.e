@@ -266,10 +266,10 @@ feature -- Constants
 		do
 			Result :=
 					"[
-					<library name="xebra_tags" location="$XEBRA_LIBRARY\xebra_tags\xebra_tags-safe.ecf" readonly="false"/>
-					<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements-safe.ecf" readonly="false"/>
-					<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-safe.ecf" readonly="false"/>
-					<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile-safe.ecf"/>
+					<library name="xebra_tags" location="$XEBRA_LIBRARY\xebra_tags\xebra_tags.ecf" readonly="false"/>
+					<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements.ecf" readonly="false"/>
+					<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities.ecf" readonly="false"/>
+					<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
 							<cluster name="servlet_gen" location=".\" recursive="true">
 								<file_rule>
 									<exclude>/EIFGENs$</exclude>

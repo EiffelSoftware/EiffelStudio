@@ -85,17 +85,10 @@
 								</td>
 								<td align="center">
 									<div width="300px">
+										<xeb:iterate times="10">
 										<span class="active_page">1 </span>
-										<a class="pager_buttons" href="">2 </a>
-										<a class="pager_buttons" href="">3 </a>
-										<a class="pager_buttons" href="">4 </a>
-										<a class="pager_buttons" href="">5 </a>
-										<a class="pager_buttons" href="">6 </a>
-										<a class="pager_buttons" href="">7 </a>
-										<a class="pager_buttons" href="">8 </a>
-										<a class="pager_buttons" href="">9 </a>
-										<a class="pager_buttons" href="">10 </a>
-										<a class="pager_buttons" href="">11 </a>
+										<!--a class="pager_buttons" href="">2 </a-->
+										</xeb>
 									</div>
 								</td>
 								<td align="right" width="37px">
@@ -206,11 +199,9 @@
 								</td>
 								<td align="center">
 									<div width="300px">
-										<span class="active_page">1 </span>
-										<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_1" class="pager_buttons" href="">2 </a>
-										<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_2" class="pager_buttons" href="">3 </a>
-										<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_3" class="pager_buttons" href="">4 </a>
-										<a id="ctl00_ctl00_default_main_content_main_content_pager___pager_4" class="pager_buttons" href="">5 </a>
+										<xeb:iterate times="10">
+											<span class="active_page">1 </span>										
+										</xeb:iterate>
 									</div>
 								</td>
 								<td align="right" width="37px">

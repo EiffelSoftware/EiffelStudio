@@ -110,9 +110,10 @@ feature -- Basic functionality
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				create buf.make (l_file)
 				create application_class.make (Application_name.as_upper)
-				application_class.set_inherit ("KL_SHARED_ARGUMENTS%N%TXU_SHARED_OUTPUTTER")
+				application_class.set_inherit ("XU_SHARED_OUTPUTTER")
 				application_class.set_constructor_name ("make")
-				application_class.add_feature (build_constructor_for_application (a_path))
+				application_class.add_feature (build_constructor_for_application)
+				application_class.add_feature (build_run_for_application (a_path))
 				application_class.serialize (buf)
 				l_util.close
 			end
@@ -142,22 +143,31 @@ feature -- Basic functionality
 
 feature {NONE} -- Implementation
 
-	build_constructor_for_application (a_path: FILE_NAME): XEL_FEATURE_ELEMENT
+	build_constructor_for_application: XEL_FEATURE_ELEMENT
+			-- Builds the constructor feature for the APPLICATION class of servlet_gen		
+		do
+			create Result.make ("make")
+			Result.append_local ("l_arg_parser", "XTAG_ARGUMENT_PARSER")
+			Result.append_expression ("create l_arg_parser.make")
+			Result.append_expression ("l_arg_parser.execute (agent run (l_arg_parser))")
+		end
+
+	build_run_for_application (a_path: FILE_NAME): XEL_FEATURE_ELEMENT
 			-- Builds the constructor feature for the APPLICATION class of servlet_gen
 		local
 			l_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR
 		do
-			create Result.make ("make")
+			create Result.make ("run (a_arg_parser: XTAG_ARGUMENT_PARSER)")
 			Result.append_local ("l_path", "STRING")
 			Result.append_local ("l_controller_table", "HASH_TABLE [STRING, STRING]")
 			Result.append_local ("l_const_class", "XEL_CONSTANTS_CLASS_ELEMENT")
 			Result.append_expression ("create l_const_class.make_constant")
 			Result.append_expression ("o.set_name (%"XEBSRVLGEN%")")
 			Result.append_expression ("o.set_debug_level (10)")
-			Result.append_expression ("if  Arguments.argument_count /= 1 then")
-			Result.append_expression ("print (%"usage:serlvet_gen output_path%%N%")")
+			Result.append_expression ("if not a_arg_parser.is_successful then")
+			Result.append_expression ("print (%"usage:serlvet_gen -o output_path%%N%")")
 			Result.append_expression ("else")
-			Result.append_expression ("l_path := Arguments.argument (1)")
+			Result.append_expression ("l_path := a_arg_parser.output_path")
 
 			from
 				servlet_generator_generators.start
@@ -245,21 +255,21 @@ feature -- Constants
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
 	<target name="servlet_gen">
 		<root class="G_APPLICATION" feature="make"/>
-		<option warning="true" syntax="transitional">
+		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="standard">
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 ]"
 
 	servlet_gen_ecf_postfix: STRING
 		do
 			Result :=
 					"[
-					<library name="xebra_tags" location="$XEBRA_LIBRARY\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
-					<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
-					<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
-					<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
+					<library name="xebra_tags" location="$XEBRA_LIBRARY\xebra_tags\xebra_tags-safe.ecf" readonly="false"/>
+					<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements-safe.ecf" readonly="false"/>
+					<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-safe.ecf" readonly="false"/>
+					<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile-safe.ecf"/>
 							<cluster name="servlet_gen" location=".\" recursive="true">
 								<file_rule>
 									<exclude>/EIFGENs$</exclude>
@@ -273,44 +283,6 @@ feature -- Constants
 		ensure
 			result_attached: Result /= Void
 		end
-	servlet_gen_ecf_postfix_TESTTEST: STRING
-		do
-			Result :=
-					"[
-					<library name="xebra_tags" location="
-					]"
-					+ config.xebra_library_path.value +
-					"[
-					\xebra_tags\xebra_tags-voidunsafe.ecf" readonly="false"/>
-					<library name="xebra_ast_elements" location="
-					]"
-					+ config.xebra_library_path.value +
-					"[
-					\xebra_ast_elements\xebra_ast_elements-voidunsafe.ecf" readonly="false"/>
-					<library name="xebra_utilities" location="
-					]"
-					+ config.xebra_library_path.value +
-					"[
-					\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
-					<precompile name="precompile" location="
-					]"
-					+ config.xebra_library_path.value +
-					"[
-					\xebra_precompile\xebra_precompile.ecf"/>
-							<cluster name="servlet_gen" location=".\" recursive="true">
-								<file_rule>
-									<exclude>/EIFGENs$</exclude>
-									<exclude>/.svn$</exclude>
-									<exclude>/CVS$</exclude>
-								</file_rule>
-							</cluster>
-						</target>
-					</system>
-					]"
-		ensure
-			result_attached: Result /= Void
-		end
-
 
 		-- The .ecf file
 

@@ -9,10 +9,17 @@ class
 	XWA_ALPHA_NUMERIC_VALIDATOR
 
 inherit
-	XWA_REGEXP_VALIDATOR
+	XWA_VALIDATOR
 
 create
 	make
+
+feature -- Initialization
+
+	make
+			-- Initializer...
+		do
+		end
 
 feature -- Implementation
 
@@ -22,11 +29,10 @@ feature -- Implementation
 			Result := "Value is not alphanumeric!"
 		end
 
-	regular_expression: STRING
+	validate (a_argument: STRING): BOOLEAN
 			-- <Precursor>
 		do
-			Result := "^\w+$"
+			Result := True
 		end
-
 
 end

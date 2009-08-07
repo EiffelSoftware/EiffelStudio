@@ -1,5 +1,5 @@
 {
-	"ecf": "$XEBRA_DEV/www/support.ecf",
+	"ecf": "$XEBRA_DEV/www/support/support.ecf",
 	"name": "support",
 	"port": "55012",
 	"host": "localhost",

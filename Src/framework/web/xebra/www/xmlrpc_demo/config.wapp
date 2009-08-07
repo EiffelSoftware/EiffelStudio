@@ -1,5 +1,5 @@
 {
-	"ecf": "$XEBRA_DEV/www/xml_rpc.ecf",
+	"ecf": "$XEBRA_DEV/www/xmlrpc_demo/xmlrpc_demo.ecf",
 	"name": "xmlrpc_demo",
 	"port": "55014",
 	"host": "localhost",

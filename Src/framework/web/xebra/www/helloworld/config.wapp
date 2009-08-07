@@ -1,5 +1,5 @@
 {
-	"ecf": "$XEBRA_DEV/www/helloworld-safe.ecf",
+	"ecf": "$XEBRA_DEV/www/helloworld/helloworld-safe.ecf",
 	"name": "helloworld",
 	"port": "55011",
 	"host": "localhost",

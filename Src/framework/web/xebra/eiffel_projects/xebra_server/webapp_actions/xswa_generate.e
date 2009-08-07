@@ -41,7 +41,7 @@ feature -- Access
 	generate_args: STRING
 			-- The arguments that are passed to the servlet_gen
 		do
-			Result :=  "."
+			Result :=  "-o ."
 		ensure
 			Result_attached: Result /= void
 		end

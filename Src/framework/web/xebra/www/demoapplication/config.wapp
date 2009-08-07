@@ -1,5 +1,5 @@
 {
-	"ecf": "$XEBRA_DEV/www/demoapplication.ecf",
+	"ecf": "$XEBRA_DEV/www/demoapplication/demoapplication-safe.ecf",
 	"name": "demoapplication",
 	"port": "55010",
 	"host": "localhost",
@@ -12,7 +12,7 @@
 		},
 		{
 			"name": "xebra_taglibrary_form",
-			"ecf":  "xebra_taglibrary_form-voidunsafe.ecf",
+			"ecf":  "xebra_taglibrary_form-safe.ecf",
 			"path": "$XEBRA_LIBRARY/xebra_taglibrary_form"
 		}
 	]

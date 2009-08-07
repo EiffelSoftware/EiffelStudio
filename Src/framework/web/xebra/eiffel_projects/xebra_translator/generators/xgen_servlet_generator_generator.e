@@ -193,10 +193,10 @@ feature -- Basic functionality
 					create buf.make (l_file)
 					servlet_gen_class.serialize (buf)
 					l_util.close
-					o.iprint ("Servlet generator generated at: " + l_filename)
+					o.dprint ("Servlet generator generated at: " + l_filename, 1)
 				end
 			else
-				o.iprint ("Already up to date: " + l_filename)
+				o.dprint ("Already up to date: " + l_filename, 1)
 			end
 		end
 

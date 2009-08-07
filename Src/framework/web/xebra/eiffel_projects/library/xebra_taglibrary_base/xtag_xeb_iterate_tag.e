@@ -56,8 +56,9 @@ feature {NONE} -- Implementation
 			l_list_value: STRING
 		do
 			a_servlet_class.add_variable_by_name_type (variable.value (current_controller_id), type.value (current_controller_id))
+			a_servlet_class.make_feature.append_expression ("create " + variable.value (current_controller_id) + ".make")
 			temp_list := a_servlet_class.render_html_page.new_local ("LIST [" + type.value (current_controller_id) + "]")
-			if list.is_dynamic or list.is_variable then
+			if list.is_dynamic or list.is_variable then			
 				l_list_value := list.plain_value (current_controller_id)
 			else
 				l_list_value := "%"" + list.value (current_controller_id) + "%""

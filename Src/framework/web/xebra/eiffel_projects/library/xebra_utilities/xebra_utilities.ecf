@@ -10,13 +10,13 @@
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
-		<library name="peg" location="$EIFFEL_SRC\framework\peg\peg-safe.ecf" readonly="false"/>
+		<library name="peg" location="$EIFFEL_SRC\framework\peg\peg.ecf" readonly="false"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types-safe.ecf" readonly="false"/>
 		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
-		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-safe.ecf" readonly="true"/>
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error.ecf" readonly="true"/>
 		<cluster name="xebra_utilities" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

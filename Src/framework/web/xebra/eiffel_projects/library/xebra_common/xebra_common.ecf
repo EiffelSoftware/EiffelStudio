@@ -8,10 +8,10 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types-safe.ecf" readonly="false"/>
 		<library name="ejson" location="$EIFFEL_SRC\contrib\library\ejson\json-safe.ecf"/>
-		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-safe.ecf" readonly="false" />
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error.ecf" readonly="false" />
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager-safe.ecf"/>
-		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http-safe.ecf" readonly="false" />
-		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-safe.ecf"/>
+		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http.ecf" readonly="false" />
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities.ecf"/>
 		<cluster name="xebra_common" location=".\" recursive="true">
 		<file_rule>
 				<exclude>/EIFGENs$</exclude>

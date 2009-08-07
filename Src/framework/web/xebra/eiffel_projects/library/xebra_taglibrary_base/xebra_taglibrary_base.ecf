@@ -6,9 +6,9 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements-safe.ecf"/>
-		<library name="xebra_tags" location="$XEBRA_LIBRARY\xebra_tags\xebra_tags-safe.ecf"/>
-		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-safe.ecf"/>
+		<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements.ecf"/>
+		<library name="xebra_tags" location="$XEBRA_LIBRARY\xebra_tags\xebra_tags.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities.ecf"/>
 		<cluster name="xebra_taglibrary_base" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

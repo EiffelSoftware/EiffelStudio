@@ -19,13 +19,13 @@ feature -- Factory
 			-- `a_parent': A parent declaration collection the literal will eventually be contained in.
 			-- `Result': A code template literal declaration
 		require
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
-			a_parent_attached: a_parent /= Void
+			a_parent_attached: attached a_parent
 		do
 			create {CODE_BUILT_IN_LITERAL_DECLARATION} Result.make (a_id, a_parent)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id.as_string_8)
 			result_is_built_in: Result.is_built_in
 		end
@@ -36,11 +36,11 @@ feature -- Factory
 			-- `a_parent': A parent metadata section the category collection will be a part of.
 			-- `Result': A code template collection of metadata categories.
 		require
-			a_parent_attached: a_parent /= Void
+			a_parent_attached: attached a_parent
 		do
 			create Result.make (a_parent)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_code_declaration_collection (a_parent: CODE_TEMPLATE_DEFINITION): CODE_DECLARATION_COLLECTION
@@ -49,11 +49,11 @@ feature -- Factory
 			-- `a_parent': A parent template definition the declaration collection will be a part of.
 			-- `Result': A code template collection of declaration.
 		require
-			a_parent_attached: a_parent /= Void
+			a_parent_attached: attached a_parent
 		do
 			create Result.make (a_parent)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_code_literal_declaration (a_id: READABLE_STRING_GENERAL; a_parent: CODE_DECLARATION_COLLECTION): CODE_LITERAL_DECLARATION
@@ -63,13 +63,13 @@ feature -- Factory
 			-- `a_parent': A parent declaration collection the declaration will be a part of.
 			-- `Result': A code literal declaration.
 		require
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
-			a_parent_Attached: a_parent /= Void
+			a_parent_Attached: attached a_parent
 		do
 			create Result.make (a_id, a_parent)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id.as_string_8)
 			not_result_is_built_in_set: not Result.is_built_in
 		end
@@ -97,7 +97,7 @@ feature -- Factory
 		do
 			create Result.make (a_major, a_minor, a_revision, a_qfe)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_code_object_declaration (a_id: READABLE_STRING_GENERAL; a_parent: CODE_DECLARATION_COLLECTION): CODE_OBJECT_DECLARATION
@@ -107,12 +107,12 @@ feature -- Factory
 			-- `a_parent': A parent declaration collection the literal will eventually be contained in.
 			-- `Result': A code template object declaration.
 		require
-			a_id_attached: a_id /= Void
-			a_parent_attached: a_parent /= Void
+			a_id_attached: attached a_id
+			a_parent_attached: attached a_parent
 		do
 			create Result.make (a_id, a_parent)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id.as_string_8)
 			not_result_is_built_in_set: not Result.is_built_in
 		end
@@ -123,11 +123,11 @@ feature -- Factory
 			-- `a_parent': A parent template definition the templates collection will be a part of.
 			-- `Result': A code template template collection.
 		require
-			a_parent_attached: a_parent /= Void
+			a_parent_attached: attached a_parent
 		do
 			create Result.make (a_parent)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_code_template_defintion: CODE_TEMPLATE_DEFINITION
@@ -137,7 +137,7 @@ feature -- Factory
 		do
 			create Result.make (Current)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_code_template (a_parent: CODE_TEMPLATE_COLLECTION): CODE_TEMPLATE
@@ -146,11 +146,11 @@ feature -- Factory
 			-- `a_parent': A parent template collection the template will be a part of.
 			-- `Result': A unversioned code template.
 		require
-			a_parent_attached: a_parent /= Void
+			a_parent_attached: attached a_parent
 		do
 			create Result.make (a_parent)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_code_version (a_version: READABLE_STRING_GENERAL): CODE_VERSION
@@ -159,11 +159,11 @@ feature -- Factory
 			-- `a_version': A version string indicating the version.
 			-- `Result': A code version.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 		do
 			create Result.make (a_version)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_code_versioned_template (a_version: CODE_VERSION; a_parent: CODE_TEMPLATE_COLLECTION): CODE_VERSIONED_TEMPLATE
@@ -174,12 +174,12 @@ feature -- Factory
 			-- `a_parent': A parent collection which the template will be eventually place in.
 			-- `Result': A versioned code template.
 		require
-			a_version_attached: a_version /= Void
-			a_parent_attached: a_parent /= Void
+			a_version_attached: attached a_version
+			a_parent_attached: attached a_parent
 		do
 			create Result.make (a_version, a_parent)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature -- Token factory
@@ -191,7 +191,7 @@ feature -- Token factory
 		do
 			create Result.make
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_eol_token: CODE_TOKEN_EOL
@@ -201,7 +201,7 @@ feature -- Token factory
 		do
 			create Result.make
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_id_token (a_id: STRING_32): CODE_TOKEN_ID
@@ -210,12 +210,12 @@ feature -- Token factory
 			-- `a_text': A unique id text string.
 			-- `Result': A new ID token.
 		require
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
 		do
 			create Result.make (a_id)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_id_ref_token (a_token: CODE_TOKEN_ID): CODE_TOKEN_ID_REF
@@ -224,11 +224,11 @@ feature -- Token factory
 			-- `a_token': A source code id token, the resulting tokens refers to.
 			-- `Result': A new reference ID token.
 		require
-			a_token_attached: a_token /= Void
+			a_token_attached: attached a_token
 		do
 			create Result.make (a_token)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	new_text_token (a_text: STRING_32): CODE_TOKEN_TEXT
@@ -236,12 +236,12 @@ feature -- Token factory
 			--
 			-- `a_text': The non-empty string composing a code token text.
 		require
-			a_text_attached: a_text /= Void
+			a_text_attached: attached a_text
 			not_a_text_is_empty: not a_text.is_empty
 		do
 			create Result.make (a_text)
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 ;note

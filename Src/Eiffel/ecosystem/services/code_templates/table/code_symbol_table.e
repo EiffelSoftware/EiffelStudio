@@ -31,7 +31,7 @@ feature -- Access
 			-- `a_id': A symbol identifier to retrieve a value for.
 			-- `Result': The associated code value.
 		require
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
 			has_id_a_id: has_id (a_id)
 		do
@@ -43,7 +43,7 @@ feature -- Access
 				create Result.make_empty
 			end
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature {NONE} -- Access
@@ -59,15 +59,15 @@ feature -- Element change
 			-- `a_value': A value to associated with an indentifier in the symbol table.
 			-- `a_id': The indentifier to associate with the value.
 		require
-			a_value_attached: a_value /= Void
+			a_value_attached: attached a_value
 			not_a_id_is_empty: not a_id.is_empty
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_has_id_a_id: not has_id (a_id)
 		do
 			a_value.set_symbol_table (Current)
 			content_table.put (a_value, a_id)
-			if attached internal_value_changed_event as l_events then
-				l_events.publish ([Current, a_id])
+			if attached internal_value_changed_event as l_event then
+				l_event.publish ([Current, a_id])
 			end
 		ensure
 			has_id_a_id: has_id (a_id)
@@ -81,8 +81,8 @@ feature -- Element change
 			-- `a_value': A value to associated with an indentifier in the symbol table.
 			-- `a_id': The indentifier to associate with the value.
 		require
-			a_value_attached: a_value /= Void
-			a_id_attached: a_id /= Void
+			a_value_attached: attached a_value
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
 		do
 			a_value.set_symbol_table (Current)

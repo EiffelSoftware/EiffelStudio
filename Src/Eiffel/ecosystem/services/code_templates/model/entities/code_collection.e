@@ -29,10 +29,8 @@ feature -- Access
 		do
 			Result := internal_items
 		ensure
-			result_attached: Result /= Void
-			result_contains_attached_items:
-				(attached {DS_BILINEAR [detachable G]} Result as l_result) and then
-				not l_result.has (internal_default_item)
+			result_attached: attached Result
+			result_contains_attached_items: not Result.has_void
 		end
 
 feature {NONE} -- Access
@@ -47,7 +45,7 @@ feature -- Query
 	has (a_item: G): BOOLEAN
 			-- Determines if a given item exists in the collection
 		require
-			a_item_attached: a_item /= Void
+			a_item_attached: attached a_item
 		do
 			Result := internal_items.has (a_item)
 		end
@@ -59,7 +57,7 @@ feature -- Extension
 			--
 			-- `a_item': The item to add to the collection.
 		require
-			a_item_attached: a_item /= Void
+			a_item_attached: attached a_item
 			not_items_has_a_items: not has (a_item)
 		do
 			internal_items.force_last (a_item)
@@ -74,7 +72,7 @@ feature -- Removal
 			--
 			-- `a_item': The item to remove from the collection.
 		require
-			a_item_attached: a_item /= Void
+			a_item_attached: attached a_item
 			items_has_a_items: has (a_item)
 		do
 			internal_items.start
@@ -93,9 +91,8 @@ feature {NONE} -- Implementation: Internal cache
 			-- Default generic item
 
 invariant
-	internal_items_attached: is_initialized implies internal_items /= Void
-	internal_items_contains_attached_items: is_initialized implies
-		((attached {DS_LIST [detachable G]} internal_items as l_internal_items) and then not l_internal_items.has (internal_default_item))
+	internal_items_attached: is_initialized implies attached internal_items
+	internal_items_contains_attached_items: is_initialized implies not internal_items.has_void
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

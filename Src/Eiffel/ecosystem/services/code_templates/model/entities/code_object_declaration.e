@@ -42,7 +42,7 @@ feature -- Element change
 			--
 			-- `a_type': The type the object literal must conform to.
 		require
-			a_type_attached: a_type /= Void
+			a_type_attached: attached a_type
 			not_a_type_is_empty: not a_type.is_empty
 		do
 			create must_conform_to.make_from_string (a_type)
@@ -59,7 +59,7 @@ feature -- Visitor
 		end
 
 invariant
-	must_conform_to: is_initialized implies must_conform_to /= Void
+	must_conform_to: is_initialized implies attached must_conform_to
 	not_must_conform_to_is_empty: is_initialized implies not must_conform_to.is_empty
 
 ;note

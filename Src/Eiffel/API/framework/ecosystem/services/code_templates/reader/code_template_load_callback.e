@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 			-- `a_factory': A factory for creating code template nodes.
 			-- `a_parser': An XML parser to use to process the callbacks.
 		require
-			a_factory_attached: a_factory /= Void
-			a_parser_attached: a_parser /= Void
+			a_factory_attached: attached a_factory
+			a_parser_attached: attached a_parser
 		do
 			code_factory := a_factory
 			make_es_callbacks (a_parser)
@@ -71,7 +71,7 @@ feature {NONE} -- Helpers
 		once
 			create Result
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature {NONE} -- Basic operations
@@ -83,8 +83,8 @@ feature {NONE} -- Basic operations
 			last_code_template_definition := Void
 			last_declaration := Void
 		ensure then
-			last_code_template_definition_detached: last_code_template_definition = Void
-			last_declaration_detached: last_declaration = Void
+			last_code_template_definition_detached: not attached last_code_template_definition
+			last_declaration_detached: not attached last_declaration
 		end
 
 feature -- Formatting
@@ -95,7 +95,7 @@ feature -- Formatting
 			-- `a_template': The orginal template text to extract a delimited template from
 			-- `Result': The extracted template.
 		require
-			a_template_attached: a_template /= Void
+			a_template_attached: attached a_template
 			not_a_template_is_empty: not a_template.is_empty
 		local
 			l_delimiter: STRING_32
@@ -129,7 +129,7 @@ feature -- Formatting
 					end
 				end
 			end
-			if l_result /= Void then
+			if attached l_result then
 				Result := l_result
 			else
 				Result := a_template
@@ -169,7 +169,7 @@ feature {NONE} -- Process
 			when t_title then
 				process_metadata_title
 			when t_description then
-				if last_declaration /= Void then
+				if attached last_declaration then
 					process_declaration_description
 				else
 					process_metadata_description
@@ -194,7 +194,7 @@ feature {NONE} -- Production processing
 	process_code_template
 			-- Processes the top-level code template node.
 		require
-			last_code_template_definition_detached: last_code_template_definition = Void
+			last_code_template_definition_detached: not attached last_code_template_definition
 		local
 			l_definition: like last_code_template_definition
 		do
@@ -214,7 +214,7 @@ feature {NONE} -- Production processing
 	process_metadata
 			-- Processes the code template's metadata node.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		do
 			-- Do nothing
 		end
@@ -222,7 +222,7 @@ feature {NONE} -- Production processing
 	process_metadata_title
 			-- Processes a metadata title.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		local
 			l_definition: like last_code_template_definition
 			l_content: like current_content
@@ -230,7 +230,7 @@ feature {NONE} -- Production processing
 			l_content := current_content
 			if not l_content.is_empty then
 				l_definition := last_code_template_definition
-				check l_definition_attached: l_definition /= Void end
+				check l_definition_attached: attached l_definition end
 				l_definition.metadata.title := l_content
 			end
 		end
@@ -238,7 +238,7 @@ feature {NONE} -- Production processing
 	process_metadata_description
 			-- Processes a metadata literal description.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		local
 			l_definition: like last_code_template_definition
 			l_content: like current_content
@@ -246,7 +246,7 @@ feature {NONE} -- Production processing
 			l_content := current_content
 			if not l_content.is_empty then
 				l_definition := last_code_template_definition
-				check l_definition_attached: l_definition /= Void end
+				check l_definition_attached: attached l_definition end
 				l_definition.metadata.description := l_content
 			end
 		end
@@ -254,7 +254,7 @@ feature {NONE} -- Production processing
 	process_metadata_author
 			-- Processes a metadata author.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		local
 			l_definition: like last_code_template_definition
 			l_content: like current_content
@@ -262,7 +262,7 @@ feature {NONE} -- Production processing
 			l_content := current_content
 			if not l_content.is_empty then
 				l_definition := last_code_template_definition
-				check l_definition_attached: l_definition /= Void end
+				check l_definition_attached: attached l_definition end
 				l_definition.metadata.author := l_content
 			end
 		end
@@ -270,7 +270,7 @@ feature {NONE} -- Production processing
 	process_metadata_shortcut
 			-- Processes a metadata shortcut.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		local
 			l_definition: like last_code_template_definition
 			l_content: like current_content
@@ -278,7 +278,7 @@ feature {NONE} -- Production processing
 			l_content := current_content
 			if not l_content.is_empty then
 				l_definition := last_code_template_definition
-				check l_definition_attached: l_definition /= Void end
+				check l_definition_attached: attached l_definition end
 				last_code_template_definition.metadata.shortcut := l_content
 			end
 		end
@@ -286,7 +286,7 @@ feature {NONE} -- Production processing
 	process_metadata_categories
 			-- Processes a metadata category collection.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		do
 			-- Nothing to do, use the templates node from the code file.
 		end
@@ -294,7 +294,7 @@ feature {NONE} -- Production processing
 	process_metadata_category
 			-- Processes a metadata category.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		local
 			l_definition: like last_code_template_definition
 			l_categories: CODE_CATEGORY_COLLECTION
@@ -303,7 +303,7 @@ feature {NONE} -- Production processing
 			l_category := current_content
 			if not l_category.is_empty then
 				l_definition := last_code_template_definition
-				check l_definition_attached: l_definition /= Void end
+				check l_definition_attached: attached l_definition end
 				l_categories := l_definition.metadata.categories
 				if not l_categories.has (l_category) then
 					l_categories.extend (l_category)
@@ -314,7 +314,7 @@ feature {NONE} -- Production processing
 	process_declarations
 			-- Processes a declaration collection node.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		do
 			-- Nothing to do, use the templates collection from the code file.
 		end
@@ -322,7 +322,7 @@ feature {NONE} -- Production processing
 	process_declaration_literal
 			-- Processes a single declaration literal node.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		local
 			l_literal: CODE_LITERAL_DECLARATION
 			l_attributes: like current_attributes
@@ -363,7 +363,7 @@ feature {NONE} -- Production processing
 	process_declaration_object
 			-- Processes a single declaration object node.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		local
 			l_object: CODE_OBJECT_DECLARATION
 			l_attributes: like current_attributes
@@ -411,8 +411,8 @@ feature {NONE} -- Production processing
 	process_declaration_description
 			-- Processes a declaration's description.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
-			last_declaration_attached: last_declaration /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
+			last_declaration_attached: attached last_declaration
 		do
 			if not current_content.is_empty then
 				last_declaration.description := current_content
@@ -422,9 +422,9 @@ feature {NONE} -- Production processing
 	process_declaration_literal_default
 			-- Processes a declaration literal's default value.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 			last_declaration_attached: last_declaration /= Void
-			last_declaration_is_literal: ({CODE_LITERAL_DECLARATION}) #? last_declaration /= Void
+			last_declaration_is_literal: attached {CODE_LITERAL_DECLARATION} last_declaration
 		do
 			if not current_content.is_empty and then (attached {CODE_LITERAL_DECLARATION} last_declaration as l_literal) then
 				l_literal.default_value := current_content
@@ -434,7 +434,7 @@ feature {NONE} -- Production processing
 	process_templates
 			-- Processes a template collection.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		do
 			-- Nothing to do, use the templates collection from the code file.
 		end
@@ -442,7 +442,7 @@ feature {NONE} -- Production processing
 	process_templates_template
 			-- Processes a template collection's template.
 		require
-			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_code_template_definition_attached: attached last_code_template_definition
 		local
 			l_attributes: like current_attributes
 			l_templates: CODE_TEMPLATE_COLLECTION
@@ -628,8 +628,8 @@ feature {NONE} -- Attributes states
 	at_version: NATURAL_8            = 0x54
 
 invariant
-	code_factory_attached: code_factory /= Void
-	last_code_template_definition_attached: last_declaration /= Void implies last_code_template_definition /= Void
+	code_factory_attached: attached code_factory
+	last_code_template_definition_attached: attached last_declaration implies attached last_code_template_definition
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

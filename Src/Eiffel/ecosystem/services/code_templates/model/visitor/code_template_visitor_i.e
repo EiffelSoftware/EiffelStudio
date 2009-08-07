@@ -15,86 +15,96 @@ inherit
 
 feature {CODE_NODE} -- Processing
 
-	process_code_category_collection (a_value: attached CODE_CATEGORY_COLLECTION)
+	process_code_category_collection (a_value: CODE_CATEGORY_COLLECTION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
 
-	process_code_declaration_collection (a_value: attached CODE_DECLARATION_COLLECTION)
+	process_code_declaration_collection (a_value: CODE_DECLARATION_COLLECTION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
 
-	process_code_literal_declaration (a_value: attached CODE_LITERAL_DECLARATION)
+	process_code_literal_declaration (a_value: CODE_LITERAL_DECLARATION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
 
-	process_code_metadata (a_value: attached CODE_METADATA)
+	process_code_metadata (a_value: CODE_METADATA)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
 
-	process_code_object_declaration (a_value: attached CODE_OBJECT_DECLARATION)
+	process_code_object_declaration (a_value: CODE_OBJECT_DECLARATION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
 
-	process_code_template (a_value: attached CODE_TEMPLATE)
+	process_code_template (a_value: CODE_TEMPLATE)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
 
-	process_code_template_collection (a_value: attached CODE_TEMPLATE_COLLECTION)
+	process_code_template_collection (a_value: CODE_TEMPLATE_COLLECTION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
 
-	process_code_template_definition (a_value: attached CODE_TEMPLATE_DEFINITION)
+	process_code_template_definition (a_value: CODE_TEMPLATE_DEFINITION)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
 
-	process_code_versioned_template (a_value: attached CODE_VERSIONED_TEMPLATE)
+	process_code_versioned_template (a_value: CODE_VERSIONED_TEMPLATE)
 			-- Process object `a_value'.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
 
 feature {NONE} -- Processing
 
-	process_collection (a_collection: attached CODE_COLLECTION [ANY])
+	process_collection (a_collection: CODE_COLLECTION [ANY])
 			-- Processes a collection of code nodes.
 			--
 			-- `a_collection': The collection items to process.	
 		require
 			is_interface_usable: is_interface_usable
+			a_collection_attached: attached a_collection
 		local
 			l_items: DS_BILINEAR_CURSOR [ANY]
 		do
@@ -109,14 +119,16 @@ feature {NONE} -- Processing
 
 feature {CODE_NODE} -- Query
 
-	is_applicable_visitation_entity (a_value: attached ANY): BOOLEAN
+	is_applicable_visitation_entity (a_value: ANY): BOOLEAN
 			-- Determines if object instance `a_value' is applicable for a visitation
+		require
+			a_value_attached: attached a_value
 		do
 			Result := True
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -129,22 +141,22 @@ feature {CODE_NODE} -- Query
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

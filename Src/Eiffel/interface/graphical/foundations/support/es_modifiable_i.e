@@ -58,13 +58,14 @@ feature -- Query
 
 feature -- Basic operations
 
-	perform_query_save_modified (a_action: attached PROCEDURE [ANY, TUPLE])
+	perform_query_save_modified (a_action: PROCEDURE [ANY, TUPLE])
 			-- Performs an action, on the condition and modifications are saved or discarded.
 			--
 			-- `a_action': A protected action to perform, which will only be executed if Current is unmodified for the user
 			--             chooses to continue, through an implementation of `query_save_modified'.
 		require
 			is_interface_usable: is_interface_usable
+			a_action_attached: attached a_action
 		local
 			l_performing: like is_performing_save_modified_operation
 		do
@@ -82,17 +83,20 @@ feature -- Basic operations
 
 feature -- Events
 
-	dirty_state_change_event: attached EVENT_TYPE [TUPLE [is_dirty: BOOLEAN]]
+	dirty_state_change_event: EVENT_TYPE_I [TUPLE [is_dirty: BOOLEAN]]
 			-- Actions called when the dirty state chages.
 			--
 			-- 'is_dirty': Reflects the dirty state.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		ensure
+			result_attached: attached Result
+			result_consistent: Result = dirty_state_change_event
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -105,22 +109,22 @@ feature -- Events
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

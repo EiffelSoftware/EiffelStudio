@@ -27,9 +27,9 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor {CODE_TEMPLATE_RENDERER} and then (code /= Void)
+			Result := Precursor {CODE_TEMPLATE_RENDERER} and then attached code
 		ensure then
-			code_attached: Result implies code /= Void
+			code_attached: Result implies attached code
 		end
 
 feature {NONE} -- Basic operations
@@ -40,7 +40,7 @@ feature {NONE} -- Basic operations
 			Precursor {CODE_TEMPLATE_RENDERER}
 			create code.make_empty
 		ensure then
-			code_attached: code /= Void
+			code_attached: attached code
 			code_is_empty: (attached code as l_code) and then l_code.is_empty
 		end
 

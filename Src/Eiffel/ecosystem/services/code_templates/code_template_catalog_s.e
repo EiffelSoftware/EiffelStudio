@@ -30,7 +30,7 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			result_consistent: Result = code_templates
 		end
 
@@ -40,7 +40,7 @@ feature -- Status report
 			-- Determines if a folder is currently cataloged
 		require
 			is_interface_usable: is_interface_usable
-			a_folder_attached: a_folder /= Void
+			a_folder_attached: attached a_folder
 			not_a_folder_is_empty: not a_folder.is_empty
 		deferred
 		end
@@ -54,7 +54,7 @@ feature -- Query
 			-- `Result': A code template definition or Void if there was an error loading the code template.
 		require
 			is_interface_usable: is_interface_usable
-			a_file_name_attached: a_file_name /= Void
+			a_file_name_attached: attached a_file_name
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		deferred
 		end
@@ -66,7 +66,7 @@ feature -- Query
 			-- `Result': A code template definition or Void if no match was made.
 		require
 			is_interface_usable: is_interface_usable
-			a_title_attached: a_title /= Void
+			a_title_attached: attached a_title
 			not_a_title_is_empty: not a_title.is_empty
 		deferred
 		end
@@ -78,7 +78,7 @@ feature -- Query
 			-- `Result': A code template definition or Void if no match was made.
 		require
 			is_interface_usable: is_interface_usable
-			a_shortcut_attached: a_shortcut /= Void
+			a_shortcut_attached: attached a_shortcut
 			not_a_shortcut_is_empty: not a_shortcut.is_empty
 		deferred
 		end
@@ -92,17 +92,13 @@ feature -- Query
 			-- `Result': A list of matched code template definitions.
 		require
 			is_interface_usable: is_interface_usable
-			a_categories_attached: a_categories /= Void
+			a_categories_attached: attached a_categories
 			not_a_categories_is_empty: not a_categories.is_empty
-			a_categories_contains_attached_items:
-				(attached {DS_BILINEAR [detachable ANY]} a_categories as l_categories) and then
-				not l_categories.has (Void)
+			a_categories_contains_attached_items: not a_categories.has_void
 		deferred
 		ensure
-			result_attached: Result /= Void
-			result_contains_attached_items:
-				(attached {DS_BILINEAR [detachable ANY]} Result as l_result) and then
-				not l_result.has (Void)
+			result_attached: attached Result
+			result_contains_attached_items: not Result.has_void
 		end
 
 feature -- Events
@@ -114,7 +110,7 @@ feature -- Events
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			result_consistent: Result = catalog_changed_event
 		end
 
@@ -126,7 +122,7 @@ feature -- Basic operations
 			-- `a_folder': The cataloged folder to rescan and update the templates
 		require
 			is_interface_usable: is_interface_usable
-			a_folder_attached: a_folder /= Void
+			a_folder_attached: attached a_folder
 			not_a_folder_is_empty: not a_folder.is_empty
 			is_cataloged: is_cataloged (a_folder)
 		deferred
@@ -149,7 +145,7 @@ feature {NONE} -- Basic operation
 			-- `a_list': A template list to sort by title.
 		require
 			is_interface_usable: is_interface_usable
-			a_list_attached: a_list /= Void
+			a_list_attached: attached a_list
 			a_list_contains_attached_items:
 				(attached {DS_INDEXABLE [detachable ANY]} a_list as l_list) and then
 				not l_list.has (Void)
@@ -159,8 +155,8 @@ feature {NONE} -- Basic operation
 		do
 			create l_comparer.make (agent (ia_template: CODE_TEMPLATE_DEFINITION; ia_other_template: CODE_TEMPLATE_DEFINITION): BOOLEAN
 				require
-					ia_template_attached: ia_template /= Void
-					ia_other_template_attached: ia_other_template /= Void
+					ia_template_attached: attached ia_template
+					ia_other_template_attached: attached ia_other_template
 				do
 					Result := ia_template.metadata.title < ia_other_template.metadata.title
 				end)
@@ -176,7 +172,7 @@ feature -- Extension
 			-- `a_folder': The folder to add to the catalog.
 		require
 			is_interface_usable: is_interface_usable
-			a_folder_attached: a_folder /= Void
+			a_folder_attached: attached a_folder
 			not_a_folder_is_empty: not a_folder.is_empty
 			not_is_cataloged: not is_cataloged (a_folder)
 		deferred
@@ -192,7 +188,7 @@ feature -- Removal
 			-- `a_folder': The folder to remove from the catalog and all it's contained templates.
 		require
 			is_interface_usable: is_interface_usable
-			a_folder_attached: a_folder /= Void
+			a_folder_attached: attached a_folder
 			not_a_folder_is_empty: not a_folder.is_empty
 			is_cataloged: is_cataloged (a_folder)
 		deferred

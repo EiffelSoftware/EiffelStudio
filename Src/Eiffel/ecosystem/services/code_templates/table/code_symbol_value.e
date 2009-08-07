@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_default': The text to use a the default value, if no other representation is available.
 		require
-			a_default_attached: a_default /= Void
+			a_default_attached: attached a_default
 		do
 			create default_value.make_from_string (a_default)
 		ensure
@@ -45,7 +45,7 @@ feature -- Access
 				create Result.make_from_string (default_value)
 			end
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	default_value: STRING_32
@@ -101,7 +101,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 invariant
-	default_value_attached: default_value /= Void
+	default_value_attached: attached default_value
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

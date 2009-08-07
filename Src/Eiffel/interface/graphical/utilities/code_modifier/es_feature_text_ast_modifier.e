@@ -24,24 +24,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: attached like context_feature; a_class: attached like context_class)
+	make (a_feature: like context_feature; a_class: like context_class)
 			-- Initialize a contract text modifier for a feature
 			--
 			-- `a_class': Associated context class to modify class text for.
 			-- `a_feature': Associated context feature to modify the class text for.
 		require
+			a_feature_attached: attached a_feature
+			a_class_attached: attached a_class
 			a_class_is_compiled: a_class.is_compiled
 		do
 			context_feature := find_actual_context_feature (a_feature, a_class)
 			make_with_class (a_class)
 		ensure
-			context_feature_set: equal (context_feature, find_actual_context_feature (a_feature, a_class))
+			context_feature_set: context_feature = find_actual_context_feature (a_feature, a_class)
 			context_class_set: context_class = a_class
 		end
 
 feature -- Access
 
-	ast_feature: detachable FEATURE_AS
+	ast_feature: FEATURE_AS
 			-- Resulting feature AST node.
 			-- Note: This is the original AST node not the modified one. To access the modified one
 			--       the changes must be commited and the ast re-prepared.
@@ -50,19 +52,21 @@ feature -- Access
 			is_ast_available: is_ast_available
 		do
 			Result := modified_data.ast_feature
+		ensure
+			result_attached: attached Result
 		end
 
-	context_feature: attached E_FEATURE
+	context_feature: E_FEATURE
 			-- Context feature.
 
 feature {NONE} -- Access
 
-	modified_data: attached ES_FEATURE_TEXT_AST_MODIFIER_DATA
+	modified_data: ES_FEATURE_TEXT_AST_MODIFIER_DATA
 			-- <Precursor>
 
 feature {NONE} -- Query
 
-	find_actual_context_feature (a_feature: attached like context_feature; a_class: attached like context_class): attached like context_feature
+	find_actual_context_feature (a_feature: like context_feature; a_class: like context_class): like context_feature
 			-- Locates the actual context feature given a class.
 			--
 			-- `a_feature': The feature to resolve an actual feature for.
@@ -70,6 +74,8 @@ feature {NONE} -- Query
 			-- `Result': A feature that actually is belongs of the supplied class.
 		require
 			is_interface_usable: is_interface_usable
+			a_feature_attached: attached a_feature
+			a_class_attached: attached a_class
 			a_class_is_compiled: a_class.is_compiled
 		local
 			l_feature_i: detachable FEATURE_I
@@ -78,13 +84,13 @@ feature {NONE} -- Query
 		do
 			if a_class.is_compiled then
 				l_class_c := a_class.compiled_class
-				if l_class_c /= Void then
+				if attached l_class_c then
 					if a_feature.written_in = l_class_c.class_id then
 						l_result := a_feature
 					elseif l_class_c.has_feature_table then
 						l_feature_i := l_class_c.feature_table.feature_of_rout_id_set (a_feature.rout_id_set)
-						check l_feature_i_attached: l_feature_i /= Void end
-						if l_feature_i /= Void and then l_feature_i.written_class = l_class_c then
+						check l_feature_i_attached: attached l_feature_i end
+						if attached l_feature_i and then l_feature_i.written_class = l_class_c then
 							l_result := l_feature_i.api_feature (l_class_c.class_id)
 						end
 					end
@@ -97,20 +103,22 @@ feature {NONE} -- Query
 			else
 				Result := l_result
 			end
+		ensure
+			result_attached: attached Result
 		end
 
 feature {NONE} -- Factory
 
-	new_modified_data: attached like modified_data
+	new_modified_data: like modified_data
 			-- <Precursor>
 		local
-			l_class: attached like context_class
+			l_class: like context_class
 			l_editor: like active_editor_for_class
-			l_text: attached STRING_32
+			l_text: STRING_32
 		do
 			l_class := context_class
 			l_editor := active_editor_for_class (l_class)
-			if l_editor = Void or else not is_editor_text_ready (l_editor) then
+			if not attached l_editor or else not is_editor_text_ready (l_editor) then
 					-- There's no open editor, use the class text from disk instead.
 				l_text := original_text
 			else
@@ -119,8 +127,12 @@ feature {NONE} -- Factory
 			create Result.make (l_class, context_feature, l_text)
 		end
 
+invariant
+	context_feature_attached: attached context_feature
+	modified_data_attached: attached modified_data
+
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -144,11 +156,11 @@ feature {NONE} -- Factory
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

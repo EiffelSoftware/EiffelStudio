@@ -20,12 +20,12 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		do
-			if internal_dirty_state_change_event /= Void then
-				internal_dirty_state_change_event.dispose
+			if attached internal_dirty_state_change_event as l_event then
+				l_event.dispose
 			end
 		ensure then
 			not_internal_dirty_state_change_event_is_interface_usable:
-				(old internal_dirty_state_change_event /= Void) implies
+				(old attached internal_dirty_state_change_event) implies
 				not (old internal_dirty_state_change_event).is_interface_usable
 		end
 
@@ -45,18 +45,18 @@ feature {NONE} -- Status setting
 			if l_old_is_dirty /= a_dirty then
 				is_dirty := a_dirty
 				on_dirty_state_changed
-				if internal_dirty_state_change_event /= Void then
-					internal_dirty_state_change_event.publish ([a_dirty])
+				if attached internal_dirty_state_change_event as l_event then
+					l_event.publish ([a_dirty])
 				end
 			end
 		end
 
 feature -- Events
 
-	dirty_state_change_event: attached EVENT_TYPE [TUPLE [is_dirty: BOOLEAN]]
+	dirty_state_change_event: EVENT_TYPE [TUPLE [is_dirty: BOOLEAN]]
 			-- <Precursor>
 		do
-			if attached {like dirty_state_change_event} internal_dirty_state_change_event as l_event then
+			if attached internal_dirty_state_change_event as l_event then
 				Result := l_event
 			else
 				create Result
@@ -80,7 +80,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -104,11 +104,11 @@ feature {NONE} -- Internal implementation cache
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

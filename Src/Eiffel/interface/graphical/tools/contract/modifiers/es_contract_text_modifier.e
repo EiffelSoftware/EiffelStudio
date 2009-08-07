@@ -46,19 +46,22 @@ feature {NONE} -- Access
 			end
 		end
 
-	template_identifier: attached STRING_32
+	template_identifier: STRING_32
 			-- Template identifer used to look up the contract code template
 		deferred
 		ensure
+			result_attached: attached Result
 			not_result_is_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Element change
 
-	set_template_values (a_table: attached CODE_SYMBOL_TABLE)
+	set_template_values (a_table: CODE_SYMBOL_TABLE)
 			-- Sets the values use in rendering a template.
 			--
 			-- `a_table': The symbol table used to render a template
+		require
+			a_table_attached: attached a_table
 		deferred
 		end
 
@@ -69,7 +72,7 @@ feature {NONE} -- Helpers
 		once
 			create Result
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature -- Basic operations
@@ -81,16 +84,16 @@ feature -- Basic operations
 		require
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
-			a_assertions_attached: a_assertions /= Void
+			a_assertions_attached: attached a_assertions
 			a_assertions_contains_attached_items: not a_assertions.has (Void)
 		local
-			l_code: attached STRING
-			l_ws: attached STRING_32
+			l_code: STRING
+			l_ws: STRING_32
 			l_pos: INTEGER
 			l_st_builder: CODE_SYMBOL_TABLE_BUILDER
-			l_table: attached CODE_SYMBOL_TABLE
-			l_value: attached CODE_SYMBOL_VALUE
-			l_renderer: attached CODE_TEMPLATE_STRING_RENDERER
+			l_table: CODE_SYMBOL_TABLE
+			l_value: CODE_SYMBOL_VALUE
+			l_renderer: CODE_TEMPLATE_STRING_RENDERER
 			l_contract_ast: detachable G
 			l_contract: STRING_32
 		do
@@ -155,7 +158,7 @@ feature -- Basic operations
 			end
 
 			l_contract_ast := contract_ast
-			if l_contract_ast /= Void then
+			if attached l_contract_ast then
 					-- Remove the contracts, because we've added the contracts anyway.
 				remove_ast_code (l_contract_ast, remove_white_space_trailing)
 			end

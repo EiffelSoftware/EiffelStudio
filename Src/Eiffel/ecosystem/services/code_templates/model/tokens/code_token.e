@@ -24,30 +24,32 @@ feature -- Query
 			-- `a_text': A string representation of the token.
 			-- `Result': True if the text is valid for the current token; False otherwise.
 		require
-			a_text_attached: a_text /= Void
+			a_text_attached: attached a_text
 		deferred
 		end
 
 feature -- Access
 
 	printable_text: like text
-			-- Printable representation of `text'
+			-- Printable representation of `text'.
 		do
 			Result := text
+		ensure
+			result_attached: attached Result
 		end
 
 	text: STRING_32
-			-- The token text
+			-- The token text.
 		deferred
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			result_is_valid_text: is_valid_text (Result)
 		end
 
 feature -- Status report
 
 	is_editable: BOOLEAN
-			-- Is the token editable
+			-- Is the token editable.
 		deferred
 		end
 
@@ -56,7 +58,7 @@ feature -- Visitor
 	process (a_visitor: CODE_TOKEN_VISITOR_I)
 			-- Visit's the current token and processes it.
 		require
-			a_visitor_attached: a_visitor /= Void
+			a_visitor_attached: attached a_visitor
 			a_visitor_is_interface_usable: a_visitor.is_interface_usable
 		deferred
 		end
@@ -76,7 +78,7 @@ feature -- Output
 		end
 
 invariant
-	text_attached: text /= Void
+	text_attached: attached text
 	text_is_valid_text: is_valid_text (text)
 
 ;note

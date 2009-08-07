@@ -19,9 +19,9 @@ feature -- Parsing
 			-- `a_factory': The factory used to create the code version.
 			-- `Result': A code version related to the version specified.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 			not_a_version_is_empty: not a_version.is_empty
-			a_factory_attached: a_factory /= Void
+			a_factory_attached: attached a_factory
 		local
 			l_version: STRING
 			l_parts: LIST [STRING]
@@ -65,7 +65,7 @@ feature -- Parsing
 				Result := a_factory.new_code_version (a_version)
 			end
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 	to_version_string (a_version: CODE_VERSION): STRING
@@ -74,7 +74,7 @@ feature -- Parsing
 			-- `a_version': The code version to convert to a string.
 			-- `Result': A produced string representation of the supplied code version.
 		require
-			a_version_attached: a_version /= Void
+			a_version_attached: attached a_version
 		do
 			if attached {CODE_NUMERIC_VERSION} a_version as l_nv then
 				create Result.make (10)
@@ -89,7 +89,7 @@ feature -- Parsing
 				create Result.make_from_string (a_version.version)
 			end
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			not_result_is_empty: not Result.is_empty
 		end
 
@@ -101,7 +101,7 @@ feature {CODE_VERSION} -- Access
 			create Result.make
 			Result.compile ("((^|[\.\-_])(([\d]+)){1,4})")
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			result_is_compiled: Result.is_compiled
 		end
 

@@ -19,9 +19,9 @@ feature -- Basic operations
 			-- `a_factory': A token factory used to create the tokenized code nodes.
 			-- `Result': The result list of code tokens tokenized from the supplied template.
 		require
-			a_template_attached: a_template /= Void
+			a_template_attached: attached a_template
 			not_a_template_is_empty: not a_template.is_empty
-			a_factory_attached: a_factory /= Void
+			a_factory_attached: attached a_factory
 		local
 			c: CHARACTER_32
 			c2, c3: CHARACTER_8
@@ -147,11 +147,9 @@ feature -- Basic operations
 				Result.force_last (a_factory.new_text_token (l_buffer))
 			end
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 			not_result_is_empty: not Result.is_empty
-			result_contains_attached_items:
-				(attached {DS_LIST [detachable ANY]} Result as l_result) and then
-				not l_result.has (Void)
+			result_contains_attached_items: not Result.has_void
 		end
 
 feature {NONE} -- Constants

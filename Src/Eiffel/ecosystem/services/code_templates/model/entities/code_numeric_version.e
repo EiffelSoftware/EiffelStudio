@@ -67,7 +67,7 @@ feature {NONE} -- Access
 		once
 			create Result
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature -- Element change

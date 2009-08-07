@@ -24,7 +24,7 @@ feature -- Query
 			-- `a_id': A case-insensitive declaration identifier to retrieve a code declaration.
 			-- `Result': A code declaration or Void if the code declaration matches the supplied id.
 		require
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
 		local
 			l_items: like items
@@ -47,7 +47,7 @@ feature -- Query
 				check gobo_cursor_cleaned_up: l_cursor.off end
 			end
 		ensure
-			matching_result_id: Result /= Void implies Result.id.is_case_insensitive_equal (a_id.as_string_8)
+			matching_result_id: attached Result implies Result.id.is_case_insensitive_equal (a_id.as_string_8)
 		end
 
 feature -- Visitor

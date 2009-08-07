@@ -8,7 +8,7 @@
 		{ 
 			"name": "xebra_taglibrary_base",
 			"ecf":  "xebra_taglibrary_base-safe.ecf",
-			"path": "$XEBRA_LIBRARY\xebra_taglibrary_base"
+			"path": "$XEBRA_LIBRARY/xebra_taglibrary_base"
 		}
 	]	
 }

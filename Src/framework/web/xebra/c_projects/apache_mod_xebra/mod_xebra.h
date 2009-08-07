@@ -73,7 +73,7 @@
 
 #define KEY_FILE_UPLOAD "#FUP#"
 #ifdef _WINDOWS
-#define UP_FN "C:\tmp\xebra_upload.XXXXXX" 
+#define UP_FN "C:\\tmp\\xebra_upload.XXXXXX" 
 #else
 #define UP_FN "/tmp/xebra_upload.XXXXXX"	
 #endif

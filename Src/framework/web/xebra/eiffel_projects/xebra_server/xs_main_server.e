@@ -352,6 +352,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 					o.dprint (config.file.print_webapp_configuration, 2)
 				end
 			end
+			handle_errors.do_nothing
 		end
 
 	shutdown_server: XC_COMMAND_RESPONSE

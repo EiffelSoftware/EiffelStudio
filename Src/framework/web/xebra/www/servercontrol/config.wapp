@@ -7,12 +7,12 @@
 	[
 		{ 
 			"name": "xebra_taglibrary_base",
-			"ecf":  "xebra_taglibrary_base-safe.ecf",
+			"ecf":  "xebra_taglibrary_base.ecf",
 			"path": "$XEBRA_LIBRARY\xebra_taglibrary_base"
 		},
 		{
 			"name": "xebra_taglibrary_form",
-			"ecf":  "xebra_taglibrary_form-voidunsafe.ecf",
+			"ecf":  "xebra_taglibrary_form.ecf",
 			"path": "$XEBRA_LIBRARY\xebra_taglibrary_form"
 		}
 	]

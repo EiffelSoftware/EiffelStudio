@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			action_generate.set_webapp (current)
 			action_compile_webapp.set_webapp (current)
 			action_run.set_webapp (current)
+			action_send.set_webapp (current)
 
 			action_translate.set_next_action (action_compile_sgen)
 			action_compile_sgen.set_next_action (action_generate)

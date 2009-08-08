@@ -84,13 +84,13 @@ feature -- Inherited Features
 			            	 if receive_message (thread_http_socket) then
 								l_response := l_webapp_handler.forward_request (current_request_message)
 			            	else
-								l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding.")).render_to_command_response
+								l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding message from mod_xebra.")).render_to_command_response
 							end
 
 							if attached {XCCR_HTTP_REQUEST} l_response as l_http_response then
 								send_message_to_http (l_http_response.response.render_to_string, thread_http_socket)
 							else
-								o.eprint ("Could not retrieve response from webapp", generating_type)
+								send_message_to_http ( (create {XER_INTERNAL_SERVER_ERROR}.make ("")).render_to_response.render_to_string, thread_http_socket)
 							end
 
 				         	thread_http_socket.cleanup

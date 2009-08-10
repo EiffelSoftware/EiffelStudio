@@ -21,11 +21,23 @@ feature {NONE}-- Initialization
 	make
 		do
 			id := ""
+			optional := False
 		ensure
 			id_attached: attached id
 		end
 
 feature -- Access
+
+	optional: BOOLEAN assign set_optional
+			-- Can the attribute be ommited?
+
+	set_optional (a_optional: BOOLEAN)
+			-- Sets the value of optional to a_optional
+		do
+			optional := a_optional
+		ensure
+			optional_set: a_optional = optional
+		end
 
 	put (child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>			

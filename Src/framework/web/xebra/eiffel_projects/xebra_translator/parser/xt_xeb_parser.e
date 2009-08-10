@@ -246,11 +246,12 @@ feature -- Parser Behaviours
 					l_i > a_result.internal_result.count
 				loop
 					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
---						if l_tag.has_attribute (l_attribute.id) then
---							Result.put_error_message ("Invalid argument detected for " + l_id + ": " + l_attribute.id + "=" + l_attribute.value.value)
---						else
+						if not l_tag.has_attribute (l_attribute.id) then
 							l_tag.put_attribute (l_attribute.id, l_attribute.value)
---						end
+						else
+							Result.put_error_message ("Double attribute occurency: " + l_attribute.id +
+											" for tag: " + l_id)
+						end
 					elseif attached {XP_TAG_ELEMENT} a_result.internal_result[l_i] as l_subtag then
 						l_tag.put_subtag (l_subtag)
 					end
@@ -280,6 +281,7 @@ feature -- Parser Behaviours
 			l_taglib: XTL_TAG_LIBRARY
 			l_i: INTEGER
 			l_end_tag: STRING
+			l_error_messages: LIST [STRING]
 		do
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_namespace then
@@ -293,7 +295,7 @@ feature -- Parser Behaviours
 						if l_taglib.contains (l_id) then
 							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug (a_result.left_to_parse.debug_information, source_path))
 							from
-								l_i := 3
+								l_i := 3 -- 1: l_namespace, 2: l_id
 							until
 								l_i > a_result.internal_result.count
 							loop
@@ -301,7 +303,12 @@ feature -- Parser Behaviours
 									if not l_taglib.argument_belongs_to_tag (l_attribute.id, l_id) then
 										Result.put_error_message ("Invalid argument detected for " + l_namespace + ":" + l_id + ": " + l_attribute.id + "=" + l_attribute.value.value)
 									else
-										l_tag.put_attribute (l_attribute.id, l_attribute.value)
+										if not l_tag.has_attribute (l_attribute.id) then
+											l_tag.put_attribute (l_attribute.id, l_attribute.value)
+										else
+											Result.put_error_message ("Double attribute occurency: " + l_attribute.id +
+											" for tag: " + l_namespace + ":" +l_id)
+										end
 									end
 								elseif attached {XP_TAG_ELEMENT} a_result.internal_result[l_i] as l_subtag then
 									l_tag.put_subtag (l_subtag)
@@ -316,6 +323,16 @@ feature -- Parser Behaviours
 									end
 								end
 							end
+								-- Check if all the mandatory attributes are set
+							 l_error_messages := l_taglib.valid (l_tag)
+							 from
+							 	l_error_messages.start
+							 until
+							 	l_error_messages.after
+							 loop
+							 	Result.put_error_message (l_error_messages.item)
+							 	l_error_messages.forth
+							 end
 						else
 							Result.put_error_message ("Unknown tag for taglib: " + l_namespace + ":" + l_id)
 						end
@@ -418,7 +435,7 @@ feature -- Basic Functionality
 					add_parse_error (source_path + ": " + l_index.out + ": " + l_result.left_to_parse.longest_match.error_messages [l_index])
 					l_index := l_index - 1
 				end
-				add_parse_error ("Parsing was not successfull! Error location: " + l_result.longest_match_debug)
+				add_parse_error (source_path + " Syntax error: " + l_result.longest_match_debug)
 			end
 			from
 				l_index := l_result.error_messages.count

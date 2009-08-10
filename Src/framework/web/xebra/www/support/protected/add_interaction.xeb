@@ -1,38 +1,26 @@
 <page:include template="support_side">
 <page:define_region id="main_content">
 	<div>
-		<div id="title_box"><h1>Problem Report Interaction Submission</h1></div>
-		<efa:collapsible_table collapsible="true" div_id="main_id" id="main_table" />
+		<div id="title_box"><h1>Problem Report Interaction Submission</h1></div>		
 		<div id="main_id">
 			<p>
 				Fill in the description for the new interaction for the
 				<b><xeb:display css_class="field_name" text="synopsis_status_label" />
 			</b> problem report <xeb:hyper_link id="pr_link" />.
 	</p>
-	<f:validation_result css_class="error" header_text="Please fix the following errors:" id="Validationsummary1" name="Validationsummary1"/>
-	<xeb:display css_class="error" text="error_label" />
+	<xeb:display text="NoText" />
 	<table class="standard_padding">
 		<tr>
 			<td class="field_name">
 				Description:
 			</td>
 			<td>
-				<f:validator class="RequiredFieldValidator"
-					display="Dynamic" 
-					control_to_validate="description_text" 
-					error_message="Give a description of the problem." 
-					css_class="error" 
-					text="*"
-					id="required_field_validator_4" />
+				<f:validator class="RequiredFieldValidator" />
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-				<f:validator class="textBox"
-					text_mode="MultiLine"
-					columns="80"
-					rows="15"
-					id="description_text" />
+				<f:validator class="textBox" />
 			</td> 
 		</tr>
 		<tr id="private_interaction">
@@ -40,45 +28,34 @@
 				<div id="private_change">
 				<a id="private_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
 				<f:check_box 
-					text="Private"
-					id="private_box" />
-				<efa:i_frame_tooltip width="400px" height="40px" anchor_id="private_link" content_url="ai_private.htm" id="private_tooltip" />
+					text="Private" value="private" name="a_private"/>				
 				</div>
 				
 			    <div id="close_report_change">
 				<a id="close_report_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-				<f:check_box 
-					text="Close report"
-					id="close_report_box" />
-				<efa:i_frame_tooltip width="400px" height="40px" anchor_id="close_report_link" content_url="ai_close_report.htm" id="close_report_tooltip" />
+				<f:check_box text="Close report" value="close_report_box" name="a_close_report_box" />				
 				</div>
 				
 				<div id="reopen_report_change">
 				<a id="reopen_report_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-				<f:check_box 
-					text="Reopen report"
-					id="reopen_report_box"/>
-				<efa:i_frame_tooltip width="400px" height="40px" anchor_id="reopen_report_link" content_url="ai_reopen_report.htm" id="reopen_report_tooltip" />
+				<f:check_box text="Reopen report" value="reopen_report_box" name="a_reopen_report_box"/>				
 				</div>
 			</td>
 		</tr>
 		<tr id="status_change">
 			<td colspan="2">
 				Change status from
-				<xeb:display css_class="field_name" text="status_label" />
+				<xeb:display text="noText"/>
 				to
-				<f:drop_down_list id="status_list" />
+
 			</td>
 		</tr>
 		<tr id="category_change">
 			<td colspan="2">
 				Change category from
-				<xeb:display 
-					css_class="field_name"
-					id="category_label" />
+				<xeb:display text="NoText" />
 				to
-				<f:drop_down_list 
-					id="category_list" />
+
 			</td>
 		</tr>
 		<tr>
@@ -88,15 +65,11 @@
 		</tr>
 		<tr>
 			<td colspan="2" class="last_field_name">
-				<efa:attachments_table id="attachments_table" />
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="submit_column">
-				<f:button 
-					text="Preview"
-					on_click="on_submit"
-					action="submit_button"/>
+				
 			</td>
 		</tr>
 	</table>

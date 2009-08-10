@@ -2,51 +2,50 @@
 <page:define_region id="main_content">
 	<div id="title_box"><h1>Problem Report Submission Confirmation</h1></div>
 
-	<efa:collapsible_table  div_id="main_div" id="main_table" />
 	<div  id="main_div">
 		<table class="problem_report">
 			<tr>
 				<td>
-					<span class="field_name">Release:</span> <xeb:display  id="release"/>
+					<span class="field_name">Release:</span>
 				</td>
 				<td>
-					<span class="field_name">Severity:</span> <xeb:display   id="severity" />
+					<span class="field_name">Severity:</span> 
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<span class="field_name">Class:</span> <xeb:display  id="class_label" />
+					<span class="field_name">Class:</span> 
 				</td>
 				<td>
-					<span class="field_name">Priority:</span> <xeb:display  id="priority"/>
+					<span class="field_name">Priority:</span>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<span class="field_name">Category:</span> <xeb:display  id="category"/>
+					<span class="field_name">Category:</span> 
 				</td>
 				<td>
-					<span class="field_name">Confidential:</span> <xeb:display  id="confidential"/>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<span class="field_name">Environment:</span><br /><xeb:display  id="environment" />
+					<span class="field_name">Confidential:</span> 
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
-					<span class="field_name">Synopsis:</span><br /><xeb:display  id="synopsis"/>
+					<span class="field_name">Environment:</span><br />
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
-					<span class="field_name">Description:</span><br /><xeb:display  class="report_content" id="description" />
+					<span class="field_name">Synopsis:</span><br />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<span class="field_name">Description:</span><br />
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2" class="last_row">
-					<span  class="field_name" id="to_reproduce_title">To Reproduce:</span><br /><xeb:display  class="report_content" id="to_reproduce" />
+					<span  class="field_name" id="to_reproduce_title">To Reproduce:</span><br />
 				</td>
 			</tr>
 			<tr  id="attachments_row">

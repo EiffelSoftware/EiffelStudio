@@ -7,7 +7,6 @@
 	</tag>
 	<tag id="display" class="XTAG_XEB_DISPLAY_TAG">
 		<attribute id="text" />
-		<attribute id="id" />
 	</tag>
 	<tag id ="redirect" class="XTAG_XEB_REDIRECT_TAG">
 		<attribute id="url" />
@@ -16,31 +15,12 @@
 		<attribute id="list" />
 		<attribute id="variable" />
 		<attribute id="type" />
-		<attribute id="id"/>
 	</tag>
 	<tag id="container" class="XTAG_XEB_CONTAINER_TAG">
 	</tag>
 	<tag id="data_grid" class="XTAG_XEB_DATA_GRID_TAG">
 		<attribute id="id" />
 		<attribute id="alternating_item_style_css_class" />
-	</tag>
-	<tag id="grid_view" class="XTAG_XEB_GRID_VIEW_TAG">
-		<attribute id="width" />
-		<attribute id="pager_settings_visible" />
-		<attribute id="css_class" />
-		<attribute id="border_color" />
-		<attribute id="border_width" />
-		<attribute id="grid_lines" />
-		<attribute id="auto_generate_columns" />
-		<attribute id="header_style_css_class" />
-		<attribute id="allow_paging" />
-		<attribute id="allow_sorting" />
-		<attribute id="row_style_css_class" />
-		<attribute id="cell_padding" />
-		<attribute id="alternating_row_style_css_class" />
-		<attribute id="page_size" />
-		<attribute id="id" />
-		<attribute id="alternating_row_style_back_color" />
 	</tag>
 	<tag id="image" class="XTAG_XEB_IMAGE_TAG">
 		<attribute id="id"/>

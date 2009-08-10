@@ -7,17 +7,10 @@
 			new interaction is added to an existing problem report from that category.
 		</p>
 		<div>
-			<xeb:display css_class="error" id="error_label" />
+			
 		</div>
 		<div>
-			<efa:multiple_selection title="Category Selection"
-				value_field="Categoryid"
-				text_field="CategorySynopsis"
-				selected_field="Subscribed"
-				on_select="on_select"
-				on_deselect="on_deselect"
-				id="category_selection"
-				/>
+			
 		</div>
 </page:define_region>
 </page:include>

@@ -3748,7 +3748,9 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_space
 			end
 			l_text_formatter_decorator.process_symbol_text (ti_l_curly)
+			l_text_formatter_decorator.indent
 			l_as.conversion_types.process (Current)
+			l_text_formatter_decorator.exdent
 			l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 			if l_as.is_creation_procedure then
 				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)

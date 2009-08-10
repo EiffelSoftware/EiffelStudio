@@ -23,7 +23,9 @@ feature -- Initialization
 	make
 		do
 			Precursor
-			create {ARRAYED_LIST [PROBLEM_REPORT_BEAN]} internal_problem_reports.make (2)			
+			create {ARRAYED_LIST [PROBLEM_REPORT_BEAN]} internal_problem_reports.make (2)
+			create internal_query.make
+			create responsibles.make (3)
 		end
 
 feature -- Access
@@ -34,14 +36,16 @@ feature -- Access
 feature {NONE} -- Access
 
 	internal_query: PROBLEM_REPORT_QUERY
-	
+			-- The query data to search for bug reports
+
 	internal_problem_reports: LIST [PROBLEM_REPORT_BEAN]
+			-- The resulting set of bug reports retrieved with the query data
 
 feature -- Basic Functionality
 
 	responsibles: ARRAYED_LIST [STRING]
 
-	problem_reports: LIST [PROBLEM_REPORT_BEAN]		
+	problem_reports: LIST [PROBLEM_REPORT_BEAN]
 		do
 			Result := internal_problem_reports
 		end
@@ -65,7 +69,7 @@ feature -- Basic Functionality
 		do
 			Result := global_state.persistence.responsibles
 		end
-		
+
 	search (a_query: PROBLEM_REPORT_QUERY)
 		local
 				l_tmp: TUPLE [list: LIST [PROBLEM_REPORT_BEAN]; row_count: INTEGER]
@@ -80,13 +84,13 @@ feature -- Basic Functionality
 		ensure
 			internal_query_set: internal_query = a_query
 		end
-		
+
 feature -- Preliminary processing		
 
-	on_load (a_request: XH_REQUEST; a_response: XH_RESPONSE)		
+	on_load (a_request: XH_REQUEST; a_response: XH_RESPONSE)
 		do
 			print ("on_load")
-			
+
 		end
 
 end

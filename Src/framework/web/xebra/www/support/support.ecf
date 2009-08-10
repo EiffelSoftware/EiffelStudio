@@ -9,7 +9,7 @@
 		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
-		<library name="odbc" location="$ISE_LIBRARY\experimental\library\store\dbms\rdbms\odbc\odbc-safe.ecf"/>
+		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc-safe.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf"/>
 		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http.ecf"/>
 		<library name="xebra_web_application" location="$XEBRA_LIBRARY\xebra_web_application\xebra_web_application.ecf" readonly="false"/>

@@ -34,8 +34,8 @@ feature {NONE} -- Access
 	session_control: DB_CONTROL
 	base_update: DB_CHANGE
 	base_selection: DB_SELECTION
-	repository: DB_REPOSITORY
-	storage: DB_STORE
+	--repository: DB_REPOSITORY
+	--storage: DB_STORE
 
 	is_connected: BOOLEAN
 
@@ -222,9 +222,11 @@ feature -- Problem report specific data manipulation
 			end
 				-- Also load the number of actual entries
 			if attached {ARRAYED_LIST [DB_RESULT]} try_select ("select found_rows()") as l_res then
-				if attached l_res.first as ll_res then		
+				if attached l_res.first as ll_res then
 					create l_tuple.copy (ll_res)
-					l_count := l_tuple.item (1).out.to_integer_32
+					if attached l_tuple.item (1) as l_first_tuple_item then
+						l_count := l_first_tuple_item.out.to_integer_32
+					end
 				end
 			end
 			Result := [l_result, l_count]
@@ -248,8 +250,8 @@ from
 			problemreports p1 join contacts c1 on (c1.ContactID = p1.ContactID
 ]"
 		if not a_query.submitter.is_empty then
-				Result := Result + " AND CONCAT_WS(' ', c1.FirstName, c1.LastName) LIKE '%%" + a_query.submitter + "%%'" 
-			end 
+				Result := Result + " AND CONCAT_WS(' ', c1.FirstName, c1.LastName) LIKE '%%" + a_query.submitter + "%%'"
+			end
 		Result := Result +
 "[
 )) p2
@@ -257,7 +259,7 @@ from
 			(problemreportresponsibles pr1 join contacts c2 on (c2.ContactID = pr1.ResponsibleID
 ]"
 			if not a_query.responsible.is_empty then
-				Result := Result + " AND CONCAT_WS(' ', c2.FirstName, c2.LastName) LIKE '%%" + a_query.responsible + "%%'" 
+				Result := Result + " AND CONCAT_WS(' ', c2.FirstName, c2.LastName) LIKE '%%" + a_query.responsible + "%%'"
 			end
 			Result := Result + "[
 )) on pr1.ReportID=p2.ReportID
@@ -267,21 +269,21 @@ join problemreportstatus pstat1 on (pstat1.StatusID=t1.StatusID)
 join problemreportseverities psev1 on psev1.SeverityID=t1.SeverityID
 ]"
 		if not a_query.severity.is_empty then
-			Result := Result + " and psev1.SeveritySynopsis LIKE '%%" + a_query.severity + "%%'" 
+			Result := Result + " and psev1.SeveritySynopsis LIKE '%%" + a_query.severity + "%%'"
 		end
 		Result := Result +
 "[
 join problemreportpriorities pprio1 on (pprio1.PriorityID=t1.PriorityID
 ]"
 		if not a_query.priority.is_empty then
-			Result := Result + " and pprio1.PrioritySynopsis LIKE '%%" + a_query.priority + "%%'" 
+			Result := Result + " and pprio1.PrioritySynopsis LIKE '%%" + a_query.priority + "%%'"
 		end
 		Result := Result +
 "[
 ) join problemreportcategories pcat1 on (pcat1.CategoryID=t1.CategoryID
 ]"
 		if not a_query.category.is_empty then
-			Result := Result + " and pcat1.CategorySynopsis LIKE '%%" + a_query.category + "%%'" 
+			Result := Result + " and pcat1.CategorySynopsis LIKE '%%" + a_query.category + "%%'"
 		end
 		Result := Result  + "%N )limit " + a_query.page_size
 			print (Result + "%N")
@@ -337,6 +339,31 @@ join problemreportpriorities pprio1 on (pprio1.PriorityID=t1.PriorityID
 			end
 		end
 
+	classes: LIST [STRING]
+			-- Get all the available classes
+		local
+			l_tuple: DB_TUPLE
+		do
+			if attached {ARRAYED_LIST [DB_RESULT]} try_select ("select ClassSynopsis from problemreportclasses") as res then
+				create {ARRAYED_LIST [STRING]} Result.make (10)
+				from
+					res.start
+				until
+					res.after
+				loop
+					if attached res.item as l_res then
+						create l_tuple.copy (l_res)
+						if attached l_tuple.item (1) as l_first_tuple_item then
+							Result.extend (l_first_tuple_item.out)
+						end
+					end
+					res.forth
+				end
+			else
+				create {ARRAYED_LIST [STRING]} Result.make (2)
+			end
+		end
+
 	priorities: LIST [STRING]
 			-- Get the available priorities
 		local
@@ -351,10 +378,14 @@ join problemreportpriorities pprio1 on (pprio1.PriorityID=t1.PriorityID
 				loop
 					if attached res.item as l_res then
 						create l_tuple.copy (l_res)
-						Result.extend (l_tuple.item (1).out)
+						if attached l_tuple.item (1) as l_first_tuple_item then
+							Result.extend (l_first_tuple_item.out)
+						end
 					end
 					res.forth
 				end
+			else
+				create {ARRAYED_LIST [STRING]} Result.make (2)
 			end
 		end
 
@@ -372,10 +403,14 @@ join problemreportpriorities pprio1 on (pprio1.PriorityID=t1.PriorityID
 				loop
 					if attached res.item as l_res then
 						create l_tuple.copy (l_res)
-						Result.extend (l_tuple.item (1).out)
+						if attached l_tuple.item (1) as l_first_tuple_item then
+							Result.extend (l_first_tuple_item.out)
+						end
 					end
 					res.forth
 				end
+			else
+				create {ARRAYED_LIST [STRING]} Result.make (3)
 			end
 		end
 
@@ -393,10 +428,14 @@ join problemreportpriorities pprio1 on (pprio1.PriorityID=t1.PriorityID
 				loop
 					if attached res.item as l_res then
 						create l_tuple.copy (l_res)
-						Result.extend (l_tuple.item (1).out)
+						if attached l_tuple.item (1) as l_first_tuple_item then
+							Result.extend (l_first_tuple_item.out)
+						end
 					end
 					res.forth
 				end
+			else
+				create {ARRAYED_LIST [STRING]} Result.make (0)
 			end
 		end
 
@@ -414,10 +453,14 @@ join problemreportpriorities pprio1 on (pprio1.PriorityID=t1.PriorityID
 				loop
 					if attached res.item as l_res then
 						create l_tuple.copy (l_res)
-						Result.extend (l_tuple.item (1).out)
+						if attached l_tuple.item (1) as l_first_tuple_item then
+							Result.extend (l_first_tuple_item.out)
+						end
 					end
 					res.forth
 				end
+			else
+				create {ARRAYED_LIST [STRING]} Result.make (3)
 			end
 		end
 

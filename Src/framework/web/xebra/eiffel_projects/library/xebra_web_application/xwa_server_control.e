@@ -29,13 +29,6 @@ feature {NONE} -- Constants
 
 	default_cmd_server_host: STRING = "localhost" -- FIXME: read this from  config file
 
-
-feature -- Access
-
-feature -- Status report
-
-feature -- Status setting
-
 feature -- Operations
 
 	send (a_command: XC_SERVER_COMMAND): XC_COMMAND_RESPONSE

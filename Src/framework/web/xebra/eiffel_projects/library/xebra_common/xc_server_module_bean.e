@@ -12,11 +12,23 @@ class
 
 inherit
 	XC_SERVER_MODULE
+		rename
+			make as make_with_name
+		end
 
 create
+	make,
 	make_from_module
 
 feature {NONE} -- Initialization
+
+	make
+			-- Initializes current
+		do
+			launched := False
+			running := False
+			name := ""
+		end
 
 	make_from_module (a_module: XC_SERVER_MODULE)
 			-- Initializes current

@@ -18,6 +18,12 @@ feature -- Files
 
 	Webapp_config_file: STRING = "config.wapp"
 
+feature -- Server
+
+	Cmd_server_port: INTEGER = 55002
+	Http_server_port: INTEGER = 55001
+	Max_tcp_clients: INTEGER = 100
+
 feature -- Env vars
 
 	Xebra_root_env: STRING = "XEBRA_DEV"
@@ -31,14 +37,12 @@ feature -- Filenames
 	Servlet_gen_name: STRING = "servlet_gen"
 	Generated_folder_name: STRING = ".generated"
 
-
 feature -- Response
 
 	Response_ct_html: STRING = "text/html;charset=ascii"
 	Response_ct_xml: STRING = "text/xml"
 	Response_Html_start: STRING = "#H#"
 	Response_content_type_start: STRING = "#CT#"
-
 
 feature -- Request Message
 
@@ -77,6 +81,5 @@ feature -- Cookie Order
 feature -- time
 
 	Two_seconds_in_nanoseconds: NATURAL = 2000000000
-
 
 end

@@ -59,8 +59,7 @@
 		<th>Interactive</th>
 		<th>Status </th>
 		<th>Sessions </th> 
-		<th>Disabled</th>
-		
+		<th>Disabled</th>		
 		<th>Development Mode</th>
 		
 	</tr>
@@ -69,7 +68,7 @@
 			<td><xeb:display text="#{webapp.app_config.name.value.out}" /></td>
 			<td><xeb:display text="#{webapp.app_config.host.value.out}" /></td>
 			<td><xeb:display text="#{webapp.app_config.port.value.out}" /></td>
-			<td><xeb:display text="#{webapp.app_config.is_interactive.value.out}" /></td>
+			<td><xeb:display text="#{webapp.app_config.is_interactive.out}" /></td>
 			<td><xeb:display text="#{webapp.status}" /></td>
 			<td><xeb:display text="#{webapp.sessions.out}" /></td>
 			<td><xeb:display text="#{webapp.is_disabled.out}" /> (<f:command_link text="on" action="disable_webapp" variable="webapp.app_config.name.value.out" /> | <f:command_link text="off" action="enable_webapp" variable="webapp.app_config.name.value.out" />)</td>

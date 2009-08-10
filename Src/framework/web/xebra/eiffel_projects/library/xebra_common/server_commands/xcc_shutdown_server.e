@@ -12,11 +12,20 @@ class
 
 inherit
 	XC_SERVER_COMMAND
+		redefine
+			has_response
+		end
 
 create
 	make
 
 feature -- Access
+
+	has_response: BOOLEAN
+			-- <Precursor>
+		do
+			Result := False
+		end
 
 	description: STRING
 			-- <Precursor>

@@ -12,9 +12,9 @@ deferred class
 
 inherit
 	XC_COMMAND
-	redefine
-		execute
-	end
+		redefine
+			execute
+		end
 
 feature -- Basic operations
 

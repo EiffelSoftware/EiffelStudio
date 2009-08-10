@@ -15,6 +15,8 @@ inherit
 
 	XS_SHARED_SERVER_CONFIG
 
+	XU_STOPWATCH
+
 feature {NONE} -- Initialization
 
 	make

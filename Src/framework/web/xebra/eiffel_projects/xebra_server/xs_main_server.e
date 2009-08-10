@@ -99,14 +99,29 @@ feature {NONE} -- Operations
 
 	shutdown_all_modules
 			-- Shuts all modules down
+		local
+			l_mods: ARRAYED_LIST [STRING]
 		do
+				-- Copy module names from hash table to arrayed list
+			create l_mods.make (3)
 			from
 				modules.start
 			until
 				modules.after
 			loop
-				shutdown_module (modules.key_for_iteration).do_nothing
+				l_mods.force (modules.key_for_iteration)
+				--shutdown_module (modules.key_for_iteration).do_nothing
 				modules.forth
+			end
+
+
+			from
+				l_mods.start
+			until
+				l_mods.after
+			loop
+				shutdown_module (l_mods.item_for_iteration).do_nothing
+				l_mods.forth
 			end
 		end
 
@@ -310,7 +325,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>
 		do
 			o.iprint ("Shutting down module '" + a_name + "'...")
-			if attached modules [a_name] as l_mod then
+			if attached {XC_SERVER_MODULE} modules [a_name] as l_mod then
 				l_mod.shutdown
 				l_mod.join
 			else

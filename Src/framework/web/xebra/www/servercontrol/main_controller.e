@@ -45,9 +45,8 @@ feature -- Modules Control
 					modules.force (l_response.modules.item_for_iteration)
 					l_response.modules.forth
 				end
-
-				Result := ""
 			end
+			Result := ""
 		end
 
 	shutdown_mod (a_mod: ANY)
@@ -58,7 +57,7 @@ feature -- Modules Control
 			create l_cmd.make
 			if attached {STRING} a_mod as l_mod then
 				l_cmd.set_parameter (l_mod)
-				server_control.send ( l_cmd ).do_nothing
+				server_control.send (l_cmd).do_nothing
 			end
 		end
 
@@ -107,10 +106,9 @@ feature -- Webapp Control
 						webapps.force (l_response.webapps.item_for_iteration)
 						l_response.webapps.forth
 					end
-
-					Result := ""
 				end
 			end
+			Result := ""
 		end
 
 

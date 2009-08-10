@@ -48,32 +48,24 @@ feature -- Inherited Features
 			l_response: XC_COMMAND_RESPONSE
 			l_http_socket: detachable NETWORK_STREAM_SOCKET
 			l_webapp_handler: XS_WEBAPP_HANDLER
-			full_collect_counter: INTEGER
 		do
-			full_collect_counter := 100
 			stop := False
 			launched := True
 			running := True
-			create l_http_socket.make_server_by_port (default_http_server_port)
+			create l_http_socket.make_server_by_port ({XU_CONSTANTS}.Http_server_port)
 
 			if not l_http_socket.is_bound then
-				o.eprint ("Socket could not be bound on port " + default_http_server_port.out , generating_type)
+				o.eprint ("Socket could not be bound on port " + {XU_CONSTANTS}.Http_server_port.out , generating_type)
 			else
 				create l_webapp_handler
 	 	       	l_http_socket.set_accept_timeout (1)
 				from
-	                l_http_socket.listen (max_tcp_clients.as_integer_32)
-	                o.dprint("HTTP Connection Server ready on port " + default_http_server_port.out,2)
+	                l_http_socket.listen ({XU_CONSTANTS}.Max_tcp_clients.as_integer_32)
+	                o.dprint("HTTP Connection Server ready on port " + {XU_CONSTANTS}.Http_server_port.out,2)
 	            until
 	            	stop
 	            loop
 	                l_http_socket.accept
-	                if full_collect_counter >= 100 then
-						full_collect_counter := 0
-			--			{MEMORY}.full_collect
-	                else
-	                	full_collect_counter := full_collect_counter + 1
-	                end
 	                if not stop then
 			            if attached {NETWORK_STREAM_SOCKET} l_http_socket.accepted as thread_http_socket then
 
@@ -138,26 +130,6 @@ feature {NONE} -- Access
 	Max_fragments: INTEGER = 1000
 
 feature -- Status
-
---	is_bound: BOOLEAN
---			-- Checks if the socket could be bound
---		do
---			Result := http_socket.is_bound
---		end
-
-
-feature -- Constants
-
-	default_http_server_port: INTEGER = 55001
-			-- Port for communication between http server and xebra server
-
-	max_tcp_clients: NATURAL = 100
-			-- Maximal number of clients which can simultanuously connect
-
-	max_thread_number: NATURAL = 10
-			-- Maximal number of simultaneous threads
-
-
 
 feature -- Status setting
 

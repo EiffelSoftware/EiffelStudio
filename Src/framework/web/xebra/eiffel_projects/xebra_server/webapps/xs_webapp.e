@@ -13,17 +13,17 @@ class
 inherit
 	XC_WEBAPP_BEAN
 		redefine
-			make
+			make_with_config
 		end
 	XS_SHARED_SERVER_OUTPUTTER
 	XS_SHARED_SERVER_CONFIG
 
 create
-	make
+	make_with_config
 
 feature {NONE} -- Initialization
 
-	make (a_webapp_config: XC_WEBAPP_CONFIG)
+	make_with_config (a_webapp_config: XC_WEBAPP_CONFIG)
 			-- Initialization for `Current'.
 			--
 			-- Initializes the actions. The action chain is:
@@ -51,8 +51,8 @@ feature {NONE} -- Initialization
 			action_generate.set_next_action (action_compile_webapp)
 			action_compile_webapp.set_next_action (action_run)
 			action_run.set_next_action (action_send)
+				-- Set dev mode by default to true
 			dev_mode := True
-
 		ensure then
 			config_attached: config /= Void
 			action_translate_attached: action_translate /= Void
@@ -64,7 +64,6 @@ feature {NONE} -- Initialization
 		end
 
 feature  -- Access
-
 
 	action_translate: XSWA_TRANSLATE
 		-- The action to translate the webapp
@@ -86,8 +85,6 @@ feature  -- Access
 
 	current_request: XC_WEBAPP_COMMAND
 		-- The last request received from the mod_xebra
-
-
 
 feature -- Actions
 
@@ -137,24 +134,6 @@ feature -- Actions
 		end
 
 feature  -- Status Setting
-
---	set_current_request (a_current_request: like current_request)
---			-- Sets current_request.
---		require
---			a_current_request_attached: a_current_request /= Void
---		do
---			current_request := a_current_request
---		ensure
---			current_request_set: equal( current_request, a_current_request)
---		end
-
---	set_request_message (a_request_message: like request_message)
---			-- Sets a_request_message.
---		do
---			request_message := a_request_message
---		ensure
---			request_message_set: request_message = a_request_message
---		end
 
 	set_needs_cleaning
 			-- Sets needs_cleaning to all cleanable actions.

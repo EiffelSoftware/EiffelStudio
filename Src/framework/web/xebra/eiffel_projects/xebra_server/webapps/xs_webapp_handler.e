@@ -84,7 +84,7 @@ feature  -- Basic Operations
 				l_files.after
 			loop
 				if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (l_files.item_for_iteration) as l_w then
-					Result.force (create {XS_WEBAPP}.make (l_w), l_w.name)
+					Result.force (create {XS_WEBAPP}.make_with_config (l_w), l_w.name)
 				end
 
 				l_files.forth

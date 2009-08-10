@@ -11,11 +11,20 @@ class
 	XC_WEBAPP_BEAN
 
 create
-	make
+	make,
+	make_with_config
 
 feature {NONE} -- Initialization
 
-	make (a_webapp_config: XC_WEBAPP_CONFIG)
+	make
+			-- Initialization for `Current'.
+		do
+			make_with_config (create {XC_WEBAPP_CONFIG}.make_empty)
+		ensure
+			config_attached: app_config /= Void
+		end
+
+	make_with_config (a_webapp_config: XC_WEBAPP_CONFIG)
 			-- Initialization for `Current'.
 		require
 			a_webapp_config_attached: a_webapp_config /= Void
@@ -35,7 +44,7 @@ feature -- Access
 
 	is_disabled: BOOLEAN assign set_is_disabled
 		-- Disabled webapps do not translate/compile/run
-		
+
 	is_enabled: BOOLEAN assign set_is_enabled
 			-- Enabled webapps do translate/compile/run
 		do
@@ -56,7 +65,6 @@ feature -- Access
 
 	is_compiling_servlet_gen: BOOLEAN assign set_is_compiling_servlet_gen
 		-- Is compiling servlet_gen
-
 
 	sessions: NATURAL assign set_sessions
 		-- How many sessions the webapp is currently serving
@@ -85,7 +93,6 @@ feature -- Access
 				Result := "Stopped"
 			end
 		end
-
 
 feature -- Status report
 
@@ -119,7 +126,6 @@ feature -- Status setting
 			is_compiling_servlet_gen_set: equal (is_compiling_servlet_gen, a_is_compiling_servlet_gen)
 		end
 
-
 	set_is_running (a_is_running: BOOLEAN)
 			-- Sets is_running
 		do
@@ -135,7 +141,6 @@ feature -- Status setting
 		ensure
 			set: equal (is_translating, a_is_translating)
 		end
-
 
 	set_is_disabled (a_is_disabled: BOOLEAN)
 			-- Sets is_disabled
@@ -170,13 +175,12 @@ feature -- Status setting
 			is_generating_set: equal (is_generating, a_is_generating)
 		end
 
-
 feature -- Basic operations
 
 	copy_from_bean : XC_WEBAPP_BEAN
 			-- Creates a copy of an other webapp bean
 		do
-			create Result.make (current.app_config)
+			create Result.make_with_config (current.app_config)
 			Result.is_compiling_webapp := current.is_compiling_webapp
 			Result.is_compiling_servlet_gen := current.is_compiling_servlet_gen
 			Result.is_generating := current.is_generating
@@ -188,9 +192,6 @@ feature -- Basic operations
 		ensure
 			result_attached: Result /= Void
 		end
-
-
-feature {NONE} -- Implementation
 
 invariant
 	config_attached: app_config /= Void

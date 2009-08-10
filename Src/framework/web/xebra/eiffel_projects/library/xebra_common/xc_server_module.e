@@ -24,27 +24,11 @@ feature {NONE} -- Initialization
 			name_set: equal(name, a_name)
 		end
 
-
---	make (a_main_server: like main_server)
---			-- Initializes current
---		require
---			a_main_servera_ttached: a_main_server /= Void
---		do
---			launched := False
---			running := False
---			main_server := a_main_server
--- 		ensure
---			main_server_set: equal (a_main_server, main_server)
---		end
-
 feature  -- Access
-
---	main_server: XC_SERVER_INTERFACE
 
 	name: STRING
 
 feature -- Status report
-
 
 	launched: BOOLEAN
 		-- Checks if a module has been launched
@@ -68,6 +52,7 @@ feature -- Status setting
 			-- Joins the thread.	
 		deferred
 		end
+		
 invariant
 	name_attached: name /= Void
 end

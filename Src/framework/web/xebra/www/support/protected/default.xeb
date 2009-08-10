@@ -42,20 +42,9 @@
 		<div id="pager_div">
 
 		</div>
-		<!-- 42 + 16 + 592 + 80 + 130 + 5 * (3 + 3) = 890 -->
-		
+	
 		<table class="top_padding">
-			<tr>
-				<xeb:iterate list="%=legend_repeater%" variable="variable_todo" type="STRING">
-					<ItemTemplate>
-						<td valign="bottom">
-							<img src="" alt="" />
-						</td>
-						<td style="padding-right:10px;">
-							<!--%#eval ("StatusSynopsis") %-->
-						</td>
-					</ItemTemplate>
-				</xeb:iterate>
+			<tr>				
 			</tr>
 		</table>
 

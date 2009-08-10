@@ -12,7 +12,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Access
 
 feature -- Access
@@ -20,9 +20,9 @@ feature -- Access
 	is_logged_in: BOOLEAN
 			-- Is a user logged in?
 		do
-			Result := attached current_session and then attached current_session.get (authentication_key)
+			Result := attached current_session as l_current and then attached l_current.get (authentication_key)
 		end
-		
+
 	is_not_logged_in: BOOLEAN
 			-- Is a user not logged in?
 		do
@@ -31,17 +31,16 @@ feature -- Access
 
 	login
 		do
-			--if attached {USER} global_state.db.valid_login (a_login.name, a_login.password) as user then
-				--if attached current_session as session then
-					--session.put (user, "auth")
-				--end
-			--end
-			current_session.put ("user", authentication_key)
+			if attached current_session as l_current then
+				l_current.put ("user", authentication_key)
+			end
 		end
 
 	logout
 		do
-			current_session.remove (authentication_key)
+			if attached current_session as l_current then
+				l_current.remove (authentication_key)
+			end
 		end
 
 	user_name: STRING

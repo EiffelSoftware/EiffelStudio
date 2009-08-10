@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			attributes_attached: attached attributes
 		end
 
-feature {NONE} -- Access
+feature {XTL_TAG_LIBRARY} -- Access
 
 	attributes: HASH_TABLE [XTL_TAG_DESCRIPTION_ATTRIBUTE, STRING]
 			-- A list of all the possible attributes
@@ -85,6 +85,31 @@ feature -- Access
 			a_name_is_valid: not a_name.is_empty
 		do
 			Result := attached attributes [a_name]
+		end
+
+feature -- Validation
+
+	valid (a_tag: XP_TAG_ELEMENT): LIST [STRING]
+			-- Validates a_tag to be conform to <Current> definition, i.e. if all mandatory attributes are set
+			-- Returns a list of errors
+		require
+			a_tag_attached: attached a_tag
+		do
+			create {ARRAYED_LIST [STRING]} Result.make (1)
+			from
+				attributes.start
+			until
+				attributes.after
+			loop
+				if attached attributes.item_for_iteration as l_item and then not l_item.optional then
+					if not a_tag.has_attribute (attributes.key_for_iteration) then
+						Result.extend ("Missing '" + attributes.key_for_iteration + "' attribute for tag '" + a_tag.id + "'.")
+					end
+				end
+				attributes.forth
+			end
+		ensure
+			Result_attached: attached Result
 		end
 
 invariant

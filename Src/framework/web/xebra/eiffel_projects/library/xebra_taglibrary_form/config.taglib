@@ -1,100 +1,53 @@
 <taglib id="f">
 	<tag id="form" class="XTAG_F_FORM_TAG">
-		<attribute id="class"/>
-		<attribute id="variable"/>
+		<attribute id="class" optional="True"/>
+		<attribute id="variable" optional="True"/>
 	</tag>
 	<tag id="button" class="XTAG_F_BUTTON_TAG">
-		<attribute id="id"/>
 		<attribute id="text"/>
 		<attribute id="action"/>
-		<attribute id="type" />
-		<attribute id="width" />
-		<attribute id="on_click"/>
+		<attribute id="type" optional="True"/>
+		<attribute id="width" optional="True"/>
 	</tag>
 	<tag id="input_text" class="XTAG_F_INPUT_TAG">
-		<attribute id="type"/>
-		<attribute id="id"/>
+		<attribute id="type" optional="True"/>
 		<attribute id="value"/>
 		<attribute id="name"/>
 		<attribute id="text" />
-		<attribute id="max_length" />
-		<attribute id="auto_post_back"/>
-		<attribute id="columns" />
-		<attribute id="rows" />
-		<attribute id="on_text_changed" />
-		<attribute id="text_mode" />
-		<attribute id="size" />
+		<attribute id="max_length" optional="True"/>
+		<attribute id="size" optional="True"/>
 	</tag>
 	<tag id="text_area" class="XTAG_F_TEXTAREA_TAG">
-		<attribute id="id"/>
 		<attribute id="value"/>
 		<attribute id="name"/>
 		<attribute id="text" />
-		<attribute id="rows" />
-		<attribute id="cols" />
-		<attribute id="max_length" />
-		<attribute id="auto_post_back"/>
-		<attribute id="columns" />
-		<attribute id="rows" />
-		<attribute id="on_text_changed" />
-		<attribute id="text_mode" />
+		<attribute id="rows" optional="True"/>
+		<attribute id="cols" optional="True"/>
+		<attribute id="max_length" optional="True"/>
 	</tag>
 	<tag id="command_link" class="XTAG_F_COMMAND_LINK_TAG">
-		<attribute id="id" />
-		<attribute id="on_click" />
 		<attribute id="text" />
 		<attribute id="action" />
-		<attribute id="variable" />
-		<attribute id="command_name" />
-		<attribute id="enabled" />
-		<attribute id="auto_post_back"/>
+		<attribute id="variable" optional="True"/>
+		<attribute id="enabled" optional="True"/>
+		<attribute id="auto_post_back" optional="True"/>
 	</tag>
 	<tag id="validator" class="XTAG_F_VALIDATOR_TAG">
-		<attribute id="id" />
 		<attribute id="class" />
-		<attribute id="text" />
-		<attribute id="display" />
-		<attribute id="error_message"/>
-		<attribute id="text_mode"/>
-		<attribute id="columns" />
-		<attribute id="rows" />
-		<attribute id="control_to_validate" />
-		<attribute id="validation_expression" />
-		<attribute id="on_server_validate" />
 	</tag>
 	<tag id="validation_result" class="XTAG_F_VALIDATION_RESULT_TAG">
 		<attribute id="name" />
-		<attribute id="id" />
-		<attribute id="header_text" />
 		<attribute id="variable" />
 	</tag>
 	<tag id="drop_down_list" class="XTAG_F_DROP_DOWN_LIST_TAG">
-		<attribute id="id" />
 		<attribute id="items" />
-		<attribute id="on_click" />
-		<attribute id="auto_post_back" />
-		<attribute id="on_text_changed" />
-		<attribute id="on_selected_index_changed" />
 		<attribute id="name"/>
 		<attribute id="value"/>
-		<attribute id="selected_index" />
-	</tag>
-	<tag id="bound_field" class="XTAG_F_BOUND_FIELD_TAG">
-		<attribute id="data_field" />
-		<attribute id="header_text" />
-		<attribute id="header_style" />
-		<attribute id="header_style_width" />
-		<attribute id="html_encode" />
-		<attribute id="sort_expression" />
+		<attribute id="selected_index" optional="True"/>
 	</tag>
 	<tag id="check_box" class="XTAG_F_CHECK_BOX_TAG">
-		<attribute id="name"/>
 		<attribute id="value"/>
 		<attribute id="text"/>
-		<attribute id="id"/>
-		<attribute id="on_selected_index_changed" />
-		<attribute id="on_checked_changed" />
-		<attribute id="auto_post_back"/>
-		<attribute id="checked" />
+		<attribute id="name"/>
 	</tag>
 </taglib>

@@ -109,7 +109,7 @@ feature -- Access
 		require
 			a_name_attached: a_name /= Void
 		do
-			Result := parameters.has_key (a_name)
+			Result := attached parameters [a_name]
 		end
 
 feature --Basic Implementation

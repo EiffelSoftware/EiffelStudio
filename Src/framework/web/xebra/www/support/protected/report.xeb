@@ -1,6 +1,5 @@
 <page:include template="support_plain">
 <page:define_region id="main_content">
-	<xeb:display css_class="error" id="error_label"/>
-	<efa:report_view error_label_id="error_label" id="report_view" />
+	<xeb:display text="NoText"/>
 </page:define_region>
 </page:include>

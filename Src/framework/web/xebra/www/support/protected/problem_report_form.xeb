@@ -7,7 +7,6 @@
 		that you read the <a href="howto.xeb">instructions
 		for submitting problem reports</a>.
 	</p>
-	<efa:collapsible_table div_id="main_id" id="main_table" />
 	<div id="main_id">
 	<!--Here is the form, note that the id for the labels must match the "title" column of the ProblemReportFormFields table: might be obsolete?-->
 		<f:form variable="problem_report" class="PROBLEM_REPORT_BEAN">

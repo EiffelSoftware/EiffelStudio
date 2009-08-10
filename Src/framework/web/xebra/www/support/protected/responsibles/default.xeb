@@ -7,7 +7,7 @@
 					Problem Report Edition
 				</h1>
 			</div>		
-			<xeb:display css_class="error" id="error_label"/>			
+			<xeb:display text="NoText" css_class="error"/>			
 			<f:form variable="query" class="PROBLEM_REPORT_QUERY">
 				<table id="responsible_filter">
 					<tbody>
@@ -26,8 +26,8 @@
 								Category:
 							</td>
 							<td valign="top">
-								<f:drop_down_list items="%=categories%" value="category"/>
-								<f:check_box value="open" name="a_open" text="Open" />
+								<f:drop_down_list name="a_category" items="%=categories%" value="category"/>
+								<f:check_box value="open" name="a_open" text="Open"/>
 							</td>
 						</tr>
 						<tr>
@@ -36,14 +36,14 @@
 								<div class="tooltip_container" width="400px"></div>
 							</td>
 							<td valign="top">
-								<f:input_text max_length="101" value="responsible" text="#{query.responsible}" />
+								<f:input_text name="a_responsible" max_length="101" value="responsible" text="#{query.responsible}" />
 							</td>
 							<td class="field_name" valign="top">
 								Severity:
 								<div class="tooltip_container" width="135px"></div>
 							</td>
 							<td valign="top">
-								<f:drop_down_list items="%=severities%" value="severity"/>
+								<f:drop_down_list name="a_severity" items="%=severities%" value="severity"/>
 							</td>
 						</tr>
 						<tr>
@@ -51,7 +51,7 @@
 								Page Size:
 							</td>
 							<td valign="top">
-								<f:input_text max_length="3" size="3" value="page_size" text="#{query.page_size}" />
+								<f:input_text name="a_page_size" max_length="3" size="3" value="page_size" text="#{query.page_size}" />
 								<span class="error" style="color: Red; visibility: hidden;">*</span>
 							</td>
 							<td class="field_name" valign="top">
@@ -59,7 +59,7 @@
 								<div class="tooltip_container" width="135px"></div>
 							</td>
 							<td valign="top">
-								<f:drop_down_list items="%=priorities%" value="priority" />
+								<f:drop_down_list name="a_priority" items="%=priorities%" value="priority" />
 							</td>
 						</tr>
 					</tbody>
@@ -85,10 +85,9 @@
 								</td>
 								<td align="center">
 									<div width="300px">
-										<xeb:iterate times="10">
-										<span class="active_page">1 </span>
-										<!--a class="pager_buttons" href="">2 </a-->
-										</xeb>
+										<xeb:loop times="10">
+										<span class="active_page">1</span>
+										</xeb:loop>
 									</div>
 								</td>
 								<td align="right" width="37px">
@@ -199,9 +198,9 @@
 								</td>
 								<td align="center">
 									<div width="300px">
-										<xeb:iterate times="10">
-											<span class="active_page">1 </span>										
-										</xeb:iterate>
+										<xeb:loop times="10">
+											<span class="active_page">1</span>
+										</xeb:loop>
 									</div>
 								</td>
 								<td align="right" width="37px">

@@ -43,7 +43,8 @@ feature {NONE} -- Access
 			value.set_behaviour (agent concatenate_results)
 
 				-- Taglib specific
-			l_attribute := open + stringp ("attribute") &+ stringp ("id") |+ equals |+ value |+ slash + close
+			l_attribute := open + stringp ("attribute") &+ stringp ("id") |+ equals |+ value |+
+							(stringp ("optional") |+ equals |+ value).optional |+ slash + close
 			l_attribute.fixate
 			l_attribute.set_behaviour (agent build_attribute)
 			l_tag := open + stringp ("tag") &+ stringp ("id") |+ equals |+ value |+ stringp("class") |+
@@ -61,9 +62,6 @@ feature -- Access
 
 	template: XP_TEMPLATE
 			-- The resulting template
-
-	--xeb_file: PEG_ABSTRACT_PEG
-			-- The xeb parsing grammar
 
 feature -- Basic functionality
 
@@ -99,6 +97,14 @@ feature {NONE} -- Parser behaviours
 			if attached {STRING} a_result.internal_result.first as l_value then
 				create l_attribute.make
 				l_attribute.set_value (l_value)
+				if a_result.internal_result.count > 1 and then
+					attached {STRING} a_result.internal_result [2] as l_optional then
+					if l_optional.is_boolean then
+						l_attribute.optional := l_optional.to_boolean;
+					else
+						add_parse_error ("Invalid Boolean value for attribute: '" + l_value + "'! Assumed 'False'.")
+					end
+				end
 				Result.replace_result (l_attribute)
 			else
 				add_parse_error ("Attribute not valid!")

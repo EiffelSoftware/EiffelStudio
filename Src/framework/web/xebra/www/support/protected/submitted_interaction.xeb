@@ -2,22 +2,21 @@
 <page:define_region id="main_content">
 	<div id="title_box"><h1>Interaction Submission Confirmation</h1></div>
 
-	<efa:collapsible_table div_id="main_div" id="main_table" />
 	<div  id="main_div">
 		<table class="problem_report" width="480px">
 			<tr  visible="false" id="status_change">
 				<td>
-					<span class="field_name">Status changed to:</span> <xeb:display  id="status_label"/>
+					<span class="field_name">Status changed to:</span> 
 				</td>
 			</tr>
 			<tr  visible="false" id="category_change">
 				<td>
-					<span class="field_name">Category changed to:</span> <xeb:display  id="category_label"/>
+					<span class="field_name">Category changed to:</span> 
 				</td>
 			</tr>
 			<tr  visible="false" id="responsible_change">
 				<td>
-					<span class="field_name">Responsible changed to:</span> <xeb:display  id="responsible_label"/>
+					<span class="field_name">Responsible changed to:</span> 
 				</td>
 			</tr>
 			<tr  visible="false" id="private">
@@ -27,7 +26,7 @@
 			</tr>
 			<tr>
 				<td class="last_row">
-					<span class="field_name">text:</span><br /><xeb:display css_class="report_content" id="interaction_text" />
+					<span class="field_name">text:</span><br />
 				</td>
 			</tr>
 			<tr  id="attachments_row">
@@ -43,9 +42,9 @@
 			</tr>
 			<tr>
 				<td class="submit_column">
-					<f:command_link on_click="on_submit" text="Submit" id="SubmitLink"/>
+					<f:command_link action="on_submit" text="Submit"/>
 					|
-					<f:command_link on_click="on_edit" text="Edit" id="EditLink"/>
+					<f:command_link action="on_edit" text="Edit"/>
 				</td>
 			</tr>
 		</table>

@@ -81,6 +81,22 @@ feature -- Access
 
 feature -- Query
 
+	valid (a_tag: XP_TAG_ELEMENT): LIST [STRING]
+			-- Checks if the a_tag conforms to <Current> tag library and returns a list of error messages
+			-- If the list is empty, a_tag is valid.
+		require
+			a_tag_attached: attached a_tag
+		do
+
+			if attached tags [a_tag.id] as l_tag_description then
+				Result := l_tag_description.valid (a_tag)
+			else
+				create {ARRAYED_LIST [STRING]} Result.make (1)
+			end
+		ensure
+			Result_attached: attached Result
+		end
+
 	get_class_for_name (a_name: STRING): STRING
 			-- Searches for the class corresponding to
 			-- the tag name. If no class is found

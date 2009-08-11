@@ -24,6 +24,21 @@ feature -- Server
 	Http_server_port: INTEGER = 55001
 	Max_tcp_clients: INTEGER = 100
 
+feature -- Debugging
+
+	Translator_debug_name: STRING = "XT"
+
+feature -- Completion messages
+
+	Successful_translation: STRING = "System translated."
+	Servlet_generation_completed: STRING = "System generated."
+
+feature -- Special Tags
+
+	Render_attribute_name: STRING = "render"
+	Css_class_attribute_name: STRING = "css_class"
+	Class_attribute_name: STRING = "class"
+
 feature -- Env vars
 
 	Xebra_root_env: STRING = "XEBRA_DEV"
@@ -78,8 +93,28 @@ feature -- Cookie Order
 	Cookie_secure: STRING = "Secure"
 	Cookie_comment: STRING = "Comment="
 
-feature -- time
+feature -- Time
 
 	Two_seconds_in_nanoseconds: NATURAL = 2000000000
+
+feature -- Debug levels
+
+	Debug_start_stop_app: INTEGER = 1
+			-- Start and stop of overall application
+
+	Debug_configuration: INTEGER = 2
+			-- Debug of configuration file reading
+
+	Debug_start_stop_components: INTEGER = 3
+			-- Start and stop of main components
+
+	Debug_tasks: INTEGER = 4
+			-- Information about tasks that are performed
+
+	Debug_subtasks: INTEGER = 5
+			--  Information about subtasks that are performed
+
+	Debug_verbose_subtasks: INTEGER = 6
+			-- Very verbose information about subtasks that are performed
 
 end

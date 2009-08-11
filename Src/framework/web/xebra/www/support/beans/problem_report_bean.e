@@ -20,7 +20,7 @@ feature -- Initialization
 
 	make
 		do
-			release := "default_release"
+			release := ""
 			to_reproduce_text := "default_to_reproduce"
 			description_text := "default_description_text"
 			environment_text:= "default_environment_text"

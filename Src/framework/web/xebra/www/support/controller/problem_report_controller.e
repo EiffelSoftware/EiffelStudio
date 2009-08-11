@@ -25,6 +25,8 @@ feature -- Initialization
 			create internal_priority_list.make (3)
 			create internal_category_list.make (4)
 			create internal_confidential_list.make (2)
+			internal_confidential_list.extend ("Yes")
+			internal_confidential_list.extend ("No")
 			create internal_class_list.make (5)
 			create internal_severity_list.make (3)
 			create responsibles.make (3)

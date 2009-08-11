@@ -29,6 +29,12 @@ feature -- Basic functionality
 			Result_attached: attached Result
 		end
 
+	classes: LIST [STRING]
+		deferred
+		ensure
+			Result_attached: attached Result
+		end
+
 	priorities: LIST [STRING]
 		deferred
 		ensure

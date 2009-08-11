@@ -15,26 +15,23 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_formatter: like notifier_formatter)
+	make (a_formatter: ES_NOTIFIER_FORMATTER)
 			-- Initializes the C output analyzer.
 			--
 			-- `a_formatter': A notifier formatter to extract the C compilation output from.
 		require
 			a_formatter_attached: attached a_formatter
 		do
-			notifier_formatter := a_formatter
-			register_action (a_formatter.text_changed_actions, agent
+			register_action (a_formatter.text_changed_actions, agent (ia_formatter: ES_NOTIFIER_FORMATTER)
 				require
 					is_interface_usable: is_interface_usable
 				do
-					if output.is_empty then
+					if ia_formatter.string.is_empty then
 							-- The output change to empty text, which means it was cleared.
-						on_output_text_cleared
+						on_output_text_cleared (ia_formatter)
 					end
 				end)
 			register_action (a_formatter.new_line_actions, agent on_output_new_line)
-		ensure
-			notifier_formatter_set: notifier_formatter = a_formatter
 		end
 
 feature {NONE} -- Clean up
@@ -44,33 +41,14 @@ feature {NONE} -- Clean up
 		do
 		end
 
-feature {NONE} -- Access
-
-	output: STRING_32
-			-- Current output string.
-		require
-			is_interface_usable: is_interface_usable
-		do
-			Result := notifier_formatter.string
-		ensure
-			result_attached: attached Result
-		end
-
-	notifier_formatter: ES_NOTIFIER_FORMATTER
-			-- Notifier formatter, which the output string can be extracted from.
-
 feature {NONE} -- Measurement
-
-	line: INTEGER
-			-- Current line of the output being processed.
-			-- Note: Remember the output can be cleared during processing.
 
 	position: INTEGER
 			-- Last position in the text a processed output line was take.
 
 feature {NONE} -- Basic operations
 
-	process_line (a_line: READABLE_STRING_8; a_number: INTEGER)
+	process_line (a_line: READABLE_STRING_8; a_number: NATURAL_32)
 			-- Processes a line.
 			--
 			-- `a_line': A line to process/parse.
@@ -85,30 +63,34 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Action handlers
 
-	on_output_text_cleared
+	on_output_text_cleared (a_formatter: ES_NOTIFIER_FORMATTER)
 			-- Called when the output is cleared/reset.
+			--
+			-- `a_formatter': Formatter that was cleared.
 		require
 			is_interface_usable: is_interface_usable
+			a_formatter_attached: attached a_formatter
 		do
-			line := 0
 			position := 0
 		ensure
-			line_reset: line = 0
 			position_reset: position = 0
 		end
 
-	on_output_new_line
+	on_output_new_line (a_formatter: ES_NOTIFIER_FORMATTER; a_lines: NATURAL_32)
 			-- Called when a new line was added to the output string.
+			--
+			-- `a_formatter': Formatter that were a new line was produced.
+			-- `a_lines': Number of lines in the current formatter.
 		require
 			is_interface_usable: is_interface_usable
+			a_formatter_attached: attached a_formatter
 		local
 			l_next_position: INTEGER
 			l_position: INTEGER
-			l_string: like output
+			l_string: STRING_32
 			l_line: STRING
 		do
-			line := line + 1
-			l_string := output
+			l_string := a_formatter.string
 			l_position := position + 1
 			l_next_position := l_string.count
 			check valid_position: l_next_position >= l_position end
@@ -116,16 +98,13 @@ feature {NONE} -- Action handlers
 			if l_next_position > l_position then
 				l_line := l_string.substring (l_position, l_next_position)
 				if not l_line.is_empty then
-					process_line (l_line, line)
+					process_line (l_line, a_lines)
 				end
 			end
 			position := l_next_position
 		ensure
-			position_set: position = output.count
+			position_set: position = a_formatter.string.count
 		end
-
-invariant
-	notifier_formatter_attached: attached notifier_formatter
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

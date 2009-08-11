@@ -193,6 +193,8 @@ feature {NONE} -- Quick search bar.
 			bottom_widget_created: bottom_widget /= Void
 		local
 			l_tool: like search_tool
+			l_search_bar: like search_bar
+			l_keyword_field: EV_COMBO_BOX
 		do
 			create search_bar.make (search_tool)
 
@@ -206,20 +208,23 @@ feature {NONE} -- Quick search bar.
 			else
 				check False end
 			end
-			bottom_widget.extend (search_bar)
+			l_search_bar := search_bar
+			bottom_widget.extend (l_search_bar)
 			hide_search_bar
-			search_bar.advanced_button.select_actions.extend (agent trigger_advanced_search)
-			search_bar.close_button.select_actions.extend (agent close_quick_search_bar (True))
-			search_bar.next_button.select_actions.extend (agent quick_find_next)
-			search_bar.previous_button.select_actions.extend (agent quick_find_previous)
+			l_search_bar.advanced_button.select_actions.extend (agent trigger_advanced_search)
+			l_search_bar.close_button.select_actions.extend (agent close_quick_search_bar (True))
+			l_search_bar.next_button.select_actions.extend (agent quick_find_next)
+			l_search_bar.previous_button.select_actions.extend (agent quick_find_previous)
 
-			search_bar.keyword_field.change_actions.extend (agent quick_incremental_search)
-			search_bar.keyword_field.focus_in_actions.extend (agent search_tool.focusing_keyword_field)
-			search_bar.keyword_field.focus_in_actions.extend (agent prepare_quick_search)
-			search_bar.keyword_field.return_actions.extend (agent return_on_quick_search_field)
+			l_keyword_field := l_search_bar.keyword_field
+			l_keyword_field.change_actions.extend (agent quick_incremental_search)
+			l_keyword_field.focus_in_actions.extend (agent search_tool.focusing_keyword_field)
+			l_keyword_field.focus_in_actions.extend (agent prepare_quick_search)
+			l_keyword_field.return_actions.extend (agent return_on_quick_search_field)
+			l_keyword_field.drop_actions.extend (agent search_tool.display_stone_signature (l_keyword_field, ?))
 
-			search_bar.set_lose_focus (agent on_search_bar_lose_focus)
-			search_bar.set_key_press_action (agent on_key_pressed_on_search_bar)
+			l_search_bar.set_lose_focus (agent on_search_bar_lose_focus)
+			l_search_bar.set_key_press_action (agent on_key_pressed_on_search_bar)
 		end
 
 	prepare_quick_search

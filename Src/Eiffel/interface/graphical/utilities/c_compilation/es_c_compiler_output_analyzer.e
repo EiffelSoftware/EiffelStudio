@@ -152,8 +152,18 @@ feature {NONE} -- Factory
 			result_attached: attached Result
 		end
 
-invariant
-	notifier_formatter_attached: attached notifier_formatter
+feature {NONE} -- Access: Regular expressions
+
+	function_name_regexp: RX_PCRE_MATCHER
+			-- Regular expression for Eiffel compiler C generated function names.
+		once
+			create Result.make
+			Result.set_greedy (True)
+			Result.compile ("F[0-9]+_[0-9]+")
+		ensure
+			result_attached: attached Result
+			result_is_compiled: Result.is_compiled
+		end
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

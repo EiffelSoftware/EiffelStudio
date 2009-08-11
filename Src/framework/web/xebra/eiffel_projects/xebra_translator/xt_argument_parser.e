@@ -50,12 +50,7 @@ feature -- Status report
 		require
 			is_successful: is_successful
 		do
-			if has_option (force_switch) then
---				if attached option_of_name (force_switch) as l_option then
---					Result := l_option.value.as_lower.is_equal("true")
---				end
-				Result := True
-			end
+			Result := has_option (force_switch)
 		end
 
 	lib_path: FILE_NAME

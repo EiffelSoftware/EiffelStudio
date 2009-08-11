@@ -72,6 +72,7 @@ feature{NONE} -- Initialization
 			close_button.select_actions.extend (agent hide_tool)
 			set_key_press_action (agent on_key_pressed_on_search_tool)
 			keyword_field.change_actions.extend (agent on_keyword_field_text_change)
+			keyword_field.drop_actions.extend (agent display_stone_signature (keyword_field, ?))
 		end
 
 feature -- Registration/Implementation
@@ -625,6 +626,23 @@ feature{NONE} -- Implementation
 
 	hide_tool_actions_internal: like hide_tool_actions
 			-- Implementation of `hide_tool_actions'
+
+	display_stone_signature (textable: EV_TEXTABLE; a_stone: FILED_STONE)
+			-- Display signature name of `a_stone' in `textable'.
+		require
+			textable_not_void: textable /= Void
+			a_stone_not_void: a_stone /= Void
+		local
+			stone_signature: STRING
+		do
+			if a_stone.stone_signature /= Void then
+				stone_signature := a_stone.stone_signature
+				if stone_signature.has (' ') then
+					stone_signature := stone_signature.substring (1, stone_signature.index_of (' ', 1) - 1)
+				end
+				textable.set_text (stone_signature)
+			end
+		end
 
 invariant
 	search_bar_position_correct:

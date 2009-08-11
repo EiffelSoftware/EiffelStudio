@@ -34,6 +34,14 @@ feature {XTL_TAG_LIBRARY} -- Access
 
 feature -- Access
 
+	has_id (a_id: STRING): BOOLEAN
+			-- Checks if the id `a_id' is already added
+		require
+			a_id_valid: attached a_id and then not a_id.is_empty
+		do
+			Result := tags.has_key (a_id)
+		end
+
 	put (a_child: XTL_TAG_LIB_ITEM)
 			-- <Precursor>
 		require else
@@ -47,9 +55,13 @@ feature -- Access
 		end
 
 	put_tag (a_tag: XTL_TAG_DESCRIPTION)
-			--
+			-- Adds a tag to the lists of tags
+		require
+			a_tag_not_already_added: not has_id (a_tag.id)
 		do
 			tags.put (a_tag, a_tag.id)
+		ensure
+			tag_added: tags.count > old tags.count
 		end
 
 	set_id (a_id: STRING)
@@ -87,7 +99,6 @@ feature -- Query
 		require
 			a_tag_attached: attached a_tag
 		do
-
 			if attached tags [a_tag.id] as l_tag_description then
 				Result := l_tag_description.valid (a_tag)
 			else
@@ -119,9 +130,9 @@ feature -- Query
 			a_tag_is_valid: not a_tag.is_empty
 		do
 			if attached tags [a_tag] as tag then
-				Result := a_attribute.is_equal (class_attribute_name) or
-							a_attribute.is_equal (Css_class_attribute_name) or
-							a_attribute.is_equal (Render_attribute_name) or
+				Result := a_attribute.is_equal ({XU_CONSTANTS}.Class_attribute_name) or
+							a_attribute.is_equal ({XU_CONSTANTS}.Css_class_attribute_name) or
+							a_attribute.is_equal ({XU_CONSTANTS}.Render_attribute_name) or
 							tag.has_argument (a_attribute)
 			end
 		end
@@ -149,13 +160,8 @@ feature -- Query
 			result_attached: attached Result
 		end
 
-feature -- Constants
-
-	Render_attribute_name: STRING = "render"
-	Css_class_attribute_name: STRING = "css_class"
-	class_attribute_name: STRING = "class"
-
 invariant
+
 	id_attached: attached id
 
 note

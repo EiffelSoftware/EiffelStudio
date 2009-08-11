@@ -82,7 +82,7 @@ feature -- Basic functionality
 			l_util: XU_FILE_UTILITIES
 			l_ecf_file_name: FILE_NAME
 		do
-				-- Generate the servlet generator files
+				-- 1. Generate the servlet generator files
 			from
 				servlet_generator_generators.start
 			until
@@ -93,7 +93,7 @@ feature -- Basic functionality
 				servlet_generator_generators.forth
 			end
 
-				-- Generate the {APPLICATION} class
+				-- 2. Generate the {APPLICATION} class
 			l_filename := a_path.twin
 			l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
 			create l_directory.make (l_filename)
@@ -118,7 +118,7 @@ feature -- Basic functionality
 				l_util.close
 			end
 
-				-- Generate the .ecf file
+				-- 3. Generate the .ecf file
 			l_filename := a_path.twin
 			l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
 			l_filename.extend ({XU_CONSTANTS}.servlet_gen_name)
@@ -156,6 +156,7 @@ feature {NONE} -- Implementation
 			-- Builds the constructor feature for the APPLICATION class of servlet_gen
 		local
 			l_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR
+			l_creation_expression: STRING
 		do
 			create Result.make ("run (a_arg_parser: XTAG_ARGUMENT_PARSER)")
 			Result.append_local ("l_path", "STRING")
@@ -176,19 +177,18 @@ feature {NONE} -- Implementation
 			loop
 				l_servlet_gg := servlet_generator_generators.item
 				build_controller_table (Result, l_servlet_gg)
+				l_creation_expression := "(create {"
+					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + Servlet_generator_suffix + "}.";
 				if l_servlet_gg.is_xrpc then
-					Result.append_expression ("(create {"
-					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make_xrpc ("
-					+ "l_path, %"" + l_servlet_gg.servlet_name + "%", l_controller_table, %""
-				    + "./" + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%","
-				    + "l_const_class, %"" + retrieve_controller_class (l_servlet_gg) + "%")).generate;")
+					l_creation_expression := l_creation_expression + "make_xrpc"
 				else
-					Result.append_expression ("(create {"
-					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + "_SERVLET_GENERATOR}.make ("
+					l_creation_expression := l_creation_expression + "make"
+				end
+				l_creation_expression := l_creation_expression + " ("
 					+ "l_path, %"" + l_servlet_gg.servlet_name + "%", l_controller_table, %""
 				    + "./" + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%","
-				    + "l_const_class)).generate;")
-				end
+				    + "l_const_class, %"" + retrieve_controller_class (l_servlet_gg) + "%")).generate;"
+				Result.append_expression (l_creation_expression)
 
 				servlet_generator_generators.forth
 			end
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			Result.append_expression ("l_const_class.serialize (buf)")
 			Result.append_expression ("constants_file.close")
 			Result.append_expression ("end")
-			Result.append_expression ("o.iprint (%"System generated.%")")
+			Result.append_expression ("o.iprint (%"" + {XU_CONSTANTS}.Servlet_generation_completed + "%")")
 		ensure
 			result_attached: attached Result
 		end
@@ -250,6 +250,8 @@ feature -- Constants
 
 	Application_name: STRING = "G_APPLICATION"
 
+	Servlet_generator_suffix: STRING = "_SERLVET_GENERATOR"
+
 	servlet_gen_ecf_prefix: STRING = "[
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="servlet_gen" uuid="E8B9E5AE-D395-4C15-8046-98D6BB466377">
@@ -281,13 +283,11 @@ feature -- Constants
 					</system>
 					]"
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
-		-- The .ecf file
-
 invariant
-	servlet_generator_generators_attached: servlet_generator_generators /= Void
+	servlet_generator_generators_attached: attached servlet_generator_generators
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

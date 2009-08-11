@@ -43,7 +43,7 @@ feature -- Operation
 			l_generation_file_name: FILE_NAME
 			l_util: XU_FILE_UTILITIES
 		do
-			o.set_name ("XT")
+			o.set_name ({XU_CONSTANTS}.Translator_debug_name)
 			o.set_debug_level (a_arg_parser.debug_level)
 			config.set_xebra_library_path (a_arg_parser.lib_path.out)
 			create l_translator.make (a_arg_parser.project_name, a_arg_parser.force)
@@ -62,16 +62,16 @@ feature -- Operation
 			if not error_manager.is_successful then
 				l_error_count := count_errors (error_manager.errors)
 				error_manager.trace_errors (l_printer)
-				o.dprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N", 3)
+				o.eprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N", generating_type)
 				{EXCEPTIONS}.die (-1)
 			else
 				create l_util
 				l_generation_file_name.extend ({XU_CONSTANTS}.Generated_folder_name)
 				l_generation_file_name.set_file_name ({XU_CONSTANTS}.Translator_executed_file)
 				if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_write (l_generation_file_name) as l_file then
-					l_file.put_string ("System translated.")
+					l_file.put_string ({XU_CONSTANTS}.Successful_translation)
 					l_file.close
-					o.dprint ("Translator_executed_file written to " + l_generation_file_name, 3)
+					o.dprint ("Translator_executed_file written to " + l_generation_file_name, {XU_CONSTANTS}.Debug_verbose_subtasks)
 				else
 					o.eprint ("Could not write Translator_executed file!", generating_type)
 				end
@@ -80,8 +80,8 @@ feature -- Operation
 				end
 
 
-				o.iprint ("Output generated to '" + l_translator.output_path + "'")
-				o.iprint ("System translated.")
+				o.dprint ("Output generated to '" + l_translator.output_path + "'", {XU_CONSTANTS}.Debug_start_stop_components)
+				o.dprint ({XU_CONSTANTS}.Successful_translation, {XU_CONSTANTS}.Debug_start_stop_app)
 			end
 		end
 
@@ -97,7 +97,6 @@ feature -- Operation
 				Result := Result + 1
 				errors.forth
 			end
-			--Result := errors.index
 		end
 
 ;note

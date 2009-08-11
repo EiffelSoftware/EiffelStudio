@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			create registry.make (output_path, a_force)
 			create xeb_parser.make_with_registry (registry)
 			create l_page_taglib.make_with_arguments ("page")
-			registry.put_tag_lib (l_page_taglib.id, l_page_taglib)
+			registry.put_tag_lib (l_page_taglib)
 			l_page_taglib.set_parser (xeb_parser)
 		ensure
 			output_path_attached: attached output_path
@@ -90,12 +90,11 @@ feature -- Processing
 			l_directory: DIRECTORY
 		do
 			create l_directory.make (a_xeb_directory)
-			process_with_files (search_rec_for_xeb (l_directory), a_force)
+			process_with_files (search_for_xeb (l_directory), a_force)
 		end
 
-	search_rec_for_xeb (a_directory: DIRECTORY): LIST [FILE_NAME]
+	search_for_xeb (a_directory: DIRECTORY): LIST [FILE_NAME]
 			-- `l_directory': In which directory to search
-			-- `already_found': All the files already found
 			-- Searches recursively over the directory to find all xeb files
 		require
 			a_directory_attached: attached a_directory
@@ -127,20 +126,20 @@ feature -- Processing
 			l_translation_config_path: FILE_NAME
 		do
 			l_translation_config_path := output_path.twin
-			o.dprint ("********************$Revision$**********************", 1)
-			o.dprint ("************************************************************", 1)
-			o.dprint ("*                  .taglib processing start...             *", 1)
-			o.dprint ("************************************************************", 1)
+			o.dprint ("********************$Revision$**********************", {XU_CONSTANTS}.Debug_configuration)
+			o.dprint ("************************************************************", {XU_CONSTANTS}.Debug_start_stop_components)
+			o.dprint ("*                  .taglib processing start...             *", {XU_CONSTANTS}.Debug_start_stop_components)
+			o.dprint ("************************************************************", {XU_CONSTANTS}.Debug_start_stop_components)
 			l_translation_config_path.set_file_name (Translation_config_name)
 			parse_translation_conf (l_translation_config_path, registry)
 			if not attached registry.taglib_configuration or error_manager.has_errors then
-				o.dprint ("Taglib configuration either not existing or corrupted! Aborting translation.", 1)
+				o.eprint ("Taglib configuration either not existing or corrupted! Aborting translation.", generating_type)
 			else
 				parse_taglibs (registry)
-				o.dprint ("************************************************************", 1)
-				o.dprint ("*                    .xeb processing start...              *", 1)
-				o.dprint ("************************************************************", 1)
-				o.dprint ("Files to process: " + a_files.count.out, 2)
+				o.dprint ("************************************************************", {XU_CONSTANTS}.Debug_start_stop_components)
+				o.dprint ("*                    .xeb processing start...              *", {XU_CONSTANTS}.Debug_start_stop_components)
+				o.dprint ("************************************************************", {XU_CONSTANTS}.Debug_start_stop_components)
+				o.dprint ("Files to process: " + a_files.count.out, {XU_CONSTANTS}.Debug_start_stop_components)
 				from
 					a_files.start
 				until
@@ -153,9 +152,9 @@ feature -- Processing
 					end
 					a_files.forth
 				end
-				o.dprint ("Processing done.", 2)
+				o.dprint ("Processing done.", {XU_CONSTANTS}.Debug_start_stop_components)
 				registry.resolve_all_templates
-
+				o.dprint ("Resolving done.", {XU_CONSTANTS}.Debug_tasks)
 				create l_generator_app_generator.make (registry)
 				l_generator_app_generator.put_servlet_generator_generators (registry.retrieve_servlet_generator_generators)
 				l_generator_app_generator.generate (output_path.twin)
@@ -186,7 +185,7 @@ feature -- Processing
 			a_path: attached a_path
 			a_file_name: attached a_file_name
 		do
-			o.dprint ("Processing '" + a_path + "'...", 2)
+			o.dprint ("Processing '" + a_path + "'...", {XU_CONSTANTS}.Debug_tasks)
 			add_template_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
 		end
 
@@ -197,7 +196,7 @@ feature -- Processing
 			a_path: attached a_path
 			a_file_name: attached a_file_name
 		do
-			o.dprint ("Processing '" + a_path + "'...", 2)
+			o.dprint ("Processing '" + a_path + "'...", {XU_CONSTANTS}.Debug_tasks)
 			add_xrpc_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
 		end
 
@@ -209,12 +208,8 @@ feature -- Processing
 			l_util: XU_FILE_UTILITIES
 		do
 			create l_util
---			l_output_path := l_util.absolute_path (output_path.out, True)
---			l_file_name := l_util.absolute_path (a_file_name.out, True)
 			l_output_path := output_path.out
 			l_file_name := a_file_name.out
-			--check not l_output_path.starts_with ("..") and not l_output_path.starts_with (".") end
-			--check not l_file_name.starts_with ("..") and not l_file_name.starts_with (".") end
 			from
 				l_i := 1
 			until
@@ -245,7 +240,7 @@ feature -- Processing
 				xeb_parser.template.force := a_force
 				a_registry.put_xrpc (a_servlet_name, xeb_parser.template)
 			else
-				o.dprint ("Parsing of : " + a_path + " was unsuccessfull" , 10)
+				o.eprint ("Parsing of : " + a_path + " was unsuccessful", generating_type)
 			end
 		end
 
@@ -267,7 +262,7 @@ feature -- Processing
 				xeb_parser.template.force := a_force
 				a_registry.put_template (a_servlet_name, xeb_parser.template)
 			else
-				o.dprint ("Parsing of : " + a_path + " was unsuccessfull" , 10)
+				o.eprint ("Parsing of : " + a_path + " was unsuccessful", generating_type)
 			end
 		end
 
@@ -286,12 +281,12 @@ feature -- Processing
 				loop
 					create l_taglibrary_file_name.make_from_string (l_config.item.path)
 					l_taglibrary_file_name.set_file_name (Taglib_config_name)
-					o.dprint ("Processing file: " + l_taglibrary_file_name, 1)
+					o.dprint ("Processing file: " + l_taglibrary_file_name, {XU_CONSTANTS}.Debug_tasks)
 					process_file (l_taglibrary_file_name, agent process_taglib_with_stream (a_registry, ?, ?))
 					l_config.forth
 				end
 			else
-				o.dprint ("Configuration file is corrupted or missing!", 0)
+				o.eprint ("Configuration file is corrupted or missing!", generating_type)
 			end
 		end
 
@@ -308,8 +303,8 @@ feature -- Processing
 			l_taglib := l_parser.parse (a_source)
 
 			if attached l_taglib then
-				o.dprint ("Successfully parsed taglib: " + l_taglib.id, 2)
-				a_registry.put_tag_lib (l_taglib.id, l_taglib)
+				o.dprint ("Successfully parsed taglib: " + l_taglib.id, {XU_CONSTANTS}.Debug_tasks)
+				a_registry.put_tag_lib (l_taglib)
 			else
 				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing a taglib: " + a_file.name]), False)
 			end

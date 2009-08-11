@@ -105,7 +105,7 @@ feature -- Access
 			xrpc_registry [a_name.out] := a_xrpc_template
 		end
 
-	put_tag_lib (a_id: STRING; a_taglib: XTL_TAG_LIBRARY)
+	put_tag_lib_with_id (a_id: STRING; a_taglib: XTL_TAG_LIBRARY)
 			-- Sets the taglib with the name `a_id'
 		require
 			a_id_valid: not a_id.is_empty
@@ -113,6 +113,16 @@ feature -- Access
 			taglib_registry [a_id] := a_taglib
 		ensure
 			taglib_set: taglib_registry [a_id] = a_taglib
+		end
+
+	put_tag_lib (a_taglib: XTL_TAG_LIBRARY)
+			-- Sets the taglib with the name `a_id'
+		require
+			a_taglib_attached: attached a_taglib
+		do
+			taglib_registry [a_taglib.id] := a_taglib
+		ensure
+			taglib_set: taglib_registry [a_taglib.id] = a_taglib
 		end
 
 	resolve_all_templates

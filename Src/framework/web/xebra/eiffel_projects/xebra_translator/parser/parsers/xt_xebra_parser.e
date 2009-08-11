@@ -61,27 +61,6 @@ feature -- Access
 
 feature {NONE} -- Convenience
 
-	chars_without_ommit (a_string: STRING): PEG_SEQUENCE
-			-- Creates a parser which parses the `a_string'
-		require
-			a_string_attached: attached a_string
-			a_string_not_empty: not a_string.is_empty
-		local
-			l_i: INTEGER
-		do
-			create Result.make
-			from
-				l_i := 1
-			until
-				l_i > a_string.count
-			loop
-				Result := Result + create {PEG_CHARACTER}.make_with_character (a_string [l_i])
-				l_i := l_i + 1
-			end
-		ensure
-			Result_attached: attached Result
-		end
-
 	add_parse_error (a_message: STRING)
 			-- Adds a parse error to the error maanager
 		do

@@ -33,7 +33,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	process_line (a_line: READABLE_STRING_8; a_number: INTEGER)
+	process_line (a_line: READABLE_STRING_8; a_number: NATURAL_32)
 			-- <Precursor>
 		local
 			l_line: STRING

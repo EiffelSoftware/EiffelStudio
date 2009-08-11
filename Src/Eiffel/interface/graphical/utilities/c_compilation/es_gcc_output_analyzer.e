@@ -18,15 +18,16 @@ create
 
 feature {NONE} -- Basic operations
 
-	process_line (a_line: READABLE_STRING_8; a_number: INTEGER)
+	process_line (a_line: READABLE_STRING_8; a_number: NATURAL_32)
 			-- <Precursor>
 		local
+			l_exp: like function_name_regexp
 			l_file_name: STRING
 			l_position: STRING
 			l_message_type: STRING
 			l_message: STRING
 			l_line: INTEGER
-			i, j, k: INTEGER
+			i, j: INTEGER
 		do
 				-- Parse GCC.
 			i := a_line.index_of (':', 1)
@@ -74,21 +75,13 @@ feature {NONE} -- Basic operations
 						line_number := 0
 
 							-- Not a line number.
-						k := l_position.substring_index ("inline_F", 1)
-						if k > 1 then
-								-- Indicates the last function
-							l_position := l_position.substring (k, l_position.count - 1)
-							function_name := l_position
-							from k := 9 until k > l_position.count loop
-								if not (l_position[k].is_digit or l_position[k] = '_') then
-									l_position.keep_head (k - 1)
-								end
-								k := k + 1
-							end
+						l_exp := function_name_regexp
+						l_exp.match (l_position)
+						if l_exp.has_matched then
+							function_name := l_exp.captured_substring (0)
 						else
 							l_message_type := l_position
 						end
-
 						l_line := 0
 					end
 

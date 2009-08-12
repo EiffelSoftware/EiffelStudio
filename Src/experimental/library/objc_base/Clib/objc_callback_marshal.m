@@ -7,6 +7,7 @@ indexing
 */
 
 #include "objc_callback_marshal.h"
+#include <Foundation/Foundation.h>
 
 EIF_OBJECT callback_object;
 boolCallbackTYPE callback_bool;
@@ -59,12 +60,18 @@ void bridge_void_general (id self, SEL selector, ...) {
 		const char* argType = [sig getArgumentTypeAtIndex: i];
 		if ((!strcmp("@", argType) || !strcmp("*", argType)) && i != 0) {
 			void* arg = va_arg (args, void*);
-			printf("    %i: %s  -> %x\n", i-2, argType, arg);
+			//printf("    %i: %s  -> %x\n", i-2, argType, arg);
 			arguments[i-2] = arg;
 		} else if (!strcmp("i", argType)) {
 			int arg = va_arg (args, int);
-			printf("    %i: %s  -> %i\n", i-2, argType, arg);
+			//printf("    %i: %s  -> %i\n", i-2, argType, arg);
 			arguments[i-2] = (void*)arg;
+		} else if (!strcmp(@encode(NSRect), argType)) {
+			NSRect arg = va_arg (args, NSRect);
+			//printf("    %i: %s  -> (%i x %i)\n", i-2, argType, arg.size.width, arg.size.height);
+			NSRect* argCopy = malloc(sizeof(NSRect));
+			memcpy (argCopy, &arg, sizeof(NSRect));
+			arguments[i-2] = (void*)argCopy;
 		}
 	}
 	

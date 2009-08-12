@@ -1,6 +1,6 @@
 note
 	description: "Representation of an Objective-C method at runtime."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -71,7 +71,6 @@ feature -- High Level Eiffel Interface
 
 			l_types := (create {C_STRING}.make (type_encoding)).item
 			l_sel := {NS_OBJC_RUNTIME}.sel_register_name ((create {C_STRING}.make (a_method_selector)).item)
---			l_imp := {NS_OBJC_RUNTIME}.class_get_method_implementation ({NS_OBJC_RUNTIME}.objc_get_class ((create {C_STRING}.make ("CustomView")).item), l_sel)
 
 			l_imp := imp_for_type_encoding (type_encoding)
 
@@ -248,6 +247,8 @@ feature {NONE} -- Implementation
 	type_encoding_for_agent (a_agent: ROUTINE [ANY, TUPLE]): STRING
 		local
 			pointer: POINTER
+			ns_rect: detachable NS_RECT
+			type: STRING
 		do
 			create Result.make_from_string ("@:")
 			if attached {FUNCTION [ANY, TUPLE, BOOLEAN]} a_agent as l_function then
@@ -255,10 +256,22 @@ feature {NONE} -- Implementation
 			elseif attached {ROUTINE [ANY, TUPLE]} a_agent as l_routine then
 				-- Command / No return type
 				Result.prepend ("v")
-				if l_routine.empty_operands.conforms_to ([POINTER]) then
+				type := l_routine.empty_operands.generating_type.name
+
+				if type.is_equal ("TUPLE") then
+					-- No arguments
+				elseif type.is_equal ("TUPLE [POINTER]") then
 					Result.append ("*")
+				elseif type.is_equal ("TUPLE [!NS_OBJECT]") or type.is_equal ("TUPLE [NS_OBJECT]") or
+					type.is_equal ("TUPLE [!NS_EVENT]") or type.is_equal ("TUPLE [NS_EVENT]")  then
+					Result.append ("*")
+				elseif type.is_equal ("TUPLE [!NS_RECT]") or type.is_equal ("TUPLE [NS_RECT]") then
+					Result.append ("{_NSRect={_NSPoint=ff}{_NSSize=ff}}")
 				else
-					io.error.put_string ("ERROR: No callback for your argument types: '" + l_routine.empty_operands.generating_type + "'%N")
+					check
+						bridging_not_supported_for_method_signature: False
+					end
+					io.error.put_string ("ERROR: No callback for your argument types: '" + l_routine.empty_operands.generating_type.name + "' " + a_agent.out + "%N")
 				end
 			else
 				-- ERROR: The type a_agent is not supported

@@ -18,6 +18,7 @@
 		<cluster name="objective_C" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/\.svn$</exclude>
+				<exclude>tests</exclude>
 			</file_rule>
 		</cluster>
 	</target>

@@ -178,8 +178,6 @@ feature -- Element Change
 
 	set_extension (an_extension: like extension)
 			-- Set `extension' with `an_extension'.
-		require
-			an_extension_not_void: an_extension /= Void
 		do
 			extension := an_extension
 		ensure

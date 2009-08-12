@@ -64,6 +64,7 @@ feature {NONE} -- Initialization
 			-- Create a Cocoa combo-box.
 		do
 			create combo_box.make
+			cocoa_view := combo_box
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			Precursor {EV_TEXT_FIELD_IMP}
 		end

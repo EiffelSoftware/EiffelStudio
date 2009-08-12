@@ -94,10 +94,13 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			l_width, l_height: INTEGER
 		do
 			if attached cocoa_view then
-				io.put_string ("Calling on_size_change of " + current.generator + " " + object_id.out + " (" + attached_view.item.out + ") with:" + a_notification.object.item.out + "%N")
+				--io.put_string ("Calling on_size_change of " + current.generator + " " + object_id.out + " (" + attached_view.item.out + ") with:" + a_notification.object.item.out + "%N")
+				if attached_view.item /= a_notification.object.item then
+					io.put_string ("Incorrect callback to on_size_change: " + current.generator + " " + object_id.out + " (item " + attached_view.item.out + " but got " + a_notification.object.item.out + ")%N")
+				end
 				l_width := width
 				l_height := height
-				if l_width /= last_width or l_height /= last_height then
+				if l_width /= last_width or l_height /= last_height and l_width > 0 and l_height > 0 then
 					if not in_resize_event and attached resize_actions_internal as l_actions then
 						in_resize_event := True
 						io.put_string ("Size change: " + current.generator + " " + object_id.out + "  " + width.out + "x" + height.out + "%N")

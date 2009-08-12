@@ -199,7 +199,9 @@ feature -- Status report
 	selected_item: like item
 			-- Page displayed topmost.
 		do
-			Result := i_th ( selected_item_index )
+			if selected_item_index > 0 then
+				Result := i_th ( selected_item_index )
+			end
 		end
 
 	selected_item_index: INTEGER
@@ -287,13 +289,13 @@ feature -- Element change
 			end
 			ev_children.go_i_th (i)
 			ev_children.put_left (v_imp)
+			if last_selected = 0 then
+				last_selected := 1
+			end
 			v.implementation.on_parented
 			v_imp.set_parent_imp (Current)
 			notify_change (Nc_minsize, Current)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
-			if last_selected = 0 then
-				last_selected := 1
-			end
 
 			create l_tab.make_with_widgets (attached_interface, v)
 			l_tab_imp ?= l_tab.implementation

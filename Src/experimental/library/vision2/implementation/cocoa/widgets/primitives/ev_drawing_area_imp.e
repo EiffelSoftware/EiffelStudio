@@ -50,7 +50,8 @@ inherit
 			initialize as initialize_cocoa,
 			copy as copy_cocoa
 		redefine
-			dispose
+			dispose,
+			mouse_down
 		end
 
 create
@@ -132,6 +133,24 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	mouse_down (a_event: NS_EVENT)
+		local
+			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
+			point: NS_POINT
+		do
+			if attached pointer_button_press_actions_internal as actions then
+				create pointer_button_action
+				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
+				pointer_button_action.x := point.x
+				pointer_button_action.y := point.y
+				point := a_event.window.convert_base_to_screen_top_left (a_event.location_in_window)
+				pointer_button_action.screen_x := point.x
+				pointer_button_action.screen_y := point.y
+				pointer_button_action.button :=	a_event.button_number + 1
+				actions.call (pointer_button_action)
+			end
+		end
 
 	is_drawing_buffered: BOOLEAN
 

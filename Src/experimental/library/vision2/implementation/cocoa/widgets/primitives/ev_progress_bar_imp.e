@@ -26,11 +26,11 @@ feature {NONE} -- Implementation
 	make
 		do
 			create progress_indicator.make
+			cocoa_view := progress_indicator
 			Precursor {EV_GAUGE_IMP}
 			disable_tabable_from
 			enable_segmentation
 			progress_indicator.set_indeterminate (False)
-			cocoa_view := progress_indicator
 			set_is_initialized (True)
 		end
 

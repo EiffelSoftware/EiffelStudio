@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			create box.make
 			box.set_box_type ({NS_BOX}.box_separator)
 			cocoa_view := box
+			set_is_initialized (True)
 		end
 
 

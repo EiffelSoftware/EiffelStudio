@@ -120,8 +120,15 @@ feature -- Status report
 
 	name: STRING_32
 			-- Face name chosen by toolkit.
+		local
+			i: INTEGER
 		do
 			Result := font.font_name
+			-- The OS X font name may be ...-Bold, but we're just interested in the first part.
+			i := Result.index_of ('-', 1)
+			if i /= 0 then
+				Result.keep_head (i)
+			end
 		end
 
 	ignore_font_metric_calculation: BOOLEAN

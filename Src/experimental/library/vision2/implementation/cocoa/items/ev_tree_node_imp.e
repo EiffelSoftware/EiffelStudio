@@ -109,6 +109,7 @@ feature {EV_ANY_I} -- Status setting
 			if attached parent_tree_imp as l_tree then
 				--l_tree.outline_view.expand_item ()
 			end
+			internal_is_expanded := a_flag
 		end
 
 	set_text (a_text: STRING_GENERAL)

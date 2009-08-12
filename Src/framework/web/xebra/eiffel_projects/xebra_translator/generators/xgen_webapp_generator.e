@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			-- Replaces all underscores by slashes
 		do
 			Result := a_servlet_name.twin
-			Result.replace_substring_all ("___", "/")
+			Result.replace_substring_all ({XU_CONSTANTS}.Folder_replacement_string, "/")
 		end
 
 feature {NONE} -- Constants

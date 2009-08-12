@@ -158,7 +158,7 @@ feature -- Access
 				l_xrpc := xrpc_registry.item_for_iteration
 				create l_servlet_gen.make_minimal (l_xrpc.template_name, path, force)
 				l_servlet_gen.set_root_tag (l_xrpc.root_tag)
-				l_servlet_gen.add_controller (l_xrpc.controller_class, "api")
+				l_servlet_gen.add_controller (l_xrpc.controller_class, "api", "default_create")
 				l_servlet_gen.transform_to_xrpc
 				servlet_g_generators.extend (l_servlet_gen)
 				xrpc_registry.forth

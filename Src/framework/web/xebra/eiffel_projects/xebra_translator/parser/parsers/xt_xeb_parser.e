@@ -56,10 +56,20 @@ feature -- Access
 			class_set: template.controller_class = a_class_name
 		end
 
+	put_controller_create_name (a_controller_create_name: STRING)
+			-- Sets the creation name of the controller in the template
+		require
+			a_controller_create_name_valid: attached a_controller_create_name and not a_controller_create_name.is_empty
+		do
+			template.controller_create_name := a_controller_create_name
+		ensure
+			controller_name_set: template.controller_create_name  = a_controller_create_name
+		end
+
 feature {NONE} -- Implementation
 
 	xml_parser: PEG_ABSTRACT_PEG
-			--
+			-- Common XML definition. Not everything included.
 		local
 			xeb_file, xml, plain_html_header, xeb_tag_header, plain_html, xeb_tag, doctype,
 			namespace_identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
@@ -99,18 +109,22 @@ feature {NONE} -- Implementation
 			l_attribute.fixate
 			l_attribute.set_name ("attribute")
 
+				-- Namespace identifier: 'identifier:identifier' for xeb tags
 			namespace_identifier := identifier + colon + identifier
 			namespace_identifier.fixate
 			namespace_identifier.set_name ("namespace_identifier")
+				-- Header for regular html tags
 			plain_html_header := identifier + (whitespaces + (-l_attribute)).optional
 			plain_html_header.fixate
 			plain_html_header.set_name ("plain_html")
+				-- Header for xebra tags (with namespace)
 			xeb_tag_header := namespace_identifier + (whitespaces + (-l_attribute)).optional
 			xeb_tag_header.fixate
 			xeb_tag_header.set_name ("xeb_tag_header")
 
 			create {PEG_CHOICE} xml.make
 
+				-- Definition of regular xml/html tags
 			plain_html_long_end := (close_fixed + (-xml) + open + slash |+ identifier)
 			plain_html := (open + identifier.enforce +
 							plain_html_header |+ (
@@ -121,6 +135,7 @@ feature {NONE} -- Implementation
 			plain_html.set_behaviour (agent build_plain_html)
 			plain_html.set_error_message_handler (agent handle_plain_html_error)
 
+				-- Definition of xebra tags with namespace
 			xeb_tag_long_end := (close_fixed + (-xml) + open + slash |+ namespace_identifier)
 			xeb_tag := (open +
 							xeb_tag_header |+ (
@@ -129,7 +144,6 @@ feature {NONE} -- Implementation
 						)
 
 			xeb_tag.set_error_message_handler (agent handle_xeb_tag_error)
-
 			xeb_tag.set_behaviour (agent build_xeb_tag)
 			xeb_tag.set_name ("xeb_tag")
 			xml := xml | (xeb_tag | plain_html) | plain_text
@@ -153,6 +167,7 @@ feature {NONE} -- Implementation
 feature -- Parser error strategies
 
 	handle_xeb_tag_error (a_result: PEG_PARSER_RESULT)
+			-- Handles the error for missing end tags in xebra tags
 		require
 			a_result_attached: attached a_result
 		local
@@ -167,6 +182,7 @@ feature -- Parser error strategies
 		end
 
 	handle_plain_html_error (a_result: PEG_PARSER_RESULT)
+			-- Handles the error for missing end tags in regular html
 		require
 			a_result_attached: attached a_result
 		local
@@ -204,7 +220,7 @@ feature -- Parser Behaviours
 		end
 
 	build_variable_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- builds a variable attribute
+			-- Builds a variable attribute
 		require
 			a_result_attached: attached a_result
 		do
@@ -217,7 +233,7 @@ feature -- Parser Behaviours
 		end
 
 	build_value_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- builds a value attribute
+			-- Builds a value attribute
 		require
 			a_result_attached: attached a_result
 		do
@@ -319,7 +335,7 @@ feature -- Parser Behaviours
 								if attached {STRING} a_result.internal_result.last as l_l_id then
 									l_end_tag := l_namespace + ":" + l_l_id
 									if not (l_namespace+":"+l_id).is_equal (l_end_tag) then
-										Result.put_error_message ("Unmatched tags: " + l_namespace+":"+l_id + " expected but found: " + l_end_tag)
+										Result.put_error_message ("Unmatched tags: " + l_namespace + ":" + l_id + " expected but found: " + l_end_tag)
 									end
 								end
 							end
@@ -428,7 +444,7 @@ feature -- Basic Functionality
 				end
 			else
 				from
-				l_index := l_result.left_to_parse.longest_match.error_messages.count
+					l_index := l_result.left_to_parse.longest_match.error_messages.count
 				until
 					l_index < 1
 				loop
@@ -446,10 +462,11 @@ feature -- Basic Functionality
 				l_index := l_index - 1
 			end
 		ensure
-			template_generated: Result implies template /= Void
+			template_generated: Result implies attached template
 		end
 
 invariant
+
 	registry_attached: attached registry
 
 end

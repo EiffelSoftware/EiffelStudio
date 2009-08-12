@@ -11,22 +11,25 @@ class
 	DEMOAPPLICATION_CONTROLLER
 
 inherit
-	XWA_CONTROLLER
-		redefine
-			make
+
+	ANY
+		undefine
+			default_create
 		end
+
 	G_SHARED_DEMOAPPLICATION_GLOBAL_STATE
+		undefine
+			default_create
+		end
+
+	XWA_CONTROLLER
+
 
 create
-	make
+
+	default_create
 
 feature {NONE} -- Initialization	
-
-	make
-			--
-		do
-			Precursor
-		end
 
 feature -- Status Repost
 

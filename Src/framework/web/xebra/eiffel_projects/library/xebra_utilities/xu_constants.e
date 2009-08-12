@@ -17,6 +17,7 @@ feature -- Xebra
 feature -- Files
 
 	Webapp_config_file: STRING = "config.wapp"
+	Taglib_config_file: STRING = "config.taglib"
 
 feature -- Server
 
@@ -96,6 +97,10 @@ feature -- Cookie Order
 feature -- Time
 
 	Two_seconds_in_nanoseconds: NATURAL = 2000000000
+
+feature -- Translator
+
+	Folder_replacement_string: STRING = "___"
 
 feature -- Debug levels
 

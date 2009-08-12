@@ -1,6 +1,6 @@
 note
 	description: "[
-		{XT_TAGLIB_PARSER}.
+		The parser definition for taglibs.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Access
 
 	tag_lib_parser: PEG_ABSTRACT_PEG
+			-- <taglib id="..."> (<tag id="..."> <attribute id="..." [optional="..."]/> </tag>)*</taglib>
 			--
 		local
 			l_taglib, l_tag, l_tags, l_attribute,

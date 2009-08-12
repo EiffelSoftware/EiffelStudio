@@ -14,7 +14,7 @@ inherit
 	DEMOAPPLICATION_CONTROLLER
 
 create
-	make
+	default_create
 
 feature -- Status Change	
 
@@ -38,7 +38,7 @@ feature -- Status Change
 			end
 		end
 
-	delete (a_bean: ANY)
+	delete (a_bean: detachable ANY)
 		do
 			if attached {RESERVATION} a_bean as l_reservation then
 				global_state.db.reservations.start

@@ -12,18 +12,28 @@ deferred class
 	XWA_CONTROLLER
 
 inherit
+	ANY
+		redefine
+			default_create
+		end
 	XU_SHARED_OUTPUTTER
+		undefine
+			default_create
+		end
 	XU_STOPWATCH
+		undefine
+			default_create
+		end
 
 
 feature -- Initialization
 
-	make
+	default_create
 			-- Initializes current
 		do
 			create {XH_REQUEST} current_request.make_empty
 			create server_control.make
-		ensure
+		ensure then
 			current_request_attached: current_request /= Void
 			server_control_attached: server_control /= Void
 		end

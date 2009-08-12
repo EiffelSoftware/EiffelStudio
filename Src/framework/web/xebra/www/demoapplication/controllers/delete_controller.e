@@ -14,7 +14,7 @@ inherit
 	DEMOAPPLICATION_CONTROLLER
 
 create
-	make
+	default_create
 
 feature -- Status Change
 

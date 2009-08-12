@@ -199,7 +199,7 @@ feature
 				p := queue.pop_protected
 				if p /= default_pointer then
 					s ?= eif_wean (p)
-					if s = Void or else s.count /= 1 or else not s.generating_type.is_equal ("STRING_8") then
+					if s = Void or else s.count /= 1 or else not s.generating_type.out.is_equal ("STRING_8") then
 						io.put_string ("ERROR%N")
 					end
 				end

@@ -259,27 +259,27 @@
 	<PREF NAME="editor.eiffel.colors.reserved_text_color" DESCRIPTION="Foreground color for reserved words."><COLOR>64;0;0</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.reserved_background_color" DESCRIPTION="Background color for reserved words."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.generic_text_color" DESCRIPTION="Foreground color for generics."><COLOR>255;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.generic_background_color" DESCRIPTION="Background color for generics."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.generic_background_color" DESCRIPTION="Background color for generics."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.local_text_color" DESCRIPTION="Foreground color for locals."><COLOR>64;0;0</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.local_background_color" DESCRIPTION="Background color for locals."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.class_text_color" DESCRIPTION="Foreground color for classes."><COLOR>0;0;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.class_background_color" DESCRIPTION="Background color for classes."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.class_background_color" DESCRIPTION="Background color for classes."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.feature_text_color" DESCRIPTION="Foreground color for features."><COLOR>0;128;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.feature_background_color" DESCRIPTION="Background color for features."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.feature_background_color" DESCRIPTION="Background color for features."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.cluster_text_color" DESCRIPTION="Foreground color for clusters."><COLOR>128;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.cluster_background_color" DESCRIPTION="Background color for clusters."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.cluster_background_color" DESCRIPTION="Background color for clusters."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.error_text_color" DESCRIPTION="Foreground color for errors."><COLOR>255;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.error_background_color" DESCRIPTION="Background color for errors."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.error_background_color" DESCRIPTION="Background color for errors."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.object_text_color" DESCRIPTION="Foreground color for object addresses."><COLOR>0;0;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.object_background_color" DESCRIPTION="Background color for object addresses."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.object_background_color" DESCRIPTION="Background color for object addresses."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.target_text_color" DESCRIPTION="Background color for target text."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.target_text_background_color" DESCRIPTION="Background color for target text."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.folder_background_color" DESCRIPTION="Background color of folder text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.target_text_background_color" DESCRIPTION="Background color for target text."><COLOR>auto</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.folder_background_color" DESCRIPTION="Background color of folder text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.folder_text_color" DESCRIPTION="Folder text color"><COLOR>166;137;149</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.argument_background_color" DESCRIPTION="Background color of argument text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.argument_background_color" DESCRIPTION="Background color of argument text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.argument_text_color" DESCRIPTION="Argument text color"><COLOR>145;86;84</COLOR></PREF> 
 	<PREF NAME="editor.eiffel.colors.warning_text_color" DESCRIPTION="Warning text color"><COLOR>200;64;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.warning_background_color" DESCRIPTION="Background color of warning text"><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.warning_background_color" DESCRIPTION="Background color of warning text"><COLOR>auto</COLOR></PREF>
 
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.use_default_indexing" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -587,7 +587,7 @@
 	<PREF NAME="editor.general.colors.selection_background_color" DESCRIPTION="Background color of selected text."><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.focus_out_selection_background_color" DESCRIPTION="Background color of selected text when not focused."><COLOR>236;233;216</COLOR></PREF>
 	<PREF NAME="editor.general.colors.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;128;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.string_background_color" DESCRIPTION="Background color of string text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.string_background_color" DESCRIPTION="Background color of string text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.keyword_text_color" DESCRIPTION="Color of keyword text."><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.spaces_text_color" DESCRIPTION="Color of space characters."><COLOR>128;128;128</COLOR></PREF>

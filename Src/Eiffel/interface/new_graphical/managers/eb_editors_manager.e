@@ -951,6 +951,13 @@ feature -- Memory management
 			editor_created_actions.wipe_out
 			editor_closed_actions.wipe_out
 			editor_switched_actions.wipe_out
+
+			cursor_observer_list_internal.wipe_out
+			selection_observer_list_internal.wipe_out
+			edition_observer_list_internal.wipe_out
+			history_observer_list_internal.wipe_out
+			lines_observer_list_internal.wipe_out
+
 			docking_manager.tab_drop_actions.set_veto_pebble_function (Void)
 		end
 
@@ -959,23 +966,10 @@ feature -- Memory management
 		do
 			development_window := Void
 			docking_manager := Void
-			editors_internal := Void
-			fake_editors := Void
 			fake_editors := Void
 			last_created_editor := Void
-			editor_closed_actions := Void
-			development_window := Void
-			docking_manager := Void
-			edition_observer_list_internal := Void
-			history_observer_list_internal := Void
 			veto_pebble_function_internal := Void
-			lines_observer_list_internal := Void
 			editor_number_factory := Void
-			editors_internal := Void
-			editor_created_actions := Void
-			editor_switched_actions := Void
-			cursor_observer_list_internal := Void
-			selection_observer_list_internal := Void
 			on_show_imp_agent := Void
 			last_focused_editor := Void
 			Precursor

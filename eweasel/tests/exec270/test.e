@@ -76,7 +76,7 @@ feature {NONE} -- Testing
 		do
 			i8 := -10
 			a := i8
-			check_equals ("generating_type", a.generating_type, "INTEGER_8")
+			check_equals ("generating_type", a.generating_type.out, "INTEGER_8")
 
 			i8_ref := i8
 			check_boolean ("comparison ref/non-ref", i8_ref.item = i8)
@@ -206,7 +206,7 @@ feature {NONE} -- Testing
 		do
 			i16 := -10
 			a := i16
-			check_equals ("generating_type", a.generating_type, "INTEGER_16")
+			check_equals ("generating_type", a.generating_type.out, "INTEGER_16")
 
 			i16_ref := i16
 			check_boolean ("comparison ref/non-ref", i16_ref.item = i16)
@@ -336,7 +336,7 @@ feature {NONE} -- Testing
 		do
 			i32 := -10
 			a := i32
-			check_equals ("generating_type", a.generating_type, "INTEGER_32")
+			check_equals ("generating_type", a.generating_type.out, "INTEGER_32")
 
 			i32_ref := i32
 			check_boolean ("comparison ref/non-ref", i32_ref.item = i32)
@@ -466,7 +466,7 @@ feature {NONE} -- Testing
 		do
 			i64 := -10
 			a := i64
-			check_equals ("generating_type", a.generating_type, "INTEGER_64")
+			check_equals ("generating_type", a.generating_type.out, "INTEGER_64")
 
 			i64_ref := i64
 			check_boolean ("comparison ref/non-ref", i64_ref.item = i64)
@@ -596,7 +596,7 @@ feature {NONE} -- Testing
 		do
 			n8 := 10
 			a := n8
-			check_equals ("generating_type", a.generating_type, "NATURAL_8")
+			check_equals ("generating_type", a.generating_type.out, "NATURAL_8")
 
 			n8_ref := n8
 			check_boolean ("comparison ref/non-ref", n8_ref.item = n8)
@@ -724,7 +724,7 @@ feature {NONE} -- Testing
 		do
 			n16 := 10
 			a := n16
-			check_equals ("generating_type", a.generating_type, "NATURAL_16")
+			check_equals ("generating_type", a.generating_type.out, "NATURAL_16")
 
 			n16_ref := n16
 			check_boolean ("comparison ref/non-ref", n16_ref.item = n16)
@@ -852,7 +852,7 @@ feature {NONE} -- Testing
 		do
 			n32 := 10
 			a := n32
-			check_equals ("generating_type", a.generating_type, "NATURAL_32")
+			check_equals ("generating_type", a.generating_type.out, "NATURAL_32")
 
 			n32_ref := n32
 			check_boolean ("comparison ref/non-ref", n32_ref.item = n32)
@@ -980,7 +980,7 @@ feature {NONE} -- Testing
 		do
 			n64 := 10
 			a := n64
-			check_equals ("generating_type", a.generating_type, "NATURAL_64")
+			check_equals ("generating_type", a.generating_type.out, "NATURAL_64")
 
 			n64_ref := n64
 			check_boolean ("comparison ref/non-ref", n64_ref.item = n64)

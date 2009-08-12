@@ -14,11 +14,11 @@ inherit
 	DEMOAPPLICATION_CONTROLLER
 
 create
-	make
+	default_create
 
 feature -- Status Change
 
-	logout (a_bean: ANY)
+	logout (a_bean: detachable ANY)
 			-- Removes the user from the session
 		do
 			if attached current_session as session  then

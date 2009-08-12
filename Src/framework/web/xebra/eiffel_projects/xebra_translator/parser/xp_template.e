@@ -29,6 +29,7 @@ feature -- Initialization
 			root_tag := a_root_tag
 			is_template := a_is_template
 			template_name := a_template_name
+			controller_create_name := Default_create_name
 		ensure
 			controller_class_attached: attached controller_class
 			root_tag_attached: attached root_tag
@@ -41,6 +42,7 @@ feature -- Initialization
 			controller_class := ""
 			create root_tag.make_empty
 			template_name := ""
+			controller_create_name := Default_create_name
 		end
 
 feature {XP_TEMPLATE} -- Access
@@ -65,6 +67,19 @@ feature -- Access
 
 	template_name: STRING assign set_name
 			-- The name of the servlet
+
+	controller_create_name: STRING assign set_controller_create_name
+			-- The name of the creation procedure of the controller
+
+	set_controller_create_name (a_controller_create_name: STRING)
+			-- Sets the controller_create_name.
+		require
+			a_controller_create_name_valid: attached a_controller_create_name and then not a_controller_create_name.is_empty
+		do
+			controller_create_name := a_controller_create_name
+		ensure
+			controller_create_name_set: a_controller_create_name = controller_create_name
+		end
 
 	controller_class: STRING assign set_controller_class
 			-- The controller corresponding to this template
@@ -146,7 +161,7 @@ feature -- Basic functionality
 			l_root_tag := root_tag.copy_tag_tree
 			if not controller_class.is_empty then
 				l_uid := a_servlet_gen.next_unique_identifier
-				set_uids (l_root_tag, a_servlet_gen, l_uid, controller_class)
+				set_uids (l_root_tag, a_servlet_gen, l_uid, controller_class, controller_create_name)
 				from
 					a_pending_uids.start
 				until
@@ -159,7 +174,7 @@ feature -- Basic functionality
 					-- All the pending uid requests have  been resolved, so the list can be emptied
 			else
 					-- Retrieve the proper controller
-				a_pending_uids.extend (agent set_uids (l_root_tag, a_servlet_gen, ?, ?))
+				a_pending_uids.extend (agent set_uids (l_root_tag, a_servlet_gen, ?, ?, ?))
 			end
 
 			create l_region_visitor.make (a_region)
@@ -173,7 +188,7 @@ feature -- Basic functionality
 			Result := l_root_tag
 		end
 
-	set_uids (a_tag: XP_TAG_ELEMENT; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR; a_uid: STRING; a_controller_class: STRING)
+	set_uids (a_tag: XP_TAG_ELEMENT; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR; a_uid, a_controller_class, a_creator: STRING)
 			-- Sets the `a_uid' recursively over the tag tree defined by `a_tag'
 		require
 			a_tag_attached: attached a_tag
@@ -183,10 +198,14 @@ feature -- Basic functionality
 		local
 			l_uid_visitor: XP_UID_TAG_VISITOR
 		do
-			a_servlet_gen.add_controller (a_uid, a_controller_class)
+			a_servlet_gen.add_controller (a_uid, a_controller_class, a_creator)
 			create l_uid_visitor.make_with_uid (a_uid)
 			a_tag.accept (l_uid_visitor)
 		end
+
+feature -- Constants
+
+	Default_create_name: STRING = "default_create"
 
 invariant
 	controller_class_attached: attached controller_class

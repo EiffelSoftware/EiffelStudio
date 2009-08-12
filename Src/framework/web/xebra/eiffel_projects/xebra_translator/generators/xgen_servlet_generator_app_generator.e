@@ -68,7 +68,7 @@ feature -- Basic functionality
 
 	generate (a_path: FILE_NAME)
 			-- Generates all the classes for the servlet_generator_app and links them together.
-			--  1. {SERLVET_GENERATOR} All the servlet generators
+			--  1. {SERVLET_GENERATOR} All the servlet generators
 			--  2. {APPLICATION} The root class
 			--  3. The project file (.ecf)
 		require
@@ -160,13 +160,13 @@ feature {NONE} -- Implementation
 		do
 			create Result.make ("run (a_arg_parser: XTAG_ARGUMENT_PARSER)")
 			Result.append_local ("l_path", "STRING")
-			Result.append_local ("l_controller_table", "HASH_TABLE [STRING, STRING]")
+			Result.append_local ("l_controller_table", "HASH_TABLE [TUPLE [STRING, STRING], STRING]")
 			Result.append_local ("l_const_class", "XEL_CONSTANTS_CLASS_ELEMENT")
 			Result.append_expression ("create l_const_class.make_constant")
 			Result.append_expression ("o.set_name (%"XEBSRVLGEN%")")
 			Result.append_expression ("o.set_debug_level (10)")
 			Result.append_expression ("if not a_arg_parser.is_successful then")
-			Result.append_expression ("print (%"usage:serlvet_gen -o output_path%%N%")")
+			Result.append_expression ("print (%"usage:servlet_gen -o output_path%%N%")")
 			Result.append_expression ("else")
 			Result.append_expression ("l_path := a_arg_parser.output_path")
 
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 				l_creation_expression := l_creation_expression + " ("
 					+ "l_path, %"" + l_servlet_gg.servlet_name + "%", l_controller_table, %""
 				    + "./" + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%","
-				    + "l_const_class, %"" + retrieve_controller_class (l_servlet_gg) + "%")).generate;"
+				    + "l_const_class)).generate;"
 				Result.append_expression (l_creation_expression)
 
 				servlet_generator_generators.forth
@@ -226,6 +226,7 @@ feature {NONE} -- Implementation
 			Result_attached: attached Result
 		end
 
+
 	build_controller_table (a_feature: XEL_FEATURE_ELEMENT; a_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR)
 			-- Builds the table [controller_uid, controller_type]
 		require
@@ -238,7 +239,7 @@ feature {NONE} -- Implementation
 			until
 				a_servlet_gg.controller_table.after
 			loop
-				a_feature.append_expression ("l_controller_table.put (%"" + a_servlet_gg.controller_table.item_for_iteration +"%", %""+ a_servlet_gg.controller_table.key_for_iteration+"%")")
+				a_feature.append_expression ("l_controller_table.put ([%"" + a_servlet_gg.controller_table.item_for_iteration.class_name +"%", %"" + a_servlet_gg.controller_table.item_for_iteration.creator + "%"], %"" + a_servlet_gg.controller_table.key_for_iteration+"%")")
 				a_servlet_gg.controller_table.forth
 			end
 		end
@@ -250,7 +251,7 @@ feature -- Constants
 
 	Application_name: STRING = "G_APPLICATION"
 
-	Servlet_generator_suffix: STRING = "_SERLVET_GENERATOR"
+	Servlet_generator_suffix: STRING = "_SERVLET_GENERATOR"
 
 	servlet_gen_ecf_prefix: STRING = "[
 <?xml version="1.0" encoding="ISO-8859-1"?>

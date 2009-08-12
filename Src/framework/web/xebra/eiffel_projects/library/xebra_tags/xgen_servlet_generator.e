@@ -14,7 +14,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [STRING, STRING]; a_current_file_path: STRING;
+	make (a_path, a_servlet_name: STRING; a_controller_id_table: HASH_TABLE [TUPLE [class_name, creator: STRING], STRING]; a_current_file_path: STRING;
 			a_constants_class: XEL_CONSTANTS_CLASS_ELEMENT)
 		require
 			a_path_is_not_valid: attached a_path and not a_path.is_empty
@@ -51,7 +51,7 @@ feature {NONE} -- Access
 	internal_root_tag: XTAG_TAG_SERIALIZER
 		-- root_tag cache
 
-	controller_id_table: HASH_TABLE [STRING, STRING]
+	controller_id_table: HASH_TABLE [TUPLE [class_name, creator: STRING], STRING]
 		-- All the used controllers and their respective class. Key: identifier; Value: Class
 
 	current_file_path: FILE_NAME
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			until
 				controller_id_table.after
 			loop
-				a_class.make_feature.append_expression ("create " + controller_id_table.key_for_iteration + ".make")
+				a_class.make_feature.append_expression ("create " + controller_id_table.key_for_iteration + "." + controller_id_table.item_for_iteration.creator)
 				a_class.make_feature.append_expression ("internal_controllers.extend (" + controller_id_table.key_for_iteration + ")")
 				controller_id_table.forth
 			end
@@ -142,7 +142,7 @@ feature -- Basic Functionality
 				until
 					controller_id_table.after
 				loop
-					l_servlet_class.add_variable_by_name_type (controller_id_table.key_for_iteration, controller_id_table.item_for_iteration)
+					l_servlet_class.add_variable_by_name_type (controller_id_table.key_for_iteration, controller_id_table.item_for_iteration.class_name)
 					controller_id_table.forth
 				end
 				l_servlet_class.add_variable_by_name_type ("internal_controllers", "LIST [XWA_CONTROLLER]")

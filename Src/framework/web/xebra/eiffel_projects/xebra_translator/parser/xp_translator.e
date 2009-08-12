@@ -78,7 +78,7 @@ feature -- Status setting
 			name_set: a_name = name
 		end
 
-feature -- Processing
+feature -- Main Processing
 
 	process_with_dir (a_xeb_directory: FILE_NAME; a_force: BOOLEAN)
 			--`a_xeb_directory': Where are the xeb files located?
@@ -91,28 +91,6 @@ feature -- Processing
 		do
 			create l_directory.make (a_xeb_directory)
 			process_with_files (search_for_xeb (l_directory), a_force)
-		end
-
-	search_for_xeb (a_directory: DIRECTORY): LIST [FILE_NAME]
-			-- `l_directory': In which directory to search
-			-- Searches recursively over the directory to find all xeb files
-		require
-			a_directory_attached: attached a_directory
-		local
-			l_directory_name: FILE_NAME
-			l_util: XU_FILE_UTILITIES
-			l_includes, l_excludes: ARRAYED_LIST [STRING]
-		do
-			create {ARRAYED_LIST [FILE_NAME]}Result.make (5)
-			create l_directory_name.make_from_string (a_directory.name)
-			create l_util
-			create l_includes.make (2)
-			l_includes.extend ("*.xeb")
-			l_includes.extend ("*.xrpc")
-			create l_excludes.make (2)
-			l_excludes.extend ("EIFGENs")
-			l_excludes.extend (".svn")
-			Result := l_util.scan_for_files (l_directory_name.out, -1, l_includes, l_excludes)
 		end
 
 	process_with_files (a_files: LIST [FILE_NAME];  a_force: BOOLEAN)
@@ -130,7 +108,7 @@ feature -- Processing
 			o.dprint ("************************************************************", {XU_CONSTANTS}.Debug_start_stop_components)
 			o.dprint ("*                  .taglib processing start...             *", {XU_CONSTANTS}.Debug_start_stop_components)
 			o.dprint ("************************************************************", {XU_CONSTANTS}.Debug_start_stop_components)
-			l_translation_config_path.set_file_name (Translation_config_name)
+			l_translation_config_path.set_file_name ({XU_CONSTANTS}.Webapp_config_file)
 			parse_translation_conf (l_translation_config_path, registry)
 			if not attached registry.taglib_configuration or error_manager.has_errors then
 				o.eprint ("Taglib configuration either not existing or corrupted! Aborting translation.", generating_type)
@@ -161,23 +139,9 @@ feature -- Processing
 				create l_webapp_gen.make_with_servlets (name, output_path, l_generator_app_generator.servlet_generator_generators)
 				l_webapp_gen.generate
 			end
-
 		end
 
-	parse_translation_conf (a_file_name: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
-			--Parses the config file to get all the date for the tag libs
-		require
-			a_registry_attached: attached a_registry
-		local
-			l_configuration: LIST [TUPLE [STRING, STRING, STRING]]
-			l_webapp_config_reader: XC_WEBAPP_JSON_CONFIG_READER
-		do
-			create l_webapp_config_reader
-			if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (a_file_name) as l_w then
-				l_configuration := l_w.taglibs
-				a_registry.set_taglibrary_config (l_configuration)
-			end
-		end
+feature {NONE} -- Processing
 
 	process_xeb_file (a_source: STRING; a_file: PLAIN_TEXT_FILE; a_path: FILE_NAME; a_file_name: STRING; a_force: BOOLEAN)
 		require
@@ -200,26 +164,41 @@ feature -- Processing
 			add_xrpc_to_registry (generate_name_from_file_name (a_path), a_source, a_path, registry, a_file.date, a_force)
 		end
 
-	generate_name_from_file_name (a_file_name: FILE_NAME): STRING
-			-- Transforms a file name and eventual folders into a class name
+	process_taglib_with_stream (a_registry: XP_SERVLET_GG_REGISTRY; a_source: STRING; a_file: PLAIN_TEXT_FILE)
+			-- Trasforms stream to tag library and adds it to `a_taglibs'
+		require
+			a_registry_attached: attached a_registry
+			a_source_attached: attached a_source
 		local
-			l_output_path, l_file_name: STRING
-			l_i: INTEGER
-			l_util: XU_FILE_UTILITIES
+			l_parser: XT_TAGLIB_PARSER
+			l_taglib: detachable XTL_TAG_LIBRARY
 		do
-			create l_util
-			l_output_path := output_path.out
-			l_file_name := a_file_name.out
-			from
-				l_i := 1
-			until
-				l_i > l_output_path.count and not (l_output_path [l_i] = l_file_name [l_i])
-			loop
-				l_i := l_i + 1
+			create l_parser.make
+			l_taglib := l_parser.parse (a_source)
+
+			if attached l_taglib then
+				o.dprint ("Successfully parsed taglib: " + l_taglib.id, {XU_CONSTANTS}.Debug_tasks)
+				a_registry.put_tag_lib (l_taglib)
+			else
+				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing a taglib: " + a_file.name]), False)
 			end
-			Result := l_file_name.substring (l_i+1, l_file_name.last_index_of ('.', l_file_name.count)-1)
-			Result.replace_substring_all ("/", "___") -- UNIX
-			Result.replace_substring_all ("\", "___") -- WINDOWS
+		end
+
+feature {NONE} -- Parsing
+
+	parse_translation_conf (a_file_name: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY)
+			--Parses the config file to get all the date for the tag libs
+		require
+			a_registry_attached: attached a_registry
+		local
+			l_configuration: LIST [TUPLE [STRING, STRING, STRING]]
+			l_webapp_config_reader: XC_WEBAPP_JSON_CONFIG_READER
+		do
+			create l_webapp_config_reader
+			if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (a_file_name) as l_w then
+				l_configuration := l_w.taglibs
+				a_registry.set_taglibrary_config (l_configuration)
+			end
 		end
 
 	add_xrpc_to_registry (a_servlet_name: STRING; a_source: STRING; a_path: FILE_NAME; a_registry: XP_SERVLET_GG_REGISTRY; a_date: INTEGER; a_force: BOOLEAN)
@@ -280,7 +259,7 @@ feature -- Processing
 					l_config.after
 				loop
 					create l_taglibrary_file_name.make_from_string (l_config.item.path)
-					l_taglibrary_file_name.set_file_name (Taglib_config_name)
+					l_taglibrary_file_name.set_file_name ({XU_CONSTANTS}.Taglib_config_file)
 					o.dprint ("Processing file: " + l_taglibrary_file_name, {XU_CONSTANTS}.Debug_tasks)
 					process_file (l_taglibrary_file_name, agent process_taglib_with_stream (a_registry, ?, ?))
 					l_config.forth
@@ -290,31 +269,51 @@ feature -- Processing
 			end
 		end
 
-	process_taglib_with_stream (a_registry: XP_SERVLET_GG_REGISTRY; a_source: STRING; a_file: PLAIN_TEXT_FILE)
-			-- Trasforms stream to tag library and adds it to `a_taglibs'
-		require
-			a_registry_attached: attached a_registry
-			a_source_attached: attached a_source
-		local
-			l_parser: XT_TAGLIB_PARSER
-			l_taglib: detachable XTL_TAG_LIBRARY
-		do
-			create l_parser.make
-			l_taglib := l_parser.parse (a_source)
+feature {NONE} -- Utility
 
-			if attached l_taglib then
-				o.dprint ("Successfully parsed taglib: " + l_taglib.id, {XU_CONSTANTS}.Debug_tasks)
-				a_registry.put_tag_lib (l_taglib)
-			else
-				error_manager.add_error (create {XERROR_PARSE}.make (["Something went wrong while parsing a taglib: " + a_file.name]), False)
-			end
+	search_for_xeb (a_directory: DIRECTORY): LIST [FILE_NAME]
+			-- `l_directory': In which directory to search
+			-- Searches recursively over the directory to find all xeb files
+		require
+			a_directory_attached: attached a_directory
+		local
+			l_directory_name: FILE_NAME
+			l_util: XU_FILE_UTILITIES
+			l_includes, l_excludes: ARRAYED_LIST [STRING]
+		do
+			create {ARRAYED_LIST [FILE_NAME]}Result.make (5)
+			create l_directory_name.make_from_string (a_directory.name)
+			create l_util
+			create l_includes.make (2)
+			l_includes.extend ("*.xeb")
+			l_includes.extend ("*.xrpc")
+			create l_excludes.make (2)
+			l_excludes.extend ("EIFGENs")
+			l_excludes.extend (".svn")
+			Result := l_util.scan_for_files (l_directory_name.out, -1, l_includes, l_excludes)
 		end
 
-feature -- Constants
-
-	Translation_config_name: STRING = "config.wapp"
-	Taglib_config_name: STRING = "config.taglib"
-
+	generate_name_from_file_name (a_file_name: FILE_NAME): STRING
+			-- Transforms a file name and eventual folders into a class name
+		local
+			l_output_path, l_file_name: STRING
+			l_i: INTEGER
+			l_util: XU_FILE_UTILITIES
+		do
+			create l_util
+			l_output_path := output_path.out
+			l_file_name := a_file_name.out
+			from
+				l_i := 1
+			until
+				l_i > l_output_path.count and not (l_output_path [l_i] = l_file_name [l_i])
+			loop
+				l_i := l_i + 1
+			end
+			Result := l_file_name.substring (l_i+1, l_file_name.last_index_of ('.', l_file_name.count)-1)
+			Result.replace_substring_all ("/", {XU_CONSTANTS}.Folder_replacement_string) -- UNIX
+			Result.replace_substring_all ("\", {XU_CONSTANTS}.Folder_replacement_string) -- WINDOWS
+		end
 
 invariant
 	output_path_attached: attached output_path

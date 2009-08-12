@@ -40,6 +40,7 @@ feature -- Initialization
 			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (0), "fragment")
 			if attached allowed_tags ["controller"] as l_controller then
 				l_controller.extend ("class")
+				l_controller.extend ("create")
 			end
 			if attached allowed_tags ["declare_region"] as l_declare_region then
 				l_declare_region.extend ("id")
@@ -149,6 +150,10 @@ feature -- Access
 			if a_id.is_equal ("class") then
 				if attached xeb_parser as l_xeb_parser then
 					l_xeb_parser.put_class_name (a_value.value)
+				end
+			elseif a_id.is_equal ("create") then
+				if attached xeb_parser as l_xeb_parser then
+					l_xeb_parser.put_controller_create_name (a_value.value)
 				end
 			end
 		end

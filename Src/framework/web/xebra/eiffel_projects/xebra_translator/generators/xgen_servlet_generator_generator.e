@@ -79,7 +79,7 @@ feature -- Access
 	force: BOOLEAN
 			-- Should the output be forced
 
-	controller_table: HASH_TABLE [STRING, STRING]
+	controller_table: HASH_TABLE [TUPLE [class_name, creator: STRING], STRING]
 			-- controller instvars of the resulting servlet
 
 	root_tag: XP_TAG_ELEMENT assign set_root_tag
@@ -120,14 +120,14 @@ feature -- Access
 			result_set: attached Result
 		end
 
-	add_controller (a_identifier: STRING; a_class: STRING)
+	add_controller (a_identifier, a_class, a_creator: STRING)
 			-- Adds a controller variable
 			-- `a_identifier' and `a_class' for a controller instvar of the resulting servlet
 		require
 			a_identifier_attached: a_identifier /= Void
 			a_class_attached: a_class /= Void
 		do
-			controller_table.put (a_class, a_identifier)
+			controller_table.put ([a_class, a_creator], a_identifier)
 		end
 
 	set_root_tag (a_root_tag: XP_TAG_ELEMENT)

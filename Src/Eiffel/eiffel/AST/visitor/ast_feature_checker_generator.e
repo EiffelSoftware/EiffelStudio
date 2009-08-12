@@ -1950,6 +1950,7 @@ feature -- Implementation
 			l_has_array_target: BOOLEAN
 			l_current_class: CLASS_C
 			l_context: like context
+			l_is_attached: BOOLEAN
 		do
 			l_context := context
 			l_current_class := l_context.current_class
@@ -2037,21 +2038,25 @@ feature -- Implementation
 					end
 				end
 				if l_array_type = Void then
+					l_has_error := False
 					if nb > 0 then
+							-- `l_gen_type' is not an array type, so for now we compute as if
+							-- there was no context the type of the manifest array by taking the lowest
+							-- common type.
+							-- Take first element in manifest array and let's suppose
+							-- it is the lowest type.
+						l_type_a := l_last_types.item (1)
+						l_is_attached := l_type_a.is_attached
+						i := 2
 						if is_checking_cas then
-								-- `l_gen_type' is not an array type, so for now we compute as if
-								-- there was no context the type of the manifest array by taking the lowest
-								-- common type.
 							from
-								l_has_error := False
-									-- Take first element in manifest array and let's suppose
-									-- it is the lowest type.
-								l_type_a := l_last_types.item (1)
-								i := 2
 							until
 								i > nb
 							loop
 								l_element_type := l_last_types.item (i)
+								if l_is_attached and then not l_element_type.is_attached then
+									l_is_attached := False
+								end
 									-- Let's try to find the type to which everyone conforms to.
 									-- If not found it will be ANY.
 								if
@@ -2075,19 +2080,14 @@ feature -- Implementation
 								i := i + 1
 							end
 						else
-								-- `l_gen_type' is not an array type, so for now we compute as if
-								-- there was no context the type of the manifest array by taking the lowest
-								-- common type.
 							from
-								l_has_error := False
-									-- Take first element in manifest array and let's suppose
-									-- it is the lowest type.
-								l_type_a := l_last_types.item (1)
-								i := 2
 							until
 								i > nb
 							loop
 								l_element_type := l_last_types.item (i)
+								if l_is_attached and then not l_element_type.is_attached then
+									l_is_attached := False
+								end
 									-- Let's try to find the type to which everyone conforms to.
 									-- If not found it will be ANY.
 								if l_element_type.conform_to (l_current_class, l_type_a) then
@@ -2109,18 +2109,19 @@ feature -- Implementation
 							l_has_error := False
 							create {CL_TYPE_A} l_type_a.make (system.any_id)
 						end
-						if not l_has_error then
-							create l_generics.make (1, 1)
-							l_generics.put (l_type_a, 1)
-							create l_array_type.make (system.array_id, l_generics)
-								-- Type of a manifest array is always attached.
-							l_array_type := l_array_type.as_attached_in (l_current_class)
-							instantiator.dispatch (l_array_type, l_current_class)
-						end
 					else
 							-- Empty manifest array
+						l_type_a := create {CL_TYPE_A}.make (system.any_id)
+							-- No elements, so it's safe to treat them as attached.
+						l_is_attached := True
+					end
+					if not l_has_error then
+						if l_is_attached then
+								-- Respect attachment status of the elements.
+							l_type_a := l_type_a.as_attached_in (l_current_class)
+						end
 						create l_generics.make (1, 1)
-						l_generics.put (create {CL_TYPE_A}.make (system.any_id), 1)
+						l_generics.put (l_type_a, 1)
 						create l_array_type.make (system.array_id, l_generics)
 							-- Type of a manifest array is always attached.
 						l_array_type := l_array_type.as_attached_in (l_current_class)

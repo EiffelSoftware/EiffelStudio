@@ -54,13 +54,13 @@ feature {NONE} -- Initialization
 			open_panel.set_allowed_file_types (l_file_types)
 
 			button := open_panel.run_modal
-			set_file_name (open_panel.filename.to_string)
-
 
 			if button =  {NS_PANEL}.ok_button then
+				set_file_name (open_panel.filename.to_string)
 				selected_button := internal_accept
 				attached_interface.open_actions.call (Void)
 			elseif button = {NS_PANEL}.cancel_button then
+				set_file_name ("")
 				selected_button := ev_cancel
 				attached_interface.cancel_actions.call (Void)
 			end

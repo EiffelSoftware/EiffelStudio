@@ -108,7 +108,7 @@ feature -- Access
 		do
 			Result := attached top_level_window_imp as l_window and then
 						attached l_window.default_button_cell as l_cell and then
-							l_cell.is_equal (cell)
+							l_cell.item = cell.item
 		end
 
 feature -- Status Setting

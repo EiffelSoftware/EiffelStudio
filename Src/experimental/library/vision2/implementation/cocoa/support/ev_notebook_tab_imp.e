@@ -46,12 +46,9 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Image displayed on `Current' or Void if none.
-		do
 			-- FIXME Currently not implemented on Mac OS X
-			create Result
-		end
 
 feature -- Element change
 

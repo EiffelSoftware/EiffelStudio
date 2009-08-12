@@ -44,6 +44,7 @@ feature {NONE} -- Implementation
 			make_key_and_order_front
 			order_out
 			allow_resize
+			set_is_initialized (True)
 		end
 
 feature -- Status report

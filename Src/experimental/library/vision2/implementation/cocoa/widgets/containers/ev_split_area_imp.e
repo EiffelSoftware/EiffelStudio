@@ -93,8 +93,13 @@ feature -- Access
 				check
 					second /= Void
 				end
-				set_split_position (height - splitter_width - v.minimum_height.min
-					(height - minimum_split_position - splitter_width))
+				if attached {EV_HORIZONTAL_SPLIT_AREA_IMP} current then
+					set_split_position (width - splitter_width - v.minimum_width.min
+						(width - minimum_split_position - splitter_width))
+				else
+					set_split_position (height - splitter_width - v.minimum_height.min
+						(height - minimum_split_position - splitter_width))
+				end
 			else
 				set_split_position (0)
 			end
@@ -174,7 +179,7 @@ feature -- Access
 			-- Position from the left/top of the splitter from `Current'.
 		do
 			--Result := internal_split_position
-			Result := internal_split_position.max (minimum_split_position)
+			Result := internal_split_position.max (minimum_split_position).min (maximum_split_position) -- enforce invariant
 		end
 
 	set_split_position (a_split_position: INTEGER)

@@ -16,13 +16,6 @@ feature -- Creating Instances
 			"return [NSView new];"
 		end
 
-	frozen custom_new (a_object, a_method: POINTER): POINTER
-		external
-			"C inline use %"custom_view.h%""
-		alias
-			"return [[CustomView new] initWithCallbackObject: $a_object andMethod: $a_method];"
-		end
-
 	frozen init (a_view: POINTER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"

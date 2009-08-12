@@ -21,7 +21,6 @@ feature {NONE} -- Creation and Initialization
 
 	make
 		do
---			make_from_pointer ({NS_VIEW_API}.new)
 			make_from_pointer (view_class.create_instance.item)
  			{NS_VIEW_API}.init (item)
 			callback_marshal.register_object (Current)
@@ -32,18 +31,29 @@ feature {NONE} -- Creation and Initialization
 			-- require: target has been set up
 		do
 			draw_action := a_draw_action
-			make_from_pointer ({NS_VIEW_API}.custom_new ($current, $draw_old))
---			make_from_pointer (view_class.create_instance.item)
+			make_from_pointer (view_class_with_draw_callback.create_instance.item)
  			{NS_VIEW_API}.init (item)
 			callback_marshal.register_object (Current)
+			initialize
 		end
 
-	view_classXX: OBJC_CLASS
+	view_class_with_draw_callback: OBJC_CLASS
 		once
 			create Result.make_with_name ("EiffelWrapperViewXX")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
-			Result.add_method ("drawRect:", agent (dirtyRect: POINTER) do io.put_string ("drawRect called%N") end)
+			Result.add_method ("drawRect:", agent draw_rectX)
+			Result.add_method ("isFlipped", agent: BOOLEAN do Result := True end)
 			Result.register
+		end
+
+	draw_rectX (dirtyRect: NS_RECT)
+		do
+			if attached draw_action as a then
+				debug ("callbacks")
+					io.put_string ("RECT: " + dirtyrect.debug_output + "%N")
+				end
+				a.call (Void)
+			end
 		end
 
 	make_flipped
@@ -58,8 +68,7 @@ feature {NONE} -- Creation and Initialization
 		once
 			create Result.make_with_name ("FlippedView")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
-			Result.add_method ("isFlipped", agent : BOOLEAN do Result := True end)
-			Result.add_method ("viewDidEndLiveResize", agent do io.put_string ("%NviewDidEndLiveResize called%N") end)
+			Result.add_method ("isFlipped", agent: BOOLEAN do Result := True end)
 			Result.register
 		end
 
@@ -67,7 +76,6 @@ feature {NONE} -- Creation and Initialization
 		once
 			create Result.make_with_name ("EiffelWrapperView")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
-			Result.add_method ("viewDidEndLiveResize", agent do io.put_string ("viewDidEndLiveResize called%N") end)
 			Result.register
 		end
 

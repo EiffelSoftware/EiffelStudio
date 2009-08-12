@@ -8,7 +8,7 @@
 			<warning name="syntax" enabled="false"/>
 		</option>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

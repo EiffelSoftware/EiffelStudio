@@ -11,6 +11,8 @@ class
 inherit
 	ANY
 
+	CONF_ACCESS
+
 	SHARED_TEXT_ITEMS
 		export
 			{NONE} All
@@ -539,6 +541,7 @@ feature {NONE} -- Implementation functions
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 		local
+			l_library: CONF_LIBRARY
 			l_assembly: CONF_ASSEMBLY
 			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 			l_cluster: CONF_CLUSTER
@@ -607,6 +610,10 @@ feature {NONE} -- Implementation functions
 				l_format_context.process_indexing_tag_text ("precompile")
 			elseif a_group.is_library then
 				l_format_context.process_indexing_tag_text ("library")
+				l_library ?= a_group
+				check
+					library: l_library /= Void
+				end
 			else
 				check
 					should_not_reach: False
@@ -672,6 +679,29 @@ feature {NONE} -- Implementation functions
 				l_format_context.process_symbol_text (ti_double_quote)
 				l_format_context.exdent
 				l_format_context.put_new_line
+			end
+
+			if l_library /= Void and then attached l_library.library_target as l_lib_target then
+				if attached l_lib_target.system.uuid as l_uuid then
+					l_format_context.process_indexing_tag_text ("UUID: ")
+					l_format_context.put_manifest_string (l_uuid.out)
+					l_format_context.put_new_line
+				end
+				if attached l_lib_target.internal_libraries as l_libs and then l_libs.count > 0 then
+					l_format_context.process_indexing_tag_text ("depends on: ")
+					from
+						l_libs.start
+					until
+						l_libs.after
+					loop
+						l_format_context.add_group (l_libs.item_for_iteration, l_libs.key_for_iteration)
+						l_libs.forth
+						if not l_libs.after then
+							l_format_context.put_manifest_string (", ")
+						end
+					end
+					l_format_context.put_new_line
+				end
 			end
 
 				-- parent

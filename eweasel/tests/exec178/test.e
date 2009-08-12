@@ -20,7 +20,7 @@ feature
 
 	try is
 		do
-			print ((agent {like Current}.generating_type).generating_type)
+			print ((agent {like Current}.generator).generating_type)
 			io.new_line
 		end
 

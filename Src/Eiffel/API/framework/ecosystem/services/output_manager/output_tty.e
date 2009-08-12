@@ -1,7 +1,7 @@
 note
 	description: "[
-
-		]"
+		An output object used to display content to the default output stream.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -26,14 +26,21 @@ feature -- Access
 
 	name: IMMUTABLE_STRING_32
 			-- <Precursor>
-		once
-			Result := "Terminal"
+		do
+			Result := once "Terminal"
 		end
 
 	formatter: TEXT_FORMATTER
 			-- <Precursor>
-		attribute
-			create {TERM_WINDOW} Result
+		do
+			if attached internal_formatter as l_result then
+				Result := l_result
+			else
+				create {TERM_WINDOW} Result
+				internal_formatter := Result
+			end
+		ensure then
+			result_consistent: Result = formatter
 		end
 
 feature -- Status report
@@ -55,6 +62,12 @@ feature -- Basic operations
 			-- <Precursor>
 		do
 		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_formatter: detachable like formatter
+			-- Cached version of `internal_formatter'.
+			-- Note: Do not use directly!
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

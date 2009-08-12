@@ -41,7 +41,7 @@ feature -- Access: User interface
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := icon.to_pixmap
+			Result := icon.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, icon.width, icon.height))
 		ensure
 			result_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed

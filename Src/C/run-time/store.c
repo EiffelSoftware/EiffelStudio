@@ -2223,7 +2223,7 @@ rt_public int char_write(char *pointer, int size)
 rt_private int stream_write (char *pointer, int size)
 {
 	RT_GET_CONTEXT
-	if (store_stream_buffer_size - store_stream_buffer_position < (size_t) size) {
+	if (store_stream_buffer_size < store_stream_buffer_position + (size_t) size) {
 		store_stream_buffer_size += buffer_size;
 		store_stream_buffer = (char *) eif_realloc (store_stream_buffer, store_stream_buffer_size);
 		if (!store_stream_buffer) {

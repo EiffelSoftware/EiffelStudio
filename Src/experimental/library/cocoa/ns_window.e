@@ -92,7 +92,7 @@ feature -- Configuring Windows
 		do
 			{NS_WINDOW_API}.set_content_view (item, a_view.item)
 		ensure
-			content_view_set: content_view = a_view
+			content_view_set: a_view.item = content_view.item -- content_view.is_equal (a_view)
 		end
 
 	content_view: NS_VIEW

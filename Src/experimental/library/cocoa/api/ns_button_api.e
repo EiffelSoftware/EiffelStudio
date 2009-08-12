@@ -11,7 +11,7 @@ feature -- Creating Buttons
 
 	frozen new: POINTER
 		external
-			"C inline use %"ns_button.h%""
+			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"return [NSButton new];"
 		end

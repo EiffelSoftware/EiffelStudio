@@ -11,6 +11,9 @@ inherit
 	EQA_TEST_SET
 
 	EXECUTION_ENVIRONMENT
+		undefine
+			default_create
+		end
 
 feature -- Test routines
 

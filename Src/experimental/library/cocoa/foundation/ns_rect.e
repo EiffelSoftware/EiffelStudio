@@ -11,6 +11,8 @@ inherit
 	MEMORY_STRUCTURE
 		rename
 			make as allocate
+		redefine
+			make_by_pointer
 		end
 
 	DEBUG_OUTPUT
@@ -18,6 +20,8 @@ inherit
 create
 	make,
 	make_rect
+create {OBJC_CALLBACK_MARSHAL}
+	make_by_pointer
 
 feature {NONE} -- Creation
 
@@ -40,6 +44,13 @@ feature {NONE} -- Creation
 		do
 			allocate
 			rect_zero_rect (item)
+			create origin.make_by_pointer (origin_address (item))
+			create size.make_by_pointer (size_address (item))
+		end
+
+	make_by_pointer (a_ptr: POINTER)
+		do
+			Precursor {MEMORY_STRUCTURE} (a_ptr)
 			create origin.make_by_pointer (origin_address (item))
 			create size.make_by_pointer (size_address (item))
 		end

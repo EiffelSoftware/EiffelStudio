@@ -15,22 +15,15 @@ feature -- Access
 	initialize
 		local
 			oldmethod: PROCEDURE [ANY, TUPLE]
-			c: OBJC_CLASS
 		do
-			create c.make_with_name ("NSButton")
-			oldmethod := c.replace_method ("mouseDown:", agent mouse_down_z)
-		end
-
-	mouse_down_z (a_event: POINTER)
-		do
-			io.put_string ("Mouse down in NSRESPONDER%N")
+			class_.add_method ("mouseDown:", agent mouse_down)
 		end
 
 feature -- Responding to Mouse Events
 
 	mouse_down (a_event: NS_EVENT)
 		do
-			io.put_string ("Mouse down%N")
+			io.put_string ("Mouse down (NSResponder)%N")
 		end
 
 	mouse_up (a_event: NS_EVENT)

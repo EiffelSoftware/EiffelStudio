@@ -24,7 +24,7 @@ feature -- Creating Windows
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[
-				return [$target initWithContentRect: *(NSRect*)$a_rect
+				return (EIF_POINTER)[$target initWithContentRect: *(NSRect*)$a_rect
 				                        styleMask: $a_style_mask
 				                        backing: NSBackingStoreBuffered
 				                        defer: $a_defer];

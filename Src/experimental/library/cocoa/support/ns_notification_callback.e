@@ -41,9 +41,9 @@ feature -- Implementation
 			Result := {NS_OBJC_RUNTIME}.sel_register_name ((create {C_STRING}.make ("callbackMethod:")).item)
 		end
 
-	call_observer (a_ptr: POINTER)
+	call_observer (a_object: NS_OBJECT)
 		do
-			callback.call ([create {NS_NOTIFICATION}.share_from_pointer (a_ptr)])
+			callback.call ([create {NS_NOTIFICATION}.share_from_pointer (a_object.item)])
 		end
 
 	callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]]

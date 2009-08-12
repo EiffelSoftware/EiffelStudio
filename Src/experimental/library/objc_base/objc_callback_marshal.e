@@ -3,7 +3,7 @@ note
 		Objective-C 2.0 Runtime library. Support for using the dynamic properties of the Objective-C language.
 		This class handles the callbacks from C/Objective-C.
 		]"
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,6 +23,11 @@ inherit
 			{NONE} all
 		undefine
 			is_equal, copy
+		redefine
+			default_create
+		end
+
+	INTERNAL
 		redefine
 			default_create
 		end
@@ -160,20 +165,24 @@ feature {NONE}
 		local
 			args_managed: MANAGED_POINTER
 			arg: TUPLE
-			argX: NS_OBJECT
+			type: STRING
 		do
---			debug ("callback")
+			debug ("callbacks")
 				io.put_string ("Callback '" + (create {OBJC_SELECTOR}.make_from_pointer (a_selector)).name + "'%N")
---			end
+			end
 			if attached {ROUTINE [ANY, TUPLE]} get_agent (a_object, a_selector) as l_agent then
 				if attached get_eiffel_object (a_object) as target then
 					if attached target.class_.instance_method (a_selector) as method then
---						io.put_string ("  no-args: " + method.argument_count.out + "  " + nargs.out + "%N")
+						debug ("callbacks")
+							io.put_string ("  no-args: " + method.argument_count.out + "  " + nargs.out + "%N")
+						end
 					else
 						check selector_not_found: False end
 					end
 
---					io.put_string ("  -> target object: " + target.generator + " (id: " + target.object_id.out + ", item: " + target.item.out + ")%N")
+					debug ("callbacks")
+						io.put_string ("  -> target object: " + target.generator + " (id: " + target.object_id.out + ", item: " + target.item.out + ")%N")
+					end
 					l_agent.set_target (target)
 				else
 					check
@@ -183,10 +192,19 @@ feature {NONE}
 				end
 				if nargs > 2 then
 					create args_managed.own_from_pointer (args, nargs*4)
-					create argX.share_from_pointer (args_managed.read_pointer (0))
---					io.put_string ("  -> argument1: " + argX.class_.name + ": " + argX.debug_output + "%N")
-					create {TUPLE[POINTER]}arg.default_create
-					arg.put_pointer (argX.item, 1)
+					type := l_agent.empty_operands.generating_type.name
+					if type.is_equal ("TUPLE [!NS_RECT]") or type.is_equal ("TUPLE [NS_RECT]") then
+						arg := [create {NS_RECT}.make_by_pointer (args_managed.read_pointer (0))]
+					elseif type.is_equal ("TUPLE [!NS_OBJECT]") or type.is_equal ("TUPLE [NS_OBJECT]") then
+--						debug ("callbacks")
+--							io.put_string ("  -> argument1: " + argX.class_.name + ": " + argX.debug_output + "%N")
+--						end
+						arg := [create {NS_OBJECT}.share_from_pointer (args_managed.read_pointer (0))]
+					elseif type.is_equal ("TUPLE [!NS_EVENT]") or type.is_equal ("TUPLE [NS_EVENT]") then
+						arg := [create {NS_EVENT}.share_from_pointer (args_managed.read_pointer (0))]
+					else
+						arg := [args_managed.read_pointer (0)]
+					end
 					l_agent.call (arg)
 				else
 					create arg.default_create

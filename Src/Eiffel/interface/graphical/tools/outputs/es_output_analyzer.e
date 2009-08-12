@@ -97,6 +97,10 @@ feature {NONE} -- Action handlers
 
 			if l_next_position > l_position then
 				l_line := l_string.substring (l_position, l_next_position)
+				if {PLATFORM}.is_windows then
+					l_line.prune_all_trailing ('%R')
+				end
+				l_line.prune_all_trailing ('%N')
 				if not l_line.is_empty then
 					process_line (l_line, a_lines)
 				end

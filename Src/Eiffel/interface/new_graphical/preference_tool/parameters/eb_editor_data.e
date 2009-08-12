@@ -675,6 +675,16 @@ feature {NONE} -- Initialization
 			auto_show_feature_contract_tooltips_preference := l_manager.new_boolean_preference_value (l_manager, auto_show_feature_contract_tooltips_string, True)
 
 				-- Auto colors
+			generic_background_color_preference.set_auto_preference (normal_background_color_preference)
+			class_background_color_preference.set_auto_preference (normal_background_color_preference)
+			feature_background_color_preference.set_auto_preference (normal_background_color_preference)
+			cluster_background_color_preference.set_auto_preference (normal_background_color_preference)
+			error_background_color_preference.set_auto_preference (normal_background_color_preference)
+			object_background_color_preference.set_auto_preference (normal_background_color_preference)
+			target_background_color_preference.set_auto_preference (normal_background_color_preference)
+			folder_background_color_preference.set_auto_preference (normal_background_color_preference)
+			argument_background_color_preference.set_auto_preference (normal_background_color_preference)
+			warning_background_color_preference.set_auto_preference (normal_background_color_preference)
 			indexing_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
 			assertion_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
 			reserved_background_color_preference.set_auto_preference (normal_background_color_preference)

@@ -36,9 +36,11 @@ feature {NONE} -- Basic operations
 	process_line (a_line: READABLE_STRING_8; a_number: NATURAL_32)
 			-- <Precursor>
 		local
+			l_exp: like function_name_regexp
 			l_line: STRING
 			l_project_location: STRING
 			l_file_name: STRING
+			l_function_name: STRING
 			l_position: STRING
 			l_line_string: STRING
 			l_line_number: INTEGER
@@ -49,11 +51,11 @@ feature {NONE} -- Basic operations
 			l_count := a_line.count
 				-- Use character 3
 			if l_count > 3 then
-				i := a_line.index_of (':', 3)
+				i := a_line.substring_index (once " : ", 3)
 				if i > 0 then
 						-- Filename
 					l_file_name := a_line.substring (1, i - 1)
-					l_line := a_line.substring (i + 1, l_count)
+					l_line := a_line.substring (i + 3, l_count)
 					l_line.left_adjust
 
 					i := l_file_name.last_index_of ('(', l_file_name.count)
@@ -86,11 +88,14 @@ feature {NONE} -- Basic operations
 						-- Error status
 					i := l_line.index_of (':', 1)
 					if i > 0 then
-						l_is_error := l_line.substring_index_in_bounds ("error", 1, i) > 0
-						l_line.remove_head (i + 1)
-						l_line.left_adjust
+						l_is_error := l_line.substring_index_in_bounds (once "error", 1, i) > 0
 
-						if attached l_file_name and then not l_line.is_empty then
+						if attached l_file_name then
+							l_exp := function_name_regexp
+							l_exp.match (l_line)
+							if l_exp.has_matched then
+								l_function_name := l_exp.captured_substring (0)
+							end
 							l_project_location := system.project_location.location
 							l_project_location.prune_all_trailing (operating_environment.directory_separator)
 							l_count := l_project_location.count
@@ -103,6 +108,7 @@ feature {NONE} -- Basic operations
 							file_name := l_file_name
 							line_number := l_line_number
 							is_error := l_is_error
+							function_name := l_function_name
 							message := l_line
 							process_last_error
 						end

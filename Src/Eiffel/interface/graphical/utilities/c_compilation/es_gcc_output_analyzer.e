@@ -67,7 +67,7 @@ feature {NONE} -- Basic operations
 							l_message_type.right_adjust
 							l_message_type.left_adjust
 
-							if l_message_type.as_lower.substring_index ("error", 1) > 0 then
+							if l_message_type.as_lower.substring_index (once "error", 1) > 0 then
 								is_error := True
 							end
 						end

@@ -23,7 +23,7 @@ inherit
 feature {NONE}-- Initialization
 
 	initialize
-			-- Initialize `Current'.
+			-- Initialize `Current'
 		local
 			internal_font: EV_FONT
 			l_vertical_box: EV_VERTICAL_BOX
@@ -33,25 +33,7 @@ feature {NONE}-- Initialization
 
 			Precursor {EV_POPUP_WINDOW}
 
-				-- Create all widgets.
-			create internal_vertical_box_top_top
-			create internal_vertical_box_top
-			create internal_label_box
-			create internal_tools_box
-			create internal_tools_label
-			create tools_column.make
-			create internal_files_box
-			create internal_files_label
-			create files_column.make
-			create internal_info_box
-			create full_title
-			create description
-			create detail
-			create internal_info_box_border
-			create scroll_area_tools
-			create scroll_area_files
-
-				-- Build widget structure.
+				-- Build widget structure
 			extend (internal_vertical_box_top_top)
 			internal_vertical_box_top_top.extend (internal_vertical_box_top)
 			internal_vertical_box_top.extend (internal_label_box)
@@ -83,19 +65,6 @@ feature {NONE}-- Initialization
 			internal_info_box.extend (description)
 			internal_info_box.extend (detail)
 
-			create string_constant_set_procedures.make (10)
-			create string_constant_retrieval_functions.make (10)
-			create integer_constant_set_procedures.make (10)
-			create integer_constant_retrieval_functions.make (10)
-			create pixmap_constant_set_procedures.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create integer_interval_constant_retrieval_functions.make (10)
-			create integer_interval_constant_set_procedures.make (10)
-			create font_constant_set_procedures.make (10)
-			create font_constant_retrieval_functions.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create color_constant_set_procedures.make (10)
-			create color_constant_retrieval_functions.make (10)
 			create internal_font
 			internal_font.set_family ({EV_FONT_CONSTANTS}.Family_sans)
 			internal_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
@@ -124,7 +93,7 @@ feature {NONE}-- Initialization
 
 				-- Connect events.
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is recieved on `Current'. i.e. the cross is clicked
 
 				-- Call `user_initialization'.
 			user_initialization
@@ -153,12 +122,12 @@ feature {NONE} -- Implementation
 			-- Is `Current' in its default state?
 		do
 			-- Re-implement if you wish to enable checking
-			-- for `Current'.
+			-- for `Current'
 			Result := True
 		end
 
 	user_initialization
-			-- Feature for custom initialization, called at end of `initialize'.
+			-- Feature for custom initialization, called at end of `initialize'
 		deferred
 		end
 
@@ -166,9 +135,9 @@ feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
-			s: STRING_GENERAL
+			l_s: detachable STRING_GENERAL
 		do
 			from
 				string_constant_set_procedures.start
@@ -176,15 +145,17 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.off
 			loop
 				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
-				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
-				string_constant_set_procedures.item.call ([s])
+				l_s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
+				if l_s /= Void then
+					string_constant_set_procedures.item.call ([l_s])
+				end
 				string_constant_set_procedures.forth
 			end
 		end
 
 	set_attributes_using_integer_constants
 			-- Set all attributes relying on integer constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
 			i: INTEGER
 			arg1, arg2: INTEGER
@@ -220,9 +191,9 @@ feature {NONE} -- Constant setting
 
 	set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
-			p: EV_PIXMAP
+			l_p: detachable EV_PIXMAP
 		do
 			from
 				pixmap_constant_set_procedures.start
@@ -230,17 +201,19 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.off
 			loop
 				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
-				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
-				pixmap_constant_set_procedures.item.call ([p])
+				l_p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
+				if l_p /= Void then
+					pixmap_constant_set_procedures.item.call ([l_p])
+				end
 				pixmap_constant_set_procedures.forth
 			end
 		end
 
 	set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
-			f: EV_FONT
+			l_f: detachable EV_FONT
 		do
 			from
 				font_constant_set_procedures.start
@@ -248,17 +221,19 @@ feature {NONE} -- Constant setting
 				font_constant_set_procedures.off
 			loop
 				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
-				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
-				font_constant_set_procedures.item.call ([f])
+				l_f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
+				if l_f /= Void then
+					font_constant_set_procedures.item.call ([l_f])
+				end
 				font_constant_set_procedures.forth
 			end
 		end
 
 	set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
-			c: EV_COLOR
+			l_c: detachable EV_COLOR
 		do
 			from
 				color_constant_set_procedures.start
@@ -266,15 +241,17 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.off
 			loop
 				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
-				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
-				color_constant_set_procedures.item.call ([c])
+				l_c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
+				if l_c /= Void then
+					color_constant_set_procedures.item.call ([l_c])
+				end
 				color_constant_set_procedures.forth
 			end
 		end
 
 	set_all_attributes_using_constants
 			-- Set all attributes relying on constants to the current
-			-- calue of the associated constant.
+			-- calue of the associated constant
 		do
 			set_attributes_using_string_constants
 			set_attributes_using_integer_constants
@@ -298,7 +275,7 @@ feature {NONE} -- Constant setting
 
 	integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of
-			-- an agent that returns a fixed integer value.
+			-- an agent that returns a fixed integer value
 		do
 			Result := an_integer
 		end
@@ -306,7 +283,7 @@ feature {NONE} -- Constant setting
 feature {NONE}  -- Implementation
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 invariant
 

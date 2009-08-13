@@ -36,23 +36,28 @@ create
 feature {NONE} -- Initlization
 
 	make (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
+			-- Creation method
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
 		do
-			default_create
-			internal_docking_manager := a_docking_manager
 			create internal_shared
-			disable_user_resize
+			internal_docking_manager := a_docking_manager
+			create internal_title_bar.make
+			create l_pixmaps
+			create internal_padding_box
+			create {EV_VERTICAL_BOX} internal_border_box
+			create assistant
+--			init
 
-			create internal_title_bar
+			default_create
+			assistant.set_floating_zone (Current)
+
+			disable_user_resize
 
 			init_border_box
 
-			create l_pixmaps
-			create internal_padding_box
 			internal_padding_box.set_border_width (1)
 			internal_padding_box.set_padding_width (1)
 			internal_padding_box.set_pointer_style (l_pixmaps.standard_cursor)
@@ -72,9 +77,8 @@ feature {NONE} -- Initlization
 		end
 
 	init_border_box
-			-- Initialize `internal_border_box'.
+			-- Initialize `internal_border_box'
 		do
-			create {EV_VERTICAL_BOX} internal_border_box
 			internal_border_box.set_border_width (internal_border_width)
 			internal_border_box.set_background_color (internal_shared.tool_bar_title_bar_color)
 			extend_to_dialog (internal_border_box)
@@ -86,7 +90,7 @@ feature {NONE} -- Initlization
 feature -- Command
 
 	show
-			-- Show `Current'.
+			-- Show `Current'
 		do
 			if internal_shared.allow_window_to_back then
 				show_allow_to_back
@@ -98,22 +102,22 @@ feature -- Command
 		end
 
 	extend (a_tool_bar_zone: SD_TOOL_BAR_ZONE)
-			-- Extend `a_tool_bar_zone'.
+			-- Extend `a_tool_bar_zone'
 		require
 			a_tool_bar_zone_not_void: a_tool_bar_zone /= Void
 			a_tool_bar_zone_horizontal: not a_tool_bar_zone.is_vertical
 			a_tool_bar_zone_parent_void: attached {EV_WIDGET} a_tool_bar_zone.tool_bar as lt_widget implies lt_widget.parent = Void
-			not_extended: content = Void
+			not_extended: not is_tool_bar_zone_set
 		do
-			zone := a_tool_bar_zone
-			tool_bar := a_tool_bar_zone.tool_bar
+			internal_zone := a_tool_bar_zone
+			internal_tool_bar := a_tool_bar_zone.tool_bar
 			if attached {EV_WIDGET} a_tool_bar_zone.tool_bar as lt_widget_2 then
 				internal_padding_box.extend (lt_widget_2)
 			else
 				check not_possible: False end
 			end
 
-			content := a_tool_bar_zone.content
+			internal_content := a_tool_bar_zone.content
 
 			internal_title_bar.set_content (content)
 
@@ -122,35 +126,45 @@ feature -- Command
 			internal_title_bar.drawing_area.pointer_motion_actions.extend (agent (a_tool_bar_zone.agents).on_drag_area_motion)
 
 			create group_divider.make_with_content (content)
-
-			create assistant.make (Current)
 		ensure
 			set: content = a_tool_bar_zone.content
 			set: zone = a_tool_bar_zone
+			set: is_tool_bar_zone_set
 		end
 
 	regroup_after_customize
 			-- Initlized group divider and regroup items
+		require
+			ready: is_tool_bar_zone_set
 		local
 			l_group_count: INTEGER
 			l_height: INTEGER
 			l_has_lock_window: BOOLEAN
+			l_group_divider: like group_divider
+			l_tool_bar: like tool_bar
 		do
-			create group_divider.make_with_content (content)
+			l_tool_bar := tool_bar
+			check l_tool_bar /= Void end -- Implied by precondition `ready'
+			create l_group_divider.make_with_content (content)
+			group_divider := l_group_divider
 			-- `l_height' is the height of inner SD_TOOL_BAR, EXCEPT the heights:
-			-- 1. floating zone title bar height (the height between the border and the tool bar buttons).
-			-- 2. border height of floating tool bar zone (one if up side border, another is bottom side border).
-			l_height := height -  (tool_bar.screen_y - screen_y) - internal_border_box.border_width * 2
+			-- 1. floating zone title bar height (the height between the border and the tool bar buttons)
+			-- 2. border height of floating tool bar zone (one if up side border, another is bottom side border)
+			l_height := height -  (l_tool_bar.screen_y - screen_y) - internal_border_box.border_width * 2
 			check positive: l_height > 0 end
 			l_group_count := group_count_by_height (l_height)
+			if attached (create {EV_ENVIRONMENT}).application as l_app then
+				l_has_lock_window := (l_app.locked_window /= Void)
+			else
+				check False end -- Implied by current application is running
+			end
 
-			l_has_lock_window := ((create {EV_ENVIRONMENT}).application.locked_window /= Void)
 			if not l_has_lock_window then
 				lock_update
 			end
 
 			if l_group_count > 0 then
-				assistant.position_groups (group_divider.best_grouping (l_group_count))
+				assistant.position_groups (l_group_divider.best_grouping (l_group_count))
 			else
 				assistant.to_minmum_size
 			end
@@ -164,36 +178,86 @@ feature -- Command
 feature -- Query
 
 	zone: SD_TOOL_BAR_ZONE
-			-- Tool bar zone Current managed.
+			-- Attached `internal_zone'
+		require
+			ready: is_tool_bar_zone_set
+		local
+			l_result: like internal_zone
+		do
+			l_result := internal_zone
+			check l_result /= Void end -- Implied by precondition `ready'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
 
 	has (a_tool_bar_zone: EV_WIDGET): BOOLEAN
 			-- Has a_tool_bar_zone?
+		require
+			not_void: a_tool_bar_zone /= Void
 		do
 			Result := internal_padding_box.has (a_tool_bar_zone)
 		end
 
 	content: SD_TOOL_BAR_CONTENT
-			-- Content which Current managed.
+			-- attached `internal_content'
+		require
+			ready: is_tool_bar_zone_set
+		local
+			l_result: like internal_content
+		do
+			l_result := internal_content
+			check l_result /= Void end -- Implied by precondition `ready'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
 
 	assistant: SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT
-			-- Assistant to position items.
+			-- Assistant to position items
 
 	tool_bar: SD_GENERIC_TOOL_BAR
-			-- SD_TOOL_BAR where contain SD_TOOL_BAR_ITEMs.
+			-- Attached `internal_tool_bar'
+		require
+			ready: is_tool_bar_zone_set
+		local
+			l_result: like internal_tool_bar
+		do
+			l_result := internal_tool_bar
+			check l_result /= Void end -- Implied by precondition
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
 
-feature {NONE} -- Implementation of resize issues.
+	is_tool_bar_zone_set: BOOLEAN
+			-- If `tool_bar', `zone' and `content' have been set?
+		do
+			Result := internal_tool_bar /= Void and internal_zone /= Void and internal_content /= Void
+		end
+
+feature {NONE} -- Implementation of resize issues
 
 	on_border_box_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle border box pointer motion.
+			-- Handle border box pointer motion
+		require
+			set: group_divider /= Void
+			ready: is_tool_bar_zone_set
 		local
 			l_temp_group_count: INTEGER
 			l_temp_group_info: SD_TOOL_BAR_GROUP_INFO
 			l_pointer_offset: INTEGER
 			l_old_position: INTEGER
+			l_group_divider: like group_divider
+			l_tool_bar: like tool_bar
 		do
 			if not internal_border_box.has_capture then
 				on_border_pointer_motion_no_capture (a_x, a_y)
 			elseif content.items_visible.count > 0 then
+				l_group_divider := group_divider
+				check l_group_divider /= Void end -- Implied by precondition `set'
+				l_tool_bar := tool_bar
+				check l_tool_bar /= Void end -- Implied by precondition `ready'
 				inspect
 					internal_pointer_direction
 				when {SD_ENUMERATION}.left then
@@ -201,16 +265,16 @@ feature {NONE} -- Implementation of resize issues.
 					l_pointer_offset := (screen_x + width) - a_screen_x
 					if l_pointer_offset > 0 then
 						if start_width < l_pointer_offset then
-							l_temp_group_info := group_divider.best_grouping_by_width_to_right (l_pointer_offset)
+							l_temp_group_info := l_group_divider.best_grouping_by_width_to_right (l_pointer_offset)
 						else
-							l_temp_group_info := group_divider.best_grouping_by_width_to_left (l_pointer_offset)
+							l_temp_group_info := l_group_divider.best_grouping_by_width_to_left (l_pointer_offset)
 						end
 
-						l_temp_group_count := group_divider.last_group_index
+						l_temp_group_count := l_group_divider.last_group_index
 						if l_temp_group_count /= last_group_count then
 							lock_update
 							assistant.position_groups (l_temp_group_info)
-							last_group_count := group_divider.last_group_index
+							last_group_count := l_group_divider.last_group_index
 							set_x_position (l_old_position - width)
 							unlock_update
 						end
@@ -218,74 +282,81 @@ feature {NONE} -- Implementation of resize issues.
 				when {SD_ENUMERATION}.right then
 					if a_screen_x - screen_x > 0 then
 						if start_width < a_screen_x - screen_x then
-							l_temp_group_info := group_divider.best_grouping_by_width_to_right (a_screen_x - screen_x)
+							l_temp_group_info := l_group_divider.best_grouping_by_width_to_right (a_screen_x - screen_x)
 						else
-							l_temp_group_info := group_divider.best_grouping_by_width_to_left (a_screen_x - screen_x)
+							l_temp_group_info := l_group_divider.best_grouping_by_width_to_left (a_screen_x - screen_x)
 						end
-						l_temp_group_count := group_divider.last_group_index
+						l_temp_group_count := l_group_divider.last_group_index
 						if l_temp_group_count /= last_group_count then
 							assistant.position_groups (l_temp_group_info)
-							last_group_count := group_divider.last_group_index
+							last_group_count := l_group_divider.last_group_index
 						end
 					end
 				when {SD_ENUMERATION}.top then
 					l_old_position := screen_y + height
-					l_pointer_offset := screen_y + height - a_screen_y - (tool_bar.screen_y - screen_y)
+					l_pointer_offset := screen_y + height - a_screen_y - (l_tool_bar.screen_y - screen_y)
 					if l_pointer_offset > 0  then
 						l_temp_group_count := group_count_by_height (l_pointer_offset)
-						if l_temp_group_count /= last_group_count and l_temp_group_count <= group_divider.max_row_count then
+						if l_temp_group_count /= last_group_count and l_temp_group_count <= l_group_divider.max_row_count then
 							lock_update
-							assistant.position_groups (group_divider.best_grouping (l_temp_group_count))
+							assistant.position_groups (l_group_divider.best_grouping (l_temp_group_count))
 							last_group_count := l_temp_group_count
 							set_y_position (l_old_position - height)
 							unlock_update
 						end
 					end
 				when {SD_ENUMERATION}.bottom then
-					l_pointer_offset := a_screen_y - tool_bar.screen_y
+					l_pointer_offset := a_screen_y - l_tool_bar.screen_y
 					if l_pointer_offset > 0 then
 						l_temp_group_count := group_count_by_height (l_pointer_offset)
-						if l_temp_group_count /= last_group_count and l_temp_group_count <= group_divider.max_row_count then
+						if l_temp_group_count /= last_group_count and l_temp_group_count <= l_group_divider.max_row_count then
 							debug ("docking")
 								print ("%N SD_FLOATING_TOOL_BAR_ZONE on_border_box_pointer_motion bottom dragging:")
 								print ("%N        l_temp_group_count: " + l_temp_group_count.out)
 								print ("%N        last_group_count: " + last_group_count.out)
-								print ("%N        max_row_count: " + group_divider.max_row_count.out)
+								print ("%N        max_row_count: " + l_group_divider.max_row_count.out)
 							end
-							assistant.position_groups (group_divider.best_grouping (l_temp_group_count))
+							assistant.position_groups (l_group_divider.best_grouping (l_temp_group_count))
 							last_group_count := l_temp_group_count
 							debug ("docking")
 								print ("%N        postion tool bar items")
-								print ("%N        group infos: " + group_divider.best_grouping (l_temp_group_count).out)
+								print ("%N        group infos: " + l_group_divider.best_grouping (l_temp_group_count).out)
 							end
 						end
 					end
 				else
-					-- It maybe just initialized Current.
+					-- It maybe just initialized Current
 				end
 			end
 		end
 
 	group_count_by_height (a_pointer_height: INTEGER): INTEGER
-			-- Group count base on `a_pointer_height'.
+			-- Group count base on `a_pointer_height'
 		require
 			valid: a_pointer_height > 0
+			ready: is_tool_bar_zone_set
 		local
 			l_total_height_without_subgroup: INTEGER
 			l_temp_height: INTEGER
 			l_item_count: INTEGER
 			l_row_height: INTEGER
+			l_tool_bar: like tool_bar
+			l_zone: like zone
 		do
-			l_total_height_without_subgroup := zone.content.groups_count (False) * tool_bar.row_height + (zone.content.groups_count (False) - 1) * {SD_TOOL_BAR_SEPARATOR}.width
+			l_tool_bar := tool_bar
+			check l_tool_bar /= Void end -- Implied by precondition `ready'
+			l_zone := zone
+			check l_zone /= Void end -- Implied by precondition `ready'
+			l_total_height_without_subgroup := l_zone.content.groups_count (False) * l_tool_bar.row_height + (l_zone.content.groups_count (False) - 1) * {SD_TOOL_BAR_SEPARATOR}.width
 			if a_pointer_height <= l_total_height_without_subgroup then
-				Result := a_pointer_height // (tool_bar.row_height + {SD_TOOL_BAR_SEPARATOR}.width) + 1
+				Result := a_pointer_height // (l_tool_bar.row_height + {SD_TOOL_BAR_SEPARATOR}.width) + 1
 			else
-				l_temp_height := a_pointer_height - (zone.content.groups_count (False) - 1) * {SD_TOOL_BAR_SEPARATOR}.width
+				l_temp_height := a_pointer_height - (l_zone.content.groups_count (False) - 1) * {SD_TOOL_BAR_SEPARATOR}.width
 				check valid: l_temp_height > 0 end
-				l_row_height := tool_bar.row_height
+				l_row_height := l_tool_bar.row_height
 				if l_row_height = 0 then
-					-- If tool bar don't have items.
-					l_row_height := tool_bar.standard_height
+					-- If tool bar don't have items
+					l_row_height := l_tool_bar.standard_height
 				end
 				Result := l_temp_height // l_row_height + 1
 			end
@@ -305,10 +376,10 @@ feature {NONE} -- Implementation of resize issues.
 		end
 
 	last_group_count: INTEGER
-			-- Group index for last pointer motion.
+			-- Group index for last pointer motion
 
 	on_border_pointer_motion_no_capture (a_x, a_y: INTEGER)
-			-- Handle pointer motion actions when not has capture.
+			-- Handle pointer motion actions when not has capture
 		require
 			not_capture: not internal_border_box.has_capture
 		local
@@ -332,7 +403,7 @@ feature {NONE} -- Implementation of resize issues.
 		end
 
 	on_border_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer press actions.
+			-- Handle pointer press actions
 		do
 			if a_button = 1 then
 				internal_shared.setter.before_enable_capture
@@ -342,7 +413,7 @@ feature {NONE} -- Implementation of resize issues.
 		end
 
 	on_border_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer release actions.
+			-- Handle pointer release actions
 		do
 			if internal_border_box.has_capture then
 				internal_border_box.disable_capture
@@ -351,64 +422,84 @@ feature {NONE} -- Implementation of resize issues.
 		end
 
 	internal_pointer_direction: INTEGER
-			-- Pointer direction, one value of SD_DOCKING_MANAGER dock_top, dock_bottom, dock_left, dock_right.
-			-- Used when user dragging Current border.
+			-- Pointer direction, one value of SD_DOCKING_MANAGER dock_top, dock_bottom, dock_left, dock_right
+			-- Used when user dragging Current border
+
+	internal_content: detachable SD_TOOL_BAR_CONTENT
+			-- Content which Current managed
+
+	internal_zone: detachable SD_TOOL_BAR_ZONE
+			-- Tool bar zone Current managed
+
+	internal_tool_bar: detachable SD_GENERIC_TOOL_BAR
+			-- SD_TOOL_BAR where contain SD_TOOL_BAR_ITEMs
 
 feature {SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_DRAGGING_AGENTS} -- Implementation
 
 	recover_docking_state
-			-- Recover to orignal docking state.
+			-- Recover to orignal docking state
+		require
+			ready: is_tool_bar_zone_set
+		local
+			l_zone: like zone
 		do
-			-- First we record floating states.
-			-- SD_TOOL_BAR_GROUP_INFO is already recorded when grouping.
-			zone.assistant.last_state.set_screen_x (screen_x)
-			zone.assistant.last_state.set_screen_y (screen_y)
+			l_zone := zone
+			check l_zone /= Void end -- Implied by precondition `ready'
+			-- First we record floating states
+			-- SD_TOOL_BAR_GROUP_INFO is already recorded when grouping
+			l_zone.assistant.last_state.set_screen_x (screen_x)
+			l_zone.assistant.last_state.set_screen_y (screen_y)
 
-			zone.assistant.dock_last_state
+			l_zone.assistant.dock_last_state
 		end
 
 	start_width: INTEGER
-			-- Window width when starting dragging.
+			-- Window width when starting dragging
 
-	group_divider: SD_TOOL_BAR_GROUP_DIVIDER
-			-- Divider to divide tool bar groups.
+	group_divider: detachable SD_TOOL_BAR_GROUP_DIVIDER
+			-- Divider to divide tool bar groups
 
 	internal_title_bar: SD_TOOL_BAR_TITLE_BAR
 			-- Title bar
 
 	internal_border_box: EV_BOX
-			-- Border box surround target tool bar.
+			-- Border box surround target tool bar
 
 	internal_padding_box: EV_VERTICAL_BOX
-			-- Box to show padding.
+			-- Box to show padding
 
 	internal_border_width: INTEGER = 2
-			-- Border width.
+			-- Border width
 
 	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager manage Current.
+			-- Docking manager manage Current
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 feature {NONE} -- Implementation
 
 	on_close_request
-			-- Handle close request actions.
+			-- Handle close request actions
 		do
 			content.close_request_actions.call (Void)
 		end
 
 	on_customize
-			-- Handle customize actions.
+			-- Handle customize actions
+		require
+			ready: is_tool_bar_zone_set
 		local
 			l_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_helper: SD_POSITION_HELPER
 			l_rect: EV_RECTANGLE
+			l_zone: like zone
 		do
+			l_zone := zone
+			check l_zone /= Void end -- Implied by precondition `ready'
 			create l_items.make (1)
-			create l_dialog.make (l_items, zone)
+			create l_dialog.make (l_items, l_zone)
 			create l_helper.make
 			l_rect := internal_title_bar.custom_rectangle
 			l_helper.set_tool_bar_floating_dialog_position (l_dialog, l_rect.x, l_rect.y, l_rect.width, l_rect.height)

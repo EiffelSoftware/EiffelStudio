@@ -92,9 +92,9 @@ feature -- Save inner container data.
 			has_editor:
 		local
 			l_dock_area: SD_MULTI_DOCK_AREA
-			l_container: EV_CONTAINER
-			l_config_data: SD_INNER_CONTAINER_DATA
-			l_maximized_zone: SD_ZONE
+			l_container: detachable EV_CONTAINER
+			l_config_data: detachable SD_INNER_CONTAINER_DATA
+			l_maximized_zone: detachable SD_ZONE
 		do
 			if not internal_docking_manager.contents.has (internal_docking_manager.zones.place_holder_content) then
 				l_dock_area := internal_docking_manager.query.inner_container_main
@@ -147,7 +147,6 @@ feature -- Save inner container data.
 			a_file_not_void: a_file /= Void
 			a_name_not_void: a_name /= Void
 		local
-			l_container: EV_CONTAINER
 			l_widget_structure_corrupted: BOOLEAN
 			l_config_data: SD_CONFIG_DATA
 		do
@@ -162,12 +161,18 @@ feature -- Save inner container data.
 				if top_container = Void then
 					l_widget_structure_corrupted := True
 				elseif top_container = internal_docking_manager.query.inner_container_main then
-					l_container ?= top_container
-					check not_void: l_container /= Void end
-					top_container := l_container.item
+					if attached {EV_CONTAINER} top_container as l_container then
+						top_container := l_container.item
+					else
+						check False end -- Implied by design of `top_container'
+					end
 				end
 			else
 				check real_has_place_holder: internal_docking_manager.zones.place_holder_content.state.zone /= Void end
+
+				-- If following check violated, it normally means when you saving tools' layout, there are BOTH editor type zones and editor place holder visible.
+				-- So docking library don't know how to separate tool area and editor area.
+				-- You should either close all editors or close editor place holder area, then try saving tool data again.
 				check place_holder_visible: internal_docking_manager.zones.place_holder_content.is_visible end
 			end
 
@@ -182,7 +187,7 @@ feature -- Save inner container data.
 			cleared: top_container = Void
 		end
 
-	top_container: EV_WIDGET
+	top_container: detachable EV_WIDGET
 		-- When only save tools config, and zone place holder not in, this is top contianer of all editors.	
 
 feature {NONE} -- Implementation
@@ -193,9 +198,9 @@ feature {NONE} -- Implementation
 			a_config_data_not_void: a_config_data /= Void
 		local
 			l_inner_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
-			l_datum: SD_INNER_CONTAINER_DATA
+			l_datum: detachable SD_INNER_CONTAINER_DATA
 			l_data: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
-			l_floating_zone: SD_FLOATING_ZONE
+			l_floating_zone: detachable SD_FLOATING_ZONE
 		do
 			l_inner_containers := internal_docking_manager.inner_containers
 			from
@@ -225,7 +230,9 @@ feature {NONE} -- Implementation
 				else
 					l_datum := Void
 				end
-				l_data.extend (l_datum)
+				if l_datum /= Void then
+					l_data.extend (l_datum)
+				end
 				l_inner_containers.forth
 			end
 			a_config_data.set_inner_container_data (l_data)
@@ -236,42 +243,38 @@ feature {NONE} -- Implementation
 		require
 			a_widget_not_void: a_widget /= Void
 			a_config_data_not_void: a_config_data /= Void
-		local
-			l_split_area: SD_MIDDLE_CONTAINER
-			l_zone: SD_ZONE
-			l_upper_zone: SD_UPPER_ZONE
 		do
 			if a_widget = top_container then
 				-- We are saving tools config data.
 				save_place_holder_data (a_config_data)
 			else
-				l_split_area ?= a_widget
-				if l_split_area /= Void then
+				if attached {SD_MIDDLE_CONTAINER} a_widget as l_split_area then
 					save_inner_container_data_split_area (l_split_area, a_config_data)
 				else -- It must be a zone area
-					l_zone ?= a_widget
-					check l_zone /= Void end
-					a_config_data.set_is_split_area (False)
-					l_zone.save_content_title (a_config_data)
-					a_config_data.set_state (l_zone.content.state.generating_type)
-					a_config_data.set_direction (l_zone.content.state.direction)
-					if attached {EV_WIDGET} l_zone as lt_widget then
-						a_config_data.set_visible (lt_widget.is_displayed)
+					if attached {SD_ZONE} a_widget as l_zone then
+						a_config_data.set_is_split_area (False)
+						l_zone.save_content_title (a_config_data)
+						a_config_data.set_state (l_zone.content.state.generating_type)
+						a_config_data.set_direction (l_zone.content.state.direction)
+						if attached {EV_WIDGET} l_zone as lt_widget then
+							a_config_data.set_visible (lt_widget.is_displayed)
+						else
+							check not_possible: False end
+						end
+
+						check valid: l_zone.content.state.last_floating_width > 0 end
+						check valid: l_zone.content.state.last_floating_height > 0 end
+						a_config_data.set_width (l_zone.content.state.last_floating_width)
+						a_config_data.set_height (l_zone.content.state.last_floating_height)
+						debug ("docking")
+							io.put_string ("%N SD_DOCKING_MANAGER zone")
+							io.put_string ("%N  zone: " + l_zone.content.unique_title.as_string_8)
+						end
+						if attached {SD_UPPER_ZONE} a_widget as l_upper_zone then
+							a_config_data.set_is_minimized (l_upper_zone.is_minimized)
+						end
 					else
-						check not_possible: False end
-					end
-					
-					check valid: l_zone.content.state.last_floating_width > 0 end
-					check valid: l_zone.content.state.last_floating_height > 0 end
-					a_config_data.set_width (l_zone.content.state.last_floating_width)
-					a_config_data.set_height (l_zone.content.state.last_floating_height)
-					debug ("docking")
-						io.put_string ("%N SD_DOCKING_MANAGER zone")
-						io.put_string ("%N  zone: " + l_zone.content.unique_title.as_string_8)
-					end
-					l_upper_zone ?= a_widget
-					if l_upper_zone /= Void then
-						a_config_data.set_is_minimized (l_upper_zone.is_minimized)
+						check False end -- Implied by must be zone area
 					end
 				end
 			end
@@ -291,7 +294,7 @@ feature {NONE} -- Implementation
 			a_config_data.set_height (1)
 		ensure
 			is_editor: not a_config_data.is_split_area
-			title_correct: a_config_data.titles.first.is_equal (internal_shared.editor_place_holder_content_name)
+			title_correct: attached a_config_data.titles as le_titles implies le_titles.first ~ (internal_shared.editor_place_holder_content_name)
 		end
 
 	save_inner_container_data_split_area (a_split_area: SD_MIDDLE_CONTAINER; a_config_data: SD_INNER_CONTAINER_DATA)
@@ -318,16 +321,24 @@ feature {NONE} -- Implementation
 				a_config_data.set_is_minimized (a_split_area.is_minimized)
 			end
 
-			check a_split_area.first /= Void end
-			create l_temp
-			a_config_data.set_children_left (l_temp)
-			l_temp.set_parent (a_config_data)
-			save_inner_container_data (a_split_area.first, l_temp)
-			check a_split_area.second /= Void end
-			create l_temp
-			a_config_data.set_children_right (l_temp)
-			l_temp.set_parent (a_config_data)
-			save_inner_container_data (a_split_area.second, l_temp)
+			if attached a_split_area.first as l_first then
+				create l_temp
+				a_config_data.set_children_left (l_temp)
+				l_temp.set_parent (a_config_data)
+				save_inner_container_data (l_first, l_temp)
+			else
+				check False end -- Implied by widget hierarchy is full two fork tree
+			end
+
+			if attached a_split_area.second as l_second then
+				create l_temp
+				a_config_data.set_children_right (l_temp)
+				l_temp.set_parent (a_config_data)
+				save_inner_container_data (l_second, l_temp)
+			else
+				check False end -- Implied by widget hierarchy is full two fork tree
+			end
+
 			if a_split_area.full then
 				if attached {EV_SPLIT_AREA} a_split_area as lt_split then
 					lt_split.update_proportion
@@ -363,7 +374,6 @@ feature {NONE} -- Implementation
 			l_tab_groups: ARRAYED_LIST [ARRAYED_LIST [SD_TAB_STUB]]
 			l_one_group_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
 			l_one_group: ARRAYED_LIST [SD_TAB_STUB]
-			l_auto_hide_state: SD_AUTO_HIDE_STATE
 		do
 			l_auto_hide_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
 			l_tab_groups := l_auto_hide_panel.tab_groups
@@ -379,9 +389,11 @@ feature {NONE} -- Implementation
 				until
 					l_one_group.after
 				loop
-					l_auto_hide_state ?= l_one_group.item.content.state
-					check not_void: l_auto_hide_state /= Void end
-					l_one_group_data.extend ([l_one_group.item.content.unique_title, l_auto_hide_state.width_height, l_auto_hide_state.last_floating_width, l_auto_hide_state.last_floating_height])
+					if attached {SD_AUTO_HIDE_STATE} l_one_group.item.content.state as l_auto_hide_state then
+						l_one_group_data.extend ([l_one_group.item.content.unique_title, l_auto_hide_state.width_height, l_auto_hide_state.last_floating_width, l_auto_hide_state.last_floating_height])
+					else
+						check False end -- Implied by
+					end
 
 					l_one_group.forth
 				end
@@ -450,10 +462,10 @@ feature {NONE} -- Implementation
 					l_tool_bar_data.set_title (l_tool_bar_contents_item.unique_title)
 
 					if
-						l_tool_bar_contents_item.zone /= Void
-						and then l_tool_bar_contents_item.zone.assistant.last_state /= Void
+						attached l_tool_bar_contents_item.zone as l_zone
+						and then l_zone.assistant.last_state /= Void
 					then
-						l_tool_bar_data.set_last_state (l_tool_bar_contents_item.zone.assistant.last_state)
+						l_tool_bar_data.set_last_state (l_zone.assistant.last_state)
 					end
 					a_tool_bar_data.extend (l_tool_bar_data)
 				end
@@ -468,9 +480,8 @@ feature {NONE} -- Implementation
 		local
 			l_tool_bar_area: EV_CONTAINER
 			l_rows: LINEAR [EV_WIDGET]
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_zone: SD_TOOL_BAR_ZONE
-			l_tool_bar: SD_TOOL_BAR_ROW
 			l_row_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
 		do
 			l_tool_bar_area := internal_docking_manager.tool_bar_manager.tool_bar_container (a_direction)
@@ -481,21 +492,24 @@ feature {NONE} -- Implementation
 			until
 				l_rows.after
 			loop
-				l_tool_bar ?= l_rows.item
-				check tool_bar_area_only_has_tool_bar_row: l_tool_bar /= Void end
-				create l_row_data.make (1)
-				Result.rows.extend (l_row_data)
-				from
-					l_tool_bars := l_tool_bar.zones
-					l_tool_bars.start
-				until
-					l_tool_bars.after
-				loop
-					l_zone := l_tool_bars.item_for_iteration
-					l_zone.assistant.save_items_layout (Void)
-					l_row_data.extend ([l_zone.content.unique_title, l_zone.position, l_zone.assistant.last_state])
-					l_tool_bars.forth
+				if attached {SD_TOOL_BAR_ROW} l_rows.item as l_tool_bar then
+					create l_row_data.make (1)
+					Result.rows.extend (l_row_data)
+					from
+						l_tool_bars := l_tool_bar.zones
+						l_tool_bars.start
+					until
+						l_tool_bars.after
+					loop
+						l_zone := l_tool_bars.item_for_iteration
+						l_zone.assistant.save_items_layout (Void)
+						l_row_data.extend ([l_zone.content.unique_title, l_zone.position, l_zone.assistant.last_state])
+						l_tool_bars.forth
+					end
+				else
+					check tool_bar_area_only_has_tool_bar_row: False end -- Implied by tool bar area only has tool bar row
 				end
+
 				l_rows.forth
 			end
 		ensure
@@ -505,7 +519,7 @@ feature {NONE} -- Implementation
 	save_editor_minimized_data (a_config_data: SD_CONFIG_DATA)
 			-- If only one editor zone, save if it's minimized.
 		local
-			l_editor_zone: SD_UPPER_ZONE
+			l_editor_zone: detachable SD_UPPER_ZONE
 		do
 			l_editor_zone := internal_docking_manager.query.only_one_editor_zone
 			if l_editor_zone /= Void then
@@ -554,7 +568,7 @@ feature {NONE} -- Implementation
 			a_config_data_not_void: a_config_data /= Void
 			a_file_not_void: a_file /= Void
 		local
-			l_file: RAW_FILE
+			l_file: detachable RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN

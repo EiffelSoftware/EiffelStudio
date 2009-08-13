@@ -46,7 +46,7 @@ feature  -- Redefine
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- <Precursor>
 		local
-			l_floating_zone: SD_FLOATING_ZONE
+			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_caller: SD_ZONE
 		do
 			l_caller := internal_mediator.caller

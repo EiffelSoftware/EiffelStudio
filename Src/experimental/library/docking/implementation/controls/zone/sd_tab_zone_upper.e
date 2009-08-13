@@ -37,6 +37,8 @@ feature {NONE} -- Initlization
 	make (a_content: SD_CONTENT)
 			-- <Precursor>
 		do
+			create {EV_CELL_IMP} implementation_upper_zone.make -- For void-safe...not used
+
 			Precursor {SD_TAB_ZONE} (a_content)
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
@@ -90,8 +92,8 @@ feature {NONE} -- Implementation
 --			if not internal_diable_on_select_tab then
 				Precursor {SD_TAB_ZONE}
 				l_content := contents.i_th (internal_notebook.selected_item_index)
-				if l_content.mini_toolbar /= Void then
-					internal_notebook.set_mini_tool_bar (l_content.mini_toolbar)
+				if attached l_content.mini_toolbar as l_mini_toolbar then
+					internal_notebook.set_mini_tool_bar (l_mini_toolbar)
 				end
 --			end
 		end
@@ -99,26 +101,31 @@ feature {NONE} -- Implementation
 	on_normal_max_window
 			-- <Precursor> (Just copy from SD_ZONE version)
 		local
-			l_split_area: EV_SPLIT_AREA
+			l_split_area: detachable EV_SPLIT_AREA
+			l_main_area: SD_MULTI_DOCK_AREA
+			l_parent: detachable EV_CONTAINER
 		do
-			internal_docking_manager.command.lock_update (Void, True)
-			main_area := internal_docking_manager.query.inner_container (Current)
+			docking_manager.command.lock_update (Void, True)
+			l_main_area := docking_manager.query.inner_container (Current)
+			main_area := l_main_area
 			if not is_maximized then
-				main_area_widget := main_area.item
-				internal_parent := parent
-				l_split_area ?= internal_parent
+				main_area_widget := l_main_area.item
+				l_parent := parent
+				internal_parent := l_parent
+				l_split_area ?= l_parent
 				if l_split_area /= Void then
 					internal_parent_split_position := l_split_area.split_position
 				end
-				internal_parent.prune (Current)
-				main_area.wipe_out
-				main_area.extend (Current)
+				check l_parent /= Void end -- Implied by Current displaying in main window
+				l_parent.prune (Current)
+				l_main_area.wipe_out
+				l_main_area.extend (Current)
 				internal_notebook.set_show_maximized (True)
 			else
 				recover_to_normal_state
 			end
-			internal_docking_manager.command.resize (False)
-			internal_docking_manager.command.unlock_update
+			docking_manager.command.resize (False)
+			docking_manager.command.unlock_update
 		end
 
 	recover_to_normal_state

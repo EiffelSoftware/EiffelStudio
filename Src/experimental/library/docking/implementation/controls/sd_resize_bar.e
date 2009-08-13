@@ -14,19 +14,20 @@ inherit
 create
 	make
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	make (a_direction: INTEGER; a_source: SD_RESIZE_SOURCE)
-			-- Creation method.
+	make (a_direction: INTEGER)
+			-- Creation method
 		require
-			a_source_not_void: a_source /= Void
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		local
 			l_background_color: EV_GRID
 		do
 			create internal_shared
+
 			default_create
+
 			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				set_minimum_size (internal_shared.resize_bar_width_height, internal_shared.resize_bar_width_height)
 			else
@@ -44,25 +45,60 @@ feature -- Access
 				set_pointer_style (default_pixmaps.sizens_cursor)
 			end
 
-			resize_source := a_source
 			expose_actions.extend (agent on_expose_action)
 			create l_background_color
 			set_background_color (l_background_color.non_focused_selection_color)
 		ensure
-			a_source_set: resize_source = a_source
 			a_direction_set: a_direction = direction
+		end
+
+feature -- Command
+
+	set_resize_source (a_source: SD_RESIZE_SOURCE)
+			-- Set `resize_source' with `a_source'
+		require
+			a_source_not_void: a_source /= Void
+		do
+			internal_resize_source := a_source
+		ensure
+			a_source_set: resize_source = a_source
+		end
+
+feature -- Query
+
+	resize_source: attached like internal_resize_source
+			-- Attached `internal_resize_source'
+		require
+			set: is_resize_source_set
+		local
+			l_result: like internal_resize_source
+		do
+			l_result := internal_resize_source
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
+
+	is_resize_source_set: BOOLEAN
+			-- If `internal_resize_source' has been set?
+		do
+			Result := attached internal_resize_source
 		end
 
 feature {NONE} -- Agents
 
 	on_pointer_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
-			-- Handle pointer button press.
+			-- Handle pointer button press
+		local
+			l_screen_boundary: like screen_boundary
 		do
 			if a_button = 1 then
 				if not resizing then
 					resizing := True
-					create screen_boundary
-					resize_source.start_resize_operation (Current, screen_boundary)
+					create l_screen_boundary
+					screen_boundary := l_screen_boundary
+					resize_source.start_resize_operation (Current, l_screen_boundary)
 					debug ("docking")
 						io.put_string ("%N start position: " + a_screen_x.out + ", " + a_screen_y.out)
 					end
@@ -82,7 +118,7 @@ feature {NONE} -- Agents
 		end
 
 	on_expose_action (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
-			-- Handle expose action.
+			-- Handle expose action
 		local
 			l_stock_colors: EV_STOCK_COLORS
 		do
@@ -102,17 +138,20 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
-			-- Handle the resize window action.
+			-- Handle the resize window action
+		require
+			not_void: resizing implies screen_boundary /= Void
 		local
 			l_scr_boundary: like screen_boundary
 			l_left, l_right, l_top, l_bottom: INTEGER
 		do
 			if resizing then
-				-- Clear the graph last drawn.
+				-- Clear the graph last drawn
 
 				clear_graph_last_drawn
 
 				l_scr_boundary := screen_boundary
+				check l_scr_boundary /= Void end -- Impied by precondition `not_void'
 				if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 					l_left := l_scr_boundary.left
 					l_right := l_scr_boundary.right
@@ -140,7 +179,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
-			-- Handle pointer release action.
+			-- Handle pointer release action
 		do
 			if resizing then
 				clear_graph_last_drawn
@@ -164,12 +203,12 @@ feature {NONE} -- Agents
 feature -- Properties
 
 	direction: INTEGER
-			-- Direction.
+			-- Direction
 
 feature {NONE}  -- Implemenetation
 
 	clear_graph_last_drawn
-			-- Clear the graph last drawn on the screen.
+			-- Clear the graph last drawn on the screen
 		do
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 				internal_shared.feedback.draw_line_area (last_screen_pointer_position, screen_y, width, height)
@@ -179,25 +218,22 @@ feature {NONE}  -- Implemenetation
 		end
 
 	internal_shared: SD_SHARED
-			-- All singletons.
-
-	internal_pixmap: EV_PIXMAP
-			-- Pixmap.
+			-- All singletons
 
 	last_screen_pointer_position: INTEGER
-			-- Screen position last drawn.
+			-- Screen position last drawn
 
-	screen_boundary: EV_RECTANGLE
-			-- The screen rectangle which allow to resize.
+	screen_boundary: detachable EV_RECTANGLE
+			-- The screen rectangle which allow to resize
 
 	old_screen_x, old_screen_y: INTEGER
-			-- The screen pointer position when user press.
+			-- The screen pointer position when user press
 
 	resizing: BOOLEAN
 			-- Is user press pointer button and then we resizing?
 
-	resize_source: SD_RESIZE_SOURCE
-			-- The resizable window.
+	internal_resize_source: detachable SD_RESIZE_SOURCE
+			-- The resizable window
 
 invariant
 

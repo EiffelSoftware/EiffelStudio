@@ -22,7 +22,7 @@ feature {NONE} -- Initlization
 feature -- Command
 
 	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
-			-- Draw unselected tab.
+			-- Draw unselected tab
 		require
 			setted: pixmap /= Void
 			vaild: a_width > 0
@@ -32,7 +32,7 @@ feature -- Command
 		end
 
 	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
-			-- Draw selected tab.
+			-- Draw selected tab
 		require
 			setted: pixmap /= Void
 			vaild: a_width > 0
@@ -42,7 +42,7 @@ feature -- Command
 		end
 
 	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
-			-- Draw hot tab.
+			-- Draw hot tab
 		require
 			setted: pixmap /= Void
 			vaild: a_width > 0
@@ -52,7 +52,7 @@ feature -- Command
 		end
 
 	draw_focus_rect (a_rect: EV_RECTANGLE)
-			-- Draw focus rectangle.
+			-- Draw focus rectangle
 		require
 			not_void: a_rect /= Void
 		do
@@ -67,7 +67,7 @@ feature -- Key setting
 		do
 			internal_tab := a_tab
 		ensure
-			set: internal_tab = a_tab
+			set: tab = a_tab
 		end
 
 	set_is_draw_at_top (a_draw_at_top: BOOLEAN)
@@ -94,7 +94,7 @@ feature -- Properties
 		end
 
 	pixmap: EV_PIXMAP
-			-- Pixmap Current will draw.
+			-- Pixmap Current will draw
 
 	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set `pixmap'
@@ -107,10 +107,10 @@ feature -- Properties
 		end
 
 	padding_width: INTEGER
-			-- Padding width.
+			-- Padding width
 
 	set_padding_width (a_width: INTEGER)
-			-- Set `padding_width'.
+			-- Set `padding_width'
 		require
 			valid: a_width >= 0
 		do
@@ -125,15 +125,15 @@ feature -- Properties
 		end
 
 	width: INTEGER
-			-- Width of Current will draw.
+			-- Width of Current will draw
 		do
-			Result := internal_tab.width
+			Result := tab.width
 		end
 
 	height: INTEGER
-			-- Height of Current will draw.
+			-- Height of Current will draw
 		do
-			Result := internal_tab.height
+			Result := tab.height
 		end
 
 	is_draw_pixmap: BOOLEAN
@@ -164,21 +164,21 @@ feature -- Properties
 	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN)
 			-- Set `is_selected'
 		local
-			l_font: EV_FONT
+			l_font: detachable EV_FONT
 		do
 			if a_selected then
-				l_font := internal_tab.font
+				l_font := tab.font
 				if l_font /= Void then
 					l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
 				end
 			else
-				l_font := internal_tab.font
+				l_font := tab.font
 				if l_font /= Void then
 					l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_regular)
 				end
 			end
 			if l_font /= Void then
-				internal_tab.set_font (l_font)
+				tab.set_font (l_font)
 			end
 			is_selected := a_selected
 		ensure
@@ -186,28 +186,28 @@ feature -- Properties
 		end
 
 	is_top_side_tab: BOOLEAN
-			-- If Current the tabs which at top side.
-			-- Otherwise it's bottom side tabs.
+			-- If Current the tabs which at top side
+			-- Otherwise it's bottom side tabs
 
 	current_total_width: INTEGER
-			-- Current total width during one drawing tab action.
+			-- Current total width during one drawing tab action
 
 feature -- Size issues
 
 	start_x_separator_before_internal: INTEGER
-			-- Start x position where should draw separator before.
+			-- Start x position where should draw separator before
 		do
 			Result := 0
 		end
 
 	start_x_pixmap_internal: INTEGER
-			-- Start x position where should draw `pixmap'.
+			-- Start x position where should draw `pixmap'
 		do
 			Result := start_x_separator_before_internal + padding_width
 		end
 
 	start_x_text_internal: INTEGER
-			-- Start x position where should draw `text'.
+			-- Start x position where should draw `text'
 		do
 			Result := start_x_pixmap_internal
 			if is_draw_pixmap then
@@ -242,7 +242,7 @@ feature -- Size issues
 		end
 
 	start_x_tail_internal: INTEGER
-			-- Start x position where should draw tail area.
+			-- Start x position where should draw tail area
 		local
 			l_width: INTEGER
 			l_font: EV_FONT
@@ -270,7 +270,7 @@ feature -- Size issues
 		end
 
 	start_x_separator_after_internal: INTEGER
-			-- Start x position where should draw separator after.
+			-- Start x position where should draw separator after
 		do
 			if is_selected then
 				if is_enough_space then
@@ -279,17 +279,21 @@ feature -- Size issues
 					Result := width - 1
 				end
 			else
-				Result := start_x_text_internal + internal_tab.font.string_width (text) + padding_width - 1
+				if attached tab.font as l_font then
+					Result := start_x_text_internal + l_font.string_width (text) + padding_width - 1
+				else
+					check False end -- FIXME: Implied by ...?
+				end
 			end
 		end
 
 	start_y_position: INTEGER
-			-- Start y position of drawing a pixmap.
+			-- Start y position of drawing a pixmap
 		deferred
 		end
 
 	start_y_position_text: INTEGER
-			-- Start y position of drawing a pixmap.
+			-- Start y position of drawing a pixmap
 		deferred
 		end
 
@@ -310,7 +314,7 @@ feature -- Size issues
 		end
 
 	close_width: INTEGER
-			-- Width of the close button.
+			-- Width of the close button
 		require
 			has_close_button: is_top_side_tab
 		do
@@ -321,8 +325,8 @@ feature -- Size issues
 			-- Close button rectangle relative to parent box
 		do
 			Result := close_rectangle
-			if internal_tab.parent /= Void then
-				Result.move (Result.x + internal_tab.x, Result.y)
+			if tab.parent /= Void then
+				Result.move (Result.x + tab.x, Result.y)
 			end
 		end
 
@@ -338,7 +342,7 @@ feature -- Size issues
 		end
 
 	close_clipping_width (a_total_width: INTEGER): INTEGER
-			-- Clipping width of text when close button exist.
+			-- Clipping width of text when close button exist
 		require
 			has_close_button: is_top_side_tab
 		do
@@ -354,42 +358,54 @@ feature {NONE} -- Implementation
 
 	start_draw
 			-- We make a buffer pixmap
-			-- Should call `end_draw' after every thing is done.
+			-- Should call `end_draw' after every thing is done
 		require
 			not_called: buffer_pixmap = Void
-			size_valid: internal_tab.width > 0 and internal_tab.height > 0
-
+			size_valid: tab.width > 0 and tab.height > 0
+		local
+			l_buffer_pixmap: like buffer_pixmap
 		do
-			create buffer_pixmap.make_with_size (internal_tab.width, internal_tab.height)
-			buffer_pixmap.set_font (internal_tab.font)
+			create l_buffer_pixmap.make_with_size (tab.width, tab.height)
+			buffer_pixmap := l_buffer_pixmap
+			if attached tab.font as l_font then
+				l_buffer_pixmap.set_font (l_font)
+			end
 
-			buffer_pixmap.set_background_color (internal_shared.default_background_color)
-			buffer_pixmap.clear
+			l_buffer_pixmap.set_background_color (internal_shared.default_background_color)
+			l_buffer_pixmap.clear
 		ensure
 			created: buffer_pixmap /= Void
 		end
 
 	end_draw
 			-- Draw `buffer_pixmap' to `internal_drawing_area'
-			-- Call `start_draw' before call this function.
+			-- Call `start_draw' before call this function
 		require
 			not_void: buffer_pixmap /= Void
+			not_void: tab.parent /= Void
+		local
+			l_buffer_pixmap: like buffer_pixmap
+			l_parent: detachable SD_NOTEBOOK_TAB_BOX
 		do
-			internal_tab.parent.draw_pixmap (internal_tab.x, 0, buffer_pixmap)
+			l_buffer_pixmap := buffer_pixmap
+			check l_buffer_pixmap /= Void end -- Implied by precondition `not_void'
+			l_parent := tab.parent
+			check l_parent /= Void end -- Implied by precondition `not_void'
+			l_parent.draw_pixmap (tab.x, 0, l_buffer_pixmap)
 			buffer_pixmap := Void
 		ensure
 			cleared: buffer_pixmap = Void
 		end
 
 	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
-			-- Draw pixmap and text when unselected.
+			-- Draw pixmap and text when unselected
 		require
 			not_void: a_pixmap /= Void
 		deferred
 		end
 
 	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
-			-- Draw pixmap and text when selected.
+			-- Draw pixmap and text when selected
 		require
 			not_void: a_pixmap /= Void
 		deferred
@@ -404,15 +420,29 @@ feature {NONE} -- Implementation
 		end
 
 	close_background_expand: INTEGER = 3
-			-- close button background expand size.
+			-- close button background expand size
 
-	internal_tab: SD_NOTEBOOK_TAB
-			-- Drawing area to draw tab.
+	tab: SD_NOTEBOOK_TAB
+			-- Attached `internal_tab'
+		require
+			set: internal_tab /= Void
+		local
+			l_result: like internal_tab
+		do
+			l_result := internal_tab
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
+
+	internal_tab: detachable SD_NOTEBOOK_TAB
+			-- Drawing area to draw tab
 
 	internal_shared: SD_SHARED
-			-- ALl singletons.
+			-- ALl singletons
 
-	buffer_pixmap: EV_PIXMAP;
+	buffer_pixmap: detachable EV_PIXMAP;
 			-- Buffer pixmap
 
 note

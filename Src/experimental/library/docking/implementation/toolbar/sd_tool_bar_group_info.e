@@ -20,17 +20,17 @@ create
 feature {NONE} -- Initlization
 
 	make
-			-- Creation method.
+			-- Creation method
 		do
 			create internal_group_info.make (1)
 			create internal_is_new_group.make (1)
-			create sub_grouping.make_default
+			create sub_grouping.make (10)
 		end
 
 feature -- Query
 
 	total_items_count: INTEGER
-			-- How many items.
+			-- How many items
 		do
 			from
 				internal_group_info.start
@@ -46,9 +46,10 @@ feature -- Query
 
 	maximum_width_sub: INTEGER
 			-- Maximum width
-			-- Calculation include sub level items.
+			-- Calculation include sub level items
 		local
 			l_maximum_index: INTEGER
+			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			l_maximum_index := maximum_width_group_index.max_index
 			go_group_i_th (l_maximum_index)
@@ -57,13 +58,15 @@ feature -- Query
 			-- But it's not calculate "sub sub" level, so we pass True here
 				Result := group_maximum_width (l_maximum_index).max_width
 			else
-				Result := sub_grouping.item (l_maximum_index).maximum_width_sub
+				l_item := sub_grouping.item (l_maximum_index)
+				check l_item /= Void end -- Implied by `has_sub_info'
+				Result := l_item.maximum_width_sub
 			end
 		end
 
 	maximum_width: INTEGER
 			-- Maximum width
-			-- The calculation include sub level groups.
+			-- The calculation include sub level groups
 		local
 			l_temp_size: INTEGER
 			l_group_count, l_max_group_count: INTEGER
@@ -84,12 +87,12 @@ feature -- Query
 
 	maximum_width_only_top_level: TUPLE [max_width: INTEGER; item_count: INTEGER]
 			-- Maximum width
-			-- The calculation not include sub level groups.
+			-- The calculation not include sub level groups
 		local
 			l_snapshot: like internal_group_info
 			l_new_group_snapshot: like internal_is_new_group
 			l_temp_size: INTEGER
-			l_item: DS_HASH_TABLE [INTEGER_32, INTEGER_32]
+			l_item: HASH_TABLE [INTEGER_32, INTEGER_32]
 			l_item_count: INTEGER
 		do
 			from
@@ -129,7 +132,7 @@ feature -- Query
 		end
 
 	maximum_width_group_index: TUPLE [max_index: INTEGER; max_row_item_count: INTEGER]
-			-- Maximum width group index.
+			-- Maximum width group index
 			-- It compute sub-level groups
 		local
 			l_group_count: INTEGER
@@ -157,10 +160,11 @@ feature -- Query
 		end
 
 	maximum_width_top_group: SD_TOOL_BAR_GROUP_INFO
-			-- The group which have maximum width.
-			-- The maximum width calculation inlucde sub level group items width calculation.
+			-- The group which have maximum width
+			-- The maximum width calculation inlucde sub level group items width calculation
 		local
 			l_result_index: INTEGER
+			l_result: detachable like maximum_width_top_group
 		do
 			l_result_index := maximum_width_top_group_index
 			create Result.make
@@ -168,13 +172,15 @@ feature -- Query
 			if not has_sub_info then
 				Result.extend (item, True)
 			else
-				Result := sub_grouping.item (l_result_index)
+				l_result := sub_grouping.item (l_result_index)
+				check l_result /= Void end -- Implied by `has_sub_info'
+				Result := l_result
 			end
 		end
 
 	maximum_width_top_group_index: INTEGER
-			-- Maximum width top group index.
-			-- Calculation include sub level items width.
+			-- Maximum width top group index
+			-- Calculation include sub level items width
 		local
 			l_group_count: INTEGER
 			l_total_group: INTEGER
@@ -199,15 +205,16 @@ feature -- Query
 		end
 
 	group_maximum_width (a_group_index: INTEGER): TUPLE [max_width: INTEGER; item_count: INTEGER]
-			-- Maximum group width of a_group_index.
-			-- `a_group_index' is top level group index.
+			-- Maximum group width of a_group_index
+			-- `a_group_index' is top level group index
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
 		local
 			l_group_count: INTEGER
 			l_index_count, l_index_max: INTEGER
 			l_temp_result: INTEGER
-			l_temp_max_info: TUPLE [max_width: INTEGER_32; item_count: INTEGER_32]
+			l_temp_max_info: detachable TUPLE [max_width: INTEGER_32; item_count: INTEGER_32]
+			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			from
 				create Result.default_create
@@ -226,7 +233,9 @@ feature -- Query
 					if not has_sub_info then
 						l_temp_result := row_width (l_index_count)
 					else
-						l_temp_max_info := sub_grouping.item (l_index_count).maximum_width_only_top_level
+						l_item := sub_grouping.item (l_index_count)
+						check l_item /= Void end -- Implied by `has_sub_info'
+						l_temp_max_info := l_item.maximum_width_only_top_level
 						l_temp_result := l_temp_max_info.max_width
 					end
 					if l_temp_result > Result.max_width then
@@ -239,6 +248,7 @@ feature -- Query
 							-- We don't want it stop here, so we assign a value which larger than 1.
 							Result.item_count := {INTEGER}.max_value
 						else
+							check l_temp_max_info /= Void end -- Implied by `l_temp_max_info' is attached in previous if clause if `not has_sub_info'
 							Result.item_count := l_temp_max_info.item_count
 						end
 					end
@@ -250,11 +260,11 @@ feature -- Query
 		end
 
 	row_width (a_row_index: INTEGER): INTEGER
-			-- Row width.
+			-- Row width
 		require
 			valid: a_row_index > 0 and a_row_index <= row_count
 		local
-			l_row: DS_HASH_TABLE [INTEGER, INTEGER]
+			l_row: HASH_TABLE [INTEGER, INTEGER]
 		do
 			l_row := internal_group_info.i_th (a_row_index)
 			from
@@ -262,7 +272,7 @@ feature -- Query
 			until
 				l_row.after
 			loop
-				Result := l_row.value (l_row.key_for_iteration) + Result
+				Result := l_row.item (l_row.key_for_iteration) + Result
 				l_row.forth
 			end
 		ensure
@@ -276,7 +286,9 @@ feature -- Query
 		end
 
 	row_total_count: INTEGER
-			-- Total row count.
+			-- Total row count
+		local
+			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			from
 				start
@@ -284,7 +296,9 @@ feature -- Query
 				after
 			loop
 				if has_sub_info then
-					Result := sub_grouping.item (index).count + Result
+					l_item := sub_grouping.item (index)
+					check l_item /= Void end -- Implied by `has_sub_info'
+					Result := l_item.count + Result
 				else
 					Result := Result + 1
 				end
@@ -295,7 +309,8 @@ feature -- Query
 		end
 
 	group_count: INTEGER
-			-- Group count. Start from 1 (not 0).
+			-- Group count
+			-- Start from 1 (not 0)
 		do
 			Result := 1
 			from
@@ -313,7 +328,9 @@ feature -- Query
 		end
 
 	total_group_count: INTEGER
-			-- Total group count, include sub group count.
+			-- Total group count, include sub group count
+		local
+			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			Result := 1
 			from
@@ -326,7 +343,9 @@ feature -- Query
 				end
 				if has_sub_info then
 					check sub_group_must_new_group: index /= 1 implies is_new_group end
-					Result := Result + sub_grouping.item (index).total_group_count
+					l_item := sub_grouping.item (index)
+					check l_item /= Void end -- Implied by `has_sub_info'
+					Result := Result + l_item.total_group_count
 					if index = 1 then
 						-- We alreay plus 1 when index = 1
 						-- So we should subtract 1
@@ -338,7 +357,7 @@ feature -- Query
 		end
 
 	group_item_count (a_group_index: INTEGER): INTEGER
-			-- How many items in a group.
+			-- How many items in a group
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
 		local
@@ -363,11 +382,11 @@ feature -- Query
 		end
 
 	group_item_start_index (a_group_index: INTEGER): INTEGER
-			-- Group item start index.
+			-- Group item start index
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
 		local
-			l_item: DS_HASH_TABLE [INTEGER, INTEGER]
+			l_item: HASH_TABLE [INTEGER, INTEGER]
 		do
 			go_group_i_th (a_group_index)
 			l_item := item
@@ -375,14 +394,14 @@ feature -- Query
 			Result := l_item.key_for_iteration
 		end
 
-	sub_grouping: DS_HASH_TABLE [SD_TOOL_BAR_GROUP_INFO ,INTEGER]
-			-- SD_TOOL_BAR`_GROUP_INFO is grouping info of items in one tool bar items group.
-			-- INTEGER is tool bar items group id. It is INTEGER in `internal_group_info'.
+	sub_grouping: HASH_TABLE [SD_TOOL_BAR_GROUP_INFO ,INTEGER]
+			-- SD_TOOL_BAR`_GROUP_INFO is grouping info of items in one tool bar items group
+			-- INTEGER is tool bar items group id. It is INTEGER in `internal_group_info'
 
 feature -- Command
 
 	set_sub_group_info (a_sub_grouping_info: SD_TOOL_BAR_GROUP_INFO; a_group_index: INTEGER)
-			-- Set sub grouping info.
+			-- Set sub grouping info
 		require
 			valid: a_group_index > 0 and a_group_index <= count
 		do
@@ -393,6 +412,8 @@ feature -- Command
 
 	out: STRING
 			-- <Precursor>
+		local
+			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			Result := "%NSD_TOOL_BAR_GROUP_INFO:"
 			Result := Result + "%N                   group count: " + group_count.out
@@ -409,7 +430,9 @@ feature -- Command
 				Result := Result + "%N                   -------------------------------------------"
 				if has_sub_info then
 					Result := Result + "%N                   <<<<<<<<<<<<< sub info start >>>>>>>>>>>>>> "
-					Result := Result + sub_grouping.item (index).out
+					l_item := sub_grouping.item (index)
+					check l_item /= Void end -- Implied by `has_sub_info'
+					Result := Result + l_item.out
 					Result := Result + "%N                   <<<<<<<<<<<<< sub info end >>>>>>>>>>>>>> "
 				end
 				forth
@@ -432,19 +455,19 @@ feature -- Query for iteration
 		end
 
 	count: INTEGER
-			-- Count of how many rows.
+			-- Count of how many rows
 		do
 			Result := internal_group_info.count
 		end
 
 	index: INTEGER
-			-- Index of current row.
+			-- Index of current row
 		do
 			Result := internal_group_info.index
 		end
 
-	item: DS_HASH_TABLE [INTEGER, INTEGER]
-			-- One row info.
+	item: HASH_TABLE [INTEGER, INTEGER]
+			-- One row info
 		do
 			Result := internal_group_info.item
 		end
@@ -461,8 +484,8 @@ feature -- Query for iteration
 			Result := sub_grouping.has (index)
 		end
 
-	i_th (a_index: INTEGER): DS_HASH_TABLE [INTEGER, INTEGER]
-			-- Item at a_index.
+	i_th (a_index: INTEGER): HASH_TABLE [INTEGER, INTEGER]
+			-- Item at a_index
 		do
 			Result := internal_group_info.i_th (a_index)
 		end
@@ -476,34 +499,34 @@ feature -- Query for iteration
 feature -- Command for iteration
 
 	start
-			-- Go to first item.
+			-- Go to first item
 		do
 			internal_group_info.start
 			internal_is_new_group.start
 		end
 
 	finish
-			-- Go to last position.
+			-- Go to last position
 		do
 			internal_group_info.finish
 			internal_is_new_group.finish
 		end
 
 	forth
-			-- Go to next row info.
+			-- Go to next row info
 		do
 			internal_group_info.forth
 			internal_is_new_group.forth
 		end
 
 	back
-			-- Go to row info before.
+			-- Go to row info before
 		do
 			internal_group_info.back
 			internal_is_new_group.back
 		end
 
-	extend (a_group_index_info: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
+	extend (a_group_index_info: HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
 			-- Extend a_group_info
 		require
 			not_void:a_group_index_info /= Void
@@ -515,14 +538,14 @@ feature -- Command for iteration
 		end
 
 	go_i_th (a_index: INTEGER)
-			-- Go to `a_index' position.
+			-- Go to `a_index' position
 		do
 			internal_group_info.go_i_th (a_index)
 			internal_is_new_group.go_i_th (a_index)
 		end
 
-	replace (a_item: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
-			-- Replace current item by a_item.
+	replace (a_item: HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
+			-- Replace current item by a_item
 		do
 			internal_group_info.replace (a_item)
 			internal_is_new_group.replace (a_new_group)
@@ -557,11 +580,11 @@ feature {NONE} -- Implementation
 			not_after: not after
 		end
 
-	internal_group_info: ARRAYED_LIST [DS_HASH_TABLE [INTEGER, INTEGER]]
+	internal_group_info: ARRAYED_LIST [HASH_TABLE [INTEGER, INTEGER]]
 			-- Grouping formation.
 			-- The order of items in arrayed list is the same order as ..........
-			-- 1st INTEGER store each item in `internal_group_info's width or it's serval SD_TOOL_BAR_ITEMs' width.			
-			-- 2nd INTEGER is group_index of SD_TOOL_BAR_CONTENT.
+			-- 1st INTEGER store each item in `internal_group_info's width or it's serval SD_TOOL_BAR_ITEMs' width
+			-- 2nd INTEGER is group_index of SD_TOOL_BAR_CONTENT
 
 	internal_is_new_group: ARRAYED_LIST [BOOLEAN]
 			-- Store each item in `internal_group_info' is a new row?

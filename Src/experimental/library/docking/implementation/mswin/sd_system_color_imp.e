@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 			-- Creation metod
 		local
 			l_err: WEL_ERROR
-			l_app_imp: EV_APPLICATION_IMP
+			l_app_imp: detachable EV_APPLICATION_IMP
 		do
 			l_app_imp ?= ev_application.implementation
 			check not_void: l_app_imp /= Void end
@@ -47,6 +47,8 @@ feature {NONE} -- Implementation
 				l_err.display_last_error
 			end
 			create wel_color
+
+			create child_cell -- Only for make void safe compiler happy
 		end
 
 	base_make_called: BOOLEAN = True
@@ -124,13 +126,15 @@ feature -- Font
 	tool_bar_font: EV_FONT
 			-- <Precursor>
 		local
-			l_imp: EV_FONT_IMP
 			l_shared_font: WEL_SHARED_FONTS
 		do
 			create Result
 			create l_shared_font
-			l_imp ?= Result.implementation
-			l_imp.set_by_wel_font (l_shared_font.menu_font)
+			if attached {EV_FONT_IMP} Result.implementation as l_imp then
+				l_imp.set_by_wel_font (l_shared_font.menu_font)
+			else
+				check False end -- Implied by design of Vision2
+			end
 		end
 
 feature {NONE}  -- Implementation

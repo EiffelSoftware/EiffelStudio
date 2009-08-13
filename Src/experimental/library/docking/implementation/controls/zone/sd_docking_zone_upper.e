@@ -44,12 +44,14 @@ feature -- Initlization
 		require
 			a_content_not_void: a_content /= Void
 		do
-			default_create
 			create internal_shared
 
 			internal_content := a_content
-			internal_docking_manager := a_content.docking_manager
+			set_docking_manager (a_content.docking_manager)
 			create notebook.make (a_content.docking_manager)
+			create {EV_CELL_IMP} implementation_upper_zone.make -- Make void safe compiler happy, not used
+			default_create
+
 			notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
 			notebook.normal_max_actions.extend (agent on_normal_max_window)
 			notebook.minimize_actions.extend (agent on_minimize)
@@ -75,7 +77,7 @@ feature -- Redefine
 			-- <Precursor>
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)
-			internal_docking_manager.command.remove_auto_hide_zones (True)
+			docking_manager.command.remove_auto_hide_zones (True)
 			notebook.set_focus_color (True)
 		end
 

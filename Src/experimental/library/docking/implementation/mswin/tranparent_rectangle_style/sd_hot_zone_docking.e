@@ -42,23 +42,26 @@ feature -- Redefine
 			-- <Precursor>
 		local
 			l_caller: SD_ZONE
+			l_docking_zone: like docking_zone_of
 		do
 			l_caller := internal_mediator.caller
 			if internal_mediator.is_dockable then
 				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.top)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.top)
 					Result := True
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.bottom)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.bottom)
 					Result := True
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.left)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.left)
 					Result := True
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.move_to_docking_zone (docking_zone_of (internal_zone), False)
+					l_docking_zone := docking_zone_of (zone)
+					check l_docking_zone /= Void end -- Implied by current is hot zone of docking zone
+					l_caller.state.move_to_docking_zone (l_docking_zone, False)
 					Result := True
 				end
 			end
@@ -141,7 +144,7 @@ feature -- Redefine
 
 feature -- Query
 
-	docking_zone_of (a_zone: SD_ZONE): SD_DOCKING_ZONE
+	docking_zone_of (a_zone: SD_ZONE): detachable SD_DOCKING_ZONE
 			-- Type convertion
 		do
 			Result ?= a_zone
@@ -223,6 +226,8 @@ feature {NONE} -- Implementation functions
 			-- Set the rectangle which allow user to dock
 		require
 			a_rect_not_void: a_rect /= Void
+		local
+			l_docking_zone: like docking_zone_of
 		do
 			internal_rectangle := a_rect
 			-- Calculate five rectangle area where allow user to dock a window in this zone.
@@ -240,7 +245,9 @@ feature {NONE} -- Implementation functions
 			internal_rectangle_bottom.grow_bottom (-10)
 			internal_rectangle_right.grow_right (-2)
 
-			internal_rectangle_title_area := docking_zone_of (internal_zone).title_area
+			l_docking_zone := docking_zone_of (zone)
+			check l_docking_zone /= Void end -- Implied by current is hot zone of docking zone
+			internal_rectangle_title_area := l_docking_zone.title_area
 		ensure
 			set: a_rect = internal_rectangle
 			left_rectangle_created: internal_rectangle_left /= Void
@@ -271,7 +278,7 @@ invariant
 
 	internal_docker_mediator_not_void: internal_mediator /= Void
 	internal_shared_not_void: internal_shared /= Void
-	internal_zone_type_valid: internal_zone /= Void and then zone_type_valid (internal_zone)
+	internal_zone_type_valid: internal_zone /= Void and then zone_type_valid (zone)
 	internal_rectangle_not_void: internal_rectangle /= Void
 	not_void: internal_indicator /= Void
 

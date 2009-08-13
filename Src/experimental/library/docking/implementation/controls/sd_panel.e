@@ -19,16 +19,22 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_style: INTEGER; a_zone: SD_ZONE)
-			-- Creation method.
+	make (a_style: INTEGER; a_zone_type: INTEGER)
+			-- Creation method
 		require
-			a_zone_not_void: a_zone /= Void
 			a_style_valid: a_style = {SD_WIDGET_FACTORY}.style_all_same or a_style = {SD_WIDGET_FACTORY}.style_different
+			a_zone_type_valid: a_zone_type = {SD_ENUMERATION}.docking or a_zone_type = {SD_ENUMERATION}.tab or a_zone_type = {SD_ENUMERATION}.auto_hide
+		local
+			l_zone_type: INTEGER
 		do
-			default_create
 			create internal_shared
+			create internal_border_box.make
+			l_zone_type := a_zone_type
 
-			internal_title_bar := internal_shared.widget_factory.title_bar (a_style, a_zone)
+			internal_title_bar := internal_shared.widget_factory.title_bar (a_style, l_zone_type)
+
+			default_create
+
 			internal_title_bar.set_minimum_height (internal_shared.title_bar_height)
 			internal_title_bar.close_request_actions.extend (agent close)
 			internal_title_bar.stick_select_actions.extend (agent stick)
@@ -41,7 +47,6 @@ feature {NONE} -- Initlization
 			extend (internal_title_bar)
 			disable_item_expand (internal_title_bar)
 
-			create internal_border_box.make
 			internal_border_box.set_border_style ({SD_ENUMERATION}.top)
 			internal_border_box.set_show_border ({SD_ENUMERATION}.top, True)
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
@@ -63,7 +68,7 @@ feature   -- Access
 		end
 
 	set_stick (a_bool: BOOLEAN)
-			-- Set whether current is sticked.
+			-- Set whether current is sticked
 		do
 			internal_title_bar.set_stick (a_bool)
 		ensure
@@ -71,26 +76,26 @@ feature   -- Access
 		end
 
 	title_bar: like internal_title_bar
-			-- Title bar which on the top.
+			-- Title bar which on the top
 		do
 			Result := internal_title_bar
 		end
 
 	user_widget: like internal_user_widget assign set_user_widget
-			-- Client programmer's widget.
+			-- Client programmer's widget
 		do
 			Result := internal_user_widget
 		end
 
 	set_user_widget (a_widget: like internal_user_widget)
-			-- Set client programmer's widget.
+			-- Set client programmer's widget
 		require
 			a_widget_not_void: a_widget /= Void
 		do
 			internal_user_widget := a_widget
 			internal_border_box.wipe_out
-			if a_widget.parent /= Void then
-				a_widget.parent.prune (a_widget)
+			if attached a_widget.parent as l_parent then
+				l_parent.prune (a_widget)
 			end
 			internal_border_box.extend (a_widget)
 
@@ -108,15 +113,15 @@ feature   -- Access
 feature {NONE} -- Two widgets
 
 	internal_title_bar: SD_TITLE_BAR
-			-- Title bar which above at top.
+			-- Title bar which above at top
 
-	internal_user_widget: EV_WIDGET
-			-- SD_CONTENT's user_widget.
+	internal_user_widget: detachable EV_WIDGET
+			-- SD_CONTENT's user_widget
 
 feature -- Basic operation
 
 	set_show_normal_max (a_show: BOOLEAN)
-			-- Set show or not show normal\max button.
+			-- Set show or not show normal\max button
 		do
 			internal_title_bar.set_show_normal_max (a_show)
 		ensure
@@ -130,7 +135,7 @@ feature -- Basic operation
 		end
 
 	set_show_stick (a_show: BOOLEAN)
-			-- Set show or not show stick button.
+			-- Set show or not show stick button
 		do
 			internal_title_bar.set_show_stick (a_show)
 		ensure
@@ -138,7 +143,7 @@ feature -- Basic operation
 		end
 
 	set_focus_color (a_focus: BOOLEAN)
-			-- Set focus color of title bar and surround focus color.
+			-- Set focus color of title bar and surround focus color
 		do
 			if a_focus then
 				title_bar.enable_focus_color
@@ -151,46 +156,63 @@ feature -- Basic operation
 
 feature -- Actions
 
-	close_request_actions: like internal_close_request_actions
+	close_request_actions: attached like internal_close_request_actions
 			-- `internal_close_request_actions'
+		local
+			l_actions: like internal_close_request_actions
 		do
-			if internal_close_request_actions = Void then
-				create internal_close_request_actions
+			l_actions := internal_close_request_actions
+			if l_actions = Void then
+				create l_actions
+				internal_close_request_actions := l_actions
 			end
-			Result := internal_close_request_actions
+			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
-	stick_actions: like internal_stick_actions
+	stick_actions: attached like internal_stick_actions
 			-- `internal_stick_actions'
+		local
+			l_actions: like internal_stick_actions
 		do
-			if internal_stick_actions = Void then
-				create internal_stick_actions
+			l_actions := internal_stick_actions
+			if l_actions = Void then
+				create l_actions
+				internal_stick_actions := l_actions
 			end
-			Result := internal_stick_actions
+			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
-	drag_actions: like internal_drag_actions
+	drag_actions: attached like internal_drag_actions
 			-- `internal_drag_actions'
+		local
+			l_actions: like internal_drag_actions
 		do
-			if internal_drag_actions = Void then
-				create internal_drag_actions
+			l_actions := internal_drag_actions
+			if l_actions = Void then
+				create l_actions
+				internal_drag_actions := l_actions
 			end
-			Result := internal_drag_actions
+			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
-	normal_max_action: like internal_normal_max_action
+	normal_max_action: attached like internal_normal_max_action
 			-- `internal_normal_max_action'
+		local
+			l_actions: like internal_normal_max_action
 		do
-			if internal_normal_max_action = Void then
-				create internal_normal_max_action
+			l_actions := internal_normal_max_action
+			if l_actions = Void then
+				create l_actions
+				internal_normal_max_action := l_actions
 			end
-			Result := internal_normal_max_action
+			check l_actions /= Void end -- Implied by previous if clause
+			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -198,58 +220,58 @@ feature -- Actions
 feature {NONE} -- Implemention
 
 	close
-			-- Handle close window,
+			-- Handle close window
 		do
 			close_request_actions.call (Void)
 		end
 
 	on_normal_max_window
-			-- Handle normal\max window.
+			-- Handle normal\max window
 		do
 			normal_max_action.call (Void)
 		end
 
 	stick
-			-- Handle stick window.
+			-- Handle stick window
 		do
 			stick_actions.call (Void)
 		end
 
 	drag_window (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
-			-- Handle drag window.
+			-- Handle drag window
 		do
 			drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
 		end
 
 	pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer motion.
+			-- Handle pointer motion
 		do
 		end
 
 	pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer release.
+			-- Handle pointer release
 		do
 		end
 
 feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
-	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when close the window.
+	internal_close_request_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when close the window
 
-	internal_stick_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when stick the window.
+	internal_stick_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when stick the window
 
-	internal_drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Actions performed when drag the window.
+	internal_drag_actions: detachable EV_POINTER_MOTION_ACTION_SEQUENCE
+			-- Actions performed when drag the window
 
-	internal_normal_max_action: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions perfromed when min/max window.
+	internal_normal_max_action: detachable EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions perfromed when min/max window
 
 	internal_border_box: SD_CELL_WITH_BORDER
-			-- Box for border highlight.
+			-- Box for border highlight
 
 invariant
 

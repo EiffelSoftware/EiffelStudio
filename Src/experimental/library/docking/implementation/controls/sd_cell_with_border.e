@@ -31,23 +31,24 @@ create
 feature {NONE} -- Initlization
 
 	make
-			-- Creation method.
+			-- Creation method
 		do
-			default_create
-
 			create internal_border_up
 			create internal_border_bottom
 			create internal_border_left
 			create internal_border_right
+			create internal_horizontal_box
+			create internal_cell
+
+			default_create
 
 			extend_vertical_box (internal_border_up)
 			disable_item_expand (internal_border_up)
 
-			create internal_horizontal_box
 			extend_vertical_box (internal_horizontal_box)
 			internal_horizontal_box.extend (internal_border_left)
 			internal_horizontal_box.disable_item_expand (internal_border_left)
-			create internal_cell
+
 			internal_horizontal_box.extend (internal_cell)
 			internal_horizontal_box.extend (internal_border_right)
 			internal_horizontal_box.disable_item_expand (internal_border_right)
@@ -59,7 +60,7 @@ feature {NONE} -- Initlization
 feature -- Command
 
 	extend (a_widget: EV_WIDGET)
-			-- Extend a_widget at border center.
+			-- Extend a_widget at border center
 		require
 			a_widget_not_void: a_widget /= Void
 		do
@@ -81,13 +82,14 @@ feature -- Command
 		end
 
 	wipe_out
-			-- Wipe out.
+			-- Wipe out
 		do
 			internal_cell.wipe_out
 		end
 
 	set_show_border (a_direction: INTEGER; a_show: BOOLEAN)
-			-- Set show border at a_direction base on a_show. a_direction is one enumeration from SD_DOCKING_MANAGER.
+			-- Set show border at `a_direction' base on a_show
+			-- `a_direction' is one enumeration from SD_DOCKING_MANAGER
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
@@ -124,7 +126,8 @@ feature -- Command
 		end
 
 	set_border_style (a_style: INTEGER)
-			--  Set border with a_sttyle, a_style is one emueration from SD_DOCKING_MANAGER.
+			--  Set border with `a_sttyle'
+			-- `a_style' is one emueration from SD_DOCKING_MANAGER
 		require
 			a_style_valid: a_style = {SD_ENUMERATION}.top or a_style = {SD_ENUMERATION}.bottom
 				or a_style = {SD_ENUMERATION}.left or a_style = {SD_ENUMERATION}.right
@@ -157,7 +160,7 @@ feature -- Command
 		end
 
 	set_border_color (a_color: EV_COLOR)
-			-- Set border color.
+			-- Set border color
 		require
 			a_color_not_void: a_color /= Void
 		do
@@ -171,7 +174,7 @@ feature -- Command
 		end
 
 	set_one_border_color (a_direction: INTEGER; a_color: EV_COLOR)
-			-- Set border at `a_direction''s color to `a_color'.
+			-- Set border at `a_direction''s color to `a_color'
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
@@ -191,7 +194,7 @@ feature -- Command
 		end
 
 	set_border_width (a_width: INTEGER)
-			-- Set border width.
+			-- Set border width
 		require
 			a_width_valid: a_width >= 0
 		do
@@ -207,13 +210,13 @@ feature -- Command
 feature {NONE}  -- Implementation
 
 	internal_horizontal_box: EV_HORIZONTAL_BOX
-			-- Horizontal box which contain left border, user widget, right border.
+			-- Horizontal box which contain left border, user widget, right border
 
 	internal_border_up, internal_border_bottom, internal_border_left, internal_border_right: EV_CELL
-			-- Four edges border.
+			-- Four edges border
 
 	internal_cell: EV_CELL;
-			-- User cell.
+			-- User cell
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -50,26 +50,31 @@ feature {NONE} -- Redefine
 			-- <Precursor>
 		local
 			l_caller: SD_ZONE
+			l_tab_zone: like tab_zone_of
 		do
 			l_caller := internal_mediator.caller
 			if internal_mediator.is_dockable then
 				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.top)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.top)
 					Result := True
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.bottom)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.bottom)
 					Result := True
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.left)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.left)
 					Result := True
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.move_to_tab_zone (tab_zone_of (internal_zone), tab_zone_of (internal_zone).contents.count + 1)
+					l_tab_zone := tab_zone_of (zone)
+					check l_tab_zone /= Void end -- Implied by curernt is hot zone of tab zone					
+					l_caller.state.move_to_tab_zone (l_tab_zone, l_tab_zone.contents.count + 1)
 					Result := True
 				else
 					from
+						l_tab_zone := tab_zone_of (zone)
+						check l_tab_zone /= Void end -- Implied by curernt is hot zone of tab zone						
 						internal_tab_area.start
 					until
 						internal_tab_area.after or Result
@@ -79,7 +84,7 @@ feature {NONE} -- Redefine
 							debug ("docking")
 								print ("%NSD_HOT_ZONE_TAB apply_change move_to_tab_zone index is " + internal_tab_area.key_for_iteration.out)
 							end
-							l_caller.state.move_to_tab_zone (tab_zone_of (internal_zone), internal_tab_area.key_for_iteration)
+							l_caller.state.move_to_tab_zone (l_tab_zone, internal_tab_area.key_for_iteration)
 						end
 						internal_tab_area.forth
 					end

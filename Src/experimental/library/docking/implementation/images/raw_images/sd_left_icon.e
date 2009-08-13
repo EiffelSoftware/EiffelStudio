@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Image data
 
 	c_colors_0 (a_ptr: POINTER; a_offset: INTEGER)
-			-- Fill `a_ptr' with colors data from `a_offset'.
+			-- Fill `a_ptr' with colors data from `a_offset'
 		external
 			"C inline"
 		alias
@@ -52,7 +52,7 @@ feature {NONE} -- Image data
 		end
 
 	c_colors_1 (a_ptr: POINTER; a_offset: INTEGER)
-			-- Fill `a_ptr' with colors data from `a_offset'.
+			-- Fill `a_ptr' with colors data from `a_offset'
 		external
 			"C inline"
 		alias
@@ -79,7 +79,7 @@ feature {NONE} -- Image data
 		end
 
 	c_colors_2 (a_ptr: POINTER; a_offset: INTEGER)
-			-- Fill `a_ptr' with colors data from `a_offset'.
+			-- Fill `a_ptr' with colors data from `a_offset'
 		external
 			"C inline"
 		alias
@@ -106,7 +106,7 @@ feature {NONE} -- Image data
 		end
 
 	c_colors_3 (a_ptr: POINTER; a_offset: INTEGER)
-			-- Fill `a_ptr' with colors data from `a_offset'.
+			-- Fill `a_ptr' with colors data from `a_offset'
 		external
 			"C inline"
 		alias
@@ -131,7 +131,7 @@ feature {NONE} -- Image data
 		end
 
 	build_colors (a_ptr: POINTER)
-			-- Build `colors'.
+			-- Build `colors'
 		do
 			c_colors_0 (a_ptr, 0)
 			c_colors_1 (a_ptr, 400)
@@ -139,12 +139,12 @@ feature {NONE} -- Image data
 			c_colors_3 (a_ptr, 1200)
 		end
 
-feature {NONE} -- Image data filling.
+feature {NONE} -- Image data filling
 
 	fill_memory
-			-- Fill image data into memory.
+			-- Fill image data into memory
 		local
-			l_imp: EV_PIXEL_BUFFER_IMP
+			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_pointer: POINTER
 		do
 			l_imp ?= implementation

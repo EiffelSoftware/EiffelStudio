@@ -57,9 +57,12 @@ feature -- Redefine agents
 
 	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER)
 			-- <Precursor>
+		local
+			l_tool_bar: like tool_bar
 		do
-			if rectangle.has_x_y (a_relative_x, a_relative_y) then
-				tool_bar.remove_tooltip
+			l_tool_bar := tool_bar
+			if rectangle.has_x_y (a_relative_x, a_relative_y) and l_tool_bar /= Void then
+				l_tool_bar.remove_tooltip
 			end
 		end
 
@@ -81,9 +84,12 @@ feature -- Redefine querys
 
 	rectangle: EV_RECTANGLE
 			-- <Precursor>
+		local
+			l_tool_bar: like tool_bar
 		do
-			if tool_bar /= Void and then is_wrap then
-				create Result.make (0, tool_bar.item_y (Current), tool_bar.minimum_width, width)
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void and then is_wrap then
+				create Result.make (0, l_tool_bar.item_y (Current), l_tool_bar.minimum_width, width)
 			else
 				Result := Precursor {SD_TOOL_BAR_ITEM}
 			end

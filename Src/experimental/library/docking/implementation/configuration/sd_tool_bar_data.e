@@ -14,7 +14,7 @@ create
 feature {NONE} -- Initlization
 
 	make
-			-- Creation method.
+			-- Creation method
 		do
 			create rows.make (1)
 		end
@@ -38,15 +38,15 @@ feature -- Floating data
 		-- If `Current' data about a floating zone?
 
 	set_floating (a_is_floating: BOOLEAN)
-			-- Set `is_floating'.
+			-- Set `is_floating'
 		do
 			is_floating := a_is_floating
 		ensure
 			set: a_is_floating = is_floating
 		end
 
-	title: STRING_32
-			-- Title of floating zone.
+	title: detachable STRING_32
+			-- Title of floating zone
 
 	set_title (a_title: STRING_GENERAL)
 			-- Set `a_title'.
@@ -55,11 +55,11 @@ feature -- Floating data
 		do
 			title := a_title
 		ensure
-			set: a_title.as_string_32.is_equal (title)
+			set: attached title as le_title implies a_title.as_string_32 ~ le_title
 		end
 
 	screen_x, screen_y: INTEGER
-			-- Floating tool bar zone's position.
+			-- Floating tool bar zone's position
 
 	set_screen_x_y (a_screen_x, a_screen_y: INTEGER)
 			-- Set `a_screen_x' and `a_screen_y'.
@@ -72,11 +72,12 @@ feature -- Floating data
 
 feature -- Docking data
 
-	rows: ARRAYED_LIST [like tool_bar_data]
-			-- All row data in `Current'.
+	rows: ARRAYED_LIST [attached like tool_bar_data]
+			-- All row data in `Current'
 
 	row (a_title: STRING_GENERAL): like tool_bar_data
-			-- Row data contain a_title. If not found, create a new one.
+			-- Row data contain a_title
+			-- If not found, create a new one
 		require
 			a_title_not_void: a_title /= Void
 		local
@@ -107,7 +108,7 @@ feature -- Docking data
 
 feature -- SD_TOOL_BAR_ZONE last state
 
-	last_state: SD_TOOL_BAR_ZONE_STATE
+	last_state: detachable SD_TOOL_BAR_ZONE_STATE
 			-- Last tool bar state information
 
 	set_last_state (a_last_state: SD_TOOL_BAR_ZONE_STATE)
@@ -122,8 +123,8 @@ feature -- SD_TOOL_BAR_ZONE last state
 
 feature  {NONE} -- Implementation
 
-	tool_bar_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
-			-- When `Current' is docking tool bar data, 1st is tool bar content's title, 2nd is this tool bar position in tool bar row.
+	tool_bar_data: detachable ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
+			-- When `Current' is docking tool bar data, 1st is tool bar content's title, 2nd is this tool bar position in tool bar row
 
 invariant
 

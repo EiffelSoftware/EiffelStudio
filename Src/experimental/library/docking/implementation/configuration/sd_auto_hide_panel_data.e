@@ -14,7 +14,7 @@ create
 feature {NONE} -- Initlization
 
 	make
-			-- Creation method.
+			-- Creation method
 		local
 			l_top, l_bottom, l_left, l_right: like internal_panel_datum
 		do
@@ -32,7 +32,7 @@ feature {NONE} -- Initlization
 feature -- Properties
 
 	top: like internal_panel_datum
-			-- Top SD_AUTO_HIDE_PANEL data.
+			-- Top SD_AUTO_HIDE_PANEL data
 		do
 			Result := internal_panel_data.i_th (1)
 		ensure
@@ -40,7 +40,7 @@ feature -- Properties
 		end
 
 	bottom: like internal_panel_datum
-			-- Bottom SD_AUTO_HIDE_PANEL data.
+			-- Bottom SD_AUTO_HIDE_PANEL data
 		do
 			Result := internal_panel_data.i_th (2)
 		ensure
@@ -48,7 +48,7 @@ feature -- Properties
 		end
 
 	left: like internal_panel_datum
-			-- Left SD_AUTO_HIDE_PANEL data.
+			-- Left SD_AUTO_HIDE_PANEL data
 		do
 			Result := internal_panel_data.i_th (3)
 		ensure
@@ -56,7 +56,7 @@ feature -- Properties
 		end
 
 	right: like internal_panel_datum
-			-- Right SD_AUTO_HIDE_PANEL data.
+			-- Right SD_AUTO_HIDE_PANEL data
 		do
 			Result := internal_panel_data.i_th (4)
 		ensure
@@ -64,7 +64,7 @@ feature -- Properties
 		end
 
 	add_zone_group_data (a_direction: INTEGER; a_data: like internal_tab_group)
-			-- Add a group data to `internal_zone_top' or `internal_zone_bottom' or `internal_zone_left' or `internal_zone_right'.
+			-- Add a group data to `internal_zone_top' or `internal_zone_bottom' or `internal_zone_left' or `internal_zone_right'
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
@@ -91,26 +91,31 @@ feature -- Properties
 feature {NONE} -- Implementation
 
 	internal_panel_data: ARRAYED_LIST [like internal_panel_datum]
-			-- Four auto hide tab stubs area config data. 1st is top one, 2nd is bottom one, 3rd is left one, 4th is right one.
+			-- Four auto hide tab stubs area config data
+			-- 1st is top one, 2nd is bottom one, 3rd is left one, 4th is right one
 
 	internal_panel_datum: ARRAYED_LIST [like internal_tab_group]
 			--
-			-- In tuple, first argument is title of content. second is width/height of zone.
+			-- In tuple, first argument is title of content, second is width/height of zone
 		require
 			False
 		do
+			-- Make void-safe compiler happy
+			create Result.make (0)
 		end
 
 	internal_tab_group: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
 			-- Anchor type
-			-- In the Tuple, first argument is SD_CONTENT unique name.
-			--               second argument is last_width_height of a SD_AUTO_HIDE_ZONE.
+			-- In the Tuple, first argument is SD_CONTENT unique name
+			--               second argument is last_width_height of a SD_AUTO_HIDE_ZONE
 			--               third argument is last_floating_width of a SD_STATE
 			--               forth argument is last_floating_height of a SD_STATE
 
 		require
 			False
 		do
+			-- Make void-safe compiler happy
+			create Result.make (0)
 		end
 
 invariant

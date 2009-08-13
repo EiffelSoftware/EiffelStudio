@@ -18,21 +18,20 @@ inherit
 
 	SD_ACCESS
 
+	SD_DOCKING_MANAGER_HOLDER
+		redefine
+			set_docking_manager
+		end
 create
 	make
 
 feature {NONE}  -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
-		require
-			a_docking_manager_not_void: a_docking_manager /= Void
+	make
+			-- Creation method
 		do
-			internal_docking_manager := a_docking_manager
 			main_window_focus_out := agent on_main_window_focus_out
 			main_window_focus_in := agent on_main_window_focus_in
-			internal_docking_manager.main_window.focus_out_actions.extend (main_window_focus_out)
-			internal_docking_manager.main_window.focus_in_actions.extend (main_window_focus_in)
 			pnd_motion_actions_handler := agent on_pnd_motions
 			pick_actions_handler := agent on_pick_actions
 			drop_actions_handler := agent on_drop_actions
@@ -43,64 +42,74 @@ feature {NONE}  -- Initlization
 			ev_application.theme_changed_actions.extend (theme_changed_handler)
 
 			create internal_shared
-		ensure
-			set: internal_docking_manager = a_docking_manager
+
+			widget_pointer_press_handler := agent on_widget_pointer_press
+			widget_pointer_press_for_upper_zone_handler := agent on_widget_pointer_press_for_upper_zone
+			top_level_window_focus_out := agent on_top_level_window_focus_out
+			top_level_window_focus_in := agent on_top_level_window_focus_in
+		end
+
+	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
+			-- <Precursor>
+		do
+			precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
+
+			docking_manager.main_window.focus_out_actions.extend (main_window_focus_out)
+			docking_manager.main_window.focus_in_actions.extend (main_window_focus_in)
 		end
 
 feature -- Command
 
 	init_actions
-			-- Initlialize actions.
+			-- Initlialize actions
 		require
 			not_destroyed: not is_destroyed
 		do
-			internal_docking_manager.contents.add_actions.extend (agent on_added_content)
-			internal_docking_manager.contents.remove_actions.extend (agent on_prune_content)
-			internal_docking_manager.zones.zones.add_actions.extend (agent on_added_zone)
-			internal_docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
-			internal_docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
-			widget_pointer_press_handler := agent on_widget_pointer_press
-			widget_pointer_press_for_upper_zone_handler := agent on_widget_pointer_press_for_upper_zone
+			docking_manager.contents.add_actions.extend (agent on_added_content)
+			docking_manager.contents.remove_actions.extend (agent on_prune_content)
+			docking_manager.zones.zones.add_actions.extend (agent on_added_zone)
+			docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
+			docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
+
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_handler)
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
-			top_level_window_focus_out := agent on_top_level_window_focus_out
-			top_level_window_focus_in := agent on_top_level_window_focus_in
-			internal_docking_manager.main_window.focus_out_actions.extend (top_level_window_focus_out)
-			internal_docking_manager.main_window.focus_in_actions.extend (top_level_window_focus_in)
+
+			docking_manager.main_window.focus_out_actions.extend (top_level_window_focus_out)
+			docking_manager.main_window.focus_in_actions.extend (top_level_window_focus_in)
 		end
 
 feature  -- Agents
 
 	on_widget_pointer_press (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER)
-			-- Handle EV_APPLICATION's pointer button press actions.
+			-- Handle EV_APPLICATION's pointer button press actions
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
+			l_auto_hide_zone: detachable SD_AUTO_HIDE_ZONE
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_content: SD_CONTENT
+			l_content: detachable SD_CONTENT
 		do
-			l_zones := internal_docking_manager.zones.zones.twin
+			l_zones := docking_manager.zones.zones.twin
 			from
 				l_zones.start
 			until
 				l_zones.after
 			loop
 				if attached {EV_CONTAINER} l_zones.item as lt_container then
-					if not lt_container.is_destroyed and then (lt_container.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= internal_docking_manager.zones.place_holder_content then
-						if internal_docking_manager.property.last_focus_content /= l_zones.item.content then
-							internal_docking_manager.property.set_last_focus_content (l_zones.item.content)
+					if not lt_container.is_destroyed and then (lt_container.has_recursive (a_widget) and not ignore_additional_click) and l_zones.item.content /= docking_manager.zones.place_holder_content then
+						if docking_manager.property.last_focus_content /= l_zones.item.content then
+							docking_manager.property.set_last_focus_content (l_zones.item.content)
 							l_zones.item.on_focus_in (Void)
 							if l_zones.item.content.focus_in_actions /= Void then
 								l_zones.item.content.focus_in_actions.call (Void)
 							end
 						else
-							l_content := internal_docking_manager.property.last_focus_content
+							l_content := docking_manager.property.last_focus_content
 							if l_content /= Void then
 								l_auto_hide_zone ?= l_content.state.zone
 							end
 							if l_auto_hide_zone = Void and not ignore_additional_click then
-								internal_docking_manager.command.remove_auto_hide_zones (True)
+								docking_manager.command.remove_auto_hide_zones (True)
 							elseif l_auto_hide_zone /= Void then
 								l_auto_hide_zone.set_focus_color (True)
 							end
@@ -117,15 +126,15 @@ feature  -- Agents
 		end
 
 	on_widget_pointer_press_for_upper_zone (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER)
-			-- Handle EV_APPLICATION's pointer button press actions, for recover SD_UPPER_ZONE's size.
+			-- Handle EV_APPLICATION's pointer button press actions, for recover SD_UPPER_ZONE's size
 		require
 			not_destroyed: not is_destroyed
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_upper_zone: SD_UPPER_ZONE
-			l_tool_bar: EV_TOOL_BAR
+			l_upper_zone: detachable SD_UPPER_ZONE
+			l_tool_bar: detachable EV_TOOL_BAR
 		do
-			l_zones := internal_docking_manager.zones.zones.twin
+			l_zones := docking_manager.zones.zones.twin
 			from
 				l_zones.start
 			until
@@ -137,7 +146,8 @@ feature  -- Agents
 						if lt_container.has_recursive (a_widget) then
 							l_tool_bar ?= a_widget
 							-- We ignore click on tool bar.
-							if l_tool_bar = Void and then not l_upper_zone.is_ignore_restore_area then
+							if l_tool_bar = Void and then not l_upper_zone.is_ignore_restore_area
+								and then l_upper_zone.is_notebook_set then
 								l_upper_zone.recover_normal_size_from_minimize
 							end
 						end
@@ -151,7 +161,7 @@ feature  -- Agents
 		end
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN)
-			-- Handle resize zone event. Resize all the widgets in fixed_area (EV_FIXED).
+			-- Handle resize zone event. Resize all the widgets in fixed_area (EV_FIXED)
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -161,52 +171,52 @@ feature  -- Agents
 			debug ("docking")
 				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~")
 			end
-			internal_docking_manager.command.remove_auto_hide_zones (False)
+			docking_manager.command.remove_auto_hide_zones (False)
 
-			-- This is to make sure item in `fixed_area' is resized, otherwise zone's size is incorrect when maximize a zone.
-			internal_docking_manager.fixed_area.set_minimum_size (0, 0)
+			-- This is to make sure item in `fixed_area' is resized, otherwise zone's size is incorrect when maximize a zone
+			docking_manager.fixed_area.set_minimum_size (0, 0)
 
 			if a_width > 0 then
-				l_width := internal_docking_manager.internal_viewport.width
+				l_width := docking_manager.internal_viewport.width
 				if l_width > 0 then
-					internal_docking_manager.internal_viewport.set_item_width (l_width)
+					docking_manager.internal_viewport.set_item_width (l_width)
 				end
 
-				-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item.
-				-- Otherwise, it will cause bug#12065. This bug ONLY happens on Solaris (both CDE and JDS), not happens on Windows, Ubuntu.
-				-- And we don't need to care about the height of `l_main_container''s item since it works fine.
-				l_main_container := internal_docking_manager.query.inner_container_main
-				l_width := internal_docking_manager.fixed_area.width
+				-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item
+				-- Otherwise, it will cause bug#12065. This bug ONLY happens on Solaris (both CDE and JDS), not happens on Windows, Ubuntu
+				-- And we don't need to care about the height of `l_main_container''s item since it works fine
+				l_main_container := docking_manager.query.inner_container_main
+				l_width := docking_manager.fixed_area.width
 				if l_main_container.readable and then l_main_container.item /= Void and then l_width < l_main_container.item.minimum_width then
 					l_width := l_main_container.item.minimum_width
 				end
 
 				if l_width > 0 then
-					internal_docking_manager.fixed_area.set_item_width (l_main_container , l_width)
+					docking_manager.fixed_area.set_item_width (l_main_container , l_width)
 				end
 			end
 			if a_height > 0 then
-				l_height := internal_docking_manager.internal_viewport.height
+				l_height := docking_manager.internal_viewport.height
 				if l_height > 0 then
-					internal_docking_manager.internal_viewport.set_item_height (l_height)
+					docking_manager.internal_viewport.set_item_height (l_height)
 				end
-				l_height := internal_docking_manager.fixed_area.height
+				l_height := docking_manager.fixed_area.height
 				if l_height > 0 then
-					internal_docking_manager.fixed_area.set_item_height (internal_docking_manager.query.inner_container_main, l_height)
+					docking_manager.fixed_area.set_item_height (docking_manager.query.inner_container_main, l_height)
 				end
 			end
-			internal_docking_manager.tool_bar_manager.on_resize (a_x, a_y, internal_docking_manager.internal_viewport.width, internal_docking_manager.internal_viewport.height, a_force)
+			docking_manager.tool_bar_manager.on_resize (a_x, a_y, docking_manager.internal_viewport.width, docking_manager.internal_viewport.height, a_force)
 		end
 
 	on_added_zone (a_zone: SD_ZONE)
-			-- Handle inserted a zone event.
+			-- Handle inserted a zone event
 		require
 			not_destroyed: not is_destroyed
 		do
 		end
 
 	on_pruned_zone (a_zone: SD_ZONE)
-			-- Handle pruned a zone event.
+			-- Handle pruned a zone event
 		require
 			not_destroyed: not is_destroyed
 			a_zone_not_void: a_zone /= Void
@@ -214,41 +224,41 @@ feature  -- Agents
 		end
 
 	on_added_content (a_content: SD_CONTENT)
-			--  Handle added a content to contents.
+			--  Handle added a content to contents
 		require
 			not_destroyed: not is_destroyed
 			a_content_widget_valid: user_widget_valid (a_content)
 			title_unique: title_unique (a_content)
 		do
-			a_content.set_docking_manager (internal_docking_manager)
+			a_content.set_docking_manager (docking_manager)
 		ensure
-			set: a_content.docking_manager = internal_docking_manager
+			set: a_content.docking_manager = docking_manager
 		end
 
 	on_prune_content (a_content: SD_CONTENT)
-			--  Handle prune a content from contents.
+			--  Handle prune a content from contents
 		require
 			not_void: a_content /= Void
 		do
-			a_content.set_docking_manager (Void)
+			a_content.clear_docking_manager
 		ensure
 			set: a_content.docking_manager = Void
 		end
 
 	on_main_window_focus_out
-			-- Handle window lost focus event.
+			-- Handle window lost focus event
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_content: SD_CONTENT
-			l_zone: SD_ZONE
+			l_zone: detachable SD_ZONE
 		do
-			if internal_docking_manager /= Void then
-				l_content := internal_docking_manager.property.last_focus_content
-				l_zone := internal_docking_manager.zones.zone_by_content (l_content)
+			if is_docking_manager_attached then
+				if attached docking_manager.property.last_focus_content as l_content then
+					l_zone := docking_manager.zones.zone_by_content (l_content)
+				end
 				if l_zone /= Void then
 					if attached {EV_WIDGET} l_zone as lt_widget then
-						if internal_docking_manager.main_container.has_recursive (lt_widget) then
+						if docking_manager.main_container.has_recursive (lt_widget) then
 							l_zone.set_non_focus_selection_color
 						end
 					else
@@ -262,19 +272,21 @@ feature  -- Agents
 		end
 
 	on_main_window_focus_in
-			-- Handle window get focus event.
+			-- Handle window get focus event
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_content: SD_CONTENT
-			l_zone: SD_ZONE
+			l_content: detachable SD_CONTENT
+			l_zone: detachable SD_ZONE
 		do
-			if internal_docking_manager /= Void then
-				l_content := internal_docking_manager.property.last_focus_content
-				l_zone := internal_docking_manager.zones.zone_by_content (l_content)
+			if is_docking_manager_attached then
+				l_content := docking_manager.property.last_focus_content
+				if l_content /= Void then
+					l_zone := docking_manager.zones.zone_by_content (l_content)
+				end
 				if l_zone /= Void then
 					if attached {EV_WIDGET} l_zone as lt_widget then
-						if internal_docking_manager.main_container.has_recursive (lt_widget) then
+						if docking_manager.main_container.has_recursive (lt_widget) then
 							l_zone.set_focus_color (True)
 						end
 					else
@@ -288,15 +300,15 @@ feature  -- Agents
 		end
 
 	on_top_level_window_focus_out
-			-- Handle top level window focus out actions.
+			-- Handle top level window focus out actions
 		local
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			l_has_focus: BOOLEAN
 		do
-			if not is_destroyed and then internal_docking_manager /= Void then
-				if not internal_docking_manager.main_window.is_destroyed and not internal_docking_manager.property.is_opening_config then
-					l_floating_zones := internal_docking_manager.query.floating_zones
-					l_has_focus := internal_docking_manager.main_window.has_focus
+			if not is_destroyed and then is_docking_manager_attached then
+				if not docking_manager.main_window.is_destroyed and not docking_manager.property.is_opening_config then
+					l_floating_zones := docking_manager.query.floating_zones
+					l_has_focus := docking_manager.main_window.has_focus
 					if not l_has_focus then
 						from
 							l_floating_zones.start
@@ -308,25 +320,25 @@ feature  -- Agents
 						end
 					end
 					if not l_has_focus then
-						--FIXIT: Currently we disable this feature.
-						-- Because when show a dialog, it'll get focus, make main window lost focus.
-						-- We should make a window can never get focus first.
-		--				internal_docking_manager.tool_bar_manager.hide_all_floating
+						--FIXIT: Currently we disable this feature
+						-- Because when show a dialog, it'll get focus, make main window lost focus
+						-- We should make a window can never get focus first
+		--				docking_manager.tool_bar_manager.hide_all_floating
 					end
 				end
 			end
 		end
 
 	on_top_level_window_focus_in
-			-- Handle top level window focus in actions.
+			-- Handle top level window focus in actions
 		require
 			not_destroyed: not is_destroyed
 		do
---			internal_docking_manager.tool_bar_manager.show_all_floating
+--			docking_manager.tool_bar_manager.show_all_floating
 		end
 
 	on_pick_actions (a_pebble: ANY)
-			-- Handle pick actions.
+			-- Handle pick actions
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -334,7 +346,7 @@ feature  -- Agents
 		end
 
 	on_drop_actions (a_pebble: ANY)
-			-- Handle drop actions.
+			-- Handle drop actions
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -342,52 +354,54 @@ feature  -- Agents
 		end
 
 	on_theme_changed
-			-- Handle theme changed actions.
+			-- Handle theme changed actions
 		require
 			not_destroyed: not is_destroyed
 		do
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.top).set_background_color (internal_shared.non_focused_color_lightness)
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.bottom).set_background_color (internal_shared.non_focused_color_lightness)
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.left).set_background_color (internal_shared.non_focused_color_lightness)
-			internal_docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.right).set_background_color (internal_shared.non_focused_color_lightness)
-			internal_docking_manager.main_container.set_background_color (internal_shared.non_focused_color_lightness)
+			docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.top).set_background_color (internal_shared.non_focused_color_lightness)
+			docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.bottom).set_background_color (internal_shared.non_focused_color_lightness)
+			docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.left).set_background_color (internal_shared.non_focused_color_lightness)
+			docking_manager.query.auto_hide_panel ({SD_ENUMERATION}.right).set_background_color (internal_shared.non_focused_color_lightness)
+			docking_manager.main_container.set_background_color (internal_shared.non_focused_color_lightness)
 		end
 
 	on_pnd_motions (a_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE)
-			-- Handle pick and drop motion actions.
-			-- We notify all auto hide tab stubs when pick and drop shere.
+			-- Handle pick and drop motion actions
+			-- We notify all auto hide tab stubs when pick and drop shere
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_widget: EV_WIDGET
 			l_screen_x, l_screen_y: INTEGER
 			l_screen: EV_SCREEN
 			l_position: EV_COORDINATE
 		do
-			create l_screen
-			l_position := l_screen.pointer_position
+			if attached {EV_WIDGET} a_target as l_widget then
+				create l_screen
+				l_position := l_screen.pointer_position
 
-			l_screen_x := l_position.x
-			l_screen_y := l_position.y
+				l_screen_x := l_position.x
+				l_screen_y := l_position.y
 
-			if not notify_one_auto_hide_panel ({SD_ENUMERATION}.top, l_widget, l_screen_x, l_screen_y) then
-				if not notify_one_auto_hide_panel ({SD_ENUMERATION}.bottom, l_widget, l_screen_x, l_screen_y) then
-					if not notify_one_auto_hide_panel ({SD_ENUMERATION}.left, l_widget, l_screen_x, l_screen_y) then
-						if not notify_one_auto_hide_panel ({SD_ENUMERATION}.right, l_widget, l_screen_x, l_screen_y) then
-							if not pointer_in_tab then
-								focused_tab_stub := Void
+				if not notify_one_auto_hide_panel ({SD_ENUMERATION}.top, l_widget, l_screen_x, l_screen_y) then
+					if not notify_one_auto_hide_panel ({SD_ENUMERATION}.bottom, l_widget, l_screen_x, l_screen_y) then
+						if not notify_one_auto_hide_panel ({SD_ENUMERATION}.left, l_widget, l_screen_x, l_screen_y) then
+							if not notify_one_auto_hide_panel ({SD_ENUMERATION}.right, l_widget, l_screen_x, l_screen_y) then
+								if not pointer_in_tab then
+									focused_tab_stub := Void
+								end
 							end
 						end
 					end
 				end
 			end
+
 			debug ("docking")
 				print ("%N SD_DOCKING_MANAGER_AGETNS on_pnd_motions: " + l_screen_x.out + " " + l_screen_y.out)
 			end
 		end
 
-	focused_tab_stub: SD_TAB_STUB
-			-- Current focused auto hide tab stub during pick and drop.
+	focused_tab_stub: detachable SD_TAB_STUB
+			-- Current focused auto hide tab stub during pick and drop
 
 	pointer_in_tab: BOOLEAN
 			-- During pick and drop, if pointer position with in a tab stub?
@@ -401,10 +415,10 @@ feature  -- Agents
 		local
 			l_panel: SD_AUTO_HIDE_PANEL
 			l_stubs: ARRAYED_LIST [SD_TAB_STUB]
-			l_state: SD_AUTO_HIDE_STATE
+			l_state: detachable SD_AUTO_HIDE_STATE
 			l_stub: SD_TAB_STUB
 		do
-			l_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
+			l_panel := docking_manager.query.auto_hide_panel (a_direction)
 			l_stubs := l_panel.tab_stubs
 
 			from
@@ -444,14 +458,14 @@ feature -- Destory
 		local
 			l_viewport: EV_VIEWPORT
 		do
-			if internal_docking_manager /= Void then
-				l_viewport := internal_docking_manager.internal_viewport
+			if is_docking_manager_attached then
+				l_viewport := docking_manager.internal_viewport
 				check not_void: l_viewport /= Void end
 				l_viewport.resize_actions.wipe_out
-				internal_docking_manager.main_window.focus_out_actions.prune_all (main_window_focus_out)
-				internal_docking_manager.main_window.focus_in_actions.prune_all (main_window_focus_in)
-				internal_docking_manager.main_window.focus_out_actions.prune_all (top_level_window_focus_out)
-				internal_docking_manager.main_window.focus_in_actions.prune_all (top_level_window_focus_in)
+				docking_manager.main_window.focus_out_actions.prune_all (main_window_focus_out)
+				docking_manager.main_window.focus_in_actions.prune_all (main_window_focus_in)
+				docking_manager.main_window.focus_out_actions.prune_all (top_level_window_focus_out)
+				docking_manager.main_window.focus_in_actions.prune_all (top_level_window_focus_in)
 			end
 
 			ev_application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
@@ -461,7 +475,7 @@ feature -- Destory
 			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_handler)
 			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
 			focused_tab_stub := Void
-			internal_docking_manager := Void
+			clear_docking_manager
 
 			is_destroyed := True
 		ensure
@@ -475,11 +489,11 @@ feature -- Contract support
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_container: EV_CONTAINER
+			l_container: detachable EV_CONTAINER
 			l_found: BOOLEAN
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			l_contents := internal_docking_manager.contents.twin
+			l_contents := docking_manager.contents.twin
 
 			from
 				l_contents.start
@@ -512,7 +526,7 @@ feature -- Contract support
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			l_contents := internal_docking_manager.contents.twin
+			l_contents := docking_manager.contents.twin
 			Result := True
 
 			from
@@ -530,25 +544,25 @@ feature -- Contract support
 	is_destroyed: BOOLEAN
 			-- If Current destroyed?
 
-feature {SD_DEBUG_ACCESS} -- For debug.
+feature {SD_DEBUG_ACCESS} -- For debug
 
 	show_inner_container_structure
-			-- For debug.
+			-- For debug
 		require
 			not_destroyed: not is_destroyed
 		do
 			io.put_string ("%N --------------------- SD_DOCKING_MANAGER inner container -------------------")
-			internal_docking_manager.inner_containers.start
-			show_inner_container_structure_imp (internal_docking_manager.inner_containers.item.item, " ")
+			docking_manager.inner_containers.start
+			show_inner_container_structure_imp (docking_manager.inner_containers.item.item, " ")
 		end
 
 	show_inner_container_structure_imp (a_container: EV_WIDGET; a_indent: STRING_GENERAL)
-			-- For debug.
+			-- For debug
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_split_area: EV_SPLIT_AREA
-			l_docking_zone: SD_DOCKING_ZONE
+			l_split_area: detachable EV_SPLIT_AREA
+			l_docking_zone: detachable SD_DOCKING_ZONE
 		do
 			l_docking_zone ?= a_container
 			if l_docking_zone /= Void then
@@ -562,28 +576,32 @@ feature {SD_DEBUG_ACCESS} -- For debug.
 			end
 			l_split_area ?= a_container
 			if l_split_area /= Void then
-				show_inner_container_structure_imp (l_split_area.first, a_indent.as_string_8 + " ")
-				show_inner_container_structure_imp (l_split_area.second, a_indent.as_string_8 + " ")
+				if attached l_split_area.first as l_first then
+					show_inner_container_structure_imp (l_first, a_indent.as_string_8 + " ")
+				end
+				if attached l_split_area.second as l_second then
+					show_inner_container_structure_imp (l_second, a_indent.as_string_8 + " ")
+				end
 			end
 		end
 
 feature {NONE}  -- Implementation
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 	main_window_focus_out, main_window_focus_in,
 	top_level_window_focus_out, top_level_window_focus_in: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE]
-			-- Agents registered into the main window's focus in and out actions.
+			-- Agents registered into the main window's focus in and out actions
 
 	widget_pointer_press_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
-			-- Pointer press actions.
+			-- Pointer press actions
 
 	widget_pointer_press_for_upper_zone_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
-			-- Pointer press actions for SD_UPPER_ZONEs.
+			-- Pointer press actions for SD_UPPER_ZONEs
 
 	pnd_motion_actions_handler: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, EV_ABSTRACT_PICK_AND_DROPABLE]]
-			-- Pick and Drop pointer motion action handler.
+			-- Pick and Drop pointer motion action handler
 
 	pick_actions_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [ANY]]
 			-- Pick actions handler
@@ -592,13 +610,10 @@ feature {NONE}  -- Implementation
 			-- Drop actions handler
 
 	theme_changed_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE[]]
-			-- Theme changed actions handler.
-
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager which Current associate with.
+			-- Theme changed actions handler
 
 	ignore_additional_click: BOOLEAN
-			-- Ingore additional pointer click after pick and drop.
+			-- Ingore additional pointer click after pick and drop
 
 invariant
 	pnd_motion_actions_handler_not_void: pnd_motion_actions_handler /= Void

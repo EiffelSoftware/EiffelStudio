@@ -85,7 +85,7 @@ feature {NONE} -- Image data filling.
 	fill_memory
 			-- Fill image data into memory.
 		local
-			l_imp: EV_PIXEL_BUFFER_IMP
+			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_pointer: POINTER
 		do
 			l_imp ?= implementation
@@ -97,7 +97,7 @@ feature {NONE} -- Image data filling.
 				l_imp.unlock
 			end
 		end
-		
+
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

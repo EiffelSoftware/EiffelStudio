@@ -31,7 +31,7 @@ feature -- Command
 
 feature -- Query
 
-	menu: EV_MENU;
+	menu: detachable EV_MENU;
 			-- Menu items.
 
 note

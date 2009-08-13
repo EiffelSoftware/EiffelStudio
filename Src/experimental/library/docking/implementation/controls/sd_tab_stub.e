@@ -24,7 +24,8 @@ create
 feature {NONE} -- Initlization
 
 	make (a_content: SD_CONTENT; a_direction: INTEGER)
-			-- Creation method. If a_vertical True then vertical style otherwise horizontal style.
+			-- Creation method.
+			-- If a_vertical True then vertical style otherwise horizontal style
 		require
 			a_content_not_void: a_content /= Void
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
@@ -35,15 +36,17 @@ feature {NONE} -- Initlization
 			internal_drawing_area.expose_actions.extend (agent on_expose)
 			create pointer_press_actions
 			create delay_timer
+			content := a_content
+			internal_docking_manager := a_content.docking_manager
+			create internal_text.make_empty
 
 			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
-				init (True)
 				create internal_box.init (True)
+				init (True)
 			else
-				init (False)
 				create internal_box.init (False)
+				init (False)
 			end
-			content := a_content
 
 			extend (internal_box)
 			internal_box.extend (internal_drawing_area)
@@ -51,7 +54,6 @@ feature {NONE} -- Initlization
 
 			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
 			internal_drawing_area.pointer_button_press_actions.extend (agent on_pointer_press)
-			internal_docking_manager := a_content.docking_manager
 
 			set_padding_width (internal_shared.padding_width)
 
@@ -105,25 +107,26 @@ feature {NONE} -- Initlization
 feature -- Query
 
 	text: STRING_32
-			-- Title.
+			-- Title
 		do
 			Result := internal_text
 		end
 
 	text_width: INTEGER
-			-- Width of title. Used for calculate max size in tab group.
+			-- Width of title
+			-- Used for calculate max size in tab group
 		do
 			Result := internal_drawing_area.font.string_width (internal_text)
 		end
 
 	text_size: INTEGER
-			-- Width/Height `internal_text' should extend to. It's max size in tab group.
+			-- Width/Height `internal_text' should extend to. It's max size in tab group
 
 	content: SD_CONTENT
-			-- Which content current is represent.
+			-- Which content current is represent
 
 	pointer_press_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Pointer press actions.
+			-- Pointer press actions
 
 	is_group_auto_hide_zone_showing: BOOLEAN
 			-- If auto hide zone belong to our group showing?
@@ -136,7 +139,7 @@ feature -- Query
 			until
 				l_group.after or Result
 			loop
-				if l_group.item /= Current and then l_group.item.content.state.zone /= Void then
+				if l_group.item /= Current and then l_group.item.content.state.is_zone_attached then
 					if attached {EV_WIDGET} l_group.item.content.state.zone as lt_widget then
 						if not lt_widget.is_destroyed then
 							Result := True
@@ -152,7 +155,7 @@ feature -- Query
 feature -- Command
 
 	set_text (a_text: STRING_GENERAL)
-			-- Set `title'.
+			-- Set `title'
 		do
 			internal_text := a_text
 			set_text_size (internal_shared.tool_bar_font.string_width (a_text))
@@ -163,7 +166,7 @@ feature -- Command
 		end
 
 	set_text_size (a_size: INTEGER)
-			-- Set text width with `a_size'.
+			-- Set text width with `a_size'
 		require
 			a_size_valid: a_size > 0
 		do
@@ -173,7 +176,7 @@ feature -- Command
 		end
 
 	set_auto_hide_panel (a_panel: SD_AUTO_HIDE_PANEL)
-			--
+			-- Set `auto_hide_panel' with `a_panel'
 		require
 			a_panel_not_void: a_panel /= Void
 		do
@@ -185,7 +188,7 @@ feature -- Command
 feature -- Properties
 
 	set_draw_separator_top (a_draw: BOOLEAN)
-			-- Set `is_draw_separator_top'.
+			-- Set `is_draw_separator_top'
 		do
 			is_draw_separator_top := a_draw
 		ensure
@@ -193,7 +196,7 @@ feature -- Properties
 		end
 
 	set_draw_separator_bottom (a_draw: BOOLEAN)
-			-- Set `is_draw_separator_bottom'.
+			-- Set `is_draw_separator_bottom'
 		do
 			is_draw_separator_bottom := a_draw
 		ensure
@@ -201,7 +204,7 @@ feature -- Properties
 		end
 
 	set_draw_separator_left (a_draw: BOOLEAN)
-			-- Set `is_draw_separator_left'.
+			-- Set `is_draw_separator_left'
 		do
 			is_draw_separator_left := a_draw
 		ensure
@@ -209,7 +212,7 @@ feature -- Properties
 		end
 
 	set_draw_separator_right (a_draw: BOOLEAN)
-			-- Set `is_draw_separator_right'.
+			-- Set `is_draw_separator_right'
 		do
 			is_draw_separator_right := a_draw
 		ensure
@@ -220,7 +223,8 @@ feature -- Properties
 			-- Draw separator at top/botoom/left/right?
 
 	set_show_text (a_show: BOOLEAN)
-			-- If `a_show' True, show title. Vice visa.
+			-- If `a_show' True, show title
+			-- Vice visa
 		do
 			if not internal_shared.show_all_tab_stub_text then
 				is_show_text := a_show
@@ -237,7 +241,7 @@ feature -- Properties
 feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 
 	on_pointer_enter
-			-- Handle pointer enter.
+			-- Handle pointer enter
 		local
 			l_tab_group: like tab_group
 		do
@@ -272,7 +276,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 		end
 
 	on_delay_timer
-			-- Handle `delay_timer' actions.
+			-- Handle `delay_timer' actions
 		local
 			l_screen: EV_SCREEN
 			l_rect: EV_RECTANGLE
@@ -293,7 +297,7 @@ feature {SD_AUTO_HIDE_STATE} -- Expose handling
 	on_expose (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Handle redraw.
 		local
-			l_imp: EV_DRAWING_AREA_IMP
+			l_imp: detachable EV_DRAWING_AREA_IMP
 		do
 			internal_drawing_area.set_background_color (internal_shared.default_background_color)
 			internal_shared.setter.clear_background_for_theme (internal_drawing_area, create {EV_RECTANGLE}.make (0, 0, internal_drawing_area.width, internal_drawing_area.height))
@@ -329,7 +333,7 @@ feature {SD_AUTO_HIDE_STATE} -- Expose handling
 feature {NONE} -- Implementation
 
 	update_size_internal
-			-- Update minmum size base on direction and `is_show_text'.
+			-- Update minmum size base on direction and `is_show_text'
 		local
 			l_size: INTEGER
 		do
@@ -349,7 +353,7 @@ feature {NONE} -- Implementation
 		end
 
 	start_x_pixmap_internal: INTEGER
-			-- Start x position when `on_draw' draw pixmap.
+			-- Start x position when `on_draw' draw pixmap
 		do
 			if is_draw_separator_left then
 				Result := Result + 1
@@ -362,7 +366,7 @@ feature {NONE} -- Implementation
 		end
 
 	start_y_pixmap_internal: INTEGER
-			-- Start y position when `on_draw' draw pixmap.
+			-- Start y position when `on_draw' draw pixmap
 		do
 			if is_draw_separator_top then
 				Result := Result + 3
@@ -375,7 +379,7 @@ feature {NONE} -- Implementation
 		end
 
 	start_x_text_internal: INTEGER
-			-- Start x position when `on_draw' draw text.
+			-- Start x position when `on_draw' draw text
 		local
 			l_platform: PLATFORM
 		do
@@ -392,7 +396,7 @@ feature {NONE} -- Implementation
 		end
 
 	start_y_text_internal: INTEGER
-			-- Start y position when `on_draw' draw text.
+			-- Start y position when `on_draw' draw text
 		local
 			l_platform: PLATFORM
 		do
@@ -408,31 +412,39 @@ feature {NONE} -- Implementation
 		end
 
 	internal_box: SD_HOR_VER_BOX
-			-- Box contain `internal_drawing_area' and `internal_label'.
+			-- Box contain `internal_drawing_area' and `internal_label'
 
 	tab_group: ARRAYED_LIST [SD_TAB_STUB]
-			-- Tab group `Current' belong to.
+			-- Tab group `Current' belong to
+		require
+			set: auto_hide_panel /= Void
+		local
+			l_panel: like auto_hide_panel
 		do
-			Result := auto_hide_panel.tab_group (Current)
+			l_panel := auto_hide_panel
+			check l_panel /= Void end -- Implied by precondition `set'
+			Result := l_panel.tab_group (Current)
+		ensure
+			not_void: Result /= Void
 		end
 
 	delay_timer: EV_TIMEOUT
 			-- Delay timer to call `pointer_enter_actions'
 
-	auto_hide_panel: SD_AUTO_HIDE_PANEL
-			-- Panel current is in.
+	auto_hide_panel: detachable SD_AUTO_HIDE_PANEL
+			-- Panel current is in
 
 	internal_drawing_area: EV_DRAWING_AREA
-			-- Drawing area draw `internal_pixmap'.
+			-- Drawing area draw `internal_pixmap'
 
 	internal_text: STRING_32
-			-- Text on `internal_drawing_area'.
+			-- Text on `internal_drawing_area'
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager manage Current.
+			-- Docking manager manage Current
 
 invariant
 

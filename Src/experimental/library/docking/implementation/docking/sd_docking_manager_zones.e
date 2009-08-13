@@ -11,21 +11,21 @@ class
 inherit
 	SD_ACCESS
 
+	SD_DOCKING_MANAGER_HOLDER
+		redefine
+			set_docking_manager
+		end
+
 create
 	make
 
 feature {NONE}  -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
-		require
-			a_docking_manager_not_void: a_docking_manager /= Void
+	make
+			-- Creation method
 		do
-			internal_docking_manager := a_docking_manager
 			create zones
 			init_place_holder
-		ensure
-			set: internal_docking_manager = a_docking_manager
 		end
 
 	init_place_holder
@@ -51,7 +51,7 @@ feature -- Zones managements
 		do
 			from
 				create Result.make (1)
-				l_zones := internal_docking_manager.zones.zones
+				l_zones := docking_manager.zones.zones
 				l_zones.start
 			until
 				l_zones.after
@@ -65,15 +65,15 @@ feature -- Zones managements
 			not_void: Result /= Void
 		end
 
-	maximized_zone_in_main_window: SD_ZONE
-			-- Maximized zone in main window.
+	maximized_zone_in_main_window: detachable SD_ZONE
+			-- Maximized zone in main window
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_main_area: SD_MULTI_DOCK_AREA
 		do
 			from
-				l_main_area := internal_docking_manager.query.inner_container_main
-				l_zones := internal_docking_manager.zones.zones
+				l_main_area := docking_manager.query.inner_container_main
+				l_zones := docking_manager.zones.zones
 				l_zones.start
 			until
 				l_zones.after or Result /= Void
@@ -95,7 +95,6 @@ feature -- Zones managements
 			-- ALl upper zones existing.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_upper_zone: SD_UPPER_ZONE
 		do
 			from
 				l_zones := zones
@@ -104,8 +103,7 @@ feature -- Zones managements
 			until
 				l_zones.after
 			loop
-				l_upper_zone ?= l_zones.item
-				if l_upper_zone /= Void then
+				if attached {SD_UPPER_ZONE} l_zones.item as l_upper_zone then
 					Result.extend (l_upper_zone)
 				end
 				l_zones.forth
@@ -114,7 +112,7 @@ feature -- Zones managements
 			not_void: Result /= Void
 		end
 
-	zone_by_content (a_content: SD_CONTENT): SD_ZONE
+	zone_by_content (a_content: SD_CONTENT): detachable SD_ZONE
 			-- If main container has zone with a_content?
 		do
 			from
@@ -154,18 +152,16 @@ feature -- Zones managements
 			-- Contract support
 		require
 			a_zone_not_void: a_zone /= Void
-		local
-			l_widget: EV_WIDGET
-			l_floating_zone: SD_FLOATING_ZONE
 		do
-			l_floating_zone ?= a_zone
-			if l_floating_zone /= Void then
+			if attached {SD_FLOATING_ZONE} a_zone as l_floating_zone then
 				-- Allow a SD_FLOATING_ZONE parent void
 				Result := False
 			else
-				l_widget ?= a_zone
-				check l_widget /= Void end
-				Result := l_widget.parent = Void
+				if attached {EV_WIDGET} a_zone as l_widget then
+					Result := l_widget.parent = Void
+				else
+					check not_possible: False end -- Implied by basic design of {SD_ZONE}
+				end
 			end
 		end
 
@@ -174,7 +170,7 @@ feature -- Zones managements
 		require
 			a_zone_not_void: a_zone /= Void
 		do
-			internal_docking_manager.command.remove_auto_hide_zones (False)
+			docking_manager.command.remove_auto_hide_zones (False)
 			zones.extend (a_zone)
 		ensure
 			extended: zones.has (a_zone)
@@ -184,12 +180,10 @@ feature -- Zones managements
 			-- Prune a zone which was managed by docking manager.
 		require
 			a_zone_not_void: a_zone /= Void
-		local
-			l_parent: EV_CONTAINER
 		do
 			if attached {EV_WIDGET} a_zone as lt_widget then
-				if lt_widget.parent /= Void then
-					lt_widget.parent.prune (lt_widget)
+				if attached lt_widget.parent as l_parent then
+					l_parent.prune (lt_widget)
 				end
 			else
 				check not_possible: False end
@@ -199,8 +193,7 @@ feature -- Zones managements
 			zones.start
 			zones.prune (a_zone)
 
-			l_parent := a_zone.content.user_widget.parent
-			if l_parent /= Void then
+			if attached {EV_CONTAINER} a_zone.content.user_widget.parent as l_parent then
 				l_parent.prune (a_zone.content.user_widget)
 			end
 		ensure
@@ -234,20 +227,18 @@ feature -- Zones managements
 		require
 			has_zone: has_zone (a_zone)
 		local
-			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
 			l_width, l_height: INTEGER
 		do
 			l_width := a_width
 			l_height := a_height
-			l_auto_hide_zone ?= a_zone
-			if l_auto_hide_zone /= Void then
+			if attached {SD_AUTO_HIDE_ZONE} a_zone as l_auto_hide_zone then
 				if l_width < l_auto_hide_zone.minimum_width then
 					l_width := l_auto_hide_zone.minimum_width
 				end
 				if l_height < l_auto_hide_zone.minimum_height then
 					l_height := l_auto_hide_zone.minimum_height
 				end
-				internal_docking_manager.fixed_area.set_item_size (l_auto_hide_zone, l_width, l_height)
+				docking_manager.fixed_area.set_item_size (l_auto_hide_zone, l_width, l_height)
 			end
 		ensure
 			set: attached {EV_WIDGET} a_zone as lt_widget implies lt_widget.width = a_width and lt_widget.height = a_height
@@ -268,6 +259,15 @@ feature -- Zones managements
 			end
 		end
 
+feature -- Command
+
+	set_docking_manager (a_docking_manager: detachable SD_DOCKING_MANAGER)
+			-- <Precursor>
+		do
+			Precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
+			place_holder_content.set_docking_manager (docking_manager)
+		end
+
 feature -- Query
 
 	place_holder_content: SD_CONTENT
@@ -279,20 +279,13 @@ feature -- Query
 feature -- Contract support
 
 	has_content (a_content: SD_CONTENT): BOOLEAN
-			-- If `internal_docking_manager' has `a_content'?
+			-- If `docking_manager' has `a_content'?
 		do
-			Result := internal_docking_manager.has_content (a_content)
+			Result := docking_manager.has_content (a_content)
 		end
 
-feature {NONE}  -- Implementation
-
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager which Current belong to.	
-
 invariant
-
 	not_void: zones /= Void
-	not_void: internal_docking_manager /= Void
 	not_void: place_holder_content /= Void
 	not_void: place_holder_widget /= Void
 

@@ -53,13 +53,13 @@ feature {NONE} -- Initlization
 		do
 			internal_vertical_style := a_vertical_style
 			if not internal_vertical_style then
-				create horizontal_box
+				create internal_horizontal_box
 			end
+			create internal_pointer_enter_actions
 			default_create
 			if not internal_vertical_style then
 				init_horizontal_style
 			end
-			create pointer_enter_actions.default_create
 		ensure
 			set: internal_vertical_style = a_vertical_style
 		end
@@ -96,6 +96,21 @@ feature -- Basic operations
 feature -- Actions
 
 	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to be executed when pointer enter
+		require
+			set: internal_pointer_enter_actions /= Void
+		local
+			l_result: like internal_pointer_enter_actions
+		do
+			l_result := internal_pointer_enter_actions
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
+
+	internal_pointer_enter_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+			-- Instance holder of `pointer_enter_actions'
 
 feature -- Query
 
@@ -384,17 +399,31 @@ feature {NONE} -- Implementation
 			-- If current box show vertically? Otherwise is show horizontally
 
 	horizontal_box: EV_HORIZONTAL_BOX
+			-- Attached `internal_horizontal_box'
+		require
+			set: internal_horizontal_box /= Void
+		local
+			l_result: like internal_horizontal_box
+		do
+			l_result := internal_horizontal_box
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
+
+	internal_horizontal_box: detachable EV_HORIZONTAL_BOX
 			-- Horizontal box in the Current when show horizontally
 
 feature {NONE} -- Contract Support
 
-	is_background_color_void: BOOLEAN = False;
+	is_background_color_void: BOOLEAN = False
 		-- <Precursor>
 		-- We have to disable the invariant {EV_COLORIZABLE} background_color_not_void when executing `background_color'. Otherwise there is stack overflow when executing `background_color'.
 		-- Because in the descendant SD_AUTO_HIDE_ZONE, this `background_color' is selected to replace the original `background_color' in the invariant.
 		-- For example: When start Eiffel Studio 6.1 without empty application data, stack overflow will happen.
 
-note
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

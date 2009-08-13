@@ -44,25 +44,25 @@ feature -- Access
 			-- Matrix height
 
 	frozen tool_bar_customize_indicator_horizontal_icon: EV_PIXMAP
-			-- Access to 'customize_indicator_horizontal' pixmap.
+			-- Access to 'customize_indicator_horizontal' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 1))
 		end
 
 	frozen tool_bar_customize_indicator_horizontal_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'customize_indicator_horizontal' pixmap pixel buffer.
+			-- Access to 'customize_indicator_horizontal' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 1))
 		end
 
 	frozen tool_bar_customize_indicator_hidden_items_horizontal_icon: EV_PIXMAP
-			-- Access to 'customize_indicator_hidden_items_horizontal' pixmap.
+			-- Access to 'customize_indicator_hidden_items_horizontal' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 2))
 		end
 
 	frozen tool_bar_customize_indicator_hidden_items_horizontal_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'customize_indicator_hidden_items_horizontal' pixmap pixel buffer.
+			-- Access to 'customize_indicator_hidden_items_horizontal' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 2))
 		end
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			-- raw matrix pixel buffer
 
 	frozen rectangle: EV_RECTANGLE
-			-- Reusable rectangle for `pixmap_from_constant'.
+			-- Reusable rectangle for `pixmap_from_constant'
 		once
 			create Result
 		end

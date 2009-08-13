@@ -30,6 +30,8 @@ inherit
 		end
 
 	EV_HORIZONTAL_BOX
+		rename
+			first as first_vision2
 		export
 			{SD_HORIZONTAL_BOX} cl_extend
 		redefine
@@ -37,12 +39,23 @@ inherit
 			implementation,
 			extend,
 			may_contain,
-			first,
 			last,
 			is_in_default_state
 		end
 
+create
+	make
+
 feature {NONE} -- Initlization
+
+	make
+			-- Creation method
+		do
+			create fake_spliter
+			default_create
+		end
+
+feature {NONE} -- Query
 
 	count_except_spliter: INTEGER
 			-- Count except `fake_spliter'
@@ -56,21 +69,20 @@ feature {NONE} -- Initlization
 	full_docking: BOOLEAN
 			--	<Precursor>
 		do
-			Result := first /= Void and second /= Void
+			Result := count > 0 and then (first /= Void and second /= Void)
 		end
 
 	initialize
 			-- <Precursor>
 		do
 			Precursor {EV_HORIZONTAL_BOX}
-			create fake_spliter
 			fake_spliter.set_minimum_width (spliter_width)
 			extend (fake_spliter)
 			disable_item_expand (fake_spliter)
 		end
 
 	fake_spliter: EV_CELL
-			-- Fake spiter which can't be dragged.
+			-- Fake spiter which can't be dragged
 
 	extend (a_widget: EV_WIDGET)
 			-- <Precursor>
@@ -96,10 +108,10 @@ feature {NONE} -- Initlization
 			end
 		end
 
-	first: EV_WIDGET
+	first: detachable EV_WIDGET
 			-- <Precursor>
 		do
-			if i_th (1) /= Void then
+			if count > 0 and then i_th (1) /= Void then
 				if i_th (1) /= fake_spliter then
 					Result := i_th (1)
 				end
@@ -117,24 +129,28 @@ feature {NONE} -- Initlization
 
 	last: EV_WIDGET
 			-- <Precursor>
+		local
+			l_result: detachable like last
 		do
-			if Result = Void and count = 1 then
-				Result := fake_spliter
+			if l_result = Void and count = 1 then
+				l_result := fake_spliter
 			else
 				if second_was_void then
-					Result := first
+					l_result := first
 				else
-					Result := second
+					l_result := second
 				end
 			end
+			check l_result /= Void end
+			Result := l_result -- Implied by previous if clause
 		end
 
 	spliter_width: INTEGER = 4
-			-- Fake spliter width.
+			-- Fake spliter width
 
 feature -- Access
 
-	second: EV_WIDGET
+	second: detachable EV_WIDGET
 			-- <Precursor>	
 		do
 			if first = Void then
@@ -192,7 +208,7 @@ feature -- Setting
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_HORIZONTAL_BOX_I
-			-- Responsible for interaction with native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

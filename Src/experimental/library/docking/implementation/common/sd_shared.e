@@ -15,24 +15,30 @@ feature -- Access
 
 	icons: SD_ICONS_SINGLETON
 			-- SD_ICONS_SINGLETON instance.
+		local
+			l_result: detachable like icons
 		do
-			Result := internal_icons_cell.item
-			if Result = Void then
-				create {SD_DEFAULT_ICONS} Result.make
-				internal_icons_cell.put (Result)
+			l_result := internal_icons_cell.item
+			if l_result = Void then
+				create {SD_DEFAULT_ICONS} l_result.make
+				internal_icons_cell.put (l_result)
 			end
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
 
 	interface_names: SD_INTERFACE_NAMES
 			-- All interface names
+		local
+			l_result: detachable like interface_names
 		do
-			Result := internal_interface_names_cell.item
-			if Result = Void then
-				create {SD_DEFAULT_INTERFACE_NAMES} Result
-				internal_interface_names_cell.put (Result)
+			l_result := internal_interface_names_cell.item
+			if l_result = Void then
+				create {SD_DEFAULT_INTERFACE_NAMES} l_result
+				internal_interface_names_cell.put (l_result)
 			end
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -47,8 +53,14 @@ feature -- Access
 
 	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY
 			-- Factory for different style hot zones.
+		require
+			set: is_hot_zone_factory_set
+		local
+			l_result: detachable like hot_zone_factory
 		do
-			Result := hot_zone_factory_cell.item
+			l_result := hot_zone_factory_cell.item
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -63,14 +75,14 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	tool_bar_docker_mediator_cell: CELL [SD_TOOL_BAR_DOCKER_MEDIATOR]
+	tool_bar_docker_mediator_cell: CELL [detachable SD_TOOL_BAR_DOCKER_MEDIATOR]
 			-- Tool bar docker mediator when user dragging a SD_TOOL_BAR_ZONE.
 		once
 			create Result.put (Void)
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	setter: SD_SYSTEM_SETTER
 			-- System special handler
 		once
@@ -93,39 +105,45 @@ feature -- Access
 
 	tool_bar_font: EV_FONT
 			-- Tool bar font
+		require
+			set: is_tool_bar_font_set
+		local
+			l_item: detachable like tool_bar_font
 		do
-			Result := sizes.tool_bar_font_cell.item
+			l_item := sizes.tool_bar_font_cell.item
+			check l_item /= Void end -- Implied by precondition `is_tool_bar_font_set'
+			Result := l_item
 		ensure
 			not_void: Result /= Void
 		end
 
 	notebook_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I
-			-- Drawer for notebook tabs.
+			-- Drawer for notebook tabs
 		once
 			create {SD_NOTEBOOK_TAB_DRAWER_IMP} Result.make
 		end
 
 	tool_bar_drawer: SD_TOOL_BAR_DRAWER
-			-- Drawer for tool bars.
+			-- Drawer for tool bars
 		once
 			create {SD_TOOL_BAR_DRAWER} Result.make
 		end
 
 	default_screen_x: INTEGER
-			-- Default floating screen x/y position for the zone's float feature first time be called.
+			-- Default floating screen x/y position for the zone's float feature first time be called
 		do
 			Result := default_screen_x_cell.item
 		end
 
 	default_screen_y: INTEGER
-			-- Default floating screen x/y position for the zone's float feature first time be called.
+			-- Default floating screen x/y position for the zone's float feature first time be called
 		do
 			Result := default_screen_y_cell.item
 		end
 
 	zone_navigation_accelerator_key: INTEGER
-			-- Accelerator key setting for zone navigation dialog.
-			-- On Windows by default is Ctlr + Tab.
+			-- Accelerator key setting for zone navigation dialog
+			-- On Windows by default is Ctlr + Tab
 		do
 			Result := zone_navigation_accelerator_key_cell.item
 		end
@@ -140,9 +158,9 @@ feature -- Right click menu items
 			set: notebook_tab_area_menu_items_agent = a_agent
 		end
 
-	notebook_tab_area_menu_items_agent: FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
-			-- Menu items shown at notebook tab area.
-			-- Client programmers can customize the menu items here.
+	notebook_tab_area_menu_items_agent: detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
+			-- Menu items shown at notebook tab area
+			-- Client programmers can customize the menu items here
 			-- Same as `notebook_tab_area_menu_items' but has higer priority than `notebook_tab_area_menu_items'
 		do
 			Result := notebook_tab_area_menu_items_agent_cell.item
@@ -150,7 +168,7 @@ feature -- Right click menu items
 
 	notebook_tab_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Menu items shown at notebook tab area.
-			-- Client programmers can customize the menu items here.
+			-- Client programmers can customize the menu items here
 		do
 			Result := widget_factory.notebook_tab_area_menu_items
 		ensure
@@ -165,7 +183,7 @@ feature -- Right click menu items
 			set: title_bar_area_menu_items_agent = a_agent
 		end
 
-	title_bar_area_menu_items_agent: FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
+	title_bar_area_menu_items_agent: detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
 			-- Menu items shown at {SD_CONTENT}'s title bar.
 			-- Client programmers can customize the menu items here.	
 			-- Same as `title_bar_area_menu_items' but has higer priority than `title_bar_area_menu_items
@@ -225,9 +243,21 @@ feature -- Status report
 		end
 
 	icons_set: BOOLEAN
-			-- Is `icons' setted?
+			-- Is `icons' has been set?
 		do
 			Result := internal_icons_cell.item /= Void
+		end
+
+	is_hot_zone_factory_set: BOOLEAN
+			-- Is `hot_zone_factory' has been set?
+		do
+			Result := hot_zone_factory_cell.item /= Void
+		end
+
+	is_tool_bar_font_set: BOOLEAN
+			-- Is tool bar singleton cell has been set?
+		do
+			Result := sizes.tool_bar_font_cell.item /= Void
 		end
 
 feature -- Status setting
@@ -581,7 +611,7 @@ feature -- Constants
 feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_SIZES,
 		SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL, SD_WIDGET_FACTORY} -- Implementation
 
-	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR)
+	set_tool_bar_docker_mediator (a_mediator: detachable SD_TOOL_BAR_DOCKER_MEDIATOR)
 			-- Set tool bar docker mediator singleton.
 		do
 			tool_bar_docker_mediator_cell.put (a_mediator)
@@ -645,7 +675,7 @@ feature {NONE} -- Implementation
 			create Result.make
 		end
 
-	internal_icons_cell: CELL [SD_ICONS_SINGLETON]
+	internal_icons_cell: CELL [detachable SD_ICONS_SINGLETON]
 			-- Singleton cell for icons.
 		once
 			create Result.put (Void)
@@ -653,7 +683,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	internal_interface_names_cell: CELL [SD_INTERFACE_NAMES]
+	internal_interface_names_cell: CELL [detachable SD_INTERFACE_NAMES]
 			-- Singleton cell for interface names.
 		once
 			create Result.put (Void)
@@ -677,7 +707,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	hot_zone_factory_cell: CELL [SD_HOT_ZONE_ABSTRACT_FACTORY]
+	hot_zone_factory_cell: CELL [detachable SD_HOT_ZONE_ABSTRACT_FACTORY]
 			-- Hot zone factory cell.
 		once
 			create Result.put (Void)
@@ -741,13 +771,13 @@ feature {NONE} -- Implementation
 			create Result.put (False)
 		end
 
-	title_bar_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]]
+	title_bar_area_menu_items_agent_cell: CELL [detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]]
 			-- Singleton cell for `title_bar_area_menu_items_agent'
 		once
 			create Result.put (Void)
 		end
 
-	notebook_tab_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]]
+	notebook_tab_area_menu_items_agent_cell: CELL [detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]]
 			-- Singleton cell for `notebook_tab_area_menu_items_agent'
 		once
 			create Result.put (Void)

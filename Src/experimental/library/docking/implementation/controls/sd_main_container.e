@@ -14,11 +14,45 @@ inherit
 			set_background_color as set_background_color_vision2
 		end
 
+create
+	make
 
 feature {NONE} -- Initialization
 
+	make
+			-- Creation method
+		do
+				-- Create all widgets
+			create l_ev_horizontal_box_1
+			create left_top
+			create top_bar
+			create right_top
+			create l_ev_horizontal_box_2
+			create left_bar
+			create center_area
+			create right_bar
+			create l_ev_horizontal_box_3
+			create left_bottom
+			create bottom_bar
+			create right_bottom
+
+			create {EV_HORIZONTAL_BOX} gap_area_top
+			create {EV_HORIZONTAL_BOX} gap_area_bottom
+			create {EV_HORIZONTAL_BOX} gap_area_left
+			create {EV_HORIZONTAL_BOX} gap_area_right
+
+				-- Build_widget_structure
+
+			create gap_area_holder
+			create internal_shared
+
+			default_create
+
+			custom_initialize
+		end
+
 	user_initialization
-			-- Called by `initialize'.
+			-- Called by `initialize'
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
@@ -35,7 +69,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_background_color (a_color: EV_COLOR)
-			-- Set background color of gap areas.
+			-- Set background color of gap areas
 		require
 			not_void: a_color /= Void
 		do
@@ -95,7 +129,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED;
-			-- All singletons.
+			-- All singletons
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

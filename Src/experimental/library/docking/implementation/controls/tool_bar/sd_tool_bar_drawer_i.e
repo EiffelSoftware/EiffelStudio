@@ -18,9 +18,9 @@ feature -- Commands
 		end
 
 	start_draw (a_rectangle: EV_RECTANGLE)
-			-- Called when start drawing, after draw should call `end_draw'.
+			-- Called when start drawing, after draw should call `end_draw'
 			-- This function is used for double buffer
-			-- `a_rectangle' is rectangle area to be double buffered.
+			-- `a_rectangle' is rectangle area to be double buffered
 		require
 			not_called: not is_start_draw_called
 			not_void: a_rectangle /= Void
@@ -31,7 +31,7 @@ feature -- Commands
 		end
 
 	end_draw
-			-- After called `start_draw', when end drawing should call this.
+			-- After called `start_draw', when end drawing should call this
 		require
 			called: is_start_draw_called
 		deferred
@@ -40,15 +40,16 @@ feature -- Commands
 		end
 
 	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
-			-- Draw `a_item' on `a_tool_bar' at `a_position'.
+			-- Draw `a_item' on `a_tool_bar' at `a_position'
 		require
 			not_void: a_arguments /= Void
+			valid: a_arguments.item /= Void
 			not_void: tool_bar /= Void
 		deferred
 		end
 
 	to_sepcial_state (a_state: INTEGER): INTEGER
-			-- Convert SD_TOOL_BAR_ITEM_STATE to system specific state.
+			-- Convert SD_TOOL_BAR_ITEM_STATE to system specific state
 		require
 			valid: (create {SD_TOOL_BAR_ITEM_STATE}).is_valid (a_state)
 		deferred
@@ -61,10 +62,10 @@ feature -- Query
 		deferred
 		end
 
-	tool_bar: SD_TOOL_BAR;
-			-- Tool bar which to draw.
+	tool_bar: detachable SD_TOOL_BAR
+			-- Tool bar which to draw
 
-note
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

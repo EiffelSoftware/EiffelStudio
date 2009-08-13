@@ -35,7 +35,7 @@ feature -- Query
 feature -- Setting
 
 	set_tab_after (a_selected_tab_after: BOOLEAN)
-			-- Set `is_tab_after'.
+			-- Set `is_tab_after'
 		do
 			is_tab_after := a_selected_tab_after
 		ensure

@@ -30,6 +30,11 @@ feature {NONE} -- Initlization
 			caller := a_caller
 			docking_manager := a_docking_manager
 			create cancel_actions
+			create internal_shared
+
+			-- Make void safe compiler happy
+			create internal_key_press_function
+			create internal_key_release_function
 		end
 
 feature -- Hanlde pointer events
@@ -38,14 +43,20 @@ feature -- Hanlde pointer events
 			-- <Precursor>
 		local
 			l_env: EV_ENVIRONMENT
+			l_agent: like focus_out_agent
 		do
 			is_tracing := True
 			offset_x := a_offset_x
 			offset_y := a_offset_y
 
-			focus_out_agent := agent on_focus_out
+			l_agent := agent on_focus_out
+			focus_out_agent := l_agent
 			create l_env
-			l_env.application.focus_out_actions.extend (focus_out_agent)
+			if attached l_env.application as l_app then
+				l_app.focus_out_actions.extend (l_agent)
+			else
+				check False end --Implied by application is running
+			end
 		end
 
 	cancel_tracing_pointer
@@ -65,7 +76,7 @@ feature -- Hanlde pointer events
 	on_pointer_motion (a_screen_x, a_screen_y: INTEGER_32)
 			-- <Precursor>
 		local
-			l_floating_zone: SD_FLOATING_ZONE
+			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 			l_x, l_y: INTEGER
 		do
@@ -79,8 +90,8 @@ feature -- Hanlde pointer events
 			else
 				l_orignal_multi_dock_area := docking_manager.query.inner_container (caller)
 				if attached {EV_WIDGET} caller as lt_widget then
-					if l_orignal_multi_dock_area.has (lt_widget) and l_orignal_multi_dock_area.parent_floating_zone /= Void then
-						l_orignal_multi_dock_area.parent_floating_zone.set_position (l_x, l_y)
+					if l_orignal_multi_dock_area.has (lt_widget) and attached l_orignal_multi_dock_area.parent_floating_zone as l_zone then
+						l_zone.set_position (l_x, l_y)
 					end
 				else
 					check not_possible: False end
@@ -97,8 +108,10 @@ feature {NONE} -- Implementation
 		do
 			cancel_actions.wipe_out
 			create l_env
-			l_env.application.focus_out_actions.start
-			l_env.application.focus_out_actions.prune (focus_out_agent)
+			if attached l_env.application as l_app and attached focus_out_agent as l_agent then
+				l_app.focus_out_actions.start
+				l_app.focus_out_actions.prune (l_agent)
+			end
 		end
 
 note

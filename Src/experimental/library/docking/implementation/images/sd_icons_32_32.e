@@ -44,73 +44,73 @@ feature -- Access
 			-- Matrix height
 
 	frozen drag_left_icon: EV_PIXMAP
-			-- Access to 'left' pixmap.
+			-- Access to 'left' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (3, 1))
 		end
 
 	frozen drag_left_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'left' pixmap pixel buffer.
+			-- Access to 'left' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 1))
 		end
 
 	frozen drag_right_icon: EV_PIXMAP
-			-- Access to 'right' pixmap.
+			-- Access to 'right' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 2))
 		end
 
 	frozen drag_right_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'right' pixmap pixel buffer.
+			-- Access to 'right' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 2))
 		end
 
 	frozen drag_up_icon: EV_PIXMAP
-			-- Access to 'up' pixmap.
+			-- Access to 'up' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 1))
 		end
 
 	frozen drag_up_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'up' pixmap pixel buffer.
+			-- Access to 'up' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 1))
 		end
 
 	frozen drag_down_icon: EV_PIXMAP
-			-- Access to 'down' pixmap.
+			-- Access to 'down' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (2, 1))
 		end
 
 	frozen drag_down_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'down' pixmap pixel buffer.
+			-- Access to 'down' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 1))
 		end
 
 	frozen drag_center_icon: EV_PIXMAP
-			-- Access to 'center' pixmap.
+			-- Access to 'center' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (3, 2))
 		end
 
 	frozen drag_center_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'center' pixmap pixel buffer.
+			-- Access to 'center' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 2))
 		end
 
 	frozen drag_float_icon: EV_PIXMAP
-			-- Access to 'float' pixmap.
+			-- Access to 'float' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (2, 2))
 		end
 
 	frozen drag_float_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'float' pixmap pixel buffer.
+			-- Access to 'float' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 2))
 		end
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			-- raw matrix pixel buffer
 
 	frozen rectangle: EV_RECTANGLE
-			-- Reusable rectangle for `pixmap_from_constant'.
+			-- Reusable rectangle for `pixmap_from_constant'
 		once
 			create Result
 		end

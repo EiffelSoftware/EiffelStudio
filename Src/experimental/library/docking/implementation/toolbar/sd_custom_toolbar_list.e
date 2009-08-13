@@ -29,13 +29,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	customizable_item: SD_CUSTOMIZABLE_LIST_ITEM
+	customizable_item: detachable SD_CUSTOMIZABLE_LIST_ITEM
 			-- Convert `item' into a EB_CUSTOMIZABLE_LIST_ITEM
 		do
 			Result ?= item
 		end
 
-	customizable_selected_item: SD_CUSTOMIZABLE_LIST_ITEM
+	customizable_selected_item: detachable SD_CUSTOMIZABLE_LIST_ITEM
 			-- Convert `selected_item' into a EB_CUSTOMIZABLE_LIST_ITEM
 		do
 			Result ?= selected_item
@@ -51,16 +51,18 @@ feature -- Basic operations
 	extend (v: like item)
    			-- Add `v' to end. Do not move cursor
 		local
-			a_customizable_item: like customizable_item
-			pix: EV_PIXMAP
+			l_customizable_item: like customizable_item
+			l_pix: detachable EV_PIXMAP
 		do
 				-- Set the size of the pixmaps in the list the same
 				-- as the real size of the pixmaps
 			if is_empty then
-				a_customizable_item ?= v
-				if v /= void then
-					pix := a_customizable_item.data.pixmap
-					set_pixmaps_size (pix.width, pix.height)
+				l_customizable_item ?= v
+				if l_customizable_item /= void then
+					l_pix := l_customizable_item.data.pixmap
+					if l_pix /= Void then
+						set_pixmaps_size (l_pix.width, l_pix.height)
+					end
 				end
 			end
 

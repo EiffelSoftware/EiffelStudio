@@ -16,17 +16,16 @@ inherit
 
 	SD_ACCESS
 
+	SD_DOCKING_MANAGER_HOLDER
+
 create
 	{SD_DOCKING_MANAGER} make
 
 feature {NONE} -- Initialization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
-		require
-			a_docking_manager_not_void: a_docking_manager /= Void
+	make
+			-- Creation method
 		do
-			docking_manager := a_docking_manager
 			create internal_shared
 			create contents
 			contents.add_actions.extend (agent on_add_tool_bar_content)
@@ -36,7 +35,6 @@ feature {NONE} -- Initialization
 			init_right_click_menu
 		ensure
 			action_added: contents.add_actions.count = 1 and contents.remove_actions.count = 1
-			set: docking_manager = a_docking_manager
 		end
 
 	init_right_click_menu
@@ -65,16 +63,39 @@ feature -- Query
 		require
 			not_destroyed: not is_destroyed
 			a_title_not_void: a_title /= Void
+			has: has (a_title)
+		local
+			l_result: detachable like content_by_title
 		do
 			from
 				contents.start
 			until
-				contents.after or Result /= Void
+				contents.after or l_result /= Void
 			loop
-				if contents.item.unique_title.as_string_32.is_equal (a_title.as_string_32) then
-					Result := contents.item
+				if contents.item.unique_title.as_string_32 ~ (a_title.as_string_32) then
+					l_result := contents.item
 				end
 				contents.forth
+			end
+
+			check l_result /= Void end -- Implied by precondition `has'
+			Result := l_result
+		end
+
+	has (a_unique_title: STRING_GENERAL): BOOLEAN
+			-- If `content' has item which unique title is `a_unique_title'?
+		local
+			l_contents: like contents
+		do
+			from
+				l_contents := contents
+				l_contents.start
+			until
+				l_contents.after or Result
+			loop
+				Result := contents.item.unique_title ~ (a_unique_title.as_string_32)
+
+				l_contents.forth
 			end
 		end
 
@@ -84,9 +105,6 @@ feature -- Query
 	is_destroyed: BOOLEAN
 			-- If Current destroyed?
 
-	docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager Current belong to.
-
 feature -- Command
 
 	lock
@@ -95,7 +113,7 @@ feature -- Command
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_zone: SD_TOOL_BAR_ZONE
+			l_zone: detachable SD_TOOL_BAR_ZONE
 		do
 			from
 				contents.start
@@ -120,7 +138,7 @@ feature -- Command
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_zone: SD_TOOL_BAR_ZONE
+			l_zone: detachable SD_TOOL_BAR_ZONE
 		do
 			from
 				contents.start
@@ -166,7 +184,7 @@ feature -- Command
 											a_content.destroy
 										end)
 			contents.wipe_out
-			docking_manager := Void
+			clear_docking_manager
 
 			is_destroyed := True
 		ensure
@@ -271,9 +289,13 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			docking: a_target_content.is_docking
 			not_floating: not a_target_content.is_floating
 		local
-			l_tool_bar_row: SD_TOOL_BAR_ROW
+			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
+			l_zone: detachable SD_TOOL_BAR_ZONE
 		do
-			l_tool_bar_row := a_target_content.zone.row
+			l_zone := a_target_content.zone
+			check l_zone /= Void end -- Implied by precondition `docking'
+			l_tool_bar_row := l_zone.row
+			check l_tool_bar_row /= Void end -- Implied by precondition `docking'
 			set_top_imp (a_source_content, l_tool_bar_row)
 		end
 
@@ -354,7 +376,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			end
 		end
 
-	content_of (a_tool_bar: SD_GENERIC_TOOL_BAR): SD_TOOL_BAR_CONTENT
+	content_of (a_tool_bar: SD_GENERIC_TOOL_BAR): detachable SD_TOOL_BAR_CONTENT
 			-- Content of `a_tool_bar'
 		require
 			not_destroyed: not is_destroyed
@@ -367,7 +389,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			until
 				l_contents.after or Result /= Void
 			loop
-				if l_contents.item.zone /= Void and then l_contents.item.zone.tool_bar = a_tool_bar then
+				if attached l_contents.item.zone as l_zone and then l_zone.tool_bar = a_tool_bar then
 					Result := l_contents.item
 				end
 				l_contents.forth
@@ -400,17 +422,14 @@ feature {NONE} -- Agents
 			-- Handle menu area right click.
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_combo_box: EV_COMBO_BOX
 		do
 			-- End user not dragging a tool bar.
 			if internal_shared.tool_bar_docker_mediator_cell.item = Void then
-				l_combo_box ?= a_widget
 				if is_at_menu_area (a_widget) and a_button = {EV_POINTER_CONSTANTS}.right
 					and then not has_pointer_actions (a_screen_x, a_screen_y)
 					and then not has_pebble_function (a_screen_x, a_screen_y)
 					and then not has_drop_function (a_screen_x, a_screen_y)
-					and then l_combo_box = Void then
+					and then not (attached {EV_COMBO_BOX} a_widget) then
 					-- We query if a button `has_drop_function' before showing the menu, because if a
 					-- pick action starts from a widget which is same as the widget receive the drop
 					-- action, then there will be an additional pointer click actions called after drop
@@ -459,7 +478,6 @@ feature {NONE} -- Implementation
 			not_void: a_tool_bar_container /= Void
 			valid: a_size >= 0
 		local
-			l_row: SD_TOOL_BAR_ROW
 			l_rows: LINEAR [EV_WIDGET]
 		do
 			from
@@ -468,9 +486,12 @@ feature {NONE} -- Implementation
 			until
 				l_rows.after
 			loop
-				l_row ?= l_rows.item
-				check not_void: l_row /= Void end
-				l_row.on_resize (a_size)
+				if attached {SD_TOOL_BAR_ROW} l_rows.item as l_row then
+					l_row.on_resize (a_size)
+				else
+					check not_void: False end -- Implied by design of tool bar container
+				end
+
 				l_rows.forth
 			end
 		end
@@ -507,7 +528,9 @@ feature {NONE} -- Implementation
 			until
 				contents.after or Result
 			loop
-				Result := contents.item.zone.has_right_click_action (a_screen_x, a_screen_y)
+				if attached contents.item.zone as l_zone then
+					Result := l_zone.has_right_click_action (a_screen_x, a_screen_y)
+				end
 				contents.forth
 			end
 		end
@@ -522,7 +545,9 @@ feature {NONE} -- Implementation
 			until
 				contents.after or Result
 			loop
-				Result := contents.item.zone.has_pebble_function (a_screen_x, a_screen_y)
+				if attached contents.item.zone as l_zone then
+					Result := l_zone.has_pebble_function (a_screen_x, a_screen_y)
+				end
 				contents.forth
 			end
 		end
@@ -537,7 +562,9 @@ feature {NONE} -- Implementation
 			until
 				contents.after or Result
 			loop
-				Result := contents.item.zone.has_drop_function (a_screen_x, a_screen_y)
+				if attached contents.item.zone as l_zone then
+					Result := l_zone.has_drop_function (a_screen_x, a_screen_y)
+				end
 				contents.forth
 			end
 		end
@@ -590,11 +617,12 @@ feature {NONE} -- Implementation
 			until
 				contents.after
 			loop
-
-				create l_custom_dialog.make_for_menu (contents.item.zone)
-				l_string := internal_shared.interface_names.tool_bar_right_click_customize (contents.item.title)
-				create l_menu_item.make_with_text_and_action (l_string, agent l_custom_dialog.on_customize)
-				Result.extend (l_menu_item)
+				if attached contents.item.zone as l_zone then
+					create l_custom_dialog.make_for_menu (l_zone)
+					l_string := internal_shared.interface_names.tool_bar_right_click_customize (contents.item.title)
+					create l_menu_item.make_with_text_and_action (l_string, agent l_custom_dialog.on_customize)
+					Result.extend (l_menu_item)
+				end
 				contents.forth
 			end
 

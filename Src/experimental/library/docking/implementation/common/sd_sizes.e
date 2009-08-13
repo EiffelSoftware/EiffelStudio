@@ -25,7 +25,10 @@ feature {NONE} -- Initlization
 			update_tool_bar_font_sizes
 			update_addtional_sizes
 			create l_env
-			l_env.application.theme_changed_actions.extend (agent update_all)
+			if attached l_env.application as l_app then
+				l_app.theme_changed_actions.extend (agent update_all)
+			end
+			
 		end
 
 feature {NONE} -- Implementation
@@ -165,7 +168,7 @@ feature {NONE} -- Implementation
 
 feature -- Singleton slots realted with tool bar font.
 
-	Tool_bar_font_cell: CELL [EV_FONT]
+	Tool_bar_font_cell: CELL [detachable EV_FONT]
 			-- Tool bar font singleton cell.
 		once
 			create Result.put (Void)

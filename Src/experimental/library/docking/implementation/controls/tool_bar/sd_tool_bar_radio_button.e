@@ -58,17 +58,18 @@ feature {NONE} -- Implementation
 			-- Set all other radio buttons in `tool_bar' states
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_item: SD_TOOL_BAR_RADIO_BUTTON
+			l_tool_bar: like tool_bar
 		do
-			if tool_bar /= Void then
-				l_items := tool_bar.all_items
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
+				l_items := l_tool_bar.all_items
 				from
 					l_items.start
 				until
 					l_items.after
 				loop
-					l_item ?= l_items.item
-					if l_item /= Void and then l_item /= Current then
+					if attached {SD_TOOL_BAR_RADIO_BUTTON} l_items.item as l_item
+						and then l_item /= Current then
 						if a_select then
 							l_item.enable_select
 						else

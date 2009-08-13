@@ -40,8 +40,8 @@ feature {NONE} -- Agents
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
 			-- <Precursor>
 		do
-			-- Tool bar maybe void when CPU is busy on GTK.
-			-- See bug#13102.
+			-- Tool bar maybe void when CPU is busy on GTK
+			-- See bug#13102
 			if tool_bar /= Void then
 				if has_position (a_relative_x, a_relative_y) and is_sensitive then
 					if state = {SD_TOOL_BAR_ITEM_STATE}.normal then

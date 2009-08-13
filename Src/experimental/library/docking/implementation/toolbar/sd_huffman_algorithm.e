@@ -24,6 +24,7 @@ feature {NONE} -- Initlization
 		do
 			max_group_count := a_max_group_count
 			group_count := 1
+			create all_best_grouping.make (max_group_count)
 		ensure
 			set: max_group_count = a_max_group_count
 		end
@@ -67,8 +68,12 @@ feature -- Query
 			-- Best grouping when `a_group_count'
 		require
 			valid: a_group_count >= 1 and a_group_count <= max_group_count
+		local
+			l_result: detachable like best_grouping_when
 		do
-			Result := all_best_grouping.item (a_group_count)
+			l_result := all_best_grouping.item (a_group_count)
+			check l_result /= Void end -- Implied by precondition `valid'
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 			valid: Result.count = a_group_count
@@ -111,8 +116,10 @@ feature -- Query
 			-- If a_group_info count right?
 		require
 			not_void: a_group_info /= Void
+			set: item_width /= Void
 		local
 			l_item_count: INTEGER
+			l_item_width: like item_width
 		do
 			from
 				a_group_info.start
@@ -122,10 +129,12 @@ feature -- Query
 				l_item_count := a_group_info.item.count + l_item_count
 				a_group_info.forth
 			end
-			Result := l_item_count = item_width.count
+			l_item_width := item_width
+			check l_item_width /= Void end -- Implied by precondition `set'			
+			Result := l_item_count = l_item_width.count
 		end
 
-	item_width: ARRAYED_LIST [INTEGER]
+	item_width: detachable ARRAYED_LIST [INTEGER]
 			-- Groups to be calculated. Integer is each group width.
 
 	group_count: INTEGER
@@ -161,10 +170,10 @@ feature {NONE} -- Implementation functions
 			-- Calculate all best groupings, added the result to `all_best_grouping'.
 		local
 			l_group_count: INTEGER
-			l_last_best_grouping: like best_grouping
+			l_last_best_grouping: detachable like best_grouping
 		do
 			from
-				create all_best_grouping.make (max_group_count)
+				all_best_grouping.wipe_out
 				l_group_count := max_group_count
 
 			until
@@ -174,11 +183,12 @@ feature {NONE} -- Implementation functions
 				if l_group_count = max_group_count then
 					l_last_best_grouping := start_condition
 				else
+					check l_last_best_grouping /= Void end -- Implied by `next_best_grouping's result not void and `start_condition' not void
 					l_last_best_grouping := next_best_grouping (l_last_best_grouping)
 				end
 
 				check count_right: l_last_best_grouping.count = l_group_count end
-				all_best_grouping.force_last (l_last_best_grouping, l_group_count)
+				all_best_grouping.extend (l_last_best_grouping, l_group_count)
 
 				l_group_count := l_group_count - 1
 			end
@@ -205,19 +215,24 @@ feature {NONE} -- Implementation functions
 			group_count_right: Result.count = a_previous_info.count - 1
 		end
 
-	all_best_grouping: DS_HASH_TABLE [like best_grouping, INTEGER]
+	all_best_grouping: HASH_TABLE [like best_grouping, INTEGER]
 			-- 2nd INTEGER parameter is group count.
 
 	start_condition: like best_grouping
 			-- Prepare start condition
+		require
+			set: item_width /= Void
 		local
 			l_item_count, l_max_count: INTEGER
 			l_item: ARRAYED_LIST [INTEGER]
+			l_item_width: like item_width
 		do
-			create Result.make (item_width.count)
+			l_item_width := item_width
+			check l_item_width /= Void end -- Implied by precondition
+			create Result.make (l_item_width.count)
 			from
 				l_item_count := 1
-				l_max_count := item_width.count
+				l_max_count := l_item_width.count
 			until
 				l_item_count > l_max_count
 			loop
@@ -229,7 +244,7 @@ feature {NONE} -- Implementation functions
 			end
 		ensure
 			not_void: Result /= Void
-			valid: Result.count = item_width.count
+			valid: attached item_width as le_item_width implies Result.count = le_item_width.count
 		end
 
 	minimum_two_group_index (a_condition: like best_grouping): INTEGER
@@ -301,13 +316,18 @@ feature {NONE} -- Implementation functions
 		require
 			not_void: a_group /= Void
 			at_leaat_one: a_group.count >= 1
+			set: item_width /= Void
+		local
+			l_item_width: like item_width
 		do
 			from
+				l_item_width := item_width
+				check l_item_width /= Void end -- Implied by precondition `set'
 				a_group.start
 			until
 				a_group.after
 			loop
-				Result := item_width.i_th (a_group.item) + Result
+				Result := l_item_width.i_th (a_group.item) + Result
 				a_group.forth
 			end
 		ensure

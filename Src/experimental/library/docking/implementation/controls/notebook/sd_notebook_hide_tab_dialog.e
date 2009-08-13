@@ -23,16 +23,16 @@ feature {NONE}  -- Initlization
 		require
 			a_note_book_not_void: a_note_book /= Void
 		do
-			make_with_shadow
 			create internal_shared
-			internal_notebook := a_note_book
 			create items_and_tabs.make (50)
-
+			internal_notebook := a_note_book
 			create internal_vertical_box
 			create internal_text_box
 			create internal_tool_bar.make
 			create internal_scroll_area
 			create {EV_VERTICAL_BOX} top_box
+
+			make_with_shadow
 
 			extend (top_box)
 			top_box.extend (internal_vertical_box)
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation agents
 			when {EV_KEY_CONSTANTS}.Key_escape then
 				destroy
 			when {EV_KEY_CONSTANTS}.Key_enter then
-				if current_focus_label /= Void then
+				if has_selected_item then
 					l_selected_tab := find_tab_by_label (current_focus_label)
 					select_content (internal_notebook.content_by_tab (l_selected_tab))
 					l_stop := True
@@ -133,23 +133,28 @@ feature {NONE} -- Implementation agents
 
 	current_focus_label: SD_TOOL_BAR_FONT_BUTTON
 			-- Current focused label
+		require
+			has_selected: has_selected_item
 		local
 			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
-			l_toggle_button: SD_TOOL_BAR_FONT_BUTTON
+			l_toggle_button: detachable SD_TOOL_BAR_FONT_BUTTON
+			l_result: detachable like current_focus_label
 		do
 			from
 				l_items := internal_tool_bar.items
 				l_items.start
 			until
-				l_items.after or Result /= Void
+				l_items.after or l_result /= Void
 			loop
 				l_toggle_button ?= l_items.item
 				check not_void: l_toggle_button /= Void end
 				if l_toggle_button.is_selected then
-					Result := l_toggle_button
+					l_result := l_toggle_button
 				end
 				l_items.forth
 			end
+			check l_result /= Void end -- Implied by precondition `has_slected'
+			Result := l_result
 		end
 
 	on_focus_out
@@ -168,7 +173,8 @@ feature {NONE} -- Implementation agents
 		require
 			a_index_valid: a_index > 0 and a_index <= items_and_tabs.count
 		local
-			l_content, l_old_content: SD_CONTENT
+			l_content: SD_CONTENT
+			l_old_content: detachable SD_CONTENT
 		do
 			l_old_content := internal_notebook.selected_item
 			l_content := internal_notebook.content_by_tab (items_and_tabs.i_th (a_index).notebook_tab)
@@ -188,12 +194,17 @@ feature {NONE} -- Implementation agents
 
 	on_search_text_change
 			-- Handle `internal_text_box' text change
+		require
+			set: text_finder /= Void
 		local
 			l_search_result: ARRAYED_LIST [INTEGER]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_passed_first: BOOLEAN
-			l_label: SD_TOOL_BAR_FONT_BUTTON
+			l_label: detachable SD_TOOL_BAR_FONT_BUTTON
+			l_text_finder: like text_finder
 		do
+			l_text_finder := text_finder
+			check l_text_finder /= Void end -- Implied by precondition `set'
 			internal_tool_bar.wipe_out
 
 			-- For Windows, if `internal_tool_bar' items changed, drawing will not be cleared by {EV_DRAWING_AREA}, so clear it here
@@ -210,8 +221,8 @@ feature {NONE} -- Implementation agents
 					items_and_tabs.forth
 				end
 			else
-				text_finder.search (internal_text_box.text)
-				l_search_result := text_finder.found_indexs_in_texts
+				l_text_finder.search (internal_text_box.text)
+				l_search_result := l_text_finder.found_indexs_in_texts
 				l_search_result.compare_objects
 				from
 					items_and_tabs.start
@@ -244,7 +255,7 @@ feature {NONE} -- Implementation agents
 			-- Focus first item
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_item: SD_TOOL_BAR_FONT_BUTTON
+			l_item: detachable SD_TOOL_BAR_FONT_BUTTON
 		do
 			l_items := internal_tool_bar.items
 			l_item ?= l_items.first
@@ -257,7 +268,7 @@ feature {NONE} -- Implementation agents
 			--	Disable select all items
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_item: SD_TOOL_BAR_FONT_BUTTON
+			l_item: detachable SD_TOOL_BAR_FONT_BUTTON
 		do
 			from
 				l_items := internal_tool_bar.items
@@ -274,15 +285,18 @@ feature {NONE} -- Implementation agents
 
 	next_selected_item (a_next: BOOLEAN): SD_TOOL_BAR_FONT_BUTTON
 			-- Next item base on current selected item
+		require
+			has_selected: has_selected_item
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_item: SD_TOOL_BAR_FONT_BUTTON
+			l_item: detachable SD_TOOL_BAR_FONT_BUTTON
+			l_result: detachable like next_selected_item
 		do
 			from
 				l_items := internal_tool_bar.items
 				l_items.start
 			until
-				l_items.after or Result /= Void
+				l_items.after or l_result /= Void
 			loop
 				l_item ?= l_items.item
 				check not_void: l_item /= Void end
@@ -290,20 +304,22 @@ feature {NONE} -- Implementation agents
 				if l_item.is_selected then
 					if a_next then
 						if not l_items.islast then
-							Result ?= l_items.i_th (l_items.index + 1)
+							l_result ?= l_items.i_th (l_items.index + 1)
 						else
-							Result ?= l_items.first
+							l_result ?= l_items.first
 						end
 					else
 						if not l_items.isfirst then
-							Result ?= l_items.i_th (l_items.index - 1)
+							l_result ?= l_items.i_th (l_items.index - 1)
 						else
-							Result ?= l_items.last
+							l_result ?= l_items.last
 						end
 					end
 				end
 				l_items.forth
 			end
+			check l_result /= Void end -- Implied by precondition `has_selected'
+			Result := l_result
 		end
 
 	on_tool_bar_key_press (a_key: EV_KEY)
@@ -417,7 +433,7 @@ feature {NONE} -- Implementation functions
 		local
 			l_tab_indicator: SD_TOOL_BAR_FONT_BUTTON
 			l_bold_font: EV_FONT
-			l_pixel_buffer: EV_PIXEL_BUFFER
+			l_pixel_buffer: detachable EV_PIXEL_BUFFER
 			l_content: SD_CONTENT
 		do
 			create l_tab_indicator.make
@@ -451,17 +467,21 @@ feature {NONE} -- Implementation functions
 		require
 			a_label_not_void: a_label /= Void
 			has: internal_tool_bar.has (a_label)
+		local
+			l_result: detachable like find_tab_by_label
 		do
 			from
 				items_and_tabs.start
 			until
-				items_and_tabs.after or Result /= Void
+				items_and_tabs.after or l_result /= Void
 			loop
 				if items_and_tabs.item.tool_bar_item = a_label then
-					Result := items_and_tabs.item.notebook_tab
+					l_result := items_and_tabs.item.notebook_tab
 				end
 				items_and_tabs.forth
 			end
+			check l_result /= Void end -- Implied by precondition `has'
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -486,6 +506,25 @@ feature {NONE} -- Implementation functions
 					l_found := True
 				end
 
+				l_items.forth
+			end
+		end
+
+	has_selected_item: BOOLEAN
+			-- Do at least one item has been selected?
+		local
+			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
+			l_toggle_button: detachable SD_TOOL_BAR_FONT_BUTTON
+		do
+			from
+				l_items := internal_tool_bar.items
+				l_items.start
+			until
+				l_items.after or Result
+			loop
+				l_toggle_button ?= l_items.item
+				check not_void: l_toggle_button /= Void end
+				Result := l_toggle_button.is_selected
 				l_items.forth
 			end
 		end
@@ -546,7 +585,7 @@ feature {NONE}  --Implementation attributes.
 	internal_text_box: EV_TEXT_FIELD
 			-- Text field for search input
 
-	text_finder: SD_TEXT_FINDER [STRING_32]
+	text_finder: detachable SD_TEXT_FINDER [STRING_32]
 			-- Find text
 
 	internal_shared: SD_SHARED

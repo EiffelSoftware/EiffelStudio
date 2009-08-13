@@ -1,6 +1,6 @@
 note
 	description: "[
-					When show hidden SD_TOOL_BAR_ITEMs by SD_TOOL_BAR_HIDDEN_ITEM_DIALOG.
+					When show hidden SD_TOOL_BAR_ITEMs by SD_TOOL_BAR_HIDDEN_ITEM_DIALOG,
 					We use this class to make sure items grouping looks nice.
 																						]"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 feature {NONE} -- Initlization
 
 	make (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
-			-- Creation method.
+			-- Creation method
 		require
 			not_void: a_items /= Void
 		do
@@ -29,7 +29,7 @@ feature {NONE} -- Initlization
 		end
 
 	init_item_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
-			-- Initlization items width.
+			-- Initlization items width
 		require
 			not_void: a_items /= Void
 		local
@@ -52,7 +52,7 @@ feature {NONE} -- Initlization
 feature -- Properties
 
 	max_width_allowed: INTEGER
-			-- Maximum width allowed.
+			-- Maximum width allowed
 
 	set_max_width_allowed (a_max_width: INTEGER)
 			-- Set `max_width_allowed'
@@ -105,10 +105,10 @@ feature -- Query
 feature {NONE}	-- Implementation
 
 	algorithm: 	SD_HUFFMAN_ALGORITHM
-			-- Grouping algorithm.
+			-- Grouping algorithm
 
 	internal_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			-- Items to be grouped.
+			-- Items to be grouped
 
 invariant
 	not_void: algorithm /= Void

@@ -35,17 +35,21 @@ create
 feature {NONE}  -- Initlization
 
 	make (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]; a_tool_bar: SD_TOOL_BAR_ZONE)
-			-- Creation method.
+			-- Creation method
 		require
 			not_void: a_hidden_items /= Void
 			not_void: a_tool_bar /= Void
 		do
 			parent_tool_bar := a_tool_bar
+			create internal_vertical_box
+			create internal_shared
+			create internal_horizontal_box
+			create internal_tool_bar.make (create {SD_TOOL_BAR}.make)
+
 			make_with_shadow
 			disable_user_resize
 			disable_border
-			create internal_vertical_box
-			create internal_shared
+
 			internal_vertical_box.set_border_width (internal_shared.border_width)
 			internal_vertical_box.set_background_color (internal_shared.border_color)
 
@@ -57,14 +61,14 @@ feature {NONE}  -- Initlization
 			init_close
 			internal_tool_bar.compute_minimum_size
 
-			-- If we don't call this, the height will be 2 pixels less on Windows.
+			-- If we don't call this, the height will be 2 pixels less on Windows
 			set_height (item.minimum_height)
 		ensure
 			set: parent_tool_bar = a_tool_bar
 		end
 
 	make_for_menu (a_tool_bar: SD_TOOL_BAR_ZONE)
-			-- Creation method for right-click menu.
+			-- Creation method for right-click menu
 		require
 			not_void: a_tool_bar /= Void
 		local
@@ -75,7 +79,7 @@ feature {NONE}  -- Initlization
 		end
 
 	init_grouping (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
-			-- Grouping hidden items.
+			-- Grouping hidden items
 		local
 			l_divider: SD_TOOL_BAR_HIDDEN_GROUP_DIVIDER
 		do
@@ -87,17 +91,15 @@ feature {NONE}  -- Initlization
 		end
 
 	init_hidden_items (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
-			-- Add hidden items to Current.
+			-- Add hidden items to Current
 		local
-			l_separator: SD_TOOL_BAR_SEPARATOR
-			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_separator: detachable SD_TOOL_BAR_SEPARATOR
+			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
-			create internal_horizontal_box
 			internal_vertical_box.extend (internal_horizontal_box)
 
 			from
 				a_hidden_items.start
-				create internal_tool_bar.make (create {SD_TOOL_BAR}.make)
 				internal_horizontal_box.extend (internal_tool_bar)
 			until
 				a_hidden_items.after
@@ -105,8 +107,9 @@ feature {NONE}  -- Initlization
 				l_separator ?= a_hidden_items.item
 				l_widget_item ?= a_hidden_items.item
 				if l_separator = Void then
-					if l_widget_item /= Void and then l_widget_item.widget /= Void and then l_widget_item.widget.parent /= Void then
-						l_widget_item.widget.parent.prune (l_widget_item.widget)
+					if l_widget_item /= Void and then
+						l_widget_item.widget /= Void and then attached l_widget_item.widget.parent as l_parent then
+						l_parent.prune (l_widget_item.widget)
 					end
 					internal_tool_bar.extend (a_hidden_items.item)
 				end
@@ -115,7 +118,7 @@ feature {NONE}  -- Initlization
 		end
 
 	init_customize_label
-			-- Add customize label.
+			-- Add customize label
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_button: SD_TOOL_BAR_BUTTON
@@ -133,7 +136,7 @@ feature {NONE}  -- Initlization
 		end
 
 	init_close
-			-- Initialization close events.
+			-- Initialization close events
 		do
 			focus_out_actions.extend (agent on_focus_out)
 		end
@@ -141,17 +144,17 @@ feature {NONE}  -- Initlization
 feature {SD_TOOL_BAR_MANAGER} -- Command
 
 	on_customize
-			-- Handle customize actions.
+			-- Handle customize actions
 		local
 			l_dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_parent_window: EV_WINDOW
 			l_vertical_docking: BOOLEAN
-			l_docking_manager: SD_DOCKING_MANAGER
+			l_docking_manager: detachable SD_DOCKING_MANAGER
 			l_assit: SD_TOOL_BAR_ZONE_ASSISTANT
 		do
-			if parent_tool_bar.customize_dialog /= Void and then not parent_tool_bar.customize_dialog.is_destroyed then
-				parent_tool_bar.customize_dialog.set_focus
+			if attached parent_tool_bar.customize_dialog as l_dialog_2 and then not l_dialog_2.is_destroyed then
+				l_dialog_2.set_focus
 			else
 				create l_dialog.make
 				parent_tool_bar.set_customize_dialog (l_dialog)
@@ -161,7 +164,7 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 				prepare_size (l_dialog, parent_tool_bar.assistant.last_state)
 
 				if parent_tool_bar.is_floating then
-					l_parent_window := parent_tool_bar.floating_tool_bar
+					l_parent_window := parent_tool_bar.attached_floating_tool_bar
 				else
 					l_parent_window := parent_tool_bar.docking_manager.main_window
 				end
@@ -185,6 +188,7 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 					end
 					if l_vertical_docking then
 						parent_tool_bar.change_direction (False)
+						check l_docking_manager /= Void end -- Implied by `l_docking_manager' is set when `l_vertical_docking'
 						l_docking_manager.command.resize (True)
 						l_docking_manager.command.unlock_update
 					end
@@ -197,7 +201,7 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 feature {NONE} -- Implementation
 
 	prepare_size (a_dialog: EV_DIALOG; a_state: SD_TOOL_BAR_ZONE_STATE)
-			-- Try to use last customize dialog width and height.
+			-- Try to use last customize dialog width and height
 		require
 			not_void: a_dialog /= Void
 			not_void: a_state /= Void
@@ -216,7 +220,7 @@ feature {NONE} -- Implementation
 		end
 
 	save_items_layout (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
-			-- Save `a_tool_bar' items layout to it's data.
+			-- Save `a_tool_bar' items layout to it's data
 		require
 			not_void: a_items /= Void
 		local
@@ -237,13 +241,13 @@ feature {NONE} -- Implementation
 		end
 
 	parent_tool_bar: SD_TOOL_BAR_ZONE
-			-- Tool bar which Current belong to.
+			-- Tool bar which Current belong to
 
 	internal_tool_bar: SD_WIDGET_TOOL_BAR
-			-- Tool bar contain all hidden items and "Customize" label.
+			-- Tool bar contain all hidden items and "Customize" label
 
 	on_focus_out
-			-- Handle focus out actions.
+			-- Handle focus out actions
 		do
 			if is_displayed then
 				-- FIXIT: can't destroy directly?
@@ -254,16 +258,13 @@ feature {NONE} -- Implementation
 		end
 
 	internal_vertical_box: EV_VERTICAL_BOX
-			-- Top level vertical box.
+			-- Top level vertical box
 
 	internal_horizontal_box: EV_HORIZONTAL_BOX
 			-- Box which in `internal_vertical_box'.
 
-	internal_label: EV_LABEL
-			-- Label which show "Customize".
-
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 invariant
 	parent_tool_bar_not_void: parent_tool_bar /= Void

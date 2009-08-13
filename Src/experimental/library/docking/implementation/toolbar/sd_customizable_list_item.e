@@ -26,11 +26,16 @@ feature -- Initialization
 			not_void: v /= Void
 			not_void: a_dlg /= Void
 		local
-			l_sep: SD_TOOL_BAR_SEPARATOR
+			l_sep: detachable SD_TOOL_BAR_SEPARATOR
 		do
-			make_with_text (v.description)
-			set_pixmap (v.pixmap)
+			dialog := a_dlg
 			data := v
+
+			make_with_text (v.description)
+			if attached v.pixmap as l_pixmap then
+				set_pixmap (l_pixmap)
+			end
+
 			l_sep ?= v
 			if l_sep = Void then
 				is_separator := False
@@ -40,7 +45,6 @@ feature -- Initialization
 			set_pebble (Current)
 			drop_actions.extend (agent add_to_parent_list)
 			drop_actions.set_veto_pebble_function (agent a_dlg.veto_pebble_function)
-			dialog := a_dlg
 		ensure
 			v_either_separator_or_command: data /= Void
 			set: dialog = a_dlg
@@ -53,29 +57,32 @@ feature -- Interactivity
 			-- `from_pool' and `to_pool' determine the behavior of separators
 		local
 			from_pool, to_pool: BOOLEAN
+			l_item_parent, l_parent: detachable EV_ITEM_LIST [EV_ITEM]
 		do
 			from_pool := an_item.custom_parent.is_a_pool_list -- Picking from a pool list?
 			to_pool := custom_parent.is_a_pool_list -- Dropping into a pool list?
-			if an_item /= Current then
+			l_item_parent := an_item.parent
+			l_parent := parent
+			if an_item /= Current and l_item_parent /= Void and l_parent /= Void then
 				if (not an_item.is_separator) then
-					an_item.parent.start
-					an_item.parent.prune (an_item)
-					parent.start
-					parent.search (Current)
-					parent.put_right (an_item)
+					l_item_parent.start
+					l_item_parent.prune (an_item)
+					l_parent.start
+					l_parent.search (Current)
+					l_parent.put_right (an_item)
 				elseif from_pool and then (not to_pool) then
-					parent.start
-					parent.search (Current)
-					parent.put_right (create {SD_CUSTOMIZABLE_LIST_ITEM}.make (dialog, create {SD_TOOL_BAR_SEPARATOR}.make))
+					l_parent.start
+					l_parent.search (Current)
+					l_parent.put_right (create {SD_CUSTOMIZABLE_LIST_ITEM}.make (dialog, create {SD_TOOL_BAR_SEPARATOR}.make))
 				elseif (not from_pool) and then to_pool then
-					an_item.parent.start
-					an_item.parent.prune (an_item)
+					l_item_parent.start
+					l_item_parent.prune (an_item)
 				elseif (not from_pool) and then (not to_pool) then
-					an_item.parent.start
-					an_item.parent.prune (an_item)
-					parent.start
-					parent.search (Current)
-					parent.put_right (an_item)
+					l_item_parent.start
+					l_item_parent.prune (an_item)
+					l_parent.start
+					l_parent.search (Current)
+					l_parent.put_right (an_item)
 				end
 			end
 		end
@@ -87,8 +94,16 @@ feature -- Access
 
 	custom_parent: SD_CUSTOM_TOOLBAR_LIST
 			-- Convert `parent' into a EB_CUSTOM_TOOLBAR_LIST
+		require
+			not_void: parent /= Void
+		local
+			l_result: detachable like custom_parent
 		do
-			Result ?= parent
+			l_result ?= parent
+			check l_result /= Void end
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG

@@ -16,32 +16,44 @@ inherit
 			copy
 		end
 
+	SD_DOCKING_MANAGER_HOLDER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 feature -- Command
 
 	on_normal_max_window
 			-- Normal or max `Current'
 		local
-			l_split_area: EV_SPLIT_AREA
+			l_split_area: detachable EV_SPLIT_AREA
+			l_main_area: like main_area
+			l_internal_parent: detachable EV_CONTAINER
 		do
 			if attached {EV_WIDGET} Current as lt_widget then
-				internal_docking_manager.command.lock_update (lt_widget, False)
-				main_area := internal_docking_manager.query.inner_container (Current)
+				docking_manager.command.lock_update (lt_widget, False)
+				l_main_area := docking_manager.query.inner_container (Current)
+				main_area := l_main_area
 				if not is_maximized then
-					main_area_widget := main_area.item
+					main_area_widget := l_main_area.item
 					internal_parent := lt_widget.parent
 					l_split_area ?= internal_parent
 					if l_split_area /= Void then
 						internal_parent_split_position := l_split_area.split_position
 					end
-					internal_parent.prune (lt_widget)
-					main_area.wipe_out
-					main_area.extend (lt_widget)
+					l_internal_parent := internal_parent
+					check l_internal_parent /= Void end -- Implied by current displaying in main window
+					l_internal_parent.prune (lt_widget)
+					l_main_area.wipe_out
+					l_main_area.extend (lt_widget)
 					set_max (True)
-					internal_docking_manager.command.resize (True)
+					docking_manager.command.resize (True)
 				else
 					recover_to_normal_state
 				end
-				internal_docking_manager.command.unlock_update
+				docking_manager.command.unlock_update
 			else
 				check not_possible: False end
 			end
@@ -49,52 +61,70 @@ feature -- Command
 
 	close
 			-- Close window
+		local
+			l_main_area: like main_area
+			l_main_area_widget: like main_area_widget
 		do
 			if attached {EV_WIDGET} Current as lt_widget then
-				internal_docking_manager.command.lock_update (lt_widget, False)
+				docking_manager.command.lock_update (lt_widget, False)
 			else
 				check not_possible: False end
 			end
 
 			if is_maximized then
-				main_area.wipe_out
-				main_area.extend (main_area_widget)
+				l_main_area := main_area
+				check l_main_area /= Void end -- Implied by `is_maximized'
+				l_main_area.wipe_out
+
+				l_main_area_widget := main_area_widget
+				check l_main_area_widget /= Void end -- Implied by `is_maximized'
+				l_main_area.extend (l_main_area_widget)
 				main_area := Void
 			end
 
-			internal_docking_manager.command.unlock_update
+			docking_manager.command.unlock_update
 		end
 
 	recover_to_normal_state
 			-- If Current maximized, then normal Current
 		local
-			l_split_area: EV_SPLIT_AREA
+			l_split_area: detachable EV_SPLIT_AREA
+			l_main_area: like main_area
+			l_main_area_widget: like main_area_widget
+			l_internal_parent: like internal_parent
 		do
 			if is_maximized then
 				if attached {EV_WIDGET} Current as lt_widget then
-					internal_docking_manager.command.lock_update (lt_widget, False)
+					docking_manager.command.lock_update (lt_widget, False)
 
 					if internal_parent /= main_area then
-						main_area.wipe_out
-						if lt_widget.parent /= Void then
-							lt_widget.parent.prune (lt_widget)
+						l_main_area := main_area
+						check l_main_area /= Void end -- Implied by `is_maximized'
+						l_main_area.wipe_out
+						if attached lt_widget.parent as l_parent then
+							l_parent.prune (lt_widget)
 						end
-						internal_parent.extend (lt_widget)
-						main_area.extend (main_area_widget)
+						l_internal_parent := internal_parent
+						check l_internal_parent /= Void end -- Implied by `is_maximized'
+						l_internal_parent.extend (lt_widget)
+						l_main_area_widget := main_area_widget
+						check l_main_area_widget /= Void end -- Implied by `is_maximized'
+						l_main_area.extend (l_main_area_widget)
 					end
 
 					main_area := Void
 
 					l_split_area ?= internal_parent
-					-- FIXIT: Only have to check if split position in bounds on GTK, mswin is not needed.
-					if l_split_area /= Void and then internal_parent_split_position >= l_split_area.minimum_split_position and internal_parent_split_position <= l_split_area.maximum_split_position then
+					-- FIXIT: Only have to check if split position in bounds on GTK, mswin is not needed
+					if l_split_area /= Void and then (internal_parent_split_position >= l_split_area.minimum_split_position and
+						 internal_parent_split_position <= l_split_area.maximum_split_position) then
 						l_split_area.set_split_position (internal_parent_split_position)
 					end
 					main_area_widget := Void
 					internal_parent := Void
 					set_max (False)
-					internal_docking_manager.command.resize (True)
-					internal_docking_manager.command.unlock_update
+					docking_manager.command.resize (True)
+					docking_manager.command.unlock_update
 				else
 					check not_possible: False end
 				end
@@ -170,9 +200,17 @@ feature -- Query
 
 	content: SD_CONTENT
 			-- Content which `Current' holded
+		require
+			valid: is_floating_zone implies child_zone_count = 1
 		deferred
 		ensure
-			not_void: not is_floating_zone implies Result /= Void
+			not_void: Result /= Void
+		end
+
+	child_zone_count: INTEGER
+			-- How many zone in Current
+		do
+			Result := 1
 		end
 
 	extend (a_content: SD_CONTENT)
@@ -183,7 +221,7 @@ feature -- Query
 		end
 
 	type: INTEGER
-			-- type.
+			-- Type
 		do
 			Result := content.type
 		end
@@ -204,7 +242,7 @@ feature -- Query
 	is_floating_zone: BOOLEAN
 			-- If current an instance of SD_FLOATNG_ZONE?
 		local
-			l_floating_zone: SD_FLOATING_ZONE
+			l_floating_zone: detachable SD_FLOATING_ZONE
 		do
 			l_floating_zone ?= Current
 			Result := l_floating_zone /= Void
@@ -222,46 +260,54 @@ feature {SD_SAVE_CONFIG_MEDIATOR} -- Save config
 feature {SD_DOCKING_MANAGER_ZONES} -- Focus out
 
 	on_focus_out
-			-- Handle focus out.
+			-- Handle focus out
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			l_multi_dock_area := internal_docking_manager.query.inner_container (Current)
+			l_multi_dock_area := docking_manager.query.inner_container (Current)
 
-			if not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
-				l_multi_dock_area.parent_floating_zone.set_title_focus (False)
+			if not docking_manager.query.is_main_inner_container (l_multi_dock_area) then
+				if attached l_multi_dock_area.parent_floating_zone as l_parent_zone then
+					l_parent_zone.set_title_focus (False)
+				else
+					check False end -- Implied by not `is_main_inner_container'
+				end
 			end
 			content.focus_out_actions.call (Void)
 		end
 
 feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD_FLOATING_ZONE}  -- Focus in
 
-	on_focus_in (a_content: SD_CONTENT)
-			-- Handle focus in.
+	on_focus_in (a_content: detachable SD_CONTENT)
+			-- Handle focus in
 		require
 			has: a_content /= Void implies has (a_content)
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			internal_docking_manager.zones.disable_all_zones_focus_color (Current)
-			l_multi_dock_area := internal_docking_manager.query.inner_container (Current)
-			if not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
-				l_multi_dock_area.parent_floating_zone.set_title_focus (True)
+			docking_manager.zones.disable_all_zones_focus_color (Current)
+			l_multi_dock_area := docking_manager.query.inner_container (Current)
+			if not docking_manager.query.is_main_inner_container (l_multi_dock_area) then
+				if attached l_multi_dock_area.parent_floating_zone as l_floating_zone then
+					l_floating_zone.set_title_focus (True)
+				else
+					check False end -- Implied by not `is_main_inner_container'
+				end
 			end
 		end
 
 feature {SD_TAB_STATE_ASSISTANT, SD_TAB_STATE, SD_DOCKING_MANAGER_QUERY} -- Maximum issues
 
-	main_area_widget: EV_WIDGET
+	main_area_widget: detachable EV_WIDGET
 			-- Other user widgets when `Current' is maximized
 
-	main_area: SD_MULTI_DOCK_AREA
+	main_area: detachable SD_MULTI_DOCK_AREA
 			-- SD_MULTI_DOCK_AREA current zone belong to
 
 	internal_parent_split_position: INTEGER
 			-- Parent split position
 
-	internal_parent: EV_CONTAINER
+	internal_parent: detachable EV_CONTAINER
 			-- Parent
 
 	restore_from_maximized
@@ -279,9 +325,6 @@ feature {NONE} -- Implementation
 		do
 			content.close_request_actions.call (Void)
 		end
-
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager manage Current
 
 	internal_shared: SD_SHARED
 			-- All singletons

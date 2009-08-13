@@ -21,7 +21,7 @@ inherit
 			{NONE} all
 			{ANY} has, parent, count, prunable, is_destroyed, is_empty, cursor, start, item, forth,
 				go_to, index, changeable_comparison_criterion, after, extendible,
-				valid_cursor, object_comparison, readable, off
+				valid_cursor, object_comparison, readable, off, cl_extend
 			{SD_TOOL_BAR_ROW} compare_objects, set_extend
 			{SD_TOOL_BAR_ZONE, SD_GENERIC_TOOL_BAR} set_item_size, width, screen_x
 			{SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_CONTENT} destroy
@@ -31,7 +31,16 @@ inherit
 
 	ANY
 		undefine
-			default_create, is_equal, copy
+			default_create,
+			is_equal,
+			copy
+		end
+
+	SD_DOCKING_MANAGER_HOLDER
+		undefine
+			default_create,
+			is_equal,
+			copy
 		end
 
 create
@@ -44,12 +53,15 @@ feature {NONE} -- Initialization
 		require
 			not_void: a_manager /= Void
 		do
-			default_create
 			create internal_shared
-			create internal_zones.make_default
-			create internal_positioner.make (Current)
+			create internal_zones.make (10)
+			create internal_positioner.make
+
 			is_vertical := a_vertical
-			docking_manager := a_manager
+			set_docking_manager (a_manager)
+
+			default_create
+			internal_positioner.set_tool_bar_row (Current)
 		ensure
 			set: docking_manager = a_manager
 			set: is_vertical = a_vertical
@@ -58,7 +70,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	extend (a_zone: SD_TOOL_BAR_ZONE)
-			-- Extend `a_zone'.
+			-- Extend `a_zone'
 		require
 			a_tool_bar_not_void: a_zone /= Void
 			parent_void: a_zone.row = Void
@@ -76,9 +88,9 @@ feature -- Command
 						set_item_width (lt_widget, internal_shared.tool_bar_size)
 					end
 				else
-					-- We can't use `internal_shared.tool_bar_size' as tool bar's height.  And we don't need care about it since `a_zone.tool_bar' calculated correctly itself.
-					-- Otherwise when desktop system font is very small (ie, Scans 8 on Linux Desktop),  `SD_WIDGET_TOOL_BAR.height' may larger than `internal_shared.tool_bar_size'.
-					-- If we force to use `internal_shared.tool_bar_size', it will lead to notebook tab cut-off problem after just shown a SD_WIDGET_TOOL_BAR.
+					-- We can't use `internal_shared.tool_bar_size' as tool bar's height.  And we don't need care about it since `a_zone.tool_bar' calculated correctly itself
+					-- Otherwise when desktop system font is very small (ie, Scans 8 on Linux Desktop),  `SD_WIDGET_TOOL_BAR.height' may larger than `internal_shared.tool_bar_size'
+					-- If we force to use `internal_shared.tool_bar_size', it will lead to notebook tab cut-off problem after just shown a SD_WIDGET_TOOL_BAR
 	--				if a_zone.tool_bar.minimum_height > internal_shared.tool_bar_size then
 	--					a_zone.tool_bar.set_minimum_height (internal_shared.tool_bar_size)
 	--				end
@@ -86,15 +98,15 @@ feature -- Command
 				end
 
 				set_item_position_fixed (lt_widget, 0, 0)
-				if internal_shared.tool_bar_docker_mediator_cell.item /= Void then
+				if attached internal_shared.tool_bar_docker_mediator_cell.item as l_mediator then
 					if is_vertical then
-						internal_positioner.position_resize_on_extend (a_zone, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_y))
+						internal_positioner.position_resize_on_extend (a_zone, to_relative_position (l_mediator.screen_y))
 					else
-						internal_positioner.position_resize_on_extend (a_zone, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_x))
+						internal_positioner.position_resize_on_extend (a_zone, to_relative_position (l_mediator.screen_x))
 					end
 				end
 				a_zone.assistant.update_indicator
-				internal_zones.force_last (a_zone)
+				internal_zones.extend (a_zone)
 			else
 				check not_possible: False end
 			end
@@ -115,21 +127,24 @@ feature -- Command
 			else
 				check not_possible: False end
 			end
-
-			internal_zones.delete (a_zone)
+			internal_zones.start
+			internal_zones.search (a_zone)
+			if not internal_zones.exhausted then
+				internal_zones.remove
+			end
 			internal_positioner.position_resize_on_prune
 		ensure
 			pruned: not internal_zones.has (a_zone)
 		end
 
 	on_pointer_motion (a_screen_position: INTEGER)
-			-- When user dragging, handle pointer motion.
+			-- When user dragging, handle pointer motion
 		local
 			l_relative_position: INTEGER
 		do
 			-- We have to check if `internal_positioner' is dragging for GTK since key press actions may
-			-- not be called immediately.
-			-- See bug#13196.			
+			-- not be called immediately
+			-- See bug#13196	
 			if internal_positioner.is_dragging then
 				l_relative_position := to_relative_position (a_screen_position)
 				internal_positioner.on_pointer_motion (l_relative_position)
@@ -137,7 +152,7 @@ feature -- Command
 		end
 
 	set_item_position_relative (a_widget: EV_WIDGET; a_relative_x_y: INTEGER)
-			-- Set `a_widget' position with relative position.
+			-- Set `a_widget' position with relative position
 		require
 			a_widget_not_void: a_widget /= Void
 		do
@@ -145,7 +160,7 @@ feature -- Command
 		end
 
 	reposition
-			-- Reposition zones, make sure there are not clip each other.
+			-- Reposition zones, make sure there are not clip each other
 		require
 			is_dragged: (create {SD_SHARED}).tool_bar_docker_mediator_cell.item /= Void
 		do
@@ -157,13 +172,13 @@ feature -- Command
 		end
 
 	apply_change
-			-- Handle user stopped dragging.
+			-- Handle user stopped dragging
 		do
 			internal_positioner.end_drag
 		end
 
 	start_drag (a_dragged_item: EV_WIDGET)
-			-- Handle user start dragging.
+			-- Handle user start dragging
 		require
 			a_dragged_item_not_void: a_dragged_item /= Void
 		do
@@ -171,7 +186,7 @@ feature -- Command
 		end
 
 	on_resize (a_size: INTEGER)
-			-- Handle docking manger main window resize events.
+			-- Handle docking manger main window resize events
 			-- a_size is width when row is horizontal
 			-- a_size is height when row is vertical
 		do
@@ -181,7 +196,7 @@ feature -- Command
 		end
 
 	record_state
-			-- Record position and size state.
+			-- Record position and size state
 		do
 			internal_positioner.record_positions_and_sizes (False)
 		end
@@ -197,14 +212,14 @@ feature -- Command
 	destroy
 			-- <Precursor>
 		do
-			docking_manager := Void
+			clear_docking_manager
 			Precursor {EV_FIXED}
 		end
 
 feature {SD_TOOL_BAR_ROW_POSITIONER} -- Internal Issues
 
 	internal_set_item_position (a_widget: EV_WIDGET; a_relative_position: INTEGER)
-			-- Only do set item position issues.
+			-- Only do set item position issues
 		require
 			valid: a_relative_position >= 0
 		do
@@ -234,20 +249,39 @@ feature -- Query
 	is_vertical: BOOLEAN
 			-- If `Current' is_vertical?
 
-	zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
-			-- All tool bar zone in Current. Order is from left to right (top to bottom).
+	zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			-- All tool bar zone in Current. Order is from left to right (top to bottom)
 		local
-			l_sorter: DS_QUICK_SORTER [SD_TOOL_BAR_ZONE]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [SD_TOOL_BAR_ZONE]
+			l_sortable_array: SORTED_TWO_WAY_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
-			Result := internal_zones.twin
-			create l_agent_sorter.make (agent sort_by_position)
-			create l_sorter.make (l_agent_sorter)
-			l_sorter.sort (Result)
+			l_zones := internal_zones.twin
+
+			from
+				l_zones.start
+				create l_sortable_array.make
+			until
+				l_zones.after
+			loop
+				l_sortable_array.extend (l_zones.item)
+
+				l_zones.forth
+			end
+
+			from
+				l_sortable_array.start
+				create Result.make (l_sortable_array.count)
+			until
+				l_sortable_array.after
+			loop
+				Result.extend (l_sortable_array.item)
+
+				l_sortable_array.forth
+			end
 		end
 
 	size: INTEGER
-			-- Size of current.
+			-- Size of current
 		do
 			if is_vertical then
 				Result := height
@@ -264,24 +298,24 @@ feature -- Query
 	is_enough_max_space: BOOLEAN
 			-- If there is enought space for each SD_TOOL_BAR without reduce size?
 		do
-			Result := internal_positioner.internal_sizer.is_enough_max_space (True)
+			Result := internal_positioner.sizer.is_enough_max_space (True)
 		end
 
 	hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			-- All hideen items in row.
+			-- All hideen items in row
 		local
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_temp_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			create Result.make (1)
-			-- Prepare all hiden items in Current row.
+			-- Prepare all hiden items in Current row
 			l_tool_bars := zones
 			from
 				l_tool_bars.start
 			until
 				l_tool_bars.after
 			loop
-				-- We can't just call `append' to insert items, because we want to reverse items order.
+				-- We can't just call `append' to insert items, because we want to reverse items order
 				from
 					l_temp_items := l_tool_bars.item_for_iteration.assistant.hide_tool_bar_items
 					l_temp_items.finish
@@ -297,22 +331,10 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	docking_manager: SD_DOCKING_MANAGER
-			-- Docking manger.
-
 feature {SD_TOOL_BAR_ROW_POSITIONER} -- Implementation
 
-	sort_by_position (a_first, a_second: SD_TOOL_BAR_ZONE): BOOLEAN
-			-- Compare `a_first' and `a_second'.
-		require
-			not_void: a_first /= Void
-			not_void: a_second /= Void
-		do
-			Result := a_first.position < a_second.position
-		end
-
 	to_relative_position (a_screen_position: INTEGER): INTEGER
-			-- Screen position convert to relative position.
+			-- Screen position convert to relative position
 		do
 			if not is_vertical then
 				Result := a_screen_position - screen_x
@@ -325,13 +347,13 @@ feature {SD_TOOL_BAR_ROW_POSITIONER} -- Implementation
 		end
 
 	internal_positioner: SD_TOOL_BAR_ROW_POSITIONER
-			-- Tool bar positioner.
+			-- Tool bar positioner
 
 	internal_shared: SD_SHARED;
-			-- All singletons.
+			-- All singletons
 
-	internal_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE];
-			-- All tool bar zones in Current.
+	internal_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE];
+			-- All tool bar zones in Current
 
 invariant
 

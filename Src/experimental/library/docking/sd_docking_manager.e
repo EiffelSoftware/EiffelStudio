@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			a_widnow_valid: window_valid (a_window)
 		local
 			l_checker: SD_DEPENDENCY_CHECKER
+			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER]
 		do
 			create internal_shared
 			create tab_drop_actions
@@ -50,103 +51,143 @@ feature {NONE} -- Initialization
 			main_window := a_window
 
 			init_widget_structure
-			init_auto_hide_panel
+			create l_list.make (20)
+			init_auto_hide_panel (l_list)
 
 			create contents
 
-			internal_shared.add_docking_manager (Current)
+			init_inner_container (l_list)
 
-			init_inner_container
+			create tool_bar_manager.make
+			l_list.extend (tool_bar_manager)
 
-
-			create tool_bar_manager.make (Current)
-			init_managers
-
-			agents.init_actions
+			init_managers (l_list)
 
 			contents.extend (zones.place_holder_content)
-			zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
 
 			if not internal_shared.is_set_show_all_feedback_indicator_called.item then
-				-- We don't override client programmers' setting.
+				-- We don't override client programmers' setting
 				internal_shared.set_show_all_feedback_indicator (True)
 			end
 
 			if not internal_shared.is_set_show_tab_stub_text_called.item then
-				-- We don't override client programmers' setting.
+				-- We don't override client programmers' setting
 				internal_shared.set_show_tab_stub_text (True)
-			end
-
-			if {PLATFORM}.is_windows then
-				set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)
 			end
 
 			create {SD_DEPENDENCY_CHECKER_IMP} l_checker
 			l_checker.check_dependency (main_window)
+
+			internal_shared.add_docking_manager (Current)
+
+			attach_docking_manager (l_list)
+
+			agents.init_actions
+			zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
+			if {PLATFORM}.is_windows then
+				set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)
+			end
 		ensure
 			a_container_filled: a_container.has (internal_viewport)
 		end
 
 	init_widget_structure
-			-- Build window struture.
+			-- Build window struture
 		do
 			create internal_viewport
 			top_container.extend (internal_viewport)
 
-			create tool_bar_container
+			create tool_bar_container.make
 			internal_viewport.extend (tool_bar_container)
 			tool_bar_container.set_minimum_size (0, 0)
-			create main_container
+			create main_container.make
 			tool_bar_container.center.extend (main_container)
 			create fixed_area
 			main_container.center_area.extend (fixed_area)
 		end
 
-	init_managers
-			-- Init managers.
+	init_managers (a_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER])
+			-- Init managers
+		require
+			not_void: a_list /= Void
 		do
-			create agents.make (Current)
-			create query.make (Current)
-			create command.make (Current)
-			create property.make (Current)
-			create zones.make (Current)
+			create agents.make
+			a_list.extend (agents)
+			create query
+			a_list.extend (query)
+			create command.make
+			a_list.extend (command)
+			create property.make
+			a_list.extend (property)
+			create zones.make
+			a_list.extend (zones)
 		end
 
-	init_auto_hide_panel
-			-- Insert auto hide panels.
+	init_auto_hide_panel (a_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER])
+			-- Insert auto hide panels
+		require
+			not_void: a_list /= Void
+		local
+			l_left, l_right, l_top, l_bottom: like internal_auto_hide_panel_bottom
 		do
-			create internal_auto_hide_panel_left.make ({SD_ENUMERATION}.left, Current)
-			create internal_auto_hide_panel_right.make ({SD_ENUMERATION}.right, Current)
-			create internal_auto_hide_panel_top.make ({SD_ENUMERATION}.top, Current)
-			create internal_auto_hide_panel_bottom.make ({SD_ENUMERATION}.bottom, Current)
-			main_container.left_bar.extend (internal_auto_hide_panel_left)
-			main_container.right_bar.extend (internal_auto_hide_panel_right)
-			main_container.top_bar.extend (internal_auto_hide_panel_top)
-			main_container.bottom_bar.extend (internal_auto_hide_panel_bottom)
+			create l_left.make ({SD_ENUMERATION}.left)
+			a_list.extend (l_left)
+			internal_auto_hide_panel_left := l_left
+			create l_right.make ({SD_ENUMERATION}.right)
+			a_list.extend (l_right)
+			internal_auto_hide_panel_right := l_right
+			create l_top.make ({SD_ENUMERATION}.top)
+			a_list.extend (l_top)
+			internal_auto_hide_panel_top := l_top
+			create l_bottom.make ({SD_ENUMERATION}.bottom)
+			a_list.extend (l_bottom)
+			internal_auto_hide_panel_bottom := l_bottom
+			main_container.left_bar.extend (l_left)
+			main_container.right_bar.extend (l_right)
+			main_container.top_bar.extend (l_top)
+			main_container.bottom_bar.extend (l_bottom)
 		end
 
-	init_inner_container
+	init_inner_container (a_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER])
 			-- Insert inner contianer
+		require
+			not_void: a_list /= Void
 		local
 			l_inner_container: SD_MULTI_DOCK_AREA
 		do
-			create l_inner_container.make (Current)
+			create l_inner_container.make
+			a_list.extend (l_inner_container)
 			fixed_area.extend (l_inner_container)
 			l_inner_container.set_minimum_size (0, 0)
 			create inner_containers.make (1)
 			inner_containers.extend (l_inner_container)
 		end
 
+	attach_docking_manager (a_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER])
+			-- Attach all items of `a_list' with Current
+		require
+			not_void: a_list /= Void
+		do
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				a_list.item.set_docking_manager (Current)
+				a_list.forth
+			end
+		end
+
 feature -- Access
 
-	restoration_callback: FUNCTION [ANY, TUPLE [title: STRING_GENERAL], SD_CONTENT]
+	restoration_callback: detachable FUNCTION [ANY, TUPLE [title: STRING_GENERAL], SD_CONTENT]
 			-- Agent to use to attempt to retrieve a {SD_CONTENT} during restoration from a cached
-			-- layout file.
+			-- layout file
 
 feature -- Element change
 
 	set_restoration_callback (a_callback: like restoration_callback)
-			-- Sets a callback to fetch a content area when it's not already located in a container.
+			-- Sets a callback to fetch a content area when it's not already located in a container
 		do
 			restoration_callback := a_callback
 		ensure
@@ -156,8 +197,8 @@ feature -- Element change
 feature -- Query
 
 	contents: ACTIVE_LIST [SD_CONTENT]
-			-- Client programmer's contents managed by Current.
-			-- Be careful when adding/pruning item in this list even after twined the list.
+			-- Client programmer's contents managed by Current
+			-- Be careful when adding/pruning item in this list even after twined the list
 			-- There are add/prune actions registered in the list.
 
 	has_content (a_content: SD_CONTENT): BOOLEAN
@@ -169,16 +210,13 @@ feature -- Query
 		end
 
 	tool_bar_manager: SD_TOOL_BAR_MANAGER
-			-- Manager control all tool bars.
+			-- Manager control all tool bars
 
-	tab_drop_actions: SD_PND_ACTION_SEQUENCE
-			-- Drop action when drop on a blank tab area.
-
-	open_actions: ACTION_SEQUENCE [TUPLE [ANY]]
-			-- Open actions when open a config.
+	tab_drop_actions: detachable SD_PND_ACTION_SEQUENCE note option: stable attribute end
+			-- Drop action when drop on a blank tab area
 
 	restore_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- When whole editor area restored automatically for maximized area, actions will be invoked.
+			-- When whole editor area restored automatically for maximized area, actions will be invoked
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -188,7 +226,7 @@ feature -- Query
 		end
 
 	restore_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- When whole editor area restored automatically for minimized area, actions will be invoked.
+			-- When whole editor area restored automatically for minimized area, actions will be invoked
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -198,9 +236,9 @@ feature -- Query
 		end
 
 	main_area_drop_action: EV_PND_ACTION_SEQUENCE
-			-- Main area (editor area) drop acitons.
+			-- Main area (editor area) drop acitons
 			-- This actions will be called if there is no editor zone and end user drop
-			-- a stone to the void editor area.
+			-- a stone to the void editor area
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -209,8 +247,9 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	focused_content: SD_CONTENT
-			-- Current focused content. Maybe void.
+	focused_content: detachable SD_CONTENT
+			-- Current focused content
+			-- Maybe void
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -249,9 +288,9 @@ feature -- Query
 			Result := command.orignal_whole_item_for_minimized /= Void
 		end
 
-	docker_mediator: SD_DOCKER_MEDIATOR
-			-- Manager for user dragging events.
-			-- Maybe Void if user is not dragging.
+	docker_mediator: detachable SD_DOCKER_MEDIATOR
+			-- Manager for user dragging events
+			-- Maybe Void if user is not dragging
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -261,7 +300,7 @@ feature -- Query
 	is_config_data_valid (a_file_name: STRING): BOOLEAN
 			 -- Is config data located at `a_file_name' valid?
 		local
-			l_data: SD_CONFIG_DATA
+			l_data: detachable SD_CONFIG_DATA
 			l_file: RAW_FILE
 			l_config_mediator: SD_OPEN_CONFIG_MEDIATOR
 		do
@@ -281,7 +320,7 @@ feature -- Query
 feature -- Command
 
 	save_data (a_file: STRING_GENERAL): BOOLEAN
-			-- Save current docking config data.
+			-- Save current docking config data
 		require
 			a_file_not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -293,7 +332,7 @@ feature -- Command
 		end
 
 	save_editors_data (a_file: STRING_GENERAL): BOOLEAN
-			-- Save main window editor config.
+			-- Save main window editor config
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -329,7 +368,7 @@ feature -- Command
 		end
 
 	open_config (a_file: STRING_GENERAL): BOOLEAN
-			-- Open a docking config from a_named_file.
+			-- Open a docking config from a_named_file
 		require
 			a_file_not_void: a_file /= Void
 			a_file_readable: is_file_readable (a_file)
@@ -342,7 +381,7 @@ feature -- Command
 		end
 
 	open_editors_config (a_file: STRING_GENERAL)
-			-- Open main window editor config.
+			-- Open main window editor config
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -366,7 +405,7 @@ feature -- Command
 		end
 
 	open_maximized_tool_config (a_file: STRING_GENERAL)
-			-- Open maximized tool config data.
+			-- Open maximized tool config data
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -377,7 +416,7 @@ feature -- Command
 		end
 
 	open_tool_bar_item_config (a_file: STRING_GENERAL)
-			-- Open maximized tool config data.
+			-- Open maximized tool config data
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -388,7 +427,7 @@ feature -- Command
 		end
 
 	set_main_area_background_color (a_color: EV_COLOR)
-			-- Set main area (editors' area) background color.
+			-- Set main area (editors' area) background color
 		require
 			a_color_not_void: a_color /= Void
 			not_destroyed: not is_destroyed
@@ -401,8 +440,8 @@ feature -- Command
 
 	update_mini_tool_bar_size (a_content: SD_CONTENT)
 			-- After mini tool bar widget size changes, update mini tool bar size to best
-			-- fit new size of mini tool bar widget.
-			-- `a_content' can be void if not known.
+			-- fit new size of mini tool bar widget
+			-- `a_content' can be void if not known
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -410,7 +449,7 @@ feature -- Command
 		end
 
 	propagate_accelerators
-			-- Proprogate `main_window' accelerators to all floating zones.
+			-- Proprogate `main_window' accelerators to all floating zones
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -418,7 +457,7 @@ feature -- Command
 		end
 
 	close_editor_place_holder
-			-- Close editors place holder zone.
+			-- Close editors place holder zone
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -426,7 +465,7 @@ feature -- Command
 		end
 
 	lock
-			-- Set `is_locked' to `True'.
+			-- Set `is_locked' to `True'
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -436,7 +475,7 @@ feature -- Command
 		end
 
 	unlock
-			-- Set `is_locked' to `False'.
+			-- Set `is_locked' to `False'
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -446,7 +485,7 @@ feature -- Command
 		end
 
 	lock_editor
-			-- Set `is_editor_locked' to `True'.
+			-- Set `is_editor_locked' to `True'
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -498,7 +537,7 @@ feature -- Command
 		end
 
 	minimize_editors
-			-- Minimize all editors.
+			-- Minimize all editors
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -506,7 +545,7 @@ feature -- Command
 		end
 
 	restore_minimized_editors
-			-- Restore all minimized editors to normal state.
+			-- Restore all minimized editors to normal state
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -522,7 +561,7 @@ feature -- Command
 		end
 
 	show_displayed_floating_windows_in_idle
-			-- Show all displayed floating windows again for Solaris CDE.
+			-- Show all displayed floating windows again for Solaris CDE
 			-- This feature fix bug#13645
 		require
 			not_destroyed: not is_destroyed
@@ -531,8 +570,8 @@ feature -- Command
 		end
 
 	close_all
-			-- Close all contents.
-			-- All actions in {SD_CONTENT} will NOT be called.
+			-- Close all contents
+			-- All actions in {SD_CONTENT} will NOT be called
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -554,11 +593,12 @@ feature -- Command
 		end
 
 	destroy
-			-- Destroy all underline objects.
+			-- Destroy all underline objects
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			l_notebooks: ARRAYED_LIST [SD_NOTEBOOK]
+			l_top, l_bottom, l_left, l_right: like internal_auto_hide_panel_top
 		do
 			internal_shared.docking_manager_list.prune_all (Current)
 			property.destroy
@@ -593,20 +633,24 @@ feature -- Command
 				l_floating_zones.forth
 			end
 
-			if internal_auto_hide_panel_top /= Void then
-				internal_auto_hide_panel_top.destroy
+			l_top := internal_auto_hide_panel_top
+			if l_top /= Void then
+				l_top.destroy
 				internal_auto_hide_panel_top := Void
 			end
-			if internal_auto_hide_panel_bottom /= Void then
-				internal_auto_hide_panel_bottom.destroy
+			l_bottom := internal_auto_hide_panel_bottom
+			if l_bottom /= Void then
+				l_bottom.destroy
 				internal_auto_hide_panel_bottom := Void
 			end
-			if internal_auto_hide_panel_left /= Void then
-				internal_auto_hide_panel_left.destroy
+			l_left := internal_auto_hide_panel_left
+			if l_left /= Void then
+				l_left.destroy
 				internal_auto_hide_panel_left := Void
 			end
-			if internal_auto_hide_panel_right /= Void then
-				internal_auto_hide_panel_right.destroy
+			l_right := internal_auto_hide_panel_right
+			if l_right /= Void then
+				l_right.destroy
 				internal_auto_hide_panel_right := Void
 			end
 
@@ -665,50 +709,50 @@ feature -- Contract support
 			Result := a_window.has_recursive (a_container) or a_container = a_window
 		end
 
-feature {SD_DEBUG_ACCESS, SD_ACCESS} -- Library internals querys.
+feature {SD_DEBUG_ACCESS, SD_ACCESS} -- Library internals querys
 
 	query: SD_DOCKING_MANAGER_QUERY
-			-- Manager helper Current for querys.
+			-- Manager helper Current for querys
 
 	property: SD_DOCKING_MANAGER_PROPERTY
 			-- Manager helper Current for properties
 
 	command: SD_DOCKING_MANAGER_COMMAND
-			-- Manager helper Current for commands.
+			-- Manager helper Current for commands
 
 	agents: SD_DOCKING_MANAGER_AGENTS
-			-- Manager help Current for agents.
+			-- Manager help Current for agents
 
 	zones: SD_DOCKING_MANAGER_ZONES
-			-- Manager help Current for zones issues.
+			-- Manager help Current for zones issues
 
-feature {SD_ACCESS} -- Library internal attributes.
+feature {SD_ACCESS} -- Library internal attributes
 
 	tool_bar_container: SD_TOOL_BAR_CONTAINER
-			-- Container for tool bars on four sides.
+			-- Container for tool bars on four sides
 
 	main_window: EV_WINDOW
-			-- Client programmer's main window.
+			-- Client programmer's main window
 
 	fixed_area: EV_FIXED
-			-- EV_FIXED for DOCKING_MANAGER manage widgets.
+			-- EV_FIXED for DOCKING_MANAGER manage widgets
 
 	top_container: EV_CONTAINER
 			-- Topest level container. It contains EV_VIWEPORT which contains fixed_area.	
 
 	inner_containers: ARRAYED_SET [SD_MULTI_DOCK_AREA]
-			-- All containers.
+			-- All containers
 
 	main_container: SD_MAIN_CONTAINER
-			-- Container has four tab stub areas in four side and main area in center.
+			-- Container has four tab stub areas in four side and main area in center
 
 	is_closing_all: BOOLEAN
-			-- If Current closing all contents now.
+			-- If Current closing all contents now
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER_COMMAND} -- Implementation
 
 	internal_viewport: EV_VIEWPORT
-			-- The viewport which contain `fixed_area'.
+			-- The viewport which contain `fixed_area'
 
 	internal_shared: SD_SHARED
 			-- All singletons
@@ -716,13 +760,13 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER
 	internal_auto_hide_panel_left,
 	internal_auto_hide_panel_right,
 	internal_auto_hide_panel_top,
-	internal_auto_hide_panel_bottom: SD_AUTO_HIDE_PANEL
+	internal_auto_hide_panel_bottom: detachable SD_AUTO_HIDE_PANEL
 			-- Auto hide panels
 
 feature -- Obsolete
 
 	save_config (a_file: STRING_GENERAL)
-			-- Save current docking config.
+			-- Save current docking config
 		obsolete
 			"Use save_data instead"
 		require
@@ -735,7 +779,7 @@ feature -- Obsolete
 		end
 
 	save_editors_config (a_file: STRING_GENERAL)
-			-- Save main window editor config.
+			-- Save main window editor config
 		obsolete
 			"Use save_editors_data instead"
 		require
@@ -778,7 +822,7 @@ invariant
 	internal_viewport_not_void: internal_viewport /= Void
 	fixed_not_void: fixed_area /= Void
 	main_container_not_void: main_container /= Void
-	inner_container_not_void: inner_containers /= Void and inner_containers.count >= 1
+	inner_container_not_void: inner_containers /= Void and then inner_containers.count >= 1
 	contents_not_void: contents /= Void
 	tool_bar_manager_not_void: tool_bar_manager /= Void
 

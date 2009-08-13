@@ -21,17 +21,19 @@ feature {NONE}  -- Initlization
 		require
 			not_void: a_widget /= Void
 		do
+			create internal_shared
+			create {EV_VERTICAL_BOX} top_box
+
 			make_with_shadow
 			disable_user_resize
 			focus_out_actions.extend (agent on_focus_out)
-			create internal_shared
-			create {EV_VERTICAL_BOX} top_box
+
 			top_box.set_border_width (internal_shared.border_width)
 			top_box.set_background_color (internal_shared.border_color)
 			extend (top_box)
 
-			if a_widget.parent /= Void then
-				a_widget.parent.prune (a_widget)
+			if attached a_widget.parent as l_parent then
+				l_parent.prune (a_widget)
 			end
 			top_box.extend (a_widget)
 		end

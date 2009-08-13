@@ -25,17 +25,29 @@ feature -- Initialization
 		do
 			create l_constants
 			create internal_shared
+			create final_toolbar.make (20)
+
+							-- Create the containers
+			create pool_list.make (True)
+
+			create current_list.make (False)
+			create add_button.make_with_text (internal_shared.interface_names.add_button)
+			create remove_button.make_with_text (internal_shared.interface_names.remove_button)
+			create up_button.make_with_text (internal_shared.interface_names.move_button_up)
+			create down_button.make_with_text (internal_shared.interface_names.move_button_down)
+			create ok_button.make_with_text (internal_shared.interface_names.ok)
+			create cancel_button.make_with_text (internal_shared.interface_names.cancel)
+
 			make_with_title (internal_shared.interface_names.tool_bar_customize_title)
 			set_icon_pixmap (internal_shared.icons.tool_bar_customize_dialog)
 
 			close_request_actions.wipe_out
 			close_request_actions.extend (agent exit)
 			prepare
-			create final_toolbar.make (20)
 		end
 
 	prepare
-			-- Initialize world.
+			-- Initialize world
 		local
 			list_container1: EV_VERTICAL_BOX
 			list_container2: EV_VERTICAL_BOX
@@ -48,21 +60,19 @@ feature -- Initialization
 			l_layout_constants: EV_LAYOUT_CONSTANTS
 		do
 			create l_layout_constants
-				-- Create the containers
 			create list_container1
 			create list_container2
-			create central_button_container
-			create right_button_container
-			create square_container
 			create main_container
+			create square_container
+			create right_button_container
+			create central_button_container
 
-			create pool_list.make (True)
 			pool_list.drop_actions.extend (agent move_to_pool_list)
 			pool_list.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			pool_list.disable_multiple_selection
 			pool_list.select_actions.extend (agent on_pool_select)
 			pool_list.deselect_actions.extend (agent on_pool_deselect)
-			create current_list.make (False)
+
 			current_list.drop_actions.extend (agent move_to_current_list)
 			current_list.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			current_list.disable_multiple_selection
@@ -74,28 +84,27 @@ feature -- Initialization
 			create current_label.make_with_text (internal_shared.interface_names.displayed_buttons)
 			current_label.align_text_left
 
-			create add_button.make_with_text (internal_shared.interface_names.add_button)
 			add_button.select_actions.extend (agent add_to_displayed)
 			l_layout_constants.set_default_size_for_button (add_button)
 
 			add_button.disable_sensitive
-			create remove_button.make_with_text (internal_shared.interface_names.remove_button)
+
 			l_layout_constants.set_default_size_for_button (remove_button)
 			remove_button.select_actions.extend (agent remove_from_displayed)
 			remove_button.disable_sensitive
-			create up_button.make_with_text (internal_shared.interface_names.move_button_up)
+
 			l_layout_constants.set_default_size_for_button (up_button)
 			up_button.select_actions.extend (agent move_up)
 			up_button.disable_sensitive
-			create down_button.make_with_text (internal_shared.interface_names.move_button_down)
+
 			l_layout_constants.set_default_size_for_button (down_button)
 			down_button.select_actions.extend (agent move_down)
 			down_button.disable_sensitive
-			create ok_button.make_with_text (internal_shared.interface_names.ok)
+
 			l_layout_constants.set_default_size_for_button (ok_button)
 			ok_button.select_actions.extend (agent generate_toolbar)
 			ok_button.select_actions.extend (agent exit)
-			create cancel_button.make_with_text (internal_shared.interface_names.cancel)
+
 			cancel_button.select_actions.extend (agent exit)
 			l_layout_constants.set_default_size_for_button (cancel_button)
 
@@ -149,7 +158,7 @@ feature -- Initialization
 
 	customize_toolbar (a_parent: EV_WINDOW; text_displayed: BOOLEAN; text_important: BOOLEAN; toolbar: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
 			-- Reload the dialog box with available buttons found in `toolbar'
-			-- and set `is_text_displayed' to `text_displayed'.
+			-- and set `is_text_displayed' to `text_displayed'
 			-- `toolbar' is a list of separators and commands that represents both
 			--  * the current aspect of the toolbar
 			-- 	* the pool of controls available
@@ -186,23 +195,23 @@ feature -- Result
 			if attached {SD_CUSTOMIZABLE_LIST_ITEM} a_stone as an_item then
 				if attached {SD_TOOL_BAR_SEPARATOR} an_item.data as l_separator then
 					Result := True
-				elseif attached {SD_TOOL_BAR_ITEM} an_item.data as l_tool_bar_item then
-					Result := all_items.has (l_tool_bar_item)
+				elseif attached {SD_TOOL_BAR_ITEM} an_item.data as l_tool_bar_item and attached all_items as l_all_items then
+					Result := l_all_items.has (l_tool_bar_item)
 				end
 			end
 		end
 
 	w_height: INTEGER
-			-- current height of the window.
+			-- current height of the window
 			--
 			-- Useful only because Vision2 currently does not remember the size
-			-- of the window after a hide/show.
+			-- of the window after a hide/show
 
 	w_width: INTEGER
-			-- current width of the window.
+			-- current width of the window
 			--
 			-- Useful only because Vision2 currently does not remember the size
-			-- of the window after a hide/show.
+			-- of the window after a hide/show
 
 feature {NONE} -- Graphical interface
 
@@ -230,12 +239,8 @@ feature {NONE} -- Graphical interface
 	cancel_button: EV_BUTTON
 			-- button labeled "Cancel"
 
-	text_combo: EV_COMBO_BOX
-			-- box to select whether text is displayed on the right of buttons
-			-- or not.
-
-	all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			-- All tool bar items in one SD_TOOL_BAR_CONTENT.
+	all_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- All tool bar items in one SD_TOOL_BAR_CONTENT
 
 feature {NONE} -- Button actions
 
@@ -243,8 +248,8 @@ feature {NONE} -- Button actions
 			-- Generate a "toolbar" in `final_toolbar' from the user input
 			-- and set `is_text_displayed'
 		local
-			cur: SD_CUSTOMIZABLE_LIST_ITEM
-			cmd: SD_TOOL_BAR_ITEM
+			cur: detachable SD_CUSTOMIZABLE_LIST_ITEM
+			cmd: detachable SD_TOOL_BAR_ITEM
 		do
 			final_toolbar.wipe_out
 			from
@@ -254,12 +259,14 @@ feature {NONE} -- Button actions
 			loop
 					-- Copy the content of current_list to final_toolbar
 				cur := current_list.customizable_item
-				cmd ?= cur.data
-				if cmd /= Void then
-					cmd.enable_displayed
-					final_toolbar.extend (cmd)
-				else
-					final_toolbar.extend (cur.data)
+				if cur /= Void then
+					cmd ?= cur.data
+					if cmd /= Void then
+						cmd.enable_displayed
+						final_toolbar.extend (cmd)
+					else
+						final_toolbar.extend (cur.data)
+					end
 				end
 				current_list.forth
 			end -- loop
@@ -272,12 +279,14 @@ feature {NONE} -- Button actions
 			loop
 					-- Copy the content of pool_list to final_toolbar
 				cur := pool_list.customizable_item
-				cmd ?= cur.data
-				if cmd /= Void then
-					cmd.disable_displayed
-					final_toolbar.extend (cmd)
-				else
-					final_toolbar.extend (cur.data)
+				if cur /= Void then
+					cmd ?= cur.data
+					if cmd /= Void then
+						cmd.disable_displayed
+						final_toolbar.extend (cmd)
+					else
+						final_toolbar.extend (cur.data)
+					end
 				end
 				pool_list.forth
 			end -- loop
@@ -295,8 +304,8 @@ feature {NONE} -- Button actions
 	add_to_displayed
 			-- Move the currently selected button from the pool to the displayed buttons
 		local
-			sel: SD_CUSTOMIZABLE_LIST_ITEM
-			sel2: SD_CUSTOMIZABLE_LIST_ITEM
+			sel: detachable SD_CUSTOMIZABLE_LIST_ITEM
+			sel2: detachable SD_CUSTOMIZABLE_LIST_ITEM
 		do
 			sel := pool_list.customizable_selected_item
 			if sel /= Void then
@@ -322,8 +331,8 @@ feature {NONE} -- Button actions
 	remove_from_displayed
 			-- Move the currently selected button from the pool to the displayed buttons
 		local
-			sel: SD_CUSTOMIZABLE_LIST_ITEM
-			sel2: SD_CUSTOMIZABLE_LIST_ITEM
+			sel: detachable SD_CUSTOMIZABLE_LIST_ITEM
+			sel2: detachable SD_CUSTOMIZABLE_LIST_ITEM
 		do
 			sel := current_list.customizable_selected_item
 			if sel /= Void then
@@ -346,7 +355,7 @@ feature {NONE} -- Button actions
 	move_up
 			-- Move the currently selected button one position up in `current_list'
 		local
-			sel: SD_CUSTOMIZABLE_LIST_ITEM
+			sel: detachable SD_CUSTOMIZABLE_LIST_ITEM
 		do
 			moving := True
 			sel := current_list.customizable_selected_item
@@ -366,7 +375,7 @@ feature {NONE} -- Button actions
 	move_down
 			-- Move the currently selected button one position down in `current_list'
 		local
-			sel: SD_CUSTOMIZABLE_LIST_ITEM
+			sel: detachable SD_CUSTOMIZABLE_LIST_ITEM
 		do
 			moving := True
 			sel := current_list.customizable_selected_item
@@ -428,14 +437,14 @@ feature {NONE} -- Actions performed by agents like graying buttons
 	move_to_pool_list (an_item: SD_CUSTOMIZABLE_LIST_ITEM)
 			-- Move `an_item' to pool list.
 		do
-			if an_item.parent /= Void then
+			if attached an_item.parent as l_parent then
 				if not an_item.is_separator then
-					an_item.parent.start
-					an_item.parent.prune (an_item)
+					l_parent.start
+					l_parent.prune (an_item)
 					pool_list.extend (an_item)
 				elseif (not an_item.custom_parent.is_a_pool_list) then
-					an_item.parent.start
-					an_item.parent.prune (an_item)
+					l_parent.start
+					l_parent.prune (an_item)
 				end
 			end
 		end
@@ -443,10 +452,10 @@ feature {NONE} -- Actions performed by agents like graying buttons
 	move_to_current_list (an_item: SD_CUSTOMIZABLE_LIST_ITEM)
 			-- Move `an_item' to current list.
 		do
-			if an_item.parent /= Void then
+			if attached an_item.parent as l_parent then
 				if (not an_item.is_separator) or else (not an_item.custom_parent.is_a_pool_list) then
-					an_item.parent.start
-					an_item.parent.prune (an_item)
+					l_parent.start
+					l_parent.prune (an_item)
 					current_list.extend (an_item)
 				else
 					current_list.extend (create {SD_CUSTOMIZABLE_LIST_ITEM}.make (Current, create {SD_TOOL_BAR_SEPARATOR}.make))
@@ -481,20 +490,24 @@ feature {NONE} -- Internal data
 			-- `src' was dropped onto `dst'.
 			-- Set up events for `src' if it is a newly created separator. (Eww how ugly...)
 		local
-			conv_cust: SD_CUSTOMIZABLE_LIST_ITEM
+			conv_cust: detachable SD_CUSTOMIZABLE_LIST_ITEM
 		do
 			if
 				(src.is_separator and src.custom_parent /= Void) and then
 				src.custom_parent.is_a_pool_list and then
 				not dst.custom_parent.is_a_pool_list
 			then
-					-- `dst' must have added a new separator after itself.
-				dst.parent.start
-				dst.parent.search (dst)
-				dst.parent.forth
-				conv_cust ?= dst.parent.item
-				if conv_cust /= Void then
-					set_up_events (conv_cust)
+					-- `dst' must have added a new separator after itself
+				if attached dst.parent as l_parent then
+					l_parent.start
+					l_parent.search (dst)
+					l_parent.forth
+					conv_cust ?= l_parent.item
+					if conv_cust /= Void then
+						set_up_events (conv_cust)
+					end
+				else
+					check False end -- Implied by list iitem displaying in dialog
 				end
 			end
 		end

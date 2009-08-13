@@ -12,8 +12,24 @@ class
 inherit
 	SD_TOOL_BAR_CONTAINER_IMP
 
+create
+	make
 
 feature {NONE} -- Initialization
+
+	make
+			-- Initialization
+		do
+				-- Create all widgets.
+			create top
+			create l_ev_horizontal_box_1
+			create left
+			create center
+			create right
+			create bottom
+
+			default_create
+		end
 
 	user_initialization
 			-- Called by `initialize'.

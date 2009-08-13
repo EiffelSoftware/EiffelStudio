@@ -44,28 +44,31 @@ feature	{NONE} -- Initlization
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
 			create internal_shared
-			internal_docking_manager := a_content.docking_manager
+			set_docking_manager (a_content.docking_manager)
+			create window.make (a_content.type, {SD_ENUMERATION}.auto_hide)
+			internal_direction := a_direction
+			internal_content := a_content
+			create resize_bar.make (a_direction)
+
 			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
 				init (False)
 			else
 				init (True)
 			end
-			internal_direction := a_direction
-			create window.make (a_content.type, Current)
-			internal_content := a_content
+
 			window.set_user_widget (internal_content.user_widget)
 			window.title_bar.set_title (internal_content.long_title)
 			window.title_bar.set_show_normal_max (False)
 			window.close_request_actions.extend (agent on_close_request)
 			window.stick_actions.extend (agent stick)
-			if a_content.mini_toolbar /= Void then
-				if a_content.mini_toolbar.parent /= Void then
-					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+			if attached a_content.mini_toolbar as l_mini_toolbar then
+				if attached l_mini_toolbar.parent as l_parent then
+					l_parent.prune (l_mini_toolbar)
 				end
-				window.title_bar.extend_custom_area (a_content.mini_toolbar)
+				window.title_bar.extend_custom_area (l_mini_toolbar)
 			end
-			create resize_bar.make (a_direction, Current)
 
+			resize_bar.set_resize_source (Current)
 			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.top then
 				extend_hor_ver_box (window)
 				extend_hor_ver_box (resize_bar)
@@ -100,17 +103,17 @@ feature {NONE} -- Implementation
 		do
 			-- Set the area which allow user to resize the window.
 			if internal_direction = {SD_ENUMERATION}.left then
-				a_screen_boundary.set_right (internal_docking_manager.query.container_rectangle_screen.right)
+				a_screen_boundary.set_right (docking_manager.query.container_rectangle_screen.right)
 				a_screen_boundary.set_left (window.screen_x + minimum_width)
 			elseif internal_direction = {SD_ENUMERATION}.right then
 				a_screen_boundary.set_right (window.screen_x + window.width - minimum_width)
-				a_screen_boundary.set_left (internal_docking_manager.query.container_rectangle_screen.left)
+				a_screen_boundary.set_left (docking_manager.query.container_rectangle_screen.left)
 			elseif internal_direction = {SD_ENUMERATION}.top then
-				a_screen_boundary.set_bottom (internal_docking_manager.query.container_rectangle_screen.bottom)
+				a_screen_boundary.set_bottom (docking_manager.query.container_rectangle_screen.bottom)
 				a_screen_boundary.set_top (window.screen_y + minimum_height)
 			elseif internal_direction = {SD_ENUMERATION}.bottom then
 				a_screen_boundary.set_bottom ((window.screen_y + window.height) - minimum_height)
-				a_screen_boundary.set_top (internal_docking_manager.query.container_rectangle_screen.top)
+				a_screen_boundary.set_top (docking_manager.query.container_rectangle_screen.top)
 			end
 			debug ("docking")
 				io.put_string ("%N allow resize area is: " + a_screen_boundary.out)
@@ -122,20 +125,20 @@ feature {NONE} -- Implementation
 		do
 			disable_item_expand (resize_bar)
 			if internal_direction = {SD_ENUMERATION}.left or internal_direction = {SD_ENUMERATION}.right then
-				internal_docking_manager.zones.set_zone_size (Current, width + a_delta, height)
+				docking_manager.zones.set_zone_size (Current, width + a_delta, height)
 				if a_bar.direction = {SD_ENUMERATION}.right then
-					internal_docking_manager.fixed_area.set_item_position (Current, x_position - a_delta, y_position)
+					docking_manager.fixed_area.set_item_position (Current, x_position - a_delta, y_position)
 				end
 			else
 				debug ("docking")
 					io.put_string ("%N SD_AUTO_HIDE_ZONE before set zone height: " + height.out + " " + ($Current).out)
 				end
-				internal_docking_manager.zones.set_zone_size (Current, width, height + a_delta)
+				docking_manager.zones.set_zone_size (Current, width, height + a_delta)
 				debug ("docking")
 					io.put_string ("%N SD_AUTO_HIDE_ZONE after set zone height: " + height.out)
 				end
 				if a_bar.direction = {SD_ENUMERATION}.bottom then
-					internal_docking_manager.fixed_area.set_item_position (Current, x_position, y_position - a_delta)
+					docking_manager.fixed_area.set_item_position (Current, x_position, y_position - a_delta)
 				end
 			end
 		end
@@ -204,11 +207,11 @@ feature -- Command
 			window.title_bar.destroy
 			window.destroy
 			resize_bar.destroy
-			if horizontal_box /= Void then
+			if internal_horizontal_box /= Void then
 				horizontal_box.destroy
 			end
 			pointer_enter_actions.wipe_out
-			pointer_enter_actions := Void
+			internal_pointer_enter_actions := Void
 		end
 
 invariant

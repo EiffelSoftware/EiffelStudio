@@ -54,20 +54,23 @@ create
 feature {NONE} -- Initlization
 
 	make (a_content: SD_CONTENT)
-			-- Creation method. When first time insert a SD_CONTENT.
+			-- Creation method
+			-- When first time insert a SD_CONTENT
 			-- FIXIT: should add a_content and a_target_zone in this function?
 		require
 			a_content_not_void: a_content /= Void
 			a_content_parent_void: a_content.user_widget.parent = Void
 		do
 			create internal_shared
-			internal_docking_manager := a_content.docking_manager
+			set_docking_manager (a_content.docking_manager)
+			create internal_notebook.make (docking_manager)
+			internal_title_bar := internal_shared.widget_factory.title_bar (a_content.type, {SD_ENUMERATION}.tab)
+
 			default_create
-			create internal_notebook.make (internal_docking_manager)
+
 			internal_notebook.set_minimum_size (0, 0)
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_bottom)
 
-			internal_title_bar := internal_shared.widget_factory.title_bar (a_content.type, Current)
 			internal_title_bar.set_stick (True)
 			internal_title_bar.drag_actions.extend (agent on_drag_title_bar)
 			internal_title_bar.stick_select_actions.extend (agent on_stick)
@@ -119,8 +122,8 @@ feature -- Command
 			-- <Precursor>
 		do
 			if not has (a_content) then
-				if a_content.user_widget.parent /= Void then
-					a_content.user_widget.parent.prune (a_content.user_widget)
+				if attached a_content.user_widget.parent as l_parent then
+					l_parent.prune (a_content.user_widget)
 				end
 				Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
 				internal_title_bar.set_title (a_content.long_title)
@@ -141,8 +144,9 @@ feature -- Command
 				l_index := 1
 			end
 			l_selected := contents.i_th (l_index)
-			-- `l_selected' should not be void in theroy.
-			-- But in fact, it can be void sometimes, see bug#12807.
+			-- `l_selected' should not be void in theroy
+			-- But in fact, it can be void sometimes.
+			-- See bug#12807
 			if l_selected /= Void then
 				internal_title_bar.set_title (l_selected.long_title)
 				update_mini_tool_bar (l_selected)
@@ -251,11 +255,11 @@ feature -- Command
 	update_mini_tool_bar (a_content: SD_CONTENT)
 			-- <Precursor>
 		do
-			if a_content.mini_toolbar /= Void then
-				if a_content.mini_toolbar.parent /= Void then
-					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+			if attached a_content.mini_toolbar as l_mini_toolbar then
+				if attached l_mini_toolbar.parent as l_parent then
+					l_parent.prune (l_mini_toolbar)
 				end
-				internal_title_bar.extend_custom_area (a_content.mini_toolbar)
+				internal_title_bar.extend_custom_area (l_mini_toolbar)
 			else
 				internal_title_bar.clear_custom_widget
 			end
@@ -276,7 +280,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR} --
 			a_config_data.set_selected_tab_index (selected_item_index)
 		end
 
-feature {SD_TAB_STATE} -- Internal issues.
+feature {SD_TAB_STATE} -- Internal issues
 
 	selected_item_index: INTEGER
 			-- Selected item index
@@ -321,7 +325,7 @@ feature -- Agents for user
 			-- <Precursor>
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
-			internal_docking_manager.command.remove_auto_hide_zones (True)
+			docking_manager.command.remove_auto_hide_zones (True)
 			internal_title_bar.enable_focus_color
 			internal_notebook.set_focus_color (True)
 			if a_content /= Void then
@@ -367,10 +371,10 @@ feature {NONE} -- Agents for docker
 			l_content := contents.i_th (internal_notebook.selected_item_index)
 			internal_title_bar.set_title (l_content.long_title)
 			update_mini_tool_bar (l_content)
-			if not l_content.focus_in_actions.is_empty and then internal_docking_manager.property.last_focus_content /= l_content then
+			if not l_content.focus_in_actions.is_empty and then docking_manager.property.last_focus_content /= l_content then
 				l_content.focus_in_actions.call (Void)
 			end
-			internal_docking_manager.property.set_last_focus_content (l_content)
+			docking_manager.property.set_last_focus_content (l_content)
 		ensure
 --			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).long_title)
 --			mini_tool_bar_added: not internal_diable_on_select_tab implies (contents.i_th (internal_notebook.selected_item_index).mini_toolbar /= Void implies
@@ -380,52 +384,58 @@ feature {NONE} -- Agents for docker
 	on_drag_title_bar (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Handle user drag title bar
 		local
-			l_tab_state: SD_TAB_STATE
+			l_tab_state: detachable SD_TAB_STATE
+			l_mediator: like internal_docker_mediator
 		do
 			if not is_destroyed and then is_displayed then
 				-- We should check if `internal_docker_mediator' is void since `on_drag_title_bar' will be called multi times when starting dragging on GTK			
 				if internal_docker_mediator = Void then
 					is_drag_title_bar := True
-					internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
-					internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+					l_mediator := docking_manager.query.docker_mediator (Current, docking_manager)
+					internal_docker_mediator := l_mediator
+					l_mediator.cancel_actions.extend (agent on_cancel_dragging)
 
 					enable_capture
-					internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
+					l_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 
 					l_tab_state ?= content.state
 					check l_tab_state /= Void end
 				end
 			end
 		ensure
-			internal_docker_mediator_tracing_pointer: internal_docker_mediator /= Void implies internal_docker_mediator.is_tracing_pointer
+			internal_docker_mediator_tracing_pointer: attached internal_docker_mediator as le_mediator implies le_mediator.is_tracing_pointer
 		end
 
 	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Handle pointer release
 		do
-			if internal_docker_mediator /= Void then
+			if attached internal_docker_mediator as l_mediator then
 				debug ("docking")
 					io.put_string ("%N SD_TAB_ZONE Handle pointer release.")
 				end
 				disable_capture
-				internal_docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
+				l_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
 				internal_docker_mediator := Void
 				is_drag_title_bar := False
 			end
 		ensure
-			internal_docker_mediator_stop: old internal_docker_mediator /= Void implies internal_docker_mediator = Void
+			internal_docker_mediator_stop: attached old internal_docker_mediator implies internal_docker_mediator = Void
 		end
 
 	on_notebook_drag (a_content: SD_CONTENT; a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Handle notebook drag actions
+		local
+			l_mediator: like internal_docker_mediator
 		do
 			-- We should check if `internal_docker_mediator' is void since `on_drag_title_bar' will be called multi times when starting dragging on GTK			
-			if internal_docker_mediator = Void then
-				internal_docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
-				internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+			l_mediator := internal_docker_mediator
+			if l_mediator = Void then
+				l_mediator := docking_manager.query.docker_mediator (Current, docking_manager)
+				internal_docker_mediator := l_mediator
+				l_mediator.cancel_actions.extend (agent on_cancel_dragging)
 				-- Enable captuer must called before start tracing pointer on GTK, otherwise, pointer realse actions may not be called on GTK.
 				enable_capture
-				internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
+				l_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
 			end
 		end
 
@@ -433,12 +443,12 @@ feature {NONE} -- Agents for docker
 			-- Handle pointer motion
 		do
 			-- If `internal_docker_mediator' /= Void and `internal_docker_mediator'.is_tracing = False, it means, we just started enable capture in `on_notebook_drag', but not called `start_tracing_pointer' yet.
-			if internal_docker_mediator /= Void and then internal_docker_mediator.is_tracing then
-				internal_docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
+			if attached internal_docker_mediator as l_mediator and then l_mediator.is_tracing then
+				l_mediator.on_pointer_motion (a_screen_x, a_screen_y)
 			end
 		ensure
-			pointer_motion_forwarded: internal_docker_mediator /= Void and then internal_docker_mediator.is_tracing implies
-				internal_docker_mediator.screen_x = a_screen_x and internal_docker_mediator.screen_y = a_screen_y
+			pointer_motion_forwarded: attached internal_docker_mediator as le_mediator and then le_mediator.is_tracing implies
+				le_mediator.screen_x = a_screen_x and le_mediator.screen_y = a_screen_y
 		end
 
 	on_notebook_drop (a_any: ANY)
@@ -459,7 +469,7 @@ feature {NONE} -- Implementation
 	internal_title_bar: SD_TITLE_BAR
 			-- Title bar
 
-	internal_docker_mediator: SD_DOCKER_MEDIATOR
+	internal_docker_mediator: detachable SD_DOCKER_MEDIATOR
 			-- Docker mediator
 
 invariant

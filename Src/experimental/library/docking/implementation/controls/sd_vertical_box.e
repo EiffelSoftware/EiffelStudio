@@ -30,6 +30,8 @@ inherit
 		end
 
 	EV_VERTICAL_BOX
+		rename
+			first as first_vision2
 		export
 			{SD_VERTICAL_BOX} cl_extend
 		redefine
@@ -37,12 +39,24 @@ inherit
 			implementation,
 			extend,
 			may_contain,
-			first,
+--			first,
 			last,
 			is_in_default_state
 		end
 
+create
+	make
+
 feature {NONE} -- Initlization
+
+	make
+			-- Creation method
+		do
+			create fake_spliter
+			default_create
+		end
+
+feature {NONE} -- Query
 
 	count_except_spliter: INTEGER
 			-- Count except `fake_spliter'
@@ -56,21 +70,20 @@ feature {NONE} -- Initlization
 	full_docking: BOOLEAN
 			-- <Precursor>
 		do
-			Result := first /= Void and second /= Void
+			Result := count > 0 and then (first /= Void and second /= Void)
 		end
 
 	initialize
 			-- <Precursor>
 		do
 			Precursor {EV_VERTICAL_BOX}
-			create fake_spliter
 			fake_spliter.set_minimum_height (spliter_width)
 			extend (fake_spliter)
 			disable_item_expand (fake_spliter)
 		end
 
 	fake_spliter: EV_CELL
-			-- Fake spiter which can't be dragged.
+			-- Fake spiter which can't be dragged
 
 	extend (a_widget: EV_WIDGET)
 			-- <Precursor>
@@ -96,10 +109,10 @@ feature {NONE} -- Initlization
 			end
 		end
 
-	first: EV_WIDGET
+	first: detachable EV_WIDGET
 			-- <Precursor>
 		do
-			if i_th (1) /= Void then
+			if count > 0 and then i_th (1) /= Void then
 				if i_th (1) /= fake_spliter then
 					Result := i_th (1)
 				end
@@ -117,20 +130,24 @@ feature {NONE} -- Initlization
 
 	last: EV_WIDGET
 			-- <Precursor>
+		local
+			l_result: detachable like last
 		do
-			if Result = Void and count = 1 then
-				Result := fake_spliter
+			if l_result = Void and count = 1 then
+				l_result := fake_spliter
 			else
 				if second_was_void then
-					Result := first
+					l_result := first
 				else
-					Result := second
+					l_result := second
 				end
 			end
+			check l_result /= Void end -- Implied by precondition `not_empty'
+			Result := l_result
 		end
 
 	spliter_width: INTEGER = 4
-			-- Fake spliter width.
+			-- Fake spliter width
 
 feature -- Contract support
 
@@ -142,7 +159,7 @@ feature -- Contract support
 
 feature -- Access
 
-	second: EV_WIDGET
+	second: detachable EV_WIDGET
 			-- <Precursor>
 		do
 			if first = Void then
@@ -161,7 +178,7 @@ feature -- Access
 
 	maximum_split_position: INTEGER
 			-- <Precursor>
-			-- This value is useful when executing SD_MULTI_DOCK_AREA.restore_spliter_position.
+			-- This value is useful when executing SD_MULTI_DOCK_AREA.restore_spliter_position
 		do
 			Result := {INTEGER}.max_value
 		end
@@ -194,7 +211,7 @@ feature -- Setting
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_VERTICAL_BOX_I
-			-- Responsible for interaction with native graphics toolkit.
+			-- Responsible for interaction with native graphics toolkit
 
 invariant
 

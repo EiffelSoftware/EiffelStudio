@@ -19,7 +19,7 @@ feature {NONE} -- Initlization
 			container_direction := {SD_ENUMERATION}.top
 		end
 
-feature -- Properties which record information in one row.
+feature -- Properties which record information in one row
 
 	size: INTEGER
 			-- SD_TOOL_BAR_ZONE size
@@ -35,7 +35,7 @@ feature -- Properties which record information in one row.
 		end
 
 	position: INTEGER
-			-- SD_TOOL_BAR_ZONE position in its parent row.
+			-- SD_TOOL_BAR_ZONE position in its parent row
 
 	set_position (a_position: INTEGER)
 			-- Set `position'
@@ -58,11 +58,11 @@ feature -- Properties which record information in one row.
 			set: is_only_zone = a_only_zone
 		end
 
-feature -- Propertites which record row infomations.
+feature -- Propertites which record row infomations
 
 	container_direction: INTEGER
-			-- Tool bar container direction.
-			-- One value of {SD_ENUMERATION}.top, dock_bottom, dock_left, dock_right.
+			-- Tool bar container direction
+			-- One value of {SD_ENUMERATION}.top, dock_bottom, dock_left, dock_right
 
 	set_container_direction (a_direction: INTEGER)
 			-- Set `container_direction'
@@ -87,7 +87,7 @@ feature -- Propertites which record row infomations.
 			set: container_row_number = a_row_number
 		end
 
-feature -- Properties which record floating informations.
+feature -- Properties which record floating informations
 
 	screen_x: INTEGER
 			-- `internal_screen_x'
@@ -136,7 +136,7 @@ feature -- Properties which record floating informations.
 			set: is_screen_position_set = True
 		end
 
-	floating_group_info: SD_TOOL_BAR_GROUP_INFO
+	floating_group_info: detachable SD_TOOL_BAR_GROUP_INFO
 			-- How items positioned when floating?
 
 	set_floating_group_info (a_group_info: SD_TOOL_BAR_GROUP_INFO)
@@ -161,17 +161,17 @@ feature -- Items layout
 			set: items_layout = a_layout
 		end
 
-	items_layout: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
+	items_layout: detachable ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
 			-- Items layout, first is item name, second is whether item `is_displayed'
-			-- Order of this list, it's order items displayed.
+			-- Order of this list, it's order items displayed
 
-feature -- Customize dialog data.
+feature -- Customize dialog data
 
 	customize_dialog_width, customize_dialog_height: INTEGER
-			-- Tool Bar customize dialog last width/height shown on the screen.
+			-- Tool Bar customize dialog last width/height shown on the screen
 
 	set_cutomize_dialog_size (a_width, a_height: INTEGER)
-			-- Set `customize_dialog_width' and `customize_dialog_height' with `a_width' and `a_height'.
+			-- Set `customize_dialog_width' and `customize_dialog_height' with `a_width' and `a_height'
 		require
 			valid: a_width >= 0 and a_height >= 0
 		do
@@ -211,7 +211,7 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	internal_screen_x, internal_screen_y: INTEGER
-			-- Floating screen position.
+			-- Floating screen position
 
 	is_screen_position_set: BOOLEAN;
 			-- If already setted `internal_screen_x' and `internal_screen_y'?

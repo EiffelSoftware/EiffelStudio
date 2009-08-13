@@ -11,20 +11,24 @@ class
 
 feature -- Tab and Docking data.
 
-	titles: ARRAYED_LIST [STRING_GENERAL]
+	titles: detachable ARRAYED_LIST [STRING_GENERAL]
 			-- All titles. If it's a docking zone, there is only one title.
 
 	add_title (a_title: STRING_GENERAL)
 			-- Add `a_title'.
 		require
 			a_title_not_void: a_title /= Void
+		local
+			l_titles: like titles
 		do
-			if titles = Void then
-				create titles.make (1)
+			l_titles := titles
+			if l_titles = Void then
+				create l_titles.make (1)
+				titles := l_titles
 			end
-			titles.extend (a_title)
+			l_titles.extend (a_title)
 		ensure
-			added: titles.has (a_title)
+			added: attached titles as le_titles implies le_titles.has (a_title)
 		end
 
 	set_titles (a_titles: like titles)
@@ -57,7 +61,7 @@ feature -- Tab and Docking data.
 			set: split_proportion = a_value
 		end
 
-	children_left: SD_INNER_CONTAINER_DATA
+	children_left: detachable SD_INNER_CONTAINER_DATA
 			-- `Current' data's left children.
 
 	set_children_left (a_data: like children_left)
@@ -70,7 +74,7 @@ feature -- Tab and Docking data.
 			set: children_left = a_data
 		end
 
-	children_right: SD_INNER_CONTAINER_DATA
+	children_right: detachable SD_INNER_CONTAINER_DATA
 			-- `Current' data's right children.
 
 	set_children_right (a_data: like children_right)
@@ -83,7 +87,7 @@ feature -- Tab and Docking data.
 			set: children_right = a_data
 		end
 
-	parent: like Current
+	parent: detachable like Current
 			-- `Current' parent data.
 
 	set_parent (a_parent: like Current)
@@ -174,7 +178,7 @@ feature -- Floating data.
 
 feature -- Common properties
 
-	state: STRING_32
+	state: detachable STRING_32
 			-- One generator type name of SD_STATE and it's descendents.
 
 	set_state (a_class_name: STRING_GENERAL)
@@ -182,7 +186,7 @@ feature -- Common properties
 		do
 			state := a_class_name
 		ensure
-			set: a_class_name /= Void implies state.is_equal (a_class_name.as_string_32)
+			set: (a_class_name /= Void and attached state as le_state) implies state ~ (a_class_name.as_string_32)
 		end
 
 	direction: INTEGER

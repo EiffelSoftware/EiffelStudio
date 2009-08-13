@@ -1,7 +1,7 @@
 note
 	description: "[
-					Tool bar that support SD_TOOL_BAR_WIDGET_ITEM.
-					A decorator for SD_TOOL_BAR.
+					Tool bar that support SD_TOOL_BAR_WIDGET_ITEM
+					A decorator for SD_TOOL_BAR
 																	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -53,11 +53,11 @@ create
 feature {NONE} -- Initlization
 
 	make (a_tool_bar: SD_TOOL_BAR)
-			-- Creation method.
+			-- Creation method
 		require
 			not_void: a_tool_bar /= Void
 		do
-			tool_bar := a_tool_bar
+			internal_tool_bar := a_tool_bar
 
 			tool_bar.expose_actions.extend (agent on_expose)
 
@@ -83,7 +83,7 @@ feature -- Properties
 	row_height: INTEGER
 			-- <Precursor>
 		local
-			l_tool_bar: SD_TOOL_BAR
+			l_tool_bar: detachable SD_TOOL_BAR
 		do
 			if is_need_calculate_size then
 				set_need_calculate_size (False)
@@ -94,8 +94,8 @@ feature -- Properties
 					after
 				loop
 					l_tool_bar ?= item
-					-- Ignore SD_TOOL_BAR's height, only take account of other widgets' height such as EV_COMBO_BOX.
-					-- Otherwise, when dragging a multi-row floating tool bar, the height is larger and larger after dock it back.
+					-- Ignore SD_TOOL_BAR's height, only take account of other widgets' height such as EV_COMBO_BOX
+					-- Otherwise, when dragging a multi-row floating tool bar, the height is larger and larger after dock it back
 					if l_tool_bar = Void then
 						Result := Result.max (item.minimum_height)
 					end
@@ -112,7 +112,7 @@ feature -- Command
 	extend (a_item: SD_TOOL_BAR_ITEM)
 			-- <Precursor>
 		local
-			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
 			tool_bar.extend (a_item)
 			a_item.set_tool_bar (Current)
@@ -127,7 +127,7 @@ feature -- Command
 	force (a_item: SD_TOOL_BAR_ITEM; a_index: INTEGER)
 			-- <Precursor>
 		local
-			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
 			tool_bar.force (a_item, a_index)
 			l_widget_item ?= a_item
@@ -141,8 +141,8 @@ feature -- Command
 	prune (a_item: SD_TOOL_BAR_ITEM)
 			-- <Precursor>
 		local
-			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
-			l_resizable_item: SD_TOOL_BAR_RESIZABLE_ITEM
+			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
+			l_resizable_item: detachable SD_TOOL_BAR_RESIZABLE_ITEM
 		do
 			tool_bar.prune (a_item)
 			l_widget_item ?= a_item
@@ -159,6 +159,8 @@ feature -- Command
 
 	compute_minimum_size
 			-- <Precursor>
+		local
+			l_width, l_height: INTEGER
 		do
 			-- See bug#15525, toolbar can be void if `is_destroyed'
 			if not is_destroyed then
@@ -167,7 +169,15 @@ feature -- Command
 					check has: has_fixed (lt_widget) end
 
 					set_minimum_size (tool_bar.minimum_width, tool_bar.minimum_height)
-					set_item_size (lt_widget, minimum_width, minimum_height)
+					l_width := minimum_width
+					l_height := minimum_height
+					if l_width < 1 then
+						l_width := 1
+					end
+					if l_height < 1 then
+						l_height := 1
+					end
+					set_item_size (lt_widget, l_width, l_height)
 				else
 					check not_possible: False end
 				end
@@ -195,7 +205,7 @@ feature -- Command
 	in_main_window: BOOLEAN
 			-- If docking in main window?
 		local
-			l_tool_bar_row: SD_TOOL_BAR_ROW
+			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
 		do
 			l_tool_bar_row ?= parent
 			if l_tool_bar_row /= Void then
@@ -204,9 +214,9 @@ feature -- Command
 		end
 
 	resize
-			-- Recalculate items sizes in the row.
+			-- Recalculate items sizes in the row
 		local
-			l_tool_bar_row: SD_TOOL_BAR_ROW
+			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
 		do
 			l_tool_bar_row ?= parent
 			if l_tool_bar_row /= Void then
@@ -215,10 +225,11 @@ feature -- Command
 		end
 
 	resize_for_sizeble_item
-			--	Call `resize' when no hidden items exist.
+			--	Call `resize' when no hidden items exist
 		local
-			l_tool_bar_row: SD_TOOL_BAR_ROW
-			l_content: SD_TOOL_BAR_CONTENT
+			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
+			l_content: detachable SD_TOOL_BAR_CONTENT
+			l_zone: detachable SD_TOOL_BAR_ZONE
 		do
 			l_tool_bar_row ?= parent
 			if l_tool_bar_row /= Void then
@@ -228,16 +239,18 @@ feature -- Command
 					if l_tool_bar_row.hidden_items.count > 0 then
 						resize
 					end
-					l_content.zone.update_maximum_size
+					l_zone := l_content.zone
+					check l_zone /= Void end -- Implied by current docking in SD_TOOL_BAR_ROW implies current is manaaged by docking manager (not using as standalone)
+					l_zone.update_maximum_size
 				end
 			end
 		end
 
 	screen_x_end_row: INTEGER
-			-- Maximum x position.
+			-- Maximum x position
 		local
-			l_tool_bar_row: SD_TOOL_BAR_ROW
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_found, l_is_end: BOOLEAN
 			l_next_tool_bar: SD_GENERIC_TOOL_BAR
 		do
@@ -269,9 +282,9 @@ feature -- Command
 	update_size
 			-- <Precursor>
 		local
-			l_tool_bar_row: SD_TOOL_BAR_ROW
-			l_parent: EV_CONTAINER
-			l_floating_zone: EV_WINDOW
+			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
+			l_parent: detachable EV_CONTAINER
+			l_floating_zone: detachable EV_WINDOW
 			l_old_size: INTEGER
 		do
 			l_tool_bar_row ?= parent
@@ -285,7 +298,7 @@ feature -- Command
 				l_tool_bar_row.set_item_size (Current, minimum_width, minimum_height)
 				l_tool_bar_row.on_resize (l_old_size)
 			else
-				-- If Current is in a SD_FLOATING_TOOL_BAR_ZONE which is a 3 level parent.
+				-- If Current is in a SD_FLOATING_TOOL_BAR_ZONE which is a 3 level parent
 				l_parent := parent
 				if l_parent /= Void then
 					l_parent := l_parent.parent
@@ -301,7 +314,7 @@ feature -- Command
 		end
 
 	set_tooltip (a_tooltip: STRING_GENERAL)
-			-- Assign `a_tooltip' to `tooltip'.
+			-- Assign `a_tooltip' to `tooltip'
 		do
 			tool_bar.set_tooltip (a_tooltip)
 		end
@@ -322,12 +335,12 @@ feature -- Command
 			-- <Precursor>
 		do
 			if not is_destroyed then
-				set_content (Void)
+				clear_content
 				internal_shared.widgets.prune_tool_bar (Current)
 				Precursor {EV_FIXED}
-				if tool_bar /= Void then
+				if internal_tool_bar /= Void then
 					tool_bar.destroy
-					tool_bar := Void
+					internal_tool_bar := Void
 				end
 			end
 		end
@@ -355,8 +368,8 @@ feature -- Query
 		local
 			l_tool_bar: like tool_bar
 		do
-			-- When exiting Eiffel Studio, everything is recycling, `tool_bar' maybe void.
-			-- See bug#14060.
+			-- When exiting Eiffel Studio, everything is recycling, `tool_bar' maybe void
+			-- See bug#14060
 			l_tool_bar := tool_bar
 			if l_tool_bar /= Void then
 				Result := l_tool_bar.has (a_item)
@@ -364,41 +377,46 @@ feature -- Query
 		end
 
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Pointer motion actions.
+			-- Pointer motion actions
 		do
 			Result := tool_bar.pointer_motion_actions
 		end
 
 	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			-- Pointer button release actions.
+			-- Pointer button release actions
 		do
 			Result := tool_bar.pointer_button_release_actions
 		end
 
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			-- Pointer button press actions.
+			-- Pointer button press actions
 		do
 			Result := tool_bar.pointer_button_press_actions
 		end
 
 	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			-- Pointer button double press actions.
+			-- Pointer button double press actions
 		do
 			Result := tool_bar.pointer_double_press_actions
 		end
 
 	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
-			-- Expose actions.
+			-- Expose actions
+		local
+			l_result: detachable like expose_actions
 		do
 			if attached {SD_TOOL_BAR} tool_bar as lt_tool_bar then
-				Result := lt_tool_bar.expose_actions
+				l_result := lt_tool_bar.expose_actions
 			else
 				check not_possible: False end
 			end
+
+			check l_result /= Void end -- Implied by previous if clause
+			Result := l_result
 		end
 
 	tooltip: STRING_32
-			-- Tooltip.
+			-- Tooltip
 		do
 			Result := tool_bar.tooltip
 		end
@@ -427,6 +445,12 @@ feature -- Query
 			Result := tool_bar.is_item_valid (a_item)
 		end
 
+	is_content_attached: BOOLEAN
+			-- <Precursor>
+		do
+			Result := tool_bar.is_content_attached
+		end
+
 	items_have_texts: BOOLEAN
 			-- <Precursor>
 		do
@@ -436,7 +460,7 @@ feature -- Query
 feature {SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE}
 
 	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP)
-			-- Draw `a_pixmap' at `a_x', `a_y'.
+			-- Draw `a_pixmap' at `a_x', `a_y'
 		do
 			if attached {SD_TOOL_BAR} tool_bar as lt_tool_bar then
 				lt_tool_bar.draw_pixmap (a_x, a_y, a_pixmap)
@@ -446,13 +470,13 @@ feature {SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE}
 		end
 
 	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
-			-- Clear rectangle area.
+			-- Clear rectangle area
 		do
 			tool_bar.clear_rectangle (a_x, a_y, a_width, a_height)
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
-			-- Redraw rectangle area.
+			-- Redraw rectangle area
 		do
 			tool_bar.redraw_rectangle (a_x, a_y, a_width, a_height)
 		end
@@ -534,6 +558,12 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR} -- Inter
 			tool_bar.set_content (a_content)
 		end
 
+	clear_content
+			-- <Precursor>
+		do
+			tool_bar.clear_content
+		end
+
 	set_start_x (a_x: INTEGER)
 			-- <Precursor>
 		do
@@ -578,10 +608,24 @@ feature {NONE} -- Implementation
 		end
 
 	tool_bar: SD_TOOL_BAR
-			-- Tool bar which decorated by Current.
+			-- Tool bar which decorated by Current
+		require
+			set: internal_tool_bar /= Void
+		local
+			l_result: like internal_tool_bar
+		do
+			l_result := internal_tool_bar
+			check l_result /= Void end
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
+
+	internal_tool_bar: detachable SD_TOOL_BAR
+			-- Instance holder of `tool_bar'
 
 	drawer: SD_TOOL_BAR_DRAWER
-			-- Tool bar drawer.
+			-- Tool bar drawer
 		do
 			Result := internal_shared.tool_bar_drawer
 			Result.set_tool_bar (tool_bar)
@@ -597,7 +641,7 @@ feature {NONE} -- Implementation
 		local
 			l_items: like items
 			l_rect: EV_RECTANGLE
-			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 			l_widget: EV_WIDGET
 		do
 			create l_rect.make (a_x, a_y, a_width, a_height)
@@ -621,9 +665,9 @@ feature {NONE} -- Implementation
 		end
 
 	on_tool_bar_expose_actions (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
-			-- Handle tool bar expose actions.
+			-- Handle tool bar expose actions
 		local
-			l_item: SD_TOOL_BAR_WIDGET_ITEM
+			l_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item_x, l_item_y: INTEGER
 		do
@@ -636,7 +680,7 @@ feature {NONE} -- Implementation
 				l_item ?= l_items.item
 				if l_item /= Void and
 					-- There are maybe expose actions have been called delayed, so we should check if has `l_item'.
-					 then l_item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) and has (l_item) then
+					 then (l_item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) and has (l_item)) then
 						l_item_x := item_x (l_item)
 						l_item_y := item_y (l_item)
 						if (l_item_x /= l_item.widget.x_position or else l_item_y /= l_item.widget.y_position) and then has_fixed (l_item.widget) then

@@ -8,25 +8,23 @@ note
 class
 	SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT
 
-create
-	make
+inherit
+	SD_ACCESS
 
-feature {NONE}  -- Initlization
+feature -- Commands
 
-	make (a_floating_zone: SD_FLOATING_TOOL_BAR_ZONE)
+	set_floating_zone (a_floating_zone: SD_FLOATING_TOOL_BAR_ZONE)
 			-- Creation method
 		require
 			not_void: a_floating_zone /= Void
 		do
-			zone := a_floating_zone
+			internal_zone := a_floating_zone
 		ensure
 			set: zone = a_floating_zone
 		end
 
-feature -- Commands
-
 	position_groups (a_groups_info: SD_TOOL_BAR_GROUP_INFO)
-			-- Position tool_bar items by a_group_info.
+			-- Position tool_bar items by a_group_info
 		require
 			not_void: a_groups_info /= Void
 		do
@@ -40,7 +38,7 @@ feature -- Commands
 		end
 
 	to_minmum_size
-			-- To minmum size.
+			-- To minmum size
 		do
 			zone.set_size (zone.minimum_width, zone.minimum_height)
 
@@ -53,9 +51,11 @@ feature -- Commands
 feature {NONE} -- Implementation functions
 
 	position_groups_imp (a_groups_info: SD_TOOL_BAR_GROUP_INFO)
-			-- Position tool_bar items by a_group_info.
+			-- Position tool_bar items by a_group_info
 		require
 			not_void: a_groups_info /= Void
+		local
+			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			debug ("docking")
 				print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp START")
@@ -77,7 +77,9 @@ feature {NONE} -- Implementation functions
 						print ("%N                                not has sub group info")
 					end
 				else
-					position_sub_level_items (a_groups_info.sub_grouping.item (a_groups_info.index), a_groups_info.index)
+					l_item := a_groups_info.sub_grouping.item (a_groups_info.index)
+					check l_item /= Void end -- Implied by `has_sub_info'
+					position_sub_level_items (l_item, a_groups_info.index)
 					debug ("docking")
 						print ("%N                                has sub group info")
 					end
@@ -91,14 +93,14 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	position_top_level_items (a_group_indexs: DS_HASH_TABLE [INTEGER, INTEGER])
-			-- Position tool bar items' groups.
+	position_top_level_items (a_group_indexs: HASH_TABLE [INTEGER, INTEGER])
+			-- Position tool bar items' groups
 		require
 			not_void: a_group_indexs /= Void
 		local
 			l_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_first_item: SD_TOOL_BAR_ITEM
-			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_first_item: detachable SD_TOOL_BAR_ITEM
+			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 		do
 			from
 				a_group_indexs.start
@@ -111,7 +113,7 @@ feature {NONE} -- Implementation functions
 			end
 			if l_first_item /= Void then
 				l_separator := Void
-				-- There should be a separator behind, otherwise this is the last tool bar item.
+				-- There should be a separator behind, otherwise this is the last tool bar item
 				l_separator := zone.content.separator_before_item (l_first_item)
 				if l_separator /= Void then
 					l_separator.set_wrap (True)
@@ -122,13 +124,13 @@ feature {NONE} -- Implementation functions
 		end
 
 	position_sub_level_items (a_sub_info: SD_TOOL_BAR_GROUP_INFO; a_group_index: INTEGER)
-			-- Position group items.
+			-- Position group items
 		require
 			not_void: a_sub_info /= Void
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_first_item: SD_TOOL_BAR_ITEM
-			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 		do
 			debug ("docking")
 				print ("%N                                  position_sub_level_items START: ")
@@ -170,7 +172,7 @@ feature {NONE} -- Implementation functions
 		end
 
 	reset_all_items_wrap
-			-- Reset items to wrap state.
+			-- Reset items to wrap state
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
@@ -187,16 +189,27 @@ feature {NONE} -- Implementation functions
 
 feature {NONE} -- Implementation attributes
 
-	last_resize: PROCEDURE [SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, TUPLE]
-			-- Last resize idle action.
+--	last_resize: PROCEDURE [SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, TUPLE]
+--			-- Last resize idle action.
 
-	zone: SD_FLOATING_TOOL_BAR_ZONE
-			-- Floating zone which items positioned by Current.
+	zone: attached like internal_zone
+			-- Attached `internal_zone'
+		require
+			set: internal_zone /= Void
+		local
+			l_result: like internal_zone
+		do
+			l_result := internal_zone
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
 
-invariant
-	not_void: zone /= Void
+	internal_zone: detachable SD_FLOATING_TOOL_BAR_ZONE
+			-- Floating zone which items positioned by Current
 
-note
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

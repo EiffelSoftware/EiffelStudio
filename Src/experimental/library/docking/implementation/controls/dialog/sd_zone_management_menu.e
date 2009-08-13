@@ -17,6 +17,8 @@ feature {NONE}  -- Initlization
 			-- Creation method
 		require
 			not_void: a_notebook /= Void
+		local
+			l_selected_item: detachable SD_CONTENT
 		do
 			default_create
 			create items.make (3)
@@ -25,17 +27,19 @@ feature {NONE}  -- Initlization
 			create internal_close
 			internal_close.set_pixmap (internal_shared.icons.close_context_tool_bar)
 			internal_close.set_text (internal_shared.interface_names.menu_close)
-			internal_close.select_actions.extend (agent on_close (internal_notebook.selected_item))
+			l_selected_item := internal_notebook.selected_item
+			check l_selected_item /= Void end -- Implied by it's not possible to create current when notebook content is empty
+			internal_close.select_actions.extend (agent on_close (l_selected_item))
 			items.extend (internal_close)
 			create internal_close_others
 			internal_close_others.set_pixmap (internal_shared.icons.close_others)
 			internal_close_others.set_text (internal_shared.interface_names.menu_close_all_but_this)
-			internal_close_others.select_actions.extend (agent on_close_others (internal_notebook.selected_item))
+			internal_close_others.select_actions.extend (agent on_close_others (l_selected_item))
 			items.extend (internal_close_others)
 			create internal_close_all
 			internal_close_all.set_pixmap (internal_shared.icons.close_all)
 			internal_close_all.set_text (internal_shared.interface_names.menu_close_all)
-			internal_close_all.select_actions.extend (agent on_close_all (internal_notebook.selected_item))
+			internal_close_all.select_actions.extend (agent on_close_all (l_selected_item))
 			items.extend (internal_close_all)
 		ensure
 			set: internal_notebook = a_notebook
@@ -44,12 +48,12 @@ feature {NONE}  -- Initlization
 feature -- Query
 
 	items: ARRAYED_LIST [EV_MENU_ITEM]
-			-- Menu items for zone management.
+			-- Menu items for zone management
 
 feature {NONE}  -- Agents
 
 	on_close (a_content: SD_CONTENT)
-			-- Handle close event.
+			-- Handle close event
 		require
 			not_void: a_content /= Void
 		do
@@ -57,7 +61,7 @@ feature {NONE}  -- Agents
 		end
 
 	on_close_others (a_content: SD_CONTENT)
-			-- Handle close others event.
+			-- Handle close others event
 		require
 			not_void: a_content /= Void
 		local
@@ -76,7 +80,7 @@ feature {NONE}  -- Agents
 		end
 
 	on_close_all (a_content: SD_CONTENT)
-			-- Handle close all event.
+			-- Handle close all event
 		require
 			not_void: a_content /= Void
 		do
@@ -89,13 +93,13 @@ feature {NONE}  -- Agents
 feature {NONE} -- Implementation
 
 	internal_close, internal_close_others, internal_close_all: EV_MENU_ITEM
-			-- Zone close items.
+			-- Zone close items
 
 	internal_notebook: SD_NOTEBOOK
-			-- Notebook which is managing.
+			-- Notebook which is managing
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 invariant
 

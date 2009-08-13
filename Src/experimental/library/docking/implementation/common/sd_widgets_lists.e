@@ -17,7 +17,6 @@ feature -- Query
 			-- All SD_TOOL_BAR instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
-			l_item: SD_GENERIC_TOOL_BAR
 		do
 			create Result.make (10)
 
@@ -28,8 +27,7 @@ feature -- Query
 				until
 					l_list.after
 				loop
-					l_item ?= id_object (l_list.item)
-					if l_item /= Void then
+					if attached {SD_GENERIC_TOOL_BAR} id_object (l_list.item) as l_item then
 						Result.extend (l_item)
 						l_list.forth
 					else
@@ -45,7 +43,6 @@ feature -- Query
 			-- All SD_TOOL_BAR_ZONE instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
-			l_item: SD_TOOL_BAR_ZONE
 		do
 			create Result.make (10)
 
@@ -56,8 +53,7 @@ feature -- Query
 				until
 					l_list.after
 				loop
-					l_item ?= id_object (l_list.item)
-					if l_item /= Void then
+					if attached {SD_TOOL_BAR_ZONE} id_object (l_list.item) as l_item then
 						Result.extend (l_item)
 						l_list.forth
 					else
@@ -73,7 +69,6 @@ feature -- Query
 			-- All SD_TITLE_BAR instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
-			l_item: SD_TITLE_BAR
 		do
 			create Result.make (10)
 
@@ -84,8 +79,7 @@ feature -- Query
 				until
 					l_list.after
 				loop
-					l_item ?= id_object (l_list.item)
-					if l_item /= Void then
+					if attached {SD_TITLE_BAR} id_object (l_list.item) as l_item then
 						Result.extend (l_item)
 						l_list.forth
 					else
@@ -101,7 +95,6 @@ feature -- Query
 			-- All SD_NOTEBOOK instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
-			l_item: SD_NOTEBOOK
 		do
 			create Result.make (10)
 
@@ -112,8 +105,7 @@ feature -- Query
 				until
 					l_list.after
 				loop
-					l_item ?= id_object (l_list.item)
-					if l_item /= Void then
+					if attached {SD_NOTEBOOK} id_object (l_list.item) as l_item then
 						Result.extend (l_item)
 						l_list.forth
 					else
@@ -129,7 +121,6 @@ feature -- Query
 			-- All SD_AUTO_HIDE_PANEL instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
-			l_item: SD_AUTO_HIDE_PANEL
 		do
 			create Result.make (10)
 
@@ -140,8 +131,7 @@ feature -- Query
 				until
 					l_list.after
 				loop
-					l_item ?= id_object (l_list.item)
-					if l_item /= Void then
+					if attached {SD_AUTO_HIDE_PANEL} id_object (l_list.item) as l_item then
 						Result.extend (l_item)
 						l_list.forth
 					else

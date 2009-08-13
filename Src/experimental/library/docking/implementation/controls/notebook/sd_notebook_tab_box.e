@@ -31,9 +31,10 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
-			default_create
 			create  internal_shared
 			create internal_tabs.make (3)
+
+			default_create
 
 			expose_actions.extend (agent on_expose)
 			pointer_motion_actions.extend (agent on_pointer_motion)
@@ -59,7 +60,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	update_size
-			--Update minimum height.
+			--Update minimum height
 		do
 			set_minimum_height (internal_shared.Notebook_tab_height)
 		end
@@ -83,8 +84,8 @@ feature -- Command
 		end
 
 	extend_tabs (a_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB])
-			-- Extend `a_tabs'.
-			-- This feature is faster than extend one by one.
+			-- Extend `a_tabs'
+			-- This feature is faster than extend one by one
 		require
 			not_void: a_tabs /= Void
 		do
@@ -114,7 +115,7 @@ feature -- Command
 		end
 
 	set_tab_position (a_tab: SD_NOTEBOOK_TAB; a_index: INTEGER)
-			-- Set `a_tab' at position `a_index'.		
+			-- Set `a_tab' at position `a_index'	
 		do
 			internal_tabs.start
 			internal_tabs.prune (a_tab)
@@ -124,7 +125,7 @@ feature -- Command
 		end
 
 	swap (a_tab_1, a_tab_2: SD_NOTEBOOK_TAB)
-			-- Swap position of `a_tab_1' and `a_tab_2'.
+			-- Swap position of `a_tab_1' and `a_tab_2'
 		require
 			has: has (a_tab_1) and has (a_tab_2)
 		local
@@ -150,7 +151,7 @@ feature -- Command
 		end
 
 	disable_capture (a_tab: SD_NOTEBOOK_TAB)
-			-- Disable user input capture.
+			-- Disable user input capture
 		require
 			has: has (a_tab)
 			capture_called: captured_tab = a_tab or captured_tab = Void
@@ -193,7 +194,7 @@ feature -- Query
 		end
 
 	i_th (a_index: INTEGER): SD_NOTEBOOK_TAB
-			-- Tab at `a_index'.
+			-- Tab at `a_index'
 		require
 			valid: is_tab_index_valid (a_index)
 		do
@@ -213,12 +214,12 @@ feature -- Query
 		end
 
 	tabs: like internal_tabs
-			-- All tabs in Current.
+			-- All tabs in Current
 		do
 			Result := internal_tabs.twin
 		end
 
-	captured_tab: SD_NOTEBOOK_TAB
+	captured_tab: detachable SD_NOTEBOOK_TAB
 			-- Tab which enabled capture
 
 	is_tab_index_valid (a_index: INTEGER): BOOLEAN
@@ -230,7 +231,7 @@ feature -- Query
 feature {NONE} -- Agents
 
 	on_expose (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
-			-- Handle expose actions.
+			-- Handle expose actions
 		local
 			l_target: EV_RECTANGLE
 			l_snapshot: like internal_tabs
@@ -252,13 +253,13 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			-- Handle pointer motion actions.
+			-- Handle pointer motion actions
 		local
 			l_snapshot: like internal_tabs
 			l_item: SD_NOTEBOOK_TAB
 		do
-			if captured_tab /= Void then
-				captured_tab.on_pointer_motion (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			if attached captured_tab as l_tab then
+				l_tab.on_pointer_motion (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			elseif pointer_entered then
 				from
 					l_snapshot := internal_tabs
@@ -283,14 +284,14 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			-- Handle pointer press actions.
+			-- Handle pointer press actions
 		local
 			l_snapshot: like internal_tabs
 			l_item: SD_NOTEBOOK_TAB
 			l_called: BOOLEAN
 		do
-			if captured_tab /= Void then
-				captured_tab.on_pointer_press (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			if attached captured_tab as l_tab then
+				l_tab.on_pointer_press (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			else
 				from
 					l_snapshot := internal_tabs.twin
@@ -301,9 +302,9 @@ feature {NONE} -- Agents
 					l_item := l_snapshot.item
 					if l_item.rectangle.has_x_y (a_x, a_y) and l_item.is_displayed then
 						l_item.on_pointer_press (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-						-- One pointer press action only call one notebook tab action.
-						-- Otherwise, right click menu can appear more than once in one pointer press action.
-						-- See bug#12806.
+						-- One pointer press action only call one notebook tab action
+						-- Otherwise, right click menu can appear more than once in one pointer press action
+						-- See bug#12806
 						l_called := True
 					end
 					l_snapshot.forth
@@ -312,13 +313,13 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			-- Handle pointer release actions.
+			-- Handle pointer release actions
 		local
 			l_snapshot: like internal_tabs
 			l_item: SD_NOTEBOOK_TAB
 		do
-			if captured_tab /= Void then
-				captured_tab.on_pointer_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			if attached captured_tab as l_tab then
+				l_tab.on_pointer_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			else
 				from
 					l_snapshot := internal_tabs
@@ -400,34 +401,28 @@ feature {NONE} -- Agents
 		end
 
 	on_drop_action (a_pebble: ANY)
-			-- Handle drop actions.
-		local
-			l_tab: SD_NOTEBOOK_TAB
+			-- Handle drop actions
 		do
-			l_tab := tab_under_pointer
-			if l_tab /= Void then
-				check accept:l_tab.drop_actions.accepts_pebble (a_pebble) end
-				l_tab.drop_actions.call ([a_pebble])
+			if attached tab_under_pointer as l_tab and then attached l_tab.drop_actions as l_drop_actions then
+				check accept: l_drop_actions.accepts_pebble (a_pebble) end
+				l_drop_actions.call ([a_pebble])
 			end
 		end
 
 	on_drop_actions_veto_pebble (a_pebble: ANY): BOOLEAN
-			-- Handle veto pebble drop actions.
-		local
-			l_tab: SD_NOTEBOOK_TAB
+			-- Handle veto pebble drop actions
 		do
-			l_tab := tab_under_pointer
-			if l_tab /= Void then
-				Result := l_tab.drop_actions.accepts_pebble (a_pebble)
+			if attached tab_under_pointer as l_tab and then attached l_tab.drop_actions as l_drop_actions then
+				Result := l_drop_actions.accepts_pebble (a_pebble)
 			end
 		end
 
 	on_key (a_key: EV_KEY)
-			-- Handle left/right navigation actions.
+			-- Handle left/right navigation actions
 		local
 			l_notebook: SD_NOTEBOOK
 			l_selected_index: INTEGER
-			l_content: SD_CONTENT
+			l_content: detachable SD_CONTENT
 		do
 
 			if a_key /= Void then
@@ -448,7 +443,7 @@ feature {NONE} -- Agents
 						l_notebook.select_item (l_content, True)
 						l_content.focus_in_actions.call ([])
 
-						-- The focus maybe was lost in `l_content.focus_in_actions', but we hope keep the focus, when end user press left/right in tabs area.
+						-- The focus maybe was lost in `l_content.focus_in_actions', but we hope keep the focus, when end user press left/right in tabs area
 						set_focus
 					end
 				end
@@ -462,7 +457,7 @@ feature{NONE} -- Implementation
 		require
 			not_void: a_tab /= Void
 		do
-			-- It behaviour like a set, but ARRAYED_SET don't have enough features we want.
+			-- It behaviour like a set, but ARRAYED_SET don't have enough features we want
 			if not internal_tabs.has (a_tab) then
 				internal_tabs.extend (a_tab)
 				a_tab.set_font (font)
@@ -472,13 +467,13 @@ feature{NONE} -- Implementation
 
 	pointer_entered: BOOLEAN
 			-- If pointer enter actions called?
-			-- We have this flag for the same reason as SD_TOOL_BAR's pointer_entered.
+			-- We have this flag for the same reason as SD_TOOL_BAR's pointer_entered
 
 	update_focus_rectangle
-			-- Draw or clear focus rectangle base on if Current has focus.
+			-- Draw or clear focus rectangle base on if Current has focus
 		local
 			l_notebook: SD_NOTEBOOK
-			l_selected: SD_CONTENT
+			l_selected: detachable SD_CONTENT
 		do
 			l_notebook := notebook
 			l_selected := l_notebook.selected_item
@@ -490,11 +485,11 @@ feature{NONE} -- Implementation
 	notebook: SD_NOTEBOOK
 			-- Parent notebook
 		local
-			l_tab_area: SD_NOTEBOOK_TAB_AREA
+			l_tab_area: detachable SD_NOTEBOOK_TAB_AREA
 		do
 			l_tab_area ?= parent
 			check not_void: l_tab_area /= Void end
-			Result := l_tab_area.internal_notebook
+			Result := l_tab_area.notebook
 		ensure
 			not_void: Result /= Void
 		end
@@ -506,25 +501,28 @@ feature{NONE} -- Implementation
 		local
 			l_snapshot: like internal_tabs
 			l_item: SD_NOTEBOOK_TAB
+			l_result: detachable like tab_at
 		do
 			from
 				l_snapshot := internal_tabs.twin
 				l_snapshot.start
 			until
-				l_snapshot.after or Result /= Void
+				l_snapshot.after or l_result /= Void
 			loop
 				l_item := l_snapshot.item
 				if item_x (l_item) <= a_x and a_x <= item_x (l_item) + l_item.width then
-					Result := l_item
+					l_result := l_item
 				end
 				l_snapshot.forth
 			end
+			check l_result /= Void end -- Implied by precondition `valid'
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
 
-	tab_under_pointer: SD_NOTEBOOK_TAB
-			-- Tab at `a_screen_x'.
+	tab_under_pointer: detachable SD_NOTEBOOK_TAB
+			-- Tab at `a_screen_x'
 		local
 			l_screen: EV_SCREEN
 			l_relative_x: INTEGER
@@ -537,7 +535,7 @@ feature{NONE} -- Implementation
 		end
 
 	clear_pressed_flag
-			-- Clear pressed flag for Linux, because when pointer double pressed, no pointer leave will be called.
+			-- Clear pressed flag for Linux, because when pointer double pressed, no pointer leave will be called
 		local
 			l_tabs: like tabs
 		do
@@ -553,7 +551,7 @@ feature{NONE} -- Implementation
 		end
 
 	internal_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
-			-- All tabs in Current.
+			-- All tabs in Current
 invariant
 
 	not_void: internal_tabs /= Void

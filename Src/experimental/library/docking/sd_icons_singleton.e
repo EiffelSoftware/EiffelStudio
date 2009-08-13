@@ -34,6 +34,7 @@ feature -- Icons
 	unstick_buffer: EV_PIXEL_BUFFER
 			-- Unstick icon pixel buffer
 		do
+			create Result.make_with_size (10, 10)
 		end
 
 	stick: 	EV_PIXMAP
@@ -46,6 +47,7 @@ feature -- Icons
 	stick_buffer: EV_PIXEL_BUFFER
 			-- Stick icon pixel buffer
 		do
+			create Result.make_with_size (10, 10)
 		end
 
 	minimize: EV_PIXMAP
@@ -58,6 +60,7 @@ feature -- Icons
 	minimize_buffer: EV_PIXEL_BUFFER
 			-- Minimize icon pixel buffer
 		do
+			create Result.make_with_size (10, 10)
 		end
 
 	maximize: EV_PIXMAP
@@ -70,6 +73,7 @@ feature -- Icons
 	maximize_buffer: EV_PIXEL_BUFFER
 			-- Maximize icon pixel buffer
 		do
+			create Result.make_with_size (10, 10)
 		end
 
 	normal: EV_PIXMAP
@@ -82,6 +86,7 @@ feature -- Icons
 	normal_buffer: EV_PIXEL_BUFFER
 			-- Normal icon pixel buffer
 		do
+			create Result.make_with_size (10, 10)
 		end
 
 	close: EV_PIXMAP
@@ -94,6 +99,7 @@ feature -- Icons
 	close_buffer: EV_PIXEL_BUFFER
 			-- Close icon pixel buffer
 		do
+			create Result.make_with_size (10, 10)
 		end
 
 	tool_bar_separator_icon: EV_PIXMAP
@@ -130,6 +136,7 @@ feature -- Icons
 			-- Hide tab indicator.
 			-- On GTK, because of drawing text on EV_PIXEL_BUFFER doesn't have a good result, Smart Docking library use this feature instead of `hide_tab_indicator_buffer'.
 		do
+			create Result.make_with_size (10, 10)
 		end
 
 	tool_bar_indicator: EV_PIXMAP
@@ -142,6 +149,7 @@ feature -- Icons
 	tool_bar_indicator_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer indicator for SD_TITLE_BAR, when there is nor enough space to show custom widget.
 		do
+			create Result.make_with_size (10, 10)
 		end
 
 feature -- Side indicators
@@ -344,6 +352,7 @@ feature -- Tool bars icons.
 	tool_bar_dropdown_buffer: EV_PIXEL_BUFFER
 			-- SD_TOOL_BAR_POPUP_BUTTON's dropdown icon.
 		do
+			create Result.make_with_size (8, 16)
 		end
 
 feature -- Editor icons

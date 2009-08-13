@@ -1,5 +1,5 @@
 note
-	description: "Find texts that contain certain string, Regular expression based."
+	description: "Find texts that contain certain string, wildcard matcher based."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -19,25 +19,29 @@ feature -- Initialization
 			a_texts_attached: a_texts /= Void
 		do
 			texts := a_texts
-			init_pcre_re
+			init_wild_matcher
+
+			create texts_found_internal.make (10)
+			create found_indexs_in_texts_internal.make (10)
 		ensure
 			texts_not_void: texts = a_texts
-			pcre_re_not_void: pcre_re /= Void
+			wild_matcher_not_void: wild_matcher /= Void
 		end
 
-	init_pcre_re
-			-- Initialize `pcre_re'
+	init_wild_matcher
+			-- Initialize `wild_matcher'
 		do
-			create pcre_re.make
-			pcre_re.set_caseless (True)
-			pcre_re.set_empty_allowed (false)
-			pcre_re.set_multiline (false)
+			create wild_matcher.make ("", "")
+			wild_matcher.disable_case_sensitive
+--			pcre_re.set_caseless (True)
+--			pcre_re.set_empty_allowed (false)
+--			pcre_re.set_multiline (false)
 		end
 
 feature -- Access
 
 	texts: ARRAYED_LIST [G]
-			-- Texts search in.
+			-- Texts search in
 
 	texts_found: like texts
 			-- Texts found in `texts'
@@ -64,13 +68,13 @@ feature -- Status report
 	is_search_launched: BOOLEAN
 			-- Is search_launched?
 
-	last_searched: G
-			-- Last searched string.
+	last_searched: detachable G
+			-- Last searched string
 
 feature -- Behavior
 
 	search (a_str: like last_searched)
-			-- Launch searching.
+			-- Launch searching
 		require
 			a_str_attached: a_str /= Void
 		do
@@ -87,21 +91,29 @@ feature -- Behavior
 feature {NONE} -- Implementation
 
 	search_perform (a_str: STRING_GENERAL)
-			-- Perform searching.
+			-- Perform searching
 		do
-			create texts_found_internal.make (10)
-			create found_indexs_in_texts_internal.make (10)
-			pcre_re.compile (a_str.as_string_8)
+			texts_found_internal.wipe_out
+			found_indexs_in_texts_internal.wipe_out
+
+			wild_matcher.set_pattern (a_str.as_string_8)
+--			pcre_re.compile (a_str.as_string_8)
 			from
 				texts.start
 			until
-				texts.after or not pcre_re.is_compiled
+--				texts.after or not pcre_re.is_compiled
+				texts.after
 			loop
-				pcre_re.match (texts.item.as_string_8)
-				if pcre_re.has_matched then
+				wild_matcher.set_text (texts.item.as_string_8)
+--				pcre_re.match (texts.item.as_string_8)
+				if wild_matcher.search_for_pattern then
 					texts_found_internal.extend (texts.item)
 					found_indexs_in_texts_internal.extend (texts.index)
 				end
+--				if pcre_re.has_matched then
+--					texts_found_internal.extend (texts.item)
+--					found_indexs_in_texts_internal.extend (texts.index)
+--				end
 				texts.forth
 			end
 		end
@@ -112,12 +124,15 @@ feature {NONE} -- Implementation
 	found_indexs_in_texts_internal: like found_indexs_in_texts
 			-- `found_indexs_in_texts'
 
-	pcre_re: RX_PCRE_REGULAR_EXPRESSION
-			-- Regular expression matcher.
+--	pcre_re: RX_PCRE_REGULAR_EXPRESSION
+			-- Regular expression matcher
+
+	wild_matcher: KMP_WILD
+			-- Wild card matcher
 
 invariant
 	texts_not_void: texts /= Void
-	pcre_re_not_void: pcre_re /= Void
+--	pcre_re_not_void: pcre_re /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

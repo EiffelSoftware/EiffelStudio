@@ -10,12 +10,14 @@ class
 	EWB_TEST_TREE_VIEW
 
 inherit
-	EWB_TEST_CMD
+	EWB_TEST_FILTER_CMD
 
 	TAG_UTILITIES
 		export
 			{NONE} all
 		end
+
+	EC_TAG_TREE_NODE_VISITOR [TEST_I]
 
 feature -- Access
 
@@ -37,62 +39,6 @@ feature -- Access
 			Result := locale.translation (h_display_tree)
 		end
 
-feature {NONE} -- Access
-
-	node_sorter: DS_SORTER [TAG_BASED_TREE_NODE [TEST_I]]
-			-- Sorter for {TAG_BASED_TREE_NODE}.
-		local
-			l_cache: like node_sorter_cache
-			l_comparator: AGENT_BASED_EQUALITY_TESTER [TAG_BASED_TREE_NODE [TEST_I]]
-			l_sorter: DS_QUICK_SORTER [TAG_BASED_TREE_NODE [TEST_I]]
-		do
-			l_cache := node_sorter_cache
-			if l_cache = Void then
-				create l_comparator.make (
-					agent (a_node1, a_node2: TAG_BASED_TREE_NODE [TEST_I]): BOOLEAN
-						do
-							Result := a_node1.token < a_node2.token
-						end)
-				create l_sorter.make (l_comparator)
-				node_sorter_cache := l_sorter
-				Result := l_sorter
-			else
-				Result := l_cache
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	node_sorter_cache: detachable like node_sorter
-			-- Cache for `node_sorter'
-
-	item_sorter: DS_SORTER [TEST_I]
-			-- Sorter for {TEST_I}
-		local
-			l_cache: like item_sorter_cache
-			l_comparator: AGENT_BASED_EQUALITY_TESTER [TEST_I]
-			l_sorter: DS_QUICK_SORTER [TEST_I]
-		do
-			l_cache := item_sorter_cache
-			if l_cache = Void then
-				create l_comparator.make (
-					agent (a_test1, a_test2: TEST_I): BOOLEAN
-						do
-							Result := a_test1.routine_name < a_test2.routine_name
-						end)
-				create l_sorter.make (l_comparator)
-				item_sorter_cache := l_sorter
-				Result := l_sorter
-			else
-				Result := l_cache
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	item_sorter_cache: detachable like item_sorter
-			-- Cache for `node_sorter'
-
 feature {NONE} -- Query
 
 	is_prefixed_token (a_token, a_prefix: STRING): BOOLEAN
@@ -106,144 +52,135 @@ feature {NONE} -- Basic operations
 	execute_with_test_suite (a_test_suite: TEST_SUITE_S)
 			-- <Precursor>
 		local
-			l_view: like tree_view
-			l_items: DS_ARRAYED_LIST [TEST_I]
+			l_tree: like test_tree
+			l_parent: TAG_TREE_NODE [TEST_I]
 		do
-			print_current_expression (a_test_suite, False)
-			print_current_prefix (a_test_suite, False)
-
-			l_view := tree_view (a_test_suite)
-			if not l_view.children.is_empty or not l_view.items.is_empty then
-				print_string ("%N")
+			l_tree := test_tree (a_test_suite)
+			l_parent := l_tree.common_parent
+			if l_parent = l_tree.tree.root_node then
+				print_node_container (l_tree, l_parent, 1)
+			else
+				print_string (indent)
+				print_parents (l_parent)
+				output_window.put_new_line
+				print_node_container (l_tree, l_parent, 2)
 			end
-			print_node_container (l_view, 0)
-
-			create l_items.make_from_linear (l_view.untagged_items)
-			if not l_items.is_empty then
-				print_string ("%N")
-				print_string (locale.translation (t_untagged_tests))
-				print_string ("%N")
-				l_items.sort (item_sorter)
-				l_items.do_all (agent print_test (?, "+ ", tab_count))
-			end
-
-			print_statistics (a_test_suite, True)
+			print_statistics (a_test_suite)
 		end
 
 feature {NONE} -- Implementation
 
-	print_node_container (a_node: TAG_BASED_TREE_NODE_CONTAINER [TEST_I]; a_depth: NATURAL)
+	print_parents (a_node: TAG_TREE_NODE [TEST_I])
+			-- Print parents of `a_node'
+		require
+			a_node_attached: a_node /= Void
+			a_node_not_root: not a_node.is_root
+		local
+			l_parent: like a_node
+		do
+			l_parent := a_node.parent
+			if not l_parent.is_root then
+				print_parents (l_parent)
+				output_window.process_basic_text (" / ")
+			end
+			a_node.process (Current)
+		end
+
+	print_node_container (a_tree: like test_tree; a_node: TAG_TREE_NODE [TEST_I]; a_depth: INTEGER_32)
 			-- Recursively print tag base tree node container
 			--
+			-- `a_tree': Tree for which nodes are being printed.
 			-- `a_node': Node containing children to be printed.
 			-- `a_depth': Current recursion depth.
 		require
 			a_node_attached: a_node /= Void
+			a_depth_not_negative: a_depth >= 0
 		local
-			l_nodes: DS_ARRAYED_LIST [TAG_BASED_TREE_NODE [TEST_I]]
-			l_child: TAG_BASED_TREE_NODE [TEST_I]
-			l_items: DS_ARRAYED_LIST [TEST_I]
+			l_children: DS_ARRAYED_LIST [TAG_TREE_NODE [TEST_I]]
+			l_child: TAG_TREE_NODE [TEST_I]
 		do
-			create l_nodes.make_from_linear (a_node.children)
-			if not l_nodes.is_empty then
-				l_nodes.sort (node_sorter)
-				from
-					l_nodes.start
-				until
-					l_nodes.after
-				loop
-					l_child := l_nodes.item_for_iteration
-					print_node (l_child, a_depth)
-					print_node_container (l_child, a_depth + 1)
-					l_nodes.forth
-				end
-			end
-			create l_items.make_from_linear (a_node.items)
-			if not l_items.is_empty then
-				l_items.sort (item_sorter)
-				l_items.do_all (agent print_indented_test (?, a_depth))
-			end
-		end
-
-	print_node (a_node: TAG_BASED_TREE_NODE [TEST_I]; a_depth: NATURAL)
-			-- Print node information.
-			--
-			-- `a_node': Node for which information is printed.
-		do
-			print_multiple_string (" ", indent_count * a_depth.to_integer_32)
-			print_token (a_node.token)
-			print_string ("%N")
-		end
-
-	print_indented_test (a_test: TEST_I; a_depth: NATURAL)
-			-- Print test with indentation.
-			--
-			-- `a_test': Test to be printed.
-			-- `a_depth': Depth used for indentation.
-		require
-			a_test_attached: a_test /= Void
-		local
-			l_indent, l_tab: INTEGER
-		do
-			l_indent := a_depth.to_integer_32
-			l_tab := (indent_count * l_indent).min (tab_count)
-			print_multiple_string (" ", l_tab)
-			print_test (a_test, "+ ", tab_count - l_tab)
-		end
-
-	print_token (a_token: STRING)
-			-- Print information represented by token.
-			--
-			-- `a_token': Token to be printed.
-		require
-			a_token_attached: a_token /= Void
-		local
-			l_type: detachable STRING
-			l_is_class, l_is_library: BOOLEAN
-			l_token: STRING
-			l_count, l_pos: INTEGER
-		do
-			if is_prefixed_token (a_token, cluster_prefix) then
-				l_type := "Cluster"
-				l_count := cluster_prefix.count
-			elseif is_prefixed_token (a_token, class_prefix) then
-				l_is_class := True
-				l_count := class_prefix.count
-			elseif is_prefixed_token (a_token, feature_prefix) then
-				l_type := "Feature"
-				l_count := feature_prefix.count
-			elseif is_prefixed_token (a_token, override_prefix) then
-				l_type := "Override"
-				l_count := override_prefix.count
-			elseif is_prefixed_token (a_token, library_prefix) then
-				l_type := "Library"
-				l_count := library_prefix.count
-				l_is_library := True
-			elseif is_prefixed_token (a_token, directory_prefix) then
-				l_count := directory_prefix.count
-			end
-			if l_count > 0 then
-				l_token := a_token.substring (l_count + 1, a_token.count)
-				if l_is_library then
-					l_pos := l_token.index_of (':', 1)
-					if l_pos > 0 then
-						l_token := l_token.substring (1, l_pos)
-					end
-				end
+			if a_node.is_leaf then
+				print_test (a_node.item, a_depth)
 			else
-				l_token := a_token
+				l_children := a_node.children
+				l_children.sort (node_sorter)
+
+				from
+					l_children.start
+				until
+					l_children.after
+				loop
+					l_child := l_children.item_for_iteration
+					if a_tree.is_parent_node (l_child) or a_tree.is_inside_node (l_child) then
+						if l_child.is_leaf then
+							print_node_container (a_tree, l_child, a_depth)
+						else
+							print_multiple_string (indent, a_depth)
+							l_child.process (Current)
+							output_window.add_new_line
+							print_node_container (a_tree, l_child, a_depth + 1)
+						end
+					end
+					l_children.forth
+				end
 			end
-			if l_is_class then
-				print_string ("{")
+		end
+
+feature {TAG_TREE_NODE} -- Basic operations
+
+	process_node (a_node: TAG_TREE_NODE [TEST_I])
+			-- <Precursor>
+		do
+			if not a_node.is_root then
+				output_window.process_basic_text (a_node.token.as_string_8)
 			end
-			print_string (l_token)
-			if l_is_class then
-				print_string ("}")
+		end
+
+	process_class_node (a_node: EC_TAG_TREE_CLASS_NODE [TEST_I])
+			-- <Precursor>
+		do
+			if attached a_node.item (etest_suite.project_access) as l_class then
+				output_window.add_class (l_class)
 			end
-			if l_type /= Void then
-				print_string (" (")
-				print_string (l_type)
-				print_string (")")
+		end
+
+	process_cluster_node (a_node: EC_TAG_TREE_CLUSTER_NODE [TEST_I])
+			-- <Precursor>
+		do
+			if attached a_node.item (etest_suite.project_access) as l_cluster then
+				output_window.add_group (l_cluster, l_cluster.name)
+			end
+		end
+
+	process_directory_node (a_node: EC_TAG_TREE_DIRECTORY_NODE [TEST_I])
+			-- <Precursor>
+		do
+			if attached a_node.item (etest_suite.project_access) as l_cluster then
+				output_window.add_group (l_cluster, a_node.name.as_string_8)
+			end
+		end
+
+	process_feature_node (a_node: EC_TAG_TREE_FEATURE_NODE [TEST_I])
+			-- <Precursor>
+		do
+			if attached a_node.item (etest_suite.project_access) as l_feature then
+				output_window.add_feature (l_feature, l_feature.name)
+			end
+		end
+
+	process_library_node (a_node: EC_TAG_TREE_LIBRARY_NODE [TEST_I])
+			-- <Precursor>
+		do
+			if attached a_node.item (etest_suite.project_access) as l_library then
+				output_window.add_group (l_library, l_library.name)
+			end
+		end
+
+	process_override_node (a_node: EC_TAG_TREE_OVERRIDE_NODE [TEST_I])
+			-- <Precursor>
+		do
+			if attached a_node.item (etest_suite.project_access) as l_override then
+				output_window.add_group (l_override, l_override.name)
 			end
 		end
 
@@ -282,10 +219,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

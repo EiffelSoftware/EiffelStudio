@@ -55,7 +55,7 @@ feature -- Access
 		deferred
 		end
 
-	last_outcome: EQA_TEST_RESULT
+	last_outcome: EQA_RESULT
 			-- Last test result if `Current' has been tested
 		require
 			usable: is_interface_usable
@@ -103,6 +103,58 @@ feature -- Status report
 			Result := outcomes.last.is_fail
 		end
 
+feature -- Basic operations
+
+	print_test (a_formatter: TEXT_FORMATTER)
+			-- Print formatted output for `Current' on a single line.
+			--
+			-- `a_formatter': Formatter to which output should be printed to.
+		do
+			a_formatter.process_basic_text (name.as_string_8)
+		end
+
+	print_result (a_formatter: TEXT_FORMATTER; a_result: EQA_RESULT)
+			-- Print formatted result information for given result.
+			--
+			-- Note: descendants which are aware of specialized output should redefine to provide more
+			--       information on `a_result' by doing an object test.
+			--
+			-- `a_formatted': Formatter to which output should be printed to.
+		do
+			if a_result.is_pass then
+				a_formatter.process_basic_text ("pass")
+			else
+				if a_result.is_fail then
+					a_formatter.process_basic_text ("FAIL")
+				else
+					a_formatter.process_basic_text ("unresolved")
+				end
+				if not a_result.tag.is_empty then
+					a_formatter.process_basic_text (" (")
+					a_formatter.process_basic_text (a_result.tag.as_string_8)
+					a_formatter.process_basic_text (")")
+				end
+			end
+		end
+
+feature {TEST_EXECUTION_I} -- Factory
+
+	new_executor (an_execution: TEST_EXECUTION_I): TEST_EXECUTOR_I [TEST_I]
+			-- Create a new executor for running `Current' in the given session.
+			--
+			-- `an_execution': Execution session in which `Current' should be executed.
+		require
+			an_execution_attached: an_execution /= Void
+			an_execution_usable: an_execution.is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_usable: Result.is_interface_usable
+			result_valid: Result.is_test_compatible (Current)
+		end
+
+
+
 -- OBSOLETE FEATURES
 
 feature -- Access
@@ -114,7 +166,7 @@ feature -- Access
 		deferred
 		end
 
-	executor: TEST_EXECUTOR_I
+	executor: TEST_OBSOLETE_EXECUTOR_I
 			-- Executor running `Current' or having `Current' queued.
 		require
 			queued_or_running: is_queued or is_running

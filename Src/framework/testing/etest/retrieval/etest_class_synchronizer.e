@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 				end
 				if l_test = Void or l_name = Void then
 						-- TODO: pass `test_class'
-					create l_test.make (a_routine_name.twin, l_test_class.eiffel_class.name.twin)
+					create l_test.make (a_routine_name.twin, l_test_class.eiffel_class, l_test_class.test_suite)
 					create l_name.make_from_string (a_routine_name)
 				end
 

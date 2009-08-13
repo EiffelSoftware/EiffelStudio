@@ -47,98 +47,45 @@ feature -- Basic operations
 
 feature {NONE} -- Access
 
-	filtered_tests (a_test_suite: TEST_SUITE_S): TAG_BASED_FILTERED_COLLECTION [TEST_I]
-			-- Currently active filtered collection of tests in `test_suite' service.
+	test_tree (a_test_suite: TEST_SUITE_S): TAG_SPARSE_TREE [TEST_I]
+			-- Filtered tag tree for given test suite.
+			--
+			-- `a_test_suite': Test suite for which a filtered tag tree should be returned.
 		require
-			test_suite_usable: a_test_suite.is_interface_usable
-			test_suite_initialized: a_test_suite.is_project_initialized
+			a_test_suite_attached: a_test_suite /= Void
+			a_test_suite_usable: a_test_suite.is_interface_usable
 		local
-			l_cache: detachable like filtered_tests
+			l_cache: like test_tree_cache
 		do
-			check not_implemented: False end
-			l_cache := filtered_tests_cell.item
-			if l_cache = Void or else
-			   not l_cache.is_interface_usable or else
-			   not l_cache.is_connected --or else
-			   --l_cache.collection /= a_test_suite
-			then
-				create l_cache.make
-				--l_cache.connect (a_test_suite)
-				filtered_tests_cell.put (l_cache)
-			end
-			Result := l_cache
-		ensure
-			result_attached: Result /= Void
-			result_usable: Result.is_interface_usable
-			result_connected: Result.is_connected
-			--result_uses_test_suite: Result.collection = a_test_suite
-		end
-
-	tree_view (a_test_suite: TEST_SUITE_S): TAG_BASED_TREE [TEST_I]
-		require
-			test_suite_usable: a_test_suite.is_interface_usable
-			test_suite_initialized: a_test_suite.is_project_initialized
-		local
-			l_cache: detachable like tree_view
-		do
-			l_cache := tree_view_cell.item
-			if l_cache = Void or else
-			   not l_cache.is_interface_usable or else
-			   not l_cache.is_connected or else
-			   l_cache.collection /= filtered_tests (a_test_suite)
-			then
-				create l_cache.make
-				l_cache.connect (filtered_tests (a_test_suite), default_tag_prefix)
-				tree_view_cell.put (l_cache)
-			end
-			Result := l_cache
-		ensure
-			result_attached: Result /= Void
-			result_usable: Result.is_interface_usable
-			result_connected: Result.is_connected
-			result_uses_filtered_tests: Result.collection = filtered_tests (a_test_suite)
-		end
-
-	filtered_tests_cell: CELL [detachable TAG_BASED_FILTERED_COLLECTION [TEST_I]]
-			-- Cache for `filtered_tests'
-		once
-			create Result.put (Void)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	tree_view_cell: CELL [detachable TAG_BASED_TREE [TEST_I]]
-			-- Cache for `tree_view'
-		once
-			create Result.put (Void)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_tag_prefix: STRING = "class"
-			-- Default tag prefix for `tree_view'
-
-feature {NONE} -- Query
-
-	outcome (a_test: TEST_I): READABLE_STRING_8
-			-- String representation for the current outcome of `a_test'
-		do
-			if a_test.is_outcome_available then
-				inspect a_test.last_outcome.status
-				when {EQA_TEST_RESULT_STATUS_TYPES}.passed then
-					Result := "passes"
-				when {EQA_TEST_RESULT_STATUS_TYPES}.failed then
-					Result := "FAIL"
-				else
-					Result := "unresolved"
+			l_cache := test_tree_cache
+			if l_cache /= Void then
+				if l_cache.is_connected and then l_cache.tree /= a_test_suite.tag_tree then
+					l_cache.disconnect
 				end
 			else
-				Result := "[untested]"
+				create l_cache.make (test_tree_filter)
 			end
+			if not l_cache.is_connected then
+				l_cache.connect (a_test_suite.tag_tree)
+			end
+			Result := l_cache
 		ensure
 			result_attached: Result /= Void
-			result_not_empty: not Result.is_empty
-			result_not_too_long: Result.count <= max_outcome_count
+			result_connected: Result.is_connected
+			result_valid: Result.tree = a_test_suite.tag_tree
+			result_uses_filter: Result.filter = test_tree_filter
+		end
+
+	test_tree_cache: detachable like test_tree
+			-- Cache for `test_tree'
+			--
+			-- Note: do not use directly, use `test_tree' instead.
+
+	test_tree_filter: TAG_REGEX_FILTER [TEST_I]
+			-- Filter used in `test_tree'
+		once
+			create Result.make
+			Result.set_expression (default_filter_expression)
 		end
 
 feature {NONE} -- Basic operations
@@ -150,7 +97,7 @@ feature {NONE} -- Basic operations
 			command_line_io.localized_print (a_string.string)
 		end
 
-	print_statistics (a_test_suite: TEST_SUITE_S; a_include_filter: BOOLEAN)
+	print_statistics (a_test_suite: TEST_SUITE_S)
 		require
 			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_test_suite_initialized: a_test_suite.is_project_initialized
@@ -159,16 +106,12 @@ feature {NONE} -- Basic operations
 			l_translated: STRING_GENERAL
 		do
 			l_total := a_test_suite.tests.count.to_natural_32
-			l_filtered := filtered_tests (a_test_suite).items.count.to_natural_32
+			--l_filtered := filtered_tests (a_test_suite).items.count.to_natural_32
 			l_executed := a_test_suite.count_executed
 			l_passing := a_test_suite.count_passing
 			l_failing := a_test_suite.count_failing
 			l_unresolved := l_executed - l_passing - l_failing
-			if a_include_filter and l_filtered /= l_total then
-				l_translated := locale.translation (m_filter_statistics)
-			else
-				l_translated := locale.translation (m_statistics)
-			end
+			l_translated := locale.translation (m_statistics)
 			print_string ("%N")
 			print_string (locale.formatted_string (l_translated,
 				[l_total, l_filtered, l_executed, l_passing, l_failing, l_unresolved]))
@@ -191,75 +134,20 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	print_current_expression (a_test_suite: TEST_SUITE_S; a_force: BOOLEAN)
-			-- Print current expression in `filtered_tests'.
-			--
-			-- `a_test_suite': Current test suite service
-			-- `a_force': True if expression should be printed even if it is empty.
-		local
-			l_filter: like filtered_tests
-		do
-			l_filter := filtered_tests (a_test_suite)
-			if a_force or l_filter.has_expression then
-				print_string (locale.translation (m_current_filter))
-				if l_filter.has_expression then
-					print_string (l_filter.expression)
-				end
-				print_string ("%N")
-			end
-		end
-
-	print_current_prefix (a_test_suite: TEST_SUITE_S; a_force: BOOLEAN)
-			-- Print current tag prefix for `tree_view'.
-			--
-			-- `a_test_suite': Current test suite service.
-			-- `a_force': True if tag prefix should be printed even if empty.
-		local
-			l_view: like tree_view
-		do
-			l_view := tree_view (a_test_suite)
-			if a_force or not l_view.tag_prefix.is_empty then
-				print_string (locale.translation (m_current_prefix))
-				print_string (l_view.tag_prefix)
-				print_string ("%N")
-			end
-		end
-
-	print_test (a_test: TEST_I; a_prefix: READABLE_STRING_8; a_tab_count: INTEGER)
+	print_test (a_test: TEST_I; a_indent: INTEGER_32)
 			-- Print information for given test.
 			--
 			-- `a_test': Test for which information should be printed.
-			-- `a_prefix': String which will be printed before the test name.
-			-- `a_tab_count': Tabulator count for outcome row following test name.
+			-- `a_indent': Number of indentations until test is printed.
 		require
 			a_test_attached: a_test /= Void
-			a_tab_count_valid: a_tab_count >= -1
 		local
 			l_name: STRING
-			l_count: INTEGER
+			l_count, l_max: INTEGER
 		do
-			l_count := a_test.routine_name.count + a_prefix.count
-			create l_name.make (l_count)
-			l_name.append (a_prefix)
-			l_name.append (a_test.routine_name.as_string_8)
-
-			if a_tab_count = -1 then
-				print_string (" ")
-				print_string (l_name)
-			elseif a_tab_count > 4 or l_count < a_tab_count then
-				if l_count >= a_tab_count then
-					print_string (l_name.substring (1, a_tab_count - 4))
-					print_string ("... ")
-				else
-					print_string (l_name)
-					print_multiple_string (" ", a_tab_count - l_count)
-				end
-			else
-				print_multiple_string (" ", a_tab_count)
-			end
-
-			print_string (outcome (a_test))
-			print_string ("%N")
+			print_multiple_string (indent, a_indent.to_integer_32)
+			a_test.print_test (output_window)
+			output_window.add_new_line
 		end
 
 feature {NONE} -- Events
@@ -299,10 +187,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	max_outcome_count: INTEGER = 10
-			-- Max length for `outcome'
-
 	tab_count: INTEGER = 65
+
+	indent: STRING = "    "
 
 feature {NONE} -- Internationalization
 

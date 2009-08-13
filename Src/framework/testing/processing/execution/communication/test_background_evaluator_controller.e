@@ -81,11 +81,7 @@ feature -- Status setting
 				--| Note: we do not really need input redirection, however on windows with a non console
 				--|       application this is needed or the process will crash.
 			process.redirect_input_to_stream
-			process.redirect_output_to_agent (
-				agent (a_string: STRING)
-					do
-
-					end)
+			process.redirect_output_to_agent (agent {STRING}.do_nothing)
 			process.redirect_error_to_same_as_output
 
 			process.launch

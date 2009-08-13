@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class
-	EQA_TEST_EVALUATOR
+	EQA_TEST_EVALUATOR [G -> EQA_TEST_SET create default_create end]
 
 inherit
 	ANY
@@ -33,12 +33,24 @@ inherit
 			{NONE} all
 		end
 
-feature -- Status report
+feature -- Access
 
-	last_result: detachable EQA_TEST_RESULT
+	last_result: EQA_ETEST_PARTIAL_RESULT
 			-- Result last produced by `execute'
+		local
+			l_cache: like last_result_cache
+		do
+			l_cache := last_result_cache
+			check l_cache /= Void end
+			Result := l_cache
+		ensure
+			result_equals_cache: Result = last_result_cache
+		end
 
 feature {NONE} -- Access
+
+	last_result_cache: detachable like last_result
+			-- Cache for `last_result'
 
 	buffer: EQA_TEST_OUTPUT_BUFFER
 			-- Buffer for recording output
@@ -48,29 +60,22 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	record_output: BOOLEAN
-			-- Shall output produced by tests be recorded in responses of `last_result'
+	has_result: BOOLEAN
+			-- Has `execute' been called yet?
+		do
+			Result := last_result_cache /= Void
+		ensure
+			result_implies_cache_attached: Result implies last_result_cache /= Void
+		end
 
 feature {NONE} -- Status report
 
 	last_invocation_response: detachable EQA_TEST_INVOCATION_RESPONSE
 			-- Response last produced by `safe_execute'
 
-feature -- Status setting
-
-	set_record_output (a_record_output: BOOLEAN)
-			-- Set `record_output'.
-			--
-			-- `a_record_output': Value to which `record_output' will be set.
-		do
-			record_output := a_record_output
-		ensure
-			record_output_set: record_output = a_record_output
-		end
-
 feature -- Execution
 
-	frozen execute (a_test_set: FUNCTION [ANY, TUPLE, EQA_TEST_SET]; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: READABLE_STRING_8)
+	frozen execute (a_routine: PROCEDURE [ANY, TUPLE [G]])
 			-- Run full test sequence for given test set and test procedure. This includes invoking `set_up'
 			-- on the {TEST_SET} instance, then calling the procedure providing the test set as an operand
 			-- and finally invoking `tear_down' on the test set.
@@ -81,64 +86,64 @@ feature -- Execution
 			--       procedure, `tear_down' still gets invoked. If both the test procedure and `tear_down'
 			--       raise an exception only the test procedure exception will be stored.
 			--
-			-- `a_test_set': Test set instance for which a test procedure shall be executed.
-			-- `a_test': Procedure taking `a_test_set' as an operand and invokes the corresponding test procedure.
+			-- `a_routine': Agent to which calls test routine.
 		require
-			a_test_set_attached: a_test_set /= Void
-			a_test_attached: a_test /= Void
-			a_name_attached: a_name /= Void
-			--valid_test_set: a_test.valid_operands ([a_test_set])
+			a_routine_attached: a_routine /= Void
+			a_routine_valid: a_routine.valid_operands ([create {G}])
 		local
+			l_creator: FUNCTION [like Current, TUPLE, G]
 			l_prepare, l_test, l_clean: like last_invocation_response
-			l_work_dir, l_target: STRING
+			l_test_set: detachable G
+			l_basic_test_set: EQA_TEST_SET
+			l_old: detachable PLAIN_TEXT_FILE
 		do
-			(create {EQA_EVALUATION_INFO}).set_test_name (a_name)
-			l_work_dir := current_working_directory.twin
-			l_target := type_name_of_type (generic_dynamic_type (a_test_set, 3))
-			safe_execute (a_test_set, l_target)
+			--(create {EQA_EVALUATION_INFO}).set_test_name (a_name)
+			l_old := io.default_output
+			io.set_file_default (buffer)
+			l_creator := agent: G do Result := create {G} end
+			safe_execute (l_creator)
 			l_prepare := last_invocation_response
 			check l_prepare /= Void end
-			if not l_prepare.is_exceptional and then attached a_test_set.last_result as l_test_set then
-				safe_execute (agent l_test_set.run_test (a_test), l_target)
+			if l_prepare.is_exceptional then
+				create last_result_cache.make (l_prepare, buffered_output)
+			else
+				l_test_set := l_creator.last_result
+				check l_test_set /= Void end
+				--a_routine.set_operands ([l_test_set])
+				safe_execute (agent a_routine.call ([l_test_set]))
 				l_test := last_invocation_response
 				check l_test /= Void end
-				safe_execute (agent l_test_set.clean (l_test.is_exceptional), l_target)
+				l_basic_test_set := l_test_set
+				safe_execute (agent l_basic_test_set.clean (l_test.is_exceptional))
 				l_clean := last_invocation_response
 				check l_clean /= Void end
-				create last_result.make (l_prepare, l_test, l_clean, create {DATE_TIME}.make_now)
-			else
-				create last_result.make_with_setup (l_prepare, create {DATE_TIME}.make_now)
+				create {EQA_ETEST_RESULT} last_result_cache.make (l_prepare, l_test, l_clean, buffered_output)
 			end
-			change_working_directory (l_work_dir)
+			if l_old = Void then
+				io.set_output_default
+			else
+				io.set_file_default (l_old)
+			end
 		ensure
-			last_result_attached: last_result /= Void
+			has_result: has_result
 		end
 
 feature {NONE} -- Implementation
 
-	safe_execute (a_procedure: ROUTINE [ANY, TUPLE]; a_target: READABLE_STRING_8)
+	safe_execute (a_procedure: ROUTINE [ANY, TUPLE])
 			-- Execute `procedure' in a protected way.
 		require
 			a_procedure_attached: a_procedure /= Void
-			a_target_attached: a_target /= Void
 			buffer_empty: buffer.is_empty
 		local
 			l_retry: BOOLEAN
-			l_old: detachable PLAIN_TEXT_FILE
 			l_excpt: detachable EXCEPTION
 			l_texcpt: EQA_TEST_INVOCATION_EXCEPTION
+			l_test_set_name: STRING
 		do
 			if not l_retry then
-				l_old := io.default_output
-				if record_output then
-					io.set_file_default (buffer)
-				end
 				a_procedure.call (Void)
-				create last_invocation_response.make_normal (buffered_output)
-				buffer.wipe_out
-			end
-			if l_old /= Void then
-				io.set_file_default (l_old)
+				create last_invocation_response.make
 			end
 		ensure
 			last_invocation_response_attached: last_invocation_response /= Void
@@ -146,9 +151,9 @@ feature {NONE} -- Implementation
 			l_retry := True
 			l_excpt := exception_manager.last_exception
 			check l_excpt /= Void end
-			create l_texcpt.make (l_excpt, a_target, Void)
-			create last_invocation_response.make_exceptional (buffered_output, l_texcpt)
-			buffer.wipe_out
+			l_test_set_name := 	type_name_of_type (generic_dynamic_type (Current, 1))
+			create l_texcpt.make (l_excpt, l_test_set_name, Void)
+			create last_invocation_response.make_exceptional (l_texcpt)
 			retry
 		end
 

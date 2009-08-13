@@ -32,10 +32,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project_access: like project_access)
+	make (a_project_access: like project_access; a_auto_retrieve: BOOLEAN)
 			-- Initialize `Current'.
 			--
 			-- `a_project_access': Access to Eiffel project.
+			-- `a_auto_retrieve': True if `Current' should retrieve new tests after loading/compiling the
+			--                    project. False otherwise.
 		require
 			a_project_access_attached: a_project_access /= Void
 		local
@@ -46,9 +48,11 @@ feature {NONE} -- Initialization
 			class_map := new_class_map
 
 			l_manager := project_access.project.manager
-			l_manager.load_agents.extend (agent on_compilation_done)
 			l_manager.compile_start_agents.extend (agent force_test_class_compilation)
-			l_manager.compile_stop_agents.extend (agent on_compilation_done)
+			if a_auto_retrieve then
+				l_manager.compile_stop_agents.extend (agent retrieve_tests)
+				l_manager.load_agents.extend (agent retrieve_tests)
+			end
 
 			if test_suite.is_service_available then
 				l_test_suite := test_suite.service
@@ -58,12 +62,52 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {ETEST_RETRIEVAL}
+feature -- Access
 
 	project_access: EC_PROJECT_ACCESS
 			-- Access to Eiffel project
 
-feature {NONE} -- Access
+	library: detachable CONF_LIBRARY
+			-- {CONF_LIBRARY} instance representing testing library, Void if library not included or not
+			-- compiled yet.
+		local
+			l_cache: like library_cache
+			l_uuid: UUID
+			l_lib_list: LIST [CONF_LIBRARY]
+			l_universe: UNIVERSE_I
+		do
+			l_cache := library_cache
+			if l_cache = Void and project_access.is_initialized then
+				create l_uuid.make_from_string ({ETEST_CONSTANTS}.testing_library_uuid)
+				l_universe := project_access.project.system.universe
+				l_lib_list := l_universe.library_of_uuid (l_uuid, False)
+				if not l_lib_list.is_empty then
+					l_cache := l_lib_list.first
+					library_cache := l_cache
+				end
+			end
+			Result := l_cache
+		end
+
+	library_class (a_name: STRING): detachable EIFFEL_CLASS_I
+			-- {EIFFEL_CLASS_I} instance of a testing library class with given name. Void if class does not
+			-- exist or library is not yet added and compiled.
+			--
+			-- `a_name': Name of testing library class that should be returned.
+		do
+			if attached library as l_library and project_access.is_initialized then
+				if attached {EIFFEL_CLASS_I} project_access.class_from_name (a_name, l_library) as l_class then
+					Result := l_class
+				end
+			end
+		end
+
+feature {NONE} -- Access: project
+
+	library_cache: detachable like library
+			-- Cache for `testing_library'
+
+feature {NONE} -- Access: tests
 
 	class_map: DS_HASH_TABLE [ETEST_CLASS, READABLE_STRING_8]
 			-- Table mapping class names to corresponding {ETEST_CLASS}.
@@ -87,27 +131,6 @@ feature {NONE} -- Access
 			-- Access to test suite service {TEST_SUITE_S}.
 		once
 			create Result
-		end
-
-	testing_library_class (a_name: STRING): detachable EIFFEL_CLASS_I
-			--
-		require
-			project_available: project_access.is_initialized
-		local
-			l_uuid: UUID
-			l_lib_list: LIST [CONF_LIBRARY]
-			l_lib: CONF_LIBRARY
-			l_universe: UNIVERSE_I
-		do
-			create l_uuid.make_from_string ("B77B3A44-A1A9-4050-8DF9-053598561C33")
-			l_universe := project_access.project.system.universe
-			l_lib_list := l_universe.library_of_uuid (l_uuid, False)
-			if not l_lib_list.is_empty then
-				l_lib := l_lib_list.first
-				if attached {EIFFEL_CLASS_I} project_access.class_from_name (a_name, l_lib) as l_ec then
-					Result := l_ec
-				end
-			end
 		end
 
 feature {NONE} -- Status report
@@ -158,7 +181,7 @@ feature {ETEST_CLUSTER_RETRIEVAL} -- Basic operations
 					-- Before we create a new `l_etest_class', we check that `class_map' has not already retrieved
 					-- a {ETEST_CLASS} with the same name.
 				if not (l_is_old and class_map.has (l_name)) then
-					create l_etest_class.make (a_class)
+					create l_etest_class.make (a_class, Current)
 					synchronizer.synchronize (l_etest_class, False)
 					l_name := l_etest_class.name
 					l_new := True
@@ -189,15 +212,18 @@ feature {TEST_SUITE_S} -- Events: test suite
 			end
 		end
 
-feature {NONE} -- Events: project
+feature -- Element change
 
-	on_compilation_done
+	retrieve_tests
 			-- Called when Eiffel project has finished compilation
 		local
 			l_retrieval: like retrieval
 			l_project: E_PROJECT
 			l_test_suite: TEST_SUITE_S
 		do
+				-- Wipe out caches
+			library_cache := Void
+
 			if is_retrieving then
 				l_retrieval := retrieval
 				check l_retrieval /= Void end
@@ -211,7 +237,7 @@ feature {NONE} -- Events: project
 				l_test_suite := test_suite.service
 				if
 					l_test_suite.is_interface_usable and
-					attached testing_library_class ({TEST_CONSTANTS}.common_test_class_ancestor_name) as l_class
+					attached library_class ({ETEST_CONSTANTS}.eqa_test_set_name) as l_class
 				then
 					create l_retrieval.make (Current, l_test_suite, project_access.project.universe.target, l_class)
 					retrieval := l_retrieval

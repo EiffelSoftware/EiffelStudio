@@ -42,23 +42,6 @@ feature {TEST_SUITE_S} -- Events
 		do
 		end
 
-	on_test_result_added (a_test_suite: TEST_SUITE_S; a_test: TEST_I; a_result: EQA_TEST_RESULT)
-			-- Called when a test result is added to a test.
-			--
-			-- `a_test_suite': Test suite that triggered event.
-			-- `a_test': Test to which result was added.
-		require
-			a_test_suite_attached: a_test_suite /= Void
-			a_test_attached: a_test /= Void
-			a_result_attached: a_result /= Void
-			a_test_suite_usable: a_test_suite.is_interface_usable
-			a_test_usable: a_test.is_interface_usable
-			a_test_has_results: a_test.is_outcome_available
-			a_result_is_last: a_test.last_outcome = a_result
-		do
-			
-		end
-
 	on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
 			-- Called when test suite launches a session.
 			--
@@ -69,10 +52,13 @@ feature {TEST_SUITE_S} -- Events
 			a_session_attached: a_session /= Void
 			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_session_usable: a_session.is_interface_usable
+			a_session_running: a_session.has_next_step
+			record_added_to_repo: a_test_suite.record_repository.has_record (a_session.record)
 		do
 
 		ensure
 			a_session_usable: a_session.is_interface_usable
+			record_added_to_repo: a_test_suite.record_repository.has_record (a_session.record)
 		end
 
 	on_session_finished (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)

@@ -55,6 +55,17 @@ feature -- Access
 			Result := l_tree
 		end
 
+	items: DS_HASH_SET [G]
+			-- All items contained in nodes or child nodes of `root_nodes'
+			--
+			-- Note: this query is expensive as it traverses all nodes in `root_nodes' recursively.
+		require
+			connected: is_connected
+		do
+			create Result.make_default
+			internal_root_nodes.do_all (agent {like common_parent}.append_items_recursive (Result))
+		end
+
 feature -- Access
 
 	root_nodes: DS_ARRAYED_LIST [TAG_TREE_NODE [G]]
@@ -80,10 +91,10 @@ feature -- Access
 			end
 		end
 
-feature {NONE}  -- Access
-
 	filter: TAG_SPARSE_TREE_FILTER [G]
 			-- Filter which determines which nodes belong to `root_nodes'
+
+feature {NONE}  -- Access
 
 	internal_tree: detachable like tree
 			-- Internal storage for `tree'

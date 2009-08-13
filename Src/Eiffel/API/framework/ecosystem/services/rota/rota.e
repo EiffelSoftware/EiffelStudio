@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create tasks.make
+			task_cursor := (create {DS_LINKED_LIST [like new_task_data]}.make).new_cursor
 			create task_run_event
 			create task_finished_event
 			create task_removed_event
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	tasks: DS_LINKED_LIST [like new_task_data]
+	task_cursor: DS_LINKED_LIST_CURSOR [like new_task_data]
 			-- <Precursor>
 
 	min_sleep_time: NATURAL
@@ -58,21 +58,12 @@ feature -- Query
 
 	has_task (a_task: ROTA_TIMED_TASK_I): BOOLEAN
 			-- <Precursor>
-		local
-			l_tasks: like tasks
-			l_cursor: INTEGER
 		do
-			from
-				l_tasks := tasks
-				l_cursor := l_tasks.index
-				l_tasks.start
-			until
-				l_tasks.after or Result
-			loop
-				Result := l_tasks.item_for_iteration.task = a_task
-				l_tasks.forth
-			end
-			l_tasks.go_i_th (l_cursor)
+			Result := tasks.there_exists (
+				agent (a_data: like new_task_data; a_t: ROTA_TIMED_TASK_I): BOOLEAN
+					do
+						Result := a_data.task = a_t
+					end (?, a_task))
 		end
 
 feature -- Basic operations
@@ -94,7 +85,7 @@ feature {NONE} -- Basic operations
 			l_now: TIME
 			l_duration: NATURAL
 		do
-			l_data := tasks.item_for_iteration
+			l_data := task_cursor.item
 			create l_now.make_now
 			l_duration := elapsed_milliseconds (l_data.last_step, l_now)
 			if l_data.sleep_time <= l_duration then
@@ -110,14 +101,14 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	remove_task
+	remove_task (a_force: BOOLEAN)
 			-- <Precursor>
 		local
 			l_task: ROTA_TIMED_TASK_I
 		do
-			l_task := tasks.item_for_iteration.task
+			l_task := task_cursor.item.task
 			task_finished_event.publish ([Current, l_task])
-			Precursor
+			Precursor (a_force)
 			task_removed_event.publish_if ([Current, l_task],
 				agent (a_rota: ROTA_S; a_task: ROTA_TIMED_TASK_I): BOOLEAN
 					do

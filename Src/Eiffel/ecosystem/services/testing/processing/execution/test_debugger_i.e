@@ -10,7 +10,7 @@ deferred class
 	TEST_DEBUGGER_I
 
 inherit
-	TEST_EXECUTOR_I
+	TEST_OBSOLETE_EXECUTOR_I
 		redefine
 			is_valid_typed_configuration
 		end

@@ -13,7 +13,7 @@ deferred class
 	TEST_EXECUTOR
 
 inherit
-	TEST_EXECUTOR_I
+	TEST_OBSOLETE_EXECUTOR_I
 		redefine
 			is_ready
 		end
@@ -411,10 +411,10 @@ feature {NONE} -- Basic functionality
 			--
 			-- `a_evaluator': Evaluator from which new results are fetched.
 		local
-			l_tuple: TUPLE [index: NATURAL; outcome: detachable EQA_TEST_RESULT; attempts: NATURAL]
+			l_tuple: TUPLE [index: NATURAL; outcome: detachable EQA_RESULT; attempts: NATURAL]
 			l_done, l_terminate: BOOLEAN
 			l_test: detachable TEST_I
-			l_outcome: EQA_TEST_RESULT
+			l_outcome: EQA_RESULT
 		do
 			from
 			until
@@ -451,8 +451,7 @@ feature {NONE} -- Basic functionality
 									log_file.put_string (": ")
 									if
 										assigner.is_aborted (result_cursor.key) or else
-										not l_test.is_outcome_available or else
-										not l_test.last_outcome.has_response
+										not l_test.is_outcome_available
 									then
 										log_file.put_string ("aborted")
 									elseif l_test.last_outcome.is_pass then
@@ -495,7 +494,7 @@ feature {NONE} -- Basic functionality
 				test_map.after
 			loop
 				if test_map.item_for_iteration.is_running then
-					test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_RESULT}.make_user_abort (create {DATE_TIME}.make_now))
+					test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_EMPTY_RESULT}.make ("User abort", Void))
 				elseif test_map.item_for_iteration.is_queued then
 					test_suite.set_test_aborted (test_map.item_for_iteration)
 				end
@@ -521,7 +520,7 @@ feature {NONE} -- Basic functionality
 							if a_test.executor = Current and not a_remove then
 								completed_tests_count := completed_tests_count + 1
 								if a_test.is_running then
-									test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_TEST_RESULT}.make_user_abort (create {DATE_TIME}.make_now))
+									test_suite.add_outcome_to_test (test_map.item_for_iteration, create {EQA_EMPTY_RESULT}.make ("User abort", Void))
 								else
 									test_suite.set_test_aborted (a_test)
 								end

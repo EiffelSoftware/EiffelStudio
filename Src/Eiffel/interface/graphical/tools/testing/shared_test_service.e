@@ -24,7 +24,6 @@ feature {NONE} -- Access
 				test_suite_cell.put (l_test_suite)
 				l_etest_suite := etest_suite
 			end
-
 			Result := l_test_suite
 		end
 
@@ -40,19 +39,8 @@ feature {NONE} -- Access
 			-- Once instance of `{ETEST_SUITE}
 		once
 			create Result.make (create {EC_PROJECT_ACCESS}.make (
-				(create {SHARED_EIFFEL_PROJECT}).eiffel_project))
-		end
-
-	background_executor_type: TYPE [TEST_BACKGROUND_EXECUTOR_I]
-			-- Type for executor used to execute tests in background
-		do
-			Result := {TEST_BACKGROUND_EXECUTOR_I}
-		end
-
-	debug_executor_type: TYPE [TEST_DEBUGGER_I]
-			-- Type for executor that runs tests in the debugger
-		do
-			Result := {TEST_DEBUGGER_I}
+				(create {SHARED_EIFFEL_PROJECT}).eiffel_project),
+				(create {SHARED_FLAGS}).is_gui)
 		end
 
 	extractor_factory_type: TYPE [TEST_EXTRACTOR_I]
@@ -73,6 +61,13 @@ feature {NONE} -- Access
 			Result := {TEST_GENERATOR_I}
 		end
 
+	default_filter_expression: STRING = "^class"
+			-- Default tag prefix for `tree_view'
+			--
+			-- Note: while {ETEST} are the only {TEST_I} instances currently added to the test suite, it is
+			--       guaranteed that all tests are shown, since all {ETEST} are tagged with a class tag
+			--       starting with "class/".
+
 feature {NONE} -- Query
 
 	error_message (a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL): STRING_32
@@ -88,7 +83,7 @@ feature {NONE} -- Query
 			when service_not_available_code then
 				l_message := e_service_not_available
 			when processor_not_available_code then
-				if attached {TYPE [TEST_EXECUTOR_I]} a_type as l_exec_type then
+				if attached {TYPE [TEST_OBSOLETE_EXECUTOR_I]} a_type as l_exec_type then
 					l_message := e_execution_unavailable
 				elseif attached {TYPE [TEST_DEBUGGER_I]} a_type as l_debug_type then
 					l_message := e_debugging_unavailable
@@ -100,7 +95,7 @@ feature {NONE} -- Query
 					l_message := e_unkonwn_error
 				end
 			when processor_not_ready_code then
-				if attached {TYPE [TEST_EXECUTOR_I]} a_type as l_exec_type2 then
+				if attached {TYPE [TEST_OBSOLETE_EXECUTOR_I]} a_type as l_exec_type2 then
 					l_message := e_execution_not_ready
 				elseif attached {TYPE [TEST_DEBUGGER_I]} a_type as l_debug_type2 then
 					l_message := e_debugging_not_ready
@@ -112,7 +107,7 @@ feature {NONE} -- Query
 					l_message := e_unkonwn_error
 				end
 			when configuration_not_valid_code then
-				if attached {TYPE [TEST_EXECUTOR_I]} a_type as l_exec_type3 then
+				if attached {TYPE [TEST_OBSOLETE_EXECUTOR_I]} a_type as l_exec_type3 then
 					l_message := e_execution_conf_invalid
 				elseif attached {TYPE [TEST_CREATOR_I]} a_type as l_creator_type3 then
 					l_message := e_creation_conf_invalid
@@ -130,6 +125,68 @@ feature {NONE} -- Query
 		end
 
 feature {NONE} -- Basic operations
+
+	launch_session (a_type: TYPE [TEST_SESSION_I]; a_procedure: detachable PROCEDURE [ANY, TUPLE [TEST_SESSION_I]])
+			-- Instatiate and launch session of given type, optionally calling a procedure before performing
+			-- the actualy launch.
+			--
+			-- `a_type': Type of session to be launched.
+			-- `a_procedure': Optional procedure which is called before launching, can be used to configure
+			--                the session.
+		require
+			a_type_attached: a_type /= Void
+		local
+			l_service: TEST_SUITE_S
+			l_error: detachable STRING
+			l_tuple: TUPLE [TEST_SESSION_I]
+		do
+			if test_suite.is_service_available then
+				l_service := test_suite.service
+				if l_service.is_interface_usable then
+					if attached l_service.new_session (a_type) as l_session then
+						if a_procedure /= Void then
+							l_tuple := a_procedure.empty_operands
+							check
+								valid_operands: l_tuple.count = 1 and then
+									l_tuple.valid_type_for_index (l_session, 1) and then
+									l_tuple.is_reference_item (1)
+							end
+							l_tuple.put_reference (l_session, 1)
+							a_procedure.call (l_tuple)
+						end
+						l_service.launch_session (l_session)
+					else
+						l_error := e_service_not_available
+					end
+				else
+					l_error := e_service_not_available
+				end
+			else
+				l_error := e_service_not_available
+			end
+			if l_error /= Void then
+				on_error (l_error)
+			end
+		end
+
+	launch_executor (a_list: detachable DS_LINEAR [TEST_I]; a_debug: BOOLEAN)
+			-- Try to run all tests in a given list through the background executor. If of some reason
+			-- the tests can not be executed, show an error message.
+			--
+			-- `a_list': List of tests to be executed, Void if all tests should be ran.
+			-- `a_debug': True if `debug_button' was pressed, False otherwise.
+		do
+			launch_session ({TEST_EXECUTION_I},
+				agent (a_exec: TEST_EXECUTION_I; a_dbg: BOOLEAN; a_tests: detachable DS_LINEAR [TEST_I])
+					do
+						a_exec.set_debugging (a_dbg)
+						if a_tests /= Void then
+							a_tests.do_all (agent a_exec.queue_test)
+						else
+							a_exec.test_suite.tests.do_all (agent a_exec.queue_test)
+						end
+					end (?, a_debug, a_list))
+		end
 
 	frozen launch_processor (a_type: TYPE [TEST_PROCESSOR_I]; a_conf: TEST_PROCESSOR_CONF_I)
 			-- Launch processor with provided configuration. If unable to launch processor, report errors
@@ -171,6 +228,13 @@ feature {NONE} -- Basic operations
 		end
 
 feature {NONE} -- Events
+
+	on_error (a_error: STRING_32)
+			-- Called when an error occurred when using `test_suite'
+			--
+			-- `a_error': Error message.
+		do
+		end
 
 	on_processor_launch_error (a_error: like error_message; a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL)
 			-- Called when an error occurred launching processor.

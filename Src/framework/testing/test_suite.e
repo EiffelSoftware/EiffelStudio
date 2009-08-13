@@ -31,6 +31,71 @@ inherit
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_project_helper: like eiffel_project_helper)
+			-- Initialize `Current'.
+		local
+			l_rota: ROTA_S
+
+
+			l_project: E_PROJECT
+			l_project_factory: SHARED_EIFFEL_PROJECT
+		do
+			create test_map.make_default
+			test_map.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_GENERAL]})
+
+				-- Events
+			create test_added_event
+			create test_removed_event
+			create session_launched_event
+			create session_finished_event
+
+			create record_repository.make
+
+			if rota.is_service_available then
+				l_rota := rota.service
+				if l_rota.is_interface_usable then
+					l_rota.connection.connect_events (Current)
+				end
+			end
+			create factories.make_default
+
+				-- register test executor
+			register_factory (create {TEST_DEFAULT_SESSION_FACTORY [TEST_EXECUTION]})
+
+
+
+
+			-- OBOLETE CREATIONS
+			--make_collection
+
+				-- Create registrar
+			create internal_processors.make
+
+				-- Create events
+			create processor_launched_event
+			create processor_proceeded_event
+			create processor_finished_event
+			create processor_stopped_event
+			create processor_error_event
+
+			create l_project_factory
+			internal_project := l_project_factory.eiffel_project
+			eiffel_project_helper := a_project_helper
+
+			if (create {SHARED_FLAGS}).is_gui then
+				create {EV_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
+			else
+				create {TTY_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
+			end
+
+				-- Create tree
+			create tag_tree.make (create {TAG_DIRECTORY_FORMATTER},
+			                      create {EC_TAG_TREE_NODE_FACTORY [TEST_I]})
+
+		end
+
 feature -- Access
 
 	tests: DS_LINEAR [TEST_I]
@@ -44,6 +109,9 @@ feature -- Access
 		do
 			Result := test_map.item (an_identifier)
 		end
+
+	record_repository: TEST_RECORD_REPOSITORY
+			-- <Precursor>
 
 feature -- Access: output
 
@@ -74,11 +142,18 @@ feature {NONE} -- Access
 			-- key: Test name
 			-- value: Test instance
 
+feature {NONE} -- Access: sessions
+
+	factories: DS_ARRAYED_LIST [TEST_SESSION_FACTORY [TEST_SESSION_I]]
+			-- List containing all registered factories
+
 	frozen rota: SERVICE_CONSUMER [ROTA_S]
 			-- Access to rota service {ROTA_S}
 		do
 			create Result
 		end
+
+feature {NONE} -- Access: output
 
 	frozen output_manager: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
 			-- Access to output manager service {OUTPUT_MANAGER_S}
@@ -151,6 +226,7 @@ feature -- Status setting: sessions
 			-- <Precursor>
 		local
 			l_rota: ROTA_S
+			l_repo: like record_repository
 		do
 			if current_output_session = Void then
 				current_output_session := a_session
@@ -160,12 +236,50 @@ feature -- Status setting: sessions
 				end
 			end
 			a_session.start
-			session_launched_event.publish ([Current, a_session])
-			if rota.is_service_available then
-				l_rota := rota.service
-				if l_rota.is_interface_usable and not l_rota.has_task (a_session) then
-					l_rota.run_task (a_session)
+			if a_session.has_next_step then
+				l_repo := record_repository
+				if not l_repo.has_record (a_session.record) then
+					l_repo.append_record (a_session.record)
 				end
+				session_launched_event.publish ([Current, a_session])
+				if rota.is_service_available then
+					l_rota := rota.service
+					if l_rota.is_interface_usable and not l_rota.has_task (a_session) then
+						l_rota.run_task (a_session)
+					end
+				end
+			elseif current_output_session = a_session then
+				current_output_session := Void
+			end
+		end
+
+feature -- Element change
+
+	register_factory (a_factory: TEST_SESSION_FACTORY [TEST_SESSION_I])
+			-- <Precursor>
+		do
+			factories.force_last (a_factory)
+		end
+
+feature -- Basic operations
+
+	new_session (a_type: TYPE [TEST_SESSION_I]): detachable TEST_SESSION_I
+			-- <Precursor>
+		local
+			l_list: like factories
+			l_factory: TEST_SESSION_FACTORY [TEST_SESSION_I]
+		do
+			from
+				l_list := factories
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				l_factory := l_list.item_for_iteration
+				if l_factory.type.conforms_to (a_type) then
+					Result := l_factory.new_session (Current)
+				end
+				l_list.forth
 			end
 		end
 
@@ -175,9 +289,6 @@ feature -- Events
 			-- <Precursor>
 
 	test_removed_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
-			-- <Precursor>
-
-	test_result_added_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test; test_result: EQA_TEST_RESULT]]
 			-- <Precursor>
 
 	session_launched_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; session: TEST_SESSION_I]]
@@ -226,64 +337,6 @@ feature {NONE} -- Clean up
 
 -- OBSOLETE FEATURES
 
-feature {NONE} -- Initialization
-
-	make (a_project_helper: like eiffel_project_helper)
-			-- Initialize `Current'.
-		local
-			l_rota: ROTA_S
-
-
-			l_project: E_PROJECT
-			l_project_factory: SHARED_EIFFEL_PROJECT
-		do
-			create test_map.make_default
-			test_map.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_GENERAL]})
-
-				-- Events
-			create test_added_event
-			create test_removed_event
-			create test_result_added_event
-			create session_launched_event
-			create session_finished_event
-
-			if rota.is_service_available then
-				l_rota := rota.service
-				if l_rota.is_interface_usable then
-					l_rota.connection.connect_events (Current)
-				end
-			end
-
-
-
-			-- OBOLETE CREATIONS
-			--make_collection
-
-				-- Create registrar
-			create internal_processors.make
-
-				-- Create events
-			create processor_launched_event
-			create processor_proceeded_event
-			create processor_finished_event
-			create processor_stopped_event
-			create processor_error_event
-
-			create l_project_factory
-			internal_project := l_project_factory.eiffel_project
-			eiffel_project_helper := a_project_helper
-
-			if (create {SHARED_FLAGS}).is_gui then
-				create {EV_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
-			else
-				create {TTY_TEST_PROCESSOR_SCHEDULER} scheduler.make (Current)
-			end
-
-				-- Create tree
-			create tag_tree.make (create {TAG_DIRECTORY_FORMATTER},
-			                      create {EC_TAG_TREE_NODE_FACTORY [TEST_I]})
-
-		end
 
 feature -- Access
 
@@ -363,9 +416,9 @@ feature {TEST_PROCESSOR_I} -- Status setting
 			processor_error_event.publish ([as_attached, a_processor.as_attached, a_error.as_attached, a_token_values.as_attached])
 		end
 
-feature {TEST_EXECUTOR_I} -- Status setting
+feature {TEST_OBSOLETE_EXECUTOR_I} -- Status setting
 
-	set_test_queued (a_test: TEST_I; a_executor: TEST_EXECUTOR_I)
+	set_test_queued (a_test: TEST_I; a_executor: TEST_OBSOLETE_EXECUTOR_I)
 			-- <Precursor>
 		do
 			a_test.set_queued (a_executor)
@@ -377,32 +430,30 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test.set_running
 		end
 
-	add_outcome_to_test (a_test: TEST_I; a_outcome: EQA_TEST_RESULT)
+	add_outcome_to_test (a_test: TEST_I; a_outcome: EQA_RESULT)
 			-- <Precursor>
 		local
 			l_old, l_new: NATURAL_8
 		do
-			if a_test.is_outcome_available then
-				l_old := a_test.last_outcome.status
-			else
-				count_executed := count_executed + 1
-			end
-			l_new := a_outcome.status
-			if l_old /= l_new then
-				if l_new = {EQA_TEST_RESULT_STATUS_TYPES}.failed then
-					count_failing := count_failing + 1
-				elseif l_new = {EQA_TEST_RESULT_STATUS_TYPES}.passed then
-					count_passing := count_passing + 1
-				end
-				if l_old = {EQA_TEST_RESULT_STATUS_TYPES}.failed then
-					count_failing := count_failing - 1
-				elseif l_old = {EQA_TEST_RESULT_STATUS_TYPES}.passed then
-					count_passing := count_passing - 1
-				end
-			end
+--			if a_test.is_outcome_available then
+--				l_old := a_test.last_outcome.status
+--			else
+--				count_executed := count_executed + 1
+--			end
+--			l_new := a_outcome.status
+--			if l_old /= l_new then
+--				if l_new = {EQA_TEST_RESULT_STATUS_TYPES}.failed then
+--					count_failing := count_failing + 1
+--				elseif l_new = {EQA_TEST_RESULT_STATUS_TYPES}.passed then
+--					count_passing := count_passing + 1
+--				end
+--				if l_old = {EQA_TEST_RESULT_STATUS_TYPES}.failed then
+--					count_failing := count_failing - 1
+--				elseif l_old = {EQA_TEST_RESULT_STATUS_TYPES}.passed then
+--					count_passing := count_passing - 1
+--				end
+--			end
 			a_test.add_outcome (a_outcome)
-				-- Note: replace `as_attached' with Current when compiler treats Current as attached
-			test_result_added_event.publish ([Current, a_test, a_outcome])
 			a_test.clear_changes
 		end
 

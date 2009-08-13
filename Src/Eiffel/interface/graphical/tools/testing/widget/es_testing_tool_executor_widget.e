@@ -1,6 +1,6 @@
 note
 	description: "[
-		Widget showing status and control buttons for a {TEST_EXECUTOR_I}.
+		Widget showing status and control buttons for a {TEST_OBSOLETE_EXECUTOR_I}.
 	]"
 	author: ""
 	date: "$Date$"
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executor: TEST_EXECUTOR_I
+	executor: TEST_OBSOLETE_EXECUTOR_I
 			-- Executor being visualized by `Current'
 
 	title: STRING_32

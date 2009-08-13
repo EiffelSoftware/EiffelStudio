@@ -129,7 +129,7 @@ feature {TEST_RESULT_RECEIVER} -- Status setting
 						end
 					else
 						if l_first.attempts >= max_attempts then
-							l_first.outcome := create {EQA_TEST_RESULT}.make_evaluator_died (create {DATE_TIME}.make_now)
+							l_first.outcome := create {EQA_EMPTY_RESULT}.make ("Evaluator died", Void)
 							assign_next
 						else
 							l_first.attempts := l_first.attempts + 1
@@ -140,7 +140,7 @@ feature {TEST_RESULT_RECEIVER} -- Status setting
 			queue_mutex.unlock
 		end
 
-feature {TEST_EXECUTOR_I} -- Status setting
+feature {TEST_OBSOLETE_EXECUTOR_I} -- Status setting
 
 	set_forced_termination
 			-- Set `is_termination_forced' to True.
@@ -164,7 +164,7 @@ feature {TEST_RESULT_RECEIVER} -- Status setting
 			queue_mutex.unlock
 		end
 
-	put_outcome (a_outcome: EQA_TEST_RESULT)
+	put_outcome (a_outcome: EQA_RESULT)
 			-- Add `a_outcome' to `status_queue'.
 		do
 			queue_mutex.lock
@@ -197,9 +197,9 @@ feature {NONE} -- Status setting
 			finished_or_expecting_outcome: is_finished or is_expecting_outcome
 		end
 
-feature {TEST_EXECUTOR_I} -- Basic operations
+feature {TEST_OBSOLETE_EXECUTOR_I} -- Basic operations
 
-	fetch_progress: TUPLE [index: like next; outcome: detachable EQA_TEST_RESULT; attempts: NATURAL]
+	fetch_progress: TUPLE [index: like next; outcome: detachable EQA_RESULT; attempts: NATURAL]
 			-- Retrieve current status
 			--
 			-- Note: `fetch_progress' might return information about tests which have been aborted.

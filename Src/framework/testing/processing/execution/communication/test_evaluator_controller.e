@@ -69,7 +69,7 @@ feature -- Status report
 	is_running: BOOLEAN
 			-- Is-evaluator currently running?
 
-feature {TEST_EXECUTOR_I} -- Status setting
+feature {TEST_OBSOLETE_EXECUTOR_I} -- Status setting
 
 	frozen launch
 			-- Launch list of tests.

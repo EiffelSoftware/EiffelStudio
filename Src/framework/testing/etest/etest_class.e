@@ -13,15 +13,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like eiffel_class)
+	make (a_class: like eiffel_class; a_test_suite: like test_suite)
 			-- Initialize `Current'.
+			--
+			-- `a_class': Eiffel class represented by `Current'.
+			-- `a_test_suite': Test suite which retrieved `Current'.
+		require
+			a_class_attached: a_class /= Void
+			a_test_suite_attached: a_test_suite /= Void
 		do
 			eiffel_class := a_class
+			test_suite := a_test_suite
 			create name.make_from_string (a_class.name)
 			reset_test_map
+		ensure
+			eiffel_class_set: eiffel_class = a_class
+			test_suite_set: test_suite = a_test_suite
 		end
 
 feature -- Access
+
+	test_suite: ETEST_SUITE
+			-- Test suite which retrieved `Current'
 
 	eiffel_class: EIFFEL_CLASS_I
 			-- Class in system carrying tests

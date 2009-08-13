@@ -13,17 +13,29 @@ class
 
 inherit
 	TEST_CLASS_SOURCE_WRITER
+		redefine
+			ancestor_names
+		end
 
 feature -- Access
 
 	class_name: STRING
 			-- Name of class
 		do
-			Result := "EQA_EVALUATOR_ROOT"
+			Result := {ETEST_CONSTANTS}.eqa_evaluator_root
 		end
 
-	root_feature_name: STRING = "make"
+	root_feature_name: STRING
 			-- <Precursor>
+		do
+			Result := {ETEST_CONSTANTS}.eqa_evaluator_creator
+		end
+
+	ancestor_names: ARRAY [STRING]
+			-- <Precursor>
+		do
+			Result := << {ETEST_CONSTANTS}.eqa_evaluator >>
+		end
 
 feature -- Basic operations
 
@@ -35,6 +47,7 @@ feature -- Basic operations
 			create stream.make (a_file)
 			put_indexing
 			put_class_header
+			put_execute_test_routine
 			put_anchor_routine (a_list)
 			put_class_footer
 			stream := Void
@@ -42,8 +55,31 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	put_execute_test_routine
+			-- Print default implementation of `execute_test'
+		require
+			stream_valid: is_writing
+		do
+			stream.indent
+			stream.put_line ("execute_test: EQA_TEST_EVALUATOR [EQA_TEST_SET]")
+			stream.indent
+			stream.put_line ("local")
+			stream.indent
+			stream.put_line ("l_result: detachable like execute_test")
+			stream.dedent
+			stream.put_line ("do")
+			stream.indent
+			stream.put_line ("check not_replaced: l_result /= Void end")
+			stream.put_line ("Result := l_result")
+			stream.dedent
+			stream.put_line ("end")
+			stream.dedent
+			stream.dedent
+			stream.put_new_line
+		end
+
 	put_anchor_routine (a_list: DS_LINEAR [EIFFEL_CLASS_I])
-			--
+			-- Print references to test classes and important library classes to force their compilation.
 		require
 			stream_valid: is_writing
 		do
@@ -59,17 +95,21 @@ feature {NONE} -- Implementation
 			stream.indent
 			stream.put_line ("-- Make sure commonly used classes in testing library which take long to compile are always referenced and compiled ")
 			stream.dedent
-			stream.put_line ("l_type := {"+ ({EQA_EVALUATOR}).generating_type +"}")
-			stream.put_line ("l_type := {"+ ({ITP_INTERPRETER}).generating_type +"}")
-			stream.put_line ("l_type := {"+ ({EQA_EXTRACTED_TEST_SET}).generating_type +"}")
-			stream.put_line ("l_type := {"+ ({EQA_COMMONLY_USED_ASSERTIONS}).generating_type +"}")
+			stream.put_line ("l_type := {ANY}")
+
+			if not a_list.is_empty then
+			stream.put_line ("l_type := {EQA_EVALUATOR}")
+			stream.put_line ("l_type := {ITP_INTERPRETER}")
+			stream.put_line ("l_type := {EQA_EXTRACTED_TEST_SET}")
+			stream.put_line ("l_type := {EQA_COMMONLY_USED_ASSERTIONS}")
 			stream.put_line ("")
 			a_list.do_all (agent (a_class: EIFFEL_CLASS_I)
 				do
-					stream.put_string ("l_type := {")
+					stream.put_string ("l_type := {EQA_TEST_EVALUATOR [")
 					stream.put_string (a_class.name)
-					stream.put_line ("}")
+					stream.put_line ("]}")
 				end)
+			end
 			stream.dedent
 			stream.put_line ("end")
 			stream.dedent

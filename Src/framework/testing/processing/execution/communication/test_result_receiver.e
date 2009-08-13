@@ -124,10 +124,10 @@ feature {NONE} -- Implementation
 					if l_next > 0 then
 						l_flag := evaluator_status (a_socket)
 						if l_flag = l_next then
-							if attached {EQA_TEST_RESULT} a_socket.retrieved as l_outcome then
+							if attached {EQA_RESULT} a_socket.retrieved as l_outcome then
 								a_status.put_outcome (l_outcome)
 							else
-								a_status.put_outcome (create {EQA_TEST_RESULT}.make_communication_error (create {DATE_TIME}.make_now))
+								a_status.put_outcome (create {EQA_EMPTY_RESULT}.make ("Communication error", Void))
 							end
 							l_stop := False
 						end

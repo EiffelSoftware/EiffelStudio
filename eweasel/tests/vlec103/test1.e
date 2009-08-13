@@ -13,7 +13,14 @@ inherit
 creation
 	default_create
 feature
-	
+
+	t: LINKED_LIST [like Current]
+		do
+			create Result.make
+		end
+
+	t2: LINKED_LIST [like Current]
+
 	default_create is
 		do
 		end

@@ -15,7 +15,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	TEST_EXECUTOR_I
+	TEST_OBSOLETE_EXECUTOR_I
 
 inherit
 	TEST_PROCESSOR_I

@@ -55,6 +55,16 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	record_repository: TEST_RECORD_REPOSITORY_I
+			-- Repository containing records of previously launched sessions
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_usable: Result.is_interface_usable
+		end
+
 feature -- Access: output
 
 	output (a_session: TEST_SESSION_I): detachable OUTPUT_I
@@ -122,6 +132,38 @@ feature -- Status setting: sessions
 			a_session_usable: a_session.is_interface_usable
 			not_running: not a_session.has_next_step
 		deferred
+		ensure
+			record_added_to_repo: a_session.has_next_step implies
+				record_repository.has_record (a_session.record)
+		end
+
+feature -- Element change
+
+	register_factory (a_factory: TEST_SESSION_FACTORY [TEST_SESSION_I])
+			-- Register factory for creating a new session
+			--
+			-- `a_factory': New factory.
+		require
+			a_factory_attached: a_factory /= Void
+		deferred
+		ensure
+				-- Note: this will instanciate a new session
+			factory_registered: new_session (a_factory.type) /= Void
+		end
+
+feature -- Basic operations
+
+	new_session (a_type: TYPE [TEST_SESSION_I]): detachable TEST_SESSION_I
+			-- Create new session of given type.
+			--
+			-- `a_type': Type specifiying what session should be created.
+		require
+			a_type_attached: a_type /= Void
+		deferred
+		ensure
+			result_conforms: Result /= Void implies a_type.attempt (Result) /= Void
+			result_valid: Result /= Void implies Result.test_suite = Current
+			result_not_running: Result /= Void implies not Result.has_next_step
 		end
 
 feature -- Events
@@ -141,17 +183,6 @@ feature -- Events
 			--
 			-- test_suite: `Current'
 			-- test: Test removed from `Current'
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	test_result_added_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test; test_result: EQA_TEST_RESULT]]
-			-- Events called after a new result has been added to a test.
-			--
-			-- test_suite: `Current'
-			-- test: Test which received new result
-			-- test_result: Last result added to test
 		require
 			usable: is_interface_usable
 		deferred
@@ -198,7 +229,7 @@ feature -- Access
 			                     Result.system_defined and then Result.universe.target /= Void
 		end
 
-	executor (a_type: TYPE [TEST_EXECUTOR_I]): TEST_EXECUTOR_I
+	executor (a_type: TYPE [TEST_OBSOLETE_EXECUTOR_I]): TEST_OBSOLETE_EXECUTOR_I
 			-- Test executor registered under `a_type'.
 			--
 			-- `a_type': Type under which executor is registered.
@@ -295,9 +326,9 @@ feature {TEST_PROCESSOR_I} -- Status setting
 		deferred
 		end
 
-feature {TEST_EXECUTOR_I} -- Status setting
+feature {TEST_OBSOLETE_EXECUTOR_I} -- Status setting
 
-	set_test_queued (a_test: TEST_I; a_executor: TEST_EXECUTOR_I)
+	set_test_queued (a_test: TEST_I; a_executor: TEST_OBSOLETE_EXECUTOR_I)
 			-- Set status of test to queued and notify observers.
 			--
 			-- `a_test': Test being queued.
@@ -326,7 +357,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test_running: a_test.is_running
 		end
 
-	add_outcome_to_test (a_test: TEST_I; a_outcome: EQA_TEST_RESULT)
+	add_outcome_to_test (a_test: TEST_I; a_outcome: EQA_RESULT)
 			-- Add outcome to test being executed and notify observers.
 			--
 			-- `a_test': Test for which outcome is available.
@@ -429,7 +460,6 @@ feature -- Event: Connection point
 							Result := <<
 									[test_added_event, agent an_observer.on_test_added],
 									[test_removed_event, agent an_observer.on_test_removed],
-									[test_result_added_event, agent an_observer.on_test_result_added],
 									[session_launched_event, agent an_observer.on_session_launched],
 									[session_finished_event, agent an_observer.on_session_finished],
 									[processor_launched_event, agent an_observer.on_processor_launched],

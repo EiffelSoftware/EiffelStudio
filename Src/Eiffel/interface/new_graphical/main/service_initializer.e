@@ -122,6 +122,7 @@ feature {NONE} -- Registration: Output
 			a_service.register (create {OUTPUT_TTY}, l_kinds.general)
 			a_service.register (create {OUTPUT_TTY}, l_kinds.eiffel_compiler)
 			a_service.register (create {OUTPUT_TTY}, l_kinds.c_compiler)
+			a_service.register (create {OUTPUT_TTY}, l_kinds.testing)
 		ensure
 			general_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).general)
 			eiffel_compiler_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)

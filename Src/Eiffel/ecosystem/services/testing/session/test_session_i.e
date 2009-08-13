@@ -31,12 +31,29 @@ feature -- Access
 			result_usable: Result.is_interface_usable
 		end
 
+	frozen record: like new_record
+		require
+			usable: is_interface_usable
+			running: has_next_step
+		local
+			l_cache: like record_cache
+		do
+			l_cache := record_cache
+			if l_cache = Void then
+				l_cache := new_record
+				record_cache := l_cache
+			end
+			Result := l_cache
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = record
+		end
+
 	progress: REAL
 			-- Progress of current run between 0 and 1
 		require
 			usable: is_interface_usable
 			running: has_next_step
-			has_progress: has_progress
 		deferred
 		ensure
 			not_negative: Result >= {REAL} 0.0
@@ -45,47 +62,46 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	record_cache: detachable like record
+			-- Cache for `record'
+			--
+			-- Note: do not use directly, use `record' instead.
+
 	connection_cache: detachable like connection
 			-- Cache for `connection'
 			--
 			-- Note: do not use directly, use `connection' instead.
 
-feature -- Status report
-
-	has_progress: BOOLEAN
-			-- Does current specify `progress'?
-		require
-			usable: is_interface_usable
-			running: has_next_step
-		deferred
-		end
-
 feature -- Status setting
 
-	frozen step
+	step
 			-- <Precursor>
-		do
-			proceed
-			proceeded_event.publish ([Current])
+			--
+			-- Note: implementors are responsible of calling `proceeded_event' frequently.
+		deferred
+		ensure then
+			record_detached_if_finished: not has_next_step implies (record_cache = Void)
+		end
+
+	cancel
+			-- <Precursor>
+		deferred
+		ensure then
+			record_detached: record_cache = Void
 		end
 
 feature {TEST_SUITE_S} -- Status setting
 
 	start
 			-- Start performing tasks.
+			--
+			-- Note: If `has_next_step' is False after `start' returns, a record is not made available and
+			--       the session is considered to be failed of some reason. Although this behavior is
+			--       exceptional, it is not considered to be an error and will be silently ignored by the
+			--       test suite.
 		require
 			usable: is_interface_usable
 			not_running: not has_next_step
-		deferred
-		end
-
-feature {NONE} -- Status setting
-
-	proceed
-			-- Perform a next step.
-		require
-			usable: is_interface_usable
-			has_next_step: has_next_step
 		deferred
 		end
 
@@ -119,6 +135,21 @@ feature {NONE} -- Events
 		require
 			usable: is_interface_usable
 		deferred
+		end
+
+feature {NONE} -- Factory
+
+	new_record: TEST_SESSION_RECORD
+			-- Create new record for current run.
+			--
+			-- Note: redefine to have specific records in `Current'.
+		require
+			usable: is_interface_usable
+			running: has_next_step
+		do
+			create Result.make
+		ensure
+			result_attached: Result /= Void
 		end
 
 note

@@ -7,12 +7,12 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ROTA_PARALLEL_TASK_I
+	ROTA_PARALLEL_TASK_I [G -> ROTA_TASK_I]
 
 inherit
 	ROTA_TASK_I
 
-	ROTA_TASK_COLLECTION_I [ROTA_TASK_I]
+	ROTA_TASK_COLLECTION_I [G]
 
 feature -- Status report
 
@@ -42,6 +42,23 @@ feature {ROTA_S, ROTA_TASK_I} -- Status setting
 				proceed_current_task
 			else
 				proceed_all_tasks
+			end
+		end
+
+	cancel
+			-- <Precursor>
+		local
+			l_task: G
+		do
+			from until
+				tasks.is_empty
+			loop
+				task_cursor.start
+				l_task := task_cursor.item.task
+				if l_task.has_next_step then
+					l_task.cancel
+				end
+				remove_task (True)
 			end
 		end
 

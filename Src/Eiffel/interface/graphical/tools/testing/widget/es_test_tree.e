@@ -158,7 +158,7 @@ feature {NONE} -- Initialization (post)
 		do
 			view_templates.force_last ("")
 			view_template_descriptions.force_last ("")
-			view_templates.force_last ("^class")
+			view_templates.force_last (default_filter_expression)
 			view_template_descriptions.force_last (locale_formatter.translation (c_class))
 			view_templates.force_last ("^covers")
 			view_template_descriptions.force_last (locale_formatter.translation (c_covers))
@@ -358,7 +358,7 @@ feature {TEST_SESSION_I} -- Events
 		do
 			if
 				attached {TEST_RETRIEVAL_I} a_session and
-				a_session.has_next_step and then a_session.has_progress
+				a_session.has_next_step
 			then
 				progress_bar.set_proportion (a_session.progress)
 			end

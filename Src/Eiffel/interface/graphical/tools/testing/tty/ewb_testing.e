@@ -13,7 +13,11 @@ inherit
 	EWB_STRING
 		rename
 			make as make_string
+		redefine
+			execute
 		end
+
+	SHARED_TEST_SERVICE
 
 	SHARED_LOCALE
 		export
@@ -41,13 +45,21 @@ feature {NONE} -- Factory
 	create_menu: like sub_menu
 			-- Create testing menu.
 		do
-			create Result.make (1, 6)
+			create Result.make (1, 4)
 			Result.put (create {EWB_TEST_LIST_VIEW}, 1)
 			Result.put (create {EWB_TEST_TREE_VIEW}, 2)
 			Result.put (create {EWB_TEST_EXECUTION}, 3)
-			Result.put (create {EWB_TEST_FILTER_CMD}, 4)
-			Result.put (create {EWB_TEST_TAG_PREFIX_CMD}, 5)
-			Result.put (create {EWB_AUTO_TEST}, 6)
+			Result.put (create {EWB_AUTO_TEST}, 4)
+		end
+
+feature {NONE} -- Implementation
+
+	execute
+			-- <Precursor>
+		do
+			etest_suite.retrieve_tests
+			command_line_io.localized_print ("%N%N")
+			command_line_io.localized_print (locale.translation ("AutoTest menu:%N%N"))
 		end
 
 feature {NONE} -- Internationalization
@@ -83,10 +95,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

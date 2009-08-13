@@ -32,9 +32,6 @@ inherit
 		redefine
 			on_test_added,
 			on_test_removed,
-			on_test_result_added,
-			on_processor_launched,
-			on_processor_stopped,
 			on_processor_error
 		end
 
@@ -83,16 +80,17 @@ feature {NONE} -- Initialization: widgets
 	build_notebook
 			-- Create `notebook' and add permament tabs.
 		local
-			l_window: like develop_window
+			l_execution: ES_TEST_EXECUTION_WIDGET
+			l_tab: EV_NOTEBOOK_TAB
 		do
 			create notebook
-			l_window := develop_window
-			check l_window /= Void end
-			create outcome_tab.make (l_window)
-			notebook.extend (outcome_tab.widget)
-			notebook.set_item_text (outcome_tab.widget, outcome_tab.title)
-			notebook.item_tab (outcome_tab.widget).set_pixmap (outcome_tab.icon_pixmap)
 			split_area.set_second (notebook)
+
+			create l_execution.make
+			notebook.extend (l_execution.widget)
+			l_tab := notebook.item_tab (l_execution.widget)
+			l_tab.set_text (locale.translation (t_execution))
+			l_tab.set_pixmap (stock_pixmaps.debug_run_icon)
 		end
 
 feature {NONE} -- Initialization: widget status
@@ -147,9 +145,6 @@ feature -- Access: help
 		end
 
 feature {NONE} -- Access
-
-	outcome_tab: ES_TESTING_TOOL_OUTCOME_WIDGET
-			-- Tab showing details of a selected test
 
 	current_window: EV_WINDOW
 			-- <Precursor>
@@ -299,24 +294,35 @@ feature {NONE} -- Events: wizard
 
 feature {NONE} -- Events: test execution
 
-	on_run_current (a_type: TYPE [TEST_EXECUTOR_I])
+	on_run_current (a_debug: BOOLEAN)
 			-- Called when user presses `run_button' or `debug_button' directly.
+			--
+			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		do
 			if test_tree.tag_tree.selected_nodes.is_empty then
-				on_run_filtered (a_type)
+				on_run_filtered (a_debug)
 			else
-				on_run_selected (a_type)
+				on_run_selected (a_debug)
 			end
 		end
 
-	on_run_all (a_type: TYPE [TEST_EXECUTOR_I])
+	on_run_all (a_debug: BOOLEAN)
 			-- Called when user selects "run all" item of `run_button'.
+			--
+			-- `a_debug': True if `debug_button' was pressed, False otherwise.
+		local
+			l_executor: TEST_EXECUTION
 		do
-			launch_executor (Void, a_type)
+			create l_executor.make (test_suite.service)
+			test_suite.service.tests.do_all (agent l_executor.queue_test)
+			test_suite.service.launch_session (l_executor)
+			--launch_executor (Void, a_type)
 		end
 
-	on_run_failing (a_type: TYPE [TEST_EXECUTOR_I])
+	on_run_failing (a_debug: BOOLEAN)
 			-- Called when user selectes "run failing" item of `run_button'.
+			--
+			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		local
 			l_item: TEST_I
 			l_list: DS_ARRAYED_LIST [TEST_I]
@@ -338,42 +344,32 @@ feature {NONE} -- Events: test execution
 					end
 					l_cursor.forth
 				end
-				launch_executor (l_list, a_type)
+				launch_executor (l_list, a_debug)
 			end
 		end
 
-	on_run_filtered (a_type: TYPE [TEST_EXECUTOR_I])
+	on_run_filtered (a_debug: BOOLEAN)
 			-- Called when user selects "run filteres" item of `run_button'.
+			--
+			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		local
 			l_set: DS_HASH_SET [TEST_I]
 		do
 			create l_set.make_default
 			test_tree.tag_tree.append_items_recursive (l_set)
-			launch_executor (l_set, a_type)
+			launch_executor (l_set, a_debug)
 		end
 
-	on_run_selected (a_type: TYPE [TEST_EXECUTOR_I])
+	on_run_selected (a_debug: BOOLEAN)
 			-- Called when user selects "run selected" item of `run_button'.
+			--
+			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		local
 			l_set: DS_HASH_SET [TEST_I]
 		do
 			create l_set.make_default
 			test_tree.tag_tree.selected_nodes.do_all (agent {TAG_TREE_NODE [TEST_I]}.append_items_recursive (l_set))
-			launch_executor (l_set, a_type)
-		end
-
-	launch_executor (a_list: detachable DS_LINEAR [TEST_I]; a_type: TYPE [TEST_EXECUTOR_I])
-			-- Try to run all tests in a given list through the background executor. If of some reason
-			-- the tests can not be executed, show an error message.
-		local
-			l_conf: TEST_EXECUTOR_CONF
-		do
-			if a_list /= Void then
-				create l_conf.make_with_tests (a_list, a_type ~ debug_executor_type)
-			else
-				create l_conf.make (a_type ~ debug_executor_type)
-			end
-			launch_processor (a_type, l_conf)
+			launch_executor (l_set, a_debug)
 		end
 
 	on_stop
@@ -418,82 +414,11 @@ feature {TEST_SUITE_S} -- Events: test suite
 			update_run_labels
 		end
 
-	on_test_result_added (a_test_suite: TEST_SUITE_S; a_test: TEST_I; a_result: EQA_TEST_RESULT)
-			-- <Precursor>
-		do
-			if outcome_tab.is_active and then outcome_tab.test = a_test then
-				outcome_tab.show_test (a_test)
-			end
-			update_run_labels
-		end
-
 	on_test_removed (a_collection: TEST_SUITE_S; a_item: TEST_I)
 			-- <Precursor>
 		do
-			if outcome_tab.is_active and then outcome_tab.test = a_item then
-				outcome_tab.remove_test
-			end
 			update_run_labels
 		end
-
-	on_processor_launched (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I)
-			-- <Precursor>
-		local
-			l_new_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET
-			l_found: BOOLEAN
-			l_window: like develop_window
-		do
-			from
-				notebook.start
-			until
-				notebook.after or l_found
-			loop
-				if attached {ES_TESTING_TOOL_PROCESSOR_WIDGET} notebook.item_for_iteration.data as l_tab then
-					if l_tab.processor = a_processor then
-						l_found := True
-						notebook.item_tab (l_tab.widget).enable_select
-					end
-				end
-				notebook.forth
-			end
-
-			if not l_found then
-				l_window := develop_window
-				check l_window /= Void end
-				if attached {TEST_EXECUTOR_I} a_processor as l_executor then
-					create {ES_TESTING_TOOL_EXECUTOR_WIDGET} l_new_tab.make (l_executor, l_window)
-				elseif attached {TEST_GENERATOR_I} a_processor as l_generator then
-					create {ES_TESTING_TOOL_GENERATOR_WIDGET} l_new_tab.make (l_generator, l_window)
-				elseif attached {TEST_CREATOR_I} a_processor as l_creator then
-					create {ES_TESTING_TOOL_CREATOR_WIDGET} l_new_tab.make (l_creator, l_window)
-				end
-				if l_new_tab /= Void then
-					l_new_tab.widget.set_data (l_new_tab)
-					register_kamikaze_action (l_new_tab.close_button.select_actions, agent on_notebook_tab_close (l_new_tab))
-					notebook.go_i_th (notebook.count)
-					notebook.put_right (l_new_tab.widget)
-					notebook.set_item_text (l_new_tab.widget, l_new_tab.title)
-					notebook.item_tab (l_new_tab.widget).set_pixmap (l_new_tab.icon_pixmap)
-					notebook.item_tab (l_new_tab.widget).enable_select
-				end
-			end
-
-			if background_executor_type.attempt (a_processor) /= Void then
-				run_button.disable_sensitive
-			elseif debug_executor_type.attempt (a_processor) /= Void then
-				debug_button.disable_sensitive
-			end
-		end
-
- 	on_processor_stopped (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I)
- 			-- <Precursor>
- 		do
- 			if background_executor_type.attempt (a_processor) /= Void then
-				run_button.enable_sensitive
-			elseif debug_executor_type.attempt (a_processor) /= Void then
-				debug_button.enable_sensitive
-			end
- 		end
 
  	on_processor_error (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I; a_error: STRING_8; a_token_values: TUPLE)
  			-- <Precursor>
@@ -515,34 +440,6 @@ feature {NONE} -- Events: tree view
 			else
 				run_selected_menu.enable_sensitive
 				debug_selected_menu.enable_sensitive
-			end
-			if a_is_selected and a_node.is_leaf then
-				if not outcome_tab.is_active or else outcome_tab.test /= a_node.item then
-					outcome_tab.show_test (a_node.item)
-				end
-				notebook.item_tab (outcome_tab.widget).enable_select
-			end
-		end
-
-feature {NONE} -- Events: notebook
-
-	on_notebook_tab_close (a_tab: ES_TESTING_TOOL_PROCESSOR_WIDGET)
-			-- Called when `close_button' on `a_tab' was pressed.
-		local
-			l_found: BOOLEAN
-		do
-			from
-				notebook.start
-			until
-				notebook.after or l_found
-			loop
-				if notebook.item_for_iteration.data = a_tab then
-					notebook.remove
-					a_tab.recycle
-					l_found := True
-				else
-					notebook.forth
-				end
 			end
 		end
 
@@ -566,11 +463,6 @@ feature {NONE} -- Factory
 			wizard_button.set_pixmap (stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0).to_pixmap)
 			wizard_button.set_pixel_buffer (stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0))
 			register_action (wizard_button.select_actions, agent on_launch_wizard)
---				local
---					l_wizard: ES_TEST_WIZARD_MANAGER
---				do
---					create l_wizard.make (develop_window)
---				end)
 			Result.force_last (wizard_button)
 
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
@@ -580,20 +472,20 @@ feature {NONE} -- Factory
 			run_button.set_tooltip (locale_formatter.translation (f_run_button))
 			run_button.set_pixel_buffer (stock_pixmaps.debug_run_icon_buffer)
 			run_button.set_pixmap (stock_pixmaps.debug_run_icon)
-			register_action (run_button.select_actions, agent on_run_current (background_executor_type))
+			register_action (run_button.select_actions, agent on_run_current (False))
 
 			create l_menu
 			create run_all_menu.make_with_text (locale_formatter.translation (m_run_all))
-			register_action (run_all_menu.select_actions, agent on_run_all (background_executor_type))
+			register_action (run_all_menu.select_actions, agent on_run_all (False))
 			l_menu.extend (run_all_menu)
 			create run_failing_menu.make_with_text (locale_formatter.translation (m_run_failing))
-			register_action (run_failing_menu.select_actions, agent on_run_failing (background_executor_type))
+			register_action (run_failing_menu.select_actions, agent on_run_failing (False))
 			l_menu.extend (run_failing_menu)
 			create run_filtered_menu.make_with_text (locale_formatter.translation (m_run_filtered))
-			register_action (run_filtered_menu.select_actions, agent on_run_filtered (background_executor_type))
+			register_action (run_filtered_menu.select_actions, agent on_run_filtered (False))
 			l_menu.extend (run_filtered_menu)
 			create run_selected_menu.make_with_text (locale_formatter.translation (m_run_selected))
-			register_action (run_selected_menu.select_actions, agent on_run_selected (background_executor_type))
+			register_action (run_selected_menu.select_actions, agent on_run_selected (False))
 			l_menu.extend (run_selected_menu)
 			run_button.set_menu (l_menu)
 
@@ -604,20 +496,20 @@ feature {NONE} -- Factory
 			debug_button.set_tooltip (locale_formatter.translation (f_debug_button))
 			debug_button.set_pixel_buffer (stock_pixmaps.debugger_environment_force_execution_mode_icon_buffer)
 			debug_button.set_pixmap (stock_pixmaps.debugger_environment_force_execution_mode_icon)
-			register_action (debug_button.select_actions, agent on_run_current (debug_executor_type))
+			register_action (debug_button.select_actions, agent on_run_current (True))
 
 			create l_menu
 			create debug_all_menu.make_with_text (locale_formatter.translation (m_debug_all))
-			register_action (debug_all_menu.select_actions, agent on_run_all (debug_executor_type))
+			register_action (debug_all_menu.select_actions, agent on_run_all (True))
 			l_menu.extend (debug_all_menu)
 			create debug_failing_menu.make_with_text (locale_formatter.translation (m_debug_failing))
-			register_action (debug_failing_menu.select_actions, agent on_run_failing (debug_executor_type))
+			register_action (debug_failing_menu.select_actions, agent on_run_failing (True))
 			l_menu.extend (debug_failing_menu)
 			create debug_filtered_menu.make_with_text (locale_formatter.translation (m_debug_filtered))
-			register_action (debug_filtered_menu.select_actions, agent on_run_filtered (debug_executor_type))
+			register_action (debug_filtered_menu.select_actions, agent on_run_filtered (True))
 			l_menu.extend (debug_filtered_menu)
 			create debug_selected_menu.make_with_text (locale_formatter.translation (m_debug_selected))
-			register_action (debug_selected_menu.select_actions, agent on_run_selected (debug_executor_type))
+			register_action (debug_selected_menu.select_actions, agent on_run_selected (True))
 			l_menu.extend (debug_selected_menu)
 			debug_button.set_menu (l_menu)
 
@@ -694,6 +586,7 @@ feature {NONE} -- Factory
 feature {NONE} -- Internationalization
 
 	t_testing_output: STRING = "Testing"
+	t_execution: STRING = "Execution"
 
 	tt_wizard: STRING = "Create new tests"
 	f_run_button: STRING = "Run all tests in background"
@@ -713,9 +606,6 @@ feature {NONE} -- Constants
 
 	l_outcome_view: STRING = "^outcome/"
 	l_filter_not_passing: STRING = "^outcome/ -^outcome/passes/"
-
-invariant
-	details_tab_valid: is_initialized implies notebook.has (outcome_tab.widget)
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

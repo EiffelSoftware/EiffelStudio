@@ -18,13 +18,28 @@ inherit
 
 feature {NONE} -- Access
 
-	tasks: DS_LIST [like new_task_data]
+	frozen tasks: DS_LIST [like new_task_data]
 			-- List of tuples containing running tasks
+		require
+			interface_usable: is_interface_usable
+		do
+			Result := task_cursor.container
+		ensure
+			result_attached: Result /= Void
+			correct: Result = task_cursor.container
+		end
+
+	task_cursor: DS_LIST_CURSOR [like new_task_data]
+			-- Cursor used to iterate through `tasks'.
+			--
+			-- Note: only move cursor if you know what you are doing, or else certain tasks might not get
+			--       executed.
 		require
 			interface_usable: is_interface_usable
 		deferred
 		ensure
-			consistent: Result = tasks
+			result_attached: Result /= Void
+			result_consistent: Result = task_cursor
 		end
 
 feature {NONE} -- Basic operations
@@ -51,9 +66,9 @@ feature {NONE} -- Basic operations
 			interface_usable: is_interface_usable
 		do
 			from
-				tasks.start
+				task_cursor.start
 			until
-				tasks.after
+				task_cursor.after
 			loop
 				proceed_current_task
 			end
@@ -68,25 +83,25 @@ feature {NONE} -- Basic operations
 			interface_usable: is_interface_usable
 			tasks_not_empty: not tasks.is_empty
 		local
-			l_tasks: like tasks
+			l_cursor: like task_cursor
 			l_data: like new_task_data
 			l_task: G
 		do
-			l_tasks := tasks
-			if l_tasks.off then
-				l_tasks.start
+			l_cursor := task_cursor
+			if l_cursor.off then
+				l_cursor.start
 			end
-			l_data := l_tasks.item_for_iteration
+			l_data := l_cursor.item
 			l_task := l_data.task
 			if l_task.has_next_step then
 				perform_step
 				if l_task.has_next_step then
-					l_tasks.forth
+					l_cursor.forth
 				else
-					remove_task
+					remove_task (False)
 				end
 			else
-				remove_task
+				remove_task (False)
 			end
 		end
 
@@ -94,23 +109,27 @@ feature {NONE} -- Basic operations
 			-- Perform step on task at current position of `tasks'.
 		require
 			interface_usable: is_interface_usable
-			tasks_not_off: not tasks.off
+			tasks_not_off: not task_cursor.off
 		do
-			tasks.item_for_iteration.task.step
+			task_cursor.item.task.step
 		ensure
-			cursor_not_moved: tasks.index = old tasks.index
+			cursor_not_moved: task_cursor.index = old task_cursor.index
 		end
 
-	remove_task
+	remove_task (a_force: BOOLEAN)
 			-- Remove task at current position of `tasks'.
 			--
 			-- Note: implementers can redefine in order to remove, reuse or add other tasks.
+			--
+			-- `a_force': If True, task should not be removed without new ones being added.
 		require
 			interface_usable: is_interface_usable
-			tasks_not_off: not tasks.off
-			task_finished: not tasks.item_for_iteration.task.has_next_step
+			tasks_not_off: not task_cursor.off
+			task_finished: not task_cursor.item.task.has_next_step
 		do
-			tasks.remove_at
+			task_cursor.remove
+		ensure
+			task_removed_if_forced: a_force implies tasks.count < old tasks.count
 		end
 
 feature {NONE} -- Factory
@@ -131,9 +150,6 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 			result_task_attached: Result.task /= Void
 		end
-
-invariant
-	tasks_attached: tasks /= Void
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

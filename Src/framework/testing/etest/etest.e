@@ -11,6 +11,9 @@ class
 
 inherit
 	TEST_I
+		redefine
+			print_test
+		end
 
 	TAGABLE_MEMENTO_I
 
@@ -19,29 +22,51 @@ create {TEST_PROJECT_I, ETEST_CLASS_SYNCHRONIZER}
 
 feature {NONE} -- Initialization
 
-	make (a_name: like routine_name; a_class_name: like class_name)
+	make (a_name: like routine_name; a_class: like eiffel_class; a_test_suite: like test_suite)
 			-- Initialize `Current'
 			--
 			-- `a_name': name of test routine
-			-- `a_parent_name': name of class in which routine `a_name' is defined
+			-- `a_class': Class in which `Current' is defined
+			-- `a_test_suite': Test suite which retrieved `Current'.
+		require
+			a_name_attached: a_name /= Void
+			a_class_attached: a_class /= Void
 		do
 			routine_name := a_name
-			class_name := a_class_name
+			eiffel_class := a_class
+			test_suite := a_test_suite
 			internal_tags := new_hash_set (0)
-			create {DS_ARRAYED_LIST [EQA_TEST_RESULT]} internal_outcomes.make (0)
+			create {DS_ARRAYED_LIST [like last_outcome]} internal_outcomes.make (0)
 		ensure
 			name_set: routine_name = a_name
-			class_name_set: class_name = a_class_name
+			eiffel_class_set: eiffel_class = a_class
+			test_suite_set: test_suite = a_test_suite
 			not_has_changed: not has_changed
 		end
 
 feature -- Access
+
+	eiffel_class: EIFFEL_CLASS_I
+			-- Class in which test is defined
 
 	routine_name: STRING
 			-- <Precursor>
 
 	class_name: STRING
 			-- <Precursor>
+		do
+			Result := eiffel_class.name
+		end
+
+	routine: detachable FEATURE_I
+			-- {FEATURE_I} instance representing `Current' if compiled.
+		do
+			if attached eiffel_class.compiled_representation as l_class then
+				if attached l_class.feature_named (routine_name) as l_feature then
+					Result := l_feature
+				end
+			end
+		end
 
 	tags: DS_LINEAR [STRING]
 			-- <Precursor>
@@ -55,7 +80,7 @@ feature -- Access
 			Result := internal_outcomes
 		end
 
-	executor: TEST_EXECUTOR_I
+	executor: TEST_OBSOLETE_EXECUTOR_I
 			-- <Precursor>
 		local
 			l_executor: like internal_executor
@@ -101,6 +126,10 @@ feature -- Access: Memento
 
 feature {NONE} -- Access
 
+	test_suite: ETEST_SUITE
+			-- Test suite which retrieved `Current'
+
+
 	internal_tags: DS_HASH_SET [STRING]
 			-- Internal set of tags
 
@@ -118,7 +147,7 @@ feature {NONE} -- Access
 			empty: Result.is_empty
 		end
 
-	internal_executor: detachable TEST_EXECUTOR_I
+	internal_executor: detachable TEST_OBSOLETE_EXECUTOR_I
 			-- Internal storage for `executor'
 
 	internal_outcomes: DS_LIST [like last_outcome]
@@ -256,7 +285,30 @@ feature {TEST_PROJECT_I} -- Status setting
 			has_execution_status_changed := True
 		end
 
-feature {TEST_MEMENTO_I} -- Factory
+feature -- Basic operations
+
+	print_test (a_formatter: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			if attached routine as l_routine then
+				a_formatter.add_feature (l_routine.e_feature, routine_name)
+			else
+				a_formatter.add_classi (eiffel_class, routine_name)
+			end
+			a_formatter.process_basic_text (" (")
+			a_formatter.add_class (eiffel_class)
+			a_formatter.process_basic_text (")")
+		end
+
+feature {TEST_EXECUTION_I} -- Factory
+
+	new_executor (an_execution: TEST_EXECUTION_I): ETEST_EXECUTOR
+			-- <Precursor>
+		do
+			create Result.make (test_suite, an_execution)
+		end
+
+feature -- Factory
 
 	new_hash_set (a_count: NATURAL): like internal_tags
 			-- Create new {DS_HASH_SET [!STRING]} with capacity `n' using a string equality tester.

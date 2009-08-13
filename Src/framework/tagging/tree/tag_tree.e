@@ -194,6 +194,39 @@ feature -- Element change
 			Precursor (an_item, a_tag)
 		end
 
+feature -- Basic operations
+
+	item_suffixes (a_prefix: READABLE_STRING_GENERAL; an_item: G): like tags_of_item
+			-- Set containing all suffixes of tags for which given item contained a tag with given prefixed
+			--
+			-- `a_prefix': A prefix.
+			-- `an_item': Item for which all tags should be returned starting with `a_prefix'.
+		require
+			a_prefix_attached: a_prefix /= Void
+			an_item_attached: an_item /= Void
+			a_prefix_valid: validator.is_valid_tag (a_prefix) or else a_prefix.is_empty
+			an_item_tagged: has_item (an_item)
+		local
+			l_cursor: DS_HASH_SET_CURSOR [READABLE_STRING_GENERAL]
+			l_tag: READABLE_STRING_GENERAL
+			l_formatter: like formatter
+		do
+			Result := new_tag_set
+			from
+				l_cursor := item_to_tags_table.item (an_item).new_cursor
+				l_cursor.start
+				l_formatter := formatter
+			until
+				l_cursor.after
+			loop
+				l_tag := l_cursor.item
+				if l_formatter.is_prefix (a_prefix, l_tag) then
+					Result.force_last (l_formatter.suffix (a_prefix, l_tag))
+				end
+				l_cursor.forth
+			end
+		end
+
 feature -- Events
 
 	node_added_event: EVENT_TYPE [TUPLE [tree: TAG_TREE [G]; node: TAG_TREE_NODE [G]]]

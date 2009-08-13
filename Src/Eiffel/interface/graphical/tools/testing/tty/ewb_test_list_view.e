@@ -10,7 +10,7 @@ class
 	EWB_TEST_LIST_VIEW
 
 inherit
-	EWB_TEST_CMD
+	EWB_TEST_FILTER_CMD
 
 feature -- Access
 
@@ -32,65 +32,16 @@ feature -- Access
 			Result := locale.translation (h_display_list)
 		end
 
-feature {NONE} -- Query
-
-	item_sorter: DS_SORTER [TEST_I]
-			-- Sorter for {TEST_I}.
-			--
-			-- Note: this sorter also takes class names in account.
-		local
-			l_cache: like item_sorter_cache
-			l_comparator: AGENT_BASED_EQUALITY_TESTER [TEST_I]
-			l_sorter: DS_QUICK_SORTER [TEST_I]
-		do
-			l_cache := item_sorter_cache
-			if l_cache = Void then
-				create l_comparator.make (
-					agent (a_test1, a_test2: TEST_I): BOOLEAN
-						do
-							if a_test1.class_name.same_string (a_test2.class_name) then
-								Result := a_test1.routine_name < a_test2.routine_name
-							else
-								Result := a_test1.class_name < a_test2.class_name
-							end
-						end)
-				create l_sorter.make (l_comparator)
-				item_sorter_cache := l_sorter
-				Result := l_sorter
-			else
-				Result := l_cache
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	item_sorter_cache: detachable like item_sorter
-			-- Cache for `node_sorter'
-
 feature {NONE} -- Basic operations
 
 	execute_with_test_suite (a_test_suite: TEST_SUITE_S)
 			-- <Precursor>
 		local
-			l_items: DS_ARRAYED_LIST [TEST_I]
-			l_item: TEST_I
+			l_tests: DS_LINEAR [TEST_I]
+			l_list: DS_ARRAYED_LIST [TEST_I]
 		do
-			print_current_expression (a_test_suite, False)
-			create l_items.make_from_linear (filtered_tests (a_test_suite).items)
-			l_items.sort (item_sorter)
-			if not l_items.is_empty then
-				print_string ("%N")
-			end
-			from
-				l_items.start
-			until
-				l_items.after
-			loop
-				l_item := l_items.item_for_iteration
-				print_test (l_item, l_item.class_name + ".", tab_count)
-				l_items.forth
-			end
-			print_statistics (a_test_suite, True)
+			print_test_list (test_tree (a_test_suite).items, 1)
+			print_statistics (a_test_suite)
 		end
 
 feature {NONE} -- Internationalization
@@ -122,10 +73,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

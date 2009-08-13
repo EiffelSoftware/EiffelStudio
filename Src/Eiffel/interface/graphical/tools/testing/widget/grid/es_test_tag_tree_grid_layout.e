@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 	status_text (a_test: TEST_I): STRING_32
 			-- Status text for `a_test'.
 		local
-			l_outcome: EQA_TEST_RESULT
+			l_outcome: EQA_RESULT
 		do
 			if a_test.is_queued then
 				Result := locale_formatter.translation (l_queued)
@@ -235,22 +235,23 @@ feature {NONE} -- Implementation
 				if a_test.is_outcome_available then
 					l_outcome := a_test.last_outcome
 					if not l_outcome.is_pass then
-						if l_outcome.has_response then
-							if l_outcome.is_setup_clean then
-								Result := exception_text (l_outcome.test_response.exception)
-							else
-								Result := exception_text (l_outcome.setup_response.exception)
-							end
-						else
-							if l_outcome.is_user_abort then
-								Result := locale_formatter.translation (l_user_aborted)
-							elseif l_outcome.is_communication_error then
-									-- TODO: use `locale_formatter' for this in 6.5
-								Result := ("communication error").to_string_32
-							else
-								Result := locale_formatter.translation (l_aborted)
-							end
-						end
+--						if l_outcome.has_response then
+--							if l_outcome.is_setup_clean then
+--								Result := exception_text (l_outcome.test_response.exception)
+--							else
+--								Result := exception_text (l_outcome.setup_response.exception)
+--							end
+--						else
+--							if l_outcome.is_user_abort then
+--								Result := locale_formatter.translation (l_user_aborted)
+--							elseif l_outcome.is_communication_error then
+--									-- TODO: use `locale_formatter' for this in 6.5
+--								Result := ("communication error").to_string_32
+--							else
+--								Result := locale_formatter.translation (l_aborted)
+--							end
+--						end
+						Result := "not pass"
 					else
 						create Result.make_empty
 					end

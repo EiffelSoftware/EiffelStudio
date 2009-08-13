@@ -112,30 +112,6 @@ feature {EQA_TEST_EVALUATOR} -- Status setting
 			not_failed: not has_failed
 		end
 
-feature -- Query
-
-	frozen is_valid_name (a_name: STRING): BOOLEAN
-			-- Is `a_name' a valid name for a test?
-		require
-			a_name_attached: a_name /= Void
-		local
-			i: INTEGER
-			c: CHARACTER
-		do
-			if not a_name.is_empty then
-				from
-					Result := a_name.item (1).is_alpha_numeric
-					i := 2
-				until
-					not Result or i > a_name.count
-				loop
-					c := a_name.item (i)
-					Result := c.is_alpha_numeric or c = '_'
-					i := i + 1
-				end
-			end
-		end
-
 feature -- Basic operations
 
 	assert (a_tag: STRING; a_condition: BOOLEAN)

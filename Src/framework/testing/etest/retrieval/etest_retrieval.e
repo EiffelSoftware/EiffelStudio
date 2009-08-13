@@ -11,15 +11,15 @@ class
 
 inherit
 	TEST_RETRIEVAL_I
-		select
-			step
+
+	TEST_SESSION
+		rename
+			make as make_session
 		end
 
 	ROTA_SERIAL_TASK_I
-		rename
-			step as proceed
 		redefine
-			proceed,
+			step,
 			remove_task
 		end
 
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			l_conf_items: like conf_items
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 		do
-			test_suite := a_test_suite
+			make_session (a_test_suite)
 			target := a_target
 			etest_suite := an_etest_suite
 			common_ancestor := an_ancestor
@@ -66,9 +66,6 @@ feature -- Access
 
 	etest_suite: ETEST_SUITE
 			-- Eiffel test suite to which eiffel classes are reported
-
-	test_suite: TEST_SUITE_S
-			-- <Precursor>
 
 	project_access: EC_PROJECT_ACCESS
 			-- Project which is being traversed
@@ -178,17 +175,14 @@ feature {TEST_SUITE_S} -- Status report
 			l_formatter: TEXT_FORMATTER
 		do
 			if project_access.is_initialized then
-
-				if attached test_suite.output (Current) as l_output then
-					l_output.lock
-					l_formatter := l_output.formatter
-					l_formatter.process_basic_text ("Synchronizing test suite with project")
-					l_formatter.add_new_line
-					l_formatter.add_new_line
-					l_formatter.process_basic_text ("Parsing classes in cluster:")
-					l_formatter.add_new_line
-					l_output.unlock
-				end
+				append_output (agent (a_formatter: TEXT_FORMATTER)
+					do
+						a_formatter.process_basic_text ("Synchronizing test suite with project")
+						a_formatter.add_new_line
+						a_formatter.add_new_line
+						a_formatter.process_basic_text ("Parsing classes in cluster:")
+						a_formatter.add_new_line
+					end)
 
 				target.process (Current)
 				initialize_sub_task
@@ -197,22 +191,15 @@ feature {TEST_SUITE_S} -- Status report
 
 feature {NONE} -- Status setting
 
-	proceed
+	step
 			-- <Precursor>
 		local
 			l_sub_task: like sub_task
 		do
 				-- If `project' is being compiled we abort
-			if project_access.is_initialized then
-
-					-- Note: Replace following with Precursor call below once bug #16017 is fixed.
-				l_sub_task := sub_task
-				check l_sub_task_attached: l_sub_task /= Void end
-				l_sub_task.step
-				if not l_sub_task.has_next_step then
-					remove_task (l_sub_task, False)
-				end
-				--Precursor {ROTA_SERIAL_TASK_I}
+			if project_access.is_initialized and then not project_access.project.is_compiling then
+				Precursor {ROTA_SERIAL_TASK_I}
+				proceeded_event.publish ([Current])
 			else
 				cancel
 			end
@@ -220,8 +207,6 @@ feature {NONE} -- Status setting
 
 	remove_task (a_task: attached like sub_task; a_cancel: BOOLEAN)
 			-- <Precursor>
-		local
-			l_formatter: TEXT_FORMATTER
 		do
 			sub_task := Void
 			if not a_cancel then
@@ -234,15 +219,14 @@ feature {NONE} -- Status setting
 				traversed_libraries.wipe_out
 				progress_list.wipe_out
 				current_library := Void
+				record_cache := Void
 
-				if attached test_suite.output (Current) as l_output then
-					l_output.lock
-					l_formatter := l_output.formatter
-					l_formatter.add_new_line
-					l_formatter.process_basic_text ("Synchronization complete")
-					l_formatter.add_new_line
-					l_output.unlock
-				end
+				append_output (agent (a_formatter: TEXT_FORMATTER)
+					do
+						a_formatter.add_new_line
+						a_formatter.process_basic_text ("Synchronization complete")
+						a_formatter.add_new_line
+					end)
 			end
 		end
 
@@ -312,14 +296,7 @@ feature -- Basis operations
 		local
 			l_formatter: TEXT_FORMATTER
 		do
-			if attached test_suite.output (Current) as l_output then
-				l_output.lock
-				l_formatter := l_output.formatter
-				l_formatter.add_group (a_library, a_library.name)
-				l_formatter.process_basic_text (" (library)")
-				l_formatter.add_new_line
-				l_output.unlock
-			end
+			append_output (agent print_library (?, a_library))
 			current_library := a_library
 			process_target (a_library.library_target)
 		end
@@ -348,29 +325,24 @@ feature -- Basis operations
 				end
 
 				create sub_task.make (Current, a_cluster, l_class_i)
-				if attached test_suite.output (Current) as l_output then
-					l_output.lock
-					l_formatter := l_output.formatter
-					print_cluster (l_formatter, a_cluster)
-					l_formatter.add_new_line
-					l_output.unlock
-				end
+				append_output (agent print_cluster (?, a_cluster, False))
 			end
 		end
 
 feature {NONE} -- Basic operations
 
-	print_cluster (a_formatter: TEXT_FORMATTER; a_cluster: CONF_CLUSTER)
+	print_cluster (a_formatter: TEXT_FORMATTER; a_cluster: CONF_CLUSTER; a_is_rec: BOOLEAN)
 			-- Recursively print cluster path to given formatter.
 			--
 			-- `a_formatter': Formatter for printing groups.
 			-- `a_cluster': Cluster for which path should be printed to `a_formatter'.
+			-- `a_is_rec': True if called recursively
 		require
 			a_formatter_attached: a_formatter /= Void
 			a_cluster_attached: a_cluster /= Void
 		do
 			if attached a_cluster.parent as l_parent then
-				print_cluster (a_formatter, l_parent)
+				print_cluster (a_formatter, l_parent, True)
 				a_formatter.process_basic_text ("/")
 			else
 				if attached current_library as l_library then
@@ -378,6 +350,23 @@ feature {NONE} -- Basic operations
 				end
 			end
 			a_formatter.add_group (a_cluster, a_cluster.name)
+			if not a_is_rec then
+				a_formatter.add_new_line
+			end
+		end
+
+	print_library (a_formatter: TEXT_FORMATTER; a_library: CONF_LIBRARY)
+			-- Print library information to formatter.
+			--
+			-- `a_formatter': Formatter to print information to.
+			-- `a_library': Library for which information should be printed.
+		require
+			a_formatter_attached: a_formatter /= Void
+			a_library_attached: a_library /= Void
+		do
+			a_formatter.add_group (a_library, a_library.name)
+			a_formatter.process_basic_text (" (library)")
+			a_formatter.add_new_line
 		end
 
 feature -- Events
@@ -398,7 +387,7 @@ feature {NONE} -- Implementation
 			then
 				conf_items.force_last (l_library)
 			elseif
-				attached {CONF_CLUSTER} an_item as l_cluster
+				attached {CONF_CLUSTER} an_item as l_cluster and then not l_cluster.is_internal
 			then
 				conf_items.force_last (l_cluster)
 			end

@@ -381,7 +381,7 @@ feature -- Class names completion
 				end
 			end
 			cname := ""
-			classes := group.accessible_classes
+			classes := accessible_classes_from_group (group)
 			create class_list.make (100)
 			from
 				classes.start
@@ -390,11 +390,11 @@ feature -- Class names completion
 			loop
 				l_class_i ?= classes.item_for_iteration
 				if show_all then
-					create class_name.make (l_class_i)
+					create class_name.make (l_class_i, classes.key_for_iteration)
 				 	class_list.extend (class_name)
 				else
 					if matches (classes.key_for_iteration, cname) then
-						create class_name.make (l_class_i)
+						create class_name.make (l_class_i, classes.key_for_iteration)
 					 	class_list.extend (class_name)
 					end
 				end
@@ -435,6 +435,32 @@ feature -- Class names completion
 			end
 			reset_after_search
 			calculate_insertion (a_token)
+		end
+
+	accessible_classes_from_group (a_group: CONF_GROUP): HASH_TABLE [CONF_CLASS, STRING]
+			-- Accessible classes from `a_group', including old classes of mappings.
+		require
+			a_group_not_void: a_group /= Void
+		local
+			l_mapping_names: EQUALITY_HASH_TABLE [STRING_8, STRING_8]
+			l_item: STRING
+		do
+			Result := group.accessible_classes
+			l_mapping_names := group.accessible_mapping
+			from
+				l_mapping_names.start
+			until
+				l_mapping_names.after
+			loop
+				l_item := l_mapping_names.item_for_iteration
+				Result.search (l_item)
+				if Result.found then
+					Result.force (Result.found_item, l_mapping_names.key_for_iteration)
+				end
+				l_mapping_names.forth
+			end
+		ensure
+			accessible_classes_from_group_not_void: Result /= Void
 		end
 
 	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]

@@ -17,8 +17,12 @@
 
 #include "mod_xebra.h"
 
-/* For description of methods see mod_xebra.h */
-
+/*
+doc:    <routine name="create_srv_cfg" export="private">
+doc:           <summary>Creates a default server config</summary>
+doc:			<return>The xebra_svr_cfg</return>
+doc:    </routine>
+*/
 static void* create_srv_cfg (apr_pool_t* pool, char* x)
 {
 	xebra_svr_cfg* svr_cfg = apr_palloc (pool, sizeof(xebra_svr_cfg));
@@ -28,6 +32,12 @@ static void* create_srv_cfg (apr_pool_t* pool, char* x)
 	return svr_cfg;
 }
 
+/*
+doc:    <routine name="set_srv_cfg_port" export="private">
+doc:           <summary>Sets the port attribute to the xebra_svr_cfg instance</summary>
+doc:		   <return>NULL</return>
+doc:    </routine>
+*/
 static const char *set_srv_cfg_port (cmd_parms *parms, void *mconfig,
 		const char *arg)
 {
@@ -37,6 +47,12 @@ static const char *set_srv_cfg_port (cmd_parms *parms, void *mconfig,
 	return NULL;
 }
 
+/*
+doc:    <routine name="set_srv_cfg_host" export="private">
+doc:            <summary>Sets the host attribute to the xebra_svr_cfg instance</summary>
+doc:			<return>NULL</return>
+doc:    </routine>
+*/
 static const char *set_srv_cfg_host (cmd_parms *parms, void *mconfig,
 		const char *arg)
 {
@@ -46,6 +62,12 @@ static const char *set_srv_cfg_host (cmd_parms *parms, void *mconfig,
 	return NULL;
 }
 
+/*
+ doc:    <routine name="set_srv_cfg_max_upload_size" export="private">
+ doc:            <summary>Sets the max_upload_size attribute to the xebra_svr_cfg instance</summary>
+ doc:			 <return>NULL</return>
+ doc:    </routine>
+ */
 static const char *set_srv_cfg_max_upload_size (cmd_parms *parms,
 		void *mconfig, const char *arg)
 {
@@ -55,6 +77,16 @@ static const char *set_srv_cfg_max_upload_size (cmd_parms *parms,
 	return NULL;
 }
 
+/*
+ doc:    <function name="read_from_POST" export="private">
+ doc:            <summary>Reads POST values and appends them to the buffer</summary>
+ doc:            <param name="r" type="request_rec*>The request</param>
+ doc:            <param name="buf" type="char**>A buffer to write the keys and values</param>
+ doc:            <param name="max_upload_size" type="int>The maximum size of post data as specified in Content-Length</param>
+ doc:            <param name="save_file" type="int>Specifies whether the data should be stored in a temp file or attached to buf. If a file is written the filename is stored in buf</param>
+ doc:			 <return>Returns an apache RESPONSE_CODE</return>
+ doc:    </routine>
+ */
 static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
 		int save_file)
 {
@@ -166,6 +198,15 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
 	return OK;
 }
 
+/*
+doc:    <routine name="print_item" export="private">
+doc:            <summary>Callback function to be used with apr_table_do to process a table item. Appends all items to table_buf </summary>
+doc:            <param name="rec" type="request_rec*>The request</param>
+doc:            <param name="key" type="const char*>A key value from the table</param>
+doc:            <param name="value" type="const char*>A value value from the table</param>
+doc:			 <return>Returns 1 if the iteration should stop and 0 otherwise</return>
+doc:    </routine>
+*/
 static int print_item (void* rec, const char *key, const char *value)
 {
 	request_rec* r = rec;
@@ -174,9 +215,15 @@ static int print_item (void* rec, const char *key, const char *value)
 	return 1;
 }
 
+/*
+doc:    <routine name="xebra_handler" export="private">
+doc:            <summary>This is the main method that handles the request</summary>
+doc:            <param name="rec" type="request_rec*>The request</param>
+doc: 			 <return>Returns an apache RESPONSE_CODE</return>
+doc:    </routine>
+*/
 static int xebra_handler (request_rec* r)
 {	
-
 #ifdef _WINDOWS
 	WORD wVersionRequested;
 	WSADATA wsaData;
@@ -419,15 +466,6 @@ static int xebra_handler (request_rec* r)
 }
 
 
-
-
-
-
-
-
-
-
-
 apr_status_t handle_response_message (request_rec* r, char* message)
 {
 	char* msg_copy;
@@ -435,7 +473,6 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 	char* cookie_order_start;
 	char* cookie_order_end;
 	char* html;
-
 
 	/* Extract cookie orders */
 	msg_copy = apr_pstrdup (r->pool, message);
@@ -497,12 +534,26 @@ apr_status_t handle_response_message (request_rec* r, char* message)
 	return APR_SUCCESS;
 }
 
+/*
+doc:    <routine name="byteArrayToInt" export="private">
+doc:            <summary>Converts an array of 4 bytes to an integer.</summary>
+doc:            <param name="b" type="char*">The bytes to convert</param>
+doc: 			 <return>Returns the integer</return>
+doc:    </routine>
+*/
 int byteArrayToInt (char * b)
 {
 	return (b[0] << 24) + ((b[1] & 0xFF) << 16) + ((b[2] & 0xFF) << 8) + (b[3]
 	& 0xFF);
 }
 
+/*
+doc:    <routine name="intToByteArray" export="private">
+doc:            <summary>Converts an integer to an array of 4 bytes. Make sure you free the return value later.</summary>
+doc:            <param name="i" type="int">The integer to convert</param>
+doc: 			 <return>Returns the byte array</return>
+doc:    </routine>
+*/
 char * intToByteArray (request_rec* r, int i)
 {
 	char * bb;
@@ -514,6 +565,14 @@ char * intToByteArray (request_rec* r, int i)
 	return bb;
 }
 
+/*
+doc:    <routine name="encode_natural" export="private">
+doc:            <summary>Encode i to include the flag. Use decode_natural to extract the original integer value and use decode_flag to extract the flag. I must not be bigger than 2^31</summary>
+doc:            <param name="i" type="unsigned int">The integer value to encode</param>
+doc:            <param name="flag" type="int">The flag value to encode</param>
+doc: 			 <return>Returns the encoded unsigned integer</return>
+doc:    </routine>
+*/
 unsigned int encode_natural (unsigned int i, int flag)
 {
 	if (i > 0x7FFFFFFF)	{
@@ -523,16 +582,38 @@ unsigned int encode_natural (unsigned int i, int flag)
 	}
 }
 
+/*
+doc:    <routine name="decode_natural" export="private">
+doc:            <summary>Decode i and return original integer value. i should be encoded with encode_natural</summary>
+doc:            <param name="i" type="unsigned int">The integer value to decode</param>
+doc: 			 <return>Returns the decoded unsigned integer</return>
+doc:    </routine>
+*/
 unsigned int decode_natural (unsigned int i)
 {
 	return (i >> 1);
 }
 
+/*
+doc:    <routine name="decode_flag" export="private">
+doc:            <summary>Decode i and return flag. i should be encoded with encode_natural</summary>
+doc:            <param name="i" type="unsigned int">The integer value to decode</param>
+doc: 			 <return>Returns the decoded boolean flag</return>
+doc:    </routine>
+*/
 int decode_flag (unsigned int i)
 {
 	return (i & 1);
 }
+
 #ifndef _WINDOWS
+/*
+doc:    <routine name="get_in_addr" export="private">
+doc:            <summary>Get socket address</summary>
+doc:            <param name="sa" type="struct sockaddr *">The address to write</param>
+doc: 			 <return>Returns the address</return>
+doc:    </routine>
+*/
 void* get_in_addr (struct sockaddr *sa)
 {
 	if (sa->sa_family == AF_INET) {
@@ -543,6 +624,14 @@ void* get_in_addr (struct sockaddr *sa)
 }
 #endif
 
+/*
+doc:    <routine name="send_message_fraged" export="private">
+doc:            <summary>Devides the message into fragments of length FRAG_SIZE. For each fragment it encodes the size of it in an array of 4 bytes, sends these 4 bytes and then sends the fragment. The 4 byte array contains also a flag that determines if there will be another fragment coming up.</summary>
+doc:            <param name="message" type="char *">The message to be sent</param>
+doc:            <param name="sockfd" type="int/SOCKET">The socket connection id</param>
+doc: 			 <return>Returns 1 on success and 0 otherwise</return>
+doc:    </routine>
+*/
 #ifdef _WINDOWS
 int send_message_fraged (char * message, SOCKET sockfd,	request_rec* r)
 #else
@@ -632,6 +721,14 @@ int send_message_fraged (char * message, int sockfd, request_rec* r)
 	return 1;
 }
 
+/**
+doc:    <routine name="receive_message_fraged" export="private">
+doc:            <summary>Receives a message that was send by send_message_fraged. For every incoming fragment, it first reads the 4 byte array determining the length of the fragment and if there will be another fragment coming up, then it calls recv until the whole fragment has been received.</summary>
+doc:            <param name="msg_buf" type="char **">The buffer where the message will be stored</param>
+doc:            <param name="sockfd" type="int">The socket connection id</param>
+doc: 			 <return>Returns 1 on success and 0 otherwise</return>
+doc:    </routine>
+*/
 #ifdef _WINDOWS
 int receive_message_fraged (char **msg_buf, SOCKET sockfd, request_rec* r)
 #else
@@ -729,78 +826,11 @@ int receive_message_fraged (char **msg_buf, int sockfd, request_rec* r)
 }
 
 /**
-* Write an RFC2109 compliant cookie.
-*
-* @param r The request
-* @param name The name of the cookie.
-* @param val The value to place in the cookie.
-* @param attrs The string containing additional cookie attributes. If NULL, the
-*              DEFAULT_ATTRS will be used.
-* @param maxage If non zero, a Max-Age header will be added to the cookie.
+doc:    <routine name="register_hooks" export="private">
+doc:            <summary>Registers the method xebra_handler as a hook in the module</summary>
+doc:            <param name="pool" type="apr_pool_t**">The apr memory pool</param> doc:
+doc:    </routine>
 */
-
-apr_status_t cookie_write (request_rec * r, const char *name, const char *val,
-						   const char *attrs, long maxage, ...)
-{
-	char *buffer;
-	char *rfc2109;
-	char *maxagestr[4];	
-	apr_table_t *t;
-	va_list vp;
-
-	/* handle expiry */
-	buffer = "";
-	/*sprintf (maxagestr, "%i", maxage);*/
-	if (maxage) {
-		buffer = apr_pstrcat (r->pool, "Max-Age=", maxagestr,
-			";", NULL);
-	}
-
-	/* create RFC2109 compliant cookie */
-	rfc2109 = apr_pstrcat (r->pool, name, "=", val, ";", buffer, attrs
-		&& strlen (attrs) > 0 ? attrs : DEFAULT_ATTRS, NULL);
-	ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, COOKIE_LOG_PREFIX
-		"user '%s' set cookie: '%s'", r->user, rfc2109);
-
-	/* write the cookie to the header table(s) provided */
-	va_start (vp, maxage);
-	while ((t = va_arg(vp, apr_table_t *))) {
-		apr_table_addn (t, SET_COOKIE, rfc2109);
-	}
-	va_end (vp);
-
-	return APR_SUCCESS;
-
-}
-
-/**
-* Remove an RFC2109 compliant cookie.
-*
-* @param r The request
-* @param name The name of the cookie.
-*/
-apr_status_t cookie_remove (request_rec * r, const char *name,
-							const char *attrs, ...)
-{
-	apr_table_t *t;
-	va_list vp;
-
-	/* create RFC2109 compliant cookie */
-	char *rfc2109 = apr_pstrcat (r->pool, name, "=;Max-Age=0;", attrs ? attrs
-		: CLEAR_ATTRS, NULL);
-	ap_log_rerror (APLOG_MARK, APLOG_DEBUG, 0, r, COOKIE_LOG_PREFIX
-		"user '%s' removed cookie: '%s'", r->user, rfc2109);
-
-	/* write the cookie to the header table(s) provided */
-	va_start (vp, attrs);
-	while ((t = va_arg(vp, apr_table_t *))) {
-		apr_table_addn (t, SET_COOKIE, rfc2109);
-	}
-	va_end (vp);
-
-	return APR_SUCCESS;
-}
-
 static void register_hooks (apr_pool_t* pool)
 {
 	ap_hook_handler (xebra_handler, NULL, NULL, APR_HOOK_MIDDLE);

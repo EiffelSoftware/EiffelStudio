@@ -101,23 +101,98 @@ feature -- Status Change
 
 feature -- Operations
 
-	process_upload_single_file (a_source_file: STRING; a_target_file_dir: STRING): detachable STRING
-			-- Copies the uploaded and encoded (single) file to a new place and removes header and footer from it
+	process_uploaded_single_file (a_target_file_dir: STRING): detachable STRING
+			-- Reads filename from request arguments and calls either
+			-- interal_iis_process_upload_single_file or internal_apache_process_upload_single_file
 			--
-			-- `a_source_file': The path to the tmp file that was created by mod_xebra.
 			-- `a_target_file_dir': The path to the folder where the file should be written. Can contain environment vars.
-			-- `Result': Returns the file name of the create file on success, void otherwise.
+			-- `Result': Returns the file name of the created file on success, void otherwise.
+		require
+			a_target_file_dir_attached: a_target_file_dir /= Void and then not a_target_file_dir.is_empty
+		local
+			l_file: STRING
+		do
+			if current_request.is_post then
+				l_file := current_request.args.twin
+				if current_request.args.starts_with ({XU_CONSTANTS}.Request_file_upload_iis) then
+					l_file.remove_head ({XU_CONSTANTS}.Request_file_upload_iis.count)
+					Result := interal_iis_process_upload_single_file (l_file, a_target_file_dir)
+				elseif current_request.args.starts_with ({XU_CONSTANTS}.Request_file_upload_apache) then
+					l_file.remove_head ({XU_CONSTANTS}.Request_file_upload_apache.count)
+					Result := internal_apache_process_upload_single_file (l_file, a_target_file_dir)
+				else
+					o.eprint ("File upload: Unknown uploader identifier " + l_file , generating_type)
+				end
+			else
+				o.eprint ("File upload: Invalid request method.", generating_type)
+			end
+		end
+
+
+feature {NONE} -- Implementation
+
+	interal_iis_process_upload_single_file (a_source_file: STRING; a_target_file_dir: STRING): detachable STRING
+			-- Copy uploaded file to new location
 			--
+			-- `a_source_file': The path to the tmp file that was created by XebraHandler.
+			-- `a_target_file_dir': The path to the folder where the file should be written. Can contain environment vars.
+			-- `Result': Returns the file name of the created file on success, void otherwise.
+		require
+			a_source_file_attached_and_not_empty: a_source_file /= Void and then not a_source_file.is_empty
+			a_target_file_dir_attached: a_target_file_dir /= Void and then not a_target_file_dir.is_empty
+		local
+			l_s_file: RAW_FILE
+			l_t_file: RAW_FILE
+			l_list: LIST [STRING]
+			l_target_fn: STRING
+			l_util: XU_FILE_UTILITIES
+			l_slash: CHARACTER
+		do
+			create l_util
+			if {PLATFORM}.is_windows then
+				l_slash := '\'
+			else
+				l_slash := '/'
+			end
+			l_list := a_source_file.split (l_slash)
+			l_target_fn := l_util.resolve_env_vars (a_target_file_dir, true) + l_slash.out + l_list [l_list.count]
+
+			create l_s_file.make (a_source_file)
+			create l_t_file.make (l_target_fn)
+			if l_s_file.exists and l_s_file.is_readable and l_s_file.is_access_readable then
+				l_s_file.open_read
+				if	not l_t_file.exists and l_t_file.is_creatable then
+					l_t_file.create_read_write
+					if l_t_file.is_writable and l_s_file.is_access_writable then
+						l_s_file.copy_to (l_t_file)
+						Result := l_t_file.name
+					else
+						o.eprint ("File upload: Cannot write into target file " + l_t_file.name , generating_type)
+					end
+				else
+					o.eprint ("File upload: Cannot create target file " + l_t_file.name , generating_type)
+				end
+			else
+				o.eprint ("File upload: Cannot read tmp file " + l_s_file.name , generating_type)
+			end
+		end
+
+	internal_apache_process_upload_single_file (a_source_file: STRING; a_target_file_dir: STRING): detachable STRING
+			-- Copy the uploaded and encoded (single) file to a new place and remove header and footer from it
 			-- The uploaded temp file is expected to be in the following format. Other formats will likely result in endless loops!
-			-- -----------------------------13689473967984000952010704750%R%N
-			-- Content-Disposition: form-data; name=%"file%"; filename=%"{FILENAME}%"%R%N
+			-- {BOUNDARY}%R%N
+			-- Content-Disposition: form-data; name=%"{NAME}%"; filename=%"{FILENAME}%"%R%N
 			-- Content-Type: text/plain%R%N
 			-- %R%N
 			-- {CONTENT}%R%N
-			-- -----------------------------13689473967984000952010704750--%R%N
+			-- {BOUNDARY}%R%N
+			--
+			-- `a_source_file': The path to the tmp file that was created by mod_xebra.
+			-- `a_target_file_dir': The path to the folder where the file should be written. Can contain environment vars.
+			-- `Result': Returns the file name of the created file on success, void otherwise.
 		require
 			a_source_file_attached_and_not_empty: a_source_file /= Void and then not a_source_file.is_empty
-			a_target_file_dir_attached: a_target_file_dir /= Void
+			a_target_file_dir_attached: a_target_file_dir /= Void and then not a_target_file_dir.is_empty
 		local
 			l_util: XU_FILE_UTILITIES
 			l_s_file: RAW_FILE
@@ -210,21 +285,21 @@ feature -- Operations
 									end
 									Result := l_t_file.name
 								else
-									o.eprint ("File upload: Created file is not readable or writable?? " + l_t_file.name, generating_type)
+									o.eprint ("File upload: Created file is not readable or writable " + l_t_file.name, generating_type)
 								end
 								l_t_file.close
 							else
-								o.eprint ("File upload: Target file is not creatable! " + l_t_file.name, generating_type)
+								o.eprint ("File upload: Target file is not creatable " + l_t_file.name, generating_type)
 							end
 						else
-							o.eprint ("File upload: Invalid file format. " + l_s_file.name , generating_type)
+							o.eprint ("File upload: Invalid file format " + l_s_file.name , generating_type)
 						end
 					else
-						o.eprint ("File upload: Invalid file format. " + l_s_file.name , generating_type)
+						o.eprint ("File upload: Invalid file format " + l_s_file.name , generating_type)
 					end
 					l_s_file.close
 				else
-					o.eprint ("File upload: Cannot read tmp file. " + l_s_file.name , generating_type)
+					o.eprint ("File upload: Cannot read tmp file " + l_s_file.name , generating_type)
 				end
 		end
 

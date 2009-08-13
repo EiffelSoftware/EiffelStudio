@@ -21,14 +21,10 @@ feature -- Status Change
 	upload: STRING
 			-- Process the uploaded file
 		do
-			if attached current_request.upload_filename as l_tfn then
-				if attached {STRING} process_upload_single_file (l_tfn, "$XEBRA_DEV/www/demoapplication/upload") as l_fn then
-					Result := "Success! File was uploaded to " + l_fn
-				else
-					Result := "Error while processing uploaded file!"
-				end
+			if attached {STRING} process_uploaded_single_file ("$XEBRA_DEV/www/demoapplication/upload") as l_fn then
+				Result := "Success! File was uploaded to " + l_fn
 			else
-				Result := "Error, no uploaded file found!"
+				Result := "Error while processing uploaded file!"
 			end
 		end
 end

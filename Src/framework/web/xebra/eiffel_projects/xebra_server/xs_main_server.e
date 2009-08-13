@@ -110,11 +110,9 @@ feature {NONE} -- Operations
 				modules.after
 			loop
 				l_mods.force (modules.key_for_iteration)
-				--shutdown_module (modules.key_for_iteration).do_nothing
 				modules.forth
 			end
-
-
+				-- Shut down modules
 			from
 				l_mods.start
 			until
@@ -139,7 +137,6 @@ feature {XS_SERVER_MODULE} -- Status setting
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
 		end
-
 
 	get_sessions (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
@@ -303,7 +300,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			if attached {XS_WEBAPP} config.file.webapps[a_name] as l_webapp then
 				l_webapp.set_needs_cleaning
 				o.iprint ("Cleaning webapp '" + a_name + "'...")
-				l_webapp.send (create {XCWC_EMPTY}.make).do_nothing
+				l_webapp.force_clean
 				Result := create {XCCR_OK}
 			else
 				Result := create {XCCR_WEBAPP_NOT_FOUND}.make (a_name)

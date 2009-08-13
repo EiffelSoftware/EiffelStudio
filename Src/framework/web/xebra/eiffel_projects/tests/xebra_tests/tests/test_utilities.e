@@ -40,6 +40,30 @@ feature -- Test routines
 			assert ("Ok", True)
 		end
 
+	test_encoding_facility
+			--
+		local
+			code: XS_ENCODING_FACILITIES
+			d: NATURAL
+			b: BOOLEAN
+			e: NATURAL
+			t: TUPLE [value: NATURAL; flag: BOOLEAN]
+		do
+			d := 2147483647
+			b := false
+			create code.make
+			e := code.encode_natural (d, b)
+			io.new_line
+			io.new_line
+			assert ("decode ", equal (d, code.decode_natural (e)))
+			assert ("decode ", equal (b, code.decode_flag (e)))
+			e := code.change_flag (e, true)
+			assert ("decode ", equal (d, code.decode_natural (e)))
+			assert ("decode ", equal (code.decode_flag (e), true))
+			t := code.decode_natural_and_flag (e)
+			assert ("decode ", equal (t.value, d))
+			assert ("decode ", equal (t.flag, true))
+		end
 
 
 

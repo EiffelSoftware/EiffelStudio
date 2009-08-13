@@ -111,7 +111,6 @@ feature -- Inherited Features
 		        		ll_http_socket.is_closed
 		       		end
 				end
-
 				stop := True
 				running := False
        	end
@@ -126,10 +125,6 @@ feature {NONE} -- Access
 	main_server: XC_SERVER_INTERFACE
 
 	current_request_message: STRING
-
-	Max_fragments: INTEGER = 1000
-
-feature -- Status
 
 feature -- Status setting
 
@@ -172,8 +167,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
-
+	Max_fragments: INTEGER = 1000
+	
 	write_message_to_data (a_d: MANAGED_POINTER;
 						   a_message: STRING;
 						   a_start_index, a_end_index: NATURAL;

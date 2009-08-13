@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			i_debug_level_attached: i_debug_level /= Void
 		end
 
-
 feature -- Access
 
 	configured: BOOLEAN
@@ -98,21 +97,9 @@ feature -- Status Change
 
 feature -- Print
 
---	dprint (a_msg: STRING; a_debug_level: INTEGER)
---			-- Prints a debug message only if debug level is >= a_debug_level
---		require
---			name_set: name.is_set
---			debug_level_set: debug_level.is_set
---			a_msg_attached: a_msg /= Void
---		do
---			dprintn (a_msg +  , a_debug_level)
---		end
-
 	dprintn (a_msg: STRING; a_debug_level: INTEGER)
 			--Prints a debug message  only if debug level is >= a_debug_level without formatting
 		require
---			name_set: name.is_set
---			debug_level_set: debug_level.is_set
 			a_msg_attached: a_msg /= Void
 			outputter_configured: configured
 		do
@@ -125,8 +112,6 @@ feature -- Print
 	dprint (a_msg: STRING; a_debug_level: INTEGER)
 			-- Prints a debug message  only if debug level is >= a_debug_level
 		require
---			name_set: name.is_set
---			debug_level_set: debug_level.is_set
 			a_msg_attached: a_msg /= Void
 			outputter_configured: configured
 		do
@@ -135,12 +120,21 @@ feature -- Print
 			end
 		end
 
+	wprint (a_msg: STRING)
+			-- Prints a warning message
+		require
+			a_msg_attached: a_msg /= Void
+			outputter_configured: configured
+		do
+
+				print_with_name ("WARNING] " + a_msg)
+
+		end
+
 	eprint (a_msg: STRING; a_generating_type: TYPE [ANY])
 			-- Prints an error message
 		require
 			outputter_configured: configured
---			name_set: name.is_set
---			a_msg_attached: a_msg /= Void
 			a_generating_type_attached: a_generating_type /= Void
 		do
 			print_with_name ("[" + a_generating_type.debug_output + "] " + a_msg)
@@ -150,7 +144,6 @@ feature -- Print
 			-- Prints an info message
 		require
 			outputter_configured: configured
---			name_set: name.is_set
 			a_msg_attached: a_msg /= Void
 		do
 			print_with_name ("[INFO] " + a_msg )
@@ -189,8 +182,6 @@ feature {NONE}  -- Impl
 				print ("%N" + a_msg)
 			end
 		end
-
-
 
 invariant
 		i_name_attached: i_name /= Void

@@ -119,6 +119,14 @@ feature -- Actions
 			action_translate.execute.do_nothing
 		end
 
+	force_clean
+			-- Forces translation and cleaning of the webapp
+		do
+			action_compile_webapp.needs_cleaning := True
+			action_compile_sgen.needs_cleaning := True
+			force_translate
+		end
+
 	get_sessions: BOOLEAN
 			-- Retrieves the count of sessions from the webapp
 		do

@@ -71,7 +71,7 @@
 #define CT_MULTIPART_FORM_DATA "multipart/form-data"
 #define CT_APP_FORM_URLENCODED "application/x-www-form-urlencoded"
 
-#define KEY_FILE_UPLOAD "#FUP#"
+#define KEY_FILE_UPLOAD "#FUPA#"
 #ifdef _WINDOWS
 #define UP_FN "C:\\tmp\\xebra_upload.XXXXXX" 
 #else
@@ -188,7 +188,7 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size, int 
 
 /*
  doc:	<attribute name="table_buf" return_type="char*" export="private">
- doc:		<summary>Print_item uses this to store post parameter values and keys </summary>
+ doc:		<summary>Print_item uses this variable to store post parameter values and keys </summary>
  doc:	</attribute>
  */
 char *table_buf;
@@ -229,7 +229,6 @@ doc:            <param name="i" type="int">The integer to convert</param>
 doc: 			 <return>Returns the byte array</return>
 doc:    </routine>
 */
-
 char * intToByteArray (request_rec *r, int i);
 
 /*
@@ -309,61 +308,6 @@ doc:    </routine>
 */
 static void register_hooks (apr_pool_t* pool);
 
-/**
-* Write an RFC2109 compliant cookie.
-*
-* @param r The request
-* @param name The name of the cookie.
-* @param val The value to place in the cookie.
-* @param attrs The string containing additional cookie attributes. If NULL, the
-*              DEFAULT_ATTRS will be used.
-* @param maxage If non zero, a Max-Age header will be added to the cookie.
-* @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
-*            to which the cookies should be added.
-*/
-apr_status_t cookie_write (request_rec * r, const char *name, const char *val,
-						   const char *attrs, long maxage, ...);
-
-/**
-* Write an RFC2965 compliant cookie.
-*
-* @param r The request
-* @param name2 The name of the cookie.
-* @param val The value to place in the cookie.
-* @param attrs2 The string containing additional cookie attributes. If NULL, the
-*               DEFAULT_ATTRS will be used.
-* @param maxage If non zero, a Max-Age header will be added to the cookie.
-* @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
-*            to which the cookies should be added.
-*/
-apr_status_t cookie_write2 (request_rec * r, const char *name2,
-							const char *val, const char *attrs2, long maxage, ...);
-
-/**
-* Remove an RFC2109 compliant cookie.
-*
-* @param r The request
-* @param name The name of the cookie.
-* @param attrs The string containing additional cookie attributes. If NULL, the
-*              CLEAR_ATTRS will be used.
-* @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
-*            to which the cookies should be added.
-*/
-apr_status_t cookie_remove (request_rec * r, const char *name,
-							const char *attrs, ...);
-
-/**
-* Remove an RFC2965 compliant cookie.
-*
-* @param r The request
-* @param name2 The name of the cookie.
-* @param attrs2 The string containing additional cookie attributes. If NULL, the
-*               CLEAR_ATTRS will be used.
-* @param ... A varargs array of zero or more (apr_table_t *) tables followed by NULL
-*            to which the cookies should be added.
-*/
-apr_status_t cookie_remove2 (request_rec * r, const char *name2,
-							 const char *attrs2, ...);
 
 /* The array of command_rec structures is passed to the httpd core by this module to declare a new configuration directive. */
 static const command_rec xebra_cmds[] = {

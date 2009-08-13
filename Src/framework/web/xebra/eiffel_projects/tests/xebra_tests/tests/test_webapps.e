@@ -29,12 +29,6 @@ feature -- Test routines
 			internal_test ("helloworld")
 		end
 
---	test_xebrahome
---			-- Tests xebrahome
---		do
---			internal_test ("xebrahome")
---		end
-
 	test_support
 			-- Tests support
 		do
@@ -47,15 +41,9 @@ feature -- Test routines
 			internal_test ("servercontrol")
 		end
 
-	test_xmlrpc_demo
-			-- Tests xmlrpc_demo
-		do
-			internal_test ("xmlrpc_demo")
-		end
-
 feature {NONE} -- Internal
 
-	do_clean: BOOLEAN = True
+	do_clean: BOOLEAN = False
 
 
 	internal_test (a_webapp_name: STRING)
@@ -64,8 +52,7 @@ feature {NONE} -- Internal
 			not_a_webapp_name_is_detached_or_empty: a_webapp_name /= Void and then not a_webapp_name.is_empty
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
-			l_webapp_finder: XS_WEBAPP_FINDER
-			l_config_reader: XS_CONFIG_READER
+			l_config_reader: XS_JSON_CONFIG_READER
 			l_ee: EXECUTION_ENVIRONMENT
 			l_f_utils: XU_FILE_UTILITIES
 			l_exp: STRING_AGENT_EXPANDER
@@ -80,18 +67,17 @@ feature {NONE} -- Internal
 			config.args.set_assume_webapps_are_running (False)
 			config.args.set_debug_level (9)
 			if (create {PLATFORM}).is_windows then
-					config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV\eiffel_projects\xebra_server\config.ini", True))
+					config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV\eiffel_projects\xebra_server\config.src", True))
 			else
-				config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV/eiffel_projects/xebra_server/config.ini", True))
+				config.args.set_config_filename ( l_f_utils.resolve_env_vars ("$XEBRA_DEV/eiffel_projects/xebra_server/config.src", True))
 			end
 
 
 				-- Read config file
-			create l_config_reader.make
+			create l_config_reader
 			if attached {XS_FILE_CONFIG} l_config_reader.process_file (config.args.config_filename) as l_config then
 				config.file := l_config
-				create l_webapp_finder
-				config.file.set_webapps (l_webapp_finder.search_webapps (config.file.webapps_root))
+				config.file.set_webapps (l_webapp_handler.search_webapps (config.file.webapps_root))
 				if attached {XS_WEBAPP} l_config.webapps [a_webapp_name] as l_webapp then
 
 						--De-chain actions

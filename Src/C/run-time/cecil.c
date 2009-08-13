@@ -193,6 +193,53 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
 }
 
 /*
+doc:	<routine name="eif_dtype_to_sk_type" return_type="int" export="private">
+doc:		<summary>Given a cecil ID, returns the corresponding SK_XX abstract type.</summary>
+doc:		<param name="dtype" type="EIF_TYPE_INDEX">cecil ID.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared int32 eif_dtype_to_sk_type (EIF_TYPE_INDEX dtype)
+{
+	if (dtype == egc_char_dtype) {
+		return SK_CHAR;
+	} else if (dtype == egc_wchar_dtype) {
+		return SK_WCHAR;
+	} else if (dtype == egc_bool_dtype) {
+		return SK_BOOL;
+	} else if (dtype == egc_uint8_dtype) {
+		return SK_UINT8;
+	} else if (dtype == egc_uint16_dtype) {
+		return SK_UINT16;
+	} else if (dtype == egc_uint32_dtype) {
+		return SK_UINT32;
+	} else if (dtype == egc_uint64_dtype) {
+		return SK_UINT64;
+	} else if (dtype == egc_int8_dtype) {
+		return SK_INT8;
+	} else if (dtype == egc_int16_dtype) {
+		return SK_INT16;
+	} else if (dtype == egc_int32_dtype) {
+		return SK_INT32;
+	} else if (dtype == egc_int64_dtype) {
+		return SK_INT64;
+	} else if (dtype == egc_real32_dtype) {
+		return SK_REAL32;
+	} else if (dtype == egc_real64_dtype) {
+		return SK_REAL64;
+	} else if (dtype == egc_point_dtype) {
+		return SK_POINTER;
+	} else {
+		if (EIF_IS_EXPANDED_TYPE(System(dtype))) {
+			return SK_EXP | dtype;
+		} else {
+			return SK_REF;
+		}
+	}
+}
+
+/*
  * Object creation
  */
 

@@ -77,7 +77,7 @@ feature -- Access
 			-- Current class type in which byte code is processed
 
 	class_type: CLASS_TYPE
-			-- Context class type with the code which we are generating
+			-- Class type from where the code being generated is coming from.
 			--| will be changed for assertion chaining, inlining, etc.
 
 	context_class_type: CLASS_TYPE
@@ -348,7 +348,7 @@ feature -- Code generation
 			if use_init then
 				-- Reset counter
 				idx_cnt.set_value (1)
-				l_gen_type.generate_cid_init (l_buffer, final_mode, True, idx_cnt, a_level)
+				l_gen_type.generate_cid_init (l_buffer, final_mode, True, idx_cnt, context_class_type.type, a_level)
 			end
 
 			l_buffer.put_new_line

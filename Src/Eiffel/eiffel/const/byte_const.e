@@ -147,7 +147,18 @@ feature -- Access
 	Bc_pop:				CHARACTER = '%/131/';
 	Bc_ref_to_ptr:		CHARACTER = '%/132/';
 	Bc_rcreate:			CHARACTER = '%/133/';
-	bc_notused_134:CHARACTER = '%/134/';
+
+		-- Special instructions operation for builtins
+	bc_builtin:			CHARACTER = '%/134/'
+	bc_builtin_unknown: CHARACTER = '%/001/'
+	bc_builtin_type__has_default: CHARACTER = '%/002/'
+	bc_builtin_type__default: CHARACTER = '%/003/'
+	bc_builtin_type__type_id: CHARACTER = '%/004/'
+	bc_builtin_type__runtime_name: CHARACTER = '%/005/'
+	bc_builtin_type__generic_parameter_type: CHARACTER = '%/006/'
+	bc_builtin_type__generic_parameter_count: CHARACTER = '%/007/'
+
+
 	Bc_cast_char32:		CHARACTER = '%/135/';
 	Bc_null_pointer:	CHARACTER = '%/136/';
 

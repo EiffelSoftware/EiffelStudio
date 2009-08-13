@@ -64,7 +64,11 @@ feature -- Properties
 	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN
 			-- Does Current have an associated class?
 		do
-			Result := conformance_type /= Void and then conformance_type.has_associated_class_type (a_context_type)
+			if a_context_type /= Void then
+				Result := True
+			else
+				Result := conformance_type /= Void and then conformance_type.has_associated_class_type (a_context_type)
+			end
 		end
 
 	is_class_valid: BOOLEAN
@@ -161,7 +165,11 @@ feature -- Access
 	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE
 			-- Associated class
 		do
-			Result := conformance_type.associated_class_type (a_context_type)
+			if a_context_type /= Void then
+				Result := a_context_type.associated_class_type (Void)
+			else
+				Result := conformance_type.associated_class_type (a_context_type)
+			end
 		end
 
 	generics: ARRAY [TYPE_A]
@@ -282,7 +290,11 @@ feature -- Generic conformance
 			if use_info then
 				create_info.generate_cid (buffer, final_mode)
 			else
-				conformance_type.generate_cid (buffer, final_mode, use_info, a_context_type)
+				if a_context_type /= Void then
+					a_context_type.generate_cid (buffer, final_mode, use_info, a_context_type)
+				else
+					conformance_type.generate_cid (buffer, final_mode, use_info, a_context_type)
+				end
 			end
 		end
 
@@ -292,17 +304,25 @@ feature -- Generic conformance
 			if use_info then
 				create_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
-				conformance_type.generate_cid_array (buffer, final_mode, use_info, idx_cnt, a_context_type)
+				if a_context_type /= Void then
+					a_context_type.generate_cid_array (buffer, final_mode, use_info, idx_cnt, a_context_type)
+				else
+					conformance_type.generate_cid_array (buffer, final_mode, use_info, idx_cnt, a_context_type)
+				end
 			end
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL)
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A; a_level: NATURAL)
 		do
 			generate_cid_prefix (Void, idx_cnt)
 			if use_info then
 				create_info.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
 			else
-				conformance_type.generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_level)
+				if a_context_type /= Void then
+					a_context_type.generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_context_type, a_level)
+				else
+					conformance_type.generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_context_type, a_level)
+				end
 			end
 		end
 
@@ -312,7 +332,11 @@ feature -- Generic conformance
 			if use_info then
 				create_info.make_type_byte_code (ba)
 			else
-				conformance_type.make_type_byte_code (ba, use_info, a_context_type)
+				if a_context_type /= Void then
+					a_context_type.make_type_byte_code (ba, use_info, a_context_type)
+				else
+					conformance_type.make_type_byte_code (ba, use_info, a_context_type)
+				end
 			end
 		end
 
@@ -343,7 +367,13 @@ feature {TYPE_A} -- Helpers
 	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER_32): BOOLEAN
 		do
 				-- We keep the same level since we are merely forwarding the call.
-			Result := conformance_type.internal_same_generic_derivation_as (current_type, other, a_level)
+				-- And because of `like Current', the underlying type is actually `current_type' if
+				-- provided otherwise `conformance_type'.
+			if current_type /= Void then
+				Result := current_type.internal_same_generic_derivation_as (current_type, other, a_level)
+			else
+				Result := conformance_type.internal_same_generic_derivation_as (current_type, other, a_level)
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Modification

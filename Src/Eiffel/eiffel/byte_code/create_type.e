@@ -50,20 +50,14 @@ feature -- C code generation
 	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate creation type id.
 		local
-			cl_type_i : CL_TYPE_A
-			gen_type_i: GEN_TYPE_A
+			l_type : TYPE_A
 		do
-			cl_type_i ?= context.creation_type (type)
-			gen_type_i ?= cl_type_i
-			if gen_type_i /= Void then
+			l_type := context.creation_type (type)
+			if attached {GEN_TYPE_A} l_type then
 				buffer.put_string ("typres")
 				buffer.put_natural_32 (a_level)
 			else
-				if final_mode then
-					buffer.put_type_id (cl_type_i.type_id (context.context_class_type.type))
-				else
-					buffer.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
-				end
+				buffer.put_integer (l_type.generated_id (final_mode, context.context_class_type.type))
 			end
 		end
 
@@ -183,7 +177,7 @@ invariant
 	type_not_void: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -196,22 +190,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CREATE_TYPE

@@ -94,6 +94,13 @@ feature {NONE} -- Initialization
 					-- Duplicate type object to avoid modification of `t'.
 				type := t.duplicate
 			end
+			if attached basic_type as l_type and then l_type.is_typed_pointer then
+					-- We have to do that as otherwise, `t' might be `TYPED_POINTER [G#2]' if this is
+					-- the type we have recorded but it certainly does not make sense in a class with
+					-- only one generic parameter.
+				basic_type ?= type
+				check basic_type_attached: basic_type /= Void end
+			end
 			is_changed := True
 			type_id := l_system.type_id_counter.next
 			static_type_id := l_static_type_id_counter.next_id

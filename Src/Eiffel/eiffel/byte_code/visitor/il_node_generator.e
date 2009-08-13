@@ -2954,10 +2954,11 @@ feature {NONE} -- Visitors
 		do
 			if a_node.is_dotnet_type then
 				il_generator.put_type_instance (
-					context.real_type (a_node.type_data.generics.item (1)))
+					context.real_type (a_node.type_type))
 			else
 				fixme ("Instance should be unique.")
-				l_type_creator := context.real_type (a_node.type_data).create_info
+				fixme ("We also need to use `a_node.type_type' when it is not an instance of CL_TYPE_A.")
+				l_type_creator := a_node.type_data.create_info
 				l_type_creator.generate_il
 			end
 
@@ -4615,22 +4616,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

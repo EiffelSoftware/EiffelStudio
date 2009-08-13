@@ -167,6 +167,15 @@ feature -- Status report
 				((direct_descendants = Void or else direct_descendants.is_empty) or is_frozen)
 		end
 
+	is_freeze_required_on_melt (a_feature: FEATURE_I): BOOLEAN
+			-- Does `a_feature' require a freeze when melted?
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			Result := a_feature.is_external or else
+				visible_level.is_visible (a_feature, class_id)
+		end
+
 feature -- Action
 
 	remove_c_generated_files
@@ -1227,13 +1236,7 @@ feature -- Melting
 				feature_i := tbl.item_for_iteration
 					-- External feature and inherited one don't need to be melted.
 				if feature_i.to_generate_in (Current) then
-					if
-						not system.is_freeze_requested and then
-						(feature_i.is_external or else
-						visible_level.is_visible (feature_i, class_id))
-					then
-							-- Feature is external, we need to trigger a freeze
-							-- or feature is used by CECIL, we need to trigger a freeze as well
+					if not system.is_freeze_requested and then is_freeze_required_on_melt (feature_i) then
 						system.request_freeze
 					end
 					add_feature_to_melted_set (feature_i)

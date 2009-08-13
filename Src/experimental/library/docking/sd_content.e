@@ -711,8 +711,9 @@ feature -- Command
 		local
 			l_zone: detachable SD_ZONE
 		do
-			l_zone := state.zone
-			if l_zone /= Void then
+			if state.is_zone_attached then
+				l_zone := state.zone
+				check l_zone /= Void end -- Implied by `is_zone_attached'
 				l_zone.update_mini_tool_bar_size
 			end
 		end
@@ -904,9 +905,8 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 			if is_user_widget_set and then not user_widget.is_displayed then
 				user_widget.show
 			end
-			l_zone := state.zone
-			if l_zone /= Void then
-				if attached {EV_WIDGET} l_zone as lt_widget then
+			if state.is_zone_attached then
+				if attached {EV_WIDGET} state.zone as lt_widget then
 					if not lt_widget.is_destroyed and then not lt_widget.is_displayed then
 						lt_widget.show
 					end

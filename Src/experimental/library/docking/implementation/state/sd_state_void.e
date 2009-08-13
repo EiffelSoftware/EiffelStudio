@@ -19,7 +19,8 @@ inherit
 			move_to_docking_zone,
 			show,
 			restore,
-			close
+			close,
+			is_zone_attached
 		end
 
 create
@@ -54,6 +55,12 @@ feature -- Redefine
 	zone: detachable SD_ZONE
 			-- <Precursor>
 		do
+		end
+
+	is_zone_attached: BOOLEAN
+			-- <Precursor>
+		do
+			Result := False
 		end
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)

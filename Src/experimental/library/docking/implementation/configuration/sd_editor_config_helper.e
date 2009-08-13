@@ -215,9 +215,14 @@ feature -- Query
 
 	has_place_holder (a_top_container: EV_CONTAINER): BOOLEAN
 			-- If `a_top_container' has place holder widget?
+		local
+			l_state: SD_STATE
 		do
-			if attached {EV_WIDGET} internal_docking_manager.zones.place_holder_content.state.zone as lt_widget then
-				Result := a_top_container.has_recursive (lt_widget)
+			l_state := internal_docking_manager.zones.place_holder_content.state
+			if l_state.is_zone_attached then
+				if attached {EV_WIDGET} l_state.zone as lt_widget then
+					Result := a_top_container.has_recursive (lt_widget)
+				end
 			end
 		end
 

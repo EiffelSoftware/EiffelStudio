@@ -33,15 +33,17 @@ feature	{NONE} -- Initlization
 			a_content_not_void: a_content /= Void
 		do
 			create internal_shared
-			internal_docking_manager := a_content.docking_manager
-			default_create
-			create window.make (a_content.type, Current)
+			set_docking_manager (a_content.docking_manager)
+			create window.make (a_content.type, {SD_ENUMERATION}.docking)
 			internal_content := a_content
+
+			default_create
+
 			window.set_user_widget (internal_content.user_widget)
 			window.title_bar.set_title (internal_content.long_title)
-			if a_content.mini_toolbar /= Void then
-				if a_content.mini_toolbar.parent /= Void then
-					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+			if attached a_content.mini_toolbar as l_toolbar then
+				if attached l_toolbar.parent as l_parent then
+					l_parent.prune (l_toolbar)
 				end
 				window.title_bar.extend_custom_area (a_content.mini_toolbar)
 			end
@@ -68,7 +70,7 @@ feature {SD_CONTENT}
 			-- <Precursor>
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)
-			internal_docking_manager.command.remove_auto_hide_zones (True)
+			docking_manager.command.remove_auto_hide_zones (True)
 			window.set_focus_color (True)
 		end
 
@@ -150,9 +152,6 @@ feature -- Query
 		end
 
 feature {NONE} -- Implementation
-
-	resize_bar: SD_RESIZE_BAR
-			-- Resize bar at the side
 
 	window: SD_PANEL
 			-- Window

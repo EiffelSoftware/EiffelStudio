@@ -56,19 +56,19 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	tabs_shown: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
+	tabs_shown: HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
 			-- Tabs which is shown
 		local
 			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 		do
-			create Result.make_default
-			l_tabs ?= internal_notebook.tabs_shown
+			create Result.make (10)
+			l_tabs := internal_notebook.tabs_shown
 			from
 				l_tabs.start
 			until
 				l_tabs.after
 			loop
-				Result.force_last (l_tabs.item, internal_notebook.index_of_tab (l_tabs.item))
+				Result.extend (l_tabs.item, internal_notebook.index_of_tab (l_tabs.item))
 				l_tabs.forth
 			end
 		end
@@ -159,7 +159,7 @@ feature -- Command
 			end
 		end
 
-	change_tab_tooltip (a_content: SD_CONTENT; a_tooltip: STRING_GENERAL)
+	change_tab_tooltip (a_content: SD_CONTENT; a_tooltip: detachable STRING_GENERAL)
 			-- Change `a_content' tab's tooltip to `a_tooltip'
 		require
 			not_void: a_content /= Void

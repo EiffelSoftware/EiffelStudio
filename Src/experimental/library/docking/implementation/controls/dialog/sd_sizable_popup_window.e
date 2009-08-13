@@ -12,18 +12,26 @@ inherit
 	SD_WINDOW
 		rename
 			extend as extend_sizeable_popup_window
-		redefine
-			initialize
 		end
+
+create
+	make
 
 feature {NONE} -- Initialization
 
-	initialize
-			-- <Precursor>
+	make
+			-- Creation method
+		do
+			init
+			default_create
+			extend_sizeable_popup_window (internal_border_box)
+		end
+
+	init
+			-- Initilaize
 		local
 			l_styles: EV_STOCK_PIXMAPS
 		do
-			Precursor {SD_WINDOW}
 			init_border_box
 
 			create {EV_CELL} internal_padding_box
@@ -39,8 +47,6 @@ feature {NONE} -- Initialization
 		do
 			create {EV_VERTICAL_BOX} internal_border_box
 			internal_border_box.set_border_width (internal_border_width)
-			extend_sizeable_popup_window (internal_border_box)
-
 			internal_border_box.pointer_motion_actions.extend (agent on_border_box_pointer_motion)
 			internal_border_box.pointer_button_press_actions.extend (agent on_border_pointer_press)
 			internal_border_box.pointer_button_release_actions.extend (agent on_border_pointer_release)

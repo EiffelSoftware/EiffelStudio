@@ -268,9 +268,6 @@ feature {NONE}  -- Implementation
 	internal_top_box: EV_HORIZONTAL_BOX
 			-- Box which contain
 
-	internal_button_box: EV_HORIZONTAL_BOX
-			-- Box which contain `custom_area' and `internal_tool_bar'
-
 	internal_tool_bar: SD_TOOL_BAR
 			-- Tool bar has `internal_normal_max_button', `internal_close_button'
 

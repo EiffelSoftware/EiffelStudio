@@ -130,7 +130,7 @@ feature -- Redefine
 	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- <Precursor>
 		local
-			l_docking_zone: SD_DOCKING_ZONE
+			l_docking_zone: detachable SD_DOCKING_ZONE
 			l_caller: SD_ZONE
 			l_in_hot_area: BOOLEAN
 		do

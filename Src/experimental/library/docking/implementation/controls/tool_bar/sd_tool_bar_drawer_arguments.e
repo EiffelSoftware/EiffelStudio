@@ -20,7 +20,7 @@ feature {NONE}  -- Initlization
 
 feature -- Properties
 
-	tool_bar: SD_TOOL_BAR
+	tool_bar: detachable SD_TOOL_BAR
 			-- SD_TOOL_BAR
 
 	set_tool_bar (a_tool_bar: SD_TOOL_BAR)
@@ -33,7 +33,7 @@ feature -- Properties
 			set: tool_bar = a_tool_bar
 		end
 
-	item: SD_TOOL_BAR_ITEM
+	item: detachable SD_TOOL_BAR_ITEM
 			-- Item on `tool_bar'
 
 	set_item (a_item: SD_TOOL_BAR_ITEM)
@@ -46,7 +46,7 @@ feature -- Properties
 			set: item = a_item
 		end
 
-	position: EV_COORDINATE
+	position: detachable EV_COORDINATE
 			-- Position to draw `item' on `tool_bar'
 
 	set_position (a_position: EV_COORDINATE)
@@ -64,12 +64,16 @@ feature -- Query
 	is_valid: BOOLEAN
 			-- If Current valid?
 		local
-			l_not_void: BOOLEAN
 			l_argument_valid: BOOLEAN
+			l_tool_bar: like tool_bar
+			l_item: like item
+			l_position: like position
 		do
-			l_not_void := tool_bar /= Void and item /= Void and position /= Void
-			if l_not_void then
-				l_argument_valid := position.x >= 0 and position.y >= 0 and tool_bar.has (item)
+			l_tool_bar := tool_bar
+			l_item := item
+			l_position := position
+			if l_tool_bar /= Void and l_item /= Void and l_position /= Void then
+				l_argument_valid := l_position.x >= 0 and l_position.y >= 0 and l_tool_bar.has (l_item)
 				Result := l_argument_valid
 			end
 		end

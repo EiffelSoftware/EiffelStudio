@@ -21,27 +21,36 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_auto_hide_state: SD_AUTO_HIDE_STATE; a_docking_manager: SD_DOCKING_MANAGER)
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 		require
-			not_void: a_auto_hide_state /= Void
 			not_void: a_docking_manager /= Void
 		do
-			state := a_auto_hide_state
 			internal_docking_manager := a_docking_manager
-
 			create internal_shared
 		ensure
-			set: state = a_auto_hide_state
 			set: internal_docking_manager = a_docking_manager
+		end
+
+feature {SD_AUTO_HIDE_STATE} -- Initlization
+
+	init (a_auto_hide_state: SD_AUTO_HIDE_STATE)
+			-- Initlization
+		require
+			not_void: a_auto_hide_state /= Void
+		do
+			internal_state := a_auto_hide_state
+		ensure
+			set: state = a_auto_hide_state
 		end
 
 feature {SD_AUTO_HIDE_STATE} -- Command
 
 	close_animation
-			-- Close window animation.
+			-- Close window animation
 		local
 			l_rect: EV_RECTANGLE
+			l_moving_timer: like internal_moving_timer
 		do
 			remove_moving_timer (True)
 			remove_close_timer
@@ -63,9 +72,10 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 				else
 					state.set_width_height (state.zone.height)
 				end
-				create internal_moving_timer
-				internal_moving_timer.actions.extend (agent on_timer_for_moving (False))
-				internal_moving_timer.set_interval (internal_shared.auto_hide_tab_slide_timer_interval)
+				create l_moving_timer
+				internal_moving_timer := l_moving_timer
+				l_moving_timer.actions.extend (agent on_timer_for_moving (False))
+				l_moving_timer.set_interval (internal_shared.auto_hide_tab_slide_timer_interval)
 			else
 				-- No animation
 				internal_docking_manager.command.remove_auto_hide_zones (False)
@@ -73,10 +83,12 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 		end
 
 	show (a_animation: BOOLEAN)
-			-- Show internal widgets.
+			-- Show internal widgets
 		local
 			l_rect: EV_RECTANGLE
 			l_zone: SD_AUTO_HIDE_ZONE
+			l_moving_timer: like internal_moving_timer
+			l_closing_timer: like internal_closing_timer
 		do
 			if not internal_docking_manager.zones.has_zone_by_content (state.content) then
 				state.set_width_height (state.max_size_by_zone (state.width_height))
@@ -100,15 +112,17 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 				internal_set_position_and_final_position (l_rect)
 
 				if internal_shared.auto_hide_tab_slide_timer_interval /= 0 then
-					create internal_close_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
-					internal_close_timer.actions.extend (agent on_timer_for_close)
+					create l_closing_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
+					internal_closing_timer := l_closing_timer
+					l_closing_timer.actions.extend (agent on_timer_for_close)
 					ev_application.pointer_motion_actions.extend (agent on_pointer_motion)
 					internal_motion_procedure := ev_application.pointer_motion_actions.last
 					-- First, put the zone in a fixed, make a animation here.
 
-					create internal_moving_timer
-					internal_moving_timer.actions.extend (agent on_timer_for_moving (True))
-					internal_moving_timer.set_interval (internal_shared.auto_hide_tab_slide_timer_interval)
+					create l_moving_timer
+					internal_moving_timer := l_moving_timer
+					l_moving_timer.actions.extend (agent on_timer_for_moving (True))
+					l_moving_timer.set_interval (internal_shared.auto_hide_tab_slide_timer_interval)
 				else
 					inspect
 						state.direction
@@ -124,11 +138,14 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 		end
 
 	remove_moving_timer (a_open: BOOLEAN)
-			-- Remove `internal_moving_timer'.
+			-- Remove `internal_moving_timer'
+		local
+			l_moving_timer: like internal_moving_timer
 		do
-			if internal_moving_timer /= Void then
-				internal_moving_timer.actions.wipe_out
-				internal_moving_timer.destroy
+			l_moving_timer := internal_moving_timer
+			if l_moving_timer /= Void then
+				l_moving_timer.actions.wipe_out
+				l_moving_timer.destroy
 				internal_moving_timer := Void
 			end
 			if not a_open then
@@ -141,40 +158,63 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 		end
 
 	remove_close_timer
-			-- Remove close timer.
+			-- Remove closing timer
+		local
+			l_closing_timer: like internal_closing_timer
 		do
-			if internal_close_timer /= Void then
-				internal_close_timer.actions.wipe_out
-				internal_close_timer.destroy
-				internal_close_timer := Void
+			l_closing_timer := internal_closing_timer
+			if l_closing_timer /= Void then
+				l_closing_timer.actions.wipe_out
+				l_closing_timer.destroy
+				internal_closing_timer := Void
 
 				ev_application.pointer_motion_actions.start
-				ev_application.pointer_motion_actions.prune (internal_motion_procedure)
+				if attached internal_motion_procedure as l_procedure then
+					ev_application.pointer_motion_actions.prune (l_procedure)
+				end
+
 				internal_motion_procedure := Void
 				debug ("docking")
 					io.put_string ("%N SD_AUTO_HIDE_STATE on_pointer_motion actions pruned")
 				end
 			end
 		ensure
-			timer_void: internal_close_timer = Void
+			timer_void: internal_closing_timer = Void
 			applcation_pointer_motion_pruned:
 		end
 
 feature -- Query
 
 	is_close_timer_exist: BOOLEAN
-			-- If `internal_close_timer' /= Void?
+			-- If `internal_closing_timer' /= Void?
 		do
-			Result := internal_close_timer /= Void
+			Result := internal_closing_timer /= Void
+		end
+
+	is_state_attached: BOOLEAN
+			-- If `internal_state' attached?
+		do
+			Result := internal_state /= Void
 		end
 
 	state: SD_AUTO_HIDE_STATE
-			-- Auto hide state which Current help it's animation issues.
+			-- Auto hide state which Current help it's animation issues
+		require
+			set: is_state_attached
+		local
+			l_result: like internal_state
+		do
+			l_result := internal_state
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
 
 feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 
 	on_timer_for_close
-			-- Handle close timer event.
+			-- Handle close timer event
 		require
 			internal_timer_not_void: is_close_timer_exist
 		do
@@ -183,7 +223,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 				close_animation
 			end
 		ensure
-			timer_void: pointer_outside and not state.zone.has_focus implies internal_close_timer = Void
+			timer_void: pointer_outside and not state.zone.has_focus implies internal_closing_timer = Void
 		end
 
 	on_pointer_motion (a_widget: EV_WIDGET; a_screen_x, a_screen_y: INTEGER)
@@ -205,7 +245,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 		end
 
 	on_timer_for_moving (a_open: BOOLEAN)
-			-- Use timer to play a animation.
+			-- Use timer to play a animation
 		do
 			if a_open then
 				internal_open_moving
@@ -219,7 +259,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 feature {NONE} -- Implementation functions
 
 	internal_set_position_and_final_position (a_whole_area: EV_RECTANGLE)
-			-- When `internal_show' set first animation position and calculate final position.
+			-- When `internal_show' set first animation position and calculate final position
 		require
 			not_void: a_whole_area /= Void
 		do
@@ -261,7 +301,7 @@ feature {NONE} -- Implementation functions
 		end
 
 	internal_open_moving
-			-- Zone open animation.
+			-- Zone open animation
 		do
 			inspect
 				state.direction
@@ -300,7 +340,7 @@ feature {NONE} -- Implementation functions
 		end
 
 	internal_close_moving
-			-- Zone close animation.
+			-- Zone close animation
 		do
 			inspect
 				state.direction
@@ -334,31 +374,33 @@ feature {NONE} -- Implementation functions
 feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 	pointer_outside: BOOLEAN
 			-- If pointer outside tab stub and zone?
 
-	internal_motion_procedure: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
-			-- Motion procedure for animation.
+	internal_motion_procedure: detachable PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
+			-- Motion procedure for animation
 
 	internal_show_step: INTEGER = 20
-			-- Step when tear-off window appear.
+			-- Step when tear-off window appear
 
 	internal_final_position: INTEGER
-			-- Final position when a tear-off window should at.
+			-- Final position when a tear-off window should at
 
-	internal_moving_timer: EV_TIMEOUT
-			-- Timer for moving animation.
+	internal_moving_timer: detachable EV_TIMEOUT
+			-- Timer for moving animation
 
-	internal_close_timer: EV_TIMEOUT
-			-- Timer for close window.
+	internal_closing_timer: detachable EV_TIMEOUT
+			-- Timer for closing window
 
 	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager.
+			-- Docking manager
+
+	internal_state: detachable SD_AUTO_HIDE_STATE
+			-- Auto hide state which Current help it's animation issues
 
 invariant
-	not_void: state /= Void
 	not_void: internal_docking_manager /= Void
 
 note

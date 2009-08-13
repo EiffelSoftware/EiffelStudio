@@ -62,7 +62,7 @@ feature {NONE} -- Image data filling.
 	fill_memory
 			-- Fill image data into memory.
 		local
-			l_imp: EV_PIXEL_BUFFER_IMP
+			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_pointer: POINTER
 		do
 			l_imp ?= implementation

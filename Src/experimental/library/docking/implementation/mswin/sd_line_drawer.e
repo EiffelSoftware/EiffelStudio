@@ -23,7 +23,7 @@ feature {NONE}  -- Initlization
 feature -- Command
 
 	draw_line_area (a_start_x, a_start_y, a_width, a_height: INTEGER)
-			-- Draw a half-tone line on screen.
+			-- Draw a half-tone line on screen
 		local
 			l_dc: WEL_SCREEN_DC
 			l_spliter_brush: WEL_BRUSH
@@ -33,8 +33,8 @@ feature -- Command
 			l_spliter_brush := half_tone_brush
 
 			l_dc.select_brush (l_spliter_brush)
-			-- We must use pattern to draw half tone feedback on Windows Vista.
-			-- Otherwise, when erasing the background will be whole black (Vista Aero theme enabled).
+			-- We must use pattern to draw half tone feedback on Windows Vista
+			-- Otherwise, when erasing the background will be whole black (Vista Aero theme enabled)
 			l_dc.pat_blt (a_start_x, a_start_y, a_width, a_height, {WEL_RASTER_OPERATIONS_CONSTANTS}.patinvert)
 
 			l_spliter_brush.dispose
@@ -42,7 +42,7 @@ feature -- Command
 		end
 
 	draw_rectangle (left, top, width, height, line_width: INTEGER)
-			-- Draw a rectangle on screen which center is blank.
+			-- Draw a rectangle on screen which center is blank
 		require
 			line_width_valid: line_width > 0
 			width_positive: width > 0
@@ -74,8 +74,8 @@ feature -- Command
 		end
 
 	reset_screen
-			-- Because dc will change between user using Remote Desktop and normal video card.
-			-- So we need to recreate `internal_screen' to make sure line can be drawn.
+			-- Because dc will change between user using Remote Desktop and normal video card
+			-- So we need to recreate `internal_screen' to make sure line can be drawn
 		do
 			create internal_screen
 		end
@@ -83,7 +83,7 @@ feature -- Command
 feature -- Query
 
 	screen: EV_SCREEN
-			-- Screen to draw.
+			-- Screen to draw
 		do
 			Result := internal_screen
 		ensure
@@ -93,56 +93,72 @@ feature -- Query
 feature {NONE} -- Implementation for draw_rectangle
 
 	draw_rectangle_internal_top (a_start_x, a_start_y, a_width, a_height: INTEGER)
-			-- Draw a vertical line on the screen.
+			-- Draw a vertical line on the screen
+		local
+			l_pixmap: like last_half_tone_pixmap_top
 		do
-			if last_half_tone_pixmap_top = Void or
-				last_half_tone_pixmap_top.width /= a_width or last_half_tone_pixmap_top.height /= a_height then
-				last_half_tone_pixmap_top := half_tone_pixmap (a_width, a_height)
+			l_pixmap := last_half_tone_pixmap_top
+			if l_pixmap = Void or else
+				(l_pixmap.width /= a_width or l_pixmap.height /= a_height) then
+				l_pixmap := half_tone_pixmap (a_width, a_height)
+				last_half_tone_pixmap_top := l_pixmap
 			end
 			screen.set_invert_mode
-			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_top)
+			screen.draw_pixmap (a_start_x, a_start_y, l_pixmap)
 		end
 
 	draw_rectangle_internal_bottom (a_start_x, a_start_y, a_width, a_height: INTEGER)
-			-- Draw a vertical line on the screen.
+			-- Draw a vertical line on the screen
+		local
+			l_pixmap: like last_half_tone_pixmap_bottom
 		do
-			if last_half_tone_pixmap_bottom = Void or
-				last_half_tone_pixmap_bottom.width /= a_width or last_half_tone_pixmap_bottom.height /= a_height then
-				last_half_tone_pixmap_bottom := half_tone_pixmap (a_width, a_height)
+			l_pixmap := last_half_tone_pixmap_bottom
+			if l_pixmap = Void or else
+				(l_pixmap.width /= a_width or l_pixmap.height /= a_height) then
+				l_pixmap := half_tone_pixmap (a_width, a_height)
+				last_half_tone_pixmap_bottom := l_pixmap
 			end
 			screen.set_invert_mode
-			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_bottom)
+			screen.draw_pixmap (a_start_x, a_start_y, l_pixmap)
 		end
 
 	draw_rectangle_internal_left (a_start_x, a_start_y, a_width, a_height: INTEGER)
-			-- Draw a vertical line on the screen.
+			-- Draw a vertical line on the screen
+		local
+			l_pixmap: like last_half_tone_pixmap_left
 		do
-			if last_half_tone_pixmap_left = Void or
-				last_half_tone_pixmap_left.width /= a_width or last_half_tone_pixmap_left.height /= a_height then
-				last_half_tone_pixmap_left := half_tone_pixmap (a_width, a_height)
+			l_pixmap := last_half_tone_pixmap_left
+			if l_pixmap = Void or else
+				(l_pixmap.width /= a_width or l_pixmap.height /= a_height) then
+				l_pixmap := half_tone_pixmap (a_width, a_height)
+				last_half_tone_pixmap_left := l_pixmap
 			end
 			screen.set_invert_mode
-			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_left)
+			screen.draw_pixmap (a_start_x, a_start_y, l_pixmap)
 		end
 
 	draw_rectangle_internal_right (a_start_x, a_start_y, a_width, a_height: INTEGER)
-			-- Draw a vertical line on the screen.
+			-- Draw a vertical line on the screen
+		local
+			l_pixmap: like last_half_tone_pixmap_right
 		do
-			if last_half_tone_pixmap_right = Void or
-				last_half_tone_pixmap_right.width /= a_width or last_half_tone_pixmap_right.height /= a_height then
-				last_half_tone_pixmap_right := half_tone_pixmap (a_width, a_height)
+			l_pixmap := last_half_tone_pixmap_right
+			if l_pixmap = Void or else
+				(l_pixmap.width /= a_width or l_pixmap.height /= a_height) then
+				l_pixmap := half_tone_pixmap (a_width, a_height)
+				last_half_tone_pixmap_right := l_pixmap
 			end
 			screen.set_invert_mode
-			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_right)
+			screen.draw_pixmap (a_start_x, a_start_y, l_pixmap)
 		end
 
-	last_half_tone_pixmap_top, last_half_tone_pixmap_bottom, last_half_tone_pixmap_left, last_half_tone_pixmap_right: EV_PIXMAP
-			-- Pixmap last dran for `draw_rectangle'.
+	last_half_tone_pixmap_top, last_half_tone_pixmap_bottom, last_half_tone_pixmap_left, last_half_tone_pixmap_right: detachable EV_PIXMAP
+			-- Pixmap last dran for `draw_rectangle'
 
 feature {NONE} -- Implementation
 
 	half_tone_pixmap (a_width, a_height: INTEGER): EV_PIXMAP
-			-- Get a dot line pixmap.
+			-- Get a dot line pixmap
 		require
 			valid: a_width > 0 and a_height > 0
 		local
@@ -186,23 +202,23 @@ feature {NONE} -- Implementation
 	internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height: INTEGER
 
 	clear_last_feedback
-			-- Clear last drawn feedback rectangle.
+			-- Clear last drawn feedback rectangle
 		do
 			draw_rectangle_internal (internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height, internal_shared.line_width)
 		end
 
 	draw_rectangle_internal (a_left, a_top, a_width, a_height, a_line_width: INTEGER)
-			-- Draw half-tone rectangle feedback.
+			-- Draw half-tone rectangle feedback
 		require
 			valid: a_line_width > 0
 		do
-			-- Draw window area, top one.
+			-- Draw window area, top one
 			draw_rectangle_internal_top (a_left, a_top, a_width, a_line_width)
-			-- Draw window area, bottom one.
+			-- Draw window area, bottom one
 			draw_rectangle_internal_bottom (a_left, a_top + a_height - a_line_width, a_width, a_line_width)
-			-- Draw window area, left one.
+			-- Draw window area, left one
 			draw_rectangle_internal_left (a_left, a_top + a_line_width, a_line_width, a_height - 2 * a_line_width)
-			-- Draw window area, right one.
+			-- Draw window area, right one
 			draw_rectangle_internal_right (a_left + a_width - a_line_width, a_top + a_line_width, a_line_width, a_height - 2 * a_line_width)
 		end
 
@@ -220,10 +236,10 @@ feature {NONE}  -- Implementation
 		end
 
 	internal_screen: EV_SCREEN
-			-- Internal screen instance, one instance per a dragging process.
+			-- Internal screen instance, one instance per a dragging process
 
 	internal_shared: SD_SHARED;
-			-- All singletons.
+			-- All singletons
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

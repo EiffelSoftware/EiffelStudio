@@ -12,54 +12,54 @@ feature -- Query
 
 	default_background_color: EV_COLOR
 			-- Default background color
-			-- Different from EV_STOCK_COLORS default_background_color, this one will change with theme.
+			-- Different from EV_STOCK_COLORS default_background_color, this one will change with theme
 		deferred
 		end
 
 	non_focused_selection_color: EV_COLOR
-			-- Non focused selection color for title bar.
+			-- Non focused selection color for title bar
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
 	non_focused_selection_title_color: EV_COLOR
-			-- Non focused selectetion color for title.
+			-- Non focused selectetion color for title
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
 	non_focused_title_text_color: EV_COLOR
-			-- Non focused selection color for title's text.
+			-- Non focused selection color for title's text
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
 	focused_selection_color: EV_COLOR
-			-- Focused selection color for title bar.
+			-- Focused selection color for title bar
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
 	focused_title_text_color: EV_COLOR
-			-- Focused selection color for title bar text.
+			-- Focused selection color for title bar text
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
 	active_border_color: EV_COLOR
-			-- Background color of multiple document interface (MDI) applications.
+			-- Background color of multiple document interface (MDI) applications
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
 	button_text_color: EV_COLOR
-			-- Text color of buttons.
+			-- Text color of buttons
 		deferred
 		ensure
 			not_void: Result /= Void

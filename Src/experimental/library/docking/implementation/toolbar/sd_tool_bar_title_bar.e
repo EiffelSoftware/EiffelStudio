@@ -22,14 +22,47 @@ inherit
 			copy
 		end
 
+create
+	make
+
 feature {NONE} -- Initialization
 
+	make
+			-- Creation method
+		do
+			create close_request_actions
+			create custom_actions
+
+				-- Create all widgets
+			create drawing_area
+			create tool_bar.make
+			create customize.make
+			create close.make
+
+			create string_constant_set_procedures.make (10)
+			create string_constant_retrieval_functions.make (10)
+			create integer_constant_set_procedures.make (10)
+			create integer_constant_retrieval_functions.make (10)
+			create pixmap_constant_set_procedures.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create integer_interval_constant_retrieval_functions.make (10)
+			create integer_interval_constant_set_procedures.make (10)
+			create font_constant_set_procedures.make (10)
+			create font_constant_retrieval_functions.make (10)
+			create pixmap_constant_retrieval_functions.make (10)
+			create color_constant_set_procedures.make (10)
+			create color_constant_retrieval_functions.make (10)
+			create pointer_double_press_actions
+			
+			default_create
+		end
+
 	user_initialization
-			-- Called by `initialize'.
+			-- Called by `initialize'
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
-			-- can be added here.
+			-- can be added here
 		local
 			l_shared: SD_SHARED
 			l_font: EV_FONT
@@ -47,8 +80,7 @@ feature {NONE} -- Initialization
 
 			close.select_actions.extend (agent on_close_selected)
 			customize.select_actions.extend (agent on_custom_selected)
-			create close_request_actions
-			create custom_actions
+
 			tool_bar.compute_minimum_size
 
 			customize.set_pixmap (l_shared.icons.tool_bar_floating_customize)
@@ -60,10 +92,8 @@ feature {NONE} -- Initialization
 		end
 
 	init_pointer_double_press_actions
-			-- Initialize pointer double press actions.
+			-- Initialize pointer double press actions
 		do
-			create pointer_double_press_actions
-
 			pointer_double_press_actions_horizontal_box.force_extend (agent on_pointer_double_press)
 			drawing_area.pointer_double_press_actions.force_extend (agent on_pointer_double_press)
 		end
@@ -71,7 +101,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	set_content (a_content: SD_TOOL_BAR_CONTENT)
-			-- Set `content'.
+			-- Set `content'
 		require
 			not_void: a_content /= Void
 		do
@@ -82,17 +112,17 @@ feature -- Command
 
 feature -- Query
 
-	content: SD_TOOL_BAR_CONTENT
-			-- Content which title is showing.
+	content: detachable SD_TOOL_BAR_CONTENT
+			-- Content which title is showing
 
 	pointer_double_press_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to performed when pointer double press on Current.
+			-- Actions to performed when pointer double press on Current
 
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to performed when pointer press X at right top.
+			-- Actions to performed when pointer press X at right top
 
 	custom_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to performed when pointer press down arrow ar right top.
+			-- Actions to performed when pointer press down arrow ar right top
 
 	drag_rectangle: EV_RECTANGLE
 			-- Drag area rectangle
@@ -103,7 +133,7 @@ feature -- Query
 		end
 
 	custom_rectangle: EV_RECTANGLE
-			-- `customize' button area rectangle.
+			-- `customize' button area rectangle
 		local
 			l_rect: EV_RECTANGLE
 		do
@@ -114,7 +144,7 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	on_drawing_area_expose (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
-			-- Handle `drawing_area' expose actions.
+			-- Handle `drawing_area' expose actions
 		local
 			l_shared: SD_SHARED
 		do
@@ -123,25 +153,25 @@ feature {NONE} -- Implementation
 			drawing_area.fill_rectangle (0, 0, drawing_area.width, drawing_area.height)
 
 			drawing_area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-			if content /= Void then
-				drawing_area.draw_ellipsed_text_top_left (2, l_shared.title_bar_text_start_y, content.title, drawing_area.width)
+			if attached content as l_content then
+				drawing_area.draw_ellipsed_text_top_left (2, l_shared.title_bar_text_start_y, l_content.title, drawing_area.width)
 			end
 		end
 
 	on_pointer_double_press
-			-- Handle pointer double press actions.
+			-- Handle pointer double press actions
 		do
 			pointer_double_press_actions.call (Void)
 		end
 
 	on_close_selected
-			-- Handle user press X button.
+			-- Handle user press X button
 		do
 			close_request_actions.call (Void)
 		end
 
 	on_custom_selected
-			-- Handle user press down arrow button.
+			-- Handle user press down arrow button
 		do
 			custom_actions.call (Void)
 		end

@@ -28,17 +28,18 @@ feature {NONE} -- Initlization
 			not_void: a_parent /= Void
 		do
 			create dialog_children.make
-			internal_dialog_make (a_parent, 0, Void)
+			internal_dialog_make (a_parent, 0, "")
 			hide
 		end
 
 feature {NONE} -- Implementation
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;	a_name: STRING_GENERAL)
+	internal_dialog_make (a_parent: detachable WEL_WINDOW; an_id: INTEGER;	a_name: detachable STRING_GENERAL)
 				-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 			tmp_result: POINTER
+			l_parent_item: POINTER
 		do
 				-- Initialise the common controls
 			create common_controls_dll.make
@@ -48,10 +49,13 @@ feature {NONE} -- Implementation
 
 				-- Launch the right dialog box modeless.
 			result_id := 0
+			if attached a_parent as l_parent then
+				l_parent_item := a_parent.item
+			end
 			tmp_result := cwin_create_dialog_indirect (
 				main_args.current_instance.item,
 				dlg_template.item,
-				a_parent.item,
+				l_parent_item,
 				cwel_dialog_procedure_address
 				)
 

@@ -44,98 +44,98 @@ feature -- Access
 			-- Matrix height
 
 	frozen tool_bar_unpin_icon: EV_PIXMAP
-			-- Access to 'unpin' pixmap.
+			-- Access to 'unpin' pixmap
 		do
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 1))
 
 		end
 
 	frozen tool_bar_unpin_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'unpin' pixmap pixel buffer.
+			-- Access to 'unpin' pixmap pixel buffer
 		do
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 1))
 		end
 
 	frozen tool_bar_pin_icon: EV_PIXMAP
-			-- Access to 'pin' pixmap.
+			-- Access to 'pin' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (2, 1))
 		end
 
 	frozen tool_bar_pin_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'pin' pixmap pixel buffer.
+			-- Access to 'pin' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 1))
 		end
 
 	frozen tool_bar_maximize_icon: EV_PIXMAP
-			-- Access to 'maximize' pixmap.
+			-- Access to 'maximize' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (3, 1))
 		end
 
 	frozen tool_bar_maximize_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'maximize' pixmap pixel buffer.
+			-- Access to 'maximize' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 1))
 		end
 
 	frozen tool_bar_normalize_icon: EV_PIXMAP
-			-- Access to 'normalize' pixmap.
+			-- Access to 'normalize' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (4, 1))
 		end
 
 	frozen tool_bar_normalize_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'normalize' pixmap pixel buffer.
+			-- Access to 'normalize' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 1))
 		end
 
 	frozen tool_bar_close_icon: EV_PIXMAP
-			-- Access to 'close' pixmap.
+			-- Access to 'close' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (5, 1))
 		end
 
 	frozen tool_bar_close_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'close' pixmap pixel buffer.
+			-- Access to 'close' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 1))
 		end
 
 	frozen tool_bar_minimize_icon: EV_PIXMAP
-			-- Access to 'minimize' pixmap.
+			-- Access to 'minimize' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (6, 1))
 		end
 
 	frozen tool_bar_minimize_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'minimize' pixmap pixel buffer.
+			-- Access to 'minimize' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 1))
 		end
 
 	frozen tool_bar_hidden_dropdown_icon: EV_PIXMAP
-			-- Access to 'hidden dropdown' pixmap.
+			-- Access to 'hidden dropdown' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (7, 1))
 		end
 
 	frozen tool_bar_hidden_dropdown_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'hidden dropdown' pixmap pixel buffer.
+			-- Access to 'hidden dropdown' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 1))
 		end
 
 	frozen tool_bar_hidden_dropdown_small_icon: EV_PIXMAP
-			-- Access to 'hidden dropdown small' pixmap.
+			-- Access to 'hidden dropdown small' pixmap
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (8, 1))
 		end
 
 	frozen tool_bar_hidden_dropdown_small_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'hidden dropdown small' pixmap pixel buffer.
+			-- Access to 'hidden dropdown small' pixmap pixel buffer
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 1))
 		end
@@ -143,7 +143,7 @@ feature -- Access
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE
-			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
+			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'
 		require
 			a_x_positive: a_x > 0
 			a_x_small_enough: a_x <= 8
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			-- raw matrix pixel buffer
 
 	frozen rectangle: EV_RECTANGLE
-			-- Reusable rectangle for `pixmap_from_constant'.
+			-- Reusable rectangle for `pixmap_from_constant'
 		once
 			create Result
 		end

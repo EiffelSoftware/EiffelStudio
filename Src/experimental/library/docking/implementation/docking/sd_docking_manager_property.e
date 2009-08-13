@@ -11,28 +11,24 @@ class
 inherit
 	SD_ACCESS
 
+	SD_DOCKING_MANAGER_HOLDER
+
 create
 	make
 
 feature {NONE}  -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
-		require
-			a_docking_manager_not_void: a_docking_manager /= Void
+	make
 		do
-			internal_docking_manager := a_docking_manager
 			create internal_clicked_list.make
-		ensure
-			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Properties
 
-	last_focus_content: SD_CONTENT
-			-- Last focused zone.
+	last_focus_content: detachable SD_CONTENT
+			-- Last focused zone
 
-	set_last_focus_content (a_content: SD_CONTENT)
+	set_last_focus_content (a_content: detachable SD_CONTENT)
 			-- Set `last_focus_content'.
 		require
 			not_destroyed: not is_destroyed
@@ -46,7 +42,7 @@ feature -- Properties
 		end
 
 	contents_by_click_order: ARRAYED_LIST [SD_CONTENT]
-			-- All contents by user click order.
+			-- All contents by user click order
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -56,7 +52,7 @@ feature -- Properties
 
 			-- We don't copy add/prune actions in ACTIVE_LIST
 			from
-				l_orignal_list := internal_docking_manager.contents
+				l_orignal_list := docking_manager.contents
 				l_orignal_list.start
 				create l_current_list.make (l_orignal_list.count)
 			until
@@ -80,17 +76,17 @@ feature -- Properties
 				end
 				l_order_list.forth
 			end
-			-- Then added SD_CONTENT which user never clicked.
+			-- Then added SD_CONTENT which user never clicked
 			Result.append (l_current_list)
 		end
 
 	main_area_drop_actions: EV_PND_ACTION_SEQUENCE
-			-- Main area (editor area) drop acitons.
+			-- Main area (editor area) drop acitons
 			-- This actions will be called if there is no editor zone and end user drop a stone to the void editor area.
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := internal_docking_manager.zones.place_holder_widget.drop_actions
+			Result := docking_manager.zones.place_holder_widget.drop_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -98,11 +94,11 @@ feature -- Properties
 	is_opening_config: BOOLEAN
 			-- If current is opening layout config?
 
-	docker_mediator: SD_DOCKER_MEDIATOR
-			-- Manager for user dragging events.
-			-- Maybe Void if user is not dragging.
+	docker_mediator: detachable SD_DOCKER_MEDIATOR
+			-- Manager for user dragging events
+			-- Maybe Void if user is not dragging
 
-	set_docker_mediator (a_mediator: SD_DOCKER_MEDIATOR)
+	set_docker_mediator (a_mediator: detachable SD_DOCKER_MEDIATOR)
 			-- Set `docker_mediator' with `a_mediator'.
 		require
 			not_destroyed: not is_destroyed
@@ -113,17 +109,16 @@ feature -- Properties
 		end
 
 	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]]
-			-- SD_TOOL_BAR_RESIABLE_ITEM data.
+			-- SD_TOOL_BAR_RESIABLE_ITEM data
 		require
 			not_destroyed: not is_destroyed
 		local
 			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
-			l_item: SD_TOOL_BAR_RESIZABLE_ITEM
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			from
 				create Result.make (5)
-				l_contents := internal_docking_manager.tool_bar_manager.contents
+				l_contents := docking_manager.tool_bar_manager.contents
 				l_contents.start
 			until
 				l_contents.after
@@ -134,8 +129,7 @@ feature -- Properties
 				until
 					l_items.after
 				loop
-					l_item ?= l_items.item
-					if l_item /= Void then
+					if attached {SD_TOOL_BAR_RESIZABLE_ITEM} l_items.item as l_item then
 						Result.extend ([l_item.name, l_item.widget.width])
 					end
 					l_items.forth
@@ -165,7 +159,7 @@ feature -- Contract support
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := internal_docking_manager.contents.has (a_content)
+			Result := docking_manager.contents.has (a_content)
 		end
 
 	is_destroyed: BOOLEAN
@@ -186,10 +180,7 @@ feature {NONE}  -- Implementation
 		end
 
 	internal_clicked_list: LINKED_SET [SD_CONTENT]
-			-- User clicked SD_CONTENT order.
-
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager which Current belong to.
+			-- User clicked SD_CONTENT order
 
 feature -- Command
 
@@ -197,7 +188,8 @@ feature -- Command
 			-- Destory all underline objects
 		do
 			main_area_drop_actions.wipe_out
-			internal_docking_manager := Void
+
+			clear_docking_manager
 
 			is_destroyed := True
 		ensure

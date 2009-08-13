@@ -63,7 +63,7 @@ feature  -- Command
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- <Precursor>
 		local
-			l_floating_zone: SD_FLOATING_ZONE
+			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_caller: SD_ZONE
 			l_left: INTEGER
 		do
@@ -117,7 +117,7 @@ feature  -- Command
 			-- <Precursor>
 		local
 			l_rect: EV_RECTANGLE
-			l_floating_zone: SD_FLOATING_ZONE
+			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_width, l_height: INTEGER
 			l_left: INTEGER
 		do

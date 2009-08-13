@@ -69,6 +69,7 @@ feature -- Command
 			-- Clear up all floating zones
 		local
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
+			l_item: SD_FLOATING_ZONE
 		do
 			l_floating_zones := internal_docking_manager.query.floating_zones
 			from
@@ -76,20 +77,23 @@ feature -- Command
 			until
 				l_floating_zones.after
 			loop
-				if attached {EV_WIDGET} l_floating_zones.item as lt_widget then
+				l_item := l_floating_zones.item
+				
+				internal_docking_manager.inner_containers.start
+				internal_docking_manager.inner_containers.prune (l_item.inner_container)
+
+				if attached {EV_WIDGET} l_item as lt_widget then
 					lt_widget.destroy
 				else
 					check not_possible: False end
 				end
 
-				internal_docking_manager.inner_containers.start
-				internal_docking_manager.inner_containers.prune (l_floating_zones.item.inner_container)
 				l_floating_zones.forth
 			end
 		end
 
 	clean_up_tool_bar_containers
-			-- Wipe out all tool bar containers.
+			-- Wipe out all tool bar containers
 		local
 			l_cont: SD_TOOL_BAR_CONTAINER
 		do
@@ -107,7 +111,7 @@ feature -- Command
 			l_all_main_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 			l_all_contents: ARRAYED_LIST [SD_CONTENT]
 			l_content: SD_CONTENT
-			l_parent: EV_CONTAINER
+			l_parent: detachable EV_CONTAINER
 			l_floating_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_query: SD_DOCKING_MANAGER_QUERY
@@ -127,7 +131,7 @@ feature -- Command
 				l_all_main_containers.forth
 			end
 
-			-- Remove auto hide panel widgets.
+			-- Remove auto hide panel widgets
 			l_query := internal_docking_manager.query
 			l_query.auto_hide_panel ({SD_ENUMERATION}.top).tab_stubs.wipe_out
 			l_query.auto_hide_panel ({SD_ENUMERATION}.top).set_minimum_height (0)
@@ -143,7 +147,7 @@ feature -- Command
 
 			l_zones := internal_docking_manager.zones.zones
 			if a_tool_only then
-				-- We are only restore tools data now.
+				-- We are only restore tools data now
                 from
                     l_zones.start
                 until
@@ -162,7 +166,7 @@ feature -- Command
 			-- Remove tool bar containers
 			clean_up_tool_bar_containers
 
-			-- Remove floating tool bar containers.
+			-- Remove floating tool bar containers
 			l_floating_tool_bars := internal_docking_manager.tool_bar_manager.floating_tool_bars
 			from
 				l_floating_tool_bars.start
@@ -202,7 +206,7 @@ feature -- Command
 		end
 
 	clean_up_tool_bars
-			-- Clean up all tool bars.
+			-- Clean up all tool bars
 		local
 			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 		do
@@ -219,11 +223,11 @@ feature -- Command
 		end
 
 	clean_up_mini_tool_bar
-			-- Clean up all mini tool bars' parents.
+			-- Clean up all mini tool bars' parents
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_mini_tool_bar: EV_WIDGET
-			l_parent: EV_CONTAINER
+			l_mini_tool_bar: detachable EV_WIDGET
+			l_parent: detachable EV_CONTAINER
 		do
 			l_contents := internal_docking_manager.contents
 			from
@@ -245,11 +249,11 @@ feature -- Command
 
 	clean_up_all_editors
 			-- Clean up all editors
-			-- Remove all parents of all editors.
+			-- Remove all parents of all editors
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_content: SD_CONTENT
-			l_parent: EV_CONTAINER
+			l_parent: detachable EV_CONTAINER
 		do
 			l_contents := internal_docking_manager.contents
 			from
@@ -263,7 +267,7 @@ feature -- Command
 					if l_parent /= Void	then
 						l_parent.prune (l_content.user_widget)
 					end
-					-- Maybe uesr_widget is hidden because minimize.
+					-- Maybe uesr_widget is hidden because minimize
 					l_content.user_widget.show
 				end
 				l_contents.forth
@@ -279,7 +283,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager which Current belong to.
+			-- Docking manager which Current belong to
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

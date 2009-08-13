@@ -8,19 +8,19 @@ note
 deferred class
 	SD_DOCKER_SOURCE
 
-feature -- Key feature.
+feature -- Key feature
 
 	add_hot_zones (a_docker_mediator: SD_DOCKER_MEDIATOR; a_hot_zones: ARRAYED_LIST [SD_HOT_ZONE])
 			-- Add hot zones
 		require
 			a_docker_mediator_not_void: a_docker_mediator /= Void
 			a_hot_zones_not_void: a_hot_zones /= Void
-		local
-			l_zone: SD_ZONE
 		do
-			l_zone ?= Current
-			check l_zone /= Void end
-			a_hot_zones.extend (internal_shared.hot_zone_factory.hot_zone (l_zone))
+			if attached {SD_ZONE} Current as l_zone then
+				a_hot_zones.extend (internal_shared.hot_zone_factory.hot_zone (l_zone))
+			else
+				check not_possible: False end
+			end
 		end
 
 feature {NONE}  -- Implementation

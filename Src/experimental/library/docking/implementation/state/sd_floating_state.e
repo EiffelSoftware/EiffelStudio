@@ -32,16 +32,17 @@ feature {NONE} -- Initlization
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			create internal_shared
-			internal_docking_manager := a_docking_manager
-			create internal_zone.make (Current)
+			set_docking_manager (a_docking_manager)
+			create internal_zone.make (a_docking_manager)
+			internal_zone.set_position (a_screen_x, a_screen_y)
+			docking_manager.command.add_inner_container (internal_zone.inner_container)
+			internal_zone.set_floating_state (Current)
 			if a_visible then
 				internal_zone.show
 			end
-			internal_zone.set_position (a_screen_x, a_screen_y)
-			internal_docking_manager.command.add_inner_container (internal_zone.inner_container)
 			initialized := True
 		ensure
-			set: internal_docking_manager = a_docking_manager
+			set: docking_manager = a_docking_manager
 		end
 
 feature -- Redefine
@@ -54,7 +55,7 @@ feature -- Redefine
 			l_split_area: EV_SPLIT_AREA
 			l_main_container_widget: EV_WIDGET
 		do
-			internal_docking_manager.command.lock_update (a_multi_dock_area, False)
+			docking_manager.command.lock_update (a_multi_dock_area, False)
 			set_all_zones_direction (direction)
 			l_widget := internal_zone.inner_container.item
 			internal_zone.inner_container.wipe_out
@@ -66,10 +67,10 @@ feature -- Redefine
 				l_width_height := (a_multi_dock_area.height * internal_shared.default_docking_height_rate).ceiling
 				l_split_area := create {SD_VERTICAL_SPLIT_AREA}
 			end
-			l_main_container_widget := internal_docking_manager.query.inner_container_main.item
-			internal_docking_manager.query.inner_container_main.save_spliter_position (l_main_container_widget, generating_type + ".dock_at_top_level")
-			internal_docking_manager.query.inner_container_main.wipe_out
-			internal_docking_manager.query.inner_container_main.extend (l_split_area)
+			l_main_container_widget := docking_manager.query.inner_container_main.item
+			docking_manager.query.inner_container_main.save_spliter_position (l_main_container_widget, generating_type + ".dock_at_top_level")
+			docking_manager.query.inner_container_main.wipe_out
+			docking_manager.query.inner_container_main.extend (l_split_area)
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.top then
 				l_split_area.set_first (l_widget)
 				l_split_area.set_second (l_main_container_widget)
@@ -80,9 +81,9 @@ feature -- Redefine
 			if l_split_area.full then
 				l_split_area.set_split_position (top_split_position (direction, l_split_area))
 			end
-			internal_docking_manager.query.inner_container_main.restore_spliter_position (l_main_container_widget, generating_type + ".dock_at_top_level")
-			internal_docking_manager.command.unlock_update
-			internal_docking_manager.command.update_title_bar
+			docking_manager.query.inner_container_main.restore_spliter_position (l_main_container_widget, generating_type + ".dock_at_top_level")
+			docking_manager.command.unlock_update
+			docking_manager.command.update_title_bar
 		end
 
 	stick (a_direction: INTEGER)
@@ -93,7 +94,7 @@ feature -- Redefine
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- <Precursor>
 		local
-			l_zone: SD_ZONE
+			l_zone: detachable SD_ZONE
 			l_current_item: EV_WIDGET
 		do
 			l_current_item := inner_container.item
@@ -103,16 +104,16 @@ feature -- Redefine
 			else
 				change_zone_split_area_whole_content (a_target_zone, a_direction)
 			end
-			internal_docking_manager.command.update_title_bar
+			docking_manager.command.update_title_bar
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
 			-- <Precursor>
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_tab_zone, l_tab_zone_source: SD_TAB_ZONE
+			l_tab_zone, l_tab_zone_source: detachable SD_TAB_ZONE
 		do
-			internal_docking_manager.command.lock_update (a_target_zone, False)
+			docking_manager.command.lock_update (a_target_zone, False)
 
 			l_zones := inner_container.zones
 			from
@@ -142,18 +143,18 @@ feature -- Redefine
 				end
 				l_zones.forth
 			end
-			internal_docking_manager.command.update_title_bar
-			internal_docking_manager.command.unlock_update
+			docking_manager.command.update_title_bar
+			docking_manager.command.unlock_update
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
 			-- <Precursor>
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_tab_zone_source: SD_TAB_ZONE
+			l_tab_zone_source: detachable SD_TAB_ZONE
 		do
 			if attached {EV_WIDGET} zone as lt_widget then
-				internal_docking_manager.command.lock_update (lt_widget, False)
+				docking_manager.command.lock_update (lt_widget, False)
 			else
 				check not_possible: False end
 			end
@@ -177,8 +178,8 @@ feature -- Redefine
 				l_zones.forth
 			end
 
-			internal_docking_manager.command.update_title_bar
-			internal_docking_manager.command.unlock_update
+			docking_manager.command.update_title_bar
+			docking_manager.command.unlock_update
 		end
 
 	change_state (a_state: SD_STATE)
@@ -277,11 +278,11 @@ feature {NONE} -- Implementation
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		local
-			l_container: EV_CONTAINER
-			l_widget: EV_WIDGET
+			l_container: detachable EV_CONTAINER
+			l_widget: detachable EV_WIDGET
 			l_spliter: EV_SPLIT_AREA
-			l_current_item: EV_SPLIT_AREA
-			l_target_split: EV_SPLIT_AREA
+			l_current_item: detachable EV_SPLIT_AREA
+			l_target_split: detachable EV_SPLIT_AREA
 			l_target_split_position: INTEGER
 		do
 			l_current_item ?= inner_container.item

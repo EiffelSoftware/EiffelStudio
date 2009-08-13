@@ -26,14 +26,14 @@ feature -- Docking query
 	is_minimized: BOOLEAN
 			-- If Current alreay a container used for minimized zones?
 		local
-			l_spliter: EV_SPLIT_AREA
+			l_spliter: detachable EV_SPLIT_AREA
 		do
 			l_spliter ?= Current
 			if l_spliter /= Void then
-				-- Current is split area used for non-minimized widgets.
+				-- Current is split area used for non-minimized widgets
 				Result := False
 			else
-				-- Current is SD_HORIZONTAL_BOX or SD_VERTICAL_BOX used for minimized widgets.
+				-- Current is SD_HORIZONTAL_BOX or SD_VERTICAL_BOX used for minimized widgets
 				Result := True
 			end
 		end
@@ -41,27 +41,27 @@ feature -- Docking query
 feature -- Access
 
 	first: detachable EV_WIDGET
-			-- First child.
+			-- First child
 		deferred
 		end
 
 	second: detachable EV_WIDGET
-			-- Second child.
+			-- Second child
 		deferred
 		end
 
 	maximum_split_position: INTEGER
-			-- Maximum split position.
+			-- Maximum split position
 		deferred
 		end
 
 	minimum_split_position: INTEGER
-			-- Minimum split position.
+			-- Minimum split position
 		deferred
 		end
 
 	split_position: INTEGER
-			-- Spliter position.
+			-- Spliter position
 		deferred
 		end
 
@@ -78,8 +78,8 @@ feature -- Access
 	is_horizontal: BOOLEAN
 			-- If current is horizontal split area?
 		local
-			l_h_split: SD_HORIZONTAL_SPLIT_AREA
-			l_h_box: SD_HORIZONTAL_BOX
+			l_h_split: detachable SD_HORIZONTAL_SPLIT_AREA
+			l_h_box: detachable SD_HORIZONTAL_BOX
 		do
 			l_h_box ?= Current
 			l_h_split ?= Current
@@ -91,12 +91,12 @@ feature -- Access
 feature -- Setting
 
 	disable_item_expand (a_item: EV_WIDGET)
-			-- Diable `a_item' size auto expand.
+			-- Diable `a_item' size auto expand
 		deferred
 		end
 
 	enable_item_expand (a_item: EV_WIDGET)
-			-- Enable `a_item' size auto expand.
+			-- Enable `a_item' size auto expand
 		deferred
 		end
 
@@ -106,17 +106,17 @@ feature -- Setting
 		end
 
 	prune (a_widget: EV_WIDGET)
-			-- Prune `a_widget'.
+			-- Prune `a_widget'
 		deferred
 		end
 
 	wipe_out
-			-- Wipe out all childs.
+			-- Wipe out all childs
 		deferred
 		end
 
 	set_splitter_visible (a_visible: BOOLEAN)
-			-- Set splitter bar visible base on chidren visibilities.
+			-- Set splitter bar visible base on chidren visibilities
 		do
 		end
 
@@ -126,8 +126,12 @@ feature -- Split area resizing
 			-- Set proportion recursive in idle actions
 		require
 			not_void: top_resize_split_area.item /= Void
+		local
+			l_item: detachable SD_MIDDLE_CONTAINER
 		do
-			set_proportion_recursive_imp (top_resize_split_area.item)
+			l_item := top_resize_split_area.item
+			check l_item /= Void end -- Implied by precondition `not_void'
+			set_proportion_recursive_imp (l_item)
 			top_resize_split_area.put (Void)
 		ensure
 			cleared: top_resize_split_area.item = Void
@@ -139,8 +143,8 @@ feature -- Split area resizing
 		require
 			not_void: a_container /= Void
 		local
-			l_first, l_second: SD_MIDDLE_CONTAINER
-			l_ev_split: EV_SPLIT_AREA
+			l_first, l_second: detachable SD_MIDDLE_CONTAINER
+			l_ev_split: detachable EV_SPLIT_AREA
 		do
 			l_ev_split ?= a_container
 			if l_ev_split /= Void and then not l_ev_split.is_destroyed and then l_ev_split.full then
@@ -162,7 +166,7 @@ feature -- Split area resizing
 			-- Record `a_split_area' to `top_resize_split_area' if `a_split_area' is outmost split area
 			-- If `top_resize_split_area' is void, one idle action will be generated
 		local
-			l_item: SD_MIDDLE_CONTAINER
+			l_item: detachable SD_MIDDLE_CONTAINER
 			l_env: EV_ENVIRONMENT
 		do
 			l_item := top_resize_split_area.item
@@ -175,14 +179,16 @@ feature -- Split area resizing
 					top_resize_split_area.put (a_split_area)
 
 					create l_env
-					l_env.application.do_once_on_idle (agent set_proportion_recursive)
+					if attached l_env.application as l_app then
+						l_app.do_once_on_idle (agent set_proportion_recursive)
+					end
 				end
 			end
 		ensure
 			set: a_split_area.full implies top_resize_split_area.item /= Void
 		end
 
-	top_resize_split_area: CELL [SD_MIDDLE_CONTAINER]
+	top_resize_split_area: CELL [detachable SD_MIDDLE_CONTAINER]
 			-- Top resize split area recorded
 			-- Set by `remember_top_resize_split_area'
 			-- Cleaned by `set_proportion_recursive'

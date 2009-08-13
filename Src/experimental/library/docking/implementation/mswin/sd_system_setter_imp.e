@@ -22,20 +22,22 @@ feature -- Command
 
 	before_enable_capture
 			-- <Precursor>
-		local
-			l_app_imp: EV_APPLICATION_IMP
 		do
-			l_app_imp ?= ev_application.implementation
-			l_app_imp.set_capture_type ({EV_APPLICATION_IMP}.capture_normal)
+			if attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
+				l_app_imp.set_capture_type ({EV_APPLICATION_IMP}.capture_normal)
+			else
+				check False end -- Implied by basic design of Vision2
+			end
 		end
 
 	after_disable_capture
 			-- <Precursor>
-		local
-			l_app_imp: EV_APPLICATION_IMP
 		do
-			l_app_imp ?= ev_application.implementation
-			l_app_imp.set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
+			if attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
+				l_app_imp.set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
+			else
+				check False end -- Implied by basic design of Vision2
+			end
 		end
 
 	is_remote_desktop: BOOLEAN

@@ -34,6 +34,8 @@ feature -- Acces
 	item_type: SD_TOOL_BAR_MENU_ITEM
 			-- <Precursor>
 		do
+			check False end -- Anchor type only
+			create Result.make -- Satisfy void-safety
 		end
 
 feature {NONE} -- Agents
@@ -48,8 +50,8 @@ feature {NONE} -- Agents
 				internal_items.after
 			loop
 				if internal_items.item.has_position (a_x, a_y) then
-					if internal_items.item.menu /= Void then
-						internal_items.item.menu.show_at (Current, a_x, height)
+					if attached internal_items.item.menu as l_menu then
+						l_menu.show_at (Current, a_x, height)
 					end
 				end
 				internal_items.forth

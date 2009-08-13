@@ -8,41 +8,48 @@ note
 class
 	SD_TOOL_BAR_DRAGGING_AGENTS
 
+inherit
+	SD_DOCKING_MANAGER_HOLDER
+
 create
 	make
 
 feature {NONE}  -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER; a_tool_bar_zone: SD_TOOL_BAR_ZONE)
-			-- Creation method.
-		require
-			not_void: a_docking_manager /= Void
-			not_void: a_tool_bar_zone /= Void
+	make
+			-- Creation method
 		do
 			default_create
 			create internal_shared
-			internal_docking_manager := a_docking_manager
-			zone := a_tool_bar_zone
 
 			init_actions
-		ensure
-			set: internal_docking_manager = a_docking_manager
-			set: zone = a_tool_bar_zone
 		end
 
 	init_actions
-			-- Initialize actions.
+			-- Initialize actions
 		do
 			on_pointer_motion_agent := agent on_pointer_motion
 			on_pointer_release_agent := agent on_pointer_release
-			zone.tool_bar.pointer_motion_actions.extend (on_pointer_motion_agent)
-			zone.tool_bar.pointer_button_release_actions.extend (on_pointer_release_agent)
 		end
 
-feature -- Agents
+feature -- Command
+
+	set_tool_bar_zone (a_tool_bar_zone: SD_TOOL_BAR_ZONE)
+			-- Set `zone' with `a_tool_bar_zone'
+		require
+			not_void: a_tool_bar_zone /= Void
+		do
+			internal_zone := a_tool_bar_zone
+			zone.tool_bar.pointer_motion_actions.extend (on_pointer_motion_agent)
+			zone.tool_bar.pointer_button_release_actions.extend (on_pointer_release_agent)
+		ensure
+			set: zone = a_tool_bar_zone
+		end
+
+feature -- Agent
 
 	on_drag_area_pressed (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle drag area pressed.
+			-- Handle drag area pressed
 		do
 			if not is_destroyed then
 				if a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) then
@@ -51,7 +58,7 @@ feature -- Agents
 					internal_shared.set_tool_bar_docker_mediator (Void)
 
 					internal_shared.setter.before_enable_capture
-					-- Following `enable_capture' will cancel pointer double press actions of SD_TOOL_BAR_TITLE_BAR on GTK.				
+					-- Following `enable_capture' will cancel pointer double press actions of SD_TOOL_BAR_TITLE_BAR on GTK		
 					zone.tool_bar.enable_capture
 				end
 			end
@@ -63,7 +70,7 @@ feature -- Agents
 		end
 
 	on_drag_area_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle drag area release.
+			-- Handle drag area release
 		do
 			if not is_destroyed then
 				if a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) then
@@ -82,12 +89,13 @@ feature -- Agents
 		end
 
 	on_drag_area_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle drag area motion.
+			-- Handle drag area motion
 		require
 			not_destroyed: not is_destroyed
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
 			l_offset_x, l_offset_y: INTEGER
+			l_mediator: like internal_docker_mediator
 		do
 			if not is_destroyed then
 				create l_pixmaps
@@ -105,12 +113,14 @@ feature -- Agents
 						-- Capture is alreadyed enable when `on_drag_area_pressed'
 						zone.tool_bar.set_pointer_style (l_pixmaps.sizeall_cursor)
 
-						create internal_docker_mediator.make (zone, internal_docking_manager)
-						internal_docker_mediator.start_drag (a_screen_x, a_screen_y)
+
+						create l_mediator.make (zone, docking_manager)
+						internal_docker_mediator := l_mediator
+						l_mediator.start_drag (a_screen_x, a_screen_y)
 
 						if zone.is_floating then
-							l_offset_x := a_screen_x - zone.floating_tool_bar.screen_x
-							l_offset_y := a_screen_y - zone.floating_tool_bar.screen_y
+							l_offset_x := a_screen_x - zone.attached_floating_tool_bar.screen_x
+							l_offset_y := a_screen_y - zone.attached_floating_tool_bar.screen_y
 						else
 							l_offset_x := a_screen_x - zone.tool_bar.screen_x
 							l_offset_y := a_screen_y - zone.tool_bar.screen_y
@@ -121,8 +131,8 @@ feature -- Agents
 								l_offset_y := 0
 							end
 						end
-						internal_docker_mediator.set_offset (zone.is_floating, l_offset_x, l_offset_y)
-						internal_docker_mediator.cancel_actions.extend (agent on_cancel)
+						l_mediator.set_offset (zone.is_floating, l_offset_x, l_offset_y)
+						l_mediator.cancel_actions.extend (agent on_cancel)
 					end
 				end
 			end
@@ -134,7 +144,7 @@ feature -- Agents
 		end
 
 	on_drag_area_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer double press actions.
+			-- Handle pointer double press actions
 		do
 			if not is_destroyed then
 				if not zone.is_floating then
@@ -156,7 +166,7 @@ feature -- Query
 		do
 			l_in_docking_gripper_area := zone.drag_area_rectangle.has_x_y (a_screen_x - zone.tool_bar.screen_x, a_screen_y - zone.tool_bar.screen_y)
 			if zone.is_floating then
-				l_in_floating_tool_bar := zone.floating_tool_bar.internal_title_bar.drag_rectangle.has_x_y (a_screen_x, a_screen_y)
+				l_in_floating_tool_bar := zone.attached_floating_tool_bar.internal_title_bar.drag_rectangle.has_x_y (a_screen_x, a_screen_y)
 			end
 			debug ("docking")
 				print ("%N SD_TOOL_BAR_DRAGGING_AGENTS is_in_drag_area: l_in_docking_gripper_area " + l_in_docking_gripper_area.out + "; l_in_floating_tool_bar " + l_in_floating_tool_bar.out)
@@ -174,7 +184,7 @@ feature -- Command
 		do
 			zone.tool_bar.pointer_motion_actions.prune_all (on_pointer_motion_agent)
 			zone.tool_bar.pointer_button_release_actions.prune_all (on_pointer_release_agent)
-			internal_docking_manager := Void
+			clear_docking_manager
 			is_destroyed := True
 		ensure
 			destroyed: is_destroyed
@@ -183,7 +193,7 @@ feature -- Command
 feature {NONE} -- Implementation functions
 
 	on_cancel
-			-- Handle user cancel dragging events.
+			-- Handle user cancel dragging events
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
 		do
@@ -203,11 +213,14 @@ feature {NONE} -- Implementation functions
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer motion.
+			-- Handle pointer motion
+		local
+			l_mediator: like internal_docker_mediator
 		do
 			if not is_destroyed then
-				if internal_docker_mediator /= Void then
-					internal_docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
+				l_mediator := internal_docker_mediator
+				if l_mediator /= Void then
+					l_mediator.on_pointer_motion (a_screen_x, a_screen_y)
 				end
 			end
 		ensure
@@ -215,11 +228,14 @@ feature {NONE} -- Implementation functions
 		end
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer release.
+			-- Handle pointer release
+		local
+			l_mediator: like internal_docker_mediator
 		do
 			if not is_destroyed then
-				if internal_docker_mediator /= Void and a_button = {EV_POINTER_CONSTANTS}.left then
-					internal_docker_mediator.apply_change (a_screen_x, a_screen_y)
+				l_mediator := internal_docker_mediator
+				if l_mediator /= Void and a_button = {EV_POINTER_CONSTANTS}.left then
+					l_mediator.apply_change (a_screen_x, a_screen_y)
 					on_cancel
 				end
 			end
@@ -238,27 +254,37 @@ feature {NONE} -- Implementation attributes
 		-- If pointer style setted?
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
-	zone: SD_TOOL_BAR_ZONE
-			-- Tool bar zone current belong to.		
+	zone: attached like internal_zone
+			-- Attached `internal_zone'
+		require
+			set: internal_zone /= Void
+		local
+			l_result: like internal_zone
+		do
+			l_result := internal_zone
+			check l_result /= Void end -- Implied by precondition `set'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
+		end
 
-	internal_docker_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR
-			-- Docker mediator.
+	internal_zone: detachable SD_TOOL_BAR_ZONE
+			-- Tool bar zone current belong to	
+
+	internal_docker_mediator: detachable SD_TOOL_BAR_DOCKER_MEDIATOR
+			-- Docker mediator
 
 	internal_pointer_pressed: BOOLEAN
 			-- If pointer pressed?
 
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager Current belong to.
-
 	on_pointer_motion_agent : PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 	on_pointer_release_agent: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]];
-			-- Agents registered into tool bar actions.
+			-- Agents registered into tool bar actions
 
 invariant
 	not_void: internal_shared /= Void
-	not_void: zone /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

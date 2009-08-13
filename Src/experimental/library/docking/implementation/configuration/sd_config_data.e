@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initlization
 	make
-			-- Creation method.
+			-- Creation method
 		do
 			create internal_inner_container_data.make (1)
 			create internal_auto_hide_zones_data.make
@@ -26,7 +26,7 @@ feature {NONE} -- Initlization
 feature -- Properties
 
 	name: STRING_32
-			-- Name of this layout.
+			-- Name of this layout
 
 	set_name (a_name: like name)
 			-- Set `name'
@@ -78,7 +78,7 @@ feature -- Properties
 		end
 
 	set_inner_container_data (a_data: like internal_inner_container_data)
-			-- Set `internal_inner_container_data' with `a_data'.
+			-- Set `internal_inner_container_data' with `a_data'
 		require
 			a_data_not_void: a_data /= Void
 		do
@@ -94,13 +94,13 @@ feature -- Properties
 		end
 
 	tool_bar_data: ARRAYED_LIST [SD_TOOL_BAR_DATA]
-			-- Four direction tool bar data. 1 is top, 2 is bottom, 3 is left, 4 is right.
+			-- Four direction tool bar data. 1 is top, 2 is bottom, 3 is left, 4 is right
 
 	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]]
-			-- Tool bar resizable items data.
+			-- Tool bar resizable items data
 
 	set_resizable_items_data (a_data: like resizable_items_data)
-			-- Set `tool_bar_data' with `a_data'.
+			-- Set `tool_bar_data' with `a_data'
 		require
 			not_void: a_data /= Void
 		do
@@ -136,15 +136,15 @@ feature -- Data for only one editor zone
 feature -- Data for maximized.
 
 	maximized_tools: ARRAYED_LIST [STRING_GENERAL]
-			-- Maximized tool, count is 0 if no maximized tool.
+			-- Maximized tool, count is 0 if no maximized tool
 
 feature {NONE}  -- Implementation
 
 	internal_inner_container_data: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
-			-- SD_MUTLI_DOCK_AREA layout data.
+			-- SD_MUTLI_DOCK_AREA layout data
 
 	internal_auto_hide_zones_data: SD_AUTO_HIDE_PANEL_DATA;
-			-- Auto hide zones data.
+			-- Auto hide zones data
 
 invariant
 	not_void: maximized_tools /= Void

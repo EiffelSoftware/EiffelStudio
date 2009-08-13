@@ -31,8 +31,7 @@ inherit
 		rename
 			extend_widget as extend_cell,
 			has_widget as has_cell,
-			prune_widget as prune,
-			internal_notebook as notebook
+			prune_widget as prune
 		end
 
 create
@@ -46,12 +45,11 @@ feature {NONE} -- Initlization
 			not_void: a_content /= Void
 			only_for_place_holder_zone: a_content.unique_title.is_equal ((create {SD_SHARED}).editor_place_holder_content_name)
 		do
+			create internal_shared
+			internal_content := a_content
+			create {EV_CELL_IMP} implementation_upper_zone.make -- Make void safe compiler happy, not used
 			default_create
 
-			create internal_shared
-
-			internal_content := a_content
-			internal_docking_manager := internal_content.docking_manager
 			extend (a_content)
 		ensure
 			set: internal_content = a_content
@@ -82,8 +80,8 @@ feature -- Command
 			Precursor {SD_DOCKING_ZONE} (a_content)
 			l_widget := a_content.user_widget
 
-			if l_widget.parent /= Void then
-				l_widget.parent.prune (l_widget)
+			if attached l_widget.parent as l_parent then
+				l_parent.prune (l_widget)
 			end
 			extend_cell (l_widget)
 		end
@@ -100,8 +98,8 @@ feature -- Command
 
 			create l_docking_state.make_for_place_holder_zone (content, Current)
 
-			if not internal_docking_manager.contents.has (content) then
-				internal_docking_manager.contents.extend (content)
+			if not docking_manager.contents.has (content) then
+				docking_manager.contents.extend (content)
 			end
 		end
 
@@ -117,12 +115,12 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 			l_ver_box: EV_VERTICAL_BOX
 			l_hor_box: EV_HORIZONTAL_BOX
 		do
-			internal_docking_manager := a_manager
+			set_docking_manager (a_manager)
 
 			create l_tool_bar.make
 			create l_button.make
 			l_button.set_text (internal_shared.interface_names.editor_area)
-			l_button.pointer_button_press_actions.force_extend (agent (internal_docking_manager.command).restore_editor_area_for_minimized)
+			l_button.pointer_button_press_actions.force_extend (agent (docking_manager.command).restore_editor_area_for_minimized)
 			l_button.set_pixel_buffer (internal_shared.icons.editor_area)
 			l_tool_bar.extend (l_button)
 			create l_border.make
@@ -158,7 +156,7 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 	clear_for_minimized_area
 			-- Cleanup
 		do
-			internal_docking_manager := Void
+			clear_docking_manager
 		ensure
 			cleared: internal_docking_manager = Void
 		end
@@ -168,7 +166,7 @@ feature -- Query
 	has (a_content: SD_CONTENT): BOOLEAN
 			-- If `a_content' is place holder content?
 		do
-			 Result := a_content = internal_docking_manager.zones.place_holder_content
+			 Result := a_content = docking_manager.zones.place_holder_content
 		end
 
 	title: STRING_32
@@ -200,17 +198,10 @@ feature -- Agents
 
 feature {NONE} -- Implementation
 
-	notebook: SD_NOTEBOOK_UPPER
-			-- <Precursor>
-		do
-			if internal_notebook = Void then
-				create internal_notebook.make (internal_docking_manager)
-			end
-			Result := internal_notebook
-		end
-
-	internal_notebook: SD_NOTEBOOK_UPPER
+	internal_notebook: detachable SD_NOTEBOOK_UPPER
 			-- Fake notebook for {SD_UPPER_ZONE}
+		do
+		end
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

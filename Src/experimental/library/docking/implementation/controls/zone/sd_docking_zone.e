@@ -49,19 +49,19 @@ feature -- Command
 	close
 			-- <Precursor>
 		do
-			internal_docking_manager.command.lock_update (Current, False)
+			docking_manager.command.lock_update (Current, False)
 			Precursor {SD_SINGLE_CONTENT_ZONE}
-			internal_docking_manager.zones.prune_zone (Current)
-			internal_docking_manager.command.unlock_update
+			docking_manager.zones.prune_zone (Current)
+			docking_manager.command.unlock_update
 		end
 
 	update_user_widget
-			-- If `content''s user_widget changed, we update containers.
+			-- If `content''s user_widget changed, we update containers
 		do
 		end
 
 	update_mini_toolbar
-			-- If `content''s mini toolbar changed, we update containers.
+			-- If `content''s mini toolbar changed, we update containers
 		do
 		end
 
@@ -81,71 +81,75 @@ feature -- Query
 
 	is_parent_split: BOOLEAN
 			-- Is parent a split area?
-		local
-			l_split_area: EV_SPLIT_AREA
 		do
-			l_split_area ?= parent
-			Result := l_split_area /= Void
+			Result := attached {EV_SPLIT_AREA} parent
 		end
 
 	parent_split_position: INTEGER
-			-- If parent is split area, get split position.
+			-- If parent is split area, get split position
+		require
+			ready: is_parent_split
 		local
-			l_split_area: EV_SPLIT_AREA
+			l_split_area: detachable EV_SPLIT_AREA
 		do
 			l_split_area ?= parent
+			check l_split_area /= Void end -- Implied by precondition `ready'
 			Result := l_split_area.split_position
 		end
 
-feature {NONE} -- For redocker.
+feature {NONE} -- For redocker
 
 	on_drag_started (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Create a SD_DOCKER_MEDIATOR, start hanlde pointer motion.
+			-- Create a SD_DOCKER_MEDIATOR, start hanlde pointer motion
+		local
+			l_docker_mediator: like docker_mediator
 		do
 			debug ("docking")
 				io.put_string ("%N ******** draging window in SD_DOCKING_ZONE " + a_screen_x.out + " " + a_screen_y.out + "and window width height is: " + width.out + " " + height.out)
 			end
 			-- We should check if `docker_mediator' is void since `on_drag_started' will be called multi times when starting dragging on GTK
-			if docker_mediator = Void then
-				docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
-				docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
-				docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
+			l_docker_mediator := docker_mediator
+			if l_docker_mediator = Void then
+				l_docker_mediator := docking_manager.query.docker_mediator (Current, docking_manager)
+				docker_mediator := l_docker_mediator
+				l_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+				l_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 				internal_shared.setter.before_enable_capture
 				enable_capture
 			end
 		end
 
 	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Stop SD_DOCKER_MEDIATOR.
+			-- Stop SD_DOCKER_MEDIATOR
 		do
-			if docker_mediator /= Void then
+			if attached docker_mediator as l_docker_mediator then
 				disable_capture
 				internal_shared.setter.after_disable_capture
-				docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
+				l_docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
 				docker_mediator := Void
 			end
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Forward pointer motion data to SD_DOCKER_MEDIATOR.
+			-- Forward pointer motion data to SD_DOCKER_MEDIATOR
 		do
-			if docker_mediator /= Void then
-				docker_mediator.on_pointer_motion (a_screen_x,  a_screen_y)
+			if attached docker_mediator as l_docker_mediator then
+				l_docker_mediator.on_pointer_motion (a_screen_x,  a_screen_y)
 			end
 		end
 
 	on_cancel_dragging
-			-- Handle cancel dragging from SD_DOCKER_MEDIATOR.
+			-- Handle cancel dragging from SD_DOCKER_MEDIATOR
 		do
 			disable_capture
 			internal_shared.setter.after_disable_capture
 			docker_mediator := Void
 		end
 
-	docker_mediator: SD_DOCKER_MEDIATOR;
-			-- Mediator perform dock.	
+	docker_mediator: detachable SD_DOCKER_MEDIATOR
+			-- Mediator perform dock
 
-note
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

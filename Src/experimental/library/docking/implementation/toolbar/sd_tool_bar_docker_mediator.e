@@ -27,24 +27,30 @@ feature {NONE} -- Initialization
 			a_caller_not_void: a_caller /= Void
 		do
 			create internal_shared
-			internal_shared.set_tool_bar_docker_mediator (Current)
+			create cancel_actions
+
 			docking_manager := a_docking_manager
 
 			caller := a_caller
 
-			create internal_top_hot_zone.make (docking_manager.tool_bar_container.top, False, Current)
-			create internal_bottom_hot_zone.make (docking_manager.tool_bar_container.bottom, False, Current)
-			create internal_left_hot_zone.make (docking_manager.tool_bar_container.left, True, Current)
-			create internal_right_hot_zone.make (docking_manager.tool_bar_container.right, True, Current)
+			create internal_top_hot_zone.make (docking_manager.tool_bar_container.top, False)
+			create internal_bottom_hot_zone.make (docking_manager.tool_bar_container.bottom, False)
+			create internal_left_hot_zone.make (docking_manager.tool_bar_container.left, True)
+			create internal_right_hot_zone.make (docking_manager.tool_bar_container.right, True)
+
+			init_key_actions
+
+			internal_shared.set_tool_bar_docker_mediator (Current)
+
+			internal_top_hot_zone.set_tool_bar_mediator (Current)
+			internal_bottom_hot_zone.set_tool_bar_mediator (Current)
+			internal_left_hot_zone.set_tool_bar_mediator (Current)
+			internal_right_hot_zone.set_tool_bar_mediator (Current)
 
 			internal_top_hot_zone.start_drag
 			internal_bottom_hot_zone.start_drag
 			internal_left_hot_zone.start_drag
 			internal_right_hot_zone.start_drag
-
-			init_key_actions
-
-			create cancel_actions
 		ensure
 			set: docking_manager = a_docking_manager
 			a_caller_set: a_caller = caller
@@ -63,20 +69,28 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	start_drag (a_screen_x, a_screen_y: INTEGER)
-			-- Handle start drag.
+			-- Handle start drag
+		local
+			l_agent: like focus_out_agent
 		do
 			if not caller.is_floating then
-				if not caller.row.is_enough_max_space then
-					is_in_orignal_row := True
-					orignal_row := caller.row
+				if attached caller.row as l_row then
+					if not l_row.is_enough_max_space then
+						is_in_orignal_row := True
+						orignal_row := caller.row
+					end
+				else
+					check False end -- Implied by when start dragging, tool bar must be displayed on screen
 				end
+
 			end
 			debug ("docking")
 				print ("%N%N%N---------------------------- SD_TOOL_BAR_DOCKER_MEDIATOR start drag ---------------------------- is_in_orignal_row: " + is_in_orignal_row.out)
 			end
 
-			focus_out_agent := agent on_focus_out
-			ev_application.focus_out_actions.extend (focus_out_agent)
+			l_agent := agent on_focus_out
+			focus_out_agent := l_agent
+			ev_application.focus_out_actions.extend (l_agent)
 		end
 
 	is_resizing_mode: BOOLEAN
@@ -110,10 +124,14 @@ feature -- Command
 						end
 					end
 				else
-					if not caller.row.is_vertical then
-						caller.row.on_pointer_motion (a_screen_x)
+					if attached caller.row as l_row then
+						if not l_row.is_vertical then
+							l_row.on_pointer_motion (a_screen_x)
+						else
+							l_row.on_pointer_motion (a_screen_y)
+						end
 					else
-						caller.row.on_pointer_motion (a_screen_y)
+						check False end -- Implied by end user pointer is moving on tool bar, so tool bar row not void
 					end
 				end
 				switch_to_reszing_mode (a_screen_x, a_screen_y)
@@ -158,34 +176,39 @@ feature -- Command
 
 	clean
 			-- Clean global key press/release actions.
+		local
+			l_agent: like focus_out_agent
 		do
 			ev_application.key_press_actions.prune_all (internal_key_press_actions)
 			ev_application.key_release_actions.prune_all (internal_key_release_actions)
 
-			ev_application.focus_out_actions.prune_all (focus_out_agent)
-			caller := Void
+			l_agent := focus_out_agent
+			if l_agent /= Void then
+				ev_application.focus_out_actions.prune_all (l_agent)
+			end
+
 			cancel_actions.call ([])
 		end
 
 feature -- Query
 
 	caller: SD_TOOL_BAR_ZONE
-			-- Caller.
+			-- Caller
 
 	docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager manage Current.
+			-- Docking manager manage Current
 
 	screen_x, screen_y: INTEGER
-			-- Current pointer position.
+			-- Current pointer position
 
 	start_floating: BOOLEAN
 			-- When start dragging, is it floating state?
 
 	offset_x, offset_y: INTEGER
-			-- Offset when start dragging.
+			-- Offset when start dragging
 
 	cancel_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Handle user canel dragging event.
+			-- Handle user canel dragging event
 
 feature {NONE} -- Implementation functions
 
@@ -211,11 +234,11 @@ feature {NONE} -- Implementation functions
 				l_changed := internal_bottom_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
 				Result := True
 			end
-			if Result and then caller.row /= Void then
-				if not caller.row.is_vertical then
-					caller.row.on_pointer_motion (a_screen_x)
+			if Result and then attached caller.row as l_row then
+				if not l_row.is_vertical then
+					l_row.on_pointer_motion (a_screen_x)
 				else
-					caller.row.on_pointer_motion (a_screen_y)
+					l_row.on_pointer_motion (a_screen_y)
 				end
 			end
 		ensure
@@ -252,17 +275,18 @@ feature {NONE} -- Implementation functions
 			-- Notify a SD_TOOL_BAR_ROW to apply change.
 		require
 			a_box_not_void: a_box /= Void
-		local
-			l_tool_bar_row: SD_TOOL_BAR_ROW
 		do
 			from
 				a_box.start
 			until
 				a_box.after
 			loop
-				l_tool_bar_row ?= a_box.item
-				check l_tool_bar_row /= Void end
-				l_tool_bar_row.apply_change
+				if attached {SD_TOOL_BAR_ROW} a_box.item as l_tool_bar_row then
+					l_tool_bar_row.apply_change
+				else
+					check False end -- Implied by basic design of {SD_TOOL_BAR_ROW}
+				end
+
 				a_box.forth
 			end
 		end
@@ -274,7 +298,7 @@ feature {NONE} -- Implementation functions
 		do
 			if is_in_orignal_row then
 				if attached {EV_WIDGET} caller.tool_bar as lt_widget then
-					if not orignal_row.has (lt_widget) then
+					if attached orignal_row as l_row and then not l_row.has (lt_widget) then
 						is_in_orignal_row := False
 					end
 				else
@@ -333,34 +357,42 @@ feature {NONE} -- Implementation functions
 					-- enable capture not fully working at this point (only capture events when pointer in main window), see bug#12542 problem 1.
 					-- caller.tool_bar.enable_capture
 					create l_env
-					l_env.application.do_once_on_idle (agent
-															local
-																l_screen: EV_SCREEN
-																l_position: EV_COORDINATE
-															do
-																if caller /= Void and then
-																	caller.tool_bar /= Void and then
-																	not caller.tool_bar.is_destroyed then
-																	caller.tool_bar.enable_capture
+					if attached l_env.application as l_application then
+						l_application.do_once_on_idle (agent
+																local
+																	l_screen: EV_SCREEN
+																	l_position: EV_COORDINATE
+																do
+																	if caller /= Void and then
+																		caller.tool_bar /= Void and then
+																		not caller.tool_bar.is_destroyed then
+																		caller.tool_bar.enable_capture
 
-																	-- Set floating tool bar to current pointer position.
-																	create l_screen
-																	l_position := l_screen.pointer_position
-																	on_pointer_motion (l_position.x, l_position.y)
+																		-- Set floating tool bar to current pointer position.
+																		create l_screen
+																		l_position := l_screen.pointer_position
+																		on_pointer_motion (l_position.x, l_position.y)
+																	end
 																end
-															end
-														)
+															)
+					end
+
+
 				end
 
 				docking_manager.command.unlock_update
 			else
-				if attached {EV_WIDGET} caller.tool_bar as lt_widget then
-					caller.row.set_item_position_relative (lt_widget, 0)
-				else
-					check not_possible: False end
-				end
+				if attached caller.row as l_row then
+					if attached {EV_WIDGET} caller.tool_bar as lt_widget then
+						l_row.set_item_position_relative (lt_widget, 0)
+					else
+						check not_possible: False end
+					end
 
-				caller.row.reposition
+					l_row.reposition
+				else
+					check False end -- Implied by not `l_should_float', so tool bar is displayed on screen
+				end
 			end
 		end
 
@@ -413,7 +445,7 @@ feature {NONE} -- Implementation functions
 		end
 
 	on_focus_out (a_widget: EV_WIDGET)
-			-- Handle focus out actions.
+			-- Handle focus out actions
 		local
 			l_platform: PLATFORM
 		do
@@ -428,24 +460,24 @@ feature {NONE} -- Implementation functions
 
 feature {NONE} -- Implementation attributes.
 
-	focus_out_agent: PROCEDURE [SD_TOOL_BAR_DOCKER_MEDIATOR, TUPLE [EV_WIDGET]]
-			-- Focus out agent.
+	focus_out_agent: detachable PROCEDURE [SD_TOOL_BAR_DOCKER_MEDIATOR, TUPLE [EV_WIDGET]]
+			-- Focus out agent
 
 	ignore_focus_out_actions: BOOLEAN
 			-- Times for ignore `on_focus_out' action?
 			-- We use it when dragging tool bar is changing from docking to floating, or changing from floating to docking.
 
-	orignal_row: SD_TOOL_BAR_ROW
-			-- Orignal row when start drag if exist.
+	orignal_row: detachable SD_TOOL_BAR_ROW
+			-- Orignal row when start drag if exist
 
 	is_in_orignal_row: BOOLEAN
-			-- Orignal parent row which `caller' in.
+			-- Orignal parent row which `caller' in
 
 	motion_count_max: INTEGER = 40
-			-- Max number start to change to resizing mode.
+			-- Max number start to change to resizing mode
 
 	easy_drag_offset: INTEGER = 50
-			-- Left user can easily drag to the begin of a tool bar row.
+			-- Left user can easily drag to the begin of a tool bar row
 
 	motion_count: INTEGER
 			-- How many times `on_pointer_motion' is called?
@@ -457,16 +489,16 @@ feature {NONE} -- Implementation attributes.
 		end
 
 	internal_key_press_actions, internal_key_release_actions: PROCEDURE [SD_TOOL_BAR_DOCKER_MEDIATOR, TUPLE [EV_WIDGET, EV_KEY]]
-			-- Golbal key press/release action, so we can prune it after dragging.
+			-- Golbal key press/release action, so we can prune it after dragging
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 	internal_top_hot_zone, internal_bottom_hot_zone, internal_left_hot_zone, internal_right_hot_zone: SD_TOOL_BAR_HOT_ZONE
-			-- Four area hot zone.
+			-- Four area hot zone
 
 	internal_last_screen_x, internal_last_screen_y: INTEGER
-			-- Last pointer position.
+			-- Last pointer position
 
 invariant
 

@@ -1,6 +1,6 @@
 note
 	description: "[
-					Objects that manage tool bar sizes for a SD_TOOL_BAR_ROW.
+					Objects that manage tool bar sizes for a SD_TOOL_BAR_ROW
 																			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,15 +16,20 @@ create
 feature {NONE}  -- Initlization
 
 	make (a_tool_bar_row: SD_TOOL_BAR_ROW)
-			-- Creation method.
+			-- Creation method
 		require
 			not_void: a_tool_bar_row /= Void
+--			ready: (create {SD_SHARED}).tool_bar_docker_mediator_cell.item /= Void
 		local
 			l_shared: SD_SHARED
+			l_mediator: detachable like internal_mediator
 		do
 			internal_tool_bar_row := a_tool_bar_row
 			create l_shared
-			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
+
+			l_mediator := l_shared.tool_bar_docker_mediator_cell.item
+--			check l_mediator /= Void end -- Implied by precondition `ready'
+			internal_mediator := l_mediator
 		ensure
 			set: internal_tool_bar_row = a_tool_bar_row
 		end
@@ -32,44 +37,55 @@ feature {NONE}  -- Initlization
 feature -- Command
 
 	start_drag_prepare
-			-- Do prepare works when user start drag.
+			-- Do prepare works when user start drag
+		require
+			ready: (create {SD_SHARED}).tool_bar_docker_mediator_cell.item /= Void
 		local
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_shared: SD_SHARED
+			l_mediator: detachable like internal_mediator
+			l_sizes: like all_sizes
 		do
 			from
 				l_tool_bars := internal_tool_bar_row.zones
 				l_tool_bars.start
-				create all_sizes.make (1)
+				create l_sizes.make (1)
+				all_sizes := l_sizes
 			until
 				l_tool_bars.after
 			loop
-				all_sizes.extend (l_tool_bars.item_for_iteration.size)
+				l_sizes.extend (l_tool_bars.item_for_iteration.size)
 				l_tool_bars.forth
 			end
 			create l_shared
-			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
+			l_mediator := l_shared.tool_bar_docker_mediator_cell.item
+			check l_mediator /= Void end -- Implied by precondition `ready'
+			internal_mediator := l_mediator
 		end
 
 	end_drag_clean
-			-- Do clean works when user end drag.
+			-- Do clean works when user end drag
 		do
 			all_sizes := Void
 		end
 
 	resize_on_extend (a_new_tool_bar: SD_TOOL_BAR_ZONE)
-			-- When extend `a_new_tool_bar;, if not `is_enough_max_space', then resize tool bars.
+			-- When extend `a_new_tool_bar;, if not `is_enough_max_space', then resize tool bars
 		require
 			has: attached {EV_WIDGET} a_new_tool_bar.tool_bar as lt_widget implies has (lt_widget)
 		local
 			l_space_to_reduce: INTEGER
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
 			if not is_enough_max_space (True) then
-				-- Not enough space, resize from right to left.
+				-- Not enough space, resize from right to left
 				l_space_to_reduce := space_to_resize (True, 0)
 				l_tool_bars := internal_tool_bar_row.zones
-				l_tool_bars.delete (a_new_tool_bar)
+				l_tool_bars.start
+				l_tool_bars.search (a_new_tool_bar)
+				if not l_tool_bars.exhausted then
+					l_tool_bars.remove
+				end
 				from
 					l_tool_bars.finish
 				until
@@ -93,9 +109,9 @@ feature -- Command
 		end
 
 	resize_on_prune
-			-- Just after prune a tool bar from `internal_tool_bar_row', we need to resize all tool bars if needed.
+			-- Just after prune a tool bar from `internal_tool_bar_row', we need to resize all tool bars if needed
 		local
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_size_to_expand: INTEGER
 		do
 			l_tool_bars := internal_tool_bar_row.zones
@@ -117,12 +133,12 @@ feature -- Command
 		end
 
 	on_resize (a_size: INTEGER)
-			-- Handle docking manager main window resize events.
+			-- Handle docking manager main window resize events
 			-- a_size is width when row is horizontal
 			-- a_size is height when row is vertical
 		local
 			l_space_to_reduce, l_space_to_expand: INTEGER
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
 			if not is_enough_space (False, a_size) then
 				from
@@ -161,7 +177,7 @@ feature -- Command
 		end
 
 	try_solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER): BOOLEAN
-			-- After SD_POSITIONER calculation, there is not enough space at left side. Try to minmize some tool bars.
+			-- After SD_POSITIONER calculation, there is not enough space at left side. Try to minmize some tool bars
 		do
 			if not is_enough_max_space (True) then
 				Result := can_solve_no_space_left (a_possible_positions, a_hot_index)
@@ -176,7 +192,7 @@ feature -- Command
 		end
 
 	try_solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER; a_hot_position: INTEGER): BOOLEAN
-			-- After SD_POSITIONER calculation, there is not enough space at right side. Try to minmize some tool bars.
+			-- After SD_POSITIONER calculation, there is not enough space at right side. Try to minmize some tool bars
 		require
 			valid: a_hot_index = a_possible_positions.count implies a_hot_position > 0
 		do
@@ -191,7 +207,7 @@ feature -- Command
 		end
 
 	try_to_solve_no_space_hot_tool_bar_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_size_to_reduce, a_hot_position: INTEGER): BOOLEAN
-			-- After SD_POSITIONER calculation, there is not enough space for dragged tool bar at right side. Try to minmize dragged tool bar.
+			-- After SD_POSITIONER calculation, there is not enough space for dragged tool bar at right side. Try to minmize dragged tool bar
 		require
 			valid: a_size_to_reduce > 0
 		do
@@ -206,15 +222,19 @@ feature -- Query
 			-- If there is enough space without reduce size of all tool bar zones in Current?
 		local
 			l_all_size: INTEGER
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
-			l_caller: SD_TOOL_BAR_ZONE
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_caller: detachable SD_TOOL_BAR_ZONE
 			l_row_max_size: INTEGER
 		do
 			l_tool_bars := internal_tool_bar_row.zones
 
-			if a_inlcude_caller_size and then internal_mediator /= Void then
-				l_caller := internal_mediator.caller
-				l_tool_bars.delete (l_caller)
+			if a_inlcude_caller_size and then attached internal_mediator as l_mediator then
+				l_caller := l_mediator.caller
+				l_tool_bars.start
+				l_tool_bars.search (l_caller)
+				if not l_tool_bars.exhausted then
+					l_tool_bars.remove
+				end
 			end
 			from
 				l_tool_bars.start
@@ -226,6 +246,7 @@ feature -- Query
 			end
 			l_all_size := internal_tool_bar_row.size
 			if a_inlcude_caller_size then
+				check l_caller /= Void end -- Implied by previsou if clause
 				Result := l_all_size >= l_row_max_size + l_caller.maximize_size
 			else
 				Result := l_all_size >= l_row_max_size
@@ -239,11 +260,11 @@ feature -- Query
 		end
 
 	space_to_resize (a_dragging_state: BOOLEAN; a_new_size: INTEGER): INTEGER
-			-- Space that not enough, so have to reduce tool bars size.
-			-- If space is enough, Result will negative, means size we can expand.
+			-- Space that not enough, so have to reduce tool bars size
+			-- If space is enough, Result will negative, means size we can expand
 		local
 			l_all_size: INTEGER
-			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_row_max_size: INTEGER
 		do
 			l_tool_bars := internal_tool_bar_row.zones
@@ -274,7 +295,9 @@ feature -- Query
 	is_dragging: BOOLEAN
 			-- If Current dragging?
 		do
-			Result := internal_mediator.caller /= Void
+			if attached internal_mediator as l_mediator then
+				Result := attached l_mediator.caller
+			end
 		end
 
 	size_of (a_index: INTEGER): INTEGER
@@ -282,16 +305,16 @@ feature -- Query
 		require
 			valid: valid_index (a_index)
 		local
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
 			l_zones := internal_tool_bar_row.zones
-			Result := l_zones.item (a_index).size
+			Result := l_zones.at (a_index).size
 		end
 
 	valid_index (a_index: INTEGER): BOOLEAN
 			-- If `a_index' valid?
 		local
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
 			l_zones := internal_tool_bar_row.zones
 			Result := a_index > 0 and a_index <= l_zones.count
@@ -303,148 +326,175 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 			-- If possible slove no space left?
 		require
 			not_enough_space: not is_enough_max_space (True)
+			not_void: internal_mediator /= Void
 		local
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_total_reduced_size_left: INTEGER
 			l_size_to_reduce_left: INTEGER
 			l_size_to_expand_right: INTEGER
 			l_total_expanded_size_right: INTEGER
 			l_old_size: INTEGER
 		do
-			l_zones := internal_tool_bar_row.zones
-			l_zones.delete (internal_mediator.caller)
-			check same_size: a_possible_positions.count = l_zones.count end
-			l_size_to_reduce_left := 0 - a_possible_positions.first.pos
-
-			if a_hot_index /= 0 then
-				from
-					a_possible_positions.start
-				until
-					-- Left side want to be smaller
-					a_possible_positions.after or a_possible_positions.index >= a_hot_index + 1 or (l_size_to_reduce_left - l_total_reduced_size_left) <= 0
-				loop
-					l_total_reduced_size_left := l_total_reduced_size_left + l_zones.item (a_possible_positions.index).assistant.can_reduce_size (l_size_to_reduce_left - l_total_reduced_size_left)
-					a_possible_positions.forth
+			if attached internal_mediator as l_mediator then
+				l_zones := internal_tool_bar_row.zones
+				l_zones.start
+				l_zones.search (l_mediator.caller)
+				if not l_zones.exhausted then
+					l_zones.remove
 				end
-			end
+				check same_size: a_possible_positions.count = l_zones.count end
+				l_size_to_reduce_left := 0 - a_possible_positions.first.pos
 
-			-- Now we start to calculate right side
-			l_size_to_expand_right := l_total_reduced_size_left
-			if a_hot_index < a_possible_positions.count then
-				from
-					-- Right side (include caller) want to be bigger
-					a_possible_positions.go_i_th (a_hot_index + 1)
-				until
-					a_possible_positions.after or (l_size_to_expand_right - l_total_expanded_size_right) <= 0
-				loop
-					l_total_expanded_size_right := l_total_expanded_size_right + l_zones.item (a_possible_positions.index).assistant.can_expand_size (l_size_to_expand_right - l_total_expanded_size_right)
-					a_possible_positions.forth
+				if a_hot_index /= 0 then
+					from
+						a_possible_positions.start
+					until
+						-- Left side want to be smaller
+						a_possible_positions.after or a_possible_positions.index >= a_hot_index + 1 or (l_size_to_reduce_left - l_total_reduced_size_left) <= 0
+					loop
+						l_total_reduced_size_left := l_total_reduced_size_left + l_zones.at (a_possible_positions.index).assistant.can_reduce_size (l_size_to_reduce_left - l_total_reduced_size_left)
+						a_possible_positions.forth
+					end
 				end
-			end
 
-			if (l_size_to_expand_right - l_total_expanded_size_right) >= 0 then
-				l_total_expanded_size_right := l_total_expanded_size_right + internal_mediator.caller.assistant.can_expand_size (l_size_to_expand_right - l_total_expanded_size_right)
-			end
+				-- Now we start to calculate right side
+				l_size_to_expand_right := l_total_reduced_size_left
+				if a_hot_index < a_possible_positions.count then
+					from
+						-- Right side (include caller) want to be bigger
+						a_possible_positions.go_i_th (a_hot_index + 1)
+					until
+						a_possible_positions.after or (l_size_to_expand_right - l_total_expanded_size_right) <= 0
+					loop
+						l_total_expanded_size_right := l_total_expanded_size_right + l_zones.at (a_possible_positions.index).assistant.can_expand_size (l_size_to_expand_right - l_total_expanded_size_right)
+						a_possible_positions.forth
+					end
+				end
 
-			l_old_size := total_zone_size (True) + internal_mediator.caller.size
-			if l_total_reduced_size_left > 0 and l_total_expanded_size_right > 0 and l_old_size + l_total_expanded_size_right - l_total_reduced_size_left <= internal_tool_bar_row.size then
-				Result := True
+				if (l_size_to_expand_right - l_total_expanded_size_right) >= 0 then
+					l_total_expanded_size_right := l_total_expanded_size_right + l_mediator.caller.assistant.can_expand_size (l_size_to_expand_right - l_total_expanded_size_right)
+				end
+
+				l_old_size := total_zone_size (True) + l_mediator.caller.size
+				if l_total_reduced_size_left > 0 and l_total_expanded_size_right > 0 and l_old_size + l_total_expanded_size_right - l_total_reduced_size_left <= internal_tool_bar_row.size then
+					Result := True
+				end
+			else
+				check False end -- Implied by precondition `not_void'
 			end
 		end
 
 	solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER)
-			-- We really solve no space left problem by reduce/expand SD_TOOL_BAR_ZONR sizes.
+			-- We really solve no space left problem by reduce/expand SD_TOOL_BAR_ZONR sizes
 		require
 			not_void: a_possible_positions /= Void
+			not_void: internal_mediator /= Void
 			valid: a_hot_index >= 0 and a_hot_index <= a_possible_positions.count
 			can_solve: can_solve_no_space_left (a_possible_positions, a_hot_index)
 		local
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_total_reduced_size_left: INTEGER
 			l_size_to_reduce_left: INTEGER
 			l_size_to_expand_right: INTEGER
 			l_total_expanded_size_right: INTEGER
 			l_temp_zone: SD_TOOL_BAR_ZONE
 		do
-			l_zones := internal_tool_bar_row.zones
-			l_zones.delete (internal_mediator.caller)
-			check same_size: a_possible_positions.count = l_zones.count end
-			l_size_to_reduce_left := 0 - a_possible_positions.first.pos
-
-			if a_hot_index /= 0 then
-				from
-					a_possible_positions.start
-				until
-					-- Left side want to be smaller
-					a_possible_positions.after or a_possible_positions.index >= a_hot_index + 1 or (l_size_to_reduce_left - l_total_reduced_size_left) <= 0
-				loop
-					l_temp_zone := l_zones.item (a_possible_positions.index)
-					l_total_reduced_size_left := l_total_reduced_size_left + l_temp_zone.assistant.reduce_size (l_size_to_reduce_left - l_total_reduced_size_left)
-					a_possible_positions.item.size := l_temp_zone.size
-					a_possible_positions.forth
+			if attached internal_mediator as l_mediator then
+				l_zones := internal_tool_bar_row.zones
+				l_zones.start
+				l_zones.search (l_mediator.caller)
+				if not l_zones.exhausted then
+					l_zones.remove
 				end
-			end
+				check same_size: a_possible_positions.count = l_zones.count end
+				l_size_to_reduce_left := 0 - a_possible_positions.first.pos
 
-			-- Now we start to really expand right side
-			l_size_to_expand_right := calculate_size_to_expand_right (a_possible_positions, a_hot_index)
-			if a_hot_index <= a_possible_positions.count then
-				from
-					-- Right side (include caller) want to be bigger
-					a_possible_positions.go_i_th (a_hot_index + 1)
-				until
-					a_possible_positions.after or (l_size_to_expand_right - l_total_expanded_size_right) <= 0
-				loop
-					if a_hot_index = a_possible_positions.index - 1 then
-						l_total_expanded_size_right := l_total_expanded_size_right + internal_mediator.caller.assistant.expand_size (l_size_to_expand_right - l_total_expanded_size_right)
-					end
-					if (l_size_to_expand_right - l_total_expanded_size_right) > 0 then
-						l_temp_zone := l_zones.item (a_possible_positions.index)
-						l_total_expanded_size_right := l_total_expanded_size_right + l_temp_zone.assistant.expand_size (l_size_to_expand_right - l_total_expanded_size_right)
+				if a_hot_index /= 0 then
+					from
+						a_possible_positions.start
+					until
+						-- Left side want to be smaller
+						a_possible_positions.after or a_possible_positions.index >= a_hot_index + 1 or (l_size_to_reduce_left - l_total_reduced_size_left) <= 0
+					loop
+						l_temp_zone := l_zones.at (a_possible_positions.index)
+						l_total_reduced_size_left := l_total_reduced_size_left + l_temp_zone.assistant.reduce_size (l_size_to_reduce_left - l_total_reduced_size_left)
 						a_possible_positions.item.size := l_temp_zone.size
+						a_possible_positions.forth
 					end
-					a_possible_positions.forth
 				end
-			end
 
-			if a_hot_index = a_possible_positions.count and then (l_size_to_expand_right - l_total_expanded_size_right) >= 0 then
-				l_total_expanded_size_right := l_total_expanded_size_right + internal_mediator.caller.assistant.expand_size (l_size_to_expand_right - l_total_expanded_size_right)
+				-- Now we start to really expand right side
+				l_size_to_expand_right := calculate_size_to_expand_right (a_possible_positions, a_hot_index)
+				if a_hot_index <= a_possible_positions.count then
+					from
+						-- Right side (include caller) want to be bigger
+						a_possible_positions.go_i_th (a_hot_index + 1)
+					until
+						a_possible_positions.after or (l_size_to_expand_right - l_total_expanded_size_right) <= 0
+					loop
+						if a_hot_index = a_possible_positions.index - 1 then
+							l_total_expanded_size_right := l_total_expanded_size_right + l_mediator.caller.assistant.expand_size (l_size_to_expand_right - l_total_expanded_size_right)
+						end
+						if (l_size_to_expand_right - l_total_expanded_size_right) > 0 then
+							l_temp_zone := l_zones.at (a_possible_positions.index)
+							l_total_expanded_size_right := l_total_expanded_size_right + l_temp_zone.assistant.expand_size (l_size_to_expand_right - l_total_expanded_size_right)
+							a_possible_positions.item.size := l_temp_zone.size
+						end
+						a_possible_positions.forth
+					end
+				end
+
+				if a_hot_index = a_possible_positions.count and then (l_size_to_expand_right - l_total_expanded_size_right) >= 0 then
+					l_total_expanded_size_right := l_total_expanded_size_right + l_mediator.caller.assistant.expand_size (l_size_to_expand_right - l_total_expanded_size_right)
+				end
+			else
+				check False end -- Implied by precondition `not_void'
 			end
 		end
 
 	calculate_size_to_expand_right (a_new_possible_size_position: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER):INTEGER
-			-- After really reduce size left, we calculate really size to expand for right side.
+			-- After really reduce size left, we calculate really size to expand for right side
 		require
 			not_void: a_new_possible_size_position /= Void
+			not_void: internal_mediator /= Void
 			valid: a_hot_index >= 0 and a_hot_index <= a_new_possible_size_position.count
 		local
 			l_new_left_size: INTEGER
 			l_old_right_size: INTEGER
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
-			from
-				l_zones := internal_tool_bar_row.zones
-				l_zones.delete (internal_mediator.caller)
-				l_zones.start
-			until
-				l_zones.after or l_zones.index >= a_hot_index + 1
-			loop
-				l_new_left_size := l_new_left_size + l_zones.item_for_iteration.size
-				l_zones.forth
-			end
+			if attached internal_mediator as l_mediator then
+				from
+					l_zones := internal_tool_bar_row.zones
+					l_zones.start
+					l_zones.search (l_mediator.caller)
+					if not l_zones.exhausted then
+						l_zones.remove
+					end
+					l_zones.start
+				until
+					l_zones.after or l_zones.index >= a_hot_index + 1
+				loop
+					l_new_left_size := l_new_left_size + l_zones.item_for_iteration.size
+					l_zones.forth
+				end
 
-			from
-				l_zones.go_i_th (a_hot_index + 1)
-			until
-				l_zones.after
-			loop
-				l_old_right_size := l_old_right_size + l_zones.item_for_iteration.size
-				l_zones.forth
-			end
-			l_old_right_size := l_old_right_size + internal_mediator.caller.size
+				from
+					l_zones.go_i_th (a_hot_index + 1)
+				until
+					l_zones.after
+				loop
+					l_old_right_size := l_old_right_size + l_zones.item_for_iteration.size
+					l_zones.forth
+				end
+				l_old_right_size := l_old_right_size + l_mediator.caller.size
 
-			Result := internal_tool_bar_row.size - l_new_left_size - l_old_right_size
-			if Result < 0  then
-				Result := 0
+				Result := internal_tool_bar_row.size - l_new_left_size - l_old_right_size
+				if Result < 0  then
+					Result := 0
+				end
+			else
+				check False end -- Implied by precondition `not_void'
 			end
 		ensure
 			valid: Result >= 0
@@ -456,61 +506,80 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 			-- If possible slove no space right?
 		require
 			not_enough_space: not is_enough_max_space (True)
+			not_void: internal_mediator /= Void
 		local
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_total_reduced_size_right: INTEGER
 			l_size_to_reduce_right: INTEGER
 			l_size_to_expand_left: INTEGER
 			l_total_expanded_size_left: INTEGER
 			l_old_size: INTEGER
 		do
-			l_zones := internal_tool_bar_row.zones
-			l_zones.delete (internal_mediator.caller)
-			check same_size: a_possible_positions.count = l_zones.count end
-			if a_hot_index /= a_possible_positions.count then
-				l_size_to_reduce_right := (a_possible_positions.last.pos + l_zones.last.size) - internal_tool_bar_row.size
+			if attached internal_mediator as l_mediator then
+				l_zones := internal_tool_bar_row.zones
+				l_zones.start
+				l_zones.search (l_mediator.caller)
+				if not l_zones.exhausted then
+					l_zones.remove
+				end
+				check same_size: a_possible_positions.count = l_zones.count end
+				if a_hot_index /= a_possible_positions.count then
+					l_size_to_reduce_right := (a_possible_positions.last.pos + l_zones.last.size) - internal_tool_bar_row.size
+				else
+					l_size_to_reduce_right := a_hot_position + l_mediator.caller.size - internal_tool_bar_row.size
+				end
+				check positive: l_size_to_reduce_right > 0 end
+
+				-- Right side want to be smaller
+				l_total_reduced_size_right := l_total_reduced_size_right + l_mediator.caller.assistant.can_reduce_size (l_size_to_reduce_right)
+				from
+					a_possible_positions.go_i_th (a_hot_index + 1)
+				until
+					a_possible_positions.after or l_size_to_reduce_right - l_total_reduced_size_right <= 0
+				loop
+					l_total_reduced_size_right := l_total_reduced_size_right + l_zones.at (a_possible_positions.index).assistant.can_reduce_size (l_size_to_reduce_right - l_total_reduced_size_right)
+					a_possible_positions.forth
+				end
+
+				-- Left side want to be bigger
+				l_size_to_expand_left := l_total_reduced_size_right
+				from
+					a_possible_positions.go_i_th (a_hot_index)
+				until
+					a_possible_positions.before or l_size_to_expand_left - l_total_expanded_size_left <= 0
+				loop
+					l_total_expanded_size_left := l_total_expanded_size_left + l_zones.at (a_possible_positions.index).assistant.can_expand_size (l_size_to_expand_left - l_total_expanded_size_left)
+
+					a_possible_positions.back
+				end
+
+				l_old_size := total_zone_size (True) + l_mediator.caller.size
+				if l_total_expanded_size_left > 0 and l_total_reduced_size_right > 0 and l_old_size - l_total_reduced_size_right + l_total_expanded_size_left <= internal_tool_bar_row.size then
+					Result := True
+				end
 			else
-				l_size_to_reduce_right := a_hot_position + internal_mediator.caller.size - internal_tool_bar_row.size
-			end
-			check positive: l_size_to_reduce_right > 0 end
-
-			-- Right side want to be smaller
-			l_total_reduced_size_right := l_total_reduced_size_right + internal_mediator.caller.assistant.can_reduce_size (l_size_to_reduce_right)
-			from
-				a_possible_positions.go_i_th (a_hot_index + 1)
-			until
-				a_possible_positions.after or l_size_to_reduce_right - l_total_reduced_size_right <= 0
-			loop
-				l_total_reduced_size_right := l_total_reduced_size_right + l_zones.item (a_possible_positions.index).assistant.can_reduce_size (l_size_to_reduce_right - l_total_reduced_size_right)
-				a_possible_positions.forth
-			end
-
-			-- Left side want to be bigger
-			l_size_to_expand_left := l_total_reduced_size_right
-			from
-				a_possible_positions.go_i_th (a_hot_index)
-			until
-				a_possible_positions.before or l_size_to_expand_left - l_total_expanded_size_left <= 0
-			loop
-				l_total_expanded_size_left := l_total_expanded_size_left + l_zones.item (a_possible_positions.index).assistant.can_expand_size (l_size_to_expand_left - l_total_expanded_size_left)
-
-				a_possible_positions.back
-			end
-
-			l_old_size := total_zone_size (True) + internal_mediator.caller.size
-			if l_total_expanded_size_left > 0 and l_total_reduced_size_right > 0 and l_old_size - l_total_reduced_size_right + l_total_expanded_size_left <= internal_tool_bar_row.size then
-				Result := True
+				check False end -- Implied by precondition `not_void'
 			end
 		end
 
 	total_zone_size (a_except_hot_zone: BOOLEAN): INTEGER
-			-- Total zones size.
+			-- Total zones size
+		require
+			not_void: a_except_hot_zone implies internal_mediator /= Void
 		local
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
 			l_zones := internal_tool_bar_row.zones
 			if a_except_hot_zone then
-				l_zones.delete (internal_mediator.caller)
+				l_zones.start
+				if attached internal_mediator as l_mediator then
+					l_zones.search (l_mediator.caller)
+				else
+					check False end -- Implied by precondition `not_void'
+				end
+				if not l_zones.exhausted then
+					l_zones.remove
+				end
 			end
 			from
 				l_zones.start
@@ -523,97 +592,114 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 		end
 
 	solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index, a_hot_position: INTEGER)
-			-- We really solve no space right problem by reduce/expand SD_TOOL_BAR_ZONR sizes.
+			-- We really solve no space right problem by reduce/expand SD_TOOL_BAR_ZONR sizes
 		require
 			not_void: a_possible_positions /= Void
+			not_void: internal_mediator /= Void
 			valid: a_hot_index >= 0 and a_hot_index <= a_possible_positions.count
 			can_solve: can_solve_no_space_right (a_possible_positions, a_hot_index, a_hot_position)
 		local
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_total_reduced_size_right: INTEGER
 			l_size_to_reduce_right: INTEGER
 			l_size_to_expand_left: INTEGER
 			l_total_expanded_size_left: INTEGER
 			l_temp_zone: SD_TOOL_BAR_ZONE
 		do
-			l_zones := internal_tool_bar_row.zones
-			l_zones.delete (internal_mediator.caller)
-			check same_size: a_possible_positions.count = l_zones.count end
-			if a_hot_index /= a_possible_positions.count then
-				l_size_to_reduce_right := (a_possible_positions.last.pos + l_zones.last.size) - internal_tool_bar_row.size
-			else
-				l_size_to_reduce_right := a_hot_position + internal_mediator.caller.size - internal_tool_bar_row.size
-			end
-			check positive: l_size_to_reduce_right > 0 end
-			-- Right side want to be smaller
-			l_total_reduced_size_right := l_total_reduced_size_right + internal_mediator.caller.assistant.reduce_size (l_size_to_reduce_right - l_total_reduced_size_right)
-			from
-				a_possible_positions.go_i_th (a_hot_index + 1)
-			until
-				a_possible_positions.after or l_size_to_reduce_right - l_total_reduced_size_right <= 0
-			loop
-				l_temp_zone := l_zones.item (a_possible_positions.index)
-				if l_size_to_reduce_right - l_total_reduced_size_right > 0 then
-					l_total_reduced_size_right := l_total_reduced_size_right + l_temp_zone.assistant.reduce_size (l_size_to_reduce_right - l_total_reduced_size_right)
-					a_possible_positions.item.size := l_temp_zone.size
-					a_possible_positions.forth
+			if attached internal_mediator as l_mediator then
+				l_zones := internal_tool_bar_row.zones
+				l_zones.start
+				l_zones.search (l_mediator.caller)
+				if not l_zones.exhausted then
+					l_zones.remove
 				end
-			end
-
-			-- Left side want to be bigger
-			l_size_to_expand_left := calculate_size_to_expand_left (a_possible_positions, a_hot_index)
-			if a_hot_index /= 0 then
+				check same_size: a_possible_positions.count = l_zones.count end
+				if a_hot_index /= a_possible_positions.count then
+					l_size_to_reduce_right := (a_possible_positions.last.pos + l_zones.last.size) - internal_tool_bar_row.size
+				else
+					l_size_to_reduce_right := a_hot_position + l_mediator.caller.size - internal_tool_bar_row.size
+				end
+				check positive: l_size_to_reduce_right > 0 end
+				-- Right side want to be smaller
+				l_total_reduced_size_right := l_total_reduced_size_right + l_mediator.caller.assistant.reduce_size (l_size_to_reduce_right - l_total_reduced_size_right)
 				from
-					a_possible_positions.go_i_th (a_hot_index)
+					a_possible_positions.go_i_th (a_hot_index + 1)
 				until
-					a_possible_positions.before or l_size_to_expand_left - l_total_expanded_size_left <= 0
+					a_possible_positions.after or l_size_to_reduce_right - l_total_reduced_size_right <= 0
 				loop
-					l_temp_zone := l_zones.item (a_possible_positions.index)
-					l_total_expanded_size_left := l_total_expanded_size_left + l_temp_zone.assistant.expand_size (l_size_to_expand_left - l_total_expanded_size_left)
-					a_possible_positions.item.size := l_temp_zone.size
-					a_possible_positions.back
+					l_temp_zone := l_zones.at (a_possible_positions.index)
+					if l_size_to_reduce_right - l_total_reduced_size_right > 0 then
+						l_total_reduced_size_right := l_total_reduced_size_right + l_temp_zone.assistant.reduce_size (l_size_to_reduce_right - l_total_reduced_size_right)
+						a_possible_positions.item.size := l_temp_zone.size
+						a_possible_positions.forth
+					end
 				end
-			end
 
+				-- Left side want to be bigger
+				l_size_to_expand_left := calculate_size_to_expand_left (a_possible_positions, a_hot_index)
+				if a_hot_index /= 0 then
+					from
+						a_possible_positions.go_i_th (a_hot_index)
+					until
+						a_possible_positions.before or l_size_to_expand_left - l_total_expanded_size_left <= 0
+					loop
+						l_temp_zone := l_zones.at (a_possible_positions.index)
+						l_total_expanded_size_left := l_total_expanded_size_left + l_temp_zone.assistant.expand_size (l_size_to_expand_left - l_total_expanded_size_left)
+						a_possible_positions.item.size := l_temp_zone.size
+						a_possible_positions.back
+					end
+				end
+			else
+				check False end -- Implied by precondition `not_void'
+			end
 		end
 
 	calculate_size_to_expand_left (a_new_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER): INTEGER
-			-- After really reduce size right, we calculate really size to expand for left side.
+			-- After really reduce size right, we calculate really size to expand for left side
 		require
 			not_void: a_new_positions /= Void
 			valid: a_hot_index >= 0 and a_hot_index <= a_new_positions.count
+			not_void: internal_mediator /= Void
 		local
 			l_old_left_size: INTEGER
 			l_new_right_size: INTEGER
-			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
-			from
-				l_zones := internal_tool_bar_row.zones
-				l_zones.delete (internal_mediator.caller)
-				l_zones.start
-			until
-				l_zones.after or l_zones.index > a_hot_index
-			loop
-				l_old_left_size := l_old_left_size + l_zones.item_for_iteration.size
-				l_zones.forth
-			end
+			if attached internal_mediator as l_mediator then
+				from
+					l_zones := internal_tool_bar_row.zones
+					l_zones.start
+					l_zones.search (l_mediator.caller)
+					if not l_zones.exhausted then
+						l_zones.remove
+					end
+					l_zones.start
+				until
+					l_zones.after or l_zones.index > a_hot_index
+				loop
+					l_old_left_size := l_old_left_size + l_zones.item_for_iteration.size
+					l_zones.forth
+				end
 
-			from
-				l_zones.go_i_th (a_hot_index + 1)
-			until
-				l_zones.after
-			loop
-				l_new_right_size := l_new_right_size + l_zones.item_for_iteration.size
-				l_zones.forth
-			end
-			l_new_right_size := l_new_right_size + internal_mediator.caller.size
+				from
+					l_zones.go_i_th (a_hot_index + 1)
+				until
+					l_zones.after
+				loop
+					l_new_right_size := l_new_right_size + l_zones.item_for_iteration.size
+					l_zones.forth
+				end
+				l_new_right_size := l_new_right_size + l_mediator.caller.size
 
-			Result := internal_tool_bar_row.size - l_old_left_size - l_new_right_size
-			debug ("docking")
-				print ("%N SD_TOOL_BAR_ROW_SIZER calculate_size_to_expand_left: Result: " + Result.out)
-			end
-			if Result < 0  then
-				Result := 0
+				Result := internal_tool_bar_row.size - l_old_left_size - l_new_right_size
+				debug ("docking")
+					print ("%N SD_TOOL_BAR_ROW_SIZER calculate_size_to_expand_left: Result: " + Result.out)
+				end
+				if Result < 0  then
+					Result := 0
+				end
+			else
+				check False end -- Implied by precondition `not_void'
 			end
 		ensure
 			positive: Result >= 0
@@ -621,14 +707,14 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 
 feature {NONE} -- Implementation attributes
 
-	internal_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR
-			-- Docker mediator for one user dragging.
+	internal_mediator: detachable SD_TOOL_BAR_DOCKER_MEDIATOR
+			-- Docker mediator for one user dragging
 
 	internal_tool_bar_row: SD_TOOL_BAR_ROW
-			-- Tool bar row which all it's tool bars' size are managed by Current.
+			-- Tool bar row which all it's tool bars' size are managed by Current
 
-	all_sizes: ARRAYED_LIST [INTEGER]
-			-- All orignal sizes when user dragging.
+	all_sizes: detachable ARRAYED_LIST [INTEGER]
+			-- All orignal sizes when user dragging
 
 invariant
 	not_void: internal_tool_bar_row /= Void

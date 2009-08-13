@@ -38,25 +38,29 @@ feature {NONE} -- Initialization
 			--| If resized smaller then drawing area should perform a full redraw where required.
 		end
 
+feature -- Query
+
+	interface: detachable SD_DRAWING_AREA
+			-- <Precursor>
+
 feature {NONE} -- Implementation
 
 	update_for_pick_and_drop (a_starting: BOOLEAN)
 			-- <Precursor>
 		local
-			l_app_imp: EV_APPLICATION_IMP
-			l_src: EV_PICK_AND_DROPABLE_IMP
+			l_app_imp: detachable EV_APPLICATION_IMP
+			l_src: detachable EV_PICK_AND_DROPABLE_IMP
 		do
 			l_app_imp ?= ev_application.implementation
 			check not_void: l_app_imp /= Void end
 			l_src := l_app_imp.pick_and_drop_source
 			-- Sometime l_src maybe void ?
-			if l_src /= Void then
-				interface.update_for_pick_and_drop (a_starting, l_src.pebble)
+			if l_src /= Void and then attached interface as l_interface then
+				if attached l_src.pebble as l_pebble then
+					l_interface.update_for_pick_and_drop (a_starting, l_pebble)
+				end
 			end
 		end
-
-	interface: detachable SD_DRAWING_AREA note option: stable attribute end;
-			-- <Precursor>
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

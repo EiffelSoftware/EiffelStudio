@@ -31,23 +31,26 @@ feature {NONE} -- Initlization
 
 feature -- Properties
 
-	set_text (a_text: STRING_GENERAL)
-			-- Set `text', can set Void text.
+	set_text (a_text: detachable STRING_GENERAL)
+			-- Set `text', can set Void text
+		local
+			l_tool_bar: like tool_bar
 		do
 			if a_text /= Void then
 				text := a_text
 			else
 				text := Void
 			end
-			if tool_bar /= Void then
-				tool_bar.update_size
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
+				l_tool_bar.update_size
 			end
 		ensure
-			set: a_text /= Void implies text.is_equal (a_text.as_string_32)
+			set: a_text /= Void implies (attached text as le_text and then le_text ~ (a_text.as_string_32))
 		end
 
-	text: STRING_32
-			-- Text shown on item.
+	text: detachable STRING_32
+			-- Text shown on item
 
 	set_tooltip (a_tip: STRING_GENERAL)
 			-- Set `a_tooltip' with `a_tip'
@@ -58,16 +61,16 @@ feature -- Properties
 				tooltip := Void
 			end
 		ensure
-			set: a_tip /= Void implies tooltip.is_equal (a_tip.as_string_32)
+			set: a_tip /= Void implies (attached tooltip as le_tooltip and then le_tooltip ~ (a_tip.as_string_32))
 		end
 
-	tooltip: STRING_32
-			-- Tooltip shown on item.
+	tooltip: detachable STRING_32
+			-- Tooltip shown on item
 
 feature -- Command
 
 	enable_sensitive
-			-- Enable sensitive.
+			-- Enable sensitive
 		do
 			is_sensitive := True
 			update
@@ -76,7 +79,7 @@ feature -- Command
 		end
 
 	disable_sensitive
-			-- Disable sensitive.
+			-- Disable sensitive
 		do
 			is_sensitive := False
 			update
@@ -88,10 +91,15 @@ feature -- Query
 
 	width: INTEGER
 			-- <Precursor>
+		local
+			l_text: like text
+			l_tool_bar: like tool_bar
 		do
 			Result := {SD_TOOL_BAR}.padding_width
-			if text /= Void and then not text.is_empty then
-				if tool_bar /= Void then
+			l_text := text
+			if l_text /= Void and then not l_text.is_empty then
+				l_tool_bar := tool_bar
+				if l_tool_bar /= Void then
 					Result := Result + {SD_TOOL_BAR}.padding_width + text_width
 				end
 			end
@@ -100,17 +108,20 @@ feature -- Query
 
 	text_width: INTEGER
 			-- Width of text
+		local
+			l_text: like text
 		do
-			if text /= Void then
-				Result := internal_shared.tool_bar_font.string_width (text)
+			l_text := text
+			if l_text /= Void then
+				Result := internal_shared.tool_bar_font.string_width (l_text)
 			end
 		end
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to performed when pointer button is pressed then released.
+			-- Actions to performed when pointer button is pressed then released
 
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			-- Actions to performed when pointer button is pressed.
+			-- Actions to performed when pointer button is pressed
 
 feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal issues
 
@@ -144,12 +155,15 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 		end
 
 	pixmap_position: EV_COORDINATE
-			-- Pixmap position.
+			-- Pixmap position
 		require
 			has_parent: tool_bar /= Void
+		local
+			l_tool_bar: like tool_bar
 		do
-			if tool_bar /= Void and then tool_bar.has (Current) then
-				create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + pixmap_y_position)
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void and then l_tool_bar.has (Current) then
+				create Result.make_with_position (l_tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  l_tool_bar.item_y (Current) + pixmap_y_position)
 				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
 					Result.set_x (Result.x + 1)
 					Result.set_y (Result.y + 1)
@@ -162,48 +176,55 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 		end
 
 	pixmap_y_position: INTEGER
-			-- Pixmap positon relative to Current.
+			-- Pixmap positon relative to Current
 			-- This feature not be used on Windows temporary.
 		local
 			l_has_text: BOOLEAN
+			l_tool_bar: like tool_bar
+			l_pixel_buffer: like pixel_buffer
+			l_pixmap: like pixmap
 		do
-			if tool_bar /= Void then
-				l_has_text := tool_bar.items_have_texts
-			end
-
-			if (pixel_buffer /= Void or pixmap /= Void) and l_has_text then
-				Result := (tool_bar.standard_height / 2).ceiling
-				if pixel_buffer /= Void then
-					Result := Result - (pixel_buffer.height / 2).floor
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
+				l_has_text := l_tool_bar.items_have_texts
+				l_pixel_buffer := pixel_buffer
+				l_pixmap := pixmap
+				if (l_pixel_buffer /= Void or l_pixmap /= Void) and l_has_text then
+					Result := (l_tool_bar.standard_height / 2).ceiling
+					if l_pixel_buffer /= Void then
+						Result := Result - (l_pixel_buffer.height / 2).floor
+					elseif l_pixmap /= Void then
+						-- pixmap not void
+						Result := Result - (l_pixmap.height / 2).floor
+					end
 				else
-					-- pixmap not void
-					Result := Result - (pixmap.height / 2).floor
+					Result := l_tool_bar.padding_width
 				end
-			else
-				Result := tool_bar.padding_width
 			end
 		end
 
 	text_rectangle: EV_RECTANGLE
-			-- Text rectangle.
+			-- Text rectangle
 		require
 			has_parent: tool_bar /= Void
 		local
 			l_left, l_top, l_width, l_height: INTEGER
 			l_platform: PLATFORM
+			l_tool_bar: like tool_bar
 		do
-			if tool_bar /= Void then
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
 				l_left := text_left
 				l_width := text_width
 
-				l_top := tool_bar.item_y (Current) + internal_shared.tool_bar_border_width - 1
+				l_top := l_tool_bar.item_y (Current) + internal_shared.tool_bar_border_width - 1
 
 				create l_platform
 				if l_platform.is_windows then
 					l_top := l_top - internal_shared.tool_bar_font.height // 3 + 1
 				end
 
-				l_height := tool_bar.row_height - internal_shared.tool_bar_border_width
+				l_height := l_tool_bar.row_height - internal_shared.tool_bar_border_width
 
 				create Result.make (l_left, l_top, l_width, l_height)
 
@@ -226,10 +247,13 @@ feature {SD_TOOL_BAR} -- Agents
 
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
 			-- <Precursor>
+		local
+			l_tool_bar: like tool_bar
 		do
-			-- Tool bar maybe void when CPU is busy on GTK.
-			-- See bug#13102.
-			if tool_bar /= Void then
+			-- Tool bar maybe void when CPU is busy on GTK
+			-- See bug#13102
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
 				if has_position (a_relative_x, a_relative_y) and is_sensitive then
 					if state = {SD_TOOL_BAR_ITEM_STATE}.normal then
 						state := {SD_TOOL_BAR_ITEM_STATE}.hot
@@ -250,15 +274,20 @@ feature {SD_TOOL_BAR} -- Agents
 
 	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER)
 			-- <Precursor>
+		local
+			l_tool_bar: like tool_bar
+			l_tooltip: like tooltip
 		do
-			-- Tool bar maybe void when CPU is busy on GTK.
-			-- See bug#13102.
-			if tool_bar /= Void then
+			-- Tool bar maybe void when CPU is busy on GTK
+			-- See bug#13102
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
 				if has_position (a_relative_x, a_relative_y) then
-					if tooltip /= Void and not (tooltip.as_string_32 ~ (tool_bar.tooltip.as_string_32)) then
-						tool_bar.set_tooltip (tooltip)
-					elseif tooltip = Void then
-						tool_bar.remove_tooltip
+					l_tooltip := tooltip
+					if l_tooltip /= Void and then (not (l_tooltip.as_string_32 ~ (l_tool_bar.tooltip.as_string_32))) then
+						l_tool_bar.set_tooltip (l_tooltip)
+					elseif l_tooltip = Void then
+						l_tool_bar.remove_tooltip
 					end
 				end
 			end
@@ -290,8 +319,11 @@ feature {SD_TOOL_BAR} -- Agents
 
 	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
 			-- <Precursor>
+		local
+			l_tool_bar: like tool_bar
 		do
-			if tool_bar /= Void and has_position (a_relative_x, a_relative_y) then
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void and has_position (a_relative_x, a_relative_y) then
 				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
 					state := {SD_TOOL_BAR_ITEM_STATE}.hot
 					is_need_redraw := True
@@ -343,20 +375,30 @@ feature{SD_TOOL_BAR} -- Implementation
 		end
 
 	icon_width: INTEGER
-			-- Width of icons which is `pixel_buffer' or `pixmap'.
+			-- Width of icons which is `pixel_buffer' or `pixmap'
+		local
+			l_pixel_buffer: like pixel_buffer
+			l_pixmap: like pixmap
 		do
-			if pixel_buffer /= Void then
-				Result := pixel_buffer.width
-			elseif pixmap /= Void then
-				Result := pixmap.width
+			l_pixel_buffer := pixel_buffer
+			l_pixmap := pixmap
+			if l_pixel_buffer /= Void then
+				Result := l_pixel_buffer.width
+			elseif l_pixmap /= Void then
+				Result := l_pixmap.width
 			end
 		end
 
 	text_left: INTEGER
 			-- Text left start position
+		local
+			l_tool_bar: like tool_bar
 		do
-			Result := tool_bar.item_x (Current)
-			Result := Result + width_before_text
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
+				Result := l_tool_bar.item_x (Current)
+				Result := Result + width_before_text
+			end
 		end
 
 	width_before_text: INTEGER
@@ -373,7 +415,7 @@ feature{SD_TOOL_BAR} -- Implementation
 			-- Before pick and drop is Current sensitive?
 
 	internal_shared: SD_SHARED
-			-- All singletons.
+			-- All singletons
 
 feature -- Obsolete
 

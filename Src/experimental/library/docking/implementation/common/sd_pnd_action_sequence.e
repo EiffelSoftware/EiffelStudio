@@ -35,12 +35,13 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	call (a_pebble_tuple: TUPLE [ANY, SD_CONTENT])
+	call (a_pebble_tuple: detachable TUPLE [ANY, SD_CONTENT])
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		local
 			snapshot: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [ANY]]]
+			l_veto_pebble_function: like veto_pebble_function
 		do
 			create snapshot.make (count)
 			snapshot.fill (Current)
@@ -57,11 +58,12 @@ feature -- Basic operations
 					or is_aborted_stack.item
 				loop
 					if snapshot.item.valid_operands (a_pebble_tuple) then
+						l_veto_pebble_function := veto_pebble_function
 						if
-							veto_pebble_function /= Void and then
-							veto_pebble_function.valid_operands (a_pebble_tuple)
+							l_veto_pebble_function /= Void and then
+							l_veto_pebble_function.valid_operands (a_pebble_tuple)
 						then
-							if veto_pebble_function.item (a_pebble_tuple) then
+							if l_veto_pebble_function.item (a_pebble_tuple) then
 								snapshot.item.call (a_pebble_tuple)
 							end
 						else
@@ -101,8 +103,10 @@ feature -- Status report
 		local
 			cur: CURSOR
 			a_tuple: TUPLE [ANY, SD_CONTENT]
+			l_veto_pebble_function: like veto_pebble_function
 		do
 			from
+				l_veto_pebble_function := veto_pebble_function
 				cur := cursor
 				a_tuple := [a_pebble, a_content]
 				start
@@ -112,10 +116,10 @@ feature -- Status report
 				Result := item.valid_operands (a_tuple)
 				if
 					Result and then
-					veto_pebble_function /= Void and then
-					veto_pebble_function.valid_operands (a_tuple)
+					l_veto_pebble_function /= Void and then
+					l_veto_pebble_function.valid_operands (a_tuple)
 				then
-					Result := Result and then veto_pebble_function.item (a_tuple)
+					Result := Result and then l_veto_pebble_function.item (a_tuple)
 				end
 				forth
 			end
@@ -123,26 +127,35 @@ feature -- Status report
 
 		end
 
-	veto_pebble_function: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]
+	veto_pebble_function: detachable FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]
 			-- User function to determine whether dropping is allowed.
 			-- Argument {SD_CONTENT} means which {SD_CONTENT} stone will be dropped to
+
+	names_set: BOOLEAN
+			-- If `names' has been set?
+		do
+			Result := names /= Void
+		end
 
 feature -- Element change
 
 	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING_GENERAL)
 			-- Acociate `a_name' with `an_item'.
+		require
+			set: names_set
+		local
+			l_names: like names
 		do
-			names.force (a_name, an_item)
+			l_names := names
+			check l_names /= Void end -- Implied by precondition `set'
+			l_names.force (a_name, an_item)
 		end
 
 feature {NONE} -- Implementation
 
-	names: HASH_TABLE [STRING_GENERAL, PROCEDURE [ANY, TUPLE]]
+	names: detachable HASH_TABLE [STRING_GENERAL, PROCEDURE [ANY, TUPLE]]
 
-invariant
-	names_not_void: names /= Void
-
-note
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

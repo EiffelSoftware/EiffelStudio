@@ -34,6 +34,14 @@ inherit
 			is_equal,
 			copy
 		end
+
+	SD_DOCKING_MANAGER_HOLDER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	make
 
@@ -46,9 +54,9 @@ feature {NONE}  -- Initlization
 		local
 			l_helper: SD_COLOR_HELPER
 		do
-			default_create
+
 			create internal_shared
-			internal_docking_manager := a_docking_manager
+			set_docking_manager (a_docking_manager)
 
 			create selection_actions
 			create tab_double_click_actions
@@ -57,11 +65,16 @@ feature {NONE}  -- Initlization
 			create internal_contents.make (1)
 			create internal_tabs.make (1)
 
-			create internal_tab_box.make (Current, internal_docking_manager)
+			create internal_tab_box.make (docking_manager)
 			create l_helper
 
 --			internal_tab_box.set_background_color (internal_shared.non_focused_color_lightness)
 			create internal_border_for_tab_area.make
+			create {EV_HORIZONTAL_BOX} internal_border_box
+			create internal_cell
+
+			default_create
+
 			internal_border_for_tab_area.set_border_width (internal_shared.border_width)
 			internal_border_for_tab_area.set_border_color (internal_shared.border_color)
 			internal_border_for_tab_area.set_border_style ({SD_ENUMERATION}.top)
@@ -73,19 +86,19 @@ feature {NONE}  -- Initlization
 			internal_border_for_tab_area.extend (internal_tab_box)
 			internal_tab_box.set_gap (False)
 
-			create {EV_HORIZONTAL_BOX} internal_border_box
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
 			extend_vertical_box (internal_border_box)
 
-			create internal_cell
 			internal_border_box.extend (internal_cell)
 
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 
 			add_notebook (Current)
+			internal_tab_box.set_notebook (Current)
 		ensure
 			set: internal_docking_manager = a_docking_manager
+			set: internal_tab_box.notebook = Current
 		end
 
 feature -- Command
@@ -95,13 +108,13 @@ feature -- Command
 		do
 			if a_focus then
 				internal_border_box.set_background_color (internal_shared.focused_color)
-				if selected_item /= Void  then
-					notify_tab (tab_by_content (selected_item), True)
+				if attached selected_item as l_item then
+					notify_tab (tab_by_content (l_item), True)
 				end
 			else
 				internal_border_box.set_background_color (internal_shared.border_color)
-				if selected_item /= Void then
-					notify_tab (tab_by_content (selected_item), False)
+				if attached selected_item as l_item then
+					notify_tab (tab_by_content (l_item), False)
 				end
 			end
 		end
@@ -109,8 +122,8 @@ feature -- Command
 	set_tab_active_color (a_focus: BOOLEAN)
 			-- Set tab active selection color to focus color or non-focus color
 		do
-			if selected_item /= Void then
-				tab_by_content (selected_item).set_selection_color (a_focus)
+			if attached selected_item as l_item then
+				tab_by_content (l_item).set_selection_color (a_focus)
 			end
 		end
 
@@ -125,7 +138,7 @@ feature -- Command
 			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.set_text (a_text)
 			internal_tab_box.tab_box.redraw
-			-- The text let tab size changed, so it need resize.
+			-- The text let tab size changed, so it need resize
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 		ensure
 			set: a_text /= Void implies item_text (a_content).is_equal (a_text.as_string_32)
@@ -152,17 +165,17 @@ feature -- Command
 			has: has (a_content)
 		do
 			if selected_item /= a_content then
-				internal_docking_manager.command.lock_update (Current, False)
-				if a_content.user_widget.parent /= Void then
-					a_content.user_widget.parent.prune (a_content.user_widget)
+				docking_manager.command.lock_update (Current, False)
+				if attached a_content.user_widget.parent as l_parent then
+					l_parent.prune (a_content.user_widget)
 				end
 				internal_cell.replace (a_content.user_widget)
-				internal_docking_manager.command.unlock_update
+				docking_manager.command.unlock_update
 			end
 			notify_tab (tab_by_content (a_content), a_focus)
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 
-			if not internal_docking_manager.property.is_opening_config then
+			if not docking_manager.property.is_opening_config then
 				a_content.show_actions.call (Void)
 			end
 		ensure
@@ -221,7 +234,7 @@ feature -- Command
 		require
 			has: has (a_content)
 		local
-			l_orignal_selected: SD_CONTENT
+			l_orignal_selected: detachable SD_CONTENT
 			l_orignal_index: INTEGER
 		do
 			l_orignal_selected := selected_item
@@ -303,7 +316,7 @@ feature -- Command
 				internal_tabs.item.destroy
 				internal_tabs.forth
 			end
-			internal_docking_manager := Void
+			clear_docking_manager
 			Precursor {EV_VERTICAL_BOX}
 		end
 
@@ -458,7 +471,7 @@ feature -- Query
 			end
 		end
 
-	selected_item: SD_CONTENT
+	selected_item: detachable SD_CONTENT
 			-- Selected item
 		local
 			l_index: INTEGER
@@ -547,12 +560,6 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	docking_manager: like internal_docking_manager
-			-- Docking manager which Current managed
-		do
-			Result := internal_docking_manager
-		end
-
 feature {SD_NOTEBOOK_HIDE_TAB_DIALOG} -- Internal commands
 
 	on_content_selected (a_content: SD_CONTENT)
@@ -581,7 +588,7 @@ feature {NONE}  -- Implementation
 			end
 		end
 
-	dragging_tab: SD_NOTEBOOK_TAB
+	dragging_tab: detachable SD_NOTEBOOK_TAB
 			-- Tab which is dragging
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
@@ -604,36 +611,36 @@ feature {NONE}  -- Implementation
 		do
 			-- FIXIT: This function should not be called on GTK.
 			-- 		  So actually this if clause is should not needed.
-			if dragging_tab /= Void and tabs_rects /= Void then
+			if attached dragging_tab as l_tab and attached tabs_rects as l_tab_rects then
 				from
-					tabs_rects.start
+					l_tab_rects.start
 				until
-					tabs_rects.after or l_in_tabs
+					l_tab_rects.after or l_in_tabs
 				loop
 					l_index := l_index + 1
 
-					if tabs_rects.item_for_iteration.has_x_y (a_screen_x, a_screen_y) then
+					if l_tab_rects.item_for_iteration.has_x_y (a_screen_x, a_screen_y) then
 						l_in_tabs := True
 
-						-- Check if already swapped.
-						if l_index /= internal_tab_box.index_of (dragging_tab) then
-							internal_docking_manager.command.lock_update (Current, False)
-							set_content_position (content_by_tab (dragging_tab), l_index)
-							internal_tab_box.set_tab_position (dragging_tab, l_index)
+						-- Check if already swapped
+						if l_index /= internal_tab_box.index_of (l_tab) then
+							docking_manager.command.lock_update (Current, False)
+							set_content_position (content_by_tab (l_tab), l_index)
+							internal_tab_box.set_tab_position (l_tab, l_index)
 
 							-- Is already done by on_resize
 							internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
-							internal_docking_manager.command.unlock_update
+							docking_manager.command.unlock_update
 						end
 					end
 
-					tabs_rects.forth
+					l_tab_rects.forth
 				end
 
 				if not l_in_tabs then
 					disable_capture
 					tabs_rects := Void
-					tab_drag_actions.call ([content_by_tab (dragging_tab), a_x, a_y, a_screen_x, a_screen_y])
+					tab_drag_actions.call ([content_by_tab (l_tab), a_x, a_y, a_screen_x, a_screen_y])
 				end
 			end
 		end
@@ -701,18 +708,20 @@ feature {NONE}  -- Implementation
 			l_tabs_snapshot: like internal_tabs
 			l_rect: EV_RECTANGLE
 			l_tab: SD_NOTEBOOK_TAB
+			l_tab_rects: like tabs_rects
 		do
-			if dragging_tab /= Void then
+			if attached dragging_tab then
 				from
 					l_tabs_snapshot := internal_tabs.twin
-					create tabs_rects.make (l_tabs_snapshot.count)
+					create l_tab_rects.make (l_tabs_snapshot.count)
+					tabs_rects := l_tab_rects
 					l_tabs_snapshot.start
 				until
 					l_tabs_snapshot.after
 				loop
 					l_tab := l_tabs_snapshot.item
 					create l_rect.make (l_tab.screen_x, l_tab.screen_y, l_tab.width, l_tab.height)
-					tabs_rects.force (l_rect, l_tab)
+					l_tab_rects.force (l_rect, l_tab)
 					l_tabs_snapshot.forth
 				end
 			end
@@ -723,7 +732,7 @@ feature {NONE}  -- Implementation
 		require
 			not_void: a_content /= Void
 		do
-			create Result.make (Current, internal_tab_box.is_gap_at_top, internal_docking_manager)
+			create Result.make (Current, internal_tab_box.is_gap_at_top, docking_manager)
 			Result.set_drop_actions (a_content.drop_actions)
 			Result.select_actions.extend (agent on_tab_selected (Result))
 			Result.close_actions.extend (agent (a_content.close_request_actions).call (Void))
@@ -736,7 +745,7 @@ feature {NONE}  -- Implementation
 			not_void: Result /= Void
 		end
 
-	tabs_rects: DS_HASH_TABLE [EV_RECTANGLE, SD_NOTEBOOK_TAB]
+	tabs_rects: detachable HASH_TABLE [EV_RECTANGLE, SD_NOTEBOOK_TAB]
 			-- We remember orignal tab position each time before start dragging, otherwise
 			-- it will cause tab jumping if a tab is very narrow and a tab is very wide.
 
@@ -757,9 +766,6 @@ feature {NONE}  -- Implementation
 
 	internal_shared: SD_SHARED
 			-- All singletons
-
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager which Current belong to
 
 	internal_border_for_tab_area: SD_CELL_WITH_BORDER
 			-- Border box

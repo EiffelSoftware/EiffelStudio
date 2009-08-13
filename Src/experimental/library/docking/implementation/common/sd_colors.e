@@ -44,6 +44,9 @@ feature {NONE} -- Initialization
 			non_focused_title_text_color_cell.put (l_system_color.non_focused_title_text_color)
 
 			default_background_color_cell.put (l_system_color.default_background_color)
+
+			is_initialized := True
+			
 			create l_helper
 			non_focused_color_lightness_cell.put (l_helper.color_with_lightness (default_background_color, {SD_SHARED}.Auto_hide_panel_lightness).twin)
 
@@ -54,66 +57,140 @@ feature {NONE} -- Initialization
 
 			create l_text_box
 			tool_tip_color_cell.put (l_text_box.background_color)
+		ensure
+			set: is_initialized = True
 		end
 
 feature -- Query
 
 	non_focused_color: EV_COLOR
-			-- Non focuse color. Used by SD_TITLE_BAR.
+			-- Non focuse color. Used by SD_TITLE_BAR
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := non_focused_color_cell.item
+			l_result := non_focused_color_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	non_focused_title_color: EV_COLOR
-			-- Non focused color of window title bar.
+			-- Non focused color of window title bar
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := non_focused_title_color_cell.item
+			l_result := non_focused_title_color_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	non_focused_title_text_color: EV_COLOR
-			-- Title bar text color when non focused.
+			-- Title bar text color when non focused
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := non_focused_title_text_color_cell.item
+			l_result := non_focused_title_text_color_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	non_focused_color_lightness: EV_COLOR
-			-- Lighter `non_focused_color'.
+			-- Lighter `non_focused_color'
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := non_focused_color_lightness_cell.item
+			l_result := non_focused_color_lightness_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	focused_color: EV_COLOR
 			-- Focused color. Used by SD_TITLE_BAR...
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := focused_color_cell.item
+			l_result := focused_color_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	focused_title_text_color: EV_COLOR
-			-- Focused title bar text color. Used bt SD_TITLE_BAR.
+			-- Focused title bar text color. Used bt SD_TITLE_BAR
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := focused_title_text_color_cell.item
+			l_result := focused_title_text_color_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	border_color: EV_COLOR
 			-- Border color, used by SD_TAB_STUB, SD_NOTEBOOK_TAB...
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := active_border_color_cell.item
+			l_result := active_border_color_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	tab_text_color: EV_COLOR
 			-- Text color
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := tab_text_color_cell.item
+			l_result := tab_text_color_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	tool_tip_color: EV_COLOR
-			-- Tooltip color which is used by SD_NOTEBOOK_HIDE_DIALOG.
+			-- Tooltip color which is used by SD_NOTEBOOK_HIDE_DIALOG
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := tool_tip_color_cell.item
+			l_result := tool_tip_color_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	tool_bar_title_bar_color: EV_COLOR
-			-- Tool bar tilte bar color when tool bar floating.
+			-- Tool bar tilte bar color when tool bar floating
 		once
 			create Result
 			Result.set_rgb (132 / 255, 130 / 255, 132 / 255)
@@ -122,21 +199,34 @@ feature -- Query
 		end
 
 	feedback_indicator_region_window_discard_color: EV_COLOR
-			-- Feedback indicator window region discard color.
+			-- Feedback indicator window region discard color
 		once
 			create Result.make_with_rgb (1, 1, 1)
 		end
 
 	default_background_color: EV_COLOR
 			-- Default background color
+		require
+			initialized: is_initialized
+		local
+			l_result: detachable EV_COLOR
 		do
-			Result := default_background_color_cell.item
+			l_result := default_background_color_cell.item
+			check l_result /= Void end -- Implied by precondition `initialized'
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
+
+feature -- Contract support
+
+	is_initialized: BOOLEAN
+			-- If all singletons colors have beend set?
 
 feature -- Implementation
 
 	update_all_tool_bars
-			-- Update all tool bars background color.
+			-- Update all tool bars background color
 		local
 			l_mem: MEMORY
 			l_tool_bar: SD_TOOL_BAR
@@ -151,70 +241,72 @@ feature -- Implementation
 			until
 				l_i >= l_tool_bars.count
 			loop
-				l_tool_bar ?= l_tool_bars.item (l_i)
-				check  not_void: l_tool_bar /= Void end
-				if not l_tool_bar.is_destroyed then
-					l_tool_bar.set_background_color (internal_shared.default_background_color)
+				if attached {SD_TOOL_BAR} l_tool_bars.item (l_i) as l_tool_bar_2 then
+					if not l_tool_bar_2.is_destroyed then
+						l_tool_bar_2.set_background_color (internal_shared.default_background_color)
+					end
+				else
+					check  not_possible: False end -- Implied by the design of {MEMORY}.objects_instance_of
 				end
 				l_i := l_i + 1
 			end
 		end
 
-	non_focused_color_cell: CELL [EV_COLOR]
+	non_focused_color_cell: CELL [detachable EV_COLOR]
 			-- Singelton cell for `non_focus_color'
 		once
 			create Result.put (Void)
 		end
 
-	non_focused_title_color_cell: CELL [EV_COLOR]
+	non_focused_title_color_cell: CELL [detachable EV_COLOR]
 			-- Singleton cell for `non_focused_title_color'
 		once
 			create Result.put (Void)
 		end
 
-	non_focused_title_text_color_cell: CELL [EV_COLOR]
+	non_focused_title_text_color_cell: CELL [detachable EV_COLOR]
 			-- Singleton cell for `non_focused_title_text_color'
 		once
 			create Result.put (Void)
 		end
 
-	non_focused_color_lightness_cell: CELL [EV_COLOR]
+	non_focused_color_lightness_cell: CELL [detachable EV_COLOR]
 			-- Singleton cell for `non_focused_color_lightness'
 		once
 			create Result.put (Void)
 		end
 
-	focused_color_cell: CELL [EV_COLOR]
+	focused_color_cell: CELL [detachable EV_COLOR]
 			-- Singleton cell for `focused_color_cell'
 		once
 			create Result.put (Void)
 		end
 
-	focused_title_text_color_cell: CELL [EV_COLOR]
+	focused_title_text_color_cell: CELL [detachable EV_COLOR]
 			-- Singleton cell for `focused_title_text_color'
 		once
 			create Result.put (Void)
 		end
 
-	active_border_color_cell: CELL [EV_COLOR]
+	active_border_color_cell: CELL [detachable EV_COLOR]
 			-- Singleton cell for `active_border_color'
 		once
 			create Result.put (Void)
 		end
 
-	tab_text_color_cell: CELL [EV_COLOR]
+	tab_text_color_cell: CELL [detachable EV_COLOR]
 			-- Singleton cell for `tab_text_color'
 		once
 			create Result.put (Void)
 		end
 
-	tool_tip_color_cell:CELL [EV_COLOR]
+	tool_tip_color_cell:CELL [detachable EV_COLOR]
 			-- Singleton cell for `tool_tip_color'
 		once
 			create Result.put (Void)
 		end
 
-	default_background_color_cell: CELL [EV_COLOR]
+	default_background_color_cell: CELL [detachable EV_COLOR]
 			-- Singletone cell for `default_background_color'
 		once
 			create Result.put (Void)

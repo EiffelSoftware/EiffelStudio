@@ -40,21 +40,23 @@ feature -- Command
 
 feature -- Query
 
-	font: EV_FONT
+	font: detachable EV_FONT
 		-- Text font
 
 	text_width: INTEGER
 			-- <Precursor>
 		local
 			l_font: EV_FONT
+			l_text: like text
 		do
-			if text /= Void then
-				if font /= Void then
-					l_font := font
+			l_text := text
+			if l_text /= Void then
+				if attached font as l_attached_font then
+					l_font := l_attached_font
 				else
 					l_font := internal_shared.tool_bar_font
 				end
-				Result := l_font.string_width (text)
+				Result := l_font.string_width (l_text)
 			end
 		end
 

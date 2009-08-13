@@ -20,11 +20,16 @@ feature -- Redefine
 
 	rectangle: EV_RECTANGLE
 			-- <Precursor>
+		local
+			l_pixmap: like pixmap
+			l_tool_bar: like tool_bar
 		do
 			Result := Precursor {SD_TOOL_BAR_BUTTON}
-			if is_wrap then
-				Result.set_height (pixmap.height + tool_bar.padding_width * 2)
-				Result.set_width (pixmap.width + tool_bar.padding_width * 2)
+			l_pixmap := pixmap
+			l_tool_bar := tool_bar
+			if is_wrap and l_pixmap /= Void and l_tool_bar /= Void then
+				Result.set_height (l_pixmap.height + l_tool_bar.padding_width * 2)
+				Result.set_width (l_pixmap.width + l_tool_bar.padding_width * 2)
 			end
 		end
 

@@ -25,7 +25,11 @@ feature -- Docking query
 
 	content: SD_TOOL_BAR_CONTENT
 			-- Related tool bar content
+		require
+			set: is_content_attached
 		deferred
+		ensure
+			not_void: Result /= Void
 		end
 
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
@@ -36,7 +40,7 @@ feature -- Docking query
 		end
 
 	is_need_calculate_size: BOOLEAN
-			-- Need recalcualte current `row_height' because of something have been changed ?
+			-- Need recalcualte current `row_height' because of something have been changed?
 		deferred
 		end
 
@@ -57,6 +61,11 @@ feature -- Docking query
 
 	is_item_position_valid (a_screen_x, a_screen_y: INTEGER_32): BOOLEAN
 			-- If `a_screen_x' and `a_screen_y' within tool bar items area?
+		deferred
+		end
+
+	is_content_attached: BOOLEAN
+			-- If `content' has been set?
 		deferred
 		end
 
@@ -341,9 +350,16 @@ feature {SD_WIDGET_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 
 	set_content (a_content: SD_TOOL_BAR_CONTENT)
 			-- Set `content' with `a_content'
+		require
+			not_void: a_content /= Void
 		deferred
 		ensure
 			content_set: content = a_content
+		end
+
+	clear_content
+			-- Remove `content'
+		deferred
 		end
 
 	internal_shared: SD_SHARED

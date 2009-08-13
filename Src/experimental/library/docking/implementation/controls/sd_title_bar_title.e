@@ -19,12 +19,12 @@ feature {NONE} -- Initlization
 	make
 			-- Creation method
 		do
-			default_create
 			title := ""
-
 			create internal_shared
-			expose_actions.force_extend (agent on_expose)
+			create drag_actions
+			default_create
 
+			expose_actions.force_extend (agent on_expose)
 			pointer_button_press_actions.extend (agent on_pointer_press)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_leave_actions.extend (agent on_pointer_leave)
@@ -34,17 +34,15 @@ feature {NONE} -- Initlization
 			pointer_double_press_actions.force_extend (agent do
 																pressed := False
 															end)
-
-			create drag_actions
 		end
 
 feature -- Properties
 
 	title: STRING_32
-			-- Text showing on Current.
+			-- Text showing on Current
 
 	set_title (a_title: STRING_GENERAL)
-			-- Set `title' with `a_title'.
+			-- Set `title' with `a_title'
 		require
 			not_void: a_title /= Void
 		do
@@ -66,7 +64,7 @@ feature -- Properties
 
 	is_focused_color: BOOLEAN
 			-- If Current use focused color?
-			-- Otherwise we use non-focused color.
+			-- Otherwise we use non-focused color
 
 	set_focused_color (a_bool: BOOLEAN)
 			-- Set `is_focus_color'
@@ -107,7 +105,7 @@ feature -- Command
 		end
 
 	set_disable_focus_background_color
-			-- Set background color for disable status.
+			-- Set background color for disable status
 		local
 			l_text_color: EV_COLOR
 			l_color_helper: SD_COLOR_HELPER
@@ -125,19 +123,19 @@ feature -- Query
 			-- Drag actions
 
 	hightlight_color: EV_COLOR
-			-- Highlight color.
+			-- Highlight color
 		do
 			Result := internal_shared.focused_color
 		end
 
 	hightlight_non_focus_color: EV_COLOR
-			-- Highligh nonfocus color.
+			-- Highligh nonfocus color
 		do
 			Result := internal_shared.non_focused_title_color
 		end
 
 	hightlight_gray_color: EV_COLOR
-			-- Highlight gray color.
+			-- Highlight gray color
 		do
 			Result := internal_shared.non_focused_color
 		end
@@ -145,7 +143,7 @@ feature -- Query
 feature {NONE} -- Agents
 
 	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			-- Handle pointer press.
+			-- Handle pointer press
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
 				pressed := True
@@ -157,7 +155,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
-			-- Handle pointer release.
+			-- Handle pointer release
 		do
 			pressed := False
 
@@ -169,13 +167,13 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_leave
-			-- Hanle pointer leave.
+			-- Hanle pointer leave
 		do
 			pressed := False
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
-			-- Handle pointer motion.
+			-- Handle pointer motion
 		do
 			if pressed then
 				drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
@@ -202,13 +200,13 @@ feature {NONE} -- Implementation
 
 	pressed: BOOLEAN
 			-- Is pointer button pressed?
-			-- This flag used for judging whether to call `drag_actions'.
+			-- This flag used for judging whether to call `drag_actions'
 
 	offset_x: INTEGER = 4
-			-- The x position start to draw title text.
+			-- The x position start to draw title text
 
 	on_expose
-			-- Handle expose actions.
+			-- Handle expose actions
 		require
 			not_destroyed: not is_destroyed
 		local

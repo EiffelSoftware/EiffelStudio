@@ -29,32 +29,12 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_HORIZONTAL_BOX}
 
-				-- Create all widgets
-			create drawing_area
-			create tool_bar.make
-			create customize.make
-			create close.make
-			create internal_pixmap
-
 				-- Build widget structure
 			extend (drawing_area)
 			extend (tool_bar)
 			tool_bar.extend (customize)
 			tool_bar.extend (close)
 
-			create string_constant_set_procedures.make (10)
-			create string_constant_retrieval_functions.make (10)
-			create integer_constant_set_procedures.make (10)
-			create integer_constant_retrieval_functions.make (10)
-			create pixmap_constant_set_procedures.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create integer_interval_constant_retrieval_functions.make (10)
-			create integer_interval_constant_set_procedures.make (10)
-			create font_constant_set_procedures.make (10)
-			create font_constant_retrieval_functions.make (10)
-			create pixmap_constant_retrieval_functions.make (10)
-			create color_constant_set_procedures.make (10)
-			create color_constant_retrieval_functions.make (10)
 			drawing_area.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 
 			disable_item_expand (tool_bar)
@@ -63,9 +43,9 @@ feature {NONE}-- Initialization
 
 				-- Connect events
 				-- Close the application when an interface close
-				-- request is recieved on `Current'. i.e. the cross is clicked.
+				-- request is recieved on `Current'. i.e. the cross is clicked
 
-				-- Call `user_initialization'.
+				-- Call `user_initialization'
 			user_initialization
 		end
 
@@ -95,9 +75,9 @@ feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
-			-- value of the associated constant.
+			-- value of the associated constant
 		local
-			s: STRING_GENERAL
+			l_s: detachable STRING_GENERAL
 		do
 			from
 				string_constant_set_procedures.start
@@ -105,8 +85,10 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.off
 			loop
 				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
-				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
-				string_constant_set_procedures.item.call ([s])
+				l_s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
+				if l_s /= Void then
+					string_constant_set_procedures.item.call ([l_s])
+				end
 				string_constant_set_procedures.forth
 			end
 		end
@@ -151,7 +133,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant
 		local
-			p: EV_PIXMAP
+			l_p: detachable EV_PIXMAP
 		do
 			from
 				pixmap_constant_set_procedures.start
@@ -159,8 +141,10 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.off
 			loop
 				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
-				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
-				pixmap_constant_set_procedures.item.call ([p])
+				l_p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
+				if l_p /= Void then
+					pixmap_constant_set_procedures.item.call ([l_p])
+				end
 				pixmap_constant_set_procedures.forth
 			end
 		end
@@ -169,7 +153,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant
 		local
-			f: EV_FONT
+			l_f: detachable EV_FONT
 		do
 			from
 				font_constant_set_procedures.start
@@ -177,8 +161,10 @@ feature {NONE} -- Constant setting
 				font_constant_set_procedures.off
 			loop
 				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
-				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
-				font_constant_set_procedures.item.call ([f])
+				l_f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
+				if l_f /= Void then
+					font_constant_set_procedures.item.call ([l_f])
+				end
 				font_constant_set_procedures.forth
 			end
 		end
@@ -187,7 +173,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant
 		local
-			c: EV_COLOR
+			l_c: detachable EV_COLOR
 		do
 			from
 				color_constant_set_procedures.start
@@ -195,8 +181,10 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.off
 			loop
 				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
-				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
-				color_constant_set_procedures.item.call ([c])
+				l_c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
+				if l_c /= Void then
+					color_constant_set_procedures.item.call ([l_c])
+				end
 				color_constant_set_procedures.forth
 			end
 		end

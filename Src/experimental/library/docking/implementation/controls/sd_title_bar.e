@@ -29,13 +29,20 @@ create
 feature {NONE} -- Initlization
 
 	make
-			-- Creation method.
+			-- Creation method
 		do
 			create internal_shared
-			default_create
 
 			create fixed
 			create internal_border.make
+			create viewport
+			create stick.make
+			create normal_max.make
+			create internal_title.make
+			create close.make
+			create internal_tool_bar.make
+
+			default_create
 
 			extend (internal_border)
 
@@ -43,12 +50,11 @@ feature {NONE} -- Initlization
 			internal_border.set_border_color (internal_shared.border_color)
 			internal_border.set_border_style ({SD_ENUMERATION}.bottom)
 
-			create viewport
+
 			internal_border.extend (viewport)
 
 			viewport.extend (fixed)
 
-			create internal_title.make
 
 			internal_title.set_focused_color (True)
 
@@ -56,7 +62,6 @@ feature {NONE} -- Initlization
 
 			update_size_and_font
 
-			create stick.make
 			stick.set_pixmap (internal_shared.icons.unstick)
 			if internal_shared.icons.unstick_buffer /= Void then
 				stick.set_pixel_buffer (internal_shared.icons.unstick_buffer)
@@ -65,13 +70,12 @@ feature {NONE} -- Initlization
 
 			set_stick (False)
 
-			create normal_max.make
 			normal_max.set_pixmap (internal_shared.icons.maximize)
 			if internal_shared.icons.maximize_buffer /= Void then
 				normal_max.set_pixel_buffer (internal_shared.icons.maximize_buffer)
 			end
 			normal_max.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_maximize)
-			create close.make
+
 			close.set_pixmap (internal_shared.icons.close)
 			if internal_shared.icons.close_buffer /= Void then
 				close.set_pixel_buffer (internal_shared.icons.close_buffer)
@@ -84,7 +88,6 @@ feature {NONE} -- Initlization
 
 			internal_title.pointer_double_press_actions.force_extend (agent on_normal_max)
 
-			create internal_tool_bar.make
 			internal_tool_bar.extend (stick)
 			internal_tool_bar.extend (normal_max)
 			internal_tool_bar.extend (close)
@@ -102,7 +105,7 @@ feature {NONE} -- Initlization
 feature -- Command
 
 	set_title (a_title: STRING_GENERAL)
-			-- Set the title on the title bar.
+			-- Set the title on the title bar
 		require
 			a_title_not_void: a_title /= Void
 		do
@@ -113,7 +116,7 @@ feature -- Command
 		end
 
 	set_stick (a_stick: BOOLEAN)
-			-- Set `is_stick'.
+			-- Set `is_stick'
 		do
 			if a_stick then
 				stick.set_pixmap (internal_shared.icons.stick)
@@ -134,7 +137,7 @@ feature -- Command
 		end
 
 	set_max (a_max: BOOLEAN)
-			-- Set `is_max'.
+			-- Set `is_max'
 		do
 			if a_max then
 				normal_max.set_pixmap (internal_shared.icons.normal)
@@ -172,7 +175,7 @@ feature -- Command
 					internal_tool_bar.compute_minimum_size
 				end
 			end
-			-- We restoring docking layout, `fixed' maybe destroyed.
+			-- We restoring docking layout, `fixed' maybe destroyed
 			if not fixed.is_destroyed then
 				internal_update_fixed_size
 			end
@@ -181,7 +184,7 @@ feature -- Command
 		end
 
 	set_show_stick (a_show: BOOLEAN)
-			-- Set show stick button.
+			-- Set show stick button
 		do
 			if a_show then
 				if not internal_tool_bar.has (stick) then
@@ -194,7 +197,7 @@ feature -- Command
 					internal_tool_bar.compute_minimum_size
 				end
 			end
-			-- We restoring docking layout, `fixed' maybe destroyed.
+			-- We restoring docking layout, `fixed' maybe destroyed
 			if not fixed.is_destroyed then
 				internal_update_fixed_size
 			end
@@ -203,44 +206,47 @@ feature -- Command
 		end
 
 	enable_focus_color
-			-- Enable focus color in applicaiton idle actions.
+			-- Enable focus color in applicaiton idle actions
 		do
 			set_color_in_idle (agent enable_focus_color_imp)
 		end
 
 	enable_non_focus_active_color
-			-- Enable non-focused active color in applicaiton idle actions.
+			-- Enable non-focused active color in applicaiton idle actions
 		do
 			set_color_in_idle (agent enable_non_focus_active_color_imp)
 		end
 
 	disable_focus_color
-			-- Disable focus color in applicaiton idle actions.
+			-- Disable focus color in applicaiton idle actions
 		do
 			set_color_in_idle (agent disable_focus_color_imp)
 		end
 
-	extend_custom_area (a_widget: EV_WIDGET)
+	extend_custom_area (a_widget: detachable EV_WIDGET)
 			-- Extend `custom_area' with `a_widget'
 			-- `a_widget' can be void
 		do
-			if internal_custom_widget /= a_widget and fixed.has (internal_custom_widget) then
+			if attached internal_custom_widget as l_custom_widget and then
+				(l_custom_widget /= a_widget and fixed.has (l_custom_widget)) then
 				-- Prune the old one
-				fixed.prune (internal_custom_widget)
+				fixed.prune (l_custom_widget)
 			end
 			internal_custom_widget := a_widget
 			internal_update_fixed_size
 
-			-- `a_widget' will not have resize actions since it was in EV_FIXED.
+			-- `a_widget' will not have resize actions since it was in EV_FIXED
 			--	a_widget.resize_actions.force_extend (agent update_fixed_size)
 		ensure
 			set: internal_custom_widget = a_widget
 		end
 
 	clear_custom_widget
-			-- Wipe out custom area.
+			-- Wipe out custom area
 		do
-			fixed.prune (internal_custom_widget)
+			if attached internal_custom_widget as l_custom_widget then
+				fixed.prune (l_custom_widget)
+			end
 			internal_custom_widget := Void
 			internal_update_fixed_size
 		ensure
@@ -248,14 +254,14 @@ feature -- Command
 		end
 
 	update_fixed_size
-			-- Update fixed sizes.
-			-- Different from `internal_update_fixed_size', this feature will force `internal_custom_widget' recalculate its size.
+			-- Update fixed sizes
+			-- Different from `internal_update_fixed_size', this feature will force `internal_custom_widget' recalculate its size
 		do
 			if not is_resizing then
 				is_resizing := True
 				-- This is to make sure item in `fixed' is resized, otherwise items inside mini tool bar size is incorrect
-				if fixed.has (internal_custom_widget) then
-					fixed.prune (internal_custom_widget)
+				if attached internal_custom_widget as l_custom_widget and then fixed.has (l_custom_widget) then
+					fixed.prune (l_custom_widget)
 				end
 				on_fixed_resize (0, 0, fixed.width, fixed.height)
 				is_resizing := False
@@ -263,21 +269,21 @@ feature -- Command
 		end
 
 	enable_baseline
-			-- Set `is_baseline_enalbed' with True.
+			-- Set `is_baseline_enalbed' with True
 		do
 			is_baseline_enabled := True
 			update_baseline
 		end
 
 	disable_baseline
-			-- Set `is_baseline_enalbed' with false.
+			-- Set `is_baseline_enalbed' with false
 		do
 			is_baseline_enabled := False
 			update_baseline
 		end
 
 	update_baseline
-			-- Update baseline state and color.
+			-- Update baseline state and color
 		do
 			if not is_destroyed then
 				if is_baseline_enabled then
@@ -359,45 +365,57 @@ feature -- Query
 
 	is_baseline_enabled: BOOLEAN
 			-- If there is a extra baseline?
-			-- When used by SD_FLOATING_ZONE, we should added an extra base line to make it looks beautiful.
+			-- When used by SD_FLOATING_ZONE, we should added an extra base line to make it looks beautiful
 
 feature -- Actions
 
-	stick_select_actions: like internal_stick_select_actions
-			-- Stick button select actions.
+	stick_select_actions: attached like internal_stick_select_actions
+			-- Stick button select actions
+		local
+			l_actions: like internal_stick_select_actions
 		do
-			if internal_stick_select_actions = Void then
-				create internal_stick_select_actions
+			l_actions := internal_stick_select_actions
+			if l_actions = Void then
+				create l_actions
+				internal_stick_select_actions := l_actions
 			end
-			Result := internal_stick_select_actions
+			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
-	close_request_actions: like internal_close_request_actions
-			-- Close button select actions.
+	close_request_actions: attached like internal_close_request_actions
+			-- Close button select actions
+		local
+			l_actions: like internal_close_request_actions
 		do
-			if internal_close_request_actions = Void then
-				create internal_close_request_actions
+			l_actions := internal_close_request_actions
+			if l_actions = Void then
+				create l_actions
+				internal_close_request_actions := l_actions
 			end
-			Result := internal_close_request_actions
+			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
-	normal_max_actions: like internal_normal_max_actions
-			-- Min max select actions.
+	normal_max_actions: attached like internal_normal_max_actions
+			-- Min max select actions
+		local
+			l_actions: like internal_normal_max_actions
 		do
-			if internal_normal_max_actions = Void then
-				create internal_normal_max_actions
+			l_actions := internal_normal_max_actions
+			if l_actions = Void then
+				create l_actions
+				internal_normal_max_actions := l_actions
 			end
-			Result := internal_normal_max_actions
+			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
 	drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Drag actions.
+			-- Drag actions
 		do
 			Result := internal_title.drag_actions
 		ensure
@@ -407,47 +425,52 @@ feature -- Actions
 feature {NONE} -- Agents
 
 	on_mini_tool_bar_indicator_clicked
-			-- Handle `mini_tool_bar_indicator' select actions.
+			-- Handle `mini_tool_bar_indicator' select actions
 		local
 			l_dialog: SD_MINI_TOOL_BAR_DIALOG
 			l_helper: SD_POSITION_HELPER
 		do
-			create l_dialog.make (internal_custom_widget)
-			create l_helper.make
-			l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y, internal_shared.title_bar_height)
-			l_dialog.show
-			l_dialog.set_focus
+			if attached internal_custom_widget as l_custom_widget then
+				create l_dialog.make (l_custom_widget)
+				create l_helper.make
+				l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y, internal_shared.title_bar_height)
+				l_dialog.show
+				l_dialog.set_focus
+			end
 		end
 
 	on_fixed_resize (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
-			-- Handle fixed resize actions.
+			-- Handle fixed resize actions
+		local
+			l_custom_widget: like internal_custom_widget
 		do
 			if a_width > 0 and a_height > 0 and not fixed.is_destroyed and not internal_tool_bar.is_destroyed then
 				fixed.set_minimum_width (a_width)
 				viewport.set_item_width (a_width)
 
-				if internal_custom_widget /= Void  then
+				l_custom_widget := internal_custom_widget
+				if l_custom_widget /= Void  then
 					-- We have to check if `internal_custome_widget' is_destroyed, it makes sense while an application is exiting.
-					-- See bug#13731.
-					if not internal_custom_widget.is_destroyed then
-						if a_width >= tool_bar_width + internal_custom_widget.minimum_width + (internal_shared.highlight_before_width + internal_shared.highlight_tail_width) then
+					-- See bug#13731
+					if not l_custom_widget.is_destroyed then
+						if a_width >= tool_bar_width + l_custom_widget.minimum_width + (internal_shared.highlight_before_width + internal_shared.highlight_tail_width) then
 							-- There is enough space for mini tool bar.
 							if internal_tool_bar.has (mini_tool_bar_indicator) then
 								internal_tool_bar.prune (mini_tool_bar_indicator)
 								internal_tool_bar.compute_minimum_size
 							end
 
-							if not fixed.has (internal_custom_widget) then
-								if internal_custom_widget.parent /= Void then
-									internal_custom_widget.parent.prune (internal_custom_widget)
+							if not fixed.has (l_custom_widget) then
+								if attached l_custom_widget.parent as l_parent then
+									l_parent.prune (l_custom_widget)
 								end
-								fixed.extend (internal_custom_widget)
+								fixed.extend (l_custom_widget)
 							end
 							if internal_title.minimum_height < a_height then
 								internal_title.set_minimum_height (a_height)
 							end
-							fixed.set_item_x_position (internal_custom_widget, a_width - tool_bar_width - internal_custom_widget.minimum_width)
-							fixed.set_item_size (internal_title, a_width - tool_bar_width - internal_custom_widget.minimum_width, a_height)
+							fixed.set_item_x_position (l_custom_widget, a_width - tool_bar_width - l_custom_widget.minimum_width)
+							fixed.set_item_size (internal_title, a_width - tool_bar_width - l_custom_widget.minimum_width, a_height)
 						else
 							-- There is not enough space for mini tool bar.
 							if not internal_tool_bar.has (mini_tool_bar_indicator) then
@@ -455,8 +478,8 @@ feature {NONE} -- Agents
 								internal_tool_bar.compute_minimum_size
 							end
 
-							if fixed.has (internal_custom_widget) then
-								fixed.prune (internal_custom_widget)
+							if fixed.has (l_custom_widget) then
+								fixed.prune (l_custom_widget)
 							end
 							if a_width - tool_bar_width >= 0 then
 								if internal_title.minimum_height < a_height then
@@ -487,7 +510,7 @@ feature {NONE} -- Agents
 		end
 
 	on_stick_select
-			-- Notify clients when user click stick button.
+			-- Notify clients when user click stick button
 		do
 			if  is_stick then
 				stick.set_pixmap (internal_shared.icons.unstick)
@@ -506,7 +529,7 @@ feature {NONE} -- Agents
 		end
 
 	on_normal_max
-			-- Handle `normal_max_actions'.
+			-- Handle `normal_max_actions'
 		do
 			if is_max then
 				normal_max.set_pixmap (internal_shared.icons.maximize)
@@ -526,7 +549,7 @@ feature {NONE} -- Agents
 		end
 
 	on_close
-			-- Handle `close_request_actions'.
+			-- Handle `close_request_actions'
 		do
 			close_request_actions.call (Void)
 		end
@@ -537,19 +560,19 @@ feature {NONE} -- Implementation
 			-- If ignore resize actions?
 
 	is_resizing: BOOLEAN
-			-- If `update_fixed_size' or `internal_update_fixed_size' is executing.
+			-- If `update_fixed_size' or `internal_update_fixed_size' is executing
 
 	internal_border: SD_CELL_WITH_BORDER
 			-- Internal border
 
-	internal_custom_widget: EV_WIDGET
-			-- Custom widget which is setted by client programmer.
+	internal_custom_widget: detachable EV_WIDGET
+			-- Custom widget which is setted by client programmer
 
 	internal_title: SD_TITLE_BAR_TITLE
 			-- Internal_title
 
 	internal_tool_bar: SD_TOOL_BAR
-			-- Tool bar which hold `stick', `normal_max', `close' buttons.
+			-- Tool bar which hold `stick', `normal_max', `close' buttons
 
 	tool_bar_width: INTEGER
 			-- Actual width of `internal_tool_bar'
@@ -568,24 +591,28 @@ feature {NONE} -- Implementation
 			-- Close button
 
 	mini_tool_bar_indicator: SD_TOOL_BAR_BUTTON
-			-- Factory method for `internal_mini_tool_bar_indicator'.
+			-- Factory method for `internal_mini_tool_bar_indicator'
+		local
+			l_indicator: like internal_mini_tool_bar_indicator
 		do
-			if internal_mini_tool_bar_indicator = Void then
-				create internal_mini_tool_bar_indicator.make
-				internal_mini_tool_bar_indicator.set_pixmap (internal_shared.icons.tool_bar_indicator)
+			l_indicator := internal_mini_tool_bar_indicator
+			if l_indicator = Void then
+				create l_indicator.make
+				internal_mini_tool_bar_indicator := l_indicator
+				l_indicator.set_pixmap (internal_shared.icons.tool_bar_indicator)
 				if internal_shared.icons.tool_bar_indicator_buffer /= Void then
-					internal_mini_tool_bar_indicator.set_pixel_buffer (internal_shared.icons.tool_bar_indicator_buffer)
+					l_indicator.set_pixel_buffer (internal_shared.icons.tool_bar_indicator_buffer)
 				end
-				internal_mini_tool_bar_indicator.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_hidden_toolbar_indicator)
-				internal_mini_tool_bar_indicator.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
+				l_indicator.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_hidden_toolbar_indicator)
+				l_indicator.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
 			end
-			Result := internal_mini_tool_bar_indicator
+			Result := l_indicator
 		ensure
 			not_void: Result /= Void
 		end
 
 	internal_update_fixed_size
-			-- Different from `update_fixed_size', this feature will not force `internal_custom_widget' recalculate it's size.
+			-- Different from `update_fixed_size', this feature will not force `internal_custom_widget' recalculate it's size
 		do
 			if not is_resizing then
 				is_resizing := True
@@ -595,33 +622,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_mini_tool_bar_indicator: SD_TOOL_BAR_BUTTON
-			-- Indicator for mini tool bar. Shown when not enough space for `internal_custom_widget'.
+	internal_mini_tool_bar_indicator: detachable SD_TOOL_BAR_BUTTON
+			-- Indicator for mini tool bar. Shown when not enough space for `internal_custom_widget'
 
 	internal_shared: SD_SHARED
 			-- All singletons
 
 	viewport: EV_VIEWPORT
-			-- Viewport which contain `fixed'.
+			-- Viewport which contain `fixed'
 
 	fixed: EV_FIXED
-			-- Fixed widget which contain `internal_custom_widget', `internal_title' and `internal_tool_bar'.
+			-- Fixed widget which contain `internal_custom_widget', `internal_title' and `internal_tool_bar'
 
-	internal_pointer_double_press_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Pointer double press actions.
-
-	internal_stick_select_actions, internal_close_request_actions, internal_normal_max_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Title bar actions.
+	internal_stick_select_actions, internal_close_request_actions, internal_normal_max_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+			-- Title bar actions
 
 	is_focused_color: BOOLEAN
 			-- If Current use focused color?
-			-- Otherwise we use non-focused color.
+			-- Otherwise we use non-focused color
 		do
 			Result := internal_title.is_focused_color
 		end
 
 	enable_focus_color_imp
-			-- Enable focus color.
+			-- Enable focus color
 		do
 			if not is_focused_active_color_enable then
 				internal_title.set_focus_color_enable (True)
@@ -638,7 +662,7 @@ feature {NONE} -- Implementation
 		end
 
 	enable_non_focus_active_color_imp
-			-- Enable non-focused active color.
+			-- Enable non-focused active color
 		do
 			if not is_non_focused_active_color_enable  then
 				internal_title.set_focus_color_enable (True)
@@ -655,7 +679,7 @@ feature {NONE} -- Implementation
 		end
 
 	disable_focus_color_imp
-			-- Disable focus color.
+			-- Disable focus color
 		do
 			if is_focus_color_enable then
 				internal_title.set_focus_color_enable (False)
@@ -668,28 +692,37 @@ feature {NONE} -- Implementation
 			focused_color_enabled: not is_focus_color_enable
 		end
 
-	set_color_in_idle (a_agent: like last_color_setting_agent)
-			-- Add `a_agent' to application idle actions and removed `last_color_setting_agent' if possible.
+	set_color_in_idle (a_agent: attached like last_color_setting_agent)
+			-- Add `a_agent' to application idle actions and removed `last_color_setting_agent' if possible
+		require
+			not_void: a_agent /= Void
 		do
-			if last_color_setting_agent /= Void then
-				application.remove_idle_action (last_color_setting_agent)
+			if attached last_color_setting_agent as l_agent then
+				application.remove_idle_action (l_agent)
 			end
 			last_color_setting_agent := a_agent
-			application.do_once_on_idle (last_color_setting_agent)
+			application.do_once_on_idle (a_agent)
 		ensure
 			set: last_color_setting_agent = a_agent
 		end
 
-	last_color_setting_agent: PROCEDURE [SD_TITLE_BAR, TUPLE]
-			--	Last agent, possibly one of `enable_focus_color_imp', `enable_non_focus_active_color_imp' and `disable_focus_color_imp'.
+	last_color_setting_agent: detachable PROCEDURE [SD_TITLE_BAR, TUPLE]
+			--	Last agent, possibly one of `enable_focus_color_imp', `enable_non_focus_active_color_imp' and `disable_focus_color_imp'
 
 	application: EV_APPLICATION
-			-- Application instance.
+			-- Application instance
+		require
+			ready: attached (create {EV_ENVIRONMENT}).application
 		local
 			l_env: EV_ENVIRONMENT
+			l_result: detachable like application
 		once
 			create l_env
-			Result := l_env.application
+			if attached l_env.application as l_app then
+				l_result := l_app
+			end
+			check l_result /= Void end -- Implied by precondition `ready'
+			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -698,17 +731,21 @@ feature {NONE} -- Implementation
 			-- call `internal_title'.refresh in idle actions
 		local
 			l_env: EV_ENVIRONMENT
+			l_agent: attached like title_bar_refresh_agent
 		do
 			if title_bar_refresh_agent = Void then
-				title_bar_refresh_agent := agent refresh_title_bar
+				l_agent := agent refresh_title_bar
+				title_bar_refresh_agent := l_agent
 				create l_env
-				l_env.application.do_once_on_idle (title_bar_refresh_agent)
+				if attached l_env.application as l_app then
+					l_app.do_once_on_idle (l_agent)
+				end
 			end
 		ensure
 			created: title_bar_refresh_agent /= Void
 		end
 
-	title_bar_refresh_agent: PROCEDURE [SD_TITLE_BAR, TUPLE]
+	title_bar_refresh_agent: detachable PROCEDURE [SD_TITLE_BAR, TUPLE]
 			-- Agent for refresh title bar
 
 	refresh_title_bar
@@ -716,8 +753,8 @@ feature {NONE} -- Implementation
 		require
 			already_set: title_bar_refresh_agent /= Void
 		do
-			if internal_title /= Void and then not internal_title.is_destroyed then
-				internal_title.refresh
+			if attached internal_title as l_title and then not l_title.is_destroyed then
+				l_title.refresh
 			end
 			title_bar_refresh_agent := Void
 		ensure

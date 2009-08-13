@@ -41,7 +41,7 @@ feature -- Redefine
 	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- <Precursor>
 		local
-			l_tab_zone: SD_TAB_ZONE
+			l_tab_zone: detachable SD_TAB_ZONE
 			l_caller: SD_ZONE
 		do
 			l_caller := internal_mediator.caller
@@ -114,9 +114,10 @@ feature -- Redefine
 	set_rectangle (a_rect: EV_RECTANGLE)
 			-- <Precursor>
 		local
-			l_tabs: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
+			l_tabs: HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
 			l_tab_behind_last: EV_RECTANGLE
-			l_tab_zone: SD_TAB_ZONE
+			l_tab_zone: detachable SD_TAB_ZONE
+			l_last: detachable EV_RECTANGLE
 		do
 			Precursor {SD_HOT_ZONE_OLD_DOCKING} (a_rect)
 			l_tab_zone ?= internal_zone
@@ -124,21 +125,23 @@ feature -- Redefine
 			l_tabs := l_tab_zone.tabs_shown
 			from
 				l_tabs.start
-				create internal_tab_area.make_default
+				create internal_tab_area.make (10)
 			until
 				l_tabs.after
 			loop
-				internal_tab_area.force_last (create {EV_RECTANGLE}.make (l_tabs.item_for_iteration.screen_x, l_tabs.item_for_iteration.screen_y, l_tabs.item_for_iteration.width, l_tabs.item_for_iteration.height), l_tabs.key_for_iteration)
+				l_last := create {EV_RECTANGLE}.make (l_tabs.item_for_iteration.screen_x, l_tabs.item_for_iteration.screen_y, l_tabs.item_for_iteration.width, l_tabs.item_for_iteration.height)
+				internal_tab_area.extend (l_last, l_tabs.key_for_iteration)
 				l_tabs.forth
 			end
-			create l_tab_behind_last.make (internal_tab_area.last.right + 1, internal_tab_area.last.top, internal_shared.feedback_tab_width, internal_tab_area.last.height)
-			internal_tab_area.finish
-			internal_tab_area.force_last (l_tab_behind_last, internal_tab_area.key_for_iteration + 1)
+
+			check l_last /= Void end -- Implied by tab zone at least has one tab
+			create l_tab_behind_last.make (l_last.right + 1, l_last.top, internal_shared.feedback_tab_width, l_last.height)
+			internal_tab_area.extend (l_tab_behind_last, internal_tab_area.key_for_iteration + 1)
 		end
 
 feature {NONE} -- Implementation
 
-	internal_tab_area: DS_HASH_TABLE [EV_RECTANGLE, INTEGER];
+	internal_tab_area: HASH_TABLE [EV_RECTANGLE, INTEGER];
 			-- Tab area's rectangle
 
 note

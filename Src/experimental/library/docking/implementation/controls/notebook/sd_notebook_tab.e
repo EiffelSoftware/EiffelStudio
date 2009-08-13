@@ -11,13 +11,15 @@ class
 inherit
 	HASHABLE
 
+	SD_DOCKING_MANAGER_HOLDER
+
 create
 	make
 
 feature {NONE}  -- Initlization
 
 	make (a_notebook: SD_NOTEBOOK; a_top: BOOLEAN; a_docking_manager: SD_DOCKING_MANAGER)
-			-- Creation method.
+			-- Creation method
 		require
 			not_void: a_notebook /= Void
 			not_void: a_docking_manager /= Void
@@ -35,7 +37,7 @@ feature {NONE}  -- Initlization
 			create drag_actions
 
 			internal_draw_pixmap := True
-			internal_docking_manager := a_docking_manager
+			set_docking_manager (a_docking_manager)
 			internal_notebook := a_notebook
 
 			init_drawing_style (a_top)
@@ -55,7 +57,7 @@ feature {NONE}  -- Initlization
 feature -- Command
 
 	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE)
-			-- Set drop actions to Current.
+			-- Set drop actions to Current
 		require
 			not_destroyed: not is_destroyed
 			a_actions_not_void: a_actions /= Void
@@ -66,7 +68,7 @@ feature -- Command
 		end
 
 	set_width_not_enough_space (a_width: INTEGER)
-			-- Set current width.
+			-- Set current width
 		require
 			not_destroyed: not is_destroyed
 			a_width_valid: a_width >= 0
@@ -78,7 +80,7 @@ feature -- Command
 		end
 
 	set_enough_space
-			-- Set current is enought space to show.
+			-- Set current is enought space to show
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -99,7 +101,7 @@ feature -- Command
 			internal_draw_pixmap := True
 		end
 
-	set_tool_tip (a_text: STRING_GENERAL)
+	set_tool_tip (a_text: detachable STRING_GENERAL)
 			-- Set `tool_tip' with `a_text'
 		require
 			not_destroyed: not is_destroyed
@@ -110,7 +112,7 @@ feature -- Command
 				tool_tip := Void
 			end
 		ensure
-			set: a_text /= Void implies tool_tip.is_equal (a_text.as_string_32)
+			set: a_text /= Void implies tool_tip ~ a_text.as_string_32
 		end
 
 	clear_pressed_flag
@@ -140,11 +142,11 @@ feature -- Command
 	destroy
 			-- Destory
 		do
-			if parent /= Void then
-				parent.prune (Current)
+			if attached parent as l_parent then
+				l_parent.prune (Current)
 				parent := Void
 			end
-			internal_docking_manager := Void
+			clear_docking_manager
 			is_destroyed := True
 		ensure
 			cleared: parent = Void
@@ -153,14 +155,14 @@ feature -- Command
 
 feature -- Query
 
-	drop_actions: EV_PND_ACTION_SEQUENCE
-			-- Drop actions.
+	drop_actions: detachable EV_PND_ACTION_SEQUENCE
+			-- Drop actions
 
 	internal_draw_pixmap: BOOLEAN
 			-- If draw `pixmap'?
 
 	prefered_size: INTEGER
-			-- If current is displayed, size should take.
+			-- If current is displayed, size should take
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -168,13 +170,13 @@ feature -- Query
 		end
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Select actions.
+			-- Select actions
 
 	close_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Close actions.
+			-- Close actions
 
 	drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Drag tab actions.
+			-- Drag tab actions
 
 	is_hot: BOOLEAN
 			-- If Current hot?
@@ -186,12 +188,16 @@ feature -- Query
 			-- If pointer button pressed?
 
 	x: INTEGER
-			-- X position relative to parent box.
+			-- X position relative to parent box
 		require
 			not_destroyed: not is_destroyed
 			not_void: parent /= Void
+		local
+			l_parent: like parent
 		do
-			Result := parent.item_x (Current)
+			l_parent := parent
+			check l_parent /= Void end -- Implied by precondition `not_void'
+			Result := l_parent.item_x (Current)
 		end
 
 	width: INTEGER
@@ -208,11 +214,16 @@ feature -- Query
 			-- Height
 		require
 			not_destroyed: not is_destroyed
+			parented: parent /= Void
+		local
+			l_parent: like parent
 		do
-			Result := parent.height
+			l_parent := parent
+			check l_parent /= Void end -- Implied by precondition `parented'
+			Result := l_parent.height
 		end
 
-	tool_tip: STRING_32
+	tool_tip: detachable STRING_32
 			-- Tool tip
 
 	screen_x: INTEGER
@@ -220,8 +231,12 @@ feature -- Query
 		require
 			not_destroyed: not is_destroyed
 			parented: parent /= Void
+		local
+			l_parent: like parent
 		do
-			Result := x + parent.screen_x
+			l_parent := parent
+			check l_parent /= Void end -- Implied by precondition `parented'
+			Result := x + l_parent.screen_x
 		end
 
 	screen_y: INTEGER
@@ -229,12 +244,16 @@ feature -- Query
 		require
 			not_destroyed: not is_destroyed
 			parented: parent /= Void
+		local
+			l_parent: like parent
 		do
-			Result := parent.screen_y
+			l_parent := parent
+			check l_parent /= Void end -- Implied by precondition `parented'
+			Result := l_parent.screen_y
 		end
 
 	rectangle: EV_RECTANGLE
-			-- Current tab rectangle relative to `parent'.
+			-- Current tab rectangle relative to `parent'
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -256,8 +275,22 @@ feature -- Query
 	is_destroyed: BOOLEAN
 			-- If Current destroyed?
 
-	parent: SD_NOTEBOOK_TAB_BOX
+	parent: detachable SD_NOTEBOOK_TAB_BOX
 			-- Parent tab box
+
+	attached_parent: attached like parent
+			-- Attached `parent'
+		require
+			set: parent /= Void
+		local
+			l_result: like parent
+		do
+			l_result := parent
+			check l_result /= Void end -- Implied by precondition `attached_parent'
+			Result := l_result
+		ensure
+			set: Result /= Void
+		end
 
 	hash_code: INTEGER
 			-- Hash code
@@ -268,10 +301,10 @@ feature -- Query
 feature -- Properties
 
 	text: STRING_32
-			-- Text shown on Current.
+			-- Text shown on Current
 
 	set_text (a_text: STRING_GENERAL)
-			-- Set `text'.
+			-- Set `text'
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
@@ -283,10 +316,10 @@ feature -- Properties
 		end
 
 	pixmap: EV_PIXMAP
-			-- Pixmap shown on Current.
+			-- Pixmap shown on Current
 
 	set_pixmap (a_pixmap: EV_PIXMAP)
-			-- Set `a_pixmap'.
+			-- Set `a_pixmap'
 		require
 			not_destroyed: not is_destroyed
 			a_pixmap_not_void: a_pixmap /= Void
@@ -304,7 +337,7 @@ feature -- Properties
 			-- If Current focused?
 
 	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN)
-			-- Set `selected'.
+			-- Set `selected'
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -320,7 +353,7 @@ feature -- Properties
 		end
 
 	set_selection_color (a_focused: BOOLEAN)
-			-- Set color of selection color to focused selection color or non-focused color.
+			-- Set color of selection color to focused selection color or non-focused color
 		require
 			not_destroyed: not is_destroyed
 			selected: is_selected
@@ -329,9 +362,9 @@ feature -- Properties
 		end
 
 	info: SD_NOTEBOOK_TAB_INFO
-			-- Information used for draw tabs.
+			-- Information used for draw tabs
 
-	font: EV_FONT
+	font: detachable EV_FONT
 			-- Font
 
 	set_font (a_font: like font)
@@ -346,7 +379,7 @@ feature -- Properties
 		end
 
 	on_expose
-			-- Handle expose actions.
+			-- Handle expose actions
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -366,7 +399,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Hanlde pointer motion.
+			-- Hanlde pointer motion
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -375,14 +408,14 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			l_in_close_button: BOOLEAN
 		do
 			if is_pointer_pressed then
-				-- Don't start drag in close button area.
+				-- Don't start drag in close button area
 				if is_draw_top_tab and then internal_tab_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y) then
 					l_in_close_button := True
 				end
 				if not l_in_close_button then
 					is_pointer_pressed := False
-					l_has_capture := parent.has_capture
-					parent.disable_capture (Current)
+					l_has_capture := attached_parent.has_capture
+					attached_parent.disable_capture (Current)
 
 					-- We must check if really have vision2 capture, because capture maybe interrupted by some operations like creating a EV_DIALOG.
 					if l_has_capture then
@@ -420,21 +453,21 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 		end
 
 	on_pointer_motion_for_tooltip (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer motion actions for setting tooltips.
+			-- Handle pointer motion actions for setting tooltips
 		require
 			not_destroyed: not is_destroyed
 		do
 			if rectangle.has_x_y (a_x, a_y) then
-				if tool_tip /= Void and then not parent.tooltip.as_string_32.is_equal (tool_tip) then
-					parent.set_tooltip (tool_tip)
+				if attached tool_tip as l_tool_tip and then not (attached_parent.tooltip.as_string_32 ~ tool_tip) then
+					attached_parent.set_tooltip (l_tool_tip)
 				elseif tool_tip = Void then
-					parent.remove_tooltip
+					attached_parent.remove_tooltip
 				end
 			end
 		end
 
 	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer press.
+			-- Handle pointer press
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -451,7 +484,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 					and internal_width > 0
 					and then l_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y)
 				then
-					-- For close actions, we don't call select actions.
+					-- For close actions, we don't call select actions
 					if is_selected then
 						redraw_selected
 					else
@@ -462,7 +495,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 				end
 
 				-- We enable capture after calling `select_actions', this will make debugger working in client programmers `select_actions'.
-				parent.enable_capture (Current)
+				attached_parent.enable_capture (Current)
 			when {EV_POINTER_CONSTANTS}.right then
 				select_actions.call (Void)
 				show_right_click_menu (False, a_x, a_y)
@@ -472,14 +505,14 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 		end
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer release.
+			-- Handle pointer release
 		require
 			not_destroyed: not is_destroyed
 		local
 			l_drawer: like internal_tab_drawer
 		do
 			is_pointer_pressed := False
-			parent.disable_capture (Current)
+			attached_parent.disable_capture (Current)
 			l_drawer := internal_tab_drawer
 			if a_button = {EV_POINTER_CONSTANTS}.right then
 				show_right_click_menu (True, a_x, a_y)
@@ -498,7 +531,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 		end
 
 	on_pointer_enter
-			-- Handle pointer enter actions.
+			-- Handle pointer enter actions
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -509,7 +542,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 		end
 
 	on_pointer_leave
-			-- Handle pointer leave actions.
+			-- Handle pointer leave actions
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -523,7 +556,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 
 	redraw_selected
-			-- Redraw selected.
+			-- Redraw selected
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -536,7 +569,7 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 		end
 
 	draw_focus_rect
-			-- Draw focus rectangle.
+			-- Draw focus rectangle
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -553,7 +586,7 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 feature {NONE}  -- Implementation agents
 
 	on_expose_with_width (a_width: INTEGER)
-			-- Handle expose with `a_width'. `a_width' is total width current should be.
+			-- Handle expose with `a_width'. `a_width' is total width current should be
 		require
 			not_destroyed: not is_destroyed
 			a_width_valid: a_width >= 0
@@ -576,10 +609,10 @@ feature {NONE}  -- Implementation agents
 			end
 		end
 
-feature {NONE}  -- Implementation functions.
+feature {NONE}  -- Implementation functions
 
 	update_minmum_size
-			-- Update minmum size of Current.
+			-- Update minmum size of Current
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -612,27 +645,27 @@ feature {NONE}  -- Implementation functions.
 			create l_platform
 			if (l_platform.is_windows and not a_pointer_release_action) or (not l_platform.is_windows and a_pointer_release_action) then
 				l_menu := internal_shared.widget_factory.editor_tab_area_menu (internal_notebook)
-				l_menu.show_at (parent, a_relative_x, a_relative_y)
+				l_menu.show_at (attached_parent, a_relative_x, a_relative_y)
 			end
 		end
 
 feature {NONE}  -- Implementation attributes
 
 	focus_rect_padding: INTEGER = 2
-			-- Padding with of focus rectangle.
+			-- Padding with of focus rectangle
 
 	internal_width: INTEGER
 			-- Width
 
 	drawing_width: INTEGER
-			-- Width showig on the screen.
+			-- Width showig on the screen
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_box: SD_NOTEBOOK_TAB_AREA
+			l_box: detachable SD_NOTEBOOK_TAB_AREA
 			l_avail_width: INTEGER
 		do
-			l_box ?= parent.parent
+			l_box ?= attached_parent.parent
 			check not_void: l_box /= Void end
 			l_avail_width := l_box.width
 			if l_avail_width > 0 then
@@ -653,21 +686,18 @@ feature {NONE}  -- Implementation attributes
 			-- If current draw tab at top?
 
 	internal_notebook: SD_NOTEBOOK
-			-- Notebook Current belong to.
+			-- Notebook Current belong to
 
 	internal_shared: SD_SHARED
-			-- All singletons.
-
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager which Current belong to.
+			-- All singletons
 
 	internal_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I
 			-- Drawer of Current
 		require
 			not_destroyed: not is_destroyed
 		do
-			-- `interal_shared' cannot be void, but in fact, it maybe void when running. See bug#12519.
-			if internal_shared /= Void  then
+			-- `interal_shared' cannot be void, but in fact, it maybe void when running. See bug#12519. Eiffel runtime bug?	
+--			if internal_shared /= Void  then
 				Result := internal_shared.notebook_tab_drawer
 				Result.set_drawing_area (Current)
 				Result.set_is_draw_at_top (is_draw_top_tab)
@@ -675,7 +705,7 @@ feature {NONE}  -- Implementation attributes
 				Result.set_text (text)
 				Result.set_pixmap (pixmap)
 				Result.set_enough_space (is_enough_space)
-			end
+--			end
 		end
 
 invariant

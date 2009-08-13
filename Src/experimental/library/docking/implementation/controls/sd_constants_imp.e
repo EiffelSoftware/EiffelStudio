@@ -11,7 +11,7 @@ class
 feature {NONE} -- Initialization
 
 	initialize_constants
-			-- Load all constants from file.
+			-- Load all constants from file
 		local
 			file: PLAIN_TEXT_FILE
 		do
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	auto_hide_bar_width: INTEGER
-			-- `Result' is INTEGER constant named auto_hide_bar_width.
+			-- `Result' is INTEGER constant named auto_hide_bar_width
 		once
 			Result := 25
 		end
@@ -55,8 +55,12 @@ feature -- Access
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant (a_name)
+		local
+			l_string: detachable STRING
 		do
-			Result := (all_constants.item (a_name)).twin
+			l_string := all_constants.item (a_name)
+			check l_string /= Void end -- Implied by precondition `has_constant'
+			Result := l_string.twin
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -68,9 +72,11 @@ feature -- Access
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant (a_name)
 		local
-			l_string: STRING
+			l_string: detachable STRING
 		do
-			l_string := (all_constants.item (a_name)).twin
+			l_string := (all_constants.item (a_name))
+			check l_string /= Void end -- Implied by precondition `has_constant'
+			l_string := l_string.twin
 			check
 				is_integer: l_string.is_integer
 			end
@@ -90,26 +96,26 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	initialized_cell: CELL [BOOLEAN]
-			-- A cell to hold whether the constants have been loaded.
+			-- A cell to hold whether the constants have been loaded
 		once
 			create Result.put (False)
 		end
 
 	all_constants: HASH_TABLE [STRING, STRING]
-			-- All constants loaded from constants file.
+			-- All constants loaded from constants file
 		once
 			create Result.make (4)
 		end
 
 	file_name: STRING = "constants.txt"
-		-- File name from which constants must be loaded.
+		-- File name from which constants must be loaded
 
 	String_constant: STRING = "STRING"
 
 	Integer_constant: STRING = "INTEGER"
 
 	parse_file_contents (content: STRING)
-			-- Parse contents of `content' into `all_constants'.
+			-- Parse contents of `content' into `all_constants'
 		local
 			line_contents: STRING
 			is_string: BOOLEAN
@@ -140,7 +146,7 @@ feature {NONE} -- Implementation
 
 	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
-			-- which will be stripped from `content'.
+			-- which will be stripped from `content'
 		require
 			content_not_void: content /= Void
 			content_not_empty: not content.is_empty
@@ -161,8 +167,8 @@ feature {NONE} -- Implementation
 		end
 
 	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
-			-- Set image of `a_pixmap' from file, `a_file_name'.
-			-- If `a_file_name' does not exist, do nothing.
+			-- Set image of `a_pixmap' from file, `a_file_name'
+			-- If `a_file_name' does not exist, do nothing
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 			a_file_name /= Void

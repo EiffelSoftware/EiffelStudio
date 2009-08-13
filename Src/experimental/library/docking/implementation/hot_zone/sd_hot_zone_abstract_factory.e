@@ -14,6 +14,7 @@ feature -- Factory Methods
 			-- Facotry method
 		require
 			a_zone_not_void: a_zone /= Void
+			valid: (attached {SD_DOCKING_ZONE} a_zone) or (attached {SD_TAB_ZONE} a_zone)
 		deferred
 		ensure
 			not_void: Result /= Void
@@ -24,6 +25,7 @@ feature -- Factory Methods
 		require
 			not_void: a_zone /= Void
 			not_void: a_docking_manager /= Void
+			set: docker_mediator /= Void
 		deferred
 		ensure
 			not_void: Result /= Void
@@ -31,7 +33,7 @@ feature -- Factory Methods
 
 feature -- Docker mediator.
 
-	docker_mediator: SD_DOCKER_MEDIATOR
+	docker_mediator: detachable SD_DOCKER_MEDIATOR
 			-- Docker mediator.
 
 	set_docker_mediator (a_mediator: like docker_mediator)

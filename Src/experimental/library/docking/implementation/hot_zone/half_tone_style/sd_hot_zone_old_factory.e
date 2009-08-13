@@ -16,45 +16,58 @@ feature -- Factory method
 	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE
 			-- <Precursor>
 		local
-			l_docking_zone: SD_DOCKING_ZONE
-			l_tab_zone: SD_TAB_ZONE
+			l_result: detachable like hot_zone
 		do
-			l_docking_zone ?= a_zone
-			if l_docking_zone /= Void then
-				Result := hot_zone_docking (l_docking_zone)
+			if attached {SD_DOCKING_ZONE} a_zone as l_docking_zone then
+				l_result := hot_zone_docking (l_docking_zone)
+			elseif attached {SD_TAB_ZONE} a_zone as l_tab_zone then
+				l_result := hot_zone_tab (l_tab_zone)
 			end
-
-			l_tab_zone ?= a_zone
-			if l_tab_zone /= Void then
-				Result := hot_zone_tab (l_tab_zone)
-			end
-
+			check l_result /= Void end -- Implied by precondition `valid'
+			Result := l_result
 		ensure then
 			result_not_void: Result /= Void
 		end
 
 	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE
 			-- <Precursor>
+		local
+			l_dock_mediator: like docker_mediator
 		do
+			l_dock_mediator := docker_mediator
+			check l_dock_mediator /= Void end -- Implied by precondition `set'			
 			if a_zone.type = {SD_ENUMERATION}.tool then
-				Result := create {SD_HOT_ZONE_OLD_MAIN}.make (docker_mediator, a_docking_manager)
-			elseif a_zone.type = {SD_ENUMERATION}.editor then
-				Result := create {SD_HOT_ZONE_OLD_MAIN_EDITOR}.make (docker_mediator, a_docking_manager)
+				Result := create {SD_HOT_ZONE_OLD_MAIN}.make (l_dock_mediator, a_docking_manager)
+			else
+				check must_be_editor: a_zone.type = {SD_ENUMERATION}.editor end
+				Result := create {SD_HOT_ZONE_OLD_MAIN_EDITOR}.make (l_dock_mediator, a_docking_manager)
 			end
 		end
 
 feature {NONE}-- Implementation
 
 	hot_zone_docking (a_zone: SD_DOCKING_ZONE): SD_HOT_ZONE_OLD_DOCKING
-			-- Hot zone for SD_DOCKING_ZONE.
+			-- Hot zone for SD_DOCKING_ZONE
+		require
+			set: docker_mediator /= Void
+		local
+			l_dock_mediator: like docker_mediator
 		do
-			create Result.make (a_zone, docker_mediator)
+			l_dock_mediator := docker_mediator
+			check l_dock_mediator /= Void end -- Implied by precondition `set'
+			create Result.make (a_zone, l_dock_mediator)
 		end
 
 	hot_zone_tab (a_zone: SD_TAB_ZONE): SD_HOT_ZONE_OLD_TAB
-			-- Hot zone for SD_TAB_ZONE.
+			-- Hot zone for SD_TAB_ZONE
+		require
+			set: docker_mediator /= Void
+		local
+			l_dock_mediator: like docker_mediator
 		do
-			create Result.make (a_zone, docker_mediator)
+			l_dock_mediator := docker_mediator
+			check l_dock_mediator /= Void end -- Implied by precondition `set'
+			create Result.make (a_zone, l_dock_mediator)
 		end
 
 note

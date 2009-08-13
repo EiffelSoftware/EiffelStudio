@@ -59,7 +59,7 @@ feature -- Query
 			Result := l_rect.has_x_y (a_relative_x, a_relative_y)
 		end
 
-	tooltip: STRING_32
+	tooltip: detachable STRING_32
 			-- Tooltip of inner widget
 			-- Maybe void
 		do
@@ -127,15 +127,20 @@ feature -- Agents
 	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER)
 			-- <Precursor>
 			-- FIXME: same as {SD_TOOL_BAR_BUTTON}, merge ?
+		local
+			l_tool_bar: like tool_bar
+			l_tooltip: like tooltip
 		do
 			-- Tool bar maybe void when CPU is busy on GTK.
 			-- See bug#13102.
-			if tool_bar /= Void then
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
 				if has_position (a_relative_x, a_relative_y) then
-					if tooltip /= Void and not (tooltip.as_string_32 ~ (tool_bar.tooltip.as_string_32)) then
-						tool_bar.set_tooltip (tooltip)
-					elseif tooltip = Void then
-						tool_bar.remove_tooltip
+					l_tooltip := tooltip
+					if l_tooltip /= Void and then (not (l_tooltip.as_string_32 ~ (l_tool_bar.tooltip.as_string_32))) then
+						l_tool_bar.set_tooltip (l_tooltip)
+					elseif l_tooltip = Void then
+						l_tool_bar.remove_tooltip
 					end
 				end
 			end

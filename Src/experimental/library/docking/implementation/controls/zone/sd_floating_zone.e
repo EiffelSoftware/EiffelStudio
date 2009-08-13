@@ -15,9 +15,11 @@ inherit
 			is_maximized as is_maximized_zone
 		export
 			{NONE} all
+			{ANY} is_floating_zone
 		redefine
 			type,
-			state
+			state,
+			child_zone_count
 		end
 
 	SD_DOCKER_SOURCE
@@ -29,7 +31,8 @@ inherit
 		rename
 			extend as real_extend_dialog,
 			show as show_allow_to_back,
-			has as has_untitled_dialog
+			has as has_untitled_dialog,
+			make as make_popup_window
 		export
 			{NONE} all
 			{ANY} set_position, set_size, screen_x, screen_y, is_displayed, is_destroyed, has_focus
@@ -50,24 +53,29 @@ inherit
 create
 	make
 
-feature {NONE} -- Initlization
+feature {NONE} -- Initialization
 
-	make (a_floating_state: SD_FLOATING_STATE)
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 		require
-			a_floating_state_not_void: a_floating_state /= Void
+			not_void: a_docking_manager /= Void
 		do
-			internal_floating_state := a_floating_state
-			internal_docking_manager := a_floating_state.docking_manager
+			set_docking_manager (a_docking_manager)
 
 			create internal_shared
 
 			create internal_shared_zone
-			default_create
 			create internal_vertical_box
+			create internal_title_bar.make
+			create internal_inner_container.make
+
+			init
+
+			make_popup_window
+
+			internal_inner_container.set_docking_manager (docking_manager)
 			real_extend_dialog (internal_vertical_box)
 
-			create internal_title_bar.make
 			internal_title_bar.enable_baseline
 			internal_title_bar.drag_actions.extend (agent on_title_bar_drag)
 			internal_title_bar.close_request_actions.extend (agent on_close)
@@ -75,18 +83,32 @@ feature {NONE} -- Initlization
 			internal_title_bar.set_show_stick (False)
 			pointer_button_release_actions.extend (agent on_pointer_button_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
-			create internal_inner_container.make (internal_docking_manager)
+
 			internal_vertical_box.extend (internal_inner_container)
 			internal_inner_container.set_parent_floating_zone (Current)
-			if internal_floating_state.docking_manager.query.golbal_accelerators /= Void then
-				accelerators.append (internal_floating_state.docking_manager.query.golbal_accelerators)
-			end
+
 			set_title ("")
 			focus_in_actions.extend (agent on_dialog_focus_in)
 			focus_out_actions.extend (agent on_dialog_focus_out)
-			focus_in_actions.extend (agent (internal_docking_manager.agents).on_top_level_window_focus_in)
-			focus_out_actions.extend (agent (internal_docking_manager.agents).on_top_level_window_focus_out)
+			focus_in_actions.extend (agent (docking_manager.agents).on_top_level_window_focus_in)
+			focus_out_actions.extend (agent (docking_manager.agents).on_top_level_window_focus_out)
 			resize_actions.extend (agent on_resize)
+		end
+
+feature {SD_FLOATING_STATE} -- Initialization
+
+	set_floating_state (a_floating_state: SD_FLOATING_STATE)
+			-- Set `internal_floating_state' with `a_floating_state'
+		require
+			a_floating_state_not_void: a_floating_state /= Void
+			not_set: not is_floating_state_attached
+		do
+			internal_floating_state := a_floating_state
+			if attached floating_state.docking_manager.query.golbal_accelerators as l_accelerators then
+				accelerators.append (l_accelerators)
+			end
+		ensure
+			set: internal_floating_state = a_floating_state
 		end
 
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config
@@ -103,7 +125,7 @@ feature -- Command
 			-- Remove/add title bar if `Current' content count changed
 			-- Destroy Current if no zone in
 		local
-			l_title_zone: SD_TITLE_BAR_REMOVEABLE
+			l_title_zone: detachable SD_TITLE_BAR_REMOVEABLE
 			l_env: EV_ENVIRONMENT
 		do
 			if not is_destroyed then
@@ -115,7 +137,7 @@ feature -- Command
 						--  l_zone should not have stick button.
 						l_title_zone.set_show_stick (False)
 
-						if only_one_zone_displayed.is_maximized then
+						if attached only_one_zone_displayed as l_only_displayed and then l_only_displayed.is_maximized then
 							l_title_zone.set_show_normal_max (True)
 							extend_title_bar
 						else
@@ -132,24 +154,30 @@ feature -- Command
 					end
 				else
 					-- No widget in `Current'.
-					internal_floating_state.docking_manager.command.prune_inner_container (internal_inner_container)
-					internal_floating_state.docking_manager.zones.zones.prune (Current)
+					floating_state.docking_manager.command.prune_inner_container (internal_inner_container)
+					floating_state.docking_manager.zones.zones.prune (Current)
 
 					-- We don't call `destroy' directly here, because if window destroy and creating very fast,
 					-- Windows will not clear window area after destroy a window.
 					create l_env
-					l_env.application.do_once_on_idle (agent destroy)
+					if attached l_env.application as l_app then
+						l_app.do_once_on_idle (agent destroy)
+					else
+						check False end -- Implied by application is running
+					end
 				end
 			end
 		end
 
 	show
 			-- Show `Current'
+		require
+			set: is_floating_state_attached
 		do
 			if internal_shared.allow_window_to_back then
 				show_allow_to_back
 			else
-				show_relative_to_window (internal_floating_state.docking_manager.main_window)
+				show_relative_to_window (floating_state.docking_manager.main_window)
 			end
 		ensure then
 			showed: is_displayed
@@ -199,7 +227,7 @@ feature -- Query
 	state: SD_STATE
 			-- <Precursor>
 		local
-			l_zone: SD_ZONE
+			l_zone: detachable SD_ZONE
 		do
 			if internal_inner_container.readable then
 				l_zone ?= internal_inner_container.item
@@ -207,14 +235,29 @@ feature -- Query
 			if l_zone /= Void then
 				Result := content.state
 			else
-				Result := internal_floating_state
+				Result := floating_state
 			end
+		end
+
+	floating_state: SD_FLOATING_STATE
+			-- Attached `internal_floating_state'
+		require
+			set: is_floating_state_attached
+		local
+			l_result: like internal_floating_state
+		do
+			l_result := internal_floating_state
+			check l_result /= Void end -- Implied by precondition
+			Result := l_result
+		ensure
+			not_void: Result /= Void
 		end
 
 	inner_container: like internal_inner_container
 			-- Main container which is a SD_MULTI_DOCK_AREA
 		do
 			Result := internal_inner_container
+			check must_contain: has_recursive (Result) end
 		ensure
 			not_void: Result /= Void
 		end
@@ -222,14 +265,24 @@ feature -- Query
 	content: SD_CONTENT
 			-- <Precursor>
 		local
-			l_zone: SD_ZONE
+			l_zone: detachable SD_ZONE
+			l_result: detachable like content
 		do
 			if internal_inner_container.readable then
 				l_zone ?= internal_inner_container.item
 			end
 			if l_zone /= Void then
-				Result := l_zone.content
+				l_result := l_zone.content
 			end
+			check l_result /= Void end -- Implied by precondition `valid'
+			Result := l_result
+		end
+
+	child_zone_count: INTEGER
+			-- <Precursor>
+		do
+			count_zone_displayed
+			Result := zone_display_count
 		end
 
 	count_zone_displayed
@@ -237,7 +290,7 @@ feature -- Query
 		require
 			readable: inner_container_readable
 		local
-			l_container: EV_CONTAINER
+			l_container: detachable EV_CONTAINER
 		do
 			zone_display_count := 0
 			if internal_inner_container.readable then
@@ -289,6 +342,12 @@ feature -- Query
 	is_last_size_or_position_recorded: BOOLEAN
 			-- If any of `last_width', `last_height', `last_screen_x' or `last_screen_y' have been set?
 
+	is_floating_state_attached: BOOLEAN
+			-- If `internal_floating_state' attached?
+		do
+			Result := attached internal_floating_state
+		end
+
 	screen_y: INTEGER
 			-- <Precursor>
 		do
@@ -331,7 +390,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	internal_floating_state: SD_FLOATING_STATE
+	internal_floating_state: detachable SD_FLOATING_STATE
 			-- Zone state
 
 	internal_vertical_box: EV_VERTICAL_BOX
@@ -343,7 +402,7 @@ feature {NONE} -- Implementation
 	internal_title_bar: SD_TITLE_BAR
 			-- Title bar
 
-	docker_mediator: SD_DOCKER_MEDIATOR
+	docker_mediator: detachable SD_DOCKER_MEDIATOR
 			-- Docker mediator
 
 	pointer_press_offset_x, pointer_press_offset_y: INTEGER
@@ -366,8 +425,8 @@ feature {NONE} -- Implementation
 			a_widget_not_void: a_widget /= Void
 			a_zones_not_void: a_zones /= Void
 		local
-			l_zone: SD_ZONE
-			l_split_area: EV_SPLIT_AREA
+			l_zone: detachable SD_ZONE
+			l_split_area: detachable EV_SPLIT_AREA
 		do
 			l_zone ?= a_widget
 			if l_zone /= Void then
@@ -376,11 +435,11 @@ feature {NONE} -- Implementation
 			l_split_area ?= a_widget
 			if l_split_area /= Void then
 				-- When restoring docking widget layout, this function called from `update_title_bar', widget strucutre maybe NOT full two fork tree structure.
-				if l_split_area.first /= Void then
-					all_zones_in_current (l_split_area.first, a_zones)
+				if attached l_split_area.first as l_first then
+					all_zones_in_current (l_first, a_zones)
 				end
-				if l_split_area.second /= Void then
-					all_zones_in_current (l_split_area.second, a_zones)
+				if attached l_split_area.second as l_second then
+					all_zones_in_current (l_second, a_zones)
 				end
 			end
 		end
@@ -401,9 +460,9 @@ feature {NONE} -- Implementation
 		require
 			a_container_not_void: a_container /= Void
 		local
-			l_zone: SD_ZONE
-			l_split: EV_SPLIT_AREA
-			l_container: EV_CONTAINER
+			l_zone: detachable SD_ZONE
+			l_split: detachable EV_SPLIT_AREA
+			l_container: detachable EV_CONTAINER
 		do
 			l_zone ?= a_container
 			if l_zone /= Void then
@@ -437,14 +496,18 @@ feature {NONE} -- Implementation
 		require
 			a_widget_not_void: a_widget /= Void
 		local
-			l_split: EV_SPLIT_AREA
-			l_zone: SD_TITLE_BAR_REMOVEABLE
+			l_split: detachable EV_SPLIT_AREA
+			l_zone: detachable SD_TITLE_BAR_REMOVEABLE
 		do
 			l_split ?= a_widget
 			l_zone ?= a_widget
 			if l_split /= Void then
-				set_all_title_bar (l_split.first)
-				set_all_title_bar (l_split.second)
+				if attached l_split.first as l_first then
+					set_all_title_bar (l_first)
+				end
+				if attached l_split.second as l_second then
+					set_all_title_bar (l_second)
+				end
 			elseif l_zone /= Void then
 				l_zone.set_show_normal_max (True)
 			end
@@ -453,18 +516,18 @@ feature {NONE} -- Implementation
 	zone_display_count: INTEGER
 			-- How many zones are displayed?
 
-	only_one_zone_displayed: SD_ZONE
-			-- Zone which is only one displayed
+	only_one_zone_displayed: detachable SD_ZONE
+			-- Zone which is the only one displayed
 
 feature {NONE} -- Agents
 
 	on_dialog_focus_in
 			-- Handle Current dialog focus in actions
 		local
-			l_last_zone: SD_ZONE
+			l_last_zone: detachable SD_ZONE
 			l_zones: like all_zones
 		do
-			if attached {SD_CONTENT} internal_docking_manager.property.last_focus_content as l_content then
+			if attached {SD_CONTENT} docking_manager.property.last_focus_content as l_content then
 				if attached {SD_STATE} l_content.state as l_state then
 					l_last_zone := l_state.zone
 					if attached {EV_WIDGET} l_last_zone as lt_widget then
@@ -490,9 +553,9 @@ feature {NONE} -- Agents
 	on_dialog_focus_out
 			-- Handle Current dialog focus out actions
 		local
-			l_last_zone: SD_ZONE
+			l_last_zone: detachable SD_ZONE
 		do
-			if attached {SD_CONTENT} internal_docking_manager.property.last_focus_content as l_content then
+			if attached {SD_CONTENT} docking_manager.property.last_focus_content as l_content then
 				if attached {SD_STATE} l_content.state as l_state then
 					l_last_zone := l_state.zone
 					if attached {EV_WIDGET} l_last_zone as lt_widget then
@@ -514,8 +577,8 @@ feature {NONE} -- Agents
 			debug ("docking")
 				print ("%NSD_FLOATING_ZONE on_pointer_motion screen_x, screen_y: " + a_screen_x.out + " " + a_screen_y.out)
 			end
-			if docker_mediator /= Void and then docker_mediator.is_tracing_pointer then
-				docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
+			if attached docker_mediator as l_mediator and then l_mediator.is_tracing_pointer then
+				l_mediator.on_pointer_motion (a_screen_x, a_screen_y)
 			end
 		end
 
@@ -523,7 +586,7 @@ feature {NONE} -- Agents
 			-- Handle close request
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_multi_zone: SD_MULTI_CONTENT_ZONE
+			l_multi_zone: detachable SD_MULTI_CONTENT_ZONE
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			create l_zones.make (1)
@@ -554,27 +617,30 @@ feature {NONE} -- Agents
 
 	on_title_bar_drag (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Start `docker_mediator'
+		local
+			l_mediator: like docker_mediator
 		do
 			-- We should check if `docker_mediator' is void since `on_drag_started' will be called multi times when starting dragging on GTK
 			if docker_mediator = Void then
 				pointer_press_offset_x := a_screen_x - screen_x
 				pointer_press_offset_y := a_screen_y - screen_y
-				docker_mediator := internal_docking_manager.query.docker_mediator (Current, internal_docking_manager)
+				l_mediator := docking_manager.query.docker_mediator (Current, docking_manager)
+				docker_mediator := l_mediator
 				enable_capture
-				docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
-				docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
+				l_mediator.cancel_actions.extend (agent on_cancel_dragging)
+				l_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
 			end
 		end
 
 	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Stop `docker_mediator'
 		do
-			if a_button = 1 and docker_mediator /= Void then
+			if a_button = 1 and attached docker_mediator as l_mediator then
 				disable_capture
 				debug ("docking")
 					io.put_string ("%N SD_FLOATING_ZONE: yeah, released! ")
 				end
-				docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
+				l_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
 				docker_mediator := Void
 			end
 		end
@@ -589,7 +655,7 @@ feature {NONE} -- Agents
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Handle resize actions
 		local
-			l_zone: SD_ZONE
+			l_zone: detachable SD_ZONE
 		do
 			if internal_inner_container.readable then
 				l_zone ?= internal_inner_container.item
@@ -598,7 +664,7 @@ feature {NONE} -- Agents
 				l_zone.set_last_floating_height (a_height)
 				l_zone.set_last_floating_width (a_width)
 			end
-			internal_floating_state.record_state
+			floating_state.record_state
 		end
 
 note

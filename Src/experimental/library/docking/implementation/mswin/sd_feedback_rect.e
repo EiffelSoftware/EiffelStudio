@@ -24,8 +24,8 @@ feature {NONE} -- Initlization
 	make
 			-- Creation method
 		do
-			default_create
 			create internal_shared
+			default_create
 			set_transparent (alpha)
 			disable_user_resize
 			set_color (internal_shared.focused_color)
@@ -43,7 +43,7 @@ feature -- Command
 			-- Set feedback area.
 		local
 			l_region: WEL_REGION
-			l_imp: WEL_WINDOW
+			l_imp: detachable WEL_WINDOW
 			l_result: INTEGER
 		do
 			set_size (a_rect.width, a_rect.height)
@@ -66,7 +66,7 @@ feature -- Command
 			l_temp_region, l_temp_region_2: WEL_REGION
 			l_constants: WEL_RGN_CONSTANTS
 			l_result: INTEGER
-			l_imp: WEL_WINDOW
+			l_imp: detachable WEL_WINDOW
 			l_left: INTEGER
 		do
 			set_size (a_top_rect.width.max (a_bottom_rect.width), a_top_rect.height + a_bottom_rect.height)
@@ -109,10 +109,11 @@ feature {NONE} -- Implementation
 	set_transparent (a_alpha: INTEGER)
 			-- Set transparent. a_alpha is a value from 0-255.
 		local
-			l_imp: EV_POPUP_WINDOW_IMP
+			l_imp: detachable EV_POPUP_WINDOW_IMP
 			l_result: INTEGER
 		do
 			l_imp ?= implementation
+			check l_imp /= Void end -- Implied by design of Vision2 {EV_POPUP_WINDOW}
 			l_imp.set_ex_style ({WEL_WS_CONSTANTS}.ws_ex_layered)
 			check l_imp /= Void end
 			cwin_setlayeredwindowattributes (l_imp.wel_item, a_alpha, $l_result)

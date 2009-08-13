@@ -11,6 +11,8 @@ class
 
 inherit
 	SD_SIZABLE_POPUP_WINDOW
+		rename
+			make as docking_make
 		redefine
 			show
 		end
@@ -56,7 +58,8 @@ feature {NONE} -- Initialization
 			choice_list.virtual_position_changed_actions.extend (agent on_scroll)
 			choice_list.mouse_wheel_actions.extend (agent on_mouse_wheel)
 
-			make_with_shadow
+			has_shadow := True
+			docking_make
 
 			option_bar_box := build_option_bar
 			create vbox
@@ -700,7 +703,7 @@ feature {NONE} -- Implementation
 			l_list: like choice_list
 		do
 			l_list := choice_list
-			
+
 			l_list.wipe_out
 			if rebuild_list_during_matching then
 				matches := matches_based_on_name (name)

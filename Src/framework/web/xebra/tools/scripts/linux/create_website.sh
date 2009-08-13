@@ -1,3 +1,8 @@
+
+# install.sh
+echo "under construction!";
+exit;
+
 if [ -x "$XEBRA_DEV" ]; then
 	:
 else

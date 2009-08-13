@@ -2,7 +2,7 @@
 
 <project name="ARCHIVE_TOOLS" default="help">
 	<description>
-		description: "archive tools to zip/unzip"
+		description: "archive tools to zip/unzip. You can edit this script to use your favorite archive tool"
 		author: "Jocelyn Fiat and others"
 	</description>
 

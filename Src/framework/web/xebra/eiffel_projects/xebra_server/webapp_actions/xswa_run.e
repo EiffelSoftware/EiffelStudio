@@ -45,9 +45,9 @@ feature -- Status report
 			Result := not is_running
 
 			if Result then
-				o.dprint ("Run is necessary.", 5)
+				o.dprint ("Run is necessary.", o.Debug_tasks)
 			else
-				o.dprint ("Run is not necessary", 3)
+				o.dprint ("Run is not necessary", o.Debug_tasks)
 			end
 		end
 
@@ -55,7 +55,7 @@ feature -- Status report
 			-- Waits until process is terminated
 		do
 			if attached {PROCESS} run_process as p  and then p.is_running then
-				o.dprint ("Waiting for run_process to exit...", 3)
+				o.dprint ("Waiting for run_process to exit...", o.Debug_tasks)
 				p.wait_for_exit
 				set_running (False)
 			end
@@ -70,7 +70,7 @@ feature -- Status setting
 		do
 			if attached webapp as l_wa then
 				if attached {PROCESS} run_process as p  and then p.is_running then
-					o.dprint ("Terminating run_process for " + l_wa.app_config.name.out  + "", 2)
+					o.dprint ("Terminating run_process for " + l_wa.app_config.name.out  + "", o.Debug_tasks)
 					p.terminate
 					p.wait_for_exit
 				end
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			if attached webapp as l_wa then
 				if  not is_running then
 					if can_launch_process (webapp_exe, run_workdir) then
-						o.dprint("-=-=-=--=-=LAUNCHING WEBAPP  -=-=-=-=-=-=", 6)
+						o.dprint("-=-=-=--=-=LAUNCHING WEBAPP  -=-=-=-=-=-=", o.Debug_verbose_subtasks)
 						run_process := launch_process (webapp_exe,
 													run_args,
 													run_workdir,
@@ -130,7 +130,7 @@ feature -- Agents
 		do
 			if attached webapp as l_wa then
 				set_running (False)
-				o.dprint ("Run process for " + l_wa.app_config.name.out + " has exited.", 3)
+				o.dprint ("Run process for " + l_wa.app_config.name.out + " has exited.", o.Debug_subtasks)
 			end
 		end
 

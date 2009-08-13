@@ -82,12 +82,12 @@ feature -- Implementation
 	                	if config.arg_config.debug_level > 9 then
 	                		start_time
 	                	end
-		                o.dprint ("Connection to Xebra Server accepted",1)
+		                o.dprint ("Connection to Xebra Server accepted", o.Debug_tasks)
 		                socket.read_natural
 			             if attached {XC_WEBAPP_COMMAND} socket.retrieved as l_command then
 			             	l_response := l_command.execute (current)
 			       			if l_command.has_response then
-							    o.dprint ("Sending back response...", 2)
+							    o.dprint ("Sending back response...", o.Debug_subtasks)
 						        socket.put_natural (0)
 								socket.independent_store (l_response)
 			       			end
@@ -97,7 +97,7 @@ feature -- Implementation
 				        	socket.is_closed
 				       	end
 				       	if config.arg_config.debug_level > 9 then
-	                		o.dprint ("Webapp Request Time: " + stop_time, 10)
+	                		o.dprint ("Webapp Request Time: " + stop_time, o.Debug_configuration)
 	                	end
 			         end
 		         end
@@ -131,7 +131,7 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 			l_request_handler: XWA_REQUEST_HANDLER
 			l_parser: XH_REQUEST_PARSER
 		do
-			o.dprint ("Handling http request...", 4)
+			o.dprint ("Handling http request...", o.Debug_tasks)
 			create l_parser.make
 			create l_request_handler.make
 			if attached {XH_REQUEST} l_parser.request (a_request) as l_request then
@@ -144,7 +144,7 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 
 	get_sessions: XC_COMMAND_RESPONSE
 			-- <Precursor>
-		do	o.dprint ("Counting sessions (=" + session_manager.sessions.count.as_natural_32.out + ")", 4)
+		do	o.dprint ("Counting sessions (=" + session_manager.sessions.count.as_natural_32.out + ")", o.Debug_verbose_subtasks)
 			Result := create {XCCR_GET_SESSIONS}.make (session_manager.sessions.count.as_natural_32)
 		end
 
@@ -153,7 +153,7 @@ feature -- Basic Operations
 	shutdown: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
-			o.dprint ("Shutting down...", 1)
+			o.dprint ("Shutting down...", o.Debug_start_stop_app)
 			stop := True
 			Result := create {XCCR_OK}
 		end

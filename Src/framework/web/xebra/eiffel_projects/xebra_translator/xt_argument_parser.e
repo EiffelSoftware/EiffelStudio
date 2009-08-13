@@ -126,7 +126,13 @@ feature {NONE} -- Access: Usage
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (input_path_switch, "Specifies the path to the directory with the input files", False, False, "input_path", "The input directory path", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (output_path_switch, "Specifies the path to the directory where the generated files will be written.", False, False, "ouput_path", "The output path", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (lib_path_switch, "Specifies the path to the directory where the xebra libraries are located.", False, False, "lib", "The xebra libraries directory", False))
-			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make (debug_level_switch, "Specifies a debug level. 0: No debug output. 10: All debug ouput.", True, False, "debug_level", "The debug level (0-10)", False))
+			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make
+			 (debug_level_switch, "Specifies a debug level.%N%T1: Start and stop of overall application" +
+														  "%N%T2: Application configuration" +
+														  "%N%T3: Start and stop of main components" +
+														  "%N%T4: Information about tasks that are performed" +
+														  "%N%T5: Information about subtasks that are performed" +
+														  "%N%T6: Very verbose information about subtasks that are performed", True, False, "debug_level", "The debug level (1-6)", False))
 		end
 
 feature {NONE} -- Switches

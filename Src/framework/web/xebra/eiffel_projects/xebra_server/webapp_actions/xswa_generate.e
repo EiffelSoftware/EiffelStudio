@@ -72,16 +72,17 @@ feature -- Status report
 			Result :=  	needs_cleaning or l_servlet_gen_not_executed
 
 			if Result then
-
+				o.dprint ("Generating is necessary", o.Debug_tasks)
+				
 				if l_servlet_gen_not_executed then
-					o.dprint ("Generating is necessary because: Servlet_gen_executed file is older than xeb files in app_dir or does not exist.", 5)
+					o.dprint ("Generating is necessary because: Servlet_gen_executed file is older than xeb files in app_dir or does not exist.", o.Debug_verbose_subtasks)
 				end
 
 				if needs_cleaning then
-					o.dprint ("Generating is necessary because: generate cleaning not yet performed.", 5)
+					o.dprint ("Generating is necessary because: generate cleaning not yet performed.", o.Debug_verbose_subtasks)
 				end
 			else
-				o.dprint ("Generating is not necessary", 3)
+				o.dprint ("Generating is not necessary", o.Debug_tasks)
 			end
 		end
 
@@ -102,7 +103,7 @@ feature -- Status setting
 		do
 			if attached webapp as l_wa then
 				if attached {PROCESS} generate_process as p and then p.is_running  then
-					o.dprint ("Terminating generate_process for " + l_wa.app_config.name.out  + "", 2)
+					o.dprint ("Terminating generate_process for " + l_wa.app_config.name.out  + "", o.Debug_tasks)
 					p.terminate
 					p.wait_for_exit
 				end
@@ -143,7 +144,7 @@ feature {TEST_WEBAPPS} -- Implementation
 							end
 						end
 						set_running (True)
-						o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR  -=-=-=-=-=-=", 6)
+						o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR  -=-=-=-=-=-=", o.Debug_verbose_subtasks)
 						generate_process := launch_process (servlet_gen_exe,
 															generate_args,
 															app_dir,

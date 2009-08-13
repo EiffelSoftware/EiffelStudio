@@ -101,7 +101,7 @@ feature -- Inherited Features
 					parse_input (io.last_string)
 				end
 			end
-			o.dprint("Input Server ends.",2)
+			o.dprint("Input Server ends.", o.Debug_start_stop_app)
 			running := False
 		end
 

@@ -100,21 +100,21 @@ feature -- Status report
 
 
 			if Result then
-				o.dprint ("Compiling webapp is necessary", 3)
+				o.dprint ("Compiling webapp is necessary", o.Debug_tasks)
 				if l_melted_file_is_old then
-					o.dprint ("Compiling webapp is necessary because: " + webapp_melted_file_path + " is older than .e files or .ecf file or does not exist.", 5)
+					o.dprint ("Compiling webapp is necessary because: " + webapp_melted_file_path + " is older than .e files or .ecf file or does not exist.", o.Debug_verbose_subtasks)
 				end
 
 				if l_executable_does_not_exist then
-					o.dprint ("Compiling webapp is necessary because: " + webapp_exe + " does not exist or is not executable", 5)
+					o.dprint ("Compiling webapp is necessary because: " + webapp_exe + " does not exist or is not executable", o.Debug_verbose_subtasks)
 				end
 
 					if needs_cleaning then
-					o.dprint ("Compiling webapp is necessary because: webapp compilation cleaning not yet performed", 5)
+					o.dprint ("Compiling webapp is necessary because: webapp compilation cleaning not yet performed", o.Debug_verbose_subtasks)
 				end
 
 			else
-				o.dprint ("Compiling webapp is not necessary", 3)
+				o.dprint ("Compiling webapp is not necessary", o.Debug_tasks)
 			end
 		end
 
@@ -136,7 +136,7 @@ feature -- Status setting
 		do
 			if attached webapp as l_wa then
 				if attached {PROCESS} compile_process as p and then p.is_running  then
-					o.dprint ("Terminating compile_process_webapp  for " + l_wa.app_config.name.out  + "", 2)
+					o.dprint ("Terminating compile_process_webapp  for " + l_wa.app_config.name.out  + "", o.Debug_subtasks)
 					p.terminate
 					p.wait_for_exit
 				end
@@ -162,7 +162,7 @@ feature {TEST_WEBAPPS} -- Implementation
 								p.terminate
 							end
 						end
-						o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP -=-=-=-=-=-=", 6)
+						o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP -=-=-=-=-=-=", o.Debug_verbose_subtasks)
 						compile_process := launch_process (config.file.compiler_filename,
 														compiler_args,
 														app_dir,
@@ -209,7 +209,7 @@ feature -- Agent
 	compiler_output_handler (a_ouput: STRING)
 			-- Forwards output to console
 		do
-			o.dprintn (a_ouput, 3)
+			o.dprintn (a_ouput, o.Debug_verbose_subtasks)
 		end
 
 invariant

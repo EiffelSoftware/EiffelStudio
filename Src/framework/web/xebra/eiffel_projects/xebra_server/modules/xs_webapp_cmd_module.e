@@ -59,7 +59,7 @@ feature -- Inherited Features
 	 	       	l_cmd_socket.set_accept_timeout (500)
 				from
 	                l_cmd_socket.listen ({XU_CONSTANTS}.Max_tcp_clients.as_integer_32)
-	                o.dprint("Command Server ready on port " + {XU_CONSTANTS}.Cmd_server_port.out, 2)
+	                o.dprint("Command Server ready on port " + {XU_CONSTANTS}.Cmd_server_port.out, o.Debug_start_stop_components)
 	            until
 	            	stop
 	            loop
@@ -67,14 +67,14 @@ feature -- Inherited Features
 
 	                if not stop then
 			            if attached {NETWORK_STREAM_SOCKET} l_cmd_socket.accepted as thread_cmd_socket then
-	 					 	o.dprint ("Command connection to Webapp accepted",2)
+	 					 	o.dprint ("Command connection to Webapp accepted", o.Debug_verbose_subtasks)
 	 					 	thread_cmd_socket.read_natural
 				            if attached {XC_SERVER_COMMAND} thread_cmd_socket.retrieved as l_command then
-				            	o.dprint ("Command retreived...",2)
+				            	o.dprint ("Command retreived...", o.Debug_verbose_subtasks)
 								l_command_response := l_command.execute (main_server)
 
 					 	       	if l_command.has_response then
-						 	       	o.dprint ("Sending back command_response...", 2)
+						 	       	o.dprint ("Sending back command_response...", o.Debug_subtasks)
 									thread_cmd_socket.put_natural (0)
 									thread_cmd_socket.independent_store (l_command_response)
 					 	       	end
@@ -93,7 +93,7 @@ feature -- Inherited Features
 	        	check
 	        		l_cmd_socket.is_closed
 	       		end
-	       		o.dprint("Command Server ends.",2)
+	       		o.dprint("Command Server ends.", o.Debug_start_stop_components)
 	       		running := False
 	       	end
        		rescue

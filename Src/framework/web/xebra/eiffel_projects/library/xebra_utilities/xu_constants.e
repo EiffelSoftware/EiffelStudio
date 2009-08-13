@@ -104,24 +104,6 @@ feature -- Translator
 
 	Folder_replacement_string: STRING = "___"
 
-feature -- Debug levels
 
-	Debug_start_stop_app: INTEGER = 1
-			-- Start and stop of overall application
-
-	Debug_configuration: INTEGER = 2
-			-- Debug of configuration file reading
-
-	Debug_start_stop_components: INTEGER = 3
-			-- Start and stop of main components
-
-	Debug_tasks: INTEGER = 4
-			-- Information about tasks that are performed
-
-	Debug_subtasks: INTEGER = 5
-			--  Information about subtasks that are performed
-
-	Debug_verbose_subtasks: INTEGER = 6
-			-- Very verbose information about subtasks that are performed
 
 end

@@ -61,7 +61,7 @@ feature -- Inherited Features
 	 	       	l_http_socket.set_accept_timeout (1)
 				from
 	                l_http_socket.listen ({XU_CONSTANTS}.Max_tcp_clients.as_integer_32)
-	                o.dprint("HTTP Connection Server ready on port " + {XU_CONSTANTS}.Http_server_port.out,2)
+	                o.dprint("HTTP Connection Server ready on port " + {XU_CONSTANTS}.Http_server_port.out, o.Debug_start_stop_components)
 	            until
 	            	stop
 	            loop
@@ -69,7 +69,7 @@ feature -- Inherited Features
 	                if not stop then
 			            if attached {NETWORK_STREAM_SOCKET} l_http_socket.accepted as thread_http_socket then
 
-			            	if config.args.debug_level >= 7 then
+			            	if config.args.debug_level >= o.Debug_configuration then
 			            		start_time
 			            	end
 
@@ -89,8 +89,8 @@ feature -- Inherited Features
 				            check
 				            	thread_http_socket.is_closed
 				            end
-				            if config.args.debug_level >= 7 then
-			            		o.dprint ("Server Request Time: " + stop_time, 7)
+				            if config.args.debug_level >= o.Debug_configuration then
+			            		o.dprint ("Server Request Time: " + stop_time, o.Debug_configuration)
 			            	end
 						end
 					end
@@ -101,7 +101,7 @@ feature -- Inherited Features
 	       		end
        		end
        		running := False
-       		o.dprint("HTTP Connection Server ends.",2)
+       		o.dprint("HTTP Connection Server ends.", o.Debug_start_stop_components)
        		rescue
        			o.eprint ("HTTP Connection Server Module shutdown due to exception. Please relaunch manually.", generating_type)
 
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			l_fragment: BOOLEAN
 			l_index, l_message_size, l_fragment_size: NATURAL
 		do
-			o.dprint ("Sending response to http",2)
+			o.dprint ("Sending response to http", o.Debug_tasks)
 			create l_data.make ({XS_MESSAGE}.message_upper_bound.as_integer_32 + {PLATFORM}.natural_32_bytes)
 			l_fragment := false
 			l_message_size := a_message.count.as_natural_32
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		end
 
 	Max_fragments: INTEGER = 1000
-	
+
 	write_message_to_data (a_d: MANAGED_POINTER;
 						   a_message: STRING;
 						   a_start_index, a_end_index: NATURAL;

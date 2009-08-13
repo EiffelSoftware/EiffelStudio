@@ -89,7 +89,13 @@ feature {NONE} -- Access: Usage
 			-- <Precursor>
 		once
 			create Result.make (2)
-			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make (debug_level_switch, "Specifies a debug level. 0: No debug output. 10: All debug ouput.", True, False, "debug_level", "The debug level (0-10)", False))
+			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make
+			 (debug_level_switch, "Specifies a debug level.%N%T1: Start and stop of overall application" +
+														  "%N%T2: Application configuration" +
+														  "%N%T3: Start and stop of main components" +
+														  "%N%T4: Information about tasks that are performed" +
+														  "%N%T5: Information about subtasks that are performed" +
+														  "%N%T6: Very verbose information about subtasks that are performed", True, False, "debug_level", "The debug level (1-6)", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (assume_webapps_are_running_switch, "If set, the server assumes that the webapps are already running and does not translate, compile and run them before connect to them.", True, False))
 		end
 

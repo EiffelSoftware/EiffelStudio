@@ -47,22 +47,22 @@ feature {NONE} -- Implementation
 			if attached webapp as l_wa then
 				if not retried then
 					if attached {XC_WEBAPP_COMMAND} l_wa.current_request as l_current_request then
-						o.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", 6)
+						o.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", o.Debug_verbose_subtasks)
 						create l_webapp_socket.make_client_by_port (l_wa.app_config.port, l_wa.app_config.host)
-						o.dprint ("Connecting to " + l_wa.app_config.name.out + "@" + l_wa.app_config.port.out, 2)
+						o.dprint ("Connecting to " + l_wa.app_config.name.out + "@" + l_wa.app_config.port.out, o.Debug_subtasks)
 						l_webapp_socket.set_accept_timeout (3000)
 						l_webapp_socket.connect
 			            if  l_webapp_socket.is_connected then
-							o.dprint ("Forwarding command", 2)
+							o.dprint ("Forwarding command", o.Debug_subtasks)
 							l_webapp_socket.put_natural (0)
 
 				            l_webapp_socket.independent_store (l_current_request)
 
 				            if l_current_request.has_response then
-				            	o.dprint ("Waiting for response", 2)
+				            	o.dprint ("Waiting for response", o.Debug_subtasks)
 					            l_webapp_socket.read_natural
 								if attached {XC_COMMAND_RESPONSE} l_webapp_socket.retrieved as l_response then
-									o.dprint ("Response retrieved", 2)
+									o.dprint ("Response retrieved", o.Debug_subtasks)
 					            	Result := l_response
 					            else
 					            	Result := (create {XER_BAD_RESPONSE}.make (l_wa.app_config.name.out)).render_to_command_response

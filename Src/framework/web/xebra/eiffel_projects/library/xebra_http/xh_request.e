@@ -68,15 +68,6 @@ feature -- Access
 	args: STRING
 			-- The post or get arguments (as string)
 
-	upload_filename: detachable STRING
-			-- Returns the filename of the uploaded file (if any)
-		do
-			if is_post and args.starts_with ({XU_CONSTANTS}.Request_file_upload) then
-				Result := args.twin
-				Result.remove_head ({XU_CONSTANTS}.Request_file_upload.count)
-			end
-		end
-
 	argument_table: HASH_TABLE [STRING, STRING]
 			-- The arguments (post or get) represented as a table		
 		do

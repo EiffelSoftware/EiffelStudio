@@ -46,12 +46,17 @@ namespace Xebra
         /// <summary>
         /// The maximal size of a message fragment
         /// </summary>
-        int FRAG_SIZE = 65536;
+        private static int FRAG_SIZE = 65536;
 
         /// <summary>
         /// The maximal number of fragments of a message
         /// </summary>
-        int MAX_FRAGS = 1000;
+        private static int MAX_FRAGS = 1000;
+
+        /// <summary>
+        /// The port on which xebra server listens to the handler
+        /// </summary>
+        private static int PORT = 55001;
 
         #endregion
 
@@ -73,7 +78,7 @@ namespace Xebra
             try
             {
                 log.Debug("Creating socket...");
-                socket = new TcpClient("localhost", 55001);
+                socket = new TcpClient("localhost", PORT);
                 log.Debug("Connected.");
                 return true;
             }

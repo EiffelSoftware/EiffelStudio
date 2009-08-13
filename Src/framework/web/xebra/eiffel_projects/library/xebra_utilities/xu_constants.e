@@ -62,6 +62,8 @@ feature -- Response
 
 feature -- Request Message
 
+	Request_file_upload_iis: STRING = "#FUPI#"
+	Request_file_upload_apache: STRING = "#FUPA#"
 	Request_method_get: STRING = "GET"
 	Request_method_post: STRING = "POST"
 	Request_http: STRING = "HTTP/"
@@ -78,7 +80,6 @@ feature -- Request Message
 	Request_content_type: STRING = "Content-Type"
 	Request_ct_form: STRING = "application/x-www-form-urlencoded"
 	Request_post_too_big: STRING = "#PTB#"
-	Request_file_upload: STRING = "#FUP#"
 
 feature -- Cookie Order
 

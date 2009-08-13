@@ -21,9 +21,7 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialization for `Current'.
-		require
 		do
-		ensure
 		end
 
 feature -- Access
@@ -32,13 +30,13 @@ feature -- Access
 			-- The webapp
 
 	is_running: BOOLEAN
-		-- True if the action has to wait e.g. for a process to terminate
+		-- True if the action is currently running
 
 	is_running_recursive: BOOLEAN
-			-- True if internal_is_running is true and
-			-- if the next action (recursively) is still running
+			-- True if is_running is true and
+			-- if the next action (recursively) is running
 		do
-			if attached next_action  as l_na then
+			if attached next_action as l_na then
 				Result := is_running or l_na.is_running_recursive
 			else
 				Result := is_running

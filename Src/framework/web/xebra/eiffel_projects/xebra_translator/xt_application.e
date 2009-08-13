@@ -71,7 +71,7 @@ feature -- Operation
 				if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_write (l_generation_file_name) as l_file then
 					l_file.put_string ({XU_CONSTANTS}.Successful_translation)
 					l_file.close
-					o.dprint ("Translator_executed_file written to " + l_generation_file_name, {XU_CONSTANTS}.Debug_verbose_subtasks)
+					o.dprint ("Translator_executed_file written to " + l_generation_file_name, o.Debug_verbose_subtasks)
 				else
 					o.eprint ("Could not write Translator_executed file!", generating_type)
 				end
@@ -80,8 +80,8 @@ feature -- Operation
 				end
 
 
-				o.dprint ("Output generated to '" + l_translator.output_path + "'", {XU_CONSTANTS}.Debug_start_stop_components)
-				o.dprint ({XU_CONSTANTS}.Successful_translation, {XU_CONSTANTS}.Debug_start_stop_app)
+				o.dprint ("Output generated to '" + l_translator.output_path + "'", o.Debug_start_stop_components)
+				o.dprint ({XU_CONSTANTS}.Successful_translation, o.Debug_start_stop_app)
 			end
 		end
 

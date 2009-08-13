@@ -193,10 +193,10 @@ feature -- Basic functionality
 					create buf.make (l_file)
 					servlet_gen_class.serialize (buf)
 					l_util.close
-					o.dprint ("Servlet generator generated at: " + l_filename, {XU_CONSTANTS}.Debug_tasks)
+					o.dprint ("Servlet generator generated at: " + l_filename, o.Debug_tasks)
 				end
 			else
-				o.dprint ("Already up to date: " + l_filename, {XU_CONSTANTS}.Debug_tasks)
+				o.dprint ("Already up to date: " + l_filename, o.Debug_tasks)
 			end
 		end
 

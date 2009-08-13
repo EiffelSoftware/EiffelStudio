@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 				Result.set_on_exit_handler (a_exit_handler)
 				Result.redirect_output_to_agent (a_output_handler)
 				Result.redirect_error_to_agent (a_error_output_handler)
-				o.dprint("Launching new process '" + a_exe + " " + a_args + "' in '" + a_dir + "'", 3)
+				o.dprint("Launching new process '" + a_exe + " " + a_args + "' in '" + a_dir + "'", o.Debug_subtasks)
 				Result.launch
 			end
 		end

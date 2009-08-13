@@ -99,18 +99,18 @@ feature -- Status report
 					 	force
 
 			if Result then
-				o.dprint ("Translating is necessary", 3)
+				o.dprint ("Translating is necessary", o.Debug_tasks)
 				if translator_executed_file_old then
-					o.dprint ("Translating is necessary because: Translator_executed file is older than xeb files in app_dir or does not exist.", 5)
+					o.dprint ("Translating is necessary because: Translator_executed file is older than xeb files in app_dir or does not exist.", o.Debug_verbose_subtasks)
 				end
 				if l_servet_gen_ecf_not_exist then
-					o.dprint ("Translating is necessary because: servlet_gen ecf does not exist.", 5)
+					o.dprint ("Translating is necessary because: servlet_gen ecf does not exist.", o.Debug_verbose_subtasks)
 				end
 				if force then
-					o.dprint ("Translating is necessary because: force.", 5)
+					o.dprint ("Translating is necessary because: force.", o.Debug_verbose_subtasks)
 				end
 			else
-				o.dprint ("Translating is not necessary", 3)
+				o.dprint ("Translating is not necessary", o.Debug_tasks)
 			end
 		end
 
@@ -123,7 +123,7 @@ feature -- Status setting
 		do
 			if attached webapp as l_wa then
 				if attached {PROCESS} translate_process as p and then p.is_running  then
-					o.dprint ("Terminating translate_process for " + l_wa.app_config.name.out  + "", 2)
+					o.dprint ("Terminating translate_process for " + l_wa.app_config.name.out  + "", o.Debug_tasks)
 					p.terminate
 					p.wait_for_exit
 				end
@@ -174,7 +174,7 @@ feature {TEST_WEBAPPS} -- Implementation
 							end
 						end
 
-						o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE -=-=-=-=-=-=", 6)
+						o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE -=-=-=-=-=-=", o.Debug_verbose_subtasks)
 						translate_process := launch_process (config.file.translator_filename,
 																translator_args,
 																app_dir,

@@ -91,21 +91,21 @@ feature -- Status report
 			Result := l_melted_file_is_old or l_executable_does_not_exist or needs_cleaning
 
 			if Result then
-				o.dprint ("Compiling servlet_gen is necessary", 3)
+				o.dprint ("Compiling servlet_gen is necessary", o.Debug_tasks)
 				if l_melted_file_is_old then
-					o.dprint ("Compiling servlet_gen is necessary because: " + servlet_gen_melted_file_path + " is older than .e files or .ecf file or does not exist.", 5)
+					o.dprint ("Compiling servlet_gen is necessary because: " + servlet_gen_melted_file_path + " is older than .e files or .ecf file or does not exist.", o.Debug_verbose_subtasks)
 				end
 
 				if l_executable_does_not_exist then
-					o.dprint ("Compiling servlet_gen is necessary because: " + servlet_gen_exe + " does not exist or is not executable.", 5)
+					o.dprint ("Compiling servlet_gen is necessary because: " + servlet_gen_exe + " does not exist or is not executable.", o.Debug_verbose_subtasks)
 				end
 
 					if needs_cleaning then
-					o.dprint ("Compiling servlet_gen is necessary because: servlet_gen compilation cleaning not yet performed.", 5)
+					o.dprint ("Compiling servlet_gen is necessary because: servlet_gen compilation cleaning not yet performed.", o.Debug_verbose_subtasks)
 				end
 
 			else
-				o.dprint ("Compiling servlet_gen is not necessary", 3)
+				o.dprint ("Compiling servlet_gen is not necessary", o.Debug_tasks)
 			end
 		end
 
@@ -126,7 +126,7 @@ feature -- Status setting
 		do
 			if attached webapp as l_wa then
 				if attached {PROCESS} gen_compile_process as p and then p.is_running  then
-					o.dprint ("Terminating gen_compile_process for " + l_wa.app_config.name.out  + "", 2)
+					o.dprint ("Terminating gen_compile_process for " + l_wa.app_config.name.out  + "", o.Debug_subtasks)
 					p.terminate
 					p.wait_for_exit
 				end
@@ -171,7 +171,7 @@ feature {TEST_WEBAPPS} -- Implementation
 							end
 						end
 						set_running (True)
-						o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN-=-=-=-=-=-=", 6)
+						o.dprint("-=-=-=--=-=LAUNCHING COMPILE SERVLET GEN-=-=-=-=-=-=", o.Debug_verbose_subtasks)
 						gen_compile_process := launch_process (config.file.compiler_filename,
 																gen_compiler_args,
 																app_dir,

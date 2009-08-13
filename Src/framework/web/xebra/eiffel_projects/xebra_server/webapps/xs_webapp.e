@@ -156,7 +156,7 @@ feature  -- Status Setting
 			-- Initiates shutdown and waits for termination.
 		do
 			if action_run.is_running then
-				o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", 4)
+				o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", o.Debug_tasks)
 				current_request := 	create {XCWC_SHUTDOWN}.make
 				action_send.execute.do_nothing
 				action_run.wait_for_exit
@@ -166,7 +166,7 @@ feature  -- Status Setting
 	fire_off
 			-- Sends shutdown signal even if the webapp process is not owned by the server
 		do
-			o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", 4)
+			o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", o.Debug_tasks)
 			current_request := 	create {XCWC_SHUTDOWN}.make
 			action_send.execute.do_nothing
 		end

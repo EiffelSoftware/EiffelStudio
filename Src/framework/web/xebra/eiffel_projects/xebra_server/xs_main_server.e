@@ -58,13 +58,13 @@ feature {XS_APPLICATION} -- Setup
 			print("%N%N%N")
 			o.iprint ("Starting Xebra Web Application Server...")
 			if check_xebra_environment_variable then
-				o.dprint (config.args.print_configuration, 2)
+				o.dprint (config.args.print_configuration, o.Debug_configuration)
 				stop := false
 				if attached {XCCR_OK} load_config then
 					modules.force (create {XS_CONSOLE_MODULE}.make (current, "mod_console"), "mod_console")
 					modules.force (create {XS_HTTP_CONN_MODULE}.make (current, "mod_http"), "mod_http")
 					modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current, "mod_cmd"), "mod_cmd")
-					o.dprint("Launching modules...",2)
+					o.dprint("Launching modules...", o.Debug_tasks)
 					modules.run_all
 					run
 				end
@@ -84,7 +84,7 @@ feature {NONE} -- Operations
 				l_thread.sleep (1000000)
 			end
 
-			o.dprint ("Shutting down...", 1)
+			o.dprint ("Shutting down...", o.Debug_start_stop_app)
 			shutdown_all_modules
 			shutdown_webapps.do_nothing
 			if attached modules ["mod_input"] as l_mi then
@@ -358,10 +358,10 @@ feature {XS_SERVER_MODULE} -- Status setting
 				config.file := l_config
 				if handle_errors then
 					Result := create {XCCR_OK}
-					o.dprint (config.file.print_configuration, 2)
+					o.dprint (config.file.print_configuration, o.Debug_configuration)
 					config.file.set_webapps (l_webapp_handler.search_webapps (config.file.webapps_root))
 					handle_errors.do_nothing
-					o.dprint (config.file.print_webapp_configuration, 2)
+					o.dprint (config.file.print_webapp_configuration, o.Debug_configuration)
 				end
 			end
 			handle_errors.do_nothing

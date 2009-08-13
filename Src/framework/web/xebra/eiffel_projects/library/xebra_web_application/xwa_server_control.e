@@ -41,18 +41,18 @@ feature -- Operations
 			Result := create {XCCR_INTERNAL_SERVER_ERROR}
 
 			create l_socket.make_client_by_port (default_cmd_server_port, default_cmd_server_host)
-			o.dprint ("Connecting...", 3)
+			o.dprint ("Connecting...", o.Debug_verbose_subtasks)
 			l_socket.connect
             if  l_socket.is_connected then
-            	o.dprint("Sending command...", 3)
+            	o.dprint("Sending command...", o.Debug_verbose_subtasks)
             	l_socket.put_natural (0)
 		        l_socket.independent_store (a_command)
 
 		        if a_command.has_response then
-		        	o.dprint ("Waiting for response", 2)
+		        	o.dprint ("Waiting for response", o.Debug_verbose_subtasks)
 		            l_socket.read_natural
 					if attached {XC_COMMAND_RESPONSE} l_socket.retrieved as l_response then
-						o.dprint ("Response retrieved", 2)
+						o.dprint ("Response retrieved", o.Debug_verbose_subtasks)
 		            	Result := l_response
 		            else
 		            	Result := create {XCCR_CANNOT_SEND}

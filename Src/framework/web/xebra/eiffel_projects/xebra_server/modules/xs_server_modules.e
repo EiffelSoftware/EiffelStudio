@@ -32,7 +32,7 @@ feature -- Status setting
 			until
 				after
 			loop
-				o.dprint ("Launching '" + key_for_iteration.out + "'", 2)
+				o.dprint ("Launching '" + key_for_iteration.out + "'", o.Debug_subtasks)
 				item_for_iteration.launch
 				forth
 			end

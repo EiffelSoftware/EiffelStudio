@@ -1,5 +1,10 @@
 # install_xebra_ubuntu.sh
 
+# install.sh
+echo "under construction!";
+exit;
+
+
 if [ -x "$XEBRA_DEV" ]; then
 	:
 else
@@ -35,7 +40,7 @@ cd $XEBRA_DEV
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/eiffel_projects
 svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/tools
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/httpd
+svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/www
 
 # Install apache
 # mkdir httpd
@@ -71,6 +76,10 @@ echo " Deny from all" >> $XEBRA_DEV/httpd/conf/httpd.conf
 echo "</Directory>" >> $XEBRA_DEV/httpd/conf/httpd.conf 
 sed -e 's/Listen 80/Listen 55000/' -i $XEBRA_DEV/httpd/conf/httpd.conf 
 
+sed -e "s/^DocumentRoot.*$/Document Root $XEBRA_DEV\/www/" -i httpd.conf
+
+
+sed -e 's/(\^DocumentRoot.*)\\/httpd\/htdocs/$1\/www/' -i $XEBRA_DEV/httpd/conf/httpd.conf 
 
 
 $XEBRA_DEV/httpd/bin/apachectl start

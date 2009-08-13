@@ -58,7 +58,6 @@ feature {NONE} -- Initialization
 			choice_list.virtual_position_changed_actions.extend (agent on_scroll)
 			choice_list.mouse_wheel_actions.extend (agent on_mouse_wheel)
 
-			has_shadow := True
 			docking_make
 
 			option_bar_box := build_option_bar

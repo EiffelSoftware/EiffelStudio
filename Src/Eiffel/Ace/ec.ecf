@@ -40,6 +40,7 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf" readonly="false"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false"/>
+		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>
 		<library name="parser_extension" location="$EIFFEL_SRC\framework\parser_extension\parser_extension.ecf" readonly="false" use_application_options="true"/>
 		<library name="pe_reader" location="$EIFFEL_SRC\framework\file_formats\pe\pe.ecf" readonly="false"/>
@@ -166,7 +167,6 @@
 		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf" readonly="false"/>
-		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf" readonly="false"/>
 		<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.ecf" readonly="false"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf" readonly="false"/>

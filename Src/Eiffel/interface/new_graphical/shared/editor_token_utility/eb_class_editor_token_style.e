@@ -61,7 +61,15 @@ feature -- Access
 			l_writer := token_writer
 			l_writer.new_line
 			l_curly_enabled := is_curly_enabled
-			if not is_class_c_set then
+			if custom_name /= Void then
+				if l_curly_enabled then
+					l_writer.process_symbol_text (ti_l_curly)
+				end
+				l_writer.process_class_name_text (custom_name, class_i, False)
+				if l_curly_enabled then
+					l_writer.process_symbol_text (ti_r_curly)
+				end
+			elseif not is_class_c_set then
 					-- Only class name is available if only `class_i' is set.
 				if l_curly_enabled then
 					l_writer.process_symbol_text (ti_l_curly)
@@ -98,6 +106,8 @@ feature -- Access
 			end
 			Result := l_writer.last_line.content
 		end
+
+	custom_name: detachable STRING_32
 
 feature -- Status report
 
@@ -285,8 +295,26 @@ feature -- Setting
 			curly_disabled: not is_curly_enabled
 		end
 
+	enable_custom_name (a_name: STRING_32)
+			-- Use `a_name' as the name displayed.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			custom_name := a_name
+		ensure
+			custom_name_set: custom_name = a_name
+		end
+
+	disable_custom_name
+			-- Use `a_name' as the name displayed.
+		do
+			custom_name := Void
+		ensure
+			custom_name_cleared: custom_name = Void
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -299,22 +327,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

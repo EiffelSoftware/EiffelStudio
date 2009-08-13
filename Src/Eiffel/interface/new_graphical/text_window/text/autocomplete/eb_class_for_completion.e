@@ -37,14 +37,19 @@ create {EB_CLASS_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_class: like associated_class)
+	make (a_class: like associated_class; a_viewable_name: detachable STRING_32)
 			-- Creates and initializes a new class completion item
 		require
 			a_class_not_void: a_class /= Void
 		do
-			token_writer.new_line
-			a_class.append_name (token_writer)
-			insert_name := token_writer.last_line.wide_image
+			if a_viewable_name = Void then
+				token_writer.new_line
+				a_class.append_name (token_writer)
+				insert_name := token_writer.last_line.wide_image
+			else
+				insert_name := a_viewable_name
+				viewable_name := a_viewable_name
+			end
 			make_old (insert_name)
 			associated_class := a_class
 		ensure
@@ -61,6 +66,9 @@ feature -- Access
 
 	insert_name: STRING_32
 			-- Name to insert in editor
+
+	viewable_name: detachable STRING_32
+			-- Name to display.
 
 	icon: EV_PIXMAP
 			-- Associated icon based on data
@@ -118,6 +126,9 @@ feature -- Access
 				l_style.set_class_c (l_class)
 			else
 				l_style.set_class_i (associated_class)
+			end
+			if viewable_name /= Void then
+				l_style.enable_custom_name (viewable_name)
 			end
 			create Result
 			Result.set_overriden_fonts (label_font_table, label_font_height)

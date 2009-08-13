@@ -12,7 +12,7 @@ feature -- Creation
 
 	make (new_pattern, new_text: STRING)
 			-- Create a matcher to search pattern
-			-- `new_pattern' in text `new_text'.
+			-- `new_pattern' in text `new_text'
 		require
 			new_pattern_non_void: new_pattern /= Void;
 			not_new_pattern_empty: not new_pattern.is_empty;
@@ -28,14 +28,16 @@ feature -- Creation
 
 	make_empty
 			-- Create a matcher to search for a pattern
-			-- in a text. Initialize it later.
+			-- in a text. Initialize it later
 		do
-		end;
+			create pattern.make_empty
+			create text.make_empty
+		end
 
 feature -- Status setting
 
 	start_at (i: INTEGER)
-			-- Start search at position `i'.
+			-- Start search at position `i'
 		require
 			i_large_enough: i >= 1;
 			i_small_enough: i <= text.count
@@ -46,7 +48,7 @@ feature -- Status setting
 		end;
 
 	set_pattern (new_pattern: STRING)
-			-- Change the pattern to `new_pattern'.
+			-- Change the pattern to `new_pattern'
 		require
 			new_pattern_non_void: new_pattern /= Void;
 		deferred
@@ -55,9 +57,9 @@ feature -- Status setting
 		end;
 
 	set_text (new_text: STRING)
-			-- Change the text to `new_text'.
+			-- Change the text to `new_text'
 			-- Next search will start at the beginning
-			-- of the text.
+			-- of the text
 		require
 			new_text_non_void: new_text /= Void;
 		do
@@ -92,7 +94,7 @@ feature -- Search
 
 	search_for_pattern: BOOLEAN
 			-- Search in the text to find the very next
-			-- occurrence of `pattern'.
+			-- occurrence of `pattern'
 		require
 			pattern_valid: pattern /= Void and then not pattern.is_empty
 			text_valid: text /= Void and then not text.is_empty
@@ -102,7 +104,7 @@ feature -- Search
 feature {NONE} -- Attributes
 
 	index: INTEGER;
-			-- Current location in `text'.
+			-- Current location in `text'
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

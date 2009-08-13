@@ -40,5 +40,5 @@ Those scripts are in progress for now.
 Please report any issue to es-develop@origo.ethz.ch (or jfiat@eiffel.com)
 
 -------------------------------------------
- Web: http://eiffelsoftware.origo.ethz.ch/
+ Web: http://eiffelstudio.origo.ethz.ch/
 -------------------------------------------

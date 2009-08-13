@@ -500,6 +500,7 @@ end
 		local
 			next_char: CHARACTER
 			temp_noc: INTEGER
+			l_from_pos: INTEGER
 		do
 			next_char := profile_string.item (string_idx)
 			if next_char.is_alpha or else next_char = '_' then
@@ -516,6 +517,16 @@ end
 					token_string.extend (next_char)
 					string_idx := string_idx + 1
 					next_char := profile_string.item (string_idx)
+				end
+
+					-- Handle prefixes and infixes like: infix "+" or prefix "-".
+					-- Get anything before " from".
+				if token_string.is_case_insensitive_equal ("infix") or token_string.is_case_insensitive_equal ("prefix") then
+					l_from_pos := profile_string.substring_index (" from", string_idx)
+					if l_from_pos > string_idx then
+						token_string.append_string (profile_string.substring (string_idx, l_from_pos - 1))
+						string_idx := l_from_pos
+					end
 				end
 
 					-- Eiffel generates ` from ABC' as well...

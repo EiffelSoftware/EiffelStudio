@@ -36,6 +36,7 @@ namespace Xebra
     {
         #region Constants
 
+
         /// <summary>
         /// The key in the request message that represents the start of the html code
         /// </summary>
@@ -60,6 +61,11 @@ namespace Xebra
         /// The key in the request message that represents the end of a table
         /// </summary>
         private static string END = "#E#";
+
+        /// <summary>
+        /// The string for method GET
+        /// </summary>
+        private static string GET = "GET";
 
         /// <summary>
         /// The string for method POST
@@ -89,7 +95,7 @@ namespace Xebra
         /// <summary>
         /// The key in the request message that splits two argument key/value pairs
         /// </summary>
-        private static string AKEY = "#$#";
+        private static string AKEY = "&";
 
         /// <summary>
         /// The key in the request message that splits a argument key and an argument value
@@ -115,6 +121,17 @@ namespace Xebra
         /// This flag is used to tell xebra server that a file was uploaded using IIS and and it has to be processed differently
         /// </summary>
         private static string FILE_UPLOAD_FLAG = "#FUPI#";
+
+        /// <summary>
+        /// This key is put before the original filename
+        /// </summary>
+        private static string FILE_NAME = "#FN#";
+
+        /// <summary>
+        /// The Content-Type string in the input stream of a file upload request
+        /// </summary>
+        private static string UPLOAD_CONTENT_TYPE = "Content-Type";
+
 
 
         #endregion
@@ -169,14 +186,45 @@ namespace Xebra
         public void ProcessRequest(HttpContext context)
         {
             string requestMsg;
-            string responseMsg = "";
+            bool ok = false;
+            string responseMsg;
             HttpRequest request = context.Request;
             log = new XWindowsLogger();
-
             srv = new XServerConnection(log);
-            if (srv.connect())
+
+            if (buildRequestMessage(out requestMsg, request))
             {
-                requestMsg = request.RequestType +                      // Method
+                if (srv.connect())
+                {
+                    if (srv.sendMessage(requestMsg))
+                    {
+                        if (srv.receiveMessage(out responseMsg))
+                        {
+                            if (processResponse(ref responseMsg, context))
+                            {
+                                context.Response.Write(responseMsg);
+                                ok = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!ok)
+            {
+                context.Response.Write(ERRORMSG);
+            }
+        }
+
+        /// <summary>
+        /// Parses the request object and generated a request message string that can be sent to the xebra server
+        /// </summary>
+        /// <param name="requestMsg">The string to store the request message </param>
+        /// <param name="request">The request object</param>
+        /// <returns>Returns true on success</returns>
+        private bool buildRequestMessage(out string requestMsg, HttpRequest request)
+        {
+            requestMsg = request.RequestType +                      // Method
                     " " +                                               // Space
                     request.RawUrl +                                    // Url
                     " " + DEFAULT_ENCODING +                            // Encoding
@@ -185,73 +233,118 @@ namespace Xebra
                     SUBPROCESS_ENVIRONMENT_VARS + END +                 // No SUBPROCESS_ENV_VARS
                     ARGUMENTS +                                         // ARGS
                     "";
-
-                /* If there are, read POST or GET parameters into message buffer */
-                if (request.RequestType.Equals(POST))
+            
+            /* If there are, read POST or GET parameters into message buffer */
+            if (request.RequestType.Equals(POST))
+            {
+                /* If the Content-Type is CT_MULTIPART_FORM_DATA save the post data to a file and don't append it to the message */
+                if (request.ContentType.StartsWith(CT_MULTIPART_FORM_DATA))
                 {
-                    /* If the Content-Type is CT_MULTIPART_FORM_DATA save the post data to a file and don't append it to the message */
-                    if (request.ContentType.StartsWith(CT_MULTIPART_FORM_DATA))
+                    if (request.Files.Keys.Count == 1)
                     {
-                        if (request.Files.Keys.Count == 1)
+                        // Save file to tmp file
+                        string tempFileName = getTmpFileName("C:\\tmp\\");
+                        requestMsg += FILE_UPLOAD_FLAG + tempFileName;
+                        request.Files.Get(0).SaveAs(tempFileName);
+
+                        //Parse header and append filename to requestMsg
+                        int bufSize = 100;
+                        int maxSize = 2000;
+                        byte[] buf = new byte[bufSize];
+                        string header = "";
+                        string[] lines;
+                        string[] lineFragments;
+                        string filename;
+
+                        do
                         {
-                            string tempFileName = getTmpFileName("C:\\tmp\\");
-                            requestMsg += FILE_UPLOAD_FLAG + tempFileName;
-                            request.Files.Get(0).SaveAs(tempFileName);
+                            request.InputStream.Read(buf, 0, bufSize);
+                            header += System.Text.ASCIIEncoding.ASCII.GetString(buf);
+                            if (header.Length > maxSize)
+                            {
+                                log.Error("Error parsing uploaded file InputStream: Giving up finding filename.");
+                                return false;
+                            }
+                        } while (!header.Contains(UPLOAD_CONTENT_TYPE));
+
+                        lines = header.Split('\n');
+
+                        if (lines.Length >= 2)
+                        {
+                            lineFragments = lines[1].Split('"');
+                            if (lineFragments.Length >= 4)
+                            {
+                                filename = lineFragments[3];
+                                requestMsg += FILE_NAME + filename;
+                                return true;
+                            }
+                            else
+                            {
+                                log.Error("Error parsing uploaded file InputStream: Unknown formatting.");
+                                return false;
+                            }
                         }
                         else
                         {
-                            context.Response.Write(ERRORMSG);
+                            log.Error("Error parsing uploaded file InputStream: Not enough lines.");
+                            return false;
                         }
                     }
                     else
                     {
-                        /* If the Content-Type is CT_APP_FORM_URLENCODED encode the data in a form layout */
-                        if (request.ContentType.Equals(CT_APP_FORM_URLENCODED))
-                        {
-                            requestMsg += EncodeArgs(request.Form);
-                        }
-                        else
-                        {
-                            if (request.InputStream.CanRead)
-                            {
-                                byte[] buf = new byte[(int)request.InputStream.Length];
-                                request.InputStream.Read(buf, 0, (int)request.InputStream.Length);
-                                requestMsg += System.Text.ASCIIEncoding.ASCII.GetString(buf);
-
-                            }
-                            else
-                            {
-                                context.Response.Write(ERRORMSG);
-                            }
-                        }
+                        log.Error("Expected uploaded files 1, actual " + request.Files.Keys.Count.ToString() + ".");
+                        return false;
                     }
                 }
                 else
                 {
-                    /* If its not a POST request, simply append the (GET) args to the message */
-                    requestMsg += EncodeArgs(request.QueryString);
-                }
-
-                log.Debug("Incoming request: " + requestMsg);
-                if (srv.sendMessage(requestMsg))
-                {
-                    responseMsg = srv.receiveMessage();
+                    /* If the Content-Type is CT_APP_FORM_URLENCODED encode the data in a form layout */
+                    if (request.ContentType.Equals(CT_APP_FORM_URLENCODED))
+                    {
+                        requestMsg += EncodeArgs(request.Form);
+                        return true;
+                    }
+                    else
+                    {
+                        /* In all other cases we just append the whole request body to the message */
+                        byte[] buf = new byte[(int)request.InputStream.Length];
+                        request.InputStream.Read(buf, 0, (int)request.InputStream.Length);
+                        requestMsg += System.Text.ASCIIEncoding.ASCII.GetString(buf);
+                        return true;
+                    }
                 }
             }
-            if (responseMsg.Equals(""))
+            else if (request.RequestType.Equals(GET))
             {
-                context.Response.Write(ERRORMSG);
+                /* If its a GET request simply append the args to the message */
+                requestMsg += EncodeArgs(request.QueryString);
+                return true;
             }
             else
             {
-                if (responseMsg.Contains(HTML_START))
-                {
-                    XCookieBakery.createCookies(responseMsg, context);
-                    responseMsg = responseMsg.Substring(responseMsg.IndexOf(HTML_START) + HTML_START.Length);
-                    context.Response.Write(responseMsg);
-                }
-                else
-                    context.Response.Write(ERRORMSG);
+                /* If the method is not POST or GET we don't add any arguments */
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Processes the received response message. Extracts cookies.
+        /// </summary>
+        /// <param name="responseMsg">The response mssage</param>
+        /// <param name="context">The context</param>
+        /// <returns>Returns true on success</returns>
+        private bool processResponse(ref string responseMsg, HttpContext context)
+        {
+            if (responseMsg.Contains(HTML_START))
+            {
+                XCookieBakery.createCookies(responseMsg, context);
+                responseMsg = responseMsg.Substring(responseMsg.IndexOf(HTML_START) + HTML_START.Length);
+                return true;
+            }
+            else
+            {
+                log.Error("Received response message does not contain HTML_START.");
+                return false;
             }
         }
 
@@ -285,7 +378,7 @@ namespace Xebra
         /// <returns>The encoded pairs</returns>
         private string EncodeHeader(NameValueCollection pairs)
         {
-            return EncodePair(pairs,  HKEY, HVALUE);
+            return EncodePair(pairs, HKEY, HVALUE);
         }
 
         /// <summary>
@@ -305,7 +398,7 @@ namespace Xebra
         /// <param name="afix">Is put before keys</param>
         /// <param name="bfix">Is put before values</param>
         /// <returns>The encoded pairs</returns>
-        private string EncodePair(NameValueCollection pair,  string afix, string bfix)
+        private string EncodePair(NameValueCollection pair, string afix, string bfix)
         {
             string result = "";
             for (int i = 0; i < pair.Count; i++)

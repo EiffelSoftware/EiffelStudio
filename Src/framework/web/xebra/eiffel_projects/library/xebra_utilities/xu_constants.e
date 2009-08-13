@@ -64,6 +64,7 @@ feature -- Request Message
 
 	Request_file_upload_iis: STRING = "#FUPI#"
 	Request_file_upload_apache: STRING = "#FUPA#"
+	Request_file_upload_filename: STRING = "#FN#"
 	Request_method_get: STRING = "GET"
 	Request_method_post: STRING = "POST"
 	Request_http: STRING = "HTTP/"

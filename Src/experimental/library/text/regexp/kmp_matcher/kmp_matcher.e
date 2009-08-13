@@ -4,8 +4,8 @@ note
 	status: "See notice at end of class.";
 	date:		"$Date$";
 	revision:	"$Revision$"
-	
-class KMP_MATCHER 
+
+class KMP_MATCHER
 
 inherit
 	MATCHER
@@ -21,17 +21,17 @@ feature -- Access
 			Result := pattern.count
 		end
 
-	matching_indices: ARRAYED_LIST [INTEGER]
+	matching_indices: detachable ARRAYED_LIST [INTEGER]
 			-- indices of found pattern in text
 
-	lengths: ARRAYED_LIST [INTEGER]
+	lengths: detachable ARRAYED_LIST [INTEGER]
 			-- lengths of found patterns in text
 		local
 			i, fpl: INTEGER
 		do
-			if matching_indices /= Void then
-				create Result.make (matching_indices.count)
-				from 
+			if attached  matching_indices as l_indices then
+				create Result.make (l_indices.count)
+				from
 					i := 1
 					fpl := found_pattern_length
 				until
@@ -59,13 +59,13 @@ feature -- Status setting
 
 	enable_case_sensitive
 			-- Set `is_not_case_sensitive' to False
-		do	
+		do
 			is_not_case_sensitive := False
 		end
 
 	disable_case_sensitive
 			-- Set `is_not_case_sensitive' to True
-		do	
+		do
 			is_not_case_sensitive := True
 		end
 
@@ -76,10 +76,11 @@ feature -- Search
 			-- occurrence of `pattern'.
 		local
 			text_count, pattern_count, i: INTEGER
-			old_pattern, old_text: STRING
+			old_pattern, old_text: detachable STRING
 			text_area, pattern_area: SPECIAL [CHARACTER]
 			table_area: SPECIAL [INTEGER]
 			j: INTEGER
+			l_table: like table
 		do
 			from
 				if is_not_case_sensitive then
@@ -88,9 +89,11 @@ feature -- Search
 					pattern := pattern.as_lower
 					text := text.as_lower
 				end
-				init_arrays 
+				init_arrays
 				pattern_area := pattern.area
-				table_area := table.area
+				l_table := table
+				check l_table /= Void end -- Implied by postcondition of `l_table'
+				table_area := l_table.area
 				text_area := text.area
 				pattern_count := pattern.count
 				text_count := text.count
@@ -112,6 +115,8 @@ feature -- Search
 			end
 			found := Result
 			if is_not_case_sensitive then
+				check old_text /= Void end -- Implied by `is_not_case_sensitive'
+				check old_pattern /= Void end -- Implied by `is_not_case_sensitive'
 				text := old_text
 				pattern := old_pattern
 			end
@@ -124,10 +129,11 @@ feature -- Search
 			text_count, pattern_count, i: INTEGER
 			text_area, pattern_area: SPECIAL [CHARACTER]
 			table_area: SPECIAL [INTEGER]
-			old_pattern, old_text: STRING
+			old_pattern, old_text: detachable STRING
 			j: INTEGER
 			finished: BOOLEAN
 			t: ARRAYED_LIST [INTEGER]
+			l_table: like table
 		do
 			from
 				if is_not_case_sensitive then
@@ -136,11 +142,13 @@ feature -- Search
 					pattern := pattern.as_lower
 					text := text.as_lower
 				end
-				init_arrays 
+				init_arrays
 				create t.make (10)
 				pattern_area := pattern.area
 				pattern_count := pattern.count
-				table_area := table.area
+				l_table := table
+				check l_table /= Void end -- Implied by postcondition of `init_arrays'
+				table_area := l_table.area
 				text_area := text.area
 				text_count := text.count
 				i := index - 1
@@ -161,13 +169,16 @@ feature -- Search
 			end
 			matching_indices := t
 			if is_not_case_sensitive then
+				check old_text /= Void end -- Implied by `is_not_case_sensitive'
+				check old_pattern /= Void end -- Implied by `is_not_case_sensitive'
 				text := old_text
 				pattern := old_pattern
 			end
 		ensure
-			found_or_not_found: not matching_indices.is_empty = search_for_pattern	
+			found_or_not_found: attached matching_indices as le_indices and then
+				not le_indices.is_empty = search_for_pattern
 		end
-	
+
 feature {NONE} -- Initialization
 
 	init_arrays
@@ -177,12 +188,14 @@ feature {NONE} -- Initialization
 			pattern_area: SPECIAL [CHARACTER]
 			pattern_count: INTEGER
 			l,k: INTEGER
+			l_table: like table
 		do
-			from 
+			from
 				pattern_area := pattern.area
 				pattern_count := pattern.count
-				create table.make (0, pattern_count)
-				table_area := table.area
+				create l_table.make (0, pattern_count)
+				table := l_table
+				table_area := l_table.area
 				l := 0
 				k := -1
 				table_area.put (-1, 0)
@@ -201,14 +214,15 @@ feature {NONE} -- Initialization
 					k := table_area.item (k)
 				end
 			end
-
+		ensure
+			created: table /= Void
 		end;
-	
+
 feature {NONE} -- Attributes
 
-	table: ARRAY [INTEGER];
+	table: detachable ARRAY [INTEGER];
 		-- Pattern automaton
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

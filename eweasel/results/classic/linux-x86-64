@@ -29,6 +29,7 @@ Test sorted-two-way-list-invariant-violation (list012): passed
 Test do-all-with-index-arrayed-list (list013): passed
 Test two-way-list-merge (list014): passed
 Test priority-queue-basics (queue001): passed
+Test heap-priority-queue-remove (queue002): passed
 Test disjoint-sets (set001): passed
 Test disjoint-sets-expanded (set001a): passed
 Test disjoint-sets-heterogenous (set001b): passed
@@ -1108,6 +1109,44 @@ Test undetected-vuot-error (valid252): failed
 
 Test equality-of-conforming-classes (valid253): passed
 Test bogus-bit-vdrd (valid254): passed
+Test missing-vhpr-with-different-generic-derivation (valid255): failed
+	Description: A class that inherits twice from the same generic class directly with two different generic derivations will be flagged with an ECMA-VHPR(5) error, but the same scenario with an indirection won't be properly detected.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/valid255/tcf at line 18
+	Original text:    compile_result validity_error TEST ECMA-VHPR(5)
+	Substituted text: compile_result validity_error TEST ECMA-VHPR(5)
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  completed 
+	Expected result:
+		Validity error in class TEST code ECMA-VHPR(5)
+		Final status:  paused 
+
+Test wrong-vdpr-errors (valid256): failed
+	Description: Test shows incorrectly VDPR errors.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/valid256/tcf at line 12
+	Original text:    compile_result OK
+	Substituted text: compile_result OK
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class C code VDPR(2)
+		Validity error in class C code VDPR(3)
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test wrong-manifest-array-attached-type (valid257): failed
+	Description: Test shows that a manifest ARRAY has the wrong type.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/valid257/tcf at line 8
+	Original text:    compile_result OK
+	Substituted text: compile_result OK
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code VJAR
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test select-stable-attribute (valid258): passed
 Test multi-error-degree-4 (multierr001): passed
 Test degree-5-forget-error (multierr002): passed
 Test degree-5-infinite-loop (multierr003): passed
@@ -1189,6 +1228,13 @@ Test svalid-inherited-invariant-not-checked (svalid017): failed
 Test svalid-invalid-parent (svalid018): passed
 Test svalid-conversion-with-binary (svalid019): passed
 Test svalid-undetected-vwoe (svalid020): passed
+Test svalid-conversion-detachable (svalid022): failed
+	Description: (Not available)
+	Parse error in file /home/manus/local/eweasel/eweasel/tests/svalid022/tcf at line 8
+	Original text:    compile_result	validity_error TEST
+	Substituted text: compile_result	validity_error TEST
+	Reason: validity error phrase has less than 2 arguments: TEST
+
 Test simple-catcall (catcall001): passed
 Test simple-catcall-generic (catcall002): failed
 	Description: Simple detection of a catcall involving call of feature with generic formal arguments which is only allowed on non-variant actual generic parameter.
@@ -1237,6 +1283,13 @@ Test catcall-generic (catcall004): failed
 Test catcall-generic-numeric (catcall005): passed
 Test catcall-at-runtime-detection (catcall006): passed
 Test wrong-catcall-reported-on-generic-expanded (catcall007): passed
+Test wrong-catcall-on-function-tuple (catcall008): failed
+	Description: A catcall is reported with froze code when supplying an empty tuple where a actual generic detachable TUPLE is required.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/catcall008/tcf at line 15
+	Original text:    compare exec_output output
+	Substituted text: compare exec_output output
+	Reason: files being compared do not have identical contents
+
 Test vlec-sneak (incr001): passed
 Test chg-inspect-const-type (incr002): passed
 Test vscn-sneak (incr003): passed
@@ -1843,17 +1896,7 @@ Test add-default-create-invalid-vtec (incr303): failed
 	Expected result:
 		Final status:  completed 
 
-Test change-base-library-to-base-safe (incr304): failed
-	Description: After initial compilation where the "base" library is used, the compiler correctly reports some VEVI errors.  When the problem is corrected by changing the configuration file to use the "base-safe" library, resuming compilation causes the compiler to crashes in degree 6.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr304/tcf at line 14
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
-	Expected result:
-		Final status:  completed 
-
+Test change-base-library-to-base-safe (incr304): passed
 Test add-then-remove-vlec-via-generic (incr305): failed
 	Description: After initial compilation an actual generic is changed from TEST2 to TEST2 [DOUBLE], which introduces a VLEC error.  When the compiler detects the error, the actual generic is changed back to its original value but the compiler still reports a VLEC error.
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr305/tcf at line 27
@@ -2320,6 +2363,24 @@ Test dollar-with-expanded-attribute-in-generic (melt094): failed
 
 Test wrong-line-number-in-trace (melt095): passed
 Test bad-melted-infix (melt096): passed
+Test new-type-type-melted (melt097): failed
+	Description: A system adds new generic derivation of TYPE that are melted.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/melt097/tcf at line 10
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VEEN
+		Validity error in class TEST code VWEQ
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
 Test bit-arg-extend-frozen (freez001): failed
 	Description: A call to a routine whose formal argument is a BIT type with a larger number of bits than the actual argument.  The actual argument should be extended with trailing zeros
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/freez001/tcf at line 28
@@ -2570,6 +2631,8 @@ Test finalize-inherited-agent-redef-routine (final082): failed
 	Substituted text: compare exec_output2 output
 	Reason: files being compared do not have identical contents
 
+Test finalize-inline-with-generic (final083): passed
+Test finalize-wrong-type (final084): passed
 Test gc-tracking-001 (runtime001): passed
 Test gc-tracking-002 (runtime002): passed
 Test gc-expanded-in-special (runtime003): passed
@@ -2582,7 +2645,7 @@ Test gc-expanded-allocating-memory-in-special-2 (runtime006): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  system_failed 
+		Final status:  system_failed had_panic 
 	Expected result:
 		Final status:  completed 
 
@@ -2609,6 +2672,7 @@ Test join-with-no-children-leaks (thread007): passed
 Test memory-referers-not-thread-safe (thread008): passed
 Test exception-in-thread-failure (thread009): passed
 Test nested-thread-exit-failure-2 (thread010): passed
+Test deadlock-when-not-joining (thread011): manual
 Test print-double (exec001): passed
 Test bit-out-wrong (exec002): passed
 Test real-conform-double (exec003): passed
@@ -2642,7 +2706,7 @@ Test very-deep-clone (exec021): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  system_failed had_panic 
+		Final status:  system_failed 
 	Expected result:
 		Final status:  completed 
 
@@ -3301,6 +3365,20 @@ Test manifest-type-expr-generating-type (exec314): failed
 	Reason: files being compared do not have identical contents
 
 Test manifest-type-singletons (exec315): passed
+Test wrong-type-creation (exec316): failed
+	Description: A generic type created at runtime whose code is located in an ancestor of an expanded class fails to compute the proper generic derivation for the new object thus creating the wrong kind.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/exec316/tcf at line 17
+	Original text:    compare exec_output1 output
+	Substituted text: compare exec_output1 output
+	Reason: files being compared do not have identical contents
+
+Test long-string-to-double (exec317): failed
+	Description: Convert long string to double.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/exec317/tcf at line 20
+	Original text:    compare exec_output2 output
+	Substituted text: compare exec_output2 output
+	Reason: files being compared do not have identical contents
+
 Test add-inheritance-cycle (term001): passed
 Test remove-root-creation-proc (term002): passed
 Test long-identifiers (term003): passed
@@ -3878,6 +3956,7 @@ Test file-append-not-thread-safe (lib031): failed
 	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
 
+Test boolean-class-invariant (lib032): passed
 Test tuple-manipulation (tuple001): passed
 Test named-tuple-validation (tuple002): passed
 Test named-tuple-as-argument (tuple003): passed
@@ -3969,7 +4048,17 @@ Test validity-vhrc4-basic (vhrc401): passed
 Test validity-vhrc5-basic (vhrc501): passed
 Test validity-vlec1-self (vlec101): passed
 Test validity-vlec1-other (vlec102): passed
-Test validity-vlec1-self-generic (vlec103): passed
+Test validity-vlec1-self-generic (vlec103): failed
+	Description: Violate validity constraint VLEC1 with an expanded client cycle involving just one class, which is a generic class
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/vlec103/tcf at line 24
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (Segmentation fault) 
+	Expected result:
+		Final status:  completed 
+
 Test validity-vlec1-other-generic (vlec104): manual
 Test validity-vlcp-basic (vlcp001): passed
 Test validity-vlel1-mult-diff (vlel101): passed
@@ -4383,9 +4472,10 @@ Test anchored-creation-crash (dotnet108): passed
 Test object-test-assertion-crash (dotnet109): passed
 Test dotnet-polymorphism (dotnet110): passed
 Test dotnet-special-handling-crash (dotnet112): passed
+Test dotnet-static-access-on-deferred (dotnet115): passed
 
-Passed:  1836 / 2098  (88%)
-Failed:  238 / 2098  (12%)
-Manual:  17 / 2098  (1%)
-Skipped:  5 / 2098  (1%)
+Passed:  1844 / 2113  (88%)
+Failed:  246 / 2113  (12%)
+Manual:  18 / 2113  (1%)
+Skipped:  5 / 2113  (1%)
 

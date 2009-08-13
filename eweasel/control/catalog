@@ -1725,6 +1725,7 @@ test	bad-c-code-for-expanded-definition	ccomp081 tcf pass c_compilation expanded
 test	expanded-generic-object-test	ccomp082 tcf fail c_compilation expanded
 test	c-header-mismatch-3				ccomp083 tcf fail c_compilation
 test	large-real-constant-c-compile-failure		ccomp084 tcf fail c_compilation
+test	c-header-sequence				ccomp085 tcf fail c_compilation
 
 -- Storable tests
 

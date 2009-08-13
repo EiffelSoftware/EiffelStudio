@@ -47,6 +47,7 @@ doc:<file name="gen_conf.c" header="eif_gen_conf.h" version="$Id$" summary="Gene
 #include "rt_malloc.h"
 #include "rt_threads.h"
 #include "rt_garcol.h"
+#include "rt_cecil.h"
 #include "rt_assert.h"
 #include <ctype.h>
 #include <string.h>
@@ -251,6 +252,7 @@ rt_public EIF_TYPE_INDEX eifthd_gen_param_id (EIF_TYPE_INDEX , uint32);
 rt_public EIF_REFERENCE eifthd_gen_create (EIF_REFERENCE , uint32);
 rt_shared EIF_TYPE_INDEX eifthd_register_bit_type (uint16);
 rt_shared EIF_TYPE_INDEX eifthd_typeof_array_of (EIF_TYPE_INDEX);
+rt_shared EIF_TYPE_INDEX eifthd_typeof_type_of (EIF_TYPE_INDEX);
 rt_public char *eifthd_gen_typename (EIF_REFERENCE );
 rt_shared EIF_TYPE_INDEX *eifthd_gen_cid (EIF_TYPE_INDEX);
 rt_shared EIF_TYPE_INDEX eifthd_gen_id_from_cid (EIF_TYPE_INDEX *, EIF_TYPE_INDEX *);
@@ -377,6 +379,18 @@ rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dtype)
 }
 /*------------------------------------------------------------------*/
 
+rt_shared EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dtype)
+{
+	EIF_TYPE_INDEX   result;
+
+	EIFMTX_LOCK;
+	result = eifthd_typeof_type_of (dtype);
+	EIFMTX_UNLOCK;
+
+	return result;
+}
+/*------------------------------------------------------------------*/
+
 rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype)
 {
 	EIF_TYPE_INDEX   *result;
@@ -422,6 +436,7 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX source_type, EIF_TYPE_INDEX target_ty
 #define eif_gen_param_id          eifthd_gen_param_id
 #define eif_register_bit_type     eifthd_register_bit_type
 #define eif_typeof_array_of       eifthd_typeof_array_of
+#define eif_typeof_type_of        eifthd_typeof_type_of
 #define eif_gen_cid               eifthd_gen_cid
 #define eif_gen_id_from_cid       eifthd_gen_id_from_cid
 #define eif_gen_conf              eifthd_gen_conf
@@ -938,24 +953,79 @@ rt_shared EIF_TYPE_INDEX eif_register_bit_type (uint16 size)
 /*------------------------------------------------------------------*/
 /* Type id for ARRAY [something], where 'something' is a reference  */
 /* type.                                                            */
-/* dtype : full type id;                                            */
+/* dftype : full type id;                                            */
 /*------------------------------------------------------------------*/
 
-rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dtype)
+rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dftype)
 {
 	EIF_TYPE_INDEX   typearr [4], result;
 
+	REQUIRE("Valid ARRAY generic type", dftype <= MAX_DTYPE);
+	REQUIRE("Valid ARRAY reference type", egc_arr_dtype <= MAX_DTYPE);
+
 	typearr [0] = INVALID_DTYPE;	/* No static call context */
 	typearr [1] = egc_arr_dtype;	/* Base type of ARRAY     */
-	typearr [2] = dtype;			/* Parameter type */
+	typearr [2] = dftype;			/* Parameter type */
 	typearr [3] = TERMINATOR;
-
-	CHECK("Valid ARRAY reference type", egc_arr_dtype <= MAX_DTYPE);
-	CHECK("Valid ARRAY generic type", dtype <= MAX_DTYPE);
 
 	result = eif_compound_id (0, typearr[1], typearr);
 	return result;
 }
+
+/*------------------------------------------------------------------*/
+/* Type id for TYPE [dftype]                                        */
+/* dftype : full type id;                                           */
+/*------------------------------------------------------------------*/
+
+rt_public EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dftype)
+{
+	EIF_TYPE_INDEX   typearr [4], result, l_type;
+	struct cecil_info *cecil_type;
+	int32 sk_type;			/* Generic information for dftype */
+	int32 *t;				/* To walk through the patterns array */
+	int matched = 0;
+	size_t index = 0;
+
+	REQUIRE("Valid actual generic type", (dftype <= MAX_DTYPE) || (dftype == NONE_TYPE));
+
+		/* Get the CECIL description for TYPE. */
+	cecil_type = (struct cecil_info *) ct_value (&egc_ce_type, "TYPE");
+
+		/* Get the SK_type for X in TYPE [X] were are trying to build. */
+	if (dftype == NONE_TYPE) {
+			/* For NONE we use the reference generic derivation of TYPE. */
+		sk_type = SK_REF;
+	} else {
+		l_type = To_dtype(dftype);
+		if (l_type == egc_bit_dtype) {
+			EIF_GEN_DER *der = eif_derivations[dftype];
+			sk_type = SK_BIT | der->size;
+		} else {
+			sk_type = eif_dtype_to_sk_type (l_type);
+		}
+	}
+
+		/* Now try to find the proper TYPE generic derivation. */
+	t = cecil_type->patterns;
+	while ((*t != SK_INVALID) && (!matched)) {
+		matched = (*t++ == sk_type);
+		index++;
+	}
+
+	if (matched == 1) {
+		typearr [0] = INVALID_DTYPE;	/* No static call context */
+		typearr [1] = cecil_type->dynamic_types[index - 1];		/* Base type of TYPE */
+		typearr [2] = dftype;			/* Parameter type */
+		typearr [3] = TERMINATOR;
+
+		result = eif_compound_id (0, typearr[1], typearr);
+	} else {
+		result = INVALID_DTYPE;
+	}
+
+	return result;
+}
+
 /*------------------------------------------------------------------*/
 /* Full type name of `obj' as STRING object.                        */
 /*------------------------------------------------------------------*/

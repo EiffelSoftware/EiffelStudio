@@ -371,12 +371,12 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL)
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A; a_level: NATURAL)
 		local
 			i, nb: INTEGER
 			l_generics: like generics
 		do
-			Precursor (buffer, final_mode, use_info, idx_cnt, a_level)
+			Precursor (buffer, final_mode, use_info, idx_cnt, a_context_type, a_level)
 
 			from
 				l_generics := generics
@@ -385,7 +385,7 @@ feature -- Generic conformance
 			until
 				i > nb
 			loop
-				l_generics.item (i).generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_level)
+				l_generics.item (i).generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_context_type, a_level)
 				i := i + 1
 			end
 		end
@@ -800,6 +800,11 @@ feature {TYPE_A} -- Helpers
 							-- create additional objects.
 						l_formal ?= l_type.actual_type
 						l_type := current_type.generics.item (l_formal.position)
+					end
+					if current_type /= Void and then attached {LIKE_CURRENT} l_type as l_like_current then
+							-- If actual generic parameter is `like Current' and that we have a context type, then
+							-- its type is clearly the context type `current_type'.
+						l_type := current_type
 					end
 					if l_type.actual_type.is_formal or l_type.is_reference then
 						if a_level = 0 then

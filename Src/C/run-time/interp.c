@@ -69,6 +69,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "rt_main.h" /* For debug_mode: we need to move dynamic_eval */
 #include "eif_helpers.h"
 #include "eif_rout_obj.h"
+#include "eif_built_in.h"
 
 /*#define SEP_DEBUG */  /**/
 /*#define DEBUG 6 */ 	/**/
@@ -207,6 +208,7 @@ rt_private void eif_interp_min_max (int code);	/* Execute `min' or `max' dependi
 rt_private void eif_interp_generator (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top);	/* generate the name of the basic type */
 rt_private void eif_interp_offset (void);	/* execute `offset' on character and pointer type */
 rt_private void eif_interp_bit_operations (void);	/* execute bit operations on integers */
+rt_private void eif_interp_builtins (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* execute basic operations on basic types */
 rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* execute basic operations on basic types */
 
 /* Assertion checking */
@@ -2684,6 +2686,11 @@ rt_private void interpret(int flag, int where)
 		diadic_op(code);
 		break;
 
+	/* Builtin operations */
+	case BC_BUILTIN:
+		eif_interp_builtins (scur, stop);
+		break;
+
 	/*
 	 * Basic operations to improve speed and correctness of operations
 	 * on basic types.
@@ -4450,6 +4457,65 @@ rt_private void eif_interp_offset(void)
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 }
+
+rt_private void eif_interp_builtins (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top)
+	/* Execute builtin operations and set result if any. */
+{
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+
+	int code = *IC++;		/* Read current byte-code and advance IC */
+	unsigned char *OLD_IC = IC;
+	unsigned long stagval = tagval;	/* Tag value backup */
+
+	OLD_IC = IC;
+
+	switch (code) {
+			/* `max' and `min' function calls */
+		case BC_BUILTIN_UNKNOWN:
+			eif_panic ("Unknown builtin");
+			break;
+
+		case BC_BUILTIN_TYPE__HAS_DEFAULT:
+			iresult->type = SK_BOOL;
+			iresult->it_char = eif_builtin_TYPE_has_default(icurrent->it_ref);
+			break;
+
+		case BC_BUILTIN_TYPE__DEFAULT:
+				/* Nothing to be done, already done by interpreter when initializing Result. */
+			break;
+
+		case BC_BUILTIN_TYPE__TYPE_ID:
+			iresult->type = SK_INT32;
+			iresult->it_int32 = eif_builtin_TYPE_type_id(icurrent->it_ref);
+			break;
+
+		case BC_BUILTIN_TYPE__RUNTIME_NAME:
+			iresult->type = SK_REF;
+			iresult->it_ref = eif_builtin_TYPE_runtime_name(icurrent->it_ref);
+			break;
+
+		case BC_BUILTIN_TYPE__GENERIC_PARAMETER_TYPE:
+			iresult->type = SK_REF;
+			iresult->it_ref = eif_builtin_TYPE_generic_parameter_type(icurrent->it_ref,arg(1)->it_int32);
+			break;
+	
+		case BC_BUILTIN_TYPE__GENERIC_PARAMETER_COUNT:
+			iresult->type = SK_INT32;
+			iresult->it_int32 = eif_builtin_TYPE_generic_parameter_count(icurrent->it_ref);
+			break;
+
+		default: eif_panic (RT_BOTCHED_MSG);
+	}
+
+	IC = OLD_IC;
+	if (tagval != stagval) {		/* previous call can call malloc which may call the interpreter for
+								   creation routines. */
+		sync_registers(stack_cur, stack_top);
+	}
+
+}
+
 
 rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top)
 	/* execute basic operations on basic types and put the result back on the

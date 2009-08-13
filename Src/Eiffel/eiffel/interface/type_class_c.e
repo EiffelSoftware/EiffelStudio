@@ -11,7 +11,7 @@ class
 inherit
 	EIFFEL_CLASS_C
 		redefine
-			check_validity, new_type, is_type
+			check_validity, new_type, is_type, is_freeze_required_on_melt
 		end
 
 	SPECIAL_CONST
@@ -27,22 +27,25 @@ feature -- Status report
 	is_type: BOOLEAN = True
 			-- Is class TYPE?
 
+	is_freeze_required_on_melt (a_feature: FEATURE_I): BOOLEAN
+			-- <Precursor>
+		do
+				-- All builtins of TYPE don't need to be frozen, they are handled in byte code too.
+			Result := (a_feature.is_external and not a_feature.extension.is_built_in) or else
+				visible_level.is_visible (a_feature, class_id)
+		end
+
 feature -- Typing
 
 	new_type (data: CL_TYPE_A): TYPE_CLASS_TYPE
 			-- New class type for class TYPE
-		local
-			l_data: GEN_TYPE_A
 		do
-			l_data ?= data
-			check
-				l_data_not_void: l_data /= Void
-			end
-			create Result.make (l_data)
-				-- Unlike the parent version, each time a new SPECIAL derivation
-				-- is added we need to freeze so that we call the right version of
-				-- `has_default' and `default'.
-			system.request_freeze
+			create Result.make (data)
+				-- Unlike the parent version, each time a new TYPE derivation
+				-- is added we do not need to freeze since the built-in implementation
+				-- we have will be correct for any expanded generic derivation of TYPE.
+				-- The generic derivation for references will be frozen since ANY is always
+				-- C generated and thus TYPE [ANY].
 			if already_compiled then
 					-- Melt all the code written in the associated class of the new class type
 				melt_all

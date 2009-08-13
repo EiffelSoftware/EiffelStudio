@@ -117,7 +117,7 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL)
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A; a_level: NATURAL)
 			-- Generate mode dependent initialization of
 			-- cid array. `use_info' is true iff
 			-- we generate code for a creation instruction.
@@ -126,6 +126,7 @@ feature -- Generic conformance
 		require
 			valid_file : buffer /= Void
 			valid_counter : idx_cnt /= Void
+			context_type_valid: is_valid_context_type (a_context_type)
 		local
 			dummy : INTEGER
 		do

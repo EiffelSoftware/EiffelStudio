@@ -14,7 +14,8 @@ inherit
 			argument_types as std_argument_types
 		redefine
 			generate, generate_compound, analyze,
-			is_external, pre_inlined_code, inlined_byte_code
+			is_external, pre_inlined_code, inlined_byte_code,
+			make_body_code
 		end
 
 create
@@ -105,6 +106,42 @@ feature -- Analyzis
 		do
 			if not system.il_generation then
 				Precursor {STD_BYTE_CODE}
+			end
+		end
+
+feature -- Byte code generation
+
+	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR)
+		local
+			l_builtin: BUILT_IN_EXTENSION_I
+			l_class: CLASS_C
+		do
+			l_builtin ?= context.current_feature.extension
+			check l_builtin_not_void: l_builtin /= Void end
+			ba.append (bc_builtin)
+			l_class := context.current_feature.written_class
+			if l_class = system.type_class.compiled_class then
+				inspect
+					context.current_feature.feature_name_id
+
+				when {PREDEFINED_NAMES}.has_default_name_id then
+					ba.append (bc_builtin_type__has_default)
+				when {PREDEFINED_NAMES}.default_name_id then
+					ba.append (bc_builtin_type__default)
+				when {PREDEFINED_NAMES}.type_id_name_id then
+					ba.append (bc_builtin_type__type_id)
+				when {PREDEFINED_NAMES}.runtime_name_name_id then
+					ba.append (bc_builtin_type__runtime_name)
+				when {PREDEFINED_NAMES}.generic_parameter_type_name_id then
+					ba.append (bc_builtin_type__generic_parameter_type)
+				when {PREDEFINED_NAMES}.generic_parameter_count_name_id then
+					ba.append (bc_builtin_type__generic_parameter_count)
+
+				else
+					ba.append (bc_builtin_unknown)
+				end
+			else
+				ba.append (bc_builtin_unknown)
 			end
 		end
 
@@ -341,7 +378,7 @@ invariant
 	external_name_id_positive: external_name_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -354,22 +391,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

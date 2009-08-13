@@ -46,7 +46,13 @@ feature -- Visitor
 feature -- Access
 
 	type_data: GEN_TYPE_A
-			-- Character value
+			-- TYPE [like type_type] instance.
+
+	type_type: TYPE_A
+			-- Type for which `type_data' corresponds to
+		do
+			Result := type_data.generics [1]
+		end
 
 	type: CL_TYPE_A
 			-- String type
@@ -119,10 +125,11 @@ feature -- Code analyzis
 			-- Analyze the type
 		do
 				-- We get a register to store the type because of the garbage
-				-- collector: assume we write f("one", "two"), then the GC
-				-- could be invoked while allocating "two" and move "one" right
+				-- collector: assume we write f({X}, {Y}), then the GC
+				-- could be invoked while allocating {Y} and move {X} right
 				-- under the back of the C (without notifying it, how could I?).
 			get_register
+			type_type.create_info.analyze
 		end
 
 feature -- C code generation
@@ -134,7 +141,10 @@ feature -- C code generation
 			l_type_creator: CREATE_INFO
 		do
 			buf := buffer
-			l_type_creator := context.real_type (type_data).create_info
+				-- Type is not known at compile time, thus we compute the
+				-- proper type using `eif_typeof_type_of' which will know
+				-- which actual generic derivation to take.
+			l_type_creator := type_type.create_info
 			l_type_creator.generate_start (buf)
 			l_type_creator.generate_gen_type_conversion (0)
 			buf.put_new_line

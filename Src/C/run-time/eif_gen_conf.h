@@ -61,6 +61,7 @@ RT_LNK int eif_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 
 /* Type of the i-th generic parameter */
 RT_LNK EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos);
+RT_LNK EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dftype);
 
 /* Detachable version of a type. */
 rt_public EIF_TYPE_INDEX eif_non_attached_type (EIF_TYPE_INDEX dftype);

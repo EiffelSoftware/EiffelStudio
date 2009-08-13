@@ -164,7 +164,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTLNS(x,y,z) allocates a new routine object of dftype 'x', dtype 'y' and size 'z'
  *  RTLNT(x) allocates a new tuple object of dftype 'x'
  *  RTLNTS(x) allocates a new tuple object of dftype 'x', with 'n' elements and is_atomic 'a'
- *  RTLNTY(x) allocates a new TYPE instance of dftype 'x'
+ *  RTLNTY(x) allocates a new TYPE [like x] instance of dftype 'x'
  *  RTLNSMART(x) allocates a new object of dftype 'x'
  *  RTLNR(x,y,a,o,c) allocates a new routine object of type 'x' and
  *  RTLNC(x) creates a new non-initialized instance of 'x'.
@@ -183,7 +183,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNS(x,y,z)		emalloc_size(x,y,z)
 #define RTLNT(x)			tuple_malloc(x)
 #define RTLNTS(x,n,a)		tuple_malloc_specific(x,n,a)
-#define RTLNTY(x)			(((x) < rt_type_set_count) ? (rt_type_set[x] ? rt_type_set [x] : eif_type_malloc(x)) : eif_type_malloc(x))
+#define RTLNTY(x)			eif_type_malloc(x)
 #define RTLNSMART(x)		smart_emalloc(x)
 #define RTLNRW(a,b,c,d,e,f,g,h,i,j,k,l,m) rout_obj_create_wb((a),(b),(c),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
 #define RTLNRF(a,b,c,d,e,f,g) rout_obj_create_fl((a),(b),(c),(d),(e),(f), (g))

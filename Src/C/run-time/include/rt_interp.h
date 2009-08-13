@@ -199,7 +199,16 @@ extern struct opstack op_stack;               /* Operational stack */
 
 #define BC_REF_TO_PTR		(unsigned char) 132
 #define BC_RCREATE		(unsigned char) 133
-#define BC_NOTUSED_134	(unsigned char) 134
+
+/* Byte code for builtins */
+#define BC_BUILTIN	(unsigned char) 134
+#define BC_BUILTIN_UNKNOWN	(unsigned char) 1
+#define BC_BUILTIN_TYPE__HAS_DEFAULT	(unsigned char) 2
+#define BC_BUILTIN_TYPE__DEFAULT	(unsigned char) 3
+#define BC_BUILTIN_TYPE__TYPE_ID	(unsigned char) 4
+#define BC_BUILTIN_TYPE__RUNTIME_NAME	(unsigned char) 5
+#define BC_BUILTIN_TYPE__GENERIC_PARAMETER_TYPE	(unsigned char) 6
+#define BC_BUILTIN_TYPE__GENERIC_PARAMETER_COUNT	(unsigned char) 7
 
 /* Byte code for expression creation */
 #define BC_CAST_CHAR32		(unsigned char) 135

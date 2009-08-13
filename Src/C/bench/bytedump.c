@@ -180,7 +180,7 @@ static  char    *names [] = {
 "BC_POP" ,
 "BC_REF_TO_PTR" ,
 "BC_RCREATE" ,
-"BC_NOTUSED_134" ,
+"BC_BUILTIN" ,
 "BC_CAST_CHAR32" ,
 "BC_NULL_POINTER" ,
 "BC_BASIC_OPERATIONS" ,
@@ -248,6 +248,18 @@ static  char    *names [] = {
 "BC_NOTUSED_199",
  (char *) 0
 };
+
+static  char    *builtin_op_names [] = {
+"",
+"BC_BUILTIN_UNKNOWN" ,
+"BC_BUILTIN_TYPE__HAS_DEFAULT" ,
+"BC_BUILTIN_TYPE__DEFAULT" ,
+"BC_BUILTIN_TYPE__TYPE_ID" ,
+"BC_BUILTIN_TYPE__RUNTIME_NAME" ,
+"BC_BUILTIN_TYPE__GENERIC_PARAMETER_TYPE" ,
+"BC_BUILTIN_TYPE__GENERIC_PARAMETER_COUNT",
+};
+
 
 static  char    *basic_op_names [] = {
 "",
@@ -1130,6 +1142,11 @@ static  void    print_instructions (void)
 				fprintf (ofp,"%d ", get_uint32(&ip));
 				/* Value */
 				fprintf (ofp,"%d ", get_uint32(&ip));
+				break;
+
+			case BC_BUILTIN:
+				/* For builtin operations. */
+				fprintf (ofp, "%s", builtin_op_names[get_char8(&ip)]);
 				break;
 
 			case BC_BASIC_OPERATIONS :

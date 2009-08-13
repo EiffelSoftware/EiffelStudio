@@ -100,7 +100,6 @@ rt_private void update_entry (struct rt_type *);
 /* Dynamic type computation. */
 rt_private int is_generic (struct cecil_info *type, struct rt_type *type_entry);
 rt_private EIF_TYPE_INDEX eifcid(struct rt_type *type_entry);
-rt_private int32 sk_type (int32 cecil_id);
 rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type);
 rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data *data);
 rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type, struct rt_global_data *data);
@@ -985,7 +984,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 						l_previous_pos = data->position;
 						eif_gen_type_id (&l_cecil_type, l_type, data);
 							/* Extract from computed type, the associated `SK_xx' value. */
-						gtype [i] = sk_type (data->typearr [l_previous_pos]);
+						gtype [i] = eif_dtype_to_sk_type (data->typearr [l_previous_pos]);
 					}
 				} else if (is_tuple (l_type)) {
 					data->count += TUPLE_OFFSET + l_type->count + (l_type->is_attached ? 1 : 0);
@@ -998,7 +997,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 								/* Could not find type. This is an error. */
 							data->has_error = 1;
 						} else {
-							gtype [i] = sk_type (l_cecil_id);
+							gtype [i] = eif_dtype_to_sk_type (l_cecil_id);
 							CHECK("valid type id", (l_cecil_id & SK_DTYPE) == l_cecil_id);
 
 							if (l_type->is_attached) {
@@ -1019,7 +1018,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 							/* Could not find type. This is an error. */
 						data->has_error = 1;
 					} else {
-						gtype [i]  = sk_type (l_cecil_id);
+						gtype [i]  = eif_dtype_to_sk_type (l_cecil_id);
 						CHECK("valid type id", (l_cecil_id & SK_DTYPE) == l_cecil_id);
 						if (l_type->is_attached) {
 							data->count++;
@@ -1087,53 +1086,6 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 
 			eif_free (gtype);
 			eif_free (itype);
-		}
-	}
-}
-
-/*
-doc:	<routine name="sk_type" return_type="int" export="private">
-doc:		<summary>Given a cecil ID, returns the corresponding SK_XX abstract type.</summary>
-doc:		<param name="cecil_id" type="int32">cecil ID.</param>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:	</routine>
-*/
-rt_private int32 sk_type (int32 cecil_id)
-{
-	if (cecil_id == egc_char_dtype) {
-		return SK_CHAR;
-	} else if (cecil_id == egc_wchar_dtype) {
-		return SK_WCHAR;
-	} else if (cecil_id == egc_bool_dtype) {
-		return SK_BOOL;
-	} else if (cecil_id == egc_uint8_dtype) {
-		return SK_UINT8;
-	} else if (cecil_id == egc_uint16_dtype) {
-		return SK_UINT16;
-	} else if (cecil_id == egc_uint32_dtype) {
-		return SK_UINT32;
-	} else if (cecil_id == egc_uint64_dtype) {
-		return SK_UINT64;
-	} else if (cecil_id == egc_int8_dtype) {
-		return SK_INT8;
-	} else if (cecil_id == egc_int16_dtype) {
-		return SK_INT16;
-	} else if (cecil_id == egc_int32_dtype) {
-		return SK_INT32;
-	} else if (cecil_id == egc_int64_dtype) {
-		return SK_INT64;
-	} else if (cecil_id == egc_real32_dtype) {
-		return SK_REAL32;
-	} else if (cecil_id == egc_real64_dtype) {
-		return SK_REAL64;
-	} else if (cecil_id == egc_point_dtype) {
-		return SK_POINTER;
-	} else {
-		if (EIF_IS_EXPANDED_TYPE(System(cecil_id))) {
-			return SK_EXP | cecil_id;
-		} else {
-			return SK_REF;
 		}
 	}
 }

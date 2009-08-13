@@ -1668,7 +1668,7 @@ feature {NONE} -- Visitors
 				-- There is no feature call:
 			ba.append_boolean (False)
 
-			l_type_creator := context.real_type (a_node.type_data).create_info
+			l_type_creator := a_node.type_type.create_info
 			l_type_creator.make_byte_code (ba)
 
 				-- Runtime is in charge to make sure that newly created object

@@ -1052,63 +1052,59 @@ rt_public EIF_REFERENCE tuple_malloc (EIF_TYPE_INDEX ftype)
 
 /*
 doc:	<routine name="eif_type_malloc" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Create a new TYPE instance for type `ftype' if it was not yet created, otherwise return an already existing one. Objects are created as old object since once allocated they cannot be garbage collected.</summary>
-doc:		<param name="ftype" type="EIF_TYPE_INDEX">Dynamic type of TYPE to return.</param>
-doc:		<return>A TYPE instance of type `ftype' if successful, otherwise throw an exception.</return>
+doc:		<summary>Create a new TYPE [like ftype] instance for type `ftype' if it was not yet created, otherwise return an already existing one. Objects are created as old object since once allocated they cannot be garbage collected.</summary>
+doc:		<param name="ftype" type="EIF_TYPE_INDEX">Dynamic type of the type for which we want to create the `TYPE [like ftype]' instance to return.</param>
+doc:		<return>A TYPE instance for `ftype' if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
+doc:		<synchronization>Through `eif_type_set_mutex'</synchronization>
 doc:	</routine>
 */
 
 rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
 {
+	RT_GET_CONTEXT
 	EIF_REFERENCE result;
+	rt_uint_ptr l_array_index;
 
-	if (rt_type_set_count > ftype) {
-			/* Path of best execution. */
-		result = rt_type_set [ftype];
+	REQUIRE("Valid actual generic type", (ftype <= MAX_DTYPE) || (ftype == NONE_TYPE));
+	
+		/* The actual offset in the `rt_type_set' array is increased by '1' so that
+		 * we can store TYPE [NONE] at index `0'. */
+	if (ftype != NONE_TYPE) {
+		l_array_index = ftype + 1;
+	} else {
+		l_array_index = 0;
+	}
+
+		/* Synchronization required to access `rt_type_set'. */
+	EIF_ENTER_C;
+	GC_THREAD_PROTECT(TYPE_SET_MUTEX_LOCK);
+
+	if (rt_type_set_count > l_array_index) {
+		result = rt_type_set [l_array_index];
 		if (!result) {
-			RT_GET_CONTEXT;
-			EIF_ENTER_C;
-			GC_THREAD_PROTECT(TYPE_SET_MUTEX_LOCK);
-			result = rt_type_set [ftype];
-				/* Double checked locking as two threads could have requested the same TYPE
-				 * instance at the same time. */
-			if (!result) {
-				result = emalloc_as_old(ftype);
-				rt_type_set [ftype] = result;
-			}
-			GC_THREAD_PROTECT(TYPE_SET_MUTEX_UNLOCK);
-			EIF_EXIT_C;
-			RTGC;
+			result = emalloc_as_old(eif_typeof_type_of (ftype));
+			rt_type_set [l_array_index] = result;
 		}
 	} else {
-		RT_GET_CONTEXT;
-		EIF_ENTER_C;
-		GC_THREAD_PROTECT(TYPE_SET_MUTEX_LOCK);
-			/* Double checked locking as two threads could have requested resizing at
-			 * the same time. */
-		if (rt_type_set_count > ftype) {
-			result = rt_type_set [ftype];
-				/* The TYPE instance should be created by the other thread in the `else' clause. */
-			CHECK("TYPE created", result);
+		rt_uint_ptr old_count = rt_type_set_count;
+			/* Ensures we allocate at least 2 entries. */
+		rt_uint_ptr new_count = (l_array_index == 0 ? 2 : l_array_index * 2);
+		if (rt_type_set) {
+			rt_type_set = (EIF_REFERENCE *) crealloc(rt_type_set, sizeof(EIF_REFERENCE) * new_count);
 		} else {
-			rt_uint_ptr old_count = rt_type_set_count;
-			if (rt_type_set) {
-				rt_type_set = (EIF_REFERENCE *) crealloc(rt_type_set, sizeof(EIF_REFERENCE) * ftype * 2);
-			} else {
-				rt_type_set = (EIF_REFERENCE *) cmalloc(sizeof(EIF_REFERENCE) * ftype * 2);
-			}
-			memset(rt_type_set + old_count, 0, sizeof(EIF_REFERENCE) * ((ftype * 2) - old_count));
-			result = emalloc_as_old(ftype);
-			rt_type_set [ftype] = result;
-			rt_type_set_count = ftype * 2;
+			rt_type_set = (EIF_REFERENCE *) cmalloc(sizeof(EIF_REFERENCE) * new_count);
 		}
-		GC_THREAD_PROTECT(TYPE_SET_MUTEX_UNLOCK);
-		EIF_EXIT_C;
-		RTGC;
+		memset(rt_type_set + old_count, 0, sizeof(EIF_REFERENCE) * (new_count - old_count));
+		result = emalloc_as_old(eif_typeof_type_of (ftype));
+		rt_type_set [l_array_index] = result;
+		rt_type_set_count = new_count;
 	}
+
+	GC_THREAD_PROTECT(TYPE_SET_MUTEX_UNLOCK);
+	EIF_EXIT_C;
+	RTGC;
 	return result;
 }
 

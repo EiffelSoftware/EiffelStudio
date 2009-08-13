@@ -101,7 +101,6 @@ namespace Xebra
                 log.Error("Not connected!");
                 return false;
             }
-            //   char[] msgFrag = new char[FRAG_SIZE + 1];
             byte[] msgFragAndLength = new byte[FRAG_SIZE + 4];
             byte[] encodedMsgLengthByte = new byte[4];
             int bytesSent = 0;
@@ -155,12 +154,13 @@ namespace Xebra
             log.Debug("Message sent.");
             return true;
         }
-
+        
         /// <summary>
         /// Waits to receive a string from the server
         /// </summary>
-        /// <returns>Returns the message that was received from the server. Returns "" if there was an error.</returns>
-        public String receiveMessage()
+        /// <param name="responseMessage">Used to store the received message</param>
+        /// <returns>Returns true if no error occured during receiving</returns>
+        public bool receiveMessage(out string responseMessage)
         {
             bool flag = false;
             byte[] encodedLengthByte = new byte[4];
@@ -170,6 +170,7 @@ namespace Xebra
             int numBytes;
             string message = "";
             byte[] msgBuf = new byte[FRAG_SIZE + 4];
+            responseMessage = "";
 
             log.Debug("Receiving message...");
             do
@@ -180,7 +181,7 @@ namespace Xebra
                 if (numBytes != 4)
                 {
                     log.Error("Could not receive 4 bytes for length.");
-                    return "";
+                    return false;
                 }
                 //Convert to littleEndian
                 Array.Reverse(encodedLengthByte);
@@ -198,7 +199,7 @@ namespace Xebra
                 if (length < 1 || length > FRAG_SIZE)
                 {
                     log.Error("Illegal msg length " + length);
-                    return "";
+                    return false;
                 }
 
                 //Read Msg
@@ -210,12 +211,13 @@ namespace Xebra
                 if (fragCounter > MAX_FRAGS)
                 {
                     log.Error ("Maximum fragments reached, aborting.");
-                    return "";
+                    return false;
                 }
 
                 fragCounter++;
-            } while (flag == true);
-            return message;
+            } while (flag);
+            responseMessage = message;
+            return true;
         }         
     }
 }

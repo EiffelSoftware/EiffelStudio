@@ -110,55 +110,55 @@ feature -- Operations
 		require
 			a_target_file_dir_attached: a_target_file_dir /= Void and then not a_target_file_dir.is_empty
 		local
-			l_file: STRING
+			l_source_file: STRING
+			l_target_filename: FILE_NAME
 		do
 			if current_request.is_post then
-				l_file := current_request.args.twin
-				if current_request.args.starts_with ({XU_CONSTANTS}.Request_file_upload_iis) then
-					l_file.remove_head ({XU_CONSTANTS}.Request_file_upload_iis.count)
-					Result := interal_iis_process_upload_single_file (l_file, a_target_file_dir)
-				elseif current_request.args.starts_with ({XU_CONSTANTS}.Request_file_upload_apache) then
-					l_file.remove_head ({XU_CONSTANTS}.Request_file_upload_apache.count)
-					Result := internal_apache_process_upload_single_file (l_file, a_target_file_dir)
+				l_source_file := current_request.args.twin
+					-- Try extract source file
+				if l_source_file.starts_with ({XU_CONSTANTS}.Request_file_upload_iis) then
+					l_source_file.remove_head ({XU_CONSTANTS}.Request_file_upload_iis.count)
+						-- Try extract target filename
+					if l_source_file.has_substring ({XU_CONSTANTS}.Request_file_upload_filename) then
+						create l_target_filename.make_from_string (a_target_file_dir)
+						l_target_filename.set_file_name (l_source_file.substring (l_source_file.substring_index ({XU_CONSTANTS}.Request_file_upload_filename, 1) + {XU_CONSTANTS}.Request_file_upload_filename.count, l_source_file.count))
+						l_source_file.remove_tail (l_source_file.count + 1 - l_source_file.substring_index ({XU_CONSTANTS}.Request_file_upload_filename, 1))
+						Result := interal_iis_process_upload_single_file (l_source_file, l_target_filename)
+					else
+						o.print ("File upload: Filename missing in upload from IIS")
+					end
+				elseif l_source_file.starts_with ({XU_CONSTANTS}.Request_file_upload_apache) then
+					l_source_file.remove_head ({XU_CONSTANTS}.Request_file_upload_apache.count)
+					Result := internal_apache_process_upload_single_file (l_source_file, a_target_file_dir)
 				else
-					o.eprint ("File upload: Unknown uploader identifier " + l_file , generating_type)
+					o.eprint ("File upload: Unknown uploader identifier " + l_source_file , generating_type)
 				end
 			else
 				o.eprint ("File upload: Invalid request method.", generating_type)
 			end
 		end
 
-
 feature {NONE} -- Implementation
 
-	interal_iis_process_upload_single_file (a_source_file: STRING; a_target_file_dir: STRING): detachable STRING
+	interal_iis_process_upload_single_file (a_source_file: STRING; a_target_file: STRING): detachable STRING
 			-- Copy uploaded file to new location
 			--
-			-- `a_source_file': The path to the tmp file that was created by XebraHandler.
-			-- `a_target_file_dir': The path to the folder where the file should be written. Can contain environment vars.
+			-- `a_source_file': The path to the tmp file that was created by XebraHandler. Can contain environment vars.
+			-- `a_target_file': The path to the target file. Can contain environment vars.
 			-- `Result': Returns the file name of the created file on success, void otherwise.
 		require
 			a_source_file_attached_and_not_empty: a_source_file /= Void and then not a_source_file.is_empty
-			a_target_file_dir_attached: a_target_file_dir /= Void and then not a_target_file_dir.is_empty
+			a_target_file_attached: a_target_file /= Void and then not a_target_file.is_empty
 		local
 			l_s_file: RAW_FILE
 			l_t_file: RAW_FILE
 			l_list: LIST [STRING]
-			l_target_fn: STRING
 			l_util: XU_FILE_UTILITIES
 			l_slash: CHARACTER
 		do
 			create l_util
-			if {PLATFORM}.is_windows then
-				l_slash := '\'
-			else
-				l_slash := '/'
-			end
-			l_list := a_source_file.split (l_slash)
-			l_target_fn := l_util.resolve_env_vars (a_target_file_dir, true) + l_slash.out + l_list [l_list.count]
-
-			create l_s_file.make (a_source_file)
-			create l_t_file.make (l_target_fn)
+			create l_s_file.make (l_util.resolve_env_vars (a_source_file, True))
+			create l_t_file.make (l_util.resolve_env_vars (a_target_file, True))
 			if l_s_file.exists and l_s_file.is_readable and l_s_file.is_access_readable then
 				l_s_file.open_read
 				if	not l_t_file.exists and l_t_file.is_creatable then
@@ -169,9 +169,11 @@ feature {NONE} -- Implementation
 					else
 						o.eprint ("File upload: Cannot write into target file " + l_t_file.name , generating_type)
 					end
+					l_t_file.close
 				else
 					o.eprint ("File upload: Cannot create target file " + l_t_file.name , generating_type)
 				end
+				l_s_file.close
 			else
 				o.eprint ("File upload: Cannot read tmp file " + l_s_file.name , generating_type)
 			end
@@ -187,7 +189,7 @@ feature {NONE} -- Implementation
 			-- {CONTENT}%R%N
 			-- {BOUNDARY}%R%N
 			--
-			-- `a_source_file': The path to the tmp file that was created by mod_xebra.
+			-- `a_source_file': The path to the tmp file that was created by mod_xebra. Can contain environment vars.
 			-- `a_target_file_dir': The path to the folder where the file should be written. Can contain environment vars.
 			-- `Result': Returns the file name of the created file on success, void otherwise.
 		require
@@ -206,15 +208,15 @@ feature {NONE} -- Implementation
 			l_buf: STRING
 			l_t_fn: FILE_NAME
 		do
-				create l_s_file.make (a_source_file)
+				create l_util
+				create l_s_file.make (l_util.resolve_env_vars (a_source_file, True))
 				if l_s_file.exists and l_s_file.is_readable and l_s_file.is_access_readable then
 					l_s_file.open_read
 					l_s_file.read_line
 					l_s_file.read_line
 					if l_s_file.last_string.has ('"') then
 						if attached l_s_file.last_string.split ('"').i_th (4) as l_up_filename then
-							create l_util
-							create l_t_fn.make_from_string (l_util.resolve_env_vars (a_target_file_dir, true))
+							create l_t_fn.make_from_string (l_util.resolve_env_vars (a_target_file_dir, True))
 							l_t_fn.set_file_name (l_up_filename)
 							create l_t_file.make (l_t_fn)
 							if l_t_file.exists and l_t_file.is_writable and l_t_file.is_access_writable then

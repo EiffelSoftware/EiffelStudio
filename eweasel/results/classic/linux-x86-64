@@ -1107,6 +1107,7 @@ Test undetected-vuot-error (valid252): failed
 		Final status:  paused 
 
 Test equality-of-conforming-classes (valid253): passed
+Test bogus-bit-vdrd (valid254): passed
 Test multi-error-degree-4 (multierr001): passed
 Test degree-5-forget-error (multierr002): passed
 Test degree-5-infinite-loop (multierr003): passed
@@ -1608,7 +1609,8 @@ Test precompile-again (incr226): failed
 		Final status:  unknown	
 	Raw compiler output:
 	Eiffel Compilation Manager
-	  (version 6.4.0.0 GPL Edition - linux-x86-64)
+	Version 6.5.0.0 GPL Edition - linux-x86-64
+	
 	There is already a project compiled in "/home/manus/local/eweasel/eweasel/../test_dir/incr226"
 	It needs to be deleted before a precompilation.
 	
@@ -2294,17 +2296,7 @@ Test character_32-constant (melt088): failed
 	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
 
-Test alt-precondition-call-on-void-target (melt089): failed
-	Description: A function whose return type is expanded is redefined in a descendant with with an alternate True precondition.  A call to the function returns void in a void-safe system, which should be impossible, but only if the system is melted.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/melt089/tcf at line 15
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test alt-precondition-call-on-void-target (melt089): passed
 Test melted-object-test-with-anchored-none (melt090): failed
 	Description: An object test involving an anchored type that is anchored to an attribute of type NONE causes system execution to end with an illegal opcode panic if code is melted.  Frozen code works fine.
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/melt090/tcf at line 12
@@ -2327,6 +2319,7 @@ Test dollar-with-expanded-attribute-in-generic (melt094): failed
 	Reason: files being compared do not have identical contents
 
 Test wrong-line-number-in-trace (melt095): passed
+Test bad-melted-infix (melt096): passed
 Test bit-arg-extend-frozen (freez001): failed
 	Description: A call to a routine whose formal argument is a BIT type with a larger number of bits than the actual argument.  The actual argument should be extended with trailing zeros
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/freez001/tcf at line 28
@@ -2589,7 +2582,7 @@ Test gc-expanded-allocating-memory-in-special-2 (runtime006): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  system_failed had_panic 
+		Final status:  system_failed 
 	Expected result:
 		Final status:  completed 
 
@@ -3307,6 +3300,7 @@ Test manifest-type-expr-generating-type (exec314): failed
 	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
 
+Test manifest-type-singletons (exec315): passed
 Test add-inheritance-cycle (term001): passed
 Test remove-root-creation-proc (term002): passed
 Test long-identifiers (term003): passed
@@ -3822,6 +3816,7 @@ Test storable-with-attached-type-1 (store019): passed
 Test storable-with-attached-type-by-63 (store020): passed
 Test storable-removing-attachment-marks (store021): passed
 Test store-expanded-class-type-2 (store022): passed
+Test store-volatile-attributes (store023): passed
 Test rename-inherited-wrong-flat (flat001): manual
 Test flat-after-change (flat002): manual
 Test flat-feature-two-defs (flat003): manual
@@ -3925,6 +3920,7 @@ Test validity-vsrp2-many-arguments (vsrp205): passed
 Test validity-vsrp2-bad-then-good (vsrp206): passed
 Test validity-vsrp2-two-procedures (vsrp207): passed
 Test validity-vsrp2-multi-procedures (vsrp208): passed
+Test validity-vsrp3-precondition (vsrp301): passed
 Test validity-vscn-same-cluster (vscn001): passed
 Test validity-vscn-diff-cluster (vscn002): passed
 Test validity-vscn-add-class (vscn003): passed
@@ -4388,8 +4384,8 @@ Test object-test-assertion-crash (dotnet109): passed
 Test dotnet-polymorphism (dotnet110): passed
 Test dotnet-special-handling-crash (dotnet112): passed
 
-Passed:  1832 / 2093  (88%)
-Failed:  239 / 2093  (12%)
-Manual:  17 / 2093  (1%)
-Skipped:  5 / 2093  (1%)
+Passed:  1836 / 2098  (88%)
+Failed:  238 / 2098  (12%)
+Manual:  17 / 2098  (1%)
+Skipped:  5 / 2098  (1%)
 

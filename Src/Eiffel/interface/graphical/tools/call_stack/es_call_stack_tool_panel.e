@@ -1853,9 +1853,6 @@ feature {NONE} -- Grid Implementation
 
 	on_grid_item_pebble_function (a_item: EV_GRID_ITEM): CALL_STACK_STONE
 			-- Returns the call_stack_stone of row related to a_item
-		local
-			l_row: EV_GRID_ROW
-			level: INTEGER
 		do
 			if not ev_application.ctrl_pressed then
 				Result := stone_for_grid_item (a_item)

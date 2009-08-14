@@ -678,6 +678,7 @@ feature -- Accelerator, focus label and menu name
 	f_use_regular_expression_question: STRING_32 do Result := locale.translation("Use regular expression?")	end
 	m_Windows_tool: STRING_32			do Result := locale.translation("&Windows")	end
 	m_Watch_tool: STRING_32				do Result := locale.translation("Watch Tool")	end
+	m_selection_to_watch_tool: STRING_32 do Result := locale.translation("Add Selection To") end
 	m_Wizard_precompile: STRING_32 		do Result := locale.translation("Precompilation &Wizard...")	end
 	m_Zoom: STRING_32 					do Result := locale.translation("Zoom")	end
 	m_Zoom_in: STRING_32 				do Result := locale.translation("Zoom in")	end

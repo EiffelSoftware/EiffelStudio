@@ -505,8 +505,21 @@ feature {NONE} -- add new expression from the grid
 
 feature {EB_CONTEXT_MENU_FACTORY, ES_WATCH_TOOL} -- Context menu
 
+	drop_text (s: STRING_32)
+			-- Drop Clipboard's text into watch tool
+		require
+			s_attached: s /= Void
+		local
+			dlg: EB_EXPRESSION_DEFINITION_DIALOG
+		do
+			show
+			create dlg.make_with_expression_text (s)
+			dlg.set_callback (agent add_expression_with_dialog (dlg))
+			dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+		end
+
 	on_element_drop (s: CLASSC_STONE)
-			-- Something was dropped in `ev_list'.
+			-- Something was dropped in watch tool.
 		local
 			fst: FEATURE_STONE
 			cst: CLASSC_STONE

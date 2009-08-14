@@ -75,6 +75,14 @@ feature -- Basic operations
 			end
 		end
 
+	drop_text (s: STRING_32)
+			-- Drop text
+		do
+			if is_tool_instantiated	and s /= Void then
+				panel.drop_text (s)
+			end
+		end
+
 feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Basic operations
 
 	disable_refresh

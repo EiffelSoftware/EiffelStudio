@@ -659,6 +659,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu_item: EV_MENU_ITEM
 			l_unmanaged_editor: BOOLEAN
 --			l_editor_is_current_editor: BOOLEAN
+			l_selection: STRING_32
 		do
 				-- The commented code below is kept so that if one wants to add one of the commented item back to the
 				-- context menu, we know in which order we should do it.
@@ -715,6 +716,42 @@ feature {NONE} -- Menu section, Granularity 1.
 
 			extend_separator (a_menu)
 
+			--| Send editor's selection to watch tool, if any and possible
+			if
+				attached dev_window.eb_debugger_manager as l_debugger and then
+				l_debugger.raised
+			then
+				create l_menu.make_with_text (names.m_selection_to_watch_tool)
+				a_menu.extend (l_menu)
+				if
+					l_has_selection and then
+					attached l_debugger.watch_tool_list as l_list and then
+					not l_list.is_empty
+				then
+					l_menu.enable_sensitive
+					l_selection := a_editor.wide_string_selection
+					from
+						l_list.start
+					until
+						l_list.after
+					loop
+						if l_list.item.is_tool_instantiated then
+							if l_list.item.is_multiple_edition then
+								l_menu.extend (new_menu_item (l_list.item.edition_title))
+							else
+								l_menu.extend (new_menu_item (l_list.item.title))
+							end
+							l_menu.last.select_actions.extend (agent (l_list.item).drop_text (a_editor.wide_string_selection))
+						end
+						l_list.forth
+					end
+				else
+					l_menu.disable_sensitive
+				end
+				extend_separator (a_menu)
+			end
+
+			--| Select all ...
 			l_menu_item := new_menu_item (names.m_select_all)
 			a_menu.extend (l_menu_item)
 			if l_unmanaged_editor then
@@ -1203,27 +1240,29 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 
 				-- Added to Watch tool, if possible.
-			l_class_stone ?= a_pebble
-			if l_class_stone /= Void then
-				l_debugger := dev_window.eb_debugger_manager
-				l_list := l_debugger.watch_tool_list
-				if l_debugger.raised and not l_list.is_empty then
-					create l_menu2.make_with_text (names.m_watch_tool)
-					l_menu.extend (l_menu2)
-					from
-						l_list.start
-					until
-						l_list.after
-					loop
-						if l_list.item.is_tool_instantiated then
-							if l_list.item.is_multiple_edition then
-								l_menu2.extend (new_menu_item (l_list.item.edition_title))
-							else
-								l_menu2.extend (new_menu_item (l_list.item.title))
+			l_debugger := dev_window.eb_debugger_manager
+			if l_debugger.raised then
+				l_class_stone ?= a_pebble
+				if l_class_stone /= Void then
+					l_list := l_debugger.watch_tool_list
+					if not l_list.is_empty then
+						create l_menu2.make_with_text (names.m_watch_tool)
+						l_menu.extend (l_menu2)
+						from
+							l_list.start
+						until
+							l_list.after
+						loop
+							if l_list.item.is_tool_instantiated then
+								if l_list.item.is_multiple_edition then
+									l_menu2.extend (new_menu_item (l_list.item.edition_title))
+								else
+									l_menu2.extend (new_menu_item (l_list.item.title))
+								end
+								l_menu2.last.select_actions.extend (agent (l_list.item).drop_stone (l_class_stone))
 							end
-							l_menu2.last.select_actions.extend (agent (l_list.item).drop_stone (l_class_stone))
+							l_list.forth
 						end
-						l_list.forth
 					end
 				end
 			end

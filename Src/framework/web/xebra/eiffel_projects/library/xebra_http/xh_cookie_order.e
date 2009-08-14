@@ -176,7 +176,7 @@ feature -- Basic operations
 		local
 			l_escaper: XU_ESCAPER
 		do
-			create l_escaper.make
+			create l_escaper
 
 				-- Name and Value are required
 			Result := {XU_CONSTANTS}.Cookie_start + l_escaper.escape_cookie_text (name) + {XU_CONSTANTS}.Cookie_eq + l_escaper.escape_cookie_text (value)

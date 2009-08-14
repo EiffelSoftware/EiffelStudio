@@ -164,14 +164,15 @@ feature -- Status setting
 		end
 
 	set_args (a_args: like args)
-			-- Sets args.
+			-- Sets args. Also unescapes HTML special chars.
 		require
 			a_args_attached: a_args /= Void
+		local
+			l_escaper: XU_ESCAPER
 		do
-			args := a_args
+			create l_escaper
+			args := l_escaper.unescape_html (a_args)
 			args_changed := True
-		ensure
-			args_set: equal (args, a_args)
 		end
 
 	set_method (a_method: like method)

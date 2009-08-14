@@ -903,9 +903,10 @@ feature {SD_EDITOR_CONFIG_HELPER} -- Internals
 					l_maximzied_tools.after
 				loop
 					l_content := internal_docking_manager.query.content_by_title (l_maximzied_tools.item)
-					if l_content /= Void then
+					if l_content /= Void and then l_content.state.is_zone_attached then
 						l_zone := l_content.state.zone
-						if l_zone /= Void and then not l_zone.is_maximized then
+						check l_zone /= Void end -- Implied by `is_zone_attached'
+						if not l_zone.is_maximized then
 							l_content.state.on_normal_max_window
 						end
 					end

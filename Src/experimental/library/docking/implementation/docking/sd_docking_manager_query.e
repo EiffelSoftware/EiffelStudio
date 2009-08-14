@@ -459,8 +459,9 @@ feature -- Querys
 			l_zone: detachable SD_ZONE
 			l_container: SD_MULTI_DOCK_AREA
 		do
-			l_zone := a_content.state.zone
-			if l_zone /= Void then
+			if a_content.state.is_zone_attached then
+				l_zone := a_content.state.zone
+				check l_zone /= Void end -- Implied by `is_zone_attached'
 				from
 					l_floating_zones := floating_zones
 					l_floating_zones.start

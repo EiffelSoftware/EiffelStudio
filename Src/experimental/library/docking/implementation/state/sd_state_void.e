@@ -211,8 +211,9 @@ feature -- Redefine
 			l_zone, l_new_zone: detachable SD_ZONE
 		do
 			if attached relative as l_relative and then (not l_restired and l_relative.is_visible) then
-				l_zone := l_relative.state.zone
-				if l_zone /= Void then
+				if l_relative.state.is_zone_attached then
+					l_zone := l_relative.state.zone
+					check l_zone /= Void end -- Implied by `is_zone_attached'
 					l_dock_area := docking_manager.query.inner_container_include_hidden (l_zone)
 				end
 

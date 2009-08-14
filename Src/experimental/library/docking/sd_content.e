@@ -786,8 +786,9 @@ feature -- States report
 		local
 			l_zone: detachable SD_ZONE
 		do
-			l_zone := a_target_content.state.zone
-			if l_zone /= Void then
+			if a_target_content.state.is_zone_attached then
+				l_zone := a_target_content.state.zone
+				check l_zone /= Void end -- Implied by `is_zone_attached'
 				if attached {EV_WIDGET} l_zone as lt_widget then
 					Result := lt_widget.parent /= Void
 				else
@@ -801,8 +802,9 @@ feature -- States report
 		local
 			l_zone: detachable SD_ZONE
 		do
-			l_zone := a_target_content.state.zone
-			if l_zone /= Void then
+			if a_target_content.state.is_zone_attached then
+				l_zone := a_target_content.state.zone
+				check l_zone /= Void end -- Implied by `is_zone_attached
 				if attached {EV_WIDGET} l_zone as lt_widget then
 					Result := lt_widget.parent /= Void
 				else
@@ -898,8 +900,6 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 
 	set_visible (a_bool: BOOLEAN)
 			-- Set `is_visible'
-		local
-			l_zone: detachable SD_ZONE
 		do
 			is_visible := a_bool
 			if is_user_widget_set and then not user_widget.is_displayed then

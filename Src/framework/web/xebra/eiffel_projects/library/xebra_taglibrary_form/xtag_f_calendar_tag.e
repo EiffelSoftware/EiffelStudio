@@ -39,12 +39,6 @@ feature -- Implementation
 			-- <Precursor>
 		do
 			Precursor (a_id, a_attribute)
-			if a_id.is_equal ("value") then
-				value := a_attribute
-			end
-			if a_id.is_equal ("name") then
-				name := a_attribute
-			end
 			if a_id.is_equal ("date") then
 				date := a_attribute
 			end
@@ -69,7 +63,7 @@ feature -- Implementation
 			)
 
 			a_servlet_class.render_html_page.append_expression (response_variable_append +
-				"(%"<input type=%%%"textarea%%%" name=%%%"" + a_name + "%%%"/>%")")
+				"(%"<input type=%%%"textarea%%%" name=%%%"" + a_name + "%%%" value=%%%"" + date.value (current_controller_id) + "%%%"/>%")")
 			a_servlet_class.render_html_page.append_expression (response_variable_append +
 			"(%"<input type=%%%"button%%%"" +
 			"onclick=%%%"" + l_cal_name + ".popup('" + a_name + "');%%%"" +
@@ -82,9 +76,9 @@ feature -- Implementation
 		local
 			l_date_time: STRING
 		do
-			l_date_time := a_servlet_class.fill_bean.new_local ("DATE_TIME")
+			l_date_time := a_servlet_class.fill_bean.new_local ("DATE")
 			Result := "create " + l_date_time + ".make_now%N"
-			Result := Result +  "if " + l_date_time + ".date_time_valid (" + a_argument_name + ", %"[0]mm/[0]dd/yyyy%") then%N"
+			Result := Result +  "if " + l_date_time + ".date_valid (" + a_argument_name + ", %"[0]mm/[0]dd/yyyy%") then%N"
 			Result := Result + "create " + l_date_time + ".make_from_string (" + a_argument_name + ", %"[0]mm/[0]dd/yyyy%")%N%T"
 			Result := Result + a_variable_name + " := " + l_date_time + "%N"
 			Result := Result + "end"

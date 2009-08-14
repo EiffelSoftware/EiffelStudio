@@ -23,7 +23,7 @@
 					variable="reservation" type="RESERVATION">
 					<tr>
 						<td><xeb:display text="#{reservation.name}"/></td>
-						<td><xeb:display text="#{reservation.date}"/></td>
+						<td><xeb:display text="#{reservation.date.out}"/></td>
 						<td><xeb:display text="#{reservation.s_persons}"/></td>
 						<xeb:container render="%=authenticated_admin%">
 							<td class="style2">
@@ -45,7 +45,7 @@
 				<tr>
 					<td>Name</td>
 					<td>
-						<f:input_text value="name" name="a_name" text="#{new_reservation.name}">
+						<f:input_text value="name" name="a_name" text="%=logged_in_name%">
 							<f:validator class="XWA_NOT_EMPTY_VALIDATOR"/>
 							<f:validator class="XWA_ALPHA_NUMERIC_VALIDATOR" />
 						</f:input_text>
@@ -57,9 +57,9 @@
 				<tr>
 					<td>Date</td>
 					<td>
-						<f:input_text value="date" name="a_date" text="#{new_reservation.date}">
+						<f:calendar value="date" name="a_date" date="#{new_reservation.date.out}">
 							<f:validator class="XWA_NOT_EMPTY_VALIDATOR"/>
-						</f:input_text>
+						</f:calendar>
 						<f:validation_result name="a_date" variable="date_errors">
 							<br /><xeb:display text="#{date_errors.out}" />
 						</f:validation_result>

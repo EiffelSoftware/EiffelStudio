@@ -74,7 +74,7 @@ feature -- Status Setting
 
 feature {NONE} -- Access
 
-	entries: HASH_TABLE [ANY, STRING]
+    entries: HASH_TABLE [ANY, STRING]
     	-- Key value pairs
 
     is_dirty: BOOLEAN

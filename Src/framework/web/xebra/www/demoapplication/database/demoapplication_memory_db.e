@@ -19,7 +19,9 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialization for `Current'.	
+			-- Initialization for `Current'.
+		local
+			l_default_time: DATE
 		do
 			create reservations.make
 			create users.make (2)
@@ -27,7 +29,8 @@ feature {NONE} -- Initialization
 			users.force ( create {USER}.make (1, "fabio", "123", False), "fabio")
 			users.force ( create {USER}.make (1, "admin", "123", True), "admin")
 
-			reservations.force (create {RESERVATION}.make_with_arguments (1, "Fabio Zuend", "2009-02-06", 4, "Big event!"))
+			create l_default_time.make_now
+			reservations.force (create {RESERVATION}.make_with_arguments (1, "Fabio Zuend", l_default_time, 4, "Big event!"))
 		ensure
 			reservations_attached: reservations /= Void
 			users_attached: users /= Void
@@ -94,7 +97,7 @@ feature -- Basic Operations
 			end
 		end
 
-	insert_reservation (a_name: STRING; a_date: STRING; a_persons: INTEGER; a_description: STRING): BOOLEAN
+	insert_reservation (a_name: STRING; a_date: DATE; a_persons: INTEGER; a_description: STRING): BOOLEAN
 			-- Inserts a new reseravation
 		do
 			reservations.force (create {RESERVATION}.make_with_arguments (reservations.count+1, a_name, a_date, a_persons, a_description))

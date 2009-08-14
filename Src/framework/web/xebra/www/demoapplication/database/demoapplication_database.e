@@ -42,12 +42,12 @@ feature -- Basic Operations
 			Result_attached: Result /= Void
 		end
 
-	insert_reservation (a_name: STRING; a_date: STRING; a_persons: INTEGER; a_description: STRING): BOOLEAN
+	insert_reservation (a_name: STRING; a_date: DATE; a_persons: INTEGER; a_description: STRING): BOOLEAN
 			-- Inserts a new reseravation
 
 		require
 			not_a_name_is_detached_or_empty: a_name /= Void and then not a_name.is_empty
-			not_a_date_is_detached_or_empty: a_date /= Void and then not a_date.is_empty
+			not_a_date_is_detached_or_empty: a_date /= Void
 			not_a_description_is_detached_or_empty: a_description /= Void and then not a_description.is_empty
 		deferred
 		end

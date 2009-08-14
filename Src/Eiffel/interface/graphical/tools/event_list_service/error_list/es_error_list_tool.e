@@ -13,7 +13,8 @@ frozen class
 inherit
 	ES_TOOL [ES_ERROR_LIST_TOOL_PANEL]
 		redefine
-			shortcut_preference_name
+			shortcut_preference_name,
+			is_tool_instantiated_immediate
 		end
 
 	ES_ERROR_LIST_COMMANDER_I
@@ -49,6 +50,11 @@ feature -- Access
 		do
 			Result := "show_errors_and_warnings_tool"
 		end
+
+feature {ES_DOCKABLE_TOOL_PANEL} -- Status report
+
+	is_tool_instantiated_immediate: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Basic operations
 

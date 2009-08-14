@@ -354,20 +354,26 @@ feature -- Access: User interface
 				if is_tool_instantiated then
 					create Result.make_with_widget (panel.widget, content_id)
 				else
-					create l_label.make_with_text ("Uh Oh!")
-						-- Note: This action is a mild hack for cases where Uh Oh! is not replaced. When shown the
-						--       user is able to click the Uh Oh message and instatiate the UI. Without this code
-						--       there would be no way to show the tool content.
-					register_kamikaze_action (l_label.select_actions, agent
-						do
-								-- Force creation on panel.
-							panel.do_nothing
-								-- Call show actions manually.
-							docking_content.show_actions.call (Void)
-						end)
+					if is_tool_instantiated_immediate and then attached {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} panel as l_tool_panel then
+							-- Immediate creation required
+						l_tool_panel.initialize
+						create Result.make_with_widget (l_tool_panel.widget, content_id)
+					else
+						create l_label.make_with_text ("Uh Oh!")
+							-- Note: This action is a mild hack for cases where Uh Oh! is not replaced. When shown the
+							--       user is able to click the Uh Oh message and instatiate the UI. Without this code
+							--       there would be no way to show the tool content.
+						register_kamikaze_action (l_label.select_actions, agent
+							do
+									-- Force creation on panel.
+								panel.do_nothing
+									-- Call show actions manually.
+								docking_content.show_actions.call (Void)
+							end)
 
-					l_label.set_font ((create {ES_SHARED_FONTS_AND_COLORS}).fonts.prompt_sub_title_font)
-					create Result.make_with_widget (l_label, content_id)
+						l_label.set_font ((create {ES_SHARED_FONTS_AND_COLORS}).fonts.prompt_sub_title_font)
+						create Result.make_with_widget (l_label, content_id)
+					end
 				end
 				Result.set_long_title (edition_title)
 				Result.set_short_title (edition_title)
@@ -419,20 +425,22 @@ feature -- Access: User interface
 					-- Register the close actions.
 				register_action (Result.close_request_actions, agent close)
 
-				register_kamikaze_action (Result.show_actions, agent (ia_content: attached SD_CONTENT)
-						-- Attach the real panel to the docking manager.
-	                do
-	                    if not is_tool_instantiated then
-	                    		-- Just access the panel to initalize it. This is kind of a hack, but it
-	                    		-- works for what is needed.
-	                    		-- This is required because the multitude of ways a tools can be shown or
-	                    		-- accessed in code. We need to be sure that the panel is created on show
-	                    		-- because we use a fack widget for the docking content. This widget needs
-	                    		-- to be replaced before the user sees the content come into view. If the
-	                    		-- user sees "Uh Oh!" the content was shown without initializing the panel.
-							panel.do_nothing
-	                    end
-	                end (Result))
+				if not is_tool_instantiated_immediate then
+					register_kamikaze_action (Result.show_actions, agent (ia_content: attached SD_CONTENT)
+							-- Attach the real panel to the docking manager.
+		                do
+		                    if not is_tool_instantiated then
+		                    		-- Just access the panel to initalize it. This is kind of a hack, but it
+		                    		-- works for what is needed.
+		                    		-- This is required because the multitude of ways a tools can be shown or
+		                    		-- accessed in code. We need to be sure that the panel is created on show
+		                    		-- because we use a fack widget for the docking content. This widget needs
+		                    		-- to be replaced before the user sees the content come into view. If the
+		                    		-- user sees "Uh Oh!" the content was shown without initializing the panel.
+								panel.do_nothing
+		                    end
+		                end (Result))
+				end
 
 				window.docking_manager.contents.extend (Result)
 			else
@@ -497,6 +505,15 @@ feature -- Status report
 			if is_tool_instantiated then
 				Result := content.has_focus
 			end
+		end
+
+feature {ES_DOCKABLE_TOOL_PANEL} -- Status report
+
+	is_tool_instantiated_immediate: BOOLEAN
+			-- Indicates if the tool panel is built as soon as the object has been created.
+			--|Redefine in *rare* cases where tools need to be fully built.
+		do
+			-- False by default.
 		end
 
 feature {ES_SHELL_TOOLS} -- Status report

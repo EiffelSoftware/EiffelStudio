@@ -16,14 +16,10 @@
  */
 
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Web;
-using System.Net.Sockets;
 using System.IO;
-using System.Diagnostics;
 using System.Collections.Specialized;
-using System.Collections;
+
 
 namespace Xebra
 {
@@ -35,8 +31,7 @@ namespace Xebra
     class XHandler : IHttpHandler
     {
         #region Constants
-
-
+        
         /// <summary>
         /// The key in the request message that represents the start of the html code
         /// </summary>
@@ -148,6 +143,11 @@ namespace Xebra
         /// </summary>
         XServerConnection srv;
 
+        /// <summary>
+        /// The config info read from the web.config file
+        /// </summary>
+        XConfig config;
+
         #endregion
 
         #region IHttpHandler Members
@@ -161,36 +161,19 @@ namespace Xebra
         }
 
         /// <summary>
-        /// The main routine of the handler. Creates a request message and sends it to the server. The request message is of the following format:
-        /// REQUEST = HEADER HEADERS_IN HEADERS_OUT SUBPROCESS_ENVIRONMENT_VARS ARGS;
-        /// 
-        /// HEADER = KEY_METHOD KEY_SPACE url KEY_SPACE KEY_HTTP;
-        /// HEADERS_IN = KEY_HI {TABLE_ENTRY}  KEY_END;
-        /// HEADERS_OUT = KEY_HO {TABLE_ENTRY} KEY_END;
-        /// SUBPROCESS_ENVIRONMENT_VARS = KEY_SE TABLE_ENTRIES KEY_END;
-        /// TABLE_ENTRY = KEY_T_NAME item_name KEY_T_VALUE item_value;
-        /// ARGS = KEY_ARG args;
-        /// 
-        /// KEY_METHOD = "GET" | "POST";
-        /// KEY_HTTP = "HTTP/1.1" | "HTTP/1.0";
-        /// KEY_SPACE = " ";
-        /// KEY_HI = "#HI#";
-        /// KEY_HO = "#HO#";
-        /// KEY_END = "#E#";
-        /// KEY_SE = "#SE#";
-        /// KEY_T_NAME = "#$#";
-        /// KEY_T_VALUE = "#%#";
-        /// KEY_ARG = "#A#";
+        /// The main routine of the handler. Creates a request message and sends it to the server. 
         /// </summary>
         /// <param name="context">The current http context<guer/param>
         public void ProcessRequest(HttpContext context)
-        {
+        {          
             string requestMsg;
             bool ok = false;
             string responseMsg;
             HttpRequest request = context.Request;
             log = new XWindowsLogger();
-            srv = new XServerConnection(log);
+            config = new XConfig(request, log);
+            srv = new XServerConnection(log, config);
+            
 
             if (buildRequestMessage(out requestMsg, request))
             {
@@ -217,13 +200,33 @@ namespace Xebra
         }
 
         /// <summary>
-        /// Parses the request object and generated a request message string that can be sent to the xebra server
+        /// Parses the request object and generated a request message string that can be sent to the xebra server.
+        /// The request message is of the following format:
+        /// REQUEST = HEADER HEADERS_IN HEADERS_OUT SUBPROCESS_ENVIRONMENT_VARS ARGS;
+        /// 
+        /// HEADER = KEY_METHOD KEY_SPACE url KEY_SPACE KEY_HTTP;
+        /// HEADERS_IN = KEY_HI {TABLE_ENTRY}  KEY_END;
+        /// HEADERS_OUT = KEY_HO {TABLE_ENTRY} KEY_END;
+        /// SUBPROCESS_ENVIRONMENT_VARS = KEY_SE TABLE_ENTRIES KEY_END;
+        /// TABLE_ENTRY = KEY_T_NAME item_name KEY_T_VALUE item_value;
+        /// ARGS = KEY_ARG args;
+        /// 
+        /// KEY_METHOD = "GET" | "POST";
+        /// KEY_HTTP = "HTTP/1.1" | "HTTP/1.0";
+        /// KEY_SPACE = " ";
+        /// KEY_HI = "#HI#";
+        /// KEY_HO = "#HO#";
+        /// KEY_END = "#E#";
+        /// KEY_SE = "#SE#";
+        /// KEY_T_NAME = "#$#";
+        /// KEY_T_VALUE = "#%#";
+        /// KEY_ARG = "#A#";
         /// </summary>
         /// <param name="requestMsg">The string to store the request message </param>
         /// <param name="request">The request object</param>
         /// <returns>Returns true on success</returns>
         private bool buildRequestMessage(out string requestMsg, HttpRequest request)
-        {
+        {   
             requestMsg = request.RequestType +                      // Method
                     " " +                                               // Space
                     request.RawUrl +                                    // Url
@@ -233,7 +236,14 @@ namespace Xebra
                     SUBPROCESS_ENVIRONMENT_VARS + END +                 // No SUBPROCESS_ENV_VARS
                     ARGUMENTS +                                         // ARGS
                     "";
-            
+
+            //Check if ContentLength does not exceed MaxUploadSize
+            if (request.ContentLength > config.MaxUploadSize)
+            {
+                log.Error("Error parsing uploaded file InputStream: Giving up finding filename.");
+                return false;
+            }
+
             /* If there are, read POST or GET parameters into message buffer */
             if (request.RequestType.Equals(POST))
             {
@@ -241,9 +251,9 @@ namespace Xebra
                 if (request.ContentType.StartsWith(CT_MULTIPART_FORM_DATA))
                 {
                     if (request.Files.Keys.Count == 1)
-                    {
+                    {                      
                         // Save file to tmp file
-                        string tempFileName = getTmpFileName("C:\\tmp\\");
+                        string tempFileName = getTmpFileName(config.UploadSavePath);
                         requestMsg += FILE_UPLOAD_FLAG + tempFileName;
                         request.Files.Get(0).SaveAs(tempFileName);
 

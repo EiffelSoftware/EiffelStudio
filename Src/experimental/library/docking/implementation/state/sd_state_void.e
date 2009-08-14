@@ -243,17 +243,15 @@ feature -- Redefine
 				float (internal_shared.default_screen_x, internal_shared.default_screen_y)
 			end
 
-			if content /= Void then
+			if content /= Void and then content.state.is_zone_attached then
 				l_new_zone := content.state.zone
-
-				if l_new_zone /= Void then
-					if attached {EV_WIDGET} l_new_zone as lt_widget then
-						if lt_widget.is_displayed then
-							call_show_actions
-						end
-					else
-						check not_possible: False end
+				check l_new_zone /= Void end -- Implied by `is_zone_attached'
+				if attached {EV_WIDGET} l_new_zone as lt_widget then
+					if lt_widget.is_displayed then
+						call_show_actions
 					end
+				else
+					check not_possible: False end
 				end
 			end
 		rescue

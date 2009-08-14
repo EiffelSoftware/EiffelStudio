@@ -50,4 +50,9 @@
 		<attribute id="text"/>
 		<attribute id="name"/>
 	</tag>
+		<tag id="calendar" class="XTAG_F_CALENDAR_TAG">
+		<attribute id="value"/>
+		<attribute id="name" />
+		<attribute id="date" />
+	</tag>	
 </taglib>

@@ -80,10 +80,13 @@ feature -- Implementation
 			else
 				l_max_length := ""
 			end
-			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<input type=%%%"" + input_type.value (current_controller_id) + "%%%" value=%%%"" + text.value (current_controller_id) +  "%%%"" + "size=%%%"" + size.value (current_controller_id) + "%%%"" + a_name + " " + l_max_length + "/>%")")
+			a_servlet_class.render_html_page.append_expression (response_variable_append + 
+			"(%"<input type=%%%"" + input_type.value (current_controller_id) + "%%%" value=%%%"" 
+			+ text.value (current_controller_id) +  "%%%"" + "size=%%%"" + size.value (current_controller_id) 
+			+ "%%%" name=%%%"" + a_name + "%%%" " + l_max_length + "/>%")")
 		end
 
-	transform_to_correct_type (a_variable_name, a_argument_name: STRING): STRING
+	transform_to_correct_type (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_name, a_argument_name: STRING): STRING
 			-- <Precursor>
 		do
 			Result := a_variable_name + " := " + a_argument_name

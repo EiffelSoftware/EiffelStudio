@@ -46,6 +46,11 @@ feature -- Command
 			not_void: a_content /= Void
 		do
 			internal_content := a_content
+
+			-- Just set docking manager if possible
+			if a_content.is_docking_manager_attached then
+				set_docking_manager (a_content.docking_manager)
+			end
 		ensure
 			set: content = a_content
 		end

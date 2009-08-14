@@ -136,7 +136,7 @@ feature -- Redefine
 
 			check l_last /= Void end -- Implied by tab zone at least has one tab
 			create l_tab_behind_last.make (l_last.right + 1, l_last.top, internal_shared.feedback_tab_width, l_last.height)
-			internal_tab_area.extend (l_tab_behind_last, internal_tab_area.key_for_iteration + 1)
+			internal_tab_area.extend (l_tab_behind_last, internal_tab_area.count + 1)
 		end
 
 feature {NONE} -- Implementation

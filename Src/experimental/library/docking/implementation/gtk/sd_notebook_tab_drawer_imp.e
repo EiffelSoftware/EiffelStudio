@@ -54,16 +54,20 @@ feature -- Command
 			-- Draw unselected notebook tab.
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
-			internal_expose (a_width, internal_tab.x, False)
+			internal_expose (a_width, tab.x, False)
 		end
 
 	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Draw selected notebook tab.
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
-			internal_expose (a_width, internal_tab.x, True)
-			if internal_tab.parent.has_focus then
-				internal_tab.draw_focus_rect
+			internal_expose (a_width, tab.x, True)
+			if attached tab.parent as l_parent then
+				if l_parent.has_focus then
+					tab.draw_focus_rect
+				end
+			else
+				check False end -- Implied by `tab' is displaying on screen
 			end
 		end
 
@@ -71,7 +75,7 @@ feature -- Command
 			-- Draw hot notebook tab.
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
-			internal_expose (a_width, internal_tab.x, False)
+			internal_expose (a_width, tab.x, False)
 		end
 
 	tool_bar_drawer: SD_TOOL_BAR_DRAWER_IMP
@@ -86,18 +90,22 @@ feature -- Command
 			-- Redefine
 		local
 			l_vision_rect: EV_RECTANGLE
-			l_imp: EV_DRAWING_AREA_IMP
+			l_imp: detachable EV_DRAWING_AREA_IMP
 		do
-			if (internal_tab.is_hot or internal_tab.is_selected)and is_top_side_tab then
+			if (tab.is_hot or tab.is_selected)and is_top_side_tab then
 
 				l_vision_rect := close_rectangle
-				l_vision_rect.move (internal_tab.x + l_vision_rect.x, l_vision_rect.y)
+				l_vision_rect.move (tab.x + l_vision_rect.x, l_vision_rect.y)
 
 				-- Draw hot state background
-				if internal_tab.is_pointer_in_close_area then
-					l_imp ?= internal_tab.parent.implementation
+				if tab.is_pointer_in_close_area then
+					if attached tab.parent as l_parent then
+						l_imp ?= l_parent.implementation
+					else
+						check False end -- Implied by `tab' is displaying on screen
+					end
 					check not_void: l_imp /= Void end
-					if internal_tab.is_pointer_pressed then
+					if tab.is_pointer_pressed then
 						tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed)
 					else
 						tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.hot)
@@ -105,10 +113,10 @@ feature -- Command
 				end
 
 				-- We draw close button
-				if internal_tab.is_pointer_pressed and internal_tab.is_pointer_in_close_area then
-					a_drawable.draw_pixmap (internal_tab.x + start_x_close + 1, start_y_close, a_close_pixmap)
+				if tab.is_pointer_pressed and tab.is_pointer_in_close_area then
+					a_drawable.draw_pixmap (tab.x + start_x_close + 1, start_y_close, a_close_pixmap)
 				else
-					a_drawable.draw_pixmap (internal_tab.x + start_x_close, start_y_close, a_close_pixmap)
+					a_drawable.draw_pixmap (tab.x + start_x_close, start_y_close, a_close_pixmap)
 				end
 			end
 		end
@@ -170,9 +178,14 @@ feature -- Command
 	draw_focus_rect (a_rect: EV_RECTANGLE)
 			-- Redefine
 		local
-			l_imp: SD_DRAWING_AREA_IMP
+			l_imp: detachable SD_DRAWING_AREA_IMP
 		do
-			l_imp ?= internal_tab.parent.implementation
+			if attached tab.parent as l_parent then
+				l_imp ?= l_parent.implementation
+			else
+				check False end -- Implied by `tab' is displaying on screen
+			end
+
 			check not_void: l_imp /= Void end
 
 			c_gtk_paint_focus (l_imp.c_object, {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
@@ -203,10 +216,14 @@ feature {NONE}  -- Implementation
 		end
 
 	clear (a_width, a_x: INTEGER)
-			-- Clear `internal_tab''s area.
+			-- Clear `tab''s area.
 		do
-			internal_tab.parent.set_foreground_color (internal_tab.parent.background_color)
-			internal_tab.parent.fill_rectangle (a_x, 0, a_width, internal_tab.parent.height)
+			if attached tab.parent as l_parent then
+				l_parent.set_foreground_color (l_parent.background_color)
+				l_parent.fill_rectangle (a_x, 0, a_width, l_parent.height)
+			else
+				check False end -- Implied by `tab' is displaying on screen
+			end
 		end
 
 	notebook_style: POINTER
@@ -226,21 +243,24 @@ feature {NONE}  -- Implementation
 	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN)
 			-- Expose implementation
 		local
-			l_imp: SD_DRAWING_AREA_IMP
+			l_imp: detachable SD_DRAWING_AREA_IMP
 		do
 			clear (a_width, a_x)
+			if attached tab.parent as l_parent then
+				l_imp ?= l_parent.implementation
+				check not_void: l_imp /= Void end
 
-			l_imp ?= internal_tab.parent.implementation
-			check not_void: l_imp /= Void end
-
-			if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer then
-				c_gtk_paint_extension (l_imp.c_object, notebook_style, a_is_selected,
-										 a_x, 0 ,a_width, internal_tab.height, is_top_side_tab)
-				if a_is_selected then
-					draw_pixmap_text_selected (internal_tab.parent, internal_tab.x, a_width)
-				else
-					draw_pixmap_text_unselected (internal_tab.parent, internal_tab.x, a_width)
+				if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer then
+					c_gtk_paint_extension (l_imp.c_object, notebook_style, a_is_selected,
+											 a_x, 0 ,a_width, tab.height, is_top_side_tab)
+					if a_is_selected then
+						draw_pixmap_text_selected (l_parent, tab.x, a_width)
+					else
+						draw_pixmap_text_unselected (l_parent, tab.x, a_width)
+					end
 				end
+			else
+				check False end -- Implied by `tab' is displaying on screen
 			end
 		end
 

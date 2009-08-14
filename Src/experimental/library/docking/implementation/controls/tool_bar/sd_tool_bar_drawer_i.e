@@ -44,6 +44,7 @@ feature -- Commands
 		require
 			not_void: a_arguments /= Void
 			valid: a_arguments.item /= Void
+			valid: a_arguments.tool_bar /= Void
 			not_void: tool_bar /= Void
 		deferred
 		end

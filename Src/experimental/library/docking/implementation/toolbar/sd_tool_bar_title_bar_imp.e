@@ -24,8 +24,6 @@ feature {NONE}-- Initialization
 
 	initialize
 			-- Initialize `Current'
-		local
-			internal_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_HORIZONTAL_BOX}
 

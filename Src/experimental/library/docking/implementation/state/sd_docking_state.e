@@ -149,7 +149,7 @@ feature -- Redefine
 			end
 
 			-- When SD_OPEN_CONFIG_MEDIATOR.open_inner_container_data, `zone' maybe void
-			if zone /= Void then
+			if is_zone_attached then
 				update_floating_zone_visible (zone, a_data.is_visible)
 			end
 			initialized := True
@@ -401,7 +401,7 @@ feature -- Redefine
 	auto_hide_tab_with (a_target_content: SD_CONTENT)
 			-- <Precursor>
 		do
-			if zone /= Void then
+			if is_zone_attached then
 				docking_manager.command.lock_update (zone, False)
 				docking_manager.command.recover_normal_state
 				docking_manager.command.remove_auto_hide_zones (False)
@@ -655,7 +655,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	internal_zone_not_void: initialized implies zone /= Void
+	internal_zone_not_void: initialized implies is_zone_attached
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

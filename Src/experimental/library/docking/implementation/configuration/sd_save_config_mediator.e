@@ -168,7 +168,7 @@ feature -- Save inner container data.
 					end
 				end
 			else
-				check real_has_place_holder: internal_docking_manager.zones.place_holder_content.state.zone /= Void end
+				check real_has_place_holder: internal_docking_manager.zones.place_holder_content.state.is_zone_attached end
 
 				-- If following check violated, it normally means when you saving tools' layout, there are BOTH editor type zones and editor place holder visible.
 				-- So docking library don't know how to separate tool area and editor area.

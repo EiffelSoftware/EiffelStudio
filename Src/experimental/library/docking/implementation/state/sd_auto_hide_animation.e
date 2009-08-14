@@ -232,7 +232,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 			l_rect, l_rect_zone: EV_RECTANGLE
 		do
 			create l_rect.make (state.tab_stub.screen_x, state.tab_stub.screen_y, state.tab_stub.width, state.tab_stub.height)
-			if state.zone /= Void and not state.zone.is_destroyed then
+			if state.is_zone_attached and not state.zone.is_destroyed then
 				create l_rect_zone.make (state.zone.screen_x, state.zone.screen_y, state.zone.width, state.zone.height)
 				-- During pick and drop target is not correct, so we can't use this:
 				-- if not state.tab_stub.has_recursive (a_widget) and not state.zone.has_recursive (a_widget) then

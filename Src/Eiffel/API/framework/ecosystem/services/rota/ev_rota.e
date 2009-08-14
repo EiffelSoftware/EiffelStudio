@@ -64,6 +64,19 @@ feature {NONE} -- Clean up
 		do
 			if a_explicit then
 				timer.destroy
+				tasks.do_all (
+					agent (a_task_data: like new_task_data)
+						local
+							l_task: ROTA_TIMED_TASK_I
+						do
+							l_task := a_task_data.task
+							if attached {DISPOSABLE_I} l_task as l_disposable then
+								l_disposable.dispose
+							elseif l_task.is_interface_usable and then l_task.has_next_step then
+								l_task.cancel
+							end
+						end)
+				tasks.wipe_out
 			end
 		end
 
@@ -77,7 +90,7 @@ feature {NONE} -- Implementation
 			--       `process_events' is called after every iteration.
 		require
 			not_looping: not is_looping
-			timer_not_destroyed: not timer.is_destroyed
+			not_disposed: not is_disposed
 		local
 			l_pause: BOOLEAN
 		do
@@ -87,22 +100,18 @@ feature {NONE} -- Implementation
 			until
 				l_pause
 			loop
-				if timer.is_destroyed then
-					l_pause := True
+				l_pause := True
+				min_sleep_time := min_sleep_time.max_value
+				proceed_all_tasks
+				if tasks.is_empty then
+				elseif min_sleep_time > 0 then
+					timer.set_interval (min_sleep_time.to_integer_32)
 				else
-					min_sleep_time := min_sleep_time.max_value
-					proceed_all_tasks
-					if tasks.is_empty then
-						l_pause := True
-					elseif min_sleep_time > 0 then
-						timer.set_interval (min_sleep_time.to_integer_32)
-						l_pause := True
+					if not shared_environment.is_destroyed and then attached shared_environment.application then
+						ev_application.process_events
+						l_pause := False
 					else
-						if not shared_environment.is_destroyed and then attached shared_environment.application then
-							ev_application.process_events
-						elseif not timer.is_destroyed then
-							timer.destroy
-						end
+						dispose
 					end
 				end
 			end

@@ -189,7 +189,7 @@ feature -- Status setting
 				not connection.has_connection_died and then
 				is_evaluator_launched and then is_evaluator_running
 			then
-				if attached request as l_request then
+				if attached request as l_request and connection.is_connected then
 					connection.send_request (l_request)
 					request := Void
 				else

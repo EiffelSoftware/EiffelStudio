@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 STRICT//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<title>Xebra Demo Application</title>
+<link href="base.css" rel="stylesheet" type="text/css"></link>
+<script language="javascript1.2" src="Scripts/codethatcalendarstd.js"></script><script language="javascript1.2" src="scroller_ex.js"></script>
+</head>
+<body>
+<div id="main">
+<div id="header_title">
+<div class="login_text">
+	 Welcome
+	          admin
+	          ,<form id="l_temp_0" action="/demoapplication/reservations.xeb" method="post">
+			<a href="#" onclick="document.forms['l_temp_0']['servlet_uid_1'].value='servlet_uid_1'; document.forms['l_temp_0'].submit(); return false;">Logout</a><input type="hidden" name ="servlet_uid_1" />
+		<input type="hidden" name="l_temp_0" value="servlet_uid_0" /></form>
+	 
+	 
+	
+	
+</div>
+</div>
+<div id="header_img"></div>
+<div class="column nav">
+<h2>Navigation</h2>
+	<ul>
+        <li><a href="index.xeb">Home</a></li>
+        <li><a href="reservations.xeb">Reservations</a></li>
+	<li><a href="upload.xeb">Upload</a></li>
+        <li><a href="contact.xeb">Contact</a></li>
+     </ul>
+</div>
+<div class="column line"></div>
+<div class="column content">
+	
+		<h2 class="style1">Reservations</h2>
+		
+		
+			<table width="100%" border="0" cellpadding="0">
+				<tr class="tableheader">
+					<td>Name</td>
+					<td>Date</td>
+					<td>Persons</td>
+					
+						<td>Delete</td>
+					
+					
+				</tr>
+				<form id="l_temp_3" action="/demoapplication/reservations.xeb" method="post">
+				
+					<tr>
+						<td>Fabio Zuend</td>
+						<td>2009-02-06</td>
+						<td>4</td>
+						
+							<td class="style2">
+							<a href="#" onclick="document.forms['l_temp_3']['servlet_uid_3'].value='servlet_uid_3'; document.forms['l_temp_3'].submit(); return false;">Delete</a><input type="hidden" name ="servlet_uid_3" />
+							</td>					
+						
+						
+					</tr>
+				
+				<input type="hidden" name="l_temp_3" value="servlet_uid_2" /></form>
+			</table>
+		
+		
+			<h2 class="style1">New Reservation</h2>
+			<form id="l_temp_7" action="/demoapplication/reservations.xeb" method="post">
+			<table width="400" border="0" cellpadding="2" cellspacing="2">
+				<tr>
+					<td>Name</td>
+					<td>
+						<input type="text" value="default_name"size="20" name="l_temp_8" />
+							
+							
+						
+						
+					</td>
+				</tr>
+				<tr>
+					<td>Date</td>
+					<td>
+						<script language="javascript1.2">
+						<!--
+						var l_temp_10 = new CodeThatCalendar(caldef1);
+						//-->
+						</script>
+						<input type="textarea" name="l_temp_9"/>
+						<input type="button"onclick="l_temp_10.popup('l_temp_9');"value="select" />
+							
+						
+						
+					</td>
+				</tr>
+				<tr>
+					<td>Persons</td>
+					<td>
+						<input type="text" value="0"size="20" name="l_temp_11" />
+							
+							
+							
+						
+						
+					</td>
+				</tr>
+				<tr>
+					<td>Description</td>
+					<td>
+						<textarea rows="5" cols="45" name="l_temp_12"></textarea>
+							
+						
+						
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<div align="center">
+					<button name="l_temp_13" type="submit">Save</button><input type="hidden" name="servlet_uid_9"value ="servlet_uid_9" /></div>
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="l_temp_7" value="servlet_uid_4" /></form>
+		
+	
+</div>
+<div id="footer"></div>
+</div>
+</body>
+</html>

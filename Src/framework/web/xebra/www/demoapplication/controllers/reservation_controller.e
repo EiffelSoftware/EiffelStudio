@@ -59,10 +59,10 @@ feature -- Status Change
 			Result_attached: Result /= Void
 		end
 
-	get_res_date_from_args: STRING
+	get_res_date_from_args: DATE
 			-- Retrieve reservartion date from request arguments
 		do
-			Result := ""
+			create Result.make_now
 			if attached {STRING} current_request.argument_table["id"] as id then
 				if attached {RESERVATION} global_state.db.reservation_by_id (id.to_integer_32) as res then
 					Result := res.date
@@ -98,5 +98,17 @@ feature -- Status Change
 			Result_attached: Result /= Void
 		end
 
+	logged_in_name: STRING
+			-- Retrieve the name of the person logged in
+		do
+			Result := ""
+			if attached current_session as session then
+				if attached {USER} session.get ("auth") as user then
+					Result := user.name
+				end	
+			end
+		ensure
+			Result_attached: attached Result
+		end
 
 end

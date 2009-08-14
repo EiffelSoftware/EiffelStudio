@@ -1,8 +1,0 @@
-<page:include template="master_template">
-<page:controller class="insert_controller"/>
-  <page:define_region id="content">
-    <p>
-      <xeb:display text="%=insert%"/>
-    </p>
-  </page:define_region>
-</page:include>

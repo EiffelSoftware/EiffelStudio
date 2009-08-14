@@ -39,6 +39,11 @@ namespace Xebra
         /// The logger to store debug and error messages
         /// </summary>
         XLogger log;
+
+        /// <summary>
+        /// The config info read from the web.config file
+        /// </summary>
+        XConfig config;
   
         #endregion
         
@@ -53,19 +58,17 @@ namespace Xebra
         /// </summary>
         private static int MAX_FRAGS = 1000;
 
-        /// <summary>
-        /// The port on which xebra server listens to the handler
-        /// </summary>
-        private static int PORT = 55001;
-
         #endregion
+
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="log">A logger to write debug and error messages</param>
-        public XServerConnection(XLogger log)
+        /// <param name="log">A logger to write debug and error messages</param>     
+        /// <param name="config">A configuration</param>
+        public XServerConnection(XLogger log, XConfig config)
         {
+            this.config = config;
             this.log = log;
         }
 
@@ -77,9 +80,7 @@ namespace Xebra
         {
             try
             {
-                log.Debug("Creating socket...");
-                socket = new TcpClient("localhost", PORT);
-                log.Debug("Connected.");
+                socket = new TcpClient(config.Host, config.Port);
                 return true;
             }
             catch
@@ -109,8 +110,6 @@ namespace Xebra
             uint totalMessageLength = (uint)messageByte.Length;
             string oute;
 
-            log.Debug("About to send message '" + message + "'. Length is " + totalMessageLength + "bytes");
-
             while (bytesSent < totalMessageLength)
             {
                 if ((totalMessageLength - bytesSent) > FRAG_SIZE)
@@ -123,9 +122,7 @@ namespace Xebra
                     System.Buffer.BlockCopy(messageByte, bytesSent, msgFragAndLength, encodedMsgLengthByte.Length, FRAG_SIZE);
 
                     oute = System.Text.ASCIIEncoding.ASCII.GetString(msgFragAndLength);
-                    log.Debug("--senging fragment " + FRAG_SIZE + " (+4) bytes : '" + oute + "'");
-                    numBytes = socket.Client.Send(msgFragAndLength, msgFragAndLength.Length, SocketFlags.None);
-                    log.Debug(numBytes + " bytes sent.");
+                    numBytes = socket.Client.Send(msgFragAndLength, msgFragAndLength.Length, SocketFlags.None);                    
                 }
                 else
                 {
@@ -136,10 +133,9 @@ namespace Xebra
                     System.Buffer.BlockCopy(encodedMsgLengthByte, 0, msgFragAndLength, 0, encodedMsgLengthByte.Length);
                     System.Buffer.BlockCopy(messageByte, bytesSent, msgFragAndLength, encodedMsgLengthByte.Length, (int)totalMessageLength - (int)bytesSent);
 
-                    oute = System.Text.ASCIIEncoding.ASCII.GetString(msgFragAndLength);
-                    log.Debug("--senging LAST fragment " + msgFragAndLength.Length + " (+4) bytes : '" + oute + "'");
+                    oute = System.Text.ASCIIEncoding.ASCII.GetString(msgFragAndLength);                    
                     numBytes = socket.Client.Send(msgFragAndLength, (int)totalMessageLength - (int)bytesSent + 4, SocketFlags.None);
-                    log.Debug(numBytes + " bytes sent.");
+                   
                 }
                 if (numBytes < 5)
                 {
@@ -151,7 +147,6 @@ namespace Xebra
                     bytesSent += numBytes - 4;
                 }
             }
-            log.Debug("Message sent.");
             return true;
         }
         
@@ -171,12 +166,9 @@ namespace Xebra
             string message = "";
             byte[] msgBuf = new byte[FRAG_SIZE + 4];
             responseMessage = "";
-
-            log.Debug("Receiving message...");
             do
             {
                 //Read Length
-                log.Debug("Reading msg length...");
                 numBytes = socket.Client.Receive(encodedLengthByte, 4, SocketFlags.None);
                 if (numBytes != 4)
                 {
@@ -190,12 +182,7 @@ namespace Xebra
                 length = XEncoder.decodeNatural(encodedLength);
                 flag = XEncoder.decodeFlag(encodedLength);
 
-                if (flag)
-                    log.Debug("Incoming message fragment " + length + " bytes...");
-                else
-                    log.Debug("Incoming (last) message fragment " + length + " bytes...");
-
-
+       
                 if (length < 1 || length > FRAG_SIZE)
                 {
                     log.Error("Illegal msg length " + length);
@@ -203,10 +190,8 @@ namespace Xebra
                 }
 
                 //Read Msg
-                log.Debug("Reading msg...");
                 numBytes = socket.Client.Receive(msgBuf, (int)length, SocketFlags.None);
                 message += System.Text.ASCIIEncoding.ASCII.GetString(msgBuf).Substring(0,numBytes);
-                log.Debug("Read: '" + System.Text.ASCIIEncoding.ASCII.GetString(msgBuf) + "'");
 
                 if (fragCounter > MAX_FRAGS)
                 {

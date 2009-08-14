@@ -9,6 +9,23 @@ note
 deferred class
 	EQA_TEST_SET
 
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	frozen default_create
+			-- <Precursor>
+		do
+			on_prepare
+		ensure then
+			prepared: is_prepared
+			not_failed: not has_failed
+		end
+
 feature -- Access
 
 	asserter: EQA_ASSERTIONS
@@ -29,25 +46,20 @@ feature -- Access
 
 feature -- Access
 
-	current_test_name: detachable READABLE_STRING_8
+	current_test_name: READABLE_STRING_8
 			-- Name of test currently being executed
+		obsolete
+			"Use {EQA_EVALUATION_INFO}.test_name"
+		do
+			Result := (create {EQA_EVALUATION_INFO}).test_name
+		end
 
 feature -- Status report
 
 	is_prepared: BOOLEAN
 			-- Is `Current' ready to execute test routines?
 		do
-			Result := has_valid_name
-		ensure
-			result_implies_test_name_attached: Result implies has_valid_name
-		end
-
-	has_valid_name: BOOLEAN
-			-- Is `current_test_name' a valid test name?
-		do
-			Result := current_test_name /= Void
-		ensure
-			result_implies_attached: Result implies current_test_name /= Void
+			Result := True
 		end
 
 feature {NONE} -- Status report
@@ -69,19 +81,23 @@ feature -- Status setting
 
 feature {EQA_TEST_EVALUATOR} -- Status setting
 
-	frozen prepare (a_name: READABLE_STRING_8)
-			-- Prepare `Current' to execute any test routine.
+	run_test (a_procedure: PROCEDURE [ANY, TUPLE [like Current]])
+			-- Run the test `a_procedure' (from `Current').
 			--
-			-- `a_name': Name of the test which will called after preparation.
+			-- Note: this routine can be redefined in order to wrap the actual test routine call.
 		require
-			a_name_not_void: a_name /= Void
-			a_name_valid: is_valid_name (a_name)
-		do
-			current_test_name := a_name.twin
-			on_prepare
-		ensure
+			a_procedure_attached: a_procedure /= Void
 			prepared: is_prepared
-			not_failed: not has_failed
+		local
+			l_operands: TUPLE [like Current]
+		do
+			l_operands := a_procedure.empty_operands
+			check
+				valid_operand_count: l_operands.count = 1
+				valid_operand: l_operands.valid_type_for_index (Current, 1)
+			end
+			l_operands.put (Current, 1)
+			a_procedure.call (l_operands)
 		end
 
 	frozen clean (a_has_failed: BOOLEAN)
@@ -92,34 +108,8 @@ feature {EQA_TEST_EVALUATOR} -- Status setting
 			has_failed := a_has_failed
 			on_clean
 			has_failed := False
-			current_test_name := Void
 		ensure
-			current_test_name_detached: current_test_name = Void
 			not_failed: not has_failed
-		end
-
-feature -- Query
-
-	frozen is_valid_name (a_name: STRING): BOOLEAN
-			-- Is `a_name' a valid name for a test?
-		require
-			a_name_attached: a_name /= Void
-		local
-			i: INTEGER
-			c: CHARACTER
-		do
-			if not a_name.is_empty then
-				from
-					Result := a_name.item (1).is_alpha_numeric
-					i := 2
-				until
-					not Result or i > a_name.count
-				loop
-					c := a_name.item (i)
-					Result := c.is_alpha_numeric or c = '_'
-					i := i + 1
-				end
-			end
 		end
 
 feature -- Basic operations
@@ -136,8 +126,6 @@ feature {NONE} -- Events
 
 	on_prepare
 			-- Called after `prepare' has performed all initialization.
-		require
-			has_valid_name: has_valid_name
 		do
 		ensure
 			prepared: is_prepared
@@ -148,8 +136,6 @@ feature {NONE} -- Events
 		require
 			prepared: is_prepared
 		do
-		ensure
-			has_valid_name: has_valid_name
 		end
 
 feature {NONE} -- Implementation
@@ -157,10 +143,7 @@ feature {NONE} -- Implementation
 	internal_asserter: detachable like asserter
 			-- Once per object storage for `asserter'.
 
-invariant
-	valid_test_name: current_test_name /= Void implies is_valid_name (current_test_name)
-
-note
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

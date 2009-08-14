@@ -184,8 +184,6 @@ feature {NONE} -- Events
 
 	on_prepare
 			-- Called when `on_prepare_frozen' is called.
-		require
-			has_valid_name: has_valid_name
 		do
 		ensure
 			prepared: is_prepared
@@ -196,8 +194,6 @@ feature {NONE} -- Events
 		require
 			prepared: is_prepared
 		do
-		ensure
-			has_valid_name: has_valid_name
 		end
 
 invariant

@@ -298,8 +298,8 @@ feature -- Redefine
 				is_set_width_after_restore := True
 				is_set_height_after_restore := True
 
-				if content.state.is_zone_attached then
-					update_floating_zone_visible (content.state.zone, a_data.is_visible)
+				if content.state.is_zone_attached and then attached content.state.zone as l_zone then
+					update_floating_zone_visible (l_zone, a_data.is_visible)
 				else
 					check False end -- `zone' was set by previsous `make_for_restore'
 				end

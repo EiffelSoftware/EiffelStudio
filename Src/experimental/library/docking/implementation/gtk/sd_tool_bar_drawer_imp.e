@@ -42,11 +42,14 @@ feature -- Redefine
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item_rect, l_rect: EV_RECTANGLE
+			l_tool_bar: like tool_bar
 		do
 			is_start_draw_called := True
 
 			from
-				l_items := tool_bar.items
+				l_tool_bar := tool_bar
+				check l_tool_bar /= Void end -- Implied by precondition `not_void'
+				l_items := l_tool_bar.items
 				l_rect := a_rectangle.twin
 				l_items.start
 			until
@@ -59,41 +62,50 @@ feature -- Redefine
 				end
 				l_items.forth
 			end
-			if not tool_bar.is_destroyed then
-				internal_shared.setter.clear_background_for_theme (tool_bar, l_rect)
+			if not l_tool_bar.is_destroyed then
+				internal_shared.setter.clear_background_for_theme (l_tool_bar, l_rect)
 			end
 		end
 
 	end_draw
-			-- Redefine
+			-- <Precursor>
 		do
 			is_start_draw_called := False
 		end
 
 	is_start_draw_called: BOOLEAN
-			-- Redefine
+			-- <Precursor>
 
 	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
-			-- Redefine
+			-- <Precursor>
 		local
-			l_tool_bar_imp: EV_DRAWING_AREA_IMP
+			l_tool_bar_imp: detachable EV_DRAWING_AREA_IMP
 			l_rect: EV_RECTANGLE
-			l_button: SD_TOOL_BAR_BUTTON
-			l_popup_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+			l_button: detachable SD_TOOL_BAR_BUTTON
+			l_popup_button: detachable SD_TOOL_BAR_DUAL_POPUP_BUTTON
+			l_tool_bar: like tool_bar
+			l_item: detachable SD_TOOL_BAR_ITEM
+			l_argument_tool_bar: detachable SD_TOOL_BAR
 		do
-			if not tool_bar.is_destroyed and then tool_bar.is_displayed then
-				l_tool_bar_imp ?= a_arguments.tool_bar.implementation
+			l_tool_bar := tool_bar
+			check l_tool_bar /= Void end -- Implied by precondition `not_void'
+			if not l_tool_bar.is_destroyed and then l_tool_bar.is_displayed then
+				l_argument_tool_bar := a_arguments.tool_bar
+				check l_argument_tool_bar /= Void end -- Implied by precondition `valid'
+				l_tool_bar_imp ?= l_argument_tool_bar.implementation
 				check not_void: l_tool_bar_imp /= Void end
-				l_rect := a_arguments.item.rectangle
+				l_item := a_arguments.item
+				check l_item /= Void end -- Implied by precondition
+				l_rect := l_item.rectangle
 				l_button ?= a_arguments.item
 				l_popup_button ?= a_arguments.item
 				if l_button /= Void then
 
 					-- Paint button background
-					if a_arguments.item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
-						c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width, l_rect.height, True)
+					if l_item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
+						c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (l_item.state), gtk_shadow_type (l_item.state), l_rect.x, l_rect.y, l_rect.width, l_rect.height, True)
 						if l_popup_button /= Void and then not l_popup_button.is_dropdown_area then
-							c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width - l_popup_button.dropdrown_width, l_rect.height, True)
+							c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (l_item.state), gtk_shadow_type (l_item.state), l_rect.x, l_rect.y, l_rect.width - l_popup_button.dropdrown_width, l_rect.height, True)
 						end
 					end
 
@@ -103,27 +115,27 @@ feature -- Redefine
 					-- Paint text
 					draw_text (a_arguments, l_tool_bar_imp.c_object)
 				else
-					if a_arguments.item.is_wrap then
-						c_gtk_paint_line (l_tool_bar_imp.c_object, l_rect.left, l_rect.right, l_rect.top + a_arguments.item.width // 2, False)
+					if l_item.is_wrap then
+						c_gtk_paint_line (l_tool_bar_imp.c_object, l_rect.left, l_rect.right, l_rect.top + l_item.width // 2, False)
 					else
-						c_gtk_paint_line (l_tool_bar_imp.c_object, l_rect.top, l_rect.bottom, l_rect.left + a_arguments.item.width // 2, True)
+						c_gtk_paint_line (l_tool_bar_imp.c_object, l_rect.top, l_rect.bottom, l_rect.left + l_item.width // 2, True)
 					end
 				end
 			end
 		end
 
 	on_theme_changed
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	desatuation (a_pixmap: EV_PIXMAP; a_k: REAL)
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
 	set_tool_bar (a_tool_bar: SD_TOOL_BAR)
-			-- Redefine
+			-- <Precursor>
 		do
 			tool_bar := a_tool_bar
 		end
@@ -202,19 +214,20 @@ feature {NONE} -- Implementation
 			not_void: a_arguments /= Void
 			exist: a_gtk_object /= default_pointer
 		local
-			l_button: SD_TOOL_BAR_BUTTON
-			l_popup_button: SD_TOOL_BAR_POPUP_BUTTON
+			l_button: detachable SD_TOOL_BAR_BUTTON
+			l_popup_button: detachable SD_TOOL_BAR_POPUP_BUTTON
 			l_position: EV_COORDINATE
-			l_temp_pixmap, l_pixmap: EV_PIXMAP
-			l_temp_imp: EV_PIXMAP_IMP
+			l_temp_pixmap: EV_PIXMAP
+			l_pixmap: detachable EV_PIXMAP
+			l_temp_imp: detachable EV_PIXMAP_IMP
 			l_pixbuf: POINTER
 		do
 			l_button ?= a_arguments.item
 			l_popup_button ?= a_arguments.item
-			if l_button /= Void and (l_button.pixel_buffer /= Void or  l_button.pixmap /= Void) and l_button.tool_bar /= Void then
+			if l_button /= Void and then ((l_button.pixel_buffer /= Void or l_button.pixmap /= Void) and attached a_arguments.tool_bar as l_argument_tool_bar) then
 				-- We should render pixmap by theme.
-				if l_button.pixel_buffer /= Void then
-					l_pixmap := l_button.pixel_buffer.to_pixmap
+				if attached l_button.pixel_buffer as l_pixel_buffer then
+					l_pixmap := l_pixel_buffer.to_pixmap
 				else
 					l_pixmap := l_button.pixmap
 				end
@@ -223,11 +236,11 @@ feature {NONE} -- Implementation
 
 				l_position := l_button.pixmap_position
 
-				if a_arguments.item.is_sensitive then
-					a_arguments.tool_bar.draw_pixmap (l_position.x, l_position.y, l_pixmap)
+				if l_button.is_sensitive then
+					l_argument_tool_bar.draw_pixmap (l_position.x, l_position.y, l_pixmap)
 					if l_popup_button /= Void then
 						-- cache `l_popup_button.dropdown_pixel_buffer.to_pixmap'?
-						a_arguments.tool_bar.draw_pixmap (l_popup_button.dropdown_left, l_position.y, l_popup_button.dropdown_pixel_buffer.to_pixmap)
+						l_argument_tool_bar.draw_pixmap (l_popup_button.dropdown_left, l_position.y, l_popup_button.dropdown_pixel_buffer.to_pixmap)
 					end
 				else
 					l_temp_pixmap := l_pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_pixmap.width, l_pixmap.height))
@@ -237,7 +250,7 @@ feature {NONE} -- Implementation
 					check exist: l_pixbuf /= default_pointer end
 					l_temp_imp.set_pixmap_from_pixbuf (l_pixbuf)
 					{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
-					a_arguments.tool_bar.draw_pixmap (l_position.x, l_position.y, l_temp_pixmap)
+					l_argument_tool_bar.draw_pixmap (l_position.x, l_position.y, l_temp_pixmap)
 				end
 			end
 		end
@@ -251,41 +264,44 @@ feature {NONE} -- Implementation
 			l_c_string: EV_GTK_C_STRING
 			l_pango_layout: POINTER
 			l_env: EV_ENVIRONMENT
-			l_app_imp: EV_APPLICATION_IMP
-			l_button: SD_TOOL_BAR_BUTTON
+			l_app_imp: detachable EV_APPLICATION_IMP
+			l_button: detachable SD_TOOL_BAR_BUTTON
 			l_text_rect: EV_RECTANGLE
 			l_state: INTEGER
-			l_width_button: SD_TOOL_BAR_WIDTH_BUTTON
-			l_font_button: SD_TOOL_BAR_FONT_BUTTON
+			l_width_button: detachable SD_TOOL_BAR_WIDTH_BUTTON
+			l_font_button: detachable SD_TOOL_BAR_FONT_BUTTON
 			l_orignal_font: EV_FONT
-			l_tool_bar: EV_DRAWING_AREA
 		do
 			l_button ?= a_arguments.item
 			l_width_button ?= a_arguments.item
 			l_font_button ?= a_arguments.item
 
-			if l_font_button /= Void and then l_font_button.text /= Void and l_font_button.font /= Void and a_arguments.tool_bar /= Void then
-				l_tool_bar := a_arguments.tool_bar
+			if l_font_button /= Void and then (attached l_font_button.text as l_text and attached l_font_button.font as l_font and attached {EV_DRAWING_AREA} a_arguments.tool_bar as l_tool_bar) then
 				l_orignal_font := l_tool_bar.font
 				l_text_rect := l_font_button.text_rectangle
-				l_tool_bar.set_font (l_font_button.font)
-				l_tool_bar.draw_text_top_left (l_text_rect.x, l_text_rect.y, l_font_button.text)
+				l_tool_bar.set_font (l_font)
+				l_tool_bar.draw_text_top_left (l_text_rect.x, l_text_rect.y, l_text)
 				l_tool_bar.set_font (l_orignal_font)
-			elseif l_width_button /= Void and then l_width_button.text /= Void and a_arguments.tool_bar /= Void then
+			elseif l_width_button /= Void and then attached l_width_button.text as l_text_2 and attached a_arguments.tool_bar as l_tool_bar_2 then
 				l_text_rect := l_width_button.text_rectangle
-				a_arguments.tool_bar.draw_ellipsed_text_top_left (l_text_rect.x, l_text_rect.y, l_width_button.text, l_text_rect.width)
-			elseif l_button /= Void and then l_button.tool_bar /= Void and then l_button.text /= Void then
+				l_tool_bar_2.draw_ellipsed_text_top_left (l_text_rect.x, l_text_rect.y, l_text_2, l_text_rect.width)
+			elseif l_button /= Void and then l_button.tool_bar /= Void and then attached l_button.text as l_text_3 then
 				create l_env
-				l_app_imp ?= l_env.application.implementation
+				if attached l_env.application as l_app then
+					l_app_imp ?= l_app.implementation
+				else
+					check False end -- Implied by application is running
+				end
+
 				check not_void: l_app_imp /= Void end
-				l_c_string := l_app_imp.c_string_from_eiffel_string (l_button.text)
+				l_c_string := l_app_imp.c_string_from_eiffel_string (l_text_3)
 				l_pango_layout := l_app_imp.pango_layout
 
 				{EV_GTK_EXTERNALS}.pango_layout_set_text (l_pango_layout, l_c_string.item, l_c_string.string_length)
 
 				l_text_rect := l_button.text_rectangle
-				if a_arguments.item.is_sensitive then
-					l_state := to_gtk_state (a_arguments.item.state)
+				if l_button.is_sensitive then
+					l_state := to_gtk_state (l_button.state)
 				else
 					l_state := {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum
 				end

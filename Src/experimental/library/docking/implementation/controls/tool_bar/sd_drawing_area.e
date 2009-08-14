@@ -43,7 +43,7 @@ feature {EV_ANY_I} -- Implementation
 			create {SD_DRAWING_AREA_IMP} implementation.make
 		end
 
-	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: detachable ANY)
 			-- Update for pick and drop.
 		require
 			not_void: a_starting implies a_pebble /= Void

@@ -329,7 +329,6 @@ feature {NONE} -- Constants
 	default_argument_count: INTEGER = 5
 
 invariant
-	environment_valid: environment.test_set.has_valid_name
 	running_implies_status_attached: (is_launched and not has_exited) implies process /= Void
 
 note

@@ -60,7 +60,7 @@ feature -- Access
 			Result := items.count
 		end
 
-	item alias "[]", infix "@" (i: INTEGER): READABLE_STRING_8
+	item alias "[]", at alias "@" (i: INTEGER): READABLE_STRING_8
 			-- Item at index `i'
 		require
 			valid_index: i > 0 and i <= count

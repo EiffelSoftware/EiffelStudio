@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 			create socket.make_client_by_address_and_port (a_server_url, a_port)
 			socket.connect
 			--socket.set_blocking
+			socket.set_nodelay
 				-- Wait for test cases and then execute test cases in a loop.
 			log_message ("<session>%N")
 			main_loop

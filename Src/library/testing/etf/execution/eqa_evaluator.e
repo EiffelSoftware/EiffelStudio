@@ -20,190 +20,108 @@ inherit
 			{NONE} all
 		end
 
-feature {NONE} -- Initialization
-
-	frozen make
-			-- Initialize `Current'
-		do
-			create arguments.make
-			arguments.execute (agent start)
+	EQA_EVALUATION_INFO
+		export
+			{NONE} all
 		end
 
-	start
-			-- Initialize output and start processing commands.
-		require
-			arguments_valid: arguments.is_successful
+	EQA_EXTERNALS
+		export
+			{NONE} all
+		end
+
+feature {NONE} -- Initialization
+
+	launch
+			-- Initialize `Current'
+
 		local
-			l_quit, l_done: BOOLEAN
-			n: NATURAL
-			l_stream: like stream
+			l_socket: like socket
 		do
-			if not l_quit then
-				initialize_stream
-				l_stream := stream
-				check l_stream /= Void end
-				from until
-					l_done
-				loop
-					l_done := True
-					l_stream.read_natural_32
-					if l_stream.bytes_read = {PLATFORM}.natural_32_bytes then
-						n := l_stream.last_natural_32
-						if n > 0 then
-							if is_valid_index (n) then
-								run_test (n)
-								l_done := False
-							end
-						end
-					end
+			parse_arguments
+			create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, port)
+			l_socket.set_blocking
+			l_socket.set_nodelay
+			l_socket.connect
+			socket := l_socket
+			main_loop
+		end
+
+	parse_arguments
+			-- Initialize `Current' according to command line arguments.
+		local
+			l_args: ARGUMENTS
+		do
+			l_args := (create {EXECUTION_ENVIRONMENT}).command_line
+			port := l_args.argument (1).to_integer
+			byte_code_feature_body_id := l_args.argument (2).to_integer
+			byte_code_feature_pattern_id := l_args.argument (3).to_integer
+		ensure
+			port_initialized: port > 0
+			body_id_initialized: byte_code_feature_body_id > 0
+		end
+
+	main_loop
+			-- Receive test routines to be executed through `socket' and send obtained test results back.
+		require
+			socket_attached: socket /= Void
+			socket_connected: socket.is_connected
+			socket_open_write: socket.is_open_write
+		local
+			l_evaluator: like execute_test
+			l_bc: STRING
+		do
+			from until
+				False
+			loop
+				if attached {TUPLE [byte_code, name: STRING]} socket.retrieved as l_retrieved then
+					l_bc := l_retrieved.byte_code
+
+						-- Replace byte code
+					eif_override_byte_code_of_body (
+						byte_code_feature_body_id,
+						byte_code_feature_pattern_id,
+						pointer_for_byte_code (l_bc), l_bc.count)
+
+						-- TODO: initialize working directory and environment variables for system level testing
+					set_test_name (l_retrieved.name)
+
+					l_evaluator := execute_test
+					socket.put_boolean (True)
+					socket.independent_store (l_evaluator.last_result)
 				end
-				l_stream.put_natural (0)
-				close_stream
 			end
 		rescue
-			if is_stream_invalid then
-				if arguments.has_port_option then
-					io.output.put_string ("Could not write to socket on port ")
-					io.output.put_integer (arguments.port_option)
-				else
-					io.output.put_string ("Count not write to file ")
-					io.output.put_string (arguments.file_option)
-				end
-				io.output.put_new_line
-				die (1)
-			elseif exception = {EXCEP_CONST}.signal_exception or
-			       exception = {EXCEP_CONST}.operating_system_exception then
-					--| assuming process was killed on user request
-				l_quit := True
-				retry
-			end
+			socket.close
 		end
 
 feature {NONE} -- Access
 
-	arguments: EQA_EVALUATOR_ARGUMENT_PARSER
-			-- Command line arguments
+	port: INTEGER
+			-- Port number executor is listening to
 
-	evaluator: EQA_TEST_EVALUATOR
-			-- Evaluator for executing tests
-		require
-			arguments_valid: arguments.is_successful
-		once
-			create Result
-			Result.set_record_output (arguments.has_output_option)
-		ensure
-			result_attached: Result /= Void
-		end
+	byte_code_feature_body_id: INTEGER
+			-- ID for feature whose byte-code is to be injected
 
-	stream: detachable IO_MEDIUM
-			-- Represents the communication medium between interpreter and client
-			--
-			-- Note: this can be a socket or a raw file
+	byte_code_feature_pattern_id: INTEGER
+			-- Pattern ID for feature whose byte-code is to be injected
+
+	socket: NETWORK_STREAM_SOCKET
+			-- Socket used to communicate to executor
 
 	is_stream_invalid: BOOLEAN
 			-- Could stream not be initialized or was it closed early?
 
-feature -- Status report
-
-	is_valid_index (a_index: NATURAL): BOOLEAN
-			-- Is `a_index' a valid?
-		deferred
-		end
-
-feature {NONE} -- Status setting
-
-	initialize_stream
-			-- Initialize `stream'.
-		local
-			l_rescued: BOOLEAN
-			l_socket: NETWORK_STREAM_SOCKET
-		do
-			if not l_rescued then
-				if arguments.has_port_option then
-					create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, arguments.port_option)
-					l_socket.connect
-					if l_socket.is_connected then
-						l_socket.set_blocking
-						if not l_socket.is_open_write then
-							raise ("bad_socket")
-						end
-						stream := l_socket
-					end
-				else
-					create {RAW_FILE} stream.make_open_write (arguments.file_option)
-				end
-			end
-		ensure
-			stream_initialized: attached stream as l_s and then l_s.is_open_write
-			stream_supports_storable: attached stream as l_s2 and then l_s2.support_storable
-		rescue
-			is_stream_invalid := True
-		end
-
-	close_stream
-			-- Close `stream' unless standard out
-		local
-			l_stream: like stream
-		do
-			l_stream := stream
-			check l_stream /= Void end
-			if not l_stream.is_closed then
-				l_stream.close
-			end
-		end
-
-feature {NONE} -- Query		
-
-	test_set_instance (a_index: NATURAL): EQA_TEST_SET
-			-- Instance of a test set class.
-		require
-			a_index_valid: is_valid_index (a_index)
-		deferred
-		ensure
-			result_attached: Result /= Void
-		end
-
-	test_procedure (a_index: NATURAL): PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]
-			-- Agent for a test procedure.
-		require
-			a_index_valid: is_valid_index (a_index)
-		deferred
-		ensure
-			result_attached: Result /= Void
-		end
-
-	test_name (a_index: NATURAL): READABLE_STRING_8
-			-- Name of the test procedure
-		require
-			a_index_valid: is_valid_index (a_index)
-		deferred
-		ensure
-			result_attached: Result /= Void
-			result_valid: test_set_instance (a_index).is_valid_name (Result)
-		end
-
 feature {NONE} -- Execution
 
-	run_test (a_index: NATURAL)
-			-- Run test with `a_index'.
-		require
-			stream_initialized: attached stream as l_s and then l_s.is_open_write
-			a_index_valid: is_valid_index (a_index)
-		local
-			l_result: detachable EQA_TEST_RESULT
-			l_stream: like stream
-		do
-			evaluator.execute (test_set_instance (a_index), test_procedure (a_index), test_name (a_index))
-			l_stream := stream
-			check l_stream /= Void end
-			if l_stream.extendible then
-				l_stream.put_natural (a_index)
-				l_result := evaluator.last_result
-				check l_result /= Void end
-				l_stream.independent_store (l_result)
-			else
-				is_stream_invalid := True
-			end
+	execute_test: EQA_TEST_EVALUATOR [EQA_TEST_SET]
+			-- Run current test and return evaluator containing result.
+			--
+			-- Note: this routine's byte code will be replaced for every test execution.
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_executed: Result.has_result
 		end
 
 note

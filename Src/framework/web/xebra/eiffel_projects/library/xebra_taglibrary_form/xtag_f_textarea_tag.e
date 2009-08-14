@@ -49,9 +49,10 @@ feature -- Implementation
 	html_representation (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING)
 			-- <Precursor>
 		do
-			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<textarea rows=%%%"" + rows.value (current_controller_id) + "%%%" cols=%%%"" +
-						cols.value (current_controller_id) +"%%%"" + a_name + ">" +
-						text.value (current_controller_id) + "</textarea>%")")
+			a_servlet_class.render_html_page.append_expression (response_variable_append +
+				"(%"<textarea rows=%%%"" + rows.value (current_controller_id) + "%%%" cols=%%%"" +
+				cols.value (current_controller_id) +"%%%" name=%%%"" + a_name + "%%%">" +
+				text.value (current_controller_id) + "</textarea>%")")
 		end
 
 
@@ -70,7 +71,7 @@ feature -- Implementation
 			end
 		end
 		
-	transform_to_correct_type (a_variable_name, a_argument_name: STRING): STRING
+	transform_to_correct_type (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_name, a_argument_name: STRING): STRING
 			-- <Precursor>
 		do
 			Result := a_variable_name + " := " + a_argument_name

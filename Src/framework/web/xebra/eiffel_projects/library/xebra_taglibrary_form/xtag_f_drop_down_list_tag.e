@@ -69,7 +69,7 @@ feature -- Implementation
 			l_items_name, l_list_value, l_option_value: STRING
 			l_drop_down_objects: STRING
 		do
-			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<select selectedIndex=%%%"" + selected_index.value (current_controller_id) + "%%%" " + a_name + ">%")")
+			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<select selectedIndex=%%%"" + selected_index.value (current_controller_id) + "%%%" name=%%%"" + a_name + "%%%">%")")
 			l_drop_down_objects := a_servlet_class.new_variable ("HASH_TABLE [" + type.value (current_controller_id) + " , STRING]")
 			a_servlet_class.make_feature.append_expression ("create " + l_drop_down_objects + ".make (5)")
 			internal_drop_down_objects := l_drop_down_objects
@@ -101,9 +101,10 @@ feature -- Implementation
 			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"</select>%")")
 		end
 
-	transform_to_correct_type (a_variable_name, a_argument_name: STRING): STRING
+	transform_to_correct_type (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_name, a_argument_name: STRING): STRING
 			-- <Precursor>
-		do	Result := "if attached {" + type.value (current_controller_id) + "} " + internal_drop_down_objects + "[" +  a_argument_name + "] as dd_argument then "
+		do
+			Result := "if attached {" + type.value (current_controller_id) + "} " + internal_drop_down_objects + "[" +  a_argument_name + "] as dd_argument then "
 			Result := Result + a_variable_name + " := dd_argument "
 			Result := Result + "end"
 		end

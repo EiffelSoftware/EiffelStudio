@@ -41,7 +41,7 @@ feature -- Implementation
 
 	html_representation (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING)
 			-- Returns the html representation of the tag
-			--`a_name': The id of the tag. Should be integrated as an attribute of the tag.
+			--`a_name': The id of the tag. This is the 'name' value of the tag.
 		require
 			a_name_attached: attached a_name
 			a_servlet_class_attached: attached a_servlet_class
@@ -72,7 +72,7 @@ feature -- Implementation
 
 						-- Render html page
 					a_servlet_class.render_html_page.append_expression (l_input_id + " := get_unique_id")
-					html_representation (a_servlet_class, "name=%%%"" + l_input_id + "%%%"")
+					html_representation (a_servlet_class, l_input_id)
 
 						-- Retrieve all validators
 					create {ARRAYED_LIST [STRING]} l_validator_list.make (0)
@@ -103,14 +103,14 @@ feature -- Implementation
 					a_servlet_class.fill_bean.append_expression ("Result := Result and " + l_validation_var)
 						-- If validation successful set the variable
 					a_servlet_class.fill_bean.append_expression ("if " + l_validation_var + " then")
-					a_servlet_class.fill_bean.append_expression (transform_to_correct_type (l_variable + "." + value.plain_value (current_controller_id),  "argument"))
+					a_servlet_class.fill_bean.append_expression (transform_to_correct_type (a_servlet_class, l_variable + "." + value.plain_value (current_controller_id),  "argument"))
 					a_servlet_class.fill_bean.append_expression ("end")
 					a_servlet_class.fill_bean.append_expression ("end")
 				end
 			end
 		end
 
-	transform_to_correct_type (a_variable_name, a_argument_name: STRING): STRING
+	transform_to_correct_type (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_name, a_argument_name: STRING): STRING
 			-- Generates an expression which holds the correct type 
 			-- (checkbox=Boolean, input_text=String, etc.)
 		require

@@ -77,6 +77,7 @@ feature {NONE} -- Implementation
 			--       `process_events' is called after every iteration.
 		require
 			not_looping: not is_looping
+			timer_not_destroyed: not timer.is_destroyed
 		local
 			l_pause: BOOLEAN
 		do
@@ -86,15 +87,23 @@ feature {NONE} -- Implementation
 			until
 				l_pause
 			loop
-				min_sleep_time := min_sleep_time.max_value
-				proceed_all_tasks
-				if tasks.is_empty then
-					l_pause := True
-				elseif min_sleep_time > 0 then
-					timer.set_interval (min_sleep_time.to_integer_32)
+				if timer.is_destroyed then
 					l_pause := True
 				else
-					ev_application.process_events
+					min_sleep_time := min_sleep_time.max_value
+					proceed_all_tasks
+					if tasks.is_empty then
+						l_pause := True
+					elseif min_sleep_time > 0 then
+						timer.set_interval (min_sleep_time.to_integer_32)
+						l_pause := True
+					else
+						if not shared_environment.is_destroyed and then attached shared_environment.application then
+							ev_application.process_events
+						elseif not timer.is_destroyed then
+							timer.destroy
+						end
+					end
 				end
 			end
 			is_looping := False

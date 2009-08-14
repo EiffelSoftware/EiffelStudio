@@ -138,7 +138,7 @@ feature -- Commands
 				docking_manager.property.set_last_focus_content (content)
 			end
 			if attached {EV_WIDGET} zone as lt_widget then
-				if zone /= Void and then not lt_widget.is_displayed then
+				if is_zone_attached and then not lt_widget.is_displayed then
 					-- Maybe current is hidden, we restore zones normal state in that dock area.
 					docking_manager.command.recover_normal_state_in_dock_area_of (zone)
 				end
@@ -162,7 +162,7 @@ feature -- Commands
 		local
 			l_state: SD_STATE_VOID
 		do
-			if zone /= Void then
+			if is_zone_attached then
 				if attached {EV_WIDGET} zone as lt_widget then
 					docking_manager.command.lock_update (lt_widget, False)
 				else

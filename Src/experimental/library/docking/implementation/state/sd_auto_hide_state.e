@@ -98,7 +98,7 @@ feature -- Redefine
 			-- <Precursor>
 		do
 			show
-			if zone /= Void then
+			if is_zone_attached then
 				zone.on_focus_in (a_content)
 			end
 			docking_manager.property.set_last_focus_content (content)
@@ -155,11 +155,11 @@ feature -- Redefine
  	change_long_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
-			if zone /= Void then
+			if is_zone_attached then
 				zone.set_title (a_title)
 			end
 		ensure then
-			set: zone /= Void implies zone.title ~ a_title
+			set: is_zone_attached implies zone.title ~ a_title
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
@@ -286,7 +286,7 @@ feature -- Redefine
 	set_user_widget (a_widget: EV_WIDGET)
 			-- <Precursor>
 		do
-			if zone /= Void then
+			if is_zone_attached then
 				zone.window.set_user_widget (a_widget)
 			end
 		end
@@ -294,7 +294,7 @@ feature -- Redefine
 	set_mini_toolbar (a_widget: EV_WIDGET)
 			-- <Precursor>
 		do
-			if zone /= Void then
+			if is_zone_attached then
 				zone.window.set_mini_toolbar (a_widget)
 			end
 		end
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation functions
 			l_docking_zone: detachable SD_DOCKING_ZONE
 			l_tab_zone: detachable SD_TAB_ZONE
 		do
-			if zone /= Void and then not zone.is_destroyed then
+			if is_zone_attached and then not zone.is_destroyed then
 				docking_manager.command.lock_update (zone, False)
 			else
 				docking_manager.command.lock_update (void, True)

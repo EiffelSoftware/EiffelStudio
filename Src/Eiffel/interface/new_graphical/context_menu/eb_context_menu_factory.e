@@ -1221,7 +1221,7 @@ feature {NONE} -- Menu section, Granularity 1.
 							else
 								l_menu2.extend (new_menu_item (l_list.item.title))
 							end
-							l_menu2.last.select_actions.extend (agent (l_list.item).set_stone (l_class_stone))
+							l_menu2.last.select_actions.extend (agent (l_list.item).drop_stone (l_class_stone))
 						end
 						l_list.forth
 					end

@@ -20,6 +20,11 @@ inherit
 			{NONE} all
 		end
 
+	EQA_EVALUATION_INFO
+		export
+			{NONE} all
+		end
+
 	EQA_EXTERNALS
 		export
 			{NONE} all
@@ -79,6 +84,7 @@ feature {NONE} -- Initialization
 						pointer_for_byte_code (l_bc), l_bc.count)
 
 						-- TODO: initialize working directory and environment variables for system level testing
+					set_test_name (l_retrieved.name)
 
 					l_evaluator := execute_test
 					socket.put_boolean (True)

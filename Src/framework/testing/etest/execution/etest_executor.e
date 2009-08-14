@@ -31,6 +31,8 @@ inherit
 
 	DISPOSABLE_SAFE
 
+	SHARED_DEBUGGER_MANAGER
+
 create
 	make
 
@@ -231,6 +233,11 @@ feature {NONE} -- Status setting
 						-- Create byte code
 					l_byte_code := byte_code_factory.execute_test_code (a_test, l_evaluator, l_evaluator_routine)
 
+						-- Set breakpoint if debugging
+					if test_execution.is_debugging then
+						set_breakpoint (a_task_data, l_evaluator_routine)
+					end
+
 						-- Pass byte code to available controller
 					l_controller := a_task_data.task
 					if l_controller.is_running then
@@ -282,6 +289,10 @@ feature {NONE} -- Status setting
 					create {EQA_EMPTY_RESULT} l_result.make ("evaluator died", Void)
 				end
 				Precursor (a_force)
+				if attached l_task_data.breakpoint as l_breakpoint then
+					debugger_manager.breakpoints_manager.delete_breakpoint (l_breakpoint)
+					l_task_data.breakpoint := Void
+				end
 				if not a_force then
 					if l_task_data.isolated then
 						l_controller.stop
@@ -304,6 +315,32 @@ feature {NONE} -- Status setting
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	set_breakpoint (a_task_data: like new_task_data; a_feature: FEATURE_I)
+			-- Set breakpoint in given feature if not set yet, and store breakpoint in task data.
+			--
+			-- `a_task_data': Task data in which breakpoint should be stored.
+			-- `a_feature': Feature for which breakpoint should be set in first slot.
+		require
+			a_task_data_attached: a_task_data /= Void
+			a_feature_attached: a_feature /= Void
+		local
+			l_manager: BREAKPOINTS_MANAGER
+			l_feature: E_FEATURE
+			l_slot: INTEGER
+		do
+			l_manager := debugger_manager.breakpoints_manager
+			l_feature := a_feature.e_feature
+			l_slot := l_feature.first_breakpoint_slot_index
+			if not l_manager.is_breakpoint_enabled (l_feature, l_slot) then
+				l_manager.set_user_breakpoint (l_feature, l_slot)
+				if l_manager.is_breakpoint_set (l_feature, l_slot, False) then
+					a_task_data.breakpoint := l_manager.user_breakpoint (l_feature, l_slot)
+				end
+			end
+		end
+
 feature {NONE} -- Factory
 
 	new_controller: ETEST_EVALUATOR_CONTROLLER
@@ -316,7 +353,7 @@ feature {NONE} -- Factory
 			end
 		end
 
-	new_task_data (a_task: ETEST_EVALUATOR_CONTROLLER): TUPLE [task: like new_controller; test: detachable ETEST; isolated: BOOLEAN]
+	new_task_data (a_task: ETEST_EVALUATOR_CONTROLLER): TUPLE [task: like new_controller; test: detachable ETEST; isolated: BOOLEAN; breakpoint: detachable BREAKPOINT]
 			-- <Precursor>
 			--
 			-- task: `a_task'.
@@ -324,7 +361,7 @@ feature {NONE} -- Factory
 			--       while executing test
 			-- isolated: True if task should be stopped after executing test
 		do
-			Result := [a_task, Void, False]
+			Result := [a_task, Void, False, Void]
 		end
 
 feature {NONE} -- Clean up

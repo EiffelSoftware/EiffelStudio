@@ -97,7 +97,7 @@ feature {NONE} -- Parser
 		local
 			l_escaper: XU_ESCAPER
 		do
-			create l_escaper.make
+			create l_escaper
 			Result := a_result
 			if attached {STRING} a_result.internal_result [1] as l_name and
 				attached {STRING} a_result.internal_result [2] as l_value then

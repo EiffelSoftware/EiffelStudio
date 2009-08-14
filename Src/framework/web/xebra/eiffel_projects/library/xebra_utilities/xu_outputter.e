@@ -126,9 +126,7 @@ feature -- Print
 			a_msg_attached: a_msg /= Void
 			outputter_configured: configured
 		do
-
-				print_with_name ("WARNING] " + a_msg)
-
+			print_with_name ("WARNING] " + a_msg)
 		end
 
 	eprint (a_msg: STRING; a_generating_type: TYPE [ANY])
@@ -137,7 +135,7 @@ feature -- Print
 			outputter_configured: configured
 			a_generating_type_attached: a_generating_type /= Void
 		do
-			print_with_name ("[" + a_generating_type.debug_output + "] " + a_msg)
+			print_with_name ("[ERROR] " + a_generating_type.debug_output + ": " + a_msg)
 		end
 
 	iprint (a_msg: STRING)
@@ -202,7 +200,7 @@ feature -- Debug levels
 
 	Debug_verbose_subtasks: INTEGER = 6
 			-- Very verbose information about subtasks that are performed
-			
+
 invariant
 		i_name_attached: i_name /= Void
 		i_debug_level_attached: i_debug_level /= Void

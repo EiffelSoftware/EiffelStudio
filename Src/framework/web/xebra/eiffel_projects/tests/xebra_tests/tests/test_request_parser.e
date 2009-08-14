@@ -273,7 +273,7 @@ feature -- Test routines
 		end
 
 
-	test_escaping
+	test_escaping_cookies
 				--
 		local
 			l_parser: XH_REQUEST_PARSER
@@ -311,6 +311,32 @@ feature -- Test routines
 				else
 					assert ("cookie_missing", false)
 				end
+			end
+
+
+		end
+
+	test_escaping_html
+				--
+		local
+			l_parser: XH_REQUEST_PARSER
+			l_req: detachable XH_REQUEST
+			l_bad_cookie_name: STRING
+			l_bad_cookie_value: STRING
+			l_temp: STRING
+			l_temp2: STRING
+
+		do
+			create l_parser.make
+			l_temp := "defa%%20ult_n++am+e%%2B%%2Fasdasd%%FF"
+			l_temp2 := "defa ult_n  am e+/asdasdÿ"
+
+
+			l_req := l_parser.request("GET /index.xeb HTTP/1.1#HI##E##HO##E##SE##E##A#" + l_temp)
+
+			assert ("Parsing ok", attached l_req)
+			if attached {XH_REQUEST} l_req as l_r then
+				assert ("Ok unescaped", l_r.args.is_equal (l_temp2))
 			end
 
 

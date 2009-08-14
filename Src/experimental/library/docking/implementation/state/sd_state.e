@@ -133,8 +133,8 @@ feature -- Commands
 		require
 			has_content: has (a_content)
 		do
-			if attached zone as l_zone then
-				l_zone.on_focus_in (a_content)
+			if is_zone_attached then
+				zone.on_focus_in (a_content)
 				docking_manager.property.set_last_focus_content (content)
 			end
 			if attached {EV_WIDGET} zone as lt_widget then
@@ -172,14 +172,16 @@ feature -- Commands
 				docking_manager.command.lock_update (Void, True)
 			end
 
-			docking_manager.command.recover_normal_state_in_dock_area_of (zone)
+			if is_zone_attached then
+				docking_manager.command.recover_normal_state_in_dock_area_of (zone)
+			end
 
 			if content /= docking_manager.zones.place_holder_content then
 				add_place_holder
 			end
 
-			if attached zone as l_zone then
-				l_zone.close
+			if is_zone_attached then
+				zone.close
 			end
 			docking_manager.zones.prune_zone_by_content (content)
 			docking_manager.command.remove_empty_split_area
@@ -206,9 +208,11 @@ feature -- Commands
 		local
 			l_zone: detachable SD_UPPER_ZONE
 		do
-			l_zone ?= zone
-			if l_zone /= Void then
-				l_zone.minimize
+			if is_zone_attached then
+				l_zone ?= zone
+				if l_zone /= Void then
+					l_zone.minimize
+				end
 			end
 		end
 
@@ -266,10 +270,10 @@ feature -- Commands
 	on_normal_max_window
 			-- Handle normal\max zone
 		require
-			set: zone /= Void
+			set: is_zone_attached
 		do
-			if attached zone as l_zone then
-				l_zone.on_normal_max_window
+			if is_zone_attached then
+				zone.on_normal_max_window
 			end
 		end
 
@@ -412,13 +416,13 @@ feature {NONE} -- Implementation
 			l_mutli_dock_area: SD_MULTI_DOCK_AREA
 		do
 			-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
-			if attached zone as l_zone then -- Maybe it's auto hide state, zone = Void.
-				l_mutli_dock_area := docking_manager.query.inner_container (l_zone)
-				if l_mutli_dock_area.editor_zone_count = 1 and l_zone.content.type = {SD_ENUMERATION}.editor then
+			if is_zone_attached then -- Maybe it's auto hide state, zone = Void.
+				l_mutli_dock_area := docking_manager.query.inner_container (zone)
+				if l_mutli_dock_area.editor_zone_count = 1 and zone.content.type = {SD_ENUMERATION}.editor then
 					check not_has: not docking_manager.has_content (docking_manager.zones.place_holder_content) end
 					docking_manager.contents.extend (docking_manager.zones.place_holder_content)
-					check is_editor: l_zone.content.type = {SD_ENUMERATION}.editor end
-					docking_manager.zones.place_holder_content.set_relative (l_zone.content, {SD_ENUMERATION}.top)
+					check is_editor: zone.content.type = {SD_ENUMERATION}.editor end
+					docking_manager.zones.place_holder_content.set_relative (zone.content, {SD_ENUMERATION}.top)
 				end
 			end
 		end
@@ -430,8 +434,8 @@ feature {NONE} -- Implementation
 			l_mutli_dock_area: SD_MULTI_DOCK_AREA
 		do
 			-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
-			if attached zone as l_zone and then l_zone.type = {SD_ENUMERATION}.editor then
-				l_mutli_dock_area := docking_manager.query.inner_container (l_zone)
+			if is_zone_attached and then zone.type = {SD_ENUMERATION}.editor then
+				l_mutli_dock_area := docking_manager.query.inner_container (zone)
 				if l_mutli_dock_area.editor_zone_count > 1 and then docking_manager.has_content (docking_manager.zones.place_holder_content) then
 					docking_manager.zones.place_holder_content.close
 				end

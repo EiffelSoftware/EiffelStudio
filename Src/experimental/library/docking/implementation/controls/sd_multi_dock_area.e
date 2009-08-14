@@ -375,17 +375,16 @@ feature {NONE} -- Implementation
 			-- Find editor place holder zone in `zones'
 		local
 			l_zones: like zones
-			l_result: detachable like editor_place_holder
 		do
 			from
 				l_zones := zones
 				l_zones.start
 			until
-				l_zones.after or l_result /= Void
+				l_zones.after or Result /= Void
 			loop
 				if l_zones.item.content.type = {SD_ENUMERATION}.place_holder then
-					l_result ?= l_zones.item
-					check not_void: l_result /= Void end
+					Result ?= l_zones.item
+					check not_void: Result /= Void end
 				end
 				l_zones.forth
 			end

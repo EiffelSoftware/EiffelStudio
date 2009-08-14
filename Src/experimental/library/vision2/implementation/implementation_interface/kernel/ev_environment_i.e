@@ -34,13 +34,13 @@ feature {EV_ANY, EV_ANY_I, EV_ENVIRONMENT, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER
 
 	application_i: EV_APPLICATION_I
 			-- Single application implementation object for system.
-		require
-			not_destroyed: not is_destroyed
 		local
 			l_result: detachable EV_APPLICATION_I
 		do
 			l_result := application_cell.item
-			if not attached l_result then
+				-- If EV_APPLICATION_IMP has not been created yet, or was just
+				-- destroyed, we recreate a fresh one.
+			if not attached l_result or else l_result.is_destroyed then
 				application_cell.put (create {EV_APPLICATION_IMP}.make)
 				l_result := application_cell.item
 			end

@@ -70,7 +70,6 @@ feature -- Initialization
 			l_process: POINTER
 		do
 			Precursor
-			create dispatcher.make
 			if {PLATFORM}.is_thread_capable then
 				create idle_action_mutex.make
 			end
@@ -90,7 +89,6 @@ feature -- Initialization
 			update_theme_drawer
 			dispatcher.set_exception_callback (agent on_exception_action)
 
-			create theme_window.make
 			create reusable_message.make
 			set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 			set_application_main_window (silly_main_window)
@@ -559,6 +557,9 @@ feature {NONE} -- Implementation
 
 	theme_window: EV_THEME_WINDOW
 			-- Window with responsibility for notify `theme_changed_actions'.
+		once
+			create Result.make
+		end
 
 	blocking_windows_stack: ARRAYED_STACK [EV_WINDOW_IMP]
 			-- Windows that are blocking window. The top

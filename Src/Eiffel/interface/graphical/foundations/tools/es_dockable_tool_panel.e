@@ -407,6 +407,7 @@ feature -- Element change
         do
             internal_title := a_title
             content.set_long_title (a_title)
+            content.set_short_title (a_title)
         ensure
             title_set: title = a_title
         end

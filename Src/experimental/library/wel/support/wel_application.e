@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			-- set the application's main window and run
 			-- the application.
 		do
-			create dispatcher.make
 			set_application (Current)
 			init_instance
 			init_application
@@ -247,6 +246,9 @@ feature {NONE} -- Implementation
 
 	dispatcher: WEL_DISPATCHER
 			-- Windows and dialog boxes messages dispatcher
+		once
+			create Result.make
+		end
 
 feature {NONE} -- Externals
 

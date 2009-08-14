@@ -312,6 +312,7 @@ feature {NONE} -- Implementation
 		do
 			-- There are 3 cases we need to handle
 			Result := internal_docking_manager.query.inner_container_main.editor_parent
+
 			if Result /= Void then
 				-- Sometime `editor_parent' feature give us a zone as top parent.
 				if attached {SD_ZONE} Result as l_zone then
@@ -670,6 +671,7 @@ feature {NONE} -- Implementation
 			-- Open four area tool bar data.
 		require
 			a_tool_bar_data_not_void: a_tool_bar_data /= Void
+			count_valid: a_tool_bar_data.count >= 4
 		local
 			l_data: SD_TOOL_BAR_DATA
 			l_tool_bar: SD_TOOL_BAR_ZONE

@@ -201,7 +201,8 @@ feature -- Properties
 
 	name: STRING_32
 			-- Name which is used for store configuration
-			-- This name should be fixed in all locales
+			-- Used by tool bar customize dialog also
+			-- This name should not changed in all locales
 
 	set_name (a_name: STRING_GENERAL)
 			-- Set `name'

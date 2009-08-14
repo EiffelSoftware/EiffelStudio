@@ -62,7 +62,17 @@ feature {NONE} -- Status report
 	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := attached {CALL_STACK_STONE} a_stone as l_stone
+			Result := attached {CALL_STACK_STONE} a_stone
+		end
+
+feature -- Basic operations
+
+	drop_stone (a_stone: CLASSC_STONE)
+			-- Drop stone
+		do
+			if is_tool_instantiated	and a_stone /= Void then
+				panel.on_element_drop (a_stone)
+			end
 		end
 
 feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Basic operations

@@ -503,7 +503,7 @@ feature {NONE} -- add new expression from the grid
 			Result := s /= Void and then (not s.is_empty and not s.has ('%R') and not s.has ('%N'))
 		end
 
-feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
+feature {EB_CONTEXT_MENU_FACTORY, ES_WATCH_TOOL} -- Context menu
 
 	on_element_drop (s: CLASSC_STONE)
 			-- Something was dropped in `ev_list'.

@@ -147,6 +147,14 @@ feature -- Element change
 			Result_attached_and_not_empty: attached Result and then not Result.is_empty
 		end
 
+	longest_match_line_row: TUPLE [line, row: INTEGER]
+			-- Returns the line and row of the longest match
+		do
+			Result := left_to_parse.debug_information_with_index (left_to_parse.longest_match.count)
+		ensure
+			Result_attached: attached Result
+		end
+
 	out: STRING
 			-- <Precursor>
 		do

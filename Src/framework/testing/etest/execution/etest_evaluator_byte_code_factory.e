@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			create l_assign
 			l_assign.set_source (l_creation)
 			l_assign.set_target (l_local)
-			a_compound.force (l_assign)
+			a_compound.extend (l_assign)
 		end
 
 	add_test_invocation (a_compound: BYTE_LIST [BYTE_NODE]; a_execute_routine, a_test_routine: FEATURE_I)
@@ -251,11 +251,11 @@ feature {NONE} -- Implementation
 			l_param.set_attachment_type (l_agent.context_type)
 
 			create l_params.make (1)
-			l_params.force (l_param)
+			l_params.extend (l_param)
 
 			l_call := a_execute_routine.access (void_type, True)
 			l_call.set_parameters (l_params)
-			a_compound.force (l_call)
+			a_compound.extend (l_call)
 		end
 
 note

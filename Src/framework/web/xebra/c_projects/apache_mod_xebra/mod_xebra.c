@@ -29,7 +29,22 @@ static void* create_srv_cfg (apr_pool_t* pool, char* x)
 	svr_cfg->port = "9999";
 	svr_cfg->port = "0.0.0.0";
 	svr_cfg->max_upload_size = 10000;
+	svr_cfg->upload_path = "";
 	return svr_cfg;
+}
+/*
+doc:    <routine name="set_srv_cfg_upload_path" export="private">
+doc:           <summary>Sets the upload_path attribute to the xebra_svr_cfg instance</summary>
+doc:		   <return>NULL</return>
+doc:    </routine>
+*/
+static const char *set_srv_cfg_upload_path (cmd_parms *parms, void *mconfig,
+		const char *arg)
+{
+	xebra_svr_cfg* svr_cfg = ap_get_module_config (
+			parms->server->module_config, &xebra_module);
+	svr_cfg->upload_path = (char *) arg;
+	return NULL;
 }
 
 /*
@@ -83,11 +98,12 @@ static const char *set_srv_cfg_max_upload_size (cmd_parms *parms,
  doc:            <param name="r" type="request_rec*>The request</param>
  doc:            <param name="buf" type="char**>A buffer to write the keys and values</param>
  doc:            <param name="max_upload_size" type="int>The maximum size of post data as specified in Content-Length</param>
+ doc:            <param name="upload_path" type="char*>A path where a uploaded file should be stored temporarily</param>
  doc:            <param name="save_file" type="int>Specifies whether the data should be stored in a temp file or attached to buf. If a file is written the filename is stored in buf</param>
  doc:			 <return>Returns an apache RESPONSE_CODE</return>
  doc:    </routine>
  */
-static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
+static int read_from_POST (request_rec* r, char **buf, int max_upload_size, char* upload_path,
 		int save_file)
 {
 	const char *bbuf;
@@ -120,7 +136,7 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size,
 
 	if (save_file) {
 		/* Prepare tmp file */
-		tmpname = apr_pstrdup (r->pool, UP_FN);
+		tmpname = apr_pstrcat (r->pool, upload_path, "xebra_upload.XXXXXX", NULL);
 		rv = apr_file_mktemp (&tmpfile, tmpname, APR_CREATE | APR_WRITE , r->pool);
 		DEBUG ("Creating file... '%s'", tmpname);
 
@@ -225,11 +241,11 @@ doc:    </routine>
 static int xebra_handler (request_rec* r)
 {	
 #ifdef _WINDOWS
-	WORD wVersionRequested;
-	WSADATA wsaData;
+	WORD w_version_requests;
+	WSADATA wsa_data;
 	SOCKET m_socket;
 	int wsaerr;
-	SOCKADDR_IN clientService;
+	SOCKADDR_IN client_service;
 #else
 	int sockfd; /* socket id */
 	char s[INET6_ADDRSTRLEN]; /* information about connection */
@@ -242,10 +258,11 @@ static int xebra_handler (request_rec* r)
 	char* rmsg_buf; /* buffer for receiving message */
 	char* post_buf;
 	char* tmp_ctype;
-	char* srv_hostname;
-	char* srv_port;
-	int srv_port_int;
-	int srv_max_upload_size; /* the max upload size read from config */
+	char* cfg_hostname;
+	char* cfg_port;
+	int cfg_port_int;
+	int cfg_max_upload_size; /* the max upload size read from config */
+	char* cfg_upload_path;	
 	char* ctype;
 	xebra_svr_cfg *srvc;
 	
@@ -260,9 +277,19 @@ static int xebra_handler (request_rec* r)
 		return HTTP_METHOD_NOT_ALLOWED;
 	}
 	/* Reading config file */
-	srv_hostname = apr_pstrcat (r->pool, srvc->host, NULL);
-	srv_port = apr_pstrcat (r->pool, srvc->port, NULL);
-	srv_max_upload_size = srvc->max_upload_size;
+	cfg_hostname = apr_pstrcat (r->pool, srvc->host, NULL);
+	cfg_port = apr_pstrcat (r->pool, srvc->port, NULL);
+	cfg_max_upload_size = srvc->max_upload_size;
+	cfg_upload_path = apr_pstrcat( r->pool, srvc->upload_path, NULL);
+
+	if (cfg_upload_path[strlen(cfg_upload_path)-1] != '/')
+	{
+#ifdef _WINDOWS
+		cfg_upload_path = apr_pstrcat (r->pool, cfg_upload_path, "\\", NULL);
+#else
+		cfg_upload_path = apr_pstrcat (r->pool, cfg_upload_path, "/", NULL);
+#endif
+	}
 
 	/* Set a default content-type */
 	ap_set_content_type (r, "text/html;charset=ascii");
@@ -270,8 +297,8 @@ static int xebra_handler (request_rec* r)
 #ifdef _WINDOWS
 	/* winsock stuff */
 	/* Using MAKEWORD macro, Winsock version request 2.2 */
-	wVersionRequested = MAKEWORD(2, 2);
-	wsaerr = WSAStartup(wVersionRequested, &wsaData);
+	w_version_requests = MAKEWORD(2, 2);
+	wsaerr = WSAStartup(w_version_requests, &wsa_data);
 	if (wsaerr != 0)
 	{
 		/* Tell the user that we could not find a usable */
@@ -287,11 +314,11 @@ static int xebra_handler (request_rec* r)
 	/* 2.2 in wVersion since that is the version we      */
 	/* requested.                                        */
 
-	if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2 )
+	if (LOBYTE(wsa_data.wVersion) != 2 || HIBYTE(wsa_data.wVersion) != 2 )
 	{
 		/* Tell the user that we could not find a usable */
 		/* WinSock DLL.*/
-		DEBUG("The dll do not support the Winsock version %u.%u!\n", LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion));
+		DEBUG("The dll do not support the Winsock version %u.%u!\n", LOBYTE(wsa_data.wVersion),HIBYTE(wsa_data.wVersion));
 		WSACleanup();
 		return 0;
 	}
@@ -328,9 +355,9 @@ static int xebra_handler (request_rec* r)
 		apr_cpystrn(tmp_ctype, ctype, strlen(CT_MULTIPART_FORM_DATA) +1);
 		/* If the Content-Type is CT_MULTIPART_FORM_DATA save the post data to a file and don't append it to the message */
 		if (tmp_ctype && (strcasecmp (tmp_ctype, CT_MULTIPART_FORM_DATA) == 0))
-			rv = read_from_POST (r, &post_buf, srv_max_upload_size, 1);
+			rv = read_from_POST (r, &post_buf, cfg_max_upload_size, cfg_upload_path, 1);
 		else
-			rv = read_from_POST (r, &post_buf, srv_max_upload_size, 0);
+			rv = read_from_POST (r, &post_buf, cfg_max_upload_size, cfg_upload_path, 0);
 
 		if (rv == HTTP_REQUEST_ENTITY_TOO_LARGE) {
 			message = apr_pstrcat (r->pool, message, ARG, POST_TOO_BIG, NULL);
@@ -357,7 +384,7 @@ static int xebra_handler (request_rec* r)
 #ifdef _WINDOWS
 	/* Set up connection to server */
 	DEBUG ("Setting up connection.");
-	DEBUG ("Using server host %s and port %s", srv_hostname, srv_port);
+	DEBUG ("Using server host %s and port %s", cfg_hostname, cfg_port);
 	
 	m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (m_socket == INVALID_SOCKET)
@@ -368,11 +395,11 @@ static int xebra_handler (request_rec* r)
 	}
 	DEBUG ("Socket created.");
 
-	clientService.sin_family = AF_INET;
-	clientService.sin_addr.s_addr = inet_addr(srv_hostname);
-	srv_port_int = atoi(srv_port);
-	clientService.sin_port = htons(srv_port_int);
-	if (connect(m_socket, (SOCKADDR*)&clientService, sizeof(clientService)) == SOCKET_ERROR)
+	client_service.sin_family = AF_INET;
+	client_service.sin_addr.s_addr = inet_addr(cfg_hostname);
+	cfg_port_int = atoi(cfg_port);
+	client_service.sin_port = htons(cfg_port_int);
+	if (connect(m_socket, (SOCKADDR*)&client_service, sizeof(client_service)) == SOCKET_ERROR)
 	{
 		PRINT_ERROR ("Cannot connect to Xebra Server. See apache error log.");
 		WSACleanup();
@@ -383,7 +410,7 @@ static int xebra_handler (request_rec* r)
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 
-	if ((rv = getaddrinfo (srv_hostname, srv_port, &hints, &servinfo)) != 0) {
+	if ((rv = getaddrinfo (cfg_hostname, cfg_port, &hints, &servinfo)) != 0) {
 		ap_log_rerror (APLOG_MARK, APLOG_ERR, rv, r, "Getaddrinfo: %s",
 				gai_strerror (rv));
 

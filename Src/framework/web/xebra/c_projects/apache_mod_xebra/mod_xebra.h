@@ -72,11 +72,7 @@
 #define CT_APP_FORM_URLENCODED "application/x-www-form-urlencoded"
 
 #define KEY_FILE_UPLOAD "#FUPA#"
-#ifdef _WINDOWS
-#define UP_FN "C:\\tmp\\xebra_upload.XXXXXX" 
-#else
-#define UP_FN "/tmp/xebra_upload.XXXXXX"	
-#endif
+
 /*======= SOCKET CONSTANTS =======*/
 
 /* FRAG_SIZE:
@@ -137,7 +133,17 @@ typedef struct
 	char * port;
 	char * host;
 	int max_upload_size;
+	char * upload_path;
 } xebra_svr_cfg;
+
+/*
+doc:    <routine name="set_srv_cfg_upload_path" export="private">
+doc:           <summary>Sets the upload_path attribute to the xebra_svr_cfg instance</summary>
+doc:		   <return>NULL</return>
+doc:    </routine>
+*/
+static const char *set_srv_cfg_upload_path (cmd_parms *parms, void *mconfig,
+											const char *arg);
 
 /*
 doc:    <routine name="create_srv_cfg" export="private">
@@ -180,11 +186,12 @@ static const char *set_srv_cfg_max_upload_size (cmd_parms *parms, void *mconfig,
  doc:            <param name="r" type="request_rec*>The request</param>
  doc:            <param name="buf" type="char**>A buffer to write the keys and values</param>
  doc:            <param name="max_upload_size" type="int>The maximum size of post data as specified in Content-Length</param>
+ doc:            <param name="upload_path" type="char*>A path where a uploaded file should be stored temporarily</param>
  doc:            <param name="save_file" type="int>Specifies whether the data should be stored in a temp file or attached to buf. If a file is written the filename is stored in buf</param>
  doc:			 <return>Returns an apache RESPONSE_CODE</return>
  doc:    </routine>
  */
-static int read_from_POST (request_rec* r, char **buf, int max_upload_size, int save_file);
+static int read_from_POST (request_rec* r, char **buf, int max_upload_size, char* upload_path, int save_file);
 
 /*
  doc:	<attribute name="table_buf" return_type="char*" export="private">
@@ -317,6 +324,9 @@ static const command_rec xebra_cmds[] = {
 	AP_INIT_TAKE1 (
 		"XebraServer_max_upload_size", set_srv_cfg_max_upload_size, NULL, RSRC_CONF,
 		"Mod_xebra: use e.g. 'Max_upload_size \"10000\"'"),
+	AP_INIT_TAKE1 (
+		"XebraServer_upload_path", set_srv_cfg_upload_path, NULL, RSRC_CONF,
+		"Mod_xebra: use e.g. 'XebraServer_upload_path \"c:\\tmp\"'"),
 	AP_INIT_TAKE1 (
 		"XebraServer_host", set_srv_cfg_host, NULL, RSRC_CONF,
 		"Mod_xebra: use e.g. 'Host \"localhost\"'")

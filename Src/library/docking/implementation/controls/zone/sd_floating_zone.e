@@ -29,7 +29,8 @@ inherit
 		rename
 			extend as real_extend_dialog,
 			show as show_allow_to_back,
-			has as has_untitled_dialog
+			has as has_untitled_dialog,
+			make as make_popup_window
 		export
 			{NONE} all
 			{ANY} set_position, set_size, screen_x, screen_y, is_displayed, is_destroyed, has_focus

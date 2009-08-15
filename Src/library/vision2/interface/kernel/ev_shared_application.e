@@ -29,6 +29,12 @@ feature -- Access
 				-- Idle actions are called when all events are processed.
 		end
 
+	shared_environment: EV_ENVIRONMENT
+			-- Shared EV_ENVIRONMENT object.
+		once
+			Result := create {EV_ENVIRONMENT}
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

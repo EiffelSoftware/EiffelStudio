@@ -16,7 +16,16 @@ inherit
 			initialize
 		end
 
+create
+	default_create,
+	make
+
 feature {NONE} -- Initialization
+
+	make
+		do
+			default_create
+		end
 
 	initialize
 			-- <Precursor>

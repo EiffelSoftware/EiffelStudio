@@ -12,6 +12,9 @@ class
 
 inherit
 	EW_INSTRUCTION_TABLES
+		undefine
+			default_create
+		end
 
 	EQA_TEST_SET
 		redefine

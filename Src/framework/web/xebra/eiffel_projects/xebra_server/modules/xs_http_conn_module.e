@@ -16,17 +16,25 @@ inherit
 		rename
 			make as base_make
 		end
+
 	THREAD
+
 	XS_SHARED_SERVER_CONFIG
+
 	XS_SHARED_SERVER_OUTPUTTER
+
 	XU_STOPWATCH
 
-create make
+create
+	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_main_server: like main_server; a_name: STRING)
 			-- Initializes current
+			--
+			-- `a_main_server': The main server object
+			-- `a_name': The name of this module
 		require
 			a_main_server_attached: a_main_server /= Void
 			a_name_attached: a_name /= Void
@@ -37,6 +45,7 @@ feature -- Initialization
             stop := False
          ensure
            main_server_set: equal (a_main_server, main_server)
+           current_request_message_attached: current_request_message /= Void
            name_set: equal (name, a_name)
 		end
 
@@ -76,7 +85,7 @@ feature -- Inherited Features
 			            	 if receive_message (thread_http_socket) then
 								l_response := l_webapp_handler.forward_request (current_request_message)
 			            	else
-								l_response := (create {XER_BAD_SERVER_ERROR}.make ("Error decoding message from mod_xebra.")).render_to_command_response
+								l_response := (create {XER_INTERNAL_SERVER_ERROR}.make ("Error decoding message from mod_xebra.")).render_to_command_response
 							end
 
 							if attached {XCCR_HTTP_REQUEST} l_response as l_http_response then
@@ -123,8 +132,13 @@ feature -- Access
 feature {NONE} -- Access
 
 	main_server: XC_SERVER_INTERFACE
+			-- The main server object
 
 	current_request_message: STRING
+			-- Stores the current request message received from http server
+
+	Max_fragments: INTEGER = 1000
+			-- Defines the maximum number of fragments that can be received
 
 feature -- Status setting
 
@@ -134,11 +148,13 @@ feature -- Status setting
 			stop := True
 		end
 
-
 feature {NONE} -- Implementation
 
 	send_message_to_http (a_message: STRING; a_http_socket: NETWORK_STREAM_SOCKET)
 			-- Sends a string over the specified socket.
+			--
+			-- `a_message': The message to be sent
+			-- `a_http_socket': The socket to be used
 		require
 			a_http_socket_is_open: not a_http_socket.is_closed
 		local
@@ -167,13 +183,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Max_fragments: INTEGER = 1000
-
 	write_message_to_data (a_d: MANAGED_POINTER;
 						   a_message: STRING;
 						   a_start_index, a_end_index: NATURAL;
 						   a_fragment: BOOLEAN)
-			-- Encodes the string so that it can be sent over the net and be read by mod_xebra.
+			-- Encodes the string so that it can be sent over the net and be read by the http server plugin.
+			--
+			-- `a_d': A destination address for the data
+			-- `a_message': The data source
+			-- `a_start_index': Read the characters in a_message from here...
+			-- `a_end_index': ...until here.
+			-- `a_fragment': Defines if this is a message fragment or not.
 		require
 			data_attached: a_d /= Void
 			data_is_allocatd: a_d.count > 0
@@ -201,6 +221,10 @@ feature {NONE} -- Implementation
 
 	read_string (a_socket: NETWORK_STREAM_SOCKET; a_n: NATURAL): STRING
 			-- Reads `n' characters from the socket and concatenates them to a string
+			--
+			-- `a_socket': The socket to read from
+			-- `a_n': The number of characters to read
+			-- `Result': The created string
 		require
 			socket_is_open: not a_socket.is_closed
 			n_small_enough: a_n <= {XS_MESSAGE}.message_upper_bound
@@ -228,7 +252,10 @@ feature {NONE} -- Implementation
 		end
 
 	receive_message (a_http_socket: NETWORK_STREAM_SOCKET): BOOLEAN
-			-- Decodes an incoming message and stores it in current_request_message. Returns true if sucessfull
+			-- Decodes an incoming message and stores it in current_request_message. Returns true if sucessful
+			--
+			-- `a_http_socket': The socket to read from
+			-- `Result': Returns true if receiving was successful.
 		require
 			a_http_socket: a_http_socket /= Void and then not a_http_socket.is_closed
 		local
@@ -289,4 +316,5 @@ feature {NONE} -- Implementation
 
 invariant
 	main_server_attached: main_server /= Void
+	current_request_message_attached: current_request_message /= Void
 end

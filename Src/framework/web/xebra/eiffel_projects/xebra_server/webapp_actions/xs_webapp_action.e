@@ -1,6 +1,6 @@
 note
 	description: "[
-		A deferred class for actions that the server can perform on webapps
+		A deferred class for actions that the server can perform on webapps.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -249,7 +249,7 @@ feature {TEST_WEBAPPS} -- Implementation
 feature {NONE} -- Implementation
 
 	can_launch_process (a_exe: FILE_NAME; a_dir: FILE_NAME): BOOLEAN
-			-- Tests if the files and dirs exist
+			-- Tests if a_exe and a_dirs exist
 		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
@@ -275,6 +275,13 @@ feature {NONE} -- Implementation
 					 a_output_handler: PROCEDURE [ANY, TUPLE [STRING]];
 					 a_error_output_handler: PROCEDURE [ANY, TUPLE [STRING]]): detachable PROCESS
 			-- Launches a process
+			--
+			-- `a_exe': The file to execute
+			-- `a_args': The arguments to run the exe
+			-- `a_dir': The working directory
+			-- `a_exit_handler': A routine that is executed when the process ends
+			-- `a_output_handler': A routine that handles output from the process
+			-- `a_error_output_handler': A routine that handles error output from the process
 		local
 			l_process_factory: PROCESS_FACTORY
 		do

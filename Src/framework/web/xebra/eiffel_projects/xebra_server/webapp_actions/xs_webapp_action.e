@@ -15,8 +15,6 @@ inherit
 
 	XS_SHARED_SERVER_CONFIG
 
-	XU_STOPWATCH
-
 feature {NONE} -- Initialization
 
 	make
@@ -26,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	webapp: detachable XS_WEBAPP
+	webapp: detachable XS_WEBAPP assign set_webapp
 			-- The webapp
 
 	is_running: BOOLEAN
@@ -37,13 +35,13 @@ feature -- Access
 			-- if the next action (recursively) is running
 		do
 			if attached next_action as l_na then
-				Result := is_running or l_na.is_running_recursive
+				Result := is_running and l_na.is_running_recursive
 			else
 				Result := is_running
 			end
 		end
 
-	next_action: detachable XS_WEBAPP_ACTION
+	next_action: detachable XS_WEBAPP_ACTION assign set_next_action
 		-- Is executed after the action has executed (if not void)
 
 feature -- Paths
@@ -57,7 +55,7 @@ feature -- Paths
 				Result := config.file.webapps_root_filename.twin
 				Result.extend (l_wa.app_config.name.out)
 			else
-				create Result.make_from_string ("")
+				create Result.make
 			end
 		ensure
 			Result_attached: Result /= Void
@@ -70,15 +68,15 @@ feature -- Paths
 		do
 			if attached webapp as l_wa then
 				Result := app_dir.twin
-				Result.extend ("EIFGENs")
+				Result.extend ({XU_CONSTANTS}.Dir_eifgen)
 				Result.extend (l_wa.app_config.name.out)
 				if config.file.finalize_webapps.value then
-					Result.extend ("F_code")
+					Result.extend ({XU_CONSTANTS}.Dir_f_code)
 				else
-					Result.extend ("W_code")
+					Result.extend ({XU_CONSTANTS}.Dir_w_code)
 				end
 			else
-				create Result.make_from_string ("")
+				create Result.make
 			end
 		ensure
 			Result_attached: Result /= Void
@@ -94,10 +92,10 @@ feature -- Paths
 					Result := webapp_exe
 				else
 					Result := run_workdir.twin
-					Result.set_file_name (l_wa.app_config.name.out + ".melted")
+					Result.set_file_name (l_wa.app_config.name.out + {XU_CONSTANTS}.Extension_melted)
 				end
 			else
-				create Result.make_from_string ("")
+				create Result.make
 			end
 		ensure
 			Result_attached: Result /= Void
@@ -111,12 +109,12 @@ feature -- Paths
 			if attached webapp as l_wa then
 				Result := run_workdir.twin
 				if {PLATFORM}.is_windows then
-					Result.set_file_name (l_wa.app_config.name.out + ".exe")
+					Result.set_file_name (l_wa.app_config.name.out + {XU_CONSTANTS}.Extension_win_exe)
 				else
 					Result.set_file_name (l_wa.app_config.name.out)
 				end
 			else
-				create Result.make_from_string ("")
+				create Result.make
 			end
 		ensure
 			Result_attached: Result /= Void
@@ -136,13 +134,13 @@ feature -- Paths
 			-- The path to the servlet_gen executable
 		do
 			Result := servlet_gen_path.twin
-			Result.extend ("EIFGENs")
+			Result.extend ({XU_CONSTANTS}.Dir_eifgen)
 			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
-			Result.extend ("W_code")
+			Result.extend ({XU_CONSTANTS}.Dir_w_code)
 			if {PLATFORM}.is_windows then
-				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + ".exe")
+				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_win_exe)
 			else
-					Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name)
+				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name)
 			end
 
 		ensure
@@ -153,11 +151,11 @@ feature -- Paths
 		-- The path to the servlet_gen melted file
 		do
 			Result := servlet_gen_path.twin
-			Result.extend ("EIFGENs")
+			Result.extend ({XU_CONSTANTS}.Dir_eifgen)
 			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
-			Result.extend ("W_code")
+			Result.extend ({XU_CONSTANTS}.Dir_f_code)
 
-			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + ".melted")
+			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_melted)
 		ensure
 			Result_attached: Result /= void
 		end
@@ -166,7 +164,7 @@ feature -- Paths
 			-- The path to the servlet_gen executable
 		do
 			Result := servlet_gen_path.twin
-			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + ".ecf")
+			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_ecf)
 		ensure
 			Result_attached: Result /= void
 		end
@@ -205,7 +203,7 @@ feature -- Operations
 			end
 		end
 
-feature  -- Status report internal
+feature {NONE}  -- Status report internal
 
 	is_necessary: BOOLEAN
 			-- Tests if the action is necessairy
@@ -216,6 +214,8 @@ feature -- Status setting
 
 	set_webapp (a_webapp: XS_WEBAPP)
 			-- Setts webapp.
+		require
+			a_webapp_attached: a_webapp /= Void
 		do
 			webapp := a_webapp
 		ensure
@@ -224,6 +224,8 @@ feature -- Status setting
 
 	set_next_action (a_action: like next_action)
 			-- Setts a next action.
+		require
+			a_action_attached: a_action /= Void
 		do
 			next_action := a_action
 		ensure
@@ -250,6 +252,9 @@ feature {NONE} -- Implementation
 
 	can_launch_process (a_exe: FILE_NAME; a_dir: FILE_NAME): BOOLEAN
 			-- Tests if a_exe and a_dirs exist
+		require
+			a_exe_attached: a_exe /= Void
+			a_dir_attached: a_dir /= Void
 		local
 			l_f_utils: XU_FILE_UTILITIES
 		do
@@ -274,14 +279,21 @@ feature {NONE} -- Implementation
 					 a_exit_handler: ROUTINE [ANY, TUPLE];
 					 a_output_handler: PROCEDURE [ANY, TUPLE [STRING]];
 					 a_error_output_handler: PROCEDURE [ANY, TUPLE [STRING]]): detachable PROCESS
-			-- Launches a process
+			-- Launches a process.
 			--
 			-- `a_exe': The file to execute
 			-- `a_args': The arguments to run the exe
 			-- `a_dir': The working directory
 			-- `a_exit_handler': A routine that is executed when the process ends
 			-- `a_output_handler': A routine that handles output from the process
-			-- `a_error_output_handler': A routine that handles error output from the process
+			-- `a_error_output_handler': A routine that handles error output from the process		
+		require
+			a_exe_attached: a_exe /= Void
+			a_args_attached: a_args /= Void
+			a_dir_attached: a_dir /= Void
+			a_exit_handler_attached: a_exit_handler /= Void
+			a_output_handler_attached: a_output_handler /= Void
+			a_error_output_handler_attached: a_error_output_handler /= Void
 		local
 			l_process_factory: PROCESS_FACTORY
 		do

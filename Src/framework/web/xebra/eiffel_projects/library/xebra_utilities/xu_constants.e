@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Constants for all xebra classes.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -18,6 +18,13 @@ feature -- Files
 
 	Webapp_config_file: STRING = "config.wapp"
 	Taglib_config_file: STRING = "config.taglib"
+	Extension_melted: STRING = ".melted"
+	Extension_win_exe: STRING = ".exe"
+	Extension_ecf: STRING = ".ecf"
+	Dir_eifgen: STRING = "EIFGENs"
+	Dir_w_code: STRING = "W_code"
+	Dir_f_code: STRING = "F_code"
+
 
 feature -- Server
 

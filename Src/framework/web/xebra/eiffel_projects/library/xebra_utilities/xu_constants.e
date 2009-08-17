@@ -21,6 +21,8 @@ feature -- Files
 	Extension_melted: STRING = ".melted"
 	Extension_win_exe: STRING = ".exe"
 	Extension_ecf: STRING = ".ecf"
+	Extension_xeb: STRING = ".xeb"
+	Extension_xrpc: STRING = ".xrpc"
 	Dir_svn: STRING = ".svn"
 	Dir_eifgen: STRING = "EIFGENs"
 	Dir_w_code: STRING = "W_code"
@@ -60,6 +62,7 @@ feature -- Filenames
 	Translator_executed_file: STRING = "t_executed_at_time"
 	Servlet_gen_name: STRING = "servlet_gen"
 	Generated_folder_name: STRING = ".generated"
+	Servlet_gen_ecf: STRING = "servlet_gen.ecf"
 
 feature -- Response
 

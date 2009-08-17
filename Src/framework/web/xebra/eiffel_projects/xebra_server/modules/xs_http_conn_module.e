@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
            main_server_set: equal (a_main_server, main_server)
            current_request_message_attached: current_request_message /= Void
            name_set: equal (name, a_name)
-		end
+	end
 
 feature -- Inherited Features
 

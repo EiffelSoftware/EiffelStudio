@@ -285,11 +285,11 @@ feature {NONE} -- Utility
 			create l_directory_name.make_from_string (a_directory.name)
 			create l_util
 			create l_includes.make (2)
-			l_includes.extend ("*.xeb")
-			l_includes.extend ("*.xrpc")
+			l_includes.extend ("*" + {XU_CONSTANTS}.Extension_xeb)
+			l_includes.extend ("*" + {XU_CONSTANTS}.Extension_xrpc)
 			create l_excludes.make (2)
-			l_excludes.extend ("EIFGENs")
-			l_excludes.extend (".svn")
+			l_excludes.extend ({XU_CONSTANTS}.Dir_eifgen)
+			l_excludes.extend ({XU_CONSTANTS}.Dir_svn)
 			Result := l_util.scan_for_files (l_directory_name.out, -1, l_includes, l_excludes)
 		end
 

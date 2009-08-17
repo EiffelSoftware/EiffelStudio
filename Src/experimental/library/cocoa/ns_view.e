@@ -12,7 +12,7 @@ inherit
 
 create
 	make,
-	make_custom,
+	make_with_drawing,
 	make_flipped
 create {NS_OBJECT}
 	share_from_pointer
@@ -26,11 +26,10 @@ feature {NONE} -- Creation and Initialization
 			callback_marshal.register_object (Current)
 		end
 
-	make_custom (a_draw_action: PROCEDURE [ANY, TUPLE])
+	make_with_drawing
 			-- Create an NSView which calls the passed draw_action when drawRect: is invoked
 			-- require: target has been set up
 		do
-			draw_action := a_draw_action
 			make_from_pointer (view_class_with_draw_callback.create_instance.item)
  			{NS_VIEW_API}.init (item)
 			callback_marshal.register_object (Current)
@@ -41,19 +40,9 @@ feature {NONE} -- Creation and Initialization
 		once
 			create Result.make_with_name ("EiffelWrapperViewXX")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
-			Result.add_method ("drawRect:", agent draw_rectX)
+			Result.add_method ("drawRect:", agent draw_rect)
 			Result.add_method ("isFlipped", agent: BOOLEAN do Result := True end)
 			Result.register
-		end
-
-	draw_rectX (dirtyRect: NS_RECT)
-		do
-			if attached draw_action as a then
-				debug ("callbacks")
-					io.put_string ("RECT: " + dirtyrect.debug_output + "%N")
-				end
-				a.call (Void)
-			end
 		end
 
 	make_flipped
@@ -227,12 +216,11 @@ feature -- Focusing
 
 feature -- Drawing
 
-	draw_rect (a_rect: NS_RECT)
+	draw_rect (a_dirty_rect: NS_RECT)
 			-- Overridden by subclasses to draw the receiver's image within the passed-in rectangle.
 		do
-			{NS_VIEW_API}.draw_rect (item, a_rect.item)
+			{NS_VIEW_API}.draw_rect (item, a_dirty_rect.item)
 		end
-
 
 	visible_rect: NS_RECT
 			-- Returns the portion of the receiver not clipped by its superviews.
@@ -240,8 +228,6 @@ feature -- Drawing
 			create Result.make
 			{NS_VIEW_API}.visible_rect (item, Result.item)
 		end
-
-feature -- Displaying
 
 feature -- Displaying
 
@@ -435,16 +421,5 @@ feature -- Event Handling
 				end
 			end
 		end
-
-feature {NONE} -- Callback
-
-	draw_old (x, y, w, h: INTEGER)
-		do
-			if attached {PROCEDURE [ANY, TUPLE]} draw_action as l_draw_action then
-				l_draw_action.call([])
-			end
-		end
-
-	draw_action: detachable PROCEDURE [ANY, TUPLE]
 
 end

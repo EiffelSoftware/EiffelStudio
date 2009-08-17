@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>
 <title>Xebra Server Control</title>
-<page:controller class="MAIN_CONTROLLER" />
+<page:controller class="MAIN_CONTROLLER" create="default_create" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="base.css" rel="stylesheet" type="text/css" />
 </head>
@@ -12,7 +12,7 @@
 <div id="title">Xebra Server Control</div>
 </div>
 <div id="content">
-<f:form variable="dummy" class="MAIN_CONTROLLER">
+<f:form>
 
 <h1>Server Control</h1>
 
@@ -23,7 +23,7 @@
 	</tr>
 		<tr>		
 			<td>Main Server</td>			
-			<td><f:command_link text="shutdown" action="shutdown_server" variable="dummy" /> | <f:command_link text="reload config file" action="reload_config" variable="dummy"/></td>
+			<td><f:command_link text="shutdown" action="shutdown_server" /> | <f:command_link text="reload config file" action="reload_config"/></td>
 		</tr>		
 
 </table>

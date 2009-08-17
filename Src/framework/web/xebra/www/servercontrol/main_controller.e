@@ -10,14 +10,14 @@ class
 	MAIN_CONTROLLER
 
 inherit
-	XWA_CONTROLLER redefine	make end
+	XWA_CONTROLLER redefine	default_create end
 
 create
-	make
+	default_create
 
 feature {NONE} -- Initialization	
 
-	make
+	default_create
 			-- Initializes Current
 		do
 			Precursor
@@ -49,7 +49,7 @@ feature -- Modules Control
 			Result := ""
 		end
 
-	shutdown_mod (a_mod: ANY)
+	shutdown_mod (a_mod: detachable ANY)
 			-- Sends a shutdown_mod command to the server.
 		local
 			l_cmd: XCC_SHUTDOWN_MOD
@@ -61,7 +61,7 @@ feature -- Modules Control
 			end
 		end
 
-	relaunch_mod (a_mod: ANY)
+	relaunch_mod (a_mod: detachable ANY)
 			-- Sends a relaunch_mod command to the server.
 		local
 			l_cmd: XCC_RELAUNCH_MOD
@@ -75,7 +75,7 @@ feature -- Modules Control
 
 feature -- Webapp Control
 
-	force_translate (a_mod: ANY)
+	force_translate (a_mod: detachable ANY)
 			-- Forces translation of a webapp
 		local
 			l_cmd: XCC_TRANSLATE_WEBAPP
@@ -112,7 +112,7 @@ feature -- Webapp Control
 		end
 
 
-	dev_mode_on_webapp (a_webapp: ANY)
+	dev_mode_on_webapp (a_webapp: detachable ANY)
 			-- Sends a dev_mode_on_webapp command to the server.
 		local
 			l_cmd: XCC_DEV_ON_WEBAPP
@@ -124,7 +124,7 @@ feature -- Webapp Control
 			end
 		end
 
-	dev_mode_off_webapp (a_webapp: ANY)
+	dev_mode_off_webapp (a_webapp: detachable ANY)
 			-- Sends a dev_mode_off_webapp command to the server.
 		local
 			l_cmd: XCC_DEV_OFF_WEBAPP
@@ -137,7 +137,7 @@ feature -- Webapp Control
 		end
 
 
-	shutdown_webapp (a_webapp: ANY)
+	shutdown_webapp (a_webapp: detachable ANY)
 			-- Sends a shutdown_webapp command to the server.
 		local
 			l_cmd: XCC_SHUTDOWN_WEBAPP
@@ -149,7 +149,7 @@ feature -- Webapp Control
 			end
 		end
 
-	relaunch_webapp (a_webapp: ANY)
+	relaunch_webapp (a_webapp: detachable ANY)
 			-- Sends a relaunch_webapp command to the server.
 		local
 			l_cmd: XCC_LAUNCH_WEBAPP
@@ -161,7 +161,7 @@ feature -- Webapp Control
 			end
 		end
 
-	clean_webapp (a_webapp: ANY)
+	clean_webapp (a_webapp: detachable ANY)
 			-- Sends a clean_webapp command to the server.
 		local
 			l_cmd: XCC_CLEAN_WEBAPP
@@ -173,7 +173,7 @@ feature -- Webapp Control
 			end
 		end
 
-	enable_webapp (a_webapp: ANY)
+	enable_webapp (a_webapp: detachable ANY)
 			-- Sends a clean_webapp command to the server.
 		local
 			l_cmd: XCC_ENABLE_WEBAPP
@@ -185,7 +185,7 @@ feature -- Webapp Control
 			end
 		end
 
-	disable_webapp (a_webapp: ANY)
+	disable_webapp (a_webapp: detachable ANY)
 			-- Sends a clean_webapp command to the server.
 		local
 			l_cmd: XCC_DISABLE_WEBAPP
@@ -199,7 +199,7 @@ feature -- Webapp Control
 
 feature -- Server Control
 
-	reload_config (e: ANY)
+	reload_config
 			-- Sends a reload_config command to the server.
 		do
 			if attached  {XCCR_OK} server_control.send (create {XCC_LOAD_CONFIG}.make) then
@@ -209,7 +209,7 @@ feature -- Server Control
 			end
 		end
 
-	shutdown_server (e: ANY)
+	shutdown_server
 			-- Sends a shutdown_server command to the server
 		do
 			if attached  {XCCR_OK} server_control.send (create {XCC_SHUTDOWN_SERVER}.make) then

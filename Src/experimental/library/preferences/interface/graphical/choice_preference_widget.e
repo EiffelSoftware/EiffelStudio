@@ -66,7 +66,7 @@ feature {NONE} -- Command
 		local
 			l_value,
 			l_item: STRING
-			l_displayed_value: detachable STRING_32
+			l_displayed_value: detachable STRING_GENERAL
 			l_cnt, nb_values: INTEGER
 			l_pref_value: detachable ARRAY [STRING]
 			l_value_mapping: like value_mapping
@@ -89,7 +89,7 @@ feature {NONE} -- Command
 					if l_displayed_value = Void then
 						l_displayed_value := l_item
 					end
-					if change_item_widget.text.is_equal (l_displayed_value) then
+					if change_item_widget.text.same_string_general (l_displayed_value) then
 						l_value.append_character ('[')
 						l_value.append (l_item)
 						l_value.append_character (']')

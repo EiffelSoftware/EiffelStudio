@@ -387,7 +387,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Constants
 
-	isolate_prefix: STRING = "execute/isolated"
+	isolate_prefix: STRING = "execution/isolated"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -212,8 +212,8 @@ feature{NONE}  -- Actions
 						-- The output was switched when starting the C compilation so now switch it back, if possible.
 						-- No switching will occur if the outputs tool is now hidden or if the user switched to a different tool.
 					l_switched_output.activate (False)
-				elseif not is_last_c_compilation_successful then
-						-- The C compilation failed, show the error list tool.
+				elseif not is_last_c_compilation_successful and then preferences.error_list_tool_data.report_c_compiler_errors then
+						-- The C compilation failed and the error list will report errors, show the error list tool.
 					l_window.shell_tools.show_tool ({ES_ERROR_LIST_TOOL}, True)
 				end
 			end

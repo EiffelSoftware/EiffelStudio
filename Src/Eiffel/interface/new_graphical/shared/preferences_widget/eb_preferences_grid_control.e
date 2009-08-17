@@ -325,6 +325,8 @@ feature {NONE} -- Widget initialization
 				Result.set_displayed_value (names.c_right_click_receiver)
 			elseif a_pref = preferences.search_tool_data.init_scope_preference then
 				Result.set_displayed_value (names.c_init_search_scope)
+			elseif a_pref = preferences.error_list_tool_data.report_c_compiler_errors_preference then
+				Result.set_displayed_value (names.c_report_c_compiler_errors)
 			end
 		end
 

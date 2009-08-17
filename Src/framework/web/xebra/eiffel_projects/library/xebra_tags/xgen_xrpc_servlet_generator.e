@@ -48,12 +48,12 @@ feature -- Implementation
 			l_executed_filename: FILE_NAME
 		do
 			l_filename := path.twin
-			l_filename.extend (".generated")
+			l_filename.extend ({XU_CONSTANTS}.Generated_folder_name)
 			create l_servlets_directory.make (l_filename)
 			if not l_servlets_directory.exists then
 				l_servlets_directory.create_dir
 			end
-			l_filename.extend ("servlets")
+			l_filename.extend ({XU_CONSTANTS}.Servlets_folder_name)
 			create l_servlets_directory.make (l_filename)
 			if not l_servlets_directory.exists then
 				l_servlets_directory.create_dir
@@ -76,7 +76,7 @@ feature -- Implementation
 				o.iprint ("done.")
 			end
 			l_executed_filename := path.twin
-			l_executed_filename.extend (".generated")
+			l_executed_filename.extend ({XU_CONSTANTS}.Generated_folder_name)
 			l_executed_filename.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
 			if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_write (l_executed_filename) as l_file then
 				l_file.put_string ("File generated for server xebra server")

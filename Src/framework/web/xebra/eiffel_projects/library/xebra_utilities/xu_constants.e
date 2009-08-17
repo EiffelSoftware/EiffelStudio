@@ -61,6 +61,7 @@ feature -- Filenames
 	Servlet_gen_executed_file: STRING = "sg_executed_at_time"
 	Translator_executed_file: STRING = "t_executed_at_time"
 	Servlet_gen_name: STRING = "servlet_gen"
+	Servlets_folder_name: STRING = "servlets"
 	Generated_folder_name: STRING = ".generated"
 	Servlet_gen_ecf: STRING = "servlet_gen.ecf"
 

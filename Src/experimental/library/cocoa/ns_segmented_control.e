@@ -126,8 +126,9 @@ feature -- Working with Individual Segments
 feature -- Specifying Segment Display
 
 
-
 	set_segment_style (a_segment_style: INTEGER)
+		require
+			valid_segment_style (a_segment_style)
 		do
 			{NS_SEGMENTED_CONTROL_API}.set_segment_style (item, a_segment_style)
 		end
@@ -135,6 +136,73 @@ feature -- Specifying Segment Display
 	segment_style: INTEGER
 		do
 			Result := {NS_SEGMENTED_CONTROL_API}.segment_style (item)
+		ensure
+			valid_segment_style (Result)
 		end
 
+feature -- Contract support
+
+	valid_segment_style (a_integer: INTEGER): BOOLEAN
+		do
+			Result := (<<segment_style_automatic, segment_style_rounded, segment_style_textured_rounded,
+						segment_style_round_rect, segment_style_capsule, segment_style_small_square>>).has (a_integer)
+		end
+
+feature -- NSSegmentStyle constants
+
+	frozen segment_style_automatic: INTEGER
+			-- The appearance of the segmented control is automatically determined based on the type of window in which the control is displayed and the position within the window.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSSegmentStyleAutomatic"
+		end
+
+	frozen segment_style_rounded: INTEGER
+			-- The control is displayed using the rounded style.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSSegmentStyleRounded"
+		end
+
+	frozen segment_style_textured_rounded: INTEGER
+			-- The control is displayed using the textured rounded style.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSSegmentStyleTexturedRounded"
+		end
+
+	frozen segment_style_round_rect: INTEGER
+			-- The control is displayed using the round rect style.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSSegmentStyleRoundRect"
+		end
+
+	frozen segment_style_textured_square: INTEGER
+			-- The control is displayed using the round rect style.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSSegmentStyleTexturedSquare"
+		end
+
+	frozen segment_style_capsule: INTEGER
+			-- The control is displayed using the capsule style.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSSegmentStyleCapsule"
+		end
+
+	frozen segment_style_small_square: INTEGER
+			-- The control is displayed using the small square style.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSSegmentStyleSmallSquare"
+		end
 end

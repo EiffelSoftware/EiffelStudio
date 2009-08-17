@@ -13,6 +13,7 @@ inherit
 create
 	blue_color,
 	white_color,
+	light_gray_color,
 	control_color,
 	control_background_color,
 	control_text_color,
@@ -21,12 +22,13 @@ create
 	color_with_calibrated_red_green_blue_alpha,
 	color_with_pattern_image,
 	selected_text_color,
-	selected_text_background_color
+	selected_text_background_color,
+	keyboard_focus_indicator_color
 create {NS_OBJECT}
 	make_from_pointer,
 	share_from_pointer
 
-feature {NONE} -- Creation
+feature {NONE} -- Creating an NSColor with Preset Components
 
 	blue_color
 		do
@@ -37,6 +39,13 @@ feature {NONE} -- Creation
 		do
 			item := {NS_COLOR_API}.white_color
 		end
+
+	light_gray_color
+		do
+			item := {NS_COLOR_API}.light_gray_color
+		end
+
+feature {NONE} -- Creating a System Color - an NSColor Whose Value Is Specified by User Preferences
 
 	control_color
 		do
@@ -81,6 +90,11 @@ feature {NONE} -- Creation
 	selected_text_background_color
 		do
 			item := {NS_COLOR_API}.selected_text_background_color
+		end
+
+	keyboard_focus_indicator_color
+		do
+			item := {NS_COLOR_API}.keyboard_focus_indicator_color
 		end
 
 feature -- Creation

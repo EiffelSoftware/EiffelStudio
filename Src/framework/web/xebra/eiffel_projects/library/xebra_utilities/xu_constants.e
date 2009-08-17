@@ -21,6 +21,7 @@ feature -- Files
 	Extension_melted: STRING = ".melted"
 	Extension_win_exe: STRING = ".exe"
 	Extension_ecf: STRING = ".ecf"
+	Dir_svn: STRING = ".svn"
 	Dir_eifgen: STRING = "EIFGENs"
 	Dir_w_code: STRING = "W_code"
 	Dir_f_code: STRING = "F_code"

@@ -153,7 +153,7 @@ feature -- Paths
 			Result := servlet_gen_path.twin
 			Result.extend ({XU_CONSTANTS}.Dir_eifgen)
 			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
-			Result.extend ({XU_CONSTANTS}.Dir_f_code)
+			Result.extend ({XU_CONSTANTS}.Dir_w_code)
 
 			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_melted)
 		ensure

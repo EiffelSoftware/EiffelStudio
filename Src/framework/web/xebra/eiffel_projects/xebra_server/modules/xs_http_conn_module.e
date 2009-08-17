@@ -53,6 +53,9 @@ feature -- Inherited Features
 
 	execute
 			-- <Precursor>
+			-- Creates a socket and connects to the http server plugin.
+			-- Waits to receive a request message from the http server plugin and sends it to the appropriate webapp.
+			-- Awaits a XC_COMMAND_RESPONSE from the webapp and if it is a XCCR_HTTP_REQUEST sends it back to the http server plugin.
 		local
 			l_response: XC_COMMAND_RESPONSE
 			l_http_socket: detachable NETWORK_STREAM_SOCKET

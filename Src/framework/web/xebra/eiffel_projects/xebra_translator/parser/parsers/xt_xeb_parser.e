@@ -31,6 +31,7 @@ feature -- Initialization
 			create template.make_empty
 		ensure
 			registry_set: registry = a_registry
+			template_attached: attached template
 		end
 
 feature {NONE} -- Access
@@ -42,6 +43,8 @@ feature -- Access
 
 	template: XP_TEMPLATE
 			-- The resulting template
+
+feature -- Status Setting
 
 	deactivate_render
 			-- The current template will not be rendered
@@ -172,7 +175,8 @@ feature -- Parser error strategies
 
 	handle_xeb_tag_error (a_result: PEG_PARSER_RESULT)
 			-- `a_result': The intermediate result of the children
-			-- Handles the error for missing end tags in xebra tags
+			-- Handles the error for missing end tags in xebra tags. If there is an open tag but no corresponding
+			-- end tag, the error is handled here.
 		require
 			a_result_attached: attached a_result
 		local
@@ -188,7 +192,7 @@ feature -- Parser error strategies
 
 	handle_plain_html_error (a_result: PEG_PARSER_RESULT)
 			-- `a_result': The intermediate result of the children
-			-- Handles the error for missing end tags in regular html
+			-- Handles the error for missing end tags in regular html. Analogous to `handle_xeb_tag_error'
 		require
 			a_result_attached: attached a_result
 		local
@@ -204,7 +208,7 @@ feature -- Parser error strategies
 
 	handle_close_error (a_result: PEG_PARSER_RESULT)
 			-- `a_result': The intermediate result of the children
-			-- Tells you that here is a '>' missing
+			-- Tells you that here is a '>' missing.
 		require
 			a_result_attached: attached a_result
 		do
@@ -436,7 +440,11 @@ feature -- Basic Functionality
 
 	parse (a_string: STRING): BOOLEAN
 			-- `a_string': The string to parse
-			-- Parses a_string and generates a template
+			-- Parses a_string and generates a template.
+			-- Returns True iff the parsing process was entirely successful
+			-- If the parsing was successful, the generated template can be retrieved from
+			-- {XT_XEB_PARSER}.template. If the parsing was not successful, the template
+			-- is set to a default.
 		require
 			a_string_attached: attached a_string
 		local
@@ -478,5 +486,6 @@ feature -- Basic Functionality
 invariant
 
 	registry_attached: attached registry
+	template_attached: attached template
 
 end

@@ -48,6 +48,11 @@ namespace Xebra
         private static string HEADERS_OUT = "#HO#";
 
         /// <summary>
+        /// The key in the request message that specifies that the request is too big
+        /// </summary>
+        private static string TOO_BIG = "#PTB#";
+
+        /// <summary>
         /// The key in the request message that represents the start of the SUBPROCESS_ENVIRONMENT_VARS
         /// </summary>
         private static string SUBPROCESS_ENVIRONMENT_VARS = "#SE#";
@@ -240,8 +245,8 @@ namespace Xebra
             //Check if ContentLength does not exceed MaxUploadSize
             if (request.ContentLength > config.MaxUploadSize)
             {
-                log.Error("Error parsing uploaded file InputStream: Giving up finding filename.");
-                return false;
+                requestMsg += TOO_BIG;
+                return true;
             }
 
             /* If there are, read POST or GET parameters into message buffer */

@@ -70,8 +70,8 @@ feature  -- Basic Operations
 		do
 			create l_ex.make
 			create l_inc.make
-			l_ex.force ("EIFGENs")
-			l_ex.force (".svn")
+			l_ex.force ({XU_CONSTANTS}.Dir_eifgen)
+			l_ex.force ({XU_CONSTANTS}.Dir_svn)
 			l_inc.force ({XU_CONSTANTS}.Webapp_config_file)
 			create Result.make (1)
 			create l_f_utils

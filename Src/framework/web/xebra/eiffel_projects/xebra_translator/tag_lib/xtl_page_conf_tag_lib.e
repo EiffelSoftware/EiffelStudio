@@ -33,22 +33,22 @@ feature -- Initialization
 			make
 			id := a_id
 			create {HASH_TABLE [ARRAYED_LIST [STRING], STRING]} allowed_tags.make (5)
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "controller")
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "declare_region")
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "define_region")
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), "include")
-			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (0), "fragment")
-			if attached allowed_tags ["controller"] as l_controller then
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), Tag_controller_name)
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), Tag_declare_region_name)
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), Tag_define_region_name)
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (1), Tag_include_name)
+			allowed_tags.put (create {ARRAYED_LIST [STRING]}.make (0), Tag_fragment_name)
+			if attached allowed_tags [Tag_controller_name] as l_controller then
 				l_controller.extend ("class")
 				l_controller.extend ("create")
 			end
-			if attached allowed_tags ["declare_region"] as l_declare_region then
+			if attached allowed_tags [Tag_declare_region_name] as l_declare_region then
 				l_declare_region.extend ("id")
 			end
-			if attached allowed_tags ["define_region"] as l_allowed_tags then
+			if attached allowed_tags [Tag_define_region_name] as l_allowed_tags then
 				l_allowed_tags.extend ("id")
 			end
-			if attached allowed_tags ["include"] as l_include then
+			if attached allowed_tags [Tag_include_name] as l_include then
 				l_include.extend ("template")
 			end
 		ensure
@@ -74,22 +74,22 @@ feature -- Access
 			a_debug_information_attached: a_debug_information /= Void
 		do
 				-- If you add a tag, please update the 'make' feature
-			if a_local_part.is_equal ("controller") then
+			if a_local_part.is_equal (Tag_controller_name) then
 				create {XP_AGENT_TAG_ELEMENT} Result.make_with_additional_arguments (a_prefix, a_local_part, a_class_name, a_debug_information, agent handle_controller_attribute)
-			elseif a_local_part.is_equal ("template") then
-				if attached xeb_parser as l_xeb_parser then
-					l_xeb_parser.deactivate_render
-				end
-				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
-			elseif a_local_part.is_equal ("declare_region") then
+--			elseif a_local_part.is_equal (Tag_template_name) then
+--				if attached xeb_parser as l_xeb_parser then
+--					l_xeb_parser.deactivate_render
+--				end
+--				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
+			elseif a_local_part.is_equal (Tag_controller_name) then
 				if attached xeb_parser as l_xeb_parser then
 					l_xeb_parser.deactivate_render
 				end
 
 				create {XP_REGION_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
-			elseif a_local_part.is_equal ("include") then
+			elseif a_local_part.is_equal (Tag_include_name) then
 				create {XP_INCLUDE_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
-			elseif a_local_part.is_equal ("fragment") then
+			elseif a_local_part.is_equal (Tag_fragment_name) then
 				if attached xeb_parser as l_xeb_parser then
 					l_xeb_parser.deactivate_render
 				end
@@ -115,7 +115,7 @@ feature -- Access
 			-- the empty string is returned
 			-- Yeah, right...
 		do
-			if a_name.is_equal ("controller") then
+			if a_name.is_equal (Tag_controller_name) then
 				Result := "XTAG_XEB_CONTAINER_TAG"
 			else
 				Result := "XTAG_PAGE_NOOP_TAG"
@@ -157,6 +157,14 @@ feature -- Access
 				end
 			end
 		end
+
+feature -- Constants
+
+	Tag_controller_name: STRING = "controller"
+	Tag_declare_region_name: STRING = "declare_region"
+	Tag_define_region_name: STRING = "define_region"
+	Tag_include_name: STRING = "include"
+	Tag_fragment_name: STRING = "fragment"
 
 invariant
 	id_attached: attached id

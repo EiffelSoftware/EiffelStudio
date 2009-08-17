@@ -122,7 +122,7 @@ feature -- Basic functionality
 			l_filename := a_path.twin
 			l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
 			l_filename.extend ({XU_CONSTANTS}.servlet_gen_name)
-			l_filename.set_file_name ("servlet_gen.ecf")
+			l_filename.set_file_name ({XU_CONSTANTS}.Servlet_gen_ecf)
 			create l_util
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				l_file.put_string (servlet_gen_ecf_prefix)

@@ -1,6 +1,7 @@
 note
 	description: "[
-		{XT_XEB_PARSER}.
+		This class' responsibility is to parse xeb files. It contains the grammer definition written in PEG
+		and builds the domain model ({XP_TEMPLATE}) from a string (the xeb file).
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -19,6 +20,8 @@ create
 feature -- Initialization
 
 	make_with_registry (a_registry: XP_SERVLET_GG_REGISTRY)
+			-- `a_registry': The registry in which the template should be
+			-- stored and where the taglibs are to be found
 		require
 			a_registry_attached: attached a_registry
 		do
@@ -41,12 +44,13 @@ feature -- Access
 			-- The resulting template
 
 	deactivate_render
-			-- The current will not be rendered
+			-- The current template will not be rendered
 		do
 			template.is_template := True
 		end
 
 	put_class_name (a_class_name: STRING)
+			-- `a_class_name': The name of the class of the template
 			-- Sets the class name of the template
 		require
 			a_class_name_valid: attached a_class_name and then not a_class_name.is_empty
@@ -63,13 +67,13 @@ feature -- Access
 		do
 			template.controller_create_name := a_controller_create_name
 		ensure
-			controller_name_set: template.controller_create_name  = a_controller_create_name
+			controller_name_set: template.controller_create_name = a_controller_create_name
 		end
 
 feature {NONE} -- Implementation
 
 	xml_parser: PEG_ABSTRACT_PEG
-			-- Common XML definition. Not everything included.
+			-- Common XML definition for xebra. Not everything included.
 		local
 			xeb_file, xml, plain_html_header, xeb_tag_header, plain_html, xeb_tag, doctype,
 			namespace_identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
@@ -167,6 +171,7 @@ feature {NONE} -- Implementation
 feature -- Parser error strategies
 
 	handle_xeb_tag_error (a_result: PEG_PARSER_RESULT)
+			-- `a_result': The intermediate result of the children
 			-- Handles the error for missing end tags in xebra tags
 		require
 			a_result_attached: attached a_result
@@ -182,6 +187,7 @@ feature -- Parser error strategies
 		end
 
 	handle_plain_html_error (a_result: PEG_PARSER_RESULT)
+			-- `a_result': The intermediate result of the children
 			-- Handles the error for missing end tags in regular html
 		require
 			a_result_attached: attached a_result
@@ -197,6 +203,7 @@ feature -- Parser error strategies
 		end
 
 	handle_close_error (a_result: PEG_PARSER_RESULT)
+			-- `a_result': The intermediate result of the children
 			-- Tells you that here is a '>' missing
 		require
 			a_result_attached: attached a_result
@@ -207,6 +214,7 @@ feature -- Parser error strategies
 feature -- Parser Behaviours
 
 	build_dynamic_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- `a_result': The intermediate result of the children
 			-- Builds a dynamic attribute
 		require
 			a_result_attached: attached a_result
@@ -220,6 +228,7 @@ feature -- Parser Behaviours
 		end
 
 	build_variable_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- `a_result': The intermediate result of the children
 			-- Builds a variable attribute
 		require
 			a_result_attached: attached a_result
@@ -233,6 +242,7 @@ feature -- Parser Behaviours
 		end
 
 	build_value_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- `a_result': The intermediate result of the children
 			-- Builds a value attribute
 		require
 			a_result_attached: attached a_result
@@ -246,6 +256,7 @@ feature -- Parser Behaviours
 		end
 
 	build_plain_html (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- `a_result': The intermediate result of the children
 			-- Builds a html tag
 		require
 			a_result_attached: attached a_result
@@ -289,12 +300,12 @@ feature -- Parser Behaviours
 		end
 
 	build_xeb_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- `a_result': The intermediate result of the children
 			-- Builds a xebra tag
 		require
 			a_result_attached: attached a_result
 		local
 			l_tag: detachable XP_TAG_ELEMENT
-			l_taglib: XTL_TAG_LIBRARY
 			l_i: INTEGER
 			l_end_tag: STRING
 			l_error_messages: LIST [STRING]
@@ -302,12 +313,7 @@ feature -- Parser Behaviours
 			Result := a_result
 			if attached {STRING} a_result.internal_result.first as l_namespace then
 				if attached {STRING} a_result.internal_result [2] as l_id then
-					if registry.contains_tag_lib (l_namespace) then
-						if attached registry.retrieve_taglib (l_namespace) as ll_taglib then
-							l_taglib := ll_taglib
-						else
-							l_taglib := create {XTL_PAGE_CONF_TAG_LIB}.make_with_arguments ("page")
-						end
+					if registry.contains_tag_lib (l_namespace) and then attached registry.retrieve_taglib (l_namespace) as l_taglib then
 						if l_taglib.contains (l_id) then
 							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug (a_result.left_to_parse.debug_information, source_path))
 							from
@@ -365,6 +371,7 @@ feature -- Parser Behaviours
 		end
 
 	build_content_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- `a_result': The intermediate result of the children
 			-- Builds a content from the results
 		require
 			a_result_attached: attached a_result
@@ -382,7 +389,8 @@ feature -- Parser Behaviours
 		end
 
 	build_root_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- Concatenate final tags to root_tag
+			-- `a_result': The intermediate result of the children
+			-- Concatenates final tags to root_tag
 		require
 			a_result_attached: attached a_result
 		local
@@ -406,6 +414,7 @@ feature -- Parser Behaviours
 		end
 
 	build_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- `a_result': The intermediate result of the children
 			-- Builds an attribute tuple from the result
 		require
 			a_result_attached: attached a_result
@@ -426,6 +435,7 @@ feature -- Parser Behaviours
 feature -- Basic Functionality
 
 	parse (a_string: STRING): BOOLEAN
+			-- `a_string': The string to parse
 			-- Parses a_string and generates a template
 		require
 			a_string_attached: attached a_string

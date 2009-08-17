@@ -12,6 +12,24 @@ deferred class
 
 inherit
 	ES_OUTPUT_ANALYZER
+		redefine
+			make,
+			on_output_new_line
+		end
+
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
+feature {NONE} -- Initialization
+
+	make (a_formatter: ES_NOTIFIER_FORMATTER)
+			-- <Precursor>
+		do
+			Precursor (a_formatter)
+			error_list_preferences := preferences.error_list_tool_data
+		end
 
 feature {NONE} -- Access
 
@@ -30,12 +48,29 @@ feature {NONE} -- Access
 	is_error: BOOLEAN
 			-- Indicates if the last processed information was an error.
 
+	error_list_preferences: ES_ERROR_LIST_DATA
+			-- Error list preferences, used to
+
 feature {NONE} -- Access: Help
 
 	c_compiler_context: UUID
 			-- Event list service context id
 		once
 			create Result.make_from_string ("E1FFE1CC-D45B-4A56-87C5-B64535BAFE1B")
+		end
+
+feature {NONE} -- Status report
+
+	is_reporting_c_errors: BOOLEAN
+			-- Indicates if C compiler errors are reported.
+		do
+			Result := error_list_preferences.report_c_compiler_errors
+		end
+
+	is_reporting_c_warnings: BOOLEAN
+			-- Indicates if C compiler warnings (and errors) are reported.
+		do
+			Result := error_list_preferences.report_c_compiler_errors_and_warnings
 		end
 
 feature {NONE} -- Helpers
@@ -62,9 +97,10 @@ feature {NONE} -- Basic operations
 			-- Process the last error information.
 		require
 			is_interface_usable: is_interface_usable
+			is_reporting_c_errors: is_reporting_c_errors
 		local
-			l_error: C_COMPILER_ERROR
-			l_item: EVENT_LIST_ERROR_ITEM_I
+			l_error: detachable C_COMPILER_ERROR
+			l_item: detachable EVENT_LIST_ERROR_ITEM_I
 		do
 			if
 				event_list.is_service_available and then
@@ -79,20 +115,24 @@ feature {NONE} -- Basic operations
 					l_error := new_c_compiler_error (l_message, l_file_name, line_number)
 					create {EVENT_LIST_ERROR_ITEM} l_item.make ({ENVIRONMENT_CATEGORIES}.compilation, l_message, l_error)
 				else
-					l_error := new_c_compiler_warning (l_message, l_file_name, line_number)
-					create {EVENT_LIST_WARNING_ITEM} l_item.make ({ENVIRONMENT_CATEGORIES}.compilation, l_message, l_error)
+					if is_reporting_c_warnings then
+						l_error := new_c_compiler_warning (l_message, l_file_name, line_number)
+						create {EVENT_LIST_WARNING_ITEM} l_item.make ({ENVIRONMENT_CATEGORIES}.compilation, l_message, l_error)
+					end
 				end
 
 					-- Push to the event list service.
-				if
-					attached function_name as l_fname and then
-					attached function_mapper.feature_from_function_name (l_fname) as l_feature
-				then
-						-- Set an associated Eiffel feature.
-					l_error.associated_feature := l_feature
-				end
+				if attached l_error and attached l_item then
+					if
+						attached function_name as l_fname and then
+						attached function_mapper.feature_from_function_name (l_fname) as l_feature
+					then
+							-- Set an associated Eiffel feature.
+						l_error.associated_feature := l_feature
+					end
 
-				event_list.service.put_event_item (c_compiler_context, l_item)
+					event_list.service.put_event_item (c_compiler_context, l_item)
+				end
 			end
 
 				-- Reset internals
@@ -107,6 +147,18 @@ feature {NONE} -- Basic operations
 			function_name_detached: not attached function_name
 			line_number_reset: line_number = 0
 			not_is_error: not is_error
+		end
+
+feature {NONE} -- Action handlers
+
+	on_output_new_line (a_formatter: ES_NOTIFIER_FORMATTER; a_lines: NATURAL_32)
+			-- <Precursor>
+		do
+			if is_reporting_c_errors then
+				Precursor (a_formatter, a_lines)
+			else
+				position := a_formatter.string.count
+			end
 		end
 
 feature {NONE} -- Factory
@@ -164,6 +216,9 @@ feature {NONE} -- Access: Regular expressions
 			result_attached: attached Result
 			result_is_compiled: Result.is_compiled
 		end
+
+invariant
+	error_list_preferences_attached: attached error_list_preferences
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

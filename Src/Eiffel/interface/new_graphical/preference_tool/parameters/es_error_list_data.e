@@ -32,13 +32,27 @@ feature -- Value
 			Result := expand_errors_preferences.value
 		end
 
-feature {ES_ERROR_LIST_TOOL_PANEL} -- Preference
+	report_c_compiler_errors: BOOLEAN
+			-- Level to report C compilation errors.
+		do
+			Result := report_c_compiler_errors_preference.selected_index > 1
+		end
+
+	report_c_compiler_errors_and_warnings: BOOLEAN
+			-- Level to report C compilation errors and warnings
+		do
+			Result := report_c_compiler_errors_preference.selected_index > 2
+		end
+
+feature {ES_ERROR_LIST_TOOL_PANEL, EB_SHARED_PREFERENCES} -- Preference
 
 	expand_errors_preferences: BOOLEAN_PREFERENCE
+	report_c_compiler_errors_preference: ARRAY_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
 	expand_errors_string: STRING = "tools.error_list.expand_errors"
+	report_c_compiler_errors_string: STRING = "tools.error_list.report_c_compiler_errors"
 
 feature {NONE} -- Implementation
 
@@ -49,17 +63,21 @@ feature {NONE} -- Implementation
 		do
 			create l_manager.make (preferences, "tools.tools.error_list")
 			expand_errors_preferences := l_manager.new_boolean_preference_value (l_manager, expand_errors_string, False)
+
+			report_c_compiler_errors_preference := l_manager.new_array_preference_value (l_manager, report_c_compiler_errors_string, <<"none", "errors", "errors_and_warnings">>)
+			report_c_compiler_errors_preference.set_is_choice (True)
 		end
 
 	preferences: PREFERENCES
 			-- Preferences
 
 invariant
-	preferences_not_void: preferences /= Void
-	expand_errors_preference_attached: expand_errors_preferences /= Void
+	preferences_not_void: attached preferences
+	expand_errors_preference_attached: attached expand_errors_preferences
+	report_c_compiler_errors_preference_attached: attached report_c_compiler_errors_preference
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -72,22 +90,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

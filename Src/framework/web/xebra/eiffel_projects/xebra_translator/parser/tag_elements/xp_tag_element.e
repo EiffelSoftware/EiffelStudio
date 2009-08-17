@@ -25,8 +25,8 @@ feature -- Initialization
 	make (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING)
 			-- `a_namespace': The namespace of the the tag
 			-- `a_id': The id of the the tag
-			-- `a_debug_information': Debug information for the backtrack to the original file
 			-- `a_class_name': The name of the corresponding TAG-class
+			-- `a_debug_information': Debug information for the backtrack to the original file
 		require
 			a_namespace_attached: a_namespace /= Void
 			a_id_attached: a_id /= Void
@@ -42,11 +42,29 @@ feature -- Initialization
 			create {ARRAYED_LIST [XP_TAG_ELEMENT]} children.make (3)
 			create {HASH_TABLE [XP_TAG_ARGUMENT, STRING]} parameters.make (3)
 			debug_information := a_debug_information
+		ensure
+			controller_id_attached: controller_id /= Void
+			debug_information_attached: debug_information /= Void
+			class_name_attached: class_name /= Void
+			parameters_attached: parameters /= Void
+			children_attached: attached children
+			id_attached: attached id
+			namespace_attached: attached namespace
 		end
 
 	make_empty
+			-- Creates a new empty {XP_TAG_ELEMENT} with
+			-- default values (namespace, id, class_name, debug_info)
 		do
 			make ("namespace", "id", "class_name", "debug_info")
+		ensure
+			controller_id_attached: controller_id /= Void
+			debug_information_attached: debug_information /= Void
+			class_name_attached: class_name /= Void
+			parameters_attached: parameters /= Void
+			children_attached: attached children
+			id_attached: attached id
+			namespace_attached: attached namespace
 		end
 
 feature -- Access
@@ -62,13 +80,6 @@ feature -- Access
 
 	controller_id: STRING assign set_controller_id
 			-- The id of the controller which should be used
-
-	set_controller_id (a_id: STRING)
-		require
-			a_id_attached: a_id /= Void
-		do
-			controller_id := a_id
-		end
 
 	retrieve_value (a_id: STRING): detachable XP_TAG_ARGUMENT
 			-- Retrieves the value of the parameter with the the id `a_id'
@@ -89,12 +100,6 @@ feature -- Access
 	date: INTEGER assign set_date
 			-- The timestamp of the corresponding file
 
-	set_date (a_date: INTEGER)
-			-- Sets the date.
-		do
-			date := a_date
-		end
-
 	namespace: STRING
 			-- The namespace (tag library) of the tag
 
@@ -112,38 +117,23 @@ feature -- Access
 			Result := attached parameters [a_name]
 		end
 
-feature --Basic Implementation
+feature -- Status setting
 
-	put_subtag (a_child: XP_TAG_ELEMENT)
-			-- Adds a tag to the list of children.
-		require
-			a_child_attached: a_child /= Void
+	set_date (a_date: INTEGER)
+			-- Sets the date.
 		do
-			children.extend (a_child)
+			date := a_date
 		ensure
-			child_has_been_added: old children.count + 1 = children.count
+			date_set: date = a_date
 		end
 
-	put_attribute (a_local_part: STRING; a_value: XP_TAG_ARGUMENT)
-			-- Sets the attribute of this tag.
+	set_controller_id (a_id: STRING)
 		require
-			a_local_part_attached: a_local_part /= Void
-			local_part_is_not_empty: not a_local_part.is_empty
+			a_id_attached: a_id /= Void
 		do
-			parameters.extend (a_value, a_local_part)
+			controller_id := a_id
 		ensure
-			attribute_has_been_added: old parameters.count + 1 = parameters.count
-		end
-
-	build_tag_tree (
-				a_feature: XEL_FEATURE_ELEMENT;
-				root_template: XGEN_SERVLET_GENERATOR_GENERATOR)
-			-- Adds the needed expressions which build the tree of Current with the correct classes
-		require
-			a_feature_valid: attached a_feature
-			root_template_valid: attached root_template
-		do
-			internal_build_tag_tree (a_feature, root_template, True)
+			controller_id_set: controller_id = a_id
 		end
 
 	set_parameters (a_parameters: HASH_TABLE [XP_TAG_ARGUMENT, STRING])
@@ -167,6 +157,44 @@ feature --Basic Implementation
 			children.extend (a_child)
 		ensure
 			not_more_than_one_child: children.count = 1
+		end
+
+feature --Basic Implementation
+
+	put_subtag (a_child: XP_TAG_ELEMENT)
+			-- Adds a tag to the list of children.
+		require
+			a_child_attached: a_child /= Void
+		do
+			children.extend (a_child)
+		ensure
+			child_has_been_added: old children.count + 1 = children.count
+		end
+
+	put_attribute (a_id: STRING; a_value: XP_TAG_ARGUMENT)
+			-- `a_id': The name of the attribute
+			-- `a_value': The value of the attribute
+			-- Sets the attribute of this tag.
+		require
+			a_id_attached: a_id /= Void
+			local_part_is_not_empty: not a_id.is_empty
+		do
+			parameters.extend (a_value, a_id)
+		ensure
+			attribute_has_been_added: old parameters.count + 1 = parameters.count
+		end
+
+	build_tag_tree (
+				a_feature: XEL_FEATURE_ELEMENT;
+				root_template: XGEN_SERVLET_GENERATOR_GENERATOR)
+			-- `a_feature': The featureto which the tag tree building should be written to
+			-- `root_template': The template which contains the tag data (root_tag, etc.)
+			-- Adds the needed expressions which build the tree of Current with the correct classes
+		require
+			a_feature_valid: attached a_feature
+			root_template_valid: attached root_template
+		do
+			internal_build_tag_tree (a_feature, root_template, True)
 		end
 
 	copy_tag_tree: XP_TAG_ELEMENT
@@ -195,6 +223,7 @@ feature --Basic Implementation
 		end
 
 	copy_self: XP_TAG_ELEMENT
+			-- Makes a copy of itself
 		do
 			create Result.make (namespace, id, class_name, debug_information)
 		ensure
@@ -211,6 +240,7 @@ feature --Basic Implementation
 		end
 
 	accept_children (a_visitor: XP_TAG_ELEMENT_VISITOR)
+			-- Part of the visitor pattern.
 		require
 			a_visitor_attached: a_visitor /= Void
 		local
@@ -251,17 +281,20 @@ feature {XP_TAG_ELEMENT} -- Implementation
 
 	internal_build_tag_tree (
 					a_feature: XEL_FEATURE_ELEMENT;
-					root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
-					is_root: BOOLEAN)
-				-- Adds the needed expressions which build the tree of Current with the correct classes
+					a_root_template: XGEN_SERVLET_GENERATOR_GENERATOR;
+					a_is_root: BOOLEAN)
+				-- `a_feature': The feature on which the tag tree code should be written
+				-- `a_root_template': The root template which provides the data for the tag tree building
+				-- `a_is_root': Is the tag the root tag?
+				-- Adds the needed expressions which build the tree of Current with the correct classes (recursively)
 		require
-			root_template_attached: root_template /= Void
+			root_template_attached: a_root_template /= Void
 			a_feature_attached: a_feature /= Void
 		do
 			a_feature.append_comment (debug_information)
 			a_feature.append_expression ("create {" + class_name + "} temp.make")
 			a_feature.append_expression ("temp.debug_information := %"" + debug_information + "%"" )
-			if is_root then
+			if a_is_root then
 				a_feature.append_expression ("root_tag := temp")
 			else
 				a_feature.append_expression ("stack.item.add_to_body (temp)")
@@ -279,7 +312,7 @@ feature {XP_TAG_ELEMENT} -- Implementation
 				until
 					children.after
 				loop
-					children.item.internal_build_tag_tree (a_feature, root_template, False)
+					children.item.internal_build_tag_tree (a_feature, a_root_template, False)
 					children.forth
 				end
 				a_feature.append_expression ("stack.remove")
@@ -322,10 +355,15 @@ feature {XP_TAG_ELEMENT} -- Implementation
 		end
 
 invariant
+
 	controller_id_attached: controller_id /= Void
 	debug_information_attached: debug_information /= Void
 	class_name_attached: class_name /= Void
 	parameters_attached: parameters /= Void
+	children_attached: attached children
+	id_attached: attached id
+	namespace_attached: attached namespace
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

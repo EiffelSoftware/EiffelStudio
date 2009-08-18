@@ -1,0 +1,11 @@
+
+test_name 	precompilation-task-failure
+test_description A precompilation task that fails when success is required causes the compiler to correctly report the error but compilation completes instead of pausing
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error NONE VD84
+
+test_end

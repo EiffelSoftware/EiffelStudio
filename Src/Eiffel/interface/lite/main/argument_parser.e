@@ -208,7 +208,7 @@ feature {NONE} -- Usage
 	version: attached STRING
 			-- Version number of application
 		once
-			Result := "6.4.0"
+			Result := "6.5.0"
 		end
 
 	non_switched_argument_name: attached STRING_8

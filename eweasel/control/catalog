@@ -474,6 +474,7 @@ test	missing-vhpr-with-different-generic-derivation	valid255 tcf pass validity
 test	wrong-vdpr-errors			valid256 tcf pass validity
 test	wrong-manifest-array-attached-type	valid257 tcf pass validity
 test	select-stable-attribute		valid258 tcf pass validity
+test	precompilation-task-failure		valid259 tcf fail validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

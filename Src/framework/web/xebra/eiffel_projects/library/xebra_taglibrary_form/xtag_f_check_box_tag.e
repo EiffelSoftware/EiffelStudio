@@ -25,17 +25,17 @@ feature -- Initialization
 	make
 		do
 			Precursor
-			create {XTAG_TAG_VALUE_ARGUMENT} text.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} label.make_default
 			create {XTAG_TAG_VALUE_ARGUMENT} is_checked.make ("False")
 		ensure then
-			text_attached: attached text
+			label_attached: attached label
 			is_checked_attached: attached is_checked
 		end
 
 feature {NONE} -- Access
 
-	text: XTAG_TAG_ARGUMENT
-			-- The text displayed near the checkbox
+	label: XTAG_TAG_ARGUMENT
+			-- The label displayed near the checkbox
 	
 	is_checked: XTAG_TAG_ARGUMENT
 			-- Is the checkbox checked?
@@ -46,8 +46,8 @@ feature -- Implementation
 			-- <Precusor>
 		do
 			Precursor (a_id, a_attribute)
-			if a_id.is_equal ("text") then
-				text := a_attribute
+			if a_id.is_equal ("label") then
+				label := a_attribute
 			end
 			if a_id.is_equal ("checked") then
 				is_checked := a_attribute
@@ -63,10 +63,11 @@ feature -- Implementation
 				l_checked := "checked=%%%"checked%%%""
 			else
 				l_checked := ""
-			end			
+			end
+			a_servlet_class.render_html_page.append_expression (response_variable_append
+				+ "(%"<label for=%%%"" + a_name + "%%%">" + label.value (current_controller_id) + "</label>%")")
 			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<input type=%%%"checkbox%%%"" +
 				"name=%%%"a_name%%%"" + l_checked + "/>%")")
-			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"" +text.value (current_controller_id) + "%")")
 		end
 		
 	transform_to_correct_type (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_name, a_argument_name: STRING): STRING

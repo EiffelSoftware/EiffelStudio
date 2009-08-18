@@ -50,7 +50,7 @@ feature -- Access
 				children.after
 			loop
 				l_child := children.item
-				if l_child.id.is_equal ("define_region") then
+				if l_child.id.is_equal ({XTL_PAGE_CONF_TAG_LIB}.tag_define_region_name) then
 						-- We have found a region so we can put the tag tree at the appropriate position
 					if attached l_child.retrieve_value ("id") as l_id then
 						l_region [l_id.value] := l_child.children

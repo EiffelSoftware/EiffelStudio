@@ -45,6 +45,9 @@ feature {NONE} -- Access
 
 	internal_drop_down_objects: STRING
 			-- Stores the name of the hashmap (for the items) in the generated class
+		
+	label: detachable XTAG_TAG_ARGUMENT
+			-- An optional label
 
 feature -- Implementation
 
@@ -61,6 +64,9 @@ feature -- Implementation
 			if a_id.is_equal ("type") then
 				type := a_attribute
 			end
+			if a_id.is_equal ("label") then
+				label := a_attribute
+			end
 		end
 
 	html_representation (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING)
@@ -69,6 +75,11 @@ feature -- Implementation
 			l_items_name, l_list_value, l_option_value: STRING
 			l_drop_down_objects: STRING
 		do
+			if attached label as l_label then
+				a_servlet_class.render_html_page.append_expression (response_variable_append + 
+				"(%"<label for=%%%"" + a_name + "%%%">" + label.value (current_controller_id) +
+				"</label>%")")
+			end
 			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<select selectedIndex=%%%"" + selected_index.value (current_controller_id) + "%%%" name=%%%"" + a_name + "%%%">%")")
 			l_drop_down_objects := a_servlet_class.new_variable ("HASH_TABLE [" + type.value (current_controller_id) + " , STRING]")
 			a_servlet_class.make_feature.append_expression ("create " + l_drop_down_objects + ".make (5)")

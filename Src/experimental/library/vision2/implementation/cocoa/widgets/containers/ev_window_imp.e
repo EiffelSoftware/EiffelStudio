@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			-- and the status bar.
 			-- The `hbox' will contain the child of the window.
 		do
-			cocoa_make (create {NS_RECT}.make_rect (100, 100, 100, 100),
+			cocoa_make (new_window_position,
 				{NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask, True)
 			make_key_and_order_front
 			order_out
@@ -98,6 +98,18 @@ feature {NONE} -- Initialization
 			internal_is_border_enabled := True
 			user_can_resize := True
 			set_is_initialized (True)
+		end
+
+	new_window_position: NS_RECT
+		do
+			last_window_position.set_x (last_window_position.x + 20)
+			last_window_position.set_y (last_window_position.y - 20)
+			create Result.make_rect (last_window_position.x, last_window_position.y - 100, 100, 100)
+		end
+
+	last_window_position: NS_POINT
+		once
+			create Result.make_point (100, zero_screen.frame.size.height - 100)
 		end
 
  	init_bars
@@ -180,7 +192,16 @@ feature {EV_ANY_I} -- Implementation
 			-- Show `Current' with respect to `a_parent'.
 		do
 			show
+			is_relative := True
+			blocking_window := a_parent
 		end
+
+	is_relative: BOOLEAN
+			-- Is `Current' shown relative to another window?
+
+	blocking_window: detachable EV_WINDOW
+			-- `Result' is window `Current' is shown to if
+			-- `is_modal' or `is_relative'.
 
 feature -- Measurement
 
@@ -494,7 +515,7 @@ feature -- Status setting
 			-- Unmap the Window from the screen.
 		do
 			order_out
-			--is_show_requested := False
+			is_show_requested := False
 		end
 
 feature -- Element change

@@ -46,12 +46,13 @@ inherit
 	NS_VIEW
 		rename
 			make as make_cocoa,
-			make_custom as make_custom_cocoa,
+			make_with_drawing as make_with_drawing_cocoa,
 			initialize as initialize_cocoa,
 			copy as copy_cocoa
 		redefine
 			dispose,
-			mouse_down
+			mouse_down,
+			draw_rect
 		end
 
 create
@@ -63,7 +64,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		do
 			Precursor {EV_DRAWABLE_IMP}
-			make_custom_cocoa (agent cocoa_draw_rect)
+			make_with_drawing_cocoa
 			cocoa_view := current
 			Precursor {EV_PRIMITIVE_IMP}
 			initialize_events
@@ -128,8 +129,6 @@ feature -- Status setting
 			else
 				unlock_focus
 			end
-			-- update the view
-			update_if_needed
 		end
 
 feature {NONE} -- Implementation
@@ -156,24 +155,20 @@ feature {NONE} -- Implementation
 
 	update_if_needed
 		do
-			set_needs_display (True)
+--			set_needs_display (True) -- Not necessaey -> Will send a redraw event right again
 		end
 
-	cocoa_draw_rect
+	draw_rect (a_dirty_rect: NS_RECT)
 			-- Draw callback
-		local
-			invalid_rect: NS_RECT
 		do
-			create invalid_rect.make_rect (0, 0, width, height)
-
 --			image.draw (create {NS_POINT}.make_point (0, 0), create {NS_RECT}.make_rect (0, 0, 1000, 1000), {NS_IMAGE}.composite_source_over, 1.0)
 
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([
-					invalid_rect.origin.x,
-					invalid_rect.origin.y,
-					invalid_rect.size.width,
-					invalid_rect.size.height
+					a_dirty_rect.origin.x,
+					a_dirty_rect.origin.y,
+					a_dirty_rect.size.width,
+					a_dirty_rect.size.height
 					])
 			end
 		end

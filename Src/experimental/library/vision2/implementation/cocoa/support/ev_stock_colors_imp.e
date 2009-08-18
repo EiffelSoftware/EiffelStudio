@@ -18,7 +18,7 @@ feature --
 		local
 			l_color: NS_COLOR
 		do
-			create l_color.control_background_color
+			create l_color.light_gray_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
 			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
@@ -69,7 +69,7 @@ feature --
 		local
 			l_color: NS_COLOR
 		do
-			create l_color.control_background_color
+			create l_color.control_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
 			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
@@ -79,7 +79,7 @@ feature --
 		local
 			l_color: NS_COLOR
 		do
-			create l_color.control_background_color
+			create l_color.control_text_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
 			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
@@ -87,4 +87,3 @@ feature --
 note
 	copyright: "Copyright (c) 2009, Daniel Furrer"
 end -- class EV_STOCK_COLORS_IMP
-

@@ -222,13 +222,13 @@ feature -- Clearing operations
 			path: NS_BEZIER_PATH
 			color: detachable EV_COLOR_IMP
 		do
-			image.lock_focus
+			prepare_drawing
 			color ?= background_color.implementation
 			check color /= void end
 			color.color.set
 			create path.make_with_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
 			path.fill
-			image.unlock_focus
+			finish_drawing
 		end
 
 feature -- Drawing operations
@@ -347,10 +347,17 @@ feature -- Drawing operations
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
 			y_cocoa: INTEGER
+			source_rect, destination_rect: NS_RECT
+			trans: NS_AFFINE_TRANSFORM
 		do
-			prepare_drawing
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= Void end
+--			create trans.make
+--			trans.translate_by_xy (0.0, pixmap_imp.image.size.height)
+--			trans.scale_by_xy (1.0, -1.0)
+--			trans.concat
+
+			prepare_drawing
 
 --			if is_flipped then
 				y_cocoa := y
@@ -358,10 +365,14 @@ feature -- Drawing operations
 --				y_cocoa := height - y - a_pixmap.height
 --			end
 
-			pixmap_imp.image.draw_in_rect (
-				create {NS_RECT}.make_rect (x, y_cocoa, a_pixmap.height, a_pixmap.width),
-				create {NS_RECT}.make_rect (0, 0, a_pixmap.width, a_pixmap.height),
-				{NS_IMAGE}.composite_source_over, 1)
+			io.output.put_string ("flipped: " + pixmap_imp.image.is_flipped.out + "%N")
+
+			pixmap_imp.image.set_flipped (True)
+
+			destination_rect := create {NS_RECT}.make_rect (x, y_cocoa, a_pixmap.height, a_pixmap.width)
+			source_rect := create {NS_RECT}.make_rect (0, 0, a_pixmap.width, a_pixmap.height)
+--			pixmap_imp.image.draw_in_rect (destination_rect, source_rect, {NS_IMAGE}.composite_source_over, 1) -- did not work correctly for SD_NOTEBOOK_TAB_DRAWER_I.end_draw
+			pixmap_imp.image.draw_at_point (create {NS_POINT}.make_point (x, y), source_rect, {NS_IMAGE}.composite_source_over, 1)
 			finish_drawing
 		end
 

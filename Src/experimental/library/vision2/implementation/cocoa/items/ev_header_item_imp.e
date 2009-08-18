@@ -44,6 +44,7 @@ feature -- Initialization
 			-- Initialize the header item.
 		do
 			create table_column.make
+			table_column.set_min_width (0.0)
 			align_text_left
 			set_width (80)
 			set_text ("")
@@ -99,6 +100,7 @@ feature -- Status setting
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimum_width', resize.
 		do
+			table_column.set_min_width (a_minimum_width)
 			minimum_width := a_minimum_width
 			if width < minimum_width then
 				set_width (minimum_width)
@@ -109,6 +111,7 @@ feature -- Status setting
 			-- Assign `a_maximum_width' in pixels to `maximum_width'.
 			-- If `width' is greater than `a_maximum_width', resize.
 		do
+			table_column.set_max_width (a_maximum_width)
 			maximum_width := a_maximum_width
 			if width > maximum_width then
 				set_width (maximum_width)
@@ -119,16 +122,18 @@ feature -- Status setting
 			-- Assign `a_width' to `width'.
 		do
 			table_column.set_width (a_width)
+			--width := a_width
 		end
 
 	width: INTEGER
 		do
+			-- Test: Does not work because cocoa seems to enforce a minimum with of 10
 			Result := table_column.width.floor
 		end
 
 	height: INTEGER
 		do
-			Result := 10
+			Result := 18
 		end
 
 	screen_x: INTEGER

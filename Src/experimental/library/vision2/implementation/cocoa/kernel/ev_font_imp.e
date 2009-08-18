@@ -127,7 +127,7 @@ feature -- Status report
 			-- The OS X font name may be ...-Bold, but we're just interested in the first part.
 			i := Result.index_of ('-', 1)
 			if i /= 0 then
-				Result.keep_head (i)
+				Result.keep_head (i - 1)
 			end
 		end
 

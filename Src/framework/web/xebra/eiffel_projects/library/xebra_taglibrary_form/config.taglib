@@ -13,6 +13,7 @@
 		<attribute id="type" optional="True"/>
 		<attribute id="value"/>
 		<attribute id="name"/>
+		<attribute id="label" optional="True" />
 		<attribute id="text" />
 		<attribute id="max_length" optional="True"/>
 		<attribute id="size" optional="True"/>
@@ -43,16 +44,18 @@
 		<attribute id="items" />
 		<attribute id="name"/>
 		<attribute id="value"/>
+		<attribute id="label" optional="True" />
 		<attribute id="selected_index" optional="True"/>
 	</tag>
 	<tag id="check_box" class="XTAG_F_CHECK_BOX_TAG">
 		<attribute id="value"/>
-		<attribute id="text"/>
+		<attribute id="label"/>
 		<attribute id="name"/>
 	</tag>
 		<tag id="calendar" class="XTAG_F_CALENDAR_TAG">
 		<attribute id="value"/>
 		<attribute id="name" />
 		<attribute id="date" />
+		<attribute id="label" optional="True" />
 	</tag>	
 </taglib>

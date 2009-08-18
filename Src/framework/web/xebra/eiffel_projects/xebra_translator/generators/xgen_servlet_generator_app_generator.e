@@ -180,14 +180,17 @@ feature {NONE} -- Implementation
 				l_creation_expression := "(create {"
 					+ Generator_Prefix.as_upper + l_servlet_gg.servlet_name.as_upper + Servlet_generator_suffix + "}.";
 				if l_servlet_gg.is_xrpc then
-					l_creation_expression := l_creation_expression + "make_xrpc"
+					l_creation_expression := l_creation_expression + "make_xrpc" + " ("
+					+ "l_path, %"" + l_servlet_gg.servlet_name + "%", l_controller_table, %""
+				    + "./" + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%","
+				    + "l_const_class, " + l_servlet_gg.controller_table.linear_representation.first.out + ")).generate;"
 				else
-					l_creation_expression := l_creation_expression + "make"
-				end
-				l_creation_expression := l_creation_expression + " ("
+					l_creation_expression := l_creation_expression + "make" + " ("
 					+ "l_path, %"" + l_servlet_gg.servlet_name + "%", l_controller_table, %""
 				    + "./" + Generator_Prefix.as_lower + l_servlet_gg.servlet_name + "_servlet_generator.e%","
 				    + "l_const_class)).generate;"
+				end
+
 				Result.append_expression (l_creation_expression)
 
 				servlet_generator_generators.forth

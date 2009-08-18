@@ -49,6 +49,9 @@ feature -- Access
 
 	input_type: XTAG_TAG_ARGUMENT
 			-- The type of the input (input, password, etc.)
+			
+	label: detachable XTAG_TAG_ARGUMENT
+			-- An optional label for the input
 
 feature -- Implementation
 
@@ -68,6 +71,9 @@ feature -- Implementation
 			if a_id.is_equal ("type") then
 				input_type := a_attribute
 			end
+			if a_id.is_equal ("label") then
+				label := a_attribute
+			end
 		end
 
 	html_representation (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_name: STRING)
@@ -75,6 +81,12 @@ feature -- Implementation
 		local
 			l_max_length: STRING
 		do
+			if attached label as l_label then
+				a_servlet_class.render_html_page.append_expression (response_variable_append +
+				"(%"<label for=%%%"" + a_name + "%%%">" + l_label.value (current_controller_id) +
+				"</label>%")")
+			end
+		
 			if attached max_length as ll_max_length then
 				l_max_length := "maxLength=%%%"" + ll_max_length.value (current_controller_id) + "%%%""
 			else

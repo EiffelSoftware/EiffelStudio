@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			test_from_c
 			test_from_c_substring
 			test_fuzzy_index
+			test_grow
 			test_has
 			test_has_substring
 			test_index_of
@@ -178,7 +179,7 @@ feature {NONE} -- Implementation
 			s.append_boolean (True)
 			check_equality ("append_boolean", s, "True")
 			
-			s.clear_all
+			s.wipe_out
 			s.append_boolean (False)
 			check_equality ("append_boolean", s, "False")
 		end
@@ -292,18 +293,18 @@ feature {NONE} -- Implementation
 			s.center_justify
 			check_equality ("center_justify", s, "    1234567890   ")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("  1234567890     ")
 			s.center_justify
 			check_equality ("center_justify", s, "    1234567890   ")
 			
-			s.clear_all
+			s.wipe_out
 			s.append ("     1234567890  ")
 			s.append ("  1234567890     ")
 			s.center_justify
 			check_equality ("center_justify", s, "     1234567890    1234567890     ")
 			
-			s.clear_all
+			s.wipe_out
 			s.append ("123456")
 			s.center_justify
 			check_equality ("center_justify", s, "123456")
@@ -382,7 +383,7 @@ feature {NONE} -- Implementation
 			s.fill_blank
 			check_equality ("fill_blank", s, "          ")
 			
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.fill_blank
 			check_equality ("fill_blank", s, "          ")
@@ -396,7 +397,7 @@ feature {NONE} -- Implementation
 			s.fill_character ('1')
 			check_equality ("fill_character", s, "1111111111")
 			
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.fill_character ('1')
 			check_equality ("fill_character", s, "1111111111")
@@ -410,7 +411,7 @@ feature {NONE} -- Implementation
 			s.fill_with ('1')
 			check_equality ("fill_with", s, "")
 			
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.fill_with ('1')
 			check_equality ("fill_with", s, "11111")
@@ -480,7 +481,25 @@ feature {NONE} -- Implementation
 			i := s.fuzzy_index ("Enterprise", 1, 0)
 			check_equality ("fuzzy_index", i, 17)
 		end
-		
+
+	test_grow is
+		local
+			s: STRING_8
+		do
+			s := ""
+			s.grow (0)
+			check_equality ("grow", s, "")
+			s.grow (5)
+			check_equality ("grow", s, "")
+			s := "12345"
+			s.grow (0)
+			check_equality ("grow", s, "12345")
+			s.grow (5)
+			check_equality ("grow", s, "12345")
+			s.grow (10)
+			check_equality ("grow", s, "12345")
+		end
+
 	test_has is
 		local
 			s: STRING_8
@@ -493,7 +512,7 @@ feature {NONE} -- Implementation
 			check_boolean ("has", s.has ('c'))
 			check_boolean ("has", not s.has ('9'))
 			
-			s.clear_all
+			s.wipe_out
 			check_boolean ("has", not s.has ('c'))
 			check_boolean ("has", not s.has ('9'))
 		end
@@ -547,27 +566,27 @@ feature {NONE} -- Implementation
 			s.insert_character ('c', 1)
 			check_equality ("insert_character", s, "c12345")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_character ('c', 2)
 			check_equality ("insert_character", s, "1c2345")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_character ('c', 3)
 			check_equality ("insert_character", s, "12c345")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_character ('c', 4)
 			check_equality ("insert_character", s, "123c45")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_character ('c', 5)
 			check_equality ("insert_character", s, "1234c5")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_character ('c', 6)
 			check_equality ("insert_character", s, "12345c")
@@ -582,27 +601,27 @@ feature {NONE} -- Implementation
 			s.insert_string (s, 1)
 			check_equality ("insert_string", s, "1234512345")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (s, 2)
 			check_equality ("insert_string", s, "1123452345")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (s, 3)
 			check_equality ("insert_string", s, "1212345345")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (s, 4)
 			check_equality ("insert_string", s, "1231234545")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (s, 5)
 			check_equality ("insert_string", s, "1234123455")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (s, 6)
 			check_equality ("insert_string", s, "1234512345")
@@ -613,27 +632,27 @@ feature {NONE} -- Implementation
 			s.insert_string (t, 1)
 			check_equality ("insert_string", s, "1234512345")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (t, 2)
 			check_equality ("insert_string", s, "1123452345")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (t, 3)
 			check_equality ("insert_string", s, "1212345345")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (t, 4)
 			check_equality ("insert_string", s, "1231234545")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (t, 5)
 			check_equality ("insert_string", s, "1234123455")
 
-			s.clear_all
+			s.wipe_out
 			s.append ("12345")
 			s.insert_string (t, 6)
 			check_equality ("insert_string", s, "1234512345")
@@ -753,7 +772,7 @@ feature {NONE} -- Implementation
 			s.append ("Fds")
 			check_boolean ("is_empty", not s.is_empty)
 
-			s.clear_all
+			s.wipe_out
 			check_boolean ("is_empty", s.is_empty)
 
 			check_boolean ("is_empty", ("").is_empty)
@@ -1880,8 +1899,6 @@ feature {NONE} -- Implementation
 			s.resize (5)
 			check_equality ("resize", s, "")
 			s := "12345"
-			s.resize (0)
-			check_equality ("resize", s, "12345")
 			s.resize (5)
 			check_equality ("resize", s, "12345")
 			s.resize (10)

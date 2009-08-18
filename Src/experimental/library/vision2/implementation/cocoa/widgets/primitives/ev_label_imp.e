@@ -19,7 +19,8 @@ inherit
 			interface,
 			make,
 			set_default_minimum_size,
-			set_background_color
+			set_background_color,
+			set_foreground_color
 		end
 
 	EV_TEXTABLE_IMP
@@ -105,6 +106,16 @@ feature -- Status setting
 			Precursor {EV_PRIMITIVE_IMP} (a_color)
 			create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, 1.0)
 			text_field.set_background_color (color)
+		end
+
+	set_foreground_color (a_color: EV_COLOR)
+			-- <Precursor>
+		local
+			color: NS_COLOR
+		do
+			Precursor {EV_PRIMITIVE_IMP} (a_color)
+			create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, 1.0)
+			text_field.set_text_color (color)
 		end
 
 	set_font (a_font: EV_FONT)

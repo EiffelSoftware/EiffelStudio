@@ -271,9 +271,10 @@ feature -- Thread Handling.
 	lock
 			-- Lock the Mutex.
 		do
-			if idle_action_mutex /= Void then
-				idle_action_mutex.lock
-			end
+--			if attached idle_action_mutex then
+--				idle_action_mutex.lock
+--			end
+-- DEADLOCK in TEXT_PANEL.update_scroll_agent because the agent is an idle action (lock acquired before execution) and calls remove_idle_action which tries to acquire the lock again
 		end
 
 	try_lock: BOOLEAN

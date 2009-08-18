@@ -1,5 +1,5 @@
 note
-	description: "Objects that creates a window that lets the user inspect the vision layout of current application"
+	description: "Lets the user inspect the vision2 widget layout of the current application"
 	author: "Daniel Furrer"
 	date: "$Date$"
 	revision: "$Revision$"

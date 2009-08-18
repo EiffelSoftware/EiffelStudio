@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 		do
 			allow_resize
 			Precursor {EV_TITLED_WINDOW_IMP}
+			is_show_requested := False
 		end
 
 feature -- Status Report
@@ -45,19 +46,6 @@ feature -- Status Report
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
 			-- application can receive user events again?
-
-	is_relative: BOOLEAN
-			-- Is `Current' shown relative to another window?
-
-	blocking_window: detachable EV_WINDOW
-			-- `Result' is window `Current' is shown to if
-			-- `is_modal' or `is_relative'.
-
-		do
-			Result := Void
-			-- `Result' is Void as `Current' cannot be shown modally or
-			-- relative, otherwise its implementation would not be EV_DIALOG_IMP.
-		end
 
 	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show and wait until window is closed.

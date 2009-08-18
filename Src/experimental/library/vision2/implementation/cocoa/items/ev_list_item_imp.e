@@ -76,6 +76,7 @@ feature -- Status setting
 			-- Deselect the item.
 		do
 			--parent_imp.deselect_item (parent_imp.index_of (interface, 1))
+			is_selected := False
 		end
 
 feature -- Element change

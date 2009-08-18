@@ -160,7 +160,7 @@ feature {NONE}-- Initialization
 			vb.set_border_width (layout_constants.default_border_size)
 
 				-- toolbar
-			create toolbar
+			create toolbar.make
 			vb.extend (toolbar)
 			vb.disable_item_expand (toolbar)
 			toolbar.edit_manually_button.select_actions.extend (agent open_text_editor)

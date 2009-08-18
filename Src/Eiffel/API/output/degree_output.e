@@ -479,7 +479,6 @@ feature -- Basic operations
 			processed := 0
 			if not is_verbose then
 				put_message (degree_description (a_degree))
-				put_message (once "...")
 				put_new_line
 			end
 		ensure

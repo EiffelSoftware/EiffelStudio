@@ -9,7 +9,7 @@ copy_raw 	test_string_32.e $CLUSTER test_string_32.e
 copy_raw 	test_immutable_string_8.e $CLUSTER test_immutable_string_8.e
 copy_raw 	test_immutable_string_32.e $CLUSTER test_immutable_string_32.e
 compile_melted
-compile_result ok
+compile_result validity_warning TEST_STRING_8 Obsolete; TEST_STRING_32 Obsolete
 
 execute_work NONE exec_output1
 execute_result ok

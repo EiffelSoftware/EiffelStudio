@@ -266,6 +266,21 @@ feature -- Choices
 			result_not_void: Result /= Void
 		end
 
+	c_report_c_compiler_errors: HASH_TABLE [STRING_GENERAL, STRING]
+			-- Choice names for the preference of right_click_receiver.
+		once
+			create Result.make (3)
+			Result.put (c_compiler_errors_none, "none")
+			Result.put (c_compiler_errors_errors, "errors")
+			Result.put (c_compiler_errors_all, "errors_and_warnings")
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	c_compiler_errors_all: STRING 		do Result := locale.translation ("Errors and Warnings") end
+	c_compiler_errors_errors: STRING 	do Result := locale.translation ("Errors Only") end
+	c_compiler_errors_none: STRING 		do Result := locale.translation ("None") end
+
 feature -- Choice original (No translation)
 
 	co_new_window: STRING = "new_window"

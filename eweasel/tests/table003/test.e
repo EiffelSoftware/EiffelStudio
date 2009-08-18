@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			h.force (0, 1)
 			h.replace_key (1, 2)
 			
-			h.clear_all
+			h.wipe_out
 			h.force (0, 1)
 			h.force (0, 2)
 			h.replace_key (2, 1)

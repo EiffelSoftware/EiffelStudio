@@ -39,14 +39,13 @@ feature {NONE} -- Initialization
 			compiler_attached: compiler /= Void
 			translator_attached: translator /= Void
 			finalize_webapps_attached: finalize_webapps /= Void
-
 		end
 
 
 feature -- Access
 
 	webapps:  HASH_TABLE [XS_WEBAPP, STRING]
-			-- The webapps the server knows about
+			-- The  webapps the server knows about
 
 	webapps_root:  SETTABLE_STRING
 			-- The webapps root directory
@@ -100,18 +99,43 @@ feature -- Stauts Report
 
 	print_webapp_configuration: STRING
 			-- Renders the loaded webapps config to a string
+		local
+			l_counter: INTEGER
 		do
-			Result :=      "%N-------------------------- Webapps ------------------------"
-			Result.append("%N-Webapps: " + webapps.count.out + " webapps at '" + webapps_root.out + "'")
+			Result :=      "%N-------------------------- Managed Webapps ------------------------"
+
 
 			from
 				webapps.start
+				l_counter := 0
 			until
 				webapps.after
 			loop
-				Result.append ("%N--'" + webapps.item_for_iteration.app_config.name.out + "' on "+ webapps.item_for_iteration.app_config.host.out + "@" + webapps.item_for_iteration.app_config.port.out)
+				if attached {XS_MANAGED_WEBAPP} webapps.item_for_iteration as l_wapp then
+					Result.append ("%N--'" + l_wapp.app_config.name.out + "' "+ "@" + l_wapp.app_config.port.out)
+					l_counter := l_counter + 1
+				end
 				webapps.forth
+
 			end
+			Result.append("%N-Managed Webapps:" + l_counter.out + " webapps at '" + webapps_root.out + "'")
+			Result.append ("%N-------------------------- Unmanaged Webapps ------------------------")
+
+
+			from
+				webapps.start
+				l_counter := 0
+			until
+				webapps.after
+			loop
+				if attached {XS_UNMANAGED_WEBAPP} webapps.item_for_iteration as l_wapp then
+					Result.append ("%N--'" + l_wapp.app_config.name.out + "' on "+ l_wapp.app_config.webapp_host.out + "@" + webapps.item_for_iteration.app_config.port.out)
+					l_counter := l_counter + 1
+				end
+				webapps.forth
+
+			end
+				Result.append("%N-Unmanaged Webapps: " + l_counter.out + " webapps")
 			Result.append ("%N-----------------------------------------------------------")
 
 		ensure

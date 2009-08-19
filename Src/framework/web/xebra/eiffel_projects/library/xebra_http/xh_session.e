@@ -24,8 +24,6 @@ feature {NONE} -- Initialization
 			remote_user := ""
 			expiry := 0
 			create entries.make (8)
-			is_dirty := False
-			is_written := False
 			set_max_age (300)
 		ensure
 			uuid_attached: uuid /= Void
@@ -46,7 +44,7 @@ feature -- Access
 		-- When the session expires
 
 	max_age: NATURAL assign set_max_age
-		-- 	
+		-- The sessions age
 
 feature -- Status Setting
 
@@ -63,7 +61,7 @@ feature -- Status Setting
 		end
 
 	set_remote_user (a_s: STRING)
-			-- Setter.
+			-- Sets remote_user.
 		require
 			not_a_s_is_detached_or_empty: a_s /= Void and then not a_s.is_empty
 		do
@@ -76,13 +74,6 @@ feature {NONE} -- Access
 
     entries: HASH_TABLE [ANY, STRING]
     	-- Key value pairs
-
-    is_dirty: BOOLEAN
-    	-- Dirty flag
-
-    is_written: BOOLEAN
-    	-- True if this session has already been writte
-
 
 feature -- Basic Operations
 
@@ -127,7 +118,7 @@ feature -- Basic Operations
 		end
 
 	remove (a_key: STRING)
-			-- Removes an item from entrie
+			-- Removes an item from entries
 		require
 			not_a_key_is_detached_or_not_empty: a_key /= Void implies not a_key.is_empty
 		do
@@ -135,10 +126,10 @@ feature -- Basic Operations
 		end
 
 invariant
-			uuid_attached: uuid /= Void
-			remote_user_attached: remote_user /= Void
-			entries_attached: entries /= Void
-			uuid_attached: uuid /= Void
+	uuid_attached: uuid /= Void
+	remote_user_attached: remote_user /= Void
+	entries_attached: entries /= Void
+	uuid_attached: uuid /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

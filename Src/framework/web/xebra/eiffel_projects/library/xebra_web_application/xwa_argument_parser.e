@@ -65,8 +65,6 @@ feature -- Access
 
 feature -- Status report
 
-
-
 feature {NONE} -- Access: Usage
 
 	name: STRING = "Xebra Web Application"
@@ -75,7 +73,7 @@ feature {NONE} -- Access: Usage
 	non_switched_argument_name: STRING = "config_filename"
 			-- <Precursor>
 
-	non_switched_argument_description: STRING = "The path of the config.ini file to use."
+	non_switched_argument_description: STRING = "The path of the config file to use."
 			-- <Precursor>
 
 	non_switched_argument_type: STRING = "file name"
@@ -102,10 +100,7 @@ feature {NONE} -- Access: Usage
 		end
 
 feature {NONE} -- Switches
-
-
 	debug_level_switch: STRING = "d|debug_level"
 	interactive_switch: STRING = "i|interactive"
-
 end
 

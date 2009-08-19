@@ -48,21 +48,23 @@ feature -- Access
 			webapp_attached: webapp /= Void
 		local
 			l_f_utils: XU_FILE_UTILITIES
+			l_wapp_ecf: STRING
 		do
 
 			Result := ""
 			if attached webapp as l_wa then
 				create l_f_utils
-				Result  := " -config %"" + l_wa.app_config.ecf.out + "%" -target %"" + l_wa.app_config.name.out + "%" -c_compile -stop"
+				l_wapp_ecf := l_wa.app_config.ecf.out
+				if {PLATFORM}.is_windows then
+					l_wapp_ecf.replace_substring_all ("/", "\")
+				end
+				Result  := " -config %"" + l_wapp_ecf + "%" -target %"" + l_wa.app_config.name.out + "%" -c_compile -stop"
 				if config.file.finalize_webapps.value then
 					Result := Result + " -finalize"
 				end
 				if needs_cleaning then
 					Result.append (" -clean")
 				end
-	--			if not l_f_utils.is_readable_file (webapp_exe) then
-	--				Result.append (" -clean")
-	--			end
 				Result.append (" " + config.file.compiler_flags.value + " ")
 			end
 
@@ -152,7 +154,7 @@ feature {TEST_WEBAPPS} -- Implementation
 			webapp_attached: webapp /= Void
 		do
 			create {XCCR_INTERNAL_SERVER_ERROR}Result
-			if attached webapp as l_wa then
+			if attached {XS_MANAGED_WEBAPP} webapp as l_wa then
 				if not is_running then
 					l_wa.shutdown
 					if can_launch_process (config.file.compiler_filename, app_dir) then
@@ -204,12 +206,6 @@ feature -- Agent
 			else
 				o.eprint ("COMPILATION OF WEBAPP FAILED", generating_type)
 			end
-		end
-
-	compiler_output_handler (a_ouput: STRING)
-			-- Forwards output to console
-		do
-			o.dprintn (a_ouput, o.Debug_verbose_subtasks)
 		end
 
 invariant

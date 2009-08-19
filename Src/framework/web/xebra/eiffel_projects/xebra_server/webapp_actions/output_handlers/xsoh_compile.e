@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			Precursor
-			max_size := 400
+			max_size := 0
 		end
 
 feature -- Status setting
@@ -33,7 +33,7 @@ feature -- Status setting
 	internal_handle_output (a_output: STRING)
 			-- <Precursor>
 		do
-			print(a_output)
+			o.dprint_noformat(a_output, o.Debug_subtasks)
 		end
 
 feature -- Status report
@@ -41,11 +41,7 @@ feature -- Status report
 	has_successfully_terminated: BOOLEAN
 			-- <Precursor>
 		do
-			if output.has_substring ("completed") or output.has_substring ("Recompiled") then
-				Result := True
-			else
-				Result := False
-			end
+			Result := False
 		end
 end
 

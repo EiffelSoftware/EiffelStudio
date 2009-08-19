@@ -20,11 +20,11 @@ feature {NONE} -- Initialization
 		do
 			create debug_level.make_empty
 			create config_filename.make_empty
-			create assume_webapps_are_running.make_empty
+			create unmanaged.make_empty
 		ensure
 			debug_level_attached: debug_level /= Void
 			config_filename_attached: config_filename /= Void
-			assume_webapps_are_running_attached: assume_webapps_are_running /= Void
+			unmanaged_attached: unmanaged /= Void
 		end
 
 feature -- Access
@@ -33,7 +33,7 @@ feature -- Access
 
 	config_filename: SETTABLE_STRING assign set_config_filename
 
-	assume_webapps_are_running:  SETTABLE_BOOLEAN assign set_assume_webapps_are_running
+	unmanaged:  SETTABLE_BOOLEAN assign set_unmanaged
 			-- Specifies
 
 feature -- Status report
@@ -43,7 +43,7 @@ feature -- Status report
 		do
 			Result := "%N---------------- Server Arguments ----------------"
 			Result.append ( "%N-Debug Level '" + debug_level.out + "'" +
-					  "%N-Assume webapps are running  '" + assume_webapps_are_running.out + "'")
+					  "%N-Unmanaged  '" + unmanaged.out + "'")
 			Result.append ("%N--------------------------------------------------")
 		ensure
 			Result_attached: Result /= Void
@@ -71,19 +71,19 @@ feature  -- Status setting
 			config_filename_set: config_filename  = a_config_filename
 		end
 
-	set_assume_webapps_are_running (a_assume_webapps_are_running: like assume_webapps_are_running)
-			-- Sets assume_webapps_are_running.
+	set_unmanaged (a_unmanaged: like unmanaged)
+			-- Sets unmanaged.
 		require
-			a_assume_webapps_are_running_attached: a_assume_webapps_are_running /= Void
+			a_unmanaged_attached: a_unmanaged /= Void
 		do
-			assume_webapps_are_running := a_assume_webapps_are_running
+			unmanaged := a_unmanaged
 		ensure
-			assume_webapps_are_running_set: assume_webapps_are_running = a_assume_webapps_are_running
+			unmanaged_set: unmanaged = a_unmanaged
 		end
 
 invariant
 	debug_level_attached: debug_level /= Void
 	config_filename_attached: config_filename /= Void
-	assume_webapps_are_running_attached: assume_webapps_are_running /= Void
+	unmanaged_attached: unmanaged /= Void
 end
 

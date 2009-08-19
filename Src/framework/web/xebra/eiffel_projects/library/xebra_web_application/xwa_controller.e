@@ -1,7 +1,6 @@
 note
 	description: "[
 		All controllers used in xeb files have to inherit from this class.
-		It's constructor has to be the make feature.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -32,15 +31,16 @@ feature -- Initialization
 			-- Initializes current
 		do
 			create {XH_REQUEST} current_request.make_empty
-			create server_control.make
+			create server_control
 		ensure then
-			current_request_attached: current_request /= Void
 			server_control_attached: server_control /= Void
+			current_request_attached: current_request /= Void
 		end
 
 feature -- Access
 
 	server_control: XWA_SERVER_CONTROL
+		-- Used to send commands to the server
 
 	current_request: XH_REQUEST
 		-- Represents the current request that was sent by the user
@@ -306,6 +306,6 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	current_request_attached: attached current_request
 	server_control_attached: server_control /= Void
+	current_request_attached: attached current_request
 end

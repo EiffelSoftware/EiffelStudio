@@ -1,7 +1,9 @@
 note
 	description: "[
-
+			Receives {XC_WEBAPP_COMMAND}s from the server, executes them and responds with {XC_COMMAND_RESPONSE}.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,10 +25,9 @@ feature {NONE} -- Initialization
 		do
 			config := a_config
 			create session_manager.make
-	--		create request_pool.make  (10, agent servlet_handler_spawner)
 			create {HASH_TABLE [XWA_SERVLET, STRING]} stateless_servlets.make (1)
 			create xserver_socket.make_server_by_port (config.port.value)
-			xserver_socket.set_accept_timeout (500)
+			xserver_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
 			stop := False
 			add_servlets
 		ensure
@@ -44,12 +45,8 @@ feature -- Constants
 
 feature -- Access
 
---	request_pool: DATA_THREAD_POOL [XWA_REQUEST_HANDLER]
-			-- A thread pool for the incoming requests from the xebra server
-
 	stateless_servlets: TABLE [XWA_SERVLET, STRING]
 			-- All the servlets which do not need a state
-			-- Page id points to the thread pool of servlets
 
 	stop: BOOLEAN
 			-- Used to stop the thread
@@ -65,24 +62,23 @@ feature -- Implementation
 	execute
 			-- Waits for connections from the Xebra Server
 		local
-
 			l_response:  XC_COMMAND_RESPONSE
 		do
 			o.set_name (config.name.out)
 			o.set_debug_level (config.arg_config.debug_level)
 
         	from
-                xserver_socket.listen (10)
+                xserver_socket.listen ({XU_CONSTANTS}.Max_tcp_clients)
             until
             	stop
             loop
                 xserver_socket.accept
                 if not stop then
 	                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
-	                	if config.arg_config.debug_level > 9 then
+	                	if config.arg_config.debug_level > o.Debug_configuration then
 	                		start_time
 	                	end
-		                o.dprint ("Connection to Xebra Server accepted", o.Debug_tasks)
+		                o.dprint ("Connection to Xebra Server accepted", o.Debug_subtasks)
 		                socket.read_natural
 			             if attached {XC_WEBAPP_COMMAND} socket.retrieved as l_command then
 			             	l_response := l_command.execute (current)
@@ -96,16 +92,26 @@ feature -- Implementation
 			            check
 				        	socket.is_closed
 				       	end
-				       	if config.arg_config.debug_level > 9 then
+				       	if config.arg_config.debug_level > o.Debug_configuration then
 	                		o.dprint ("Webapp Request Time: " + stop_time, o.Debug_configuration)
 	                	end
 			         end
 		         end
             end
             xserver_socket.cleanup
-        ensure then
+			o.dprint("Server connection server ends.", o.Debug_start_stop_components)
+		ensure then
         	xserver_socket_closed: xserver_socket.is_closed
-		end
+		rescue
+       		o.eprint ("Exception in server connection server! Retrying...", generating_type)
+			xserver_socket.cleanup
+			check
+        		xserver_socket.is_closed
+       		end
+			if not stop then
+				retry
+			end
+        end
 
 feature -- Status report
 
@@ -133,7 +139,7 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 		do
 			o.dprint ("Handling http request...", o.Debug_tasks)
 			create l_parser.make
-			create l_request_handler.make
+			create l_request_handler
 			if attached {XH_REQUEST} l_parser.request (a_request) as l_request then
 				create {XCCR_HTTP_REQUEST}Result.make (l_request_handler.process_servlet (session_manager, l_request, Current))
 			else

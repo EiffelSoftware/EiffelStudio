@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Is used to send commands to the server
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -13,21 +13,7 @@ class
 inherit
 	XU_SHARED_OUTPUTTER
 
- create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
-		do
-		end
-
-feature {NONE} -- Constants
-
-	default_cmd_server_port: INTEGER = 55002
-
-	default_cmd_server_host: STRING = "localhost" -- FIXME: read this from  config file
+	XWA_SHARED_CONFIG
 
 feature -- Operations
 
@@ -40,8 +26,9 @@ feature -- Operations
 		do
 			Result := create {XCCR_INTERNAL_SERVER_ERROR}
 
-			create l_socket.make_client_by_port (default_cmd_server_port, default_cmd_server_host)
+			create l_socket.make_client_by_port ({XU_CONSTANTS}.Cmd_server_port, config.server_host)
 			o.dprint ("Connecting...", o.Debug_verbose_subtasks)
+			l_socket.set_connect_timeout ({XU_CONSTANTS}.Socket_connect_timeout)
 			l_socket.connect
             if  l_socket.is_connected then
             	o.dprint("Sending command...", o.Debug_verbose_subtasks)

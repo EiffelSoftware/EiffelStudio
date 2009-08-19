@@ -70,7 +70,7 @@ feature -- Inherited Features
 				o.eprint ("Socket could not be bound on port " + {XU_CONSTANTS}.Http_server_port.out , generating_type)
 			else
 				create l_webapp_handler
-	 	       	l_http_socket.set_accept_timeout (1)
+	 	       	l_http_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
 				from
 	                l_http_socket.listen ({XU_CONSTANTS}.Max_tcp_clients.as_integer_32)
 	                o.dprint("HTTP Connection Server ready on port " + {XU_CONSTANTS}.Http_server_port.out, o.Debug_start_stop_components)
@@ -114,17 +114,17 @@ feature -- Inherited Features
        		end
        		running := False
        		o.dprint("HTTP Connection Server ends.", o.Debug_start_stop_components)
-       		rescue
-       			o.eprint ("HTTP Connection Server Module shutdown due to exception. Please relaunch manually.", generating_type)
+       	rescue
+       		o.eprint ("HTTP Connection Server Module shutdown due to exception. Please relaunch manually.", generating_type)
 
-				if attached {NETWORK_STREAM_SOCKET} l_http_socket as ll_http_socket then
-					ll_http_socket.cleanup
-					check
-		        		ll_http_socket.is_closed
-		       		end
-				end
-				stop := True
-				running := False
+			if attached {NETWORK_STREAM_SOCKET} l_http_socket as ll_http_socket then
+				ll_http_socket.cleanup
+				check
+	        		ll_http_socket.is_closed
+	       		end
+			end
+			stop := True
+			running := False
        	end
 
 feature -- Access

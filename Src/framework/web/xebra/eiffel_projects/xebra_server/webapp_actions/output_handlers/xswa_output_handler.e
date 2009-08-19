@@ -10,6 +10,9 @@ note
 deferred class
 	XS_OUTPUT_HANDLER
 
+inherit
+	XS_SHARED_SERVER_OUTPUTTER
+
 feature {NONE} -- Initialization
 
 	make
@@ -17,7 +20,7 @@ feature {NONE} -- Initialization
 		do
 			output := ""
 		ensure
-			max_size_is_positive: max_size >= 0
+			max_size_is_not_negative: max_size >= 0
 			output_attached: output /= Void
 		end
 
@@ -69,6 +72,6 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	max_size_is_positive: max_size > 0
+	max_size_is_not_negative: max_size >= 0
 	output_attached: output /= Void
 end

@@ -11,7 +11,7 @@ class
 	CONTROLLER
 
 inherit
-	XWA_CONTROLLER redefine	make end
+	XWA_CONTROLLER
 
 create
 	make
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes 'Current'
 		do
-			Precursor
+			default_create
 		end
 
 feature -- Basic Operations

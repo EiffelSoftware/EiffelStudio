@@ -48,9 +48,10 @@ feature {NONE} -- Implementation
 				if not retried then
 					if attached {XC_WEBAPP_COMMAND} l_wa.current_request as l_current_request then
 						o.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", o.Debug_verbose_subtasks)
-						create l_webapp_socket.make_client_by_port (l_wa.app_config.port, l_wa.app_config.host)
+						create l_webapp_socket.make_client_by_port (l_wa.app_config.port, l_wa.app_config.webapp_host)
 						o.dprint ("Connecting to " + l_wa.app_config.name.out + "@" + l_wa.app_config.port.out, o.Debug_subtasks)
-						l_webapp_socket.set_accept_timeout (3000)
+						l_webapp_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
+						l_webapp_socket.set_connect_timeout ({XU_CONSTANTS}.Socket_connect_timeout)
 						l_webapp_socket.connect
 			            if  l_webapp_socket.is_connected then
 							o.dprint ("Forwarding command", o.Debug_subtasks)

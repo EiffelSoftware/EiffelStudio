@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			Precursor
-			max_size := 30
+			max_size := 0
 		end
 
 feature -- Status setting
@@ -33,7 +33,7 @@ feature -- Status setting
 	internal_handle_output (a_output: STRING)
 			-- <Precursor>
 		do
-			print(a_output)
+			o.dprint_noformat(a_output, o.debug_subtasks)
 		end
 
 feature -- Status report
@@ -42,9 +42,6 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := False
-			if output.has_substring ("System translated.") then
-				Result := True
-			end
 		end
 
 end

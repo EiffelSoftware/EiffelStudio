@@ -85,9 +85,8 @@ feature -- Inherited Features
 
 	execute
 			-- <Precursor>	
-		local
-
 		do
+			o.set_add_input_line (True)
 			launched := True
 			running := True
 			o.iprint (print_help)
@@ -103,6 +102,7 @@ feature -- Inherited Features
 			end
 			o.dprint("Input Server ends.", o.Debug_start_stop_app)
 			running := False
+			o.set_add_input_line (False)
 		end
 
 feature {NONE} -- Access
@@ -232,7 +232,7 @@ feature -- Status Report
 			loop
 
 				Result.append ("%N- " + a_response.webapps.item_for_iteration.app_config.name.out +
---				"%N%THost: '" + a_response.webapps.item_for_iteration.app_config.host.out + "'" +
+				"%N%THost: '" + a_response.webapps.item_for_iteration.app_config.webapp_host.out + "'" +
 				"%N%TPort: '" + a_response.webapps.item_for_iteration.app_config.port.out + "'" +
 				"%N%TStatus: '" + a_response.webapps.item_for_iteration.status + "'" +
 				"%N%TSessions: '" + a_response.webapps.item_for_iteration.sessions.out + "'" +

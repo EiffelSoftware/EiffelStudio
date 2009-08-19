@@ -163,6 +163,11 @@ feature -- Test suite
 			set.prune ("B")
 
 			display_set ("prune", set)
+
+			set.prune ("A")
+			if not set.is_empty then
+				io.put_string ("prune failure%N")
+			end
 		end
 
 	test_subtract (a_type: INTEGER)

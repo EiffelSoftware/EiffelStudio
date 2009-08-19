@@ -111,7 +111,6 @@ feature -- Webapp Control
 			Result := ""
 		end
 
-
 	dev_mode_on_webapp (a_webapp: detachable ANY)
 			-- Sends a dev_mode_on_webapp command to the server.
 		local
@@ -203,9 +202,6 @@ feature -- Server Control
 			-- Sends a reload_config command to the server.
 		do
 			if attached  {XCCR_OK} server_control.send (create {XCC_LOAD_CONFIG}.make) then
---				Result := "OK"
-			else
---				Result := "Error"
 			end
 		end
 
@@ -213,9 +209,6 @@ feature -- Server Control
 			-- Sends a shutdown_server command to the server
 		do
 			if attached  {XCCR_OK} server_control.send (create {XCC_SHUTDOWN_SERVER}.make) then
---				Result := "OK"
-			else
---				Result := "Error"
 			end
 		end
 

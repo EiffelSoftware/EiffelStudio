@@ -32,9 +32,11 @@ feature -- Initialization
 		do
 			create {XH_REQUEST} current_request.make_empty
 			create server_control
+			create session.make
 		ensure then
 			server_control_attached: server_control /= Void
 			current_request_attached: current_request /= Void
+			session_attached: session /= Void
 		end
 
 feature -- Access
@@ -45,7 +47,7 @@ feature -- Access
 	current_request: XH_REQUEST
 		-- Represents the current request that was sent by the user
 
-	current_session: detachable XH_SESSION
+	session: XH_SESSION
 		-- Represents the session that belongs to the user that has send the current request
 
 feature -- Render actions
@@ -94,9 +96,9 @@ feature -- Status Change
 		require
 			a_session_attached: attached a_session
 		do
-			current_session := a_session
+			session := a_session
 		ensure
-			current_session_attached: attached current_session
+			current_session_attached: attached session
 		end
 
 feature -- Operations
@@ -308,4 +310,5 @@ feature {NONE} -- Implementation
 invariant
 	server_control_attached: server_control /= Void
 	current_request_attached: attached current_request
+	session_attached: session /= Void
 end

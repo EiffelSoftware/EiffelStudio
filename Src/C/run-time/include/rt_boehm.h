@@ -1120,7 +1120,7 @@ GC_API void GC_use_DllMain(void);
         || defined(_WIN32) && !defined(__CYGWIN32__) && !defined(__CYGWIN__))
   /* win32S may not free all resources on process exit.  */
   /* This explicitly deallocates the heap.		 */
-    GC_API void GC_win32_free_heap ();
+    GC_API void GC_win32_free_heap (void);
 #endif
 
 #if ( defined(_AMIGA) && !defined(GC_AMIGA_MAKINGLIB) )

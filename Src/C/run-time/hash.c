@@ -2,7 +2,7 @@
 	description: "Hashtable of pointers/pointers."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -50,7 +50,7 @@ doc:<file name="hash.c" header="rt_hash.h" version="$Id$" summary="Hash table im
 rt_shared char **hash_search(struct hash *hp, register char *object);	/* Search in the hash table */
 rt_shared void hash_free(struct hash *hp);		/* Free the tables */
 rt_shared void hash_malloc(struct hash *hp, register long int size);	/* Hash table creation */
-/*rt_private void free_entries();*/	/* Free all the hector entries */ /* %%ss undefined not used in run-time */
+/*rt_private void free_entries(void);*/	/* Free all the hector entries */ /* %%ss undefined not used in run-time */
 /* 
  * Function definitions
  */

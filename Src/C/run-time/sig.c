@@ -2,7 +2,7 @@
 	description: "Signal handling and filtering."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1389,7 +1389,7 @@ Signal_t test_handler(int sig)
 	printf("test_handler: caught signal #%d\n", sig);
 }
 
-main()
+int main (void)
 {
 	printf("> Starting test for signal handling mechanism.\n");
 	printf(">> Initializing signals.\n");
@@ -1436,6 +1436,8 @@ main()
 	printf(">> Sending exception raising signal #1.\n");
 	kill(getpid(), 1);
 	printf("> End of tests.\n");
+
+	return 0;
 }
 
 rt_private int bufstate(void)

@@ -2,7 +2,7 @@
 	description: "Some structures and definitions used to ensure protocol."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -74,7 +74,7 @@ extern int dbg_recv_packet(EIF_PSTREAM s, Request *rqst, BOOL reset);
 extern int dbg_recv_packet(EIF_PSTREAM s, Request *rqst);	/* Receive data from client */
 #endif
 
-extern void apphandle();		/* Handle messages from application */ /* %%ss undefined not used in C */
+extern void apphandle(void);		/* Handle messages from application */ /* %%ss undefined not used in C */
 extern void dead_app(void);		/* Signals ewb that app is dead */
 extern void dbg_prt_init(void);		/* Initialize IDR filters */
 

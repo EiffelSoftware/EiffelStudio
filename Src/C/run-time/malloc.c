@@ -2,7 +2,7 @@
 	description: "Memory allocation management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -447,7 +447,7 @@ rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
 #define EIF_Size(type)			40		/* Size of the object */
 #define Disp_rout(type)		0		/* No dispose procedure */
 #define XCreate(type)		0		/* No creation procedure */
-/* char *(**ecreate)(); FIXME: SEE EIF_PROJECT.C */
+/* char *(**ecreate)(void); FIXME: SEE EIF_PROJECT.C */
 
 #ifndef DEBUG
 #define DEBUG	 127		/* Highest debug level */

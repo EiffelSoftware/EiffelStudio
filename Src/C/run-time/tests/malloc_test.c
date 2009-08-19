@@ -2,7 +2,7 @@
 	description: "Testing of `malloc.c'."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -574,7 +574,7 @@ rt_private uint32 *type_use = 0;   /* Object usage table by dynamic type */
 rt_private uint32 c_mem = 0;		/* C memory used (bytes) */
 #endif /* EIF_THREADS */
 
-/*rt_private void inspect();    (never defined) */
+/*rt_private void inspect(void);    (never defined) */
 rt_private void check_obj(char *object);
 
 
@@ -721,8 +721,8 @@ rt_private void mem_status(void);		/* Print memory status */
 rt_private void mem_reset(void);		/* Reset memory */
 rt_private void run_tests(void);		/* Run all the memory tests */
 
-/* char *(**ecreate)(); FIXME: SEE EIF_PROJECT.C */
-/* void (**edispose)(); FIXME: SEE EIF_PROJECT.C */
+/* char *(**ecreate)(void); FIXME: SEE EIF_PROJECT.C */
+/* void (**edispose)(void); FIXME: SEE EIF_PROJECT.C */
 long nbref[1];
 
 rt_public main(void)

@@ -2,7 +2,7 @@
 	description: "Externals for class FILE."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -141,13 +141,13 @@ rt_public char *file_open_mode(int how, char mode);		/* Open file */
 rt_private char *file_fopen(char *name, char *type);		/* Open file */
 rt_private char *file_fdopen(int fd, char *type);	/* Open file descriptor (UNIX specific) */
 rt_private char *file_freopen(char *name, char *type, FILE *stream);	/* Reopen file */
-/*rt_private char *file_binary_fopen();*/		/* Open file */ /* %%zs undefined */
-/*rt_private char *file_binary_fdopen();*/	/* Open file descriptor (UNIX specific) */ /* %%zs undefined */
-/*rt_private char *file_binary_freopen();*/	/* Reopen file */ /* %%zs undefined */
+/*rt_private char *file_binary_fopen(void);*/		/* Open file */ /* %%zs undefined */
+/*rt_private char *file_binary_fdopen(void);*/	/* Open file descriptor (UNIX specific) */ /* %%zs undefined */
+/*rt_private char *file_binary_freopen(void);*/	/* Reopen file */ /* %%zs undefined */
 rt_private void swallow_nl(FILE *f);		/* Swallow next character if new line */
 
 #ifndef HAS_UTIME
-/* rt_private int utime(); */ /* %%ss removed and replaced by below */
+/* rt_private int utime(void); */ /* %%ss removed and replaced by below */
 rt_private int utime(char *path, struct utimbuf *times);	/* %%ss */
 #endif
 

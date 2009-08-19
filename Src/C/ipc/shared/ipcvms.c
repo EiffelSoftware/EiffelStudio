@@ -2,7 +2,7 @@
 	description: "VMS specific interprocess communication routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -2092,7 +2092,7 @@ static int select_attn_post(int efn, int fd, int flag)
     return ++select_data_numb;
 }
 
-static void select_attn_cleanup()
+static void select_attn_cleanup (void)
 {
     VMS_STS st;
     int ii;

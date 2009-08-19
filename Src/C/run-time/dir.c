@@ -2,7 +2,7 @@
 	description: "Routines for manipulating directories."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1018,7 +1018,7 @@ void seekdir(DIR *dd, long pos)
 
 
 #ifdef	TEST
-main()
+int main(void)
 {
     char		buff[256];
     DIR			*dd;
@@ -1052,6 +1052,7 @@ main()
 	closedir(dd);
     }
     exit(0);
+    return 0;
 }
 #endif	/* TEST */
 #endif	/* EIF_VMS_V6_ONLY */

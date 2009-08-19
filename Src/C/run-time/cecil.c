@@ -2,7 +2,7 @@
 	description: "C-Eiffel Call-In Library."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -93,7 +93,7 @@ doc:	</attribute>
 */
 rt_shared EIF_LW_MUTEX_TYPE *eif_cecil_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
-rt_shared void eif_cecil_init ();
+rt_shared void eif_cecil_init (void);
 #define EIF_CECIL_LOCK EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_cecil_mutex, "Couldn't lock cecil mutex");
 #define EIF_CECIL_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_cecil_mutex, "Couldn't unlock cecil mutex");
 

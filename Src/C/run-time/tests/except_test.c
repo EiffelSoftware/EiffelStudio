@@ -2,7 +2,7 @@
 	description: "Testing of `except.c'."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -65,7 +65,7 @@
 #include "urgent.c"
 
 rt_private struct stack hec_stack;
-/*rt_private char *(**ecreate)(); FIXME: SEE EIF_PROJECT.C */
+/*rt_private char *(**ecreate)(void); FIXME: SEE EIF_PROJECT.C */
 
 #include "eif_macros.h"
 
@@ -105,7 +105,7 @@ rt_private void t_fourth_routine(void);
 /*
 rt_private void t_fifth_routine(void);
 */
-rt_private void t_called_by_check();	/* %%zs undefined */
+rt_private void t_called_by_check(void);	/* %%zs undefined */
 rt_private Signal_t emergency(int sig);
 
 rt_public main(void)

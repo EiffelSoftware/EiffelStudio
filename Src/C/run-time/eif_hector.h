@@ -2,7 +2,7 @@
 	description: "Declarations for Hector."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -66,7 +66,7 @@ RT_LNK struct stack hec_stack;	/* Indirection table "hector" */
 /* Declaration of hector routines */
 #ifdef DEBUG2
 extern int stck_nb_items (const struct stack stk);
-extern int stck_nb_items_free_stack ();
+extern int stck_nb_items_free_stack (void);
 #endif
 
 #if defined(ISE_GC) && !defined(EIF_IL_DLL)

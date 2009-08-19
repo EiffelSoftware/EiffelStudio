@@ -53,7 +53,6 @@ feature -- Access
 	root_tag: XP_TAG_ELEMENT
 			-- The root tag of the tag tree
 
-
 	force: BOOLEAN assign set_force
 			-- Should the regeneration be forced?
 
@@ -136,6 +135,16 @@ feature -- Status setting
 
 feature -- Basic functionality
 
+	copy_template: XP_TEMPLATE
+			-- Creates a new copy of itself
+		do
+			create Result.make_empty
+			Result.absorb (Current)
+		ensure
+			Result_attached: attached Result
+			new_instance: Result /= Current
+		end
+
 	absorb (a_other: XP_TEMPLATE)
 			-- Takes all the instvars of `a_other'
 		require
@@ -143,44 +152,57 @@ feature -- Basic functionality
 		do
 			template_name := a_other.template_name
 			controller_class := a_other.controller_class
+			controller_create_name := a_other.controller_create_name
 			is_template := a_other.is_template
 			root_tag := a_other.root_tag.copy_tag_tree
 		end
 
-	resolve (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_region: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING]; a_pending_uids: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR): XP_TAG_ELEMENT
-			-- Resolves the templates "includes" and returns the tag element tree
+	resolve (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_regions: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING]; a_pending_uids: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR): XP_TAG_ELEMENT
+			-- `a_templates': All the templates that can be included
+			-- `a_regions': All regions already defined with 'page:define_region'
+			-- `a_pending_uids': A list of agents which set the proper controller uids as soon as possible
+			-- `a_servlet_gen': The servlet generator generator for this xeb file
+			-- Resolves the template's "includes" and returns the tag element tree
 		require
 			a_templates_attached: attached a_templates
-			a_region_attached: attached a_region
-			a_pending_uids: attached a_pending_uids
+			a_region_attached: attached a_regions
+			a_pending_uids_attached: attached a_pending_uids
+			a_servlet_gen_atttachd: attached a_servlet_gen
 		local
 			l_region_visitor: XP_REGION_TAG_ELEMENT_VISITOR
 			l_root_tag: XP_TAG_ELEMENT
 			l_uid: STRING
 		do
-			l_root_tag := root_tag.copy_tag_tree
+			--l_root_tag := root_tag.copy_tag_tree
+			l_root_tag := root_tag
+			print ("************************** Resolving: " + template_name + ", empty=" + controller_class.is_empty.out)
 			if not controller_class.is_empty then
+						-- The controller is defined, so all pending templates can be resolved
 				l_uid := a_servlet_gen.next_unique_identifier
+					-- Set your own uid
 				set_uids (l_root_tag, a_servlet_gen, l_uid, controller_class, controller_create_name)
+					-- Set all the pending uids
 				from
 					a_pending_uids.start
 				until
 					a_pending_uids.after
 				loop
-					a_pending_uids.item.call ([l_uid, controller_class])
+					a_pending_uids.item.call ([l_uid, controller_class, controller_create_name])
 					a_pending_uids.forth
 				end
+					-- All the pending uid requests have been resolved, so the list can be emptied
 				a_pending_uids.wipe_out
-					-- All the pending uid requests have  been resolved, so the list can be emptied
 			else
-					-- Retrieve the proper controller
+					-- Delay the setting of the controller id.
 				a_pending_uids.extend (agent set_uids (l_root_tag, a_servlet_gen, ?, ?, ?))
 			end
 
-			create l_region_visitor.make (a_region)
+			create l_region_visitor.make (a_regions)
+				-- Insert all regions from `a_regions' which match a declare_region tag element
 			l_root_tag.accept (l_region_visitor)
 
-				-- l_region_visitor might have unused regions. Pass them over to the next resolve_all_dependencies so it can be used transitively!
+				-- l_region_visitor might have unused regions. Pass them over
+				-- to the next resolve_all_dependencies so regions can be used transitively!
 			l_root_tag.resolve_all_dependencies (a_templates, a_pending_uids, a_servlet_gen, l_region_visitor.regions)
 			if l_root_tag.date < date then
 				l_root_tag.date := date

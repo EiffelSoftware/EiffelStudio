@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			until
 				a_servlet_gg.controller_table.after
 			loop
-				a_feature.append_expression ("l_controller_table.put ([%"" + a_servlet_gg.controller_table.item_for_iteration.class_name +"%", %"" + a_servlet_gg.controller_table.item_for_iteration.creator + "%"], %"" + a_servlet_gg.controller_table.key_for_iteration+"%")")
+				a_feature.append_expression ("l_controller_table.put ([%"" + a_servlet_gg.controller_table.item_for_iteration.class_name + "%", %"" + a_servlet_gg.controller_table.item_for_iteration.creator + "%"], %"" + a_servlet_gg.controller_table.key_for_iteration + "%")")
 				a_servlet_gg.controller_table.forth
 			end
 		end

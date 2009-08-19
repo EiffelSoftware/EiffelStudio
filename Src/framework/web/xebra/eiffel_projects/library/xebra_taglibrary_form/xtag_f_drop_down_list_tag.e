@@ -77,7 +77,7 @@ feature -- Implementation
 		do
 			if attached label as l_label then
 				a_servlet_class.render_html_page.append_expression (response_variable_append + 
-				"(%"<label for=%%%"" + a_name + "%%%">" + label.value (current_controller_id) +
+				"(%"<label for=%%%"" + a_name + "%%%">" + l_label.value (current_controller_id) +
 				"</label>%")")
 			end
 			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<select selectedIndex=%%%"" + selected_index.value (current_controller_id) + "%%%" name=%%%"" + a_name + "%%%">%")")

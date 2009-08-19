@@ -59,7 +59,7 @@ feature -- Removal
 			-- Remove all items.
 		do
 			last_index := 0
-			table.clear_all
+			table.wipe_out
 		end
 
 feature {NONE} -- Implementation

@@ -53,6 +53,7 @@ test	symdif-sets-heterogenous	set002a tcf pass set
 test	prune-tree-set			set003  tcf pass set
 test	linear-subset-move		set004  tcf pass set
 test	void-items-set-crash	set005  tcf pass set
+test	various-set-operations	set006	tcf pass set
 
 test	tree-is-equal			tree001 tcf pass tree
 test	tree-clone			tree002 tcf pass tree

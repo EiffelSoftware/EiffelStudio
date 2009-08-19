@@ -1,5 +1,5 @@
 <page:include template="support_side">
-<page:controller class="PROBLEM_REPORT_CONTROLLER" />
+<page:controller class="PROBLEM_REPORT_CONTROLLER" create="make"/>
 <page:define_region id="main_content">
 	<div id="title_box"><h1>Problem Report Submission</h1></div>
 	<p>

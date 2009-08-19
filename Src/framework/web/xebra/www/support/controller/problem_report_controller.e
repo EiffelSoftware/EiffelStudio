@@ -9,10 +9,11 @@ class
 
 inherit
 	XWA_CONTROLLER
-		redefine
-			make
-		end
+	
 	G_SHARED_SUPPORT_GLOBAL_STATE
+		undefine
+			default_create
+		end
 
 create
 	make
@@ -21,7 +22,7 @@ feature -- Initialization
 
 	make
 		do
-			Precursor
+			default_create
 			create internal_priority_list.make (3)
 			create internal_category_list.make (4)
 			create internal_confidential_list.make (2)

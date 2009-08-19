@@ -1,5 +1,5 @@
 <page:include template="support_plain">
-	<page:controller class="problem_report_search_controller"/>
+	<page:controller class="problem_report_search_controller" create="make"/>
 	<page:define_region id="main_content">
 		<div>
 			<div id="title_box">
@@ -27,7 +27,7 @@
 							</td>
 							<td valign="top">
 								<f:drop_down_list name="a_category" items="%=categories%" value="category"/>
-								<f:check_box value="open" name="a_open" text="Open"/>
+								<f:check_box value="open" name="a_open" label="Open"/>
 							</td>
 						</tr>
 						<tr>

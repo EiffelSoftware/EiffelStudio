@@ -11,7 +11,7 @@ inherit
 	XWA_CONTROLLER
 
 create
-	make
+	default_create
 
 feature -- Access
 

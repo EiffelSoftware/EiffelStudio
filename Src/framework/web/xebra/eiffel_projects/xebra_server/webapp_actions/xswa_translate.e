@@ -162,7 +162,7 @@ feature {TEST_WEBAPPS} -- Implementation
 			webapp_attached: webapp /= Void
 		do
 			create {XCCR_INTERNAL_SERVER_ERROR}Result
-			if attached webapp as l_wa then
+			if attached {XS_MANAGED_WEBAPP} webapp as l_wa then
 				if not is_running then
 					l_wa.shutdown
 					if can_launch_process (config.file.translator_filename, app_dir) then

@@ -17,7 +17,7 @@ feature {NONE} -- Internal Access
 
 	ecf_name: STRING = "ecf"
 	name_name: STRING = "name"
-	host_name: STRING = "host"
+	server_host_name: STRING = "server_host"
 	port_name: STRING = "port"
 	taglibs_name: STRING = "taglibs"
 	tl_name_name: STRING = "name"
@@ -68,11 +68,11 @@ feature -- Processing
 					l_ok := False
 				end
 
-					-- Check host
-				if attached {JSON_STRING} l_v.map_representation [create {JSON_STRING}.make_json (host_name)] as l_e then
-					l_config.set_host (l_e.item)
+					-- Check server_host
+				if attached {JSON_STRING} l_v.map_representation [create {JSON_STRING}.make_json (server_host_name)] as l_e then
+					l_config.set_server_host (l_e.item)
 				else
-					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + host_name), false)
+					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + server_host_name), false)
 					l_ok := False
 				end
 
@@ -137,6 +137,8 @@ feature -- Processing
 					l_ok := False
 				end
 
+					-- Set webapp_host to localhost for all managed webapps
+				l_config.set_webapp_host ("localhost")
 				if l_ok then
 					Result := l_config
 				end

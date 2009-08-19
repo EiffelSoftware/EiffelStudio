@@ -17,7 +17,7 @@ inherit
 
 feature -- Status Change
 
-	stop_apps
+	stop_managed_apps
 			-- Terminates all process from webapps
 		do
 			from
@@ -25,7 +25,9 @@ feature -- Status Change
 			until
 				config.file.webapps.after
 			loop
-				config.file.webapps.item_for_iteration.shutdown_all
+				if attached {XS_MANAGED_WEBAPP}config.file.webapps.item_for_iteration as l_managed_webapp then
+					l_managed_webapp.shutdown_all
+				end
 				config.file.webapps.forth
 			end
 		end
@@ -58,7 +60,7 @@ feature  -- Basic Operations
 		end
 
 	search_webapps (a_path: STRING): HASH_TABLE [XS_WEBAPP, STRING]
-			-- Traverses folders to find config files which define webapps
+			-- Traverses folders to find config files which define managed webapps
 		require
 			not_a_path_is_detached_or_empty: a_path /= Void and then not a_path.is_empty
 		local
@@ -84,7 +86,7 @@ feature  -- Basic Operations
 				l_files.after
 			loop
 				if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (l_files.item_for_iteration) as l_w then
-					Result.force (create {XS_WEBAPP}.make_with_config (l_w), l_w.name)
+					Result.force (create {XS_MANAGED_WEBAPP}.make_with_config (l_w), l_w.name)
 				end
 
 				l_files.forth

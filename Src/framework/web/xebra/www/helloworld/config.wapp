@@ -2,7 +2,7 @@
 	"ecf": "$XEBRA_DEV/www/helloworld/helloworld.ecf",
 	"name": "helloworld",
 	"port": "55011",
-	"host": "localhost",
+	"server_host": "localhost",
 	"taglibs": 
 	[
 		{ 

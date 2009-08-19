@@ -3,6 +3,8 @@ note
 		Handles requests and delegates them to the appropriate servlet. Is
 		reponsible for sending back the response to the client.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,21 +14,9 @@ class
 inherit
 	XU_SHARED_OUTPUTTER
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			--
-		do
-		end
-
-feature -- Access
-
 feature -- Processing
 
-	process_servlet	 (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST; a_server_conn_handler: XWA_SERVER_CONN_HANDLER): XH_RESPONSE
+	process_servlet (a_session_manager: XWA_SESSION_MANAGER; a_request: XH_REQUEST; a_server_conn_handler: XWA_SERVER_CONN_HANDLER): XH_RESPONSE
 			-- Processes an incoming request and sends it back to the server.
 			-- Routes the request to the appropriate controller.
 		require

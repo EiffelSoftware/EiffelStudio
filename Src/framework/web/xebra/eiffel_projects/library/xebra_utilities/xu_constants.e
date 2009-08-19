@@ -29,11 +29,13 @@ feature -- Files
 	Dir_f_code: STRING = "F_code"
 
 
-feature -- Server
+feature -- Network
 
 	Cmd_server_port: INTEGER = 55002
 	Http_server_port: INTEGER = 55001
 	Max_tcp_clients: INTEGER = 100
+	Socket_accept_timeout: INTEGER = 500
+	Socket_connect_timeout: INTEGER = 5000
 
 feature -- Debugging
 
@@ -96,6 +98,7 @@ feature -- Request Message
 
 feature -- Cookie Order
 
+	Cookie_uuid: STRING = "Xuuid"
 	Cookie_start: STRING = "#C#"
 	Cookie_end: STRING = "#CE#"
 	Cookie_eq: STRING = "="
@@ -115,7 +118,6 @@ feature -- Time
 feature -- Translator
 
 	Folder_replacement_string: STRING = "___"
-
 
 
 end

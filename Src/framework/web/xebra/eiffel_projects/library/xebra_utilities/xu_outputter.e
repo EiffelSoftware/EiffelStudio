@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		do
 			create i_name.make_empty
 			create i_debug_level.make_empty
+			add_input_line := False
 		ensure
 			i_name_attached: i_name /= Void
 			i_debug_level_attached: i_debug_level /= Void
@@ -97,14 +98,15 @@ feature -- Status Change
 
 feature -- Print
 
-	dprintn (a_msg: STRING; a_debug_level: INTEGER)
+	dprint_noformat (a_msg: STRING; a_debug_level: INTEGER)
 			--Prints a debug message  only if debug level is >= a_debug_level without formatting
+			-- and without logging
 		require
 			a_msg_attached: a_msg /= Void
 			outputter_configured: configured
 		do
 			if a_debug_level <= debug_level then
-				print_with_cmdnl (a_msg)
+				print (a_msg)
 			end
 		end
 

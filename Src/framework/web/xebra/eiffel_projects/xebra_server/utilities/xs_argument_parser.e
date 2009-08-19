@@ -53,12 +53,22 @@ feature -- Access
 			end
 		end
 
-	assume_webapps_are_running: BOOLEAN
-			-- The assume_webapps_are_running option
+	create_webapp: detachable STRING
+			-- The create webapp config file
 		require
 			is_successful: is_successful
 		do
-			Result := has_option (assume_webapps_are_running_switch)
+			if has_option (create_webapp_switch) and then attached option_of_name (create_webapp_switch) as l_option then
+				Result := l_option.value
+			end
+		end
+
+	unmanaged: BOOLEAN
+			-- The unmanaged option
+		require
+			is_successful: is_successful
+		do
+			Result := has_option (unmanaged_switch)
 		end
 
 
@@ -96,14 +106,16 @@ feature {NONE} -- Access: Usage
 														  "%N%T4: Information about tasks that are performed" +
 														  "%N%T5: Information about subtasks that are performed" +
 														  "%N%T6: Very verbose information about subtasks that are performed", True, False, "debug_level", "The debug level (1-6)", False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (assume_webapps_are_running_switch, "If set, the server assumes that the webapps are already running and does not translate, compile and run them before connect to them.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (unmanaged_switch, "If set, the server treats all managed webapps as unmanged webapps.", True, False))
+			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (create_webapp_switch, "If this switch is used the server will translate, generate and compile the specified webapp and shut down.", True, False, "Webapp config file", "The webapp config file", False))
 		end
 
 
 feature {NONE} -- Switches
 
 	debug_level_switch: STRING = "d|debug_level"
-	assume_webapps_are_running_switch: STRING = "r|assume_webapps_are_running"
+	unmanaged_switch: STRING = "i|unmanaged"
+	create_webapp_switch: STRING = "c|create_webapp"
 
 end
 

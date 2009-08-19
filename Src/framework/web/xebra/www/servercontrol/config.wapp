@@ -2,7 +2,7 @@
 	"ecf": "$XEBRA_DEV/www/servercontrol/servercontrol.ecf",
 	"name": "servercontrol",
 	"port": "55003",
-	"host": "localhost",
+	"server_host": "localhost",
 	"taglibs":
 	[
 		{ 

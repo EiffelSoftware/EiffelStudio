@@ -20,7 +20,8 @@ feature {NONE} -- Initialization
 		do
 			create name.make_empty
 			create port.make_empty
-			create host.make_empty
+			create server_host.make_empty
+			create webapp_host.make_empty
 			create ecf.make_empty
 			create arg_config.make_empty
 			create {ARRAYED_LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]} taglibs.make (3)
@@ -28,9 +29,10 @@ feature {NONE} -- Initialization
 			arg_config_attached: arg_config /= Void
 			name_attached: name /= Void
 			ecf_attached: ecf /= Void
-			host_attached: host /= Void
+			server_host_attached: server_host /= Void
 			port_attached: port /= Void
 			taglibs_attached: taglibs /= Void
+			webapp_host_attached: webapp_host /= Void
 		end
 
 feature -- Access
@@ -41,10 +43,13 @@ feature -- Access
 	name: SETTABLE_STRING assign set_name
 		-- The name of the application.
 
-	host: SETTABLE_STRING assign set_host
-		-- The host of the application.	
+	server_host: SETTABLE_STRING assign set_server_host
+		-- The server_host address.
 
-	port: SETTABLE_INTEGER assign set_port
+	webapp_host: SETTABLE_STRING assign set_webapp_host
+		-- The server_host address, this is only used for unmanaged (remote) webapps.
+
+	port: SETTABLE_INTEGER
 		-- The port on which the application listens.
 
 	taglibs: LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]
@@ -88,17 +93,27 @@ feature -- Status setting
 			name_set: name = a_name
 		end
 
-	set_host (a_host: like host)
-			-- Sets host
+	set_server_host (a_server_host: like server_host)
+			-- Sets server_host
 		require
-			a_host_attached: a_host /= Void
+			a_server_host_attached: a_server_host /= Void
 		do
-			host := a_host
+			server_host := a_server_host
 		ensure
-			host_set: host = a_host
+			server_host_set: server_host = a_server_host
 		end
 
-	set_port  (a_port: like port)
+	set_webapp_host (a_webapp_host: like webapp_host)
+			-- Sets webapp_host
+		require
+			a_webapp_host_attached: a_webapp_host /= Void
+		do
+			webapp_host := a_webapp_host
+		ensure
+			webapp_host_set: webapp_host = a_webapp_host
+		end
+
+	set_port  (a_port: INTEGER)
 			-- Sets port
 		require
 			a_port_attached: a_port /= Void
@@ -111,7 +126,8 @@ feature -- Status setting
 invariant
 	arg_config_attached: arg_config /= Void
 	name_attached: name /= Void
-	host_attached: host /= Void
+	server_host_attached: server_host /= Void
+	webapp_host_attached: webapp_host /= Void
 	port_attached: port /= Void
 	ecf_attached: ecf /= Void
 	taglibs_attached: taglibs /= Void

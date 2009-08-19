@@ -54,19 +54,24 @@ feature {XS_APPLICATION} -- Setup
 		do
 			config.args.set_debug_level (a_arg_parser.debug_level)
 			config.args.set_config_filename (a_arg_parser.config_filename)
-			config.args.set_assume_webapps_are_running (a_arg_parser.assume_webapps_are_running)
+			config.args.set_unmanaged (a_arg_parser.unmanaged)
+
 			print("%N%N%N")
 			o.iprint ("Starting Xebra Web Application Server...")
 			if check_xebra_environment_variable then
 				o.dprint (config.args.print_configuration, o.Debug_configuration)
 				stop := false
 				if attached {XCCR_OK} load_config then
-					modules.force (create {XS_CONSOLE_MODULE}.make (current, "mod_console"), "mod_console")
-					modules.force (create {XS_HTTP_CONN_MODULE}.make (current, "mod_http"), "mod_http")
-					modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current, "mod_cmd"), "mod_cmd")
-					o.dprint("Launching modules...", o.Debug_tasks)
-					modules.run_all
-					run
+					if attached a_arg_parser.create_webapp as l_config  then
+						compile_mode (l_config)
+					else
+						modules.force (create {XS_CONSOLE_MODULE}.make (current, "mod_console"), "mod_console")
+						modules.force (create {XS_HTTP_CONN_MODULE}.make (current, "mod_http"), "mod_http")
+						modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current, "mod_cmd"), "mod_cmd")
+						o.dprint("Launching modules...", o.Debug_tasks)
+						modules.run_all
+						run
+					end
 				end
 			end
 		end
@@ -123,16 +128,48 @@ feature {NONE} -- Operations
 			end
 		end
 
+	compile_mode (a_config: STRING)
+			--test
+		local
+			l_w: XS_MANAGED_WEBAPP
+			l_webapp_config_reader: XC_WEBAPP_JSON_CONFIG_READER
+			l_thread: EXECUTION_ENVIRONMENT
+			l_stop: BOOLEAN
+		do
+			create l_webapp_config_reader
+			create l_thread
+			if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (a_config) as l_c then
+				create l_w.make_with_config (l_c)
+				l_w.force_translate
+
+
+				from
+					o.iprint ("CREATING WEBAPP, hit enter to abort.")
+				until
+					l_stop
+				loop
+					io.read_line
+					l_stop := True
+				end
+				o.iprint ("Aborting...")
+				l_w.shutdown_all
+			end
+			handle_errors.do_nothing
+
+		end
+
 
 feature {XS_SERVER_MODULE} -- Status setting
 
 	force_translate (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Forcing retranslation of webapp '" + a_name + "'")
 				l_w.force_translate
 				create {XCCR_OK}Result
+			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
+				create {XCCR_INVALID_CMD_UNMANAGED}Result.make (a_name)
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -163,7 +200,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Fireing off webapp '" + a_name + "'")
 				l_w.fire_off
 				create {XCCR_OK}Result
@@ -181,7 +218,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 			until
 				config.file.webapps.after
 			loop
-				config.file.webapps.item_for_iteration.dev_mode := True
+				if attached {XS_MANAGED_WEBAPP} config.file.webapps.item_for_iteration as l_webapp then
+					l_webapp.dev_mode := True
+				end
 				config.file.webapps.forth
 			end
 			create {XCCR_OK}Result
@@ -205,10 +244,12 @@ feature {XS_SERVER_MODULE} -- Status setting
 	dev_mode_on_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Setting dev_mode of webapp '" + a_name + "' to on.")
 				l_w.dev_mode := True
 				create {XCCR_OK}Result
+			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
+				Result := create {XCCR_INVALID_CMD_UNMANAGED}.make (a_name)
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -217,10 +258,12 @@ feature {XS_SERVER_MODULE} -- Status setting
 	dev_mode_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-		if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Setting dev_mode of webapp '" + a_name + "' to off.")
 				l_w.dev_mode := False
 				create {XCCR_OK}Result
+			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
+				Result := create {XCCR_INVALID_CMD_UNMANAGED}.make (a_name)
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -230,10 +273,12 @@ feature {XS_SERVER_MODULE} -- Status setting
 	launch_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Launching webapp '" + a_name + "'...")
 				l_w.send (create {XCWC_EMPTY}.make).do_nothing
 				create {XCCR_OK}Result
+			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
+				Result := create {XCCR_INVALID_CMD_UNMANAGED}.make (a_name)
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -242,10 +287,12 @@ feature {XS_SERVER_MODULE} -- Status setting
 	shutdown_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Shutting down webapp '" + a_name + "'...")
 				l_w.shutdown_all
 				create {XCCR_OK}Result
+			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
+				Result := create {XCCR_INVALID_CMD_UNMANAGED}.make (a_name)
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
 			end
@@ -263,7 +310,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 				until
 					l_webapps.after
 				loop
-					l_response.webapps.force ( l_webapps.item_for_iteration.copy_from_bean)
+					l_response.webapps.force (l_webapps.item_for_iteration.copy_from_bean)
 					l_webapps.forth
 				end
 			end
@@ -297,11 +344,13 @@ feature {XS_SERVER_MODULE} -- Status setting
 	clean_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_WEBAPP} config.file.webapps[a_name] as l_webapp then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_webapp then
 				l_webapp.set_needs_cleaning
 				o.iprint ("Cleaning webapp '" + a_name + "'...")
 				l_webapp.force_clean
 				Result := create {XCCR_OK}
+			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
+				Result := create {XCCR_INVALID_CMD_UNMANAGED}.make (a_name)
 			else
 				Result := create {XCCR_WEBAPP_NOT_FOUND}.make (a_name)
 			end
@@ -312,9 +361,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
 		do
-			o.iprint ("Terminating Web Applications...")
+			o.iprint ("Terminating managed web applications...")
 			create l_webapp_handler
-			l_webapp_handler.stop_apps
+			l_webapp_handler.stop_managed_apps
 			Result := create {XCCR_OK}
 		end
 
@@ -359,7 +408,17 @@ feature {XS_SERVER_MODULE} -- Status setting
 				if handle_errors then
 					Result := create {XCCR_OK}
 					o.dprint (config.file.print_configuration, o.Debug_configuration)
-					config.file.set_webapps (l_webapp_handler.search_webapps (config.file.webapps_root))
+
+					if attached l_webapp_handler.search_webapps (config.file.webapps_root.value) as l_managed_webapps then
+						from
+							l_managed_webapps.start
+						until
+							l_managed_webapps.after
+						loop
+							config.file.webapps.force (l_managed_webapps.item_for_iteration, l_managed_webapps.key_for_iteration)
+							l_managed_webapps.forth
+						end
+					end
 					handle_errors.do_nothing
 					o.dprint (config.file.print_webapp_configuration, o.Debug_configuration)
 				end

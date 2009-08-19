@@ -56,7 +56,7 @@ feature -- Inherited Features
 				o.eprint ("Socket could not be bound on port " + {XU_CONSTANTS}.Cmd_server_port.out, generating_type)
 			else
 
-	 	       	l_cmd_socket.set_accept_timeout (500)
+	 	       	l_cmd_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
 				from
 	                l_cmd_socket.listen ({XU_CONSTANTS}.Max_tcp_clients.as_integer_32)
 	                o.dprint("Command Server ready on port " + {XU_CONSTANTS}.Cmd_server_port.out, o.Debug_start_stop_components)

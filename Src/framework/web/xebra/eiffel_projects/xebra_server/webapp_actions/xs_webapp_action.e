@@ -31,11 +31,11 @@ feature -- Access
 		-- True if the action is currently running
 
 	is_running_recursive: BOOLEAN
-			-- True if is_running is true and
+			-- True if is_running is true or
 			-- if the next action (recursively) is running
 		do
 			if attached next_action as l_na then
-				Result := is_running and l_na.is_running_recursive
+				Result := is_running or l_na.is_running_recursive
 			else
 				Result := is_running
 			end
@@ -48,12 +48,31 @@ feature -- Paths
 
 	app_dir: FILE_NAME
 			-- The directory to the application
+			--
 		require
 			webapp_attached: webapp /= Void
+		local
+			l_string: STRING
+			l_i: INTEGER
 		do
 			if attached webapp as l_wa then
-				Result := config.file.webapps_root_filename.twin
-				Result.extend (l_wa.app_config.name.out)
+				l_string := l_wa.app_config.ecf.out
+				l_string.replace_substring_all ("\" ,"/")
+				if attached {ARRAYED_LIST [ANY]} l_string.split ('/') as l_ist then
+					from
+						l_i := 2
+						l_string := l_ist.i_th (1).out
+					until
+						l_i >= l_ist.count
+					loop
+						l_string := l_string + "/" + l_ist.i_th (l_i).out
+						l_i := l_i + 1
+					end
+				end
+				if {PLATFORM}.is_windows then
+					l_string.replace_substring_all ("/" ,"\")
+				end
+				create Result.make_from_string (l_string)
 			else
 				create Result.make
 			end

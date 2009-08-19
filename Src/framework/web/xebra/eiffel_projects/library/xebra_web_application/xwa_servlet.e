@@ -4,6 +4,8 @@ note
 		the concrete render functions as well as the post and get handling with the final handling after rendering.
 		This class handles premature redirects as well.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

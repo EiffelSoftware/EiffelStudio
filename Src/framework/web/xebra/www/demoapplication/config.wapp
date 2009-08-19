@@ -2,7 +2,7 @@
 	"ecf": "$XEBRA_DEV/www/demoapplication/demoapplication.ecf",
 	"name": "demoapplication",
 	"port": "55010",
-	"host": "localhost",
+	"server_host": "localhost",
 	"taglibs":
 	[
 		{ 

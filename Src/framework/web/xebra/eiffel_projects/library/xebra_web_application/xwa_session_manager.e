@@ -23,13 +23,10 @@ feature {NONE} -- Initialzation
 			sessions_attached: sessions /= Void
 		end
 
-feature -- Constants
-
-	Uuid: STRING = "xuuid"
-
 feature -- Access
 
 	sessions: HASH_TABLE [XH_SESSION, STRING]
+		-- The table of sessions
 
 feature -- Basic operations
 
@@ -43,7 +40,7 @@ feature -- Basic operations
 		local
 			l_session: detachable like get_current_session
 		do
-			if attached a_request.cookies [Uuid] as l_cookie then
+			if attached a_request.cookies [{XU_CONSTANTS}.Cookie_uuid] as l_cookie then
 				l_session := sessions.item (l_cookie.value)
 				if l_session /= Void and then not l_session.has_expired then
 					renew_session (l_session, a_response)
@@ -66,7 +63,7 @@ feature -- Basic operations
 		local
 			l_cookie_order: XH_COOKIE_ORDER
 		do
-			create l_cookie_order.make (Uuid, a_session.uuid)
+			create l_cookie_order.make ({XU_CONSTANTS}.Cookie_uuid, a_session.uuid)
 			l_cookie_order.max_age := a_session.max_age
 			a_response.put_cookie_order (l_cookie_order)
 		end
@@ -84,7 +81,7 @@ feature -- Basic operations
 			sessions.put (l_session, l_session.uuid)
 			Result := l_session
 
-			create l_cookie_order.make (Uuid, l_session.uuid)
+			create l_cookie_order.make ({XU_CONSTANTS}.Cookie_uuid, l_session.uuid)
 			l_cookie_order.max_age := 1000
 			a_response.put_cookie_order (l_cookie_order)
 		ensure

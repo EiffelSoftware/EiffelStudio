@@ -25,7 +25,7 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Shuts down a webapp."
+			Result := "Shuts down a webapp. (Managed webapp only)"
 		end
 
 	parameter_description: STRING

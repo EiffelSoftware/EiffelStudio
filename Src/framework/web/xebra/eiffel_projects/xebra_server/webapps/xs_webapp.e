@@ -42,6 +42,14 @@ feature -- Actions
 		deferred
 		end
 
+	fire_off
+			-- Sends shutdown signal no matter what
+		do
+			o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", o.Debug_tasks)
+			current_request := 	create {XCWC_SHUTDOWN}.make
+			action_send.execute.do_nothing
+		end
+
 invariant
 	config_attached: config /= Void
 	current_request_attached: current_request /= Void

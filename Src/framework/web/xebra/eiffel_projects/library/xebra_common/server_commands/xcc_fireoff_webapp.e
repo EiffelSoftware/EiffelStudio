@@ -25,7 +25,7 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Sends shutdown signal to webapp."
+			Result := "Sends shutdown signal directly to webapp."
 		end
 
 	parameter_description: STRING
@@ -35,7 +35,6 @@ feature -- Access
 		end
 
 feature -- Status Change
-
 
 feature -- Basic operations
 

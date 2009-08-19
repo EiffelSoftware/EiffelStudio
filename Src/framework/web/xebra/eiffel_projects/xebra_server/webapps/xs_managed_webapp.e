@@ -150,14 +150,6 @@ feature  -- Status Setting
 			end
 		end
 
-	fire_off
-			-- Sends shutdown signal even if the webapp process is not owned by the server
-		do
-			o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", o.Debug_tasks)
-			current_request := 	create {XCWC_SHUTDOWN}.make
-			action_send.execute.do_nothing
-		end
-
 	shutdown_all
 			-- Shuts the application down and all process (compile and translate).
 		do

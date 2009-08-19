@@ -123,6 +123,34 @@ feature -- Status setting
 			port_set: port  = port
 		end
 
+	copy_from (a_other: like current)
+			-- Copies all fields
+		require
+			arg_config_attached: a_other.arg_config /= Void
+			name_attached: a_other.name /= Void
+			ecf_attached: a_other.ecf /= Void
+			server_host_attached: a_other.server_host /= Void
+			port_attached: a_other.port /= Void
+			taglibs_attached: a_other.taglibs /= Void
+			webapp_host_attached: a_other.webapp_host /= Void
+		do
+			name := a_other.name
+			port := a_other.port
+			server_host := a_other.server_host
+			webapp_host := a_other.webapp_host
+			ecf := a_other.ecf
+			arg_config := a_other.arg_config
+			taglibs := a_other.taglibs
+		ensure then
+			arg_config_attached: arg_config /= Void
+			name_attached: name /= Void
+			ecf_attached: ecf /= Void
+			server_host_attached: server_host /= Void
+			port_attached: port /= Void
+			taglibs_attached: taglibs /= Void
+			webapp_host_attached: webapp_host /= Void
+		end
+
 invariant
 	arg_config_attached: arg_config /= Void
 	name_attached: name /= Void

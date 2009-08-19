@@ -63,7 +63,7 @@ feature {XS_APPLICATION} -- Setup
 				stop := false
 				if attached {XCCR_OK} load_config then
 					if attached a_arg_parser.create_webapp as l_config  then
-						compile_mode (l_config)
+						run_compile_mode (l_config)
 					else
 						modules.force (create {XS_CONSOLE_MODULE}.make (current, "mod_console"), "mod_console")
 						modules.force (create {XS_HTTP_CONN_MODULE}.make (current, "mod_http"), "mod_http")
@@ -79,7 +79,7 @@ feature {XS_APPLICATION} -- Setup
 feature {NONE} -- Operations
 
 	run
-			--  until stopped
+			-- Start the server
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
 			l_thread: EXECUTION_ENVIRONMENT
@@ -101,6 +101,34 @@ feature {NONE} -- Operations
 			o.iprint ("Shutdown complete. Bye!")
 		end
 
+	run_compile_mode (a_config: STRING)
+			-- The server is not started as usual but only initiates translation of the specified webapp and ends afterwards.
+		local
+			l_w: XS_MANAGED_WEBAPP
+			l_webapp_config_reader: XC_WEBAPP_JSON_CONFIG_READER
+			l_thread: EXECUTION_ENVIRONMENT
+			l_stop: BOOLEAN
+		do
+			create l_webapp_config_reader
+			create l_thread
+			if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (a_config) as l_c then
+				create l_w.make_with_config (l_c)
+				l_w.force_translate
+				from
+					o.iprint ("CREATING WEBAPP, hit enter to abort.")
+				until
+					l_stop
+				loop
+					io.read_line
+					l_stop := True
+				end
+				o.iprint ("Aborting...")
+				l_w.shutdown_all
+			end
+			handle_errors.do_nothing
+		end
+
+feature {XS_SERVER_MODULE} -- Status setting
 
 	shutdown_all_modules
 			-- Shuts all modules down
@@ -127,39 +155,6 @@ feature {NONE} -- Operations
 				l_mods.forth
 			end
 		end
-
-	compile_mode (a_config: STRING)
-			--test
-		local
-			l_w: XS_MANAGED_WEBAPP
-			l_webapp_config_reader: XC_WEBAPP_JSON_CONFIG_READER
-			l_thread: EXECUTION_ENVIRONMENT
-			l_stop: BOOLEAN
-		do
-			create l_webapp_config_reader
-			create l_thread
-			if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (a_config) as l_c then
-				create l_w.make_with_config (l_c)
-				l_w.force_translate
-
-
-				from
-					o.iprint ("CREATING WEBAPP, hit enter to abort.")
-				until
-					l_stop
-				loop
-					io.read_line
-					l_stop := True
-				end
-				o.iprint ("Aborting...")
-				l_w.shutdown_all
-			end
-			handle_errors.do_nothing
-
-		end
-
-
-feature {XS_SERVER_MODULE} -- Status setting
 
 	force_translate (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
@@ -188,8 +183,8 @@ feature {XS_SERVER_MODULE} -- Status setting
 				l_webapp := config.file.webapps.item_for_iteration
 
 				if not l_webapp.app_config.name.value.is_equal (a_name) then
-					if l_webapp.get_sessions then
-						-- FIXME: Errorhandling
+					if not l_webapp.get_sessions then
+						create {XCCR_INTERNAL_SERVER_ERROR}Result
 					end
 				end
 				config.file.webapps.forth
@@ -200,7 +195,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
-			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				o.iprint ("Fireing off webapp '" + a_name + "'")
 				l_w.fire_off
 				create {XCCR_OK}Result
@@ -235,7 +230,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 			until
 				config.file.webapps.after
 			loop
-				config.file.webapps.item_for_iteration.dev_mode := False
+				if attached {XS_MANAGED_WEBAPP} config.file.webapps.item_for_iteration as l_webapp then
+					l_webapp.dev_mode := False
+				end
 				config.file.webapps.forth
 			end
 			create {XCCR_OK}Result

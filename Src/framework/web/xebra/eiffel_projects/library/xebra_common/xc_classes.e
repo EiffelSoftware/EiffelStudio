@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 feature -- Other
 
 	include_common_classes
-			-- Includes all classes in the system that are needed but not neccesarily included by default
+			-- Includes all classes in the system that are needed but not necessarily included by default
 		local
 			l: ANY
 		do
@@ -42,6 +42,7 @@ feature -- Other
 			if attached {XCCR_OK} l then end
 			if attached {XCCR_INTERNAL_SERVER_ERROR} l then end
 			if attached {XCCR_WEBAPP_NOT_FOUND} l then end
+			if attached {XCCR_INVALID_CMD_UNMANAGED} l then end
 
 				-- Server Commands
 			if attached {XCC_CLEAN_WEBAPP} l then end

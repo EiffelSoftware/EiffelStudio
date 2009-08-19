@@ -12,8 +12,10 @@ deferred class
 
 inherit
 	XU_SHARED_OUTPUTTER
-	
+
 	ERROR_SHARED_MULTI_ERROR_MANAGER
+
+	XWA_SHARED_CONFIG
 
 feature {NONE} -- Initialization
 
@@ -23,7 +25,6 @@ feature {NONE} -- Initialization
 			l_arg_parser: XWA_ARGUMENT_PARSER
 			l_common_classes: XC_CLASSES
 		do
-			create config.make_empty
 			create l_common_classes.make
 			print ("%N%N%N")
 			create l_arg_parser.make
@@ -42,30 +43,22 @@ feature {NONE} -- Operations Internal
 			l_printer: ERROR_CUI_PRINTER
 		do
 			create l_config_reader
-			if attached l_config_reader.process_file (a_arg_parser.config_filename) as l_config then
-				config := l_config
-				config.arg_config.set_debug_level (a_arg_parser.debug_level)
-				if a_arg_parser.is_interactive then
-					config.set_is_interactive (True)
-				end
-			end
-
 			create l_printer.default_create
-			if error_manager.has_warnings then
-				error_manager.trace_warnings (l_printer)
-			end
-
-			if not error_manager.is_successful then
-				error_manager.trace_errors (l_printer)
-			else
-				check config /= Void end
-
+			if attached l_config_reader.process_file (a_arg_parser.config_filename) as l_config then
+				config.copy_from (l_config)
+				config.arg_config.set_debug_level (a_arg_parser.debug_level)
+				config.set_is_interactive (a_arg_parser.is_interactive)
 				o.set_name (config.name.out)
 				o.set_debug_level (config.arg_config.debug_level)
 				o.iprint ("Starting " + config.name.out + "@" + config.port.out)
 				initialize_server_connection_handler
 				run
+
 			end
+			if not error_manager.is_successful then
+					error_manager.trace_errors (l_printer)
+			end
+
 		end
 
 	initialize_server_connection_handler
@@ -110,9 +103,6 @@ feature -- Access
 
 	server_connection_handler: detachable XWA_SERVER_CONN_HANDLER
 			-- Returns the applications server conn handler
-
-	config:  XC_WEBAPP_CONFIG
-			-- Configuration for the webapp
 
 invariant
 	config_attached: config /= Void

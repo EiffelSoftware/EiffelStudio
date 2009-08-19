@@ -54,7 +54,7 @@
 <table class="default">
 	<tr>
 		<th>Name</th>
-		<th>Host </th>
+		<th>Webapp Host </th>
 		<th>Port</th>
 		<th>Interactive</th>
 		<th>Status </th>
@@ -66,7 +66,7 @@
 	<xeb:iterate list="%=webapps%" variable="webapp" type="XC_WEBAPP_BEAN">
 		<tr>
 			<td><xeb:display text="#{webapp.app_config.name.value.out}" /></td>
-			<td><xeb:display text="#{webapp.app_config.host.value.out}" /></td>
+			<td><xeb:display text="#{webapp.app_config.webapp_host.value.out}" /></td>
 			<td><xeb:display text="#{webapp.app_config.port.value.out}" /></td>
 			<td><xeb:display text="#{webapp.app_config.is_interactive.out}" /></td>
 			<td><xeb:display text="#{webapp.status}" /></td>

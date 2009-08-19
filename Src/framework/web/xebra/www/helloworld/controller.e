@@ -31,6 +31,7 @@ feature -- Basic Operations
 		local
 			l_time: TIME
 		do
+				-- Sets the sessions max age to 1000 seconds
 			session.set_max_age (10000)
 
 			create l_time.make_now

@@ -21,19 +21,14 @@ feature -- Status Change
 	logout (a_bean: detachable ANY)
 			-- Removes the user from the session
 		do
-			if attached current_session as session  then
-					session.remove ("auth")
-					--Result := "/demoapplication/logout.xeb"
-			end
+			session.remove ("auth")
 		end
 
 	login_with_bean (a_login: LOGIN_BEAN)
 			-- Tries to log in with the information provided by `a_login'
 		do
 			if attached {USER} global_state.db.valid_login (a_login.name, a_login.password) as user then
-				if attached current_session as session then
-					session.put (user, "auth")
-				end
+				session.put (user, "auth")
 			end
 		end
 end

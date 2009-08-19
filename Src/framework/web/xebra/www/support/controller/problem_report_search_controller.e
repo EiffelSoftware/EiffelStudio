@@ -10,10 +10,13 @@ class
 inherit
 	XWA_CONTROLLER
 		redefine
-			make,
-			on_load
+			on_load		
 		end
+
 	G_SHARED_SUPPORT_GLOBAL_STATE
+		undefine
+			default_create
+		end
 
 create
 	make
@@ -22,7 +25,7 @@ feature -- Initialization
 
 	make
 		do
-			Precursor
+			default_create
 			create {ARRAYED_LIST [PROBLEM_REPORT_BEAN]} internal_problem_reports.make (2)
 			create internal_query.make
 			create responsibles.make (3)

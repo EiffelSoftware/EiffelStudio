@@ -28,17 +28,17 @@
 				<div id="private_change">
 				<a id="private_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
 				<f:check_box 
-					text="Private" value="private" name="a_private"/>				
+					label="Private" value="private" name="a_private"/>				
 				</div>
 				
 			    <div id="close_report_change">
 				<a id="close_report_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-				<f:check_box text="Close report" value="close_report_box" name="a_close_report_box" />				
+				<f:check_box label="Close report" value="close_report_box" name="a_close_report_box" />				
 				</div>
 				
 				<div id="reopen_report_change">
 				<a id="reopen_report_link"><img alt="" class="info_icon" src="<%=information_icon_url %>" /></a>
-				<f:check_box text="Reopen report" value="reopen_report_box" name="a_reopen_report_box"/>				
+				<f:check_box label="Reopen report" value="reopen_report_box" name="a_reopen_report_box"/>				
 				</div>
 			</td>
 		</tr>

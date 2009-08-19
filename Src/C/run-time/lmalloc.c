@@ -5,7 +5,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -69,14 +69,14 @@ struct lm_entry {
 	struct lm_entry *next;
 }; 
 
-rt_shared void eif_lm_display ();
+rt_shared void eif_lm_display (void);
 rt_shared int is_in_lm (void *ptr);
 rt_private struct lm_entry **lm = (struct lm_entry **) 0;
 
-rt_private int lm_create (); 
+rt_private int lm_create (void);
 rt_private int lm_put (void *ptr, char *file, int line);
 rt_private int lm_remove (void *ptr);
-rt_shared  int eif_lm_free ();
+rt_shared  int eif_lm_free (void);
 
 /*----------------------*/
 /* MT declarations.     */
@@ -99,7 +99,7 @@ rt_private EIF_LW_MUTEX_TYPE *lm_lock = NULL;
 /*-------------------------------------------*/
 /* Create and initialize lm linked list.     */
 /*-------------------------------------------*/
-rt_private int lm_create () {
+rt_private int lm_create (void) {
 
 	REQUIRE ("lm not created", lm == (struct lm_entry **) 0);
 
@@ -247,7 +247,7 @@ rt_shared int is_in_lm (void *ptr) {
 /*------------------------------*/
 /* Display lm linked list.      */
 /*------------------------------*/
-rt_shared void eif_lm_display () {
+rt_shared void eif_lm_display (void) {
 	struct lm_entry *cur;
 
 #ifdef EIF_THREADS
@@ -271,7 +271,7 @@ rt_shared void eif_lm_display () {
 /*------------------------------*/
 /* Free lm linked list.         */
 /*------------------------------*/
-rt_shared int eif_lm_free () {
+rt_shared int eif_lm_free (void) {
 	struct lm_entry *cur, *tmp;
 
 #ifdef EIF_THREADS

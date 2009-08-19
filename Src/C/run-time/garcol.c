@@ -2,7 +2,7 @@
 	description: "Garbage collection routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -691,7 +691,7 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object);			/* Partial scavenge with gi
 rt_private void init_plsc(void);			/* Initialize the scavenging process */
 rt_private void clean_zones(void);			/* Clean up scavenge zones */
 rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top);			/* Scavenge an object */
-/*rt_private void clean_space();*/			/* Sweep forwarded objects */ /* %%ss undefine */
+/*rt_private void clean_space(void);*/			/* Sweep forwarded objects */ /* %%ss undefine */
 rt_private void full_update(void);			/* Update scavenge-related structures */
 rt_private int split_to_block (int is_to_keep);		/* Keep only needed space in 'to' block */
 rt_private int sweep_from_space(void);		/* Clean space after the scavenging */

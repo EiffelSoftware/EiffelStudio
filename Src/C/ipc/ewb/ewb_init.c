@@ -7,7 +7,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -338,18 +338,18 @@ void win_ioh_clean_client(void)
 	delay = 0; 
 }
 
-DWORD ewb_current_process_id() 
+DWORD ewb_current_process_id(void)
 {
 	return GetCurrentProcessId();
 }
 #else
 
-int ewb_current_process_id() 
+int ewb_current_process_id(void)
 {
 	return getpid();
 }
 
-int ewb_pipe_read_fd () {
+int ewb_pipe_read_fd (void) {
 	return readfd(ewb_sp);
 }
 

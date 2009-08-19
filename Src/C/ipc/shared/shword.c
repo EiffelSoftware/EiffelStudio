@@ -9,7 +9,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -317,12 +317,13 @@ test(char *cmd)
 	print_argv();
 }
 
-main()
+int main(void)
 {
 	test("   ls -al /home");
 	test("'ls -al' /home");
 	test("ls '-al \\\"\\'/home'");
 	test("ls \"-al \\'\\\"/home'\"");
+	return 0;
 }
 
 #endif

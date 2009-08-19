@@ -2,7 +2,7 @@
 	description: "Declarations for transfer routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -41,7 +41,7 @@
 
 extern char *tread(STREAM *sp, int *size);		/* Read from the transfer "pipe" */
 extern int twrite(STREAM *sp,void *buffer, size_t size);		/* Write to the transfer "pipe" */
-extern void end_debug();		/* Free the communication buffer, should be called when debugging stops */
+extern void end_debug(void);		/* Free the communication buffer, should be called when debugging stops */
 
 extern void swallow(EIF_PSTREAM , size_t size);		/* Discard a certain amount of bytes from file */
 

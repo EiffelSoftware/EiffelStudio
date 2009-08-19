@@ -22,9 +22,7 @@ feature {NONE} -- Initialization
 		do
 			uuid := uuid_generator.generate_uuid.out
 			remote_user := ""
-			expiry := 0
 			create entries.make (8)
-			set_max_age (300)
 		ensure
 			uuid_attached: uuid /= Void
 			remote_user_attached: remote_user /= Void
@@ -46,28 +44,39 @@ feature -- Access
 	max_age: NATURAL assign set_max_age
 		-- The sessions age
 
+	needs_cookie_order: BOOLEAN assign set_needs_cookie_order
+		-- Used by session manager to know for which sessions cookie order have to be created
+
 feature -- Status Setting
 
-	set_max_age (a_i: NATURAL)
+	set_max_age (a_max_age: NATURAL)
 			-- Sets max_age and updates expiry.
 		local
 			l_date: XU_DATE
 		do
-			max_age := a_i
+			max_age := a_max_age
 			create l_date.default_create
 			expiry := max_age + l_date.unix_time_stamp
 		ensure
-			max_age_set: max_age = a_i
+			max_age_set: max_age = a_max_age
 		end
 
-	set_remote_user (a_s: STRING)
+	set_remote_user (a_remote_user: STRING)
 			-- Sets remote_user.
 		require
-			not_a_s_is_detached_or_empty: a_s /= Void and then not a_s.is_empty
+			not_a_remote_user_is_detached_or_empty: a_remote_user /= Void and then not a_remote_user.is_empty
 		do
-			remote_user := a_s
+			remote_user := a_remote_user
 		ensure
-			remote_user_set: remote_user = a_s
+			remote_user_set: remote_user = a_remote_user
+		end
+
+	set_needs_cookie_order (a_needs_cookie_order: BOOLEAN)
+			-- Sets needs_cookie_order.
+		do
+			needs_cookie_order := a_needs_cookie_order
+		ensure
+			needs_cookie_order_set: needs_cookie_order = a_needs_cookie_order
 		end
 
 feature {NONE} -- Access

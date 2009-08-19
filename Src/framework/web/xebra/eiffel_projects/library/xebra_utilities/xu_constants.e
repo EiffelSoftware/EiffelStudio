@@ -111,6 +111,10 @@ feature -- Cookie Order
 	Cookie_secure: STRING = "Secure"
 	Cookie_comment: STRING = "Comment="
 
+feature -- Webapp
+
+	Initial_session_length: NATURAL = 10
+
 feature -- Time
 
 	Two_seconds_in_nanoseconds: NATURAL = 2000000000

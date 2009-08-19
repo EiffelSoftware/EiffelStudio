@@ -13,8 +13,8 @@ class
 
 inherit
 	XH_COOKIE
-		redefine
-			make
+		rename
+			make as make_cookie
 		end
 
 create
@@ -22,16 +22,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: STRING)
+	make (a_name: STRING; a_value: STRING; a_max_age: NATURAL)
 			-- Initialization for `Current'.
 		require else
 			not_a_name_is_detached_or_empty: a_name /= Void and then not a_name.is_empty
 			not_a_value_is_detached_or_empty: a_value /= Void and then not a_value.is_empty
 		do
 				-- Initialize to default values
-			set_name (a_name)
-			set_value (a_value)
-			set_max_age (default_max_age)
+			make_cookie (a_name, a_value)
+			set_max_age (a_max_age)
 			set_path ("")
 			set_domain ("")
 			set_comment ("")
@@ -204,15 +203,6 @@ feature -- Basic operations
 			Result := Result + {XU_CONSTANTS}.Cookie_sq + {XU_CONSTANTS}.Cookie_version + version + {XU_CONSTANTS}.Cookie_end
 		ensure
 			Result_not_empty: not Result.is_empty
-		end
-
-
-feature {NONE} -- Implementation
-
-	default_max_age: NATURAL
-			-- Generates a default max age of 5min
-		do
-			Result := 300;
 		end
 
 

@@ -84,7 +84,8 @@ feature -- Basic Operations
 			l_internal_controllers: LIST [XWA_CONTROLLER]
 		do
 			o.dprint ("Processing request...", o.Debug_tasks)
-			current_session := a_session_manager.get_current_session (a_request, a_response)
+
+			current_session := a_session_manager.get_current_session (a_request)
 			l_internal_controllers := internal_controllers
 			from
 				l_internal_controllers.start
@@ -109,6 +110,7 @@ feature -- Basic Operations
 			end
 			validation_errors.wipe_out
 			uid_counter := 0
+			a_session_manager.place_cookie_order (current_session, a_response)
 		end
 
 	execute_on_controller (a_controllers: LIST [XWA_CONTROLLER]; a_feature: PROCEDURE [ANY, TUPLE [XWA_CONTROLLER]])

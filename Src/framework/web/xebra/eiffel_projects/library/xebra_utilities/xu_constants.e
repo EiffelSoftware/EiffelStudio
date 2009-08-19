@@ -34,7 +34,7 @@ feature -- Network
 	Cmd_server_port: INTEGER = 55002
 	Http_server_port: INTEGER = 55001
 	Max_tcp_clients: INTEGER = 100
-	Socket_accept_timeout: INTEGER = 500
+	Socket_accept_timeout: INTEGER = 1000
 	Socket_connect_timeout: INTEGER = 5000
 
 feature -- Debugging
@@ -113,7 +113,7 @@ feature -- Cookie Order
 
 feature -- Webapp
 
-	Initial_session_length: NATURAL = 10
+	Initial_session_length: NATURAL = 600
 
 feature -- Time
 

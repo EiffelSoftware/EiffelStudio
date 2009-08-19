@@ -25,7 +25,7 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Forces re-translation of webapp (without cleaning)."
+			Result := "Forces re-translation of webapp (without cleaning). (Managed webapp only)"
 		end
 
 	parameter_description: STRING

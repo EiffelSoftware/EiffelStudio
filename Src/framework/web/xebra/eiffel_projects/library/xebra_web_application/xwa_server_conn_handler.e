@@ -15,24 +15,21 @@ inherit
 	XU_SHARED_OUTPUTTER
 	XC_WEBAPP_INTERFACE
 	XU_STOPWATCH
+	XWA_SHARED_CONFIG
 
 feature {NONE} -- Initialization
 
-	make (a_config: XC_WEBAPP_CONFIG)
+	make
 			-- Initialization of classes.
-		require
-			a_config_attached: a_config /= Void
 		do
-			config := a_config
 			create session_manager.make
 			create {HASH_TABLE [XWA_SERVLET, STRING]} stateless_servlets.make (1)
-			create xserver_socket.make_server_by_port (config.port.value)
-			xserver_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
+			create server_socket.make_server_by_port (config.port.value)
+			server_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
 			stop := False
 			add_servlets
 		ensure
-			config_attached: config /= Void
-			xserver_socket_attached: xserver_socket /= Void
+			server_socket_attached: server_socket /= Void
 			session_manager_attached: session_manager /= Void
 			stateless_servlets_attached: stateless_servlets /= Void
 		end
@@ -51,10 +48,7 @@ feature -- Access
 	stop: BOOLEAN
 			-- Used to stop the thread
 
-	config: XC_WEBAPP_CONFIG
-			-- The configuration for the webapp
-
-	xserver_socket: NETWORK_STREAM_SOCKET
+	server_socket: NETWORK_STREAM_SOCKET
 			-- The socket to the server
 
 feature -- Implementation
@@ -68,13 +62,13 @@ feature -- Implementation
 			o.set_debug_level (config.arg_config.debug_level)
 
         	from
-                xserver_socket.listen ({XU_CONSTANTS}.Max_tcp_clients)
+                server_socket.listen ({XU_CONSTANTS}.Max_tcp_clients)
             until
             	stop
             loop
-                xserver_socket.accept
+                server_socket.accept
                 if not stop then
-	                if attached {NETWORK_STREAM_SOCKET} xserver_socket.accepted as socket then
+	                if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as socket then
 	                	if config.arg_config.debug_level > o.Debug_configuration then
 	                		start_time
 	                	end
@@ -98,15 +92,15 @@ feature -- Implementation
 			         end
 		         end
             end
-            xserver_socket.cleanup
+            server_socket.cleanup
 			o.dprint("Server connection server ends.", o.Debug_start_stop_components)
 		ensure then
-        	xserver_socket_closed: xserver_socket.is_closed
+        	server_socket_closed: server_socket.is_closed
 		rescue
        		o.eprint ("Exception in server connection server! Retrying...", generating_type)
-			xserver_socket.cleanup
+			server_socket.cleanup
 			check
-        		xserver_socket.is_closed
+        		server_socket.is_closed
        		end
 			if not stop then
 				retry
@@ -118,7 +112,7 @@ feature -- Status report
 	is_bound: BOOLEAN
 			-- Checks if the socket could be bound
 		do
-			Result := xserver_socket.is_bound
+			Result := server_socket.is_bound
 		end
 
 feature -- Status setting
@@ -165,8 +159,7 @@ feature -- Basic Operations
 		end
 
 invariant
-	config_attached: config /= Void
-	xserver_socket_attached: xserver_socket /= Void
+	server_socket_attached: server_socket /= Void
 	session_manager_attached: session_manager /= Void
 	stateless_servlets_attached: stateless_servlets /= Void
 note

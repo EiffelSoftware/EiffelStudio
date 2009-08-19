@@ -25,7 +25,7 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Sets developing mode of a webapp to on."
+			Result := "Sets developing mode of a webapp to on. (Managed webapp only)"
 		end
 
 	parameter_description: STRING

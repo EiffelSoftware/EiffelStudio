@@ -25,7 +25,7 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Cleans, re-translates, compiles and launches a webapp."
+			Result := "Cleans, re-translates, compiles and launches a webapp. (Managed webapp only)"
 		end
 
 	parameter_description: STRING

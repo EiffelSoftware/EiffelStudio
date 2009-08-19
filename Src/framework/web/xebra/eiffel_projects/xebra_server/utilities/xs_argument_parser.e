@@ -107,14 +107,14 @@ feature {NONE} -- Access: Usage
 														  "%N%T5: Information about subtasks that are performed" +
 														  "%N%T6: Very verbose information about subtasks that are performed", True, False, "debug_level", "The debug level (1-6)", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (unmanaged_switch, "If set, the server treats all managed webapps as unmanged webapps.", True, False))
-			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (create_webapp_switch, "If this switch is used the server will translate, generate and compile the specified webapp and shut down.", True, False, "Webapp config file", "The webapp config file", False))
+			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (create_webapp_switch, "With this switch the server can be used as a tool to translate, generate and compile the specified webapp", True, False, "Webapp config file", "The webapp config file", False))
 		end
 
 
 feature {NONE} -- Switches
 
 	debug_level_switch: STRING = "d|debug_level"
-	unmanaged_switch: STRING = "i|unmanaged"
+	unmanaged_switch: STRING = "u|unmanaged"
 	create_webapp_switch: STRING = "c|create_webapp"
 
 end

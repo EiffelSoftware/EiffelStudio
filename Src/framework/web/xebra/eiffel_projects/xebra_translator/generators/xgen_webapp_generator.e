@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			-- Generates the constructor for the application
 		do
 			create Result.make ("initialize_server_connection_handler")
-			Result.append_expression ("create " + "{" + Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class + "} server_connection_handler.make (config)")
+			Result.append_expression ("create " + "{" + Generator_Prefix.as_upper + webapp_name.as_upper + "_" + Server_con_handler_class + "} server_connection_handler.make")
 		ensure
 			result_attached: attached Result
 		end

@@ -21,6 +21,7 @@ feature -- Status Change
 	upload: STRING
 			-- Process the uploaded file
 		do
+		
 			if attached {STRING} process_uploaded_single_file ("$XEBRA_DEV/www/demoapplication/upload") as l_fn then
 				Result := "Success! File was uploaded to " + l_fn
 			else

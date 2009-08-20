@@ -30,28 +30,48 @@ feature -- Access
 
 feature -- Basic operations
 
-	get_current_session (a_request: XH_REQUEST): XH_SESSION
+	current_session (a_request: XH_REQUEST): XH_SESSION
 			-- Returns the session that belongs to the request.
-			-- XXXX
-			-- XXXX
+			-- If the sessions does not exist or has expired, a new session is created
+			-- Removes expired sessions
 		require
 			a_request_attached: a_request /= Void
-		local
-			l_session: detachable like get_current_session
 		do
+			remove_expired_sessions
+
 			if attached a_request.cookies [{XU_CONSTANTS}.Cookie_uuid] as l_cookie then
-				l_session := sessions.item (l_cookie.value)
-				if l_session /= Void and then not l_session.has_expired then
-					l_session.set_needs_cookie_order (True)
+				if attached sessions.item (l_cookie.value) as l_old_session then
+					Result := l_old_session
+				else
+					Result := new_session
 				end
-			end
-			if l_session /= Void then
-				Result := l_session
 			else
 				Result := new_session
 			end
+
 		ensure
 			Result_attached: Result /= Void
+		end
+
+	remove_expired_sessions
+			-- Removed all expired sessions from the table
+		local
+			l_keys: ARRAY [STRING]
+			i: INTEGER
+		do
+			l_keys := sessions.current_keys
+			from
+				i := 1
+			until
+				i > l_keys.count
+			loop
+				if attached sessions.at (l_keys [i]) as l_session then
+					if l_session.has_expired then
+						sessions.remove (l_keys [i])
+					end
+				end
+				i := i +1
+			end
 		end
 
 	place_cookie_order (a_session: XH_SESSION ; a_response: XH_RESPONSE)
@@ -62,12 +82,8 @@ feature -- Basic operations
 		local
 			l_cookie_order: XH_COOKIE_ORDER
 		do
-			if a_session.needs_cookie_order then
-				create l_cookie_order.make ({XU_CONSTANTS}.Cookie_uuid, a_session.uuid, a_session.max_age)
-				a_response.put_cookie_order (l_cookie_order)
-				a_session.set_needs_cookie_order (False)
-			end
-
+			create l_cookie_order.make ({XU_CONSTANTS}.Cookie_uuid, a_session.uuid, a_session.max_age)
+			a_response.put_cookie_order (l_cookie_order)
 		end
 
 	new_session: XH_SESSION
@@ -77,8 +93,7 @@ feature -- Basic operations
 		do
 			create l_session.make
 			l_session.max_age := {XU_CONSTANTS}.Initial_session_length
-			sessions.put (l_session, l_session.uuid)
-			l_session.set_needs_cookie_order (True)
+			sessions.force (l_session, l_session.uuid)
 			Result := l_session
 		ensure
 			Result_attached: Result /= Void

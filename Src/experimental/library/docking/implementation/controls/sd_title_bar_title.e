@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 				clear_for_theme
 				l_clipping_width := width - internal_shared.highlight_before_width - internal_shared.highlight_tail_width
 				if l_clipping_width >= 0 then
-					draw_ellipsed_text_top_left (internal_shared.highlight_before_width + internal_shared.title_bar_text_start_x, internal_shared.title_bar_text_start_y, title + "X", l_clipping_width)
+					draw_ellipsed_text_top_left (internal_shared.highlight_before_width + internal_shared.title_bar_text_start_x, internal_shared.title_bar_text_start_y, title, l_clipping_width)
 				end
 
 			end

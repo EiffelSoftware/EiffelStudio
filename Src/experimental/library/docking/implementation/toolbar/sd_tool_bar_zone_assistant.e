@@ -203,6 +203,7 @@ feature -- Command
 
 			l_helper: SD_POSITION_HELPER
 			l_indicator_size: INTEGER
+
 		do
 			if attached attached_zone.row as l_row then
 				l_all_hiden_items := l_row.hidden_items

@@ -875,7 +875,8 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 {
 	EIF_GET_CONTEXT
 
-	rt_uint_ptr elem_size, i, offset;
+	EIF_INTEGER i;
+	rt_uint_ptr elem_size, offset;
 	union overhead *zone;
 	EIF_TYPE_INDEX dtype = To_dtype(dftype);
 	void (*cp) (EIF_REFERENCE);
@@ -941,13 +942,13 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 					}
 					RT_GC_WEAN(obj);
 				} else {
-					EIF_REFERENCE exp = obj;
-					for (i = lower; i <= upper; i++, exp += elem_size) {
-						zone = (union overhead *) exp;
-						zone->ov_size = OVERHEAD + elem_size * i;	/* For GC */
+					for (i = lower, offset = elem_size * i; i <= upper; i++) {
+						zone = (union overhead *) (obj + offset);
+						zone->ov_size = OVERHEAD + offset;	/* For GC */
 						zone->ov_flags = EO_EXP;	/* Expanded type */
 						zone->ov_dftype = dftype;
 						zone->ov_dtype = dtype;
+						offset += elem_size;
 					}
 				}
 			}

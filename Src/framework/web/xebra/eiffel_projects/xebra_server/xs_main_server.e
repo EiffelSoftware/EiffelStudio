@@ -406,7 +406,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 					Result := create {XCCR_OK}
 					o.dprint (config.file.print_configuration, o.Debug_configuration)
 
-					if attached l_webapp_handler.search_webapps (config.file.webapps_root.value) as l_managed_webapps then
+					if attached l_webapp_handler.search_webapps (config.file.webapps_root.value, config.args.unmanaged) as l_managed_webapps then
 						from
 							l_managed_webapps.start
 						until

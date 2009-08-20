@@ -10,6 +10,9 @@ note
 class
 	XWA_SESSION_MANAGER
 
+inherit
+	XWA_SHARED_CONFIG
+
 create
 	make
 
@@ -83,6 +86,7 @@ feature -- Basic operations
 			l_cookie_order: XH_COOKIE_ORDER
 		do
 			create l_cookie_order.make ({XU_CONSTANTS}.Cookie_uuid, a_session.uuid, a_session.max_age)
+			l_cookie_order.set_path ("/" + config.name.value)
 			a_response.put_cookie_order (l_cookie_order)
 		end
 
@@ -94,6 +98,7 @@ feature -- Basic operations
 			create l_session.make
 			l_session.max_age := {XU_CONSTANTS}.Initial_session_length
 			sessions.force (l_session, l_session.uuid)
+
 			Result := l_session
 		ensure
 			Result_attached: Result /= Void

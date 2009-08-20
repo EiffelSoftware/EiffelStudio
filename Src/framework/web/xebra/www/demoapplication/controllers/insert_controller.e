@@ -41,7 +41,6 @@ feature -- Status Change
 
 	save (a_reservation: RESERVATION): STRING
 		do
-			print (a_reservation.description + " " + a_reservation.name)
 			Result := "login.xeb"
 		end
 

@@ -6,13 +6,6 @@
   "library": "$XEBRA_DEV/eiffel_projects/library",
   "compiler_flags": "-experiment",
   "unmanaged_webapps":
-  [
-		{ 
-			"name": "helloworld2",
-			"host": "10.0.10.197",
-			"port": "55030"
-		}
-	]
-  
-  
+  [		
+  ]
 }

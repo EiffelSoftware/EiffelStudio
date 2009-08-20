@@ -113,7 +113,7 @@ feature -- Cookie Order
 
 feature -- Webapp
 
-	Initial_session_length: NATURAL = 600
+	Initial_session_length: NATURAL = 60
 
 feature -- Time
 

@@ -37,7 +37,7 @@ feature -- Status Repost
 			-- Tests if session contains authenticated flag.
 		do
 			Result := False
-			if attached session.get ("auth") as item then
+			if attached session.item ("auth") as item then
 				Result := True
 			end
 		end
@@ -46,7 +46,7 @@ feature -- Status Repost
 			-- Tests if session contains authenticated flag and user is admin
 		do
 			Result := False
-			if attached {USER} session.get ("auth") as session_user then
+			if attached {USER} session.item ("auth") as session_user then
 				if session_user.is_admin then
 					Result := True
 				end
@@ -69,7 +69,7 @@ feature -- Status Repost
 			-- Gets username of logged in user
 		do
 			Result := ""
-			if attached {USER} session.get ("auth") as user then
+			if attached {USER} session.item ("auth") as user then
 				Result := user.name
 			end
 

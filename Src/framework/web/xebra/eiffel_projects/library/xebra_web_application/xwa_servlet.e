@@ -85,7 +85,7 @@ feature -- Basic Operations
 		do
 			o.dprint ("Processing request...", o.Debug_tasks)
 
-			current_session := a_session_manager.get_current_session (a_request)
+			current_session := a_session_manager.current_session (a_request)
 			l_internal_controllers := internal_controllers
 			from
 				l_internal_controllers.start

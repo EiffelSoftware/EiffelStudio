@@ -44,9 +44,6 @@ feature -- Access
 	max_age: NATURAL assign set_max_age
 		-- The sessions age
 
-	needs_cookie_order: BOOLEAN assign set_needs_cookie_order
-		-- Used by session manager to know for which sessions cookie order have to be created
-
 feature -- Status Setting
 
 	set_max_age (a_max_age: NATURAL)
@@ -71,14 +68,6 @@ feature -- Status Setting
 			remote_user_set: remote_user = a_remote_user
 		end
 
-	set_needs_cookie_order (a_needs_cookie_order: BOOLEAN)
-			-- Sets needs_cookie_order.
-		do
-			needs_cookie_order := a_needs_cookie_order
-		ensure
-			needs_cookie_order_set: needs_cookie_order = a_needs_cookie_order
-		end
-
 feature {NONE} -- Access
 
     entries: HASH_TABLE [ANY, STRING]
@@ -94,7 +83,6 @@ feature -- Basic Operations
 			create l_date.default_create
 			Result := (expiry < l_date.unix_time_stamp)
 		end
-
 
 	put (a_value: ANY; a_key: STRING)
 			-- Puts a new pair into entries
@@ -118,7 +106,7 @@ feature -- Basic Operations
 			bigger:	entries.count > old entries.count
 		end
 
-	get (a_key: STRING): detachable ANY
+	item (a_key: STRING): detachable ANY
 			-- Gets an item from entries
 		require
 			not_a_key_is_detached_or_not_empty: a_key /= Void implies not a_key.is_empty

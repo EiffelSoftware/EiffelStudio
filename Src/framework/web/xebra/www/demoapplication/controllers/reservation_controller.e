@@ -102,9 +102,9 @@ feature -- Status Change
 			-- Retrieve the name of the person logged in
 		do
 			Result := ""
-			if attached {USER} session.get ("auth") as user then
+			if attached {USER} session.item ("auth") as user then
 				Result := user.name
-			end	
+			end
 		ensure
 			Result_attached: attached Result
 		end

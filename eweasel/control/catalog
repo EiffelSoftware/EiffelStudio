@@ -2258,6 +2258,7 @@ test	attached-formal-creation	conform008 tcf pass conformance attached_types
 -- Test for Reflection
 test	basic-type-internal				reflection001 tcf pass reflection
 test	basic-type-internal-violation	reflection002 tcf pass reflection
+test	type-of-internal				reflection003 tcf pass reflection
  
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

@@ -59,8 +59,12 @@ feature  -- Basic Operations
             end
 		end
 
-	search_webapps (a_path: STRING): HASH_TABLE [XS_WEBAPP, STRING]
+	search_webapps (a_path: STRING; a_unmanaged: BOOLEAN): HASH_TABLE [XS_WEBAPP, STRING]
 			-- Traverses folders to find config files which define managed webapps
+			--
+			-- `a_path': The path to start scanning for webapp config files
+			-- `a_unmanaged': If true, managed webapps will be created, unmanaged webapps otherwise
+			-- `Result': A hash table of webapps and the webapps names
 		require
 			not_a_path_is_detached_or_empty: a_path /= Void and then not a_path.is_empty
 		local
@@ -86,7 +90,11 @@ feature  -- Basic Operations
 				l_files.after
 			loop
 				if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (l_files.item_for_iteration) as l_w then
-					Result.force (create {XS_MANAGED_WEBAPP}.make_with_config (l_w), l_w.name)
+					if a_unmanaged then
+						Result.force (create {XS_UNMANAGED_WEBAPP}.make_with_attributes (l_w.name, l_w.webapp_host, l_w.port) , l_w.name )
+					else
+						Result.force (create {XS_MANAGED_WEBAPP}.make_with_config (l_w), l_w.name)
+					end
 				end
 
 				l_files.forth

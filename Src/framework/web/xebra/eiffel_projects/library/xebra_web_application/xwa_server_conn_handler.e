@@ -144,7 +144,8 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 
 	get_sessions: XC_COMMAND_RESPONSE
 			-- <Precursor>
-		do	o.dprint ("Counting sessions (=" + session_manager.sessions.count.as_natural_32.out + ")", o.Debug_verbose_subtasks)
+		do
+			o.dprint ("Counting sessions (=" + session_manager.sessions.count.as_natural_32.out + ")", o.Debug_verbose_subtasks)
 			Result := create {XCCR_GET_SESSIONS}.make (session_manager.sessions.count.as_natural_32)
 		end
 

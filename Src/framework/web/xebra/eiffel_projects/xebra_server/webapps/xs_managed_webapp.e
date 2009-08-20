@@ -87,14 +87,10 @@ feature -- Actions
 			if is_disabled then
 					Result := (create {XER_DISABLED}.make(app_config.name)).render_to_command_response
 			else
-				if config.args.unmanaged.value then
-					Result := action_send.execute
+				if dev_mode then
+					Result := action_translate.execute
 				else
-					if dev_mode then
-						Result := action_translate.execute
-					else
-						Result := action_run.execute
-					end
+					Result := action_run.execute
 				end
 			end
 		end

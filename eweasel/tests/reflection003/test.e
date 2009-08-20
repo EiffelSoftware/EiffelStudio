@@ -16,9 +16,11 @@ feature {NONE} -- Initialization
 		do
 			l_int_value_type := dynamic_type_from_string ("INTEGER_32")
 			t := type_of_type (l_int_value_type)
-			print (t.out)
+			io.put_string (t.out)
+			io.put_new_line
 			t := type_of ({INTEGER} 2)
-			print (t.out)
+			io.put_string (t.out)
+			io.put_new_line
 		end
 
 end

@@ -9,6 +9,8 @@ class
 
 inherit
 	EV_MULTI_COLUMN_LIST_ROW_I
+		undefine
+			pixmap
 		redefine
 			interface
 		end

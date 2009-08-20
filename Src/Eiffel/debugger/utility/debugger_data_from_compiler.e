@@ -228,7 +228,6 @@ feature -- Specific access
 	class_c_by_name (a_class_name: STRING_8): detachable CLASS_C
 			-- Instance of CLASS_C related to `a_name'
 		local
-			lst: LIST [CLASS_I]
 			l_cli: detachable CLASS_I
 		do
 			l_cli :=  class_i_by_name (a_class_name)
@@ -239,9 +238,6 @@ feature -- Specific access
 
 	internal_class_c: CLASS_C
 			--
-		local
-			lst: LIST [CLASS_I]
-			l_cli: CLASS_I
 		do
 			Result := opo_internal_class_c
 			if Result = Void then
@@ -254,9 +250,6 @@ feature -- Specific access
 
 	ise_runtime_class_c: CLASS_C
 			-- ISE_RUNTIME class (for dotnet)
-		local
-			lst: LIST [CLASS_I]
-			l_cli: CLASS_I
 		do
 			Result := opo_ise_runtime_class_c
 			if Result = Void then

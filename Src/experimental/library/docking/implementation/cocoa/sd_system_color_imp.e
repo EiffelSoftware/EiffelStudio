@@ -41,36 +41,43 @@ feature -- Access
 
 	focused_selection_color: EV_COLOR
 			-- Focused selection color for title bar.
+			-- SD_TITE_BAR background of the focused window Blue
+		local
+			l_color: NS_COLOR
 		do
-			Result := selected_color
+			create l_color.keyboard_focus_indicator_color
+			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
+			create Result.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
 		end
 
 	non_focused_selection_color: EV_COLOR
 			-- Non focused selection color for title bar.
+			-- SD_TITLE_BAR: Font color for the focused window and the color that is faded to on the right
+		local
+			l_color: NS_COLOR
 		do
-			create Result.make_with_rgb (1.0, 0.5, 0.5)
+--			create l_color.light_gray_color
+--			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
+			create Result.make_with_rgb (0.91, 0.91, 0.91)
 		end
 
 	non_focused_title_text_color: EV_COLOR
 			-- Non focuesd title text color
-		local
-			l_helper: SD_COLOR_HELPER
 		do
-			create l_helper
-			Result := l_helper.text_color_by (non_focused_selection_title_color)
+			create Result.make_with_rgb (0.0, 0.0, 0.0)
 		end
 
 	non_focused_selection_title_color: EV_COLOR
 			-- Non focused selection title color
 		do
-			Result := insesitive_color
+			create Result.make_with_rgb (0.0, 0.0, 0.0)
 		end
 
 	active_border_color: EV_COLOR
 			-- Active border color
-			-- Used by SD_TITLE_BAR
+			-- Used by SD_TITLE_BAR for the border around titles
 		do
-			create Result.make_with_rgb (0.0, 0.0, 0.0)
+			create Result.make_with_rgb (0.1, 0.1, 0.1)
 		end
 
 	focused_title_text_color: EV_COLOR

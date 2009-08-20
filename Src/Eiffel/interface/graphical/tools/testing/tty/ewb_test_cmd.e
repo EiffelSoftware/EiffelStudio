@@ -141,9 +141,6 @@ feature {NONE} -- Basic operations
 			-- `a_indent': Number of indentations until test is printed.
 		require
 			a_test_attached: a_test /= Void
-		local
-			l_name: STRING
-			l_count, l_max: INTEGER
 		do
 			print_multiple_string (indent, a_indent.to_integer_32)
 			a_test.print_test (output_window)

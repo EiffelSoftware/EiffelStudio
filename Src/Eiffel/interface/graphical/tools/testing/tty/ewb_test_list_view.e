@@ -36,9 +36,6 @@ feature {NONE} -- Basic operations
 
 	execute_with_test_suite (a_test_suite: TEST_SUITE_S)
 			-- <Precursor>
-		local
-			l_tests: DS_LINEAR [TEST_I]
-			l_list: DS_ARRAYED_LIST [TEST_I]
 		do
 			print_test_list (test_tree (a_test_suite).items, 1)
 			print_statistics (a_test_suite)

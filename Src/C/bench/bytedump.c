@@ -2,7 +2,7 @@
 	description: "Byte code reader."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1209,10 +1209,10 @@ static  void    print_instructions (void)
 				fprintf (ofp, "count %d", get_int32(&ip));
 				break;
 			case  BC_FLOAT :
-				fprintf (ofp,"%lf", get_real64(&ip));
+				fprintf (ofp,"%f", get_real64(&ip));
 				break;
 			case  BC_DOUBLE :
-				fprintf (ofp,"%lf", get_real64(&ip));
+				fprintf (ofp,"%f", get_real64(&ip));
 				break;
 			case  BC_NULL_POINTER :
 				fprintf (ofp,"%d", 0);

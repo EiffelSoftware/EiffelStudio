@@ -1142,18 +1142,18 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	dprintf(1)("scollect: (Scavenging collect: %ld bytes)\n",
 		rt_g_data.mem_copied - rt_g_data.mem_move);
 	if (gc_monitor) {
-		dprintf(1)("scollect: Real time: %lfs\n", gstat->real_time / 100.);
-		dprintf(1)("scollect: CPU time: %lfs\n", gstat->cpu_time);
-		dprintf(1)("scollect: System time: %lfs\n", gstat->sys_time);
-		dprintf(1)("scollect: Average real time: %lfs\n", gstat->real_avg / 100.);
-		dprintf(1)("scollect: Average CPU time: %lf\n", gstat->cpu_avg);
-		dprintf(1)("scollect: Average system time: %lf\n", gstat->sys_avg);
-		dprintf(1)("scollect: Interval time: %lf\n", gstat->real_itime / 100.);
-		dprintf(1)("scollect: Interval CPU time: %lf\n", gstat->cpu_itime);
-		dprintf(1)("scollect: Interval sys time: %lf\n", gstat->sys_itime);
-		dprintf(1)("scollect: Avg interval time: %lf\n", gstat->real_iavg / 100.);
-		dprintf(1)("scollect: Avg interval CPU time: %lf\n", gstat->cpu_iavg);
-		dprintf(1)("scollect: Avg interval sys time: %lf\n", gstat->sys_iavg);
+		dprintf(1)("scollect: Real time: %fs\n", gstat->real_time / 100.);
+		dprintf(1)("scollect: CPU time: %fs\n", gstat->cpu_time);
+		dprintf(1)("scollect: System time: %fs\n", gstat->sys_time);
+		dprintf(1)("scollect: Average real time: %fs\n", gstat->real_avg / 100.);
+		dprintf(1)("scollect: Average CPU time: %f\n", gstat->cpu_avg);
+		dprintf(1)("scollect: Average system time: %f\n", gstat->sys_avg);
+		dprintf(1)("scollect: Interval time: %f\n", gstat->real_itime / 100.);
+		dprintf(1)("scollect: Interval CPU time: %f\n", gstat->cpu_itime);
+		dprintf(1)("scollect: Interval sys time: %f\n", gstat->sys_itime);
+		dprintf(1)("scollect: Avg interval time: %f\n", gstat->real_iavg / 100.);
+		dprintf(1)("scollect: Avg interval CPU time: %f\n", gstat->cpu_iavg);
+		dprintf(1)("scollect: Avg interval sys time: %f\n", gstat->sys_iavg);
 	}
 #endif
 
@@ -1919,7 +1919,7 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 				case SK_INT32: printf("\t%d: int32 %ld\n", i, lst->it_int32); break;
 				case SK_INT64: printf("\t%d: int64 %ld\n", i, lst->it_int64); break;
 				case SK_REAL32: printf("\t%d: real32 %f\n", i, lst->it_real32); break;
-				case SK_REAL64: printf("\t%d: real64 %lf\n", i, lst->it_real64); break;
+				case SK_REAL64: printf("\t%d: real64 %f\n", i, lst->it_real64); break;
 				case SK_BIT: printf("\t%d: BITS\n", i); break;
 				case SK_POINTER: printf("\t%d: pointer 0x%lx\n", i, lst->it_ref); break;
 				case SK_VOID: printf("\t%d: void\n", i); break;
@@ -1973,7 +1973,7 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 				case SK_INT32: printf("\t%d: int %ld\n", i, lst->it_int32); break;
 				case SK_INT64: printf("\t%d: int %ld\n", i, lst->it_int64); break;
 				case SK_REAL32: printf("\t%d: real32 %f\n", i, lst->it_real32); break;
-				case SK_REAL64: printf("\t%d: real64 %lf\n", i, lst->it_real64); break;
+				case SK_REAL64: printf("\t%d: real64 %f\n", i, lst->it_real64); break;
 				case SK_BIT: printf("\t%d: BITS\n", i); break;
 				case SK_POINTER: printf("\t%d: pointer 0x%lx\n", i, lst->it_ref); break;
 				case SK_VOID: printf("\t%d: void\n", i); break;

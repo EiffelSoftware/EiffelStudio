@@ -74,7 +74,7 @@ feature -- Basic functionality
 		require
 			path_is_valid: attached a_path and not a_path.is_empty
 		local
-			buf:XU_INDENDATION_FORMATTER
+			buf: XU_INDENDATION_FORMATTER
 			servlet_generator_generator: XGEN_SERVLET_GENERATOR_GENERATOR
 			application_class: XEL_CLASS_ELEMENT
 			l_filename: FILE_NAME

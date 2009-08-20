@@ -76,11 +76,6 @@ feature -- Access
 				-- If you add a tag, please update the 'make' feature
 			if a_local_part.is_equal (Tag_controller_name) then
 				create {XP_AGENT_TAG_ELEMENT} Result.make_with_additional_arguments (a_prefix, a_local_part, a_class_name, a_debug_information, agent handle_controller_attribute)
---			elseif a_local_part.is_equal ("template") then
---				if attached xeb_parser as l_xeb_parser then
---					l_xeb_parser.deactivate_render
---				end
---				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal (Tag_declare_region_name) then
 				if attached xeb_parser as l_xeb_parser then
 					l_xeb_parser.deactivate_render

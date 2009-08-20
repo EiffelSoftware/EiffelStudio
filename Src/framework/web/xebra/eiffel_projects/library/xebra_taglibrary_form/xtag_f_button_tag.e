@@ -67,7 +67,7 @@ feature -- Implementation
 						a_servlet_class.render_html_page.append_expression (l_unique_var + " := get_unique_id")
 						a_servlet_class.render_html_page.append_expression (
 							response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"%"+" + l_unique_var + "+%"%%%""+
-							"value =%%%"%"+" + l_unique_var + "+%"%%%" />%")")
+							" value =%%%"%"+" + l_unique_var + "+%"%%%" />%")")
 
 						a_servlet_class.render_html_page.append_expression ("if attached agent_table [%"" + l_unique_form_id + "%"] as l_agent_table then")
 						a_servlet_class.render_html_page.append_expression ("l_agent_table [" + l_unique_var + "] := agent (a_request: XH_REQUEST) do")

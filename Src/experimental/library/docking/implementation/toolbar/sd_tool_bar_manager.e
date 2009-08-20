@@ -200,10 +200,10 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 		do
 			if last_width /= a_width or last_height /= a_height or a_force then
 				if last_width /= a_width or a_force then
-					notify_for_area (a_width, a_height, True)
+					notify_four_area (a_width, a_height, True)
 				end
 				if last_height /= a_height or a_force then
-					notify_for_area (a_width, a_height, False)
+					notify_four_area (a_width, a_height, False)
 				end
 			 	last_width := a_width
 			 	last_height := a_height
@@ -443,8 +443,8 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	notify_for_area (a_width, a_height: INTEGER; a_resize_horizontal: BOOLEAN)
-			-- Called by `on_resize'. Notify for tool bar area.
+	notify_four_area (a_width, a_height: INTEGER; a_resize_horizontal: BOOLEAN)
+			-- Called by `on_resize'. Notify four tool bar area.
 		require
 			not_destroyed: not is_destroyed
 		local

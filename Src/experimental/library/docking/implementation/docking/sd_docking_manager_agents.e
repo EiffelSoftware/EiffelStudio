@@ -485,7 +485,7 @@ feature -- Destory
 feature -- Contract support
 
 	user_widget_valid (a_content: SD_CONTENT): BOOLEAN
-			-- True iff `a_widget' is not yet a child of a docking widget
+			-- Dose a_widget alreay in docking library?
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -519,7 +519,7 @@ feature -- Contract support
 		end
 
 	title_unique (a_content: SD_CONTENT): BOOLEAN
-			-- Is `a_unique_title' really unique?
+			-- If `a_unique_title' really unique?
 		require
 			not_destroyed: not is_destroyed
 			a_content_not_void: a_content /= Void

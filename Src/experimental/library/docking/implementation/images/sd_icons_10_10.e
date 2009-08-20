@@ -47,6 +47,7 @@ feature -- Access
 			-- Access to 'unpin' pixmap
 		do
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 1))
+
 		end
 
 	frozen tool_bar_unpin_icon_buffer: EV_PIXEL_BUFFER

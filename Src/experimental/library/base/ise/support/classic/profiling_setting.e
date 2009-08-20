@@ -6,6 +6,9 @@ note
 			if `profile (yes)' is enabled in your project configuration file.
 			Also disabling the profiler should be done at the same place
 			where you enabled it otherwise you might corrupt the profiling data.
+			To use this functionality effectively, make sure that the first instruction
+			in your program calls `stop_profiling', and that the last executed instruction
+			calls `start_profiling', otherwise no profile information will be generated.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

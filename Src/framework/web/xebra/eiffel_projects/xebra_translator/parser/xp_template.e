@@ -175,8 +175,7 @@ feature -- Basic functionality
 			l_uid: STRING
 		do
 			--l_root_tag := root_tag.copy_tag_tree
-			l_root_tag := root_tag
-			print ("************************** Resolving: " + template_name + ", empty=" + controller_class.is_empty.out)
+			l_root_tag := root_tag			
 			if not controller_class.is_empty then
 						-- The controller is defined, so all pending templates can be resolved
 				l_uid := a_servlet_gen.next_unique_identifier

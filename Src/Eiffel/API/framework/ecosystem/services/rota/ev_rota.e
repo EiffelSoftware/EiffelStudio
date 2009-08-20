@@ -43,6 +43,9 @@ feature -- Status report
 	is_looping: BOOLEAN
 			-- Is `loop_to_next_pause' already called?
 
+	is_kamikaze_registered: BOOLEAN
+			-- Has kamikaze agent been registered in `run_task'?
+
 feature -- Basic operations
 
 	run_task (a_task: ROTA_TIMED_TASK_I)
@@ -52,8 +55,11 @@ feature -- Basic operations
 			if not is_looping then
 					-- Note: we do not call iterate directly to garuantee that `append_task' returns before
 					--       stepping through `a_task'.
-				timer.set_interval (0)
-				ev_application.add_idle_action_kamikaze (agent loop_to_next_pause)
+				if not is_kamikaze_registered then
+					is_kamikaze_registered := True
+					timer.set_interval (0)
+					ev_application.add_idle_action_kamikaze (agent loop_to_next_pause)
+				end
 			end
 		end
 
@@ -94,13 +100,14 @@ feature {NONE} -- Implementation
 		local
 			l_pause: BOOLEAN
 		do
-			is_looping := True
 			from
-				timer.set_interval (0)
+				is_looping := True
+				is_kamikaze_registered := False
 			until
 				l_pause
 			loop
 				l_pause := True
+				timer.set_interval (0)
 				min_sleep_time := min_sleep_time.max_value
 				proceed_all_tasks
 				if tasks.is_empty then

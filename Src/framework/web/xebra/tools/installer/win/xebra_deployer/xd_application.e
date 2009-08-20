@@ -104,8 +104,6 @@ feature -- Paths
 
 feature -- Constants
 
-	File_xu_constants: STRING = "xu_constants\.e"
-		-- The xu_constants.e file
 
 	File_httpd_conf: STRING = "httpd\.conf"
 		-- The http.conf file (in xebra/apache/conf)
@@ -113,7 +111,7 @@ feature -- Constants
 	File_launcher: STRING = "launch_xebra\.bat"
 		-- The launcher file (in xebra/bin)	
 
-	File_server_ini: STRING = "server\.ini"
+	File_server_ini: STRING = "config\.srv"
 		-- The server.ini file (in xebra/conf)
 
 	Key_install_path: STRING = "_INSTALL_PATH_"
@@ -170,38 +168,22 @@ feature -- Basic Operations
 
 feature -- Replacement Tasks
 
---	process_xu_constants
---			-- Replaces in xu_constants.e file all occurrences of
---			--	Key_eiffel_projects 	with 	install_dir
---		local
---			l_util: XU_FILE_UTILITIES
---			l_files: LIST [FILE_NAME]
---		do
---			create l_util
---			o.dprint ("Scanning for " + file_xu_constants + " file in " + dir_utilities, 1)
---			l_files := l_util.scan_for_files (dir_utilities, 0, file_xu_constants, "\.svn")
---			from
---				l_files.start
---			until
---				l_files.after
---			loop
---				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
---				l_util.replace_in_file (l_files.item_for_iteration, Key_eiffel_projects, install_dir)
---				l_util.replace_in_file (l_files.item_for_iteration, Key_xebra_root, install_dir)
---				l_files.forth
---			end
---		end
-
 	process_ecfs
 			-- Replaces in all ecf files all occurrences of
 			--	Key_eiffel_src 	with 	Key_library_root
 		local
 			l_util: XU_FILE_UTILITIES
 			l_files: LIST [FILE_NAME]
+			l_incl: LINKED_LIST [STRING]
+			l_excl: LINKED_LIST [STRING]
 		do
+			create l_incl.make
+			l_incl.force ("*.ecf")
+			create l_excl.make
+			l_excl.force (".svn")
 			create l_util
 			o.dprint ("Scanning for ecf  files in " + dir_library, 1)
-			l_files := l_util.scan_for_files (install_dir, -1, ".+\.ecf", "\.svn")
+			l_files := l_util.scan_for_files (install_dir, -1, l_incl, l_excl)
 			from
 				l_files.start
 			until
@@ -220,10 +202,13 @@ feature -- Replacement Tasks
 		local
 			l_util: XU_FILE_UTILITIES
 			l_files: LIST [FILE_NAME]
+			l_incl: LINKED_LIST [STRING]
 		do
+			create l_incl.make
+			l_incl.force (File_httpd_conf)
 			create l_util
 			o.dprint ("Scanning for '" + File_httpd_conf + "' in " + dir_apache_conf, 1)
-			l_files := l_util.scan_for_files (dir_apache_conf, 0, File_httpd_conf, "")
+			l_files := l_util.scan_for_files (dir_apache_conf, 0, l_incl, create {LINKED_LIST [STRING]}.make)
 			from
 				l_files.start
 			until
@@ -242,10 +227,13 @@ feature -- Replacement Tasks
 		local
 			l_util: XU_FILE_UTILITIES
 			l_files: LIST [FILE_NAME]
+			l_incl: LINKED_LIST [STRING]
 		do
+			create l_incl.make
+			l_incl.force (File_launcher)
 			create l_util
 			o.dprint ("Scanning for '" + File_launcher + "' in " + dir_bin, 1)
-			l_files := l_util.scan_for_files (dir_bin, 0, File_launcher, "")
+			l_files := l_util.scan_for_files (dir_bin, 0, l_incl, create {LINKED_LIST [STRING]}.make)
 			from
 				l_files.start
 			until
@@ -256,30 +244,6 @@ feature -- Replacement Tasks
 				l_files.forth
 			end
 		end
---	process_server_ini
---			-- Replaces in server.ini all occurrences of
---			--	Key_install_path 	with 	install_dir
---			--	Key_ise_eiffel		with 	(resolved path)
---			--	Key_ise_platform	with 	(resolved path)
---		local
---			l_util: XU_FILE_UTILITIES
---			l_files: LIST [FILE_NAME]
---		do
---			create l_util
---			o.dprint ("Scanning for '" + File_server_ini + "' files in " + dir_conf, 1)
---			l_files := l_util.scan_for_files (dir_conf, -1, File_server_ini, "\.svn")
---			from
---				l_files.start
---			until
---				l_files.after
---			loop
---				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
---				l_util.replace_in_file (l_files.item_for_iteration, Key_install_path, install_dir)
---				l_util.replace_in_file (l_files.item_for_iteration, Key_ise_eiffel, l_util.resolve_env_vars (Key_ise_eiffel, true))
---				l_util.replace_in_file (l_files.item_for_iteration, Key_ise_platform, l_util.resolve_env_vars (Key_ise_platform, true))
---				l_files.forth
---			end
---		end
 
 invariant
 	install_dir_attached: install_dir /= Void

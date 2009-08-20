@@ -90,7 +90,8 @@ feature -- Access
 		end
 
 	is_template: BOOLEAN assign set_is_template
-			-- Can the XP_TEMPLATE NOT be renderered on its own?
+			-- Can the XP_TEMPLATE NOT be renderered on its own, that is,
+			-- are explicit region declarations?
 
 	set_is_template (a_is_template: BOOLEAN)
 			-- Sets the is_template variable

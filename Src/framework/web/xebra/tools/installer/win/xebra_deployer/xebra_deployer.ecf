@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="xebra_deployer" uuid="DA33C660-20DA-4B32-820E-2F37F08DB248">
 	<target name="xebra_deployer">
 		<root class="XD_APPLICATION" feature="make"/>
-		<option warning="true" full_class_checking="false">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -10,8 +10,8 @@
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
-		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error-voidunsafe.ecf"/>
-		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities-voidunsafe.ecf" readonly="false"/>
+		<library name="xebra_error" location="$XEBRA_LIBRARY\xebra_error\xebra_error.ecf"/>
+		<library name="xebra_utilities" location="$XEBRA_LIBRARY\xebra_utilities\xebra_utilities.ecf" readonly="false"/>
 		<cluster name="xebra_deployer" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

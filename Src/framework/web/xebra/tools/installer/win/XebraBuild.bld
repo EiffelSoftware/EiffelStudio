@@ -34,14 +34,14 @@
 			<name>Compile Precompile</name>
 		</step>
 		<step action='Batch File'>
-			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_translator\xebra_translator-voidunsafe.ecf -target xebra_translator -c_compile  -finalize -stop</CmdStr>
+			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_translator\xebra_translator.ecf -target xebra_translator -c_compile  -finalize -stop</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
 			<indent type='3'>2</indent>
 			<name>Compile Translator</name>
 		</step>
 		<step action='Batch File'>
-			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_server\xebra_server-voidunsafe.ecf -target xebra_server -c_compile -finalize -stop</CmdStr>
+			<CmdStr>ecb %EC_FLAGS% -config %XEBRA_DEV%\eiffel_projects\xebra_server\xebra_server.ecf -target xebra_server -c_compile -finalize -stop</CmdStr>
 			<CmdType type='3'>1</CmdType>
 			<NoEcho type='11'>-1</NoEcho>
 			<indent type='3'>2</indent>
@@ -208,25 +208,6 @@
 			<indent type='3'>2</indent>
 			<name>Copy demoapp</name>
 		</step>
-		<step action='Copy Files'>
-			<Converted type='11'>-1</Converted>
-			<Delay>15</Delay>
-			<DestDir>%BUILD%\www\xmlrpc_demo</DestDir>
-			<Empty type='11'>-1</Empty>
-			<ExclExt><![CDATA[\EIFGENs
-\.svn
-\.generated
-*.sh]]></ExclExt>
-			<Incremental type='11'>-1</Incremental>
-			<LogCopied type='11'>-1</LogCopied>
-			<ReadOnly type='11'>-1</ReadOnly>
-			<Recurse type='11'>-1</Recurse>
-			<Retries>10</Retries>
-			<SourceDir>%XEBRA_DEV%\www\xmlrpc_demo</SourceDir>
-			<TBD type='11'>-1</TBD>
-			<indent type='3'>2</indent>
-			<name>Copy xmlrpc_demo</name>
-		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
 			<name>Copy Xebra Libraries</name>
@@ -276,6 +257,7 @@
 			<Retries>10</Retries>
 			<SourceDir>%EIFFEL_SRC%\framework\xml-rpc</SourceDir>
 			<TBD type='11'>-1</TBD>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Copy Xml-rpc</name>
 		</step>
@@ -368,16 +350,21 @@
 			<name>Create config files</name>
 		</step>
 		<step action='Write File'>
-			<Filename>%BUILD%\conf\server.ini</Filename>
-			<Text><![CDATA[finalize_webapps=False
-compiler=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec.exe
-translator=$XEBRA_DEV\bin\xebra_translator.exe
-webapps_root=$XEBRA_DEV\www
-library=$XEBRA_LIBRARY
-compiler_flags=-experiment
+			<Filename>%BUILD%\conf\config.srv</Filename>
+			<Text><![CDATA[{
+  "finalize_webapps": "false",
+  "compiler": "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec.exe",
+  "translator": "$XEBRA_DEV\bin\xebra_translator.exe",
+  "managed_webapps": "$XEBRA_DEV\www",
+  "library": "$XEBRA_LIBRARY",
+  "compiler_flags": "-experiment",
+  "unmanaged_webapps":
+  [		
+  ]
+}
 ]]></Text>
 			<indent type='3'>2</indent>
-			<name>Write Server config.ini (NEW)</name>
+			<name>Write Server config</name>
 		</step>
 		<step action='Write File'>
 			<Filename>%BUILD%\bin\launch_xebra.bat</Filename>

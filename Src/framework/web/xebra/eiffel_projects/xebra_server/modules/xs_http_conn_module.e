@@ -91,7 +91,11 @@ feature -- Inherited Features
 								l_response := (create {XER_INTERNAL_SERVER_ERROR}.make ("Error decoding message from mod_xebra.")).render_to_command_response
 							end
 
+							o.dprint ("%N%N----%N" + current_request_message + "%N", 7)
+
+
 							if attached {XCCR_HTTP_REQUEST} l_response as l_http_response then
+								o.dprint ("%N%N-------------%N" + l_http_response.response.render_to_string + "%N", 7)
 								send_message_to_http (l_http_response.response.render_to_string, thread_http_socket)
 							else
 								send_message_to_http ( (create {XER_INTERNAL_SERVER_ERROR}.make ("")).render_to_response.render_to_string, thread_http_socket)

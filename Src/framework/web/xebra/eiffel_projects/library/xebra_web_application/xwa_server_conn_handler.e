@@ -80,6 +80,10 @@ feature -- Implementation
 							    o.dprint ("Sending back response...", o.Debug_subtasks)
 						        socket.put_natural (0)
 								socket.independent_store (l_response)
+
+								if attached {XCCR_HTTP_REQUEST} l_response as l then
+									o.dprint ("%N%N----------------%N" + l.response.render_to_string  + "%N", 7)
+								end
 			       			end
 			            end
 			            socket.cleanup
@@ -132,6 +136,8 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 			l_parser: XH_REQUEST_PARSER
 		do
 			o.dprint ("Handling http request...", o.Debug_tasks)
+			o.dprint ("%N%N---%N" + a_request  + "%N", 7)
+
 			create l_parser.make
 			create l_request_handler
 			if attached {XH_REQUEST} l_parser.request (a_request) as l_request then

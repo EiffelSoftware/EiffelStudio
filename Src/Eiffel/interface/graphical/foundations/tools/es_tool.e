@@ -419,7 +419,17 @@ feature -- Access: User interface
 					-- Register the close actions.
 				register_action (Result.close_request_actions, agent close)
 
-				if not is_tool_instantiated_immediate then
+					-- Associate the docking content with the docking manager.
+				window.docking_manager.contents.extend (Result)
+
+				if is_tool_instantiated_immediate then
+						-- Initialize the tool now, if it hasn't already been.
+		        	if attached {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} panel as l_panel then
+						if not l_panel.is_initialized then
+							l_panel.initialize
+						end
+		        	end
+		        else
 					register_kamikaze_action (Result.show_actions, agent (ia_content: attached SD_CONTENT)
 							-- Attach the real panel to the docking manager.
 		                do
@@ -431,15 +441,11 @@ feature -- Access: User interface
 		                    		-- because we use a fack widget for the docking content. This widget needs
 		                    		-- to be replaced before the user sees the content come into view. If the
 		                    		-- user sees "Uh Oh!" the content was shown without initializing the panel.
-								panel.do_nothing
+					        	panel.do_nothing
 		                    end
 		                end (Result))
-		        else
-		        		-- Instatiate now.
-		        	panel.do_nothing
 				end
 
-				window.docking_manager.contents.extend (Result)
 			else
 				Result := l_result
 			end
@@ -488,10 +494,11 @@ feature -- Status report
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := docking_content.is_visible
+			Result := attached internal_docking_content and then internal_docking_content.is_visible
 		ensure
 			is_interface_usable: Result implies is_interface_usable
-			docking_content_is_visible: Result implies docking_content.is_visible
+			internal_docking_content_attached: Result implies attached internal_docking_content
+			docking_content_is_visible: Result implies internal_docking_content.is_visible
 		end
 
 	has_focus: BOOLEAN

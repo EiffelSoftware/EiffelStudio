@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			uid_counter := 0
 			create controller_table.make (1)
 			force := a_force
+			is_generated := False
 		ensure
 			servlet_name_attached: attached servlet_name
 			root_tag_attached: attached root_tag
@@ -72,6 +73,9 @@ feature {NONE} -- Access
 			-- Internal counter used to generate unique identifiers
 
 feature -- Access
+
+	is_generated: BOOLEAN
+			-- Has the servlet_gg already been generated
 
 	is_xrpc: BOOLEAN
 			-- Is the servlet_gen_gen a xrpc generator?
@@ -153,6 +157,8 @@ feature -- Basic functionality
 
 	generate (a_path: FILE_NAME)
 			-- Generates the servlet generator class if needed
+			-- Checks, if all the declared regions have been defined. If not
+			-- the file is not (re-)generated and an error is printed
 			-- `a_path': The path in which the file should be generated
 		require
 			path_is_attached: attached path
@@ -164,40 +170,58 @@ feature -- Basic functionality
 			l_directory: DIRECTORY
 			l_util: XU_FILE_UTILITIES
 		do
-			l_filename := a_path.twin
-			l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
-			create l_directory.make (l_filename)
-			if not l_directory.exists then
-				l_directory.create_dir
-			end
-			l_filename.extend ({XU_CONSTANTS}.servlet_gen_name)
-			create l_directory.make (l_filename)
-			if not l_directory.exists then
-				l_directory.create_dir
-			end
-
-			l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e")
-			create l_util
-			if l_util.file_is_older_than (l_filename, root_tag.date) or force then
-				if attached l_util.plain_text_file_write (l_filename) as l_file then
-					create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")
-					if is_xrpc then
-						servlet_gen_class.set_inherit (Servlet_xrpc_generator_class)
-						servlet_gen_class.set_constructor_name ("make_xrpc")
-					else
-						servlet_gen_class.set_inherit (Servlet_generator_class)
-						servlet_gen_class.set_constructor_name ("make")
-					end
-
-					build_generate_for_servlet_generator (servlet_gen_class)
-					create buf.make (l_file)
-					servlet_gen_class.serialize (buf)
-					l_util.close
-					o.dprint ("Servlet generator generated at: " + l_filename, o.Debug_tasks)
+			if all_regions_defined then
+				l_filename := a_path.twin
+				l_filename.extend ({XU_CONSTANTS}.generated_folder_name)
+				create l_directory.make (l_filename)
+				if not l_directory.exists then
+					l_directory.create_dir
 				end
+				l_filename.extend ({XU_CONSTANTS}.servlet_gen_name)
+				create l_directory.make (l_filename)
+				if not l_directory.exists then
+					l_directory.create_dir
+				end
+
+				l_filename.set_file_name (Generator_Prefix.as_lower + servlet_name.as_lower + "_servlet_generator.e")
+				create l_util
+				if l_util.file_is_older_than (l_filename, root_tag.date) or force then
+					if attached l_util.plain_text_file_write (l_filename) as l_file then
+						create servlet_gen_class.make (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET_GENERATOR")
+						if is_xrpc then
+							servlet_gen_class.set_inherit (Servlet_xrpc_generator_class)
+							servlet_gen_class.set_constructor_name ("make_xrpc")
+						else
+							servlet_gen_class.set_inherit (Servlet_generator_class)
+							servlet_gen_class.set_constructor_name ("make")
+						end
+
+						build_generate_for_servlet_generator (servlet_gen_class)
+						create buf.make (l_file)
+						servlet_gen_class.serialize (buf)
+						l_util.close
+						o.dprint ("Servlet generator generated at: " + l_filename, o.Debug_tasks)
+					end
+				else
+					o.dprint ("Already up to date: " + l_filename, o.Debug_tasks)
+				end
+				is_generated := True
 			else
-				o.dprint ("Already up to date: " + l_filename, o.Debug_tasks)
+				o.dprint ("Unresolved regions in : " + servlet_name, o.Debug_tasks)
 			end
+		end
+
+
+	all_regions_defined: BOOLEAN
+			-- Checkes if all regions have
+		require
+			root_tag_attached: attached root_tag
+		local
+			l_region_checker: XP_REGION_CHECK_VISITOR
+		do
+			create l_region_checker.make
+			root_tag.accept (l_region_checker)
+			Result := l_region_checker.all_set
 		end
 
 feature {NONE} -- Implementation

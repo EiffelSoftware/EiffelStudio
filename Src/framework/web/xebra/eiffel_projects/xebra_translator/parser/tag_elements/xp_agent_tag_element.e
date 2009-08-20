@@ -1,6 +1,7 @@
 note
 	description: "[
-		A {XP_TAG_ELEMENT} which executes an agent on setting an attribute. Be aware that the agent is executed but the first time.
+		A {XP_TAG_ELEMENT} which executes an agent on setting an attribute.
+		Be aware that the agent is executed but the first time.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

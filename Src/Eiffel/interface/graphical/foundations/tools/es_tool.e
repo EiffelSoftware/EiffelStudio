@@ -354,26 +354,20 @@ feature -- Access: User interface
 				if is_tool_instantiated then
 					create Result.make_with_widget (panel.widget, content_id)
 				else
-					if is_tool_instantiated_immediate and then attached {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]} panel as l_tool_panel then
-							-- Immediate creation required
-						l_tool_panel.initialize
-						create Result.make_with_widget (l_tool_panel.widget, content_id)
-					else
-						create l_label.make_with_text ("Uh Oh!")
-							-- Note: This action is a mild hack for cases where Uh Oh! is not replaced. When shown the
-							--       user is able to click the Uh Oh message and instatiate the UI. Without this code
-							--       there would be no way to show the tool content.
-						register_kamikaze_action (l_label.select_actions, agent
-							do
-									-- Force creation on panel.
-								panel.do_nothing
-									-- Call show actions manually.
-								docking_content.show_actions.call (Void)
-							end)
+					create l_label.make_with_text ("Uh Oh!")
+						-- Note: This action is a mild hack for cases where Uh Oh! is not replaced. When shown the
+						--       user is able to click the Uh Oh message and instatiate the UI. Without this code
+						--       there would be no way to show the tool content.
+					register_kamikaze_action (l_label.select_actions, agent
+						do
+								-- Force creation on panel.
+							panel.do_nothing
+								-- Call show actions manually.
+							docking_content.show_actions.call (Void)
+						end)
 
-						l_label.set_font ((create {ES_SHARED_FONTS_AND_COLORS}).fonts.prompt_sub_title_font)
-						create Result.make_with_widget (l_label, content_id)
-					end
+					l_label.set_font ((create {ES_SHARED_FONTS_AND_COLORS}).fonts.prompt_sub_title_font)
+					create Result.make_with_widget (l_label, content_id)
 				end
 				Result.set_long_title (edition_title)
 				Result.set_short_title (edition_title)
@@ -440,6 +434,9 @@ feature -- Access: User interface
 								panel.do_nothing
 		                    end
 		                end (Result))
+		        else
+		        		-- Instatiate now.
+		        	panel.do_nothing
 				end
 
 				window.docking_manager.contents.extend (Result)

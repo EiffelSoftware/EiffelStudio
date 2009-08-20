@@ -149,7 +149,8 @@ feature -- Redefine
 			end
 
 			-- When SD_OPEN_CONFIG_MEDIATOR.open_inner_container_data, `zone' maybe void
-			if is_zone_attached then
+			-- since Current is initialized by {INTERNAL}.new_instance_of
+			if is_zone_attached and then zone /= Void then
 				update_floating_zone_visible (zone, a_data.is_visible)
 			end
 			initialized := True

@@ -61,7 +61,7 @@ feature -- Implementation
 			end
 			l_cal_name := a_servlet_class.render_html_page.new_uid
 			a_servlet_class.render_html_page.append_expression (response_variable_append +
-			"(%"<script language=%%%"javascript1.2%%%">%")"
+			"(%"<script language=%%%"javascript1.2%%%" type=%%%"text/javascript%%%" >%")"
 			)
 			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<!--%%N%")")
 			a_servlet_class.render_html_page.append_expression (response_variable_append +
@@ -73,11 +73,11 @@ feature -- Implementation
 			)
 
 			a_servlet_class.render_html_page.append_expression (response_variable_append +
-				"(%"<input type=%%%"textarea%%%" name=%%%"" + a_name + "%%%" value=%%%"" + date.value (current_controller_id) + "%%%"/>%")")
+				"(%"<input type=%%%"text%%%" name=%%%"" + a_name + "%%%" value=%%%"" + date.value (current_controller_id) + "%%%"/>%")")
 			a_servlet_class.render_html_page.append_expression (response_variable_append +
 			"(%"<input type=%%%"button%%%"" +
-			"onclick=%%%"" + l_cal_name + ".popup('" + a_name + "');%%%"" +
-			"value=%%%"select%%%" />%")"
+			" onclick=%%%"" + l_cal_name + ".popup('" + a_name + "');%%%"" +
+			" value=%%%"select%%%" />%")"
 			)
 		end
 

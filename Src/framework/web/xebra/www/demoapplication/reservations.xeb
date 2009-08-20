@@ -6,6 +6,7 @@
 			<p>Please log in to see reservations.</p>
 		</xeb:container>
 		<xeb:container render="%=authenticated%">
+			<f:form>
 			<table width="100%" border="0" cellpadding="0">
 				<tr class="tableheader">
 					<td>Name</td>
@@ -18,7 +19,7 @@
 						<td>Details</td>
 					</xeb:container>
 				</tr>
-				<f:form>
+				
 				<xeb:iterate list="%=global_state.db.reservations%"
 					variable="reservation" type="RESERVATION">
 					<tr>
@@ -35,8 +36,9 @@
 						</xeb:container>
 					</tr>
 				</xeb:iterate>
-				</f:form>
+				
 			</table>
+			</f:form>
 		</xeb:container>
 		<xeb:container render="%=authenticated_admin%">
 			<h2 class="style1">New Reservation</h2>

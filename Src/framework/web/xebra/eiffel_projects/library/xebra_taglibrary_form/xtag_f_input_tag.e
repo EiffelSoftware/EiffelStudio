@@ -94,7 +94,7 @@ feature -- Implementation
 			end
 			a_servlet_class.render_html_page.append_expression (response_variable_append + 
 			"(%"<input type=%%%"" + input_type.value (current_controller_id) + "%%%" value=%%%"" 
-			+ text.value (current_controller_id) +  "%%%"" + "size=%%%"" + size.value (current_controller_id) 
+			+ text.value (current_controller_id) +  "%%%" size=%%%"" + size.value (current_controller_id) 
 			+ "%%%" name=%%%"" + a_name + "%%%" " + l_max_length + "/>%")")
 		end
 

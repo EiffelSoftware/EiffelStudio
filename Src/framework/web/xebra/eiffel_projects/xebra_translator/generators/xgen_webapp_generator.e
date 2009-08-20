@@ -175,14 +175,16 @@ feature {NONE} -- Implementation
 				some_servlets.after
 			loop
 				l_servlet := some_servlets.item
-				if l_servlet.is_xrpc then
-					l_postfix := ".xrpc"
-				else
-					l_postfix := ".xeb"
+				if l_servlet.is_generated then
+					if l_servlet.is_xrpc then
+						l_postfix := ".xrpc"
+					else
+						l_postfix := ".xeb"
+					end
+					Result.append_expression ("stateless_servlets.put (create {"
+						+ Generator_Prefix.as_upper + l_servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + transform_to_url (l_servlet.servlet_name.as_lower) + l_postfix + "%")")
+					some_servlets.forth
 				end
-				Result.append_expression ("stateless_servlets.put (create {"
-					+ Generator_Prefix.as_upper + l_servlet.servlet_name.as_upper + "_SERVLET}.make, %"/" + webapp_name.as_lower + "/" + transform_to_url (l_servlet.servlet_name.as_lower) + l_postfix + "%")")
-				some_servlets.forth
 			end
 		ensure
 			result_attached: attached Result

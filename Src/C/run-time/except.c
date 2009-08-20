@@ -2864,9 +2864,14 @@ rt_private void print_object_location_reason_effect (
 	l_effect_count = (int) strlen(a_effect);
 
 		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
-		 *      for `a_object_addr' and `a_location'. */
-		/* 2 - precision of 181 = 254 - 73, 73 being number of characters written
-		 *      for `a_object_addr', `a_location' and `a_reason'.*/
+			   for `a_object_addr' and `a_location'. 
+		 * 2 - precision of 181 = 254 - 73, 73 being number of characters written
+			   for `a_object_addr', `a_location' and `a_reason'.
+		 * 3 - 22, number of characters written for `a_location'
+		 * 4 - 29, number of characters written for `a_reason' */
+
+		/* Check this for formatting using `printf':
+		 * http://en.wikipedia.org/wiki/Printf#printf_format_placeholders */
 
 		/* Print object address with 16 digits to be ready when pointers
 		 * will be on 64 bits on all platform. */
@@ -2888,7 +2893,7 @@ rt_private void print_object_location_reason_effect (
 		}
 	} else {
 		if (l_reason_count > 29) {
-			sprintf(buffer,"%-29.29s %*.211s\n", a_location, l_reason_count, a_reason);
+			sprintf(buffer,"%-22.22s %*.211s\n", a_location, l_reason_count, a_reason);
 			append_trace(buffer);
 			sprintf(buffer, "%*.181s", 73 + l_effect_count, a_effect);
 			append_trace(buffer);

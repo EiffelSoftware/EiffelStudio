@@ -18,7 +18,7 @@ inherit
 			process_parent_as,
 			process_create_as,
 			process_like_id_as,
-			process_feat_name_id_as,
+			process_feat_name_id_as, process_infix_prefix_as,
 			process_feature_as, process_body_as,
 			process_access_feat_as,
 			process_access_id_as,
@@ -258,6 +258,15 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
+	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
+			-- Process prefix / infix.
+		do
+			if old_feature_name.is_case_insensitive_equal (l_as.internal_name.name) then
+				l_as.replace_text (new_feature_name, match_list)
+				has_modified := True
+			end
+		end
+
 	process_feature_as (l_as: FEATURE_AS)
 			-- Process feature clauses.
 		do
@@ -426,7 +435,7 @@ invariant
 	type_a_generator_not_void: type_a_generator /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -450,11 +459,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

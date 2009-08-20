@@ -41,6 +41,7 @@ feature -- Command
 			-- <Precursor>
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
+			expose (a_width, a_tab_info)
 		end
 
 	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
@@ -51,28 +52,42 @@ feature -- Command
 			icon: NS_IMAGE
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
+			expose (a_width, a_tab_info)
+		end
+
+	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
+			-- <Precursor>
+		do
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
+			expose (a_width, a_tab_info)
+		end
+
+	expose (a_width: INTEGER;  a_tab_info: SD_NOTEBOOK_TAB_INFO)
+		local
+			l_pixmap_imp: EV_PIXMAP_IMP
+			l_segmented_control: NS_SEGMENTED_CONTROL
+			icon: NS_IMAGE
+		do
 			start_draw
 
 			l_pixmap_imp ?= buffer_pixmap.implementation
 			check not_void: l_pixmap_imp /= Void end
 
-
-			buffer_pixmap.set_background_color (create {EV_COLOR}.make_with_rgb (1.0, 0.0, 1.0))
-			buffer_pixmap.clear
-
 			l_pixmap_imp.prepare_drawing
 
 			create l_segmented_control.make
 			l_segmented_control.set_segment_count (1)
-			l_segmented_control.set_segment_style (3)
-			--l_segmented_cell.set_selected_segment (0)
+			l_segmented_control.set_segment_style ({NS_SEGMENTED_CONTROL}.segment_style_small_square)
+			if is_selected then
+				l_segmented_control.set_selected_segment (0)
+			end
 			l_segmented_control.set_label_for_segment (text, 0)
 			l_segmented_control.set_enabled_for_segment (True, 0)
-			l_segmented_control.set_width_for_segment (a_width, 0)
+			l_segmented_control.set_width_for_segment (a_width-4, 0)
 			if attached {EV_PIXMAP_IMP} pixmap.implementation as l_icon_imp then
 				icon := l_icon_imp.image.twin
-				icon.set_size (create {NS_SIZE}.make_size(20,20))
-				l_segmented_control.set_image_for_segment (icon , 0)
+				icon.set_size (create {NS_SIZE}.make_size (20, 20))
+				l_segmented_control.set_image_for_segment (icon, 0)
 			end
 
 			l_segmented_control.set_frame (create {NS_RECT}.make_rect (0, 0, a_width, buffer_pixmap.height + 1))
@@ -91,26 +106,6 @@ feature -- Command
 			if internal_tab.parent.has_focus then
 				internal_tab.draw_focus_rect
 			end
-		end
-
-	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
-			-- <Precursor>
-		local
-			l_pixmap_imp: EV_PIXMAP_IMP
-		do
-			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
-			start_draw
-
---			l_pixmap_imp ?= buffer_pixmap.implementation
---			check not_void: l_pixmap_imp /= Void end
-
---			create l_wel_rect.make (0, 0, a_width, buffer_pixmap.height)
-
---			draw_cocoa_tab (0, 0, a_width, buffer_pixmap.height)
-
-			draw_pixmap_text_unselected (buffer_pixmap , 0, a_width)
-
-			end_draw
 		end
 
 	draw_focus_rect (a_rect: EV_RECTANGLE)

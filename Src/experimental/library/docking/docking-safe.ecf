@@ -25,6 +25,12 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
+		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa-safe.ecf" readonly="false">
+			<condition>
+				<platform value="macintosh"/>
+				<custom name="vision_implementation" value="cocoa"/>
+			</condition>
+		</library>
 		<cluster name="docking" location=".\">
 			<option namespace="Docking">
 			</option>

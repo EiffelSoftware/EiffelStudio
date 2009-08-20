@@ -10,6 +10,8 @@ class
 inherit
 	SD_SYSTEM_SETTER
 
+	EV_ANY_HANDLER
+
 feature -- Command
 
 	before_enable_capture
@@ -25,19 +27,21 @@ feature -- Command
 		end
 
 	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
-		do
-			a_widget.set_background_color (background_color)
-			a_widget.clear_rectangle (a_rect.x , a_rect.y, a_rect.width, a_rect.height)
-		end
-
-feature -- Internal
-
-	background_color: EV_COLOR
 		local
-			l_stock_colors: EV_STOCK_COLORS
-		once
-			create l_stock_colors
-			Result := l_stock_colors.default_background_color
+			l_widget_imp: EV_DRAWING_AREA_IMP
+			path: NS_BEZIER_PATH
+			l_color: NS_COLOR
+		do
+			l_widget_imp ?= a_widget.implementation
+			check
+				l_widget_imp /= Void
+			end
+			l_widget_imp.prepare_drawing
+			create l_color.control_color
+			l_color.set
+			create path.make_with_rect (create {NS_RECT}.make_rect (a_rect.x, a_rect.y, a_rect.width, a_rect.height))
+			path.fill
+			l_widget_imp.finish_drawing
 		end
 
 end

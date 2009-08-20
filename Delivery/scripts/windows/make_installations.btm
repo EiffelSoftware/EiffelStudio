@@ -106,8 +106,8 @@ move %STUDIO_NAME% EiffelStudio
 
 remtrace Uploading packages online
 cdd %INSTALL_DIR\setups\gpl
-scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.msi manus@eiffel.com:builds/
-scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.7z manus@eiffel.com:builds/
+scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.msi manus@eiffel.com:uploads/
+scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.7z manus@eiffel.com:uploads/
 
 fullrf %INSTALL_DIR\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ec.exe
 fullrf %INSTALL_DIR\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ecb.exe

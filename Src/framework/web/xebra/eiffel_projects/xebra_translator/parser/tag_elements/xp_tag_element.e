@@ -184,6 +184,17 @@ feature --Basic Implementation
 			attribute_has_been_added: old parameters.count + 1 = parameters.count
 		end
 
+	put_attribute_for_copy (a_id: STRING; a_value: XP_TAG_ARGUMENT)
+			-- `a_id': The name of the attribute
+			-- `a_value': The value of the attribute
+			-- Sets the attribute of this tag. Only use it for a copy operation
+		require
+			a_id_attached: a_id /= Void
+			local_part_is_not_empty: not a_id.is_empty
+		do
+			put_attribute (a_id, a_value)
+		end
+
 	build_tag_tree (
 				a_feature: XEL_FEATURE_ELEMENT;
 				root_template: XGEN_SERVLET_GENERATOR_GENERATOR)
@@ -206,7 +217,7 @@ feature --Basic Implementation
 			until
 				parameters.after
 			loop
-				Result.put_attribute (parameters.key_for_iteration, parameters.item_for_iteration)
+				Result.put_attribute_for_copy (parameters.key_for_iteration, parameters.item_for_iteration)
 				parameters.forth
 			end
 

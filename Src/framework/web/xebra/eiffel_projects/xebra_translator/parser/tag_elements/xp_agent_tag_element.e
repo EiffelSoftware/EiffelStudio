@@ -15,7 +15,8 @@ inherit
 	XP_TAG_ELEMENT
 		redefine
 			put_attribute,
-			copy_self
+			copy_self,
+			put_attribute_for_copy
 		end
 
 create
@@ -41,19 +42,6 @@ feature {XP_TAG_ELEMENT}  -- Access
 		attribute_handler: detachable PROCEDURE [ANY, TUPLE [STRING, XP_TAG_ARGUMENT]]
 				-- Handles the incoming attributes
 
-		executed: BOOLEAN assign set_executed
-				-- Has the attribute_handler been executed?
-
-feature {XP_TAG_ELEMENT} -- Status setting
-
-		set_executed (a_executed: BOOLEAN)
-				-- `a_executed': Has the attribute_handler been executed yet?
-			do
-				executed := a_executed
-			ensure
-				executed_set: executed = a_executed
-			end
-
 feature -- Access
 
 		copy_self: XP_TAG_ELEMENT
@@ -62,7 +50,6 @@ feature -- Access
 				l_agent_tag: XP_AGENT_TAG_ELEMENT
 			do
 				create {XP_AGENT_TAG_ELEMENT} l_agent_tag.make_with_additional_arguments (namespace, id, class_name, debug_information, attribute_handler)
-				l_agent_tag.executed := executed
 				Result := l_agent_tag
 			end
 
@@ -73,10 +60,15 @@ feature -- Access
 				a_local_part_attached: a_local_part /= Void
 			do
 				Precursor  (a_local_part, a_value)
-				if not executed and attached attribute_handler as l_attribute_handler then
+				if attached attribute_handler as l_attribute_handler then
 					l_attribute_handler.call ([a_local_part, a_value])
-					executed := True
 				end
+			end
+
+		put_attribute_for_copy (a_id: STRING; a_value: XP_TAG_ARGUMENT)
+				-- <Precursor>
+			do
+				-- Do nothing
 			end
 
 invariant

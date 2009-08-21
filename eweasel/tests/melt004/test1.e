@@ -20,7 +20,7 @@ feature
 		do
 			!!a.make (0);
 			a.append ("weasel");
-			b := 3.14159;
+			b := {REAL_32} 3.14159;
 		end;
 
 	make (arg: TEST1) is

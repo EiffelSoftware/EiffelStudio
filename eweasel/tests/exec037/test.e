@@ -26,7 +26,7 @@ feature
 			!!d;
 			d := d + 1.3;
 			!!e;
-			e := e + 1.3;
+			e := e + {REAL_32} 1.3;
 			!!f;
 			f := g;
 		end

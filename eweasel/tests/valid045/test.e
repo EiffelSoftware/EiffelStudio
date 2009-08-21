@@ -18,7 +18,7 @@ feature
 	make is
 		do
 			x1 := 47
-			x2 := 47.0
+			x2 := {REAL_32} 47.0
 			x3 := 47.0
 			x4 := True
 			x5 := 'W'

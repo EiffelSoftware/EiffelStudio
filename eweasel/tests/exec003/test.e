@@ -40,7 +40,7 @@ feature
 			n2 := d;
 			io.putstring ("Real conforms to double: ");
 			io.putbool (n1.conforms_to (n2)); io.new_line;
-			r := square_real (9.876543);
+			r := square_real ({REAL_32} 9.876543).truncated_to_real;
 			d := square_double (9.876543);
 			io.putstring ("Real square of 9.876543: ");
 			io.putreal (r); io.new_line;

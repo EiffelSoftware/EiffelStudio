@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			int_64 := 64
 			char := 'b'
 			bool := True
-			real := 32.5
+			real := {REAL_32} 32.5
 			double := 64.5
 			ref := "toto"
 			--none := Void
@@ -68,11 +68,11 @@ feature {NONE} -- Initialization
 			arr_bool.put (False, 4)
 			arr_bool.put (True, 5)
 			create arr_real.make (1, 5)
-			arr_real.put (32.5, 1)
-			arr_real.put (33.5, 2)
-			arr_real.put (34.5, 3)
-			arr_real.put (35.5, 4)
-			arr_real.put (36.5, 5)
+			arr_real.put ({REAL_32} 32.5, 1)
+			arr_real.put ({REAL_32} 33.5, 2)
+			arr_real.put ({REAL_32} 34.5, 3)
+			arr_real.put ({REAL_32} 35.5, 4)
+			arr_real.put ({REAL_32} 36.5, 5)
 			create arr_double.make (1, 5)
 			arr_double.put (132.5, 1)
 			arr_double.put (133.5, 2)

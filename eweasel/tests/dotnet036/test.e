@@ -12,7 +12,7 @@ feature {NONE} -- Creation
 			r64: REAL_64
 		do
 $C			{SYSTEM_THREAD}.current_thread.current_culture := create {CULTURE_INFO}.make ("ru-RU", false)
-			r32 := 1.5
+			r32 := {REAL_32} 1.5
 			r64 := 1.5
 			print (r32)
 			io.put_new_line

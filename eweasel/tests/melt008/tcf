@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	melted-putreal-wrong
-test_description Call to `io.putreal' where the calling routine is melted
+test_description Call to `io.put_real' where the calling routine is melted
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

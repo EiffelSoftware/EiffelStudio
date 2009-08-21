@@ -14,7 +14,7 @@ feature
 		local
 			output_value: REAL
 		do
-			output_value:= multiply (1.01, 2.1)
+			output_value:= multiply ({REAL_32} 1.01, {REAL_32} 2.1)
 			print (output_value.out)
 			io.new_line
 		end

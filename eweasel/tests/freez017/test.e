@@ -53,7 +53,7 @@ feature
 			try_real (i64)
 			try_real (i)
 			try_real (r)
-			try_real (d)
+			try_real (d.truncated_to_real)
 			
 			try_double (i8)
 			try_double (i16)
@@ -99,7 +99,7 @@ feature
 			(agent try_real (i64)).call ([])
 			(agent try_real (i)).call ([])
 			(agent try_real (r)).call ([])
-			(agent try_real (d)).call ([])
+			(agent try_real (d.truncated_to_real)).call ([])
 			
 			(agent try_double (i8)).call ([])
 			(agent try_double (i16)).call ([])
@@ -145,7 +145,7 @@ feature
 	i: INTEGER is 64
 	r: REAL is 
 		do 
-			Result := 64.0
+			Result := {REAL_32} 64.0
 		end
 	d: DOUBLE is 64.0
 end

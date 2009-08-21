@@ -23,7 +23,7 @@ feature
 			io.putstring ("print (9.876534): ");
 			print (9.876534); io.new_line;
 			io.putstring ("io.putreal (9.876534): ");
-			io.putreal (9.876534); io.new_line;
+			io.putreal ({REAL_32} 9.876534); io.new_line;
 			io.putstring ("print (9.876534) double: ");
 			print (9.876534); io.new_line;
 			io.putstring ("io.putdouble (9.876534): ");

@@ -13,7 +13,7 @@ feature
 	make is
 		do
 			io.put_real (64); io.new_line
-			io.put_real (64.0); io.new_line
+			io.put_real ({REAL_32} 64.0); io.new_line
 			io.put_real (r); io.new_line
 		end;
 

@@ -19,7 +19,7 @@ feature
 			k: INTEGER;
 			x: REAL;
 		do
-			x := 1.0 / 0.0;
+			x := {REAL_32} 1.0 / {REAL_32} 0.0;
 			k := 1 // 0;
 			print (x); io.new_line;
 			io.putreal (x); io.new_line;

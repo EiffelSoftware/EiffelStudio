@@ -12,7 +12,7 @@ feature
 	make is
 		do
 			$INSTRUCTION
-			print (my_arc_tangent (0.5)); io.new_line
+			print (my_arc_tangent ({REAL_32} 0.5)); io.new_line
 		end
 
 	x: INTEGER

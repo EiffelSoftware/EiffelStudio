@@ -68,8 +68,8 @@ feature
 			test_false_boolean (b.tilde_compare (True, False))
 			test_false_boolean (b.tilde_compare (False, True))
 
-			test_true_boolean (r4.tilde_compare (4.5, 4.5))
-			test_false_boolean (r4.tilde_compare (4.5, 4.8))
+			test_true_boolean (r4.tilde_compare ({REAL_32} 4.5, {REAL_32} 4.5))
+			test_false_boolean (r4.tilde_compare ({REAL_32} 4.5, {REAL_32} 4.8))
 
 			test_true_boolean (r8.tilde_compare (4.5, 4.5))
 			test_false_boolean (r8.tilde_compare (4.5, 4.8))
@@ -135,8 +135,8 @@ feature
 			test_true_boolean (b.not_tilde_compare (True, False))
 			test_true_boolean (b.not_tilde_compare (False, True))
 
-			test_false_boolean (r4.not_tilde_compare (4.5, 4.5))
-			test_true_boolean (r4.not_tilde_compare (4.5, 4.8))
+			test_false_boolean (r4.not_tilde_compare ({REAL_32} 4.5, {REAL_32} 4.5))
+			test_true_boolean (r4.not_tilde_compare ({REAL_32} 4.5, {REAL_32} 4.8))
 
 			test_false_boolean (r8.not_tilde_compare (4.5, 4.5))
 			test_true_boolean (r8.not_tilde_compare (4.5, 4.8))

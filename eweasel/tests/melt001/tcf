@@ -10,12 +10,12 @@ test_name 	divide-melt-panic
 test_description The integer division `40 / 5' in melted feature
 
 copy_sub 	Ace $TEST Ace
-define		BODY "io.putint (40 / 5); io.new_line"
+define		BODY "io.put_integer (40 / 5); io.new_line"
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
 compile_result 	validity_error TEST VUAR(2)
 
-define		BODY "io.putreal (40 / 5); io.new_line"
+define		BODY "io.put_double (40 / 5); io.new_line"
 copy_sub 	test.e $CLUSTER test.e
 resume_compile
 compile_result 	ok

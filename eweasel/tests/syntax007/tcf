@@ -11,5 +11,5 @@ test_description Some things ETL says are OK related to constants
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 compile_melted
-compile_result validity_warning TEST Unused_local_warning
+compile_result	ok
 test_end

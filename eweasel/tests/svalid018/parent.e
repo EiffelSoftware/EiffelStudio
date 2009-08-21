@@ -5,7 +5,7 @@ create
 feature
 	make
 		local
-			r: REAL
+			r: DOUBLE
 		do
 			r := p.x
 		end

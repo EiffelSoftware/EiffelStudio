@@ -17,7 +17,7 @@ feature
 			r: REAL
 		do
 			$INST
-			r := 50.0
+			r := {REAL_32} 50.0
 			r := c_floor (r)
 			io.put_real (r)
 			io.new_line

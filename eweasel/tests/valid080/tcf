@@ -7,11 +7,11 @@
 -- This is a test control file
 
 test_name 	 double-assigned-to-real
-test_description An assignment of an entity of type DOUBLE to an entity of type REAL should be a VJAR violation (should now be allowed since there is a conversion from DOUBLE to REAL)
+test_description An assignment of an entity of type DOUBLE to an entity of type REAL should be a VJAR violation
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e $CLUSTER test.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_error	TEST VJAR
 
 test_end

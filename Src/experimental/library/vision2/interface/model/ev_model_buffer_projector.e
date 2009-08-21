@@ -93,7 +93,6 @@ feature -- Access
 			old_drawable: detachable like drawable
 			old_drawable_position: detachable EV_COORDINATE
 			u_x, u_y: INTEGER
-			l_result: detachable EV_PIXMAP
 		do
 			is_world_too_large := False
 			old_drawable := drawable

@@ -197,7 +197,7 @@ feature {NONE} -- Access
 			has_border: has_border
 		once
 			Result := active_border_color.twin
-			Result.set_rgb (.6, .6, .7)
+			Result.set_rgb ({REAL_32} 0.6, {REAL_32} 0.6, {REAL_32} 0.7)
 		ensure
 			result_attached: Result /= Void
 		end

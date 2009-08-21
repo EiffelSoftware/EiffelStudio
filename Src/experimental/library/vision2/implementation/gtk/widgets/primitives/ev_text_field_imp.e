@@ -131,21 +131,21 @@ feature -- Status setting
 			-- Make text left aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
-			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, 0.0)
+			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, {REAL_32} 0.0)
 		end
 
 	align_text_right
 			-- Make text right aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_right
-			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, 1.0)
+			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, {REAL_32} 1.0)
 		end
 
 	align_text_center
 			-- Make text center aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_center
-			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_entry_set_alignment (entry_widget, {REAL_32} 0.5)
 		end
 
 feature -- Status Report

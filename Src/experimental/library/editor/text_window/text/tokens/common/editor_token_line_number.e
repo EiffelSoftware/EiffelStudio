@@ -17,7 +17,7 @@ inherit
 			text_color_id
 		end
 
-	DOUBLE_MATH
+	SINGLE_MATH
 
 create
 	make

@@ -87,13 +87,13 @@ feature -- Access
 			from
 				l_sub_task := sub_task
 				check l_sub_task /= Void end
-				Result := l_sub_task.index/l_sub_task.class_count
+				Result := (l_sub_task.index/l_sub_task.class_count).truncated_to_real
 				i := progress_list.count
 			until
 				i < 1
 			loop
 				l_progress := progress_list.at (i)
-				l_invert := 1/l_progress.total
+				l_invert := (1/l_progress.total).truncated_to_real
 				Result := Result*l_invert + (1 - (l_progress.remaining + 1)*l_invert)
 				i := i - 1
 			end

@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 				-- content's widget will be minimum size
 				docking_manager.command.resize (False)
 
-				l_new_split_area.set_proportion (0.5)
+				l_new_split_area.set_proportion ({REAL_32} 0.5)
 				set_direction (a_target_zone.state.direction)
 				docking_manager.command.remove_empty_split_area
 			else

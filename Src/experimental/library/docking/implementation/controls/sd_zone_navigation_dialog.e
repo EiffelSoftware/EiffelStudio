@@ -557,7 +557,7 @@ feature {NONE} -- Implementation command
 			l_left_in := l_scroll_area.x_offset <= l_target_x
 			l_right_in := l_target_x + maximum_item_width <= l_scroll_area.x_offset + l_scroll_area.width
 			if not (l_left_in and l_right_in) then
-				l_maximum_scroll_position := l_scroll_area.item.width * (1 - (l_scroll_area.width / l_scroll_area.item.width))
+				l_maximum_scroll_position := l_scroll_area.item.width * (1 - (l_scroll_area.width / l_scroll_area.item.width).truncated_to_real)
 				l_scroll_area.set_x_offset (l_target_x.min (l_maximum_scroll_position.rounded))
 			end
 		end

@@ -679,14 +679,17 @@ feature -- Element change
 
 	scale (a_scale: DOUBLE)
 			-- Scale to x and y direction for `a_scale'.
+		local
+			l_scale: REAL
 		do
+			l_scale := a_scale.truncated_to_real
 			Precursor {EV_MODEL_WORLD} (a_scale)
 			scale_factor := scale_factor * a_scale
-			real_grid_x := real_grid_x * a_scale
+			real_grid_x := real_grid_x * l_scale
 			if grid_x /= as_integer (real_grid_x) then
 				grid_x := as_integer (real_grid_x)
 			end
-			real_grid_y := real_grid_y * a_scale
+			real_grid_y := real_grid_y * l_scale
 			if grid_y /= as_integer (real_grid_y) then
 				grid_y := as_integer (real_grid_y)
 			end

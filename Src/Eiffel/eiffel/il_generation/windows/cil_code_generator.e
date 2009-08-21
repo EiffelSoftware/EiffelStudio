@@ -6251,7 +6251,7 @@ feature -- Constants generation
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_r8 then
 				put_real_64_constant (0.0)
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_r4 then
-				put_real_32_constant (0.0)
+				put_real_32_constant ({REAL_32} 0.0)
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
 				put_natural_8_constant (0)
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then

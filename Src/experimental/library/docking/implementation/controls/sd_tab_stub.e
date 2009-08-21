@@ -311,7 +311,7 @@ feature {SD_AUTO_HIDE_STATE} -- Expose handling
 				else
 					l_imp ?= internal_drawing_area.implementation
 					check not_void: l_imp /= Void end
-					l_imp.draw_rotated_text (start_x_text_internal, start_y_text_internal, {MATH_CONST}.pi * 1.5, internal_text)
+					l_imp.draw_rotated_text (start_x_text_internal, start_y_text_internal, {MATH_CONST}.pi.truncated_to_real * {REAL_32} 1.5, internal_text)
 				end
 			end
 

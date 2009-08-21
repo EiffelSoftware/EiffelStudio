@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 				end
 				l_target_split.set_split_position (l_target_split_position)
 			end
-			l_spliter.set_proportion (0.5)
+			l_spliter.set_proportion ({REAL_32} 0.5)
 			inner_container.restore_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
 		end
 

@@ -108,7 +108,7 @@ feature -- Basic operations
 
 feature -- Query
 
-	theme_color(a_theme: POINTER; a_color_id: INTEGER): EV_COLOR
+	theme_color (a_theme: POINTER; a_color_id: INTEGER): EV_COLOR
 			-- Theme color of a_color_id
 		local
 			l_wel_color: WEL_SYSTEM_COLORS
@@ -174,7 +174,7 @@ feature -- Query
 			when {WEL_COLOR_CONSTANTS}.color_infotext then
 				l_wel_color_ref := l_wel_color.system_color_info_text
 			end
-			create Result.make_with_rgb (l_wel_color_ref.red / 255, l_wel_color_ref.green / 255, l_wel_color_ref.blue / 255)
+			create Result.make_with_8_bit_rgb (l_wel_color_ref.red, l_wel_color_ref.green, l_wel_color_ref.blue)
 		end
 
 feature {NONE} -- implementation

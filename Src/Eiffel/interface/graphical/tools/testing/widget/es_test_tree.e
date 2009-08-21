@@ -346,7 +346,7 @@ feature {TEST_SUITE_S} -- Events
 		do
 			if attached {TEST_RETRIEVAL_I} a_session then
 				a_session.connection.disconnect_events (Current)
-				progress_bar.set_proportion (0.0)
+				progress_bar.set_proportion ({REAL_32} 0.0)
 			end
 			status_label.set_text (a_test_suite.tests.count.out + " tests")
 		end

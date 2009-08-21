@@ -18,7 +18,7 @@ inherit
 			update_width
 		end
 
-	DOUBLE_MATH
+	SINGLE_MATH
 
 create
 	make

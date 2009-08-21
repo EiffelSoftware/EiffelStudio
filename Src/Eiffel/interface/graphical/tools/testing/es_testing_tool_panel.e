@@ -132,7 +132,7 @@ feature {NONE} -- Initialization: widget status
 			end
 
 			l_app := (create {EV_SHARED_APPLICATION}).ev_application
-			l_app.add_idle_action_kamikaze (agent split_area.set_proportion (0.5))
+			l_app.add_idle_action_kamikaze (agent split_area.set_proportion ({REAL_32} 0.5))
 		end
 
 

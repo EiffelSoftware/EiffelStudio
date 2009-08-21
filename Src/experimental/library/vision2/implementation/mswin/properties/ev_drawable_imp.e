@@ -487,9 +487,9 @@ feature -- Drawing operations
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
-			semi_width, semi_height: DOUBLE
-			tang_start, tang_end: DOUBLE
-			x_tmp, y_tmp: DOUBLE
+			semi_width, semi_height: REAL
+			tang_start, tang_end: REAL
+			x_tmp, y_tmp: REAL
 		do
 				-- It appears that the divide by 0 we are protecting against in
 				-- `Current' will fail on Borland, but not microsoft.
@@ -498,19 +498,19 @@ feature -- Drawing operations
 			right := left + a_bounding_width
 			bottom := top + a_bounding_height
 
-			semi_width := a_bounding_width / 2
-			semi_height := a_bounding_height / 2
+			semi_width := (a_bounding_width / 2).truncated_to_real
+			semi_height := (a_bounding_height / 2).truncated_to_real
 			tang_start := tangent (a_start_angle)
 			tang_end := tangent (a_start_angle + an_aperture)
 				-- We must protect against both possible divides by 0.
 			if tang_start + semi_height /= 0 and semi_width /= 0 then
-				x_tmp := semi_height / (sqrt (tang_start ^ 2 + semi_height ^ 2 / semi_width ^ 2))
+				x_tmp := semi_height / (sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width)))
 			else
 				x_tmp := 0
 			end
 				-- We must protect against divide by 0.
 			if tang_start /= 0 and semi_width /= 0 then
-				y_tmp := semi_height / (sqrt (1 + semi_height ^ 2 / (semi_width ^ 2 * tang_start ^ 2)))
+				y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start)))
 			else
 				y_tmp := 0
 			end
@@ -524,13 +524,13 @@ feature -- Drawing operations
 			y_start_arc := (y_tmp + top + semi_height).rounded
 				-- We must protect against both possible divides by 0.
 			if tang_end + semi_height /= 0 and semi_width /= 0 then
-				x_tmp := semi_height / (sqrt (tang_end ^ 2 + semi_height ^ 2 / semi_width ^ 2))
+				x_tmp := semi_height / (sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width)))
 			else
 				x_tmp := 0
 			end
 				-- We must ensure that we protect against divide by 0.
 			if tang_end /= 0 and semi_width /= 0 then
-				y_tmp := semi_height / (sqrt (1 + semi_height ^ 2 / (semi_width ^ 2 * tang_end ^ 2)))
+				y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end)))
 			else
 				y_tmp := 0
 			end
@@ -805,9 +805,9 @@ feature -- Drawing operations
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
-			semi_width, semi_height: DOUBLE
-			tang_start, tang_end: DOUBLE
-			x_tmp, y_tmp: DOUBLE
+			semi_width, semi_height: REAL
+			tang_start, tang_end: REAL
+			x_tmp, y_tmp: REAL
 		do
 				-- It appears that the divide by 0 we are protecting against in
 				-- `Current' will fail on Borland, but not microsoft.
@@ -816,20 +816,20 @@ feature -- Drawing operations
 			right := left + a_bounding_width
 			bottom := top + a_bounding_height
 
-			semi_width := a_bounding_width / 2
-			semi_height := a_bounding_height / 2
+			semi_width := (a_bounding_width / 2).truncated_to_real
+			semi_height := (a_bounding_height / 2).truncated_to_real
 			tang_start := tangent (a_start_angle)
 			tang_end := tangent (a_start_angle + an_aperture)
 
 				-- We must protect against both possible divides by 0.
 			if tang_start + semi_height /= 0 and semi_width /= 0 then
-				x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
+				x_tmp := semi_height / (sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width)))
 			else
 				x_tmp := 0
 			end
 				-- We must ensure that we protect against divide by 0.
 			if tang_start /= 0 and semi_width /= 0 then
-				y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_start^2)))
+				y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start)))
 			else
 				y_tmp := 0
 			end
@@ -844,13 +844,13 @@ feature -- Drawing operations
 
 				-- We must protect against both possible divides by 0.
 			if tang_end + semi_height /= 0 and semi_width /= 0 then
-				x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
+				x_tmp := semi_height / (sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width)))
 			else
 				x_tmp := 0
 			end
 				-- We must ensure that we protect against divide by 0.
 			if semi_width /= 0 and tang_end /= 0 then
-				y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_end^2)))
+				y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end)))
 			else
 				y_tmp := 0
 			end
@@ -954,9 +954,9 @@ feature -- Filling operations
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
 			internal_bounding_width, internal_bounding_height: INTEGER
-			semi_width, semi_height: DOUBLE
-			tang_start, tang_end: DOUBLE
-			x_tmp, y_tmp: DOUBLE
+			semi_width, semi_height: REAL
+			tang_start, tang_end: REAL
+			x_tmp, y_tmp: REAL
 		do
 			-- It appears that the divide by 0 we are protecting against in
 			-- `Current' will fail on Borland, but not microsoft.
@@ -972,20 +972,20 @@ feature -- Filling operations
 				right := x + internal_bounding_width
 				bottom := top + internal_bounding_height
 
-				semi_width := internal_bounding_width / 2
-				semi_height := internal_bounding_height / 2
+				semi_width := (internal_bounding_width / 2).truncated_to_real
+				semi_height := (internal_bounding_height / 2).truncated_to_real
 				tang_start := tangent (a_start_angle)
 				tang_end := tangent (a_start_angle + an_aperture)
 
 					-- We must protect against both possible divides by 0.
 				if tang_start + semi_height /= 0 and semi_width /= 0 then
-					x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
+					x_tmp := semi_height / (sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width)))
 				else
 					x_tmp := 0
 				end
 					-- We must ensure that we protect against divide by 0.
 				if semi_width /= 0 and tang_start /= 0 then
-					y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_start^2)))
+					y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start)))
 				else
 					y_tmp := 0
 				end
@@ -1000,13 +1000,13 @@ feature -- Filling operations
 
 					-- We must protect against both possible divides by 0.
 				if tang_end + semi_height /= 0 and semi_width /= 0 then
-					x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
+					x_tmp := semi_height / (sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width)))
 				else
 					x_tmp := 0
 				end
 					-- We must ensure that we protect against divide by 0.
 				if semi_width /= 0 and tang_end /= 0 then
-					y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_end^2)))
+					y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end)))
 				else
 					y_tmp := 0
 				end

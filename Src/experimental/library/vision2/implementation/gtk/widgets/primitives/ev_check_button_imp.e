@@ -58,10 +58,10 @@ feature -- Element change
 			Precursor {EV_TOGGLE_BUTTON_IMP} (txt)
 
 				-- We left-align and vertical_center-position the text
-			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, {REAL_32} 0.0, {REAL_32} 0.5)
 
 			if gtk_pixmap /= NULL then
-				{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (pixmap_box, 0.0, 0.5)
+				{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (pixmap_box, {REAL_32} 0.0, {REAL_32} 0.5)
 			end
 		end
 

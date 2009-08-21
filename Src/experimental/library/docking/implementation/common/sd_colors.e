@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			default_background_color_cell.put (l_system_color.default_background_color)
 
 			is_initialized := True
-			
+
 			create l_helper
 			non_focused_color_lightness_cell.put (l_helper.color_with_lightness (default_background_color, {SD_SHARED}.Auto_hide_panel_lightness).twin)
 
@@ -193,7 +193,7 @@ feature -- Query
 			-- Tool bar tilte bar color when tool bar floating
 		once
 			create Result
-			Result.set_rgb (132 / 255, 130 / 255, 132 / 255)
+			Result.set_rgb_with_8_bit (132, 130, 132)
 		ensure
 			not_void: Result /= Void
 		end

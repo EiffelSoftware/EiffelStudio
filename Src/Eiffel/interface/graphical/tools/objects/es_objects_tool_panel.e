@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			create split
 			split.pointer_double_press_actions.force_extend (agent (a_split: EV_SPLIT_AREA)
 					do
-						a_split.set_proportion (0.5)
+						a_split.set_proportion ({REAL_32} 0.5)
 					end(split)
 				)
 
@@ -544,7 +544,7 @@ feature -- Status report
 		require
 			split_exists: split_exists
 		do
-			Result := split.split_position / split.width
+			Result := (split.split_position / split.width).truncated_to_real
 		end
 
 	set_split_proportion (p: like split_proportion)

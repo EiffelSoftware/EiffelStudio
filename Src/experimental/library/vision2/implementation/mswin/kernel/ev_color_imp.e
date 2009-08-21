@@ -47,21 +47,21 @@ feature {EV_COLOR} -- Access
 			-- Intensity of red component.
 			-- Range: [0,1]
 		do
-			Result := red_8_bit / 255.0
+			Result := red_8_bit / {REAL_32} 255.0
 		end
 
 	green: REAL
 			-- Intensity of green component.
 			-- Range: [0,1]
 		do
-			Result := green_8_bit / 255.0
+			Result := green_8_bit / {REAL_32} 255.0
 		end
 
 	blue: REAL
 			-- Intensity of blue component.
 			-- Range: [0,1]
 		do
-			Result := blue_8_bit / 255.0
+			Result := blue_8_bit / {REAL_32} 255.0
 		end
 
 	name: STRING_32
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			-- Amount by which two intensities can differ but still be
 			-- considered equal by `is_equal'.
 		do
-			Result := 1/255
+			Result := {REAL_32} 1.0 / {REAL_32} 255.0
 		end
 
 note
@@ -221,12 +221,3 @@ note
 
 
 end -- class EV_COLOR_IMP
-
-
-
-
-
-
-
-
-

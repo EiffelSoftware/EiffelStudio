@@ -199,7 +199,7 @@ feature {EV_ANY} -- Contract support
 			-- Amount by which `proportion' can differ from expected value
 			-- and still be considered correct.
 		do
-			Result := (value_range.upper - value_range.lower) / (step * 10000)
+			Result := ((value_range.upper - value_range.lower) / (step * 10000)).truncated_to_real
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

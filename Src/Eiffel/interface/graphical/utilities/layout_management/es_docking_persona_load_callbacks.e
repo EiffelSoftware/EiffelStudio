@@ -199,7 +199,7 @@ feature {NONE} -- Basic operation
 												l_tool.content.set_top ({SD_ENUMERATION}.bottom)
 											end
 										end
-										l_tool.content.set_split_proportion (1.0 - (current_zone_size.min (100) / 100))
+										l_tool.content.set_split_proportion ({REAL_32} 1.0 - (current_zone_size.min (100) / 100).truncated_to_real)
 									else
 											-- Default to floating.
 										l_tool.content.set_floating_width (default_floating_width)

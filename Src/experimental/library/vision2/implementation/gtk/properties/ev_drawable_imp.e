@@ -553,7 +553,7 @@ feature -- Drawing operations
 						x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 						y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
 					)
-					{EV_GTK_EXTERNALS}.pango_matrix_rotate (a_pango_matrix, a_angle / Pi * 180)
+					{EV_GTK_EXTERNALS}.pango_matrix_rotate (a_pango_matrix, a_angle / Pi.truncated_to_real * 180)
 					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, 0, -(y - a_y))
 
 					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, a_pango_matrix)
@@ -865,22 +865,22 @@ feature -- Drawing operations
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
-			semi_width, semi_height: DOUBLE
-			tang_start, tang_end: DOUBLE
-			x_tmp, y_tmp: DOUBLE
+			semi_width, semi_height: REAL
+			tang_start, tang_end: REAL
+			x_tmp, y_tmp: REAL
 		do
 			left := x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
 			top := y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
 			right := left + a_width
 			bottom := top + a_height
 
-			semi_width := a_width / 2
-			semi_height := a_height / 2
+			semi_width := (a_width / 2).truncated_to_real
+			semi_height := (a_height / 2).truncated_to_real
 			tang_start := tangent (a_start_angle)
 			tang_end := tangent (a_start_angle + an_aperture)
 
-			x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
-			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_start^2)))
+			x_tmp := semi_height / (sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width)))
+			y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start)))
 			if sine (a_start_angle) > 0 then
 				y_tmp := -y_tmp
 			end
@@ -890,8 +890,8 @@ feature -- Drawing operations
 			x_start_arc := (x_tmp + left + semi_width).rounded
 			y_start_arc := (y_tmp + top + semi_height).rounded
 
-			x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
-			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_end^2)))
+			x_tmp := semi_height / (sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width)))
+			y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end)))
 			if sine (a_start_angle + an_aperture) > 0 then
 				y_tmp := -y_tmp
 			end

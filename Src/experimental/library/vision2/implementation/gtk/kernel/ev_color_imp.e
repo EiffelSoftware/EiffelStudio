@@ -162,21 +162,21 @@ feature -- Conversion
 			-- Set `red' from `a_8_bit_red' intinsity.
 		do
 			red_16_bit := a_16_bit_red
-			red := a_16_bit_red / 0xFFFF
+			red := (a_16_bit_red / 0xFFFF).truncated_to_real
 		end
 
 	set_green_with_16_bit (a_16_bit_green: INTEGER)
 			-- Set `green' from `a_16_bit_green' intinsity.
 		do
 			green_16_bit := a_16_bit_green
-			green := a_16_bit_green / 0xFFFF
+			green := (a_16_bit_green / 0xFFFF).truncated_to_real
 		end
 
 	set_blue_with_16_bit (a_16_bit_blue: INTEGER)
 			-- Set `blue' from `a_16_bit_blue' intinsity.
 		do
 			blue_16_bit := a_16_bit_blue
-			blue := a_16_bit_blue / 0xFFFF
+			blue := (a_16_bit_blue / 0xFFFF).truncated_to_real
 		end
 
 	set_with_other (other: EV_COLOR)
@@ -202,7 +202,7 @@ feature {EV_ANY_I} -- Command
 			-- Amount by which two intensities can differ but still be
 			-- considered equal by `is_equal'.
 		do
-			Result := 1 / 255
+			Result := {REAL_32} 1.0 / {REAL_32} 255.0
 		end
 
 	destroy

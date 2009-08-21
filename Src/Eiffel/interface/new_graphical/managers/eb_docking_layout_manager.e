@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			l_tool.content.set_tab_with (l_last_tool.content, True)
 			l_last_tool := l_tool
 
-			l_tool.content.set_split_proportion (0.6)
+			l_tool.content.set_split_proportion ({REAL_32} 0.6)
 
 				-- Right tools
 			l_tool := l_shell_tools.tool ({ES_FAVORITES_TOOL})
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 			l_tool := l_shell_tools.tool ({ES_GROUPS_TOOL})
 			l_tool.content.set_tab_with (l_last_tool.content, True)
 
-			l_tool.content.set_split_proportion (0.73)
+			l_tool.content.set_split_proportion ({REAL_32} 0.73)
 
 				-- Auto hide (bottom) tools
 			l_tool := l_shell_tools.tool ({ES_DIAGRAM_TOOL})

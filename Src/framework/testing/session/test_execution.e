@@ -66,9 +66,9 @@ feature -- Access
 			-- <Precursor>
 		do
 			if initial_test_count > 0 then
-				Result := (test_count + running_test_map.count)/initial_test_count
+				Result := ((test_count + running_test_map.count)/initial_test_count).truncated_to_real
 			else
-				Result := 1.0
+				Result := {REAL_32} 1.0
 			end
 		end
 

@@ -31,7 +31,7 @@ feature -- Access
 	Grey, Gray: EV_COLOR
 			-- Grey.
 		once
-			create Result.make_with_rgb (0.7, 0.7, 0.7)
+			create Result.make_with_rgb ({REAL_32} 0.7, {REAL_32} 0.7, {REAL_32} 0.7)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -39,7 +39,7 @@ feature -- Access
 	Dark_grey, Dark_gray: EV_COLOR
 			-- Dark grey.
 		once
-			create Result.make_with_rgb (0.5, 0.5, 0.5)
+			create Result.make_with_rgb ({REAL_32} 0.5, {REAL_32} 0.5, {REAL_32} 0.5)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -55,7 +55,7 @@ feature -- Access
 	Dark_blue: EV_COLOR
 			-- Dark blue.
 		once
-			create Result.make_with_rgb (0, 0, 0.5)
+			create Result.make_with_rgb (0, 0, {REAL_32} 0.5)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -71,7 +71,7 @@ feature -- Access
 	Dark_cyan: EV_COLOR
 			-- Dark cyan.
 		once
-			create Result.make_with_rgb (0, 0.5, 0.5)
+			create Result.make_with_rgb (0, {REAL_32} 0.5, {REAL_32} 0.5)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -87,7 +87,7 @@ feature -- Access
 	Dark_green: EV_COLOR
 			-- Dark green.
 		once
-			create Result.make_with_rgb (0, 0.5, 0)
+			create Result.make_with_rgb (0, {REAL_32} 0.5, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -103,7 +103,7 @@ feature -- Access
 	Dark_yellow: EV_COLOR
 			-- Dark yellow.
 		once
-			create Result.make_with_rgb (0.5, 0.5, 0)
+			create Result.make_with_rgb ({REAL_32} 0.5, {REAL_32} 0.5, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -119,7 +119,7 @@ feature -- Access
 	Dark_red: EV_COLOR
 			-- Dark red.
 		once
-			create Result.make_with_rgb (0.5, 0, 0)
+			create Result.make_with_rgb ({REAL_32} 0.5, 0, 0)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -135,7 +135,7 @@ feature -- Access
 	Dark_magenta: EV_COLOR
 			-- Dark magenta.
 		once
-			create Result.make_with_rgb (0.5, 0, 0.5)
+			create Result.make_with_rgb ({REAL_32} 0.5, 0, {REAL_32} 0.5)
 		ensure
 			result_not_void: Result /= Void
 		end

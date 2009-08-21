@@ -187,7 +187,7 @@ feature -- Query
 			end
 			create l_wel_color.make_by_color (l_int)
 
-			create Result.make_with_rgb (l_wel_color.red / 255, l_wel_color.green / 255, l_wel_color.blue / 255)
+			create Result.make_with_8_bit_rgb (l_wel_color.red, l_wel_color.green, l_wel_color.blue)
 		end
 
 feature {NONE} -- Implementation
@@ -292,15 +292,3 @@ note
 
 
 end
-
-
-
-
-
-
-
-
-
-
-
-

@@ -112,21 +112,21 @@ feature -- Status setting
 	align_text_left
 			-- Display `text' left aligned.
 		do
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 0, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, {REAL_32} 0.0, {REAL_32} 0.5)
 			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_left_enum
 		end
 
 	align_text_right
 			-- Display `text' right aligned.
 		do
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 1, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, {REAL_32} 1.0, {REAL_32} 0.5)
 			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_right_enum
 		end
 
 	align_text_center
 			-- Display `text' centered.
 		do
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 0.5, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, {REAL_32} 0.5, {REAL_32} 0.5)
 			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_center_enum
 		end
 

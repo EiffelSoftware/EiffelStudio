@@ -134,7 +134,7 @@ feature -- Figure drawing
 			end
 			d.set_line_width (arc.line_width)
 			d.set_foreground_color (arc.foreground_color)
-			d.draw_arc (min_x + offset_x, min_y + offset_y, max_x - min_x, max_y - min_y, arc.start_angle, arc.aperture)
+			d.draw_arc (min_x + offset_x, min_y + offset_y, max_x - min_x, max_y - min_y, arc.start_angle.truncated_to_real, arc.aperture.truncated_to_real)
 
 			if arc.dashed_line_style then
 				d.disable_dashed_line_style
@@ -477,10 +477,10 @@ feature -- Figure drawing
 			bg := slice.background_color
 			if bg /= Void then
 				d.set_foreground_color (bg)
-				d.fill_pie_slice (min_x + l_offset_x, min_y + l_offset_y, max_x - min_x, max_y - min_y, slice.start_angle, slice.aperture)
+				d.fill_pie_slice (min_x + l_offset_x, min_y + l_offset_y, max_x - min_x, max_y - min_y, slice.start_angle.truncated_to_real, slice.aperture.truncated_to_real)
 			end
 			d.set_foreground_color (slice.foreground_color)
-			d.draw_pie_slice (min_x + l_offset_x, min_y + l_offset_y, max_x - min_x, max_y - min_y, slice.start_angle, slice.aperture)
+			d.draw_pie_slice (min_x + l_offset_x, min_y + l_offset_y, max_x - min_x, max_y - min_y, slice.start_angle.truncated_to_real, slice.aperture.truncated_to_real)
 
 			if slice.dashed_line_style then
 				d.disable_dashed_line_style
@@ -833,7 +833,7 @@ feature -- Figure drawing
 			p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y, p5x, p5y: INTEGER
 			p0, p1, p2, p3, p4, p5: EV_COORDINATE
 			l_offset_x, l_offset_y: INTEGER
-			pi2: DOUBLE
+			pi2: REAL_32
 		do
 			l_point_array := f.point_array
 			p0 := l_point_array.item (2)
@@ -892,12 +892,12 @@ feature -- Figure drawing
 			d.draw_segment (p5x - 1, p1y, p4x, p1y)
 			d.draw_segment (p0x, p2y - 1, p0x, p5y)
 
-			pi2 := pi / 2
+			pi2 := (pi / 2).truncated_to_real
 
 			d.draw_arc (p0x, p0y, (p2x - p0x) * 2, (p2y - p0y) * 2, pi2, pi2)
 			d.draw_arc (p1x - (p1x - p3x) * 2, p0y, (p1x - p3x) * 2, (p3y - p0y) * 2, 0, pi2)
 			d.draw_arc (p1x - (p1x - p4x) * 2 + 1, p1y - (p1y - p4y) * 2 + 1, (p1x - p4x) * 2, (p1y - p4y) * 2, 3* pi2, pi2)
-			d.draw_arc (p0x, p1y - (p1y - p5y) * 2 + 1, (p5x - p0x) * 2, (p1y - p5y) * 2, pi, pi2)
+			d.draw_arc (p0x, p1y - (p1y - p5y) * 2 + 1, (p5x - p0x) * 2, (p1y - p5y) * 2, pi.truncated_to_real, pi2)
 
 			if f.dashed_line_style then
 				d.disable_dashed_line_style

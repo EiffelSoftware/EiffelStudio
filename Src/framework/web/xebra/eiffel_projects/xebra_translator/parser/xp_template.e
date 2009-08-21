@@ -156,6 +156,7 @@ feature -- Basic functionality
 			controller_create_name := a_other.controller_create_name
 			is_template := a_other.is_template
 			root_tag := a_other.root_tag.copy_tag_tree
+			date := a_other.date
 		end
 
 	resolve (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_regions: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING]; a_pending_uids: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR): XP_TAG_ELEMENT
@@ -175,7 +176,7 @@ feature -- Basic functionality
 			l_uid: STRING
 		do
 			--l_root_tag := root_tag.copy_tag_tree
-			l_root_tag := root_tag			
+			l_root_tag := root_tag
 			if not controller_class.is_empty then
 						-- The controller is defined, so all pending templates can be resolved
 				l_uid := a_servlet_gen.next_unique_identifier

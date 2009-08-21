@@ -772,11 +772,15 @@ feature {NONE} -- Implementation
 			-- Reset all marks
 		do
 			Precursor {EB_EDITOR}
-			reset_search_bar_marks
+			if search_bar /= Void then
+				reset_search_bar_marks
+			end
 		end
 
 	reset_search_bar_marks
 			-- Reset colors and the bottom/start item reach marks
+		require
+			search_bar_not_void: search_bar /= Void
 		do
 			search_bar.trigger_bottom_reached_pixmap (False)
 			search_bar.trigger_first_reached_pixmap (False)

@@ -99,8 +99,8 @@ feature -- Figure drawing
 			end
 			d.set_line_width (arc.line_width)
 			d.set_foreground_color (arc.foreground_color)
-			d.draw_arc (a_x, a_y, a_width, a_height, arc.start_angle,
-				arc.aperture)
+			d.draw_arc (a_x, a_y, a_width, a_height, arc.start_angle.truncated_to_real,
+				arc.aperture.truncated_to_real)
 			if arc.dashed_line_style then
 				d.disable_dashed_line_style
 			end
@@ -249,11 +249,11 @@ feature -- Figure drawing
 			if bg /= Void then
 				d.set_foreground_color (bg)
 				d.fill_pie_slice (cx, cy, a_width, a_height,
-					slice.start_angle, slice.aperture)
+					slice.start_angle.truncated_to_real, slice.aperture.truncated_to_real)
 			end
 			d.set_foreground_color (slice.foreground_color)
 			d.draw_pie_slice (cx, cy, a_width, a_height,
-				slice.start_angle, slice.aperture)
+				slice.start_angle.truncated_to_real, slice.aperture.truncated_to_real)
 			if slice.dashed_line_style then
 				d.disable_dashed_line_style
 			end

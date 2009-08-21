@@ -698,11 +698,11 @@ feature -- Element change
 			i: INTEGER
 		do
 			if an_alignment.is_left_aligned then
-				alignment := 0
+				alignment := {REAL_32} 0.0
 			elseif an_alignment.is_center_aligned then
-				alignment := 0.5
+				alignment := {REAL_32} 0.5
 			else
-				alignment := 1.0
+				alignment := {REAL_32} 1.0
 			end
 
 			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)

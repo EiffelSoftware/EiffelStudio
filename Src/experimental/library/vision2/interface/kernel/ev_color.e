@@ -139,13 +139,13 @@ feature -- Access
 			min_color := R.min(G).min(B)
 			diff_color := max_color - min_color
 			if diff_color = 0.0 then
-				Result := 0.0
+				Result := {REAL_32} 0.0
 			else
 				sum_color := max_color + min_color
 				if sum_color < 1 then
 					Result := diff_color / sum_color
 				else
-					Result := diff_color / (2.0 - sum_color)
+					Result := diff_color / ({REAL_32} 2.0 - sum_color)
 				end
 			end
 		end
@@ -167,14 +167,14 @@ feature -- Access
 			min_color := R.min(G).min(B)
 			diff_color := max_color - min_color
 			if diff_color = 0.0 then
-				Result := 0.0
+				Result := {REAL_32} 0.0
 			else
 				if max_color = R then
 					Result := (G - B) / diff_color
 				elseif max_color = G then
-					Result := 2.0 + ((B - R) / diff_color)
+					Result := {REAL_32} 2.0 + ((B - R) / diff_color)
 				elseif max_color = B then
-					Result := 4.0 + ((R - G) / diff_color)
+					Result := {REAL_32} 4.0 + ((R - G) / diff_color)
 				end
 			end
 		end

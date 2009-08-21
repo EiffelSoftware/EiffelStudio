@@ -63,7 +63,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			str := local_vs_object_proportion_preference.value
 			if not str.is_real then
 				local_vs_object_proportion_preference.set_value ("0.5")
-				Result := 0.5
+				Result := {REAL_32} 0.5
 			else
 				Result := str.to_real
 			end

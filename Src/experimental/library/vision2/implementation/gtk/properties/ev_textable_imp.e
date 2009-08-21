@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		do
 			text_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
-			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, {REAL_32} 0.0, {REAL_32} 0.5)
 			{EV_GTK_EXTERNALS}.gtk_misc_set_padding (text_label, 2, 0)
 		end
 
@@ -67,21 +67,21 @@ feature -- Status setting
 	align_text_center
 			-- Display `text' centered.
 		do
-			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.5, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, {REAL_32} 0.5, {REAL_32} 0.5)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_center_enum)
 		end
 
 	align_text_left
 			-- Display `text' left aligned.
 		do
-			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, {REAL_32} 0.0, {REAL_32} 0.5)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
 		end
 
 	align_text_right
 			-- Display `text' right aligned.
 		do
-			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 1, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, {REAL_32} 1.0, {REAL_32} 0.5)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
 		end
 

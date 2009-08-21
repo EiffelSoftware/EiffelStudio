@@ -279,7 +279,7 @@ feature {NONE} -- Basic operations
 								l_progress := {REAL} 1.0
 								if l_total > 0 then
 									l_remaining := l_error_handler.remaining_time.second_count
-									l_progress := l_remaining/l_total
+									l_progress := (l_remaining/l_total).truncated_to_real
 									if l_remaining <= 0 then
 										l_cancel := True
 									end
@@ -287,7 +287,7 @@ feature {NONE} -- Basic operations
 								l_totalc := session.options.test_count
 								if l_totalc > 0 then
 									l_remainingc := l_error_handler.counter
-									l_progress := l_progress.min (l_remainingc/l_totalc)
+									l_progress := l_progress.min ((l_remainingc/l_totalc).truncated_to_real)
 									if l_remainingc = 0 then
 										l_cancel := True
 									end

@@ -51,37 +51,37 @@ feature {NONE} -- Drawing.
 			l_color: EV_COLOR
 			l_red, l_blue, l_green: REAL
 		do
-			l_red := background_color_internal.red * 0.95
-			l_green := background_color_internal.green * 0.95
-			l_blue := background_color_internal.blue * 0.95
+			l_red := background_color_internal.red * {REAL_32} 0.95
+			l_green := background_color_internal.green * {REAL_32} 0.95
+			l_blue := background_color_internal.blue * {REAL_32} 0.95
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
 			bar_dot.draw_point (0, 0)
 
-			l_red := background_color_internal.red * 0.83
-			l_green := background_color_internal.green * 0.83
-			l_blue := background_color_internal.blue * 0.83
+			l_red := background_color_internal.red * {REAL_32} 0.83
+			l_green := background_color_internal.green * {REAL_32} 0.83
+			l_blue := background_color_internal.blue * {REAL_32} 0.83
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
 			bar_dot.draw_point (0, 1)
 
-			l_red := background_color_internal.red * 0.94
-			l_green := background_color_internal.green * 0.94
-			l_blue := background_color_internal.blue * 0.94
+			l_red := background_color_internal.red * {REAL_32} 0.94
+			l_green := background_color_internal.green * {REAL_32} 0.94
+			l_blue := background_color_internal.blue * {REAL_32} 0.94
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
 			bar_dot.draw_point (0, 2)
 
-			l_red := background_color_internal.red * 0.80
-			l_green := background_color_internal.green * 0.80
-			l_blue := background_color_internal.blue * 0.80
+			l_red := background_color_internal.red * {REAL_32} 0.80
+			l_green := background_color_internal.green * {REAL_32} 0.80
+			l_blue := background_color_internal.blue * {REAL_32} 0.80
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
 			bar_dot.draw_point (1, 0)
 
-			l_red := 1 - background_color_internal.red * 0.45
-			l_green := 1 - background_color_internal.green * 0.45
-			l_blue := 1 - background_color_internal.blue * 0.45
+			l_red := 1 - background_color_internal.red * {REAL_32} 0.45
+			l_green := 1 - background_color_internal.green * {REAL_32} 0.45
+			l_blue := 1 - background_color_internal.blue * {REAL_32} 0.45
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
 			bar_dot.draw_point (1, 1)
@@ -93,9 +93,9 @@ feature {NONE} -- Drawing.
 			bar_dot.set_foreground_color (l_color)
 			bar_dot.draw_point (1, 2)
 
-			l_red := background_color_internal.red * 0.97
-			l_green := background_color_internal.green * 0.97
-			l_blue := background_color_internal.blue * 0.96
+			l_red := background_color_internal.red * {REAL_32} 0.97
+			l_green := background_color_internal.green * {REAL_32} 0.97
+			l_blue := background_color_internal.blue * {REAL_32} 0.96
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
 			bar_dot.draw_point (2, 0)

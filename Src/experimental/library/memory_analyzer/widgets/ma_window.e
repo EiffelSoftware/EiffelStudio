@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 				-- Small hack to ensure that first time `split_incre' is shown it
 				-- is shown with the right proportion as `resize_actions' are called
 				-- when notebook tab shows its content.
-			split_incre.resize_actions.force_extend (agent update_splitter_proportion_once (split_incre, 0.5))
+			split_incre.resize_actions.force_extend (agent update_splitter_proportion_once (split_incre, {REAL_32} 0.5))
 
 			gc_graphs.resize_actions.force_extend (agent analyze_gc.redraw_for_resize)
 

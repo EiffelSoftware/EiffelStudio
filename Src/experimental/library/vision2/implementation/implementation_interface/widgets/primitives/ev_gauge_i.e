@@ -46,10 +46,10 @@ feature -- Status report
 			u := value_range.upper
 			l := value_range.lower
 			if u /= l then
-				Result := (value - l) / (u - l)
+				Result := ((value - l) / (u - l)).truncated_to_real
 			else
 				--| By definition:
-				Result := 0.0
+				Result := {REAL_32} 0.0
 			end
 		end
 

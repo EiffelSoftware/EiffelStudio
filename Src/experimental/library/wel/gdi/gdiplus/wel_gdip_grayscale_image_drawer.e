@@ -133,11 +133,11 @@ feature {NONE} -- Implementation
 			-- See MSDN "A Twist in Color Space"
 		do
 			create Result.make
-			Result.set_m_row (<<0.2125, 0.2125, 0.2125, 0, 0>>, 0) -- Grey scale R channel
-			Result.set_m_row (<<0.2577, 0.2577, 0.2577, 0, 0>>, 1) -- Grey scale G channel
-			Result.set_m_row (<<0.0361, 0.0361, 0.0361, 0, 0>>, 2) -- Grey scale B channel			
-			Result.set_m_row (<<0, 0, 0, 1, 0>>, 3) -- Opacity
-			Result.set_m_row (<<0.38, 0.38, 0.38, 0, 1>>, 4) -- Brightness
+			Result.set_m_row (<<{REAL_32} 0.2125, {REAL_32} 0.2125, {REAL_32} 0.2125, {REAL_32} 0.0, {REAL_32} 0.0>>, 0) -- Grey scale R channel
+			Result.set_m_row (<<{REAL_32} 0.2577, {REAL_32} 0.2577, {REAL_32} 0.2577, {REAL_32} 0.0, {REAL_32} 0.0>>, 1) -- Grey scale G channel
+			Result.set_m_row (<<{REAL_32} 0.0361, {REAL_32} 0.0361, {REAL_32} 0.0361, {REAL_32} 0.0, {REAL_32} 0.0>>, 2) -- Grey scale B channel			
+			Result.set_m_row (<<{REAL_32} 0.0, {REAL_32} 0.0, {REAL_32} 0.0, {REAL_32} 1.0, {REAL_32} 0.0>>, 3) -- Opacity
+			Result.set_m_row (<<{REAL_32} 0.38, {REAL_32} 0.38, {REAL_32} 0.38, {REAL_32} 0.0, {REAL_32} 1.0>>, 4) -- Brightness
 		ensure
 			not_void: Result /= Void
 		end
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			Result.set_m_row (<<1, 0, 0, 0, 0>>, 0) -- Grey scale R channel
 			Result.set_m_row (<<0, 1, 0, 0, 0>>, 1) -- Grey scale G channel
 			Result.set_m_row (<<0, 0, 1, 0, 0>>, 2) -- Grey scale B channel			
-			Result.set_m_row (<<0, 0, 0, 0.7, 0>>, 3) -- Opacity
+			Result.set_m_row (<<0, 0, 0, {REAL_32} 0.7, 0>>, 3) -- Opacity
 			Result.set_m_row (<<0, 0, 0, 0, 0>>, 4) -- Brightness
 		ensure
 			not_void: Result /= Void

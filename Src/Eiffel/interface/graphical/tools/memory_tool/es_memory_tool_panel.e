@@ -955,7 +955,7 @@ feature {NONE} -- Analysis
 			-- `Result': A string representation of `a_bytes'.
 		local
 			l_bytes: NATURAL
-			l_usage: REAL
+			l_usage: DOUBLE
 			l_stat: STRING_32
 			l_formatter: FORMAT_DOUBLE
 		do

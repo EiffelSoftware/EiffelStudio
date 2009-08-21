@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 		do
 				-- If adjustment hasn't already been preset then we create a default one.
 			if adjustment_internal = default_pointer then
-				adjustment_internal := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0.0, 0.0, 100.0, 1.0, 10.0, 0.0)
+				adjustment_internal := {EV_GTK_EXTERNALS}.gtk_adjustment_new ({REAL_32} 0.0, {REAL_32} 0.0, {REAL_32} 100.0, {REAL_32} 1.0, {REAL_32} 10.0, {REAL_32} 0.0)
 			end
 			Result := adjustment_internal
 		ensure

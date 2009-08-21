@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 					l_height_count >= l_height
 				loop
 					l_wel_color := l_wel_dc.pixel_color (l_width_count, l_height_count)
-					l_intensity := 0.3 * l_wel_color.red + 0.59 * l_wel_color.green + 0.11 * l_wel_color.blue
+					l_intensity := {REAL_32} 0.3 * l_wel_color.red + {REAL_32} 0.59 * l_wel_color.green + {REAL_32} 0.11 * l_wel_color.blue
 					create l_new_color.make_rgb (
 										(l_intensity * a_k + l_wel_color.red * (1 - a_k)).rounded,
 										(l_intensity * a_k + l_wel_color.green * (1 - a_k)).rounded,

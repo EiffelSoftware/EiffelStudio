@@ -142,7 +142,7 @@ feature {SD_TAB_STATE}  -- Implementation functions
 			end
 			check l_target_zone_parent /= Void end -- Implied by previous assign codes in this feature
 			l_target_zone_parent.extend (l_new_split_area)
-			l_new_split_area.set_proportion (0.5)
+			l_new_split_area.set_proportion ({REAL_32} 0.5)
 			if l_target_zone_parent_spliter /= Void and then l_target_zone_parent_spliter.full then
 				if l_target_zone_parent_spliter.maximum_split_position >= l_target_zone_parent_split_position and
 					l_target_zone_parent_spliter.minimum_split_position <= l_target_zone_parent_split_position then

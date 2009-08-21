@@ -8,29 +8,29 @@ note
 
 class
 	UML_CONSTANTS
-	
+
 inherit
 	EB_SHARED_PREFERENCES
-	
+
 	EV_SHARED_SCALE_FACTORY
-		
+
 feature {NONE} -- UML class
-		
+
 	uml_class_name_font: EV_IDENTIFIED_FONT
 		do
 			Result := preferences.diagram_tool_data.uml_class_name_font
 		end
-		
+
 	uml_class_deferred_font: EV_IDENTIFIED_FONT
 		do
 			Result := preferences.diagram_tool_data.uml_class_deferred_font
 		end
-		
+
 	uml_class_properties_font: EV_IDENTIFIED_FONT
 		do
 			Result := preferences.diagram_tool_data.uml_class_properties_font
 		end
-		
+
 	uml_class_properties_color: EV_COLOR
 		do
 			Result := preferences.diagram_tool_data.uml_class_properties_color
@@ -48,7 +48,7 @@ feature {NONE} -- UML class
 
 	uml_class_line_color: EV_COLOR
 		once
-			create Result.make_with_rgb (0.0, 0.0, 0.0)
+			create Result.make_with_rgb (0, 0, 0)
 		end
 
 	uml_class_line_width: INTEGER = 1
@@ -62,22 +62,22 @@ feature {NONE} -- UML class
 		do
 			Result := preferences.diagram_tool_data.uml_generics_color
 		end
-		
+
 	uml_class_features_font: EV_IDENTIFIED_FONT
 		do
 			Result := preferences.diagram_tool_data.uml_class_features_font
 		end
-		
+
 	uml_class_features_color: EV_COLOR
 		do
 			Result := preferences.diagram_tool_data.uml_class_features_color
 		end
-		
+
 	uml_class_feature_section_font: EV_IDENTIFIED_FONT
 		do
 			Result := preferences.diagram_tool_data.uml_class_feature_section_font
 		end
-		
+
 	uml_class_feature_section_color: EV_COLOR
 		do
 			Result := preferences.diagram_tool_data.uml_class_feature_section_color
@@ -89,7 +89,7 @@ feature {NONE} -- Cluster
 		do
 			Result := preferences.diagram_tool_data.uml_cluster_line_color
 		end
-		
+
 	uml_cluster_line_width: INTEGER = 1
 
 	uml_cluster_fill_color: EV_COLOR
@@ -108,14 +108,14 @@ feature {NONE} -- Cluster
 		do
 			Result := preferences.diagram_tool_data.uml_cluster_name_color
 		end
-		
+
 	uml_cluster_name_font: EV_IDENTIFIED_FONT
 		do
 			Result := preferences.diagram_tool_data.uml_cluster_name_font
 		end
 
 	max_cluster_name_length: INTEGER = 25
-		
+
 feature {NONE} -- Client supplier link
 
 	uml_client_label_font: EV_IDENTIFIED_FONT
@@ -127,31 +127,31 @@ feature {NONE} -- Client supplier link
 		do
 			Result := preferences.diagram_tool_data.uml_client_label_color
 		end
-		
+
 	uml_client_color: EV_COLOR
 		do
 			Result := preferences.diagram_tool_data.uml_client_color
 		end
-		
-	uml_client_line_width: INTEGER 
+
+	uml_client_line_width: INTEGER
 		do
 			Result := preferences.diagram_tool_data.uml_client_line_width
 		end
-	
+
 feature {NONE} -- Inheritance link
 
 	uml_inheritance_color: EV_COLOR
 		do
 			Result := preferences.diagram_tool_data.uml_inheritance_color
 		end
-		
+
 	uml_inheritance_line_width: INTEGER
 		do
 			Result := preferences.diagram_tool_data.uml_inheritance_line_width
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -164,22 +164,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class UML_CONSTANTS

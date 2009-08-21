@@ -672,9 +672,9 @@ feature {NONE} -- Implementation (move)
 		require
 			a_color_exists: a_color /= Void
 		do
-			create Result.make_with_rgb ((a_color.red - (a_color.red / 2)).max (0.0),
-										 (a_color.green - (a_color.green / 2)).max (0.0),
-										 (a_color.blue - (a_color.blue / 2)).max (0.0))
+			create Result.make_with_rgb ((a_color.red - (a_color.red / 2)).max ({REAL_32} 0.0),
+										 (a_color.green - (a_color.green / 2)).max ({REAL_32} 0.0),
+										 (a_color.blue - (a_color.blue / 2)).max ({REAL_32} 0.0))
 		ensure
 			Result_exists: Result /= Void
 		end

@@ -40,7 +40,7 @@ feature {NONE} -- Bon class
 
 	bon_class_line_color: EV_COLOR
 		once
-			create Result.make_with_rgb (0.3, 0.3, 0.3)
+			create Result.make_with_rgb ({REAL_32} 0.3, {REAL_32} 0.3, {REAL_32} 0.3)
 		end
 
 	bon_class_line_width: INTEGER = 1

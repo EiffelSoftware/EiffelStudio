@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 
 			accel_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
 				-- We right align accelerator text.
-			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (accel_label, 1.0, 0.5)
+			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (accel_label, {REAL_32} 1.0, {REAL_32} 0.5)
 			{EV_GTK_EXTERNALS}.gtk_misc_set_padding (accel_label, 0, 0)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, accel_label, True, True, 2)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (accel_label, {EV_GTK_EXTERNALS}.gtk_justify_right_enum)

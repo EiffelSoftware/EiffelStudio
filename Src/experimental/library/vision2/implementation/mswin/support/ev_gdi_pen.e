@@ -38,9 +38,9 @@ feature -- Access
 		do
 			if computed_hash_code = 0 then
 				color_hash_value :=
-					262144.0*color_red +
-					4096.0*color_green +
-					64.0*color_blue
+					{REAL_32} 262144.0*color_red +
+					{REAL_32} 4096.0*color_green +
+					{REAL_32} 64.0*color_blue
 				computed_hash_code := (
 					color_hash_value.abs.floor +
 					line_width * 2 +

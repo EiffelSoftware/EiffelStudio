@@ -86,7 +86,7 @@ feature -- Saturation
 					lx >= aright
 				loop
 					l_count := lx - aleft
-					a_drawing_area.set_foreground_color (color_mix (a_to_color, a_start_color, (l_count / awidth)))
+					a_drawing_area.set_foreground_color (color_mix (a_to_color, a_start_color, (l_count / awidth).truncated_to_real))
 					a_drawing_area.draw_segment (lx, atop, lx, abottom)
 					lx := lx + 1
 				end

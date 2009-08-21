@@ -132,21 +132,21 @@ feature -- Status Setting
 			-- Display `text' centered.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, 0.5, 0.5, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, {REAL_32} 0.5, {REAL_32} 0.5, 0, 0)
 		end
 
 	align_text_left
 			-- Display `text' left aligned.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, 0.0, 0.5, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, {REAL_32} 0.0, {REAL_32} 0.5, 0, 0)
 		end
 
 	align_text_right
 			-- Display `text' right aligned.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, 1.0, 0.5, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, {REAL_32} 1.0, {REAL_32} 0.5, 0, 0)
 		end
 
 	enable_default_push_button

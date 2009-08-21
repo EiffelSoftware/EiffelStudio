@@ -68,7 +68,7 @@ feature -- Access
 	set_angle (a_angle: REAL)
 			--
 		do
-			{EV_GTK_EXTERNALS}.gtk_label_set_angle (text_label, a_angle / 3.14 * 180)
+			{EV_GTK_EXTERNALS}.gtk_label_set_angle (text_label, a_angle / {REAL_32} 3.14 * {REAL_32} 180.0)
 			angle := a_angle
 		end
 

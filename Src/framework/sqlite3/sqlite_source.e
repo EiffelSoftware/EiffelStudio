@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	locator: READABLE_STRING_8
+	locator: IMMUTABLE_STRING_8
 			-- Locator string for the SQLite database source.
 		deferred
 		ensure

@@ -22,6 +22,14 @@
 			<indent type='3'>2</indent>
 			<name>Checkout EIFFEL_SRC/framework</name>
 		</step>
+		<step action='Subversion'>
+			<Host>svn.origo.ethz.ch/eiffelstudio/trunk/Src/contrib</Host>
+			<LocalPath>%EIFFEL_SRC%</LocalPath>
+			<Protocol>https</Protocol>
+			<Subcommand>export --force</Subcommand>
+			<indent type='3'>2</indent>
+			<name>Checkout EIFFEL_SRC/contrib</name>
+		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
 			<name>Compile Xebra Bins</name>
@@ -142,7 +150,7 @@
 			<LogCopied type='11'>-1</LogCopied>
 			<ReadOnly type='11'>-1</ReadOnly>
 			<Retries>10</Retries>
-			<SourceDir>%XEBRA_DEV%\c_projects\apache_mod_xebra_win\</SourceDir>
+			<SourceDir>%XEBRA_DEV%\c_projects\apache_mod_xebra\</SourceDir>
 			<TBD type='11'>-1</TBD>
 			<indent type='3'>2</indent>
 			<name>Copy mod_xebra</name>
@@ -349,22 +357,19 @@
 			<indent type='3'>1</indent>
 			<name>Create config files</name>
 		</step>
-		<step action='Write File'>
-			<Filename>%BUILD%\conf\config.srv</Filename>
-			<Text><![CDATA[{
-  "finalize_webapps": "false",
-  "compiler": "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec.exe",
-  "translator": "$XEBRA_DEV\bin\xebra_translator.exe",
-  "managed_webapps": "$XEBRA_DEV\www",
-  "library": "$XEBRA_LIBRARY",
-  "compiler_flags": "-experiment",
-  "unmanaged_webapps":
-  [		
-  ]
-}
-]]></Text>
+		<step action='Copy Files'>
+			<Converted type='11'>-1</Converted>
+			<Delay>15</Delay>
+			<DestDir>%BUILD%\conf</DestDir>
+			<Ext>config.srv</Ext>
+			<Incremental type='11'>-1</Incremental>
+			<LogCopied type='11'>-1</LogCopied>
+			<ReadOnly type='11'>-1</ReadOnly>
+			<Retries>10</Retries>
+			<SourceDir>%XEBRA_DEV%\tools\installer\win</SourceDir>
+			<TBD type='11'>-1</TBD>
 			<indent type='3'>2</indent>
-			<name>Write Server config</name>
+			<name>Copy Files</name>
 		</step>
 		<step action='Write File'>
 			<Filename>%BUILD%\bin\launch_xebra.bat</Filename>

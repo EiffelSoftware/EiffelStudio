@@ -1,0 +1,11 @@
+{
+  "finalize_webapps": "false",
+  "compiler": "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec.exe",
+  "translator": "$XEBRA_DEV\bin\xebra_translator.exe",
+  "managed_webapps": "$XEBRA_DEV\www",
+  "library": "$XEBRA_LIBRARY",
+  "compiler_flags": "-experiment",
+  "unmanaged_webapps":
+  [		
+  ]
+}

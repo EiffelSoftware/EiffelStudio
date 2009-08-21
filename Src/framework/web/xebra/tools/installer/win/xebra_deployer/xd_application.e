@@ -75,47 +75,47 @@ feature -- Paths
 			result_attached: Result /= Void
 		end
 
-	dir_conf: FILE_NAME
-			-- The path to the xebra conf folder
-		do
-			Result := install_dir.twin
-			Result.extend ("conf")
-		ensure
-			result_attached: Result /= Void
-		end
+--	dir_conf: FILE_NAME
+--			-- The path to the xebra conf folder
+--		do
+--			Result := install_dir.twin
+--			Result.extend ("conf")
+--		ensure
+--			result_attached: Result /= Void
+--		end
 
-	dir_bin: FILE_NAME
-			-- The path to the xebra conf folder
-		do
-			Result := install_dir.twin
-			Result.extend ("bin")
-		ensure
-			result_attached: Result /= Void
-		end
+--	dir_bin: FILE_NAME
+--			-- The path to the xebra conf folder
+--		do
+--			Result := install_dir.twin
+--			Result.extend ("bin")
+--		ensure
+--			result_attached: Result /= Void
+--		end
 
-	dir_utilities: FILE_NAME
-			-- The path  to xebra_utilities library
-		do
-			Result := dir_library.twin
-			Result.extend ("xebra_utilities")
-		ensure
-			result_attached: Result /= Void
-		end
+--	dir_utilities: FILE_NAME
+--			-- The path  to xebra_utilities library
+--		do
+--			Result := dir_library.twin
+--			Result.extend ("xebra_utilities")
+--		ensure
+--			result_attached: Result /= Void
+--		end
 
 feature -- Constants
 
 
-	File_httpd_conf: STRING = "httpd\.conf"
+	File_httpd_conf: STRING = "httpd.conf"
 		-- The http.conf file (in xebra/apache/conf)
 
-	File_launcher: STRING = "launch_xebra\.bat"
-		-- The launcher file (in xebra/bin)	
+--	File_launcher: STRING = "launch_xebra\.bat"
+--		-- The launcher file (in xebra/bin)	
 
-	File_server_ini: STRING = "config\.srv"
-		-- The server.ini file (in xebra/conf)
+--	File_server_ini: STRING = "config.srv"
+--		-- The server.ini file (in xebra/conf)
 
-	Key_install_path: STRING = "_INSTALL_PATH_"
-		-- A key inside server.ini that will be replaced
+--	Key_install_path: STRING = "_INSTALL_PATH_"
+--		-- A key inside server.ini that will be replaced
 
 	Key_document_root: STRING = "_DOCUMENT_ROOT_"
 		-- A key inside httpd.conf that will be replaced
@@ -123,8 +123,8 @@ feature -- Constants
 	Key_server_root: STRING = "_SERVER_ROOT_"
 		-- A key inside httpd.conf that will be replaced
 
-	Key_xebra_root: STRING = "$XEBRA_DEV"
-		-- A key inside various files that will be replaced
+--	Key_xebra_root: STRING = "$XEBRA_DEV"
+--		-- A key inside various files that will be replaced
 
 	Key_library_root: STRING = "$XEBRA_LIBRARY"
 		-- A key inside various files that will be replaced	
@@ -132,11 +132,11 @@ feature -- Constants
 	Key_eiffel_src: STRING = "$EIFFEL_SRC"
 		-- A key inside ecf files that will be replaced
 
-	Key_ise_eiffel: STRING = "$ISE_EIFFEL"
-		-- A key inside server.ini that will be replaced	
+--	Key_ise_eiffel: STRING = "$ISE_EIFFEL"
+--		-- A key inside server.ini that will be replaced	
 
-	Key_ise_platform: STRING = "$ISE_PLATFORM"
-		-- A key inside server.ini that will be replaced		
+--	Key_ise_platform: STRING = "$ISE_PLATFORM"
+--		-- A key inside server.ini that will be replaced		
 
 feature -- Basic Operations
 
@@ -208,7 +208,7 @@ feature -- Replacement Tasks
 			l_incl.force (File_httpd_conf)
 			create l_util
 			o.dprint ("Scanning for '" + File_httpd_conf + "' in " + dir_apache_conf, 1)
-			l_files := l_util.scan_for_files (dir_apache_conf, 0, l_incl, create {LINKED_LIST [STRING]}.make)
+			l_files := l_util.scan_for_files (dir_apache_conf, 1, l_incl, create {LINKED_LIST [STRING]}.make)
 			from
 				l_files.start
 			until
@@ -221,29 +221,29 @@ feature -- Replacement Tasks
 			end
 		end
 
-	process_launcher
-			-- Replaces in File_launcher all occurrences of
-			--	Key_install_path 		with 	install_dir
-		local
-			l_util: XU_FILE_UTILITIES
-			l_files: LIST [FILE_NAME]
-			l_incl: LINKED_LIST [STRING]
-		do
-			create l_incl.make
-			l_incl.force (File_launcher)
-			create l_util
-			o.dprint ("Scanning for '" + File_launcher + "' in " + dir_bin, 1)
-			l_files := l_util.scan_for_files (dir_bin, 0, l_incl, create {LINKED_LIST [STRING]}.make)
-			from
-				l_files.start
-			until
-				l_files.after
-			loop
-				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
-				l_util.replace_in_file (l_files.item_for_iteration, Key_install_path, "%"" + install_dir + "%"")
-				l_files.forth
-			end
-		end
+--	process_launcher
+--			-- Replaces in File_launcher all occurrences of
+--			--	Key_install_path 		with 	install_dir
+--		local
+--			l_util: XU_FILE_UTILITIES
+--			l_files: LIST [FILE_NAME]
+--			l_incl: LINKED_LIST [STRING]
+--		do
+--			create l_incl.make
+--			l_incl.force (File_launcher)
+--			create l_util
+--			o.dprint ("Scanning for '" + File_launcher + "' in " + dir_bin, 1)
+--			l_files := l_util.scan_for_files (dir_bin, 0, l_incl, create {LINKED_LIST [STRING]}.make)
+--			from
+--				l_files.start
+--			until
+--				l_files.after
+--			loop
+--				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
+--				l_util.replace_in_file (l_files.item_for_iteration, Key_install_path, "%"" + install_dir + "%"")
+--				l_files.forth
+--			end
+--		end
 
 invariant
 	install_dir_attached: install_dir /= Void

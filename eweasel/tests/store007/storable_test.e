@@ -55,7 +55,7 @@ feature -- Basic types
 
 			p := default_pointer + 65
 
-			r32 := 4.5
+			r32 := {REAL_32} 4.5
 			r64 := 6.5
 
 			c := 'a'
@@ -112,7 +112,7 @@ feature -- Specials
 			create spec_n16.make_filled (0, 100)
 			create spec_n32.make_filled (0, 100)
 			create spec_n64.make_filled (0, 100)
-			create spec_r32.make_filled (0.0, 100)
+			create spec_r32.make_filled ({REAL_32} 0.0, 100)
 			create spec_r64.make_filled (0.0, 100)
 			create spec_p.make_filled (default_pointer, 100)
 			create spec_c.make_filled ('%/000/', 100)

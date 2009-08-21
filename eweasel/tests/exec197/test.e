@@ -73,7 +73,7 @@ feature {NONE} -- Tests
 			r := l_n16
 			r := l_n32
 			r := l_n64
-			r := d
+			r := d.truncated_to_real
 
 				-- Target is DOUBLE
 			d := l_i8

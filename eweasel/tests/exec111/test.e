@@ -67,9 +67,9 @@ feature
 			io.put_real (r1); io.new_line
 			io.put_real (r2); io.new_line
 			io.put_real (r3); io.new_line
-			io.put_real (d1); io.new_line
-			io.put_real (d2); io.new_line
-			io.put_real (d3); io.new_line
+			io.put_real (d1.truncated_to_real); io.new_line
+			io.put_real (d2.truncated_to_real); io.new_line
+			io.put_real (d3.truncated_to_real); io.new_line
 			
 			io.put_string ("%NSection 5%N")
 			io.put_double (i1); io.new_line
@@ -115,11 +115,11 @@ feature
 			io.put_real (r); io.new_line
 			r := r3
 			io.put_real (r); io.new_line
-			r := d1
+			r := d1.truncated_to_real
 			io.put_real (r); io.new_line
-			r := d2
+			r := d2.truncated_to_real
 			io.put_real (r); io.new_line
-			r := d3
+			r := d3.truncated_to_real
 			io.put_real (r); io.new_line
 			
 			io.put_string ("%NSection 8%N")
@@ -182,9 +182,9 @@ feature
 			io.put_integer (r_to_i (r1)); io.new_line
 			io.put_integer (r_to_i (r2)); io.new_line
 			io.put_integer (r_to_i (r3)); io.new_line
-			io.put_integer (r_to_i (d1)); io.new_line
-			io.put_integer (r_to_i (d2)); io.new_line
-			io.put_integer (r_to_i (d3)); io.new_line
+			io.put_integer (r_to_i (d1.truncated_to_real)); io.new_line
+			io.put_integer (r_to_i (d2.truncated_to_real)); io.new_line
+			io.put_integer (r_to_i (d3.truncated_to_real)); io.new_line
 			
 			io.put_string ("%NSection 13%N")
 			io.put_real (r_to_r (i1)); io.new_line
@@ -193,9 +193,9 @@ feature
 			io.put_real (r_to_r (r1)); io.new_line
 			io.put_real (r_to_r (r2)); io.new_line
 			io.put_real (r_to_r (r3)); io.new_line
-			io.put_real (r_to_r (d1)); io.new_line
-			io.put_real (r_to_r (d2)); io.new_line
-			io.put_real (r_to_r (d3)); io.new_line
+			io.put_real (r_to_r (d1.truncated_to_real)); io.new_line
+			io.put_real (r_to_r (d2.truncated_to_real)); io.new_line
+			io.put_real (r_to_r (d3.truncated_to_real)); io.new_line
 			
 			io.put_string ("%NSection 14%N")
 			io.put_double (r_to_d (i1)); io.new_line
@@ -204,9 +204,9 @@ feature
 			io.put_double (r_to_d (r1)); io.new_line
 			io.put_double (r_to_d (r2)); io.new_line
 			io.put_double (r_to_d (r3)); io.new_line
-			io.put_double (r_to_d (d1)); io.new_line
-			io.put_double (r_to_d (d2)); io.new_line
-			io.put_double (r_to_d (d3)); io.new_line
+			io.put_double (r_to_d (d1.truncated_to_real)); io.new_line
+			io.put_double (r_to_d (d2.truncated_to_real)); io.new_line
+			io.put_double (r_to_d (d3.truncated_to_real)); io.new_line
 			
 			io.put_string ("%NSection 15%N")
 			io.put_integer (d_to_i (i1)); io.new_line
@@ -259,9 +259,9 @@ feature
 			io.put_real (real_to_real (r1)); io.new_line
 			io.put_real (real_to_real (r2)); io.new_line
 			io.put_real (real_to_real (r3)); io.new_line
-			io.put_real (real_to_real (d1)); io.new_line
-			io.put_real (real_to_real (d2)); io.new_line
-			io.put_real (real_to_real (d3)); io.new_line
+			io.put_real (real_to_real (d1.truncated_to_real)); io.new_line
+			io.put_real (real_to_real (d2.truncated_to_real)); io.new_line
+			io.put_real (real_to_real (d3.truncated_to_real)); io.new_line
 			
 			io.put_string ("%NSection 20%N")
 			io.put_double (double_to_double (i1)); io.new_line
@@ -320,7 +320,7 @@ feature
 
 	d_to_r (n: DOUBLE): REAL is
 		do
-			Result := n
+			Result := n.truncated_to_real
 		end
 
 	d_to_d (n: DOUBLE): DOUBLE is

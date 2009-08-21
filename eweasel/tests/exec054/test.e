@@ -33,7 +33,7 @@ feature
 			print (int_ref < int); io.new_line;
 			print (int_ref <= int); io.new_line;
 			
-			real := 5.0;
+			real := {REAL_32} 5.0;
 			real_ref := real;
 			print (real); io.new_line;
 			print (real_ref); io.new_line;

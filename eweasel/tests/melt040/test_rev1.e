@@ -30,7 +30,7 @@ feature
 			io.putint (b # 13); io.new_line;
 			io.putint (b # Integer_const); io.new_line;
 			!!c;
-			io.putreal (c # 13.47); io.new_line;
+			io.putreal (c # {REAL_32} 13.47); io.new_line;
 			io.putreal (c # 13); io.new_line;
 			io.putreal (c # Real_const); io.new_line;
 			io.putreal (c # Integer_const); io.new_line;

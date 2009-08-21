@@ -8,10 +8,10 @@ class TEST
 creation 
 	make
 feature
-        make is 
-        	do
-			set_real_value (13.245);
-        	end
+	make is 
+		do
+			set_real_value ({REAL_32} 13.245);
+		end
 
 	attribute_field: REAL;
 

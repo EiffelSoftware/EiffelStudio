@@ -16,11 +16,11 @@ feature
 			d: DOUBLE;
 		do
 			i := 47;
-			r := 47.25;
+			r := {REAL_32} 47.25;
 			d := 47.5;
 			
 			ia := 47;
-			ra := 47.25;
+			ra := {REAL_32} 47.25;
 			da := 47.5;
 			
 			weasel1 (47);
@@ -36,7 +36,7 @@ feature
 			wimp1 (47);
 			wimp1 (Constant1);
 			wimp1 (Constant2);
-			wimp1 (47.5);
+			wimp1 ({REAL_32} 47.5);
 			wimp1 (i);
 			wimp1 (r);
 			wimp1 (ia);
@@ -61,7 +61,7 @@ feature
 			wimp2 (47);
 			wimp2 (Constant1);
 			wimp2 (Constant2);
-			wimp2 (47.5);
+			wimp2 ({REAL_32} 47.5);
 			wimp2 (i);
 			wimp2 (r);
 			wimp2 (ia);

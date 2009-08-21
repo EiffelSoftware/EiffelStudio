@@ -17,19 +17,19 @@ feature
 		local
 			z: REAL;
 		do
-			z := (1.0 + 0.1);
+			z := ({REAL_32} 1.0 + {REAL_32} 0.1);
 			io.putreal (z); io.putchar('%T');
 			print (z); io.new_line;
 			
-			z := (1.0 - 0.1);
+			z := ({REAL_32} 1.0 - {REAL_32} 0.1);
 			io.putreal (z); io.putchar('%T');
 			print (z); io.new_line;
 			
-			z := (1.0 * 0.1);
+			z := ({REAL_32} 1.0 * {REAL_32} 0.1);
 			io.putreal (z); io.putchar('%T');
 			print (z); io.new_line;
 			
-			z := (1.0 / 0.1);
+			z := ({REAL_32} 1.0 / {REAL_32} 0.1);
 			io.putreal (z); io.putchar('%T');
 			print (z); io.new_line;
 			io.new_line;

@@ -30,7 +30,7 @@ feature
 			print (b # 13); io.new_line;
 			print (b # Integer_const); io.new_line;
 			!!c;
-			print (c # 13.47); io.new_line;
+			print (c # {REAL_32} 13.47); io.new_line;
 			print (c # 13); io.new_line;
 			print (c # Real_const); io.new_line;
 			print (c # Integer_const); io.new_line;

@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 			test_automatic_grow
 			test_center_justify
 			test_character_justify
-			test_clear_all
 			test_copy
 			test_ends_with
 			test_extend
@@ -222,7 +221,7 @@ feature {NONE} -- Implementation
 			s: STRING_32
 			r: REAL
 		do
-			r := 5.6
+			r := {REAL_32} 5.6
 			create s.make (10)
 			s.append_real (r)
 			check_string_equality ("append_real", s, "5.6")
@@ -327,18 +326,6 @@ feature {NONE} -- Implementation
 			s := "1234567890x1234567890"
 			s.character_justify ('s', 1)
 			check_string_equality ("character_justify", s, "1234567890x1234567890")
-		end
-
-	test_clear_all is
-		local
-			s: STRING_32
-		do
-			create s.make (10)
-			s.append ("1234")
-			s.clear_all
-			check_string_equality ("clear_all", s, "")
-			check_equality ("clear_all", s.count, 0)
-			check_equality ("clear_all", s.capacity, 10)
 		end
 
 	test_copy is
@@ -1571,9 +1558,9 @@ feature {NONE} -- Implementation
 			check_string_equality ("prepend_real", s, "0")
 			s.prepend_real (1)
 			check_string_equality ("prepend_real", s, "10")
-			s.prepend_real (0.5)
+			s.prepend_real ({REAL_32} 0.5)
 			check_string_equality ("prepend_real", s, "0.510")
-			s.prepend_real (-0.5)
+			s.prepend_real ({REAL_32} -0.5)
 			check_string_equality ("prepend_real", s, "-0.50.510")
 		end
 

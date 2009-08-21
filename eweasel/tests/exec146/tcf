@@ -22,7 +22,7 @@ execute_work 	NONE exec_output1
 execute_result 	ok
 compare		exec_output1 output
 
-define INST "r := 50.0"
+define INST "r := {REAL_32} 50.0"
 copy_sub 	Ace $TEST Ace
 copy_sub 	test.e $CLUSTER test.e
 compile_melted

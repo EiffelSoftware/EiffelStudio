@@ -15,7 +15,7 @@ creation
 feature
 	default_create is
 		do
-			m := 3.14159;
+			m := {REAL_32} 3.14159;
 		end;
 
 	m: REAL;

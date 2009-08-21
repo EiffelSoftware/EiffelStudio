@@ -26,7 +26,7 @@ feature
 			x5 := 127
 			x6 := 32767
 			x7 := $default_create
-			x8 := -47.29383
+			x8 := {REAL_32} -47.29383
 			x9 := 123456789012345
 			x10 := once "TEST2"
 		end

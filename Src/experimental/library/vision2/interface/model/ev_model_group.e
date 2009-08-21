@@ -628,7 +628,7 @@ feature -- List change
 				forth
 			end
 			Precursor {ARRAYED_LIST}
-			lookup_table.clear_all
+			lookup_table.wipe_out
 			center_invalidate
 			invalidate
 			full_redraw

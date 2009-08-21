@@ -63,7 +63,7 @@ feature -- Processing
 					loop
 						l_name := l_files [i]
 							-- Reuse `l_full_path' string buffer.
-						l_full_path.clear_all
+						l_full_path.wipe_out
 						l_full_path.append (a_path)
 						l_full_path.append (l_cluster_separator)
 						l_full_path.append (l_name)
@@ -83,7 +83,7 @@ feature -- Processing
 							i > cnt
 						loop
 								-- Reuse `l_full_path' string buffer.
-							l_full_path.clear_all
+							l_full_path.wipe_out
 							l_full_path.append (a_path)
 							l_full_path.append (l_cluster_separator)
 							l_full_path.append (l_subdirs [i])

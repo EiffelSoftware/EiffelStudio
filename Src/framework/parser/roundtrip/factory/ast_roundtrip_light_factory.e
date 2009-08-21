@@ -328,7 +328,7 @@ feature -- Leaf nodes
 				-- Create the ID_AS first.
 			l_cnt := a_scn.text_count
 			l_str := reusable_string_buffer
-			l_str.clear_all
+			l_str.wipe_out
 			a_scn.append_text_to_string (l_str)
 			create l_id_as.initialize (l_str)
 			l_id_as.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)

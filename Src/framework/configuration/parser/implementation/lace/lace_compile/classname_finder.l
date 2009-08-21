@@ -50,7 +50,7 @@ X		([a-z]|[A-Z]|[0-9]|_)
 	\"([^"%\n]|%([^/\n\r\t ]|([ \t\r]*\n[ \t\r\n]*%)|("/"[0-9]+"/")))*\"	-- Ignore
 		-- Verbatim string:
 	\"[^\n"]*[\[\{]/[ \t\r]*\n {
-				verbatim_marker.clear_all
+				verbatim_marker.wipe_out
 				if text_item (text_count) = '[' then
 					verbatim_marker.append_character (']')
 				else

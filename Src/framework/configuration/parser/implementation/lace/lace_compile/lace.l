@@ -183,7 +183,7 @@ X		([a-z]|[A-Z]|[0-9]|_)
 
 {A}{X}*		{
 					-- Note: Identifiers are converted to lower-case.
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				token_buffer.to_lower
 				last_token := LAC_IDENTIFIER
@@ -198,12 +198,12 @@ X		([a-z]|[A-Z]|[0-9]|_)
 				last_token := LAC_STRING
 			}
 \"[^%\n"]+\" {
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
 				last_token := LAC_STRING
 			}
 \"[^%\n"]*	{
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				if text_count > 1 then
 					append_text_substring_to_string (2, text_count, token_buffer)
 				end

@@ -72,9 +72,9 @@ feature -- Initialization
 		do
 			Precursor
 			start_location.set_position (0, 0, 0, 0)
-			token_buffer.clear_all
-			roundtrip_token_buffer.clear_all
-			verbatim_marker.clear_all
+			token_buffer.wipe_out
+			roundtrip_token_buffer.wipe_out
+			verbatim_marker.wipe_out
 			syntax_version := obsolete_64_syntax
 		end
 

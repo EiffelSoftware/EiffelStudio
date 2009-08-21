@@ -144,11 +144,11 @@ feature -- Clearing tables
 	clear_format_tables
 			-- Clear all the format tables (after a compilation)
 		do
-			flat_table.clear_all
-			flatshort_table.clear_all
-			short_table.clear_all
-			clickable_table.clear_all
-			rout_flat_table.clear_all
+			flat_table.wipe_out
+			flatshort_table.wipe_out
+			short_table.wipe_out
+			clickable_table.wipe_out
+			rout_flat_table.wipe_out
 			history_list.wipe_out
 		end
 
@@ -178,9 +178,9 @@ feature -- Clearing tables
 					history_list.forth
 				end
 			end
-			flat_table.clear_all
-			flatshort_table.clear_all
-			short_table.clear_all
+			flat_table.wipe_out
+			flatshort_table.wipe_out
+			short_table.wipe_out
 		end
 
 feature {NONE} -- Attributes

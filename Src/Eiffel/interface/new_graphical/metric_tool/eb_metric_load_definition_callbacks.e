@@ -151,7 +151,7 @@ feature{NONE} -- Callbacks
 			else
 				set_first_parsed_node (Void)
 			end
-			current_attributes.clear_all
+			current_attributes.wipe_out
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)

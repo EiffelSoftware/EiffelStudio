@@ -115,7 +115,7 @@ feature -- Updating
 		do
 			from
 				h_addrs := addr_table.linear_representation;
-				addr_table.clear_all;
+				addr_table.wipe_out;
 				h_addrs.start
 			until
 				h_addrs.after

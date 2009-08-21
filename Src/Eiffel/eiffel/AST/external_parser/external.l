@@ -171,7 +171,7 @@ N		[0-9]
 
 -- Identifiers
 [@]{N}*		{
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				token_buffer.remove_head (1)
 				last_token := TE_INTEGER
@@ -179,7 +179,7 @@ N		[0-9]
 
 [@]{A}{X}*	{
 					-- To escape external keywords.
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				token_buffer.remove_head (1)
 				last_token := TE_ID
@@ -187,7 +187,7 @@ N		[0-9]
 
 {A}{X}*		{
 					-- Traditional identifier
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_ID
 			}
@@ -195,7 +195,7 @@ N		[0-9]
 					-- Special identifier for include files that specifies
 					-- a path, e.g. <sys/timeb.h>, <windows\file.h>, or path
 					-- that includes an hyphenation.
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_FILE_ID
 			}
@@ -227,7 +227,7 @@ feature -- Initialization
 			-- another input buffer.)
 		do
 			Precursor
-			token_buffer.clear_all
+			token_buffer.wipe_out
 			current_class := Void
 		end
 

@@ -1393,7 +1393,7 @@ feature -- Access
 		do
 			l_cnt := a_scn.text_count
 			l_str := reusable_string_buffer
-			l_str.clear_all
+			l_str.wipe_out
 			a_scn.append_text_to_string (l_str)
 			create Result.initialize (l_str)
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)

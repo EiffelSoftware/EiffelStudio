@@ -946,7 +946,7 @@ end;
 						-- Retrieve next available feature id.
 					from
 							-- Use previous `l_feature_id' to prevent reiterating `l_used_feature_ids'
-						l_feature_id := l_feature_id + 1 
+						l_feature_id := l_feature_id + 1
 					until
 						not l_used_feature_ids.has (l_feature_id)
 					loop
@@ -1460,7 +1460,7 @@ end;
 			previous_feature_table := Void;
 			feature_table := Void;
 			parents := Void;
-			Origin_table.clear_all;
+			Origin_table.wipe_out;
 			adaptations.wipe_out;
 			changed_features.wipe_out;
 			origins.wipe_out;
@@ -1468,7 +1468,7 @@ end;
 			invariant_removed := False;
 			assert_prop_list := Void;
 
-			clear_all
+			wipe_out
 --			if capacity > 200 then
 --				extend_tbl_make (default_size)
 --			end

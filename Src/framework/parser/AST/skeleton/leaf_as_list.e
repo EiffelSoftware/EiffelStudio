@@ -605,7 +605,7 @@ feature -- Modifier operation
 			active_modifier_list.wipe_out
 			active_prepend_modifier_list.wipe_out
 			active_append_modifier_list.wipe_out
-			token_text_table.clear_all
+			token_text_table.wipe_out
 			if not modifier_list.is_empty then
 				modifier_list.do_all (agent {ERT_REGION_MODIFIER}.reset_applied)
 			end

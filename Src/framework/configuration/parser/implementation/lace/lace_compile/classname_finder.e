@@ -96,7 +96,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line <not available>")
 end
 
-				verbatim_marker.clear_all
+				verbatim_marker.wipe_out
 				if text_item (text_count) = '[' then
 					verbatim_marker.append_character (']')
 				else

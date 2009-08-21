@@ -132,7 +132,7 @@ feature -- Removal
 	wipe_out_image
 			-- Wipe out the image.
 		do
-			image.clear_all
+			image.wipe_out
 		end
 
 feature -- Access
@@ -1198,7 +1198,7 @@ feature {NONE} -- Implementation
 					else
 						image.append (kw)
 					end
-					kw.clear_all
+					kw.wipe_out
 					l_state := 0
 				end
 				i := i + 1

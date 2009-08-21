@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 				remove_default_cancel_button
 			end
 			button_box.wipe_out
-			buttons.clear_all
+			buttons.wipe_out
 		end
 
 	add_button (a_text: STRING_GENERAL)

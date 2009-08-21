@@ -242,8 +242,8 @@ feature -- Callbacks
 						process_element_under_note
 					end
 				end
-				current_attributes.clear_all
-				current_attributes_undefined.clear_all
+				current_attributes.wipe_out
+				current_attributes_undefined.wipe_out
 			end
 		end
 
@@ -333,9 +333,9 @@ feature -- Callbacks
 							overrides_list.forth
 						end
 					end
-					uses_list.clear_all
-					overrides_list.clear_all
-					group_list.clear_all
+					uses_list.wipe_out
+					overrides_list.wipe_out
+					group_list.wipe_out
 					if current_target.extends = Void then
 							-- Set default options for the standalone target in case the old schema is being processed.
 							-- Extension targets do not need it because the options are inherited from the standalone ones.

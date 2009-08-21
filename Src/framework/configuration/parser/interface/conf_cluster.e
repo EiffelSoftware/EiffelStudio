@@ -524,8 +524,8 @@ feature {CONF_ACCESS} -- Update, not stored in configuration file
 	wipe_class_cache
 			-- Wipe out the class cache.
 		do
-			class_by_name_cache.clear_all
-			name_by_class_cache.clear_all
+			class_by_name_cache.wipe_out
+			name_by_class_cache.wipe_out
 		end
 
 feature -- Equality
@@ -573,7 +573,7 @@ invariant
 	parent_child_relationship: parent /= Void implies parent.children /= Void and then parent.children.has (Current)
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -597,10 +597,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

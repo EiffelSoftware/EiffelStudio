@@ -126,7 +126,7 @@ feature{NONE} -- Event handlers
 			if l_start_prc.has (l_tag) then
 				l_start_prc.item (l_tag).call (Void)
 			end
-			current_attributes.clear_all
+			current_attributes.wipe_out
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)

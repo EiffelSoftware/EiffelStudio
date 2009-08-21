@@ -68,7 +68,7 @@ feature {NONE} -- Visit
 			text_processing.append (ps_space)
 			text_processing.append (ps_new_line + new_line)
 			text_processing.append (current_line)
-			current_line.clear_all
+			current_line.wipe_out
 			current_line_height := 0
 			current_line_width := 0
 		end

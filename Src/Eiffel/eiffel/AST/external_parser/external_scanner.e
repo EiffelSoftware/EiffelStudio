@@ -485,7 +485,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'external.l' at line <not available>")
 end
 
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				token_buffer.remove_head (1)
 				last_token := TE_INTEGER
@@ -499,7 +499,7 @@ debug ("GELEX")
 end
 
 					-- To escape external keywords.
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				token_buffer.remove_head (1)
 				last_token := TE_ID
@@ -513,7 +513,7 @@ debug ("GELEX")
 end
 
 					-- Traditional identifier
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_ID
 			
@@ -528,7 +528,7 @@ end
 					-- Special identifier for include files that specifies
 					-- a path, e.g. <sys/timeb.h>, <windows\file.h>, or path
 					-- that includes an hyphenation.
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_FILE_ID
 			
@@ -1243,7 +1243,7 @@ feature -- Initialization
 			-- another input buffer.)
 		do
 			Precursor
-			token_buffer.clear_all
+			token_buffer.wipe_out
 			current_class := Void
 		end
 

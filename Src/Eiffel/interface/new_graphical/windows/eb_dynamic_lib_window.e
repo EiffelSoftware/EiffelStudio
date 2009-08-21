@@ -922,7 +922,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 		do
 			create dynamic_library
 				-- This is necessary because the E_DYNAMIC_LIB's content is once (!).
-			dynamic_library.dynamic_lib_exports.clear_all
+			dynamic_library.dynamic_lib_exports.wipe_out
 			from
 				exports.start
 			until

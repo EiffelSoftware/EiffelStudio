@@ -17,7 +17,7 @@ feature -- Name generation
 			type_id_not_void: type_id > 0
 		do
 			Result := Feature_buffer
-			Result.clear_all
+			Result.wipe_out
 			Result.append_character ('F')
 			Result.append_integer (type_id)
 			Result.append_character ('_')
@@ -28,7 +28,7 @@ feature -- Name generation
 			-- Name of a table of attribute offsets for the final Eiffel executable.
 		do
 			Result := Attribute_table_buffer
-			Result.clear_all
+			Result.wipe_out
 			Result.append_character ('O')
 			Result.append_integer (rout_id)
 		ensure
@@ -39,7 +39,7 @@ feature -- Name generation
 			-- Name of a routine table for the final Eiffel executable.
 		do
 			Result := Routine_table_buffer
-			Result.clear_all
+			Result.wipe_out
 			Result.append_character ('R')
 			Result.append_integer (rout_id)
 		ensure
@@ -51,7 +51,7 @@ feature -- Name generation
 			-- routine table. Useful for creation generation.
 		do
 			Result := Type_table_buffer
-			Result.clear_all
+			Result.wipe_out
 			Result.append_character ('Y')
 			Result.append_integer (rout_id)
 		end
@@ -62,7 +62,7 @@ feature -- Name generation
 			-- workbench and finalized mode.
 		do
 			Result := Address_table_buffer;
-			Result.clear_all
+			Result.wipe_out
 			Result.append_character ('A')
 			Result.append_integer (static_type_id)
 			Result.append_character ('_')
@@ -139,7 +139,7 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -152,22 +152,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -502,7 +502,7 @@ debug ("GELEX")
 end
 
 					-- Note: Identifiers are converted to lower-case.
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				token_buffer.to_lower
 				last_token := LAC_IDENTIFIER
@@ -527,7 +527,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
 				last_token := LAC_STRING
 			
@@ -539,7 +539,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line <not available>")
 end
 
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				if text_count > 1 then
 					append_text_substring_to_string (2, text_count, token_buffer)
 				end

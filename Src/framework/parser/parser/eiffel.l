@@ -626,25 +626,25 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					-- instead of:
 					--     `when' `1' `..' `2' `then'
 
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			}
 
 0[xX]{H}(({H}|_)*{H})?	{		-- Recognizes hexadecimal integer numbers.
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			}
 
 0[cC]{O}(({O}|_)*{O})?	{		-- Recognizes octal integer numbers.
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			}
 
 0[bB]{B}(({B}|_)*{B})?	{		-- Recognizes binary integer numbers.
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			}
@@ -657,7 +657,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 -- Reals
 
 ({D}*\.{D}+{E})|({D}+\.{D}*{E})|(({U}(_{T})*)?\.({T}_)*{U}{E})|({U}(_{T})*\.(({T}_)*{U})?{E}) {
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				token_buffer.to_lower
 				last_token := TE_REAL
@@ -787,7 +787,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 \'%\/0[cC]{O}(({O}|_)*{O})?\/\' |
 \'%\/0[bB]{B}(({B}|_)*{B})?\/\' {
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				token_buffer.clear_all
+				token_buffer.wipe_out
 					-- We discard the '%/ and the final /'.
 				append_text_substring_to_string (4, text_count - 2, token_buffer)
 				last_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
@@ -878,8 +878,8 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 \"[^\n"]*[\[\{]/[ \t\r]*\n {
 					-- Verbatim string.
-				token_buffer.clear_all
-				verbatim_marker.clear_all
+				token_buffer.wipe_out
+				verbatim_marker.wipe_out
 				if text_item (text_count) = '[' then
 					verbatim_marker.append_character (']')
 				else
@@ -933,7 +933,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 						end
 					elseif token_buffer.count = 1 then
 						check new_line: token_buffer.item (1) = '%N' end
-						token_buffer.clear_all
+						token_buffer.wipe_out
 					end
 					if verbatim_marker.item (1) = ']' then
 						align_left (token_buffer)
@@ -1016,7 +1016,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 \"[^%\n"]*	{
 					-- String with special characters.
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				token_buffer.clear_all
+				token_buffer.wipe_out
 				if text_count > 1 then
 					append_text_substring_to_string (2, text_count, token_buffer)
 				end

@@ -55,7 +55,7 @@ feature -- Buffer operation
 
 	set_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON)
 		do
-			a_buf.clear_all
+			a_buf.wipe_out
 			a_buf.append (a_scn.text)
 		ensure then
 			a_buf_set: a_buf.is_equal (a_scn.text)

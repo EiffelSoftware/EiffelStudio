@@ -2568,7 +2568,7 @@ feature -- Clearing
 		do
 			local_vars.clear_all
 			local_index_table.wipe_out
-			associated_register_table.clear_all
+			associated_register_table.wipe_out
 			local_index_counter := 0
 			dt_current := 0
 			inlined_dt_current := 0

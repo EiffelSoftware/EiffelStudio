@@ -8,7 +8,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf" readonly="false"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager-safe.ecf"/>
-		<library name="json" location="$EIFFEL_SRC\contrib\library\ejson\json-safe.ecf"/>
+		<library name="json" location="$XEBRA_LIBRARY\ejson\json-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="settable_types" location="$EIFFEL_SRC\framework\settable_types\settable_types-safe.ecf"/>

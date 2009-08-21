@@ -185,7 +185,7 @@ feature -- Access: Actions
 		attribute
 		end
 
-	update_action: detachable PROCEDURE [ANY, TUPLE [type: INTEGER; database_name: STRING; table_name: STRING; row_id: INTEGER_64]] assign set_update_action
+	update_action: detachable PROCEDURE [ANY, TUPLE] assign set_update_action
 			-- Action called when and INSERT, DELETE or UPDATE statment is executed on the database.
 			--
 			-- 'type': The type of update, see {SQLITE_UPDATE_CONSTANTS}.
@@ -196,6 +196,31 @@ feature -- Access: Actions
 			is_interface_usable: is_interface_usable
 			is_readable: is_readable
 		attribute
+		end
+
+	update_actions: ACTION_SEQUENCE [TUPLE [action: INTEGER; database_name: STRING; table_name: STRING; row_id: INTEGER_64]]
+			-- Action called when and INSERT, DELETE or UPDATE statment is executed on the database.
+			--
+			-- 'type': The type of update, see {SQLITE_UPDATE_CONSTANTS}.
+			-- 'database_name': The name of the database where the update occurred.
+			-- 'table_name': The name of the table where the update occurred.
+			-- 'row_id': The row identifier of the update, or the new identifier in the case of an insert.
+		require
+			is_interface_usable: is_interface_usable
+			is_readable: is_readable
+		do
+			if attached internal_update_actions as l_result then
+				Result := l_result
+			else
+				create Result
+				internal_update_actions := Result
+
+					-- Register the update action with the database.
+				set_update_hook (True)
+			end
+		ensure
+			result_attached: attached Result
+			result_consistent: Result = update_actions
 		end
 
 feature -- Measurements
@@ -274,7 +299,7 @@ feature -- Element change
 		do
 			update_action := a_action
 			if attached a_action then
-				l_action := $update_callback_internal
+--				l_action := $update_callback_internal
 			end
 --			l_other_action := sqlite3_update_hook (sqlite_api, internal_db, l_action, $Current)
 		ensure
@@ -499,6 +524,10 @@ feature -- Basic operations
 					end
 				end
 				sqlite_raise_on_failure (l_result)
+
+					-- Unregister any update hooks.
+				set_update_hook (False)
+
 					-- Only reset the pointer if there was no failure, because there could still be a lock, which
 					-- can possibly be resolved by a client cleaning up.
 				internal_db := default_pointer
@@ -611,9 +640,15 @@ feature {NONE} -- Basic operations
 			if sqlite_success (l_result) then
 				check not_l_db_is_null: l_db /= default_pointer end
 				internal_db := l_db
+
 					-- Set use of extended errors because the exeception classes supports them.
 				l_other_result := sqlite3_extended_result_codes (sqlite_api, l_db, 1)
 				check success: sqlite_success (l_other_result) end
+
+					-- Re-enable hooks
+				if attached internal_update_actions then
+					set_update_hook (True)
+				end
 			else
 				if l_db /= default_pointer then
 						-- Even in the event of an error, db's must be closed.
@@ -659,22 +694,92 @@ feature {NONE} -- Basic operations: Callbacks
 			end
 		end
 
-	frozen update_callback_internal (a_type: INTEGER; a_db_name: POINTER; a_table: POINTER; a_row_id: INTEGER_64; a_pointer: POINTER)
-			-- Update action callback associated with `update_action'.
+	set_update_hook (a_enable: BOOLEAN)
+			-- Sets up the update hook for the database.
 			--
-			-- `a_type': The type of update, see {SQLITE_UPDATE_CONSTANTS}.
-			-- `a_db_name': The name of the database where the update occurred.
-			-- `a_table': The name of the table where the update occurred.
-			-- `a_row_id': The row identifier of the update, or the new identifier in the case of an insert.
-			-- `a_pointer': Ignore.
+			-- `a_enable': True to enable callbacks; False otherwise.
 		require
 			is_interface_usable: is_interface_usable
-			not_a_db_name_is_null: a_db_name /= default_pointer
-			not_a_table_is_null: a_table /= default_pointer
-			a_row_id_positive: a_row_id > 0
+			not_is_closed: not is_closed
+			internal_update_actions_attached: a_enable implies attached internal_update_actions
+		local
+			l_data: POINTER
 		do
-			if is_readable and then attached rollback_action as l_action then
-				l_action.call ([a_type, create {STRING}.make_from_c (a_db_name), create {STRING}.make_from_c (a_table), a_row_id])
+			if a_enable then
+					-- Create the callback data
+				l_data := new_cb_data ($on_update_callback, $Current)
+				internal_update_actions_data := l_data
+
+					-- Request callbacls from SQLite
+				l_data := sqlite3_update_hook (sqlite_api, internal_db, l_data)
+				check no_old_callback: l_data = default_pointer end
+			else
+				l_data := internal_update_actions_data
+				if l_data /= default_pointer then
+					internal_update_actions_data := default_pointer
+
+						-- Prevent callbacks from SQLite
+					l_data := sqlite3_update_hook (sqlite_api, internal_db, default_pointer)
+					if l_data /= default_pointer then
+						free_cb_data (l_data)
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Implementation: Callbacks
+
+	new_cb_data (a_cb: POINTER; a_object: POINTER): POINTER
+			-- Creates a callback back data struct to process SQLite callbacks.
+			-- Note: All calls should be matched with a call to `free_db_data' once finished with the
+			--       the callback.
+			--
+			-- `a_cb': A function to callback.
+			-- `a_object': The Eiffel object to make the function callback on
+		require
+			a_object_is_null: a_object /= default_pointer implies a_cb /= default_pointer
+		external
+			"C inline use %"esqlite.h%""
+		alias
+			"[
+				EIF_CBDATAP p_data = (EIF_CBDATAP)malloc(sizeof(EIF_CBDATA));
+				p_data->o = eif_protect($a_object);
+				p_data->func = $a_cb;
+				return p_data;
+			]"
+		end
+
+	free_cb_data (a_data: POINTER)
+			-- Frees the callback data created from `new_cb_data'.
+			--
+			-- `a_data': The callback data to free.
+		require
+			not_a_data_is_null: a_data /= default_pointer
+		external
+			"C inline use %"esqlite.h%""
+		alias
+			"[
+				eif_wean (((EIF_CBDATAP)$a_data)->o);
+				free($a_data);
+			]"
+		end
+
+	on_update_callback (a_action: INTEGER; a_db_name: POINTER; a_tb_name: POINTER; a_row_id: INTEGER_64)
+			-- Called back from the wrapper implementation in the Eiffel C code.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+			a_action_is_valid: a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_delete or
+				a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_insert or
+				a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_update
+		local
+			l_db_name: STRING
+			l_tb_name: STRING
+		do
+			if attached internal_update_actions as l_actions then
+				create l_db_name.make_from_c (a_db_name)
+				create l_tb_name.make_from_c (a_tb_name)
+				l_actions.call ([a_action, l_db_name, l_tb_name, a_row_id])
 			end
 		end
 
@@ -694,6 +799,15 @@ feature {NONE} -- Implementation
 	internal_thread_id: INTEGER
 			-- The thread the database was connected using.
 			--|In non multi-threaded systems this will always be 0.
+
+	internal_update_actions_data: POINTER
+			-- Update actions callback data, set using `new_cb_data'
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_update_actions: detachable like update_actions
+			-- Cached version of `update_actions'.
+			-- Note: Do not use directly!
 
 feature {NONE} -- Externals
 

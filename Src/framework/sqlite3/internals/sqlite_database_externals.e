@@ -154,14 +154,14 @@ feature -- Callbacks
 --			Result := c_sqlite3_rollback_hook (a_api.api_pointer (once "sqlite3_rollback_hook"), a_db, a_callback, a_data)
 --		end
 
---	sqlite3_update_hook (a_api: SQLITE_API; a_db: POINTER; a_callback: POINTER a_data: POINTER): POINTER
---		require
---			a_api_attached: attached a_api
---			a_api_is_interface_usable: a_api.is_interface_usable
---			not_a_db_is_null: a_db /= default_pointer
---		do
---			Result := c_sqlite3_update_hook (a_api.api_pointer (once "sqlite3_update_hook"), a_db, $c_update_hook_callback, a_data)
---		end
+	sqlite3_update_hook (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+			not_a_db_is_null: a_db /= default_pointer
+		do
+			Result := c_sqlite3_update_hook (a_api.api_pointer (once "sqlite3_update_hook"), a_db, c_sqlite3_update_callback, a_cb_data)
+		end
 
 --	sqlite3_unlock_notify (a_api: SQLITE_API; a_db: POINTER; a_callback: POINTER; a_arg: POINTER): INTEGER
 --			-- Experimental interface!
@@ -355,21 +355,18 @@ feature {NONE} -- Externals: Threading
 --			]"
 --		end
 
---	c_sqlite3_update_hook (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
---		require
---			not_a_fptr_is_null: a_fptr /= default_pointer
---			not_a_db_is_null: a_db /= default_pointer
---		external
---			"C inline use %"eif_sqlite3.h%""
---		alias
---			"[
---				eif_sqlite3_callback *function_data = (eif_sqlite3_callback*)malloc(sizeof(eif_sqlite3_callback));
---				function_data->object = (EIF_OBJECT)eif_adopt((EIF_OBJECT)&$a_data);
---				function_data->callback = $a_callback;
---				return (EIF_POINTER)(FUNCTION_CAST(void *, (sqlite3 *, void (*)(void *, int, char const *, char const *, sqlite3_int64), void *)) $a_fptr) (
---					(sqlite3 *)$a_db, (void (*)(void *, int, char const *, char const *, sqlite3_int64))$a_callback, (void *)function_data);
---			]"
---		end
+	c_sqlite3_update_hook (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
+			not_a_db_is_null: a_db /= default_pointer
+		external
+			"C inline use %"sqlite3.h%""
+		alias
+			"[
+				return (EIF_POINTER)(FUNCTION_CAST(void *, (sqlite3 *, void (*)(void *, int, char const *, char const *, sqlite3_int64), void *)) $a_fptr) (
+					(sqlite3 *)$a_db, (void (*)(void *, int, char const *, char const *, sqlite3_int64))$a_callback, (void *)$a_data);
+			]"
+		end
 
 --	c_sqlite3_unlock_notify (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_arg: POINTER): INTEGER
 --			-- Experimental interface!
@@ -385,6 +382,15 @@ feature {NONE} -- Externals: Threading
 --					(sqlite3_mutex *)$a_mutex);
 --			]"
 --		end
+feature {NONE} -- Externals: Eiffel callbacks
+
+	c_sqlite3_update_callback: POINTER
+		external
+			"C inline use %"esqlite.h%""
+		alias
+			"return c_sqlite3_update_callback"
+		end
+
 feature -- Externals: Macros
 
 	SQLITE_OPEN_READONLY: INTEGER

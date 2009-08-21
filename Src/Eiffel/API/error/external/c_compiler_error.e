@@ -151,8 +151,18 @@ feature -- Status report
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
-			-- Build the error message
+			-- <Precursor>
+		local
+			l_message: STRING
 		do
+			l_message := message
+			if not l_message.is_empty then
+				a_text_formatter.add (message)
+				if l_message[l_message.count].is_alpha_numeric then
+					a_text_formatter.add (once ".")
+				end
+				a_text_formatter.add_new_line
+			end
 		end
 
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)

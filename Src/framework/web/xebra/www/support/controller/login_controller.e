@@ -20,7 +20,7 @@ feature -- Access
 	is_logged_in: BOOLEAN
 			-- Is a user logged in?
 		do
-			Result := attached session as l_current and then attached l_current.get (authentication_key)
+			Result := attached session as l_current and then attached l_current.item (authentication_key)
 		end
 
 	is_not_logged_in: BOOLEAN

@@ -2244,6 +2244,7 @@ test	object-test-code-generation				attach065 tcf pass object_test
 test	detachable-for-attached-constraint			attach066 tcf pass void_safe attached_types generic conformance validity
 test	call-on-detachable-generic				attach067 tcf pass void_safe attached_types generic validity
 test	conversion-from-cap-attached				attach068 tcf pass void_safe attached_types conversion
+test	attached-special-creation						attach069 tcf pass attached_types special
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

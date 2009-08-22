@@ -22,14 +22,6 @@
 			<indent type='3'>2</indent>
 			<name>Checkout EIFFEL_SRC/framework</name>
 		</step>
-		<step action='Subversion'>
-			<Host>svn.origo.ethz.ch/eiffelstudio/trunk/Src/contrib</Host>
-			<LocalPath>%EIFFEL_SRC%</LocalPath>
-			<Protocol>https</Protocol>
-			<Subcommand>export --force</Subcommand>
-			<indent type='3'>2</indent>
-			<name>Checkout EIFFEL_SRC/contrib</name>
-		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
 			<name>Compile Xebra Bins</name>
@@ -126,20 +118,6 @@
 			<TBD type='11'>-1</TBD>
 			<indent type='3'>2</indent>
 			<name>Copy httpd.conf</name>
-		</step>
-		<step action='Copy Files'>
-			<Converted type='11'>-1</Converted>
-			<Delay>15</Delay>
-			<DestDir>%BUILD%\taglibs</DestDir>
-			<Ext>*.taglib</Ext>
-			<Incremental type='11'>-1</Incremental>
-			<LogCopied type='11'>-1</LogCopied>
-			<ReadOnly type='11'>-1</ReadOnly>
-			<Retries>10</Retries>
-			<SourceDir>%XEBRA_DEV%\eiffel_projects\xebra_translator</SourceDir>
-			<TBD type='11'>-1</TBD>
-			<indent type='3'>2</indent>
-			<name>Copy Taglibs</name>
 		</step>
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
@@ -257,21 +235,6 @@
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
 			<Delay>15</Delay>
-			<DestDir>%BUILD%\library\framework\xml-rpc</DestDir>
-			<Incremental type='11'>-1</Incremental>
-			<LogCopied type='11'>-1</LogCopied>
-			<ReadOnly type='11'>-1</ReadOnly>
-			<Recurse type='11'>-1</Recurse>
-			<Retries>10</Retries>
-			<SourceDir>%EIFFEL_SRC%\framework\xml-rpc</SourceDir>
-			<TBD type='11'>-1</TBD>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Copy Xml-rpc</name>
-		</step>
-		<step action='Copy Files'>
-			<Converted type='11'>-1</Converted>
-			<Delay>15</Delay>
 			<DestDir>%BUILD%\library\framework\base\</DestDir>
 			<Incremental type='11'>-1</Incremental>
 			<LogCopied type='11'>-1</LogCopied>
@@ -282,20 +245,6 @@
 			<TBD type='11'>-1</TBD>
 			<indent type='3'>2</indent>
 			<name>Copy Base</name>
-		</step>
-		<step action='Copy Files'>
-			<Converted type='11'>-1</Converted>
-			<Delay>15</Delay>
-			<DestDir>%BUILD%\library\framework\file_utilities</DestDir>
-			<Incremental type='11'>-1</Incremental>
-			<LogCopied type='11'>-1</LogCopied>
-			<ReadOnly type='11'>-1</ReadOnly>
-			<Recurse type='11'>-1</Recurse>
-			<Retries>10</Retries>
-			<SourceDir>%EIFFEL_SRC%\framework\file_utilities</SourceDir>
-			<TBD type='11'>-1</TBD>
-			<indent type='3'>2</indent>
-			<name>Copy File_utilities</name>
 		</step>
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
@@ -336,6 +285,7 @@
 			<Retries>10</Retries>
 			<SourceDir>%EIFFEL_SRC%\framework\file_formats</SourceDir>
 			<TBD type='11'>-1</TBD>
+			<checked type='11'>0</checked>
 			<indent type='3'>2</indent>
 			<name>Copy File_formats</name>
 		</step>
@@ -352,6 +302,20 @@
 			<TBD type='11'>-1</TBD>
 			<indent type='3'>2</indent>
 			<name>Copy Environment</name>
+		</step>
+		<step action='Copy Files'>
+			<Converted type='11'>-1</Converted>
+			<Delay>15</Delay>
+			<DestDir>%BUILD%\library\framework\peg</DestDir>
+			<Incremental type='11'>-1</Incremental>
+			<LogCopied type='11'>-1</LogCopied>
+			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
+			<Retries>10</Retries>
+			<SourceDir>%EIFFEL_SRC%\framework\peg</SourceDir>
+			<TBD type='11'>-1</TBD>
+			<indent type='3'>2</indent>
+			<name>Copy Peg</name>
 		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
@@ -374,7 +338,7 @@
 		<step action='Write File'>
 			<Filename>%BUILD%\bin\launch_xebra.bat</Filename>
 			<Text><![CDATA[start ..\apache\bin\httpd.exe 
-start xebra_server.exe ..\conf\server.ini 
+start xebra_server.exe ..\conf\config.srv
 start /max /wait http://localhost:55000/helloworld]]></Text>
 			<indent type='3'>2</indent>
 			<name>Write launcher</name>

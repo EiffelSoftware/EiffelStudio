@@ -47,7 +47,7 @@ feature -- Access
 			l_f_utils: XU_FILE_UTILITIES
 		do
 			create l_f_utils
-			Result  := " -config %"" + servlet_gen_ecf.string + "%" -target servlet_gen -c_compile -stop"
+			Result  := " -config %"" + servlet_gen_ecf.string + "%" -target servlet_gen -c_compile -stop -project_path %"" + servlet_gen_path + "%" "
 
 			if needs_cleaning then
 				Result.append (" -clean")

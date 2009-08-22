@@ -58,7 +58,7 @@ feature -- Access
 				if {PLATFORM}.is_windows then
 					l_wapp_ecf.replace_substring_all ("/", "\")
 				end
-				Result  := " -config %"" + l_wapp_ecf + "%" -target %"" + l_wa.app_config.name.out + "%" -c_compile -stop"
+				Result  := " -config %"" + l_wapp_ecf + "%" -target %"" + l_wa.app_config.name.out + "%" -c_compile -stop -project_path %"" + app_dir + "%" "
 				if config.file.finalize_webapps.value then
 					Result := Result + " -finalize"
 				end

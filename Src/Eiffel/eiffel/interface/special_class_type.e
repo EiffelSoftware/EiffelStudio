@@ -140,9 +140,9 @@ feature -- C code generation
 			target_register.print_register
 
 				-- 1. Dynamic type with flags
-			buffer.put_string (" = RTLNSP2(")
+			buffer.put_string (" = RTLNSP2(eif_non_attached_type(")
 			info.generate_type_id (buffer, final_mode, 0)
-			buffer.put_character (',')
+			buffer.put_two_character (')', ',')
 			if not gen_param.is_expanded or else l_exp_has_references or else gen_param.is_bit then
 				buffer.put_string ("EO_REF")
 				if l_param_is_expanded then

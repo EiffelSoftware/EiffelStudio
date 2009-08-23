@@ -275,6 +275,7 @@ feature -- Thread Handling.
 --				idle_action_mutex.lock
 --			end
 -- DEADLOCK in TEXT_PANEL.update_scroll_agent because the agent is an idle action (lock acquired before execution) and calls remove_idle_action which tries to acquire the lock again
+-- FIXME: This is because MUTEX is reentrant on windows, but not so on Unix
 		end
 
 	try_lock: BOOLEAN

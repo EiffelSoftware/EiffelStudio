@@ -516,6 +516,7 @@ feature -- Status setting
 		do
 			order_out
 			is_show_requested := False
+			blocking_window := Void
 		end
 
 feature -- Element change

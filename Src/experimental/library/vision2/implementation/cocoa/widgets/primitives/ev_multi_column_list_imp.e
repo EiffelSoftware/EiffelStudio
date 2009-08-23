@@ -81,11 +81,11 @@ feature {NONE} -- Initialization
 			create table_column.make
 			table_column.set_editable (False)
 			table_column.set_data_cell (create {NS_IMAGE_CELL}.make)
-			table_column.set_width (20.0)
+			table_column.set_width ({REAL_32}20.0)
 			outline_view.add_table_column (table_column)
 			create table_column.make
 			table_column.set_editable (False)
-			table_column.set_width (1000.0)
+			table_column.set_width ({REAL_32}1000.0)
 			outline_view.add_table_column (table_column)
 
 			outline_view.set_header_view (default_pointer)

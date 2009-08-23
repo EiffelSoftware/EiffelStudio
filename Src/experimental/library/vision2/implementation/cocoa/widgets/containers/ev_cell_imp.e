@@ -78,7 +78,7 @@ feature -- Element change
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (a_color)
 			if attached {NS_BOX} cocoa_view as l_box then -- TODO: get rid of this when redefining in children
-				create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, 1.0)
+				create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, {REAL_32} 1.0)
 				--create color.white_color
 				l_box.set_fill_color (color);
 			end

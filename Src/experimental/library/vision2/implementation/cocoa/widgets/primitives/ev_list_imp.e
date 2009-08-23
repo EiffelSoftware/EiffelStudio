@@ -62,7 +62,7 @@ feature -- Initialize
 			outline_view.add_table_column (table_column)
 			outline_view.set_outline_table_column (table_column)
 			outline_view.set_header_view (default_pointer)
-			table_column.set_width (1000.0)
+			table_column.set_width ({REAL_32}1000.0)
 
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 

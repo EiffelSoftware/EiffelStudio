@@ -151,13 +151,13 @@ feature {NONE} -- Graphical view
 					n := tree.retrieve_item_recursively_by_data (window_list.item, false)
 					if attached n then
 						n.set_text (window_list.item.title)
-						update_recursive (n, window_list.item)
+						update_recursive (n, window_list.item, 0)
 					else
 						n := create {EV_TREE_ITEM}.make_with_text (window_list.item.title)
 						n.select_actions.extend (agent show_info (window_list.item))
 						n.set_data (window_list.item)
 						tree.extend (n)
-						add_recursive (n, window_list.item)
+						add_recursive (n, window_list.item, 0)
 					end
 					window_list.forth
 				end
@@ -201,7 +201,7 @@ feature {NONE} -- Graphical view
 		end
 
 
-	update_recursive (a_node: EV_TREE_NODE; a_container: EV_CONTAINER)
+	update_recursive (a_node: EV_TREE_NODE; a_container: EV_CONTAINER; a_depth: INTEGER)
 			-- If the item is already in the view just continue. If not add it.
 		local
 			node: detachable EV_TREE_NODE
@@ -214,12 +214,12 @@ feature {NONE} -- Graphical view
 					node := tree.retrieve_item_recursively_by_data (child, false)
 					if attached node then
 						if attached {EV_CONTAINER} node.data as l_container then
-							update_recursive (node, l_container)
+							update_recursive (node, l_container, a_depth+1)
 						end
 					else
 						node := add_element (child, a_node)
 						if attached {EV_CONTAINER} child as l_container then
-							add_recursive (node, l_container)
+							add_recursive (node, l_container, a_depth+1)
 						end
 					end
 				end
@@ -228,12 +228,12 @@ feature {NONE} -- Graphical view
 					node := tree.retrieve_item_recursively_by_data (child, false)
 					if attached node then
 						if attached {EV_CONTAINER} node.data as l_container then
-							update_recursive (node, l_container)
+							update_recursive (node, l_container, a_depth+1)
 						end
 					else
 						node := add_element (child, a_node)
 						if attached {EV_CONTAINER} child as l_container then
-							add_recursive (node, l_container)
+							add_recursive (node, l_container, a_depth+1)
 						end
 					end
 				end
@@ -249,12 +249,12 @@ feature {NONE} -- Graphical view
 						node := tree.retrieve_item_recursively_by_data (wlist.item, false)
 						if attached node then
 							if attached {EV_CONTAINER} node.data as l_container then
-								update_recursive (node, l_container)
+								update_recursive (node, l_container, a_depth+1)
 							end
 						else
 							node := add_element (wlist.item, a_node)
 							if attached {EV_CONTAINER} wlist.item as l_container then
-								add_recursive (node, l_container)
+								add_recursive (node, l_container, a_depth+1)
 							end
 						end
 					end
@@ -265,19 +265,20 @@ feature {NONE} -- Graphical view
 				node := tree.retrieve_item_recursively_by_data (a_container.item, false)
 				if attached node then
 					if attached {EV_CONTAINER} node.data as l_container then
-						update_recursive (node, l_container)
+						update_recursive (node, l_container, a_depth+1)
 					end
 				else
 					node := add_element(a_container.item, a_node)
 					if attached {EV_CONTAINER} a_container.item as l_container then
-						add_recursive (node, l_container)
+						add_recursive (node, l_container, a_depth+1)
 					end
 				end
 			end
 		end
 
+	max_depth: INTEGER is 10
 
-	add_recursive (a_node: EV_TREE_NODE; a_widget: detachable EV_WIDGET)
+	add_recursive (a_node: EV_TREE_NODE; a_widget: detachable EV_WIDGET; a_depth: INTEGER)
 			-- Add all the children of a_container to a_node (and then the children of the children, etc.)
 		local
 			node: EV_TREE_NODE
@@ -286,9 +287,9 @@ feature {NONE} -- Graphical view
 				-- Do nothing. no children to add to a_node
 			elseif attached {EV_WINDOW} a_widget as l_window then
 				node := add_element (l_window.upper_bar, a_node)
-				add_recursive (node, l_window.upper_bar)
+				add_recursive (node, l_window.upper_bar, a_depth+1)
 				node := add_element (l_window.item, a_node)
-				add_recursive (node, l_window.item)
+				add_recursive (node, l_window.item, a_depth+1)
 --			elseif attached {EV_ITEM_LIST} a_widget as l_list then
 --				node := add_element (l_window.upper_bar, a_node)
 --				add_recursive (node, l_window.upper_bar)
@@ -296,17 +297,17 @@ feature {NONE} -- Graphical view
 --				add_recursive (node, l_window.item)
 			elseif attached {EV_GRID} a_widget as l_grid then
 				node := add_element (l_grid.implementation.cell_item, a_node)
-				add_recursive (node, l_grid.implementation.cell_item)
+				add_recursive (node, l_grid.implementation.cell_item, a_depth+1)
 			elseif attached {EV_SPLIT_AREA} a_widget as l_splitarea then
 				-- The split area needs special treatment
 				if attached l_splitarea.first as child then
 					node := add_element (child, a_node)
-					add_recursive (node, child)
+					add_recursive (node, child, a_depth+1)
 				end
 
 				if attached l_splitarea.second as child then
 					node := add_element (child, a_node)
-					add_recursive (node, child)
+					add_recursive (node, child, a_depth+1)
 				end
 			elseif attached {EV_WIDGET_LIST} a_widget as wlist then
 				-- Okay, we have a widget which can have several children
@@ -316,7 +317,7 @@ feature {NONE} -- Graphical view
 					wlist.index > wlist.count
 				loop
 					node := add_element (wlist.item, a_node)
-					add_recursive (node, wlist.item)
+					add_recursive (node, wlist.item, a_depth+1)
 					wlist.forth
 				end
 			elseif attached {EV_TABLE} a_widget as table then
@@ -326,14 +327,14 @@ feature {NONE} -- Graphical view
 					table.after
 				loop
 					node := add_element (table.item_for_iteration, a_node)
-					add_recursive (node, table.item_for_iteration)
+					add_recursive (node, table.item_for_iteration, a_depth+1)
 					table.forth
 				end
 			elseif attached {EV_CELL} a_widget as l_cell then
 				-- We have a container with a single child
 				if l_cell.readable and then attached l_cell.item then
 					node := add_element (l_cell.item, a_node)
-					add_recursive (node, l_cell.item)
+					add_recursive (node, l_cell.item, a_depth+1)
 				end
 --			elseif attached {SD_TOOL_BAR} a_widget as toolbar and then attached toolbar.items as items then
 --				from
@@ -436,7 +437,7 @@ feature {NONE} -- Graphical view
 			create {NS_RECT}.make,
 				{NS_WINDOW}.borderless_window_mask, False)
 			Result.set_background_color (create {NS_COLOR}.blue_color)
-			Result.set_alpha_value (0.3)
+			Result.set_alpha_value ({REAL_32}0.3)
 			Result.make_key_and_order_front
 			Result.set_ignores_mouse_events (True)
 			Result.set_level ({NS_WINDOW}.floating_window_level)

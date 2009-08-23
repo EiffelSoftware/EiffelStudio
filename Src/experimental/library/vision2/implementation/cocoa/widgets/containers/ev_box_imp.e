@@ -176,7 +176,7 @@ feature -- Color
 			color: NS_COLOR
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (a_color)
-			create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, 1.0)
+			create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, (1.0).truncated_to_real)
 			box.set_fill_color (color);
 		end
 

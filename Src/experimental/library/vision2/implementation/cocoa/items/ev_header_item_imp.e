@@ -44,7 +44,7 @@ feature -- Initialization
 			-- Initialize the header item.
 		do
 			create table_column.make
-			table_column.set_min_width (0.0)
+			table_column.set_min_width ({REAL_32}0.0)
 			align_text_left
 			set_width (80)
 			set_text ("")

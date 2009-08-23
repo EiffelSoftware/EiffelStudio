@@ -104,7 +104,7 @@ feature -- Status setting
 			color: NS_COLOR
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_color)
-			create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, 1.0)
+			create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, {REAL_32}1.0)
 			text_field.set_background_color (color)
 		end
 
@@ -114,7 +114,7 @@ feature -- Status setting
 			color: NS_COLOR
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_color)
-			create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, 1.0)
+			create color.color_with_calibrated_red_green_blue_alpha (a_color.red, a_color.green, a_color.blue, {REAL_32}1.0)
 			text_field.set_text_color (color)
 		end
 

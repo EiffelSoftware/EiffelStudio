@@ -303,7 +303,7 @@ feature -- Drawing operations
 			create path.make
 			path.set_line_width (internal_line_width)
 			if internal_dashed_line_style then
-				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<1.0, 1.0>>), 0.0)
+				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<{REAL_32}1.0, {REAL_32}1.0>>), {REAL_32}0.0)
 			end
 			path.move_to_point (create {NS_POINT}.make_point (x1, y1))
 			path.line_to_point (create {NS_POINT}.make_point (x2, y2))
@@ -348,7 +348,7 @@ feature -- Drawing operations
 			pixmap_imp: detachable EV_PIXMAP_IMP
 			y_cocoa: INTEGER
 			source_rect, destination_rect: NS_RECT
-			trans: NS_AFFINE_TRANSFORM
+--			trans: NS_AFFINE_TRANSFORM
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= Void end
@@ -434,7 +434,7 @@ feature -- Drawing operations
 			create path.make_with_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
 			path.set_line_width (internal_line_width)
 			if internal_dashed_line_style then
-				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<1.0, 1.0>>), 0.0)
+				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<{REAL_32}1.0, {REAL_32}1.0>>), {REAL_32}0.0)
 			end
 			path.stroke
 			finish_drawing
@@ -450,7 +450,7 @@ feature -- Drawing operations
 			create path.make_with_oval_in_rect ( create {NS_RECT}.make_rect (x, y, a_width, a_height) )
 			path.set_line_width (internal_line_width)
 			if internal_dashed_line_style then
-				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<1.0, 1.0>>), 0.0)
+				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<{REAL_32}1.0, {REAL_32}1.0>>), {REAL_32}0.0)
 			end
 			path.stroke
 			finish_drawing
@@ -469,7 +469,7 @@ feature -- Drawing operations
 			create path.make
 			path.set_line_width (internal_line_width)
 			if internal_dashed_line_style then
-				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<1.0, 1.0>>), 0.0)
+				path.set_line_dash_count_phase (create {ARRAYED_LIST[REAL]}.make_from_array (<<{REAL_32}1.0, {REAL_32}1.0>>), {REAL_32}0.0)
 			end
 			if not points.is_empty then
 				l_point := 	points.item (points.lower)
@@ -586,8 +586,8 @@ feature {EV_ANY_HANDLER} -- Implementation
 			image.lock_focus
 			if not is_flipped then
 				create trans.make
-				trans.translate_by_xy (0.0, image.size.height)
-				trans.scale_by_xy (1.0, -1.0)
+				trans.translate_by_xy ({REAL_32}0.0, image.size.height)
+				trans.scale_by_xy ({REAL_32}1.0, {REAL_32}-1.0)
 				trans.concat
 			end
 			l_color ?= foreground_color.implementation

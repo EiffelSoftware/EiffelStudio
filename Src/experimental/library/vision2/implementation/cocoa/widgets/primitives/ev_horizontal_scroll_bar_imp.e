@@ -37,7 +37,7 @@ feature -- Initialization
 			change_actions_internal := create_change_actions
 			scroller.set_action (agent
 				do
-					set_proportion (scroller.double_value)
+					set_proportion (scroller.double_value.truncated_to_real)
 					change_actions.call ([value])
 				end)
 		end

@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {CHOICE}."
+	description: "[
+		Greedy PEG choice operator. It can be assembled with the operator '|'.
+	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
 	date: "$Date$"

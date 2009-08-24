@@ -1,5 +1,7 @@
 note
 	description: "[
+		Inherit from this class to benefit from a few predefined parsers and parser builders
+		like `char' and `stringp', and debugging.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -12,106 +14,125 @@ class
 feature -- Predefined PEGs
 
 	plus: PEG_ABSTRACT_PEG
+			-- Character parser which parses '+'
 		do
 			Result := char ('+')
 
 		end
 
 	minus: PEG_ABSTRACT_PEG
+			-- Character parser which parses '-'
 		do
 			Result := char ('-')
 
 		end
 
 	dot: PEG_ABSTRACT_PEG
+			-- Character parser which parses '.'
 		do
 			Result := char ('.')
 
 		end
 
 	quote: PEG_ABSTRACT_PEG
+			-- Character parser which parses '"'
 		do
 			Result := char ('"')
 
 		end
 
 	colon: PEG_ABSTRACT_PEG
+			-- Character parser which parses ':'
 		do
 			Result := char (':')
 
 		end
 
 	comma: PEG_ABSTRACT_PEG
+			-- Character parser which parses ','
 		do
 			Result := char (',')
 
 		end
 
 	back_slash: PEG_ABSTRACT_PEG
+			-- Character parser which parses '\'
 		do
 			Result := char ('\')
 
 		end
 
 	open_square: PEG_ABSTRACT_PEG
+			-- Character parser which parses '['
 		do
 			Result := char ('[')
 
 		end
 
 	close_square: PEG_ABSTRACT_PEG
+			-- Character parser which parses ']'
 		do
 			Result := char (']')
 
 		end
 
 	open_curly: PEG_ABSTRACT_PEG
+			-- Character parser which parses '{'
 		do
 			Result := char ('{')
 
 		end
 
 	close_curly: PEG_ABSTRACT_PEG
+			-- Character parser which parses '}'
 		do
 			Result := char ('}')
 		end
 
 	hyphen: PEG_ABSTRACT_PEG
+			-- Character parser which parses '-'
 		do
 			Result := char ('-')
 		end
 
 	underscore: PEG_ABSTRACT_PEG
+			-- Character parser which parses '_'
 		do
 			Result := char ('_')
 		end
 
 	slash: PEG_ABSTRACT_PEG
+			-- Character parser which parses '/'
 		do
 			Result := char ('/')
 		end
 
 	percent: PEG_ABSTRACT_PEG
+			-- Character parser which parses '%'
 		do
 			Result := char ('%%')
 		end
 
 	equals: PEG_ABSTRACT_PEG
+			-- Character parser which parses '='
 		do
 			Result := char ('=')
 		end
 
 	sharp: PEG_ABSTRACT_PEG
+			-- Character parser which parses '#'
 		do
 			Result := char ('#')
 		end
 
 	ampersand: PEG_ABSTRACT_PEG
+			-- Character parser which parses '&'
 		do
 			Result := char ('&')
 		end
 
 	digit: PEG_ABSTRACT_PEG
+			-- Range parser which parses a digit [0-9]
 		do
 			Result := range ('0', '9')
 		end

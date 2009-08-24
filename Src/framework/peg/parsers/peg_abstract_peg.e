@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {PARSING_EXPRESSION_GRAMMAR}."
+	description: "[
+		The deferred class which defines the API of all the PEG parsers.
+	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
 	date: "$Date$"
@@ -41,6 +43,8 @@ feature -- Access
 		end
 
 	set_name (a_name: STRING)
+			-- `a_name': The name of the parser
+			-- Sets the name of the parser.
 		require
 			a_name_attached: attached a_name
 		do
@@ -224,6 +228,7 @@ feature {PEG_ABSTRACT_PEG} -- Implementation
 feature -- Convenience
 
 	add alias "+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+			-- `a_other': The parser to be added
 			-- Convenience feature to add two pegs together in a sequence
 		require
 			a_other_attached: attached a_other
@@ -235,6 +240,7 @@ feature -- Convenience
 		end
 
 	add_with_whitespace alias "&+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+			-- `a_other': The parser to be added after the whitespaces
 			-- Convience feature to add two pegs together in a sequence with an arbitrary number
 			-- (at least 1) of whitespaces inbetween
 		require
@@ -251,6 +257,7 @@ feature -- Convenience
 		end
 
 	add_with_optional_whitespace alias "|+" (a_other: PEG_ABSTRACT_PEG): PEG_SEQUENCE
+			-- `a_other': The parser to be added after the whitescaces
 			-- Convience feature to add two pegs together in a sequence with an arbitrary number
 			-- (zero or more) of whitespaces inbetween
 		require
@@ -267,6 +274,10 @@ feature -- Convenience
 		end
 
 	add_choice alias "|" (a_other: PEG_ABSTRACT_PEG): PEG_CHOICE
+			-- `a_other': The parser to be added to the choice
+			-- Convenience feature to build choice chains
+			-- A new choice {PEG_CHOICE} is created and reused
+			-- for every subsequent addition of a parser
 		require
 			a_other_attached: attached a_other
 		do
@@ -277,6 +288,7 @@ feature -- Convenience
 		end
 
 	add_zero_or_more alias "-": PEG_ABSTRACT_PEG
+			-- Wraps `Current' into a zero or more parser
 		do
 			create {PEG_ZERO_OR_MORE} Result.make (Current)
 		ensure
@@ -284,6 +296,7 @@ feature -- Convenience
 		end
 
 	add_one_or_more alias "+": PEG_ABSTRACT_PEG
+			-- Wraps `Current' into a one or more parser
 		do
 			create {PEG_ONE_OR_MORE} Result.make (Current)
 		ensure
@@ -291,7 +304,7 @@ feature -- Convenience
 		end
 
 	negate: PEG_NEGATE
-			-- Returns Current negated
+			-- Returns Current negated, i.e. "!Current"
 		do
 			create Result.make (Current)
 		ensure
@@ -299,7 +312,7 @@ feature -- Convenience
 		end
 
 	enforce: PEG_ENFORCE
-			-- Returns Current enforced
+			-- Returns Current enforced, i.e. "&Current"
 		do
 			create Result.make (Current)
 		ensure
@@ -307,7 +320,7 @@ feature -- Convenience
 		end
 
 	optional: PEG_OPTIONAL
-			-- Returns Current as optional parser
+			-- Returns Current as optional parser, i.e. "Current?"
 		do
 			create Result.make (Current)
 		ensure
@@ -316,7 +329,7 @@ feature -- Convenience
 
 	fixate
 			-- Forces the parser to generate new sequences and choice parsers if built
-			-- with + or | respectively
+			-- with + (|+, |&) or | respectively
 		do
 			fixated := True
 		ensure
@@ -324,7 +337,7 @@ feature -- Convenience
 		end
 
 	consumer: PEG_CONSUMER
-			-- Transforms Current a consumer parser
+			-- Transforms Current into a consumer parser
 		do
 			create Result.make (Current)
 		ensure

@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {PARSER_RESULT}."
+	description: "[
+		The object which holds all the errors,results and the current position in the string
+		of a parsing process. It is passed
+		around by the parsers.
+	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
 	date: "$Date$"
@@ -20,6 +24,8 @@ create
 feature -- Initialize
 
 	make (a_left_to_parse: PEG_PARSER_STRING; a_success: BOOLEAN)
+			-- `a_left_to_parse': The string which is unparsed
+			-- `a_success': Was the parsing a success
 		require
 			a_left_to_parse_attached: attached a_left_to_parse
 		do
@@ -56,7 +62,7 @@ feature -- Access
 		end
 
 	append_result (a_result: ANY)
-			-- Appends an object to the list of objects
+			-- Appends an object to the list of results
 		require
 			a_result_attached: attached a_result
 		do
@@ -167,7 +173,6 @@ feature -- Element change
 				Result.append ("%N%T" + internal_result.index.out + ": " + internal_result.item.out)
 				internal_result.forth
 			end
-			Result.append ("*****************************************")
 		end
 
 end

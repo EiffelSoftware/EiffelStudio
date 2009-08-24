@@ -1,6 +1,6 @@
 note
 	description: "[
-		{PEG_SINGLE_CHILD}.
+		Encapsulates the functionality of parsers with exactly one child.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -16,6 +16,7 @@ inherit
 feature -- Initialization
 
 	make (a_child: PEG_ABSTRACT_PEG)
+			-- `a_child': The child parser
 		do
 			child := a_child
 		end

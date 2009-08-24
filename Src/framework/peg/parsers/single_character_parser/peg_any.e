@@ -1,6 +1,6 @@
 note
 	description: "[
-		{PEG_ANY}.
+		Parses any character (1 character). Only fails on empty input.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

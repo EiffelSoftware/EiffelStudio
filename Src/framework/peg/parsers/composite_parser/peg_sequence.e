@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {SEQUENCE}."
+	description: "[
+		The sequence parser parses with one child after the other sequentially. If one fails the sequence fails.
+		A sequence can be created with the binary '+' operator.
+	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
 	date: "$Date$"
@@ -93,6 +96,7 @@ feature -- Implementation
 		end
 
 	serialization_separator: STRING
+			-- <Precursor>
 		do
 			Result := " "
 		end

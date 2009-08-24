@@ -52,7 +52,7 @@ feature {XS_APPLICATION} -- Setup
 		require
 			a_arg_parser_attached: a_arg_parser /= Void
 		do
-			config.args.set_debug_level (a_arg_parser.debug_level)
+			set_debug_level (a_arg_parser.debug_level.out).do_nothing
 			config.args.set_config_filename (a_arg_parser.config_filename)
 			config.args.set_unmanaged (a_arg_parser.unmanaged)
 
@@ -428,6 +428,18 @@ feature {XS_SERVER_MODULE} -- Status setting
 		do
 			stop := True
 			Result := create {XCCR_OK}
+		end
+
+	set_debug_level (a_debug_level: STRING): XC_COMMAND_RESPONSE
+		-- <Precursor>
+		do
+			if a_debug_level.is_integer then
+				config.args.set_debug_level (a_debug_level.to_integer)
+				o.set_debug_level (a_debug_level.to_integer)
+				create {XCCR_OK}Result
+			else
+				create {XCCR_INVALID_PARAM_TYPE}Result.make (a_debug_level)
+			end
 		end
 
 	get_modules: XC_COMMAND_RESPONSE

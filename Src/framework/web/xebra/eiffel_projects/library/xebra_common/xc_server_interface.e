@@ -161,6 +161,15 @@ feature -- Modules
 
 feature -- Server
 
+	set_debug_level (a_debug_level: STRING): XC_COMMAND_RESPONSE
+		-- Sets the debug level.
+		require
+			a_a_debug_level_attached: a_debug_level /= Void
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 	load_config: XC_COMMAND_RESPONSE
 			-- (re) load the file config.
 		deferred

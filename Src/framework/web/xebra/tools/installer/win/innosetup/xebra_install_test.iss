@@ -5,22 +5,22 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{B312588D-4952-4273-941D-39CAEF12C25F}
+AppId={{FD0CA48F-DD6D-4567-B479-875603AB56E0}
 AppName=Eiffel Xebra
-AppVerName=Eiffel Xebra Pre-Release 0.2
+AppVerName=Eiffel Xebra Pre-Release 0.3
 AppPublisher=Eiffel Software
 AppPublisherURL=http://dev.eiffel.com/Xebra
 AppSupportURL=http://dev.eiffel.com/Xebra
 AppUpdatesURL=http://dev.eiffel.com/Xebra
 DefaultDirName={pf}\Eiffel Software\Xebra
-DefaultGroupName=Eiffel Software
+DefaultGroupName=Eiffel Xebra
 LicenseFile=C:\Users\fabioz\Desktop\gnu.txt
 OutputDir=output
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=true
 SetupLogging=true
-AppVersion=0.0.2
+AppVersion=0.0.3
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
@@ -33,7 +33,12 @@ Source: C:\virtual_box_share\eiffel_src\framework\web\xebra\tools\installer\win\
 [Icons]
 Name: {group}\{cm:ProgramOnTheWeb,Eiffel Xebra}; Filename: http://www.eiffel.com
 Name: {group}\{cm:UninstallProgram,Eiffel Xebra}; Filename: {uninstallexe}
-Name: {commondesktop}\Launch Xebra; Filename: {app}\bin\launch_xebra_full.bat; WorkingDir: {app}\bin
+Name: {group}\Launch Xebra Full; Filename: {app}\bin\launch_xebra_full.bat; WorkingDir: {app}\bin
+Name: {group}\Launch Xebra Apache only; Filename: {app}\bin\launch_xebra_apache.bat; WorkingDir: {app}\bin
+Name: {group}\Launch Xebra Server only; Filename: {app}\bin\launch_xebra_server.bat; WorkingDir: {app}\bin
+
+
+
 
 [Registry]
 Root: HKLM; Subkey: Software\ISE\Eiffel65; ValueType: string; ValueName: XEBRA_DEV; Flags: uninsdeletevalue; Languages: ; ValueData: {app}

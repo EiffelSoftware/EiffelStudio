@@ -277,21 +277,6 @@
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
 			<Delay>15</Delay>
-			<DestDir>%BUILD%\library\framework\file_formats</DestDir>
-			<Incremental type='11'>-1</Incremental>
-			<LogCopied type='11'>-1</LogCopied>
-			<ReadOnly type='11'>-1</ReadOnly>
-			<Recurse type='11'>-1</Recurse>
-			<Retries>10</Retries>
-			<SourceDir>%EIFFEL_SRC%\framework\file_formats</SourceDir>
-			<TBD type='11'>-1</TBD>
-			<checked type='11'>0</checked>
-			<indent type='3'>2</indent>
-			<name>Copy File_formats</name>
-		</step>
-		<step action='Copy Files'>
-			<Converted type='11'>-1</Converted>
-			<Delay>15</Delay>
 			<DestDir>%BUILD%\library\framework\environment</DestDir>
 			<Incremental type='11'>-1</Incremental>
 			<LogCopied type='11'>-1</LogCopied>
@@ -321,6 +306,11 @@
 			<indent type='3'>1</indent>
 			<name>Create config files</name>
 		</step>
+		<step action='Create Folder'>
+			<Path>%BUILD%\upload_tmp</Path>
+			<indent type='3'>2</indent>
+			<name>Create upload_tmp</name>
+		</step>
 		<step action='Copy Files'>
 			<Converted type='11'>-1</Converted>
 			<Delay>15</Delay>
@@ -336,12 +326,25 @@
 			<name>Copy Files</name>
 		</step>
 		<step action='Write File'>
-			<Filename>%BUILD%\bin\launch_xebra.bat</Filename>
+			<Filename>%BUILD%\bin\launch_xebra_full.bat</Filename>
 			<Text><![CDATA[start ..\apache\bin\httpd.exe 
 start xebra_server.exe ..\conf\config.srv
 start /max /wait http://localhost:55000/helloworld]]></Text>
 			<indent type='3'>2</indent>
-			<name>Write launcher</name>
+			<name>Write launcher full</name>
+		</step>
+		<step action='Write File'>
+			<Filename>%BUILD%\bin\launch_xebra_apache.bat</Filename>
+			<Text>start ..\apache\bin\httpd.exe</Text>
+			<indent type='3'>2</indent>
+			<name>Write apache launcher</name>
+		</step>
+		<step action='Write File'>
+			<Filename>%BUILD%\bin\launch_xebra_server.bat</Filename>
+			<Text><![CDATA[start xebra_server.exe ..\conf\config.srv
+]]></Text>
+			<indent type='3'>2</indent>
+			<name>Write server launcher</name>
 		</step></steps>
 	<macros>
 		<macro name='APACHE'>

@@ -43,6 +43,7 @@ feature -- Other
 			if attached {XCCR_INTERNAL_SERVER_ERROR} l then end
 			if attached {XCCR_WEBAPP_NOT_FOUND} l then end
 			if attached {XCCR_INVALID_CMD_UNMANAGED} l then end
+			if attached {XCCR_INVALID_PARAM_TYPE} l then end
 
 				-- Server Commands
 			if attached {XCC_CLEAN_WEBAPP} l then end
@@ -64,6 +65,7 @@ feature -- Other
 			if attached {XCC_SHUTDOWN_WEBAPPS} l then end
 			if attached {XCC_GET_SESSIONS} l then end
 			if attached {XCC_TRANSLATE_WEBAPP} l then end
+			if attached {XCC_SET_DEBUG} l then end
 
 				-- Webapp Commands
 			if attached {XCWC_EMPTY} l then end

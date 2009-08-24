@@ -43,6 +43,7 @@ feature -- Initialization
 				l_group_sc.force  (create {XCC_SHUTDOWN_SERVER}.make, "exit")
 				l_group_sc.force  (create {XCC_LOAD_CONFIG}.make, "reload")
 				l_group_sc.force  (create {XCC_SHUTDOWN_WEBAPPS}.make, "shutdown_webapps")
+				l_group_sc.force  (create {XCC_SET_DEBUG}.make, "debug_level")
 			end
 
 			if attached command_groups ["Modules"] as l_group_m then

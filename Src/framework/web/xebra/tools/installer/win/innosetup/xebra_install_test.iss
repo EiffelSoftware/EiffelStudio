@@ -33,7 +33,7 @@ Source: C:\virtual_box_share\eiffel_src\framework\web\xebra\tools\installer\win\
 [Icons]
 Name: {group}\{cm:ProgramOnTheWeb,Eiffel Xebra}; Filename: http://www.eiffel.com
 Name: {group}\{cm:UninstallProgram,Eiffel Xebra}; Filename: {uninstallexe}
-Name: {commondesktop}\Launch Xebra; Filename: {app}\bin\launch_xebra.bat; WorkingDir: {app}\bin
+Name: {commondesktop}\Launch Xebra; Filename: {app}\bin\launch_xebra_full.bat; WorkingDir: {app}\bin
 
 [Registry]
 Root: HKLM; Subkey: Software\ISE\Eiffel65; ValueType: string; ValueName: XEBRA_DEV; Flags: uninsdeletevalue; Languages: ; ValueData: {app}

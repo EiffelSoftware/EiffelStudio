@@ -46,7 +46,7 @@
 
 
 /*======= Choose debug level here ======= */
-#define DO_DEBUG
+/* #define DO_DEBUG */
  /* #define DO_DEBUG2 */
 
 /*======= DEBUG MACRO ======= */

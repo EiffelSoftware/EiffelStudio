@@ -10,6 +10,9 @@ class
 
 inherit
 	EV_APPLICATION
+		redefine
+			create_interface_objects
+		end
 
 create
 	make_and_launch
@@ -21,12 +24,17 @@ feature {NONE} -- Initialization
 			-- then launch the application.
 		do
 			default_create
-			create main_window
 			main_window.show
 			launch
 		end
 		
 feature {NONE} -- Implementation
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			create main_window
+		end
 
 	main_window: <MAIN_WINDOW>
 		-- Main window of `Current'.

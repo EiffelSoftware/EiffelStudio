@@ -209,7 +209,10 @@ static int read_from_POST (request_rec* r, char **buf, int max_upload_size, char
 	} while (!eos);
 
 	if (save_file)
+	{
 		apr_file_flush (tmpfile);
+		apr_file_close (tmpfile);
+	}
 
 	return OK;
 }

@@ -1,6 +1,6 @@
 note
 	description: "[
-		{PEG_LONGEST_MATCH}.
+		Holds the pointer of the longest match of a parse process.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -29,6 +29,7 @@ feature -- Access
 feature -- Basic functionality
 
 	set_error_message (a_messages: LIST [STRING])
+			-- Sets the error messages.
 		require
 			a_messages_attached: attached a_messages
 		do
@@ -62,6 +63,7 @@ feature -- Basic functionality
 		end
 
 invariant
+
 	count_bigger_than_zero: count > 0
 
 end

@@ -1,6 +1,6 @@
 note
 	description: "[
-		{PEG_RANGE}.
+		Works as {PEG_CHARACTER} but instead of one single character it parses a range of characters.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

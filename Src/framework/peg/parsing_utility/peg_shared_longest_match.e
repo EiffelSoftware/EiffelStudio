@@ -1,6 +1,6 @@
 note
 	description: "[
-		{PEG_SHARED_LONGEST_MATCH}.
+		Sharing a PEG_LONGEST_MATCH object.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

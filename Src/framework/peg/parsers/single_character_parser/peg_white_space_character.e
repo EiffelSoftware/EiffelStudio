@@ -1,6 +1,6 @@
 note
 	description: "[
-		{PEG_WHITE_SPACE_CHARACTER}.
+		As {PEG_RANGE} but parses only whitespaces (being a ASCII-Character in [0, 32])
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

@@ -1,6 +1,6 @@
 note
 	description: "[
-		{PEG_PARSER_STRING}.
+		A wrapped string used for parsing.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -66,7 +66,9 @@ feature {NONE} -- Access
 
 	base_string: STRING
 			-- The base string
+
 	line, colon: INTEGER
+			-- Cached line and colon of the actual position in the string
 
 feature -- Internal Access
 

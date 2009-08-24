@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {ZERO_OR_MORE}."
+	description: "[
+		The PEG parser which parses with its child one or more time. Also known as '*'.
+		It can be created with the prefix operator '+'.
+	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
 	date: "$Date$"

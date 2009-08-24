@@ -1,6 +1,7 @@
 note
 	description: "[
-		{PEG_OPTIONAL}.
+		This parser tries to parse its child. If it succeeds the string is consumed otherwise a backtracking occurs.
+		It can be easily created with `optional'.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

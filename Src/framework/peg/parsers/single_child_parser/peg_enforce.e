@@ -1,6 +1,7 @@
 note
 	description: "[
-		{PEG_ENFORCE}.
+		This PEG parser succeeds iff the child succeeds. The string is not consumed though and a backtracking occurs.
+		It can be easily created with `enforce'.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

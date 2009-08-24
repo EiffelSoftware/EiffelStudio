@@ -1,6 +1,7 @@
 note
 	description: "[
-		{COMPOSITE_PARSER}.
+		The composite parser encapsulates functionality of parsers with an arbitrary number
+		of children. Mainly used for {PEG_CHOICE} and {PEG_SEQUENCE}.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

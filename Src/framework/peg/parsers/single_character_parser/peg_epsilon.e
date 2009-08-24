@@ -1,6 +1,8 @@
 note
 	description: "Summary description for {PEG_EPSILON}."
-	legal: "See notice at end of class."
+	legal: "[
+		Succeeds on any input and doesn't consume anything.
+	]"
 	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +36,7 @@ feature -- Implementation
 		do
 			Result := "epsilon"
 		end
-		
+
 	short_debug_info: STRING
 			-- <Precursor>		
 		do

@@ -1,6 +1,8 @@
 note
 	description: "[
-		{PEG_CONSUMER}.
+		This PEG parser tries to parse with its child parser. If the child is successful
+		it replaces the parsing result by the string extracted from the starting parse point
+		to the current parse poitn. Every result of the child is overwritten.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

@@ -15,7 +15,7 @@ AppUpdatesURL=http://dev.eiffel.com/Xebra
 DefaultDirName={pf}\Eiffel Software\Xebra
 DefaultGroupName=Eiffel Xebra
 LicenseFile=C:\Users\fabioz\Desktop\gnu.txt
-OutputDir=output
+OutputDir=C:\virtual_box_share\
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=true
@@ -36,9 +36,6 @@ Name: {group}\{cm:UninstallProgram,Eiffel Xebra}; Filename: {uninstallexe}
 Name: {group}\Launch Xebra Full; Filename: {app}\bin\launch_xebra_full.bat; WorkingDir: {app}\bin
 Name: {group}\Launch Xebra Apache only; Filename: {app}\bin\launch_xebra_apache.bat; WorkingDir: {app}\bin
 Name: {group}\Launch Xebra Server only; Filename: {app}\bin\launch_xebra_server.bat; WorkingDir: {app}\bin
-
-
-
 
 [Registry]
 Root: HKLM; Subkey: Software\ISE\Eiffel65; ValueType: string; ValueName: XEBRA_DEV; Flags: uninsdeletevalue; Languages: ; ValueData: {app}

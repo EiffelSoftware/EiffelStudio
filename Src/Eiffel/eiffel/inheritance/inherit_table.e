@@ -1220,7 +1220,7 @@ end;
 					create vmfn;
 					vmfn.set_class (a_class);
 					vmfn.set_a_feature (feature_i);
-					vmfn.set_inherited_feature (inherited_features.item_id (feature_name_id));
+					vmfn.set_inherited_feature (inherited_info.a_feature);
 					Error_handler.insert_error (vmfn);
 				else
 						-- Name clash: a non-deferred feature is inherited

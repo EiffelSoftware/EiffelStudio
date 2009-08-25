@@ -209,6 +209,16 @@ doc:	</attribute>
 rt_shared unsigned char **melt;
 
 /*
+doc:	<attribute name="melt_count" return_type="rt_uint_ptr" export="shared">
+doc:		<summary>Size of `melt' and `mpatidtab' arrays.</summary>
+doc:		<access>Read/Write once</access>\
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since updated in `update.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_shared rt_uint_ptr melt_count;
+
+/*
 doc:	<attribute name="eif_nb_features" return_type="uint32" export="public">
 doc:		<summary>Number of features in frozen system. Correspond to count of generated `egc_frozen_init'.</summary>
 doc:		<access>Read/Write once</access>

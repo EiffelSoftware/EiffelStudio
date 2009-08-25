@@ -6291,12 +6291,67 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 	/* NOT REACHED */
 }
 
-rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsigned char *bc, int count) {
+/*
+doc:	<routine name="eif_override_byte_code_of_body" export="public">
+doc:		<summary>Melt the code of routine `body_id' using the byte code `bc' of size `count'.</summary>
+doc:		<param name="body_id" type="int">Body ID identifying the routine we want to melt.</param>
+doc:		<param name="pattern_id" type="int">Pattern ID associated to `body_id'.</param>
+doc:		<param name="bc" type="unsigned char *">Byte code for routine `body_id'.</param>
+doc:		<param name="count" type="int">Size of the `bc' content.</param>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>Caller should ensure that only one thread executes this code as it might perform resizing of `melt' and `mpatidtab' arrays.</synchronization>
+doc:	</routine>
+*/
+
+rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsigned char *bc, int count)
+{
 	unsigned char *bcode;
+	rt_uint_ptr old_count;
 	
-		/* Let's free the previously allocated byte code. */
+	REQUIRE("valid body_id", body_id >= 0);
+	REQUIRE("valid pattern_id", pattern_id >= 0);
+	REQUIRE ("valid byte_code", bc);
+	REQUIRE ("valid byte_code count", count >= 0);
+
+		/* First allocate the `melt' and `mpatidtab' arrays if not yet created. And if created
+		 * but too small for `body_id' we resize them. */
+	if (!melt) {
+		melt_count = body_id + 1;
+		melt = (unsigned char **) cmalloc (melt_count* sizeof(unsigned char *));
+		if (!melt) {
+			enomem();
+		} else {
+			mpatidtab = (int *) cmalloc (melt_count * sizeof(int));
+			if (!mpatidtab) {
+				enomem();
+			} else {
+				memset (melt, 0, melt_count * sizeof(unsigned char *));
+				memset (mpatidtab, 0, melt_count * sizeof(int));
+			}
+		}
+	} else if (melt_count <= body_id) {
+		old_count = melt_count;
+		melt_count = body_id + 1;
+		melt = (unsigned char **) crealloc (melt, melt_count * sizeof(unsigned char *));
+		if (!melt) {
+			enomem();
+		} else {
+			mpatidtab = (int *) crealloc (mpatidtab, melt_count * sizeof(int));
+			if (!mpatidtab) {
+				enomem();
+			} else {
+				memset (melt + old_count, 0, (melt_count - old_count) * sizeof(unsigned char *));
+				memset (mpatidtab + old_count, 0, (melt_count - old_count) * sizeof(int));
+			}
+		}
+	}
+	CHECK("melt allocated", melt);
+	CHECK("mpatidtab allocated", mpatidtab);
+	CHECK("valid melt array count", melt_count > body_id);
+
 	bcode = melt [body_id];
-	if(bcode!=NULL) {
+	if (bcode != NULL) {
+			/* Let's free the previously allocated byte code. */
 		eif_rt_xfree (bcode);
 	}	
 		/* Allocate a new area for the new byte code to store. */
@@ -6304,7 +6359,7 @@ rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsi
 	if (!bcode) {
 		enomem();
 	} else {
-		memcpy(bcode, bc, count * sizeof(unsigned char));
+		memcpy (bcode, bc, count * sizeof(unsigned char));
 		melt [body_id] = bcode;
 		mpatidtab [body_id] = pattern_id;
 		egc_frozen [body_id] = 0;

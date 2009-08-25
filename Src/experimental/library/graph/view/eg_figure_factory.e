@@ -40,11 +40,15 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	model_from_xml (node: XM_ELEMENT): EG_ITEM
+	model_from_xml (node: attached like xml_element_type): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		require
 			node_not_void: node /= Void
 		deferred
+		end
+
+	xml_element_type: detachable XM_ELEMENT
+		do
 		end
 		
 feature {EG_FIGURE_WORLD} -- Implementation

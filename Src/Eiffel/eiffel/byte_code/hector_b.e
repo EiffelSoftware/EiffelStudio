@@ -131,7 +131,8 @@ feature -- C code generation
 			l_type := real_type (expr.type)
 			if not is_pointer or else (l_type.is_basic and not l_type.is_bit) then
 				buf := buffer
-				buf.put_string ("(EIF_POINTER) &(")
+				l_type.c_type.generate_access_cast (buf)
+				buf.put_three_character (' ', '&', '(')
 				if expr.is_attribute then
 					expr.generate_access
 				else

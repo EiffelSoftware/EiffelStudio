@@ -121,7 +121,7 @@ feature -- Access
 			l_style: like just_class_name_style
 		do
 			l_class := associated_class.compiled_representation
-			l_style := just_class_name_style
+			l_style := just_custom_class_name_style
 			if l_class /= Void then
 				l_style.set_class_c (l_class)
 			else
@@ -129,6 +129,8 @@ feature -- Access
 			end
 			if viewable_name /= Void then
 				l_style.enable_custom_name (viewable_name)
+			else
+				l_style.disable_custom_name
 			end
 			create Result
 			Result.set_overriden_fonts (label_font_table, label_font_height)
@@ -150,6 +152,12 @@ feature -- Status report
 		end
 
 feature {NONE} -- Implementation
+
+	just_custom_class_name_style: EB_CLASS_EDITOR_TOKEN_STYLE
+			-- Just class name style with possible custom names.
+		once
+			Result := just_class_name_style.twin
+		end
 
 	associated_class: CLASS_I;
 			-- Corresponding class

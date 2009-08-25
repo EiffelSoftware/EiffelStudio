@@ -10,6 +10,8 @@ remtrace argument_parser
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/argument_parser argument_parser
 remtrace base
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base base 
+remtrace base_extension
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/base_extension base_extension 
 remtrace diff
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/diff diff
 remtrace docking

@@ -206,10 +206,12 @@ feature -- Insertion, deletion
 		require
 			valid_key: valid_key (key)
 		local
-			l_default_key: H
+			l_default_key: detachable H
 		do
 			internal_search (key)
 			if control = Found_constant then
+					-- To make it void-safe
+				check l_default_key /= Void end
 				content.put (l_default_key, position)
 				deleted_marks.put (True, position)
 				count := count - 1
@@ -231,7 +233,7 @@ feature -- Insertion, deletion
 			found_item := default_value
 		end
 
-	merge (other: like Current)
+	merge (other: SEARCH_TABLE [H])
 			-- Merge two search_tables
 		require
 			other_not_void: other /= Void
@@ -274,6 +276,39 @@ feature -- Insertion, deletion
 					end
 					i := i + 1
 				end
+			end
+		end
+
+feature -- Resizing
+
+	resize (n: INTEGER)
+			-- Resize table to accomodate `n' elements.
+		require
+			n_non_negative: n >= 0
+			n_greater_than_count: n >= count
+		local
+			i, table_size: INTEGER
+			current_key: H
+			other: SEARCH_TABLE [H]
+			local_content: SPECIAL [H]
+		do
+			if (content.count * Size_threshold <= 100 * n) then
+				from
+					create other.make (n)
+					local_content := content
+					table_size := local_content.count
+				until
+					i >= table_size
+				loop
+					current_key := local_content.item (i)
+					if valid_key (current_key) then
+						other.put (current_key)
+					end
+					i := i + 1
+				end
+				content := other.content
+				deleted_marks := other.deleted_marks
+				capacity := other.capacity
 			end
 		end
 
@@ -385,28 +420,8 @@ feature {NONE} -- Internal features
 	add_space
 			-- Double the capacity of `Current'.
 			-- Transfer everything except deleted keys.
-		local
-			i, table_size: INTEGER
-			current_key: H
-			other: SEARCH_TABLE [H]
-			local_content: SPECIAL [H]
 		do
-			from
-				create other.make ((3 * capacity) // 2)
-				local_content := content
-				table_size := local_content.count
-			until
-				i >= table_size
-			loop
-				current_key := local_content.item (i)
-				if valid_key (current_key) then
-					other.put (current_key)
-				end
-				i := i + 1
-			end
-			content := other.content
-			deleted_marks := other.deleted_marks
-			capacity := other.capacity
+			resize ((3 * capacity) // 2)
 		end
 
 	Size_threshold: INTEGER = 80

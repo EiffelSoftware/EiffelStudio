@@ -13,6 +13,9 @@
 		<cluster name="base_extension" location=".\" recursive="true">
 			<option namespace="Extension">
 			</option>
+			<file_rule>
+				<exclude>/tests$</exclude>
+			</file_rule>
 		</cluster>
 	</target>
 </system>

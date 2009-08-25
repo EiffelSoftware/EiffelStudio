@@ -124,7 +124,6 @@ rt_public void update(char ignore_updt, char *argv0)
 	char *meltpath = (char *) 0;			/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
-	long melt_count;						/* Size of melting table */
 	fnptr *tmp_frozen;						/* Update of `egc_frozen' */
 /* %%ss bloc moved below*/
 
@@ -344,7 +343,7 @@ rt_public void update(char ignore_updt, char *argv0)
 	routid_updt();
 
 		/* Updating of the melting table */
-	melt_count = wint32();		/* Read the size of the byte code array */
+	melt_count = (rt_uint_ptr) wint32();		/* Read the size of the byte code array */
 #ifdef DEBUG
 	dprintf(1)("=== Size of melted table: %ld ===\n", melt_count);
 #endif

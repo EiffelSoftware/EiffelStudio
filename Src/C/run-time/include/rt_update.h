@@ -62,7 +62,6 @@ extern void conform_updt(void);				/* Update conformance table */
 extern void option_updt(void);				/* Update of the option table */
 extern void routinfo_updt(void);			/* Update routine information table */
 extern void desc_updt(void);				/* Update the descriptors */
-extern long melt_count;					/* Size of melting table */
 
 
 #ifdef __cplusplus

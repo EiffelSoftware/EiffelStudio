@@ -50,6 +50,7 @@ extern struct desc_info ***desc_tab;	/* Global descriptor table */
 
 /* Melting Ice technology */
 extern unsigned char **melt;				/* Byte code array of melted eiffel features */
+extern rt_uint_ptr melt_count;				/* Size of `melt' array. */
 extern int *mpatidtab;			/* Table of pattern id's indexed by body id's */
 
 #define Routids(x)	ecall[x]	/* Routine id array */

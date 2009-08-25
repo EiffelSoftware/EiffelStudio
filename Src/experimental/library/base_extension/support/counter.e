@@ -5,7 +5,8 @@ note
 	date: "$Date$"
 	revision: "$Revision: "
 
-class COUNTER
+class
+	COUNTER
 
 feature -- Access
 

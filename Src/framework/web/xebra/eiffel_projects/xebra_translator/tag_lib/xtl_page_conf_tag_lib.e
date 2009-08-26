@@ -78,14 +78,14 @@ feature -- Access
 				create {XP_AGENT_TAG_ELEMENT} Result.make_with_additional_arguments (a_prefix, a_local_part, a_class_name, a_debug_information, agent handle_controller_attribute)
 			elseif a_local_part.is_equal (Tag_declare_region_name) then
 				if attached xeb_parser as l_xeb_parser then
-					l_xeb_parser.deactivate_render
+					l_xeb_parser.template.set_is_template (True)
 				end
 				create {XP_REGION_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal (Tag_include_name) then
 				create {XP_INCLUDE_TAG_ELEMENT} Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			elseif a_local_part.is_equal (Tag_fragment_name) then
 				if attached xeb_parser as l_xeb_parser then
-					l_xeb_parser.deactivate_render
+					l_xeb_parser.template.set_is_template (True)
 				end
 				create Result.make (a_prefix, a_local_part, a_class_name, a_debug_information)
 			else
@@ -143,11 +143,11 @@ feature -- Access
 		do
 			if a_id.is_equal ("class") then
 				if attached xeb_parser as l_xeb_parser then
-					l_xeb_parser.put_class_name (a_value.value)
+					l_xeb_parser.template.set_controller_class (a_value.value)
 				end
 			elseif a_id.is_equal ("create") then
 				if attached xeb_parser as l_xeb_parser then
-					l_xeb_parser.put_controller_create_name (a_value.value)
+					l_xeb_parser.template.set_controller_create_name (a_value.value)
 				end
 			end
 		end

@@ -13,65 +13,38 @@ class
 
 inherit
 	XT_XEBRA_PARSER
+		rename
+			make as make_parser
+		end
 
 create
-	make_with_registry
+	make
 
 feature -- Initialization
 
-	make_with_registry (a_registry: XP_SERVLET_GG_REGISTRY)
+	make (a_registry: XP_SERVLET_GG_REGISTRY)
 			-- `a_registry': The registry in which the template should be
 			-- stored and where the taglibs are to be found
 		require
 			a_registry_attached: attached a_registry
 		do
-			make
+			make_parser
 			registry := a_registry
 			source_path := "No source path specified."
 			create template.make_empty
 		ensure
 			registry_set: registry = a_registry
-			template_attached: attached template
 		end
-
-feature {NONE} -- Access
-
-	registry: XP_SERVLET_GG_REGISTRY
-			-- The registry for the taglibs
 
 feature -- Access
 
 	template: XP_TEMPLATE
 			-- The resulting template
 
-feature -- Status Setting
+feature {NONE} -- Access
 
-	deactivate_render
-			-- The current template will not be rendered
-		do
-			template.is_template := True
-		end
-
-	put_class_name (a_class_name: STRING)
-			-- `a_class_name': The name of the class of the template
-			-- Sets the class name of the template
-		require
-			a_class_name_valid: attached a_class_name and then not a_class_name.is_empty
-		do
-			template.controller_class := a_class_name
-		ensure
-			class_set: template.controller_class = a_class_name
-		end
-
-	put_controller_create_name (a_controller_create_name: STRING)
-			-- Sets the creation name of the controller in the template
-		require
-			a_controller_create_name_valid: attached a_controller_create_name and not a_controller_create_name.is_empty
-		do
-			template.controller_create_name := a_controller_create_name
-		ensure
-			controller_name_set: template.controller_create_name = a_controller_create_name
-		end
+	registry: XP_SERVLET_GG_REGISTRY
+			-- The registry for the taglibs
 
 feature {NONE} -- Implementation
 
@@ -171,19 +144,16 @@ feature {NONE} -- Implementation
 			Result := xeb_file
 		end
 
-feature -- Parser error strategies
+feature {NONE} -- Parser error strategies
 
 	handle_xeb_tag_error (a_result: PEG_PARSER_RESULT)
-			-- `a_result': The intermediate result of the children
 			-- Handles the error for missing end tags in xebra tags. If there is an open tag but no corresponding
 			-- end tag, the error is handled here.
+			-- `a_result': The intermediate result of the children
 		require
 			a_result_attached: attached a_result
-		local
-			l_count: INTEGER
 		do
-			l_count := a_result.internal_result.count
-			if l_count > 1 then
+			if a_result.internal_result.count > 1 then
 				a_result.put_error_message ("Missing end tag for start tag '" + a_result.internal_result [1].out + ":" + a_result.internal_result [2].out + "'!")
 			else
 				a_result.put_error_message ("Invalid tag!")
@@ -191,8 +161,8 @@ feature -- Parser error strategies
 		end
 
 	handle_plain_html_error (a_result: PEG_PARSER_RESULT)
-			-- `a_result': The intermediate result of the children
 			-- Handles the error for missing end tags in regular html. Analogous to `handle_xeb_tag_error'
+			-- `a_result': The intermediate result of the children
 		require
 			a_result_attached: attached a_result
 		local
@@ -207,19 +177,19 @@ feature -- Parser error strategies
 		end
 
 	handle_close_error (a_result: PEG_PARSER_RESULT)
-			-- `a_result': The intermediate result of the children
 			-- Tells you that here is a '>' missing.
+			-- `a_result': The intermediate result of the children
 		require
 			a_result_attached: attached a_result
 		do
 			a_result.put_error_message ("Missing '>'")
 		end
 
-feature -- Parser Behaviours
+feature {NONE} -- Parser Behaviors
 
 	build_dynamic_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- `a_result': The intermediate result of the children
 			-- Builds a dynamic attribute
+			-- `a_result': The intermediate result of the children
 		require
 			a_result_attached: attached a_result
 		do
@@ -232,8 +202,8 @@ feature -- Parser Behaviours
 		end
 
 	build_variable_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- `a_result': The intermediate result of the children
 			-- Builds a variable attribute
+			-- `a_result': The intermediate result of the children
 		require
 			a_result_attached: attached a_result
 		do
@@ -246,8 +216,8 @@ feature -- Parser Behaviours
 		end
 
 	build_value_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- `a_result': The intermediate result of the children
 			-- Builds a value attribute
+			-- `a_result': The intermediate result of the children
 		require
 			a_result_attached: attached a_result
 		do
@@ -260,38 +230,40 @@ feature -- Parser Behaviours
 		end
 
 	build_plain_html (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- `a_result': The intermediate result of the children
-			-- Builds a html tag
+			-- Builds a html tag (id without namespace)
+			-- `a_result': The intermediate result of the children			
 		require
 			a_result_attached: attached a_result
 		local
 			l_tag: detachable XP_TAG_ELEMENT
-			l_i: INTEGER
+			i: INTEGER
+			l_internal_result: LIST [ANY]
 		do
 			Result := a_result
-			if attached {STRING} a_result.internal_result.first as l_id then
+			l_internal_result := a_result.internal_result
+			if attached {STRING} l_internal_result.first as l_id then
 				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug (a_result.left_to_parse.debug_information, source_path))
 				from
-					l_i := 2
+					i := 2
 				until
-					l_i > a_result.internal_result.count
+					i > l_internal_result.count
 				loop
-					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
+					if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} l_internal_result [i] as l_attribute then
 						if not l_tag.has_attribute (l_attribute.id) then
-							l_tag.put_attribute (l_attribute.id, l_attribute.value)
+							l_tag.extend_attribute (l_attribute.id, l_attribute.value)
 						else
 							Result.put_error_message ("Double attribute occurency: " + l_attribute.id +
 											" for tag: " + l_id)
 						end
-					elseif attached {XP_TAG_ELEMENT} a_result.internal_result[l_i] as l_subtag then
-						l_tag.put_subtag (l_subtag)
+					elseif attached {XP_TAG_ELEMENT} l_internal_result[i] as l_subtag then
+						l_tag.extend_tag (l_subtag)
 					end
-					l_i := l_i + 1
+					i := i + 1
 				end
-				if attached {STRING} a_result.internal_result.last as l_last_tag then
+				if attached {STRING} l_internal_result.last as l_last_tag then
 					if not l_last_tag.is_equal (l_id) then
-						Result.put_error_message ("Non-matching end tag: " + a_result.internal_result.last.out +
-											" for start tag: " + a_result.internal_result.first.out)
+						Result.put_error_message ("Non-matching end tag: " + l_internal_result.last.out +
+											" for start tag: " + l_internal_result.first.out)
 					end
 				end
 			end
@@ -304,42 +276,42 @@ feature -- Parser Behaviours
 		end
 
 	build_xeb_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- `a_result': The intermediate result of the children
-			-- Builds a xebra tag
+			-- Builds a xebra tag (namespace:id)
+			-- `a_result': The intermediate result of the children			
 		require
 			a_result_attached: attached a_result
 		local
 			l_tag: detachable XP_TAG_ELEMENT
-			l_i: INTEGER
+			i: INTEGER
 			l_end_tag: STRING
 			l_error_messages: LIST [STRING]
 		do
 			Result := a_result
-			if attached {STRING} a_result.internal_result.first as l_namespace then
-				if attached {STRING} a_result.internal_result [2] as l_id then
+			if attached {STRING} a_result.internal_result [namespace_index] as l_namespace then
+				if attached {STRING} a_result.internal_result [id_index] as l_id then
 					if registry.contains_tag_lib (l_namespace) and then attached registry.retrieve_taglib (l_namespace) as l_taglib then
 						if l_taglib.contains (l_id) then
 							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug (a_result.left_to_parse.debug_information, source_path))
 							from
-								l_i := 3 -- 1: l_namespace, 2: l_id
+								i := id_index + 1
 							until
-								l_i > a_result.internal_result.count
+								i > a_result.internal_result.count
 							loop
-								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [l_i] as l_attribute then
+								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [i] as l_attribute then
 									if not l_taglib.argument_belongs_to_tag (l_attribute.id, l_id) then
 										Result.put_error_message ("Invalid argument detected for " + l_namespace + ":" + l_id + ": " + l_attribute.id + "=" + l_attribute.value.value)
 									else
 										if not l_tag.has_attribute (l_attribute.id) then
-											l_tag.put_attribute (l_attribute.id, l_attribute.value)
+											l_tag.extend_attribute (l_attribute.id, l_attribute.value)
 										else
 											Result.put_error_message ("Double attribute occurency: " + l_attribute.id +
 											" for tag: " + l_namespace + ":" +l_id)
 										end
 									end
-								elseif attached {XP_TAG_ELEMENT} a_result.internal_result[l_i] as l_subtag then
-									l_tag.put_subtag (l_subtag)
+								elseif attached {XP_TAG_ELEMENT} a_result.internal_result[i] as l_subtag then
+									l_tag.extend_tag (l_subtag)
 								end
-								l_i := l_i + 1
+								i := i + 1
 							end
 							if attached {STRING} a_result.internal_result [a_result.internal_result.count-1] as l_l_namespace then
 								if attached {STRING} a_result.internal_result.last as l_l_id then
@@ -375,8 +347,8 @@ feature -- Parser Behaviours
 		end
 
 	build_content_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
+			-- Builds a content from the results (plain text)
 			-- `a_result': The intermediate result of the children
-			-- Builds a content from the results
 		require
 			a_result_attached: attached a_result
 		local
@@ -385,7 +357,7 @@ feature -- Parser Behaviours
 			Result := concatenate_results (a_result)
 			if attached {STRING} a_result.internal_result [1] as l_content then
 				create l_tag.make ("", "content", "XTAG_XEB_CONTENT_TAG", format_debug (a_result.left_to_parse.debug_information, source_path))
-				l_tag.put_attribute ("text", create {XP_TAG_VALUE_ARGUMENT}.make (l_content))
+				l_tag.extend_attribute ("text", create {XP_TAG_VALUE_ARGUMENT}.make (l_content))
 				Result.replace_result (l_tag)
 			end
 		ensure
@@ -393,24 +365,26 @@ feature -- Parser Behaviours
 		end
 
 	build_root_tag (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- `a_result': The intermediate result of the children
 			-- Concatenates final tags to root_tag
+			-- `a_result': The intermediate result of the children
 		require
 			a_result_attached: attached a_result
 		local
 			l_tag: XP_TAG_ELEMENT
+			l_internal_result: LIST [ANY]
 		do
 			Result := a_result
 			create l_tag.make ("", "html", "XTAG_XEB_CONTAINER_TAG", format_debug (a_result.left_to_parse.debug_information, source_path))
+			l_internal_result := Result.internal_result
 			from
-				Result.internal_result.start
+				l_internal_result.start
 			until
-				Result.internal_result.after
+				l_internal_result.after
 			loop
-				if attached {XP_TAG_ELEMENT} Result.internal_result.item as l_subtag then
-					l_tag.put_subtag (l_subtag)
+				if attached {XP_TAG_ELEMENT} l_internal_result.item as l_subtag then
+					l_tag.extend_tag (l_subtag)
 				end
-				Result.internal_result.forth
+				l_internal_result.forth
 			end
 			Result.replace_result (l_tag)
 		ensure
@@ -418,8 +392,8 @@ feature -- Parser Behaviours
 		end
 
 	build_attribute (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
-			-- `a_result': The intermediate result of the children
 			-- Builds an attribute tuple from the result
+			-- `a_result': The intermediate result of the children
 		require
 			a_result_attached: attached a_result
 		local
@@ -439,17 +413,18 @@ feature -- Parser Behaviours
 feature -- Basic Functionality
 
 	parse (a_string: STRING): BOOLEAN
-			-- `a_string': The string to parse
 			-- Parses a_string and generates a template.
 			-- Returns True iff the parsing process was entirely successful
 			-- If the parsing was successful, the generated template can be retrieved from
 			-- {XT_XEB_PARSER}.template. If the parsing was not successful, the template
 			-- is set to a default.
+			-- `a_string': The string to parse
 		require
 			a_string_attached: attached a_string
 		local
 			l_result: PEG_PARSER_RESULT
 			l_index: INTEGER
+			l_error_messages: LIST [STRING]
 		do
 			create template.make_empty
 			l_result := xml_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
@@ -462,11 +437,12 @@ feature -- Basic Functionality
 				end
 			else
 				from
-					l_index := l_result.left_to_parse.longest_match.error_messages.count
+					l_error_messages := l_result.left_to_parse.longest_match.error_messages
+					l_index := l_error_messages.count
 				until
 					l_index < 1
 				loop
-					add_parse_error (source_path + ": " + l_index.out + ": " + l_result.left_to_parse.longest_match.error_messages [l_index])
+					add_parse_error (source_path + ": " + l_index.out + ": " + l_error_messages [l_index])
 					l_index := l_index - 1
 				end
 				add_parse_error (source_path + " Syntax error: " + l_result.longest_match_debug)
@@ -482,6 +458,11 @@ feature -- Basic Functionality
 		ensure
 			template_generated: Result implies attached template
 		end
+
+feature -- Constants
+
+	namespace_index: INTEGER = 1
+	id_index: INTEGER = 2
 
 invariant
 

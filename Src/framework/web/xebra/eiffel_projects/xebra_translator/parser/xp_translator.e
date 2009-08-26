@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			output_path.extend (a_name)
 			name := a_name
 			create registry.make (output_path, a_force)
-			create xeb_parser.make_with_registry (registry)
+			create xeb_parser.make (registry)
 			create l_page_taglib.make_with_arguments ("page")
 			registry.put_tag_lib (l_page_taglib)
 			l_page_taglib.set_parser (xeb_parser)

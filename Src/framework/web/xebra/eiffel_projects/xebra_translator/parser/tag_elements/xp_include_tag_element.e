@@ -65,7 +65,7 @@ feature -- Access
 			if attached retrieve_value ("template") as l_template_arg then
 				if attached a_templates [l_template_arg.value] as l_template then
 					l_tmpl_cp := l_template.copy_template
-					set_child (l_tmpl_cp.resolve (a_templates, l_region, a_pending, a_servlet_gen))
+					replace_children_by (l_tmpl_cp.resolve (a_templates, l_region, a_pending, a_servlet_gen))
 					if date < children.first.date then
 						date := children.first.date
 					end

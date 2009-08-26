@@ -49,7 +49,7 @@ feature {XT_XEBRA_PARSER} -- Access
 
 feature -- Access
 
-	set_source_path (a_source_path: STRING)
+	set_source_path (a_source_path: like source_path)
 			-- Sets the source path.
 		require
 			a_source_path_attached: attached a_source_path
@@ -81,15 +81,17 @@ feature {XT_XEBRA_PARSER} -- Behaviours
 			a_result_attached: attached a_result
 		local
 			l_product: STRING
+			l_internal_result: LIST [ANY]
 		do
 			l_product := ""
+			l_internal_result := a_result.internal_result
 			from
-				a_result.internal_result.start
+				l_internal_result.start
 			until
-				a_result.internal_result.after
+				l_internal_result.after
 			loop
-				l_product := l_product + a_result.internal_result.item.out
-				a_result.internal_result.forth
+				l_product := l_product + l_internal_result.item.out
+				l_internal_result.forth
 			end
 			Result := a_result
 			Result.internal_result.wipe_out

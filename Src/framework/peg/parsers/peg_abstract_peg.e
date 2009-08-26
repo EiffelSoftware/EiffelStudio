@@ -30,6 +30,9 @@ feature {PEG_ABSTRACT_PEG} -- Access
 			-- If parsing is unsucessful, what should the parser do?
 			-- Detachable!
 
+	ommit: BOOLEAN
+			-- Should the behaviour be executed?
+
 feature -- Access
 
 	set_error_message_handler (a_error_message_handler: PROCEDURE [ANY, TUPLE [PEG_PARSER_RESULT]])
@@ -84,18 +87,10 @@ feature -- Access
 			error_strategy_set: error_strategy = a_error_strategy
 		end
 
-	ommit: BOOLEAN
-			-- Should the behaviour be executed?
-
 	ommit_result
 			-- Ommit the addition of the character to the result list
 		do
 			ommit := True
-		end
-
-	is_debug: BOOLEAN
-		once
-			Result := True
 		end
 
 feature -- Basic Functionality
@@ -149,7 +144,7 @@ feature -- Basic Functionality
 		end
 
 	short_debug_info: STRING
-				-- The short informal description of the parser (without children)
+			-- The short informal description of the parser (without children)
 		deferred
 		ensure
 			Result_attached: attached Result

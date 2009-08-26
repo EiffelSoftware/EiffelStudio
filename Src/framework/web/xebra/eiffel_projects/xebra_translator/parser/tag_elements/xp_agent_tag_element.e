@@ -14,9 +14,9 @@ class
 inherit
 	XP_TAG_ELEMENT
 		redefine
-			put_attribute,
+			extend_attribute,
 			copy_self,
-			put_attribute_for_copy
+			extend_attribute_for_copy
 		end
 
 create
@@ -53,7 +53,7 @@ feature -- Access
 				Result := l_agent_tag
 			end
 
-		put_attribute (a_local_part: STRING; a_value: XP_TAG_ARGUMENT)
+		extend_attribute (a_local_part: STRING; a_value: XP_TAG_ARGUMENT)
 				-- <Precursor>
 			require else
 				a_value_attached: a_value /= Void
@@ -65,7 +65,7 @@ feature -- Access
 				end
 			end
 
-		put_attribute_for_copy (a_id: STRING; a_value: XP_TAG_ARGUMENT)
+		extend_attribute_for_copy (a_id: STRING; a_value: XP_TAG_ARGUMENT)
 				-- <Precursor>
 			do
 				-- Do nothing

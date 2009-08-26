@@ -124,7 +124,7 @@ feature {NONE} -- Initialization
 			expression_field.set_text (a_exp)
 		end
 
-	make_with_named_object (oa: DBG_ADDRESS; on: STRING_32; ac: CLASS_C)
+	make_with_named_object (oa: DBG_ADDRESS; on: STRING_32; ac: detachable CLASS_C)
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object.

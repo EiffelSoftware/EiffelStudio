@@ -527,35 +527,54 @@ feature {EB_CONTEXT_MENU_FACTORY, ES_WATCH_TOOL} -- Context menu
 			fost: FEATURE_ON_OBJECT_STONE
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			oname: STRING
+			cl: CLASS_C
+			add: DBG_ADDRESS
+			ctrl_pressed: BOOLEAN
 		do
+			ctrl_pressed := ev_application.ctrl_pressed
 			show
 			fost ?= s
 			if fost /= Void then
 				oname := fost.feature_name
-				if ev_application.ctrl_pressed then
+				add := fost.object_address
+				if ctrl_pressed then
 					ost := fost.object_stone
+					cl := fost.e_class
+					if
+						ost = Void and then
+						add /= Void and then
+						cl /= Void
+					then
+						create ost.make (add, oname, cl)
+					end
 					if ost /= Void then
 						on_element_drop (ost)
 					end
 				else
-					create dlg.make_with_expression_on_object (fost.object_address, fost.feature_name)
+					create dlg.make_with_expression_on_object (add, oname)
 				end
 			else
 				fst ?= s
 				if fst /= Void then
 					oname := fst.feature_name
-					create dlg.make_with_expression_text (fst.feature_name)
-					if fst.e_class /= Void then
-						dlg.set_class_text (fst.e_class)
+					cl := fst.e_class
+					if ctrl_pressed then
+						add_new_expression_for_context (oname)
+					else
+						create dlg.make_with_expression_text (oname)
+						if cl /= Void then
+							dlg.set_class_text (cl)
+						end
 					end
 				else
 					ost ?= s
 					if ost /= Void then
 						oname := ost.name + ": " + ost.object_address.output
-						if ev_application.ctrl_pressed then
+						cl := ost.dynamic_class
+						if ctrl_pressed then
 							add_object (ost, oname)
 						else
-							create dlg.make_with_named_object (ost.object_address, oname, ost.dynamic_class)
+							create dlg.make_with_named_object (ost.object_address, oname, cl)
 						end
 					else
 						cst ?= s

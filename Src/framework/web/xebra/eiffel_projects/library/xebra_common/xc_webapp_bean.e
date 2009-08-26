@@ -103,7 +103,7 @@ feature -- Status setting
 		do
 			sessions := a_sessions
 		ensure
-			set: equal (sessions, a_sessions)
+			set: sessions ~ a_sessions
 		end
 
 	set_is_compiling_webapp (a_is_compiling_webapp: like is_compiling_webapp)
@@ -113,7 +113,7 @@ feature -- Status setting
 		do
 			is_compiling_webapp := a_is_compiling_webapp
 		ensure
-			is_compiling_webapp_set: equal (is_compiling_webapp, a_is_compiling_webapp)
+			is_compiling_webapp_set: is_compiling_webapp ~ a_is_compiling_webapp
 		end
 
 	set_is_compiling_servlet_gen (a_is_compiling_servlet_gen: like is_compiling_servlet_gen)
@@ -123,7 +123,7 @@ feature -- Status setting
 		do
 			is_compiling_servlet_gen := a_is_compiling_servlet_gen
 		ensure
-			is_compiling_servlet_gen_set: equal (is_compiling_servlet_gen, a_is_compiling_servlet_gen)
+			is_compiling_servlet_gen_set: is_compiling_servlet_gen ~ a_is_compiling_servlet_gen
 		end
 
 	set_is_running (a_is_running: BOOLEAN)
@@ -131,7 +131,7 @@ feature -- Status setting
 		do
 			is_running := a_is_running
 		ensure
-			set: equal (is_running, a_is_running)
+			set: is_running ~ a_is_running
 		end
 
 	set_is_translating (a_is_translating: BOOLEAN)
@@ -139,7 +139,7 @@ feature -- Status setting
 		do
 			is_translating := a_is_translating
 		ensure
-			set: equal (is_translating, a_is_translating)
+			set: is_translating ~ a_is_translating
 		end
 
 	set_is_disabled (a_is_disabled: BOOLEAN)
@@ -147,14 +147,14 @@ feature -- Status setting
 		do
 			is_disabled := a_is_disabled
 		ensure
-			set: equal (is_disabled, a_is_disabled)
+			set: is_disabled ~ a_is_disabled
 		end
 
 	set_is_enabled (a_is_enabled: BOOLEAN)
 		do
 			is_disabled := not a_is_enabled
 		ensure
-			set: equal (is_enabled, a_is_enabled)
+			set: is_enabled ~ a_is_enabled
 		end
 
 	set_dev_mode (a_dev_mode: BOOLEAN)
@@ -162,7 +162,7 @@ feature -- Status setting
 		do
 			dev_mode := a_dev_mode
 		ensure
-			set: equal (dev_mode, a_dev_mode)
+			set:  dev_mode ~ a_dev_mode
 		end
 
 	set_is_generating (a_is_generating: like is_generating)
@@ -172,7 +172,7 @@ feature -- Status setting
 		do
 			is_generating := a_is_generating
 		ensure
-			is_generating_set: equal (is_generating, a_is_generating)
+			is_generating_set: is_generating  ~ a_is_generating
 		end
 
 feature -- Basic operations

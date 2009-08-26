@@ -12,9 +12,6 @@ class
 
 inherit
 	XS_WEBAPP_ACTION
-		redefine
-			make
-		end
 
 create
 	make
@@ -24,7 +21,6 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.	
 		do
-			Precursor
 			create output_handler.make
 		ensure then
 			output_handler_attached: output_handler /= Void
@@ -91,10 +87,10 @@ feature -- Status report
 			l_inc.force ("*.ecf")
 			l_inc.force ("*.e")
 			create l_f_util
-			l_melted_file_is_old := l_f_util.file_is_newer (webapp_melted_file_path,
+			l_melted_file_is_old := l_f_util.file_is_newer (webapp_melted_file,
 												app_dir,
 												l_inc)
-			l_executable_does_not_exist := not l_f_util.is_executable_file (webapp_exe)
+			l_executable_does_not_exist := not l_f_util.is_executable_file (webapp_exe_file)
 
 
 
@@ -102,21 +98,21 @@ feature -- Status report
 
 
 			if Result then
-				o.dprint ("Compiling webapp is necessary", o.Debug_tasks)
+				log.dprint ("Compiling webapp is necessary", log.debug_tasks)
 				if l_melted_file_is_old then
-					o.dprint ("Compiling webapp is necessary because: " + webapp_melted_file_path + " is older than .e files or .ecf file or does not exist.", o.Debug_verbose_subtasks)
+					log.dprint ("Compiling webapp is necessary because: " + webapp_melted_file + " is older than .e files or .ecf file or does not exist.", log.debug_verbose_subtasks)
 				end
 
 				if l_executable_does_not_exist then
-					o.dprint ("Compiling webapp is necessary because: " + webapp_exe + " does not exist or is not executable", o.Debug_verbose_subtasks)
+					log.dprint ("Compiling webapp is necessary because: " + webapp_exe_file + " does not exist or is not executable", log.debug_verbose_subtasks)
 				end
 
 					if needs_cleaning then
-					o.dprint ("Compiling webapp is necessary because: webapp compilation cleaning not yet performed", o.Debug_verbose_subtasks)
+					log.dprint ("Compiling webapp is necessary because: webapp compilation cleaning not yet performed", log.debug_verbose_subtasks)
 				end
 
 			else
-				o.dprint ("Compiling webapp is not necessary", o.Debug_tasks)
+				log.dprint ("Compiling webapp is not necessary", log.debug_tasks)
 			end
 		end
 
@@ -128,7 +124,7 @@ feature -- Status setting
 		do
 			needs_cleaning := a_needs_cleaning
 		ensure
-			needs_cleaning_set: equal (needs_cleaning, a_needs_cleaning)
+			needs_cleaning_set: needs_cleaning ~ a_needs_cleaning
 		end
 
 	stop
@@ -138,7 +134,7 @@ feature -- Status setting
 		do
 			if attached webapp as l_wa then
 				if attached {PROCESS} compile_process as p and then p.is_running  then
-					o.dprint ("Terminating compile_process_webapp  for " + l_wa.app_config.name.out  + "", o.Debug_subtasks)
+					log.dprint ("Terminating compile_process_webapp  for " + l_wa.app_config.name.out  + "", log.debug_subtasks)
 					p.terminate
 					p.wait_for_exit
 				end
@@ -148,23 +144,23 @@ feature -- Status setting
 
 feature {TEST_WEBAPPS} -- Implementation
 
-	internal_execute: XC_COMMAND_RESPONSE
+	internal_execute
 			-- <Precursor>
 		require else
 			webapp_attached: webapp /= Void
 		do
-			create {XCCR_INTERNAL_SERVER_ERROR}Result
+			create {XCCR_INTERNAL_SERVER_ERROR}internal_last_response
 			if attached {XS_MANAGED_WEBAPP} webapp as l_wa then
 				if not is_running then
 					l_wa.shutdown
 					if can_launch_process (config.file.compiler_filename, app_dir) then
 						if attached compile_process as p then
 							if p.is_running then
-								o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
+								log.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
 								p.terminate
 							end
 						end
-						o.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP -=-=-=-=-=-=", o.Debug_verbose_subtasks)
+						log.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP -=-=-=-=-=-=", log.debug_verbose_subtasks)
 						compile_process := launch_process (config.file.compiler_filename,
 														compiler_args,
 														app_dir,
@@ -174,7 +170,7 @@ feature {TEST_WEBAPPS} -- Implementation
 						set_running (True)
 					end
 				end
-				Result := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
+				internal_last_response := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
 			end
 		end
 
@@ -190,7 +186,7 @@ feature {NONE} -- Internal Status Setting
 				l_wa.is_compiling_webapp := a_running
 			end
 		ensure
-			set: equal (is_running, a_running)
+			set: is_running ~ a_running
 		end
 
 
@@ -202,9 +198,9 @@ feature -- Agent
 			set_running (False)
 			set_needs_cleaning (False)
 			if not is_necessary then
-				execute_next_action.do_nothing
+				execute_next_action
 			else
-				o.eprint ("COMPILATION OF WEBAPP FAILED", generating_type)
+				log.eprint ("COMPILATION OF WEBAPP FAILED", generating_type)
 			end
 		end
 

@@ -43,8 +43,8 @@ feature -- Operation
 			l_generation_file_name: FILE_NAME
 			l_util: XU_FILE_UTILITIES
 		do
-			o.set_name ({XU_CONSTANTS}.Translator_debug_name)
-			o.set_debug_level (a_arg_parser.debug_level)
+			log.set_name ({XU_CONSTANTS}.Translator_debug_name)
+			log.set_debug_level (a_arg_parser.debug_level)
 			config.set_xebra_library_path (a_arg_parser.lib_path.out)
 			create l_translator.make (a_arg_parser.project_name, a_arg_parser.force)
 			create l_dir.make_from_string (a_arg_parser.input_path)
@@ -62,7 +62,7 @@ feature -- Operation
 			if not error_manager.is_successful then
 				l_error_count := count_errors (error_manager.errors)
 				error_manager.trace_errors (l_printer)
-				o.eprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N", generating_type)
+				log.eprint ("%N *******" + l_error_count.out + " ERROR(S)*******%N", generating_type)
 				{EXCEPTIONS}.die (-1)
 			else
 				create l_util
@@ -71,17 +71,17 @@ feature -- Operation
 				if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_write (l_generation_file_name) as l_file then
 					l_file.put_string ({XU_CONSTANTS}.Successful_translation)
 					l_file.close
-					o.dprint ("Translator_executed_file written to " + l_generation_file_name, o.Debug_verbose_subtasks)
+					log.dprint ("Translator_executed_file written to " + l_generation_file_name, log.debug_verbose_subtasks)
 				else
-					o.eprint ("Could not write Translator_executed file!", generating_type)
+					log.eprint ("Could not write Translator_executed file!", generating_type)
 				end
 				if not error_manager.is_successful then
 					error_manager.trace_errors (l_printer)
 				end
 
 
-				o.dprint ("Output generated to '" + l_translator.output_path + "'", o.Debug_start_stop_components)
-				o.dprint ({XU_CONSTANTS}.Successful_translation, o.Debug_start_stop_app)
+				log.dprint ("Output generated to '" + l_translator.output_path + "'", log.debug_start_stop_components)
+				log.dprint ({XU_CONSTANTS}.Successful_translation, log.debug_start_stop_app)
 			end
 		end
 

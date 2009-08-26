@@ -282,7 +282,7 @@ feature -- Basic Opertaions
 			Result := l_file.exists and l_file.is_directory
 		end
 
-	file_is_newer (a_file, a_dir: FILE_NAME; a_include: LINKED_LIST [STRING]): BOOLEAN
+	file_is_newer (a_file: FILE_NAME; a_dir: DIRECTORY_NAME; a_include: LINKED_LIST [STRING]): BOOLEAN
 				-- Returns True if there is a file in a_dir (recursively) that matches a_maching_files_expr
 				-- that is newer than a_file or a_file does not exist
 		require

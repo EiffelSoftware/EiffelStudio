@@ -41,9 +41,9 @@
 		<tr>		
 			<td><xeb:display text="#{module.name}" /></td>
 
-			<td><xeb:display text="#{module.launched.out}" /></td>
+			<td><xeb:display text="#{module.is_launched.out}" /></td>
 
-			<td><xeb:display text="#{module.running.out}" /> (<f:command_link text="stop" action="shutdown_mod" variable="module.name" /> | <f:command_link text="restart" action="relaunch_mod" variable="module.name"/>)</td>
+			<td><xeb:display text="#{module.is_running.out}" /> (<f:command_link text="stop" action="shutdown_mod" variable="module.name" /> | <f:command_link text="restart" action="relaunch_mod" variable="module.name"/>)</td>
 		</tr>		
 	</xeb:iterate>
 </table>

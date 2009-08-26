@@ -92,7 +92,7 @@ feature -- Status setting
 		do
 			max_age := a_max_age
 		ensure
-			max_age_set: equal (max_age, a_max_age)
+			max_age_set: max_age ~ a_max_age
 		end
 
 	set_name (a_name: like name)
@@ -102,7 +102,7 @@ feature -- Status setting
 		do
 			name := a_name
 		ensure
-			name_set: equal (name, a_name)
+			name_set: name ~ a_name
 		end
 
 
@@ -113,7 +113,7 @@ feature -- Status setting
 		do
 			value := a_value
 			ensure
-			value_set: equal (value, a_value)
+			value_set: value ~ a_value
 		end
 
 	set_path (a_path: like path)
@@ -123,7 +123,7 @@ feature -- Status setting
 		do
 			path := a_path
 		ensure
-			path_set: equal (path, a_path)
+			path_set: path ~ a_path
 		end
 
 
@@ -134,7 +134,7 @@ feature -- Status setting
 		do
 			comment := a_comment
 		ensure
-			comment_set: equal (comment, a_comment)
+			comment_set: comment ~ a_comment
 		end
 
 
@@ -145,7 +145,7 @@ feature -- Status setting
 		do
 			domain := a_domain
 		ensure
-			domain_set: equal (domain, a_domain)
+			domain_set: domain ~ a_domain
 		end
 
 
@@ -154,7 +154,7 @@ feature -- Status setting
 		do
 			is_secure := a_secure
 		ensure
-			secure_set: equal (is_secure, a_secure)
+			secure_set: is_secure ~ a_secure
 		end
 
 feature -- Basic operations

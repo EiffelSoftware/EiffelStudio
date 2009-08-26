@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 			create action_compile_sgen.make
 			create action_generate.make
 			create action_compile_webapp.make
-			create action_run.make
-			create action_send.make
+			create action_run
+			create action_send
 
 			action_translate.set_webapp (current)
 			action_compile_sgen.set_webapp (current)
@@ -88,9 +88,11 @@ feature -- Actions
 					Result := (create {XER_DISABLED}.make(app_config.name)).render_to_command_response
 			else
 				if dev_mode then
-					Result := action_translate.execute
+					action_translate.execute
+					Result := action_translate.last_response
 				else
-					Result := action_run.execute
+					action_run.execute
+					Result := action_run.last_response
 				end
 			end
 		end
@@ -99,7 +101,7 @@ feature -- Actions
 			-- Forces to retranslate the webapp
 		do
 			action_translate.force := True
-			action_translate.execute.do_nothing
+			action_translate.execute
 		end
 
 	force_clean
@@ -116,7 +118,8 @@ feature -- Actions
 			Result := True
 			if is_running then
 				current_request :=  create {XCWC_GET_SESSIONS}.make
-				if attached {XCCR_GET_SESSIONS} action_send.execute as l_response then
+				action_send.execute
+				if attached {XCCR_GET_SESSIONS} action_send.last_response as l_response then
 					sessions := l_response.sessions
 				else
 					Result := False
@@ -139,9 +142,9 @@ feature  -- Status Setting
 			-- Initiates shutdown and waits for termination.
 		do
 			if action_run.is_running then
-				o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", o.Debug_tasks)
+				log.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", log.debug_tasks)
 				current_request := 	create {XCWC_SHUTDOWN}.make
-				action_send.execute.do_nothing
+				action_send.execute
 				action_run.wait_for_exit
 			end
 		end

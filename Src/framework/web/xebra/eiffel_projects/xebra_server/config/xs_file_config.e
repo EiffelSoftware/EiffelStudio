@@ -168,7 +168,7 @@ feature -- Setters
 		do
 			webapps := a_webapps
 		ensure
-			webapps_set: equal (webapps, a_webapps)
+			webapps_set: webapps ~ a_webapps
 		end
 
 

@@ -39,7 +39,7 @@ feature -- Status setting
 		do
 			webapp := a_webapp
 		ensure
-			webapp_set: equal (webapp, a_webapp)
+			webapp_set: webapp ~ a_webapp
 		end
 
 	set_post_too_big (a_post_too_big: like post_too_big)
@@ -47,7 +47,7 @@ feature -- Status setting
 		do
 			post_too_big := a_post_too_big
 		ensure
-			post_too_big_set: equal (post_too_big, a_post_too_big)
+			post_too_big_set: post_too_big ~ a_post_too_big
 		end
 
 end

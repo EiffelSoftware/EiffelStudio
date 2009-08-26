@@ -163,8 +163,8 @@ feature {NONE} -- Implementation
 			Result.append_local ("l_controller_table", "HASH_TABLE [TUPLE [STRING, STRING], STRING]")
 			Result.append_local ("l_const_class", "XEL_CONSTANTS_CLASS_ELEMENT")
 			Result.append_expression ("create l_const_class.make_constant")
-			Result.append_expression ("o.set_name (%"XEBSRVLGEN%")")
-			Result.append_expression ("o.set_debug_level (10)")
+			Result.append_expression ("log.set_name (%"XEBSRVLGEN%")")
+			Result.append_expression ("log.set_debug_level (10)")
 			Result.append_expression ("if not a_arg_parser.is_successful then")
 			Result.append_expression ("print (%"usage:servlet_gen -o output_path%%N%")")
 			Result.append_expression ("else")
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			Result.append_expression ("l_const_class.serialize (buf)")
 			Result.append_expression ("constants_file.close")
 			Result.append_expression ("end")
-			Result.append_expression ("o.iprint (%"" + {XU_CONSTANTS}.Servlet_generation_completed + "%")")
+			Result.append_expression ("log.iprint (%"" + {XU_CONSTANTS}.Servlet_generation_completed + "%")")
 		ensure
 			result_attached: attached Result
 		end

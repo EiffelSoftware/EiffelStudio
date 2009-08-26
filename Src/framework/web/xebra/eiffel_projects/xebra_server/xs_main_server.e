@@ -52,14 +52,13 @@ feature {XS_APPLICATION} -- Setup
 		require
 			a_arg_parser_attached: a_arg_parser /= Void
 		do
+			print("%N%N%N")
+			print ("Starting Xebra Web Application Server $Revision$%N")
 			set_debug_level (a_arg_parser.debug_level.out).do_nothing
 			config.args.set_config_filename (a_arg_parser.config_filename)
 			config.args.set_unmanaged (a_arg_parser.unmanaged)
-
-			print("%N%N%N")
-			o.iprint ("Starting Xebra Web Application Server...")
 			if check_xebra_environment_variable then
-				o.dprint (config.args.print_configuration, o.Debug_configuration)
+				log.dprint (config.args.print_configuration, log.debug_configuration)
 				stop := false
 				if attached {XCCR_OK} load_config then
 					if attached a_arg_parser.create_webapp as l_config  then
@@ -68,7 +67,7 @@ feature {XS_APPLICATION} -- Setup
 						modules.force (create {XS_CONSOLE_MODULE}.make (current, "mod_console"), "mod_console")
 						modules.force (create {XS_HTTP_CONN_MODULE}.make (current, "mod_http"), "mod_http")
 						modules.force (create {XS_WEBAPP_CMD_MODULE}.make (current, "mod_cmd"), "mod_cmd")
-						o.dprint("Launching modules...", o.Debug_tasks)
+						log.dprint("Launching modules...", log.debug_tasks)
 						modules.run_all
 						run
 					end
@@ -89,16 +88,16 @@ feature {NONE} -- Operations
 				l_thread.sleep (1000000)
 			end
 
-			o.dprint ("Shutting down...", o.Debug_start_stop_app)
+			log.dprint ("Shutting down...", log.debug_start_stop_app)
 			shutdown_all_modules
 			shutdown_webapps.do_nothing
 			if attached modules ["mod_input"] as l_mi then
-				if l_mi.running then
-					o.iprint ("Remote Shutdown. Bye!");
+				if l_mi.is_running then
+					log.iprint ("Remote Shutdown. Bye!");
 					(create {EXCEPTIONS}).die (1)
 				end
 			end
-			o.iprint ("Shutdown complete. Bye!")
+			log.iprint ("Shutdown complete. Bye!")
 		end
 
 	run_compile_mode (a_config: STRING)
@@ -115,14 +114,14 @@ feature {NONE} -- Operations
 				create l_w.make_with_config (l_c)
 				l_w.force_translate
 				from
-					o.iprint ("CREATING WEBAPP, hit enter to abort.")
+					log.iprint ("CREATING WEBAPP, hit enter to abort.")
 				until
 					l_stop
 				loop
 					io.read_line
 					l_stop := True
 				end
-				o.iprint ("Aborting...")
+				log.iprint ("Aborting...")
 				l_w.shutdown_all
 			end
 			handle_errors.do_nothing
@@ -160,7 +159,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>.
 		do
 			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
-				o.iprint ("Forcing retranslation of webapp '" + a_name + "'")
+				log.iprint ("Forcing retranslation of webapp '" + a_name + "'")
 				l_w.force_translate
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
@@ -196,7 +195,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>
 		do
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
-				o.iprint ("Fireing off webapp '" + a_name + "'")
+				log.iprint ("Fireing off webapp '" + a_name + "'")
 				l_w.fire_off
 				create {XCCR_OK}Result
 			else
@@ -207,7 +206,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 	dev_mode_on_global: XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			o.iprint ("Setting dev_mode global on.")
+			log.iprint ("Setting dev_mode global on.")
 			from
 				config.file.webapps.start
 			until
@@ -224,7 +223,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 	dev_mode_off_global: XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			o.iprint ("Setting dev_mode global off.")
+			log.iprint ("Setting dev_mode global off.")
 			from
 				config.file.webapps.start
 			until
@@ -242,7 +241,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>.
 		do
 			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
-				o.iprint ("Setting dev_mode of webapp '" + a_name + "' to on.")
+				log.iprint ("Setting dev_mode of webapp '" + a_name + "' to on.")
 				l_w.dev_mode := True
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
@@ -256,7 +255,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>.
 		do
 			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
-				o.iprint ("Setting dev_mode of webapp '" + a_name + "' to off.")
+				log.iprint ("Setting dev_mode of webapp '" + a_name + "' to off.")
 				l_w.dev_mode := False
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
@@ -271,7 +270,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>.
 		do
 			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
-				o.iprint ("Launching webapp '" + a_name + "'...")
+				log.iprint ("Launching webapp '" + a_name + "'...")
 				l_w.send (create {XCWC_EMPTY}.make).do_nothing
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
@@ -285,7 +284,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			-- <Precursor>.
 		do
 			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
-				o.iprint ("Shutting down webapp '" + a_name + "'...")
+				log.iprint ("Shutting down webapp '" + a_name + "'...")
 				l_w.shutdown_all
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
@@ -319,7 +318,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 		do
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
 				l_w.is_disabled := False
-				o.iprint ("Enabling webapp '" + a_name + "'...")
+				log.iprint ("Enabling webapp '" + a_name + "'...")
 				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
@@ -331,7 +330,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 		do
 			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w  then
 				l_w.is_disabled := True
-				o.iprint ("Disabling webapp '" + a_name + "'...")
+				log.iprint ("Disabling webapp '" + a_name + "'...")
 				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
@@ -343,7 +342,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 		do
 			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_webapp then
 				l_webapp.set_needs_cleaning
-				o.iprint ("Cleaning webapp '" + a_name + "'...")
+				log.iprint ("Cleaning webapp '" + a_name + "'...")
 				l_webapp.force_clean
 				Result := create {XCCR_OK}
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
@@ -358,7 +357,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 		local
 			l_webapp_handler: XS_WEBAPP_HANDLER
 		do
-			o.iprint ("Terminating managed web applications...")
+			log.iprint ("Terminating managed web applications...")
 			create l_webapp_handler
 			l_webapp_handler.stop_managed_apps
 			Result := create {XCCR_OK}
@@ -367,12 +366,12 @@ feature {XS_SERVER_MODULE} -- Status setting
 	shutdown_module (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
-			o.iprint ("Shutting down module '" + a_name + "'...")
+			log.iprint ("Shutting down module '" + a_name + "'...")
 			if attached {XC_SERVER_MODULE} modules [a_name] as l_mod then
 				l_mod.shutdown
 				l_mod.join
 			else
-				o.iprint ("No module '" + a_name + "' found.")
+				log.iprint ("No module '" + a_name + "' found.")
 			end
 			Result := create {XCCR_OK}
 		end
@@ -380,12 +379,12 @@ feature {XS_SERVER_MODULE} -- Status setting
 	relaunch_module (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
-			o.iprint ("Launching module '" + a_name + "'...")
+			log.iprint ("Launching module '" + a_name + "'...")
 			if attached modules [a_name] as l_mod then
 				shutdown_module (a_name).do_nothing
 				l_mod.launch
 			else
-				o.iprint ("No module '" + a_name + "' found.")
+				log.iprint ("No module '" + a_name + "' found.")
 			end
 			Result := create {XCCR_OK}
 		end
@@ -396,7 +395,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			l_webapp_handler: XS_WEBAPP_HANDLER
 			l_config_reader: XS_JSON_CONFIG_READER
 		do
-			o.iprint ("Reading config...")
+			log.iprint ("Reading config...")
 			create l_webapp_handler
 			Result := create {XCCR_CONFIG_ERROR}
 			create l_config_reader
@@ -404,7 +403,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 				config.file := l_config
 				if handle_errors then
 					Result := create {XCCR_OK}
-					o.dprint (config.file.print_configuration, o.Debug_configuration)
+					log.dprint (config.file.print_configuration, log.debug_configuration)
 
 					if attached l_webapp_handler.search_webapps (config.file.webapps_root.value, config.args.unmanaged) as l_managed_webapps then
 						from
@@ -417,7 +416,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 						end
 					end
 					handle_errors.do_nothing
-					o.dprint (config.file.print_webapp_configuration, o.Debug_configuration)
+					log.dprint (config.file.print_webapp_configuration, log.debug_configuration)
 				end
 			end
 			handle_errors.do_nothing
@@ -435,7 +434,8 @@ feature {XS_SERVER_MODULE} -- Status setting
 		do
 			if a_debug_level.is_integer then
 				config.args.set_debug_level (a_debug_level.to_integer)
-				o.set_debug_level (a_debug_level.to_integer)
+				log.set_debug_level (a_debug_level.to_integer)
+				log.iprint ("Debug level set to " + a_debug_level)
 				create {XCCR_OK}Result
 			else
 				create {XCCR_INVALID_PARAM_TYPE}Result.make (a_debug_level)
@@ -515,7 +515,7 @@ feature -- From EIFFEL_ENV
 				end
 
 				if l_value = Void or else l_value.is_empty then
-					o.eprint ("The registry key or environment variable " + l_variable.var + " has not been set!", generating_type)
+					log.eprint ("The registry key or environment variable " + l_variable.var + " has not been set!", generating_type)
 					Result := False
 				else
 						-- Set the environment variable, as it may have come from the Windows registry.

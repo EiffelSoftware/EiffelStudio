@@ -27,19 +27,19 @@ feature -- Operations
 			Result := create {XCCR_INTERNAL_SERVER_ERROR}
 
 			create l_socket.make_client_by_port ({XU_CONSTANTS}.Cmd_server_port, config.server_host)
-			o.dprint ("Connecting...", o.Debug_verbose_subtasks)
+			log.dprint ("Connecting...", log.debug_verbose_subtasks)
 			l_socket.set_connect_timeout ({XU_CONSTANTS}.Socket_connect_timeout)
 			l_socket.connect
             if  l_socket.is_connected then
-            	o.dprint("Sending command...", o.Debug_verbose_subtasks)
+            	log.dprint("Sending command...", log.debug_verbose_subtasks)
             	l_socket.put_natural (0)
 		        l_socket.independent_store (a_command)
 
 		        if a_command.has_response then
-		        	o.dprint ("Waiting for response", o.Debug_verbose_subtasks)
+		        	log.dprint ("Waiting for response", log.debug_verbose_subtasks)
 		            l_socket.read_natural
 					if attached {XC_COMMAND_RESPONSE} l_socket.retrieved as l_response then
-						o.dprint ("Response retrieved", o.Debug_verbose_subtasks)
+						log.dprint ("Response retrieved", log.debug_verbose_subtasks)
 		            	Result := l_response
 		            else
 		            	Result := create {XCCR_CANNOT_SEND}

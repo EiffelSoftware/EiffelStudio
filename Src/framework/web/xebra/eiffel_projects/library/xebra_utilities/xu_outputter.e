@@ -77,7 +77,7 @@ feature -- Status Change
 		do
 			i_name := a_name
 		ensure
-			name_set: equal (i_name.value, a_name)
+			name_set: i_name.value ~ a_name
 		end
 
 	set_add_input_line (a_add_input_line: BOOLEAN)
@@ -85,7 +85,7 @@ feature -- Status Change
 		do
 			add_input_line := a_add_input_line
 		ensure
-			add_input_line_set: equal (add_input_line, a_add_input_line)
+			add_input_line_set: add_input_line ~ a_add_input_line
 		end
 
 	set_debug_level (a_debug_level: INTEGER)
@@ -93,7 +93,7 @@ feature -- Status Change
 		do
 			i_debug_level := a_debug_level
 		ensure
-			debug_level_set: equal (i_debug_level.value, a_debug_level)
+			debug_level_set: i_debug_level.value ~ a_debug_level
 		end
 
 feature -- Print

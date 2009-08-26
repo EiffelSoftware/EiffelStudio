@@ -12,9 +12,6 @@ class
 
 inherit
 	XS_WEBAPP_ACTION
-		redefine
-			make
-		end
 
 create
 	make
@@ -24,7 +21,6 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.	
 		do
-			Precursor
 			create output_handler_translate.make
 			force := False
 		ensure then
@@ -84,7 +80,8 @@ feature -- Status report
 			create l_inc.make
 			l_inc.force ("*.xeb")
 			create l_f_utils
-			translator_executed_file := app_dir.twin
+
+			create translator_executed_file.make_from_string (app_dir.string)
 			translator_executed_file.extend ({XU_CONSTANTS}.Generated_folder_name)
 			translator_executed_file.set_file_name ({XU_CONSTANTS}.Translator_executed_file)
 
@@ -92,25 +89,25 @@ feature -- Status report
 									app_dir,
 									l_inc)
 
-			l_servet_gen_ecf_not_exist := not  l_f_utils.is_readable_file (servlet_gen_ecf)
+			l_servet_gen_ecf_not_exist := not  l_f_utils.is_readable_file (servlet_gen_ecf_file)
 
 			Result := translator_executed_file_old or
 						l_servet_gen_ecf_not_exist or
 					 	force
 
 			if Result then
-				o.dprint ("Translating is necessary", o.Debug_tasks)
+				log.dprint ("Translating is necessary", log.debug_tasks)
 				if translator_executed_file_old then
-					o.dprint ("Translating is necessary because: Translator_executed file is older than xeb files in app_dir or does not exist.", o.Debug_verbose_subtasks)
+					log.dprint ("Translating is necessary because: Translator_executed file is older than xeb files in app_dir or does not exist.", log.debug_verbose_subtasks)
 				end
 				if l_servet_gen_ecf_not_exist then
-					o.dprint ("Translating is necessary because: servlet_gen ecf does not exist.", o.Debug_verbose_subtasks)
+					log.dprint ("Translating is necessary because: servlet_gen ecf does not exist.", log.debug_verbose_subtasks)
 				end
 				if force then
-					o.dprint ("Translating is necessary because: force.", o.Debug_verbose_subtasks)
+					log.dprint ("Translating is necessary because: force.", log.debug_verbose_subtasks)
 				end
 			else
-				o.dprint ("Translating is not necessary", o.Debug_tasks)
+				log.dprint ("Translating is not necessary", log.debug_tasks)
 			end
 		end
 
@@ -123,7 +120,7 @@ feature -- Status setting
 		do
 			if attached webapp as l_wa then
 				if attached {PROCESS} translate_process as p and then p.is_running  then
-					o.dprint ("Terminating translate_process for " + l_wa.app_config.name.out  + "", o.Debug_tasks)
+					log.dprint ("Terminating translate_process for " + l_wa.app_config.name.out  + "", log.debug_tasks)
 					p.terminate
 					p.wait_for_exit
 				end
@@ -136,7 +133,7 @@ feature -- Status setting
 		do
 			force := a_force
 		ensure
-			set: equal (force, a_force)
+			set: force ~ a_force
 		end
 
 feature {NONE} -- Internal Status Setting
@@ -151,17 +148,17 @@ feature {NONE} -- Internal Status Setting
 				l_wa.is_translating := a_running
 			end
 		ensure
-			set: equal (is_running, a_running)
+			set: is_running ~ a_running
 		end
 
 feature {TEST_WEBAPPS} -- Implementation
 
-	internal_execute: XC_COMMAND_RESPONSE
+	internal_execute
 			-- <Precursor>
 		require else
 			webapp_attached: webapp /= Void
 		do
-			create {XCCR_INTERNAL_SERVER_ERROR}Result
+			create {XCCR_INTERNAL_SERVER_ERROR}internal_last_response
 			if attached {XS_MANAGED_WEBAPP} webapp as l_wa then
 				if not is_running then
 					l_wa.shutdown
@@ -169,12 +166,12 @@ feature {TEST_WEBAPPS} -- Implementation
 
 						if attached translate_process as p then
 							if p.is_running then
-								o.eprint ("About to launch translate process but it was still running... So I'm going to kill it.", generating_type)
+								log.eprint ("About to launch translate process but it was still running... So I'm going to kill it.", generating_type)
 								p.terminate
 							end
 						end
 
-						o.dprint("-=-=-=--=-=LAUNCHING TRANSLATE -=-=-=-=-=-=", o.Debug_verbose_subtasks)
+						log.dprint("-=-=-=--=-=LAUNCHING TRANSLATE -=-=-=-=-=-=", log.debug_verbose_subtasks)
 						translate_process := launch_process (config.file.translator_filename,
 																translator_args,
 																app_dir,
@@ -184,7 +181,7 @@ feature {TEST_WEBAPPS} -- Implementation
 						set_running (True)
 					end
 				end
-				Result := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
+				internal_last_response := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
 			end
 		end
 
@@ -196,9 +193,9 @@ feature -- Agents
 			set_running (False)
 			set_force (False)
 			if not is_necessary then
-				execute_next_action.do_nothing
+				execute_next_action
 			else
-				o.eprint ("TRANSLATION FAILED", generating_type)
+				log.eprint ("TRANSLATION FAILED", generating_type)
 			end
 		end
 

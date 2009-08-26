@@ -1,8 +1,9 @@
 #!/bin/bash
-# Title
-# Description
+# Xebra Installation Script for Ubuntu 9.04
+# Adapt variables in the #Constants section
 #
 #
+
 echo "This script will install Xebra."
 
 #Constants

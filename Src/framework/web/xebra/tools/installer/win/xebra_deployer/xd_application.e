@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 		local
 			l_arg_parser: XD_ARGUMENT_PARSER
 		do
-			o.set_name ("DEPLOYER")
-			o.set_debug_level (1)
+			log.set_name ("DEPLOYER")
+			log.set_debug_level (1)
 			create install_dir.make
 			create l_arg_parser.make
 			l_arg_parser.execute (agent run (l_arg_parser))
@@ -105,7 +105,7 @@ feature -- Basic Operations
 			create l_util
 			create install_dir.make_from_string (a_arg_parser.install_dir)
 			if  l_util.is_dir (install_dir) then
-				o.dprint ("Starting...",1)
+				log.dprint ("Starting...",1)
 				process_httpd
 				process_ecfs
 			else
@@ -116,7 +116,7 @@ feature -- Basic Operations
 				create l_error_printer
 				error_manager.trace_errors (l_error_printer)
 			end
-			o.dprint ("Done. Bye.",1)
+			log.dprint ("Done. Bye.",1)
 		end
 
 feature -- Replacement Tasks
@@ -135,14 +135,14 @@ feature -- Replacement Tasks
 			create l_excl.make
 			l_excl.force (".svn")
 			create l_util
-			o.dprint ("Scanning for ecf  files in " + dir_library, 1)
+			log.dprint ("Scanning for ecf  files in " + dir_library, 1)
 			l_files := l_util.scan_for_files (install_dir, -1, l_incl, l_excl)
 			from
 				l_files.start
 			until
 				l_files.after
 			loop
-				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
+				log.dprint ("Replacing in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_eiffel_src, Key_library_root)
 				l_files.forth
 			end
@@ -159,14 +159,14 @@ feature -- Replacement Tasks
 			create l_incl.make
 			l_incl.force (File_httpd_conf)
 			create l_util
-			o.dprint ("Scanning for '" + File_httpd_conf + "' in " + dir_apache_conf, 1)
+			log.dprint ("Scanning for '" + File_httpd_conf + "' in " + dir_apache_conf, 1)
 			l_files := l_util.scan_for_files (dir_apache_conf, 1, l_incl, create {LINKED_LIST [STRING]}.make)
 			from
 				l_files.start
 			until
 				l_files.after
 			loop
-				o.dprint ("Replacing in " + l_files.item_for_iteration,1)
+				log.dprint ("Replacing in " + l_files.item_for_iteration,1)
 				l_util.replace_in_file (l_files.item_for_iteration, Key_xebra_install, install_dir)
 				l_files.forth
 			end

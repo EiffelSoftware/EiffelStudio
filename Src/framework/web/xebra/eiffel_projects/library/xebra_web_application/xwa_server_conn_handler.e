@@ -58,8 +58,8 @@ feature -- Implementation
 		local
 			l_response:  XC_COMMAND_RESPONSE
 		do
-			o.set_name (config.name.out)
-			o.set_debug_level (config.arg_config.debug_level)
+			log.set_name (config.name.out)
+			log.set_debug_level (config.arg_config.debug_level)
 
         	from
                 server_socket.listen ({XU_CONSTANTS}.Max_tcp_clients)
@@ -69,20 +69,20 @@ feature -- Implementation
                 server_socket.accept
                 if not stop then
 	                if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as socket then
-	                	if config.arg_config.debug_level > o.Debug_configuration then
+	                	if config.arg_config.debug_level > log.debug_configuration then
 	                		start_time
 	                	end
-		                o.dprint ("Connection to Xebra Server accepted", o.Debug_subtasks)
+		                log.dprint ("Connection to Xebra Server accepted", log.debug_subtasks)
 		                socket.read_natural
 			             if attached {XC_WEBAPP_COMMAND} socket.retrieved as l_command then
 			             	l_response := l_command.execute (current)
 			       			if l_command.has_response then
-							    o.dprint ("Sending back response...", o.Debug_subtasks)
+							    log.dprint ("Sending back response...", log.debug_subtasks)
 						        socket.put_natural (0)
 								socket.independent_store (l_response)
 
 								if attached {XCCR_HTTP_REQUEST} l_response as l then
-									o.dprint ("%N%N----------------%N" + l.response.render_to_string  + "%N", 7)
+									log.dprint ("%N%N----------------%N" + l.response.render_to_string  + "%N", 7)
 								end
 			       			end
 			            end
@@ -90,18 +90,19 @@ feature -- Implementation
 			            check
 				        	socket.is_closed
 				       	end
-				       	if config.arg_config.debug_level > o.Debug_configuration then
-	                		o.dprint ("Webapp Request Time: " + stop_time, o.Debug_configuration)
+				       	if config.arg_config.debug_level > log.debug_configuration then
+				       		stop_time
+	                		log.dprint ("Webapp Request Time: " + last_elapsed_time, log.debug_configuration)
 	                	end
 			         end
 		         end
             end
             server_socket.cleanup
-			o.dprint("Server connection server ends.", o.Debug_start_stop_components)
+			log.dprint("Server connection server ends.", log.debug_start_stop_components)
 		ensure then
         	server_socket_closed: server_socket.is_closed
 		rescue
-       		o.eprint ("Exception in server connection server! Retrying...", generating_type)
+       		log.eprint ("Exception in server connection server! Retrying...", generating_type)
 			server_socket.cleanup
 			check
         		server_socket.is_closed
@@ -135,8 +136,8 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 			l_request_handler: XWA_REQUEST_HANDLER
 			l_parser: XH_REQUEST_PARSER
 		do
-			o.dprint ("Handling http request...", o.Debug_tasks)
-			o.dprint ("%N%N---%N" + a_request  + "%N", 7)
+			log.dprint ("Handling http request...", log.debug_tasks)
+			log.dprint ("%N%N---%N" + a_request  + "%N", 7)
 
 			create l_parser.make
 			create l_request_handler
@@ -151,7 +152,7 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 	get_sessions: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
-			o.dprint ("Counting sessions (=" + session_manager.sessions.count.as_natural_32.out + ")", o.Debug_verbose_subtasks)
+			log.dprint ("Counting sessions (=" + session_manager.sessions.count.as_natural_32.out + ")", log.debug_verbose_subtasks)
 			Result := create {XCCR_GET_SESSIONS}.make (session_manager.sessions.count.as_natural_32)
 		end
 
@@ -160,7 +161,7 @@ feature -- Basic Operations
 	shutdown: XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
-			o.dprint ("Shutting down...", o.Debug_start_stop_app)
+			log.dprint ("Shutting down...", log.debug_start_stop_app)
 			stop := True
 			Result := create {XCCR_OK}
 		end

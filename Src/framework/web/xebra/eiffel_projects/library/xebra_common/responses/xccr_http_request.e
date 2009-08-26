@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		do
 			response := a_response
 		ensure
-			response_set: equal (response, a_response)
+			response_set: response ~ a_response
 		end
 
 feature -- Access

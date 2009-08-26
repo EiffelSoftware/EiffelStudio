@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 		ensure
-			name_set: equal (name, a_name)
+			name_set: name ~ a_name
 		end
 
 feature -- Access

@@ -6,7 +6,7 @@ deferred class
 
 feature -- Singleton
 
-	o: XU_OUTPUTTER
+	log: XU_OUTPUTTER
 			-- Shared access to an uuid_generator.
 		once
 			create Result.make

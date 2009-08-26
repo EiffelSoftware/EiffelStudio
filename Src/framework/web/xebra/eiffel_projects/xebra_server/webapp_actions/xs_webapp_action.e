@@ -15,17 +15,23 @@ inherit
 
 	XS_SHARED_SERVER_CONFIG
 
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
-		do
-		end
-
 feature -- Access
+
+	last_response: XC_COMMAND_RESPONSE
+			-- The last response
+		do
+			if attached internal_last_response as l_response then
+				Result := l_response
+			else
+				create {XCCR_NO_RESPONSE} Result
+			end
+		end
 
 	webapp: detachable XS_WEBAPP assign set_webapp
 			-- The webapp
+		note
+			option: stable attribute
+		end
 
 	is_running: BOOLEAN
 		-- True if the action is currently running
@@ -39,6 +45,8 @@ feature -- Access
 			else
 				Result := is_running
 			end
+		ensure
+			Is_running: Result implies is_running
 		end
 
 	next_action: detachable XS_WEBAPP_ACTION assign set_next_action
@@ -46,9 +54,8 @@ feature -- Access
 
 feature -- Paths
 
-	app_dir: FILE_NAME
+	app_dir: DIRECTORY_NAME
 			-- The directory to the application
-			--
 		require
 			webapp_attached: webapp /= Void
 		local
@@ -80,7 +87,7 @@ feature -- Paths
 			Result_attached: Result /= Void
 		end
 
-	run_workdir : FILE_NAME
+	run_workdir : DIRECTORY_NAME
 			-- The working directory to execute the application X_CODE
 		require
 			webapp_attached: webapp /= Void
@@ -101,16 +108,16 @@ feature -- Paths
 			Result_attached: Result /= Void
 		end
 
-	webapp_melted_file_path: FILE_NAME
+	webapp_melted_file: FILE_NAME
 			-- Returns the path to the melted file
 		require
 			webapp_attached: webapp /= Void
 		do
 			if attached webapp as l_wa then
 				if config.file.finalize_webapps.value then
-					Result := webapp_exe
+					Result := webapp_exe_file
 				else
-					Result := run_workdir.twin
+					create Result.make_from_string (run_workdir.string)
 					Result.set_file_name (l_wa.app_config.name.out + {XU_CONSTANTS}.Extension_melted)
 				end
 			else
@@ -120,13 +127,13 @@ feature -- Paths
 			Result_attached: Result /= Void
 		end
 
-	webapp_exe: FILE_NAME
+	webapp_exe_file: FILE_NAME
 			-- Returns the path to the exe of the webapp
 		require
 			webapp_attached: webapp /= Void
 		do
 			if attached webapp as l_wa then
-				Result := run_workdir.twin
+				create Result.make_from_string (run_workdir.string)
 				if {PLATFORM}.is_windows then
 					Result.set_file_name (l_wa.app_config.name.out + {XU_CONSTANTS}.Extension_win_exe)
 				else
@@ -139,7 +146,7 @@ feature -- Paths
 			Result_attached: Result /= Void
 		end
 
-	servlet_gen_path: FILE_NAME
+	servlet_gen_dir: DIRECTORY_NAME
 			-- The path to the servlet_gen
 		do
 			Result := app_dir.twin
@@ -149,10 +156,10 @@ feature -- Paths
 			Result_attached: Result /= void
 		end
 
-	servlet_gen_exe: FILE_NAME
+	servlet_gen_exe_file: FILE_NAME
 			-- The path to the servlet_gen executable
 		do
-			Result := servlet_gen_path.twin
+			create Result.make_from_string (servlet_gen_dir.string)
 			Result.extend ({XU_CONSTANTS}.Dir_eifgen)
 			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
 			Result.extend ({XU_CONSTANTS}.Dir_w_code)
@@ -166,10 +173,10 @@ feature -- Paths
 			Result_attached: Result /= void
 		end
 
-	servlet_gen_melted_file_path: FILE_NAME
+	servlet_gen_melted_file: FILE_NAME
 		-- The path to the servlet_gen melted file
 		do
-			Result := servlet_gen_path.twin
+			create Result.make_from_string (servlet_gen_dir.string)
 			Result.extend ({XU_CONSTANTS}.Dir_eifgen)
 			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
 			Result.extend ({XU_CONSTANTS}.Dir_w_code)
@@ -179,10 +186,10 @@ feature -- Paths
 			Result_attached: Result /= void
 		end
 
-	servlet_gen_ecf: FILE_NAME
+	servlet_gen_ecf_file: FILE_NAME
 			-- The path to the servlet_gen executable
 		do
-			Result := servlet_gen_path.twin
+			create Result.make_from_string (servlet_gen_dir.string)
 			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_ecf)
 		ensure
 			Result_attached: Result /= void
@@ -191,7 +198,7 @@ feature -- Paths
 	servlet_gen_executed_file: FILE_NAME
 				-- The path to the servlet_gen executed_at_time-file
 		do
-			Result := app_dir.twin
+			create Result.make_from_string (app_dir.string)
 			Result.extend ({XU_CONSTANTS}.Generated_folder_name)
 			Result.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
 		ensure
@@ -200,26 +207,29 @@ feature -- Paths
 
 feature -- Operations
 
-	execute: XC_COMMAND_RESPONSE
+	execute
 			-- Executes the action if necessary or else executes the next action
 		do
 			if is_necessary then
-				Result := internal_execute
+				internal_execute
 			else
-				Result := execute_next_action
+				execute_next_action
 			end
 		ensure
-			Result_attached: Result /= Void
+			internal_last_response_attached: internal_last_response /= Void
 		end
 
-	execute_next_action: XC_COMMAND_RESPONSE
+	execute_next_action
 			--	Executes the next action if attached
 		do
 			if attached next_action as l_action then
-				Result := l_action.execute
+				l_action.execute
+				internal_last_response := l_action.last_response
 			else
-				Result := create {XCCR_INTERNAL_SERVER_ERROR}
+				internal_last_response := create {XCCR_INTERNAL_SERVER_ERROR}
 			end
+		ensure
+			internal_last_response_attached: internal_last_response /= Void
 		end
 
 feature {NONE}  -- Status report internal
@@ -260,16 +270,18 @@ feature -- Status setting
 
 feature {TEST_WEBAPPS} -- Implementation
 
-	internal_execute: XC_COMMAND_RESPONSE
+	internal_execute
 			-- The actual implementation of an action
 		deferred
 		ensure
-			Result_attached: Result /= Void
+			internal_last_response_attached: internal_last_response /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	can_launch_process (a_exe: FILE_NAME; a_dir: FILE_NAME): BOOLEAN
+	internal_last_response: detachable XC_COMMAND_RESPONSE
+
+	can_launch_process (a_exe: FILE_NAME; a_dir: DIRECTORY_NAME): BOOLEAN
 			-- Tests if a_exe and a_dirs exist
 		require
 			a_exe_attached: a_exe /= Void
@@ -281,12 +293,12 @@ feature {NONE} -- Implementation
 			create l_f_utils
 
 			if not l_f_utils.is_dir (a_dir) then
-				o.eprint ("Invalid directory for launching process: '" + a_dir + "'", generating_type)
+				log.eprint ("Invalid directory for launching process: '" + a_dir + "'", generating_type)
 				Result := False
 			end
 
 			if not l_f_utils.is_executable_file (a_exe) then
-				o.eprint ("File does not exist for launching process: '" + a_exe + "'", generating_type)
+				log.eprint ("File does not exist for launching process: '" + a_exe + "'", generating_type)
 				Result := False
 			end
 		end
@@ -294,7 +306,7 @@ feature {NONE} -- Implementation
 
 	launch_process (a_exe: FILE_NAME;
 					 a_args: STRING;
-					 a_dir: FILE_NAME;
+					 a_dir: DIRECTORY_NAME;
 					 a_exit_handler: ROUTINE [ANY, TUPLE];
 					 a_output_handler: PROCEDURE [ANY, TUPLE [STRING]];
 					 a_error_output_handler: PROCEDURE [ANY, TUPLE [STRING]]): detachable PROCESS
@@ -322,7 +334,7 @@ feature {NONE} -- Implementation
 				Result.set_on_exit_handler (a_exit_handler)
 				Result.redirect_output_to_agent (a_output_handler)
 				Result.redirect_error_to_agent (a_error_output_handler)
-				o.dprint("Launching new process '" + a_exe + " " + a_args + "' in '" + a_dir + "'", o.Debug_subtasks)
+				log.dprint("Launching new process '" + a_exe + " " + a_args + "' in '" + a_dir + "'", log.debug_subtasks)
 				Result.launch
 			end
 		end

@@ -127,16 +127,16 @@ feature -- Operations
 						l_source_file.remove_tail (l_source_file.count + 1 - l_source_file.substring_index ({XU_CONSTANTS}.Request_file_upload_filename, 1))
 						Result := interal_iis_process_upload_single_file (l_source_file, l_target_filename)
 					else
-						o.print ("File upload: Filename missing in upload from IIS")
+						log.eprint ("File upload: Filename missing in upload from IIS", generating_type)
 					end
 				elseif l_source_file.starts_with ({XU_CONSTANTS}.Request_file_upload_apache) then
 					l_source_file.remove_head ({XU_CONSTANTS}.Request_file_upload_apache.count)
 					Result := internal_apache_process_upload_single_file (l_source_file, a_target_file_dir)
 				else
-					o.eprint ("File upload: Unknown uploader identifier " + l_source_file , generating_type)
+					log.eprint ("File upload: Unknown uploader identifier " + l_source_file , generating_type)
 				end
 			else
-				o.eprint ("File upload: Invalid request method.", generating_type)
+				log.eprint ("File upload: Invalid request method.", generating_type)
 			end
 		end
 
@@ -169,15 +169,15 @@ feature {NONE} -- Implementation
 						l_s_file.copy_to (l_t_file)
 						Result := l_t_file.name
 					else
-						o.eprint ("File upload: Cannot write into target file " + l_t_file.name , generating_type)
+						log.eprint ("File upload: Cannot write into target file " + l_t_file.name , generating_type)
 					end
 					l_t_file.close
 				else
-					o.eprint ("File upload: Cannot create target file " + l_t_file.name , generating_type)
+					log.eprint ("File upload: Cannot create target file " + l_t_file.name , generating_type)
 				end
 				l_s_file.close
 			else
-				o.eprint ("File upload: Cannot read tmp file " + l_s_file.name , generating_type)
+				log.eprint ("File upload: Cannot read tmp file " + l_s_file.name , generating_type)
 			end
 		end
 
@@ -289,21 +289,21 @@ feature {NONE} -- Implementation
 									end
 									Result := l_t_file.name
 								else
-									o.eprint ("File upload: Created file is not readable or writable " + l_t_file.name, generating_type)
+									log.eprint ("File upload: Created file is not readable or writable " + l_t_file.name, generating_type)
 								end
 								l_t_file.close
 							else
-								o.eprint ("File upload: Target file is not creatable " + l_t_file.name, generating_type)
+								log.eprint ("File upload: Target file is not creatable " + l_t_file.name, generating_type)
 							end
 						else
-							o.eprint ("File upload: Invalid file format " + l_s_file.name , generating_type)
+							log.eprint ("File upload: Invalid file format " + l_s_file.name , generating_type)
 						end
 					else
-						o.eprint ("File upload: Invalid file format " + l_s_file.name , generating_type)
+						log.eprint ("File upload: Invalid file format " + l_s_file.name , generating_type)
 					end
 					l_s_file.close
 				else
-					o.eprint ("File upload: Cannot read tmp file " + l_s_file.name , generating_type)
+					log.eprint ("File upload: Cannot read tmp file " + l_s_file.name , generating_type)
 				end
 		end
 

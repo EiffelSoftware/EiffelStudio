@@ -42,7 +42,7 @@ feature -- Processing
 			uri := a_uri
 			l_res := parser.parse_string (a_string)
 			if l_res.success and l_res.error_messages.is_empty then
-				if attached {JSON_VALUE} l_res.internal_result.first as l_json then
+				if attached {JSON_VALUE} l_res.parse_result.first as l_json then
 					Result := l_json
 				end
 			else
@@ -145,17 +145,17 @@ feature {NONE} -- Behaviour
 			Result := a_result
 			create l_res.make
 			from
-				Result.internal_result.start
+				Result.parse_result.start
 			until
-				Result.internal_result.after
+				Result.parse_result.after
 			loop
-				if attached {JSON_STRING} Result.internal_result.item as l_key then
-					Result.internal_result.forth
-					if attached {JSON_VALUE} Result.internal_result.item as l_child then
+				if attached {JSON_STRING} Result.parse_result.item as l_key then
+					Result.parse_result.forth
+					if attached {JSON_VALUE} Result.parse_result.item as l_child then
 						l_res.put (l_child, l_key)
 					end
 				end
-				Result.internal_result.forth
+				Result.parse_result.forth
 			end
 			Result.replace_result (l_res)
 		end
@@ -186,7 +186,7 @@ feature {NONE} -- Behaviour
 	build_string (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 		do
 			Result := a_result
-			if attached {STRING} a_result.internal_result.first as l_string then
+			if attached {STRING} a_result.parse_result.first as l_string then
 				Result.replace_result (create {JSON_STRING}.make_json (l_string))
 			end
 		end
@@ -194,7 +194,7 @@ feature {NONE} -- Behaviour
 	build_number (a_result: PEG_PARSER_RESULT): PEG_PARSER_RESULT
 		do
 			Result := a_result
-			if attached {STRING} a_result.internal_result.first as l_number then
+			if attached {STRING} a_result.parse_result.first as l_number then
 				if l_number.is_integer then
 					Result.replace_result (create {JSON_NUMBER}.make_integer (l_number.to_integer))
 				elseif l_number.is_real then
@@ -212,15 +212,15 @@ feature {NONE} -- Behaviour
 		do
 			Result := a_result
 			from
-				Result.internal_result.start
+				Result.parse_result.start
 				create l_res.make_array
 			until
-				Result.internal_result.after
+				Result.parse_result.after
 			loop
-				if attached {JSON_VALUE} Result.internal_result.item as l_item then
+				if attached {JSON_VALUE} Result.parse_result.item as l_item then
 					l_res.add (l_item)
 				end
-				Result.internal_result.forth
+				Result.parse_result.forth
 			end
 			Result.replace_result (l_res)
 		end

@@ -84,7 +84,7 @@ feature {XT_XEBRA_PARSER} -- Behaviours
 			l_internal_result: LIST [ANY]
 		do
 			l_product := ""
-			l_internal_result := a_result.internal_result
+			l_internal_result := a_result.parse_result
 			from
 				l_internal_result.start
 			until
@@ -94,7 +94,7 @@ feature {XT_XEBRA_PARSER} -- Behaviours
 				l_internal_result.forth
 			end
 			Result := a_result
-			Result.internal_result.wipe_out
+			Result.parse_result.wipe_out
 			Result.append_result (l_product)
 		ensure
 			Result_attached: attached Result

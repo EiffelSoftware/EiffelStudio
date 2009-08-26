@@ -153,8 +153,8 @@ feature {NONE} -- Parser error strategies
 		require
 			a_result_attached: attached a_result
 		do
-			if a_result.internal_result.count > 1 then
-				a_result.put_error_message ("Missing end tag for start tag '" + a_result.internal_result [1].out + ":" + a_result.internal_result [2].out + "'!")
+			if a_result.parse_result.count > 1 then
+				a_result.put_error_message ("Missing end tag for start tag '" + a_result.parse_result [1].out + ":" + a_result.parse_result [2].out + "'!")
 			else
 				a_result.put_error_message ("Invalid tag!")
 			end
@@ -168,9 +168,9 @@ feature {NONE} -- Parser error strategies
 		local
 			l_count: INTEGER
 		do
-			l_count := a_result.internal_result.count
+			l_count := a_result.parse_result.count
 			if l_count > 0 then
-				a_result.put_error_message ("Missing end tag for start tag '" + a_result.internal_result [1].out + "'!")
+				a_result.put_error_message ("Missing end tag for start tag '" + a_result.parse_result [1].out + "'!")
 			else
 				a_result.put_error_message ("Invalid tag!")
 			end
@@ -194,7 +194,7 @@ feature {NONE} -- Parser Behaviors
 			a_result_attached: attached a_result
 		do
 			Result := concatenate_results (a_result)
-			if attached {STRING} Result.internal_result.first as l_argument then
+			if attached {STRING} Result.parse_result.first as l_argument then
 				Result.replace_result (create {XP_TAG_DYNAMIC_ARGUMENT}.make (l_argument))
 			end
 		ensure
@@ -208,7 +208,7 @@ feature {NONE} -- Parser Behaviors
 			a_result_attached: attached a_result
 		do
 			Result := concatenate_results (a_result)
-			if attached {STRING} Result.internal_result.first as l_argument then
+			if attached {STRING} Result.parse_result.first as l_argument then
 				Result.replace_result (create {XP_TAG_VARIABLE_ARGUMENT}.make (l_argument))
 			end
 		ensure
@@ -222,7 +222,7 @@ feature {NONE} -- Parser Behaviors
 			a_result_attached: attached a_result
 		do
 			Result := concatenate_results (a_result)
-			if attached {STRING} Result.internal_result.first as l_argument then
+			if attached {STRING} Result.parse_result.first as l_argument then
 				Result.replace_result (create {XP_TAG_VALUE_ARGUMENT}.make (l_argument))
 			end
 		ensure
@@ -240,7 +240,7 @@ feature {NONE} -- Parser Behaviors
 			l_internal_result: LIST [ANY]
 		do
 			Result := a_result
-			l_internal_result := a_result.internal_result
+			l_internal_result := a_result.parse_result
 			if attached {STRING} l_internal_result.first as l_id then
 				create l_tag.make ("", l_id, "XTAG_XEB_HTML_TAG", format_debug (a_result.left_to_parse.debug_information, source_path))
 				from
@@ -287,17 +287,17 @@ feature {NONE} -- Parser Behaviors
 			l_error_messages: LIST [STRING]
 		do
 			Result := a_result
-			if attached {STRING} a_result.internal_result [namespace_index] as l_namespace then
-				if attached {STRING} a_result.internal_result [id_index] as l_id then
+			if attached {STRING} a_result.parse_result [namespace_index] as l_namespace then
+				if attached {STRING} a_result.parse_result [id_index] as l_id then
 					if registry.contains_tag_lib (l_namespace) and then attached registry.retrieve_taglib (l_namespace) as l_taglib then
 						if l_taglib.contains (l_id) then
 							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug (a_result.left_to_parse.debug_information, source_path))
 							from
 								i := id_index + 1
 							until
-								i > a_result.internal_result.count
+								i > a_result.parse_result.count
 							loop
-								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.internal_result [i] as l_attribute then
+								if attached {TUPLE [id: STRING; value: XP_TAG_ARGUMENT]} a_result.parse_result [i] as l_attribute then
 									if not l_taglib.argument_belongs_to_tag (l_attribute.id, l_id) then
 										Result.put_error_message ("Invalid argument detected for " + l_namespace + ":" + l_id + ": " + l_attribute.id + "=" + l_attribute.value.value)
 									else
@@ -308,13 +308,13 @@ feature {NONE} -- Parser Behaviors
 											" for tag: " + l_namespace + ":" +l_id)
 										end
 									end
-								elseif attached {XP_TAG_ELEMENT} a_result.internal_result[i] as l_subtag then
+								elseif attached {XP_TAG_ELEMENT} a_result.parse_result[i] as l_subtag then
 									l_tag.extend_tag (l_subtag)
 								end
 								i := i + 1
 							end
-							if attached {STRING} a_result.internal_result [a_result.internal_result.count-1] as l_l_namespace then
-								if attached {STRING} a_result.internal_result.last as l_l_id then
+							if attached {STRING} a_result.parse_result [a_result.parse_result.count-1] as l_l_namespace then
+								if attached {STRING} a_result.parse_result.last as l_l_id then
 									l_end_tag := l_namespace + ":" + l_l_id
 									if not (l_namespace+":"+l_id).is_equal (l_end_tag) then
 										Result.put_error_message ("Unmatched tags: " + l_namespace + ":" + l_id + " expected but found: " + l_end_tag)
@@ -355,7 +355,7 @@ feature {NONE} -- Parser Behaviors
 			l_tag: XP_TAG_ELEMENT
 		do
 			Result := concatenate_results (a_result)
-			if attached {STRING} a_result.internal_result [1] as l_content then
+			if attached {STRING} a_result.parse_result [1] as l_content then
 				create l_tag.make ("", "content", "XTAG_XEB_CONTENT_TAG", format_debug (a_result.left_to_parse.debug_information, source_path))
 				l_tag.extend_attribute ("text", create {XP_TAG_VALUE_ARGUMENT}.make (l_content))
 				Result.replace_result (l_tag)
@@ -375,7 +375,7 @@ feature {NONE} -- Parser Behaviors
 		do
 			Result := a_result
 			create l_tag.make ("", "html", "XTAG_XEB_CONTAINER_TAG", format_debug (a_result.left_to_parse.debug_information, source_path))
-			l_internal_result := Result.internal_result
+			l_internal_result := Result.parse_result
 			from
 				l_internal_result.start
 			until
@@ -400,8 +400,8 @@ feature {NONE} -- Parser Behaviors
 			l_attribute: TUPLE [STRING, XP_TAG_ARGUMENT]
 		do
 			Result := a_result
-			if attached {STRING} a_result.internal_result [1] as l_id then
-				if attached {XP_TAG_ARGUMENT} a_result.internal_result [2] as l_value then
+			if attached {STRING} a_result.parse_result [1] as l_id then
+				if attached {XP_TAG_ARGUMENT} a_result.parse_result [2] as l_value then
 					l_attribute := [l_id, l_value]
 					Result.replace_result (l_attribute)
 				end
@@ -428,7 +428,7 @@ feature -- Basic Functionality
 		do
 			create template.make_empty
 			l_result := xml_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
-			if l_result.success and attached {XP_TAG_ELEMENT} l_result.internal_result.first as l_root_tag then
+			if l_result.success and attached {XP_TAG_ELEMENT} l_result.parse_result.first as l_root_tag then
 				if not l_result.left_to_parse.is_empty then
 					add_parse_error ("Parsing was incomplete. " + l_result.longest_match_debug)
 				else

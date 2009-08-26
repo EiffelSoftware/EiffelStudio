@@ -47,7 +47,7 @@ feature -- Basic Operations
 				end
 
 			else
-				if attached {like argument_table} l_result.internal_result.first as l_rec then
+				if attached {like argument_table} l_result.parse_result.first as l_rec then
 					Result := l_rec
 				end
 			end
@@ -99,8 +99,8 @@ feature {NONE} -- Parser
 			l_item: TUPLE [name: STRING; value: STRING]
 		do
 			Result := a_result
-			if attached {STRING} a_result.internal_result [1] as l_name and
-				attached {STRING} a_result.internal_result [2] as l_value then
+			if attached {STRING} a_result.parse_result [1] as l_name and
+				attached {STRING} a_result.parse_result [2] as l_value then
 					Result.replace_result ([l_name, l_value])
 			end
 		ensure
@@ -116,16 +116,16 @@ feature {NONE} -- Parser
 			l_table_args: HASH_TABLE [STRING, STRING]
 		do
 			Result := a_result
-			create l_table_args.make (a_result.internal_result.count)
+			create l_table_args.make (a_result.parse_result.count)
 			from
-				a_result.internal_result.start
+				a_result.parse_result.start
 			until
-				a_result.internal_result.after
+				a_result.parse_result.after
 			loop
-				if attached {TUPLE [name: STRING; value: STRING]} a_result.internal_result.item as l_arg then
+				if attached {TUPLE [name: STRING; value: STRING]} a_result.parse_result.item as l_arg then
 					l_table_args.put (l_arg.value, l_arg.name)
 				end
-				a_result.internal_result.forth
+				a_result.parse_result.forth
 			end
 			Result.replace_result (l_table_args)
 		ensure

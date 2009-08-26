@@ -74,7 +74,7 @@ feature -- Basic functionality
 			l_result: PEG_PARSER_RESULT
 		do
 			l_result := tag_lib_parser.parse (create {PEG_PARSER_STRING}.make_from_string (a_string))
-			if l_result.success and attached {XTL_TAG_LIBRARY} l_result.internal_result.first as l_taglib then
+			if l_result.success and attached {XTL_TAG_LIBRARY} l_result.parse_result.first as l_taglib then
 				if not l_result.left_to_parse.is_empty then
 					add_parse_error ("Parsing of taglib was incomplete. " + l_result.longest_match_debug)
 				else
@@ -95,11 +95,11 @@ feature {NONE} -- Parser behaviours
 			l_attribute: XTL_TAG_DESCRIPTION_ATTRIBUTE
 		do
 			Result := a_result
-			if attached {STRING} a_result.internal_result.first as l_value then
+			if attached {STRING} a_result.parse_result.first as l_value then
 				create l_attribute.make
 				l_attribute.set_value (l_value)
-				if a_result.internal_result.count > 1 and then
-					attached {STRING} a_result.internal_result [2] as l_optional then
+				if a_result.parse_result.count > 1 and then
+					attached {STRING} a_result.parse_result [2] as l_optional then
 					if l_optional.is_boolean then
 						l_attribute.optional := l_optional.to_boolean;
 					else
@@ -122,26 +122,26 @@ feature {NONE} -- Parser behaviours
 			l_tag: detachable XTL_TAG_DESCRIPTION
 		do
 			Result := a_result
-			if attached {STRING} Result.internal_result.first as l_id then
-				if attached {STRING} Result.internal_result [2] as l_class then
+			if attached {STRING} Result.parse_result.first as l_id then
+				if attached {STRING} Result.parse_result [2] as l_class then
 					create l_tag.make (l_id, l_class)
 					from
-						Result.internal_result.start
-						Result.internal_result.forth
-						Result.internal_result.forth
+						Result.parse_result.start
+						Result.parse_result.forth
+						Result.parse_result.forth
 					until
-						Result.internal_result.after
+						Result.parse_result.after
 					loop
-						if attached {XTL_TAG_DESCRIPTION_ATTRIBUTE} Result.internal_result.item as l_description then
+						if attached {XTL_TAG_DESCRIPTION_ATTRIBUTE} Result.parse_result.item as l_description then
 							l_tag.put_attribute_description (l_description)
 						else
 						--	add_parse_error ("Erroneous tag attribute description!")
 						end
-						Result.internal_result.forth
+						Result.parse_result.forth
 					end
 				end
 			end
-			Result.internal_result.wipe_out
+			Result.parse_result.wipe_out
 			if attached l_tag as ll_tag then
 				Result.replace_result (ll_tag)
 			end
@@ -159,16 +159,16 @@ feature {NONE} -- Parser behaviours
 			Result := a_result
 			create l_taglib.make
 			from
-				Result.internal_result.start
+				Result.parse_result.start
 			until
-				Result.internal_result.after
+				Result.parse_result.after
 			loop
-				if attached {XTL_TAG_DESCRIPTION} Result.internal_result.item as l_description then
+				if attached {XTL_TAG_DESCRIPTION} Result.parse_result.item as l_description then
 					l_taglib.put_tag (l_description)
-				elseif attached {STRING} Result.internal_result.item as l_name then
+				elseif attached {STRING} Result.parse_result.item as l_name then
 					l_taglib.set_id (l_name)
 				end
-				Result.internal_result.forth
+				Result.parse_result.forth
 			end
 			Result.replace_result (l_taglib)
 		ensure

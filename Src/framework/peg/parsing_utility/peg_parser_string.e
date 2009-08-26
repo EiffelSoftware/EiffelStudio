@@ -73,8 +73,8 @@ feature {NONE} -- Access
 feature -- Internal Access
 
 	substring_internal (a_start_index, a_end_index: INTEGER): STRING
-			-- Extracts the string at the *absolute* coordinates. Use substring if you're not sure
-			-- what this means
+			-- Extracts the string at the *absolute* coordinates.
+			-- Use `substring' if you're not sure what this means
 		require
 			a_start_index_valid: a_start_index > 0 and a_start_index <= a_end_index+1
 			a_end_index_valid: a_end_index <= internal_count

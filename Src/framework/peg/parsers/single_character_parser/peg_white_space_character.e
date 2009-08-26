@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 			--
 		do
 			behaviour := agent build
+			parser_name := "whitespace"
 		end
 
 feature {NONE} -- Access

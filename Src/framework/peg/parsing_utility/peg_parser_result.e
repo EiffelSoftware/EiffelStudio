@@ -31,9 +31,9 @@ feature -- Initialize
 		do
 			left_to_parse := a_left_to_parse
 			success := a_success
-			create {ARRAYED_LIST [ANY]} internal_result.make (1)
+			create {ARRAYED_LIST [ANY]} parse_result.make (1)
 		ensure
-			internal_result_attached: attached internal_result
+			parse_result_attached: attached parse_result
 			success_set: attached success and success = a_success
 			left_to_parse_set: attached left_to_parse and left_to_parse = a_left_to_parse
 		end
@@ -45,7 +45,7 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	internal_result: LIST [ANY] assign set_result
+	parse_result: LIST [ANY] assign set_result
 			-- Result of parsing. Is at least an empty list
 
 	error_messages: LIST [STRING]
@@ -66,7 +66,7 @@ feature -- Access
 		require
 			a_result_attached: attached a_result
 		do
-			internal_result.extend (a_result)
+			parse_result.extend (a_result)
 		end
 
 	append_results (a_result: PEG_PARSER_RESULT)
@@ -74,10 +74,10 @@ feature -- Access
 		require
 			a_result_attached: attached a_result
 		do
-			internal_result.append (a_result.internal_result)
+			parse_result.append (a_result.parse_result)
 			error_messages.append (a_result.error_messages)
 		ensure
-			internal_result_appended: internal_result.count = (old internal_result.count) + (old a_result.internal_result.count)
+			internal_result_appended: parse_result.count = (old parse_result.count) + (old a_result.parse_result.count)
 			error_messages_appended: error_messages.count = (old error_messages.count) + (old a_result.error_messages.count)
 		end
 
@@ -86,22 +86,22 @@ feature -- Access
 		require
 			a_result_attached: attached a_result
 		do
-			internal_result.wipe_out
+			parse_result.wipe_out
 			append_result (a_result)
 		ensure
-			only_new_result_in_list: internal_result.count = 1 and internal_result.first = a_result
+			only_new_result_in_list: parse_result.count = 1 and parse_result.first = a_result
 		end
 
-	set_result (a_result: like internal_result)
+	set_result (a_result: like parse_result)
 			-- Sets the result
 		require
 			a_result_attached: attached a_result
 		do
-			internal_result := a_result
+			parse_result := a_result
 		end
 
 	success: BOOLEAN assign set_success
-		-- Has the parsing been a success?
+			-- Has the parsing been a success?
 
 	set_success (is_success: BOOLEAN)
 			-- Sets the success.
@@ -164,14 +164,14 @@ feature -- Element change
 	out: STRING
 			-- <Precursor>
 		do
-			Result := left_to_parse.out + "," + success.out + " results(" + internal_result.count.out + "): "
+			Result := left_to_parse.out + "," + success.out + " results(" + parse_result.count.out + "): "
 			from
-				internal_result.start
+				parse_result.start
 			until
-				internal_result.after
+				parse_result.after
 			loop
-				Result.append ("%N%T" + internal_result.index.out + ": " + internal_result.item.out)
-				internal_result.forth
+				Result.append ("%N%T" + parse_result.index.out + ": " + parse_result.item.out)
+				parse_result.forth
 			end
 		end
 

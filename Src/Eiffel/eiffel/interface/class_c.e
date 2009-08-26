@@ -223,8 +223,17 @@ feature -- Access
 	is_debuggable: BOOLEAN
 			-- Is the class able to be debugged?
 			-- (not if it doesn't have class types)
+		local
+			rescued: BOOLEAN
 		do
-			Result := has_types
+			if rescued then
+				Result := False
+			else
+				Result := has_types
+			end
+		rescue
+			rescued := True
+			retry
 		end
 
 	has_expanded: BOOLEAN

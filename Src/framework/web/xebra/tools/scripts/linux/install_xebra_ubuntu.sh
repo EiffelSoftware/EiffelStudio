@@ -1,100 +1,242 @@
-# install_xebra_ubuntu.sh
+#!/bin/bash
+# Title
+# Description
+#
+#
+echo "This script will install Xebra."
 
-# install.sh
-echo "under construction!";
-exit;
+#Constants
 
+apache_dir="httpd-2.2.13"
+apache_file="$apache_dir.tar.gz"
+apache_url="http://www.apache.org/dist/httpd/$apache_file" 
+revision=80408
 
-if [ -x "$XEBRA_DEV" ]; then
-	:
-else
- 	echo "XEBRA_DEV is not defined. Please define before running script.";
- 	exit;
-fi;
-
-if [ -x "$EIFFEL_SRC" ]; then
-	:
-else
- 	echo "EIFFEL_SRC is not defined. Please define before running script.";
- 	exit;
-fi;
-
-if [ -x "$ISE_EIFFEL" ]; then
-	:
-else
- 	echo "ISE_EIFFEL is not defined. Please define before running script.";
- 	exit;
-fi;
+echo "Apache $apache_url will be installed..."
+echo "Xebra revision $revision will be installed..."
 
 
-if [ -x "$ISE_LIBRARY" ]; then
-	:
-else
- 	echo "ISE_LIBRARYis not defined. Please define before running script.";
- 	exit;
-fi;
+#Checks
+echo "=========================Checking environment..."
+
+if [ ! -x "`which wget`" ]; then
+ 	echo "Wget cannot be found! Please install wget!"
+	exit
+fi
+
+if [ ! -x "`which svn`" ]; then
+ 	echo "Svn cannot be found! Please install svn!"
+	exit
+fi
+
+if [ ! -x "`which tar`" ]; then
+ 	echo "Tar cannot be found! Please install tar!"
+	exit
+fi
+
+if [ ! -x "`which ecb`" ]; then
+ 	echo "Ecb cannot be found! Please add the Eiffel Studio bin directory to your PATH."
+	exit
+fi
+
+if [ ! -x "`which vim`" ]; then
+ 	echo "Vim cannot be found! Please install vim."
+	exit
+fi
+
+if [ ! -d "$XEBRA_DEV" ]; then
+ 	echo "XEBRA_DEV is not defined or is not a directory. Please define before running script, e.g. to ~/xebra"
+ 	exit
+fi
+
+if [ ! -d "$ISE_EIFFEL" ]; then
+ 	echo "ISE_EIFFEL is not defined or is not a directory. Please define before running script."
+ 	exit
+fi
 
 
-# Checkout xebra
+if [ ! -d "$ISE_LIBRARY" ]; then
+ 	echo "ISE_LIBRARY is not defined or is not a directory. Please define before running script."
+ 	exit
+fi
+
+wget -q --spider $apache_url
+if [ ! $? -eq 0 ]; then
+	echo "Apache $apache_url does not exist. Please update this script to use the latest apache version."
+	exit
+fi
+
+
+#==Setup xebra==
+#Create xebra dir
+echo "=========================Creating directories..."
+mkdir $XEBRA_DEV/apache
+mkdir $XEBRA_DEV/bin
+mkdir $XEBRA_DEV/www
+mkdir $XEBRA_DEV/conf
+mkdir $XEBRA_DEV/library
+mkdir $XEBRA_DEV/library/framework
+mkdir $XEBRA_DEV/upload_tmp
+
+
+#Set Xebra_library
+export XEBRA_LIBRARY=$XEBRA_DEV/eiffel_projects/library
+
+
+#Checkout needed libraries from framework
+echo "=========================Checking out framework libraries..."
 cd $XEBRA_DEV
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/eiffel_projects
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/tools
-svn co https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/www
+mkdir eiffel_src
+cd eiffel_src
+mkdir framework
+cd framework
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/base base
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/settable_types settable_types
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/string_expander string_expander
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/environment environment
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/peg peg
+export EIFFEL_SRC=$XEBRA_DEV/eiffel_src
 
-# Install apache
+#Checkout eiffel_projects
+echo "=========================Checking out xebra libraries..."
+cd $XEBRA_DEV
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/eiffel_projects -r $revision
+
+#Checkout ejson
+echo "=========================Checking out ejason..."
+cd $XEBRA_DEV
+svn export https://svn.origo.ethz.ch/ejson/trunk/json eiffel_projects/library/ejson
+
+
+#Compile Precompile
+echo "=========================Compiling precompile..."
+ecb -experiment -config $XEBRA_DEV/eiffel_projects/library/xebra_precompile/xebra_precompile.ecf -target xebra_precompile -c_compile  -precompile -stop -project_path $XEBRA_DEV/eiffel_projects/library/xebra_precompile
+
+#Compile Server
+echo "=========================Compiling server..."
+ecb -experiment -config $XEBRA_DEV/eiffel_projects/xebra_server/xebra_server.ecf  -target xebra_server -c_compile -finalize -stop -project_path $XEBRA_DEV/eiffel_projects/xebra_server
+
+#Compile Translator
+echo "=========================Compiling translator..."
+ecb -experiment -config $XEBRA_DEV/eiffel_projects/xebra_translator/xebra_translator.ecf  -target xebra_translator -c_compile -finalize -stop -project_path $XEBRA_DEV/eiffel_projects/xebra_translator
+
+#Copy server and translator
+cp $XEBRA_DEV/eiffel_projects/xebra_server/EIFGENs/xebra_server/F_code/xebra_server $XEBRA_DEV/bin
+cp $XEBRA_DEV/eiffel_projects/xebra_translator/EIFGENs/xebra_translator/F_code/xebra_translator $XEBRA_DEV/bin
+
+#Checkout webapps
+echo "=========================Checking out webapps..."
+cd $XEBRA_DEV/www
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/www/helloworld -r $revision helloworld
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/www/demoapplication -r $revision demoapplication
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/www/servercontrol -r $revision servercontrol
+
+echo "=========================Setting up webapps..."
+#Move xebra libraries
+cp -Rf $XEBRA_DEV/eiffel_projects/library $XEBRA_DEV
+
+#Move framework libraries
+cp -Rf $EIFFEL_SRC/framework $XEBRA_DEV/library
+
+
+#Replace '$EIFFEL_SRC' in ecfs with '$XEBRA_LIBRARY'
+cd $XEBRA_DEV/library
+a='$EIFFEL_SRC'
+b='$XEBRA_LIBRARY'
+for f in `find  -type f -name "*.ecf"`;
+ do
+  if grep $a $f;
+  then
+   cp $f $f.bak
+#   echo "The string $a will be replaced with $b in $f"
+   sed s/$a/$b/g < $f.bak > $f
+   rm $f.bak
+  fi
+ done
+
+#Write server config file
+echo '{' > $XEBRA_DEV/conf/config.srv
+echo '  "finalize_webapps": "false",' >> $XEBRA_DEV/conf/config.srv
+echo '  "compiler": "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec",' >> $XEBRA_DEV/conf/config.srv
+echo '  "translator": "$XEBRA_DEV/bin/xebra_translator",' >> $XEBRA_DEV/conf/config.srv
+echo '  "managed_webapps": "$XEBRA_DEV/www",' >> $XEBRA_DEV/conf/config.srv
+echo '  "library": "$XEBRA_LIBRARY",' >> $XEBRA_DEV/conf/config.srv
+echo ' "compiler_flags": "-experiment",' >> $XEBRA_DEV/conf/config.srv
+echo '  "unmanaged_webapps":' >> $XEBRA_DEV/conf/config.srv
+echo '  [' >> $XEBRA_DEV/conf/config.srv
+echo '  ]' >> $XEBRA_DEV/conf/config.srv
+echo '}' >> $XEBRA_DEV/conf/config.srv
+
+
+
+#==Install Apache==
 # mkdir httpd
+echo "=========================Installing apache..."
+cd $XEBRA_DEV
 mkdir httpd_tmp
 cd $XEBRA_DEV/httpd_tmp
-wget http://mirrors.directorymix.com/apache/httpd/httpd-2.2.11.tar.bz2
-tar -xf httpd-2.2.11.tar.bz2 
-cd $XEBRA_DEV/httpd_tmp/httpd-2.2.11
-./configure --prefix=$XEBRA_DEV/httpd
+wget $apache_url
+tar -xf $apache_file
+cd $XEBRA_DEV/httpd_tmp/$apache_dir
+./configure --prefix=$XEBRA_DEV/apache --with-port=55000
 make
 make install
 rm -Rf $XEBRA_DEV/httpd_tmp
 
 # Compile and install xebra module
+echo "=========================Installing mod_xebra..."
+cd $XEBRA_DEV
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/c_projects -r $revision c_projects
 cd $XEBRA_DEV/c_projects/apache_mod_xebra
-$XEBRA_DEV/httpd/bin/apxs -c -I$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include mod_xebra.c mod_xebra.h
-$XEBRA_DEV/httpd/bin/apxs -i mod_xebra.la
-echo "LoadModule xebra_module modules/mod_xebra.so" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "AddHandler mod_xebra .xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "AddHandler mod_xebra .xrpc" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "XebraServer_port \"55001\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "XebraServer_host \"localhost\"" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "XebraServer_max_upload_size 10000000" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "LogLevel debug" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "DirectoryIndex index.xeb" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo '<Files ~ "\.(ini|e|ecf)$">' >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo " Order allow,deny" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo " Deny from all" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "</Files>" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo '<Directory ~ "EIFGENs">' >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo " Order allow,deny" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo " Deny from all" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-echo "</Directory>" >> $XEBRA_DEV/httpd/conf/httpd.conf 
-sed -e 's/Listen 80/Listen 55000/' -i $XEBRA_DEV/httpd/conf/httpd.conf 
+$XEBRA_DEV/apache/bin/apxs -c mod_xebra.c mod_xebra.h
+$XEBRA_DEV/apache/bin/apxs -i mod_xebra.la
+echo "LoadModule xebra_module modules/mod_xebra.so" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "ServerName XebraServer" >> $XEBRA_DEV/apache/conf/httpd.conf
+echo "AddHandler mod_xebra .xeb" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "AddHandler mod_xebra .xrpc" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "XebraServer_port \"55001\"" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "XebraServer_host \"localhost\"" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "XebraServer_max_upload_size 10000000" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "XebraServer_upload_path $XEBRA_DEV/upload_tmp" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "LogLevel debug" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "DirectoryIndex index.xeb" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo '<Files ~ "\.(wapp|e|ecf)$">' >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo " Order allow,deny" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo " Deny from all" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "</Files>" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo '<Directory ~ "EIFGENs">' >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo " Order allow,deny" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo " Deny from all" >> $XEBRA_DEV/apache/conf/httpd.conf 
+echo "</Directory>" >> $XEBRA_DEV/apache/conf/httpd.conf 
 
-sed -e "s/^DocumentRoot.*$/Document Root $XEBRA_DEV\/www/" -i httpd.conf
+#Replace all '$XEBRA_DEV/apache/htdocs' with '$XEBRA_DEV/www' in httpd.conf
+echo $XEBRA_DEV > xebra_path
+vim -c "s/\\//\\\\\\//g" -c "wq" xebra_path
+sed -e "s/`cat xebra_path`\/apache\/htdocs/`cat xebra_path`\/www/g" -i httpd.conf
+rm xebra_path
 
-
-sed -e 's/(\^DocumentRoot.*)\\/httpd\/htdocs/$1\/www/' -i $XEBRA_DEV/httpd/conf/httpd.conf 
-
-
-$XEBRA_DEV/httpd/bin/apachectl start
-
-
-# Compile xebra translator
-cd $XEBRA_DEV/eiffel_projects/xebra_translator/
-ec -config xebra_translator-voidunsafe.ecf  -target xebra_translator -c_compile -clean -finalize
-
-# Compile xebra server
-cd $XEBRA_DEV/eiffel_projects/xebra_server
-ec -config xebra_server-voidunsafe.ecf -target xebra_server -c_compile -clean -finalize
-
-echo "Installation complete."
+#Creating launcher
+echo "cd $XEBRA_DEV/bin
+./xebra_server ../conf/config.srv"> $XEBRA_DEV/bin/launch_server.sh
+chmod +x $XEBRA_DEV/bin/launch_server.sh
+echo "cd $XEBRA_DEV/bin
+./xebra_server ../conf/config.srv -d 6"> $XEBRA_DEV/bin/launch_server_debug.sh
+chmod +x $XEBRA_DEV/bin/launch_server_debug.sh
+echo "$XEBRA_DEV/apache/bin/apachectl start"> $XEBRA_DEV/bin/launch_apache.sh
+chmod +x $XEBRA_DEV/bin/launch_apache.sh
 
 
+
+#==Clean Up==
+#Delete checkout dir
+rm -Rf $XEBRA_DEV/eiffel_src
+rm -Rf $XEBRA_DEV/eiffel_projects
+rm -Rf $XEBRA_DEV/c_projects
+rm -Rf $XEBRA_DEV/library/xebra_precompile/EIFGENs
+
+#Start apache
+$XEBRA_DEV/apache/bin/apachectl start
+
+echo "Installation complete. Please define XEBRA_LIBRARY to $XEBRA_DEV/library. "
 
 

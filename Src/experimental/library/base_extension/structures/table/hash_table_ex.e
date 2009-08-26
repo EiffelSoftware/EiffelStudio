@@ -17,7 +17,7 @@ class
 inherit
 	HASH_TABLE [G, K]
 		redefine
-			same_keys, copy, is_equal
+			same_keys, copy, is_equal, empty_duplicate
 		end
 
 create
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make_with_key_tester (n: INTEGER; a_key_tester: EQUALITY_TESTER [K])
+	make_with_key_tester (n: INTEGER; a_key_tester: detachable EQUALITY_TESTER [K])
 			-- Allocate hash table for at least `n' items with `a_key_tester' to compare keys.
 			-- The table will be resized automatically if more than `n' items are inserted.
 		require
@@ -37,6 +37,7 @@ feature -- Initialization
 		ensure
 			breathing_space: n < capacity
 			more_than_minimum: capacity > minimum_capacity
+			key_tester_set: key_tester = a_key_tester
 			no_status: not special_status
 		end
 
@@ -48,6 +49,14 @@ feature -- Duplication
 			if other /= Current then
 				Precursor {HASH_TABLE} (other)
 			end
+		end
+
+feature {NONE} -- Duplication
+
+	empty_duplicate (n: INTEGER_32): like Current
+			-- <Precursor>
+		do
+			create Result.make_with_key_tester (n, key_tester)
 		end
 
 feature -- Comparison

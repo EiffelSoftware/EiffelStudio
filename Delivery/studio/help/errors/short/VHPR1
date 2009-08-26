@@ -1,2 +1,2 @@
 Error: cycle in inheritance relation.
-What to do: make sure that Parent clause does not list any descendant.
+What to do: make sure that Parent clause does not list itself or any descendant.

@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes current
 		do
-			launched := False
-			running := False
+			is_launched := False
+			is_running := False
 			name := ""
 		end
 
@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 		require
 			a_module_attached: a_module /= Void
 		do
-			launched := a_module.launched
-			running := a_module.running
+			is_launched := a_module.is_launched
+			is_running := a_module.is_running
 			name := a_module.name
 		end
 

@@ -130,7 +130,7 @@ feature -- Basic Functionality
 			create l_current_file.make (current_file_path)
 			create l_util
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
-				o.iprint ("The servlet '" + l_filename + "' is being generated...")
+				log.iprint ("The servlet '" + l_filename + "' is being generated...")
 
 				create l_buf.make (l_file)
 				create l_servlet_class.make_with_constants (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET", constants_class)
@@ -150,7 +150,7 @@ feature -- Basic Functionality
 				l_servlet_class.serialize (l_buf)
 
 				l_util.close
-				o.iprint ("done.")
+				log.iprint ("done.")
 			end
 			l_executed_filename := path.twin
 			l_executed_filename.extend ({XU_CONSTANTS}.Generated_folder_name) 

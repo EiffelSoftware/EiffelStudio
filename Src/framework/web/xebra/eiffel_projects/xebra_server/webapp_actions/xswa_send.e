@@ -13,9 +13,6 @@ class
 inherit
 	XS_WEBAPP_ACTION
 
-create
-	make
-
 feature -- Status report
 
 	is_necessary: BOOLEAN
@@ -35,7 +32,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_execute: XC_COMMAND_RESPONSE
+	internal_execute
 			-- <Precursor>
 		require else
 			webapp_attached: webapp /= Void
@@ -43,46 +40,46 @@ feature {NONE} -- Implementation
 			l_webapp_socket: detachable NETWORK_STREAM_SOCKET
 			retried: BOOLEAN
 		do
-			create {XCCR_INTERNAL_SERVER_ERROR}Result
+			create {XCCR_INTERNAL_SERVER_ERROR}internal_last_response
 			if attached webapp as l_wa then
 				if not retried then
 					if attached {XC_WEBAPP_COMMAND} l_wa.current_request as l_current_request then
-						o.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", o.Debug_verbose_subtasks)
+						log.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", log.debug_verbose_subtasks)
 						create l_webapp_socket.make_client_by_port (l_wa.app_config.port, l_wa.app_config.webapp_host)
-						o.dprint ("Connecting to " + l_wa.app_config.name.out + "@" + l_wa.app_config.port.out, o.Debug_subtasks)
+						log.dprint ("Connecting to " + l_wa.app_config.name.out + "@" + l_wa.app_config.port.out, log.debug_subtasks)
 						l_webapp_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
 						l_webapp_socket.set_connect_timeout ({XU_CONSTANTS}.Socket_connect_timeout)
 						l_webapp_socket.connect
 			            if  l_webapp_socket.is_connected then
-							o.dprint ("Forwarding command", o.Debug_subtasks)
+							log.dprint ("Forwarding command", log.debug_subtasks)
 							l_webapp_socket.put_natural (0)
 
 				            l_webapp_socket.independent_store (l_current_request)
 
 				            if l_current_request.has_response then
-				            	o.dprint ("Waiting for response", o.Debug_subtasks)
+				            	log.dprint ("Waiting for response", log.debug_subtasks)
 					            l_webapp_socket.read_natural
 								if attached {XC_COMMAND_RESPONSE} l_webapp_socket.retrieved as l_response then
-									o.dprint ("Response retrieved", o.Debug_subtasks)
-					            	Result := l_response
+									log.dprint ("Response retrieved", log.debug_subtasks)
+					            	internal_last_response := l_response
 					            else
-					            	Result := (create {XER_BAD_RESPONSE}.make (l_wa.app_config.name.out)).render_to_command_response
+					            	internal_last_response := (create {XER_BAD_RESPONSE}.make (l_wa.app_config.name.out)).render_to_command_response
 					            end
 						   else
-						   		Result := create {XCCR_NO_RESPONSE}
+						   		internal_last_response := create {XCCR_NO_RESPONSE}
 						   end
 
 				        else
-				        	Result := (create {XER_CANNOT_CONNECT}.make (l_wa.app_config.name.out)).render_to_command_response
+				        	internal_last_response := (create {XER_CANNOT_CONNECT}.make (l_wa.app_config.name.out)).render_to_command_response
 				        end
 				        l_webapp_socket.cleanup
 				    end
 				else
-					Result := (create {XER_CANNOT_CONNECT}.make (l_wa.app_config.name.out)).render_to_command_response
+					internal_last_response := (create {XER_CANNOT_CONNECT}.make (l_wa.app_config.name.out)).render_to_command_response
 				end
 			end
 		rescue
-	    	o.eprint ("Exception while sending command to webapp", generating_type)
+	    	log.eprint ("Exception while sending command to webapp", generating_type)
 	    	if l_webapp_socket /= Void then
 		    	l_webapp_socket.cleanup
 	    	end

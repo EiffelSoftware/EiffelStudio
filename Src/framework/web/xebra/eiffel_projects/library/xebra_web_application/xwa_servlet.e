@@ -83,7 +83,7 @@ feature -- Basic Operations
 		local
 			l_internal_controllers: LIST [XWA_CONTROLLER]
 		do
-			o.dprint ("Processing request...", o.Debug_tasks)
+			log.dprint ("Processing request...", log.debug_tasks)
 
 			current_session := a_session_manager.current_session (a_request)
 			l_internal_controllers := internal_controllers

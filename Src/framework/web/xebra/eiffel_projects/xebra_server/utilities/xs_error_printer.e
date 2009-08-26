@@ -29,13 +29,13 @@ feature -- Basic Operations
 	print_error (a_error: ERROR_ERROR_INFO)
 			-- <Precursor>.
 		do
-			o.eprint (a_error.description, a_error.generating_type)
+			log.eprint (a_error.description, a_error.generating_type)
 		end
 
 	print_warning (a_warning: ERROR_WARNING_INFO)
 			-- <Precursor>.
 		do
-			o.iprint ("Warning: " + a_warning.description)
+			log.iprint ("Warning: " + a_warning.description)
 		end
 
 end

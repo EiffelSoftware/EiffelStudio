@@ -65,7 +65,7 @@ feature -- Implementation
 			create l_current_file.make (current_file_path)
 			create l_util
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
-				o.iprint ("The xrpc_servlet '" + l_filename + "' is being generated...")
+				log.iprint ("The xrpc_servlet '" + l_filename + "' is being generated...")
 				create l_buf.make (l_file)
 				create l_servlet_class.make_with_constants (Generator_Prefix.as_upper + servlet_name.as_upper + "_SERVLET", constants_class)
 				l_servlet_class.set_inherit (Servlet_xrpc_class_name + " [" + api_class_name + "] redefine namespace end")
@@ -73,7 +73,7 @@ feature -- Implementation
 				build_handle_request_feature_for_servlet (l_servlet_class, get_root_tag)
 				l_servlet_class.serialize (l_buf)
 				l_util.close
-				o.iprint ("done.")
+				log.iprint ("done.")
 			end
 			l_executed_filename := path.twin
 			l_executed_filename.extend ({XU_CONSTANTS}.Generated_folder_name)

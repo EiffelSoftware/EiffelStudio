@@ -24,7 +24,12 @@ feature -- Access
 	description: STRING
 			-- <Precursor>
 		do
-			Result := "Sets a debug level (overrides debug level from arguments)."
+			Result := "Sets a debug level (overrides debug level from arguments):%N%T1: Start and stop of overall application" +
+														  "%N%T2: Application configuration" +
+														  "%N%T3: Start and stop of main components" +
+														  "%N%T4: Information about tasks that are performed" +
+														  "%N%T5: Information about subtasks that are performed" +
+														  "%N%T6: Very verbose information about subtasks that are performed."
 		end
 
 	parameter_description: STRING

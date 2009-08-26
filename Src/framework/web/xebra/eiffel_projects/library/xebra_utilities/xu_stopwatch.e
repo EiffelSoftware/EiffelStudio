@@ -10,9 +10,19 @@ note
 deferred class
 	XU_STOPWATCH
 
-feature {NONE} -- Implementation
+feature -- Access
 
-	the_start_time: NATURAL
+	last_elapsed_time: STRING
+			-- The elapsed time between star_time and stop_time
+		attribute
+				create Result.make_empty
+		end
+		
+feature {NONE} -- Access
+
+	internal_start_time: NATURAL
+
+feature -- Status Setting
 
 	start_time
 			-- Starts the stopwatch
@@ -20,17 +30,16 @@ feature {NONE} -- Implementation
 			l_time: XU_DATE
 		do
 			create l_time
-			the_start_time := l_time.time_stamp_milliseconds
+			internal_start_time := l_time.time_stamp_milliseconds
 		end
 
-	stop_time: STRING
-			-- Stops the stopwatch and returns the elapsed time
+	stop_time
+			-- Stops the stopwatch
 		local
 			l_time: XU_DATE
 		do
 			create l_time
-			Result := (l_time.time_stamp_milliseconds - the_start_time).out + "ms"
-
+			last_elapsed_time := (l_time.time_stamp_milliseconds - internal_start_time).out + "ms"
 		end
 
 end

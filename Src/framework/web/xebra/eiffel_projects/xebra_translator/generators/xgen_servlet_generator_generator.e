@@ -200,14 +200,14 @@ feature -- Basic functionality
 						create buf.make (l_file)
 						servlet_gen_class.serialize (buf)
 						l_util.close
-						o.dprint ("Servlet generator generated at: " + l_filename, o.Debug_tasks)
+						log.dprint ("Servlet generator generated at: " + l_filename, log.debug_tasks)
 					end
 				else
-					o.dprint ("Already up to date: " + l_filename, o.Debug_tasks)
+					log.dprint ("Already up to date: " + l_filename, log.debug_tasks)
 				end
 				is_generated := True
 			else
-				o.dprint ("Unresolved regions in : " + servlet_name, o.Debug_tasks)
+				log.dprint ("Unresolved regions in : " + servlet_name, log.debug_tasks)
 			end
 		end
 

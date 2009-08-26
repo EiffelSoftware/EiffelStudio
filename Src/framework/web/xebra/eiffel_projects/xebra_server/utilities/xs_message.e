@@ -67,7 +67,7 @@ feature -- Status setting
 		do
 			length := a_length
 		ensure
-			length_set: equal (length, a_length)
+			length_set: length ~ a_length
 		end
 
 	set_flag (a_flag: BOOLEAN)
@@ -75,7 +75,7 @@ feature -- Status setting
 		do
 			flag := a_flag
 		ensure
-			flag_set: equal (flag, a_flag)
+			flag_set: flag ~ a_flag
 		end
 
 invariant

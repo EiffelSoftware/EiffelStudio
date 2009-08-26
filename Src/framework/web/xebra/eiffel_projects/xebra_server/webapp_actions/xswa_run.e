@@ -13,9 +13,6 @@ class
 inherit
 	XS_WEBAPP_ACTION
 
-create
-	make
-
 feature -- Access
 
 	run_process: detachable PROCESS
@@ -26,7 +23,7 @@ feature -- Access
 		local
 			l_f: FILE_NAME
 		do
-			l_f := app_dir.twin
+			create l_f.make_from_string (app_dir)
 			l_f.set_file_name ({XU_CONSTANTS}.Webapp_config_file)
 			Result := "%"" + l_f.string + "%" -d " + config.args.debug_level.out + ""
 						--webapp_debug_level.out
@@ -45,9 +42,9 @@ feature -- Status report
 			Result := not is_running
 
 			if Result then
-				o.dprint ("Run is necessary.", o.Debug_tasks)
+				log.dprint ("Run is necessary.", log.debug_tasks)
 			else
-				o.dprint ("Run is not necessary", o.Debug_tasks)
+				log.dprint ("Run is not necessary", log.debug_tasks)
 			end
 		end
 
@@ -55,7 +52,7 @@ feature -- Status report
 			-- Waits until process is terminated
 		do
 			if attached {PROCESS} run_process as p  and then p.is_running then
-				o.dprint ("Waiting for run_process to exit...", o.Debug_tasks)
+				log.dprint ("Waiting for run_process to exit...", log.debug_tasks)
 				p.wait_for_exit
 				set_running (False)
 			end
@@ -70,7 +67,7 @@ feature -- Status setting
 		do
 			if attached webapp as l_wa then
 				if attached {PROCESS} run_process as p  and then p.is_running then
-					o.dprint ("Terminating run_process for " + l_wa.app_config.name.out  + "", o.Debug_tasks)
+					log.dprint ("Terminating run_process for " + l_wa.app_config.name.out  + "", log.debug_tasks)
 					p.terminate
 					p.wait_for_exit
 				end
@@ -81,16 +78,16 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_execute: XC_COMMAND_RESPONSE
+	internal_execute
 			-- <Precursor>
 		require else
 			webapp_attached: webapp /= Void
 		do
 			if attached webapp as l_wa then
 				if  not is_running then
-					if can_launch_process (webapp_exe, run_workdir) then
-						o.dprint("-=-=-=--=-=LAUNCHING WEBAPP  -=-=-=-=-=-=", o.Debug_verbose_subtasks)
-						run_process := launch_process (webapp_exe,
+					if can_launch_process (webapp_exe_file, run_workdir) then
+						log.dprint("-=-=-=--=-=LAUNCHING WEBAPP  -=-=-=-=-=-=", log.debug_verbose_subtasks)
+						run_process := launch_process (webapp_exe_file,
 													run_args,
 													run_workdir,
 													agent run_process_exited,
@@ -99,9 +96,9 @@ feature {NONE} -- Implementation
 						set_running (True)
 					end
 				end
-				Result := (create {XER_APP_STARTING}.make (l_wa.app_config.name.out)).render_to_command_response
+				internal_last_response := (create {XER_APP_STARTING}.make (l_wa.app_config.name.out)).render_to_command_response
 			else
-				create {XCCR_INTERNAL_SERVER_ERROR}Result
+				create {XCCR_INTERNAL_SERVER_ERROR}internal_last_response
 			end
 		end
 
@@ -117,7 +114,7 @@ feature {NONE} -- Internal Status Setting
 				l_wa.is_running := a_running
 			end
 		ensure
-			set: equal (is_running, a_running)
+			set: is_running ~ a_running
 		end
 
 feature -- Agents
@@ -130,7 +127,7 @@ feature -- Agents
 		do
 			if attached webapp as l_wa then
 				set_running (False)
-				o.dprint ("Run process for " + l_wa.app_config.name.out + " has exited.", o.Debug_subtasks)
+				log.dprint ("Run process for " + l_wa.app_config.name.out + " has exited.", log.debug_subtasks)
 			end
 		end
 

@@ -28,11 +28,11 @@ feature {NONE} -- Initialization
 			persons:= a_persons
 			description:= a_description
 		ensure
-			id_set: equal (id, a_id)
-			name_set: equal (name, a_name)
-			date_set: date = a_date
-			persons_set: equal (persons, a_persons)
-			description_set: equal (description, a_description)
+			id_set:  id ~ a_id
+			name_set:  name ~ a_name
+			date_set: date ~ a_date
+			persons_set: persons ~ a_persons
+			description_set: description ~ a_description
 		end
 
 	make

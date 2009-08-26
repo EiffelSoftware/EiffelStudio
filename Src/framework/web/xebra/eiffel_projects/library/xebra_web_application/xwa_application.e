@@ -48,9 +48,9 @@ feature {NONE} -- Operations Internal
 				config.copy_from (l_config)
 				config.arg_config.set_debug_level (a_arg_parser.debug_level)
 				config.set_is_interactive (a_arg_parser.is_interactive)
-				o.set_name (config.name.out)
-				o.set_debug_level (config.arg_config.debug_level)
-				o.iprint ("Starting " + config.name.out + "@" + config.port.out)
+				log.set_name (config.name.out)
+				log.set_debug_level (config.arg_config.debug_level)
+				log.iprint ("Starting " + config.name.out + "@" + config.port.out)
 				initialize_server_connection_handler
 				run
 
@@ -78,23 +78,23 @@ feature {NONE} -- Operations Internal
 		do
 			if attached server_connection_handler as server then
 				if not server.is_bound then
-					o.eprint ("Socket could not be bound!", generating_type)
+					log.eprint ("Socket could not be bound!", generating_type)
 				else
 					server.launch
-					o.iprint ("Xebra Web Application ready to rock...")
+					log.iprint ("Xebra Web Application ready to rock...")
 					if config.is_interactive then
-						o.iprint ("(enter 'x' to shut down)")
+						log.iprint ("(enter 'x' to shut down)")
 						from
 						until
 							io.last_character.is_equal ('x')
 						loop
 							io.read_character
 						end
-						o.iprint ("Shutting down...")
+						log.iprint ("Shutting down...")
 						server.shutdown.do_nothing
 					end
 					server.join
-					o.iprint ("Bye!")
+					log.iprint ("Bye!")
 				end
 			end
 		end

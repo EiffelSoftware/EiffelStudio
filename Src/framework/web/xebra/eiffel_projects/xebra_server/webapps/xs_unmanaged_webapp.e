@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			l_config.set_port (a_port)
 			make_with_config (l_config)
 			current_request := create {XCWC_EMPTY}.make
-			create action_send.make
+			create action_send
 			action_send.set_webapp (current)
 			is_running := True
 		ensure then
@@ -55,7 +55,8 @@ feature -- Actions
 			if is_disabled then
 				Result := (create {XER_DISABLED}.make(app_config.name)).render_to_command_response
 			else
-				Result := action_send.execute
+				action_send.execute
+				Result := action_send.last_response
 			end
 		end
 
@@ -64,7 +65,8 @@ feature -- Actions
 		do
 			Result := True
 			current_request :=  create {XCWC_GET_SESSIONS}.make
-			if attached {XCCR_GET_SESSIONS} action_send.execute as l_response then
+			action_send.execute
+			if attached {XCCR_GET_SESSIONS} action_send.last_response as l_response then
 				sessions := l_response.sessions
 			else
 				Result := False

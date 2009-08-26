@@ -17,8 +17,8 @@ feature {NONE} -- Initialization
 		require
 			a_name_attached: a_name /= Void
 		do
-			launched := False
-			running := False
+			is_launched := False
+			is_running := False
 			name := a_name
 		ensure
 			name_set: equal(name, a_name)
@@ -30,10 +30,10 @@ feature  -- Access
 
 feature -- Status report
 
-	launched: BOOLEAN
+	is_launched: BOOLEAN
 		-- Checks if a module has been launched
 
-	running: BOOLEAN
+	is_running: BOOLEAN
 		-- Checks if a module is currently running	
 
 feature -- Status setting

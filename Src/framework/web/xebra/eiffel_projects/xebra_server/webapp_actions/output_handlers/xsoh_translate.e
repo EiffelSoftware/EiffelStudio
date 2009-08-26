@@ -33,7 +33,7 @@ feature -- Status setting
 	internal_handle_output (a_output: STRING)
 			-- <Precursor>
 		do
-			o.dprint_noformat(a_output, o.debug_subtasks)
+			log.dprint_noformat(a_output, log.debug_subtasks)
 		end
 
 feature -- Status report

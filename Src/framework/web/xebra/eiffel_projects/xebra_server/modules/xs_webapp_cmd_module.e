@@ -13,7 +13,7 @@ class
 inherit
 	XC_SERVER_MODULE
 		rename
-			make as base_make
+			make as module_make
 		end
 	THREAD
 	XS_SHARED_SERVER_CONFIG
@@ -30,11 +30,11 @@ feature -- Initialization
 			a_main_server_attached: a_main_server /= Void
 			a_name_attached: a_name /= Void
 		do
-			base_make (a_name)
+			module_make (a_name)
 			main_server := a_main_server
  		ensure
-			main_server_set: equal (a_main_server, main_server)
-			name_set: equal (name, a_name)
+			main_server_set: a_main_server ~ main_server
+			name_set: name ~ a_name
 		end
 
 feature -- Inherited Features
@@ -47,19 +47,19 @@ feature -- Inherited Features
 
 		do
 			stop := False
-			launched := True
-			running := True
+			is_launched := True
+			is_running := True
 
 			create l_cmd_socket.make_server_by_port ({XU_CONSTANTS}.Cmd_server_port)
 
 			if not l_cmd_socket.is_bound then
-				o.eprint ("Socket could not be bound on port " + {XU_CONSTANTS}.Cmd_server_port.out, generating_type)
+				log.eprint ("Socket could not be bound on port " + {XU_CONSTANTS}.Cmd_server_port.out, generating_type)
 			else
 
 	 	       	l_cmd_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
 				from
 	                l_cmd_socket.listen ({XU_CONSTANTS}.Max_tcp_clients.as_integer_32)
-	                o.dprint("Command Server ready on port " + {XU_CONSTANTS}.Cmd_server_port.out, o.Debug_start_stop_components)
+	                log.dprint("Command Server ready on port " + {XU_CONSTANTS}.Cmd_server_port.out, log.debug_start_stop_components)
 	            until
 	            	stop
 	            loop
@@ -67,14 +67,14 @@ feature -- Inherited Features
 
 	                if not stop then
 			            if attached {NETWORK_STREAM_SOCKET} l_cmd_socket.accepted as thread_cmd_socket then
-	 					 	o.dprint ("Command connection to Webapp accepted", o.Debug_verbose_subtasks)
+	 					 	log.dprint ("Command connection to Webapp accepted", log.debug_verbose_subtasks)
 	 					 	thread_cmd_socket.read_natural
 				            if attached {XC_SERVER_COMMAND} thread_cmd_socket.retrieved as l_command then
-				            	o.dprint ("Command retreived...", o.Debug_verbose_subtasks)
+				            	log.dprint ("Command retreived...", log.debug_verbose_subtasks)
 								l_command_response := l_command.execute (main_server)
 
 					 	       	if l_command.has_response then
-						 	       	o.dprint ("Sending back command_response...", o.Debug_subtasks)
+						 	       	log.dprint ("Sending back command_response...", log.debug_subtasks)
 									thread_cmd_socket.put_natural (0)
 									thread_cmd_socket.independent_store (l_command_response)
 					 	       	end
@@ -93,11 +93,11 @@ feature -- Inherited Features
 	        	check
 	        		l_cmd_socket.is_closed
 	       		end
-	       		o.dprint("Command Server ends.", o.Debug_start_stop_components)
-	       		running := False
+	       		log.dprint("Command Server ends.", log.debug_start_stop_components)
+	       		is_running := False
 	       	end
        		rescue
-       			o.eprint ("Command Server Module shutdown due to exception. Please relaunch manually.", generating_type)
+       			log.eprint ("Command Server Module shutdown due to exception. Please relaunch manually.", generating_type)
 
 				if attached {NETWORK_STREAM_SOCKET} l_cmd_socket as ll_cmd_socket then
 					ll_cmd_socket.cleanup
@@ -107,7 +107,7 @@ feature -- Inherited Features
 				end
 
 				stop := True
-				running := False
+				is_running := False
        	end
 
 feature -- Access

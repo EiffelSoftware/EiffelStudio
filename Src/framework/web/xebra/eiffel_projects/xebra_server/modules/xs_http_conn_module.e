@@ -14,7 +14,7 @@ class
 inherit
 	XC_SERVER_MODULE
 		rename
-			make as base_make
+			make as module_make
 		end
 
 	THREAD
@@ -39,14 +39,14 @@ feature {NONE} -- Initialization
 			a_main_server_attached: a_main_server /= Void
 			a_name_attached: a_name /= Void
 		do
-			base_make (a_name)
+			module_make (a_name)
 			main_server := a_main_server
 	       	current_request_message := ""
-            stop := False
+            is_stop_requested := False
          ensure
-           main_server_set: equal (a_main_server, main_server)
+           main_server_set: a_main_server ~ main_server
            current_request_message_attached: current_request_message /= Void
-           name_set: equal (name, a_name)
+           name_set: name ~ a_name
 	end
 
 feature -- Inherited Features
@@ -61,52 +61,53 @@ feature -- Inherited Features
 			l_http_socket: detachable NETWORK_STREAM_SOCKET
 			l_webapp_handler: XS_WEBAPP_HANDLER
 		do
-			stop := False
-			launched := True
-			running := True
+			is_stop_requested := False
+			is_launched := True
+			is_running := True
 			create l_http_socket.make_server_by_port ({XU_CONSTANTS}.Http_server_port)
 
 			if not l_http_socket.is_bound then
-				o.eprint ("Socket could not be bound on port " + {XU_CONSTANTS}.Http_server_port.out , generating_type)
+				log.eprint ("Socket could not be bound on port " + {XU_CONSTANTS}.Http_server_port.out , generating_type)
 			else
 				create l_webapp_handler
 	 	       	l_http_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
 				from
 	                l_http_socket.listen ({XU_CONSTANTS}.Max_tcp_clients.as_integer_32)
-	                o.dprint("HTTP Connection Server ready on port " + {XU_CONSTANTS}.Http_server_port.out, o.Debug_start_stop_components)
+	                log.dprint("HTTP Connection Server ready on port " + {XU_CONSTANTS}.Http_server_port.out, log.debug_start_stop_components)
 	            until
-	            	stop
+	            	is_stop_requested
 	            loop
 	                l_http_socket.accept
-	                if not stop then
+	                if not is_stop_requested then
 			            if attached {NETWORK_STREAM_SOCKET} l_http_socket.accepted as thread_http_socket then
 
-			            	if config.args.debug_level >= o.Debug_configuration then
+			            	if config.args.debug_level >= log.debug_configuration then
 			            		start_time
 			            	end
 
-			            	 if receive_message (thread_http_socket) then
+			            	 if receive_message_from_http (thread_http_socket) then
 								l_response := l_webapp_handler.forward_request (current_request_message)
 			            	else
 								l_response := (create {XER_INTERNAL_SERVER_ERROR}.make ("Error decoding message from mod_xebra.")).render_to_command_response
 							end
 
-							o.dprint ("%N%N----%N" + current_request_message + "%N", 7)
+							log.dprint ("%N%N----%N" + current_request_message + "%N", 7)
 
 
 							if attached {XCCR_HTTP_REQUEST} l_response as l_http_response then
-								o.dprint ("%N%N-------------%N" + l_http_response.response.render_to_string + "%N", 7)
-								send_message_to_http (l_http_response.response.render_to_string, thread_http_socket)
+								log.dprint ("%N%N-------------%N" + l_http_response.response.render_to_string + "%N", 7)
+								send_message_to_http_server (l_http_response.response.render_to_string, thread_http_socket)
 							else
-								send_message_to_http ( (create {XER_INTERNAL_SERVER_ERROR}.make ("")).render_to_response.render_to_string, thread_http_socket)
+								send_message_to_http_server ( (create {XER_INTERNAL_SERVER_ERROR}.make ("")).render_to_response.render_to_string, thread_http_socket)
 							end
 
 				         	thread_http_socket.cleanup
 				            check
 				            	thread_http_socket.is_closed
 				            end
-				            if config.args.debug_level >= o.Debug_configuration then
-			            		o.dprint ("Server Request Time: " + stop_time, o.Debug_configuration)
+				            if config.args.debug_level >= log.debug_configuration then
+				            	stop_time
+			            		log.dprint ("Server Request Time: " + last_elapsed_time, log.debug_configuration)
 			            	end
 						end
 					end
@@ -116,10 +117,10 @@ feature -- Inherited Features
 	        		l_http_socket.is_closed
 	       		end
        		end
-       		running := False
-       		o.dprint("HTTP Connection Server ends.", o.Debug_start_stop_components)
+       		is_running := False
+       		log.dprint("HTTP Connection Server ends.", log.debug_start_stop_components)
        	rescue
-       		o.eprint ("HTTP Connection Server Module shutdown due to exception. Please relaunch manually.", generating_type)
+       		log.eprint ("HTTP Connection Server Module shutdown due to exception. Please relaunch manually.", generating_type)
 
 			if attached {NETWORK_STREAM_SOCKET} l_http_socket as ll_http_socket then
 				ll_http_socket.cleanup
@@ -127,13 +128,13 @@ feature -- Inherited Features
 	        		ll_http_socket.is_closed
 	       		end
 			end
-			stop := True
-			running := False
+			is_stop_requested := True
+			is_running := False
        	end
 
 feature -- Access
 
-	stop: BOOLEAN
+	is_stop_requested: BOOLEAN
 			-- Set true to stop accept loop
 
 feature {NONE} -- Access
@@ -152,12 +153,12 @@ feature -- Status setting
 	shutdown
 			-- Stops the thread
 		do
-			stop := True
+			is_stop_requested := True
 		end
 
 feature {NONE} -- Implementation
 
-	send_message_to_http (a_message: STRING; a_http_socket: NETWORK_STREAM_SOCKET)
+	send_message_to_http_server (a_message: STRING; a_http_socket: NETWORK_STREAM_SOCKET)
 			-- Sends a string over the specified socket.
 			--
 			-- `a_message': The message to be sent
@@ -169,7 +170,7 @@ feature {NONE} -- Implementation
 			l_fragment: BOOLEAN
 			l_index, l_message_size, l_fragment_size: NATURAL
 		do
-			o.dprint ("Sending response to http", o.Debug_tasks)
+			log.dprint ("Sending response to http", log.debug_tasks)
 			create l_data.make ({XS_MESSAGE}.message_upper_bound.as_integer_32 + {PLATFORM}.natural_32_bytes)
 			l_fragment := false
 			l_message_size := a_message.count.as_natural_32
@@ -184,13 +185,13 @@ feature {NONE} -- Implementation
 				l_fragment := (a_message.count.as_natural_32 - l_index) > {XS_MESSAGE}.message_upper_bound
 				l_fragment_size := {XS_MESSAGE}.message_upper_bound.min (a_message.count.as_natural_32-l_index+1)
 
-				write_message_to_data (l_data, a_message, l_index, l_index + l_fragment_size, l_fragment)
+				encode_string (l_data, a_message, l_index, l_index + l_fragment_size, l_fragment)
 				a_http_socket.put_managed_pointer (l_data, 0, l_fragment_size.as_integer_32 + {PLATFORM}.natural_32_bytes)
 				l_index := l_index + l_fragment_size
 			end
 		end
 
-	write_message_to_data (a_d: MANAGED_POINTER;
+	encode_string (a_d: MANAGED_POINTER;
 						   a_message: STRING;
 						   a_start_index, a_end_index: NATURAL;
 						   a_fragment: BOOLEAN)
@@ -226,7 +227,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_string (a_socket: NETWORK_STREAM_SOCKET; a_n: NATURAL): STRING
+	read_string_from_socket (a_socket: NETWORK_STREAM_SOCKET; a_n: NATURAL): STRING
 			-- Reads `n' characters from the socket and concatenates them to a string
 			--
 			-- `a_socket': The socket to read from
@@ -258,7 +259,7 @@ feature {NONE} -- Implementation
 			Result_attached: Result /= Void
 		end
 
-	receive_message (a_http_socket: NETWORK_STREAM_SOCKET): BOOLEAN
+	receive_message_from_http (a_http_socket: NETWORK_STREAM_SOCKET): BOOLEAN
 			-- Decodes an incoming message and stores it in current_request_message. Returns true if sucessful
 			--
 			-- `a_http_socket': The socket to read from
@@ -293,13 +294,13 @@ feature {NONE} -- Implementation
 		          		l_msg.flag := encoder.decode_flag (a_http_socket.last_natural_32)
 		           		if not l_msg.is_length_valid then
 		          			l_error := True
-		           			o.eprint ("Could not decode msg length", generating_type)
+		           			log.eprint ("Could not decode msg length", generating_type)
 		           		else
-		           			l_buf := read_string (a_http_socket, l_msg.length)
+		           			l_buf := read_string_from_socket (a_http_socket, l_msg.length)
 		           			l_msg.append_string(l_buf)
 		           		if (l_frag_counter >= Max_fragments) then
 		           			l_error := True
-		           			o.eprint ("Maximumg fragments reached", generating_type)
+		           			log.eprint ("Maximumg fragments reached", generating_type)
 		           		end
 		           		l_frag_counter := l_frag_counter + 1
 		           		end
@@ -314,7 +315,7 @@ feature {NONE} -- Implementation
 
 				end
             else
-            	o.eprint ("Exception while receiving message", generating_type)
+            	log.eprint ("Exception while receiving message", generating_type)
             end
             rescue
             	l_retried := True

@@ -45,9 +45,9 @@ feature -- Actions
 	fire_off
 			-- Sends shutdown signal no matter what
 		do
-			o.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", o.Debug_tasks)
+			log.dprint ("Sending shutdown command to '" + app_config.name.value + "'...", log.debug_tasks)
 			current_request := 	create {XCWC_SHUTDOWN}.make
-			action_send.execute.do_nothing
+			action_send.execute
 		end
 
 invariant

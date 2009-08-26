@@ -40,7 +40,7 @@ feature -- Processing
 				l_original_uri := l_new_request.uri
 				create l_response.make_empty
 
-				o.dprint ("Searching matching servlet...", o.Debug_tasks)
+				log.dprint ("Searching matching servlet...", log.debug_tasks)
 				l_servlet := find_servlet (l_new_request, a_server_conn_handler)
 
 				if not attached l_servlet then
@@ -52,11 +52,11 @@ feature -- Processing
 				end
 
 				if attached l_servlet then
-					o.dprint ("Handing over to matching servlet...", o.Debug_subtasks)
+					log.dprint ("Handing over to matching servlet...", log.debug_subtasks)
 					l_servlet.pre_handle_request (a_session_manager, l_new_request, l_response)
 					l_new_request := post_process_response (l_response, l_new_request)
 				else
-					o.dprint ("No matching servlet found.", o.Debug_tasks)
+					log.dprint ("No matching servlet found.", log.debug_tasks)
 					l_response := (create {XER_CANNOT_FIND_PAGE}.make(l_original_uri)).render_to_response
 					l_new_request := Void
 				end
@@ -92,7 +92,7 @@ feature {NONE} -- Internal Processing
 			a_server_conn_handler_attached: a_server_conn_handler /= Void
 		do
 
-			o.dprint ("Looking up servlet for '" + a_request.uri + "'", o.Debug_subtasks)
+			log.dprint ("Looking up servlet for '" + a_request.uri + "'", log.debug_subtasks)
 			if attached a_server_conn_handler.stateless_servlets [a_request.uri] as l_servlet then
 				Result := l_servlet
 			else

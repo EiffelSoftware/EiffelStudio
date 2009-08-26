@@ -129,7 +129,7 @@ feature -- Status setting
 		do
 			uri := a_target_uri
 		ensure
-			target_uri_set: equal (uri, a_target_uri)
+			target_uri_set: uri ~ a_target_uri
 		end
 
 	set_headers_in (a_headers_in: like headers_in)
@@ -140,7 +140,7 @@ feature -- Status setting
 			headers_in := a_headers_in
 			headers_in_changed := True
 		ensure
-			headers_in_set: equal (headers_in, a_headers_in)
+			headers_in_set: headers_in ~ a_headers_in
 		end
 
 	set_headers_out (a_headers_out: like headers_out)
@@ -150,7 +150,7 @@ feature -- Status setting
 		do
 			headers_out := a_headers_out
 		ensure
-			headers_out_set: equal (headers_out, a_headers_out)
+			headers_out_set: headers_out ~ a_headers_out
 		end
 
 	set_environment_vars (a_environment_vars: like environment_vars)
@@ -160,7 +160,7 @@ feature -- Status setting
 		do
 			environment_vars := a_environment_vars
 		ensure
-			environment_vars_set: equal (environment_vars, a_environment_vars)
+			environment_vars_set: environment_vars ~ a_environment_vars
 		end
 
 	set_args (a_args: like args)
@@ -182,7 +182,7 @@ feature -- Status setting
 		do
 			method := a_method
 		ensure
-			method_set: equal (method, a_method)
+			method_set: method ~ a_method
 		end
 
 	set_request_message (a_request_message: like request_message)
@@ -192,7 +192,7 @@ feature -- Status setting
 		do
 			request_message := a_request_message
 		ensure
-			request_message_set: equal (request_message, a_request_message)
+			request_message_set: request_message ~ a_request_message
 		end
 
 

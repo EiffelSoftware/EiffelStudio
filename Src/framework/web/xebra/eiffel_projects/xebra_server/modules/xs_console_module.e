@@ -13,7 +13,7 @@ class
 inherit
 	XC_SERVER_MODULE
 		rename
-			make as base_make
+			make as module_make
 		end
 	THREAD
 	XS_SHARED_SERVER_CONFIG
@@ -31,7 +31,7 @@ feature -- Initialization
 			a_main_server_attached: a_main_server /= Void
 			a_name_attached: a_name /= Void
 		do
-			base_make (a_name)
+			module_make (a_name)
 			main_server := a_main_server
 
 			create command_groups.make(1)
@@ -68,9 +68,9 @@ feature -- Initialization
 			end
 			-- help command is hardcoded
         ensure
-        	main_server_set: equal (a_main_server, main_server)
+        	main_server_set: a_main_server ~ main_server
         	command_groups_attached: command_groups /= Void
-        	name_set: equal (name, a_name)
+        	name_set: name ~ a_name
 		end
 
 feature -- Acces
@@ -87,10 +87,10 @@ feature -- Inherited Features
 	execute
 			-- <Precursor>	
 		do
-			o.set_add_input_line (True)
-			launched := True
-			running := True
-			o.iprint (print_help)
+			log.set_add_input_line (True)
+			is_launched := True
+			is_running := True
+			log.iprint (print_help)
 			from
 				stop := False
 			until
@@ -101,9 +101,9 @@ feature -- Inherited Features
 					parse_input (io.last_string)
 				end
 			end
-			o.dprint("Input Server ends.", o.Debug_start_stop_app)
-			running := False
-			o.set_add_input_line (False)
+			log.dprint("Input Server ends.", log.debug_start_stop_app)
+			is_running := False
+			log.set_add_input_line (False)
 		end
 
 feature {NONE} -- Access
@@ -123,7 +123,7 @@ feature {NONE} -- Operations
 		do
 				-- help command is hardcoded
 			if a_string.is_equal ("help") then
-				o.iprint (print_command_list)
+				log.iprint (print_command_list)
 			else
 				if a_string.has_substring (" ") then
 					l_command := a_string.split (' ')[1]
@@ -136,7 +136,7 @@ feature {NONE} -- Operations
 				if  attached {XC_SERVER_COMMAND} command (l_command) as cmd then
 						if  attached {XC_PARAMETER_CONTAINER} cmd as param_cmd then
 							if l_parameter.is_empty then
-								o.iprint ("No parameter specified for command '" + l_command + "'. Type 'help' for a list of commands.")
+								log.iprint ("No parameter specified for command '" + l_command + "'. Type 'help' for a list of commands.")
 							else
 								param_cmd.set_parameter (l_parameter)
 								l_response := cmd.execute (main_server)
@@ -149,7 +149,7 @@ feature {NONE} -- Operations
 							stop := True
 						end
 				else
-					o.iprint ("Invalid command '" + l_command + "'. Type 'help' for a list of commands.")
+					log.iprint ("Invalid command '" + l_command + "'. Type 'help' for a list of commands.")
 				end
 
 				if attached l_response then
@@ -164,15 +164,15 @@ feature {NONE} -- Operations
 			a_response_attached: a_response /= Void
 		do
 			if attached {XCCR_ERROR} a_response as l_error then
-				o.iprint (l_error.description)
+				log.iprint (l_error.description)
 			end
 
 			if attached {XCCR_GET_MODULES} a_response as l_response then
-				o.iprint (print_modules (l_response))
+				log.iprint (print_modules (l_response))
 			end
 
 			if attached {XCCR_GET_WEBAPPS} a_response as l_response then
-				o.iprint (print_webapps (l_response))
+				log.iprint (print_webapps (l_response))
 			end
 
 		end
@@ -210,8 +210,8 @@ feature -- Status Report
 				a_response.modules.after
 			loop
 				Result.append (" - name: '" + a_response.modules.item_for_iteration.name +
-				"',%Tlaunched: '" + a_response.modules.item_for_iteration.launched.out +
-				"',%Trunning: '" + a_response.modules.item_for_iteration.running.out +
+				"',%Tlaunched: '" + a_response.modules.item_for_iteration.is_launched.out +
+				"',%Trunning: '" + a_response.modules.item_for_iteration.is_running.out +
 				"'%N")
 				a_response.modules.forth
 			end

@@ -12,9 +12,6 @@ class
 
 inherit
 	XS_WEBAPP_ACTION
-		redefine
-			make
-		end
 
 create
 	make
@@ -24,7 +21,6 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.	
 		do
-			Precursor
 			create output_handler_gen.make
 		ensure then
 			output_handler_gen_attached: output_handler_gen /= Void
@@ -72,17 +68,17 @@ feature -- Status report
 			Result :=  	needs_cleaning or l_servlet_gen_not_executed
 
 			if Result then
-				o.dprint ("Generating is necessary", o.Debug_tasks)
-				
+				log.dprint ("Generating is necessary", log.debug_tasks)
+
 				if l_servlet_gen_not_executed then
-					o.dprint ("Generating is necessary because: Servlet_gen_executed file is older than xeb files in app_dir or does not exist.", o.Debug_verbose_subtasks)
+					log.dprint ("Generating is necessary because: Servlet_gen_executed file is older than xeb files in app_dir or does not exist.", log.debug_verbose_subtasks)
 				end
 
 				if needs_cleaning then
-					o.dprint ("Generating is necessary because: generate cleaning not yet performed.", o.Debug_verbose_subtasks)
+					log.dprint ("Generating is necessary because: generate cleaning not yet performed.", log.debug_verbose_subtasks)
 				end
 			else
-				o.dprint ("Generating is not necessary", o.Debug_tasks)
+				log.dprint ("Generating is not necessary", log.debug_tasks)
 			end
 		end
 
@@ -93,7 +89,7 @@ feature -- Status setting
 		do
 			needs_cleaning := a_needs_cleaning
 		ensure
-			needs_cleaning_set: equal (needs_cleaning, a_needs_cleaning)
+			needs_cleaning_set: needs_cleaning ~ a_needs_cleaning
 		end
 
 	stop
@@ -103,7 +99,7 @@ feature -- Status setting
 		do
 			if attached webapp as l_wa then
 				if attached {PROCESS} generate_process as p and then p.is_running  then
-					o.dprint ("Terminating generate_process for " + l_wa.app_config.name.out  + "", o.Debug_tasks)
+					log.dprint ("Terminating generate_process for " + l_wa.app_config.name.out  + "", log.debug_tasks)
 					p.terminate
 					p.wait_for_exit
 				end
@@ -123,29 +119,29 @@ feature {NONE} -- Internal Status Setting
 				l_wa.is_generating := a_running
 			end
 		ensure
-			set: equal (is_running, a_running)
+			set: is_running ~ a_running
 		end
 
 feature {TEST_WEBAPPS} -- Implementation
 
-	internal_execute: XC_COMMAND_RESPONSE
+	internal_execute
 			-- <Precursor>
 		require else
 			webapp_attached: webapp /= Void
 		do
-			create {XCCR_INTERNAL_SERVER_ERROR}Result
+			create {XCCR_INTERNAL_SERVER_ERROR}internal_last_response
 			if attached webapp as l_wa then
 				if not is_running then
-					if can_launch_process (servlet_gen_exe, app_dir) then
+					if can_launch_process (servlet_gen_exe_file, app_dir) then
 						if attached generate_process as p then
 							if p.is_running then
-								o.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
+								log.eprint ("About to launch generate_process but it was still running... So I'm going to kill it.", generating_type)
 								p.terminate
 							end
 						end
 						set_running (True)
-						o.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR  -=-=-=-=-=-=", o.Debug_verbose_subtasks)
-						generate_process := launch_process (servlet_gen_exe,
+						log.dprint("-=-=-=--=-=LAUNCHING SERVLET GENERATOR  -=-=-=-=-=-=", log.debug_verbose_subtasks)
+						generate_process := launch_process (servlet_gen_exe_file,
 															generate_args,
 															app_dir,
 															agent generate_process_exited,
@@ -153,7 +149,7 @@ feature {TEST_WEBAPPS} -- Implementation
 															agent output_handler_gen.handle_output)
 					end
 				end
-				Result := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
+				internal_last_response := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
 			end
 		end
 
@@ -165,9 +161,9 @@ feature -- Agents
 			set_running (False)
 			set_needs_cleaning (False)
 			if not is_necessary then
-				execute_next_action.do_nothing
+				execute_next_action
 			else
-				o.eprint ("GENERATION FAILED", generating_type)
+				log.eprint ("GENERATION FAILED", generating_type)
 			end
 		end
 invariant

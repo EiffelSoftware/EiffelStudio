@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		do
 				request := a_request
 		ensure
-			request_set: equal (request, a_request)
+			request_set: request ~ a_request
 		end
 
 

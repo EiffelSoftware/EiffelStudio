@@ -13,7 +13,7 @@ class
 
 feature {NONE} -- Access
 
-	o: XS_SERVER_OUTPUTTER
+	log: XS_SERVER_OUTPUTTER
 			-- Shared access to a server outputter
 		note
 			once_status: global

@@ -43,7 +43,7 @@ feature -- Basic Operations
 					l_result.error_messages.forth
 				end
 			else
-				if attached {like cookie_table} l_result.internal_result.first as l_rec then
+				if attached {like cookie_table} l_result.parse_result.first as l_rec then
 					Result := l_rec
 				end
 			end
@@ -99,8 +99,8 @@ feature {NONE} -- Parser
 		do
 			create l_escaper
 			Result := a_result
-			if attached {STRING} a_result.internal_result [1] as l_name and
-				attached {STRING} a_result.internal_result [2] as l_value then
+			if attached {STRING} a_result.parse_result [1] as l_name and
+				attached {STRING} a_result.parse_result [2] as l_value then
 					Result.replace_result (create {XH_COOKIE}.make ( l_escaper.unescape_cookie_text (l_name), l_escaper.unescape_cookie_text (l_value)))
 			end
 		ensure
@@ -117,16 +117,16 @@ feature {NONE} -- Parser
 			-- l_cookie_monster: like cookie
 		do
 			Result := a_result
-			create l_table_args.make (a_result.internal_result.count)
+			create l_table_args.make (a_result.parse_result.count)
 			from
-				a_result.internal_result.start
+				a_result.parse_result.start
 			until
-				a_result.internal_result.after
+				a_result.parse_result.after
 			loop
-				if attached {XH_COOKIE} a_result.internal_result.item as l_arg then
+				if attached {XH_COOKIE} a_result.parse_result.item as l_arg then
 					l_table_args.put (l_arg, l_arg.name)
 				end
-				a_result.internal_result.forth
+				a_result.parse_result.forth
 			end
 			Result.replace_result (l_table_args)
 		ensure

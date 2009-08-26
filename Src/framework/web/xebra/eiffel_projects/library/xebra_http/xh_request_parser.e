@@ -44,7 +44,7 @@ feature -- Basic Operations
 				end
 
 			else
-				if attached {XH_REQUEST} l_result.internal_result.first as l_rec then
+				if attached {XH_REQUEST} l_result.parse_result.first as l_rec then
 					l_rec.set_request_message (a_request_message)
 					Result := l_rec
 				end
@@ -140,37 +140,37 @@ feature {NONE} -- Parser
 			Result := a_result
 			create l_request.make_empty
 
-			if attached {STRING} a_result.internal_result [1] as l_method then
+			if attached {STRING} a_result.parse_result [1] as l_method then
 				l_request.set_method (l_method)
 			else
 				a_result.put_error_message ("Missing method")
 			end
 
-			if attached {STRING} a_result.internal_result [2] as l_target_uri then
+			if attached {STRING} a_result.parse_result [2] as l_target_uri then
 				l_request.set_target_uri (l_target_uri)
 			else
 				a_result.put_error_message ("Missing url")
 			end
 
-			if attached {HASH_TABLE [STRING, STRING]} a_result.internal_result [3] as l_headers_in then
+			if attached {HASH_TABLE [STRING, STRING]} a_result.parse_result [3] as l_headers_in then
 				l_request.set_headers_in (l_headers_in)
 			else
 				a_result.put_error_message ("Missing HEADERS_IN")
 			end
 
-			if attached {HASH_TABLE [STRING, STRING]} a_result.internal_result [4] as l_headers_out then
+			if attached {HASH_TABLE [STRING, STRING]} a_result.parse_result [4] as l_headers_out then
 				l_request.set_headers_out (l_headers_out)
 			else
 				a_result.put_error_message ("Missing HEADERS_OUT")
 			end
 
-			if attached {HASH_TABLE [STRING, STRING]} a_result.internal_result [5] as l_subprocess_environment_vars then
+			if attached {HASH_TABLE [STRING, STRING]} a_result.parse_result [5] as l_subprocess_environment_vars then
 				l_request.set_environment_vars (l_subprocess_environment_vars)
 			else
 				a_result.put_error_message ("Missing SUBPROCESS_ENVIRONMENT_VARS")
 			end
 
-			if attached {STRING} Result.internal_result [6] as l_args then
+			if attached {STRING} Result.parse_result [6] as l_args then
 				l_request.set_args (l_args)
 			else
 				Result.put_error_message ("Missing ARGS")
@@ -192,8 +192,8 @@ feature {NONE} -- Parser
 			l_item: TUPLE [name: STRING; value: STRING]
 		do
 			Result := a_result
-			if attached {STRING} a_result.internal_result [1] as l_name and
-				attached {STRING} a_result.internal_result [2] as l_value then
+			if attached {STRING} a_result.parse_result [1] as l_name and
+				attached {STRING} a_result.parse_result [2] as l_value then
 					Result.replace_result ([l_name, l_value])
 			end
 		ensure
@@ -209,16 +209,16 @@ feature {NONE} -- Parser
 			l_table_args: HASH_TABLE [STRING, STRING]
 		do
 			Result := a_result
-			create l_table_args.make (a_result.internal_result.count)
+			create l_table_args.make (a_result.parse_result.count)
 			from
-				a_result.internal_result.start
+				a_result.parse_result.start
 			until
-				a_result.internal_result.after
+				a_result.parse_result.after
 			loop
-				if attached {TUPLE [name: STRING; value: STRING]} a_result.internal_result.item as l_arg then
+				if attached {TUPLE [name: STRING; value: STRING]} a_result.parse_result.item as l_arg then
 					l_table_args.put (l_arg.value, l_arg.name)
 				end
-				a_result.internal_result.forth
+				a_result.parse_result.forth
 			end
 			Result.replace_result (l_table_args)
 		ensure

@@ -3,7 +3,7 @@ VHPR, chapter 6 (The inheritance relation), page 79
      Parent rule
 
      The Inheritance clause of a class `D' is valid if and
-     only if it meets the following two conditions:
+     only if it meets the following conditions:
 
         1 In every Parent clause for a class `B',  `B'  is
           not a descendant of `D'.

@@ -212,7 +212,7 @@ echo "</Directory>" >> $XEBRA_DEV/apache/conf/httpd.conf
 #Replace all '$XEBRA_DEV/apache/htdocs' with '$XEBRA_DEV/www' in httpd.conf
 echo $XEBRA_DEV > xebra_path
 vim -c "s/\\//\\\\\\//g" -c "wq" xebra_path
-sed -e "s/`cat xebra_path`\/apache\/htdocs/`cat xebra_path`\/www/g" -i $XEBRA_DEV/apache/htdocs
+sed -e "s/`cat xebra_path`\/apache\/htdocs/`cat xebra_path`\/www/g" -i $XEBRA_DEV/apache/conf/httpd.conf
 rm xebra_path
 
 #Creating launcher

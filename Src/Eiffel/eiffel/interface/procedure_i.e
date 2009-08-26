@@ -102,12 +102,7 @@ feature -- Initialization
 			-- Duplicate feature
 		do
 			Result := Precursor {FEATURE_I}
-			if arguments /= Void then
-				Result.set_arguments (arguments.twin)
-			end
-			if type /= Void then
-				Result.set_type (type.twin, assigner_name_id)
-			end
+			Result.duplicate_arguments
 		end
 
 	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]; a_context_class: CLASS_C)

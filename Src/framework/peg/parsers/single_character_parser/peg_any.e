@@ -39,13 +39,13 @@ feature -- Implementation
 			end
 		end
 
-	default_parse_info: STRING
+	default_parse_info: READABLE_STRING_8
 			-- <Precursor>
 		do
 			Result := "."
 		end
 
-	short_debug_info: STRING
+	short_debug_info: READABLE_STRING_8
 			-- <Precursor>		
 		do
 			Result := default_parse_info
@@ -53,7 +53,7 @@ feature -- Implementation
 
 feature {PEG_ABSTRACT_PEG} -- Serialization
 
-	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): READABLE_STRING_8
 			-- <Precursor>
 		do
 			Result := "."

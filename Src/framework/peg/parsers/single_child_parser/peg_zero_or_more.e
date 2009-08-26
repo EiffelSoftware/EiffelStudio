@@ -39,13 +39,13 @@ feature -- Implementation
 			Result := build_result (Result)
 		end
 
-	default_parse_info: STRING
+	default_parse_info: READABLE_STRING_8
 				-- <Precursor>	
 			do
 				Result := "zero_or_more (" + child.short_debug_info + ")"
 			end
 
-	short_debug_info: STRING
+	short_debug_info: READABLE_STRING_8
 			-- <Precursor>		
 		do
 			Result := "zero_or_more"
@@ -53,7 +53,7 @@ feature -- Implementation
 
 feature {PEG_ABSTRACT_PEG} -- Serialization
 
-	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): READABLE_STRING_8
 			-- <Precursor>
 		do
 			if not already_serialized (a_already_visited, Current) then

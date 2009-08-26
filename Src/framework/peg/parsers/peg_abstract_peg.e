@@ -23,7 +23,7 @@ feature {PEG_ABSTRACT_PEG} -- Access
 	fixated: BOOLEAN
 			-- Is the parser fixed, that is, are sequences and choices always newly created?
 
-	parser_name: detachable STRING
+	parser_name: detachable READABLE_STRING_8
 			-- The optional name for the parser
 
 	error_message_handler: detachable PROCEDURE [ANY, TUPLE [PEG_PARSER_RESULT]] assign set_error_message_handler
@@ -45,7 +45,7 @@ feature -- Access
 			error_message_handler_set: a_error_message_handler = error_message_handler
 		end
 
-	set_name (a_name: STRING)
+	set_name (a_name: READABLE_STRING_8)
 			-- `a_name': The name of the parser
 			-- Sets the name of the parser.
 		require
@@ -95,7 +95,7 @@ feature -- Access
 
 feature -- Basic Functionality
 
-	parse_string (a_string: STRING): PEG_PARSER_RESULT
+	parse_string (a_string: READABLE_STRING_8): PEG_PARSER_RESULT
 			-- Automatically wraps the string and persues to parse with `parse'
 		require
 			a_string_attached: attached a_string
@@ -124,7 +124,7 @@ feature -- Basic Functionality
 			result_attached: attached Result
 		end
 
-	internal_debug_info: STRING
+	internal_debug_info: READABLE_STRING_8
 			-- Returns an informal description of the parser (or the user defined name)
 		do
 			if attached parser_name as l_parser_name then
@@ -136,14 +136,14 @@ feature -- Basic Functionality
 			Result_attached: attached Result
 		end
 
-	default_parse_info: STRING
+	default_parse_info: READABLE_STRING_8
 			-- The default informal description of the parser
 		deferred
 		ensure
 			Result_attached: attached Result
 		end
 
-	short_debug_info: STRING
+	short_debug_info: READABLE_STRING_8
 			-- The short informal description of the parser (without children)
 		deferred
 		ensure
@@ -160,7 +160,7 @@ feature -- Basic Functionality
 			result_attached: attached Result
 		end
 
-	serialize: STRING
+	serialize: READABLE_STRING_8
 			-- Serializes the parser recursively
 		do
 			Result := internal_serialize (create {ARRAYED_LIST [PEG_ABSTRACT_PEG]}.make (20))
@@ -170,7 +170,7 @@ feature -- Basic Functionality
 
 feature {PEG_ABSTRACT_PEG} -- Serialization
 
-	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): READABLE_STRING_8
 			-- Serializes the parser recursively. Endless recursions are taken care of.
 		deferred
 		ensure

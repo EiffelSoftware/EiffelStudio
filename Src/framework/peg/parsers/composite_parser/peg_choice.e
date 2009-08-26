@@ -55,7 +55,7 @@ feature -- Implementation
 			end
 		end
 
-	serialization_separator: STRING
+	serialization_separator: READABLE_STRING_8
 			-- <Precursor>
 		do
 			Result := " | "

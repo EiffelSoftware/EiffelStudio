@@ -51,13 +51,13 @@ feature -- Implementation
 			end
 		end
 
-	default_parse_info: STRING
+	default_parse_info: READABLE_STRING_8
 			-- <Precursor>	
 		do
 			Result := "whitespace"
 		end
 
-	short_debug_info: STRING
+	short_debug_info: READABLE_STRING_8
 			-- <Precursor>		
 		do
 			Result := default_parse_info

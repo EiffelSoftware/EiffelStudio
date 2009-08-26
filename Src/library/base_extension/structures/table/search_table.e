@@ -235,7 +235,7 @@ feature -- Insertion, deletion
 			other_not_void: other /= Void
 		local
 			local_other, local_current, new_content: SPECIAL[H]
-			new: SEARCH_TABLE[H]
+			new: like Current
 			i, my_size, other_size: INTEGER
 			current_key: H
 		do
@@ -246,7 +246,7 @@ feature -- Insertion, deletion
 				my_size := local_current.count
 				if ((my_size + other_size) * Size_threshold <= 100*count) then
 					from
-						create new.make (3 * (capacity + other_size) // 2)
+						new := empty_duplicate (3 * (capacity + other_size) // 2)
 						new_content := new.content
 					until
 						i >= my_size
@@ -285,12 +285,12 @@ feature -- Resizing
 		local
 			i, table_size: INTEGER
 			current_key: H
-			other: SEARCH_TABLE [H]
+			other: like Current
 			local_content: SPECIAL [H]
 		do
 			if (content.count * Size_threshold <= 100 * n) then
 				from
-					create other.make (n)
+					other := empty_duplicate (n)
 					local_content := content
 					table_size := local_content.count
 				until
@@ -321,6 +321,18 @@ feature -- Duplication
 			standard_copy (other)
 			content := other.content.twin
 			deleted_marks := other.deleted_marks.twin
+		end
+
+feature {NONE} -- Duplication
+
+	empty_duplicate (n: INTEGER): like Current
+			-- Create an empty copy of Current that can accommodate `n' items
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make (n)
+		ensure
+			empty_duplicate_not_void: Result /= Void
 		end
 
 feature -- Conversion

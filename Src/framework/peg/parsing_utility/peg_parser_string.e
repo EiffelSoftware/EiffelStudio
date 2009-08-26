@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_string (a_string: STRING)
+	make_from_string (a_string: READABLE_STRING_8)
 			-- <Precursor>
 		require
 			a_string_attached: attached a_string
@@ -64,7 +64,7 @@ feature {NONE} -- Access
 	start_pivot, end_pivot: INTEGER
 			-- The indexes defining the *actual* string. String goes from start_pivot to end_pivot-1
 
-	base_string: STRING
+	base_string: READABLE_STRING_8
 			-- The base string
 
 	line, colon: INTEGER
@@ -72,7 +72,7 @@ feature {NONE} -- Access
 
 feature -- Internal Access
 
-	substring_internal (a_start_index, a_end_index: INTEGER): STRING
+	substring_internal (a_start_index, a_end_index: INTEGER): READABLE_STRING_8
 			-- Extracts the string at the *absolute* coordinates.
 			-- Use `substring' if you're not sure what this means
 		require

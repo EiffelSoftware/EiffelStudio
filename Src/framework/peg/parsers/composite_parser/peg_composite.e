@@ -31,7 +31,7 @@ feature {PEG_ABSTRACT_PEG} -- Serialization
 	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
 			-- <Precursor>
 		local
-			separator: STRING
+			separator: READABLE_STRING_8
 		do
 			if not already_serialized (a_already_visited, Current) then
 				from
@@ -52,11 +52,11 @@ feature {PEG_ABSTRACT_PEG} -- Serialization
 			end
 		end
 
-	default_parse_info: STRING
+	default_parse_info: READABLE_STRING_8
 			-- <Precursor>
 		local
 			l_i: INTEGER
-			l_sep: STRING
+			l_sep: READABLE_STRING_8
 		do
 			from
 				l_i := 1
@@ -72,7 +72,7 @@ feature {PEG_ABSTRACT_PEG} -- Serialization
 			Result := Result + ")"
 		end
 
-	short_debug_info: STRING
+	short_debug_info: READABLE_STRING_8
 			-- <Precursor>		
 		do
 			Result := "(" + serialization_separator + ")"
@@ -80,7 +80,7 @@ feature {PEG_ABSTRACT_PEG} -- Serialization
 
 feature {PEG_COMPOSITE} -- Serialization
 
-	serialization_separator: STRING
+	serialization_separator: READABLE_STRING_8
 		-- The separator string for serialization
 		deferred
 		end

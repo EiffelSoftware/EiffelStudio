@@ -31,19 +31,19 @@ feature -- Implementation
 			Result := build_result (Result)
 		end
 
-	default_parse_info: STRING
+	default_parse_info: READABLE_STRING_8
 			-- <Precursor>	
 		do
 			Result := "epsilon"
 		end
 
-	short_debug_info: STRING
+	short_debug_info: READABLE_STRING_8
 			-- <Precursor>		
 		do
 			Result := default_parse_info
 		end
 
-	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): STRING
+	internal_serialize (a_already_visited: LIST [PEG_ABSTRACT_PEG]): READABLE_STRING_8
 			-- <Precursor>
 		do
 			Result := "e"

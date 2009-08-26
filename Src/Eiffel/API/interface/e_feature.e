@@ -374,18 +374,26 @@ feature -- Access
 
 	is_debuggable: BOOLEAN
 			-- Is feature debuggable?
+			--| Protecting code by return False when exception occurred
+			--| See bug#16186
 		local
 			cl: CLASS_C
+			rescued: BOOLEAN
 		do
-			if
-				(body_index /= 0) and then
-				(not is_constant) and then
-				(not is_deferred) and then
-				(not is_unique) and then
-				(not (is_attribute and not is_attribute_with_body))
-			then
-				cl := written_class
-				Result := cl /= Void and then cl.is_debuggable
+			if rescued then
+					--| See why this occurs
+				Result := False
+			else
+				if
+					(body_index /= 0) and then
+					(not is_constant) and then
+					(not is_deferred) and then
+					(not is_unique) and then
+					(not (is_attribute and not is_attribute_with_body))
+				then
+					cl := written_class
+					Result := cl /= Void and then cl.is_debuggable
+				end
 			end
 		ensure
 			debuggable_if: Result implies
@@ -395,7 +403,10 @@ feature -- Access
 				(not is_deferred) and then
 				(not is_unique) and then
 				(written_class /= Void and then written_class.is_debuggable)
-		end;
+		rescue
+			rescued := True
+			retry
+		end
 
 	text (a_text_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Text of the feature.

@@ -442,6 +442,7 @@ feature -- Breakpoints tags
 			bps: like breakpoints
 			cursor: CURSOR
 			bp: BREAKPOINT
+			l_bp_tag_path: STRING
 		do
 			btp := breakpoints_tags_provider
 			tp := tags_provider
@@ -457,8 +458,11 @@ feature -- Breakpoints tags
 			loop
 				bp := bps.item_for_iteration
 				if not bp.is_hidden and then not bp.is_corrupted then
-					btp.add_tag (bp.to_tag_path)
-					tp.add_tags (bp.tags_as_array)
+					l_bp_tag_path := bp.to_tag_path
+					if not l_bp_tag_path.is_empty then
+						btp.add_tag (l_bp_tag_path)
+						tp.add_tags (bp.tags_as_array)
+					end
 				end
 				bps.forth
 			end

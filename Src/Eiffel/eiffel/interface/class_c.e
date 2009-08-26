@@ -1147,6 +1147,7 @@ feature -- Parent checking
 				if class_id = l_any_id then
 						-- Throw a VHPR1 error is ANY contains any custom inheritance clauses.
 					create l_vhpr1
+					l_vhpr1.set_associated_class (Current)
 					create l_dummy_list.make
 					l_dummy_list.extend (class_id)
 					l_vhpr1.set_involved_classes (l_dummy_list)
@@ -1238,7 +1239,19 @@ feature -- Parent checking
 									-- This ensures that routine `check_suppliers'
 									-- has been called before.
 							end
-							l_parent_class.add_descendant (Current)
+							if l_parent_class = Current then
+									-- We have a direct inheritance of the current class so we raise a VHPR1
+									-- This needs to be flagged here before Degree 4
+									-- otherwise valid descendent classes have incorrect meta information.
+								create l_vhpr1
+								l_vhpr1.set_associated_class (Current)
+								create l_dummy_list.make
+								l_dummy_list.extend (class_id)
+								l_vhpr1.set_involved_classes (l_dummy_list)
+								Error_handler.insert_error (l_vhpr1)
+							else
+								l_parent_class.add_descendant (Current)
+							end
 
 								-- Use reference class type as a parent.
 							if l_parent_type.is_expanded then

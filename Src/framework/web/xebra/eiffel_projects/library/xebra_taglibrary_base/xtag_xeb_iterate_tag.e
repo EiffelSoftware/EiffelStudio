@@ -55,8 +55,8 @@ feature {NONE} -- Implementation
 			temp_list: STRING
 			l_list_value: STRING
 		do
-			a_servlet_class.add_variable_by_name_type (variable.value (current_controller_id), type.value (current_controller_id))
-			a_servlet_class.make_feature.append_expression ("create " + variable.value (current_controller_id) + ".make")
+			--a_servlet_class.add_variable_by_name_type (variable.value (current_controller_id), "detachable " + type.value (current_controller_id))
+			--a_servlet_class.make_feature.append_expression ("create " + variable.value (current_controller_id) + ".make")
 			temp_list := a_servlet_class.render_html_page.new_local ("LIST [" + type.value (current_controller_id) + "]")
 			if list.is_dynamic or list.is_variable then			
 				l_list_value := list.plain_value (current_controller_id)
@@ -70,10 +70,12 @@ feature {NONE} -- Implementation
 			a_servlet_class.render_html_page.append_expression ("until")
 			a_servlet_class.render_html_page.append_expression (temp_list + ".after")
 			a_servlet_class.render_html_page.append_expression ("loop")
-			a_servlet_class.render_html_page.append_expression (variable.value (current_controller_id) + " := " + temp_list + ".item")
+			a_servlet_class.render_html_page.append_expression ("if attached {" +
+				type.value (current_controller_id) + "} " + temp_list + ".item as " + 					variable.value (current_controller_id) + " then")
 			generate_children (a_servlet_class, a_variable_table)
 			a_servlet_class.render_html_page.append_expression (temp_list + ".forth")
-			a_servlet_class.render_html_page.append_expression ("end --from " + temp_list)
+			a_servlet_class.render_html_page.append_expression ("end -- if attached " + variable.value (current_controller_id))
+			a_servlet_class.render_html_page.append_expression ("end -- from " + temp_list)
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)

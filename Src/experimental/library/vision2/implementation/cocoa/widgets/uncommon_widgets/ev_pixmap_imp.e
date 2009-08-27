@@ -11,7 +11,8 @@ class
 inherit
 	EV_PIXMAP_I
 		redefine
-			interface
+			interface,
+			save_to_named_file
 		end
 
 	EV_DRAWABLE_IMP
@@ -209,10 +210,18 @@ feature -- Element change
 feature -- Access
 
 	raw_image_data: EV_RAW_IMAGE_DATA
+		local
+			l_image_rep: NS_BITMAP_IMAGE_REP
+			l_data: NS_DATA
 		do
 			create Result.make_with_alpha_zero (width, height)
 			Result.set_originating_pixmap (attached_interface)
+
+--			create l_image_rep.make_with_data (image.tiff_representation)
+--			l_data := l_image_rep.representation_using_type ({NS_BITMAP_IMAGE_REP}.BMP_file_type, Void)
 			-- TODO: image -> bitmap, read bitmap values and write in Result
+
+
 		end
 
 feature -- Duplication
@@ -250,6 +259,34 @@ feature -- Duplication
 				enable_tabable_to
 			else
 				disable_tabable_to
+			end
+		end
+
+feature -- Saving
+
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME)
+			-- Save `Current' to `a_filename' in `a_format' format.
+		local
+			l_image_rep: NS_BITMAP_IMAGE_REP
+			l_data: NS_DATA
+			l_success: BOOLEAN
+		do
+			if attached {EV_BMP_FORMAT} a_format as bmp_format then
+				create l_image_rep.make_with_data (image.tiff_representation)
+				l_data := l_image_rep.representation_using_type ({NS_BITMAP_IMAGE_REP}.BMP_file_type, Void)
+				l_success := l_data.write_to_file_atomically (a_filename.string, False)
+				if not l_success then
+					(create {EXCEPTIONS}).raise ("Could not save image file.")
+				end
+			elseif attached {EV_PNG_FORMAT} a_format as png_format then
+				create l_image_rep.make_with_data (image.tiff_representation)
+				l_data := l_image_rep.representation_using_type ({NS_BITMAP_IMAGE_REP}.PNG_file_type, Void)
+				l_success := l_data.write_to_file_atomically (a_filename.string, False)
+				if not l_success then
+					(create {EXCEPTIONS}).raise ("Could not save image file.")
+				end
+			else
+				a_format.save (raw_image_data, a_filename)
 			end
 		end
 

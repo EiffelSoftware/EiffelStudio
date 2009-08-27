@@ -21,7 +21,8 @@ inherit
 	EV_WINDOW_IMP
 		redefine
 			interface,
-			make
+			make,
+			window_mask
 		end
 
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -36,6 +37,11 @@ feature {NONE} -- Initialization
 			internal_icon_name := ""
 			create icon_pixmap
 			Precursor {EV_WINDOW_IMP}
+		end
+
+	window_mask: NATURAL
+		do
+			Result := {NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask
 		end
 
 feature -- Access

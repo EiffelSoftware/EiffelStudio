@@ -242,8 +242,7 @@ feature -- Drawing operations
 	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
-			-- fixme: should be the baseline
-			draw_text_top_left (x, y, a_text)
+			draw_text_top_left (x, y - font.ascent, a_text)
 		end
 
 	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING_GENERAL)
@@ -279,6 +278,9 @@ feature -- Drawing operations
 			l_attributes: NS_MUTABLE_DICTIONARY
 			l_font: detachable EV_FONT_IMP
 			l_color: detachable EV_COLOR_IMP
+			trans: NS_AFFINE_TRANSFORM
+			color: NS_COLOR
+			path: NS_BEZIER_PATH
 		do
 			create l_string.make_with_string (a_text)
 			l_font ?= font.implementation
@@ -290,7 +292,17 @@ feature -- Drawing operations
 			l_attributes.set_object_for_key (l_font.font, font_attribute_name)
 			l_attributes.set_object_for_key (l_color.color, foreground_color_attribute_name)
 			prepare_drawing
-			l_string.draw_at_point_with_attributes (create {NS_POINT}.make_point (x, y), l_attributes)
+
+			create trans.make
+			trans.translate_by_xy (x, y)
+			if not is_flipped then
+				trans.translate_by_xy (0, l_string.size_with_attributes (l_attributes).height)
+				trans.scale_by_xy ({REAL_32}1.0, {REAL_32}-1.0)
+			end
+			trans.concat
+
+			l_string.draw_at_point_with_attributes (create {NS_POINT}.make_point (0, 0), l_attributes)
+
 			finish_drawing
 		end
 
@@ -346,33 +358,27 @@ feature -- Drawing operations
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
-			y_cocoa: INTEGER
 			source_rect, destination_rect: NS_RECT
---			trans: NS_AFFINE_TRANSFORM
+			trans: NS_AFFINE_TRANSFORM
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= Void end
---			create trans.make
---			trans.translate_by_xy (0.0, pixmap_imp.image.size.height)
---			trans.scale_by_xy (1.0, -1.0)
---			trans.concat
 
 			prepare_drawing
 
 --			if is_flipped then
-				y_cocoa := y
 --			else
---				y_cocoa := height - y - a_pixmap.height
 --			end
 
-			io.output.put_string ("flipped: " + pixmap_imp.image.is_flipped.out + "%N")
+			create trans.make
+			trans.translate_by_xy (x, pixmap_imp.image.size.height + y)
+			trans.scale_by_xy (1, -1)
+			trans.concat
 
-			pixmap_imp.image.set_flipped (True)
-
-			destination_rect := create {NS_RECT}.make_rect (x, y_cocoa, a_pixmap.height, a_pixmap.width)
+			destination_rect := create {NS_RECT}.make_rect (0, 0, a_pixmap.height, a_pixmap.width)
 			source_rect := create {NS_RECT}.make_rect (0, 0, a_pixmap.width, a_pixmap.height)
 --			pixmap_imp.image.draw_in_rect (destination_rect, source_rect, {NS_IMAGE}.composite_source_over, 1) -- did not work correctly for SD_NOTEBOOK_TAB_DRAWER_I.end_draw
-			pixmap_imp.image.draw_at_point (create {NS_POINT}.make_point (x, y), source_rect, {NS_IMAGE}.composite_source_over, 1)
+			pixmap_imp.image.draw_at_point (create {NS_POINT}.make_point (0, 0), source_rect, {NS_IMAGE}.composite_source_over, 1)
 			finish_drawing
 		end
 
@@ -396,27 +402,31 @@ feature -- Drawing operations
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
---			color: NS_COLOR
---			path: NS_BEZIER_PATH
+			color: NS_COLOR
+			path: NS_BEZIER_PATH
 			y_cocoa: INTEGER
+			trans: NS_AFFINE_TRANSFORM
+			source_rect, destination_rect: NS_RECT
 		do
-			prepare_drawing
 			pixmap_imp ?= a_pixmap.implementation
 			check pixmap_imp /= void end
---			if is_flipped then
---				y_cocoa := a_area.y
---			else
-				y_cocoa := pixmap_imp.image.size.height - a_area.height - a_area.y
---			end
 
-			pixmap_imp.image.draw_in_rect (
-				create {NS_RECT}.make_rect (x, y, a_area.width, a_area.height),
-				create {NS_RECT}.make_rect (a_area.x, y_cocoa, a_area.width, a_area.height),
-				{NS_IMAGE}.composite_source_over, 1)
+			prepare_drawing
+
+			create trans.make
+			trans.translate_by_xy (x, y + a_area.height)
+			trans.scale_by_xy (1, -1)
+			trans.concat
+
+			destination_rect := create {NS_RECT}.make_rect (0, 0, a_area.height, a_area.width)
+			source_rect := create {NS_RECT}.make_rect (a_area.x, a_pixmap.height - a_area.height - a_area.y, a_area.width, a_area.height)
+--			pixmap_imp.image.draw_in_rect (destination_rect, source_rect, {NS_IMAGE}.composite_source_over, 1)
+--			pixmap_imp.image.draw_at_point (create {NS_POINT}.make_point(0,0), source_rect, {NS_IMAGE}.composite_source_over, 1)
+			pixmap_imp.image.composite_to_point_from_rect_operation (create {NS_POINT}.make_point(0,0), source_rect, {NS_IMAGE}.composite_source_over)
 
 --			create color.blue_color
---			color.color_with_alpha_component (0.5).set
---			create path.make_with_rect ( create {NS_RECT}.make_rect (x, y, a_area.width, a_area.height) )
+--			color.color_with_alpha_component ({REAL_32}0.5).set
+--			create path.make_with_rect ( create {NS_RECT}.make_rect (0, 0, a_area.width, a_area.height) )
 --			path.set_line_width (internal_line_width)
 --			path.fill
 --			path.stroke

@@ -16,19 +16,34 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_key_tester
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (n: INTEGER)
-			-- Allocate hash table for at least `n' items.
-			-- The table will be resized automatically
-			-- if more than `n' items are inserted.
+			-- Allocate hash table for at least `n' items using `~' for comparison.
+			-- The table will be resized automatically if more than `n' items are inserted.
+		require
+			n_non_negative: n >= 0
+		do
+			make_with_key_tester (n, Void)
+		ensure
+			capacity_big_enough: capacity >= n and capacity >= 5
+		end
+
+	make_with_key_tester (n: INTEGER; a_key_tester: detachable EQUALITY_TESTER [H])
+			-- Allocate hash table for at least `n' items with `a_key_tester' to compare keys.
+			-- If `a_key_tester' is void, it uses `~' for comparison.
+			-- The table will be resized automatically if more than `n' items are inserted.
+		require
+			n_non_negative: n >= 0
 		local
 			clever: PRIMES
 			local_content: ARRAY [H]
 			local_deleted_marks: ARRAY [BOOLEAN]
 		do
+			key_tester := a_key_tester
 			create clever
 			capacity := clever.higher_prime ((3 * n) // 2)
 			if capacity < 5 then
@@ -39,7 +54,7 @@ feature -- Creation
 			content := local_content.area
 			deleted_marks := local_deleted_marks.area
 		ensure
-			capacity_big_enough: capacity >= n and capacity >= 5
+			breathing_space: n < capacity
 		end
 
 feature -- Access and queries
@@ -115,14 +130,35 @@ feature -- Access and queries
 			Result := (control = Found_constant)
 		end
 
+	key_tester: detachable EQUALITY_TESTER [H]
+			-- Tester used for comparing keys.	
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
 			-- Does table contain the same information as `other'?
+		local
+			i, table_size: INTEGER
+			current_key: H
+			local_content: SPECIAL [H]
 		do
-			Result :=
-				equal (content, other.content) and
-				equal (deleted_marks, other.deleted_marks)
+			if Current = other then
+				Result := True
+			elseif count = other.count and then key_tester ~ other.key_tester then
+				from
+					local_content := content
+					table_size := local_content.count
+					Result := True
+				until
+					i >= table_size or not Result
+				loop
+					current_key := local_content.item (i)
+					if valid_key (current_key) then
+						Result := other.has (current_key)
+					end
+					i := i + 1
+				end
+			end
 		end
 
 	same_keys (a_search_key, a_key: H): BOOLEAN
@@ -132,7 +168,11 @@ feature -- Comparison
 			valid_search_key: valid_key (a_search_key)
 			valid_key: valid_key (a_key)
 		do
-			Result := a_search_key ~ a_key
+			if attached key_tester as l_tester then
+				Result := l_tester.test (a_search_key, a_key)
+			else
+				Result := a_search_key ~ a_key
+			end
 		end
 
 feature -- Insertion, deletion
@@ -334,9 +374,10 @@ feature {NONE} -- Duplication
 		require
 			n_non_negative: n >= 0
 		do
-			create Result.make (n)
+			create Result.make_with_key_tester (n, key_tester)
 		ensure
 			empty_duplicate_not_void: Result /= Void
+			same_key_tester: Result.key_tester = key_tester
 		end
 
 feature -- Conversion

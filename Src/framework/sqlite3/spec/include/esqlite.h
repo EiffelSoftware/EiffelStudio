@@ -38,7 +38,7 @@ int c_esqlite3_commit_callback(void *p_data);
 //
 // `p_data': A EIF_CBDATAP struct reference, containing the Eiffel function
 //           and Eiffel object to callback.
-void c_sqlite3_rollback_callback(void *p_data);
+void c_esqlite3_rollback_callback(void *p_data);
 
 // C callback function for 'void *sqlite3_update_hook(sqlite3*, void(*)(void *, int, char const *, char const *, sqlite3_int64), void*)'
 // Note: This is the function called back from SQLite and should
@@ -46,7 +46,7 @@ void c_sqlite3_rollback_callback(void *p_data);
 //
 // `p_data': A EIF_CBDATAP struct reference, containing the Eiffel function
 //           and Eiffel object to callback.
-extern void c_sqlite3_update_callback (void *p_data, int action, char const *db_name, char const *tb_name, sqlite3_int64 row_id);
+extern void c_esqlite3_update_callback (void *p_data, int action, char const *db_name, char const *tb_name, sqlite3_int64 row_id);
 
 
 #ifdef __cplusplus

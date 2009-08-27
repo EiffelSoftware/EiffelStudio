@@ -24,7 +24,7 @@ feature {SQLITE_INTERNALS} -- Initializations
 			not_a_src_name_is_null: a_src_name /= default_pointer
 			a_dest_db_not_a_src_db: a_dest_name /= a_src_db
 		do
-			Result := c_sqlite3_backup_init (a_api.api_pointer (once "sqlite3_backup_init"), a_dest_db, a_dest_name, a_src_db, a_src_name)
+			Result := c_sqlite3_backup_init (a_api.api_pointer (sqlite3_backup_init_api), a_dest_db, a_dest_name, a_src_db, a_src_name)
 		end
 
 feature {SQLITE_INTERNALS} -- Clean up
@@ -35,7 +35,7 @@ feature {SQLITE_INTERNALS} -- Clean up
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_backup_is_null: a_backup /= default_pointer
 		do
-			Result := c_sqlite3_backup_finish (a_api.api_pointer (once "sqlite3_backup_finish"), a_backup)
+			Result := c_sqlite3_backup_finish (a_api.api_pointer (sqlite3_backup_finish_api), a_backup)
 		end
 
 feature {SQLITE_INTERNALS} -- Measurement
@@ -46,7 +46,7 @@ feature {SQLITE_INTERNALS} -- Measurement
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_backup_is_null: a_backup /= default_pointer
 		do
-			Result := c_sqlite3_backup_remaining (a_api.api_pointer (once "sqlite3_backup_remaining"), a_backup)
+			Result := c_sqlite3_backup_remaining (a_api.api_pointer (sqlite3_backup_remaining_api), a_backup)
 		end
 
 	sqlite3_backup_pagecount (a_api: SQLITE_API; a_backup: POINTER): INTEGER
@@ -55,7 +55,7 @@ feature {SQLITE_INTERNALS} -- Measurement
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_backup_is_null: a_backup /= default_pointer
 		do
-			Result := c_sqlite3_backup_pagecount (a_api.api_pointer (once "sqlite3_backup_pagecount"), a_backup)
+			Result := c_sqlite3_backup_pagecount (a_api.api_pointer (sqlite3_backup_pagecount_api), a_backup)
 		end
 
 feature {SQLITE_INTERNALS} -- Basic operations
@@ -66,8 +66,16 @@ feature {SQLITE_INTERNALS} -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_backup_is_null: a_backup /= default_pointer
 		do
-			Result := c_sqlite3_backup_step (a_api.api_pointer (once "sqlite3_backup_step"), a_backup, a_page)
+			Result := c_sqlite3_backup_step (a_api.api_pointer (sqlite3_backup_step_api), a_backup, a_page)
 		end
+
+feature {NONE} -- Constants
+
+	sqlite3_backup_finish_api: STRING = "sqlite3_backup_finish"
+	sqlite3_backup_init_api: STRING = "sqlite3_backup_init"
+	sqlite3_backup_pagecount_api: STRING = "sqlite3_backup_pagecount"
+	sqlite3_backup_remaining_api: STRING = "sqlite3_backup_remaining"
+	sqlite3_backup_step_api: STRING = "sqlite3_backup_step"
 
 feature {NONE} -- Externals
 

@@ -19,7 +19,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_blob (a_api.api_pointer (once "sqlite3_column_blob"), a_stmt, a_column)
+			Result := c_sqlite3_column_blob (a_api.api_pointer (sqlite3_column_blob_api), a_stmt, a_column)
 		end
 
 	sqlite3_column_bytes (a_api: SQLITE_API; a_stmt: POINTER; a_column: INTEGER): INTEGER
@@ -29,7 +29,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_bytes (a_api.api_pointer (once "sqlite3_column_bytes"), a_stmt, a_column)
+			Result := c_sqlite3_column_bytes (a_api.api_pointer (sqlite3_column_bytes_api), a_stmt, a_column)
 		end
 
 	sqlite3_column_bytes12 (a_api: SQLITE_API; a_stmt: POINTER; a_column: INTEGER): INTEGER
@@ -39,7 +39,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_bytes12 (a_api.api_pointer (once "sqlite3_column_bytes12"), a_stmt, a_column)
+			Result := c_sqlite3_column_bytes12 (a_api.api_pointer (sqlite3_column_bytes12_api), a_stmt, a_column)
 		end
 
 	sqlite3_column_double (a_api: SQLITE_API; a_stmt: POINTER; a_column: INTEGER): REAL_64
@@ -49,7 +49,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_double (a_api.api_pointer (once "sqlite3_column_double"), a_stmt, a_column)
+			Result := c_sqlite3_column_double (a_api.api_pointer (sqlite3_column_double_api), a_stmt, a_column)
 		end
 
 	sqlite3_column_int (a_api: SQLITE_API; a_stmt: POINTER; a_column: INTEGER): INTEGER
@@ -59,7 +59,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_int (a_api.api_pointer (once "sqlite3_column_int"), a_stmt, a_column)
+			Result := c_sqlite3_column_int (a_api.api_pointer (sqlite3_column_int_api), a_stmt, a_column)
 		end
 
 	sqlite3_column_int64 (a_api: SQLITE_API; a_stmt: POINTER; a_column: INTEGER): INTEGER_64
@@ -69,7 +69,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_int64 (a_api.api_pointer (once "sqlite3_column_int64"), a_stmt, a_column)
+			Result := c_sqlite3_column_int64 (a_api.api_pointer (sqlite3_column_int64_api), a_stmt, a_column)
 		end
 
 	sqlite3_column_text (a_api: SQLITE_API; a_stmt: POINTER; a_column: INTEGER): POINTER
@@ -79,7 +79,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_text (a_api.api_pointer (once "sqlite3_column_text"), a_stmt, a_column)
+			Result := c_sqlite3_column_text (a_api.api_pointer (sqlite3_column_text_api), a_stmt, a_column)
 		end
 
 	sqlite3_column_text16 (a_api: SQLITE_API; a_stmt: POINTER; a_column: INTEGER): POINTER
@@ -89,7 +89,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_text16 (a_api.api_pointer (once "sqlite3_column_text16"), a_stmt, a_column)
+			Result := c_sqlite3_column_text16 (a_api.api_pointer (sqlite3_column_text16_api), a_stmt, a_column)
 		end
 
 	sqlite3_column_type (a_api: SQLITE_API; a_stmt: POINTER; a_column: INTEGER): INTEGER
@@ -99,7 +99,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_type (a_api.api_pointer (once "sqlite3_column_type"), a_stmt, a_column)
+			Result := c_sqlite3_column_type (a_api.api_pointer (sqlite3_column_type_api), a_stmt, a_column)
 		end
 
 	sqlite3_column_value (a_api: SQLITE_API; a_stmt: POINTER; a_column: INTEGER): POINTER
@@ -109,7 +109,7 @@ feature {SQLITE_INTERNALS} -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_value (a_api.api_pointer (once "sqlite3_column_value"), a_stmt, a_column)
+			Result := c_sqlite3_column_value (a_api.api_pointer (sqlite3_column_value_api), a_stmt, a_column)
 		end
 
 	sqlite3_data_count (a_api: SQLITE_API; a_stmt: POINTER): INTEGER
@@ -118,8 +118,22 @@ feature {SQLITE_INTERNALS} -- Query
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_stmt_is_null: a_stmt /= default_pointer
 		do
-			Result := c_sqlite3_data_count (a_api.api_pointer (once "sqlite3_data_count"), a_stmt)
+			Result := c_sqlite3_data_count (a_api.api_pointer (sqlite3_data_count_api), a_stmt)
 		end
+
+feature {NONE} -- Constants
+
+	sqlite3_column_blob_api: STRING    = "sqlite3_column_blob"
+	sqlite3_column_bytes_api: STRING   = "sqlite3_column_bytes"
+	sqlite3_column_bytes12_api: STRING = "sqlite3_column_bytes12"
+	sqlite3_column_double_api: STRING  = "sqlite3_column_double"
+	sqlite3_column_int_api: STRING     = "sqlite3_column_int"
+	sqlite3_column_int64_api: STRING   = "sqlite3_column_int64"
+	sqlite3_column_text_api: STRING    = "sqlite3_column_text"
+	sqlite3_column_text16_api: STRING  = "sqlite3_column_text16"
+	sqlite3_column_type_api: STRING    = "sqlite3_column_type"
+	sqlite3_column_value_api: STRING   = "sqlite3_column_value"
+	sqlite3_data_count_api: STRING     = "sqlite3_data_count"
 
 feature {NONE} -- Externals
 

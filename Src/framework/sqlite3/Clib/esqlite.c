@@ -38,7 +38,7 @@ void c_esqlite3_rollback_callback(void *p_data)
 	}
 }
 
-void c_sqlite3_update_callback (void *p_data, int action, char const * db_name, char const *tb_name, sqlite3_int64 row_id)
+void c_esqlite3_update_callback (void *p_data, int action, char const * db_name, char const *tb_name, sqlite3_int64 row_id)
 {
 	typedef void(*EIF_CBFUNC)(
 #ifndef EIF_IL_DLL

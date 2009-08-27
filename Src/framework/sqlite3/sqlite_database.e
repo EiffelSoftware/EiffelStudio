@@ -1,6 +1,8 @@
 note
 	description: "[
 		An SQLite database connection for reading, writing and creating SQLite databases.
+		
+		Be sure you have installed the binaries from http://www.sqlite.org/download.html!
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,12 +13,12 @@ class
 	SQLITE_DATABASE
 
 inherit
-	SQLITE_SHARED_API
-
 	DISPOSABLE
 		export
 			{NONE} dispose
 		end
+
+	SQLITE_SHARED_API
 
 --inherit {NONE}
 	SQLITE_INTERNALS
@@ -120,6 +122,19 @@ feature -- Access
 	source: SQLITE_SOURCE
 			-- Database source where the data is, or is to be, located.
 
+feature -- Access: Actions
+
+	commit_action: detachable FUNCTION [ANY, TUPLE, BOOLEAN] assign set_commit_action
+			-- Action called when during the commit transaction.
+			--
+			-- `Result': True to abort a commit; False otherwise.
+
+	rollback_action: detachable PROCEDURE [ANY, TUPLE] assign set_rollback_action
+			-- Action called when during the rollback of a commit.
+
+	update_action: detachable PROCEDURE [ANY, TUPLE [action: INTEGER; db_name: STRING; table: STRING; row: INTEGER_64]] assign set_update_action
+			-- Action called when during the rollback of a commit.
+
 feature -- Access: Error reporting
 
 	last_exception: detachable SQLITE_EXCEPTION
@@ -165,64 +180,6 @@ feature -- Access: Error reporting
 			is_locked_unchanged: is_locked = old is_locked
 		end
 
-feature -- Access: Actions
-
-	commit_action: detachable FUNCTION [ANY, TUPLE, BOOLEAN] assign set_commit_action
-			-- Action called when during the commit transaction.
-			--
-			-- 'Result': Return True to indicate a failure and perform a rollback; False to continue commit.
-		require
-			is_interface_usable: is_interface_usable
-			is_readable: is_readable
-		attribute
-		end
-
-	rollback_action: detachable PROCEDURE [ANY, TUPLE] assign set_rollback_action
-			-- Action called when during the rollback of a commit.
-		require
-			is_interface_usable: is_interface_usable
-			is_readable: is_readable
-		attribute
-		end
-
-	update_action: detachable PROCEDURE [ANY, TUPLE] assign set_update_action
-			-- Action called when and INSERT, DELETE or UPDATE statment is executed on the database.
-			--
-			-- 'type': The type of update, see {SQLITE_UPDATE_CONSTANTS}.
-			-- 'database_name': The name of the database where the update occurred.
-			-- 'table_name': The name of the table where the update occurred.
-			-- 'row_id': The row identifier of the update, or the new identifier in the case of an insert.
-		require
-			is_interface_usable: is_interface_usable
-			is_readable: is_readable
-		attribute
-		end
-
-	update_actions: ACTION_SEQUENCE [TUPLE [action: INTEGER; database_name: STRING; table_name: STRING; row_id: INTEGER_64]]
-			-- Action called when and INSERT, DELETE or UPDATE statment is executed on the database.
-			--
-			-- 'type': The type of update, see {SQLITE_UPDATE_CONSTANTS}.
-			-- 'database_name': The name of the database where the update occurred.
-			-- 'table_name': The name of the table where the update occurred.
-			-- 'row_id': The row identifier of the update, or the new identifier in the case of an insert.
-		require
-			is_interface_usable: is_interface_usable
-			is_readable: is_readable
-		do
-			if attached internal_update_actions as l_result then
-				Result := l_result
-			else
-				create Result
-				internal_update_actions := Result
-
-					-- Register the update action with the database.
-				set_update_hook (True)
-			end
-		ensure
-			result_attached: attached Result
-			result_consistent: Result = update_actions
-		end
-
 feature -- Measurements
 
 	changes_count: NATURAL
@@ -246,16 +203,10 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_readable: is_readable
-			commit_action_detached: attached a_function implies not attached commit_action
-		local
-			l_action: POINTER
-			l_other_action: POINTER
+			already_set: attached a_function implies not attached commit_action
 		do
 			commit_action := a_function
-			if attached a_function then
-				l_action := $commit_callback_internal
-			end
---			l_other_action := sqlite3_commit_hook (sqlite_api, internal_db, l_action, default_pointer)
+			enable_commit_callbacks (attached a_function)
 		ensure
 			commit_action_set: commit_action = a_function
 		end
@@ -270,16 +221,10 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_readable: is_readable
-			rollback_action_detached: attached a_action implies not attached rollback_action
-		local
-			l_action: POINTER
-			l_other_action: POINTER
+			already_set: attached a_action implies not attached rollback_action
 		do
 			rollback_action := a_action
-			if attached a_action then
-				l_action := $rollback_callback_internal
-			end
---			l_other_action := sqlite3_rollback_hook (sqlite_api, internal_db, l_action, default_pointer)
+			enable_rollback_callbacks (attached a_action)
 		ensure
 			rollback_action_set: rollback_action = a_action
 		end
@@ -293,19 +238,13 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_readable: is_readable
-		local
-			l_action: POINTER
-			l_other_action: POINTER
+			already_set: attached a_action implies not attached update_action
 		do
 			update_action := a_action
-			if attached a_action then
---				l_action := $update_callback_internal
-			end
---			l_other_action := sqlite3_update_hook (sqlite_api, internal_db, l_action, $Current)
+			enable_update_callbacks (attached a_action)
 		ensure
 			update_action_set: update_action = a_action
 		end
-
 
 feature -- Status report
 
@@ -313,13 +252,16 @@ feature -- Status report
 			-- Indicates if the database is accessible on the current thread.
 		do
 			if {PLATFORM}.is_thread_capable then
-				Result := sqlite_api.is_thread_safe --internal_thread_id = get_current_thread_id.to_integer_32
+				--Result := sqlite_api.is_thread_safe or else
+					-- The Eiffel object is NOT thread safe!
+				Result := internal_thread_id = get_current_thread_id.to_integer_32
 			else
 				Result := True
 			end
 		ensure
 			true_result: not {PLATFORM}.is_thread_capable implies Result
-			--same_internal_thread_id: (Result and {PLATFORM}.is_thread_capable) implies internal_thread_id = get_current_thread_id.to_integer_32
+			same_internal_thread_id: (Result and {PLATFORM}.is_thread_capable and not sqlite_api.is_thread_safe) implies
+				internal_thread_id = get_current_thread_id.to_integer_32
 		end
 
 	is_readable: BOOLEAN
@@ -381,14 +323,19 @@ feature -- Status report: Comparison
 					attached {SQLITE_FILE_SOURCE} a_other.source as l_other_source and then
 					not l_other_source.is_temporary
 				then
-						-- May enter here because one of the databases may be closed.
-					if {PLATFORM}.is_windows then
-						Result := l_source.locator.same_string (l_other_source.locator)
+					if not (l_source.is_temporary and l_other_source.is_temporary) then
+							-- May enter here because one of the databases may be closed.
+						if {PLATFORM}.is_windows then
+							Result := l_source.locator.same_string (l_other_source.locator)
+						else
+							Result := l_source.locator.same_string (l_other_source.locator)
+						end
 					else
-						Result := l_source.locator.same_string (l_other_source.locator)
+							-- Already compared database objects, if they are both temporary then they are not
+							-- the same.
+						check not_result: not Result end
 					end
 				end
-
 			end
 		end
 
@@ -473,7 +420,7 @@ feature -- Basic operations
 		end
 
 	close
-			-- Closes and open database connection. If no connection is open nothing will happen. This is
+			-- Closes an open database connection. If no connection is open nothing will happen. This is
 			-- for convenience.
 			--
 			-- Note: Closed connections can be reopened using one of the `open_*' routines.
@@ -487,6 +434,7 @@ feature -- Basic operations
 			l_result: INTEGER
 			l_externals: SQLITE_STATEMENT_EXTERNALS
 			l_stmt: POINTER
+			l_is_locked: BOOLEAN
 		do
 			check not_is_in_final_collect: not is_in_final_collect end
 			if internal_db /= default_pointer then
@@ -510,6 +458,12 @@ feature -- Basic operations
 					then
 							-- Still locked! The only option now is to sever all statement connections (as
 							-- per-documentation recommendation.)
+
+							-- Lock the database (using thread-based locks) so we can trap error information, if needed.
+						lock
+						l_is_locked := True
+
+							-- Finalize (close) all statements
 						create l_externals
 						from
 							l_stmt := sqlite3_next_stmt (l_api, l_db, default_pointer)
@@ -521,12 +475,24 @@ feature -- Basic operations
 
 							l_stmt := sqlite3_next_stmt (l_api, l_db, l_stmt)
 						end
+
+							-- Unlock the database so we can reattempt a close operation.
+						l_is_locked := False
+						unlock
 					end
 				end
 				sqlite_raise_on_failure (l_result)
 
 					-- Unregister any update hooks.
-				set_update_hook (False)
+				if attached commit_action then
+					enable_commit_callbacks (False)
+				end
+				if attached rollback_action then
+					enable_rollback_callbacks (False)
+				end
+				if attached update_action then
+					enable_update_callbacks (False)
+				end
 
 					-- Only reset the pointer if there was no failure, because there could still be a lock, which
 					-- can possibly be resolved by a client cleaning up.
@@ -535,6 +501,10 @@ feature -- Basic operations
 		ensure
 			internal_db_is_null: internal_db = default_pointer
 			is_closed: is_closed
+		rescue
+			if l_is_locked then
+				unlock
+			end
 		end
 
 	abort
@@ -550,6 +520,8 @@ feature -- Basic operations: Threading
 
 	lock
 			-- Locks access to the database for all threads except the current thread.
+			-- Note: This is not for the Eiffel database object thread safe, but integrity of information
+			--       returns from SQLite (such as last error information).
 		require
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
@@ -574,6 +546,8 @@ feature -- Basic operations: Threading
 
 	unlock
 			-- Unlocks access to the database for all threads.
+			-- Note: This is not for the Eiffel database object thread safe, but integrity of information
+			--       returns from SQLite (such as last error information).
 		require
 			is_accessible: is_accessible
 			is_locked: is_locked
@@ -646,8 +620,14 @@ feature {NONE} -- Basic operations
 				check success: sqlite_success (l_other_result) end
 
 					-- Re-enable hooks
-				if attached internal_update_actions then
-					set_update_hook (True)
+				if attached commit_action then
+					enable_commit_callbacks (True)
+				end
+				if attached rollback_action then
+					enable_rollback_callbacks (True)
+				end
+				if attached update_action then
+					enable_update_callbacks (True)
 				end
 			else
 				if l_db /= default_pointer then
@@ -667,67 +647,156 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Basic operations: Callbacks
 
-	frozen commit_callback_internal (a_pointer: POINTER): INTEGER
-			-- Commit action callback associated with `commit_action'.
+	enable_commit_callbacks (a_enable: BOOLEAN)
+			-- Sets up the commit hook for the database.
 			--
-			-- `a_pointer': Ignore.
-			-- `Result': Zero to continue with commit; Non-zero to rollback.
+			-- `a_enable': True to enable callbacks; False otherwise.
 		require
 			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+			commit_action_attached: a_enable implies attached commit_action
+		local
+			l_data: POINTER
 		do
-			if is_readable and then attached commit_action as l_function then
-				if l_function.item (Void) then
-					Result := 1
+			if a_enable then
+					-- Create the callback data
+				l_data := new_cb_data ($on_commit_callback, $Current)
+
+					-- Request callbacls from SQLite
+				l_data := sqlite3_commit_hook (sqlite_api, internal_db, l_data)
+				check no_old_callback: l_data = default_pointer end
+			else
+					-- Prevent callbacks from SQLite
+				l_data := sqlite3_update_hook (sqlite_api, internal_db, default_pointer)
+				if l_data /= default_pointer then
+					free_cb_data (l_data)
 				end
 			end
 		end
 
-	frozen rollback_callback_internal (a_pointer: POINTER)
-			-- Rollback action callback associated with `rollback_action'.
-			--
-			-- `a_pointer': Ignore.
+	on_commit_callback: BOOLEAN
+			-- Called back from the wrapper implementation in the Eiffel C code.
 		require
 			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
 		do
-			if is_readable and then attached rollback_action as l_action then
+			if attached commit_action as l_action then
+				Result := l_action.item (Void)
+			end
+		end
+
+	enable_rollback_callbacks (a_enable: BOOLEAN)
+			-- Sets up the commit rollback hook for the database.
+			--
+			-- `a_enable': True to enable callbacks; False otherwise.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+			rollback_action_attached: a_enable implies attached rollback_action
+		local
+			l_data: POINTER
+		do
+			if a_enable then
+					-- Create the callback data
+				l_data := new_cb_data ($on_rollback_callback, $Current)
+
+					-- Request callbacls from SQLite
+				l_data := sqlite3_rollback_hook (sqlite_api, internal_db, l_data)
+				check no_old_callback: l_data = default_pointer end
+			else
+					-- Prevent callbacks from SQLite
+				l_data := sqlite3_update_hook (sqlite_api, internal_db, default_pointer)
+				if l_data /= default_pointer then
+					free_cb_data (l_data)
+				end
+			end
+		end
+
+	on_rollback_callback
+			-- Called back from the wrapper implementation in the Eiffel C code.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+		do
+			if attached rollback_action as l_action then
 				l_action.call (Void)
 			end
 		end
 
-	set_update_hook (a_enable: BOOLEAN)
+	enable_update_callbacks (a_enable: BOOLEAN)
 			-- Sets up the update hook for the database.
 			--
 			-- `a_enable': True to enable callbacks; False otherwise.
 		require
 			is_interface_usable: is_interface_usable
 			not_is_closed: not is_closed
-			internal_update_actions_attached: a_enable implies attached internal_update_actions
+			update_action_attached: a_enable implies attached update_action
 		local
 			l_data: POINTER
 		do
 			if a_enable then
 					-- Create the callback data
 				l_data := new_cb_data ($on_update_callback, $Current)
-				internal_update_actions_data := l_data
 
 					-- Request callbacls from SQLite
 				l_data := sqlite3_update_hook (sqlite_api, internal_db, l_data)
 				check no_old_callback: l_data = default_pointer end
 			else
-				l_data := internal_update_actions_data
+					-- Prevent callbacks from SQLite
+				l_data := sqlite3_update_hook (sqlite_api, internal_db, default_pointer)
 				if l_data /= default_pointer then
-					internal_update_actions_data := default_pointer
-
-						-- Prevent callbacks from SQLite
-					l_data := sqlite3_update_hook (sqlite_api, internal_db, default_pointer)
-					if l_data /= default_pointer then
-						free_cb_data (l_data)
-					end
+					free_cb_data (l_data)
 				end
 			end
 		end
 
-feature {NONE} -- Implementation: Callbacks
+	on_update_callback (a_action: INTEGER; a_db_name: POINTER; a_tb_name: POINTER; a_row_id: INTEGER_64)
+			-- Called back from the wrapper implementation in the Eiffel C code.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+			a_action_is_valid: a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_delete or
+				a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_insert or
+				a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_update
+		local
+			l_db_name: STRING
+			l_tb_name: STRING
+		do
+			if attached update_action as l_action then
+				create l_db_name.make_from_c (a_db_name)
+				create l_tb_name.make_from_c (a_tb_name)
+				l_action.call ([a_action, l_db_name, l_tb_name, a_row_id])
+			end
+		end
+
+feature {SQLITE_INTERNALS} -- Implementation
+
+	internal_db: POINTER
+			-- Handle to the database.
+
+	internal_flags: INTEGER
+			-- Flags database was opened with.
+
+feature {NONE} -- Implementation
+
+	internal_lock_count: INTEGER
+			-- Internal lock count for thread protection.
+
+	internal_thread_id: INTEGER
+			-- The thread the database was connected using.
+			--|In mono-threaded systems this will always be 0.
+
+feature {NONE} -- Externals
+
+	get_current_thread_id: POINTER
+			-- Returns a pointer to the thread-id of the thread.
+		require
+			is_thread_capable: {PLATFORM}.is_thread_capable
+		external
+			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_thread_id"
+		end
 
 	new_cb_data (a_cb: POINTER; a_object: POINTER): POINTER
 			-- Creates a callback back data struct to process SQLite callbacks.
@@ -762,63 +831,6 @@ feature {NONE} -- Implementation: Callbacks
 				eif_wean (((EIF_CBDATAP)$a_data)->o);
 				free($a_data);
 			]"
-		end
-
-	on_update_callback (a_action: INTEGER; a_db_name: POINTER; a_tb_name: POINTER; a_row_id: INTEGER_64)
-			-- Called back from the wrapper implementation in the Eiffel C code.
-		require
-			is_interface_usable: is_interface_usable
-			not_is_closed: not is_closed
-			a_action_is_valid: a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_delete or
-				a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_insert or
-				a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_update
-		local
-			l_db_name: STRING
-			l_tb_name: STRING
-		do
-			if attached internal_update_actions as l_actions then
-				create l_db_name.make_from_c (a_db_name)
-				create l_tb_name.make_from_c (a_tb_name)
-				l_actions.call ([a_action, l_db_name, l_tb_name, a_row_id])
-			end
-		end
-
-feature {SQLITE_INTERNALS} -- Implementation
-
-	internal_db: POINTER
-			-- Handle to the database.
-
-	internal_flags: INTEGER
-			-- Flags database was opened with.
-
-feature {NONE} -- Implementation
-
-	internal_lock_count: INTEGER
-			-- Internal lock count for thread protection.
-
-	internal_thread_id: INTEGER
-			-- The thread the database was connected using.
-			--|In non multi-threaded systems this will always be 0.
-
-	internal_update_actions_data: POINTER
-			-- Update actions callback data, set using `new_cb_data'
-
-feature {NONE} -- Implementation: Internal cache
-
-	internal_update_actions: detachable like update_actions
-			-- Cached version of `update_actions'.
-			-- Note: Do not use directly!
-
-feature {NONE} -- Externals
-
-	get_current_thread_id: POINTER
-			-- Returns a pointer to the thread-id of the thread.
-		require
-			is_thread_capable: {PLATFORM}.is_thread_capable
-		external
-			"C use %"eif_threads.h%""
-		alias
-			"eif_thr_thread_id"
 		end
 
 invariant

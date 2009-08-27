@@ -84,7 +84,8 @@ feature {NONE} -- Access
 			l_indexing := ast.top_indexes
 			if l_indexing /= Void then
 				Result := ast_license_name_from_indexing (l_indexing)
-			else
+			end
+			if Result = Void then
 				l_indexing := ast.bottom_indexes
 				if l_indexing /= Void then
 					Result := ast_license_name_from_indexing (l_indexing)
@@ -320,9 +321,9 @@ feature {NONE} -- Basic operations: Modifications
 						l_old_index := a_ast.index_as_of_tag_name (l_tag_name)
 						if l_old_index /= Void then
 							l_atoms := l_old_index.index_list
-							replace_code (l_atoms.start_position, l_atoms.end_position, l_index.index_list.text (l_match_list))
+							replace_code (l_atoms.complete_start_position (a_match_list), l_atoms.complete_end_position (a_match_list), l_index.index_list.text (l_match_list))
 						else
-							insert_code (a_ast.end_position, "%N%T" + l_index.text (l_match_list))
+							insert_code (a_ast.complete_end_position (a_match_list) + 1, "%N%T" + l_index.text (l_match_list))
 						end
 						l_indexing.forth
 					end
@@ -344,7 +345,7 @@ feature {NONE} -- Helpers
 	round_trip_indexing_parser: attached EIFFEL_PARSER
 			-- A parser used to parse indexing clauses, with round-trip facilities.
 		once
-			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
+			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_FACTORY})
 			Result.set_indexing_parser
 		ensure
 			result_is_indexing_parser: Result.indexing_parser

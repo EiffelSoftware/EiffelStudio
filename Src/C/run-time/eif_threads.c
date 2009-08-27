@@ -1269,7 +1269,7 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 				memcpy(&all_thread_list, &running_thread_list, sizeof(struct stack_list));
 				memset(&running_thread_list, 0, sizeof(struct stack_list));
 
-				CHECK("data not null", all_thread_list.threads.data);
+				CHECK("data not null if not empty", (all_thread_list.count == 0) || (all_thread_list.threads.data));
 
 					/* For performance reasons on systems with a poor scheduling policy, 
 					 * we switch context to one of the remaining running thread. Not doing

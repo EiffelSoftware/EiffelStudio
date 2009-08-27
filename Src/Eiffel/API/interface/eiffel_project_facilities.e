@@ -136,7 +136,7 @@ feature -- Helper
 			path_representation_not_void: Result /= Void
 		end
 
-	subclusters_of_group (a_group: CONF_GROUP): DS_ARRAYED_LIST [CONF_CLUSTER]
+	subclusters_of_group (a_group: CONF_GROUP): ARRAYED_LIST [CONF_CLUSTER]
 			-- Subclusters of a group.
 		require
 			a_group_not_void: a_group /= Void
@@ -145,7 +145,6 @@ feature -- Helper
 			l_lib: CONF_LIBRARY
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_clu: ARRAYED_LIST [CONF_CLUSTER]
-			l_groups: DS_ARRAYED_LIST [CONF_GROUP]
 		do
 			create Result.make (10)
 			if a_group.classes_set then
@@ -158,7 +157,7 @@ feature -- Helper
 						until
 							l_clu.after
 						loop
-							Result.force_last (l_clu.item)
+							Result.extend (l_clu.item)
 							l_clu.forth
 						end
 					end
@@ -170,21 +169,18 @@ feature -- Helper
 					until
 						l_clusters.after
 					loop
-						Result.force_last (l_clusters.item_for_iteration)
+						Result.extend (l_clusters.item_for_iteration)
 						l_clusters.forth
 					end
 				end
 			end
-				-- Sort `Result', but using `group_sorter' forces us to use
-				-- a DS_ARRAYED_LIST [CONF_GROUP] local.
-			l_groups := Result
-			l_groups.sort (group_sorter)
+			group_sorter.sort (Result)
 		ensure
 			subclusters_of_group_not_void: Result /= Void
-			sorted: (({DS_ARRAYED_LIST [CONF_GROUP]}) [Result]).sorted (group_sorter)
+			sorted: group_sorter.sorted (Result)
 		end
 
-	top_level_clusters: DS_ARRAYED_LIST [CONF_GROUP]
+	top_level_clusters: ARRAYED_LIST [CONF_GROUP]
 			-- Top level clusters in the system
 		local
 			l_groups: ARRAYED_LIST [CONF_GROUP]
@@ -200,31 +196,31 @@ feature -- Helper
 				if l_groups.item.is_cluster then
 					l_cluster ?= l_groups.item
 					if l_cluster.parent /= Void then
-						Result.force_last (l_cluster)
+						Result.extend (l_cluster)
 					end
 				else
-					Result.force_last (l_groups.item)
+					Result.extend (l_groups.item)
 				end
 				l_groups.forth
 			end
-			Result.sort (group_sorter)
+			group_sorter.sort (Result)
 		ensure
 			top_level_clusters_not_void: Result /= Void
-			sorted: Result.sorted (group_sorter)
+			sorted: group_sorter.sorted (Result)
 		end
 
 feature {NONE} -- Implementation
 
-	group_sorter: DS_QUICK_SORTER [CONF_GROUP]
+	group_sorter: QUICK_SORTER [CONF_GROUP]
 			-- Sorter of group in alphabetical order.
 		once
-			create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make)
+			create Result.make (create {COMPARABLE_COMPARATOR [CONF_GROUP]})
 		ensure
 			group_sorter_not_void: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -237,22 +233,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DOCUMENTATION_FACILITIES

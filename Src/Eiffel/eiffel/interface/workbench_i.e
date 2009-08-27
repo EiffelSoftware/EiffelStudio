@@ -517,7 +517,7 @@ feature -- Commands
 			-- Record all the classes in the universe as
 			-- changed (for compilation using `ANY' as root class)
 		local
-			classes: DS_HASH_SET [CLASS_I]
+			classes: SEARCH_TABLE [CLASS_I]
 			cl: CLASS_I
 		do
 			from

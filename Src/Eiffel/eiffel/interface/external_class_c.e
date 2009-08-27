@@ -1126,8 +1126,7 @@ feature {NONE} -- Initialization
 					l_type_is_integer: l_type.is_integer
 				end
 				if l_type /= Void then
-					create convert_to.make (1)
-					convert_to.set_key_equality_tester (create {CONVERTIBILITY_CHECKER})
+					create {HASH_TABLE_EX [INTEGER, NAMED_TYPE_A]} convert_to.make_with_key_tester (1, create {CONVERTIBILITY_CHECKER})
 					convert_to.force ({NAMES_HEAP}.to_integer_name_id, l_type)
 				end
 			end
@@ -1604,7 +1603,7 @@ feature {NONE} -- Implementation
 					l_assemblies.forth
 				end
 				if not l_path.is_empty then
-					create l_man.make (create {CONF_COMP_FACTORY}, system.metadata_cache_path, system.clr_runtime_version, assembly.target,  create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default)
+					create l_man.make (create {CONF_COMP_FACTORY}, system.metadata_cache_path, system.clr_runtime_version, assembly.target,  create {SEARCH_TABLE [CONF_CLASS]}.make (0), create {SEARCH_TABLE [CONF_CLASS]}.make (0), create {SEARCH_TABLE [CONF_CLASS]}.make (0))
 					l_emitter := l_man.il_emitter
 					if l_emitter.exists and then l_emitter.is_initialized then
 						l_emitter.consume_assembly_from_path (assembly.consumed_assembly.location, False, l_path)

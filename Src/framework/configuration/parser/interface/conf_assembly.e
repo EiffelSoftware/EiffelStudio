@@ -103,7 +103,7 @@ feature -- Access, in compiled only
 
 feature -- Access queries
 
-	accessible_groups: DS_HASH_SET [CONF_GROUP]
+	accessible_groups: SEARCH_TABLE [CONF_GROUP]
 			-- Groups that are accessible within `Current'.
 		do
 			Result := physical_assembly.accessible_groups
@@ -144,19 +144,17 @@ feature -- Access queries
 		local
 			l_dep: CONF_GROUP
 			l_groups: like accessible_groups
-			l_cursor: DS_HASH_SET_CURSOR [CONF_GROUP]
 		do
 			Result := Precursor (a_class, a_dependencies)
 			if a_dependencies then
 				l_groups := accessible_groups
-				l_cursor := l_groups.new_cursor
 				from
-					l_cursor.start
+					l_groups.start
 				until
-					l_cursor.after
+					l_groups.after
 				loop
-					l_dep := l_cursor.item
-					l_cursor.forth
+					l_dep := l_groups.item_for_iteration
+					l_groups.forth
 					if l_dep.classes_set then
 						Result.append (l_dep.name_by_class (a_class, False))
 					end
@@ -275,7 +273,7 @@ feature -- Visit
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -288,21 +286,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -261,7 +261,7 @@ feature {NONE} -- Access
 			result_attached: attached Result
 		end
 
-	configuration_libraries: DS_HASH_TABLE [CONF_SYSTEM, STRING]
+	configuration_libraries: HASH_TABLE [CONF_SYSTEM, STRING]
 			-- A set of libraries configurations to display in the dialog
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
@@ -284,7 +284,7 @@ feature {NONE} -- Access
 					attached l_loader.last_system as l_system and then
 					attached l_system.library_target as l_target
 				then
-					Result.put_last (l_system, l_libs.item_for_iteration)
+					Result.force (l_system, l_libs.item_for_iteration)
 				end
 				l_libs.forth
 			end
@@ -444,7 +444,7 @@ feature {NONE} -- Basic operation
 			-- Populates the list of libraries in the UI
 		local
 			l_libraries: like configuration_libraries
-			l_sorted_keys: DS_HASH_TABLE [STRING, STRING]
+			l_sorted_keys: HASH_TABLE [STRING, STRING]
 			l_list: DS_ARRAYED_LIST [STRING]
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
@@ -474,13 +474,13 @@ feature {NONE} -- Basic operation
 					l_key.append_string (l_target.name)
 					l_key.append_string (once " # ")
 					l_key.append_string (l_path)
-					l_sorted_keys.force_last (l_path, l_key)
+					l_sorted_keys.force (l_path, l_key)
 				end
 				l_libraries.forth
 			end
 
 				-- Sort keys
-			create l_list.make_from_linear (l_sorted_keys.keys)
+			create l_list.make_from_array (l_sorted_keys.current_keys)
 			l_list.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
 
 				-- Build libraries list

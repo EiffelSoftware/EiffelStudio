@@ -82,7 +82,7 @@ feature -- Actions
 			af: LINEAR [INTEGER]
 			cancelled: BOOLEAN
 			ir_error: INTERRUPT_ERROR
-			l_groups_cursor: DS_ARRAYED_LIST_CURSOR [CONF_GROUP]
+			l_groups: like groups
 			l_group: CONF_GROUP
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_cursor: CURSOR
@@ -141,14 +141,14 @@ feature -- Actions
 						generate_cluster_hierarchy
 					end
 
-					l_groups_cursor := groups.new_cursor
+					l_groups := groups
 					if cluster_chart_generated then
 						from
-							l_groups_cursor.start
+							l_groups.start
 						until
-							l_groups_cursor.after
+							l_groups.after
 						loop
-							l_group := l_groups_cursor.item
+							l_group := l_groups.item
 							deg.put_string ("Building cluster chart for " + group_name_presentation (".", "", l_group))
 							deg.flush_output
 							if filter.is_html then
@@ -158,21 +158,21 @@ feature -- Actions
 							prepare_for_file (relative_path (l_group), "index")
 							set_document_title ("cluster " + l_group.name)
 							generate_cluster_index (l_group)
-							l_groups_cursor.forth
+							l_groups.forth
 						end
 					end
 
 					if filter.is_html and then cluster_diagram_generated then
 						from
-							l_groups_cursor.start
+							l_groups.start
 						until
-							l_groups_cursor.after
+							l_groups.after
 						loop
-							l_group := l_groups_cursor.item
+							l_group := l_groups.item
 							deg.put_string ("Building cluster diagram for " + group_name_presentation (".", "", l_group))
 							deg.flush_output
 							generate_cluster_diagram (l_group)
-							l_groups_cursor.forth
+							l_groups.forth
 						end
 					end
 
@@ -180,12 +180,12 @@ feature -- Actions
 						deg.put_start_documentation (doc_universe.classes.count, generated_class_formats_string)
 						l_context_group := filter.context_group
 						from
-							l_groups_cursor.start
+							l_groups.start
 						until
-							l_groups_cursor.after
+							l_groups.after
 						loop
-							l_group := l_groups_cursor.item
-							l_groups_cursor.forth
+							l_group := l_groups.item
+							l_groups.forth
 							l_classes := l_group.classes
 							if l_classes /= Void then
 								l_cursor := l_classes.cursor
@@ -301,8 +301,8 @@ feature -- Actions
 		require
 			root_directory /= Void
 		local
-			d: KL_DIRECTORY
-			fi: FILE_NAME
+			d: DIRECTORY
+			fi: DIRECTORY_NAME
 			l_string: STRING
 		do
 			l_string := relative_path (a_group).out
@@ -310,7 +310,7 @@ feature -- Actions
 			fi.extend (l_string)
 			create d.make (fi)
 			if not d.exists then
-				d.recursive_create_directory
+				d.recursive_create_dir
 			end
 		end
 
@@ -447,10 +447,10 @@ feature {NONE} -- Implementation
 			doc_universe.set_any_feature_format_generated (feature_links /= Void)
 		end
 
-	classes: DS_ARRAYED_LIST [CONF_CLASS]
+	classes: ARRAYED_LIST [CONF_CLASS]
 			-- Classes to be generated.
 
-	groups: DS_ARRAYED_LIST [CONF_GROUP]
+	groups: ARRAYED_LIST [CONF_GROUP]
 			-- Groups to be generated.
 		do
 			Result := doc_universe.groups

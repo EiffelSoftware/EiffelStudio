@@ -690,9 +690,9 @@ end
 			l_class: CLASS_C
 			l_table: SEARCH_TABLE [CLASS_C]
 			l_has_error: BOOLEAN
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [VTCT]
-			l_sorter: DS_QUICK_SORTER [VTCT]
-			l_list: DS_ARRAYED_LIST [VTCT]
+			l_agent_sorter: AGENT_EQUALITY_TESTER [VTCT]
+			l_sorter: QUICK_SORTER [VTCT]
+			l_list: ARRAYED_LIST [VTCT]
 		do
 			if missing_classes /= Void then
 				from
@@ -726,7 +726,7 @@ end
 							create l_vtct
 							l_vtct.set_class (l_class)
 							l_vtct.set_class_name (l_name)
-							l_list.force_last (l_vtct)
+							l_list.extend (l_vtct)
 
 								-- But since it is an invalid class, then we need to force
 								-- a compilation again to check for the VTCT error again.
@@ -767,9 +767,9 @@ end
 			l_class: CLASS_C
 			l_table: SEARCH_TABLE [CLASS_C]
 			l_has_error: BOOLEAN
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [VTCM]
-			l_sorter: DS_QUICK_SORTER [VTCM]
-			l_list: DS_ARRAYED_LIST [VTCM]
+			l_agent_sorter: AGENT_EQUALITY_TESTER [VTCM]
+			l_sorter: QUICK_SORTER [VTCM]
+			l_list: ARRAYED_LIST [VTCM]
 		do
 			if missing_classes_warning /= Void then
 				from
@@ -803,7 +803,7 @@ end
 							create l_vtcm
 							l_vtcm.set_class (l_class)
 							l_vtcm.set_class_name (l_name)
-							l_list.force_last (l_vtcm)
+							l_list.extend (l_vtcm)
 
 							l_has_error := True
 						end
@@ -909,7 +909,7 @@ end
 			-- Build or rebuild the configuration information
 		local
 			l_vis_build: CONF_BUILD_VISITOR
-			l_classes: DS_HASH_SET [CONF_CLASS]
+			l_classes: SEARCH_TABLE [CONF_CLASS]
 			l_conf_class: CONF_CLASS
 			l_class_i: CLASS_I
 			l_errors, l_warnings: LIST [CONF_ERROR]
@@ -1134,7 +1134,7 @@ end
 			-- Check if all the classes in the system have unique names.
 		local
 			l_table: HASH_TABLE [CLASS_I, STRING]
-			l_classes: DS_HASH_SET [CLASS_I]
+			l_classes: SEARCH_TABLE [CLASS_I]
 			l_class: CLASS_I
 			l_name: STRING
 			l_vd87: VD87
@@ -4720,7 +4720,7 @@ feature -- Generation
 			cecil_file, header_file: INDENT_FILE
 			buffer, header_buffer: GENERATION_BUFFER
 			l_has_visible: BOOLEAN
-			generated_wrappers: DS_HASH_SET [STRING]
+			generated_wrappers: SEARCH_TABLE [STRING]
 		do
 				-- Clear buffers for current generation
 			buffer := generation_buffer
@@ -4738,7 +4738,7 @@ feature -- Generation
 
 			buffer.start_c_specific_code
 
-			create generated_wrappers.make_equal (10)
+			create generated_wrappers.make (10)
 			class_array := classes
 			nb := class_counter.count
 			from i := 1 until i > nb loop

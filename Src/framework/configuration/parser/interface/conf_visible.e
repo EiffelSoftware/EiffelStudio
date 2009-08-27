@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic commands
 
-	update_visible (a_added_classes: DS_HASH_SET [CONF_CLASS])
+	update_visible (a_added_classes: SEARCH_TABLE [CONF_CLASS])
 			-- Update visible options on classes.
 		require
 			a_added_classes_not_void: a_added_classes /= Void

@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			feature_stack.item.fbody_pos := a_fbody_pos
 		end
 
-	feature_stack: DS_ARRAYED_STACK [TUPLE [id_level, fbody_pos: INTEGER]]
+	feature_stack: ARRAYED_STACK [TUPLE [id_level, fbody_pos: INTEGER]]
 			-- id_level and fbody_pos are needed per feature body. Since there are inline agents
 			-- we need a stack of them. It may be, that there is no feature at all when its used
 			-- for an invariant. We never remove the first element of the stack.
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 	last_symbol: SYMBOL_AS
 			-- Temporary locals in semantic actions.
 
-	last_rsqure: DS_ARRAYED_STACK [SYMBOL_AS]
+	last_rsqure: ARRAYED_STACK [SYMBOL_AS]
 			-- Stack of ']'s used for parsing named tuples
 
 feature {NONE} -- Counters
@@ -594,11 +594,11 @@ feature {NONE} -- Counters
 			one_more: counter2_value = old counter2_value + 1
 		end
 
-	counters: DS_ARRAYED_STACK [INTEGER]
+	counters: ARRAYED_STACK [INTEGER]
 			-- Counters currently in use by the parser
 			-- to build lists of AST nodes with the right size.
 
-	counters2: DS_ARRAYED_STACK [INTEGER]
+	counters2: ARRAYED_STACK [INTEGER]
 			-- Counters used for parsing tuples
 
 feature {NONE} -- Actions

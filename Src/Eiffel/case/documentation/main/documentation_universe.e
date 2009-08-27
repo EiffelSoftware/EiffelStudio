@@ -47,7 +47,7 @@ feature -- Element change
 			l_class_i: CLASS_I
 		do
 			if not groups.has (gr) then
-				groups.force_last (gr)
+				groups.extend (gr)
 				cl := gr.classes
 				if cl /= Void then
 					from
@@ -60,7 +60,7 @@ feature -- Element change
 							l_class_i /= Void
 						end
 						if l_class_i.is_compiled then
-							classes_internal.force_last (cl.item_for_iteration)
+							classes_internal.extend (cl.item_for_iteration)
 						end
 						cl.forth
 					end
@@ -79,7 +79,7 @@ feature -- Element change
 		do
 			gr := Universe.groups
 			from gr.start until gr.after loop
-				groups.force_last (gr.item)
+				groups.extend (gr.item)
 				cl := gr.item.classes
 				if cl /= Void then
 					from
@@ -92,7 +92,7 @@ feature -- Element change
 							l_class_i /= Void
 						end
 						if l_class_i.is_compiled then
-							classes_internal.force_last (cl.item_for_iteration)
+							classes_internal.extend (cl.item_for_iteration)
 						end
 						cl.forth
 					end
@@ -106,29 +106,29 @@ feature -- Setting
 	complete_universe
 			-- Set `is_universe_completed' to True.
 		do
-			groups.sort (group_sorter)
+			group_sorter.sort (groups)
 			is_universe_completed := True
 		ensure
 			is_universe_completed_set: is_universe_completed
-			groups_sorter: groups.sorted (group_sorter)
+			groups_sorter: group_sorter.sorted (groups)
 		end
 
 feature -- Access
 
-	groups: DS_ARRAYED_LIST [CONF_GROUP]
+	groups: ARRAYED_LIST [CONF_GROUP]
 			-- All groups in universe.
 
-	classes: DS_ARRAYED_LIST [CONF_CLASS]
+	classes: ARRAYED_LIST [CONF_CLASS]
 			-- All classes from `groups' sorted.
 		do
 			Result := classes_internal
 			if not class_sorted then
-				Result.sort (class_sorter)
+				class_sorter.sort (Result)
 				class_sorted := True
 			end
 		ensure
 			classes_not_void: Result /= Void
-			sorted: Result.sorted (class_sorter)
+			sorted: class_sorter.sorted (Result)
 		end
 
 	classes_in_group (group: CONF_GROUP): like classes
@@ -137,10 +137,10 @@ feature -- Access
 			group_not_void: group /= Void
 		do
 			Result := unsorted_classes_in_group (group)
-			Result.sort (class_sorter)
+			class_sorter.sort (Result)
 		ensure
 			classes_in_group_not_void: Result /= Void
-			sorted: Result.sorted (class_sorter)
+			sorted: class_sorter.sorted (Result)
 		end
 
 	any_group_format_generated: BOOLEAN
@@ -201,7 +201,7 @@ feature -- Status report
 		do
 			l_index := classes.index
 			classes.start
-			classes.search_forth (a_class.config_class)
+			classes.search (a_class.config_class)
 			if not classes.after then
 				Result := True
 				found_group := classes.item_for_iteration.group
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 						l_class_i_not_void: l_class_i /= Void
 					end
 					if l_class_i.is_compiled then
-						Result.force_last (cl.item_for_iteration)
+						Result.extend (cl.item_for_iteration)
 					end
 					cl.forth
 				end
@@ -285,23 +285,23 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: Access
 
-	class_sorter: DS_QUICK_SORTER [CONF_CLASS]
+	class_sorter: QUICK_SORTER [CONF_CLASS]
 			-- Sorter object for classes.
 		once
-			create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_CLASS]}.make)
+			create Result.make (create {COMPARABLE_COMPARATOR [CONF_CLASS]})
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	group_sorter: DS_QUICK_SORTER [CONF_GROUP]
+	group_sorter: QUICK_SORTER [CONF_GROUP]
 			-- Sorter object for groups.
 		once
-			create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make)
+			create Result.make (create {COMPARABLE_COMPARATOR [CONF_GROUP]})
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	classes_internal: DS_ARRAYED_LIST [CONF_CLASS]
+	classes_internal: ARRAYED_LIST [CONF_CLASS]
 			-- Classes internal
 
 	class_sorted: BOOLEAN
@@ -311,7 +311,7 @@ invariant
 	groups_not_void: groups /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -324,22 +324,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DOCUMENTATION_UNIVERSE

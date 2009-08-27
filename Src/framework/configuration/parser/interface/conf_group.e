@@ -314,12 +314,12 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	accessible_groups: DS_HASH_SET [CONF_GROUP]
+	accessible_groups: SEARCH_TABLE [CONF_GROUP]
 			-- Groups that are accessible within `Current'.
 		require
 			classes_set: classes_set
 		once
-			create Result.make_default
+			create Result.make (0)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -530,7 +530,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			same_as_classes: classes.count = classes_by_filename.count
 		end
 
-	add_overriders (an_overrider: CONF_OVERRIDE; a_added_classes, a_modified_classes, a_removed_classes: DS_HASH_SET [CONF_CLASS])
+	add_overriders (an_overrider: CONF_OVERRIDE; a_added_classes, a_modified_classes, a_removed_classes: SEARCH_TABLE [CONF_CLASS])
 			-- Add `an_overrider' to `overriders', track classes with a changed override in `a_modified_classes'
 			-- and classes that where compiled but do now override something in `a_removed_classes'.
 		require

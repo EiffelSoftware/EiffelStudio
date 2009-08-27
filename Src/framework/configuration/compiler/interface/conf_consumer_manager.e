@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_factory: like factory; a_metadata_cache_path: STRING; an_il_version: like il_version; a_application_target: like application_target; an_added_classes, a_removed_classes, a_modified_classes: DS_HASH_SET [CONF_CLASS])
+	make (a_factory: like factory; a_metadata_cache_path: STRING; an_il_version: like il_version; a_application_target: like application_target; an_added_classes, a_removed_classes, a_modified_classes: SEARCH_TABLE [CONF_CLASS])
 			-- Create.
 		require
 			a_factory_ok: a_factory /= Void
@@ -183,13 +183,13 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
-	modified_classes: DS_HASH_SET [CONF_CLASS]
+	modified_classes: SEARCH_TABLE [CONF_CLASS]
 			-- The list of modified classes.
 
-	added_classes: DS_HASH_SET [CONF_CLASS]
+	added_classes: SEARCH_TABLE [CONF_CLASS]
 			-- The list of added classes.
 
-	removed_classes: DS_HASH_SET [CONF_CLASS]
+	removed_classes: SEARCH_TABLE [CONF_CLASS]
 			-- The list of removed classes.
 
 	linear_assemblies: ARRAYED_LIST [CONF_PHYSICAL_ASSEMBLY]
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 	old_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
 		-- Old assemblies from previous compilation.
 
-	new_assemblies: DS_HASH_SET [CONF_ASSEMBLY]
+	new_assemblies: SEARCH_TABLE [CONF_ASSEMBLY]
 		-- List of assemblies to process.
 
 	get_physical_assembly (a_consumed: CONSUMED_ASSEMBLY): CONF_PHYSICAL_ASSEMBLY
@@ -577,7 +577,7 @@ feature {NONE} -- retrieving information from cache
 
 feature {NONE} -- Consuming
 
-	consume_all_assemblies  (an_assemblies: DS_HASH_SET [CONF_ASSEMBLY])
+	consume_all_assemblies  (an_assemblies: SEARCH_TABLE [CONF_ASSEMBLY])
 			-- Consume all (local and gac) assemblies in `an_assemblies'.
 		require
 			an_assemblies_not_void: an_assemblies /= Void
@@ -587,7 +587,6 @@ feature {NONE} -- Consuming
 			l_path: STRING
 			l_unique_paths: ARRAYED_LIST [STRING]
 			l_emitter: like il_emitter
-			l_cursor: DS_HASH_SET_CURSOR [CONF_ASSEMBLY]
 		do
 			create l_unique_paths.make (10)
 			l_unique_paths.compare_objects
@@ -596,12 +595,11 @@ feature {NONE} -- Consuming
 			from
 				l_emitter := il_emitter
 				create l_paths.make_empty
-				l_cursor := an_assemblies.new_cursor
-				l_cursor.start
+				an_assemblies.start
 			until
-				l_cursor.after
+				an_assemblies.after
 			loop
-				l_a := l_cursor.item
+				l_a := an_assemblies.item_for_iteration
 				if l_a.is_non_local_assembly then
 					l_emitter.consume_assembly (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token, True)
 				else
@@ -611,7 +609,7 @@ feature {NONE} -- Consuming
 						l_paths.append (l_path + ";")
 					end
 				end
-				l_cursor.forth
+				an_assemblies.forth
 			end
 			if not l_paths.is_empty then
 				l_paths.remove_tail (1)
@@ -625,7 +623,7 @@ feature {NONE} -- Consuming
 			cache_content_set: cache_content /= Void
 		end
 
-	consume_local_assemblies (an_assemblies: DS_HASH_SET [CONF_ASSEMBLY])
+	consume_local_assemblies (an_assemblies: SEARCH_TABLE [CONF_ASSEMBLY])
 			-- Consume all local assemblies in `an_assemblies'.
 		require
 			an_assemblies_not_void: an_assemblies /= Void
@@ -634,7 +632,6 @@ feature {NONE} -- Consuming
 			l_paths: STRING
 			l_path: STRING
 			l_unique_paths: ARRAYED_LIST [STRING]
-			l_cursor: DS_HASH_SET_CURSOR [CONF_ASSEMBLY]
 			l_emitter: like il_emitter
 		do
 			create l_unique_paths.make (10)
@@ -642,13 +639,12 @@ feature {NONE} -- Consuming
 
 			on_consume_assemblies
 			from
-				l_cursor := an_assemblies.new_cursor
 				create l_paths.make_empty
-				l_cursor.start
+				an_assemblies.start
 			until
-				l_cursor.after
+				an_assemblies.after
 			loop
-				l_a := l_cursor.item
+				l_a := an_assemblies.item_for_iteration
 				if not l_a.is_non_local_assembly then
 					l_path := l_a.location.evaluated_path.as_lower
 					if not l_unique_paths.has (l_path) then
@@ -656,7 +652,7 @@ feature {NONE} -- Consuming
 						l_paths.append (l_path + ";")
 					end
 				end
-				l_cursor.forth
+				an_assemblies.forth
 			end
 			if not l_paths.is_empty then
 				l_paths.remove_tail (1)
@@ -852,21 +848,17 @@ feature {NONE} -- Contract
 
 	new_assemblies_valid: BOOLEAN
 			-- Are `new_assemblies' valid?
-		local
-			l_cursor: DS_HASH_SET_CURSOR [CONF_ASSEMBLY]
 		do
 			Result := True
-			if new_assemblies /= Void then
+			if attached new_assemblies as l_assemblies then
 				from
-					l_cursor := new_assemblies.new_cursor
-					l_cursor.start
+					l_assemblies.start
 				until
-					not Result or l_cursor.after
+					not Result or l_assemblies.after
 				loop
-					Result := l_cursor.item.is_valid
-					l_cursor.forth
+					Result := l_assemblies.item_for_iteration.is_valid
+					l_assemblies.forth
 				end
-				l_cursor.go_after
 			end
 		end
 

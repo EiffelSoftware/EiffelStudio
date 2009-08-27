@@ -325,10 +325,10 @@ feature -- Access
 
 feature -- Access: Convertibility
 
-	convert_to: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
+	convert_to: HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			-- Set of feature name IDs indexed by type to which they convert to.
 
-	convert_from: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
+	convert_from: HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			-- Set of feature name IDs indexed by type to which they convert from.
 
 feature -- Access: CLI implementation
@@ -2646,7 +2646,7 @@ feature -- Dead code removal
 
 feature -- Cecil
 
-	generate_cecil (generated_wrappers: DS_HASH_SET [STRING])
+	generate_cecil (generated_wrappers: SEARCH_TABLE [STRING])
 			-- Generate cecil table for a class having visible features
 		require
 			has_visible: has_visible

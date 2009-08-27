@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_classes: DS_HASH_SET [CLASS_I])
+	make (a_classes: SEARCH_TABLE [CLASS_I])
 			-- Create check for `a_classes'.
 		require
 			a_classes_not_void: a_classes /= void
@@ -48,7 +48,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	classes: DS_HASH_SET [CLASS_I]
+	classes: SEARCH_TABLE [CLASS_I]
 			-- The list of classes to check.
 
 invariant

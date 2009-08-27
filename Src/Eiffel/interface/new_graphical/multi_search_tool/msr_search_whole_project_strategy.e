@@ -24,7 +24,7 @@ feature -- Basic Operation
 	launch
 			-- Launch the search
 		local
-			classes: DS_HASH_SET [CLASS_I]
+			classes: SEARCH_TABLE [CLASS_I]
 		do
 			create item_matched_internal.make (1000)
 			if workbench.universe_defined then

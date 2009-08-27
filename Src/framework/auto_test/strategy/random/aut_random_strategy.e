@@ -79,45 +79,36 @@ feature -- Element change
 		require
 			not_has_next_step: not has_next_step
 		local
-			l_tester: KL_STRING_EQUALITY_TESTER_A [STRING]
-			l_class_set: DS_HASH_SET [CLASS_I]
-			l_class_cur: DS_HASH_SET_CURSOR [CLASS_I]
+			l_class_set: SEARCH_TABLE [CLASS_I]
 			l_type: TYPE_A
-			l_class_name_set: DS_HASH_SET [STRING]
-			l_name_cur: DS_HASH_SET_CURSOR [STRING]
+			l_class_name_set: SEARCH_TABLE [STRING]
 			l_name: STRING
 		do
-
-			create l_tester
 			if a_list /= Void and then not a_list.is_empty then
 				create l_class_name_set.make (a_list.count)
-				l_class_name_set.set_equality_tester (l_tester)
-				l_class_name_set.append (a_list)
+				a_list.do_all (agent l_class_name_set.put)
 			else
 					-- If no type name is given explictly, we test all compiled classes in the system.
 				l_class_set := system.universe.all_classes
 				create l_class_name_set.make (l_class_set.count)
-				l_class_name_set.set_equality_tester (l_tester)
 				from
-					l_class_cur := l_class_set.new_cursor
-					l_class_cur.start
+					l_class_set.start
 				until
-					l_class_cur.after
+					l_class_set.after
 				loop
-					l_name := l_class_cur.item.name
+					l_name := l_class_set.item_for_iteration.name
 					check l_name /= Void end
-					l_class_name_set.force_last (l_name)
-					l_class_cur.forth
+					l_class_name_set.force (l_name)
+					l_class_set.forth
 				end
 			end
 
 			from
-				l_name_cur := l_class_name_set.new_cursor
-				l_name_cur.start
+				l_class_name_set.start
 			until
-				l_name_cur.after
+				l_class_name_set.after
 			loop
-				l_type := base_type (l_name_cur.item)
+				l_type := base_type (l_class_name_set.item_for_iteration)
 				if l_type /= Void then
 					if l_type.associated_class.is_generic then
 						if not attached {GEN_TYPE_A} l_type as l_gen_type then
@@ -147,7 +138,7 @@ feature -- Element change
 						end
 					end
 				end
-				l_name_cur.forth
+				l_class_name_set.forth
 			end
 		end
 

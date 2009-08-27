@@ -46,7 +46,7 @@ feature -- Element change
 
 feature {ERF_CHK_FEATURE_RENAME} -- Element Change from check
 
-	set_affected_classes (an_affected_classes: DS_HASH_SET [CLASS_I])
+	set_affected_classes (an_affected_classes: SEARCH_TABLE [CLASS_I])
 			-- Set `affected_classes' to `an_affected_classes'.
 		require
 			an_affected_classes_not_void: an_affected_classes /= Void

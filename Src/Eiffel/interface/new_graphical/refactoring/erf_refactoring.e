@@ -146,7 +146,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW} -- Callbacks
 -- TODO: Change this stuff to use the query interface that will be created
 feature {NONE} -- Implementation convenience
 
-	descendant_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I]
+	descendant_classes (a_class: CLASS_I): SEARCH_TABLE [CLASS_I]
 			-- Get all descendant classes of `a_class'.
 		require
 			compiled_class: a_class.is_compiled
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation convenience
 			descendants: ARRAYED_LIST [CLASS_C]
 			descendant_class: CLASS_C
 		do
-			create Result.make (100)
+			create Result.make_with_key_tester (100, create {REFERENCE_EQUALITY_TESTER [CLASS_I]})
 			descendants := a_class.compiled_class.direct_descendants
 			if not descendants.is_empty then
 				from
@@ -177,14 +177,14 @@ feature {NONE} -- Implementation convenience
 			Result_not_void: Result /= Void
 		end
 
-	client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I]
+	client_classes (a_class: CLASS_I): SEARCH_TABLE [CLASS_I]
 			-- Get all client classes of `a_class'.
 		require
 			compiled_class: a_class.is_compiled
 		local
 			clients: ARRAYED_LIST [CLASS_C]
 		do
-			create Result.make (100)
+			create Result.make_with_key_tester (100, create {REFERENCE_EQUALITY_TESTER [CLASS_I]})
 			clients := a_class.compiled_class.syntactical_clients
 			from
 				clients.start
@@ -198,16 +198,16 @@ feature {NONE} -- Implementation convenience
 			Result_not_void: Result /= Void
 		end
 
-	recursive_client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I]
+	recursive_client_classes (a_class: CLASS_I): SEARCH_TABLE [CLASS_I]
 			-- Get all client classes of `a_class' or a descendant of `a_class'.
 		require
 			compiled_class: a_class.is_compiled
 		local
-			descendants: DS_HASH_SET [CLASS_I]
+			descendants: SEARCH_TABLE [CLASS_I]
 			class_i: CLASS_I
 		do
-			create Result.make (100)
-			Result.append (client_classes (a_class))
+			create Result.make_with_key_tester (100, create {REFERENCE_EQUALITY_TESTER [CLASS_I]})
+			Result.merge (client_classes (a_class))
 
 			descendants := descendant_classes (a_class)
 			from
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation convenience
 			loop
 				class_i := descendants.item_for_iteration
 				if class_i /= Void and then class_i.is_compiled then
-					Result.append (client_classes (class_i))
+					Result.merge (client_classes (class_i))
 				end
 				descendants.forth
 			end
@@ -225,15 +225,15 @@ feature {NONE} -- Implementation convenience
 			Result_not_void: Result /= Void
 		end
 
-	usage_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I]
+	usage_classes (a_class: CLASS_I): SEARCH_TABLE  [CLASS_I]
 			-- Get all classes that somehow use `a_class' directly or indirectly.
 		require
 			compiled_class: a_class.is_compiled
 		do
-			create Result.make (100)
+			create Result.make_with_key_tester (100, create {REFERENCE_EQUALITY_TESTER [CLASS_I]})
 			Result.force (a_class)
-			Result.append (descendant_classes (a_class))
-			Result.append (recursive_client_classes (a_class))
+			Result.merge (descendant_classes (a_class))
+			Result.merge (recursive_client_classes (a_class))
 		ensure
 			Result_not_void: Result /= Void
 		end

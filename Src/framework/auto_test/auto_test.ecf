@@ -7,6 +7,7 @@
 		</option>
 		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\ecosystem\ecosystem.ecf"/>

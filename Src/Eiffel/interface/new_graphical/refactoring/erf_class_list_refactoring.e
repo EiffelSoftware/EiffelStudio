@@ -19,12 +19,12 @@ feature {NONE} -- Initialization
 	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES)
 		do
 			Precursor (an_undo_stack, a_preference)
-			create affected_classes.make (0)
+			create affected_classes.make_with_key_tester (0, create {REFERENCE_EQUALITY_TESTER [CLASS_I]})
 		end
 
 feature {NONE} -- Implementation
 
-	affected_classes: DS_HASH_SET [CLASS_I]
+	affected_classes: SEARCH_TABLE [CLASS_I]
 			-- The classes that are affected by this refactoring.
 
 	handle_classes

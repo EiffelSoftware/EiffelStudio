@@ -12,7 +12,8 @@ inherit
  	EV_FONT_I
 		redefine
 			interface,
-			string_size
+			string_size,
+			line_height
 		end
 
 	EV_ANY_IMP
@@ -24,6 +25,8 @@ inherit
 
 	EV_FONT_CONSTANTS
 
+	NS_ENVIRONEMENT
+
 create
 	make
 
@@ -31,23 +34,17 @@ feature {NONE} -- Initialization
 
 	make
 			-- Set up `Current'
-		local
-			--l_app_imp: like app_implementation
 		do
 			create font.system_font_of_size (0)
 
-			--l_app_imp := app_implementation
 			create preferred_families
-			--set_height_in_points (l_app_imp.default_font_point_height_internal)
 			set_shape (shape_regular)
 			set_weight (weight_regular)
 			set_family (family_screen)
+			set_is_initialized (True)
+
 			--preferred_families.internal_add_actions.extend (agent update_preferred_faces)
 			--preferred_families.internal_remove_actions.extend (preferred_families.internal_add_actions.first)
-			height := {NS_FONT_API}.system_font_size.rounded
-			height_in_points := height
-			set_is_initialized (True)
-			shape := Shape_regular
 		end
 
 feature -- Access
@@ -66,9 +63,21 @@ feature -- Access
 
 	height: INTEGER
 			-- Preferred font height measured in screen pixels.
+		do
+			Result := font.point_size.rounded
+		end
 
 	height_in_points: INTEGER
 			-- Preferred font height measured in points.
+		do
+			Result := font.point_size.rounded
+		end
+
+	line_height: INTEGER
+			-- <Precursor>
+		do
+			Result := font.point_size.rounded
+		end
 
 feature -- Element change
 
@@ -76,44 +85,47 @@ feature -- Element change
 			-- Set `a_family' as preferred font category.
 		do
 			family := a_family
-			calculate_font_metrics
+			--font := shared_font_manager.convert_font_to_family (font, ...)
 		end
 
 	set_face_name (a_face: STRING_GENERAL)
 			-- Set the face name for current.
 		do
-			--name := a_face
-			calculate_font_metrics
+			font := shared_font_manager.convert_font_to_face (font, a_face)
 		end
 
 	set_weight (a_weight: INTEGER)
 			-- Set `a_weight' as preferred font thickness.
 		do
 			weight := a_weight
-			calculate_font_metrics
+			if weight > weight_regular then
+				font := shared_font_manager.convert_font_to_have_trait (font, {NS_FONT_DESCRIPTOR}.bold_trait)
+			else
+				font := shared_font_manager.convert_font_to_not_have_trait (font, {NS_FONT_DESCRIPTOR}.bold_trait)
+			end
 		end
 
 	set_shape (a_shape: INTEGER)
 			-- Set `a_shape' as preferred font slant.
 		do
 			shape := a_shape
-			calculate_font_metrics
+			if shape = Shape_italic then
+				font := shared_font_manager.convert_font_to_have_trait (font, {NS_FONT_DESCRIPTOR}.italic_trait)
+			else
+				font := shared_font_manager.convert_font_to_not_have_trait (font, {NS_FONT_DESCRIPTOR}.italic_trait)
+			end
 		end
 
 	set_height (a_height: INTEGER)
 			-- Set `a_height' as preferred font size in screen pixels
 		do
-			height := a_height
-			height_in_points := a_height
-			calculate_font_metrics
+			font := shared_font_manager.convert_font_to_size (font, a_height.to_real)
 		end
 
 	set_height_in_points (a_height: INTEGER)
 			-- Set `a_height' as preferred font size in screen pixels
 		do
-			height_in_points := a_height
-			height := a_height
-			calculate_font_metrics
+			font := shared_font_manager.convert_font_to_size (font, a_height.to_real)
 		end
 
 feature -- Status report
@@ -131,22 +143,17 @@ feature -- Status report
 			end
 		end
 
-	ignore_font_metric_calculation: BOOLEAN
-			-- Should the font metric calculation be ignored?
-
-	calculate_font_metrics
-			-- Calculate metrics for font
-		do
-			ascent := 1
-			descent := 1
-			update_font_face
-		end
-
 	ascent: INTEGER
 			-- Vertical distance from the origin of the drawing operation to the top of the drawn character.
+		do
+			Result := font.ascender.floor
+		end
 
 	descent: INTEGER
 			-- Vertical distance from the origin of the drawing operation to the bottom of the drawn character.
+		do
+			Result := - font.descender.floor
+		end
 
 	width: INTEGER
 			-- Character width of current fixed-width font.
@@ -202,21 +209,13 @@ feature -- Status report
 	is_proportional: BOOLEAN
 			-- Can characters in the font have different sizes?
 		do
-			--Result:= font.is_fixed_pitch
+			Result:= font.is_fixed_pitch
 		end
 
 feature {NONE} -- Implementation
 
 	update_font_face
-		local
-			font_descriptor: NS_FONT_DESCRIPTOR
 		do
-			create font_descriptor.make
-			font_descriptor.set_size (height)
-			if weight > weight_regular then
-				font_descriptor.set_trait ({NS_FONT_DESCRIPTOR}.bold_trait)
-			end
-			create font.font_with_descriptor (font_descriptor, height)
 		end
 
 	update_preferred_faces (a_face: STRING_32)

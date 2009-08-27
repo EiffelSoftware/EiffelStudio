@@ -1,8 +1,11 @@
 note
 	description:
-		"Eiffel Vision color. Cocoa implementation%N%
-		%Both REAL and 16 bit INTEGER values are stored%N%
-		%as attributes and kept up to date."
+		"[
+		  Eiffel Vision color. Cocoa implementation
+		  Both REAL and 16 bit INTEGER values are stored
+		  as attributes and kept up to date.
+		  In Cocoa colors have an Alpha value in addition to the RGB or can even be a pattern
+		 ]"
 	author: "Daniel Furrer"
 	keywords: "color, pixel, rgb, 8, 16, 24"
 	date: "$Date$";

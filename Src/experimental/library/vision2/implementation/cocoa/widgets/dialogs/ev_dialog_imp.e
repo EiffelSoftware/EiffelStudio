@@ -21,7 +21,8 @@ inherit
 		redefine
 			make,
 			interface,
-			destroy
+			destroy,
+			hide
 		end
 
 create
@@ -56,10 +57,18 @@ feature -- Status Report
 			is_modal := True
 			show
 			ret := app_implementation.run_modal_for_window (current)
+			blocking_window := a_window
 			is_modal := False
 		end
 
 feature -- Status Setting
+
+	hide
+			-- <Precursor>
+		do
+			is_modal := False
+			Precursor
+		end
 
 	enable_closeable
 			-- Set the window to be closeable by the user

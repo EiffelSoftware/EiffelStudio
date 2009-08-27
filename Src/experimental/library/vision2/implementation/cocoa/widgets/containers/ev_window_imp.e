@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			-- The `hbox' will contain the child of the window.
 		do
 			cocoa_make (new_window_position,
-				{NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask, True)
+				window_mask, True)
 			make_key_and_order_front
 			order_out
 			allow_resize
@@ -98,6 +98,11 @@ feature {NONE} -- Initialization
 			internal_is_border_enabled := True
 			user_can_resize := True
 			set_is_initialized (True)
+		end
+
+	window_mask: NATURAL
+		do
+			Result := {NS_WINDOW}.borderless_window_mask
 		end
 
 	new_window_position: NS_RECT
@@ -517,6 +522,7 @@ feature -- Status setting
 			order_out
 			is_show_requested := False
 			blocking_window := Void
+			is_relative := False
 		end
 
 feature -- Element change

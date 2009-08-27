@@ -73,7 +73,7 @@ feature -- Basic operatons
 			l_mod: ES_CLASS_LICENSE_MODIFIER
 			l_name: detachable STRING_32
 			l_fn: detachable FILE_NAME
-			l_path: detachable STRING_32
+			l_path: STRING
 			l_index: INTEGER
 			l_license: detachable like load_license
 			l_libraries: LIST [CONF_LIBRARY]
@@ -123,10 +123,23 @@ feature -- Basic operatons
 								l_fn.add_extension ("lic")
 
 									-- Try to load the license
-								l_path := l_fn.string.as_string_32
-								if attached l_path and then (create {RAW_FILE}.make (l_path)).exists then
+								l_path := l_fn.string
+								if (create {RAW_FILE}.make (l_path)).exists then
 									l_license := load_license (l_path, l_use_old_syntax)
 									l_load_default := False
+								else
+										-- Try the default license file
+									l_index := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
+									if l_index > 1 then
+										l_path.keep_head (l_index - 1)
+										create l_fn.make_from_string (l_path)
+										l_fn.set_file_name (once "license.lic")
+										l_path := l_fn.string
+										if (create {RAW_FILE}.make (l_path)).exists then
+											l_license := load_license (l_path, l_use_old_syntax)
+											l_load_default := False
+										end
+									end
 								end
 							end
 						end

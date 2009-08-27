@@ -337,7 +337,7 @@ feature {XP_TAG_ELEMENT} -- Implementation
 			a_feature.append_expression ("create {" + class_name + "} temp.make")
 			a_feature.append_expression ("temp.debug_information := %"" + debug_information + "%"" )
 			if a_is_root then
-				a_feature.append_expression ("root_tag := temp")
+				a_feature.append_expression ("l_root_tag := temp")
 			else
 				a_feature.append_expression ("stack.item.add_to_body (temp)")
 			end

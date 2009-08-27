@@ -24,7 +24,7 @@ feature -- Initialization
 		do
 			create path.make_from_string (a_path)
 			servlet_name := a_servlet_name
-			internal_root_tag := get_root_tag
+			internal_root_tag := root_tag
 			controller_id_table := a_controller_id_table
 			create current_file_path.make_from_string (a_current_file_path)
 			constants_class := a_constants_class
@@ -62,7 +62,7 @@ feature {NONE} -- Access
 
 feature -- Access
 
-	get_root_tag: XTAG_TAG_SERIALIZER
+	root_tag: XTAG_TAG_SERIALIZER
 			-- Returns the root tag of the compiled xeb file
 		deferred
 		ensure

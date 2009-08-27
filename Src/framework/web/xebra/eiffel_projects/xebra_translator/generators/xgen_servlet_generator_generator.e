@@ -233,14 +233,14 @@ feature {NONE} -- Implementation
 		local
 			generate_feature: XEL_FEATURE_ELEMENT
 		do
-			create generate_feature.make ("get_root_tag: " + Tag_serializer_class)
+			create generate_feature.make ("root_tag: " + Tag_serializer_class)
 			a_class.add_feature (generate_feature)
 			generate_feature.append_local ("stack", "ARRAYED_STACK [" + Tag_serializer_class + "]")
-			generate_feature.append_local ("root_tag, temp", Tag_serializer_class)
+			generate_feature.append_local ("l_root_tag, temp", Tag_serializer_class)
 			generate_feature.append_expression ("create stack.make (10)")
 
 			root_tag.build_tag_tree (generate_feature, Current)
-			generate_feature.append_expression ("Result := root_tag")
+			generate_feature.append_expression ("Result := l_root_tag")
 		end
 
 feature -- Constants

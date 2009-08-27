@@ -26,25 +26,27 @@ import traceback, sys
 
 basedir = "/System/Library/Frameworks"
 
+"""config = {
+		  "framework": "ApplicationKit",
+		  "dirname": basedir + "/AppKit.framework/Headers",
+		  "class": "NSImage",
+		  "include": "Cocoa/NSImage.h"
+		  }"""
+
 config = {
 		  "framework": "Foundation",
 		  "dirname": basedir + "/Foundation.framework/Headers",
-		  "class": "NSTimer",
-		  "include": "Foundation/NSTimer.h"
+		  "class": "NSBundle",
+		  "include": "Foundation/NSBundle.h"
 		  }
-"""
-config = {
-		  "framework": "ApplicationKit",
-		  "dirname": basedir + "/AppKit.framework/Headers"
-		  }"""
 
 headerpath = config["dirname"] + "/" + config["class"] + ".h"
 
 # URL schema:
-url = Template("http://developer.apple.com/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/$class.html").\
-        substitute (config)
-#url = Template("http://developer.apple.com/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/Reference.html").\
+#url = Template("http://developer.apple.com/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/$class.html").\
 #        substitute (config)
+url = Template("http://developer.apple.com/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/Reference.html").\
+        substitute (config)
 
 ###
 
@@ -337,7 +339,7 @@ typeMap = {
 	"NSToolbarSizeMode": "INTEGER",
 	"NSGlyph": "INTEGER",
 	"NSSplitViewDividerStyle": "INTEGER",
-	"Class": "POINTER",
+	"Class": "OBJC_CLASS",
 	"NSTimeInterval": "REAL_64"
 	}
 
@@ -351,7 +353,11 @@ enumMap = {
 	"NSGradientType": "NSUInteger",
 	"NSImageScaling": "NSUInteger",
 	"NSFontAction": "int",
-	"NSFontTraitMask": "unsigned int"
+	"NSFontTraitMask": "unsigned int",
+	"NSCompositingOperation": "int",
+	"NSBitmapFormat": "int",
+	"NSImageLoadStatus": "int",
+    "NSImageCacheMode": "int"
 }
 	
 expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER", "NATURAL"]

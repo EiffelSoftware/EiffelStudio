@@ -26,16 +26,21 @@ create {NS_OBJECT}
 feature {NONE} -- Creation
 
 	make_with_referencing_file (a_path: STRING_GENERAL)
+			-- Initializes and returns an NS_IMAGE instance and associates it with the specified file.
 		do
-			make_from_pointer ({NS_IMAGE_API}.init_by_referencing_file ((create {NS_STRING}.make_with_string(a_path)).item))
+			make_from_pointer ({NS_IMAGE_API}.alloc)
+			item := {NS_IMAGE_API}.init_by_referencing_file (item, (create {NS_STRING}.make_with_string(a_path)).item)
 		end
 
 	make_with_size (a_size: NS_SIZE)
+			-- Initializes and returns an NS_IMAGE instance whose size is set to the specified value.
 		do
-			make_from_pointer ({NS_IMAGE_API}.init_with_size (a_size.item))
+			make_from_pointer ({NS_IMAGE_API}.alloc)
+			item := {NS_IMAGE_API}.init_with_size (item, a_size.item)
 		end
 
 	make_named (a_name: STRING_GENERAL)
+			-- Returns the NS_IMAGE instance associated with the specified name.
 		do
 			make_from_pointer ({NS_IMAGE_API}.image_named ((create {NS_STRING}.make_with_string (a_name)).item))
 		end
@@ -64,13 +69,7 @@ feature -- Setting the Image Attributes
 
 feature -- Referring to Images by Name
 
-feature -- Working With Image Representatons
-
-	representations: NS_ARRAY [NS_IMAGE_REP]
-			-- Returns an array containing all of the receiver's image representations.
-		do
-			create Result.share_from_pointer ({NS_IMAGE_API}.representations (item))
-		end
+feature -- Drawing the Image
 
 	draw_at_point (a_point: NS_POINT; a_from_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
 			-- Draws all or part of the image at the specified point in the current coordinate system.
@@ -94,6 +93,61 @@ feature -- Working With Image Representatons
 			{NS_IMAGE_API}.draw_in_rect_from_rect_operation_fraction (item, a_dst_rect.item, a_from_rect.item, a_op, a_delta)
 		end
 
+	draw_representation_in_rect (a_image_rep: NS_IMAGE_REP; a_rect: NS_RECT): BOOLEAN
+			-- Draws the image using the specified image representation object.
+		do
+			Result := {NS_IMAGE_API}.draw_representation_in_rect (item, a_image_rep.item, a_rect.item)
+		end
+
+	composite_to_point_operation (a_point: NS_POINT; a_op: INTEGER)
+			-- Composites the entire image to the specified point in the current coordinate system.
+		do
+			{NS_IMAGE_API}.composite_to_point_operation (item, a_point.item, a_op.item)
+		end
+
+	composite_to_point_from_rect_operation (a_point: NS_POINT; a_rect: NS_RECT; a_op: INTEGER)
+			-- Composites a portion of the image to the specified point in the current coordinate system.
+		do
+			{NS_IMAGE_API}.composite_to_point_from_rect_operation (item, a_point.item, a_rect.item, a_op.item)
+		end
+
+	composite_to_point_from_rect_operation_fraction (a_point: NS_POINT; a_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
+			-- Composites a portion of the image at the specified opacity to the current coordinate system.
+		do
+			{NS_IMAGE_API}.composite_to_point_from_rect_operation_fraction (item, a_point.item, a_rect.item, a_op.item, a_delta)
+		end
+
+	composite_to_point_operation_fraction (a_point: NS_POINT; a_op: INTEGER; a_delta: REAL)
+			-- Composites the entire image at the specified opacity in the current coordinate system.
+		do
+			{NS_IMAGE_API}.composite_to_point_operation_fraction (item, a_point.item, a_op.item, a_delta)
+		end
+
+	dissolve_to_point_fraction (a_point: NS_POINT; a_float: REAL)
+			-- Composites the entire image to the specified location using the `NSCompositeSourceOver' operator.
+		do
+			{NS_IMAGE_API}.dissolve_to_point_fraction (item, a_point.item, a_float)
+		end
+
+	dissolve_to_point_from_rect_fraction (a_point: NS_POINT; a_rect: NS_RECT; a_float: REAL)
+			-- Composites a portion of the image to the specified location using the `NSCompositeSourceOver' operator.
+		do
+			{NS_IMAGE_API}.dissolve_to_point_from_rect_fraction (item, a_point.item, a_rect.item, a_float)
+		end
+
+	image_did_not_draw_in_rect (a_sender: NS_OBJECT; a_rect: NS_RECT): NS_IMAGE
+			-- Sent to the delegate when the image object is unable, for whatever reason, to lock focus on its image or draw in the specified rectangle.
+		do
+			create Result.share_from_pointer ({NS_IMAGE_API}.image_did_not_draw_in_rect (item, a_sender.item, a_rect.item))
+		end
+
+feature -- Working With Image Representatons
+
+	representations: NS_ARRAY [NS_IMAGE_REP]
+			-- Returns an array containing all of the receiver's image representations.
+		do
+			create Result.share_from_pointer ({NS_IMAGE_API}.representations (item))
+		end
 
 	lock_focus
 			-- Prepares the image to receive drawing commands.

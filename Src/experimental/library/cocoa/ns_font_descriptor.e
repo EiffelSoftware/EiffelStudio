@@ -37,6 +37,14 @@ feature -- Status setting
 
 feature --
 
+	frozen italic_trait: NATURAL_32
+			-- NSFontItalicTrait
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSFontItalicTrait"
+		end
+
 	frozen bold_trait: NATURAL_32
 			-- NSFontBoldTrait
 		external

@@ -39,6 +39,12 @@ feature -- NSString Additions: Drawing String Objects
 			c_draw_at_point_with_attributes (item, a_point.item, a_attributes.item)
 		end
 
+	draw_in_rect_with_attributes (a_rect: NS_RECT; a_attributes: NS_DICTIONARY)
+			-- Draws the receiver with the font and other display characteristics of the given attributes, within the specified rectangle in the currently focused NSView.
+		do
+			c_draw_in_rect_with_attributes (item, a_rect.item, a_attributes.item)
+		end
+
 	size_with_attributes (a_attributes: NS_DICTIONARY): NS_SIZE
 			-- Returns the bounding box size the receiver occupies when drawn with the given attributes.
 			-- 'a_attributes' is a dictionary of text attributes to be applied to the string. These are the same attributes that can be applied to an
@@ -61,6 +67,14 @@ feature -- NSString Additions: Drawing String Objects
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[(NSString*)$a_ns_string drawAtPoint: *(NSPoint*)$a_point withAttributes: $a_attributes];"
+		end
+
+	frozen c_draw_in_rect_with_attributes (a_ns_string: POINTER; a_rect: POINTER; a_attributes: POINTER)
+			--- (void)drawAInRect:(NSRect)aPoint withAttributes:(NSDictionary *)attributes
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSString*)$a_ns_string drawInRect: *(NSRect*)$a_rect withAttributes: $a_attributes];"
 		end
 
 	frozen c_size_with_attributes (a_ns_string: POINTER; a_attributes: POINTER; res: POINTER)

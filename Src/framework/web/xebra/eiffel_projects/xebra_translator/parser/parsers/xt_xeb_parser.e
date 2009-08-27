@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			dynamic_attribute := (percent + equals + (identifier + (-(dot + identifier))).consumer + percent)
 			dynamic_attribute.set_behaviour (agent build_dynamic_attribute)
 			dynamic_attribute.set_name ("dynamic_attribute")
-			variable_attribute := (sharp + open_curly + (identifier + (+(dot + identifier))).consumer + close_curly)
+			variable_attribute := (sharp + open_curly + (identifier + (-(dot + identifier))).consumer + close_curly)
 			variable_attribute.set_behaviour (agent build_variable_attribute)
 			variable_attribute.set_name ("variable_attribute")
 

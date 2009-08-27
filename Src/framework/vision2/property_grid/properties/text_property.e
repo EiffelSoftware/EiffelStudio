@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize
 		do
-			pointer_button_press_actions.force_extend (agent activate)
 			deactivate_actions.extend (agent update_text_on_deactivation)
 			Precursor
 			set_left_border (3)

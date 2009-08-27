@@ -338,7 +338,7 @@ feature -- Getting Metrics Information
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"return [(NSFont*)$a_ns_font matrix];"
+			"return (EIF_REFERENCE)[(NSFont*)$a_ns_font matrix];"
 		end
 
 	frozen maximum_advancement (a_ns_font: POINTER; res: POINTER)

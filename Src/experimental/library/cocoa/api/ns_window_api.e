@@ -18,7 +18,7 @@ feature -- Creating Windows
 		end
 
 
-	frozen init_with_control_rect_style_mask_backing_defer (target: POINTER; a_rect: POINTER; a_style_mask: INTEGER; a_defer: BOOLEAN): POINTER
+	frozen init_with_control_rect_style_mask_backing_defer (target: POINTER; a_rect: POINTER; a_style_mask: NATURAL; a_defer: BOOLEAN): POINTER
 			-- - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag;
 		external
 			"C inline use <Cocoa/Cocoa.h>"

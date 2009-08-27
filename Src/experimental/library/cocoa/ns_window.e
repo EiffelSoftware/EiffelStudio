@@ -1,6 +1,6 @@
 note
 	description: "Wrapper for NSWindow."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,8 +24,10 @@ create {NS_OBJECT}
 
 feature {NONE} -- Creating Windows
 
-	make (a_rect: NS_RECT; a_style_mask: INTEGER; a_defer: BOOLEAN)
+	make (a_rect: NS_RECT; a_style_mask: NATURAL; a_defer: BOOLEAN)
 			-- Create a new window
+		require
+			valid_style_mask: valid_style_mask (a_style_mask)
 		do
 			item := {NS_WINDOW_API}.alloc
 			item := {NS_WINDOW_API}.init_with_control_rect_style_mask_backing_defer (item, a_rect.item, a_style_mask, a_defer)
@@ -398,37 +400,52 @@ feature -- Managing Attached Windows
 			{NS_WINDOW_API}.set_parent_window (item, a_window.item)
 		end
 
+feature -- Contract support
+
+	valid_style_mask (a_natural: NATURAL): BOOLEAN
+			-- True iff a_natural is a valid style-mask
+		local
+			all_flags: NATURAL
+		do
+			if a_natural = borderless_window_mask then
+				Result := True
+			else
+				all_flags := titled_window_mask | closable_window_mask | miniaturizable_window_mask | resizable_window_mask
+				Result := all_flags.bit_or (a_natural) = all_flags
+			end
+		end
+
 feature -- Style Mask Constants
 
-	frozen borderless_window_mask: INTEGER
+	frozen borderless_window_mask: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSBorderlessWindowMask;"
 		end
 
-	frozen titled_window_mask: INTEGER
+	frozen titled_window_mask: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSTitledWindowMask;"
 		end
 
-	frozen closable_window_mask: INTEGER
+	frozen closable_window_mask: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSClosableWindowMask;"
 		end
 
-	frozen miniaturizable_window_mask: INTEGER
+	frozen miniaturizable_window_mask: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSMiniaturizableWindowMask;"
 		end
 
-	frozen resizable_window_mask: INTEGER
+	frozen resizable_window_mask: NATURAL
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias

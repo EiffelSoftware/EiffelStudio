@@ -206,10 +206,10 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	classes: DS_ARRAYED_LIST [CONF_CLASS]
+	classes: ARRAYED_LIST [CONF_CLASS]
 			-- Classes to be generated.
 
-	groups: DS_ARRAYED_LIST [CONF_GROUP]
+	groups: ARRAYED_LIST [CONF_GROUP]
 			-- Clusters to be generated.
 
 	xmi_clusters: LINKED_LIST [XMI_CLUSTER]

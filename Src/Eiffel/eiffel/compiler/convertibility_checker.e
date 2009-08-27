@@ -29,7 +29,7 @@ inherit
 			{NONE} all
 		end
 
-	KL_EQUALITY_TESTER [NAMED_TYPE_A]
+	EQUALITY_TESTER [NAMED_TYPE_A]
 		export
 			{NONE} all
 		redefine
@@ -54,7 +54,7 @@ feature -- Initialization/Checking
 			l_feat: CONVERT_FEAT_AS
 			l_type: TYPE_AS
 			l_named_type: NAMED_TYPE_A
-			l_convert_to, l_convert_from: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
+			l_convert_to, l_convert_from: HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			l_name_id: INTEGER
 			l_processed: SEARCH_TABLE [INTEGER]
 			l_vtug: VTUG
@@ -280,7 +280,7 @@ feature -- Initialization/Checking
 		local
 			l_success: BOOLEAN
 			l_source_class, l_target_class: CLASS_C
-			l_convert_table: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
+			l_convert_table: HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			l_conversion_type: TYPE_A
 			l_feat_name_id: INTEGER
 			l_feat: FEATURE_I
@@ -448,13 +448,11 @@ feature -- Status report
 
 feature {NONE} -- Implementation: initialization
 
-	new_convert_table: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
+	new_convert_table: HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			-- Create new instance used to initialize `convert_to' or `convert_from' of CLASS_C
 			-- where equality on keys is done using `same_as' from NAMED_TYPE_A.
 		do
-			create Result.make (10)
-				-- Compare keys using `same_as'.
-			Result.set_key_equality_tester (Current)
+			create {HASH_TABLE_EX [INTEGER, NAMED_TYPE_A]} Result.make_with_key_tester (10, Current)
 		ensure
 			new_convert_table_not_void: Result /= Void
 		end
@@ -608,7 +606,7 @@ feature {NONE} -- Implementation: status report
 			a_not_void: a /= Void
 			b_not_void: b /= Void
 		local
-			l_convert: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
+			l_convert: HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			l_type: NAMED_TYPE_A
 		do
 				-- First check if there are no conversion to `b' from `a'.

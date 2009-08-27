@@ -822,11 +822,12 @@ feature {NONE} -- Settings
 			a_system_not_void: a_system /= Void
 		local
 			l_not_found: BOOLEAN
-			l_list: DS_ARRAYED_LIST [STRING]
+			l_list: ARRAYED_LIST [STRING]
 			l_targets: HASH_TABLE [CONF_TARGET, STRING]
 			l_user_options_factory: USER_OPTIONS_FACTORY
 			l_last_target: STRING
 			l_last_target_matched: BOOLEAN
+			l_sorter: QUICK_SORTER [STRING]
 		do
 			l_targets := a_system.compilable_targets
 			if a_proposed_target /= Void then
@@ -855,7 +856,7 @@ feature {NONE} -- Settings
 
 					-- Order targets in alphabetical order after last selected target (if any)
 				from
-					create l_list.make_equal (l_targets.count)
+					create l_list.make (l_targets.count)
 					l_targets.start
 				until
 					l_targets.after
@@ -864,14 +865,16 @@ feature {NONE} -- Settings
 							-- We want the last target first in the list.
 						l_last_target_matched := True
 					else
-						l_list.put_last (l_targets.key_for_iteration)
+						l_list.extend (l_targets.key_for_iteration)
 					end
 					l_targets.forth
 				end
-				l_list.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				l_sorter.sort (l_list)
 				if l_last_target_matched then
 						-- Set the last used target as first in the list.
-					l_list.put_first (l_last_target)
+					l_list.start
+					l_list.put_left (l_last_target)
 				end
 				ask_for_target_name (a_proposed_target, l_list)
 			end
@@ -1025,7 +1028,7 @@ feature {NONE} -- User interaction
 		deferred
 		end
 
-	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING])
+	ask_for_target_name (a_target: STRING; a_targets: ARRAYED_LIST [STRING])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		require

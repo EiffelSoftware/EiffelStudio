@@ -276,15 +276,15 @@ feature -- Sorting
 		require
 			a_test_agent_attached: a_test_agent /= Void
 		local
-			l_sorted_list: DS_ARRAYED_LIST [like item_type]
-			l_agent_tester: AGENT_BASED_EQUALITY_TESTER [like item_type]
-			l_sorter: DS_QUICK_SORTER [like item_type]
+			l_sorted_list: ARRAYED_LIST [like item_type]
+			l_agent_tester: AGENT_EQUALITY_TESTER [like item_type]
+			l_sorter: QUICK_SORTER [like item_type]
 			l_content: like content
 		do
 			if not is_empty then
 				create l_sorted_list.make (count)
 				l_content := content
-				l_content.do_all (agent l_sorted_list.force_last)
+				l_content.do_all (agent l_sorted_list.extend)
 				l_content.wipe_out
 				create l_agent_tester.make (a_test_agent)
 				create l_sorter.make (l_agent_tester)
@@ -346,12 +346,11 @@ feature -- Set operation
 			other_attached: other /= Void
 			current_and_other_are_of_same_type: scope = other.scope
 		local
-			l_other_set: DS_HASH_SET [like item_type]
+			l_other_set: SEARCH_TABLE [like item_type]
 			l_cur_content: like content
 			l_cursor: CURSOR
 		do
 			create l_other_set.make (other.count)
-			l_other_set.set_equality_tester (create {KL_EQUALITY_TESTER [like item_type]})
 			other.content.do_all (agent l_other_set.put)
 			l_cur_content := content
 			l_cursor := l_cur_content.cursor
@@ -502,8 +501,8 @@ feature{NONE} -- Implementation/Set operations
 			a_new_domain_and_a_other_domain_of_same_type: a_new_domain.same_type (a_other_domain)
 			a_new_domain_is_empty: a_new_domain.is_empty
 		local
-			l_item_set: DS_HASH_SET [like item_type]
-			l_tester: AGENT_BASED_EQUALITY_TESTER [like item_type]
+			l_item_set: SEARCH_TABLE [like item_type]
+			l_tester: AGENT_EQUALITY_TESTER [like item_type]
 			l_content: like content
 			l_content2: like content
 			l_item: like item_type
@@ -511,9 +510,8 @@ feature{NONE} -- Implementation/Set operations
 			if a_other_domain.is_empty then
 				a_new_domain.content.fill (content)
 			else
-				create l_item_set.make (count)
 				create l_tester.make (agent are_items_equivalent)
-				l_item_set.set_equality_tester (l_tester)
+				create l_item_set.make_with_key_tester (count, l_tester)
 				content.do_all (agent l_item_set.put)
 				l_content := a_other_domain.content
 				l_content2 := a_new_domain.content
@@ -541,16 +539,15 @@ feature{NONE} -- Implementation/Set operations
 			a_new_domain_and_a_other_domain_of_same_type: a_new_domain.same_type (a_other_domain)
 			a_new_domain_is_empty: a_new_domain.is_empty
 		local
-			l_item_set: DS_HASH_SET [like item_type]
-			l_tester: AGENT_BASED_EQUALITY_TESTER [like item_type]
+			l_item_set: SEARCH_TABLE [like item_type]
+			l_tester: AGENT_EQUALITY_TESTER [like item_type]
 			l_content: like content
 			l_content2: like content
 			l_item: like item_type
 		do
 			if not a_other_domain.is_empty then
-				create l_item_set.make (count)
 				create l_tester.make (agent are_items_equivalent)
-				l_item_set.set_equality_tester (l_tester)
+				create l_item_set.make_with_key_tester (count, l_tester)
 				content.do_all (agent l_item_set.put)
 				l_content := a_other_domain.content
 				l_content2 := a_new_domain.content
@@ -577,8 +574,8 @@ feature{NONE} -- Implementation/Set operations
 			a_new_domain_and_a_other_domain_of_same_type: a_new_domain.same_type (a_other_domain)
 			a_new_domain_is_empty: a_new_domain.is_empty
 		local
-			l_item_set: DS_HASH_SET [like item_type]
-			l_tester: AGENT_BASED_EQUALITY_TESTER [like item_type]
+			l_item_set: SEARCH_TABLE [like item_type]
+			l_tester: AGENT_EQUALITY_TESTER [like item_type]
 			l_content: like content
 			l_content2: like content
 			l_item: like item_type
@@ -586,9 +583,8 @@ feature{NONE} -- Implementation/Set operations
 			if a_other_domain.is_empty then
 				a_new_domain.content.fill (content)
 			else
-				create l_item_set.make (count)
 				create l_tester.make (agent are_items_equivalent)
-				l_item_set.set_equality_tester (l_tester)
+				create l_item_set.make_with_key_tester (count, l_tester)
 				content.do_all (agent l_item_set.put)
 				l_content := a_other_domain.content
 				l_content2 := a_new_domain.content
@@ -598,10 +594,7 @@ feature{NONE} -- Implementation/Set operations
 					l_content.after
 				loop
 					l_item := l_content.item
-					l_item_set.search (l_item)
-					if l_item_set.found then
-						l_item_set.remove_found_item
-					end
+					l_item_set.remove (l_item)
 					l_content.forth
 				end
 				from
@@ -620,15 +613,13 @@ feature{NONE} -- Implementation/Set operations
 		require
 			a_domain_attached: a_domain /= Void
 		local
-			l_hash_set: DS_HASH_SET [like item_type]
+			l_hash_set: SEARCH_TABLE [like item_type]
 			l_content: like content
 			l_domain_content: LIST [like item_type]
 		do
 			create l_hash_set.make (count)
 			l_content := content
-
-			l_hash_set.set_equality_tester (create {KL_EQUALITY_TESTER [like item_type]})
-			l_content.do_all (agent l_hash_set.force_last)
+			l_content.do_all (agent l_hash_set.force)
 			from
 				l_domain_content := a_domain.content
 				l_hash_set.start
@@ -663,35 +654,35 @@ invariant
 	domain_valid: is_domain_valid
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

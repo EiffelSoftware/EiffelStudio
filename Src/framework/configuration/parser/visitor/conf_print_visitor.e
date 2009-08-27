@@ -122,7 +122,8 @@ feature -- Visit nodes
 			l_version: CONF_VERSION
 			l_settings, l_variables: HASH_TABLE [STRING, STRING]
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
-			l_sort_lst: DS_ARRAYED_LIST [STRING]
+			l_sort_lst: ARRAYED_LIST [STRING]
+			l_sorter: QUICK_SORTER [STRING]
 		do
 			current_target := a_target
 			append_text_indent ("<target name=%""+escape_xml (a_target.name)+"%"")
@@ -180,7 +181,8 @@ feature -- Visit nodes
 			from
 				l_settings := a_target.internal_settings
 				create l_sort_lst.make_from_array (l_settings.current_keys)
-				l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				l_sorter.sort (l_sort_lst)
 				l_sort_lst.start
 			until
 				l_sort_lst.after
@@ -367,11 +369,13 @@ feature {NONE} -- Implementation
 		require
 			a_groups_not_void: a_groups /= Void
 		local
-			l_sort_lst: DS_ARRAYED_LIST [STRING]
+			l_sort_lst: ARRAYED_LIST [STRING]
+			l_sorter: QUICK_SORTER [STRING]
 		do
 			from
 				create l_sort_lst.make_from_array (a_groups.current_keys)
-				l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				l_sorter.sort (l_sort_lst)
 				l_sort_lst.start
 			until
 				l_sort_lst.after
@@ -678,7 +682,7 @@ feature {NONE} -- Implementation
 	append_file_rule (a_file_rules: ARRAYED_LIST [CONF_FILE_RULE])
 			-- Append `a_file_rule'
 		local
-			l_pattern: DS_HASH_SET [STRING]
+			l_pattern: SEARCH_TABLE [STRING]
 			l_rule: CONF_FILE_RULE
 		do
 			from
@@ -730,7 +734,8 @@ feature {NONE} -- Implementation
 			l_debugs, l_warnings: HASH_TABLE [BOOLEAN, STRING]
 			l_assertions: CONF_ASSERTIONS
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
-			l_sort_lst: DS_ARRAYED_LIST [STRING]
+			l_sort_lst: ARRAYED_LIST [STRING]
+			l_sorter: QUICK_SORTER [STRING]
 		do
 			if an_options /= Void and then not an_options.is_empty then
 				if a_class /= Void and then not a_class.is_empty then
@@ -784,7 +789,8 @@ feature {NONE} -- Implementation
 				l_debugs := an_options.debugs
 				if l_debugs /= Void and then not l_debugs.is_empty then
 					create l_sort_lst.make_from_array (l_debugs.current_keys)
-					l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+					create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+					l_sorter.sort (l_sort_lst)
 					from
 						l_sort_lst.start
 					until
@@ -831,7 +837,8 @@ feature {NONE} -- Implementation
 				l_warnings := an_options.warnings
 				if l_warnings /= Void and then not l_warnings.is_empty then
 					create l_sort_lst.make_from_array (l_warnings.current_keys)
-					l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+					create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+					l_sorter.sort (l_sort_lst)
 					from
 						l_sort_lst.start
 					until
@@ -1011,7 +1018,7 @@ feature {NONE} -- Implementation
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_deps: DS_HASH_SET [CONF_GROUP]
+			l_deps: SEARCH_TABLE [CONF_GROUP]
 			l_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [STRING_8, EQUALITY_HASH_TABLE [STRING_8, STRING_8]]], STRING_8]
 			l_clusters: ARRAYED_LIST [CONF_CLUSTER]
 		do

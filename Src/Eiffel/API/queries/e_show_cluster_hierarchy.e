@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			a_tab_count_non_negative: a_tab_count >= 0
 		local
 			l_class_table: like class_table
-			l_sorted_classes: DS_LIST [CONF_CLASS]
+			l_sorted_classes: ARRAYED_LIST [CONF_CLASS]
 		do
 			if is_folder_hierarchy_displayed then
 				l_class_table := class_table (a_group.classes)
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			a_class_table_attached: a_class_table /= Void
 			a_tab_count_non_negative: a_tab_count >= 0
 		local
-			l_list: DS_LIST [CONF_CLASS]
+			l_list: LIST [CONF_CLASS]
 			l_dir: DIRECTORY
 			l_file: RAW_FILE
 			l_dir_list: PART_SORTED_TWO_WAY_LIST [STRING]
@@ -298,17 +298,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_table (a_classes: HASH_TABLE [CONF_CLASS, STRING]): HASH_TABLE [DS_LIST [CONF_CLASS], STRING]
+	class_table (a_classes: HASH_TABLE [CONF_CLASS, STRING]): HASH_TABLE [ARRAYED_LIST [CONF_CLASS], STRING]
 			-- Table of classes.
 			-- Key is `path', value are list of classes with the same `path'.
 		require
 			a_classes_attached: a_classes /= Void
 			not_a_classes_is_empty: not a_classes.is_empty
 		local
-			l_list: DS_LIST [CONF_CLASS]
+			l_list: ARRAYED_LIST [CONF_CLASS]
 			l_class: CONF_CLASS
-			l_agent_tester: AGENT_BASED_EQUALITY_TESTER [CONF_CLASS]
-			l_sorter: DS_QUICK_SORTER [CONF_CLASS]
+			l_agent_tester: AGENT_EQUALITY_TESTER [CONF_CLASS]
+			l_sorter: QUICK_SORTER [CONF_CLASS]
 		do
 			create Result.make (30)
 			from
@@ -319,10 +319,10 @@ feature {NONE} -- Implementation
 				l_class := a_classes.item_for_iteration
 				l_list := Result.item (l_class.path)
 				if l_list = Void then
-					create {DS_ARRAYED_LIST [CONF_CLASS]}l_list.make (20)
+					create l_list.make (20)
 					Result.force (l_list, l_class.path)
 				end
-				l_list.force_last (l_class)
+				l_list.extend (l_class)
 				a_classes.forth
 			end
 			create l_agent_tester.make (agent class_name_tester)
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			a_group_is_assembly: a_group.is_assembly or a_group.is_physical_assembly
 			a_tab_count_non_negative: a_tab_count >= 0
 		local
-			l_sorted_list: DS_LIST [CONF_CLASS]
+			l_sorted_list: ARRAYED_LIST [CONF_CLASS]
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
 			l_classes := a_group.classes
@@ -494,21 +494,21 @@ feature{NONE} -- Implementation
 			Result := l_op.directory_separator
 		end
 
-	sorted_classes (a_table: HASH_TABLE [CONF_CLASS, STRING]): DS_LIST [CONF_CLASS]
+	sorted_classes (a_table: HASH_TABLE [CONF_CLASS, STRING]): ARRAYED_LIST [CONF_CLASS]
 			-- Classes from `a_class_table' that are sorted using `class_name_tester'
 		require
 			a_table_attached: a_table /= Void
 		local
-			l_agent_tester: AGENT_BASED_EQUALITY_TESTER [CONF_CLASS]
-			l_sorter: DS_QUICK_SORTER [CONF_CLASS]
+			l_agent_tester: AGENT_EQUALITY_TESTER [CONF_CLASS]
+			l_sorter: QUICK_SORTER [CONF_CLASS]
 		do
-			create {DS_ARRAYED_LIST [CONF_CLASS]}Result.make (a_table.count)
+			create {ARRAYED_LIST [CONF_CLASS]} Result.make (a_table.count)
 			from
 				a_table.start
 			until
 				a_table.after
 			loop
-				Result.force_last (a_table.item_for_iteration)
+				Result.extend (a_table.item_for_iteration)
 				a_table.forth
 			end
 			create l_agent_tester.make (agent class_name_tester)
@@ -519,7 +519,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -543,11 +543,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class E_SHOW_CLUSTER_HIERARCHY

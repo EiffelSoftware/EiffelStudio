@@ -181,7 +181,7 @@ feature -- Access (Folder)
 		local
 			l_path: STRING
 			l_cluster: CONF_CLUSTER
-			l_dir: KL_DIRECTORY
+			l_dir: DIRECTORY
 		do
 			last_folder_path := Void
 			l_cluster ?= group_of_id (a_id)

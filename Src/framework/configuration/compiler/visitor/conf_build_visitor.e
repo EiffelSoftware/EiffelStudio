@@ -77,23 +77,23 @@ feature -- Access
 	is_full_class_name_analysis: BOOLEAN
 			-- Will we check for the class name?
 
-	modified_classes: DS_HASH_SET [CONF_CLASS]
+	modified_classes: SEARCH_TABLE [CONF_CLASS]
 			-- The list of modified classes.
 
-	added_classes: DS_HASH_SET [CONF_CLASS]
+	added_classes: SEARCH_TABLE [CONF_CLASS]
 			-- The list of added classes.
 
-	removed_classes: DS_HASH_SET [CONF_CLASS]
+	removed_classes: SEARCH_TABLE [CONF_CLASS]
 			-- The list of removed classes.
 
-	removed_classes_from_override: DS_HASH_SET [CONF_CLASS]
+	removed_classes_from_override: SEARCH_TABLE [CONF_CLASS]
 			-- The list of removed classes from override clusters.
 
 	partly_removed_classes: ARRAYED_LIST [EQUALITY_TUPLE [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]]
 			-- The list of classes that have been removed from a certain system only.
 			-- (if a library that is still used somewhere else has been removed)
 
-	new_assemblies: DS_HASH_SET [CONF_ASSEMBLY]
+	new_assemblies: SEARCH_TABLE [CONF_ASSEMBLY]
 			-- List of assemblies in the current configuration.
 
 feature -- Update

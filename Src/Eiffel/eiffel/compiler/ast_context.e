@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			create supplier_ids.make
 			create scopes.make (0)
 			create object_test_scopes.make (0)
-			create object_test_locals.make_map (0)
+			create {HASH_TABLE_EX [LOCAL_INFO, ID_AS]} object_test_locals.make_with_key_tester (0, create {REFERENCE_EQUALITY_TESTER [ID_AS]})
 		end
 
 feature -- Access
@@ -184,7 +184,7 @@ feature -- Modification
 
 feature {NONE} -- Local scopes
 
-	object_test_locals: DS_HASH_TABLE [LOCAL_INFO, ID_AS]
+	object_test_locals: HASH_TABLE [LOCAL_INFO, ID_AS]
 			-- Types of object-test locals indexes by their name id
 
 	result_id: INTEGER_32 = 0x7fffffff

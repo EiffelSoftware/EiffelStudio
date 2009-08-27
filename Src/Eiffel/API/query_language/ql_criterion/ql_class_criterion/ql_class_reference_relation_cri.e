@@ -104,10 +104,10 @@ feature -- Status report
 
 feature -- Access
 
-	only_syntactical_class_set: DS_HASH_SET [INTEGER]
+	only_syntactical_class_set: SEARCH_TABLE [INTEGER]
 			-- Set of class id of classes which appear only as syntactical class (no feature in those class are invoked explicitly).
 
-	reference_table: HASH_TABLE [DS_HASH_SET [INTEGER], INTEGER]
+	reference_table: HASH_TABLE [SEARCH_TABLE [INTEGER], INTEGER]
 			-- Table of class references.
 			-- Key is class id of a class who references classes whose class id are specified in value.
 			-- For example, if we are looking at supplier relationship:
@@ -155,7 +155,7 @@ feature{NONE} -- Implementation
 			reference_table_valid: reference_table /= Void and then reference_table.is_empty
 		end
 
-	mark_only_syntactical_classes (a_syntactical_class_list: LIST [CLASS_C]; a_non_syntactical_class_list: LIST [CLASS_C]): DS_HASH_SET [CLASS_C]
+	mark_only_syntactical_classes (a_syntactical_class_list: LIST [CLASS_C]; a_non_syntactical_class_list: LIST [CLASS_C]): SEARCH_TABLE [CLASS_C]
 			-- Mark only syntactically referenced classes in `only_syntactical_class_set' and
 			-- return a class set which are distinct classes retrieved from `a_syntactical_class_list' and `a_non_syntactical_class_list' (Because
 			-- referenced classes (`suppliers' or `clients') from a class may overlap with syntactically referenced classes (`syntactical_suppliers' or
@@ -172,11 +172,10 @@ feature{NONE} -- Implementation
 			l_candidate_classes: like candidate_class_list
 			l_cursor: CURSOR
 			l_invocation_referenced: BOOLEAN
-			l_referenced_class_set: DS_HASH_SET [CLASS_C]
+			l_referenced_class_set: SEARCH_TABLE [CLASS_C]
 		do
-			create Result.make (a_non_syntactical_class_list.count)
+			create Result.make_with_key_tester (a_non_syntactical_class_list.count, create {AGENT_EQUALITY_TESTER [CLASS_C]}.make (agent (a_class, b_class: CLASS_C): BOOLEAN do Result := a_class.class_id = b_class.class_id end))
 			create l_referenced_class_set.make (a_non_syntactical_class_list.count)
-			Result.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [CLASS_C]}.make (agent (a_class, b_class: CLASS_C): BOOLEAN do Result := a_class.class_id = b_class.class_id end))
 			l_only_syntactical_class_set := only_syntactical_class_set
 			l_invocation_referenced := is_invocation_referenced_class_enabled
 			l_candidate_classes := candidate_class_list
@@ -197,7 +196,7 @@ feature{NONE} -- Implementation
 				a_non_syntactical_class_list.forth
 			end
 			if l_invocation_referenced then
-				Result.extend (l_referenced_class_set)
+				Result.merge (l_referenced_class_set)
 			end
 			a_non_syntactical_class_list.go_to (l_cursor)
 
@@ -237,7 +236,6 @@ feature{NONE} -- Implementation
 			l_class_id: INTEGER
 			l_processed_classes: like processed_classes
 			l_class_set: like mark_only_syntactical_classes
-			l_hash_set_cursor: DS_HASH_SET_CURSOR [CLASS_C]
 			l_class_c: CLASS_C
 			l_indirect: BOOLEAN
 		do
@@ -253,13 +251,12 @@ feature{NONE} -- Implementation
 				end
 				l_class_set := mark_only_syntactical_classes (l_syn_list, l_list)
 				l_indirect := is_indirect_class_enabled
-				l_hash_set_cursor := l_class_set.new_cursor
 				from
-					l_hash_set_cursor.start
+					l_class_set.start
 				until
-					l_hash_set_cursor.after
+					l_class_set.after
 				loop
-					l_class_c := l_hash_set_cursor.item
+					l_class_c := l_class_set.item_for_iteration
 					l_class_id := l_class_c.class_id
 					if l_class_id /= l_source_id then
 						l_candidate_class_list.put (l_class_c, l_class_id)
@@ -267,7 +264,7 @@ feature{NONE} -- Implementation
 					if l_indirect then
 						find_referenced_classes (l_class_c)
 					end
-					l_hash_set_cursor.forth
+					l_class_set.forth
 				end
 			end
 		end
@@ -277,8 +274,7 @@ feature{NONE} -- Implementation
 		local
 			l_invocation: BOOLEAN
 			l_syntactical: BOOLEAN
-			l_class_set: DS_HASH_SET [CLASS_C]
-			l_cursor: DS_HASH_SET_CURSOR [CLASS_C]
+			l_class_set: SEARCH_TABLE [CLASS_C]
 		do
 			l_invocation := is_invocation_referenced_class_enabled
 			l_syntactical := is_syntactical_class_enabled
@@ -300,14 +296,13 @@ feature{NONE} -- Implementation
 										list_to_set (referenced_classes (a_class_c))
 								   )
 				end
-				l_cursor := l_class_set.new_cursor
 				from
-					l_cursor.start
+					l_class_set.start
 				until
-					l_cursor.after
+					l_class_set.after
 				loop
-					find_referenced_classes (l_cursor.item)
-					l_cursor.forth
+					find_referenced_classes (l_class_set.item_for_iteration)
+					l_class_set.forth
 				end
 			end
 		end
@@ -322,65 +317,62 @@ feature{NONE} -- Implementation
 			end
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
-	excepted_set (a_list, b_list: DS_HASH_SET [CLASS_C]): DS_HASH_SET [CLASS_C]
+	excepted_set (a_list, b_list: SEARCH_TABLE [CLASS_C]): SEARCH_TABLE [CLASS_C]
 			-- Return `a_lsit' - `b_list'.
 		require
 			a_list_attached: a_list /= Void
 			b_list_attached: b_list /= Void
 		local
-			l_cursor: DS_HASH_SET_CURSOR [CLASS_C]
 			l_class: CLASS_C
 		do
 			create Result.make (a_list.count)
-			l_cursor := a_list.new_cursor
 			from
-				l_cursor.start
+				a_list.start
 			until
-				l_cursor.after
+				a_list.after
 			loop
-				l_class := l_cursor.item
+				l_class := a_list.item_for_iteration
 				if not b_list.has (l_class) then
-					Result.put_last (l_class)
+					Result.put (l_class)
 				end
-				l_cursor.forth
+				a_list.forth
 			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	unioned_set (a_list, b_list: DS_HASH_SET [CLASS_C]): DS_HASH_SET [CLASS_C]
+	unioned_set (a_list, b_list: SEARCH_TABLE [CLASS_C]): SEARCH_TABLE [CLASS_C]
 			-- Return `a_list' + `b_list'.
 		require
 			a_list_attached: a_list /= Void
 			b_list_attached: b_list /= Void
 		local
-			l_cursor: DS_HASH_SET_CURSOR [CLASS_C]
 			l_class: CLASS_C
 		do
 			create Result.make (a_list.count)
-			l_cursor := a_list.new_cursor
 			from
-				l_cursor.start
+				a_list.start
 			until
-				l_cursor.after
+				a_list.after
 			loop
-				l_class := l_cursor.item
+				l_class := a_list.item_for_iteration
 				if b_list.has (l_class) then
-					Result.put_last (l_class)
+					Result.put (l_class)
 				end
-				l_cursor.forth
-			end		ensure
+				a_list.forth
+			end
+		ensure
 			result_attached: Result /= Void
 		end
 
-	list_to_set (a_list: LIST [CLASS_C]): DS_HASH_SET [CLASS_C]
+	list_to_set (a_list: LIST [CLASS_C]): SEARCH_TABLE [CLASS_C]
 			-- Set representation of `a_list'
 		do
 			if a_list /= Void then
 				create Result.make (a_list.count)
-				a_list.do_all (agent Result.force_last)
+				a_list.do_all (agent Result.force)
 			else
 				create Result.make (0)
 			end
@@ -389,35 +381,35 @@ feature{NONE} -- Implementation
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

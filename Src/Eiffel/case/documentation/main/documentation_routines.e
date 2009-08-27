@@ -38,7 +38,7 @@ feature -- Access
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			subs: DS_ARRAYED_LIST [CONF_GROUP]
+			subs: ARRAYED_LIST [CONF_GROUP]
 		do
 			a_text_formatter.process_filter_item (f_class_declaration, true)
 
@@ -156,7 +156,7 @@ feature -- Access
 
 	group_index_text (
 		group: CONF_GROUP;
-		class_list: DS_ARRAYED_LIST [CONF_CLASS];
+		class_list: ARRAYED_LIST [CONF_CLASS];
 		diagrams: BOOLEAN; a_text_formatter: TEXT_FORMATTER)
 			-- Generate documentation group index for `group'.
 			-- Add links to diagrams if `diagrams' is True.
@@ -164,7 +164,7 @@ feature -- Access
 			group_not_void: group /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			subs: DS_ARRAYED_LIST [CONF_CLUSTER]
+			subs: ARRAYED_LIST [CONF_CLUSTER]
 			l_name: STRING
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
@@ -458,7 +458,7 @@ feature -- Routines
 			end
 		end
 
-	append_cluster_list (text: TEXT_FORMATTER; cluster_list: DS_ARRAYED_LIST [CONF_GROUP])
+	append_cluster_list (text: TEXT_FORMATTER; cluster_list: ARRAYED_LIST [CONF_GROUP])
 		local
 			l_cluster: CONF_GROUP
 		do
@@ -538,7 +538,7 @@ feature -- Routines
 
 feature {NONE} -- Implementation
 
-	append_class_list (text: TEXT_FORMATTER; class_list: DS_ARRAYED_LIST [CONF_CLASS]; desc: BOOLEAN)
+	append_class_list (text: TEXT_FORMATTER; class_list: ARRAYED_LIST [CONF_CLASS]; desc: BOOLEAN)
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 	append_cluster_hierarchy_leaf (text: TEXT_FORMATTER; du: DOCUMENTATION_UNIVERSE; a_group: CONF_GROUP; indent: INTEGER)
 		local
 			n: INTEGER
-			subs: DS_ARRAYED_LIST [CONF_CLUSTER]
+			subs: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			from n := 1 until n > indent loop
 				text.add_indent
@@ -939,7 +939,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -952,22 +952,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DOCUMENTATION_ROUTINES

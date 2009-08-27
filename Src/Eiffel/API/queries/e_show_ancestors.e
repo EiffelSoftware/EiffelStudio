@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 		local
 			l_any_id: INTEGER
 			l_list: LIST [QL_CLASS]
-			l_sorted_list: DS_ARRAYED_LIST [QL_CLASS]
+			l_sorted_list: ARRAYED_LIST [QL_CLASS]
 		do
 			l_any_id := Eiffel_system.system.any_id
 			add_tabs (a_text_formatter, a_tab_count)
@@ -64,15 +64,12 @@ feature {NONE} -- Implementation
 				end
 				a_text_formatter.add_new_line
 			else
-				if processed_class.capacity = processed_class.count then
-					processed_class.resize (processed_class.count + 50)
-				end
 				processed_class.put (a_class)
 				a_text_formatter.add_new_line
 				l_list ?= a_class.data
 				if l_list /= Void and then not l_list.is_empty then
 					create l_sorted_list.make (l_list.count)
-					l_list.do_all (agent l_sorted_list.force_last)
+					l_list.do_all (agent l_sorted_list.extend)
 					from
 						l_sorted_list.start
 					until
@@ -85,12 +82,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	processed_class: DS_HASH_SET [QL_CLASS]
+	processed_class: SEARCH_TABLE [QL_CLASS]
 			-- List of processed classes
 		do
 			if processed_class_internal = Void then
-				create processed_class_internal.make (50)
-				processed_class_internal.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
+				create processed_class_internal.make_with_key_tester (50,
+					create {AGENT_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
 			end
 			Result := processed_class_internal
 		ensure
@@ -121,7 +118,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -134,22 +131,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class E_SHOW_ANCESTORS

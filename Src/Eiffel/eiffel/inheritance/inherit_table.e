@@ -186,7 +186,7 @@ feature
 			pass3_control: PASS3_CONTROL;
 			depend_unit: DEPEND_UNIT;
 			old_creators, new_creators: HASH_TABLE [EXPORT_I, STRING];
-			old_convert_to, old_convert_from: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
+			old_convert_to, old_convert_from: HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			creation_name: STRING;
 			equiv_tables: BOOLEAN;
 			l_error_level: NATURAL
@@ -1526,7 +1526,7 @@ end;
 		end;
 
 	update_convert_clause (
-			a_old_convert, a_new_convert: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A];
+			a_old_convert, a_new_convert: HASH_TABLE [INTEGER, NAMED_TYPE_A];
 			a_resulting_table: FEATURE_TABLE)
 
 			-- Take into account incremental changes in `convert' clauses.

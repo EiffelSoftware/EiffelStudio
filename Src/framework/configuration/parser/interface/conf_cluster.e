@@ -67,7 +67,7 @@ feature -- Access, stored in configuration file
 
 feature -- Access queries
 
-	dependencies: DS_HASH_SET [CONF_GROUP]
+	dependencies: SEARCH_TABLE [CONF_GROUP]
 			-- Dependencies to other groups.
 			-- Empty = No dependencies
 			-- Void = Depend on all
@@ -222,7 +222,6 @@ feature -- Access queries
 			l_class: CONF_CLASS
 			l_grp: CONF_GROUP
 			l_name: STRING
-			l_cursor: DS_HASH_SET_CURSOR [CONF_GROUP]
 		do
 				-- apply mapping
 			if mapping.has_key (a_class) then
@@ -244,17 +243,16 @@ feature -- Access queries
 					-- search in dependencies
 				if a_dependencies then
 					l_groups := accessible_groups
-					l_cursor := l_groups.new_cursor
 					from
-						l_cursor.start
+						l_groups.start
 					until
-						l_cursor.after
+						l_groups.after
 					loop
-						l_grp := l_cursor.item
+						l_grp := l_groups.item_for_iteration
 						if l_grp.classes_set then
 							Result.append (l_grp.class_by_name (l_name, False))
 						end
-						l_cursor.forth
+						l_groups.forth
 					end
 
 					class_by_name_cache.force (Result, l_name)
@@ -293,7 +291,7 @@ feature -- Access queries
 			end
 		end
 
-	accessible_groups: DS_HASH_SET [CONF_GROUP]
+	accessible_groups: SEARCH_TABLE [CONF_GROUP]
 			-- Groups that are accessible within `Current'.
 			-- Dependencies if we have them, else everything except `Current'.
 		local
@@ -451,7 +449,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_group_not_void: a_group /= Void
 		do
 			if internal_dependencies = Void then
-				create internal_dependencies.make_default
+				create internal_dependencies.make (0)
 			end
 			internal_dependencies.force (a_group)
 		ensure
@@ -550,7 +548,7 @@ feature -- Visit
 
 feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
-	internal_dependencies: DS_HASH_SET [CONF_GROUP]
+	internal_dependencies: SEARCH_TABLE [CONF_GROUP]
 			-- Dependencies to other groups of this cluster itself.
 
 	internal_file_rule: ARRAYED_LIST [CONF_FILE_RULE]

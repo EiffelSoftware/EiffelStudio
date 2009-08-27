@@ -36,15 +36,12 @@
 	<tag id="hyper_link" class="XTAG_XEB_HYPER_LINK_TAG">
 		<attribute id="id"/>
 	</tag>
-	<tag id="bound_field" class="XTAG_XEB_BOUND_FIELD_TAG">
-		<attribute id="header_text"/>
-		<attribute id="data_field"/>
-		<attribute id="header_style_width"/>
-		<attribute id="sort_expression"/>
-		<attribute id="html_encode"/>
+	<tag id="variable" class="XTAG_XEB_VARIABLE_TAG">
+		<attribute id="name" />
+		<attribute id="type" />
 	</tag>
-	<tag id="hidden_field" class="XTAG_XEB_HIDDEN_FIELD_TAG">
-		<attribute id="on_data_binding"/>
-		<attribute id="id"/>
+	<tag id="set_variable" class="XTAG_XEB_SET_VARIABLE_TAG">
+		<attribute id="variable" />
+		<attribute id="value" />
 	</tag>
 </taglib>

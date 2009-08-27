@@ -108,7 +108,7 @@ feature -- Query
 			Result_attached: attached Result
 		end
 
-	get_class_for_name (a_name: STRING): STRING
+	class_for_name (a_name: STRING): STRING
 			-- Searches for the class corresponding to
 			-- the tag name. If no class is found
 			-- the empty string is returned

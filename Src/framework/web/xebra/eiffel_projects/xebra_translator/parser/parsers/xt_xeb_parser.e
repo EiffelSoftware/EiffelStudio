@@ -291,7 +291,7 @@ feature {NONE} -- Parser Behaviors
 				if attached {STRING} a_result.parse_result [id_index] as l_id then
 					if registry.contains_tag_lib (l_namespace) and then attached registry.retrieve_taglib (l_namespace) as l_taglib then
 						if l_taglib.contains (l_id) then
-							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.get_class_for_name (l_id), format_debug (a_result.left_to_parse.debug_information, source_path))
+							l_tag := l_taglib.create_tag (l_namespace, l_id, l_taglib.class_for_name (l_id), format_debug (a_result.left_to_parse.debug_information, source_path))
 							from
 								i := id_index + 1
 							until

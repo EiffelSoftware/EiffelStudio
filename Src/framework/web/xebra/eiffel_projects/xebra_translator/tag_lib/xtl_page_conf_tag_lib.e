@@ -14,7 +14,7 @@ inherit
 	XTL_TAG_LIBRARY
 		redefine
 			create_tag,
-			get_class_for_name,
+			class_for_name,
 			contains,
 			argument_belongs_to_tag
 		end
@@ -103,7 +103,7 @@ feature -- Access
 			xeb_parser_set: xeb_parser = a_xeb_parser
 		end
 
-	get_class_for_name (a_name: STRING): STRING
+	class_for_name (a_name: STRING): STRING
 			-- Searches for the class corresponding to
 			-- the tag name. If no class is found
 			-- the empty string is returned

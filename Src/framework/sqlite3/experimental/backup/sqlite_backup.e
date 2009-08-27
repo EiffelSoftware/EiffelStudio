@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 			a_source_attached: attached a_source
 			a_source_is_interface_usable: a_source.is_interface_usable
 			a_source_is_readable: a_source.is_readable
-			not_a_source_is_locked: not a_source.is_locked
+			a_source_is_accessible: a_source.is_accessible
 			a_destination_attached: attached a_destination
 			a_destination_is_interface_usable: a_destination.is_interface_usable
 			a_destination_is_writable: a_destination.is_writable
-			not_a_destination_is_locked: not a_destination.is_locked
+			a_destination_is_accessible: a_destination.is_accessible
 			not_is_same_connection: not a_source.is_same_connection (a_destination)
 		do
 			source := a_source
@@ -78,7 +78,7 @@ feature {NONE} -- Status report
 
 feature -- Actions
 
-	start_actions: ACTION_SEQUENCE [ANY, TUPLE]
+	start_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions called when a back up is started.
 		do
 			if attached internal_start_actions as l_result then
@@ -92,7 +92,7 @@ feature -- Actions
 			result_consistent: Result = start_actions
 		end
 
-	progress_actions: ACTION_SEQUENCE [ANY, TUPLE]
+	progress_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions called when a back up is started.
 		do
 			if attached internal_progress_actions as l_result then
@@ -106,7 +106,7 @@ feature -- Actions
 			result_consistent: Result = progress_actions
 		end
 
-	finished_actions: ACTION_SEQUENCE [ANY, TUPLE]
+	finished_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions called when a back up is completed.
 		do
 			if attached internal_finished_actions as l_result then
@@ -122,44 +122,44 @@ feature -- Actions
 
 feature -- Basic operations
 
-	backup
-			-- Starts the back up process
-		require
-			is_interface_usable: is_interface_usable
-			not_is_backing_up: not is_backing_up
-			source_is_interface_usable: source.is_interface_usable
-			source_is_readable: source.is_readable
-			not_source_is_locked: not source.is_locked
-			destination_is_interface_usable: destination.is_interface_usable
-			destination_is_writable: destination.is_writable
-			not_a_destination_is_locked: not a_destination.is_locked
-		do
-			is_abort_requested := False
-			destination.lock
-			l_locked := True
+--	backup
+--			-- Starts the back up process
+--		require
+--			is_interface_usable: is_interface_usable
+--			not_is_backing_up: not is_backing_up
+--			source_is_interface_usable: source.is_interface_usable
+--			source_is_readable: source.is_readable
+--			not_source_is_locked: not source.is_locked
+--			destination_is_interface_usable: destination.is_interface_usable
+--			destination_is_writable: destination.is_writable
+--			not_destination_is_locked: not destination.is_locked
+--		do
+--			is_abort_requested := False
+--			destination.lock
+--			l_locked := True
 
-			
 
-			l_locked := False
-			destination.unlock
-		ensure
-			is_backing_up: is_backing_up
-		rescue
-			if l_locked then
-				l_locked := False
-				destination.unlock
-			end
-		end
 
-	abort
-			-- Call to abort the back up
-		require
-			is_backing_up: is_backing_up
-		do
-			is_abort_requested := True
-		ensure
-			is_abort_requested: is_abort_requested
-		end
+--			l_locked := False
+--			destination.unlock
+--		ensure
+--			is_backing_up: is_backing_up
+--		rescue
+--			if l_locked then
+--				l_locked := False
+--				destination.unlock
+--			end
+--		end
+
+--	abort
+--			-- Call to abort the back up
+--		require
+--			is_backing_up: is_backing_up
+--		do
+--			is_abort_requested := True
+--		ensure
+--			is_abort_requested: is_abort_requested
+--		end
 
 --feature -- Basic operations
 
@@ -198,6 +198,20 @@ feature -- Basic operations
 --		do
 
 --		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_start_actions: detachable like start_actions
+			-- Cached version of `start_actions'.
+			-- Note: Do not use directly!
+
+	internal_progress_actions: detachable like progress_actions
+			-- Cached version of `progress_actions'.
+			-- Note: Do not use directly!
+
+	internal_finished_actions: detachable like finished_actions
+			-- Cached version of `finished_actions'.
+			-- Note: Do not use directly!
 
 invariant
 	source_attached: attached source

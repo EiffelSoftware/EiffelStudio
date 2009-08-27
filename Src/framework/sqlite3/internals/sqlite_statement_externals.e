@@ -18,7 +18,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_stmt_is_null: a_stmt /= default_pointer
 		do
-			Result := c_sqlite3_column_count (a_api.api_pointer (once "sqlite3_column_count"), a_stmt)
+			Result := c_sqlite3_column_count (a_api.api_pointer (sqlite3_column_count_api), a_stmt)
 		end
 
 	sqlite3_db_handle (a_api: SQLITE_API; a_stmt: POINTER): POINTER
@@ -27,7 +27,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_stmt_is_null: a_stmt /= default_pointer
 		do
-			Result := c_sqlite3_db_handle (a_api.api_pointer (once "sqlite3_db_handle"), a_stmt)
+			Result := c_sqlite3_db_handle (a_api.api_pointer (sqlite3_db_handle_api), a_stmt)
 		end
 
 feature -- Query
@@ -39,7 +39,7 @@ feature -- Query
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_column_non_negative: a_column >= 0
 		do
-			Result := c_sqlite3_column_name (a_api.api_pointer (once "sqlite3_column_name"), a_stmt, a_column)
+			Result := c_sqlite3_column_name (a_api.api_pointer (sqlite3_column_name_api), a_stmt, a_column)
 		end
 
 feature -- Basic operations
@@ -53,7 +53,7 @@ feature -- Basic operations
 			a_bytes_positive: a_bytes > 0
 			not_a_hnd_is_null: a_hnd /= default_pointer
 		do
-			Result := c_sqlite3_prepare_v2 (a_api.api_pointer (once "sqlite3_prepare_v2"), a_db, a_statement, a_bytes, a_hnd, a_tail)
+			Result := c_sqlite3_prepare_v2 (a_api.api_pointer (sqlite3_prepare_v2_api), a_db, a_statement, a_bytes, a_hnd, a_tail)
 		end
 
 	sqlite3_step (a_api: SQLITE_API; a_stmt: POINTER): INTEGER
@@ -62,7 +62,7 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_stmt_is_null: a_stmt /= default_pointer
 		do
-			Result := c_sqlite3_step (a_api.api_pointer (once "sqlite3_step"), a_stmt)
+			Result := c_sqlite3_step (a_api.api_pointer (sqlite3_step_api), a_stmt)
 		end
 
 	sqlite3_reset (a_api: SQLITE_API; a_stmt: POINTER): INTEGER
@@ -71,7 +71,7 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_stmt_is_null: a_stmt /= default_pointer
 		do
-			Result := c_sqlite3_reset (a_api.api_pointer (once "sqlite3_reset"), a_stmt)
+			Result := c_sqlite3_reset (a_api.api_pointer (sqlite3_reset_api), a_stmt)
 		end
 
 	sqlite3_finalize (a_api: SQLITE_API; a_stmt: POINTER): INTEGER
@@ -80,8 +80,18 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_stmt_is_null: a_stmt /= default_pointer
 		do
-			Result := c_sqlite3_finalize (a_api.api_pointer (once "sqlite3_finalize"), a_stmt)
+			Result := c_sqlite3_finalize (a_api.api_pointer (sqlite3_finalize_api), a_stmt)
 		end
+
+feature {NONE} -- Constants
+
+	sqlite3_column_count_api: STRING = "sqlite3_column_count"
+	sqlite3_column_name_api: STRING = "sqlite3_column_name"
+	sqlite3_db_handle_api: STRING = "sqlite3_db_handle"
+	sqlite3_finalize_api: STRING = "sqlite3_finalize"
+	sqlite3_prepare_v2_api: STRING = "sqlite3_prepare_v2"
+	sqlite3_step_api: STRING = "sqlite3_step"
+	sqlite3_reset_api: STRING = "sqlite3_reset"
 
 feature {NONE} -- Externals
 

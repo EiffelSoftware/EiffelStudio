@@ -17,7 +17,7 @@ feature -- Initialization
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
 		do
-			Result := c_sqlite3_initialize (a_api.api_pointer (once "sqlite3_initialize"))
+			Result := c_sqlite3_initialize (a_api.api_pointer (sqlite3_initialize_api))
 		end
 
 feature -- Clean up
@@ -27,7 +27,7 @@ feature -- Clean up
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
 		do
-			Result := c_sqlite3_shutdown (a_api.api_pointer (once "sqlite3_shutdown"))
+			Result := c_sqlite3_shutdown (a_api.api_pointer (sqlite3_shutdown_api))
 		end
 
 feature -- Access
@@ -37,7 +37,7 @@ feature -- Access
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
 		do
-			Result := c_sqlite3_threadsafe (a_api.api_pointer (once "sqlite3_threadsafe"))
+			Result := c_sqlite3_threadsafe (a_api.api_pointer (sqlite3_threadsafe_api))
 		end
 
 	sqlite3_libversion (a_api: SQLITE_API): POINTER
@@ -45,7 +45,7 @@ feature -- Access
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
 		do
-			Result := c_sqlite3_libversion (a_api.api_pointer (once "sqlite3_libversion"))
+			Result := c_sqlite3_libversion (a_api.api_pointer (sqlite3_libversion_api))
 		end
 
 	sqlite3_libversion_number (a_api: SQLITE_API): INTEGER
@@ -53,7 +53,7 @@ feature -- Access
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
 		do
-			Result := c_sqlite3_libversion_number (a_api.api_pointer (once "sqlite3_libversion_number"))
+			Result := c_sqlite3_libversion_number (a_api.api_pointer (sqlite3_libversion_number_api))
 		end
 
 feature {NONE} -- External: Experimental
@@ -63,8 +63,17 @@ feature {NONE} -- External: Experimental
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
 		do
-			Result := c_sqlite3_config (a_api.api_pointer (once "sqlite3_config"), a_config)
+			Result := c_sqlite3_config (a_api.api_pointer (sqlite3_config_api), a_config)
 		end
+
+feature {NONE} -- Constants
+
+	sqlite3_config_api: STRING            = "sqlite3_config"
+	sqlite3_initialize_api: STRING        = "sqlite3_initialize"
+	sqlite3_libversion_api: STRING        = "sqlite3_libversion"
+	sqlite3_libversion_number_api: STRING = "sqlite3_libversion_number"
+	sqlite3_threadsafe_api: STRING        = "sqlite3_threadsafe"
+	sqlite3_shutdown_api: STRING          = "sqlite3_shutdown"
 
 feature {NONE} -- Externals
 

@@ -18,7 +18,7 @@ feature -- Element change
 			a_api_is_interface_usable: a_api.is_interface_usable
 			a_limit_non_negative: a_limit >= 0
 		do
-			c_sqlite3_soft_heap_limit (a_api.api_pointer (once "sqlite3_soft_heap_limit"), a_limit)
+			c_sqlite3_soft_heap_limit (a_api.api_pointer (sqlite3_soft_heap_limit_api), a_limit)
 		end
 
 feature -- Basic operations
@@ -29,7 +29,7 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			a_size_non_negative: a_size >= 0
 		do
-			Result := c_sqlite3_malloc (a_api.api_pointer (once "sqlite3_realloc"), a_size)
+			Result := c_sqlite3_malloc (a_api.api_pointer (sqlite3_malloc_api), a_size)
 		end
 
 	sqlite3_relloc (a_api: SQLITE_API; a_p: POINTER): POINTER
@@ -38,7 +38,7 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_p_is_null: a_p /= default_pointer
 		do
-			Result := c_sqlite3_relloc (a_api.api_pointer (once "sqlite3_realloc"), a_p)
+			Result := c_sqlite3_relloc (a_api.api_pointer (sqlite3_realloc_api), a_p)
 		end
 
 	sqlite3_free (a_api: SQLITE_API; a_p: POINTER)
@@ -47,8 +47,15 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_p_is_null: a_p /= default_pointer
 		do
-			c_sqlite3_free (a_api.api_pointer (once "sqlite3_free"), a_p)
+			c_sqlite3_free (a_api.api_pointer (sqlite3_free_api), a_p)
 		end
+
+feature {NONE} -- Constants
+
+	sqlite3_free_api: STRING = "sqlite3_free"
+	sqlite3_malloc_api: STRING = "sqlite3_malloc"
+	sqlite3_realloc_api: STRING = "sqlite3_realloc"
+	sqlite3_soft_heap_limit_api: STRING = "sqlite3_soft_heap_limit"
 
 feature {NONE} -- Externals
 

@@ -19,7 +19,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_blob (a_api.api_pointer (once "sqlite3_value_blob"), a_value)
+			Result := c_sqlite3_value_blob (a_api.api_pointer (sqlite3_value_blob_api), a_value)
 		end
 
 	sqlite3_value_bytes (a_api: SQLITE_API; a_value: POINTER): INTEGER
@@ -28,7 +28,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_bytes (a_api.api_pointer (once "sqlite3_value_bytes"), a_value)
+			Result := c_sqlite3_value_bytes (a_api.api_pointer (sqlite3_value_bytes_api), a_value)
 		end
 
 	sqlite3_value_bytes16 (a_api: SQLITE_API; a_value: POINTER): INTEGER
@@ -37,7 +37,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_bytes16 (a_api.api_pointer (once "sqlite3_value_bytes16"), a_value)
+			Result := c_sqlite3_value_bytes16 (a_api.api_pointer (sqlite3_value_bytes16_api), a_value)
 		end
 
 	sqlite3_value_double (a_api: SQLITE_API; a_value: POINTER): REAL_64
@@ -46,7 +46,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_double (a_api.api_pointer (once "sqlite3_value_double"), a_value)
+			Result := c_sqlite3_value_double (a_api.api_pointer (sqlite3_value_double_api), a_value)
 		end
 
 	sqlite3_value_int (a_api: SQLITE_API; a_value: POINTER): INTEGER
@@ -55,7 +55,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_int (a_api.api_pointer (once "sqlite3_value_int"), a_value)
+			Result := c_sqlite3_value_int (a_api.api_pointer (sqlite3_value_int_api), a_value)
 		end
 
 	sqlite3_value_int_64 (a_api: SQLITE_API; a_value: POINTER): INTEGER
@@ -64,7 +64,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_int_64 (a_api.api_pointer (once "sqlite3_value_int_64"), a_value)
+			Result := c_sqlite3_value_int_64 (a_api.api_pointer (sqlite3_value_int_64_api), a_value)
 		end
 
 	sqlite3_value_text (a_api: SQLITE_API; a_value: POINTER): POINTER
@@ -73,7 +73,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_text (a_api.api_pointer (once "sqlite3_value_text"), a_value)
+			Result := c_sqlite3_value_text (a_api.api_pointer (sqlite3_value_text_api), a_value)
 		end
 
 	sqlite3_value_text16 (a_api: SQLITE_API; a_value: POINTER): POINTER
@@ -82,7 +82,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_text16 (a_api.api_pointer (once "sqlite3_value_text16"), a_value)
+			Result := c_sqlite3_value_text16 (a_api.api_pointer (sqlite3_value_text16_api), a_value)
 		end
 
 	sqlite3_value_text16be (a_api: SQLITE_API; a_value: POINTER): POINTER
@@ -91,7 +91,7 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_text16be (a_api.api_pointer (once "sqlite3_value_text16be"), a_value)
+			Result := c_sqlite3_value_text16be (a_api.api_pointer (sqlite3_value_text16be_api), a_value)
 		end
 
 	sqlite3_value_textle (a_api: SQLITE_API; a_value: POINTER): POINTER
@@ -100,10 +100,21 @@ feature -- Access
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_value_is_null: a_value /= default_pointer
 		do
-			Result := c_sqlite3_value_textle (a_api.api_pointer (once "sqlite3_value_textle"), a_value)
+			Result := c_sqlite3_value_textle (a_api.api_pointer (sqlite3_value_textle_api), a_value)
 		end
 
-feature {NONE} -- Externals
+feature {NONE} -- Constants
+
+	sqlite3_value_blob_api: STRING     = "sqlite3_value_blob"
+	sqlite3_value_bytes_api: STRING    = "sqlite3_value_bytes"
+	sqlite3_value_bytes16_api: STRING  = "sqlite3_value_bytes16"
+	sqlite3_value_double_api: STRING   = "sqlite3_value_double"
+	sqlite3_value_int_api: STRING      = "sqlite3_value_int"
+	sqlite3_value_int_64_api: STRING   = "sqlite3_value_int_64"
+	sqlite3_value_text_api: STRING     = "sqlite3_value_text"
+	sqlite3_value_text16_api: STRING   = "sqlite3_value_text16"
+	sqlite3_value_text16be_api: STRING = "sqlite3_value_text16be"
+	sqlite3_value_textle_api: STRING   = "sqlite3_value_textle"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

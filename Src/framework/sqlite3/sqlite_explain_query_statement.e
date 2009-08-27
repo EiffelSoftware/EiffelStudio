@@ -14,7 +14,7 @@ class
 inherit
 	SQLITE_QUERY_STATEMENT
 		redefine
-			compile_statement
+			compile_statement_string
 		end
 
 create
@@ -22,12 +22,12 @@ create
 
 feature {NONE} -- Access
 
-	compile_statement: STRING
+	compile_statement_string: STRING
 			-- <Precursor>
 		local
-			l_stmt: like statement
+			l_stmt: like statement_string
 		do
-			l_stmt := statement
+			l_stmt := statement_string
 			create Result.make (l_stmt.count + 8)
 				-- Prepend the EXPLAIN statment to the query to fetch the virtual machine instructions.
 				-- See http://www.sqlite.org/opcode.html

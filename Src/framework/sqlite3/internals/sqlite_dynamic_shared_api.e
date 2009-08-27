@@ -11,7 +11,7 @@ deferred class
 	SQLITE_DYNAMIC_SHARED_API
 
 inherit
-	DYNAMIC_SHARED_API [SQLITE_API]
+	DYNAMIC_SHARED_API
 
 feature {NONE} -- Initialize
 

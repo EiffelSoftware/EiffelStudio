@@ -1,6 +1,6 @@
 note
 	description: "[
-
+		Externals for interacting with SQLite's internal configuration options.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,6 @@ class
 feature -- Basic operations
 
 	sqlite3_config_threading (a_api: DYNAMIC_API; a_mode: INTEGER): INTEGER
-			--
 		require
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
@@ -22,18 +21,20 @@ feature -- Basic operations
 				a_mode = SQLITE_CONFIG_MULTITHREAD or
 				a_mode = SQLITE_CONFIG_SERIALIZED
 		do
-			Result := c_sqlite3_config_thread (a_api.api_pointer (once "sqlite3_config"), a_mode)
+			Result := c_sqlite3_config_thread (a_api.api_pointer (sqlite3_config_api), a_mode)
 		end
 
 	sqlite3_config_memstatus (a_api: DYNAMIC_API; a_onoff: BOOLEAN): INTEGER
-			--
 		require
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
 		do
-			Result := c_sqlite3_config_memstatus (a_api.api_pointer (once "sqlite3_config"), a_onoff)
+			Result := c_sqlite3_config_memstatus (a_api.api_pointer (sqlite3_config_api), a_onoff)
 		end
 
+feature {NONE} -- Constants
+
+	sqlite3_config_api: STRING = "sqlite3_config"
 
 feature {NONE} -- External: Experimental
 

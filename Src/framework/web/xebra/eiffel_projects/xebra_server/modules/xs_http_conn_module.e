@@ -91,11 +91,14 @@ feature -- Inherited Features
 								l_response := (create {XER_INTERNAL_SERVER_ERROR}.make ("Error decoding message from mod_xebra.")).render_to_command_response
 							end
 
-							log.dprint ("%N%N----%N" + current_request_message + "%N", 7)
-
+							debug
+								log.iprint ("%N%N----%N" + current_request_message + "%N")
+							end
 
 							if attached {XCCR_HTTP_REQUEST} l_response as l_http_response then
-								log.dprint ("%N%N-------------%N" + l_http_response.response.render_to_string + "%N", 7)
+								debug
+									log.iprint ("%N%N-------------%N" + l_http_response.response.render_to_string + "%N")
+								end
 								send_message_to_http_server (l_http_response.response.render_to_string, thread_http_socket)
 							else
 								send_message_to_http_server ( (create {XER_INTERNAL_SERVER_ERROR}.make ("")).render_to_response.render_to_string, thread_http_socket)
@@ -164,7 +167,10 @@ feature {NONE} -- Implementation
 			-- `a_message': The message to be sent
 			-- `a_http_socket': The socket to be used
 		require
+			a_http_socket_attached: a_http_socket /= Void
 			a_http_socket_is_open: not a_http_socket.is_closed
+			a_message_attached: a_message /= Void
+			a_message_not_empty: not a_message.is_empty
 		local
 			l_data: MANAGED_POINTER
 			l_fragment: BOOLEAN
@@ -241,7 +247,6 @@ feature {NONE} -- Implementation
 			l_buf: detachable STRING
 		do
 			create Result.make (a_n.as_integer_32)
-			create l_buf.make (a_n.as_integer_32)
 			from
 				l_read_size := 0
 				Result := ""

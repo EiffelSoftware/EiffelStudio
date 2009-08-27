@@ -117,7 +117,7 @@ feature -- Element change
 			until
 				cookie_orders.after
 			loop
-				Result := Result +  cookie_orders.item.render_to_string
+				Result.append (cookie_orders.item.render_to_string)
 				cookie_orders.forth
 			end
 			Result := Result + {XU_CONSTANTS}.Response_content_type_start + content_type + {XU_CONSTANTS}.Response_html_start + html_stream.get_text

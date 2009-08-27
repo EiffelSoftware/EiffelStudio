@@ -4,6 +4,7 @@
 	</tag>
 	<tag id="loop" class="XTAG_XEB_LOOP_TAG">
 		<attribute id="times" />
+		<attribute id="variable" optional="True" />
 	</tag>
 	<tag id="display" class="XTAG_XEB_DISPLAY_TAG">
 		<attribute id="text" />

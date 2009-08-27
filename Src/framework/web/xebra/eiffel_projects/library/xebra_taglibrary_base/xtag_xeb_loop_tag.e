@@ -31,22 +31,32 @@ feature {NONE} -- Access
 
 	times: XTAG_TAG_ARGUMENT
 			-- Number of repetitions of the body
+	
+	index_variable: detachable XTAG_TAG_ARGUMENT
+			-- Index variable of the current loop cycle
 
 feature {NONE} -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		local
-			temp_var_name: STRING
+			l_temp_var_name: STRING
 		do
-			temp_var_name := a_servlet_class.render_html_page.new_local ("NATURAL")
+			if attached index_variable as l_index_variable then
+				a_servlet_class.render_html_page.append_local
+					(l_index_variable.value (current_controller_id), "NATURAL")
+			end
+			l_temp_var_name := a_servlet_class.render_html_page.new_local ("NATURAL")
 			a_servlet_class.render_html_page.append_expression ("from")
-			a_servlet_class.render_html_page.append_expression (temp_var_name + " := 1")
+			a_servlet_class.render_html_page.append_expression (l_temp_var_name + " := 1")
 			a_servlet_class.render_html_page.append_expression ("until")
-			a_servlet_class.render_html_page.append_expression (temp_var_name + " > " + times.value (current_controller_id))
+			a_servlet_class.render_html_page.append_expression (l_temp_var_name + " > " + times.value (current_controller_id))
 			a_servlet_class.render_html_page.append_expression ("loop")
+			if attached index_variable as l_index_variable then
+				a_servlet_class.render_html_page.append_expression (l_index_variable.value (current_controller_id) + " := " + l_temp_var_name)
+			end
 			generate_children (a_servlet_class, a_variable_table)
-			a_servlet_class.render_html_page.append_expression (temp_var_name + " := " + temp_var_name + " + 1")
+			a_servlet_class.render_html_page.append_expression (l_temp_var_name + " := " + l_temp_var_name + " + 1")
 			a_servlet_class.render_html_page.append_expression ("end")
 		end
 
@@ -55,6 +65,9 @@ feature {NONE} -- Implementation
 		do
 			if id.is_equal ("times") then
 				times := a_attribute
+			end
+			if id.is_equal ("variable") then
+				index_variable := a_attribute
 			end
 		end
 

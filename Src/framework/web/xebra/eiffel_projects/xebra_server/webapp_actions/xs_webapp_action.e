@@ -60,31 +60,28 @@ feature -- Paths
 			webapp_attached: webapp /= Void
 		local
 			l_string: STRING
-			l_i: INTEGER
+			i: INTEGER
 		do
-			if attached webapp as l_wa then
-				l_string := l_wa.app_config.ecf.out
-				l_string.replace_substring_all ("\" ,"/")
-				if attached {ARRAYED_LIST [ANY]} l_string.split ('/') as l_ist then
-					from
-						l_i := 2
-						l_string := l_ist.i_th (1).out
-					until
-						l_i >= l_ist.count
-					loop
-						l_string := l_string + "/" + l_ist.i_th (l_i).out
-						l_i := l_i + 1
-					end
-				end
-				if {PLATFORM}.is_windows then
-					l_string.replace_substring_all ("/" ,"\")
-				end
-				create Result.make_from_string (l_string)
+			if attached internal_app_dir as l_app_dir then
+				Result := l_app_dir
 			else
-				create Result.make
+				if attached webapp as l_wa then
+					l_string := l_wa.app_config.ecf.out
+					l_string.replace_substring_all ("\" ,"/")
+					i := l_string.last_index_of ('/', l_string.count)
+					l_string := l_string.substring (1, i - 1)
+					if {PLATFORM}.is_windows then
+						l_string.replace_substring_all ("/" ,"\")
+					end
+					create Result.make_from_string (l_string)
+				else
+					create Result.make
+				end
+				internal_app_dir := Result
 			end
 		ensure
 			Result_attached: Result /= Void
+			Result_consistent: internal_app_dir ~ Result
 		end
 
 	run_workdir : DIRECTORY_NAME
@@ -92,20 +89,26 @@ feature -- Paths
 		require
 			webapp_attached: webapp /= Void
 		do
-			if attached webapp as l_wa then
-				Result := app_dir.twin
-				Result.extend ({XU_CONSTANTS}.Dir_eifgen)
-				Result.extend (l_wa.app_config.name.out)
-				if config.file.finalize_webapps.value then
-					Result.extend ({XU_CONSTANTS}.Dir_f_code)
-				else
-					Result.extend ({XU_CONSTANTS}.Dir_w_code)
-				end
+			if attached internal_run_workdir as l_run_workdir then
+				Result := l_run_workdir
 			else
-				create Result.make
+				if attached webapp as l_wa then
+					Result := app_dir.twin
+					Result.extend ({XU_CONSTANTS}.Dir_eifgen)
+					Result.extend (l_wa.app_config.name.out)
+					if config.file.finalize_webapps.value then
+						Result.extend ({XU_CONSTANTS}.Dir_f_code)
+					else
+						Result.extend ({XU_CONSTANTS}.Dir_w_code)
+					end
+				else
+					create Result.make
+				end
+				internal_run_workdir := Result
 			end
 		ensure
 			Result_attached: Result /= Void
+			Result_consistent: internal_run_workdir ~ Result
 		end
 
 	webapp_melted_file: FILE_NAME
@@ -113,96 +116,135 @@ feature -- Paths
 		require
 			webapp_attached: webapp /= Void
 		do
-			if attached webapp as l_wa then
-				if config.file.finalize_webapps.value then
-					Result := webapp_exe_file
-				else
-					create Result.make_from_string (run_workdir.string)
-					Result.set_file_name (l_wa.app_config.name.out + {XU_CONSTANTS}.Extension_melted)
-				end
+			if attached internal_webapp_melted_file as l_webapp_melted_file then
+				Result := l_webapp_melted_file
 			else
-				create Result.make
+				if attached webapp as l_wa then
+					if config.file.finalize_webapps.value then
+						Result := webapp_exe_file
+					else
+						create Result.make_from_string (run_workdir.string)
+						Result.set_file_name (l_wa.app_config.name.out + {XU_CONSTANTS}.Extension_melted)
+					end
+				else
+					create Result.make
+				end
+				internal_webapp_melted_file := Result
 			end
 		ensure
 			Result_attached: Result /= Void
+			Result_consistent: internal_webapp_melted_file ~ Result
 		end
 
 	webapp_exe_file: FILE_NAME
 			-- Returns the path to the exe of the webapp
 		require
 			webapp_attached: webapp /= Void
+		local
+			l_os: XU_OS
 		do
-			if attached webapp as l_wa then
-				create Result.make_from_string (run_workdir.string)
-				if {PLATFORM}.is_windows then
-					Result.set_file_name (l_wa.app_config.name.out + {XU_CONSTANTS}.Extension_win_exe)
-				else
-					Result.set_file_name (l_wa.app_config.name.out)
-				end
+			if attached internal_webapp_exe_file as l_webapp_exe_file then
+				Result := l_webapp_exe_file
 			else
-				create Result.make
+				create l_os
+				if attached webapp as l_wa then
+					create Result.make_from_string (run_workdir.string)
+					Result.set_file_name (l_wa.app_config.name.out + l_os.exe_extension)
+				else
+					create Result.make
+				end
+				internal_webapp_exe_file := Result
 			end
 		ensure
 			Result_attached: Result /= Void
+			Result_consistent: internal_webapp_exe_file ~ Result
 		end
 
 	servlet_gen_dir: DIRECTORY_NAME
 			-- The path to the servlet_gen
 		do
-			Result := app_dir.twin
-			Result.extend ({XU_CONSTANTS}.generated_folder_name)
-			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
+			if attached internal_servlet_gen_dir as l_servlet_gen_dir then
+				Result := l_servlet_gen_dir
+			else
+				Result := app_dir.twin
+				Result.extend ({XU_CONSTANTS}.generated_folder_name)
+				Result.extend ({XU_CONSTANTS}.servlet_gen_name)
+				internal_servlet_gen_dir := Result
+			end
 		ensure
 			Result_attached: Result /= void
+			Result_consistent: internal_servlet_gen_dir~ Result
 		end
 
 	servlet_gen_exe_file: FILE_NAME
 			-- The path to the servlet_gen executable
+		local
+			l_os: XU_OS
 		do
-			create Result.make_from_string (servlet_gen_dir.string)
-			Result.extend ({XU_CONSTANTS}.Dir_eifgen)
-			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
-			Result.extend ({XU_CONSTANTS}.Dir_w_code)
-			if {PLATFORM}.is_windows then
-				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_win_exe)
+			if attached internal_servlet_gen_exe_file as l_servlet_gen_exe_file then
+				Result := l_servlet_gen_exe_file
 			else
-				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name)
+				create l_os
+				create Result.make_from_string (servlet_gen_dir.string)
+				Result.extend ({XU_CONSTANTS}.Dir_eifgen)
+				Result.extend ({XU_CONSTANTS}.servlet_gen_name)
+				Result.extend ({XU_CONSTANTS}.Dir_w_code)
+				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + l_os.exe_extension)
+				internal_servlet_gen_exe_file := Result
 			end
-
 		ensure
 			Result_attached: Result /= void
+			Result_consistent: internal_servlet_gen_exe_file ~ Result
 		end
 
 	servlet_gen_melted_file: FILE_NAME
 		-- The path to the servlet_gen melted file
 		do
-			create Result.make_from_string (servlet_gen_dir.string)
-			Result.extend ({XU_CONSTANTS}.Dir_eifgen)
-			Result.extend ({XU_CONSTANTS}.servlet_gen_name)
-			Result.extend ({XU_CONSTANTS}.Dir_w_code)
+			if attached internal_servlet_gen_melted_file as l_servlet_gen_melted_file then
+				Result := l_servlet_gen_melted_file
+			else
+				create Result.make_from_string (servlet_gen_dir.string)
+				Result.extend ({XU_CONSTANTS}.Dir_eifgen)
+				Result.extend ({XU_CONSTANTS}.servlet_gen_name)
+				Result.extend ({XU_CONSTANTS}.Dir_w_code)
 
-			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_melted)
+				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_melted)
+				internal_servlet_gen_melted_file := Result
+			end
 		ensure
 			Result_attached: Result /= void
+			Result_consistent: internal_servlet_gen_melted_file ~ Result
 		end
 
 	servlet_gen_ecf_file: FILE_NAME
 			-- The path to the servlet_gen executable
 		do
-			create Result.make_from_string (servlet_gen_dir.string)
-			Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_ecf)
+			if attached internal_servlet_gen_ecf_file as l_servlet_gen_ecf_file then
+				Result := l_servlet_gen_ecf_file
+			else
+				create Result.make_from_string (servlet_gen_dir.string)
+				Result.set_file_name ({XU_CONSTANTS}.servlet_gen_name + {XU_CONSTANTS}.Extension_ecf)
+				internal_servlet_gen_ecf_file := Result
+			end
 		ensure
 			Result_attached: Result /= void
+			Result_consistent: internal_servlet_gen_ecf_file ~ Result
 		end
 
 	servlet_gen_executed_file: FILE_NAME
 				-- The path to the servlet_gen executed_at_time-file
 		do
-			create Result.make_from_string (app_dir.string)
-			Result.extend ({XU_CONSTANTS}.Generated_folder_name)
-			Result.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
+			if attached internal_servlet_gen_executed_file as l_servlet_gen_executed_file then
+				Result := l_servlet_gen_executed_file
+			else
+				create Result.make_from_string (app_dir.string)
+				Result.extend ({XU_CONSTANTS}.Generated_folder_name)
+				Result.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
+					internal_servlet_gen_executed_file := Result
+			end
 		ensure
 			Result_attached: Result /= void
+			Result_consistent: internal_servlet_gen_executed_file ~ Result
 		end
 
 feature -- Operations
@@ -280,6 +322,18 @@ feature {TEST_WEBAPPS} -- Implementation
 feature {NONE} -- Implementation
 
 	internal_last_response: detachable XC_COMMAND_RESPONSE
+
+		-- The following internal_ paths are use for once per object pattern
+	internal_app_dir: detachable like app_dir
+	internal_run_workdir: detachable like run_workdir
+	internal_webapp_melted_file: detachable like webapp_melted_file
+	internal_webapp_exe_file: detachable like webapp_exe_file
+	internal_servlet_gen_exe_file: detachable like servlet_gen_exe_file
+	internal_servlet_gen_dir: detachable like servlet_gen_dir
+	internal_servlet_gen_melted_file: detachable like servlet_gen_melted_file
+	internal_servlet_gen_ecf_file: detachable like servlet_gen_ecf_file
+	internal_servlet_gen_executed_file: detachable like servlet_gen_executed_file
+
 
 	can_launch_process (a_exe: FILE_NAME; a_dir: DIRECTORY_NAME): BOOLEAN
 			-- Tests if a_exe and a_dirs exist

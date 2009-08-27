@@ -19,7 +19,6 @@ feature -- Files
 	Webapp_config_file: STRING = "config.wapp"
 	Taglib_config_file: STRING = "config.taglib"
 	Extension_melted: STRING = ".melted"
-	Extension_win_exe: STRING = ".exe"
 	Extension_ecf: STRING = ".ecf"
 	Extension_xeb: STRING = ".xeb"
 	Extension_xrpc: STRING = ".xrpc"

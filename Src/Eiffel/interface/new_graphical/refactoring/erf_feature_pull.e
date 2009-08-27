@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 		local
 			dialog: ERF_CLASS_SELECT
 			l_feature: FEATURE_I
-			l_classes: DS_HASH_SET [CLASS_I]
+			l_classes: SEARCH_TABLE [CLASS_I]
         do
 			create dialog
 
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 				create recursive_descendants.make (20)
 				compute_recursive_descendants (feature_i.written_class)
 	        	checks.wipe_out
-	        	create l_classes.make (100)
+	        	create l_classes.make_with_key_tester (100, create {REFERENCE_EQUALITY_TESTER [CLASS_I]})
 	        	l_classes.force (feature_i.written_class.lace_class)
 	        	l_classes.force (parent_class)
 	        	checks.extend (create {ERF_CLASSES_WRITABLE}.make (l_classes))

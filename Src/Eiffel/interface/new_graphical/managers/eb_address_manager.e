@@ -1336,7 +1336,7 @@ feature {NONE} -- open new class
 			cluster: CLUSTER_I
 			cluster_name: STRING
 			matcher: KMP_WILD
-			l_classes: DS_HASH_SET [CLASS_I]
+			l_classes: SEARCH_TABLE [CLASS_I]
 		do
 			if workbench.is_universe_ready then
 				class_i := Void

@@ -89,7 +89,7 @@ feature -- Execution
 			-- `a_routine': Agent to which calls test routine.
 		require
 			a_routine_attached: a_routine /= Void
-			a_routine_valid: a_routine.valid_operands ([create {G}])
+			--a_routine_valid: a_routine.valid_operands ([create {G}])
 		local
 			l_creator: FUNCTION [like Current, TUPLE, G]
 			l_prepare, l_test, l_clean: like last_invocation_response

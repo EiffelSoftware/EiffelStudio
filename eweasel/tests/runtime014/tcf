@@ -1,6 +1,144 @@
 test_name	 console-in-windows-dll
 test_description Accessing standard input/output should not cause program failure.
 
+-- Monothreaded mode
+
+define MULTITHREADED "false"
+define PRECOMPILE "$PRECOMPILED_BASE"
+
+-- Compile DLL
+copy_sub 	dll.Ace	$TEST Ace
+copy_raw 	dll.def	$TEST\dll test.def
+copy_raw 	dll.e	$TEST\dll test.e
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+
+-- Compile executable
+
+define CONSOLE_APPLICATION "true"
+
+copy_sub 	Ace $TEST Ace
+
+define BEFORE_DLL_CALL ""
+define AFTER_DLL_CALL ""
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE 	exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+define BEFORE_DLL_CALL "io.put_string ("Before call"); io.put_new_line"
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE 	exec_output2
+execute_result	ok
+compare		exec_output2 output_b
+
+define AFTER_DLL_CALL "io.put_string ("After call"); io.put_new_line"
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE 	exec_output3
+execute_result	ok
+compare		exec_output3 output_ba
+
+define BEFORE_DLL_CALL ""
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE 	exec_output4
+execute_result	ok
+compare		exec_output4 output_a
+
+define CONSOLE_APPLICATION "false"
+
+copy_sub 	Ace $TEST Ace
+
+define BEFORE_DLL_CALL ""
+define AFTER_DLL_CALL ""
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE 	exec_output5
+execute_result	ok
+compare		exec_output5 output
+
+define BEFORE_DLL_CALL "io.put_string ("Before call"); io.put_new_line"
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE 	exec_output6
+execute_result	ok
+compare		exec_output6 output_b
+
+define AFTER_DLL_CALL "io.put_string ("After call"); io.put_new_line"
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE 	exec_output7
+execute_result	ok
+compare		exec_output7 output_ba
+
+define BEFORE_DLL_CALL ""
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE 	exec_output8
+execute_result	ok
+compare		exec_output8 output_a
+
+-- Multithreaded mode
+
+cleanup_compile
+
+define MULTITHREADED "true"
+define PRECOMPILE "$PRECOMPILED_BASE_MT"
+
 -- Compile DLL
 copy_sub 	dll.Ace	$TEST Ace
 copy_raw 	dll.def	$TEST\dll test.def

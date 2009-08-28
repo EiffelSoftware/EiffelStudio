@@ -11,32 +11,57 @@ class
 	XSWA_COMPILE_WEBAPP
 
 inherit
-	XS_WEBAPP_ACTION
+	XSWA_COMPILE
 
 create
 	make
 
-feature {NONE} -- Initialization
 
-	make
-			-- Initialization for `Current'.	
-		do
-			create output_handler.make
-		ensure then
-			output_handler_attached: output_handler /= Void
-		end
-
-
-feature -- Access
+feature {NONE} -- Access
 
 	compile_process: detachable PROCESS
 			-- Used to compile the webapp
 
-	output_handler: XSOH_COMPILE
-			-- Handles output from process	
+feature {NONE} -- Status report
 
-	needs_cleaning: BOOLEAN assign set_needs_cleaning
-			-- Can be used to force the action to execute and add -clean option to compilation
+	action_name: STRING
+			-- The name of the action as it appears in the status messages
+		do
+			Result := "Compile Webapp"
+		end
+
+	internal_is_execution_needed (a_with_cleaning: BOOLEAN): TUPLE [BOOLEAN, detachable LIST [XSWA_STATUS]]
+			-- <Precursor>
+			--
+			-- Reasons can be:
+			--	- There is a .e or .ecf file somewhere in app_dir (recursively) that is newer than the melted file
+			--	- The executable is missing
+			--	- The webapp needs cleaning
+		local
+			l_f_util: XU_FILE_UTILITIES
+			l_inc: LINKED_LIST [STRING]
+			l_errors: ARRAYED_LIST [XSWA_STATUS]
+		do
+			create l_errors.make (1)
+			create l_inc.make
+			l_inc.force ("*.ecf")
+			l_inc.force ("*.e")
+			create l_f_util
+
+			if l_f_util.file_is_newer (webapp_melted_file, app_dir, l_inc) then
+				l_errors.force (create {XSWA_STATUS_FILE_OLDER_THAN_E}.make (webapp_melted_file))
+			end
+
+			if not l_f_util.is_executable_file (webapp_exe_file) then
+				l_errors.force (create {XSWA_STATUS_FILE_NOT_EXIST}.make (webapp_exe_file))
+			end
+
+			if a_with_cleaning and needs_cleaning then
+				l_errors.force (create {XSWA_STATUS_NEEDS_CLEANING})
+			end
+
+			Result := [not l_errors.is_empty, l_errors]
+		end
 
 	compiler_args: STRING
 			-- The arguments that are passed to compile the webapp
@@ -68,64 +93,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-feature -- Status report
-
-	is_necessary: BOOLEAN
-			-- <Precursor>
-			--
-			-- Returns true if:
-			--	- There is a .e or .ecf file somewhere in app_dir (recursively) that is newer than the melted file
-			--	- The executable is missing
-			--	- The webapp needs cleaning
-		local
-			l_f_util: XU_FILE_UTILITIES
-			l_melted_file_is_old: BOOLEAN
-			l_executable_does_not_exist: BOOLEAN
-			l_inc: LINKED_LIST [STRING]
-		do
-			create l_inc.make
-			l_inc.force ("*.ecf")
-			l_inc.force ("*.e")
-			create l_f_util
-			l_melted_file_is_old := l_f_util.file_is_newer (webapp_melted_file,
-												app_dir,
-												l_inc)
-			l_executable_does_not_exist := not l_f_util.is_executable_file (webapp_exe_file)
-
-
-
-			Result := l_melted_file_is_old or l_executable_does_not_exist or needs_cleaning
-
-
-			if Result then
-				log.dprint ("Compiling webapp is necessary", log.debug_tasks)
-				if l_melted_file_is_old then
-					log.dprint ("Compiling webapp is necessary because: " + webapp_melted_file + " is older than .e files or .ecf file or does not exist.", log.debug_verbose_subtasks)
-				end
-
-				if l_executable_does_not_exist then
-					log.dprint ("Compiling webapp is necessary because: " + webapp_exe_file + " does not exist or is not executable", log.debug_verbose_subtasks)
-				end
-
-					if needs_cleaning then
-					log.dprint ("Compiling webapp is necessary because: webapp compilation cleaning not yet performed", log.debug_verbose_subtasks)
-				end
-
-			else
-				log.dprint ("Compiling webapp is not necessary", log.debug_tasks)
-			end
-		end
-
-
 feature -- Status setting
-
-	set_needs_cleaning (a_needs_cleaning: like needs_cleaning)
-			-- Setts needs_cleaning
-		do
-			needs_cleaning := a_needs_cleaning
-		ensure
-			needs_cleaning_set: needs_cleaning ~ a_needs_cleaning
-		end
 
 	stop
 			-- <Precursor>
@@ -142,7 +110,7 @@ feature -- Status setting
 			end
 		end
 
-feature {TEST_WEBAPPS} -- Implementation
+feature {NONE} -- Implementation
 
 	internal_execute
 			-- <Precursor>
@@ -161,12 +129,13 @@ feature {TEST_WEBAPPS} -- Implementation
 							end
 						end
 						log.dprint("-=-=-=--=-=LAUNCHING COMPILE WEBAPP -=-=-=-=-=-=", log.debug_verbose_subtasks)
+						error_output_cache.wipe_out
 						compile_process := launch_process (config.file.compiler_filename,
 														compiler_args,
 														app_dir,
 														agent compile_process_exited,
-														agent output_handler.handle_output ,
-														agent output_handler.handle_output)
+														agent handle_compile_output ,
+														agent handle_compile_output)
 						set_running (True)
 					end
 				end
@@ -178,34 +147,13 @@ feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)
 			-- Sets is_running
-		require
-			webapp_attached: webapp /= Void
 		do
 			if attached webapp as l_webapp then
 				is_running := a_running
 				l_webapp.is_compiling_webapp := a_running
 			end
-		ensure
-			set: is_running ~ a_running
 		end
 
-
-feature -- Agent
-
-	compile_process_exited
-			-- Sets
-		do
-			set_running (False)
-			set_needs_cleaning (False)
-			if not is_necessary then
-				execute_next_action
-			else
-				log.eprint ("COMPILATION OF WEBAPP FAILED", generating_type)
-			end
-		end
-
-invariant
-	output_handler_attached: output_handler /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

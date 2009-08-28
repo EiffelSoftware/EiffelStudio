@@ -1,6 +1,7 @@
 note
 	description: "[
-		Implements a output handler for translation
+		Is returned by {XS_WEBAPP_ACTION}.is_necessary if a certain file 
+		is older than .e files or .ecf file or does not exist.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -8,12 +9,12 @@ note
 	revision: "$Revision$"
 
 class
-	XSOH_TRANSLATE
+	XSWA_STATUS_FILE_OLDER_THAN_E
 
 inherit
-	XS_OUTPUT_HANDLER
+	XSWA_STATUS
 		redefine
-			make
+			out
 		end
 
 create
@@ -21,29 +22,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_file_name: STRING)
 			-- Initialization for `Current'.
+		require
+			a_file_name_attached: a_file_name /= Void
 		do
-			Precursor
-			max_size := 0
+			file_name := a_file_name
+		ensure
+			a_file_name_set: a_file_name ~ file_name
 		end
 
-feature -- Status setting
+feature -- Access
 
-	internal_handle_output (a_output: STRING)
-			-- <Precursor>
+	file_name: STRING
+
+feature -- Status Report
+
+	out: STRING
+			-- Returns the error message
 		do
-			log.dprint_noformat(a_output, log.debug_subtasks)
+			Result := file_name + " is older than .e files or .ecf file or does not exist."
 		end
-
-feature -- Status report
-
-	has_successfully_terminated: BOOLEAN
-			-- <Precursor>
-		do
-			Result := False
-		end
-
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -76,4 +75,3 @@ note
 			Customer support http://support.eiffel.com
 		]"
 end
-

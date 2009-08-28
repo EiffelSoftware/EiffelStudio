@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Cannot open file error.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

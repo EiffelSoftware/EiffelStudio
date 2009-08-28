@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Defines a deferred class for internals errors that are used in all xebra applications. E.g. {XERROR_FILE_NOT_FOUND}.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -9,15 +9,6 @@ note
 
 class
 	XTERROR_ERROR
-
-feature -- Access
-
-feature -- Status report
-
-
-feature -- Status setting
-
-feature {NONE} -- Implementation
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

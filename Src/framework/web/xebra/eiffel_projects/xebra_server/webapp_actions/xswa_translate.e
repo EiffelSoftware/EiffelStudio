@@ -21,22 +21,19 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.	
 		do
-			create output_handler_translate.make
 			force := False
-		ensure then
-			output_handler_translate_attached: output_handler_translate /= Void
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
 	force: BOOLEAN assign set_force
 		-- If true, translation is alsways neccesary
 
-	output_handler_translate: XSOH_TRANSLATE
-		-- Output handler for translate process
-
 	translate_process: detachable PROCESS
 			-- Used to translate the xeb files
+
+
+feature {NONE} -- Status report
 
 	translator_args: STRING
 			-- The arguments that are passed to the translator
@@ -58,12 +55,16 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
+	action_name: STRING
+			-- The name of the action as it appears in the status messages
+		do
+			Result := "Translate Webapp"
+		end
 
-feature -- Status report
-
-	is_necessary: BOOLEAN
+	internal_is_execution_needed (a_with_cleaning: BOOLEAN): TUPLE [BOOLEAN, detachable LIST [XSWA_STATUS]]
 			-- <Precursor>
 			--
+			-- Reasons can be:
 			-- Returns True if:
 			--  - The translated-file is older than any xeb file in app_dir.
 			--  - The servlet_gen_exf file does not exist.
@@ -71,12 +72,10 @@ feature -- Status report
 		local
 			translator_executed_file: FILE_NAME
 			l_f_utils: XU_FILE_UTILITIES
-			translator_executed_file_old: BOOLEAN
-			l_servlet_gen_exe_not_exist: BOOLEAN
-			l_servet_gen_ecf_not_exist: BOOLEAN
-			l_servlet_gen_not_executed: BOOLEAN
 			l_inc: LINKED_LIST [STRING]
+			l_errors: ARRAYED_LIST [XSWA_STATUS]
 		do
+			create l_errors.make (1)
 			create l_inc.make
 			l_inc.force ("*.xeb")
 			create l_f_utils
@@ -85,30 +84,18 @@ feature -- Status report
 			translator_executed_file.extend ({XU_CONSTANTS}.Generated_folder_name)
 			translator_executed_file.set_file_name ({XU_CONSTANTS}.Translator_executed_file)
 
-			translator_executed_file_old := l_f_utils.file_is_newer (translator_executed_file,
-									app_dir,
-									l_inc)
-
-			l_servet_gen_ecf_not_exist := not  l_f_utils.is_readable_file (servlet_gen_ecf_file)
-
-			Result := translator_executed_file_old or
-						l_servet_gen_ecf_not_exist or
-					 	force
-
-			if Result then
-				log.dprint ("Translating is necessary", log.debug_tasks)
-				if translator_executed_file_old then
-					log.dprint ("Translating is necessary because: Translator_executed file is older than xeb files in app_dir or does not exist.", log.debug_verbose_subtasks)
-				end
-				if l_servet_gen_ecf_not_exist then
-					log.dprint ("Translating is necessary because: servlet_gen ecf does not exist.", log.debug_verbose_subtasks)
-				end
-				if force then
-					log.dprint ("Translating is necessary because: force.", log.debug_verbose_subtasks)
-				end
-			else
-				log.dprint ("Translating is not necessary", log.debug_tasks)
+			if l_f_utils.file_is_newer (translator_executed_file, app_dir, l_inc) then
+				l_errors.force (create {XSWA_STATUS_FILE_OLDER_THAN_XEB}.make ("translator-executed-file"))
 			end
+
+			if not l_f_utils.is_readable_file (servlet_gen_ecf_file) then
+				l_errors.force (create {XSWA_STATUS_FILE_NOT_EXIST}.make (servlet_gen_ecf_file))
+			end
+
+			if a_with_cleaning and force then
+				l_errors.force (create {XSWA_STATUS_FORCE}.make)
+			end
+			Result := [not l_errors.is_empty, l_errors]
 		end
 
 feature -- Status setting
@@ -140,18 +127,14 @@ feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)
 			-- Sets is_running
-		require
-			webapp_attached: webapp /= Void
 		do
 			if attached webapp as l_webapp then
 				is_running := a_running
 				l_webapp.is_translating := a_running
 			end
-		ensure
-			set: is_running ~ a_running
 		end
 
-feature {TEST_WEBAPPS} -- Implementation
+feature {NONE} -- Implementation
 
 	internal_execute
 			-- <Precursor>
@@ -176,8 +159,8 @@ feature {TEST_WEBAPPS} -- Implementation
 																translator_args,
 																app_dir,
 																agent translate_process_exited,
-																agent output_handler_translate.handle_output,
-																agent output_handler_translate.handle_output)
+																agent output_regular,
+																agent output_error)
 						set_running (True)
 					end
 				end
@@ -185,22 +168,17 @@ feature {TEST_WEBAPPS} -- Implementation
 			end
 		end
 
-feature -- Agents
+feature {NONE} -- Agents
 
 	translate_process_exited
 			-- Launch compiling of servlet_gen in gen_compile_process
 		do
 			set_running (False)
 			set_force (False)
-			if not is_necessary then
+			if is_successful then
 				execute_next_action
-			else
-				log.eprint ("TRANSLATION FAILED", generating_type)
 			end
 		end
-
-invariant
-	output_handler_translate_attached: output_handler_translate /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

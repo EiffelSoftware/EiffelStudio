@@ -21,18 +21,18 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.	
 		do
-			create output_handler_gen.make
-		ensure then
-			output_handler_gen_attached: output_handler_gen /= Void
+
 		end
 
-feature -- Access
-
-	output_handler_gen: XSOH_GEN
-		-- Output handler for compilation of servletget process
+feature {NONE} -- Access
 
 	generate_process: detachable PROCESS
 			-- Used to run the servlet_gen
+
+	needs_cleaning: BOOLEAN assign set_needs_cleaning
+			-- Can be used to force the action to execute and add -clean option to compilation	
+
+feature {NONE} -- Status report
 
 	generate_args: STRING
 			-- The arguments that are passed to the servlet_gen
@@ -42,44 +42,35 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	needs_cleaning: BOOLEAN assign set_needs_cleaning
-			-- Can be used to force the action to execute and add -clean option to compilation	
+	action_name: STRING
+			-- The name of the action as it appears in the status messages
+		do
+			Result := "Generate Webapp"
+		end
 
-feature -- Status report
-
-	is_necessary: BOOLEAN
+	internal_is_execution_needed (a_with_cleaning: BOOLEAN): TUPLE [BOOLEAN, detachable LIST [XSWA_STATUS]]
 			-- <Precursor>
 			--
-			-- Returns true if:
+			-- Reasons can be:
 			--  - There is a xeb file that is newer than servlet_gen_executed_file in app_dir
 			--  - Needs cleaning
 		local
-			l_servlet_gen_not_executed: BOOLEAN
 			l_f_utils: XU_FILE_UTILITIES
 			l_inc: LINKED_LIST [STRING]
+			l_errors: ARRAYED_LIST [XSWA_STATUS]
 		do
+			create l_errors.make (1)
 			create l_inc.make
 			l_inc.force ("*.xeb")
 			create l_f_utils
-			l_servlet_gen_not_executed := l_f_utils.file_is_newer (servlet_gen_executed_file,
-									app_dir,
-									l_inc)
-
-			Result :=  	needs_cleaning or l_servlet_gen_not_executed
-
-			if Result then
-				log.dprint ("Generating is necessary", log.debug_tasks)
-
-				if l_servlet_gen_not_executed then
-					log.dprint ("Generating is necessary because: Servlet_gen_executed file is older than xeb files in app_dir or does not exist.", log.debug_verbose_subtasks)
-				end
-
-				if needs_cleaning then
-					log.dprint ("Generating is necessary because: generate cleaning not yet performed.", log.debug_verbose_subtasks)
-				end
-			else
-				log.dprint ("Generating is not necessary", log.debug_tasks)
+			if l_f_utils.file_is_newer (servlet_gen_executed_file, app_dir, l_inc) then
+				l_errors.force (create {XSWA_STATUS_FILE_OLDER_THAN_XEB}.make ("Servlet-generator-executed-file"))
 			end
+
+			if a_with_cleaning and needs_cleaning then
+				l_errors.force (create {XSWA_STATUS_NEEDS_CLEANING})
+			end
+			Result := [not l_errors.is_empty, l_errors]
 		end
 
 feature -- Status setting
@@ -110,19 +101,15 @@ feature -- Status setting
 feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)
-			-- Sets is_running
-		require
-			webapp_attached: webapp /= Void
+			-- Sets is_running	
 		do
 			if attached webapp as l_webapp then
 				is_running := a_running
 				l_webapp.is_generating := a_running
 			end
-		ensure
-			set: is_running ~ a_running
 		end
 
-feature {TEST_WEBAPPS} -- Implementation
+feature {NONE} -- Implementation
 
 	internal_execute
 			-- <Precursor>
@@ -145,29 +132,27 @@ feature {TEST_WEBAPPS} -- Implementation
 															generate_args,
 															app_dir,
 															agent generate_process_exited,
-															agent output_handler_gen.handle_output,
-															agent output_handler_gen.handle_output)
+															agent output_regular,
+															agent output_error)
 					end
 				end
 				internal_last_response := (create {XER_APP_COMPILING}.make (l_webapp.app_config.name.out)).render_to_command_response
 			end
 		end
 
-feature -- Agents
+feature {NONE} -- Agents
 
 	generate_process_exited
 			-- Sets is_running := False and executes next action
 		do
 			set_running (False)
 			set_needs_cleaning (False)
-			if not is_necessary then
+			if is_successful then
 				execute_next_action
-			else
-				log.eprint ("GENERATION FAILED", generating_type)
 			end
 		end
-invariant
-		output_handler_gen_attached: output_handler_gen /= Void
+
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Problem in config file error.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

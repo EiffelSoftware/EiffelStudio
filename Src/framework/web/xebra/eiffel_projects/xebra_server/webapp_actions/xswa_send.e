@@ -1,6 +1,6 @@
 note
 	description: "[
-		The action which sends a request to the webapp.
+		The action which sends a command to the webapp.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -13,21 +13,37 @@ class
 inherit
 	XS_WEBAPP_ACTION
 
-feature -- Status report
 
-	is_necessary: BOOLEAN
-			-- <Precursor>
-			-- Necessary if:
-			--	- always
+
+feature {NONE} -- Status report
+
+	action_name: STRING
+			-- The name of the action as it appears in the status messages
 		do
-			Result := True
+			Result := "Send Command to Webapp"
+		end
+
+	internal_is_execution_needed (a_with_cleaning: BOOLEAN): TUPLE [BOOLEAN, detachable LIST [XSWA_STATUS]]
+			-- <Precursor>
+			--
+			-- List is always empty.
+		do
+			Result := [True, Void]
 		end
 
 feature -- Status setting
 
+	set_running (a_running: BOOLEAN)
+			-- Sets is_running	
+		do
+			if attached webapp as l_webapp then
+				is_running := a_running
+			end
+		end
 	stop
 			-- <Precursor>
 		do
+			-- Can't be stopped.
 		end
 
 feature {NONE} -- Implementation

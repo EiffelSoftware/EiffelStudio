@@ -40,7 +40,7 @@ feature -- Basic Functionality
 			if attached constants_table [a_string] as l_constant then
 				Result := l_constant
 			else
-				Result := get_unique_identifier
+				Result := unique_identifier
 				constants_table.put (Result, a_string)
 				add_const_variable_by_name_type (Result, "STRING", "%"" + a_string + "%"")
 			end

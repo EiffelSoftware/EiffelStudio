@@ -51,9 +51,9 @@ feature -- Status report
 	wait_for_exit
 			-- Waits until process is terminated
 		do
-			if attached {PROCESS} run_process as p  and then p.is_running then
+			if attached {PROCESS} run_process as l_process  and then l_process.is_running then
 				log.dprint ("Waiting for run_process to exit...", log.debug_tasks)
-				p.wait_for_exit
+				l_process.wait_for_exit
 				set_running (False)
 			end
 		end
@@ -65,11 +65,11 @@ feature -- Status setting
 		require else
 			webapp_attached: webapp /= Void
 		do
-			if attached webapp as l_wa then
-				if attached {PROCESS} run_process as p  and then p.is_running then
-					log.dprint ("Terminating run_process for " + l_wa.app_config.name.out  + "", log.debug_tasks)
-					p.terminate
-					p.wait_for_exit
+			if attached webapp as l_webapp then
+				if attached {PROCESS} run_process as l_process  and then l_process.is_running then
+					log.dprint ("Terminating run_process for " + l_webapp.app_config.name.out  + "", log.debug_tasks)
+					l_process.terminate
+					l_process.wait_for_exit
 				end
 				set_running (False)
 			end
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 		require else
 			webapp_attached: webapp /= Void
 		do
-			if attached webapp as l_wa then
+			if attached webapp as l_webapp then
 				if  not is_running then
 					if can_launch_process (webapp_exe_file, run_workdir) then
 						log.dprint("-=-=-=--=-=LAUNCHING WEBAPP  -=-=-=-=-=-=", log.debug_verbose_subtasks)
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 						set_running (True)
 					end
 				end
-				internal_last_response := (create {XER_APP_STARTING}.make (l_wa.app_config.name.out)).render_to_command_response
+				internal_last_response := (create {XER_APP_STARTING}.make (l_webapp.app_config.name.out)).render_to_command_response
 			else
 				create {XCCR_INTERNAL_SERVER_ERROR}internal_last_response
 			end
@@ -109,9 +109,9 @@ feature {NONE} -- Internal Status Setting
 		require
 			webapp_attached: webapp /= Void
 		do
-			if attached webapp as l_wa then
+			if attached webapp as l_webapp then
 				is_running := a_running
-				l_wa.is_running := a_running
+				l_webapp.is_running := a_running
 			end
 		ensure
 			set: is_running ~ a_running
@@ -125,9 +125,9 @@ feature -- Agents
 		require
 			webapp_attached: webapp /= Void
 		do
-			if attached webapp as l_wa then
+			if attached webapp as l_webapp then
 				set_running (False)
-				log.dprint ("Run process for " + l_wa.app_config.name.out + " has exited.", log.debug_subtasks)
+				log.dprint ("Run process for " + l_webapp.app_config.name.out + " has exited.", log.debug_subtasks)
 			end
 		end
 
@@ -136,5 +136,36 @@ feature -- Agents
 		do
 			print (a_ouput)
 		end
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

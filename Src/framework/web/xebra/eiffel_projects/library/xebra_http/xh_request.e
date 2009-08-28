@@ -17,10 +17,10 @@ feature {NONE} -- Initialization
 	make_empty
 			-- Creates an empty request
 		do
-			uri := ""
-			method := ""
-			request_message := ""
-			args := ""
+			create uri.make_empty
+			create method.make_empty
+			create request_message.make_empty
+			create args.make_empty
 			create environment_vars.make (1)
 			create headers_out.make (1)
 			create headers_in.make (1)
@@ -76,8 +76,8 @@ feature -- Access
 				args_changed := False
 			end
 
-			if attached internal_argument_table as l_iat then
-				Result := l_iat
+			if attached internal_argument_table as l_internal_argument_table then
+				Result := l_internal_argument_table
 			else
 				create Result.make (1)
 			end
@@ -95,8 +95,8 @@ feature -- Access
 				headers_in_changed := False
 			end
 
-			if attached internal_cookies as l_ic then
-				Result := l_ic
+			if attached internal_cookies as l_internal_cookies then
+				Result := l_internal_cookies
 			else
 				create Result.make (1)
 			end

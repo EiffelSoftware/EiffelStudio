@@ -41,12 +41,12 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			create {XCCR_INTERNAL_SERVER_ERROR}internal_last_response
-			if attached webapp as l_wa then
+			if attached webapp as l_webapp then
 				if not retried then
-					if attached {XC_WEBAPP_COMMAND} l_wa.current_request as l_current_request then
+					if attached {XC_WEBAPP_COMMAND} l_webapp.current_request as l_current_request then
 						log.dprint("-=-=-=--=-=SENDING TO WEBAPP (0) -=-=-=-=-=-=", log.debug_verbose_subtasks)
-						create l_webapp_socket.make_client_by_port (l_wa.app_config.port, l_wa.app_config.webapp_host)
-						log.dprint ("Connecting to " + l_wa.app_config.name.out + "@" + l_wa.app_config.port.out, log.debug_subtasks)
+						create l_webapp_socket.make_client_by_port (l_webapp.app_config.port, l_webapp.app_config.webapp_host)
+						log.dprint ("Connecting to " + l_webapp.app_config.name.out + "@" + l_webapp.app_config.port.out, log.debug_subtasks)
 						l_webapp_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
 						l_webapp_socket.set_connect_timeout ({XU_CONSTANTS}.Socket_connect_timeout)
 						l_webapp_socket.connect
@@ -63,19 +63,19 @@ feature {NONE} -- Implementation
 									log.dprint ("Response retrieved", log.debug_subtasks)
 					            	internal_last_response := l_response
 					            else
-					            	internal_last_response := (create {XER_BAD_RESPONSE}.make (l_wa.app_config.name.out)).render_to_command_response
+					            	internal_last_response := (create {XER_BAD_RESPONSE}.make (l_webapp.app_config.name.out)).render_to_command_response
 					            end
 						   else
 						   		internal_last_response := create {XCCR_NO_RESPONSE}
 						   end
 
 				        else
-				        	internal_last_response := (create {XER_CANNOT_CONNECT}.make (l_wa.app_config.name.out)).render_to_command_response
+				        	internal_last_response := (create {XER_CANNOT_CONNECT}.make (l_webapp.app_config.name.out)).render_to_command_response
 				        end
 				        l_webapp_socket.cleanup
 				    end
 				else
-					internal_last_response := (create {XER_CANNOT_CONNECT}.make (l_wa.app_config.name.out)).render_to_command_response
+					internal_last_response := (create {XER_CANNOT_CONNECT}.make (l_webapp.app_config.name.out)).render_to_command_response
 				end
 			end
 		rescue
@@ -87,6 +87,37 @@ feature {NONE} -- Implementation
 	    	retry
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 
 

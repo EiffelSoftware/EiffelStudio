@@ -109,7 +109,7 @@ feature -- Basic Operations
 				process_httpd
 				process_ecfs
 			else
-				error_manager.add_error (create {XERROR_DIR_NOT_FOUND}.make (install_dir), false)
+				error_manager.add_error (create {XERROR_DIR_NOT_FOUND}.make (install_dir), False)
 			end
 
 			if not error_manager.is_successful then

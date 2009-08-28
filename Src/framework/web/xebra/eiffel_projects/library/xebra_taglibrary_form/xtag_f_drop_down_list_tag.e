@@ -100,7 +100,7 @@ feature -- Implementation
 				a_servlet_class.render_html_page.append_expression (l_items_name + ".after")
 				a_servlet_class.render_html_page.append_expression ("loop")
 				l_option_value := a_servlet_class.render_html_page.new_local ("STRING")
-				a_servlet_class.render_html_page.append_expression (l_option_value + " := get_unique_id")
+				a_servlet_class.render_html_page.append_expression (l_option_value + " := unique_id")
 				a_servlet_class.render_html_page.append_expression
 						(response_variable_append + "(%"<option value=%%%"%"+" + l_option_value + "+%"%%%">%" + " +
 						l_items_name +".item.out + " + "%"</option>%")")

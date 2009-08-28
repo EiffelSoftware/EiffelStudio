@@ -68,27 +68,29 @@ feature -- Implementation
             loop
                 server_socket.accept
                 if not stop then
-	                if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as socket then
+	                if attached {NETWORK_STREAM_SOCKET} server_socket.accepted as l_socket then
 	                	if config.arg_config.debug_level > log.debug_configuration then
 	                		start_time
 	                	end
 		                log.dprint ("Connection to Xebra Server accepted", log.debug_subtasks)
-		                socket.read_natural
-			             if attached {XC_WEBAPP_COMMAND} socket.retrieved as l_command then
+		                l_socket.read_natural
+			             if attached {XC_WEBAPP_COMMAND} l_socket.retrieved as l_command then
 			             	l_response := l_command.execute (current)
 			       			if l_command.has_response then
 							    log.dprint ("Sending back response...", log.debug_subtasks)
-						        socket.put_natural (0)
-								socket.independent_store (l_response)
+						        l_socket.put_natural (0)
+								l_socket.independent_store (l_response)
 
-								if attached {XCCR_HTTP_REQUEST} l_response as l then
-									log.dprint ("%N%N----------------%N" + l.response.render_to_string  + "%N", 7)
+								debug
+									if attached {XCCR_HTTP_REQUEST} l_response as l_http_response then
+										log.dprint ("%N%N----------------%N" + l_http_response.response.render_to_string  + "%N", 7)
+									end
 								end
 			       			end
 			            end
-			            socket.cleanup
+			            l_socket.cleanup
 			            check
-				        	socket.is_closed
+				        	l_socket.is_closed
 				       	end
 				       	if config.arg_config.debug_level > log.debug_configuration then
 				       		stop_time

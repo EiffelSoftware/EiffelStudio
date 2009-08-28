@@ -43,86 +43,86 @@ feature -- Processing
 			create l_util
 			l_error_prefix := "In config file '" + a_filename + "': "
 
-			if attached {JSON_OBJECT} a_value as l_v then
+			if attached {JSON_OBJECT} a_value as l_root_element then
 				create l_config.make_empty
 
 					-- Check ecf
-				if attached {JSON_STRING} l_v.map_representation [create {JSON_STRING}.make_json (ecf_name)] as l_e then
-				l_resolved_path := l_util.resolve_env_vars (l_e.item, True)
+				if attached {JSON_STRING} l_root_element.map_representation [create {JSON_STRING}.make_json (ecf_name)] as l_element then
+				l_resolved_path := l_util.resolve_env_vars (l_element.item, True)
 					if l_util.is_readable_file (l_resolved_path) then
 						l_config.set_ecf (l_resolved_path)
 					else
-						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_error_prefix + ecf_name + ":'" + l_resolved_path + "'"), false)
+						error_manager.add_error (create {XERROR_FILE_NOT_FOUND}.make (l_error_prefix + ecf_name + ":'" + l_resolved_path + "'"), False)
 						l_ok := False
 					end
 				else
-					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + ecf_name), false)
+					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + ecf_name), False)
 					l_ok := False
 				end
 
 					-- Check name
-				if attached {JSON_STRING} l_v.map_representation [create {JSON_STRING}.make_json (name_name)] as l_e then
-						l_config.set_name (l_e.item)
+				if attached {JSON_STRING} l_root_element.map_representation [create {JSON_STRING}.make_json (name_name)] as l_element then
+						l_config.set_name (l_element.item)
 				else
-					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + name_name), false)
+					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + name_name), False)
 					l_ok := False
 				end
 
 					-- Check server_host
-				if attached {JSON_STRING} l_v.map_representation [create {JSON_STRING}.make_json (server_host_name)] as l_e then
-					l_config.set_server_host (l_e.item)
+				if attached {JSON_STRING} l_root_element.map_representation [create {JSON_STRING}.make_json (server_host_name)] as l_element then
+					l_config.set_server_host (l_element.item)
 				else
-					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + server_host_name), false)
+					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + server_host_name), False)
 					l_ok := False
 				end
 
 					-- Check port
-				if attached {JSON_STRING} l_v.map_representation [create {JSON_STRING}.make_json (port_name)] as l_e then
-					if l_e.item.is_integer_32  then
-						l_config.set_port (l_e.item.to_integer_32)
+				if attached {JSON_STRING} l_root_element.map_representation [create {JSON_STRING}.make_json (port_name)] as l_element then
+					if l_element.item.is_integer_32  then
+						l_config.set_port (l_element.item.to_integer_32)
 					else
-						error_manager.add_error (create {XERROR_CONFIG_PROPERTY}.make (l_error_prefix + l_e.item), false)
+						error_manager.add_error (create {XERROR_CONFIG_PROPERTY}.make (l_error_prefix + l_element.item), False)
 					l_ok := False
 					end
 				else
-					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + port_name), false)
+					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + port_name), False)
 					l_ok := False
 				end
 
 					-- Check taglibs
-				if attached {JSON_ARRAY} l_v.map_representation [create {JSON_STRING}.make_json (taglibs_name)] as l_e then
+				if attached {JSON_ARRAY} l_root_element.map_representation [create {JSON_STRING}.make_json (taglibs_name)] as l_element then
 
 					from
-						l_e.array_representation.start
+						l_element.array_representation.start
 					until
-						l_e.array_representation.after
+						l_element.array_representation.after
 					loop
 						l_buf_tl_name := ""
 						l_buf_tl_ecf := ""
 						l_buf_tl_path := ""
 
-						if attached {JSON_OBJECT} l_e.array_representation.item_for_iteration as l_ti then
+						if attached {JSON_OBJECT} l_element.array_representation.item_for_iteration as l_array_element then
 								-- Check taglib name
-							if attached {JSON_STRING} l_ti.map_representation [create {JSON_STRING}.make_json (tl_name_name)] as l_ti_i then
-								l_buf_tl_name := l_ti_i.item
+							if attached {JSON_STRING} l_array_element.map_representation [create {JSON_STRING}.make_json (tl_name_name)] as l_array_element_element then
+								l_buf_tl_name := l_array_element_element.item
 							else
-								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_name_name + " in " + taglibs_name), false)
+								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_name_name + " in " + taglibs_name), False)
 								l_ok := False
 							end
 
 								-- Check taglib ecf
-							if attached {JSON_STRING} l_ti.map_representation [create {JSON_STRING}.make_json (tl_ecf_name)] as l_ti_i then
-								l_buf_tl_ecf := l_ti_i.item
+							if attached {JSON_STRING} l_array_element.map_representation [create {JSON_STRING}.make_json (tl_ecf_name)] as l_array_element_element then
+								l_buf_tl_ecf := l_array_element_element.item
 							else
-								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_ecf_name + " in " + taglibs_name), false)
+								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_ecf_name + " in " + taglibs_name), False)
 								l_ok := False
 							end
 
 								-- Check taglib path
-							if attached {JSON_STRING} l_ti.map_representation [create {JSON_STRING}.make_json (tl_path_name)] as l_ti_i then
-								l_buf_tl_path := l_ti_i.item
+							if attached {JSON_STRING} l_array_element.map_representation [create {JSON_STRING}.make_json (tl_path_name)] as l_array_element_element then
+								l_buf_tl_path := l_array_element_element.item
 							else
-								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_path_name + " in " + taglibs_name), false)
+								error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + tl_path_name + " in " + taglibs_name), False)
 								l_ok := False
 							end
 								-- If all attributes success, add to taglibs
@@ -130,10 +130,10 @@ feature -- Processing
 								l_config.taglibs.force ([l_buf_tl_name, l_buf_tl_ecf, l_buf_tl_path])
 							end
 						end
-						l_e.array_representation.forth
+						l_element.array_representation.forth
 					end
 				else
-					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + taglibs_name), false)
+					error_manager.add_error (create {XERROR_MISSING_CONFIG_PROPERTY}.make (l_error_prefix + taglibs_name), False)
 					l_ok := False
 				end
 

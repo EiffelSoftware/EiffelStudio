@@ -46,8 +46,8 @@ feature  -- Basic Operations
 			l_req_buf := l_request_parser.request (a_request_message)
 	        if attached {XH_MINI_REQUEST} l_req_buf as l_request then
 				if not l_request.post_too_big then
-					if attached {XS_WEBAPP} config.file.webapps[l_request.webapp] as webapp then
-						Result := webapp.send (create {XCWC_HTTP_REQUEST}.make_with_request (a_request_message))
+					if attached {XS_WEBAPP} config.file.webapps[l_request.webapp] as l_webapp then
+						Result := l_webapp.send (create {XCWC_HTTP_REQUEST}.make_with_request (a_request_message))
 					else
 						Result := (create {XER_CANNOT_FIND_APP}.make ("")).render_to_command_response
 					end
@@ -89,11 +89,11 @@ feature  -- Basic Operations
 			until
 				l_files.after
 			loop
-				if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (l_files.item_for_iteration) as l_w then
+				if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (l_files.item_for_iteration) as l_webapp then
 					if a_unmanaged then
-						Result.force (create {XS_UNMANAGED_WEBAPP}.make_with_attributes (l_w.name, l_w.webapp_host, l_w.port) , l_w.name )
+						Result.force (create {XS_UNMANAGED_WEBAPP}.make_with_attributes (l_webapp.name, l_webapp.webapp_host, l_webapp.port) , l_webapp.name )
 					else
-						Result.force (create {XS_MANAGED_WEBAPP}.make_with_config (l_w), l_w.name)
+						Result.force (create {XS_MANAGED_WEBAPP}.make_with_config (l_webapp), l_webapp.name)
 					end
 				end
 
@@ -102,4 +102,35 @@ feature  -- Basic Operations
 		ensure
 			Result_attached: Result /= Void
 		end
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

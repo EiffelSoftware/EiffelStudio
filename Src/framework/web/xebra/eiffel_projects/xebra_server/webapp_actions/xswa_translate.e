@@ -44,8 +44,8 @@ feature -- Access
 			webapp_attached: webapp /= Void
 		do
 			Result := ""
-			if attached webapp as l_wa then
-				Result := " -n %"" + l_wa.app_config.name.out + "%""
+			if attached webapp as l_webapp then
+				Result := " -n %"" + l_webapp.app_config.name.out + "%""
 				Result.append ( " -i . ")
 				Result.append (" -o . ")
 				Result.append (" -l %"" + config.file.lib.out + "%"")
@@ -55,7 +55,7 @@ feature -- Access
 				end
 			end
 		ensure
-			Result_attached: Result /= void
+			Result_attached: Result /= Void
 		end
 
 
@@ -118,11 +118,11 @@ feature -- Status setting
 		require else
 			webapp_attached: webapp /= Void
 		do
-			if attached webapp as l_wa then
-				if attached {PROCESS} translate_process as p and then p.is_running  then
-					log.dprint ("Terminating translate_process for " + l_wa.app_config.name.out  + "", log.debug_tasks)
-					p.terminate
-					p.wait_for_exit
+			if attached webapp as l_webapp then
+				if attached {PROCESS} translate_process as l_process and then l_process.is_running  then
+					log.dprint ("Terminating translate_process for " + l_webapp.app_config.name.out  + "", log.debug_tasks)
+					l_process.terminate
+					l_process.wait_for_exit
 				end
 				set_running (False)
 			end
@@ -143,9 +143,9 @@ feature {NONE} -- Internal Status Setting
 		require
 			webapp_attached: webapp /= Void
 		do
-			if attached webapp as l_wa then
+			if attached webapp as l_webapp then
 				is_running := a_running
-				l_wa.is_translating := a_running
+				l_webapp.is_translating := a_running
 			end
 		ensure
 			set: is_running ~ a_running
@@ -159,15 +159,15 @@ feature {TEST_WEBAPPS} -- Implementation
 			webapp_attached: webapp /= Void
 		do
 			create {XCCR_INTERNAL_SERVER_ERROR}internal_last_response
-			if attached {XS_MANAGED_WEBAPP} webapp as l_wa then
+			if attached {XS_MANAGED_WEBAPP} webapp as l_webapp then
 				if not is_running then
-					l_wa.shutdown
+					l_webapp.shutdown
 					if can_launch_process (config.file.translator_filename, app_dir) then
 
-						if attached translate_process as p then
-							if p.is_running then
+						if attached translate_process as l_process then
+							if l_process.is_running then
 								log.eprint ("About to launch translate process but it was still running... So I'm going to kill it.", generating_type)
-								p.terminate
+								l_process.terminate
 							end
 						end
 
@@ -181,7 +181,7 @@ feature {TEST_WEBAPPS} -- Implementation
 						set_running (True)
 					end
 				end
-				internal_last_response := (create {XER_APP_COMPILING}.make (l_wa.app_config.name.out)).render_to_command_response
+				internal_last_response := (create {XER_APP_COMPILING}.make (l_webapp.app_config.name.out)).render_to_command_response
 			end
 		end
 
@@ -201,5 +201,36 @@ feature -- Agents
 
 invariant
 	output_handler_translate_attached: output_handler_translate /= Void
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

@@ -297,20 +297,20 @@ feature {NONE} -- Utility
 			-- Transforms a file name and eventual folders into a class name
 		local
 			l_output_path, l_file_name: STRING
-			l_i: INTEGER
+			i: INTEGER
 			l_util: XU_FILE_UTILITIES
 		do
 			create l_util
 			l_output_path := output_path.out
 			l_file_name := a_file_name.out
 			from
-				l_i := 1
+				i := 1
 			until
-				l_i > l_output_path.count and not (l_output_path [l_i] = l_file_name [l_i])
+				i > l_output_path.count and not (l_output_path [i] = l_file_name [i])
 			loop
-				l_i := l_i + 1
+				i := i + 1
 			end
-			Result := l_file_name.substring (l_i+1, l_file_name.last_index_of ('.', l_file_name.count)-1)
+			Result := l_file_name.substring (i + 1, l_file_name.last_index_of ('.', l_file_name.count) - 1)
 			Result.replace_substring_all ("/", {XU_CONSTANTS}.Folder_replacement_string) -- UNIX
 			Result.replace_substring_all ("\", {XU_CONSTANTS}.Folder_replacement_string) -- WINDOWS
 		end

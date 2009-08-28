@@ -17,6 +17,23 @@ inherit
 
 feature -- Access
 
+	webapp: detachable XS_WEBAPP assign set_webapp
+			-- The webapp
+		note
+			option: stable attribute
+		end
+
+	is_running: BOOLEAN
+		-- True if the action is currently running
+
+	next_action: detachable XS_WEBAPP_ACTION assign set_next_action
+			-- Is executed after the action has executed (if not void)
+		note
+			option: stable attribute
+		end
+
+feature -- Status Report
+
 	last_response: XC_COMMAND_RESPONSE
 			-- The last response
 		do
@@ -27,30 +44,14 @@ feature -- Access
 			end
 		end
 
-	webapp: detachable XS_WEBAPP assign set_webapp
-			-- The webapp
-		note
-			option: stable attribute
-		end
-
-	is_running: BOOLEAN
-		-- True if the action is currently running
-
 	is_running_recursive: BOOLEAN
 			-- True if is_running is true or
 			-- if the next action (recursively) is running
 		do
-			if attached next_action as l_na then
-				Result := is_running or l_na.is_running_recursive
-			else
-				Result := is_running
-			end
+			Result := is_running or else attached next_action as a and then a.is_running_recursive
 		ensure
 			Is_running: Result implies is_running
 		end
-
-	next_action: detachable XS_WEBAPP_ACTION assign set_next_action
-		-- Is executed after the action has executed (if not void)
 
 feature -- Paths
 
@@ -65,8 +66,8 @@ feature -- Paths
 			if attached internal_app_dir as l_app_dir then
 				Result := l_app_dir
 			else
-				if attached webapp as l_wa then
-					l_string := l_wa.app_config.ecf.out
+				if attached webapp as l_webapp then
+					l_string := l_webapp.app_config.ecf.out
 					l_string.replace_substring_all ("\" ,"/")
 					i := l_string.last_index_of ('/', l_string.count)
 					l_string := l_string.substring (1, i - 1)
@@ -92,10 +93,10 @@ feature -- Paths
 			if attached internal_run_workdir as l_run_workdir then
 				Result := l_run_workdir
 			else
-				if attached webapp as l_wa then
+				if attached webapp as l_webapp then
 					Result := app_dir.twin
 					Result.extend ({XU_CONSTANTS}.Dir_eifgen)
-					Result.extend (l_wa.app_config.name.out)
+					Result.extend (l_webapp.app_config.name.out)
 					if config.file.finalize_webapps.value then
 						Result.extend ({XU_CONSTANTS}.Dir_f_code)
 					else
@@ -119,12 +120,12 @@ feature -- Paths
 			if attached internal_webapp_melted_file as l_webapp_melted_file then
 				Result := l_webapp_melted_file
 			else
-				if attached webapp as l_wa then
+				if attached webapp as l_webapp then
 					if config.file.finalize_webapps.value then
 						Result := webapp_exe_file
 					else
 						create Result.make_from_string (run_workdir.string)
-						Result.set_file_name (l_wa.app_config.name.out + {XU_CONSTANTS}.Extension_melted)
+						Result.set_file_name (l_webapp.app_config.name.out + {XU_CONSTANTS}.Extension_melted)
 					end
 				else
 					create Result.make
@@ -147,9 +148,9 @@ feature -- Paths
 				Result := l_webapp_exe_file
 			else
 				create l_os
-				if attached webapp as l_wa then
+				if attached webapp as l_webapp then
 					create Result.make_from_string (run_workdir.string)
-					Result.set_file_name (l_wa.app_config.name.out + l_os.exe_extension)
+					Result.set_file_name (l_webapp.app_config.name.out + l_os.exe_extension)
 				else
 					create Result.make
 				end
@@ -172,8 +173,8 @@ feature -- Paths
 				internal_servlet_gen_dir := Result
 			end
 		ensure
-			Result_attached: Result /= void
-			Result_consistent: internal_servlet_gen_dir~ Result
+			Result_attached: Result /= Void
+			Result_consistent: internal_servlet_gen_dir ~ Result
 		end
 
 	servlet_gen_exe_file: FILE_NAME
@@ -193,7 +194,7 @@ feature -- Paths
 				internal_servlet_gen_exe_file := Result
 			end
 		ensure
-			Result_attached: Result /= void
+			Result_attached: Result /= Void
 			Result_consistent: internal_servlet_gen_exe_file ~ Result
 		end
 
@@ -212,7 +213,7 @@ feature -- Paths
 				internal_servlet_gen_melted_file := Result
 			end
 		ensure
-			Result_attached: Result /= void
+			Result_attached: Result /= Void
 			Result_consistent: internal_servlet_gen_melted_file ~ Result
 		end
 
@@ -227,7 +228,7 @@ feature -- Paths
 				internal_servlet_gen_ecf_file := Result
 			end
 		ensure
-			Result_attached: Result /= void
+			Result_attached: Result /= Void
 			Result_consistent: internal_servlet_gen_ecf_file ~ Result
 		end
 
@@ -243,7 +244,7 @@ feature -- Paths
 					internal_servlet_gen_executed_file := Result
 			end
 		ensure
-			Result_attached: Result /= void
+			Result_attached: Result /= Void
 			Result_consistent: internal_servlet_gen_executed_file ~ Result
 		end
 
@@ -283,7 +284,7 @@ feature {NONE}  -- Status report internal
 
 feature -- Status setting
 
-	set_webapp (a_webapp: XS_WEBAPP)
+	set_webapp (a_webapp: like webapp)
 			-- Setts webapp.
 		require
 			a_webapp_attached: a_webapp /= Void
@@ -310,7 +311,7 @@ feature -- Status setting
 			not_running: is_running = False
 		end
 
-feature {TEST_WEBAPPS} -- Implementation
+feature {NONE} -- Implementation
 
 	internal_execute
 			-- The actual implementation of an action
@@ -392,5 +393,36 @@ feature {NONE} -- Implementation
 				Result.launch
 			end
 		end
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

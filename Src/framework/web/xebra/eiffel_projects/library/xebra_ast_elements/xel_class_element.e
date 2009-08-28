@@ -104,7 +104,7 @@ feature -- Access
 		require
 			a_type_attached: attached a_type and then not a_type.is_empty
 		do
-			Result := get_unique_identifier
+			Result := unique_identifier
 			add_variable_by_name_type (Result, a_type)
 		ensure
 			Result_attached: attached Result
@@ -123,7 +123,7 @@ feature -- Access
 			variable_added: variables.count = old variables.count + 1
 		end
 
-	get_unique_identifier: STRING
+	unique_identifier: STRING
 			-- Generates a name for a unique (feature scope) temp variable
 		do
 			Result := "class_temp_" + ui_count.out

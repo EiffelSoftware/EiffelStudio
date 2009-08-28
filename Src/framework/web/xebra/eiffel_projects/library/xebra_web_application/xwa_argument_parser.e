@@ -54,7 +54,6 @@ feature -- Access
 			end
 		end
 
-
 	is_interactive: BOOLEAN
 		--
 		require

@@ -129,27 +129,28 @@ feature {NONE} -- Implementation
 			text_formatter.add_group (l_group, l_group.name)
 			if l_group.is_library then
 				l_library ?= l_group
-				l_processed := processed_libraries.has (l_library.library_target.system.uuid)
-				if l_processed then
-					text_formatter.add (output_interface_names.ellipse)
-				else
-					processed_libraries.extend (l_library.library_target.system.uuid)
+				if l_library.library_target /= Void then
+					l_processed := processed_libraries.has (l_library.library_target.system.uuid)
+					if l_processed then
+						text_formatter.add (output_interface_names.ellipse)
+					else
+						processed_libraries.extend (l_library.library_target.system.uuid)
+					end
 				end
 			elseif l_group.is_assembly or l_group.is_physical_assembly then
 				l_assembly ?= l_group
 				if l_assembly /= Void then
 					l_phys_as ?= l_assembly.physical_assembly
-					check
-						physical_assembly: l_phys_as /= Void
-					end
 				else
 					l_phys_as ?= l_group
 				end
-				l_assembly_processed := processed_assemblies.has (l_phys_as.guid)
-				if l_assembly_processed then
-					text_formatter.add (output_interface_names.ellipse)
-				else
-					processed_assemblies.extend (l_phys_as.guid)
+				if l_phys_as /= Void then
+					l_assembly_processed := processed_assemblies.has (l_phys_as.guid)
+					if l_assembly_processed then
+						text_formatter.add (output_interface_names.ellipse)
+					else
+						processed_assemblies.extend (l_phys_as.guid)
+					end
 				end
 			end
 			text_formatter.add_space

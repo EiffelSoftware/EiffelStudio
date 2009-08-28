@@ -31,16 +31,10 @@ inherit
 	TEST_SUITE_OBSERVER
 		redefine
 			on_test_added,
-			on_test_removed,
-			on_processor_error
+			on_test_removed
 		end
 
 	ES_HELP_CONTEXT
-		export
-			{NONE} all
-		end
-
-	TAG_UTILITIES
 		export
 			{NONE} all
 		end
@@ -253,21 +247,19 @@ feature {NONE} -- Status settings: widgets
 				l_ts := test_suite.service
 				create l_text.make (10)
 				l_text.append ("Run: ")
-				l_text.append_natural_32 (l_ts.count_executed)
+				--l_text.append_natural_32 (l_ts.count_executed)
+				l_text.append_natural_32 (0)
 				l_text.append_character ('/')
-				if l_ts.is_project_initialized then
-					l_text.append_integer (l_ts.tests.count)
-				else
-					l_text.append_integer (0)
-				end
+				l_text.append_integer (l_ts.tests.count)
 				runs_label.set_text (l_text)
 
 				create l_text.make (10)
 				l_text.append ("Failing: ")
-				l_text.append_natural_32 (l_ts.count_failing)
+				--l_text.append_natural_32 (l_ts.count_failing)
+				l_text.append_natural_32 (0)
 				errors_label.set_text (l_text)
 
-				if l_ts.count_failing > 0 then
+				if False then -- l_ts.count_failing > 0 then
 					errors_pixmap.enable_sensitive
 					errors_label.enable_sensitive
 				else
@@ -337,11 +329,12 @@ feature {NONE} -- Events: test execution
 					l_cursor.after
 				loop
 					l_item := l_cursor.item
-					if l_item.is_outcome_available then
-						if l_item.last_outcome.is_fail then
+					-- FIXME: only execute failing once statistics are implemented
+					--if l_item.is_outcome_available then
+					--	if l_item.last_outcome.is_fail then
 							l_list.force_last (l_item)
-						end
-					end
+					--	end
+					--end
 					l_cursor.forth
 				end
 				launch_executor (l_list, a_debug)
@@ -374,22 +367,8 @@ feature {NONE} -- Events: test execution
 
 	on_stop
 			-- Stop any running test processor
-		local
-			l_cursor: DS_LINEAR_CURSOR [TEST_PROCESSOR_I]
 		do
-			if test_suite.is_service_available then
-				from
-					l_cursor := test_suite.service.processor_registrar.processor_instances (test_suite.service).new_cursor
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					if l_cursor.item.is_interface_usable and l_cursor.item.is_running then
-						l_cursor.item.request_stop
-					end
-					l_cursor.forth
-				end
-			end
+			-- TODO: implmement
 		end
 
 feature {NONE} -- Events: labels
@@ -419,15 +398,6 @@ feature {TEST_SUITE_S} -- Events: test suite
 		do
 			update_run_labels
 		end
-
- 	on_processor_error (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I; a_error: STRING_8; a_token_values: TUPLE)
- 			-- <Precursor>
- 		do
- 			if window_manager.last_focused_window = develop_window then
- 					-- Note: remove `as_attached' compiler treats Current as attached
- 				prompts.show_error_prompt (locale_formatter.formatted_translation (a_error, a_token_values.as_attached), develop_window.window, Void)
- 			end
- 		end
 
 feature {NONE} -- Events: tree view
 

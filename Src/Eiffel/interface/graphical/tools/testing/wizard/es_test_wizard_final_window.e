@@ -18,8 +18,7 @@ inherit
 		redefine
 			is_final_state,
 			wizard_information,
-			on_session_launch_error,
-			on_processor_launch_error
+			on_session_launch_error
 		end
 
 feature {NONE} -- Access
@@ -88,13 +87,6 @@ feature {NONE} -- Events
 		do
 			has_error := True
 			Precursor (a_error)
-		end
-
-	on_processor_launch_error (a_error: STRING_32; a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL_32)
-			-- <Precursor>
-		do
-			has_error := True
-			Precursor (a_error, a_type, a_code)
 		end
 
 ;note

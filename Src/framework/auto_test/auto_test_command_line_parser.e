@@ -17,8 +17,7 @@ inherit
 	KL_SHARED_ARGUMENTS
 
 create
-	make_with_arguments,
-	make_with_configuration
+	make_with_arguments
 
 feature {NONE} -- Initialization
 
@@ -271,31 +270,6 @@ feature {NONE} -- Initialization
 --			end
 		ensure
 			help_message_set_when_required: should_display_help_message implies help_message /= Void
-		end
-
-	make_with_configuration (a_conf: TEST_GENERATOR_CONF_I; error_handler: AUT_ERROR_HANDLER)
-			-- use `configuration' to initialize AutoTest settings
-		do
-			is_slicing_enabled := a_conf.is_slicing_enabled
-			is_ddmin_enabled := a_conf.is_ddmin_enabled
-			is_minimization_enabled := is_slicing_enabled or is_ddmin_enabled
-
-			create time_out.make (0, 0, 0, 0, a_conf.time_out.as_integer_32, 0)
-			test_count := a_conf.test_count
-
-			if a_conf.seed > 0 then
-				random.set_seed (a_conf.seed.to_integer_32)
-			else
-				random.set_seed ((create {TIME}.make_now).milli_second)
-			end
-			random.start
-
-			is_text_statistics_format_enabled := True
-			is_html_statistics_format_enabled := a_conf.is_html_output
-
-			proxy_time_out := a_conf.proxy_time_out.as_integer_32
-
-			create {DS_ARRAYED_LIST [attached STRING]} class_names.make_from_linear (a_conf.types)
 		end
 
 feature -- Status report

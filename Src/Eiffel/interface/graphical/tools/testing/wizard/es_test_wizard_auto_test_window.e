@@ -365,8 +365,8 @@ feature {NONE} -- Events
 					error_handler.wipe_out
 					l_type_as := type_parser.type_node
 					if l_type_as /= Void then
-						if test_suite.is_service_available and then test_suite.service.is_project_initialized then
-							l_system := test_suite.service.eiffel_project.system.system
+						if test_suite.is_service_available then
+							l_system := etest_suite.project_access.project.system.system
 							if not l_system.root_creators.is_empty then
 								l_root := l_system.root_creators.first
 								l_root_group := l_root.cluster

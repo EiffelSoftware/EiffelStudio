@@ -12,11 +12,6 @@ class
 inherit
 	EWB_TEST_FILTER_CMD
 
-	TAG_UTILITIES
-		export
-			{NONE} all
-		end
-
 	EC_TAG_TREE_NODE_VISITOR [TEST_I]
 
 feature -- Access

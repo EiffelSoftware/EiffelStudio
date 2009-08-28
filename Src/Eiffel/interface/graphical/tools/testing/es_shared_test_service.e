@@ -13,7 +13,6 @@ inherit
 	SHARED_TEST_SERVICE
 		redefine
 			test_suite,
-			on_processor_launch_error,
 			on_session_launch_error
 		end
 
@@ -53,12 +52,6 @@ feature {NONE} -- Access
 feature {NONE} -- Events
 
 	on_session_launch_error (a_error: STRING_32)
-			-- <Precursor>
-		do
-			prompts.show_error_prompt (a_error, current_window, Void)
-		end
-
-	on_processor_launch_error (a_error: like error_message; a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL)
 			-- <Precursor>
 		do
 			prompts.show_error_prompt (a_error, current_window, Void)

@@ -27,7 +27,6 @@ feature -- Access
 			-- Tag tree containing tagging structure for all tests in `Current'.
 		require
 			usable: is_interface_usable
-			initialized: is_project_initialized
 		deferred
 		end
 
@@ -78,6 +77,12 @@ feature -- Access: output
 		ensure
 			result_attached_implies_usable: Result /= Void implies Result.is_interface_usable
 		end
+
+feature {NONE} -- Access
+
+	internal_test_suite_connection: detachable like test_suite_connection
+			-- Cached version of `test_suite_connection'.
+			-- Note: Do not use directly!
 
 feature -- Query
 
@@ -202,249 +207,6 @@ feature {NONE} -- Events
 		deferred
 		end
 
-
-
-
--- OBSOLETE FEATURES
-
-
-feature -- Access
-
-	eiffel_project_helper: TEST_PROJECT_HELPER_I
-			-- Project helper for compiling, debugging and adding new classes.
-		require
-			usable: is_interface_usable
-			initialized: is_project_initialized
-		deferred
-		end
-
-	eiffel_project: E_PROJECT
-			-- Project containing actual eiffel classes
-		require
-			usable: is_interface_usable
-			initialized: is_project_initialized
-		deferred
-		ensure
-			project_initialized: Result.initialized and Result.workbench.universe_defined and
-			                     Result.system_defined and then Result.universe.target /= Void
-		end
-
-	executor (a_type: TYPE [TEST_OBSOLETE_EXECUTOR_I]): TEST_OBSOLETE_EXECUTOR_I
-			-- Test executor registered under `a_type'.
-			--
-			-- `a_type': Type under which executor is registered.
-			-- `Result': Executor registered in `processor_registrar' for `a_type'.
-		require
-			usable: is_interface_usable
-			a_type_registered: processor_registrar.is_valid_type (a_type, Current)
-		do
-			if attached {like executor} processor_registrar.processor (a_type, Current) as l_executor then
-				Result := l_executor
-			else
-				check
-					False
-				end
-			end
-		ensure
-			result_from_registrar: Result = processor_registrar.processor (a_type, Current)
-		end
-
-	factory (a_type: TYPE [TEST_CREATOR_I]): TEST_CREATOR_I
-			-- Test factory registered under `a_type'.
-			--
-			-- `a_type': Type under which factory is registered.
-			-- `Result': Factory registered in `processor_registrar' for `a_type'.
-		require
-			usable: is_interface_usable
-			a_type_registered: processor_registrar.is_valid_type (a_type, Current)
-		do
-			if attached {like factory} processor_registrar.processor (a_type, Current) as l_factory then
-				Result := l_factory
-			else
-				check
-					False
-				end
-			end
-		ensure
-			result_from_registrar: Result = processor_registrar.processor (a_type, Current)
-		end
-
-	processor_registrar: TEST_PROCESSOR_REGISTRAR_I
-			-- Registrar managing available test processors
-		require
-			usable: is_interface_usable
-		deferred
-		ensure
-			registrar_usable: Result.is_interface_usable
-		end
-
-	scheduler: TEST_PROCESSOR_SCHEDULER_I
-			-- Scheduler for launching test processors
-		require
-			usable: is_interface_usable
-		deferred
-		ensure
-			schduler_usable: Result.is_interface_usable
-		end
-
-feature -- Status report
-
-	is_project_initialized: BOOLEAN
-			-- Has `eiffel_project' been successfully compiled yet?
-		deferred
-		end
-
-	count_executed: NATURAL
-			-- Number of tests in `test' which have been executed
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	count_passing: NATURAL
-			-- Number of passing tests in `tests'
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	count_failing: NATURAL
-			-- Number of failing tests in `tests'
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-feature {TEST_PROCESSOR_I} -- Status setting
-
-	propagate_error (a_error: STRING; a_token_values: TUPLE; a_processor: TEST_PROCESSOR_I)
-			-- Propagate error message raised by processor
-		require
-			usable: is_interface_usable
-			a_processor_usable: a_processor.is_interface_usable
-			a_processor_running: a_processor.is_running
-		deferred
-		end
-
-feature {TEST_OBSOLETE_EXECUTOR_I} -- Status setting
-
-	set_test_queued (a_test: TEST_I; a_executor: TEST_OBSOLETE_EXECUTOR_I)
-			-- Set status of test to queued and notify observers.
-			--
-			-- `a_test': Test being queued.
-		require
-			usable: is_interface_usable
-			tests_available: is_project_initialized
-			tests_has_a_test: tests.has (a_test)
-			test_not_queued_or_running: not (a_test.is_queued or a_test.is_running)
-		deferred
-		ensure
-			a_test_queued: a_test.is_queued
-			a_executor_queues_a_test: a_test.executor = a_executor
-		end
-
-	set_test_running (a_test: TEST_I)
-			-- Set status of test to running and notify observers.
-			--
-			-- `a_test': Test being executed.
-		require
-			usable: is_interface_usable
-			tests_available: is_project_initialized
-			tests_has_a_test: tests.has (a_test)
-			test_queued: a_test.is_queued
-		deferred
-		ensure
-			a_test_running: a_test.is_running
-		end
-
-	add_outcome_to_test (a_test: TEST_I; a_outcome: EQA_RESULT)
-			-- Add outcome to test being executed and notify observers.
-			--
-			-- `a_test': Test for which outcome is available.
-			-- `a_outcome': Outcome received from last execution.
-		require
-			usable: is_interface_usable
-			tests_available: is_project_initialized
-			tests_has_a_test: tests.has (a_test)
-			test_running: a_test.is_running
-		deferred
-		ensure
-			a_test_not_queued_or_running: not (a_test.is_queued or a_test.is_running)
-			a_test_has_outcome: a_test.is_outcome_available
-			a_outcome_is_last_outcome: a_test.last_outcome = a_outcome
-		end
-
-	set_test_aborted (a_test: TEST_I)
-			-- Abort execution of test and notify observers.
-			--
-			-- `a_test': Test which was not completely executed.
-		require
-			usable: is_interface_usable
-			tests_available: is_project_initialized
-			tests_has_a_test: tests.has (a_test)
-			test_queued_or_running: (a_test.is_queued or a_test.is_running)
-		deferred
-		ensure
-			a_test_not_queued_or_running: not (a_test.is_queued or a_test.is_running)
-		end
-
-feature -- Events
-
-	processor_launched_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I]]
-			-- Events called when `Current' launches a processor.
-			--
-			-- test_suite: `Current'
-			-- processor: Processor which was launched by `Current'
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	processor_proceeded_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I]]
-			-- Events called after some processor has proceeded with its task.
-			--
-			-- test_suite: `Current'
-			-- processor: Processor that proceeded with its task.
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	processor_finished_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I]]
-			-- Events called when some processor finished its task.
-			--
-			-- test_suite: `Current'
-			-- processor: Processor that finished its task.
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	processor_stopped_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I]]
-			-- Events called when a processor has completely stopped
-			--
-			-- Note: It is not guaranteed that all observers will receive this notification. This is because
-			--       any observer in the list can restart the processor during the notification.
-			--
-			-- test_suite: `Current'
-			-- processor: Processor that has just stopped
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
-	processor_error_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; processor: TEST_PROCESSOR_I; error: STRING; token_values: TUPLE]]
-			-- Events called when a processor raises an error message
-			--
-			-- test_suite: `Current'
-			-- processor: Processor raising error
-			-- error: Readable error message containing tokens
-			-- token_values: Values for tokens in error message
-		require
-			usable: is_interface_usable
-		deferred
-		end
-
 feature -- Event: Connection point
 
 	test_suite_connection: EVENT_CONNECTION_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
@@ -461,12 +223,7 @@ feature -- Event: Connection point
 									[test_added_event, agent an_observer.on_test_added],
 									[test_removed_event, agent an_observer.on_test_removed],
 									[session_launched_event, agent an_observer.on_session_launched],
-									[session_finished_event, agent an_observer.on_session_finished],
-									[processor_launched_event, agent an_observer.on_processor_launched],
-									[processor_proceeded_event, agent an_observer.on_processor_proceeded],
-									[processor_finished_event, agent an_observer.on_processor_finished],
-									[processor_stopped_event, agent an_observer.on_processor_stopped],
-									[processor_error_event, agent an_observer.on_processor_error]
+									[session_finished_event, agent an_observer.on_session_finished]
 								>>
 						end
 					)
@@ -476,13 +233,7 @@ feature -- Event: Connection point
 			Result := l_result
 		end
 
-feature {NONE} -- Implementation: Internal cache
-
-	internal_test_suite_connection: detachable like test_suite_connection
-			-- Cached version of `test_suite_connection'.
-			-- Note: Do not use directly!
-
-;note
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

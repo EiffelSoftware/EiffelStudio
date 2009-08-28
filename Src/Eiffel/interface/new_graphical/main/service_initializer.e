@@ -75,7 +75,7 @@ feature {NONE} -- Factory
 	new_testing_service: detachable TEST_SUITE_S
 			-- Create test suite service
 		do
-			create {TEST_SUITE} Result.make (create {TEST_PROJECT_HELPER})
+			create {TEST_SUITE} Result.make
 		ensure
 			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
 		end

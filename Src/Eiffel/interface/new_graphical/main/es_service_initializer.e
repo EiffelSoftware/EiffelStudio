@@ -15,7 +15,6 @@ inherit
 		redefine
 			add_core_services,
 			new_output_manager_service,
-			new_testing_service,
 			new_rota_service,
 			register_environment_variables,
 			register_outputs
@@ -98,12 +97,6 @@ feature {NONE} -- Factory
 --		ensure
 --			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 --		end
-
-	new_testing_service: detachable TEST_SUITE_S
-			-- <Precursor>
-		do
-			create {TEST_SUITE} Result.make (create {ES_TEST_PROJECT_HELPER})
-		end
 
 	new_wizard_service: detachable WIZARD_ENGINE_S
 			-- Create the wizard service

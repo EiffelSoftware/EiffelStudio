@@ -18,6 +18,7 @@ inherit
 		redefine
 			is_final_state,
 			wizard_information,
+			on_session_launch_error,
 			on_processor_launch_error
 		end
 
@@ -26,9 +27,15 @@ feature {NONE} -- Access
 	wizard_information: ES_TEST_WIZARD_INFORMATION
 			-- Information user has provided to the wizard
 
-	factory_type: TYPE [TEST_CREATOR_I]
-			-- Factory type used to create tests
+	session (a_test_suite: TEST_SUITE_S): TEST_CREATION_I
+			-- Configured session ready to be launched.
+		require
+			has_valid_conf: has_valid_conf (wizard_information)
 		deferred
+		ensure
+			result_attached: Result /= Void
+			result_usable: Result.is_interface_usable
+			result_ready: not Result.has_next_step
 		end
 
 feature -- Status report
@@ -51,19 +58,37 @@ feature {NONE} -- Basic operations
 
 	proceed_with_current_info
 			-- <Precursor>
-		local
-			l_conf: TEST_CREATOR_CONF
 		do
-			l_conf := wizard_information.current_conf
-			check l_conf /= Void end
-			has_error := False
-			launch_processor (factory_type, l_conf)
+			if has_valid_conf (wizard_information) then
+				has_error := False
+				perform_with_test_suite (
+					agent (a_test_suite: TEST_SUITE_S)
+						require
+							a_test_suite_attached: a_test_suite /= Void
+							a_test_suite_usable: a_test_suite.is_interface_usable
+						local
+							l_session: like session
+						do
+							l_session := session (a_test_suite)
+							a_test_suite.launch_session (l_session)
+						end)
+			else
+				has_error := True
+				on_session_launch_error ("Wizard failure")
+			end
 			if not has_error then
 				cancel_actions
 			end
 		end
 
 feature {NONE} -- Events
+
+	on_session_launch_error (a_error: STRING_32)
+			-- <Precursor>
+		do
+			has_error := True
+			Precursor (a_error)
+		end
 
 	on_processor_launch_error (a_error: STRING_32; a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL_32)
 			-- <Precursor>

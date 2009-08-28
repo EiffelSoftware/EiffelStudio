@@ -163,12 +163,12 @@ feature {NONE} -- Initialization
 			create l_vb
 
 			create setup_checkbox
-			setup_checkbox.set_text (locale_formatter.formatted_translation (b_setup_routine, [{TEST_CONSTANTS}.prepare_routine_name]))
+			setup_checkbox.set_text (locale_formatter.formatted_translation (b_setup_routine, [{ETEST_CONSTANTS}.prepare_routine_name]))
 			l_vb.extend (setup_checkbox)
 			l_vb.disable_item_expand (setup_checkbox)
 
 			create tear_down_checkbox
-			tear_down_checkbox.set_text (locale_formatter.formatted_translation (b_tear_down_routine, [{TEST_CONSTANTS}.clean_routine_name]))
+			tear_down_checkbox.set_text (locale_formatter.formatted_translation (b_tear_down_routine, [{ETEST_CONSTANTS}.clean_routine_name]))
 			l_vb.extend (tear_down_checkbox)
 			l_vb.disable_item_expand (tear_down_checkbox)
 

@@ -12,14 +12,23 @@ deferred class
 inherit
 	TEST_SESSION_I
 
+	SHARED_LOCALE
+
 feature {NONE} -- Initialization
 
 	make (a_test_suite: like test_suite)
 			-- Initizialize `Current'.
 			--
 			-- `a_test_suite': Test suite instanciating `Current'.
+		require
+			a_test_suite_attached: a_test_suite /= Void
+			a_test_suite_usable: a_test_suite.is_interface_usable
 		do
 			test_suite := a_test_suite
+			create proceeded_event
+			create error_event
+		ensure
+			test_suite_set: test_suite = a_test_suite
 		end
 
 feature -- Access
@@ -54,7 +63,15 @@ feature -- Basic operations
 			end
 		end
 
-note
+feature {NONE} -- Events
+
+	proceeded_event: EVENT_TYPE [TUPLE [TEST_SESSION_I]]
+			-- <Precursor>
+
+	error_event: EVENT_TYPE [TUPLE [session: TEST_SESSION_I; error: READABLE_STRING_GENERAL]]
+			-- <Precursor>
+
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

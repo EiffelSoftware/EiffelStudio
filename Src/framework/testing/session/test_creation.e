@@ -1,61 +1,39 @@
 note
 	description: "[
-		Evaulator controller which launched the evaluator through the debugger.
+		Base implementations of {TEST_CREATION_I}.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ETEST_EVALUATOR_DEBUGGER_CONTROLLER
+deferred class
+	TEST_CREATION
 
 inherit
-	ETEST_EVALUATOR_CONTROLLER
+	TEST_CREATION_I
 
-	SHARED_DEBUGGER_MANAGER
-		export
-			{NONE} all
+	TEST_SESSION
+		undefine
+			new_record
+		redefine
+			make
 		end
 
-create
-	make
+feature {NONE} -- Initialization
 
-feature {NONE} -- Access
-
-	service: SERVICE_CONSUMER [TEST_SUITE_S]
-		once
-			create Result
-		end
-
-feature {NONE} -- Status report
-
-	is_evaluator_launched: BOOLEAN
-			-- <Precursor>
-
-	is_evaluator_running: BOOLEAN
-		do
-			Result := debugger_manager.application_initialized and then debugger_manager.application.is_running
-		end
-
-
-feature {NONE} -- Status setting
-
-	start_evaluator (a_argument: STRING_8)
+	make (a_test_suite: like test_suite)
 			-- <Precursor>
 		do
-			test_suite.project_helper.run (Void, a_argument, Void)
-			is_evaluator_launched := True
+			Precursor (a_test_suite)
+			create test_created_event
 		end
 
-	stop_evaluator
-		do
-			if is_evaluator_running then
-				debugger_manager.application.kill
-			end
-			is_evaluator_launched := False
-		end
+feature {NONE} -- Events
 
-note
+	test_created_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: READABLE_STRING_8]]
+			-- <Precursor>
+
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

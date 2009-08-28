@@ -1,6 +1,11 @@
 note
 	description: "[
-		Executor capable of executing instances of ETEST.
+		Executor capable of running parallel instances of {ETEST}.
+		
+		Note: although ETEST_EXECUTOR represents a valid {TEST_EXEUCTOR_I}, it is not directly used by
+		      {ETEST} instances to by executed. Instead {TEST_EXECUTION} is used which uses `Current'
+		      through a bridge pattern, but also makes sure the project is properly compiled before
+		      starting or proceeding `Current'.
 	]"
 	author: ""
 	date: "$Date$"
@@ -14,9 +19,9 @@ inherit
 
 	ROTA_PARALLEL_TASK_I [ETEST_EVALUATOR_CONTROLLER]
 		redefine
-			step,
 			remove_task,
-			new_task_data
+			new_task_data,
+			cancel
 		end
 
 	ETEST_EVALUATOR_BYTE_CODE_FACTORY
@@ -38,31 +43,34 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite; a_test_execution: like test_execution)
+	make (an_execution: like test_execution; an_etest_suite: like etest_suite)
 			-- Initialize `Current'.
 			--
-			-- `a_test_execution': Session which will launch `Current'.
+			-- `an_execution': Execution which launches `Current'.
+			-- `an_etest_suite': ETEST_SUITE instance.
 		require
-			a_test_execution_attached: a_test_execution /= Void
-			a_test_suite_attached: a_test_suite /= Void
+			an_execution_attached: an_execution /= Void
+			an_etest_suite_attached: an_etest_suite /= Void
 		do
-			test_execution := a_test_execution
-			test_suite := a_test_suite
+			test_execution := an_execution
+			etest_suite := an_etest_suite
 			create idle_controllers.make_default
-			task_cursor := (create {DS_ARRAYED_LIST [like new_task_data]}.make_default).new_cursor
+			empty_task_cursor := (create {DS_ARRAYED_LIST [like new_task_data]}.make (0)).new_cursor
+			occupied_controller_cursor := (create {DS_ARRAYED_LIST [like new_task_data]}.make_default).new_cursor
+			task_cursor := empty_task_cursor
 			create byte_code_factory
 		ensure
-			test_execution_set: test_execution = a_test_execution
-			test_suite_set: test_suite = a_test_suite
+			test_execution_set: test_execution = an_execution
+			etest_suite_set: etest_suite = an_etest_suite
 		end
 
 feature -- Access
 
+	etest_suite: ETEST_SUITE
+			-- Etest suite
+
 	test_execution: TEST_EXECUTION_I
 			-- <Precursor>
-
-	test_suite: ETEST_SUITE
-			-- Test suite containing {ETEST} instances
 
 	sleep_time: NATURAL_32 = 0
 			-- <Precusor>
@@ -74,11 +82,23 @@ feature {NONE} -- Access
 	task_cursor: DS_LIST_CURSOR [like new_task_data]
 			-- <Precursor>
 
+	empty_task_cursor: like task_cursor
+			-- Task cursor always pointing to an empty list
+
+	occupied_controller_cursor: like task_cursor
+			-- Task cursor pointing to controllers currently occupied with a test
+
+	frozen occupied_controllers: DS_LIST [like new_task_data]
+			-- Controllers currently running a test
+		do
+			Result := occupied_controller_cursor.container
+		end
+
 	idle_controllers: DS_ARRAYED_LIST [like new_controller]
 			-- Controllers not running any test
 
 	controller_count: INTEGER
-			-- Number of cotrollers that can be launched in current session
+			-- Number of controllers that can be launched in current session
 		do
 			if test_execution.is_debugging then
 				Result := 1
@@ -97,13 +117,13 @@ feature -- Status report
 	is_available: BOOLEAN
 			-- <Precursor>
 		do
-			Result := tasks.count < controller_count
+			Result := occupied_controllers.count < controller_count
 		end
 
 	is_running_test (a_test: TEST_I): BOOLEAN
 			-- <Precursor>
 		do
-			Result := tasks.there_exists (
+			Result := occupied_controllers.there_exists (
 				agent (a_data: like new_task_data; a_t: TEST_I): BOOLEAN
 					do
 						Result := a_data.test = a_t and a_data.task.is_running
@@ -117,33 +137,14 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	step
-			-- <Precursor>
-		local
-			l_tasks: like tasks
-			l_task_data: like new_task_data
-			l_controller: like new_controller
+	start
+			-- Start execution
 		do
-			if test_suite.project_access.project.is_compiling then
-				from
-					l_tasks := tasks
-					l_tasks.start
-				until
-					l_tasks.after
-				loop
-					l_task_data := l_tasks.item_for_iteration
-					l_controller := l_task_data.task
-					if l_controller.is_running then
-						l_controller.stop
-					end
-					l_tasks.forth
-				end
-			else
-				Precursor
-			end
+			occupied_controllers.do_all (agent launch_test)
+			task_cursor := occupied_controller_cursor
 		end
 
-feature {TEST_EXECUTION_I} -- Status setting
+feature {TEST_EXECUTION_I, ETEST_COMPILATION_EXECUTOR} -- Status setting
 
 	abort_test (a_test: TEST_I)
 			-- <Precursor>
@@ -151,7 +152,7 @@ feature {TEST_EXECUTION_I} -- Status setting
 			l_cursor: like task_cursor
 		do
 			from
-				l_cursor := tasks.new_cursor
+				l_cursor := occupied_controllers.new_cursor
 				l_cursor.start
 			until
 				l_cursor.after
@@ -166,13 +167,14 @@ feature {TEST_EXECUTION_I} -- Status setting
 			end
 		end
 
-feature {NONE} -- Status setting
+feature {ETEST_COMPILATION_EXECUTOR, TEST_EXECUTION_I} -- Status setting
 
 	run_compatible_test (a_test: ETEST)
 			-- <Precursor>
 		local
 			l_idle: like idle_controllers
 			l_controller: like new_controller
+			l_data: like new_task_data
 		do
 				-- Check if test class is compiled
 			l_idle := idle_controllers
@@ -183,26 +185,25 @@ feature {NONE} -- Status setting
 				l_controller := l_idle.item_for_iteration
 				l_idle.remove_at
 			end
-			append_task (l_controller)
-			if test_suite.project_access.project.is_compiling then
-					-- Will be launched when compilation is done
-				tasks.last.test := a_test
-			else
-				launch_test (tasks.last, a_test)
+			l_data := new_task_data (l_controller)
+			l_data.test := a_test
+			occupied_controllers.force_last (l_data)
+			if has_next_step then
+				launch_test (l_data)
 			end
 		end
 
-	launch_test (a_task_data: like new_task_data; a_test: ETEST)
+feature {NONE} -- Status setting
+
+	launch_test (a_task_data: like new_task_data)
 			-- Generate byte code for test and launch it through `a_controller'.
 			--
 			-- `a_task_data': Task data of controller to be launched.
-			-- `a_test': Test to be launched.
 		require
 			a_task_data_attached: a_task_data /= Void
-			a_test_attached: a_test /= Void
-			a_test_running: test_execution.is_test_running (a_test)
-			not_compiling: not test_suite.project_access.project.is_compiling
+			a_task_data_has_test: a_task_data.test /= Void
 		local
+			l_test: detachable ETEST
 			l_byte_code: STRING
 			l_generics: TYPE_LIST_AS
 			l_type: GENERIC_CLASS_TYPE_AS
@@ -210,11 +211,12 @@ feature {NONE} -- Status setting
 			l_isolated: BOOLEAN
 			l_controller: like new_controller
 		do
-			a_task_data.test := a_test
+			l_test := a_task_data.test
+			check l_test /= Void end
 			a_task_data.isolated := False
 			if
-				attached a_test.eiffel_class.compiled_representation as l_test_class and then
-				attached l_test_class.feature_named (a_test.routine_name) as l_test_routine
+				attached l_test.eiffel_class.compiled_representation as l_test_class and then
+				attached l_test_class.feature_named (l_test.routine_name) as l_test_routine
 			then
 				create l_generics.make (1)
 				l_generics.force (create {CLASS_TYPE_AS}.initialize (create {ID_AS}.initialize(l_test_class.name)))
@@ -222,16 +224,16 @@ feature {NONE} -- Status setting
 
 					-- Check if all required evaluator classes/types/features are compiled
 				if
-					attached test_suite.project_access.class_from_name ("EQA_EVALUATOR_ROOT", Void) as l_evaluator_class and then
+					attached etest_suite.project_access.class_from_name ({ETEST_CONSTANTS}.eqa_evaluator_root, Void) as l_evaluator_class and then
 					attached {EIFFEL_CLASS_C} l_evaluator_class.compiled_representation as l_evaluator and then
 					not l_evaluator.types.is_empty and then
 					attached l_evaluator.feature_named ({ETEST_CONSTANTS}.eqa_evaluator_routine) as l_evaluator_routine and then
 					l_evaluator_routine.valid_body_id and then
-					attached a_test.eiffel_class.is_compiled and then
+					attached l_test.eiffel_class.is_compiled and then
 					attached evaluate_type_if_possible (l_type, l_evaluator) as l_evaluator_type
 				then
 						-- Create byte code
-					l_byte_code := byte_code_factory.execute_test_code (a_test, l_evaluator, l_evaluator_routine)
+					l_byte_code := byte_code_factory.execute_test_code (l_test, l_evaluator, l_evaluator_routine)
 
 						-- Set breakpoint if debugging
 					if test_execution.is_debugging then
@@ -245,8 +247,8 @@ feature {NONE} -- Status setting
 						if not l_controller.is_ready then
 							l_controller.stop
 						elseif
-							l_tag_tree.has_item (a_test) and then
-							not l_tag_tree.item_suffixes (isolate_prefix, a_test).is_empty
+							l_tag_tree.has_item (l_test) and then
+							not l_tag_tree.item_suffixes (isolate_prefix, l_test).is_empty
 						then
 								-- Restart controller if test should be executed isolated
 							l_controller.stop
@@ -256,15 +258,13 @@ feature {NONE} -- Status setting
 					if not l_controller.is_running then
 						l_controller.start (l_evaluator, l_evaluator_routine)
 					end
-					l_controller.execute_test ([l_byte_code, a_test.name.as_string_8])
+					l_controller.execute_test ([l_byte_code, l_test.name.as_string_8])
 				else
-					test_execution.report_result (a_test, create {EQA_EMPTY_RESULT}.make ("test not properly compiled", Void))
+					test_execution.report_result (l_test, create {EQA_EMPTY_RESULT}.make ("test not properly compiled", Void))
 				end
 			else
-				test_execution.report_result (a_test, create {EQA_EMPTY_RESULT}.make ("test not compiled", Void))
+				test_execution.report_result (l_test, create {EQA_EMPTY_RESULT}.make ("test not compiled", Void))
 			end
-		ensure
-			test_set: a_task_data.test = a_test
 		end
 
 	remove_task (a_force: BOOLEAN)
@@ -280,39 +280,56 @@ feature {NONE} -- Status setting
 			l_task_data := task_cursor.item
 			l_controller := l_task_data.task
 			l_test := l_task_data.test
-			check l_test /= Void end
-			if l_controller.is_running then
-					-- The controller was running so we try to report a result
-				if l_controller.has_result then
-					l_result := l_controller.test_result
-				else
-					create {EQA_EMPTY_RESULT} l_result.make ("evaluator died", Void)
-				end
-				Precursor (a_force)
-				if attached l_task_data.breakpoint as l_breakpoint then
-					debugger_manager.breakpoints_manager.delete_breakpoint (l_breakpoint)
-					l_task_data.breakpoint := Void
-				end
-				if not a_force then
-					if l_task_data.isolated then
-						l_controller.stop
-					end
-					idle_controllers.force_last (l_controller)
-				end
-				if test_execution.is_test_running (l_test) then
-					test_execution.report_result (l_test, l_result)
-				end
+			check test_attached: l_test /= Void end
+
+				-- Try to retrieve result from controller
+			if not l_controller.is_running then
+				create {EQA_EMPTY_RESULT} l_result.make ("evaluator could not be launched", Void)
+			elseif l_controller.has_result then
+				l_result := l_controller.test_result
 			else
-					-- If removal is not forced, try to relaunch test after compilation
-				if not a_force and test_execution.is_test_running (l_test) then
-					launch_test (l_task_data, l_test)
-				else
-					Precursor (a_force)
-				end
+				create {EQA_EMPTY_RESULT} l_result.make ("evaluator died", Void)
 			end
+
+				-- Remove controller from `occupied_controllers'
+			Precursor (a_force)
+
+				-- Remove breakpoint if set
+			if attached l_task_data.breakpoint as l_breakpoint then
+				debugger_manager.breakpoints_manager.delete_breakpoint (l_breakpoint)
+				l_task_data.breakpoint := Void
+			end
+
+				-- Add to controller to `idle_controllers' and stop it if test was marked isolated
+			if not a_force then
+				if l_task_data.isolated then
+					l_controller.stop
+				end
+				idle_controllers.force_last (l_controller)
+			end
+
+				-- Report result
+			if test_execution.is_test_running (l_test) then
+				test_execution.report_result (l_test, l_result)
+			end
+
 			if a_force then
 				l_controller.dispose
 			end
+		end
+
+	cancel
+			-- <Precursor>
+		do
+				-- Since `cancel' is only called from {ETEST_EXECUTION} when compiling started, wo do not
+				-- completely abort testing. Instead we only stop the controllers, ensure `has_next_step' is
+				-- False and relaunch them when `start' is called after compilation is done.
+			occupied_controllers.do_all (
+				agent (a_task_data: like new_task_data)
+					do
+						a_task_data.task.stop
+					end)
+			task_cursor := empty_task_cursor
 		end
 
 feature {NONE} -- Implementation
@@ -347,9 +364,9 @@ feature {NONE} -- Factory
 			-- Create new controller
 		do
 			if test_execution.is_debugging then
-				create {ETEST_EVALUATOR_DEBUGGER_CONTROLLER} Result.make (test_suite)
+				create {ETEST_EVALUATOR_DEBUGGER_CONTROLLER} Result.make (etest_suite)
 			else
-				create {ETEST_EVALUATOR_PROCESS_CONTROLLER} Result.make (test_suite)
+				create {ETEST_EVALUATOR_PROCESS_CONTROLLER} Result.make (etest_suite)
 			end
 		end
 

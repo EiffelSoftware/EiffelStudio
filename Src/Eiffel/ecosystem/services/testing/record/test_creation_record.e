@@ -1,58 +1,39 @@
 note
 	description: "[
-		Evaulator controller which launched the evaluator through the debugger.
+		Records containing a list of test names which have been created during a creation session.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ETEST_EVALUATOR_DEBUGGER_CONTROLLER
+	TEST_CREATION_RECORD
 
 inherit
-	ETEST_EVALUATOR_CONTROLLER
-
-	SHARED_DEBUGGER_MANAGER
-		export
-			{NONE} all
+	TEST_COMMON_SESSION_RECORD [DATE_TIME]
+		rename
+			has_item as has_date,
+			has_item_for_test as has_date_for_test,
+			item_for_name as date_for_name,
+			item_for_test as date_for_test
 		end
 
-create
+create {TEST_CREATION_I}
 	make
 
-feature {NONE} -- Access
+feature {TEST_CREATION_I} -- Element change
 
-	service: SERVICE_CONSUMER [TEST_SUITE_S]
-		once
-			create Result
-		end
-
-feature {NONE} -- Status report
-
-	is_evaluator_launched: BOOLEAN
-			-- <Precursor>
-
-	is_evaluator_running: BOOLEAN
+	add_test (a_name: READABLE_STRING_8)
+			-- Add name of newly created test and add it to end of `test_map'.
+			--
+			-- `a_name': Name of created test.
+		require
+			a_name_attached: a_name /= Void
+			not_added_yet: not has_date (a_name)
 		do
-			Result := debugger_manager.application_initialized and then debugger_manager.application.is_running
-		end
-
-
-feature {NONE} -- Status setting
-
-	start_evaluator (a_argument: STRING_8)
-			-- <Precursor>
-		do
-			test_suite.project_helper.run (Void, a_argument, Void)
-			is_evaluator_launched := True
-		end
-
-	stop_evaluator
-		do
-			if is_evaluator_running then
-				debugger_manager.application.kill
-			end
-			is_evaluator_launched := False
+			test_map.force_last (create {DATE_TIME}.make_now, a_name)
+		ensure
+			has_date: has_date (a_name)
 		end
 
 note

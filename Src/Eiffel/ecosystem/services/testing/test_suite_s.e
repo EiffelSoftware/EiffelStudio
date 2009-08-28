@@ -166,7 +166,7 @@ feature -- Basic operations
 			result_not_running: Result /= Void implies not Result.has_next_step
 		end
 
-feature -- Events
+feature {NONE} -- Events
 
 	test_added_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
 			-- Events called after a test was added to `Current'.

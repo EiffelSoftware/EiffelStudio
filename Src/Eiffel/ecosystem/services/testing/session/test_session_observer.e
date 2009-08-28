@@ -27,6 +27,20 @@ feature {TEST_SESSION_I} -- Events
 			a_session_usable: a_session.is_interface_usable
 		end
 
+	on_error (a_session: TEST_SESSION_I; an_error: READABLE_STRING_GENERAL)
+			-- Called when session encountered an error.
+			--
+			-- `a_session': Session that triggered event.
+			-- `an_error': Error message.
+		require
+			a_session_attached: a_session /= Void
+			an_error_attached: an_error /= Void
+			a_session_usable: a_session.is_interface_usable
+			an_error_not_empty: not an_error.is_empty
+		do
+
+		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

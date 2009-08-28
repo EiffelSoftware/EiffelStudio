@@ -62,17 +62,11 @@ feature {NONE} -- Initialization
 		local
 			l_stack: detachable EIFFEL_CALL_STACK
 			i: INTEGER
-			l_reg: TEST_PROCESSOR_REGISTRAR_I
 			l_row: EV_GRID_ROW
 			l_cse: CALL_STACK_ELEMENT
 		do
-			if test_suite.is_service_available then
-				l_reg := test_suite.service.processor_registrar
-				if l_reg.is_valid_type (extractor_factory_type, test_suite.service) then
-					if attached {like extractor} test_suite.service.factory (extractor_factory_type) as l_extractor then
-						extractor := l_extractor
-					end
-				end
+			if test_suite.is_service_available and then test_suite.service.is_interface_usable then
+				create extractor.make (test_suite.service, etest_suite)
 			end
 			if debugger_manager.application_is_executing then
 				if debugger_manager.application_is_stopped then
@@ -107,16 +101,27 @@ feature {NONE} -- Access
 			Result := wizard_information.extractor_conf
 		end
 
-	factory_type: TYPE [TEST_CREATOR_I]
+	session (a_test_suite: TEST_SUITE_S): ETEST_EXTRACTION
 			-- <Precursor>
+		local
+			l_conf: like conf
 		do
-			Result := extractor_factory_type
+			if attached extractor as l_extraction then
+				Result := l_extraction
+			else
+				create Result.make (a_test_suite, etest_suite)
+			end
+			l_conf := conf
+			Result.set_class_name (l_conf.new_class_name)
+			Result.set_cluster_name (l_conf.cluster.name)
+			Result.set_path_name (l_conf.path)
+			l_conf.call_stack_elements.do_all (agent Result.add_call_stack_level)
 		end
 
 	grid: ES_GRID
 			-- Grid showing call stack
 
-	extractor: detachable TEST_EXTRACTOR_I
+	extractor: detachable ETEST_EXTRACTION
 			-- Extractor instance
 
 	selection_count: NATURAL

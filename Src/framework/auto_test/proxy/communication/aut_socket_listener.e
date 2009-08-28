@@ -162,14 +162,16 @@ feature {NONE} -- Implementation
 			-- Note: this routine is blocking.
 		local
 			l_rescued: BOOLEAN
+			l_connection: like connection
 		do
 			if not l_rescued then
 				a_socket.accept
 				mutex.lock
 				if is_listening then
-					connection := a_socket.accepted
-					connection.set_blocking
-					connection.set_nodelay
+					l_connection := a_socket.accepted
+					l_connection.set_blocking
+					l_connection.set_nodelay
+					connection := l_connection
 					condition.broadcast
 				end
 				mutex.unlock

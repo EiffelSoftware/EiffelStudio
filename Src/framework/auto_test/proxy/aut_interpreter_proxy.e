@@ -199,7 +199,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_timeout (a_timeout: INTEGER)
+	set_timeout (a_timeout: like timeout)
 			-- Set `timeout' with `a_timeout'.
 		require
 			a_timeout_valid: a_timeout > 0
@@ -831,6 +831,7 @@ feature -- Socket IPC
 						-- because everything that the interpreter output should come from `l_data.output'.
 						-- Jason 2008.10.22
 					replace_output_from_socket_by_pipe_data
+					io.output.flush
 				else
 					last_raw_response := Void
 				end

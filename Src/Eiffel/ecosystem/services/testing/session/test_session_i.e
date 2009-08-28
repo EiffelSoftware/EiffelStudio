@@ -118,7 +118,8 @@ feature -- Events
 					agent (an_observer: TEST_SESSION_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := <<
-									[proceeded_event, agent an_observer.on_proceeded]
+									[proceeded_event, agent an_observer.on_proceeded],
+									[error_event, agent an_observer.on_error]
 								>>
 						end)
 				connection_cache := l_result
@@ -132,6 +133,18 @@ feature {NONE} -- Events
 			-- Events called after `Current' proceeded
 			--
 			-- Note: implementers do not have to publish this event since it is already done by `step_task'.
+			--
+			-- session: `Current'.
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	error_event: EVENT_TYPE [TUPLE [session: TEST_SESSION_I; error: READABLE_STRING_GENERAL]]
+			-- Events called when `Current' encountered an error.
+			--
+			-- session: `Current'.
+			-- error: Error message.
 		require
 			usable: is_interface_usable
 		deferred

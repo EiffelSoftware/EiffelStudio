@@ -37,6 +37,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	last_added_class: EIFFEL_CLASS_I
@@ -172,13 +177,34 @@ feature -- Basic operations
 	compile
 			-- <Precursor>
 		do
-			melt_project_cmd.execute_and_wait
-			if eiffel_project.successful then
-				window_manager.development_windows.do_all (
-					agent (a_window: EB_DEVELOPMENT_WINDOW)
+				-- Compile project on during next idle
+			if attached {EV_APPLICATION} shared_environment.application as l_app then
+				l_app.add_idle_action_kamikaze (
+					agent
 						do
-							a_window.shell_tools.show_tool ({ES_TESTING_TOOL}, True)
+							melt_project_cmd.execute_and_wait
 						end)
+				eiffel_project.manager.compile_stop_agents.extend_kamikaze (
+					agent
+						do
+							if eiffel_project.successful then
+								window_manager.development_windows.do_all (
+									agent (a_window: EB_DEVELOPMENT_WINDOW)
+										do
+											a_window.shell_tools.show_tool ({ES_TESTING_TOOL}, True)
+										end)
+							end
+						end)
+			end
+		end
+
+	cancel_compilation
+			-- <Precursor>
+		do
+			if project_cancel_cmd.executable then
+				project_cancel_cmd.execute
+			elseif terminate_c_compilation_cmd.executable then
+				terminate_c_compilation_cmd.execute
 			end
 		end
 

@@ -60,6 +60,7 @@ feature -- Element change
 			--
 			-- `a_observer': Observer to be added to `observers'.
 		require
+			a_observer_attached: a_observer /= Void
 			not_has_observer: not has_observer (a_observer)
 		do
 			observers.force_last (a_observer)
@@ -73,6 +74,7 @@ feature -- Element change
 			--
 			-- `a_observer': Observer to be removed from `observers'.
 		require
+			a_observer_attached: a_observer /= Void
 			has_observer: has_observer (a_observer)
 		do
 			observers.start

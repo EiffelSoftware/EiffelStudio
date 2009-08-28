@@ -11,7 +11,7 @@ echo "This script will install Xebra."
 apache_dir="httpd-2.2.13"
 apache_file="$apache_dir.tar.gz"
 apache_url="http://www.apache.org/dist/httpd/$apache_file" 
-revision=80408
+revision=80506
 
 echo "Apache $apache_url will be installed..."
 echo "Xebra revision $revision will be installed..."
@@ -131,6 +131,7 @@ cd $XEBRA_DEV/www
 svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/www/helloworld -r $revision helloworld
 svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/www/demoapplication -r $revision demoapplication
 svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/www/servercontrol -r $revision servercontrol
+svn export https://svn.origo.ethz.ch/eiffelstudio/trunk/Src/framework/web/xebra/www/examples -r $revision examples
 
 echo "=========================Setting up webapps..."
 #Move xebra libraries

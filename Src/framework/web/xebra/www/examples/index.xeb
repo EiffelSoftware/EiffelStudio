@@ -1,0 +1,128 @@
+<html>
+<page:controller class="MAIN_CONTROLLER" create="make"/>
+<head>
+<style>
+	div.title { 
+		font-weight: bold; font-size: 110%; 
+		margin: 5px;
+		}
+	div.example { 
+		padding: 10px; margin: 10px; 
+		background-color: #fff; 
+		border-top: solid 2px #000;
+		}
+	div.source { 
+		white-space: pre;  padding: 3px; 
+		font-size: 70%;
+		border: dotted 1px #99c;
+		background-color: #fff; font-family: verdana; 
+		margin-bottom: 5px;
+		}
+	div.demo { 
+		clear:both; 
+		background-color: #ddddff; 
+		border: solid 1px #aae; 
+		padding: 5px; 
+		margin-top: 5px; 
+		}
+	.xeb { float: left; width: 48%}
+	.eiffel { float: right; width: 48%; }
+</style>
+</head>
+<body>
+<h1>Xebra's quick tutorial by examples</h1>
+
+<div class="example"><div class="title">xeb:display's example:</div>
+	<div class="source xeb" >
+		&lt;xeb:display text="This is a text" /&gt;
+	</div>
+	<div class="demo">
+	<xeb:display text="This is a text" />
+	</div>
+</div>
+
+<div class="example"><div class="title">Calling the controller:</div>
+	<div class="source xeb" >
+	&lt;html&gt;
+	&lt;page:controller class="MAIN_CONTROLLER" create="make"/&gt;
+	....
+	&lt;body&gt;
+	&lt;xeb:display text="%=the_text%" /&gt;
+	</div>
+	<div class="source eiffel" >
+	the_text: STRING
+		do
+			Result := "This is a text"
+		end
+	</div>
+	<div class="demo">
+	<xeb:display text="%=the_text%" />
+	<xeb:display text="%=xebra_documentation_url%" />
+	</div>
+</div>
+
+<div class="example"><div class="title">xeb:loop's example:</div>
+	<div class="source xeb" >
+	&lt;ol&gt;
+	&lt;xeb:loop times="5" variable="loop_index" &gt;
+	&lt;li&gt;item &lt;xeb:display text="#{loop_index.out}" /&gt;&lt;/li&gt;
+	&lt;/xeb:loop&gt;
+	&lt;/ol&gt;
+	</div>
+
+	<div class="demo">
+		<ol>
+		<xeb:loop times="5" variable="loop_index" >
+		<li>item <xeb:display text="#{loop_index.out}" /></li>
+		</xeb:loop>
+		</ol>
+	</div>
+</div>
+
+
+<div class="example"><div class="title">xeb:iterate's example:</div>
+	<div class="source xeb" >
+	&lt;ul&gt;
+	&lt;xeb:iterate list="%=my_items%" variable="entry" type="STRING" &gt;
+	&lt;li&gt;&lt;xeb:display text="#{entry}" /&gt;&lt;/li&gt;
+	&lt;/xeb:iterate&gt;
+	&lt;/ul&gt;
+	</div>
+	<div class="source eiffel">
+	my_items: ARRAYED_LIST [STRING]
+		do
+			create Result.make (3)
+			Result.force ("a")
+			Result.force ("b")
+			Result.force ("c")
+		end
+	</div>
+	<div class="demo">
+	<ul>
+	<xeb:iterate list="%=my_items%" variable="entry" type="STRING" >
+	<li><xeb:display text="#{entry}" /></li>
+	</xeb:iterate>
+	</ul>
+	</div>
+</div>
+
+
+<div class="example"><div class="title">xeb:set_variable's example:</div>
+	<div class="source xeb" >
+	&lt;xeb:variable name="doc_url" type="STRING" /&gt;
+	&lt;xeb:set_variable variable="doc_url" value="%=xebra_documentation_url%" /&gt;
+	Check the Xebra's documentation: &lt;a href="#{doc_url}"&gt;&lt;xeb:display text="#{doc_url}"/&gt; &lt;/a&gt;
+	</div>
+	<div class="source eiffel" >
+			Result := "http://dev.eiffel.com/Xebra_Documentation"
+	</div>
+	<div class="demo">
+	<xeb:variable name="doc_url" type="STRING" />
+	<xeb:set_variable variable="doc_url" value="%=xebra_documentation_url%" />
+	Check the Xebra's documentation: <a href="#{doc_url}"><xeb:display text="#{doc_url}"/> </a>
+	</div>
+</div>
+
+
+</body>
+</html>

@@ -563,7 +563,14 @@ feature {NONE} -- Implementation
 			l_anim := pixmaps.icon_pixmaps.run_animation_anim
 			debugger_icon.set_background_color (debugger_cell.background_color)
 			debugger_icon.clear
-			debugger_icon.draw_pixmap (0, 0, l_anim.item (running_icon_index))
+			if l_anim.valid_index (running_icon_index) then
+				debugger_icon.draw_pixmap (0, 0, l_anim.item (running_icon_index))
+			else
+				check not_possible: False end
+				-- FIXME: Runtime bug or ...? In theory, running_icon_index's value is always between 1 and 5.
+				-- So the index should always valid. But on Linux it's not the case sometimes
+				-- See bug#15209
+			end
 
 			running_icon_index := running_icon_index + 1
 			if running_icon_index > l_anim.count then

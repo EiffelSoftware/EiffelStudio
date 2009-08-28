@@ -4,7 +4,8 @@
 		<root cluster="root_cluster" class="TEST" feature="make"/>
 		<option warning="true"/>
 		<setting name="console_application" value="$CONSOLE_APPLICATION"/>
-		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
+		<setting name="multithreaded" value="$MULTITHREADED"/>
+		<precompile name="precompile" location="$PRECOMPILE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>

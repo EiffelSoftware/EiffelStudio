@@ -31,7 +31,7 @@ feature {NONE} -- Access
 
 	times: XTAG_TAG_ARGUMENT
 			-- Number of repetitions of the body
-	
+
 	index_variable: detachable XTAG_TAG_ARGUMENT
 			-- Index variable of the current loop cycle
 

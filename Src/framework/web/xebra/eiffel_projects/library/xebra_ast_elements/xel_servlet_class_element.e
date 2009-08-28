@@ -28,7 +28,7 @@ feature -- Initialization
 			create render_html_page.make_with_const_class (render_html_page_signature, a_const_class)
 			create clean_up_after_render.make (clean_up_after_render_signature)
 			create fill_bean.make (fill_bean_signature)
-			
+
 			add_feature (make_feature)
 			add_feature (set_all_booleans)
 			add_feature (handle_form_internal)

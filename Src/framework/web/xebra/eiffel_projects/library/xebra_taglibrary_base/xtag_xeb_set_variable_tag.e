@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			a_servlet_class.render_html_page.append_expression (
-				variable.value (current_controller_id) + " := " + value.value (current_controller_id))			
+				variable.value (current_controller_id) + " := " + value.value (current_controller_id))
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)

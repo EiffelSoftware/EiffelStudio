@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 	status_text (a_test: TEST_I): STRING_32
 			-- Status text for `a_test'.
 		local
-			l_outcome: EQA_RESULT
+--			l_outcome: EQA_RESULT
 		do
 --			if a_test.is_queued then
 --				Result := locale_formatter.translation (l_queued)

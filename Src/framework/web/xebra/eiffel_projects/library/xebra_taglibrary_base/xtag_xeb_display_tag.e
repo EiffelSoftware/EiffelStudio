@@ -25,27 +25,35 @@ feature -- Initialization
 	make
 		do
 			make_base
-			create {XTAG_TAG_VALUE_ARGUMENT}feature_name.make_default
+			create {XTAG_TAG_VALUE_ARGUMENT} text.make_default
 		end
 
 feature -- Access
 
-	feature_name: XTAG_TAG_ARGUMENT
-			-- The name of the feature to call
+	text: XTAG_TAG_ARGUMENT
+			-- The text to display
 
 feature -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
-			a_servlet_class.render_html_page.append_output_expression ("%"" + feature_name.value (current_controller_id) + "%"")
+			if text.is_dynamic or text.is_variable then
+				a_servlet_class.render_html_page.append_expression ("if attached {STRING} " + text.plain_value (current_controller_id) + " as l_text then ")
+				a_servlet_class.render_html_page.append_output_expression ("l_text")
+				a_servlet_class.render_html_page.append_expression ("else")
+				a_servlet_class.render_html_page.append_output_expression (text.plain_value (current_controller_id) + ".out")
+				a_servlet_class.render_html_page.append_expression ("end")				
+			else
+				a_servlet_class.render_html_page.append_output_expression ("%"" + text.value (current_controller_id) + "%"")
+			end
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)
 			-- <Precursor>
 		do
 			if id.is_equal ("text") then
-				feature_name := a_attribute
+				text := a_attribute
 			end
 		end
 

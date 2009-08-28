@@ -1,4 +1,3 @@
-
 note
 	description: "[
 		Defines validator classes for an input field.

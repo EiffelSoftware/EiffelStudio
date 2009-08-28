@@ -17,6 +17,7 @@ inherit
 
 create
 	make,
+	make_map,
 	make_with_key_tester
 
 feature {NONE} -- Creation
@@ -29,7 +30,20 @@ feature {NONE} -- Creation
 		do
 			make_with_key_tester (n, Void)
 		ensure
-			capacity_big_enough: capacity >= n and capacity >= 5
+			capacity_big_enough: capacity >= n
+		end
+
+	make_map (n: INTEGER)
+			-- Allocate hash table for at least `n' items using `=' for comparison.
+			-- The table will be resized automatically if more than `n' items are inserted.
+		require
+			n_non_negative: n >= 0
+		do
+			make_with_key_tester (n, Void)
+			is_map := True
+		ensure
+			capacity_big_enough: capacity >= n
+			is_map: is_map
 		end
 
 	make_with_key_tester (n: INTEGER; a_key_tester: detachable EQUALITY_TESTER [H])
@@ -54,7 +68,7 @@ feature {NONE} -- Creation
 			content := local_content.area
 			deleted_marks := local_deleted_marks.area
 		ensure
-			breathing_space: n < capacity
+			capacity_big_enough: capacity >= n
 		end
 
 feature -- Access and queries
@@ -456,6 +470,11 @@ feature {NONE} -- Internal features
 					elseif first_deleted_position < 0 then
 						first_deleted_position := pos
 					end
+				elseif is_map then
+					if seark_key = old_key then
+						control := Found_constant
+						stop := True
+					end
 				elseif same_keys (search_key, old_key) then
 					control := Found_constant
 					stop := True
@@ -531,6 +550,9 @@ feature {NONE} -- Status
 
 	Not_found_constant: INTEGER = unique
 			-- Key not found
+
+	is_map: BOOLEAN
+			-- Is current comparing keys using `='.
 
 feature {SEARCH_TABLE}
 

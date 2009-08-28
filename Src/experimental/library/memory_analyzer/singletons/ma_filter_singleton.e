@@ -52,7 +52,7 @@ feature  -- Filter
 
 feature {MA_FILTER_WINDOW} -- Implementation
 
-	item_and_filter_names: DS_HASH_TABLE [TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING], INTEGER]
+	item_and_filter_names: HASH_TABLE [TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING], INTEGER]
 			-- The hash table of grid items and filter datas. The second argument is the grid item index.
 			-- In the tuple, first argument is Class Name, second is Selected to Filter, third is the Description.
 

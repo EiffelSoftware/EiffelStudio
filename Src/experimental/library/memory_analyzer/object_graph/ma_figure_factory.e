@@ -10,7 +10,7 @@ class
 
 inherit
 	EG_FIGURE_FACTORY
- 
+
 feature -- Basic operations
 
 	new_node_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE
@@ -18,20 +18,20 @@ feature -- Basic operations
 		do
 			Result := create {MA_OBJECT_NODE}.make_with_model (a_node)
 		end
-		
+
 	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE
 			-- Create a cluster figure for `a_cluster'.
 		do
 			Result := create {EG_SIMPLE_CLUSTER}.make_with_model (a_cluster)
 		end
-		
+
 	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE
 			-- Create a link figure for `a_link'.
 		do
 			Result := create {MA_REFERENCE_LINK}.make_with_model (a_link)
 		end
-		
-	model_from_xml (node: XM_ELEMENT): EG_ITEM
+
+	model_from_xml (node: like xml_element_type): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 --		local
 --			node_name, source_name, target_name: STRING

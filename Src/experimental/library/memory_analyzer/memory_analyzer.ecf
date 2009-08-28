@@ -9,10 +9,7 @@
 			<exclude>/\.svn</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
-		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>

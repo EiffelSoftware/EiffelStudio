@@ -17,7 +17,8 @@ inherit
 			stone,
 			retrieve_formatters,
 			force_last_stone,
-			on_file_changed
+			on_file_changed,
+			initialize
 		end
 
 	ES_FEATURE_RELATION_TOOL_COMMANDER_I
@@ -32,6 +33,16 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	initialize
+			-- <Precursor>
+		do
+			Precursor {ES_FORMATTER_TOOL_PANEL_BASE}
+
+			content.show_actions.extend (agent refresh_if_possible)
+		end
 
 feature -- Access
 
@@ -53,6 +64,11 @@ feature -- Access
 		do
 			Result := Interface_names.l_No_feature
 		end
+
+	is_refresh_needed: BOOLEAN
+			-- If current need a fresh?
+			-- Useful for refresh Current only when Current is redisplayed
+			-- See bug#14840
 
 feature {ES_FEATURE_RELATION_TOOL} -- Access
 
@@ -275,6 +291,29 @@ feature -- Status setting
 				l_mode := l_formatter.mode
 			end
 			set_mode (l_mode)
+		end
+
+	refresh_if_possible
+			-- Call `refresh' if `is_refresh_needed'
+		do
+			if is_refresh_needed then
+				refresh
+				is_refresh_needed := False
+			end
+		ensure
+			cleared: not is_refresh_needed
+		end
+
+	set_refresh_needed
+			-- Set `is_refresh_needed' with True
+		do
+			if content.user_widget.is_displayed then
+				refresh
+			else
+				is_refresh_needed := True
+			end
+		ensure
+			set: content.user_widget.is_displayed = not is_refresh_needed
 		end
 
 feature {NONE} -- Event handlers

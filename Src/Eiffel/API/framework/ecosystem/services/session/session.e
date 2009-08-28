@@ -479,24 +479,24 @@ feature {NONE} -- Conversion
 
 feature {NONE} -- Conversion type tables
 
-	frozen type_codes: DS_HASH_TABLE [INTEGER, INTEGER]
+	frozen type_codes: HASH_TABLE [INTEGER, INTEGER]
 			-- Table of abstract type codes, indexed by a respective dynamic type id of a built-in expanded type.
 		once
 			create Result.make (14)
-			Result.put_last ({INTERNAL}.boolean_type, type_code_of_type ({BOOLEAN}))
-			Result.put_last ({INTERNAL}.character_8_type, type_code_of_type ({CHARACTER_8}))
-			Result.put_last ({INTERNAL}.character_32_type, type_code_of_type ({CHARACTER_32}))
-			Result.put_last ({INTERNAL}.integer_8_type, type_code_of_type ({INTEGER_8}))
-			Result.put_last ({INTERNAL}.integer_16_type, type_code_of_type ({INTEGER_16}))
-			Result.put_last ({INTERNAL}.integer_32_type, type_code_of_type ({INTEGER_32}))
-			Result.put_last ({INTERNAL}.integer_64_type, type_code_of_type ({INTEGER_64}))
-			Result.put_last ({INTERNAL}.natural_8_type, type_code_of_type ({NATURAL_8}))
-			Result.put_last ({INTERNAL}.natural_16_type, type_code_of_type ({NATURAL_16}))
-			Result.put_last ({INTERNAL}.natural_32_type, type_code_of_type ({NATURAL_32}))
-			Result.put_last ({INTERNAL}.natural_64_type, type_code_of_type ({NATURAL_64}))
-			Result.put_last ({INTERNAL}.real_32_type, type_code_of_type ({REAL_32}))
-			Result.put_last ({INTERNAL}.real_64_type, type_code_of_type ({REAL_64}))
-			Result.put_last ({INTERNAL}.pointer_type, type_code_of_type ({POINTER}))
+			Result.force ({INTERNAL}.boolean_type, type_code_of_type ({BOOLEAN}))
+			Result.force ({INTERNAL}.character_8_type, type_code_of_type ({CHARACTER_8}))
+			Result.force ({INTERNAL}.character_32_type, type_code_of_type ({CHARACTER_32}))
+			Result.force ({INTERNAL}.integer_8_type, type_code_of_type ({INTEGER_8}))
+			Result.force ({INTERNAL}.integer_16_type, type_code_of_type ({INTEGER_16}))
+			Result.force ({INTERNAL}.integer_32_type, type_code_of_type ({INTEGER_32}))
+			Result.force ({INTERNAL}.integer_64_type, type_code_of_type ({INTEGER_64}))
+			Result.force ({INTERNAL}.natural_8_type, type_code_of_type ({NATURAL_8}))
+			Result.force ({INTERNAL}.natural_16_type, type_code_of_type ({NATURAL_16}))
+			Result.force ({INTERNAL}.natural_32_type, type_code_of_type ({NATURAL_32}))
+			Result.force ({INTERNAL}.natural_64_type, type_code_of_type ({NATURAL_64}))
+			Result.force ({INTERNAL}.real_32_type, type_code_of_type ({REAL_32}))
+			Result.force ({INTERNAL}.real_64_type, type_code_of_type ({REAL_64}))
+			Result.force ({INTERNAL}.pointer_type, type_code_of_type ({POINTER}))
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -519,7 +519,7 @@ invariant
 	data_attached: data /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -543,11 +543,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

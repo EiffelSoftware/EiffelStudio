@@ -471,7 +471,7 @@ feature {NONE} -- Internal features
 						first_deleted_position := pos
 					end
 				elseif is_map then
-					if seark_key = old_key then
+					if search_key = old_key then
 						control := Found_constant
 						stop := True
 					end

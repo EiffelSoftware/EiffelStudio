@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Directory not found error.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

@@ -147,6 +147,7 @@ feature {XC_COMMAND} -- Inherited from XC_WEBAPP_INTERFACE
 				create {XCCR_HTTP_REQUEST}Result.make (l_request_handler.process_servlet (session_manager, l_request, Current))
 			else
 				create {XCCR_INTERNAL_SERVER_ERROR}Result
+				log.eprint ("Request could not be parsed!", generating_type)
 			end
 
 		end

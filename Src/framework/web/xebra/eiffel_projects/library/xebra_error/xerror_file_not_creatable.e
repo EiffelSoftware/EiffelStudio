@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		File is not creatable error.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

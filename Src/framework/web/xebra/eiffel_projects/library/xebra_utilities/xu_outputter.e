@@ -13,7 +13,6 @@ class
 inherit
 	ANY
 
-
 create
 	make
 
@@ -32,20 +31,23 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	add_input_line: BOOLEAN assign set_add_input_line
+
+feature -- Status Report
+
 	configured: BOOLEAN
 			-- Checks if the outputter has been configured and all neccesary attributes have been set
 		do
 			Result := (i_name /= Void and then i_name.is_set) and (i_debug_level /= Void and then i_debug_level.is_set)
 		end
 
-	add_input_line: BOOLEAN assign set_add_input_line
-
 	name: STRING
 			-- The name of the application
 		do
-			Result := "NO NAME SET"
 			if i_name.is_set then
-					Result := i_name.value.out
+				Result := i_name.value.out
+			else
+				Result := "NO NAME SET"
 			end
 		end
 
@@ -99,8 +101,10 @@ feature -- Status Change
 feature -- Print
 
 	dprint_noformat (a_msg: STRING; a_debug_level: INTEGER)
-			--Prints a debug message  only if debug level is >= a_debug_level without formatting
-			-- and without logging
+			--Prints a debug message without formatting	and without logging
+			--
+			-- `a_msg': The message to be printed
+			-- `a_debug_level': Prints message only if `debug_level' is >= `a_debug_level'
 		require
 			a_msg_attached: a_msg /= Void
 			outputter_configured: configured
@@ -110,76 +114,94 @@ feature -- Print
 			end
 		end
 
-
 	dprint (a_msg: STRING; a_debug_level: INTEGER)
-			-- Prints a debug message  only if debug level is >= a_debug_level
+			-- Prints a debug message
+			--
+			-- `a_msg': The message to be printed
+			-- `a_debug_level': Prints message only if current `i_debug_level' is >= `a_debug_level'
 		require
 			a_msg_attached: a_msg /= Void
 			outputter_configured: configured
 		do
 			if a_debug_level <= debug_level then
-				print_with_name ("[DEBUG" + a_debug_level.out + "] " + a_msg)
+				print_with_name ("[DEBUG" + a_debug_level.out + "] " + a_msg, False)
 			end
 		end
 
 	wprint (a_msg: STRING)
 			-- Prints a warning message
+			--
+			-- `a_msg': The message to be printed
 		require
 			a_msg_attached: a_msg /= Void
 			outputter_configured: configured
 		do
-			print_with_name ("WARNING] " + a_msg)
+			print_with_name ("WARNING] " + a_msg, False)
 		end
 
 	eprint (a_msg: STRING; a_generating_type: TYPE [ANY])
 			-- Prints an error message
+			--
+			-- `a_msg': The message to be printed
+			-- `a_generating_type': The type that generated this errror
 		require
 			outputter_configured: configured
 			a_generating_type_attached: a_generating_type /= Void
 		do
-			print_with_name ("[ERROR] " + a_generating_type.debug_output + ": " + a_msg)
+			print_with_name ("[ERROR] " + a_generating_type.debug_output + ": " + a_msg, True)
 		end
 
 	iprint (a_msg: STRING)
 			-- Prints an info message
+			--
+			-- `a_msg': The message to be printed
 		require
 			outputter_configured: configured
 			a_msg_attached: a_msg /= Void
 		do
-			print_with_name ("[INFO] " + a_msg )
+			print_with_name ("[INFO] " + a_msg, False)
 		end
 
-feature {NONE}  -- Impl
+feature {NONE}  -- Implementation
 
-	print_with_name (a_msg: STRING)
+	print_with_name (a_msg: STRING; a_is_error_output: BOOLEAN)
 			-- Adds the name
+			--
+			-- `a_msg': The message to be printed
+			-- `a_is_error_output': True, if message should be print to error output
 		require
 			outputter_configured: configured
 			a_msg_attached: a_msg /= Void
 		do
-			print_with_cmdnl ("[" + name.out + "]" + a_msg)
+			print_with_cmdnl ("[" + name.out + "]" + a_msg, a_is_error_output)
 		end
 
-	print_with_cmdnl (a_msg: STRING)
+	print_with_cmdnl (a_msg: STRING; a_is_error_output: BOOLEAN)
 			-- Adds a new line at the start and the end and the command symbol(s)
+			--
+			-- `a_msg': The message to be printed
+			-- `a_is_error_output': True, if message should be print to error output
 		require
 			outputter_configured: configured
 			a_msg_attached: a_msg /= Void
  		local
 			l_f_utils: XU_FILE_UTILITIES
+			l_msg: STRING
 		do
 			create l_f_utils
-
 			if attached {PLAIN_TEXT_FILE}l_f_utils.plain_text_file_append_create (name + ".log") as l_file then
 				l_file.put_string ("%N" + a_msg)
 				l_f_utils.close
 			end
-
+			l_msg := "%N" + a_msg
 			if add_input_line then
-				print ("%N" + a_msg + "%N$> ")
+				l_msg.append ("%N$> ")
+			end
 
+			if a_is_error_output then
+				io.error.put_string (l_msg)
 			else
-				print ("%N" + a_msg)
+				io.put_string (l_msg)
 			end
 		end
 

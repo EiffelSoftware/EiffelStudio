@@ -32,30 +32,21 @@ feature -- Access
 		end
 
 
-feature -- Status report
+feature {NONE} -- Status report
 
-	is_necessary: BOOLEAN
-			-- <Precursor>
-			-- Necessary if:
-			--	- The action is not running
+	action_name: STRING
+			-- The name of the action as it appears in the status messages
 		do
-			Result := not is_running
-
-			if Result then
-				log.dprint ("Run is necessary.", log.debug_tasks)
-			else
-				log.dprint ("Run is not necessary", log.debug_tasks)
-			end
+			Result := "Run Webapp"
 		end
 
-	wait_for_exit
-			-- Waits until process is terminated
+	internal_is_execution_needed (a_with_cleaning: BOOLEAN): TUPLE [BOOLEAN, detachable LIST [XSWA_STATUS]]
+			-- <Precursor>
+			--
+			-- Reasons can be:
+			--	- The action is not running
 		do
-			if attached {PROCESS} run_process as l_process  and then l_process.is_running then
-				log.dprint ("Waiting for run_process to exit...", log.debug_tasks)
-				l_process.wait_for_exit
-				set_running (False)
-			end
+			Result := [not is_running, Void]
 		end
 
 feature -- Status setting
@@ -75,6 +66,15 @@ feature -- Status setting
 			end
 		end
 
+	wait_for_exit
+			-- Waits until process is terminated
+		do
+			if attached {PROCESS} run_process as l_process  and then l_process.is_running then
+				log.dprint ("Waiting for run_process to exit...", log.debug_tasks)
+				l_process.wait_for_exit
+				set_running (False)
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -91,8 +91,8 @@ feature {NONE} -- Implementation
 													run_args,
 													run_workdir,
 													agent run_process_exited,
-													agent run_output_handler,
-													agent run_output_handler)
+													agent output_regular,
+													agent output_error)
 						set_running (True)
 					end
 				end
@@ -106,19 +106,14 @@ feature {NONE} -- Internal Status Setting
 
 	set_running (a_running: BOOLEAN)
 			-- Sets is_running
-		require
-			webapp_attached: webapp /= Void
 		do
 			if attached webapp as l_webapp then
 				is_running := a_running
 				l_webapp.is_running := a_running
 			end
-		ensure
-			set: is_running ~ a_running
 		end
 
-feature -- Agents
-
+feature {NONE} -- Agents
 
 	run_process_exited
 			-- Sets is_running := False
@@ -131,11 +126,6 @@ feature -- Agents
 			end
 		end
 
-	run_output_handler (a_ouput: STRING)
-			 -- Forwards output to console
-		do
-			print (a_ouput)
-		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

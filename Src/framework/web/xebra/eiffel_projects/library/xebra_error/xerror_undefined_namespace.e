@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Undefined namespace error.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -30,7 +30,7 @@ feature {NONE} -- Access
 	dollar_description: STRING
 			-- <Precursor>
 		do
-			Result := "Undefined tag {1}."
+			Result := "Undefined namespace {1}."
 		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

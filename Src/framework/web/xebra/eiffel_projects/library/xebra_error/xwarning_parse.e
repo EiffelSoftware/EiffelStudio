@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Parser warning.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

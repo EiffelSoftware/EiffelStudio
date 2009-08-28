@@ -100,15 +100,15 @@ feature -- Actions
 	force_translate
 			-- Forces to retranslate the webapp
 		do
-			action_translate.force := True
+			action_translate.set_force (True)
 			action_translate.execute
 		end
 
 	force_clean
 			-- Forces translation and cleaning of the webapp
 		do
-			action_compile_webapp.needs_cleaning := True
-			action_compile_sgen.needs_cleaning := True
+			action_compile_webapp.set_needs_cleaning (True)
+			action_compile_sgen.set_needs_cleaning (True)
 			force_translate
 		end
 

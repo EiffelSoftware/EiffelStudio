@@ -10,7 +10,7 @@ note
 class
 	DEMOAPPLICATION_CONTROLLER
 
-inherit
+inherithalo?
 
 	ANY
 		undefine

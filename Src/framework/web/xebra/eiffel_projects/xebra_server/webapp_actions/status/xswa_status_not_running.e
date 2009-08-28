@@ -1,47 +1,28 @@
 note
 	description: "[
-		Implements a output handler for compilation
+		Is returned by {XS_WEBAPP_ACTION}.check_status if the webapp is not running.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
+
 class
-	XSOH_COMPILE
+	XSWA_STATUS_NOT_RUNNING
 
 inherit
-	XS_OUTPUT_HANDLER
+	XSWA_STATUS
 		redefine
-			make
+			out
 		end
 
-create
-	make
+feature -- Status Report
 
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
+	out: STRING
+			-- Returns the error message
 		do
-			Precursor
-			max_size := 0
-		end
-
-feature -- Status setting
-
-	internal_handle_output (a_output: STRING)
-			-- <Precursor>
-		do
-			log.dprint_noformat(a_output, log.debug_subtasks)
-		end
-
-feature -- Status report
-
-	has_successfully_terminated: BOOLEAN
-			-- <Precursor>
-		do
-			Result := False
+			Result := "webapp is not running."
 		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
@@ -75,4 +56,3 @@ note
 			Customer support http://support.eiffel.com
 		]"
 end
-

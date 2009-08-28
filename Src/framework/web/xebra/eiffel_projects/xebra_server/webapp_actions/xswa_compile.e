@@ -1,46 +1,73 @@
 note
 	description: "[
-		File not writable error.
+		Deferred class for compiling actions.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	XERROR_FILE_NOT_WRITABLE
+deferred class
+	XSWA_COMPILE
 
 inherit
-	ERROR_ERROR_INFO
-		rename
-			make as make_error
-		end
+	XS_WEBAPP_ACTION
 
-create
-	make
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: READABLE_STRING_8)
+	make
+			-- Initialization for `Current'.	
 		do
-			create file_name.make_from_string (a_file_name)
-			make_error ([a_file_name]);
+			create error_output_cache.make_empty
+		ensure
+			error_output_cache_attached: error_output_cache /= Void
 		end
-
-feature -- Access
-
-	file_name: IMMUTABLE_STRING_8
-			-- File name on which the error occurred
 
 feature {NONE} -- Access
 
-	dollar_description: STRING
-			-- <Precursor>
+	needs_cleaning: BOOLEAN assign set_needs_cleaning
+			-- Can be used to force the action to execute and add -clean option to compilation
+
+	error_output_cache: STRING
+			-- Stores the current output from error output to be displayed delayed.
+
+feature -- Status setting
+
+	set_needs_cleaning (a_needs_cleaning: like needs_cleaning)
+			-- Setts needs_cleaning
 		do
-			Result := "File not writable {1}"
+			needs_cleaning := a_needs_cleaning
+		ensure
+			needs_cleaning_set: needs_cleaning ~ a_needs_cleaning
 		end
 
+feature {NONE} -- Agents
 
+	compile_process_exited
+			-- Is executed when the compilation process has exited
+		do
+			set_running (False)
+			set_needs_cleaning (False)
+			if is_successful then
+				execute_next_action
+			else
+				log.eprint (error_output_cache, generating_type)
+			end
+		end
+
+	handle_compile_output (a_string: STRING)
+			-- Adds output to `error_output_cache' or prints
+		do
+			if log.debug_level >= log.debug_subtasks then
+				log.dprint (a_string, log.debug_subtasks)
+			else
+				error_output_cache.append (a_string)
+			end
+		end
+
+invariant
+	error_output_cache_attached: error_output_cache /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

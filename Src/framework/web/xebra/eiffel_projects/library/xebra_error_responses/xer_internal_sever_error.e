@@ -12,10 +12,22 @@ class
 
 inherit
 	X_ERROR_RESPONSE
-	XER_SERVER
+		undefine
+			default_create
+		end
 
-create
-	make
+	XER_SERVER
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Creation
+
+	default_create
+			-- <Precursor>
+		do
+			create arg.make_empty
+		end
 
 feature -- Access
 

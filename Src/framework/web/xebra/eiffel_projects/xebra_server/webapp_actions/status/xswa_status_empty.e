@@ -1,6 +1,6 @@
 note
 	description: "[
-		Implements a output handler for generation
+		Is returned by {XS_WEBAPP_ACTION}.check_status if the action is always
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -8,41 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	XSOH_GEN
+	XSWA_STATUS_EMPTY
 
 inherit
-	XS_OUTPUT_HANDLER
-		redefine
-			make
-		end
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialization for `Current'.
-		do
-			Precursor
-			max_size := 0
-		end
-
-feature -- Status setting
-
-	internal_handle_output (a_output: STRING)
-			-- <Precursor>
-		do
-			log.dprint_noformat(a_output, log.debug_subtasks)
-		end
-
-feature -- Status report
-
-	has_successfully_terminated: BOOLEAN
-			-- <Precursor>
-		do
-			Result := False
-		end
+	XSWA_STATUS
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
@@ -76,4 +45,3 @@ note
 			Customer support http://support.eiffel.com
 		]"
 end
-

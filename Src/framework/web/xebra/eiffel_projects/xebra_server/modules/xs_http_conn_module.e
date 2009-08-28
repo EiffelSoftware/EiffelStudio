@@ -89,7 +89,8 @@ feature -- Inherited Features
 			            	 if receive_message_from_http (l_thread_http_socket) then
 								l_response := l_webapp_handler.forward_request (current_request_message)
 			            	else
-								l_response := (create {XER_INTERNAL_SERVER_ERROR}.make ("Error decoding message from mod_xebra.")).render_to_command_response
+								l_response := (create {XER_INTERNAL_SERVER_ERROR}).render_to_command_response
+								log.eprint ("Error decoding message from http server plugin!", generating_type)
 							end
 
 							debug
@@ -102,7 +103,8 @@ feature -- Inherited Features
 								end
 								send_message_to_http_server (l_http_response.response.render_to_string, l_thread_http_socket)
 							else
-								send_message_to_http_server ( (create {XER_INTERNAL_SERVER_ERROR}.make ("")).render_to_response.render_to_string, l_thread_http_socket)
+								send_message_to_http_server ( (create {XER_INTERNAL_SERVER_ERROR}).render_to_response.render_to_string, l_thread_http_socket)
+								log.eprint ("Expected XCCR_HTTP_REQUEST from webapp but received " + l_response.generating_type, generating_type)
 							end
 
 				         	l_thread_http_socket.cleanup

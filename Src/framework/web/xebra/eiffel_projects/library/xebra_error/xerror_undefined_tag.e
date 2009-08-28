@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Undefined tag error.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

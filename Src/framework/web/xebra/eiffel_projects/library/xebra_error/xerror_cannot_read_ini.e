@@ -1,6 +1,6 @@
 note
 	description: "[
-		no comment yet
+		Cannot read ini file error.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"

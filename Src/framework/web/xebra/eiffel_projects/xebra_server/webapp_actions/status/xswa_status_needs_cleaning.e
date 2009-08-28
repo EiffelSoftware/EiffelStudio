@@ -1,46 +1,29 @@
 note
 	description: "[
-		File not writable error.
+		Is returned by {XS_WEBAPP_ACTION}.check_status if the action needs cleaning.
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 
+
 class
-	XERROR_FILE_NOT_WRITABLE
+	XSWA_STATUS_NEEDS_CLEANING
 
 inherit
-	ERROR_ERROR_INFO
-		rename
-			make as make_error
+	XSWA_STATUS
+		redefine
+			out
 		end
 
-create
-	make
+feature -- Status Report
 
-feature {NONE} -- Initialization
-
-	make (a_file_name: READABLE_STRING_8)
+	out: STRING
+			-- Returns the error message
 		do
-			create file_name.make_from_string (a_file_name)
-			make_error ([a_file_name]);
+			Result := "needs cleaning."
 		end
-
-feature -- Access
-
-	file_name: IMMUTABLE_STRING_8
-			-- File name on which the error occurred
-
-feature {NONE} -- Access
-
-	dollar_description: STRING
-			-- <Precursor>
-		do
-			Result := "File not writable {1}"
-		end
-
-
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

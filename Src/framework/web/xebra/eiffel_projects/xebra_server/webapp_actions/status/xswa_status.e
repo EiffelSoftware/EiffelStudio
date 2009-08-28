@@ -1,6 +1,7 @@
 note
 	description: "[
-		Is used to redirect output from process and check if they have terminated successfully.
+		Deferred class for items that are returned by {XS_WEBAPP_ACTION}.is_neccesary.
+		Represents the reason why it is neccesary
 	]"
 	legal: "See notice at end of class."
 	status: "Pre-release"
@@ -8,72 +9,21 @@ note
 	revision: "$Revision$"
 
 deferred class
-	XS_OUTPUT_HANDLER
+	XSWA_STATUS
 
 inherit
-	XS_SHARED_SERVER_OUTPUTTER
+	ANY
+		redefine
+			out
+		end
 
-feature {NONE} -- Initialization
+feature -- Status Report
 
-	make
-			-- Initialization for `Current'.
+	out: STRING
+			-- Prints the status
 		do
-			output := ""
-		ensure
-			max_size_is_not_negative: max_size >= 0
-			output_attached: output /= Void
+			create Result.make_empty
 		end
-
-feature -- Access
-
-	output: STRING
-			-- The output
-
-	max_size: INTEGER
-			-- The max size of the stored output
-
-feature -- Status report
-
-	has_successfully_terminated: BOOLEAN
-			-- Checks if the process has terminated successfully
-		deferred
-		end
-
-feature -- Operations
-
-	handle_output (a_output: STRING)
-			-- Handles the output
-		require
-			a_output_attached: a_output /= Void
-		do
-			add_output (a_output)
-			internal_handle_output (a_output)
-		end
-
-feature {NONE} -- Implementation
-
-	add_output (a_output: READABLE_STRING_8)
-			-- Adds output and rezises if necessary.
-		require
-			a_output_attached: a_output /= Void
-		do
-			output := output + a_output
-			if output.count > max_size then
-				output.remove_head (output.count - max_size)
-			end
-		end
-
-	internal_handle_output (a_output: STRING)
-			-- Lets the effective class do what it wants with the output
-
-		require
-			a_output_attached: a_output /= Void
-		deferred
-		end
-
-invariant
-	max_size_is_not_negative: max_size >= 0
-	output_attached: output /= Void
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

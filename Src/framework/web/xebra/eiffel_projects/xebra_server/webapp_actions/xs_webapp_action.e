@@ -248,6 +248,56 @@ feature -- Paths
 			Result_consistent: internal_servlet_gen_executed_file ~ Result
 		end
 
+feature {NONE} -- Internal Status Report
+
+	action_name: STRING
+			-- The name of the action as it appears in the status messages
+		deferred
+		end
+
+	is_necessary: BOOLEAN
+			-- Checks if the current action is necessary
+		do
+			if attached internal_is_execution_needed (true) as l_res then
+				if attached {BOOLEAN} l_res[1] as l_boolean then
+					Result := l_boolean
+				end
+
+				if attached {LIST [ANY]} l_res[2] as l_ist then
+					from l_ist.start until l_ist.after loop
+						log.dprint (action_name + " necessary because: " + l_ist.item_for_iteration.out, log.debug_subtasks)
+						l_ist.forth
+					end
+				end
+			end
+		end
+
+	is_successful: BOOLEAN
+			-- Checks if the current action was successful
+		do
+			if attached internal_is_execution_needed (false) as l_res then
+				if attached {BOOLEAN} l_res[1] as l_boolean then
+					Result := not l_boolean
+				end
+
+				if attached {LIST [ANY]} l_res[2] as l_ist then
+					from l_ist.start until l_ist.after loop
+					log.eprint (action_name + " failed because: " + l_ist.item_for_iteration.out, generating_type)
+						l_ist.forth
+					end
+				end
+			end
+		end
+
+	internal_is_execution_needed (a_with_cleaning: BOOLEAN): TUPLE [BOOLEAN, detachable LIST [XSWA_STATUS]]
+			-- Returns a TUPLE of BOOLEAN and LIST of {XSWA_STATUS}.
+			-- If the BOOLEAN is true, there execution of this action is needed, i.e. it IS necessary to execute the action or the action WAS NOT successful.
+			-- The LIST is optional, each item describes a reason.
+			--
+			-- `a_with_cleaning': If set, it will also check for `needs_cleaning'
+		deferred
+		end
+
 feature -- Operations
 
 	execute
@@ -262,24 +312,19 @@ feature -- Operations
 			internal_last_response_attached: internal_last_response /= Void
 		end
 
+feature {NONE} -- Internal Operations
+
 	execute_next_action
 			--	Executes the next action if attached
+		require
+			next_action_exists: next_action /= Void
 		do
 			if attached next_action as l_action then
 				l_action.execute
 				internal_last_response := l_action.last_response
-			else
-				internal_last_response := create {XCCR_INTERNAL_SERVER_ERROR}
 			end
 		ensure
 			internal_last_response_attached: internal_last_response /= Void
-		end
-
-feature {NONE}  -- Status report internal
-
-	is_necessary: BOOLEAN
-			-- Tests if the action is necessairy
-		deferred
 		end
 
 feature -- Status setting
@@ -304,6 +349,15 @@ feature -- Status setting
 			action_set: next_action = a_action
 		end
 
+	set_running (a_running: BOOLEAN)
+			-- Sets is_running
+		require
+			webapp_attached: webapp /= Void
+		deferred
+		ensure
+			set: is_running ~ a_running
+		end
+
 	stop
 			-- Stops the action
 		deferred
@@ -311,16 +365,21 @@ feature -- Status setting
 			not_running: is_running = False
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Process output agents
 
-	internal_execute
-			-- The actual implementation of an action
-		deferred
-		ensure
-			internal_last_response_attached: internal_last_response /= Void
+	output_regular (a_string: STRING)
+			-- Prints a_string to log.dprint
+		do
+			log.dprint_noformat(a_string, log.debug_subtasks)
 		end
 
-feature {NONE} -- Implementation
+	output_error (a_string: STRING)
+			-- Prints a_String to log.eprint
+		do
+			log.eprint (a_string, generating_type)
+		end
+
+feature {NONE} -- Internal Access
 
 	internal_last_response: detachable XC_COMMAND_RESPONSE
 
@@ -335,6 +394,14 @@ feature {NONE} -- Implementation
 	internal_servlet_gen_ecf_file: detachable like servlet_gen_ecf_file
 	internal_servlet_gen_executed_file: detachable like servlet_gen_executed_file
 
+feature {NONE} -- Implementation
+
+	internal_execute
+			-- The actual implementation of an action
+		deferred
+		ensure
+			internal_last_response_attached: internal_last_response /= Void
+		end
 
 	can_launch_process (a_exe: FILE_NAME; a_dir: DIRECTORY_NAME): BOOLEAN
 			-- Tests if a_exe and a_dirs exist

@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			xeb_file, xml, plain_html_header, xeb_tag_header, plain_html, xeb_tag, doctype,
 			namespace_identifier, l_attribute, dynamic_attribute, variable_attribute, value_attribute,
 			plain_text, plain_text_without_behaviour, close_fixed, value, plain_html_long_end,
-			xeb_tag_long_end: PEG_ABSTRACT_PEG
+			xeb_tag_long_end, chain, invocation: PEG_ABSTRACT_PEG
 		once
 				-- For graceful recovery of silly mistake: on missing '>' we assume it was there all along
 			close_fixed := char ('>')
@@ -70,13 +70,16 @@ feature {NONE} -- Implementation
 
 				-- Values for attributes of tags. Denote "%=feature%" and "#{variable.something.out}" as well
 				-- as normal xml values (plain text)
+			chain := (identifier + (-(dot + identifier)))
+			chain.fixate
+			invocation := (chain |+ (open_parenthesis |+ chain |+ (-(comma |+ chain)) |+ close_parenthesis).optional).consumer
 			value_attribute := (-(quote.negate + any)).consumer
 			value_attribute.set_behaviour (agent build_value_attribute)
 			value_attribute.set_name ("value_attribute")
-			dynamic_attribute := (percent + equals + (identifier + (-(dot + identifier))).consumer + percent)
+			dynamic_attribute := (percent + equals + invocation + percent)
 			dynamic_attribute.set_behaviour (agent build_dynamic_attribute)
 			dynamic_attribute.set_name ("dynamic_attribute")
-			variable_attribute := (sharp + open_curly + (identifier + (-(dot + identifier))).consumer + close_curly)
+			variable_attribute := (sharp + open_curly + invocation + close_curly)
 			variable_attribute.set_behaviour (agent build_variable_attribute)
 			variable_attribute.set_name ("variable_attribute")
 

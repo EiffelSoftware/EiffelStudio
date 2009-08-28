@@ -38,12 +38,18 @@ feature {NONE} -- Access
 
 	value: XTAG_TAG_ARGUMENT
 			-- Value of variable
+	
+	type: detachable XTAG_TAG_ARGUMENT
+			-- The type of the variable
 
 feature {NONE} -- Implementation
 
 	internal_generate (a_servlet_class: XEL_SERVLET_CLASS_ELEMENT; a_variable_table: HASH_TABLE [ANY, STRING])
 			-- <Precursor>
 		do
+			if attached type as l_type then
+				a_servlet_class.render_html_page.append_local_if_not_exists (variable.plain_value (current_controller_id), l_type.plain_value (current_controller_id))
+			end
 			if value.is_dynamic or value.is_variable then
 				a_servlet_class.render_html_page.append_expression (variable.value (current_controller_id) + " := " + value.plain_value (current_controller_id))
 			else
@@ -60,6 +66,9 @@ feature {NONE} -- Implementation
 			end
 			if id.is_equal ("value") then
 				value := a_attribute
+			end
+			if id.is_equal ("type") then
+				type := a_attribute
 			end
 		end
 

@@ -35,13 +35,10 @@
 	</tag>
 	<tag id="hyper_link" class="XTAG_XEB_HYPER_LINK_TAG">
 		<attribute id="id"/>
-	</tag>
-	<tag id="variable" class="XTAG_XEB_VARIABLE_TAG">
-		<attribute id="name" />
-		<attribute id="type" />
-	</tag>
+	</tag>	
 	<tag id="set_variable" class="XTAG_XEB_SET_VARIABLE_TAG">
 		<attribute id="variable" />
 		<attribute id="value" />
+		<attribute id="type" optional="True"/>
 	</tag>
 </taglib>

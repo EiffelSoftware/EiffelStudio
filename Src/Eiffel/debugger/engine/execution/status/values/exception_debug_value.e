@@ -466,7 +466,6 @@ feature {APPLICATION_EXECUTION} -- Implementation Change
 		do
 			if exception_others = Void then
 				create exception_others.make (2)
-				exception_others.compare_objects
 			end
 			exception_others.force (v, k)
 		end

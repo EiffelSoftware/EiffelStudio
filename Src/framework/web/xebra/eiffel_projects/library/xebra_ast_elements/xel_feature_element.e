@@ -118,6 +118,22 @@ feature -- Access
 		ensure
 			local_has_been_added: old locals.count < locals.count
 		end
+		
+	append_local_if_not_exists (name, type: STRING)
+			-- If variable already exists nothing happends, otherwise the variable is 
+			-- appended
+		require
+			name_attached: attached name
+			name_valid: not name.is_empty
+			type_attached: attached type
+			type_valid: not type.is_empty
+		do
+			if not locals.has_key (name) then
+				append_local (name, type)
+			end
+		ensure
+			local_has_been_added: locals.has_key (name)
+		end
 
 	append_expression (expression: STRING)
 			-- Appends a {XEL_PLAIN_CODE_ELEMENT} to the feature

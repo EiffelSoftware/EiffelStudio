@@ -86,8 +86,6 @@ feature -- Access
 				l_test := a_node.item
 				if a_column = 2 then
 					Result := new_status_item (l_test)
-				elseif l_test.is_outcome_available then
-					Result := new_date_time_item (l_test.last_outcome.date)
 				end
 			else
 				Result := Precursor (a_column, a_grid, a_node)
@@ -104,30 +102,20 @@ feature {TAG_TREE_NODE} -- Basic operations
 	process_node (a_node: TAG_TREE_NODE [TEST_I])
 			-- <Precursor>
 		local
-			l_test: TEST_I
-			l_class: detachable CLASS_I
-			l_classc: detachable CLASS_C
 			l_feature: detachable E_FEATURE
 		do
-			if a_node.is_leaf then
-				l_test := a_node.item
-					-- TODO: the CLASS_I instance should be stored in the test.
-				if project_access.is_initialized then
-					l_class := project_access.class_from_name (l_test.class_name, Void)
-					if attached l_class and then l_class.is_compiled then
-						l_classc := l_class.compiled_representation
-						if l_classc.has_feature_table then
-							l_feature := l_classc.feature_with_name (l_test.routine_name.as_string_8)
-						end
-					end
+			if a_node.is_leaf and then attached {ETEST} a_node.item as l_test then
+				if
+					attached {CLASS_C} l_test.eiffel_class.compiled_representation as l_classc and then
+					l_classc.has_feature_table
+				then
+					l_feature := l_classc.feature_with_name (l_test.routine_name)
 				end
 
 				if attached l_feature then
-					token_writer.add_feature (l_feature, l_test.routine_name.as_string_8)
-				elseif attached l_class then
-					token_writer.add_classi (l_class, l_test.routine_name.as_string_8)
+					token_writer.add_feature (l_feature, l_test.routine_name)
 				else
-					token_writer.process_basic_text (l_test.routine_name.as_string_8)
+					token_writer.add_classi (l_test.eiffel_class, l_test.routine_name)
 				end
 
 				if
@@ -135,11 +123,7 @@ feature {TAG_TREE_NODE} -- Basic operations
 					l_parent.name.same_string (l_test.class_name))
 				then
 					token_writer.process_basic_text (" (")
-					if attached l_class then
-						token_writer.add_class (l_class)
-					else
-						token_writer.process_basic_text (l_test.class_name)
-					end
+					token_writer.add_class (l_test.eiffel_class)
 					token_writer.process_basic_text (")")
 				end
 				last_pixmap := icon_provider.icons.test_routine_icon
@@ -227,38 +211,13 @@ feature {NONE} -- Implementation
 		local
 			l_outcome: EQA_RESULT
 		do
-			if a_test.is_queued then
-				Result := locale_formatter.translation (l_queued)
-			elseif a_test.is_running then
-				Result := locale_formatter.translation (l_running)
-			else
-				if a_test.is_outcome_available then
-					l_outcome := a_test.last_outcome
-					if not l_outcome.is_pass then
---						if l_outcome.has_response then
---							if l_outcome.is_setup_clean then
---								Result := exception_text (l_outcome.test_response.exception)
---							else
---								Result := exception_text (l_outcome.setup_response.exception)
---							end
---						else
---							if l_outcome.is_user_abort then
---								Result := locale_formatter.translation (l_user_aborted)
---							elseif l_outcome.is_communication_error then
---									-- TODO: use `locale_formatter' for this in 6.5
---								Result := ("communication error").to_string_32
---							else
---								Result := locale_formatter.translation (l_aborted)
---							end
---						end
-						Result := "not pass"
-					else
-						create Result.make_empty
-					end
-				else
-					Result := locale_formatter.translation (l_not_tested)
-				end
-			end
+--			if a_test.is_queued then
+--				Result := locale_formatter.translation (l_queued)
+--			elseif a_test.is_running then
+--				Result := locale_formatter.translation (l_running)
+--			else
+				Result := locale_formatter.translation (l_not_tested)
+--			end
 		end
 
 	exception_text (a_exception: EQA_TEST_INVOCATION_EXCEPTION): STRING_32
@@ -283,15 +242,15 @@ feature {NONE} -- Implementation
 	status_icon (a_test: TEST_I): detachable EV_PIXMAP
 			-- Icon representing status of `a_test'.
 		do
-			if not (a_test.is_queued or a_test.is_running) and a_test.is_outcome_available then
-				if a_test.last_outcome.is_pass then
-					Result := pixmaps.icon_pixmaps.general_tick_icon
-				elseif a_test.last_outcome.is_fail then
-					Result := pixmaps.icon_pixmaps.general_error_icon
-				else
-					Result := pixmaps.icon_pixmaps.general_warning_icon
-				end
-			end
+--			if not (a_test.is_queued or a_test.is_running) and a_test.is_outcome_available then
+--				if a_test.last_outcome.is_pass then
+--					Result := pixmaps.icon_pixmaps.general_tick_icon
+--				elseif a_test.last_outcome.is_fail then
+--					Result := pixmaps.icon_pixmaps.general_error_icon
+--				else
+--					Result := pixmaps.icon_pixmaps.general_warning_icon
+--				end
+--			end
 		end
 
 feature {NONE} -- Internationalization

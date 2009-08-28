@@ -307,23 +307,19 @@ feature {NONE} -- Events
 			check l_name /= Void end
 			class_name_validator.validate_class_name (l_name)
 			if class_name_validator.is_valid then
-				if test_suite.is_service_available and then test_suite.service.is_project_initialized then
-					if not wizard_information.is_generator_conf then
-						class_name_validator.validate_new_class_name (l_name, test_suite.service.eiffel_project)
-						if not class_name_validator.is_valid then
-							l_error := class_name_validator.last_error_message
-						elseif is_cluster_valid then
-							l_cluster := conf.cluster_cache
-							check l_cluster /= Void end
-							l_path := l_cluster.location.build_path (conf.path_cache, l_name.as_lower)
-							l_path.append (".e")
-							if (create {RAW_FILE}.make (l_path)).exists then
-								l_error := locale_formatter.formatted_translation (e_file_exists, [l_path])
-							end
+				if not wizard_information.is_generator_conf then
+					class_name_validator.validate_new_class_name (l_name, etest_suite.project_access.project)
+					if not class_name_validator.is_valid then
+						l_error := class_name_validator.last_error_message
+					elseif is_cluster_valid then
+						l_cluster := conf.cluster_cache
+						check l_cluster /= Void end
+						l_path := l_cluster.location.build_path (conf.path_cache, l_name.as_lower)
+						l_path.append (".e")
+						if (create {RAW_FILE}.make (l_path)).exists then
+							l_error := locale_formatter.formatted_translation (e_file_exists, [l_path])
 						end
 					end
-				else
-					l_error := locale_formatter.translation (e_project_not_available)
 				end
 			else
 				l_error := class_name_validator.last_error_message
@@ -470,7 +466,6 @@ feature {NONE} -- Internationalization
 	b_tear_down_routine: STRING = "Redefine `$1'"
 	b_system_level_test: STRING = "System level test"
 
-	e_project_not_available: STRING = "Project is currently not available"
 	e_file_exists: STRING = "Class file $1 already exists"
 	e_directory_not_writable: STRING = "Directory $1 is not writable"
 	e_directory_non_existent: STRING = "Directory $1 does not exists"

@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 			if test_suite.is_service_available then
 				l_service := test_suite.service
-				if l_service.is_project_initialized then
+				if etest_suite.project_access.is_initialized then
 					launch_with_service (l_service)
 				else
 					prompts.show_error_prompt (locale.translation (e_project_not_compiled), current_window, Void)
@@ -67,13 +67,12 @@ feature {NONE} -- Initialization
 	launch_with_service (a_service: TEST_SUITE_S)
 		require
 			a_service_attached: a_service /= Void
-			a_service_initialized: a_service.is_project_initialized
 		local
 			l_project: E_PROJECT
 			l_uuid: UUID
 			l_debugger_manager: like debugger_manager
 		do
-			l_project := a_service.eiffel_project
+			l_project := etest_suite.project_access.project
 			create l_uuid.make_from_string (testing_library_uuid)
 			if l_project.universe.library_of_uuid (l_uuid, False).is_empty and not library_prompt_cell.item then
 					-- Testing library has not been added yet

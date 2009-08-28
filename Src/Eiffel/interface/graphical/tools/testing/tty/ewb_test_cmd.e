@@ -12,15 +12,7 @@ deferred class
 inherit
 	EWB_CMD
 
-	TEST_SUITE_OBSERVER
-		redefine
-			on_processor_error
-		end
-
 	SHARED_TEST_SERVICE
-		redefine
-			on_processor_launch_error
-		end
 
 feature -- Basic operations
 
@@ -32,12 +24,7 @@ feature -- Basic operations
 			if test_suite.is_service_available then
 				l_service := test_suite.service
 				if l_service.is_interface_usable then
-					if l_service.is_project_initialized then
-						execute_with_test_suite (l_service)
-					else
-						print_string (locale.translation (e_test_suite_not_initialized))
-						print_string ("%N")
-					end
+					execute_with_test_suite (l_service)
 				else
 					print_string (locale.translation (e_test_suite_not_usable))
 					print_string ("%N")
@@ -100,16 +87,15 @@ feature {NONE} -- Basic operations
 	print_statistics (a_test_suite: TEST_SUITE_S)
 		require
 			a_test_suite_usable: a_test_suite.is_interface_usable
-			a_test_suite_initialized: a_test_suite.is_project_initialized
 		local
 			l_total, l_executed, l_failing, l_passing, l_unresolved, l_filtered: NATURAL
 			l_translated: STRING_GENERAL
 		do
 			l_total := a_test_suite.tests.count.to_natural_32
 			--l_filtered := filtered_tests (a_test_suite).items.count.to_natural_32
-			l_executed := a_test_suite.count_executed
-			l_passing := a_test_suite.count_passing
-			l_failing := a_test_suite.count_failing
+			l_executed := 0 -- a_test_suite.count_executed
+			l_passing := 0 -- a_test_suite.count_passing
+			l_failing := 0 -- a_test_suite.count_failing
 			l_unresolved := l_executed - l_passing - l_failing
 			l_translated := locale.translation (m_statistics)
 			print_string ("%N")
@@ -147,38 +133,11 @@ feature {NONE} -- Basic operations
 			output_window.add_new_line
 		end
 
-feature {NONE} -- Events
-
-	on_processor_error (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I; a_error: STRING_8; a_token_values: TUPLE)
-			-- <Precursor>
-		do
-			print_string (locale.formatted_string (a_error, a_token_values))
-			print_string ("%N")
-		end
-
-	on_processor_launch_error (a_error: like error_message; a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL_32)
-			-- <Precursor>
-		do
-			print_string (a_error)
-			print_string ("%N%N")
-		end
-
 feature {NONE} -- Implementation
-
-	launch_ewb_processor (a_test_suite: TEST_SUITE_S; a_type: TYPE [TEST_PROCESSOR_I]; a_conf: TEST_PROCESSOR_CONF_I)
-			-- Launch test suite processor.
-		require
-			a_test_suite_usable: a_test_suite.is_interface_usable
-		do
-			a_test_suite.test_suite_connection.connect_events (Current)
-			launch_processor (a_type, a_conf)
-			a_test_suite.test_suite_connection.disconnect_events (Current)
-		end
 
 	execute_with_test_suite (a_test_suite: TEST_SUITE_S)
 		require
 			test_suite_usable: a_test_suite.is_interface_usable
-			test_suite_initialized: a_test_suite.is_project_initialized
 		deferred
 		end
 
@@ -202,7 +161,6 @@ feature {NONE} -- Internationalization
 			-- $5: Number of tests failing (total)
 			-- $6: Number of tests unresolved (total)
 
-	e_test_suite_not_initialized: STRING = "Test suite has not been initialized yet. Please compile project."
 	e_test_suite_not_usable: STRING = "The test suite service is currently unavailable."
 
 note

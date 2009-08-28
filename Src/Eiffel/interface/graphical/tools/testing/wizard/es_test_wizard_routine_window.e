@@ -291,14 +291,6 @@ feature {NONE} -- Access: widgets
 	add_template_button: EV_BUTTON
 			-- Button adding tag for selected item in `template_list'
 
-feature {NONE} -- Access: tag utilities
-
-	tag_utilities: TAG_UTILITIES
-			-- Tag utilities
-		once
-			create Result
-		end
-
 feature {NONE} -- Status report
 
 	is_valid: BOOLEAN
@@ -351,12 +343,15 @@ feature {NONE} -- Events
 			check l_tag /= Void end
 			if l_tag.is_empty then
 				l_valid := True
-			elseif tag_utilities.is_valid_tag (l_tag) then
+			elseif
+				test_suite.is_service_available and then
+				test_suite.service.is_interface_usable and then
+				test_suite.service.tag_tree.validator.is_valid_tag (l_tag) then
 				l_valid := True
 				l_enable := True
 			else
 				l_error := locale_formatter.formatted_translation (e_invalid_tag,
-					[l_tag, example_tag, tag_utilities.valid_token_chars])
+					[l_tag, example_tag, "_{}()[]:.-"])
 			end
 			if l_enable then
 				if not add_button.is_sensitive then
@@ -377,11 +372,16 @@ feature {NONE} -- Events
 		do
 			l_tag := tag_field.text.to_string_8
 			check l_tag /= Void end
-			if not l_tag.is_empty and tag_utilities.is_valid_tag (l_tag) then
-				conf.tags_cache.force (l_tag)
-				update_tag_list
-				tag_field.set_text (create {STRING_32}.make_empty)
-			end
+			perform_with_test_suite (
+				agent (a_test_suite: TEST_SUITE_S; a_tag: STRING)
+					do
+						if a_test_suite.tag_tree.validator.is_valid_tag (a_tag) then
+							conf.tags_cache.force (a_tag)
+							update_tag_list
+
+							tag_field.set_text (create {STRING_32}.make_empty)
+						end
+					end (?, l_tag))
 		end
 
 	on_remove_tag

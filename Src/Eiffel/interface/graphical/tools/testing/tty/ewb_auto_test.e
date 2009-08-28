@@ -12,8 +12,7 @@ class
 inherit
 	EWB_TEST_CMD
 		redefine
-			check_arguments_and_execute,
-			on_processor_proceeded
+			check_arguments_and_execute
 		end
 
 create
@@ -81,7 +80,7 @@ feature -- Execution
 		do
 			l_args := auto_test_arguments
 			if l_args /= Void then
-				l_project := a_test_suite.eiffel_project
+				l_project := etest_suite.project_access.project
 				create l_error_handler.make (l_project.system.system)
 				create l_ap.make_with_arguments (l_args, l_error_handler)
 				--l_ap.process_arguments (l_args)
@@ -128,7 +127,9 @@ feature -- Execution
 				end
 				l_conf.set_new_class_name("NEW_AUTO_TEST")
 				l_conf.set_debugging (l_ap.is_debugging)
-				launch_ewb_processor (a_test_suite, generator_factory_type, l_conf)
+
+				-- TODO: use new {TEST_CREATION_I} model for launching test generation
+				--launch_ewb_processor (a_test_suite, generator_factory_type, l_conf)
 			else
 
 			end
@@ -172,47 +173,6 @@ feature -- Execution
 			auto_test_arguments := Void
 		ensure then
 		--	auto_test_arguments_attached: auto_test_arguments /= Void
-		end
-
-feature {NONE} -- Events
-
-	on_processor_proceeded (a_test_suite: TEST_SUITE_S; a_processor: TEST_PROCESSOR_I)
-			-- <Precursor>
-		local
-			l_generator: detachable TEST_GENERATOR_I
-		do
-			l_generator := generator_factory_type.attempt (a_processor)
-			if l_generator /= Void then
-
-				if l_generator.is_running then
-					if l_generator.is_compiling then
-						if current_state /= compiling_state then
-							print_string ("Compiling%N")
-							current_state := compiling_state
-						end
-					elseif l_generator.is_executing then
-						if current_state /= executing_state then
-							print_string ("Executing random tests%N")
-							current_state := executing_state
-						end
-					elseif l_generator.is_replaying_log then
-						if current_state /= replaying_state then
-							print_string ("Replaying log%N")
-							current_state := replaying_state
-						end
-					elseif l_generator.is_minimizing_witnesses then
-						if current_state /= minimizing_state then
-							print_string ("Minimizing witnesses%N")
-							current_state := minimizing_state
-						end
-					elseif l_generator.is_generating_statistics then
-						if current_state /= generating_state then
-							print_string ("Generating statistics%N")
-							current_state := generating_state
-						end
-					end
-				end
-			end
 		end
 
 note

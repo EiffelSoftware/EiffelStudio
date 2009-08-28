@@ -51,86 +51,12 @@ feature {NONE} -- Access
 			end
 		end
 
-	extractor_factory_type: TYPE [TEST_EXTRACTOR_I]
-			-- Factory type for test case extraction
-		do
-			Result := {TEST_EXTRACTOR_I}
-		end
-
-	manual_factory_type: TYPE [TEST_MANUAL_CREATOR_I]
-			-- Type for manual test creation
-		do
-			Result := {TEST_MANUAL_CREATOR_I}
-		end
-
-	generator_factory_type: TYPE [TEST_GENERATOR_I]
-			-- Factory type for test case generation
-		do
-			Result := {TEST_GENERATOR_I}
-		end
-
 	default_filter_expression: STRING = "^class"
 			-- Default tag prefix for `tree_view'
 			--
 			-- Note: while {ETEST} are the only {TEST_I} instances currently added to the test suite, it is
 			--       guaranteed that all tests are shown, since all {ETEST} are tagged with a class tag
 			--       starting with "class/".
-
-feature {NONE} -- Query
-
-	error_message (a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL): STRING_32
-			-- Translated error message for given error code and corresponding processor.
-			--
-			-- `a_type': Type of processor
-			-- `a_code': Corresponding error code
-		local
-			l_message: STRING
-		do
-			inspect
-				a_code
-			when service_not_available_code then
-				l_message := e_service_not_available
-			when processor_not_available_code then
-				if attached {TYPE [TEST_OBSOLETE_EXECUTOR_I]} a_type as l_exec_type then
-					l_message := e_execution_unavailable
-				elseif attached {TYPE [TEST_DEBUGGER_I]} a_type as l_debug_type then
-					l_message := e_debugging_unavailable
-				elseif attached {TYPE [TEST_CREATOR_I]} a_type as l_creator_type then
-					l_message := e_creation_unavailable
-				elseif attached {TYPE [TEST_EXTRACTOR_I]} a_type as l_extractor_type then
-					l_message := e_extraction_unavailable
-				elseif attached {TYPE [TEST_GENERATOR_I]} a_type as l_generator_type then
-					l_message := e_unkonwn_error
-				end
-			when processor_not_ready_code then
-				if attached {TYPE [TEST_OBSOLETE_EXECUTOR_I]} a_type as l_exec_type2 then
-					l_message := e_execution_not_ready
-				elseif attached {TYPE [TEST_DEBUGGER_I]} a_type as l_debug_type2 then
-					l_message := e_debugging_not_ready
-				elseif attached {TYPE [TEST_CREATOR_I]} a_type as l_creator_type2 then
-					l_message := e_creation_not_ready
-				elseif attached {TYPE [TEST_EXTRACTOR_I]} a_type as l_extractor_type2 then
-					l_message := e_extraction_not_ready
-				elseif attached {TYPE [TEST_GENERATOR_I]} a_type as l_generator_type2 then
-					l_message := e_unkonwn_error
-				end
-			when configuration_not_valid_code then
-				if attached {TYPE [TEST_OBSOLETE_EXECUTOR_I]} a_type as l_exec_type3 then
-					l_message := e_execution_conf_invalid
-				elseif attached {TYPE [TEST_CREATOR_I]} a_type as l_creator_type3 then
-					l_message := e_creation_conf_invalid
-				elseif attached {TYPE [TEST_EXTRACTOR_I]} a_type as l_extractor_type3 then
-					l_message := e_extraction_conf_invalid
-				elseif attached {TYPE [TEST_GENERATOR_I]} a_type as l_generator_type3 then
-					l_message := e_generation_conf_invalid
-				else
-					l_message := e_unkonwn_error
-				end
-			else
-				l_message := e_unkonwn_error
-			end
-			Result := locale.translation (l_message)
-		end
 
 feature {NONE} -- Basic operations
 
@@ -208,60 +134,12 @@ feature {NONE} -- Basic operations
 					end (?, a_debug, a_list))
 		end
 
-	frozen launch_processor (a_type: TYPE [TEST_PROCESSOR_I]; a_conf: TEST_PROCESSOR_CONF_I)
-			-- Launch processor with provided configuration. If unable to launch processor, report errors
-			-- through `on_error'.
-			--
-			-- `a_type': Type of processor to be launched.
-			-- `a_conf': Configuration to launch processor.
-			-- `a_blocking': True if `launch_processor' should return after processor is stopped, otherwise
-			--               it will return immediately.
-		local
-			l_service: TEST_SUITE_S
-			l_registrar: TEST_PROCESSOR_REGISTRAR_I
-			l_proc: TEST_PROCESSOR_I
-			l_code: NATURAL
-		do
-			if test_suite.is_service_available and then test_suite.service.is_project_initialized then
-				l_service := test_suite.service
-				l_registrar := l_service.processor_registrar
-				if l_registrar.is_valid_type (a_type, l_service) then
-					l_proc := l_registrar.processor (a_type, l_service)
-					if l_proc.is_ready then
-						if l_proc.is_valid_configuration (a_conf) then
-							l_service.scheduler.launch_processor (l_proc, a_conf)
-						else
-							l_code := configuration_not_valid_code
-						end
-					else
-						l_code := processor_not_ready_code
-					end
-				else
-					l_code := processor_not_available_code
-				end
-			else
-				l_code := service_not_available_code
-			end
-			if l_code > 0 then
-				on_processor_launch_error (error_message (a_type, l_code), a_type, l_code)
-			end
-		end
-
 feature {NONE} -- Events
 
 	on_session_launch_error (a_error: STRING_32)
 			-- Called when an error occurred when using `test_suite'
 			--
 			-- `a_error': Error message.
-		do
-		end
-
-	on_processor_launch_error (a_error: like error_message; a_type: TYPE [TEST_PROCESSOR_I]; a_code: NATURAL)
-			-- Called when an error occurred launching processor.
-			--
-			-- `a_error': Error message
-			-- `a_type': Type of processor attempted to launch.
-			-- `a_code': Error code
 		do
 		end
 

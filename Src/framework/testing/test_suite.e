@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 
 				-- register test executor
 			register_factory (create {TEST_DEFAULT_SESSION_FACTORY [TEST_EXECUTION]})
+
+			create tag_tree.make (create {TAG_DIRECTORY_FORMATTER}, create {EC_TAG_TREE_NODE_FACTORY [TEST_I]})
 		end
 
 feature -- Access

@@ -71,7 +71,7 @@ feature -- Implementation
 					l_input_id := a_servlet_class.render_html_page.new_local ("STRING")
 
 						-- Render html page
-					a_servlet_class.render_html_page.append_expression (l_input_id + " := get_unique_id")
+					a_servlet_class.render_html_page.append_expression (l_input_id + " := unique_id")
 					html_representation (a_servlet_class, l_input_id)
 
 						-- Retrieve all validators

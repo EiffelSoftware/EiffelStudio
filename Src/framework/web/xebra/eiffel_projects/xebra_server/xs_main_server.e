@@ -59,7 +59,7 @@ feature {XS_APPLICATION} -- Setup
 			config.args.set_unmanaged (a_arg_parser.unmanaged)
 			if check_xebra_environment_variable then
 				log.dprint (config.args.print_configuration, log.debug_configuration)
-				stop := false
+				stop := False
 				if attached {XCCR_OK} load_config then
 					if attached a_arg_parser.create_webapp as l_config  then
 						run_compile_mode (l_config)
@@ -103,16 +103,16 @@ feature {NONE} -- Operations
 	run_compile_mode (a_config: STRING)
 			-- The server is not started as usual but only initiates translation of the specified webapp and ends afterwards.
 		local
-			l_w: XS_MANAGED_WEBAPP
+			l_webapp: XS_MANAGED_WEBAPP
 			l_webapp_config_reader: XC_WEBAPP_JSON_CONFIG_READER
 			l_thread: EXECUTION_ENVIRONMENT
 			l_stop: BOOLEAN
 		do
 			create l_webapp_config_reader
 			create l_thread
-			if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (a_config) as l_c then
-				create l_w.make_with_config (l_c)
-				l_w.force_translate
+			if attached {XC_WEBAPP_CONFIG} l_webapp_config_reader.process_file (a_config) as l_config then
+				create l_webapp.make_with_config (l_config)
+				l_webapp.force_translate
 				from
 					log.iprint ("CREATING WEBAPP, hit enter to abort.")
 				until
@@ -122,7 +122,7 @@ feature {NONE} -- Operations
 					l_stop := True
 				end
 				log.iprint ("Aborting...")
-				l_w.shutdown_all
+				l_webapp.shutdown_all
 			end
 			handle_errors.do_nothing
 		end
@@ -158,9 +158,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 	force_translate (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_webapp then
 				log.iprint ("Forcing retranslation of webapp '" + a_name + "'")
-				l_w.force_translate
+				l_webapp.force_translate
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
 				create {XCCR_INVALID_CMD_UNMANAGED}Result.make (a_name)
@@ -194,9 +194,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 	fire_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_webapp then
 				log.iprint ("Fireing off webapp '" + a_name + "'")
-				l_w.fire_off
+				l_webapp.fire_off
 				create {XCCR_OK}Result
 			else
 				create {XCCR_WEBAPP_NOT_FOUND}Result.make (a_name)
@@ -240,9 +240,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 	dev_mode_on_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_webapp then
 				log.iprint ("Setting dev_mode of webapp '" + a_name + "' to on.")
-				l_w.dev_mode := True
+				l_webapp.dev_mode := True
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
 				Result := create {XCCR_INVALID_CMD_UNMANAGED}.make (a_name)
@@ -254,9 +254,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 	dev_mode_off_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_webapp then
 				log.iprint ("Setting dev_mode of webapp '" + a_name + "' to off.")
-				l_w.dev_mode := False
+				l_webapp.dev_mode := False
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
 				Result := create {XCCR_INVALID_CMD_UNMANAGED}.make (a_name)
@@ -269,9 +269,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 	launch_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_webapp then
 				log.iprint ("Launching webapp '" + a_name + "'...")
-				l_w.send (create {XCWC_EMPTY}.make).do_nothing
+				l_webapp.send (create {XCWC_EMPTY}.make).do_nothing
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
 				Result := create {XCCR_INVALID_CMD_UNMANAGED}.make (a_name)
@@ -283,9 +283,9 @@ feature {XS_SERVER_MODULE} -- Status setting
 	shutdown_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_w then
+			if attached {XS_MANAGED_WEBAPP} config.file.webapps [a_name] as l_webapp then
 				log.iprint ("Shutting down webapp '" + a_name + "'...")
-				l_w.shutdown_all
+				l_webapp.shutdown_all
 				create {XCCR_OK}Result
 			elseif attached {XS_UNMANAGED_WEBAPP} config.file.webapps [a_name] then
 				Result := create {XCCR_INVALID_CMD_UNMANAGED}.make (a_name)
@@ -316,8 +316,8 @@ feature {XS_SERVER_MODULE} -- Status setting
 	enable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w then
-				l_w.is_disabled := False
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_webapp then
+				l_webapp.is_disabled := False
 				log.iprint ("Enabling webapp '" + a_name + "'...")
 				create {XCCR_OK}Result
 			else
@@ -328,8 +328,8 @@ feature {XS_SERVER_MODULE} -- Status setting
 	disable_webapp (a_name: STRING): XC_COMMAND_RESPONSE
 			-- <Precursor>.
 		do
-			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_w  then
-				l_w.is_disabled := True
+			if attached {XS_WEBAPP} config.file.webapps [a_name] as l_webapp  then
+				l_webapp.is_disabled := True
 				log.iprint ("Disabling webapp '" + a_name + "'...")
 				create {XCCR_OK}Result
 			else
@@ -484,7 +484,7 @@ feature -- From EIFFEL_ENV
 
 	check_xebra_environment_variable: BOOLEAN
 			-- Check if needed environment variables are set up.
-			-- Returns false if a var is missing.
+			-- Returns False if a var is missing.
 		local
 			l_product_names: PRODUCT_NAMES
 			l_op_env: like operating_environment
@@ -527,5 +527,36 @@ feature -- From EIFFEL_ENV
 
 invariant
 		modules_attached: modules /= Void
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

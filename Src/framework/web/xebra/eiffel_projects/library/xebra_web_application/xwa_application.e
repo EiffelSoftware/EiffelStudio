@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			l_arg_parser.execute (agent setup (l_arg_parser))
 		end
 
-
 feature {NONE} -- Operations Internal
 
 	setup (a_arg_parser: XWA_ARGUMENT_PARSER)
@@ -103,10 +102,8 @@ feature -- Access
 
 	server_connection_handler: detachable XWA_SERVER_CONN_HANDLER
 			-- Returns the applications server conn handler
-
 invariant
 	config_attached: config /= Void
-
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

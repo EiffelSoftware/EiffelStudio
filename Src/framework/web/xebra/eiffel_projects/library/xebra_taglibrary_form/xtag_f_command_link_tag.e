@@ -54,7 +54,7 @@ feature -- Implementation
 						-- Figure out, if the post request comes from this link, if yes execute the function with the appropriate argument
 					l_unique_id :=  a_servlet_class.render_html_page.new_uid
 					l_unique_var :=  a_servlet_class.render_html_page.new_local ("STRING")
-					a_servlet_class.render_html_page.append_expression (l_unique_var + " := get_unique_id")
+					a_servlet_class.render_html_page.append_expression (l_unique_var + " := unique_id")
 
 					a_servlet_class.render_html_page.append_expression (Response_variable + ".append (%"" +
 						forms1 + l_unique_form_id +

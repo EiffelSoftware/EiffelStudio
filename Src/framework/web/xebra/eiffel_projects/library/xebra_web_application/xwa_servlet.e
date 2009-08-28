@@ -50,13 +50,22 @@ feature -- Access
 	uid_counter: INTEGER
 			-- Counter to generate unique ids
 
-	get_unique_id: STRING
+feature -- Queries
+
+	unique_id: STRING
 			-- Generates a new unique id for the servlet
 		do
 			Result := "servlet_uid_" + uid_counter.out
 			uid_counter := uid_counter + 1
 		ensure
 			result_attached: attached Result
+		end
+		
+	internal_controllers: LIST [XWA_CONTROLLER]
+			-- The controller associated to the servlet
+		deferred
+		ensure
+			Result_attached: attached Result
 		end
 
 feature -- Basic Operations	
@@ -136,13 +145,6 @@ feature -- Basic Operations
 			l_real_bean: ANY
 		do
 			handle_form_internal (a_request, a_response)
-		end
-
-	internal_controllers: LIST [XWA_CONTROLLER]
-			-- The controller associated to the servlet
-		deferred
-		ensure
-			Result_attached: attached Result
 		end
 
 feature -- Children responsibility

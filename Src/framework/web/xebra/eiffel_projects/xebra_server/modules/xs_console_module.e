@@ -338,16 +338,16 @@ feature -- Status Report
 	nice_space (a_count: INTEGER): STRING
 			-- Returns count many spaces in a string
 		local
-			l_i: INTEGER
+			i: INTEGER
 		do
 			from
-				l_i := 0
+				i := 0
 				Result := ""
 			until
-				l_i >= a_count
+				i >= a_count
 			loop
 				Result := Result + " "
-				l_i := l_i + 1
+				i := i + 1
 			end
 
 		end
@@ -363,4 +363,35 @@ feature -- Status setting
 invariant
 		command_groups_attached: command_groups /= Void
 		main_server_attached: main_server /= Void
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

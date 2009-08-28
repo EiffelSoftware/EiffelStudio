@@ -164,7 +164,7 @@ feature -- Basic implementation
 			a_servlet_class.set_debug_information (debug_information)
 				-- If the render option is set, overwrite definition of tag
 			if not render.value (current_controller_id).is_empty then
-				l_render_condition_id := a_servlet_class.get_unique_identifier
+				l_render_condition_id := a_servlet_class.unique_identifier
 				a_servlet_class.set_all_booleans.append_expression ("render_conditions [%"" + l_render_condition_id + "%"] := " + render.plain_value (current_controller_id))
 				a_servlet_class.clean_up_after_render.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
 			a_servlet_class.render_html_page.append_expression ("if attached render_conditions [%"" + l_render_condition_id + "%"] and then render_conditions [%"" + l_render_condition_id + "%"] then")
@@ -358,7 +358,7 @@ feature -- Utilities
 			if attached {STRING} a_validation_table [a_name] as var_name then
 				Result := var_name
 			else
-				l_local_name := a_servlet_class.get_unique_identifier
+				l_local_name := a_servlet_class.unique_identifier
 				a_servlet_class.add_variable_by_name_type (l_local_name, "ARRAYED_LIST [STRING]")
 				a_servlet_class.make_feature.append_expression ("create " + l_local_name + ".make (10)")
 				a_validation_table [a_name] := l_local_name

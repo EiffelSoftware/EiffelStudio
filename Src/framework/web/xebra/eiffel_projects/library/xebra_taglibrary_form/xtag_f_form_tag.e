@@ -60,7 +60,7 @@ feature -- Implementation
 			end
 
 			l_id := a_servlet_class.render_html_page.new_local ("STRING")
-			a_servlet_class.render_html_page.append_expression (l_id + ":= get_unique_id")
+			a_servlet_class.render_html_page.append_expression (l_id + ":= unique_id")
 			a_servlet_class.render_html_page.append_expression (Response_variable + ".append (%"<form id=%%%"" + l_id + "%%%" action=%%%"%" +"
 				+ Request_variable + ".uri + %"%%%" method=%%%"post%%%">%")")
 

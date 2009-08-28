@@ -64,7 +64,7 @@ feature -- Implementation
 							value.value (current_controller_id) + "</button>%")")
 
 						l_unique_var :=  a_servlet_class.render_html_page.new_local ("STRING")
-						a_servlet_class.render_html_page.append_expression (l_unique_var + " := get_unique_id")
+						a_servlet_class.render_html_page.append_expression (l_unique_var + " := unique_id")
 						a_servlet_class.render_html_page.append_expression (
 							response_variable_append + "(%"<input type=%%%"hidden%%%" name=%%%"%"+" + l_unique_var + "+%"%%%""+
 							" value =%%%"%"+" + l_unique_var + "+%"%%%" />%")")

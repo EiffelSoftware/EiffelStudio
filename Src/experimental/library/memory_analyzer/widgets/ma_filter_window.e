@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 		end
 
 	hash_table_datas_to_arrayed_list_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data]
-			-- Change the data stored in DS_HASH_TABLE to a arrayed_list which is storable.
+			-- Change the data stored in HASH_TABLE to a arrayed_list which is storable.
 
 		local
 			l_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data]
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 		end
 
 	arrayed_list_datas_to_hash_table_datas (a_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data])
-			-- Set the data stored in DS_HASH_TABLE to a_datas, and update the grid content
+			-- Set the data stored in HASH_TABLE to a_datas, and update the grid content
 		require
 			a_datas_not_void: a_datas /= Void
 		local

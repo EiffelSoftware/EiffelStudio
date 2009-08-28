@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			grid_to_state.enable_single_row_selection
 			grid_changed := main_window.increased_object_result
 
-			create grid_data.make_default
+			create grid_data.make (10)
 			init_grid
 			grid_changed.set_item_pebble_function (agent handle_pick_item)
 			grid_changed.set_accept_cursor (accept_node_class)
@@ -54,7 +54,7 @@ feature -- Command
 				l_list.after
 			loop
 				l_item := l_list.item
-				grid_data.force ([grid_state_prefix + l_list.index.out, l_item.objects_total_count, l_item.memory_used_eiffel, l_item.memory_used_c], l_list.index)
+				grid_data.extend ([grid_state_prefix + l_list.index.out, l_item.objects_total_count, l_item.memory_used_eiffel, l_item.memory_used_c])
 				l_list.forth
 			end
 			update_grid_content
@@ -104,7 +104,7 @@ feature -- Command
 			system_util.collect
 			create l_state.make_with_memory_map (memory.memory_count_map)
 			states.extend (l_state)
-			grid_data.force_last ([grid_state_prefix + states.count.out, l_state.objects_total_count,
+			grid_data.extend ([grid_state_prefix + states.count.out, l_state.objects_total_count,
 			 l_state.memory_used_eiffel, l_state.memory_used_c])
 			update_grid_content
 		ensure
@@ -149,22 +149,22 @@ feature -- Command
 				grid_data.after
 			loop
 				-- set state name
-				create l_item.make_with_text (grid_data.item (l_i).type_name)
+				create l_item.make_with_text (grid_data.item.type_name)
 				l_item.set_pixmap (icons.system_state_from_icon)
 				grid_from_state.set_item (1, l_i, l_item.deep_twin)
 				l_item.set_pixmap (icons.system_state_to_icon)
 				grid_to_state.set_item (1, l_i, l_item)
 				-- set object count
-				create l_item.make_with_text (grid_data.item (l_i).e_mem.out)
+				create l_item.make_with_text (grid_data.item.e_mem.out)
 				grid_from_state.set_item (2, l_i, l_item.deep_twin)
 				grid_to_state.set_item (2, l_i, l_item)
 
 				-- set eiffel memory used
-				create l_item.make_with_text (grid_data.item (l_i).c_mem.out)
+				create l_item.make_with_text (grid_data.item.c_mem.out)
 				grid_from_state.set_item (3,	l_i, l_item.deep_twin)
 				grid_to_state.set_item (3,	l_i, l_item)
 				-- set c memory used
-				create l_item.make_with_text (grid_data.item (l_i).type_id.out)
+				create l_item.make_with_text (grid_data.item.type_id.out)
 				grid_from_state.set_item (4,	l_i, l_item.deep_twin)
 				grid_to_state.set_item (4,	l_i, l_item)
 
@@ -282,8 +282,8 @@ feature {NONE} -- Implemention
 	sort_data
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
 		local
-			l_sorter: DS_QUICK_SORTER [like grid_data_increased_row]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [like grid_data_increased_row]
+			l_sorter: QUICK_SORTER [like grid_data_increased_row]
+			l_agent_sorter: AGENT_EQUALITY_TESTER [like grid_data_increased_row]
 		do
 			inspect
 				sorted_column
@@ -334,10 +334,10 @@ feature {NONE} -- Implemention
 		do
 		end
 
-	grid_data_increased: DS_ARRAYED_LIST [like grid_data_increased_row]
+	grid_data_increased: ARRAYED_LIST [like grid_data_increased_row]
 			-- the objects increased, first INTEGER is increased object count, second INTEGER is the increased objects type id
 
-	grid_data: DS_ARRAYED_LIST [like row_data]
+	grid_data: ARRAYED_LIST [like row_data]
 			-- Data used to fill grid.
 
 	row_data: TUPLE [type_name: STRING; e_mem: INTEGER; c_mem: INTEGER; type_id: INTEGER]

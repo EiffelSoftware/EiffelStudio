@@ -424,10 +424,10 @@ feature {NONE} -- Low Level Logic Implementation
 
 feature {NONE} -- Fields
 
-	links_should_orignal_color: DS_HASH_TABLE [ANY, EG_LINK]
+	links_should_orignal_color: HASH_TABLE [ANY, EG_LINK]
 			-- Nodos which should be orignal color
 
-	nodes_visited: DS_HASH_TABLE [ANY, EG_FIGURE]
+	nodes_visited: HASH_TABLE [ANY, EG_FIGURE]
 			-- Nodes which should have been visited
 
 	grid_layout: EG_GRID_LAYOUT
@@ -436,7 +436,7 @@ feature {NONE} -- Fields
 	last_drawed_node:EG_NODE
 			--Node which was just drawed
 
-	objects_already_draw: DS_HASH_TABLE [TUPLE [obj: ANY; node: EG_NODE], EG_FIGURE]
+	objects_already_draw: HASH_TABLE [TUPLE [obj: ANY; node: EG_NODE], EG_FIGURE]
 			-- Objects which is already draw on the graph, ANY is the object which EG_NODE is correspond to
 
 	object_drawing : EV_FRAME

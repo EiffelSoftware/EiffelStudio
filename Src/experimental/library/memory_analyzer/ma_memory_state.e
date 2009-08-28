@@ -100,7 +100,7 @@ feature -- Status report
 
 feature -- Compare
 
-	compare (a_state: like Current): DS_ARRAYED_LIST [like state]
+	compare (a_state: like Current): ARRAYED_LIST [like state]
 			-- compare Current with a_state
 			-- result indicate type name and changed amount
 		require
@@ -109,7 +109,7 @@ feature -- Compare
 			l_count_change: INTEGER
 		do
 			from
-				create Result.make_default
+				create Result.make (10)
 				objects_states.start
 			until
 				objects_states.after
@@ -117,10 +117,10 @@ feature -- Compare
 				if a_state.found_type (objects_states.item.type_name) then
 					l_count_change := a_state.item_found_count - objects_states.item.count_in_system
 					if l_count_change /= 0 then
-						Result.force_last ([objects_states.item.type_name, l_count_change])
+						Result.extend ([objects_states.item.type_name, l_count_change])
 					end
 				else
-					Result.force_last ([objects_states.item.type_name, - objects_states.item.count_in_system])
+					Result.extend ([objects_states.item.type_name, - objects_states.item.count_in_system])
 				end
 				objects_states.forth
 			end

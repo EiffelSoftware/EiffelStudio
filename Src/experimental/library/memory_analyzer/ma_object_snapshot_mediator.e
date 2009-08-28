@@ -124,7 +124,7 @@ feature -- Command
 				else
 					l_delta := l_new_table.item_for_iteration
 				end
-				l_data.force ([l_name, l_count, l_delta, l_new_table.key_for_iteration], i)
+				l_data.extend ([l_name, l_count, l_delta, l_new_table.key_for_iteration])
 				i := i + 1
 				l_new_table.forth
 			end
@@ -138,7 +138,7 @@ feature -- Command
 					l_name := l_int.type_name_of_type (l_old_table.key_for_iteration)
 					l_count := 0
 					l_delta := - l_old_table.item_for_iteration
-					l_data.force ([l_name, l_count, l_delta, l_old_table.key_for_iteration], i)
+					l_data.extend ([l_name, l_count, l_delta, l_old_table.key_for_iteration])
 					i := i + 1
 					l_old_table.forth
 				end
@@ -207,8 +207,8 @@ feature {NONE} -- Implementation
 		require
 			grid_data_not_void: grid_data /= Void
 		local
-			l_sorter: DS_QUICK_SORTER [like row_data]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [like row_data]
+			l_sorter: QUICK_SORTER [like row_data]
+			l_agent_sorter: AGENT_EQUALITY_TESTER [like row_data]
 		do
 			inspect
 				sorted_column
@@ -292,16 +292,16 @@ feature {NONE} -- Implementation
 			a_dynamic_type_non_negative: a_dynamic_type >= 0
 			a_parent_row_not_void: a_parent_row /= Void
 		local
-			l_data: ARRAYED_LIST [ANY]
+			l_data: SPECIAL [ANY]
 			l_item: MA_GRID_LABEL_ITEM
 			l_check_item: MA_GRID_CHECK_BOX_ITEM
-			l_row_index, i: INTEGER
+			l_row_index, i, j, nb: INTEGER
 			l_row: EV_GRID_ROW
 			l_any: ANY
 		do
 			if a_parent_row.subrow_count = 0 then
 
-				l_data := memory.memory_map.item (a_dynamic_type)
+				l_data := memory.objects_instance_of_type (a_dynamic_type)
 				if l_data /= Void then
 
 					debug ("larry")
@@ -310,32 +310,33 @@ feature {NONE} -- Implementation
 					--| FIXIT: Why get void object here? There sometime a void object...?
 					object_grid.insert_new_rows_parented (l_data.count, a_parent_row.index + 1, a_parent_row)
 					from
-						l_data.start
+						i := 0
+						nb := l_data.count
 						l_row_index := a_parent_row.index
-						i := l_row_index + 1
+						j := l_row_index + 1
 					until
-						l_data.after
+						i = nb
 					loop
-						if l_data.item /= Void then
-							create l_item.make_with_text ((i - l_row_index).out)
+						l_any := l_data.item (i)
+						i := i + 1
+						if l_any /= Void then
+							create l_item.make_with_text ((j - l_row_index).out)
 							l_item.set_pixmap (icons.object_grid_icon)
-							object_grid.set_item (1, i, l_item)
-							l_item.set_data (l_data.item)
-							l_any := l_data.item
+							object_grid.set_item (1, j, l_item)
+							l_item.set_data (l_any)
 							create l_item.make_with_text (($l_any).out)
-							l_item.set_data (l_data.item)
-							object_grid.set_item (2, i, l_item)
+							l_item.set_data (l_any)
+							object_grid.set_item (2, j, l_item)
 
 							create l_check_item.make_with_boolean (False)
 							l_check_item.selected_changed_actions.extend (agent on_check_box_selected (?, l_any))
-							object_grid.set_item (3, i, l_check_item)
+							object_grid.set_item (3, j, l_check_item)
 
-							l_row := object_grid.row (i)
+							l_row := object_grid.row (j)
 							l_row.ensure_expandable
 							l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_any, l_row))
-							i := i + 1
+							j := j + 1
 						end
-						l_data.forth
 					end
 				end
 			end
@@ -575,7 +576,7 @@ feature {NONE} -- Fields
 	last_table: HASH_TABLE [INTEGER, INTEGER]
 			-- Result of last call to `mem.memory_map_count' in `show_memory_map'.
 
-	grid_data: DS_ARRAYED_LIST [like row_data]
+	grid_data: ARRAYED_LIST [like row_data]
 			-- Data used to fill grid.
 
 feature -- Access

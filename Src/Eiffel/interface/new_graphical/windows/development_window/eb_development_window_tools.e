@@ -293,7 +293,7 @@ feature -- Commands
 				 diagram_tool.synchronize
 			end
 			class_tool.refresh
-			features_relation_tool.refresh
+			features_relation_tool.set_refresh_needed
 			dependency_tool.refresh
 			customized_tools.do_all (agent (a_tool: EB_CUSTOMIZED_TOOL)
 				do

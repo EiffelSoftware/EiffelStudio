@@ -1,0 +1,14 @@
+{
+	"ecf": "$XEBRA_DEV/www/examples/examples.ecf",
+	"name": "examples",
+	"port": "55088",
+	"server_host": "localhost",
+	"taglibs": 
+	[
+		{ 
+			"name": "xebra_taglibrary_base",
+			"ecf":  "xebra_taglibrary_base.ecf",
+			"path": "$XEBRA_LIBRARY/xebra_taglibrary_base"
+		}
+	]	
+}

@@ -4,7 +4,7 @@ note
 			Container that allows custom placement of widgets. Widgets are
 			placed relative to (`origin_x', `origin_y'). Clipping will be
 			applied. Items are ordered in z-order with the last item as the
-			topmost."
+			topmost.
 		]"
 	legal: "See notice at end of class."
 	appearance:
@@ -59,8 +59,8 @@ feature -- Element change
 			cursor_not_moved: (index = old index) or (after and old after)
 			an_item_x_position_assigned: a_widget.x_position = a_x
 			an_item_y_position_assigned: a_widget.y_position = a_y
-			an_item_width_assigned: a_widget.width = a_width.max (a_widget.minimum_width)
-			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
+			an_item_width_assigned: a_width > 0 implies a_widget.width = a_width.max (a_widget.minimum_width)
+			an_item_height_assigned: a_height > 0 implies a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
 	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
@@ -76,8 +76,8 @@ feature -- Element change
 		ensure
 			an_item_x_position_assigned: a_widget.x_position = a_x
 			an_item_y_position_assigned: a_widget.y_position = a_y
-			an_item_width_assigned: a_widget.width = a_width.max (a_widget.minimum_width)
-			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
+			an_item_width_assigned: a_width > 0 implies a_widget.width = a_width.max (a_widget.minimum_width)
+			an_item_height_assigned: a_height > 0 implies a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
 	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER)
@@ -128,7 +128,7 @@ feature -- Element change
 		do
 			implementation.set_item_width (a_widget, a_width.max (a_widget.minimum_width))
 		ensure
-			an_item_width_assigned: a_widget.width = a_width.max (a_widget.minimum_width)
+			an_item_width_assigned: a_width > 0 implies a_widget.width = a_width.max (a_widget.minimum_width)
 		end
 
 	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER)
@@ -141,7 +141,7 @@ feature -- Element change
 		do
 			implementation.set_item_height (a_widget, a_height.max (a_widget.minimum_height))
 		ensure
-			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
+			an_item_height_assigned: a_height > 0 implies a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER)
@@ -158,8 +158,8 @@ feature -- Element change
 				a_width.max (a_widget.minimum_width),
 				a_height.max (a_widget.minimum_height))
 		ensure
-			an_item_width_assigned: a_widget.width = a_width.max (a_widget.minimum_width)
-			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
+			an_item_width_assigned: a_width > 0 implies a_widget.width = a_width.max (a_widget.minimum_width)
+			an_item_height_assigned: a_height > 0 implies a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -1,58 +1,47 @@
 note
 	description: "[
-		Evaulator controller which launched the evaluator through the debugger.
+		Task which does not do anything then waiting.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ETEST_EVALUATOR_DEBUGGER_CONTROLLER
+	ETEST_IDLE_TASK
 
 inherit
-	ETEST_EVALUATOR_CONTROLLER
+	ROTA_TIMED_TASK_I
 
-	SHARED_DEBUGGER_MANAGER
-		export
-			{NONE} all
-		end
+feature -- Access
 
-create
-	make
-
-feature {NONE} -- Access
-
-	service: SERVICE_CONSUMER [TEST_SUITE_S]
-		once
-			create Result
-		end
-
-feature {NONE} -- Status report
-
-	is_evaluator_launched: BOOLEAN
+	sleep_time: NATURAL = 500
 			-- <Precursor>
 
-	is_evaluator_running: BOOLEAN
+feature -- Status report
+
+	has_next_step: BOOLEAN
+			-- <Precursor>
+
+	is_interface_usable: BOOLEAN = True
+			-- <Precursor>
+
+feature -- Status setting
+
+	start
+			-- Start idling.
 		do
-			Result := debugger_manager.application_initialized and then debugger_manager.application.is_running
+			has_next_step := True
 		end
 
-
-feature {NONE} -- Status setting
-
-	start_evaluator (a_argument: STRING_8)
+	step
 			-- <Precursor>
 		do
-			test_suite.project_helper.run (Void, a_argument, Void)
-			is_evaluator_launched := True
 		end
 
-	stop_evaluator
+	cancel
+			-- <Precursor>
 		do
-			if is_evaluator_running then
-				debugger_manager.application.kill
-			end
-			is_evaluator_launched := False
+			has_next_step := False
 		end
 
 note

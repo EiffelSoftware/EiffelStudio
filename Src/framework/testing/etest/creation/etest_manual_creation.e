@@ -1,50 +1,128 @@
 note
 	description: "[
-		Implementation of {TEST_CREATOR_I} creating manual test classes.
+		Implementation of {ETEST_CREATION} which creates a template of a manual test set.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TEST_MANUAL_CREATOR
+	ETEST_MANUAL_CREATION
 
 inherit
-	TEST_MANUAL_CREATOR_I
-
-	TEST_CREATOR
+	ETEST_CREATION
+		redefine
+			make
+		end
 
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
 
+	DISPOSABLE_SAFE
+
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_test_suite: like test_suite; a_etest_suite: like etest_suite)
+			-- <Precursor>
+		do
+			Precursor (a_test_suite, a_etest_suite)
+			create test_routine_name.make_empty
+		end
+
+feature -- Access
+
+	test_routine_name: IMMUTABLE_STRING_8
+			-- Name for new test routine
+
+	progress: REAL_32
+			-- <Precursor>
 
 feature {TEST_PROCESSOR_SCHEDULER_I} -- Status report
 
 	sleep_time: NATURAL = 0
 			-- <Precursor>
 
-feature {NONE} -- Status report
+feature -- Status report
 
-	is_creating_new_class: BOOLEAN
+	has_prepare: BOOLEAN
+			-- Should `on_prepare' be redefined in new test?
+
+	has_clean: BOOLEAN
+			-- Should `on_clean' be redefined in new test?
+
+	has_next_step: BOOLEAN
+			-- <Precursor>
+
+feature -- Status setting
+
+	set_test_routine_name (a_name: READABLE_STRING_8)
+			-- Set `test_routine_name' to given name.
+			--
+			-- `a_name': New name for `test_routine_name'
+		require
+			a_name_attached: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+			not_running: not has_next_step
+		do
+			create test_routine_name.make_from_string (a_name)
+		ensure
+			test_routine_name_set: test_routine_name.same_string (a_name)
+		end
+
+	set_has_prepare (a_has_prepare: like has_prepare)
+			-- Set `has_prepare' to given value.
+			--
+			-- `a_has_prepare': New value for `has_prepare'.
+		require
+			not_running: not has_next_step
+		do
+			has_prepare := a_has_prepare
+		ensure
+			has_prepare_set: has_prepare = a_has_prepare
+		end
+
+	set_has_clean (a_has_clean: like has_clean)
+			-- Set `has_clean' to given value.
+			--
+			-- `a_has_clean': New value for `has_clean'.
+		require
+			not_running: not has_next_step
+		do
+			has_clean := a_has_clean
+		ensure
+			has_clean_set: has_clean = a_has_clean
+		end
+
+feature -- Status setting: task
+
+	step
 			-- <Precursor>
 		do
-			Result := configuration.is_new_class
+			create_new_class
+			cancel
+		end
+
+	cancel
+			-- <Precursor>
+		do
+			has_next_step := False
+		end
+
+feature {NONE} -- Status setting
+
+	start_creation
+			-- <Precursor>
+		do
+			progress := {REAL_32} 0.5
+			has_next_step := True
 		end
 
 feature {NONE} -- Basic operations
-
-	proceed_process
-			-- <Precursor>
-		do
-			if configuration.is_new_class then
-				create_new_class
-			end
-			is_finished := True
-		end
 
 	print_new_class (a_file: KL_TEXT_OUTPUT_FILE; a_class_name: STRING)
 			-- Create test routine in new class
@@ -78,10 +156,10 @@ feature {NONE} -- Basic operations
 					if l_wizard.is_service_available then
 						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters, a_file_name)
 					else
-						test_suite.propagate_error (w_wizard_service_not_available, [], Current)
+						error_event.publish ([Current, locale.translation (w_wizard_service_not_available)])
 					end
 				else
-					test_suite.propagate_error (w_template_file, [l_template], Current)
+					error_event.publish ([Current, locale.formatted_string (w_template_file, [l_template])])
 				end
 			end
 		rescue
@@ -93,27 +171,27 @@ feature {NONE} -- Basic operations
 			-- Template parameters for creating actual class text from template file.
 		local
 			l_redefine, l_body, l_indexing, l_name: STRING
-			l_cursor: DS_LINEAR_CURSOR [STRING]
+			l_cursor: DS_LINEAR_CURSOR [READABLE_STRING_8]
 			l_count: INTEGER
-			l_tags: DS_LINEAR [STRING]
+			l_tags: DS_LINEAR [READABLE_STRING_8]
 		do
 			create Result.make_default
-			if configuration.cluster.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
+			if attached cluster as l_cluster and then l_cluster.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
 					-- Use old syntax
 				Result.force_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
 			else
 					-- Use new syntax
 				Result.force_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
 			end
-			l_name := configuration.new_class_name
+			l_name := class_name
 			Result.force_last (l_name, v_class_name)
 			if False then--configuration.is_system_level_test then
 					-- TODO: switch to system level tests
-				Result.force_last (test_set_ancestor, v_test_set_ancestor)
+				Result.force_last (system_level_test_ancestor, v_test_set_ancestor)
 			else
 				Result.force_last (test_set_ancestor, v_test_set_ancestor)
 			end
-			if configuration.has_prepare or configuration.has_clean then
+			if has_prepare or has_clean then
 				create l_body.make (100)
 				l_body.append ("%N%T%T%T-- <Precursor>%N")
 				l_body.append ("%T%Tdo%N")
@@ -121,38 +199,38 @@ feature {NONE} -- Basic operations
 				l_body.append ("%T%Tend%N")
 				create l_redefine.make (300)
 				l_redefine.append ("%T%Tredefine%N")
-				if configuration.has_prepare then
+				if has_prepare then
 					l_redefine.append ("%T%T%T")
-					l_redefine.append ({TEST_CONSTANTS}.prepare_routine_name)
-					if configuration.has_clean then
+					l_redefine.append ({ETEST_CONSTANTS}.prepare_routine_name)
+					if has_clean then
 						l_redefine.append (",%N")
 					end
 				end
-				if configuration.has_clean then
+				if has_clean then
 					l_redefine.append ("%T%T%T")
-					l_redefine.append ({TEST_CONSTANTS}.clean_routine_name)
+					l_redefine.append ({ETEST_CONSTANTS}.clean_routine_name)
 				end
 				l_redefine.append ("%N%T%Tend%N%N")
 				l_redefine.append ("feature {NONE} -- Events%N%N")
 
 
-				if configuration.has_prepare then
+				if has_prepare then
 					l_redefine.append_character ('%T')
-					l_redefine.append ({TEST_CONSTANTS}.prepare_routine_name)
+					l_redefine.append ({ETEST_CONSTANTS}.prepare_routine_name)
 					l_redefine.append (l_body)
-					if configuration.has_clean then
+					if has_clean then
 						l_redefine.append_character ('%N')
 					end
 				end
-				if configuration.has_clean then
+				if has_clean then
 					l_redefine.append_character ('%T')
-					l_redefine.append ({TEST_CONSTANTS}.clean_routine_name)
+					l_redefine.append ({ETEST_CONSTANTS}.clean_routine_name)
 					l_redefine.append (l_body)
 				end
 				Result.force_last (l_redefine, v_redefine_events)
 			end
-			Result.force_last (configuration.name, v_test_name)
-			l_tags := configuration.tags
+			Result.force_last (test_routine_name, v_test_name)
+			l_tags := tags
 			if not l_tags.is_empty then
 				create l_indexing.make (100)
 				l_indexing.append ("%T%Tindexing%N%T%T%Ttesting: ")
@@ -181,6 +259,13 @@ feature {NONE} -- Basic operations
 			end
 		end
 
+feature {NONE} -- Clean up
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+		end
+
 feature {NONE} -- Constants
 
 	w_wizard_service_not_available: STRING = "Could not generate class text because wizard service not available."
@@ -195,13 +280,16 @@ feature {NONE} -- Constants
 
 	test_set_ancestor: STRING
 		do
-			Result := {TEST_CONSTANTS}.common_test_class_ancestor_name
+			Result := {ETEST_CONSTANTS}.eqa_test_set_name
 		end
 
 	system_level_test_ancestor: STRING
 		do
-			Result := {TEST_CONSTANTS}.system_level_test_ancestor_name
+			Result := {ETEST_CONSTANTS}.eqa_system_test_set_name
 		end
+
+invariant
+	test_routine_name_not_empty: not test_routine_name.is_empty
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

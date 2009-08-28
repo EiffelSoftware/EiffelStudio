@@ -18,7 +18,13 @@ feature -- Access: constants
 	eqa_evaluator: STRING = "EQA_EVALUATOR"
 	eqa_evaluator_root: STRING = "EQA_EVALUATOR_ROOT"
 	eqa_test_evaluator: STRING = "EQA_TEST_EVALUATOR"
+	eqa_system_test_set_name: STRING = "EQA_SYSTEM_LEVEL_TEST_SET"
 			-- Names of classes in testing library
+
+	indexing_clause_tag_name: STRING = "testing"
+	prepare_routine_name: STRING = "on_prepare"
+	clean_routine_name: STRING = "on_clean"
+			-- Routine names in testing library
 
 	eqa_evaluator_routine: STRING = "execute_test"
 	eqa_evaluator_creator: STRING = "launch"

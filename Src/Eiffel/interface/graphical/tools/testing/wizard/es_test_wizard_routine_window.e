@@ -246,16 +246,26 @@ feature {NONE} -- Access
 			Result := wizard_information.manual_conf
 		end
 
-	factory_type: TYPE [TEST_CREATOR_I]
-			-- <Precursor>
-		do
-			Result := manual_factory_type
-		end
-
 	feature_name_validator: ES_FEATURE_NAME_VALIDATOR
 			-- Validator for `test_name'
 		once
 			create Result
+		end
+
+	session (a_test_suite: TEST_SUITE_S): ETEST_MANUAL_CREATION
+			-- <Precursor>
+		local
+			l_conf: like conf
+		do
+			create Result.make (a_test_suite, etest_suite)
+			l_conf := conf
+			l_conf.tags.do_all (agent Result.add_tag)
+			Result.set_class_name (l_conf.new_class_name)
+			Result.set_cluster_name (l_conf.cluster.name)
+			Result.set_path_name (l_conf.path)
+			Result.set_has_prepare (l_conf.has_prepare)
+			Result.set_has_clean (l_conf.has_clean)
+			Result.set_test_routine_name (l_conf.name)
 		end
 
 feature {NONE} -- Access: widgets
@@ -279,7 +289,7 @@ feature {NONE} -- Access: widgets
 			-- List containing tag templates.
 
 	add_template_button: EV_BUTTON
-			-- Button adding tag for selected item in `tamplate_list'
+			-- Button adding tag for selected item in `template_list'
 
 feature {NONE} -- Access: tag utilities
 
@@ -322,7 +332,7 @@ feature {NONE} -- Events
 			l_valid := feature_name_validator.is_valid
 			l_msg := feature_name_validator.last_error_message
 			if l_valid then
-				if l_name.is_equal ({TEST_CONSTANTS}.prepare_routine_name) or l_name.is_equal ({TEST_CONSTANTS}.clean_routine_name) then
+				if l_name.is_equal ({ETEST_CONSTANTS}.prepare_routine_name) or l_name.is_equal ({ETEST_CONSTANTS}.clean_routine_name) then
 					l_valid := False
 					l_msg := locale_formatter.formatted_translation (e_bad_test_name, [a_name])
 				end
@@ -468,7 +478,7 @@ feature {NONE} -- Implementation
 		local
 			l_item: EV_LIST_ITEM
 			l_tag: STRING
-			l_tags: DS_ARRAYED_LIST [STRING]
+			l_tags: DS_ARRAYED_LIST [READABLE_STRING_8]
 		do
 			tag_list.wipe_out
 			create l_tags.make_from_linear (conf.tags_cache)
@@ -478,7 +488,7 @@ feature {NONE} -- Implementation
 			until
 				l_tags.after
 			loop
-				l_tag := l_tags.item_for_iteration
+				l_tag := l_tags.item_for_iteration.as_string_8
 				create l_item.make_with_text (l_tag)
 				tag_list.extend (l_item)
 				l_tags.forth

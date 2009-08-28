@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {ES_TEST_TREE}."
+	description: "[
+		Widget displaying {TEST_SUITE_S}.tag_tree, providing a text box for filtering shown items.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

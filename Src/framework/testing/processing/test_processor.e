@@ -43,9 +43,6 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	test_suite: TEST_SUITE_S
-			-- <Precursor>
-
 feature {NONE} -- Access
 
 	internal_progress: like progress

@@ -76,9 +76,6 @@ feature {NONE} -- Factory
 			-- Create test suite service
 		do
 			create {TEST_SUITE} Result.make (create {TEST_PROJECT_HELPER})
-			if Result.is_interface_usable then
-				register_test_suite_processors (Result)
-			end
 		ensure
 			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
 		end
@@ -127,26 +124,6 @@ feature {NONE} -- Registration: Output
 			general_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).general)
 			eiffel_compiler_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
 			c_compilerl_output_registered: a_service.is_output_available ((create {OUTPUT_MANAGER_KINDS}).c_compiler)
-		end
-
-feature {NONE} -- Registrations: Testing
-
-	register_test_suite_processors (a_service: attached TEST_SUITE_S)
-			-- Register standard test processors for test suite service.
-			--
-			-- `a_service': Service in which test processors are registered.
-		require
-			a_service_attached: a_service /= Void
-			a_service_usable: a_service.is_interface_usable
-		local
-			a_registrar: TEST_PROCESSOR_REGISTRAR_I
-		do
-			a_registrar := a_service.processor_registrar
-			a_registrar.register (create {TEST_BACKGROUND_EXECUTOR}.make (a_service))
-			a_registrar.register (create {TEST_DEBUG_EXECUTOR}.make (a_service))
-			a_registrar.register (create {TEST_MANUAL_CREATOR}.make (a_service))
-			a_registrar.register (create {TEST_EXTRACTOR}.make (a_service))
-			a_registrar.register (create {TEST_GENERATOR}.make (a_service))
 		end
 
 ;note

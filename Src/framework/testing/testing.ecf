@@ -20,6 +20,8 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_time" location="$ISE_LIBRARY\library\gobo\gobo_time.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
+		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
+		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<library name="parser_extension" location="$EIFFEL_SRC\framework\parser_extension\parser_extension.ecf"/>

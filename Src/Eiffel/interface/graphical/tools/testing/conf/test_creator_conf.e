@@ -54,7 +54,7 @@ feature -- Access
 			Result := l_path
 		end
 
-	tags: DS_LINEAR [STRING]
+	tags: DS_LINEAR [READABLE_STRING_8]
 			-- <Precursor>
 		do
 			Result := tags_cache
@@ -65,7 +65,7 @@ feature -- Access: cache
 	new_class_name_cache: detachable like new_class_name assign set_new_class_name
 			-- Cache for `new_class_name'
 
-	tags_cache: DS_HASH_SET [STRING]
+	tags_cache: DS_HASH_SET [READABLE_STRING_8]
 			-- List of tags for new test routine
 
 	cluster_cache: detachable like cluster assign set_cluster

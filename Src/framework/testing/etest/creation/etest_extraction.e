@@ -1,56 +1,101 @@
 note
 	description: "{
-		Implementation of {TEST_EXTRACTOR_I}.
+		Test extraction implementation.
 	}"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TEST_EXTRACTOR
+	ETEST_EXTRACTION
 
 inherit
-	TEST_EXTRACTOR_I
-
-	TEST_CREATOR
+	ETEST_CREATION
 		redefine
-			make,
-			is_valid_typed_configuration
+			make
 		end
 
 	SHARED_DEBUGGER_MANAGER
+
+	DISPOSABLE_SAFE
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite)
+	make (a_test_suite: like test_suite; a_etest_suite: like etest_suite)
 			-- <Precursor>
 		do
+			Precursor (a_test_suite, a_etest_suite)
 			create capturer.make
-			Precursor (a_test_suite)
+			create internal_call_stack_levels.make_default
+		end
+
+feature -- Access
+
+	call_stack_levels: DS_HASH_SET [INTEGER]
+			-- Levels in call stack which will be extraced.
+		do
+			Result := internal_call_stack_levels.twin
 		end
 
 feature {NONE} -- Access
 
+	internal_call_stack_levels: like call_stack_levels
+			-- Internal storage for `call_stack_levels'
+
 	capturer: TEST_CAPTURER
 			-- Capturer retrieving objects from running application.
 
-feature {TEST_PROCESSOR_SCHEDULER_I} -- Status report
+feature -- Status report
+
+	has_next_step: BOOLEAN
+			-- <Precursor>
 
 	sleep_time: NATURAL = 0
 			-- <Precursor>
 
-feature {NONE} -- Status report
+	progress: REAL_32
+			-- <Precursor>
 
-	is_creating_new_class: BOOLEAN
+feature -- Status setting
+
+	add_call_stack_level (a_level: INTEGER)
+			-- Add level to `call_stack_levels'
+			--
+			-- `a_level': Level of call stack frame to be extracted by `Current'.
+		require
+			valid_level: is_valid_call_stack_element (a_level)
+		do
+			internal_call_stack_levels.force_last (a_level)
+		ensure
+			added: call_stack_levels.has (a_level)
+		end
+
+feature -- Status setting: Task
+
+	step
 			-- <Precursor>
 		do
-			Result := True
+			create_new_class
+			cancel
+		end
+
+	cancel
+			-- <Precursor>
+		do
+			has_next_step := False
 		end
 
 feature {NONE} -- Status setting
+
+	start_creation
+			-- <Precursor>
+		do
+			has_next_step := True
+			progress := {REAL_32} 0.5
+		end
 
 	print_new_class (a_file: KL_TEXT_OUTPUT_FILE; a_class_name: STRING)
 			-- <Precursor>
@@ -75,8 +120,9 @@ feature {NONE} -- Status setting
 					loop
 						if
 							attached {EIFFEL_CALL_STACK_ELEMENT} l_cs.item as l_cse and then
-							configuration.call_stack_elements.has (l_cse.level_in_stack)
+							call_stack_levels.has (l_cse.level_in_stack)
 						then
+							check valid: capturer.is_valid_call_stack_element (l_cse) end
 							capturer.capture_call_stack_element (l_cse)
 						end
 						l_cs.forth
@@ -84,7 +130,7 @@ feature {NONE} -- Status setting
 					capturer.capture_objects
 				end
 			else
-				test_suite.propagate_error (e_no_application_status, [], Current)
+				error_event.publish ([Current, locale.translation (e_no_application_status)])
 			end
 
 			capturer.observers.start
@@ -95,28 +141,7 @@ feature {NONE} -- Status setting
 			capturer.observers.remove_at
 		end
 
-	proceed_process
-			-- <Precursor>
-		local
-		do
-			create_new_class
-			is_finished := True
-		end
-
 feature -- Query
-
-	is_valid_typed_configuration (a_arg: like conf_type): BOOLEAN
-			-- <Precursor>
-		do
-			if debugger_manager.application_is_executing and then debugger_manager.application_is_stopped then
-				if a_arg.is_interface_usable then
-					Result := a_arg.call_stack_elements.for_all (agent is_valid_call_stack_element)
-				end
-			end
-		ensure then
-			result_implies_debugger_running: Result implies debugger_manager.application_is_executing
-			result_implies_debugger_stopped: Result implies debugger_manager.application_is_stopped
-		end
 
 	is_valid_call_stack_element (a_index: INTEGER): BOOLEAN
 			-- <Precursor>
@@ -131,6 +156,14 @@ feature -- Query
 					end
 				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	safe_dispose (a_explicit: BOOLEAN)
+			-- <Precursor>
+		do
+
 		end
 
 feature {NONE} -- Constants

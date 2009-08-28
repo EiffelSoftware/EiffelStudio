@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {TEST_EXECUTION_OBSERVER}."
+	description: "[
+		Observer for events in {TEST_EXECUTION_I}.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,11 +22,10 @@ feature {TEST_EXECUTION_I} -- Events
 		require
 			a_session_attached: a_session /= Void
 			a_test_attached: a_test /= Void
-			a_session.is_interface_usable
+			a_session_usable: a_session.is_interface_usable
 			a_test_usable: a_test.is_interface_usable
 			a_test_running: a_session.is_test_running (a_test)
 		do
-
 		ensure
 			a_session.is_interface_usable
 			a_test_usable: a_test.is_interface_usable
@@ -51,7 +52,6 @@ feature {TEST_EXECUTION_I} -- Events
 			has_result: a_session.record.has_result_for_test (a_test)
 			a_result_valid: a_session.record.result_for_test (a_test) = a_result
 		do
-
 		ensure
 			a_session_usable: a_session.is_interface_usable
 			a_session_running: a_session.has_next_step
@@ -74,7 +74,6 @@ feature {TEST_EXECUTION_I} -- Events
 			a_session_running: a_session.has_next_step
 			a_session_not_has_test: not a_session.has_test (a_test)
 		do
-
 		ensure
 			a_session_usable: a_session.is_interface_usable
 			a_test_usable: a_test.is_interface_usable

@@ -266,10 +266,32 @@ feature {NONE} -- Access
 			Result := wizard_information.generator_conf
 		end
 
-	factory_type: TYPE [TEST_CREATOR_I]
+	session (a_test_suite: TEST_SUITE_S): TEST_GENERATOR
 			-- <Precursor>
+		local
+			l_conf: like conf
 		do
-			Result := generator_factory_type
+			l_conf := conf
+			create Result.make (a_test_suite, etest_suite)
+			Result.set_class_name (l_conf.new_class_name)
+			Result.set_cluster_name (l_conf.cluster.name)
+			Result.set_path_name (l_conf.path)
+
+				-- Test generation specific settings
+			l_conf.types.do_all (agent Result.add_class_name)
+			Result.set_time_out (l_conf.time_out)
+			Result.set_test_count (l_conf.test_count)
+			if l_conf.is_slicing_enabled then
+				Result.enable_slicing
+			elseif l_conf.is_ddmin_enabled then
+				Result.enable_ddmin
+			end
+			Result.set_text_statistics (True)
+			Result.set_html_statistics (l_conf.is_html_output)
+			Result.set_proxy_timeout (l_conf.proxy_time_out)
+			if l_conf.seed > 0 then
+				Result.set_seed (l_conf.seed)
+			end
 		end
 
 feature {NONE} -- Access: widgets
@@ -486,10 +508,10 @@ feature {NONE} -- Basic operations
 			l_conf: like conf
 		do
 			l_conf := conf
-			l_conf.time_out_cache := timeout_field.value.to_natural_32
-			l_conf.test_count_cache := test_count_field.value.to_natural_32
-			l_conf.proxy_time_out_cache := proxy_time_out.value.to_natural_32
-			l_conf.seed_cache := seed.value.to_natural_32
+			l_conf.time_out_cache := timeout_field.text.to_natural_32
+			l_conf.test_count_cache := test_count_field.text.to_natural_32
+			l_conf.proxy_time_out_cache := proxy_time_out.text.to_natural_32
+			l_conf.seed_cache := seed.text.to_natural_32
 			l_conf.is_ddmin_enabled_cache := ddmin_checkbox.is_selected
 			l_conf.is_slicing_enabled_cache := slicing_checkbox.is_selected
 			l_conf.is_html_output_cache := html_output.is_selected

@@ -1,58 +1,34 @@
 note
 	description: "[
-		Evaulator controller which launched the evaluator through the debugger.
+		Observer for events in {TEST_CREATION_I}.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ETEST_EVALUATOR_DEBUGGER_CONTROLLER
+	TEST_CREATION_OBSERVER
 
 inherit
-	ETEST_EVALUATOR_CONTROLLER
+	TEST_SESSION_OBSERVER
 
-	SHARED_DEBUGGER_MANAGER
-		export
-			{NONE} all
-		end
+feature {TEST_CREATION_I} -- Events
 
-create
-	make
-
-feature {NONE} -- Access
-
-	service: SERVICE_CONSUMER [TEST_SUITE_S]
-		once
-			create Result
-		end
-
-feature {NONE} -- Status report
-
-	is_evaluator_launched: BOOLEAN
-			-- <Precursor>
-
-	is_evaluator_running: BOOLEAN
+	on_test_created (a_session: TEST_CREATION_I; a_test: READABLE_STRING_8)
+			-- Called when a test was created.
+			--
+			-- Note: only the name of the created test is passed here, since it's actual TEST_I
+			--       representation might not be available yet.
+			--
+			-- `a_session': Test creation which triggered event.
+			-- `a_test': Name of test which was created.
+		require
+			a_session_attached: a_session /= Void
+			a_test_attached: a_test /= Void
+			a_session_usable: a_session.is_interface_usable
+			a_test_not_empty: not a_test.is_empty
 		do
-			Result := debugger_manager.application_initialized and then debugger_manager.application.is_running
-		end
 
-
-feature {NONE} -- Status setting
-
-	start_evaluator (a_argument: STRING_8)
-			-- <Precursor>
-		do
-			test_suite.project_helper.run (Void, a_argument, Void)
-			is_evaluator_launched := True
-		end
-
-	stop_evaluator
-		do
-			if is_evaluator_running then
-				debugger_manager.application.kill
-			end
-			is_evaluator_launched := False
 		end
 
 note

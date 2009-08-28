@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_class_names (a_list: detachable DS_LIST [STRING_8])
+	add_class_names (a_list: detachable DS_LINEAR [STRING_8])
 			-- Add class/type names which shall be tested to `queue', `types_under_test' and
 			-- `classes_under_test' with list of class names.
 			--

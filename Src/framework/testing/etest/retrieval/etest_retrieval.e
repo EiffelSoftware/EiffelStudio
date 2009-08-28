@@ -59,7 +59,6 @@ feature {NONE} -- Initialization
 			create traversed_libraries.make_default
 			traversed_libraries.set_equality_tester (create {KL_EQUALITY_TESTER [UUID]})
 			create progress_list.make_default
-			create proceeded_event
 		end
 
 feature -- Access
@@ -193,8 +192,6 @@ feature {NONE} -- Status setting
 
 	step
 			-- <Precursor>
-		local
-			l_sub_task: like sub_task
 		do
 				-- If `project' is being compiled we abort
 			if project_access.is_initialized and then not project_access.project.is_compiling then
@@ -368,11 +365,6 @@ feature {NONE} -- Basic operations
 			a_formatter.process_basic_text (" (library)")
 			a_formatter.add_new_line
 		end
-
-feature -- Events
-
-	proceeded_event: EVENT_TYPE [TUPLE [TEST_SESSION_I]]
-			-- <Precursor>
 
 feature {NONE} -- Implementation
 

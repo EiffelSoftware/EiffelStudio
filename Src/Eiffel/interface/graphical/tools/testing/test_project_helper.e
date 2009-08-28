@@ -15,6 +15,7 @@ inherit
 			can_compile,
 			can_run,
 			compile,
+			cancel_compilation,
 			run
 		end
 
@@ -41,6 +42,12 @@ feature -- Basic operations
 			if eiffel_project.freezing_occurred then
 				eiffel_project.call_finish_freezing_and_wait (True)
 			end
+		end
+
+	cancel_compilation
+			-- <Precursor>
+		do
+			degree_output.request_abort
 		end
 
 	run (a_working_directory: detachable STRING; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [STRING_32, STRING_32])

@@ -48,12 +48,12 @@ feature -- Access
 	system: SYSTEM_I
 			-- <Precursor>
 		do
-			Result := session.eiffel_system
+			Result := session.system
 		end
 
 feature {NONE} -- Access
 
-	session: AUT_SESSION
+	session: TEST_GENERATOR
 			-- Current session
 
 feature -- Access
@@ -100,7 +100,7 @@ feature -- Generation
 					file_system.pathname (a_log_dirname, "proxy_log.txt"),
 					session.error_handler)
 				l_new.add_observer (session.error_handler)
-				l_new.set_timeout (session.options.proxy_time_out)
+				l_new.set_timeout (session.proxy_time_out.as_integer_32)
 			end
 			last_interpreter := l_new
 		end

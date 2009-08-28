@@ -302,7 +302,7 @@ feature -- Basic operations
 
 feature {TEST_EXECUTION_I} -- Factory
 
-	new_executor (an_execution: TEST_EXECUTION_I): ETEST_EXECUTOR
+	new_executor (an_execution: TEST_EXECUTION_I): ETEST_COMPILATION_EXECUTOR
 			-- <Precursor>
 		do
 			create Result.make (test_suite, an_execution)

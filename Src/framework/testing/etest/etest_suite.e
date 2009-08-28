@@ -32,19 +32,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project_access: like project_access; a_auto_retrieve: BOOLEAN)
+	make (a_project_access: like project_access; a_project_helper: like project_helper; a_auto_retrieve: BOOLEAN)
 			-- Initialize `Current'.
 			--
 			-- `a_project_access': Access to Eiffel project.
+			-- `a_project_helper': Project helper for compiling, debugging and adding new classes.
 			-- `a_auto_retrieve': True if `Current' should retrieve new tests after loading/compiling the
 			--                    project. False otherwise.
 		require
 			a_project_access_attached: a_project_access /= Void
+			a_project_helper: a_project_helper /= Void
 		local
 			l_manager: EB_PROJECT_MANAGER
 			l_test_suite: TEST_SUITE_S
 		do
 			project_access := a_project_access
+			project_helper := a_project_helper
 			class_map := new_class_map
 
 			l_manager := project_access.project.manager
@@ -60,12 +63,17 @@ feature {NONE} -- Initialization
 					l_test_suite.test_suite_connection.connect_events (Current)
 				end
 			end
+		ensure
+			project_helper_set: project_helper = a_project_helper
 		end
 
 feature -- Access
 
 	project_access: EC_PROJECT_ACCESS
 			-- Access to Eiffel project
+
+	project_helper: TEST_PROJECT_HELPER_I
+			-- Project helper for compiling, debugging and adding new classes.
 
 	library: detachable CONF_LIBRARY
 			-- {CONF_LIBRARY} instance representing testing library, Void if library not included or not
@@ -133,6 +141,17 @@ feature {NONE} -- Access: tests
 			create Result
 		end
 
+	etest_session_count: NATURAL
+			-- Number of etest sessions currently running.
+
+feature {TEST_SESSION_I, ETEST_EXECUTOR, ETEST_COMPILATION_EXECUTOR} -- Status report
+
+	frozen is_etest_session_running: BOOLEAN
+			-- Is an etest session currently running?
+		do
+			Result := etest_session_count > 0
+		end
+
 feature {NONE} -- Status report
 
 	is_retrieving: BOOLEAN
@@ -145,6 +164,24 @@ feature {NONE} -- Status report
 
 	has_class_map_changed: BOOLEAN
 			-- Have keys of `class_map' changed since last call to `force_test_class_compilation'
+
+feature {TEST_SESSION_I, ETEST_EXECUTOR, ETEST_COMPILATION_EXECUTOR} -- Status setting
+
+	increase_etest_session_count
+			-- Increase `etest_session_count' by one.
+		do
+			etest_session_count := etest_session_count + 1
+		ensure
+			running: is_etest_session_running
+		end
+
+	decrease_etest_session_count
+			-- Decrease `etest_session_count' by one.
+		require
+			running: is_etest_session_running
+		do
+			etest_session_count := etest_session_count - 1
+		end
 
 feature {ETEST_CLUSTER_RETRIEVAL} -- Basic operations
 
@@ -217,21 +254,14 @@ feature -- Element change
 	retrieve_tests
 			-- Called when Eiffel project has finished compilation
 		local
-			l_retrieval: like retrieval
 			l_project: E_PROJECT
 			l_test_suite: TEST_SUITE_S
+			l_retrieval: like retrieval
 		do
 				-- Wipe out caches
 			library_cache := Void
 
-			if is_retrieving then
-				l_retrieval := retrieval
-				check l_retrieval /= Void end
-				if l_retrieval.has_next_step then
-					l_retrieval.cancel
-				end
-				finalize_retrieval (False)
-			end
+			stop_retrieval
 
 			if test_suite.is_service_available and project_access.is_initialized then
 				l_test_suite := test_suite.service
@@ -249,6 +279,21 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	stop_retrieval
+			-- Stop and finalize any current retrieval.
+		local
+			l_retrieval: like retrieval
+		do
+			if is_retrieving then
+				l_retrieval := retrieval
+				check l_retrieval /= Void end
+				if l_retrieval.has_next_step then
+					l_retrieval.cancel
+				end
+				finalize_retrieval (False)
+			end
+		end
 
 	finalize_retrieval (a_remove: BOOLEAN)
 			-- Finalize current retrieval by cleaning up remaining classes `old_class_map'.
@@ -296,7 +341,8 @@ feature {NONE} -- Implementation
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_system: SYSTEM_I
 		do
-			if has_class_map_changed and project_access.is_initialized then
+			stop_retrieval
+			if (is_etest_session_running or has_class_map_changed) and project_access.is_initialized then
 				l_system := project_access.project.system.system
 				has_class_map_changed := False
 				create l_class_writer

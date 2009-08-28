@@ -57,7 +57,6 @@ feature {NONE} -- Initialization
 			create test_running_event
 			create test_executed_event
 			create test_removed_event
-			create proceeded_event
 		end
 
 feature -- Access
@@ -487,9 +486,6 @@ feature {NONE} -- Events
 			-- <Precursor>
 
 	test_removed_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: TEST_I]]
-			-- <Precursor>
-
-	proceeded_event: EVENT_TYPE [TUPLE [session: TEST_SESSION_I]]
 			-- <Precursor>
 
 feature {NONE} -- Implementation

@@ -14,7 +14,7 @@ inherit
 		redefine
 			test_suite,
 			on_processor_launch_error,
-			on_error
+			on_session_launch_error
 		end
 
 	ES_SHARED_PROMPT_PROVIDER
@@ -52,7 +52,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Events
 
-	on_error (a_error: STRING_32)
+	on_session_launch_error (a_error: STRING_32)
 			-- <Precursor>
 		do
 			prompts.show_error_prompt (a_error, current_window, Void)

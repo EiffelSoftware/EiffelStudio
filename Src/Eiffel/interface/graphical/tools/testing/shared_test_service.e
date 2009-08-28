@@ -38,9 +38,17 @@ feature {NONE} -- Access
 	etest_suite: ETEST_SUITE
 			-- Once instance of `{ETEST_SUITE}
 		once
-			create Result.make (create {EC_PROJECT_ACCESS}.make (
-				(create {SHARED_EIFFEL_PROJECT}).eiffel_project),
-				(create {SHARED_FLAGS}).is_gui)
+			if (create {SHARED_FLAGS}).is_gui then
+				create Result.make (create {EC_PROJECT_ACCESS}.make (
+					(create {SHARED_EIFFEL_PROJECT}).eiffel_project),
+					create {ES_TEST_PROJECT_HELPER},
+					True)
+			else
+				create Result.make (create {EC_PROJECT_ACCESS}.make (
+					(create {SHARED_EIFFEL_PROJECT}).eiffel_project),
+					create {TEST_PROJECT_HELPER},
+					False)
+			end
 		end
 
 	extractor_factory_type: TYPE [TEST_EXTRACTOR_I]
@@ -126,7 +134,32 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	launch_session (a_type: TYPE [TEST_SESSION_I]; a_procedure: detachable PROCEDURE [ANY, TUPLE [TEST_SESSION_I]])
+	perform_with_test_suite (a_procedure: PROCEDURE [ANY, TUPLE [TEST_SUITE_S]])
+			-- Call given procedure with usable test suite service.
+			--
+			-- `a_procedure': Procedure to be called which takes a test suite as the only argument.
+		require
+			a_procedure_attached: a_procedure /= Void
+		local
+			l_service: TEST_SUITE_S
+			l_error: detachable STRING
+		do
+			if test_suite.is_service_available then
+				l_service := test_suite.service
+				if l_service.is_interface_usable then
+					a_procedure.call ([l_service])
+				else
+					l_error := e_service_not_available
+				end
+			else
+				l_error := e_service_not_available
+			end
+			if l_error /= Void then
+				on_session_launch_error (l_error)
+			end
+		end
+
+	launch_session_type (a_type: TYPE [TEST_SESSION_I]; a_procedure: detachable PROCEDURE [ANY, TUPLE [TEST_SESSION_I]])
 			-- Instatiate and launch session of given type, optionally calling a procedure before performing
 			-- the actualy launch.
 			--
@@ -135,38 +168,25 @@ feature {NONE} -- Basic operations
 			--                the session.
 		require
 			a_type_attached: a_type /= Void
-		local
-			l_service: TEST_SUITE_S
-			l_error: detachable STRING
-			l_tuple: TUPLE [TEST_SESSION_I]
 		do
-			if test_suite.is_service_available then
-				l_service := test_suite.service
-				if l_service.is_interface_usable then
-					if attached l_service.new_session (a_type) as l_session then
-						if a_procedure /= Void then
-							l_tuple := a_procedure.empty_operands
+			perform_with_test_suite (agent (a_ts: TEST_SUITE_S; a_t: TYPE [TEST_SESSION_I]; a_p: detachable PROCEDURE [ANY, TUPLE [TEST_SESSION_I]])
+				local
+					l_tuple: TUPLE [TEST_SESSION_I]
+				do
+					if attached a_ts.new_session (a_t) as l_session then
+						if a_p /= Void then
+							l_tuple := a_p.empty_operands
 							check
 								valid_operands: l_tuple.count = 1 and then
 									l_tuple.valid_type_for_index (l_session, 1) and then
 									l_tuple.is_reference_item (1)
 							end
 							l_tuple.put_reference (l_session, 1)
-							a_procedure.call (l_tuple)
+							a_p.call (l_tuple)
 						end
-						l_service.launch_session (l_session)
-					else
-						l_error := e_service_not_available
+						a_ts.launch_session (l_session)
 					end
-				else
-					l_error := e_service_not_available
-				end
-			else
-				l_error := e_service_not_available
-			end
-			if l_error /= Void then
-				on_error (l_error)
-			end
+				end (?, a_type, a_procedure))
 		end
 
 	launch_executor (a_list: detachable DS_LINEAR [TEST_I]; a_debug: BOOLEAN)
@@ -176,7 +196,7 @@ feature {NONE} -- Basic operations
 			-- `a_list': List of tests to be executed, Void if all tests should be ran.
 			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		do
-			launch_session ({TEST_EXECUTION_I},
+			launch_session_type ({TEST_EXECUTION_I},
 				agent (a_exec: TEST_EXECUTION_I; a_dbg: BOOLEAN; a_tests: detachable DS_LINEAR [TEST_I])
 					do
 						a_exec.set_debugging (a_dbg)
@@ -229,7 +249,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Events
 
-	on_error (a_error: STRING_32)
+	on_session_launch_error (a_error: STRING_32)
 			-- Called when an error occurred when using `test_suite'
 			--
 			-- `a_error': Error message.

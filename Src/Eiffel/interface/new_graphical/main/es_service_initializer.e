@@ -103,7 +103,6 @@ feature {NONE} -- Factory
 			-- <Precursor>
 		do
 			create {TEST_SUITE} Result.make (create {ES_TEST_PROJECT_HELPER})
-			register_test_suite_processors (Result)
 		end
 
 	new_wizard_service: detachable WIZARD_ENGINE_S

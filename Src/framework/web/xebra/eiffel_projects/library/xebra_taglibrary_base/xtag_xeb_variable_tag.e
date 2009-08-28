@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			a_servlet_class.render_html_page.append_local (
-				name.value (current_controller_id), type.value (current_controller_id))			
+				name.value (current_controller_id), type.value (current_controller_id))
 		end
 
 	internal_put_attribute (id: STRING; a_attribute: XTAG_TAG_ARGUMENT)

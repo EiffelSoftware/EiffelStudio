@@ -153,7 +153,7 @@ feature -- Basic Functionality
 				log.iprint ("done.")
 			end
 			l_executed_filename := path.twin
-			l_executed_filename.extend ({XU_CONSTANTS}.Generated_folder_name) 
+			l_executed_filename.extend ({XU_CONSTANTS}.Generated_folder_name)
 			l_executed_filename.set_file_name ({XU_CONSTANTS}.Servlet_gen_executed_file)
 			if attached {PLAIN_TEXT_FILE} l_util.plain_text_file_write (l_executed_filename) as l_file then
 				l_file.put_string ("File generated for server xebra server")

@@ -109,7 +109,7 @@ feature {NONE} -- Initlization
 			-- Initlialize layout list items.
 		local
 			l_item: EV_LIST_ITEM
-			l_names:  DS_HASH_TABLE [TUPLE [FILE_NAME, BOOLEAN], STRING_GENERAL]
+			l_names:  HASH_TABLE [TUPLE [FILE_NAME, BOOLEAN], STRING_GENERAL]
 		do
 			from
 				l_names := manager.layouts

@@ -9429,6 +9429,7 @@ feature {NONE} -- Implementation: catcall check
 			l_generics: ARRAY [TYPE_A]
 			l_target_types: ARRAYED_LIST [TYPE_A]
 			i, nb: INTEGER
+			l_rout_id_set: ROUT_ID_SET
 			l_type_feat: TYPE_FEATURE_I
 			l_needs_formal_check, l_compiler_limitation, l_fail_if_constraint_not_met: BOOLEAN
 			l_covariant_features: HASH_TABLE [FEATURE_I, CLASS_C]
@@ -9497,8 +9498,8 @@ feature {NONE} -- Implementation: catcall check
 									until
 										i > nb or l_compiler_limitation
 									loop
-										l_type_feat := l_descendant_class.formal_at_position (i)
-										l_type_feat ?= l_parent_class.feature_of_rout_id_set (l_type_feat.rout_id_set)
+										l_rout_id_set := l_descendant_class.formal_rout_id_set_at_position (i)
+										l_type_feat ?= l_parent_class.feature_of_rout_id_set (l_rout_id_set)
 										if l_type_feat /= Void then
 											l_constraint_type := l_parent_type.generics.item (l_type_feat.position)
 											if l_constraint_type.has_variant_mark then

@@ -11,10 +11,16 @@ class
 
 inherit
 	I18N_PLURAL_TOOLS
+		undefine
+			default_create
+		end
 
 	EQA_SYSTEM_TEST_SET
 
 	I18N_TEST_UTILITIES
+		undefine
+			default_create
+		end
 
 feature -- Tests
 

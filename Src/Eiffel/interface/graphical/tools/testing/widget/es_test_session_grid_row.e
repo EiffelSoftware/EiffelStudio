@@ -141,8 +141,12 @@ feature {NONE} -- Basic operations
 		end
 
 	fill_row
-			-- Fill `row' with new content.
-		deferred
+			-- <Precursor>
+		local
+			l_label: EV_GRID_LABEL_ITEM
+		do
+			create l_label.make_with_text (record.creation_date.formatted_out (record.creation_date.default_format_string))
+			row.set_item (1, l_label)
 		end
 
 	fill_subrows
@@ -156,6 +160,16 @@ feature {NONE} -- Events: row
 			-- Called when `row' is expanded for the first time.
 		do
 			fill_subrows
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle
+			-- <Precursor>
+		do
+			if is_running then
+				detach_session
+			end
 		end
 
 invariant

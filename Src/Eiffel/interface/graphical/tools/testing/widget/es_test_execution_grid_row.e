@@ -32,15 +32,6 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Basic operations
 
-	fill_row
-			-- <Precursor>
-		local
-			l_label: EV_GRID_LABEL_ITEM
-		do
-			create l_label.make_with_text (record.creation_date.formatted_out (record.creation_date.default_format_string))
-			row.set_item (1, l_label)
-		end
-
 	fill_subrows
 			-- <Precursor>
 		do
@@ -92,16 +83,6 @@ feature {TEST_EXECUTION_I} -- Events
 			l_grid.insert_new_row_parented (l_pos, row)
 			create l_label.make_with_text ((a_test.name + " aborted").as_string_32)
 			l_grid.row (l_pos).set_item (1, l_label)
-		end
-
-feature {NONE} -- Clean up
-
-	internal_recycle
-			-- <Precursor>
-		do
-			if is_running then
-				detach_session
-			end
 		end
 
 note

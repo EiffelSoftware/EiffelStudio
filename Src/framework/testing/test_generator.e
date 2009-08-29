@@ -150,7 +150,7 @@ feature {NONE} -- Access: tasks
 	sub_task: detachable ROTA_TASK_I
 			-- <Precursor>
 
-feature {TEST_PROCESSOR_SCHEDULER_I} -- Status report
+feature -- Status report
 
 	sleep_time: NATURAL
 			-- <Precursor>
@@ -171,6 +171,9 @@ feature {NONE} -- Status report
 		ensure then
 			definition: Result = (current_results /= Void and then not current_Results.is_empty)
 		end
+
+	creates_multiple_classes: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Status setting
 

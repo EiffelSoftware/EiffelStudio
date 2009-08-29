@@ -59,6 +59,11 @@ feature -- Status report
 	progress: REAL_32
 			-- <Precursor>
 
+feature {NONE} -- Status report
+
+	creates_multiple_classes: BOOLEAN = False
+			-- <Precursor>
+
 feature -- Status setting
 
 	add_call_stack_level (a_level: INTEGER)

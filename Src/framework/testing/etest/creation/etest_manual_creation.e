@@ -58,6 +58,11 @@ feature -- Status report
 	has_next_step: BOOLEAN
 			-- <Precursor>
 
+feature {NONE} -- Status report
+
+	creates_multiple_classes: BOOLEAN = False
+			-- <Precursor>
+
 feature -- Status setting
 
 	set_test_routine_name (a_name: READABLE_STRING_8)

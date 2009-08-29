@@ -135,7 +135,7 @@ feature -- Properties
 			l_cl: CLASS_I
 		do
 			create l_vis.make
-			create Result.make (1000)
+			create Result.make_map (1000)
 			if target /= Void then
 				target.process (l_vis)
 			end
@@ -273,7 +273,7 @@ feature -- Properties
 			end
 
 				-- Analyze all targets and retrieve clusters, and then add the result classes.
-			create Result.make (100)
+			create Result.make_map (1000)
 			from l_apt_targets.start until l_apt_targets.after loop
 				l_target := l_apt_targets.item
 				l_clusters := l_target.clusters.linear_representation

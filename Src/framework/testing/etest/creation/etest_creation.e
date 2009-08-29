@@ -87,6 +87,8 @@ feature {NONE} -- Status report
 
 	creates_multiple_classes: BOOLEAN
 			-- Does current create multiple new test classes during one creation?
+		deferred
+		end
 
 feature {TEST_SUITE_S} -- Status setting
 

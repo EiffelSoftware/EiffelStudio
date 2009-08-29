@@ -56,7 +56,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Events
 
-	test_created_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: READABLE_STRING_8]]
+	test_created_event: EVENT_TYPE [TUPLE [session: TEST_CREATION_I; test: READABLE_STRING_8]]
 			-- Events called when a new test has been created
 			--
 			-- session: `Current'.

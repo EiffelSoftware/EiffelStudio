@@ -194,6 +194,25 @@
 			<indent type='3'>2</indent>
 			<name>Copy demoapp</name>
 		</step>
+		<step action='Copy Files'>
+			<Converted type='11'>-1</Converted>
+			<Delay>15</Delay>
+			<DestDir>%BUILD%\www\examples</DestDir>
+			<Empty type='11'>-1</Empty>
+			<ExclExt><![CDATA[\EIFGENs
+\.svn
+\.generated
+*.sh]]></ExclExt>
+			<Incremental type='11'>-1</Incremental>
+			<LogCopied type='11'>-1</LogCopied>
+			<ReadOnly type='11'>-1</ReadOnly>
+			<Recurse type='11'>-1</Recurse>
+			<Retries>10</Retries>
+			<SourceDir>%XEBRA_DEV%\www\examples</SourceDir>
+			<TBD type='11'>-1</TBD>
+			<indent type='3'>2</indent>
+			<name>Copy examples</name>
+		</step>
 		<step action='Group'>
 			<indent type='3'>1</indent>
 			<name>Copy Xebra Libraries</name>

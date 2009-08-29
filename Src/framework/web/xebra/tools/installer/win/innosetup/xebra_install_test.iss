@@ -5,9 +5,9 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{FD0CA48F-DD6D-4567-B479-875603AB56E0}
+AppId={{BE1257F5-D066-4F4B-A30B-F51FA55A8481}
 AppName=Eiffel Xebra
-AppVerName=Eiffel Xebra Pre-Release 0.3
+AppVerName=Eiffel Xebra Pre-Release 0.4
 AppPublisher=Eiffel Software
 AppPublisherURL=http://dev.eiffel.com/Xebra
 AppSupportURL=http://dev.eiffel.com/Xebra
@@ -15,12 +15,12 @@ AppUpdatesURL=http://dev.eiffel.com/Xebra
 DefaultDirName={pf}\Eiffel Software\Xebra
 DefaultGroupName=Eiffel Xebra
 LicenseFile=C:\Users\fabioz\Desktop\gnu.txt
-OutputDir=C:\virtual_box_share\
-OutputBaseFilename=setup
+OutputDir=output
+OutputBaseFilename=XebraSetup
 Compression=lzma
 SolidCompression=true
 SetupLogging=true
-AppVersion=0.0.3
+AppVersion=0.0.4
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl

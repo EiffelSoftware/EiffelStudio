@@ -114,6 +114,13 @@ feature {NONE} -- Status report
 	is_valid_feature_clause: BOOLEAN
 			-- Is traversed feature clause valid for containing test routines?
 
+	is_valid_feature (a_feature: FEATURE_AS): BOOLEAN
+			-- Is given feature valid for to represent a test routine?
+		do
+			Result := (attached a_feature.body.arguments as l_args implies l_args.is_empty) and
+			          not a_feature.is_function and not a_feature.is_attribute
+		end
+
 feature {ETEST_SUITE} -- Basic operations
 
 	synchronize (an_etest_class: ETEST_CLASS; a_remove: BOOLEAN)
@@ -512,14 +519,16 @@ feature {NONE} -- Implementation: AST
 	process_feature_as (l_as: FEATURE_AS)
 			-- <Precursor>
 		do
-				-- Retrieve tags from note clause
-			current_state := extract_tags_state
-			current_tag_set := feature_tags
-			safe_process (l_as.indexes)
-			current_state := default_state
+			if is_valid_feature (l_as) then
+					-- Retrieve tags from note clause
+				current_state := extract_tags_state
+				current_tag_set := feature_tags
+				safe_process (l_as.indexes)
+				current_state := default_state
 
-			l_as.feature_names.process (Current)
-			feature_tags.wipe_out
+				l_as.feature_names.process (Current)
+				feature_tags.wipe_out
+			end
 		end
 
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)

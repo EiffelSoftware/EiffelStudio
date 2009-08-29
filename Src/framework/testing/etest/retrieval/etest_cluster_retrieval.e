@@ -86,31 +86,15 @@ feature -- Status setting
 	step
 			-- <Precursor>
 		local
-			l_cursor, l_old: like cursor
+			i: like classes_per_step
 		do
-			l_cursor := cursor
-			check cursor_attached: l_cursor /= Void end
-			if
-				session.project_access.is_initialized and
-				attached cluster.classes as l_ht and then
-				l_ht.valid_cursor (l_cursor)
-			 then
-				l_old := l_ht.cursor
-				l_ht.go_to (l_cursor)
-				if attached {EIFFEL_CLASS_I} l_ht.item_for_iteration as l_class then
-					process_class (l_class)
-				end
-				l_ht.forth
-				if l_ht.after then
-					cursor := Void
-					index := 0
-				else
-					cursor := l_ht.cursor
-					index := index + 1
-				end
-				l_ht.go_to (l_old)
-			else
-				cancel
+			from
+				i := 1
+			until
+				i > classes_per_step or not has_next_step
+			loop
+				step_one_class
+				i := i + 1
 			end
 		end
 
@@ -173,6 +157,39 @@ feature {NONE} -- Query
 
 feature {NONE} -- Implementation
 
+	step_one_class
+			-- Process a single class.
+		require
+			has_next_step: has_next_step
+		local
+			l_cursor, l_old: like cursor
+		do
+			l_cursor := cursor
+			check cursor_attached: l_cursor /= Void end
+			if
+				session.project_access.is_initialized and
+				attached cluster.classes as l_ht and then
+				l_ht.valid_cursor (l_cursor)
+			 then
+				l_old := l_ht.cursor
+				l_ht.go_to (l_cursor)
+				if attached {EIFFEL_CLASS_I} l_ht.item_for_iteration as l_class then
+					process_class (l_class)
+				end
+				l_ht.forth
+				if l_ht.after then
+					cursor := Void
+					index := 0
+				else
+					cursor := l_ht.cursor
+					index := index + 1
+				end
+				l_ht.go_to (l_old)
+			else
+				cancel
+			end
+		end
+
 	process_class (a_class: EIFFEL_CLASS_I)
 			-- Retrieve any tests in given class.
 			--
@@ -227,7 +244,12 @@ feature {NONE} -- Implementation
 			factory_reset: session.inheritance_ast_factory.is_reset
 		end
 
-note
+feature {NONE} -- Constants
+
+	classes_per_step: NATURAL = 5
+			-- Number of classes which are parsed per call to `step'
+
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

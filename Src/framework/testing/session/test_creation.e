@@ -30,10 +30,32 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Events
 
-	test_created_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: READABLE_STRING_8]]
+	test_created_event: EVENT_TYPE [TUPLE [session: TEST_CREATION_I; test: READABLE_STRING_8]]
 			-- <Precursor>
 
-;note
+feature {NONE} -- Basic operations
+
+	publish_test_creation (a_name: READABLE_STRING_8)
+			-- Notify observers of `Current' and `record' that new test was created.
+			--
+			-- `a_name': Name of new test.
+		require
+			a_name_attached: a_name /= Void
+			usable: is_interface_usable
+			running: has_next_step
+			a_name_not_empty: not a_name.is_empty
+		local
+			l_record: like record
+			l_repo: TEST_RECORD_REPOSITORY_I
+		do
+			l_record := record
+			l_record.add_test (a_name)
+			l_repo := test_suite.record_repository
+			l_repo.record_updated_event.publish ([l_repo, l_record])
+			test_created_event.publish ([Current, a_name])
+		end
+
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

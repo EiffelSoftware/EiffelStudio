@@ -75,6 +75,7 @@ feature {NONE} -- Initialization: widgets
 			-- Create `notebook' and add permament tabs.
 		local
 			l_execution: ES_TEST_EXECUTION_WIDGET
+			l_creation: ES_TEST_CREATION_WIDGET
 			l_tab: EV_NOTEBOOK_TAB
 		do
 			create notebook
@@ -85,6 +86,12 @@ feature {NONE} -- Initialization: widgets
 			l_tab := notebook.item_tab (l_execution.widget)
 			l_tab.set_text (locale.translation (t_execution))
 			l_tab.set_pixmap (stock_pixmaps.debug_run_icon)
+
+			create l_creation.make
+			notebook.extend (l_creation.widget)
+			l_tab := notebook.item_tab (l_creation.widget)
+			l_tab.set_text (locale.translation (t_creation))
+			l_tab.set_pixmap (test_creation_pixmap)
 		end
 
 feature {NONE} -- Initialization: widget status
@@ -146,6 +153,18 @@ feature {NONE} -- Access
 			Result := develop_window.window
 		end
 
+	test_creation_pixmap: EV_PIXMAP
+			-- Pixmap for test creation
+		do
+			Result := stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0).to_pixmap
+		end
+
+	test_creation_pixel_bugger: EV_PIXEL_BUFFER
+			-- Pixel buffer for test creation
+		do
+			Result := stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0)
+		end
+
 feature {NONE} -- Access: widgets
 
 	test_tree: ES_TEST_TREE
@@ -164,6 +183,7 @@ feature {NONE} -- Access: widgets
 			-- Label showing number of tests currently failing
 
 	errors_pixmap: EV_PIXMAP
+			-- Pixmap with big error cross
 
 feature {NONE} -- Access: buttons
 
@@ -430,8 +450,8 @@ feature {NONE} -- Factory
 
 			create wizard_button.make
 			wizard_button.set_tooltip (locale_formatter.translation (tt_wizard))
-			wizard_button.set_pixmap (stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0).to_pixmap)
-			wizard_button.set_pixel_buffer (stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0))
+			wizard_button.set_pixmap (test_creation_pixmap)
+			wizard_button.set_pixel_buffer (test_creation_pixel_bugger)
 			register_action (wizard_button.select_actions, agent on_launch_wizard)
 			Result.force_last (wizard_button)
 
@@ -557,6 +577,7 @@ feature {NONE} -- Internationalization
 
 	t_testing_output: STRING = "Testing"
 	t_execution: STRING = "Execution"
+	t_creation: STRING = "Creation"
 
 	tt_wizard: STRING = "Create new tests"
 	f_run_button: STRING = "Run all tests in background"

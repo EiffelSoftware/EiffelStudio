@@ -1,16 +1,16 @@
 note
 	description: "[
-		Notebook widget showing execution states and results.
+		Notebook widget showing test creation states.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TEST_EXECUTION_WIDGET
+	ES_TEST_CREATION_WIDGET
 
 inherit
-	ES_TEST_SESSION_WIDGET [TEST_EXECUTION_I]
+	ES_TEST_SESSION_WIDGET [TEST_CREATION_I]
 		redefine
 			record
 		end
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Access
 
-	record (a_session: TEST_EXECUTION_I): TEST_EXECUTION_RECORD
+	record (a_session: TEST_CREATION_I): TEST_CREATION_RECORD
 			-- <Precursor>
 		do
 			Result := a_session.record
@@ -28,10 +28,10 @@ feature {NONE} -- Access
 
 feature {NONE} -- Factory
 
-	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_SESSION_GRID_ROW [TEST_EXECUTION_I]
+	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_CREATION_GRID_ROW
 			-- <Precursor>
 		do
-			create {ES_TEST_EXECUTION_GRID_ROW} Result.make (a_record, a_row)
+			create Result.make (a_record, a_row)
 		end
 
 note

@@ -1,37 +1,69 @@
 note
 	description: "[
-		Notebook widget showing execution states and results.
+		Grid row visualizing creation record/state.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TEST_EXECUTION_WIDGET
+	ES_TEST_CREATION_GRID_ROW
 
 inherit
-	ES_TEST_SESSION_WIDGET [TEST_EXECUTION_I]
+	ES_TEST_SESSION_GRID_ROW [TEST_CREATION_I]
 		redefine
-			record
+			attach_session,
+			detach_session
+		end
+
+	TEST_CREATION_OBSERVER
+		redefine
+			on_test_created
 		end
 
 create
 	make
 
-feature {NONE} -- Access
+feature {NONE} -- Status report
 
-	record (a_session: TEST_EXECUTION_I): TEST_EXECUTION_RECORD
+	is_expandable: BOOLEAN = True
+
+feature {NONE} -- Basic operations
+
+	fill_subrows
 			-- <Precursor>
 		do
-			Result := a_session.record
+
 		end
 
-feature {NONE} -- Factory
+feature {ES_TEST_SESSION_WIDGET} -- Status setting
 
-	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_SESSION_GRID_ROW [TEST_EXECUTION_I]
+	attach_session (a_session: like session)
 			-- <Precursor>
 		do
-			create {ES_TEST_EXECUTION_GRID_ROW} Result.make (a_record, a_row)
+			Precursor (a_session)
+			a_session.creation_connection.connect_events (Current)
+		end
+
+	detach_session
+			-- <Precursor>
+		do
+			session.creation_connection.disconnect_events (Current)
+			Precursor
+		end
+
+feature {TEST_CREATION_I} -- Events
+
+	on_test_created (a_session: TEST_CREATION_I; a_test: READABLE_STRING_8)
+			-- <Precursor>
+		local
+			l_pos: INTEGER
+			l_label: EV_GRID_LABEL_ITEM
+		do
+			l_pos := 1 + row.subrow_count_recursive
+			row.insert_subrow (l_pos)
+			create l_label.make_with_text (a_test.as_string_8)
+			row.subrow (l_pos).set_item (1, l_label)
 		end
 
 note

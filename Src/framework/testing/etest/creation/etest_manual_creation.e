@@ -147,6 +147,7 @@ feature {NONE} -- Basic operations
 			l_retried: BOOLEAN
 			l_template, l_user_template: FILE_NAME
 			l_wizard: SERVICE_CONSUMER [WIZARD_ENGINE_S]
+			l_name: STRING
 		do
 			if not l_retried then
 				create l_template.make_from_string (eiffel_layout.templates_path)
@@ -160,6 +161,11 @@ feature {NONE} -- Basic operations
 					create l_wizard
 					if l_wizard.is_service_available then
 						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters, a_file_name)
+						create l_name.make (class_name.count + test_routine_name.count + 1)
+						l_name.append (class_name)
+						l_name.append_character ('.')
+						l_name.append (test_routine_name)
+						publish_test_creation (l_name)
 					else
 						error_event.publish ([Current, locale.translation (w_wizard_service_not_available)])
 					end

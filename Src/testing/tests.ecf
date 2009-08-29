@@ -20,7 +20,6 @@
 		<library name="i18n-tests" location="$ISE_LIBRARY\library\i18n\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="pattern-tests" location="$EIFFEL_SRC\framework\patterns\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="process-tests" location="$ISE_LIBRARY\library\process\tests\tests.ecf" readonly="false" use_application_options="true"/>
-		<library name="tagging-tests" location="$EIFFEL_SRC\framework\tagging\obsolete\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="testing-tests" location="$ISE_LIBRARY\library\testing\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="thread-tests" location="$ISE_LIBRARY\library\thread\tests\tests.ecf" readonly="false" use_application_options="true"/>

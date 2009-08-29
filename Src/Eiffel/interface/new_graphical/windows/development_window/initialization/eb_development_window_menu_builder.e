@@ -1041,7 +1041,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			valid: is_open_layout_menu (a_menu)
 		local
 			l_item: EV_MENU_ITEM
-			l_names: DS_HASH_TABLE [TUPLE [FILE_NAME, BOOLEAN], STRING_GENERAL]
+			l_names: HASH_TABLE [TUPLE [FILE_NAME, BOOLEAN], STRING_GENERAL]
 			l_manager: EB_NAMED_LAYOUT_MANAGER
 		do
 			from

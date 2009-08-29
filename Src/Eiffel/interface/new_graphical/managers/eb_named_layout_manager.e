@@ -199,7 +199,7 @@ feature -- Command
 
 feature -- Query
 
-	layouts: DS_HASH_TABLE [TUPLE [file_path: FILE_NAME; is_normal_mode: BOOLEAN], STRING_GENERAL]
+	layouts: HASH_TABLE [TUPLE [file_path: FILE_NAME; is_normal_mode: BOOLEAN], STRING_GENERAL]
 			-- All names of layouts.
 			-- Key is name of a layout.
 
@@ -280,11 +280,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_NAMED_LAYOUT_MANAGER

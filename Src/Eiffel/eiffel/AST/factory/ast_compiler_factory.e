@@ -77,18 +77,19 @@ feature -- Access
 			-- New BITS AST node
 		local
 			l_vtbt: VTBT_SIMPLE
-			l_class_c: CLASS_C
 		do
 			if v /= Void then
 				create Result.initialize (v, b_as)
 				if (v.integer_32_value <= 0) then
-					create l_vtbt
-					l_class_c ?= parser.current_class
-					check l_class_c_attached: l_class_c /= Void end
-					l_vtbt.set_class (l_class_c)
-					l_vtbt.set_value (v.integer_32_value)
-					l_vtbt.set_location (v.start_location)
-					Error_handler.insert_error (l_vtbt)
+					if attached {CLASS_C} parser.current_class as l_class_c then
+						create l_vtbt
+						l_vtbt.set_class (l_class_c)
+						l_vtbt.set_value (v.integer_32_value)
+						l_vtbt.set_location (v.start_location)
+						Error_handler.insert_error (l_vtbt)
+					else
+						error_handler.insert_error (create {SYNTAX_ERROR}.init (eiffel_parser))
+					end
 				end
 			end
 		end
@@ -132,17 +133,13 @@ feature -- Access
 		end
 
 	set_expanded_class_type (a_type: TYPE_AS; is_expanded: BOOLEAN; s_as: KEYWORD_AS)
-		local
-			l_class_c: CLASS_C
 		do
 			Precursor {AST_FACTORY} (a_type, is_expanded, s_as)
 			if is_expanded then
 				system.set_has_expanded
-				l_class_c ?= parser.current_class
-				check
-					has_class_c: l_class_c /= Void
+				if attached {CLASS_C} parser.current_class as l_class_c then
+					l_class_c.set_has_expanded
 				end
-				l_class_c.set_has_expanded
 			end
 		end
 
@@ -295,10 +292,8 @@ feature -- Access
 					l_built_in_processor.reset
 				end
 
-				if b.is_unique then
-					if attached {CLASS_C} parser.current_class as l_class_c then
-						l_class_c.set_has_unique
-					end
+				if b.is_unique and then attached {CLASS_C} parser.current_class as l_class_c then
+					l_class_c.set_has_unique
 				end
 			end
 		end
@@ -353,7 +348,6 @@ feature -- Access for Erros
 			-- Create new VTGC1 error.
 		local
 			l_location: LOCATION_AS
-			l_class_c: CLASS_C
 		do
 			if a_id /= Void then
 				l_location := a_id
@@ -362,9 +356,9 @@ feature -- Access for Erros
 			end
 			check l_location_not_void: l_location /= Void end
 			create Result
-			l_class_c ?= parser.current_class
-			check l_class_c_attached: l_class_c /= Void end
-			Result.set_class (l_class_c)
+			if attached {CLASS_C} parser.current_class as l_class_c then
+				Result.set_class (l_class_c)
+			end
 			Result.set_location (l_location)
 		end
 
@@ -425,7 +419,7 @@ feature {NONE} -- Validation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -438,22 +432,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

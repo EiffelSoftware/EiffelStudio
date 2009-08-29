@@ -57,7 +57,8 @@ feature -- Access
 							Result := <<
 									[record_added_event, agent an_observer.on_record_added],
 									[record_updated_event, agent an_observer.on_record_updated],
-									[record_removed_event, agent an_observer.on_record_removed]
+									[record_removed_event, agent an_observer.on_record_removed],
+									[record_property_updated_event, agent an_observer.on_record_property_updated]
 								>>
 						end)
 				connection_cache := l_cache
@@ -97,6 +98,18 @@ feature {NONE} -- Access
 			--
 			-- repository: `Current'.
 			-- record: Record which was removed from `Current'.
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	record_property_updated_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
+			-- Events called after a property of a record was changed.
+			--
+			-- Note: a property is considered any record dependent query in `Current'.
+			--
+			-- repository: `Current'.
+			-- record: Record for which a property of `Current' was changed.
 		require
 			usable: is_interface_usable
 		deferred

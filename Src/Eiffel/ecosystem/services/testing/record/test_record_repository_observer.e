@@ -61,6 +61,24 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events
 			not_a_repo_has_record: not a_repo.has_record (a_record)
 		end
 
+	on_record_property_updated(a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
+			-- Called after a property of a record was changed.
+			--
+			-- Note: a property is considered any record dependent query in `a_repo'.
+			--
+			-- `a_repo': Repository that contained result.
+			-- `a_record': Record for which a property of `a_repo' was changed.
+		require
+			a_repo_attached: a_repo /= Void
+			a_record_attached: a_record /= Void
+			a_repo_usable: a_repo.is_interface_usable
+			a_repo_has_record: a_repo.has_record (a_record)
+		do
+		ensure
+			a_repo_usable: a_repo.is_interface_usable
+			a_repo_has_result: a_repo.has_record (a_record)
+		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

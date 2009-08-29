@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			create record_added_event
 			create record_removed_event
 			create record_updated_event
+			create record_property_updated_event
 		end
 
 feature -- Access
@@ -137,6 +138,9 @@ feature {NONE} -- Events
 			-- <Precursor>
 
 	record_removed_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
+			-- <Precursor>
+
+	record_property_updated_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
 			-- <Precursor>
 
 feature {NONE} -- Clean up

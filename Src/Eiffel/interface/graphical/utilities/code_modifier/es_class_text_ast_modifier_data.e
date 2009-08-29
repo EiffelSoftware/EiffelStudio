@@ -71,7 +71,7 @@ feature -- Basic operations
 			reset
 			l_class := associated_class
 			if l_class.is_compiled then
-				l_current_class := system.current_class
+				l_current_class := l_class.compiled_class
 			end
 			l_current_group := inst_context.group
 			inst_context.set_group (l_class.group)

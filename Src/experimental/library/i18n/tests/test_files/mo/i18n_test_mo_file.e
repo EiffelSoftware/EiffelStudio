@@ -13,6 +13,9 @@ inherit
 	EQA_SYSTEM_TEST_SET
 
 	I18N_TEST_UTILITIES
+		undefine
+			default_create
+		end
 
 feature -- Test
 

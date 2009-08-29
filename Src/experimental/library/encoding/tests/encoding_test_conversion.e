@@ -14,6 +14,9 @@ inherit
 	EQA_TEST_SET
 
 	SYSTEM_ENCODINGS
+		undefine
+			default_create
+		end
 
 feature -- Test routines
 

@@ -208,7 +208,7 @@ feature -- Access queries
 			if accessible_groups_cache = Void then
 				if dependencies /= Void then
 					from
-						create accessible_groups_cache.make (dependencies.count)
+						create accessible_groups_cache.make_map (dependencies.count)
 						dependencies.start
 					until
 						dependencies.after
@@ -217,7 +217,7 @@ feature -- Access queries
 						dependencies.forth
 					end
 				else
-					create accessible_groups_cache.make (0)
+					create accessible_groups_cache.make_map (0)
 				end
 			end
 			Result := accessible_groups_cache

@@ -319,7 +319,7 @@ feature -- Access queries
 		require
 			classes_set: classes_set
 		once
-			create Result.make (0)
+			create Result.make_map (0)
 		ensure
 			Result_not_void: Result /= Void
 		end

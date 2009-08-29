@@ -58,8 +58,6 @@ feature -- Tests
 		local
 			l_basic_interface: SITE_TEST_INTERFACE_BASIC
 			l_object: SITE_TEST_OBJECT
-			l_validation_interface: SITE_TEST_VALIDATION_INTERFACE
-			l_validation_object: SITE_TEST_VALIDATION_OBJECT
 		do
 				-- Test defaults
 			create l_basic_interface

@@ -233,8 +233,6 @@ feature {NONE} -- Events
 
 	frozen on_clean_frozen
 			-- <Precursor>
-		local
-			l_process: like current_process
 		do
 			on_clean
 			if current_process /= Void then

@@ -37,7 +37,6 @@ feature -- Test routines
 			testing:  "covers/{DIFF_TEXT}.unified"
 		local
 			l_patch: STRING
-			l_text: STRING
 		do
 			diff.set_text (text, text_merge)
 			assert ("Values set", diff.values_set)
@@ -59,7 +58,6 @@ feature -- Test routines
 			testing:  "covers/{DIFF_TEXT}.unified"
 		local
 			l_patch: STRING
-			l_text: STRING
 		do
 			diff.set_text (text_merge, text)
 			assert ("Values set", diff.values_set)
@@ -81,7 +79,6 @@ feature -- Test routines
 			testing:  "covers/{DIFF_TEXT}.unified"
 		local
 			l_patch: STRING
-			l_text: STRING
 		do
 			diff.set_text (text, text_merge_dual)
 			assert ("Values set", diff.values_set)

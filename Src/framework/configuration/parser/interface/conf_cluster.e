@@ -300,7 +300,7 @@ feature -- Access queries
 			if accessible_groups_cache = Void then
 				if dependencies = Void then
 					l_grps := target.clusters
-					create accessible_groups_cache.make (l_grps.count)
+					create accessible_groups_cache.make_map (l_grps.count)
 					from
 						l_grps.start
 					until

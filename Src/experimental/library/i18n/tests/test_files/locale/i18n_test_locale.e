@@ -158,7 +158,6 @@ feature {NONE} -- Implementation
 		local
 			t: like locale_manager
 			l_locale: I18N_LOCALE
-			l_file: RAW_FILE
 		do
 			t := locale_manager
 			l_locale := t.locale (a_id)

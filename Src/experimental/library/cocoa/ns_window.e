@@ -8,7 +8,7 @@ class
 	NS_WINDOW
 
 inherit
-	NS_OBJECT
+	NS_RESPONDER
 
 	NS_ANIMATABLE_PROPERTY_CONTAINER [NS_WINDOW]
 
@@ -29,8 +29,16 @@ feature {NONE} -- Creating Windows
 		require
 			valid_style_mask: valid_style_mask (a_style_mask)
 		do
-			item := {NS_WINDOW_API}.alloc
+			make_from_pointer (window_class.create_instance.item)
 			item := {NS_WINDOW_API}.init_with_control_rect_style_mask_backing_defer (item, a_rect.item, a_style_mask, a_defer)
+		end
+
+	window_class: OBJC_CLASS
+		once
+			create Result.make_with_name ("EiffelWrapperWindow")
+			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSWindow"))
+			Result.add_method ("keyDown:", agent key_down)
+			Result.register
 		end
 
 feature -- Delegate Methods

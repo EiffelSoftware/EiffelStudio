@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {NS_GRAPHICS_CONTEXT}."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,6 +9,10 @@ class
 
 inherit
 	NS_OBJECT
+
+create {NS_OBJECT}
+	make_from_pointer,
+	share_from_pointer
 
 feature -- Access
 

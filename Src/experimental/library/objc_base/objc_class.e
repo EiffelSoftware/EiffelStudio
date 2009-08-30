@@ -49,6 +49,7 @@ feature -- High Level Eiffel Interface
 	exists: BOOLEAN
 
 	register
+			-- Registers a class. No more methods and instance variables can be added. The class is new ready for use.
 		require
 			not exists
 		do
@@ -126,6 +127,7 @@ feature -- Introspection
 
 	methods: ARRAYED_LIST [OBJC_METHOD]
 			-- List of methods of Current Objective-C class.
+			-- Any instance methods implemented by superclasses are not included.
 		local
 			l_ptr: POINTER
 			l_count: NATURAL_32

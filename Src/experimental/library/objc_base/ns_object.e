@@ -102,6 +102,14 @@ feature -- Status report
 			Result := l_string
 		end
 
+feature -- Obtaining Information About Methods
+
+--	method_signature_for_selector (a_selector: OBJC_SELECTOR): NS_METHOD_SIGNATURE
+--			-- Returns an NS_METHOD_SIGNATURE object that contains a description of the method identified by a given selector.
+--		do
+--			create Result.share_from_pointer ({NS_OBJECT_API}.method_signature_for_selector (a_selector.item))
+--		end
+
 feature -- Duplication
 
 	copy (other: like Current)

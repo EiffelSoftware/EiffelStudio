@@ -77,6 +77,12 @@ feature -- Access
 			Result := l_cstr.string
 		end
 
+	implementation: POINTER
+			-- A pointer to the implementation of a method.
+		do
+			Result := {NS_OBJC_RUNTIME}.method_get_implementation (item)
+		end
+
 feature -- Status Report
 
 	exists: BOOLEAN
@@ -91,7 +97,7 @@ feature -- Status Report
 			Result := name
 		end
 
-feature {NONE} -- Implementation: Access
+feature {NS_OBJECT} -- Implementation: Access
 
 	item: POINTER;
 			-- Underlying Method pointer.

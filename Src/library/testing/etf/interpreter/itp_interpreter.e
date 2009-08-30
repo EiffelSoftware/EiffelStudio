@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 		do
 			create socket.make_client_by_address_and_port (a_server_url, a_port)
 			socket.connect
-			--socket.set_blocking
+			socket.set_blocking
 			socket.set_nodelay
 				-- Wait for test cases and then execute test cases in a loop.
 			log_message ("<session>%N")
@@ -408,25 +408,19 @@ feature {NONE} -- Socket IPC
 			if not l_retried then
 					-- Get request from proxy through `socket'.
 					-- This will block Current process.
-				from until
-					socket.readable or socket.is_closed
-				loop
-					sleep (100_000_000)
-				end
-				if socket.readable then
-						-- Read the type of the next request.
-					socket.read_natural_32
-					last_request_type := socket.last_natural_32
+				socket.read_natural_32
+				last_request_type := socket.last_natural_32
 
-					if attached {like last_request} socket.retrieved as l_request then
-						last_request := l_request
-					end
+				if attached {like last_request} socket.retrieved as l_request then
+					last_request := l_request
 				end
 			end
 		rescue
 			l_retried := True
 			last_request := Void
-			socket.close
+			if not socket.is_closed then
+				socket.close
+			end
 			retry
 		end
 

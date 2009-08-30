@@ -63,7 +63,6 @@ inherit
 	NS_BUTTON
 		rename
 			make as cocoa_make,
-			initialize as cocoa_initialize,
 			font as cocoa_font,
 			alignment as cocoa_alignment,
 			set_font as cocoa_set_font,

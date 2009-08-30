@@ -43,8 +43,11 @@ feature -- Access
 		do
 			if attached timer as previous_timer then
 				previous_timer.invalidate
+				timer := Void
 			end
-			create timer.scheduled_timer (an_interval / 1000.0, agent on_timeout, Void, True)
+			if an_interval > 0 then
+				create timer.scheduled_timer (an_interval / 1000.0, agent on_timeout, Void, True)
+			end
 			interval := an_interval
 		end
 

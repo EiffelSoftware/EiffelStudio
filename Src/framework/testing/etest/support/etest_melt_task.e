@@ -83,7 +83,9 @@ feature -- Status setting
 			compilation_requested := False
 			launched_current_compilation := False
 
-			launch_compilation
+			if force_recompilation then
+				launch_compilation
+			end
 		end
 
 	step

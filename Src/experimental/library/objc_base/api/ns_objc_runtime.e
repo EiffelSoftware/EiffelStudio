@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {NS_OBJC_RUNTIME}."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -123,6 +123,22 @@ feature -- Working with methods
 			"C inline use <objc/runtime.h>"
 		alias
 			"return (EIF_POINTER) sel_getName(method_getName((Method) $a_method));"
+		end
+
+	frozen method_get_name (a_method: POINTER): POINTER
+			-- SEL method_getName(Method method)
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return (EIF_POINTER) method_getName((Method) $a_method);"
+		end
+
+	frozen method_get_implementation(a_method: POINTER): POINTER
+			-- IMP method_getImplementation(Method method)
+		external
+			"C inline use <objc/runtime.h>"
+		alias
+			"return (EIF_POINTER) method_getImplementation((Method) $a_method);"
 		end
 
 	frozen method_argument_count (a_method: POINTER): NATURAL_32

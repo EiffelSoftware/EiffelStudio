@@ -33,7 +33,6 @@ feature {NONE} -- Creation and Initialization
 			make_from_pointer (view_class_with_draw_callback.create_instance.item)
  			{NS_VIEW_API}.init (item)
 			callback_marshal.register_object (Current)
-			initialize
 		end
 
 	view_class_with_draw_callback: OBJC_CLASS
@@ -41,6 +40,9 @@ feature {NONE} -- Creation and Initialization
 			create Result.make_with_name ("EiffelWrapperViewXX")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSView"))
 			Result.add_method ("drawRect:", agent draw_rect)
+			Result.add_method ("mouseDown:", agent mouse_down)
+			Result.add_method ("mouseUp:", agent mouse_up)
+			Result.add_method ("keyDown:", agent key_down)
 			Result.add_method ("isFlipped", agent: BOOLEAN do Result := True end)
 			Result.register
 		end

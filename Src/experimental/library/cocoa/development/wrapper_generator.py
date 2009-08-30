@@ -26,18 +26,19 @@ import traceback, sys
 
 basedir = "/System/Library/Frameworks"
 
-"""config = {
+"""
+config = {
 		  "framework": "ApplicationKit",
 		  "dirname": basedir + "/AppKit.framework/Headers",
-		  "class": "NSImage",
-		  "include": "Cocoa/NSImage.h"
-		  }"""
-
+		  "class": "NSEvent",
+		  "include": "Cocoa/NSEvent.h"
+		  }
+"""
 config = {
 		  "framework": "Foundation",
 		  "dirname": basedir + "/Foundation.framework/Headers",
-		  "class": "NSBundle",
-		  "include": "Foundation/NSBundle.h"
+		  "class": "NSInvocation",
+		  "include": "Foundation/NSInvocation.h"
 		  }
 
 headerpath = config["dirname"] + "/" + config["class"] + ".h"
@@ -320,6 +321,10 @@ typeMap = {
 	"char": "CHARACTER",
 	"int": "INTEGER",
 	"unsigned int": "NATURAL",
+	"short": "INTEGER_16",
+	"unsigned short": "NATURAL_16",
+	"unsigned long long": "NATURAL_64",
+	"long long": "INTEGER_64",
 	"float": "REAL",
 	"double": "REAL_64",
 	"BOOL": "BOOLEAN",
@@ -357,10 +362,13 @@ enumMap = {
 	"NSCompositingOperation": "int",
 	"NSBitmapFormat": "int",
 	"NSImageLoadStatus": "int",
-    "NSImageCacheMode": "int"
+    "NSImageCacheMode": "int",
+    "NSEventType": "int",
+    "NSPointingDeviceType": "int"
+    
 }
 	
-expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER", "NATURAL"]
+expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER", "NATURAL", "NATURAL_64", "INTEGER_64", "NATURAL_16", "INTEGER_16"]
 
 def EiffelTypeN(CTypeName):
 	if CTypeName.endswith("*"):
@@ -572,6 +580,7 @@ def main():
 		   replace("\xc2", "C2C2C2").\
 		   replace("\xa0", "A0A0A0").\
 		   replace("\xb1", "B1B1B1").\
+		   replace("\xb4", "B4B4B4").\
 		   replace("\xe2", "E2E2E2").\
 		   replace("\x80", "808080").\
 		   replace("\xa6", "QQQ").\

@@ -59,7 +59,8 @@ inherit
 			dispose,
 			set_size,
 			window_did_resize,
-			window_did_move
+			window_did_move,
+			key_down
 		end
 
 create
@@ -189,6 +190,20 @@ feature -- Delegate
 				resize_actions_internal.call (
 					[screen_x, screen_y, a_width, a_height])
 			end
+		end
+
+	key_down (a_event: NS_EVENT)
+		local
+			char: CHARACTER
+		do
+			io.put_string (a_event.characters + " (" + a_event.key_code.out + ")%N")
+			if attached key_press_actions_internal then
+				char := a_event.characters.as_string_8.item (1)
+				if char.is_lower then
+					key_press_actions_internal.call ([create {EV_KEY}.make_with_code (char.code - 97 + {EV_KEY_CONSTANTS}.Key_a)])
+				end
+			end
+			Precursor {EV_NS_WINDOW} (a_event)
 		end
 
 feature {EV_ANY_I} -- Implementation

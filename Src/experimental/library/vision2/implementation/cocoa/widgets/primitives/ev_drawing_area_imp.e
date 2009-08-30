@@ -1,6 +1,6 @@
 note
 	description: "EiffelVision drawing area. Cocoa implementation."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -47,11 +47,12 @@ inherit
 		rename
 			make as make_cocoa,
 			make_with_drawing as make_with_drawing_cocoa,
-			initialize as initialize_cocoa,
 			copy as copy_cocoa
 		redefine
 			dispose,
 			mouse_down,
+			mouse_up,
+			mouse_moved,
 			draw_rect
 		end
 
@@ -88,11 +89,15 @@ feature -- Status setting
 	clear_and_redraw
 			-- Clear `Current' and redraw.
 		do
+			clear
+			redraw
 		end
 
 	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Clear the rectangle area defined by `a_x', `a_y', `a_width', `a_height' and then redraw it.
 		do
+			clear
+			redraw_rectangle (a_x, a_y, a_width, a_height)
 		end
 
 	flush
@@ -151,6 +156,42 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	mouse_up (a_event: NS_EVENT)
+		local
+			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
+			point: NS_POINT
+		do
+			if attached pointer_button_release_actions_internal as actions then
+				create pointer_button_action
+				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
+				pointer_button_action.x := point.x
+				pointer_button_action.y := point.y
+				point := a_event.window.convert_base_to_screen_top_left (a_event.location_in_window)
+				pointer_button_action.screen_x := point.x
+				pointer_button_action.screen_y := point.y
+				pointer_button_action.button :=	a_event.button_number + 1
+				actions.call (pointer_button_action)
+			end
+		end
+
+	mouse_moved (a_event: NS_EVENT)
+			-- Translate a Cocoa mouseMoved NS_EVENT to a pointer_motion_action call
+		local
+			pointer_motion_action: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
+			point: NS_POINT
+		do
+			if attached pointer_motion_actions_internal as actions then
+				create pointer_motion_action
+				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
+				pointer_motion_action.x := point.x
+				pointer_motion_action.y := point.y
+				point := a_event.window.convert_base_to_screen_top_left (a_event.location_in_window)
+				pointer_motion_action.screen_x := point.x
+				pointer_motion_action.screen_y := point.y
+				actions.call (pointer_motion_action)
+			end
+		end
+
 	is_drawing_buffered: BOOLEAN
 
 	update_if_needed
@@ -161,8 +202,6 @@ feature {NONE} -- Implementation
 	draw_rect (a_dirty_rect: NS_RECT)
 			-- Draw callback
 		do
---			image.draw (create {NS_POINT}.make_point (0, 0), create {NS_RECT}.make_rect (0, 0, 1000, 1000), {NS_IMAGE}.composite_source_over, 1.0)
-
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([
 					a_dirty_rect.origin.x,

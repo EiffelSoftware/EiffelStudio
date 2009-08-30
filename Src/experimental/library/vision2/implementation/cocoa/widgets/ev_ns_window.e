@@ -122,4 +122,5 @@ feature -- Measurement
 			set_shows_resize_indicator (True)
 			standdard_window_button ({NS_WINDOW}.window_zoom_button).set_enabled (True)
 		end
+
 end

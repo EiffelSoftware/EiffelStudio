@@ -331,25 +331,29 @@ feature -- Drawing operations
 		do
 		end
 
-	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; a_area: EV_RECTANGLE)
-			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
+	draw_sub_pixel_buffer (x, y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; a_area: EV_RECTANGLE)
+			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`x', `y').
 		local
 			pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
-			y_cocoa: INTEGER
+			source_rect, destination_rect: NS_RECT
+			trans: NS_AFFINE_TRANSFORM
 		do
 			prepare_drawing
 			pixel_buffer_imp ?= a_pixel_buffer.implementation
 			check pixel_buffer_imp /= void end
---			if is_flipped then
---				y_cocoa := a_area.y
---			else
-				y_cocoa := pixel_buffer_imp.image.size.height - a_area.height - a_area.y
---			end
 
-			pixel_buffer_imp.image.draw_in_rect (
-				create {NS_RECT}.make_rect (a_x, a_y, a_area.width, a_area.height),
-				create {NS_RECT}.make_rect (a_area.x, y_cocoa, a_area.width, a_area.height),
-				{NS_IMAGE}.composite_source_over, 1)
+			create trans.make
+			trans.translate_by_xy (x, y + a_area.height)
+			trans.scale_by_xy (1, -1)
+			trans.concat
+
+			destination_rect := create {NS_RECT}.make_rect (0, 0, a_area.height, a_area.width)
+			source_rect := create {NS_RECT}.make_rect (a_area.x, a_pixel_buffer.height - a_area.height - a_area.y, a_area.width, a_area.height)
+			pixel_buffer_imp.image.composite_to_point_from_rect_operation (create {NS_POINT}.make_point(0,0), source_rect, {NS_IMAGE}.composite_source_over)
+--			pixel_buffer_imp.image.draw_in_rect (
+--				create {NS_RECT}.make_rect (a_x, a_y, a_area.width, a_area.height),
+--				create {NS_RECT}.make_rect (a_area.x, y_cocoa, a_area.width, a_area.height),
+--				{NS_IMAGE}.composite_source_over, 1)
 
 			finish_drawing
 		end
@@ -365,10 +369,6 @@ feature -- Drawing operations
 			check pixmap_imp /= Void end
 
 			prepare_drawing
-
---			if is_flipped then
---			else
---			end
 
 			create trans.make
 			trans.translate_by_xy (x, pixmap_imp.image.size.height + y)

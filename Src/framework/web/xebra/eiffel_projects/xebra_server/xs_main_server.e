@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-    XS_MAIN_SERVER
+    XS_MAIN_SERVER	
 
 inherit
 	XC_SERVER_INTERFACE
@@ -476,7 +476,6 @@ feature {XS_SERVER_MODULE} -- Status setting
 				Result := False
 			end
 		end
-
 
 feature -- From EIFFEL_ENV
 

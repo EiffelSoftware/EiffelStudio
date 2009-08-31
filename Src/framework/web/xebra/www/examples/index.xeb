@@ -117,8 +117,7 @@
 			Result := "http://dev.eiffel.com/Xebra_Documentation"
 	</div>
 	<div class="demo">
-	<xeb:variable name="doc_url" type="STRING" />
-	<xeb:set_variable variable="doc_url" value="%=xebra_documentation_url%" />
+	<xeb:set_variable variable="doc_url" value="%=xebra_documentation_url%" type="STRING" />
 	Check the Xebra's documentation: <a href="#{doc_url}"><xeb:display text="#{doc_url}"/> </a>
 	</div>
 </div>

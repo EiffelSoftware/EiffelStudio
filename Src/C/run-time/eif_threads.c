@@ -2,7 +2,7 @@
 	description: "Thread management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -64,6 +64,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_object_id.h"
 #include "rt_cecil.h"
 #include "rt_debug.h"
+#include "rt_main.h"
 #ifdef BOEHM_GC
 #include "rt_boehm.h"
 #endif
@@ -304,6 +305,9 @@ rt_private void eif_thr_init_global_mutexes (void)
 	EIF_LW_MUTEX_CREATE(eif_gen_mutex, 100, "Cannot create mutex for eif_gen_conf\n");
 	EIF_LW_MUTEX_CREATE(eif_hec_saved_mutex, 100, "Cannot create mutex for hec_saved\n");
 	EIF_LW_MUTEX_CREATE(eif_cecil_mutex, -1, "Couldn't create cecil lock");
+#ifdef EIF_WINDOWS
+	EIF_LW_MUTEX_CREATE(eif_console_mutex, -1, "Couldn't create eif_console_mutex");
+#endif
 }
 
 rt_public void eif_thr_init_root(void) 
@@ -394,6 +398,9 @@ rt_shared void eif_thread_cleanup (void)
 	EIF_LW_MUTEX_DESTROY(eif_gen_mutex, "Cannot destroy mutex for eif_gen_conf\n");
 	EIF_LW_MUTEX_DESTROY(eif_hec_saved_mutex, "Cannot destroy mutex for hec_saved\n");
 	EIF_LW_MUTEX_DESTROY(eif_cecil_mutex, "Couldn't destroy cecil mutex");
+#ifdef EIF_WINDOWS
+	EIF_LW_MUTEX_DESTROY(eif_console_mutex, "Couldn't destroy eif_console_mutex");
+#endif
 
 	EIF_TSD_DESTROY(eif_global_key, "Could not free key");
 	EIF_TSD_DESTROY(rt_global_key, "Could not free key");

@@ -38,6 +38,7 @@
 #define _rt_main_h_
 
 #include "eif_main.h"
+#include "rt_threads.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,6 +68,9 @@ extern unsigned TIMEOUT;		/* Time out on reads */
 /* Console management for Windows */
 extern void eif_console_cleanup (EIF_BOOLEAN);
 extern void eif_show_console (void);					/* Show the DOS console if needed */
+#ifdef EIF_THREADS
+extern EIF_LW_MUTEX_TYPE *eif_console_mutex;
+#endif
 #endif
 
 extern void dexit(int);

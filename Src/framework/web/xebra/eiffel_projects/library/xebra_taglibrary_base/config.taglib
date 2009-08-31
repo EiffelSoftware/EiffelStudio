@@ -33,4 +33,9 @@
 		<attribute id="value" />
 		<attribute id="type" optional="True"/>
 	</tag>
+	<tag id="concat" class="XTAG_XEB_CONCAT_TAG">
+		<attribute id="variable" />
+		<attribute id="left" optional="True" />
+		<attribute id="right" optional="True"/>
+	</tag>
 </taglib>

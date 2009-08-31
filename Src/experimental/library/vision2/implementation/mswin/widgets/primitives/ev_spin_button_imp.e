@@ -169,8 +169,6 @@ feature {NONE} -- Initialization
 
 			set_default_font
 			Precursor {EV_GAUGE_IMP}
-
-			internal_text_field.wel_set_parent (Current)
 		ensure then
 			text_field_not_void: internal_text_field /= Void
 			arrows_not_void: internal_arrows_control /= Void
@@ -182,6 +180,7 @@ feature {NONE} -- Initialization
 			create child_cell
 			create internal_arrows_control.make
 				(Current, 0, 0, default_spin_height, spin_width, -1)
+			internal_text_field.wel_set_parent (Current)
 			internal_arrows_control.set_buddy_window (internal_text_field)
 			internal_arrows_control.set_range (0, 100)
 			last_change_value := 0

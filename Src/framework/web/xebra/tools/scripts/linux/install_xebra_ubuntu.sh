@@ -11,7 +11,7 @@ echo "This script will install Xebra."
 apache_dir="httpd-2.2.13"
 apache_file="$apache_dir.tar.gz"
 apache_url="http://www.apache.org/dist/httpd/$apache_file" 
-revision=80506
+revision=80545
 
 echo "Apache $apache_url will be installed..."
 echo "Xebra revision $revision will be installed..."

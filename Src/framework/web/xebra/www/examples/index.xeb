@@ -109,8 +109,7 @@
 
 <div class="example"><div class="title">xeb:set_variable's example:</div>
 	<div class="source xeb" >
-	&lt;xeb:variable name="doc_url" type="STRING" /&gt;
-	&lt;xeb:set_variable variable="doc_url" value="%=xebra_documentation_url%" /&gt;
+	&lt;xeb:set_variable variable="doc_url" value="%=xebra_documentation_url%" type="STRING" /&gt;
 	Check the Xebra's documentation: &lt;a href="#{doc_url}"&gt;&lt;xeb:display text="#{doc_url}"/&gt; &lt;/a&gt;
 	</div>
 	<div class="source eiffel" >

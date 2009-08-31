@@ -376,7 +376,9 @@ feature {NONE} -- Process output agents
 	output_error (a_string: STRING)
 			-- Prints a_String to log.eprint
 		do
-			log.eprint (a_string, generating_type)
+			if not a_string.is_empty then
+				log.eprint (a_string, generating_type)
+			end
 		end
 
 feature {NONE} -- Internal Access

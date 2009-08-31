@@ -352,41 +352,39 @@ feature {NONE} -- Events
 			to_undo, to_redo: INTEGER
 			offset: INTEGER
 		do
-			if not action_list.selected_item.text.is_equal (history_discarded_string) then
-				if user_selected then
-					if previously_selected_item /= Void then
-				 		to_undo := action_list.index_of (previously_selected_item, 1) -
-							action_list.index_of (action_list.selected_item, 1)
-						to_redo := - to_undo
-					else
-						if action_list.first.text.is_equal (history_discarded_string) then
-							offset := 1
-						end
-				 		to_undo := - (action_list.index_of (action_list.selected_item, 1) - offset)
-						to_redo := - to_undo
+			if user_selected then
+				if previously_selected_item /= Void then
+					to_undo := action_list.index_of (previously_selected_item, 1) -
+						action_list.index_of (action_list.selected_item, 1)
+					to_redo := - to_undo
+				else
+					if action_list.first.text.is_equal (history_discarded_string) then
+						offset := 1
 					end
-					previously_selected_item := action_list.selected_item
-
-						-- We process the undo stack, however some undo operations might
-						-- discard the full history (case where something else outside
-						-- EiffelStudio did modify some code).
-					from
-					until
-						to_undo <= 0 or undo_list.is_empty
-					loop
-						undo
-						to_undo := to_undo - 1
-					end
-					from
-					until
-						to_redo <= 0
-					loop
-						redo
-						to_redo := to_redo - 1
-					end
+					to_undo := - (action_list.index_of (action_list.selected_item, 1) - offset)
+					to_redo := - to_undo
 				end
-				user_selected := True
+				previously_selected_item := action_list.selected_item
+
+					-- We process the undo stack, however some undo operations might
+					-- discard the full history (case where something else outside
+					-- EiffelStudio did modify some code).
+				from
+				until
+					to_undo <= 0 or undo_list.is_empty
+				loop
+					undo
+					to_undo := to_undo - 1
+				end
+				from
+				until
+					to_redo <= 0
+				loop
+					redo
+					to_redo := to_redo - 1
+				end
 			end
+			user_selected := True
 		end
 
 	close_action

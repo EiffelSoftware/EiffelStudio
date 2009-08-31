@@ -19,14 +19,6 @@
 	</tag>
 	<tag id="container" class="XTAG_XEB_CONTAINER_TAG">
 	</tag>
-	<tag id="data_grid" class="XTAG_XEB_DATA_GRID_TAG">
-		<attribute id="id" />
-		<attribute id="alternating_item_style_css_class" />
-	</tag>
-	<tag id="image" class="XTAG_XEB_IMAGE_TAG">
-		<attribute id="id"/>
-		<attribute id="image_url"/>
-	</tag>
 	<tag id="template_field" class="XTAG_XEB_TEMPLATE_FIELD_TAG">
 		<attribute id="header_text"/>
 		<attribute id="header_style_width"/>

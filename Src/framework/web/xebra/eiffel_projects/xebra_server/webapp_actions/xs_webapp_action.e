@@ -257,6 +257,8 @@ feature {NONE} -- Internal Status Report
 
 	is_necessary: BOOLEAN
 			-- Checks if the current action is necessary
+		local
+			l_out: STRING
 		do
 			if attached internal_is_execution_needed (true) as l_res then
 				if attached {BOOLEAN} l_res[1] as l_boolean then
@@ -264,9 +266,13 @@ feature {NONE} -- Internal Status Report
 				end
 
 				if attached {LIST [ANY]} l_res[2] as l_ist then
-					from l_ist.start until l_ist.after loop
-						log.dprint (action_name + " necessary because: " + l_ist.item_for_iteration.out, log.debug_subtasks)
-						l_ist.forth
+					if not l_ist.is_empty then
+						l_out := action_name + " is necessary because: "
+						from l_ist.start until l_ist.after loop
+							l_out.append ("%N%T- " + l_ist.item_for_iteration.out)
+							l_ist.forth
+						end
+						log.dprint (l_out, log.debug_subtasks)
 					end
 				end
 			end
@@ -274,16 +280,21 @@ feature {NONE} -- Internal Status Report
 
 	is_successful: BOOLEAN
 			-- Checks if the current action was successful
+		local
+			l_out: STRING
 		do
 			if attached internal_is_execution_needed (false) as l_res then
 				if attached {BOOLEAN} l_res[1] as l_boolean then
 					Result := not l_boolean
 				end
-
 				if attached {LIST [ANY]} l_res[2] as l_ist then
-					from l_ist.start until l_ist.after loop
-					log.eprint (action_name + " failed because: " + l_ist.item_for_iteration.out, generating_type)
-						l_ist.forth
+					if not l_ist.is_empty then
+						l_out := action_name + " failed because: "
+						from l_ist.start until l_ist.after loop
+							l_out.append ("%N%T- " + l_ist.item_for_iteration.out)
+							l_ist.forth
+						end
+						log.eprint (l_out, generating_type)
 					end
 				end
 			end

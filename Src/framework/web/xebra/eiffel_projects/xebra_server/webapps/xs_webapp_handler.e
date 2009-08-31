@@ -63,7 +63,7 @@ feature  -- Basic Operations
 			-- Traverses folders to find config files which define managed webapps
 			--
 			-- `a_path': The path to start scanning for webapp config files
-			-- `a_unmanaged': If true, managed webapps will be created, unmanaged webapps otherwise
+			-- `a_unmanaged': If true, unmanaged webapps will be created, managed webapps otherwise
 			-- `Result': A hash table of webapps and the webapps names
 		require
 			not_a_path_is_detached_or_empty: a_path /= Void and then not a_path.is_empty

@@ -3,35 +3,10 @@
 echo "under construction!";
 exit;
 
-if [ -x "$XEBRA_DEV" ]; then
-	:
-else
- 	echo "XEBRA_DEV is not defined. Please define before running script.";
- 	exit;
-fi;
-
-if [ -x "$EIFFEL_SRC" ]; then
-	:
-else
- 	echo "EIFFEL_SRC is not defined. Please define before running script.";
- 	exit;
-fi;
-
-if [ -x "$ISE_EIFFEL" ]; then
-	:
-else
- 	echo "ISE_EIFFEL is not defined. Please define before running script.";
- 	exit;
-fi;
-
-
-if [ -x "$ISE_LIBRARY" ]; then
-	:
-else
- 	echo "ISE_LIBRARYis not defined. Please define before running script.";
- 	exit;
-fi;
-
+if [ ! -d "$XEBRA_DEV" ]; then
+ 	echo "XEBRA_DEV is not defined or is not a directory. Please define before running script."
+ 	exit
+fi
 
 if [ ! $# = 3 ]; then
 	echo "Wrong number of arguments. Usage: $0 <name> <port> <install_path>";
@@ -55,13 +30,14 @@ echo '<?xml version="1.0" encoding="ISO-8859-1"?>
 		<option full_class_checking="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="console_application" value="true"/>
+			<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="xebra_http" location="$XEBRA_DEV\eiffel_projects\library\xebra_http\xebra_http-voidunsafe.ecf"/>
-		<library name="xebra_ini" location="$XEBRA_DEV\eiffel_projects\library\xebra_ini\xebra_ini-voidunsafe.ecf"/>
-		<library name="xebra_web_application" location="$XEBRA_DEV\eiffel_projects\library\xebra_web_application\xebra_web_application-voidunsafe.ecf" readonly="false"/>
-		<cluster name="xebrawebapp" location=".\" recursive="true">
+		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http.ecf"/>
+		<library name="xebra_web_application" location="$XEBRA_LIBRARY\xebra_web_application\xebra_web_application.ecf"/>
+		<cluster name="'$1'" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
@@ -72,12 +48,23 @@ echo '<?xml version="1.0" encoding="ISO-8859-1"?>
 </system>
 ' > $1.ecf;
 
-# Create ini file
+# Create config file
 echo "Creating website config file..." 
-echo "name=$1
-port=$2
-host=localhost
-is_interactive=false" > config.ini;
+echo '{
+	"ecf": "$3/$1.ecf",
+	"name": "$1",
+	"port": "$2",
+	"server_host": "localhost",
+	"taglibs": 
+	[
+		{ 
+			"name": "xebra_taglibrary_base",
+			"ecf":  "xebra_taglibrary_base.ecf",
+			"path": "$XEBRA_LIBRARY/xebra_taglibrary_base"
+		}
+	]	
+}
+' > config.wapp;
 
 # Create xeb files and controller
 echo "Creating xeb files and controller..."

@@ -60,7 +60,7 @@ feature {NONE} -- Agents
 			-- Adds output to `error_output_cache' or prints
 		do
 			if log.debug_level >= log.debug_subtasks then
-				log.dprint (a_string, log.debug_subtasks)
+				log.dprint_noformat (a_string, log.debug_subtasks)
 			else
 				error_output_cache.append (a_string)
 			end

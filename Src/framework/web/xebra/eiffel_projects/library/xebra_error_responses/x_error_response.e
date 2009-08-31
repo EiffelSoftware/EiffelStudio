@@ -30,9 +30,7 @@ feature -- Access
 	img: STRING
 			-- <Precursor>
 		do
-			Result := "[
-					   <img src="http://fusun.ch/download/temp/xebTot.jpg" alt="fail xebra image" width="520" height="256" />
-					   ]"
+			Result := ""
 		end
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

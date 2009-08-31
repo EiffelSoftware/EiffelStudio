@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {SUPPORT_GLOBAL_STATE}."
+	description: "[
+		Support global state
+	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

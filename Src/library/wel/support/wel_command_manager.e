@@ -20,6 +20,9 @@ inherit
 create
 	make
 
+create {WEL_COMMAND_MANAGER}
+	hash_table_make
+
 feature -- Initialization
 
 	make

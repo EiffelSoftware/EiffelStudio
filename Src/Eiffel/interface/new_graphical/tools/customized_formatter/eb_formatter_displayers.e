@@ -66,6 +66,7 @@ feature -- Generators
 			l_editor.widget.set_background_color ((create {EV_STOCK_COLORS}).gray)
 			l_editor.disable_line_numbers
 			l_editor.drop_actions.append (a_drop_actions)
+			l_editor.drop_actions.set_veto_pebble_function (agent (s: STONE): BOOLEAN do Result := True end)
 			create Result.make (l_editor)
 		ensure
 			result_attached: Result /= Void

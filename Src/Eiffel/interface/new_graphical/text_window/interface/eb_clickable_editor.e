@@ -71,6 +71,8 @@ feature {NONE}-- Initialization
 			editor_drawing_area.set_pebble_function (agent pebble_from_x_y)
 			editor_drawing_area.enable_pebble_positioning
 			editor_drawing_area.drop_actions.extend (agent resume_cursor_for_drop)
+				-- Always refuse pick and drop by default if user does not add its own `drop_actions'.
+			editor_drawing_area.drop_actions.set_veto_pebble_function (agent (a: ANY): BOOLEAN do Result := False end)
 			editor_drawing_area.pick_actions.force_extend (agent suspend_cursor_blinking)
 			editor_drawing_area.pick_ended_actions.force_extend (agent resume_cursor_blinking)
 

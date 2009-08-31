@@ -44,7 +44,7 @@ inherit
 			copy
 		redefine
 			append,
-			force_i_th,
+			extend,
 			replace,
 			insert,
 			prune_all,
@@ -528,10 +528,10 @@ feature -- List change
 			fig_in_group: fig /= Void implies fig.group = Current
 		end
 
-	force_i_th (fig: like item; i: INTEGER)
+	extend (fig: like item)
 			-- Add `fig' to the group.
 		do
-			Precursor {ARRAYED_LIST} (fig, i)
+			Precursor {ARRAYED_LIST} (fig)
 			if fig /= Void then
 				fig.set_group (Current)
 				lookup_table.put (fig, fig.id)

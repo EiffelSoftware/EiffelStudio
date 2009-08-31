@@ -33,7 +33,7 @@ inherit
 			copy
 		redefine
 			append,
-			force_i_th,
+			extend,
 			replace,
 			insert,
 			prune_all,
@@ -232,10 +232,10 @@ feature -- List operations
 			full_redraw
 		end
 
-	force_i_th (fig: like item; i: INTEGER)
+	extend (fig: like item)
 			-- Add `fig' to the group.
 		do
-			Precursor {ARRAYED_LIST} (fig, i)
+			Precursor {ARRAYED_LIST} (fig)
 			fig.set_group (Current)
 			full_redraw
 		end

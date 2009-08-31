@@ -1,5 +1,9 @@
 note
-	description: ""
+	description: "[
+		DB problem report persistence
+	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

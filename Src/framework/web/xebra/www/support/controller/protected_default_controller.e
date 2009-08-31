@@ -1,5 +1,9 @@
 note
-	description: "Summary description for {LOGIN_CONTROLLER}."
+	description: "[
+		Protected default controller
+	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

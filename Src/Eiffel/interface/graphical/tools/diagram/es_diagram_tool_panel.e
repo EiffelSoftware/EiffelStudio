@@ -2311,7 +2311,13 @@ feature {EIFFEL_WORLD} -- XML Output
 				toggle_uml_cmd.disable_select
 			end
 
+				-- We block the actions as we do not want them to be added to the undo/redo list
+				-- since we are merely resetting the zoom to its default value. This is necessary
+				-- since the fix of rev#70349 in Vision2 (see bug#12683) which will automatically
+				-- select the item corresponding to the new text being set.
+			zoom_selector.select_actions.block
 			zoom_selector.show_as_text ((world.scale_factor * 100).rounded)
+			zoom_selector.select_actions.resume
 		end
 
 feature {NONE} -- Implementation keyboard shortcuts

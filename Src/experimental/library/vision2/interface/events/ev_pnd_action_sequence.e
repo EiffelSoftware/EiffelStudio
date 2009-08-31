@@ -131,7 +131,9 @@ feature {NONE} -- Convenience
 					Result := l_veto_pebble_function.valid_operands (l_tuple) and then
 						l_veto_pebble_function.item (l_tuple)
 				else
-					Result := True
+						-- The `a_pebble' does not match what the veto even accept, we should
+						-- clearly reject the drop.
+					Result := False
 				end
 			else
 				Result := True

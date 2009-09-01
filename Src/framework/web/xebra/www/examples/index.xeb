@@ -121,6 +121,19 @@
 	</div>
 </div>
 
+<div class="example"><div class="title">xeb:concat's example:</div>
+	<div class="source xeb" >
+	&lt;xeb:set_variable variable="aplusb" value="PLUS" type="STRING" /&gt;
+	&lt;xeb:concat variable="aplusb" left="a" right="b" /&gt;
+	&lt;xeb:display text="#{aplusb}" /&gt;
+	</div>
+	<div class="demo">
+	<xeb:set_variable variable="aplusb" value="PLUS" type="STRING" />
+	<xeb:concat variable="aplusb" left="a" right="b" />
+	<xeb:display text="#{aplusb}" />
+	</div>
+</div>
+
 
 </body>
 </html>

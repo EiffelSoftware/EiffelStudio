@@ -200,19 +200,28 @@ feature {NONE} -- Implementation
 
 	internal_notebook: detachable SD_NOTEBOOK_UPPER
 			-- Fake notebook for {SD_UPPER_ZONE}
+			-- Must create a fake notebook for Current
+			-- Otherwise bug#16214
 		do
+			if internal_notebook_instance = Void then
+				create internal_notebook_instance.make (internal_docking_manager)
+			end
+			Result := internal_notebook_instance
 		end
+
+	internal_notebook_instance: detachable SD_NOTEBOOK_UPPER
+			-- Instance holder for `internal_notebook'
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

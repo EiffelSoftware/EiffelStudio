@@ -248,7 +248,9 @@ feature {NONE} -- Implementation
 				l_editor_zone := internal_docking_manager.query.only_one_editor_zone
 				if l_editor_zone /= Void and a_config_data.is_one_editor_zone then
 					if a_config_data.is_editor_minimized and not l_editor_zone.is_minimized then
-						l_editor_zone.on_minimize
+						if not attached {SD_PLACE_HOLDER_ZONE} l_editor_zone then
+							l_editor_zone.on_minimize
+						end
 					end
 				end
 			end
@@ -285,14 +287,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -1,9 +1,0 @@
-test_name 	 finalize-all-classes-crash
-test_description If you try to finalize a system which was compiled with `all classes' then it would crash during dead code removal.
-
-copy_sub 	Ace $TEST Ace
-
-compile_final
-compile_result 	ok
-
-test_end

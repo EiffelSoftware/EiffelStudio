@@ -1608,7 +1608,6 @@ test	argument-anchors-formal-crash	term177	tcf pass termination
 test	small-eif-stack-chunk		term178	tcf pass termination skip
 test	inherit-inline-agent-with-formal	term179	tcf pass termination
 test	infix-prefix-alias-compatibility-crash	term180 tcf pass termination
-test	finalize-all-classes-crash	term181 tcf pass termination
 
 -- Config
 

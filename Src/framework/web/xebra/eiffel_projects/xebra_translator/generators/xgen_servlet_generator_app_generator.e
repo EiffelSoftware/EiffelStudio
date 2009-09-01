@@ -81,9 +81,11 @@ feature -- Basic functionality
 			l_directory: DIRECTORY
 			l_util: XU_FILE_UTILITIES
 			l_ecf_file_name: FILE_NAME
+			l_cursor: INTEGER
 		do
 				-- 1. Generate the servlet generator files
 			from
+				l_cursor := servlet_generator_generators.index
 				servlet_generator_generators.start
 			until
 				servlet_generator_generators.after
@@ -92,6 +94,7 @@ feature -- Basic functionality
 				servlet_generator_generator.generate (a_path.twin)
 				servlet_generator_generators.forth
 			end
+			servlet_generator_generators.go_i_th (l_cursor)
 
 				-- 2. Generate the {APPLICATION} class
 			l_filename := a_path.twin
@@ -127,6 +130,7 @@ feature -- Basic functionality
 			if attached l_util.plain_text_file_write (l_filename) as l_file then
 				l_file.put_string (servlet_gen_ecf_prefix)
 				from
+					l_cursor := taglibs.index
 					taglibs.start
 				until
 					taglibs.after
@@ -136,6 +140,7 @@ feature -- Basic functionality
 					l_file.put_string ("<library name=%"" + taglibs.item.name + "%" location=%"" +  l_ecf_file_name + "%"/>")
 					taglibs.forth
 				end
+				taglibs.go_i_th (l_cursor)
 				l_file.put_string (servlet_gen_ecf_postfix)
 				l_util.close
 			end
@@ -157,6 +162,7 @@ feature {NONE} -- Implementation
 		local
 			l_servlet_gg: XGEN_SERVLET_GENERATOR_GENERATOR
 			l_creation_expression: STRING
+			l_cursor: INTEGER
 		do
 			create Result.make ("run (a_arg_parser: XTAG_ARGUMENT_PARSER)")
 			Result.append_local ("l_path", "STRING")
@@ -171,6 +177,7 @@ feature {NONE} -- Implementation
 			Result.append_expression ("l_path := a_arg_parser.output_path")
 
 			from
+				l_cursor := servlet_generator_generators.index
 				servlet_generator_generators.start
 			until
 				servlet_generator_generators.after
@@ -196,6 +203,7 @@ feature {NONE} -- Implementation
 				end
 				servlet_generator_generators.forth
 			end
+			servlet_generator_generators.go_i_th (l_cursor)
 			Result.append_local ("buf", "XU_INDENDATION_FORMATTER")
 			Result.append_local ("constants_file", "PLAIN_TEXT_FILE")
 			Result.append_local ("constants_file_name", "FILE_NAME")
@@ -216,15 +224,18 @@ feature {NONE} -- Implementation
 			-- Retrieves the first controlller (only use in combination with xrpc)
 		require
 			a_servlet_gg_attached: a_servlet_gg /= Void
+		local
+			l_controller_table: HASH_TABLE [TUPLE [class_name: STRING_8; creator: STRING_8], STRING_8]
 		do
 			Result := ""
 			from
-				a_servlet_gg.controller_table.start
+				l_controller_table := a_servlet_gg.controller_table
+				l_controller_table.start
 			until
-				a_servlet_gg.controller_table.after
+				l_controller_table.after
 			loop
-				Result := Result + a_servlet_gg.controller_table.key_for_iteration
-				a_servlet_gg.controller_table.forth
+				Result := Result + l_controller_table.key_for_iteration
+				l_controller_table.forth
 			end
 		ensure
 			Result_attached: attached Result
@@ -236,15 +247,18 @@ feature {NONE} -- Implementation
 		require
 			a_servlet_gg_attached: a_servlet_gg /= Void
 			a_feature_attached: a_feature /= Void
+		local
+			l_controller_table: HASH_TABLE [TUPLE [class_name: STRING_8; creator: STRING_8], STRING_8]
 		do
 			a_feature.append_expression ("create l_controller_table.make (" + a_servlet_gg.controller_table.count.out + ")")
 			from
-				a_servlet_gg.controller_table.start
+				l_controller_table := a_servlet_gg.controller_table
+				l_controller_table.start
 			until
-				a_servlet_gg.controller_table.after
+				l_controller_table.after
 			loop
-				a_feature.append_expression ("l_controller_table.put ([%"" + a_servlet_gg.controller_table.item_for_iteration.class_name + "%", %"" + a_servlet_gg.controller_table.item_for_iteration.creator + "%"], %"" + a_servlet_gg.controller_table.key_for_iteration + "%")")
-				a_servlet_gg.controller_table.forth
+				a_feature.append_expression ("l_controller_table.put ([%"" + l_controller_table.item_for_iteration.class_name + "%", %"" + a_servlet_gg.controller_table.item_for_iteration.creator + "%"], %"" + l_controller_table.key_for_iteration + "%")")
+				l_controller_table.forth
 			end
 		end
 

@@ -118,10 +118,13 @@ feature -- Access
 
 	argument_belongs_to_tag (a_attribute, a_tag: STRING) : BOOLEAN
 			-- Verifies that `a_attribute' belongs to `a_tag'
+		local
+			l_cursor: INTEGER
 		do
 			Result := False
 			if attached allowed_tags [a_tag] as l_attributes then
 				from
+					l_cursor := l_attributes.index
 					l_attributes.start
 				until
 					l_attributes.after
@@ -129,6 +132,7 @@ feature -- Access
 					Result := Result or else l_attributes.item.is_equal (a_attribute)
 					l_attributes.forth
 				end
+				l_attributes.go_i_th (l_cursor)
 			end
 		end
 

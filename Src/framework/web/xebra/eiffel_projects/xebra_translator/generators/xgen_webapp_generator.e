@@ -167,9 +167,11 @@ feature {NONE} -- Implementation
 		local
 			l_servlet: XGEN_SERVLET_GENERATOR_GENERATOR
 			l_postfix: STRING
+			l_cursor: INTEGER
 		do
 			create Result.make ("add_servlets")
 			from
+				l_cursor := some_servlets.index
 				some_servlets.start
 			until
 				some_servlets.after
@@ -186,6 +188,7 @@ feature {NONE} -- Implementation
 					some_servlets.forth
 				end
 			end
+			some_servlets.go_i_th (l_cursor)
 		ensure
 			result_attached: attached Result
 		end

@@ -251,9 +251,11 @@ feature {NONE} -- Parsing
 			a_registry_attached: attached a_registry
 		local
 			l_taglibrary_file_name: FILE_NAME
+			l_cursor: INTEGER
 		do
 			if attached {LIST [TUPLE [name: STRING; ecf: STRING; path: STRING]]} a_registry.taglib_configuration as l_config then
 				from
+					l_cursor := l_config.index
 					l_config.start
 				until
 					l_config.after
@@ -264,6 +266,7 @@ feature {NONE} -- Parsing
 					process_file (l_taglibrary_file_name, agent process_taglib_with_stream (a_registry, ?, ?))
 					l_config.forth
 				end
+				l_config.go_i_th (l_cursor)
 			else
 				log.eprint ("Configuration file is corrupted or missing!", generating_type)
 			end

@@ -120,25 +120,30 @@ feature {NONE} -- Parser behaviours
 			a_result_attached: attached a_result
 		local
 			l_tag: detachable XTL_TAG_DESCRIPTION
+			l_cursor: INTEGER
+			l_parse_result: LIST [ANY]
 		do
 			Result := a_result
 			if attached {STRING} Result.parse_result.first as l_id then
 				if attached {STRING} Result.parse_result [2] as l_class then
 					create l_tag.make (l_id, l_class)
 					from
-						Result.parse_result.start
-						Result.parse_result.forth
-						Result.parse_result.forth
+						l_parse_result := Result.parse_result
+						l_cursor := l_parse_result.index
+						l_parse_result.start
+						l_parse_result.forth
+						l_parse_result.forth
 					until
-						Result.parse_result.after
+						l_parse_result.after
 					loop
-						if attached {XTL_TAG_DESCRIPTION_ATTRIBUTE} Result.parse_result.item as l_description then
+						if attached {XTL_TAG_DESCRIPTION_ATTRIBUTE} l_parse_result.item as l_description then
 							l_tag.put_attribute_description (l_description)
 						else
 						--	add_parse_error ("Erroneous tag attribute description!")
 						end
-						Result.parse_result.forth
+						l_parse_result.forth
 					end
+					l_parse_result.go_i_th (l_cursor)
 				end
 			end
 			Result.parse_result.wipe_out
@@ -155,21 +160,26 @@ feature {NONE} -- Parser behaviours
 			a_result_attached: attached a_result
 		local
 			l_taglib: XTL_TAG_LIBRARY
+			l_parse_result: LIST [ANY]
+			l_cursor: INTEGER
 		do
 			Result := a_result
 			create l_taglib.make
 			from
-				Result.parse_result.start
+				l_parse_result := Result.parse_result
+				l_cursor := l_parse_result.index
+				l_parse_result.start
 			until
-				Result.parse_result.after
+				l_parse_result.after
 			loop
-				if attached {XTL_TAG_DESCRIPTION} Result.parse_result.item as l_description then
+				if attached {XTL_TAG_DESCRIPTION} l_parse_result.item as l_description then
 					l_taglib.put_tag (l_description)
-				elseif attached {STRING} Result.parse_result.item as l_name then
+				elseif attached {STRING} l_parse_result.item as l_name then
 					l_taglib.set_id (l_name)
 				end
-				Result.parse_result.forth
+				l_parse_result.forth
 			end
+			l_parse_result.go_i_th (l_cursor)
 			Result.replace_result (l_taglib)
 		ensure
 			Result_attached: attached Result

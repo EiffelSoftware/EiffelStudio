@@ -170,7 +170,7 @@ feature {NONE} -- Initialization
 
 			create output_grid
 			output_grid.enable_multiple_row_selection
-			output_grid.set_item_pebble_function (agent retrieve_pebble)
+			output_grid.set_item_pebble_function (agent retrieve_pebble (?, True))
 			output_grid.pointer_motion_item_actions.extend (agent record_mouse_relative_to_item)
 			output_grid.row_expand_actions.extend (agent row_expanded)
 			output_grid.row_collapse_actions.extend (agent row_collapsed)
@@ -1220,19 +1220,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_pebble (an_item: EV_GRID_ITEM): STONE
+	retrieve_pebble (an_item: EV_GRID_ITEM; a_pnd_mode: BOOLEAN): STONE
 			-- Retrieve a pebble from `an_item' if it represents
 			-- a pickable object. May return an instance of
 			-- CLUSTER_STONE, CLASS_STONE, FEATURE_STONE or Void.
-		require
-			an_item_not_void: an_item /= Void
+			-- Done only if we are not in pick and drop mode, or else if pick
+			-- and drop mode but the Ctrl key is not pressed.
 		local
 			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
 			eiffel_profile_data: EIFFEL_PROFILE_DATA
 			e_feature: E_FEATURE
 			total_offset: INTEGER
 		do
-			if an_item /= Void then
+			if (not a_pnd_mode or else not ev_application.ctrl_pressed) and then an_item /= Void then
 				query_grid_row ?= an_item.data
 				if query_grid_row /= Void then
 					if query_grid_row.type = 1 then
@@ -1487,23 +1487,31 @@ feature {NONE} -- Implementation
 			l_indent: INTEGER
 			spacing: INTEGER
 			rows: ARRAYED_LIST [INTEGER]
+			l_stone: STONE
 		do
-			if a_button = 3 and tree_structure_enabled then
-					-- We must now display a context menu for expanding or collapsing rows,
-					-- but only if the mouse pointer is above the tree node.
-				rows := output_grid.visible_row_indexes
-				grid_row := output_grid.row (rows.i_th ((a_y // output_grid.row_height) + 1))
-				l_indent := grid_row.item (1).horizontal_indent
-				spacing := output_grid.tree_node_spacing
-				if an_x < l_indent - (spacing * 2) and an_x > l_indent - (spacing * 2) - output_grid.expand_node_pixmap.width then
-					create menu
-					create menu_item.make_with_text (profiler_expand_all)
-					menu_item.select_actions.extend (agent expand_all (grid_row))
-					menu.extend (menu_item)
-					create menu_item.make_with_text (profiler_collapse_all)
-					menu_item.select_actions.extend (agent collapse_all (grid_row))
-					menu.extend (menu_item)
-					menu.show
+			if a_button = {EV_POINTER_CONSTANTS}.right then
+				if ev_application.ctrl_pressed then
+					l_stone ?= retrieve_pebble (an_item, False)
+					if l_stone /= Void and then l_stone.is_valid then
+						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+					end
+				elseif tree_structure_enabled then
+						-- We must now display a context menu for expanding or collapsing rows,
+						-- but only if the mouse pointer is above the tree node.
+					rows := output_grid.visible_row_indexes
+					grid_row := output_grid.row (rows.i_th ((a_y // output_grid.row_height) + 1))
+					l_indent := grid_row.item (1).horizontal_indent
+					spacing := output_grid.tree_node_spacing
+					if an_x < l_indent - (spacing * 2) and an_x > l_indent - (spacing * 2) - output_grid.expand_node_pixmap.width then
+						create menu
+						create menu_item.make_with_text (profiler_expand_all)
+						menu_item.select_actions.extend (agent expand_all (grid_row))
+						menu.extend (menu_item)
+						create menu_item.make_with_text (profiler_collapse_all)
+						menu_item.select_actions.extend (agent collapse_all (grid_row))
+						menu.extend (menu_item)
+						menu.show
+					end
 				end
 			end
 		end

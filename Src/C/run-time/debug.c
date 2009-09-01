@@ -1196,6 +1196,15 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	struct dcall *context;			/* Current calling context */
 
+	if (!d_cxt.pg_interp.st_top) { 
+		/* if st_top is not NULL, there might be a memory leak
+		 * indeed, the op_stack might have allocated more than one chunk
+		 */
+
+		/* we clean the stack allocated in interp.c:opush(..) */
+		opstack_reset (&op_stack);
+	}	
+
 	memcpy (&db_stack, &d_cxt.pg_debugger, sizeof(struct dbstack));
 	memcpy (&op_stack, &d_cxt.pg_interp, sizeof(struct opstack));
 	memcpy (&eif_stack, &d_cxt.pg_stack, sizeof(struct xstack));

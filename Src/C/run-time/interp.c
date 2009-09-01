@@ -5835,9 +5835,10 @@ rt_public EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val)
 	EIF_TYPED_VALUE *top = op_stack.st_top;	/* Top of stack */
 	
 	if (top == (EIF_TYPED_VALUE *) 0)	{			/* No stack yet? */
-		top = stack_allocate(eif_stack_chunk);		/* Create one */
-		if (top == (EIF_TYPED_VALUE *) 0)	 		/* Could not create stack */
-			enomem(MTC_NOARG);							/* No more memory */
+		top = stack_allocate (eif_stack_chunk);		/* Create one */
+		if (top == (EIF_TYPED_VALUE *) 0) {	 		/* Could not create stack */
+			enomem(MTC_NOARG);						/* No more memory */
+		}
 	}
 
 	if (op_stack.st_end == top) {

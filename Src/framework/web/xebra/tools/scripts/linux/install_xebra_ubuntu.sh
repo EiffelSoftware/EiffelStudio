@@ -194,7 +194,7 @@ wget $apache_url
 tar -xf $apache_file
 cd $XEBRA_DEV/httpd_tmp/$apache_dir
 ./configure --prefix=$XEBRA_DEV/apache --with-port=55000
-if [ ! $? == 0 ]; then;
+if [ ! $? == 0 ]; then
 	echo "Error installing apache!"
 	exit
 fi;

@@ -2254,7 +2254,8 @@ feature {NONE} -- Implementation
 			l: EV_LABEL
 			okb, cancelb: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
-			vb: EV_VERTICAL_BOX
+			vb_top, vb: EV_VERTICAL_BOX
+			l_sep: EV_HORIZONTAL_SEPARATOR
 		do
 				-- Create widgets.
 			create dialog
@@ -2266,11 +2267,14 @@ feature {NONE} -- Implementation
 			create cancelb.make_with_text (Interface_names.b_Cancel)
 
 				-- Organize widgets.
+			create vb_top
 			create vb
 			vb.set_border_width (Layout_constants.Default_border_size)
 			vb.set_padding (Layout_constants.Small_padding_size)
 			vb.extend (show_all_radio)
+			vb.disable_item_expand (show_all_radio)
 			vb.extend (rb2)
+			vb.disable_item_expand (rb2)
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
 			hb.extend (element_nb)
@@ -2279,8 +2283,17 @@ feature {NONE} -- Implementation
 			hb.disable_item_expand (l)
 			hb.extend (create {EV_CELL})
 			vb.extend (hb)
+			vb.disable_item_expand (hb)
+
+				-- Separator with Ok/Cancel button
+			vb_top.extend (vb)
+			vb_top.extend (create {EV_CELL})
+			create l_sep
+			vb_top.extend (l_sep)
+			vb_top.disable_item_expand (l_sep)
 
 			create hb
+			hb.set_border_width (layout_constants.default_border_size)
 			hb.set_padding (Layout_constants.Small_padding_size)
 			hb.extend (create {EV_CELL})
 			hb.extend (okb)
@@ -2288,14 +2301,14 @@ feature {NONE} -- Implementation
 			hb.extend (cancelb)
 			hb.disable_item_expand (cancelb)
 			hb.extend (create {EV_CELL})
-			vb.extend (hb)
+			vb_top.extend (hb)
+			vb_top.disable_item_expand (hb)
 
-			dialog.extend (vb)
+			dialog.extend (vb_top)
 
 				-- Set widget properties.
 			dialog.set_title (Interface_names.t_Set_critical_stack_depth)
 			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-			dialog.disable_user_resize
 			rb2.enable_select
 			Layout_constants.set_default_width_for_button (okb)
 			Layout_constants.set_default_width_for_button (cancelb)

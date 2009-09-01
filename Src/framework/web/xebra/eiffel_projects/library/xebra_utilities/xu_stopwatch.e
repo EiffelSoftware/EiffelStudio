@@ -3,7 +3,7 @@ note
 		Descendants of this class can start and stop time
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

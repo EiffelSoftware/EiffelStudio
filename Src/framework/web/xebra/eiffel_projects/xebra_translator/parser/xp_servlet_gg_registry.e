@@ -3,7 +3,7 @@ note
 		This registry handles the storage of {XP_TEMPLATE}s and {XTL_TAG_LIBRARY}s and is delegates resolving of {XP_TEMPLATE}s
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

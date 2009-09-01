@@ -5,7 +5,7 @@ note
 		Can only be used in the context of a {XTAG_F_FORM_TAG}.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

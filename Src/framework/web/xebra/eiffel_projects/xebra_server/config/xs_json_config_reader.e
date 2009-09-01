@@ -3,7 +3,7 @@ note
 		JSON config file reader for server config files.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

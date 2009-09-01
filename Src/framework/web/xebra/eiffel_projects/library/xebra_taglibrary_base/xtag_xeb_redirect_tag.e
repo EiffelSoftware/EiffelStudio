@@ -4,7 +4,7 @@ note
 		to the server and not a html redirect. Expects an internal `url' to redirect to.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

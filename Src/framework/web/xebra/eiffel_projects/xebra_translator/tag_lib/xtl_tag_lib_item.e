@@ -3,7 +3,7 @@ note
 		Abstraction for all TAG_LIB related classes
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

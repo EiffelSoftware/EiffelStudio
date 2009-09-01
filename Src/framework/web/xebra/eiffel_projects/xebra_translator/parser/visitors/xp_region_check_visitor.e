@@ -2,7 +2,7 @@ note
 	description: "Summary description for {XP_REGION_CHECK_VISITOR}."
 	date: "$Date$"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	revision: "$Revision$"
 
 class

@@ -1,7 +1,7 @@
 note
 	description: "Summary description for {DATA_THREAD_POOL_MANAGER}."
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,7 @@ note
 			Represents a message that is sent from and to the http server plugin.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

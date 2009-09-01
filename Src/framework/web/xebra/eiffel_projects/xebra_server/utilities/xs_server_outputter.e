@@ -3,7 +3,7 @@ note
 			A version of XU_OUTPUTTER that sets all attributes already in the constructor.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

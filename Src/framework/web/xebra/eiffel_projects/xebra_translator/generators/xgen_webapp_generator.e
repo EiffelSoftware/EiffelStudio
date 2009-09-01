@@ -3,7 +3,7 @@ note
 		Generates and links all the needed classes for a web application.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

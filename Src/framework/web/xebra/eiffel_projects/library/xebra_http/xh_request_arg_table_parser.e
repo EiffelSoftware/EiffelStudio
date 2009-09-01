@@ -3,7 +3,7 @@ note
 		Can be used to parse the args of a request to get a table of argument names and values.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

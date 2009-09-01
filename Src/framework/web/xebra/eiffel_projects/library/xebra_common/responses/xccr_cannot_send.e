@@ -3,7 +3,7 @@ note
 		The error command response that occurs if the server cannot send a command to the webapp.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

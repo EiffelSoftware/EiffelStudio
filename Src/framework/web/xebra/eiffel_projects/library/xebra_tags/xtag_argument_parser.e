@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {XTAG_ARGUMENT_PARSER}."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

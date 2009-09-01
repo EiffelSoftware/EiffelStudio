@@ -3,7 +3,7 @@ note
 		Sets all the uids of the {XP_TAG_ELEMENT} tree.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

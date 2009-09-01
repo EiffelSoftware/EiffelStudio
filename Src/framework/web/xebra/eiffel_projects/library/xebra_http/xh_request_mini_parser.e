@@ -3,7 +3,7 @@ note
 		Creates a MINI_REQUEST from a request_message
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

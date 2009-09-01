@@ -4,7 +4,7 @@ note
 		and builds the domain model ({XP_TEMPLATE}) from a string (the xeb file).
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

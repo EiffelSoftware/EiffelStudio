@@ -3,7 +3,7 @@ note
 		Constants for all xebra classes.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +12,7 @@ class
 
 feature -- Xebra
 
-	Version: STRING = "Pre-Release"
+	Version: STRING = "Community Preview 1.0"
 
 feature -- Files
 

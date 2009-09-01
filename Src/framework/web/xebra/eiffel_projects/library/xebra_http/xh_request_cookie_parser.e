@@ -3,7 +3,7 @@ note
 		Can be used to parse the headers_in value for "Cookie" to get a table of cookies.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

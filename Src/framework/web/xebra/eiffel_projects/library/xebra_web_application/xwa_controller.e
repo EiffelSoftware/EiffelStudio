@@ -3,7 +3,7 @@ note
 		All controllers used in xeb files have to inherit from this class.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -230,7 +230,7 @@ feature -- Basic Operations
 			-- Uncomment all lines included in the selection with the string `--'.
 		local
 			ln: like first_line
-			end_loop, cursor_start: BOOLEAN
+			l_done, end_loop, cursor_start: BOOLEAN
 			l_comment_token: EDITOR_TOKEN_COMMENT
 			start_pos, end_pos, start_line, end_line: INTEGER
 			start_selection, end_selection: like cursor
@@ -253,19 +253,28 @@ feature -- Basic Operations
 
 			from
 				ln := start_selection.line
+				l_done := False
 			until
-				ln = Void or else ln = end_selection.line.next
+				l_done
 			loop
 				from
 					ln.start
-					end_loop := false
+					end_loop := False
 				until
 					ln.after or end_loop
 				loop
 					if ln.item.is_text then
 						l_comment_token ?= ln.item
-						if l_comment_token /= Void then
-							check line_valid: ln.is_valid end
+							-- Allow uncommenting if we are strictly between `start_selection' and `end_selection'
+							-- and we are at the end selection, that the selection does not end at the first
+							-- character in the line. Fixes bug#16033.
+						if
+							l_comment_token /= Void and then
+							(ln /= end_selection.line or else
+								(end_selection.token /= ln.first_token  or else
+								end_selection.pos_in_token /= 1 or else
+								start_selection.is_equal (end_selection)))
+						then
 							create cursor.make_from_relative_pos (ln, l_comment_token, 1, Current)
 							delete_n_chars_at_cursor_pos (2)
 							history.record_uncomment ("--")
@@ -286,11 +295,12 @@ feature -- Basic Operations
 								end
 							end
 						end
-						end_loop := true
+						end_loop := True
 					end
 					ln.forth
 				end
 				ln := ln.next
+				l_done := ln.index > end_line
 			end
 			if cursor_start then
 				create cursor.make_from_character_pos (start_pos, start_line, Current)

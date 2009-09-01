@@ -65,7 +65,9 @@
 	</tr>
 	<xeb:iterate list="%=webapps%" variable="webapp" type="XC_WEBAPP_BEAN">
 		<tr>
-			<td><xeb:display text="#{webapp.app_config.name.value.out}" /></td>
+			<xeb:set_variable variable="wappurl" value="../" type="STRING" />
+			<xeb:concat variable="wappurl" right="#{webapp.app_config.name.value.out}" />
+			<td><a href="#{wappurl}"><xeb:display text="#{webapp.app_config.name.value.out}" /></a></td>
 			<td><xeb:display text="#{webapp.app_config.webapp_host.value.out}" /></td>
 			<td><xeb:display text="#{webapp.app_config.port.value.out}" /></td>
 			<td><xeb:display text="#{webapp.app_config.is_interactive.out}" /></td>

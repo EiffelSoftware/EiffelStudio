@@ -52,7 +52,7 @@
 		<attribute id="label"/>
 		<attribute id="name"/>
 	</tag>
-		<tag id="calendar" class="XTAG_F_CALENDAR_TAG">
+	<tag id="calendar" class="XTAG_F_CALENDAR_TAG">
 		<attribute id="value"/>
 		<attribute id="name" />
 		<attribute id="date" />

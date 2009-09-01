@@ -861,6 +861,7 @@ test	ececil-undefined-symbol-2	incr333	tcf fail incrementality
 test	efrozen-undefined-symbol	incr334	tcf fail incrementality
 test	ececil-undefined-symbol-3	incr335	tcf fail incrementality
 test	can-be-inlined-crash		incr336	tcf fail incrementality
+if WINDOWS test	shared-library-definition-update	incr337 tcf pass incrementality windows dll
 
 
 -- Melting

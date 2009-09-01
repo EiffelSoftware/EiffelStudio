@@ -50,13 +50,7 @@
 			</tr>
 			<tr  id="attachments_row">
 				<td colspan="2" class="last_row">
-					<span class="field_name">Attachments:</span><br />
-					<xeb:data_grid 
-						css_class="attachments_grid"
-						alternating_item_style_css_class="alternating"
-						id="attachments_grid">
-						<HeaderStyle Font-Bold="True"/>
-						</xeb:data_grid>
+					<span class="field_name">Attachments:</span><br />				
 				</td>
 			</tr>
 			<tr>

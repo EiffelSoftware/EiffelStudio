@@ -26,6 +26,11 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	EV_LAYOUT_CONSTANTS
+		undefine
+			default_create, copy, is_equal
+		end
+
 create
 	make
 
@@ -64,7 +69,10 @@ feature {NONE} -- Initialization
 			go_button.select_actions.extend (agent goto_line)
 			line_number_text.key_press_actions.extend (agent on_key_pressed)
 			line_number_text.change_actions.extend (agent on_value_changed (?))
+			line_number_text.text_change_actions.extend (agent on_value_changed (-1))
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
+			set_default_size_for_button (go_button)
+			set_default_size_for_button (cancel_button)
 		end
 
 	initialize_line_number_label_text
@@ -118,9 +126,16 @@ feature {NONE} -- Implementation
 
 	on_value_changed (a_value: INTEGER)
 			-- Text field changed
+		local
+			i: INTEGER
 		do
 			if line_number_text.text.is_integer then
-				go_button.enable_sensitive
+				i := line_number_text.text.to_integer
+				if i >= 1 and then i <= editor.number_of_lines then
+					go_button.enable_sensitive
+				else
+					go_button.disable_sensitive
+				end
 			else
 				go_button.disable_sensitive
 			end
@@ -130,7 +145,7 @@ invariant
 	has_editor: editor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -154,11 +169,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class GOTO_DIALOG

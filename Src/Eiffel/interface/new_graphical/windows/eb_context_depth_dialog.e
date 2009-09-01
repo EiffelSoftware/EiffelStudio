@@ -58,41 +58,40 @@ feature {NONE} -- Initialization
 			hb2.set_padding (Layout_constants.Small_padding_size)
 			create hb_view
 			hb_view.set_padding (Layout_constants.Small_padding_size)
-			create hb_cluster
-			hb_cluster.set_padding (Layout_constants.Small_padding_size)
 			create main_vb
 			main_vb.set_padding (Layout_constants.Small_padding_size)
 			main_vb.set_border_width (Layout_constants.Default_border_size)
 			create vb
 			vb.set_padding (Layout_constants.Small_padding_size)
+			vb.set_border_width (Layout_constants.default_border_size)
 			create vb2
 			vb2.set_padding (Layout_constants.Small_padding_size)
+			vb2.set_border_width (Layout_constants.small_border_size)
 			create vb_view
 			vb_view.set_padding (Layout_constants.Small_padding_size)
+			vb_view.set_border_width (Layout_constants.default_border_size)
 			create vb_include
 			vb_include.set_padding (Layout_constants.Small_padding_size)
 			create vb_cluster
 			vb_cluster.set_padding (Layout_constants.Small_padding_size)
+			vb_cluster.set_border_width (Layout_constants.default_border_size)
 
 			create cb_only.make_with_text (interface_names.l_only_classes_in_same_cluster)
 			vb_cluster.extend (cb_only)
 			create cb_all.make_with_text (interface_names.l_all_classes_in_same_cluster)
 			vb_cluster.extend (cb_all)
 
-			hb_cluster.extend (create {EV_CELL})
-			hb_cluster.extend (vb_cluster)
-
-			vb_include.extend (hb_cluster)
+			vb_include.extend (vb_cluster)
 
 			create sep
 			vb_include.extend (sep)
 			vb_include.disable_item_expand (sep)
 
-			create l.make_with_text (interface_names.first_character_as_upper (interface_names.l_Ancestors))
+			create l.make_with_text (interface_names.first_character_as_upper (interface_names.l_ancestors))
 			vb.extend (create {EV_CELL})
 			vb.extend (l)
 
-			create l.make_with_text (interface_names.first_character_as_upper (interface_names.l_Descendants))
+			create l.make_with_text (interface_names.first_character_as_upper (interface_names.l_descendants))
 			vb.extend (l)
 
 			create l.make_with_text (interface_names.first_character_as_upper (interface_names.l_clients))
@@ -102,6 +101,7 @@ feature {NONE} -- Initialization
 			vb.extend (l)
 
 			hb.extend (vb)
+			hb.disable_item_expand (vb)
 
             create sb_ancestor
 			sb_ancestor.set_minimum_width (125)
@@ -120,20 +120,24 @@ feature {NONE} -- Initialization
 			vb2.extend (sb_supplier)
 
 			vb_include.extend (hb)
+			vb_include.disable_item_expand (hb)
 			vb_include.extend (create {EV_CELL})
 			frm.extend (vb_include)
 			frm2.extend (vb2)
 			hb.extend (frm2)
 			main_vb.extend (frm)
+			main_vb.disable_item_expand (frm)
 
 			create l.make_with_text (interface_names.l_apply_changes_to_view_named)
 			hb_view.extend (l)
+			hb_view.disable_item_expand (l)
 			create view_selector.make_default
 			hb_view.extend (view_selector)
-			vb_view.extend (create {EV_CELL})
 			vb_view.extend (hb_view)
+			vb_view.disable_item_expand (hb_view)
 			create l.make_with_text (interface_names.l_select_another_view)
 			vb_view.extend (l)
+			vb_view.disable_item_expand (l)
 			vb_view.extend (create {EV_CELL})
 			frm3.extend (vb_view)
 			main_vb.extend (frm3)
@@ -152,7 +156,6 @@ feature {NONE} -- Initialization
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
 			is_for_class_view := True
-			disable_user_resize
 		end
 
 	make_for_cluster_view
@@ -244,7 +247,6 @@ feature {NONE} -- Initialization
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
 			is_for_class_view := False
-			disable_user_resize
 		end
 
 feature -- Initialization
@@ -459,7 +461,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -472,22 +474,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CONTEXT_DEPTH_DIALOG

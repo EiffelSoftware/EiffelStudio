@@ -11,7 +11,7 @@ echo "This script will install Xebra."
 apache_dir="httpd-2.2.13"
 apache_file="$apache_dir.tar.gz"
 apache_url="http://www.apache.org/dist/httpd/$apache_file" 
-revision=80545
+revision=80570
 
 echo "Apache $apache_url will be installed..."
 echo "Xebra revision $revision will be installed..."
@@ -112,14 +112,27 @@ svn export https://svn.origo.ethz.ch/ejson/trunk/json eiffel_projects/library/ej
 #Compile Precompile
 echo "=========================Compiling precompile..."
 ecb -experiment -config $XEBRA_DEV/eiffel_projects/library/xebra_precompile/xebra_precompile.ecf -target xebra_precompile -c_compile  -precompile -stop -project_path $XEBRA_DEV/eiffel_projects/library/xebra_precompile
+if [ ! $? == 0 ]; then
+	echo "Error compiling precompile!"
+	exit
+fi;
+
 
 #Compile Server
 echo "=========================Compiling server..."
 ecb -experiment -config $XEBRA_DEV/eiffel_projects/xebra_server/xebra_server.ecf  -target xebra_server -c_compile -finalize -stop -project_path $XEBRA_DEV/eiffel_projects/xebra_server
+if [ ! $? == 0 ]; then
+	echo "Error compiling server!"
+	exit
+fi;
 
 #Compile Translator
 echo "=========================Compiling translator..."
 ecb -experiment -config $XEBRA_DEV/eiffel_projects/xebra_translator/xebra_translator.ecf  -target xebra_translator -c_compile -finalize -stop -project_path $XEBRA_DEV/eiffel_projects/xebra_translator
+if [ ! $? == 0 ]; then
+	echo "Error compiling translator!"
+	exit
+fi;
 
 #Copy server and translator
 cp $XEBRA_DEV/eiffel_projects/xebra_server/EIFGENs/xebra_server/F_code/xebra_server $XEBRA_DEV/bin
@@ -181,8 +194,20 @@ wget $apache_url
 tar -xf $apache_file
 cd $XEBRA_DEV/httpd_tmp/$apache_dir
 ./configure --prefix=$XEBRA_DEV/apache --with-port=55000
+if [ ! $? == 0 ]; then;
+	echo "Error installing apache!"
+	exit
+fi;
 make
+if [ ! $? == 0 ]; then
+	echo "Error installing apache!"
+	exit
+fi;
 make install
+if [ ! $? == 0 ]; then
+	echo "Error installing apache!"
+	exit
+fi;
 rm -Rf $XEBRA_DEV/httpd_tmp
 
 # Compile and install xebra module
@@ -237,6 +262,7 @@ rm -Rf $XEBRA_DEV/c_projects
 rm -Rf $XEBRA_DEV/library/xebra_precompile/EIFGENs
 
 #Start apache
+echo "Starting apache..."
 $XEBRA_DEV/apache/bin/apachectl start
 
 echo "Installation complete. Please define XEBRA_LIBRARY to $XEBRA_DEV/library. "

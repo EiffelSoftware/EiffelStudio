@@ -25,9 +25,6 @@
 		<attribute id="header_style_css_class"/>
 		<attribute id="sort_expression"/>
 	</tag>
-	<tag id="hyper_link" class="XTAG_XEB_HYPER_LINK_TAG">
-		<attribute id="id"/>
-	</tag>	
 	<tag id="set_variable" class="XTAG_XEB_SET_VARIABLE_TAG">
 		<attribute id="variable" />
 		<attribute id="value" />

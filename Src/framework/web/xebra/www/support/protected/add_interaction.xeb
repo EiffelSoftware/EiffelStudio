@@ -6,7 +6,7 @@
 			<p>
 				Fill in the description for the new interaction for the
 				<b><xeb:display css_class="field_name" text="synopsis_status_label" />
-			</b> problem report <xeb:hyper_link id="pr_link" />.
+			</b> problem report .
 	</p>
 	<xeb:display text="NoText" />
 	<table class="standard_padding">

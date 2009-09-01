@@ -3,7 +3,7 @@ note
 		Defines a deferred class for internals errors that are used in all xebra applications. E.g. {XERROR_FILE_NOT_FOUND}.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

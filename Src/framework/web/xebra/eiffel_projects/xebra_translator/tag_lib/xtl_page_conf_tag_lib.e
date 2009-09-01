@@ -3,7 +3,7 @@ note
 		Mimics a {XTL_TAG_LIBRARY} and provides a hardcoded library for <page:X> tags.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -4,7 +4,7 @@ note
 		till threads get available again.
 		]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

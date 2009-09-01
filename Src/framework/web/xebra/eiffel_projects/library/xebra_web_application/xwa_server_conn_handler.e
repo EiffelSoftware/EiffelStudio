@@ -3,7 +3,7 @@ note
 			Receives {XC_WEBAPP_COMMAND}s from the server, executes them and responds with {XC_COMMAND_RESPONSE}.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

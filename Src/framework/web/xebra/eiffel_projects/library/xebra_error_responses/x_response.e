@@ -3,7 +3,7 @@ note
 		Provides basic deferred features to generate a nice response that is sent back to the http server
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

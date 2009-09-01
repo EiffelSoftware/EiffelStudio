@@ -4,7 +4,7 @@ note
 		out header in order create a rfc2109 cookie in the browser
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

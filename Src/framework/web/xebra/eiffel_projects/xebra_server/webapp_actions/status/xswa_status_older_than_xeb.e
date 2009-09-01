@@ -4,7 +4,7 @@ note
 		is older than xeb files in app_dir or does not exist.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

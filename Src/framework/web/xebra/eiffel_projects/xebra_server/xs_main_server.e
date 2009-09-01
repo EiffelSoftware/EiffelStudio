@@ -3,7 +3,7 @@ note
 			The main component of the Server.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -526,7 +526,6 @@ feature -- From EIFFEL_ENV
 
 invariant
 		modules_attached: modules /= Void
-
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

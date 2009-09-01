@@ -4,7 +4,7 @@ note
 		Be aware that the agent is executed but the first time.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

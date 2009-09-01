@@ -3,7 +3,7 @@ note
 		Used to write plain text to a file. Indendation is automatically handled.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

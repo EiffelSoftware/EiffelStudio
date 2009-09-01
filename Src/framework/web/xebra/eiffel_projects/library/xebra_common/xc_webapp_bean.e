@@ -3,7 +3,7 @@ note
 		Contains basic data about webapp that can be sent over sockets.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

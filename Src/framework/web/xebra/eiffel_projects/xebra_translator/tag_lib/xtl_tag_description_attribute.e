@@ -3,7 +3,7 @@ note
 		Contains all the data to meta describe an attribute of a tag
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -3,7 +3,7 @@ note
 		Is returned by {XS_WEBAPP_ACTION}.check_status if the action needs cleaning.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

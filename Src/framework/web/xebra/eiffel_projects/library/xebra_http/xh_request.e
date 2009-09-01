@@ -3,7 +3,7 @@ note
 		The {REQUEST} object contains all data from a user request.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 class

@@ -3,7 +3,7 @@ note
 		Runns the argument parser which then runns the translator.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

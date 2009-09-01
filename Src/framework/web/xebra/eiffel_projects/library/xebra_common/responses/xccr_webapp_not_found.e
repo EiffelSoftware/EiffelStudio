@@ -3,7 +3,7 @@ note
 		The error command response that occurs if the server cannot find a given webapp.
 	]"
 	legal: "See notice at end of class."
-	status: "Pre-release"
+	status: "Community Preview 1.0"
 	date: "$Date$"
 	revision: "$Revision$"
 

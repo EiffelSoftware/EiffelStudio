@@ -1,7 +1,7 @@
+#!/bin/bash
+# This script will create an empty xebra webapp
+# 
 
-# install.sh
-echo "under construction!";
-exit;
 
 if [ ! -d "$XEBRA_DEV" ]; then
  	echo "XEBRA_DEV is not defined or is not a directory. Please define before running script."
@@ -15,7 +15,7 @@ fi;
 
 cd $3;
 # Create folders
-echo "Creating folderss..."
+echo "Creating folders..."
 mkdir $1;
 cd $1;
 
@@ -51,9 +51,9 @@ echo '<?xml version="1.0" encoding="ISO-8859-1"?>
 # Create config file
 echo "Creating website config file..." 
 echo '{
-	"ecf": "$3/$1.ecf",
-	"name": "$1",
-	"port": "$2",
+	"ecf": "'$3'/'$1'/'$1'.ecf",
+	"name": "'$1'",
+	"port": "'$2'",
 	"server_host": "localhost",
 	"taglibs": 
 	[
@@ -86,18 +86,9 @@ class
 	MAIN_CONTROLLER
 
 inherit
-	XWA_CONTROLLER redefine	make end
+	XWA_CONTROLLER
 
-create
-	make
 
-feature {NONE} -- Initialization	
-
-	make
-			-- Initializes 'Current'
-		do
-			Precursor
-		end
 end' > main_controller.e
 echo "All done."
 

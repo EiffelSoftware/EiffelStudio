@@ -82,10 +82,12 @@ feature {XT_XEBRA_PARSER} -- Behaviours
 		local
 			l_product: STRING
 			l_internal_result: LIST [ANY]
+			l_cursor: INTEGER
 		do
 			l_product := ""
 			l_internal_result := a_result.parse_result
 			from
+				l_cursor := l_internal_result.index
 				l_internal_result.start
 			until
 				l_internal_result.after
@@ -93,6 +95,7 @@ feature {XT_XEBRA_PARSER} -- Behaviours
 				l_product := l_product + l_internal_result.item.out
 				l_internal_result.forth
 			end
+			l_internal_result.go_i_th (l_cursor)
 			Result := a_result
 			Result.parse_result.wipe_out
 			Result.append_result (l_product)

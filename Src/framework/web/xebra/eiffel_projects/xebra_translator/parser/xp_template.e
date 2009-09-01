@@ -174,6 +174,7 @@ feature -- Basic functionality
 			l_region_visitor: XP_REGION_TAG_ELEMENT_VISITOR
 			l_root_tag: XP_TAG_ELEMENT
 			l_uid: STRING
+			l_cursor: INTEGER
 		do
 			--l_root_tag := root_tag.copy_tag_tree
 			l_root_tag := root_tag
@@ -184,6 +185,7 @@ feature -- Basic functionality
 				set_uids (l_root_tag, a_servlet_gen, l_uid, controller_class, controller_create_name)
 					-- Set all the pending uids
 				from
+					l_cursor := a_pending_uids.index
 					a_pending_uids.start
 				until
 					a_pending_uids.after
@@ -191,6 +193,7 @@ feature -- Basic functionality
 					a_pending_uids.item.call ([l_uid, controller_class, controller_create_name])
 					a_pending_uids.forth
 				end
+				a_pending_uids.go_i_th (l_cursor)
 					-- All the pending uid requests have been resolved, so the list can be emptied
 				a_pending_uids.wipe_out
 			else

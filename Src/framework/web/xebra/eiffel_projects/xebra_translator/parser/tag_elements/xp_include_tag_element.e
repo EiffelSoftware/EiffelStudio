@@ -41,8 +41,10 @@ feature -- Access
 			l_child: XP_TAG_ELEMENT
 			l_region: HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]
 			l_tmpl_cp: XP_TEMPLATE
+			l_cursor: INTEGER
 		do
 			from
+				l_cursor := children.index
 				children.start
 				create l_region.make (10)
 				l_region.merge (a_regions)
@@ -61,6 +63,8 @@ feature -- Access
 				end
 				children.forth
 			end
+			children.go_i_th (l_cursor)
+
 				-- Set the child of current to the resolved template (i.e. replace all the regions by the found regions)
 			if attached retrieve_value ("template") as l_template_arg then
 				if attached a_templates [l_template_arg.value] as l_template then

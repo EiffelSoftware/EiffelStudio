@@ -248,8 +248,8 @@ feature --Basic Implementation
 			l_child: XP_TAG_ELEMENT
 			l_cursor: INTEGER
 		do
-			l_cursor := children.index
 			from
+				l_cursor := children.index
 				children.start
 			until
 				children.after

@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-    XS_MAIN_SERVER	
+    XS_MAIN_SERVER
 
 inherit
 	XC_SERVER_INTERFACE
@@ -62,7 +62,7 @@ feature {XS_APPLICATION} -- Setup
 				stop := False
 				if attached {XCCR_OK} load_config then
 					if attached a_arg_parser.create_webapp as l_config  then
-						run_compile_mode (l_config)
+						run_create_webapp_mode (l_config)
 					else
 						modules.force (create {XS_CONSOLE_MODULE}.make (current, "mod_console"), "mod_console")
 						modules.force (create {XS_HTTP_CONN_MODULE}.make (current, "mod_http"), "mod_http")
@@ -100,7 +100,7 @@ feature {NONE} -- Operations
 			log.iprint ("Shutdown complete. Bye!")
 		end
 
-	run_compile_mode (a_config: STRING)
+	run_create_webapp_mode (a_config: STRING)
 			-- The server is not started as usual but only initiates translation of the specified webapp and ends afterwards.
 		local
 			l_webapp: XS_MANAGED_WEBAPP
@@ -526,6 +526,7 @@ feature -- From EIFFEL_ENV
 
 invariant
 		modules_attached: modules /= Void
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

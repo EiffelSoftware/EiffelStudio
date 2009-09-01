@@ -1628,7 +1628,6 @@ test	config-library-options-redefinition	config015 tcf pass config
 test	config-library-options-setting	config016 tcf pass config
 test	config-nonstandard-source-extension	config017 tcf pass config
 test	config-keyword-root-class		config018 tcf fail config
-test	config-pre-post-task			config019 tcf pass config
 
 -- Lace
 

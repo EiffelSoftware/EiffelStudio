@@ -429,7 +429,7 @@ rt_private EIF_REFERENCE add_to_moved_set (EIF_REFERENCE);
 /* Also used by the garbage collector */
 rt_shared void lxtract(union overhead *next);					/* Extract a block from free list */
 rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes);			/* Wrapper to eif_rt_xmalloc */
-rt_shared EIF_REFERENCE get_to_from_core();		/* Get a free eiffel chunk from kernel */
+rt_shared EIF_REFERENCE get_to_from_core(void);		/* Get a free eiffel chunk from kernel */
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 rt_private void check_free_list (size_t nbytes, register union overhead **hlist);
 #endif

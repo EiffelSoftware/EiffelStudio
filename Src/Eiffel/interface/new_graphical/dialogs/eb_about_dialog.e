@@ -47,6 +47,7 @@ feature -- Initialization
 	make
 		local
 			eiffel_image: EV_PIXMAP
+			eiffel_image_box: EV_VERTICAL_BOX
 			eiffel_text_box: EV_VERTICAL_BOX
 			texts_box: EV_VERTICAL_BOX
 			vbox: EV_VERTICAL_BOX
@@ -67,6 +68,13 @@ feature -- Initialization
 			eiffel_image := Pixmaps.bm_About.twin
 			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
 			eiffel_image.set_background_color (White)
+			create eiffel_image_box
+			eiffel_image_box.extend (eiffel_image)
+			eiffel_image_box.disable_item_expand (eiffel_image)
+			create white_cell
+			white_cell.set_background_color (white)
+			eiffel_image_box.extend (white_cell)
+
 			create info_label.make_with_text (t_info)
 			info_label.align_text_left
 			info_label.set_background_color (White)
@@ -89,26 +97,25 @@ feature -- Initialization
 			eiffel_text_box.set_padding (Layout_constants.Default_padding_size)
 			eiffel_text_box.set_background_color (White)
 			eiffel_text_box.extend (version_label)
+			eiffel_text_box.disable_item_expand (version_label)
 			eiffel_text_box.extend (copyright_label)
+			eiffel_text_box.disable_item_expand (copyright_label)
 			eiffel_text_box.extend (info_label)
+			eiffel_text_box.disable_item_expand (info_label)
 			eiffel_text_box.extend (registration_label)
 
 				-- Texts box			
 			create texts_box
 			texts_box.set_background_color (White)
 			texts_box.extend (eiffel_text_box)
-			texts_box.disable_item_expand (eiffel_text_box)
-			create white_cell
-			white_cell.set_background_color (White)
-			texts_box.extend (white_cell) -- expandable item
 
 				-- Box with left image + text
 			create hbox
 			hbox.set_padding (Layout_constants.Default_padding_size)
 			hbox.set_border_width (Layout_constants.Default_border_size)
 			hbox.set_background_color (White)
-			hbox.extend (eiffel_image)
-			hbox.disable_item_expand (eiffel_image)
+			hbox.extend (eiffel_image_box)
+			hbox.disable_item_expand (eiffel_image_box)
 			hbox.extend (texts_box)
 
 				-- Box where the Ok button is
@@ -130,8 +137,6 @@ feature -- Initialization
 			extend (vbox)
 			set_default_push_button (ok_button)
 			set_default_cancel_button (ok_button)
-
-			disable_user_resize
 		end
 
 feature {NONE} -- Implementation
@@ -187,7 +192,7 @@ feature {NONE} -- Constant strings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -200,22 +205,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_ABOUT_DIALOG

@@ -79,6 +79,7 @@ feature {NONE} -- Initialization
 			vb_top.disable_item_expand (hb_name)
 			f_top.extend (vb_top)
 			vb.extend (f_top)
+			vb.disable_item_expand (f_top)
 
 			create f_middle
 			create fvb
@@ -93,6 +94,7 @@ feature {NONE} -- Initialization
 			all_classes_button.set_tooltip (interface_names.h_refactoring_all_classes)
 			fvb.extend (all_classes_button)
 			vb.extend (f_middle)
+			vb.disable_item_expand (f_middle)
 
 			create f_bottom
 			create fvb
@@ -101,10 +103,14 @@ feature {NONE} -- Initialization
 			f_bottom.extend (fvb)
 			create rename_file_button.make_with_text (interface_names.l_rename_file)
 			fvb.extend (rename_file_button)
+			fvb.disable_item_expand (rename_file_button)
 			create comments_button.make_with_text (interface_names.l_replace_comments)
 			fvb.extend (comments_button)
+			fvb.disable_item_expand (comments_button)
 			create strings_button.make_with_text (interface_names.l_replace_strings)
 			fvb.extend (strings_button)
+			fvb.disable_item_expand (strings_button)
+			fvb.extend (create {EV_CELL})
 			vb.extend (f_bottom)
 
 			create hb

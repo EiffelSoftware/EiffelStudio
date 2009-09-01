@@ -147,12 +147,17 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 	refresh
 		require
 			is_attached_to_row: is_attached_to_row
+		local
+			row_was_selected: BOOLEAN
+			l_row: like row
 		do
-			if row.parent /= Void then
-				grid_remove_and_clear_subrows_from (row)
-				row.ensure_non_expandable
-				row.clear
-				row.set_background_color (Void)
+			l_row := row
+			if l_row /= Void and then l_row.parent /= Void then
+				row_was_selected := l_row.is_selected
+				grid_remove_and_clear_subrows_from (l_row)
+				l_row.ensure_non_expandable
+				l_row.clear
+				l_row.set_background_color (Void)
 			end
 
 			set_expand_action (Void)
@@ -160,6 +165,17 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 
 			compute_grid_display_done := False
 			compute_grid_display
+
+			l_row := row
+			if
+				row_was_selected and then
+				l_row /= Void and then
+				l_row.parent /= Void and then
+				not l_row.is_destroyed and then
+				l_row.is_selectable
+			then
+				l_row.enable_select
+			end
 		ensure
 			is_attached_to_row: is_attached_to_row
 		end
@@ -173,7 +189,7 @@ feature -- Status
 
 feature -- Properties
 
-	row: ES_OBJECTS_GRID_ROW
+	row: detachable ES_OBJECTS_GRID_ROW
 
 	parent_grid: ES_OBJECTS_GRID
 
@@ -289,7 +305,7 @@ invariant
 	parent_grid_related_to_attached_row: (row /= Void and then row.parent /= Void) implies parent_grid = row.parent
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -302,22 +318,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -1061,6 +1061,21 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
+	pointer_press_action (a_item: EV_LIST_ITEM; a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
+			-- Send a stone corresponding to `Current'.
+		require
+			a_item_attached: a_item /= Void
+		local
+			l_stone: STONE
+		do
+			if a_button = {EV_POINTER_CONSTANTS}.right and then ev_application.ctrl_pressed then
+				l_stone := scope_pebble_function (a_item.data, False)
+				if l_stone /= Void and then l_stone.is_valid then
+					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+				end
+			end
+		end
+
 feature {EB_DEVELOPMENT_WINDOW} -- Notification
 
 	class_changed (a_class: CLASS_I)
@@ -1535,10 +1550,11 @@ feature -- Custom search scope
 				l_item.set_pixmap (pixmap_from_class_i (a_class))
 				scope_list.extend (l_item)
 				l_item.set_data (a_class)
-				l_item.set_pebble_function (agent scope_pebble_function (a_class))
+				l_item.set_pebble_function (agent scope_pebble_function (a_class, True))
 				l_item.set_accept_cursor (Cursors.cur_class)
 				l_item.set_deny_cursor (Cursors.cur_x_class)
 				l_item.set_configurable_target_menu_mode
+				l_item.pointer_button_press_actions.force_extend (agent pointer_press_action (l_item, ?, ?, ?, ?, ?, ?, ?, ?))
 				l_item.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).search_scope_menu)
 				force_new_search
 			end
@@ -1571,7 +1587,7 @@ feature -- Custom search scope
 					l_item.set_pixmap (pixmap_from_group (a_group))
 					scope_list.extend (l_item)
 					l_item.set_data (a_group)
-					l_item.set_pebble_function (agent scope_pebble_function (a_group))
+					l_item.set_pebble_function (agent scope_pebble_function (a_group, True))
 					l_item.set_accept_cursor (Cursors.cur_cluster)
 					l_item.set_deny_cursor (Cursors.cur_x_cluster)
 					l_item.set_configurable_target_menu_mode
@@ -1607,7 +1623,7 @@ feature -- Custom search scope
 				l_item.set_pixmap (pixmap_from_group_path (a_folder.cluster, a_folder.path))
 				scope_list.extend (l_item)
 				l_item.set_data (a_folder)
-				l_item.set_pebble_function (agent scope_pebble_function (a_folder))
+				l_item.set_pebble_function (agent scope_pebble_function (a_folder, True))
 				l_item.set_accept_cursor (Cursors.cur_cluster)
 				l_item.set_deny_cursor (Cursors.cur_x_cluster)
 				l_item.set_configurable_target_menu_mode
@@ -1628,22 +1644,24 @@ feature -- Custom search scope
 			force_new_search
 		end
 
-	scope_pebble_function (a_data: ANY) : STONE
+	scope_pebble_function (a_data: ANY; a_pnd_mode: BOOLEAN) : STONE
 			-- Scope pebble function
 		local
 			l_class_i: CLASS_I
 			l_cluster_i: CONF_GROUP
 			l_folder: EB_FOLDER
 		do
-			l_class_i ?= a_data
-			l_cluster_i ?= a_data
-			l_folder ?= a_data
-			if l_class_i /= Void then
-				Result := stone_from_class_i (l_class_i)
-			elseif l_folder /= Void then
-				create {CLUSTER_STONE}Result.make_subfolder (l_folder.cluster, l_folder.path, l_folder.name)
-			elseif l_cluster_i /= Void then
-				create {CLUSTER_STONE}Result.make (l_cluster_i)
+			if not a_pnd_mode or else not ev_application.ctrl_pressed then
+				l_class_i ?= a_data
+				l_cluster_i ?= a_data
+				l_folder ?= a_data
+				if l_class_i /= Void then
+					Result := stone_from_class_i (l_class_i)
+				elseif l_folder /= Void then
+					create {CLUSTER_STONE} Result.make_subfolder (l_folder.cluster, l_folder.path, l_folder.name)
+				elseif l_cluster_i /= Void then
+					create {CLUSTER_STONE} Result.make (l_cluster_i)
+				end
 			end
 		end
 

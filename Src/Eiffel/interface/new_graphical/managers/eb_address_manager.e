@@ -2187,9 +2187,13 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			feature_label.pointer_enter_actions.extend (agent highlight_label (feature_label))
 			feature_label.pointer_leave_actions.extend (agent unhighlight_label (feature_label))
 
-			cluster_label.pointer_button_press_actions.extend (agent button_action (cluster_address, ?, ?, ?, ?, ?, ?, ?, ?))
-			class_label.pointer_button_press_actions.extend (agent button_action (class_address, ?, ?, ?, ?, ?, ?, ?, ?))
-			feature_label.pointer_button_press_actions.extend (agent button_action (feature_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			cluster_label.pointer_button_press_actions.extend (agent button_action (cluster_label, cluster_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			class_label.pointer_button_press_actions.extend (agent button_action (class_label, class_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			feature_label.pointer_button_press_actions.extend (agent button_action (feature_label, feature_address, ?, ?, ?, ?, ?, ?, ?, ?))
+
+			cluster_label.set_pebble_function (agent associated_stone (cluster_label))
+			class_label.set_pebble_function (agent associated_stone (class_label))
+			feature_label.set_pebble_function (agent associated_stone (feature_label))
 
 			class_label.drop_actions.extend (agent drop_class)
 			feature_label.drop_actions.extend (agent drop_feature)
@@ -2249,73 +2253,48 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 		require
 			for_context_tool: mode
 		local
-			conv_clus: CLUSTER_STONE
-			conv_class: CLASSI_STONE
-			conv_f: FEATURE_STONE
-			text: STRING
-			c_stone: STONE
+			l_stone: STONE
 			l_class_c: CLASS_C
 		do
-			c_stone := parent.history_manager.active
-			conv_clus ?= c_stone
-			if conv_clus /= Void then
-				text := conv_clus.group.name
-				cluster_label.set_minimum_width (maximum_label_width (text))
-				cluster_label.set_text (text)
-				cluster_label.set_pebble (conv_clus)
-				class_label.set_minimum_width (maximum_label_width (default_class_name))
+				-- Reset data
+			cluster_label.set_data (Void)
+			class_label.set_data (Void)
+			feature_label.set_data (Void)
+
+			l_stone := parent.history_manager.active
+			if attached {CLUSTER_STONE} l_stone as l_conv_clus then
+				cluster_label.set_text (l_conv_clus.group.name)
+				cluster_label.set_data (l_conv_clus)
 				class_label.set_text (default_class_name)
-				class_label.remove_pebble
-				feature_label.set_minimum_width (maximum_label_width (default_feature_name))
 				feature_label.set_text (default_feature_name)
-				feature_label.remove_pebble
-			else
-				conv_f ?= c_stone
-				if conv_f /= Void then
-					text := conv_f.feature_name
-					feature_label.set_minimum_width (maximum_label_width (text))
-					feature_label.set_text (text)
-					feature_label.set_pebble (create {FEATURE_STONE}.make (conv_f.e_feature))
-					text := conv_f.e_feature.associated_class.name
-					class_label.set_minimum_width (maximum_label_width (text))
-					class_label.set_text (text)
-					class_label.set_pebble (create {CLASSC_STONE}.make (conv_f.e_feature.associated_class))
-					text := conv_f.e_feature.associated_class.group.name
-					cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_f.e_feature.associated_class.group))
-					cluster_label.set_minimum_width (maximum_label_width (text))
-					cluster_label.set_text (text)
+			elseif attached {FEATURE_STONE} l_stone as l_conv_f then
+				feature_label.set_text (l_conv_f.feature_name)
+				feature_label.set_data (create {FEATURE_STONE}.make (l_conv_f.e_feature))
+				class_label.set_text (l_conv_f.e_feature.associated_class.name)
+				class_label.set_data (create {CLASSC_STONE}.make (l_conv_f.e_feature.associated_class))
+				cluster_label.set_text (l_conv_f.e_feature.associated_class.group.name)
+				cluster_label.set_data (create {CLUSTER_STONE}.make (l_conv_f.e_feature.associated_class.group))
+			elseif attached {CLASSI_STONE} l_stone as l_conv_class then
+				cluster_label.set_text (l_conv_class.group.name)
+				cluster_label.set_data (create {CLUSTER_STONE}.make (l_conv_class.group))
+				class_label.set_text (l_conv_class.class_i.name)
+				l_class_c := l_conv_class.class_i.compiled_representation
+				if l_class_c /= Void then
+					class_label.set_data (create {CLASSC_STONE}.make (l_class_c))
 				else
-					conv_class ?= c_stone
-					if conv_class /= Void then
-						text := conv_class.group.name
-						cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_class.group))
-						cluster_label.set_minimum_width (maximum_label_width (text))
-						cluster_label.set_text (text)
-						text := conv_class.class_i.name
-						l_class_c := conv_class.class_i.compiled_representation
-						if l_class_c /= Void then
-							class_label.set_pebble (create {CLASSC_STONE}.make (l_class_c))
-						else
-							class_label.set_pebble (create {CLASSI_STONE}.make (conv_class.class_i))
-						end
-						class_label.set_minimum_width (maximum_label_width (text))
-						class_label.set_text (text)
-						feature_label.remove_pebble
-						feature_label.set_minimum_width (maximum_label_width (default_feature_name))
-						feature_label.set_text (default_feature_name)
-					else
-						cluster_label.remove_pebble
-						cluster_label.set_minimum_width (maximum_label_width (default_cluster_name))
-						cluster_label.set_text (default_cluster_name)
-						class_label.remove_pebble
-						class_label.set_minimum_width (maximum_label_width (default_class_name))
-						class_label.set_text (default_class_name)
-						feature_label.remove_pebble
-						feature_label.set_minimum_width (maximum_label_width (default_feature_name))
-						feature_label.set_text (default_feature_name)
-					end
+					class_label.set_data (create {CLASSI_STONE}.make (l_conv_class.class_i))
 				end
+				feature_label.set_text (default_feature_name)
+			else
+				cluster_label.set_text (default_cluster_name)
+				class_label.set_text (default_class_name)
+				feature_label.set_text (default_feature_name)
 			end
+				-- Adapt the size of labels with new text.
+			cluster_label.set_minimum_width (maximum_label_width (cluster_label.text))
+			class_label.set_minimum_width (maximum_label_width (class_label.text))
+			feature_label.set_minimum_width (maximum_label_width (feature_label.text))
+
 			label_changed_actions.call (Void)
 		end
 
@@ -2380,19 +2359,28 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			pop_up_address_bar_at_position ((header_info.screen_x + header_info.width // 2) - address_dialog.width // 2, header_info.screen_y, 0)
 		end
 
-	button_action (combo: EV_COMBO_BOX; x, y, b: INTEGER; d1, d2, d3: DOUBLE; ax, ay: INTEGER)
+	button_action (a_label: EV_LABEL; combo: EV_COMBO_BOX; x, y, b: INTEGER; d1, d2, d3: DOUBLE; ax, ay: INTEGER)
 			-- Action performed when one of the labels is clicked.
 			-- Pop up `address_dialog' and give focus to `combo'.
 		require
 			for_context_tool: mode
+			a_label_attached: a_label /= Void
+			combo_attached: combo /= Void
+		local
+			l_stone: STONE
 		do
-			if b = 1 then
+			if b = {EV_POINTER_CONSTANTS}.left then
 				lost_focus_action_enabled := False
 				pop_up_address_bar
 				if combo.is_displayed then
 					combo.set_focus
 				end
 				lost_focus_action_enabled := True
+			elseif b = {EV_POINTER_CONSTANTS}.right and then ev_application.ctrl_pressed then
+				l_stone ?= a_label.data
+				if l_stone /= Void and then l_stone.is_valid then
+					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+				end
 			end
 		end
 
@@ -2520,8 +2508,18 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 
 	bold_ratio: DOUBLE = 1.19;
 
+	associated_stone (a_label: EV_LABEL): STONE
+			-- Associated stone which is `a_stone' for normal pick and drop and Ctrl+Right click.
+		require
+			a_label_attached: a_label /= Void
+		do
+			if not ev_application.ctrl_pressed then
+				Result ?= a_label.data
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2534,22 +2532,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_ADDRESS_MANAGER

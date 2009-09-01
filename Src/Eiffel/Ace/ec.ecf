@@ -198,23 +198,23 @@
 				<exclude>/override$</exclude>
 			</file_rule>
 			<file_rule>
-				<exclude>/mswin$</exclude>
 				<exclude>/gtk$</exclude>
+				<exclude>/mswin$</exclude>
 				<condition>
 					<platform value="macintosh"/>
 					<custom name="vision_implementation" value="cocoa"/>
 				</condition>
 			</file_rule>
 			<file_rule>
-				<exclude>/gtk$</exclude>
 				<exclude>/cocoa$</exclude>
+				<exclude>/gtk$</exclude>
 				<condition>
 					<platform value="windows"/>
 				</condition>
 			</file_rule>
 			<file_rule>
-				<exclude>/mswin$</exclude>
 				<exclude>/cocoa$</exclude>
+				<exclude>/mswin$</exclude>
 				<condition>
 					<platform excluded_value="windows"/>
 					<custom name="vision_implementation" excluded_value="cocoa"/>
@@ -226,10 +226,10 @@
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<file_rule>
-				<exclude>/lite$</exclude>
-				<exclude>^/tty$</exclude>
 				<exclude>/preferences$</exclude>
 				<exclude>/overrides$</exclude>
+				<exclude>/lite$</exclude>
+				<exclude>^/tty$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/mswin$</exclude>
@@ -247,11 +247,11 @@
 		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
 		<cluster name="tty" location="$EIFFEL_SRC\Eiffel\interface\tty\" recursive="true">
 			<file_rule>
-				<exclude>/eb_diagram_html_generator\.e$</exclude>
 				<exclude>/eb_gui_preferences\.e$</exclude>
 				<exclude>/dbg_preferences\.e$</exclude>
-				<exclude>/ewb_testing\.e$</exclude>
+				<exclude>/eb_diagram_html_generator\.e$</exclude>
 				<exclude>/ewb_auto_test\.e$</exclude>
+				<exclude>/ewb_testing\.e$</exclude>
 			</file_rule>
 		</cluster>
 		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>

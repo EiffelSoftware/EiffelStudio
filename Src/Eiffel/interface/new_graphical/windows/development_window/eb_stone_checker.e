@@ -445,6 +445,10 @@ feature {NONE} -- Implementation functions
 	check_class_stone
 			-- Handle class stone.
 		do
+			if class_text_exists then
+				develop_window.commands.new_feature_cmd.enable_sensitive
+			end
+
 			if conv_classc = Void then
 					--| The dropped class is not compiled.
 					--| Display only the textual formatter.
@@ -456,17 +460,6 @@ feature {NONE} -- Implementation functions
 				develop_window.address_manager.disable_formatters
 			else
 					--| We have a compiled class.
-				if
-					class_text_exists and then
-					develop_window.Eiffel_project.Workbench.last_reached_degree <= 2
-				then
-					develop_window.commands.new_feature_cmd.enable_sensitive
---					develop_window.commands.toggle_feature_alias_cmd.enable_sensitive
---					develop_window.commands.toggle_feature_signature_cmd.enable_sensitive
---					develop_window.commands.toggle_feature_assigner_cmd.enable_sensitive
-				end
-
-				--address_manager.enable_formatters
 				develop_window.update_formatters
 				set_class_text
 			end

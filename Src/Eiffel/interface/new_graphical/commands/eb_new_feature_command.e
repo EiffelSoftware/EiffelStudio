@@ -32,30 +32,22 @@ feature -- Basic operations
 			c: CLASSI_STONE
 			class_i: CLASS_I
 			cg: CLASS_TEXT_MODIFIER
-			class_c: CLASS_C
 			retried: BOOLEAN
 		do
 			if retried then
 				prompts.show_error_prompt (Warning_messages.w_could_not_modify_class, target.window, Void)
 			else
-				if
-					Workbench.last_reached_degree <= 2
-				then
-					c ?= target.stone
-					if c /= Void then
-						class_i := c.class_i
-						if class_i /= Void then
-							class_c := class_i.compiled_class
-							if not class_i.is_read_only then
-								create cg.make (class_i)
-								cg.new_feature
-							else
-								prompts.show_error_prompt (Warning_messages.W_class_not_modifiable, target.window, Void)
-							end
+				c ?= target.stone
+				if c /= Void then
+					class_i := c.class_i
+					if class_i /= Void then
+						if not class_i.is_read_only then
+							create cg.make (class_i)
+							cg.new_feature
+						else
+							prompts.show_error_prompt (Warning_messages.W_class_not_modifiable, target.window, Void)
 						end
 					end
-				else
-					prompts.show_error_prompt (Warning_messages.w_Unsufficient_compilation (3), target.window, Void)
 				end
 			end
 		rescue
@@ -120,7 +112,7 @@ feature {NONE} -- Implementation
 			-- preferences.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -133,22 +125,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_NEW_FEATURE_COMMAND

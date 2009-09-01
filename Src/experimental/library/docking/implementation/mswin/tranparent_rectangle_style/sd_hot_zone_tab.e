@@ -159,6 +159,7 @@ feature {NONE} -- Implementation
 			check l_rect /= Void end -- Implied by tab zone at least has one tab
 			create l_tab_behind_last.make (l_rect.right + 1, l_rect.top, internal_shared.feedback_tab_width, l_rect.height)
 			from
+				internal_tab_area.start
 			until
 				internal_tab_area.after
 			loop
@@ -190,14 +191,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -2,6 +2,8 @@ note
 	description: "[
 			Contains configuration from the arguments and from the config file.
 	]"
+	legal: "See notice at end of class."
+	status: "Pre-release"
 	date: "$Date$"
 	revision: "$Revision$"
 

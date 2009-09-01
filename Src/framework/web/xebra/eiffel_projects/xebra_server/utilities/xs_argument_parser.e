@@ -83,7 +83,7 @@ feature {NONE} -- Access: Usage
 	non_switched_argument_name: STRING = "config_filename"
 			-- <Precursor>
 
-	non_switched_argument_description: STRING = "The path of the config.ini file to use."
+	non_switched_argument_description: STRING = "The path of the config file to use."
 			-- <Precursor>
 
 	non_switched_argument_type: STRING = "file name"

@@ -77,7 +77,7 @@ feature {NONE} -- Operations Internal
 		do
 			if attached server_connection_handler as server then
 				if not server.is_bound then
-					log.eprint ("Socket could not be bound!", generating_type)
+					log.eprint ("Socket could not be bound on port " + server.config.port.value.out + " !", generating_type)
 				else
 					server.launch
 					log.iprint ("Xebra Web Application ready to rock...")

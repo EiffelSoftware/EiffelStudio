@@ -149,7 +149,11 @@ feature {NONE} -- Operations
 							stop := True
 						end
 				else
-					log.iprint ("Invalid command '" + l_command + "'. Type 'help' for a list of commands.")
+					if not l_command.is_empty then
+						log.iprint ("Invalid command '" + l_command + "'. Type 'help' for a list of commands.")
+					else
+						log.iprint ("Type 'help' for a list of commands.")
+					end
 				end
 
 				if attached l_response then

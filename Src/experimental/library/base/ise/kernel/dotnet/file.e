@@ -1382,7 +1382,7 @@ feature -- Removal
 			if attached last_string as l_last_string then
 				l_last_string.wipe_out
 			end
-			last_real := 0.0
+			last_real := {REAL_32} 0.0
 			last_character := '%U'
 			last_double := 0.0
 		ensure

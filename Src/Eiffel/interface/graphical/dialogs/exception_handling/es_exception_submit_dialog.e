@@ -961,7 +961,7 @@ feature {NONE} -- Internationalization
 	i_serious: STRING = "Serious"
 	i_non_critical: STRING = "Non Critical"
 
-	w_no_description: STRING = "No bug description has been supplied. Submitting a report without additional details can make it hard to repoduce.%N%NDo you want to continue submitting a bug report?"
+	w_no_description: STRING = "No bug description has been supplied. Submitting a report without additional details can make it hard to reproduce.%N%NDo you want to continue submitting a bug report?"
 	e_submit_error: STRING = "There was a problem submitting the problem report. Please retry or submit it manually at http://support.eiffel.com."
 
 feature {NONE} -- Constants

@@ -26,8 +26,9 @@ feature {EB_PREFERENCES} -- Initialization
 			preferences := a_preferences
 			initialize_preferences
 
-			-- Update default value for docking library.
+			-- Update default value for docking library
 			on_auto_hide_animation_speed_changed
+			on_undocked_window_lower_than_main_window
 			on_show_all_applicable_docking_indicators_changed
 
 			-- default value
@@ -176,6 +177,12 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := auto_hide_animation_speed_preference.value
 		end
 
+	undocked_window_lower_than_main_window: BOOLEAN
+			-- All undocked window lower than main development window?
+		do
+			Result := undocked_window_lower_than_main_window_preference.value
+		end
+
 	show_all_applicable_docking_indicators: BOOLEAN
 			-- If we need to show all feedback indicators when dragging a zone?
 		do
@@ -232,6 +239,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	auto_hide_animation_speed_preference: INTEGER_PREFERENCE
 			-- The speed of auto hide zone animation in milliseconds if `auto_hide_zone_use_animation_preference' True.
 			-- 0 to disable animation effect.
+
+	undocked_window_lower_than_main_window_preference: BOOLEAN_PREFERENCE
+			-- Allow undocked windows lower than main develop window?
 
 	show_all_applicable_docking_indicators_preference: BOOLEAN_PREFERENCE
 			-- If we need to show all feedback indicators when dragging a zone?
@@ -322,6 +332,7 @@ feature {NONE} -- Preference Strings
 	use_animated_icons_string: STRING = "interface.development_window.use_animated_icons"
 	c_output_panel_prompted_string: STRING = "interface.development_window.c_output_panel_prompted"
 	auto_hide_animation_speed_string: STRING = "interface.development_window.auto_hide_animation_speed"
+	undocked_window_lower_than_main_window_string: STRING = "interface.development_window.undocked_window_lower_than_main_window"
 	show_all_applicable_docking_indicators_string: STRING = "interface.development_window.show_all_applicable_docking_indicators"
 	output_tool_prompted_string: STRING = "interface.development_window.output_tool_prompted"
 
@@ -353,6 +364,7 @@ feature {NONE} -- Implementation
 			use_animated_icons_preference := l_manager.new_boolean_preference_value (l_manager, use_animated_icons_string, True)
 			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)
 			auto_hide_animation_speed_preference := l_manager.new_integer_preference_value (l_manager, auto_hide_animation_speed_string, 50)
+			undocked_window_lower_than_main_window_preference := l_manager.new_boolean_preference_value (l_manager, undocked_window_lower_than_main_window_string, False)
 			show_all_applicable_docking_indicators_preference := l_manager.new_boolean_preference_value (l_manager, show_all_applicable_docking_indicators_string, True)
 			output_tool_prompted_preference := l_manager.new_boolean_preference_value (l_manager, output_tool_prompted_string, True)
 
@@ -362,6 +374,7 @@ feature {NONE} -- Implementation
 			estudio_dbg_menu_enabled_preference.set_hidden (not estudio_dbg_menu_allowed_preference.value)
 			estudio_dbg_menu_enabled_preference.change_actions.extend (agent update_estudio_dbg_menu)
 			auto_hide_animation_speed_preference.change_actions.extend (agent on_auto_hide_animation_speed_changed)
+			undocked_window_lower_than_main_window_preference.change_actions.extend (agent on_undocked_window_lower_than_main_window)
 			show_all_applicable_docking_indicators_preference.change_actions.extend (agent on_show_all_applicable_docking_indicators_changed)
 		end
 
@@ -385,6 +398,15 @@ feature {NONE} -- Implementation
 		do
 			create l_shared
 			l_shared.set_auto_hide_tab_slide_timer_interval (auto_hide_animation_speed)
+		end
+
+	on_undocked_window_lower_than_main_window
+			-- Handle change actions of `undocked_window_lower_than_main_window_preference'
+		local
+			l_shared: SD_SHARED
+		do
+			create l_shared
+			l_shared.set_allow_window_to_back (undocked_window_lower_than_main_window)
 		end
 
 	on_show_all_applicable_docking_indicators_changed

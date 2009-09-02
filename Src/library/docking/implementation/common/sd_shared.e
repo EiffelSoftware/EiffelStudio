@@ -272,6 +272,14 @@ feature -- Status setting
 			set: show_all_feedback_indicator = a_bool
 		end
 
+	set_allow_window_to_back (a_bool: BOOLEAN)
+			-- Set `allow_window_to_back' with `a_bool'
+		do
+			allow_window_to_back_cell.put (a_bool)
+		ensure
+			set: allow_window_to_back = a_bool
+		end
+
 	set_auto_hide_tab_slide_timer_interval (a_int: INTEGER)
 			-- Set `auto_hide_tab_slide_timer_interval' with `a_int'.
 		do

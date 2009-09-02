@@ -263,7 +263,7 @@ feature -- Status report
 feature -- Status setting
 
 	set_icons (a_icons: like icons)
-			-- Set the SD_ICONS_SINGLETON instance.
+			-- Set the SD_ICONS_SINGLETON instance
 			-- Client programmers don't have to call this feature since SD_DEFAULT_ICONS will be used by default.
 		require
 			a_icons_not_void: a_icons /= Void
@@ -284,7 +284,7 @@ feature -- Status setting
 		end
 
 	set_hot_zone_factory (a_factory: like hot_zone_factory)
-			-- Set `hot_zone_factory'.
+			-- Set `hot_zone_factory'
 		require
 			a_factory_not_void: a_factory /= Void
 		do
@@ -294,12 +294,20 @@ feature -- Status setting
 		end
 
 	set_show_all_feedback_indicator (a_bool: BOOLEAN)
-			-- Set `show_all_feedback_indicator'.
+			-- Set `show_all_feedback_indicator'
 		do
 			show_all_feedback_indicator_cell.put (a_bool)
 			is_set_show_all_feedback_indicator_called.put (True)
 		ensure
 			set: show_all_feedback_indicator = a_bool
+		end
+
+	set_allow_window_to_back (a_bool: BOOLEAN)
+			-- Set `allow_window_to_back' with `a_bool'
+		do
+			allow_window_to_back_cell.put (a_bool)
+		ensure
+			set: allow_window_to_back = a_bool
 		end
 
 	set_auto_hide_tab_slide_timer_interval (a_int: INTEGER)
@@ -630,7 +638,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 		end
 
 	docking_manager_list: ARRAYED_LIST [SD_DOCKING_MANAGER]
-			-- All docking managers.
+			-- All docking managers
 		once
 			create Result.make (1)
 		ensure
@@ -785,14 +793,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

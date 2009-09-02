@@ -136,7 +136,7 @@ feature -- Print
 			a_msg_attached: a_msg /= Void
 			outputter_configured: configured
 		do
-			print_with_name ("WARNING] " + a_msg, False)
+			print_with_name ("[WARNING] " + a_msg, False)
 		end
 
 	eprint (a_msg: STRING; a_generating_type: TYPE [ANY])
@@ -173,7 +173,7 @@ feature {NONE}  -- Implementation
 			outputter_configured: configured
 			a_msg_attached: a_msg /= Void
 		do
-			print_with_cmdnl ("[" + name.out + "]" + a_msg, a_is_error_output)
+			print_with_cmdnl ("[" + name + "]" + a_msg, a_is_error_output)
 		end
 
 	print_with_cmdnl (a_msg: STRING; a_is_error_output: BOOLEAN)
@@ -188,12 +188,14 @@ feature {NONE}  -- Implementation
 			l_f_utils: XU_FILE_UTILITIES
 			l_msg: STRING
 		do
+			l_msg := "%N" + a_msg
+
 			create l_f_utils
-			if attached {PLAIN_TEXT_FILE}l_f_utils.plain_text_file_append_create (name + ".log") as l_file then
-				l_file.put_string ("%N" + a_msg)
+			if attached l_f_utils.plain_text_file_append_create (name + ".log") as l_file then
+				l_file.put_string (l_msg)
 				l_f_utils.close
 			end
-			l_msg := "%N" + a_msg
+
 			if add_input_line then
 				l_msg.append ("%N$> ")
 			end

@@ -642,7 +642,7 @@ feature -- External
 
 	get_real_data (no_descriptor: INTEGER; ind: INTEGER): REAL
 		do
-			Result := odbc_get_real_data (no_descriptor, ind)
+			Result := odbc_get_real_data (no_descriptor, ind).truncated_to_real
 		end
 
 	get_boolean_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN

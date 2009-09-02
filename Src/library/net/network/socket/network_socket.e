@@ -110,22 +110,12 @@ feature -- Status report
 	is_bound: BOOLEAN
 
 	port: INTEGER
-			--
-		do
-			if not is_connected then
-				Result := 0
-			else
-				Result := the_port
-			end
-		end
-
-	local_port: INTEGER
-			--
+			-- Port socket is bound to.
 		do
 			if not is_bound then
 				Result := -1
 			else
-				Result := the_local_port
+				Result := internal_port
 			end
 		end
 
@@ -242,9 +232,8 @@ feature {NONE} -- Implementation
 
 	last_fd: INTEGER
 
-	the_port: INTEGER
-
-	the_local_port: INTEGER
+	internal_port: INTEGER
+			-- Internal storage for `port' when `is_bound'.
 
 	do_create
 		deferred

@@ -23,7 +23,8 @@ inherit
 
 create -- Creation procedure
 
-	make
+	make,
+	ht_make
 
 feature -- Initialization
 

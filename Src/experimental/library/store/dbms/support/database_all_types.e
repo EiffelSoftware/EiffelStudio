@@ -23,7 +23,8 @@ inherit
 
 create -- Creation procedure
 
-	make
+	make,
+	ht_make
 
 feature -- Initialization
 
@@ -94,7 +95,6 @@ feature -- Element change
 		ensure
 			incremented_count: count = old count + 1
 		end
-
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -145,12 +145,16 @@ feature -- Creation
 			result_not_void: Result /= Void
 		end
 
-	type_of_type (type_id: INTEGER): detachable TYPE [detachable ANY]
+	type_of_type (type_id: INTEGER): TYPE [detachable ANY]
 			-- Return type for type id `type_id'.
 		require
 			type_id_nonnegative: type_id >= 0
+		local
+			l_result: detachable like type_of_type
 		do
-			Result ?= new_instance_of (dynamic_type_from_string ("TYPE [" + type_name_of_type (type_id) + "]"))
+			l_result ?= new_instance_of (dynamic_type_from_string ("TYPE [" + type_name_of_type (type_id) + "]"))
+			check l_result /= Void end
+			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end

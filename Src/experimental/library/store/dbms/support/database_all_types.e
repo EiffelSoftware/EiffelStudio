@@ -22,8 +22,9 @@ inherit
 		end
 
 create -- Creation procedure
+	make
 
-	make,
+create {HASH_TABLE}
 	ht_make
 
 feature -- Initialization

@@ -127,6 +127,9 @@ feature -- Access
 	precompile: CONF_PRECOMPILE
 			-- Precompile needed for building our target.
 
+	shared_library_definition_stamp: INTEGER
+			-- Time stamp of a shared library definition file (if any)
+
 feature -- Update from retrieved object.
 
 	update_from_retrieved_project (other: like Current)
@@ -137,6 +140,7 @@ feature -- Update from retrieved object.
 		do
 			-- standard_copy (other)
 			date := other.date
+			shared_library_definition_stamp := other.shared_library_definition_stamp
 			compile_all_classes := other.compile_all_classes
 			successful := True
 		end
@@ -367,6 +371,22 @@ feature -- Status setting
 			user_options_set: user_options /= Void
 		rescue
 			is_error := True
+		end
+
+	check_shared_library_definition_stamp
+			-- Check if a shared library definition file has changed and request to freeze if required.
+		local
+			s: STRING
+		do
+			s := system.dynamic_def_file
+			if s = Void then
+				shared_library_definition_stamp := 0
+			elseif file_modified_date (s) /= shared_library_definition_stamp then
+					-- Record new time stamp.
+				shared_library_definition_stamp := file_modified_date (s)
+					-- New definition file is taken into account only during freeze.
+				system.request_freeze
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -1169,8 +1189,21 @@ feature {NONE} -- Implementation
 			l_s := l_settings.item (s_shared_library_definition)
 				-- If the release doesn't generate DLL's,
 				-- we do not take the option into account in the Ace.
-			if l_s /= Void and eiffel_layout.has_dll_generation then
-				system.set_dynamic_def_file (l_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
+			if l_s /= Void and then eiffel_layout.has_dll_generation then
+				l_s := l_factory.new_location_from_full_path (l_s, a_target).evaluated_path
+				if	system.dynamic_def_file /~ l_s or else
+					shared_library_definition_stamp /= file_modified_date (l_s)
+				then
+					system.set_dynamic_def_file (l_s)
+						-- Record new time stamp.
+					shared_library_definition_stamp := file_modified_date (l_s)
+						-- New definition file is taken into account only during freeze.
+					system.request_freeze
+				end
+			else
+					-- Settings might have been changed and do not list DLL definition file anymore.
+				system.set_dynamic_def_file (Void)
+				shared_library_definition_stamp := 0
 			end
 
 			l_s := l_settings.item (s_use_cluster_name_as_namespace)

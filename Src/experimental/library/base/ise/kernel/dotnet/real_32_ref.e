@@ -52,14 +52,14 @@ feature -- Access
 			-- Neutral element for "*" and "/"
 		do
 			create Result
-			Result.set_item (1.0)
+			Result.set_item ({REAL_32} 1.0)
 		end
 
 	zero: like Current
 			-- Neutral element for "+" and "-"
 		do
 			create Result
-			Result.set_item (0.0)
+			Result.set_item ({REAL_32} 0.0)
 		end
 
 feature -- Comparison
@@ -137,7 +137,7 @@ feature {NONE} -- Initialization
 		do
 			item := v.item
 		ensure
-			item_set: item = v.item	
+			item_set: item = v.item
 		end
 
 feature -- Conversion
@@ -208,7 +208,7 @@ feature -- Conversion
 	ceiling_real_32: REAL
 			-- Smallest integral value no smaller than current object
 		do
-			Result := {MATH}.ceiling (item)
+			Result := {MATH}.ceiling (item).truncated_to_real
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
@@ -217,7 +217,7 @@ feature -- Conversion
 	floor_real_32: REAL
 			-- Greatest integral value no greater than current object
 		do
-			Result := {MATH}.floor (item)
+			Result := {MATH}.floor (item).truncated_to_real
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
@@ -226,9 +226,9 @@ feature -- Conversion
 	rounded_real_32: REAL
 			-- Rounded integral value
 		do
-			Result := sign * {MATH}.floor ({MATH}.abs_real (item) + 0.5)
+			Result := (sign * {MATH}.floor ({MATH}.abs_real (item) + 0.5)).truncated_to_real
 		ensure
-			definition: Result = sign * ((abs + 0.5).floor_real_32)
+			definition: Result = sign * ((abs + {REAL_32} 0.5).floor_real_32)
 		end
 
 feature -- Basic operations

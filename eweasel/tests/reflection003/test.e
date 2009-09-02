@@ -13,6 +13,7 @@ feature {NONE} -- Initialization
 		local
 			l_int_value_type: INTEGER_32
 			t: TYPE [detachable ANY]
+			ti: TYPE [INTEGER_32]
 		do
 			l_int_value_type := dynamic_type_from_string ("INTEGER_32")
 			t := type_of_type (l_int_value_type)

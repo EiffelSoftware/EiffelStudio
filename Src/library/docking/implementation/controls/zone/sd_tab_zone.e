@@ -140,7 +140,11 @@ feature -- Command
 			if l_index = 0 then
 				l_index := 1
 			end
-			l_selected := contents.i_th (l_index)
+			-- When call by {SD_TAB_STATE}.`close', maybe {SD_TAB_STATE_ASSISTANT}.`update_last_content_state' not execute since parent void
+			-- So it's possible `contents.count' is 0, we have to valid index here
+			if contents.valid_index (l_index) then
+				l_selected := contents.i_th (l_index)
+			end
 			-- `l_selected' should not be void in theroy.
 			-- But in fact, it can be void sometimes, see bug#12807.
 			if l_selected /= Void then
@@ -468,14 +472,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

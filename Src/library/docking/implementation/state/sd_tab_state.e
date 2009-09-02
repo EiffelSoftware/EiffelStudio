@@ -347,11 +347,13 @@ feature -- Redefine
 			l_parent := tab_zone.parent
 			-- If we are closing all contents, we should not give focus to next content, see bug#13796
 			tab_zone.prune (internal_content, not internal_docking_manager.is_closing_all)
-			-- When Eiffel Studio exiting and recycling, `l_parent' maybe void.
+
+			-- When Eiffel Studio exiting and recycling, `l_parent' maybe void (Linux only, Windows implementation works fine)
 			-- This is ok since Current whole tab zone will be destroyed.
 			if l_parent /= Void then
 				assistant.update_last_content_state (l_parent)
 			end
+
 			create l_state_void.make (content)
 			change_state (l_state_void)
 			internal_docking_manager.command.remove_empty_split_area
@@ -472,7 +474,10 @@ feature -- Redefine
 		do
 			close
 			create l_state.make (internal_content)
-			l_state.set_relative (zone.contents.last)
+			-- See comments in `close', it's possible the {SD_TAB_ZONE} doesn't have any content when closing all tools
+			if not zone.contents.is_empty then
+				l_state.set_relative (zone.contents.last)
+			end
 			change_state (l_state)
 		end
 
@@ -697,14 +702,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

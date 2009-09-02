@@ -216,11 +216,11 @@ feature {NONE} -- Implementation
 		do
 			l_fd := fd
 			l_fd1 := fd1
-			l_port := the_local_port
+			l_port := internal_port
 			c_bind ($l_fd, $l_fd1, $l_port, a_address.socket_address.item)
 			fd := l_fd
 			fd1 := l_fd1
-			the_local_port := l_port
+			internal_port := l_port
 		end
 
 feature {NONE} -- Externals

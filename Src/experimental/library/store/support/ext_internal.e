@@ -50,7 +50,7 @@ feature -- Basic operations
 					local_real := real_ref.item
 					set_real_field (i, object, local_real)
 				elseif attached {DOUBLE_REF} value as double_ref then
-					local_real := double_ref.item
+					local_real := double_ref.item.truncated_to_real
 					set_real_field (i, object, local_real)
 				elseif attached {INTEGER_REF} value as int_ref then
 					local_real := int_ref.item

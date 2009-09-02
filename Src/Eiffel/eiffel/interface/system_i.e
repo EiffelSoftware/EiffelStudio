@@ -1602,6 +1602,7 @@ feature -- Recompilation
 			end
 
 			has_been_changed := is_config_changed
+			lace.check_shared_library_definition_stamp
 			do_recompilation
 
 			successful := True

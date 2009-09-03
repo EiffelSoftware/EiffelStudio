@@ -2,7 +2,7 @@
 	description: "Routine to control the debugging behavior."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1257,7 +1257,9 @@ rt_private struct dcall *dbstack_allocate(register int size)
 
 	size *= CALL_SZ;
 	size += sizeof(*chunk);
+	SIGBLOCK;
 	chunk = (struct stdchunk *) cmalloc(size);
+	SIGRESUME;
 	if (chunk == (struct stdchunk *) 0)
 		return (struct dcall *) 0;		/* Malloc failed for some reason */
 
@@ -1791,15 +1793,19 @@ rt_public EIF_TYPED_ADDRESS *c_stack_allocate(EIF_CONTEXT register int size)
 	 */
 
 	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	EIF_TYPED_ADDRESS *arena;		/* Address for the arena */
 	struct c_stochunk *chunk;	/* Address of the chunk */
 
 	size *= ITEM_SZ;
 	size += sizeof(*chunk);
+	SIGBLOCK;
 	chunk = (struct c_stochunk *) cmalloc(size);
+	SIGRESUME;
 	if (chunk == (struct c_stochunk *) 0)
 		return (EIF_TYPED_ADDRESS *) 0;		/* Malloc failed for some reason */
 
+	SIGBLOCK;
 	cop_stack.st_hd = chunk;						/* New stack (head of list) */
 	cop_stack.st_tl = chunk;						/* One chunk for now */
 	cop_stack.st_cur = chunk;					/* Current chunk */
@@ -1810,6 +1816,7 @@ rt_public EIF_TYPED_ADDRESS *c_stack_allocate(EIF_CONTEXT register int size)
 		((char *) chunk + size);		/* First free location beyond stack */
 	chunk->sk_next = (struct c_stochunk *) 0;
 	chunk->sk_prev = (struct c_stochunk *) 0;
+	SIGRESUME;
 
 	return arena;			/* Stack allocated */
 }

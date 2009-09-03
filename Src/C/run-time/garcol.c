@@ -5129,7 +5129,9 @@ rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 	struct stchunk *chunk;	/* Address of the chunk */
 	rt_uint_ptr l_size = size * REFSIZ + sizeof(struct stchunk);
 
+	SIGBLOCK;							/* Critical section */
 	chunk = (struct stchunk *) eif_rt_xmalloc(l_size, C_T, GC_OFF);
+	SIGRESUME;							/* End of critical section */
 	if (chunk == (struct stchunk *) 0)
 		return (EIF_REFERENCE *) 0;		/* Malloc failed for some reason */
 

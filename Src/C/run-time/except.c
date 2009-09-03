@@ -2503,30 +2503,35 @@ rt_private void extend_trace_string(char *line)
 	size_t l_buf_sz = 0;
 	size_t l_line_length = strlen(line);
 
+		/* Protect `ex_string' from corruption if a signal is raised. */
+	SIGBLOCK;
 	if ((ex_string.size - ex_string.used) > l_line_length) {
 		strcpy (ex_string.area + ex_string.used, line);
 		ex_string.used += l_line_length;
 	} else {
+		char * p;
 		l_buf_sz = ex_string.size + l_line_length + BUFSIZ;
 #ifdef DEBUG
 		printf ("extend_trace_string: Going to do a realloc...\n");
 #endif
-		ex_string.area = (char *) xrealloc(ex_string.area, l_buf_sz, GC_OFF);
-		if(ex_string.area) {
+		p = (char *) xrealloc(ex_string.area, l_buf_sz, GC_OFF);
+		if (p) {
+			ex_string.area = p;
+			ex_string.size = l_buf_sz; /* Set size after `xrealloc' in case exception was raised. */
 			strcpy (ex_string.area + ex_string.used, line);
 			ex_string.used += l_line_length;
-			ex_string.size = l_buf_sz; /* Set size after `xrealloc' in case exception was raised. */
 		}
 	}
+	SIGRESUME;
 }
 rt_public char* stack_trace_str (void)
 {
-    /* Initialize the SMART_STRING structure supposed to receive the exception
-     * stack, dump the existing exception trace stack into it and return a C string.
-     */
+	/* Initialize the SMART_STRING structure supposed to receive the exception
+	 * stack, dump the existing exception trace stack into it and return a C string.
+	 */
 	RT_GET_CONTEXT
 
-    /* Clean the area from a previous call. Keep TRACE_SZ of the trace */
+	/* Clean the area from a previous call. Keep TRACE_SZ of the trace */
 	if (!ex_string.area) {
 			/* Prepare the structure for a new trace */
 		ex_string.used = 0;
@@ -2538,10 +2543,10 @@ rt_public char* stack_trace_str (void)
 		memset (ex_string.area, 0, ex_string.size);
 	}
 
-    /* Dump the exception stack into this structure by using the
-     * wrapper ds_string().
-     */
-    dump_stack(ds_string);
+	/* Dump the exception stack into this structure by using the
+	 * wrapper ds_string().
+	 */
+	dump_stack(ds_string);
 
 	if (ex_string.size > TRACE_SZ && ex_string.used <= TRACE_SZ) { /* Shrink the memory block if too large */
 		ex_string.area = (char *) xrealloc(ex_string.area, TRACE_SZ, GC_OFF);

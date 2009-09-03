@@ -291,6 +291,9 @@ rt_public EIF_REFERENCE dir_current(void)
 
 #ifdef EIF_VMS
 	cwd = getcwd (NULL, PATH_MAX, 0);   // force Unix format filespec
+	if (cwd == NULL)
+		/* if cwd is not representable in Unix form (if it is a VMS search list) */
+	    cwd = getcwd (NULL, PATH_MAX, 1);
 #else
 	cwd = getcwd (NULL, PATH_MAX);
 #endif

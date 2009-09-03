@@ -1556,6 +1556,14 @@ feature {NONE} -- Class initialization
 								-- so Degree 4 can be done the same way
 							Degree_5.insert_changed_class (l_class)
 						end
+							-- We need to recompile the features because their code might still
+							-- contain reference to the type and because it switched from
+							-- expanded to non and vice versa, the type description have to change.
+							-- This fixes eweasel test#incr306, test#incr316 and test#final069.
+						l_eiffel_class ?= l_class
+						if l_eiffel_class /= Void then
+							l_eiffel_class.set_new_byte_code_needed (True)
+						end
 					else
 						set_changed2 (True)
 					end

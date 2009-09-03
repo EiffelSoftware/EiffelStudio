@@ -158,10 +158,10 @@ feature -- Error notification: expression error
 			notify_error (cst_error_expression, t, mesg)
 		end
 
-	notify_error_list_expression_and_tag (a_error_list: LINKED_LIST [ERROR])
+	notify_error_list_expression_and_tag (a_error_list: LIST [ERROR])
 		local
 			l_error: ERROR
-			l_cursor: LINKED_LIST_CURSOR [ERROR]
+			l_cursor: CURSOR
 		do
 			if a_error_list /= Void then
 				l_cursor := a_error_list.cursor

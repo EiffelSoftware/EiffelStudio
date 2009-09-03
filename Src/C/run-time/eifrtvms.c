@@ -717,8 +717,13 @@ rt_public int eifrt_vms_unlink (const char *name) {
 #endif // moose
 #endif  /* EIF_VMS_OLD */
 
+/******************************************/
+/*** I18N (Internationalization) stuff: ***/
+/******************************************/
+/*  Jackets for setlocal, nl_langinfo,    */
+/*  iconv_ et. al.                        */
+/******************************************/
 
-/*** I18N (Internationalization) stuff ***/
 
 /* local forward references */
 static const char* spaces (size_t len) ;
@@ -739,14 +744,14 @@ char_ptr32 eifrt_vms_setlocale (int category, const char* locale)
     char_ptr32 __XSETLOCALE (int category, const char* locale);
 
 #ifdef VMS_TRACE_SETLOCALE
-    printf ("eifrtvms: setlocale(%s (%d), \"%s\")\n", locale_category_name (category), category, safe_string(locale));
+    printf ("eifrtvms: setlocale(%d (%s), \"%s\") called:\n", category, locale_category_name (category), safe_string(locale));
 #endif
     if (!once) {
 	once = TRUE;
 	res = DECC$SETLOCALE (LC_ALL, NULL);
 	default_locale = _strdup32 (res);
 #ifdef VMS_TRACE_SETLOCALE
-	printf ("eifrtvms: first call to setlocale (LC_ALL, NULL) = %s\n", default_locale);
+	printf ("  (first call to setlocale (LC_ALL, NULL) returns \"%s\" -- default locale).\n", default_locale);
 #endif
     }
     res1 = DECC$SETLOCALE (category, locale);
@@ -805,19 +810,19 @@ static const char* locale_category_name (int category)
 }
 
 
-
 //#define VMS_TRACE_NL_LANGINFO
 #include <langinfo.h>
 
-/*  Currently, Eiffel I18N library class {I18N_POSIX_CONSTANTS}			*/
+/*  Eiffel 6.4 Eiffel I18N library class {I18N_POSIX_CONSTANTS}			*/
 /*	(ISE_EIFFEL:[library.i18n.locale.posix]i18n_posix_constants.e)		*/
-/*  uses hard-coded values for nl_langinfo item codes.				*/
-/*  This table maps those values to the corresponding VMS symbolic values.	*/
-#define NL_ENT(e,i,n) { e, i, n }
-#define NL_ITEM(itm, eifval) NL_ENT (eifval, itm, #itm)
-typedef struct { int32 eifval; nl_item vmsval; const char* nam;} nl_map_item_t;
-static nl_map_item_t nl_item_map[] = {
-	//{"CODESET", CODESET, 0x0 }, 
+/*  uses inline C to get platform defined values for nl_langinfo item codes,	*/
+/*  where the Eiffel 6.3 version used hard-coded (Linux) values. 		*/
+/*  These tables are used to map item codes to strings, and were formerly used	*/
+/*  to map the hard coded values to the corresponding VMS symbolic values.	*/
+#define NL_ENT(e,i,n)  { e, i, n }
+#define NL_ITEM(itm, eifval)  NL_ENT (eifval, itm, #itm)
+typedef struct { int32 eifval; nl_item vmsval; const char* nam;} nl_item_map_entry_t;
+static const nl_item_map_entry_t nl_item_map_source[] = {
 	NL_ITEM (CODESET, 0), 
 	NL_ITEM (ABDAY_1, 0x20000), NL_ITEM (ABDAY_2, 0x20001), NL_ITEM (ABDAY_3, 0x20002), NL_ITEM (ABDAY_4, 0x20003), 
 	NL_ITEM (ABDAY_5, 0x20004), NL_ITEM (ABDAY_6, 0x20005), NL_ITEM (ABDAY_7, 0x20006), 
@@ -841,8 +846,13 @@ static nl_map_item_t nl_item_map[] = {
 	NL_ITEM (ERA_T_FMT, ), NL_ITEM (ERA_D_T_FMT, )
 #endif
 };
+static nl_item_map_entry_t *nl_item_map_vmsval;
 
-static int nl_item_compare (const nl_map_item_t* p1, const nl_map_item_t* p2)
+#define REMAP_EIFFEL_NL_ITEM_CODES
+#ifdef REMAP_EIFFEL_NL_ITEM_CODES
+static nl_item_map_entry_t *nl_item_map_eifval;
+/* comparison routine used for sorting and searching nl_item_map: compare eifval values */
+static int nl_item_compare_eifval (const nl_item_map_entry_t* p1, const nl_item_map_entry_t* p2)
 {
     if (p1->eifval < p2->eifval)
 	return -1;
@@ -851,50 +861,93 @@ static int nl_item_compare (const nl_map_item_t* p1, const nl_map_item_t* p2)
     else
 	return 1;
 }
+#endif // REMAP_EIFFEL_NL_ITEM_CODES
+
+/* comparison routine used for sorting and searching nl_item_map: compare vmsval values */
+static int nl_item_compare_vmsval (const nl_item_map_entry_t* p1, const nl_item_map_entry_t* p2)
+{
+    if (p1->vmsval < p2->vmsval)
+	return -1;
+    else if (p1->vmsval == p2->vmsval)
+	return 0;
+    else
+	return 1;
+}
 
 /* jacket for nl_langinfo () */
-char_ptr32 eifrt_vms_nl_langinfo (nl_item item)
-{   
-    char_ptr32 res;
-    nl_map_item_t* nlp;
-    nl_item itm = item;
+char_ptr32 eifrt_vms_nl_langinfo (nl_item eif_item)
+{
+    char_ptr32 result;
+    nl_item_map_entry_t item, *nlp;
+    nl_item vms_item;		// remapped (if necessary) eif_item
     char_ptr32 DECC$NL_LANGINFO (nl_item item);
-    static int sorted = FALSE;
+    static size_t num = CARDINALITY(nl_item_map_source);
+    static size_t siz = sizeof(nl_item_map_entry_t);
 
-    REQUIRE ("eifval first element of nl_map_item", offsetof (nl_map_item_t, eifval) == 0);
-    if (!sorted) {
-	sorted = TRUE;
-	qsort (nl_item_map, CARDINALITY(nl_item_map), sizeof (*nl_item_map), 
-                (int (*)(const void*, const void*))nl_item_compare);
+    //REQUIRE ("eifval first element of nl_item_map_entry", offsetof (nl_item_map_entry_t, eifval) == 0);
+
+    if (nl_item_map_vmsval == NULL) {
+	nl_item_map_vmsval = calloc (num, siz);
+	memcpy (nl_item_map_vmsval, nl_item_map_source, sizeof (nl_item_map_source));
+	qsort (nl_item_map_vmsval, num, siz, (int (*)(const void*, const void*))nl_item_compare_vmsval);
+#ifdef REMAP_EIFFEL_NL_ITEM_CODES
+	nl_item_map_eifval = calloc (num, siz);
+	memcpy (nl_item_map_eifval, nl_item_map_source, sizeof (nl_item_map_source));
+	qsort (nl_item_map_eifval, num, siz, (int (*)(const void*, const void*))nl_item_compare_eifval);
+#endif
     }
+
+//#define DEBUG
 #ifdef DEBUG
-    res = DECC$NL_LANGINFO (item);	// what was this for? 
-    res = DECC$NL_LANGINFO (itm);	// what was this for? 
+    //result = DECC$NL_LANGINFO (vms_item);	// what was this for? 
+    result = DECC$NL_LANGINFO (eif_item);	// what was this for? 
 #endif
-    nlp = bsearch (&item, nl_item_map, CARDINALITY(nl_item_map), sizeof (*nl_item_map), 
-		(int (*)(const void*, const void*))nl_item_compare);
+
+    item.vmsval = eif_item;
+    item.eifval = eif_item;
+    nlp = bsearch (&item, nl_item_map_vmsval, num, siz, (int (*)(const void*, const void*))nl_item_compare_vmsval);
     if (nlp) {
+	vms_item = nlp->vmsval;
 #ifdef VMS_TRACE_NL_LANGINFO
-	printf ("eifrtvms: nl_langinfo(\"%s\" (0x%x, mapped from 0x%x)\n", safe_string (nlp->nam), nlp->vmsval, item);
+	printf ("eifrtvms: nl_langinfo(%d. [\"%s\", unmapped])\n", vms_item, safe_string (nlp->nam));
 #endif
-	res = DECC$NL_LANGINFO (nlp->vmsval);
+#ifdef REMAP_EIFFEL_NL_ITEM_CODES
+    } else {
+	nlp = bsearch (&item, nl_item_map_eifval, num, siz, (int (*)(const void*, const void*))nl_item_compare_eifval);
+	if (nlp) {
+	    vms_item = nlp->eifval;
+#ifdef VMS_TRACE_NL_LANGINFO
+	    printf ("eifrtvms: nl_langinfo(%d. [\"%s\", mapped from 0x%x])\n", vms_item, safe_string (nlp->nam), eif_item, eif_item);
+#endif // VMS_TRACE_NL_LANGINFO
+	}
+#endif // REMAP_EIFFEL_NL_ITEM_CODES
+    }
+
+    if (!nlp) {
+	vms_item = eif_item;
+#ifdef VMS_TRACE_NL_LANGINFO
+       printf ("eifrtvms: nl_langinfo (%d. [0x%x, unknown item code])\n", vms_item, vms_item);
+#endif
+    }
+    result = DECC$NL_LANGINFO (vms_item);
+    if (vms_item == CODESET && result && !strcmp (result, "ASCII")) {
+	result = "ISO8859-1";
+#ifdef VMS_TRACE_NL_LANGINFO
+	printf ("  returning \"%s\" (substituted for \"ASCII\")\n", safe_string(result));
+#endif
     } else {
 #ifdef VMS_TRACE_NL_LANGINFO
-	printf ("eifrtvms: nl_langinfo(unknown item code %d\n", item);
+	printf ("  returning \"%s\"\n", safe_string(result));
 #endif
-	res = DECC$NL_LANGINFO (item);
     }
-#ifdef VMS_TRACE_NL_LANGINFO
-    printf ("  returning \"%s\"\n", safe_string(res));
-#endif
-    return res;
+    return result;
 }
 
 
 /*** ICONV jackets ***/
 
-//#define VMS_TRACE_ICONV
 //#define VMS_TRACE_ICONV_OPEN
+//#define VMS_TRACE_ICONV
 
 #undef iconv
 #undef iconv_open
@@ -905,7 +958,7 @@ char_ptr32 eifrt_vms_nl_langinfo (nl_item item)
 */
 size_t eifrt_vms_iconv (iconv_t a_cd, const char **a_inpbuf, size_t *a_inpbytesleft, char **a_outbuf, size_t *a_outbytesleft)
 {
-    size_t res;
+    size_t result;
     char_ptr32 inpbufx, inpbufx_orig;
     char_ptr32 outbufx, outbufx_orig;
     char_ptr_ptr32 inpbufpp, outbufpp;
@@ -945,19 +998,19 @@ size_t eifrt_vms_iconv (iconv_t a_cd, const char **a_inpbuf, size_t *a_inpbytesl
     }
     inpbytesleftx = *a_inpbytesleft;
     outbytesleftx = *a_outbytesleft;
-    res = DECC$ICONV (a_cd, inpbufpp, &inpbytesleftx, outbufpp, &outbytesleftx);
+    result = DECC$ICONV (a_cd, inpbufpp, &inpbytesleftx, outbufpp, &outbytesleftx);
 
 #else
 #error incomplete
-    res = DECC$ICONV (a_cd, a_inpbuf, a_inpbytesleft, a_outbuf, a_outbytesleft);
+    result = DECC$ICONV (a_cd, a_inpbuf, a_inpbytesleft, a_outbuf, a_outbytesleft);
 #endif
 
     outbytescount = *a_outbytesleft - outbytesleftx;	// count of bytes written to output buffer
 #ifdef VMS_TRACE_ICONV
     err = errno;
     printf ("  iconv(32) returned %d (\"%.*s\", inpbytesleft: %d, outbytesleft: %d)\n", 
-	    res, outbytescount, outbufx - outbytescount, inpbytesleftx, outbytesleftx);
-    if (res)
+	    result, outbytescount, outbufx - outbytescount, inpbytesleftx, outbytesleftx);
+    if (result)
 	printf ("  errno: %d %s\n", err, strerror (err));
 #endif
 
@@ -977,10 +1030,10 @@ size_t eifrt_vms_iconv (iconv_t a_cd, const char **a_inpbuf, size_t *a_inpbytesl
 
 #ifdef VMS_TRACE_ICONV
     printf ("  returning %d (*outbuf: \"%.*s\"),\n\t updated *inpbuf=0x%08Lp, inpbytesleft= %d, *outbuf=0x%08Lp, *outbytesleft=%d)\n", 
-	    res, outbytescount, outbuf_orig, *a_inpbuf, *a_inpbytesleft, *a_outbuf, *a_outbytesleft);
+	    result, outbytescount, outbuf_orig, *a_inpbuf, *a_inpbytesleft, *a_outbuf, *a_outbytesleft);
 #endif
 
-    return res;
+    return result;
 }
 
 
@@ -998,7 +1051,7 @@ int eifrt_vms_iconv_close (iconv_t cd)
 
 iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
 {   
-    iconv_t res;
+    iconv_t result;
     int err, erv;
     static const char *altcode = "ISO8859-1";
     static int level = 0;
@@ -1008,23 +1061,23 @@ iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
 #ifdef VMS_TRACE_ICONV_OPEN
     printf ("eifrtvms: %siconv_open (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (fromcode));
 #endif
-    res = DECC$ICONV_OPEN (tocode, fromcode);
-    if (res == (iconv_t)-1) {
+    result = DECC$ICONV_OPEN (tocode, fromcode);
+    if (result == (iconv_t)-1) {
 	err = errno;
 	erv = vaxc$errno;
 	if (!strcasecmp (fromcode, "ASCII")) {
 #ifdef VMS_TRACE_ICONV_OPEN
 	    printf (" %sfailed, retrying with (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (altcode));
 #endif
-	    res = eifrt_vms_iconv_open (tocode, altcode);
+	    result = eifrt_vms_iconv_open (tocode, altcode);
 	} else if (!strcasecmp (tocode, "ASCII")) {
 #ifdef VMS_TRACE_ICONV_OPEN
 	    printf (" %sfailed, retrying with (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (altcode));
 #endif
-	    res = eifrt_vms_iconv_open (altcode, fromcode);
+	    result = eifrt_vms_iconv_open (altcode, fromcode);
 	}
     }
-    if (res == (iconv_t)-1) {
+    if (result == (iconv_t)-1) {
 	err = errno;
 	erv = vaxc$errno;
 #ifdef VMS_TRACE_ICONV_OPEN
@@ -1033,11 +1086,11 @@ iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
     } else {
 #ifdef VMS_TRACE_ICONV_OPEN
 	if (level == 1) 
-	    printf (" %siconv_open succeeded (return 0x%08Lp.\n", spaces(level), res);
+	    printf (" %siconv_open succeeded (return 0x%08Lp.\n", spaces(level), result);
 #endif
     }
     --level;
-    return res;
+    return result;
 }
 
 
@@ -1045,29 +1098,29 @@ iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
 static char* spacedup (size_t len) ;
 static const char* spaces (size_t len)
 {
-    char* res;
+    char* result;
     size_t cur;
     static char* cachep = NULL;
 
     if (cachep == NULL) 
-	res = cachep = spacedup (cur = len);
+	result = cachep = spacedup (cur = len);
     else if (len <= (cur = strlen(cachep))) 
-	res = cachep + cur - len;
+	result = cachep + cur - len;
     else {
 	free (cachep);
-	res = cachep = spacedup (len);
+	result = cachep = spacedup (len);
 	}
-    return res;
+    return result;
 }
 
 /* allocate a string of length `len' filled with spaces */
 static char* spacedup (size_t len)
 {
-    char* res;
-    res = malloc (len + 1);
-    memset (res, ' ', len);
-    res[len] = '\0';
-    return res;
+    char* result;
+    result = malloc (len + 1);
+    memset (result, ' ', len);
+    result[len] = '\0';
+    return result;
 }
 
 static const char* safe_string (const char* p)
@@ -1078,7 +1131,13 @@ static const char* safe_string (const char* p)
 }
 
 
-#ifdef TEST
+
+#ifdef TEST
+#include <stdio.h>
+#include <ssdef.h>
+#include <errno.h>
+
+#elif defined TEST1
 #include <stdio.h>
 #include <ssdef.h>
 #include <errno.h>

@@ -68,9 +68,9 @@ feature -- Basic operation
 			--                    parse has been completed; False to retain them.
 		local
 			l_error_handler: like error_handler
-			l_errors: LINKED_LIST [ERROR]
+			l_errors: LIST [ERROR]
 			l_error_index: INTEGER
-			l_warnings: LINKED_LIST [ERROR]
+			l_warnings: LIST [ERROR]
 			l_warning_index: INTEGER
 			retried: BOOLEAN
 		do
@@ -103,7 +103,7 @@ feature -- Basic operation
 							has_error := True
 							l_errors.go_i_th (l_error_index)
 							from until l_errors.count = l_error_index loop
-								l_errors.remove_right
+								l_errors.remove
 							end
 						end
 					end
@@ -112,7 +112,7 @@ feature -- Basic operation
 						if l_warnings.count > l_warning_index then
 							l_warnings.go_i_th (l_warning_index)
 							from until l_warnings.count = l_warning_index loop
-								l_warnings.remove_right
+								l_warnings.remove
 							end
 						end
 					end

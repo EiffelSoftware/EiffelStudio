@@ -808,7 +808,8 @@ feature {NONE} -- User interface elements
             -- Secondary right tool bar
         local
             l_cell: like internal_right_tool_bar_widget
-            l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
+            l_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+            l_padding: EV_CELL
         do
             l_cell := internal_right_tool_bar_widget
             if l_cell = Void then
@@ -822,6 +823,12 @@ feature {NONE} -- User interface elements
                     	Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
                     end
                     l_items.do_all (agent Result.extend)
+					if not l_items.is_empty and then attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.last as l_widget then
+							-- Need to added end padding because the widgets look too close to the window's border.
+						create l_padding
+						l_padding.set_minimum_width ({ES_UI_CONSTANTS}.frame_border)
+						Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_padding))
+					end
                     l_cell.put (Result)
                 end
             else

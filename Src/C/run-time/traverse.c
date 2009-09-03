@@ -443,6 +443,7 @@ rt_shared EIF_OBJECT map_next(void)
 	
 	item = (EIF_OBJECT *) map_stack.st_bot++;		/* Make a guess */
 	if (item >= (EIF_OBJECT *) map_stack.st_end) {	/* Bad guess (beyond chunk) */
+		RT_GET_CONTEXT
 		cur = map_stack.st_cur->sk_next;		/* Advance one chunk */
 
 		CHECK ("We should have a chunk", cur);
@@ -450,9 +451,11 @@ rt_shared EIF_OBJECT map_next(void)
 		map_stack.st_end = cur->sk_end;			/* Precompute end of chunk */
 		map_stack.st_bot = cur->sk_arena;		/* This is the new bottom */
 		item = (EIF_OBJECT *) map_stack.st_bot++;	/* Next item in stack */
+		SIGBLOCK;
 		eif_rt_xfree((char *) (map_stack.st_cur));				/* Free previous chunk */
 		map_stack.st_cur = cur;					/* It's the new first chunk */
 		map_stack.st_hd = cur;					/* In case of emergency */
+		SIGRESUME;
 	}
 
 	ENSURE ("Object found before end of stack", item != (EIF_OBJECT *) map_stack.st_top);

@@ -164,7 +164,10 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Is current type still valid for current system?
 		do
-			Result := associated_class /= Void and then system.class_type_of_id (type_id) /= Void
+			Result := associated_class /= Void and then
+				system.class_type_of_id (type_id) = Current and then
+				type.is_valid and then
+				type.is_valid_generic_derivation
 		end
 
 	is_modifiable: BOOLEAN

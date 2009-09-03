@@ -166,8 +166,8 @@ feature {NONE} -- Implementation
 				new_class.put_string (
 					"note%N%
 					%%Tdescription : %"" + system_name + " application root class%"%N%
-					%%Tdate        : %"$Date$%"%N%
-					%%Trevision    : %"$Revision$%"%N%
+					%%Tdate        : %"$"+ "Date" + "$%"%N%
+					%%Trevision    : %"$" + "Revision" + "$%"%N%
 					%%N%
 					%class%N%
 					%%T" + root_class_name + "%N%
@@ -184,6 +184,7 @@ feature {NONE} -- Implementation
 					%%T%T%T-- Run application.%N%
 					%%T%Tdo%N%
 					%%T%T%T--| Add your code here%N%
+					%%T%T%Tprint (%"Hello Eiffel World!%%N%")%N%
 					%%T%Tend%N%
 					%%Nend%
 					%%N")

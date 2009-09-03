@@ -5801,10 +5801,13 @@ rt_private EIF_TYPED_VALUE *stack_allocate(register int size)
 
 	size *= ITEM_SZ;
 	size += sizeof(*chunk);
+	SIGBLOCK;							/* Critical section */
 	chunk = (struct stochunk *) cmalloc(size);
+	SIGRESUME;
 	if (chunk == (struct stochunk *) 0)
 		return (EIF_TYPED_VALUE *) 0;		/* Malloc failed for some reason */
 
+	SIGBLOCK;							/* Critical section */
 	op_stack.st_hd = chunk;						/* New stack (head of list) */
 	op_stack.st_tl = chunk;						/* One chunk for now */
 	op_stack.st_cur = chunk;					/* Current chunk */
@@ -5815,6 +5818,7 @@ rt_private EIF_TYPED_VALUE *stack_allocate(register int size)
 		((char *) chunk + size);		/* First free location beyond stack */
 	chunk->sk_next = (struct stochunk *) 0;
 	chunk->sk_prev = (struct stochunk *) 0;
+	SIGRESUME;							/* End of critical section */
 
 	return arena;			/* Stack allocated */
 }

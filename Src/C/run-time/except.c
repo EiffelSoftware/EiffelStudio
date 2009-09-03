@@ -2,7 +2,7 @@
 	description: "Exception handling routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -3168,16 +3168,20 @@ rt_private struct ex_vect *stack_allocate(struct xstack *stk, int size)
 {
 	/* The stack 'stk' is created, with size 'size'. Return the arena value */
 
+	RT_GET_CONTEXT
 	struct ex_vect *arena;	/* Address for the arena */
 	struct stxchunk *chunk;	/* Address of the chunk */
 
 	size *= sizeof(struct ex_vect);
 	size += sizeof(*chunk);				/* Ensure arena is a correct multiple */
+	SIGBLOCK;							/* Critical section */
 	chunk = (struct stxchunk *) cmalloc(size);
+	SIGRESUME;							/* End of critical section */
 	if (chunk == (struct stxchunk *) 0) {
 		return (struct ex_vect *) 0;		/* Malloc failed for some reason */
 	}
 
+	SIGBLOCK;							/* Critical section */
 	stk->st_hd = chunk;						/* New stack (head of list) */
 	stk->st_tl = chunk;						/* One chunk for now */
 	stk->st_cur = chunk;					/* Current chunk */
@@ -3189,6 +3193,7 @@ rt_private struct ex_vect *stack_allocate(struct xstack *stk, int size)
 		((char *) chunk + size);		/* First free location beyond stack */
 	chunk->sk_next = (struct stxchunk *) 0;
 	chunk->sk_prev = (struct stxchunk *) 0;
+	SIGRESUME;							/* End of critical section */
 
 	return arena;			/* Stack allocated */
 }

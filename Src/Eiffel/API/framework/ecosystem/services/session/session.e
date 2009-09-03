@@ -304,7 +304,7 @@ feature -- Query
 				l_id := l_internal.dynamic_type (a_value)
 					-- Supporting basic types; {STRING_GENERAL}, reference types inheriting {SESSION_DATA_I} or other type wrapped in a {CELL} (for expanded)
 				Result := l_codes.has (l_id) or else
-					attached {STRING_GENERAL} a_value as l_string or else
+					attached {READABLE_STRING_GENERAL} a_value as l_string or else
 					attached {SESSION_DATA_I} a_value as l_session_data or else
 					({TUPLE}) #? a_value /= Void or else -- TUPLE cannot be used with explict attachment mark (6.1.7.1179)
 					attached {CELL [ANY]} a_value as l_cell or else

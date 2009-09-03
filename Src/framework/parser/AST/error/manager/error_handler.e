@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization
 		do
-			create error_list.make
-			create warning_list.make
+			create error_list.make (0)
+			create warning_list.make (0)
 		end
 
 feature -- Properties		
@@ -32,10 +32,10 @@ feature -- Properties
 	error_displayer: ERROR_DISPLAYER
 			-- Displays warning and error messages when they occur
 
-	error_list: LINKED_LIST [ERROR]
+	error_list: ARRAYED_LIST [ERROR]
 			-- Error list
 
-	warning_list: LINKED_LIST [ERROR]
+	warning_list: ARRAYED_LIST [ERROR]
 			-- Warning list
 
 	error_level: NATURAL

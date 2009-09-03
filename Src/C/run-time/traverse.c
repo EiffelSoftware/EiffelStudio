@@ -473,6 +473,7 @@ rt_shared void map_reset(int emergency)
 			  		/* Need to reset due to emergency (exception) */
 {
 	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	struct stchunk *next;	/* Next chunk in stack list */
 	struct stchunk *cur;	/* Current chunk in stack list */
 
@@ -483,6 +484,7 @@ rt_shared void map_reset(int emergency)
 	 * (and last) chunk.
 	 */
 
+	SIGBLOCK;
 	if (emergency) {
 		for (next = map_stack.st_hd; next != NULL; /*empty */) {
 			cur = next;						/* Current chunk to be freed */
@@ -497,6 +499,7 @@ rt_shared void map_reset(int emergency)
 	 * construction (obj_nb exactly, even if we were interrupted by an
 	 * exception in the middle of the traversal...
 	 */
+	SIGRESUME;
 
 #ifdef ISE_GC
 	epop(&hec_stack, obj_nb);		/* Remove stacked EIF_OBJECT pointers */

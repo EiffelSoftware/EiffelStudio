@@ -21,7 +21,7 @@ create
 	make
 
 convert
-	widget: {EV_WIDGET}
+	container_widget: {EV_WIDGET}
 
 feature {NONE} -- Initialization
 
@@ -122,6 +122,7 @@ feature {NONE} -- Action handlers
 					l_locale := (create {SHARED_LOCALE}).locale_manager.locale (create {I18N_LOCALE_ID}.make_from_string (l_id))
 					if l_locale.info.code_page /= Void then
 						create encoding.make (l_locale.info.code_page)
+						editor.set_encoding (encoding)
 					end
 				end
 			end
@@ -177,7 +178,7 @@ feature {NONE} -- Factory
 				-- Locale label
 			create l_hbox
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-			create l_label.make_with_text (locale_formatter.translation (lb_locale))
+			create l_label.make_with_text (locale_formatter.translation (lb_locale) + ":")
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
 
@@ -195,9 +196,9 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	tt_locale: STRING = "Select an alternative locale for the output."
+	tt_locale: STRING = "Select an alternative locale for the output"
 
-	lb_locale: STRING = "Locale:"
+	lb_locale: STRING = "Locale"
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

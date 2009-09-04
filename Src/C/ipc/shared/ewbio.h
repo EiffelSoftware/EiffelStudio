@@ -42,7 +42,7 @@
 
 /* The following two file descriptors, also known as ewbin and ewbout are
  * arbitrary entries in the file table which are expected to be pre-set when
- * the aplication wants to speak to its parent.
+ * the application wants to speak to its parent.
  * It is REALLY important to have the file number for ewbout lesser than the
  * file number used by ewbin, due to the way pipes are opened in the parent.
  * NOTE: do not use low-level numbers like 4/3, since some shells use those

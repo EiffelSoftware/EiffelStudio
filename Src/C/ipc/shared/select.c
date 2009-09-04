@@ -554,28 +554,23 @@ void set_callback (STREAM *h, STREAM_FN call)
 {
 	int i;
 
-	for (i = 0; i < nfds; i++)
-		if (readfd(callback_handles [i]) == readfd(h))
-			{
-			if (call == NULL)
-				{
-				if (nfds > 1)
-					{
+	for (i = 0; i < nfds; i++) {
+		if (readfd(callback_handles [i]) == readfd(h)) {
+			if (call == NULL) {
+				if (nfds > 1) {
 					callback_handles [i] = callback_handles [nfds-1];
 					callback_array [i] = callback_array [nfds-1];
-					}
-				else
-					{
+				} else {
 					callback_handles [i] = NULL;
 					callback_array [i] = NULL;
-					}
-				nfds --;
 				}
-			else
+				nfds --;
+			} else {
 				callback_array [i] = call;
-
-			return;
 			}
+			return;
+		}
+	}
 	callback_array [nfds] = call;
 	callback_handles [nfds] = h;
 	nfds ++;
@@ -606,13 +601,14 @@ void unset_multiple_mask (STREAM *h, HANDLE mask[NOFILE])
 {
 	int i, j;
 
-	for (i = 0; mask[i] != 0 && i < nfds; i++)
-		if (mask [i] == readev(h))
-			{
-			for (j = i+1; mask[j] != 0 && j < NOFILE-1; j++)
+	for (i = 0; mask[i] != 0 && i < nfds; i++) {
+		if (mask [i] == readev(h)) {
+			for (j = i+1; mask[j] != 0 && j < NOFILE-1; j++) {
 				mask [j-1] = mask[j];
+			}
 			mask [j - 1] = 0;
 			break;
-			}
+		}
+	}
 }
 #endif

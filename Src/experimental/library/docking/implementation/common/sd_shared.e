@@ -617,7 +617,8 @@ feature -- Constants
 		end
 
 feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_SIZES,
-		SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL, SD_WIDGET_FACTORY} -- Implementation
+		SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL, SD_WIDGET_FACTORY,
+		SD_TITLE_BAR_TITLE, SD_NOTEBOOK_TAB} -- Implementation
 
 	set_tool_bar_docker_mediator (a_mediator: detachable SD_TOOL_BAR_DOCKER_MEDIATOR)
 			-- Set tool bar docker mediator singleton.
@@ -668,6 +669,9 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 		ensure
 			not_void: Result /= Void
 		end
+
+	drag_offset: INTEGER is 1
+			-- How many pixels user's pointer moved before calling drag actions
 
 feature {NONE} -- Implementation
 

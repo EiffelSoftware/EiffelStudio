@@ -19,6 +19,7 @@ feature -- Creation
 			new_text_non_void: new_text /= Void;
 			not_new_text_empty: not new_text.is_empty
 		do
+			make_empty
 			set_pattern (new_pattern);
 			set_text (new_text);
 		ensure
@@ -105,6 +106,10 @@ feature {NONE} -- Attributes
 
 	index: INTEGER;
 			-- Current location in `text'
+
+invariant
+	text_attached: text /= Void
+	pattern_attached: pattern /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

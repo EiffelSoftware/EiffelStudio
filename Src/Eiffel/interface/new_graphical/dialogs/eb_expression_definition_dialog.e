@@ -536,7 +536,7 @@ feature {NONE} -- Event handling
 				l_class_name.left_adjust
 				l_class_name.right_adjust
 				l_class_name.to_upper
-				if is_valid_class_name (l_class_name) then
+				if is_valid_class_name (l_class_name) and eiffel_project.initialized then
 					l_list := eiffel_universe.compiled_classes_with_name (l_class_name)
 					if l_list /= Void and then not l_list.is_empty then
 						l_class_c := l_list.first.compiled_class
@@ -573,7 +573,7 @@ feature {NONE} -- Event handling
 					t.left_adjust
 					t.right_adjust
 					t.to_upper
-					if is_valid_class_name (t) then
+					if is_valid_class_name (t) and eiffel_project.initialized then
 							--| First find the class given in `class_field'.
 						cl_i := Eiffel_universe.classes_with_name (t)
 						if cl_i.is_empty then
@@ -822,7 +822,7 @@ invariant
 	dialog_not_void: dialog /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -835,22 +835,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_EXPRESSION_DEFINITION_DIALOG

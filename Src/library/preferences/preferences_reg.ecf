@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="preferences" uuid="9647AA82-399B-486F-9E41-5373590095B7" library_target="preferences">
-	<target name="preferences">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="preferences_reg" uuid="9647AA82-399B-486F-9E41-5373590095B7" library_target="preferences_reg">
+	<target name="preferences_reg">
 		<description>Preferences library.
       Copyright (c) 1984-2006, Eiffel Software and others.
       Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
@@ -12,19 +12,23 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
-		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf">
+		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>
 			</condition>
 		</library>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>
 			</condition>
 		</library>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<custom name="batch_preferences" excluded_value="true"/>
+			</condition>
+		</library>
 		<cluster name="interface" location="interface\" recursive="true">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>

@@ -14,7 +14,6 @@ class KMP_WILD
 inherit
 	KMP_MATCHER
 		redefine
-			make,
 			make_empty,
 			found_at,
 			set_pattern,
@@ -29,21 +28,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (new_pattern, new_text: STRING)
-			-- Create a matcher to search pattern
-			-- `new_pattern' in text `new_text'
-		do
-			character_representation := '?';
-			string_representation := '*'
-			Precursor {KMP_MATCHER} (new_pattern, new_text);
-		end
-
 	make_empty
 			-- Create a matcher to search for a pattern
 			-- in a text. Initialize it later.
 		do
-			character_representation := '?'
+			character_representation := '?';
 			string_representation := '*'
+			create string_list.make
 			Precursor {KMP_MATCHER}
 		end
 
@@ -117,39 +108,44 @@ feature -- Search
 	pattern_matches: BOOLEAN
 			-- does `text' exactly match `pattern' ?
 		local
-			lsi, for_test: STRING;
+			lsi: STRING;
 			as_star: BOOLEAN
 			offset: INTEGER
-			l_string_list: like string_list
+			ls: like string_list
+			txt: like text
+			c: CHARACTER
 		do
 			if
-				search_for_pattern
-					and then
+				search_for_pattern and then
 				(found_at = 1 or else pattern @ 1 = string_representation)
 			then
+				txt := text
+				ls := string_list
 				from
-					l_string_list := string_list
-					check l_string_list /= Void end -- Implied by postcondition of `search_for_pattern'
-					l_string_list.finish
-					offset := text.count
+					ls.finish
+					offset := txt.count
 					Result := True
 				until
-					l_string_list.before or as_star or not Result
+					ls.before or as_star or not Result
 				loop
-					lsi := l_string_list.item
-					if lsi.is_equal (string_representation.out) then
+					lsi := ls.item
+					check 
+							-- Implied by invariant
+						lsi_not_empty: not lsi.is_empty 
+					end
+					c := lsi @ 1
+					if c = string_representation then
 						as_star := True
-					elseif lsi.is_equal (character_representation.out) then
+					elseif c = character_representation then
 						offset := offset - 1
 					else
-						for_test := text.substring (offset - lsi.count + 1, offset)
-						Result := for_test.is_equal (lsi)
+						Result := imp_same_substring (txt, offset - lsi.count + 1, offset, lsi)
 						offset := offset - lsi.count
 					end
-					l_string_list.back
+					ls.back
 				end
 				if not as_star then
-					Result := found_pattern_length = text.count
+					Result := found_pattern_length = txt.count
 				end
 			end
 		end
@@ -158,18 +154,19 @@ feature -- Search
 			-- Search in the text to find the very next
 			-- occurrence of `pattern'
 		local
-			ls: detachable LIST [STRING];
+			ls: like string_list
 			lsi: STRING;
 			fa, i, tc, pc, tcmpc, i_before_loop: INTEGER;
 			sr, cr: STRING;
 			kmp_matcher: KMP_MATCHER
 			str_without_wild: STRING
 			is_star: BOOLEAN
-			old_pattern, old_text: detachable STRING
+			old_pattern: like pattern
+			old_text: like text
 		do
+			old_text := text
+			old_pattern := pattern
 			if is_not_case_sensitive then
-				old_text := text
-				old_pattern := pattern
 				pattern := pattern.as_lower
 				text := text.as_lower
 			end
@@ -182,7 +179,7 @@ feature -- Search
 			pc := pattern.count;
 			tcmpc := tc - pc;
 			if tcmpc = -1 and then pattern.item (pc) = string_representation then
-				Result := text.is_equal (pattern.substring (1, tc))
+				Result := imp_same_substring (pattern, 1, tc, text)
 				if Result then
 					fa := 1
 				end
@@ -205,7 +202,6 @@ feature -- Search
 					i_before_loop := i
 					from
 						ls := string_list
-						check ls /= Void end -- Implied by postcondition of `init_list'
 						ls.start
 						Result := True
 						fa := -1
@@ -254,20 +250,16 @@ feature -- Search
 			end
 			found := Result
 			if is_not_case_sensitive then
-				check old_text /= Void end -- Implied by `is_not_case_sensitive'
-				check old_pattern /= Void end -- Implied by `is_not_case_sensitive'
 				text := old_text
 				pattern := old_pattern
 			end
-		ensure then
-			created: string_list /= Void
 		end
 
 	find_matching_indices
 			-- All indices in `text' which matches the
 			-- very next occurrence of `pattern'
 		local
-			ls: detachable LIST [STRING]
+			ls: like string_list
 			lsi: STRING;
 			fa, i, tc, pc, tcmpc: INTEGER;
 			sr, cr: STRING;
@@ -276,18 +268,21 @@ feature -- Search
 			str_without_wild: STRING
 			is_star: BOOLEAN
 			offset, next_i: INTEGER
-			old_pattern, old_text: detachable STRING
+			old_pattern: like pattern
+			old_text: like text
 			l_indices: like matching_indices
 			l_lengths: like lengths
 		do
+			old_text := text
+			old_pattern := pattern
 			if is_not_case_sensitive then
-				old_text := text
-				old_pattern := pattern
 				pattern := pattern.as_lower
 				text := text.as_lower
 			end
 			init_list
-			create {ARRAYED_LIST [INTEGER]} matching_indices.make (10)
+			create {ARRAYED_LIST [INTEGER]} l_indices.make (10)
+			matching_indices := l_indices
+
 			create {ARRAYED_LIST [INTEGER]} l_lengths.make (10)
 			lengths := l_lengths
 			create sr.make (1);
@@ -313,7 +308,6 @@ feature -- Search
 					loop
 						from
 							ls := string_list
-							check ls /= Void end -- Implied by postcondition of `init_list'
 							ls.start
 							found_one := True
 							fa := -1
@@ -365,8 +359,6 @@ feature -- Search
 							found_one := found_one and then (i <= tc + 1 or else ls.after)
 						end
 						if found_one then
-							l_indices := matching_indices
-							check l_indices /= Void end -- Implied by postcondition of `init_list'
 							l_indices.extend (fa)
 							l_lengths.extend (i- fa)
 							i := fa + 1
@@ -378,8 +370,6 @@ feature -- Search
 				end
 			end
 			if is_not_case_sensitive then
-				check old_text /= Void end -- Implied by `is_not_case_sensitive'
-				check old_pattern /= Void end -- Implied by `is_not_case_sensitive'
 				text := old_text
 				pattern := old_pattern
 			end
@@ -393,15 +383,16 @@ feature {NONE} -- Implementation
 			-- Initializes the list for the wild carded
 			-- pattern
 		local
+			ls: like string_list
 			str: STRING;
 			i, pc: INTEGER;
 			pa: SPECIAL [CHARACTER];
 			sr, cr: STRING
-			l_string_list: like string_list
+			c: CHARACTER
 		do
 			from
-				create l_string_list.make;
-				string_list := l_string_list;
+				create ls.make;
+				string_list := ls
 				create str.make (0);
 				create sr.make (1);
 				sr.extend (string_representation);
@@ -413,17 +404,18 @@ feature {NONE} -- Implementation
 			until
 				i = pc
 			loop
-				if pa.item (i) = string_representation then
+				c := pa.item (i) 
+				if c = string_representation then
 					if str.count > 0 then
-						l_string_list.extend (str);
+						ls.extend (str);
 					end
-					l_string_list.extend (sr);
+					ls.extend (sr);
 					create str.make (0);
-				elseif pa.item (i) = character_representation then
+				elseif c = character_representation then
 					if str.count > 0 then
-						l_string_list.extend (str);
+						ls.extend (str);
 					end
-					l_string_list.extend (cr);
+					ls.extend (cr);
 					create str.make (0);
 				else
 					str.extend (pa.item (i));
@@ -431,33 +423,39 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end;
 			if str.count > 0 then
-				l_string_list.extend (str)
+				ls.extend (str)
 			end
-		ensure
-			created: string_list /= Void
 		end;
 
 	last_string_matches: BOOLEAN
 		local
 			i: INTEGER
+			ls: like string_list
+			lsi: STRING
+			txt: like text
+			txt_count: INTEGER
 		do
-			if attached string_list as l_string_list and then not l_string_list.is_empty then
-				if l_string_list.last.is_equal (string_representation.out) then
+			ls := string_list
+			if not ls.is_empty then
+				if ls.last.item (1) = string_representation then
 					Result := True
 				else
+					txt := text
+					txt_count := txt.count
 					from
 						i := 0
-						l_string_list.finish
+						ls.finish
 					until
-						l_string_list.before or else not l_string_list.item.is_equal (character_representation.out)
+						ls.before or else ls.item @ 1 /= character_representation
 					loop
 						i := i + 1
-						l_string_list.back
+						ls.back
 					end
-					if l_string_list.before or else l_string_list.item.is_equal (string_representation.out) then
+					lsi := ls.item
+					if ls.before or else lsi @ 1 = string_representation then
 						Result := True
 					else
-						Result := text.substring (text.count - l_string_list.item.count - i + 1, text.count - i).is_equal (l_string_list.item)
+						Result := imp_same_substring (txt, txt_count - lsi.count - i + 1, txt_count - i, lsi)
 					end
 				end
  			end
@@ -465,13 +463,52 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	string_list: detachable LINKED_LIST [STRING]
+	string_list: LINKED_LIST [STRING]
 			-- List of strings
 			--| Parts not containing `string_representation' and
 			--| `character_representation' are held as items
 
+feature {NONE} -- Implementation
+
+	imp_same_substring (a_text: STRING; a_text_start, a_text_end: INTEGER; a_string: STRING): BOOLEAN
+			-- Optimized code for `a_text.substring (a_text_start, a_text_end).is_equal (a_string)' ?
+		require
+			a_text_not_empty: a_text /= Void 
+			a_string_attached: a_string /= Void
+		local
+			i, j, m, n: INTEGER
+		do
+			m := a_text.count
+			n := a_string.count
+			if m >= n then
+				if 
+					1 <= a_text_start and
+					a_text_start <= a_text_end and
+					a_text_end <= m
+				then
+					from
+						i := 1
+						j := a_text_start
+						Result := a_text_end - a_text_start + 1 = n
+					until
+						not Result or i > n or j > a_text_end
+					loop
+						Result := a_text.item (j) = a_string.item (i)
+						i := i + 1
+						j := j + 1
+					end
+				else
+					Result := a_string.is_empty
+				end
+			end
+		ensure
+			result_correct: a_text.substring (a_text_start, a_text_end).is_equal (a_string)
+		end
+
 invariant
 
+	attached_string_list: string_list /= Void
+	string_list_contains_non_empty_item: string_list.for_all (agent (s: STRING): BOOLEAN do Result := s /= Void and then not s.is_empty end)
 	different_character_and_string_representation: string_representation /= character_representation
 
 note

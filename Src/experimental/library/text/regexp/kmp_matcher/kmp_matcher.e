@@ -9,9 +9,21 @@ class KMP_MATCHER
 
 inherit
 	MATCHER
+		redefine
+			make_empty
+		end
 
 create
 	make, make_empty
+
+feature -- Creation
+
+	make_empty
+			-- <Precursor>
+		do
+			create table.make_filled (0, 0) -- Empty
+			Precursor {MATCHER}
+		end
 
 feature -- Access
 
@@ -76,24 +88,22 @@ feature -- Search
 			-- occurrence of `pattern'.
 		local
 			text_count, pattern_count, i: INTEGER
-			old_pattern, old_text: detachable STRING
+			old_pattern: like pattern
+			old_text: like text
 			text_area, pattern_area: SPECIAL [CHARACTER]
-			table_area: SPECIAL [INTEGER]
+			l_table: SPECIAL [INTEGER]
 			j: INTEGER
-			l_table: like table
 		do
+			old_text := text
+			old_pattern := pattern
 			from
 				if is_not_case_sensitive then
-					old_text := text
-					old_pattern := pattern
 					pattern := pattern.as_lower
 					text := text.as_lower
 				end
 				init_arrays
 				pattern_area := pattern.area
 				l_table := table
-				check l_table /= Void end -- Implied by postcondition of `l_table'
-				table_area := l_table.area
 				text_area := text.area
 				pattern_count := pattern.count
 				text_count := text.count
@@ -110,13 +120,11 @@ feature -- Search
 						index := i
 					end
 				else
-					j := table_area.item (j)
+					j := l_table.item (j)
 				end
 			end
 			found := Result
 			if is_not_case_sensitive then
-				check old_text /= Void end -- Implied by `is_not_case_sensitive'
-				check old_pattern /= Void end -- Implied by `is_not_case_sensitive'
 				text := old_text
 				pattern := old_pattern
 			end
@@ -128,17 +136,17 @@ feature -- Search
 		local
 			text_count, pattern_count, i: INTEGER
 			text_area, pattern_area: SPECIAL [CHARACTER]
-			table_area: SPECIAL [INTEGER]
-			old_pattern, old_text: detachable STRING
+			l_table: SPECIAL [INTEGER]
+			old_pattern: like pattern
+			old_text: like text
 			j: INTEGER
 			finished: BOOLEAN
 			t: ARRAYED_LIST [INTEGER]
-			l_table: like table
 		do
+			old_text := text
+			old_pattern := pattern
 			from
 				if is_not_case_sensitive then
-					old_text := text
-					old_pattern := pattern
 					pattern := pattern.as_lower
 					text := text.as_lower
 				end
@@ -147,8 +155,6 @@ feature -- Search
 				pattern_area := pattern.area
 				pattern_count := pattern.count
 				l_table := table
-				check l_table /= Void end -- Implied by postcondition of `init_arrays'
-				table_area := l_table.area
 				text_area := text.area
 				text_count := text.count
 				i := index - 1
@@ -161,16 +167,14 @@ feature -- Search
 					j := j + 1
 					if j >= pattern_count then
 						t.extend (i - pattern_count + 1)
-						j := table_area.item (j)
+						j := l_table.item (j)
 					end
 				else
-					j := table_area.item (j)
+					j := l_table.item (j)
 				end
 			end
 			matching_indices := t
 			if is_not_case_sensitive then
-				check old_text /= Void end -- Implied by `is_not_case_sensitive'
-				check old_pattern /= Void end -- Implied by `is_not_case_sensitive'
 				text := old_text
 				pattern := old_pattern
 			end
@@ -184,21 +188,19 @@ feature {NONE} -- Initialization
 	init_arrays
 			-- Initializes arrays for pattern.
 		local
-			table_area: SPECIAL [INTEGER]
+			l_table: SPECIAL [INTEGER]
 			pattern_area: SPECIAL [CHARACTER]
 			pattern_count: INTEGER
 			l,k: INTEGER
-			l_table: like table
 		do
 			from
 				pattern_area := pattern.area
 				pattern_count := pattern.count
-				create l_table.make (0, pattern_count)
-				table := l_table
-				table_area := l_table.area
+				table := table.aliased_resized_area_with_default (0, pattern_count)
+				l_table := table
 				l := 0
 				k := -1
-				table_area.put (-1, 0)
+				l_table.put (-1, 0)
 			until
 				l >= pattern_count
 			loop
@@ -206,21 +208,19 @@ feature {NONE} -- Initialization
 					l := l + 1
 					k := k + 1
 					if (pattern_area.item (k) = pattern_area.item (l)) then
-						table_area.put (table_area.item (k), l)
+						l_table.put (l_table.item (k), l)
 					else
-						table_area.put (k, l)
+						l_table.put (k, l)
 					end
 				else
-					k := table_area.item (k)
+					k := l_table.item (k)
 				end
 			end
-		ensure
-			created: table /= Void
-		end;
+		end
 
 feature {NONE} -- Attributes
 
-	table: detachable ARRAY [INTEGER];
+	table: SPECIAL [INTEGER];
 		-- Pattern automaton
 
 note

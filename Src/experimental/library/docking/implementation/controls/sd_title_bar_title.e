@@ -30,9 +30,9 @@ feature {NONE} -- Initlization
 			pointer_leave_actions.extend (agent on_pointer_leave)
 			pointer_motion_actions.extend (agent on_pointer_motion)
 
-			-- Because on Linux, pointer leave actions will not be called after pointer double pressed, so we clear the flag manually.
+			-- Because on Linux, pointer leave actions will not be called after pointer double pressed, so we clear the data manually.
 			pointer_double_press_actions.force_extend (agent do
-																pressed := False
+																first_press_position := Void
 															end)
 		end
 
@@ -146,38 +146,46 @@ feature {NONE} -- Agents
 			-- Handle pointer press
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
-				pressed := True
+				create first_press_position.make_with_position (a_screen_x, a_screen_y)
 			elseif a_button = {EV_POINTER_CONSTANTS}.right then
 				show_menu (True, a_x, a_y)
 			end
 		ensure
-			set: a_button = {EV_POINTER_CONSTANTS}.left implies pressed = True
+			set: a_button = {EV_POINTER_CONSTANTS}.left implies attached first_press_position
 		end
 
 	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle pointer release
 		do
-			pressed := False
+			first_press_position := Void
 
 			if a_button = {EV_POINTER_CONSTANTS}.right then
 				show_menu (False, a_x, a_y)
 			end
 		ensure
-			set: pressed = False
+			set: first_press_position = Void
 		end
 
 	on_pointer_leave
 			-- Hanle pointer leave
 		do
-			pressed := False
+			first_press_position := Void
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Handle pointer motion
+		local
+			l_offset: INTEGER
 		do
-			if pressed then
-				drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
-				pressed := False
+			if attached first_press_position as l_position then
+				l_offset := internal_shared.drag_offset
+				-- Only after user pointer moved `l_offset' pixels, then start calling `drag_actions'.
+				-- Otherwise, it's too sensitive. See bug#13038
+				if (a_screen_x < l_position.x - l_offset or a_screen_x > l_position.x + l_offset) and
+					(a_screen_y < l_position.y - l_offset or a_screen_y > l_position.y + l_offset) then
+					drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
+					first_press_position := Void
+				end
 			end
 		end
 
@@ -198,8 +206,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pressed: BOOLEAN
-			-- Is pointer button pressed?
+	first_press_position: detachable EV_COORDINATE
+			-- Is pointer button pressed? If yes, the value means the screen position of first pointer press
+			-- Otherwise, the value is void
 			-- This flag used for judging whether to call `drag_actions'
 
 	offset_x: INTEGER = 4
@@ -267,14 +276,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

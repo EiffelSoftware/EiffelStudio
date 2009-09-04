@@ -70,7 +70,7 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	setter: SD_SYSTEM_SETTER
 			-- System special handler
 		once
@@ -587,7 +587,8 @@ feature -- Constants
 		end
 
 feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_SIZES,
-		SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL, SD_WIDGET_FACTORY} -- Implementation
+		SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL, SD_WIDGET_FACTORY,
+		SD_TITLE_BAR_TITLE, SD_NOTEBOOK_TAB} -- Implementation
 
 	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR)
 			-- Set tool bar docker mediator singleton.
@@ -638,6 +639,9 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 		ensure
 			not_void: Result /= Void
 		end
+
+	drag_offset: INTEGER is 1
+			-- How many pixels user's pointer moved before calling drag actions
 
 feature {NONE} -- Implementation
 
@@ -763,14 +767,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

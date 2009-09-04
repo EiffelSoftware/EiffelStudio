@@ -117,10 +117,11 @@ feature -- Command
 
 	clear_pressed_flag
 			-- Set `is_pointer_pressed' to False
+			-- Clear `first_press_position' data
 		require
 			not_destroyed: not is_destroyed
 		do
-			is_pointer_pressed := False
+			first_press_position := Void
 		end
 
 	hide
@@ -185,7 +186,10 @@ feature -- Query
 			-- If pointer in close button area?
 
 	is_pointer_pressed: BOOLEAN
-			-- If pointer button pressed?
+			-- Is pointer button pressed?
+		do
+			Result := attached first_press_position
+		end
 
 	x: INTEGER
 			-- X position relative to parent box
@@ -406,20 +410,28 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			l_has_capture: BOOLEAN
 			l_drawer: like internal_tab_drawer
 			l_in_close_button: BOOLEAN
+			l_offset: INTEGER
 		do
-			if is_pointer_pressed then
+			if attached first_press_position as l_position then
 				-- Don't start drag in close button area
 				if is_draw_top_tab and then internal_tab_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y) then
 					l_in_close_button := True
 				end
 				if not l_in_close_button then
-					is_pointer_pressed := False
+					first_press_position := Void
 					l_has_capture := attached_parent.has_capture
 					attached_parent.disable_capture (Current)
 
 					-- We must check if really have vision2 capture, because capture maybe interrupted by some operations like creating a EV_DIALOG.
 					if l_has_capture then
-						drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+						l_offset := internal_shared.drag_offset
+						-- Only after user pointer moved `l_offset' pixels, then start calling `drag_actions'.
+						-- Otherwise, it's too sensitive. See bug#13038
+						if (a_screen_x < l_position.x - l_offset or a_screen_x > l_position.x + l_offset) and
+							(a_screen_y < l_position.y - l_offset or a_screen_y > l_position.y + l_offset) then
+							drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+							first_press_position := Void
+						end
 					end
 				end
 			else
@@ -476,7 +488,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			inspect
 				a_button
 			when {EV_POINTER_CONSTANTS}.left then
-				is_pointer_pressed := True
+				create first_press_position.make_with_position (a_screen_x, a_screen_y)
 
 				l_drawer := internal_tab_drawer
 				if
@@ -511,7 +523,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 		local
 			l_drawer: like internal_tab_drawer
 		do
-			is_pointer_pressed := False
+			first_press_position := Void
 			attached_parent.disable_capture (Current)
 			l_drawer := internal_tab_drawer
 			if a_button = {EV_POINTER_CONSTANTS}.right then
@@ -651,6 +663,10 @@ feature {NONE}  -- Implementation functions
 
 feature {NONE}  -- Implementation attributes
 
+	first_press_position: detachable EV_COORDINATE
+			-- Is pointer button pressed? If yes, the value means the screen position of first pointer press
+			-- Otherwise, the value is void
+
 	focus_rect_padding: INTEGER = 2
 			-- Padding with of focus rectangle
 
@@ -718,14 +734,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

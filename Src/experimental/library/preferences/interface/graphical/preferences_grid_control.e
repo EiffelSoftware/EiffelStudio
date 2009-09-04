@@ -67,11 +67,15 @@ feature {NONE} -- Initialization
 			create filter_box
 			create lab.make_with_text (l_filter)
 			create filter_text_box
+			create filter_value_check_box.make_with_text (l_filter_value)
 			create tb
 			create view_toggle_button.make_with_text (l_flat_view)
 			filter_box.extend (lab)
 			filter_box.disable_item_expand (lab)
 			filter_box.extend (filter_text_box)
+			filter_box.extend (filter_value_check_box)
+			filter_box.disable_item_expand (filter_value_check_box)
+			filter_box.set_padding_width (small_padding_size)
 			hb.extend (filter_box)
 			tb.extend (view_toggle_button)
 			hb.extend (tb)
@@ -186,6 +190,7 @@ feature {NONE} -- Initialization
 
 				--| Filter
 			filter_text_box.change_actions.extend (agent request_update_matches)
+			filter_value_check_box.select_actions.extend (agent request_update_matches)
 
 			init_shortcuts
 		end
@@ -228,6 +233,7 @@ feature -- Access
 	grid_container: EV_VERTICAL_BOX
 	status_label: EV_LABEL
 	filter_text_box: EV_TEXT_FIELD
+	filter_value_check_box: EV_CHECK_BUTTON
 
 feature -- Obsolete
 
@@ -235,7 +241,7 @@ feature -- Obsolete
 			obsolete "[090514] do not use, this had no effect at all, so this was removed"
 		do
 		end
-		
+
 feature -- Status Setting
 
 	set_parent_window (p: like parent_window)
@@ -696,12 +702,16 @@ feature {NONE} -- Implementation
 	build_preference_name_to_display (a_pref: PREFERENCE): STRING_32
 		do
 			Result := a_pref.name
+		ensure
+			result_attached: Result /= Void
 		end
 
 	build_full_name_to_display (a_pref_name: STRING): STRING_32
 			-- Name to show on display for a preference name
 		do
 			Result := a_pref_name.as_string_32
+		ensure
+			result_attached: Result /= Void
 		end
 
 	build_structured
@@ -1430,12 +1440,13 @@ feature {NONE} -- Filtering
 		require
 			in_flat_mode: not grid.is_tree_enabled
 		local
-			l_match_text: STRING_32
+			s, l_match_text: STRING
 			s32: STRING_32
-
+			l_matched: BOOLEAN
 			l_preference: PREFERENCE
 			l_prefs: LIST [PREFERENCE]
-			l_filter_engine: detachable LX_DFA_WILDCARD
+			l_filter_engine: detachable KMP_WILD
+			l_filter_also_value: BOOLEAN
 			l_matches: like matches
 		do
 			status_label.set_text (l_updating_the_view)
@@ -1444,39 +1455,46 @@ feature {NONE} -- Filtering
 			matches := Void
 			if not grid.is_tree_enabled and not update_matches_requested then
 				l_prefs := preferences.preferences.linear_representation
-				l_match_text := filter_text_box.text
+				l_match_text := filter_text_box.text.as_string_8  --| Keep only CHARACTER_8 values
+				l_filter_also_value := filter_value_check_box.is_selected
 				if l_match_text.is_empty then
 					matches := l_prefs
 				else
 					create {ARRAYED_LIST [PREFERENCE]} l_matches.make (l_prefs.count)
 					matches := l_matches
 					from
-						l_match_text := l_match_text.as_string_8
 						if l_match_text.item (1) /= '*' then
 							l_match_text.prepend_character ('*')
 						end
 						if l_match_text.item (l_match_text.count) /= '*' then
 							l_match_text.append_character ('*')
 						end
-						create l_filter_engine.compile_case_insensitive (l_match_text)
-						if not l_filter_engine.is_compiled then
-							l_filter_engine := Void
-						end
+						create l_filter_engine.make_empty
+						l_filter_engine.set_pattern (l_match_text)
+						l_filter_engine.disable_case_sensitive
 						l_prefs.start
 					until
 						l_prefs.after
 					loop
 						l_preference := l_prefs.item
 						s32 := build_preference_name_to_display (l_preference)
-						if
-							s32 /= Void
-							and then not s32.is_empty
-							and l_filter_engine /= Void
-						then
-							if l_filter_engine.recognizes (s32.as_string_8) then
-								l_matches.extend (l_preference)
+						l_matched := False
+						if l_filter_engine /= Void then
+							if not s32.is_empty	then
+								l_filter_engine.set_text (s32.as_string_8)
+								l_matched := l_filter_engine.pattern_matches
+							end
+							if not l_matched and l_filter_also_value then
+								s := l_preference.string_value
+								if not s.is_empty then
+									l_filter_engine.set_text (s)
+									l_matched := l_filter_engine.pattern_matches
+								end
 							end
 						else
+							l_matched := True
+						end
+						if l_matched then
 							l_matches.extend (l_preference)
 						end
 						l_prefs.forth

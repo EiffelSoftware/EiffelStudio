@@ -263,12 +263,13 @@ feature {NONE} -- Implementation
 
 	build_preference_name_to_display (a_pref: PREFERENCE): STRING_32
 		local
-			l_sp: STRING_PREFERENCE
 			l_short_name: STRING_GENERAL
 		do
 			if a_pref.name /= Void then
-				l_sp ?= a_pref
-				if l_sp /= Void and then preferences.debug_tool_data.grid_column_layout_preferences.has_item (l_sp) then
+				if
+					attached {STRING_PREFERENCE} a_pref as l_sp  and then
+					preferences.debug_tool_data.grid_column_layout_preferences.has_item (l_sp)
+				then
 						-- Try to translate dynamically built preference "debugger.grid_column_layout_".
 					l_short_name := names.l_grid_column_layout
 					l_short_name := l_short_name.as_string_32 + a_pref.name.substring (a_pref.name.last_index_of ('_', a_pref.name.count) + 1, a_pref.name.count)
@@ -285,7 +286,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				create {STRING_32}Result.make_empty
+				create Result.make_empty
 			end
 		end
 

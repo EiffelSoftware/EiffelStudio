@@ -177,28 +177,25 @@ feature -- Hanlde pointer events
 		end
 
 	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER)
-			-- Stop is_tracing mouse positions
-		require
-			is_tracing: is_tracing
+			-- Stop tracing mouse positions
 		local
 			changed: BOOLEAN
 			l_floating_zone: detachable SD_FLOATING_ZONE
-			l_hot_zones: like hot_zones
 		do
 			debug ("docking")
 				print ("%NSD_DOCKER_MEDIATOR end_tracing_pointer a_screen_x, a_screen_y: " + a_screen_x.out + " " + a_screen_y.out)
 			end
 			clear_up
 
-			from
-				l_hot_zones := hot_zones
-				check l_hot_zones /= Void end -- Implied by precondition `is_tracing'
-				l_hot_zones.start
-			until
-				l_hot_zones.after or changed
-			loop
-				changed := l_hot_zones.item.apply_change (a_screen_x, a_screen_y)
-				l_hot_zones.forth
+			if attached hot_zones as l_hot_zones then
+				from
+					l_hot_zones.start
+				until
+					l_hot_zones.after or changed
+				loop
+					changed := l_hot_zones.item.apply_change (a_screen_x, a_screen_y)
+					l_hot_zones.forth
+				end
 			end
 
 			l_floating_zone ?= caller
@@ -631,14 +628,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

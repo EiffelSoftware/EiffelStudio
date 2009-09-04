@@ -127,7 +127,7 @@ feature -- Basic operations
 				if raise_events or else a_session.value_changed_event.is_suspended then
 					if a_stone /= Void and then attached {TYPE [STONE]} internal.type_of (a_stone) as l_type and then delegate_persist_stone (l_type, a_session, a_base_id, a_stone) then
 							-- Stone was persisted, so update the necessary stone type information to reflect a persisted stone.
-						a_session.set_value (l_type.generating_type.name, session_id (a_base_id, type_session_id))
+						a_session.set_value (l_type.generating_type.out, session_id (a_base_id, type_session_id))
 					else
 							-- No stone was persisted, wipe out the stone type so it's not attempted to be retrieved
 						a_session.set_value (Void, session_id (a_base_id, type_session_id))

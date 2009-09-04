@@ -409,16 +409,18 @@ feature {NONE} -- Handle keystokes
 
 			when Key_tab then
 				if is_editable then
-						-- Tab key action
-					if shifted_key then
-							-- Shift + Tab = Unindent selection
-						unindent_selection
-					elseif has_selection and then text_displayed.selected_wide_string.has ('%N') then
-							-- Tab = indent selection
-						indent_selection
-					else
-							-- normal behavior --> we insert a %T character
-						handle_character ('%T')
+					if not ctrled_key then
+							-- Tab key action
+						if shifted_key then
+								-- Shift + Tab = Unindent selection
+							unindent_selection
+						elseif has_selection and then text_displayed.selected_wide_string.has ('%N') then
+								-- Tab = indent selection
+							indent_selection
+						else
+								-- normal behavior --> we insert a %T character
+							handle_character ('%T')
+						end
 					end
 				else
 					display_not_editable_warning_message

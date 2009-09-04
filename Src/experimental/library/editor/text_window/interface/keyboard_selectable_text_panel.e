@@ -445,7 +445,11 @@ feature {NONE} -- Process Vision2 events
 					key_action_timer.actions.wipe_out
 					key_action_timer.set_interval (40)
 					continue_key_action := True
-					if ctrled_key and then not alt_key then
+					if
+						ctrled_key and then
+						not alt_key and then
+						not shifted_key
+					then
 						key_action_timer.actions.extend (agent repeat_ctrled_key (ev_key))
 					elseif not (not ctrled_key and not shifted_key and alt_key) then
 							-- Ignore the case only Alt is pressed.

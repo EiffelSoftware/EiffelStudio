@@ -135,7 +135,7 @@ feature -- Command
 	prune (a_content: SD_CONTENT; a_focus: BOOLEAN)
 			-- <Precursor>
 		local
-			l_selected: SD_CONTENT
+			l_selected: detachable SD_CONTENT
 			l_index: INTEGER
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content, a_focus)

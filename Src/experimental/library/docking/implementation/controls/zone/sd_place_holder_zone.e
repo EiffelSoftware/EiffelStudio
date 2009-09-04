@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			-- Otherwise bug#16214
 		do
 			if internal_notebook_instance = Void then
-				create internal_notebook_instance.make (internal_docking_manager)
+				create internal_notebook_instance.make (docking_manager)
 			end
 			Result := internal_notebook_instance
 		end

@@ -163,7 +163,7 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 	 */
 
 #ifdef EIF_WINDOWS
-	/* Standard pipe oeratons for Windows
+	/* Standard pipe operatons for Windows
 		DuplicateHandle is called to set correct permisions.
 	*/
 

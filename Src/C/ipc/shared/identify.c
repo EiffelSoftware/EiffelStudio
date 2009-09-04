@@ -198,16 +198,15 @@ rt_public int identify(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_ev
 	sa.lpSecurityDescriptor = NULL;
 	sa.bInheritHandle = TRUE;
 
-      eif_conoutfile = CreateFile ("CONOUT$", GENERIC_WRITE | GENERIC_READ,
+    eif_conoutfile = CreateFile ("CONOUT$", GENERIC_WRITE | GENERIC_READ,
 	      FILE_SHARE_READ | FILE_SHARE_WRITE, &sa, OPEN_EXISTING, 0, 0);
 
-      if (eif_conoutfile == INVALID_HANDLE_VALUE)
-	      {
+    if (eif_conoutfile == INVALID_HANDLE_VALUE) {
 #ifdef USE_ADD_LOG
 /*              add_log(12, "Create output handle failed %d", GetLastError()); */
 #endif
 /*              return -1; */
-	      }
+	}
 
 	SetStdHandle (STD_OUTPUT_HANDLE, eif_conoutfile);
 	eif_coninfile = CreateFile ("CONIN$", GENERIC_READ | GENERIC_WRITE,
@@ -224,7 +223,7 @@ rt_public int identify(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_ev
 	return 0;
 }
 
-#else
+#else /* not EIF_WINDOWS */
 rt_public int identify(char* id, int fd_in, int fd_out)
 {
 	/* Identification protocol, to make sure we have been started via the

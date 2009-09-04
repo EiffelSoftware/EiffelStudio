@@ -299,7 +299,7 @@ rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumpin
 		(stack).st_cur = (cur);			\
 		(stack).st_top = (top);			\
 		if (cur) { (stack).st_end = (cur)->sk_end; }	\
-	} else { /* There was no chunk allocated when saving, but allocated at excution in between */ \
+	} else { /* There was no chunk allocated when saving, but allocated at execution in between */ \
 		(stack).st_cur = (stack).st_hd; \
 		(stack).st_top = (stack).st_cur->sk_arena; \
 		(stack).st_end = (stack).st_cur->sk_end; \

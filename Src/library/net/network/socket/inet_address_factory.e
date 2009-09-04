@@ -32,7 +32,7 @@ feature
 		end
 
 	create_localhost: INET_ADDRESS
-			--
+			-- Local host address
 		local
 			localhostname: STRING
 			l_result: detachable INET_ADDRESS
@@ -46,7 +46,7 @@ feature
 		end
 
 	create_from_name (hostname: STRING): detachable INET_ADDRESS
-			--
+			-- host address from `hostname'.
 		local
 			r: detachable ARRAY [INET_ADDRESS]
 		do
@@ -57,7 +57,7 @@ feature
 		end
 
 	create_from_address (address: ARRAY [NATURAL_8]): detachable INET_ADDRESS
-			--
+			-- host address from `address'.
 		require
 			valid_address: address /= Void
 		local
@@ -76,7 +76,7 @@ feature
 		end
 
 	create_from_sockaddr (sockaddr: POINTER): detachable INET_ADDRESS
-			--
+			-- host address from pointer `sockaddr'.
 		require
 			valid_sockaddr: sockaddr /= default_pointer
 		local

@@ -339,36 +339,78 @@ feature {NONE} -- Filling
 	check_validity
 			-- Check if there is cycle(s) in the inheritance graph
 		local
-			i: INTEGER
-			no_cycle: BOOLEAN
+			i, l_count: INTEGER
 			name_list: LINKED_LIST [INTEGER]
-			a_class: CLASS_C
 			vhpr1: VHPR1
+			l_precursor_count: like precursor_count
+			l_cyclic_inheritance_list: LINKED_LIST [CLASS_C]
+			l_exit, l_remove: BOOLEAN
+			l_direct_descendants: ARRAYED_LIST [CLASS_C]
 		do
 			from
-				no_cycle := True
+				l_precursor_count := precursor_count
+				create l_cyclic_inheritance_list.make
 				i := 1
+				l_count := count
 			until
-				i > count
+				i > l_count
 			loop
-				if precursor_count.item (i) /= 0 then
+				if l_precursor_count [i] /= 0 then
 						-- I_th item of the graph is involved in a cycle
 						-- in the inheritance graph
-					no_cycle := False
-					a_class := original.item (i)
-					if name_list = Void then
-						create name_list.make
-					end
-					name_list.put_front (a_class.class_id)
+					l_cyclic_inheritance_list.put_front (original [i])
 				end
 				i := i + 1
 			end
-			if no_cycle then
+			if l_cyclic_inheritance_list.is_empty then
 					-- Update class ids
 				finalize
 			else
 					-- Cycle(s) in inheritance graph
+					-- List needs post-processing to remove false positives of descendents of classes involved
+					-- in the cyclic inheritance loop.
 				create vhpr1
+				create name_list.make
+				from
+					l_exit := False
+				until
+					l_exit
+				loop
+					from
+						l_exit := True
+						l_cyclic_inheritance_list.start
+					until
+						l_cyclic_inheritance_list.after
+					loop
+						l_direct_descendants := l_cyclic_inheritance_list.item.direct_descendants
+						from
+							l_direct_descendants.start
+							l_remove := True
+						until
+							l_direct_descendants.after
+						loop
+							if l_cyclic_inheritance_list.has (l_direct_descendants.item) then
+								l_remove := False
+							end
+							l_direct_descendants.forth
+						end
+						if l_remove then
+							l_exit := False
+							l_cyclic_inheritance_list.remove
+						else
+							l_cyclic_inheritance_list.forth
+						end
+					end
+				end
+
+				from
+					l_cyclic_inheritance_list.start
+				until
+					l_cyclic_inheritance_list.after
+				loop
+					name_list.extend (l_cyclic_inheritance_list.item.class_id)
+					l_cyclic_inheritance_list.forth
+				end
 				vhpr1.set_involved_classes (name_list)
 				Error_handler.insert_error (vhpr1)
 			end
@@ -511,7 +553,7 @@ invariant
 	outsides2_not_void: outsides2 /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -524,22 +566,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

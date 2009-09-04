@@ -1142,18 +1142,18 @@ feature -- Label texts
 
 	l_c_compilation_and_external_command_running: STRING_32
 		do Result := locale.translation("A C Compilation and an external command are currently running.%N%
-								%They need to be terminated before EiffelStudio can exist.%N%N%
+								%They need to be terminated before EiffelStudio can exit.%N%N%
 								%Cancel C compilation, terminate external command and exit?%N")	end
 	l_c_compilation_running: STRING_32
 		do Result := locale.translation("A C Compilation is currently running.%N%
-								%It needs to be terminated before EiffelStudio can exist.%N%N%
+								%It needs to be terminated before EiffelStudio can exit.%N%N%
 								%Cancel C compilation and exit?%N")	end
 	l_cwd (a_working_directory: STRING_GENERAL): STRING_32
 		do Result := locale.formatted_string (locale.translation ("cwd=%"$1%""), [a_working_directory]) end
 
 	l_external_command_running: STRING_32
 		do Result := locale.translation("An external command is currently running.%N%
-								%It need to be terminated before EiffelStudio can exist.%N%N%
+								%It need to be terminated before EiffelStudio can exit.%N%N%
 								%Terminate external command and exit?%N")	end
 
 	l_debugger_catcall_warning_message: STRING_32		do Result := locale.translation ("CatCall detected") end

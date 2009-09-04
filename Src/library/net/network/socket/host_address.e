@@ -9,7 +9,7 @@ class
 	HOST_ADDRESS
 
 obsolete
-	"Use the INET_ADDRESS_FACTORY instead to create addresses."
+	"[2008-10-30] Use the INET_ADDRESS_FACTORY instead to create addresses."
 
 inherit
 	ANY

@@ -390,19 +390,24 @@ feature -- Completion-clickable initialization / update
 			classi_stone ?= stone
 			if classi_stone /= Void and then classi_stone.is_valid then
 				if
-					classi_stone.class_name /= Void and then not classi_stone.class_i.is_external_class and then
-					classi_stone.group /= Void and then classi_stone.group.is_valid
+					classi_stone.class_name /= Void and then
+					attached classi_stone.class_i as l_class_i and then
+					not l_class_i.is_external_class and then
+					attached classi_stone.group as l_group and then
+					l_group.is_valid
 				then
-					click_tool.initialize (Current, classi_stone.class_i,
-						classi_stone.group, after_save)
+					click_tool.initialize (Current, l_class_i, l_group, after_save)
 					current_class_is_clickable := click_tool.can_analyze_current_class
 					if click_tool.last_syntax_error = Void then
 						if
 							current_class_is_clickable and then
-							not classi_stone.class_i.config_class.name.is_equal (click_tool.current_class_as.class_name.name)
+							attached click_tool.current_class_as as l_curr_class_as
 						then
-							current_class_is_clickable := False
-							click_tool_status := class_name_changed
+							if l_class_i.config_class.name /~ l_curr_class_as.class_name.name then
+--							if not l_class_i.config_class.name ~ (l_curr_class_as.class_name.name) then								
+								current_class_is_clickable := False
+								click_tool_status := class_name_changed
+							end
 						end
 					else
 						click_tool_status := syntax_error
@@ -877,7 +882,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -890,22 +895,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class SMART_TEXT

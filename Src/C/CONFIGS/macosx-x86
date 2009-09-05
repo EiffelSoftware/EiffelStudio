@@ -166,7 +166,7 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe -no-cpp-precomp -fno-common -fPIC'
+	ccflags='-ObjC -fobjc-gc -pipe -no-cpp-precomp -fno-common -fPIC'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then
@@ -193,11 +193,11 @@ d_tls='undef'
 #Check value for next 2
 mtccflags="$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 mtcppflags="$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
-optimize="-O3"
+optimize="-O0 -g"
 voidflags='15'
 #Check value for next 1
 warning_level='-Wall'
-wkoptimize="-O0"
+wkoptimize="-O0 -g"
 
 #Makefiles
 ar='ar'

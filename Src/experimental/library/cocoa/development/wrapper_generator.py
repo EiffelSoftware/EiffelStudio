@@ -30,8 +30,8 @@ basedir = "/System/Library/Frameworks"
 config = {
 		  "framework": "ApplicationKit",
 		  "dirname": basedir + "/AppKit.framework/Headers",
-		  "class": "NSWindow",
-		  "include": "Cocoa/NSWindow.h"
+		  "class": "NSGraphicsContext",
+		  "include": "Cocoa/NSGraphicsContext.h"
 		  }
 """
 config = {

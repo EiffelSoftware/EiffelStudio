@@ -71,7 +71,7 @@ feature -- Getting General Event Information
 			y_position_valid: 0 < Result.y
 		end
 
-	modifier_flags: INTEGER
+	modifier_flags: NATURAL
 			-- Returns an integer bit field indicating the modifier keys in effect for the receiver.
 		do
 			Result := {NS_EVENT_API}.modifier_flags (item)
@@ -456,6 +456,81 @@ feature -- NSEventType Constants
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSPeriodic"
+		end
+
+feature -- Modifier flag constants
+
+
+	frozen alpha_shift_key_mask: NATURAL_32
+			-- Set if Caps Lock key is pressed.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSAlphaShiftKeyMask"
+		end
+
+	frozen shift_key_mask: NATURAL_32
+			-- Set if Shift key is pressed.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSShiftKeyMask"
+		end
+
+	frozen control_key_mask: NATURAL_32
+			-- Set if Control key is pressed.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSControlKeyMask"
+		end
+
+	frozen alternate_key_mask: NATURAL_32
+			-- Set if Option or Alternate key is pressed.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSAlternateKeyMask"
+		end
+
+	frozen command_key_mask: NATURAL_32
+			-- Set if Command key is pressed.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCommandKeyMask"
+		end
+
+	frozen numeric_pad_key_mask: NATURAL_32
+			-- Set if any key in the numeric keypad is pressed. The numeric keypad is generally on the right side of the keyboard. This is also set if any of the arrow keys are pressed (NSUpArrowFunctionKey, NSDownArrowFunctionKey, NSLeftArrowFunctionKey, and NSRightArrowFunctionKey).
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSNumericPadKeyMask"
+		end
+
+	frozen help_key_mask: NATURAL_32
+			-- Set if the Help key is pressed.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSHelpKeyMask"
+		end
+
+	frozen function_key_mask: NATURAL_32
+			-- Set if any function key is pressed. The function keys include the F keys at the top of most keyboards (F1, F2, and so on) and the navigation keys in the center of most keyboards (Help, Forward Delete, Home, End, Page Up, Page Down, and the arrow keys).
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSFunctionKeyMask"
+		end
+
+	frozen device_independent_modifier_flags_mask: NATURAL_32
+			-- Set if any function key is pressed. The function keys include the F keys at the top of most keyboards (F1, F2, and so on) and the navigation keys in the center of most keyboards (Help, Forward Delete, Home, End, Page Up, Page Down, and the arrow keys).
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSDeviceIndependentModifierFlagsMask"
 		end
 
 end

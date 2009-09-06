@@ -67,7 +67,7 @@ feature -- Getting General Event Information
 			"NSPoint point = [(NSEvent*)$a_event locationInWindow]; memcpy($res, &point, sizeof(NSPoint));"
 		end
 
-	frozen modifier_flags (a_ns_event: POINTER): INTEGER
+	frozen modifier_flags (a_ns_event: POINTER): NATURAL
 			-- - (NSUInteger)modifierFlags
 		external
 			"C inline use <Cocoa/Cocoa.h>"

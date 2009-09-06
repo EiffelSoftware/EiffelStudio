@@ -26,12 +26,12 @@ feature -- Configuring Buttons
 			"[(NSButton*)$a_button setButtonType: $a_button_type];"
 		end
 
-	frozen set_title (a_button: POINTER; a_nsstring: POINTER)
+	frozen set_title (a_button: POINTER; a_string: POINTER)
 			-- - (void)setTitle:(NSString *)aString
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"[(NSButton*)$a_button setTitle: $a_nsstring];"
+			"[(NSButton*)$a_button setTitle: $a_string];"
 		end
 
 	frozen title (a_button: POINTER): POINTER

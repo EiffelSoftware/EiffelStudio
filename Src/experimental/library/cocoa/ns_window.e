@@ -351,11 +351,6 @@ feature -- Managing Titles
 			Result := {NS_WINDOW_API}.is_miniaturized (item)
 		end
 
-	make_key_and_order_front
-		do
-			{NS_WINDOW_API}.make_key_and_order_front (item, default_pointer)
-		end
-
 	order_front
 		do
 			{NS_WINDOW_API}.order_front (item, default_pointer)
@@ -406,6 +401,70 @@ feature -- Managing Attached Windows
 	set_parent_window (a_window: NS_WINDOW)
 		do
 			{NS_WINDOW_API}.set_parent_window (item, a_window.item)
+		end
+
+feature -- Managing Key Status
+
+	is_key_window: BOOLEAN
+			-- Indicates whether the window is the key window for the application.
+		do
+			Result := {NS_WINDOW_API}.is_key_window (item)
+		end
+
+	can_become_key_window: BOOLEAN
+			-- Indicates whether the window can become the key window.
+		do
+			Result := {NS_WINDOW_API}.can_become_key_window (item)
+		end
+
+	make_key_window
+			-- Makes the window the key window.
+		do
+			{NS_WINDOW_API}.make_key_window (item)
+		end
+
+	make_key_and_order_front (a_sender: NS_OBJECT)
+			-- Moves the window to the front of the screen list, within its level, and makes it the key window; that is, it shows the window.
+		do
+			{NS_WINDOW_API}.make_key_and_order_front (item, a_sender.item)
+		end
+
+	become_key_window
+			-- Invoked automatically to inform the window that it has become the key window; never invoke this method directly.
+		do
+			{NS_WINDOW_API}.become_key_window (item)
+		end
+
+	resign_key_window
+			-- Invoked automatically when the window resigns key window status; never invoke this method directly.
+		do
+			{NS_WINDOW_API}.resign_key_window (item)
+		end
+
+feature -- Managing Responders
+
+	initial_first_responder: NS_VIEW
+			-- Returns view that`s made first responder the first time the window is placed onscreen.
+		do
+			create Result.share_from_pointer ({NS_WINDOW_API}.initial_first_responder (item))
+		end
+
+	first_responder: NS_RESPONDER
+			-- Returns the window`s first responder.
+		do
+			create Result.share_from_pointer ({NS_WINDOW_API}.first_responder (item))
+		end
+
+	set_initial_first_responder (a_view: NS_VIEW)
+			-- Sets a given view as the one that`s made first responder (also called the key view) the first time the window is placed onscreen.
+		do
+			{NS_WINDOW_API}.set_initial_first_responder (item, a_view.item)
+		end
+
+	make_first_responder (a_responder: NS_RESPONDER): BOOLEAN
+			-- Attempts to make a given responder the first responder for the window.
+		do
+			Result := {NS_WINDOW_API}.make_first_responder (item, a_responder.item)
 		end
 
 feature -- Contract support

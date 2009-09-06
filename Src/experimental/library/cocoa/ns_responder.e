@@ -4,17 +4,18 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+class -- Should probably be a deferred class?
 	NS_RESPONDER
 
 inherit
 	NS_OBJECT
 
+create {NS_OBJECT}
+	share_from_pointer
+
 feature -- Access
 
 	initialize_class
-		local
-			oldmethod: PROCEDURE [ANY, TUPLE]
 		do
 			class_.add_method ("mouseDown:", agent mouse_down)
 		end
@@ -43,14 +44,19 @@ feature -- Responding to Key Events
 		local
 			original_method: detachable OBJC_METHOD
 			selector: OBJC_SELECTOR
-			invocation: NS_INVOCATION
 		do
 			create selector.make ("keyDown:")
-			original_method := class_.superclass.instance_method (selector.item)
-			check
-				original_method /= Void
+			if attached class_.superclass as l_superclass then
+				original_method := l_superclass.instance_method (selector.item)
+				check
+					original_method /= Void -- If this method is not a redefinition of a parent's method there is no precursor
+				end
+				call_original (original_method.implementation, item, selector.item, a_event.item)
+			else
+				check
+					has_superclass: False -- class_ needs to have a superlcass, otherwise calling the precursor makes no sense.
+				end
 			end
-			call_original (original_method.implementation, item, selector.item, a_event.item)
 		end
 
 	key_up (a_event: NS_EVENT)

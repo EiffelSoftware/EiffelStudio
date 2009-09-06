@@ -301,8 +301,21 @@ feature -- Managing Pixel Values
 			"return [(NSBitmapImageRep*)$a_ns_bitmap_image_rep colorAtX: $a_x y: $a_y];"
 		end
 
--- Error generating setPixel:atX:y:: Message signature for feature not set
--- Error generating getPixel:atX:y:: Message signature for feature not set
+	frozen get_pixel (a_ns_bitmap_image_rep: POINTER; p: POINTER; a_x: INTEGER; a_y: INTEGER)
+			-- - (void)getPixel:(NSUInteger[])p atX:(NSInteger)x y:(NSInteger)y;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSBitmapImageRep*)$a_ns_bitmap_image_rep getPixel: $p atX: $a_x y: $a_y];"
+		end
+
+	frozen set_pixel (a_ns_bitmap_image_rep: POINTER; p: POINTER; a_x: INTEGER; a_y: INTEGER)
+			-- - (void)setPixel:(NSUInteger[])p atX:(NSInteger)x y:(NSInteger)y;
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSBitmapImageRep*)$a_ns_bitmap_image_rep getPixel: $p atX: $a_x y: $a_y];"
+		end
 
 feature -- Getting a Core Graphics Image
 

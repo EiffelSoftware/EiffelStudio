@@ -43,7 +43,9 @@ feature {NONE} -- Creation and Initialization
 			Result.add_method ("mouseDown:", agent mouse_down)
 			Result.add_method ("mouseUp:", agent mouse_up)
 			Result.add_method ("keyDown:", agent key_down)
+			Result.add_method ("keyUp:", agent key_up)
 			Result.add_method ("isFlipped", agent: BOOLEAN do Result := True end)
+			Result.add_method ("acceptsFirstResponder", agent: BOOLEAN do Result := True end)
 			Result.register
 		end
 

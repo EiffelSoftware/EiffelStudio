@@ -1,6 +1,6 @@
 note
 	description: "Wrapper for cocoa's root class (id)."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 

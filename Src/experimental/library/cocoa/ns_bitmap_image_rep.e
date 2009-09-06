@@ -246,17 +246,24 @@ feature -- Managing Pixel Values
 		do
 			create Result.share_from_pointer ({NS_BITMAP_IMAGE_REP_API}.color_at_x_y (item, a_x, a_y))
 		end
--- Error generating setPixel:atX:y:: Message signature for feature not set
--- Error generating getPixel:atX:y:: Message signature for feature not set
+
+--	set_pixel_at_x_y (a_color: NS_COLOR; a_x: INTEGER; a_y: INTEGER)
+--			-- Error generating setPixel:atX:y:: Message signature for feature not set
+--		do
+--		end
+
+--	get_pixel_at_x_y (a_color: NS_COLOR; a_x: INTEGER; a_y: INTEGER)
+--			-- Error generating getPixel:atX:y:: Message signature for feature not set
+--		do
+--		end
 
 feature -- Getting a Core Graphics Image
 
---	cg_image: CG_IMAGE_REF
---			-- Returns a Core Graphics image object from the receiver`s current bitmap data.
---		do
---			create Result.make
---			{NS_BITMAP_IMAGE_REP_API}.cg_image (item, Result.item)
---		end
+	cg_image: POINTER
+			-- Returns a Core Graphics image object from the receiver`s current bitmap data.
+		do
+			Result := {NS_BITMAP_IMAGE_REP_API}.cg_image (item)
+		end
 
 feature -- Contract support
 

@@ -128,6 +128,54 @@ feature -- Managing Window Frames in User Defaults
 
 feature -- Managing Key Status
 
+	frozen is_key_window (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)isKeyWindow
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window isKeyWindow];"
+		end
+
+	frozen can_become_key_window (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)canBecomeKeyWindow
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window canBecomeKeyWindow];"
+		end
+
+	frozen make_key_window (a_ns_window: POINTER)
+			-- - (void)makeKeyWindow
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window makeKeyWindow];"
+		end
+
+	frozen make_key_and_order_front (a_ns_window: POINTER; a_sender: POINTER)
+			-- - (void)makeKeyAndOrderFront: (id) sender
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window makeKeyAndOrderFront: $a_sender];"
+		end
+
+	frozen become_key_window (a_ns_window: POINTER)
+			-- - (void)becomeKeyWindow
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window becomeKeyWindow];"
+		end
+
+	frozen resign_key_window (a_ns_window: POINTER)
+			-- - (void)resignKeyWindow
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window resignKeyWindow];"
+		end
+
 feature -- Managing Main Status
 
 feature -- Managing Toolbars
@@ -174,6 +222,38 @@ feature -- Managing Tooltips
 feature -- Handling Events
 
 feature -- Managing Responders
+
+	frozen initial_first_responder (a_ns_window: POINTER): POINTER
+			-- - (NSView *)initialFirstResponder
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window initialFirstResponder];"
+		end
+
+	frozen first_responder (a_ns_window: POINTER): POINTER
+			-- - (NSResponder *)firstResponder
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window firstResponder];"
+		end
+
+	frozen set_initial_first_responder (a_ns_window: POINTER; a_view: POINTER)
+			-- - (void)setInitialFirstResponder: (NSView *) view
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setInitialFirstResponder: $a_view];"
+		end
+
+	frozen make_first_responder (a_ns_window: POINTER; a_responder: POINTER): BOOLEAN
+			-- - (BOOL)makeFirstResponder: (NSResponder *) aResponder
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window makeFirstResponder: $a_responder];"
+		end
 
 feature -- Managing the Key View Loop
 
@@ -400,13 +480,6 @@ feature -- Working with Carbon
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"return [(NSWindow*)$a_window isMiniaturized];"
-		end
-
-	frozen make_key_and_order_front (a_window: POINTER; a_sender: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSWindow*)$a_window makeKeyAndOrderFront: $a_sender];"
 		end
 
 	frozen order_front (a_window: POINTER; a_sender: POINTER)

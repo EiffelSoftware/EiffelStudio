@@ -189,14 +189,18 @@ feature -- Producing TIFF data for the image
 
 feature -- Contract Support
 
-	valid_operation (a_integer: INTEGER): BOOLEAN
+	valid_operation (a_natural: NATURAL): BOOLEAN
+			-- True iff a_natural is a valid NSComposingOperation
 		do
-			 Result := (<<composite_clear, composite_copy, composite_source_over, composite_xor>>).has (a_integer)
+			 Result := (<<composite_clear, composite_copy,
+			 	composite_source_over, composite_source_in, composite_source_out, composite_source_atop,
+			 	composite_destination_over, composite_destination_in, composite_destination_out, composite_destination_atop,
+			 	composite_xor, composite_plus_darker, composite_plus_lighter>>).has (a_natural)
 		end
 
 feature -- NSCompositingOperation Constants
 
-	frozen composite_clear: INTEGER
+	frozen composite_clear: NATURAL
 			-- Transparent. (R = 0)
 		external
 			"C macro use <Cocoa/Cocoa.h>"
@@ -204,7 +208,7 @@ feature -- NSCompositingOperation Constants
 			"NSCompositeClear"
 		end
 
-	frozen composite_copy: INTEGER
+	frozen composite_copy: NATURAL
 			-- Source image. (R = S)
 		external
 			"C macro use <Cocoa/Cocoa.h>"
@@ -212,7 +216,7 @@ feature -- NSCompositingOperation Constants
 			"NSCompositeCopy"
 		end
 
-	frozen composite_source_over: INTEGER
+	frozen composite_source_over: NATURAL
 			-- Source image wherever source image is opaque, and destination image elsewhere. (R = S + D*(1 - Sa))
 		external
 			"C macro use <Cocoa/Cocoa.h>"
@@ -220,11 +224,84 @@ feature -- NSCompositingOperation Constants
 			"NSCompositeSourceOver"
 		end
 
-	frozen composite_xor: INTEGER
+	frozen composite_source_in: NATURAL
+			-- Source image wherever both images are opaque, and transparent elsewhere. (R = S*Da)
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCompositeSourceIn"
+		end
+
+	frozen composite_source_out: NATURAL
+			-- Source image wherever source image is opaque but destination image is transparent, and transparent elsewhere. (R = S*(1 - Da))
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCompositeSourceOut"
+		end
+
+	frozen composite_source_atop: NATURAL
+			-- Source image wherever both images are opaque, destination image wherever destination image is opaque but source image is transparent, and transparent elsewhere. (R = S*Da + D*(1 - Sa))
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCompositeSourceAtop"
+		end
+
+	frozen composite_destination_over: NATURAL
+			-- Destination image wherever destination image is opaque, and source image elsewhere. (R = S*(1 - Da) + D)
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCompositeDestinationOver"
+		end
+
+	frozen composite_destination_in: NATURAL
+			-- Destination image wherever both images are opaque, and transparent elsewhere. (R = D*Sa)	
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCompositeDestinationIn"
+		end
+
+	frozen composite_destination_out: NATURAL
+			-- Destination image wherever destination image is opaque but source image is transparent, and transparent elsewhere. (R = D*(1 - Sa))
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCompositeDestinationOut"
+		end
+
+	frozen composite_destination_atop: NATURAL
+			-- Destination image wherever both images are opaque, source image wherever source image is opaque but destination image is transparent, and transparent elsewhere. (R = S*(1 - Da) + D*Sa)
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCompositeDestinationAtop"
+		end
+
+	frozen composite_xor: NATURAL
+			-- Exclusive OR of source and destination images. (R = S*(1 - Da) + D*(1 - Sa))
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSCompositeXOR"
+		end
+
+	frozen composite_plus_darker: NATURAL
+			-- Sum of source and destination images, with color values approaching 0 as a limit. (R = MAX(0, (1 - D) + (1 - S)))
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCompositePlusDarker"
+		end
+
+	frozen composite_plus_lighter: NATURAL
+			-- Sum of source and destination images, with color values approaching 1 as a limit. (R = MIN(1, S + D))
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSCompositePlusLighter"
 		end
 
 feature {NS_IMAGE_CONSTANTS} -- Named Images

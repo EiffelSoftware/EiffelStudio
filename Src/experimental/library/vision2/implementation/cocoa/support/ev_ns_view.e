@@ -172,6 +172,24 @@ feature -- Element change
 			attached_view.add_cursor_rect (attached_view.visible_rect, pointer_style_imp.cursor)
 		end
 
+feature -- Focus
+
+	has_focus: BOOLEAN
+			-- Does widget have the keyboard focus?
+		do
+			Result := attached attached_view.window as win and then (win.is_key_window and attached_view.item = win.first_responder.item)
+		end
+
+	set_focus
+			-- Grab keyboard focus.
+		local
+			success: BOOLEAN
+		do
+			if attached attached_view.window as win then
+				success := win.make_first_responder (attached_view)
+			end
+		end
+
 feature -- Implementation
 
 	internal_tooltip_string: detachable STRING_32

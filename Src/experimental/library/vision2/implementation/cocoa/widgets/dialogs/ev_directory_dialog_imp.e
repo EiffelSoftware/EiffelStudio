@@ -64,7 +64,7 @@ feature -- Access
 			-- Path of the current selected directory
 		do
 			if selected_button.is_equal (internal_accept) then
-				Result := filename.to_string
+				Result := filename
 			else
 				create Result.make_empty
 			end

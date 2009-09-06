@@ -64,16 +64,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES,  LAYOUT_INSPECTOR} -- Implementatio
 			--create Result
 		end
 
-	set_focus
-			-- Grab keyboard focus.
-		do
-		end
-
-	has_focus: BOOLEAN
-			-- Does widget have the keyboard focus?
-		do
-		end
-
 	set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style'.
 		do

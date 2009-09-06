@@ -74,7 +74,7 @@ feature -- Status setting
 			-- Request that window be displayed above all other windows.
 		do
 			--show
-			 make_key_and_order_front
+			 make_key_and_order_front (current)
 		end
 
 	lower

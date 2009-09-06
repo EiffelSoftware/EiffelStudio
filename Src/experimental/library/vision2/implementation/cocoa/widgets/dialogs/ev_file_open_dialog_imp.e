@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			button := open_panel.run_modal
 
 			if button =  {NS_PANEL}.ok_button then
-				set_file_name (open_panel.filename.to_string)
+				set_file_name (open_panel.filename.as_string_32)
 				selected_button := internal_accept
 				attached_interface.open_actions.call (Void)
 			elseif button = {NS_PANEL}.cancel_button then
@@ -90,7 +90,7 @@ feature {NONE} -- Access
 			loop
 				l_item := l_filenames.item (i)
 				check l_item /= Void end
-				Result.extend (l_item.to_string)
+				Result.extend (l_item)
 				i := i + 1
 			end
 		end

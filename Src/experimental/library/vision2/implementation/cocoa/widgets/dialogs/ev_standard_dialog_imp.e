@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 		do
 			cocoa_make (create {NS_RECT}.make_rect (100, 100, 100, 100),
 				{NS_WINDOW}.closable_window_mask | {NS_WINDOW}.miniaturizable_window_mask | {NS_WINDOW}.resizable_window_mask, True)
-			make_key_and_order_front
+			make_key_and_order_front (current)
 			order_out
 			allow_resize
 			set_is_initialized (True)

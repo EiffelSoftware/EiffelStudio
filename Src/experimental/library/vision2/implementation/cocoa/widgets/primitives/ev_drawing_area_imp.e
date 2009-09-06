@@ -48,6 +48,9 @@ inherit
 			make as make_cocoa,
 			make_with_drawing as make_with_drawing_cocoa,
 			copy as copy_cocoa
+		undefine
+			key_down,
+			key_up
 		redefine
 			dispose,
 			mouse_down,
@@ -55,6 +58,8 @@ inherit
 			mouse_moved,
 			draw_rect
 		end
+
+	EV_NS_RESPONDER
 
 create
 	make
@@ -101,9 +106,9 @@ feature -- Status setting
 		end
 
 	flush
-			-- Redraw the screen immediately.
+			-- Redraw the screen immediately, if change actions have been requested
 		do
---			display
+			display_if_needed
 		end
 
 	prepare_drawing

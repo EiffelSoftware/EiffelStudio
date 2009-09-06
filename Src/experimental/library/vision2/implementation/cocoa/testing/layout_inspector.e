@@ -438,7 +438,7 @@ feature {NONE} -- Graphical view
 				{NS_WINDOW}.borderless_window_mask, False)
 			Result.set_background_color (create {NS_COLOR}.blue_color)
 			Result.set_alpha_value ({REAL_32}0.3)
-			Result.make_key_and_order_front
+			Result.make_key_and_order_front (overlay)
 			Result.set_ignores_mouse_events (True)
 			Result.set_level ({NS_WINDOW}.floating_window_level)
 		end

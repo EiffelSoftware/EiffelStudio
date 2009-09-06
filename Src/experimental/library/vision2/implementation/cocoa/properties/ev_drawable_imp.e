@@ -592,6 +592,7 @@ feature {EV_ANY_HANDLER} -- Implementation
 		local
 			l_color: detachable EV_COLOR_IMP
 			trans: NS_AFFINE_TRANSFORM
+			gc: NS_GRAPHICS_CONTEXT
 		do
 			image.lock_focus
 			if not is_flipped then
@@ -600,6 +601,7 @@ feature {EV_ANY_HANDLER} -- Implementation
 				trans.scale_by_xy ({REAL_32}1.0, {REAL_32}-1.0)
 				trans.concat
 			end
+			--create gc
 			l_color ?= foreground_color.implementation
 			check l_color /= void end
 			l_color.color.set

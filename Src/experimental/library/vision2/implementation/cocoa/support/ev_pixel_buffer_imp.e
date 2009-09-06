@@ -71,17 +71,37 @@ feature -- Command
 			end
 		end
 
-	save_to_named_file (a_file_name: STRING)
-			-- Save pixel data to file `a_file_name'.
+	save_to_named_file (a_filename: STRING)
+			-- Save pixel data to file `a_filename'.
+			-- NOTE Why there are different implementations to save a pixel_buffer and a pixmap is a mistery to me
 		local
-			data: NS_DATA
-			image_rep: NS_BITMAP_IMAGE_REP
+			l_image_rep: NS_BITMAP_IMAGE_REP
+			l_data: NS_DATA
+			l_success: BOOLEAN
+			l_extension: STRING
+			l_format: INTEGER
 		do
-			data := image.tiff_representation
-			create image_rep.make_with_data (data)
-			--data := bits.representation_using_type (NS_PNG_FILE, void)
-			--data.write_to_file_atomically (a_file_name, False)
-			io.put_string ("EV_PIXEL_BUFFER_IMP: Not implemented")
+			l_extension := a_filename.split ('.').last.as_upper
+			if l_extension.is_equal ("JPEG") or l_extension.is_equal ("JPG") then
+				l_format := {NS_BITMAP_IMAGE_REP}.JPEG_file_type
+			elseif l_extension.is_equal ("TIFF") or l_extension.is_equal ("TIF") then
+				l_format := {NS_BITMAP_IMAGE_REP}.TIFF_file_type
+			elseif l_extension.is_equal ("BMP") then
+				l_format := {NS_BITMAP_IMAGE_REP}.BMP_file_type
+			elseif l_extension.is_equal ("GIF") then
+				l_format := {NS_BITMAP_IMAGE_REP}.GIF_file_type
+			elseif l_extension.is_equal ("PNG") then
+				l_format := {NS_BITMAP_IMAGE_REP}.PNG_file_type
+			else
+				(create {EXCEPTIONS}).raise ("Could not save image file: Format " + l_extension + " unknown.")
+			end
+
+			create l_image_rep.make_with_data (image.tiff_representation)
+			l_data := l_image_rep.representation_using_type (l_format, Void)
+			l_success := l_data.write_to_file_atomically (a_filename.string, False)
+			if not l_success then
+				(create {EXCEPTIONS}).raise ("Could not save image file.")
+			end
 		end
 
 	sub_pixmap (a_area: EV_RECTANGLE): EV_PIXMAP
@@ -177,9 +197,12 @@ feature -- Query
 	image: NS_IMAGE
 
 	data_ptr: POINTER
-		-- A pointer to the byte-data. Accessed by classes in the Smart Docking library
+			-- A pointer to the byte-data. Accessed by classes in the Smart Docking library
+		local
+			l_image_rep: NS_BITMAP_IMAGE_REP
 		do
-			--image
+			create l_image_rep.make_with_data (image.tiff_representation)
+			Result := l_image_rep.bitmap_data
 		end
 
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementation

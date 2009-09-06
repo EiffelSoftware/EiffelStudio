@@ -166,7 +166,7 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe -no-cpp-precomp -fno-common -fPIC'
+	ccflags='-arch i386 -pipe -no-cpp-precomp -fno-common -fPIC'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then

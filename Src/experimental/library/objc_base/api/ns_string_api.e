@@ -41,9 +41,25 @@ feature -- Creating and Initializing Strings
 
  feature -- Writing to a File or URL
 
- feature -- Getting a String's Length
+feature -- Getting a String's Length
 
- feature -- Getting Characters and Bytes
+	frozen length (a_ns_string: POINTER): like ns_uinteger
+			-- - (NSUInteger)length
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSString*)$a_ns_string length];"
+		end
+
+feature -- Getting Characters and Bytes
+
+	frozen character_at_index (a_ns_string: POINTER; a_index: like ns_uinteger): NATURAL_16
+			-- - (unichar)characterAtIndex: (NSUInteger) index
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSString*)$a_ns_string characterAtIndex: $a_index];"
+		end
 
  feature -- Getting C Strings
 

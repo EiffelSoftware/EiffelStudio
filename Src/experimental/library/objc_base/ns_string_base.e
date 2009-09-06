@@ -91,4 +91,19 @@ feature -- Access
 		ensure
 			result_not_void: Result /= void
 		end
+
+	character_at_index (a_index: like ns_uinteger): NATURAL_16
+			-- Returns the character at a given array position.
+		do
+			Result := {NS_STRING_API}.character_at_index (item, a_index)
+		end
+
+feature -- Measurement
+
+	count, length: like ns_uinteger
+			-- Returns the number of Unicode characters.
+		do
+			Result := {NS_STRING_API}.length (item)
+		end
+
 end

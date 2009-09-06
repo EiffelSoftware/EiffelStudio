@@ -26,28 +26,29 @@ import traceback, sys
 
 basedir = "/System/Library/Frameworks"
 
-"""
+
 config = {
 		  "framework": "ApplicationKit",
 		  "dirname": basedir + "/AppKit.framework/Headers",
-		  "class": "NSEvent",
-		  "include": "Cocoa/NSEvent.h"
+		  "class": "NSWindow",
+		  "include": "Cocoa/NSWindow.h"
 		  }
 """
 config = {
 		  "framework": "Foundation",
 		  "dirname": basedir + "/Foundation.framework/Headers",
-		  "class": "NSInvocation",
-		  "include": "Foundation/NSInvocation.h"
-		  }
+		  "class": "NSString",
+		  "include": "Foundation/NSString.h"
+		  }"""
 
 headerpath = config["dirname"] + "/" + config["class"] + ".h"
 
 # URL schema:
-#url = Template("http://developer.apple.com/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/$class.html").\
-#        substitute (config)
-url = Template("http://developer.apple.com/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/Reference.html").\
+url = Template("http://developer.apple.com/mac/library/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/Reference.html").\
         substitute (config)
+#url = Template("http://developer.apple.com/mac/library/documentation/Cocoa/Reference/$framework/Classes/${class}_Class/Reference/$class.html").\
+#        substitute (config)
+
 
 ###
 
@@ -331,13 +332,14 @@ typeMap = {
 	"id": "POINTER[NS_OBJECT]",
 	"SEL": "POINTER[OBJC_SELECTOR]",
 	"NSInteger": "INTEGER",
-	"NSUInteger": "INTEGER",
+	"NSUInteger": "NATURAL",
 	"IBAction": "",
 	"CGFloat" : "REAL",
 	"void * /* WindowRef */": "WINDOW_REF",
 	"id <NSCopying>": "NS_COPYING",
 	"IconRef": "ICON_REF",
 	"unsigned char": "NATURAL_8",
+	"unichar": "NATURAL_16",
 	"bitmapFormat": "BITMAP_FORMAT",
 	"bytesPerRow": "BYTES_PER_ROW",
 	"NSToolbarDisplayMode": "INTEGER",
@@ -516,7 +518,7 @@ class AppleDocumentationParser(sgmllib.SGMLParser):
     def start_img (self, attributes):
     	if self.section == "Tasks" and self.last_message:
 	    	for name, value in attributes:
-	    		if name == "abstract":
+	    		if name == "data-abstract":
     			     self.last_message.set_abstract(value)
     
     def handle_data (self, data):
@@ -577,20 +579,30 @@ def main():
 		   replace("\xe2\x80\x94", "--").\
 		   replace("\xe2\x80\x93", "-").\
 		   replace("\xe2\x80\x9c", "\"").replace("\xe2\x80\x9d", "\"").\
-		   replace("\xc2", "C2C2C2").\
-		   replace("\xa0", "A0A0A0").\
-		   replace("\xb1", "B1B1B1").\
-		   replace("\xb4", "B4B4B4").\
-		   replace("\xe2", "E2E2E2").\
-		   replace("\x80", "808080").\
-		   replace("\xa6", "QQQ").\
-		   replace("\x93", "939393").\
-		   replace("\x94", "949494").\
+		   replace("\x80", "\\0x80").\
+		   replace("\x81", "\\0x81").\
+		   replace("\x93", "\\0x93").\
+		   replace("\x94", "\\0x94").\
+		   replace("\x96", "\\0x96").\
 		   replace("\x98", "989898").\
 		   replace("\x99", "999999").\
 		   replace("\x9c", "9C9C9C").\
 		   replace("\x9d", "9D9D9D").\
-		   decode("ascii");
+		   replace("\x9f", "\\0x9F").\
+		   replace("\xa0", "A0A0A0").\
+		   replace("\xa4", "\\0xA4").\
+		   replace("\xa6", "\\0xA6").\
+		   replace("\xa8", "\\0xA8").\
+		   replace("\xb1", "B1B1B1").\
+		   replace("\xb4", "B4B4B4").\
+		   replace("\xbc", "\\0xBC").\
+		   replace("\xc2", "C2C2C2").\
+		   replace("\xc3", "\\0xC3").\
+		   replace("\xc4", "\\0xC4").\
+		   replace("\xe2", "E2E2E2")
+		for code in range(0x80, 0xFF):
+		 	documentation = documentation.replace(chr(code), "\\0x" + str(code))
+		documentation = documentation.decode("ascii")
 		   # Some hacking to get rid of unicode chars
 	except urllib2.HTTPError:
 		print "URL: " + url

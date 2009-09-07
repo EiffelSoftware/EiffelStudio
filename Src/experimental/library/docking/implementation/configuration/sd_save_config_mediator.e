@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 					if attached {SD_AUTO_HIDE_STATE} l_one_group.item.content.state as l_auto_hide_state then
 						l_one_group_data.extend ([l_one_group.item.content.unique_title, l_auto_hide_state.width_height, l_auto_hide_state.last_floating_width, l_auto_hide_state.last_floating_height])
 					else
-						check False end -- Implied by
+						check False end -- Implied by in auto hide panel, content's state must be {SD_AUTO_HIDE_STATE}
 					end
 
 					l_one_group.forth
@@ -600,14 +600,14 @@ feature {NONE} -- Implementation attributes
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -264,8 +264,6 @@ feature -- Insertion, deletion
 		do
 			internal_search (key)
 			if control = Found_constant then
-					-- To make it void-safe
-				check l_default_key /= Void end
 				content.put (l_default_key, position)
 				deleted_marks.put (True, position)
 				count := count - 1

@@ -136,12 +136,11 @@ feature {NONE} -- Initialization
 				project_window_session_data.session_connection.connect_events (Current)
 			end
 
+
 			if code_template_catalog.is_service_available then
 					-- Connect code template catalog observer, to recieve change notifications.
 				code_template_catalog.service.code_template_catalog_connection.connect_events (Current)
-			end
 
-			if code_template_catalog.is_service_available then
 					-- Update the menu
 				update_code_template_list
 			else

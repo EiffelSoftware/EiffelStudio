@@ -13,6 +13,7 @@
 		</option>
 		<external_include location="$(ISE_LIBRARY)/library/objc_base/Clib"/>
 		<external_include location="$(ISE_LIBRARY)/library/cocoa/Clib"/>
+		<external_include location=". -ObjC"/>
 		<external_object location="-framework Cocoa"/>
 		<external_object location="$(ISE_LIBRARY)/library/cocoa/spec/$(ISE_PLATFORM)/lib/cocoa_eiffel.o"/>
 		<external_object location="$(ISE_LIBRARY)/library/objc_base/spec/$(ISE_PLATFORM)/lib/objc_base_eiffel.o"/>

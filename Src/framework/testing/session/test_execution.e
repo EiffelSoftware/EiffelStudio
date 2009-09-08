@@ -65,7 +65,7 @@ feature -- Access
 			-- <Precursor>
 		do
 			if initial_test_count > 0 then
-				Result := ((test_count + running_test_map.count)/initial_test_count).truncated_to_real
+				Result := ((initial_test_count - test_count - running_test_map.count.as_natural_32)/initial_test_count).truncated_to_real
 			else
 				Result := {REAL_32} 1.0
 			end
@@ -82,7 +82,7 @@ feature -- Access
 		local
 			l_group_map: DS_HASH_TABLE [DS_HASH_SET [TEST_I], NATURAL_64]
 		do
-			create Result.make (test_count)
+			create Result.make (test_count.as_integer_32)
 			test_queues.do_all (
 				agent (a_set: TEST_EXECUTION_QUEUE; a_list: like queued_tests)
 					local
@@ -99,6 +99,9 @@ feature -- Access
 			Result := 10
 		end
 
+	initial_test_count: NATURAL
+			-- <Precursor>
+
 feature {NONE} -- Access: task
 
 	task_cursor: DS_ARRAYED_LIST_CURSOR [like new_task_data]
@@ -106,10 +109,7 @@ feature {NONE} -- Access: task
 
 feature {NONE} -- Access: testing
 
-	initial_test_count: INTEGER
-			-- Number of tests in `test_queues' when `Current' was launched
-
-	test_count: INTEGER
+	test_count: NATURAL
 			-- Current number of tests in `test_queues'
 
 	test_queues: DS_HASH_TABLE [TEST_EXECUTION_QUEUE, STRING]
@@ -355,7 +355,6 @@ feature {NONE} -- Element change
 			if l_executor.is_interface_usable and then l_executor.is_running_test (a_test) then
 				l_executor.abort_test (a_test)
 			end
-			test_count := test_count - 1
 
 			publish_test_result (a_test, a_result)
 
@@ -525,6 +524,7 @@ feature {NONE} -- Implementation
 					l_queue := l_queues.found_item
 					launch_test (l_queue)
 					if has_launched_test then
+						test_count := test_count - 1
 						l_cursor.remove
 						if l_queue.group_map.is_empty then
 							l_queues.remove_found_item

@@ -66,6 +66,14 @@ feature -- Access
 			Result := l_cache
 		end
 
+	initial_test_count: NATURAL
+			-- Number of tests queued when `Current' was launched.
+		require
+			usable: is_interface_usable
+			running: has_next_step
+		deferred
+		end
+
 feature {NONE} -- Access
 
 	execution_connection_cache: like execution_connection

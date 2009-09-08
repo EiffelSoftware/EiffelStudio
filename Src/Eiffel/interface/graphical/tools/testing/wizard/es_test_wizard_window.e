@@ -87,16 +87,6 @@ feature {NONE} -- Access
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Window `Current' is attached to.
 
-	current_window: EV_WINDOW
-			-- <Precursor>
-		local
-			l_window: EV_WINDOW
-		do
-			l_window := development_window.window
-			check l_window /= Void end
-			Result := l_window
-		end
-
 	pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 			-- Pixmap factory
 		once
@@ -186,10 +176,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

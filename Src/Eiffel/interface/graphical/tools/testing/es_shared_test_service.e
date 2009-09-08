@@ -21,6 +21,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Access
 
 	test_suite: SERVICE_CONSUMER [TEST_SUITE_S]
@@ -38,7 +43,8 @@ feature {NONE} -- Access
 
 	current_window: EV_WINDOW
 			-- Window in which `Current' is used.
-		deferred
+		do
+			Result := window_manager.last_focused_window.window
 		end
 
 	observer_cell: CELL [detachable ES_TEST_CLUSTER_OBSERVER]

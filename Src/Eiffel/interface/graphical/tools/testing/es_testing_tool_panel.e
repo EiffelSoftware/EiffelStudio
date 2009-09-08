@@ -147,12 +147,6 @@ feature -- Access: help
 
 feature {NONE} -- Access
 
-	current_window: EV_WINDOW
-			-- <Precursor>
-		do
-			Result := develop_window.window
-		end
-
 	test_creation_pixmap: EV_PIXMAP
 			-- Pixmap for test creation
 		do

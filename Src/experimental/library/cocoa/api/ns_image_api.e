@@ -319,7 +319,7 @@ feature -- Managing the Focus
 
 feature -- Drawing the Image
 
-	frozen draw_at_point_from_rect_operation_fraction (a_ns_image: POINTER; a_point: POINTER; a_from_rect: POINTER; a_op: INTEGER; a_delta: REAL)
+	frozen draw_at_point_from_rect_operation_fraction (a_ns_image: POINTER; a_point: POINTER; a_from_rect: POINTER; a_op: NATURAL; a_delta: REAL)
 			-- - (void)drawAtPoint: (NSPoint) point fromRect: (NSRect) fromRect operation: (NSCompositingOperation) op fraction: (CGFloat) delta
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -327,7 +327,7 @@ feature -- Drawing the Image
 			"[(NSImage*)$a_ns_image drawAtPoint: *(NSPoint*)$a_point fromRect: *(NSRect*)$a_from_rect operation: $a_op fraction: $a_delta];"
 		end
 
-	frozen draw_in_rect_from_rect_operation_fraction (a_ns_image: POINTER; a_rect: POINTER; a_from_rect: POINTER; a_op: INTEGER; a_delta: REAL)
+	frozen draw_in_rect_from_rect_operation_fraction (a_ns_image: POINTER; a_rect: POINTER; a_from_rect: POINTER; a_op: NATURAL; a_delta: REAL)
 			-- - (void)drawInRect: (NSRect) rect fromRect: (NSRect) fromRect operation: (NSCompositingOperation) op fraction: (CGFloat) delta
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -343,7 +343,7 @@ feature -- Drawing the Image
 			"return [(NSImage*)$a_ns_image drawRepresentation: $a_image_rep inRect: *(NSRect*)$a_rect];"
 		end
 
-	frozen composite_to_point_operation (a_ns_image: POINTER; a_point: POINTER; a_op: INTEGER)
+	frozen composite_to_point_operation (a_ns_image: POINTER; a_point: POINTER; a_op: NATURAL)
 			-- - (void)compositeToPoint: (NSPoint) point operation: (NSCompositingOperation) op
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -351,7 +351,7 @@ feature -- Drawing the Image
 			"[(NSImage*)$a_ns_image compositeToPoint: *(NSPoint*)$a_point operation: $a_op];"
 		end
 
-	frozen composite_to_point_from_rect_operation (a_ns_image: POINTER; a_point: POINTER; a_rect: POINTER; a_op: INTEGER)
+	frozen composite_to_point_from_rect_operation (a_ns_image: POINTER; a_point: POINTER; a_rect: POINTER; a_op: NATURAL)
 			-- - (void)compositeToPoint: (NSPoint) point fromRect: (NSRect) rect operation: (NSCompositingOperation) op
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -359,7 +359,7 @@ feature -- Drawing the Image
 			"[(NSImage*)$a_ns_image compositeToPoint: *(NSPoint*)$a_point fromRect: *(NSRect*)$a_rect operation: $a_op];"
 		end
 
-	frozen composite_to_point_from_rect_operation_fraction (a_ns_image: POINTER; a_point: POINTER; a_rect: POINTER; a_op: INTEGER; a_delta: REAL)
+	frozen composite_to_point_from_rect_operation_fraction (a_ns_image: POINTER; a_point: POINTER; a_rect: POINTER; a_op: NATURAL; a_delta: REAL)
 			-- - (void)compositeToPoint: (NSPoint) point fromRect: (NSRect) rect operation: (NSCompositingOperation) op fraction: (CGFloat) delta
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -367,7 +367,7 @@ feature -- Drawing the Image
 			"[(NSImage*)$a_ns_image compositeToPoint: *(NSPoint*)$a_point fromRect: *(NSRect*)$a_rect operation: $a_op fraction: $a_delta];"
 		end
 
-	frozen composite_to_point_operation_fraction (a_ns_image: POINTER; a_point: POINTER; a_op: INTEGER; a_delta: REAL)
+	frozen composite_to_point_operation_fraction (a_ns_image: POINTER; a_point: POINTER; a_op: NATURAL; a_delta: REAL)
 			-- - (void)compositeToPoint: (NSPoint) point operation: (NSCompositingOperation) op fraction: (CGFloat) delta
 		external
 			"C inline use <Cocoa/Cocoa.h>"

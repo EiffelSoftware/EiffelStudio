@@ -335,6 +335,7 @@ typeMap = {
 	"NSUInteger": "NATURAL",
 	"IBAction": "",
 	"CGFloat" : "REAL",
+	"void *": "POINTER",
 	"void * /* WindowRef */": "WINDOW_REF",
 	"id <NSCopying>": "NS_COPYING",
 	"IconRef": "ICON_REF",

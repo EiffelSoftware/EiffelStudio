@@ -239,7 +239,7 @@ feature {NONE} -- Action handlers
 				l_cmd_line.append_character (' ')
 				l_cmd_line.append (l_profile)
 			end
-			(create {COMMAND_EXECUTOR}).execute (l_profile)
+			(create {COMMAND_EXECUTOR}).execute (l_cmd_line)
 
 				-- Perform quit of current process
 			on_quit

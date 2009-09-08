@@ -301,6 +301,7 @@ feature -- Basic operations
 		do
 			Precursor
 			flush_output
+			proceeded_event.publish ([Current])
 		end
 
 

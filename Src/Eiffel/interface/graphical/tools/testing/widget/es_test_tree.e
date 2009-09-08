@@ -10,25 +10,23 @@ class
 	ES_TEST_TREE
 
 inherit
-	ES_WINDOW_WIDGET [EV_VERTICAL_BOX]
+	ES_TEST_SESSION_WIDGET_NEW [TEST_RETRIEVAL_I]
 		rename
-			make as make_window_widget
+			make as make_widget
+		undefine
+			internal_detach_entities
 		redefine
 			on_before_initialize,
 			on_after_initialized
 		end
 
-	ES_SHARED_TEST_SERVICE
-
-	TEST_SUITE_OBSERVER
-		redefine
-			on_session_launched,
-			on_session_finished
-		end
-
-	TEST_SESSION_OBSERVER
-		redefine
-			on_proceeded
+	ES_WINDOW_WIDGET [EV_VERTICAL_BOX]
+		rename
+			make as make_window_widget
+		undefine
+			on_before_initialize,
+			on_after_initialized,
+			internal_recycle
 		end
 
 create
@@ -36,17 +34,16 @@ create
 
 feature {NONE} -- Initialization: pre
 
-	make (a_develop_window: like develop_window; a_icon_provider: ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS])
+	make (a_window: like develop_window; a_icon_provider: ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS])
 			-- Initialize `Current'.
 		do
 			create tag_filter.make
-			create tag_tree.make (a_develop_window,
+			create tag_tree.make (a_window,
 			                      tag_filter,
 			                      create {ES_TEST_TAG_TREE_GRID_LAYOUT}.make (a_icon_provider))
 			tag_tree.set_hide_outside_nodes (True)
 			tag_tree.set_update_timer (2)
-
-			make_window_widget (a_develop_window)
+			make_window_widget (a_window)
 		end
 
 	on_before_initialize
@@ -54,7 +51,7 @@ feature {NONE} -- Initialization: pre
 		local
 			l_et: KL_STRING_EQUALITY_TESTER_A [STRING]
 		do
-			Precursor
+			Precursor {ES_TEST_SESSION_WIDGET_NEW}
 			create l_et
 			create view_templates.make (5)
 			view_templates.set_equality_tester (l_et)
@@ -72,8 +69,6 @@ feature {NONE} -- Initialization
 			build_view_bar (a_widget)
 
 			a_widget.extend (tag_tree.widget)
-
-			build_status_bar (a_widget)
 		end
 
 	build_view_bar (a_widget: like create_widget)
@@ -111,47 +106,17 @@ feature {NONE} -- Initialization
 			a_widget.disable_item_expand (l_hbox)
 		end
 
-	build_status_bar (a_widget: like create_widget)
-			-- Initialize status bar.
-		local
-			l_status_bar: EV_STATUS_BAR
-			l_frame: EV_FRAME
-		do
-			create l_status_bar
-
-			create l_frame
-			create status_label
-			status_label.align_text_left
-			l_frame.extend (status_label)
-			l_status_bar.extend (l_frame)
-
-			create l_frame
-			create progress_bar.make_with_value_range (1 |..| 100)
-			progress_bar.disable_segmentation
-			l_frame.set_minimum_width (100)
-			l_frame.extend (progress_bar)
-			l_status_bar.extend (l_frame)
-			l_status_bar.disable_item_expand (l_frame)
-
-			a_widget.extend (l_status_bar)
-			a_widget.disable_item_expand (l_status_bar)
-		end
-
 feature {NONE} -- Initialization (post)
 
 	on_after_initialized
 			-- <Precursor>
-		local
-			l_test_suite: TEST_SUITE_S
 		do
-			if test_suite.is_service_available then
-				l_test_suite := test_suite.service
-				if l_test_suite.is_interface_usable then
-					tag_tree.connect (l_test_suite.tag_tree)
-					l_test_suite.test_suite_connection.connect_events (Current)
-				end
-			end
-
+			Precursor {ES_TEST_SESSION_WIDGET_NEW}
+			perform_with_test_suite (
+				agent (a_test_suite: TEST_SUITE_S)
+					do
+						tag_tree.connect (a_test_suite.tag_tree)
+					end)
 			initialize_view_bar
 		end
 
@@ -180,14 +145,6 @@ feature -- Access
 	tag_tree: ES_TAG_TREE_GRID [TEST_I]
 			-- Widget showing tag tree
 
-feature {NONE} -- Access
-
-	current_window: EV_WINDOW
-			-- <Precursor>
-		do
-			Result := develop_window.window
-		end
-
 feature {NONE} -- Access: widgets
 
 	tag_filter: TAG_REGEX_FILTER [TEST_I]
@@ -198,12 +155,6 @@ feature {NONE} -- Access: widgets
 
 	clear_filter_button: SD_TOOL_BAR_BUTTON
 			-- Button for clearing any filter
-
-	status_label: EV_LABEL
-			-- Label indicating current status
-
-	progress_bar: EV_HORIZONTAL_PROGRESS_BAR
-			-- Progress bar for retrieval
 
 feature {NONE} -- Access: filter
 
@@ -331,44 +282,9 @@ feature {NONE} -- Status setting: view
 			develop_window.unlock_update
 		end
 
-feature {TEST_SUITE_S} -- Events
-
-	on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
-			-- <Precursor>
-		do
-			if attached {TEST_RETRIEVAL_I} a_session then
-				a_session.connection.connect_events (Current)
-				on_proceeded (a_session)
-			end
-			status_label.set_text ("Searching tests")
-		end
-
-	on_session_finished (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
-			-- <Precursor>
-		do
-			if attached {TEST_RETRIEVAL_I} a_session then
-				a_session.connection.disconnect_events (Current)
-				progress_bar.set_proportion ({REAL_32} 0.0)
-			end
-			status_label.set_text (a_test_suite.tests.count.out + " tests")
-		end
-
-feature {TEST_SESSION_I} -- Events
-
-	on_proceeded (a_session: TEST_SESSION_I)
-			-- <Precursor>
-		do
-			if
-				attached {TEST_RETRIEVAL_I} a_session and
-				a_session.has_next_step
-			then
-				progress_bar.set_proportion (a_session.progress)
-			end
-		end
-
 feature {NONE} -- Factory
 
-	create_widget: EV_VERTICAL_BOX
+	create_widget: like widget
 			-- <Precursor>
 		do
 			create Result

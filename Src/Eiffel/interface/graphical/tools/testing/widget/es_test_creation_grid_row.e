@@ -10,7 +10,7 @@ class
 	ES_TEST_CREATION_GRID_ROW
 
 inherit
-	ES_TEST_SESSION_GRID_ROW [TEST_CREATION_I]
+	ES_TEST_RECORD_GRID_ROW [TEST_CREATION_I]
 		redefine
 			attach_session,
 			detach_session
@@ -36,7 +36,7 @@ feature {NONE} -- Basic operations
 
 		end
 
-feature {ES_TEST_SESSION_WIDGET} -- Status setting
+feature {ES_TEST_RECORDS_TAB} -- Status setting
 
 	attach_session (a_session: like session)
 			-- <Precursor>

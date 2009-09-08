@@ -10,7 +10,7 @@ class
 	ES_TEST_CREATION_WIDGET
 
 inherit
-	ES_TEST_SESSION_WIDGET [TEST_CREATION_I]
+	ES_TEST_RECORDS_TAB [TEST_CREATION_I]
 		redefine
 			record
 		end

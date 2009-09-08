@@ -7,10 +7,12 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ES_TEST_SESSION_GRID_ROW [G -> TEST_SESSION_I]
+	ES_TEST_RECORD_GRID_ROW [G -> TEST_SESSION_I]
 
 inherit
 	EB_RECYCLABLE
+
+	EB_SHARED_PIXMAPS
 
 feature {NONE} -- Initialization
 
@@ -74,7 +76,7 @@ feature {NONE} -- Status report
 		deferred
 		end
 
-feature {ES_TEST_SESSION_WIDGET} -- Status setting
+feature {ES_TEST_RECORDS_TAB} -- Status setting
 
 	attach_session (a_session: like session)
 			-- Attach running session to `Current'.
@@ -147,6 +149,15 @@ feature {NONE} -- Basic operations
 		do
 			create l_label.make_with_text (record.creation_date.formatted_out (record.creation_date.default_format_string))
 			row.set_item (1, l_label)
+
+			create l_label.make_with_text ("")
+			--l_label.set_pixmap (icon_pixmaps.general_save_icon)
+			row.set_item (3, l_label)
+
+			create l_label.make_with_text ("")
+			--l_label.set_pixmap (icon_pixmaps.breakpoints_delete_icon)
+			row.set_item (4, l_label)
+			l_label.disable_full_select
 		end
 
 	fill_subrows

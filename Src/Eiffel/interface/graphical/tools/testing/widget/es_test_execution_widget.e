@@ -10,7 +10,7 @@ class
 	ES_TEST_EXECUTION_WIDGET
 
 inherit
-	ES_TEST_SESSION_WIDGET [TEST_EXECUTION_I]
+	ES_TEST_RECORDS_TAB [TEST_EXECUTION_I]
 		redefine
 			record
 		end
@@ -28,7 +28,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Factory
 
-	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_SESSION_GRID_ROW [TEST_EXECUTION_I]
+	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_RECORD_GRID_ROW [TEST_EXECUTION_I]
 			-- <Precursor>
 		do
 			create {ES_TEST_EXECUTION_GRID_ROW} Result.make (a_record, a_row)

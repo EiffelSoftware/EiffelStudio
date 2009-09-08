@@ -7,20 +7,25 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ES_TEST_SESSION_WIDGET [G -> TEST_SESSION_I]
+	ES_TEST_RECORDS_TAB [G -> TEST_SESSION_I]
 
 inherit
-	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
-		rename
-			make as make_notebook_widget
+	ES_TEST_SESSION_WIDGET_NEW [G]
+		undefine
+			internal_detach_entities
 		redefine
-			internal_recycle
+			on_before_initialize,
+			on_after_initialized,
+			internal_recycle,
+			on_typed_session_launched,
+			on_typed_session_finished
 		end
 
-	TEST_SUITE_OBSERVER
-		redefine
-			on_session_launched,
-			on_session_finished
+	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
+		undefine
+			on_before_initialize,
+			on_after_initialized,
+			internal_recycle
 		end
 
 	TEST_RECORD_REPOSITORY_OBSERVER
@@ -31,27 +36,6 @@ inherit
 		end
 
 feature {NONE} -- Initialization
-
-	make
-			-- Initialize `Current'.
-		local
-			l_service: SERVICE_CONSUMER [TEST_SUITE_S]
-			l_test_suite: TEST_SUITE_S
-			l_repo: TEST_RECORD_REPOSITORY_I
-		do
-			make_notebook_widget
-			create records.make_default
-			create l_service
-			if l_service.is_service_available then
-				l_test_suite := l_service.service
-				if l_test_suite.is_interface_usable then
-					l_test_suite.test_suite_connection.connect_events (Current)
-					l_repo := l_test_suite.record_repository
-					l_repo.connection.connect_events (Current)
-					l_repo.records.do_all (agent on_record_added (l_repo, ?))
-				end
-			end
-		end
 
 	build_notebook_widget_interface (a_widget: EV_VERTICAL_BOX)
 			-- <Precursor>
@@ -64,11 +48,53 @@ feature {NONE} -- Initialization
 			-- Initialize `grid'
 		local
 			l_grid: like grid
+			l_col: EV_GRID_COLUMN
 		do
 			create l_grid
 			l_grid.enable_tree
-			l_grid.set_column_count_to (1)
+			l_grid.hide_tree_node_connectors
+			l_grid.enable_single_row_selection
+
+			l_grid.set_column_count_to (5)
+			l_grid.enable_auto_size_best_fit_column (1)
+			l_col := l_grid.column (1)
+			l_col.header_item.set_text ("Results")
+
+			l_col := l_grid.column (2)
+			l_col.set_width (20)
+
+			l_col := l_grid.column (3)
+			l_col.set_width (20)
+
+			l_col := l_grid.column (4)
+			l_col.set_width (20)
+
+			l_col := l_grid.column (5)
+			l_col.set_width (10)
+
 			grid := l_grid
+		end
+
+	on_before_initialize
+			-- <Precursor>
+		do
+			Precursor {ES_TEST_SESSION_WIDGET_NEW}
+			create records.make_default
+		end
+
+	on_after_initialized
+			-- <Precursor>
+		do
+			Precursor {ES_TEST_SESSION_WIDGET_NEW}
+			perform_with_test_suite (
+				agent (a_test_suite: TEST_SUITE_S)
+					local
+						l_repo: TEST_RECORD_REPOSITORY_I
+					do
+						l_repo := a_test_suite.record_repository
+						l_repo.connection.connect_events (Current)
+						l_repo.records.do_all (agent on_record_added (l_repo, ?))
+					end)
 		end
 
 feature {NONE} -- Access
@@ -189,11 +215,12 @@ feature {NONE} -- Basic operations
 
 feature {TEST_SUITE_S} -- Events: test sutie
 
-	on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
+	on_typed_session_launched (a_test_suite: TEST_SUITE_S; a_session: G)
 			-- <Precursor>
 		local
 			l_row: like last_found_row
 		do
+			Precursor (a_test_suite, a_session)
 			if attached {G} a_session as l_session then
 				find_row (record (l_session))
 				l_row := last_found_row
@@ -205,12 +232,13 @@ feature {TEST_SUITE_S} -- Events: test sutie
 			end
 		end
 
-	on_session_finished (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
+	on_typed_session_finished (a_test_suite: TEST_SUITE_S; a_session: G)
 			-- <Precursor>
 		local
 			l_records: like records
 			l_row: like create_grid_row
 		do
+			Precursor (a_test_suite, a_session)
 			if attached {G} a_session as l_session then
 				from
 					l_records := records
@@ -282,7 +310,7 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 
 feature {NONE} -- Factory
 
-	create_notebook_widget: EV_VERTICAL_BOX
+	create_notebook_widget: like widget
 			-- <Precursor>
 		do
 			create Result
@@ -293,7 +321,7 @@ feature {NONE} -- Factory
 		do
 		end
 
-	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_SESSION_GRID_ROW [G]
+	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_RECORD_GRID_ROW [G]
 			-- Create new grid row data
 		require
 			a_record_attached: a_record /= Void
@@ -310,8 +338,8 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		do
-			Precursor
-			records.do_all (agent {ES_TEST_SESSION_GRID_ROW [G]}.recycle)
+			Precursor {ES_TEST_SESSION_WIDGET_NEW}
+			records.do_all (agent {ES_TEST_RECORD_GRID_ROW [G]}.recycle)
 		end
 
 note

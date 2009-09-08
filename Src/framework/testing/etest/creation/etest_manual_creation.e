@@ -109,6 +109,7 @@ feature -- Status setting: task
 			-- <Precursor>
 		do
 			create_new_class
+			proceeded_event.publish ([Current])
 			cancel
 		end
 

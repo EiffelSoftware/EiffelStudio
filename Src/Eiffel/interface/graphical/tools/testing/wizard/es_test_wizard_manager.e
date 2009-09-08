@@ -11,6 +11,9 @@ inherit
 	EB_WIZARD_MANAGER
 
 	ES_SHARED_TEST_SERVICE
+		redefine
+			current_window
+		end
 
 	SHARED_DEBUGGER_MANAGER
 		export

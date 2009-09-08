@@ -1,6 +1,6 @@
 note
 	description: "Wrapper for delegate methods of NSSplitView."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 

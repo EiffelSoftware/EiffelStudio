@@ -207,7 +207,7 @@ feature -- Mananging Compression Types
 			{NS_BITMAP_IMAGE_REP_API}.set_compression_factor (item, a_compression, a_factor)
 		end
 
-	get_compression_factor (a_compression: TYPED_POINTER[NATURAL]; a_factor: TYPED_POINTER[REAL])
+	get_compression_factor (a_compression: TYPED_POINTER[NATURAL_64]; a_factor: TYPED_POINTER[REAL])
 			-- Returns by indirection the receiver`s compression type and compression factor.
 		do
 			{NS_BITMAP_IMAGE_REP_API}.get_compression_factor (item, a_compression, a_factor)

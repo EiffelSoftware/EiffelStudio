@@ -22,57 +22,51 @@ create {NS_OBJECT}
 	make_from_pointer,
 	share_from_pointer
 
-feature {NONE} -- Creating and Initializing Date Objects
+feature {NONE} -- Creating Date Objects
 
 	make
 			-- Creates and returns a new date set to the current date and time.
 		do
-			make_from_pointer ({NS_DATE_API}.date)
+			make_from_pointer ({NS_DATE_API}.create_default)
 		end
 
 	make_with_time_interval_since_now (a_secs: REAL_64)
 			-- Creates and returns an <code>NSDate</code> object set to a given number of seconds from the current date and time.
 		do
-			make_from_pointer ({NS_DATE_API}.date_with_time_interval_since_now (a_secs))
+			make_from_pointer ({NS_DATE_API}.create_with_time_interval_since_now (a_secs))
 		end
 
 	make_with_time_interval_since_reference_date (a_secs: REAL_64)
 			-- Creates and returns an <code>NSDate</code> object set to a given number of seconds from the first instant of 1 January 2001, GMT.
 		do
-			make_from_pointer ({NS_DATE_API}.date_with_time_interval_since_reference_date (a_secs))
+			make_from_pointer ({NS_DATE_API}.create_with_time_interval_since_reference_date (a_secs))
 		end
 
 	make_with_time_interval_since1970 (a_secs: REAL_64)
 			-- Creates and returns an <code>NSDate</code> object set to the given number of seconds from the first instant of 1 January 1970, GMT.
 		do
-			make_from_pointer ({NS_DATE_API}.date_with_time_interval_since1970 (a_secs))
+			make_from_pointer ({NS_DATE_API}.create_with_time_interval_since1970 (a_secs))
 		end
 
-feature
+feature -- Initializing Date Objects
 
-	init
-			-- Initializes an <code>NSDate</code> object to the current date and time.
+	init_with_time_interval_since_now (a_secs_to_be_added_to_now: REAL_64)
+			-- Returns an <code>NSDate</code> object initialized relative to the current date and time by a given number of seconds.
 		do
-			item := {NS_DATE_API}.init (item)
+			item := {NS_DATE_API}.init_with_time_interval_since_now (item, a_secs_to_be_added_to_now)
 		end
 
---	init_with_time_interval_since_now (a_secs_to_be_added_to_now: REAL_64)
---			-- Returns an <code>NSDate</code> object initialized relative to the current date and time by a given number of seconds.
---		do
---			{NS_DATE_API}.init_with_time_interval_since_now (item, a_secs_to_be_added_to_now)
---		end
+	init_with_time_interval_since_date (a_secs_to_be_added: REAL_64; a_another_date: NS_DATE)
+			-- Returns an <code>NSDate</code> object initialized relative to another given date by a given number of seconds.
+		do
+			item := {NS_DATE_API}.init_with_time_interval_since_date (item, a_secs_to_be_added, a_another_date.item)
+		end
 
---	init_with_time_interval_since_date (a_secs_to_be_added: REAL_64; a_another_date: NS_DATE)
---			-- Returns an <code>NSDate</code> object initialized relative to another given date by a given number of seconds.
---		do
---			{NS_DATE_API}.init_with_time_interval_since_date (item, a_secs_to_be_added, a_another_date.item)
---		end
-
---	init_with_time_interval_since_reference_date (a_secs_to_be_added: REAL_64)
---			-- Returns an <code>NSDate</code> object initialized relative the first instant of 1 January 2001, GMT by a given number of seconds.
---		do
---			{NS_DATE_API}.init_with_time_interval_since_reference_date (item, a_secs_to_be_added)
---		end
+	init_with_time_interval_since_reference_date (a_secs_to_be_added: REAL_64)
+			-- Returns an <code>NSDate</code> object initialized relative the first instant of 1 January 2001, GMT by a given number of seconds.
+		do
+			item := {NS_DATE_API}.init_with_time_interval_since_reference_date (item, a_secs_to_be_added)
+		end
 
 feature -- Getting Temporal Boundaries
 
@@ -138,14 +132,6 @@ feature -- Getting Time Intervals
 			-- Returns the interval between the receiver and the first instant of 1 January 1970, GMT.
 		do
 			Result := {NS_DATE_API}.time_interval_since1970 (item)
-		end
-
-feature -- Adding a Time Interval
-
-	add_time_interval (a_seconds: REAL_64): NS_OBJECT
-			-- Returns a new <code>NSDate</code> object that is set to a given number of seconds relative to the receiver.
-		do
-			create Result.make_from_pointer ({NS_DATE_API}.add_time_interval (item, a_seconds))
 		end
 
 feature -- Representing Dates as Strings

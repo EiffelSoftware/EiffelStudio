@@ -13,11 +13,6 @@ inherit
 			copy
 		end
 
-	DISPOSABLE
-		redefine
-			copy
-		end
-
 	DEBUG_OUTPUT
 		redefine
 			copy
@@ -51,7 +46,7 @@ feature {OBJC_CLASS} -- Initialization
 			item := a_ptr
 		ensure
 			item_set: item = a_ptr
-			proper_reference_counting: {NS_OBJECT_API}.retain_count (a_ptr) = 1
+			--proper_reference_counting: {NS_OBJECT_API}.retain_count (a_ptr) = 1
 		end
 
 	share_from_pointer (a_ptr: POINTER)
@@ -76,14 +71,6 @@ feature -- Access
 
 	item: POINTER
 			-- Underlying objective-C object
-
-	null: POINTER
-			-- Default NULL pointer to be used in assertions in place of `default_pointer'
-		external
-			"C inline"
-		alias
-			"return NULL;"
-		end
 
 feature -- Status report
 
@@ -121,7 +108,7 @@ feature -- Duplication
 			end
 		end
 
-feature -- Removal
+feature {NONE} -- Memory Management
 
 	dispose
 			-- <Precursor>
@@ -130,7 +117,7 @@ feature -- Removal
 		do
 			Precursor {IDENTIFIED}
 			if item /= l_null then
---				{NS_OBJECT_API}.release (item)
+				{NS_OBJECT_API}.release (item)
 				item := l_null
 			end
 		end

@@ -25,4 +25,11 @@ feature -- Managing a Pool
 			"[(NSAutoreleasePool*)$a_target release];"
 		end
 
+	frozen drain (a_target: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSAutoreleasePool*)$a_target drain];"
+		end
+
 end

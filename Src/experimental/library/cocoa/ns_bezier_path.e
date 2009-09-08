@@ -626,17 +626,4 @@ feature {NONE} -- Objective-C implementation
 --			"return [(NSBezierPath*)$a_bezier_path containsPoint: $a_point];"
 --		end
 
-	frozen bezier_path_caches_bezier_path (a_bezier_path: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSBezierPath*)$a_bezier_path cachesBezierPath];"
-		end
-
-	frozen bezier_path_set_caches_bezier_path (a_bezier_path: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSBezierPath*)$a_bezier_path setCachesBezierPath: $a_flag];"
-		end
 end

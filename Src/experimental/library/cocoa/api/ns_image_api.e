@@ -217,13 +217,13 @@ feature -- Working With Image Representations
 			"[(NSImage*)$a_ns_image addRepresentations: $a_image_reps];"
 		end
 
-	frozen best_representation_for_device (a_ns_image: POINTER; a_device_description: POINTER): POINTER
-			-- - (NSImageRep *)bestRepresentationForDevice: (NSDictionary *) deviceDescription
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSImage*)$a_ns_image bestRepresentationForDevice: $a_device_description];"
-		end
+--	frozen best_representation_for_device (a_ns_image: POINTER; a_device_description: POINTER): POINTER
+--			-- - (NSImageRep *)bestRepresentationForDevice: (NSDictionary *) deviceDescription
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"return [(NSImage*)$a_ns_image bestRepresentationForDevice: $a_device_description];"
+--		end
 
 	frozen representations (a_ns_image: POINTER): POINTER
 			-- - (NSArray *)representations
@@ -391,13 +391,13 @@ feature -- Drawing the Image
 			"[(NSImage*)$a_ns_image dissolveToPoint: *(NSPoint*)$a_point fromRect: *(NSRect*)$a_rect fraction: $a_float];"
 		end
 
-	frozen image_did_not_draw_in_rect (a_ns_image: POINTER; a_sender: POINTER; a_rect: POINTER): POINTER
-			-- - (NSImage *)imageDidNotDraw: (id) sender inRect: (NSRect) aRect
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSImage*)$a_ns_image imageDidNotDraw: $a_sender inRect: *(NSRect*)$a_rect];"
-		end
+--	frozen image_did_not_draw_in_rect (a_ns_image: POINTER; a_sender: POINTER; a_rect: POINTER): POINTER
+--			-- - (NSImage *)imageDidNotDraw: (id) sender inRect: (NSRect) aRect
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"return [(NSImage*)$a_ns_image imageDidNotDraw: $a_sender inRect: *(NSRect*)$a_rect];"
+--		end
 
 feature -- Working With Alignment Metadata
 
@@ -581,36 +581,36 @@ feature -- Managing Incremental Loads
 			"[(NSImage*)$a_ns_image cancelIncrementalLoad];"
 		end
 
-	frozen image_did_load_part_of_representation_with_valid_rows (a_ns_image: POINTER; a_image: POINTER; a_rep: POINTER; a_rows: INTEGER)
-			-- - (void)image: (NSImage*) image didLoadPartOfRepresentation: (NSImageRep*) rep withValidRows: (NSInteger) rows
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSImage*)$a_ns_image image: $a_image didLoadPartOfRepresentation: $a_rep withValidRows: $a_rows];"
-		end
+--	frozen image_did_load_part_of_representation_with_valid_rows (a_ns_image: POINTER; a_image: POINTER; a_rep: POINTER; a_rows: INTEGER)
+--			-- - (void)image: (NSImage*) image didLoadPartOfRepresentation: (NSImageRep*) rep withValidRows: (NSInteger) rows
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"[(NSImage*)$a_ns_image image: $a_image didLoadPartOfRepresentation: $a_rep withValidRows: $a_rows];"
+--		end
 
-	frozen image_did_load_representation_with_status (a_ns_image: POINTER; a_image: POINTER; a_rep: POINTER; a_status: INTEGER)
-			-- - (void)image: (NSImage*) image didLoadRepresentation: (NSImageRep*) rep withStatus: (NSImageLoadStatus) status
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSImage*)$a_ns_image image: $a_image didLoadRepresentation: $a_rep withStatus: $a_status];"
-		end
+--	frozen image_did_load_representation_with_status (a_ns_image: POINTER; a_image: POINTER; a_rep: POINTER; a_status: INTEGER)
+--			-- - (void)image: (NSImage*) image didLoadRepresentation: (NSImageRep*) rep withStatus: (NSImageLoadStatus) status
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"[(NSImage*)$a_ns_image image: $a_image didLoadRepresentation: $a_rep withStatus: $a_status];"
+--		end
 
-	frozen image_did_load_representation_header (a_ns_image: POINTER; a_image: POINTER; a_rep: POINTER)
-			-- - (void)image: (NSImage*) image didLoadRepresentationHeader: (NSImageRep*) rep
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSImage*)$a_ns_image image: $a_image didLoadRepresentationHeader: $a_rep];"
-		end
+--	frozen image_did_load_representation_header (a_ns_image: POINTER; a_image: POINTER; a_rep: POINTER)
+--			-- - (void)image: (NSImage*) image didLoadRepresentationHeader: (NSImageRep*) rep
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"[(NSImage*)$a_ns_image image: $a_image didLoadRepresentationHeader: $a_rep];"
+--		end
 
-	frozen image_will_load_representation (a_ns_image: POINTER; a_image: POINTER; a_rep: POINTER)
-			-- - (void)image: (NSImage*) image willLoadRepresentation: (NSImageRep*) rep
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSImage*)$a_ns_image image: $a_image willLoadRepresentation: $a_rep];"
-		end
+--	frozen image_will_load_representation (a_ns_image: POINTER; a_image: POINTER; a_rep: POINTER)
+--			-- - (void)image: (NSImage*) image willLoadRepresentation: (NSImageRep*) rep
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"[(NSImage*)$a_ns_image image: $a_image willLoadRepresentation: $a_rep];"
+--		end
 
 end

@@ -135,11 +135,11 @@ feature -- Drawing the Image
 			{NS_IMAGE_API}.dissolve_to_point_from_rect_fraction (item, a_point.item, a_rect.item, a_float)
 		end
 
-	image_did_not_draw_in_rect (a_sender: NS_OBJECT; a_rect: NS_RECT): NS_IMAGE
-			-- Sent to the delegate when the image object is unable, for whatever reason, to lock focus on its image or draw in the specified rectangle.
-		do
-			create Result.share_from_pointer ({NS_IMAGE_API}.image_did_not_draw_in_rect (item, a_sender.item, a_rect.item))
-		end
+--	image_did_not_draw_in_rect (a_sender: NS_OBJECT; a_rect: NS_RECT): NS_IMAGE
+--			-- Sent to the delegate when the image object is unable, for whatever reason, to lock focus on its image or draw in the specified rectangle.
+--		do
+--			create Result.share_from_pointer ({NS_IMAGE_API}.image_did_not_draw_in_rect (item, a_sender.item, a_rect.item))
+--		end
 
 feature -- Working With Image Representatons
 

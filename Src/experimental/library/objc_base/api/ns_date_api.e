@@ -9,36 +9,44 @@ class
 
 feature -- Creating and Initializing Date Objects
 
-	frozen date: POINTER
-			-- + (id)date
+	frozen create_default: POINTER
+			-- - (id)init
 		external
 			"C inline use <Foundation/NSDate.h>"
 		alias
-			"return [NSDate date];"
+			"return [[NSDate alloc] init];"
 		end
 
-	frozen date_with_time_interval_since_now (a_secs: REAL_64): POINTER
-			-- + (id)dateWithTimeIntervalSinceNow: (NSTimeInterval) secs
+	frozen create_with_time_interval_since_now (a_secs_to_be_added_to_now: REAL_64): POINTER
+			-- - (id)initWithTimeIntervalSinceNow: (NSTimeInterval) secsToBeAddedToNow
 		external
 			"C inline use <Foundation/NSDate.h>"
 		alias
-			"return [NSDate dateWithTimeIntervalSinceNow: $a_secs];"
+			"return [[NSDate alloc] initWithTimeIntervalSinceNow: $a_secs_to_be_added_to_now];"
 		end
 
-	frozen date_with_time_interval_since_reference_date (a_secs: REAL_64): POINTER
-			-- + (id)dateWithTimeIntervalSinceReferenceDate: (NSTimeInterval) secs
+	frozen create_with_time_interval_since_date (a_secs_to_be_added: REAL_64; a_another_date: POINTER): POINTER
+			-- - (id)initWithTimeInterval: (NSTimeInterval) secsToBeAdded sinceDate: (NSTimeInterval) anotherDate
 		external
 			"C inline use <Foundation/NSDate.h>"
 		alias
-			"return [NSDate dateWithTimeIntervalSinceReferenceDate: $a_secs];"
+			"return [[NSDate alloc] initWithTimeInterval: $a_secs_to_be_added sinceDate: $a_another_date];"
 		end
 
-	frozen date_with_time_interval_since1970 (a_secs: REAL_64): POINTER
-			-- + (id)dateWithTimeIntervalSince1970: (NSTimeInterval) secs
+	frozen create_with_time_interval_since_reference_date (a_secs_to_be_added: REAL_64): POINTER
+			-- - (id)initWithTimeIntervalSinceReferenceDate: (NSTimeInterval) secsToBeAdded
 		external
 			"C inline use <Foundation/NSDate.h>"
 		alias
-			"return [NSDate dateWithTimeIntervalSince1970: $a_secs];"
+			"return [[NSDate alloc] initWithTimeIntervalSinceReferenceDate: $a_secs_to_be_added];"
+		end
+
+	frozen create_with_time_interval_since1970 (a_secs: REAL_64): POINTER
+			-- - (id)initWithTimeIntervalSince1970: (NSTimeInterval) secs
+		external
+			"C inline use <Foundation/NSDate.h>"
+		alias
+			"return [[NSDate alloc] dateWithTimeIntervalSince1970: $a_secs];"
 		end
 
 	frozen init (a_ns_date: POINTER): POINTER
@@ -157,16 +165,6 @@ feature -- Getting Time Intervals
 			"C inline use <Foundation/NSDate.h>"
 		alias
 			"return [(NSDate*)$a_ns_date timeIntervalSince1970];"
-		end
-
-feature -- Adding a Time Interval
-
-	frozen add_time_interval (a_ns_date: POINTER; a_seconds: REAL_64): POINTER
-			-- - (id)addTimeInterval: (NSTimeInterval) seconds
-		external
-			"C inline use <Foundation/NSDate.h>"
-		alias
-			"return [(NSDate*)$a_ns_date addTimeInterval: $a_seconds];"
 		end
 
 feature -- Representing Dates as Strings

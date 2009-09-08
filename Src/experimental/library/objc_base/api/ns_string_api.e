@@ -12,26 +12,19 @@ inherit
 
 feature -- Creating and Initializing Strings
 
-	frozen string_with_c_string (a_c_string: POINTER; a_encoding: INTEGER): POINTER
+	frozen create_with_c_string (a_c_string: POINTER; a_encoding: INTEGER): POINTER
 		external
 			"C inline use <Foundation/NSString.h>"
 		alias
-			"return [NSString stringWithCString: $a_c_string encoding: $a_encoding];"
+			"return [[NSString alloc] initWithCString: $a_c_string encoding: $a_encoding];"
 		end
 
-	frozen c_string_using_encoding (a_ns_string: POINTER; a_encoding: INTEGER): POINTER
-		external
-			"C inline use <Foundation/NSString.h>"
-		alias
-			"return (char*) [(NSString*)$a_ns_string cStringUsingEncoding: $a_encoding];"
-		end
-
-	frozen string_with_characters (a_characters: POINTER; a_length: like ns_uinteger): POINTER
+	frozen create_with_characters (a_characters: POINTER; a_length: like ns_uinteger): POINTER
 			-- - (id)stringWithCharacters:(const unichar *)characters length:(NSUInteger)length
 		external
 			"C inline use <Foundation/NSString.h>"
 		alias
-			"return [NSString stringWithCharacters: $a_characters length: $a_length];"
+			"return [[NSString alloc] initWithCharacters: $a_characters length: $a_length];"
 		end
 
 
@@ -62,6 +55,13 @@ feature -- Getting Characters and Bytes
 		end
 
  feature -- Getting C Strings
+
+	frozen c_string_using_encoding (a_ns_string: POINTER; a_encoding: INTEGER): POINTER
+		external
+			"C inline use <Foundation/NSString.h>"
+		alias
+			"return (char*) [(NSString*)$a_ns_string cStringUsingEncoding: $a_encoding];"
+		end
 
  feature -- Combining Strings
 

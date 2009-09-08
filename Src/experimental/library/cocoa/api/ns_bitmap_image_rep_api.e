@@ -249,12 +249,12 @@ feature -- Mananging Compression Types
 			"[(NSBitmapImageRep*)$a_ns_bitmap_image_rep setCompression: $a_compression factor: $a_factor];"
 		end
 
-	frozen get_compression_factor (a_ns_bitmap_image_rep: POINTER; a_compression: TYPED_POINTER[NATURAL]; a_factor: TYPED_POINTER[REAL])
+	frozen get_compression_factor (a_ns_bitmap_image_rep: POINTER; a_compression: TYPED_POINTER[NATURAL_64]; a_factor: TYPED_POINTER[REAL])
 			-- - (void)getCompression: (NSTIFFCompression *) compression factor: (float *) factor
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"[(NSBitmapImageRep*)$a_ns_bitmap_image_rep getCompression: $a_compression factor: $a_factor];"
+			"[(NSBitmapImageRep*)$a_ns_bitmap_image_rep getCompression: (NSUInteger*)$a_compression factor: $a_factor];"
 		end
 
 	frozen set_property_with_value (a_ns_bitmap_image_rep: POINTER; a_property: POINTER; a_value: POINTER)

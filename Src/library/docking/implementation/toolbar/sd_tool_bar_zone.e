@@ -335,7 +335,7 @@ feature -- Command
 		do
 			floating_tool_bar.set_position (a_screen_x, a_screen_y)
 		ensure
-			set: floating_tool_bar.screen_x = a_screen_x and floating_tool_bar.screen_y = a_screen_y
+			set: (create {PLATFORM}).is_windows implies floating_tool_bar.screen_x = a_screen_x and floating_tool_bar.screen_y = a_screen_y
 		end
 
 	compute_minmum_size
@@ -772,14 +772,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

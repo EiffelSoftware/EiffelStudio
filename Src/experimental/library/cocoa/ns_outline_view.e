@@ -59,11 +59,11 @@ feature -- Access
 
 feature -- Expanding and Collapsing the Outline
 
-	outline_view_should_expand_item (a_outline_view: NS_OUTLINE_VIEW; a_item: NS_OBJECT): BOOLEAN
-			-- Returns a Boolean value that indicates whether the outline view should expand a given item.
-		do
-			Result := {NS_OUTLINE_VIEW_API}.outline_view_should_expand_item (item, a_outline_view.item, a_item.item)
-		end
+--	outline_view_should_expand_item (a_outline_view: NS_OUTLINE_VIEW; a_item: NS_OBJECT): BOOLEAN
+--			-- Returns a Boolean value that indicates whether the outline view should expand a given item.
+--		do
+--			Result := {NS_OUTLINE_VIEW_API}.outline_view_should_expand_item (item, a_outline_view.item, a_item.item)
+--		end
 
 	outline_view_item_will_expand (a_notification: NS_NOTIFICATION)
 
@@ -89,11 +89,11 @@ feature -- Expanding and Collapsing the Outline
 			{NS_OUTLINE_VIEW_API}.outline_view_item_did_expand (item, a_notification.item)
 		end
 
-	outline_view_should_collapse_item (a_outline_view: NS_OUTLINE_VIEW; a_item: NS_OBJECT): BOOLEAN
-			-- Returns a Boolean value that indicates whether the outline view should collapse a given item.
-		do
-			Result := {NS_OUTLINE_VIEW_API}.outline_view_should_collapse_item (item, a_outline_view.item, a_item.item)
-		end
+--	outline_view_should_collapse_item (a_outline_view: NS_OUTLINE_VIEW; a_item: NS_OBJECT): BOOLEAN
+--			-- Returns a Boolean value that indicates whether the outline view should collapse a given item.
+--		do
+--			Result := {NS_OUTLINE_VIEW_API}.outline_view_should_collapse_item (item, a_outline_view.item, a_item.item)
+--		end
 
 	outline_view_item_will_collapse (a_notification: NS_NOTIFICATION)
 

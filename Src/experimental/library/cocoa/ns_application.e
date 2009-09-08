@@ -9,14 +9,15 @@ class
 
 inherit
 	NS_OBJECT
-		redefine
-			make_from_pointer
-		end
+--		redefine
+--			make_from_pointer
+--		end
 
 create
 	make
-create {NS_OBJECT}
-	make_from_pointer
+
+--create {NS_OBJECT}
+--	make_from_pointer
 
 feature {NONE} -- Creation
 
@@ -28,11 +29,10 @@ feature {NONE} -- Creation
 			{NS_APPLICATION_API}.finish_launching (item)
 		end
 
-	make_from_pointer (a_ptr: POINTER)
-		do
-			Precursor {NS_OBJECT} (a_ptr)
-			create pool.make
-		end
+--	make_from_pointer (a_ptr: POINTER)
+--		do
+--			Precursor {NS_OBJECT} (a_ptr)
+--		end
 
 feature -- Eiffel Extensions
 
@@ -41,46 +41,52 @@ feature -- Eiffel Extensions
 		local
 			l_event: detachable NS_EVENT
 			until_date: NS_DATE
+			l_loop_pool: NS_AUTORELEASE_POOL
+			l_not_first: BOOLEAN
 		do
 			create until_date.distant_future
 			from
-				l_event := next_event (0, until_date, default_run_loop_mode, true)
 			until
-				l_event = void
+				l_not_first and then l_event = void
 			loop
-				pool.release
-				create pool.make
-				send_event (l_event)
-				update_windows
-				l_event := next_event(0, until_date, default_run_loop_mode, true)
+				l_not_first := True
+				create l_loop_pool.make
+				l_event := next_event ({NS_APPLICATION_API}.ns_any_event_mask, until_date, default_run_loop_mode, True)
+				if attached l_event then
+					send_event (l_event)
+					update_windows
+				end
+				l_loop_pool.release
 			end
-			pool.release
 		end
-
-	pool: NS_AUTORELEASE_POOL
 
 	process_events
 			-- Process all pending events
 		local
 			l_event: detachable NS_EVENT
+			l_loop_pool: NS_AUTORELEASE_POOL
+			l_not_first: BOOLEAN
 		do
 			from
-				l_event := next_event (0, Void, default_run_loop_mode, True)
 			until
-				l_event = void
+				l_not_first and then l_event = Void
 			loop
-				pool.release
-				create pool.make
-				send_event (l_event)
-				update_windows
-				l_event := next_event(0, Void, default_run_loop_mode, True)
+				l_not_first := True
+				create l_loop_pool.make
+				l_event := next_event ({NS_APPLICATION_API}.ns_any_event_mask, Void, default_run_loop_mode, True)
+				if attached l_event then
+					send_event (l_event)
+					update_windows
+				end
+				l_loop_pool.release
 			end
-			pool.release
 		end
 
 feature -- Access
 
-	next_event (a_matching_mask: INTEGER; a_until_date: detachable NS_DATE; a_in_mode: NS_STRING; a_dequeue: BOOLEAN): detachable NS_EVENT
+	pool: NS_AUTORELEASE_POOL
+
+	next_event (a_matching_mask: NATURAL_64; a_until_date: detachable NS_DATE; a_in_mode: NS_STRING; a_dequeue: BOOLEAN): detachable NS_EVENT
 			-- Returns the next event matching a given mask, or `Void' if no such event is found before a specified expiration date.
 			-- You can use this method to short circuit normal event dispatching and get your own events. For example, you may want
 			-- to do this in response to a mouse-down event in order to track the mouse while its button is down. (In such an example,
@@ -188,13 +194,13 @@ feature -- Other
 		local
 			l_menu: NS_MENU
 			l_menu_item: NS_MENU_ITEM
-			apple_icon_char: CHARACTER_32
 			name: NS_STRING
+			l_apple_icon: NS_STRING
 		do
 			-- A little hack is needed to set the apple menu:
 			-- see http://lists.apple.com/archives/cocoa-dev/2006/Sep/msg00011.html
-			apple_icon_char := (0xF8FF).to_character_32
-			create name.make_from_pointer ({NS_STRING_API}.string_with_characters ($apple_icon_char, 1))
+			create l_apple_icon.make_with_string ((0xF8FF).to_character_32.out)
+			create name.make_from_pointer (l_apple_icon.item)
 
 			create l_menu.make
 			l_menu.set_title (name)

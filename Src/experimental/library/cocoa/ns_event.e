@@ -16,6 +16,7 @@ create
 	enter_exit_event,
 	other_event,
 	event_with_cg_event
+
 create {NS_OBJECT, OBJC_CALLBACK_MARSHAL}
 	make_from_pointer,
 	share_from_pointer
@@ -25,32 +26,32 @@ feature {NONE} -- Creating Events
 	key_event (a_type: INTEGER; a_location: NS_POINT; a_flags: INTEGER; a_time: REAL_64; a_w_num: INTEGER; a_context: NS_GRAPHICS_CONTEXT; a_keys: NS_STRING; a_ukeys: NS_STRING; a_flag: BOOLEAN; a_code: NATURAL_16)
 			-- Returns a new `NSEvent' object describing a key event.
 		do
-			make_from_pointer ({NS_EVENT_API}.key_event_with_type_location_modifier_flags_timestamp_window_number_context_characters_characters_ignoring_modifiers_is_arepeat_key_code (a_type, a_location.item, a_flags, a_time, a_w_num, a_context.item, a_keys.item, a_ukeys.item, a_flag, a_code))
+			share_from_pointer ({NS_EVENT_API}.key_event_with_type_location_modifier_flags_timestamp_window_number_context_characters_characters_ignoring_modifiers_is_arepeat_key_code (a_type, a_location.item, a_flags, a_time, a_w_num, a_context.item, a_keys.item, a_ukeys.item, a_flag, a_code))
 		end
 
 	mouse_event (a_type: INTEGER; a_location: NS_POINT; a_flags: INTEGER; a_time: REAL_64; a_w_num: INTEGER; a_context: NS_GRAPHICS_CONTEXT; a_e_num: INTEGER; a_c_num: INTEGER; a_pressure: REAL)
 			-- Returns a new NSEvent object describing a mouse-down, -up, -moved, or -dragged event.
 		do
-			make_from_pointer ({NS_EVENT_API}.mouse_event_with_type_location_modifier_flags_timestamp_window_number_context_event_number_click_count_pressure (a_type, a_location.item, a_flags, a_time, a_w_num, a_context.item, a_e_num, a_c_num, a_pressure))
+			share_from_pointer ({NS_EVENT_API}.mouse_event_with_type_location_modifier_flags_timestamp_window_number_context_event_number_click_count_pressure (a_type, a_location.item, a_flags, a_time, a_w_num, a_context.item, a_e_num, a_c_num, a_pressure))
 		end
 
 	enter_exit_event (a_type: INTEGER; a_location: NS_POINT; a_flags: INTEGER; a_time: REAL_64; a_w_num: INTEGER; a_context: NS_GRAPHICS_CONTEXT; a_e_num: INTEGER; a_t_num: INTEGER; a_data: POINTER)
 			-- Returns a new `NSEvent' object describing a tracking-rectangle or cursor-update event.
 		do
-			make_from_pointer ({NS_EVENT_API}.enter_exit_event_with_type_location_modifier_flags_timestamp_window_number_context_event_number_tracking_number_user_data (a_type, a_location.item, a_flags, a_time, a_w_num, a_context.item, a_e_num, a_t_num, a_data.item))
+			share_from_pointer ({NS_EVENT_API}.enter_exit_event_with_type_location_modifier_flags_timestamp_window_number_context_event_number_tracking_number_user_data (a_type, a_location.item, a_flags, a_time, a_w_num, a_context.item, a_e_num, a_t_num, a_data.item))
 		end
 
 	other_event (a_type: INTEGER; a_location: NS_POINT; a_flags: INTEGER; a_time: REAL_64; a_w_num: INTEGER; a_context: NS_GRAPHICS_CONTEXT; a_subtype: INTEGER_16; a_d1: INTEGER; a_d2: INTEGER)
 			-- Returns a new NSEvent object describing a custom event.
 		do
-			make_from_pointer ({NS_EVENT_API}.other_event_with_type_location_modifier_flags_timestamp_window_number_context_subtype_data1_data2 (a_type, a_location.item, a_flags, a_time, a_w_num, a_context.item, a_subtype, a_d1, a_d2))
+			share_from_pointer ({NS_EVENT_API}.other_event_with_type_location_modifier_flags_timestamp_window_number_context_subtype_data1_data2 (a_type, a_location.item, a_flags, a_time, a_w_num, a_context.item, a_subtype, a_d1, a_d2))
 		end
 -- Error generating eventWithEventRef:: Message signature for feature not set
 
 	event_with_cg_event (a_cg_event: POINTER)
 			-- Creates and returns an event object that is based on a Core Graphics type of event.
 		do
-			make_from_pointer ({NS_EVENT_API}.event_with_cg_event (a_cg_event))
+			share_from_pointer ({NS_EVENT_API}.event_with_cg_event (a_cg_event))
 		end
 
 feature -- Getting General Event Information

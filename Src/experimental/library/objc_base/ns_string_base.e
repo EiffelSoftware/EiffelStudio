@@ -25,7 +25,7 @@ feature {NONE} -- Creation
 
 	make_with_cstring (a_c_string: C_STRING)
 		do
-			make_from_pointer ({NS_STRING_API}.string_with_c_string (a_c_string.item, {NS_STRING_API}.UTF8_string_encoding))
+			make_from_pointer ({NS_STRING_API}.create_with_c_string (a_c_string.item, {NS_STRING_API}.UTF8_string_encoding))
 		end
 
 	make_with_string (a_string: READABLE_STRING_GENERAL)

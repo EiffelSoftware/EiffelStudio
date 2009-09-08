@@ -85,11 +85,16 @@ feature -- Managing the View Hierarchy
 			end
 		end
 
-	superview: NS_VIEW
+	superview: detachable NS_VIEW
 			-- Returns the receiver's superview, or nil if it has none.
 			-- When applying this method iteratively or recursively, be sure to compare the returned view object to the content view of the window to avoid proceeding out of the view hierarchy.
+		local
+			l_ptr: POINTER
 		do
-			create Result.share_from_pointer ({NS_VIEW_API}.superview (item))
+			l_ptr := {NS_VIEW_API}.superview (item)
+			if l_ptr /= default_pointer then
+				create Result.share_from_pointer (l_ptr)
+			end
 		end
 
 	subviews: NS_ARRAY [NS_VIEW]

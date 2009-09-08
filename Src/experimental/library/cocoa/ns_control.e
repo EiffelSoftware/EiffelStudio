@@ -36,7 +36,7 @@ feature -- Access
 		do
 			{NS_CONTROL_API}.set_double_value (item, a_double)
 		ensure
-			value_set: a_double = double_value
+			value_set: (a_double - double_value).abs < 0.01
 		end
 
 	double_value: DOUBLE

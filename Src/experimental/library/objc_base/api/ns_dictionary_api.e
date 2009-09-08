@@ -45,28 +45,44 @@ feature -- Objective-C implementation
 
 --@interface NSDictionary (NSDictionaryCreation)
 
-	frozen dictionary: POINTER
-			--+ (id)dictionary;
+	frozen create_default: POINTER
+			-- - (id)init;
 		external
 			"C inline use <Foundation/NSDictionary.h>"
 		alias
-			"return [NSDictionary dictionary];"
+			"return [[NSDictionary alloc] init];"
 		end
 
 	frozen dictionary_with_object_for_key (a_object, a_key: POINTER): POINTER
-			--+ (id)dictionaryWithObject:(id)object forKey:(id)key;
+			-- - (id)initWithObject:(id)object forKey:(id)key;
 		external
 			"C inline use <Foundation/NSDictionary.h>"
 		alias
 			"return [NSDictionary dictionaryWithObject: $a_object forKey: $a_key];"
 		end
 
-	frozen dictionary_with_objects_for_keys (a_objects, a_keys: POINTER): POINTER
-			--+ (id)dictionaryWithObjects:(id *)objects forKeys:(id *)keys count:(NSUInteger)cnt;
+	frozen create_with_objects_for_keys (a_objects, a_keys: POINTER): POINTER
+			-- - (id)initWithObjects:(id *)objects forKeys:(id *)keys count:(NSUInteger)cnt;
 		external
 			"C inline use <Foundation/NSDictionary.h>"
 		alias
-			"return [NSDictionary dictionaryWithObjects: $a_objects forKeys: $a_keys];"
+			"return [[NSDictionary alloc] initWithObjects: $a_objects forKeys: $a_keys];"
+		end
+
+	frozen init (a_ptr: POINTER): POINTER
+			-- - (id)init;
+		external
+			"C inline use <Foundation/NSDictionary.h>"
+		alias
+			"return [(NSDictionary*)$a_ptr init];"
+		end
+
+	frozen init_with_objects_for_keys (a_ptr, a_objects, a_keys: POINTER): POINTER
+			-- - (id)initWithObjects:(id *)objects forKeys:(id *)keys count:(NSUInteger)cnt;
+		external
+			"C inline use <Foundation/NSDictionary.h>"
+		alias
+			"return [(NSDictionary*)$a_ptr initWithObjects: $a_objects forKeys: $a_keys];"
 		end
 
 --+ (id)dictionaryWithObjectsAndKeys:(id)firstObject, ... NS_REQUIRES_NIL_TERMINATION;

@@ -71,7 +71,7 @@ feature -- Referring to Images by Name
 
 feature -- Drawing the Image
 
-	draw_at_point (a_point: NS_POINT; a_from_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
+	draw_at_point (a_point: NS_POINT; a_from_rect: NS_RECT; a_op: NATURAL; a_delta: REAL)
 			-- Draws all or part of the image at the specified point in the current coordinate system.
 			-- `delta': The opacity of the image, specified as a value from 0.0 to 1.0. Specifying a value of 0.0 draws the image as fully transparent
 			--  while a value of 1.0 draws the image as fully opaque. Values greater than 1.0 are interpreted as 1.0.
@@ -83,7 +83,7 @@ feature -- Drawing the Image
 			{NS_IMAGE_API}.draw_at_point_from_rect_operation_fraction (item, a_point.item, a_from_rect.item, a_op, a_delta)
 		end
 
-	draw_in_rect (a_dst_rect: NS_RECT; a_from_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
+	draw_in_rect (a_dst_rect: NS_RECT; a_from_rect: NS_RECT; a_op: NATURAL; a_delta: REAL)
 			-- Draws all or part of the image in the specified rectangle in the current coordinate system.
 			-- `delta': The opacity of the image, specified as a value from 0.0 to 1.0. Specifying a value of 0.0 draws the image as fully transparent
 			--  while a value of 1.0 draws the image as fully opaque. Values greater than 1.0 are interpreted as 1.0.
@@ -99,28 +99,28 @@ feature -- Drawing the Image
 			Result := {NS_IMAGE_API}.draw_representation_in_rect (item, a_image_rep.item, a_rect.item)
 		end
 
-	composite_to_point_operation (a_point: NS_POINT; a_op: INTEGER)
+	composite_to_point_operation (a_point: NS_POINT; a_op: NATURAL)
 			-- Composites the entire image to the specified point in the current coordinate system.
 		do
-			{NS_IMAGE_API}.composite_to_point_operation (item, a_point.item, a_op.item)
+			{NS_IMAGE_API}.composite_to_point_operation (item, a_point.item, a_op)
 		end
 
-	composite_to_point_from_rect_operation (a_point: NS_POINT; a_rect: NS_RECT; a_op: INTEGER)
+	composite_to_point_from_rect_operation (a_point: NS_POINT; a_rect: NS_RECT; a_op: NATURAL)
 			-- Composites a portion of the image to the specified point in the current coordinate system.
 		do
-			{NS_IMAGE_API}.composite_to_point_from_rect_operation (item, a_point.item, a_rect.item, a_op.item)
+			{NS_IMAGE_API}.composite_to_point_from_rect_operation (item, a_point.item, a_rect.item, a_op)
 		end
 
-	composite_to_point_from_rect_operation_fraction (a_point: NS_POINT; a_rect: NS_RECT; a_op: INTEGER; a_delta: REAL)
+	composite_to_point_from_rect_operation_fraction (a_point: NS_POINT; a_rect: NS_RECT; a_op: NATURAL; a_delta: REAL)
 			-- Composites a portion of the image at the specified opacity to the current coordinate system.
 		do
-			{NS_IMAGE_API}.composite_to_point_from_rect_operation_fraction (item, a_point.item, a_rect.item, a_op.item, a_delta)
+			{NS_IMAGE_API}.composite_to_point_from_rect_operation_fraction (item, a_point.item, a_rect.item, a_op, a_delta)
 		end
 
-	composite_to_point_operation_fraction (a_point: NS_POINT; a_op: INTEGER; a_delta: REAL)
+	composite_to_point_operation_fraction (a_point: NS_POINT; a_op: NATURAL; a_delta: REAL)
 			-- Composites the entire image at the specified opacity in the current coordinate system.
 		do
-			{NS_IMAGE_API}.composite_to_point_operation_fraction (item, a_point.item, a_op.item, a_delta)
+			{NS_IMAGE_API}.composite_to_point_operation_fraction (item, a_point.item, a_op, a_delta)
 		end
 
 	dissolve_to_point_fraction (a_point: NS_POINT; a_float: REAL)

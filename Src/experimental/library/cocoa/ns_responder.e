@@ -20,19 +20,56 @@ feature -- Access
 			class_.add_method ("mouseDown:", agent mouse_down)
 		end
 
+feature -- Changing the First Responder
+
+	accepts_first_responder: BOOLEAN
+			-- Overridden by subclasses to return YES if the receiver accepts first responder status.
+		do
+
+		end
+
+	become_first_responder: BOOLEAN
+			-- Notifies the receiver that it's about to become first responder in its NS_WINDOW.
+		do
+
+		end
+
+	resign_first_responder: BOOLEAN
+			-- Notifies the receiver that it's been asked to relinquish its status as first responder in its window.
+		do
+
+		end
+
+feature -- Managing the Next Responder
+
 feature -- Responding to Mouse Events
 
 	mouse_down (a_event: NS_EVENT)
+			-- Informs the receiver that the user has pressed the left mouse button.
 		do
-			io.put_string ("Mouse down (NSResponder)%N")
+
 		end
 
 	mouse_up (a_event: NS_EVENT)
+			-- Informs the receiver that the user has released the left mouse button.
 		do
-			io.put_string ("Mouse up%N")
+
 		end
 
 	mouse_moved (a_event: NS_EVENT)
+			-- Informs the receiver that the mouse has moved.
+		do
+
+		end
+
+	mouse_entered (a_event: NS_EVENT)
+			-- Informs the receiver that the cursor has entered a tracking rectangle.
+		do
+
+		end
+
+	mouse_exited (a_event: NS_EVENT)
+			-- Informs the receiver that the cursor has exited a tracking rectangle.
 		do
 
 		end

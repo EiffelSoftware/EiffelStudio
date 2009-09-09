@@ -45,7 +45,9 @@ feature {NONE} -- Creation and Initialization
 			Result.add_method ("keyDown:", agent key_down)
 			Result.add_method ("keyUp:", agent key_up)
 			Result.add_method ("isFlipped", agent: BOOLEAN do Result := True end)
-			Result.add_method ("acceptsFirstResponder", agent: BOOLEAN do Result := True end)
+			Result.add_method ("acceptsFirstResponder", agent accepts_first_responder)
+			Result.add_method ("becomeFirstResponder", agent become_first_responder)
+			Result.add_method ("resignFirstResponder", agent accepts_first_responder)
 			Result.register
 		end
 

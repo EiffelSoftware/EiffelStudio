@@ -74,25 +74,63 @@ feature -- Delegate Methods
 		do
 		end
 
-feature --
+feature -- Configuring windows
 
-	resize_actions_X: ACTION_SEQUENCE[TUPLE [x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER]]
-		attribute
-			create Result
-		end
-
-feature -- Drawing Windows
-
-	display
-			-- Passes a display message down the window's view hierarchy, thus redrawing all views within the window,
-			-- including the frame view that draws the border, title bar, and other peripheral elements.
-			-- You rarely need to invoke this method. NSWindow objects normally record which of their views need display and
-			-- display them automatically on each pass through the event loop.
+	style_mask: NATURAL
+			-- Returns the window`s style mask, indicating what kinds of control items it displays.
 		do
-			{NS_WINDOW_API}.display (item)
+			Result := {NS_WINDOW_API}.style_mask (item)
 		end
 
-feature -- Configuring Windows
+	set_style_mask (a_style_mask: NATURAL)
+			-- Sets the window`s style mask to the given value.
+		do
+			{NS_WINDOW_API}.set_style_mask (item, a_style_mask)
+		end
+
+	works_when_modal: BOOLEAN
+			-- Indicates whether the window is able to receive keyboard and mouse events even when some other window is being run modally.
+		do
+			Result := {NS_WINDOW_API}.works_when_modal (item)
+		end
+
+	alpha_value: REAL
+			-- Returns the window`s alpha value.
+		do
+			Result := {NS_WINDOW_API}.alpha_value (item)
+		end
+
+	set_alpha_value (a_window_alpha: REAL)
+			-- Applies a given alpha value to the entire window.
+		do
+			{NS_WINDOW_API}.set_alpha_value (item, a_window_alpha)
+		end
+
+	background_color: NS_COLOR
+			-- Returns the color of the window`s background.
+		do
+			create Result.share_from_pointer ({NS_WINDOW_API}.background_color (item))
+		end
+
+	set_background_color (a_color: NS_COLOR)
+			-- Sets the window`s background color to the given color.
+		do
+			{NS_WINDOW_API}.set_background_color (item, a_color.item)
+		end
+
+-- Error generating colorSpace: Message signature for feature not set
+
+	set_color_space (a_color_space: NS_COLOR_SPACE)
+			-- Sets the window`s color space.
+		do
+			{NS_WINDOW_API}.set_color_space (item, a_color_space.item)
+		end
+
+	content_view: NS_VIEW
+			-- Returns the window's content view, the highest accessible NS_VIEW object in the window's view hierarchy.
+		do
+			create Result.share_from_pointer ({NS_WINDOW_API}.content_view (item))
+		end
 
 	set_content_view (a_view: NS_VIEW)
 			-- Makes a given view the window's content view.
@@ -105,10 +143,119 @@ feature -- Configuring Windows
 			content_view_set: a_view.item = content_view.item -- content_view.is_equal (a_view)
 		end
 
-	content_view: NS_VIEW
-			-- Returns the window's content view, the highest accessible NS_VIEW object in the window's view hierarchy.
+	can_hide: BOOLEAN
+			-- Indicates whether the window can be hidden when its application becomes hidden (during execution of the `NSApplication' `hide:' method).
 		do
-			create Result.share_from_pointer ({NS_WINDOW_API}.content_view (item))
+			Result := {NS_WINDOW_API}.can_hide (item)
+		end
+
+	set_can_hide (a_flag: BOOLEAN)
+			-- Specifies whether the window can be hidden when its application becomes hidden (during execution of the `NSApplication' `hide:' method).
+		do
+			{NS_WINDOW_API}.set_can_hide (item, a_flag)
+		end
+
+-- Error generating isOnActiveSpace: Message signature for feature not set
+
+	hides_on_deactivate: BOOLEAN
+			-- Indicates whether the window is removed from the screen when its application becomes inactive.
+		do
+			Result := {NS_WINDOW_API}.hides_on_deactivate (item)
+		end
+
+	set_hides_on_deactivate (a_flag: BOOLEAN)
+			-- Specifies whether the window is removed from the screen when the application is inactive.
+		do
+			{NS_WINDOW_API}.set_hides_on_deactivate (item, a_flag)
+		end
+
+	collection_behavior: NATURAL
+			-- Identifies the window`s behavior in window collections.
+		do
+			Result := {NS_WINDOW_API}.collection_behavior (item)
+		end
+
+	set_collection_behavior (a_behavior: NATURAL)
+			-- Specifies the window`s behavior in window collections.
+		do
+			{NS_WINDOW_API}.set_collection_behavior (item, a_behavior)
+		end
+
+	is_opaque: BOOLEAN
+			-- Indicates whether the window is opaque.
+		do
+			Result := {NS_WINDOW_API}.is_opaque (item)
+		end
+
+	set_opaque (a_is_opaque: BOOLEAN)
+			-- Specifies whether the window is opaque.
+		do
+			{NS_WINDOW_API}.set_opaque (item, a_is_opaque)
+		end
+
+	has_shadow: BOOLEAN
+			-- Indicates whether the window has a shadow.
+		do
+			Result := {NS_WINDOW_API}.has_shadow (item)
+		end
+
+	set_has_shadow (a_has_shadow: BOOLEAN)
+			-- Specifies whether the window has a shadow.
+		do
+			{NS_WINDOW_API}.set_has_shadow (item, a_has_shadow)
+		end
+
+	invalidate_shadow
+			-- Invalidates the window shadow so that it is recomputed based on the current window shape.
+		do
+			{NS_WINDOW_API}.invalidate_shadow (item)
+		end
+
+--	autorecalculates_content_border_thickness_for_edge (a_edge: NS_RECT_EDGE): BOOLEAN
+--			-- Indicates whether the window calculates the thickness of a given border automatically.
+--		do
+--			Result := {NS_WINDOW_API}.autorecalculates_content_border_thickness_for_edge (item, a_edge.item)
+--		end
+
+--	set_autorecalculates_content_border_thickness_for_edge (a_flag: BOOLEAN; a_edge: NS_RECT_EDGE)
+--			-- Specifies whether the window calculates the thickness of a given border automatically.
+--		do
+--			{NS_WINDOW_API}.set_autorecalculates_content_border_thickness_for_edge (item, a_flag, a_edge.item)
+--		end
+
+--	content_border_thickness_for_edge (a_edge: NS_RECT_EDGE): REAL
+--			-- Indicates the thickness of a given border of the window.
+--		do
+--			Result := {NS_WINDOW_API}.content_border_thickness_for_edge (item, a_edge.item)
+--		end
+
+--	set_content_border_thickness_for_edge (a_thickness: REAL; a_edge: NS_RECT_EDGE)
+--			-- Specifies the thickness of a given border of the window.
+--		do
+--			{NS_WINDOW_API}.set_content_border_thickness_for_edge (item, a_thickness, a_edge.item)
+--		end
+
+	prevents_application_termination_when_modal: BOOLEAN
+			-- Indicates whether the window prevents application termination when modal.
+		do
+			Result := {NS_WINDOW_API}.prevents_application_termination_when_modal (item)
+		end
+
+	set_prevents_application_termination_when_modal (a_flag: BOOLEAN)
+			-- Specifies whether the window prevents application termination when modal.
+		do
+			{NS_WINDOW_API}.set_prevents_application_termination_when_modal (item, a_flag)
+		end
+
+feature -- Drawing Windows
+
+	display
+			-- Passes a display message down the window's view hierarchy, thus redrawing all views within the window,
+			-- including the frame view that draws the border, title bar, and other peripheral elements.
+			-- You rarely need to invoke this method. NSWindow objects normally record which of their views need display and
+			-- display them automatically on each pass through the event loop.
+		do
+			{NS_WINDOW_API}.display (item)
 		end
 
 feature -- Sizing
@@ -267,27 +414,6 @@ feature -- Managing Titles
 			create Result.make
 			{NS_WINDOW_API}.convert_base_to_screen (item, a_point.item, Result.item)
 			Result.y := zero_screen.frame.size.height - Result.y
-		end
-
-
-	set_alpha_value (a_window_alpha: REAL)
-		do
-			{NS_WINDOW_API}.set_alpha_value (item, a_window_alpha)
-		end
-
-	alpha_value: REAL
-		do
-			Result := {NS_WINDOW_API}.alpha_value (item)
-		end
-
-	set_background_color (a_color: NS_COLOR)
-		do
-			{NS_WINDOW_API}.set_background_color (item, a_color.item)
-		end
-
-	background_color: NS_COLOR
-		do
-			create Result.make_from_pointer ({NS_WINDOW_API}.background_color (item))
 		end
 
 	set_ignores_mouse_events (a_flag: BOOLEAN)
@@ -521,12 +647,30 @@ feature -- Style Mask Constants
 
 feature -- Window Levels
 
+	frozen normal_window_level: INTEGER
+			-- The default level for NSWindow objects.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSNormalWindowLevel"
+		end
+
 	frozen floating_window_level: INTEGER
+			-- Useful for floating palettes.
 		external
 			"C macro use <Cocoa/Cocoa.h>"
 		alias
 			"NSFloatingWindowLevel"
 		end
+
+	frozen modal_panel_window_level: INTEGER
+			-- The level for a modal panel.
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSModalPanelWindowLevel"
+		end
+
 
 feature -- Window Ordering Mode
 

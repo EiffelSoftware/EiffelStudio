@@ -115,10 +115,10 @@ feature
 --			text_field_set_delegate (cocoa_object, a_an_object.item)
 --		end
 
-	accepts_first_responder: BOOLEAN
-		do
-			Result := text_field_accepts_first_responder (item)
-		end
+--	accepts_first_responder: BOOLEAN
+--		do
+--			Result := text_field_accepts_first_responder (item)
+--		end
 
 	set_bezel_style (a_style: INTEGER)
 		do

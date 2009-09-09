@@ -140,25 +140,7 @@ feature -- Flushing Graphics to the Context
 		alias
 			"[(NSGraphicsContext*)$a_ns_graphics_context flushGraphics];"
 		end
-
-feature -- Managing the Focus Stack
-
-	frozen focus_stack (a_ns_graphics_context: POINTER): POINTER
-			-- - (id)focusStack
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSGraphicsContext*)$a_ns_graphics_context focusStack];"
-		end
-
-	frozen set_focus_stack (a_ns_graphics_context: POINTER; a_stack: POINTER)
-			-- - (void)setFocusStack: (id) stack
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSGraphicsContext*)$a_ns_graphics_context setFocusStack: $a_stack];"
-		end
-
+	
 feature -- Configuring Rendering Options
 
 	frozen set_compositing_operation (a_ns_graphics_context: POINTER; a_operation: NATURAL)

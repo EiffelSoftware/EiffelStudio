@@ -84,7 +84,7 @@ feature -- Access
 			-- post condition on this feature.
 		end
 
-	pointer_style: detachable EV_POINTER_STYLE
+	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when pointer is over this widget.
 		require
 			not_destroyed: not is_destroyed

@@ -316,9 +316,9 @@ feature -- Element change
 
 	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER_32; repaint: BOOLEAN)
 		local
-			l_tab_imp: detachable EV_NOTEBOOK_TAB_IMP
-			l_widget: detachable EV_WIDGET
-			l_widget_imp: detachable EV_WIDGET_IMP
+--			l_tab_imp: detachable EV_NOTEBOOK_TAB_IMP
+--			l_widget: detachable EV_WIDGET
+--			l_widget_imp: detachable EV_WIDGET_IMP
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 --			from

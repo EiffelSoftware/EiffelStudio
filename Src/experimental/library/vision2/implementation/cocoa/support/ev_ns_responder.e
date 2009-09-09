@@ -19,7 +19,6 @@ feature -- Event handling
 	key_down (a_event: NS_EVENT)
 			-- Translate a Cocoa key-event to an EiffelVision key event
 		local
-			char: CHARACTER
 			cocoa_code: NATURAL_16
 		do
 			io.put_string ("Key down: " + a_event.characters + " (" + a_event.key_code.out + ")%N")
@@ -43,7 +42,6 @@ feature -- Event handling
 	key_up (a_event: NS_EVENT)
 			-- Translate a Cocoa key-event to an EiffelVision key event
 		local
-			char: CHARACTER
 			cocoa_code: NATURAL_16
 		do
 			io.put_string ("Key up: " + a_event.characters + " (" + a_event.key_code.out + ")%N")

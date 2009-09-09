@@ -56,6 +56,9 @@ inherit
 			mouse_down,
 			mouse_up,
 			mouse_moved,
+			accepts_first_responder,
+			become_first_responder,
+			resign_first_responder,
 			draw_rect
 		end
 
@@ -114,7 +117,7 @@ feature -- Status setting
 	prepare_drawing
 		local
 			l_color: detachable EV_COLOR_IMP
-			trans: NS_AFFINE_TRANSFORM
+--			trans: NS_AFFINE_TRANSFORM
 		do
 			if not lock_focus_if_can_draw then
 				image.lock_focus
@@ -147,8 +150,26 @@ feature {NONE} -- Implementation
 		local
 			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			point: NS_POINT
+			actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do
-			if attached pointer_button_press_actions_internal as actions then
+-- NOTE Should the pointer_button_press actions always be fired - even when a double click is coming up?
+--      At the moment it is.
+--
+-- From the topic "detecting a double click ahead of time" on cocoa-dev:
+--
+--  The standard method is to run start a timer when you see the first
+--  click, then if you don't get a double-click before the timer fires,
+--  assume that there isn't going to be one.  Obviously you need to
+--  remember to cancel the timer if you see a double click, and you will
+--  also want to ignore double-clicks if they don't happen when you're
+--  running the timer (otherwise a spurious double-click event could cause
+--  a lot of trouble).
+			if a_event.click_count = 1 then
+				actions := pointer_button_press_actions_internal
+			else -- if click_count >= 2
+				actions := pointer_double_press_actions_internal
+			end
+			if attached actions then
 				create pointer_button_action
 				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
 				pointer_button_action.x := point.x
@@ -196,6 +217,32 @@ feature {NONE} -- Implementation
 				actions.call (pointer_motion_action)
 			end
 		end
+
+	accepts_first_responder: BOOLEAN
+			-- Every (sensitive?) Vision2 widget must be able to accept key events
+		do
+			Result := is_sensitive
+		end
+
+	become_first_responder: BOOLEAN
+			-- Call the focus_in actions
+		do
+			if attached focus_in_actions_internal as actions then
+				actions.call ([])
+			end
+			Result := True -- always accept first responder status
+		end
+
+	resign_first_responder: BOOLEAN
+			-- Call the focus_out actions
+		do
+			if attached focus_out_actions_internal as actions then
+				actions.call ([])
+			end
+			Result := True -- always resign first responder status
+		end
+
+feature -- Implementation
 
 	is_drawing_buffered: BOOLEAN
 

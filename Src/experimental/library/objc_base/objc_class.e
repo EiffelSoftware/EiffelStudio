@@ -247,9 +247,8 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	type_encoding_for_agent (a_agent: ROUTINE [ANY, TUPLE]): STRING
+			-- Given an Eiffel agent, returns the Objective-C type encoding for a similar message that will be used to do the dispatching.
 		local
-			pointer: POINTER
-			ns_rect: detachable NS_RECT
 			type: STRING
 		do
 			create Result.make_from_string ("@:")

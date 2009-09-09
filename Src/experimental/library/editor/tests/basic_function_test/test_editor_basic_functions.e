@@ -17,7 +17,7 @@ inherit
 			on_clean
 		end
 
-feature -- Redefined
+feature {NONE} -- Redefined
 
 	on_prepare
 		do

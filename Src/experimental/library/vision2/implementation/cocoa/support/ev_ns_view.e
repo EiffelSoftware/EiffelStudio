@@ -25,8 +25,11 @@ feature -- Positions
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position'.
 			-- Unit of measurement: screen pixels.
+		local
+			l_superview: detachable NS_VIEW
 		do
-			if attached_view.superview.is_flipped then
+			l_superview := attached_view.superview
+			if attached l_superview and then l_superview.is_flipped then
 				Result := attached_view.frame.origin.y
 			else
 				Result := parent_inner_height - attached_view.frame.size.height - attached_view.frame.origin.y
@@ -97,7 +100,9 @@ feature -- Measurement
 					Result := l_parent.client_height
 				end
 			else
-				Result := attached_view.superview.bounds.size.height
+				if attached {NS_VIEW} attached_view.superview as l_superview then
+					Result := l_superview.bounds.size.height
+				end
 				--io.error.put_string ("Failed to calculate parent's inner height%N")
 			end
 		end
@@ -109,8 +114,10 @@ feature -- Measurement
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER)
 		local
 			y_cocoa: INTEGER
+			l_superview: detachable NS_VIEW
 		do
-			if attached_view.superview.is_flipped then
+			l_superview := attached_view.superview
+			if attached l_superview and then l_superview.is_flipped then
 				-- cocoa coordinates = vision coordinates
 				y_cocoa := a_y_position
 			else
@@ -126,11 +133,13 @@ feature -- Measurement
 	cocoa_move (a_x_position, a_y_position: INTEGER)
 		local
 			l_frame: NS_RECT
+			l_superview: detachable NS_VIEW
 		do
 			l_frame := attached_view.frame
 			l_frame.origin.x := a_x_position
 			l_frame.origin.y := a_y_position
-			if not attached_view.superview.is_flipped then
+			l_superview := attached_view.superview
+			if attached l_superview and then not l_superview.is_flipped then
 				-- Recalculate y-coordinate with respect to parent view
 				if parent /= void then
 					l_frame.origin.y := parent_inner_height - l_frame.size.height - a_y_position

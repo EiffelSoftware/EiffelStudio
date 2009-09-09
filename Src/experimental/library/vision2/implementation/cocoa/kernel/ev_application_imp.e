@@ -129,15 +129,18 @@ feature -- Basic operation
 			pointer_button_action: TUPLE [x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			pointer_motion_action: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
 			point: NS_POINT
+			l_loop_pool: NS_AUTORELEASE_POOL
 		do
+			create l_loop_pool.make
 			from
-				event := next_event (0, Void, default_run_loop_mode, true)
+				event := next_event ({NS_APPLICATION_API}.ns_any_event_mask, Void, default_run_loop_mode, true)
 			until
-				event = void
+				event = Void
 			loop
-				pool.release
-				create pool.make
 
+				-- We are translating and forwarding the Cocoa events to Vision events here, but this way of doing it has its problems.
+				-- (E.g. because modal windows have their own event loop)
+				-- We already hanlde things better in EV_DRAWING_AREA_IMP and this is how all widgets should wirk in the future.
 				if event.type = {NS_EVENT}.left_mouse_down or event.type = {NS_EVENT}.right_mouse_down or event.type = {NS_EVENT}.other_mouse_down
 					or event.type = {NS_EVENT}.left_mouse_up or event.type = {NS_EVENT}.right_mouse_up or event.type = {NS_EVENT}.other_mouse_up then
 					view := event.window.content_view.hit_test (event.location_in_window)
@@ -175,9 +178,9 @@ feature -- Basic operation
 				end
 				send_event (event)
 				update_windows
-				event := next_event (0, Void, default_run_loop_mode, true)
+				event := next_event ({NS_APPLICATION_API}.ns_any_event_mask, Void, default_run_loop_mode, true)
 			end
-			pool.release
+			l_loop_pool.release
 		end
 
 	process_graphical_events
@@ -232,7 +235,7 @@ feature {EV_ANY} -- Implementation
 			-- Is application display remote?
 			-- This function is primarily to determine if drawing to the display is optimal.
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	wait_for_input (msec: INTEGER)
 			-- Wait for at most `msec' milliseconds for an event.
@@ -241,7 +244,7 @@ feature -- Implementation
 			until_time: NS_DATE
 		do
 			create until_time.make_with_time_interval_since_now (msec / 1000.0)
-			event := next_event (0, until_time, default_run_loop_mode, false)
+			event := next_event ({NS_APPLICATION_API}.ns_any_event_mask, until_time, default_run_loop_mode, false)
 		end
 
 	is_in_transport: BOOLEAN

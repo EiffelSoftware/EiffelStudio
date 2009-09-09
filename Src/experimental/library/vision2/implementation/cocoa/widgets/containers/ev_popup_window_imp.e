@@ -19,6 +19,8 @@ inherit
 		end
 
 	EV_WINDOW_IMP
+		rename
+			has_shadow as has_shadow_cocoa
 		redefine
 			interface,
 			make

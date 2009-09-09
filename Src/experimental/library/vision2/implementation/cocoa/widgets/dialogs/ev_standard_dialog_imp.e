@@ -71,9 +71,6 @@ feature -- Status setting
 		end
 
 	blocking_window: detachable EV_WINDOW
-		do
-
-		end
 
 feature {NONE} -- Implementation
 

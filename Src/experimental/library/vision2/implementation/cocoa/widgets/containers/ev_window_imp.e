@@ -1,6 +1,6 @@
 note
 	description: "Eiffel Vision window. Cocoa implementation."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 		do
 			cocoa_make (new_window_position,
 				window_mask, True)
-			make_key_and_order_front (current)
+			make_key_and_order_front (content_view)
 			order_out
 			allow_resize
 

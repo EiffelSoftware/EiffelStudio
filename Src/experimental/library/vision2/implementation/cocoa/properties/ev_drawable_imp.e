@@ -157,13 +157,6 @@ feature -- Element change
 			-- Set drawing mode to `a_mode'.
 		do
 			drawing_mode := a_mode
-			inspect drawing_mode
-				when drawing_mode_and then
-				when drawing_mode_copy then
-				when drawing_mode_invert then
-				when drawing_mode_or then
-				when drawing_mode_xor then
-			end
 		end
 
 	set_clip_area (an_area: EV_RECTANGLE)
@@ -279,8 +272,6 @@ feature -- Drawing operations
 			l_font: detachable EV_FONT_IMP
 			l_color: detachable EV_COLOR_IMP
 			trans: NS_AFFINE_TRANSFORM
-			color: NS_COLOR
-			path: NS_BEZIER_PATH
 		do
 			create l_string.make_with_string (a_text)
 			l_font ?= font.implementation
@@ -402,9 +393,8 @@ feature -- Drawing operations
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
-			color: NS_COLOR
-			path: NS_BEZIER_PATH
-			y_cocoa: INTEGER
+--			color: NS_COLOR
+--			path: NS_BEZIER_PATH
 			trans: NS_AFFINE_TRANSFORM
 			source_rect, destination_rect: NS_RECT
 		do
@@ -601,7 +591,19 @@ feature {EV_ANY_HANDLER} -- Implementation
 				trans.scale_by_xy ({REAL_32}1.0, {REAL_32}-1.0)
 				trans.concat
 			end
-			--create gc
+			create gc.current_context
+			inspect drawing_mode
+				when drawing_mode_and then
+					gc.set_compositing_operation ({NS_IMAGE}.composite_source_over)
+				when drawing_mode_copy then
+					gc.set_compositing_operation ({NS_IMAGE}.composite_source_over)
+				when drawing_mode_invert then
+					gc.set_compositing_operation ({NS_IMAGE}.composite_source_over)
+				when drawing_mode_or then
+					gc.set_compositing_operation ({NS_IMAGE}.composite_source_over)
+				when drawing_mode_xor then
+					gc.set_compositing_operation ({NS_IMAGE}.composite_xor)
+			end
 			l_color ?= foreground_color.implementation
 			check l_color /= void end
 			l_color.color.set

@@ -80,7 +80,7 @@ feature {SD_TAB_STATE}  -- Implementation functions
 	change_zone_split_area_to_docking_zone (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- Change zone split area to docking zone
 			-- FIXIT: This routine copy from SD_DOCKING_STATE, only change internal_zone to tab_zone.
-			-- May should merge functions
+			-- Maybe functions should be merged
 		require
 			a_target_zone_not_void: a_target_zone /= Void
 			direction_valid: (create {SD_ENUMERATION}).is_direction_valid (state.direction)
@@ -451,14 +451,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

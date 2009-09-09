@@ -130,24 +130,6 @@ feature -- Saving Subview Positions
 			"return [(NSSplitView*)$a_ns_split_view autosaveName];"
 		end
 
-feature -- Configuring Pane Splitters
-
-	frozen is_pane_splitter (a_ns_split_view: POINTER): BOOLEAN
-			-- - (BOOL)isPaneSplitter
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSSplitView*)$a_ns_split_view isPaneSplitter];"
-		end
-
-	frozen set_is_pane_splitter (a_ns_split_view: POINTER; a_flag: BOOLEAN)
-			-- - (void)setIsPaneSplitter: (BOOL) flag
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSSplitView*)$a_ns_split_view setIsPaneSplitter: $a_flag];"
-		end
-
 feature -- Constraining Split Position
 
 	frozen min_possible_position_of_divider_at_index (a_ns_split_view: POINTER; a_divider_index: INTEGER): REAL

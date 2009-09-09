@@ -124,20 +124,6 @@ feature -- Flushing Graphics to the Context
 			{NS_GRAPHICS_CONTEXT_API}.flush_graphics (item)
 		end
 
-feature -- Managing the Focus Stack
-
-	focus_stack: NS_OBJECT
-			-- Returns the object used by the context to track the hierarchy of views with locked focus.
-		do
-			create Result.share_from_pointer ({NS_GRAPHICS_CONTEXT_API}.focus_stack (item))
-		end
-
-	set_focus_stack (a_stack: NS_OBJECT)
-			-- Sets the object used by the receiver to track the hierarchy of views with locked focus.
-		do
-			{NS_GRAPHICS_CONTEXT_API}.set_focus_stack (item, a_stack.item)
-		end
-
 feature -- Configuring Rendering Options
 
 	set_compositing_operation (a_operation: NATURAL)

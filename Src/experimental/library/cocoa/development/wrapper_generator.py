@@ -30,8 +30,8 @@ basedir = "/System/Library/Frameworks"
 config = {
 		  "framework": "ApplicationKit",
 		  "dirname": basedir + "/AppKit.framework/Headers",
-		  "class": "NSGraphicsContext",
-		  "include": "Cocoa/NSGraphicsContext.h"
+		  "class": "NSWindow",
+		  "include": "Cocoa/NSWindow.h"
 		  }
 """
 config = {
@@ -367,8 +367,8 @@ enumMap = {
 	"NSImageLoadStatus": "int",
     "NSImageCacheMode": "int",
     "NSEventType": "int",
-    "NSPointingDeviceType": "int"
-    
+    "NSPointingDeviceType": "int",
+	"NSWindowCollectionBehavior": "NSUInteger"    
 }
 	
 expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER", "NATURAL", "NATURAL_64", "INTEGER_64", "NATURAL_16", "INTEGER_16"]
@@ -563,7 +563,10 @@ class ObjC_Class:
 # Tokens which end up in the message signature when parsing but we can't deal with
 ignore_tokens = [
 	"DEPRECATED_IN_MAC_OS_X_VERSION_10_4_AND_LATER",
+	"DEPRECATED_IN_MAC_OS_X_VERSION_10_5_AND_LATER",
+	"DEPRECATED_IN_MAC_OS_X_VERSION_10_6_AND_LATER",
 	"AVAILABLE_MAC_OS_X_VERSION_10_5_AND_LATER",
+	"AVAILABLE_MAC_OS_X_VERSION_10_6_AND_LATER",
 	"__OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0)",
 	""];
 

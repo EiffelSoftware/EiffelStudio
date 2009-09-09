@@ -27,13 +27,13 @@ feature {NONE} -- Creation
 feature -- Managing Subviews
 
 	adjust_subviews
-			-- Adjusts the sizes of the receiver`s subviews so they (plus the dividers) fill the receiver.
+			-- Adjusts the sizes of the receiver's subviews so they (plus the dividers) fill the receiver.
 		do
 			{NS_SPLIT_VIEW_API}.adjust_subviews (item)
 		end
 
 	is_subview_collapsed (a_subview: NS_VIEW): BOOLEAN
-			-- Returns True if <em>subview</em> is in a collapsed state, False otherwise.
+			-- Returns True if `subview' is in a collapsed state, False otherwise.
 		do
 			Result := {NS_SPLIT_VIEW_API}.is_subview_collapsed (item, a_subview.item)
 		end
@@ -61,7 +61,7 @@ feature -- Assigning a Delegate
 		end
 
 	set_delegate (a_delegate: NS_SPLIT_VIEW_DELEGATE)
-			-- Makes <em>anObject</em> the receiver`s delegate.
+			-- Makes `a_delegate' the receiver's delegate.
 		do
 			{NS_SPLIT_VIEW_API}.set_delegate (item, a_delegate.item)
 		end

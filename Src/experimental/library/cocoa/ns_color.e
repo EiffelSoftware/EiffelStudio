@@ -11,6 +11,7 @@ inherit
 	NS_OBJECT
 
 create
+	clear_color,
 	blue_color,
 	white_color,
 	light_gray_color,
@@ -29,6 +30,12 @@ create {NS_OBJECT}
 	share_from_pointer
 
 feature {NONE} -- Creating an NSColor with Preset Components
+
+	clear_color
+			-- Returns an NSColor object whose grayscale and alpha values are both 0.0.
+		do
+			item := {NS_COLOR_API}.clear_color
+		end
 
 	blue_color
 		do

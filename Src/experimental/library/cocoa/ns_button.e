@@ -1,6 +1,6 @@
 note
 	description: "Wrapper for NSButton"
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,9 +33,9 @@ feature -- Configuring Buttons
 
 	set_button_type (a_button_type: NATURAL)
 			-- Sets how the receiver button highlights while pressed and how it shows its state.
-			-- setButtonType: redisplays the button before returning.
-			-- You can configure different behavior with the NS_BUTTON_CELL methods set_highlights_by and set_shows_state_by
-			-- Note that there is no button_type method. The set method sets various button properties that together establish the behavior of the type.
+			-- `set_button_type' redisplays the button before returning.
+			-- You can configure different behavior with the NS_BUTTON_CELL methods `set_highlights_by' and `set_shows_state_by'
+			-- Note that there is no `button_type' method. The set method sets various button properties that together establish the behavior of the type.
 		require
 			valid_button_type: valid_button_type (a_button_type)
 		do

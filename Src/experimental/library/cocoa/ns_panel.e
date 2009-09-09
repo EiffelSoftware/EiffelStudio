@@ -32,10 +32,10 @@ feature -- Access
 			panel_set_becomes_key_only_if_needed (item, a_flag)
 		end
 
-	works_when_modal: BOOLEAN
-		do
-			Result := panel_works_when_modal (item)
-		end
+--	works_when_modal: BOOLEAN
+--		do
+--			Result := panel_works_when_modal (item)
+--		end
 
 	set_works_when_modal (a_flag: BOOLEAN)
 		do

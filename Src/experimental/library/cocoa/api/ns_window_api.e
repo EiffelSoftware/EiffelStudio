@@ -33,7 +33,244 @@ feature -- Creating Windows
 
 feature -- Configuring Windows
 
+	frozen style_mask (a_ns_window: POINTER): NATURAL
+			-- - (NSUInteger)styleMask
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window styleMask];"
+		end
 
+	frozen set_style_mask (a_ns_window: POINTER; a_style_mask: NATURAL)
+			-- - (void)setStyleMask: (NSUInteger) styleMask
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setStyleMask: $a_style_mask];"
+		end
+
+	frozen works_when_modal (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)worksWhenModal
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window worksWhenModal];"
+		end
+
+	frozen alpha_value (a_ns_window: POINTER): REAL
+			-- - (CGFloat)alphaValue
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window alphaValue];"
+		end
+
+	frozen set_alpha_value (a_ns_window: POINTER; a_window_alpha: REAL)
+			-- - (void)setAlphaValue: (CGFloat) windowAlpha
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setAlphaValue: $a_window_alpha];"
+		end
+
+	frozen background_color (a_ns_window: POINTER): POINTER
+			-- - (NSColor *)backgroundColor
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window backgroundColor];"
+		end
+
+	frozen set_background_color (a_ns_window: POINTER; a_color: POINTER)
+			-- - (void)setBackgroundColor: (NSColor *) color
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setBackgroundColor: $a_color];"
+		end
+
+	frozen color_space (a_ns_window: POINTER): POINTER
+			-- - (NSColorSpace *)colorSpace
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window colorSpace];"
+		end
+
+	frozen set_color_space (a_ns_window: POINTER; a_color_space: POINTER)
+			-- - (void)setColorSpace: (NSColorSpace *) colorSpace
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setColorSpace: $a_color_space];"
+		end
+
+	frozen content_view (a_ns_window: POINTER): POINTER
+			-- - (id)contentView
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window contentView];"
+		end
+
+	frozen set_content_view (a_ns_window: POINTER; a_view: POINTER)
+			-- - (void)setContentView: (NSView *) aView
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setContentView: $a_view];"
+		end
+
+	frozen can_hide (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)canHide
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window canHide];"
+		end
+
+	frozen set_can_hide (a_ns_window: POINTER; a_flag: BOOLEAN)
+			-- - (void)setCanHide: (BOOL) flag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setCanHide: $a_flag];"
+		end
+
+	frozen is_on_active_space (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)isOnActiveSpace
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window isOnActiveSpace];"
+		end
+
+	frozen hides_on_deactivate (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)hidesOnDeactivate
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window hidesOnDeactivate];"
+		end
+
+	frozen set_hides_on_deactivate (a_ns_window: POINTER; a_flag: BOOLEAN)
+			-- - (void)setHidesOnDeactivate: (BOOL) flag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setHidesOnDeactivate: $a_flag];"
+		end
+
+	frozen collection_behavior (a_ns_window: POINTER): NATURAL
+			-- - (NSWindowCollectionBehavior)collectionBehavior
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window collectionBehavior];"
+		end
+
+	frozen set_collection_behavior (a_ns_window: POINTER; a_behavior: NATURAL)
+			-- - (void)setCollectionBehavior: (NSWindowCollectionBehavior) behavior
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setCollectionBehavior: $a_behavior];"
+		end
+
+	frozen is_opaque (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)isOpaque
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window isOpaque];"
+		end
+
+	frozen set_opaque (a_ns_window: POINTER; a_is_opaque: BOOLEAN)
+			-- - (void)setOpaque: (BOOL) isOpaque
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setOpaque: $a_is_opaque];"
+		end
+
+	frozen has_shadow (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)hasShadow
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window hasShadow];"
+		end
+
+	frozen set_has_shadow (a_ns_window: POINTER; a_has_shadow: BOOLEAN)
+			-- - (void)setHasShadow: (BOOL) hasShadow
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setHasShadow: $a_has_shadow];"
+		end
+
+	frozen invalidate_shadow (a_ns_window: POINTER)
+			-- - (void)invalidateShadow
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window invalidateShadow];"
+		end
+
+--	frozen autorecalculates_content_border_thickness_for_edge (a_ns_window: POINTER; a_edge: POINTER): BOOLEAN
+--			-- - (BOOL)autorecalculatesContentBorderThicknessForEdge: (NSRectEdge) edge
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"return [(NSWindow*)$a_ns_window autorecalculatesContentBorderThicknessForEdge: *(NSRectEdge*)$a_edge];"
+--		end
+
+--	frozen set_autorecalculates_content_border_thickness_for_edge (a_ns_window: POINTER; a_flag: BOOLEAN; a_edge: POINTER)
+--			-- - (void)setAutorecalculatesContentBorderThickness: (BOOL) flag forEdge: (NSRectEdge) edge
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"[(NSWindow*)$a_ns_window setAutorecalculatesContentBorderThickness: $a_flag forEdge: *(NSRectEdge*)$a_edge];"
+--		end
+
+--	frozen content_border_thickness_for_edge (a_ns_window: POINTER; a_edge: POINTER): REAL
+--			-- - (CGFloat)contentBorderThicknessForEdge: (NSRectEdge) edge
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"return [(NSWindow*)$a_ns_window contentBorderThicknessForEdge: *(NSRectEdge*)$a_edge];"
+--		end
+
+--	frozen set_content_border_thickness_for_edge (a_ns_window: POINTER; a_thickness: REAL; a_edge: POINTER)
+--			-- - (void)setContentBorderThickness: (CGFloat) thickness forEdge: (NSRectEdge) edge
+--		external
+--			"C inline use <Cocoa/Cocoa.h>"
+--		alias
+--			"[(NSWindow*)$a_ns_window setContentBorderThickness: $a_thickness forEdge: *(NSRectEdge*)$a_edge];"
+--		end
+
+	frozen prevents_application_termination_when_modal (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)preventsApplicationTerminationWhenModal
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window preventsApplicationTerminationWhenModal];"
+		end
+
+	frozen set_prevents_application_termination_when_modal (a_ns_window: POINTER; a_flag: BOOLEAN)
+			-- - (void)setPreventsApplicationTerminationWhenModal: (BOOL) flag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setPreventsApplicationTerminationWhenModal: $a_flag];"
+		end
+
+	frozen set_delegate (a_window: POINTER; a_delegate: POINTER)
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_window setDelegate: $a_delegate];"
+		end
 
 feature -- Creating Windows
 
@@ -334,27 +571,6 @@ feature -- Providing Services
 
 feature -- Working with Carbon
 
-	frozen set_content_view (a_window: POINTER; a_view: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSWindow*)$a_window setContentView: $a_view];"
-		end
-
-	frozen content_view (a_window: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSWindow*)$a_window contentView];"
-		end
-
-	frozen set_delegate (a_window: POINTER; a_delegate: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSWindow*)$a_window setDelegate: $a_delegate];"
-		end
-
 	frozen set_min_size (a_window: POINTER; a_width, a_height: INTEGER)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
@@ -375,34 +591,6 @@ feature -- Working with Carbon
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"NSPoint point = [(NSWindow*)$a_window convertBaseToScreen: *(NSPoint*)$a_point]; memcpy($res, &point, sizeof(NSPoint));"
-		end
-
-	frozen set_alpha_value (a_window: POINTER; a_alpha: REAL)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSWindow*)$a_window setAlphaValue: $a_alpha];"
-		end
-
-	frozen alpha_value (a_window: POINTER): REAL
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSWindow*)$a_window alphaValue];"
-		end
-
-	frozen set_background_color (a_window: POINTER; a_color: POINTER)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSWindow*)$a_window setBackgroundColor: $a_color];"
-		end
-
-	frozen background_color (a_window: POINTER): POINTER
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSWindow*)$a_window backgroundColor];"
 		end
 
 	frozen set_ignores_mouse_events (a_window: POINTER; a_flag: BOOLEAN)

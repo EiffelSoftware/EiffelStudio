@@ -1,0 +1,14 @@
+test_name field-basic-type-inconsistency
+test_description If you use {INTERNAL} to get fields of basic type you get _REF versions instead of the actual basic type.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

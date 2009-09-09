@@ -61,7 +61,10 @@ feature {NONE} -- Agents
 	on_pointer_press (a_relative_x, a_relative_y: INTEGER)
 			-- Handle pointer press actions
 		do
-			if has_position (a_relative_x, a_relative_y) and is_sensitive then
+			-- We have to check `tool_bar /= Void', because on GTK plaforms, pointer press actions maybe delayed
+			-- The action maybe called even after tool bar has been destroyed.
+			-- See bug#13178			
+			if attached tool_bar and then (has_position (a_relative_x, a_relative_y) and is_sensitive) then
 				if state = {SD_TOOL_BAR_ITEM_STATE}.hot then
 					last_state := state
 				elseif state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked  then
@@ -139,14 +142,14 @@ feature {NONE} --Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

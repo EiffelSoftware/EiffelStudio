@@ -253,7 +253,7 @@ feature {SD_TOOL_BAR} -- Agents
 		do
 			-- Tool bar maybe void when CPU is busy on GTK.
 			-- See bug#13102.
-			if tool_bar /= Void then
+			if attached tool_bar then
 				if has_position (a_relative_x, a_relative_y) then
 					if tooltip /= Void and not (tooltip.as_string_32 ~ (tool_bar.tooltip.as_string_32)) then
 						tool_bar.set_tooltip (tooltip)
@@ -267,7 +267,10 @@ feature {SD_TOOL_BAR} -- Agents
 	on_pointer_press (a_relative_x, a_relative_y: INTEGER)
 			-- <Precursor>
 		do
-			if is_sensitive then
+			-- We have to check `tool_bar /= Void', because on GTK plaforms, pointer press actions maybe delayed
+			-- The action maybe called even after tool bar has been destroyed.
+			-- See bug#13178
+			if is_sensitive and then attached tool_bar then
 				if has_position (a_relative_x, a_relative_y) then
 					if state /= {SD_TOOL_BAR_ITEM_STATE}.pressed then
 						state := {SD_TOOL_BAR_ITEM_STATE}.pressed
@@ -316,7 +319,10 @@ feature {SD_TOOL_BAR} -- Agents
 	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- <Precursor>
 		do
-			if is_sensitive and then has_position (a_x, a_y) then
+			-- We have to check `tool_bar /= Void', because on GTK plaforms, pointer press actions maybe delayed
+			-- The action maybe called even after tool bar has been destroyed.
+			-- See bug#13178			
+			if attached tool_bar and then (is_sensitive and then has_position (a_x, a_y)) then
 				pointer_button_press_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 			end
 		end
@@ -393,14 +399,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

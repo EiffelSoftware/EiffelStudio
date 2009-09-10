@@ -14,12 +14,8 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(EIFFEL_SRC)/framework/terminal/spec/include"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
-		<library name="enumerated_type" location="$EIFFEL_SRC/framework/enumerated_type/enumerated_type-safe.ecf"/>
-		<cluster name="terminal" location="./">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</cluster>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="enumerated_type" location="$EIFFEL_SRC\framework\enumerated_type\enumerated_type-safe.ecf"/>
+		<cluster name="terminal" location=".\"/>
 	</target>
 </system>

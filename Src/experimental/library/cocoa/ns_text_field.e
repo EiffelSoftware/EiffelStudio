@@ -23,8 +23,8 @@ feature {NONE} -- Creation
 	make
 		do
 			make_from_pointer (text_field_new)
-			callback_marshal.register_object (Current)
 			init_delegate
+			callback_marshal.register_object (Current)
 		end
 
 feature
@@ -36,7 +36,7 @@ feature
 
 	background_color: NS_COLOR
 		do
-			create Result.make_from_pointer (text_field_background_color (item))
+			create Result.share_from_pointer (text_field_background_color (item))
 		end
 
 	set_draws_background (a_flag: BOOLEAN)
@@ -56,7 +56,7 @@ feature
 
 	text_color: NS_COLOR
 		do
-			create Result.make_from_pointer (text_field_text_color (item))
+			create Result.share_from_pointer (text_field_text_color (item))
 		end
 
 	is_bordered: BOOLEAN

@@ -18,7 +18,7 @@ feature -- Creating an NSBitmapImageRep Object
 	make_with_data (a_data: NS_DATA)
 			-- Creates and returns an `NSBitmapImageRep' object initialized with the first image in the supplied data.
 		do
-			make_from_pointer ({NS_BITMAP_IMAGE_REP_API}.image_rep_with_data (a_data.item))
+			share_from_pointer ({NS_BITMAP_IMAGE_REP_API}.image_rep_with_data (a_data.item))
 		end
 
 --	image_reps_with_data (a_data: NS_DATA): NS_ARRAY [NS_IMAGE_REP]

@@ -16,7 +16,7 @@ feature -- Access
 
 	string: NS_STRING
 		do
-			create Result.make_from_pointer ({NS_TEXT_API}.string (item))
+			create Result.share_from_pointer ({NS_TEXT_API}.string (item))
 		end
 
 	size_to_fit

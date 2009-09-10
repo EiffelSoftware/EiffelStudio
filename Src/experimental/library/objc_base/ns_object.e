@@ -30,12 +30,27 @@ create
 	share_from_pointer
 
 create {NS_OBJECT, OBJC_CLASS, OBJC_CALLBACK_MARSHAL}
-	make_from_pointer
+	make_from_pointer,
+	make_weak_from_pointer
 
 feature {OBJC_CLASS} -- Initialization
 
+	make_weak_from_pointer (a_ptr: POINTER)
+			-- Create a weak reference to a_ptr, the object will neither be retained nor
+			-- freed when `Current' is collected
+			-- Use with care
+ 		require
+			a_ptr_not_null: a_ptr /= default_pointer
+		do
+			item := a_ptr
+			do_not_collect := True
+		ensure
+			item_set: item = a_ptr
+		end
+
 	make_from_pointer (a_ptr: POINTER)
 			-- Initialize Current assuming the Eiffel code initialized `a_ptr' via an external call.
+			-- Use this feature if you alloc'ed the object yourself or are otherwise responsible of freeing it
 			-- For internal use by the framework only
  		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -51,6 +66,8 @@ feature {OBJC_CLASS} -- Initialization
 
 	share_from_pointer (a_ptr: POINTER)
 			-- Initialize Current using `a_ptr' assuming `a_ptr' was not created by the Eiffel code.
+			-- Use this if you didn't alloc the poitner yourself. This feature will retain the
+			-- object so that it will not go away until the eiffel object is garbage collected
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
 		do
@@ -58,7 +75,7 @@ feature {OBJC_CLASS} -- Initialization
 			{NS_OBJECT_API}.retain (a_ptr)
 		ensure
 			item_set: item = a_ptr
-			proper_reference_counting: {NS_OBJECT_API}.retain_count (a_ptr) = old {NS_OBJECT_API}.retain_count (a_ptr) + 1
+			--proper_reference_counting: {NS_OBJECT_API}.retain_count (a_ptr) = old {NS_OBJECT_API}.retain_count (a_ptr) + 1
 		end
 
 feature -- Access
@@ -71,6 +88,14 @@ feature -- Access
 
 	item: POINTER
 			-- Underlying objective-C object
+
+feature -- Operations
+
+	init
+			-- Send an init message to 'item'
+		do
+			item := {NS_OBJECT_API}.init (item)
+		end
 
 feature -- Status report
 
@@ -85,7 +110,7 @@ feature -- Status report
 		local
 			l_string: NS_STRING_BASE
 		do
-			create l_string.make_from_pointer ({NS_OBJECT_API}.description (item))
+			create l_string.share_from_pointer ({NS_OBJECT_API}.description (item))
 			Result := l_string
 		end
 
@@ -117,8 +142,8 @@ feature {NONE} -- Memory Management
 		do
 			Precursor {IDENTIFIED}
 			if item /= l_null then
-				{NS_OBJECT_API}.release (item)
-				item := l_null
+--				{NS_OBJECT_API}.release (item)
+--				item := l_null
 			end
 		end
 

@@ -23,7 +23,7 @@ feature {NONE} -- Creation
 	make
 			-- Creates and returns a new NSAffineTransform object initialized to the identity matrix.
 		do
-			make_from_pointer ({NS_AFFINE_TRANSFORM_API}.transform)
+			share_from_pointer ({NS_AFFINE_TRANSFORM_API}.transform)
 		end
 
 feature -- Access

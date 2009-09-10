@@ -25,7 +25,7 @@ feature {NONE} -- Creation
 		do
 			create pool.make
 			{NS_APPLICATION_API}.init
-			make_from_pointer ({NS_APPLICATION_API}.get)
+			make_weak_from_pointer ({NS_APPLICATION_API}.get)
 			{NS_APPLICATION_API}.finish_launching (item)
 		end
 
@@ -185,7 +185,7 @@ feature -- Run-Loop modes
 
 	default_run_loop_mode: NS_STRING
 		once
-			create Result.make_from_pointer (ns_default_run_loop_mode)
+			create Result.make_weak_from_pointer (ns_default_run_loop_mode)
 		end
 
 feature -- Other
@@ -195,12 +195,10 @@ feature -- Other
 			l_menu: NS_MENU
 			l_menu_item: NS_MENU_ITEM
 			name: NS_STRING
-			l_apple_icon: NS_STRING
 		do
 			-- A little hack is needed to set the apple menu:
 			-- see http://lists.apple.com/archives/cocoa-dev/2006/Sep/msg00011.html
-			create l_apple_icon.make_with_string ((0xF8FF).to_character_32.out)
-			create name.make_from_pointer (l_apple_icon.item)
+			create name.make_with_string ((0xF8FF).to_character_32.out)
 
 			create l_menu.make
 			l_menu.set_title (name)

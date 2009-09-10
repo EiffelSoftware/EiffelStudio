@@ -27,14 +27,19 @@ feature -- Class
 			end
 		end
 
+	delegate: detachable NS_OBJECT
+
 	init_delegate
 		local
-			delegate: NS_OBJECT
+			l_delegate: like delegate
 		do
-			delegate := delegate_class.create_instance
- 			{NS_VIEW_API}.init (delegate.item)
+			if attached l_delegate then
+				l_delegate := delegate_class.create_instance
+				l_delegate.init
 
-			{NS_OUTLINE_VIEW_API}.set_delegate (item, delegate.item)
+				{NS_OUTLINE_VIEW_API}.set_delegate (item, l_delegate.item)
+				delegate := l_delegate
+			end
 		end
 
 	text_did_change_actions: ACTION_SEQUENCE [TUPLE[]]

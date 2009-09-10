@@ -49,7 +49,7 @@ feature {NONE} -- Creation
 			l_objects: MANAGED_POINTER
 			i: INTEGER
 		do
-			create l_objects.make (a_objects.count)
+			create l_objects.make (a_objects.count * {PLATFORM}.pointer_bytes)
 			from
 				a_objects.start
 				i := 0
@@ -62,7 +62,7 @@ feature {NONE} -- Creation
 				i := i + 1
 				a_objects.forth
 			end
-			make_from_pointer ({NS_ARRAY_API}.array_with_objects_count (l_objects.item, to_ns_uinteger (a_objects.count)))
+			make_from_pointer ({NS_ARRAY_API}.create_with_objects_count (l_objects.item, to_ns_uinteger (a_objects.count)))
 		end
 
 	make_from_array (a_array: ARRAY [T])
@@ -84,7 +84,7 @@ feature {NONE} -- Creation
 				i := i + 1
 				j := j + 1
 			end
-			make_from_pointer ({NS_ARRAY_API}.array_with_objects_count (l_objects.item, to_ns_uinteger (a_array.count)))
+			make_from_pointer ({NS_ARRAY_API}.create_with_objects_count (l_objects.item, to_ns_uinteger (a_array.count)))
 		end
 
 feature -- Access

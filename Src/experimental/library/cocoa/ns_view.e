@@ -14,24 +14,31 @@ create
 	make,
 	make_with_drawing,
 	make_flipped
+
 create {NS_OBJECT}
 	share_from_pointer
 
 feature {NONE} -- Creation and Initialization
 
 	make
+		local
+			l_view_class: NS_OBJECT
 		do
-			make_from_pointer (view_class.create_instance.item)
- 			{NS_VIEW_API}.init (item)
+			l_view_class := view_class.create_instance
+			l_view_class.init
+			share_from_pointer (l_view_class.item)
 			callback_marshal.register_object (Current)
 		end
 
 	make_with_drawing
 			-- Create an NSView which calls the passed draw_action when drawRect: is invoked
 			-- require: target has been set up
+		local
+			l_class: NS_OBJECT
 		do
-			make_from_pointer (view_class_with_draw_callback.create_instance.item)
- 			{NS_VIEW_API}.init (item)
+			l_class := view_class_with_draw_callback.create_instance
+			l_class.init
+			share_from_pointer (l_class.item)
 			callback_marshal.register_object (Current)
 		end
 
@@ -53,9 +60,12 @@ feature {NONE} -- Creation and Initialization
 
 	make_flipped
 			-- Create an NSView with flipped coordinates (i.e. redefine the isFlipped method to return True)
+		local
+			l_class: NS_OBJECT
 		do
-			make_from_pointer (flipped_view_class.create_instance.item)
- 			{NS_VIEW_API}.init (item)
+			l_class := flipped_view_class.create_instance
+			l_class.init
+			share_from_pointer (l_class.item)
 			callback_marshal.register_object (Current)
 		end
 

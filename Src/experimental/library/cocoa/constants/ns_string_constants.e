@@ -11,12 +11,12 @@ feature -- Attributed Strings
 
 	font_attribute_name: NS_STRING
 		once
-			create Result.make_from_pointer (ns_font_attribute_name)
+			create Result.make_weak_from_pointer (ns_font_attribute_name)
 		end
 
 	foreground_color_attribute_name: NS_STRING
 		once
-			create Result.make_from_pointer (ns_foreground_color_attribute_name)
+			create Result.make_weak_from_pointer (ns_foreground_color_attribute_name)
 		end
 
 feature -- NSView / Notifications
@@ -25,7 +25,7 @@ feature -- NSView / Notifications
 			-- Posted whenever the view's frame rectangle changes, if the view is configured using
 			-- setPostsFrameChangedNotifications: to post such notifications.
 		once
-			create Result.make_from_pointer (ns_view_frame_did_change_notification)
+			create Result.make_weak_from_pointer (ns_view_frame_did_change_notification)
 		end
 
 feature {NONE} -- Implementation

@@ -67,9 +67,10 @@ feature -- Getting General Event Information
 		do
 			create Result.make
 			{NS_EVENT_API}.location_in_window (item, Result.item)
-		ensure
-			x_position_valid: 0 < Result.x
-			y_position_valid: 0 < Result.y
+-- This postcondition doesn't seem to hold
+--		ensure
+--			x_position_valid: 0 < Result.x
+--			y_position_valid: 0 < Result.y
 		end
 
 	modifier_flags: NATURAL

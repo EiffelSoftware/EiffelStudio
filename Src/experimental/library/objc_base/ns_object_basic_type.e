@@ -23,6 +23,11 @@ feature -- Basic types
 		do
 		end
 
+	cg_float: REAL_64
+			-- Type of `CGFloat' for Current compilation
+		do
+		end
+
 feature -- Conversion
 
 	to_ns_integer (a_int: INTEGER): like ns_integer

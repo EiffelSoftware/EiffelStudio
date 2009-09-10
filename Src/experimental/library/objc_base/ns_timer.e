@@ -113,6 +113,8 @@ feature {NONE} -- Implementation
 
 	callbacks_class: OBJC_CLASS
 			-- Create a new Objective-C object with one method and use this as a callback.
+		note
+            once_status: global
 		once
 			create Result.make_with_name ("EiffelWrapperTimerCallback")
 			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSObject"))

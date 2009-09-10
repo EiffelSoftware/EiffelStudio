@@ -11,7 +11,8 @@ inherit
 	NS_VIEW
 
 create {NS_OBJECT}
-	share_from_pointer
+	share_from_pointer,
+	make_from_pointer
 
 feature -- Working with Background Color
 
@@ -22,7 +23,7 @@ feature -- Working with Background Color
 
 	background_color: NS_COLOR
 		do
-			create Result.make_from_pointer (clip_view_background_color (item))
+			create Result.share_from_pointer (clip_view_background_color (item))
 		end
 
 	set_draws_background (a_flag: BOOLEAN)

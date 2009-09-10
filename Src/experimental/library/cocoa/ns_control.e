@@ -96,7 +96,7 @@ feature -- Access
 	cell: NS_CELL
 			-- Returns the receiver's cell object.
 		do
-			create Result.make_from_pointer ({NS_CONTROL_API}.cell (item))
+			create Result.share_from_pointer ({NS_CONTROL_API}.cell (item))
 		ensure
 			result_not_void: Result /= void
 		end
@@ -124,7 +124,7 @@ feature -- Formatting Text
 	font: NS_FONT
 			-- Returns the font used to draw text in the receiver's cell.
 		do
-			create Result.make_from_pointer ({NS_CONTROL_API}.font (item))
+			create Result.share_from_pointer ({NS_CONTROL_API}.font (item))
 		end
 
 	set_font (a_font: NS_FONT)

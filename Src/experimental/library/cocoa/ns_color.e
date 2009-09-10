@@ -106,14 +106,25 @@ feature {NONE} -- Creating a System Color - an NSColor Whose Value Is Specified 
 
 feature -- Creation
 
-	color_using_color_space (a_color_space: NS_COLOR_SPACE): NS_COLOR
+	color_using_color_space (a_color_space: NS_COLOR_SPACE): detachable NS_COLOR
+			-- Creates and returns an NSColor whose color is the same as the receiver’s, except that the new NSColor is in the specified color space.
+		local
+			l_ptr: POINTER
 		do
-			Result := create {NS_COLOR}.make_from_pointer ({NS_COLOR_API}.color_using_color_space (item, a_color_space.item))
+			l_ptr := {NS_COLOR_API}.color_using_color_space (item, a_color_space.item)
+			if l_ptr /= default_pointer then
+				Result := create {NS_COLOR}.make_from_pointer (l_ptr)
+			end
 		end
 
-	color_using_color_space_name (a_color_space: NS_STRING): NS_COLOR
+	color_using_color_space_name (a_color_space: NS_STRING): detachable NS_COLOR
+		local
+			l_ptr: POINTER
 		do
-			Result := create {NS_COLOR}.make_from_pointer ({NS_COLOR_API}.color_using_color_space_name (item, a_color_space.item))
+			l_ptr := {NS_COLOR_API}.color_using_color_space_name (item, a_color_space.item)
+			if l_ptr /= default_pointer then
+				Result := create {NS_COLOR}.make_from_pointer (l_ptr)
+			end
 		end
 
 feature -- Retrieving Individual Components

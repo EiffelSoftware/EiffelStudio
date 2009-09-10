@@ -18,16 +18,27 @@ feature {NONE} -- Initialization
 			-- but we must link the widget events to `widget'.
 		do
 			output := an_output_device
+			widget.pointer_motion_actions.wipe_out
 			widget.pointer_motion_actions.extend (agent widget_motion)
+			widget.pointer_button_press_actions.wipe_out
 			widget.pointer_button_press_actions.extend (agent widget_button_press)
+			widget.pointer_double_press_actions.wipe_out
 			widget.pointer_double_press_actions.extend (agent widget_double_press)
+			widget.pointer_button_release_actions.wipe_out
 			widget.pointer_button_release_actions.extend (agent widget_button_release)
+			widget.pointer_enter_actions.wipe_out
 			widget.pointer_enter_actions.extend (agent output.append_text ("Pointer enter event occurred%N"))
+			widget.pointer_leave_actions.wipe_out
 			widget.pointer_leave_actions.extend (agent output.append_text ("Pointer leave event occurred%N"))
+			widget.key_press_actions.wipe_out
 			widget.key_press_actions.extend (agent key_press)
-			widget.key_press_actions.extend (agent key_release)
+			widget.key_release_actions.wipe_out
+			widget.key_release_actions.extend (agent key_release)
+			widget.key_press_string_actions.wipe_out
 			widget.key_press_string_actions.extend (agent key_press_string)
+			widget.focus_in_actions.wipe_out
 			widget.focus_in_actions.extend (agent output.append_text ("Focus in event occurred%N"))
+			widget.focus_out_actions.wipe_out
 			widget.focus_out_actions.extend (agent output.append_text ("Focus out event occurred%N"))
 		end
 

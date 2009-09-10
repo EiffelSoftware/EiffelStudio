@@ -15,7 +15,7 @@
 		<echo message=" geant precompile" />
 		<echo message=" geant clean" />
 		<echo message="" />
-		<echo message=" geant estudio        :open EiffelStudio" />
+		<echo message=" geant estudio | gui  :open EiffelStudio" />
 		<echo message=" geant menu           :menu interface" />
 		<echo message="" />
 		<echo message="defines:" />
@@ -31,7 +31,7 @@
 		<echo message=" 4) melt" />
 		<echo message=" 5) precompile" />
 		<echo message=" 6) clean" />
-		<echo message=" 7) estudio         :open EiffelStudio" />
+		<echo message=" 7) estudio | gui     :open EiffelStudio" />
 		<echo message=" Q) Quit" />
 		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,5,6,7,Q,q" />
 		<set name="answer" value="q" if="$answer=Q" />
@@ -41,7 +41,7 @@
 		<geant if="$answer=4" target="melt"	/>
 		<geant if="$answer=5" target="precompile"	/>
 		<geant if="$answer=6" target="clean"	/>
-		<geant if="$answer=7" target="estudio"	/>
+		<geant if="$answer=7" target="gui"	/>
 	</target>
 
 	<target name="init">
@@ -113,7 +113,7 @@
 		<geant target="_tpl_compile_" arguments="precompile" />
 	</target>
 
-	<target name="estudio" depend="init">
+	<target name="gui" depend="init">
 
 		<set name="old_force_gui" value="$force_gui" if="$force_gui" />
 		<set name="force_gui" value="true" />
@@ -123,6 +123,9 @@
 		<set name="force_gui" value="$old_force_gui" if="$old_force_gui" />
 		<unset name="force_gui" unless="$old_force_gui" />
 		<unset name="old_force_gui" />
+	</target>
+
+	<target name="estudio" depend="gui">
 	</target>
 
 	<target name="clean" depend="init_skip" unless="$_SKIP=true">

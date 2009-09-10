@@ -24,11 +24,7 @@
 				<custom name="batch_preferences" excluded_value="true"/>
 			</condition>
 		</library>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
-			<condition>
-				<custom name="batch_preferences" excluded_value="true"/>
-			</condition>
-		</library>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="interface" location="interface\" recursive="true">
 			<condition>
 				<custom name="batch_preferences" excluded_value="true"/>

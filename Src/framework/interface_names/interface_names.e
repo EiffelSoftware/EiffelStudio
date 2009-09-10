@@ -361,6 +361,10 @@ feature -- Accelerator, focus label and menu name
 	l_affected_items: STRING_32					do Result := locale.translation ("Affected items") end
 	m_Breakpoints_tool: STRING_32				do Result := locale.translation("Breakpoints")	end
 	m_Breakpoint_index: STRING_32				do Result := locale.translation("Breakpoint index:")	end
+	m_enable_remove_breakpoint_here: STRING_32				do Result := locale.translation("Enable/Remove Breakpoint Here")	end
+	m_enable_disable_breakpoint_here: STRING_32				do Result := locale.translation("Enable/Disable Breakpoint Here")	end
+	m_Edit_breakpoint_here: STRING_32				do Result := locale.translation("Edit Breakpoint Here")	end
+
 	m_Break_always: STRING_32						do Result := locale.translation("Break always")	end
 	m_Break_when_hit_count_equal: STRING_32			do Result := locale.translation("Break when the hit count is equal to")	end
 	m_Break_when_hit_count_multiple_of: STRING_32	do Result := locale.translation("Break when the hit count is a multiple of")	end

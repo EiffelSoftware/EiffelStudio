@@ -11,6 +11,11 @@ class
 inherit
 	ES_TOOLBAR_PREFERENCE
 
+	EV_KEY_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -129,6 +134,12 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			Result := display_agent_details_preference.value
 		end
 
+feature -- Preference
+
+	edit_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
+	enable_remove_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
+	enable_disable_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
+
 feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 
 	last_saved_stack_path_preference: STRING_PREFERENCE
@@ -154,7 +165,6 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	watch_tools_layout_preference: ARRAY_PREFERENCE
 	move_up_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
 	move_down_watch_expression_shortcut_preference: SHORTCUT_PREFERENCE
-
 
 	objects_tool_layout_preference: ARRAY_PREFERENCE
 
@@ -236,6 +246,9 @@ feature -- Preference Strings
 	default_expanded_view_size_string: STRING = "debugger.default_expanded_view_size"
 	move_up_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_up_watch_expression"
 	move_down_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_down_watch_expression"
+	edit_bp_here_shortcut_string: STRING = "debugger.shortcuts.edit_bp_here"
+	enable_remove_here_shortcut_string: STRING = "debugger.shortcuts.enable_remove_here"
+	enable_disable_bp_here_shortcut_string: STRING = "debugger.shortcuts.enable_disable_bp_here"
 
 feature {NONE} -- Implementation
 
@@ -272,8 +285,11 @@ feature {NONE} -- Implementation
 			watch_tools_layout_preference := l_manager.new_array_preference_value (l_manager, watch_tools_layout_string, <<>>)
 
 			move_up_watch_expression_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, move_up_watch_expression_shortcut_string, [True, False, True, "up"])
-			move_down_watch_expression_shortcut_preference  := l_manager.new_shortcut_preference_value (l_manager, move_down_watch_expression_shortcut_string,  [True, False, True, "down"])
+			move_down_watch_expression_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, move_down_watch_expression_shortcut_string,  [True, False, True, "down"])
 
+			edit_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, edit_bp_here_shortcut_string,  [False, True, False, "F9"])
+			enable_remove_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, enable_remove_here_shortcut_string,  [False, False, False, "F9"])
+			enable_disable_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, enable_disable_bp_here_shortcut_string,  [False, False, True, "F9"])
 		end
 
 	preferences: PREFERENCES
@@ -300,7 +316,9 @@ invariant
 	is_watches_grids_layout_managed_preference_not_void: is_watches_grids_layout_managed_preference /= Void
 	objects_tool_layout_preference_not_void: objects_tool_layout_preference /= Void
 	watch_tools_layout_preference_not_void: watch_tools_layout_preference /= Void
-
+	edit_bp_here_shortcut_preference_not_void: edit_bp_here_shortcut_preference /= Void
+	enable_remove_here_shortcut_preference_not_void: enable_remove_bp_here_shortcut_preference /= Void
+	enable_disable_bp_here_shortcut_preference_not_void: enable_disable_bp_here_shortcut_preference /= Void
 	display_agent_details_preference_not_void: display_agent_details_preference /= Void
 
 note

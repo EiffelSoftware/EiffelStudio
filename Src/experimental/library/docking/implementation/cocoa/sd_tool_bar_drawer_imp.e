@@ -38,7 +38,6 @@ feature -- Redefine
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item_rect, l_rect: EV_RECTANGLE
-			trans: NS_AFFINE_TRANSFORM
 		do
 			is_start_draw_called := True
 
@@ -81,7 +80,6 @@ feature -- Redefine
 			-- Redefine
 		local
 			l_rect: EV_RECTANGLE
-			l_pixmap: EV_PIXMAP
 		do
 			if not tool_bar.is_destroyed and then tool_bar.is_displayed then
 				l_rect := a_arguments.item.rectangle
@@ -98,7 +96,7 @@ feature -- Redefine
 					draw_pixmap (a_arguments)
 					draw_text (a_arguments)
 				elseif attached {SD_TOOL_BAR_SEPARATOR} a_arguments.item as l_separator then
-					tool_bar_imp.set_foreground_color (create {EV_COLOR}.make_with_rgb (1.0, 1.0, 1.0))
+					tool_bar_imp.set_foreground_color (create {EV_COLOR}.make_with_rgb ({REAL_32}1.0, {REAL_32}1.0, {REAL_32}1.0)
 					tool_bar_imp.fill_rectangle (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 					if l_rect.width < l_rect.height then
 						l_rect.move_and_resize (l_rect.x + l_rect.width // 2, l_rect.y + 1, 1, l_rect.height - 1)
@@ -106,13 +104,13 @@ feature -- Redefine
 						l_rect.set_y (l_rect.y + l_rect.height // 2)
 						l_rect.set_height (1)
 					end
-					tool_bar_imp.set_foreground_color (create {EV_COLOR}.make_with_rgb (0.5, 0.5, 0.5))
+					tool_bar_imp.set_foreground_color (create {EV_COLOR}.make_with_rgb ({REAL_32}0.5, {REAL_32}0.5, {REAL_32}0.5))
 					tool_bar_imp.fill_rectangle (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 				else
 					io.put_string ("Drawing other item at (" + l_rect.x.out + ", " + l_rect.y.out + ") size (" + l_rect.width.out + "," + l_rect.height.out + ")%N")
 					io.put_string ("  name:" + a_arguments.item.name + "%N")
 
-					tool_bar_imp.set_foreground_color (create {EV_COLOR}.make_with_rgb (1.0, 1.0, 0.0))
+					tool_bar_imp.set_foreground_color (create {EV_COLOR}.make_with_rgb ({REAL_32}1.0, {REAL_32}1.0, {REAL_32}0.0))
 					tool_bar_imp.fill_rectangle (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 					if a_arguments.item.is_wrap then
 					else
@@ -146,7 +144,6 @@ feature {NONE} -- Implementation
 			-- Draw pixmap
 		local
 			l_coordinate: EV_COORDINATE
-			l_image: NS_IMAGE
 			l_pixmap_imp: EV_PIXMAP_IMP
 		do
 			if attached {SD_TOOL_BAR_BUTTON} a_arguments.item as l_button and then ((l_button.pixmap /= Void or l_button.pixel_buffer /= Void) and l_button.tool_bar /= Void) then
@@ -199,4 +196,13 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

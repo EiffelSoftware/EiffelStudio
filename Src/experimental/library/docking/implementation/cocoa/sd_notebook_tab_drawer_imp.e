@@ -67,6 +67,7 @@ feature -- Command
 			l_pixmap_imp: EV_PIXMAP_IMP
 			l_segmented_control: NS_SEGMENTED_CONTROL
 			icon: NS_IMAGE
+			trans: NS_AFFINE_TRANSFORM
 		do
 			start_draw
 
@@ -74,6 +75,11 @@ feature -- Command
 			check not_void: l_pixmap_imp /= Void end
 
 			l_pixmap_imp.prepare_drawing
+
+			create trans.make
+			trans.translate_by_xy ({REAL_32}0.0, l_pixmap_imp.image.size.height.truncated_to_real)
+			trans.scale_by_xy ({REAL_32}1.0, {REAL_32}-1.0)
+			trans.concat
 
 			create l_segmented_control.make
 			l_segmented_control.set_segment_count (1)
@@ -86,6 +92,7 @@ feature -- Command
 			l_segmented_control.set_width_for_segment (a_width-4, 0)
 			if attached {EV_PIXMAP_IMP} pixmap.implementation as l_icon_imp then
 				icon := l_icon_imp.image.twin
+				--icon.set_flipped (True)
 				icon.set_size (create {NS_SIZE}.make_size (20, 20))
 				l_segmented_control.set_image_for_segment (icon, 0)
 			end
@@ -147,5 +154,13 @@ feature {NONE}  -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

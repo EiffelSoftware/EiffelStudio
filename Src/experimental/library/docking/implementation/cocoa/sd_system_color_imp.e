@@ -54,30 +54,30 @@ feature -- Access
 			-- Non focused selection color for title bar.
 			-- SD_TITLE_BAR: Font color for the focused window and the color that is faded to on the right
 		local
-			l_color: NS_COLOR
+--			l_color: NS_COLOR
 		do
 --			create l_color.light_gray_color
 --			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
-			create Result.make_with_rgb (0.91, 0.91, 0.91)
+			create Result.make_with_rgb ({REAL_32}0.91, {REAL_32}0.91, {REAL_32}0.91)
 		end
 
 	non_focused_title_text_color: EV_COLOR
 			-- Non focuesd title text color
 		do
-			create Result.make_with_rgb (0.0, 0.0, 0.0)
+			create Result.make_with_rgb ({REAL_32}0.0, {REAL_32}0.0, {REAL_32}0.0)
 		end
 
 	non_focused_selection_title_color: EV_COLOR
 			-- Non focused selection title color
 		do
-			create Result.make_with_rgb (0.0, 0.0, 0.0)
+			create Result.make_with_rgb ({REAL_32}0.0, {REAL_32}0.0, {REAL_32}0.0)
 		end
 
 	active_border_color: EV_COLOR
 			-- Active border color
 			-- Used by SD_TITLE_BAR for the border around titles
 		do
-			create Result.make_with_rgb (0.1, 0.1, 0.1)
+			create Result.make_with_rgb ({REAL_32}0.1, {REAL_32}0.1, {REAL_32}0.1)
 		end
 
 	focused_title_text_color: EV_COLOR
@@ -122,49 +122,49 @@ feature {NONE} -- Cocoa text_aa colors.
 	normal_color: EV_COLOR
 			-- State during normal operation.
 		do
-			create Result.make_with_rgb (1.0, 1.0, 0.0)
+			create Result.make_with_rgb ({REAL_32}1.0, {REAL_32}1.0, {REAL_32}0.0)
 		end
 
 	active_color: EV_COLOR
 			-- State of a currently active widget, such as a depressed button.
 		do
-			create Result.make_with_rgb (1.0, 0.0, 0.0)
+			create Result.make_with_rgb ({REAL_32}1.0, {REAL_32}0.0, {REAL_32}0.0)
 		end
 
 	dark_color: EV_COLOR
 			-- Dark color of a widget.
 		do
-			create Result.make_with_rgb (1.0, 0.0, 1.0)
+			create Result.make_with_rgb ({REAL_32}1.0, {REAL_32}0.0, {REAL_32}1.0)
 		end
 
 	prelight_color: EV_COLOR
 			-- State indicating that the mouse pointer is over the widget and widget will respond to mouse clicks.
 		do
-			create Result.make_with_rgb (0.0, 1.0, 0.0)
+			create Result.make_with_rgb ({REAL_32}0.0, {REAL_32}1.0, {REAL_32}0.0)
 		end
 
 	selected_color: EV_COLOR
 			-- State of a selected item, such the selected row in a list.
 		do
-			create Result.make_with_rgb (0.0, 1.0, 1.0)
+			create Result.make_with_rgb ({REAL_32}0.0, {REAL_32}1.0, {REAL_32}1.0)
 		end
 
 	insesitive_color: EV_COLOR
 			-- State indicating that the widget is unresponsive to user actions.
 		do
-			create Result.make_with_rgb (0.0, 0.0, 1.0)
+			create Result.make_with_rgb ({REAL_32}0.0, {REAL_32}0.0, {REAL_32}1.0)
 		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

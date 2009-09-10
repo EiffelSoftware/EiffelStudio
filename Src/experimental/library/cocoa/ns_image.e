@@ -42,7 +42,7 @@ feature {NONE} -- Creation
 	make_named (a_name: STRING_GENERAL)
 			-- Returns the NS_IMAGE instance associated with the specified name.
 		do
-			make_from_pointer ({NS_IMAGE_API}.image_named ((create {NS_STRING}.make_with_string (a_name)).item))
+			share_from_pointer ({NS_IMAGE_API}.image_named ((create {NS_STRING}.make_with_string (a_name)).item))
 		end
 
 feature -- Setting the Image Attributes

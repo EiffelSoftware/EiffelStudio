@@ -12,12 +12,28 @@ inherit
 
 feature -- Creating and Initializing a Mutable Dictionary
 
+	frozen alloc: POINTER
+			-- alloc a NSMutableDictionary;
+		external
+			"C inline use <Foundation/NSDictionary.h>"
+		alias
+			"return [NSMutableDictionary alloc];"
+		end
+
 	frozen dictionary_with_capacity (a_capacity: like ns_uinteger): POINTER
 			-- + (id)dictionaryWithOCapacity:(NSUInteger)numItems;
 		external
 			"C inline use <Foundation/NSDictionary.h>"
 		alias
 			"return [NSMutableDictionary dictionaryWithCapacity: $a_capacity];"
+		end
+
+	frozen init_with_capacity (a_ptr: POINTER; a_capacity: like ns_uinteger): POINTER
+			-- - (id)initWithOCapacity:(NSUInteger)numItems;
+		external
+			"C inline use <Foundation/NSDictionary.h>"
+		alias
+			"return [(NSMutableDictionary*)$a_ptr initWithCapacity: $a_capacity];"
 		end
 
 feature -- Adding Entries to a Mutable Dictionary

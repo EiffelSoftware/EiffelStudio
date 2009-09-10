@@ -43,7 +43,7 @@ feature {NONE} -- Creation
 
 	separator_item
 		do
-			make_from_pointer ({NS_MENU_ITEM_API}.separator_item)
+			share_from_pointer ({NS_MENU_ITEM_API}.separator_item)
 		end
 
 feature -- Access

@@ -16,8 +16,10 @@ inherit
 create
 	make,
 	make_with_frame
+
 create {NS_OBJECT}
-	make_from_pointer
+	make_from_pointer,
+	share_from_pointer
 
 feature {NONE} -- Creation
 

@@ -267,7 +267,7 @@ feature -- Setting the Delegate
 	delegate: NS_OBJECT
 			-- Returns the receiver`s delegate.
 		do
-			create Result.make_from_pointer ({NS_FONT_MANAGER_API}.delegate (item))
+			create Result.share_from_pointer ({NS_FONT_MANAGER_API}.delegate (item))
 		end
 
 feature -- Accessing the Action Method

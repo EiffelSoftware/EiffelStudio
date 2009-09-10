@@ -13,11 +13,15 @@ inherit
 			item as delegate_item
 		end
 
+create
+	make
+
 feature -- Creation
 
 	make
 		do
-			delegate_item := window_delegate_class.create_instance.item
+			delegate := window_delegate_class.create_instance
+			delegate_item := delegate.item
 			callback_marshal.register_object (Current)
 		end
 
@@ -33,6 +37,8 @@ feature -- Delegate Methods
 		end
 
 feature {NS_OBJECT} -- Implementation
+
+	delegate: NS_OBJECT
 
 	window_delegate_class: OBJC_CLASS
 			-- An Objective-C class which has the selectors of the delegate

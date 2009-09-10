@@ -25,25 +25,25 @@ feature -- Creating a Graphics Context
 	graphics_context_with_attributes (a_attributes: NS_DICTIONARY)
 			-- Instantiates and returns an instance of `NSGraphicsContext' using the specified attributes.
 		do
-			make_from_pointer ({NS_GRAPHICS_CONTEXT_API}.graphics_context_with_attributes (a_attributes.item))
+			share_from_pointer ({NS_GRAPHICS_CONTEXT_API}.graphics_context_with_attributes (a_attributes.item))
 		end
 
 	graphics_context_with_bitmap_image_rep (a_bitmap_rep: NS_BITMAP_IMAGE_REP)
 			-- Instantiates and returns a new graphics context using the supplied `NSBitmapImageRep' object as the context destination.
 		do
-			make_from_pointer ({NS_GRAPHICS_CONTEXT_API}.graphics_context_with_bitmap_image_rep (a_bitmap_rep.item))
+			share_from_pointer ({NS_GRAPHICS_CONTEXT_API}.graphics_context_with_bitmap_image_rep (a_bitmap_rep.item))
 		end
 
 	graphics_context_with_graphics_port_flipped (a_graphics_port: POINTER; a_initial_flipped_state: BOOLEAN)
 			-- Instantiates and returns a new graphics context from the given graphics port.
 		do
-			make_from_pointer ({NS_GRAPHICS_CONTEXT_API}.graphics_context_with_graphics_port_flipped (a_graphics_port.item, a_initial_flipped_state))
+			share_from_pointer ({NS_GRAPHICS_CONTEXT_API}.graphics_context_with_graphics_port_flipped (a_graphics_port.item, a_initial_flipped_state))
 		end
 
 	graphics_context_with_window (a_window: NS_WINDOW)
 			-- Creates and returns a new graphics context for drawing into a window.
 		do
-			make_from_pointer ({NS_GRAPHICS_CONTEXT_API}.graphics_context_with_window (a_window.item))
+			share_from_pointer ({NS_GRAPHICS_CONTEXT_API}.graphics_context_with_window (a_window.item))
 		end
 
 feature -- Managing the Current Context
@@ -51,7 +51,7 @@ feature -- Managing the Current Context
 	current_context
 			-- Returns the current graphics context of the current thread.
 		do
-			make_from_pointer ({NS_GRAPHICS_CONTEXT_API}.current_context)
+			share_from_pointer ({NS_GRAPHICS_CONTEXT_API}.current_context)
 		end
 
 	set_current_context (a_context: NS_GRAPHICS_CONTEXT)

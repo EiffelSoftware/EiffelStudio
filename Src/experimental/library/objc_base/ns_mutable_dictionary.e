@@ -22,7 +22,8 @@ feature -- Creating and Initializing a Mutable Dictionary
 	make_with_capacity (a_capacity: like ns_uinteger)
 			-- Creates a mutable dictionary, initially giving it enough allocated memory to hold a given number of entries.
 		do
-			make_from_pointer ({NS_MUTABLE_DICTIONARY_API}.dictionary_with_capacity (a_capacity))
+			make_from_pointer ({NS_MUTABLE_DICTIONARY_API}.alloc)
+			item := {NS_MUTABLE_DICTIONARY_API}.init_with_capacity (item, a_capacity)
 		end
 
 feature -- Adding Entries to a Mutable Dictionary

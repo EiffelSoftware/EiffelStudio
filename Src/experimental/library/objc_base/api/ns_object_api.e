@@ -31,6 +31,15 @@ feature -- Identifying classes
 			"return [(NSObject*)$a_object class];"
 		end
 
+feature -- Initializing Objects
+
+	frozen init (a_item_ptr: POINTER): POINTER
+		external
+			"C inline use <Foundation/NSObject.h>"
+		alias
+			"return [(NSObject *) $a_item_ptr init];"
+		end
+
 feature -- Managing Reference Counts
 
 	frozen retain_count (a_item_ptr: POINTER):  NATURAL_64

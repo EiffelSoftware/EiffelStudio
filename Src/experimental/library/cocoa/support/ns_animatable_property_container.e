@@ -26,7 +26,7 @@ feature -- Managing Animations for Properties
 	animations: NS_DICTIONARY
 			-- Returns the optional dictionary that maps event trigger keys to animation objects.
 		do
-			create Result.make_from_pointer (animation_animations (item))
+			create Result.share_from_pointer (animation_animations (item))
 		end
 
 	set_animations (a_dict: NS_DICTIONARY)

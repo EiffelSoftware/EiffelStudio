@@ -21,7 +21,10 @@ feature -- Creation
 	make_with_agent (a_callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]])
 		do
 			callback := a_callback
-			item := class_.create_instance.item
+			instance := class_.create_instance
+			instance.init
+			item := instance.item
+			{NS_OBJECT_API}.retain (item)
 			callback_marshal.register_object (current)
 		end
 
@@ -47,5 +50,7 @@ feature -- Implementation
 		end
 
 	callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]]
+
+	instance: NS_OBJECT
 
 end

@@ -20,19 +20,19 @@ feature {NONE} -- Creation
 	make
 			-- [NSBezierPath bezierPath]
 		do
-			make_from_pointer (bezier_path_bezier_path)
+			share_from_pointer (bezier_path_bezier_path)
 		end
 
 	make_with_rect (a_rect: NS_RECT)
 			-- [NSBezierPath bezierPathWithRect:(NSRect)rect]
 		do
-			make_from_pointer (bezier_path_bezier_path_with_rect (a_rect.item))
+			share_from_pointer (bezier_path_bezier_path_with_rect (a_rect.item))
 		end
 
 	make_with_oval_in_rect (a_rect: NS_RECT)
 			-- [NSBezierPath bezierPathWithOvalInRect:(NSRect)rect]
 		do
-			make_from_pointer (bezier_path_bezier_path_with_oval_in_rect (a_rect.item))
+			share_from_pointer (bezier_path_bezier_path_with_oval_in_rect (a_rect.item))
 		end
 
 feature

@@ -36,13 +36,13 @@ feature -- Creating an NSImageRep
 	image_rep_with_contents_of_file (a_filename: NS_STRING)
 			-- Creates and returns an image representation object using the contents of the specified file.
 		do
-			make_from_pointer ({NS_IMAGE_REP_API}.image_rep_with_contents_of_file (a_filename.item))
+			share_from_pointer ({NS_IMAGE_REP_API}.image_rep_with_contents_of_file (a_filename.item))
 		end
 
 	image_rep_with_pasteboard (a_pasteboard: NS_PASTEBOARD)
 			-- Creates and returns an image representation object using the contents of the specified pasteboard.
 		do
-			make_from_pointer ({NS_IMAGE_REP_API}.image_rep_with_pasteboard (a_pasteboard.item))
+			share_from_pointer ({NS_IMAGE_REP_API}.image_rep_with_pasteboard (a_pasteboard.item))
 		end
 
 --	image_rep_with_contents_of_url (a_url: NSURL): NS_OBJECT

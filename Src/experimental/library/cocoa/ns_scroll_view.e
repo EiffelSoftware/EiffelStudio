@@ -27,12 +27,13 @@ feature {NONE} -- Creation
 	make_with_flipped_content_view
 			-- Creates a new ScrollView and replaces the content-view with one that uses a flipped coordinate system.
 		local
+			l_class: NS_OBJECT
 			new_clip_view: NS_CLIP_VIEW
 		do
 			make
 
-			create new_clip_view.share_from_pointer (flipped_clip_view_class.create_instance.item)
- 			{NS_VIEW_API}.init (new_clip_view.item)
+			l_class := flipped_clip_view_class.create_instance
+			create new_clip_view.share_from_pointer (l_class.item)
 			set_content_view (new_clip_view)
 		end
 
@@ -106,7 +107,7 @@ feature
 
 	background_color: NS_COLOR
 		do
-			create Result.make_from_pointer ({NS_SCROLL_VIEW_API}.background_color (item))
+			create Result.share_from_pointer ({NS_SCROLL_VIEW_API}.background_color (item))
 		end
 
 	set_draws_background (a_flag: BOOLEAN)
@@ -146,7 +147,7 @@ feature
 
 	vertical_scroller: NS_SCROLLER
 		do
-			create Result.make_from_pointer ({NS_SCROLL_VIEW_API}.vertical_scroller (item))
+			create Result.share_from_pointer ({NS_SCROLL_VIEW_API}.vertical_scroller (item))
 		end
 
 	set_horizontal_scroller (a_an_object: NS_SCROLLER)
@@ -156,7 +157,7 @@ feature
 
 	horizontal_scroller: NS_SCROLLER
 		do
-			create Result.make_from_pointer ({NS_SCROLL_VIEW_API}.horizontal_scroller (item))
+			create Result.share_from_pointer ({NS_SCROLL_VIEW_API}.horizontal_scroller (item))
 		end
 
 	autohides_scrollers: BOOLEAN

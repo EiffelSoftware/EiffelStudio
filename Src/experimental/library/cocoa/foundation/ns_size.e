@@ -11,6 +11,8 @@ inherit
 	MEMORY_STRUCTURE
 
 	DEBUG_OUTPUT
+	
+	NS_OBJECT_BASIC_TYPE
 
 create
 	make,
@@ -20,7 +22,7 @@ create {NS_RECT, NS_OBJECT}
 
 feature {NONE} -- Creation
 
-	make_size (a_width, a_height: INTEGER)
+	make_size (a_width, a_height: like cg_float)
 		do
 			make
 			set_width (a_width)
@@ -29,22 +31,22 @@ feature {NONE} -- Creation
 
 feature -- Measurement
 
-	width: INTEGER
+	width: like cg_float
 		do
 			Result := internal_width (item)
 		end
 
-	height: INTEGER
+	height: like cg_float
 		do
 			Result := internal_height (item)
 		end
 
-	set_width (a_width: INTEGER)
+	set_width (a_width: like cg_float)
 		do
 			internal_set_width (item, a_width)
 		end
 
-	set_height (a_height: INTEGER)
+	set_height (a_height: like cg_float)
 		do
 			internal_set_height (item, a_height)
 		end
@@ -59,34 +61,34 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-    internal_width (p: POINTER): INTEGER
+    internal_width (p: POINTER): like cg_float
             -- Access field width of struct pointed by `p'.
         external
-            "C [struct <Cocoa/Cocoa.h>] (NSSize): EIF_INTEGER"
+            "C [struct <Cocoa/Cocoa.h>] (NSSize): EIF_REAL"
         alias
             "width"
         end
 
-    internal_height (p: POINTER): INTEGER
+    internal_height (p: POINTER): like cg_float
             -- Access field height of struct pointed by `p'.
         external
-            "C [struct <Cocoa/Cocoa.h>] (NSSize): EIF_INTEGER"
+            "C [struct <Cocoa/Cocoa.h>] (NSSize): EIF_REAL"
         alias
             "height"
         end
 
-	internal_set_width (p: POINTER; v: INTEGER)
+	internal_set_width (p: POINTER; v: like cg_float)
             -- Set field x of struct pointed by `p'.
         external
-            "C [struct <Cocoa/Cocoa.h>] (NSSize, int)"
+            "C [struct <Cocoa/Cocoa.h>] (NSSize, CGFloat)"
         alias
             "width"
         end
 
-    internal_set_height (p: POINTER; v: INTEGER)
+    internal_set_height (p: POINTER; v: like cg_float)
             -- Set field y of struct pointed by `p' with `v'.
         external
-            "C [struct <Cocoa/Cocoa.h>] (NSSize, int)"
+            "C [struct <Cocoa/Cocoa.h>] (NSSize, CGFloat)"
         alias
             "height"
         end

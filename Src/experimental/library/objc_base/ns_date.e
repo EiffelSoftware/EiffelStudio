@@ -73,13 +73,13 @@ feature -- Getting Temporal Boundaries
 	distant_future
 			-- Creates and returns an <code>NSDate</code> object representing a date in the distant future.
 		do
-			make_from_pointer ({NS_DATE_API}.distant_future)
+			share_from_pointer ({NS_DATE_API}.distant_future)
 		end
 
 	distant_past
 			-- Creates and returns an <code>NSDate</code> object representing a date in the distant past.
 		do
-			make_from_pointer ({NS_DATE_API}.distant_past)
+			share_from_pointer ({NS_DATE_API}.distant_past)
 		end
 
 feature -- Comparing Dates

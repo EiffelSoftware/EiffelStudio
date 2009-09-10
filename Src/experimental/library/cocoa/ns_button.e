@@ -57,7 +57,7 @@ feature -- Configuring Buttons
 			-- This title is always displayed if the button doesn't use its alternate contents for highlighting or displaying the alternate state.
 			-- By default, a button's title is "Button."
 		do
-			create Result.make_from_pointer ({NS_BUTTON_API}.title (item))
+			create Result.share_from_pointer ({NS_BUTTON_API}.title (item))
 		ensure
 			result_not_void: Result /= void
 		end
@@ -72,7 +72,7 @@ feature -- Configuring Button Images
 		do
 			l_image := {NS_BUTTON_API}.image (item)
 			if l_image /= default_pointer then
-				create Result.make_from_pointer (l_image)
+				create Result.share_from_pointer (l_image)
 			end
 		end
 
@@ -227,7 +227,7 @@ feature -- Setting the Control's Cell
 	cell: NS_BUTTON_CELL
 			-- Returns the receiver's cell object.
 		do
-			create Result.make_from_pointer ({NS_CONTROL_API}.cell (item))
+			create Result.share_from_pointer ({NS_CONTROL_API}.cell (item))
 		end
 
 feature -- Contract support

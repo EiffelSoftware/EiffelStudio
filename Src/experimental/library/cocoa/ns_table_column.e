@@ -86,7 +86,7 @@ feature -- ...
 
 	header_cell: NS_CELL
 		do
-			create Result.make_from_pointer (table_column_header_cell (item))
+			create Result.share_from_pointer (table_column_header_cell (item))
 		end
 
 	set_data_cell (a_cell: NS_CELL)
@@ -97,7 +97,7 @@ feature -- ...
 	data_cell: NS_CELL
 			-- Note: Original signature returns NS_OBJECT
 		do
-			create Result.make_from_pointer (table_column_data_cell (item))
+			create Result.share_from_pointer (table_column_data_cell (item))
 		end
 
 --	data_cell_for_row (a_row: INTEGER): NS_OBJECT

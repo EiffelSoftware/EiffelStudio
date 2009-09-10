@@ -66,12 +66,15 @@ void bridge_void_general (id self, SEL selector, ...) {
 			int arg = va_arg (args, int);
 			//printf("    %i: %s  -> %i\n", i-2, argType, arg);
 			arguments[i-2] = (void*)arg;
-		} else if (!strcmp(@encode(NSRect), argType)) {
+		} else if (!strcmp(@encode(NSRect), argType) || !strcmp("{_NSRect={_NSPoint=ff}{_NSSize=ff}}", argType)) {
 			NSRect arg = va_arg (args, NSRect);
-			//printf("    %i: %s  -> (%i x %i)\n", i-2, argType, arg.size.width, arg.size.height);
+			printf("    %i: %s  -> (%f x %f)\n", i-2, argType, arg.size.width, arg.size.height);
 			NSRect* argCopy = malloc(sizeof(NSRect));
 			memcpy (argCopy, &arg, sizeof(NSRect));
 			arguments[i-2] = (void*)argCopy;
+		} else {
+			NSLog(@"Failed to convert argument of type '%s' \n", argType);
+			arguments[i-2] = (void*)0;
 		}
 	}
 	

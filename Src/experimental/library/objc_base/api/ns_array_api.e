@@ -12,11 +12,11 @@ inherit
 
 feature -- Createing an Array & Initializing an Array
 
-	frozen array_with_objects_count (a_objects: POINTER; a_count: like ns_uinteger): POINTER
+	frozen create_with_objects_count (a_objects: POINTER; a_count: like ns_uinteger): POINTER
 		external
 			"C inline use <Foundation/NSArray.h>"
 		alias
-			"return [NSArray arrayWithObjects: $a_objects count: $a_count];"
+			"return [[NSArray alloc] initWithObjects: $a_objects count: $a_count];"
 		end
 
 feature -- Querying an Array

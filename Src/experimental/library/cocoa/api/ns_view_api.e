@@ -16,11 +16,11 @@ feature -- Creating Instances
 			"return [NSView new];"
 		end
 
-	frozen init (a_view: POINTER)
+	frozen init (a_view: POINTER): POINTER
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
-			"[(NSView*)$a_view init];"
+			"return [(NSView*)$a_view init];"
 		end
 
 feature -- Managing the View Hierarchy

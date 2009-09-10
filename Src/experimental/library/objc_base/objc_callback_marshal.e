@@ -177,7 +177,8 @@ feature {NONE}
 							io.put_string ("  no-args: " + method.argument_count.out + "  " + nargs.out + "%N")
 						end
 					else
-						check selector_not_found: False end
+						-- FIXME:
+						-- check selector_not_found: False end
 					end
 
 					debug ("callbacks")

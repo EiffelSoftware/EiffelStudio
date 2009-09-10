@@ -11,7 +11,7 @@ inherit
 	NS_OBJECT
 
 create {NS_OBJECT}
-	make_from_pointer
+	share_from_pointer
 
 feature -- Initialization
 
@@ -44,7 +44,7 @@ feature -- Managing Cell Values
 
 	string_value: NS_STRING
 		do
-			create Result.make_from_pointer ({NS_CELL_API}.string_value (item))
+			create Result.share_from_pointer ({NS_CELL_API}.string_value (item))
 		end
 
 	set_string_value (a_string: NS_STRING)
@@ -184,7 +184,7 @@ feature -- Managing Expansion Frames
 	title: NS_STRING
 			-- Returns the receiver's title.
 		do
-			create Result.make_from_pointer ({NS_CELL_API}.title (item))
+			create Result.share_from_pointer ({NS_CELL_API}.title (item))
 		end
 
 	set_title (a_string: NS_STRING)

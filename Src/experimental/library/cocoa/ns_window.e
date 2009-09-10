@@ -9,8 +9,14 @@ class
 
 inherit
 	NS_RESPONDER
+		redefine
+			dispose
+		end
 
 	NS_ANIMATABLE_PROPERTY_CONTAINER [NS_WINDOW]
+		undefine
+			dispose
+		end
 
 	NS_ENVIRONEMENT
 		undefine
@@ -23,6 +29,13 @@ create {NS_OBJECT}
 	share_from_pointer
 
 feature {NONE} -- Creating Windows
+
+	dispose is
+			--
+		do
+			Precursor {NS_RESPONDER}
+			print ("NS_WINDOW collcted " + ($Current).out + "%N")
+		end
 
 	make (a_rect: NS_RECT; a_style_mask: NATURAL; a_defer: BOOLEAN)
 			-- Create a new window
@@ -41,15 +54,21 @@ feature {NONE} -- Creating Windows
 			Result.register
 		end
 
+	delegate: detachable NS_OBJECT
+
 feature -- Delegate Methods
 
 	init_delegate
 		local
-			delegate: NS_OBJECT
+			l_delegate: like delegate
 		do
-			delegate := window_delegate_class.create_instance
-			{NS_WINDOW_API}.set_delegate (item, delegate.item)
-			callback_marshal.register_object_for_item (Current, delegate.item)
+			l_delegate := window_delegate_class.create_instance
+			if attached l_delegate then
+				l_delegate.init
+				{NS_WINDOW_API}.set_delegate (item, l_delegate.item)
+				callback_marshal.register_object_for_item (Current, l_delegate.item)
+				delegate := l_delegate
+			end
 		end
 
 	window_delegate_class: OBJC_CLASS
@@ -289,12 +308,16 @@ feature -- Sizing
 
 feature -- Managing Title Bars
 
-	standdard_window_button (a_window_button_kind: INTEGER): NS_BUTTON
+	standard_window_button (a_window_button_kind: INTEGER): detachable NS_BUTTON
 			-- Returns the window button of a given window button kind in the window's view hierarchy.
-			-- `Void' when such a button is not in the window's view hierarchy.			
-
+			-- `Void' when such a button is not in the window's view hierarchy.
+		local
+			l_ptr: POINTER
 		do
-			create Result.share_from_pointer ({NS_WINDOW_API}.standdard_window_button (item, a_window_button_kind))
+			l_ptr := {NS_WINDOW_API}.standdard_window_button (item, a_window_button_kind)
+			if l_ptr /= default_pointer then
+				create Result.share_from_pointer (l_ptr)
+			end
 		end
 
 feature -- ..
@@ -345,7 +368,7 @@ feature -- Managing Default Buttons
 		do
 			l_button_cell := {NS_WINDOW_API}.default_button_cell (item)
 			if l_button_cell /= default_pointer then
-				create Result.make_from_pointer (l_button_cell)
+				create Result.share_from_pointer (l_button_cell)
 			end
 		end
 
@@ -359,7 +382,7 @@ feature -- Managing Titles
 		do
 			c_title := {NS_WINDOW_API}.title (item)
 			if c_title /= default_pointer then
-				create Result.make_from_pointer (c_title)
+				create Result.share_from_pointer (c_title)
 			else
 				create Result.make_empty
 			end
@@ -443,13 +466,13 @@ feature -- Managing Titles
 		do
 			res := {NS_WINDOW_API}.screen (item)
 			if res /= default_pointer then
-				create Result.make_from_pointer (res)
+				create Result.share_from_pointer (res)
 			end
 		end
 
 	deepest_screen: NS_SCREEN
 		do
-			create Result.make_from_pointer ({NS_WINDOW_API}.deepest_screen (item))
+			create Result.share_from_pointer ({NS_WINDOW_API}.deepest_screen (item))
 		end
 
 	miniaturize

@@ -15,6 +15,11 @@
 		<setting name="line_generation" value="False"/>
 		<setting name="multithreaded" value="True"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa.ecf">
+			<condition>
+				<platform value="macintosh"/>
+			</condition>
+		</library>
 		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
@@ -22,15 +27,21 @@
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<variable name="vision_implementation" value="cocoa"/>
 		<cluster name="src" location="..\src\">
 			<cluster name="unix" location="$|spec\unix\">
 				<condition>
-					<platform excluded_value="windows"/>
+					<platform excluded_value="windows macintosh"/>
 				</condition>
 			</cluster>
 			<cluster name="windows" location="$|spec\windows\">
 				<condition>
 					<platform value="windows"/>
+				</condition>
+			</cluster>
+			<cluster name="macosx" location="$|spec\macosx\">
+				<condition>
+					<platform value="macintosh"/>
 				</condition>
 			</cluster>
 		</cluster>

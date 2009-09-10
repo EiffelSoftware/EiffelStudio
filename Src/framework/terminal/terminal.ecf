@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="terminal" uuid="4A585495-218C-4639-A04F-F7D58CF3CC3B" library_target="terminal">
+	<description>Supports manipulation of a Linux terminal, such as cursor movement and colorization.</description>
+	<target name="terminal">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/tests$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option syntax="transitional" namespace="EiffelSoftware.Library">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
+		<library name="enumerated_type" location="$EIFFEL_SRC/framework/enumerated_type/enumerated_type.ecf"/>
+		<cluster name="terminal" location="./">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</cluster>
+	</target>
+</system>

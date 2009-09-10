@@ -360,6 +360,11 @@ feature -- Command
 			create l_restore_editors_command.make (develop_window)
 			l_dev_commands.set_restore_editors_command (l_restore_editors_command)
 
+			l_dev_commands.set_edit_bp_here_command (create {ES_EDIT_BREAKPOINT_HERE_CMD}.make (develop_window))
+			l_dev_commands.set_enable_remove_bp_here_command (create {ES_TOGGLE_BREAKPOINT_HERE_CMD}.make_enable_remove (develop_window))
+			l_dev_commands.set_enable_disable_bp_here_command (create {ES_TOGGLE_BREAKPOINT_HERE_CMD}.make_enable_disable (develop_window))
+
+
 			create l_editor_font_zoom_in_command.make (develop_window)
 			l_dev_commands.set_editor_font_zoom_in_command (l_editor_font_zoom_in_command)
 			l_dev_commands.editor_commands.extend (l_editor_font_zoom_in_command)

@@ -174,8 +174,6 @@ feature {NONE} -- Initialization
 			show_tool_commands.extend (l_cmd)
 			show_watch_tool_command := l_cmd
 
-			create object_viewer_cmd.make
-
 --| FIXME XR: TODO: Add:
 --| 3) edit feature, feature evaluation
 			create toolbarable_commands.make (35)
@@ -601,7 +599,7 @@ feature -- tools management
 			create Result.make_with_text (Interface_names.m_Debug)
 
 			l_item := clear_bkpt.new_menu_item
-			Result.extend (clear_bkpt.new_menu_item)
+			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
 			l_item := disable_bkpt.new_menu_item

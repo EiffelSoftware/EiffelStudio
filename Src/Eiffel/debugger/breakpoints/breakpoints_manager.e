@@ -857,7 +857,29 @@ feature -- Breakpoints change
 			breakpoints.add_breakpoint (a_bp)
 		end
 
-	delete_breakpoint (bpk: BREAKPOINT_KEY)
+	disable_breakpoint (bpk: detachable BREAKPOINT_KEY)
+			-- disable breakpoint related to `bpk'
+			-- if no breakpoint found, add a disabled bp
+			--| Note: accept Void `bpk'
+		local
+			bp: BREAKPOINT
+		do
+			if bpk /= Void then
+				if breakpoints.has_key (bpk) then
+						-- yes, the breakpoint is already known, so disable it
+					bp := breakpoints.found_item
+					bp.disable
+					on_breakpoint_added_or_deleted_event (False)
+				else
+					bp := new_user_breakpoint (bpk.location)
+					add_breakpoint (bp)
+					bp.disable
+					on_breakpoint_added_or_deleted_event (True)
+				end
+			end
+		end
+
+	delete_breakpoint (bpk: detachable BREAKPOINT_KEY)
 			-- remove breakpoint related to `bpk'
 			-- if no breakpoint found, do nothing
 			--| Note: accept Void `bpk'

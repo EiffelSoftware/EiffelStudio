@@ -105,8 +105,30 @@ feature -- Query
 		do
 			create l_env
 			l_application := l_env.application
-			if attached {EV_WIDGET} l_application.focused_widget as l_widget then
+			if attached l_application.focused_widget as l_widget then
 				Result := widget_top_level_window (l_widget, False)
+			end
+		end
+
+	widget_has_recursive_focus (a_widget: EV_WIDGET): BOOLEAN
+			-- Is `a_widget' (or its childs) focused?
+		require
+			attached_widget: a_widget /= Void
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			if
+				not a_widget.is_destroyed and then
+				a_widget.is_displayed
+			then
+				if a_widget.has_focus then
+					Result := True
+				elseif attached {EV_CONTAINER} a_widget as cont then
+					create l_env
+					if attached l_env.application.focused_widget as fw then
+						Result := cont.has_recursive (fw)
+					end
+				end
 			end
 		end
 
@@ -308,7 +330,7 @@ feature -- Placement
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -332,11 +354,11 @@ feature -- Placement
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

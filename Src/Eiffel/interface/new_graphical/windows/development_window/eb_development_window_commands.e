@@ -126,6 +126,15 @@ feature -- Query
 	restore_editors_command: EB_RESTORE_EDITORS_COMMAND
 			-- Command that restore all minimized editors
 
+	edit_bp_here_command: ES_EDIT_BREAKPOINT_HERE_CMD
+			-- Command that edit bp on current location
+
+	enable_remove_bp_here_command: ES_TOGGLE_BREAKPOINT_HERE_CMD
+			-- Command that enable/remove bp on current location
+
+	enable_disable_bp_here_command: ES_TOGGLE_BREAKPOINT_HERE_CMD
+			-- Command that enable/disable bp on current location
+
 	editor_font_zoom_in_command: EB_EDITOR_FONT_ZOOM_IN_COMMAND
 			-- Command that increase editor font
 
@@ -480,6 +489,30 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: restore_editors_command = a_cmd
 		end
 
+	set_edit_bp_here_command (a_cmd: like edit_bp_here_command)
+			-- Set `edit_bp_here_command'
+		do
+			edit_bp_here_command := a_cmd
+		ensure
+			set: edit_bp_here_command = a_cmd
+		end
+
+	set_enable_remove_bp_here_command (a_cmd: like enable_remove_bp_here_command)
+			-- Set `enable_bp_here_command'
+		do
+			enable_remove_bp_here_command := a_cmd
+		ensure
+			set: enable_remove_bp_here_command = a_cmd
+		end
+
+	set_enable_disable_bp_here_command (a_cmd: like enable_disable_bp_here_command)
+			-- Set `enable_disable_bp_here_command'
+		do
+			enable_disable_bp_here_command := a_cmd
+		ensure
+			set: enable_disable_bp_here_command = a_cmd
+		end
+
 	set_editor_font_zoom_in_command (a_cmd: like editor_font_zoom_in_command)
 			-- Set `editor_font_zoom_in_command'
 		do
@@ -610,6 +643,10 @@ feature -- Recycle
 			restore_editor_area_command.recycle
 			lock_tool_bar_command.recycle
 			save_as_cmd.recycle
+
+			edit_bp_here_command.recycle
+			enable_remove_bp_here_command.recycle
+			enable_disable_bp_here_command.recycle
 
 			editor_font_zoom_in_command.recycle
 			editor_font_zoom_in_numpad_command.recycle

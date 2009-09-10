@@ -19,7 +19,7 @@
 
 #include "eif_eiffel.h"
 
-#ifndef EIF_WINDOW
+#ifndef EIF_WINDOWS
 #include <sys/ioctl.h>
 #endif
 

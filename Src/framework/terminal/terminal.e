@@ -378,10 +378,12 @@ feature {NONE} -- Basic operations: Display
 		local
 			l_term: like terminal
 		do
-			l_term := terminal
-			l_term.put_character (command_character)
-			l_term.put_character (qualifer_character)
-			l_term.put_string (a_command)
+			if not {PLATFORM}.is_windows then
+				l_term := terminal
+				l_term.put_character (command_character)
+				l_term.put_character (qualifer_character)
+				l_term.put_string (a_command)
+			end
 		end
 
 	put_short_command (a_command: STRING)
@@ -395,10 +397,12 @@ feature {NONE} -- Basic operations: Display
 		local
 			l_command: STRING
 		do
-			create l_command.make (3)
-			l_command.append_character (command_character)
-			l_command.append (a_command)
-			terminal.put_string (l_command)
+			if not {PLATFORM}.is_windows then
+				create l_command.make (3)
+				l_command.append_character (command_character)
+				l_command.append (a_command)
+				terminal.put_string (l_command)
+			end
 		end
 
 	put_attribute_command (a_code: NATURAL_8)

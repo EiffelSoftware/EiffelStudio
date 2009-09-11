@@ -121,7 +121,8 @@ feature -- Content Change
 
 				-- Reset the editor state
 			if not append then
-				reset
+					-- Load empty text to hold the invariant of the editor.
+				load_text ("")
 			end
 			allow_edition := False
 
@@ -260,7 +261,7 @@ feature -- Possibly delayed operations
 					if text_displayed.has_selection then
 						text_displayed.disable_selection
 					end
-					cursor.make_from_integer (pos.min (text_displayed.text_length).max (1), text_displayed)
+					cursor.set_from_integer (pos.min (text_displayed.text_length).max (1), text_displayed)
 					if number_of_lines > number_of_lines_displayed then
 						set_first_line_displayed (cursor.y_in_lines.min (maximum_top_line_index), True)
 						check_position (cursor)
@@ -331,7 +332,7 @@ feature -- Possibly delayed operations
 				if text_displayed.has_selection then
 					text_displayed.disable_selection
 				end
-				text_displayed.cursor.make_from_character_pos (1, number_of_lines, text_displayed)
+				text_displayed.cursor.set_from_character_pos (1, number_of_lines, text_displayed)
 				if number_of_lines > number_of_lines_displayed then
 					check_cursor_position
 				end
@@ -466,7 +467,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 					check
 						cursor_not_void: text_displayed.cursor /= Void
 					end
-					text_displayed.cursor.make_from_character_pos (cur.x_in_characters, cur.y_in_lines, text_displayed)
+					text_displayed.cursor.set_from_character_pos (cur.x_in_characters, cur.y_in_lines, text_displayed)
 					bkstn.display_bkpt_menu
 					mouse_right_button_down := False
 					mouse_left_button_down := False
@@ -576,8 +577,8 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 									end
 									l_line := text_displayed.current_line_number
 									cur.set_current_char (cur.token, 1)
-									text_displayed.cursor.make_from_character_pos (cur.x_in_characters, l_number, text_displayed)
-									text_displayed.selection_cursor.make_from_character_pos (cur.x_in_characters + cur.token.length, l_number, text_displayed)
+									text_displayed.cursor.set_from_character_pos (cur.x_in_characters, l_number, text_displayed)
+									text_displayed.selection_cursor.set_from_character_pos (cur.x_in_characters + cur.token.length, l_number, text_displayed)
 									text_displayed.enable_selection
 									old_offset := offset
 									invalidate_line (l_number, False)
@@ -602,7 +603,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 							text_displayed.disable_selection
 							l_line := text_displayed.selection_start.y_in_lines
 							l_number := text_displayed.selection_end.y_in_lines
-							text_displayed.cursor.make_from_character_pos (cur.x_in_characters, cur.y_in_lines, text_displayed)
+							text_displayed.cursor.set_from_character_pos (cur.x_in_characters, cur.y_in_lines, text_displayed)
 							text_displayed.set_selection_cursor (text_displayed.cursor)
 							invalidate_block (l_line, l_number, False)
 						end

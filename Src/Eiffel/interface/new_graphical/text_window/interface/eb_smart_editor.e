@@ -1523,9 +1523,9 @@ feature {NONE} -- Code completable implementation
 		do
 			if text_displayed.cursor /= text_displayed.selection_start then
 				if text_displayed.selection_end.y_in_lines = text_displayed.selection_start.y_in_lines then
-					text_displayed.cursor.make_from_relative_pos (text_displayed.current_line, text_displayed.selection_start.token, text_displayed.selection_start.pos_in_token, text_displayed)
+					text_displayed.cursor.set_from_relative_pos (text_displayed.current_line, text_displayed.selection_start.token, text_displayed.selection_start.pos_in_token, text_displayed)
 				else
-					text_displayed.cursor.make_from_relative_pos (text_displayed.current_line, text_displayed.current_line.first_token, 1, text_displayed)
+					text_displayed.cursor.set_from_relative_pos (text_displayed.current_line, text_displayed.current_line.first_token, 1, text_displayed)
 				end
 			end
 			disable_selection
@@ -1536,9 +1536,9 @@ feature {NONE} -- Code completable implementation
 		do
 			if text_displayed.cursor /= text_displayed.selection_end then
 				if text_displayed.selection_end.y_in_lines = text_displayed.selection_start.y_in_lines then
-					text_displayed.cursor.make_from_relative_pos (text_displayed.current_line, text_displayed.selection_end.token, text_displayed.selection_end.pos_in_token, text_displayed)
+					text_displayed.cursor.set_from_relative_pos (text_displayed.current_line, text_displayed.selection_end.token, text_displayed.selection_end.pos_in_token, text_displayed)
 				else
-					text_displayed.cursor.make_from_relative_pos (text_displayed.current_line, text_displayed.current_line.eol_token, 1, text_displayed)
+					text_displayed.cursor.set_from_relative_pos (text_displayed.current_line, text_displayed.current_line.eol_token, 1, text_displayed)
 				end
 			end
 			disable_selection
@@ -1579,7 +1579,7 @@ feature {NONE} -- Code completable implementation
 				disable_selection
 			end
 			check a_line_valid: a_line.is_valid end
-			text_displayed.cursor.make_from_relative_pos (a_line, a_token, 1, text_displayed)
+			text_displayed.cursor.set_from_relative_pos (a_line, a_token, 1, text_displayed)
 		end
 
 	select_region_between_token (a_start_token: EDITOR_TOKEN; a_start_line: like current_line; a_end_token: EDITOR_TOKEN; a_end_line: like current_line)
@@ -1592,8 +1592,8 @@ feature {NONE} -- Code completable implementation
 				start_line_valid: a_start_line.is_valid
 				end_line_valid: a_end_line.is_valid
 			end
-			text_displayed.selection_cursor.make_from_relative_pos (a_start_line, a_start_token, 1, text_displayed)
-			text_displayed.cursor.make_from_relative_pos (a_end_line, a_end_token, 1, text_displayed)
+			text_displayed.selection_cursor.set_from_relative_pos (a_start_line, a_start_token, 1, text_displayed)
+			text_displayed.cursor.set_from_relative_pos (a_end_line, a_end_token, 1, text_displayed)
 			show_possible_selection
 		end
 
@@ -1821,7 +1821,7 @@ feature {NONE} -- Code completable implementation
 	retrieve_cursor
 			-- Retrieve cursor position from saving.
 		do
-			text_displayed.cursor.make_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)
+			text_displayed.cursor.set_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)
 		end
 
 	saved_cursor: EDITOR_CURSOR
@@ -1836,8 +1836,8 @@ feature {NONE} -- Code completable implementation
 			-- Select from cursor position to saved cursor position
 		do
 			check saved_cursor /= Void end
-			text_displayed.selection_cursor.make_from_character_pos (text_displayed.cursor.x_in_characters, text_displayed.cursor.y_in_lines, text_displayed)
-			text_displayed.cursor.make_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)
+			text_displayed.selection_cursor.set_from_character_pos (text_displayed.cursor.x_in_characters, text_displayed.cursor.y_in_lines, text_displayed)
+			text_displayed.cursor.set_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)
 			text_displayed.enable_selection
 			show_possible_selection
 		end

@@ -175,6 +175,7 @@ feature -- Execution
 			sc: EIFFEL_SYNTAX_CHECKER
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
 			l_project_initialized: BOOLEAN
+			q: ES_PROMPT
 		do
 			success := False
 			if not retried then
@@ -215,33 +216,49 @@ feature -- Execution
 				ace_file_name := blank_project_builder.ace_filename
 				compile_project := compile_project_check_button.is_selected
 
-					-- Generate the files (ace file + root class)
-				blank_project_builder.create_blank_project
-
-					-- Create a new project using the previously generated files.
-				create l_project_loader.make (Current)
-				l_project_loader.set_is_project_location_requested (False)
-				l_project_initialized := eiffel_project.initialized
-				if l_project_initialized then
-					l_project_loader.enable_project_creation_or_opening_not_requested
+				if (create {PLAIN_TEXT_FILE}.make (ace_file_name)).exists then
+						-- Warn that the existing configuration file will be overwritten.
+					prompts.show_warning_prompt_with_cancel (
+						warning_messages.w_file_exists (ace_file_name),
+						Current,
+						agent do success := True end,
+						Void
+					)
+				else
+					success := True
 				end
-				l_project_loader.open_project_file (ace_file_name, Void, directory_name, True)
-				if not l_project_loader.has_error then
-					if compile_project then
-						l_project_loader.set_is_compilation_requested (True)
-						l_project_loader.melt_project (l_project_initialized)
-					elseif l_project_initialized and l_project_loader.is_project_ok then
-							-- Open a new EiffelStudio session for sure since current
-							-- system is already initialized.
-						l_project_loader.open_project (True)
+
+				if success then
+						-- Project creation can still fail
+					success := False
+						-- Generate the files (ace file + root class)
+					blank_project_builder.create_blank_project
+
+						-- Create a new project using the previously generated files.
+					create l_project_loader.make (Current)
+					l_project_loader.set_is_project_location_requested (False)
+					l_project_initialized := eiffel_project.initialized
+					if l_project_initialized then
+						l_project_loader.enable_project_creation_or_opening_not_requested
 					end
+					l_project_loader.open_project_file (ace_file_name, Void, directory_name, True)
+					if not l_project_loader.has_error then
+						if compile_project then
+							l_project_loader.set_is_compilation_requested (True)
+							l_project_loader.melt_project (l_project_initialized)
+						elseif l_project_initialized and l_project_loader.is_project_ok then
+								-- Open a new EiffelStudio session for sure since current
+								-- system is already initialized.
+							l_project_loader.open_project (True)
+						end
+					end
+
+						-- Update `success' state.
+					success := not l_project_loader.has_error and then Eiffel_project.initialized and then
+						(not Eiffel_ace.file_name.is_empty)
+
+					destroy
 				end
-
-					-- Update `success' state.
-				success := not l_project_loader.has_error and then Eiffel_project.initialized and then
-					(not Eiffel_ace.file_name.is_empty)
-
-				destroy
 			else
 				if not is_destroyed and then is_displayed then
 					display_error_message (Current)
@@ -463,23 +480,6 @@ feature {NONE} -- Implementation
 			dd.show_modal_to_window (Current)
 		end
 
-	browse_ace_file
-			-- Popup a "select file" dialog.
-		local
-			fod: EV_FILE_OPEN_DIALOG
-			existing_path: STRING
-		do
-			existing_path := directory_field.text
-			create fod
-			if not existing_path.is_empty then
-				fod.set_start_directory (existing_path)
-			end
-			fod.set_title (Interface_names.t_Select_a_file)
-			set_dialog_filters_and_add_all (fod, <<ace_files_filter>>)
-			fod.open_actions.extend (agent retrieve_ace_file (fod))
-			fod.show_modal_to_window (Current)
-		end
-
 	check_and_create_directory (a_directory_name: DIRECTORY_NAME)
 			-- Check that the directory `a_directory_name' is valid and exists and MODIFY IT if needed.
 			-- If `a_directory_name' is not valid or does not exits, a developper exception is raised.
@@ -578,19 +578,6 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	retrieve_ace_file (dialog: EV_FILE_OPEN_DIALOG)
-			-- Get callback information from `dialog', then send it to the ace file name field.
-		local
-			file_name: STRING
-		do
-			file_name := dialog.file_name
-			if file_name.is_empty then
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (Warning_messages.w_Not_a_file_retry (file_name), Current, agent browse_ace_file, Void)
-			else
-				ace_filename_field.set_text (file_name)
-			end
-		end
-
 feature {NONE} -- Private attributes
 
 	blank_project_creation: BOOLEAN
@@ -652,7 +639,7 @@ feature {NONE} -- Constants
 	Invalid_project_name_exception: STRING = "Invalid_project_name";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

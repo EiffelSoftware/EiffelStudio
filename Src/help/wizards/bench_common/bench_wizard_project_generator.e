@@ -23,6 +23,40 @@ feature {NONE} -- Initialization
 			wizard_information := a_wizard_information
 		end
 
+feature -- Status report
+
+	existing_target_files: TRAVERSABLE [STRING_GENERAL]
+			-- Files that exist in the target directory
+		local
+			r: ARRAYED_LIST [STRING_GENERAL]
+		do
+			create r.make (0)
+			Result := r
+			target_files.do_all (
+				agent (n: STRING_GENERAL; s: SEQUENCE [STRING_GENERAL])
+					local
+						e: FILE
+					do
+						create {PLAIN_TEXT_FILE} e.make (wizard_information.project_location + "\" + n.as_string_8)
+						if e.exists then
+							s.extend (n)
+						end
+					end
+				(?, r)
+			)
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature {NONE} -- Access
+
+	target_files: TRAVERSABLE [STRING_GENERAL]
+			-- All target files that will be created during generation
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Basic Operations
 
 	generate_code
@@ -36,6 +70,7 @@ feature {NONE} -- Implementation
 			-- Copy Class whose name is 'name'
 		require
 			name /= Void
+			is_target_file: target_files.has (name + "." + extension)
 		local
 			f1,f_name: FILE_NAME
 			fi: RAW_FILE
@@ -61,6 +96,8 @@ feature {NONE} -- Implementation
 			-- Take a template_name (name of the file) and its template_path
 			-- Then change the FL Tag with strings according to the map_list
 			-- Copy the modified template in a new file resource_name in the resource_path.
+		require
+			is_target_file: target_files.has (resource_name)
 		local
 			tup: TUPLE [STRING, STRING]
 			s, s1, s2: STRING
@@ -156,7 +193,7 @@ feature {NONE} -- Implementation / private attributes
 			-- Information about the project to generate.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -187,4 +224,3 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 end -- class WIZARD_PROJECT_GENERATOR
-

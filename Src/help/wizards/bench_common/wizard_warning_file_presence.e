@@ -1,68 +1,91 @@
 note
-	description	: "Template for the last state of a wizard"
+	description	: "Wizard state: Target file(s) exist(s)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	WIZARD_FINAL_STATE
+	WIZARD_WARNING_FILE_PRESENCE
 
 inherit
-	BENCH_WIZARD_FINAL_STATE_WINDOW
+	BENCH_WIZARD_INITIAL_STATE_WINDOW
 		redefine
-			proceed_with_current_info
+			proceed_with_current_info,
+			cancel
 		end
 
-	WIZARD_WIZARD_CONSTANTS
+	BENCH_WIZARD_CONSTANTS
 		export
 			{NONE} all
 		end
 
 create
-	make
+	make_with_names
 
-feature -- Basic Operations
+feature {NONE} -- Creation
 
-	proceed_with_current_info
-		local
-			ace_location: FILE_NAME
+	make_with_names (names: TRAVERSABLE [STRING_GENERAL]; i: like wizard_information)
+		require
+			names_attached: names /= Void
+			names_not_empty: not names.is_empty
 		do
-			create ace_location.make_from_string (wizard_information.project_location)
-			ace_location.set_file_name (wizard_information.project_name.as_lower)
-			ace_location.add_extension ("ecf")
-			wizard_information.set_ace_location (ace_location)
-
-			project_generator.generate_code
-			write_bench_notification_ok (wizard_information)
-
-			Precursor
+			files := names
+			make (i)
+		ensure
+			files_set: files = names
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
+
+	files: TRAVERSABLE [STRING_GENERAL]
+			-- List of files that exist in the target directory
+
+feature -- basic Operations
 
 	display_state_text
 			-- Display message text relative to current state.
+		local
+			l: STRING_GENERAL
 		do
-			title.set_text (Interface_names.t_Final_state)
-			message.set_text (Interface_names.m_Final_state(wizard_information.compile_project,
-					wizard_information.project_name, wizard_information.project_location))
+			title.set_text (Bench_interface_names.t_Files_already_exist)
+			create {STRING_32} l.make_empty
+			files.do_all (agent (n: STRING_GENERAL; s: STRING_GENERAL)
+				do
+					s.append_code (('%N').to_character_32.natural_32_code)
+					s.append_code (('%T').to_character_32.natural_32_code)
+					s.append (n)
+				end (?, l))
+			message.set_text (Bench_interface_names.m_Files_already_exist (l))
+		end
+
+	proceed_with_current_info
+		do
+			Precursor
+				-- Go to code generation step.
+			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make (wizard_information))
 		end
 
 	final_message: STRING
 		do
 		end
 
+	cancel
+		do
+		end
+
+feature {WIZARD_STATE_WINDOW}
+
 	pixmap_icon_location: FILE_NAME
-			-- Icon for the Eiffel Store Wizard
+			-- Icon for the Eiffel Wizard
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -92,4 +115,4 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_FINAL_STATE
+end

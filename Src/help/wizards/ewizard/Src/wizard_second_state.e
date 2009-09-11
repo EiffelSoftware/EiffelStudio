@@ -27,14 +27,14 @@ create
 
 feature -- Basic Operation
 
-	build 
+	build
 			-- Build entries.
 		local
 			hbox: EV_HORIZONTAL_BOX
 			vbox: EV_VERTICAL_BOX
 			left_label: EV_LABEL
 			right_label: EV_LABEL
-		do 
+		do
 				-- Label
 			create left_label.make_with_text (Interface_names.l_Number_of_state1)
 			left_label.align_text_left
@@ -84,7 +84,7 @@ feature -- Basic Operation
 				create list_item
 				list_item.set_text (i.out)
 				number_state.extend (list_item)
-			
+
 				if i = wizard_information.number_state then
 					list_item.enable_select
 				end
@@ -98,10 +98,21 @@ feature -- Basic Operation
 			end
 		end
 
-	proceed_with_current_info 
+	proceed_with_current_info
+		local
+			next_window: WIZARD_STATE_WINDOW
+			existing_target_files: TRAVERSABLE [STRING_GENERAL]
 		do
+			existing_target_files := (create {WIZARD_PROJECT_GENERATOR}.make (wizard_information)).existing_target_files
+			if existing_target_files.is_empty then
+					-- Go to code generation step.
+				create {WIZARD_FINAL_STATE} next_window.make (wizard_information)
+			else
+					-- Warn that there are files to be overwritten.
+				create {WIZARD_WARNING_FILE_PRESENCE} next_window.make_with_names (existing_target_files, wizard_information)
+			end
 			Precursor
-			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make (wizard_information))
+			proceed_with_new_state(next_window)
 		end
 
 	update_state_information
@@ -128,7 +139,7 @@ feature {NONE} -- Implementation
 			-- Text field to enter the number of states
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

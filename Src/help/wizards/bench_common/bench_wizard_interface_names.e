@@ -56,7 +56,7 @@ feature -- Location error state
 
 feature -- Project warning
 
-	t_Project_already_exist: STRING_GENERAL do Result := locale.translation ("Project already exist") end
+	t_Project_already_exist: STRING_GENERAL do Result := locale.translation ("Project already exists") end
 
 	m_Project_already_exist: STRING_GENERAL
 		do Result := locale.translation ("The directory you have chosen already contain%N%
@@ -66,9 +66,27 @@ feature -- Project warning
 		%%N%
 		%Click Next to continue and erase actual project.") end;
 
+feature -- Files warning
+
+	t_Files_already_exist: STRING_GENERAL do Result := locale.translation ("Files already exist") end
+
+	m_Files_already_exist (n: STRING_GENERAL): STRING_GENERAL
+		do
+			Result := locale.formatted_string (
+				"[
+					The project directory already contains the following files
+					that are about to be generated:$1
+					
+					Click Back to rename a project and to choose another directory.
+					
+					Click Next to continue and to replace existing files with the new ones.
+				]",
+				[n]
+			)
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

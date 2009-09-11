@@ -137,6 +137,24 @@ feature -- Basic Operations
 			Result.put (Empty_string, 2)
 		end
 
+feature {NONE} -- Access
+
+	target_files: TRAVERSABLE [STRING_GENERAL]
+			-- All target files that will be created during generation
+		local
+			r: ARRAYED_LIST [STRING_GENERAL]
+			root_class_name_lowercase: STRING
+		do
+			create r.make_from_array (<<
+				wizard_information.project_name.as_lower + Config_extension
+			>>)
+			Result := r
+			root_class_name_lowercase := wizard_information.root_class_name.as_lower
+			if not root_class_name_lowercase.is_equal (None_class) then
+				r.extend (root_class_name_lowercase + Eiffel_extension)
+			end
+		end
+
 feature {NONE} -- Constants
 
 	Application_type_template: STRING = "${FL_APPLICATION_TYPE}"
@@ -176,7 +194,7 @@ feature {NONE} -- Constants
 			-- Comma
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -206,4 +224,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 end -- class WIZARD_PROJECT_GENERATOR

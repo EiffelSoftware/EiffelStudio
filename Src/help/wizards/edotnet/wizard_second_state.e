@@ -176,6 +176,7 @@ feature -- Basic Operation
 			root_class_name_text: STRING
 			next_window: WIZARD_STATE_WINDOW
 			retried, com_problem: BOOLEAN
+			existing_target_files: TRAVERSABLE [STRING_GENERAL]
 		do
 			if not retried then
 				if root_class_name.text /= Void and then not root_class_name.text.is_empty then
@@ -184,8 +185,14 @@ feature -- Basic Operation
 					if is_valid_identifier (root_class_name.text) then
 						if creation_routine_name.text /= Void and then not creation_routine_name.text.is_empty then
 							if is_valid_identifier (creation_routine_name.text) then
-								Precursor
-								create {WIZARD_FINAL_STATE} next_window.make (wizard_information)
+								existing_target_files := (create {WIZARD_PROJECT_GENERATOR}.make (wizard_information)).existing_target_files
+								if existing_target_files.is_empty then
+										-- Go to code generation step.
+									create {WIZARD_FINAL_STATE} next_window.make (wizard_information)
+								else
+										-- Warn that there are files to be overwritten.
+									create {WIZARD_WARNING_FILE_PRESENCE} next_window.make_with_names (existing_target_files, wizard_information)
+								end
 							else
 									-- Ask for a valid creation routine name (in the sense of an Eiffel valid identifier).
 								create {WIZARD_ERROR_VALID_CREATION_ROUTINE_NAME} next_window.make (wizard_information)
@@ -343,7 +350,7 @@ feature {NONE} -- Constants
 			-- Clr versions selection combo box
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

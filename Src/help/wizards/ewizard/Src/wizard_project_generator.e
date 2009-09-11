@@ -24,7 +24,6 @@ feature -- Basic Operations
 		local
 			dir: DIRECTORY
 			l: LINKED_LIST [TUPLE [STRING, STRING]]
-			list_of_name: LINKED_LIST [STRING]
 			l_tuple: TUPLE [STRING, STRING]
 			class_name: STRING
 			i: INTEGER
@@ -39,19 +38,6 @@ feature -- Basic Operations
 				-- Cached variables.
 			create project_location.make_from_string (wizard_information.project_location)
 			project_name := wizard_information.project_name
-
-			create list_of_name.make
-			list_of_name.extend ("FIRST")
-			list_of_name.extend ("SECOND")
-			list_of_name.extend ("THIRD")
-			list_of_name.extend ("FOURTH")
-			list_of_name.extend ("FIFTH")
-			list_of_name.extend ("SIXTH")
-			list_of_name.extend ("SEVENTH")
-			list_of_name.extend ("HEIGHT")
-			list_of_name.extend ("NINETH")
-			list_of_name.extend ("TENTH")
-
 
 			create dir.make (project_location)
 			if dir.exists then
@@ -83,7 +69,7 @@ feature -- Basic Operations
 			l_tuple.put ("${FL_UUID}", 1)
 			l_tuple.put (l_uuid.generate_uuid.out, 2)
 			l.extend (l_tuple)
-			from_template_to_project (wizard_resources_path, "template_config.ecf", project_location, "Ace.ecf", l)
+			from_template_to_project (wizard_resources_path, "template_config.ecf", project_location, project_name.as_lower + ".ecf", l)
 
 			from
 				i := 1
@@ -146,8 +132,59 @@ feature -- Basic Operations
 			copy_file ("eiffel_wizard", 		pixmap_extension, pixmap_location)
 		end
 
+feature {NONE} -- Access
+
+	target_files: TRAVERSABLE [STRING_GENERAL]
+			-- All target files that will be created during generation
+		local
+			i: INTEGER
+			r: ARRAYED_LIST [STRING_GENERAL]
+		do
+			create r.make_from_array (<<
+				wizard_information.project_name.as_lower + ".ecf",
+				"wizard_initial_state.e",
+				"wizard_final_state.e",
+				"application_factory.e",
+				"application.e",
+				"wizard_information.e",
+				"wizard_project_shared.e",
+				"pixmaps\eiffel_wizard_icon" + pixmap_extension,
+				"pixmaps\eiffel_wizard" + pixmap_extension
+			>>)
+			Result := r
+			from
+				i := 1
+				list_of_name.start
+			until
+				i > wizard_information.number_state
+			loop
+				if list_of_name.after then
+					list_of_name.start
+				end
+				r.extend (("WIZARD_" + list_of_name.item + "_STATE").as_lower + ".e")
+					-- Prepare next step
+				list_of_name.forth
+				i := i + 1
+			end
+		end
+
+	list_of_name: LINKED_LIST [STRING]
+		once
+			create Result.make
+			list_of_name.extend ("FIRST")
+			list_of_name.extend ("SECOND")
+			list_of_name.extend ("THIRD")
+			list_of_name.extend ("FOURTH")
+			list_of_name.extend ("FIFTH")
+			list_of_name.extend ("SIXTH")
+			list_of_name.extend ("SEVENTH")
+			list_of_name.extend ("EIGHTH")
+			list_of_name.extend ("NINETH")
+			list_of_name.extend ("TENTH")
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -177,4 +214,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 end -- class WIZARD_PROJECT_GENERATOR

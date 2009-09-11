@@ -63,7 +63,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_CHARACTER val = *(EIF_CHARACTER *) o_ref;
 
-			new_obj = RTLN(egc_char_ref_dtype);
+			new_obj = RTLN(egc_char_dtype);
 			*(EIF_CHARACTER *) new_obj = val;
 			return new_obj;
 		}
@@ -71,7 +71,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_BOOLEAN val = *(EIF_BOOLEAN *) o_ref;
 
-			new_obj = RTLN(egc_bool_ref_dtype);
+			new_obj = RTLN(egc_bool_dtype);
 			*(EIF_BOOLEAN *) new_obj = val;
 			return new_obj;
 		}
@@ -79,7 +79,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_WIDE_CHAR val = *(EIF_WIDE_CHAR *) o_ref;
 
-			new_obj = RTLN(egc_wchar_ref_dtype);
+			new_obj = RTLN(egc_wchar_dtype);
 			*(EIF_WIDE_CHAR *) new_obj = val;
 			return new_obj;
 		}
@@ -87,7 +87,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_NATURAL_8 val = *(EIF_NATURAL_8 *) o_ref;
 
-			new_obj = RTLN(egc_uint8_ref_dtype);
+			new_obj = RTLN(egc_uint8_dtype);
 			*(EIF_NATURAL_8 *) new_obj = val;
 			return new_obj;
 		}
@@ -95,7 +95,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_NATURAL_16 val = *(EIF_NATURAL_16 *) o_ref;
 
-			new_obj = RTLN(egc_uint16_ref_dtype);
+			new_obj = RTLN(egc_uint16_dtype);
 			*(EIF_NATURAL_16 *) new_obj = val;
 			return new_obj;
 		}
@@ -103,7 +103,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_NATURAL_32 val = *(EIF_NATURAL_32 *) o_ref;
 
-			new_obj = RTLN(egc_uint32_ref_dtype);
+			new_obj = RTLN(egc_uint32_dtype);
 			*(EIF_NATURAL_32 *) new_obj = val;
 			return new_obj;
 		}
@@ -111,7 +111,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_NATURAL_64 val = *(EIF_NATURAL_64 *) o_ref;
 
-			new_obj = RTLN(egc_uint64_ref_dtype);
+			new_obj = RTLN(egc_uint64_dtype);
 			*(EIF_NATURAL_64 *) new_obj = val;
 			return new_obj;
 		}
@@ -119,7 +119,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_INTEGER_8 val = *(EIF_INTEGER_8 *) o_ref;
 
-			new_obj = RTLN(egc_int8_ref_dtype);
+			new_obj = RTLN(egc_int8_dtype);
 			*(EIF_INTEGER_8 *) new_obj = val;
 			return new_obj;
 		}
@@ -127,7 +127,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_INTEGER_16 val = *(EIF_INTEGER_16 *) o_ref;
 
-			new_obj = RTLN(egc_int16_ref_dtype);
+			new_obj = RTLN(egc_int16_dtype);
 			*(EIF_INTEGER_16 *) new_obj = val;
 			return new_obj;
 		}
@@ -135,7 +135,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_INTEGER_32 val = *(EIF_INTEGER_32 *) o_ref;
 
-			new_obj = RTLN(egc_int32_ref_dtype);
+			new_obj = RTLN(egc_int32_dtype);
 			*(EIF_INTEGER_32 *) new_obj = val;
 			return new_obj;
 		}
@@ -143,7 +143,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_INTEGER_64 val = *(EIF_INTEGER_64 *) o_ref;
 
-			new_obj = RTLN(egc_int64_ref_dtype);
+			new_obj = RTLN(egc_int64_dtype);
 			*(EIF_INTEGER_64 *) new_obj = val;
 			return new_obj;
 		}
@@ -151,7 +151,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_REAL_32 val = *(EIF_REAL_32 *) o_ref;
 
-			new_obj = RTLN(egc_real32_ref_dtype);
+			new_obj = RTLN(egc_real32_dtype);
 			*(EIF_REAL_32 *) new_obj = val;
 			return new_obj;
 		}
@@ -159,7 +159,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_POINTER val = *(EIF_POINTER *) o_ref;
 
-			new_obj = RTLN(egc_point_ref_dtype);
+			new_obj = RTLN(egc_point_dtype);
 			*(EIF_POINTER *) new_obj = val;
 			return new_obj;
 		}
@@ -167,7 +167,7 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 		{
 			EIF_REAL_64 val = *(EIF_REAL_64 *) o_ref;
 
-			new_obj = RTLN(egc_real64_ref_dtype);
+			new_obj = RTLN(egc_real64_dtype);
 			*(EIF_REAL_64 *) new_obj = val;
 			return new_obj;
 		}

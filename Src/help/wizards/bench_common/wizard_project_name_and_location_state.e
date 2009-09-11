@@ -27,7 +27,7 @@ create
 
 feature -- Basic Operation
 
-	build 
+	build
 			-- Build entries.
 		do
 			create project_name.make (Current)
@@ -64,7 +64,7 @@ feature -- Basic Operation
 				to_compile_b.select_actions>>)
 		end
 
-	proceed_with_current_info 
+	proceed_with_current_info
 		local
 			next_window: WIZARD_STATE_WINDOW
 			rescued: BOOLEAN
@@ -85,10 +85,9 @@ feature -- Basic Operation
 						if not a_directory.exists then
 							a_directory.create_dir
 						end
-						if a_directory.has_entry ("EIFGEN") then
+						if a_directory.has_entry ("EIFGENs") then
 							create {WIZARD_WARNING_PROJECT_EXIST} next_window.make (wizard_information)
 						else
-							Precursor
 							create {WIZARD_SECOND_STATE} next_window.make (wizard_information)
 						end
 					end
@@ -205,7 +204,7 @@ feature {NONE} -- Implementation
 			-- Should compilation be launched?.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

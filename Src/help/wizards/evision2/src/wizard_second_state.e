@@ -120,9 +120,20 @@ feature -- Basic Operation
 		end
 
 	proceed_with_current_info
+		local
+			next_window: WIZARD_STATE_WINDOW
+			existing_target_files: TRAVERSABLE [STRING_GENERAL]
 		do
+			existing_target_files := (create {WIZARD_PROJECT_GENERATOR}.make (wizard_information)).existing_target_files
+			if existing_target_files.is_empty then
+					-- Go to code generation step.
+				create {WIZARD_FINAL_STATE} next_window.make (wizard_information)
+			else
+					-- Warn that there are files to be overwritten.
+				create {WIZARD_WARNING_FILE_PRESENCE} next_window.make_with_names (existing_target_files, wizard_information)
+			end
 			Precursor
-			proceed_with_new_state (create {WIZARD_FINAL_STATE}.make(wizard_information))
+			proceed_with_new_state (next_window)
 		end
 
 	update_state_information
@@ -164,7 +175,7 @@ feature {NONE} -- Implementation
 			-- Pixmap used to preview the application.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

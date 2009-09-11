@@ -122,8 +122,30 @@ feature -- Basic Operations
 			Result.put ("", 2)
 		end
 
+feature {NONE} -- Access
+
+	target_files: TRAVERSABLE [STRING_GENERAL]
+			-- <Precursor>
+		local
+			r: ARRAYED_LIST [STRING_GENERAL]
+		do
+			create r.make_from_array (<<
+				"main_window.e",
+				"interface_names.e",
+				"about_dialog.e",
+				wizard_information.project_name.as_lower + ".ecf",
+				"application.e"
+			>>)
+			Result := r
+			if wizard_information.has_tool_bar then
+				r.extend ("new.png")
+				r.extend ("open.png")
+				r.extend ("save.png")
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

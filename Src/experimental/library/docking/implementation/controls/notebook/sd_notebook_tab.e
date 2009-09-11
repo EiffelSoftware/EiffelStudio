@@ -418,10 +418,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 					l_in_close_button := True
 				end
 				if not l_in_close_button then
-					first_press_position := Void
 					l_has_capture := attached_parent.has_capture
-					attached_parent.disable_capture (Current)
-
 					-- We must check if really have vision2 capture, because capture maybe interrupted by some operations like creating a EV_DIALOG.
 					if l_has_capture then
 						l_offset := internal_shared.drag_offset
@@ -429,6 +426,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 						-- Otherwise, it's too sensitive. See bug#13038
 						if (a_screen_x < l_position.x - l_offset or a_screen_x > l_position.x + l_offset) and
 							(a_screen_y < l_position.y - l_offset or a_screen_y > l_position.y + l_offset) then
+							attached_parent.disable_capture (Current)
 							drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 							first_press_position := Void
 						end

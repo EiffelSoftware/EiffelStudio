@@ -41,12 +41,21 @@ feature -- Query
 			known_type: known_document_type (a_type)
 		local
 			l_type: STRING
+			l_result: detachable DOCUMENT_CLASS
 		do
 			l_type := a_type.twin
 			l_type.to_lower
-			Result := registered_document_types.item (l_type)
+			l_result := registered_document_types.item (l_type)
+			check l_result /= Void end -- Implied by precondition
+			Result := l_result
 		ensure
 			has_result: Result /= Void
+		end
+
+	current_class_set: BOOLEAN
+			-- Is `current_class' set?
+		do
+			Result := current_class_cell.item /= Void
 		end
 
 feature -- Status Setting
@@ -61,8 +70,14 @@ feature -- Access
 
 	current_class: DOCUMENT_CLASS
 			-- Current document class
+		require
+			current_class_set: current_class_set
+		local
+			l_class: detachable like current_class
 		do
-			Result := current_class_cell.item
+			l_class := current_class_cell.item
+			check l_class /= Void end -- Implied by precondition.
+			Result := l_class
 		end
 
 	default_document_class: DOCUMENT_CLASS

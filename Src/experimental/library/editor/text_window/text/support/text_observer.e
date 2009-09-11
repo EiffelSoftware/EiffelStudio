@@ -11,7 +11,7 @@ deferred class
 
 feature {NONE} -- Access
 
-	text_observer_manager: TEXT_OBSERVER_MANAGER
+	text_observer_manager: detachable TEXT_OBSERVER_MANAGER
 			-- Manager managing `Current'.
 
 feature {TEXT_OBSERVER_MANAGER}-- Element Change
@@ -22,7 +22,7 @@ feature {TEXT_OBSERVER_MANAGER}-- Element Change
 			text_observer_manager := m
 		end
 
-feature {TEXT_OBSERVER_MANAGER} -- Update 
+feature {TEXT_OBSERVER_MANAGER} -- Update
 
 	on_text_edited (directly_edited: BOOLEAN)
 			-- Update `Current' when some text has been modified
@@ -55,7 +55,7 @@ feature {TEXT_OBSERVER_MANAGER} -- Update
 			-- Observer must be registered as "edition_observer" for this feature to be called.
 		do
 		end
-		
+
 
 	on_selection_begun
 			-- Update `Current' when a selection begins in the observed editor.

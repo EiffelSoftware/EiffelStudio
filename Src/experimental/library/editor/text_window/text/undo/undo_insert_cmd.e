@@ -10,7 +10,7 @@ class
 	UNDO_INSERT_CMD
 
 inherit
-	UNDO_CMD
+	UNDO_TEXT_CMD
 
 create
 	make_from_string
@@ -51,11 +51,12 @@ feature -- Basic operations
 
 	undo
 		local
-			cur: EDITOR_CURSOR
+			cur: detachable EDITOR_CURSOR
 		do
 			cur := text.cursor
+			check cur /= Void end -- Implied by precondition
 			text.forget_selection
-			cur.make_from_character_pos (x_start, y_start, text)
+			cur.set_from_character_pos (x_start, y_start, text)
 			if not message.is_empty then
 				text.delete_n_chars_at_cursor_pos (message.count)
 			end
@@ -63,26 +64,16 @@ feature -- Basic operations
 
 	redo
 		local
-			cur: EDITOR_CURSOR
+			cur: detachable EDITOR_CURSOR
 		do
 			cur := text.cursor
+			check cur /= Void end -- Implied by precondition
 			text.forget_selection
-			cur.make_from_character_pos (x_start, y_start, text)
+			cur.set_from_character_pos (x_start, y_start, text)
 			if not message.is_empty then
 				text.insert_string_at_cursor_pos (message)
 			end
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-	text : EDITABLE_TEXT
-
-invariant
-	invariant_clause: -- Your invariant here
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

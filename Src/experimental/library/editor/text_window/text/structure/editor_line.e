@@ -31,8 +31,8 @@ feature -- Initialization
 		local
 			t_eol				: EDITOR_TOKEN_EOL
 			t_begin				: EDITOR_TOKEN_LINE_NUMBER
-			lexer_first_token	: EDITOR_TOKEN
-			lexer_end_token		: EDITOR_TOKEN
+			lexer_first_token,
+			lexer_end_token		: detachable EDITOR_TOKEN
 		do
 			create t_eol.make
 			create t_begin.make
@@ -41,6 +41,7 @@ feature -- Initialization
 			if lexer_end_token /= Void then
 					-- The lexer has parsed something.
 				lexer_first_token := lexer.first_token
+				check lexer_first_token /= Void end -- Implied by `end_token' is attached, the lexer should ensure.
 
 				lexer_end_token.set_next_token (t_eol)
 				t_eol.set_previous_token (lexer_end_token)
@@ -67,12 +68,13 @@ feature -- Transformation
 			t_before_exists: t_before /= Void
 			t_after_exists: t_after /= Void
 		local
-			first_t, last_t: EDITOR_TOKEN
+			first_t, last_t: detachable EDITOR_TOKEN
 		do
 			last_t := lexer.end_token
 			if last_t /= Void then
 					-- The lexer has parsed something.
 				first_t := lexer.first_token
+				check first_t /= Void end -- Implied by `end_token' attached, the scanner should ensure.
 				last_t.set_next_token (t_after)
 				t_after.set_previous_token (last_t)
 				first_t.set_previous_token (t_before)
@@ -95,7 +97,7 @@ feature -- Transformation
 			lexer_exists: lexer /= Void
 			t_after_exists: t_after /= Void
 		local
-			t: EDITOR_TOKEN
+			t: detachable EDITOR_TOKEN
 		do
 			t := lexer.end_token
 			if t /= Void then
@@ -113,7 +115,7 @@ feature -- Transformation
 			-- Rebuild Current using token from `lexer'.  If lexer is scanning a line that is part of
 			-- a verbatim string then `in_v_string' should be True.
 		do
-			if previous /= Void and then ((previous.part_of_verbatim_string and then not previous.end_of_verbatim_string) or previous.start_of_verbatim_string) then
+			if attached previous as l_previous and then ((l_previous.part_of_verbatim_string and then not l_previous.end_of_verbatim_string) or l_previous.start_of_verbatim_string) then
 				lexer.set_in_verbatim_string (True)
 			else
 				lexer.set_in_verbatim_string (False)
@@ -130,7 +132,7 @@ feature -- Status Report
 		require
 			text_cursor.line = Current
 		local
-			local_token		: EDITOR_TOKEN
+			local_token		: detachable EDITOR_TOKEN
 			cursor_token	: EDITOR_TOKEN
 			l_string_32		: STRING_32
 		do
@@ -144,13 +146,16 @@ feature -- Status Report
 			until
 				local_token = cursor_token or else local_token = eol_token
 			loop
-				l_string_32.append(local_token.wide_image)
+				check local_token /= Void end -- A line should not have void token before the cursor token.
+				l_string_32.append (local_token.wide_image)
 				local_token := local_token.next
 			end
 
 				-- Append the current string with the portion of the current
 				-- token that is before the cursor.
-			l_string_32.append(local_token.wide_image.substring(1, text_cursor.pos_in_token - 1))
+			if local_token /= Void then
+				l_string_32.append (local_token.wide_image.substring(1, text_cursor.pos_in_token - 1))
+			end
 			Result := l_string_32
 		ensure
 			Result_not_void: Result /= Void
@@ -162,7 +167,7 @@ feature -- Status Report
 		require
 			text_cursor.line = Current
 		local
-			local_token		: EDITOR_TOKEN
+			local_token		: detachable EDITOR_TOKEN
 			cursor_token	: EDITOR_TOKEN
 			l_string_32		: STRING_32
 		do

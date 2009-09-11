@@ -10,7 +10,7 @@ class
 	UNDO_SYMBOL_SELECTION_CMD
 
 inherit
-	UNDO_CMD
+	UNDO_TEXT_CMD
 
 create
 	make
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Access
 
-	lines: LINKED_LIST[INTEGER]
+	lines: LIST[INTEGER]
 
 	symbol: STRING_GENERAL
 		-- symbol added at the beginning of the lines.
@@ -55,8 +55,6 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	text : EDITABLE_TEXT
-
 	do_selection (a_symbol: BOOLEAN)
 			-- Symbol or unsymbol the section.
 		local
@@ -69,8 +67,8 @@ feature {NONE} -- Implementation
 			until
 				lines.after
 			loop
-				b.make_from_character_pos (1, lines.item, text)
-				e.make_from_character_pos (1, lines.item, text)
+				b.set_from_character_pos (1, lines.item, text)
+				e.set_from_character_pos (1, lines.item, text)
 				e.go_end_line
 				if not a_symbol then
 					text.unsymbol_selection (b, e, symbol)
@@ -84,7 +82,6 @@ feature {NONE} -- Implementation
 invariant
 	lines_set: lines /= Void
 	symbol_not_void: symbol /= Void
-	text_not_void: text /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -48,8 +48,13 @@ feature -- Access
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant (a_name)
+		local
+			l_string: detachable STRING
 		do
-			Result := (all_constants.item (a_name)).twin
+			l_string := all_constants.item (a_name)
+			check l_string /= Void end -- Implied by precondition
+			create l_string.make_from_string (l_string)
+			Result := l_string
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -63,7 +68,7 @@ feature -- Access
 		local
 			l_string: STRING
 		do
-			l_string := (all_constants.item (a_name)).twin
+			l_string := string_constant_by_name (a_name)
 			check
 				is_integer: l_string.is_integer
 			end

@@ -25,20 +25,38 @@ feature -- Access
 
 	font: EV_FONT
 			-- Font used in the editor
+		require
+			has_font: has_font
+		local
+			l_pref: detachable FONT_PREFERENCE
 		do
-			Result := font_cell.item.value
+			l_pref := font_cell.item
+			check l_pref /= Void end -- Implied by precondition
+			Result := l_pref.value
 		end
 
 	keyword_font: EV_FONT
 			-- Keyword Font used in the editor
+		require
+			has_keyword_font: has_keyword_font
+		local
+			l_pref: detachable FONT_PREFERENCE
 		do
-			Result := keyword_font_cell.item.value
+			l_pref := keyword_font_cell.item
+			check l_pref /= Void end -- Implied by precondition
+			Result := l_pref.value
 		end
 
 	header_font: EV_FONT
 			-- Font used in the header control
+		require
+			has_header_fontn: has_header_font
+		local
+			l_pref: detachable FONT_PREFERENCE
 		do
-			Result := header_font_cell.item.value
+			l_pref := header_font_cell.item
+			check l_pref /= Void end -- Implied by precondition
+			Result := l_pref.value
 		end
 
 	font_width: INTEGER
@@ -55,9 +73,29 @@ feature -- Access
 			Result := is_fixed_width_cell.item
 		end
 
+feature -- Query
+
+	has_font: BOOLEAN
+			-- Is `header_font' set?
+		do
+			Result := font_cell.item /= Void
+		end
+
+	has_keyword_font: BOOLEAN
+			-- Is `header_font' set?
+		do
+			Result := keyword_font_cell.item /= Void
+		end
+
+	has_header_font: BOOLEAN
+			-- Is `header_font' set?
+		do
+			Result := header_font_cell.item /= Void
+		end
+
 feature {EDITOR_DATA} -- Implementation
 
-	font_cell: CELL [FONT_PREFERENCE]
+	font_cell: CELL [detachable FONT_PREFERENCE]
 			-- Cached version of `font'.
 		once
 			create Result.put (Void)
@@ -154,11 +192,20 @@ feature {EDITOR_DATA} -- Implementation
 
 	calculate_font_with_zoom_factor: EV_FONT
 			-- Font with zoom factor
+		require
+			font_cell_item_set: has_font
+			font_zoom_factor_cell_set: font_zoom_factor_cell.item /= Void
 		local
 			l_height: INTEGER
+			l_pref: detachable FONT_PREFERENCE
+			l_pref_factor: detachable INTEGER_PREFERENCE
 		do
-			Result := font_cell.item.value.twin
-			l_height := Result.height + font_zoom_factor_cell.item.value
+			l_pref := font_cell.item
+			check l_pref /= Void end -- Implied by precondition
+			Result := l_pref.value.twin
+			l_pref_factor := font_zoom_factor_cell.item
+			check l_pref_factor /= Void end -- Implied by precondition
+			l_height := Result.height + l_pref_factor.value
 			if l_height > 0 then
 				Result.set_height (l_height)
 			end
@@ -166,11 +213,20 @@ feature {EDITOR_DATA} -- Implementation
 
 	calculate_keyword_font_with_zoom_factor: EV_FONT
 			-- Keyword font with zoom factor
+		require
+			keyword_font_cell_set: has_keyword_font
+			font_zoom_factor_cell_set: font_zoom_factor_cell.item /= Void
 		local
 			l_height: INTEGER
+			l_pref: detachable FONT_PREFERENCE
+			l_pref_factor: detachable INTEGER_PREFERENCE
 		do
-			Result := keyword_font_cell.item.value.twin
-			l_height := Result.height + font_zoom_factor_cell.item.value
+			l_pref := keyword_font_cell.item
+			check l_pref /= Void end -- Implied by precondition
+			Result := l_pref.value.twin
+			l_pref_factor := font_zoom_factor_cell.item
+			check l_pref_factor /= Void end -- Implied by precondition
+			l_height := Result.height + l_pref_factor.value
 			if l_height > 0 then
 				Result.set_height (l_height)
 			end

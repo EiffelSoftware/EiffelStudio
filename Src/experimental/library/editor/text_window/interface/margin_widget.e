@@ -127,10 +127,9 @@ feature -- Basic operations
 			-- Destroy
 		do
 			margin_viewport.destroy
-			if margin_area /= Void then
-				margin_area.destroy
-				margin_area := Void
-			end
+			margin_area.destroy
+				-- Detach the original object.
+			create margin_area
 		end
 
 	refresh
@@ -318,6 +317,7 @@ feature {TEXT_PANEL} -- Display functions
  			y_offset,
  			l_line_height: INTEGER
  			l_text_displayed: like text_displayed_type
+ 			l_line: detachable EDITOR_LINE
 		do
 			l_text_displayed := text_panel.text_displayed
 			if l_text_displayed /= Void and then last <= l_text_displayed.number_of_lines then
@@ -334,7 +334,9 @@ feature {TEXT_PANEL} -- Display functions
 	 				if buffered then
 	 					-- We do not currently buffer for the margin
 					else
-						draw_line_to_screen (0, y_offset, l_text_displayed.line (curr_line), curr_line)
+						l_line := l_text_displayed.line (curr_line)
+						check l_line /= Void end -- Implied by not `l_text_displayed.after'
+						draw_line_to_screen (0, y_offset, l_line, curr_line)
 					end
 	 				curr_line := curr_line + 1
 					y_offset := y_offset + l_line_height
@@ -349,7 +351,6 @@ feature {TEXT_PANEL} -- Display functions
 			-- Update display by drawing `line' onto the `editor_drawing_area' directly at co-ordinates x,y.
 		local
  			curr_token	: EDITOR_TOKEN
- 			line_token  : EDITOR_TOKEN_LINE_NUMBER
  			spacer_text: STRING
  			max_chars: INTEGER
  		do
@@ -361,8 +362,7 @@ feature {TEXT_PANEL} -- Display functions
  			create spacer_text.make_filled ('0', max_chars - xline.out.count)
 
  				-- Set the correct image for line number
- 			line_token ?= a_line.number_token
-			if line_token /= Void then
+			if attached {EDITOR_TOKEN_LINE_NUMBER} a_line.number_token as line_token then
 				line_token.set_internal_image (spacer_text + xline.out)
 			end
 
@@ -384,11 +384,12 @@ feature {TEXT_PANEL} -- Display functions
  				a_line.after or else not curr_token.is_margin_token
  			loop
 				if curr_token.is_margin_token then
-					line_token ?= curr_token
-					if line_token /= Void and then line_numbers_visible then
-						line_token.display (y, margin_area, text_panel)
-					elseif line_token /= Void then
-						line_token.hide
+					if attached {EDITOR_TOKEN_LINE_NUMBER} curr_token as l_num_token then
+						if line_numbers_visible then
+							l_num_token.display (y, margin_area, text_panel)
+						else
+							l_num_token.hide
+						end
 					end
 				end
 				a_line.forth
@@ -419,6 +420,8 @@ feature {NONE} -- Implementation
 	text_displayed_type: TEXT
 			-- Type of `text_panel.text_displayed'.
 		do
+			check should_not_be_called: False end
+			Result := text_panel.text_displayed
 		end
 
 note

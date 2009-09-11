@@ -178,7 +178,8 @@ feature -- Color
 	background_color: EV_COLOR
 		do
 				-- There is no background for this symbol.
-			Result := Void
+				-- Default to white.
+			Result := (create {EV_STOCK_COLORS}).white
 		end
 
 	background_color_id: INTEGER

@@ -19,17 +19,17 @@ feature {NONE} -- Initialization
 	make (a_name: STRING)
 			-- Initialize Current with `name' set to `a_name'.
 		do
-			name := a_name			
+			name := a_name
 		end
 
 feature -- Access
 
 	name: STRING
 			-- Name
-			
-	previous: like Current
-	
-	next: like Current
+
+	previous: detachable like Current
+
+	next: detachable like Current
 
 feature -- Status setting
 
@@ -41,7 +41,7 @@ feature -- Status setting
 		ensure
 			prev_set: previous = a_prev
 		end
-		
+
 	set_next (a_next: like next)
 			-- Set `next'
 		require
@@ -61,13 +61,13 @@ feature -- Status
 			Result := (other /= Void) and then
 				(name.is_equal (other.name))
 		end
-		
+
 feature {NONE} -- Implementation
 
 	update_position
 			-- Update position
 		deferred
-		end		
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

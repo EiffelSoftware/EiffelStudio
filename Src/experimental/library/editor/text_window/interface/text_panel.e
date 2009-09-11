@@ -86,6 +86,9 @@ feature -- Initialization
 			-- Default creation
 		do
 			create widget
+				-- Initialize with unexecutable agent.
+			update_scroll_agent := agent do check False end end
+			refresh_line_number_agent := agent do check False end end
 			initialize
 			is_initialized := True
 		end
@@ -99,32 +102,36 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		local
-			l_parent: EV_HORIZONTAL_BOX
+			l_margin: like margin
 		do
+				-- Create the buffered line.
+			create buffered_line.make_with_size (buffered_drawable_width, line_height)
+
 				-- First display the first line...
 			first_line_displayed := 1
 			line_numbers_enabled := True
-			panel_manager.add_panel (Current)
 			initialize_editor_context
 			text_displayed := new_text_displayed
+			register_observers
+			panel_manager.add_panel (Current)
 			set_current_document_class (default_document_class)
 			editor_width := buffered_drawable_width
 			main_vbox.set_background_color (editor_preferences.normal_background_color)
 			inner_hbox.set_background_color (editor_preferences.normal_background_color)
 
 				-- Create the margin and associate it with `margin_container'.
-			create margin.make_with_panel (Current)
-			l_parent ?= margin_container.parent
-			check l_parent_not_void: l_parent /= Void end
-			l_parent.prune (margin_container)
-			margin_container := margin.margin_viewport
-			l_parent.put_front (margin_container)
-			l_parent.disable_item_expand (margin_container)
+			create l_margin.make_with_panel (Current)
+			margin := l_margin
+			if attached {EV_HORIZONTAL_BOX} margin_container.parent as l_parent then
+				l_parent.prune (margin_container)
+				margin_container := l_margin.margin_viewport
+				l_parent.put_front (margin_container)
+				l_parent.disable_item_expand (margin_container)
+			else
+				check parent_set: False end
+			end
 
 			editor_drawing_area.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
-
-				-- Create the buffered line.
-			create buffered_line.make_with_size (buffered_drawable_width, line_height)
 
 				-- Viewport Events
 			editor_drawing_area.expose_actions.extend (agent on_repaint)
@@ -165,25 +172,25 @@ feature -- Access
 			-- New instance of `text_displayed' for Current.
 		do
 			create Result.make
-			Result.add_lines_observer (Current)
-			Result.add_edition_observer (Current)
 			Result.set_first_read_block_size (number_of_lines_in_block)
 			Result.set_userset_data (userset_data)
 		ensure
 			new_text_not_void: Result /= Void
 		end
 
+	register_observers
+			-- Register observers for `text_displayed'
+		do
+			text_displayed.add_lines_observer (Current)
+			text_displayed.add_edition_observer (Current)
+		end
+
 	text: STRING
 			-- Image of the text being displayed.
 		obsolete
 			"Use `wide_text' instead, or wide characters are truncated."
-		local
-			l_text: like wide_text
 		do
-			l_text := wide_text
-			if l_text /= Void then
-				Result := wide_text.as_string_8
-			end
+			Result := wide_text.as_string_8
 		end
 
 	wide_text: STRING_32
@@ -199,7 +206,7 @@ feature -- Access
 	text_displayed: TEXT
 			-- Text currently displayed on the screen.
 
-	file_name: FILE_NAME
+	file_name: detachable FILE_NAME
 			-- Name of the currently opened file, if any.
 
 	size_of_file_when_loaded: INTEGER
@@ -208,7 +215,7 @@ feature -- Access
 	date_of_file_when_loaded: INTEGER
 			-- Date of current file when it was loaded.
 
-	margin: MARGIN_WIDGET
+	margin: detachable MARGIN_WIDGET
 			-- Margin.
 
 	first_line_displayed: INTEGER
@@ -220,18 +227,18 @@ feature -- Access
 	is_checking_modifications: BOOLEAN
 			-- Are document modifications being checked?
 
-	cursors: EDITOR_CURSORS
+	cursors: detachable EDITOR_CURSORS note option: stable attribute end
 			-- Editor cursors
 
-	icons: EDITOR_ICONS
+	icons: detachable EDITOR_ICONS note option: stable attribute end
 			-- Editor icons
 
-	encoding: ENCODING
+	encoding: detachable ENCODING
 			-- Returns user encoding if `user_encoding' is set by `set_encoding'.
 			-- Otherwise returns encodinge valuated when text was loaded.
 		do
-			if user_encoding /= Void then
-				Result := user_encoding
+			if attached user_encoding as l_enc then
+				Result := l_enc
 			else
 				Result := detected_encoding
 			end
@@ -329,7 +336,11 @@ feature -- Status Setting
 			set_editor_width (editor_width)
 			update_horizontal_scrollbar
 			refresh_now
-			margin.setup_margin
+			if attached margin as l_margin then
+				l_margin.setup_margin
+			else
+				check margin_always_attached: False end
+			end
 		end
 
 	on_focus
@@ -394,7 +405,7 @@ feature -- Query
 	file_loaded: BOOLEAN
 			-- Has a file been loaded into the text panel?
 		do
-			Result := file_name /= Void and then not file_name.is_empty
+			Result := attached file_name as l_name and then not l_name.is_empty
 		end
 
 	editor_x: INTEGER
@@ -508,6 +519,12 @@ feature -- Query
 			Result := editor_viewport.y_offset >= 0
 		end
 
+	has_icons: BOOLEAN
+			-- Has `icons' set?
+		do
+			Result := icons /= Void
+		end
+
 feature -- Pick and Drop
 
 	drop_actions: EV_PND_ACTION_SEQUENCE
@@ -596,8 +613,8 @@ feature -- Status setting
 			-- Give the focus to the editor area.
 		do
 			if is_initialized and then not editor_drawing_area.is_destroyed and then editor_drawing_area.is_displayed and then editor_drawing_area.is_sensitive then
-				if reference_window /= Void then
-					if reference_window.has_focus then
+				if attached reference_window as l_window then
+					if l_window.has_focus then
 						editor_drawing_area.set_focus
 					end
 				else
@@ -616,14 +633,22 @@ feature -- Basic Operations
 			in_scroll := True
 			update_line_and_token_info
 			editor_drawing_area.redraw
-			margin.refresh
+			if attached margin as l_margin then
+				l_margin.refresh
+			else
+				check margin_always_attached: False end
+			end
 		end
 
 	refresh_now
 			-- Update display without waiting for next idle
 		do
 			refresh
-			margin.margin_area.flush
+			if attached margin as l_margin then
+				l_margin.margin_area.flush
+			else
+				check margin_always_attached: False end
+			end
 			editor_drawing_area.flush
 			in_scroll := False
 		end
@@ -745,7 +770,11 @@ feature -- Basic Operations
 			buffered_line.set_size (buffered_line.width, line_height)
 			update_horizontal_scrollbar
 			update_vertical_scrollbar
-			margin.on_font_changed
+			if attached margin as l_margin then
+				l_margin.on_font_changed
+			else
+				check margin_always_attached: False end
+			end
 			redraw_current_screen
 		end
 
@@ -777,7 +806,11 @@ feature -- Basic Operations
 					dialog.set_default_push_button (dialog.button (button_labels @ 1))
 					dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
 					dialog.set_title ("External edition")
-					dialog.show_modal_to_window (reference_window)
+					if attached reference_window as l_window then
+						dialog.show_modal_to_window (l_window)
+					else
+						check False end -- Bug
+					end
 				elseif editor_preferences.automatic_update and not changed then
 					reload
 				end
@@ -798,7 +831,7 @@ feature -- Basic Operations
 
 feature -- Graphical interface
 
-	pointer_style: EV_POINTER_STYLE
+	pointer_style: detachable EV_POINTER_STYLE
 			-- Pointer style over the text.
 		do
 			Result := editor_drawing_area.pointer_style
@@ -807,7 +840,7 @@ feature -- Graphical interface
 	font: EV_FONT
 			-- Font used to display the text
 		local
-			l_fonts: SPECIAL [EV_FONT]
+			l_fonts: detachable SPECIAL [EV_FONT]
 		do
 			l_fonts := userset_data.fonts
 			if l_fonts /= Void then
@@ -817,7 +850,7 @@ feature -- Graphical interface
 			end
 		end
 
-	userset_fonts: SPECIAL [EV_FONT]
+	userset_fonts: detachable SPECIAL [EV_FONT]
 			-- Font set via `set_font'
 		do
 			Result := userset_data.fonts
@@ -836,7 +869,7 @@ feature -- Graphical interface
 			end
 		end
 
-	reference_window: EV_WINDOW
+	reference_window: detachable EV_WINDOW
 			-- Window which error dialogs will be shown relative to. Void if not set using `set_reference_window'.
 		do
 			Result := internal_reference_window
@@ -851,7 +884,9 @@ feature -- Graphical interface
 			create wd.make_with_text (a_message)
 			wd.pointer_button_release_actions.force_extend (agent wd.destroy)
 			wd.key_press_actions.force_extend (agent wd.destroy)
-			wd.show_modal_to_window (reference_window)
+			if attached reference_window as l_window then
+				wd.show_modal_to_window (l_window)
+			end
 		end
 
 feature {MARGIN_WIDGET} -- Private properties of the text window
@@ -1079,7 +1114,9 @@ feature {NONE} -- Scroll bars Management
 					end
 				end
 			end
-			ev_application.remove_idle_action (update_scroll_agent)
+			if attached shared_environment.application then
+				ev_application.remove_idle_action (update_scroll_agent)
+			end
 		end
 
 	update_width
@@ -1092,7 +1129,11 @@ feature {NONE} -- Scroll bars Management
 			until
 				i = number_of_lines
 			loop
-				editor_width := editor_width.max (text_displayed.line (i).width)
+				if attached text_displayed.line (i) as l_line then
+					editor_width := editor_width.max (l_line.width)
+				else
+					check False end -- Bug
+				end
 				i := i + 1
 			end
 		end
@@ -1122,14 +1163,22 @@ feature {NONE} -- Scroll bars Management
  						-- above the drawing area, so flip to the bottom
  					editor_viewport.set_y_offset (l_buff_height - viewable_height - ((l_buff_height - viewable_height) \\ l_line_height))
  					flip_count := flip_count - 1
-					margin.synch_with_panel
+					if attached margin as l_margin then
+						l_margin.synch_with_panel
+					else
+						check margin_always_attached: False end
+					end
  					refresh_now
  				else
  					editor_viewport.set_y_offset (view_y_offset + (l_diff * l_line_height))
  					check
  						not_negative: editor_viewport.y_offset >= 0
  					end
-					margin.synch_with_panel
+					if attached margin as l_margin then
+						l_margin.synch_with_panel
+					else
+						check margin_always_attached: False end
+					end
  				end
  			elseif l_diff > 0 then
  					-- Scroll down
@@ -1137,11 +1186,19 @@ feature {NONE} -- Scroll bars Management
  				if l_bottom_line_y > l_buff_height then
  					editor_viewport.set_y_offset (0)
  					flip_count := flip_count + 1
-					margin.synch_with_panel
+					if attached margin as l_margin then
+						l_margin.synch_with_panel
+					else
+						check margin_always_attached: False end
+					end
  					refresh_now
  				else
  					editor_viewport.set_y_offset (view_y_offset + (l_diff * l_line_height))
-					margin.synch_with_panel
+					if attached margin as l_margin then
+						l_margin.synch_with_panel
+					else
+						check margin_always_attached: False end
+					end
  				end
  			end
 			last_vertical_scroll_bar_value := vscroll_pos
@@ -1248,7 +1305,11 @@ feature {NONE} -- Display functions
 			if editor_viewport.y_offset + viewable_height > buffered_drawable_height then
 					-- The viewport needs to be moved up because it is too low down to display
 				editor_viewport.set_y_offset (editor_viewport.y_offset - (editor_viewport.height - last_viewport_height))
-				margin.margin_viewport.set_y_offset (editor_viewport.y_offset)
+				if attached margin as l_margin then
+					l_margin.margin_viewport.set_y_offset (editor_viewport.y_offset)
+				else
+					check margin_always_attached: False end
+				end
 			end
 		end
 
@@ -1329,7 +1390,11 @@ feature {NONE} -- Display functions
 	 		--			draw_line_to_buffered_line (curr_line, l_text.current_line)
 			--			draw_buffered_line_to_screen (0, y_offset)
 					else
-						draw_line_to_screen (start_pos, end_pos, y_offset, l_text.current_line)
+						if attached l_text.current_line as l_line then
+							draw_line_to_screen (start_pos, end_pos, y_offset, l_line)
+						else
+							check False end -- Not possible according to not `after'.
+						end
 					end
 	 				curr_line := curr_line + 1
 					y_offset := y_offset + line_height
@@ -1384,7 +1449,6 @@ feature {NONE} -- Display functions
 			redraw_token: BOOLEAN
 			token_start_pos,
 			token_end_position: INTEGER
-			eol_token: EDITOR_TOKEN_EOL
 		do
 			from
 				if offset < left_margin_width then
@@ -1412,8 +1476,8 @@ feature {NONE} -- Display functions
 				curr_token := a_line.item
 			end
 			if curr_token = a_line.eol_token and then view_invisible_symbols then
-				eol_token ?= curr_token
-				eol_token.display_with_offset (curr_token.position + left_margin_width, y, da, Current)
+				check current_is_end_token: attached {EDITOR_TOKEN_EOL}curr_token end
+				curr_token.display_with_offset (curr_token.position + left_margin_width, y, da, Current)
 			end
 		end
 
@@ -1499,8 +1563,8 @@ feature {NONE} -- Text loading
 	reload
 			-- Reload the opened file from disk.
 		do
-			if file_name /= Void and then not file_name.is_empty then
-				load_file (file_name.string)
+			if attached file_name as l_name and then not l_name.is_empty then
+				load_file (l_name.string)
 			end
 		end
 
@@ -1513,10 +1577,18 @@ feature {NONE} -- Text loading
 			until
 				text_displayed.after
 			loop
-				editor_width := editor_width.max (text_displayed.current_line.width)
+				if attached text_displayed.current_line as l_line then
+					editor_width := editor_width.max (l_line.width)
+				else
+					check current_line_attached: False end -- Implied by not `after'.
+				end
 				text_displayed.forth
 			end
-			editor_width := editor_width + left_margin_width + margin.width
+			if attached margin as l_margin then
+				editor_width := editor_width + left_margin_width + l_margin.width
+			else
+				check margin_always_attached: False end
+			end
 			set_editor_width (editor_width)
 			vertical_scrollbar.enable_sensitive
 			update_vertical_scrollbar
@@ -1577,11 +1649,16 @@ feature {EDITOR_TOKEN} -- User set data
 
 	userset_data: TEXT_PANEL_BUFFERED_DATA
 			-- Userset editor data
+		local
+			l_data: like intneral_userset_data
 		do
-			Result := intneral_userset_data
-			if Result = Void then
-				create intneral_userset_data
-				Result := intneral_userset_data
+			l_data := intneral_userset_data
+			if l_data = Void then
+				create l_data
+				Result := l_data
+				intneral_userset_data := l_data
+			else
+				Result := l_data
 			end
 		ensure
 			userset_data_not_void: Result /= Void
@@ -1605,39 +1682,28 @@ feature -- Memory management
 
 				-- Remove `refresh_line_number_agent' from `change_actions' for `show_line_numbers'.
 			editor_preferences.show_line_numbers_preference.change_actions.prune_all (refresh_line_number_agent)
-			refresh_line_number_agent := Void
+			refresh_line_number_agent := agent do end
 
 				-- Reset scrolling agent.
-			update_scroll_agent := Void
+			update_scroll_agent := agent do end
 
-			if editor_drawing_area /= Void then
-				editor_drawing_area.destroy
-				editor_drawing_area := Void
-			end
-			if margin /= Void then
-				margin.destroy
+			editor_drawing_area.destroy
+			create editor_drawing_area	-- Detach original instance to help memory management.
+
+			if attached margin as l_margin then
+				l_margin.destroy
 				margin := Void
 			end
-			if scroll_cell /= Void then
-				scroll_cell.destroy
-				scroll_cell := Void
-			end
-			if horizontal_scrollbar /= Void then
-				horizontal_scrollbar.destroy
-				horizontal_scrollbar := Void
-			end
-			if vertical_scrollbar /= Void then
-				vertical_scrollbar.destroy
-				vertical_scrollbar := Void
-			end
-			if text_displayed /= Void then
-				text_displayed.recycle
-				text_displayed := Void
-			end
-			if editor_viewport /= Void then
-				editor_viewport.destroy
-				editor_viewport := Void
-			end
+			scroll_cell.destroy
+			create scroll_cell
+			horizontal_scrollbar.destroy
+			create horizontal_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (1, 1))
+			vertical_scrollbar.destroy
+			create vertical_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (1, 1))
+			text_displayed.recycle
+			create text_displayed.make
+			editor_viewport.destroy
+			create editor_viewport
 			panel_manager.remove_panel (Current)
 		ensure
 			not_initialized: not is_initialized
@@ -1691,8 +1757,12 @@ feature -- Implementation
 			file_exists: file_exists
 		local
 			l_file: RAW_FILE
+			l_name: detachable STRING
 		do
-			create l_file.make (file_name.string)
+			l_name := file_name
+			check l_name /= Void end -- Implied by precondition
+			l_name := l_name.string
+			create l_file.make (l_name)
 			Result := l_file.date
 		end
 
@@ -1703,8 +1773,12 @@ feature -- Implementation
 			file_exists: file_exists
 		local
 			l_file: RAW_FILE
+			l_name: detachable STRING
 		do
-			create l_file.make (file_name.string)
+			l_name := file_name
+			check l_name /= Void end -- Implied by precondition
+			l_name := l_name.string
+			create l_file.make (l_name)
 			Result := l_file.count
 		end
 
@@ -1714,8 +1788,12 @@ feature -- Implementation
 			file_loaded: file_loaded
 		local
 			l_file: RAW_FILE
+			l_name: detachable STRING
 		do
-			create l_file.make (file_name.string)
+			l_name := file_name
+			check l_name /= Void end -- Implied by precondition
+			l_name := l_name.string
+			create l_file.make (l_name)
 			Result := l_file.exists
 		end
 
@@ -1732,14 +1810,14 @@ feature -- Implementation
 			size_of_file_when_loaded := file_size
 		end
 
-	intneral_userset_data: like userset_data
+	intneral_userset_data: detachable like userset_data
 			-- Buffered userset data
 
 	update_line_and_token_info
 			-- Update all tokens for correct width.
 		local
 			l_text: like text_displayed
-			l_line: EDITOR_LINE
+			l_line: detachable EDITOR_LINE
 		do
 			l_text := text_displayed
 			if not l_text.is_empty then
@@ -1749,6 +1827,7 @@ feature -- Implementation
 	 				l_text.after
 	 			loop
 	 				l_line := l_text.current_line
+	 				check l_line /= Void end -- Implied by not `after'
 					if l_line.userset_data /= userset_data then
 						l_line.set_userset_data (userset_data)
 						l_line.update_token_information
@@ -1763,19 +1842,23 @@ feature {NONE} -- Implementation
 	line_type: EDITOR_LINE
 			-- Type of a line.
 		do
+			check False end -- Not called.
+			Result := line_type
 		end
 
 	cursor_type: TEXT_CURSOR
 			-- Type of a cursor.
 		do
+			check False end -- Not called.
+			Result := cursor_type
 		end
 
 feature {NONE} -- Encoding conversion
 
-	user_encoding: ENCODING
+	user_encoding: detachable ENCODING
 			-- User set encoding of the text
 
-	detected_encoding: ENCODING
+	detected_encoding: detachable ENCODING
 			-- Detected encoding of the text loaded
 			-- `user_encoding' takes higher priority.
 
@@ -1788,10 +1871,10 @@ feature {NONE} -- Encoding conversion
 		require
 			a_string_not_void: a_string /= Void
 		local
-			l_str: STRING_GENERAL
-			l_encoding: ENCODING
+			l_str: detachable STRING_GENERAL
+			l_encoding: detachable ENCODING
 		do
-			if user_encoding = Void then
+			if not attached user_encoding as l_encod then
 				encoding_detector.detect (a_string)
 				if encoding_detector.last_detection_successful then
 					l_encoding := encoding_detector.detected_encoding
@@ -1800,7 +1883,7 @@ feature {NONE} -- Encoding conversion
 					end
 				end
 			else
-				l_encoding := user_encoding
+				l_encoding := l_encod
 			end
 			if l_encoding /= Void then
 				l_encoding.convert_to (utf8, a_string)
@@ -1823,8 +1906,8 @@ feature {NONE} -- Encoding detector
 			-- Encoding detector.
 			-- Used to detect/decide what encoding should be used.
 		do
-			if current_class /= Void and then current_class.encoding_detector /= Void then
-				Result := current_class.encoding_detector
+			if current_class_set and then attached current_class.encoding_detector as l_detector then
+				Result := l_detector
 			else
 				Result := Current
 			end

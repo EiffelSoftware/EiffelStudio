@@ -418,27 +418,26 @@ feature -- Memory management
 	recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
+			-- Not necessary to dereference the container, as they are wiped out.
 		do
 			edition_observer_list.wipe_out
-			edition_observer_list := Void
 			selection_observer_list.wipe_out
-			selection_observer_list := Void
 			lines_observer_list.wipe_out
-			lines_observer_list := Void
+			cursor_observer_list.wipe_out
 		end
 
 feature {TEXT_PANEL} -- Implementation
 
-	edition_observer_list: detachable ARRAYED_LIST [TEXT_OBSERVER]
+	edition_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.
 
 	cursor_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of cursor observers.
 
-	selection_observer_list: detachable ARRAYED_LIST [TEXT_OBSERVER]
+	selection_observer_list: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.
 
-	lines_observer_list: detachable ARRAYED_LIST [TEXT_OBSERVER];
+	lines_observer_list: ARRAYED_LIST [TEXT_OBSERVER];
 		-- List of editor observers.
 
 note

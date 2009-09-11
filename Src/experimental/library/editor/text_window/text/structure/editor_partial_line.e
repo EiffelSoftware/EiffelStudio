@@ -14,7 +14,7 @@ inherit
 		redefine
 			make_from_lexer
 		end
-		
+
 create
 	make_empty_line,
 	make_from_lexer
@@ -24,8 +24,7 @@ feature -- Initialisation
 	make_from_lexer (lexer: EDITOR_SCANNER)
 			-- Create a line using token from `lexer'
 		local
-			lexer_first_token	: EDITOR_TOKEN
-			lexer_end_token		: EDITOR_TOKEN
+			lexer_end_token		: detachable EDITOR_TOKEN
 		do
 			lexer_end_token := lexer.end_token
 			if lexer_end_token /= Void then

@@ -35,8 +35,20 @@ feature -- Initialization
 
 feature -- Access
 
-	cursor: TEXT_CURSOR
+	cursor: detachable TEXT_CURSOR
 			-- Current cursor.
+
+	attached_cursor: attached like cursor
+			-- Attached `cursor'.
+		require
+			not_is_empty: not is_empty and then has_cursor
+		local
+			l_cursor: like cursor
+		do
+			l_cursor := cursor
+			check l_cursor /= Void end
+			Result := l_cursor
+		end
 
 	selection_cursor: like cursor
 			-- Position where the user has started to select
@@ -44,45 +56,59 @@ feature -- Access
 			-- cursor (and therefore represent the end of the
 			-- selection)
 
+	attached_selection_cursor: attached like cursor
+			-- Attached `selection_cursor'.
+		require
+			not_is_empty: not is_empty
+		local
+			l_c: like selection_cursor
+		do
+			l_c := selection_cursor
+			check l_c /= Void end -- Implied by precondition and invariant
+			Result := l_c
+		end
+
 	current_line_number : INTEGER
 			-- Current line number.
 		require
 			text_is_not_empty: not is_empty
 		do
-			Result := cursor.y_in_lines
+			Result := attached_cursor.y_in_lines
 		end
 
-	selection_start: like cursor
+	selection_start: attached like cursor
 			-- Beginning of the selection (always < than
 			-- `selection_end').
 		require
 			text_is_not_empty: not is_empty
+		local
+			l_sel, l_cur: like attached_cursor
 		do
-			check
-				selection_cursor_exists: selection_cursor /= Void
-			end
-			if cursor > selection_cursor then
-				Result := selection_cursor
+			l_sel := attached_selection_cursor
+			l_cur := attached_cursor
+			if l_cur > l_sel then
+				Result := l_sel
 			else
-				Result := cursor
+				Result := l_cur
 			end
 		ensure
 			result_cursor_position_lesser: Result <= selection_end
 		end
 
-	selection_end: like cursor
+	selection_end: attached like cursor
 			-- End of the selection (always > than
 			-- `selection_start').
 		require
 			text_is_not_empty: not is_empty
+		local
+			l_sel, l_cur: like attached_cursor
 		do
-			check
-				selection_cursor_exists: selection_cursor /= Void
-			end
-			if cursor > selection_cursor then
-				Result := cursor
+			l_sel := attached_selection_cursor
+			l_cur := attached_cursor
+			if l_cur > l_sel then
+				Result := l_cur
 			else
-				Result := selection_cursor
+				Result := l_sel
 			end
 		ensure
 			result_cursor_position_greater: Result >= selection_start
@@ -93,13 +119,8 @@ feature -- Access
 			"Use `selected_wide_string' instead."
 		require
 			text_is_not_empty: not is_empty
-		local
-			l_str: STRING_32
 		do
-			l_str := selected_wide_string
-			if l_str /= Void then
-				Result := l_str.as_string_8
-			end
+			Result := selected_wide_string.as_string_8
 		end
 
 	selected_wide_string: STRING_32
@@ -114,8 +135,8 @@ feature -- Status report
 	has_selection: BOOLEAN
 			-- Is there a selection?
 		do
-			if selection_cursor /= Void then
-				Result := internal_has_selection and then not selection_cursor.is_equal (cursor)
+			if attached selection_cursor as l_sel and attached cursor as l_cur then
+				Result := internal_has_selection and then not l_sel.is_equal (l_cur)
 			end
 		end
 
@@ -124,7 +145,13 @@ feature -- Status report
 		require
 			text_is_not_empty: not is_empty
 		do
-			Result := (not has_selection) or else cursor.is_equal (selection_cursor)
+			Result := (not has_selection) or else attached_cursor.is_equal (attached_selection_cursor)
+		end
+
+	has_cursor: BOOLEAN
+			-- is `cursor' set?
+		do
+			Result := cursor /= Void
 		end
 
 feature -- Status setting
@@ -163,7 +190,7 @@ feature -- Selection Changes
 		do
 			selection_cursor := c.twin
 		ensure
-			selection_cursor.is_equal (c)
+			selection_cursor_set: attached selection_cursor as l_c and then l_c.is_equal (c)
 		end
 
 	select_region (start_pos, end_pos: INTEGER)
@@ -174,13 +201,15 @@ feature -- Selection Changes
 			right_order: start_pos <= end_pos
 		local
 			had_selection: BOOLEAN
+			l_selection_cursor: like attached_selection_cursor
 		do
 			had_selection := has_selection
 			internal_has_selection := False
 			disable_selection
-			selection_cursor.make_from_integer (start_pos, Current)
-			cursor.make_from_integer (end_pos, Current)
-			if not cursor.is_equal (selection_cursor) then
+			l_selection_cursor := attached_selection_cursor
+			l_selection_cursor.set_from_integer (start_pos, Current)
+			attached_cursor.set_from_integer (end_pos, Current)
+			if not attached_cursor.is_equal (l_selection_cursor) then
 				internal_has_selection := True
 				if not had_selection then
 					on_selection_begun
@@ -194,16 +223,24 @@ feature -- Selection Changes
 			-- Select the entire text.
 		require
 			text_is_not_empty: not is_empty
+		local
+			l_line: like first_line
 		do
-			selection_cursor.set_line (first_line)
-			selection_cursor.go_start_line
-			cursor.set_line (last_line)
-			cursor.go_end_line
+			l_line := first_line
+			check l_line /= Void end -- Implied by not `empty'.
+			attached_selection_cursor.set_line (l_line)
+			attached_selection_cursor.go_start_line
+			l_line := last_line
+			check l_line /= Void end -- Implied by not `empty'.
+			attached_cursor.set_line (l_line)
+			attached_cursor.go_end_line
 			enable_selection
 		ensure
 			selection: has_selection
-			cursor_positioned: cursor.line = last_line and then cursor.token = last_line.eol_token
-			selection_cursor_positioned: selection_cursor.line = first_line and then selection_cursor.token = first_line.first_token
+			cursor_positioned: attached last_line as l_last_line and then
+							attached_cursor.line = l_last_line and then attached_cursor.token = l_last_line.eol_token
+			selection_cursor_positioned: attached first_line as l_first_line and then
+										attached_selection_cursor.line = l_first_line and then attached_selection_cursor.token = l_first_line.first_token
 		end
 
 	forget_selection
@@ -233,29 +270,36 @@ feature -- Search
 			found_index,
 			line_number,
 			full_found_index: INTEGER
+			l_cursor: like attached_cursor
+			l_cur_line: like current_line
 		do
 				-- Reset the success tag.
 			successful_search := False
 
 				-- Search the string.
+			l_cursor := attached_cursor
 			from
-				go_i_th (cursor.y_in_lines)
-				line_number := cursor.y_in_lines
-				line_string := current_line.wide_image
-				full_found_index := cursor.pos_in_characters
+				go_i_th (l_cursor.y_in_lines)
+				line_number := l_cursor.y_in_lines
+				l_cur_line := current_line
+				check l_cur_line /= Void end -- Implied by `go_i_th'
+				line_string := l_cur_line.wide_image
+				full_found_index := l_cursor.pos_in_characters
 				if line_string.count >= searched_string.count then
-					found_index := line_string.substring (cursor.x_in_characters, line_string.count).substring_index (searched_string, 1) - 1
+					found_index := line_string.substring (l_cursor.x_in_characters, line_string.count).substring_index (searched_string, 1) - 1
 				end
 				if found_index > 0 then
 					full_found_index := full_found_index + found_index
 				else
-					full_found_index := full_found_index + current_line.wide_image.count - cursor.x_in_characters
+					full_found_index := full_found_index + l_cur_line.wide_image.count - l_cursor.x_in_characters
 				end
 				forth
 			until
 				found_index > 0 or else after
 			loop
-				line_string := current_line.wide_image
+				l_cur_line := current_line
+				check l_cur_line /= Void end -- Implied by not `after'
+				line_string := l_cur_line.wide_image
 				if line_string.count >= searched_string.count then
 					found_index := line_string.substring_index (searched_string, 1)
 				end
@@ -263,7 +307,7 @@ feature -- Search
 				if found_index > 0 then
 					full_found_index := full_found_index + found_index + 1
 				else
-					full_found_index := full_found_index + current_line.wide_image.count + 1
+					full_found_index := full_found_index + l_cur_line.wide_image.count + 1
 				end
 
 					-- Prepare next iteration.
@@ -283,9 +327,16 @@ feature {NONE} -- Implementation
 
 	on_text_block_loaded (was_first_block: BOOLEAN)
 			-- Create cursors as the first block of text has been read.
+		local
+			l_line: like first_line
+			l_token: detachable EDITOR_TOKEN
 		do
 			if was_first_block then
-				create cursor.make_from_integer (1, Current)
+				l_line := first_line
+				check l_line /= Void end -- Implied by text is loaded.
+				l_token := l_line.first_token
+				check l_token /= Void end -- First token not void.
+				create cursor.make_from_relative_pos (l_line, l_token, 1, Current)
 				set_selection_cursor (cursor)
 			end
 			Precursor {TEXT} (was_first_block)
@@ -294,10 +345,11 @@ feature {NONE} -- Implementation
 	string_selected (start_sel, end_sel: like cursor): STRING_GENERAL
 			-- String between cursors `start_sel' and `end_sel'.
 		require
-				right_order: start_sel < end_sel
+			attached_cursors: start_sel /= Void and then end_sel /= Void
+			right_order: start_sel < end_sel
 		local
 			ln: like current_line
-			t, t2 : EDITOR_TOKEN
+			t, t2 : detachable EDITOR_TOKEN
 			l_string_32: STRING_32
 		do
 				-- Retrieving line after `start_selection'.
@@ -315,13 +367,8 @@ feature {NONE} -- Implementation
 					if t = ln.eol_token then
 						l_string_32 := "%N"
 						ln := ln.next
-						if ln = Void then
-							check
-								never_reached: False
-							end
-						else
-							t := ln.first_token
-						end
+						check ln /= Void end -- Never, otherwise a bug.
+						t := ln.first_token
 					else
 						l_string_32 := t.wide_image.substring (start_sel.pos_in_token, t.wide_image.count)
 						t := t.next
@@ -332,13 +379,8 @@ feature {NONE} -- Implementation
 						if t = Void or else t = ln.eol_token then
 							l_string_32.extend ('%N')
 							ln := ln.next
-							if ln = Void then
-								check
-									never_reached: False
-								end
-							else
-								t := ln.first_token
-							end
+							check ln /= Void end -- Never, otherwise a bug.
+							t := ln.first_token
 						else
 							l_string_32.append (t.wide_image)
 							t := t.next
@@ -354,8 +396,8 @@ feature {NONE} -- Implementation
 
 invariant
 	valid_selection: has_selection implies selection_cursor /= Void
---	cursor_exists: not is_empty implies cursor /= Void
---	selection_cursor_exists: not is_empty implies selection_cursor /= Void
+	cursor_exists: not is_empty implies cursor /= Void
+	selection_cursor_exists: not is_empty implies selection_cursor /= Void
 	no_cursor_when_empty: is_empty implies cursor = Void and then selection_cursor = Void
 
 note

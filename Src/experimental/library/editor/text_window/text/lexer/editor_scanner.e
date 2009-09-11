@@ -40,7 +40,7 @@ feature {NONE} -- Local variables
 
 	i_, nb_: INTEGER
 	char_: CHARACTER
-	str_: STRING
+	str_: detachable STRING
 	code_: INTEGER
 
 feature {NONE} -- Initialization
@@ -48,8 +48,8 @@ feature {NONE} -- Initialization
 	make
 			-- Create a new Eiffel scanner.
 		do
-			make_with_buffer (Empty_buffer)
 			create eif_buffer.make (Init_buffer_size)
+			make_with_buffer (Empty_buffer)
 		end
 
 feature -- Start Job / Reinitialization
@@ -108,7 +108,7 @@ feature -- Start Job / Reinitialization
 
 feature -- Access
 
-	curr_token: EDITOR_TOKEN
+	curr_token: detachable EDITOR_TOKEN
 			-- Current token analysed
 
 	end_token: detachable EDITOR_TOKEN
@@ -117,7 +117,7 @@ feature -- Access
 	first_token: detachable EDITOR_TOKEN
 			-- First token analysed.
 
-	last_value: ANY
+	last_value: detachable ANY
 			-- Semantic value to be passed to the parser
 
 	eif_buffer: STRING
@@ -204,13 +204,21 @@ feature {NONE} -- Processing
 
 	update_token_list
 			-- Link the current token to the last one.
+		require
+			curr_token_not_void: curr_token /= Void
+		local
+			l_end_token: like end_token
+			l_curr_token: like curr_token
 		do
-			if end_token = Void then
+			l_end_token := end_token
+			if l_end_token = Void then
 				first_token := curr_token
 			else
-				end_token.set_next_token(curr_token)
+				l_end_token.set_next_token (curr_token)
 			end
-			curr_token.set_previous_token(end_token)
+			l_curr_token := curr_token
+			check l_curr_token /= Void end -- Implied by precondition
+			l_curr_token.set_previous_token (l_end_token)
 			end_token := curr_token
 		end
 

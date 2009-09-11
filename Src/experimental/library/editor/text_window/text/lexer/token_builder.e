@@ -10,9 +10,10 @@ class
 
 feature -- Access
 
-	build_token (a_token: TOKEN): EDITOR_TOKEN
-	        -- 
-	  	require
+	build_token (a_token: TOKEN): detachable EDITOR_TOKEN
+	        --
+		require
+			a_token_not_void: a_token /= Void
 	  	do
 	  		inspect a_token.type
 	  		when 0 then
@@ -23,8 +24,8 @@ feature -- Access
 	  			create {EDITOR_TOKEN_CHARACTER} Result.make (a_token.string_value)
 	  		when comment_type then
 	  			create {EDITOR_TOKEN_COMMENT} Result.make (a_token.string_value)
-	  		when integer_type then       
-	  			create {EDITOR_TOKEN_NUMBER} Result.make (a_token.string_value)	  			
+	  		when integer_type then
+	  			create {EDITOR_TOKEN_NUMBER} Result.make (a_token.string_value)
 	  		when operator_type then
 	  			create {EDITOR_TOKEN_OPERATOR} Result.make (a_token.string_value)
 	  		when real_type then
@@ -42,15 +43,15 @@ feature -- Access
 					create {EDITOR_TOKEN_TEXT} Result.make (a_token.string_value)
 				end
 			when newline_type then
-				-- Do nothing because EDITOR_LINE automatically deals with newlines.  Must catch it here though to 
+				-- Do nothing because EDITOR_LINE automatically deals with newlines.  Must catch it here though to
 				-- avoid producing a text token instead.
 	  		else
-	  			if not a_token.string_value.has_substring ("%N") then	  			   
-		  			create {EDITOR_TOKEN_TEXT} Result.make (a_token.string_value)		  		
+	  			if not a_token.string_value.has_substring ("%N") then
+		  			create {EDITOR_TOKEN_TEXT} Result.make (a_token.string_value)
 	  			end
 	  		end
 	  	end
-		
+
 feature {NONE} -- Implementation
 
 	unmatched_type: INTEGER = 1

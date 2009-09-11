@@ -29,9 +29,7 @@ feature -- Access
 		obsolete
 			"Use `wide_image' instead."
 		do
-			if wide_image /= Void then
-				Result := wide_image.as_string_8
-			end
+			Result := wide_image.as_string_8
 		end
 
 	length: INTEGER
@@ -41,7 +39,7 @@ feature -- Access
 			-- position in pixels of the first character of
 			-- this token
 
-	pebble: ANY
+	pebble: detachable ANY
 			-- pebble to be picked when user right-clicks
 			-- on this token.
 			-- Only cursors are used in the class STONE.
@@ -175,20 +173,20 @@ feature -- Visitor
 
 feature -- Linkable functions
 
-	previous: EDITOR_TOKEN
+	previous: detachable EDITOR_TOKEN
 			-- Previous token in the line. Void if none
 
-	next: EDITOR_TOKEN
+	next:detachable EDITOR_TOKEN
 			-- Next token in the line. Void if none.
 
-	set_next_token (next_token: EDITOR_TOKEN)
+	set_next_token (next_token: detachable EDITOR_TOKEN)
 			-- set `next' to `next_token'. `next' can
 			-- be Void if there are no next token.
 		do
 			next := next_token
 		end
 
-	set_previous_token (previous_token: EDITOR_TOKEN)
+	set_previous_token (previous_token: detachable EDITOR_TOKEN)
 			-- set `next' to `next_token'. `next' can
 			-- be Void if there are no next token.
 		do
@@ -199,9 +197,9 @@ feature -- Linkable functions
 			-- Update the value of `position'.
 		do
 				-- Update current position
-			if previous /= Void then
-				if not previous.is_margin_token then
-					position := previous.position + previous.width
+			if attached previous as l_previous then
+				if not l_previous.is_margin_token then
+					position := l_previous.position + l_previous.width
 				else
 					position := 0
 				end
@@ -262,7 +260,7 @@ feature -- Width & height
 			l_userset_data: like userset_data
 		do
 			l_userset_data := userset_data
-			if l_userset_data /= Void and l_userset_data.line_height > 0 then
+			if l_userset_data /= Void and then l_userset_data.line_height > 0 then
 				Result := l_userset_data.line_height
 			else
 				Result := editor_preferences.line_height
@@ -424,7 +422,7 @@ feature -- Font
 		do
 			l_data := userset_data
 			if l_data /= Void and then l_data.is_font_fixed_set then
-				Result := userset_data.is_font_fixed
+				Result := l_data.is_font_fixed
 			else
 				Result := editor_preferences.is_fixed_width
 			end
@@ -483,22 +481,22 @@ feature {TEXT_PANEL, VIEWER_LINE}
 
 feature {NONE} -- Userset Implementation, text panel wide attributes
 
-	userset_data: TEXT_PANEL_BUFFERED_DATA;
+	userset_data: detachable TEXT_PANEL_BUFFERED_DATA;
 			-- Userset editor data
 
-	userset_fonts: SPECIAL [EV_FONT]
+	userset_fonts: detachable SPECIAL [EV_FONT]
 			-- Userset fonts
 		do
-			if userset_data /= Void then
-				Result := userset_data.fonts
+			if attached userset_data as l_data then
+				Result := l_data.fonts
 			end
 		end
 
-	userset_font_offset: like font_offset
+	userset_font_offset: detachable like font_offset
 			-- Userset font offset
 		do
-			if userset_data /= Void then
-				Result := userset_data.font_offset
+			if attached userset_data as l_data then
+				Result := l_data.font_offset
 			end
 		end
 
@@ -507,9 +505,8 @@ feature {NONE} -- Userset Implementation, text panel wide attributes
 		local
 			l_userset_data: like userset_data
 		do
-			l_userset_data := userset_data
-			if l_userset_data /= Void then
-				Result := l_userset_data.font_width
+			if attached userset_data as l_data then
+				Result := l_data.font_width
 			end
 		end
 

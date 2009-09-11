@@ -24,7 +24,7 @@ feature -- Initialisation
 			lexer_exists: lexer /= Void
 		local
 			lexer_token,
-			lexer_end_token: EDITOR_TOKEN
+			lexer_end_token: detachable EDITOR_TOKEN
 		do
 			lexer_end_token := lexer.end_token
 			if lexer_end_token /= Void then
@@ -34,10 +34,13 @@ feature -- Initialisation
 				until
 					lexer_token = lexer_end_token
 				loop
+					check lexer_token /= Void end -- Implied by `lexer_end_token' attached and before the end token is not void.
 					internal_representation.extend (lexer_token)
 					lexer_token := lexer_token.next
 				end
 				internal_representation.extend (lexer_end_token)
+			else
+				create internal_representation.make (0)
 			end
 			wide_image := composite_image
 		end
@@ -122,13 +125,18 @@ feature -- Miscellaneous
 			end
 		end
 
-	tab_size_cell: CELL [INTEGER]
+	tab_size_cell: detachable CELL [INTEGER]
 
 	tabulation_width: INTEGER
+		local
+			l_tab_size: like tab_size_cell
 		do
 				-- Compute the number of pixels represented by a tabulation based on
 				-- user preferences number of spaces per tabulation.
-			Result := tab_size_cell.item * font.string_width(" ")
+			l_tab_size := tab_size_cell
+			if l_tab_size /= Void then
+				Result := l_tab_size.item * font.string_width(" ")
+			end
 		end
 
 	internal_representation: ARRAYED_LIST [EDITOR_TOKEN]

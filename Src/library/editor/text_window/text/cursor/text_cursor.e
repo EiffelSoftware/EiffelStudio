@@ -117,6 +117,43 @@ feature -- Initialization
 			make_from_relative_pos (cline, t, pos, text)
 		end
 
+feature -- Compatible
+
+	set_from_relative_pos (a_line: like line; a_token: EDITOR_TOKEN;	pos: INTEGER; a_text: like text)
+			-- Create a cursor for `text', at position given by
+			-- `a_line', `a_token' and `pos'.
+		require
+			a_line_not_void: a_line /= Void
+			a_line_valid: a_line.is_valid
+			a_token_not_void: a_token /= Void
+			a_text_not_void: a_text /= Void
+			pos_positive_not_null: pos >= 0
+			line_has_token: a_line.count > 0
+		do
+			make_from_relative_pos (a_line, a_token, pos, a_text)
+		end
+
+	set_from_character_pos (ch_num, y: INTEGER; a_text: like text)
+			-- Create a cursor for `text', at the `ch_num'th
+			-- character in line `y'.
+		require
+			text_valid: a_text /= Void
+			ch_num_valid: ch_num >= 1
+			y_valid: y >= 1
+		do
+			set_from_character_pos (ch_num, y, a_text)
+		end
+
+	set_from_integer (ch_num: INTEGER; a_text: like text)
+			-- Create a cursor in `a_window', at the `ch_num'th
+			-- character of the whole text.
+		require
+			txt_valid: a_text /= Void
+			ch_num_valid: ch_num >= 1
+		do
+			make_from_integer (ch_num, a_text)
+		end
+
 feature -- Access
 
 --| Relative position

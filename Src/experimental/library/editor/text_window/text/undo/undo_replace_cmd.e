@@ -10,7 +10,7 @@ class
 	UNDO_REPLACE_CMD
 
 inherit
-	UNDO_CMD
+	UNDO_TEXT_CMD
 
 create
 	make_from_strings
@@ -63,10 +63,11 @@ feature -- Basic operations
 
 	undo
 		local
-			cur: EDITOR_CURSOR
+			cur: detachable EDITOR_CURSOR
 		do
 			cur := text.cursor
-			cur.make_from_character_pos (x_start, y_start, text)
+			check cur /= Void end -- Implied by precondition
+			cur.set_from_character_pos (x_start, y_start, text)
 			text.forget_selection
 			if not new_message.is_empty then
 				text.delete_n_chars_at_cursor_pos (new_message.count)
@@ -78,10 +79,11 @@ feature -- Basic operations
 
 	redo
 		local
-			cur: EDITOR_CURSOR
+			cur: detachable EDITOR_CURSOR
 		do
 			cur := text.cursor
-			cur.make_from_character_pos (x_start, y_start, text)
+			check cur /= Void end -- Implied by precondition
+			cur.set_from_character_pos (x_start, y_start, text)
 			if not old_message.is_empty then
 				text.delete_n_chars_at_cursor_pos (old_message.count)
 			end
@@ -90,11 +92,6 @@ feature -- Basic operations
 				text.insert_string_at_cursor_pos (new_message)
 			end
 		end
-
-
-feature {NONE} -- Implementation
-
-	text : EDITABLE_TEXT;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

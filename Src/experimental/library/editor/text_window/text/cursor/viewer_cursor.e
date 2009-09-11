@@ -76,25 +76,29 @@ feature -- Initialization
 			ch_num_valid: ch_num >= 1
 		local
 			pos: INTEGER
-			cline: VIEWER_LINE
-			t: EDITOR_TOKEN
+			cline: detachable VIEWER_LINE
+			t: detachable EDITOR_TOKEN
 		do
 			whole_text := a_text
 			from
 				pos := ch_num
 				cline := whole_text.first_line
+				check cline /= Void end -- Not possible, otherwise a bug.
 				t := cline.first_token
+				check t /= Void end -- Never, otherwise a bug.
 			until
-				pos <= t.length or else t = Void
+				pos <= t.length
 			loop
+				check t /= Void end -- Never, otherwise a bug.
 				pos := pos - t.length
 				t := t.next
-				if t = Void and then cline.next /= Void then
+				if t = Void and then attached cline.next as l_next then
 						--| No next token? go to next line, if possible.
-					cline := cline.next
+					cline := l_next
 					t := cline.first_token
 				end
 			end
+			check t /= Void end -- Never, otherwise a bug.
 			make_from_relative_pos (cline, t, pos, a_text)
 		end
 
@@ -125,7 +129,7 @@ feature -- Access
 	x_in_characters: INTEGER
 			-- Horizontal position of Current, in characters.
 		local
-			current_token : EDITOR_TOKEN
+			current_token : detachable EDITOR_TOKEN
 		do
 			Result := pos_in_token
 			from
@@ -161,7 +165,7 @@ feature -- Access
 	pos_in_characters: INTEGER
 			-- Position of Current, in characters from the start of the text.
 		local
-			a_line: VIEWER_LINE
+			a_line: detachable VIEWER_LINE
 		do
 				--| First, we add the EOL characters
 			Result := y_in_lines -1
@@ -171,49 +175,64 @@ feature -- Access
 			until
 				a_line = line
 			loop
+				check a_line /= Void end -- Never, otherwise a bug.
 				Result := Result + a_line.wide_image.count
 				a_line := a_line.next
 			end
 			Result := Result + x_in_characters
 		end
 
+	number_of_lines: INTEGER
+			-- Number of lines in `whole_text'
+		do
+			Result := whole_text.count
+		end
+
 feature -- Cursor movement
 
 	go_right_char
 			-- Move to next character, if there is one.
+		local
+			l_first_token: detachable EDITOR_TOKEN
 		do
 			if pos_in_token = token.length then
 					-- Go to next token, first character.
-				if token.next = Void then
+				if not attached token.next as l_next then
 						-- No next token? Go to next line.
 					if line.next /= Void then
 						set_line_to_next
-						set_current_char (line.first_token, 1)
+						l_first_token := line.first_token
+						check l_first_token /= Void end -- Never, otherwise a bug.
+						set_current_char (l_first_token, 1)
 					end
 				else
-					set_current_char (token.next, 1)
+					set_current_char (l_next, 1)
 				end
 			else
-					set_current_char (token, pos_in_token + 1)
+				set_current_char (token, pos_in_token + 1)
 			end
 		end
 
 	go_left_char
 			-- Move to previous character, if there is one.
+		local
+			l_eol_token: detachable EDITOR_TOKEN
 		do
 			if pos_in_token = 1 then
 					-- Go to previous token, last character.
-				if token.previous = Void then
+				if not attached token.previous as l_previous then
 						-- No previous token? Go to previous line.
 					if line.previous /= Void then
 						set_line_to_previous
-						set_current_char (line.eol_token, line.eol_token.length)
+						l_eol_token := line.eol_token
+						check l_eol_token /= Void end -- Never, otherwise a bug.
+						set_current_char (l_eol_token, l_eol_token.length)
 					end
 				else
-					set_current_char (token.previous, token.previous.length)
+					set_current_char (l_previous, l_previous.length)
 				end
 			else
-					set_current_char (token, pos_in_token - 1)
+				set_current_char (token, pos_in_token - 1)
 			end
 		end
 
@@ -233,14 +252,22 @@ feature -- Cursor movement
 
 	go_start_line
 			-- Move to beginning of line.
+		local
+			l_token: detachable EDITOR_TOKEN
 		do
-			set_current_char (line.first_token, 1)
+			l_token := line.first_token
+			check l_token /= Void end -- Never, otherwise a bug.
+			set_current_char (l_token, 1)
 		end
 
 	go_end_line
 			-- Move to end of line.
+		local
+			l_token: detachable EDITOR_TOKEN
 		do
-			set_current_char (line.eol_token, line.eol_token.length)
+			l_token := line.eol_token
+			check l_token /= Void end -- Never, otherwise a bug.
+			set_current_char (l_token, l_token.length)
 		end
 
 feature -- Element change
@@ -265,7 +292,7 @@ feature -- Element change
 			a_position_positive_not_null: a_position >= 0
 		local
 			current_width: INTEGER
-			current_token: EDITOR_TOKEN
+			current_token: detachable EDITOR_TOKEN
 		do
 				-- Update the attributes.
 			token := a_token
@@ -306,12 +333,16 @@ feature -- Element change
 			-- Make `y' be the new value of `y_in_lines'.
 			-- Change `line' accordingly.
 		require
-			y_valid: y >= 1
+			y_valid: y >= 1 and then y <= number_of_lines
+		local
+			l_line: detachable like line
 		do
 			y_in_lines := y
 
 				-- Update the line attribute.
-			line := whole_text.item(y)
+			l_line := whole_text.item (y)
+			check l_line /= Void end -- Implied by precondition
+			line := l_line
 			update_current_char
 		end
 
@@ -321,7 +352,7 @@ feature -- Element change
 			x_in_ch_valid: x_in_ch >= 1
 		local
 			current_x: INTEGER
-			current_token: EDITOR_TOKEN
+			current_token, l_end_token: detachable EDITOR_TOKEN
 			remaining_ch: INTEGER
 		do
 				-- Update the current token.
@@ -354,7 +385,9 @@ feature -- Element change
 			else
 					-- The cursor is further than the end of the line, so
 					-- we set the current token to the last of the line.
-				token := line.eol_token
+				l_end_token := line.eol_token
+				check l_end_token /= Void end -- Not possible, otherwise a bug.
+				token := l_end_token
 				pos_in_token := 1
 				x_in_pixels := current_x
 			end
@@ -389,8 +422,8 @@ feature {NONE} -- Implementation
 		local
 --			last_line_displayed: INTEGER
 		do
-			if line.next /= Void then
-				line := line.next
+			if attached line.next as l_next then
+				line := l_next
 				y_in_lines := y_in_lines + 1
 
 ---------------------------------------
@@ -412,8 +445,8 @@ feature {NONE} -- Implementation
 			-- Do not update `pos' and `token',
 			-- as it is done at a higher level.
 		do
-			if line.previous /= Void then
-				line := line.previous
+			if attached line.previous as l_previous then
+				line := l_previous
 				y_in_lines := y_in_lines - 1
 
 ---------------------------------------
@@ -431,7 +464,7 @@ feature {NONE} -- Implementation
 			-- Update the current token and the the position in it.
 		local
 			current_x: INTEGER
-			current_token: EDITOR_TOKEN
+			current_token, l_previous, l_end_token: detachable EDITOR_TOKEN
 			x_in_token: INTEGER
 		do
 				-- Update the current token.
@@ -458,7 +491,10 @@ feature {NONE} -- Implementation
 				else
 						-- we are too far, so the good token is the
 						-- previous one, we have to look into it.
-					token := current_token.previous
+					l_previous := current_token.previous
+					check l_previous /= Void end -- Never, otherwise a bug.
+					token := l_previous
+
 						-- rewind our pixel position
 					current_x := current_x - token.width
 					x_in_token := x_in_pixels - current_x
@@ -469,7 +505,9 @@ feature {NONE} -- Implementation
 			else
 				-- The cursor is further than the end of the line, so
 				-- we set the current token to the last of the line.
-				token := line.eol_token
+				l_end_token := line.eol_token
+				check l_end_token /= Void end -- Never, otherwise a bug.
+				token := l_end_token
 				pos_in_token := 1
 			end
 		end
@@ -478,7 +516,7 @@ feature {NONE} -- Implementation
 			-- Update x_in_pixels from `token' and `pos_in_token'
 		local
 			current_width: INTEGER
-			current_token: EDITOR_TOKEN
+			current_token: detachable EDITOR_TOKEN
 		do
 				-- Compute the size of the current token.
 			current_width := token.get_substring_width(pos_in_token - 1)

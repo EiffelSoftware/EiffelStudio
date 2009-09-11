@@ -82,15 +82,15 @@ feature -- Basic operation
 
 feature -- Access
 
-	horizontal_scrollbar: detachable EV_HORIZONTAL_SCROLL_BAR
+	horizontal_scrollbar: EV_HORIZONTAL_SCROLL_BAR
 	vertical_scrollbar: EV_VERTICAL_SCROLL_BAR
 	main_vbox: EV_VERTICAL_BOX
 	scroll_vbox: EV_VERTICAL_BOX
 	inner_hbox: EV_HORIZONTAL_BOX
 	margin_container: EV_CELL
-	scroll_cell: detachable EV_CELL
+	scroll_cell: EV_CELL
 	editor_viewport: EV_VIEWPORT
-	editor_drawing_area: detachable EV_DRAWING_AREA
+	editor_drawing_area: EV_DRAWING_AREA
 
 feature {NONE} -- Implementation
 

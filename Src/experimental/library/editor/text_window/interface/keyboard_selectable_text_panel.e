@@ -92,8 +92,11 @@ feature -- Query
 			-- Is `cursor' in the selection?
 		require
 			cursor_is_not_void: cur /= Void
+		local
+			l_cur: like cursor_type
 		do
-			Result := has_selection and then (cur >= text_displayed.selection_start and then cur < text_displayed.selection_end)
+			l_cur := cur
+			Result := has_selection and then (l_cur >= text_displayed.selection_start and then l_cur < text_displayed.selection_end)
 		end
 
 	cursor_is_visible: BOOLEAN
@@ -101,8 +104,8 @@ feature -- Query
 		local
 			cur_pos: INTEGER
 		do
-			if text_displayed.cursor /= Void then
-				cur_pos := text_displayed.cursor.y_in_lines
+			if text_displayed.has_cursor then
+				cur_pos := text_displayed.attached_cursor.y_in_lines
 				Result := cur_pos >= first_line_displayed and cur_pos <= (first_line_displayed + number_of_lines_displayed) + 1
 			end
 		end
@@ -110,10 +113,12 @@ feature -- Query
 	current_cursor_position: INTEGER
 			-- Character position of current cursor in text.
 		local
-			l_cursor: like cursor_type
+			l_cursor: detachable like cursor_type
 		do
 			l_cursor := text_displayed.cursor
-			Result := l_cursor.token.position + l_cursor.token.get_substring_width (l_cursor.pos_in_token - 1)
+			if l_cursor /= Void then
+				Result := l_cursor.token.position + l_cursor.token.get_substring_width (l_cursor.pos_in_token - 1)
+			end
 		end
 
 	auto_scroll: BOOLEAN assign set_auto_scroll
@@ -126,7 +131,7 @@ feature -- Cursor Management
 		require
 			text_not_empty: not text_displayed.is_empty
 		do
-			check_position (text_displayed.cursor)
+			check_position (text_displayed.attached_cursor)
 		end
 
 	position_cursor (a_cursor: like cursor_type; x_pos, y_pos: INTEGER)
@@ -135,8 +140,8 @@ feature -- Cursor Management
 			l_number		: INTEGER
 			current_width	: INTEGER
 			nol				: INTEGER
-			pointed_line	: like line_type
-			pointed_token	: EDITOR_TOKEN
+			pointed_line	: detachable like line_type
+			pointed_token	: detachable EDITOR_TOKEN
 			tw				: INTEGER
 			l_x_pos			: INTEGER
 		do
@@ -158,6 +163,7 @@ feature -- Cursor Management
 				pointed_line := text_displayed.line (l_number)
 				if pointed_line /= Void then
 					pointed_token := pointed_line.first_token
+					check pointed_token /= Void end -- First token is not void, otherwise a bug.
 					from
 						tw := pointed_token.width
 					until
@@ -174,12 +180,16 @@ feature -- Cursor Management
 						debug ("editor")
 							print (pointed_token.out + "%N")
 						end
-						a_cursor.make_from_relative_pos (pointed_line, pointed_token, pointed_token.retrieve_position_by_width (current_width), text_displayed)
+						a_cursor.set_from_relative_pos (pointed_line, pointed_token, pointed_token.retrieve_position_by_width (current_width), text_displayed)
 					else
 						debug
 							print ("pointed token is VOID!%N")
 						end
-						a_cursor.make_from_relative_pos (pointed_line, pointed_line.eol_token, 1, text_displayed)
+						if attached pointed_line.eol_token as l_token then
+							a_cursor.set_from_relative_pos (pointed_line, l_token, 1, text_displayed)
+						else
+							check end_token_exists: False end
+						end
 					end
 				end
 			end
@@ -267,7 +277,7 @@ feature -- Text Selection
 		require
 			text_loading_completed: text_is_fully_loaded
 			right_order: start_pos <= end_pos
-			text_is_not_empty: number_of_lines > 0
+			text_is_not_empty: not is_empty
 			character_to_select: start_pos /= end_pos
 		local
 			old_l_number: INTEGER
@@ -279,7 +289,7 @@ feature -- Text Selection
 				old_sel_s := text_displayed.selection_start.y_in_lines
 				had_selection := True
 			else
-				old_l_number := text_displayed.cursor.y_in_lines
+				old_l_number := text_displayed.attached_cursor.y_in_lines
 				old_sel_s := old_l_number
 			end
 			text_displayed.select_region (start_pos, end_pos)
@@ -292,9 +302,9 @@ feature -- Text Selection
 				end
 			elseif had_selection then
 				invalidate_block (old_sel_s, old_l_number, False)
-				invalidate_line (text_displayed.cursor.y_in_lines, True)
+				invalidate_line (text_displayed.attached_cursor.y_in_lines, True)
 			else
-				invalidate_line (text_displayed.cursor.y_in_lines, False)
+				invalidate_line (text_displayed.attached_cursor.y_in_lines, False)
 				invalidate_line (old_l_number, True)
 			end
  		end
@@ -307,12 +317,14 @@ feature -- Text Selection
 			end_valid: a_end > 0 and a_end <= number_of_lines
 			range_valid: a_start <= a_end
 		local
-			l_first_line, l_last_line: like line_type
+			l_first_line, l_last_line: detachable like line_type
 			l_first_char,
 			l_last_char: INTEGER
 		do
 			l_first_line := text_displayed.line (a_start)
 			l_last_line := text_displayed.line (a_end)
+			check l_first_line /= Void end -- Implied by precondition
+			check l_last_line /= Void end -- Implied by precondition
 			l_first_char := text_displayed.line_pos_in_chars (l_first_line)
 			l_last_char := text_displayed.line_pos_in_chars (l_last_line) + l_last_line.wide_image.count
 			select_region (l_first_char, l_last_char)
@@ -326,7 +338,7 @@ feature -- Text Selection
 			copied_text: STRING_32
 		do
 			if has_selection then
-				if not text_displayed.cursor.is_equal (text_displayed.selection_cursor) then
+				if not text_displayed.attached_cursor.is_equal (text_displayed.attached_selection_cursor) then
 					copied_text := text_displayed.selected_wide_string
 					if not copied_text.is_empty then
 						clipboard.set_text (copied_text)
@@ -394,19 +406,19 @@ feature -- Observation
 
 	on_text_loaded
 			-- Finish the panel setup as the entire text has been loaded.
-		local
-			l_cursor: like cursor_type
 		do
 			Precursor {TEXT_PANEL}
 			if restore_cursor then
-				l_cursor := text_displayed.cursor
-				if number_of_lines >= stored_cursor_line then
-					text_displayed.cursor.set_y_in_lines (stored_cursor_line)
+				if text_displayed.has_cursor and then number_of_lines >= stored_cursor_line then
+					text_displayed.attached_cursor.set_y_in_lines (stored_cursor_line)
 					set_first_line_displayed (stored_first_line.min (vertical_scrollbar.value_range.upper), True)
 						-- We add 1 to represent the last position of a line.
 						-- The position of 1 means the position before the first character of a line.
-					if text_displayed.line (stored_cursor_line).wide_image.count + 1 >= stored_cursor_char then
-						text_displayed.cursor.set_x_in_characters (stored_cursor_char)
+					if
+						attached text_displayed.line (stored_cursor_line) as l_line and then
+						l_line.wide_image.count + 1 >= stored_cursor_char
+					then
+						text_displayed.attached_cursor.set_x_in_characters (stored_cursor_char)
 					end
 					invalidate_cursor_rect (True)
 				end
@@ -418,10 +430,10 @@ feature -- Observation
 			-- Reload the opened file from disk.
 		do
 			restore_cursor := True
-			if text_is_fully_loaded and text_displayed.cursor /= Void then
+			if text_is_fully_loaded and attached text_displayed.cursor as l_cursor then
 				disable_selection
-				stored_cursor_line := text_displayed.cursor.y_in_lines
-				stored_cursor_char := text_displayed.cursor.x_in_characters
+				stored_cursor_line := l_cursor.y_in_lines
+				stored_cursor_char := l_cursor.x_in_characters
 			end
 			stored_first_line := first_line_displayed
 			Precursor {TEXT_PANEL}
@@ -438,7 +450,7 @@ feature {NONE} -- Process Vision2 events
 
 				reset_blinking
 
-				if key_pressed /= Void and then ev_key.code = key_pressed.code then
+				if attached key_pressed as l_key and then ev_key.code = l_key.code then
 					continue_key_action := true
 				else
 					key_pressed := ev_key
@@ -533,7 +545,7 @@ feature {NONE} -- Handle keystrokes
 	key_action_timer: EV_TIMEOUT
 			-- Timer between executions of action associated with pressed key.
 
-	key_pressed: EV_KEY
+	key_pressed: detachable EV_KEY
 			-- Key currently pressed.
 
 	continue_key_action: BOOLEAN
@@ -541,12 +553,15 @@ feature {NONE} -- Handle keystrokes
 
 	handle_extended_ctrled_key (ev_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
+ 		require
+ 			has_cursor: text_displayed.has_cursor
 		local
 			l_cursor: like cursor_type
 			other_keys,
 			scroll_to_cursor: BOOLEAN
 		do
-			l_cursor := text_displayed.cursor
+			check has_cursor: text_displayed.has_cursor end
+			l_cursor := text_displayed.attached_cursor
 			scroll_to_cursor := True
 			inspect
 				ev_key.code
@@ -601,12 +616,14 @@ feature {NONE} -- Handle keystrokes
 
 	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
+ 		require
+ 			has_cursor: text_displayed.has_cursor
 		local
 			other_keys: BOOLEAN
 			l_cursor: like cursor_type
 			l_cursor_twin: like cursor_type
 		do
-			l_cursor := text_displayed.cursor
+			l_cursor := text_displayed.attached_cursor
 			inspect
 				ev_key.code
 
@@ -767,8 +784,8 @@ feature {NONE} -- Blink Cursor Management
 					reset_blinking
 					let_blink := True
 				end
-				if blinking_timeout /= Void and then text_displayed.cursor /= Void then
-					draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
+				if blinking_timeout /= Void and then text_displayed.has_cursor then
+					draw_cursor (buffered_line, current_cursor_position, (text_displayed.attached_cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
 				end
 			end
 		ensure
@@ -786,17 +803,17 @@ feature {NONE} -- Blink Cursor Management
 			new_line: INTEGER
 			l_cursor: like cursor_type
 		do
-			l_cursor := text_displayed.cursor
+			l_cursor := text_displayed.attached_cursor
 			if shifted_key then
 					-- We want to create or modify a selection.
 				if not text_displayed.has_selection then
 						-- No selection? We have to start one.
-					text_displayed.set_selection_cursor (text_displayed.cursor.twin)
+					text_displayed.set_selection_cursor (text_displayed.attached_cursor.twin)
 					text_displayed.enable_selection
 				end
 				old_line := l_cursor.y_in_lines
 				action.call (Void)
-				if text_displayed.selection_cursor.is_equal (text_displayed.cursor) then
+				if text_displayed.attached_selection_cursor.is_equal (text_displayed.attached_cursor) then
 						-- If nothing is selected, we forget the selection.
 					text_displayed.disable_selection
 				end
@@ -830,8 +847,8 @@ feature {NONE} -- Blink Cursor Management
 			-- Set the line where the cursor is situated to be redrawn
 			-- Redraw immediately if `flush' is set.
 		do
-			if text_displayed.cursor /= Void then
-				invalidate_line (text_displayed.cursor.y_in_lines, flush_screen)
+			if text_displayed.has_cursor then
+				invalidate_line (text_displayed.attached_cursor.y_in_lines, flush_screen)
 			end
 		end
 
@@ -853,7 +870,7 @@ feature {NONE} -- Blink Cursor Management
 		require
 			x_pos_valid: x >= 0
 			width_valid: width > 0
-			cursor_has_token: text_displayed.cursor.token /= Void
+			has_cursor: text_displayed.has_cursor
 		do
 				-- Draw the cursor
 			blinking_timeout.actions.wipe_out
@@ -988,7 +1005,7 @@ feature {NONE} -- Implementation
  			token_selection_end		: INTEGER
  			local_selection_start 	: like cursor_type -- cache of the value of selection_start
  			local_selection_end		: like cursor_type -- cache of the value of selection_end
-			l_cursor				: like cursor_type
+			l_cursor				: detachable like cursor_type
 			selection_present		: BOOLEAN
 			token_start_pos,
 			token_end_position		: INTEGER
@@ -1108,13 +1125,13 @@ feature {NONE} -- Implementation
 	 				end
 
 						-- Display the cursor (if needed).
-	 				if cursor_line and then (l_cursor.token = curr_token) then
+	 				if cursor_line and then attached l_cursor as l_cur and then l_cur.token = curr_token then
 	 						-- Compute the start pixel of the cursor.
-	 					start_cursor := token_start_pos + curr_token.get_substring_width (l_cursor.pos_in_token - 1)
+	 					start_cursor := token_start_pos + curr_token.get_substring_width (l_cur.pos_in_token - 1)
 
 	 						-- Compute the width of the current character (used to display plain cursor)
-	 					width_cursor := curr_token.get_substring_width (l_cursor.pos_in_token) -
-									curr_token.get_substring_width (l_cursor.pos_in_token - 1)
+	 					width_cursor := curr_token.get_substring_width (l_cur.pos_in_token) -
+									curr_token.get_substring_width (l_cur.pos_in_token - 1)
 	 					width_cursor := width_cursor.max (cursor_width)
 
 	 						-- Draw the cursor
@@ -1129,24 +1146,27 @@ feature {NONE} -- Implementation
 	 			if token_start_pos < editor_width then
 
 						-- Display the end token
-		 			curr_token := a_line.eol_token
-		 			if
-						selection_present
-					and then
-						 (local_selection_start.y_in_lines /= local_selection_end.y_in_lines)
-					and then
-		 			   (selected_line or else (xline = local_selection_start.y_in_lines))
-					then
-		 				a_line.eol_token.display_end_token_selected (0, l_buffered_line,
-							buffered_line.width, Current)
-		 			else
-		 				a_line.eol_token.display_end_token_normal (0, l_buffered_line,
-							buffered_line.width, Current)
-		 			end
+		 			if attached a_line.eol_token as l_end_token then
+			 			if
+							selection_present
+						and then
+							 (local_selection_start.y_in_lines /= local_selection_end.y_in_lines)
+						and then
+			 			   (selected_line or else (xline = local_selection_start.y_in_lines))
+						then
+			 				l_end_token.display_end_token_selected (0, l_buffered_line,
+								buffered_line.width, Current)
+			 			else
+			 				l_end_token.display_end_token_normal (0, l_buffered_line,
+								buffered_line.width, Current)
+			 			end
+			 		else
+			 			check False end -- End token not void, otherwise a bug.
+			 		end
 	 			end
 
 	 				-- Display the cursor (if its on the current end of line).
-	 			if cursor_line and then (l_cursor.token = curr_token) then
+	 			if cursor_line and then (attached l_cursor as l_cur and then l_cur.token = curr_token) then
 					draw_cursor (buffered_line, current_cursor_position, 0, cursor_width)
 				end
 
@@ -1195,18 +1215,22 @@ feature {NONE} -- Implementation
 	 				y_offset := l_editor_viewport_y_offset + ((curr_line - first_line_displayed) * l_line_height)
 					l_x_offset := x_offset
 					l_has_data := line_has_cursor_or_selection (curr_line)
-					l_line_width := l_text.current_line.width
+					if attached l_text.current_line as l_line then
+						l_line_width := l_line.width
 
-					if (l_line_width + l_margin_width) > l_x_offset or l_buffered or l_has_data then
-							-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
-							-- Lines with cursor or selection in them ALWAYS need redrawing.
-						if use_buffered or l_has_data then
-		 					draw_line_to_buffered_line (curr_line, l_text.current_line)
-							draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width + left_margin_width, l_x_offset, y_offset)
-						else
-							draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width, y_offset, l_text.current_line)
+						if (l_line_width + l_margin_width) > l_x_offset or l_buffered or l_has_data then
+								-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
+								-- Lines with cursor or selection in them ALWAYS need redrawing.
+							if use_buffered or l_has_data then
+			 					draw_line_to_buffered_line (curr_line, l_line)
+								draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width + left_margin_width, l_x_offset, y_offset)
+							else
+								draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width, y_offset, l_line)
+							end
+							l_x_offset := l_x_offset + l_viewable_width
 						end
-						l_x_offset := l_x_offset + l_viewable_width
+					else
+						check False end -- Implied by not `after'.
 					end
 
 					if l_x_offset >= (l_line_width + l_margin_width) and not l_has_data then
@@ -1247,7 +1271,7 @@ feature {NONE} -- Implementation
 	line_has_cursor_or_selection (a_line: INTEGER): BOOLEAN
 			-- Does `a_line' have either the cursor or some part of the text selected?
 		local
-			l_cursor: like cursor_type
+			l_cursor: detachable like cursor_type
 			l_text: like text_displayed
 		do
 			l_text := text_displayed
@@ -1278,10 +1302,10 @@ feature {NONE} -- Scroll bars management
  			Precursor {TEXT_PANEL} (vscroll_pos)
 
  				-- If the cursor is blinking here we must wipe out the previous action because they draw onto the wrong line
- 			if blinking_timeout /= Void and then text_displayed.cursor /= Void then
+ 			if blinking_timeout /= Void and then attached text_displayed.cursor as l_cursor then
 				reset_blinking
 				let_blink := False
-				draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
+				draw_cursor (buffered_line, current_cursor_position, (l_cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
 				let_blink := True
  			end
  		end
@@ -1292,10 +1316,10 @@ feature {NONE} -- Scroll bars management
  			Precursor {TEXT_PANEL} (scroll_pos)
 
  				-- If the cursor is blinking here we must wipe out the previous action because they draw onto the wrong line
- 			if blinking_timeout /= Void and then text_displayed.cursor /= Void then
+ 			if blinking_timeout /= Void and then attached text_displayed.cursor as l_cursor then
 				reset_blinking
 				let_blink := False
-				draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
+				draw_cursor (buffered_line, current_cursor_position, (l_cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)
 				let_blink := True
  			end
  		end
@@ -1316,9 +1340,9 @@ feature {NONE} -- Memory Management
 			if internal_blink_delay_timeout /= Void and then not internal_blink_delay_timeout.is_destroyed then
 				internal_blink_delay_timeout.destroy
 			end
-			key_action_timer := Void
-			blinking_timeout := Void
-			internal_blink_delay_timeout := Void
+			create key_action_timer.make_with_interval (0)
+			create key_action_timer.make_with_interval (0)
+			create internal_blink_delay_timeout.make_with_interval (0)
 		end
 
 feature {NONE} -- Private Constants

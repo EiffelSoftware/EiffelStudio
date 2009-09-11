@@ -65,9 +65,7 @@ feature -- Access
 		obsolete
 			"Use `not_editable_warning_wide_message' instead"
 		do
-			if not_editable_warning_wide_message /= Void then
-				Result := not_editable_warning_wide_message.as_string_8
-			end
+			Result := not_editable_warning_wide_message.as_string_8
 		end
 
 	not_editable_warning_wide_message: STRING_32
@@ -80,7 +78,7 @@ feature -- Access
 	  	  	Result := editor_preferences.blinking_cursor
 	  	end
 
-	copy_cut_cursor: like cursor_type
+	copy_cut_cursor: detachable like cursor_type
 
 feature -- Content change
 
@@ -191,17 +189,13 @@ feature -- Indirect observer / manager pattern.
 	add_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Add observer of `history'.
 		do
-			if text_displayed /= Void then
-				text_displayed.history.add_observer (history_observer)
-			end
+			text_displayed.attached_history.add_observer (history_observer)
 		end
 
 	remove_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Remove observer of `history'.
 		do
-			if text_displayed /= Void then
-				text_displayed.history.remove_observer (history_observer)
-			end
+			text_displayed.attached_history.remove_observer (history_observer)
 		end
 
 feature -- Private Status
@@ -220,6 +214,8 @@ feature -- Access
 	cursor_type: EDITOR_CURSOR
 			-- <Precursor>
 		do
+			check False end -- Not called.
+			Result := cursor_type
 		end
 
 feature -- Process Vision2 events
@@ -244,11 +240,13 @@ feature {NONE} -- Handle keystokes
 
  	handle_character (c: CHARACTER_32)
  			-- Process push on a character key corresponding to `c'.
+ 		require
+ 			has_cursor: text_displayed.has_cursor
 		local
 			had_selection: BOOLEAN
  		do
 			if is_editable then
-				check_position (text_displayed.cursor)
+				check_position (text_displayed.attached_cursor)
 				had_selection := text_displayed.has_selection
 				if overwrite_mode then
 					text_displayed.replace_char (c)
@@ -438,7 +436,11 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 			wdth: INTEGER
 		do
 			if line_number >= 1 and line_number <= number_of_lines then
-				wdth := text_displayed.line (line_number).width + left_margin_width + 50
+				if attached text_displayed.line (line_number) as l_line then
+					wdth := l_line.width + left_margin_width + 50
+				else
+					check False end -- Implied by the if clause.
+				end
 				if editor_width < wdth then
 					set_editor_width (wdth)
 				end
@@ -467,7 +469,11 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 			wdth: INTEGER
 		do
 			if line_number >= 1 and then line_number <= number_of_lines then
-				wdth := text_displayed.line (line_number).width + left_margin_width + 50
+				if attached text_displayed.line (line_number) as l_line then
+					wdth := l_line.width + left_margin_width + 50
+				else
+					check False end -- Implied by the if clause.
+				end
 				if editor_width < wdth then
 					set_editor_width (wdth)
 				end
@@ -482,11 +488,7 @@ feature -- Text selection access
 		require
 			has_selection: has_selection
 		do
-			if has_selection then
-				if not text_displayed.cursor.is_equal (text_displayed.selection_cursor) then
-					Result := text_displayed.selected_wide_string
-				end
-			end
+			Result := text_displayed.selected_wide_string
 		end
 
 	string_selection: STRING
@@ -495,13 +497,8 @@ feature -- Text selection access
 			"Use `wide_string_selection' instead."
 		require
 			has_selection: has_selection
-		local
-			l_str: like wide_string_selection
 		do
-			l_str := wide_string_selection
-			if l_str /= Void then
-				Result := l_str.as_string_8
-			end
+			Result := wide_string_selection.as_string_8
 		end
 
 feature -- Text status report
@@ -511,7 +508,7 @@ feature -- Text status report
 		require
 			not_empty: not is_empty
 		do
-			Result := text_displayed.cursor.x_in_characters
+			Result := text_displayed.attached_cursor.x_in_characters
 		end
 
 	cursor_visible_x_position: INTEGER
@@ -519,7 +516,7 @@ feature -- Text status report
 		require
 			not_empty: not is_empty
 		do
-			Result := text_displayed.cursor.x_in_visible_characters
+			Result := text_displayed.attached_cursor.x_in_visible_characters
 		end
 
 	cursor_y_position: INTEGER
@@ -527,16 +524,16 @@ feature -- Text status report
 		require
 			not_empty: not is_empty
 		do
-			Result := text_displayed.cursor.y_in_lines
+			Result := text_displayed.attached_cursor.y_in_lines
 		end
 
 	 draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER)
-			-- Draw the cursor block defined by the rectangle associated with the current cursor at `y' and on `media'.		
+			-- Draw the cursor block defined by the rectangle associated with the current cursor at `y' and on `media'.	
 		local
 			width_cursor: INTEGER
 			l_cursor: like cursor_type
 		do
-			l_cursor := text_displayed.cursor
+			l_cursor := text_displayed.attached_cursor
 
 				-- Compute the width of the current character (used to display plain cursor)
 			width_cursor := l_cursor.token.get_substring_width (l_cursor.pos_in_token) - l_cursor.token.get_substring_width (l_cursor.pos_in_token - 1)
@@ -557,9 +554,12 @@ feature -- Text status report
 		local
 			width_cursor: INTEGER
 			y_pos: INTEGER
+			l_copy_cut_cursor: like copy_cut_cursor
 		do
+			l_copy_cut_cursor := copy_cut_cursor
+			check l_copy_cut_cursor /= Void end -- Implied by precondition
 				-- Compute the width of the current character (used to display plain cursor)
-			width_cursor := copy_cut_cursor.token.get_substring_width (copy_cut_cursor.pos_in_token) - copy_cut_cursor.token.get_substring_width (copy_cut_cursor.pos_in_token - 1)
+			width_cursor := l_copy_cut_cursor.token.get_substring_width (l_copy_cut_cursor.pos_in_token) - l_copy_cut_cursor.token.get_substring_width (l_copy_cut_cursor.pos_in_token - 1)
 			width_cursor := width_cursor.max (cursor_width)
 			y_pos := y + editor_viewport.y_offset
 			media.set_xor_mode
@@ -590,7 +590,7 @@ feature -- Edition Operations on text
 			text_is_editable: is_editable
 		do
 			if has_selection then
-				if not text_displayed.cursor.is_equal (text_displayed.selection_cursor) then
+				if not text_displayed.attached_cursor.is_equal (text_displayed.attached_selection_cursor) then
 					copy_selection
 					text_displayed.delete_selection
 					refresh_now
@@ -755,7 +755,8 @@ feature {NONE} -- Mouse copy cut
 					else
 						disable_selection
 						y_cur := text_displayed.current_line_number
-						position_cursor (text_displayed.cursor, x_cur, l_y_pos)
+						check text_displayed.has_cursor end
+						position_cursor (text_displayed.attached_cursor, x_cur, l_y_pos)
 						invalidate_line (y_cur, True)
 					end
 				elseif button = 3 then
@@ -775,23 +776,25 @@ feature {NONE} -- Mouse copy cut
 		local
 			x_cur, y_cur: INTEGER
 			tok: EDITOR_TOKEN
+			l_cut_cursor: like copy_cut_cursor
 		do
 			if mouse_left_button_down and then mouse_copy_cut then
 					-- Position the temporary copy/cut cursor at the best location based on mouse co-ordinates
 				wipe_copy_cut_cursor_out
 				x_cur := abs_x_pos - left_margin_width
 				y_cur := (a_screen_y - editor_y).min (viewable_height).max (1)
-				create copy_cut_cursor.make_from_integer (1, text_displayed)
-				position_cursor (copy_cut_cursor, x_cur, y_cur)
+				create l_cut_cursor.make_from_integer (1, text_displayed)
+				copy_cut_cursor := l_cut_cursor
+				position_cursor (l_cut_cursor, x_cur, y_cur)
 				Precursor (abs_x_pos, abs_y_pos, unused1,unused2,unused3, a_screen_x, a_screen_y)
-				if not cursor_is_in_selection (copy_cut_cursor) then
-					tok := copy_cut_cursor.token
+				if not cursor_is_in_selection (l_cut_cursor) then
+					tok := l_cut_cursor.token
 					if prev_x_cur > 0 and prev_x_cur > x_cur then
-						x_cur := tok.position + tok.get_substring_width (copy_cut_cursor.pos_in_token)
+						x_cur := tok.position + tok.get_substring_width (l_cut_cursor.pos_in_token)
 					else
-						x_cur := tok.position + tok.get_substring_width (copy_cut_cursor.pos_in_token - 1)
+						x_cur := tok.position + tok.get_substring_width (l_cut_cursor.pos_in_token - 1)
 					end
-					y_cur := copy_cut_cursor.y_in_lines
+					y_cur := l_cut_cursor.y_in_lines
 					if prev_x_cur /= x_cur or else prev_y_cur /= y_cur then
 						if prev_x_cur /= 0 or else prev_y_cur /= 0 then
 							prev_x_cur := 0
@@ -950,7 +953,11 @@ feature {NONE} -- Text Loading
 		do
 			Precursor {SELECTABLE_TEXT_PANEL}
 			if open_backup then
-				text_observer_manager.set_changed (True, True)
+				if attached text_observer_manager as l_manager then
+					l_manager.set_changed (True, True)
+				else
+					check False end -- the manager should be set.
+				end
 			end
 			enable_editable
 		end

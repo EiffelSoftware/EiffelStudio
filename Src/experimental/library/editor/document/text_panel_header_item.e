@@ -9,7 +9,7 @@ class
 	TEXT_PANEL_HEADER_ITEM
 
 inherit
-	DOCUMENT_ITEM		
+	DOCUMENT_ITEM
 		redefine
 			make
 		end
@@ -18,7 +18,7 @@ inherit
 		undefine
 			is_equal
 		end
-		
+
 	SHARED_EDITOR_FONT
 		undefine
 			is_equal
@@ -26,7 +26,7 @@ inherit
 
 create
 	make
-		
+
 feature -- Creation
 
 	make (a_name: STRING)
@@ -34,12 +34,12 @@ feature -- Creation
 			no_unwanted_chars_in_name: not a_name.has ('%N') and not a_name.has ('%T')
 		do
 			Precursor (a_name)
-			image := short_name (a_name)			
+			image := short_name (a_name)
 			length := image.count
 		ensure then
 			image_not_void: image /= Void
 		end
-		
+
 feature -- Access
 
 	image: STRING
@@ -52,15 +52,15 @@ feature -- Access
 			-- position in pixels of the first character of
 			-- this token
 
-	data: TEXT
+	data: detachable TEXT note option: stable attribute end
 		-- Data
 
 	cursor_line: INTEGER
 		-- Stored cursor line
-	
+
 	cursor_char: INTEGER
 		-- Stored cursor char
-		
+
 	first_line_displayed: INTEGER
 		-- Stored first line displayed in text
 
@@ -69,7 +69,7 @@ feature -- Access
 		do
 			create Result.make_empty
 			if not (name.occurrences ('.') = 0) then
-				Result ?= name.substring (name.last_index_of ('.', name.count) + 1, name.count)
+				Result := name.substring (name.last_index_of ('.', name.count) + 1, name.count)
 				Result.to_lower
 			else
 				create Result.make_empty
@@ -81,12 +81,12 @@ feature -- Display
 	display (device: EV_PIXMAP; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
-		do	
+		do
  				-- Change drawing style here.
  			device.set_font (editor_preferences.header_font)
 			device.set_foreground_color (editor_preferences.normal_text_color)
 			device.clear_rectangle (position, 0, width, device.height)
-			
+
  				-- Display the text.
  			draw_text_top_left (position + padding, text_font_offset (device.height), image, device)
 		end
@@ -97,14 +97,14 @@ feature -- Display
 			-- selected state.
 		local
 			l_bg_color: EV_COLOR
-		do		
+		do
 				-- Change drawing style here.
  			device.set_font (editor_preferences.header_font)
 			device.set_foreground_color (editor_preferences.normal_text_color)
-			l_bg_color := device.background_color.twin		
+			l_bg_color := device.background_color.twin
 			device.set_background_color (background_color)
-			device.clear_rectangle (position, 0, width, device.height)			
-			
+			device.clear_rectangle (position, 0, width, device.height)
+
  				-- Display the text.
  			draw_text_top_left (position + padding, text_font_offset (device.height), image, device)
  			device.set_background_color (l_bg_color)
@@ -129,15 +129,15 @@ feature -- Width & height
 	update_width
 			-- update value of `width'
 		do
-			width := get_substring_width (image.count) + (2 * padding)
+			width := substring_width (image.count) + (2 * padding)
 		end
 
 	update_position
 			-- Update the value of `position' to its correct value
 		do
 				-- Update current position
-			if previous /= Void then				
-				position := previous.position + previous.width
+			if attached previous as l_previous then
+				position := l_previous.position + l_previous.width
 			else
 				position := 0
 			end
@@ -145,19 +145,21 @@ feature -- Width & height
 			update_width
 		end
 
-	get_substring_width (n: INTEGER): INTEGER
+	substring_width (n: INTEGER): INTEGER
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
+		require
+			initialized: initialized
 		do
 			if n = 0 then
 				Result := 0
 			else
-				Result := editor_preferences.header_font.string_width(image.substring (1,n))
+				Result := editor_preferences.header_font.string_width (image.substring (1,n))
 			end
 		end
 
 feature {TEXT_PANEL_HEADER} -- Status Setting
-		
+
 	set_data (a_data: like data)
 			-- Set `data'
 		require
@@ -166,31 +168,31 @@ feature {TEXT_PANEL_HEADER} -- Status Setting
 			data := a_data
 		ensure
 			data_set: data = a_data
-		end		
+		end
 
 	set_image (a_image: STRING)
 			-- Set `image'
 		do
 			image := short_name (a_image)
-		end		
+		end
 
 	set_cursor_line (a_cursor_line: like cursor_line)
 			-- Set `cursor_line'
 		do
 			cursor_line := a_cursor_line
-		end	
+		end
 
 	set_cursor_char (a_cursor_char: like cursor_char)
 			-- Set `cursor_char'
 		do
 			cursor_char := a_cursor_char
-		end	
-	
+		end
+
 	set_first_line_displayed (a_line_no: INTEGER)
 			-- Set `first_line_displayed'
 		do
-			first_line_displayed := a_line_no	
-		end		
+			first_line_displayed := a_line_no
+		end
 
 feature {NONE} -- Implementation
 
@@ -204,7 +206,7 @@ feature {NONE} -- Implementation
 			l_name := a_name.twin
 			l_name.replace_substring_all ("\", "/")
 			if l_name.last_index_of ('/', a_name.count) > 0 then
-				Result := l_name.substring (l_name.last_index_of ('/', l_name.count) + 1, l_name.count)			
+				Result := l_name.substring (l_name.last_index_of ('/', l_name.count) + 1, l_name.count)
 			else
 				Result := l_name
 			end
@@ -234,13 +236,18 @@ feature {NONE} -- Properties used to display the token
 		end
 
 	text_font_offset (a_height: INTEGER): INTEGER
-			-- 
-		do			
-			Result := (a_height / 2).ceiling + (header_font_cell.item.value.height / 2).floor	
-		end		
+		require
+			has_header_font: has_header_font
+		local
+			l_font: like header_font
+		do
+			l_font := header_font
+			check l_font /= Void end -- Implied by precondition
+			Result := (a_height / 2).ceiling + (l_font.height / 2).floor
+		end
 
 invariant
-	image_not_void: image /= Void	
+	image_not_void: image /= Void
 	width_positive_or_null: width >= 0
 	previous = Void implies position = 0
 

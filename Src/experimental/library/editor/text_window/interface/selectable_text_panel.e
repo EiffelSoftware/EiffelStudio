@@ -157,7 +157,7 @@ feature {NONE} -- Handle mouse clicks
 								-- No selection? We have to start one.
 							text_displayed.set_selection_cursor (text_displayed.cursor)
 							text_displayed.enable_selection
-							old_l_number := text_displayed.cursor.y_in_lines
+							old_l_number := text_displayed.attached_cursor.y_in_lines
 						else
 							if l_number < first_line_displayed then
 									-- We are going up
@@ -167,14 +167,14 @@ feature {NONE} -- Handle mouse clicks
 									old_l_number :=	text_displayed.selection_end.y_in_lines
 								end
 							else
-								old_l_number := text_displayed.cursor.y_in_lines
+								old_l_number := text_displayed.attached_cursor.y_in_lines
 							end
 						end
 					end
 					process_left_click (x_pos.max (1), y_pos - editor_viewport.y_offset, a_screen_x, a_screen_y)
 					if shifted_key then
 							-- Look if we have to perform a deselection.
-						if text_displayed.cursor.is_equal (text_displayed.selection_cursor) then -- then or has_selection then
+						if text_displayed.attached_cursor.is_equal (text_displayed.attached_selection_cursor) then -- then or has_selection then
 								-- The selection has to be forgotten.						
 							disable_selection
 						else
@@ -193,11 +193,12 @@ feature {NONE} -- Handle mouse clicks
 			x_valid: x_pos > 0
 			y_valid: y_pos > 0
 			cursors_set: cursors /= Void
+			has_cursor: text_displayed.has_cursor
 		local
 			old_l_number	: INTEGER
 			l_cursor: like cursor_type
 		do
-			l_cursor := text_displayed.cursor
+			l_cursor := text_displayed.attached_cursor
 			old_l_number := l_cursor.y_in_lines
 			mouse_left_button_down := True
 			if not shifted_key then --and then text_displayed.has_selection then
@@ -241,10 +242,12 @@ feature {NONE} -- Handle mouse clicks
 	select_current_token (is_for_word: BOOLEAN)
 			-- Select the token where current cursor is, if `is_for_word',
 			-- look for the previous token if current token is not a word.
+		require
+			not_empty: not is_empty
 		local
 			stop, l_cursor: like cursor_type
 		do
-			l_cursor := text_displayed.cursor
+			l_cursor := text_displayed.attached_cursor
 			empty_word_selection := False
 			if is_for_word and then (not l_cursor.token.is_text or else not is_word (l_cursor.token.wide_image)) then
 					-- Current token does not represent a word, we try the previous one only, no loops until
@@ -256,13 +259,13 @@ feature {NONE} -- Handle mouse clicks
 			end
 			stop := l_cursor.twin
 			text_displayed.set_selection_cursor (l_cursor)
-			text_displayed.selection_cursor.go_start_word
+			text_displayed.attached_selection_cursor.go_start_word
 			l_cursor.go_end_word
 			text_displayed.enable_selection
-			if l_cursor.is_equal (text_displayed.selection_cursor) then
+			if l_cursor.is_equal (text_displayed.attached_selection_cursor) then
 				l_cursor.go_right_char_no_down_line
 				l_cursor.go_end_word
-				if l_cursor.is_equal (text_displayed.selection_cursor) then
+				if l_cursor.is_equal (text_displayed.attached_selection_cursor) then
 					text_displayed.disable_selection
 					empty_word_selection := True
 					l_cursor := stop
@@ -331,10 +334,10 @@ feature {NONE} -- Handle mouse clicks
 				l_click_count := click_count
 				click_count := 0
 				if not text_displayed.is_empty then
-					l_cursor := text_displayed.cursor
+					l_cursor := text_displayed.attached_cursor
 					if l_cursor.token /= Void then
 						l_num := l_cursor.y_in_lines
-						l_cursor.make_from_character_pos (l_cursor.x_in_characters, l_num, text_displayed)
+						l_cursor.set_from_character_pos (l_cursor.x_in_characters, l_num, text_displayed)
 						invalidate_line (l_cursor.y_in_lines, False)
 						if l_click_count < 4 then
 								-- If the click count is greater than 3 don't move the cursor to the bottom of the screen
@@ -452,6 +455,8 @@ feature {NONE} -- Handle mouse clicks
 			-- Selection mode depends on how many times the user has clicked
 			-- on the mouse button before moving the pointer.
 		require
+			has_cursor: text_displayed.has_cursor
+			not_empty: not is_empty
 			valid_x: x_pos > 0
 			valid_y: y_pos > 0
 		local
@@ -461,13 +466,13 @@ feature {NONE} -- Handle mouse clicks
 			l_cursor,
 			selection_cursor	: like cursor_type
 		do
-			l_cursor := text_displayed.cursor
-			selection_cursor := text_displayed.selection_cursor
+			l_cursor := text_displayed.attached_cursor
+			selection_cursor := text_displayed.attached_selection_cursor
 
 				-- Save cursor position.	
 			if not text_displayed.has_selection then
 					-- There is no selection, so we start a selection.
-				text_displayed.set_selection_cursor (text_displayed.cursor.twin)
+				text_displayed.set_selection_cursor (text_displayed.attached_cursor.twin)
 				text_displayed.enable_selection
 			end
 
@@ -484,26 +489,26 @@ feature {NONE} -- Handle mouse clicks
 				position_cursor (cur, x_pos, y_pos)
 				if empty_word_selection then
 					if cur < selection_cursor then
-						l_cursor.make_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
+						l_cursor.set_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
 						l_cursor.go_start_word
 						if not text_displayed.has_selection then
 							text_displayed.enable_selection
 						end
 					elseif cur > selection_cursor then
-						l_cursor.make_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
+						l_cursor.set_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
 						l_cursor.go_end_word
 						if not text_displayed.has_selection then
 							text_displayed.enable_selection
 						end
 					else
-						l_cursor.make_from_relative_pos(selection_cursor.line, selection_cursor.token, selection_cursor.pos_in_token, text_displayed)
+						l_cursor.set_from_relative_pos(selection_cursor.line, selection_cursor.token, selection_cursor.pos_in_token, text_displayed)
 						if text_displayed.has_selection then
 							text_displayed.disable_selection
 						end
 					end
 				elseif selection_cursor < l_cursor then
 					if selection_cursor <= cur then
-						l_cursor.make_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
+						l_cursor.set_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
 						if l_cursor.is_equal (selection_cursor) then
 							l_cursor.go_right_char_no_down_line
 						end
@@ -511,12 +516,12 @@ feature {NONE} -- Handle mouse clicks
 					elseif selection_cursor > cur then
 						selection_cursor.go_right_char_no_down_line
 						selection_cursor.go_end_word
-						l_cursor.make_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
+						l_cursor.set_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
 						l_cursor.go_start_word
 					end
 				elseif selection_cursor > l_cursor then
 					if l_cursor > cur then
-						l_cursor.make_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
+						l_cursor.set_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
 						l_cursor.go_start_word
 					elseif l_cursor < cur then
 						if cur > selection_cursor then
@@ -526,20 +531,20 @@ feature {NONE} -- Handle mouse clicks
 								selection_cursor.go_right_char
 							end
 							selection_cursor.go_start_word
-							l_cursor.make_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
+							l_cursor.set_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
 							if l_cursor.is_equal (selection_cursor) then
 								l_cursor.go_right_char_no_down_line
 							end
 							l_cursor.go_end_word
 						elseif cur < selection_cursor then
-							l_cursor.make_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
+							l_cursor.set_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
 							l_cursor.go_right_char_no_down_line
 							l_cursor.go_end_word
 							if l_cursor.is_equal (selection_cursor) then
-								selection_cursor.make_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
+								selection_cursor.set_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
 								selection_cursor.go_start_word
 							else
-								l_cursor.make_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
+								l_cursor.set_from_relative_pos (cur.line, cur.token, cur.pos_in_token, text_displayed)
 								l_cursor.go_start_word
 							end
 						end
@@ -675,15 +680,15 @@ feature {NONE} -- Memory Management
 		do
 			Precursor {KEYBOARD_SELECTABLE_TEXT_PANEL}
 
-			if click_delay /= Void and then not click_delay.is_destroyed then
+			if not click_delay.is_destroyed then
 				click_delay.destroy
 			end
-			click_delay := Void
+			create click_delay.make_with_interval (0)
 
-			if autoscroll /= Void and then not autoscroll.is_destroyed then
+			if not autoscroll.is_destroyed then
 				autoscroll.destroy
 			end
-			autoscroll := Void
+			create autoscroll.make_with_interval (0)
 		end
 
 note

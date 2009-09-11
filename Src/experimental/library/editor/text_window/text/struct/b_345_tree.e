@@ -29,9 +29,9 @@ feature -- Access
 			Result := root_node.keys_plus_one - 1
 		end
 
-	first_data: TREE_ITEM
+	first_data: detachable TREE_ITEM
 
-	last_data: like first_data
+	last_data: detachable like first_data
 
 	item (i: INTEGER): like first_data
 		require
@@ -52,54 +52,64 @@ feature -- Element Change
 			last_data := tl
 		end
 
-	prepend_data (tl: like first_data)
+	prepend_data (tl: attached like first_data)
 			-- add tl at the beginning of the tree.
 		require
 			tl_not_linked: tl.next = Void and then tl.previous = Void
 		local
-			ti: TREE_KEY [like first_data]
+			ti: TREE_KEY [attached like first_data]
+			l_key: detachable TREE_KEY [attached like first_data]
+			l_first_data: like first_data
 		do
 			tl.set_tree (Current)
 			create ti.make (tl)
 			tl.set_key (ti)
-			if first_data = Void then
+			l_first_data := first_data
+			if l_first_data = Void then
 				set_last_data (tl)
 				root_node.insert_first (ti)
 			else
 				tl.set_next (first_data)
-				first_data.set_previous (tl)
-				first_data.key.add_left (ti)
+				l_first_data.set_previous (tl)
+				l_key := l_first_data.key
+				check l_key /= Void end -- Implied by the invariant.
+				l_key.add_left (ti)
 			end
 			set_first_data (tl)
 		ensure
 			tl_linked: tl /= last_data implies
-				(tl.next /= Void and then tl.next.previous = tl)
+				(attached tl.next as l_next and then l_next.previous = tl)
 			tl_has_key: tl.key /= Void
 			tl_has_tree: tl.tree /= Void
 		end
 
-	append_data (tl: like first_data)
+	append_data (tl: attached like first_data)
 			-- add tl at the end of the tree.
 		require
 			tl_not_linked: tl.next = Void and then tl.previous = Void
 		local
-			ti: TREE_KEY [like first_data]
+			ti: TREE_KEY [attached like first_data]
+			l_key: detachable TREE_KEY [attached like first_data]
+			l_last_data: like last_data
 		do
 			tl.set_tree (Current)
 			create ti.make (tl)
 			tl.set_key (ti)
-			if last_data = Void then
+			l_last_data := last_data
+			if l_last_data = Void then
 				set_first_data (tl)
 				root_node.insert_last (ti)
 			else
-				tl.set_previous (last_data)
-				last_data.set_next (tl)
-				last_data.key.add_right (ti)
+				tl.set_previous (l_last_data)
+				l_last_data.set_next (tl)
+				l_key := l_last_data.key
+				check l_key /= Void end -- Implied by the invariant.
+				l_key.add_right (ti)
 			end
 			set_last_data (tl)
 		ensure
 			tl_linked: tl /= first_data implies
-				(tl.previous /= Void and then tl.previous.next = tl)
+				(attached tl.previous as l_previous and then l_previous.next = tl)
 			tl_has_key: tl.key /= Void
 			tl_has_tree: tl.tree /= Void
 		end
@@ -122,8 +132,8 @@ feature {NONE} -- Implementation
 	root_node: TREE_NODE [like first_data];
 
 invariant
-	first_data_valid: first_data /= Void implies first_data.is_valid
-	last_data_valid: last_data /= Void implies last_data.is_valid
+	first_data_valid: attached first_data as l_first_data implies l_first_data.is_valid
+	last_data_valid: attached last_data as l_last_data implies l_last_data.is_valid
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

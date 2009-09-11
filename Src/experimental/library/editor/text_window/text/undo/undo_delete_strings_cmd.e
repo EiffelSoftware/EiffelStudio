@@ -9,7 +9,7 @@ class
 	UNDO_DELETE_STRINGS_CMD
 
 inherit
-	UNDO_CMD
+	UNDO_TEXT_CMD
 
 create
 	make
@@ -74,11 +74,16 @@ feature {NONE} -- Implementation
 
 	actual_undo
 			-- Actual undo
+		require
+			undo_possible: undo_possible
 		local
 			x_in_characters, y_in_lines : INTEGER
+			l_cursor: detachable EDITOR_CURSOR
 		do
-			x_in_characters := text.cursor.x_in_characters
-			y_in_lines := text.cursor.y_in_lines
+			l_cursor := text.cursor
+			check l_cursor /= Void end -- Implied by precondition
+			x_in_characters := l_cursor.x_in_characters
+			y_in_lines := l_cursor.y_in_lines
 			from
 				undo_remove_trailing_blank_list.finish
 			until
@@ -87,16 +92,21 @@ feature {NONE} -- Implementation
 				undo_remove_trailing_blank_list.item.undo
 				undo_remove_trailing_blank_list.back
 			end
-			text.cursor.make_from_character_pos (x_in_characters, y_in_lines, text)
+			l_cursor.set_from_character_pos (x_in_characters, y_in_lines, text)
 		end
 
 	actual_redo
 			-- Actual redo
+		require
+			redo_possible: redo_possible
 		local
 			x_in_characters, y_in_lines : INTEGER
+			l_cursor: detachable EDITOR_CURSOR
 		do
-			x_in_characters := text.cursor.x_in_characters
-			y_in_lines := text.cursor.y_in_lines
+			l_cursor := text.cursor
+			check l_cursor /= Void end -- Implied by precondition
+			x_in_characters := l_cursor.x_in_characters
+			y_in_lines := l_cursor.y_in_lines
 			from
 				undo_remove_trailing_blank_list.start
 			until
@@ -105,17 +115,14 @@ feature {NONE} -- Implementation
 				undo_remove_trailing_blank_list.item.redo
 				undo_remove_trailing_blank_list.forth
 			end
-			text.cursor.make_from_character_pos (x_in_characters, y_in_lines, text)
+			l_cursor.set_from_character_pos (x_in_characters, y_in_lines, text)
 		end
 
 	undo_remove_trailing_blank_list: LINKED_LIST [UNDO_DELETE_CMD]
 
-	text: EDITABLE_TEXT
-
 invariant
 
 	undo_list_not_void: undo_remove_trailing_blank_list /= Void
-	text_not_void: text /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

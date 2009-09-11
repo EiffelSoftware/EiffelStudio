@@ -55,16 +55,15 @@ feature -- Miscellaneous
 				-- l_is_fixed := is_fixed_width
 				l_is_fixed := False
 				if wide_image.has ('%T') then
-					if previous /= Void and then not previous.is_margin_token then
-						l_tab_position := previous.position + previous.width
+					if attached previous as l_previous and then not l_previous.is_margin_token then
+						l_tab_position := l_previous.position + l_previous.width
 					end
 					from
 						i := 1
 						if l_is_fixed then
 							l_font_width := font_width
-						else
-							create l_string.make_filled (' ', 1)
 						end
+						create l_string.make_filled (' ', 1)
 						l_tab_width := tabulation_width
 					until
 						i > n or else i > wide_image.count

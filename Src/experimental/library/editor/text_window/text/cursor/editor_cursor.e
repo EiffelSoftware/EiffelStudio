@@ -28,7 +28,9 @@ feature -- Element change
 			-- Update `x_in_pixels' accordingly.
 		do
 			Precursor {TEXT_CURSOR} (a_token, a_position)
-			text.on_cursor_move (Current)
+			if not initializing then
+				text.on_cursor_move (Current)
+			end
 		end
 
 feature {EDITABLE_TEXT} -- Implementation

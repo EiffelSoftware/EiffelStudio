@@ -30,11 +30,11 @@ feature {NONE} -- Initialization
 			preferences_not_void: a_preferences /= Void
 		do
 			preferences := a_preferences
-			editor_preferences_cell.put (Current)
 			initialized_cell.put (True)
 			initialize_preferences
 			init_colors
 			init_fonts
+			editor_preferences_cell.put (Current)
 		ensure
 			preferences_not_void: preferences /= Void
 		end
@@ -305,12 +305,6 @@ feature -- Value
 			Result := cursor_line_highlight_color_preference.value
 		end
 
-	highlight_document_changes: BOOLEAN
-			-- Should editor highlight changes in document between saves?
-		do
-			Result := highlight_document_changes_preference.value
-		end
-
 	quadruple_click_enabled: BOOLEAN
 			-- is quadruple click (select all) enabled ?
 		do
@@ -436,8 +430,6 @@ feature {ANY} -- Preferences
 
 	cursor_line_highlight_color_preference : COLOR_PREFERENCE
 
-	highlight_document_changes_preference: BOOLEAN_PREFERENCE
-
 	smart_indentation_preference: BOOLEAN_PREFERENCE
 			-- Is smart indentation enabled?	
 
@@ -560,13 +552,13 @@ feature {NONE} -- Implementation
 	colors: SPECIAL [EV_COLOR]
 			-- Color table
 		once
-			create Result.make_filled (Void, max_color_id + 1)
+			create Result.make_filled ((create {EV_STOCK_COLORS}).black, max_color_id + 1)
 		end
 
 	fonts: SPECIAL [EV_FONT]
 			-- Font table
 		once
-			create Result.make_filled (Void, max_font_id + 1)
+			create Result.make_filled ((create {EV_LABEL}).font, max_font_id + 1)
 		end
 
 	init_colors

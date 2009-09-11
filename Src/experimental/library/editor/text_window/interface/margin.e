@@ -29,6 +29,7 @@ feature -- Initialization
 			-- Create a new margin
 		require
 			text_panel_not_void: a_text_panel /= Void
+			editor_preferences_set: editor_preferences /= Void
 		do
 			text_panel := a_text_panel
 			build_margin_area
@@ -38,6 +39,10 @@ feature -- Initialization
 
 	build_margin_area
 			-- Initialize variables and objects related to display.	
+		require
+			editor_preferences_set: editor_preferences /= Void
+		local
+			l_pref: like editor_preferences
 		do
 			create margin_area
 			margin_area.set_minimum_size (1, 1)
@@ -52,7 +57,10 @@ feature -- Initialization
 
 				-- Set up the screen.
 			create buffered_screen.make_with_size (margin_area.width, text_panel.editor_drawing_area.height)
-			buffered_screen.set_background_color (editor_preferences.margin_background_color)
+
+			l_pref := editor_preferences
+			check l_pref /= Void end -- Implied by precondition
+			buffered_screen.set_background_color (l_pref.margin_background_color)
 			hide_breakpoints
 --			hide_line_numbers
 		end
@@ -176,14 +184,10 @@ feature -- Basic operations
 	destroy
 			-- Destroy
 		do
-			if widget /= Void then
-				widget.wipe_out
-				widget := Void
-			end
-			if margin_area /= Void then
-				margin_area.destroy
-				margin_area := Void
-			end
+			widget.wipe_out
+			create widget -- Dereference original one to help finding memory leak.
+			margin_area.destroy
+			create margin_area -- Dereference original one to help finding memory leak.
 		end
 
 	refresh
@@ -262,31 +266,42 @@ feature {TEXT_PANEL} -- Display functions
 
 	update_buffered_screen (top: INTEGER; bottom: INTEGER)
  			-- Update buffered pixmap between lines number `top' and `bottom'.
+ 		require
+ 			initialized: initialized
  		local
  			curr_line			: INTEGER
  			first_line_to_draw	: INTEGER
  			last_line_to_draw	: INTEGER
  			curr_y				: INTEGER
+ 			l_pref				: like editor_preferences
+ 			l_text				: TEXT
+ 			l_line				: detachable EDITOR_LINE
  		do
-			buffered_screen.set_background_color (editor_preferences.margin_background_color)
+ 			l_pref := editor_preferences
+ 			check l_pref /= Void end -- Implied by precondition
+			buffered_screen.set_background_color (l_pref.margin_background_color)
 			buffered_screen.clear_rectangle (0, top, buffered_screen.width, bottom - top)
 			set_margin_width (width)
 
+			l_text := text_panel.text_displayed
+
  				-- Draw all lines
  			first_line_to_draw := (text_panel.first_line_displayed + top // text_panel.line_height ).max (1)
- 			last_line_to_draw := (text_panel.first_line_displayed + (bottom - 1) // text_panel.line_height).min (text_panel.text_displayed.number_of_lines)
+ 			last_line_to_draw := (text_panel.first_line_displayed + (bottom - 1) // text_panel.line_height).min (l_text.number_of_lines)
  			curr_y := top
 
  			if first_line_to_draw <= last_line_to_draw then
- 				text_panel.text_displayed.go_i_th (first_line_to_draw)
+ 				l_text.go_i_th (first_line_to_draw)
  				from
  					curr_line := first_line_to_draw
  				until
- 					curr_line > last_line_to_draw or else text_panel.text_displayed.after
+ 					curr_line > last_line_to_draw or else l_text.after
  				loop
- 					display_line (curr_line, text_panel.text_displayed.current_line)
+ 					l_line := l_text.current_line
+ 					check l_line /= Void end -- Implied by not `after'
+ 					display_line (curr_line, l_line)
  					curr_line := curr_line + 1
- 					text_panel.text_displayed.forth
+ 					l_text.forth
  				end
 
  				curr_y := (curr_line - text_panel.first_line_displayed) * text_panel.line_height
@@ -294,7 +309,7 @@ feature {TEXT_PANEL} -- Display functions
  			if curr_y < bottom then
  				-- The file is too small for the screen, so we fill in the
  				-- last portion of the screen.
-				buffered_screen.set_background_color (editor_preferences.margin_background_color)
+				buffered_screen.set_background_color (l_pref.margin_background_color)
 				buffered_screen.clear_rectangle (0, curr_y, width, bottom - curr_y)
  			end
  		end
@@ -348,9 +363,12 @@ feature {TEXT_PANEL} -- Display functions
 
 	display_line (xline: INTEGER; a_line: EDITOR_LINE)
  			-- Display `a_line' on the buffered screen.
+ 		require
+ 			xline_valid: xline > 0 and then xline <= text_panel.number_of_lines
+ 			a_line_valid: a_line.is_valid
+ 			xline_is_a_line: text_panel.text_displayed.line (xline) = a_line
  		local
 -- 			bp_token			: EDITOR_TOKEN_BREAKPOINT
- 			line_token			: EDITOR_TOKEN_LINE_NUMBER
  			curr_token			: EDITOR_TOKEN
  			curr_y, max_chars	: INTEGER
  			spacer_text			: STRING
@@ -364,9 +382,9 @@ feature {TEXT_PANEL} -- Display functions
  			create spacer_text.make_filled ('0', max_chars - xline.out.count)
 
  				-- Set the correct image for line number
- 			line_token ?= text_panel.text_displayed.line (xline).number_token
-			if line_token /= Void then
-				line_token.set_internal_image (spacer_text + xline.out)
+ 			-- line_token ?= text_panel.text_displayed.line (xline).number_token
+			if attached {EDITOR_TOKEN_LINE_NUMBER}a_line.number_token as l_num_token then
+				l_num_token.set_internal_image (spacer_text + xline.out)
 			end
 
    			curr_y := (xline - text_panel.first_line_displayed) * text_panel.line_height
@@ -384,11 +402,12 @@ feature {TEXT_PANEL} -- Display functions
 --					elseif bp_token /= Void then						
 --						bp_token.hide
 --					else
-						line_token ?= curr_token
-						if line_token /= Void and then line_numbers_visible then
-							line_token.display (curr_y, buffered_screen, text_panel)
-						elseif line_token /= Void then
-							line_token.hide
+						if attached {EDITOR_TOKEN_LINE_NUMBER} curr_token as line_token then
+							if line_numbers_visible then
+								line_token.display (curr_y, buffered_screen, text_panel)
+							else
+								line_token.hide
+							end
 						end
 --					end
 				end

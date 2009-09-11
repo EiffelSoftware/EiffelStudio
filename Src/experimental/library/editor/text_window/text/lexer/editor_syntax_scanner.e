@@ -19,19 +19,19 @@ inherit
 		    store_analyzer,
 		    build
 		end
-		
+
 	EDITOR_BASIC_SCANNER
 		rename
 		    case_diff as ut_case_diff,
 		    make as make_editor_scanner
 		undefine
 		    is_equal,
-		    copy		
+		    copy
 		redefine
-		    execute		    
+		    execute
 		end
-	
-create 
+
+create
 	make
 
 feature -- Creation
@@ -40,12 +40,13 @@ feature -- Creation
 			-- Create a lexical analyser to analyze text according to the rules in `syntax_file'.
 		require
 		    file_not_void: syntax_file /= Void
-		do			
+		do
 			token_list.wipe_out
+			make_editor_scanner
 			scanning_make
-			build (syntax_file + "_bin", syntax_file)		
+			build (syntax_file + "_bin", syntax_file)
 		end
-		
+
 feature -- Actions
 
 	build (store_file_name, grammar_file_name: STRING)
@@ -55,8 +56,8 @@ feature -- Actions
 			-- Otherwise read grammar from `grammar_file_name',
 			-- create an analyzer, and store it in `store_file_name'.
 		do
-			build_from_grammar (store_file_name, grammar_file_name)			
-		end; 
+			build_from_grammar (store_file_name, grammar_file_name)
+		end;
 
 	store_analyzer (file_name: STRING)
 			-- Store `analyzer' in file named `file_name'.
@@ -70,47 +71,51 @@ feature -- Actions
 	execute (a_string: STRING)
 			-- Analyze a string.		
 		require else
-		   	has_analyzer: analyzer /= Void	
-		do						
-			from					
+		   	has_analyzer: analyzer /= Void
+		local
+			l_analyzer: like analyzer
+		do
+			from
 				first_token := Void
 				end_token := Void
 				token_list.wipe_out
-				analyzer.set_string (a_string)
+				l_analyzer := analyzer
+				check l_analyzer /= Void end -- Implied by precondition
+				l_analyzer.set_string (a_string)
 				begin_analysis
 			until
-				analyzer.end_of_text
+				l_analyzer.end_of_text
 			loop
-				analyzer.get_any_token
-				do_a_token (analyzer.last_token)
-			end	
+				l_analyzer.get_any_token
+				do_a_token (l_analyzer.last_token)
+			end
 			end_analysis
 		end
-		
+
 	do_a_token (a_token: TOKEN)
 			-- Handle `read_token'.
 		local
-			l_token: EDITOR_TOKEN
-    	do    		
-    		if a_token.type > 0 then    			
+			l_token: detachable EDITOR_TOKEN
+    	do
+    		if a_token.type > 0 then
     			l_token := token_builder.build_token (a_token)
-    			if l_token /= Void then    				
-		    		token_list.extend (l_token)			
+    			if l_token /= Void then
+		    		token_list.extend (l_token)
     			end
     		end
     	end
-    	
+
     begin_analysis
     		-- Redefined just so no put_string's are called
-    	do    		
-    	end    	
-    	
+    	do
+    	end
+
     end_analysis
             -- End of analysis
         local
-            l_prev_token: EDITOR_TOKEN
+            l_prev_token: detachable EDITOR_TOKEN
       	do
-      	 	if not token_list.is_empty then	  	   		
+      	 	if not token_list.is_empty then
 	  	   		first_token := token_list.first
 	  	   		end_token := token_list.last
       	   		from
@@ -123,11 +128,11 @@ feature -- Actions
       	   	    	    token_list.item.set_previous_token (l_prev_token)
       	   	    	end
       	   	        l_prev_token := token_list.item
-      	   	        token_list.forth      	   	        
-      	   	    end      	   	     
+      	   	        token_list.forth
+      	   	    end
       	   	end
-      	end    	
-    	
+      	end
+
 feature {NONE} -- Implementation
 
 	token_list: ARRAYED_LIST [EDITOR_TOKEN]

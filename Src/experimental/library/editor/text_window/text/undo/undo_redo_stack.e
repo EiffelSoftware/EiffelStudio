@@ -37,7 +37,7 @@ feature {EDITABLE_TEXT} -- Initialization
 
 feature {EDITABLE_TEXT} -- Access
 
-	item: UNDO_CMD
+	item: detachable UNDO_CMD
 			-- First undo command, Void if none.
 		do
 			if undo_is_possible then
@@ -68,25 +68,30 @@ feature {EDITABLE_TEXT} -- Element change
 	record_insert (c: CHARACTER_32)
 			-- Update `Current' as `c' is to be inserted at cursor position.
 		local
-			uic: UNDO_INSERT_CMD
-			urc: UNDO_REPLACE_CMD
-			udc: UNDO_DELETE_CMD
+			uic: detachable UNDO_INSERT_CMD
+			urc: detachable UNDO_REPLACE_CMD
+			udc: detachable UNDO_DELETE_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
 			inspect current_status
 
 			when insert_char then
-				uic ?= item
-				check
-					uic /= Void
+				if attached {UNDO_INSERT_CMD}item as l_item then
+					uic := l_item
+				else
+					check uic /= Void end -- Implied by `insert_char' status.
 				end
 				uic.extend (c)
 
 			when back_delete then
-				udc ?= item
-				check
-					udc /= Void
+				if attached {UNDO_DELETE_CMD}item as l_item then
+					udc := l_item
+				else
+					check udc /= Void end -- Implied by `back_delete' status.
 				end
-				create urc.make_from_strings (text.cursor, udc.message, create {STRING_32}.make_filled (c, 1), text)
+				l_cursor := text.cursor
+				check l_cursor_not_void: l_cursor /= Void end
+				create urc.make_from_strings (l_cursor, udc.message, create {STRING_32}.make_filled (c, 1), text)
 				if udc.is_bound_to_next then
 					urc.bind_to_next
 				end
@@ -95,14 +100,17 @@ feature {EDITABLE_TEXT} -- Element change
 				current_status := back_delete_combo
 
 			when back_delete_combo then
-				urc ?= item
-				check
-					urc /= Void
+				if attached {UNDO_REPLACE_CMD}item as l_item then
+					urc := l_item
+				else
+					check urc /= Void end -- Implied by `back_delete_combo' status.
 				end
 				urc.extend_new (c)
 
 			else
-				create uic.make_from_string (text.cursor, create {STRING_32}.make_filled (c, 1), text)
+				l_cursor := text.cursor
+				check l_cursor_not_void: l_cursor /= Void end
+				create uic.make_from_string (l_cursor, create {STRING_32}.make_filled (c, 1), text)
 				put (uic)
 				current_status := insert_char
 			end
@@ -116,6 +124,7 @@ feature {EDITABLE_TEXT} -- Element change
 		local
 			uic: UNDO_INSERT_CMD
 			l_string: STRING_32
+			l_cursor: detachable EDITOR_CURSOR
 		do
 		--	Commented lines made the editor undo at the same time
 		--	the insertion of the new line and of the characters at the end
@@ -130,9 +139,11 @@ feature {EDITABLE_TEXT} -- Element change
 --				uic.extend_string ("%N" + inserted_indentation)
 --				current_status := insert_eol
 --			else
+				l_cursor := text.cursor
+				check l_cursor_not_void: l_cursor /= Void end
 				l_string := "%N"
 				l_string.append (inserted_indentation)
-				create uic.make_from_string	(text.cursor, l_string, text)
+				create uic.make_from_string	(l_cursor, l_string, text)
 				put (uic)
 				current_status := insert_eol
 --			end
@@ -144,8 +155,11 @@ feature {EDITABLE_TEXT} -- Element change
 			-- Update `Current' as `s' is to be inserted at cursor position.
 		local
 			uic: UNDO_INSERT_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
-			create uic.make_from_string (text.cursor, s, text)
+			l_cursor := text.cursor
+			check l_cursor_not_void: l_cursor /= Void end
+			create uic.make_from_string (l_cursor, s, text)
 			put (uic)
 			current_status := paste
 
@@ -155,16 +169,21 @@ feature {EDITABLE_TEXT} -- Element change
 	record_delete (c: CHARACTER_32)
 			-- Update `Current' as `c' is to be deleted at cursor position.
 		local
-			udc: UNDO_DELETE_CMD
+			udc: detachable UNDO_DELETE_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
+
 			if current_status = delete_char then
-				udc ?= item
-				check
-					udc /= Void
+				if attached {UNDO_DELETE_CMD}item as l_item then
+					udc := l_item
+				else
+					check udc /= Void end -- Implied by `delete_char' status.
 				end
 				udc.extend (c)
 			else
-				create udc.make_from_string (text.cursor, create {STRING_32}.make_filled (c, 1), text)
+				l_cursor := text.cursor
+				check l_cursor_not_void: l_cursor /= Void end
+				create udc.make_from_string (l_cursor, create {STRING_32}.make_filled (c, 1), text)
 				put (udc)
 				current_status := delete_char
 			end
@@ -176,8 +195,11 @@ feature {EDITABLE_TEXT} -- Element change
 			-- Update `Current' as `s' has just been deleted at cursor position.
 		local
 			udc: UNDO_DELETE_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
-			create udc.make_from_string (text.cursor, s, text)
+			l_cursor := text.cursor
+			check l_cursor_not_void: l_cursor /= Void end
+			create udc.make_from_string (l_cursor, s, text)
 			put (udc)
 			current_status := cut_selection
 
@@ -187,12 +209,14 @@ feature {EDITABLE_TEXT} -- Element change
 
 	record_replace (c1, c2: CHARACTER_32)
 		local
-			urc: UNDO_REPLACE_CMD
+			urc: detachable UNDO_REPLACE_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
 			if current_status = replace then
-				urc ?= item
-				check
-					urc /= Void
+				if attached {UNDO_REPLACE_CMD}item as l_item then
+					urc := l_item
+				else
+					check urc /= Void end -- Implied by `replace' status.
 				end
 				if c1 = '%N' then
 					urc.extend_new (c2)
@@ -200,10 +224,12 @@ feature {EDITABLE_TEXT} -- Element change
 					urc.extend_both (c1, c2)
 				end
 			else
+				l_cursor := text.cursor
+				check l_cursor_not_void: l_cursor /= Void end
 				if c1 = '%N' then
-					create urc.make_from_strings (text.cursor, "", create {STRING_32}.make_filled (c2, 1), text)
+					create urc.make_from_strings (l_cursor, "", create {STRING_32}.make_filled (c2, 1), text)
 				else
-					create urc.make_from_strings (text.cursor, create {STRING_32}.make_filled (c1, 1), create {STRING_32}.make_filled (c2, 1), text)
+					create urc.make_from_strings (l_cursor, create {STRING_32}.make_filled (c1, 1), create {STRING_32}.make_filled (c2, 1), text)
 				end
 				put (urc)
 				current_status := replace
@@ -215,8 +241,11 @@ feature {EDITABLE_TEXT} -- Element change
 	record_replace_selection (s1, s2: STRING_GENERAL)
 		local
 			urc: UNDO_REPLACE_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
-			create urc.make_from_strings (text.cursor, s1, s2, text)
+			l_cursor := text.cursor
+			check l_cursor_not_void: l_cursor /= Void end
+			create urc.make_from_strings (l_cursor, s1, s2, text)
 			put (urc)
 			current_status := replace_selection
 			notify_observers
@@ -224,15 +253,23 @@ feature {EDITABLE_TEXT} -- Element change
 
 	record_replace_all (s1, s2: STRING_GENERAL)
 		local
-			urac: UNDO_REPLACE_ALL_CMD
+			urac: detachable UNDO_REPLACE_ALL_CMD
 			urc: UNDO_REPLACE_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
 			if current_status = replace_all then
-				urac ?= item
+				if attached {UNDO_REPLACE_ALL_CMD}item as l_item then
+					urac := l_item
+				else
+					check urac /= Void end -- Implied by `replace_all' status.
+				end
 			else
 				create urac.make
 			end
-			create urc.make_from_strings (text.cursor, s1, s2, text)
+
+			l_cursor := text.cursor
+			check l_cursor_not_void: l_cursor /= Void end
+			create urc.make_from_strings (l_cursor, s1, s2, text)
 			urac.add(urc)
 			if current_status /= replace_all then
 				put (urac)
@@ -243,16 +280,20 @@ feature {EDITABLE_TEXT} -- Element change
 
 	record_back_delete (c: CHARACTER_32)
 		local
-			udc: UNDO_DELETE_CMD
+			udc: detachable UNDO_DELETE_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
+			l_cursor := text.cursor
+			check l_cursor_not_void: l_cursor /= Void end
 			if current_status = back_delete then
-				udc ?= item
-				check
-					udc /= Void
+				if attached {UNDO_DELETE_CMD}item as l_item then
+					udc := l_item
+				else
+					check udc /= Void end -- Implied by `back_delete' status.
 				end
-				udc.prepend (text.cursor, c)
+				udc.prepend (l_cursor, c)
 			else
-				create udc.make_from_string (text.cursor, create {STRING_32}.make_filled (c, 1), text)
+				create udc.make_from_string (l_cursor, create {STRING_32}.make_filled (c, 1), text)
 				put (udc)
 				current_status := back_delete
 			end
@@ -260,7 +301,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_symbol (lines: LINKED_LIST[INTEGER]; symbl: STRING_GENERAL)
+	record_symbol (lines: LIST [INTEGER]; symbl: STRING_GENERAL)
 		local
 			uisc: UNDO_SYMBOL_SELECTION_CMD
 		do
@@ -270,7 +311,7 @@ feature {EDITABLE_TEXT} -- Element change
 			current_status := symbol
 		end
 
-	record_unsymbol (lines: LINKED_LIST[INTEGER]; symbl: STRING_GENERAL)
+	record_unsymbol (lines: LIST[INTEGER]; symbl: STRING_GENERAL)
 			--| Warning : to be called after `unsymbol_selection'
 		local
 			uusc: UNDO_UNSYMBOL_SELECTION_CMD
@@ -284,28 +325,35 @@ feature {EDITABLE_TEXT} -- Element change
 	record_remove_trailing_blank (s: STRING_GENERAL)
 			-- Update `Current' as `s' has just been removed at cursor position.
 		local
-			undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD
+			undo_rtb_cmd: detachable UNDO_DELETE_STRINGS_CMD
 			convers_undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD
 			undo_delete_cmd: UNDO_DELETE_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
 			if not undo_list.is_empty or not redo_list.is_empty then
 				if current_status = remove_trailing_blank then
 					if not undo_list.is_empty then
-						undo_rtb_cmd ?= item
+						if attached {UNDO_DELETE_STRINGS_CMD}item as l_item then
+							undo_rtb_cmd := l_item
+						end
 					end
 					if not redo_list.is_empty then
-						undo_rtb_cmd ?= redo_list.first
+						if attached {UNDO_DELETE_STRINGS_CMD}redo_list.first as l_item then
+							undo_rtb_cmd := l_item
+						end
 					end
 				end
 				if undo_rtb_cmd = Void then
 					create undo_rtb_cmd.make (text)
 				end
-				create undo_delete_cmd.make_from_string (text.cursor, s, text)
+				l_cursor := text.cursor
+				check l_cursor_not_void: l_cursor /= Void end
+				create undo_delete_cmd.make_from_string (l_cursor, s, text)
 				undo_rtb_cmd.add(undo_delete_cmd)
 				if current_status /= remove_trailing_blank then
 						-- Add real remove command to undo list and converse remove command to redo list.	
 					if not undo_list.is_empty then
-						item.bind_to_next
+						bind_current_item_to_next
 						undo_list.put_front (undo_rtb_cmd)
 					end
 					if not redo_list.is_empty then
@@ -323,19 +371,24 @@ feature {EDITABLE_TEXT} -- Element change
 	record_uncomment (s: STRING_GENERAL)
 			-- Update `Current' as `s' has just been removed at cursor position.
 		local
-			undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD
+			undo_rtb_cmd: detachable UNDO_DELETE_STRINGS_CMD
 			undo_delete_cmd: UNDO_DELETE_CMD
+			l_cursor: detachable EDITOR_CURSOR
 		do
 			if current_status = uncomment then
 				if not undo_list.is_empty then
-					undo_rtb_cmd ?= item
+					if attached {UNDO_DELETE_STRINGS_CMD}item as l_item then
+						undo_rtb_cmd := l_item
+					end
 				end
 			end
 			if undo_rtb_cmd = Void then
 				create undo_rtb_cmd.make (text)
 				undo_list.put_front (undo_rtb_cmd)
 			end
-			create undo_delete_cmd.make_from_string (text.cursor, s, text)
+			l_cursor := text.cursor
+			check l_cursor_not_void: l_cursor /= Void end
+			create undo_delete_cmd.make_from_string (l_cursor, s, text)
 			undo_rtb_cmd.add(undo_delete_cmd)
 			if current_status /= uncomment then
 				current_status := uncomment
@@ -349,7 +402,8 @@ feature {EDITABLE_TEXT} -- Basic operations
 			-- undo command at the beginning of `undo_list'.
 			-- update `undo_list' and `redo_list'.
 		local
-			uc: UNDO_CMD
+			uc: detachable UNDO_CMD
+			l_item: like item
 		do
 			if not undo_list.is_empty then
 				undo_list.start
@@ -357,14 +411,17 @@ feature {EDITABLE_TEXT} -- Basic operations
 				uc.undo
 				redo_list.put_front (uc)
 				undo_list.remove
-				from until
-					undo_list.is_empty or else not item.is_bound_to_next
+				from
+					l_item := item
+				until
+					undo_list.is_empty or else (l_item = Void or else not l_item.is_bound_to_next)
 				loop
 					undo_list.start
 					uc := undo_list.item
 					uc.undo
 					redo_list.put_front (uc)
 					undo_list.remove
+					l_item := item
 				end
 				current_status := move
 				notify_observers
@@ -427,16 +484,22 @@ feature {EDITABLE_TEXT} -- Basic operations
 
 
 	bind_current_item_to_next
+		local
+			l_item: like item
 		do
-			if item /= Void then
-				item.bind_to_next
+			l_item := item
+			if l_item /= Void then
+				l_item.bind_to_next
 			end
 		end
 
 	unbind_current_item_to_next
+		local
+			l_item: like item
 		do
-			if item /= Void then
-				item.unbind_to_next
+			l_item := item
+			if l_item /= Void then
+				l_item.unbind_to_next
 			end
 		end
 
@@ -557,7 +620,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	observers: ARRAYED_LIST [UNDO_REDO_OBSERVER];
+	observers: detachable ARRAYED_LIST [UNDO_REDO_OBSERVER] note option: stable attribute end
 			-- All observers for Current.
 
 note

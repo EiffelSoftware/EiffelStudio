@@ -24,7 +24,7 @@ feature -- Initialization
 			keys_plus_one := 1
 		end
 
-	make_with_child (first_child: like Current)
+	make_with_child (first_child: detachable like Current)
 			-- Initialize Current with a `first_child'.
 			-- `first_child''s parent is changed as a side effect.
 		do
@@ -38,11 +38,11 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: like Current
+	parent: detachable like Current
 		-- parent of Current
 		-- Void if Current is a root.
 
-	children: ARRAY [like Current]
+	children: ARRAY [detachable like Current]
 		-- children of Current
 
 	keys: ARRAY [detachable like item]
@@ -58,9 +58,12 @@ feature -- Access
 				-- Number of keys until the one we seek.
 			aux, k: INTEGER
 			bool: BOOLEAN
+			l_key: detachable like item
+			l_child: detachable like Current
 		do
 			if is_leaf then
-				Result := keys @ i
+				l_key := keys @ i
+				check l_key /= Void end -- Key in the range should not be void.
 			else
 				from
 					k := 1
@@ -70,7 +73,9 @@ feature -- Access
 				until
 					bool
 				loop
-					aux := pos - (children @ k).keys_plus_one
+					l_child := children @ k
+					check l_child /= Void end -- Controlled by `bool'
+					aux := pos - l_child.keys_plus_one
 					if aux > 0 then
 							--| The key isn't in child `k'.
 						pos := aux
@@ -82,37 +87,51 @@ feature -- Access
 					elseif aux < 0 then
 							--| The key is in child `k'.
 						bool := True
-						Result := (children @ k).item (pos)
+						l_child := children @ k
+						check l_child /= Void end -- Controlled by `bool'
+						l_key := l_child.item (pos)
 					else
 							--| We found the key.
 						bool := True
-						Result := keys @ k
+						l_key := keys @ k
 					end
 				end
+				check l_key /= Void end -- Implied by `bool'
 			end
+			Result := l_key
 		ensure
 			final_Result_good: is_root implies (Result.number = i)
 		end
 
-	first_item: like item
+	first_item: detachable like item
 			-- first key of a tree
 			-- goes much faster than "item (1)"
+		require
+			has_children: not is_leaf implies children @ 1 /= Void
+		local
+			l_fisrt: detachable like Current
 		do
 			if is_leaf then
 				Result := keys @ 1
 			else
-				Result := (children @ 1).first_item
+				l_fisrt := children @ 1
+				check l_fisrt /= Void end -- Implied by precondition.
+				Result := l_fisrt.first_item
 			end
 		end
 
-	last_item: like item
+	last_item: detachable like item
 			-- last key of a tree
 			-- goes much faster than "item (keys_plus_one - 1)"
+		local
+			l_last: detachable like Current
 		do
 			if is_leaf then
 				Result := keys @ (arity - 1)
 			else
-				Result := (children @ arity).last_item
+				l_last := children @ arity
+				check l_last_not_void: l_last /= Void end -- Implied by not `is_leaf'.
+				Result := l_last.last_item
 			end
 		end
 
@@ -144,19 +163,22 @@ feature -- Status report
 			has_a_parent: not is_root
 		local
 			ch: like children
+			l_parent: like parent
 		do
+			l_parent := parent
+			check l_parent /= Void end -- Implied by not `is_root'
 			from
-				ch := parent.children
+				ch := l_parent.children
 				Result := 1
 			until
 				ch @ Result = Current
 			loop
 				Result := Result + 1
 				check
-					no_overflow: Result <= parent.arity
+					no_overflow: Result <= l_parent.arity
 				end
 			variant
-				parent.arity - Result
+				l_parent.arity - Result
 			end
 		end
 --| FIXME
@@ -166,13 +188,19 @@ feature -- Status report
 
 	keys_before_child (i: INTEGER): INTEGER
 			-- Number of keys in the tree before child number `i'
+		require
+			i_valid: i >= 1 and then i <= children.upper
 		local
 			j: INTEGER
+			l_parent: like parent
+			l_child: detachable like Current
 		do
 			if is_root then
 				Result := 0
 			else
-				Result := parent.keys_before_child (pos_in_parent)
+				l_parent := parent
+				check l_parent /= Void end -- Implied by not `is_root'
+				Result := l_parent.keys_before_child (pos_in_parent)
 			end
 			if is_leaf then
 				Result := Result + i - 1
@@ -182,7 +210,9 @@ feature -- Status report
 				until
 					j >= i
 				loop
-					Result := Result + (children @ j).keys_plus_one
+					l_child := children @ j
+					check l_child /= Void end
+					Result := Result + l_child.keys_plus_one
 					j := j + 1
 				variant
 					i - j
@@ -218,15 +248,17 @@ feature {TREE_NODE} -- Status setting
 
 feature -- Element change
 
-	set_parent (par: like Current)
+	set_parent (par: detachable like Current)
 			-- make `par' the parent of Current
 		do
 			parent := par
 		end
 
-	insert_key_and_right_child (key : like item; node: like Current; pos: INTEGER)
+	insert_key_and_right_child (key : like item; node: detachable like Current; pos: INTEGER)
 			-- insert `key' at position `pos', and `node' at right of `key'
 			-- (so `node' will be @`pos'+1)
+		require
+			key_not_void: key /= Void
 		local
 			i: INTEGER
 		do
@@ -261,7 +293,7 @@ feature -- Element change
 			end
 		end
 
-	insert_key_and_left_child (key : like item; node: like Current; pos: INTEGER)
+	insert_key_and_left_child (key : like item; node: detachable like Current; pos: INTEGER)
 			-- insert `key' at position `pos', and `node' at left of `key'
 			-- (so `node' will be @`pos')
 		local
@@ -301,21 +333,33 @@ feature -- Element change
 
 	insert_first (key: like item)
 			-- Insert `key' in first position of the tree.
+		require
+			has_children: not is_leaf implies children @ 1 /= Void
+		local
+			l_fisrt: detachable like Current
 		do
 			if is_leaf then
 				insert_key_and_left_child (key, Void, 1)
 			else
-				children.item (1).insert_first (key)
+				l_fisrt := children @ 1
+				check l_fisrt /= Void end -- Implied by precondition.
+				l_fisrt.insert_first (key)
 			end
 		end
 
 	insert_last (key: like item)
 			-- Insert `key' in last position of the tree.
+		require
+			has_last_item: not is_leaf implies children @ arity /= Void
+		local
+			l_last: detachable like Current
 		do
 			if is_leaf then
 				insert_key_and_right_child (key, Void, arity)
 			else
-				children.item (arity).insert_last (key)
+				l_last := children @ arity
+				check l_last_not_void: l_last /= Void end -- Implied by not `is_leaf'.
+				l_last.insert_last (key)
 			end
 		end
 
@@ -325,8 +369,9 @@ feature -- Removal
 			-- delete key in position `pos' in the node.
 		local
 			i: INTEGER
-			previous_key: like item
-			parent_pk: like Current
+			previous_key: detachable like item
+			parent_pk: detachable like Current
+			l_child: detachable like Current
 		do
 			if is_leaf then
 					--| Children are Void, so they do not ned to be changed:
@@ -352,10 +397,14 @@ feature -- Removal
 			else
 					--| We cannot move this key directly, so we put the previous key
 					--| in his place,and free the previous key's room.
-				previous_key := (children @ pos).last_item
+				l_child := children @ pos
+				check l_child /= Void end
+				previous_key := l_child.last_item
+				check previous_key /= Void end
 				parent_pk := previous_key.parent
 				keys.put (previous_key, pos)
 				previous_key.set_parent (Current)
+				check parent_pk /= Void end
 				parent_pk.delete_key_and_right_child (parent_pk.arity -1)
 			end
 		end
@@ -380,22 +429,33 @@ feature -- Transformation
 			--| behaviour. be careful while changing it.
 		local
 			node2, aux_node: like Current
-			parent_key: like item
+			parent_key, l_key1, l_key2, l_key4, l_key5: detachable like item
+			l_child_1, l_child_2, l_child_3: detachable like Current
+			l_parent: like parent
 		do
 				--| Create the other node and fill it
 			create node2.make_with_child (children @ 4)
-			node2.insert_key_and_right_child (keys @ 4, children @ 5, 1)
-			node2.insert_key_and_right_child (keys @ 5, children @ 6, 2)
+			l_key4 := keys @ 4
+			l_key5 := keys @ 5
+			check l_key4 /= Void end
+			check l_key5 /= Void end
+			node2.insert_key_and_right_child (l_key4, children @ 5, 1)
+			node2.insert_key_and_right_child (l_key5, children @ 6, 2)
 
 			parent_key := keys @ 3
+			check parent_key /= Void end
 
 			if is_root then
 					--| Current is root, so we have to create a third node.
 					--| Current must remain root, because other objects may
 					--| be referencing it.
 				create aux_node.make_with_child (children @ 1)
-				aux_node.insert_key_and_right_child (keys @ 1, children @ 2, 1)
-				aux_node.insert_key_and_right_child (keys @ 2, children @ 3, 2)
+				l_key1 := keys @ 1
+				l_key2 := keys @ 2
+				check l_key1 /= Void end
+				check l_key2 /= Void end
+				aux_node.insert_key_and_right_child (l_key1, children @ 2, 1)
+				aux_node.insert_key_and_right_child (l_key2, children @ 3, 2)
 
 				make_with_child (aux_node)
 				insert_key_and_right_child (parent_key, node2, 1)
@@ -411,11 +471,17 @@ feature -- Transformation
 				if is_leaf then
 					keys_plus_one := 3
 				else
-					keys_plus_one := (children @ 1).keys_plus_one
-						+ (children @ 2).keys_plus_one
-						+ (children @ 3).keys_plus_one
+					l_child_1 := children @ 1
+					l_child_2 := children @ 2
+					l_child_3 := children @ 3
+					check l_child_1 /= Void and then l_child_2 /= Void and then l_child_3 /= Void end
+					keys_plus_one := l_child_1.keys_plus_one
+						+ l_child_2.keys_plus_one
+						+ l_child_3.keys_plus_one
 				end
-				parent.insert_key_and_right_child (parent_key, node2, pos_in_parent)
+				l_parent := parent
+				check l_parent /= Void end -- Implied by not `is_root'.
+				l_parent.insert_key_and_right_child (parent_key, node2, pos_in_parent)
 			end
 		end
 
@@ -424,91 +490,117 @@ feature -- Transformation
 		require
 			Current_is_root: is_root
 			several_level_tree: not is_leaf
-			node_and_children_can_merge: (arity < 3) and then ((children @ 1).arity + (children @ 2).arity < 6)
+			node_and_children_can_merge: (arity < 3) and then
+							(attached children.item (1) as l_chi_1 and then attached children.item (2) as l_chi_2
+							 and then (l_chi_1.arity + l_chi_2.arity < 6))
+
 		local
-			parent_key: like item
+			parent_key: detachable like item
 			node1, node2: like current
+			key1, key2: detachable like item
 		do
 				--| Copy old root contents.
 				--| Root has two children only, otherwise
 				--| no merging would have been compulsory.
 			parent_key := keys @ 1
+			check parent_key /= Void end
 			node1 := children @ 1
 			node2 := children @ 2
 				--| Write first child contents.
 			make_with_child (node1.children @ 1)
-			insert_key_and_right_child (node1.keys @ 1, node1.children @ 2, arity)
+			key1 := node1.keys @ 1
+			check key1 /= Void end
+			insert_key_and_right_child (key1, node1.children @ 2, arity)
 			if node1.arity > 2 then
-				insert_key_and_right_child (node1.keys @ 2, node1.children @ 3, arity)
+				key2 := node1.keys @ 2
+				check key2 /= Void end
+				insert_key_and_right_child (key2, node1.children @ 3, arity)
 			end
 				--| Write second child contents.
 			insert_key_and_right_child (parent_key, node2.children @ 1, arity)
-			insert_key_and_right_child (node2.keys @ 1, node2.children @ 2, arity)
+			key1 := node2.keys @ 1
+			check key1 /= Void end
+			insert_key_and_right_child (key1, node2.children @ 2, arity)
 			if node2.arity > 2 then
-				insert_key_and_right_child (node2.keys @ 2, node2.children @ 3, arity)
+				key2 := node2.keys @ 2
+				check key2 /= Void end
+				insert_key_and_right_child (key2, node2.children @ 3, arity)
 			end
 		end
 
 	balance_light_node
 			-- rebalance a light node (by key migration or merging)
-		require
 		local
-			parent_key, aux_key: like item
-			aux_node: like Current
+			parent_key, aux_key: detachable like item
+			aux_node: detachable like Current
 			i: INTEGER
+			l_parent: like parent
+			l_key1: detachable like item
 		do
 			if is_root then
 				check
 					one_level_tree: is_leaf
 				end
 			else
+				l_parent := parent
+				check l_parent /= Void end -- Implied by not `is_root'
 				i := pos_in_parent
 				if i > 1 then
 						--| Get previous node (at same level),
 						--| and key in parent between it and Current.
-					aux_node := parent.children @ (i - 1)
-					parent_key := parent.keys @ (i - 1)
+					aux_node := l_parent.children @ (i - 1)
+					check aux_node /= Void end -- Implied by "i > 1"
+					parent_key := l_parent.keys @ (i - 1)
+					check parent_key /= Void end -- Implied by "i > 1"
 					if aux_node.arity > 3 then
 							--| Many childs? Take one of them.
 						insert_key_and_left_child (parent_key, aux_node.children @ (aux_node.arity), 1)
 
 						aux_key := aux_node.keys @ (aux_node.arity - 1)
-						parent.keys.put (aux_key, i - 1)
+						check aux_key /= Void end -- Implied by `aux_node.arity > 3'
+						l_parent.keys.put (aux_key, i - 1)
 						aux_key.set_parent (parent)
 
 						aux_node.delete_key_and_right_child (aux_node.arity - 1)
 					else
 							--| Few childs? Merge the nodes.
-						if parent.is_root and parent.arity = 2 then
-							parent.balance_light_root
+						if l_parent.is_root and l_parent.arity = 2 then
+							l_parent.balance_light_root
 						else
+							l_key1 := keys @ 1
+							check l_key1 /= Void end
 							aux_node.insert_key_and_right_child (parent_key, children @ 1, aux_node.arity)
-							aux_node.insert_key_and_right_child (keys @ 1, children @ 2, aux_node.arity)
-							parent.delete_key_and_right_child (i - 1)
+							aux_node.insert_key_and_right_child (l_key1, children @ 2, aux_node.arity)
+							l_parent.delete_key_and_right_child (i - 1)
 						end
 					end
-				elseif i < parent.arity then
+				elseif i < l_parent.arity then
 						--| Get next node (at same level).
 						--| and key in parent between it and Current.
-					aux_node := parent.children @ (i+1)
-					parent_key := parent.keys @ (i)
+					aux_node := l_parent.children @ (i+1)
+					check aux_node /= Void end -- The algerithm implies there must be the next node.
+					parent_key := l_parent.keys @ (i)
+					check parent_key /= Void end -- The algerithm implies there must be a corresponding key.
 					if aux_node.arity > 3 then
 							--| Many childs? Take one of them.
 						insert_key_and_right_child (parent_key, aux_node.children @ 1, arity)
 
 						aux_key := aux_node.keys @ 1
-						parent.keys.put (aux_key, i)
-						aux_key.set_parent (parent)
+						check aux_key /= Void end -- Implied by `aux_node.arity > 3'
+						l_parent.keys.put (aux_key, i)
+						aux_key.set_parent (l_parent)
 
 						aux_node.delete_key_and_left_child (1)
 					else
 							--| Few childs? Merge the nodes.
-						if parent.is_root and parent.arity = 2 then
-							parent.balance_light_root
+						if l_parent.is_root and l_parent.arity = 2 then
+							l_parent.balance_light_root
 						else
+							l_key1 := keys @ 1
+							check l_key1 /= Void end
 							aux_node.insert_key_and_left_child (parent_key, children @ 2, 1)
-							aux_node.insert_key_and_left_child (keys @ 1, children @ 1, 1)
-							parent.delete_key_and_left_child (i)
+							aux_node.insert_key_and_left_child (l_key1, children @ 1, 1)
+							l_parent.delete_key_and_left_child (i)
 						end
 					end
 				else
@@ -527,26 +619,35 @@ feature -- Conversion
 
 	merge_right (other: like Current)
 			-- Add `other' at the right of Current.
+		require
+			other_not_void: other /= Void
+			other_has_children: children.valid_index (1)
 		local
 			dummy		: like item
-			l_default: G
-			current_node: like Current
-			child		: like Current
+			current_node: detachable like Current
+			child		: detachable like Current
 			pos			: INTEGER
 			i			: INTEGER
+			l_key		: detachable like item
 		do
-			create dummy.make (l_default)
+			create dummy.make (({G}).default)
 			child := other.children @ 1
+			check child /= Void end -- Implied by precondition
 			insert_key_and_right_child (dummy, child, arity)
 			from
 				i := 1
 				current_node := child.parent
+				check current_node /= Void end -- Children are never a root.
 				pos := child.pos_in_parent
 			until
 				i = other.arity
 			loop
 				child := other.children @ (i + 1)
-				current_node.insert_key_and_right_child (other.keys @ i, child, pos)
+				check child /= Void end -- Children in range should never be void
+				l_key := other.keys @ i
+				check l_key /= Void end -- keys in range should never be void.
+				check current_node /= Void end -- Should never reach a root, otherwise implies a bug.
+				current_node.insert_key_and_right_child (l_key, child, pos)
 					--| Node organisation may have changed if `current_node'
 					--| has been split due to rebalancing. We are looking for the
 					--| place the last child inserted is, to attach others after it.
@@ -563,14 +664,15 @@ feature -- Conversion
 			-- Add `other' at the left of Current.
 		local
 			dummy		: like item
-			current_node: like Current
-			child		: like Current
+			current_node: detachable like Current
+			child		: detachable like Current
 			pos			: INTEGER
 			i			: INTEGER
-			l_default: G
+			l_key		: detachable like item
 		do
-			create dummy.make (l_default)
+			create dummy.make (({G}).default)
 			child := other.children @ arity
+			check child /= Void end
 			insert_key_and_left_child (dummy, child, 1)
 			from
 				i := other.arity - 1
@@ -580,7 +682,10 @@ feature -- Conversion
 				i = 0
 			loop
 				child := other.children @ i
-				insert_key_and_left_child (other.keys @ i, child, pos)
+				check child /= Void end
+				l_key := other.keys @ i
+				check l_key /= Void end
+				insert_key_and_left_child (l_key, child, pos)
 				current_node := child.parent
 				pos := child.pos_in_parent
 				i := i - 1
@@ -634,24 +739,32 @@ feature {TREE_NODE} -- Implementation
 			-- propagate update to `parent', if not root.
 		local
 			i : INTEGER
+			l_child: detachable like Current
+			l_parent: like parent
 		do
 			if is_leaf then
 				keys_plus_one := arity
 			else
 				from
 					i := 2
-					keys_plus_one := (children @ 1).keys_plus_one
+					l_child := children @ 1
+					check l_child /= Void end
+					keys_plus_one := l_child.keys_plus_one
 				until
 					i > arity
 				loop
-					keys_plus_one := keys_plus_one + (children @ i).keys_plus_one
+					l_child := children @ i
+					check l_child /= Void end
+					keys_plus_one := keys_plus_one + l_child.keys_plus_one
 					i := i + 1
 				variant
 					arity - i + 1
 				end
 			end
 			if (not is_root) then
-				parent.rec_update_key_number
+				l_parent := parent
+				check l_parent /= Void end -- Implied by not `is_root'
+				l_parent.rec_update_key_number
 			end
 		end
 invariant

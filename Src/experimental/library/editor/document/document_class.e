@@ -36,19 +36,21 @@ feature -- Initialization
 	        -- default text scanner will be used.  To use a custom scanner override with `set_scanner'.
 	    local
 	        l_error: BOOLEAN
+	        l_scanner: like scanner
+	        l_syntax_definition: like syntax_definition
 	  	do
-	  		if syntax_definition /= Void then
-		  		if (create {PLAIN_TEXT_FILE}.make (syntax_definition)).exists then
-    	  		    l_error := parse_syntax_file (syntax_definition)
+	  		l_syntax_definition := syntax_definition
+	  		if l_syntax_definition /= Void then
+		  		if (create {PLAIN_TEXT_FILE}.make (l_syntax_definition)).exists then
+    	  		    l_error := parse_syntax_file (l_syntax_definition)
+    	  		    l_scanner := scanner
     			else
-    			    l_error := True
+    			    l_scanner := basic_lexer
     	  		end
     	  	else
-    	  	    l_error := True
+    	  	    l_scanner := basic_lexer
     	  	end
-	  		if l_error then
-	  			scanner := basic_lexer
-	  		end
+	  		scanner := l_scanner
 	  	ensure
 	  	    scanner_not_void: scanner /= Void
 	  	end
@@ -58,13 +60,13 @@ feature -- Access
 	name: STRING
 			-- Name description
 
-	syntax_definition: STRING
+	syntax_definition: detachable STRING
 			-- Name of file containing syntax definition
 
 	scanner: EDITOR_SCANNER
 			-- Scanner
 
-	encoding_detector: ENCODING_DETECTOR
+	encoding_detector: detachable ENCODING_DETECTOR
 			-- Encoding detector
 
 feature -- Query
@@ -123,6 +125,8 @@ feature {NONE} -- Parsing
 
 	parse_syntax_file (a_syn_file: STRING): BOOLEAN
 	        -- To implement.  Return True if there is an error.
+		require
+			a_syn_file_not_void: a_syn_file /= Void
 	   	local
 	   	    l_syntax: EDITOR_SYNTAX_SCANNER
    	 	do
@@ -130,6 +134,8 @@ feature {NONE} -- Parsing
 	   		scanner := l_syntax
 			l_syntax.analyze (a_syn_file)
 	   		Result := l_syntax.analyzer = Void
+	   	ensure
+	   		scanner_set: scanner /= Void
 	   	end
 
 feature {NONE} -- Implementation

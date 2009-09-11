@@ -81,9 +81,9 @@ feature -- Miscellaneous
 			-- Update the value of `position' to
 			-- its correct value
 		do
-			if previous /= Void then
+			if attached previous as l_previous then
 				-- Update current position
-				position := previous.width
+				position := l_previous.width
 			end
 
 			update_width

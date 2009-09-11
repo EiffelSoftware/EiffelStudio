@@ -12,11 +12,11 @@ deferred class
 feature -- Status report
 
 	is_bound_to_next: BOOLEAN
-			-- does this command belong to a group of undo commands to be executed at the same time 
+			-- does this command belong to a group of undo commands to be executed at the same time
 
 feature -- Status setting
 
-	bind_to_next 
+	bind_to_next
 			-- bind the excution of this command to the execution of the following command
 			-- in the undo-redo stack (i.e. set is_bound_with_next to true)
 		do
@@ -30,13 +30,31 @@ feature -- Status setting
 			is_bound_to_next := False
 		end
 
+feature -- Status report
+
+	undo_possible: BOOLEAN
+			-- undo possible?
+		do
+			Result := True
+		end
+
+	redo_possible: BOOLEAN
+			-- redo possible?
+		do
+			Result := True
+		end
+
 feature -- Basic operations
 
 	undo
+		require
+			undo_possible: undo_possible
 		deferred
 		end
 
 	redo
+		require
+			redo_possible: redo_possible
 		deferred
 		end
 

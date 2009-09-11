@@ -13,7 +13,6 @@ inherit
 		rename
 			remove as remove_document
 		redefine
-			area,
 			item,
 			remove_document
 		end
@@ -48,6 +47,7 @@ feature -- Creation
 			-- Make with `a_text_panel'
 		require
 			panel_not_void: a_text_panel /= Void
+			panel_has_icons: a_text_panel.has_icons
 		do
 			make (0)
 			panel := a_text_panel
@@ -91,8 +91,8 @@ feature -- Basic Operations
 			end
 
 				-- Update editor panel				
-			if item.data /= Void then
-				panel.set_text (item.data, a_doc.name)
+			if attached item.data as l_data then
+				panel.set_text (l_data, a_doc.name)
 				if item.cursor_line > 0 then
 					panel.setup_editor (item.cursor_line)
 				else
@@ -154,10 +154,16 @@ feature {NONE} -- Initialization
 
 	build_header_area
 			-- Build the header area
+		require
+			has_icon: panel.has_icons
 		local
 			l_inner_box: EV_HORIZONTAL_BOX
 			l_toolbar: EV_TOOL_BAR
+			l_icons: detachable EDITOR_ICONS
 		do
+			l_icons := panel.icons
+			check l_icons /= Void end -- Implied by precondition
+
 			create header_area
 			update_height
 			header_area.set_minimum_size (1, height)
@@ -171,19 +177,19 @@ feature {NONE} -- Initialization
 			create l_toolbar
 
 			create left_scroll_button
-			left_scroll_button.set_pixmap (panel.icons.header_left_scroll_pixmap)
+			left_scroll_button.set_pixmap (l_icons.header_left_scroll_pixmap)
 			left_scroll_button.select_actions.force_extend (agent scroll_left)
 			left_scroll_button.disable_sensitive
 			l_toolbar.extend (left_scroll_button)
 
 			create right_scroll_button
-			right_scroll_button.set_pixmap (panel.icons.header_right_scroll_pixmap)
+			right_scroll_button.set_pixmap (l_icons.header_right_scroll_pixmap)
 			right_scroll_button.select_actions.force_extend (agent scroll_right)
 			right_scroll_button.disable_sensitive
 			l_toolbar.extend (right_scroll_button)
 
 			create close_button
-			close_button.set_pixmap (panel.icons.header_close_current_document_pixmap)
+			close_button.set_pixmap (l_icons.header_close_current_document_pixmap)
 			close_button.select_actions.force_extend (agent close_document)
 			close_button.disable_sensitive
 			l_toolbar.extend (close_button)
@@ -322,7 +328,7 @@ feature {NONE} -- Display functions
 			-- Update the items
 		local
 			l_index: INTEGER
-			l_prev_item: like item
+			l_prev_item: detachable like item
 		do
 				-- Update the open document items
 			from
@@ -346,9 +352,11 @@ feature {NONE} -- Display functions
 		end
 
 	update_height
-			--
+			-- Update height
+		require
+			has_header_font: has_header_font
 		do
-			height := header_font_cell.item.value.height + 10
+			height := header_font.height + 10
 		end
 
 feature {NONE} -- Widgets
@@ -365,9 +373,9 @@ feature {NONE} -- Events
 			-- Mouse button was pressed.
 		local
 			l_index: INTEGER
-			l_item: like item
+			l_item: detachable like item
 			found: BOOLEAN
-			l_keyboard_panel: KEYBOARD_SELECTABLE_TEXT_PANEL
+			l_cursor: detachable TEXT_CURSOR
 		do
 			if button = 1 and then panel.text_is_fully_loaded then
 
@@ -389,16 +397,18 @@ feature {NONE} -- Events
 				end
 				index := l_index
 
+				check l_item /= Void end -- item must be found, otherwise a bug.
 				if l_index /= index_of (l_item, 1) then
 						-- It is not the same item
 					before_selection_actions.call ([Current])
 					if item /= Void then
 							-- Store item information for when we change back
 						item.set_data (panel.text_displayed)
-						l_keyboard_panel ?= panel
-						if l_keyboard_panel/= Void then
-							item.set_cursor_line (l_keyboard_panel.text_displayed.cursor.y_in_lines)
-							item.set_cursor_char (l_keyboard_panel.text_displayed.cursor.x_in_characters)
+						if attached {KEYBOARD_SELECTABLE_TEXT_PANEL} panel as l_keyboard_panel then
+							l_cursor := l_keyboard_panel.text_displayed.cursor
+							check l_cursor /= Void end -- Not void, other wise a bug.
+							item.set_cursor_line (l_cursor.y_in_lines)
+							item.set_cursor_char (l_cursor.x_in_characters)
 						end
 						item.set_first_line_displayed (panel.first_line_displayed)
 					end
@@ -446,29 +456,27 @@ feature {NONE} -- Events
 	on_text_loaded
 			-- Update `Current' when the text has been completely loaded.
 		local
-			l_keyboard_panel: KEYBOARD_SELECTABLE_TEXT_PANEL
+			l_cursor: detachable TEXT_CURSOR
 		do
-			l_keyboard_panel ?= panel
-			if l_keyboard_panel /= Void and then not is_empty and then item /= Void then
+			if attached {KEYBOARD_SELECTABLE_TEXT_PANEL}panel as l_keyboard_panel and then not is_empty and then item /= Void then
 				if item.first_line_displayed > 0 then
 					l_keyboard_panel.set_first_line_displayed (item.first_line_displayed, False)
 				end
+				l_cursor := l_keyboard_panel.text_displayed.cursor
+				check l_cursor /= Void end -- Never, otherwise a bug.
 				if item.cursor_line > 0 then
-					l_keyboard_panel.text_displayed.cursor.set_y_in_lines (item.cursor_line)
+					l_cursor.set_y_in_lines (item.cursor_line)
 				end
 				if item.cursor_char > 0 then
-					l_keyboard_panel.text_displayed.cursor.set_x_in_characters (item.cursor_char)
+					l_cursor.set_x_in_characters (item.cursor_char)
 				end
 			end
 		end
 
 	on_text_fully_loaded
 			-- Update `Current' when the text has been completely loaded.
-		local
-			l_keyboard_panel: KEYBOARD_SELECTABLE_TEXT_PANEL
 		do
-			l_keyboard_panel ?= panel
-			if l_keyboard_panel /= Void and then not is_empty and then item /= Void then
+			if attached {KEYBOARD_SELECTABLE_TEXT_PANEL}panel as l_keyboard_panel and then not is_empty and then item /= Void then
 				close_button.enable_sensitive
 			end
 		end
@@ -492,9 +500,6 @@ feature {NONE} -- Implementation
 
 	in_resize: BOOLEAN
 		-- Is Current currently being resized
-
-	area: SPECIAL [TEXT_PANEL_HEADER_ITEM]
-		-- Area
 
 	item: TEXT_PANEL_HEADER_ITEM
 			-- Item

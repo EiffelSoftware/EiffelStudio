@@ -55,6 +55,7 @@ feature {NONE}-- Initialization
 			Precursor {B_345_TREE}
 			set_tabulation_size (editor_preferences.tabulation_spaces)
 			finish_reading_string_agent := agent finish_reading_string
+			create current_string.make_empty
 		end
 
 feature -- Content Change
@@ -97,16 +98,16 @@ feature -- Reinitialization
 			wipe_out
 			text_being_processed := True
 			reading_text_finished := False
-			current_string := Void
+			create current_string.make_empty
 			current_pos := 0
 			on_text_reset
 		end
 
 feature -- Access
 
-	first_line: EDITOR_LINE
+	first_line: detachable EDITOR_LINE
 
-	current_line: like line
+	current_line: detachable like line
 		-- current line
 
 	text: STRING
@@ -129,13 +130,15 @@ feature -- Access
 			l_string_32: STRING_32
 		do
 			from
-				l_string_32 := first_line.wide_image
 				li := first_line
+				check li /= Void end -- The first line is not void, otherwise a bug.
+				l_string_32 := li.wide_image
 			until
 				li = last_line
 			loop
 				l_string_32.extend ('%N')
 				li := li.next
+				check li /= Void end -- Only the `last_line.next' can be void.
 				l_string_32.append (li.wide_image)
 			end
 			Result := l_string_32
@@ -173,17 +176,27 @@ feature -- Status Setting
 	highlight_line (a_line: INTEGER)
 			-- Highlight line.  Do not move cursor to this line.
 		require
+			valid_i: a_line >= 1 and then a_line <= number_of_lines
+		local
+			l_line: like current_line
 		do
 			go_i_th (a_line)
-			current_line.set_highlighted (True)
+			l_line := current_line
+			check l_line /= Void end -- Implied by postcondition of `go_i_th'
+			l_line.set_highlighted (True)
 		end
 
 	unhighlight_line (a_line: INTEGER)
 			-- Highlight line.  Do not move cursor to this line.
 		require
+			valid_i: a_line >= 1 and then a_line <= number_of_lines
+		local
+			l_line: like current_line
 		do
 			go_i_th (a_line)
-			current_line.set_highlighted (False)
+			l_line := current_line
+			check l_line /= Void end -- Implied by postcondition of `go_i_th'
+			l_line.set_highlighted (False)
 		end
 
 feature -- Query
@@ -202,24 +215,36 @@ feature -- Query
 
 	first_non_blank_token (a_line: like line): EDITOR_TOKEN
 			-- First non blank token in `a_line'.
+		require
+			a_line_not_void: a_line /= Void
 		local
-			blnk: EDITOR_TOKEN_BLANK
+			l_token: detachable EDITOR_TOKEN
+			l_found: BOOLEAN
 		do
 			from
-				Result := a_line.first_token
-				blnk ?= Result
+				l_token := a_line.first_token
+				if attached {EDITOR_TOKEN_BLANK} l_token then
+					l_found := True
+				end
 			until
-				blnk = Void
+				l_found
 			loop
-				Result := Result.next
-				blnk ?= Result
+				check l_token /= Void end -- Never, otherwise a bug
+				l_token := l_token.next
+				if attached {EDITOR_TOKEN_BLANK} l_token then
+					l_found := True
+				end
 			end
+			check l_token /= Void end -- Never, otherwise a bug
+			Result := l_token
 		end
 
 	line_pos_in_chars (a_line: like line): INTEGER
 			-- Position in chars of start of `a_line'.
 		require
 			line_not_void: a_line /= Void
+		local
+			l_line: like current_line
 		do
 			from
 				start
@@ -227,7 +252,9 @@ feature -- Query
 			until
 				a_line = current_line or after
 			loop
-				Result := Result + current_line.wide_image.count + 1
+				l_line := current_line
+				check l_line /= Void end -- Implied by not `after'
+				Result := Result + l_line.wide_image.count + 1
 				forth
 			end
 		ensure
@@ -239,9 +266,13 @@ feature -- Element Change
 	forth
 			-- move `current_line' to the next line
 		require
-			not after
+			not_after: not after
+		local
+			l_line: like current_line
 		do
-			current_line := current_line.next
+			l_line := current_line
+			check l_line /= Void end -- Implied by not `after'
+			current_line := l_line.next
 		end
 
 	start
@@ -258,14 +289,20 @@ feature -- Element Change
 			valid_i: i >= 1 and then i <= number_of_lines
 		do
 			current_line := line (i)
+		ensure
+			not_after: not after
 		end
 
 	update_line (a_line: INTEGER)
 			-- Update line tokens
 		require
 			line_index_valid: a_line > 0 and a_line <= number_of_lines
+		local
+			l_line: like line
 		do
-			line (a_line).update_token_information
+			l_line := line (a_line)
+			check l_line /= Void end -- Implid by precondition
+			l_line.update_token_information
 		end
 
 feature -- Status report
@@ -296,6 +333,7 @@ feature -- Search
 			line_string: STRING_32
 			found_index: INTEGER
 			line_number: INTEGER
+			l_line: like current_line
 		do
 				-- Reset the success tag.
 			successful_search := False
@@ -307,9 +345,11 @@ feature -- Search
 			until
 				found_index /= 0 or else after
 			loop
-				line_string := current_line.wide_image
+				l_line := current_line
+				check l_line /= Void end -- Implied by not `after'
+				line_string := l_line.wide_image
 				if line_string.count >= searched_string.count then
-					found_index := line_string.substring_index(searched_string, 1)
+					found_index := line_string.substring_index (searched_string, 1)
 				end
 				line_number := line_number + 1
 
@@ -350,7 +390,7 @@ feature {TEXT_PANEL} -- Userset data
 			userset_data_set: userset_data = a_data
 		end
 
-	userset_data: TEXT_PANEL_BUFFERED_DATA assign set_userset_data
+	userset_data: detachable TEXT_PANEL_BUFFERED_DATA assign set_userset_data
 			-- Userset editor data
 
 feature {NONE} -- Text Loading
@@ -361,6 +401,8 @@ feature {NONE} -- Text Loading
 			curr_string, l_current_string: STRING -- UTF-8
 			j: INTEGER
 		do
+			
+
 			lexer.set_tab_size (editor_preferences.tabulation_spaces)
 			lexer.set_in_verbatim_string (False)
 
@@ -415,7 +457,7 @@ feature {NONE} -- Text Loading
 	finish_reading_string
 			-- Read the file named `a_name' and perform a lexical analysis
 		local
-			l_current_string, curr_string: STRING -- UTF-8
+			l_current_string, curr_string: detachable STRING -- UTF-8
 			j				: INTEGER
 			lines_read		: INTEGER
 		do
@@ -468,7 +510,7 @@ feature {NONE} -- Text Loading
 			end
 		end
 
-	new_line_from_lexer (line_image: STRING): like line
+	new_line_from_lexer (line_image: STRING): attached like line
 			-- create a new EDITOR_LINE from `line_image' using
 			-- `line_image' is in UTF-8.
 		require
@@ -538,11 +580,11 @@ feature -- Memory management
 	recycle
 		do
 			reset_text
-			finish_reading_string_agent := Void
+			finish_reading_string_agent := agent do end
 		end
 
 invariant
-	current_line_valid: current_line /= Void implies current_line.is_valid
+	current_line_valid: attached current_line as l_line implies l_line.is_valid
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

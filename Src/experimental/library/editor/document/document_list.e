@@ -26,7 +26,7 @@ feature -- List operations
 		do
 			removed_item := item
 			Precursor
-			on_item_removed (removed_item)			
+			on_item_removed (removed_item)
 		end
 
 	extend (v: like item)
@@ -34,7 +34,7 @@ feature -- List operations
 			-- Do not move cursor.
 		do
 			Precursor (v)
-			on_item_added (v)				
+			on_item_added (v)
 		end
 
 feature -- Basic Operations
@@ -44,12 +44,12 @@ feature -- Basic Operations
 		do
 			duplicates_enabled := True
 		end
-	
+
 	disable_duplicates
 			-- Enable to contain duplicate items
 		do
 			duplicates_enabled := False
-		end	
+		end
 
 feature -- Query
 
@@ -74,7 +74,7 @@ feature -- Query
 				forth
 			end
 		end
-		
+
 feature -- Observer Pattern
 
 	add_observer (a_observer: DOCUMENT_OBSERVER)
@@ -126,19 +126,19 @@ feature -- Observer Pattern
 				observer_list.forth
 			end
 		end
-		
+
 feature {NONE} -- Attributes
 
 	in_operation: BOOLEAN
 			-- Are we in the middle of a list operation (put, extend, remove, ...)?
-			
+
 	observer_list: ARRAYED_LIST [DOCUMENT_OBSERVER]
-			-- 
+			--
 		once
 			create Result.make (1)
-		end	
-		
-	previous_item: like item;
+		end
+
+	previous_item: detachable like item;
 			-- Previously focused item
 
 note

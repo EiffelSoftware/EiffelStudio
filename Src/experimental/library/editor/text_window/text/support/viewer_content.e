@@ -31,11 +31,11 @@ feature -- Initialization
 
 feature -- Access
 
-	first_line: VIEWER_LINE
+	first_line: detachable VIEWER_LINE
 
-	first_displayed_line: like current_line
+	first_displayed_line: detachable like current_line
 
-	last_displayed_line: like current_line
+	last_displayed_line: detachable like current_line
 
 	nb_of_lines_displayed: INTEGER
 
@@ -54,7 +54,7 @@ feature -- Search status
 
 feature -- test features
 
-	current_line: VIEWER_LINE
+	current_line: detachable VIEWER_LINE
 
 	after: BOOLEAN
 		do
@@ -63,9 +63,13 @@ feature -- test features
 
 	forth
 		require
-			not after
+			not_after: not after
+		local
+			l_line: like current_line
 		do
-			current_line := current_line.next
+			l_line := current_line
+			check l_line /= Void end -- Implied by precondition
+			current_line := l_line.next
 		end
 
 	go_i_th (i: INTEGER)
@@ -93,6 +97,7 @@ feature -- Basic operations
 			line_string	: STRING_32
 			found_index : INTEGER
 			line_number : INTEGER
+			l_current_line: like current_line
 		do
 				-- Reset the success tag.
 			successful_search := False
@@ -104,7 +109,9 @@ feature -- Basic operations
 			until
 				found_index /= 0 or else after
 			loop
-				line_string := current_line.wide_image
+				l_current_line := current_line
+				check l_current_line /= Void end -- Implied by not `after'
+				line_string := l_current_line.wide_image
 				if line_string.count >= searched_string.count then
 					found_index := line_string.substring_index (searched_string, 1)
 				end
@@ -124,10 +131,11 @@ feature -- Basic operations
 
 	string_selected (start_selection: VIEWER_CURSOR; end_selection: VIEWER_CURSOR): STRING
 		require
-				right_order: start_selection < end_selection
+			selections_attached: start_selection /= Void and end_selection /= Void
+			right_order: start_selection < end_selection
 		local
 			line: like current_line
-			t, t2 : EDITOR_TOKEN
+			t, t2 : detachable EDITOR_TOKEN
 		do
 				-- Retrieving line after `start_selection'.
 			t := start_selection.token
@@ -144,13 +152,8 @@ feature -- Basic operations
 					if t = line.eol_token then
 						Result := "%N"
 						line := line.next
-						if line = Void then
-							check
-								never_reached: False
-							end
-						else
-							t := line.first_token
-						end
+						check line /= Void end -- Never, otherwise a bug.
+						t := line.first_token
 					else
 						Result := t.wide_image.substring (start_selection.pos_in_token, t.wide_image.count)
 						t := t.next
@@ -161,14 +164,10 @@ feature -- Basic operations
 					if t = line.eol_token then
 						Result.extend ('%N')
 						line := line.next
-						if line = Void then
-							check
-								never_reached: False
-							end
-						else
-							t := line.first_token
-						end
+						check line /= Void end -- Never, otherwise a bug.
+						t := line.first_token
 					else
+						check t /= Void end -- Never, otherwise a bug.
 						Result.append (t.wide_image)
 						t := t.next
 					end
@@ -183,11 +182,15 @@ feature -- Basic operations
 feature -- Element Change
 
 	prepend_line (a_line: like first_displayed_line)
+		require
+			a_line_not_void: a_line /= Void
 		do
 			prepend_data (a_line)
 		end
 
 	append_line, extend (a_line: like first_displayed_line)
+		require
+			a_line_not_void: a_line /= Void
 		do
 			append_data (a_line)
 		end

@@ -14,16 +14,16 @@ inherit
 
 feature -- Access
 
-	tree: B_345_TREE
+	tree: detachable B_345_TREE
 
-	key: TREE_KEY [like Current]
+	key: detachable TREE_KEY [like Current]
 		-- Tree Key of Current
 
-	next: like Current
+	next: detachable like Current
 		-- next item
 		-- Void if Current is the last item.
 
-	previous: like Current
+	previous: detachable like Current
 		-- previous item
 		-- Void if Current is the last item.
 
@@ -31,8 +31,12 @@ feature -- Access
 			-- index of item in tree
 		require
 			is_valid: is_valid
+		local
+			l_key: like key
 		do
-			Result := key.number
+			l_key := key
+			check l_key /= Void end -- Implied by precondition
+			Result := l_key.number
 		end
 
 feature -- Status report
@@ -41,31 +45,31 @@ feature -- Status report
 			-- Is current item valid in the tree?
 		do
 			Result := tree /= Void and then
-					key /= Void and then
-					key.is_valid
+					(attached key as l_key and then
+					l_key.is_valid)
 		end
 
 feature -- Element change
 
-	set_key (k: like key)
+	set_key (k: detachable like key)
 			-- Make `k' the value of `key'.
 		do
 			key := k
 		end
 
-	set_tree (t: like tree)
+	set_tree (t: detachable like tree)
 			-- Make `t' the value of `tree'.
 		do
 			tree := t
 		end
 
-	set_next (ti: like Current)
+	set_next (ti: detachable like Current)
 			-- Make `ti' the next item.
 		do
 			next := ti
 		end
 
-	set_previous (ti: like Current)
+	set_previous (ti: detachable like Current)
 			-- Make `ti' the previous item.
 		do
 			previous := ti
@@ -76,29 +80,45 @@ feature -- Removal
 	delete
 			-- Supress Current.
 			-- If Current is the only line of `tree', prompt `tree' so.
+		require
+			key_not_void: key /= Void
+		local
+			l_key: like key
 		do
-			key.delete
+			l_key := key
+			check l_key /= Void end -- Implied by precondition
+			l_key.delete
 			unlink
 		end
 
 	unlink
 			-- link `previous' to `next'. used in deletion.
+		require
+			tree_not_void: tree /= Void
+		local
+			l_tree: like tree
+			l_next: like next
+			l_previous: like previous
 		do
-			if next /= Void then
-				next.set_previous (previous)
+			l_next := next
+			l_previous := previous
+			if l_next /= Void then
+				l_next.set_previous (l_previous)
 			end
-			if previous /= Void then
-				previous.set_next (next)
+			if l_previous /= Void then
+				l_previous.set_next (l_next)
 			end
-			if Current = tree.last_data then
-				if Current = tree.first_data then
-					tree.wipe_out
+			l_tree := tree
+			check l_tree /= Void end -- Implied by precondition
+			if Current = l_tree.last_data then
+				if Current = l_tree.first_data then
+					l_tree.wipe_out
 				else
-					tree.set_last_data (previous)
+					l_tree.set_last_data (l_previous)
 				end
 			else
-				if Current = tree.first_data then
-					tree.set_first_data (next)
+				if Current = l_tree.first_data then
+					l_tree.set_first_data (l_next)
 				end
 			end
 		end
@@ -109,14 +129,17 @@ feature -- Basic Operations
 			-- add `other' to the right of Current
 		require
 			other_not_void: other /= Void
+			key_not_void: key /= Void
 		local
-			ti: like key
+			ti, l_key: like key
 		do
 			other.set_tree (tree)
 			link_right (other)
 			create ti.make (other)
 			other.set_key (ti)
-			key.add_right (ti)
+			l_key := key
+			check l_key_not_void: l_key /= Void end -- Implied by precondition
+			l_key.add_right (ti)
 		ensure
 			other_has_key: other.key /= Void
 			other_has_tree: other.tree /= void
@@ -124,14 +147,19 @@ feature -- Basic Operations
 
 	add_left (other: like Current)
 			-- add `other' to the left of Current
+		require
+			other_not_void: other /= Void
+			key_not_void: key /= Void
 		local
-			ti: like key
+			ti, l_key: like key
 		do
 			other.set_tree (tree)
 			link_left (other)
 			create ti.make (other)
 			other.set_key (ti)
-			key.add_left (ti)
+			l_key := key
+			check l_key_not_void: l_key /= Void end -- Implied by precondition
+			l_key.add_left (ti)
 		ensure
 			other_has_key: other.key /= Void
 			other_has_tree: other.tree /= void
@@ -140,15 +168,23 @@ feature -- Basic Operations
 	link_right (other: like Current)
 			-- Add `other' to the right of current.
 			-- Change links
+		require
+			tree_set: tree /= Void
+		local
+			l_next: like next
+			l_tree: like tree
 		do
 			other.set_next (next)
 			other.set_previous (Current)
-			if next /= Void then
-				next.set_previous (other)
+			l_next := next
+			if l_next /= Void then
+				l_next.set_previous (other)
 			end
 				-- Being last tree data is not the same as having no following data.
-			if Current = tree.last_data then
-				tree.set_last_data (other)
+			l_tree := tree
+			check l_tree /= Void end -- Implied by precondition
+			if Current = l_tree.last_data then
+				l_tree.set_last_data (other)
 			end
 			set_next (other)
 				--| `set_next' is last to not interfere
@@ -158,15 +194,23 @@ feature -- Basic Operations
 	link_left (other: like Current)
 			-- Add `other' to the left of current.
 			-- Change links
+		require
+			tree_set: tree /= Void
+		local
+			l_pre: like previous
+			l_tree: like tree
 		do
 			other.set_previous (previous)
 			other.set_next (Current)
-			if previous /= Void then
-				previous.set_next (other)
+			l_pre := previous
+			if l_pre /= Void then
+				l_pre.set_next (other)
 			end
 				-- Being first tree data is not the same as having no previous data.
-			if Current = tree.first_data then
-				tree.set_first_data (other)
+			l_tree := tree
+			check l_tree /= Void end -- Implied by precondition
+			if Current = l_tree.first_data then
+				l_tree.set_first_data (other)
 			end
 			set_previous (other)
 				--| `set_previous' is last to not interfere

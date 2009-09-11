@@ -20,8 +20,15 @@ feature -- Resources
 			-- Editor preferences
 		require
 			initialized: initialized
+		local
+			l_result : detachable EDITOR_DATA
 		do
-			Result := editor_preferences_cell.item
+			if attached editor_preferences_cell.item as l_item then
+				l_result := l_item
+			else
+				check l_result /= Void end -- Implied by precondition
+			end
+			Result := l_result
 		end
 
 feature -- Query
@@ -29,7 +36,7 @@ feature -- Query
 	initialized: BOOLEAN
 			--
 		do
-			Result := initialized_cell.item = True
+			Result := initialized_cell.item = True and then editor_preferences_cell.item /= Void
 		end
 
 feature {NONE} -- Implementation		

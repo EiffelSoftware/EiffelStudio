@@ -10,7 +10,7 @@ class
 	UNDO_DELETE_CMD
 
 inherit
-	UNDO_CMD
+	UNDO_TEXT_CMD
 
 create
 	make_from_string
@@ -18,6 +18,10 @@ create
 feature -- Initialization
 
 	make_from_string (tc: EDITOR_CURSOR; s: STRING_GENERAL; txt: EDITABLE_TEXT)
+		require
+			tc_not_void: tc /= Void
+			s_not_void: s /= Void
+			txt_not_void: txt /= Void
 		do
 			y_start := tc.y_in_lines
 			x_start := tc.x_in_characters
@@ -51,11 +55,12 @@ feature -- Basic operations
 
 	undo
 		local
-			cur: EDITOR_CURSOR
+			cur: detachable EDITOR_CURSOR
 		do
 			cur := text.cursor
+			check cur /= Void end -- Implied by precondition
 			text.forget_selection
-			cur.make_from_character_pos (x_start, y_start, text)
+			cur.set_from_character_pos (x_start, y_start, text)
 			if not message.is_empty then
 				text.insert_string_at_cursor_pos (message)
 			end
@@ -63,20 +68,16 @@ feature -- Basic operations
 
 	redo
 		local
-			cur: EDITOR_CURSOR
+			cur: detachable EDITOR_CURSOR
 		do
 			cur := text.cursor
+			check cur /= Void end -- Implied by precondition
 			text.forget_selection
-			cur.make_from_character_pos (x_start, y_start, text)
+			cur.set_from_character_pos (x_start, y_start, text)
 			if not message.is_empty then
 				text.delete_n_chars_at_cursor_pos (message.count)
 			end
 		end
-
-
-feature {NONE} -- Implementation
-
-	text : EDITABLE_TEXT;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

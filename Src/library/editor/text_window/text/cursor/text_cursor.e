@@ -141,7 +141,7 @@ feature -- Compatible
 			ch_num_valid: ch_num >= 1
 			y_valid: y >= 1
 		do
-			set_from_character_pos (ch_num, y, a_text)
+			make_from_character_pos (ch_num, y, a_text)
 		end
 
 	set_from_integer (ch_num: INTEGER; a_text: like text)

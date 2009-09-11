@@ -190,7 +190,7 @@ feature -- Basic Operations
 			insert_string (indent + "end")
 			history.bind_current_item_to_next
 			history.record_move
-			cursor.make_from_character_pos (1, selection_cursor.y_in_lines, Current)
+			cursor.set_from_character_pos (1, selection_cursor.y_in_lines, Current)
 			insert_eol
 			history.bind_current_item_to_next
 
@@ -302,7 +302,7 @@ feature -- Search
 						end
 						found_feature := low2.is_equal (low)
 						if found_feature then
-							cursor.make_from_relative_pos (ln, tok, 1, Current)
+							cursor.set_from_relative_pos (ln, tok, 1, Current)
 						end
 					end
 					tok := tok.next
@@ -693,7 +693,7 @@ feature -- Syntax completion
 				line_nb := cursor.y_in_lines
 				char_nb := cursor.x_in_characters
 				insert_string (to_be_inserted)
-				cursor.make_from_character_pos (char_nb, line_nb, Current)
+				cursor.set_from_character_pos (char_nb, line_nb, Current)
 				from
 					i := 1
 				until

@@ -133,7 +133,7 @@ feature -- Compatibility
 			forget_selection
 
 				-- create the new cursor
-			cursor.make_from_integer (a_position, Current)
+			cursor.set_from_integer (a_position, Current)
 			history.record_move
 		end
 
@@ -150,12 +150,20 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 
 	end_processing
 			-- End processing text.
+		local
+			l_line: like first_line
+			l_token: detachable EDITOR_TOKEN
 		do
 			if first_line = Void then
 				last_processed_line.update_token_information
 				if number_of_lines = 0 then
 					append_line (last_processed_line)
 					if cursor = Void then
+						l_line := first_line
+						check l_line /= Void end -- Just appended one.
+						l_token := l_line.first_token
+						check l_token /= Void end -- The first token not void.
+						create cursor.make_from_relative_pos (l_line, l_token, 1, Current)
 						create cursor.make_from_integer (1, Current)
 						set_selection_cursor (cursor)
 					end
@@ -199,8 +207,8 @@ feature -- Initialization
 			l_num_large_enough: l_num > 0
 			l_num_small_enough: l_num <= number_of_lines
 		do
-			cursor.make_from_character_pos (1, l_num, Current)
-			selection_cursor.make_from_character_pos (1, l_num, Current)
+			cursor.set_from_character_pos (1, l_num, Current)
+			selection_cursor.set_from_character_pos (1, l_num, Current)
 			cursor.go_end_line
 			enable_selection
 		ensure
@@ -217,10 +225,10 @@ feature -- Initialization
 		local
 			l_token: EDITOR_TOKEN
 		do
-			cursor.make_from_character_pos (l_col, l_line, Current)
+			cursor.set_from_character_pos (l_col, l_line, Current)
 			l_token := cursor.token
 			if l_token /= cursor.line.eol_token then
-				selection_cursor.make_from_character_pos (l_col, l_line, Current)
+				selection_cursor.set_from_character_pos (l_col, l_line, Current)
 				cursor.set_current_char (l_token.next, 1)
 				enable_selection
 			end
@@ -241,6 +249,9 @@ feature {NONE} -- Load Text handling
 
 	process_new_line_internal
 			-- Process new line.
+		local
+			l_line: like first_line
+			l_token: detachable EDITOR_TOKEN
 		do
 			line_read := line_read + 1
 			eol_reached := True
@@ -249,7 +260,11 @@ feature {NONE} -- Load Text handling
 				append_line (last_processed_line)
 			end
 			if cursor = Void then
-				create cursor.make_from_character_pos (1, number_of_lines, Current)
+				l_line := first_line
+				check l_line /= Void end -- Just appended one.
+				l_token := l_line.first_token
+				check l_token /= Void end -- The first token not void.
+				create cursor.make_from_relative_pos (l_line, l_token, 1, Current)
 				if selection_cursor = Void then
 					set_selection_cursor (cursor)
 				end
@@ -404,11 +419,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CLICKABLE_TEXT

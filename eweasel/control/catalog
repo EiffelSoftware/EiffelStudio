@@ -478,6 +478,7 @@ test	select-stable-attribute		valid258 tcf pass validity
 test	precompilation-task-failure		valid259 tcf fail validity
 test	manifest_char_type			valid260 tcf fail validity
 test	inherited-generic-agent-argument	valid261 tcf pass validity formal generic agent
+test	conversion_without_binary_operator	valid262 tcf pass validity
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

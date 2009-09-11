@@ -263,7 +263,7 @@ feature -- Status Report
 				l_type ?= l_generics.item (i)
 					-- If type is still expanded, we do the recursion in case it has a generic parameter which is
 					-- itself generic and needs to be checked as well.
-				if l_type /= Void and then not l_type.is_expanded then
+				if l_type /= Void and then (not l_type.is_expanded or else not l_type.has_associated_class_type (Void)) then
 					Result := False
 					i := nb + 1
 				else

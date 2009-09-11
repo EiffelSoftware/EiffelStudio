@@ -34,12 +34,12 @@ feature {NONE} -- Implementation
 
 	project_generator: WIZARD_PROJECT_GENERATOR
 			-- Project generator
-		once
+		do
 			create Result.make (wizard_information)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

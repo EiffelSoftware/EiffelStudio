@@ -1,10 +1,10 @@
 note
-	description	: "Template for the last state of a wizard"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	description: "Template for the last state of a wizard"
+	legal:       "See notice at end of class."
+	status:      "See notice at end of class."
+	author:      "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date:        "$Date$"
+	revision:    "$Revision$"
 
 deferred class
 	WIZARD_FINAL_STATE_WINDOW
@@ -44,7 +44,7 @@ feature -- Basic Operations
 		do
 			progress_text.set_text(s)
 			iteration := iteration + 1
-			progress.set_proportion(iteration/total)
+			progress.set_proportion((iteration/total).truncated_to_real)
 		end
 
 	total, iteration: INTEGER
@@ -62,9 +62,9 @@ feature -- Access
 	progress: EV_HORIZONTAL_PROGRESS_BAR;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
+	source:	"[
 			 Eiffel Software
 			 356 Storke Road, Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
@@ -72,9 +72,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class WIZARD_FINAL_STATE_WINDOW
-
-

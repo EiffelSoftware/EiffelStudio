@@ -136,7 +136,7 @@ feature -- Type checking
 			if a_code_inherited then
 				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				if not a_feature.is_deferred and not a_feature.is_il_external then
-					set_is_inherited (True)
+					set_is_inherited (not a_replicated_in_current_class)
 					a_feature.body.process (Current)
 					set_is_inherited (False)
 				end
@@ -306,7 +306,7 @@ feature -- Type checking
 
 feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 
-	check_body (a_feature: FEATURE_I; a_body: BODY_AS; a_is_byte_node_enabled, a_is_inherited, a_is_for_inline_agent: BOOLEAN)
+	check_body (a_feature: FEATURE_I; a_body: BODY_AS; a_is_byte_node_enabled, a_is_inherited, a_is_replicated_in_current_class, a_is_for_inline_agent: BOOLEAN)
 			-- Type check `a_feature' which represents an inline agent `a_body'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -826,7 +826,7 @@ feature -- Roundtrip
 			l_feature_generator: AST_FEATURE_I_GENERATOR
 			l_feature, l_cur_feature, l_enclosing_feature: FEATURE_I
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
-			l_cur_class: EIFFEL_CLASS_C
+			l_current_class, l_written_class: EIFFEL_CLASS_C
 			l_body_code: BYTE_CODE
 			l_loc: LOCATION_AS
 			l_new_feature_dep: FEATURE_DEPENDANCE
@@ -841,7 +841,7 @@ feature -- Roundtrip
 			l_error_level: NATURAL_32
 		do
 			l_error_level := error_level
-			l_cur_class ?= context.current_class
+			l_current_class ?= context.current_class
 
 			if is_inherited then
 					-- We have to retrieve the FEATURE_I object from the class where the inline agent is
@@ -857,10 +857,20 @@ feature -- Roundtrip
 					l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize ("inline_agent")))
 					create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
 
-					create l_feature_generator
-					l_feature := l_feature_generator.new_feature (l_feature_as, 0, l_cur_class)
-					l_enclosing_feature := init_inline_agent_feature (l_feature, Void)
 					l_cur_feature := context.current_feature
+					create l_feature_generator
+
+					if is_replicated then
+							-- Agent needs to be created with respect to its original class.
+						l_written_class ?= l_cur_feature.written_class
+					else
+						l_written_class := l_current_class
+					end
+					l_feature := l_feature_generator.new_feature (l_feature_as, 0, l_written_class)
+
+					l_feature := init_inline_agent_feature (l_feature, Void, l_current_class, l_written_class)
+
+
 
 					if is_byte_node_enabled then
 						create l_feature_name.initialize_from_id (l_feature.feature_name_id)
@@ -878,7 +888,7 @@ feature -- Roundtrip
 					end
 					l_feature := context.inline_agent (l_as)
 					if l_feature = Void then
-						l_feature := l_cur_class.inline_agent_with_nr (l_enclosing_feature.body_index, context.inline_agent_counter.next)
+						l_feature := l_current_class.inline_agent_with_nr (l_enclosing_feature.body_index, context.inline_agent_counter.next)
 						context.put_inline_agent (l_feature, l_as)
 					end
 				end
@@ -947,7 +957,7 @@ feature -- Roundtrip
 			create l_feature_checker
 			l_feature_checker.init (context)
 			context.set_current_inline_agent_body (l_as.body)
-			l_feature_checker.check_body (l_feature, l_as.body, is_byte_node_enabled, is_inherited, True)
+			l_feature_checker.check_body (l_feature, l_as.body, is_byte_node_enabled, is_inherited, is_replicated, True)
 
 			l_new_feature_dep := context.supplier_ids
 			context.restore (l_context)
@@ -969,7 +979,7 @@ feature -- Roundtrip
 						end
 						init_inline_agent_dep (l_feature, l_new_feature_dep)
 					end
-					l_as.set_inl_class_id (l_feature.written_in)
+					l_as.set_inl_class_id (l_feature.access_in)
 					l_as.set_inl_rout_id (l_feature.rout_id_set.first)
 				end
 					-- Now as the features is generated the inline agent creation is
@@ -977,8 +987,8 @@ feature -- Roundtrip
 				process_routine_creation_as_ext (l_as, l_feature)
 			else
 				if not is_inherited and then is_byte_node_enabled then
-					if l_cur_class.has_inline_agents then
-						l_cur_class.inline_agent_table.remove (l_feature.feature_name_id)
+					if l_current_class.has_inline_agents then
+						l_current_class.inline_agent_table.remove (l_feature.feature_name_id)
 					end
 				end
 				reset_types
@@ -2209,7 +2219,7 @@ feature -- Implementation
 							-- Only interprets the `built_in' implementation if this is not an attribute.
 						create l_feature_checker
 						l_feature_checker.init (context)
-						l_feature_checker.check_body (current_feature, l_feature_as.body, True, False, False)
+						l_feature_checker.check_body (current_feature, l_feature_as.body, True, False, False, False)
 						last_byte_node := l_feature_checker.last_byte_node
 						l_as.set_body (l_feature_as)
  					else
@@ -8587,7 +8597,7 @@ feature {NONE} -- Agents
 			l_func.set_type (a_feature_type, 0)
 
 			l_func.set_is_fake_inline_agent (True)
-			l_enclosing_feature := init_inline_agent_feature (l_func, a_for_feature)
+			l_enclosing_feature := init_inline_agent_feature (l_func, a_for_feature, l_cur_class, l_cur_class)
 
 			create l_byte_list.make (1)
 			l_byte_list.start
@@ -8712,7 +8722,7 @@ feature {NONE} -- Agents
 			create Result.make (l_byte_list, integer_array_type, integer_array_type.create_info)
 		end
 
-	init_inline_agent_feature (a_feat, a_real_feat: FEATURE_I): FEATURE_I
+	init_inline_agent_feature (a_feat, a_real_feat: FEATURE_I; a_current_class, a_written_class: EIFFEL_CLASS_C): FEATURE_I
 			-- a_feat may just be a fake wrapper to a_real_feat (for agents on attributes).
 		require
 			a_feat /= Void
@@ -8727,9 +8737,10 @@ feature {NONE} -- Agents
 			l_old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
 			l_old_feat: FEATURE_I
 		do
-			l_cur_class ?= context.current_class
+			l_cur_class := a_current_class
+			Result := a_feat
 
-			l_is_fake := a_feat.is_fake_inline_agent
+			l_is_fake := Result.is_fake_inline_agent
 
 			create l_new_rout_id_set.make
 			if l_is_fake then
@@ -8742,20 +8753,20 @@ feature {NONE} -- Agents
 				end
 			end
 			if l_old_feat /= Void then
-				a_feat.set_body_index (l_old_feat.body_index)
+				Result.set_body_index (l_old_feat.body_index)
 				l_new_rout_id_set.put (l_old_feat.rout_id_set.first)
-				a_feat.set_feature_id (l_old_feat.feature_id)
-				a_feat.set_origin_feature_id (l_old_feat.origin_feature_id)
+				Result.set_feature_id (l_old_feat.feature_id)
+				Result.set_origin_feature_id (l_old_feat.origin_feature_id)
 			else
-				a_feat.set_body_index (system.body_index_counter.next_id)
-				l_new_rout_id_set.put (a_feat.new_rout_id)
-				a_feat.set_feature_id (l_cur_class.feature_id_counter.next)
-				a_feat.set_origin_feature_id (a_feat.feature_id)
+				Result.set_body_index (system.body_index_counter.next_id)
+				l_new_rout_id_set.put (Result.new_rout_id)
+				Result.set_feature_id (l_cur_class.feature_id_counter.next)
+				Result.set_origin_feature_id (Result.feature_id)
 			end
-			a_feat.set_rout_id_set (l_new_rout_id_set)
-			a_feat.set_written_in (l_cur_class.class_id)
-			a_feat.set_origin_class_id (a_feat.written_in)
-			a_feat.set_export_status (create {EXPORT_ALL_I})
+			Result.set_rout_id_set (l_new_rout_id_set)
+			Result.set_written_in (a_written_class.class_id)
+			Result.set_origin_class_id (Result.written_in)
+			Result.set_export_status (create {EXPORT_ALL_I})
 
 				-- calculate the enclosing feature
 			from
@@ -8776,11 +8787,23 @@ feature {NONE} -- Agents
 				end
 			end
 
-			a_feat.set_inline_agent (l_enclosing_feature.body_index, l_number)
+			if is_replicated then
+					-- We need to replicate the agent feature.
+				Result := Result.replicated (a_current_class.class_id)
+				Result.set_is_replicated_directly (True)
+					-- Instantiate agent with respect to current class.
+				Result := Result.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable)
+				if l_enclosing_feature.from_non_conforming_parent then
+					Result.set_from_non_conforming_parent (True)
+				end
+			end
+
+			Result.set_inline_agent (l_enclosing_feature.body_index, l_number)
+
 			if l_is_fake then
 				l_name := "fake inline-agent"
 				l_name.append_character ('#')
-				l_name.append_integer (a_feat.body_index)
+				l_name.append_integer (Result.body_index)
 				if a_real_feat /= Void then
 					l_name.append_character ('#')
 					l_name.append_integer (a_real_feat.written_in)
@@ -8791,19 +8814,18 @@ feature {NONE} -- Agents
 			else
 				l_name := "inline-agent"
 				l_name.append_character ('#')
-				l_name.append_integer (a_feat.inline_agent_nr)
+				l_name.append_integer (Result.inline_agent_nr)
 			end
 			l_name.append_string (" of ")
 			l_name.append (l_enclosing_feature.feature_name)
-			a_feat.set_feature_name (l_name)
+			Result.set_feature_name (l_name)
 
 			if is_byte_node_enabled then
 				system.rout_info_table.put (l_new_rout_id_set.first, l_cur_class)
-				l_cur_class.put_inline_agent (a_feat)
+				l_cur_class.put_inline_agent (Result)
 
 				degree_2.insert_class (l_cur_class)
 			end
-			Result := l_enclosing_feature
 		end
 
 	init_inline_agent_dep (a_feat: FEATURE_I; a_new_feat_dep: FEATURE_DEPENDANCE)

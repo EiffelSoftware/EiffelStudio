@@ -8793,6 +8793,9 @@ feature {NONE} -- Agents
 				Result.set_is_replicated_directly (True)
 					-- Instantiate agent with respect to current class.
 				Result := Result.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable)
+				if l_enclosing_feature.has_replicated_ast then
+					Result.set_has_replicated_ast (True)
+				end
 				if l_enclosing_feature.from_non_conforming_parent then
 					Result.set_from_non_conforming_parent (True)
 				end

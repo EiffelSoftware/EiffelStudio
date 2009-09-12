@@ -42,24 +42,22 @@ feature -- Search
 			type_not_void: t /= Void
 		local
 			l_area: like area
-			l_item: like item
 			i, nb: INTEGER
 		do
 			from
-				l_area := area
-				nb := count - 1
-			until
-				i > nb or Result
-			loop
-				l_item := l_area.item (i)
-				Result := t.same_generic_derivation_as (context_type, l_item.type)
-				i := i + 1
-			end
-
-			if Result then
-				found_item := l_item
-			else
 				found_item := Void
+				l_area := area
+				nb := count
+			until
+				i = nb
+			loop
+				if t.same_generic_derivation_as (context_type, l_area [i].type) then
+					Result := True
+					found_item := l_area [i]
+					i := nb
+				else
+					i := i + 1
+				end
 			end
 		ensure
 			cursor_not_changed: index = old index
@@ -98,7 +96,7 @@ feature -- Access
 			until
 				i > nb
 			loop
-				if l_area.item (i).is_modifiable then
+				if l_area [i].is_modifiable then
 					Result := Result + 1
 				end
 				i := i + 1
@@ -121,7 +119,7 @@ feature -- Traversals
 			until
 				i > nb
 			loop
-				l_area.item (i).pass4
+				l_area [i].pass4
 				i := i + 1
 			end
 		ensure
@@ -132,7 +130,6 @@ feature -- Traversals
 			-- Proceed to the `melt' on the items of the list
 		local
 			l_area: like area
-			l_item: like item
 			i, nb: INTEGER
 		do
 			from
@@ -141,9 +138,8 @@ feature -- Traversals
 			until
 				i > nb
 			loop
-				l_item := l_area.item (i)
-				if not l_item.is_precompiled then
-					l_item.melt
+				if not l_area [i].is_precompiled then
+					l_area [i].melt
 				end
 				i := i + 1
 			end
@@ -155,7 +151,6 @@ feature -- Traversals
 			-- Proceed to the `update_execution_table' on the items of the list
 		local
 			l_area: like area
-			l_item: like item
 			i, nb: INTEGER
 		do
 			from
@@ -164,9 +159,8 @@ feature -- Traversals
 			until
 				i > nb
 			loop
-				l_item := l_area.item (i)
-				if not l_item.is_precompiled then
-					l_item.update_execution_table
+				if not l_area [i].is_precompiled then
+					l_area [i].update_execution_table
 				end
 				i := i + 1
 			end
@@ -178,7 +172,6 @@ feature -- Traversals
 			-- Proceed to the `melt_feature_table' on the items of the list
 		local
 			l_area: like area
-			l_item: like item
 			i, nb: INTEGER
 		do
 			from
@@ -187,9 +180,8 @@ feature -- Traversals
 			until
 				i > nb
 			loop
-				l_item := l_area.item (i)
-				if l_item.is_modifiable then
-					l_item.melt_feature_table
+				if l_area [i].is_modifiable then
+					l_area [i].melt_feature_table
 				end
 				i := i + 1
 			end
@@ -253,7 +245,6 @@ feature -- Sorting
 					i := i + 1
 					l_list.forth
 				end
-				do_nothing
 			end
 		end
 

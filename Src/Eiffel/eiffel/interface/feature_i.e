@@ -438,13 +438,17 @@ feature -- Access
 			-- Gives the (real) feature in which this features is defined.
 			-- If the feature has no enclosing feature, a reference to itself is returned.
 		local
-			l_written_class: CLASS_C
+			l_access_class: CLASS_C
 		do
 			if is_inline_agent then
-				l_written_class := written_class;
-				Result := l_written_class.feature_of_body_index (enclosing_body_id)
+				if is_replicated_directly then
+					l_access_class := access_class
+				else
+					l_access_class := written_class;
+				end
+				Result := l_access_class.feature_of_body_index (enclosing_body_id)
 				if Result = Void then
-					Result := l_written_class.invariant_feature
+					Result := l_access_class.invariant_feature
 				end
 			else
 				Result := Current
@@ -1968,7 +1972,7 @@ feature -- Signature checking
 			-- Check argument names
 		require
 			argument_names_exists: arguments.argument_names /= Void
-			written_in_class: written_in = feat_table.feat_tbl_id
+			written_in_class: written_in = feat_table.feat_tbl_id or else is_replicated_directly
 				-- The feature must be written in the associated class
 				-- of `feat_table'.
 		local

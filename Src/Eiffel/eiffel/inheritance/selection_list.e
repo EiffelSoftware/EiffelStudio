@@ -124,6 +124,7 @@ feature -- Selection
 						after
 					loop
 						unselect (item, new_t, old_t, l_selected_rout_id_set)
+
 						forth
 					end;
 				end
@@ -155,6 +156,9 @@ feature -- Selection
 					new_t.replace (l_selected_feature, l_selected_feature.feature_name_id, False)
 				end
 				--l_selected_feature.set_is_selected (True)
+				check
+					is_replicated_directly_correctly_set: l_selected_feature.is_replicated_directly implies l_selected_feature.access_class = system.current_class
+				end
 			end
 		end;
 
@@ -381,6 +385,10 @@ end;
 				-- Add unselected feature to feature table, replacing the previous one.
 			a_feature.set_is_selected (False)
 			new_t.replace (a_feature, feature_name_id, False);
+
+			check
+				is_replicated_directly_correctly_set: a_feature.is_replicated_directly implies a_feature.access_class = System.current_class
+			end
 		end;
 
 feature -- Conceptual Replication

@@ -1647,7 +1647,7 @@ feature -- Order relation for inheritance and topological sort
 		require
 			good_argument: other /= Void
 		do
-			Result := conform_to (other)
+			Result := simple_conform_to (other)
 			if not Result then
 					-- Loop through all ancestors to check non-conforming parents.
 				Result := inherits_from_internal (other)
@@ -2443,7 +2443,7 @@ feature {CLASS_C} -- Incrementality
 			new_class_type_not_void: new_class_type /= Void
 			new_class_type_is_expanded: new_class_type.is_expanded
 			filters_not_void: filters /= Void
-			conformance: new_class_type.associated_class.simple_conform_to (Current)
+			conformance: new_class_type.associated_class.inherits_from (Current)
 		local
 			class_filters: like filters
 			filter: CL_TYPE_A

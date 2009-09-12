@@ -64,7 +64,11 @@ feature -- Execution
 					Inst_context.set_group (current_class.group);
 					begin;
 
-					written_in_class := target_feat.written_class;
+					if target_feat.is_replicated_directly then
+						written_in_class := target_feat.access_class
+					else
+						written_in_class := target_feat.written_class
+					end
 					source_feat := target_feat
 
 					l_match_list := match_list_server.item (written_in_class.class_id)

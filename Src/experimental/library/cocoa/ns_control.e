@@ -14,6 +14,9 @@ inherit
 		end
 
 	TARGET_ACTION_SUPPORT
+		undefine
+			is_equal
+		end
 
 create
 	make

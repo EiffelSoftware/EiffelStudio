@@ -14,6 +14,9 @@ inherit
 		end
 
 	NS_TEXT_DELEGATE
+		undefine
+			is_equal
+		end
 
 create
 	make

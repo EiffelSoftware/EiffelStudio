@@ -11,6 +11,9 @@ inherit
 	NS_OBJECT
 
 	TARGET_ACTION_SUPPORT
+		undefine
+			is_equal
+		end
 
 create
 	make,

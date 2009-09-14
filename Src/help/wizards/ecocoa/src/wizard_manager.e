@@ -20,6 +20,16 @@ inherit
 			copy
 		end
 
+	EXECUTION_ENVIRONMENT
+		rename
+			sleep as sleep_ee,
+			launch as launch_ee,
+			command_line as command_line_ee
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make_and_launch
 
@@ -27,9 +37,18 @@ feature -- Initialization
 
 	prepare
 		local
-			li: LAYOUT_INSPECTOR
+			original, link: FILE_NAME
 		do
-			create li
+			-- The path to the icon is fixed so we make a link to the system icon we want to use
+			create original.make
+			original.set_directory ("/System/Library/Frameworks/AppKit.framework/Resources")
+			original.set_file_name ("NSDefaultApplicationIcon")
+			original.add_extension ("tiff")
+			create link.make
+			link.set_directory (wizard_pixmaps_path)
+			link.set_file_name ("eiffel_wizard_icon")
+			link.add_extension ("png")
+			system ("ln -s " + original + " " + link)
 			Precursor
 		end
 

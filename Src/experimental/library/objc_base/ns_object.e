@@ -9,13 +9,16 @@ class
 
 inherit
 	NS_OBJECT_BASIC_TYPE
+		undefine
+			is_equal
 		redefine
 			copy
 		end
 
 	DEBUG_OUTPUT
 		redefine
-			copy
+			copy,
+			is_equal
 		end
 
 	IDENTIFIED
@@ -131,6 +134,11 @@ feature -- Duplication
 			check
 				cannot_copy_this_class: False
 			end
+		end
+
+	is_equal (other: like Current): BOOLEAN
+		do
+			Result := {NS_OBJECT_API}.is_equal (item, other.item)
 		end
 
 feature {NONE} -- Memory Management

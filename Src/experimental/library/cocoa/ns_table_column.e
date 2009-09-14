@@ -160,16 +160,6 @@ feature -- ...
 			table_column_set_hidden (item, a_hidden)
 		end
 
-	set_resizable (a_flag: BOOLEAN)
-		do
-			table_column_set_resizable (item, a_flag)
-		end
-
-	is_resizable: BOOLEAN
-		do
-			Result := table_column_is_resizable (item)
-		end
-
 feature {NONE} -- Objective-C implementation
 
 	frozen table_column_new: POINTER
@@ -366,19 +356,5 @@ feature {NONE} -- Objective-C implementation
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"[(NSTableColumn*)$a_table_column setHidden: $a_hidden];"
-		end
-
-	frozen table_column_set_resizable (a_table_column: POINTER; a_flag: BOOLEAN)
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSTableColumn*)$a_table_column setResizable: $a_flag];"
-		end
-
-	frozen table_column_is_resizable (a_table_column: POINTER): BOOLEAN
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"return [(NSTableColumn*)$a_table_column isResizable];"
 		end
 end

@@ -616,6 +616,38 @@ feature -- Managing Responders
 			Result := {NS_WINDOW_API}.make_first_responder (item, a_responder.item)
 		end
 
+feature -- Moving Windows
+
+	is_movable_by_window_background: BOOLEAN
+			-- Indicates whether the window is movable by clicking and dragging anywhere in its background.
+		do
+			Result := {NS_WINDOW_API}.is_movable_by_window_background (item)
+		end
+
+	set_movable_by_window_background (a_flag: BOOLEAN)
+			-- Sets whether the window is movable by clicking and dragging anywhere in its background.
+		do
+			{NS_WINDOW_API}.set_movable_by_window_background (item, a_flag)
+		end
+
+	is_movable: BOOLEAN
+			-- Indicates whether the window can be moved by clicking in its title bar or background.
+		do
+			Result := {NS_WINDOW_API}.is_movable (item)
+		end
+
+	set_movable (a_flag: BOOLEAN)
+			-- Specifies whether the window can be dragged by clicking in its title bar or background.
+		do
+			{NS_WINDOW_API}.set_movable (item, a_flag)
+		end
+
+	center
+			-- Sets the window`s location to the center of the screen.
+		do
+			{NS_WINDOW_API}.center (item)
+		end
+
 feature -- Contract support
 
 	valid_style_mask (a_natural: NATURAL): BOOLEAN

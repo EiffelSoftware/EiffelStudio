@@ -1,6 +1,6 @@
 note
 	description: "Wrapper for NSRect. This usually has call-by-value sementics in Objective-C. The wrapper takes care of that."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,6 +17,8 @@ inherit
 
 	DEBUG_OUTPUT
 
+	NS_OBJECT_BASIC_TYPE
+
 create
 	make,
 	make_rect
@@ -32,7 +34,7 @@ feature {NONE} -- Creation
 			create size.make_by_pointer (size_address (item))
 		end
 
-	make_rect (a_x, a_y, a_width, a_height: INTEGER)
+	make_rect (a_x, a_y, a_width, a_height: like cg_float)
 		do
 			allocate
 			rect_make_rect (item, a_x, a_y, a_width, a_height)
@@ -93,7 +95,7 @@ feature {NONE} -- Implementation
 			"return &((*(NSRect *)$p).size);"
 		end
 
-	frozen rect_make_rect (res: POINTER; a_x, a_y, a_w, a_h: INTEGER)
+	frozen rect_make_rect (res: POINTER; a_x, a_y, a_w, a_h: like cg_float)
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias

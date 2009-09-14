@@ -21,6 +21,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_TEST_SERVICE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -52,8 +57,9 @@ feature {NONE} -- Access
 
 	project_access: EC_PROJECT_ACCESS
 			-- Project access for creating clickable content
-		once
-			create Result.make ((create {SHARED_EIFFEL_PROJECT}).eiffel_project)
+		do
+				-- TODO: retrieve once instance of project access from somewhere else (Arno 09/14/2009)
+			Result := etest_suite.project_access
 		end
 
 	last_pixmap: detachable EV_PIXMAP

@@ -22,6 +22,7 @@ feature {NONE} -- Creation
 			-- Create a new NSBox.
 		do
 			make_from_pointer ({NS_BOX_API}.new)
+			callback_marshal.register_object (Current)
 		end
 
 feature -- Box

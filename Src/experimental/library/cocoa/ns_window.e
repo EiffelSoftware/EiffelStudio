@@ -30,11 +30,11 @@ create {NS_OBJECT}
 
 feature {NONE} -- Creating Windows
 
-	dispose is
+	dispose
 			--
 		do
 			Precursor {NS_RESPONDER}
-			print ("NS_WINDOW collcted " + ($Current).out + "%N")
+			print ("NS_WINDOW collected " + ($Current).out + "%N")
 		end
 
 	make (a_rect: NS_RECT; a_style_mask: NATURAL; a_defer: BOOLEAN)
@@ -44,6 +44,7 @@ feature {NONE} -- Creating Windows
 		do
 			make_from_pointer (window_class.create_instance.item)
 			item := {NS_WINDOW_API}.init_with_control_rect_style_mask_backing_defer (item, a_rect.item, a_style_mask, a_defer)
+			callback_marshal.register_object (Current)
 		end
 
 	window_class: OBJC_CLASS

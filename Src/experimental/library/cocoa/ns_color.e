@@ -1,6 +1,10 @@
 note
-	description: "Wrapper for NSColor."
-	author: "Daniel Furrer"
+	description: "[
+					Wrapper for NSColor.
+					NSColor represents an abstract color that can be used for drawing in Cocoa.
+					Different color spaces and even textures are supported.
+					]"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,6 +13,11 @@ class
 
 inherit
 	NS_OBJECT
+		undefine
+			copy
+		end
+
+	NS_COPYING
 
 create
 	clear_color,

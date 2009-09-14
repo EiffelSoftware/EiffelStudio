@@ -91,12 +91,19 @@ feature -- Getting General Event Information
 			Result := {NS_EVENT_API}.type (item)
 		end
 
-	window: NS_WINDOW
+	window: detachable NS_WINDOW
 			-- Returns the window object associated with the receiver.
+			-- This is Void if the event is periodic and, strangely, may even be Void ofr mouse events
 		require
 			type_not_periodic: type /= periodic
 		do
-			create Result.share_from_pointer ({NS_EVENT_API}.window (item))
+			if attached {NS_EVENT_API}.window (item) as l_window then
+				if attached {NS_WINDOW} callback_marshal.get_eiffel_object (l_window) as res then
+					Result := res
+				else
+					create Result.share_from_pointer (l_window)
+				end
+			end
 		end
 
 	window_number: INTEGER

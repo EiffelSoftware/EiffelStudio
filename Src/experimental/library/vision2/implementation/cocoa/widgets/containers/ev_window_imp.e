@@ -77,8 +77,7 @@ feature {NONE} -- Initialization
 			-- and the status bar.
 			-- The `hbox' will contain the child of the window.
 		do
-			cocoa_make (new_window_position,
-				window_mask, True)
+			cocoa_make (new_window_position, window_mask, True)
 			make_key_and_order_front (content_view)
 			order_out
 			allow_resize
@@ -112,7 +111,7 @@ feature {NONE} -- Initialization
 		do
 			last_window_position.set_x (last_window_position.x + 20)
 			last_window_position.set_y (last_window_position.y - 20)
-			create Result.make_rect (last_window_position.x, last_window_position.y - 100, 100, 100)
+			create Result.make_rect (last_window_position.x.rounded, last_window_position.y.rounded - 100, 100, 100)
 		end
 
 	last_window_position: NS_POINT
@@ -243,7 +242,7 @@ feature -- Measurement
 
 	client_height: INTEGER
 		do
-			Result := content_rect_for_frame_rect (frame).size.height - client_y
+			Result := content_rect_for_frame_rect (frame).size.height.rounded - client_y
 --			Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} - client_y
 			if not lower_bar.is_empty then
 				-- Add 1 pixel to separate client area and lower bar.
@@ -254,7 +253,7 @@ feature -- Measurement
 
 	client_width: INTEGER
 		do
-			Result := content_rect_for_frame_rect (frame).size.width
+			Result := content_rect_for_frame_rect (frame).size.width.rounded
 		end
 
  	client_y: INTEGER
@@ -332,7 +331,7 @@ feature -- Measurement
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER)
 			-- The given y-coordinate is in the vision-coordinate system
 		do
-			set_frame (create {NS_RECT}.make_rect (a_x_position, zero_screen.frame.size.height - a_y_position - a_height, a_width, a_height), True)
+			set_frame (create {NS_RECT}.make_rect (a_x_position, zero_screen.frame.size.height.rounded - a_y_position - a_height, a_width, a_height), True)
 		end
 
 feature -- Layout implementation
@@ -396,7 +395,7 @@ feature -- Layout implementation
 				mh := mh + lower_bar.minimum_height + 1
 			end
 			l_size := frame_rect_for_content_rect (create {NS_RECT}.make_rect (0, 0, mw, mh)).size
-			internal_set_minimum_size (l_size.width, l_size.height)
+			internal_set_minimum_size (l_size.width.rounded, l_size.height.rounded)
 			set_content_min_size(mw, mh)
 		end
 

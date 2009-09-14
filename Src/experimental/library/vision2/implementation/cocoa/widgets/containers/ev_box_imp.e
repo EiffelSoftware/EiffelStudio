@@ -51,13 +51,13 @@ feature -- Access
 	client_width: INTEGER
 			-- Width of the client area of `Current'.
 		do
-			Result := (box.content_view.frame.size.width - 2 * border_width).max (0)
+			Result := (box.content_view.frame.size.width.rounded - 2 * border_width).max (0)
 		end
 
 	client_height: INTEGER
 			-- Height of the client area of `Current'.
 		do
-			Result := (box.content_view.frame.size.height  - 2 * border_width).max (0)
+			Result := (box.content_view.frame.size.height.rounded  - 2 * border_width).max (0)
 		end
 
 	total_spacing: INTEGER

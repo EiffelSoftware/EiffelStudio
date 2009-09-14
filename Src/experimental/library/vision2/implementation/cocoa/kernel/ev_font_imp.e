@@ -186,8 +186,8 @@ feature -- Status report
 			l_size := l_string.size_with_attributes (l_attributes)
 
 			create Result.default_create
-			Result.width := l_size.width
-			Result.height := l_size.height
+			Result.width := l_size.width.rounded
+			Result.height := l_size.height.rounded
 		end
 
 	string_width (a_string: STRING_GENERAL): INTEGER

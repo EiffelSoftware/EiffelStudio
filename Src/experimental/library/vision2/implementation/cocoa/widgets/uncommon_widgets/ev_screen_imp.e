@@ -50,7 +50,7 @@ feature -- Status report
 			point: NS_POINT
 		do
 			create point.make_from_mouse_location
-			create Result.make (point.x, point.y)
+			create Result.make (point.x.rounded, point.y.rounded)
 		end
 
 	widget_at_position (x, y: INTEGER): detachable EV_WIDGET
@@ -130,27 +130,32 @@ feature -- Measurement
 
 	horizontal_resolution: INTEGER
 			-- Number of pixels per inch along horizontal axis
+		local
+			resolution: NS_VALUE
 		do
-			--create {NS_VALUE}.make_shared (screen.device_description.object_for_key ({NS_WINDOW}.device_resolution))
-			Result := 72 -- FIXME: implement
+			create resolution.share_from_pointer (device_description.object_for_key ({NS_WINDOW}.device_resolution))
+			Result := resolution.size_value.width.rounded
 		end
 
 	vertical_resolution: INTEGER
 			-- Number of pixels per inch along vertical axis
+		local
+			resolution: NS_VALUE
 		do
-			Result := 72 -- FIXME: implement
+			create resolution.share_from_pointer (device_description.object_for_key ({NS_WINDOW}.device_resolution))
+			Result := resolution.size_value.height.rounded
 		end
 
 	height: INTEGER
 			-- Vertical size in pixels.
 		do
-			Result := frame.size.height
+			Result := frame.size.height.rounded
 		end
 
 	width: INTEGER
 			-- Horizontal size in pixels.
 		do
-			Result := frame.size.width
+			Result := frame.size.width.rounded
 		end
 
 feature {NONE} -- Implementation

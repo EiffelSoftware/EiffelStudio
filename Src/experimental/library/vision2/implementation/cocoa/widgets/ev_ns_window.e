@@ -47,7 +47,7 @@ feature -- Measurement
 	x_position, screen_x: INTEGER
 			-- X coordinate of `Current'
 		do
-			Result := frame.origin.x
+			Result := frame.origin.x.rounded
 		end
 
 	y_position, screen_y: INTEGER
@@ -56,7 +56,7 @@ feature -- Measurement
 			l_frame: NS_RECT
 		do
 			l_frame := frame
-			Result := zero_screen.frame.size.height - l_frame.origin.y - l_frame.size.height
+			Result := (zero_screen.frame.size.height - l_frame.origin.y - l_frame.size.height).rounded
 		end
 
 	set_x_position (a_x: INTEGER)
@@ -81,13 +81,13 @@ feature -- Measurement
 	width: INTEGER
 			-- Horizontal size measured in pixels.
 		do
-			Result := frame.size.width
+			Result := frame.size.width.rounded
 		end
 
 	height: INTEGER
 			-- Vertical size measured in pixels.
 		do
-			Result := frame.size.height
+			Result := frame.size.height.rounded
 		end
 
 	set_width (a_width: INTEGER)
@@ -106,21 +106,31 @@ feature -- Measurement
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
 		do
-			set_frame (create {NS_RECT}.make_rect (x_position, zero_screen.frame.size.height - y_position - a_height, a_width, a_height), True)
+			set_frame (create {NS_RECT}.make_rect (x_position, zero_screen.frame.size.height.rounded - y_position - a_height, a_width, a_height), True)
 		end
 
 	forbid_resize
 			-- Forbid the resize of `Current'.
+		local
+			l_button: detachable NS_BUTTON
 		do
 			set_shows_resize_indicator (False)
-			standdard_window_button ({NS_WINDOW}.window_zoom_button).set_enabled (False)
+			l_button := standard_window_button ({NS_WINDOW}.window_zoom_button)
+			if attached l_button then
+				l_button.set_enabled (False)
+			end
 		end
 
 	allow_resize
 			-- Allow the resize of `Current'.
+		local
+			l_button: detachable NS_BUTTON
 		do
 			set_shows_resize_indicator (True)
-			standdard_window_button ({NS_WINDOW}.window_zoom_button).set_enabled (True)
+			l_button := standard_window_button ({NS_WINDOW}.window_zoom_button)
+			if attached l_button then
+				l_button.set_enabled (True)
+			end
 		end
 
 end

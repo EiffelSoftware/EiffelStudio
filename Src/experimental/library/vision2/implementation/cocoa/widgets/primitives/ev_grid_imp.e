@@ -70,23 +70,32 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		local
-			l_color: NS_COLOR
+			l_color: detachable NS_COLOR
 		do
 			create focused_selection_color.make_with_rgb (1, 0, 0)
 
 			create l_color.selected_text_background_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
-			create non_focused_selection_color.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
+			if attached l_color then
+				create non_focused_selection_color.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
+			else
+				-- FIXME: What to do in this case ?
+				create non_focused_selection_color
+			end
 
 			create focused_selection_text_color.make_with_rgb (0, 1, 0)
 			create l_color.selected_text_color
 			l_color := l_color.color_using_color_space_name (create {NS_STRING}.make_with_string ("NSDeviceRGBColorSpace"))
-			create non_focused_selection_text_color.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
+			if attached l_color then
+				create non_focused_selection_text_color.make_with_rgb (l_color.red_component, l_color.green_component, l_color.blue_component)
+			else
+				-- FIXME
+				create non_focused_selection_text_color
+			end
 
 			create cocoa_view.make
 			Precursor {EV_CELL_IMP}
 			initialize_grid
-
 
 			set_is_initialized (True)
 		end
@@ -138,8 +147,8 @@ feature {EV_GRID_ITEM_I} -- Implementation
 				create l_attributes.make_with_object_for_key (l_font_imp.font, font_attribute_name)
 				l_size := l_string.size_with_attributes (l_attributes)
 
-				tuple.put_integer (l_size.width, 1)
-				tuple.put_integer (l_size.height, 2)
+				tuple.put_integer (l_size.width.rounded, 1)
+				tuple.put_integer (l_size.height.rounded, 2)
 			end
 		end
 

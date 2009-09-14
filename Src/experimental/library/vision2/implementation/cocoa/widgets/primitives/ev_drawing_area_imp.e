@@ -172,11 +172,11 @@ feature {NONE} -- Implementation
 			if attached actions then
 				create pointer_button_action
 				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
-				pointer_button_action.x := point.x
-				pointer_button_action.y := point.y
+				pointer_button_action.x := point.x.rounded
+				pointer_button_action.y := point.y.rounded
 				point := a_event.window.convert_base_to_screen_top_left (a_event.location_in_window)
-				pointer_button_action.screen_x := point.x
-				pointer_button_action.screen_y := point.y
+				pointer_button_action.screen_x := point.x.rounded
+				pointer_button_action.screen_y := point.y.rounded
 				pointer_button_action.button :=	a_event.button_number + 1
 				actions.call (pointer_button_action)
 			end
@@ -190,11 +190,11 @@ feature {NONE} -- Implementation
 			if attached pointer_button_release_actions_internal as actions then
 				create pointer_button_action
 				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
-				pointer_button_action.x := point.x
-				pointer_button_action.y := point.y
+				pointer_button_action.x := point.x.rounded
+				pointer_button_action.y := point.y.rounded
 				point := a_event.window.convert_base_to_screen_top_left (a_event.location_in_window)
-				pointer_button_action.screen_x := point.x
-				pointer_button_action.screen_y := point.y
+				pointer_button_action.screen_x := point.x.rounded
+				pointer_button_action.screen_y := point.y.rounded
 				pointer_button_action.button :=	a_event.button_number + 1
 				actions.call (pointer_button_action)
 			end
@@ -209,11 +209,11 @@ feature {NONE} -- Implementation
 			if attached pointer_motion_actions_internal as actions then
 				create pointer_motion_action
 				point := a_event.window.content_view.convert_point_to_view (a_event.location_in_window, cocoa_view)
-				pointer_motion_action.x := point.x
-				pointer_motion_action.y := point.y
+				pointer_motion_action.x := point.x.rounded
+				pointer_motion_action.y := point.y.rounded
 				point := a_event.window.convert_base_to_screen_top_left (a_event.location_in_window)
-				pointer_motion_action.screen_x := point.x
-				pointer_motion_action.screen_y := point.y
+				pointer_motion_action.screen_x := point.x.rounded
+				pointer_motion_action.screen_y := point.y.rounded
 				actions.call (pointer_motion_action)
 			end
 		end
@@ -256,10 +256,10 @@ feature -- Implementation
 		do
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([
-					a_dirty_rect.origin.x,
-					a_dirty_rect.origin.y,
-					a_dirty_rect.size.width,
-					a_dirty_rect.size.height
+					a_dirty_rect.origin.x.rounded,
+					a_dirty_rect.origin.y.rounded,
+					a_dirty_rect.size.width.rounded,
+					a_dirty_rect.size.height.rounded
 					])
 			end
 		end

@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 				button.set_image_position ({NS_CELL}.image_above)
 			end
 			size := button.cell.cell_size
-			internal_set_minimum_size (size.width, size.height)
+			internal_set_minimum_size (size.width.rounded, size.height.rounded)
 		end
 
 feature -- Implementation

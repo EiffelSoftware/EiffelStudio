@@ -19,7 +19,7 @@ feature -- Positions
 			-- Horizontal offset relative to parent `x_position'.
 			-- Unit of measurement: screen pixels.
 		do
-			Result := attached_view.frame.origin.x
+			Result := attached_view.frame.origin.x.rounded
 		end
 
 	y_position: INTEGER
@@ -30,9 +30,9 @@ feature -- Positions
 		do
 			l_superview := attached_view.superview
 			if attached l_superview and then l_superview.is_flipped then
-				Result := attached_view.frame.origin.y
+				Result := attached_view.frame.origin.y.rounded
 			else
-				Result := parent_inner_height - attached_view.frame.size.height - attached_view.frame.origin.y
+				Result := (parent_inner_height - attached_view.frame.size.height - attached_view.frame.origin.y).rounded
 			end
 		end
 
@@ -42,7 +42,7 @@ feature -- Positions
 			if attached {NS_WINDOW} attached_view.window as l_window then
 				Result := l_window.convert_base_to_screen (
 					attached_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
-				).x
+				).x.rounded
 			end
 		end
 
@@ -54,27 +54,27 @@ feature -- Positions
 		do
 			-- Translate the coordinate to a top-left coordinate system
 			if attached attached_view.window as l_window and then attached l_window.screen as l_screen then
-				screen_height := l_screen.frame.size.height
+				screen_height := l_screen.frame.size.height.rounded
 				if attached_view.is_flipped then
 					position_in_window := attached_view.convert_point_to_view (create {NS_POINT}.make_point (0, 0), void)
 				else
 					position_in_window := attached_view.convert_point_to_view (create {NS_POINT}.make_point (0, attached_view.frame.size.height), void)
 				end
 				position_on_screen := l_window.convert_base_to_screen (position_in_window)
-				Result :=  screen_height - position_on_screen.y
+				Result :=  screen_height - position_on_screen.y.rounded
 			end
 		end
 
 	width: INTEGER
 			-- Horizontal size measured in pixels.
 		do
-			Result := minimum_width.max (attached_view.frame.size.width)
+			Result := minimum_width.max (attached_view.frame.size.width.rounded)
 		end
 
 	height: INTEGER
 			-- Vertical size measured in pixels.
 		do
-			Result := minimum_height.max (attached_view.frame.size.height)
+			Result := minimum_height.max (attached_view.frame.size.height.rounded)
 		end
 
 	minimum_width: INTEGER
@@ -87,7 +87,7 @@ feature -- Positions
 
 feature -- Measurement
 
-	parent_inner_height: INTEGER
+	parent_inner_height: REAL_64
 			-- FIXME: find a way to calculate the proper inner/client size of an nsview
 		do
 			if attached {EV_CONTAINER} parent as l_parent then
@@ -122,7 +122,7 @@ feature -- Measurement
 				y_cocoa := a_y_position
 			else
 				if parent /= void then
-					y_cocoa := parent_inner_height - a_height - a_y_position
+					y_cocoa := parent_inner_height.rounded - a_height - a_y_position
 				else
 					io.put_string ("Warning: converting coordinates failed " + current.generating_type.out + "%N")
 				end

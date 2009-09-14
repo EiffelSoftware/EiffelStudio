@@ -1,6 +1,6 @@
 note
 	description: "EiffelVision drawable. Cocoa implementation."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	keywords: "figures, primitives, drawing, line, point, ellipse"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -287,7 +287,7 @@ feature -- Drawing operations
 			create trans.make
 			trans.translate_by_xy (x, y)
 			if not is_flipped then
-				trans.translate_by_xy (0, l_string.size_with_attributes (l_attributes).height)
+				trans.translate_by_xy (0, l_string.size_with_attributes (l_attributes).height.rounded)
 				trans.scale_by_xy ({REAL_32}1.0, {REAL_32}-1.0)
 			end
 			trans.concat
@@ -362,7 +362,7 @@ feature -- Drawing operations
 			prepare_drawing
 
 			create trans.make
-			trans.translate_by_xy (x, pixmap_imp.image.size.height + y)
+			trans.translate_by_xy (x, pixmap_imp.image.size.height.rounded + y)
 			trans.scale_by_xy (1, -1)
 			trans.concat
 
@@ -587,7 +587,7 @@ feature {EV_ANY_HANDLER} -- Implementation
 			image.lock_focus
 			if not is_flipped then
 				create trans.make
-				trans.translate_by_xy ({REAL_32}0.0, image.size.height)
+				trans.translate_by_xy ({REAL_32}0.0, image.size.height.rounded)
 				trans.scale_by_xy ({REAL_32}1.0, {REAL_32}-1.0)
 				trans.concat
 			end

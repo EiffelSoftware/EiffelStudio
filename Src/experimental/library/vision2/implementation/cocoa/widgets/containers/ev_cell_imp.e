@@ -103,7 +103,7 @@ feature -- Layout
 			-- Height of the client area of `Current'
 		do
 			if attached {NS_BOX} cocoa_view as l_box then
-				Result := l_box.content_view.frame.size.height.max (0).min (height)
+				Result := l_box.content_view.frame.size.height.rounded.max (0).min (height)
 			else
 				Result := height
 			end
@@ -113,7 +113,7 @@ feature -- Layout
 			-- Height of the client area of `Current'.
 		do
 			if attached {NS_BOX} cocoa_view as l_box then
-				Result := l_box.content_view.frame.size.width.max (0).min (width)
+				Result := l_box.content_view.frame.size.width.rounded.max (0).min (width)
 			else
 				Result := width
 			end

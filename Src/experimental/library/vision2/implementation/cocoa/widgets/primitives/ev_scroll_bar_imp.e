@@ -1,6 +1,6 @@
 note
 	description: "Eiffel Vision scrollbar. Cocoa implementation."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +19,9 @@ inherit
 			set_value
 		redefine
 			interface,
-			make
+			make,
+			set_leap,
+			set_range
 		end
 
 feature {NONE} -- Implementation
@@ -34,15 +36,29 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Setter
 
 	set_value (a_value: INTEGER)
-		-- Set `value' to `a_value'.
-	do
-		Precursor {EV_GAUGE_IMP} (a_value)
-		scroller.set_double_value (proportion)
-	end
+			-- Set `value' to `a_value'.
+		do
+			Precursor {EV_GAUGE_IMP} (a_value)
+			scroller.set_double_value (proportion)
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	scroller: NS_SCROLLER
+
+	set_leap (a_leap: INTEGER)
+			-- <Precursor>
+		do
+			Precursor {EV_GAUGE_IMP} (a_leap)
+			scroller.set_knob_proportion ((a_leap / value_range.count).truncated_to_real)
+		end
+
+	set_range
+			-- <Precursor>
+		do
+			Precursor {EV_GAUGE_IMP}
+			scroller.set_knob_proportion ((leap / value_range.count).truncated_to_real)
+		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

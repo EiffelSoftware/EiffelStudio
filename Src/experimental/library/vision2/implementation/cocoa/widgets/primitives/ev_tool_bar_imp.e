@@ -174,7 +174,7 @@ feature -- Implementation
 			item_width, item_height: INTEGER
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
-			item_height := box.content_view.bounds.size.height
+			item_height := box.content_view.bounds.size.height.rounded
 			from
 				ev_children.start
 				x := 0

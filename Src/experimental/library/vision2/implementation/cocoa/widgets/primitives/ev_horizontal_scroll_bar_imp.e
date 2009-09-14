@@ -1,6 +1,6 @@
 note
 	description: "Eiffel Vision horizontal scroll bar. Cocoa implementation."
-	author:	"Daniel Furrer"
+	author:	"Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,19 +27,21 @@ feature -- Initialization
 
 	make
 		do
-			create scroller.make_with_frame (0, 0, 10, 5)
+			create scroller.make_with_frame (create {NS_RECT}.make_rect (0, 0, 10, 5)) -- This call sets the orientation of the scrollbar
 			cocoa_view := scroller
 			Precursor {EV_SCROLL_BAR_IMP}
 			disable_tabable_from
 			disable_tabable_to
 			scroller.set_enabled (True)
 
-			change_actions_internal := create_change_actions
 			scroller.set_action (agent
 				do
 					set_proportion (scroller.double_value.truncated_to_real)
-					change_actions.call ([value])
+					if change_actions_internal /= Void then
+						change_actions_internal.call ([value])
+					end
 				end)
+			set_is_initialized (True)
 		end
 
 feature -- Minimum size
@@ -51,6 +53,7 @@ feature -- Minimum size
  		end
 
 	cocoa_set_size (a_x_position, a_y_position, a_width, a_height: INTEGER_32)
+			-- Make sure the width of the scrollbar stays the same - just center it in the available space.
 		local
 			l_y_position: INTEGER
 			l_height: INTEGER

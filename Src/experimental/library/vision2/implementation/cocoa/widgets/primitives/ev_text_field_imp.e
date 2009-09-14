@@ -159,7 +159,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	set_default_minimum_size
 			-- Called after creation. Set current size and notify parent.
 		do
-			internal_set_minimum_size (maximum_character_width * 4, text_field.cell.cell_size.height)
+			internal_set_minimum_size (maximum_character_width * 4, text_field.cell.cell_size.height.rounded)
 		end
 
 feature -- Status report

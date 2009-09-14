@@ -1,6 +1,6 @@
 note
 	description: "Eiffel Vision titled window. Cocoa implementation."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 

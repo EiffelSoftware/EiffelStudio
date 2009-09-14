@@ -1,6 +1,6 @@
 note
 	description: "Eiffel Vision dialog. Cocoa implementation."
-	author:	"Daniel Furrer"
+	author:	"Daniel Furrer <daniel.furrer@gmail.com>"
 
 class
 	EV_DIALOG_IMP
@@ -56,9 +56,10 @@ feature -- Status Report
 		do
 			is_modal := True
 			show
-			ret := app_implementation.run_modal_for_window (current)
 			blocking_window := a_window
+			ret := app_implementation.run_modal_for_window (current)
 			is_modal := False
+			blocking_window := Void
 		end
 
 feature -- Status Setting

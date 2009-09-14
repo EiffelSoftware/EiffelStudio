@@ -117,16 +117,6 @@ feature -- Element change
 			set_value ( temp_value )
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	value_changed_handler
-			-- Called when `value' changes.
-		do
-			if change_actions_internal /= Void then
-				change_actions_internal.call ([value])
-			end
-		end
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_GAUGE note option: stable attribute end

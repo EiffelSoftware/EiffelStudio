@@ -412,14 +412,14 @@ feature {NONE} -- Graphical view
 			if attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
 				if attached w_imp.top_level_window_imp as w and then attached w.screen as l_screen then
 					x1 := a_widget.screen_x - 1
-					y1 := (l_screen.frame.size.height - a_widget.screen_y - a_widget.height) - 1
+					y1 := (l_screen.frame.size.height.rounded - a_widget.screen_y - a_widget.height) - 1
 					x2 := a_widget.screen_x + a_widget.width + 1
-					y2 := (l_screen.frame.size.height - a_widget.screen_y) + 1
+					y2 := (l_screen.frame.size.height.rounded - a_widget.screen_y) + 1
 
-					x1 := x1.min(l_screen.frame.size.width).max(0)
-					y1 := y1.min(l_screen.frame.size.height).max(0)
-					x2 := x2.min(l_screen.frame.size.width).max(0)
-					y2 := y2.min(l_screen.frame.size.height).max(0)
+					x1 := x1.min(l_screen.frame.size.width.rounded).max(0)
+					y1 := y1.min(l_screen.frame.size.height.rounded).max(0)
+					x2 := x2.min(l_screen.frame.size.width.rounded).max(0)
+					y2 := y2.min(l_screen.frame.size.height.rounded).max(0)
 					overlay.animator.set_frame (create {NS_RECT}.make_rect (x1, y1, x2-x1, (y2-y1).abs), True)
 					if attached {NS_WINDOW} implementation as win_imp then
 						overlay.set_parent_window (win_imp)

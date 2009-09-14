@@ -244,8 +244,8 @@ feature {NONE} -- implementation
 			x, y: INTEGER
 			l_screen_x, l_screen_y: INTEGER
 		do
-			x := a_event.location_in_window.x
-			y := a_event.location_in_window.y
+			x := a_event.location_in_window.x.rounded
+			y := a_event.location_in_window.y.rounded
 			pointer_button_press_actions.call ([x, y, 0, 0.0, 0.0, 0.0, l_screen_x, l_screen_y])
 		end
 

@@ -26,20 +26,20 @@ import traceback, sys
 
 basedir = "/System/Library/Frameworks"
 
-
+"""
 config = {
 		  "framework": "ApplicationKit",
 		  "dirname": basedir + "/AppKit.framework/Headers",
-		  "class": "NSWindow",
-		  "include": "Cocoa/NSWindow.h"
+		  "class": "NSRunLoop",
+		  "include": "Cocoa/NSRunLoop.h"
 		  }
 """
 config = {
 		  "framework": "Foundation",
 		  "dirname": basedir + "/Foundation.framework/Headers",
-		  "class": "NSString",
-		  "include": "Foundation/NSString.h"
-		  }"""
+		  "class": "NSValue",
+		  "include": "Foundation/NSValue.h"
+		  }
 
 headerpath = config["dirname"] + "/" + config["class"] + ".h"
 
@@ -336,6 +336,7 @@ typeMap = {
 	"IBAction": "",
 	"CGFloat" : "REAL",
 	"void *": "POINTER",
+	"const void *": "POINTER",
 	"void * /* WindowRef */": "WINDOW_REF",
 	"id <NSCopying>": "NS_COPYING",
 	"IconRef": "ICON_REF",
@@ -368,7 +369,12 @@ enumMap = {
     "NSImageCacheMode": "int",
     "NSEventType": "int",
     "NSPointingDeviceType": "int",
-	"NSWindowCollectionBehavior": "NSUInteger"    
+	"NSWindowCollectionBehavior": "NSUInteger",
+	"NSControlTint": "NSUInteger",
+	"NSScrollerPart": "NSUInteger",
+	"NSScrollerArrow": "NSUInteger",
+	"NSScrollArrowPosition": "NSUInteger",
+	"NSUsableScrollerParts": "NSUInteger"
 }
 	
 expandedTypes = ["REAL", "REAL_64", "CHARACTER", "BOOLEAN", "INTEGER", "NATURAL", "NATURAL_64", "INTEGER_64", "NATURAL_16", "INTEGER_16"]

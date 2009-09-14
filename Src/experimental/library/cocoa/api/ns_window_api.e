@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {NS_WINDOW_API}."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -557,7 +557,47 @@ feature -- Managing Titles
 
 feature -- Accessing Screen Information
 
-feature -- Moving
+feature -- Moving Windows
+
+	frozen is_movable_by_window_background (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)isMovableByWindowBackground
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window isMovableByWindowBackground];"
+		end
+
+	frozen set_movable_by_window_background (a_ns_window: POINTER; a_flag: BOOLEAN)
+			-- - (void)setMovableByWindowBackground: (BOOL) flag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setMovableByWindowBackground: $a_flag];"
+		end
+
+	frozen is_movable (a_ns_window: POINTER): BOOLEAN
+			-- - (BOOL)isMovable
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSWindow*)$a_ns_window isMovable];"
+		end
+
+	frozen set_movable (a_ns_window: POINTER; a_flag: BOOLEAN)
+			-- - (void)setMovable: (BOOL) flag
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window setMovable: $a_flag];"
+		end
+
+	frozen center (a_ns_window: POINTER)
+			-- - (void)center
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"[(NSWindow*)$a_ns_window center];"
+		end
 
 feature -- Closing Windows
 

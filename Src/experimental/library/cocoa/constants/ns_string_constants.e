@@ -28,6 +28,14 @@ feature -- NSView / Notifications
 			create Result.make_weak_from_pointer (ns_view_frame_did_change_notification)
 		end
 
+feature -- Run Loop Modes
+
+	default_tun_loop_mode: NS_STRING
+		once
+			create Result.make_weak_from_pointer (ns_default_tun_loop_mode)
+		end
+
+
 feature {NONE} -- Implementation
 
 	frozen ns_font_attribute_name: POINTER
@@ -55,4 +63,11 @@ feature {NONE} -- Implementation
 			"NSViewFrameDidChangeNotification"
 		end
 
+	frozen ns_default_tun_loop_mode: POINTER
+			-- NSDefaultRunLoopMode
+		external
+			"C macro use <Cocoa/Cocoa.h>"
+		alias
+			"NSDefaultRunLoopMode"
+		end
 end

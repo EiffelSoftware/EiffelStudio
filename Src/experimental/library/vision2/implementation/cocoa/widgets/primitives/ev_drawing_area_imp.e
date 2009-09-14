@@ -50,7 +50,8 @@ inherit
 			copy as copy_cocoa
 		undefine
 			key_down,
-			key_up
+			key_up,
+			is_equal
 		redefine
 			dispose,
 			mouse_down,

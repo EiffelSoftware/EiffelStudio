@@ -1,6 +1,6 @@
 note
 	description: "EiffelVision color selection dialog. Cocoa implementation."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 
 class
 	EV_COLOR_DIALOG_IMP
@@ -27,7 +27,7 @@ inherit
 			set_background_color as set_background_color_cocoa,
 			background_color as background_color_cocoa
 		undefine
-			copy
+			copy, is_equal
 		redefine
 			dispose
 		select

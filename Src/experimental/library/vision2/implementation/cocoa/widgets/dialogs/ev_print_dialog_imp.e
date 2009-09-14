@@ -1,6 +1,6 @@
 note
 	description: "Eiffel Vision print dialog. Cocoa implementation."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -37,6 +37,8 @@ inherit
 			title as cocoa_title,
 			set_title as cocoa_set_title,
 			copy as cocoa_copy
+		undefine
+			is_equal
 		redefine
 			dispose
 		select

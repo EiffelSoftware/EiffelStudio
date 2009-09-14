@@ -31,6 +31,8 @@ inherit
 			make as create_split_view_delegate,
 			item as delegate_item,
 			copy as copy_cocoa
+		undefine
+			is_equal
 		redefine
 			split_view_did_resize_subviews,
 			dispose

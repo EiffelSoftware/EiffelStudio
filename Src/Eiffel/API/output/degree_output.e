@@ -686,10 +686,10 @@ feature {NONE} -- Internationalization
 	lb_degree_minus_3: STRING = "Generating Optimized Code"
 
 	lb_compiler_header_1: STRING = "Eiffel Compilation Manager%NVersion $1"
-	lb_melting_changes_message: STRING = "Melting System Changes..."
-	lb_consume_assemblies_message: STRING = "Pre-consuming Assembly Types..."
-	lb_freezing_system_message: STRING = "Freezing System Changes..."
-	lb_removing_dead_code_message: STRING = "Removing Unused Code..."
+	lb_melting_changes_message: STRING = "Melting System Changes"
+	lb_consume_assemblies_message: STRING = "Pre-consuming Assembly Types"
+	lb_freezing_system_message: STRING = "Freezing System Changes"
+	lb_removing_dead_code_message: STRING = "Removing Unused Code"
 	lb_system_recompiled: STRING = "System Recompiled."
 	lb_dead_code_done_to_go_2: STRING = "Features done: $1%TFeatures to go: $2"
 

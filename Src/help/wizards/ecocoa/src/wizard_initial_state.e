@@ -10,37 +10,13 @@ class
 inherit
 	BENCH_WIZARD_INITIAL_STATE_WINDOW
 		redefine
-			make,
 			proceed_with_current_info
 		end
 
 	WIZARD_PROJECT_SHARED
 
-	EXECUTION_ENVIRONMENT
-		rename
-			command_line as env_command_line
-		end
-
 create
 	make
-
-feature
-
-	make (an_info: WIZARD_INFORMATION)
-		local
-			original, link: FILE_NAME
-		do
-			-- The path to the icon is fixed so we make a link to the system icon we want to use
-			create original.make
-			original.set_directory ("/System/Library/Frameworks/AppKit.framework/Resources")
-			original.set_file_name ("NSDefaultApplicationIcon")
-			original.add_extension ("tiff")
-			create link.make
-			link.set_directory (wizard_pixmaps_path)
-			link.set_file_name (pixmap_icon_location)
-			system ("ln -s " + original + " " + link)
-			Precursor (an_info)
-		end
 
 feature -- basic Operations
 
@@ -55,6 +31,7 @@ feature -- basic Operations
 		do
 			title.set_text (interface_names.t_welcome_to_the_wizard)
 			message.set_text (interface_names.m_wizard_introduction)
+			first_window.set_minimum_height (400)
 		end
 
 	pixmap_icon_location: FILE_NAME

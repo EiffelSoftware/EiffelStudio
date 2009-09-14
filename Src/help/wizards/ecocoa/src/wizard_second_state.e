@@ -10,8 +10,7 @@ class
 inherit
 	BENCH_WIZARD_FINAL_STATE_WINDOW
 		redefine
-			proceed_with_current_info,
-			build
+			proceed_with_current_info
 		end
 
 	EXECUTION_ENVIRONMENT
@@ -36,25 +35,6 @@ feature -- Basic Operations
 		end
 
 feature -- Access
-
-	build
-		local
-			local_pixmap: EV_PIXMAP
-			interior_box: EV_HORIZONTAL_BOX
-		do
-			Precursor
-			main_box.start
-			interior_box ?= main_box.item
-			interior_box.start
-
-			local_pixmap := pixmap.twin
---			local_pixmap.set_minimum_size (
---				dialog_unit_to_pixels(165),
---				dialog_unit_to_pixels(312))
-			local_pixmap.draw_pixmap (60, 60, pixmap_icon)
-
-			interior_box.replace (local_pixmap)
-		end
 
 	display_state_text
 		do

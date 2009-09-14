@@ -96,8 +96,11 @@ feature -- Getting General Event Information
 			-- This is Void if the event is periodic and, strangely, may even be Void ofr mouse events
 		require
 			type_not_periodic: type /= periodic
+		local
+			l_window: POINTER
 		do
-			if attached {NS_EVENT_API}.window (item) as l_window then
+			l_window := {NS_EVENT_API}.window (item)
+			if l_window /= default_pointer then
 				if attached {NS_WINDOW} callback_marshal.get_eiffel_object (l_window) as res then
 					Result := res
 				else

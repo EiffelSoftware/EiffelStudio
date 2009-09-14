@@ -15,12 +15,12 @@ inherit
 
 	NS_ANIMATABLE_PROPERTY_CONTAINER [NS_WINDOW]
 		undefine
-			dispose
+			dispose, is_equal
 		end
 
 	NS_ENVIRONEMENT
 		undefine
-			copy
+			copy, is_equal
 		end
 
 create

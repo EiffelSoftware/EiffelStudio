@@ -11,6 +11,9 @@ inherit
 	NS_VIEW
 
 	NS_TEXT_DELEGATE
+		undefine
+			is_equal
+		end
 
 feature -- Access
 

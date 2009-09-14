@@ -19,7 +19,7 @@ inherit
 		rename
 			item as item_for_iteration
 		undefine
-			copy
+			copy, is_equal
 		redefine
 			item_for_iteration
 		end
@@ -27,6 +27,8 @@ inherit
 	NS_COPYING
 		rename
 			item as object_item
+		undefine
+			is_equal
 		end
 
 -- TODO: Would probably be nice if an NS_ARRAY could inherit from CHAIN [T] or even ARRAY [T]

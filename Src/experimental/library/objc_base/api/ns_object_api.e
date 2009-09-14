@@ -1,6 +1,6 @@
 note
 	description: "Summary description for {NS_OBJECT_API}."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,7 +10,8 @@ class
 inherit
 	ANY
 		rename
-			copy as any_copy
+			copy as any_copy,
+			is_equal as any_is_equal
 		end
 
 feature -- Creating, Copying, and Deallocating Objects
@@ -20,6 +21,15 @@ feature -- Creating, Copying, and Deallocating Objects
 			"C inline use <Foundation/NSObject.h>"
 		alias
 			"return [(NSObject*)$a_object copy];"
+		end
+
+feature -- Identifying and Comparing Objects
+
+	frozen is_equal (a_object: POINTER; other: POINTER): BOOLEAN
+		external
+			"C inline use <Foundation/NSObject.h>"
+		alias
+			"return [(NSObject*)$a_object isEqual: $other];"
 		end
 
 feature -- Identifying classes

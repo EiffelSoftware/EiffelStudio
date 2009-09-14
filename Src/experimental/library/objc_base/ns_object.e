@@ -43,7 +43,7 @@ feature {OBJC_CLASS} -- Initialization
 			a_ptr_not_null: a_ptr /= default_pointer
 		do
 			item := a_ptr
-			do_not_collect := True
+--			do_not_collect := True
 		ensure
 			item_set: item = a_ptr
 		end
@@ -135,13 +135,17 @@ feature -- Duplication
 
 feature {NONE} -- Memory Management
 
-	dispose
-			-- <Precursor>
-		local
-			l_null: POINTER
-		do
-			Precursor {IDENTIFIED}
-			if item /= l_null then
+	do_not_collect: BOOLEAN
+			-- Flag that indicates that item must not be released when the Eiffel object is
+			-- collected
+
+ 	dispose
+ 			-- <Precursor>
+ 		local
+ 			l_null: POINTER
+ 		do
+ 			Precursor {IDENTIFIED}
+			if item /= l_null and not do_not_collect then
 --				{NS_OBJECT_API}.release (item)
 --				item := l_null
 			end

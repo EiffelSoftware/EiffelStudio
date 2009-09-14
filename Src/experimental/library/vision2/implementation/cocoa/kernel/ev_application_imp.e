@@ -1,6 +1,6 @@
 note
 	description: "EiffelVision application, Cocoa implementation."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	todo: "[
 		- Locking is the same as in the mswin implementation. Promote to implementation interface.
 	]"
@@ -43,6 +43,8 @@ inherit
 			launch as launch_cocoa,
 			copy as copy_cocoa,
 			process_events as process_events_cocoa
+		undefine
+			is_equal
 		redefine
 			dispose
 		end

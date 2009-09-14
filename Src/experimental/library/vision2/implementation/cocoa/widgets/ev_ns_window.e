@@ -18,6 +18,8 @@ inherit
 			title as cocoa_title,
 			set_title as cocoa_set_title,
 			copy as cocoa_copy
+		undefine
+			is_equal
 		end
 
 feature -- Window Title

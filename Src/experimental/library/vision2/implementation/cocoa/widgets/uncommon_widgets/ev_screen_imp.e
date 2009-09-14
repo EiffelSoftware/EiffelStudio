@@ -26,6 +26,8 @@ inherit
 	NS_SCREEN
 		rename
 			copy as copy_cocoa
+		undefine
+			is_equal
 		end
 
 	NS_ENVIRONEMENT

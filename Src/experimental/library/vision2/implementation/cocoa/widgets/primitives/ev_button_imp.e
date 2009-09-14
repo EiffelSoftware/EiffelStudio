@@ -54,8 +54,6 @@ inherit
 		end
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
-		export
-			{EV_INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
 			interface
 		end
@@ -67,6 +65,8 @@ inherit
 			alignment as cocoa_alignment,
 			set_font as cocoa_set_font,
 			copy as cocoa_copy
+		undefine
+			is_equal
 		redefine
 			mouse_down,
 			dispose

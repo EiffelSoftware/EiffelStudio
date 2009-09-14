@@ -201,8 +201,9 @@ feature -- Query
 		local
 			l_image_rep: NS_BITMAP_IMAGE_REP
 		do
-			create l_image_rep.make_with_data (image.tiff_representation)
-			Result := l_image_rep.bitmap_data
+--			create l_image_rep.make_with_data (image.tiff_representation)
+--			Result := l_image_rep.bitmap_data
+			Result := Result.memory_alloc (width * height * 3)
 		end
 
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementation

@@ -1,6 +1,6 @@
 note
 	description: "Eiffel Vision directory dialog."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,6 +35,8 @@ inherit
 			screen as cocoa_screen,
 			set_title as cocoa_set_title,
 			directory as cocoa_directory
+		undefine
+			is_equal
 		redefine
 			dispose
 		select

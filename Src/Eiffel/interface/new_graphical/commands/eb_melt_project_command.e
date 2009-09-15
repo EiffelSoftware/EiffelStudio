@@ -390,7 +390,7 @@ feature {NONE} -- Execution
 			then
 				compile_and_run
 			else
-				create l_confirm.make_standard (interface_names.e_exec_recompile, "", preferences.dialog_data.stop_execution_when_compiling_string)
+				create l_confirm.make_standard (interface_names.e_exec_recompile, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.stop_execution_when_compiling_preference, True))
 				l_confirm.set_title (interface_names.t_debugger_question)
 				l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent compile_and_run)
 				l_confirm.show_on_active_window

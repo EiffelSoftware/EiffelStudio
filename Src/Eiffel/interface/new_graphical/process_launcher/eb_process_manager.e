@@ -130,9 +130,9 @@ feature -- Execution
 		do
 			if is_c_compilation_running then
 				if is_freezing_running then
-					create l_question.make_standard (warning_messages.w_freezing_running, interface_names.l_discard_terminate_freezing, preferences.dialog_data.confirm_on_terminate_freezing_string)
+					create l_question.make_standard (warning_messages.w_freezing_running, interface_names.l_discard_terminate_freezing, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_on_terminate_freezing_preference, True))
 				elseif is_finalizing_running then
-					create l_question.make_standard (warning_messages.w_finalizing_running, interface_names.l_discard_terminate_finalizing, preferences.dialog_data.confirm_on_terminate_finalizing_string)
+					create l_question.make_standard (warning_messages.w_finalizing_running, interface_names.l_discard_terminate_finalizing, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_on_terminate_finalizing_preference, True))
 				end
 				if l_question /= Void then
 					l_question.set_button_action (l_question.dialog_buttons.yes_button, ok_agent)
@@ -160,7 +160,7 @@ feature -- Execution
 					l_output := interface_names.l_external_command_running
 					l_discard_msg := interface_names.l_discard_terminate_external_command_when_exit
 				end
-				create l_question.make_standard_with_cancel (l_output, l_discard_msg, preferences.dialog_data.confirm_on_terminate_process_string)
+				create l_question.make_standard_with_cancel (l_output, l_discard_msg, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_on_terminate_process_preference, True))
 				l_question.set_button_action (l_question.dialog_buttons.ok_button, ok_agent)
 				l_question.show (a_window)
 			end
@@ -174,7 +174,7 @@ feature -- Execution
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			if is_external_command_running then
-				create l_question.make_standard (warning_messages.w_external_command_running_in_development_window, interface_names.l_discard_terminate_external_command, preferences.dialog_data.confirm_on_terminate_external_command_string)
+				create l_question.make_standard (warning_messages.w_external_command_running_in_development_window, interface_names.l_discard_terminate_external_command, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_on_terminate_external_command_preference, True))
 				l_question.set_button_action (l_question.dialog_buttons.yes_button, ok_agent)
 				l_question.show (a_window)
 			end

@@ -352,7 +352,7 @@ feature -- Actions
 				original_metric /= Void
 				current_metric_editor /= Void
 			end
-			create l_question.make_standard (metric_names.t_remove_metric (current_metric_editor.name_area.name), metric_names.t_discard_remove_prompt, preferences.dialog_data.confirm_remove_metric_string)
+			create l_question.make_standard (metric_names.t_remove_metric (current_metric_editor.name_area.name), metric_names.t_discard_remove_prompt, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_remove_metric_preference, True))
 			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent remove_current_metric)
 			l_question.show (metric_tool_window)
 		end
@@ -475,7 +475,7 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Implemetation
 				original_metric /= Void
 				current_metric_editor /= Void
 			end
-			create l_question.make_standard (metric_names.t_remove_metric (a_metric.name), metric_names.t_discard_remove_prompt, preferences.dialog_data.confirm_remove_metric_string)
+			create l_question.make_standard (metric_names.t_remove_metric (a_metric.name), metric_names.t_discard_remove_prompt, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_remove_metric_preference, True))
 			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent remove_metric (a_metric))
 			l_question.show (metric_tool_window)
 		end
@@ -742,11 +742,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
         source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_NEW_METRIC_PANEL

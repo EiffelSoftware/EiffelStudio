@@ -91,7 +91,7 @@ feature {EB_WINDOW_MANAGER} -- Exit methods.
 		do
 			if not already_confirmed then
 				already_confirmed := True
-				create l_confirm.make_standard (interface_names.l_exit_application, "", preferences.dialog_data.confirm_on_exit_string)
+				create l_confirm.make_standard (interface_names.l_exit_application, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_on_exit_preference, True))
 				l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent exit_application)
 				l_confirm.show_on_active_window
 			else

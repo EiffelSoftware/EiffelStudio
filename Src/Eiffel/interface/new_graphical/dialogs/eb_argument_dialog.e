@@ -234,7 +234,7 @@ feature {NONE} -- Actions
 				create l_question.make_standard_with_cancel (
 						warning_messages.w_apply_debugger_profiles_before_closing,
 						"",
-						preferences.dialog_data.confirm_always_apply_debugger_profiles_before_closing_string
+						create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_always_apply_debugger_profiles_before_closing_preference, True)
 					)
 				l_question.set_button_action (l_question.dialog_buttons.yes_button, agent do debugging_options_control.store_dbg_options; hide end)
 				l_question.set_button_action (l_question.dialog_buttons.no_button, agent do debugging_options_control.validate; hide end)
@@ -336,7 +336,7 @@ invariant
 	argument_control_not_void: debugging_options_control /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -349,22 +349,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_ARGUMENT_DIALOG

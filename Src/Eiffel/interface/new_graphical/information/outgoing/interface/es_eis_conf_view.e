@@ -121,7 +121,7 @@ feature -- Operation
 			if component_editable then
 				create l_request.make_standard_with_cancel (interface_names.l_confirm_delete_selected_items,
 					interface_names.l_always_delete_without_asking,
-					preferences.dialog_data.confirm_delete_eis_entries_string)
+					create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_delete_eis_entries_prefernce, True))
 				l_request.set_title (interface_names.t_eiffelstudio_question)
 				l_request.show_on_active_window
 				if l_request.dialog_result = dialog_buttons.cancel_button then

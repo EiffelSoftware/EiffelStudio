@@ -132,7 +132,7 @@ feature -- Execution
 			if l_wb.is_changed or window_manager.has_modified_windows then
 				create l_compile_request.make_standard_with_cancel (warning_messages.w_compile_before_debug,
 					interface_names.l_always_compile_before_debug,
-					preferences.dialog_data.confirm_always_compile_before_executing_string)
+					create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_always_compile_before_executing_preference, True))
 				l_compile_request.set_title (interface_names.t_debugger_question)
 				l_compile_request.set_button_action (dialog_buttons.yes_button, agent melt_project_cmd.execute_and_wait)
 				l_compile_request.show_on_active_window

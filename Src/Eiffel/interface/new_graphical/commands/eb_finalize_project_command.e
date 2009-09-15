@@ -43,7 +43,7 @@ feature -- Callbacks
 		local
 			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create l_confirm.make_standard_with_cancel (Warning_messages.w_assertion_warning, interface_names.l_discard_finalize_assertions, preferences.dialog_data.confirm_finalize_assertions_string)
+			create l_confirm.make_standard_with_cancel (Warning_messages.w_assertion_warning, interface_names.l_discard_finalize_assertions, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_finalize_assertions_preference, True))
 			l_confirm.set_button_text (l_confirm.dialog_buttons.yes_button, Interface_names.b_discard_assertions)
 			l_confirm.set_button_text (l_confirm.dialog_buttons.no_button, Interface_names.b_keep_assertions)
 			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent set_assertion_flag_and_compile (False))
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			l_buttons: ES_DIALOG_BUTTONS
 		do
 			create l_buttons
-			create l_confirm.make (warning_messages.w_finalize_warning, l_buttons.yes_no_cancel_buttons, l_buttons.cancel_button, l_buttons.yes_button, l_buttons.cancel_button, interface_names.l_discard_freeze_dialog, preferences.dialog_data.confirm_finalize_string)
+			create l_confirm.make (warning_messages.w_finalize_warning, l_buttons.yes_no_cancel_buttons, l_buttons.cancel_button, l_buttons.yes_button, l_buttons.cancel_button, interface_names.l_discard_freeze_dialog, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_finalize_preference, True))
 			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent set_c_compilation_and_compile (True))
 			l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent set_c_compilation_and_compile (False))
 			l_confirm.show_on_active_window
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			-- preferences.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -177,22 +177,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_FINALIZE_PROJECT_COMMAND

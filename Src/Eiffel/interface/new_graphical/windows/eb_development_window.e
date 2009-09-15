@@ -721,7 +721,7 @@ feature -- Stone process
 						-- We're not editing the class in another window.
 					set_stone_after_first_check (a_stone)
 				else
-					create l_warning.make_standard (warning_messages.w_class_already_edited, "", preferences.dialog_data.already_editing_class_string)
+					create l_warning.make_standard (warning_messages.w_class_already_edited, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.already_editing_class_preference, True))
 					l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent set_stone_after_first_check (a_stone))
 					l_warning.show (window)
 				end

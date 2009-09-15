@@ -341,7 +341,7 @@ feature {NONE} -- Error reporting
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			create l_question.make_standard (warning_messages.w_project_incompatible_version (config_file_name, version_number, eiffel_project.incompatible_version_number),
-				interface_names.l_discard_convert_project_dialog, preferences.dialog_data.confirm_convert_project_string)
+				interface_names.l_discard_convert_project_dialog, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_convert_project_preference, True))
 			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent set_should_override_project (True))
 			l_question.set_button_action (l_question.dialog_buttons.no_button, agent set_has_error)
 			l_question.show (parent_window)
@@ -603,7 +603,7 @@ feature {NONE} -- User interaction
 		local
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create l_question.make_standard (warning_messages.w_project_build_precompile, interface_names.l_discard_build_precompile_dialog, preferences.dialog_data.confirm_build_precompile_string)
+			create l_question.make_standard (warning_messages.w_project_build_precompile, interface_names.l_discard_build_precompile_dialog, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_build_precompile_preference, True))
 			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent do is_user_wants_precompile := True end)
 			l_question.show (parent_window)
 		end

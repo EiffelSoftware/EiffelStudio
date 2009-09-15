@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 		do
 			start_c_compilation := True
 			if is_dotnet_project then
-				create l_confirm.make_standard (warning_messages.w_finalize_precompile, interface_names.l_discard_finalize_precompile_dialog, preferences.dialog_data.confirm_finalize_precompile_string)
+				create l_confirm.make_standard (warning_messages.w_finalize_precompile, interface_names.l_discard_finalize_precompile_dialog, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_finalize_precompile_preference, True))
 				l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent confirm_finalization_and_compile (True))
 				l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent confirm_finalization_and_compile (False))
 				l_confirm.show_on_active_window

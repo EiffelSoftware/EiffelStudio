@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			a_width: INTEGER
 			a_widget_y_offset: INTEGER
 			a_widget: EV_WIDGET
-			l_parent: detachable like parent
+			l_parent: like parent
 		do
 			a_widget := a_popup.item
 				-- Account for position of text relative to pixmap.
@@ -129,6 +129,7 @@ feature {NONE} -- Implementation
 			-- `Current' has been requested to be updated via `popup_window'.
 		local
 			l_text_field: like text_field
+			l_bg_color: EV_COLOR
 		do
 			create l_text_field
 			text_field := l_text_field
@@ -140,8 +141,9 @@ feature {NONE} -- Implementation
 
 			l_text_field.set_text (text)
 
-			l_text_field.set_background_color (implementation.displayed_background_color)
-			popup_window.set_background_color (implementation.displayed_background_color)
+			l_bg_color := implementation.displayed_background_color
+			l_text_field.set_background_color (l_bg_color)
+			popup_window.set_background_color (l_bg_color)
 			l_text_field.set_foreground_color (implementation.displayed_foreground_color)
 
 			popup_window.extend (l_text_field)

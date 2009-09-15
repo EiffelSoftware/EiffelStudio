@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 
 			create record_added_event
 			create record_removed_event
-			create record_updated_event
 			create record_property_updated_event
 
 			if is_project_initialized then
@@ -401,22 +400,7 @@ feature {NONE} -- Element change
 			record_added_event.publish ([Current, a_record])
 		end
 
-feature {TEST_SESSION_I} -- Basic operations
-
-	report_record_update (a_record: TEST_SESSION_RECORD)
-			-- <Precursor>
-		do
-			if has_record (a_record) then
-				seek_record (a_record)
-				store_record_at_index (record_storage.index)
-				record_updated_event.publish ([Current, a_record])
-			end
-		end
-
 feature {NONE} -- Events
-
-	record_updated_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
-			-- <Precursor>
 
 	record_added_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
 			-- <Precursor>
@@ -455,7 +439,6 @@ feature {NONE} -- Clean up
 			-- <Precursor>
 		do
 			if a_explicit then
-				record_updated_event.dispose
 				record_added_event.dispose
 				record_removed_event.dispose
 			end

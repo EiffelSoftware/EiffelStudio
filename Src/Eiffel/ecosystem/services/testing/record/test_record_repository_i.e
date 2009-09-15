@@ -182,20 +182,6 @@ feature {TEST_SUITE_S} -- Element change
 		deferred
 		end
 
-feature {TEST_SESSION_RECORD} -- Basic operations
-
-	report_record_update (a_record: TEST_SESSION_RECORD)
-			-- Report `Current' that the content of a record was updated by a running session.
-			--
-			-- Note: this routine can be called even if the corresponding record has already been removed.
-			--
-			-- `a_record': Record which was updated.
-		require
-			a_record_attached: a_record /= Void
-			usable: is_interface_usable
-		deferred
-		end
-
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

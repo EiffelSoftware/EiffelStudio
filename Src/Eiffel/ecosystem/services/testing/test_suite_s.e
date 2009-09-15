@@ -137,9 +137,6 @@ feature -- Status setting: sessions
 			a_session_usable: a_session.is_interface_usable
 			not_running: not a_session.has_next_step
 		deferred
-		ensure
-			record_added_to_repo: a_session.has_next_step implies
-				record_repository.has_record (a_session.record)
 		end
 
 feature -- Element change

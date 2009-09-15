@@ -30,21 +30,6 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events
 			a_repo_has_result: a_repo.has_record (a_record)
 		end
 
-	on_record_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
-			-- Called when a record was updated in the repository.
-			--
-			-- `a_repo': Repository containing record.
-			-- `a_record': Record which was updated.
-		require
-			a_repo_attached: a_repo /= Void
-			a_record_attached: a_record /= Void
-			a_repo_usable: a_repo.is_interface_usable
-			a_repo_has_record: a_repo.has_record (a_record)
-		do
-		ensure
-			a_repo_has_record: a_repo.has_record (a_record)
-		end
-
 	on_record_removed (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- Called after a record was removed from a repository.
 			--

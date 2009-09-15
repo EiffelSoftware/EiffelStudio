@@ -103,6 +103,8 @@ feature {TEST_SUITE_S} -- Status setting
 			usable: is_interface_usable
 			not_running: not has_next_step
 		deferred
+		ensure
+			has_next_step_implies_unattached_record: has_next_step implies not record.is_attached
 		end
 
 feature -- Events

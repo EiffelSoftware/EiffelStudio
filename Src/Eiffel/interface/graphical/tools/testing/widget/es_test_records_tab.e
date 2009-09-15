@@ -31,8 +31,7 @@ inherit
 	TEST_RECORD_REPOSITORY_OBSERVER
 		redefine
 			on_record_added,
-			on_record_removed,
-			on_record_updated
+			on_record_removed
 		end
 
 feature {NONE} -- Initialization
@@ -265,7 +264,10 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 			if attached {like record} a_record as l_record then
 					-- Add record if not done yet.
 				find_row (l_record)
-				last_found_row := Void
+				if attached last_found_row as l_row then
+					l_row.rebuild
+					last_found_row := Void
+				end
 			end
 		end
 
@@ -288,22 +290,6 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 					l_records.go_after
 				else
 					l_records.forth
-				end
-			end
-		end
-
-	on_record_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
-			-- <Precursor>
-		local
-			l_row: like last_found_row
-		do
-			if attached {like record} a_record as l_record then
-				find_row (l_record)
-				l_row := last_found_row
-				last_found_row := Void
-				check l_row /= Void end
-				if not l_row.is_running then
-					l_row.rebuild
 				end
 			end
 		end

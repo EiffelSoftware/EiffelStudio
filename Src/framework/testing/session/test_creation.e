@@ -50,8 +50,6 @@ feature {NONE} -- Basic operations
 		do
 			l_record := record
 			l_record.add_test (a_name)
-			l_repo := test_suite.record_repository
-			l_repo.record_updated_event.publish ([l_repo, l_record])
 			test_created_event.publish ([Current, a_name])
 		end
 

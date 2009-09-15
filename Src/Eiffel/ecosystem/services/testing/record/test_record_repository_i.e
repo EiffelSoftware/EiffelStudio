@@ -24,6 +24,8 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			results_valid: Result.for_all (agent has_record (?))
+			results_sorted: Result.sorted (create {DS_BUBBLE_SORTER [TEST_SESSION_RECORD]}.make (
+				create {KL_COMPARABLE_COMPARATOR [TEST_SESSION_RECORD]}.make))
 		end
 
 	records_of_type (a_type: TYPE [TEST_SESSION_RECORD]): like records
@@ -42,6 +44,8 @@ feature -- Access
 					do
 						Result := a_t.attempt (a_record) /= Void
 					end (a_type, ?))
+			results_sorted: Result.sorted (create {DS_BUBBLE_SORTER [TEST_SESSION_RECORD]}.make (
+				create {KL_COMPARABLE_COMPARATOR [TEST_SESSION_RECORD]}.make))
 		end
 
 	connection: EVENT_CONNECTION_I [TEST_RECORD_REPOSITORY_OBSERVER, TEST_RECORD_REPOSITORY_I]
@@ -56,7 +60,6 @@ feature -- Access
 						do
 							Result := <<
 									[record_added_event, agent an_observer.on_record_added],
-									[record_updated_event, agent an_observer.on_record_updated],
 									[record_removed_event, agent an_observer.on_record_removed],
 									[record_property_updated_event, agent an_observer.on_record_property_updated]
 								>>
@@ -64,21 +67,6 @@ feature -- Access
 				connection_cache := l_cache
 			end
 			Result := l_cache
-		end
-
-feature {TEST_SESSION_I} -- Access
-
-	record_updated_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
-			-- Events called when a record was updated in `Current'.
-			--
-			-- Note: is is up to a {TEST_SESSION_I} to publish this event with the correct parameters if the
-			--       record is part of `Current'.
-			--
-			-- repository: `Current'
-			-- record: Record which was updated.
-		require
-			usable: is_interface_usable
-		deferred
 		end
 
 feature {NONE} -- Access
@@ -120,6 +108,19 @@ feature {NONE} -- Access
 			--
 			-- Note: do not use directly, use `connection' instead.
 
+feature -- Status setting
+
+	force_record_persistence (a_record: TEST_SESSION_RECORD)
+			-- Force permament storage of given record.
+			--
+			-- `a_record': Record which should be stored persistently.
+		require
+			a_record_attached: a_record /= Void
+			usable: is_interface_usable
+			has_a_record: has_record (a_record)
+		deferred
+		end
+
 feature -- Query
 
 	has_record (a_record: TEST_SESSION_RECORD): BOOLEAN
@@ -132,6 +133,17 @@ feature -- Query
 		deferred
 		ensure
 			result_valid: Result = records.has (a_record)
+			result_implies_attached: Result implies
+				(a_record.is_attached and then a_record.repository = Current)
+		end
+
+	is_record_persistent (a_record: TEST_SESSION_RECORD): BOOLEAN
+			-- Should given record be stored permanently?
+		require
+			a_record_attached: a_record /= Void
+			usable: is_interface_usable
+			has_a_record: has_record (a_record)
+		deferred
 		end
 
 feature -- Element change
@@ -152,17 +164,36 @@ feature -- Element change
 feature {TEST_SUITE_S} -- Element change
 
 	append_record (a_record: TEST_SESSION_RECORD)
-			-- Add new record to end of `records'.
+			-- Add new record to `records'.
 			--
-			-- `a_record': Record to be added to end of `records'.
+			-- Note: there is no guarantee that `a_record' is part of `Current' after `append_record'
+			--       returns. This is usually because the number of records in `Current' is limited and
+			--       depending on the record's creation date.
+			--
+			-- Note: `a_record' should no longer be modified after calling `append_record', since these
+			--       changes might not be stored permanently.
+			--
+			-- `a_record': Record to be added.
 		require
 			a_record_attached: a_record /= Void
 			usable: is_interface_usable
+			a_record_not_attached: not a_record.is_attached
 			not_has_record: not has_record (a_record)
 		deferred
-		ensure
-			a_record_is_last: attached records as l_records and then
-				(not l_records.is_empty and then l_records.last = a_record)
+		end
+
+feature {TEST_SESSION_RECORD} -- Basic operations
+
+	report_record_update (a_record: TEST_SESSION_RECORD)
+			-- Report `Current' that the content of a record was updated by a running session.
+			--
+			-- Note: this routine can be called even if the corresponding record has already been removed.
+			--
+			-- `a_record': Record which was updated.
+		require
+			a_record_attached: a_record /= Void
+			usable: is_interface_usable
+		deferred
 		end
 
 note

@@ -196,7 +196,7 @@ feature {NONE} -- Initialization
 			from
 				pattern_area := pattern.area
 				pattern_count := pattern.count
-				table := table.aliased_resized_area_with_default (0, pattern_count)
+				table := table.aliased_resized_area_with_default (0, pattern_count + 1)
 				l_table := table
 				l := 0
 				k := -1

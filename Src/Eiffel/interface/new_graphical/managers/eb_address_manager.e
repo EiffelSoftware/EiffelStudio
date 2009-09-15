@@ -1144,8 +1144,7 @@ feature {NONE} -- Implementation
 					choice.destroy_actions.extend (agent one_lost_focus)
 					choice.set_title (Interface_names.t_Select_cluster)
 					choice.set_list (cluster_names, cluster_pixmaps)
-					choice.set_position (cluster_address.screen_x, cluster_address.screen_y + cluster_address.height)
-					choice.set_width (cluster_address.width)
+					position_choice_window (choice, cluster_address)
 					must_show_choice := True
 				end
 			else
@@ -1213,8 +1212,7 @@ feature {NONE} -- Implementation
 					choice.destroy_actions.extend (agent one_lost_focus)
 					choice.set_title (Interface_names.t_Select_class)
 					choice.set_list (class_names, class_pixmaps)
-					choice.set_position (class_address.screen_x, class_address.screen_y + class_address.height)
-					choice.set_width (class_address.width)
+					position_choice_window (choice, class_address)
 					must_show_choice := True
 				end
 			else
@@ -1254,8 +1252,7 @@ feature {NONE} -- Implementation
 					choice.destroy_actions.extend (agent one_lost_focus)
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names, feature_pixmaps)
-					choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)
-					choice.set_width (feature_address.width)
+					position_choice_window (choice, feature_address)
 					must_show_choice := True
 				end
 			else
@@ -2516,6 +2513,128 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			if not ev_application.ctrl_pressed then
 				Result ?= a_label.data
 			end
+		end
+
+feature {NONE} -- Choice Positioning
+
+	border_size: INTEGER = 20
+			-- Size in pixels that the pop up window can go to (virtual border)
+
+	position_choice_window (a_choice: like choice; a_positioned: EV_POSITIONED)
+			-- Position `a_choice' at a proper place arround `a_positioned'
+		require
+			a_choice_not_void: a_choice /= Void
+			a_positioned_not_void: a_positioned /= Void
+		do
+			a_choice.set_width (a_positioned.width)
+			a_choice.set_position (calculate_completion_list_x_position (a_positioned),
+									calculate_completion_list_y_position (a_positioned))
+			a_choice.set_height (calculate_completion_list_height (a_positioned))
+		end
+
+	calculate_completion_list_x_position (a_positioned: EV_POSITIONED): INTEGER
+			-- Determine the x position to display the popup dialog.
+		require
+			a_positioned_not_void: a_positioned /= Void
+		local
+			screen: EB_STUDIO_SCREEN
+			right_space,
+			list_width: INTEGER
+		do
+			create screen
+
+			Result := a_positioned.screen_x
+				-- Determine how much room there is free on the right of the screen from the cursor position
+			right_space := screen.virtual_right - Result
+
+			list_width := calculate_completion_list_width (a_positioned)
+
+			if right_space < list_width then
+					-- Shift x pos back so it fits on the screen
+				Result := Result - (list_width - right_space)
+			end
+			Result := Result.max (0)
+		end
+
+	calculate_completion_list_y_position (a_positioned: EV_POSITIONED): INTEGER
+			-- Determine the y position to display the popup dialog.
+		require
+			a_positioned_not_void: a_positioned /= Void
+		local
+			screen: EB_STUDIO_SCREEN
+			preferred_height,
+			upper_space,
+			lower_space: INTEGER
+			show_below: BOOLEAN
+			l_height: INTEGER
+		do
+				-- Get y pos of cursor
+			create screen
+			show_below := True
+			Result := a_positioned.screen_y
+
+			l_height := calculate_completion_list_height (a_positioned)
+
+			if Result < ((screen.virtual_height / 3) * 2) then
+					-- Cursor in upper two thirds of screen
+				show_below := True
+			else
+					-- Cursor in lower third of screen
+				show_below := False
+			end
+
+			if show_below then
+				Result := Result + a_positioned.height
+			else
+				Result := Result - l_height
+			end
+		end
+
+	calculate_completion_list_height (a_positioned: EV_POSITIONED): INTEGER
+			-- Determine the height the popup dialog should have
+		require
+			a_positioned_not_void: a_positioned /= Void
+		local
+			upper_space,
+			lower_space,
+			y_pos: INTEGER
+			screen: EB_STUDIO_SCREEN
+			show_below: BOOLEAN
+		do
+				-- Get y pos of cursor
+			create screen
+			show_below := True
+			y_pos := a_positioned.screen_y
+
+			if y_pos < ((screen.virtual_height / 3) * 2) then
+					-- Cursor in upper two thirds of screen
+				show_below := True
+			else
+					-- Cursor in lower third of screen
+				show_below := False
+			end
+
+			upper_space := y_pos - border_size
+			lower_space := screen.virtual_bottom - y_pos - a_positioned.height - border_size
+
+			if show_below then
+				Result := lower_space
+			else
+				Result := upper_space
+			end
+			Result := Result.min (choice.required_height)
+		end
+
+	calculate_completion_list_width (a_positioned: EV_POSITIONED): INTEGER
+			-- Determine the width the popup dialog should have
+		require
+			a_positioned_not_void: a_positioned /= Void
+		local
+			l_screen: EB_STUDIO_SCREEN
+		do
+			Result := a_positioned.width
+			create l_screen
+			Result := l_screen.width.min (Result)
 		end
 
 note

@@ -9,6 +9,9 @@ note
 class
 	TEST_SESSION_RECORD
 
+inherit
+	COMPARABLE
+
 create
 	make
 
@@ -24,6 +27,57 @@ feature -- Access
 
 	creation_date: DATE_TIME
 			-- Date when `Current' was created
+
+	frozen repository: TEST_RECORD_REPOSITORY_I
+			-- Repository containing `Current'
+		require
+			is_attached: is_attached
+		local
+			l_repo: like internal_repository
+		do
+			l_repo := internal_repository
+			check l_repo /= Void end
+			Result := l_repo
+		ensure
+			result_usable: Result.is_interface_usable
+		end
+
+feature {NONE} -- Access
+
+	frozen internal_repository: detachable TEST_RECORD_REPOSITORY_I
+			-- Internal storage for `repository'.
+			--
+			-- Note: transient attribute so repository is not stored to disk.
+		note
+			option: transient
+		attribute
+		end
+
+feature -- Status report
+
+	frozen is_attached: BOOLEAN
+			-- Does `Current' belong to a repository?
+		do
+			Result := attached internal_repository as l_repo and then l_repo.is_interface_usable
+		end
+
+feature {TEST_RECORD_REPOSITORY_I} -- Status setting
+
+	attach_repository (a_repo: like repository)
+			-- Attach `Current' to repository.
+		require
+			not_attached: not is_attached
+		do
+			internal_repository := a_repo
+		end
+
+feature -- Query
+
+	is_less alias "<" (other: TEST_SESSION_RECORD): BOOLEAN
+			-- <Precursor>
+		do
+			Result := creation_date < other.creation_date
+		end
 
 invariant
 	create_date_attached: creation_date /= Void

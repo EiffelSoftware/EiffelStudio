@@ -53,12 +53,9 @@ feature {TEST_SUITE_S} -- Events
 			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_session_usable: a_session.is_interface_usable
 			a_session_running: a_session.has_next_step
-			record_added_to_repo: a_test_suite.record_repository.has_record (a_session.record)
 		do
-
 		ensure
 			a_session_usable: a_session.is_interface_usable
-			record_added_to_repo: a_test_suite.record_repository.has_record (a_session.record)
 		end
 
 	on_session_finished (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)

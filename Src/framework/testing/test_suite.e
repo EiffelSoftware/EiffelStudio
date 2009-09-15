@@ -28,10 +28,6 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		local
 			l_rota: ROTA_S
-
-
-			l_project: E_PROJECT
-			l_project_factory: SHARED_EIFFEL_PROJECT
 		do
 			create test_map.make_default
 			test_map.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_GENERAL]})
@@ -51,6 +47,7 @@ feature {NONE} -- Initialization
 				end
 			end
 			create factories.make_default
+			create running_sessions.make_default
 
 				-- register test executor
 			register_factory (create {TEST_DEFAULT_SESSION_FACTORY [TEST_EXECUTION]})
@@ -108,6 +105,9 @@ feature {NONE} -- Access: sessions
 
 	factories: DS_ARRAYED_LIST [TEST_SESSION_FACTORY [TEST_SESSION_I]]
 			-- List containing all registered factories
+
+	running_sessions: DS_ARRAYED_LIST [TUPLE [session: TEST_SESSION_I; record: TEST_SESSION_RECORD]]
+			-- List of running sessions
 
 	frozen rota: SERVICE_CONSUMER [ROTA_S]
 			-- Access to rota service {ROTA_S}
@@ -188,7 +188,6 @@ feature -- Status setting: sessions
 			-- <Precursor>
 		local
 			l_rota: ROTA_S
-			l_repo: like record_repository
 		do
 			if current_output_session = Void then
 				current_output_session := a_session
@@ -199,10 +198,7 @@ feature -- Status setting: sessions
 			end
 			a_session.start
 			if a_session.has_next_step then
-				l_repo := record_repository
-				if not l_repo.has_record (a_session.record) then
-					l_repo.append_record (a_session.record)
-				end
+				running_sessions.force_last ([a_session, a_session.record])
 				session_launched_event.publish ([Current, a_session])
 				if rota.is_service_available then
 					l_rota := rota.service
@@ -263,15 +259,33 @@ feature {ROTA_S} -- Events: rota
 
 	on_task_finished (a_rota: ROTA_S; a_task: ROTA_TIMED_TASK_I)
 			-- <Precursor>
+		local
+			l_running: like running_sessions
+			l_session: TEST_SESSION_I
+			l_repo: like record_repository
+			l_record: TEST_SESSION_RECORD
 		do
-			if
-				attached {TEST_SESSION_I} a_task as l_session and then
-				l_session.test_suite = Current
-			then
-				if current_output_session = l_session then
-					current_output_session := Void
+			from
+				l_repo := record_repository
+				l_running := running_sessions
+				l_running.start
+			until
+				l_running.after
+			loop
+				l_session := l_running.item_for_iteration.session
+				if l_session = a_task then
+					l_record := l_running.item_for_iteration.record
+					if not l_repo.has_record (l_record) then
+						l_repo.append_record (l_record)
+					end
+					if current_output_session = l_session then
+						current_output_session := Void
+					end
+					session_finished_event.publish ([Current, l_session])
+					l_running.go_after
+				else
+					l_running.forth
 				end
-				session_finished_event.publish ([Current, l_session])
 			end
 		end
 

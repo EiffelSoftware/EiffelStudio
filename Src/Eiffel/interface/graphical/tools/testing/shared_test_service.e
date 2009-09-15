@@ -37,18 +37,17 @@ feature {NONE} -- Access
 
 	etest_suite: ETEST_SUITE
 			-- Once instance of `{ETEST_SUITE}
+		local
+			l_helper: TEST_PROJECT_HELPER
+			l_auto_retrieve: BOOLEAN
 		once
 			if (create {SHARED_FLAGS}).is_gui then
-				create Result.make (create {EC_PROJECT_ACCESS}.make (
-					(create {SHARED_EIFFEL_PROJECT}).eiffel_project),
-					create {ES_TEST_PROJECT_HELPER},
-					True)
+				create l_helper
+				l_auto_retrieve := True
 			else
-				create Result.make (create {EC_PROJECT_ACCESS}.make (
-					(create {SHARED_EIFFEL_PROJECT}).eiffel_project),
-					create {TEST_PROJECT_HELPER},
-					False)
+				create {TEST_PROJECT_HELPER} l_helper
 			end
+			create Result.make (create {EC_PROJECT_ACCESS}.make ((create {SHARED_EIFFEL_PROJECT}).eiffel_project), l_helper, l_auto_retrieve)
 		end
 
 	default_filter_expression: STRING = "^class"

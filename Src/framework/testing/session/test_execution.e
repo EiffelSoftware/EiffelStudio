@@ -388,10 +388,6 @@ feature {NONE} -- Element change
 			record.add_result (a_test, a_result)
 			append_output (agent print_test_result (?, a_test, a_result))
 			test_executed_event.publish ([Current, a_test, a_result])
-			l_test_suite := test_suite
-			if l_test_suite.is_interface_usable and l_test_suite.record_repository.has_record (record) then
-				l_test_suite.record_repository.record_updated_event.publish ([l_test_suite.record_repository, record])
-			end
 		ensure
 			result_added: record.has_result_for_test (a_test) and then
 				record.result_for_test (a_test) = a_result

@@ -24,7 +24,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_MANAGERS
 		export
 			{NONE} all
@@ -100,9 +100,9 @@ feature -- Aspects
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			if a_button_count = 2 then
-				create l_question.make_standard (msg, "", a_pref_string)
+				create l_question.make_standard (msg, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make_from_name (a_pref_string, True))
 			elseif a_button_count = 3 then
-				create l_question.make_standard_with_cancel (msg, "", a_pref_string)
+				create l_question.make_standard_with_cancel (msg, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make_from_name (a_pref_string, True))
 			else
 				check False end
 			end

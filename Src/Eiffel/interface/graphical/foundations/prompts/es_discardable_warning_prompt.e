@@ -23,20 +23,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make_standard_with_cancel (a_text: like text; a_discard_message: like discard_message; a_pref_name: like preference_name)
+	make_standard_with_cancel (a_text: like text; a_discard_message: like discard_message; a_setting: like setting)
 			-- Initialize a discardable warning prompt, with a cancel button, using required information.
 			--
 			-- `a_text': The text to display on the prompt.
 			-- `a_discard_message': A message to inform the user what the discard option will do as a default.
-			-- `a_pref_name': Name of preference resource.
+			-- `a_setting': Setting used to dictate the discard state of the prompt.
 		require
 			a_text_attached: a_text /= Void
 			a_discard_message_attached: a_discard_message /= Void
-			a_pref_name_attached: a_pref_name /= Void
-			not_a_pref_name_is_empty: not a_pref_name.is_empty
+			a_setting_attached: attached a_setting
+			a_setting_is_interface_usable: a_setting.is_interface_usable
 		do
 			is_standard_prompt_with_cancel := True
-			make_standard (a_text, a_discard_message, a_pref_name)
+			make_standard (a_text, a_discard_message, a_setting)
 		ensure
 			text_set: format_text (a_text).is_equal (text)
 			default_button_set: default_button = standard_default_button
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			default_cancel_button_set: default_cancel_button = standard_default_cancel_button
 			buttons_set: buttons = standard_buttons
 			discard_message_set: a_discard_message.is_equal (discard_message)
-			preference_name_set: a_pref_name.is_equal (preference_name)
+			setting_set: setting = a_setting
 		end
 
 feature {NONE} -- User interface initialization
@@ -109,7 +109,7 @@ feature {NONE} -- Status report
 			-- Indicates if a cancel button should be present
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -122,22 +122,22 @@ feature {NONE} -- Status report
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -507,6 +507,7 @@ feature {NONE} -- Basic operations
 			l_line: EIFFEL_EDITOR_LINE
 			l_context_stone: STONE
 			l_expanded: BOOLEAN
+			l_is_updating: BOOLEAN
 		do
 			create l_item
 			a_row.set_item (1, l_item)
@@ -570,7 +571,14 @@ feature {NONE} -- Basic operations
 					a_row.select_actions.extend (agent l_tip.restart_tooltip_timer)
 
 						-- Sub row full error
-					a_row.insert_subrow (1)
+					if a_row.subrow_count = 0 then
+							-- No subrow, add one.
+							-- Note: A sub row will exist if the information is being updated
+						a_row.insert_subrow (1)
+					else
+							-- The row is being updated, so preserve any original state.
+						l_is_updating := True
+					end
 					l_row := a_row.subrow (1)
 					create l_item
 					l_item.disable_full_select
@@ -581,6 +589,8 @@ feature {NONE} -- Basic operations
 						-- No extra initialization needed so update `l_editor_item' to reflect settings.
 					l_editor_item.try_call_setting_change_actions
 					l_row.set_item (error_column, l_editor_item)
+				elseif a_row.subrow_count > 0 then
+					a_row.remove_subrow (a_row.subrow (1))
 				end
 
 					-- Context
@@ -652,7 +662,7 @@ feature {NONE} -- Basic operations
 			end
 
 				-- Set expanded status
-			if a_row.is_expandable and then is_error_event (a_event_item) then
+			if not l_is_updating and then a_row.is_expandable and then is_error_event (a_event_item) then
 				if is_expanding_errors then
 					l_expanded := is_expanding_all_errors
 					is_expanding_all_errors := True

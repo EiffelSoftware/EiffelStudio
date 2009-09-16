@@ -54,7 +54,7 @@ feature {NONE} -- Basic operations
 		do
 			tasks.force_last (new_task_data (a_task))
 		ensure
-			tasks_increased: tasks.count > old tasks.count + 1
+			tasks_increased: tasks.count = old tasks.count + 1
 			a_task_appended: tasks.last.task = a_task
 		end
 

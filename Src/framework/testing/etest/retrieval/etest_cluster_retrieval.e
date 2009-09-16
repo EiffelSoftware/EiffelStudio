@@ -149,10 +149,10 @@ feature {NONE} -- Query
 				end
 			end
 		ensure
-			cached_correctly: a_cache implies
+			cached_descendants_correctly: a_cache implies
 			    (Result = (session.traversed_descendants.has (a_class) or a_class = common_ancestor))
-			cached_correctly: a_cache implies
-				(Result = (not session.traversed_helpers.has (a_class) or a_class = session.project_access.project.system.any_class))
+			cached_helpers_correctly: a_cache implies
+				(Result = not (session.traversed_helpers.has (a_class) or a_class = session.project_access.project.system.any_class))
 		end
 
 feature {NONE} -- Implementation

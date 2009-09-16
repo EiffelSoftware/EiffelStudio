@@ -17,8 +17,10 @@ inherit
 			make_per_window as make_per_window_session
 		redefine
 			safe_dispose,
+			has,
 			value,
-			value_or_default
+			value_or_default,
+			store
 		end
 
 create
@@ -122,7 +124,7 @@ feature {SESSION_MANAGER_S} -- Element change
 
 feature -- Query
 
-	value (a_id: STRING_8): ANY assign set_value
+	value alias "[]" (a_id: STRING_8): ANY assign set_value
 			-- <Precursor>
 		do
 			if data.has (a_id) then
@@ -139,6 +141,27 @@ feature -- Query
 				Result := Precursor {SESSION} (a_id, a_default_value)
 			else
 				Result := inner_session.value_or_default (a_id, a_default_value)
+			end
+		end
+
+feature -- Status report
+
+	has (a_id: STRING): BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor (a_id) or else inner_session.has (a_id)
+		end
+
+feature -- Basic operations
+
+	store
+			-- <Precursor>
+		do
+			if is_dirty then
+				Precursor
+				if attached inner_session as l_session then
+					l_session.store
+				end
 			end
 		end
 
@@ -161,7 +184,7 @@ invariant
 	extension_name_set: not (is_actively_disposing or is_disposed) implies inner_session /= Void and then equal (extension_name, inner_session.extension_name)
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -185,11 +208,11 @@ invariant
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

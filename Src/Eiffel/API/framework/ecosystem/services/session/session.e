@@ -260,7 +260,7 @@ feature {SESSION_MANAGER_S} -- Element change
 
 feature -- Query
 
-	value (a_id: STRING_8): ANY assign set_value
+	value alias "[]" (a_id: STRING_8): ANY assign set_value
 			-- Retrieve a piece of sessions data, indexed by an ID.
 			--
 			-- `a_id': An id to retrieve session data for
@@ -290,6 +290,14 @@ feature -- Query
 			default_value_set: not data.has (a_id) implies Result = a_default_value
 		end
 
+feature -- Status report
+
+	is_dirty: BOOLEAN
+			-- Indicates if the session has modifications
+
+	is_per_project: BOOLEAN
+			-- Indicates if the session is a per-project session object
+
 	is_valid_session_value (a_value: ANY): BOOLEAN
 			-- Determines if `a_valud' is a valid session value
 		local
@@ -312,13 +320,11 @@ feature -- Query
 			end
 		end
 
-feature -- Status report
-
-	is_dirty: BOOLEAN
-			-- Indicates if the session has modifications
-
-	is_per_project: BOOLEAN
-			-- Indicates if the session is a per-project session object
+	has (a_id: STRING): BOOLEAN
+			-- <Precursor>
+		do
+			Result := data.has (a_id)
+		end
 
 feature {SESSION_MANAGER_S} -- Status setting
 
@@ -336,6 +342,16 @@ feature {NONE} -- Helpers
 			create Result
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature -- Basic operations
+
+	store
+			-- <Precursor>
+		do
+			if is_dirty and then attached manager as l_manager then
+				l_manager.store (Current)
+			end
 		end
 
 feature {SESSION_DATA_I, SESSION_I} -- Basic operations

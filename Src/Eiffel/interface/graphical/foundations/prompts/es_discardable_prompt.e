@@ -25,6 +25,14 @@ inherit
 			show_on_active_window
 		end
 
+	ES_DISCARDABLE_PROMPT_OVERRIDES
+		rename
+			session_manager as overide_session_manager,
+			session_data as override_session_data
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_text: like text; a_buttons: like buttons; a_default: like default_button; a_default_confirm: like default_confirm_button; a_default_cancel: like default_cancel_button; a_discard_message: like discard_message; a_setting: like setting)
@@ -109,6 +117,12 @@ feature {NONE} -- User interface initialization
 			else
 				create discard_check
 			end
+			if is_discarded then
+					-- The check state is set because this may be a prompt that is shown because the discardable
+					-- status has been overriden, using `is_non_discardable'.
+				discard_check.enable_select
+			end
+
 
 			a_container.extend (discard_check)
 			a_container.disable_item_expand (discard_check)
@@ -201,7 +215,7 @@ feature -- Basic operations
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 		do
-			if not is_discarded then
+			if not is_discarded or else is_non_discardable then
 				Precursor {ES_PROMPT} (a_window)
 			else
 				on_dialog_button_pressed (discard_button)
@@ -213,7 +227,7 @@ feature -- Basic operations
 	show_on_active_window
 			-- Attempts to show the dialog parented to the last active window.
 		do
-			if not is_discarded then
+			if not is_discarded or else is_non_discardable then
 				Precursor {ES_PROMPT}
 			else
 				on_dialog_button_pressed (discard_button)
@@ -242,7 +256,7 @@ feature {NONE} -- Action handlers
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		do
 			Precursor {ES_PROMPT} (a_id)
-			if not is_discarded and then not is_shown and is_discard_requested and dialog_result = discard_button then
+			if not is_shown and is_discard_requested and dialog_result = discard_button then
 					-- Set discarded state and perform any other operations.
 					-- Note: only called when dialog is closed using the set discard button
 				surpress_future_dialogs

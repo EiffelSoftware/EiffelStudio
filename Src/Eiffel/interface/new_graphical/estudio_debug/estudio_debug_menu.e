@@ -73,6 +73,11 @@ feature {NONE} -- Initialization
 			extend (menu)
 			build_services_sub_menu (menu)
 
+				--| Foundataions
+			create menu.make_with_text ("Foundations")
+			extend (menu)
+			build_foundations_sub_menu (menu)
+
 			extend (create {EV_MENU_SEPARATOR})
 
 				--| Editor
@@ -109,7 +114,7 @@ feature {NONE} -- Initialization
 			extend (create {EV_MENU_SEPARATOR})
 
 				--| Debug
-			create menu.make_with_text ("debug")
+			create menu.make_with_text ("Debug")
 			extend (menu)
 			build_debug_sub_menu (menu)
 
@@ -173,6 +178,20 @@ feature {NONE} -- Initialization
 			if not code_template_catalog.is_service_available then
 				l_menu_item.disable_sensitive
 			end
+		end
+
+	build_foundations_sub_menu (a_menu: attached EV_MENU)
+			-- Builds the foundataions submenu
+		require
+			not_a_menu_is_destroyed: not a_menu.is_destroyed
+		local
+			l_check_menu_item: EV_CHECK_MENU_ITEM
+		do
+			create l_check_menu_item.make_with_text_and_action ("Non Discardable Prompts", agent on_toggle_discardable_prompts)
+			if discardable_overrides.is_non_discardable then
+				l_check_menu_item.enable_select
+			end
+			a_menu.extend (l_check_menu_item)
 		end
 
 	build_editor_sub_menu (a_menu: attached EV_MENU)
@@ -241,16 +260,28 @@ feature {NONE} -- Access
 
 feature {NONE} -- Services
 
-	frozen session_manager: attached SERVICE_CONSUMER [SESSION_MANAGER_S]
+	frozen session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
 			-- Access to the session manager service
 		once
 			create Result
+		ensure
+			result_attached: attached Result
 		end
 
-	frozen code_template_catalog: attached SERVICE_CONSUMER [CODE_TEMPLATE_CATALOG_S]
+	frozen code_template_catalog: SERVICE_CONSUMER [CODE_TEMPLATE_CATALOG_S]
 			-- Access to the code template catalog service
 		once
 			create Result
+		ensure
+			result_attached: attached Result
+		end
+
+	frozen discardable_overrides: ES_DISCARDABLE_PROMPT_OVERRIDES
+			-- Access to discardable overrides
+		once
+			create Result
+		ensure
+			result_attached: attached Result
 		end
 
 feature {NONE} -- Query
@@ -462,6 +493,15 @@ feature {NONE} -- Actions
 				(create {EB_SHARED_PIXMAPS}).icon_pixmaps.tool_search_icon_buffer)
 			l_window.set_action (agent (code_template_catalog.service).rescan_catalog)
 			l_window.show_relative_to_window (window)
+		end
+
+	on_toggle_discardable_prompts
+			-- Toggles the state of non-discardable prompts (makes discardable prompts non-discardable)
+		local
+			l_overrides: like discardable_overrides
+		do
+			l_overrides := discardable_overrides
+			l_overrides.is_non_discardable := not l_overrides.is_non_discardable
 		end
 
 	on_force_show_tools

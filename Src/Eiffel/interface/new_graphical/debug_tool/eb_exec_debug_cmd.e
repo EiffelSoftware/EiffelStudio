@@ -173,8 +173,9 @@ feature {NONE} -- Attributes
 			l_item: EV_MENU_ITEM
 			l_submenu: EV_MENU
 			l_cb_item: EV_CHECK_MENU_ITEM
-			profs: DEBUGGER_PROFILES
-			k, pn: STRING_32
+			profs: DEBUGGER_PROFILE_MANAGER
+			k: UUID
+			defprof: detachable UUID
 			dbg: EB_DEBUGGER_MANAGER
 		do
 			create Result
@@ -241,14 +242,14 @@ feature {NONE} -- Attributes
 					--| Flat menu (no submenu)
 				l_submenu := Result
 
-				pn := profs.last_profile_name
+				defprof := profs.last_profile_uuid
 
 				create l_cb_item.make_with_text (Interface_names.l_default)
 				l_submenu.extend (l_cb_item)
-				if pn = Void then
+				if defprof = Void then
 					l_cb_item.enable_select
 				else
-					l_cb_item.select_actions.extend (agent profs.set_last_profile_by_name (Void))
+					l_cb_item.select_actions.extend (agent profs.set_last_profile_by_uuid (Void))
 				end
 
 				from
@@ -257,14 +258,12 @@ feature {NONE} -- Attributes
 					profs.after
 				loop
 					k := profs.key_for_iteration
-					if k /= Void then
-						create l_cb_item.make_with_text (k)
-						l_submenu.extend (l_cb_item)
-						if pn /= Void and then k.is_equal (pn) then
-							l_cb_item.enable_select
-						else
-							l_cb_item.select_actions.extend (agent profs.set_last_profile_by_name (k))
-						end
+					create l_cb_item.make_with_text (profs.item_for_iteration.title)
+					l_submenu.extend (l_cb_item)
+					if defprof /= Void and then k ~ defprof then
+						l_cb_item.enable_select
+					else
+						l_cb_item.select_actions.extend (agent profs.set_last_profile_by_uuid (k))
 					end
 					profs.forth
 				end
@@ -274,7 +273,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -287,22 +286,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_EXEC_NO_STOP_CMD

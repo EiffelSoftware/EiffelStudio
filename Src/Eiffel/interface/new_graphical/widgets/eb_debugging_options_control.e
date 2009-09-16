@@ -102,9 +102,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 			l_row: EV_GRID_ROW
 			l_prof: like profile_from_row
 			dm: DEBUGGER_MANAGER
-			profs: DEBUGGER_PROFILES
-			l_param: DEBUGGER_EXECUTION_PARAMETERS
-			l_title: STRING_32
+			profs: DEBUGGER_PROFILE_MANAGER
 		do
 				--| Reset cached data
 			internal_sorted_environment_variables := Void
@@ -126,10 +124,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 				until
 					profs.after
 				loop
-					l_title := profs.key_for_iteration
-					l_param := profs.item_for_iteration
-					l_prof := [l_title, l_param]
-					l_row := added_profile_text_row (l_prof, False)
+					l_row := added_profile_text_row (profs.item_for_iteration, False)
 					profs.forth
 				end
 
@@ -164,9 +159,9 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 			-- Store the current arguments and set current
 			-- arguments for system execution.
 		local
-			profs: DEBUGGER_PROFILES
+			profs: DEBUGGER_PROFILE_MANAGER
 			r: INTEGER
-			t: like profile_from_row
+			p: like profile_from_row
 			toprows: LINKED_LIST [EV_GRID_ROW]
 			lrow: EV_GRID_ROW
 		do
@@ -191,21 +186,21 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 			until
 				toprows.after
 			loop
-				t := profile_from_row (toprows.item)
-				if t /= Void then
-					profs.force (t.params, t.title)
+				p := profile_from_row (toprows.item)
+				if p /= Void then
+					profs.add (p)
 				end
 				toprows.forth
 			end
 
-			t := selected_profile
-			if t = Void then
+			p := selected_profile
+			if p = Void then
 				lrow := default_profile_row
 				if lrow /= Void then
 					lrow.enable_select
 				end
 			end
-			profs.set_last_profile (t)
+			profs.set_last_profile (p)
 			debugger_manager.save_profiles_data
 
 			set_changed (Void, False)
@@ -236,17 +231,6 @@ feature -- Query
 			if profiles_grid.row_count > 0 and then not profiles_grid.selected_rows.is_empty then
 				lrow := profiles_grid.selected_rows.first
 				Result := profile_from_row (lrow)
-			end
-		end
-
-	selected_profile_parameters: DEBUGGER_EXECUTION_PARAMETERS
-			-- Selected profile's execution parameters
-		local
-			p: like selected_profile
-		do
-			p := selected_profile
-			if p /= Void then
-				Result := p.params
 			end
 		end
 
@@ -388,15 +372,13 @@ feature {NONE} -- Grid events
 	on_profiles_grid_key_pressed (a_key: EV_KEY)
 			-- `a_key' has been pressed on `profiles_grid'
 		local
-			l_ctler: ES_GRID_ROW_CONTROLLER
 			l_row: EV_GRID_ROW
-			l_gi: EV_GRID_EDITABLE_ITEM
+			l_editable_item: EV_GRID_ITEM
 			c: INTEGER
 		do
 			l_row := profiles_grid.single_selected_row
 			if l_row /= Void then
-				l_ctler ?= l_row.data
-				if l_ctler /= Void then
+				if attached {ES_GRID_ROW_CONTROLLER} l_row.data as l_ctler then
 					l_ctler.call_key_pressed_action (a_key)
 				elseif l_row.count > 0 then
 					inspect a_key.code
@@ -404,13 +386,17 @@ feature {NONE} -- Grid events
 						from
 							c := 1
 						until
-							l_gi /= Void or c > l_row.count
+							l_editable_item /= Void or c > l_row.count
 						loop
-							l_gi ?= l_row.item (c)
+							if attached {EV_GRID_EDITABLE_ITEM} l_row.item (c) as gi then
+								l_editable_item := gi
+							elseif attached {EV_GRID_EDITABLE_SPAN_LABEL_ITEM} l_row.item (c) as gsi then
+								l_editable_item := gsi
+							end
 							c := c + 1
 						end
-						if l_gi /= Void then
-							l_gi.activate
+						if l_editable_item /= Void then
+							l_editable_item.activate
 						end
 					when {EV_KEY_CONSTANTS}.key_numpad_add then
 						if ev_application.ctrl_pressed then
@@ -549,6 +535,10 @@ feature -- Status Setting
 			if has_changed /= b then
 				has_changed := b
 				if has_changed then
+					if p /= Void then
+						p.incremente_version
+					end
+
 					if apply_button /= Void then
 						apply_button.enable_sensitive
 					end
@@ -585,7 +575,7 @@ feature -- Data change
 	new_profile: like profile_from_row
 			-- New empty profile
 		do
-			Result := [Void, create {DEBUGGER_EXECUTION_PARAMETERS}]
+			create Result.make
 			update_title (Result)
 		ensure
 			Result_not_void: Result /= Void
@@ -602,8 +592,8 @@ feature -- Data change
 			i: INTEGER
 		do
 			if p.title = Void or else p.title.is_empty then
-				args := p.params.arguments
-				if args /= Void and then args.count > 0 then
+				args := p.arguments
+				if not args.is_empty then
 					s32 := args.to_string_32
 					from
 						i := 1
@@ -634,7 +624,7 @@ feature -- Data change
 					end
 					s32 := s
 				end
-				p.title := s32
+				p.set_title (s32)
 			end
 		ensure
 			title_not_empty: p.title /= Void and then not p.title.is_empty
@@ -650,7 +640,7 @@ feature -- Data change
 			elseif s1 = Void or s2 = Void then
 				Result := False
 			else --| s1 /= Void and s2 /= Void
-				Result := s1.is_equal (s2)
+				Result := s1.same_string (s2)
 			end
 		end
 
@@ -667,7 +657,7 @@ feature -- Data change
 			else
 				s := v.as_string_32
 			end
-			p.title := s
+			p.set_title (s)
 			update_title (p)
 
 			if not same_string_value (old_title, p.title) then
@@ -679,19 +669,17 @@ feature -- Data change
 	change_cwd_on (v: STRING; p: like profile_from_row)
 		require
 			v /= Void
+			p /= Void
 		local
 			s: STRING
-			params: DEBUGGER_EXECUTION_PARAMETERS
 		do
 			if v.is_empty then
 				s := Void
 			else
 				s := v
 			end
-			params := p.params
-			check p.params /= Void end
-			if not same_string_value (params.working_directory, s) then
-				params.set_working_directory (s)
+			if not same_string_value (p.working_directory, s) then
+				p.set_working_directory (s)
 				update_title_row_of (p)
 				set_changed (p, True)
 			end
@@ -700,34 +688,30 @@ feature -- Data change
 	change_args_on (v: STRING; p: like profile_from_row)
 		require
 			v /= Void
+			p /= Void
 		local
 			s: STRING
-			params: DEBUGGER_EXECUTION_PARAMETERS
 		do
 			if v.is_empty then
 				s := Void
 			else
 				s := v
 			end
-			params := p.params
-			check p.params /= Void end
-			if not same_string_value (params.arguments, s) then
-				params.set_arguments (s)
+			if not same_string_value (p.arguments, s) then
+				p.set_arguments (s)
 				update_title_row_of (p)
 				set_changed (p, True)
 			end
 		end
 
 	change_env_on (v: HASH_TABLE [STRING_32, STRING_32]; p: like profile_from_row)
-		local
-			params: DEBUGGER_EXECUTION_PARAMETERS
+		require
+			p /= Void
 		do
-			params := p.params
-			check params /= Void end
 			if v = Void or else v.is_empty then
-				params.set_environment_variables (Void)
+				p.set_environment_variables (Void)
 			else
-				params.set_environment_variables (v)
+				p.set_environment_variables (v)
 			end
 			update_title_row_of (p)
 			set_changed (p, True)
@@ -768,35 +752,29 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 	validate
 			-- Update the selected profile in user options
 		local
-			profs: DEBUGGER_PROFILES
 			sp, p: like profile_from_row
-			t: STRING_32
+			l_uuid, k: UUID
 		do
-			profs := debugger_manager.profiles
-			if profs /= Void then
+			if attached debugger_manager.profiles as l_profs then
 				sp := selected_profile
 				if sp = Void then
-					profs.set_last_profile (Void) -- Default profile
-				elseif sp.title /= Void then
+					l_profs.set_last_profile (Void) -- Default profile
+				else
+					l_uuid := sp.uuid
 					from
-						profs.start
+						l_profs.start
 					until
-						profs.after or p /= Void
+						l_profs.after or p /= Void
 					loop
-						t := profs.key_for_iteration
-						p := [t, profs.item_for_iteration]
-						if
-							t /= Void
-							and then t.is_case_insensitive_equal (sp.title)
-						then
+						k := l_profs.key_for_iteration
+						if k /= Void and then k ~ l_uuid then
 							--| Let's consider it as same profile.
-						else
-							p := Void
+							p := l_profs.item_for_iteration
 						end
-						profs.forth
+						l_profs.forth
 					end
 					if p /= Void then
-						profs.set_last_profile (p)
+						l_profs.set_last_profile (p)
 					end
 				end
 			end
@@ -827,11 +805,11 @@ feature {NONE} -- Button Actions
 			if r /= Void then
 				p := profile_from_row (r)
 				if p /= Void then
-					p := [p.title, p.params.deep_twin]
+					p := p.duplication (True)
 					if p.title = Void then
-						p.title := description_from_profile (p)
+						p.set_title (description_from_profile (p))
 					end
-					p.title := interface_names.m_copy_of (p.title)
+					p.set_title (interface_names.m_copy_of (p.title))
 					r := added_profile_text_row (p, True)
 					if r.is_expandable and then not r.is_expanded then
 						r.expand
@@ -897,20 +875,19 @@ feature {NONE} -- Queries
 	description_from_profile (a_profile: like profile_from_row): STRING_32
 			-- String describing `a_profile'.
 		local
-			params: DEBUGGER_EXECUTION_PARAMETERS
+			params: DEBUGGER_EXECUTION_PROFILE
 		do
 			create Result.make (5)
-			params := a_profile.params
-			if params.arguments /= Void then
-				Result.append ("%"" + params.arguments + "%"")
+			if not a_profile.arguments.is_empty then
+				Result.append ("%"" + a_profile.arguments + "%"")
 			end
-			if params.working_directory /= Void and then not params.working_directory.is_empty then
+			if not a_profile.working_directory.is_empty then
 				Result.append (" ")
 				Result.append (interface_names.l_cwd (params.working_directory))
 			end
-			if params.environment_variables /= Void and then not params.environment_variables.is_empty then
+			if a_profile.environment_variables /= Void and then not a_profile.environment_variables.is_empty then
 				Result.append (" (")
-				Result.append (interface_names.l_variable_count (params.environment_variables.count))
+				Result.append (interface_names.l_variable_count (a_profile.environment_variables.count))
 				Result.append (")")
 			end
 		ensure
@@ -958,7 +935,6 @@ feature {NONE} -- Profile actions
 			l_args: STRING
 			l_cwd: STRING
 			l_env: HASH_TABLE [STRING_32, STRING_32]
-			gei: EV_GRID_EDITABLE_ITEM
 			gdi: EV_GRID_DIRECTORY_ITEM
 			gti: EV_GRID_TEXT_ITEM
 			gli: EV_GRID_LABEL_ITEM
@@ -970,9 +946,9 @@ feature {NONE} -- Profile actions
 			was_changed := has_changed
 			p := profile_from_row (a_row)
 			l_title := p.title
-			l_cwd := p.params.working_directory
-			l_args := p.params.arguments
-			l_env := p.params.environment_variables
+			l_cwd := p.working_directory
+			l_args := p.arguments
+			l_env := p.environment_variables
 
 				-- Clean a_row
 			if a_row.subrow_count > 0 then
@@ -980,33 +956,14 @@ feature {NONE} -- Profile actions
 				a_row.parent.remove_rows (a_row.index + 1, a_row.index + a_row.subrow_count_recursive)
 			end
 
-				--| Note
-			a_row.insert_subrow (a_row.subrow_count + 1)
-			srow := a_row.subrow (a_row.subrow_count)
-			create gi.make_with_text (interface_names.l_note)
-			srow.set_item (1, gi)
-			if l_title = Void then
-				l_title := ""
-			end
-			create gei.make_with_text (l_title)
-			srow.set_item (2, gei)
-			gei.deactivate_actions.extend (agent
-					(a_prof: like profile_from_row; a_gi: EV_GRID_EDITABLE_ITEM)
-						do
-							change_title_on (a_gi.text, a_prof)
-							a_gi.set_text (a_prof.title)
-						end(p, gei)
-				)
-
 				--| Arguments
 			a_row.insert_subrow (a_row.subrow_count + 1)
 			srow := a_row.subrow (a_row.subrow_count)
 			create gi.make_with_text (interface_names.l_arguments)
 			srow.set_item (1, gi)
 			s := l_args
-			if s = Void then
-				s := ""
-			end
+			check s /= Void end
+
 			create gti.make_with_text (s)
 			gti.set_dialog_title (interface_names.l_edit_text)
 			gti.set_ok_button_string (interface_names.b_ok)
@@ -1090,13 +1047,15 @@ feature {NONE} -- Profile actions
 		require
 			a_row /= Void
 		local
+			l_master_item: EV_GRID_EDITABLE_SPAN_LABEL_ITEM
 			l_item: EV_GRID_SPAN_LABEL_ITEM
 		do
 			a_row.set_data (p)
 
-			create l_item.make_master (1)
-			l_item.set_font (title_font)
-			a_row.set_item (1, l_item)
+			create l_master_item.make_master (1)
+			l_master_item.set_font (title_font)
+			a_row.set_item (1, l_master_item)
+
 
 			create l_item.make_span (1)
 			a_row.set_item (2, l_item)
@@ -1104,6 +1063,21 @@ feature {NONE} -- Profile actions
 
 			refresh_title_row_text (a_row)
 			if p /= Void then
+				-- DEBUG --
+				l_master_item.set_tooltip (p.debug_output)
+
+				a_row.item (1).pointer_double_press_actions.force_extend (agent l_master_item.activate)
+				l_master_item.deactivate_actions.extend (agent (ia_master_item: EV_GRID_EDITABLE_SPAN_LABEL_ITEM)
+						do
+							if
+								attached ia_master_item.row as l_row and then
+								attached profile_from_row (l_row) as ia_p
+							then
+								change_title_on (ia_master_item.text, ia_p)
+							end
+						end(l_master_item)
+					)
+				a_row.item (2).pointer_double_press_actions.force_extend (agent l_master_item.activate)
 				a_row.ensure_expandable
 			end
 			set_changed (p, True)
@@ -1115,7 +1089,6 @@ feature {NONE} -- Profile actions
 			a_row /= Void
 		local
 			p: like profile_from_row
-			l_item: EV_GRID_SPAN_LABEL_ITEM
 			s: STRING_32
 		do
 			p := profile_from_row (a_row)
@@ -1127,11 +1100,14 @@ feature {NONE} -- Profile actions
 					s := description_from_profile (p).as_string_32
 				end
 			end
-			l_item ?= a_row.item (1)
-			l_item.set_text (s)
+			if attached {EV_GRID_SPAN_LABEL_ITEM} a_row.item (1) as l_item then
+				l_item.set_text (s)
+			else
+				check False end
+			end
 		end
 
-	profile_from_row (a_row: EV_GRID_ROW): TUPLE [title:STRING_32; params: DEBUGGER_EXECUTION_PARAMETERS]
+	profile_from_row (a_row: EV_GRID_ROW): detachable DEBUGGER_EXECUTION_PROFILE
 			-- Profile related to `a_row'.
 		require
 			a_row_not_void: a_row /= Void
@@ -1153,10 +1129,7 @@ feature {NONE} -- Profile actions
 				r > profiles_grid.row_count or Result /= Void
 			loop
 				p := profile_from_row (profiles_grid.row (r))
-				if
-					p /= Void
-					and then p.is_equal (a_profile)
-				then
+				if p /= Void and then p.is_equal (a_profile) then
 					Result := profiles_grid.row (r)
 				end
 				r := r + 1
@@ -1173,8 +1146,8 @@ feature {NONE} -- Environment queries
 			p: like profile_from_row
 		do
 			p := profile_from_row (a_row)
-			if p /= Void and then p.params /= Void then
-				Result := p.params.environment_variables
+			if p /= Void then
+				Result := p.environment_variables
 			end
 		end
 
@@ -1182,11 +1155,8 @@ feature {NONE} -- Environment queries
 			-- Environment variable name related to `a_row'.
 		require
 			a_row /= Void
-		local
-			ctrler: ES_GRID_ROW_CONTROLLER
 		do
-			ctrler ?= a_row.data
-			if ctrler /= Void then
+			if attached {ES_GRID_ROW_CONTROLLER} a_row.data as ctrler then
 				Result ?= ctrler.data
 			else
 				Result ?= a_row.data
@@ -1485,7 +1455,7 @@ feature {NONE} -- Environment actions
 				old_k := environment_variable_name_from_row (a_row)
 				p := profile_from_row (a_row)
 				check p /= Void end
-				env := p.params.environment_variables
+				env := p.environment_variables
 				if env = Void then
 					create env.make (3)
 				end
@@ -1556,8 +1526,8 @@ feature {NONE} -- Environment actions
 			end
 			k := environment_variable_name_from_row (a_row)
 			p := profile_from_row (a_row)
-			if k /= Void and (p /= Void and then p.params.environment_variables /= Void) then
-				p.params.environment_variables.remove (k)
+			if k /= Void and (p /= Void and then p.environment_variables /= Void) then
+				p.environment_variables.remove (k)
 			end
 			r := a_row.index
 			g := a_row.parent
@@ -1574,7 +1544,7 @@ feature {NONE} -- Environment actions
 			end
 			a_row.clear
 			g.remove_row (r)
-			change_env_on (p.params.environment_variables, p)
+			change_env_on (p.environment_variables, p)
 			inside_row_operation := False
 			if r > 1 then
 				g.select_row (r - 1)
@@ -1595,10 +1565,11 @@ feature {NONE} -- Environment actions
 			if k = Void or else k.is_empty then
 				if
 					k /= Void and
-					(p /= Void and then p.params /= Void and then p.params.environment_variables /= Void)
+					p /= Void and then
+					attached p.environment_variables as envs
 				then
-					p.params.environment_variables.remove (k)
-					change_env_on (p.params.environment_variables, p)
+					envs.remove (k)
+					change_env_on (envs, p)
 				end
 			end
 		end
@@ -1685,7 +1656,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1698,22 +1669,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -218,7 +218,8 @@ feature {NONE} -- Implementation
 		local
 			ctlr: DEBUGGER_CONTROLLER
 			wdir: STRING
-			param: DEBUGGER_EXECUTION_PARAMETERS
+			prof: DEBUGGER_EXECUTION_PROFILE
+			param: DEBUGGER_EXECUTION_RESOLVED_PROFILE
 		do
 			wdir := param_working_directory
 			if wdir = Void or else wdir.is_empty then
@@ -226,16 +227,17 @@ feature {NONE} -- Implementation
 						--Execution_environment.current_working_directory
 			end
 			ctlr := debugger_manager.controller
-			create param
-			param.set_arguments (param_args)
-			param.set_working_directory (wdir)
-			param.set_environment_variables (param_env_variables)
+			create prof.make
+			prof.set_arguments (param_args)
+			prof.set_working_directory (wdir)
+			prof.set_environment_variables (param_env_variables)
 			debugger_manager.set_execution_ignoring_breakpoints (ign_bp)
+			create param.make_from_profile (prof)
 			ctlr.debug_application (param, a_exec_mode)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -248,22 +250,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EWB_RUN

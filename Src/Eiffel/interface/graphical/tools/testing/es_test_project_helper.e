@@ -211,9 +211,9 @@ feature -- Basic operations
 	run (a_working_directory: detachable STRING; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [STRING_32, STRING_32])
 			-- <Precursor>
 		local
-			l_params: DEBUGGER_EXECUTION_PARAMETERS
+			l_params: DEBUGGER_EXECUTION_PROFILE
 		do
-			create l_params
+			create l_params.make
 			l_params.set_working_directory (a_working_directory)
 			l_params.set_arguments (a_arguments)
 			l_params.set_environment_variables (a_env)

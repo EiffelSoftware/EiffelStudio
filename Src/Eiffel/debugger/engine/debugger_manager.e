@@ -213,7 +213,7 @@ feature -- Output helpers
 		do
 		end
 
-	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS)
+	display_debugger_info (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 			-- Display execution parameters information	
 		do
 		end
@@ -622,7 +622,7 @@ feature {NONE} -- Breakpoints events
 
 feature -- Properties
 
-	profiles: DEBUGGER_PROFILES
+	profiles: DEBUGGER_PROFILE_MANAGER
 			-- Execution profiles
 
 	object_manager: DEBUGGED_OBJECT_MANAGER
@@ -639,70 +639,22 @@ feature -- Properties
 
 feature -- Access
 
-	current_execution_parameters: DEBUGGER_EXECUTION_PARAMETERS
+	current_execution_parameters: DEBUGGER_EXECUTION_RESOLVED_PROFILE
 			-- Current resolved execution parameters
-		local
-			t: TUPLE [title: STRING_32; params: DEBUGGER_EXECUTION_PARAMETERS]
-			params: like current_execution_parameters
 		do
-			t := profiles.last_profile
-			if t /= Void then
-				params := t.params
-			end
-			Result := resolved_execution_parameters (params)
+			Result := resolved_execution_parameters (profiles.last_profile)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	resolved_execution_parameters (params: DEBUGGER_EXECUTION_PARAMETERS): DEBUGGER_EXECUTION_PARAMETERS
+	resolved_execution_parameters (p: detachable DEBUGGER_EXECUTION_PROFILE): DEBUGGER_EXECUTION_RESOLVED_PROFILE
 			-- Resolved execution parameters from `params'
 			-- i.e: check the validity of parameters, and either correct them, of fill with default values.
-		local
-			envi: ENV_INTERP
-			shared_eiffel: SHARED_EIFFEL_PROJECT
-			wd: STRING
-			l_dir: DIRECTORY
 		do
-			create Result
-
-			create envi
-			create shared_eiffel
-
-				--| arguments			
-			if params /= Void and then params.arguments /= Void and then not params.arguments.is_empty then
-				Result.set_arguments (envi.interpreted_string (params.arguments))
+			if p /= Void then
+				create Result.make_from_profile (p)
 			else
-				Result.set_arguments ("")
-			end
-
-				--| Working_directory
-			if params /= Void and then params.working_directory /= Void and then not params.working_directory.is_empty then
-				wd := envi.interpreted_string (params.working_directory)
-			else
-				wd := shared_eiffel.Eiffel_project.lace.directory_name
-			end
-			wd := wd.twin; wd.left_adjust; wd.right_adjust
-			if wd.count > 1 then
-					-- Check if directory exists? If it does not, it might be because of
-					-- an extra directory separator at the end of the name which could cause
-					-- some problem. Therefore we remove it.
-					-- We only do it if there is at least one character in the directory name,
-					-- otherwise it does not make sense.
-				create l_dir.make (wd)
-				if not l_dir.exists and then wd.item (wd.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
-					wd.remove_tail (1)
-					create l_dir.make (wd)
-					if not l_dir.exists then
-							-- Revert back to the original string.
-						wd.extend ((create {OPERATING_ENVIRONMENT}).directory_separator)
-					end
-				end
-			end
-			Result.set_working_directory (wd)
-
-				--| environment_variables
-			if params /= Void and then params.environment_variables /= Void and then not params.environment_variables.is_empty then
-				Result.set_environment_variables (params.environment_variables.twin)
+				create Result.make_from_profile (create {DEBUGGER_EXECUTION_PROFILE}.make)
 			end
 		ensure
 			result_not_void: Result /= Void

@@ -7,9 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	DEBUGGER_PROFILES
-
-obsolete "[2009-09-14] Please use DEBUGGER_PROFILE_MANAGER"
+	DEBUGGER_PROFILE_MANAGER
 
 inherit
 	DEBUGGER_STORABLE_DATA_I
@@ -26,41 +24,33 @@ feature {NONE} -- Initialization
 			create internal_storage.make (n)
 		end
 
-feature -- Conversion
-
-	to_profile_provider: DEBUGGER_PROFILE_MANAGER
-		local
-			l_item: DEBUGGER_EXECUTION_PROFILE
-		do
-			from
-				create Result.make (count)
-				start
-			until
-				after
-			loop
-				l_item := item_for_iteration.to_profile
-				l_item.set_title (key_for_iteration)
-				Result.add (l_item)
-				forth
-			end
-		end
 feature -- Access
 
-	last_profile_name: detachable STRING_32
+	last_profile_uuid: detachable UUID
 			-- Last profile's name
 
 	last_profile: like profile
 			-- Last profile details
 		do
-			if attached last_profile_name as n then
-				Result := profile (n)
+			if attached last_profile_uuid as i then
+				Result := profile (i)
 			end
 		end
 
-	profile (a_name: STRING_32): TUPLE [name: STRING_32; params: DEBUGGER_EXECUTION_PARAMETERS]
-			-- Profile indexed by `a_name'
+	profile_changed (a_prof: DEBUGGER_EXECUTION_RESOLVED_PROFILE): BOOLEAN
+			-- `a_prof' changed?
+		do
+			if attached profile (a_prof.uuid) as p then
+				if not a_prof.same_profile_parameters (p) then
+					Result := True
+				end
+			end
+		end
+
+	profile (a_uuid: UUID): detachable DEBUGGER_EXECUTION_PROFILE
+			-- Profile indexed by `a_uuid'
 		require
-			a_name_not_void: a_name /= Void
+			a_uuid_not_void: a_uuid /= Void
 		local
 			cursor: CURSOR
 			lst: like internal_storage
@@ -73,7 +63,32 @@ feature -- Access
 				lst.after or Result /= Void
 			loop
 				Result := lst.item
-				if Result /= Void and then not Result.name.same_string (a_name) then
+				if Result.uuid /~ a_uuid then
+					Result := Void
+				end
+				lst.forth
+			end
+			internal_storage.go_to (cursor)
+		end
+
+
+	profile_by_title (a_title: STRING_32): like profile
+			-- Profile indexed by `a_title'
+		require
+			a_name_not_void: a_title /= Void
+		local
+			cursor: CURSOR
+			lst: like internal_storage
+		do
+			lst := internal_storage
+			cursor := lst.cursor
+			from
+				lst.start
+			until
+				lst.after or Result /= Void
+			loop
+				Result := lst.item
+				if not Result.title.same_string (a_title) then
 					Result := Void
 				end
 				lst.forth
@@ -83,15 +98,20 @@ feature -- Access
 
 feature -- Element change
 
-	force (new: DEBUGGER_EXECUTION_PARAMETERS; key: STRING_32)
+	add (a_value: like item_for_iteration)
 			-- Update Current so that `new' will be the item associated
 			-- with `key'.
+		require
+			a_value_attached: a_value /= Void
+		local
+			l_key: like key_for_iteration
 		do
-			if has (key) then
-				check profile (key).name.is_equal (key) end
-				internal_storage.replace ([key, new])
+			l_key := a_value.uuid
+			if has (l_key) then
+				check internal_storage.item.uuid ~ l_key end
+				internal_storage.replace (a_value)
 			else
-				internal_storage.force ([key, new])
+				internal_storage.force (a_value)
 			end
 		end
 
@@ -99,19 +119,18 @@ feature -- Element change
 			-- Set `last_profile_name' related to `v'
 		do
 			if v = Void then
-				last_profile_name := Void
+				last_profile_uuid := Void
 			else
-				check v_name_not_empty: v.name /= Void and then not v.name.is_empty end
-				last_profile_name := v.name
-				force (v.params, v.name)
+				last_profile_uuid := v.uuid
+				add (v)
 			end
 		end
 
-	set_last_profile_by_name (n: like last_profile_name)
-			-- Set `last_profile_name' to `n'
+	set_last_profile_by_uuid (n: like last_profile_uuid)
+			-- Set `last_profile_uuid' to `n'
 		do
 			if n /= Void and then has (n) then
-				set_last_profile (profile (n))
+				set_last_profile (internal_storage.item)
 			else
 				set_last_profile (Void)
 			end
@@ -127,13 +146,12 @@ feature -- Removal
 
 feature -- Cursor movement
 
-	has (key: like last_profile_name): BOOLEAN
-			-- Has profile named `key' ?
+	has (a_key: like key_for_iteration): BOOLEAN
+			-- Has profile named `a_key' ?
 			-- move cursor to found profile if any
 		local
 			cursor: CURSOR
 			lst: like internal_storage
-			p: like profile
 		do
 			lst := internal_storage
 			cursor := lst.cursor
@@ -142,8 +160,7 @@ feature -- Cursor movement
 			until
 				lst.after or Result
 			loop
-				p := lst.item
-				if p /= Void and then p.name.same_string (key) then
+				if lst.item.uuid ~ a_key then
 					Result := True
 				else
 					lst.forth
@@ -153,7 +170,7 @@ feature -- Cursor movement
 				lst.go_to (cursor)
 			end
 		ensure
-			found_at_position: Result implies (attached internal_storage.item as el_item and then el_item.name.same_string (key))
+			found_at_position: Result implies (attached internal_storage.item as el_item and then el_item.uuid ~ a_key)
 		end
 
 	start
@@ -177,20 +194,20 @@ feature -- Cursor movement
 			Result := internal_storage.after
 		end
 
-	item_for_iteration: DEBUGGER_EXECUTION_PARAMETERS
+	item_for_iteration: like profile
 			-- Element at current iteration position
 		require
 			not_off: not after
 		do
-			Result := internal_storage.item.params
+			Result := internal_storage.item
 		end
 
-	key_for_iteration: STRING_32
+	key_for_iteration: UUID
 			-- Key at current iteration position
 		require
 			not_off: not after
 		do
-			Result := internal_storage.item.name
+			Result := internal_storage.item.uuid
 		end
 
 	count: INTEGER

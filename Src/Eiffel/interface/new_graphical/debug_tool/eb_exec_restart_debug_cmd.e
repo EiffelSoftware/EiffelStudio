@@ -22,6 +22,8 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	EV_SHARED_APPLICATION
+
 create
 	make
 
@@ -32,52 +34,93 @@ feature -- Initialization
 		local
 			pre_ag, ag: PROCEDURE [ANY, TUPLE]
 			params: like last_parameters
+			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			if eb_debugger_manager.application_is_executing then
+			if attached eb_debugger_manager as dbgm then
+				if dbgm.application_is_executing then
 
-				if not eb_debugger_manager.debug_mode_forced then
-					eb_debugger_manager.force_execution_mode (True)
-					pre_ag := agent eb_debugger_manager.unforce_execution_mode
-					eb_debugger_manager.application_prelaunching_actions.extend_kamikaze (pre_ag)
-				end
-
-				last_parameters := eb_debugger_manager.application.parameters
-
-				if delayed_run_action = Void then
-					create delayed_run_action.make (agent internal_execute (a_execution_mode), 5)
-				end
-				ag := agent delayed_run_action.request_call
-				eb_debugger_manager.application_quit_actions.extend_kamikaze (ag)
-
-				kill_requested := False
-				ask_and_kill
-
-				if not kill_requested then
-					if pre_ag /= Void then
-						eb_debugger_manager.unforce_execution_mode
-						eb_debugger_manager.application_prelaunching_actions.prune_all (pre_ag)
+					if not dbgm.debug_mode_forced then
+						dbgm.force_execution_mode (True)
+						pre_ag := agent dbgm.unforce_execution_mode
+						dbgm.application_prelaunching_actions.extend_kamikaze (pre_ag)
 					end
-					eb_debugger_manager.application_quit_actions.prune_all (ag)
-				end
-			else
-				if delayed_run_action /= Void then
-					delayed_run_action.cancel_request
-					delayed_run_action := Void
-				end
-				params := last_parameters
-				last_parameters := Void
-				if params = Void then
-					Precursor (a_execution_mode)
+
+					last_parameters := dbgm.application.parameters
+
+					if delayed_run_action = Void then
+						create delayed_run_action.make (agent internal_execute (a_execution_mode), 5)
+					end
+					ag := agent delayed_run_action.request_call
+					dbgm.application_quit_actions.extend_kamikaze (ag)
+
+					kill_requested := False
+					if ev_application.shift_pressed then
+						kill
+					else
+						ask_and_kill
+					end
+
+					if not kill_requested then
+						if pre_ag /= Void then
+							dbgm.unforce_execution_mode
+							dbgm.application_prelaunching_actions.prune_all (pre_ag)
+						end
+						dbgm.application_quit_actions.prune_all (ag)
+					end
 				else
-					internal_launch (a_execution_mode, params)
+					if delayed_run_action /= Void then
+						delayed_run_action.cancel_request
+						delayed_run_action := Void
+					end
+					if dbgm.profiles.profile_changed (last_parameters) then
+						if ev_application.shift_pressed then
+							reload_last_parameters
+						else
+							create l_confirm.make_standard (
+									interface_names.l_confirm_reload_execution_profile (last_parameters.title),
+									interface_names.l_confirm_always_reload_profile,
+									create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_reload_execution_profile_preference, True)
+								)
+							l_confirm.set_title (interface_names.t_debugger_question)
+							l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent reload_last_parameters)
+							l_confirm.show_on_active_window
+							window_manager.last_focused_window.show
+						end
+					end
+					params := last_parameters
+					last_parameters := Void
+					if params = Void then
+						Precursor (a_execution_mode)
+					else
+						internal_launch (a_execution_mode, params)
+					end
 				end
 			end
 		end
 
-	last_parameters: DEBUGGER_EXECUTION_PARAMETERS
+	last_parameters: DEBUGGER_EXECUTION_RESOLVED_PROFILE
 			-- Parameters used before Restarting
 
 feature {NONE} -- Implementation
+
+	reload_last_parameters
+			-- Reload `last_parameters' with profile's parameters (in case, they changed)
+		do
+			if
+				attached last_parameters as l_params and
+				attached eb_debugger_manager as a_dbgm
+			then
+					-- Reload parameters
+				if attached a_dbgm.profiles.profile (l_params.uuid) as l_profile then
+					last_parameters := a_dbgm.resolved_execution_parameters (l_profile)
+				else
+					--| Could not find previous parameters
+					--| then keep same parameters ...
+					--| FIXME: 2009-09-16: raise a warning.
+					last_parameters := Void
+				end
+			end
+		end
 
 	delayed_run_action: ES_DELAYED_ACTION
 			-- Delayed run action when "restarting"

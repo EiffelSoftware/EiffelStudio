@@ -46,13 +46,11 @@ feature {ICOR_EXPORTER} -- Access
  			retry
 		end
 
-	create_process (a_command_line, a_working_directory: STRING; a_env: STRING_GENERAL): POINTER
+	create_process (a_command_line, a_working_directory: STRING; a_env: detachable STRING_GENERAL): POINTER
 			-- Pointer on the freshly creared ICorDebugProcess
 		require
-			non_void_command_line: a_command_line /= Void
-			not_empty_command_line: not a_command_line.is_empty
-			non_void_working_directory: a_working_directory /= Void
-			not_empty_working_directory: not a_working_directory.is_empty
+			not_empty_command_line: a_command_line /= Void and then not a_command_line.is_empty
+			not_empty_working_directory: a_working_directory /= Void and then not a_working_directory.is_empty
 		local
 			icordebug_process: POINTER
 			l_hr: INTEGER

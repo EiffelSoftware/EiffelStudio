@@ -37,7 +37,7 @@ inherit
 
 feature -- Aspects
 
-	before_starting (param: DEBUGGER_EXECUTION_PARAMETERS)
+	before_starting (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 		do
 			if attached debugger_output as l_output then
 				l_output.lock

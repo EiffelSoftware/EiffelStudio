@@ -251,7 +251,7 @@ feature {NONE} -- Properties
 	debugging_options_control: EB_DEBUGGING_OPTIONS_CONTROL
 			-- Widget holding all arguments information.
 
-	run: PROCEDURE [ANY, TUPLE [DEBUGGER_EXECUTION_PARAMETERS]]
+	run: PROCEDURE [ANY, TUPLE [DEBUGGER_EXECUTION_PROFILE]]
 
 feature {NONE} -- Implementation
 
@@ -282,14 +282,14 @@ feature {NONE} -- Implementation
 	execute_operation (op: like run)
 			-- Execute operation `op'
 		local
-			params: DEBUGGER_EXECUTION_PARAMETERS
+			prof: DEBUGGER_EXECUTION_PROFILE
 		do
-			params := debugging_options_control.selected_profile_parameters
+			prof := debugging_options_control.selected_profile
 
 			if keep_opened_check_button.is_selected then
-				op.call ([params])
+				op.call ([prof])
 			else
-				op.call ([params])
+				op.call ([prof])
 				on_close
 			end
 		end

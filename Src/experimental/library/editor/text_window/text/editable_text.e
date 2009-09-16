@@ -609,6 +609,17 @@ feature -- Basic Operations
 			end
 		end
 
+	replace_char_including_new_line (c: CHARACTER_32)
+			-- Replace character at cursor position by `c',
+			-- including new line.
+		require
+			text_not_empty: not is_empty
+		do
+			insert_string (create {STRING_32}.make_filled (c, 1))
+			attached_history.bind_current_item_to_next
+			delete_char
+		end
+
 	delete_char
 			-- Delete character at cursor position.
 			-- Delete selection, if any.

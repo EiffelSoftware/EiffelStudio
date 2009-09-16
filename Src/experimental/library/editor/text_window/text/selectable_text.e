@@ -130,6 +130,14 @@ feature -- Access
 			Result := string_selected (selection_start, selection_end)
 		end
 
+	current_char: CHARACTER_32
+			-- Current character at cursor position
+		require
+			text_is_not_empty: not is_empty
+		do
+			Result := attached_cursor.wide_item
+		end
+
 feature -- Status report
 
 	has_selection: BOOLEAN

@@ -614,9 +614,28 @@ feature -- Edition Operations on text
 		end
 
 	set_selection_case (lower: BOOLEAN)
+			-- Set selection case according to `lower'.
+			-- If no selection, simply set current character case,
+			-- and move the cursor forward by one position.
+		local
+			l_char: CHARACTER_32
 		do
 			if not text_displayed.is_empty then
-				text_displayed.set_selection_case (lower)
+				if has_selection then
+					text_displayed.set_selection_case (lower)
+				else
+					l_char := text_displayed.current_char
+					if lower then
+						if l_char.is_character_8 then
+							l_char := l_char.as_lower
+						end
+					else
+						if l_char.is_character_8 then
+							l_char := l_char.as_upper
+						end
+					end
+					text_displayed.replace_char_including_new_line (l_char)
+				end
 				refresh_now
 			end
 		end

@@ -71,7 +71,7 @@ feature {NONE} -- Factory
 	new_record: TEST_CREATION_RECORD
 			-- <Precursor>
 		do
-			create Result.make
+			create Result.make (Current)
 		end
 
 note

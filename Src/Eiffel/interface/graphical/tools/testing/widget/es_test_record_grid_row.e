@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ES_TEST_RECORD_GRID_ROW [G -> TEST_SESSION_I]
+	ES_TEST_RECORD_GRID_ROW [G -> TEST_SESSION_I, H -> TEST_SESSION_RECORD]
 
 inherit
 	EB_RECYCLABLE
@@ -16,25 +16,29 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_record: like record; a_row: like row)
+	make (a_record: like record; a_row: like row; a_icons_provider: like icons_provider)
 			-- Initialize `Current'.
 			--
 			-- `a_record': Test session record to be displayed in row
 			-- `a_row': Grid row in which `a_record' is displayed
+			-- `a_icons_provider': Icons provider for testing tool icons.
 		require
 			a_record_attached: a_record /= Void
 			a_row_attached: a_row /= Void
+			a_icons_provider_attached: a_icons_provider /= Void
 		do
 			record := a_record
 			row := a_row
+			icons_provider := a_icons_provider
 		ensure
 			record_set: record = a_record
 			row_set: row = a_row
+			icons_provider_set: icons_provider = a_icons_provider
 		end
 
 feature -- Access
 
-	record: TEST_SESSION_RECORD
+	record: H
 			-- Test session record
 
 	row: EV_GRID_ROW
@@ -58,6 +62,24 @@ feature {NONE} -- Access
 
 	internal_session: detachable G
 			-- Internal storage of `session'
+
+	icons_provider: ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
+			-- Icons provider for testing tool icons.
+
+	pixmap: EV_PIXMAP
+			-- Pixmap used at beginning of row
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	label: STRING
+			-- Label shown in first item of `row'
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_not_empty: not Result.is_empty
+		end
 
 feature -- Status report
 
@@ -145,19 +167,24 @@ feature {NONE} -- Basic operations
 	fill_row
 			-- <Precursor>
 		local
+			l_pixmap: EV_PIXMAP
 			l_label: EV_GRID_LABEL_ITEM
 		do
-			create l_label.make_with_text (record.creation_date.formatted_out (record.creation_date.default_format_string))
+			create l_label.make_with_text (label)
+			l_label.set_pixmap (pixmap)
 			row.set_item (1, l_label)
 
 			create l_label.make_with_text ("")
-			--l_label.set_pixmap (icon_pixmaps.general_save_icon)
+			l_pixmap := icon_pixmaps.general_save_icon.twin
+			l_pixmap.disable_sensitive
+			l_label.set_pixmap (l_pixmap)
+			l_label.disable_full_select
 			row.set_item (3, l_label)
 
 			create l_label.make_with_text ("")
-			--l_label.set_pixmap (icon_pixmaps.breakpoints_delete_icon)
-			row.set_item (4, l_label)
+			l_label.set_pixmap (icon_pixmaps.general_delete_icon)
 			l_label.disable_full_select
+			row.set_item (4, l_label)
 		end
 
 	fill_subrows

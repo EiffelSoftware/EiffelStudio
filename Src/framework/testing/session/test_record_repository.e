@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 
 			create record_added_event
 			create record_removed_event
+			create record_updated_event
 			create record_property_updated_event
 
 			if is_project_initialized then
@@ -281,6 +282,22 @@ feature {TEST_SUITE_S} -- Element change
 			append_record_sorted (a_record, new_property_tuple (Void))
 		end
 
+feature {TEST_SESSION_RECORD} -- Element change
+
+	report_record_update (a_record: TEST_SESSION_RECORD)
+			-- <Precursor>
+		do
+			record_updated_event.publish ([Current, a_record])
+		end
+
+	report_record_completion (a_record: TEST_SESSION_RECORD)
+			-- <Precursor>
+		do
+			seek_record (a_record)
+			store_record_at_index (record_storage.index)
+			record_property_updated_event.publish ([Current, a_record])
+		end
+
 feature {NONE} -- Element change
 
 	store_record_at_index (an_index: INTEGER)
@@ -333,12 +350,11 @@ feature {NONE} -- Element change
 				end
 			end
 
+			l_record.detach_repository
 			record_removed_event.publish ([Current, l_record])
 		ensure
 			removed: not has_record (old record_storage.item (an_index))
 		end
-
-feature {NONE} -- Element change
 
 	append_record_sorted (a_record: TEST_SESSION_RECORD; a_property: like new_property_tuple)
 			-- Add given record and property to `record_storage' and `property_storage' using insertion
@@ -396,7 +412,6 @@ feature {NONE} -- Element change
 			l_properties.go_i_th (l_pos)
 			l_properties.force_right (a_property)
 			a_record.attach_repository (Current)
-			store_record_at_index (l_pos + 1)
 			record_added_event.publish ([Current, a_record])
 		end
 
@@ -406,6 +421,9 @@ feature {NONE} -- Events
 			-- <Precursor>
 
 	record_removed_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
+			-- <Precursor>
+
+	record_updated_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
 			-- <Precursor>
 
 	record_property_updated_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
@@ -441,6 +459,8 @@ feature {NONE} -- Clean up
 			if a_explicit then
 				record_added_event.dispose
 				record_removed_event.dispose
+				record_updated_event.dispose
+				record_property_updated_event.dispose
 			end
 		end
 

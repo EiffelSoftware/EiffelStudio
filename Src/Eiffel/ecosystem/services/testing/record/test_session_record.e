@@ -17,10 +17,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_session: like session)
 			-- Initialize `Current'.
 		do
 			create creation_date.make_now
+			internal_session := a_session
+		ensure
+			running: is_running
+			session_set: session = a_session
 		end
 
 feature -- Access
@@ -40,11 +44,24 @@ feature -- Access
 			Result := l_repo
 		ensure
 			result_usable: Result.is_interface_usable
+			result_contains_current: Result.has_record (Current)
+		end
+
+	frozen session: TEST_SESSION_I
+			-- Session which adds information to `Current'
+		require
+			running: is_running
+		local
+			l_session: like internal_session
+		do
+			l_session := internal_session
+			check l_session /= Void end
+			Result := l_session
 		end
 
 feature {NONE} -- Access
 
-	frozen internal_repository: detachable TEST_RECORD_REPOSITORY_I
+	frozen internal_repository: detachable like repository
 			-- Internal storage for `repository'.
 			--
 			-- Note: transient attribute so repository is not stored to disk.
@@ -53,12 +70,29 @@ feature {NONE} -- Access
 		attribute
 		end
 
+	frozen internal_session: detachable TEST_SESSION_I
+			-- Internal storage for `session'
+			--
+			-- Note: transient attribute so session is not stored to disk.
+		note
+			option: transient
+		attribute
+		end
+
 feature -- Status report
 
 	frozen is_attached: BOOLEAN
-			-- Does `Current' belong to a repository?
+			-- Has `Current' been added to a repository?
+			--
+			-- Note: this does not imply that the repository still contains `Current'.
 		do
 			Result := attached internal_repository as l_repo and then l_repo.is_interface_usable
+		end
+
+	frozen is_running: BOOLEAN
+			-- Is `Current' still being updated by a session?
+		do
+			Result := internal_session /= Void
 		end
 
 feature {TEST_RECORD_REPOSITORY_I} -- Status setting
@@ -69,6 +103,29 @@ feature {TEST_RECORD_REPOSITORY_I} -- Status setting
 			not_attached: not is_attached
 		do
 			internal_repository := a_repo
+		end
+
+	detach_repository
+			-- Detach `Current' from repository.
+		require
+			is_attached: is_attached
+		do
+			internal_repository := Void
+		end
+
+feature {TEST_SESSION_I} -- Status setting
+
+	complete
+			-- Detach `session' and notify `repository'.
+		require
+			running: is_running
+		local
+			l_repo: like repository
+		do
+			internal_session := Void
+			if is_attached then
+				repository.report_record_completion (Current)
+			end
 		end
 
 feature -- Query

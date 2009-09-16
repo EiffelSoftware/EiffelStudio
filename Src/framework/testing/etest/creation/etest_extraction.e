@@ -92,6 +92,7 @@ feature -- Status setting: Task
 			-- <Precursor>
 		do
 			has_next_step := False
+			clean_record
 		end
 
 feature {NONE} -- Status setting

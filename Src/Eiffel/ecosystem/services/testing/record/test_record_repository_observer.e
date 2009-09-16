@@ -46,10 +46,29 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events
 			not_a_repo_has_record: not a_repo.has_record (a_record)
 		end
 
-	on_record_property_updated(a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
+	on_record_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
+			-- Called after the content of a record has changed.
+			--
+			-- `a_repo': Repository that contained result.
+			-- `a_record': Record for which a property of `a_repo' was changed.
+		require
+			a_repo_attached: a_repo /= Void
+			a_record_attached: a_record /= Void
+			a_repo_usable: a_repo.is_interface_usable
+			a_repo_has_record: a_repo.has_record (a_record)
+			a_record_running: a_record.is_running
+		do
+		ensure
+			a_repo_usable: a_repo.is_interface_usable
+			a_repo_has_result: a_repo.has_record (a_record)
+			a_record_running: a_record.is_running
+		end
+
+	on_record_property_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- Called after a property of a record was changed.
 			--
-			-- Note: a property is considered any record dependent query in `a_repo'.
+			-- Note: a property is considered any record dependent query in `a_repo' or the running status
+			--       of a record.
 			--
 			-- `a_repo': Repository that contained result.
 			-- `a_record': Record for which a property of `a_repo' was changed.

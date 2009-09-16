@@ -36,7 +36,23 @@ feature -- Access
 	test_suite: TEST_SUITE_S
 			-- <Precursor>
 
-feature -- Basic operations
+feature {NONE} -- Status setting
+
+	clean_record
+			-- If `record_cache' is attached, call `complete' on it and set `record_cache' Void.
+		do
+			if attached record_cache as l_record then
+				if l_record.is_running then
+					l_record.complete
+				end
+				record_cache := Void
+			end
+		ensure
+			old_record_not_running: (attached old record_cache as l_record) implies not l_record.is_running
+			record_cache_detached: record_cache = Void
+		end
+
+feature {NONE} -- Basic operations
 
 	append_output (a_procedure: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]])
 			-- Append output for `Current'.

@@ -434,7 +434,7 @@ feature {NONE} -- Basic operations
 					queued_tests.do_all (agent remove_queued_test (?, Void))
 					check test_queues_empty: test_queues.is_empty end
 				end
-				record_cache := Void
+				clean_record
 				initial_test_count := 0
 				test_count := 0
 				append_output (agent (a_formatter: TEXT_FORMATTER)
@@ -518,12 +518,12 @@ feature {NONE} -- Implementation
 					l_queues.search (l_executor.generator)
 					check found: l_queues.found end
 					l_queue := l_queues.found_item
+					l_cursor.remove
 					launch_test (l_queue)
 					if has_launched_test then
 						test_count := test_count - 1
-						l_cursor.remove
 						if l_queue.group_map.is_empty then
-							l_queues.remove_found_item
+								-- Queue already removed by `launch_test'
 						elseif l_executor.is_available then
 								-- If test has been launched but executor is still available, we move executor to end of
 								-- list so others will be checked first the next time around
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 							has_availability_changed := True
 						end
 					else
-						l_cursor.forth
+						available_executors.force_last (l_executor)
 					end
 				end
 			end
@@ -568,6 +568,9 @@ feature {NONE} -- Implementation
 					l_set.remove (l_test)
 					if l_set.is_empty then
 						l_groups.remove (l_group)
+						if l_groups.is_empty then
+							test_queues.remove (a_queue.executor.generator)
+						end
 					end
 					if not l_executor.has_next_step then
 							-- This means it has not been in `tasks' yet

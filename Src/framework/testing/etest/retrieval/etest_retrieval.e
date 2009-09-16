@@ -216,7 +216,7 @@ feature {NONE} -- Status setting
 				traversed_libraries.wipe_out
 				progress_list.wipe_out
 				current_library := Void
-				record_cache := Void
+				clean_record
 
 				append_output (agent (a_formatter: TEXT_FORMATTER)
 					do

@@ -18,10 +18,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_session: like session)
 			-- <Precursor>
 		do
-			Precursor
+			Precursor (a_session)
 			create test_map.make_default
 			test_map.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_8]})
 		end

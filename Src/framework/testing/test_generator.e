@@ -354,6 +354,7 @@ feature {NONE} -- Basic operations
 				end
 				output_file := Void
 			end
+			clean_record
 		end
 
 feature {NONE} -- Implementation

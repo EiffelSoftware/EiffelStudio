@@ -113,7 +113,7 @@ feature {SESSION_MANAGER_S, SESSION_I} -- Element change
 
 feature -- Query
 
-	value (a_id: STRING_8): ANY assign set_value
+	value alias "[]" (a_id: STRING_8): ANY assign set_value
 			-- Retrieve a piece of sessions data, indexed by an ID.
 			--
 			-- `a_id': An id to retrieve session data for
@@ -137,13 +137,6 @@ feature -- Query
 		deferred
 		ensure
 			result_is_valid_session_value: is_valid_session_value (Result)
-		end
-
-	is_valid_session_value (a_value: ANY): BOOLEAN
-			-- Determines if `a_valud' is a valid session value
-		require
-			is_interface_usable: is_interface_usable
-		deferred
 		end
 
 feature -- Status report
@@ -170,6 +163,24 @@ feature -- Status report
 			Result := window_id > 0
 		end
 
+	is_valid_session_value (a_value: ANY): BOOLEAN
+			-- Determines if `a_valud' is a valid session value
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+	has (a_id: STRING): BOOLEAN
+			-- Indicates if the session contains an entry for a given id.
+			--
+			-- `a_id': Session key id to test for.
+			-- `Result': True if the session contains an entry; False otherwise.
+		require
+			a_id_attached: attached a_id
+			not_a_id_is_empty: not a_id.is_empty
+		deferred
+		end
+
 feature {SESSION_MANAGER_S} -- Status setting
 
 	reset_is_dirty
@@ -179,6 +190,16 @@ feature {SESSION_MANAGER_S} -- Status setting
 		deferred
 		ensure
 			not_is_dirty: not is_dirty
+		end
+
+feature -- Basic operations
+
+	store
+			-- Save session data immediately.
+			--|Note: Implementers should check `is_dirty' before commiting to storage.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
 		end
 
 feature {SESSION_DATA_I, SESSION_I} -- Basic operations

@@ -57,10 +57,12 @@ feature {EB_RECENT_PROJECTS_MANAGER} -- Observer pattern
 	update
 			-- (Re)build the menu.
 		local
-			recent_projects: ARRAYED_LIST [STRING]
+			recent_projects: ARRAYED_LIST [TUPLE [file: READABLE_STRING_GENERAL; target: READABLE_STRING_GENERAL]]
+			project: TUPLE [file: READABLE_STRING_GENERAL; target: READABLE_STRING_GENERAL]
+			target: READABLE_STRING_GENERAL
 			open_cmd: EB_OPEN_PROJECT_COMMAND
 			menu_item: EV_MENU_ITEM
-			project_file_name: STRING
+			project_file_name: READABLE_STRING_GENERAL
 		do
 			wipe_out
 			recent_projects := recent_projects_manager.recent_projects
@@ -69,10 +71,16 @@ feature {EB_RECENT_PROJECTS_MANAGER} -- Observer pattern
 			until
 				recent_projects.after
 			loop
-				project_file_name := recent_projects.item
+				project := recent_projects.item
+				project_file_name := project.file
+				target := project.target
+				if target = Void or else target.is_empty then
+					create menu_item.make_with_text (project_file_name.as_string_32)
+				else
+					create menu_item.make_with_text (project_file_name.as_string_32 + "%T" + target.as_string_32)
+				end
 				create open_cmd.make
-				create menu_item.make_with_text (project_file_name)
-				menu_item.select_actions.extend (agent open_cmd.execute_with_file (project_file_name, False))
+				menu_item.select_actions.extend (agent open_cmd.execute_with_file_and_target (project_file_name, target, False))
 				extend (menu_item)
 				recent_projects.forth
 			end
@@ -101,7 +109,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

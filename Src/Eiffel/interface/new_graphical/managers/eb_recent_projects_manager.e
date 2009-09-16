@@ -21,9 +21,9 @@ feature {NONE} -- Initialization
 			-- Create a project manager.
 		local
 			l_value: STRING
-			l_projects: ARRAY [STRING]
+			l_projects: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
 			i: INTEGER
-			l_project_name: STRING
+			l_project: TUPLE [READABLE_STRING_32, READABLE_STRING_32]
 		do
 				-- Get values from preferences.
 			l_value := preferences.preferences.get_preference_value_direct ("LIST_" + preferences.recent_projects_data.last_opened_projects_string)
@@ -40,9 +40,9 @@ feature {NONE} -- Initialization
 				until
 					i > l_projects.upper
 				loop
-					create l_project_name.make_from_string (l_projects.item (i))
-					if not recent_projects.has (l_project_name) then
-						recent_projects.extend (l_project_name)
+					l_project := l_projects [i]
+					if not recent_projects.has (l_project) then
+						recent_projects.extend (l_project)
 					end
 					i := i + 1
 				end
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	recent_projects: ARRAYED_LIST [STRING]
+	recent_projects: ARRAYED_LIST [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
 			-- Save the list of recent opened projects during the execution
 			-- Purpose: make it easier to save the data at the end.
 
@@ -71,19 +71,25 @@ feature -- Menus handling
 
 feature -- Basic operations
 
-	add_recent_project (a_project: STRING)
-			-- Add `a_project' to list of recent projects.
+	add_recent_project (a_project: READABLE_STRING_32; a_target: READABLE_STRING_32)
+			-- Add `a_project' to list of recent projects
+			-- and save the list of projects.
 		require
 			a_project_not_void: a_project /= Void
 			a_project_not_empty: not a_project.is_empty
+		local
+			p: TUPLE [READABLE_STRING_32, READABLE_STRING_32]
+			t: READABLE_STRING_32
 		do
-			recent_projects.prune_all (a_project)
-			recent_projects.put_front (a_project)
-		end
-
-	save_recent_projects
-			-- Save the current list of recent projects
-		do
+			t := a_target
+			if t = Void then
+				t := ""
+			end
+				-- Ensure the type of tuple by using locals.
+			p := [a_project, t]
+			p.compare_objects
+			recent_projects.prune_all (p)
+			recent_projects.put_front (p)
 			save_projects (recent_projects)
 		end
 
@@ -92,12 +98,16 @@ feature -- Basic operations
 		require
 			a_projects_list_not_void: a_projects_list /= Void
 			a_projects_list_compare_objects: a_projects_list.object_comparison
+		local
+			a: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
 		do
 			recent_projects := a_projects_list
 				-- Let observers know about the changes.
 			on_update
 				-- Update it.
-			preferences.recent_projects_data.last_opened_projects_preference.set_value (recent_projects.to_array)
+			a := recent_projects.to_array
+			a.compare_objects
+			preferences.recent_projects_data.set_last_opened_projects (a)
 				-- Save it to disk.
 			preferences.preferences.save_preference (preferences.recent_projects_data.last_opened_projects_preference)
 		end

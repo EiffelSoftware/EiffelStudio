@@ -175,7 +175,6 @@ feature -- Execution
 			sc: EIFFEL_SYNTAX_CHECKER
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
 			l_project_initialized: BOOLEAN
-			q: ES_PROMPT
 		do
 			success := False
 			if not retried then
@@ -529,10 +528,6 @@ feature {NONE} -- Callbacks
 				create_blank_project
 			else
 				select_project_path
-			end
-			if success and (ace_file_name /= Void and then not ace_file_name.is_empty) then
-				recent_projects_manager.add_recent_project (ace_file_name)
-				recent_projects_manager.save_recent_projects
 			end
 		end
 

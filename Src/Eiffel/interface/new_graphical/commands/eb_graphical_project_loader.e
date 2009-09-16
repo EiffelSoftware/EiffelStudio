@@ -159,6 +159,7 @@ feature -- Settings
 			not_has_error: not has_error
 			is_project_ready_for_compilation: not is_project_creation_or_opening_not_requested or is_project_ok
 		do
+			recent_projects_manager.add_recent_project (config_file_name, target_name)
 			if in_new_studio then
 				execute (estudio_cmd_line)
 			end
@@ -233,6 +234,9 @@ feature {NONE} -- Actions
 			if delete_status_prompt /= Void and then delete_status_prompt.is_interface_usable then
 				delete_status_prompt.recycle
 				delete_status_prompt := Void
+			end
+			if not has_error then
+				recent_projects_manager.add_recent_project (config_file_name, target_name)
 			end
 		end
 
@@ -382,8 +386,7 @@ feature {NONE} -- Error reporting
 				l_title.append (interface_names.l_precompiled)
 			end
 			window_manager.display_message (l_title)
-			recent_projects_manager.add_recent_project (config_file_name)
-			Recent_projects_manager.save_recent_projects
+			recent_projects_manager.add_recent_project (config_file_name, target_name)
 
 				--| IEK With project session handling this code is no longer needed, remove when fully integrated.
 				-- We print text in the project_tool text concerning the system

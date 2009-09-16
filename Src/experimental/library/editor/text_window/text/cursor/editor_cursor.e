@@ -33,8 +33,6 @@ feature -- Element change
 			end
 		end
 
-feature {EDITABLE_TEXT} -- Implementation
-
 	update_current_char
 			-- Update the current token and the the position in it.
 			-- It is required that the cursor is not in the left margin.

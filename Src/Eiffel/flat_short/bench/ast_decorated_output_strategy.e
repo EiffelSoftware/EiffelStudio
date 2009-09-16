@@ -3156,10 +3156,10 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.exdent
 			end
-			l_text_formatter_decorator.put_new_line
 
 				-- Process non-conforming inheritance.
 			if l_text_formatter_decorator.is_clickable_format and l_as.non_conforming_parents /= Void then
+				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.process_filter_item (f_inheritance, True)
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_keyword_text (ti_inherit_keyword, Void)

@@ -2562,9 +2562,6 @@ feature {NONE} -- Choice Positioning
 			a_positioned_not_void: a_positioned /= Void
 		local
 			screen: EB_STUDIO_SCREEN
-			preferred_height,
-			upper_space,
-			lower_space: INTEGER
 			show_below: BOOLEAN
 			l_height: INTEGER
 		do

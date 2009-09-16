@@ -1614,7 +1614,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				-- reset pos_in_file values of tokens if possible
 			restore_tokens_properties (ln, ln)
 			attached_cursor.set_x_in_characters (char_pos)
-			--attached_cursor.update_current_char
+			attached_cursor.update_current_char
 		end
 
 	replace_char_at_cursor_pos (c: CHARACTER_32)
@@ -1698,7 +1698,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				restore_tokens_properties (ln, ln)
 
 				attached_cursor.set_x_in_characters (char_pos)
-				--attached_cursor.update_current_char
+				attached_cursor.update_current_char
 				attached_cursor.go_right_char
 
 			end
@@ -1841,7 +1841,7 @@ feature {UNDO_CMD} -- Basic Text changes
 					-- reset pos_in_file values of tokens if possible
 				restore_tokens_properties (ln, ln)
 			end
-			--attached_cursor.update_current_char
+			attached_cursor.update_current_char
 			attached_cursor.set_x_in_characters (char_pos)
 		end
 

@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 				a_hash_table.forth
 			end
 		ensure
-			appended: conf_items.count = old conf_items.count + a_hash_table.count
+			appended: conf_items.count >= old conf_items.count
 		end
 
 feature {NONE} -- Implementation: null routines

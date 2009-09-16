@@ -81,13 +81,13 @@ feature {NONE} -- Initialization: widgets
 			create notebook
 			split_area.set_second (notebook)
 
-			create l_execution.make
+			create l_execution.make (Current)
 			notebook.extend (l_execution.widget)
 			l_tab := notebook.item_tab (l_execution.widget)
 			l_tab.set_text (locale.translation (t_execution))
 			l_tab.set_pixmap (stock_pixmaps.debug_run_icon)
 
-			create l_creation.make
+			create l_creation.make (Current)
 			notebook.extend (l_creation.widget)
 			l_tab := notebook.item_tab (l_creation.widget)
 			l_tab.set_text (locale.translation (t_creation))

@@ -61,6 +61,7 @@ feature -- Access
 							Result := <<
 									[record_added_event, agent an_observer.on_record_added],
 									[record_removed_event, agent an_observer.on_record_removed],
+									[record_updated_event, agent an_observer.on_record_updated],
 									[record_property_updated_event, agent an_observer.on_record_property_updated]
 								>>
 						end)
@@ -86,6 +87,16 @@ feature {NONE} -- Access
 			--
 			-- repository: `Current'.
 			-- record: Record which was removed from `Current'.
+		require
+			usable: is_interface_usable
+		deferred
+		end
+
+	record_updated_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
+			-- Events called after a record was updated.
+			--
+			-- repository: `Current'.
+			-- record: Record which was updated.
 		require
 			usable: is_interface_usable
 		deferred
@@ -170,15 +181,38 @@ feature {TEST_SUITE_S} -- Element change
 			--       returns. This is usually because the number of records in `Current' is limited and
 			--       depending on the record's creation date.
 			--
-			-- Note: `a_record' should no longer be modified after calling `append_record', since these
-			--       changes might not be stored permanently.
-			--
 			-- `a_record': Record to be added.
 		require
 			a_record_attached: a_record /= Void
 			usable: is_interface_usable
 			a_record_not_attached: not a_record.is_attached
 			not_has_record: not has_record (a_record)
+		deferred
+		end
+
+feature {TEST_SESSION_RECORD} -- Element change
+
+	report_record_update (a_record: TEST_SESSION_RECORD)
+			-- Notify observers that record was updated.
+			--
+			-- `a_record': Record that was updated.
+		require
+			a_record_attached: a_record /= Void
+			usable: is_interface_usable
+			has_record: has_record (a_record)
+			a_record_running: a_record.is_running
+		deferred
+		end
+
+	report_record_completion (a_record: TEST_SESSION_RECORD)
+			-- Notify observer that the session producing the record is finished.
+			--
+			-- `a_record': Completed record.
+		require
+			a_record_attached: a_record /= Void
+			usable: is_interface_usable
+			has_record: has_record (a_record)
+			a_record_running: not a_record.is_running
 		deferred
 		end
 

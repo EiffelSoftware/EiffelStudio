@@ -188,6 +188,7 @@ feature -- Status setting: sessions
 			-- <Precursor>
 		local
 			l_rota: ROTA_S
+			l_record: TEST_SESSION_RECORD
 		do
 			if current_output_session = Void then
 				current_output_session := a_session
@@ -198,7 +199,9 @@ feature -- Status setting: sessions
 			end
 			a_session.start
 			if a_session.has_next_step then
-				running_sessions.force_last ([a_session, a_session.record])
+				l_record := a_session.record
+				record_repository.append_record (l_record)
+				running_sessions.force_last ([a_session, l_record])
 				session_launched_event.publish ([Current, a_session])
 				if rota.is_service_available then
 					l_rota := rota.service
@@ -262,11 +265,8 @@ feature {ROTA_S} -- Events: rota
 		local
 			l_running: like running_sessions
 			l_session: TEST_SESSION_I
-			l_repo: like record_repository
-			l_record: TEST_SESSION_RECORD
 		do
 			from
-				l_repo := record_repository
 				l_running := running_sessions
 				l_running.start
 			until
@@ -274,10 +274,6 @@ feature {ROTA_S} -- Events: rota
 			loop
 				l_session := l_running.item_for_iteration.session
 				if l_session = a_task then
-					l_record := l_running.item_for_iteration.record
-					if not l_repo.has_record (l_record) then
-						l_repo.append_record (l_record)
-					end
 					if current_output_session = l_session then
 						current_output_session := Void
 					end

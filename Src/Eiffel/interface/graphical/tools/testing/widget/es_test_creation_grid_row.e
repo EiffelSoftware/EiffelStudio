@@ -10,7 +10,7 @@ class
 	ES_TEST_CREATION_GRID_ROW
 
 inherit
-	ES_TEST_RECORD_GRID_ROW [TEST_CREATION_I]
+	ES_TEST_RECORD_GRID_ROW [TEST_CREATION_I, TEST_CREATION_RECORD]
 		redefine
 			attach_session,
 			detach_session
@@ -23,6 +23,30 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Access
+
+	pixmap: EV_PIXMAP
+			-- <Precursor>
+		do
+			Result := icons_provider.icons.general_test_icon
+		end
+
+	label: STRING
+			-- <Precursor>
+		do
+			if is_running then
+				if attached {TEST_GENERATOR} session then
+					Result := "Test Generation"
+				elseif attached {ETEST_EXTRACTION} session then
+					Result := "Test Extraction"
+				else
+					Result := "Manual Test Creation"
+				end
+			else
+				Result := "Created " + record.tests.count.out + " tests"
+			end
+		end
 
 feature {NONE} -- Status report
 

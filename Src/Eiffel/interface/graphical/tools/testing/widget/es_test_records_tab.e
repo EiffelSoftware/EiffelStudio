@@ -7,10 +7,12 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ES_TEST_RECORDS_TAB [G -> TEST_SESSION_I]
+	ES_TEST_RECORDS_TAB [G -> TEST_SESSION_I, H -> TEST_SESSION_RECORD]
 
 inherit
 	ES_TEST_SESSION_WIDGET_NEW [G]
+		rename
+			make as make_session_widget
 		undefine
 			internal_detach_entities
 		redefine
@@ -22,6 +24,8 @@ inherit
 		end
 
 	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
+		rename
+			make as make_session_widget
 		undefine
 			on_before_initialize,
 			on_after_initialized,
@@ -35,6 +39,19 @@ inherit
 		end
 
 feature {NONE} -- Initialization
+
+	make (a_icons_provider: like icons_provider)
+			-- Initialize `Current'.
+			--
+			-- `a_icons_provider': Icons provider for testing tool icons.
+		require
+			a_icons_provider_attached: a_icons_provider /= Void
+		do
+			make_session_widget
+			icons_provider := a_icons_provider
+		ensure
+			icons_provider_set: icons_provider = a_icons_provider
+		end
 
 	build_notebook_widget_interface (a_widget: EV_VERTICAL_BOX)
 			-- <Precursor>
@@ -104,18 +121,16 @@ feature {NONE} -- Access
 	records: DS_ARRAYED_LIST [like create_grid_row]
 			-- List containing displayed records in displayed order
 
-	record (a_session: G): TEST_SESSION_RECORD
+	record (a_session: G): H
 			-- Retrieve record from session
 			--
-			-- Note: this routines serves as a type anchor for items in `records'. When formal type
-			--       declarations of the form "like a_session.record" become available, this routine can be
-			--       removed.
+			-- Note: this routines serves as a type brigde between a session of type {G} providing records
+			--       of type {H}.
 			--
 			-- `a_session': Session providing certain type of record displayed in `Current'.
 		require
 			a_session_attached: a_session /= Void
-		do
-			Result := a_session.record
+		deferred
 		ensure
 			result_valid: Result = a_session.record
 		end
@@ -160,6 +175,9 @@ feature {NONE} -- Access
 						Result := a_row.record = a_r
 					end (?, a_record))
 		end
+
+	icons_provider: ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
+			-- Icons provider for testing tool icons.
 
 	last_found_row: detachable like create_grid_row
 			-- Last row found through `find_row'
@@ -264,10 +282,7 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 			if attached {like record} a_record as l_record then
 					-- Add record if not done yet.
 				find_row (l_record)
-				if attached last_found_row as l_row then
-					l_row.rebuild
-					last_found_row := Void
-				end
+				last_found_row := Void
 			end
 		end
 
@@ -307,7 +322,7 @@ feature {NONE} -- Factory
 		do
 		end
 
-	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_RECORD_GRID_ROW [G]
+	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_RECORD_GRID_ROW [G, H]
 			-- Create new grid row data
 		require
 			a_record_attached: a_record /= Void
@@ -325,7 +340,7 @@ feature {NONE} -- Clean up
 			-- <Precursor>
 		do
 			Precursor {ES_TEST_SESSION_WIDGET_NEW}
-			records.do_all (agent {ES_TEST_RECORD_GRID_ROW [G]}.recycle)
+			records.do_all (agent {ES_TEST_RECORD_GRID_ROW [G, H]}.recycle)
 		end
 
 note

@@ -35,6 +35,9 @@ feature {TEST_EXECUTION_I} -- Element change
 			not_added_yet: not has_result_for_test (a_test)
 		do
 			test_map.force_last (a_result, a_test.name)
+			if is_attached then
+				repository.report_record_update (Current)
+			end
 		ensure
 			has_result_for_test: has_result_for_test (a_test)
 			valid_result: result_for_test (a_test) = a_result

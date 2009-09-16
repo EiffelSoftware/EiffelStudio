@@ -10,7 +10,7 @@ class
 	ES_TEST_EXECUTION_GRID_ROW
 
 inherit
-	ES_TEST_RECORD_GRID_ROW [TEST_EXECUTION_I]
+	ES_TEST_RECORD_GRID_ROW [TEST_EXECUTION_I, TEST_EXECUTION_RECORD]
 		redefine
 			attach_session,
 			detach_session
@@ -25,6 +25,27 @@ inherit
 create
 	make
 
+feature {NONE} -- Access
+
+	pixmap: EV_PIXMAP
+			-- <Precursor>
+		do
+			Result := icon_pixmaps.debug_run_icon
+		end
+
+	label: STRING
+			-- <Precursor>
+		local
+			l_count: INTEGER
+		do
+			if is_running then
+				l_count := session.initial_test_count.to_integer_32
+			else
+				l_count := record.tests.count
+			end
+			Result := "Execute " + l_count.out + " Tests"
+		end
+
 feature {NONE} -- Status report
 
 	is_expandable: BOOLEAN = True
@@ -35,6 +56,11 @@ feature {NONE} -- Basic operations
 	fill_subrows
 			-- <Precursor>
 		do
+			record.tests.do_all (
+				agent (a_test_name: READABLE_STRING_8)
+					do
+						append_result (a_test_name + " " + record.result_for_name (a_test_name).tag)
+					end)
 		end
 
 feature {ES_TEST_RECORDS_TAB} -- Status setting
@@ -57,32 +83,29 @@ feature {TEST_EXECUTION_I} -- Events
 
 	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: EQA_RESULT)
 			-- <Precursor>
-		local
-			l_grid: detachable EV_GRID
-			l_pos: INTEGER
-			l_label: EV_GRID_LABEL_ITEM
 		do
-			l_grid := row.parent
-			check l_grid /= Void end
-			l_pos := row.index + 1 + row.subrow_count_recursive
-			l_grid.insert_new_row_parented (l_pos, row)
-			create l_label.make_with_text ((a_test.name + " " + a_result.tag).as_string_32)
-			l_grid.row (l_pos).set_item (1, l_label)
+			append_result (a_test.name + " " + a_result.tag)
 		end
 
 	on_test_removed (a_session: TEST_EXECUTION_I; a_test: TEST_I)
 			-- <Precursor>
+		do
+			append_result (a_test.name + " aborted")
+		end
+
+feature {NONE} -- Implementation
+
+	append_result (a_text: STRING)
 		local
-			l_grid: detachable EV_GRID
+			l_row: like row
 			l_pos: INTEGER
 			l_label: EV_GRID_LABEL_ITEM
 		do
-			l_grid := row.parent
-			check l_grid /= Void end
-			l_pos := row.index + 1 + row.subrow_count_recursive
-			l_grid.insert_new_row_parented (l_pos, row)
-			create l_label.make_with_text ((a_test.name + " aborted").as_string_32)
-			l_grid.row (l_pos).set_item (1, l_label)
+			l_row := row
+			l_pos := 1 + l_row.subrow_count
+			l_row.insert_subrow (l_pos)
+			create l_label.make_with_text (a_text)
+			l_row.subrow (l_pos).set_item (1, l_label)
 		end
 
 note

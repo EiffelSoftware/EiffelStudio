@@ -81,6 +81,7 @@ feature -- Status setting
 		deferred
 		ensure then
 			record_detached_if_finished: not has_next_step implies (record_cache = Void)
+			old_record_completed: not has_next_step implies not (old record).is_running
 		end
 
 	cancel
@@ -88,6 +89,7 @@ feature -- Status setting
 		deferred
 		ensure then
 			record_detached: record_cache = Void
+			old_record_completed: not (old record).is_running
 		end
 
 feature {TEST_SUITE_S} -- Status setting
@@ -162,7 +164,7 @@ feature {NONE} -- Factory
 			usable: is_interface_usable
 			running: has_next_step
 		do
-			create Result.make
+			create Result.make (Current)
 		ensure
 			result_attached: Result /= Void
 		end

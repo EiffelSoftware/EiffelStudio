@@ -306,6 +306,7 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 	stop_execution_when_compiling_preference: BOOLEAN_PREFERENCE
 	confirm_kill_preference: BOOLEAN_PREFERENCE
 	confirm_kill_and_restart_preference: BOOLEAN_PREFERENCE
+	confirm_reload_execution_profile_preference: BOOLEAN_PREFERENCE
 	already_editing_class_preference: BOOLEAN_PREFERENCE
 	executing_command_preference: BOOLEAN_PREFERENCE
 
@@ -366,6 +367,7 @@ feature -- Preference strings
 	stop_execution_when_compiling_string: STRING = "interface.dialogs.stop_execution_when_compiling"
 	confirm_kill_string: STRING = "interface.dialogs.confirm_kill"
 	confirm_kill_and_restart_string: STRING = "interface.dialogs.confirm_kill_and_restart"
+	confirm_reload_execution_profile_string: STRING = "interface.dialogs.confirm_reload_execution_profile"
 	already_editing_class_string: STRING = "interface.dialogs.already_editing_class"
 	executing_command_string: STRING = "interface.dialogs.executing_command"
 	file_open_and_save_dialogs_remember_last_directory_string: STRING = "interface.dialogs.file_open_and_save_dialogs_remember_last_directory"
@@ -430,6 +432,7 @@ feature {NONE} -- Implementation
 			stop_execution_when_compiling_preference := l_manager.new_boolean_preference_value (l_manager, stop_execution_when_compiling_string, True)
 			confirm_kill_preference := l_manager.new_boolean_preference_value (l_manager, confirm_kill_string, True)
 			confirm_kill_and_restart_preference := l_manager.new_boolean_preference_value (l_manager, confirm_kill_and_restart_string, True)
+			confirm_reload_execution_profile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_reload_execution_profile_string, True)
 			already_editing_class_preference := l_manager.new_boolean_preference_value (l_manager, already_editing_class_string, True)
 			executing_command_preference := l_manager.new_boolean_preference_value (l_manager, executing_command_string, True)
 			confirm_replace_all_preference := l_manager.new_boolean_preference_value (l_manager, confirm_replace_all_string, True)
@@ -499,7 +502,7 @@ invariant
 	open_project_dialog_height_preference_not_void: open_project_dialog_height_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -512,22 +515,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DIALOGS_DATA

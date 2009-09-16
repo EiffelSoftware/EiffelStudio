@@ -240,14 +240,8 @@ feature -- Bridge to Debugger
 
 feature -- Execution
 
-	run_with_env_string (app: STRING; args, cwd: STRING; env: STRING_GENERAL)
-			-- Run application `app' with arguments `args' in directory `cwd'.
-			-- If `is_running' is false after the
-			-- execution of this routine, it means that
-			-- the application was unable to be launched
-			-- due to the time_out (see `eiffel_timeout_message').
-			-- Before running the application you must check
-			-- to see if the debugged information is up to date.
+	run_with_env_string (app, args, cwd: STRING; env: detachable STRING_GENERAL)
+			-- <Precursor>
 		do
 			reload_dotnet_debug_info_if_needed
 			if il_debug_info_recorder.entry_point_feature_i = Void then

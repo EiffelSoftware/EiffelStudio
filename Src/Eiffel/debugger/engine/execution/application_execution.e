@@ -229,7 +229,7 @@ end
 
 feature -- Execution
 
-	run (params: DEBUGGER_EXECUTION_PARAMETERS)
+	run (params: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -244,19 +244,16 @@ feature -- Execution
 		local
 			l_envstr: STRING_32
 			env: HASH_TABLE [STRING_32, STRING_32]
-			args, app: STRING
+			app: STRING
 			ctlr: DEBUGGER_CONTROLLER
 		do
 			parameters := params
 			ctlr := debugger_manager.controller
-			args := params.arguments
-			if args = Void then
-				create args.make_empty
-			end
 			env := ctlr.environment_variables_updated_with (params.environment_variables, True)
 			l_envstr := environment_variables_to_string (env)
+
 			app := Eiffel_system.application_name (True)
-			run_with_env_string (app, args, params.working_directory, l_envstr)
+			run_with_env_string (app, params.arguments, params.working_directory, l_envstr)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -374,12 +371,14 @@ feature -- Execution
 		deferred
 		end
 
-feature -- Remote access to RT_
+feature -- Remote: Access to RT_
 
 	remote_rt_object: ABSTRACT_DEBUG_VALUE
 			-- Return the remote rt_object
 		deferred
 		end
+
+feature -- Remote: execution recorder on RT_
 
 	remote_rt_execution_recorder_value: DUMP_VALUE
 			-- Return the remote rt_object.execution_recorder
@@ -676,6 +675,8 @@ feature -- Remote access to RT_
 			end
 		end
 
+feature -- Remote: Store/Load object on RT_
+
 	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN
 			-- Store in file `fn' on the application the object addressed by `oa'
 			-- Return True is succeed.
@@ -737,6 +738,45 @@ feature -- Remote access to Exceptions
 			Result_not_void: Result /= Void
 		end
 
+feature -- Debuggee: runtime
+--TODO: 2009-09-16: complete this integration in DUMP_VALUE
+--
+--	debugger_type_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): STRING
+--		require
+--			a_value_attached: a_value /= Void
+--		local
+--			v: DBG_EVALUATED_VALUE
+--			s: detachable like debugger_type_string_evaluation
+--		do
+--			create v.make_with_value (a_value)
+--			s := one_arg_resulting_string_evaluation ("debugger_type_string", v, 0,0, error_handler)
+--			if s /= Void then
+--				Result := s
+--			else
+--				create Result.make_empty
+--			end
+--		ensure
+--			result_attached: Result /= Void
+--		end
+--
+--	debugger_output_string_evaluation (a_value: DUMP_VALUE; min,max: INTEGER; error_handler: detachable DBG_ERROR_HANDLER): STRING
+--		require
+--			a_value_attached: a_value /= Void
+--		local
+--			v: DBG_EVALUATED_VALUE
+--			s: detachable like debugger_output_string_evaluation
+--		do
+--			create v.make_with_value (a_value)
+--			s := one_arg_resulting_string_evaluation ("debugger_output_string", v, min, max, error_handler)
+--			if s /= Void then
+--				Result := s
+--			else
+--				create Result.make_empty
+--			end
+--		ensure
+--			result_attached: Result /= Void
+--		end
+
 feature -- Debuggee: evaluation
 
 	tilda_equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
@@ -764,6 +804,31 @@ feature -- Debuggee: evaluation
 		end
 
 feature -- Expression evaluation
+
+	one_arg_resulting_string_evaluation (a_featname: STRING; a_value: DBG_EVALUATED_VALUE; min,max: INTEGER; error_handler: detachable DBG_ERROR_HANDLER): STRING
+		require
+			a_value_attached: a_value /= Void
+		local
+			params: ARRAYED_LIST [DUMP_VALUE]
+			dv: DUMP_VALUE
+		do
+			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
+				create params.make (1)
+				params.extend (a_value.value)
+				dv := query_evaluation_on (rto, Void, rto.dynamic_class, a_featname, params)
+				if dv /= Void and then dv.has_formatted_output then
+					if min >= max then
+						Result := dv.string_representation
+					else
+						Result := dv.truncated_string_representation (min, max)
+					end
+				else
+					if error_handler /= Void then
+						error_handler.notify_error_evaluation_report_to_support (Void)
+					end
+				end
+			end
+		end
 
 	two_args_resulting_boolean_evaluation (a_featname: STRING; a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
 		require
@@ -1276,7 +1341,7 @@ feature -- Query
 
 feature -- Parameters
 
-	parameters: DEBUGGER_EXECUTION_PARAMETERS
+	parameters: DEBUGGER_EXECUTION_RESOLVED_PROFILE
 			-- Parameters used to run Application
 
 feature -- Setting
@@ -1317,7 +1382,7 @@ feature -- Setting
 
 feature -- Environment related
 
-	environment_variables_to_string (env: HASH_TABLE [STRING_32, STRING_32]): STRING_32
+	environment_variables_to_string (env: detachable HASH_TABLE [STRING_32, STRING_32]): detachable STRING_32
 			-- String representation of the Environment variables
 		local
 			k,v: STRING_32
@@ -1380,7 +1445,7 @@ feature {NONE} -- fake
 			last_assertion_check_stack.wipe_out
 		end
 
-	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL)
+	run_with_env_string (app, args, cwd: STRING; env: detachable STRING_GENERAL)
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -1390,6 +1455,8 @@ feature {NONE} -- fake
 			-- to see if the debugged information is up to date.
 		require
 			app_not_void: app /= Void
+			args_attached: args /= Void
+			cwd_attached: cwd /= Void
 			application_not_running: not is_running
 			application_exists: exists
 			non_negative_interrupt: debugger_manager.interrupt_number >= 0

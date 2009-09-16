@@ -1110,8 +1110,12 @@ feature -- Interaction with .Net Debugger
 			eif_debug_display ("[EIFDBG] " + a_title)
 		end
 
-	do_create_process (cmd, cwd, args: STRING; env: STRING_GENERAL)
+	do_create_process (cmd, cwd, args: STRING; env: detachable STRING_GENERAL)
 			-- Create Process
+		require
+			cmd_attached: cmd /= Void
+			cwd_attached: cwd /= Void
+			args_attached: args /= Void
 		local
 			l_icd_process: POINTER
 			n: INTEGER
@@ -1128,8 +1132,12 @@ feature -- Interaction with .Net Debugger
 			end
 		end
 
-	do_run (cmd, cwd, args: STRING; env: STRING_GENERAL)
+	do_run (cmd, cwd, args: STRING; env: detachable STRING_GENERAL)
 			-- Start the process to debug
+		require
+			cmd_attached: cmd /= Void
+			cwd_attached: cwd /= Void
+			args_attached: args /= Void
 		do
 			do_create_process (cmd, cwd, args, env)
 			waiting_debugger_callback ("run process")

@@ -1105,6 +1105,18 @@ feature -- Label texts
 	l_Condition: STRING_32				do Result := locale.translation("Condition")	end
 	l_Confirm_kill: STRING_32			do Result := locale.translation("Are you sure you want to stop the execution?")	end
 	l_Confirm_kill_and_restart: STRING_32			do Result := locale.translation("Are you sure you want to stop and restart the execution?")	end
+
+	l_confirm_reload_execution_profile (a_title: detachable STRING_32): STRING_32
+		do
+			if a_title /= Void then
+				Result := locale.formatted_string (locale.translation("Execution profile [$1] changed. Do you want to use the new parameters?"), [a_title])
+			else
+				Result := locale.translation("Current execution profile changed. Do you want to use the new parameters?")
+			end
+		end
+
+	l_confirm_always_reload_profile: STRING_32			do Result := locale.translation("always reload")	end
+
 	l_confirm_delete_selected_items: STRING_32			do Result := locale.translation("Are you sure you want to delete selected items forever?")	end
 	l_constructing_diagram_for (a_name: STRING_GENERAL): STRING_32			do Result := locale.formatted_string (locale.translation("Constructing diagram for $1"), [a_name])	end
 	l_Context: STRING_32					do Result := locale.translation("Context")	end

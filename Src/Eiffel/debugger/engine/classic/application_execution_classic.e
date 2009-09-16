@@ -110,17 +110,8 @@ feature -- Properties
 
 feature -- Execution
 
-	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL)
-			-- Run application with arguments `args' in directory `cwd'.
-			-- If `is_running' is false after the
-			-- execution of this routine, it means that
-			-- the application was unable to be launched
-			-- due to the time_out (see `eiffel_timeout_message').
-			-- Before running the application you must check
-			-- to see if the debugged information is up to date.
-		require else
-			cwd_not_void: cwd /= Void
-			env_not_void: env /= Void
+	run_with_env_string (app, args, cwd: STRING; env: detachable STRING_GENERAL)
+			-- <Precursor>
 		local
 			l_status: APPLICATION_STATUS
 			l_env_s8: STRING_8

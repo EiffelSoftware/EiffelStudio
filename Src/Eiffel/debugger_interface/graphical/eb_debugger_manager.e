@@ -1120,7 +1120,7 @@ feature -- Output
 			end
 		end
 
-	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS)
+	display_debugger_info (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 			-- <Precursor>
 		local
 			l_formatter: like debugger_formatter
@@ -1725,18 +1725,18 @@ feature -- Debugging events
 					feat_tool.set_mode ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat)
 					feat_tool.show (False)
 				end
-				safe_launch_stone_on_tools (st, debugging_window.tools)
+				safe_launch_stone_on_tools (st)
 			end
 		end
 
-	safe_launch_stone_on_tools (st: STONE; a_tools: EB_DEVELOPMENT_WINDOW_TOOLS)
-		require
-			tools_attached: a_tools /= Void
+	safe_launch_stone_on_tools (st: STONE)
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				a_tools.launch_stone (st)
+				if attached debugging_window as w then
+					w.tools.launch_stone (st)
+				end
 			end
 		rescue
 			retried := True

@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Debug Operation
 
-	debug_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER)
+	debug_application (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE; a_execution_mode: INTEGER)
 			-- Launch the program from the project target.
 			-- see EXEC_MODES for `a_execution_mode' values.
 		local
@@ -257,7 +257,7 @@ feature {DEBUGGER_MANAGER} -- Debugging operation
 
 feature -- Start Operation
 
-	start_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS)
+	start_workbench_application (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 		local
 			appl_name: STRING
 			cmd_exec: COMMAND_EXECUTOR
@@ -320,7 +320,7 @@ feature -- Start Operation
 			end
 		end
 
-	start_finalized_application (param: DEBUGGER_EXECUTION_PARAMETERS)
+	start_finalized_application (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 		local
 			appl_name: STRING
 			cmd_exec: COMMAND_EXECUTOR
@@ -383,7 +383,7 @@ feature -- Start Operation
 
 feature {NONE} -- Callbacks
 
-	before_starting (param: DEBUGGER_EXECUTION_PARAMETERS)
+	before_starting (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 		do
 			manager.display_debugger_info (param)
 		end
@@ -412,7 +412,7 @@ feature {NONE} -- Callbacks
 
 feature {NONE} -- debugging
 
-	debug_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER; ign_bp: BOOLEAN)
+	debug_workbench_application (param: DEBUGGER_EXECUTION_RESOLVED_PROFILE; a_execution_mode: INTEGER; ign_bp: BOOLEAN)
 		require
 			param.working_directory /= Void
 		local
@@ -482,7 +482,9 @@ feature {NONE} -- Implementation
 
 feature -- Environment related
 
-	environment_variables_updated_with (env: HASH_TABLE [STRING_32, STRING_32]; return_void_if_unchanged: BOOLEAN): HASH_TABLE [STRING_32, STRING_32]
+	environment_variables_updated_with (env: detachable HASH_TABLE [STRING_32, STRING_32];
+										return_void_if_unchanged: BOOLEAN
+				): detachable HASH_TABLE [STRING_32, STRING_32]
 			-- String representation of the Environment variables
 		local
 			k,v: STRING_32
@@ -542,7 +544,7 @@ invariant
 	manager_not_void: manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -555,22 +557,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

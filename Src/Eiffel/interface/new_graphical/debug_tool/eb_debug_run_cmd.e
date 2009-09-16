@@ -116,7 +116,7 @@ feature -- Execution
 			end
 		end
 
-	launch_with_mode (execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS)
+	launch_with_mode (execution_mode: INTEGER; params: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 		require
 			project_initialized: Eiffel_project.initialized
 			not_compiling: not Eiffel_project.Workbench.is_compiling
@@ -283,7 +283,7 @@ feature -- Execution
 			end
 		end
 
-	launch_application (a_execution_mode: INTEGER; a_params: DEBUGGER_EXECUTION_PARAMETERS)
+	launch_application (a_execution_mode: INTEGER; a_params: DEBUGGER_EXECUTION_RESOLVED_PROFILE)
 			-- Launch the program from the project target.
 		local
 			ctlr: DEBUGGER_CONTROLLER

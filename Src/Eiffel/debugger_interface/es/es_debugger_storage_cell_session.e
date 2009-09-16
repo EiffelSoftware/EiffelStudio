@@ -57,19 +57,42 @@ feature -- Access
 			end
 		end
 
-	profiles_data_from_storage: DEBUGGER_PROFILES
+	profiles_data_from_storage: DEBUGGER_PROFILE_MANAGER
 			-- <Precursor>
 		local
 			dbg_session: SESSION_I
+			l_value: detachable ANY
 		do
 			dbg_session := profiles_session_data
-			if attached {CELL_SESSION_DATA [like profiles_data_from_storage]} dbg_session.value (Profiles_session_data_id) as c then
-				data_cells.force (c, Profiles_session_data_id)
-				Result := c.item
+			if attached old_profiles_data_from_storage as old_profiles then
+				Result := old_profiles.to_profile_provider
 			else
-				Result ?= dbg_session.value (Profiles_session_data_id)
+				l_value := dbg_session.value (Profiles_session_data_id)
+				if attached {CELL_SESSION_DATA [like profiles_data_from_storage]} l_value as dpp then
+					data_cells.force (dpp, Profiles_session_data_id)
+					Result := dpp.item
+				else
+					Result ?= l_value
+				end
 			end
 		end
+
+	old_profiles_data_from_storage: detachable DEBUGGER_PROFILES
+			-- old profile storage, to avoid loosing profiles.
+		local
+			dbg_session: SESSION_I
+			l_value: ANY
+		do
+			dbg_session := profiles_session_data
+			l_value := dbg_session.value (Profiles_session_data_id)
+			if attached {CELL_SESSION_DATA [like old_profiles_data_from_storage]} l_value as old_profs then
+				data_cells.force (old_profs, Profiles_session_data_id)
+				Result := old_profs.item
+			else
+				Result ?= l_value
+			end
+		end
+
 
 feature {NONE} -- Persistence
 

@@ -26,10 +26,59 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature -- Value
 
-	last_opened_projects: ARRAY [STRING]
-			-- List of last opened projects	
+	last_opened_projects: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
+			-- List of last opened projects
 		do
-			Result := last_opened_projects_preference.value
+			create Result.make (1, 0)
+			Result.compare_objects
+			last_opened_projects_preference.value.do_all (
+				agent (s: STRING; r: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]])
+					local
+						i: INTEGER
+						p: TUPLE [READABLE_STRING_32, READABLE_STRING_32]
+						f: READABLE_STRING_32
+						t: READABLE_STRING_32
+					do
+						i := s.index_of_code (('>').code.as_natural_32, 1)
+						if i > 1 then
+							f := s.substring (1, i - 1)
+							t := s.substring (i + 1, s.count)
+						else
+							f := s
+							t := ""
+						end
+							-- Ensure the type of tuple by using locals.
+						p := [f, t]
+						p.compare_objects
+						r.force (p, r.upper + 1)
+					end
+				(?, Result)
+			)
+		end
+
+feature -- Modification
+
+	set_last_opened_projects (l: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]])
+			-- Set list of last opened projects
+		local
+			a: ARRAY [STRING]
+		do
+			create a.make (1, 0)
+			a.compare_objects
+			l.do_all (
+				agent (t: TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_32]; r: ARRAY [STRING])
+					do
+						if t.target = Void or else t.target.is_empty then
+							r.force (t.file, r.upper + 1)
+						else
+							r.force (t.file + ">" + t.target, r.upper + 1)
+						end
+					end
+				(?, a)
+			)
+			last_opened_projects_preference.set_value (a)
+		ensure
+			last_opened_projects_set: last_opened_projects ~ l
 		end
 
 feature {EB_SHARED_PREFERENCES} -- Preference
@@ -58,7 +107,7 @@ invariant
 	preferences_not_void: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

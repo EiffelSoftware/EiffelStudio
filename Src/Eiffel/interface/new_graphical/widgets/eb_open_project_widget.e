@@ -452,10 +452,12 @@ feature {NONE} -- Initialization
 		require
 			is_empty: is_empty
 		local
-			lop: ARRAYED_LIST [STRING]
+			lop: ARRAYED_LIST [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
+			p: TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_32]
 			project_exist: BOOLEAN
 			i, n: INTEGER
 			l_header: EV_GRID_HEADER
+			f: ARRAYED_LIST [READABLE_STRING_32]
 		do
 				-- Now initialize grid behavior.
 			projects_list.enable_single_row_selection
@@ -469,18 +471,23 @@ feature {NONE} -- Initialization
 			lop := recent_projects_manager.recent_projects
 			if not lop.is_empty then
 				from
+					create f.make (0)
+					f.compare_objects
 					lop.start
 					i := 1
 					n := 1
 				until
 					lop.after
 				loop
+					p := lop.item
 					if
-						lop.item /= Void and then not lop.item.is_empty and then
-						is_file_readable (lop.item)
+						p /= Void and then not p.file.is_empty and then
+						not f.has (p.file) and then
+						is_file_readable (p.file.as_string_8)
 					then
 						project_exist := True
-						insert_new_project (lop.item, n)
+						f.extend (p.file)
+						insert_new_project (p.file, n)
 						update_project (projects_list.row (n), True, True, False)
 						n := n + 1
 						i := i + 1
@@ -521,7 +528,7 @@ feature {NONE} -- Initialization
 			projects_list_created: projects_list /= Void
 		end
 
-	insert_new_project (a_project_file: STRING; a_row_index: INTEGER)
+	insert_new_project (a_project_file: READABLE_STRING_GENERAL; a_row_index: INTEGER)
 			-- Create an empty new row for `a_project_file' in `projects_list'.
 		require
 			a_project_file_not_void: a_project_file /= Void
@@ -541,7 +548,7 @@ feature {NONE} -- Initialization
 			create lc
 			lc.pointer_button_press_actions.force_extend (agent on_choose_target (lc))
 			l_row.set_item (target_column_index, lc)
-			create li.make_with_text (a_project_file)
+			create li.make_with_text (a_project_file.as_string_32)
 			l_row.set_item (path_column_index, li)
 
 			l_row.select_actions.extend (agent on_project_selected (l_row))
@@ -868,8 +875,12 @@ feature {NONE} -- Implementation
 			-- Save current list of projects directly to preferences.
 		local
 			l_item: EV_GRID_LABEL_ITEM
+			l_target: EV_GRID_CHOICE_ITEM
 			i, nb: INTEGER
-			l_projects: ARRAYED_LIST [STRING]
+			l_projects: ARRAYED_LIST [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
+			p: TUPLE [READABLE_STRING_32, READABLE_STRING_32]
+			f: READABLE_STRING_32
+			t: READABLE_STRING_32
 		do
 				-- Search first if it is a file which is already in the list.
 				-- If in the list, we simply ensure it is visible and selected.
@@ -882,8 +893,18 @@ feature {NONE} -- Implementation
 				i > nb
 			loop
 				l_item ?= projects_list.row (i).item (path_column_index)
-				check l_item_not_void: l_item /= Void end
-				l_projects.extend (l_item.text)
+				l_target ?= projects_list.row (i).item (target_column_index)
+				check l_item_attached: l_item /= Void end
+				check l_target_attached: l_target /= Void end
+				t := l_target.text
+				if t = Void then
+					t := ""
+				end
+				f := l_item.text
+					-- Ensure the type of tuple by using locals.
+				p := [f, t]
+				p.compare_objects
+				l_projects.extend (p)
 				i := i + 1
 			end
 
@@ -1228,7 +1249,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Convenience
 
-	is_file_readable (a_file_name: STRING): BOOLEAN
+	is_file_readable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does file of path `a_file_name' exist and is readable?
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -1236,7 +1257,7 @@ feature {NONE} -- Convenience
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make (a_file_name)
+			create l_file.make (a_file_name.as_string_8)
 			Result := l_file.exists and then l_file.is_readable
 		end
 

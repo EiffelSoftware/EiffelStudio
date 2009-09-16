@@ -84,8 +84,8 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute_with_file (a_project_file_name: STRING; is_fresh_compilation: BOOLEAN)
-			-- Open the specific project named `a_project_file_name'
+	execute_with_file_and_target (a_project_file_name: READABLE_STRING_GENERAL; target: READABLE_STRING_GENERAL; is_fresh_compilation: BOOLEAN)
+			-- Open the specific project named `a_project_file_name' with the given `target' (if any)
 		require
 			a_project_file_name_valid: a_project_file_name /= Void
 		local
@@ -95,11 +95,11 @@ feature -- Execution
 		do
 			if not Eiffel_project.initialized then
 				create l_project_loader.make (parent_window)
-				l_project_loader.open_project_file (a_project_file_name, Void, Void, is_fresh_compilation)
+				l_project_loader.open_project_file (a_project_file_name.as_string_8, target.as_string_8, Void, is_fresh_compilation)
 			else
-				create file.make (valid_file_name (a_project_file_name))
+				create file.make (valid_file_name (a_project_file_name.as_string_8))
 				if not file.exists or else file.is_directory then
-					prompts.show_error_prompt (warning_messages.w_file_not_exist (a_project_file_name), parent_window, Void)
+					prompts.show_error_prompt (warning_messages.w_file_not_exist (a_project_file_name.as_string_8), parent_window, Void)
 				else
 					ebench_name := "%"" + eiffel_layout.estudio_command_name + "%""
 					l_profile := eiffel_layout.command_line_profile_option
@@ -108,8 +108,13 @@ feature -- Execution
 						ebench_name.append (l_profile)
 					end
 					ebench_name.append (" -config %"")
-					ebench_name.append (a_project_file_name)
+					ebench_name.append (a_project_file_name.as_string_8)
 					ebench_name.append_character ('"')
+					if target /= Void and then not target.is_empty then
+						ebench_name.append (" -target %"")
+						ebench_name.append (target.as_string_8)
+						ebench_name.append_character ('"')
+					end
 					launch_ebench (ebench_name)
 				end
 			end

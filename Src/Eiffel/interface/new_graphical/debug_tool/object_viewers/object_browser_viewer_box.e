@@ -12,7 +12,8 @@ class
 inherit
 	EB_OBJECT_VIEWER
 		redefine
-			build_mini_tool_bar
+			build_mini_tool_bar,
+			build_tool_bar
 		end
 
 	ES_OBJECTS_GRID_MANAGER
@@ -88,13 +89,45 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	build_hexa_cmd
+		do
+			if hex_format_cmd = Void then
+				create hex_format_cmd.make (agent set_hexadecimal_mode)
+				hex_format_cmd.enable_sensitive
+			end
+		end
+
+	build_tool_bar
+		local
+			tb: SD_TOOL_BAR
+		do
+			if not is_associated_with_tool then
+				build_slices_cmd
+				build_hexa_cmd
+				if tool_bar = Void then
+					create tb.make
+					tool_bar := tb
+
+					tb.extend (slices_cmd.new_mini_sd_toolbar_item)
+					tb.extend (hex_format_cmd.new_mini_sd_toolbar_item)
+					tb.extend (object_viewer_cmd.new_mini_sd_toolbar_item)
+
+					tb.compute_minimum_size
+				end
+			end
+		end
+
 	build_mini_tool_bar
 		do
 			build_slices_cmd
+			build_hexa_cmd
 			if mini_tool_bar = Void then
 				create mini_tool_bar.make
 
 				mini_tool_bar.extend (slices_cmd.new_mini_sd_toolbar_item)
+				mini_tool_bar.extend (hex_format_cmd.new_mini_sd_toolbar_item)
+				mini_tool_bar.extend (object_viewer_cmd.new_mini_sd_toolbar_item)
+
 				mini_tool_bar.compute_minimum_size
 			end
 		end
@@ -163,6 +196,11 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
+	set_hexadecimal_mode (v: BOOLEAN)
+		do
+			viewer.set_hexadecimal_mode (v)
+		end
+
 	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
 		do
 			Result := Eb_debugger_manager.object_viewer_cmd
@@ -205,7 +243,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -229,11 +267,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

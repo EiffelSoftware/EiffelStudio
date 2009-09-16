@@ -38,7 +38,7 @@ feature {NONE} -- Access
 	etest_suite: ETEST_SUITE
 			-- Once instance of `{ETEST_SUITE}
 		local
-			l_helper: TEST_PROJECT_HELPER
+			l_helper: ES_TEST_PROJECT_HELPER
 			l_auto_retrieve: BOOLEAN
 		once
 			if (create {SHARED_FLAGS}).is_gui then

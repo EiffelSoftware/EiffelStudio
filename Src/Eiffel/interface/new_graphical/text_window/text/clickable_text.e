@@ -145,6 +145,7 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 			reading_text_finished := False
 			if not append then
 				block_counter := 0
+				no_processed_line := True
 			end
 		end
 
@@ -178,6 +179,7 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 				after_reading_idle_action
 				line_read := 0
 			end
+			no_processed_line := False
 		end
 
 feature -- Load Text handling
@@ -256,8 +258,13 @@ feature {NONE} -- Load Text handling
 			line_read := line_read + 1
 			eol_reached := True
 			last_processed_line.update_token_information
-			if number_of_lines = 0 then
+			if no_processed_line or number_of_lines = 0 then
+					-- Delete the initial blank line.
+				if number_of_lines = 1 then
+					line (1).delete
+				end
 				append_line (last_processed_line)
+				no_processed_line := False
 			end
 			if cursor = Void then
 				l_line := first_line
@@ -387,6 +394,9 @@ feature {NONE} -- Private status
 
 	block_counter: INTEGER
 			-- Blocks loaded.
+
+	no_processed_line: BOOLEAN
+			-- has processed line of text after calling `start_processing'?
 
 feature {NONE} -- Private Constants
 

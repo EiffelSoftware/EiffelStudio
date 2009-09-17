@@ -2623,7 +2623,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_space
 			end
 			if not has_error_internal then
-				l_text_formatter_decorator.process_feature_text (l_as.visual_name, l_feat, False)
+				l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 			else
 				l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 			end

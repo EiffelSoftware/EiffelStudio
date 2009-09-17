@@ -1694,7 +1694,13 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 		do
 			if not managed_main_formatters.first.selected then
 					-- We are either in clickable mode or looking at a .NET class.
-				editors_manager.current_editor.find_feature_named (feat_as.name)
+					-- Written feature is needed, otherwise renamed feature cannot be located.
+					-- See bug#11354
+				l_feature := feat_as.written_feature
+				if l_feature = Void then
+					l_feature := feat_as
+				end
+				editors_manager.current_editor.find_feature_named (l_feature.name)
 			else
 				if displayed_class.is_compiled then
 						-- We need to adapt E_FEATURE to the current displayed class

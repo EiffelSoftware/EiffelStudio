@@ -2131,11 +2131,13 @@ rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlis
 	flush;
 #endif
 
+	SIGBLOCK;			/* Critical section */
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 
 	selected = add_core(nbytes, type);	/* Ask for more core */
 	if (!selected) {
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
+		SIGRESUME;			/* End of critical section */
 		return (EIF_REFERENCE) 0;				/* Could not obtain enough memory */
 	}
 	
@@ -2154,8 +2156,6 @@ rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlis
 	 * property is used by the garbage collector, for efficiency reasons
 	 * that are too long to be explained here--RAM.
 	 */
-
-	SIGBLOCK;			/* Critical section */
 
 	if (C_T == type) {
 		/* C block chunck */
@@ -2222,7 +2222,6 @@ doc:	</routine>
 
 rt_private union overhead *add_core(size_t nbytes, int type)
 {
-	RT_GET_CONTEXT	
 	union overhead *oldbrk; /* Initialized with `failed' value. */
 	size_t mod;					/* Remainder for padding */
 	size_t asked = nbytes;	/* Bytes requested */
@@ -2265,7 +2264,6 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 	if (!oldbrk) {
 		return NULL;
 	}
-	SIGBLOCK;			/* Critical section starts */
 
 		/* Accounting informations */
 	rt_m_data.ml_chunk++;
@@ -2319,8 +2317,6 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 		 */
 	CHECK("asked not too big", asked <= B_SIZE);
 	oldbrk->ov_size = asked | B_LAST;
-
-	SIGRESUME;				/* Critical section ends */
 
 	return oldbrk;			/* Pointer to new free zone */
 }

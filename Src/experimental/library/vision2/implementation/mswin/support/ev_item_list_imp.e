@@ -41,33 +41,25 @@ feature {NONE} -- Implementation
 
 	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
-		local
-			v_imp: detachable H
 		do
 			Precursor {EV_DYNAMIC_LIST_IMP} (v, i)
-			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
+			if attached {H} v.implementation as v_imp then
+				v_imp.set_parent_imp (Current)
+				insert_item (v_imp, i)
+				v_imp.on_parented
+				new_item_actions.call ([v_imp.attached_interface])
 			end
-			v_imp.set_parent_imp (Current)
-			insert_item (v_imp, i)
-			v_imp.on_parented
-			new_item_actions.call ([v_imp.attached_interface])
 		end
 
 	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
-		local
-			v_imp: detachable H
 		do
-			v_imp ?= interface_i_th (i).implementation
-			check
-				v_imp_not_void: v_imp /= Void
+			if attached {H} interface_i_th (i).implementation as v_imp then
+				v_imp.on_orphaned
+				remove_item_actions.call ([v_imp.attached_interface])
+				remove_item (v_imp)
+				v_imp.set_parent_imp (Void)
 			end
-			v_imp.on_orphaned
-			remove_item_actions.call ([v_imp.attached_interface])
-			remove_item (v_imp)
-			v_imp.set_parent_imp (Void)
 			Precursor {EV_DYNAMIC_LIST_IMP} (i)
 		end
 
@@ -123,7 +115,7 @@ invariant
 	remove_item_actions_not_void: is_usable implies remove_item_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -133,19 +125,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_ITEM_LIST_IMP
-
-
-
-
-
-
-
-
-
-
-
-

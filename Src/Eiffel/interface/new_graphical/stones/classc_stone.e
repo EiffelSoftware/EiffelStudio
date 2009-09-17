@@ -19,6 +19,8 @@ inherit
 			header, stone_signature, history_name
 		end
 
+	SHARED_LOCALE
+
 create
 	make
 
@@ -88,7 +90,7 @@ feature -- Access
 																eiffel_universe.target_name,
 																c.group.name,
 																stone_signature,
-																c.lace_class.file_name)
+																console_encoding_to_utf32 (system_encoding, c.lace_class.file_name))
 				end
 			end
 		end
@@ -131,7 +133,7 @@ feature -- Synchronization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

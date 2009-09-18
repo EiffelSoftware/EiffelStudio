@@ -63,3 +63,46 @@ void c_esqlite3_update_callback (void *p_data, int action, char const * db_name,
 			));
 	}
 }
+
+int c_esqlite3_busy_callback (void *p_data, int n)
+{
+	typedef EIF_INTEGER(*EIF_CBFUNC)(
+#ifndef EIF_IL_DLL
+			EIF_REFERENCE,
+#endif
+			EIF_NATURAL
+		);
+	EIF_CBDATAP p_dbdata = (EIF_CBDATAP)p_data;
+	EIF_CBFUNC p_func = (EIF_CBFUNC) p_dbdata->func;
+	if (p_func != NULL) {
+		return (int)(p_func (
+#ifndef EIF_IL_DLL
+				eif_access (p_dbdata->o),
+#endif
+				(EIF_NATURAL)n
+			));
+	}
+
+	return 0;
+}
+
+int c_esqlite3_progress_callback (void *p_data)
+{
+	typedef EIF_INTEGER(*EIF_CBFUNC)(
+#ifndef EIF_IL_DLL
+			EIF_REFERENCE
+#endif
+		);
+	EIF_CBDATAP p_dbdata = (EIF_CBDATAP)p_data;
+	EIF_CBFUNC p_func = (EIF_CBFUNC) p_dbdata->func;
+	if (p_func != NULL) {
+		return (int)(p_func (
+#ifndef EIF_IL_DLL
+				eif_access (p_dbdata->o)
+#endif
+			));
+	}
+
+	return 0;
+}
+

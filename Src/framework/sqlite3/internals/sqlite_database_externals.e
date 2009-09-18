@@ -136,14 +136,23 @@ feature -- Basic operations: Threading
 
 feature -- Callbacks
 
---	sqlite3_progress_handler (a_api: SQLITE_API; a_db: POINTER; a_value: INTEGER; a_callback: POINTER; a_data: POINTER)
---		require
---			a_api_attached: attached a_api
---			a_api_is_interface_usable: a_api.is_interface_usable
---			not_a_db_is_null: a_db /= default_pointer
---		do
---			c_sqlite3_progress_handler (a_api.api_pointer (sqlite3_progress_handler_api), a_db, a_value, a_callback, a_data)
---		end
+	sqlite3_progress_handler (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+			not_a_db_is_null: a_db /= default_pointer
+		do
+			Result := c_sqlite3_progress_handler (a_api.api_pointer (sqlite3_progress_handler_api), a_db, c_sqlite3_busy_callback, a_cb_data)
+		end
+
+	sqlite3_busy_handler (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+			not_a_db_is_null: a_db /= default_pointer
+		do
+			Result := c_sqlite3_busy_handler (a_api.api_pointer (sqlite3_busy_handler_api), a_db, c_sqlite3_busy_callback, a_cb_data)
+		end
 
 	sqlite3_commit_hook (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
 		require
@@ -185,6 +194,7 @@ feature -- Callbacks
 
 feature {NONE} -- Constants
 
+	sqlite3_busy_handler_api: STRING          = "sqlite3_busy_handler"
 	sqlite3_changes_api: STRING               = "sqlite3_changes"
 	sqlite3_close_api: STRING                 = "sqlite3_close"
 	sqlite3_commit_hook_api: STRING           = "sqlite3_commit_hook"
@@ -346,25 +356,31 @@ feature {NONE} -- Externals: Threading
 
 feature {NONE} -- Callbacks
 
---	c_sqlite3_progress_handler (a_fptr: POINTER; a_db: POINTER; a_int: INTEGER; a_callback: POINTER; a_data: POINTER)
---		require
---			not_a_fptr_is_null: a_fptr /= default_pointer
---			not_a_db_is_null: a_db /= default_pointer
---		external
---			"C inline use <sqlite3.h>"
---		alias
---			"[
---				if (NULL == $a_callback) {
---					if (NULL != $a_data) {
---						eif_wean($a_data);
---					}
---				} else if (NULL != $a_data) {
---					(FUNCTION_CAST(void *, (sqlite3 *, int, int (*)(void *), void *)) $a_fptr) (
---						(sqlite3 *)$a_db, (int)$a_int, (int (*)(void *))$a_callback, (void *)eif_protect($a_data));
---				}
+	c_sqlite3_progress_handler (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
+			not_a_db_is_null: a_db /= default_pointer
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"[
+				return (EIF_POINTER)(FUNCTION_CAST(void *, (sqlite3 *, int (*)(void *), void *)) $a_fptr) (
+					(sqlite3 *)$a_db, (int (*)(void *))$a_callback, (void *)$a_data);
+			]"
+		end
 
---			]"
---		end
+	c_sqlite3_busy_handler (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
+			not_a_db_is_null: a_db /= default_pointer
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"[
+				return (EIF_POINTER)(FUNCTION_CAST(void *, (sqlite3 *, int (*)(void *, int), void *)) $a_fptr) (
+					(sqlite3 *)$a_db, (int (*)(void *, int))$a_callback, (void *)$a_data);
+			]"
+		end
 
 	c_sqlite3_commit_hook (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
 		require
@@ -405,22 +421,21 @@ feature {NONE} -- Callbacks
 			]"
 		end
 
---	c_sqlite3_unlock_notify (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_arg: POINTER): INTEGER
---			-- Experimental interface!
---		require
---			not_a_fptr_is_null: a_fptr /= default_pointer
---			not_a_db_is_null: a_db /= default_pointer
---			not_a_callback_is_null a_callback /= default_pointer
---		external
---			"C inline use <sqlite3.h>"
---		alias
---			"[
---				(FUNCTION_CAST(void, (sqlite3_mutex *)) $a_fptr) (
---					(sqlite3_mutex *)$a_mutex);
---			]"
---		end
-
 feature {NONE} -- Externals: Eiffel callbacks
+
+	c_sqlite3_progress_callback: POINTER
+		external
+			"C inline use %"esqlite.h%""
+		alias
+			"return c_esqlite3_progress_callback"
+		end
+
+	c_sqlite3_busy_callback: POINTER
+		external
+			"C inline use %"esqlite.h%""
+		alias
+			"return c_esqlite3_busy_callback"
+		end
 
 	c_sqlite3_commit_callback: POINTER
 		external

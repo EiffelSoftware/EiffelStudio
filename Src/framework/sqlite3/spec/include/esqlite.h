@@ -48,6 +48,22 @@ void c_esqlite3_rollback_callback(void *p_data);
 //           and Eiffel object to callback.
 extern void c_esqlite3_update_callback (void *p_data, int action, char const *db_name, char const *tb_name, sqlite3_int64 row_id);
 
+// C callback function for 'void *sqlite3_busy_handler(sqlite3*, int(*)(void *, int), void*)'
+// Note: This is the function called back from SQLite and should
+//       not be directly associated with an Eiffel class.
+//
+// `p_data': A EIF_CBDATAP struct reference, containing the Eiffel function
+//           and Eiffel object to callback.
+// `n': Number of times the busy handler has been called.
+extern int c_esqlite3_busy_callback (void *p_data, int n);
+
+// C callback function for 'void *sqlite3_progress(sqlite3*, int(*)(void *), void*)'
+// Note: This is the function called back from SQLite and should
+//       not be directly associated with an Eiffel class.
+//
+// `p_data': A EIF_CBDATAP struct reference, containing the Eiffel function
+//           and Eiffel object to callback.
+extern int c_esqlite3_progress_callback (void *p_data);
 
 #ifdef __cplusplus
 } // extern "C"

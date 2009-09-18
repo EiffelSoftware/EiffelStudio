@@ -21,7 +21,7 @@ CTAGS = ctags
 CFLAGS = $optimize $ccflags $large -I$rt_include -I"../spec/include"
 MTCFLAGS = $optimize $mtccflags $large -I$rt_include -I"../spec/include"
 SHAREDLINK = $sharedlink
-LDSHAREDFLAGS = $ldsharedflags
+LDSHAREDFLAGS = -export-dynamic $ldsharedflags
 LN = $ln
 MAKE = $make
 MKDEP = $mkdep \$(DPFLAGS) --
@@ -48,18 +48,23 @@ all: $(ESQLITE_LIBS)
 	$(MV) $? ../spec/$(PLATFORM)/lib
 	$(MAKE) clobber
 
-SMODE = esqlite.c
+SMODE = esqlite.c sqlite3.c
 
 LSRCS = $(SMODE)
 
 MT_OBJECTS = \
-	esqlite.o
+	esqlite.o \
+	sqlite3.o
 
 OBJECTS = \
-	esqlite.o
+	esqlite.o \
+	sqlite3.o
 
 ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 esqlite.o: esqlite.c
+	$(CC) -c $(MTCFLAGS) $? -o $@
+
+sqlite3.o: sqlite3.c
 	$(CC) -c $(MTCFLAGS) $? -o $@
 
 libmtesqlite.a: $(MT_OBJECTS)

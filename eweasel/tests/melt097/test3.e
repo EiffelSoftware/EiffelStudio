@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	s: STRING
+	s: detachable STRING
 
 	out: STRING
 		do

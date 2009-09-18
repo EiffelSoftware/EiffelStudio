@@ -60,7 +60,7 @@ feature {NONE} -- Initlization
 			end
 			make_with_items (a_unique_title, l_temp_items)
 		ensure
-			set: a_unique_title = unique_title
+			set: a_unique_title.as_string_32 ~ unique_title
 			set: a_tool_bar.count = items.count
 		end
 

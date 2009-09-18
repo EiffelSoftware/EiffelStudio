@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_code': A SQLite result code, possibily with a extended code.
 		require
-			not_a_code_is_ok: a_code /= {SQLITE_RESULT_CODES}.sqlite_ok
+			not_a_code_is_ok: a_code /= {SQLITE_RESULT_CODE}.ok
 		do
 			make_with_message (a_code, message_from_code (a_code))
 		ensure
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			-- `a_code': A SQLite result code, possibily with a extended code.
 			-- `a_message': A message string returned from SQLite.
 		require
-			not_a_code_is_ok: a_code /= {SQLITE_RESULT_CODES}.sqlite_ok
+			not_a_code_is_ok: a_code /= {SQLITE_RESULT_CODE}.ok
 		do
 			internal_code := a_code
 			create internal_meaning.make_from_string (a_message)
@@ -55,12 +55,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	result_code: INTEGER
-			-- Result error code. See {SQLITE_RESULT_CODES} for meanings.
+	result_code: SQLITE_RESULT_CODE
+			-- Result error code. See {SQLITE_RESULT_CODE} for meanings.
 		do
-			Result := internal_code & {SQLITE_RESULT_CODES}.mask
+			Result := internal_code & {SQLITE_RESULT_CODE}.mask
 		ensure
-			not_result_is_ok: Result /= {SQLITE_RESULT_CODES}.sqlite_ok
+			not_result_is_ok: Result /= {SQLITE_RESULT_CODE}.ok
 		end
 
 	extended_code: INTEGER
@@ -71,70 +71,70 @@ feature -- Access
 
 feature {NONE} -- Query
 
-	message_from_code (a_code: INTEGER): READABLE_STRING_8
+	message_from_code (a_code: SQLITE_RESULT_CODE): READABLE_STRING_8
 			-- Retrieves an SQLite default error message from an SQLite result code.
 			--
 			-- `a_code': A SQLite result code, possibily with a extended code.
 			-- `Result': The default message.
 		require
-			not_a_code_is_ok: a_code /= {SQLITE_RESULT_CODES}.sqlite_ok
+			not_a_code_is_ok: a_code /= {SQLITE_RESULT_CODE}.ok
 		local
 			l_code: INTEGER
 		do
-			l_code := a_code & {SQLITE_RESULT_CODES}.mask
-			if l_code = {SQLITE_RESULT_CODES}.SQLITE_ERROR then
+			l_code := a_code & {SQLITE_RESULT_CODE}.mask
+			if l_code = {SQLITE_RESULT_CODE}.e_error then
 				Result := "SQL error or missing database"
-			elseif l_code =  {SQLITE_RESULT_CODES}.SQLITE_INTERNAL then
+			elseif l_code =  {SQLITE_RESULT_CODE}.e_internal then
 				Result := "Internal logic error in SQLite"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_PERM then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_perm then
 				Result := "Access permission denied"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_ABORT then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_abort then
 				Result := "Callback routine requested an abort"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_BUSY then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_busy then
 				Result := "The database file is locked"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_LOCKED then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_locked then
 				Result := "A table in the database is locked"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_NOMEM then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_no_mem then
 				Result := "There is not enough memory"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_READONLY then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_read_only then
 				Result := "Attempted to write a read-only database"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_INTERRUPT then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_interrupt then
 				Result := "Operation interrupted"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_IOERR then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_io_err then
 				Result := "I/O operation error"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_CORRUPT then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_corrupt then
 				Result := "The database disk image is malformed"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_NOTFOUND then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_not_found then
 				check not_used: False end
 				Result := "Table or record not found"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_FULL then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_full then
 				Result := "Insertion failed because database is full"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_CANTOPEN then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_cant_open then
 				Result := "Unable to open the database file"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_PROTOCOL then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_protocol then
 				check not_used: False end
 				Result := "Database lock protocol error"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_EMPTY then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_empty then
 				Result := "Database is empty"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_SCHEMA then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_schema then
 				Result := "The database schema changed"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_TOOBIG then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_too_big then
 				Result := "String or BLOB exceeds size limit"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_CONSTRAINT then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_constraint then
 				Result := "Abort due to constraint violation"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_MISMATCH then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_mismatch then
 				Result := "Data type mismatch"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_MISUSE then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_misuse then
 				Result := "Library used incorrectly"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_NOLFS then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_nolfs then
 				Result := "Use of OS features not supported on host"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_AUTH then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_auth then
 				Result := "Authorization denied"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_FORMAT then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_format then
 				Result := "Auxiliary database format error"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_RANGE then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_range then
 				Result := "2nd parameter to sqlite3_bind out of range"
-			elseif l_code = {SQLITE_RESULT_CODES}.SQLITE_NOTADB then
+			elseif l_code = {SQLITE_RESULT_CODE}.e_not_a_db then
 				Result := "File opened that is not a database file"
 			else
 				check unhandled_error: False end

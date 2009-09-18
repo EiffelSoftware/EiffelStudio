@@ -132,7 +132,7 @@ feature -- Access: Actions
 	rollback_action: detachable PROCEDURE [ANY, TUPLE] assign set_rollback_action
 			-- Action called when during the rollback of a commit.
 
-	update_action: detachable PROCEDURE [ANY, TUPLE [action: INTEGER; db_name: STRING; table: STRING; row: INTEGER_64]] assign set_update_action
+	update_action: detachable PROCEDURE [ANY, TUPLE [action: SQLITE_UPDATE_ACTION; db_name: STRING; table: STRING; row: INTEGER_64]] assign set_update_action
 			-- Action called when during the rollback of a commit.
 
 	progress_handler: detachable FUNCTION [ANY, TUPLE, BOOLEAN] assign set_progress_handler
@@ -494,16 +494,16 @@ feature -- Basic operations
 				l_api := sqlite_api
 				l_result := sqlite3_close (l_api, l_db)
 				if
-					(l_result & {SQLITE_RESULT_CODES}.mask) = {SQLITE_RESULT_CODES}.sqlite_locked or else
-					(l_result & {SQLITE_RESULT_CODES}.mask) = {SQLITE_RESULT_CODES}.sqlite_busy
+					(l_result & {SQLITE_RESULT_CODE}.mask) = {SQLITE_RESULT_CODE}.e_locked or else
+					(l_result & {SQLITE_RESULT_CODE}.mask) = {SQLITE_RESULT_CODE}.e_busy
 				then
 						-- Database is locked, which means there are lingering references.
 						-- Try forcing a GC to collect and dispose of any still held references.
 					{MEMORY}.full_collect
 					l_result := sqlite3_close (l_api, l_db)
 					if
-						(l_result & {SQLITE_RESULT_CODES}.mask) = {SQLITE_RESULT_CODES}.sqlite_locked or else
-						(l_result & {SQLITE_RESULT_CODES}.mask) = {SQLITE_RESULT_CODES}.sqlite_busy
+						(l_result & {SQLITE_RESULT_CODE}.mask) = {SQLITE_RESULT_CODE}.e_locked or else
+						(l_result & {SQLITE_RESULT_CODE}.mask) = {SQLITE_RESULT_CODE}.e_busy
 					then
 							-- Still locked! The only option now is to sever all statement connections (as
 							-- per-documentation recommendation.)
@@ -573,7 +573,7 @@ feature -- Basic operations
 			sqlite3_interrupt (sqlite_api, internal_db)
 		end
 
-feature -- Basic operations: Threading
+feature {SQLITE_INTERNALS} -- Basic operations: Threading
 
 	lock
 			-- Locks access to the database for all threads except the current thread.
@@ -823,9 +823,9 @@ feature {NONE} -- Basic operations: Callbacks
 		require
 			is_interface_usable: is_interface_usable
 			not_is_closed: not is_closed
-			a_action_is_valid: a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_delete or
-				a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_insert or
-				a_action = {SQLITE_UPDATE_CONSTANTS}.sqlite_update
+			a_action_is_valid: a_action = {SQLITE_UPDATE_ACTION}.delete or
+				a_action = {SQLITE_UPDATE_ACTION}.insert or
+				a_action = {SQLITE_UPDATE_ACTION}.update
 		local
 			l_db_name: STRING
 			l_tb_name: STRING
@@ -833,7 +833,7 @@ feature {NONE} -- Basic operations: Callbacks
 			if attached update_action as l_action then
 				create l_db_name.make_from_c (a_db_name)
 				create l_tb_name.make_from_c (a_tb_name)
-				l_action.call ([a_action, l_db_name, l_tb_name, a_row_id])
+				l_action.call ([create {SQLITE_UPDATE_ACTION}.make (a_action), l_db_name, l_tb_name, a_row_id])
 			end
 		ensure
 			not_is_closed: not is_closed
@@ -875,7 +875,7 @@ feature {NONE} -- Basic operations: Callbacks
 			not_is_closed: not is_closed
 		do
 			if attached progress_handler as l_action then
-				l_action.call (Void)
+				Result := l_action.item (Void)
 			end
 		ensure
 			not_is_closed: not is_closed
@@ -918,7 +918,7 @@ feature {NONE} -- Basic operations: Callbacks
 			not_is_closed: not is_closed
 		do
 			if attached busy_handler as l_action then
-				l_action.call ([a_count])
+				Result := l_action.item ([a_count])
 			end
 		ensure
 			not_is_closed: not is_closed

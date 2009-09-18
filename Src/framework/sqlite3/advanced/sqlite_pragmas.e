@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_PRAGMA_FUNCTIONS
+	SQLITE_PRAGMAS
 
 inherit
 	SQLITE_SHARED_API

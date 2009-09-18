@@ -15,7 +15,7 @@ feature -- Access
 	api: detachable SQLITE_API assign set_api
 			-- The SQLite API the configuration has been applied to.
 
-	threading_mode: INTEGER assign set_threading_mode
+	threading_mode: SQLITE_THREADING_MODE assign set_threading_mode
 			-- Threading mode (single, multi, serialized).
 		do
 			Result := internal_threading_mode.item
@@ -35,15 +35,14 @@ feature -- Element change
 			api_set: api = a_api
 		end
 
-	set_threading_mode (a_mode: INTEGER)
+	set_threading_mode (a_mode: like threading_mode)
 			-- Set SQLite's threading accessiblity mode.
 		require
 			is_config_writable: is_config_writable
-			a_mode_is_valid_threading_mode: is_valid_threading_mode (a_mode)
 		do
 			internal_threading_mode.put (a_mode)
 		ensure
-			threading_mode_set: threading_mode = a_mode
+			threading_mode_set: threading_mode ~ a_mode
 		end
 
 feature -- Status report
@@ -63,16 +62,6 @@ feature -- Status report
 			Result := internal_is_memory_stats_enabled.item
 		end
 
-feature -- Status report: Validation
-
-	is_valid_threading_mode (a_mode: INTEGER): BOOLEAN
-			-- Determines if a mode is a valid threading mode for the configuration
-		do
-			Result := a_mode = {SQLITE_THREADING_MODES}.SQLITE_CONFIG_SINGLETHREAD or
-				a_mode = {SQLITE_THREADING_MODES}.SQLITE_CONFIG_MULTITHREAD or
-				a_mode = {SQLITE_THREADING_MODES}.SQLITE_CONFIG_SERIALIZED
-		end
-
 feature -- Status setting
 
 	set_is_memory_stats_enabled (a_enable: BOOLEAN)
@@ -89,12 +78,12 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_threading_mode: CELL [INTEGER]
+	internal_threading_mode: CELL [SQLITE_THREADING_MODE]
 			-- Process-bound `threading_mode'.
 		note
 			once_status: global
 		once
-			create Result.put ({SQLITE_THREADING_MODES}.SQLITE_CONFIG_SINGLETHREAD)
+			create Result.put ({SQLITE_THREADING_MODE}.single_threaded)
 		end
 
 	internal_is_memory_stats_enabled: CELL [BOOLEAN]
@@ -104,9 +93,6 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (False)
 		end
-
-invariant
-	threading_mode_is_valid_threading_mode: is_valid_threading_mode (threading_mode)
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

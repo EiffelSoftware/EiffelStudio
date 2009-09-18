@@ -116,9 +116,9 @@ feature -- Status report
 			a_column_positive: a_column > 0
 			a_column_small_enough: a_column <= count
 		do
-			Result := type (a_column) = {SQLITE_TYPES}.sqlite_null
+			Result := type (a_column) = {SQLITE_TYPE}.null
 		ensure
-			not_result: not Result implies type (a_column) /= {SQLITE_TYPES}.sqlite_null
+			not_result: not Result implies type (a_column) /= {SQLITE_TYPE}.null
 		end
 
 feature -- Query
@@ -162,15 +162,15 @@ feature -- Query
 		local
 			l_type: like type
 		do
-			l_type := type (a_column).as_integer_32
-			if l_type /= {SQLITE_TYPES}.sqlite_null then
-				if l_type /= {SQLITE_TYPES}.sqlite_blob then
+			l_type := type (a_column)
+			if l_type /= {SQLITE_TYPE}.null then
+				if l_type /= {SQLITE_TYPE}.blob then
 					--Result := blob_value (a_column)
-				elseif l_type /= {SQLITE_TYPES}.sqlite_float then
+				elseif l_type /= {SQLITE_TYPE}.float then
 					create {CELL [REAL_64]}Result.put (real_64_value (a_column))
-				elseif l_type /= {SQLITE_TYPES}.sqlite_integer then
+				elseif l_type /= {SQLITE_TYPE}.integer then
 					create {CELL [INTEGER_64]}Result.put (integer_64_value (a_column))
-				elseif l_type /= {SQLITE_TYPES}.sqlite_text then
+				elseif l_type /= {SQLITE_TYPE}.text then
 					Result := string_value (a_column)
 				else
 					check unknown_type: False end
@@ -178,11 +178,11 @@ feature -- Query
 			end
 		end
 
-	type (a_column: NATURAL): INTEGER
+	type (a_column: NATURAL): SQLITE_TYPE
 			-- Returns the type of the column.
 			--
 			-- `a_column': The column to retrieve the result for.
-			-- `Result': A column type as described in {SQLITE_TYPES}
+			-- `Result': A column type as described in {SQLITE_TYPE}
 		require
 			is_interface_usable: is_interface_usable
 			is_connected: is_connected
@@ -203,7 +203,7 @@ feature -- Query: Value affinity
 --			is_connected: is_connected
 --			a_column_positive: a_column > 0
 --			a_column_small_enough: a_column <= count
---			acceptable_type: type (a_column) /= {SQLITE_TYPES}.sqlite_null
+--			acceptable_type: type (a_column) /= {SQLITE_TYPE}.sqlite_null
 --		local
 --			l_p: POINTER
 --			l_offset: INTEGER

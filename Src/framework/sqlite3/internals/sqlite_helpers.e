@@ -21,14 +21,14 @@ feature -- Query
 			-- `a_code': A result code.
 			-- `Result': True if the result code was a successful code; False for all errors codes.
 		do
-			Result := ({SQLITE_RESULT_CODES}.failure_mask & a_code) = 0 or
-				a_code = {SQLITE_RESULT_CODES}.sqlite_row or
-				a_code = {SQLITE_RESULT_CODES}.sqlite_done
+			Result := ({SQLITE_RESULT_CODE}.failure_mask & a_code) = 0 or else
+				a_code = {SQLITE_RESULT_CODE}.row or
+				a_code = {SQLITE_RESULT_CODE}.done
 		ensure
 			result_is_ok: Result implies (
-				({SQLITE_RESULT_CODES}.failure_mask & a_code) = 0 or
-				a_code = {SQLITE_RESULT_CODES}.sqlite_row or
-				a_code = {SQLITE_RESULT_CODES}.sqlite_done)
+				({SQLITE_RESULT_CODE}.failure_mask & a_code) = 0 or else
+				a_code = {SQLITE_RESULT_CODE}.row or
+				a_code = {SQLITE_RESULT_CODE}.done)
 		end
 
 	frozen sqlite_exception (a_code: INTEGER; a_message: detachable READABLE_STRING_8): SQLITE_EXCEPTION
@@ -41,7 +41,7 @@ feature -- Query
 			not_a_code_sqlite_success: not sqlite_success (a_code)
 			not_a_message_is_empty: attached a_message implies not a_message.is_empty
 		do
-			if (a_code & {SQLITE_RESULT_CODES}.sqlite_ioerr) = {SQLITE_RESULT_CODES}.sqlite_ioerr then
+			if (a_code & {SQLITE_RESULT_CODE}.e_io_err) = {SQLITE_RESULT_CODE}.e_io_err then
 				if attached a_message then
 					create {SQLITE_IO_EXCEPTION}Result.make_with_message (a_code, a_message)
 				else

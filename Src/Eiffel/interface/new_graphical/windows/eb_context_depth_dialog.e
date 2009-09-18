@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		local
 			l: EV_LABEL
 			sep: EV_HORIZONTAL_SEPARATOR
-			hb, hb2, hb_view, hb_cluster: EV_HORIZONTAL_BOX
+			hb, hb2, hb_view: EV_HORIZONTAL_BOX
 			main_vb, vb, vb2, vb_view, vb_include, vb_cluster: EV_VERTICAL_BOX
 			frm, frm2, frm3: EV_FRAME
 		do

@@ -16,7 +16,8 @@ inherit
 		redefine
 			update_for_pick_and_drop,
 			interface,
-			class_style
+			class_style,
+			set_focus
 		end
 
 	EV_SHARED_APPLICATION
@@ -55,19 +56,35 @@ feature {NONE} -- Implementation
 			end
 		end
 
+
+	set_focus
+			-- <Precursor>
+		do
+			-- When separate two editor tabs from a notebook to two editor zones (drag
+			-- a tab out of notebook), after operation, when destroying
+			-- {SD_FEEDBACK_INDICATOR}, the focus would set to the hidden
+			-- "destroyed" notebook's tab box {SD_NOTEBOOK_TAB_BOX}.
+			-- The {SD_NOTEBOOK_TAB_BOX} would be destroyed soon. It would make
+			-- main window lose focus which is annoying.
+			-- We prevent the hidden notebook tab box getting focus here
+			if is_displayed then
+				cwin_set_focus (wel_item)
+			end
+		end
+
 	interface: SD_DRAWING_AREA;
 			-- <Precursor>
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

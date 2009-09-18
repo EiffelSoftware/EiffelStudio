@@ -480,10 +480,12 @@ feature{NONE} -- Implementation
 			l_notebook: SD_NOTEBOOK
 			l_selected: SD_CONTENT
 		do
-			l_notebook := notebook
-			l_selected := l_notebook.selected_item
-			if l_selected /= Void then
-				l_notebook.tab_by_content (l_selected).redraw_selected
+			if has_parent then
+				l_notebook := notebook
+				l_selected := l_notebook.selected_item
+				if l_selected /= Void then
+					l_notebook.tab_by_content (l_selected).redraw_selected
+				end
 			end
 		end
 
@@ -560,14 +562,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

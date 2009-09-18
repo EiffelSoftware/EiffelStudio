@@ -103,6 +103,49 @@ feature -- Error handling primitives
 			warning_list.wipe_out
 		end
 
+	save
+			-- Save current errors and warnings for later `restore'.
+		do
+			saved_error_count := error_list.count
+			saved_warning_count := warning_list.count
+		end
+
+	restore
+			-- Restore `error_list' and `warning_list' to remove any added items since
+			-- last call to `save'.
+		do
+			if error_list.count > saved_error_count then
+				if saved_error_count = 0 then
+						-- The list was empty on save, so we simply remove all added items.
+					error_list.wipe_out
+				else
+					check error_list.valid_index (saved_error_count + 1) end
+					error_list.go_i_th (saved_error_count + 1)
+					from
+					until
+						error_list.count = saved_error_count
+					loop
+						error_list.remove
+					end
+				end
+			end
+			if warning_list.count > saved_warning_count then
+				if saved_warning_count = 0 then
+						-- The list was empty on save, so we simply remove all added items.
+					warning_list.wipe_out
+				else
+					check warning_list.valid_index (saved_warning_count + 1) end
+					warning_list.go_i_th (saved_warning_count + 1)
+					from
+					until
+						warning_list.count = saved_warning_count
+					loop
+						warning_list.remove
+					end
+				end
+			end
+		end
+
 feature -- Status
 
 	has_error: BOOLEAN
@@ -168,6 +211,11 @@ feature {COMPILER_EXPORTER} -- Setting
 		ensure
 			set: error_displayer = ed
 		end
+
+feature {NONE} -- Implementation
+
+	saved_error_count, saved_warning_count: INTEGER
+			-- Number of items in `error_list' and `warning_list' used by `save'/`restore'
 
 invariant
 	error_list_exists: error_list /= Void

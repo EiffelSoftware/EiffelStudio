@@ -14,7 +14,9 @@ inherit
 			set_background_color as set_color,
 			hide as clear
 		redefine
-			clear
+			clear,
+			implementation,
+			create_implementation
 		end
 create
 	make
@@ -25,6 +27,7 @@ feature {NONE} -- Initlization
 			-- Creation method
 		do
 			default_create
+
 			create internal_shared
 			set_transparent (alpha)
 			disable_user_resize
@@ -153,18 +156,27 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	internal_shared: SD_SHARED;
-			-- All singletons.
-note
+	implementation: SD_FEEDBACK_RECT_I
+			-- <Precursor>
+
+	create_implementation
+			-- <Precursor>
+		do
+			create {SD_FEEDBACK_RECT_IMP} implementation.make (Current)
+		end
+
+	internal_shared: SD_SHARED
+			-- All singletons
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

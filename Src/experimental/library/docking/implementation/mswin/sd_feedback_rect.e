@@ -14,7 +14,9 @@ inherit
 			set_background_color as set_color,
 			hide as clear
 		redefine
-			clear
+			clear,
+			implementation,
+			create_implementation
 		end
 create
 	make
@@ -26,6 +28,7 @@ feature {NONE} -- Initlization
 		do
 			create internal_shared
 			default_create
+
 			set_transparent (alpha)
 			disable_user_resize
 			set_color (internal_shared.focused_color)
@@ -113,7 +116,7 @@ feature {NONE} -- Implementation
 			l_result: INTEGER
 		do
 			l_imp ?= implementation
-			check l_imp /= Void end -- Implied by design of Vision2 {EV_POPUP_WINDOW}
+			check l_imp /= Void end -- Implied by basic design of Vision2
 			l_imp.set_ex_style ({WEL_WS_CONSTANTS}.ws_ex_layered)
 			check l_imp /= Void end
 			cwin_setlayeredwindowattributes (l_imp.wel_item, a_alpha, $l_result)
@@ -154,18 +157,30 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	internal_shared: SD_SHARED;
-			-- All singletons.
-note
+	create_implementation
+			-- <Precursor>
+		do
+			create {SD_FEEDBACK_RECT_IMP} implementation.make
+		end
+
+	internal_shared: SD_SHARED
+			-- All singletons
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: SD_FEEDBACK_RECT_I
+			-- <Precursor>
+
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

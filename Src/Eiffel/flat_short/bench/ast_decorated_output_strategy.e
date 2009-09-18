@@ -1722,6 +1722,7 @@ feature {NONE} -- Implementation
 		local
 			l_feat: E_FEATURE
 			l_text_formatter_decorator: like text_formatter_decorator
+			l_class: CLASS_C
 		do
 				-- No type set for this expression?
 			if not expr_type_visiting then
@@ -1732,8 +1733,14 @@ feature {NONE} -- Implementation
 					l_as.target.process (Current)
 					l_text_formatter_decorator.process_symbol_text (ti_dot)
 				end
+
 				if l_as.class_id /= 0 and l_as.routine_ids /= Void then
-					l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
+					if l_as.target /= Void then
+						l_class := system.class_of_id (l_as.class_id)
+					else
+						l_class := current_class
+					end
+					l_feat := feature_in_class (l_class, l_as.routine_ids)
 				else
 					has_error_internal := True
 				end

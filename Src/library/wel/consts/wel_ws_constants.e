@@ -158,6 +158,9 @@ feature -- Extended window styles
 	Ws_ex_layered: INTEGER = 0x00080000
 			-- Declared in Windows as WS_EX_LAYERED
 
+	Ws_ex_noactivate: INTEGER = 0x08000000
+			-- Declared in Windows as WS_EX_NOACTIVATE
+
 feature -- Miscellaneous
 
 	Cw_usedefault: INTEGER = -2147483648;

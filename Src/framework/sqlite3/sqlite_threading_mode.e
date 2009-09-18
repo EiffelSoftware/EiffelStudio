@@ -1,6 +1,6 @@
 note
 	description: "[
-
+		Different threading modes to configure the SQLite API with.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,48 +8,47 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_TYPES
+	SQLITE_THREADING_MODE
 
-feature -- Access
+inherit
+	ENUMERATED_TYPE [INTEGER]
 
-	SQLITE_INTEGER: INTEGER
-			-- Integer column type.
+create
+	make
+
+convert
+	make ({INTEGER}),
+	item: {INTEGER}
+
+feature -- Constants
+
+	single_threaded: INTEGER
 		external
 			"C macro use <sqlite3.h>"
 		alias
-			"SQLITE_INTEGER"
+			"SQLITE_CONFIG_SINGLETHREAD"
 		end
 
-	SQLITE_FLOAT: INTEGER
-			-- Float column type.
+	multi_threaded: INTEGER
 		external
 			"C macro use <sqlite3.h>"
 		alias
-			"SQLITE_FLOAT"
+			"SQLITE_CONFIG_MULTITHREAD"
 		end
 
-	SQLITE_TEXT: INTEGER
-			-- Text column type.
+	multi_threaded_serialized: INTEGER
 		external
 			"C macro use <sqlite3.h>"
 		alias
-			"SQLITE_TEXT"
+			"SQLITE_CONFIG_SERIALIZED"
 		end
 
-	SQLITE_BLOB: INTEGER
-			-- Blob column type.
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_BLOB"
-		end
+feature {NONE} -- Factory
 
-	SQLITE_NULL: INTEGER
-			-- Null columm type.
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_NULL"
+	members: ARRAY [INTEGER]
+			-- <Precursor>
+		once
+			Result := <<single_threaded, multi_threaded, multi_threaded_serialized>>
 		end
 
 ;note

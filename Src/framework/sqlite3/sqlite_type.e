@@ -1,7 +1,6 @@
 note
 	description: "[
-		Extracts the virtual machine instructions generated for a compiled statement. This is not
-		intended for use within an application but for testing, or the enquisitive mind.
+
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,30 +8,66 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_EXPLAIN_QUERY_STATEMENT
+	SQLITE_TYPE
 
 inherit
-	SQLITE_QUERY_STATEMENT
-		redefine
-			compile_statement_string
-		end
+	ENUMERATED_TYPE [INTEGER]
 
 create
 	make
 
-feature {NONE} -- Access
+convert
+	make ({INTEGER}),
+	item: {INTEGER}
 
-	compile_statement_string: STRING
+feature -- Access
+
+	integer: INTEGER
+			-- Integer column type.
+		external
+			"C macro use <sqlite3.h>"
+		alias
+			"SQLITE_INTEGER"
+		end
+
+	float: INTEGER
+			-- Float column type.
+		external
+			"C macro use <sqlite3.h>"
+		alias
+			"SQLITE_FLOAT"
+		end
+
+	text: INTEGER
+			-- Text column type.
+		external
+			"C macro use <sqlite3.h>"
+		alias
+			"SQLITE_TEXT"
+		end
+
+	blob: INTEGER
+			-- Blob column type.
+		external
+			"C macro use <sqlite3.h>"
+		alias
+			"SQLITE_BLOB"
+		end
+
+	null: INTEGER
+			-- Null columm type.
+		external
+			"C macro use <sqlite3.h>"
+		alias
+			"SQLITE_NULL"
+		end
+
+feature {NONE} -- Factory
+
+	members: ARRAY [INTEGER]
 			-- <Precursor>
-		local
-			l_stmt: like statement_string
-		do
-			l_stmt := statement_string
-			create Result.make (l_stmt.count + 8)
-				-- Prepend the EXPLAIN statment to the query to fetch the virtual machine instructions.
-				-- See http://www.sqlite.org/opcode.html
-			Result.append (once "EXPLAIN ")
-			Result.append (l_stmt)
+		once
+			Result := <<integer, float, text, blob, null>>
 		end
 
 ;note

@@ -95,7 +95,7 @@ feature {NONE} -- Clean up
 							-- The statement is still connected with the database
 						if l_db = internal_db then
 							l_result := sqlite3_finalize (l_api, l_stmt)
-							if (l_result & {SQLITE_RESULT_CODES}.mask) = {SQLITE_RESULT_CODES}.sqlite_misuse then
+							if (l_result & {SQLITE_RESULT_CODE}.mask) = {SQLITE_RESULT_CODE}.e_misuse then
 									-- Happens when the DB was closed before the statement was finalized.
 								check is_closed: database.is_closed end
 							else
@@ -352,7 +352,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			from
 				create l_row.make (Current)
 				l_result := sqlite3_step (l_api, l_stmt)
-				l_done := l_result = {SQLITE_RESULT_CODES}.sqlite_done
+				l_done := l_result = {SQLITE_RESULT_CODE}.done
 			until
 				not sqlite_success (l_result) or l_done
 			loop
@@ -379,10 +379,10 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 							-- Abort the last operation
 						l_db.abort
 					else
-						l_done := l_result /= {SQLITE_RESULT_CODES}.sqlite_row
+						l_done := l_result /= {SQLITE_RESULT_CODE}.row
 						if not l_done then
 							l_result := sqlite3_step (l_api, l_stmt)
-							l_done := l_result = {SQLITE_RESULT_CODES}.sqlite_done
+							l_done := l_result = {SQLITE_RESULT_CODE}.done
 						end
 					end
 				else

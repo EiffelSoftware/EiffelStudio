@@ -17,10 +17,22 @@ class
 
 inherit
 	SQLITE_EXCEPTION
+		redefine
+			extended_code
+		end
 
 create
 	make,
 	make_with_message
+
+feature -- Access
+
+	extended_code: INTEGER
+			-- <Precursor>
+			-- See {SQLITE_EXTENDED_IOERR_CODES} for error codes.
+		do
+			Result := Precursor
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

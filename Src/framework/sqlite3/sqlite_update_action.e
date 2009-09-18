@@ -8,29 +8,47 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_UPDATE_CONSTANTS
+	SQLITE_UPDATE_ACTION
+
+inherit
+	ENUMERATED_TYPE [INTEGER]
+
+create
+	make
+
+convert
+	make ({INTEGER}),
+	item: {INTEGER}
 
 feature -- Constants: Update constants
 
-	SQLITE_DELETE: INTEGER
+	delete: INTEGER
 		external
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_DELETE"
 		end
 
-	SQLITE_INSERT: INTEGER
+	insert: INTEGER
 		external
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_INSERT"
 		end
 
-	SQLITE_UPDATE: INTEGER
+	update: INTEGER
 		external
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_UPDATE"
+		end
+
+feature {NONE} -- Factory
+
+	members: ARRAY [INTEGER]
+			-- <Precursor>
+		once
+			Result := <<delete, insert, update>>
 		end
 
 ;note

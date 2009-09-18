@@ -3,7 +3,7 @@ note
 		SQLite C macros used to determine the success/failure of an SQLite API operation.
 		
 		These codes are used by the internals of the SQLite library, but are also used in the
-		SQLite exceptions {SQLITE_EXCEPTION}.
+		SQLite exceptions {e_EXCEPTION}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,17 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_RESULT_CODES
+	SQLITE_RESULT_CODE
+
+inherit
+	ENUMERATED_TYPE [INTEGER]
+
+create
+	make
+
+convert
+	make ({INTEGER}),
+	item: {INTEGER}
 
 feature -- Access
 
@@ -23,7 +33,7 @@ feature -- Access
 
 feature -- Constants: Success
 
-	SQLITE_OK: INTEGER
+	ok: INTEGER
 			-- Successful result.
 		external
 			"C macro use <sqlite3.h>"
@@ -33,7 +43,7 @@ feature -- Constants: Success
 
 feature -- Constants: Failure
 
-	SQLITE_ERROR: INTEGER
+	e_error: INTEGER
 			-- SQL error or missing database.
 		external
 			"C macro use <sqlite3.h>"
@@ -41,7 +51,7 @@ feature -- Constants: Failure
 			"SQLITE_ERROR"
 		end
 
-	SQLITE_INTERNAL: INTEGER
+	e_internal: INTEGER
 			-- Internal logic error in SQLite.
 		external
 			"C macro use <sqlite3.h>"
@@ -49,7 +59,7 @@ feature -- Constants: Failure
 			"SQLITE_INTERNAL"
 		end
 
-	SQLITE_PERM: INTEGER
+	e_perm: INTEGER
 			-- Access permission denied.
 		external
 			"C macro use <sqlite3.h>"
@@ -57,7 +67,7 @@ feature -- Constants: Failure
 			"SQLITE_PERM"
 		end
 
-	SQLITE_ABORT: INTEGER
+	e_abort: INTEGER
 			-- Callback routine requested an abort.
 		external
 			"C macro use <sqlite3.h>"
@@ -65,7 +75,7 @@ feature -- Constants: Failure
 			"SQLITE_ABORT"
 		end
 
-	SQLITE_BUSY: INTEGER
+	e_busy: INTEGER
 			-- The database file is locked.
 		external
 			"C macro use <sqlite3.h>"
@@ -73,7 +83,7 @@ feature -- Constants: Failure
 			"SQLITE_BUSY"
 		end
 
-	SQLITE_LOCKED: INTEGER
+	e_locked: INTEGER
 			-- A table in the database is locked.
 		external
 			"C macro use <sqlite3.h>"
@@ -81,7 +91,7 @@ feature -- Constants: Failure
 			"SQLITE_LOCKED"
 		end
 
-	SQLITE_NOMEM: INTEGER
+	e_no_mem: INTEGER
 			-- A malloc() failed.
 		external
 			"C macro use <sqlite3.h>"
@@ -89,7 +99,7 @@ feature -- Constants: Failure
 			"SQLITE_NOMEM"
 		end
 
-	SQLITE_READONLY: INTEGER
+	e_read_only: INTEGER
 			-- Attempt to write a readonly database.
 		external
 			"C macro use <sqlite3.h>"
@@ -97,7 +107,7 @@ feature -- Constants: Failure
 			"SQLITE_READONLY"
 		end
 
-	SQLITE_INTERRUPT: INTEGER
+	e_interrupt: INTEGER
 			-- Operation terminated by sqlite3_interrupt().
 		external
 			"C macro use <sqlite3.h>"
@@ -105,7 +115,7 @@ feature -- Constants: Failure
 			"SQLITE_INTERRUPT"
 		end
 
-	SQLITE_IOERR: INTEGER
+	e_io_err: INTEGER
 			-- Some kind of disk I/O error occurred.
 		external
 			"C macro use <sqlite3.h>"
@@ -113,7 +123,7 @@ feature -- Constants: Failure
 			"SQLITE_IOERR"
 		end
 
-	SQLITE_CORRUPT: INTEGER
+	e_corrupt: INTEGER
 			-- The database disk image is malformed.
 		external
 			"C macro use <sqlite3.h>"
@@ -121,7 +131,7 @@ feature -- Constants: Failure
 			"SQLITE_CORRUPT"
 		end
 
-	SQLITE_NOTFOUND: INTEGER
+	e_not_found: INTEGER
 			-- NOT USED. Table or record not found.
 		external
 			"C macro use <sqlite3.h>"
@@ -129,7 +139,7 @@ feature -- Constants: Failure
 			"SQLITE_NOTFOUND"
 		end
 
-	SQLITE_FULL: INTEGER
+	e_full: INTEGER
 			-- Insertion failed because database is full.
 		external
 			"C macro use <sqlite3.h>"
@@ -137,7 +147,7 @@ feature -- Constants: Failure
 			"SQLITE_FULL"
 		end
 
-	SQLITE_CANTOPEN: INTEGER
+	e_cant_open: INTEGER
 			-- Unable to open the database file.
 		external
 			"C macro use <sqlite3.h>"
@@ -145,7 +155,7 @@ feature -- Constants: Failure
 			"SQLITE_CANTOPEN"
 		end
 
-	SQLITE_PROTOCOL: INTEGER
+	e_protocol: INTEGER
 			-- NOT USED. Database lock protocol error.
 		external
 			"C macro use <sqlite3.h>"
@@ -153,7 +163,7 @@ feature -- Constants: Failure
 			"SQLITE_PROTOCOL"
 		end
 
-	SQLITE_EMPTY: INTEGER
+	e_empty: INTEGER
 			-- Database is empty.
 		external
 			"C macro use <sqlite3.h>"
@@ -161,7 +171,7 @@ feature -- Constants: Failure
 			"SQLITE_EMPTY"
 		end
 
-	SQLITE_SCHEMA: INTEGER
+	e_schema: INTEGER
 			-- The database schema changed.
 		external
 			"C macro use <sqlite3.h>"
@@ -169,7 +179,7 @@ feature -- Constants: Failure
 			"SQLITE_SCHEMA"
 		end
 
-	SQLITE_TOOBIG: INTEGER
+	e_too_big: INTEGER
 			-- String or BLOB exceeds size limit.
 		external
 			"C macro use <sqlite3.h>"
@@ -177,7 +187,7 @@ feature -- Constants: Failure
 			"SQLITE_TOOBIG"
 		end
 
-	SQLITE_CONSTRAINT: INTEGER
+	e_constraint: INTEGER
 			-- Abort due to constraint violation.
 		external
 			"C macro use <sqlite3.h>"
@@ -185,7 +195,7 @@ feature -- Constants: Failure
 			"SQLITE_CONSTRAINT"
 		end
 
-	SQLITE_MISMATCH: INTEGER
+	e_mismatch: INTEGER
 			-- Data type mismatch.
 		external
 			"C macro use <sqlite3.h>"
@@ -193,7 +203,7 @@ feature -- Constants: Failure
 			"SQLITE_MISMATCH"
 		end
 
-	SQLITE_MISUSE: INTEGER
+	e_misuse: INTEGER
 			-- Library used incorrectly.
 		external
 			"C macro use <sqlite3.h>"
@@ -201,7 +211,7 @@ feature -- Constants: Failure
 			"SQLITE_MISUSE"
 		end
 
-	SQLITE_NOLFS: INTEGER
+	e_nolfs: INTEGER
 			-- Uses OS features not supported on host.
 		external
 			"C macro use <sqlite3.h>"
@@ -209,7 +219,7 @@ feature -- Constants: Failure
 			"SQLITE_NOLFS"
 		end
 
-	SQLITE_AUTH: INTEGER
+	e_auth: INTEGER
 			-- Authorization denied.
 		external
 			"C macro use <sqlite3.h>"
@@ -217,7 +227,7 @@ feature -- Constants: Failure
 			"SQLITE_AUTH"
 		end
 
-	SQLITE_FORMAT: INTEGER
+	e_format: INTEGER
 			-- Auxiliary database format error.
 		external
 			"C macro use <sqlite3.h>"
@@ -225,7 +235,7 @@ feature -- Constants: Failure
 			"SQLITE_FORMAT"
 		end
 
-	SQLITE_RANGE: INTEGER
+	e_range: INTEGER
 			-- 2nd parameter to sqlite3_bind out of range.
 		external
 			"C macro use <sqlite3.h>"
@@ -233,7 +243,7 @@ feature -- Constants: Failure
 			"SQLITE_RANGE"
 		end
 
-	SQLITE_NOTADB: INTEGER
+	e_not_a_db: INTEGER
 			-- File opened that is not a database file.
 		external
 			"C macro use <sqlite3.h>"
@@ -243,7 +253,7 @@ feature -- Constants: Failure
 
 feature -- Constants: Success
 
-	SQLITE_ROW: INTEGER
+	row: INTEGER
 			-- sqlite3_step() has another row ready.
 		external
 			"C macro use <sqlite3.h>"
@@ -251,12 +261,27 @@ feature -- Constants: Success
 			"SQLITE_ROW"
 		end
 
-	SQLITE_DONE: INTEGER
+	done: INTEGER
 			-- sqlite3_step() has finished executing.
 		external
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_DONE"
+		end
+
+feature {NONE} -- Factory
+
+	members: ARRAY [INTEGER]
+			-- <Precursor>
+		once
+			Result := <<
+				ok, e_error, e_internal, e_perm, e_abort, e_busy,
+				e_locked, e_no_mem, e_read_only, e_interrupt, e_io_err,
+				e_corrupt, e_not_found, e_full, e_cant_open, e_protocol,
+				e_empty, e_schema, e_too_big, e_constraint, e_mismatch,
+				e_misuse, e_nolfs, e_auth, e_format, e_range, e_not_a_db,
+				row, done
+			>>
 		end
 
 ;note

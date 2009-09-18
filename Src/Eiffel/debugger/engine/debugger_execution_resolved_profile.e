@@ -112,7 +112,7 @@ feature -- Properties
 	uuid: UUID
 			-- Unique identifier
 
-	title: detachable STRING
+	title: detachable STRING_32
 			-- Optional title
 
 	arguments: STRING

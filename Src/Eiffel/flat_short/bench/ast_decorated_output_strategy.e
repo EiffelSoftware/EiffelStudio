@@ -954,7 +954,7 @@ feature {NONE} -- Implementation
 							l_right_parenthesis_needed := True
 							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
 							l_text_formatter_decorator.put_space
-							if l_feat.is_function then
+							if l_feat.has_return_value then
 								l_text_formatter_decorator.process_keyword_text (ti_current, Void)
 							end
 						else

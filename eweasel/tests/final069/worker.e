@@ -23,13 +23,14 @@ feature
 		local
 			k: INTEGER
 			s: SPECIAL [TEST2]
+			t: TEST2
 		do
 			from
 				k := 1
 			until
 				k > iterations
 			loop
-				create s.make (size)
+				create s.make_filled (t, size)
 				k := k + 1
 			end
 		end;

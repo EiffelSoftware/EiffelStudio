@@ -127,13 +127,25 @@ feature -- Access: Actions
 	commit_action: detachable FUNCTION [ANY, TUPLE, BOOLEAN] assign set_commit_action
 			-- Action called when during the commit transaction.
 			--
-			-- `Result': True to abort a commit; False otherwise.
+			-- 'Result': True to abort a commit; False otherwise.
 
 	rollback_action: detachable PROCEDURE [ANY, TUPLE] assign set_rollback_action
 			-- Action called when during the rollback of a commit.
 
 	update_action: detachable PROCEDURE [ANY, TUPLE [action: INTEGER; db_name: STRING; table: STRING; row: INTEGER_64]] assign set_update_action
 			-- Action called when during the rollback of a commit.
+
+	progress_handler: detachable FUNCTION [ANY, TUPLE, BOOLEAN] assign set_progress_handler
+			-- Progress update handler, called when a long running statement is being executed.
+			-- This handler is useful to prevent UI or other run loops from being blocked.
+			--
+			-- 'Result': True to abort the long running statement; False to continue.
+
+	busy_handler: detachable FUNCTION [ANY, TUPLE [calls: NATURAL], BOOLEAN] assign set_busy_handler
+			-- Handler called when the database is processing an statement and another action has received a busy status.
+			--
+			-- 'calls': Number of calls made to the busy handler.
+			-- 'Result': True to continue waiting; False otherwise.
 
 feature -- Access: Error reporting
 
@@ -203,10 +215,11 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_readable: is_readable
+			not_is_closed: attached a_function implies not is_closed
 			already_set: attached a_function implies not attached commit_action
 		do
 			commit_action := a_function
-			enable_commit_callbacks (attached a_function)
+			enable_commit_callback (attached a_function)
 		ensure
 			commit_action_set: commit_action = a_function
 		end
@@ -221,10 +234,11 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_readable: is_readable
+			not_is_closed: attached a_action implies not is_closed
 			already_set: attached a_action implies not attached rollback_action
 		do
 			rollback_action := a_action
-			enable_rollback_callbacks (attached a_action)
+			enable_rollback_callback (attached a_action)
 		ensure
 			rollback_action_set: rollback_action = a_action
 		end
@@ -238,12 +252,47 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_readable: is_readable
+			not_is_closed: attached a_action implies not is_closed
 			already_set: attached a_action implies not attached update_action
 		do
 			update_action := a_action
-			enable_update_callbacks (attached a_action)
+			enable_update_callback (attached a_action)
 		ensure
 			update_action_set: update_action = a_action
+		end
+
+	set_progress_handler (a_handler: like progress_handler)
+			-- Sets the database progress handler, called when a long running statement is being executed.
+			--
+			-- `a_handler': Handler function called during the long running statement.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_readable: is_readable
+			not_is_closed: attached a_handler implies not is_closed
+			already_set: attached a_handler implies not attached progress_handler
+		do
+			progress_handler := a_handler
+			enable_progress_callback (attached a_handler)
+		ensure
+			progress_handler_set: progress_handler = a_handler
+		end
+
+	set_busy_handler (a_handler: like busy_handler)
+			-- Sets the database busy handler, called when a action is blocked from being processed.
+			--
+			-- `a_handler': Handler function called to determine if a action should continue waiting.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_readable: is_readable
+			not_is_closed: attached a_handler implies not is_closed
+			already_set: attached a_handler implies not attached busy_handler
+		do
+			busy_handler := a_handler
+			enable_busy_callback (attached a_handler)
+		ensure
+			busy_handler_set: busy_handler = a_handler
 		end
 
 feature -- Status report
@@ -485,13 +534,21 @@ feature -- Basic operations
 
 					-- Unregister any update hooks.
 				if attached commit_action then
-					enable_commit_callbacks (False)
+					enable_commit_callback (False)
 				end
 				if attached rollback_action then
-					enable_rollback_callbacks (False)
+					enable_rollback_callback (False)
 				end
 				if attached update_action then
-					enable_update_callbacks (False)
+					enable_update_callback (False)
+				end
+
+					-- Re-enable handlers
+				if attached progress_handler then
+					enable_progress_callback (False)
+				end
+				if attached busy_handler then
+					enable_busy_callback (False)
 				end
 
 					-- Only reset the pointer if there was no failure, because there could still be a lock, which
@@ -621,13 +678,20 @@ feature {NONE} -- Basic operations
 
 					-- Re-enable hooks
 				if attached commit_action then
-					enable_commit_callbacks (True)
+					enable_commit_callback (True)
 				end
 				if attached rollback_action then
-					enable_rollback_callbacks (True)
+					enable_rollback_callback (True)
 				end
 				if attached update_action then
-					enable_update_callbacks (True)
+					enable_update_callback (True)
+				end
+					-- Re-enable handlers
+				if attached progress_handler then
+					enable_progress_callback (True)
+				end
+				if attached busy_handler then
+					enable_busy_callback (True)
 				end
 			else
 				if l_db /= default_pointer then
@@ -647,7 +711,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Basic operations: Callbacks
 
-	enable_commit_callbacks (a_enable: BOOLEAN)
+	enable_commit_callback (a_enable: BOOLEAN)
 			-- Sets up the commit hook for the database.
 			--
 			-- `a_enable': True to enable callbacks; False otherwise.
@@ -685,7 +749,7 @@ feature {NONE} -- Basic operations: Callbacks
 			end
 		end
 
-	enable_rollback_callbacks (a_enable: BOOLEAN)
+	enable_rollback_callback (a_enable: BOOLEAN)
 			-- Sets up the commit rollback hook for the database.
 			--
 			-- `a_enable': True to enable callbacks; False otherwise.
@@ -710,6 +774,8 @@ feature {NONE} -- Basic operations: Callbacks
 					free_cb_data (l_data)
 				end
 			end
+		ensure
+			not_is_closed: not is_closed
 		end
 
 	on_rollback_callback
@@ -721,9 +787,11 @@ feature {NONE} -- Basic operations: Callbacks
 			if attached rollback_action as l_action then
 				l_action.call (Void)
 			end
+		ensure
+			not_is_closed: not is_closed
 		end
 
-	enable_update_callbacks (a_enable: BOOLEAN)
+	enable_update_callback (a_enable: BOOLEAN)
 			-- Sets up the update hook for the database.
 			--
 			-- `a_enable': True to enable callbacks; False otherwise.
@@ -767,6 +835,93 @@ feature {NONE} -- Basic operations: Callbacks
 				create l_tb_name.make_from_c (a_tb_name)
 				l_action.call ([a_action, l_db_name, l_tb_name, a_row_id])
 			end
+		ensure
+			not_is_closed: not is_closed
+		end
+
+	enable_progress_callback (a_enable: BOOLEAN)
+			-- Sets up the progress handler for the database.
+			--
+			-- `a_enable': True to enable the handler; False otherwise.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+			progress_handler_attached: a_enable implies attached progress_handler
+		local
+			l_data: POINTER
+		do
+			if a_enable then
+					-- Create the callback data
+				l_data := new_cb_data ($on_busy, $Current)
+
+					-- Request callbacls from SQLite
+				l_data := sqlite3_progress_handler (sqlite_api, internal_db, l_data)
+				check no_old_callback: l_data = default_pointer end
+			else
+					-- Prevent callbacks from SQLite
+				l_data := sqlite3_progress_handler (sqlite_api, internal_db, default_pointer)
+				if l_data /= default_pointer then
+					free_cb_data (l_data)
+				end
+			end
+		end
+
+	on_progress: BOOLEAN
+			-- Called when the database is running a long running action.
+			--
+			-- `Result': True to abort the statement; False to continue processing.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+		do
+			if attached progress_handler as l_action then
+				l_action.call (Void)
+			end
+		ensure
+			not_is_closed: not is_closed
+		end
+
+	enable_busy_callback (a_enable: BOOLEAN)
+			-- Sets up the busy handler for the database.
+			--
+			-- `a_enable': True to enable the handler; False otherwise.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+			busy_handler_attached: a_enable implies attached busy_handler
+		local
+			l_data: POINTER
+		do
+			if a_enable then
+					-- Create the callback data
+				l_data := new_cb_data ($on_busy, $Current)
+
+					-- Request callbacls from SQLite
+				l_data := sqlite3_busy_handler (sqlite_api, internal_db, l_data)
+				check no_old_callback: l_data = default_pointer end
+			else
+					-- Prevent callbacks from SQLite
+				l_data := sqlite3_busy_handler (sqlite_api, internal_db, default_pointer)
+				if l_data /= default_pointer then
+					free_cb_data (l_data)
+				end
+			end
+		end
+
+	on_busy (a_count: NATURAL): BOOLEAN
+			-- Called when the database is busy, allowing reprocessing of a statement.
+			--
+			-- `a_count': Number of times the busy handler has been called.
+			-- `Result': True to continue waiting; False to return a busy signal.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_closed: not is_closed
+		do
+			if attached busy_handler as l_action then
+				l_action.call ([a_count])
+			end
+		ensure
+			not_is_closed: not is_closed
 		end
 
 feature {SQLITE_INTERNALS} -- Implementation

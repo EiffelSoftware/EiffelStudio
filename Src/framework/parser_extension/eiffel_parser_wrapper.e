@@ -67,57 +67,25 @@ feature -- Basic operation
 			-- `a_ignore_errors': True to remove all errors and warnings from the error handler after a
 			--                    parse has been completed; False to retain them.
 		local
-			l_error_handler: like error_handler
-			l_errors: LIST [ERROR]
-			l_error_index: INTEGER
-			l_warnings: LIST [ERROR]
-			l_warning_index: INTEGER
 			retried: BOOLEAN
+			l_level: NATURAL_32
 		do
 			if not retried then
 				reset
-
-				l_error_handler := error_handler
+				l_level := error_handler.error_level
 				if a_ignore_errors then
-						-- Log last error/warning index
-					l_errors := l_error_handler.error_list
-					if l_errors /= Void then
-						l_error_index := l_errors.count
-					end
-					l_warnings := l_error_handler.warning_list
-					if l_warnings /= Void then
-						l_warning_index := l_warnings.count
-					end
+					error_handler.save
 				else
-					check not_l_error_handler_has_error: l_error_handler.has_error end
+					check not_error_handler_has_error: error_handler.has_error end
 				end
 
 					-- Perform parse
 				a_parser.parse_from_string (a_text.as_string_8, a_context_class)
 
+				has_error := error_handler.error_level /= l_level
 				if a_ignore_errors then
 						-- Remove any added errors
-					l_errors := error_handler.error_list
-					if l_errors /= Void then
-						if l_errors.count > l_error_index then
-							has_error := True
-							l_errors.go_i_th (l_error_index)
-							from until l_errors.count = l_error_index loop
-								l_errors.remove
-							end
-						end
-					end
-					l_warnings := error_handler.warning_list
-					if l_warnings /= Void then
-						if l_warnings.count > l_warning_index then
-							l_warnings.go_i_th (l_warning_index)
-							from until l_warnings.count = l_warning_index loop
-								l_warnings.remove
-							end
-						end
-					end
-				else
-					has_error := l_error_handler.has_error
+					error_handler.restore
 				end
 
 				if not has_error then

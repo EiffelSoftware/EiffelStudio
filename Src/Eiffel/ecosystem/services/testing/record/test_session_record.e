@@ -119,8 +119,6 @@ feature {TEST_SESSION_I} -- Status setting
 			-- Detach `session' and notify `repository'.
 		require
 			running: is_running
-		local
-			l_repo: like repository
 		do
 			internal_session := Void
 			if is_attached then

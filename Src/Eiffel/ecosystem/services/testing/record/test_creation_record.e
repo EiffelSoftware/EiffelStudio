@@ -30,8 +30,6 @@ feature {TEST_CREATION_I} -- Element change
 		require
 			a_name_attached: a_name /= Void
 			not_added_yet: not has_date (a_name)
-		local
-			l_repo: like repository
 		do
 			test_map.force_last (create {DATE_TIME}.make_now, a_name)
 			if is_attached then

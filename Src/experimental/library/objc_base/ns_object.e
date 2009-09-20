@@ -64,7 +64,8 @@ feature {OBJC_CLASS} -- Initialization
 			item := a_ptr
 		ensure
 			item_set: item = a_ptr
-			--proper_reference_counting: {NS_OBJECT_API}.retain_count (a_ptr) = 1
+--			proper_reference_counting: {NS_OBJECT_API}.retain_count (a_ptr) = 1
+-- 			The retain count doesn't give much information since the framework may retain some of our objects in unpredictable ways
 		end
 
 	share_from_pointer (a_ptr: POINTER)
@@ -76,6 +77,10 @@ feature {OBJC_CLASS} -- Initialization
 		do
 			item := a_ptr
 			{NS_OBJECT_API}.retain (a_ptr)
+--			We should make sure that there can only ever be one dual eiffel object for a cocoa object
+--			check
+--				eiffel_dual_not_created: callback_marshal.get_eiffel_object (a_ptr) = Void
+--			end
 		ensure
 			item_set: item = a_ptr
 			--proper_reference_counting: {NS_OBJECT_API}.retain_count (a_ptr) = old {NS_OBJECT_API}.retain_count (a_ptr) + 1

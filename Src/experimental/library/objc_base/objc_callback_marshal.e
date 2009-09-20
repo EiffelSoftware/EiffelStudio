@@ -186,6 +186,7 @@ feature {NONE}
 					end
 					l_agent.set_target (target)
 				else
+					io.put_string ("Object " + (create {NS_OBJECT}.share_from_pointer (a_object)).debug_output + " for callback '" + (create {OBJC_SELECTOR}.make_from_pointer (a_selector)).name + "' not found.%N")
 					check
 						target_object_not_registered: False
 						-- Register the Eiffel-object by calling register_object.

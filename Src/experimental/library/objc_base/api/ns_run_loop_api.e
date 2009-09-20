@@ -69,16 +69,6 @@ feature -- Managing Ports
 			"[(NSRunLoop*)$a_ns_run_loop removePort: $a_port forMode: $a_mode];"
 		end
 
-feature -- Configuring as Server Process
-
-	frozen configure_as_server (a_ns_run_loop: POINTER)
-			-- - (void)configureAsServer
-		external
-			"C inline use <Cocoa/Cocoa.h>"
-		alias
-			"[(NSRunLoop*)$a_ns_run_loop configureAsServer];"
-		end
-
 feature -- Running a Loop
 
 	frozen run (a_ns_run_loop: POINTER)

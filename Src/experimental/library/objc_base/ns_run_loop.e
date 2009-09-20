@@ -65,14 +65,6 @@ feature -- Managing Ports
 --			{NS_RUN_LOOP_API}.remove_port_for_mode (item, a_port.item, a_mode.item)
 --		end
 
-feature -- Configuring as Server Process
-
-	configure_as_server
-			-- Deprecated. Does nothing. (<span style=
-		do
-			{NS_RUN_LOOP_API}.configure_as_server (item)
-		end
-
 feature -- Running a Loop
 
 	run

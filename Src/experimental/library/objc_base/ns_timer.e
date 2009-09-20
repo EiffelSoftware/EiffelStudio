@@ -11,21 +11,13 @@ inherit
 	NS_OBJECT
 
 create
---	scheduled_timer_with_time_interval_invocation_repeats,
 	scheduled_timer,
---	timer_with_time_interval_invocation_repeats,
 	make_timer
 create {NS_OBJECT}
 	make_from_pointer,
 	share_from_pointer
 
 feature {NONE} -- Creating a Timer
-
---	scheduled_timer_with_time_interval_invocation_repeats (a_ti: REAL_64; a_invocation: NS_INVOCATION; a_yes_or_no: BOOLEAN)
---			-- Returns a new `NSTimer' object, scheduled with the current `NSRunLoop' object in the default mode.
---		do
---			make_from_pointer ({NS_TIMER_API}.scheduled_timer_with_time_interval_invocation_repeats (a_ti, a_invocation.item, a_yes_or_no))
---		end
 
 	scheduled_timer (a_ti: REAL_64; a_callback: PROCEDURE [ANY, TUPLE]; a_user_info: detachable NS_OBJECT; a_yes_or_no: BOOLEAN)
 			-- Returns a new `NSTimer' object, scheduled the current `NSRunLoop' object in the default mode.
@@ -37,16 +29,9 @@ feature {NONE} -- Creating a Timer
 			end
 			callback := a_callback
 			callback_item := callbacks_class.create_instance.item
---			callback_marshal.register_object (current)
-			--a_target: NS_OBJECT; a_selector: OBJC_SELECTOR
+			callback_marshal.register_object_for_item (current, callback_item)
 			make_from_pointer ({NS_TIMER_API}.scheduled_timer_with_time_interval_target_selector_user_info_repeats (a_ti, callback_item, selector, l_user_info, a_yes_or_no))
 		end
-
---	timer_with_time_interval_invocation_repeats (a_ti: REAL_64; a_invocation: NS_INVOCATION; a_yes_or_no: BOOLEAN)
---			-- Returns a new `NSTimer' that, when added to a run loop, will fire after a given number of seconds.
---		do
---			make_from_pointer ({NS_TIMER_API}.timer_with_time_interval_invocation_repeats (a_ti, a_invocation.item, a_yes_or_no))
---		end
 
 	make_timer (a_ti: REAL_64; a_callback: PROCEDURE [ANY, TUPLE]; a_user_info: NS_OBJECT; a_yes_or_no: BOOLEAN)
 			-- Returns a new `NSTimer' that, when added to a run loop, will fire after a specified number of seconds.
@@ -58,12 +43,11 @@ feature {NONE} -- Creating a Timer
 			end
 			callback := a_callback
 			callback_item := callbacks_class.create_instance.item
---			callback_marshal.register_object (current)
-			--a_target: NS_OBJECT; a_selector: OBJC_SELECTOR
+			callback_marshal.register_object_for_item (current, callback_item)
 			make_from_pointer ({NS_TIMER_API}.timer_with_time_interval_target_selector_user_info_repeats (a_ti, callback_item, selector, l_user_info, a_yes_or_no))
 		end
 
-	init_with_fire_date_interval_target_selector_user_info_repeats (a_date: NS_DATE; a_ti: REAL_64; a_t: NS_OBJECT; a_s: OBJC_SELECTOR; a_ui: NS_OBJECT; a_rep: BOOLEAN)
+	init_with_date (a_date: NS_DATE; a_ti: REAL_64; a_t: NS_OBJECT; a_s: OBJC_SELECTOR; a_ui: NS_OBJECT; a_rep: BOOLEAN)
 			-- Initializes a new <code>NSTimer</code> that, when added to a run loop, will fire at a given date.
 		do
 			item := {NS_TIMER_API}.init_with_fire_date_interval_target_selector_user_info_repeats (item, a_date.item, a_ti, a_t.item, a_s.item, a_ui.item, a_rep)
@@ -72,7 +56,7 @@ feature {NONE} -- Creating a Timer
 feature -- Firing a Timer
 
 	fire
-			-- Causes the receiver`s message to be sent to its target.
+			-- Causes the receiver's message to be sent to its target.
 		do
 			{NS_TIMER_API}.fire (item)
 		end

@@ -1,6 +1,6 @@
 note
 	description: "Splash displayer."
-	author: "Daniel Furrer <daniel.furrer@gmail.com"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,6 +15,8 @@ inherit
 	EIFFEL_LAYOUT
 
 	NS_ENVIRONEMENT
+
+	NS_STRING_CONSTANTS
 
 create
 	make_with_text
@@ -39,8 +41,8 @@ feature -- Splash displayer
 			create splash_image.make_with_referencing_file (splash_image_file_name)
 
 			create window_rect.make_rect (0, 0, splash_image.size.width, splash_image.size.height)
-			window_rect.origin.x := main_screen.frame.size.width // 2 - splash_image.size.width // 2
-			window_rect.origin.y := main_screen.frame.size.height // 2 - splash_image.size.height // 2
+			window_rect.origin.x := main_screen.frame.size.width / 2 - splash_image.size.width / 2
+			window_rect.origin.y := main_screen.frame.size.height / 2 - splash_image.size.height / 2
 			create window.make (window_rect, {NS_WINDOW}.borderless_window_mask, True)
 			window.set_level ({NS_WINDOW}.modal_panel_window_level)
 			--window.center
@@ -56,10 +58,11 @@ feature -- Splash displayer
 
 	close
 		local
-			timer: NS_TIMER
+			timer1, timer2: NS_TIMER
 		do
-			window.animator.set_alpha_value ({REAL_32}0.0)
-			create timer.scheduled_timer (1.0, agent window.order_out, Void, False)
+			create timer1.scheduled_timer (1.0, agent do window.animator.set_alpha_value ({REAL_32}0.0) end, Void, True)
+
+			create timer2.scheduled_timer (2.0, agent window.order_out, Void, True)
 		end
 
 feature {NONE} -- Implementation

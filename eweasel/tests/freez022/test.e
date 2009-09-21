@@ -13,9 +13,9 @@ feature
 
 	make is
 		local
-			r: REAL
+			r: REAL_32
 		do
-			r := 50.0
+			r := {REAL_32} 50.0
 			r := value (i8)
 			io.put_real (r)
 			io.new_line
@@ -25,7 +25,7 @@ feature
 
 	value (r: DOUBLE): like r is
 		do
-			Result := r
+			Result := r.truncated_to_real
 		end
 
 end

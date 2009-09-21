@@ -17,12 +17,12 @@ feature
 
 	make is
 		local
-			x, real_zero: REAL;
+			x, real_zero: REAL_32;
 			n: INTEGER;
 		do
 			if n = 0 then
-				real_zero := 0.0;
-				x := 1.0 / real_zero;
+				real_zero := {REAL_32} 0.0;
+				x := {REAL_32} 1.0 / real_zero;
 				print (x); io.new_line;
 				io.putreal (x); io.new_line;
 				io.putstring ("Got past divides by zero%N");

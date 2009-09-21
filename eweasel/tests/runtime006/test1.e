@@ -20,7 +20,7 @@ feature
 				-- The allocation is there to force a hook on current
 			create s.make (1)
 			full_collect
-			if not generating_type.is_equal ("TEST1") then
+			if not generating_type.out.is_equal ("TEST1") then
 				io.put_string ("ERROR%N")
 			end
 		end
@@ -31,7 +31,7 @@ feature
 		do
 			create s.make (1)
 			full_collect
-			if not generating_type.is_equal ("TEST1") then
+			if not generating_type.out.is_equal ("TEST1") then
 				io.put_string ("ERROR%N")
 			end
 		end

@@ -7,7 +7,7 @@ feature
 		do
 		ensure
 			same_g: old g = g
-			valid_type: g /= Void implies equal (old g.generating_type, expected_type)
+			valid_type: g /= Void implies equal (old g.generating_type.out, expected_type)
 		end
 
 	expected_type: STRING is

@@ -274,8 +274,8 @@ rt_public int eifthd_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 #endif
 /*------------------------------------------------------------------*/
 
-rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype, int level);
-rt_private void eif_create_typename (EIF_TYPE_INDEX, char*, int level);
+rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype);
+rt_private void eif_create_typename (EIF_TYPE_INDEX, char*);
 rt_private EIF_GEN_DER *eif_new_gen_der(uint32, EIF_TYPE_INDEX*, EIF_TYPE_INDEX, char, char, EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 rt_private void eif_expand_tables(int);
 rt_private EIF_TYPE_INDEX eif_id_of (EIF_TYPE_INDEX**, EIF_TYPE_INDEX**, EIF_TYPE_INDEX);
@@ -1886,12 +1886,12 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 			result = gdp->name;	/* Allocated dynamically! */
 		} else {
 				/* Create dynamic buffer for string */
-			result = cmalloc (eif_typename_len (dftype, 0) + 1);
+			result = cmalloc (eif_typename_len (dftype) + 1);
 			if (result == NULL) {
 				enomem(); 
 			} else {
 				*result = '\0';
-				eif_create_typename (dftype, result, 0);
+				eif_create_typename (dftype, result);
 				CHECK ("Not computed", !(gdp->name))
 				gdp->name = result;
 			}
@@ -1906,7 +1906,7 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 /* dftype : full type id                                            */
 /*------------------------------------------------------------------*/
 
-rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result, int level)
+rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result)
 {
 	EIF_GEN_DER *gdp;
 	EIF_TYPE_INDEX       *gp, dtype, i;
@@ -1935,13 +1935,11 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result, int le
 			if (gdp->name != NULL) {    /* Already computed */
 				strcat (result, gdp->name);
 			} else {
-				if (level > 0) {
-/*					if (!RT_IS_FROZEN_TYPE(gdp->annotation)) {
-						strcat (result, "variant ");
-					} */
-					if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
-						strcat (result, "!");
-					}
+/*				if (!RT_IS_FROZEN_TYPE(gdp->annotation)) {
+					strcat (result, "variant ");
+				} */
+				if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
+					strcat (result, "!");
 				}
 				if (gdp->is_bit) {
 					size = gdp->size;
@@ -1975,7 +1973,7 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result, int le
 						gp = gdp->typearr;
 						while (i--) {
 							dtype = *gp;
-							eif_create_typename (dtype, result, level + 1);
+							eif_create_typename (dtype, result);
 							++gp;
 							if (i) {
 								strcat (result, ", ");
@@ -1994,7 +1992,7 @@ rt_private void eif_create_typename (EIF_TYPE_INDEX dftype, char *result, int le
 /* dftype : full type id                                            */
 /*------------------------------------------------------------------*/
 
-rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype, int level)
+rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype)
 {
 	EIF_GEN_DER *gdp;
 	EIF_TYPE_INDEX *gp, l_dftype;
@@ -2023,13 +2021,11 @@ rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype, int level)
 			if (gdp->name != NULL) {    /* Already computed */
 				len += strlen (gdp->name);
 			} else {
-				if (level > 0) {
-/*					if (!RT_IS_FROZEN_TYPE(gdp->annotation)) {
-						len += 7 + 1; *//* for variant followed by a space */
-/*					} */
-					if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
-						len += 1;	/* for ! */
-					}
+/*				if (!RT_IS_FROZEN_TYPE(gdp->annotation)) {
+					len += 7 + 1; *//* for variant followed by a space */
+/*				} */
+				if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
+					len += 1;	/* for ! */
 				}
 				if (gdp->is_bit) {
 					size = gdp->size;
@@ -2055,7 +2051,7 @@ rt_private size_t eif_typename_len (EIF_TYPE_INDEX dftype, int level)
 						gp = gdp->typearr;
 						while (i--) {
 							l_dftype = *gp;
-							len += eif_typename_len (l_dftype, level + 1);
+							len += eif_typename_len (l_dftype);
 							++gp;
 						}
 					}
@@ -2222,7 +2218,7 @@ rt_public EIF_TYPE_INDEX eif_non_attached_type (EIF_TYPE_INDEX dftype)
 
 	if (gdp && (RT_IS_ATTACHED_TYPE(gdp->annotation))) {
 		nb = gdp->size;
-		if (nb) {
+		if (nb || (gdp->is_tuple)) {
 			if (gdp->is_tuple) {
 				tuple_added_size = 2;
 			} else {
@@ -2278,11 +2274,15 @@ rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
 	if (!gdp || (!RT_IS_ATTACHED_TYPE(gdp->annotation))) {
 		tuple_added_size = 0;
 		if (gdp) {
-			nb = gdp->size;
-			if (gdp->is_tuple) {
-					/* + 2 because we need to store TUPLE_TYPE followed by
-					 * the actual generic parameter count. */
-				tuple_added_size = 2;
+			if (gdp->is_bit) {
+				nb = 1;
+			} else {
+				nb = gdp->size;
+				if (gdp->is_tuple) {
+						/* + 2 because we need to store TUPLE_TYPE followed by
+						* the actual generic parameter count. */
+					tuple_added_size = 2;
+				}
 			}
 		} else {
 			nb = 0;
@@ -2303,12 +2303,17 @@ rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
 		intable[0] = ATTACHED_TYPE;
 		intable[tuple_added_size + 1] = To_dtype(dftype);
 		if (gdp) {
-			if (tuple_added_size) {
-				intable[1] = TUPLE_TYPE;
-				CHECK("valid cound", nb < 0xFFFF);
-				intable[2] = (EIF_TYPE_INDEX) nb;
+			if (gdp->is_bit) {
+				CHECK("not tuple", tuple_added_size == 0);
+				intable [2] = (EIF_TYPE_INDEX) gdp->size;
+			} else {
+				if (tuple_added_size) {
+					intable[1] = TUPLE_TYPE;
+					CHECK("valid cound", nb < 0xFFFF);
+					intable[2] = (EIF_TYPE_INDEX) nb;
+				}
+				memcpy (intable + (tuple_added_size + 2), gdp->typearr, sizeof(EIF_TYPE_INDEX) * nb);
 			}
-			memcpy (intable + (tuple_added_size + 2), gdp->typearr, sizeof(EIF_TYPE_INDEX) * nb);
 		}
 		intable[nb + tuple_added_size + 2] = TERMINATOR;
 		l_result = eif_id_of (&intable, &outtable, dftype);

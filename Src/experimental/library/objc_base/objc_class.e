@@ -264,7 +264,10 @@ feature {NONE} -- Implementation
 				elseif type.is_equal ("TUPLE [POINTER]") then
 					Result.append ("*")
 				elseif type.is_equal ("TUPLE [!NS_OBJECT]") or type.is_equal ("TUPLE [NS_OBJECT]") or
-					type.is_equal ("TUPLE [!NS_EVENT]") or type.is_equal ("TUPLE [NS_EVENT]")  then
+					type.is_equal ("TUPLE [!NS_EVENT]") or type.is_equal ("TUPLE [NS_EVENT]") or
+					type.is_equal ("TUPLE [!NS_NOTIFICATION]") or type.is_equal ("TUPLE [NS_NOTIFICATION]") or
+					type.is_equal ("TUPLE [!NS_WINDOW]") or type.is_equal ("TUPLE [NS_WINDOW]") then
+					-- dynamic_type_from_string (...), generic_dynamic_type(type, i)...
 					Result.append ("*")
 				elseif type.is_equal ("TUPLE [!NS_RECT]") or type.is_equal ("TUPLE [NS_RECT]") then
 					Result.append ("{_NSRect={_NSPoint=ff}{_NSSize=ff}}")

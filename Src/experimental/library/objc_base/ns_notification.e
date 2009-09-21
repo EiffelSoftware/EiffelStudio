@@ -10,7 +10,7 @@ class
 inherit
 	NS_OBJECT
 
-create {NS_OBJECT}
+create {NS_OBJECT, OBJC_CALLBACK_MARSHAL}
 	make_from_pointer,
 	share_from_pointer
 
@@ -38,8 +38,17 @@ feature -- Getting Notification Information
 
 	object: NS_OBJECT
 			-- Returns the object associated with the notification.
+		local
+			l_window: POINTER
 		do
-			create Result.share_from_pointer ({NS_NOTIFICATION_API}.object (item))
+			l_window := {NS_NOTIFICATION_API}.object (item)
+			if l_window /= default_pointer then
+				if attached {NS_OBJECT} callback_marshal.get_eiffel_object (l_window) as res then
+					Result := res
+				else
+					create Result.share_from_pointer (l_window)
+				end
+			end
 		end
 
 	user_info: NS_DICTIONARY

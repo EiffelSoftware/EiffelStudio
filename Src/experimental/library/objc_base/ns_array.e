@@ -114,7 +114,11 @@ feature -- Access
 		do
 			l_object := {NS_ARRAY_API}.object_at_index (object_item, a_index)
 			if l_object /= default_pointer then
-				create Result.share_from_pointer (l_object)
+				if attached {T} callback_marshal.get_eiffel_object (l_object) as l_result then
+					Result := l_result
+				else
+					create Result.share_from_pointer (l_object)
+				end
 			end
 		end
 

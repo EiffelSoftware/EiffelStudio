@@ -40,12 +40,7 @@ feature {NONE} -- Implementation
 				l_dtype := l_dtype_table.item_for_iteration
 				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 					-- Write type name
-				if l_int.is_attached_type (l_dtype) then
-						-- We could use a buffer to speed up things here.
-					l_ser.write_string_8 ("!" + l_int.type_name_of_type (l_dtype))
-				else
-					l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
-				end
+				l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
 				l_dtype_table.forth
 			end
 

@@ -49,7 +49,7 @@ feature
 			create l_c1.make_filled ('%/000/', 10)
 			create l_p.make_filled (default_pointer, 10)
 			create l_r8.make_filled (0.0, 10)
-			create l_r4.make_filled (0.0, 10)
+			create l_r4.make_filled ({REAL_32} 0.0, 10)
 			create l_a.make_filled (Void, 10)
 			create l_exp1.make_filled (exp1, 10)
 			create l_exp2.make_filled (exp2, 10)
@@ -95,7 +95,7 @@ feature
 			l_c1.fill_with ('%/000/', 0, 9)
 			l_p.fill_with (default_pointer, 0, 9)
 			l_r8.fill_with (0.0, 0, 9)
-			l_r4.fill_with (0.0, 0, 9)
+			l_r4.fill_with ({REAL_32} 0.0, 0, 9)
 			l_a.fill_with (Void, 0, 9)
 			l_exp1.fill_with (exp1, 0, 9)
 			l_exp2.fill_with (exp2, 0, 9)
@@ -156,7 +156,7 @@ feature
 		require
 			a_spec_not_void: a_spec /= Void
 		do
-			print (a_spec.generating_type)
+			print (a_spec.generating_type.out)
 			print (" has ")
 			print (a_spec.count)
 			print (" elements.%N")
@@ -167,7 +167,7 @@ feature
 			a_spec_not_void: a_spec /= Void
 		do
 			if not a_spec.filled_with (a_def, a_spec.lower, a_spec.upper) then
-				print (a_spec.generating_type)
+				print (a_spec.generating_type.out)
 				print (" does not have all default elements.%N")
 			end
 		end

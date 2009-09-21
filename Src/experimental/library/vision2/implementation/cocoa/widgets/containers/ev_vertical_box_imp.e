@@ -1,6 +1,6 @@
 note
 	description: "EiffelVision vertical box. Puts child widgets in a column. Cocoa implementation."
-	author:	"Daniel Furrer"
+	author:	"Daniel Furrer <daniel.furrer@gmail.com>"
 	keywords: "container, box, vertical"
 	date: "$Date$"
 	revision: "$Revision$"

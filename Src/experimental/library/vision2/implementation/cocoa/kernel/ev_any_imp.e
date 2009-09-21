@@ -2,7 +2,7 @@ note
 	description:
 		"Base class for Cocoa implementation (_IMP) classes. %N%
 		%Handles interaction between Eiffel objects and Cocoa objects"
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 
 
 deferred class

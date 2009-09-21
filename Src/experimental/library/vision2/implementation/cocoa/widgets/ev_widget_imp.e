@@ -95,7 +95,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 		do
 			if attached cocoa_view then
 				--io.put_string ("Calling on_size_change of " + current.generator + " " + object_id.out + " (" + attached_view.item.out + ") with:" + a_notification.object.item.out + "%N")
-				if attached_view.item /= a_notification.object.item then
+				if a_notification.object.item /= attached_view.item then
 					io.put_string ("Incorrect callback to on_size_change: " + current.generator + " " + object_id.out + " (item " + attached_view.item.out + " but got " + a_notification.object.item.out + ")%N")
 				end
 				l_width := width

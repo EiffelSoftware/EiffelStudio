@@ -2,7 +2,7 @@ note
 	description: "EiffelVision application, Cocoa implementation."
 	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	todo: "[
-		- Locking is the same as in the mswin implementation. Promote to implementation interface.
+
 	]"
 
 class
@@ -13,11 +13,6 @@ inherit
 		export
 			{EV_PICK_AND_DROPABLE_IMP}
 				captured_widget
-			{EV_INTERMEDIARY_ROUTINES}
-				pointer_motion_actions_internal,
-				pointer_button_press_actions_internal,
-				pointer_double_press_actions_internal,
-				pointer_button_release_actions_internal
 		redefine
 			make,
 			dispose
@@ -144,41 +139,41 @@ feature -- Basic operation
 				-- We are translating and forwarding the Cocoa events to Vision events here, but this way of doing it has its problems.
 				-- (E.g. because modal windows have their own event loop)
 				-- We already hanlde things better in EV_DRAWING_AREA_IMP and this is how all widgets should wirk in the future.
-				if event.type = {NS_EVENT}.left_mouse_down or event.type = {NS_EVENT}.right_mouse_down or event.type = {NS_EVENT}.other_mouse_down
-					or event.type = {NS_EVENT}.left_mouse_up or event.type = {NS_EVENT}.right_mouse_up or event.type = {NS_EVENT}.other_mouse_up then
-					view := event.window.content_view.hit_test (event.location_in_window)
-					--io.output.put_string ("MouseDown event at " + event.location_in_window.out + " in object of type " + view.class_.name + "  " + view.generating_type + "%N")
+--				if event.type = {NS_EVENT}.left_mouse_down or event.type = {NS_EVENT}.right_mouse_down or event.type = {NS_EVENT}.other_mouse_down
+--					or event.type = {NS_EVENT}.left_mouse_up or event.type = {NS_EVENT}.right_mouse_up or event.type = {NS_EVENT}.other_mouse_up then
+--					view := event.window.content_view.hit_test (event.location_in_window)
+--					--io.output.put_string ("MouseDown event at " + event.location_in_window.out + " in object of type " + view.class_.name + "  " + view.generating_type + "%N")
 
-					if attached {EV_WIDGET_IMP} view as widget then
-						create pointer_button_action
-						point := event.window.content_view.convert_point_to_view (event.location_in_window, widget.cocoa_view)
-						pointer_button_action.x := point.x.rounded
-						pointer_button_action.y := point.y.rounded
-						point := event.window.convert_base_to_screen_top_left (event.location_in_window)
-						pointer_button_action.screen_x := point.x.rounded
-						pointer_button_action.screen_y := point.y.rounded
-						pointer_button_action.button :=	event.button_number + 1
-						if event.type = {NS_EVENT}.left_mouse_up or event.type = {NS_EVENT}.right_mouse_up or event.type = {NS_EVENT}.other_mouse_up then
-							widget.pointer_button_release_actions.call (pointer_button_action)
-						else
-							widget.pointer_button_press_actions.call (pointer_button_action)
-						end
-					end
-				elseif event.type = {NS_EVENT}.mouse_moved then
-					view := event.window.content_view.hit_test (event.location_in_window)
-					--io.output.put_string ("Move event at " + event.location_in_window.out + " in object of type " + view.class_.name + "  " + view.generating_type + "%N")
-
-					if attached {EV_WIDGET_IMP} view as widget then
-						create pointer_motion_action
-						point := event.window.content_view.convert_point_to_view (event.location_in_window, widget.cocoa_view)
-						pointer_motion_action.x := point.x.rounded
-						pointer_motion_action.y := point.y.rounded
+--					if attached {EV_WIDGET_IMP} view as widget then
+--						create pointer_button_action
+--						point := event.window.content_view.convert_point_to_view (event.location_in_window, widget.cocoa_view)
+--						pointer_button_action.x := point.x.rounded
+--						pointer_button_action.y := point.y.rounded
 --						point := event.window.convert_base_to_screen_top_left (event.location_in_window)
---						pointer_button_action.screen_x := point.x
---						pointer_button_action.screen_y := point.y
-						widget.pointer_motion_actions.call (pointer_motion_action)
-					end
-				end
+--						pointer_button_action.screen_x := point.x.rounded
+--						pointer_button_action.screen_y := point.y.rounded
+--						pointer_button_action.button :=	event.button_number + 1
+--						if event.type = {NS_EVENT}.left_mouse_up or event.type = {NS_EVENT}.right_mouse_up or event.type = {NS_EVENT}.other_mouse_up then
+--							widget.pointer_button_release_actions.call (pointer_button_action)
+--						else
+--							widget.pointer_button_press_actions.call (pointer_button_action)
+--						end
+--					end
+--				elseif event.type = {NS_EVENT}.mouse_moved then
+--					view := event.window.content_view.hit_test (event.location_in_window)
+--					--io.output.put_string ("Move event at " + event.location_in_window.out + " in object of type " + view.class_.name + "  " + view.generating_type + "%N")
+
+--					if attached {EV_WIDGET_IMP} view as widget then
+--						create pointer_motion_action
+--						point := event.window.content_view.convert_point_to_view (event.location_in_window, widget.cocoa_view)
+--						pointer_motion_action.x := point.x.rounded
+--						pointer_motion_action.y := point.y.rounded
+----						point := event.window.convert_base_to_screen_top_left (event.location_in_window)
+----						pointer_button_action.screen_x := point.x
+----						pointer_button_action.screen_y := point.y
+--						widget.pointer_motion_actions.call (pointer_motion_action)
+--					end
+--				end
 				send_event (event)
 				update_windows
 				event := next_event ({NS_APPLICATION_API}.ns_any_event_mask, Void, default_run_loop_mode, true)

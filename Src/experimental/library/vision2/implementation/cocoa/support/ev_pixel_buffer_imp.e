@@ -1,6 +1,6 @@
 note
 	description: "Cocoa implementation for EV_PIXEL_BUFFER_I."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
 	date: "$Date$"
 	revision: "$Revision$"

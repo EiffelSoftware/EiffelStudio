@@ -119,7 +119,7 @@ feature -- Access
 		local
 			l_subviews: NS_ARRAY [NS_VIEW]
 		do
-			l_subviews := attached_view.subviews
+			l_subviews := attached_view.subviews.twin
 			from
 				l_subviews.start
 			until

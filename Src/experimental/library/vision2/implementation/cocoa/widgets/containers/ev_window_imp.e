@@ -58,9 +58,7 @@ inherit
 			key_up
 		redefine
 			dispose,
-			set_size,
-			window_did_resize,
-			window_did_move
+			set_size
 		end
 
 	EV_NS_RESPONDER
@@ -76,6 +74,8 @@ feature {NONE} -- Initialization
 			-- The `vbox' will be able to contain the menu bar, the `hbox'
 			-- and the status bar.
 			-- The `hbox' will contain the child of the window.
+		local
+			l_delegate: NS_WINDOW_DELEGATE
 		do
 			cocoa_make (new_window_position, window_mask, True)
 			make_key_and_order_front (content_view)
@@ -92,9 +92,20 @@ feature {NONE} -- Initialization
 			initialize
 
 			init_bars
---			create_delegate
---			set_delegate (current)
-			init_delegate
+			create l_delegate
+			set_delegate (l_delegate)
+			l_delegate.window_did_resize_actions.extend (agent (a_notification: NS_NOTIFICATION)
+				do
+					if attached {EV_WINDOW_IMP} a_notification.object as l_window then
+						l_window.window_did_resize
+					end
+				end)
+			l_delegate.window_did_move_actions.extend (agent (a_notification: NS_NOTIFICATION)
+				do
+					if attached {EV_WINDOW_IMP} a_notification.object as l_window then
+						l_window.window_did_move
+					end
+				end)
 			app_implementation.windows_imp.extend (current)
 
 			internal_is_border_enabled := True

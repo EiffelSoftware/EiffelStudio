@@ -185,11 +185,14 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		end
 
 	has_duplicated_items: BOOLEAN
+			-- True if any of the items in the list occurrs more than once
 		local
 			l_radio_group: like radio_group
+			l_cur: LINKED_LIST_CURSOR [like Current]
 		do
 			l_radio_group := radio_group
 			check l_radio_group /= Void end
+			l_cur := l_radio_group.cursor
 			from
 				l_radio_group.start
 			until
@@ -200,6 +203,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 				end
 				l_radio_group.forth
 			end
+			l_radio_group.go_to (l_cur)
 		end
 
 invariant

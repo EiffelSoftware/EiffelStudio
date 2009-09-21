@@ -121,7 +121,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 	extra_text_spacing: INTEGER
 			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
 		do
-			Result := 6
+			Result := 4
 		end
 
 	string_size (a_string: STRING_GENERAL; a_font: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])

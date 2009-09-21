@@ -900,7 +900,9 @@ feature {NONE} -- Implementation
 									-- We are already in a nested call like: xyz.a.f.*
 									-- So `last_type', last_class are the ones from "a" and
 									-- `l_rout_id_set' is the one of f
-								if not last_type.is_none then
+								if last_type.is_none then
+										-- The target has been redefined as {NONE}.
+										-- We use the written class gotten from `l_as.class_id'.
 									if l_as.class_id /= 0 then
 											-- Class ID may be zero if an incomplete compilation has occurred.
 											-- Protection prevents infinitely looping and memory usage (see bug#13300)
@@ -949,7 +951,7 @@ feature {NONE} -- Implementation
 							l_text_formatter_decorator.process_keyword_text (ti_current, Void)
 							l_text_formatter_decorator.put_space
 							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
-						elseif l_feat.is_prefix then
+						elseif l_feat.is_prefix and then not l_as.is_qualified then
 							l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 							l_right_parenthesis_needed := True
 							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)

@@ -4,6 +4,7 @@
 	revision:	"$Revision$"
 	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	source:		"http://www.cse.wustl.edu/~schmidt/win32-cv-1.html"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
@@ -82,27 +83,11 @@ int pthread_cond_wait (pthread_cond_t *cv, pthread_mutex_t external_mutex)
 		/* must be locked by the caller.     */
 	cv->waiters_++;
 
-#if defined (SIGNAL_OBJECT_AND_WAIT) /* NT 4.0 only */
 		/* This call will automatically release     */
 		/* the mutex and wait on the semaphore      */
 		/* until cond_signal() or cond_broadcast()  */
 		/* are called by another thread.            */
 	result = SignalObjectAndWait (external_mutex, cv->sema_, INFINITE, FALSE);
-
-#else /* NT 3.51 or Win95 */
-		/* Keep the lock held just long enough to        */
-		/* increment the count of waiters by one.        */
-		/* We can't keep it held across the call         */
-		/* to WaitForSingleObject() since that will      */
-		/* deadlock other calls to pthread_cond_signal() */
-		/* and pthread_cond_broadcast().                 */
-	ReleaseMutex (external_mutex);
-
-	/* Wait to be awakened by a pthread_cond_signal() or */
-	/* pthread_cond_broadcast().                         */
-	result = WaitForSingleObject (cv->sema_, INFINITE);
-
-#endif /* SIGNAL_OBJECT_AND_WAIT */
 
 	if (result != WAIT_FAILED) {
 			/* Reacquire lock to avoid race conditions.*/
@@ -137,27 +122,11 @@ int pthread_cond_timedwait (pthread_cond_t *cv, pthread_mutex_t external_mutex, 
 		/* must be locked by the caller.     */
 	cv->waiters_++;
 
-#if defined (SIGNAL_OBJECT_AND_WAIT) /* NT 4.0 only */
 		/* This call will automatically release     */
 		/* the mutex and wait on the semaphore      */
 		/* until cond_signal() or cond_broadcast()  */
 		/* are called by another thread.            */
 	result = SignalObjectAndWait (external_mutex, cv->sema_, timeout, FALSE);
-#else /* NT 3.51 or Win95 */
-		/* Keep the lock held just long enough to        */
-		/* increment the count of waiters by one.        */
-		/* We can't keep it held across the call         */
-		/* to WaitForSingleObject() since that will      */
-		/* deadlock other calls to pthread_cond_signal() */
-		/* and pthread_cond_broadcast().                 */
-	ReleaseMutex (external_mutex);
-
-		/* Wait to be awakened by a pthread_cond_signal() or */
-		/* pthread_cond_broadcast().                         */
-	result = WaitForSingleObject (cv->sema_, timeout);
-
-#endif /* SIGNAL_OBJECT_AND_WAIT */
-	
 
 	if (result != WAIT_FAILED) {
 			/* Reacquire lock to avoid race conditions.*/

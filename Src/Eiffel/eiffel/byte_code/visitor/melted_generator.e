@@ -1663,13 +1663,30 @@ feature {NONE} -- Visitors
 		local
 			l_type_creator: CREATE_INFO
 		do
-			fixme ("Instance should be unique.")
 			ba.append (Bc_create_type)
 				-- There is no feature call:
 			ba.append_boolean (False)
 
 			l_type_creator := a_node.type_type.create_info
 			l_type_creator.make_byte_code (ba)
+
+				-- Because `l_type_creator' discards the attachment mark if any, we need
+				-- to take it into account to create the proper type.
+				-- First boolean is to figure out if there is an action to be taken, the
+				-- second which action.
+			if attached {ATTACHABLE_TYPE_A} a_node.type_type as l_type then
+				if l_type.is_attached then
+					ba.append_boolean (True)
+					ba.append_boolean (True)
+				elseif l_type.has_detachable_mark then
+					ba.append_boolean (True)
+					ba.append_boolean (False)
+				else
+					ba.append_boolean (False)
+				end
+			else
+				ba.append_boolean (False)
+			end
 
 				-- Runtime is in charge to make sure that newly created object
 				-- has been duplicated so that we can check the invariant.

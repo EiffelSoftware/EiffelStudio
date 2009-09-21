@@ -2074,7 +2074,16 @@ rt_private void interpret(int flag, int where)
 
 			stagval = tagval;
 			if (is_type_creation) {
-				new_obj = RTLNTY(type);		/* Create new TYPE instance. */
+					/* Create the proper type instance. */
+				if (*IC++) {
+					if (*IC++) {
+						new_obj = RTLNTY(eif_attached_type (type));
+					} else {
+						new_obj = RTLNTY(eif_non_attached_type (type));
+					}
+				} else {
+					new_obj = RTLNTY(type);
+				}
 			} else {
 				new_obj = RTLNSMART(type);	/* Create new object */
 			}
@@ -4482,7 +4491,14 @@ rt_private void eif_interp_builtins (struct stochunk *stack_cur, EIF_TYPED_VALUE
 			break;
 
 		case BC_BUILTIN_TYPE__DEFAULT:
-				/* Nothing to be done, already done by interpreter when initializing Result. */
+				/* Nothing to be done except check the precondition as the initialization of Result
+				 * is already done by interpreter. */
+			RTCT("has_default", EX_PRE);
+			if (eif_builtin_TYPE_has_default(icurrent->it_ref)) {
+				RTCK;
+			} else {
+				RTCF;
+			}
 			break;
 
 		case BC_BUILTIN_TYPE__TYPE_ID:

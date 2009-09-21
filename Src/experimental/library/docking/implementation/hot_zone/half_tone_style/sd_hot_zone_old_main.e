@@ -146,17 +146,25 @@ feature  -- Redefine
 		local
 			l_platform: PLATFORM
 			l_window: EV_WINDOW
+			l_main_window: EV_WINDOW
 		do
 			create l_platform
 			if l_platform.is_windows then
-				internal_mediator.docking_manager.main_window.set_pointer_style (a_pointer_style)
+				l_main_window :=  internal_mediator.docking_manager.main_window
+				-- Have to check if `main_window' destroyed, see bug#13201
+				if not l_main_window.is_destroyed then
+					l_main_window.set_pointer_style (a_pointer_style)
+				end
 			else
 				l_window := internal_mediator.caller_top_window
 
 				if attached {SD_FLOATING_ZONE} l_window as lt_floating_zone then
 					lt_floating_zone.set_pointer_style_for_border (a_pointer_style)
 				end
-				l_window.set_pointer_style (a_pointer_style)
+				-- Have to check if `l_window' attached, see bug#13201
+				if l_window /= Void then
+					l_window.set_pointer_style (a_pointer_style)
+				end
 			end
 		end
 
@@ -201,14 +209,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

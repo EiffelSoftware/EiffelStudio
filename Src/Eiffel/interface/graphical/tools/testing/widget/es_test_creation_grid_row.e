@@ -12,8 +12,10 @@ class
 inherit
 	ES_TEST_RECORD_GRID_ROW [TEST_CREATION_I, TEST_CREATION_RECORD]
 		redefine
-			attach_session,
-			detach_session
+			make_running,
+			detach_session,
+			show_content,
+			clear_content
 		end
 
 	TEST_CREATION_OBSERVER
@@ -22,7 +24,16 @@ inherit
 		end
 
 create
-	make
+	make, make_running
+
+feature {NONE} -- Initialization
+
+	make_running (a_session: like session; a_row: like row; a_icons_provider: like icons_provider)
+			-- <Precursor>
+		do
+			Precursor (a_session, a_row, a_icons_provider)
+			session.creation_connection.connect_events (Current)
+		end
 
 feature {NONE} -- Access
 
@@ -54,20 +65,19 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Basic operations
 
-	fill_subrows
+	show_content
 			-- <Precursor>
 		do
+			Precursor
+		end
 
+	clear_content
+			-- <Precursor>
+		do
+			Precursor
 		end
 
 feature {ES_TEST_RECORDS_TAB} -- Status setting
-
-	attach_session (a_session: like session)
-			-- <Precursor>
-		do
-			Precursor (a_session)
-			a_session.creation_connection.connect_events (Current)
-		end
 
 	detach_session
 			-- <Precursor>
@@ -84,10 +94,12 @@ feature {TEST_CREATION_I} -- Events
 			l_pos: INTEGER
 			l_label: EV_GRID_LABEL_ITEM
 		do
-			l_pos := 1 + row.subrow_count_recursive
-			row.insert_subrow (l_pos)
-			create l_label.make_with_text (a_test.as_string_8)
-			row.subrow (l_pos).set_item (1, l_label)
+			if is_expanded then
+				l_pos := 1 + row.subrow_count_recursive
+				row.insert_subrow (l_pos)
+				create l_label.make_with_text (a_test.as_string_8)
+				row.subrow (l_pos).set_item (1, l_label)
+			end
 		end
 
 note

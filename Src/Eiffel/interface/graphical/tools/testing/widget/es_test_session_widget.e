@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ES_TEST_SESSION_WIDGET_NEW [G -> TEST_SESSION_I]
+	ES_TEST_SESSION_WIDGET [G -> TEST_SESSION_I]
 
 inherit
 	ES_WIDGET [EV_VERTICAL_BOX]

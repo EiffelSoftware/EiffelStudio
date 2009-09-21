@@ -10,7 +10,7 @@ class
 	ES_TEST_TREE
 
 inherit
-	ES_TEST_SESSION_WIDGET_NEW [TEST_RETRIEVAL_I]
+	ES_TEST_SESSION_WIDGET [TEST_RETRIEVAL_I]
 		rename
 			make as make_widget
 		undefine
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization: pre
 		local
 			l_et: KL_STRING_EQUALITY_TESTER_A [STRING]
 		do
-			Precursor {ES_TEST_SESSION_WIDGET_NEW}
+			Precursor {ES_TEST_SESSION_WIDGET}
 			create l_et
 			create view_templates.make (5)
 			view_templates.set_equality_tester (l_et)
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization (post)
 	on_after_initialized
 			-- <Precursor>
 		do
-			Precursor {ES_TEST_SESSION_WIDGET_NEW}
+			Precursor {ES_TEST_SESSION_WIDGET}
 			perform_with_test_suite (
 				agent (a_test_suite: TEST_SUITE_S)
 					do

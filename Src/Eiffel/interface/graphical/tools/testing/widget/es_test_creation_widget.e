@@ -10,7 +10,7 @@ class
 	ES_TEST_CREATION_WIDGET
 
 inherit
-	ES_TEST_RECORDS_TAB [TEST_CREATION_I, TEST_CREATION_RECORD]
+	ES_TEST_RECORDS_TAB [TEST_CREATION_I, TEST_CREATION_RECORD, ES_TEST_CREATION_GRID_ROW]
 
 create
 	make
@@ -21,14 +21,6 @@ feature {NONE} -- Access
 			-- <Precursor>
 		do
 			Result := a_session.record
-		end
-
-feature {NONE} -- Factory
-
-	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_CREATION_GRID_ROW
-			-- <Precursor>
-		do
-			create Result.make (a_record, a_row, icons_provider)
 		end
 
 note

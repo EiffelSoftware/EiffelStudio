@@ -1,6 +1,6 @@
 note
 	description: "Wrapper for NSImage."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,9 +11,14 @@ inherit
 	NS_OBJECT
 		undefine
 			copy
+		redefine
+			is_equal
 		end
 
 	NS_COPYING
+		redefine
+			is_equal
+		end
 
 create
 	make_with_referencing_file,
@@ -196,6 +201,12 @@ feature -- Contract Support
 			 	composite_source_over, composite_source_in, composite_source_out, composite_source_atop,
 			 	composite_destination_over, composite_destination_in, composite_destination_out, composite_destination_atop,
 			 	composite_xor, composite_plus_darker, composite_plus_lighter>>).has (a_natural)
+		end
+
+	is_equal (other: like Current): BOOLEAN
+			-- NSImage's isEqual seems to be broken and violating the postcondition of {ANY}.copy
+		do
+			Result := size.width = other.size.width and size.height = other.size.height
 		end
 
 feature -- NSCompositingOperation Constants

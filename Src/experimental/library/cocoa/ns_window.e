@@ -9,9 +9,6 @@ class
 
 inherit
 	NS_RESPONDER
-		redefine
-			dispose
-		end
 
 	NS_ANIMATABLE_PROPERTY_CONTAINER [NS_WINDOW]
 		undefine
@@ -25,17 +22,10 @@ inherit
 
 create
 	make
-create {NS_OBJECT}
+create {NS_OBJECT, OBJC_CALLBACK_MARSHAL}
 	share_from_pointer
 
 feature {NONE} -- Creating Windows
-
-	dispose
-			--
-		do
-			Precursor {NS_RESPONDER}
-			print ("NS_WINDOW collected " + ($Current).out + "%N")
-		end
 
 	make (a_rect: NS_RECT; a_style_mask: NATURAL; a_defer: BOOLEAN)
 			-- Create a new window
@@ -55,44 +45,7 @@ feature {NONE} -- Creating Windows
 			Result.register
 		end
 
-	delegate: detachable NS_OBJECT
-
-feature -- Delegate Methods
-
-	init_delegate
-		local
-			l_delegate: like delegate
-		do
-			l_delegate := window_delegate_class.create_instance
-			if attached l_delegate then
-				l_delegate.init
-				{NS_WINDOW_API}.set_delegate (item, l_delegate.item)
-				callback_marshal.register_object_for_item (Current, l_delegate.item)
-				delegate := l_delegate
-			end
-		end
-
-	window_delegate_class: OBJC_CLASS
-			-- An Objective-C class which has the selectors of the delegate
-		once
-			create Result.make_with_name ("EiffelWrapperWindowDelegate")
-			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSObject"))
-			Result.add_method ("windowDidResize:", agent (a_ptr: POINTER) do window_did_resize end)
-			Result.add_method ("windowDidMove:", agent (a_ptr: POINTER) do window_did_move end)
-			-- windowDidBecomeKey:
-			-- windowDidResignKey:
-			-- windowShouldClose: / windowWillClose:
-			Result.register
-		end
-
-	window_did_resize
-			-- Sent by the default notification center immediately after an NSWindow object has been moved.
-		do
-		end
-
-	window_did_move
-		do
-		end
+	delegate: detachable NS_WINDOW_DELEGATE
 
 feature -- Configuring windows
 
@@ -422,7 +375,8 @@ feature -- Managing Titles
 
 	set_delegate (a_delegate: NS_WINDOW_DELEGATE)
 		do
-			{NS_WINDOW_API}.set_delegate (item, a_delegate.delegate_item)
+			delegate := a_delegate
+			{NS_WINDOW_API}.set_delegate (item, a_delegate.item)
 		end
 
 	convert_base_to_screen (a_point: NS_POINT): NS_POINT
@@ -601,8 +555,15 @@ feature -- Managing Responders
 
 	first_responder: NS_RESPONDER
 			-- Returns the window`s first responder.
+		local
+			l_ptr: POINTER
 		do
-			create Result.share_from_pointer ({NS_WINDOW_API}.first_responder (item))
+			l_ptr := {NS_WINDOW_API}.first_responder (item)
+			if attached {NS_RESPONDER} callback_marshal.get_eiffel_object (l_ptr) as l_result then
+				Result := l_result
+			else
+				create Result.share_from_pointer (l_ptr)
+			end
 		end
 
 	set_initial_first_responder (a_view: NS_VIEW)

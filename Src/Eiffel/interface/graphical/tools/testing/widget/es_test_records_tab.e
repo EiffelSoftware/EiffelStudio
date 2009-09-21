@@ -7,10 +7,10 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ES_TEST_RECORDS_TAB [G -> TEST_SESSION_I, H -> TEST_SESSION_RECORD]
+	ES_TEST_RECORDS_TAB [G -> TEST_SESSION_I, H -> TEST_SESSION_RECORD, J -> ES_TEST_RECORD_GRID_ROW [G, H] create make, make_running end]
 
 inherit
-	ES_TEST_SESSION_WIDGET_NEW [G]
+	ES_TEST_SESSION_WIDGET [G]
 		rename
 			make as make_session_widget
 		undefine
@@ -18,9 +18,7 @@ inherit
 		redefine
 			on_before_initialize,
 			on_after_initialized,
-			internal_recycle,
-			on_typed_session_launched,
-			on_typed_session_finished
+			internal_recycle
 		end
 
 	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
@@ -35,7 +33,9 @@ inherit
 	TEST_RECORD_REPOSITORY_OBSERVER
 		redefine
 			on_record_added,
-			on_record_removed
+			on_record_removed,
+			on_record_updated,
+			on_record_property_updated
 		end
 
 feature {NONE} -- Initialization
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			l_col.header_item.set_text ("Results")
 
 			l_col := l_grid.column (2)
-			l_col.set_width (20)
+			l_col.set_width (150)
 
 			l_col := l_grid.column (3)
 			l_col.set_width (20)
@@ -94,14 +94,14 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- <Precursor>
 		do
-			Precursor {ES_TEST_SESSION_WIDGET_NEW}
+			Precursor {ES_TEST_SESSION_WIDGET}
 			create records.make_default
 		end
 
 	on_after_initialized
 			-- <Precursor>
 		do
-			Precursor {ES_TEST_SESSION_WIDGET_NEW}
+			Precursor {ES_TEST_SESSION_WIDGET}
 			perform_with_test_suite (
 				agent (a_test_suite: TEST_SUITE_S)
 					local
@@ -118,7 +118,7 @@ feature {NONE} -- Access
 	grid: ES_GRID
 			-- Grid displaying records in root rows
 
-	records: DS_ARRAYED_LIST [like create_grid_row]
+	records: DS_ARRAYED_LIST [J]
 			-- List containing displayed records in displayed order
 
 	record (a_session: G): H
@@ -135,7 +135,7 @@ feature {NONE} -- Access
 			result_valid: Result = a_session.record
 		end
 
-	record_row (a_record: like record): detachable like create_grid_row
+	record_row (a_record: like record): detachable J
 			-- Return grid row for given `a_record' if it has been added yet. Ohterwise return row where
 			-- given record should be added according to it's creation date. If Void is returned, the record
 			-- should be added to the end of `grid'.
@@ -145,7 +145,7 @@ feature {NONE} -- Access
 			a_record_attached: a_record /= Void
 		local
 			l_records: like records
-			l_row: like create_grid_row
+			l_row: J
 			l_row_record: like record
 		do
 			from
@@ -170,7 +170,7 @@ feature {NONE} -- Access
 			end
 		ensure
 			result_valid: (Result = Void or else Result.record /= a_record) implies
-				not records.there_exists (agent (a_row: like create_grid_row; a_r: like record): BOOLEAN
+				not records.there_exists (agent (a_row: J; a_r: like record): BOOLEAN
 					do
 						Result := a_row.record = a_r
 					end (?, a_record))
@@ -179,93 +179,65 @@ feature {NONE} -- Access
 	icons_provider: ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
 			-- Icons provider for testing tool icons.
 
-	last_found_row: detachable like create_grid_row
-			-- Last row found through `find_row'
+feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 
-feature {NONE} -- Element change
-
-	add_record (a_record: like record; an_index: INTEGER)
-			-- Add grid row for given record.
-			--
-			-- `a_record': New record to be displayed in `grid'.
-			-- `an_index': Index in `grid' where new row should be located.
-		require
-			a_record_attached: a_record /= Void
-			an_index_valid: 1 <= an_index and an_index <= grid.row_count + 1
-			an_index_not_subrow: an_index <= grid.row_count implies grid.row (an_index).parent_row = Void
-		local
-			l_grid: like grid
-			l_row: EV_GRID_ROW
-			l_row_data: like create_grid_row
-		do
-			l_grid := grid
-			l_grid.insert_new_row (an_index)
-			l_row := l_grid.row (an_index)
-			l_row_data := create_grid_row (a_record, l_row)
-			records.force_last (l_row_data)
-			l_row_data.rebuild
-			last_found_row := l_row_data
-		end
-
-feature {NONE} -- Basic operations
-
-	find_row (a_record: like record)
-			-- Find grid row for `a_record' or add now row can be found. Store result in `last_found_row'.
-			--
-			-- `a_record': Record for which corresponding grid row shoul be stored in `last_found_row'.
-		require
-			a_record_attached: a_record /= Void
-		local
-			l_row: like record_row
-		do
-			l_row := record_row (a_record)
-			if l_row = Void then
-				add_record (a_record, grid.row_count + 1)
-			elseif l_row.record /= a_record then
-				add_record (a_record, l_row.row.index)
-			else
-				last_found_row := l_row
-			end
-		ensure
-			last_found_row_valid: attached last_found_row as l_r and then l_r.record = a_record
-		end
-
-feature {TEST_SUITE_S} -- Events: test sutie
-
-	on_typed_session_launched (a_test_suite: TEST_SUITE_S; a_session: G)
-			-- <Precursor>
-		local
-			l_row: like last_found_row
-		do
-			Precursor (a_test_suite, a_session)
-			if attached {G} a_session as l_session then
-				find_row (record (l_session))
-				l_row := last_found_row
-				last_found_row := Void
-				check l_row /= Void end
-				if not l_row.is_running then
-					l_row.attach_session (l_session)
-				end
-			end
-		end
-
-	on_typed_session_finished (a_test_suite: TEST_SUITE_S; a_session: G)
+	on_record_added (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		local
 			l_records: like records
-			l_row: like create_grid_row
+			l_pos: INTEGER
+			l_record_row, l_new: J
+			l_done: BOOLEAN
 		do
-			Precursor (a_test_suite, a_session)
-			if attached {G} a_session as l_session then
+			if attached {H} a_record as l_record then
+					-- Add record.
+				from
+					l_records := records
+					l_records.start
+					l_pos := 1
+				until
+					l_done
+				loop
+					if l_records.after then
+						l_pos := grid.row_count + 1
+						l_done := True
+					else
+						l_record_row := l_records.item_for_iteration
+						if l_record_row.record < l_record then
+							l_records.forth
+						else
+							l_pos := l_record_row.row.index
+							l_done := True
+						end
+					end
+				end
+				grid.insert_new_row (l_pos)
+				if l_record.is_running and then attached {G} l_record.session as l_session then
+					create l_new.make_running (l_session, grid.row (l_pos), icons_provider)
+				else
+					create l_new.make (l_record, grid.row (l_pos), icons_provider)
+				end
+				l_records.put_left (l_new)
+			end
+		end
+
+	on_record_removed (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
+			-- <Precursor>
+		local
+			l_records: like records
+			l_row_data: J
+		do
+			if attached {H} a_record then
 				from
 					l_records := records
 					l_records.start
 				until
 					l_records.after
 				loop
-					l_row := l_records.item_for_iteration
-					if l_row.is_running and then l_row.session = l_session then
-						l_row.detach_session
+					l_row_data := l_records.item_for_iteration
+					if l_row_data.record = a_record then
+						grid.remove_row (l_row_data.row.index)
+						l_records.remove_at
 						l_records.go_after
 					else
 						l_records.forth
@@ -274,23 +246,35 @@ feature {TEST_SUITE_S} -- Events: test sutie
 			end
 		end
 
-feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
-
-	on_record_added (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
+	on_record_property_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		do
-			if attached {like record} a_record as l_record then
-					-- Add record if not done yet.
-				find_row (l_record)
-				last_found_row := Void
+			if attached {H} a_record as l_record then
+				update_record_row (l_record, False)
 			end
 		end
 
-	on_record_removed (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
+	on_record_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
+		do
+			if attached {H} a_record as l_record then
+				update_record_row (l_record, True)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	update_record_row (a_record: H; a_update_content: BOOLEAN)
+			-- Update record row in `records' for given record.
+			--
+			-- `a_record': Record for which row should be updated.
+			-- `a_update_content': True if contents (subwrows) should also be updated.
+		require
+			a_record_attached: a_record /= Void
 		local
 			l_records: like records
-			l_row_data: like create_grid_row
+			l_row: J
+			l_rebuild_content: BOOLEAN
 		do
 			from
 				l_records := records
@@ -298,10 +282,21 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 			until
 				l_records.after
 			loop
-				l_row_data := l_records.item_for_iteration
-				if l_row_data.record = a_record then
-					grid.remove_row (l_row_data.row.index)
-					l_records.remove_at
+				l_row := l_records.item_for_iteration
+				if l_row.record = a_record then
+					if not a_record.is_running then
+							-- As an optimization, even if `a_update_content' is true we assume the row will update
+							-- itself through the events of the running session `a_record.session'.
+						if l_row.is_running then
+							l_row.detach_session
+						end
+						l_rebuild_content := a_update_content
+					end
+					l_row.refresh
+					if l_rebuild_content and l_row.is_expanded then
+						l_row.clear_content
+						l_row.show_content
+					end
 					l_records.go_after
 				else
 					l_records.forth
@@ -322,25 +317,17 @@ feature {NONE} -- Factory
 		do
 		end
 
-	create_grid_row (a_record: like record; a_row: EV_GRID_ROW): ES_TEST_RECORD_GRID_ROW [G, H]
-			-- Create new grid row data
-		require
-			a_record_attached: a_record /= Void
-			a_row_attached: a_row /= Void
-		deferred
-		ensure
-			result_attached: Result /= Void
-			result_uses_a_record: Result.record = a_record
-			result_uses_a_row: Result.row = a_row
-		end
-
 feature {NONE} -- Clean up
 
 	internal_recycle
 			-- <Precursor>
 		do
-			Precursor {ES_TEST_SESSION_WIDGET_NEW}
-			records.do_all (agent {ES_TEST_RECORD_GRID_ROW [G, H]}.recycle)
+			Precursor {ES_TEST_SESSION_WIDGET}
+			records.do_all (
+				agent (a_row: J)
+					do
+						a_row.recycle
+					end)
 		end
 
 note

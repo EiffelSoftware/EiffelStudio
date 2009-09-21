@@ -69,9 +69,8 @@ feature {OBJC_CLASS} -- Eiffel interaction
 			l_object: NS_OBJECT
 			l_class: detachable OBJC_CLASS
 		do
-			create l_object.share_from_pointer (a_object)
 			from
-				l_class := l_object.class_
+				create l_class.make_from_pointer ({NS_OBJECT_API}.class_ (a_object))
 			until
 				l_class = void or Result /= void
 			loop
@@ -80,6 +79,10 @@ feature {OBJC_CLASS} -- Eiffel interaction
 					l_item.search (a_selector)
 					if l_item.found then
 						Result := l_item.found_item
+					else
+						check
+							class_found_but_not_selector: False
+						end
 					end
 				end
 				l_class := l_class.superclass
@@ -95,6 +98,8 @@ feature -- Eiffel interaction
 
 	register_object (a_object: NS_OBJECT)
 			-- Registers an Eiffel object so that we can later query for it by Cocoa pointer
+		require
+			a_object /= Void
 		do
 			objc_to_eiffel_object_map.force (a_object.object_id, a_object.item)
 			-- FIXME: perform cleanup after a number of insertions
@@ -102,6 +107,8 @@ feature -- Eiffel interaction
 
 	register_object_for_item (a_object: NS_OBJECT; a_item: POINTER)
 			-- Registers an Eiffel object so that it will receive callbacks sent to the given Cocoa Object
+		require
+			a_object /= Void
 		do
 			objc_to_eiffel_object_map.force (a_object.object_id, a_item)
 			-- FIXME: perform cleanup after a number of insertions
@@ -202,6 +209,10 @@ feature {NONE}
 --							io.put_string ("  -> argument1: " + argX.class_.name + ": " + argX.debug_output + "%N")
 --						end
 						arg := [create {NS_OBJECT}.share_from_pointer (args_managed.read_pointer (0))]
+					elseif type.is_equal ("TUPLE [!NS_NOTIFICATION]") or type.is_equal ("TUPLE [NS_NOTIFICATION]") then
+						arg := [create {NS_NOTIFICATION}.share_from_pointer (args_managed.read_pointer (0))]
+					elseif type.is_equal ("TUPLE [!NS_WINDOW]") or type.is_equal ("TUPLE [NS_WINDOW]") then
+						arg := [create {NS_WINDOW}.share_from_pointer (args_managed.read_pointer (0))]
 					elseif type.is_equal ("TUPLE [!NS_EVENT]") or type.is_equal ("TUPLE [NS_EVENT]") then
 						arg := [create {NS_EVENT}.share_from_pointer (args_managed.read_pointer (0))]
 					else

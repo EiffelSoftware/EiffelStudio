@@ -1,6 +1,6 @@
 note
 	description: "Representation of an Objective-C selector at runtime."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,6 +9,11 @@ class
 
 inherit
 	ANY
+		redefine
+			is_equal
+		end
+
+	DEBUG_OUTPUT
 		redefine
 			is_equal
 		end
@@ -37,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name, debug_output: STRING
 			-- The name of the method specified by a given selector.
 		do
 			Result := (create {C_STRING}.make_shared_from_pointer ({NS_OBJC_RUNTIME}.sel_get_name (item))).string

@@ -255,7 +255,7 @@ feature -- Clearing and drawing operations
 	clear
 			-- Erase `Current' with `background_color'.
 		do
-			postscript_result.clear_all
+			postscript_result.wipe_out
 			clear_rectangle (0, 0, width, height)
 		end
 

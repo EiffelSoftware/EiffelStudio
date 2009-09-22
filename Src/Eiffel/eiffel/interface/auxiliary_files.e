@@ -989,7 +989,7 @@ feature -- Plug and Makefile file
 					type_set: l_root.is_class_type_set
 				end
 				l_root_cl := l_root.class_type.associated_class
-				if not compilation_modes.is_precompiling then
+				if not compilation_modes.is_precompiling and then not l_root.procedure_name.is_empty then
 					l_root_ft := l_root_cl.feature_table.item (l_root.procedure_name)
 					l_rout_info := system.rout_info_table.item (l_root_ft.rout_id_set.first)
 					l_rcorigin := l_rout_info.origin
@@ -1001,7 +1001,7 @@ feature -- Plug and Makefile file
 				buffer.put_string ("egc_rlist[")
 				buffer.put_integer (i)
 				buffer.put_string ("] = %"")
-				if not compilation_modes.is_precompiling then
+				if not compilation_modes.is_precompiling and not l_root.procedure_name.is_empty then
 					buffer.put_string (l_root_cl.name_in_upper)
 					buffer.put_character ('.')
 					buffer.put_string (l_root.procedure_name.as_lower)
@@ -1034,7 +1034,7 @@ feature -- Plug and Makefile file
 					buffer.put_string ("egc_rcarg[")
 					buffer.put_integer (i)
 					buffer.put_string ("] = ")
-					if not compilation_modes.is_precompiling and then l_root_ft.has_arguments then
+					if l_root_ft /= Void and then l_root_ft.has_arguments then
 						buffer.put_integer (1)
 					else
 						buffer.put_integer (0)

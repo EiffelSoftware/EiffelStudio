@@ -3633,12 +3633,14 @@ feature -- Dead code removal
 						l_cl: CLASS_C
 						l_ft: FEATURE_I
 					do
-						check
-							valid_root: a_root.is_class_type_set
+						if not a_root.procedure_name.is_empty then
+							check
+								valid_root: a_root.is_class_type_set
+							end
+							l_cl := a_root.class_type.associated_class
+							l_ft := l_cl.feature_table.item (a_root.procedure_name)
+							remover.record (l_ft, l_cl)
 						end
-						l_cl := a_root.class_type.associated_class
-						l_ft := l_cl.feature_table.item (a_root.procedure_name)
-						remover.record (l_ft, l_cl)
 					end)
 
 			remover.mark_dispose
@@ -5159,32 +5161,33 @@ feature -- Pattern table generation
 					root_creators.after
 				loop
 					l_root := root_creators.item_for_iteration
-					l_root_type := root_class_type (l_root.class_type)
-					l_root_cl := l_root_type.associated_class
+					if not l_root.procedure_name.is_empty then
+						l_root_type := root_class_type (l_root.class_type)
+						l_root_cl := l_root_type.associated_class
+						l_root_ft := l_root_cl.feature_table.item (l_root.procedure_name)
+						l_root_rout_id := l_root_ft.rout_id_set.first
+						l_root_rout_table ?= eiffel_table.poly_table (l_root_rout_id)
+						l_root_rout_table.goto_implemented (l_root_type.type, l_root_type)
+						check
+							implemented: l_root_rout_table.is_implemented
+						end
+						l_root_rout_cname := l_root_rout_table.feature_name.string
+						if l_root_ft.has_arguments then
+							buffer.generate_extern_declaration
+								("void", l_root_rout_cname, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
+						else
+							buffer.generate_extern_declaration
+								("void", l_root_rout_cname, <<"EIF_REFERENCE">>)
+						end
 
-					l_root_ft := l_root_cl.feature_table.item (l_root.procedure_name)
-					l_root_rout_id := l_root_ft.rout_id_set.first
-					l_root_rout_table ?= eiffel_table.poly_table (l_root_rout_id)
-					l_root_rout_table.goto_implemented (l_root_type.type, l_root_type)
-					check
-						implemented: l_root_rout_table.is_implemented
+						l_root_caller := l_root_rout_cname.string
+						l_root_caller.append ("(root_obj")
+						if l_root_ft.has_arguments then
+							l_root_caller.append (", argarr(argc, argv)")
+						end
+						l_root_caller.append (");")
+						l_root_callers.force (l_root_caller)
 					end
-					l_root_rout_cname := l_root_rout_table.feature_name.string
-					if l_root_ft.has_arguments then
-						buffer.generate_extern_declaration
-							("void", l_root_rout_cname, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
-					else
-						buffer.generate_extern_declaration
-							("void", l_root_rout_cname, <<"EIF_REFERENCE">>)
-					end
-
-					l_root_caller := l_root_rout_cname.string
-					l_root_caller.append ("(root_obj")
-					if l_root_ft.has_arguments then
-						l_root_caller.append (", argarr(argc, argv)")
-					end
-					l_root_caller.append (");")
-					l_root_callers.force (l_root_caller)
 					root_creators.forth
 				end
 				root_creators.go_to (cs)

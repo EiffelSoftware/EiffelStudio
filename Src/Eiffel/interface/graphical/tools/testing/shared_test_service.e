@@ -59,7 +59,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	perform_with_test_suite (a_procedure: PROCEDURE [ANY, TUPLE [TEST_SUITE_S]])
+	perform_with_test_suite (a_procedure: ROUTINE [ANY, TUPLE [TEST_SUITE_S]])
 			-- Call given procedure with usable test suite service.
 			--
 			-- `a_procedure': Procedure to be called which takes a test suite as the only argument.

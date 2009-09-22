@@ -16,3 +16,5 @@ untgz_ccode wizard
 mkdir -p $INSTALL_DIR/studio/wizards/others/precompile/spec/$ISE_PLATFORM
 move wizard $INSTALL_DIR/studio/wizards/others/precompile/spec/$ISE_PLATFORM
 remtrace Precompilation wizard Built!
+
+remtrace Building the EiffelCocoa wizard

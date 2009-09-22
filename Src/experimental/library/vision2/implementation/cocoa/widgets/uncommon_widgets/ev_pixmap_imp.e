@@ -1,6 +1,6 @@
 note
 	description: "EiffelVision pixmap, Cocoa implementation."
-	author: "Daniel Furrer"
+	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,7 +113,7 @@ feature -- Drawing operations
 
 feature -- Measurement
 
-	width, minimum_width: INTEGER
+	width: INTEGER
 			-- Width of the pixmap in pixels.
 		do
 			Result := internal_width
@@ -128,9 +128,18 @@ feature -- Measurement
 	minimum_height: INTEGER
 		do
 			if is_user_min_height_set then
-				Result := internal_minimum_width
+				Result := internal_minimum_height
 			else
 				Result := height
+			end
+		end
+
+	minimum_width: INTEGER
+		do
+			if is_user_min_width_set then
+				Result := internal_minimum_width
+			else
+				Result := width
 			end
 		end
 

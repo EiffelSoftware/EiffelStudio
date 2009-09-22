@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 	string_selected (start_sel, end_sel: like cursor): STRING_GENERAL
 			-- String between cursors `start_sel' and `end_sel'.
 		require
-				right_order: start_sel < end_sel
+			right_order: start_sel <= end_sel
 		local
 			ln: like current_line
 			t, t2 : EDITOR_TOKEN

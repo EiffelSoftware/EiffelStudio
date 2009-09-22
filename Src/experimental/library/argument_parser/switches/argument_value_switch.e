@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional)
+	make_hidden (a_id: like id; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_val_optional: like is_value_optional)
 			-- Initialize a new value option.
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"
@@ -61,21 +61,15 @@ feature {NONE} -- Initialization
 			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
 			a_id_is_valid_id: is_valid_id (a_id)
-			a_desc_attached: a_desc /= Void
-			not_a_desc_is_empty: not a_desc.is_empty
 			a_arg_name_attached: a_arg_name /= Void
 			not_a_arg_name_is_empty: not a_arg_name.is_empty
-			a_arg_desc_attached: a_arg_desc /= Void
-			not_a_arg_desc_is_empty: not a_arg_desc.is_empty
 		do
-			make (a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional)
+			make (a_id, internal_switch_description, a_optional, a_allow_mutliple, a_arg_name, internal_argument_description, a_val_optional)
 			is_hidden := True
 		ensure
 			nid_set: id ~ a_id
-			description_set: description ~ a_desc
 			optional: optional = a_optional
 			arg_name_set: arg_name ~ a_arg_name
-			arg_description_set: arg_description ~ a_arg_desc
 			is_value_optional_set: is_value_optional = a_val_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
 			is_hidden: is_hidden

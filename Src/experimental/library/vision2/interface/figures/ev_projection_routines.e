@@ -58,6 +58,7 @@ feature {NONE} -- Implementation
 		local
 			g: detachable EV_FIGURE_GROUP
 			r: detachable PROCEDURE [ANY, TUPLE [EV_FIGURE]]
+			t: TUPLE [EV_FIGURE]
 		do
 			if f.is_show_requested then
 				if draw_routines.valid_index (f.draw_id) then
@@ -65,7 +66,13 @@ feature {NONE} -- Implementation
 				end
 				if r /= Void then
 					if f.intersects (rect) then
-						r.call ([f])
+						t := r.empty_operands
+						check
+							t.valid_index (1)
+							t.valid_type_for_index (f, 1)
+						end
+						t.put (f, 1)
+						r.call (t)
 					end
 				else
 					g ?= f

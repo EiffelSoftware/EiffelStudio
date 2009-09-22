@@ -30,7 +30,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_setup_response: attached like setup_response;
+	make (a_start_date: like start_date;
+	      a_setup_response: attached like setup_response;
 	      a_test_response: attached like test_response;
 	      a_teardown_response: attached like teardown_response;
 	      an_output: READABLE_STRING_8)
@@ -42,7 +43,7 @@ feature {NONE} -- Initialization
 			an_output_attached: an_output /= Void
 			a_setup_response_clean: not a_setup_response.is_exceptional
 		do
-			make_result (a_setup_response, an_output)
+			make_result (a_start_date, a_setup_response, an_output)
 			setup_response := a_setup_response
 			test_response := a_test_response
 			teardown_response := a_teardown_response

@@ -489,7 +489,7 @@ feature {NONE} -- Action handlers
 			l_line_string: STRING_32
 			l_line: NATURAL
 			l_full_file_name: FILE_NAME
-			l_files: DS_ARRAYED_LIST [STRING_8]
+			l_files: ARRAYED_LIST [STRING_8]
 			l_expr: RX_PCRE_MATCHER
 		do
 			l_selected := editor.text_displayed.selected_wide_string

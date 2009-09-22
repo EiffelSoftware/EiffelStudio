@@ -83,7 +83,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	cataloged_folder_files: DS_HASH_TABLE [DS_ARRAYED_LIST [READABLE_STRING_GENERAL], STRING]
+	cataloged_folder_files: DS_HASH_TABLE [ARRAYED_LIST [READABLE_STRING_GENERAL], STRING]
 			-- Cataloged folders, where template files are extracted from.
 			-- Key: Folder path
 			-- Value: List of file names
@@ -311,7 +311,7 @@ feature -- Extension
 		local
 			l_definitions: like cataloged_template_definitions
 			l_definition: detachable TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_files: DS_ARRAYED_LIST [STRING]
+			l_files: ARRAYED_LIST [STRING]
 			l_changed: BOOLEAN
 		do
 			l_files := file_utilities.scan_for_files (a_folder, -1, code_file_regex, Void)
@@ -360,7 +360,7 @@ feature -- Removal
 		local
 			l_catalog: like cataloged_folder_files
 			l_folder: STRING
-			l_files: DS_ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_files: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_definitions: like cataloged_template_definitions
 			l_definition: TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 			l_file: STRING

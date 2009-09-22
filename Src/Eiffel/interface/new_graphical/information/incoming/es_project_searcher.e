@@ -98,7 +98,7 @@ feature {NONE} -- Implemetation
 			search_needed: search_needed
 		local
 			l_file_uti: FILE_UTILITIES
-			l_files: attached DS_ARRAYED_LIST [STRING]
+			l_files: attached ARRAYED_LIST [STRING]
 			l_file: detachable STRING
 		do
 			if file_system.directory_exists (a_path) then

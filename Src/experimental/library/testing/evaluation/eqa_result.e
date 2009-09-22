@@ -11,9 +11,24 @@ deferred class
 
 feature -- Access
 
-	date: DATE_TIME
+	start_date: DATE_TIME
+			-- Date/time when test was launched
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	finish_date: DATE_TIME
 			-- Date and time when `Current' was obtained
 		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+	frozen duration: DATE_TIME_DURATION
+			-- Duration of test execution
+		do
+			Result := finish_date.relative_duration (start_date)
 		ensure
 			result_attached: Result /= Void
 		end

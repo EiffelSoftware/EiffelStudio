@@ -19,7 +19,7 @@ OBJECTS = png.$obj pngerror.$obj pngget.$obj pngmem.$obj pngpread.$obj \
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: lib_dir libpng.lib clean
+all:: exp_lib_dir lib_dir libpng.lib clean
 
 ..$(DIR)..$(DIR)library$(DIR)vision2$(DIR)spec:
 	$(MKDIR_TARGET)
@@ -35,6 +35,21 @@ all:: lib_dir libpng.lib clean
 
 lib_dir: ..$(DIR)..$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 
+..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec:
+	$(MKDIR_TARGET)
+
+..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec
+	$(MKDIR_TARGET)
+
+..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)
+	$(MKDIR_TARGET)
+
+..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
+	$(MKDIR_TARGET)
+
+exp_lib_dir: ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
+
+
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
@@ -43,3 +58,4 @@ clean:
 libpng.lib: $(OBJECTS)
 	$alib_line
 	$(MV) $@ ..$(DIR)..$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
+	$(MV) $@ ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@

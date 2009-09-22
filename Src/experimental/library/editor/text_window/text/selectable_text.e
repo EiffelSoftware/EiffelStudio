@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			-- String between cursors `start_sel' and `end_sel'.
 		require
 			attached_cursors: start_sel /= Void and then end_sel /= Void
-			right_order: start_sel < end_sel
+			right_order: start_sel <= end_sel
 		local
 			ln: like current_line
 			t, t2 : detachable EDITOR_TOKEN

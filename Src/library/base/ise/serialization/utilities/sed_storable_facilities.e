@@ -91,12 +91,16 @@ feature -- Serialization routines
 
 			if l_deserializer /= Void then
 				l_deserializer.decode (a_is_gc_enabled)
+				retrieved_error := l_deserializer.error
 				if not l_deserializer.has_error then
 					Result := l_deserializer.last_decoded_object
 					a_reader.read_footer
 				end
 			end
 		end
+
+	retrieved_error: detachable SED_ERROR
+			-- Error set from last call to `retrieved'.		
 
 feature -- Storable type
 

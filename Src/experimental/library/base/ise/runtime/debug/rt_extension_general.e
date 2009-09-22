@@ -20,6 +20,16 @@ feature -- RT extension identifiers (check eif_debug.h uses the same values)
 	Op_rt_assign_attrib:	INTEGER = 14
 	Op_rt_assign_local:		INTEGER = 15
 
+feature -- Debugger helper
+
+	debugger_type_string (a_obj: detachable ANY): detachable STRING
+			-- Return the evaluation of `a.generating_type.out'
+		do
+			if a_obj /= Void then
+				Result := a_obj.generating_type.out
+			end
+		end
+
 feature -- Evaluation helper
 
 	tilda_equal_evaluation (a,b: detachable ANY): BOOLEAN

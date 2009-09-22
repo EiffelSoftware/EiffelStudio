@@ -25,7 +25,7 @@ create {DEBUG_VALUE_EXPORTER}
 feature {DEBUG_VALUE_EXPORTER}
 
 	make_attribute_of_special (attr_name: like name; a_class: like e_class;
-			type: like dynamic_type_id)
+			type: like dynamic_type_id; a_add: like address)
 		require
 			not_attr_name_void: attr_name /= Void
 		do
@@ -36,7 +36,7 @@ feature {DEBUG_VALUE_EXPORTER}
 				is_attribute := True
 			end
 			dynamic_type_id := type
-			address := Void
+			address := a_add
 			is_null := False
 			create attributes.make (10)
 		end
@@ -117,15 +117,18 @@ feature {NONE} -- Implementation
 		local
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
+			if address /= Void and then not address.is_void then
+				address := keep_object_as_hector_address (address)
+			end
 			from
 				l_cursor := attributes.new_cursor
 				l_cursor.start
 			until
 				l_cursor.after
 			loop
-				l_cursor.item.set_hector_addr;
+				l_cursor.item.set_hector_addr
 				l_cursor.forth
-			end;
+			end
 		end
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
@@ -141,7 +144,7 @@ invariant
 	attributes_exists: attributes /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -154,22 +157,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EXPANDED_VALUE

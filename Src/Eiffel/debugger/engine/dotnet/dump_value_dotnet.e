@@ -29,31 +29,16 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 
 	set_object_value (value: DBG_ADDRESS; dtype: CLASS_C)
 			-- make a object item initialized to `value'
-		local
-			dobj: DEBUGGED_OBJECT_DOTNET
-			l_val: EIFNET_ABSTRACT_DEBUG_VALUE
-			l_eifnet_ref: EIFNET_DEBUG_REFERENCE_VALUE
-			l_eifnet_str: EIFNET_DEBUG_STRING_VALUE
-			l_eifnet_nat: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 		do
 			Precursor {DUMP_VALUE} (value, dtype)
-			dobj ?= debugger_manager.object_manager.debugged_object (value, 0, 0)
-			if dobj /= Void then
-				l_val ?= dobj.debug_value
-				if l_val /= Void then
-					l_eifnet_ref ?= l_val
-					if l_eifnet_ref /= Void then
+			if attached {DEBUGGED_OBJECT_DOTNET} debugger_manager.object_manager.debugged_object (value, 0, 0) as dobj then
+				if attached {EIFNET_ABSTRACT_DEBUG_VALUE} dobj.debug_value as l_val then
+					if attached {EIFNET_DEBUG_REFERENCE_VALUE} l_val as l_eifnet_ref then
 						set_object_for_dotnet_value (l_eifnet_ref)
-					else
-						l_eifnet_str ?= l_val
-						if l_eifnet_str /= Void then
-							set_string_for_dotnet_value (l_eifnet_str)
-						else
-							l_eifnet_nat ?= l_val
-							if l_eifnet_nat /= Void then
-								set_native_array_object_for_dotnet_value (l_eifnet_nat)
-							end
-						end
+					elseif attached {EIFNET_DEBUG_STRING_VALUE} l_val as l_eifnet_str then
+						set_string_for_dotnet_value (l_eifnet_str)
+					elseif attached {EIFNET_DEBUG_NATIVE_ARRAY_VALUE} l_val as l_eifnet_nat then
+						set_native_array_object_for_dotnet_value (l_eifnet_nat)
 					end
 				end
 			end
@@ -177,7 +162,7 @@ feature -- Access
 			end
 		end
 
-	formatted_output: STRING_32
+	formatted_output: detachable STRING_32
 			-- Output of the call to `debug_output' on `Current', if any.
 		do
 			if type = Type_string_dotnet and then value_string_dotnet = Void then

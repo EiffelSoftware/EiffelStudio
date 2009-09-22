@@ -238,8 +238,9 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Specific access
 feature -- Action
 
 	classic_send_value
-			-- send the value the application
+			-- <Precursor>
 		do
+			last_classic_send_value_succeed := True
 			inspect (type)
 			when Type_boolean then
 				send_bool_value (value_boolean)

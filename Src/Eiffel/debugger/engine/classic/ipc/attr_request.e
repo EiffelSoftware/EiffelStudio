@@ -1,7 +1,9 @@
 note
+	description: "[
+		Request for attributes' value of an object
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Request for attributes' value of an object
 
 class ATTR_REQUEST
 
@@ -48,7 +50,6 @@ inherit
 	COMPILER_EXPORTER
 
 create
-
 	make
 
 feature -- Initialization
@@ -59,9 +60,12 @@ feature -- Initialization
 		do
 			old_make (Rqst_inspect)
 			object_address := addr
-		end;
+		end
 
 feature -- Properites
+
+	is_erroneous: BOOLEAN
+			-- Is retrieved data erroneous?
 
 	object_address: DBG_ADDRESS;
 			-- Hector address of object being inspected
@@ -77,13 +81,15 @@ feature -- Update
 
 	send
 			-- Send inpect request to application.
+			-- if failure, then `is_erroneous' is True
 		local
 			address: POINTER
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
+			is_erroneous := False
 			object_type_id := 0
 			send_rqst_3_integer (Rqst_sp_lower, 0, sp_lower, sp_upper)
-			send_rqst_3 (request_code, In_h_addr, 0, object_address.as_pointer)
+			send_rqst_3 (request_code, In_h_addr, object_address.offset, object_address.as_pointer)
 			is_special := to_boolean (c_tread)
 			is_tuple := to_boolean (c_tread)
 			object_type_id := to_integer_32 (c_tread) + 1
@@ -166,7 +172,8 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	recv_attributes (attr_list: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C; container_is_special: BOOLEAN)
+	recv_attributes (attr_list: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C;
+				container_is_special: BOOLEAN)
 			-- Receive `e_class attribute info from application and
 			-- store it in `attr_list'.
 		local
@@ -180,6 +187,7 @@ feature {NONE} -- Implementation
 			type_id: INTEGER
 			p: POINTER
 			i1,i2: INTEGER
+			l_attr_address: like object_address
 		do
 			s := c_tread
 			if is_valid_integer_32_string (s) then
@@ -254,7 +262,9 @@ feature {NONE} -- Implementation
 							--| If expanded contained in SPECIAL, it doesn't have a specific (hector) address
 							--| and is only addressed via the SPECIAL object and the index
 							--| Then in this case we receive its attributes right away
-							create exp_attr.make_attribute_of_special (attr_name, e_class, type_id)
+							create l_attr_address.make_from_pointer (object_address.as_pointer)
+							l_attr_address.set_offset (i)
+							create exp_attr.make_attribute_of_special (attr_name, e_class, type_id, l_attr_address)
 							attr := exp_attr
 							if Eiffel_system.valid_dynamic_id (type_id) then
 								recv_attributes (exp_attr.attributes, Eiffel_system.class_of_dynamic_id (type_id, False), False)

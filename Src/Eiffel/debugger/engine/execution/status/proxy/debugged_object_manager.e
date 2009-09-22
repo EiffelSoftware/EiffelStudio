@@ -92,11 +92,10 @@ feature -- Query
 			address_not_void: addr /= Void and then not addr.is_void
 		local
 			dobj: DEBUGGED_OBJECT
-			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
 			dobj := debugged_object (addr, 0, 0)
-			lst := dobj.sorted_attributes
-			Result := lst /= Void and then not lst.is_empty
+			Result := attached dobj.sorted_attributes as lst and then
+					 not lst.is_empty
 		end
 
 	special_object_count_and_capacity_at_address (addr: DBG_ADDRESS): TUPLE [spec_count, spec_capacity: INTEGER]
@@ -129,12 +128,12 @@ feature -- Settings
 
 feature -- Status report
 
-	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN
+	is_valid_and_known_object_address (addr: DBG_ADDRESS): BOOLEAN
 				-- Is `addr' a valid object address?
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
-			Result := debugger_manager.application.is_valid_object_address (addr)
+			Result := debugger_manager.application.is_valid_and_known_object_address (addr)
 		end
 
 	is_dotnet: BOOLEAN
@@ -154,7 +153,7 @@ feature -- Access
 				-- Debugged remote object located at address `addr'
 		require
 			non_void_addr: addr /= Void and then not addr.is_void
-			valid_addr: is_valid_object_address (addr)
+			valid_addr: is_valid_and_known_object_address (addr)
 			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else sp_upper = -1)
 		do
 			debug ("debugger_caching")
@@ -163,7 +162,7 @@ feature -- Access
 			if
 				caching_enabled and then
 				last_debugged_object /= Void
-				and then last_debugged_object.object_address.is_equal (addr)
+				and then last_debugged_object.object_address ~ addr
 			then
 				debug ("debugger_caching")
 					print (generator + " : reused last debugged_object %N")
@@ -206,7 +205,7 @@ feature -- Access
 			last_sp_lower := sp_lower
 			last_sp_upper := sp_upper
 		ensure
-			Result /= Void
+			result_attached: Result /= Void
 		end
 
 note

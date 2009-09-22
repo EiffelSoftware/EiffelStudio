@@ -537,7 +537,7 @@ feature -- Query
 			end
 		end
 
-	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE
+	dump_value_at_address (addr: DBG_ADDRESS): detachable DUMP_VALUE
 			-- <Precursor>	
 		do
 			if Eifnet_debugger.know_about_kept_object (addr) then

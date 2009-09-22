@@ -204,7 +204,7 @@ feature {DBG_EXPRESSION_EVALUATION} -- Implementation
 			Result := debugger_manager.safe_application_is_stopped
 		end
 
-	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE
+	dump_value_at_address (addr: DBG_ADDRESS): detachable DUMP_VALUE
 			-- DUNP_VALUE object associated with object address `addr'
 		require
 			addr_attached: addr /= Void and then not addr.is_void

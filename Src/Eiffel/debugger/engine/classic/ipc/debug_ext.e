@@ -13,6 +13,8 @@ class DEBUG_EXT
 inherit
 	PLATFORM
 
+	IPC_SHARED
+
 feature
 
 	send_rqst_0 (code: INTEGER)
@@ -137,6 +139,20 @@ feature
 			-- value is the address of the object
 		external
 			"C signature (EIF_REFERENCE)"
+		end
+
+--	send_ref_value (value: POINTER)
+--			-- value is the address of the object
+--		external
+--			"C inline"
+--		alias
+--			"send_ref_value ((EIF_REFERENCE) $value)"
+--		end
+
+	send_ref_offset_value (value: POINTER; a_offset: INTEGER)
+			-- value is the address of the object
+		do
+			send_rqst_3 (Rqst_dumped_with_offset, 0, a_offset, value)
 		end
 
 	send_ack_ok

@@ -47,7 +47,7 @@ feature -- Access
 			if addr_table.has (addr) then
 				Result := addr_table.item (addr)
 			else
-				send_rqst_3 (Rqst_adopt, In_address, 0, addr.as_pointer)
+				send_rqst_3 (Rqst_adopt, In_address, addr.offset, addr.as_pointer)
 				create Result.make_from_string (c_tread)
 				addr_table.put (Result, addr)
 			end
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 		require
 			h_addr_not_void: h_addr /= Void
 		do
-			send_rqst_3 (Rqst_access, In_address, 0, h_addr.as_pointer);
+			send_rqst_3 (Rqst_access, In_address, h_addr.offset, h_addr.as_pointer);
 			create Result.make_from_string (c_tread)
 
 			debug ("HECTOR")
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 		require
 			h_addr_not_void: h_addr /= Void
 		do
-			send_rqst_3 (Rqst_wean, In_address, 0, h_addr.as_pointer)
+			send_rqst_3 (Rqst_wean, In_address, h_addr.offset, h_addr.as_pointer)
 
 			debug ("HECTOR")
 				io.error.put_string ("Wean Hector: ");

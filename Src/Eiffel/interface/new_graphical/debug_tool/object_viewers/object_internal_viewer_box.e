@@ -150,7 +150,7 @@ feature -- Change
 								grid.set_item (1, r, create {EV_GRID_LABEL_ITEM}.make_with_text (info[i].name))
 								if dv /= Void then
 									if dv.has_formatted_output then
-										s := dv.string_representation
+										s := dv.attached_string_representation
 									else
 										s := dv.output_value (True)
 									end
@@ -182,8 +182,8 @@ feature -- Change
 			-- Destroy Current
 		do
 			reset
-			if widget /= Void then
-				widget.destroy
+			if attached widget as w then
+				w.destroy
 				widget := Void
 			end
 		end
@@ -196,11 +196,8 @@ feature {NONE} -- Implementation
 		end
 
 	parent_window (w: EV_WIDGET): EV_WINDOW
-		local
-			p: EV_WIDGET
 		do
-			p := w.parent
-			if p /= Void then
+			if attached w.parent as p then
 				Result ?= p
 				if Result = Void then
 					Result := parent_window (p)
@@ -290,11 +287,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

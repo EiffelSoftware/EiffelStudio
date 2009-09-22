@@ -234,11 +234,17 @@ feature -- Basic operations: Evaluation
 
 					if e.is_context_object then
 						check e.context /= Void e.context.on_object end
-						value := ev.dump_value_at_address (e.context.associated_address)
-						if value /= Void then
-							dynamic_class := value.dynamic_class
-							dynamic_type := value.dynamic_class_type
-							static_class := value.dynamic_class
+						if attached ev.dump_value_at_address (e.context.associated_address) as dv then
+							value := dv
+							dynamic_class := dv.dynamic_class
+							dynamic_type := dv.dynamic_class_type
+							static_class := dv.dynamic_class
+						else
+							dbg_error_handler.notify_error_evaluation_unable_to_get_context_object
+							value := Void
+							dynamic_class := Void
+							dynamic_type := Void
+							static_class := Void
 						end
 						evaluated := True
 					else

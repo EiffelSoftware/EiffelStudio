@@ -121,11 +121,11 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_MANAGER} -- Grid
 
 feature {NONE} -- Helpers
 
-	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN
+	is_valid_and_known_object_address (addr: DBG_ADDRESS): BOOLEAN
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
-			Result := debugger_manager.application.is_valid_object_address (addr)
+			Result := debugger_manager.application.is_valid_and_known_object_address (addr)
 		end
 
 feature -- Properties

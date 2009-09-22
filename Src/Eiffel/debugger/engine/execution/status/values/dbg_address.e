@@ -27,11 +27,16 @@ inherit
 			is_hashable
 		end
 
+	PLATFORM
+		redefine
+			out, is_equal
+		end
+
 create
+	make_from_address,
 	make_void,
 	make_from_string,
 	make_from_pointer,
-	make_from_integer_64,
 	make_from_natural_64
 
 --| Keep it during refactorying.	
@@ -45,6 +50,17 @@ create
 
 feature {NONE} -- Initialization
 
+	make_from_address (a_add: detachable like Current)
+			-- Create address based on `a_add'
+		do
+			if a_add /= Void then
+				value := a_add.value
+				offset := a_add.offset
+			else
+				make_void
+			end
+		end
+
 	make_void
 			-- Create address representing Void
 		do
@@ -55,9 +71,27 @@ feature {NONE} -- Initialization
 
 	make_from_string (s: STRING_8)
 			-- Create address from string `s'
+			--| FIXME: does not handle offset
+		local
+			p: INTEGER
 		do
 			if s /= Void then
-				value := hex_to_pointer (s)
+				p := s.last_index_of ('+', s.count)
+				if p > 0 then
+					value := hex_to_pointer (s.substring (1, p - 1))
+					if
+						attached s.substring (p + 1, s.count) as s_offset and then
+						s_offset.is_integer
+					then
+						offset := s_offset.to_integer
+					else
+						--| Erroneous value ...
+						is_void := True
+						check should_not_occur: False end
+					end
+				else
+					value := hex_to_pointer (s)
+				end
 				if value = Default_pointer then
 					is_void := True
 				end
@@ -76,27 +110,30 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_from_integer_64 (i64: INTEGER_64)
-			-- Create address from integer 64 `i64'
-		local
-			p: POINTER
-			i32: INTEGER_32
-		do
-			if i64 = 0 then
-				is_void := True
-			else
-				if Pointer_bytes = Integer_64_bytes then
-					($p).memory_copy ($i64, Pointer_bytes)
-				else
-					i32 := i64.to_integer_32;
-					($p).memory_copy ($i32, Pointer_bytes)
-				end
-				make_from_pointer (p)
-			end
-		end
+--Unused for now.
+--	make_from_integer_64 (i64: INTEGER_64)
+--			-- Create address from integer 64 `i64'
+--			--| FIXME: does not handle offset			
+--		local
+--			p: POINTER
+--			i32: INTEGER_32
+--		do
+--			if i64 = 0 then
+--				is_void := True
+--			else
+--				if Pointer_bytes = Integer_64_bytes then
+--					($p).memory_copy ($i64, Pointer_bytes)
+--				else
+--					i32 := i64.to_integer_32;
+--					($p).memory_copy ($i32, Pointer_bytes)
+--				end
+--				make_from_pointer (p)
+--			end
+--		end
 
 	make_from_natural_64 (n64: NATURAL_64)
 			-- Create address from narual 64 `n64'
+			--| FIXME: does not handle offset
 		local
 			p: POINTER
 			n32: NATURAL_32
@@ -141,6 +178,10 @@ feature -- Access
 			-- Current as STRING_8 value
 		do
 			Result := value.out
+			if has_offset then
+				Result.append_character ('+')
+				Result.append_integer (offset)
+			end
 		ensure
 			Result_attached_if_not_void: (not is_void) implies (Result /= Void and then not Result.is_empty)
 		end
@@ -180,7 +221,7 @@ feature -- Status report
 				check other_is_not_void: not other.is_void end
 				Result := False
 			else
-				Result := value.is_equal (other.value)
+				Result := value ~ other.value and offset = other.offset
 			end
 		end
 
@@ -198,16 +239,41 @@ feature -- Status report
 			Result := not is_void
 		end
 
-	debug_output: STRING
-			-- String that should be displayed in debugger to represent `Current'.
+	has_offset: BOOLEAN
+			-- Has offset?
 		do
-			Result := output
+			Result := offset > 0
+		end
+
+feature -- Access
+
+	offset: INTEGER
+			-- In case of SPECIAL[Expanded]
+			-- we access the item by Address of Special + `offset'
+			-- Then Current's pointer indicates the container's reference
+
+feature -- Basic operation
+
+	set_offset (n: like offset)
+			-- Set `offset' to `n'
+		require
+			valid_offset: n > 0
+		do
+			offset := n
 		end
 
 feature {DBG_ADDRESS} -- Implementation
 
 	value: POINTER
 			-- Object address internal representation
+
+feature -- Debug
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := output
+		end
 
 invariant
 	default_value_if_is_void: is_void implies value = Default_pointer

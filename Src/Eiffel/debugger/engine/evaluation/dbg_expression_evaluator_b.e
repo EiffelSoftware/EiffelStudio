@@ -108,8 +108,12 @@ feature {NONE} -- Evaluation
 				context.set_data (Void, context.class_c, Void, Void, Void, 0, 0)
 				apply_context
 			elseif on_object then
-				dobj := debugger_manager.object_manager.debugged_object (context.address, 0, 0)
-				if dobj.is_erroneous then
+				if attached debugger_manager.object_manager as objman and then objman.is_valid_and_known_object_address (context.address) then
+					dobj := objman.debugged_object (context.address, 0, 0)
+				else
+					dobj := Void
+				end
+				if dobj = Void or else dobj.is_erroneous then
 					dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context.address.output)))
 				else
 					context.set_data (Void, dobj.dynamic_class, dobj.class_type, Void, Void, 0, 0)

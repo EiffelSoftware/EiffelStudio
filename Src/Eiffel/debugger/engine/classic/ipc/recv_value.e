@@ -145,7 +145,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 			else
 					--| The runtime is sending the debugger a wrong id ...
 					--| then let's handle such case
-				create {DUMMY_MESSAGE_DEBUG_VALUE} item.make_with_details (add.as_string, "Invalid type id: " + l_type_id.out, 0)
+				create {DUMMY_MESSAGE_DEBUG_VALUE} item.make_with_details (add.output, "Invalid type id: " + l_type_id.out, 0)
 			end
 		end
 

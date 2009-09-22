@@ -313,12 +313,11 @@ feature -- Status report
 			end
 		end
 
-	formatted_output: STRING_32
+	formatted_output: detachable STRING_32
 			-- Output of the call to `debug_output' on `Current', if any.
 		require
 			has_formatted_output: has_formatted_output
 		local
-			l_str: STRING_32
 			l_max: INTEGER
 		do
 			debug ("debugger_interface")
@@ -335,22 +334,32 @@ feature -- Status report
 				l_max := debugger_manager.displayed_string_size
 					--| if l_max = -1, then do no truncate upper string
 
-				l_str := truncated_string_representation (0, l_max)
-				if l_str /= Void then
-					if (l_max > 0) and then last_string_representation_length > (l_max - 0 + 1) then
-						l_str.append ("...")
+				if attached address as add then
+					if
+						attached truncated_string_representation (0, l_max) as l_str
+					then
+						if (l_max > 0) and then last_string_representation_length > (l_max - 0 + 1) then
+							l_str.append ("...")
+						end
+						create Result.make (l_str.count)
+						Result.append (Character_routines.eiffel_string_32 (l_str))
+					else
+							--| Should not occurs since precondition
+							--| is `has_formatted_output'
+						if add.has_offset then
+								--| This should not occurs anymore, but let this for now
+								--| TODO: 2009-09-22: remove after a few weeks of testing
+							Result := "`debug_output' disabled on this expanded item!"
+						else
+							check should_not_occurs: False end
+						end
 					end
-					create Result.make (l_str.count)
-					Result.append (Character_routines.eiffel_string_32 (l_str))
 				else
 						--| Should not occurs since precondition
 						--| is `has_formatted_output'
 					check should_not_occurs: False end
-					Result := "`debug_output` disabled !"
 				end
 			end
-		ensure
-			not_void: Result /= Void
 		end
 
 	full_output: STRING
@@ -359,12 +368,14 @@ feature -- Status report
 		do
 			Result := output_value (True).twin
 			if type /= Type_manifest_string and has_formatted_output then
-				Result.append_character (' ')
-				Result.append_character ('=')
-				Result.append_character (' ')
-				Result.append_character ('%"')
-				Result.append (formatted_output)
-				Result.append_character ('%"')
+				if attached formatted_output as fo then
+					Result.append_character (' ')
+					Result.append_character ('=')
+					Result.append_character (' ')
+					Result.append_character ('%"')
+					Result.append (fo)
+					Result.append_character ('%"')
+				end
 			end
 			debug ("debug_recv")
 				print ("Output is ")
@@ -378,17 +389,24 @@ feature -- Status report
 	output_for_debugger: STRING_32
 			-- Displayed output, including string representation.
 			--| but remove address value
+		local
+			s: detachable STRING_32
 		do
 			if has_formatted_output then
-				Result := formatted_output.twin
+				s := formatted_output
+			end
+			if s /= Void then
+				create Result.make_from_string (s)
 			else
-				Result := output_value (False).twin
+				create Result.make_from_string (output_value (False))
 			end
 			debug ("debug_recv")
 				print ("Output is ")
 				print (Result)
 				print ("%N")
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 	hexa_output_for_debugger: STRING_32
@@ -410,11 +428,32 @@ feature -- Status report
 	last_string_representation_length: INTEGER
 			-- Length of last string_representation Result
 
+
+	string_representation: detachable STRING_32
+			-- Complete string value representation.
+			-- it can be Void!
+		do
+			if address /= Void and has_formatted_output then
+				Result := truncated_string_representation (0, -1)
+			end
+		end
+
+	attached_string_representation: STRING_32
+			-- Complete string value representation.
+			-- it can be Void!
+		do
+			if attached string_representation as s then
+				Result := s
+			else
+				Result := no_string_representation_text
+			end
+		end
+
 	formatted_truncated_string_representation (min, max: INTEGER): STRING_32
 		local
 			i: INTEGER
 		do
-			Result := truncated_string_representation (min, max)
+			Result := attached_truncated_string_representation (min, max)
 			from
 				i := 1
 			until
@@ -441,37 +480,14 @@ feature -- Status report
 			end
 		end
 
-	string_representation: STRING_32
-			-- Complete string value representation.
-			-- it can be Void!
-		do
-			if address /= Void and has_formatted_output then
-				Result := raw_string_representation (0, -1)
-			end
-		end
-
-	truncated_string_representation (min, max: INTEGER): STRING_32
-			-- truncated string value representation.
-			--| if max < 0 then do not truncate the upper part of the string
-		do
-			Result := raw_string_representation (min, max)
-			if Result = Void then
-				Result := "Could not find string representation"
-			end
-		ensure
-			truncated_string_representation_not_void: Result /= Void
-		end
-
-feature {DUMP_VALUE} -- string_representation Implementation
-
-	raw_string_representation (min, max: INTEGER): STRING_32
+	truncated_string_representation (min, max: INTEGER): detachable STRING_32
 			-- Get the `debug_output' representation with bounds from `min' and `max'.
 			-- Special characters are not converted but '%U's are replaced by '%/1/' .
 		require
-			object_with_debug_output: address /= Void and has_formatted_output
+			object_with_debug_output: has_formatted_output and address /= Void
 		do
 			debug ("debugger_trace", "debug_recv")
-				print (generating_type + ".raw_string_representation (" + min.out + ", " + max.out + ") from " + dynamic_class.name_in_upper +" %N")
+				print (generating_type + ".truncated_string_representation (" + min.out + ", " + max.out + ") from " + dynamic_class.name_in_upper +" %N")
 			end
 			last_string_representation_length := 0
 			if is_dotnet_value then
@@ -481,7 +497,23 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			end
 		end
 
-	classic_string_representation (min, max: INTEGER): STRING_32
+	attached_truncated_string_representation (min, max: INTEGER): STRING_32
+			-- truncated string value representation.
+			--| if max < 0 then do not truncate the upper part of the string
+		do
+			Result := truncated_string_representation (min, max)
+			if Result = Void then
+				Result := no_string_representation_text
+			end
+		ensure
+			truncated_string_representation_not_void: Result /= Void
+		end
+
+feature {DUMP_VALUE} -- string_representation Implementation
+
+	no_string_representation_text: STRING = "Could not find string representation"
+
+	classic_string_representation (min, max: INTEGER): detachable STRING_32
 			-- String representation for classic value
 			-- with bounds from `min' and `max'.
 		require
@@ -602,20 +634,21 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			end
 		end
 
-	classic_debug_output_evaluated_string (min, max: INTEGER): STRING_32
+	classic_debug_output_evaluated_string (min, max: INTEGER): detachable STRING_32
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current	
 		require
 			is_classic_system
 		local
-			l_final_result_value: DUMP_VALUE
 			l_feat: FEATURE_I
 		do
 			if debugger_manager.safe_application_is_stopped then
 				if dynamic_class /= Void then
 					l_feat := debug_output_feature_i (dynamic_class)
-					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
-
-					if l_final_result_value /= Void and then not l_final_result_value.is_void then
+					if
+						l_feat /= Void and then
+						attached classic_feature_result_value_on_current (l_feat, dynamic_class) as l_final_result_value and then
+						not l_final_result_value.is_void
+					then
 						Result := l_final_result_value.classic_string_representation (min, max)
 						last_string_representation_length := l_final_result_value.last_string_representation_length
 					end
@@ -623,17 +656,22 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			end
 		end
 
-	generating_type_evaluated_string: STRING
+	generating_type_evaluated_string: detachable STRING
 			-- Full generic type using evaluation of generating_type on the related object
 			-- WARNING: This has to be an Eiffel type (descendant of ANY to implement generating_type)
 		require
 			is_valid_eiffel_type: dynamic_class /= Void and then not dynamic_class.is_true_external
 		do
 			if debugger_manager.safe_application_is_stopped then
-				if is_dotnet_value then
-					Result := dotnet_generating_type_evaluated_string
-				else
-					Result := classic_generating_type_evaluated_string
+				Result := debugger_manager.application.debugger_type_string_evaluation (Current, Void)
+				if Result.is_empty then
+						--| In case the RT_ .. classes are not up to date.
+						--| TODO: 2009-09-16: remove this after next release.
+					if is_dotnet_value then
+						Result := dotnet_generating_type_evaluated_string
+					else
+						Result := classic_generating_type_evaluated_string
+					end
 				end
 				if Result /= Void then
 					Result.prune_all ('%U')
@@ -643,24 +681,25 @@ feature {DUMP_VALUE} -- string_representation Implementation
 
 feature {NONE} -- Classic specific
 
-	classic_generating_type_evaluated_string: STRING
+	classic_generating_type_evaluated_string: detachable STRING
 		require
 			is_stopped: debugger_manager.safe_application_is_stopped
 			is_valid_eiffel_type: dynamic_class /= Void and then not dynamic_class.is_true_external
 			is_classic_system: is_classic_system
 		local
 			l_feat: FEATURE_I
-			l_final_result_value: DUMP_VALUE
 		do
 			l_feat := generating_type_feature_i (dynamic_class)
-			l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
-
-			if l_final_result_value /= Void and then not l_final_result_value.is_void then
+			if
+				l_feat /= Void and then
+				attached classic_feature_result_value_on_current (l_feat, dynamic_class) as l_final_result_value and then
+				not l_final_result_value.is_void
+			then
 				Result := l_final_result_value.classic_string_representation (0, -1)
 			end
 		end
 
-	classic_feature_result_value_on_current (a_feat: FEATURE_I; a_compiled_class: CLASS_C): DUMP_VALUE
+	classic_feature_result_value_on_current (a_feat: FEATURE_I; a_compiled_class: CLASS_C): detachable DUMP_VALUE
 			-- Evaluation of `a_feat': STRING on object related to Current dump_value
 			--| FIXME: duplication with DBG_EVALUATOR_CLASSIC.effective_evaluate_routine...
 		local
@@ -674,42 +713,48 @@ feature {NONE} -- Classic specific
 			check
 				running_and_stopped: debugger_manager.safe_application_is_stopped
 			end
-			if a_feat /= Void and debugger_manager.application.is_valid_object_address (value_address) then
+			if a_feat /= Void and debugger_manager.application.is_valid_and_known_object_address (value_address) then
 					-- Initialize the communication.
 				l_dbg_obj := debugger_manager.object_manager.classic_debugged_object_with_class (value_address, a_compiled_class)
-				l_dtype := l_dbg_obj.dynamic_class
-				if l_dtype = a_compiled_class or else l_dtype.simple_conform_to (a_compiled_class) then
-					l_dyntype := l_dbg_obj.class_type
-					if a_feat.is_attribute then
-						l_dbg_val := l_dbg_obj.attribute_by_name (a_feat.feature_name)
-						if l_dbg_val /= Void then
-							Result := l_dbg_val.dump_value
-						end
-					else
-						Init_recv_c
-						classic_send_value
-						if a_feat.is_external then
-							par := par + 1
-						end
+				if not l_dbg_obj.is_erroneous then
+					l_dtype := l_dbg_obj.dynamic_class
+					if l_dtype = a_compiled_class or else l_dtype.simple_conform_to (a_compiled_class) then
+						l_dyntype := l_dbg_obj.class_type
+						if a_feat.is_attribute then
+							l_dbg_val := l_dbg_obj.attribute_by_name (a_feat.feature_name)
+							if l_dbg_val /= Void then
+								Result := l_dbg_val.dump_value
+							end
+						else
+							Init_recv_c
+							classic_send_value
+							if last_classic_send_value_succeed then
+								if a_feat.is_external then
+									par := par + 1
+								end
 
-						if a_feat.written_class.is_precompiled then
-							par := par + 2
-							rout_info := Eiffel_system.system.rout_info_table.item (a_feat.rout_id_set.first)
-							send_rqst_4_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, l_dyntype.type_id - 1, par)
-						else
-							send_rqst_4_integer (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, 0, par)
-						end
-							-- Receive the Result.
-						recv_value (Current)
-						if is_exception then
-							Result := Void --| exception_item
-						else
-							if item /= Void then
-								item.set_hector_addr
-								Result := item.dump_value
+								if a_feat.written_class.is_precompiled then
+									par := par + 2
+									rout_info := Eiffel_system.system.rout_info_table.item (a_feat.rout_id_set.first)
+									send_rqst_4_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, l_dyntype.type_id - 1, par)
+								else
+									send_rqst_4_integer (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, 0, par)
+								end
+									-- Receive the Result.
+								recv_value (Current)
+								if is_exception then
+									Result := Void --| exception_item
+								else
+									if item /= Void then
+										item.set_hector_addr
+										Result := item.dump_value
+									end
+								end
+								reset_recv_value
+							else
+								Result := Void --| Unable to send the value
 							end
 						end
-						reset_recv_value
 					end
 				end
 			end
@@ -717,13 +762,17 @@ feature {NONE} -- Classic specific
 
 feature -- Action
 
+	last_classic_send_value_succeed: BOOLEAN
+
 	classic_send_value
 			-- send the value the application
+			-- Return False if unable to send the value
 		require
 			is_classic_system
 		local
 			value_string_c: ANY
 		do
+			last_classic_send_value_succeed := True
 			inspect (type)
 			when Type_manifest_string then
 				debug ("refactor_fixme")
@@ -732,8 +781,12 @@ feature -- Action
 				value_string_c := value_string.as_string_8.to_c
 				send_string_value ($value_string_c)
 			when Type_object, Type_expanded_object then
-				if value_address /= Void then
-					send_ref_value (value_address.as_pointer)
+				if attached value_address as add then
+					if add.has_offset then
+						send_ref_offset_value (add.as_pointer, add.offset)
+					else
+						send_ref_value (add.as_pointer)
+					end
 				else
 					send_ref_value (Default_pointer)
 				end
@@ -744,6 +797,7 @@ feature -- Action
 				debug("DEBUGGER")
 					io.put_string ("Error: unexpected value in [DUMP_VALUE]send_value%N")
 				end
+				last_classic_send_value_succeed := False
 			end
 		end
 
@@ -912,10 +966,19 @@ feature -- Access
 			-- If it makes sense, return the address of current object.
 			-- Void if `is_void' or if `Current' does not represent an object.
 		do
-			if type = Type_object or type = Type_string_dotnet or type = Type_manifest_string then
+			inspect type
+			when type_object, type_string_dotnet, type_manifest_string then
 				Result := value_address
-			elseif is_type_exception and value_exception /= Void then
-				Result := value_exception.address
+			when type_expanded_object then
+				Result := value_address
+			when
+				type_exception
+			then
+				if attached value_exception as e then
+					Result := e.address
+				end
+			else
+				check is_not_type_exception: not is_type_exception end
 			end
 		end
 

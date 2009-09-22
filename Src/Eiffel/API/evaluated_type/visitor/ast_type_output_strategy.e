@@ -31,6 +31,11 @@ inherit
 			{NONE} all
 		end
 
+	AST_OUTPUT_HELPER
+		export
+			{NONE} all
+		end
+
 create
 	default_create
 
@@ -239,21 +244,7 @@ feature {TYPE_A} -- Visitors
 			check
 				l_feat_not_void: l_feat /= Void
 			end
-			if l_feat.is_infix then
-				text_formatter.process_keyword_text (ti_infix_keyword, Void)
-				text_formatter.add_space
-				text_formatter.process_symbol_text (ti_double_quote)
-				text_formatter.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
-				text_formatter.process_symbol_text (ti_double_quote)
-			elseif l_feat.is_prefix then
-				text_formatter.process_keyword_text (ti_prefix_keyword, Void)
-				text_formatter.add_space
-				text_formatter.process_symbol_text (ti_double_quote)
-				text_formatter.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
-				text_formatter.process_symbol_text (ti_double_quote)
-			else
-				text_formatter.add_feature (l_feat, l_feat.name)
-			end
+			append_feature_name (l_feat, text_formatter)
 		end
 
 	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A)

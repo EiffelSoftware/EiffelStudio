@@ -198,7 +198,7 @@ feature {NONE} -- Access
 					i := i + 1
 				end
 
-				create Result.make (1, l_result.count)
+				create Result.make_filled ("", 1, l_result.count)
 				from l_result.start until l_result.after loop
 					Result.put (l_result.item_for_iteration, l_result.index)
 					l_result.forth

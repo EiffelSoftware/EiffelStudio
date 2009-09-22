@@ -90,11 +90,20 @@ feature {NONE} -- Implementation
 		local
 			l_eitem: EB_GRID_EDITOR_TOKEN_ITEM
 			l_token_writer: like token_writer
+			l_duration: REAL_64
+			l_seconds: INTEGER
+			l_fine: TIME
 		do
 			Precursor
 			create l_eitem
 			l_token_writer := token_writer
-			l_token_writer.add_comment ("[0.356s] ")
+			l_token_writer.add_comment ("[")
+			l_duration := test_result.duration.fine_seconds_count
+			l_seconds := l_duration.truncated_to_integer
+			create l_fine.make_fine (0, 0, l_duration - l_seconds)
+			l_token_writer.add_comment (l_seconds.out)
+			l_token_writer.add_comment (l_fine.formatted_out (".ff4"))
+			l_token_writer.add_comment ("s] ")
 			l_token_writer.process_basic_text (test_result.tag.as_string_8)
 			l_eitem.set_text_with_tokens (l_token_writer.last_line.content)
 			reset_token_writer

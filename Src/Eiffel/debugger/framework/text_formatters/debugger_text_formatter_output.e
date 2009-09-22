@@ -90,6 +90,7 @@ feature -- Application status
 			ctlr: DEBUGGER_CONTROLLER
 			app: APPLICATION_EXECUTION
 			s: STRING
+			s32: STRING_32
 		do
 			ctlr := dbg.controller
 			app := dbg.application
@@ -103,10 +104,10 @@ feature -- Application status
 			tf.add_string ("Launching system :")
 			tf.add_new_line
 			if params /= Void then
-				s := params.title
-				if s /= Void then
+				s32 := params.title
+				if s32 /= Void then
 					tf.add_comment ("  - profile = ")
-					tf.add_quoted_text (s)
+					tf.add_quoted_text (s32)
 					tf.add_new_line
 				end
 			end

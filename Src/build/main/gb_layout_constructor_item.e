@@ -110,7 +110,6 @@ feature {GB_OBJECT} -- Implementation
 			Precursor {EV_TREE_ITEM}
 		end
 
-
 feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
 
 	update_pixmap
@@ -166,19 +165,36 @@ feature {NONE} -- Implementation
 			object.register_collapse
 		end
 
+	delay_to_make_keyboard_navigation_practical: EV_TIMEOUT
+			-- Timeout for making keyboard navigation practical
+
 	update_docked_object_editor
 			-- update `docked_object_editor' to reflect `Current'
 		do
-			if components.system_status.project_open then
-					-- If there is no project open, then there is
-					-- nothing to update. The reason that we must protect,
-					-- is that when rebuilding new projects, it seems that
-					-- selection change events from the layout tree items
-					-- are somewhat unusual. There will be no side
-					-- effect from performing this protection. Julian.				
-				components.object_editors.force_name_change_completion_on_all_editors
-				components.object_editors.docked_object_editor.set_object (object)
+				-- To make navigation much more practical (since building the object editor
+				-- is quite expensive) we do it on a timeout if the selected item is still the same.
+			if delay_to_make_keyboard_navigation_practical = Void then
+				create delay_to_make_keyboard_navigation_practical
+				delay_to_make_keyboard_navigation_practical.actions.extend (agent
+					do
+							-- Kill the timer and start the action, but only if Current
+							-- is still the selected element.
+						delay_to_make_keyboard_navigation_practical.set_interval (0)
+						if parent_tree /= Void and then parent_tree.selected_item = Current then
+							if components.system_status.project_open then
+									-- If there is no project open, then there is
+									-- nothing to update. The reason that we must protect,
+									-- is that when rebuilding new projects, it seems that
+									-- selection change events from the layout tree items
+									-- are somewhat unusual. There will be no side
+									-- effect from performing this protection. Julian.				
+								components.object_editors.force_name_change_completion_on_all_editors
+								components.object_editors.docked_object_editor.set_object (object)
+							end
+						end
+					end)
 			end
+			delay_to_make_keyboard_navigation_practical.set_interval (300)
 		end
 
 note

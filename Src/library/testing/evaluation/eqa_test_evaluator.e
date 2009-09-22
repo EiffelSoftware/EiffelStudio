@@ -91,12 +91,14 @@ feature -- Execution
 			a_routine_attached: a_routine /= Void
 			--a_routine_valid: a_routine.valid_operands ([create {G}])
 		local
+			l_start_date: DATE_TIME
 			l_creator: FUNCTION [like Current, TUPLE, G]
 			l_prepare, l_test, l_clean: like last_invocation_response
 			l_test_set: detachable G
 			l_basic_test_set: EQA_TEST_SET
 			l_old: detachable PLAIN_TEXT_FILE
 		do
+			create l_start_date.make_now
 			--(create {EQA_EVALUATION_INFO}).set_test_name (a_name)
 			l_old := io.default_output
 			io.set_file_default (buffer)
@@ -105,7 +107,7 @@ feature -- Execution
 			l_prepare := last_invocation_response
 			check l_prepare /= Void end
 			if l_prepare.is_exceptional then
-				create last_result_cache.make (l_prepare, buffered_output)
+				create last_result_cache.make (l_start_date, l_prepare, buffered_output)
 			else
 				l_test_set := l_creator.last_result
 				check l_test_set /= Void end
@@ -117,7 +119,7 @@ feature -- Execution
 				safe_execute (agent l_basic_test_set.clean (l_test.is_exceptional))
 				l_clean := last_invocation_response
 				check l_clean /= Void end
-				create {EQA_ETEST_RESULT} last_result_cache.make (l_prepare, l_test, l_clean, buffered_output)
+				create {EQA_ETEST_RESULT} last_result_cache.make (l_start_date, l_prepare, l_test, l_clean, buffered_output)
 			end
 			if l_old = Void then
 				io.set_output_default

@@ -25,23 +25,32 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_setup_response: attached like setup_response; an_output: READABLE_STRING_8)
+	make (a_start_date: like start_date; a_setup_response: attached like setup_response; an_output: READABLE_STRING_8)
 			-- Initialize `Current' with exceptional setup response.
+			--
+			-- `a_start_date': Date/time when test was launched.
+			-- `a_setup_response': Response from setup stage.
+			-- `an_output': Output gathered during test execution.
 		require
 			a_setup_response_attached: a_setup_response /= Void
 			an_output_attached: an_output /= Void
 		do
+			start_date := a_start_date
 			setup_response := a_setup_response
 			create output.make_from_string (an_output)
-			create date.make_now
+			create finish_date.make_now
 		ensure
+			start_date_set: start_date = a_start_date
 			setup_response_set: setup_response = a_setup_response
 			output_set: output.same_string (an_output)
 		end
 
 feature -- Access
 
-	date: DATE_TIME
+	start_date: DATE_TIME
+			-- <Precursor>
+
+	finish_date: DATE_TIME
 			-- <Precursor>
 
 	setup_response: EQA_TEST_INVOCATION_RESPONSE

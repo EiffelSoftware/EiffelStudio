@@ -18,7 +18,7 @@ OBJECTS =   adler32.$obj compress.$obj crc32.$obj deflate.$obj gzio.$obj infback
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: lib_dir zlib.lib clean
+all:: exp_lib_dir lib_dir zlib.lib clean
 
 ..$(DIR)..$(DIR)library$(DIR)vision2$(DIR)spec:
 	$(MKDIR_TARGET)
@@ -34,6 +34,21 @@ all:: lib_dir zlib.lib clean
 
 lib_dir: ..$(DIR)..$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 
+..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec:
+	$(MKDIR_TARGET)
+
+..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec
+	$(MKDIR_TARGET)
+
+..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)
+	$(MKDIR_TARGET)
+
+..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
+	$(MKDIR_TARGET)
+
+exp_lib_dir: ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
+
+
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
@@ -42,3 +57,4 @@ clean:
 zlib.lib: $(OBJECTS)
 	$alib_line
 	$(MV) $@ ..$(DIR)..$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
+	$(MV) $@ ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@

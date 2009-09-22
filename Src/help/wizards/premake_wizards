@@ -31,5 +31,4 @@ mv wizard.tar.bz2 $EXPORT_DIR/precomp_wizard
 clean_project                                                                    
 echo Precompilation wizard Built!
 
-
-
+remtrace EiffelCocoa wizard

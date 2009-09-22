@@ -10,9 +10,13 @@ deferred class
 	ES_TEST_RECORD_GRID_ROW [G -> TEST_SESSION_I, H -> TEST_SESSION_RECORD]
 
 inherit
+	ES_SHARED_TEST_GRID_UTILITIES
+
 	EB_RECYCLABLE
 
 	EB_SHARED_PIXMAPS
+
+	SHARED_TEST_SERVICE
 
 feature {NONE} -- Initialization
 
@@ -30,6 +34,8 @@ feature {NONE} -- Initialization
 			record := a_record
 			row := a_row
 			icons_provider := a_icons_provider
+			create subrows.make_default
+			subrows.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_8]})
 			row.expand_actions.extend (agent on_row_expand)
 			row.collapse_actions.extend (agent on_row_collapse)
 			refresh
@@ -96,6 +102,9 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	subrows: DS_HASH_TABLE [ES_TEST_GRID_ROW, READABLE_STRING_8]
+			-- Table containing test names and the corresponding grid row
+
 	internal_session: detachable G
 			-- Internal storage of `session'
 
@@ -115,6 +124,32 @@ feature {NONE} -- Access
 		ensure
 			result_attached: Result /= Void
 			result_not_empty: not Result.is_empty
+		end
+
+	test_from_name (a_name: READABLE_STRING_8): detachable TEST_I
+			-- Test instance given it's name if available
+			--
+			-- `a_name': Name of the test for which its instance should be returned.
+			-- `Result': Test from test suite.
+		require
+			a_name_attached: a_name /= Void
+		local
+			l_function: FUNCTION [ANY, TUPLE [TEST_SUITE_S], detachable TEST_I]
+		do
+			l_function := agent (a_test_suite: TEST_SUITE_S; a_n: READABLE_STRING_8): detachable TEST_I
+				do
+					if a_test_suite.has_test (a_n) then
+						Result := a_test_suite.test (a_n)
+					end
+				end (?, a_name)
+			if is_running then
+				l_function.call ([session.test_suite])
+			else
+				perform_with_test_suite (l_function)
+			end
+			Result := l_function.last_result
+		ensure
+			result_valid: Result /= Void implies Result.name.same_string (a_name)
 		end
 
 feature -- Status report
@@ -161,7 +196,7 @@ feature {ES_TEST_RECORDS_TAB} -- Basic operations
 			create l_text.make (80)
 			l_text.append_string_general (label)
 			l_text.append_string_general (" (")
-			l_text.append_string_general (record.creation_date.formatted_out ("[0]mm/[0]dd/yyyy [0]hh:[0]mi"))
+			l_text.append_string_general (date_time (record.creation_date))
 			l_text.append_string_general (")")
 			create l_label.make_with_text (l_text)
 			l_label.set_pixmap (pixmap)
@@ -208,8 +243,49 @@ feature {ES_TEST_RECORDS_TAB} -- Basic operations
 			if is_expandable then
 				l_row.ensure_expandable
 			end
+			subrows.wipe_out
 		ensure
 			not_expanded: not is_expanded
+		end
+
+feature {ES_TEST_RECORDS_TAB} -- Events: tests
+
+	on_test_added (a_test: TEST_I)
+			-- Called when test was added to test suite.
+			--
+			-- `a_test': Test that was added to test suite.
+		require
+			a_test_attached: a_test /= Void
+			a_test_usable: a_test.is_interface_usable
+		local
+			l_subrows: like subrows
+		do
+			l_subrows := subrows
+			l_subrows.search (a_test.name)
+			if l_subrows.found then
+				if not l_subrows.found_item.is_attached then
+					l_subrows.found_item.attach_test (a_test)
+				end
+			end
+		end
+
+	on_test_remove (a_test: TEST_I)
+			-- Called after test has been removed from test suite.
+			--
+			-- `a_test': Test that was removed from test suite.
+		require
+			a_test_attached: a_test /= Void
+			a_test_usable: a_test.is_interface_usable
+		local
+			l_subrows: like subrows
+		do
+			l_subrows := subrows
+			l_subrows.search (a_test.name)
+			if l_subrows.found then
+				if l_subrows.found_item.is_attached then
+					l_subrows.found_item.detach_test
+				end
+			end
 		end
 
 feature {NONE} -- Events: row

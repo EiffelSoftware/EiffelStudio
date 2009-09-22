@@ -668,7 +668,7 @@ feature {NONE} --
 					i := i + 1
 				end
 				create Result.make (l_result.count)
-				{SYSTEM_ARRAY}.copy_array_array_integer_32 (({NATIVE_ARRAY [DIRECTORY_INFO]}) [({ARRAY [DIRECTORY_INFO]}) #? l_result], Result, l_result.count)
+				{SYSTEM_ARRAY}.copy_array_array_integer_32 (({NATIVE_ARRAY [DIRECTORY_INFO]}) [({ARRAY [DIRECTORY_INFO]}) #? l_result.to_array], Result, l_result.count)
 			else
 				Result := a_dirs
 			end

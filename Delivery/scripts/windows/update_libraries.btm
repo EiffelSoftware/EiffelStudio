@@ -1,26 +1,24 @@
 remtrace Update the Eiffel libraries source
 
-cdd %EIFFEL_SRC
 remtrace Compile the Eiffel libraries C code
 remtrace com
-cd %EIFFEL_SRC\library\com\Clib
+cdd %1\library\com\Clib
 default_make
 remtrace com run-time
-cd %EIFFEL_SRC\library\com\Clib_runtime
+cdd %1\library\com\Clib_runtime
 default_make
 remtrace curl
-cd %EIFFEL_SRC\library\cURL\Clib
+cdd %1\library\cURL\Clib
 default_make
 remtrace encryption
-cd %EIFFEL_SRC\library\encryption\Clib
+cdd %1\library\encryption\Clib
 default_make
 remtrace net
-cd %EIFFEL_SRC\library\net\Clib
+cdd %1\library\net\Clib
 default_make
 remtrace wel
-cd %EIFFEL_SRC\library\wel\clib
+cdd %1\library\wel\clib
 default_make
 remtrace vision2
-cd %EIFFEL_SRC\library\vision2\Clib
+cdd %1\library\vision2\Clib
 default_make
-cd %EIFFEL_SRC

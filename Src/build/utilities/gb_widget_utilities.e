@@ -1,4 +1,4 @@
-note	
+note
 	description: "Objects that provide useful facilities for widgets."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ note
 
 deferred class
 	GB_WIDGET_UTILITIES
-	
+
 inherit
 	EV_FONT_CONSTANTS
 
@@ -30,12 +30,12 @@ feature -- Basic operations
 					if parent_containable /= Void then
 						Result := parent_window (parent_containable)
 					end
-				end	
+				end
 			else
 				Result := window
-			end	
+			end
 		end
-		
+
 	parent_dialog (widget: EV_WIDGET): EV_DIALOG
 			-- `Result' is dialog parent of `widget'.
 			-- `Void' if none.
@@ -48,12 +48,12 @@ feature -- Basic operations
 			if dialog = Void then
 				if widget.parent /= Void then
 					Result := parent_dialog (widget.parent)
-				end	
+				end
 			else
 				Result := dialog
-			end	
+			end
 		end
-		
+
 	x_position_relative_to_window (widget: EV_WIDGET): INTEGER
 			-- `Result' is the x position of `widget' relative to
 			-- the EV_WINDOW containing `widget'.
@@ -74,7 +74,7 @@ feature -- Basic operations
 				end
 			end
 		end
-		
+
 	y_position_relative_to_window (widget: EV_WIDGET): INTEGER
 			-- `Result' is the y position of `widget' relative to
 			-- the EV_WINDOW containing `widget'.
@@ -108,7 +108,7 @@ feature -- Basic operations
 			box_contains_widget: a_box.has (a_widget)
 			widget_not_expanded: not a_box.is_item_expanded (a_widget)
 		end
-		
+
 	disable_all_items (b: EV_BOX)
 			-- Call `disable_item_expand' on all items in `b'.
 		require
@@ -123,7 +123,7 @@ feature -- Basic operations
 				b.forth
 			end
 		end
-		
+
 	align_labels_left (b: EV_BOX)
 			-- For every item in `b' of type EV_LABEL, align the test left.
 		require
@@ -143,7 +143,7 @@ feature -- Basic operations
 				b.forth
 			end
 		end
-		
+
 	unparent_ev_object (ev_object: EV_ANY)
 			-- Remove `ev_object' from its parent.
 		require
@@ -189,7 +189,7 @@ feature -- Basic operations
 				containable_unparented: containable.parent = Void
 			end
 		end
-		
+
 	fake_cancel_button (a_dialog: EV_DIALOG; action: PROCEDURE [ANY, TUPLE])
 			-- Place a cancel button in `a_dialog',
 			-- and then remove it, so that we have
@@ -226,7 +226,7 @@ feature -- Basic operations
 		do
 			tree_node_list.recursive_do_all (agent expand_node)
 		end
-		
+
 	collapse_tree_recursive (tree: EV_TREE)
 			-- Ensure that every node of `tree' is not epanded.
 		require
@@ -234,7 +234,7 @@ feature -- Basic operations
 		do
 			tree.recursive_do_all (agent collapse_node)
 		end
-		
+
 	unparent_tree_node (tree_node: EV_TREE_NODE)
 			-- Remove `tree_node' from its `parent'.
 			-- Do not change `index' of `parent'.
@@ -253,7 +253,7 @@ feature -- Basic operations
 		ensure
 			tree_node_unparented: tree_node.parent = Void
 		end
-		
+
 	set_split_position (split_area: EV_SPLIT_AREA; position: INTEGER)
 			-- Assign `position' to `split_position' of `split_area', bounded
 			-- to the minimum and maximum split positions.
@@ -262,7 +262,7 @@ feature -- Basic operations
 		do
 			split_area.set_split_position ((position.max (split_area.minimum_split_position)).min (split_area.maximum_split_position))
 		end
-		
+
 	scaled_pixmap (original_pixmap: EV_PIXMAP; x_dimension, y_dimension: INTEGER): EV_PIXMAP
 			-- `Result' is representation of ``original_pixmap', scaled to fit in `x_dimension', `y_dimension'
 			-- with same aspect ratio.
@@ -271,13 +271,13 @@ feature -- Basic operations
 			x_dimension_positive: x_dimension > 0
 			y_dimension_positive: y_dimension > 0
 		local
-			x_ratio, y_ratio: REAL
+			x_ratio, y_ratio: REAL_64
 			new_x, new_y: INTEGER
-			biggest_ratio: REAL
+			biggest_ratio: REAL_64
 		do
 			x_ratio := original_pixmap.width / x_dimension
 			y_ratio := original_pixmap.height / y_dimension
-			if x_ratio > 1 and y_ratio < 1 then 
+			if x_ratio > 1 and y_ratio < 1 then
 				new_x := x_dimension
 				new_y := (original_pixmap.height / x_ratio).truncated_to_integer
 			end
@@ -298,7 +298,7 @@ feature -- Basic operations
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	select_named_combo_item (combo_box: EV_COMBO_BOX; a_text: STRING)
 			-- Ensure item in `combo_box' with `text' matching `a_text' is
 			-- selected. Case insensitive.
@@ -321,7 +321,7 @@ feature -- Basic operations
 				combo_box.forth
 			end
 		end
-		
+
 	list_item_with_matching_text (item_list: EV_LIST_ITEM_LIST; a_text:STRING): EV_LIST_ITEM
 			-- `Result' is item contained in `item_list' with
 			-- `text' matching `a_text', or `Void' if none.
@@ -340,9 +340,9 @@ feature -- Basic operations
 				item_list.forth
 			end
 		end
-		
+
 	tree_item_matching_path (tree_list: EV_TREE_NODE_LIST; texts: ARRAYED_LIST [STRING]): EV_TREE_ITEM
-			-- `Result' is tree item in `tree_list' that is reachable by stepping down a level for each 
+			-- `Result' is tree item in `tree_list' that is reachable by stepping down a level for each
 			-- matched item in `texts'.
 		require
 			tree_list_not_void: tree_list /= Void
@@ -409,7 +409,7 @@ feature -- Basic operations
 			new_widget_parented_correctly: new_widget.parent /= Void and old original_widget.parent = new_widget.parent
 			original_widget_not_parented: original_widget.parent = Void
 		end
-		
+
 	path_of_tree_node (root_node: EV_TREE_NODE): ARRAYED_LIST [STRING]
 			-- Result is `text' of all parents of `Current' from the top down to
 			-- and including `node'.
@@ -430,7 +430,7 @@ feature -- Basic operations
 				temp_result.extend (node.text)
 				node ?= node.parent
 			end
-			
+
 				-- Now build `result' by reversing the structure recently traversed.
 				-- This is because we wish the higher level nodes to appear first.
 			create Result.make (temp_result.count)
@@ -449,7 +449,7 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 			node_not_parented_implies_result_has_single_item: root_node.parent = Void implies Result.count = 1
 		end
-		
+
 
 feature {NONE} -- Implementation
 
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 		ensure
 			node_expanded: node.is_expandable implies node.is_expanded
 		end
-		
+
 	collapse_node (node: EV_TREE_NODE)
 			-- Collapse `node' if not empty.
 		do
@@ -470,9 +470,9 @@ feature {NONE} -- Implementation
 				node.collapse
 			end
 		end
-		
+
 	internal_tree_item_matching_path (tree_list: EV_TREE_NODE_LIST; texts: ARRAYED_LIST [STRING]): EV_TREE_ITEM
-			-- `Result' is tree item in `tree_list' that is reachable by stepping down a level for each 
+			-- `Result' is tree item in `tree_list' that is reachable by stepping down a level for each
 			-- matched item in `texts'.
 		require
 			tree_list_not_void: tree_list /= Void
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 		ensure
 			tree_list_unchanged: old tree_list.index = tree_list.index
 		end
-		
+
 	add_to_tree_node_alphabetically (tree_node_list: EV_TREE_NODE_LIST; tree_node: EV_TREE_NODE)
 			-- Add `tree_node' to `tree_node_list' at a position so that it is ordered alphabetically
 			-- by its `text'.
@@ -524,7 +524,7 @@ feature {NONE} -- Implementation
 			from
 				tree_node_list.go_i_th (tree_node_list.count)
 			until
-				tree_node_list.off or else tree_node_list.item.text.as_lower < l_text 
+				tree_node_list.off or else tree_node_list.item.text.as_lower < l_text
 			loop
 				tree_node_list.back
 			end
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 			contained: tree_node_list.has (tree_node)
 			tree_node_contents_alphabetical (tree_node_list)
 		end
-		
+
 	add_to_list_alphabetically (list: EV_LIST_ITEM_LIST; list_item: EV_LIST_ITEM)
 			-- Add `tree_node' to `tree_node_list' at a position so that it is ordered alphabetically
 			-- by its `text'.
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 			from
 				list.go_i_th (list.count)
 			until
-				list.off or else list.item.text.as_lower < l_text 
+				list.off or else list.item.text.as_lower < l_text
 			loop
 				list.back
 			end
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 		ensure
 			contained: list.has (list_item)
 		end
-		
+
 	tree_node_contents_alphabetical (tree_node_list: EV_TREE_NODE_LIST): BOOLEAN
 			-- Are the `text' of all items contained ordered alphabetically?
 		require
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 		ensure
 			index_not_changed: old tree_node_list.index = tree_node_list.index
 		end
-		
+
 	insert_into_window (ev_any: EV_ANY; window: EV_TITLED_WINDOW)
 			-- Insert `ev_any' into `window' with the minimum parenting structure
 			-- required to bridge the interface if `ev_any' is not a widget.
@@ -615,12 +615,12 @@ feature {NONE} -- Implementation
 		do
 			an_item ?= ev_any
 			a_menu_bar ?= ev_any
-			
+
 			if an_item /= Void then
 				tool_bar_item ?= ev_any
 				if tool_bar_item /= Void then
 					create tool_bar
-					tool_bar.extend (tool_bar_item)	
+					tool_bar.extend (tool_bar_item)
 					window.extend (tool_bar)
 				end
 				tree_item ?= an_item
@@ -657,7 +657,7 @@ feature {NONE} -- Implementation
 				parent_within_window_structure: parent_window (containable) = window
 			end
 		end
-		
+
 	build_string_from_font (font: EV_FONT): STRING
 			-- `Result' is string representation of `font'.
 		require
@@ -676,7 +676,7 @@ feature {NONE} -- Implementation
 				font.preferred_families.forth
 			end
 		end
-		
+
 	font_constant_to_string (constant: INTEGER): STRING
 			-- `Result' is font `constant' converted to STRING representation.
 		require
@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	string_to_font_constant (string: STRING): INTEGER
 			-- `Result' is string representation of font constant converted to INTEGER.
 		require
@@ -697,7 +697,7 @@ feature {NONE} -- Implementation
 		ensure
 			valid_constant: valid_family (Result) or valid_shape (Result) or valid_weight (Result)
 		end
-		
+
 	font_integer_lookup: HASH_TABLE [INTEGER, STRING]
 			-- `Result' is a lookup table for all INTEGER font constant values by STRING.
 		once
@@ -716,7 +716,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	font_string_lookup: HASH_TABLE [STRING, INTEGER]
 			-- `Result' is a lookup table for all STRING font constant values by INTEGER.
 		once
@@ -735,7 +735,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	build_string_from_color (color: EV_COLOR): STRING
 			-- `Result' is string representation of `color'.
 		require
@@ -746,7 +746,7 @@ feature {NONE} -- Implementation
 			Result := Result + add_leading_zeros (color.green_8_bit.out, 3)
 			Result := Result + add_leading_zeros (color.blue_8_bit.out, 3)
 		end
-		
+
 	build_color_from_string (a_string: STRING): EV_COLOR
 			-- `Result' is an EV_COLOR built from contents of `a_string'.
 		require
@@ -761,7 +761,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	build_font_from_string (a_string: STRING): EV_FONT
 			-- `Result' is an EV_FONT built from contents of `a_string'.
 		require
@@ -780,7 +780,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	get_next_part_of_multi_part_string (a_string: STRING): STRING
 			-- `Result' is substring from position 1 to the position up to the first
 			-- occurance of a ';' character. Prune all characters up to and including
@@ -798,7 +798,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 			counts_consistent: old a_string.count = a_string.count + Result.count + 1
 		end
-		
+
 	add_leading_zeros (original_string: STRING count: INTEGER): STRING
 			-- `Result' is `a_string' with leading zeros added so that it it `count' characters long.
 		require

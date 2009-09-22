@@ -11,28 +11,20 @@ class
 inherit
 	GB_COMMAND_TOOL_BAR_BUTTON
 		undefine
-			is_in_default_state
-		redefine
-			implementation,
+			is_in_default_state,
 			create_implementation
+		redefine
+			implementation
+
 		end
 
 	EV_TOOL_BAR_TOGGLE_BUTTON
 		redefine
-			implementation,
-			create_implementation
+			implementation
 		end
 
 create
 	make
-
-feature {NONE} -- Implementation
-
-	create_implementation
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			create {EV_TOOL_BAR_TOGGLE_BUTTON_IMP} implementation.make (Current)
-		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

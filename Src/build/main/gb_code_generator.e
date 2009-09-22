@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 			-- Report progress from XML store, represented by percentage
 			-- of `stored' against `total'.
 		do
-			set_progress (progress_switch * (stored / total))
+			set_progress (progress_switch * (stored / total).truncated_to_real)
 		end
 
 	reset_generation_constants
@@ -776,7 +776,7 @@ feature {NONE} -- Implementation
 			a_class_name, temp_string: STRING
 		do
 			window_counter := window_counter + 1
-			set_progress ((progress_switch + ((1 - progress_switch) * (window_counter / total_windows))).min (1))
+			set_progress ((progress_switch + ((1 - progress_switch) * (window_counter / total_windows).truncated_to_real)).min (1))
 				-- Build the file name for generation
 			a_class_name := info.name.as_upper + Class_implementation_extension
 			file_name := directory_name.twin

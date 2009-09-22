@@ -835,7 +835,7 @@ feature {NONE} -- Implementation
 			-- Perform sort of information displayed in `constants_list',
 			-- sorted by column index `a_column',
 		local
-			sorter: DS_ARRAY_QUICK_SORTER [EV_MULTI_COLUMN_LIST_ROW]
+			sorter: QUICK_SORTER [EV_MULTI_COLUMN_LIST_ROW]
 			comparator: MULTI_COLUMN_LIST_ROW_STRING_COMPARATOR
 			lconstants: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		do

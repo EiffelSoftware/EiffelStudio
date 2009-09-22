@@ -14,6 +14,7 @@
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf" readonly="false"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf" readonly="false"/>

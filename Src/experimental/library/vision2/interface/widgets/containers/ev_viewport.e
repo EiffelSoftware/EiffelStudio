@@ -98,13 +98,13 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			has_item: item /= Void
-			a_width_positive: a_width > 0
+			a_width_positive: a_width >= 0
 			a_width_not_smaller_than_minimum_width:
 				a_width >= item.minimum_width
 		do
 			implementation.set_item_width (a_width)
 		ensure
-			an_item_width_assigned: item.width = a_width
+			an_item_width_assigned: a_width > 0 implies item.width = a_width
 		end
 
 	set_item_height (a_height: INTEGER)
@@ -112,13 +112,13 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			has_item: item /= Void
-			a_height_positive: a_height > 0
+			a_height_positive: a_height >= 0
 			a_height_not_smaller_than_minimum_height:
 				a_height >= item.minimum_height
 		do
 			implementation.set_item_height ( a_height)
 		ensure
-			an_item_height_assigned: item.height = a_height
+			an_item_height_assigned: a_height > 0 implies item.height = a_height
 		end
 
 	set_item_size (a_width, a_height: INTEGER)
@@ -127,8 +127,8 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			has_item: item /= Void
-			a_width_positive: a_width > 0
-			a_height_positive: a_height > 0
+			a_width_positive: a_width >= 0
+			a_height_positive: a_height >= 0
 			a_width_not_smaller_than_minimum_width:
 				a_width >= item.minimum_width
 			a_height_not_smaller_than_minimum_height:
@@ -136,8 +136,8 @@ feature -- Element change
 		do
 			implementation.set_item_size (a_width, a_height)
 		ensure
-			an_item_width_assigned: item.width = a_width
-			an_item_height_assigned: item.height = a_height
+			an_item_width_assigned: a_width > 0 implies item.width = a_width
+			an_item_height_assigned: a_height > 0 implies item.height = a_height
 		end
 
 feature {NONE} -- Contract support

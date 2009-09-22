@@ -297,6 +297,9 @@ feature -- Status report
 			-- Indiciate if argument switch value descriptions should be shown inline
 			-- with the argument description
 
+	is_usage_verbose: BOOLEAN assign set_is_usage_verbose
+			-- Indicates if the usage information should be verbose.
+
 	is_usage_displayed_on_error: BOOLEAN assign set_is_usage_displayed_on_error
 			-- Indicates if usage should be shown on an error.
 
@@ -442,6 +445,18 @@ feature -- Status Setting
 			is_showing_argument_usage_inline := a_show
 		ensure
 			is_showing_argument_usage_inline_set: is_showing_argument_usage_inline = a_show
+		end
+
+	set_is_usage_verbose (a_verbose: like is_usage_verbose)
+			-- Sets usage formatter to display a much information as possible.
+			--
+			-- `a_verbose': True to display verbose usage; False otherwise.
+		require
+			not_has_executed: not has_executed
+		do
+			is_usage_verbose := a_verbose
+		ensure
+			is_usage_verbose_set: is_usage_verbose = a_verbose
 		end
 
 	set_is_usage_displayed_on_error (a_display: like is_usage_displayed_on_error)
@@ -1702,6 +1717,8 @@ feature {NONE} -- Usage
 			l_dependent_switches: detachable ARRAY [ARGUMENT_SWITCH]
 			l_dependent_list: ARRAYED_LIST [ARGUMENT_SWITCH]
 			l_use_separated: like is_using_separated_switch_values
+			l_verbose: BOOLEAN
+			l_unix_style: BOOLEAN
 			l_cursor: CURSOR
 			l_switch: ARGUMENT_SWITCH
 			l_cfg: like command_option_group_configuration
@@ -1715,6 +1732,8 @@ feature {NONE} -- Usage
 				l_dependencies := switch_dependencies
 				l_prefix := switch_prefixes[1]
 				l_use_separated := is_using_separated_switch_values
+				l_verbose := is_usage_verbose
+				l_unix_style := is_using_unix_switch_style
 				create Result.make  (a_group.count * 12)
 
 				l_cursor := a_group.cursor
@@ -1728,7 +1747,15 @@ feature {NONE} -- Usage
 								Result.append_character ('[')
 							end
 							Result.append_character (l_prefix)
-							Result.append (l_switch.name)
+							if l_verbose then
+								if l_unix_style then
+									Result.append_character (l_prefix)
+								end
+								Result.append (l_switch.long_name)
+							else
+								Result.append (l_switch.name)
+							end
+
 							if attached {ARGUMENT_VALUE_SWITCH} l_switch as l_val_switch then
 								l_opt_val := l_val_switch.is_value_optional
 								if l_opt_val then

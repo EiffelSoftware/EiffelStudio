@@ -18,6 +18,8 @@ inherit
 
 	SHARED_TEST_SERVICE
 
+	EV_STOCK_PIXMAPS
+
 feature {NONE} -- Initialization
 
 	make (a_record: like record; a_row: like row; a_icons_provider: like icons_provider)
@@ -109,7 +111,7 @@ feature {NONE} -- Access
 			-- Internal storage of `session'
 
 	icons_provider: ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
-			-- Icons provider for testing tool icons.
+			-- Icons provider for testing tool icons
 
 	pixmap: EV_PIXMAP
 			-- Pixmap used at beginning of row
@@ -189,7 +191,6 @@ feature {ES_TEST_RECORDS_TAB} -- Basic operations
 	refresh
 			-- Rebuild content and all subrows of `row'.
 		local
-			l_pixmap: EV_PIXMAP
 			l_label: EV_GRID_LABEL_ITEM
 			l_text: STRING_32
 		do
@@ -203,15 +204,19 @@ feature {ES_TEST_RECORDS_TAB} -- Basic operations
 			row.set_item (1, l_label)
 
 			create l_label.make_with_text ("")
-			l_pixmap := icon_pixmaps.general_save_icon.twin
-			l_pixmap.disable_sensitive
-			l_label.set_pixmap (l_pixmap)
 			l_label.disable_full_select
+			l_label.pointer_enter_actions.extend (agent on_store_label_enter (l_label))
+			l_label.pointer_leave_actions.extend (agent on_store_label_leave (l_label))
+			l_label.pointer_button_press_actions.extend (agent on_store_label_press)
+			on_store_label_leave (l_label)
 			row.set_item (3, l_label)
 
 			create l_label.make_with_text ("")
 			l_label.set_pixmap (icon_pixmaps.general_delete_icon)
 			l_label.disable_full_select
+			l_label.pointer_enter_actions.extend (agent on_delete_label_enter (l_label))
+			l_label.pointer_leave_actions.extend (agent on_delete_label_leave (l_label))
+			l_label.pointer_button_press_actions.extend (agent on_delete_label_press)
 			row.set_item (4, l_label)
 		end
 
@@ -303,6 +308,108 @@ feature {NONE} -- Events: row
 		do
 			if is_expanded then
 				clear_content
+			end
+		end
+
+feature {NONE} -- Events: labels
+
+	on_store_label_enter (a_label: EV_GRID_LABEL_ITEM)
+			-- Called when label item is entered with pointer.
+			--
+			-- `a_label': Label that was hovered with mouse.
+		require
+			a_label_attached: a_label /= Void
+			a_label_not_destroyed: not a_label.is_destroyed
+		do
+			a_label.set_pixmap (icons_provider.icons.record_store_icon)
+			row.parent.set_pointer_style (hyperlink_cursor)
+		end
+
+	on_store_label_leave (a_label: EV_GRID_LABEL_ITEM)
+			-- Called when label item is exited with pointer.
+			--
+			-- `a_label': Label that was hovered with mouse.
+		require
+			a_label_attached: a_label /= Void
+			a_label_not_destroyed: not a_label.is_destroyed
+		do
+			perform_with_test_suite (
+				agent (a_ts: TEST_SUITE_S; a_l: EV_GRID_LABEL_ITEM)
+					local
+						l_record: like record
+						l_repo: TEST_RECORD_REPOSITORY_I
+					do
+						l_repo := a_ts.record_repository
+						l_record := record
+						if l_repo.has_record (l_record) and then not l_repo.is_record_persistent (l_record) then
+							a_l.set_pixmap (icons_provider.icons.record_store_disabled_icon)
+						else
+							a_l.set_pixmap (icons_provider.icons.record_store_icon)
+						end
+					end (?, a_label))
+			row.parent.set_pointer_style (standard_cursor)
+		end
+
+	on_store_label_press (x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER)
+			-- Called when the user clicks the store label
+		do
+			if button = 1 then
+				perform_with_test_suite (
+					agent (a_ts: TEST_SUITE_S)
+						local
+							l_record: like record
+							l_repo: TEST_RECORD_REPOSITORY_I
+						do
+							l_repo := a_ts.record_repository
+							l_record := record
+							if l_repo.has_record (l_record) and then not l_repo.is_record_persistent (l_record) then
+								l_repo.force_record_persistence (l_record)
+							end
+						end)
+				if row.is_selected then
+					row.disable_select
+				end
+			end
+		end
+
+	on_delete_label_enter (a_label: EV_GRID_LABEL_ITEM)
+			-- Called when label item is entered with pointer.
+			--
+			-- `a_label': Label that was hovered with mouse.
+		require
+			a_label_attached: a_label /= Void
+			a_label_not_destroyed: not a_label.is_destroyed
+		do
+			row.parent.set_pointer_style (hyperlink_cursor)
+		end
+
+	on_delete_label_leave (a_label: EV_GRID_LABEL_ITEM)
+			-- Called when label item is exited with pointer.
+			--
+			-- `a_label': Label that was hovered with mouse.
+		require
+			a_label_attached: a_label /= Void
+			a_label_not_destroyed: not a_label.is_destroyed
+		do
+			row.parent.set_pointer_style (standard_cursor)
+		end
+
+	on_delete_label_press (x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER)
+			-- Called when pointer button is pressed on top of delete label.
+		do
+			if button = 1 then
+				perform_with_test_suite (
+						agent (a_ts: TEST_SUITE_S)
+							local
+								l_repo: TEST_RECORD_REPOSITORY_I
+								l_record: like record
+							do
+								l_repo := a_ts.record_repository
+								l_record := record
+								if l_repo.has_record (l_record) then
+									l_repo.remove_record (l_record)
+								end
+							end)
 			end
 		end
 

@@ -143,7 +143,7 @@ feature -- Query
 
 						-- An initial indexed file exists, scan for the next available index.
 					l_paths := scan_for_files (l_parent_path, 0, l_include_expr, Void)
-					l_paths.append_last (scan_for_folders (l_parent_path, 0, l_include_expr, Void))
+					l_paths.append (scan_for_folders (l_parent_path, 0, l_include_expr, Void))
 					from l_paths.start until l_paths.after loop
 						l_path := l_paths.item_for_iteration
 
@@ -337,7 +337,7 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	frozen scan_for_folders (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): attached DS_ARRAYED_LIST [attached STRING]
+	frozen scan_for_folders (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): attached ARRAYED_LIST [attached STRING]
 			-- Scans a folder for matching folders.
 			--
 			-- `a_folder': Folder location to scan.
@@ -359,7 +359,7 @@ feature -- Basic operations
 				end (?, a_include, a_exclude))
 		end
 
-	frozen scan_for_files (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): attached DS_ARRAYED_LIST [attached STRING]
+	frozen scan_for_files (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): attached ARRAYED_LIST [attached STRING]
 			-- Scans a folder for matching files.
 			--
 			-- `a_folder': Folder location to scan.
@@ -383,7 +383,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	frozen internal_scan_for_folders (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER; a_recursive: BOOLEAN): attached DS_ARRAYED_LIST [attached STRING]
+	frozen internal_scan_for_folders (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER; a_recursive: BOOLEAN): attached ARRAYED_LIST [attached STRING]
 			-- Scans a folder for matching folders.
 			--
 			-- `a_folder': Folder location to scan.
@@ -401,7 +401,7 @@ feature {NONE} -- Basic operations
 			l_dir: KL_DIRECTORY
 			l_directories: ARRAY [STRING]
 			l_count, i: INTEGER
-			l_sub_results: attached DS_ARRAYED_LIST [attached STRING]
+			l_sub_results: attached ARRAYED_LIST [attached STRING]
 			l_path_name: DIRECTORY_NAME
 		do
 			if a_recursive then
@@ -424,22 +424,22 @@ feature {NONE} -- Basic operations
 					create l_path_name.make_from_string (l_dn)
 					l_path_name.extend (l_directories.item (i))
 					if attached {STRING} l_path_name.string as l_path and then is_path_applicable (l_path, a_include, a_exclude) then
-						Result.put_last (l_path)
+						Result.extend (l_path)
 					end
 					i := i + 1
 				end
 
 				if a_levels /= 0 then
 						-- Recurse directories
-					create l_sub_results.make_default
+					create l_sub_results.make (10)
 					from Result.start until Result.after loop
-						l_sub_results.append_last (internal_scan_for_folders (Result.item_for_iteration, (a_levels - 1).max (-1), a_include, a_exclude, True))
+						l_sub_results.append (internal_scan_for_folders (Result.item_for_iteration, (a_levels - 1).max (-1), a_include, a_exclude, True))
 						Result.forth
 					end
 
 					if not l_sub_results.is_empty then
 							-- Append results
-						Result.append_last (l_sub_results)
+						Result.append (l_sub_results)
 					end
 				end
 			else
@@ -452,7 +452,7 @@ feature {NONE} -- Basic operations
 				end (?, a_include, a_exclude))
 		end
 
-	frozen internal_scan_for_files (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER; a_recursive: BOOLEAN): attached DS_ARRAYED_LIST [attached STRING]
+	frozen internal_scan_for_files (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER; a_recursive: BOOLEAN): attached ARRAYED_LIST [attached STRING]
 			-- Scans a folder for matching files.
 			--
 			-- `a_folder': Folder location to scan.
@@ -493,7 +493,7 @@ feature {NONE} -- Basic operations
 					create l_path_name.make_from_string (l_dn)
 					l_path_name.extend (l_files.item (i))
 					if attached {STRING} l_path_name.string as l_file and then is_path_applicable (l_file, a_include, a_exclude) then
-						Result.put_last (l_file)
+						Result.extend (l_file)
 					end
 					i := i + 1
 				end
@@ -512,7 +512,7 @@ feature {NONE} -- Basic operations
 						if attached {STRING} l_path_name.string as l_path and then is_path_applicable (l_path, Void, a_exclude) then
 								-- Note: checking applicablity of the path does not check the include expression. This is because
 								--       directories can be excluded but not included. Files can be included.
-							Result.append_last (internal_scan_for_files (l_path, (a_levels - 1).max (-1), a_include, a_exclude, True))
+							Result.append (internal_scan_for_files (l_path, (a_levels - 1).max (-1), a_include, a_exclude, True))
 						end
 						i := i + 1
 					end

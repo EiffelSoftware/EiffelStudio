@@ -226,8 +226,13 @@ iff not defined NO_COMPILE then
 	co %DEFAULT_ISE_SVN/Src/tools/activation activation
 	co %DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
 
+	remtrace Build the normal libraries
 	cdd %INIT_DIR
-	call update_libraries.btm
+	call update_libraries.btm %EIFFEL_SRC
+	remtrace Build the experimental libraries
+	cdd %INIT_DIR
+	call update_libraries.btm %EIFFEL_SRC\experimental
+
 	copy %EIFFEL_SRC\library\wel\spec\msc\%ISE_PLATFORM\dll\wel_hook.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\
 	copy %EIFFEL_SRC\library\wel\spec\msc\%ISE_PLATFORM\dll\wel_hook.dll %STUDIO_DIR\esbuilder\spec\%ISE_PLATFORM\bin\
 	copy %EIFFEL_SRC\library\wel\spec\msc\%ISE_PLATFORM\dll\wel_hook.dll %STUDIO_DIR\vision2_demo\spec\%ISE_PLATFORM\bin\

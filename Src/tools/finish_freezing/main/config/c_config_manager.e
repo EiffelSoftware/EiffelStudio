@@ -289,8 +289,8 @@ feature {NONE} -- Access
 			l_32_bits := not {PLATFORM_CONSTANTS}.is_64_bits or else a_use_32bit
 			create Result.make (11)
 
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.0\WinSDK", a_use_32bit, {WSDK_CONFIG}.wsdk_70, "Microsoft Windows SDK 7.0 (Windows 7)", "2009-WSDK", False))
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1\WinSDK", a_use_32bit, {WSDK_CONFIG}.wsdk_61, "Microsoft Windows SDK 6.1 (Windows Vista)", "2008-WSDK", False))
+			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.0", a_use_32bit, {WSDK_CONFIG}.wsdk_70, "Microsoft Windows SDK 7.0 (Windows 7)", "2009-WSDK", False))
+			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1", a_use_32bit, {WSDK_CONFIG}.wsdk_61, "Microsoft Windows SDK 6.1 (Windows Vista)", "2008-WSDK", False))
 
 				-- VS 9.0
 			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)", "2008-VS", False))
@@ -302,17 +302,17 @@ feature {NONE} -- Access
 			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, {WSDK_CONFIG}.wsdk_60, "Microsoft Windows SDK 6.0 (Windows Vista)", "2006-WSDK", False))
 			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ (8.0)", "2005-VS", False))
 
+				-- VS 10.0
+			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\10.0\Setup\VC", a_use_32bit, "VC100", "Microsoft Visual Studio 2010 VC++ (10.0)", "2010-VS", False))
+			if l_32_bits then
+				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\10.0\Setup\VC", True, "VC100X", "Microsoft Visual C++ 2010 Express (10.0)", "2010-VC", False))
+			end
+
 			if l_32_bits then
 					-- VS Other
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ (7.1)", "2001-VS", True))
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ (7.0)", "2002-VS", True))
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)", "199x-VS", True))
-			end
-
-				-- VS 10.0
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\10.0\Setup\VC", a_use_32bit, "VC100", "Microsoft Visual Studio 2010 VC++ (10.0)", "2010-VS", False))
-			if l_32_bits then
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\10.0\Setup\VC", True, "VC100X", "Microsoft Visual C++ 2010 Express (10.0)", "2010-VC", False))
 			end
 		ensure
 			result_attached: Result /= Void

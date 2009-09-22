@@ -41,8 +41,14 @@ feature -- Access
 
 feature -- Status report
 
+	error: detachable SED_ERROR
+			-- Last error if any
+
 	has_error: BOOLEAN
 			-- Did we encounter an error during retrieval?
+		do
+			Result := error /= Void
+		end
 
 feature -- Settings
 
@@ -68,7 +74,7 @@ feature -- Basic operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				has_error := False
+				set_error (Void)
 
 					-- Read number of objects we are retrieving
 				l_count := deserializer.read_compressed_natural_32
@@ -116,14 +122,22 @@ feature {NONE} -- Implementation: Access
 	is_for_fast_retrieval: BOOLEAN
 			-- Was current data stored for fast retrieval?
 
+	error_factory: SED_ERROR_FACTORY
+			-- Once access to the error factory.
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation: Settings
 
-	set_has_error
-			-- Set `has_error' to True.
+	set_error (a_error: like error)
+			-- Assign `a_error' to `error'.
 		do
-			has_error := True
+			error := a_error
 		ensure
-			has_error_set: has_error
+			error_set: error = a_error
 		end
 
 feature {NONE} -- Cleaning

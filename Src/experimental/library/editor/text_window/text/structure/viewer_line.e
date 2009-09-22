@@ -280,10 +280,8 @@ feature -- Status Report
 			-- string representation of the line.
 		local
 			t: detachable EDITOR_TOKEN
-			prev_token: detachable EDITOR_TOKEN
 			l_string_32: STRING_32
 		do
-			prev_token := item
 			create l_string_32.make (50) -- 50 = average number of characters per line
 			from
 				t := first_token
@@ -294,7 +292,6 @@ feature -- Status Report
 				l_string_32.append (t.wide_image)
 				t := t.next
 			end
-			curr_token := prev_token
 			Result := l_string_32
 		ensure
 			Result_not_void: Result /= Void

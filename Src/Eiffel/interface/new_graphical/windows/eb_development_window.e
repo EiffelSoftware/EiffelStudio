@@ -2091,11 +2091,9 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 	goto
 			-- Display a dialog to select a line to go to in the editor.
 		local
-			ed: EB_EDITOR
 			l_dialog: EB_GOTO_DIALOG
 		do
-			ed ?= editors_manager.current_editor
-			if ed /= Void then
+			if attached {EB_CLICKABLE_EDITOR} editors_manager.current_editor as ed then
 				create l_dialog.make (ed)
 				ui.set_goto_dialog (l_dialog)
 				l_dialog.show_modal_to_window (window)

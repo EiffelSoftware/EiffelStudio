@@ -583,7 +583,7 @@ feature -- Basic operation
 			show_tool_edition (a_type, 1, a_activate)
 		ensure
 			tool_is_instatiated: tool (a_type).is_tool_instantiated
-			tool_is_shown: tool (a_type).panel.is_shown
+			tool_is_shown: tool (a_type).panel.is_visible
 		end
 
 	show_tool_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_edition: NATURAL_8; a_activate: BOOLEAN)
@@ -605,7 +605,7 @@ feature -- Basic operation
 			l_tool.show (a_activate)
 		ensure
 			tool_is_instatiated: tool_edition (a_type, a_edition).is_tool_instantiated
-			tool_is_shown: tool_edition (a_type, a_edition).panel.is_shown
+			tool_is_shown: tool_edition (a_type, a_edition).panel.is_visible
 		end
 
 	show_tool_next_available_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_reuse: BOOLEAN; a_activate: BOOLEAN)
@@ -624,7 +624,7 @@ feature -- Basic operation
 			l_tool.show (a_activate)
 		ensure
 			tool_is_instatiated: (old tool_next_available_edition (a_type, a_reuse)).is_tool_instantiated
-			tool_is_shown: (old tool_next_available_edition (a_type, a_reuse)).panel.is_shown
+			tool_is_shown: (old tool_next_available_edition (a_type, a_reuse)).panel.is_visible
 		end
 
 feature {ES_TOOL} -- Removal

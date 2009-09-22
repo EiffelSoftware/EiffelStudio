@@ -28,6 +28,7 @@
 :: Default value for SDK install directory that is determined during the install of the SDK.
 :: --------------------------------------------------------------------------------------------
 SET MSSdk=%~1
+SHIFT
 SET TARGETOS=WINNT
 
 :: --------------------------------------------------------------------------------------------

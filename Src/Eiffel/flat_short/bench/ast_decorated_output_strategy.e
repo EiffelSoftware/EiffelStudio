@@ -66,6 +66,11 @@ inherit
 			{NONE} all
 		end
 
+	AST_OUTPUT_HELPER
+		export
+			{NONE} all
+		end
+
 create
 	make, make_for_inline_agent
 
@@ -828,7 +833,6 @@ feature {NONE} -- Implementation
 			l_type: TYPE_A
 			l_pos: INTEGER
 			l_actual_argument_typs: like expr_types
-			l_right_parenthesis_needed: BOOLEAN
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
@@ -943,32 +947,14 @@ feature {NONE} -- Implementation
 				end
 				if not expr_type_visiting then
 					if l_feat /= Void then
-						if l_feat.is_infix and then not l_as.is_qualified  then
-								-- We are in the case where a feature was renamed into an infix. It is an unqualified call so
-								-- we print (Current + b) for example.
-							l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-							l_right_parenthesis_needed := True
-							l_text_formatter_decorator.process_keyword_text (ti_current, Void)
-							l_text_formatter_decorator.put_space
-							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
-						elseif l_feat.is_prefix and then not l_as.is_qualified then
-							l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-							l_right_parenthesis_needed := True
-							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
-							l_text_formatter_decorator.put_space
-							if l_feat.has_return_value then
-								l_text_formatter_decorator.process_keyword_text (ti_current, Void)
-							end
+							-- This includes the case where a qualified call on a feature which was renamed into an infix (or aliased).
+						if l_as.is_qualified or l_text_formatter_decorator.dot_needed then
+							l_text_formatter_decorator.process_symbol_text (ti_dot)
+						end
+						if not has_error_internal then
+							append_feature_name (l_feat, l_text_formatter_decorator)
 						else
-								-- This includes the case where a qualified call on a feature which was renamed into an infix (or aliased).
-							if l_as.is_qualified or l_text_formatter_decorator.dot_needed then
-								l_text_formatter_decorator.process_symbol_text (ti_dot)
-							end
-							if not has_error_internal then
-								l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
-							else
-								l_text_formatter_decorator.process_basic_text (l_as.access_name)
-							end
+							l_text_formatter_decorator.process_basic_text (l_as.access_name)
 						end
 					else
 						if l_as.is_qualified or l_text_formatter_decorator.dot_needed then
@@ -992,10 +978,6 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.commit
 				last_type := l_last_type
 				last_class := l_last_class
-			end
-			if l_right_parenthesis_needed then
-				check not_expr_type_visiting: not expr_type_visiting end
-				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 			end
 			if l_as.is_argument then
 				last_type := current_feature.arguments.i_th (l_as.argument_position)
@@ -3525,7 +3507,7 @@ feature {NONE} -- Implementation
 				l_feat := feature_from_id_as (l_id)
 			end
 			if l_feat /= Void then
-				l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+				append_feature_name (l_feat, l_text_formatter_decorator)
 			else
 				l_as.lower.process (Current)
 			end
@@ -3540,7 +3522,7 @@ feature {NONE} -- Implementation
 					l_feat := feature_from_id_as (l_id)
 				end
 				if l_feat /= Void then
-					l_text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
+					append_feature_name (l_feat, l_text_formatter_decorator)
 				else
 					l_as.upper.process (Current)
 				end

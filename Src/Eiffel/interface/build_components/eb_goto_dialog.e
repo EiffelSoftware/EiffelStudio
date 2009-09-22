@@ -36,7 +36,7 @@ create
 
 feature -- Creation
 
-	make (a_text_panel: KEYBOARD_SELECTABLE_TEXT_PANEL)
+	make (a_text_panel: like editor)
 			-- Make with text panel
 		require
 			text_panel_not_void: a_text_panel /= Void
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	editor: KEYBOARD_SELECTABLE_TEXT_PANEL
+	editor: EB_CLICKABLE_EDITOR
 			-- Editor to search
 
 	goto_line
@@ -110,8 +110,7 @@ feature {NONE} -- Implementation
 				elseif l_line < 1 then
 					l_line := 1
 				end
-				editor.set_first_line_displayed (l_line.min (editor.vertical_scrollbar.value_range.upper), True)
-				editor.text_displayed.cursor.set_y_in_lines (l_line)
+				editor.scroll_to_start_of_line_when_ready_if_top (l_line.min (editor.vertical_scrollbar.value_range.upper), 0, False, False)
 			end
 		end
 

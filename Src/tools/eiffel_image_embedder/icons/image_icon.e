@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 	build_colors
 			-- Build `colors'.
 		do
-			create colors.make (14)
+			create colors.make_filled (Void, 14)
 			colors.put (<<148, 170, 214, 148, 170, 214, 148, 170, 214, 148, 170, 214, 148, 170, 198, 148, 162, 198, 132, 154, 198, 132, 146, 198, 115, 138, 181, 115, 130, 181, 99, 121, 165, 99, 121, 165, 82, 113, 165, 82, 105, 165>>, 0)
 			colors.put (<<148, 170, 214, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 247, 251, 255, 247, 243, 255, 231, 243, 255, 231, 235, 255, 214, 227, 255, 49, 73, 132>>, 1)
 			colors.put (<<148, 170, 214, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 247, 219, 214, 214, 97, 49, 214, 97, 49, 214, 203, 214, 214, 227, 255, 165, 186, 231, 33, 73, 132>>, 2)
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -151,11 +151,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- IMAGE_ICON

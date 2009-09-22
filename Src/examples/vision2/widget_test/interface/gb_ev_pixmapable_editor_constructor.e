@@ -144,9 +144,9 @@ feature {NONE} -- Implementation
 	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP)
 			-- Add `pixmap' to `pixmap_container'.
 		local
-			x_ratio, y_ratio: REAL
+			x_ratio, y_ratio: REAL_64
 			new_x, new_y: INTEGER
-			biggest_ratio: REAL
+			biggest_ratio: REAL_64
 		do
 			pixmap.set_tooltip (first.internal_pixmap_path)
 				-- We also add a tooltip to the space to the right

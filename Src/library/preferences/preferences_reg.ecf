@@ -12,6 +12,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf">
@@ -39,9 +40,9 @@
 			<option namespace="Preferences.Interface">
 			</option>
 			<file_rule>
+				<exclude>/build_project$</exclude>
 				<exclude>/shortcut_management$</exclude>
 				<exclude>/graphical$</exclude>
-				<exclude>/build_project$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="preference" location="preference\" recursive="true">

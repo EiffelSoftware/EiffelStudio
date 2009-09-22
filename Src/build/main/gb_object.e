@@ -868,24 +868,20 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 			local_parent_object: GB_OBJECT
 			new_short_type, new_type: STRING
 			funct_result: BOOLEAN
-			color_stone: GB_COLOR_STONE
 			colorizeable: EV_COLORIZABLE
-			an_object_stone: GB_OBJECT_STONE
 			standard_object_stone: GB_STANDARD_OBJECT_STONE
 		do
-			color_stone ?= object_representation
-			if color_stone /= Void then
+			if attached {GB_COLOR_STONE} object_representation as l_color_stone then
 				colorizeable ?= object
 				Result := colorizeable /= Void
-			else
-				an_object_stone ?= object_representation
-				new_type := an_object_stone.object_type
+			elseif attached {GB_OBJECT_STONE} object_representation as l_object_stone  then
+				new_type := l_object_stone.object_type
 				new_short_type := new_type.substring (4, new_type.count)
 				Result := True
 
 				create env
 					-- If shift is pressed `object_representation' must be added to the parent.
-				if env.application.shift_pressed and not an_object_stone.is_instance_of_top_level_object then
+				if env.application.shift_pressed and not l_object_stone.is_instance_of_top_level_object then
 					local_parent_object := parent_object
 				else
 					local_parent_object := Current
@@ -896,8 +892,8 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 					components.status_bar.set_status_text ("Cannot parent object in locked instance of " + components.object_handler.deep_object_from_id (local_parent_object.associated_top_level_object).name)
 				end
 
-				if Result and an_object_stone /= Void then
-					Result := has_clashing_dependencies (an_object_stone)
+				if Result and l_object_stone /= Void then
+					Result := has_clashing_dependencies (l_object_stone)
 					if not Result then
 						components.status_bar.set_status_text (cyclic_inheritance_error)
 					end
@@ -908,7 +904,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 					Result := not local_parent_object.is_full
 							-- We only need to check this if we are not a component,
 							-- as this means there is no way we could be contained in `Current'.
-					standard_object_stone ?= an_object_stone
+					standard_object_stone ?= l_object_stone
 					if standard_object_stone /= Void then
 						funct_result := local_parent_object.override_drop_on_child (standard_object_stone.object)
 						if not funct_result then

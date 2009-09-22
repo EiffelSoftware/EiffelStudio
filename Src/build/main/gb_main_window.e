@@ -946,7 +946,15 @@ feature {NONE} -- Implementation
 				preferences.preferences.save_preferences
 
 					-- Destroy the application.
-				application.destroy
+				if not is_destroyed and not application.is_destroyed then
+					application.windows.do_all (agent (a_window: EV_WINDOW)
+						do
+							if not a_window.is_destroyed then
+								a_window.hide
+							end
+						end)
+					application.destroy
+				end
 			end
 		end
 

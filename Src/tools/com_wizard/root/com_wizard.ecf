@@ -16,15 +16,15 @@
 		<setting name="multithreaded" value="True"/>
 		<external_object location="htmlhelp.lib"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
-		<library name="base" location="$EIFFEL_SRC\library\base\base.ecf"/>
-		<library name="com" location="$EIFFEL_SRC\library\com\com.ecf" readonly="false" use_application_options="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
-		<library name="date_time" location="$EIFFEL_SRC\library\time\time.ecf"/>
+		<library name="date_time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<library name="vision2" location="$EIFFEL_SRC\library\vision2\vision2.ecf"/>
-		<library name="vision2_extension" location="$EIFFEL_SRC\library\vision2_extension\vision2_extension.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="eiffel_to_idl" location="$EIFFEL_SRC\tools\com_wizard\eiffeltoidl\" recursive="true"/>
 		<cluster name="help_engine" location="$EIFFEL_SRC\Eiffel\interface\new_graphical\help\" recursive="true">

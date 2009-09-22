@@ -23,16 +23,16 @@ create
 
 feature -- Access
 
-	icon_width: NATURAL_8 = 16 
+	icon_width: NATURAL_8 = 16
 			-- <Precursor>
 
-	icon_height: NATURAL_8 = 16 
+	icon_height: NATURAL_8 = 16
 			-- <Precursor>
 
-	width: NATURAL_8 = 3
+	width: NATURAL_8 = 5
 			-- <Precursor>
 
-	height: NATURAL_8 = 1 
+	height: NATURAL_8 = 1
 			-- <Precursor>
 
 feature {NONE} -- Access
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-	
+
 	frozen test_routine_icon: EV_PIXMAP
 			-- Access to 'routine' pixmap.
 		require
@@ -102,8 +102,48 @@ feature -- Icons
 			general_bug_icon_buffer_attached: Result /= Void
 		end
 
+	frozen record_store_icon: EV_PIXMAP
+			-- Access to 'store' pixmap.
+		require
+			has_named_icon: has_named_icon (record_store_name)
+		once
+			Result := named_icon (record_store_name)
+		ensure
+			record_store_icon_attached: Result /= Void
+		end
+
+	frozen record_store_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'store' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (record_store_name)
+		once
+			Result := named_icon_buffer (record_store_name)
+		ensure
+			record_store_icon_buffer_attached: Result /= Void
+		end
+
+	frozen record_store_disabled_icon: EV_PIXMAP
+			-- Access to 'store_disabled' pixmap.
+		require
+			has_named_icon: has_named_icon (record_store_disabled_name)
+		once
+			Result := named_icon (record_store_disabled_name)
+		ensure
+			record_store_disabled_icon_attached: Result /= Void
+		end
+
+	frozen record_store_disabled_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'store_disabled' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (record_store_disabled_name)
+		once
+			Result := named_icon_buffer (record_store_disabled_name)
+		ensure
+			record_store_disabled_icon_buffer_attached: Result /= Void
+		end
+
 feature -- Icons: Animations
-	
+
 	-- No animation frames detected.
 
 feature -- Constants: Icon names
@@ -111,6 +151,8 @@ feature -- Constants: Icon names
 	test_routine_name: STRING = "test routine"
 	general_test_name: STRING = "general test"
 	general_bug_name: STRING = "general bug"
+	record_store_name: STRING = "record store"
+	record_store_disabled_name: STRING = "record store_disabled"
 
 feature {NONE} -- Basic operations
 
@@ -120,6 +162,8 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 1], test_routine_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 1], general_test_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 1], general_bug_name)
+			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 1], record_store_name)
+			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 1], record_store_disabled_name)
 		end
 
 ;note

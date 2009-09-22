@@ -11,12 +11,12 @@ note
 
 class
 	MULTI_COLUMN_LIST_ROW_STRING_COMPARATOR
-	
+
 inherit
-	KL_PART_COMPARATOR [EV_MULTI_COLUMN_LIST_ROW]
-	
+	PART_COMPARATOR [EV_MULTI_COLUMN_LIST_ROW]
+
 feature -- Status Setting
-	
+
 	set_sort_column (a_column: INTEGER)
 			-- Use column `a_column' for search comparison.
 		do
@@ -30,21 +30,21 @@ feature -- Measurement
 		do
 			Result := u.i_th (sort_column) < v.i_th (sort_column)
 		end
-		
+
 feature -- Access
 
 	sort_column: INTEGER;
 		-- Column on which sorting is performed.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

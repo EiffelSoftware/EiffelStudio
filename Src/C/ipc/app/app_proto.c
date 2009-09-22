@@ -83,14 +83,15 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what);		/* Object inspection */
 rt_private void ipc_access(EIF_PSTREAM s, Opaque *what);		/* Access object through hector */
 rt_private void wean(EIF_PSTREAM s, Opaque *what);			/* Wean adopted object */
 rt_private void once_inspect(EIF_PSTREAM s, Opaque *what);	/* Once routines inspection */
-rt_private void obj_inspect(EIF_OBJ object);
+rt_private void obj_inspect(EIF_OBJECT object);
 rt_private void bit_inspect(EIF_REFERENCE object);
-rt_private void string_inspect(EIF_OBJ object);		/* String object inspection */
+rt_private void string_inspect(EIF_OBJECT object);		/* String object inspection */
 rt_private void load_bc(int slots, int amount);		/* Load byte code information */
 rt_private void app_send_integer (EIF_PSTREAM sp, int val);
 rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int dump_type);
 rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type);
 rt_private void app_send_rt_uint_ptr_as_string (EIF_PSTREAM sp, rt_uint_ptr ref);
+rt_private EIF_REFERENCE rt_boxed_expanded_item_at_index (EIF_REFERENCE a_obj, int a_index);
 
 rt_private long sp_lower, sp_upper;					/* Special objects' bounds to be inspected */
 rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
@@ -121,6 +122,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 
 /* Dynamic function evaluation */
 rt_private void opush_dmpitem(EIF_TYPED_VALUE *item);
+rt_private void opush_ref_offset_item(rt_int_ptr a_addr, int a_offset);
 rt_private EIF_TYPED_VALUE *previous_otop = NULL;
 rt_private rt_uint_ptr nb_pushed = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call);
@@ -182,10 +184,11 @@ rt_private void process_request(EIF_PSTREAM sp, Request *rqst)
 
 static int curr_modify = NO_CURRMODIF;
 
-#define arg_1	rqst->rq_opaque.op_1
-#define arg_2	rqst->rq_opaque.op_2
-#define arg_3	(int) rqst->rq_opaque.op_3
-#define arg_4	rqst->rq_opaque.op_4
+#define arg_1		rqst->rq_opaque.op_1
+#define arg_2		rqst->rq_opaque.op_2
+#define arg_3_p		rqst->rq_opaque.op_3 /* rt_uint_ptr */
+#define arg_3		(int) rqst->rq_opaque.op_3
+#define arg_4		rqst->rq_opaque.op_4
 
 #ifdef USE_ADD_LOG
 	add_log(9, "received request type %d", rqst->rq_type);
@@ -272,8 +275,13 @@ static int curr_modify = NO_CURRMODIF;
 		curr_modify = LOCAL_ITEM;
 		break;
 	case MODIFY_ATTR:				/* modify the value of an attribute of an object */
-		modify_object_attribute(arg_3,arg_1,NULL);
+		modify_object_attribute(arg_3_p, arg_1, NULL);
 		curr_modify = OBJECT_ATTR;
+		break;
+	case DUMPED_WITH_OFFSET:	
+		dthread_prepare();
+		opush_ref_offset_item(arg_3_p, (int) arg_2);
+		dthread_restore();
 		break;
 	case DUMPED:					/* new value for the modified local variable / object / attribute */
 		dthread_prepare();
@@ -388,6 +396,7 @@ static int curr_modify = NO_CURRMODIF;
 #undef arg_1
 #undef arg_2
 #undef arg_3
+#undef arg_3_p
 #undef arg_4
 }
 
@@ -681,16 +690,25 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 		 * Note that the address is stored as a long, because XDR cannot pass
 		 * pointers (without also sending the information referred to by this pointer).
 		 */
-	char *addr;				/* Address of EIF_OBJ */
+	char *addr;				/* Address of EIF_OBJECT */
+	EIF_OBJECT obj;
+	
 
 	switch (what->op_1) {		/* First value describes request */
 	case IN_H_ADDR:					/* Hector address inspection */
 		addr = (char *) what->op_3;		/* long -> (char *) */
+		if (what->op_2 > 0) {
+			/* Note: op_2 contains the offset */
+			EIF_REFERENCE ref = rt_boxed_expanded_item_at_index(eif_access((EIF_OBJECT) addr), what->op_2 - 1);
+			obj = (EIF_OBJECT) (&ref);
+		} else {
 #ifdef ISE_GC
-		obj_inspect((EIF_OBJ)(&(eif_access((EIF_OBJ) addr))));
+			obj = ((EIF_OBJECT)(&(eif_access((EIF_OBJECT) addr))));
 #else
-		obj_inspect((EIF_OBJ) addr);
+			obj = (EIF_OBJECT) addr;
 #endif
+		}
+		obj_inspect(obj);
 		return;
 	case IN_BIT_ADDR:				/* Bit address inspection */
 		addr = (char *) what->op_3;		/* long -> (char *) */
@@ -699,9 +717,9 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 	case IN_STRING_ADDR:		/* String object inspection (hector addr) */
 		addr = (char *) what->op_3;		/* long -> (char *) */
 #ifdef ISE_GC
-		string_inspect((EIF_OBJ)(&(eif_access((EIF_OBJ) addr))));
+		string_inspect((EIF_OBJECT)(&(eif_access((EIF_OBJECT) addr))));
 #else
-		obj_inspect((EIF_OBJ) addr);
+		obj_inspect((EIF_OBJECT) addr);
 #endif
 		return;
 	default:
@@ -821,8 +839,15 @@ rt_private void adopt(EIF_PSTREAM sp, Opaque *what)
 	 */
 
 	char *physical_addr;	/* Address of unprotected object */
+	int offset;
 	physical_addr = (char *) what->op_3;
-	app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_adopt((EIF_OBJ) &physical_addr));
+	offset = what->op_2;
+	if (offset > 0) {
+		/* We are passing hector address + offset */
+		app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_protect((EIF_REFERENCE) rt_boxed_expanded_item_at_index(eif_access((EIF_OBJECT) physical_addr), offset - 1)));
+	} else {
+		app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_adopt((EIF_OBJECT) &physical_addr));
+	}
 }
 
 rt_private void ipc_access(EIF_PSTREAM sp, Opaque *what)
@@ -838,9 +863,16 @@ rt_private void ipc_access(EIF_PSTREAM sp, Opaque *what)
 
 	char physical_addr[20];	/* Address of unprotected object */
 	char *hector_addr;		/* Hector address with indirection */
+	int offset;
 
 	hector_addr = (char *) what->op_3;
-	sprintf(physical_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_access((EIF_OBJ) hector_addr));
+	offset = what->op_2;
+	if (offset > 0) {
+		/* We are passing hector address + offset */
+		sprintf(physical_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_access((EIF_OBJECT) rt_boxed_expanded_item_at_index(eif_access((EIF_OBJECT) hector_addr), offset - 1)));
+	} else {
+		sprintf(physical_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_access((EIF_OBJECT) hector_addr));
+	}
 	app_twrite(physical_addr, strlen(physical_addr));
 }
 
@@ -854,9 +886,16 @@ rt_private void wean(EIF_PSTREAM sp, Opaque *what)
 	 */
 
 	char *hector_addr;		/* Hector address with indirection */
+	int offset;
 
 	hector_addr = (char *) what->op_3;
-	eif_wean((EIF_OBJ) hector_addr);
+	offset = what->op_2;
+	if (offset > 0) {
+		/* We are passing hector address + offset */
+		eif_wean((EIF_OBJECT) rt_boxed_expanded_item_at_index(eif_access((EIF_OBJECT) hector_addr), offset - 1));
+	} else {
+		eif_wean((EIF_OBJECT) hector_addr);
+	}
 }
 
 rt_private void load_bc(int slots, int amount)
@@ -946,7 +985,7 @@ rt_private void rec_inspect(EIF_REFERENCE object);
 rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items);
 rt_private void rec_tinspect(EIF_REFERENCE object);
 
-rt_private void obj_inspect(EIF_OBJ object)
+rt_private void obj_inspect(EIF_OBJECT object)
 {
 	uint32 flags;		/* Object lags */
 	EIF_BOOLEAN is_special, is_tuple;
@@ -1409,7 +1448,7 @@ rt_private void bit_inspect(EIF_REFERENCE object)
 	eif_rt_xfree(buf);
 }
 
-rt_private void string_inspect(EIF_OBJ object)
+rt_private void string_inspect(EIF_OBJECT object)
                		/* Reference to a string object */
 {
 		/* Inspect the string object to get the string value */
@@ -1610,7 +1649,7 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 }
 
 rt_private void opush_dmpitem(EIF_TYPED_VALUE *item)
-	{
+{
 	switch (item->type & SK_HEAD) {
 		case SK_REF:
 			if (item->it_ref) {
@@ -1634,6 +1673,49 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item)
 		previous_otop--;
 	}
 	nb_pushed++;
+}
+
+rt_private void opush_ref_offset_item(rt_int_ptr a_addr, int a_offset)
+{
+	/* Used for items of SPECIAL [expanded] */
+	EIF_TYPED_VALUE item;
+	EIF_REFERENCE obj;
+
+#ifdef ISE_GC
+	obj = eif_access((EIF_OBJECT) a_addr);
+#else
+	obj = (EIF_REFERENCE) (arg_addr);
+#endif
+
+	item.type = SK_REF|SK_EXP;
+	item.it_r = rt_boxed_expanded_item_at_index (obj, a_offset - 1);
+
+	opush(&item);
+	if (previous_otop == NULL) {
+			/* First call in pushing arguments for a debugger evaluation, record top of stack
+			 * prior the push. We do not do it before the call to `opush' in the event that
+			 * the stack has not yet been created in which case `otop' would be NULL. */
+		previous_otop = otop();
+		CHECK("has_top", previous_otop);
+		previous_otop--;
+	}
+	nb_pushed++;
+}
+
+rt_private EIF_REFERENCE rt_boxed_expanded_item_at_index (EIF_REFERENCE a_obj, int a_index)
+{
+	/* 
+	 * boxed expanded item referenced by hector address `a_obj' and `a_index' as offset 
+	 */
+
+	REQUIRE("is_special", RT_IS_SPECIAL(a_obj));
+	if (a_index < 0) {
+		eraise ("index_large_enough", EN_RT_CHECK);
+	}
+	if (a_index >= RT_SPECIAL_COUNT(a_obj)) {
+		eraise ("index_small_enough", EN_RT_CHECK);
+	}
+	return RTCL(a_obj + OVERHEAD + (rt_uint_ptr) a_index * RT_SPECIAL_ELEM_SIZE(a_obj));
 }
 
 rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp)

@@ -72,7 +72,11 @@ feature {NONE} -- Implementation
 				-- Send the target object.
 			if a_target = Void then
 				if a_addr /= Void and then not a_addr.is_void then
-					send_ref_value (a_addr.as_pointer)
+					if a_addr.has_offset then
+						send_ref_offset_value (a_addr.as_pointer, a_addr.offset)
+					else
+						send_ref_value (a_addr.as_pointer)
+					end
 				else
 					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_non_once_call_with_any_object (
 								fi.written_class.name_in_upper,
@@ -88,6 +92,9 @@ feature {NONE} -- Implementation
 					par := par + 4
 				end
 				dmp.classic_send_value
+				if not dmp.last_classic_send_value_succeed then
+					dbg_error_handler.notify_error_exception_internal_issue
+				end
 			end
 
 			if not error_occurred then
@@ -274,16 +281,18 @@ feature -- Query
 			Result := Debugger_manager.Dump_value_factory.new_object_value (cse.object_address, cse.dynamic_class)
 		end
 
-	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE
+	dump_value_at_address (addr: DBG_ADDRESS): detachable DUMP_VALUE
 			-- <Precursor>
 		local
 			l_cl: CLASS_C
 			dbg: DEBUGGER_MANAGER
 		do
 			dbg := debugger_manager
-			l_cl := dbg.object_manager.class_c_at_address (addr)
-			if l_cl /= Void then
-				Result := dbg.dump_value_factory.new_object_value (addr, l_cl)
+			if dbg.object_manager.is_valid_and_known_object_address (addr) then
+				l_cl := dbg.object_manager.class_c_at_address (addr)
+				if l_cl /= Void then
+					Result := dbg.dump_value_factory.new_object_value (addr, l_cl)
+				end
 			end
 		end
 
@@ -306,6 +315,9 @@ feature {NONE} -- Parameters operation
 	parameters_push (dmp: DUMP_VALUE)
 		do
 			dmp.classic_send_value
+			if not dmp.last_classic_send_value_succeed then
+				dbg_error_handler.notify_error_exception_internal_issue
+			end
 		end
 
 	parameters_push_and_metamorphose (dmp: DUMP_VALUE)
@@ -314,7 +326,11 @@ feature {NONE} -- Parameters operation
 				print (generating_type + ".parameters_push_and_metamorphose :: Send Metamorphose request ... %N")
 			end
 			dmp.classic_send_value
-			send_rqst_0 (Rqst_metamorphose)
+			if not dmp.last_classic_send_value_succeed then
+				dbg_error_handler.notify_error_exception_internal_issue
+			else
+				send_rqst_0 (Rqst_metamorphose)
+			end
 		end
 
 feature -- Implementation

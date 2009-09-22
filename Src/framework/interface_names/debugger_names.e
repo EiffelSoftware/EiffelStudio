@@ -409,6 +409,9 @@ feature -- Expression evaluation messages
 	cst_error_evaluation_side_effect_forbidden: STRING_32
 		do Result := locale.translation ("Evaluation stopped to avoid potential side effect.") end
 
+	cst_error_evaluation_unable_to_get_context_object: STRING_32
+		do Result := locale.translation ("Unable to get the context object.") end
+
 	cst_error_context_corrupted_or_not_found: STRING_32
 		do Result := locale.translation ("Context corrupted or not found") end
 

@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			-- `oa' is the address of the object.
 		require
 			application_stopped: Debugger_manager.safe_application_is_stopped
-			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
+			valid_address: oa /= Void and then Debugger_manager.application.is_valid_and_known_object_address (oa)
 		do
 			stick_with_current_object := True
 			make
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			-- `on' is a name for this object
 		require
 			application_stopped: Debugger_manager.safe_application_is_stopped
-			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
+			valid_address: oa /= Void and then Debugger_manager.application.is_valid_and_known_object_address (oa)
 			valid_object_name: on /= Void and then not on.is_empty
 		do
 			stick_with_current_object := True
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 	make_with_expression_on_object	(oa: DBG_ADDRESS; a_exp: STRING)
 		require
 			application_stopped: Debugger_manager.safe_application_is_stopped
-			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
+			valid_address: oa /= Void and then Debugger_manager.application.is_valid_and_known_object_address (oa)
 			valid_expression: a_exp /= Void and then not a_exp.is_empty
 		do
 			make_with_object (oa)
@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 			-- `ac' is the dynamic type of the object.
 		require
 			application_stopped: Debugger_manager.safe_application_is_stopped
-			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
+			valid_address: oa /= Void and then Debugger_manager.application.is_valid_and_known_object_address (oa)
 			valid_object_name: on /= Void and then not on.is_empty
 		do
 			stick_with_current_object := True
@@ -628,7 +628,7 @@ feature {NONE} -- Event handling
 
 					if
 						Debugger_manager.safe_application_is_stopped
-						and then Debugger_manager.application.is_valid_object_address (add)
+						and then Debugger_manager.application.is_valid_and_known_object_address (add)
 					then
 						o := debugger_manager.object_manager.debugged_object (add, 0, 0)
 						if as_object_radio.is_selected or else expression_field.text.is_empty then
@@ -645,7 +645,9 @@ feature {NONE} -- Event handling
 							Debugger_manager.application_status.keep_object (add)
 						end
 					else
-						set_focus (address_field)
+						if address_field.is_sensitive then
+							set_focus (address_field)
+						end
 						prompts.show_error_prompt (Warning_messages.w_Invalid_address (t), dialog, Void)
 					end
 				else

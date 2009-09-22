@@ -86,14 +86,14 @@ feature -- Query
 
 	has_attributes_values: BOOLEAN
 		do
-			if attached object_address as oadd and then is_valid_object_address (oadd) then
+			if attached object_address as oadd and then is_valid_and_known_object_address (oadd) then
 				Result := debugger_manager.object_manager.object_at_address_has_attributes (oadd)
 			end
 		end
 
 	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
-			if attached object_address as oadd and then is_valid_object_address (oadd) then
+			if attached object_address as oadd and then is_valid_and_known_object_address (oadd) then
 				Result := debugger_manager.object_manager.sorted_attributes_at_address (oadd, object_spec_lower, object_spec_upper)
 			end
 		end

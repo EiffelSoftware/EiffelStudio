@@ -13,7 +13,7 @@ inherit
 		redefine
 			status,
 			send_breakpoints_for_stepping,
-			is_valid_object_address,
+			is_valid_and_known_object_address,
 			can_not_launch_system_message,
 			recycle,
 			clean_on_process_termination,
@@ -221,7 +221,7 @@ feature -- Properties
 
 feature {APPLICATION_EXECUTION} -- Properties
 
-	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN
+	is_valid_and_known_object_address (addr: DBG_ADDRESS): BOOLEAN
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		do

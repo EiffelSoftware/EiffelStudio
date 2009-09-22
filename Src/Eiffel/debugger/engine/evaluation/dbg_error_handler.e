@@ -217,6 +217,11 @@ feature -- Error notification: evaluation error
 			notify_error_evaluation (Debugger_names.Cst_error_evaluation_side_effect_forbidden)
 		end
 
+	notify_error_evaluation_unable_to_get_context_object
+		do
+			notify_error_evaluation (Debugger_names.Cst_error_evaluation_unable_to_get_context_object)
+		end
+
 	notify_error_evaluation_call_on_void (fname: STRING_GENERAL)
 		do
 			notify_error_evaluation (Debugger_names.msg_error_call_on_void_target (fname))

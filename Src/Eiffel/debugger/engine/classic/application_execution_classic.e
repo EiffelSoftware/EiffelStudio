@@ -14,7 +14,7 @@ inherit
 			status,
 			send_no_breakpoints,
 			send_breakpoints_for_stepping,
-			is_valid_object_address,
+			is_valid_and_known_object_address,
 			update_critical_stack_depth,
 			can_not_launch_system_message,
 			recycle,
@@ -102,7 +102,7 @@ feature -- Properties
 	status: APPLICATION_STATUS_CLASSIC
 			-- Status of the running dotnet application
 
-	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN
+	is_valid_and_known_object_address (addr: DBG_ADDRESS): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (addr) and then is_object_kept (addr)

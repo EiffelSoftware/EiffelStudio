@@ -334,6 +334,19 @@ rt_public void send_ref_value(EIF_REFERENCE value)
 	send_dmpitem_request(&item);
 }
 
+/* send a reference+offset value to the application */
+rt_public void send_ref_offset_value(EIF_REFERENCE value, EIF_NATURAL_32 a_offset)
+{
+	EIF_TYPED_VALUE item;
+	
+	/* fill in the item to send */
+	item.type = SK_REF;
+	item.it_ref = value;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
 /* send a pointer value to the application */
 rt_public void send_ptr_value(EIF_POINTER value)
 {

@@ -155,14 +155,14 @@ feature -- Status
 			Result := f.exists
 		end
 
-	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN
+	is_valid_and_known_object_address (addr: DBG_ADDRESS): BOOLEAN
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		require
 			is_running: is_running
 			is_stopped: is_stopped
 		do
-			Result := addr /= Void and then not addr.is_void
+			Result := addr /= Void and then	not addr.is_void
 		end
 
 feature -- Access
@@ -651,7 +651,7 @@ feature -- Remote: execution recorder on RT_
 			end
 		end
 
-	replay_callstack_details (a_id: STRING; nb: INTEGER): REPLAYED_CALL_STACK_ELEMENT
+	replay_callstack_details (a_id: STRING; nb: INTEGER): detachable REPLAYED_CALL_STACK_ELEMENT
 			-- Details related to replayed callstack identified by `a_id'
 			-- get the information for `nb' levels
 		local
@@ -668,7 +668,10 @@ feature -- Remote: execution recorder on RT_
 				params.extend (dv_fact.new_integer_32_value (nb, dbg.compiler_data.integer_32_class_c))
 				dv := query_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "callstack_record_details", params)
 				if dv /= Void and then not dv.is_void then
-					if (attached dv.string_representation as s32) and then s32.count > 0 then
+					if
+						attached dv.string_representation as s32 and then
+						s32.count > 0
+					then
 						create Result.make_from_string (a_id , s32)
 					end
 				end
@@ -739,43 +742,29 @@ feature -- Remote access to Exceptions
 		end
 
 feature -- Debuggee: runtime
---TODO: 2009-09-16: complete this integration in DUMP_VALUE
---
---	debugger_type_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): STRING
---		require
---			a_value_attached: a_value /= Void
---		local
---			v: DBG_EVALUATED_VALUE
---			s: detachable like debugger_type_string_evaluation
---		do
---			create v.make_with_value (a_value)
---			s := one_arg_resulting_string_evaluation ("debugger_type_string", v, 0,0, error_handler)
---			if s /= Void then
---				Result := s
---			else
---				create Result.make_empty
---			end
---		ensure
---			result_attached: Result /= Void
---		end
---
---	debugger_output_string_evaluation (a_value: DUMP_VALUE; min,max: INTEGER; error_handler: detachable DBG_ERROR_HANDLER): STRING
---		require
---			a_value_attached: a_value /= Void
---		local
---			v: DBG_EVALUATED_VALUE
---			s: detachable like debugger_output_string_evaluation
---		do
---			create v.make_with_value (a_value)
---			s := one_arg_resulting_string_evaluation ("debugger_output_string", v, min, max, error_handler)
---			if s /= Void then
---				Result := s
---			else
---				create Result.make_empty
---			end
---		ensure
---			result_attached: Result /= Void
---		end
+
+	debugger_type_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): STRING
+			-- Get the `generating_type' as STRING by evaluation on the debuggee
+		require
+			a_value_attached: a_value /= Void
+		local
+			v: DBG_EVALUATED_VALUE
+			s: detachable like debugger_type_string_evaluation
+		do
+			if a_value.is_void then
+				Result := "NONE"
+			else
+				create v.make_with_value (a_value)
+				s := one_arg_resulting_string_evaluation ("debugger_type_string", v, 0,0, error_handler)
+				if s /= Void then
+					Result := s
+				else
+					create Result.make_empty
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Debuggee: evaluation
 
@@ -805,56 +794,58 @@ feature -- Debuggee: evaluation
 
 feature -- Expression evaluation
 
-	one_arg_resulting_string_evaluation (a_featname: STRING; a_value: DBG_EVALUATED_VALUE; min,max: INTEGER; error_handler: detachable DBG_ERROR_HANDLER): STRING
+	one_arg_resulting_string_evaluation (a_featname: STRING; a_value: DBG_EVALUATED_VALUE; min,max: INTEGER; a_error_handler: detachable DBG_ERROR_HANDLER): STRING
 		require
 			a_value_attached: a_value /= Void
 		local
 			params: ARRAYED_LIST [DUMP_VALUE]
-			dv: DUMP_VALUE
 		do
 			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
 				create params.make (1)
 				params.extend (a_value.value)
-				dv := query_evaluation_on (rto, Void, rto.dynamic_class, a_featname, params)
-				if dv /= Void and then dv.has_formatted_output then
+				if
+					attached query_evaluation_on (rto, Void, rto.dynamic_class, a_featname, params) as dv and then
+					dv.has_formatted_output
+				then
 					if min >= max then
 						Result := dv.string_representation
 					else
 						Result := dv.truncated_string_representation (min, max)
 					end
 				else
-					if error_handler /= Void then
-						error_handler.notify_error_evaluation_report_to_support (Void)
+					if a_error_handler /= Void then
+						a_error_handler.notify_error_evaluation_report_to_support (Void)
 					end
 				end
 			end
 		end
 
-	two_args_resulting_boolean_evaluation (a_featname: STRING; a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
+	two_args_resulting_boolean_evaluation (a_featname: STRING; a_value, a_other_value: DBG_EVALUATED_VALUE; a_error_handler: DBG_ERROR_HANDLER): BOOLEAN
 		require
 			a_value_attached: a_value /= Void
 			a_other_value_attached: a_other_value /= Void
 		local
 			params: ARRAYED_LIST [DUMP_VALUE]
-			dv: DUMP_VALUE
 		do
 			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
 				create params.make (2)
 				params.extend (a_value.value)
 				params.extend (a_other_value.value)
-				dv := query_evaluation_on (rto, Void, rto.dynamic_class, a_featname, params)
-				if dv /= Void and then
+				if
+					attached query_evaluation_on (rto, Void, rto.dynamic_class, a_featname, params) as dv and then
 					dv.is_valid_value and then
 					dv.is_type_boolean
 				then
 					Result := dv.as_dump_value_basic.value_boolean
 				else
-					error_handler.notify_error_evaluation_report_to_support (Void)
+					if a_error_handler /= Void then
+						a_error_handler.notify_error_evaluation_report_to_support (Void)
+					end
 				end
 			end
 		end
 
-	string_field_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING): STRING_32
+	string_field_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING): detachable STRING_32
 			-- String representation of `{cl}.fname' evaluated on `edv'.
 		require
 			edv_not_void: edv /= Void
@@ -1296,7 +1287,7 @@ feature -- Query
 			end
 		end
 
-	internal_type_name_of_type (a_type_id: INTEGER): STRING
+	internal_type_name_of_type (a_type_id: INTEGER): detachable STRING
 			-- Internal type_name_of_type for `a_type_id'
 			--| note: a_type_id is the runtime type_id (so don't forget to -1 from eiffel type id)
 		require

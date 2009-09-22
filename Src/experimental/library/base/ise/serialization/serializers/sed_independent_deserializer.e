@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			l_old_dtype, l_dtype, l_field_count: INTEGER
 			i, nb: INTEGER
 			a: like attributes_mapping
-			l_item: detachable TUPLE [INTEGER, INTEGER]
+			l_item: detachable TUPLE [position, dtype: INTEGER]
 			l_attribute_type: INTEGER
 		do
 			l_deser := deserializer
@@ -208,12 +208,12 @@ feature {NONE} -- Implementation
 					if l_map.found then
 						l_item := l_map.found_item
 						if l_item /= Void then
-							l_attribute_type := l_item.integer_32_item (2)
+							l_attribute_type := l_item.dtype
 							if l_attribute_type /= l_dtype then
 								set_error (error_factory.new_attribute_mismatch (a_dtype, l_name, l_attribute_type, l_dtype))
 								i := nb - 1 -- Jump out of loop
 							else
-								l_mapping.extend (l_item.integer_32_item (1))
+								l_mapping.extend (l_item.position)
 							end
 						end
 					else
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	attributes_map (a_dtype, a_field_count: INTEGER): HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING]
+	attributes_map (a_dtype, a_field_count: INTEGER): HASH_TABLE [TUPLE [position, dtype: INTEGER], STRING]
 			-- Attribute map for dynamic type `a_dtype' which records
 			-- position and dynamic type for a given attribute name.
 		require

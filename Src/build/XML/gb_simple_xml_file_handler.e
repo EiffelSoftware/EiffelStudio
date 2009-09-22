@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	create_file (root_node_name: STRING; file_name: STRING; data: ARRAY [TUPLE [STRING, STRING]])
+	create_file (root_node_name: STRING; file_name: STRING; data: ARRAYED_LIST [TUPLE [STRING, STRING]])
 			-- Create an XML file `file_name', with a root node named `root_node_name' and the root node
 			-- containing information given by `data'.
 		require

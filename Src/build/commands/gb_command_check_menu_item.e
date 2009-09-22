@@ -11,16 +11,15 @@ class
 inherit
 	GB_COMMAND_MENU_ITEM
 		undefine
-			is_in_default_state
-		redefine
-			implementation,
+			is_in_default_state,
 			create_implementation
+		redefine
+			implementation
 		end
 
 	EV_CHECK_MENU_ITEM
 		redefine
-			implementation,
-			create_implementation
+			implementation
 		end
 
 create
@@ -28,16 +27,8 @@ create
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	implementation: EV_CHECK_MENU_ITEM_I
+	implementation: EV_CHECK_MENU_ITEM_I;
 			-- Responsible for interaction with the native graphics toolkit.
-
-feature {NONE} -- Implementation
-
-	create_implementation
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			create {EV_CHECK_MENU_ITEM_IMP} implementation.make (Current)
-		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -70,6 +61,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 
 end -- class EB_COMMAND_CHECK_MENU_ITEM

@@ -228,9 +228,9 @@ feature {NONE} -- Implementation
 	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP)
 			-- Add `pixmap' to `pixmap_container'.
 		local
-			x_ratio, y_ratio: REAL
+			x_ratio, y_ratio: REAL_64
 			new_x, new_y: INTEGER
-			biggest_ratio: REAL
+			biggest_ratio: REAL_64
 			a_pixmap: EV_PIXMAP
 			a_pixmapable: EV_PIXMAPABLE
 			a_path: STRING_GENERAL

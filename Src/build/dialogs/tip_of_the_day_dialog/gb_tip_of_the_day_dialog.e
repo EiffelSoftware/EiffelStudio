@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 					end
 					lines.forth
 				end
-				previous_lines.make_from_array (lines)
+				previous_lines.copy (lines)
 				tip_label.set_text (output)
 			end
 		end

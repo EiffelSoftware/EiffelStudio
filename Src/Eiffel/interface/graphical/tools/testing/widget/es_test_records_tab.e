@@ -16,6 +16,8 @@ inherit
 		undefine
 			internal_detach_entities
 		redefine
+			on_test_added,
+			on_test_removed,
 			on_before_initialize,
 			on_after_initialized,
 			internal_recycle
@@ -77,7 +79,7 @@ feature {NONE} -- Initialization
 			l_col.header_item.set_text ("Results")
 
 			l_col := l_grid.column (2)
-			l_col.set_width (150)
+			l_col.set_width (250)
 
 			l_col := l_grid.column (3)
 			l_col.set_width (20)
@@ -178,6 +180,30 @@ feature {NONE} -- Access
 
 	icons_provider: ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
 			-- Icons provider for testing tool icons.
+
+feature {TEST_SUITE_S} -- Events: test suite
+
+	on_test_added (a_test_suite: TEST_SUITE_S; a_test: TEST_I)
+			-- <Precursor>
+		do
+			Precursor (a_test_suite, a_test)
+			records.do_all (
+				agent (a_row: J; a_t: TEST_I)
+					do
+						a_row.on_test_added (a_t)
+					end (?, a_test))
+		end
+
+	on_test_removed (a_test_suite: TEST_SUITE_S; a_test: TEST_I)
+			-- <Precursor>
+		do
+			Precursor (a_test_suite, a_test)
+			records.do_all (
+				agent (a_row: J; a_t: TEST_I)
+					do
+						a_row.on_test_remove (a_t)
+					end (?, a_test))
+		end
 
 feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 

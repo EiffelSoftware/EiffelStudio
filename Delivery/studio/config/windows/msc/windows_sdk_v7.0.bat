@@ -28,7 +28,6 @@
 :: Default value for SDK install directory that is determined during the install of the SDK.
 :: --------------------------------------------------------------------------------------------
 SET MSSdk=%~1
-SHIFT
 SET TARGETOS=WINNT
 
 :: --------------------------------------------------------------------------------------------
@@ -145,6 +144,13 @@ SET "VSRoot=%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\"
 :Done_SetRegPath
 
 :: --------------------------------------------------------------------------------------------
+:: Save the default values for VCRoot and VSRoot just in case we get unexpected output from
+:: the calls to REG in the next section
+:: --------------------------------------------------------------------------------------------
+SET "VCRoot_Orig=%VCRoot%"
+SET "VSRoot_Orig=%VSRoot%"
+
+:: --------------------------------------------------------------------------------------------
 :: Read the value for VCRoot and VSRoot from the registry.
 :: Note: The second call to REG will fail if VS is not installed.  These calls to REG are
 :: checking to see if VS is installed in a custom location.  This behavior is expected in
@@ -158,6 +164,13 @@ FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "%VSRegKeyPath%" /v 9.0') DO SET
 :: to a default value.
 :: --------------------------------------------------------------------------------------------
 CLS
+
+:: --------------------------------------------------------------------------------------------
+:: Versions of Reg.exe on XP SP2 and SP3 have different output than other versions.  Detect
+:: incorrect output and reset VCRoot and VSRoot as needed
+:: --------------------------------------------------------------------------------------------
+IF "%VCRoot%"=="VERSION 3.0" SET "VCRoot=%VCRoot_Orig%"
+IF "%VSRoot%"=="VERSION 3.0" SET "VSRoot=%VSRoot_Orig%"
 
 :: --------------------------------------------------------------------------------------------
 :: Setup our VCTools environment path based on target CPU and processor architecture
@@ -223,6 +236,11 @@ Set "VCINSTALLDIR=%VCRoot%"
 Set "VCLibraries=%VCRoot%Lib"
 Set "VCIncludes=%VCRoot%Include"
 
+:: --------------------------------------------------------------------------------------------
+:: Setup the Windows SDK Setup directory to path
+:: --------------------------------------------------------------------------------------------
+SET SdkSetupDir=%MSSdk%\Setup
+SET Path=%SdkSetupDir%;!Path!
 
 :: --------------------------------------------------------------------------------------------
 :: Setup the SdkTools environment path
@@ -592,9 +610,17 @@ SET VCBUILD_DEFAULT_OPTIONS=
 GOTO CleanUp
 
 :: --------------------------------------------------------------------------------------------
-:: End Successfully.  If necessary, display warning about compiling on Windows 9x platforms.
+:: End Successfully.  
+:: If Windows 7 headers,libs and tools are not used, display a warning message.
+:: If necessary, display warning about compiling on Windows 9x platforms.
 :: --------------------------------------------------------------------------------------------
 :End_Success
+CALL :GetWindowsSdkVersion
+IF ERRORLEVEL 1 (
+	CALL :DisplayWarningMsg_NoVersion
+) ELSE (
+	IF NOT "%CurrentSdkVersion%" == "v7.0" CALL :DisplayWarningMsg
+)
 IF "x%OS%x" == "xWindows_NTx" SET "DEBUGMSG=" & GOTO CleanUp
 ECHO *** WARNING ***
 ECHO You are currently building on a Windows 9x based platform.  Most samples have 
@@ -605,6 +631,45 @@ ECHO problem, you must create the destination directory by hand from the command
 ECHO line before calling NMAKE. 
 ECHO.
 
+
+:DisplayWarningMsg
+ECHO **********************************************************************************
+ECHO WARNING: The VC++ Compiler Toolset is currently using Windows SDK '%CurrentSdkVersion%'. 
+ECHO To use Windows SDK v7.0 use 'WindowsSdkVer.exe -version:v7.0', or alternatively 
+ECHO you can pass the '/useenv' switch to vcbuild.exe to use the Windows SDK v7.0 on 
+ECHO a per project basis. 
+ECHO **********************************************************************************
+EXIT /B 0
+
+:DisplayWarningMsg_NoVersion
+ECHO **********************************************************************************
+ECHO WARNING: The VC++ Compiler Toolset is not using Windows SDK v7.0. To use Windows
+ECHO SDK v7.0 use 'WindowsSdkVer.exe -version:v7.0', or alternatively you can pass the
+ECHO '/useenv' switch to vcbuild.exe to use the Windows SDK v7.0 on a per project
+ECHO basis. 
+ECHO **********************************************************************************
+EXIT /B 0
+
+:: --------------------------------------------------------------------
+:: Detect the paths of Windows 7 headers, libs and tools by default
+:: Note: Visual Studio IDE query HKCU key first and then try HKLM
+:: --------------------------------------------------------------------
+:GetWindowsSdkVersion
+CALL :GetWindowsSdkVersionHelper HKCU > nul 2>&1
+IF ERRORLEVEL 1 CALL :GetWindowsSdkVersionHelper HKLM > nul 2>&1
+IF ERRORLEVEL 1 EXIT /B 1
+EXIT /B 0
+
+:GetWindowsSdkVersionHelper
+SET CurrentSdkVersion=
+FOR /F "tokens=1,2*" %%i in ('reg query "%1\SOFTWARE\Microsoft\Microsoft SDKs\Windows" /v "CurrentVersion"') DO (
+    IF "%%i"=="CurrentVersion" (
+        SET "CurrentSdkVersion=%%k"
+    )
+)
+IF "%CurrentSdkVersion%"=="" EXIT /B 1
+EXIT /B 0
+
 :: -------------------------------------------------------------------
 :: Clean up
 :: -------------------------------------------------------------------
@@ -612,6 +677,8 @@ ECHO.
 SET OSLibraries=
 SET OSIncludes=
 SET VSRoot=
+SET VCRoot_Orig=
+SET VSRoot_Orig=
 SET VCTools=
 SET VSTools=
 SET VCLibraries=
@@ -620,3 +687,4 @@ SET TARGET_PLATFORM=
 SET TARGET_DEBUGTYPE=
 SET CURRENT_CPU=
 SET TARGET_CPU=
+SET CurrentSdkVersion=

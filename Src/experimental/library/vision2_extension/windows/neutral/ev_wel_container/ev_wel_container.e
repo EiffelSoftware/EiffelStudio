@@ -19,6 +19,7 @@ inherit
 			prune as cell_prune,
 			item as cell_item,
 			extend as cell_extend,
+			full as cell_full,
 			linear_representation as cell_linear_representation
 		export {NONE}
 			cell_replace,
@@ -26,6 +27,7 @@ inherit
 			cell_prune,
 			cell_item,
 			cell_extend,
+			cell_full,
 			has_recursive,
 			merge_radio_button_groups,
 			propagate_background_color,
@@ -36,8 +38,7 @@ inherit
 			{EV_ANY_I} cell_has
 		redefine
 			implementation,
-			create_implementation,
-			full
+			create_implementation
 		end
 
 feature -- Access

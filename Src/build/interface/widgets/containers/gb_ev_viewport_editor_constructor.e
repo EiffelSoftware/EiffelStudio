@@ -8,28 +8,28 @@ note
 
 deferred class
 	GB_EV_VIEWPORT_EDITOR_CONSTRUCTOR
-	
+
 inherit
 	GB_EV_EDITOR_CONSTRUCTOR
 		undefine
 			default_create
 		end
-		
+
 feature -- Access
 
 	ev_type: EV_VIEWPORT
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING = "EV_VIEWPORT"
 		-- String representation of object_type modifyable by `Current'.
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
 			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
-			
+
 			create x_offset_entry.make (Current, Result, x_offset_string, gb_ev_viewport_x_offset, gb_ev_viewport_x_offset_tooltip,
 				agent set_x_offset (?), agent valid_position (?), components)
 			create y_offset_entry.make (Current, Result, y_offset_string, gb_ev_viewport_y_offset, gb_ev_viewport_y_offset_tooltip,
@@ -38,13 +38,13 @@ feature -- Access
 				agent set_item_width (?), agent valid_item_width (?), components)
 			create item_height_entry.make (Current, Result, item_height_string, gb_ev_viewport_item_height, gb_ev_viewport_item_height_tooltip,
 				agent set_item_height (?), agent valid_item_height (?), components)
-			
+
 			update_attribute_editor
-			
+
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	initialize_agents
@@ -97,20 +97,20 @@ feature {NONE} -- Implementation
 			for_all_objects (agent {EV_VIEWPORT}.set_x_offset (integer))
 			update_editors
 		end
-		
+
 	set_y_offset (integer: INTEGER)
 			-- Update property `y_offset' on all items in `objects'.
 		do
 			for_all_objects (agent {EV_VIEWPORT}.set_y_offset (integer))
 			update_editors
 		end
-		
+
 	valid_position (integer: INTEGER): BOOLEAN
 			-- Is `integer' a valid coordinate in a viewport.
 		do
 			Result := True
 		end
-		
+
 	set_item_width (integer: INTEGER)
 			-- Call `set_item_width' on all items in `objects'.
 		do
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 			update_editors
 		end
-		
+
 	actual_set_item_width (an_object: GB_OBJECT; width: INTEGER)
 			-- Set width of widgets contained in representations of `an_object' to `width'.
 		require
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 			update_editors
 		end
-		
+
 	actual_set_item_height (an_object: GB_OBJECT; height: INTEGER)
 			-- Set height of widgets contained in representations of `an_object' to `height'.
 		require
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 				viewport.set_item_height (height.max (viewport.item.height))
 			end
 		end
-		
+
 	valid_item_width (integer: INTEGER): BOOLEAN
 			-- Is `integer' a valid width for item of `Current'?
 		do
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 				Result := True
 			end
 		end
-		
+
 	valid_item_height (integer: INTEGER): BOOLEAN
 			-- Is `integer' a valid height for item of `Current'?
 		do
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 	y_offset_string: STRING = "Y_offset"
 	item_width_string: STRING = "Item_width"
 	item_height_string: STRING = "Item_height"
-	
+
 	x_offset_entry, y_offset_entry, item_width_entry, item_height_entry: GB_INTEGER_INPUT_FIELD;
 		-- Input widgets for `x_offset', `y_offset', `set_item_width' and `set_item_height'.
 

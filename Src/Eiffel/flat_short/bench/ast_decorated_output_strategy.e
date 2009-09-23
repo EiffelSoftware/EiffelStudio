@@ -829,7 +829,6 @@ feature {NONE} -- Implementation
 			l_formal: FORMAL_A
 			l_last_type_set: TYPE_SET_A
 			l_is_multiconstraint_formal: BOOLEAN
-			l_named_tuple_type: NAMED_TUPLE_TYPE_A
 			l_type: TYPE_A
 			l_pos: INTEGER
 			l_actual_argument_typs: like expr_types
@@ -993,15 +992,10 @@ feature {NONE} -- Implementation
 				end
 			elseif l_as.is_tuple_access then
 				if not has_error_internal then
-					l_named_tuple_type ?= last_type.actual_type
-					check
-						l_named_tuple_type /= Void
-					end
-					l_pos := l_named_tuple_type.label_position (l_as.access_name)
-					if l_pos > 0 then
-						last_type := l_named_tuple_type.generics.item (l_pos)
+					if attached {TUPLE_TYPE_A} last_type.actual_type as l_tuple_type then
+						last_type := l_tuple_type.generics.item (l_as.label_position)
 					else
-						last_type := Void
+						check compiler_bug: False end
 					end
 				else
 					last_type := Void

@@ -218,8 +218,19 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 		do
 			if attached {H} a_record as l_record then
 					-- Add record.
+				l_records := records
 				from
-					l_records := records
+					l_records.start
+				until
+					l_records.after
+				loop
+					l_record_row := l_records.item_for_iteration
+					if l_record_row.is_expanded and not l_record_row.is_running then
+						l_record_row.row.collapse
+					end
+					l_records.forth
+				end
+				from
 					l_records.start
 					l_pos := 1
 				until

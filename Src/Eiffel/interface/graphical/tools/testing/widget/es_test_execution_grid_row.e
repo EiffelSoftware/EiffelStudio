@@ -102,16 +102,32 @@ feature {TEST_EXECUTION_I} -- Events
 
 	on_test_running (a_session: TEST_EXECUTION_I; a_test: TEST_I)
 			-- <Precursor>
+		local
+			l_row: like row
+			l_expanded: BOOLEAN
 		do
+			l_row := row
+			l_expanded := l_row.is_expanded
 			remove_subrow (a_test.name)
 			add_running_test (a_test)
+			if l_expanded and not l_row.is_expanded and l_row.is_expandable then
+				l_row.expand
+			end
 		end
 
 	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: EQA_RESULT)
 			-- <Precursor>
+		local
+			l_row: like row
+			l_expanded: BOOLEAN
 		do
+			l_row := row
+			l_expanded := l_row.is_expanded
 			remove_subrow (a_test.name)
 			add_result (a_test, Void, a_result)
+			if l_expanded and not l_row.is_expanded and l_row.is_expandable then
+				l_row.expand
+			end
 		end
 
 	on_test_removed (a_session: TEST_EXECUTION_I; a_test: TEST_I)

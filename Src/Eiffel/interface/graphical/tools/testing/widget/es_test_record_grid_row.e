@@ -18,6 +18,8 @@ inherit
 
 	SHARED_TEST_SERVICE
 
+	ES_SHARED_TEST_GRID_UTILITIES
+
 	EV_STOCK_PIXMAPS
 
 feature {NONE} -- Initialization
@@ -191,29 +193,32 @@ feature {ES_TEST_RECORDS_TAB} -- Basic operations
 	refresh
 			-- Rebuild content and all subrows of `row'.
 		local
-			l_label: EV_GRID_LABEL_ITEM
-			l_text: STRING_32
+			l_token_writer: like token_writer
+			l_label: EB_GRID_EDITOR_TOKEN_ITEM
 		do
-			create l_text.make (80)
-			l_text.append_string_general (label)
-			l_text.append_string_general (" (")
-			l_text.append_string_general (date_time (record.creation_date))
-			l_text.append_string_general (")")
-			create l_label.make_with_text (l_text)
+			l_token_writer := token_writer
+
+			l_token_writer.process_basic_text (label)
+			l_token_writer.add_comment (" (")
+			l_token_writer.add_comment (date_time (record.creation_date))
+			l_token_writer.add_comment (")")
+			create l_label
+			l_label.set_text_with_tokens (l_token_writer.last_line.content)
+			reset_token_writer
 			l_label.set_pixmap (pixmap)
 			row.set_item (1, l_label)
 
-			create l_label.make_with_text ("")
-			l_label.disable_full_select
+			create l_label
+			--l_label.disable_full_select
 			l_label.pointer_enter_actions.extend (agent on_store_label_enter (l_label))
 			l_label.pointer_leave_actions.extend (agent on_store_label_leave (l_label))
 			l_label.pointer_button_press_actions.extend (agent on_store_label_press)
 			on_store_label_leave (l_label)
 			row.set_item (3, l_label)
 
-			create l_label.make_with_text ("")
+			create l_label
 			l_label.set_pixmap (icon_pixmaps.general_delete_icon)
-			l_label.disable_full_select
+			--l_label.disable_full_select
 			l_label.pointer_enter_actions.extend (agent on_delete_label_enter (l_label))
 			l_label.pointer_leave_actions.extend (agent on_delete_label_leave (l_label))
 			l_label.pointer_button_press_actions.extend (agent on_delete_label_press)
@@ -313,7 +318,7 @@ feature {NONE} -- Events: row
 
 feature {NONE} -- Events: labels
 
-	on_store_label_enter (a_label: EV_GRID_LABEL_ITEM)
+	on_store_label_enter (a_label: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Called when label item is entered with pointer.
 			--
 			-- `a_label': Label that was hovered with mouse.
@@ -325,7 +330,7 @@ feature {NONE} -- Events: labels
 			row.parent.set_pointer_style (hyperlink_cursor)
 		end
 
-	on_store_label_leave (a_label: EV_GRID_LABEL_ITEM)
+	on_store_label_leave (a_label: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Called when label item is exited with pointer.
 			--
 			-- `a_label': Label that was hovered with mouse.
@@ -334,7 +339,7 @@ feature {NONE} -- Events: labels
 			a_label_not_destroyed: not a_label.is_destroyed
 		do
 			perform_with_test_suite (
-				agent (a_ts: TEST_SUITE_S; a_l: EV_GRID_LABEL_ITEM)
+				agent (a_ts: TEST_SUITE_S; a_l: EB_GRID_EDITOR_TOKEN_ITEM)
 					local
 						l_record: like record
 						l_repo: TEST_RECORD_REPOSITORY_I
@@ -372,7 +377,7 @@ feature {NONE} -- Events: labels
 			end
 		end
 
-	on_delete_label_enter (a_label: EV_GRID_LABEL_ITEM)
+	on_delete_label_enter (a_label: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Called when label item is entered with pointer.
 			--
 			-- `a_label': Label that was hovered with mouse.
@@ -383,7 +388,7 @@ feature {NONE} -- Events: labels
 			row.parent.set_pointer_style (hyperlink_cursor)
 		end
 
-	on_delete_label_leave (a_label: EV_GRID_LABEL_ITEM)
+	on_delete_label_leave (a_label: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Called when label item is exited with pointer.
 			--
 			-- `a_label': Label that was hovered with mouse.

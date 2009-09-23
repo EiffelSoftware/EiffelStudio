@@ -137,7 +137,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	grid: EV_GRID
+	grid: like create_grid
 			-- Grid visualizing tree nodes through rows
 
 	layout: TAG_TREE_GRID_LAYOUT [G]
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Factory
 
-	create_grid: like grid
+	create_grid: EV_GRID
 			-- Create new grid.
 		do
 			create Result

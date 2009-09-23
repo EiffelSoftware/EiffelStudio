@@ -218,11 +218,11 @@ feature {NONE} -- Implementation
 						time_left := time_left.max(new_time_left)
 					end
 				end
-				progress_2.set_proportion (time_left / 100)
+				progress_2.set_proportion ((time_left / 100).truncated_to_real)
 				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name).as_string_32 + time_left.out + "%%")
 
 				total_prog := ((time_left + 100*n_lib_done)/(n_lib_to_precompile)).floor
-				progress.set_proportion ((time_left + 100*n_lib_done)/(100*n_lib_to_precompile))
+				progress.set_proportion (((time_left + 100*n_lib_done)/(100*n_lib_to_precompile)).truncated_to_real)
 				progress_text.set_text (interface_names.l_total_progress_is (total_prog.out))
 			end
 			n_lib_done := n_lib_done + 1

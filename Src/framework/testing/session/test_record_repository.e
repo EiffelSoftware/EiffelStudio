@@ -243,6 +243,7 @@ feature -- Status setting
 		do
 			seek_record (a_record)
 			property_storage.item_for_iteration.persistent := True
+			store_record_at_index (record_storage.index)
 			record_property_updated_event.publish ([Current, a_record])
 		end
 

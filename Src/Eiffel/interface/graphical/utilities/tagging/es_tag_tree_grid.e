@@ -13,11 +13,9 @@ inherit
 			make as make_grid
 		redefine
 			widget,
-			grid,
+			create_grid,
 			initialize,
 			initialize_layout,
-			on_select_row,
-			on_deselect_row,
 			layout
 		end
 
@@ -29,9 +27,6 @@ inherit
 		end
 
 	ES_SHARED_FONTS_AND_COLORS
-		export
-			{NONE} all
-		end
 
 create
 	make
@@ -59,15 +54,14 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		local
 			l_grid: like grid
-			l_colors: like colors
-			l_pnd: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
 			l_grid := grid
-			l_colors := colors
 
 				-- Operational
-			l_grid.enable_tree
+
 			l_grid.enable_single_row_selection
+			l_grid.enable_tree
+			l_grid.hide_tree_node_connectors
 			l_grid.enable_partial_dynamic_content
 
 				-- Events
@@ -75,28 +69,10 @@ feature {NONE} -- Initialization
 			register_action (l_grid.row_collapse_actions, agent on_row_collapse)
 			register_action (l_grid.row_select_actions, agent on_select_row)
 			register_action (l_grid.row_deselect_actions, agent on_deselect_row)
-			register_action (l_grid.focus_in_actions, agent on_change_focus)
-			register_action (l_grid.focus_out_actions, agent on_change_focus)
 			l_grid.set_dynamic_content_function (agent computed_grid_item)
 
-				-- Appearance
-			l_grid.hide_tree_node_connectors
-			l_grid.set_focused_selection_color (l_colors.grid_focus_selection_color)
-			l_grid.set_focused_selection_text_color (l_colors.grid_focus_selection_text_color)
-			l_grid.set_non_focused_selection_color (l_colors.grid_unfocus_selection_color)
-			l_grid.set_non_focused_selection_text_color (l_colors.grid_unfocus_selection_text_color)
-
-				-- PND support
-			create l_pnd.make_with_grid (l_grid)
-			l_pnd.synchronize_scroll_behavior_with_editor
-			l_pnd.enable_grid_item_pnd_support
-			l_pnd.enable_ctrl_right_click_to_open_new_window
-			l_pnd.set_context_menu_factory_function (agent (develop_window.menus).context_menu_factory)
-
-			auto_recycle (l_pnd)
-
 			a_widget.set_border_width (1)
-			a_widget.set_background_color (l_colors.stock_colors.gray)
+			a_widget.set_background_color (colors.stock_colors.gray)
 			a_widget.extend (l_grid)
 		end
 
@@ -120,54 +96,15 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	grid: ES_GRID
-			-- <Precursor>
-
 	layout: ES_TAG_TREE_GRID_LAYOUT [G]
 			-- <Precursor>
 
-feature {NONE} -- Events: grid
+feature {NONE} -- Factory
 
-	on_select_row (a_row: EV_GRID_ROW)
-			-- Called when row is selected.
+	create_grid: ES_TESTING_TOOL_GRID
+			-- <Precursor>
 		do
-			Precursor (a_row)
-			highlight_row (a_row)
-		end
-
-	on_deselect_row (a_row: EV_GRID_ROW)
-			-- Called when row is deselected.
-		do
-			Precursor (a_row)
-			unhighlight_row (a_row)
-		end
-
-	highlight_row (a_row: EV_GRID_ROW)
-			-- Make `a_row' look like it is fully selected.
-		do
-			if grid.has_focus then
-				a_row.set_background_color (colors.grid_focus_selection_color)
-			else
-				a_row.set_background_color (colors.grid_unfocus_selection_color)
-			end
-		end
-
-	unhighlight_row (a_row: EV_GRID_ROW)
-			-- Make `a_row' look like it is not selected.
-		do
-			a_row.set_background_color (grid.background_color)
-		end
-
-	on_change_focus
-			-- Make sure all selected rows have correct background color.
-		do
-			grid.selected_rows.do_all (
-				agent (a_row: EV_GRID_ROW)
-					require
-						a_row /= Void
-					do
-						highlight_row (a_row)
-					end)
+			create Result
 		end
 
 note

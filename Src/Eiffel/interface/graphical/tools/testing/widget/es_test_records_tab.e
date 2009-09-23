@@ -72,6 +72,7 @@ feature {NONE} -- Initialization
 			l_grid.enable_tree
 			l_grid.hide_tree_node_connectors
 			l_grid.enable_single_row_selection
+			--l_grid.disable_selection_on_click
 
 			l_grid.set_column_count_to (5)
 			l_grid.enable_auto_size_best_fit_column (1)
@@ -117,7 +118,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	grid: ES_GRID
+	grid: ES_TESTING_TOOL_GRID
 			-- Grid displaying records in root rows
 
 	records: DS_ARRAYED_LIST [J]

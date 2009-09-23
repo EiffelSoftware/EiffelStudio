@@ -33,7 +33,7 @@
 		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
 			<assertions/>
 		</option>
-		<external_library location="-ldl">
+		<external_library location="`$(ISE_LIBRARY)/experimental/library/api_wrapper/implementation/unix/Clib/dl-config --library`">
 			<description>Library required for dynamic loading.</description>
 			<condition>
 				<platform excluded_value="windows"/>

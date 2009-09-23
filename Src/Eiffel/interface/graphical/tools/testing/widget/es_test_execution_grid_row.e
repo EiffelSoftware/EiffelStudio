@@ -14,7 +14,8 @@ inherit
 		redefine
 			make_running,
 			detach_session,
-			show_content
+			show_content,
+			clear_content
 		end
 
 	TEST_EXECUTION_OBSERVER
@@ -89,6 +90,14 @@ feature {NONE} -- Basic operations
 			end
 		end
 
+	clear_content
+			-- <Precursor>
+		do
+			Precursor
+			running_index := 0
+			queued_index := 0
+		end
+
 feature {ES_TEST_RECORDS_TAB} -- Status setting
 
 	detach_session
@@ -104,14 +113,15 @@ feature {TEST_EXECUTION_I} -- Events
 			-- <Precursor>
 		local
 			l_row: like row
-			l_expanded: BOOLEAN
 		do
 			l_row := row
-			l_expanded := l_row.is_expanded
-			remove_subrow (a_test.name)
-			add_running_test (a_test)
-			if l_expanded and not l_row.is_expanded and l_row.is_expandable then
-				l_row.expand
+			if is_expanded then
+				remove_subrow (a_test.name)
+				add_running_test (a_test)
+				l_row := row
+				if not l_row.is_expanded and l_row.is_expandable then
+					l_row.expand
+				end
 			end
 		end
 
@@ -119,21 +129,24 @@ feature {TEST_EXECUTION_I} -- Events
 			-- <Precursor>
 		local
 			l_row: like row
-			l_expanded: BOOLEAN
 		do
 			l_row := row
-			l_expanded := l_row.is_expanded
-			remove_subrow (a_test.name)
-			add_result (a_test, Void, a_result)
-			if l_expanded and not l_row.is_expanded and l_row.is_expandable then
-				l_row.expand
+			if is_expanded then
+				remove_subrow (a_test.name)
+				add_result (a_test, Void, a_result)
+				l_row := row
+				if not l_row.is_expanded and l_row.is_expandable then
+					l_row.expand
+				end
 			end
 		end
 
 	on_test_removed (a_session: TEST_EXECUTION_I; a_test: TEST_I)
 			-- <Precursor>
 		do
-			remove_subrow (a_test.name)
+			if is_expanded then
+				remove_subrow (a_test.name)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -275,6 +288,7 @@ feature {NONE} -- Implementation
 			-- Remove subrow for test with name `a_test_name'.
 		require
 			a_test_name_attached: a_test_name /= Void
+			is_expanded: is_expanded
 		local
 			l_subrows: like subrows
 			l_subrow: ES_TEST_GRID_ROW

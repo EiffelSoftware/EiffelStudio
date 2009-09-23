@@ -759,11 +759,13 @@ feature {NONE} -- Row actions
 
 	on_objects_row_selected (row: EV_GRID_ROW)
 			-- An item in the list of expression was selected.
-		local
-			g: like objects_grid
 		do
-			g ?= row.parent
-			if g /= Void and then g = dropped_objects_grid then
+			if
+				attached {like objects_grid} row.parent as g and then
+				g = dropped_objects_grid and then
+				attached {ES_OBJECTS_GRID_OBJECT_LINE} row.data as gline and then
+				is_removable_debugged_object_line (gline)
+			then
 				remove_debugged_object_cmd.enable_sensitive
 			else
 				remove_debugged_object_cmd.disable_sensitive
@@ -1279,12 +1281,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					line_row := line.row
 					check attached line_row end
 					if
-						is_removable_debugged_object_row (line.row)
-						and then is_removable_debugged_object_address (line.object_address)
-						and then (
-							(not attached {ES_OBJECTS_GRID_SPECIFIC_LINE} line) or else
-							not line.is_read_only
-							) --| might be only `not line.is_read_only'
+						is_removable_debugged_object_line (line)
 					then
 						remove_debugged_object_line (line)
 					end
@@ -1341,6 +1338,17 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				end
 				Result := Result and then is_removable_debugged_object_address (ost.object_address)
 			end
+		end
+
+	is_removable_debugged_object_line (a_line: ES_OBJECTS_GRID_OBJECT_LINE): BOOLEAN
+			-- `a_line' is removable?
+		do
+			Result := is_removable_debugged_object_row (a_line.row)
+					and then is_removable_debugged_object_address (a_line.object_address)
+					and then (
+							(not attached {ES_OBJECTS_GRID_SPECIFIC_LINE} a_line) or else
+							not a_line.is_read_only
+						) --| might be only `not line.is_read_only'
 		end
 
 	is_removable_debugged_object_row (row: EV_GRID_ROW): BOOLEAN

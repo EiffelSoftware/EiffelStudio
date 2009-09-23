@@ -4762,6 +4762,7 @@ rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtyp
 	jmp_buf exenv;
 	volatile int saved_debug_mode = debug_mode;
 	uint32	type = 0;			/* Dynamic type of the result */
+	EIF_TYPED_VALUE* last = NULL;
 
 	REQUIRE("exception_occured not null", exception_occured);
 	REQUIRE("result not null", result);
@@ -4781,7 +4782,8 @@ rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtyp
 		exclear ();
 	} else {
 		dynamic_eval (fid_or_offset, stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, 0, nb_pushed);
-		if (otop() != previous_otop) { /* a result has been pushed on the stack */
+		last = otop();
+		if (last != NULL && last != previous_otop) { /* a result has been pushed on the stack */
 			memcpy(result, opop(), sizeof(EIF_TYPED_VALUE)); 
 			type = result->type & SK_HEAD;
 			if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL)) {

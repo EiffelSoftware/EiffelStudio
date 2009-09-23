@@ -70,9 +70,10 @@ feature {NONE} -- Initialization
 		local
 			l_evaluator: like execute_test
 			l_bc: STRING
+			l_done: BOOLEAN
 		do
 			from until
-				False
+				l_done
 			loop
 				if attached {TUPLE [byte_code, name: STRING]} socket.retrieved as l_retrieved then
 					l_bc := l_retrieved.byte_code
@@ -89,10 +90,18 @@ feature {NONE} -- Initialization
 					l_evaluator := execute_test
 					socket.put_boolean (True)
 					socket.independent_store (l_evaluator.last_result)
+				else
+						-- If we retrieved something unexpected, we close the socket and terminate.
+					if not socket.is_closed then
+						socket.close
+					end
+					l_done := True
 				end
 			end
 		rescue
-			socket.close
+			if not socket.is_closed then
+				socket.close
+			end
 		end
 
 feature {NONE} -- Access

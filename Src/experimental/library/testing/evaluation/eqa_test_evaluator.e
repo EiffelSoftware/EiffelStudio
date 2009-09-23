@@ -99,7 +99,6 @@ feature -- Execution
 			l_old: detachable PLAIN_TEXT_FILE
 		do
 			create l_start_date.make_now
-			--(create {EQA_EVALUATION_INFO}).set_test_name (a_name)
 			l_old := io.default_output
 			io.set_file_default (buffer)
 			l_creator := agent: G do Result := create {G} end
@@ -111,7 +110,6 @@ feature -- Execution
 			else
 				l_test_set := l_creator.last_result
 				check l_test_set /= Void end
-				--a_routine.set_operands ([l_test_set])
 				safe_execute (agent a_routine.call ([l_test_set]))
 				l_test := last_invocation_response
 				check l_test /= Void end

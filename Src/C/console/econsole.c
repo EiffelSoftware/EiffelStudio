@@ -167,7 +167,6 @@ rt_public void eif_show_console(void)
 #endif
 		RT_GET_CONTEXT
 
-
 			/* Get all default standard handles */
 		eif_conin = GetStdHandle (STD_INPUT_HANDLE);
 		eif_conout = GetStdHandle (STD_OUTPUT_HANDLE);
@@ -175,21 +174,21 @@ rt_public void eif_show_console(void)
 
 			/* Check if handles are available, allocate console if not */
 			/* Raise an I/O exception if we cannot get a valid handle */
-		if (eif_conin == 0) {
+		if ((eif_conin == 0) || (eif_conin == INVALID_HANDLE_VALUE)) {
 			AllocConsole ();
 			eif_conin = GetStdHandle (STD_INPUT_HANDLE);
 		}
 		if (eif_conin == INVALID_HANDLE_VALUE) {
 			eio ();
 		}
-		if (eif_conout == 0) {
+		if ((eif_conout == 0) || (eif_conout == INVALID_HANDLE_VALUE)){
 			AllocConsole ();
 			eif_conout = GetStdHandle (STD_OUTPUT_HANDLE);
 		}
 		if (eif_conout == INVALID_HANDLE_VALUE) {
 			eio ();
 		}
-		if (eif_conerr == 0) {
+		if ((eif_conerr == 0) || (eif_conerr == INVALID_HANDLE_VALUE)) {
 			AllocConsole ();
 			eif_conerr = GetStdHandle (STD_ERROR_HANDLE);
 		}

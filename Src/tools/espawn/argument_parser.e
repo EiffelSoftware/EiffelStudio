@@ -160,7 +160,7 @@ feature {NONE} -- Usage
 			if {PLATFORM_CONSTANTS}.is_64_bits then
 				Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Forces use of a 32bit environment.", True, False))
 			else
-				Result.extend (create {ARGUMENT_SWITCH}.make_hidden (x86_switch, "Ineffective.", True, False))
+				Result.extend (create {ARGUMENT_SWITCH}.make_hidden (x86_switch, True, False))
 			end
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (use_compiler_switch, "Forces espawn to use an specific environment.", True, False, "code", "The code related to a compiler, use -l to list codes.", False))
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (aync_switch, "Process commands asynchronously.", True, False, "count", "Number of processors to utilize.", True, 1, {NATURAL_16}.max_value))

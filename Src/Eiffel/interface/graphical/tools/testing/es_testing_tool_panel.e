@@ -31,7 +31,8 @@ inherit
 	TEST_SUITE_OBSERVER
 		redefine
 			on_test_added,
-			on_test_removed
+			on_test_removed,
+			on_session_launched
 		end
 
 	ES_HELP_CONTEXT
@@ -411,6 +412,16 @@ feature {TEST_SUITE_S} -- Events: test suite
 			-- <Precursor>
 		do
 			update_run_labels
+		end
+
+	on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
+			-- <Precursor>
+		do
+			if attached {TEST_EXECUTION_I} a_session then
+				notebook.select_item (notebook.at (1))
+			elseif attached {TEST_CREATION_I} a_session then
+				notebook.select_item (notebook.at (2))
+			end
 		end
 
 feature {NONE} -- Events: tree view

@@ -18,7 +18,8 @@ inherit
 			default_ex_style,
 			interface,
 			dispose,
-			class_name
+			class_name,
+			destroy
 		end
 
 	SD_FEEDBACK_INDICATOR_I
@@ -126,6 +127,15 @@ feature -- Command
 					update_layered_window_rgba (alpha)
 				end
 			end
+		end
+
+	destroy
+			-- <Precusor>
+		do
+			if not is_destroyed then
+				set_is_in_destroy (True)
+			end
+			Precursor {EV_POPUP_WINDOW_IMP}
 		end
 
 feature {NONE} -- Implementation

@@ -830,7 +830,6 @@ feature {NONE} -- Implementation
 			l_last_type_set: TYPE_SET_A
 			l_is_multiconstraint_formal: BOOLEAN
 			l_type: TYPE_A
-			l_pos: INTEGER
 			l_actual_argument_typs: like expr_types
 			l_text_formatter_decorator: like text_formatter_decorator
 		do

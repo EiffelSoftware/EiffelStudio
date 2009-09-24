@@ -439,7 +439,7 @@ feature {NONE} -- Process Vision2 events
 				reset_blinking
 
 				if key_pressed /= Void and then ev_key.code = key_pressed.code then
-					continue_key_action := true
+					continue_key_action := True
 				else
 					key_pressed := ev_key
 					key_action_timer.actions.wipe_out
@@ -447,8 +447,7 @@ feature {NONE} -- Process Vision2 events
 					continue_key_action := True
 					if
 						ctrled_key and then
-						not alt_key and then
-						not shifted_key
+						not alt_key
 					then
 						key_action_timer.actions.extend (agent repeat_ctrled_key (ev_key))
 					elseif not (not ctrled_key and not shifted_key and alt_key) then

@@ -29,7 +29,9 @@ feature -- Conversion
 			end
 			if not a_encoding.is_equal (utf32) then
 				utf32.convert_to (a_encoding, a_string)
-				Result := utf32.last_converted_stream
+				if utf32.last_conversion_successful then
+					Result := utf32.last_converted_stream
+				end
 			end
 			if Result = Void then
 				Result := a_string.as_string_8

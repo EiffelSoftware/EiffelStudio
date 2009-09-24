@@ -565,7 +565,7 @@ feature -- Access
 				a_flag = {DEPEND_UNIT}.is_in_require_flag
 		local
 			dep: CLASS_DEPENDANCE
-			fdep: FEATURE_DEPENDANCE
+			fdep: detachable FEATURE_DEPENDANCE
 			l_depend_unit: DEPEND_UNIT
 			l_system: like eiffel_system
 			l_class_c: CLASS_C
@@ -575,27 +575,30 @@ feature -- Access
 			l_system := eiffel_system
 			if Depend_server.has (written_class.class_id) then
 				dep := Depend_server.item (written_class.class_id)
-				from
-					fdep := dep.item (body_index)
-					fdep.start
-				until
-					fdep.after
-				loop
-					l_depend_unit := fdep.item
-					if l_depend_unit.rout_id /= 0 then
-						if a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
-							l_class_c := l_system.class_of_id (l_depend_unit.class_id)
-							if l_class_c /= Void then
-								l_e_feature := l_class_c.feature_with_rout_id (l_depend_unit.rout_id)
-									-- We ignore inline agents because what they called are already
-									-- propagated to the enclosing feature.
-								if l_e_feature /= Void and then not l_e_feature.is_inline_agent then
-									Result.extend ([l_class_c, l_e_feature.name])
+				fdep := dep.item (body_index)
+					-- It is possible detached when compilation is not finished. See bug#11409.
+				if fdep /= Void then
+					from
+						fdep.start
+					until
+						fdep.after
+					loop
+						l_depend_unit := fdep.item
+						if l_depend_unit.rout_id /= 0 then
+							if a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
+								l_class_c := l_system.class_of_id (l_depend_unit.class_id)
+								if l_class_c /= Void then
+									l_e_feature := l_class_c.feature_with_rout_id (l_depend_unit.rout_id)
+										-- We ignore inline agents because what they called are already
+										-- propagated to the enclosing feature.
+									if l_e_feature /= Void and then not l_e_feature.is_inline_agent then
+										Result.extend ([l_class_c, l_e_feature.name])
+									end
 								end
 							end
 						end
+						fdep.forth
 					end
-					fdep.forth
 				end
 			end
 			if Result.is_empty then

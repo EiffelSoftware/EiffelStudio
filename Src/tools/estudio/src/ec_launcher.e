@@ -468,10 +468,6 @@ feature -- Environment
 		require
 			is_environment_valid: is_environment_valid
 		local
-			s: STRING
-			cwd: STRING
-			fn: FILE_NAME
-			file: RAW_FILE
 			i: INTEGER
 		do
 				--| Compute command line, args, and working directory
@@ -486,16 +482,8 @@ feature -- Environment
 					else
 							--| use the required -config argument
 						ec_arguments.extend ("-config")
-						s := cmdline_argument (1)
-
 							--| `s' is the path to the config file
-						if s.has (' ') and then not s.has ('"') then
-							s.left_adjust
-							s.right_adjust
-							s.prepend_character ('"')
-							s.append_character ('"')
-						end
-						ec_arguments.extend (s)
+						ec_arguments.extend (cmdline_argument (1))
 					end
 				else
 					from
@@ -503,22 +491,7 @@ feature -- Environment
 					until
 						i > cmdline_arguments_count
 					loop
-						s := cmdline_argument (i).twin
-						if
-							i < cmdline_arguments_count and then
-							(s.is_equal ("-config") or s.is_equal ("-project_path") or s.is_equal ("-target"))
-						then
-							ec_arguments.extend (s)
-							i := i + 1
-							s := cmdline_argument (i).twin
-							if s.has (' ') and then not s.has ('"') then
-								s.left_adjust
-								s.right_adjust
-								s.prepend_character ('"')
-								s.append_character ('"')
-							end
-						end
-						ec_arguments.extend (s)
+						ec_arguments.extend (cmdline_argument (i))
 						i := i + 1
 					end
 				end

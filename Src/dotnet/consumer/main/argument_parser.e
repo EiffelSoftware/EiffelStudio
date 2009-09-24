@@ -178,7 +178,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Display verbose output.", True, False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (output_switch, "Location of Eiffel assembly cache to perform operations on.", True, False, "cache", "A location of an Eiffel assembly cache", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Cleans and compacts an Eiffel cache.", False, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make_hidden (halt_switch, "Waits for user to press enter before exiting.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (halt_switch, "Waits for user to press enter before exiting.", True, False))
 
 		end
 

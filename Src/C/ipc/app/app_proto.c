@@ -1774,13 +1774,11 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
 {
 	EIF_TYPED_VALUE ip;
-	EIF_TYPED_VALUE* old_previous_otop;
 
 	int b = exec_recording_enabled;
 	int exception_occured = 0;	/* Exception occurred ? */
 
 	exec_recording_enabled = 0; /* Disable execution recording status */
-	old_previous_otop = previous_otop;
 
 	dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, nb_pushed, &exception_occured, &ip);
 
@@ -1795,7 +1793,7 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype
 	}
 
 	/* reset info concerning otop */
-	previous_otop = old_previous_otop;
+	previous_otop = NULL;
 	nb_pushed = 0;
 
 	exec_recording_enabled = b; /* Restore execution recording status */

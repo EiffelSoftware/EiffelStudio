@@ -12,6 +12,8 @@ inherit
 	EV_MODEL_MOVE_HANDLE
 		export
 			{EG_POLYLINE_LINK_FIGURE} on_start_resizing
+		redefine
+			new_filled_list
 		end
 
 create
@@ -39,12 +41,18 @@ feature {NONE} -- Initialization
 			set_center
 		end
 
+	new_filled_list (n: INTEGER): like Current
+			-- <Precursor>
+		do
+			create Result.make (Void)
+		end
+
 feature -- Access
 
-	corresponding_point: EV_COORDINATE
+	corresponding_point: detachable EV_COORDINATE
 			-- Point on line `Current' is an edge handler for.
 
-	corresponding_line: EG_POLYLINE_LINK_FIGURE
+	corresponding_line: detachable EG_POLYLINE_LINK_FIGURE
 			-- Line `Current' is part of.
 
 feature {EG_POLYLINE_LINK_FIGURE} -- Element change
@@ -58,10 +66,6 @@ feature {EG_POLYLINE_LINK_FIGURE} -- Element change
 		ensure
 			corresponding_point_assigned: corresponding_point = a_corresponding_point
 		end
-
-
-invariant
-	corresponding_point_not_void: corresponding_point /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

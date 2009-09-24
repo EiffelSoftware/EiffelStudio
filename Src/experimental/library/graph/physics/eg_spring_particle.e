@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
 			l_item: EG_LINK_FIGURE
-			l_other: EG_LINKABLE_FIGURE
+			l_other: detachable EG_LINKABLE_FIGURE
 			l_weight: DOUBLE
 		do
 			from
@@ -81,6 +81,7 @@ feature {NONE} -- Implementation
 					else
 						l_other := l_item.source
 					end
+					check l_other /= Void end -- FXIME: Implied by ...?
 					if l_other.is_show_requested then
 						l_weight := stiffness * link_stiffness (l_item)
 						Result.set (Result.x - l_weight * (px - l_other.port_x), Result.y - l_weight * (py - l_other.port_y))
@@ -112,7 +113,12 @@ feature {NONE} -- Implementation
 
 	particle_type: EG_LINKABLE_FIGURE
 			-- Type of particle
+		local
+			l_result: detachable like particle_type
 		do
+			check anchor_type_only: False end
+			check l_result /= Void end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
 note

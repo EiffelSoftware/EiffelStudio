@@ -3,7 +3,7 @@ note
 						The `label_group' is attached to the polyline defined
 						through the `polyline_points' from 0 to count - 1.
 						The `label_group' can be moved allong the polyline.
-						
+
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,34 +13,34 @@ note
 deferred class
 	EG_POLYLINE_LABEL
 
-inherit		
+inherit
 	EV_MODEL_DOUBLE_MATH
 		redefine
 			default_create
 		end
-		
+
 	EG_XML_STORABLE
 		undefine
 			default_create
 		end
-	
+
 feature {NONE} -- Initialization
 
 	default_create
 			-- Create a EG_POLYLINE_LABEL.
-		do	
+		do
 			create label_move_handle
 			create label_group
 			label_move_handle.extend (label_group)
 			label_move_handle.move_actions.extend (agent on_label_move)
 			label_move_handle.scale_x_actions.extend (agent on_scale)
 			label_move_handle.scale_y_actions.extend (agent on_scale)
-			
+
 			set_label_line_start_and_end
 			position_on_line := -10.0
-			
+
 		end
-		
+
 feature -- Status report
 
 	is_left: BOOLEAN
@@ -48,18 +48,18 @@ feature -- Status report
 		-- The line "flows" from `source' to `target'. Left is therfore
 		-- on the left side of the line if you look to the direction
 		-- of the flow.
-		
+
 feature -- Access
 
 	label_group: EV_MODEL_GROUP
 			-- The label group moved allong the line.
 			-- Fill it with your labels.
-		
+
 	line_width: INTEGER
 			-- The with of the polyline.
 		deferred
 		end
-		
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		do
@@ -69,7 +69,7 @@ feature -- Access
 			Result.put_last (xml_routines.xml_node (Result, once "LABEL_END_NB", point_number (label_line_end_point).out))
 			Result.put_last (xml_routines.xml_node (Result, once "IS_LEFT", boolean_representation (is_left)))
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
@@ -81,8 +81,8 @@ feature -- Access
 			label_line_start_point := p
 			label_line_end_point := q
 			is_left := xml_routines.xml_boolean (node, once "IS_LEFT")
-		end	
-		
+		end
+
 feature -- Element change
 
 	recycle
@@ -103,16 +103,16 @@ feature -- Element change
 		ensure
 			set: is_left = a_left
 		end
-		
+
 feature {NONE} -- Implementation
 
 	label_move_handle: EV_MODEL_MOVE_HANDLE
 			-- The move handle used to move the `label_group'.
-			
+
 	label_line_start_point, label_line_end_point: EV_COORDINATE
 			-- The point of `label_move_handler' is situated on the segment
 			-- from `label_line_start_point' to `label_line_end_point'.
-			
+
 	position_on_line: DOUBLE
 			-- Position of `label_move_handle' between `label_line_start_point'
 			-- and `label_line_end_point'. 0.0 is closest to `label_line_start_point'
@@ -133,10 +133,10 @@ feature {NONE} -- Implementation
 			from
 				lx := label_move_handle.point_x
 				ly := label_move_handle.point_y
-				
+
 				p := l_polyline_points.item (0)
 				q := l_polyline_points.item (1)
-				
+
 				min_dist := distance_from_segment (lx, ly, p.x_precise, p.y_precise, q.x_precise, q.y_precise)
 				nearest_start := p
 				nearest_end := q
@@ -156,12 +156,12 @@ feature {NONE} -- Implementation
 				p := q
 				i := i + 1
 			end
-			
+
 			label_line_start_point := nearest_start
 			label_line_end_point := nearest_end
 			position_on_line := -1.0
 		end
-		
+
 	set_label_position_on_line (nearest_start, nearest_end: EV_COORDINATE)
 			-- Set the `label_move_handle' position such that its point is
 			-- on the segment from `nearest_start' to `nearest_end'.
@@ -171,17 +171,17 @@ feature {NONE} -- Implementation
 			d_x, d_y: DOUBLE
 			m1, m2: DOUBLE
 			x1, y1, x2, y2, nx, ny: DOUBLE
-			
+
 			a, b, c, d, g, h: DOUBLE
 		do
 			lx := label_move_handle.point_x
 			ly := label_move_handle.point_y
-			
+
 			x1 := nearest_start.x_precise
 			y1 := nearest_start.y_precise
 			x2 := nearest_end.x_precise
 			y2 := nearest_end.y_precise
-			
+
 			if position_on_line < 0.0 then
 				-- nearest line is from nearest_start to nearest_end
 				-- project to this line
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 					else
 						new_x := as_integer (x2)
 						new_y := as_integer (y2)
-					end				
+					end
 				end
 				b := distance (x1, y1, x2, y2)
 				if b = 0.0 then
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 					new_y := as_integer (y1 + c)
 				end
 			end
-			
+
 			-- the label_move_handles point goes to new_x new_y
 			label_move_handle.set_point_position (new_x, new_y)
 			-- set the label_group to the correct side of the line			
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			end
 			label_group.set_point_position (label_move_handle.point_x - shift_x, label_move_handle.point_y - shift_y)
 		end
-		
+
 	transition (start_value, end_value: INTEGER; progress: DOUBLE): INTEGER
 			-- Value between `start_value' and `end_value'.
 		do
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 				Result := [nx, ny]
 			end
 		end
-		
+
 	has_projection (ax, ay, x1, y1, x2, y2: DOUBLE): BOOLEAN
 			-- Does a line perpendicular to line [(`x1', `y1), (`x2', `y2')] exist
 			-- that goes through point (`ax', `ay') and intersects with the segment [(`x1', `y1), (`x2', `y2')]?
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			ny := t.double_item (2)
 			Result := between (nx, x1, x2) and between (ny, y1, y2)
 		end
-		
+
 	distance_from_segment (ax, ay, x1, y1, x2, y2: DOUBLE): DOUBLE
 			-- Calculate distance between (`x', `y') and (`x1', `y1')-(`x2', `y2').
 			-- The line is NOT considered to be infinite.
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 				Result := distance (ax, ay, x1, y1).min (distance (ax, ay, x2, y2))
 			end
 		end
-		
+
 	on_label_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `label_move_handler' was moved for `ax' `ay'.
 		do
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 			set_label_line_start_and_end
 			set_label_position_on_line (label_line_start_point, label_line_end_point)
 		end
-		
+
 	left_from_segment (ax, ay, x1, y1, x2, y2: DOUBLE): BOOLEAN
 			-- Is (`ax', `ay') on the left side of segment from (`x1', `y1') to (`x2', `y2')?
 			-- (See `is_left' for a definition of left).
@@ -427,19 +427,19 @@ feature {NONE} -- Implementation
 		do
 			set_label_position_on_line (label_line_start_point, label_line_end_point)
 		end
-		
+
 	on_scale (scale: DOUBLE)
 			-- `label_move_handle' was scaled by user.
 		do
 			set_label_position_on_line (label_line_start_point, label_line_end_point)
 		end
-		
-	point_with_position (ax, ay: INTEGER): EV_COORDINATE
+
+	point_with_position (ax, ay: INTEGER): detachable EV_COORDINATE
 			-- Point at position `ax' `ay' or Void if none.
 		local
 			l_points: like polyline_points
 			i, nb: INTEGER
-			l_item: EV_COORDINATE
+			l_item: detachable EV_COORDINATE
 		do
 			from
 				l_points := polyline_points
@@ -449,13 +449,14 @@ feature {NONE} -- Implementation
 				i >= nb or else Result /= Void
 			loop
 				l_item ?= l_points.item (i)
+				check l_item /= Void end -- FIXME: Implied by ...?
 				if l_item.x = ax and then l_item.y = ay then
 					Result := l_item
 				end
 				i := i + 1
 			end
 		end
-		
+
 	point_number (a_point: EV_COORDINATE): INTEGER
 			-- Position in `polyline_points' of `a_point'.
 		require
@@ -479,7 +480,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-			
+
 feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 
 	polyline_points: SPECIAL [EV_COORDINATE]

@@ -45,22 +45,26 @@ feature -- Status report
 
 	valid_tree: BOOLEAN
 			-- Are all particles in `Current' element `region'?
+		local
+			l_particle: like particle
 		do
 			if is_leaf then
-				Result := region.has_x_y (particle.x, particle.y)
+				l_particle := particle
+				check l_particle /= Void end -- Implied by invariant `leaf_has_particle_inner_nodes_do_not'
+				Result := region.has_x_y (l_particle.x, l_particle.y)
 			else
 				Result := True
-				if childe_sw /= Void then
-					Result := childe_sw.valid_tree
+				if attached childe_sw as l_childe_sw then
+					Result := l_childe_sw.valid_tree
 				end
-				if Result and then childe_se /= Void then
-					Result := childe_se.valid_tree
+				if Result and then attached childe_se as l_childe_se then
+					Result := l_childe_se.valid_tree
 				end
-				if Result and then childe_nw /= Void then
-					Result := childe_nw.valid_tree
+				if Result and then attached childe_nw as l_childe_nw then
+					Result := l_childe_nw.valid_tree
 				end
-				if Result and then childe_ne /= Void then
-					Result := childe_ne.valid_tree
+				if Result and then attached childe_ne as l_childe_ne then
+					Result := l_childe_ne.valid_tree
 				end
 			end
 		end
@@ -70,22 +74,22 @@ feature -- Access
 	region: EV_RECTANGLE
 			-- All particles element of `Current' Tree are element of `region'.
 
-	particle: EG_PARTICLE
+	particle: detachable EG_PARTICLE
 			-- Particle in the node.
 
-	childe_sw: EG_QUAD_TREE
+	childe_sw: detachable EG_QUAD_TREE
 			-- Root node for particles in the south west part of `region'.
 
-	childe_se: EG_QUAD_TREE
+	childe_se: detachable EG_QUAD_TREE
 			-- Root node for particles in the south east part of `region'.
 
-	childe_ne: EG_QUAD_TREE
+	childe_ne: detachable EG_QUAD_TREE
 			-- Root node for particles in the north east part of `region'.
 
-	childe_nw: EG_QUAD_TREE
+	childe_nw: detachable EG_QUAD_TREE
 			-- Root node for particles int the north west part of `region'.
 
-	center_of_mass_particle: EG_PARTICLE
+	center_of_mass_particle: detachable EG_PARTICLE
 			-- The average particle of all the children particles or particle if `is_leaf'.
 
 feature -- Element change
@@ -100,32 +104,36 @@ feature -- Element change
 			if particle /= Void then
 				center_of_mass_particle := particle
 			else
-				if childe_sw /= Void then
-					childe_sw.build_center_of_mass
-					l_particle := childe_sw.center_of_mass_particle
+				if attached childe_sw as l_childe_sw then
+					l_childe_sw.build_center_of_mass
+					l_particle := l_childe_sw.center_of_mass_particle
+					check l_particle /= Void end -- Implied by postcondition of `build_center_of_mass'
 					mass := l_particle.mass
 					x := l_particle.x * mass
 					y := l_particle.y * mass
 				end
-				if childe_se /= Void then
-					childe_se.build_center_of_mass
-					l_particle := childe_se.center_of_mass_particle
+				if attached childe_se as l_childe_se then
+					l_childe_se.build_center_of_mass
+					l_particle := l_childe_se.center_of_mass_particle
+					check l_particle /= Void end -- Implied by postcondition of `build_center_of_mass'
 					l_mass := l_particle.mass
 					x := x + l_particle.x * l_mass
 					y := y + l_particle.y * l_mass
 					mass := l_mass + mass
 				end
-				if childe_ne /= Void then
-					childe_ne.build_center_of_mass
-					l_particle := childe_ne.center_of_mass_particle
+				if attached childe_ne as l_childe_ne then
+					l_childe_ne.build_center_of_mass
+					l_particle := l_childe_ne.center_of_mass_particle
+					check l_particle /= Void end -- Implied by postcondition of `build_center_of_mass'
 					l_mass := l_particle.mass
 					x := x + l_particle.x * l_mass
 					y := y + l_particle.y * l_mass
 					mass := l_mass + mass
 				end
-				if childe_nw /= Void then
-					childe_nw.build_center_of_mass
-					l_particle := childe_nw.center_of_mass_particle
+				if attached childe_nw as l_childe_nw then
+					l_childe_nw.build_center_of_mass
+					l_particle := l_childe_nw.center_of_mass_particle
+					check l_particle /= Void end -- Implied by postcondition of `build_center_of_mass'
 					l_mass := l_particle.mass
 					x := x + l_particle.x * l_mass
 					y := y + l_particle.y * l_mass
@@ -135,7 +143,7 @@ feature -- Element change
 			end
 		ensure
 			set: center_of_mass_particle /= Void
-			inside: region.has_x_y (center_of_mass_particle.x, center_of_mass_particle.y)
+			inside: attached center_of_mass_particle as le_center_of_mass_particle and then region.has_x_y (le_center_of_mass_particle.x, le_center_of_mass_particle.y)
 		end
 
 	insert (a_particle: like particle)
@@ -147,14 +155,14 @@ feature -- Element change
 		local
 			hh, hw: INTEGER
 			px, py: INTEGER
-			l_null_particle: EG_PARTICLE
+			l_null_particle: detachable EG_PARTICLE
 		do
 			hw := (region.width / 2).ceiling
 			hh := (region.height / 2).ceiling
-			if particle /= Void then
+			if attached particle as l_particle then
 					-- It's a leaf push down particle.
-				px := particle.x
-				py := particle.y
+				px := l_particle.x
+				py := l_particle.y
 				if px >= region.left + hw then
 					if py >= region.top + hh then
 						create childe_se.make (create {EV_RECTANGLE}.set (region.left + hw, region.top + hh, hw, hh), particle)
@@ -178,30 +186,30 @@ feature -- Element change
 			py := a_particle.y
 			if px >= region.left + hw then
 				if py >= region.top + hh then
-					if childe_se = Void then
-						create childe_se.make (create {EV_RECTANGLE}.set (region.left + hw, region.top + hh, hw, hh), a_particle)
+					if attached childe_se as l_childe_se then
+						l_childe_se.insert (a_particle)
 					else
-						childe_se.insert (a_particle)
+						create childe_se.make (create {EV_RECTANGLE}.set (region.left + hw, region.top + hh, hw, hh), a_particle)
 					end
 				else
-					if childe_ne = Void then
-						create childe_ne.make (create {EV_RECTANGLE}.set (region.left + hw, region.top, hw, hh), a_particle)
+					if attached childe_ne as l_childe_ne then
+						l_childe_ne.insert (a_particle)
 					else
-						childe_ne.insert (a_particle)
+						create childe_ne.make (create {EV_RECTANGLE}.set (region.left + hw, region.top, hw, hh), a_particle)
 					end
 				end
 			else
 				if py >= region.top + hh then
-					if childe_sw = Void then
-						create childe_sw.make (create {EV_RECTANGLE}.set (region.left, region.top + hh, hw, hh), a_particle)
+					if attached childe_sw as l_childe_sw then
+						l_childe_sw.insert (a_particle)
 					else
-						childe_sw.insert (a_particle)
+						create childe_sw.make (create {EV_RECTANGLE}.set (region.left, region.top + hh, hw, hh), a_particle)
 					end
 				else
-					if childe_nw = Void then
-						create childe_nw.make (create {EV_RECTANGLE}.set (region.left, region.top, hw, hh), a_particle)
+					if attached childe_nw as l_childe_nw then
+						l_childe_nw.insert (a_particle)
 					else
-						childe_nw.insert (a_particle)
+						create childe_nw.make (create {EV_RECTANGLE}.set (region.left, region.top, hw, hh), a_particle)
 					end
 				end
 			end
@@ -223,9 +231,9 @@ feature -- Element change
 			if not region.has_x_y (px, py) then
 				Result := False
 			else
-				if particle /= Void then
+				if attached particle as l_particle then
 						-- Reached the leaf.
-					if particle.x = px and then particle.y = py then
+					if l_particle.x = px and then l_particle.y = py then
 						Result := True
 					else
 						Result := False
@@ -236,30 +244,30 @@ feature -- Element change
 						-- Look into childrens.
 					if px >= region.left + hw then
 						if py >= region.top + hh then
-							if childe_se = Void then
-								Result := False
+							if attached childe_se as l_childe_se then
+								Result := l_childe_se.has (a_particle)
 							else
-								Result := childe_se.has (a_particle)
+								Result := False
 							end
 						else
-							if childe_ne = Void then
-								Result := False
+							if attached childe_ne as l_childe_ne then
+								Result := l_childe_ne.has (a_particle)
 							else
-								Result := childe_ne.has (a_particle)
+								Result := False
 							end
 						end
 					else
 						if py >= region.top + hh then
-							if childe_sw = Void then
-								Result := False
+							if attached childe_sw as l_childe_sw then
+								Result := l_childe_sw.has (a_particle)
 							else
-								Result := childe_sw.has (a_particle)
+								Result := False
 							end
 						else
-							if childe_nw = Void then
-								Result := False
+							if attached childe_nw as l_childe_nw then
+								Result := l_childe_nw.has (a_particle)
 							else
-								Result := childe_nw.has (a_particle)
+								Result := False
 							end
 						end
 					end
@@ -269,7 +277,7 @@ feature -- Element change
 
 invariant
 	leaf_has_particle_inner_nodes_do_not: is_leaf = (particle /= Void)
-	is_leaf_implies_has_particle: is_leaf implies region.has_x_y (particle.x, particle.y)
+	is_leaf_implies_has_particle: is_leaf implies attached (attached particle as l_particle and then region.has_x_y (l_particle.x, l_particle.y))
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

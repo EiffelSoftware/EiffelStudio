@@ -23,9 +23,13 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Initialize `Current' (synchronize with `model')
+		local
+			l_model: like model
 		do
 			Precursor {EG_FIGURE}
-			model.is_directed_change_actions.extend (agent on_is_directed_change)
+			l_model := model
+			check l_model /= Void end -- Implied by precondition `model_not_void'
+			l_model.is_directed_change_actions.extend (agent on_is_directed_change)
 		end
 
 feature -- Status report
@@ -39,13 +43,13 @@ feature -- Status report
 
 feature -- Access
 
-	source: EG_LINKABLE_FIGURE
+	source: detachable EG_LINKABLE_FIGURE
 			-- source of `Current'.
 
 	target: like source
 			-- target of `Current'.
 
-	model: EG_LINK
+	model: detachable EG_LINK
 			-- The model for `Current'.
 
 	xml_element (node: XM_ELEMENT): XM_ELEMENT
@@ -55,6 +59,7 @@ feature -- Access
 		do
 			l_model := model
 			Result := Precursor {EG_FIGURE} (node)
+			check l_model /= Void end -- FIXME: Implied by ...?
 			Result.add_attribute (once "SOURCE", xml_namespace, l_model.source.link_name)
 			Result.add_attribute (once "TARGET", xml_namespace, l_model.target.link_name)
 			Result.put_last (Xml_routines.xml_node (Result, is_directed_string, boolean_representation (l_model.is_directed)))
@@ -62,11 +67,15 @@ feature -- Access
 
 	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
+		local
+			l_model: like model
 		do
 			node.forth
 			node.forth
 			Precursor {EG_FIGURE} (node)
-			model.set_is_directed (xml_routines.xml_boolean (node, is_directed_string))
+			l_model := model
+			check l_model /= Void end -- FIXME: Implied by ...?
+			l_model.set_is_directed (xml_routines.xml_boolean (node, is_directed_string))
 		end
 
 	is_directed_string: STRING = "IS_DIRECTED"
@@ -83,8 +92,8 @@ feature -- Element change
 			-- Free `Current's resources.
 		do
 			Precursor {EG_FIGURE}
-			if model /= Void then
-				model.is_directed_change_actions.extend (agent on_is_directed_change)
+			if attached model as l_model then
+				l_model.is_directed_change_actions.extend (agent on_is_directed_change)
 			end
 		end
 

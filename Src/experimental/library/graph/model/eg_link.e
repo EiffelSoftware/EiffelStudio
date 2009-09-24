@@ -13,11 +13,11 @@ inherit
 		redefine
 			default_create
 		end
-	
+
 create
 	make_with_source_and_target,
 	make_directed_with_source_and_target
-	
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			source := a_source
-			source.add_link (Current)
 			target := a_target
+			source.add_link (Current)
 			if a_source /= a_target then
 				target.add_link (Current)
 			end
@@ -46,8 +46,8 @@ feature {NONE} -- Initialization
 			source_set: source = a_source
 			target_set: target = a_target
 			not_is_directed: not is_directed
-		end	
-		
+		end
+
 	make_directed_with_source_and_target (a_source, a_target: like source)
 			-- 	Make a directed link from `a_source' to `a_target'.
 		require
@@ -60,13 +60,13 @@ feature {NONE} -- Initialization
 			source_set: source = a_source
 			target_set: target = a_target
 			is_directed: is_directed
-		end	
+		end
 
 feature -- Status report
 
 	is_directed: BOOLEAN
 			-- Is the link directed from `source' to `target'?
-			
+
 	is_reflexive: BOOLEAN
 			-- Is the link reflexive?
 		do
@@ -74,14 +74,14 @@ feature -- Status report
 		ensure
 			result_equal_source_equal_target: Result = (source = target)
 		end
-		
+
 feature -- Status Settings
 
 	set_is_directed (b: BOOLEAN)
 			-- Set `is_directed' to `b'.
 		do
-			if b /= is_directed then		
-				is_directed := b	
+			if b /= is_directed then
+				is_directed := b
 				is_directed_change_actions.call (Void)
 			end
 		ensure
@@ -92,13 +92,13 @@ feature -- Access
 
 	source: EG_LINKABLE
 			-- The source of the link.
-			
+
 	target: like source
 			-- The target of the link.
-			
+
 	is_directed_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when `is_directed' changes.
-			
+
 invariant
 	source_not_void: source /= Void
 	target_not_void: target /= Void

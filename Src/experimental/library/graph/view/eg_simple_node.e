@@ -14,7 +14,8 @@ inherit
 			update,
 			default_create,
 			xml_node_name,
-			model
+			model,
+			make_filled
 		end
 
 create
@@ -40,15 +41,26 @@ feature {NONE} -- Initialization
 		require
 			a_model_not_void: a_model /= Void
 		do
+			-- Satisfy invariant
+			create node_figure
+
 			default_create
 			model := a_model
 			initialize
 			update
 		end
 
+	make_filled (n: INTEGER_32)
+			-- <Precursor>
+		do
+			create node_figure
+			
+			Precursor {EG_LINKABLE_FIGURE} (n)
+		end
+
 feature -- Access
 
-	model: EG_NODE
+	model: detachable EG_NODE
 			-- Model `Current' is a view for.
 
 	port_x: INTEGER

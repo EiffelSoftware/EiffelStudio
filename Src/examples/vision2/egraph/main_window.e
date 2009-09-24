@@ -69,35 +69,31 @@ feature {NONE} -- Menu Implementation
 	file_menu: EV_MENU
 			-- "File" menu for this window (contains New, Open, Close, Exit...)
 
-	help_menu: EV_MENU
+	help_menu: detachable EV_MENU
 			-- "Help" menu for this window (contains About...)
 
 	build_standard_menu_bar
 			-- Create and populate `standard_menu_bar'.
 		require
-			menu_bar_not_yet_created: standard_menu_bar = Void 
+			menu_bar_created: standard_menu_bar /= Void and then standard_menu_bar.is_empty
 		do
-				-- Create the menu bar.
-			create standard_menu_bar
-
 				-- Add the "File" menu
 			build_file_menu
 			standard_menu_bar.extend (file_menu)
 
 		ensure
-			menu_bar_created: 
-				standard_menu_bar /= Void and then 
+			menu_bar_created:
+				standard_menu_bar /= Void and then
 				not standard_menu_bar.is_empty
 		end
 
 	build_file_menu
 			-- Create and populate `file_menu'.
 		require
-			file_menu_not_yet_created: file_menu = Void
+			file_menu_created: file_menu /= Void and then file_menu.is_empty
 		local
 			menu_item: EV_MENU_ITEM
 		do
-			create file_menu.make_with_text (Menu_file_item)
 
 			create menu_item.make_with_text (Menu_file_new_item)
 			menu_item.select_actions.extend (agent on_new)
@@ -138,14 +134,13 @@ feature {NONE} -- ToolBar Implementation
 	build_standard_toolbar
 			-- Create and populate the standard toolbar.
 		require
-			toolbar_not_yet_created: standard_toolbar = Void
+			toolbar_created: standard_toolbar /= Void and then standard_toolbar.is_empty
 		local
 			toolbar_item: EV_TOOL_BAR_BUTTON
 			toolbar_pixmap: EV_PIXMAP
 		do
 				-- Create the toolbar.
-			create standard_toolbar
-			
+
 			create toolbar_item
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("new.png")
@@ -179,16 +174,19 @@ feature {NONE} -- Implementation, Close event
 			-- The user wants to close the window
 		local
 			question_dialog: EV_CONFIRMATION_DIALOG
+			l_app: detachable EV_APPLICATION
 		do
 			create question_dialog.make_with_text (Label_confirm_close_window)
 			question_dialog.show_modal_to_window (Current)
 
-			if question_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if question_dialog.selected_button ~ ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 					-- Destroy the window
 				destroy;
-				
+
 					-- End the application
-				(create {EV_ENVIRONMENT}).application.destroy
+				l_app := (create {EV_ENVIRONMENT}).application
+				check l_app /= Void end -- Implied by application is running
+				l_app.destroy
 			end
 		end
 
@@ -200,10 +198,8 @@ feature {NONE} -- Implementation
 	build_main_container
 			-- Create and populate `main_container'.
 		require
-			main_container_not_yet_created: main_container = Void
+			main_container_created: main_container /= Void and then main_container.is_empty
 		deferred
-		ensure
-			main_container_created: main_container /= Void
 		end
 
 feature {NONE} -- Implementation / Constants
@@ -216,29 +212,29 @@ feature {NONE} -- Implementation / Constants
 
 	Window_height: INTEGER = 600
 			-- Initial height for this window.
-			
+
 feature {NONE} -- Actions
 
 	on_new
 			-- New was selected.
 		deferred
 		end
-		
+
 	on_save
 			-- Save was selected.
 		deferred
 		end
-		
+
 	on_open
 			-- Open was selected.
 		deferred
 		end
-		
+
 	on_save_as
 			-- SaveAs was selected.
 		deferred
 		end
-		
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

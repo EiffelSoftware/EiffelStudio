@@ -7,7 +7,7 @@ note
 
 deferred class
 	EG_LAYOUT
-	
+
 feature {NONE} -- Initialization
 
 	make_with_world (a_world: like world)
@@ -20,12 +20,12 @@ feature {NONE} -- Initialization
 		ensure
 			set: world = a_world
 		end
-	
+
 feature -- Access
 
 	world: EG_FIGURE_WORLD
 			-- The graph to layout.
-			
+
 feature -- Element change
 
 	set_world (a_world: like world)
@@ -41,7 +41,7 @@ feature -- Element change
 	layout
 			-- Arrange the elements in `graph'.
 		local
-			cluster_figure: EG_CLUSTER_FIGURE
+			cluster_figure: detachable EG_CLUSTER_FIGURE
 			root: ARRAYED_LIST [EG_LINKABLE_FIGURE]
 		do
 			world.update
@@ -53,17 +53,17 @@ feature -- Element change
 			loop
 				cluster_figure ?= root.item
 				if cluster_figure /= Void then
-					if cluster_figure.layouter = Void then
-						layout_cluster (cluster_figure, 2)
+					if attached cluster_figure.layouter as l_layouter then
+						l_layouter.layout_cluster (cluster_figure, 2)
 					else
-						cluster_figure.layouter.layout_cluster (cluster_figure, 2)
+						layout_cluster (cluster_figure, 2)
 					end
 				end
 				root.forth
 			end
 			layout_linkables (world.root_cluster, 1, void)
 		end
-		
+
 	layout_cluster (cluster: EG_CLUSTER_FIGURE; level: INTEGER)
 			-- Arrange the elements in `cluster' (recursive).
 		require
@@ -71,8 +71,8 @@ feature -- Element change
 			level_greater_zero: level > 0
 		local
 			figures_in_cluster: ARRAYED_LIST [EG_LINKABLE_FIGURE]
-			cluster_figure: EG_CLUSTER_FIGURE
-			linkable_figure: EG_LINKABLE_FIGURE
+			cluster_figure: detachable EG_CLUSTER_FIGURE
+			linkable_figure: detachable EG_LINKABLE_FIGURE
 		do
 			from
 				create figures_in_cluster.make (cluster.count)
@@ -85,10 +85,10 @@ feature -- Element change
 					figures_in_cluster.extend (linkable_figure)
 					cluster_figure ?= linkable_figure
 					if cluster_figure /= Void then
-						if cluster_figure.layouter = Void then
-							layout_cluster (cluster_figure, level + 1)
+						if attached cluster_figure.layouter as l_layouter then
+							l_layouter.layout_cluster (cluster_figure, level + 1)
 						else
-							cluster_figure.layouter.layout_cluster (cluster_figure, level + 1)
+							layout_cluster (cluster_figure, level + 1)
 						end
 					end
 				end
@@ -96,14 +96,14 @@ feature -- Element change
 			end
 			layout_linkables (figures_in_cluster, level, cluster)
 		end
-		
+
 	layout_cluster_only (cluster: EG_CLUSTER_FIGURE)
 			-- Arrange the elements in `cluster' (not recursive).
 		require
 			cluster_not_void: cluster /= Void
 		local
 			figures_in_cluster: ARRAYED_LIST [EG_LINKABLE_FIGURE]
-			linkable_figure: EG_LINKABLE_FIGURE
+			linkable_figure: detachable EG_LINKABLE_FIGURE
 		do
 			from
 				create figures_in_cluster.make (cluster.count)
@@ -119,10 +119,10 @@ feature -- Element change
 			end
 			layout_linkables (figures_in_cluster, 1, cluster)
 		end
-		
+
 feature {NONE} -- Implementation
-		
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
+
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: detachable EG_CLUSTER_FIGURE)
 			-- arrange `linkables' that are elements of `clusters' at `level'.
 		require
 			linkables_not_void: linkables /= Void

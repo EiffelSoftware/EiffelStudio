@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	world: EG_FIGURE_WORLD
+	world: detachable EG_FIGURE_WORLD
 			-- World `Current' is a factory for.
 
 	new_node_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE
@@ -21,7 +21,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE
 			-- Create a cluster figure for `a_cluster'.
 		require
@@ -30,7 +30,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE
 			-- Create a link figure for `a_link'.
 		require
@@ -39,8 +39,8 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
-	model_from_xml (node: attached like xml_element_type): EG_ITEM
+
+	model_from_xml (node: attached like xml_element_type): detachable EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		require
 			node_not_void: node /= Void
@@ -50,7 +50,7 @@ feature -- Access
 	xml_element_type: detachable XM_ELEMENT
 		do
 		end
-		
+
 feature {EG_FIGURE_WORLD} -- Implementation
 
 	set_world (a_world: like world)
@@ -62,10 +62,10 @@ feature {EG_FIGURE_WORLD} -- Implementation
 		ensure
 			set: world = a_world
 		end
-		
+
 feature {NONE} -- Implementation
 
-	linkable_with_name (a_name: STRING): EG_LINKABLE
+	linkable_with_name (a_name: STRING): detachable EG_LINKABLE
 			-- Linkable with name `a_name' in graph if any
 		require
 			a_name_not_void: a_name /= Void
@@ -73,26 +73,29 @@ feature {NONE} -- Implementation
 		local
 			nodes: LIST [EG_NODE]
 			clusters: LIST [EG_CLUSTER]
+			l_world: like world
 		do
 			from
-				nodes := world.model.flat_nodes
+				l_world := world
+				check l_world /= Void end -- Implied by precondition `world_not_void'
+				nodes := l_world.attached_model.flat_nodes
 				nodes.start
 			until
 				nodes.after or else Result /= Void
 			loop
-				if nodes.item.name.is_equal (a_name) then
+				if nodes.item.name ~ a_name then
 					Result := nodes.item
 				end
 				nodes.forth
 			end
 			if Result = Void then
 				from
-					clusters := world.model.flat_clusters
+					clusters := l_world.attached_model.flat_clusters
 					clusters.start
 				until
 					clusters.after or else Result /= Void
 				loop
-					if clusters.item.name.is_equal (a_name) then
+					if clusters.item.name ~ a_name then
 						Result := clusters.item
 					end
 					clusters.forth

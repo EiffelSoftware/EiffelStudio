@@ -19,35 +19,39 @@ inherit
 			set_with_xml_element,
 			recycle
 		end
-		
+
 feature {NONE} -- Initialization
-	
+
 	initialize
 			-- Initialize `Current' (synchronize with model).
+		local
+			l_model: like model
 		do
 			Precursor {EG_LINKABLE_FIGURE}
-			model.linkable_add_actions.extend (agent on_linkable_add)
-			model.linkable_remove_actions.extend (agent on_linkable_remove)
+			l_model := model
+			check l_model /= Void end -- FIXME: Implied by ...?
+			l_model.linkable_add_actions.extend (agent on_linkable_add)
+			l_model.linkable_remove_actions.extend (agent on_linkable_remove)
 		end
 
 feature -- Access
 
-	model: EG_CLUSTER
+	model: detachable EG_CLUSTER
 			-- The model for `Current'.
-			
-	layouter: EG_LAYOUT
+
+	layouter: detachable EG_LAYOUT
 			-- Layouter used for this `Cluster' if not Void
-			
+
 	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
 			Result := once "EG_CLUSTER_FIGURE"
 		end
-		
+
 	subclusters: ARRAYED_LIST [EG_CLUSTER_FIGURE]
 			-- Clusters with parent `Current'.
 		local
-			l_item: EG_CLUSTER_FIGURE
+			l_item: detachable EG_CLUSTER_FIGURE
 		do
 			from
 				create {ARRAYED_LIST [EG_CLUSTER_FIGURE]} Result.make (1)
@@ -68,7 +72,7 @@ feature -- Access
 	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		local
-			eg_fig: EG_LINKABLE_FIGURE
+			eg_fig: detachable EG_LINKABLE_FIGURE
 			fig, elements: XM_ELEMENT
 		do
 			Result := Precursor {EG_LINKABLE_FIGURE} (node)
@@ -87,21 +91,25 @@ feature -- Access
 			end
 			Result.put_last (elements)
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
-			elements: XM_ELEMENT
+			elements: detachable XM_ELEMENT
 			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			l_item: XM_ELEMENT
-			eg_model: EG_LINKABLE
-			eg_cluster: EG_CLUSTER
-			eg_node: EG_NODE
-			fig: EG_FIGURE
+			l_item: detachable XM_ELEMENT
+			eg_model: detachable EG_LINKABLE
+			eg_cluster: detachable EG_CLUSTER
+			eg_node: detachable EG_NODE
+			fig: detachable EG_FIGURE
+			l_world: like world
+			l_model: detachable EG_GRAPH
+			l_model_2: like model
 		do
 			Precursor {EG_LINKABLE_FIGURE} (node)
 			elements ?= node.item_for_iteration
 			node.forth
+			check elements /= Void end -- FIXME: Implied by ...?
 			l_cursor := elements.new_cursor
 			from
 				l_cursor.start
@@ -110,16 +118,24 @@ feature -- Access
 			loop
 				l_item ?= l_cursor.item
 				if l_item /= Void then
-					eg_model ?= world.factory.model_from_xml (l_item)
+					l_world := world
+					check l_world /= Void end -- FIXME: Implied by ...?
+					eg_model ?= l_world.attached_factory.model_from_xml (l_item)
 					if eg_model /= Void then
-						if not world.model.has_linkable (eg_model) then
+						l_model := l_world.model
+						check l_model /= Void end -- FIXME: Implied by ...?
+						if not l_model.has_linkable (eg_model) then
 							eg_cluster ?= eg_model
 							if eg_cluster /= Void then
-								world.model.add_cluster (eg_cluster)
+								l_model := l_world.model
+								check l_model /= Void end -- FIXME: Implied by ...?
+								l_model.add_cluster (eg_cluster)
 							else
 								eg_node ?= eg_model
 								if eg_node /= Void then
-									world.model.add_node (eg_node)
+									l_model := l_world.model
+									check l_model /= Void end -- FIXME: Implied by ...?
+									l_model.add_node (eg_node)
 								else
 									check
 										node_or_cluster: False
@@ -127,30 +143,33 @@ feature -- Access
 								end
 							end
 						end
-						if not model.has (eg_model) then
-							model.extend (eg_model)
+						l_model_2 := model
+						check l_model_2 /= Void end -- FIXME: Implied by ...?						
+						if not l_model_2.has (eg_model) then
+							l_model_2.extend (eg_model)
 						end
-						fig := world.figure_from_model (eg_model)
+						fig := l_world.figure_from_model (eg_model)
 						check
 							eg_model_inserted: eg_model /= Void
 						end
 						l_item.start
+						check fig /= Void end -- FIXME: Implied by ...?
 						fig.set_with_xml_element (l_item)
 					end
 				end
 				l_cursor.forth
 			end
 		end
-			
+
 feature -- Element change
 
 	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EG_LINKABLE_FIGURE}
-			if model /= Void then
-				model.linkable_add_actions.prune_all (agent on_linkable_add)
-				model.linkable_remove_actions.prune_all (agent on_linkable_remove)
+			if attached model as l_model then
+				l_model.linkable_add_actions.prune_all (agent on_linkable_add)
+				l_model.linkable_remove_actions.prune_all (agent on_linkable_remove)
 			end
 		end
 
@@ -161,13 +180,13 @@ feature -- Element change
 		ensure
 			set: layouter = a_layouter
 		end
-		
+
 feature -- Status settings
 
 	set_is_fixed (b: BOOLEAN)
 			-- Set `is_fixed' to `b'
 		local
-			linkable_figure: EG_LINKABLE_FIGURE
+			linkable_figure: detachable EG_LINKABLE_FIGURE
 		do
 			Precursor {EG_LINKABLE_FIGURE} (b)
 			from
@@ -182,18 +201,18 @@ feature -- Status settings
 				forth
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_linkable_add (a_linkable: EG_LINKABLE)
 			-- `a_linkable' was added to the cluster.
 		local
 			l_world: like world
-			linkable_fig: EG_LINKABLE_FIGURE
+			linkable_fig: detachable EG_LINKABLE_FIGURE
 		do
 			l_world := world
-			if world /= Void then
-				linkable_fig ?= world.items_to_figure_lookup_table.item (a_linkable)
+			if l_world /= Void then
+				linkable_fig ?= l_world.items_to_figure_lookup_table.item (a_linkable)
 				check
 					linkable_fig_is_in_view_but_not_in_cluster: linkable_fig /= Void not has (linkable_fig)
 				end
@@ -207,11 +226,11 @@ feature {NONE} -- Implementation
 			-- `a_linkable' was removed from the cluster.
 		local
 			l_world: like world
-			linkable_fig: EG_LINKABLE_FIGURE
+			linkable_fig: detachable EG_LINKABLE_FIGURE
 		do
 			l_world := world
-			if world /= Void then
-				linkable_fig ?= world.items_to_figure_lookup_table.item (a_linkable)
+			if l_world /= Void then
+				linkable_fig ?= l_world.items_to_figure_lookup_table.item (a_linkable)
 				check
 					linkable_fig_in_view: linkable_fig /= Void
 				end

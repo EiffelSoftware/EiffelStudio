@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 	iterations: INTEGER
 			-- Number of iterations
 
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: detachable EG_CLUSTER_FIGURE)
 			-- arrange `linkables'.
 		local
 			l_item: EG_LINKABLE_FIGURE

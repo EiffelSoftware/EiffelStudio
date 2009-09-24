@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			links: ARRAYED_LIST [EG_LINK_FIGURE]
-			an_other: like a_node
+			an_other: detachable like a_node
 			an_edge: EG_LINK_FIGURE
 			l_distance: DOUBLE
 		do
@@ -95,7 +95,12 @@ feature {NONE} -- Implementation
 
 	particle_type: EG_LINKABLE_FIGURE
 			-- Type of particle
+		local
+			l_result: detachable like particle_type
 		do
+			check anchor_type_only: False end
+			check l_result /= Void end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
 note

@@ -12,7 +12,8 @@ inherit
 	EG_LINK_FIGURE
 		redefine
 			default_create,
-			xml_node_name
+			xml_node_name,
+			make_filled
 		end
 
 create
@@ -36,17 +37,24 @@ feature {NONE} -- Initialization
 			-- Make a link using `a_model'.
 		require
 			a_model_not_void: a_model /= Void
+		local
+			l_reflexive: like reflexive
 		do
+			-- Satisfy invariant
+			create line
+
 			default_create
 			model := a_model
 			initialize
 
-			if model.is_directed then
+			if a_model.is_directed then
 				line.enable_end_arrow
 			end
-			if model.is_reflexive then
+			if a_model.is_reflexive then
 				prune_all (line)
-				extend (reflexive)
+				l_reflexive := reflexive
+				check l_reflexive /= Void end -- Implied by `is_reflexive'
+				extend (l_reflexive)
 			end
 
 			disable_moving
@@ -54,6 +62,14 @@ feature {NONE} -- Initialization
 			disable_rotating
 
 			update
+		end
+
+	make_filled (n: INTEGER_32)
+			-- <Precursor>
+		do
+			create line
+
+			Precursor {EG_LINK_FIGURE} (n)
 		end
 
 feature -- Access
@@ -90,27 +106,31 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			p1, p2: EV_COORDINATE
 			an_angle: DOUBLE
 			source_size: EV_RECTANGLE
+			l_model: like model
+			l_reflexive: like reflexive
 		do
-			if not model.is_reflexive then
-				if source /= Void and then target /= Void then
+			l_model := model
+			check l_model /= Void end -- FIXME: Implied by ...?
+			if not l_model.is_reflexive then
+				if attached source as l_source and then attached target as l_target then
 					p1 := line.point_array.item (0)
 					p2 := line.point_array.item (1)
 
-					p1.set (source.port_x, source.port_y)
-					p2.set (target.port_x, target.port_y)
+					p1.set (l_source.port_x, l_source.port_y)
+					p2.set (l_target.port_x, l_target.port_y)
 
 					an_angle := line_angle (p1.x_precise, p1.y_precise, p2.x_precise, p2.y_precise)
-					source.update_edge_point (p1, an_angle)
+					l_source.update_edge_point (p1, an_angle)
 					an_angle := pi + an_angle
-					target.update_edge_point (p2, an_angle)
-				elseif source /= Void then
+					l_target.update_edge_point (p2, an_angle)
+				elseif attached source as l_source_2 then
 					p1 := line.point_array.item (0)
-					p1.set (source.port_x, source.port_y)
-					source.update_edge_point (p1, 0)
-				elseif target /= Void then
+					p1.set (l_source_2.port_x, l_source_2.port_y)
+					l_source_2.update_edge_point (p1, 0)
+				elseif attached target as l_target_2 then
 					p2 := line.point_array.item (1)
-					p2.set (target.port_x, target.port_y)
-					target.update_edge_point (p2, 0)
+					p2.set (l_target_2.port_x, l_target_2.port_y)
+					l_target_2.update_edge_point (p2, 0)
 				end
 
 				line.invalidate
@@ -119,12 +139,16 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 					name_label.set_point_position (line.x, line.y)
 				end
 			else
-				if source /= Void then
-					source_size := source.size
-					reflexive.set_x_y (source_size.right + reflexive.radius1, source_size.top + source_size.height // 2)
+				if attached source as l_source then
+					source_size := l_source.size
+					l_reflexive := reflexive
+					check l_reflexive /= Void end -- FIXME: Implied by ...?
+					l_reflexive.set_x_y (source_size.right + l_reflexive.radius1, source_size.top + source_size.height // 2)
 				end
 				if is_label_shown then
-					name_label.set_point_position (reflexive.x + reflexive.radius1, reflexive.y)
+					l_reflexive := reflexive
+					check l_reflexive /= Void end -- FIXME: Implied by ...?
+					name_label.set_point_position (l_reflexive.x + l_reflexive.radius1, l_reflexive.y)
 				end
 			end
 			is_update_required := False
@@ -141,13 +165,17 @@ feature {NONE} -- Implementation
 	line: EV_MODEL_LINE
 			-- The line representing the link.
 
-	reflexive: EV_MODEL_ELLIPSE
+	reflexive: detachable EV_MODEL_ELLIPSE
 			-- The ellipse used when link `is_reflexive'.
 
 	on_is_directed_change
 			-- `model'.`is_directed' changed.
+		local
+			l_model: like model
 		do
-			if model.is_directed then
+			l_model := model
+			check l_model /= Void end -- FIXME: Implied by ...?
+			if l_model.is_directed then
 				line.enable_end_arrow
 			else
 				line.disable_end_arrow

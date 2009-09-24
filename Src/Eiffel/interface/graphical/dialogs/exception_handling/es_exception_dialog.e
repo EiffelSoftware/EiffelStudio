@@ -24,6 +24,11 @@ inherit
 			standard_default_cancel_button
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
@@ -138,7 +143,7 @@ feature -- Access
 	trace: STRING_32
 			-- Exception trace message
 
-	last_description: STRING
+	last_description: detachable STRING
 			-- Last description for submitting bug report
 			-- Maybe void if not recorded
 
@@ -300,8 +305,42 @@ feature {NONE} -- Action handlers
 			support_login_is_support_accessible: support_login.is_support_accessible
 		local
 			l_dialog: ES_EXCEPTION_SUBMIT_DIALOG
+			l_description: like last_description
+			l_message: detachable STRING_GENERAL
 		do
-			create l_dialog.make (support_login, last_description)
+			l_description := last_description
+			if not attached l_description then
+					-- No previously set description, create a system description.
+				create l_description.make (300)
+
+				l_description.append_character ('%N')
+				l_description.append_character ('%N')
+				l_description.append (locale_formatter.formatted_translation (lb_project_loaded, [workbench.system_defined]))
+				l_description.append_character ('%N')
+				if workbench.system_defined then
+					l_description.append (locale_formatter.formatted_translation (lb_was_compiled, [workbench.is_already_compiled]))
+					l_description.append_character ('%N')
+					l_description.append (locale_formatter.formatted_translation (lb_is_compiling, [workbench.is_compiling]))
+					l_description.append_character ('%N')
+					if workbench.is_compiling then
+						l_description.append (locale_formatter.formatted_translation (lb_last_degree, [workbench.last_reached_degree]))
+						l_description.append_character ('%N')
+					end
+
+					if attached workbench.system.current_class as l_class then
+						l_description.append (locale_formatter.formatted_translation (lb_last_processed_class, [l_class.name]))
+						l_description.append_character ('%N')
+					end
+				end
+
+				l_message := development_window.status_bar.message
+				if attached l_message and then not l_message.is_empty then
+					l_description.append (locale_formatter.formatted_translation (lb_status_bar_text, [l_message]))
+					l_description.append_character ('%N')
+				end
+				last_description := l_description
+			end
+			create l_dialog.make (support_login, l_description)
 			l_dialog.show (dialog)
 			if l_dialog.dialog_result = l_dialog.dialog_buttons.ok_button then
 				if l_dialog.is_submit_successed then
@@ -331,6 +370,15 @@ feature -- Button constants
 		once
 			Result := {ES_DIALOG_BUTTONS}.cancel_button
 		end
+
+feature {NONE} -- Internationalization
+
+	lb_project_loaded: STRING = "Project loaded: $1"
+	lb_was_compiled: STRING = "Project compiled: $1"
+	lb_is_compiling: STRING = "Is compiling: $1"
+	lb_last_degree: STRING = "Last compilation degree: $1"
+	lb_last_processed_class: STRING = "Last known class processed: $1"
+	lb_status_bar_text: STRING = "Last status message: $1"
 
 invariant
 	support_login_attached: is_interface_usable implies support_login /= Void

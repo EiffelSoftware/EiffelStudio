@@ -76,7 +76,7 @@ feature -- Actions
 		do
 			deg.put_start_output
 			if not cancelled then
-				deg.put_string ("Initializing")
+				deg.put_string ("Initializing XMI")
 
 				groups := doc_universe.groups
 
@@ -179,6 +179,7 @@ feature -- Actions
 				ir_error ?= Error_handler.error_list.first
 				if ir_error /= Void then
 					cancelled := True
+					deg.put_string ("XMI generation was cancelled.")
 					Error_handler.error_list.wipe_out
 					retry
 				end

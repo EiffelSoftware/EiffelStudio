@@ -338,7 +338,7 @@ feature {NONE} -- Basic operations
 				l_classi := l_class.original_class
 				l_system := l_class.system
 				if l_system.string_32_class = l_classi or l_system.string_8_class = l_classi then
-					l_dump := l_adv.dump_value.truncated_string_representation (0, -1).to_string_8
+					l_dump := l_adv.dump_value.attached_truncated_string_representation (0, -1).to_string_8
 					check l_dump /= Void end
 					create {TEST_CAPTURED_STRING_OBJECT} l_object.make (l_id, l_type, l_dump)
 

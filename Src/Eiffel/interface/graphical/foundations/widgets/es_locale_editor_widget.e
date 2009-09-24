@@ -31,7 +31,9 @@ feature {NONE} -- Initialization
 			Precursor
 
 				-- Set the default string.
+			locale_selection.change_actions.block
 			locale_selection.set_strings (locale_table.linear_representation)
+			locale_selection.change_actions.resume
 				-- Force a change.
 			on_locale_preference_changed
 				-- Receive notification when the user changes the preference.

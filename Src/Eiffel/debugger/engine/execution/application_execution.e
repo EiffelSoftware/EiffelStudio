@@ -1010,16 +1010,22 @@ feature -- Expression evaluation
 				if tgt = Void and e /= Void then
 					tgt := e.dump_value
 				end
-				if tgt /= Void then
-					disable_assertion_check
-					dbg_eval := debugger_manager.dbg_evaluator
-					dbg_eval.reset
 
-					dbg_eval.evaluate_routine (Void, tgt, cl, f, params, tgt = Void)
+				dbg_eval := debugger_manager.dbg_evaluator
+				dbg_eval.reset
+				disable_assertion_check
+				if f.is_once then
+					dbg_eval.evaluate_once (f)
+				else
+					if tgt = Void then
+						dbg_eval.evaluate_static_function (f, cl, params)
+					else
+						dbg_eval.evaluate_routine (Void, tgt, cl, f, params, tgt = Void)
+					end
 					Result := not dbg_eval.error_occurred
-					restore_assertion_check
-					dbg_eval.reset
 				end
+				restore_assertion_check
+				dbg_eval.reset
 			end
 		rescue
 			rescued := True

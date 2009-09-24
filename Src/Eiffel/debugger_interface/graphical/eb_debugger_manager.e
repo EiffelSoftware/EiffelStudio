@@ -1834,6 +1834,12 @@ feature -- Debugging events
 				if st /= Void then
 					launch_stone (st)
 						--| After launch_stone, the call stack tool will show something,
+					if call_stack_tool.is_visible then
+							-- Show it, only if the tool is visible (in the UI)
+						if eb_preferences.debug_tool_data.always_show_callstack_tool_when_stopping then
+							call_stack_tool.show (False)
+						end
+					end
 					if call_stack_tool.is_shown then
 						debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).show (False)
 					end

@@ -18,7 +18,7 @@ inherit
 			set_with_xml_element,
 			recycle
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			rectangle: EV_MODEL_RECTANGLE
 		do
 			Precursor {EG_CLUSTER_FIGURE}
-			
+
 			create resizer_top_left
 			resizer_top_left.disable_rotating
 			resizer_top_left.disable_scaling
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			resizer_top_left.extend (rectangle)
 			rectangle.hide
 			extend (resizer_top_left)
-			
+
 			create resizer_top_right
 			resizer_top_right.disable_rotating
 			resizer_top_right.disable_scaling
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			resizer_top_right.extend (rectangle)
 			rectangle.hide
 			extend (resizer_top_right)
-			
+
 			create resizer_bottom_right
 			resizer_bottom_right.disable_rotating
 			resizer_bottom_right.disable_scaling
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			resizer_bottom_right.extend (rectangle)
 			rectangle.hide
 			extend (resizer_bottom_right)
-			
+
 			create resizer_bottom_left
 			resizer_bottom_left.disable_rotating
 			resizer_bottom_left.disable_scaling
@@ -67,44 +67,44 @@ feature {NONE} -- Initialization
 			resizer_bottom_left.extend (rectangle)
 			rectangle.hide
 			extend (resizer_bottom_left)
-			
+
 --			start_actions.extend (agent set_move_cursor)
 --			end_actions.extend (agent set_default_cursor)
 			disable_rotating
 			disable_scaling
 		end
-		
+
 feature -- Access
 
 	left: INTEGER
-			-- 
+			--
 		deferred
 		end
 
 	top: INTEGER
-			-- 
+			--
 		deferred
 		end
-		
+
 	right: INTEGER
-			-- 
+			--
 		deferred
 		end
-		
+
 	bottom: INTEGER
 			--
 		deferred
 		end
-		
-	user_size: EV_RECTANGLE
+
+	user_size: detachable EV_RECTANGLE
 			-- User resized `Current' to `user_size' if not void.
-			
+
 	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
 			Result := once "EG_RESIZABLE_CLUSTER_FIGURE"
 		end
-		
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		local
@@ -118,7 +118,7 @@ feature -- Access
 				Result.put_last (Xml_routines.xml_node (Result, is_user_sized_string, boolean_representation (False)))
 			else
 				Result.put_last (Xml_routines.xml_node (Result, is_user_sized_string, boolean_representation (True)))
-				Result.put_last (Xml_routines.xml_node (Result, user_size_string, 
+				Result.put_last (Xml_routines.xml_node (Result, user_size_string,
 					l_user_size.left.out + l_colon +
 					l_user_size.top.out + l_colon +
 					l_user_size.width.out + l_colon +
@@ -129,19 +129,20 @@ feature -- Access
 	is_user_sized_string: STRING = "IS_USER_SIZED"
 	user_size_string: STRING = "USER_SIZE"
 		-- String constants for XML handling.
-		
+
 	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
-			size_str: STRING
+			size_str: detachable STRING
 		do
 			Precursor {EG_CLUSTER_FIGURE} (node)
 			if xml_routines.xml_boolean (node, is_user_sized_string) then
 				size_str := xml_routines.xml_string (node, user_size_string)
+				check size_str /= Void end -- FIXME: Implied by ...?
 				user_size := rectangle_from_string (size_str)
 			end
 		end
-		
+
 feature -- Element change
 
 	recycle
@@ -153,7 +154,7 @@ feature -- Element change
 			resizer_bottom_right.move_actions.prune_all (agent on_move_bottom_right)
 			resizer_bottom_left.move_actions.prune_all (agent on_move_bottom_left)
 		end
-		
+
 	reset_user_size
 			-- Set `user_size' to Void
 		do
@@ -161,9 +162,9 @@ feature -- Element change
 		ensure
 			set: user_size = Void
 		end
-		
+
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
-			
+
 	update
 			-- Some properties of `Current' may have changed.
 		do
@@ -180,31 +181,31 @@ feature {NONE} -- Implementation
 			-- Set position of top left corner to (`ax', `ay').
 		deferred
 		end
-		
+
 	set_bottom_right_position (ax, ay: INTEGER)
 			-- Set position of bottom right corner to (`ax', `ay').
 		deferred
 		end
 
-		
+
 	resizer_top_left: EV_MODEL_MOVE_HANDLE
 			-- resizer for top left corner.
-			
+
 	resizer_top_right: EV_MODEL_MOVE_HANDLE
 			-- resizer for top right corner.
-			
+
 	resizer_bottom_right: EV_MODEL_MOVE_HANDLE
 			-- resizer for bottom right corner.
-			
+
 	resizer_bottom_left: EV_MODEL_MOVE_HANDLE
 			-- resizer for bottom left corner.
-			
+
 	resizers_width: INTEGER = 20
 			-- width of the resizers in pixel.
-			
+
 	resizers_height: INTEGER = 20
 			-- height of the resizers in pixel.
-			
+
 	on_move_top_left (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `resizer_top_left' was moved for (`ax', `ay').
 		local
@@ -235,7 +236,7 @@ feature {NONE} -- Implementation
 			update_user_size
 			request_update
 		end
-		
+
 	on_move_bottom_right (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `resizer_bottom_right' was moved to (`ax', `ay').
 		local
@@ -250,7 +251,7 @@ feature {NONE} -- Implementation
 			update_user_size
 			request_update
 		end
-		
+
 	on_move_bottom_left (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `resizer_bottom_left' was moved to (`ax', `ay').
 		local
@@ -266,19 +267,19 @@ feature {NONE} -- Implementation
 			update_user_size
 			request_update
 		end
-		
+
 	update_user_size
 			-- Set `user_size' to current size.
 		do
-			if user_size = Void then
-				create user_size.make (left, top, right - left, bottom - top)
+			if attached user_size as l_user_size then
+				l_user_size.move_and_resize (left, top, right - left, bottom - top)
 			else
-				user_size.move_and_resize (left, top, right - left, bottom - top)
+				create user_size.make (left, top, right - left, bottom - top)
 			end
 		end
-		
+
 	rectangle_from_string (a_size: STRING): EV_RECTANGLE
-			-- 
+			--
 		require
 			a_size_not_void: a_size /= Void
 		local

@@ -18,10 +18,10 @@ inherit
 		undefine
 			default_create
 		end
-	
+
 create
 	make_with_world
-	
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -30,22 +30,22 @@ feature {NONE} -- Initialization
 			Precursor {EG_LAYOUT}
 			exponent := 1.0
 		end
-	
+
 feature -- Access
-		
+
 	center_x: INTEGER
 				-- X position of the center of the circle.
-				
+
 	center_y: INTEGER
 				-- Y position of the center of the circle
-				
+
 	radius: INTEGER
 				-- Radius of largest circle.
-				
+
 	exponent: DOUBLE
 				-- Exponent used to reduce radius per level:
 				-- (`radius' / cluster_level ^ `exponent')
-				
+
 feature -- Element change
 
 	set_center (ax, ay: like center_x)
@@ -56,7 +56,7 @@ feature -- Element change
 		ensure
 			set: center_x = ax and center_y = ay
 		end
-		
+
 	set_radius (a_radius: like radius)
 			-- Set `radius' to `a_radius'.
 		require
@@ -66,7 +66,7 @@ feature -- Element change
 		ensure
 			set: radius = a_radius
 		end
-		
+
 	set_exponent (an_exponent: like exponent)
 			-- Set `exponent' to `an_exponent'.
 		require
@@ -79,7 +79,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: detachable EG_CLUSTER_FIGURE)
 			-- arrange `linkables'.
 		local
 			l_count: INTEGER
@@ -87,6 +87,7 @@ feature {NONE} -- Implementation
 			d_angle, angle: DOUBLE
 			i: INTEGER
 			l_link: EG_LINKABLE_FIGURE
+			l_cluster: detachable EG_CLUSTER_FIGURE
 		do
 			l_count := linkables.count
 			if l_count = 1 then
@@ -105,13 +106,15 @@ feature {NONE} -- Implementation
 				if level = 1 then
 					l_link.set_port_position ((cosine (angle) * level_radius).truncated_to_integer + center_x, (sine (angle) * level_radius).truncated_to_integer + center_y)
 				else
-					l_link.set_port_position ((cosine (angle) * level_radius).truncated_to_integer + l_link.cluster.port_x, (sine (angle) * level_radius).truncated_to_integer + l_link.cluster.port_y)
+					l_cluster := l_link.cluster
+					check l_cluster /= Void end -- FIXME: Implied by ...?
+					l_link.set_port_position ((cosine (angle) * level_radius).truncated_to_integer + l_cluster.port_x, (sine (angle) * level_radius).truncated_to_integer + l_cluster.port_y)
 				end
 				angle := angle + d_angle
 				i := i + 1
 			end
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

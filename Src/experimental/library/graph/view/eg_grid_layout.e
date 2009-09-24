@@ -13,10 +13,10 @@ inherit
 		redefine
 			default_create
 		end
-	
+
 create
 	make_with_world
-	
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -31,16 +31,16 @@ feature -- Access
 
 	point_a_x: INTEGER
 			-- The x position of the start of the grid.
-	
+
 	point_a_y: INTEGER
 			-- The y position of the start of the grid.
-	
+
 	point_b_x: INTEGER
 			-- The x position of the end of the grid.
-	
+
 	point_b_y: INTEGER
 			-- The y position of the end of the grid.
-			
+
 	grid_width: INTEGER
 			-- The width of the grid.
 		do
@@ -48,7 +48,7 @@ feature -- Access
 		ensure
 			result_greater_equal_zero: Result >= 0
 		end
-		
+
 	grid_height: INTEGER
 			-- The height of the grid.
 		do
@@ -60,11 +60,11 @@ feature -- Access
 	number_of_columns: INTEGER
 			-- Number of columns. (The number of rows is calculated
 			-- such that all elements fit in the grid)
-	
+
 	exponent: DOUBLE
 			-- Exponent used to reduce grid width per level.
 			-- (`grid_width' / cluster_level ^ `exponent').
-	
+
 feature -- Element change
 
 	set_point_a_position (ax, ay: INTEGER)
@@ -75,7 +75,7 @@ feature -- Element change
 		ensure
 			set: point_a_x = ax and point_a_y = ay
 		end
-		
+
 	set_point_b_position (ax, ay: INTEGER)
 			-- Set `point_b_x' to `ax' and `point_b_y' to `ay'.
 		do
@@ -84,7 +84,7 @@ feature -- Element change
 		ensure
 			set: point_b_x = ax and point_b_y = ay
 		end
-		
+
 	set_exponent (an_exponent: like exponent)
 			-- Set `exponent' to `an_exponent'.
 		do
@@ -92,7 +92,7 @@ feature -- Element change
 		ensure
 			set: exponent = an_exponent
 		end
-		
+
 	set_number_of_columns (a_number_of_columns: like number_of_columns)
 			-- Set `number_of_columns' to `a_number_of_columns'.
 		require
@@ -105,7 +105,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: detachable EG_CLUSTER_FIGURE)
 			-- arrange `linkables'.
 		local
 			d_x, d_y: INTEGER

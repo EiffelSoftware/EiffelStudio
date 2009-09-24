@@ -13,7 +13,8 @@ inherit
 		redefine
 			default_create,
 			update,
-			xml_node_name
+			xml_node_name,
+			make_filled
 		end
 
 create
@@ -38,6 +39,8 @@ feature {NONE} -- Initialization
 		require
 			a_model_not_void: a_model /= Void
 		do
+			create rectangle -- Satisfy invariant
+
 			default_create
 			model := a_model
 			initialize
@@ -46,6 +49,14 @@ feature {NONE} -- Initialization
 			disable_scaling
 
 			update
+		end
+
+	make_filled (n: INTEGER_32)
+			-- <Precursor>
+		do
+			create rectangle
+
+			Precursor {EG_CLUSTER_FIGURE} (n)
 		end
 
 feature -- Access

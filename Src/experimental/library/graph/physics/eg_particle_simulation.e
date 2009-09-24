@@ -100,7 +100,12 @@ feature {NONE} -- Implementation
 
 	particle_type: EG_PARTICLE
 			-- Type of particles
+		local
+			l_result: detachable like particle_type
 		do
+			check anchor_type_only: False end
+			check l_result /= Void end -- Satisfy void safe compiler
+			Result := l_result
 		end
 
 invariant

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	graph: EG_GRAPH
+	graph: detachable EG_GRAPH
 			-- The graph model `Current' is part of (if not Void).
 
 	id: INTEGER
@@ -40,10 +40,10 @@ feature -- Access
 			Result := internal_hash_id
 		end
 
-	name: STRING
+	name: detachable STRING
 			-- Name of `Current'.
 
-	set_name (a_name: STRING)
+	set_name (a_name: detachable STRING)
 			-- Set `name' to `a_name'.
 		do
 			if a_name /= name then
@@ -59,7 +59,7 @@ feature -- Access
 
 feature {EG_GRAPH} -- Element change.
 
-	set_graph (a_graph: like graph)
+	set_graph (a_graph: detachable like graph)
 			-- Set `graph' to `a_graph'.
 --		require
 --			a_graph_not_void: a_graph /= Void

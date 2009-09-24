@@ -11,11 +11,46 @@ class
 
 inherit
 	MAIN_WINDOW
+		redefine
+			create_interface_objects
+		end
 
 create
 	default_create
-	
+
 feature {NONE} -- Initialization
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			Precursor {MAIN_WINDOW}
+
+			create file_menu.make_with_text (Menu_file_item)
+			create standard_toolbar
+				-- Create the menu bar.
+			create standard_menu_bar
+
+			create_main_container_objects
+			create_statistic_objects
+		ensure then
+			main_container_created: main_container /= Void
+		end
+
+	create_main_container_objects
+			-- Create main container related objects
+		do
+			create graph
+			create world.make_with_model_and_factory (graph, create {ELLIPSE_FACTORY})
+			create small_world.make_with_model (graph)
+			create physics_layout.make_with_world (small_world)
+			create model_cell.make_with_world (world)
+			create circle_layout.make_with_world (world)
+			create grid_layout.make_with_world (world)
+			create timer.make_with_interval (40)
+			create main_container
+			create statistic_frame.make_with_text ("Statistics")
+			create view_cell.make_with_world (small_world)
+		end
 
 	build_main_container
 			-- Create and populate `main_container'.
@@ -25,70 +60,56 @@ feature {NONE} -- Initialization
 			frame: EV_FRAME
 		do
 			build_extended_menu_bar
-			
-			create graph
-			
-			create world.make_with_model_and_factory (graph, create {ELLIPSE_FACTORY})
+
 			world.drop_actions.extend (agent drop_new_node)
-			
-			create small_world.make_with_model (graph)
+
 			small_world.disable_multiple_selection
-			
-			create physics_layout.make_with_world (small_world)
+
 			physics_layout.set_center (200, 200)
 			physics_layout.set_move_threshold (20)
-			
-			create circle_layout.make_with_world (world)
-			
-			create grid_layout.make_with_world (world)
-			
-			create timer.make_with_interval (40)
+
 			timer.actions.extend (agent on_time_out)
-			
-			create main_container
-			
+
 				create hbox
-				
+
 					create vbox
-					
+
 					vbox.extend (standard_toolbar)
 					vbox.disable_item_expand (standard_toolbar)
-					
+
 						create frame
-							create model_cell.make_with_world (world)
+
 						frame.extend (model_cell)
-					
+
 					vbox.extend (frame)
-					
+
 				hbox.extend (vbox)
-				
+
 					create vbox
-				
-						create statistic_frame.make_with_text ("Statistics")
+
 						statistic_frame.set_minimum_height (150)
 						build_statistic
-						
+
 					vbox.extend (statistic_frame)
 					vbox.disable_item_expand (statistic_frame)
-					
+
 						create frame.default_create
-							
-							create view_cell.make_with_world (small_world)
+
 							view_cell.disable_scrollbars
 							view_cell.set_world_border (5)
 							view_cell.set_autoscroll_border (0)
-							
+
 						frame.extend (view_cell)
-				
+
 					vbox.extend (frame)
 					vbox.set_minimum_width (400)
-					
+
 				hbox.extend (vbox)
 				hbox.disable_item_expand (vbox)
-				
+
 			main_container.extend (hbox)
 		end
-		
+
 	build_extended_menu_bar
 			-- Add menu item new node.
 		local
@@ -105,7 +126,7 @@ feature {NONE} -- Initialization
 			toolbar_item.set_accept_cursor (accept_node)
 			toolbar_item.set_tooltip (add_one_node)
 			toolbar_item.set_deny_cursor (deny_node)
-			
+
 			create toolbar_item
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("new_node.png")
@@ -114,7 +135,7 @@ feature {NONE} -- Initialization
 			toolbar_item.set_pixmap (toolbar_pixmap)
 			toolbar_item.set_tooltip (add_ten_nodes)
 			standard_toolbar.extend (toolbar_item)
-			
+
 			create toolbar_item
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("new_node.png")
@@ -123,7 +144,7 @@ feature {NONE} -- Initialization
 			toolbar_item.set_pixmap (toolbar_pixmap)
 			toolbar_item.set_tooltip (add_hundred_nodes)
 			standard_toolbar.extend (toolbar_item)
-			
+
 			create toolbar_item
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("new_node.png")
@@ -132,7 +153,7 @@ feature {NONE} -- Initialization
 			toolbar_item.set_pixmap (toolbar_pixmap)
 			toolbar_item.set_tooltip (add_thousand_nodes)
 			standard_toolbar.extend (toolbar_item)
-			
+
 			create toolbar_item
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("circle_layout.png")
@@ -140,7 +161,7 @@ feature {NONE} -- Initialization
 			toolbar_item.set_pixmap (toolbar_pixmap)
 			toolbar_item.set_tooltip (apply_circle_layout)
 			standard_toolbar.extend (toolbar_item)
-			
+
 			create toolbar_item
 			create toolbar_pixmap
 			toolbar_pixmap.set_with_named_file ("grid_layout.png")
@@ -149,7 +170,19 @@ feature {NONE} -- Initialization
 			toolbar_item.set_tooltip (apply_grid_layout)
 			standard_toolbar.extend (toolbar_item)
 		end
-		
+
+	create_statistic_objects
+			-- Create statistic related objects
+		do
+			create node_label.make_with_text ("0")
+			create link_label.make_with_text ("0")
+			create draw_label.make_with_text ("?")
+			create physics_label.make_with_text ("?")
+			create iteration_label.make_with_text ("0")
+			create theta_label.make_with_text ("0.0")
+			create theta_selector.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 100))
+		end
+
 	build_statistic
 			-- Populate `statistic_frame'.
 		require
@@ -162,138 +195,133 @@ feature {NONE} -- Initialization
 			draw_count := 0
 			create table
 			table.resize (2, 7)
-				
+
 				create label.make_with_text ("Number of Nodes:")
-			
+
 			table.add (label, 1, 1, 1, 1)
-			
+
 				create label.make_with_text ("Number of Links:")
-				
+
 			table.add (label, 1, 2, 1, 1)
-			
+
 				create label.make_with_text ("Draw time (ms):")
-				
+
 			table.add (label, 1, 3, 1, 1)
-			
+
 				create label.make_with_text ("Physics time (ms):")
-				
+
 			table.add (label, 1, 4, 1, 1)
-			
+
 				create label.make_with_text ("Iterations:")
-				
+
 			table.add (label, 1, 5, 1, 1)
-			
+
 				create label.make_with_text ("Theta average:")
-				
+
 			table.add (label, 1, 6, 1, 1)
-			
+
 				create label.make_with_text ("Theta: ")
-			
+
 			table.add (label, 1, 7, 1, 1)
-			
-				create node_label.make_with_text ("0")				
+
 				node_label.align_text_left
-			
+
 			table.add (node_label, 2, 1, 1, 1)
-			
-				create link_label.make_with_text ("0")
+
 				link_label.align_text_left
-				
+
 			table.add (link_label, 2, 2, 1, 1)
-			
-				create draw_label.make_with_text ("?")
+
 				draw_label.align_text_left
-				
+
 			table.add (draw_label, 2, 3, 1, 1)
-			
-				create physics_label.make_with_text ("?")
+
 				physics_label.align_text_left
-				
+
 			table.add (physics_label, 2, 4, 1, 1)
-			
-				create iteration_label.make_with_text ("0")
+
 				iteration_label.align_text_left
-				
+
 			table.add (iteration_label, 2, 5, 1, 1)
-			
-				create theta_label.make_with_text ("0.0")
+
 				theta_label.align_text_left
-				
+
 			table.add (theta_label, 2, 6, 1, 1)
-			
-				create theta_selector.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 100))
+
 				theta_selector.set_value (25)
 				theta_selector.change_actions.extend (agent on_theta_change)
-				
+
 			table.add (theta_selector, 2, 7, 1, 1)
-			
+
 			statistic_frame.extend (table)
 		end
-		
+
 feature -- Access
-	
+
 	world: EG_FIGURE_WORLD
 			-- The world allowing to manipulate the graph.
-	
+
 	small_world: EG_FIGURE_WORLD
 			-- The small world with force directed physic.
-	
+
 	graph: EG_GRAPH
 			-- The graph showen in both `world' and `small_world'.
-			
+
 	physics_layout: EG_FORCE_DIRECTED_LAYOUT
 			-- Force directed layout
-			
+
 	circle_layout: EG_CIRCLE_LAYOUT
 			-- Layout to arrange nodes in a circle.
-			
+
 	grid_layout: EG_GRID_LAYOUT
 			-- Layout to arrange nodes in a grid.
 
 	node_counter: INTEGER
 			-- Number of nodes in the graph.
-			
+
 feature {NONE} -- Implementation
 
 	model_cell: WORLD_CELL
 			-- The cell allowing to edit the graph.
-			
+
 	view_cell: WORLD_CELL
 			-- The cell with the force directed graph.
-			
+
 feature {NONE} -- Add nodes
 
 	add_node (ax, ay: INTEGER)
 			-- Add a new node to `graph' position it at (`ax', `ay') in `world'.
 		local
 			new_node: EG_NODE
-			fig: EG_FIGURE
+			fig: detachable EG_FIGURE
 		do
 			node_counter := node_counter + 1
-			
+
 			-- Create the node
 			create new_node
 			new_node.set_name ("NODE_" + node_counter.out)
-			
+
 			-- Add it to the graph
 			graph.add_node (new_node)
-			
+
 			-- Place the new figure at (`ax', `ay') in `world'.
 			fig := world.figure_from_model (new_node)
+			check fig /= Void end -- FIXME: Implied by ...?
 			fig.set_point_position (ax, ay)
 
 			-- Make new node figure a drop target
 			fig.set_accept_cursor (accept_node)
 			fig.set_deny_cursor (deny_node)
 			fig.drop_actions.extend (agent on_link_drop (?, new_node))
-			
+
 			-- Make new node figure pickable
 			fig.set_pebble (create {NODE_STONE}.make (new_node))
-			
+
 			-- Hide label of simple nodes
 			fig := small_world.figure_from_model (new_node)
+			check fig /= Void end -- FIXME: Implied by ...?
 			fig.hide_label
-			
+
 			-- Position the simple node at some random position
 			fig.set_point_position (300 - random.next_item_in_range (0, 200), 300 - random.next_item_in_range (0, 200) )
 
@@ -301,7 +329,7 @@ feature {NONE} -- Add nodes
 			fig.move_actions.extend (agent on_small_move)
 			physics_layout.reset
 		end
-		
+
 	add_link (n1, n2: EG_LINKABLE)
 			-- Add a link to `graph' connecting `n1' with `n2'.
 		require
@@ -309,7 +337,7 @@ feature {NONE} -- Add nodes
 			n2_not_void: n2 /= Void
 		local
 			link: EG_LINK
-			simple_link: EG_SIMPLE_LINK
+			simple_link: detachable EG_SIMPLE_LINK
 		do
 			create link.make_directed_with_source_and_target (n1, n2)
 			graph.add_link (link)
@@ -344,7 +372,7 @@ feature {NONE} -- Add nodes
 				n1 := l_nodes.i_th (random.next_item_in_range (1, l_nodes.count))
 				n2 := l_nodes.i_th (random.next_item_in_range (1, l_nodes.count))
 				add_link (n1, n2)
-				i := i + 1	
+				i := i + 1
 			end
 			from
 				l_nodes := graph.flat_nodes
@@ -357,7 +385,7 @@ feature {NONE} -- Add nodes
 					n2 := l_nodes.i_th (random.next_item_in_range (1, l_nodes.count))
 					add_link (n1, n2)
 				end
-				l_nodes.forth	
+				l_nodes.forth
 			end
 			draw_count := 1
 			draw_time := 0
@@ -365,7 +393,7 @@ feature {NONE} -- Add nodes
 			physics_time := 0
 			iterations := 0
 		end
-		
+
 	random: RANGED_RANDOM
 		once
 			create Result.make
@@ -375,7 +403,7 @@ feature {NONE} -- Animation
 
 	timer: EV_TIMEOUT
 			-- Timer for `on_time_out'.
-	
+
 	on_time_out
 			-- Timeout: layout physics and calculate time for statistics.
 		local
@@ -388,7 +416,7 @@ feature {NONE} -- Animation
 				end
 				l_cpu := cpu_ticks
 				physics_layout.layout
-				
+
 				physics_time := physics_time + (cpu_ticks - l_cpu)
 				physics_count := physics_count + 1
 				iterations := iterations + 1
@@ -397,21 +425,21 @@ feature {NONE} -- Animation
 			if not graph.is_empty and then not physics_layout.is_stopped then
 				view_cell.fit_to_screen
 			end
-			
+
 			if draw_count >= max_count then
 				draw_count := 0
 				draw_time := 0
 			end
 			l_cpu := cpu_ticks
-			
+
 			view_cell.projector.full_project
-			
+
 			draw_time := draw_time + (cpu_ticks - l_cpu)
 			draw_count := draw_count + 1
-			
+
 			update_statistic
 		end
-		
+
 feature {NONE} -- Pick and drop new node
 
 	explain
@@ -430,11 +458,11 @@ feature {NONE} -- Pick and drop new node
 		do
 			drop_x := model_cell.pointer_position.x
 			drop_y := model_cell.pointer_position.y
-			
+
 			add_node (drop_x, drop_y)
 			iterations := 0
 		end
-	
+
 	on_link_drop (a_stone: NODE_STONE; a_node: EG_NODE)
 			-- `a_stone' was droped on `a_node'.
 		local
@@ -447,7 +475,7 @@ feature {NONE} -- Pick and drop new node
 				iterations := 0
 			end
 		end
-		
+
 	on_small_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 			-- A small figure node was moved.
 		do
@@ -456,7 +484,7 @@ feature {NONE} -- Pick and drop new node
 				iterations := 0
 			end
 		end
-		
+
 feature {NONE} -- Statistic
 
 	statistic_frame: EV_FRAME
@@ -465,7 +493,7 @@ feature {NONE} -- Statistic
 	update_statistic
 			-- Update `statistic_frame'.
 		do
-			node_label.set_text (node_counter.out)	
+			node_label.set_text (node_counter.out)
 			link_label.set_text (graph.flat_links.count.out)
 			if draw_count /= 0 then
 				draw_label.set_text ((draw_time / draw_count).rounded.out)
@@ -480,30 +508,34 @@ feature {NONE} -- Statistic
 			end
 			iteration_label.set_text (iterations.out)
 		end
-		
+
 	draw_count, physics_count: INTEGER
 	max_count: INTEGER = 10
 	draw_time, physics_time: INTEGER
 	link_label, node_label, draw_label, physics_label, iteration_label, theta_label: EV_LABEL
 	iterations: INTEGER
 	theta_selector: EV_HORIZONTAL_RANGE
-	
+
 	on_theta_change (a_value: INTEGER)
 			-- User changed theta.
 		do
 			physics_layout.set_theta (a_value)
 			physics_layout.reset
 		end
-	
+
 feature {NONE} -- Save/retrive
 
 	on_save
 			-- User selected save.
+		local
+			l_name: like last_file_name
 		do
 			if last_file_name = Void then
 				on_save_as
 			else
-				save (last_file_name)
+				l_name := last_file_name
+				check l_name /= Void end -- FIXME: Implied by ...?
+				save (l_name)
 			end
 		end
 
@@ -516,7 +548,7 @@ feature {NONE} -- Save/retrive
 			create dialog
 			dialog.filters.extend (["*.xml", "XML File"])
 			dialog.show_modal_to_window (Current)
-			
+
 			file_name := dialog.file_name
 			if file_name.count > 4 then
 				ext := file_name.substring (file_name.count - 3, file_name.count)
@@ -532,10 +564,10 @@ feature {NONE} -- Save/retrive
 				save (file_name)
 			end
 		end
-		
-	last_file_name: STRING
+
+	last_file_name: detachable STRING
 			-- last used file name.
-		
+
 	save (file_name: STRING)
 			-- Save `buffer' to `file'.
 		require
@@ -546,22 +578,25 @@ feature {NONE} -- Save/retrive
 			create ptf.make_open_write (file_name)
 			world.store (ptf)
 		end
-		
+
 	on_open
 			-- User selected open.
 		local
 			dialog: EV_FILE_OPEN_DIALOG
 			l_nodes: LIST [EG_LINKABLE_FIGURE]
 			l_item: EG_LINKABLE_FIGURE
+			l_name: like last_file_name
 		do
 			create dialog
 			dialog.filters.extend (["*.xml", "XML File"])
 			dialog.show_modal_to_window (Current)
-			
+
 			if dialog.file_name /= Void then
 				last_file_name := dialog.file_name
-				load (last_file_name)
-				
+				l_name := last_file_name
+				check l_name /= Void end -- FIXME: Implied by ...?
+				load (l_name)
+
 				from
 					l_nodes := small_world.flat_nodes
 					l_nodes.start
@@ -576,14 +611,14 @@ feature {NONE} -- Save/retrive
 					l_item.set_point_position (300 - random.next_item_in_range (0, 200), 300 - random.next_item_in_range (0, 200))
 					l_nodes.forth
 				end
-				
+
 				if physics_layout.is_stopped then
 					physics_layout.reset
 					iterations := 0
 				end
 			end
 		end
-		
+
 	load (file_name: STRING)
 			-- Load file with `file_name'.
 		require
@@ -610,7 +645,7 @@ feature {NONE} -- New
 			world.full_redraw
 			small_world.full_redraw
 		end
-		
+
 feature {NONE} -- Layouts
 
 	layout_circle
@@ -620,7 +655,7 @@ feature {NONE} -- Layouts
 			circle_layout.set_radius ((model_cell.width // 2 - 50).min (model_cell.height // 2 - 50))
 			circle_layout.layout
 		end
-		
+
 	layout_grid
 			-- Layout nodes in `world' in a grid.
 		local
@@ -648,7 +683,7 @@ feature {NONE} -- Implementation
 			time.update
 			Result := time.millisecond_now + time.second_now * 1000 + time.minute_now * 60000
 		end
-		
+
 	accept_node: EV_CURSOR
 		local
 			pix: EV_PIXMAP
@@ -657,7 +692,7 @@ feature {NONE} -- Implementation
 			pix.set_with_named_file ("node.png")
 			create Result.make_with_pixmap (pix, 8, 8)
 		end
-		
+
 	deny_node: EV_CURSOR
 		local
 			pix: EV_PIXMAP

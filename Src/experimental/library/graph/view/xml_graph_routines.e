@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	relative_window: EV_WINDOW
+	relative_window: detachable EV_WINDOW
 			-- relative window
 
 feature {EG_XML_STORABLE} -- Access
@@ -61,8 +61,8 @@ feature {EG_XML_STORABLE} -- Access
 			node_not_void: node /= Void
 		local
 			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			l_item: XM_ELEMENT
-			attr: XM_ATTRIBUTE
+			l_item: detachable XM_ELEMENT
+			attr: detachable XM_ATTRIBUTE
 		do
 			from
 				l_cursor := node.new_cursor
@@ -114,8 +114,8 @@ feature {EG_XML_STORABLE} -- Processing
 	xml_integer (elem: XM_ELEMENT; a_name: STRING): INTEGER
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
-			e: XM_ELEMENT
-			int_str: STRING
+			e: detachable XM_ELEMENT
+			int_str: detachable STRING
 		do
 			e ?= elem.item_for_iteration
 			if e /= Void and then e.name.is_equal (a_name) then
@@ -135,8 +135,8 @@ feature {EG_XML_STORABLE} -- Processing
 	xml_boolean (elem: XM_ELEMENT; a_name: STRING): BOOLEAN
 			-- Find in sub-elememt of `elem' boolean item with tag `a_name'.
 		local
-			e: XM_ELEMENT
-			bool_str: STRING
+			e: detachable XM_ELEMENT
+			bool_str: detachable STRING
 		do
 			e ?= elem.item_for_iteration
 			if e /= Void and then e.name.is_equal (a_name) then
@@ -156,8 +156,8 @@ feature {EG_XML_STORABLE} -- Processing
 	xml_double (elem: XM_ELEMENT; a_name: STRING): DOUBLE
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
-			e: XM_ELEMENT
-			double_str: STRING
+			e: detachable XM_ELEMENT
+			double_str: detachable STRING
 		do
 			e ?= elem.item_for_iteration
 			if e /= Void and then e.name.is_equal (a_name) then
@@ -174,10 +174,10 @@ feature {EG_XML_STORABLE} -- Processing
 			elem.forth
 		end
 
-	xml_string (elem: XM_ELEMENT; a_name: STRING): STRING
+	xml_string (elem: XM_ELEMENT; a_name: STRING): detachable STRING
 			-- Find in sub-elememt of `elem' string item with tag `a_name'.
 		local
-			e: XM_ELEMENT
+			e: detachable XM_ELEMENT
 		do
 			e ?= elem.item_for_iteration
 			if e /= Void and then e.name.is_equal (a_name) then
@@ -192,8 +192,8 @@ feature {EG_XML_STORABLE} -- Processing
 	xml_color (elem: XM_ELEMENT; a_name: STRING): EV_COLOR
 			-- Find in sub-elememt of `elem' color item with tag `a_name'.
 		local
-			e: XM_ELEMENT
-			s: STRING
+			e: detachable XM_ELEMENT
+			s: detachable STRING
 			sc1, sc2: INTEGER
 			r, g, b: INTEGER
 			rescued: BOOLEAN
@@ -231,7 +231,7 @@ feature {EG_XML_STORABLE} -- Processing
 			retry
 		end
 
-	element_by_name (e: XM_ELEMENT; n: STRING): XM_ELEMENT
+	element_by_name (e: XM_ELEMENT; n: STRING): detachable XM_ELEMENT
 			-- Find in sub-elemement of `e' an element with tag `n'.
 		require
 			e_not_void: e /= Void
@@ -289,7 +289,7 @@ feature -- Saving
 
 feature -- Deserialization
 
-	deserialize_document (a_file_path: STRING): XM_DOCUMENT
+	deserialize_document (a_file_path: STRING): detachable XM_DOCUMENT
 			-- Retrieve xml document associated to file
 			-- serialized in `a_file_path'.
 			-- If deserialization fails, return Void.
@@ -300,6 +300,7 @@ feature -- Deserialization
 			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
 			l_file: KL_BINARY_INPUT_FILE
 			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+
 		do
 			create l_file.make (a_file_path)
 			l_file.open_read

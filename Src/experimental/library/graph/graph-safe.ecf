@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="graph" uuid="8F1CADDA-FC27-41B6-8197-09FD0BF1B648" library_target="graph">
+	<target name="graph">
+		<description>Graph library.
+      Copyright (c) 1984-2006, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library.Graph">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure-safe.ecf"/>
+		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml-safe.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
+		<cluster name="events" location="events\" recursive="true">
+			<option namespace="Events">
+			</option>
+		</cluster>
+		<cluster name="model" location="model\" recursive="true">
+			<option namespace="Model">
+			</option>
+		</cluster>
+		<cluster name="physics" location="physics\" recursive="true">
+			<option namespace="Physics">
+			</option>
+		</cluster>
+		<cluster name="view" location="view\" recursive="true">
+			<option namespace="View">
+			</option>
+		</cluster>
+	</target>
+</system>

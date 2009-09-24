@@ -76,7 +76,7 @@ feature -- Element change.
 
 feature -- Access
 
-	quad_tree: EG_QUAD_TREE
+	quad_tree: detachable EG_QUAD_TREE
 			-- The quad tree to traverse.
 
 	theta: DOUBLE
@@ -91,11 +91,19 @@ feature {NONE} -- Implementation
 			-- Number of times theta was below 1.0
 
 	n_body_force_solver (a_particle: like particle_type): G
-			-- Solve n_nody_force O(log n) best case O(n) worste case.
+			-- Solve n_nody_force O(log n) best case O(n) worste case
+		local
+			l_result: detachable like n_body_force_solver
 		do
 			last_theta_average := 0.0
 			theta_count := 0
-			Result := traverse_tree (quad_tree, a_particle)
+			if attached quad_tree as l_quad_tree then
+				l_result := traverse_tree (l_quad_tree, a_particle)
+			else
+				check False end -- FIXME: Implied by ...
+			end
+			check l_result /= Void end -- Implied by previsous if cluase and postcondition of `traverse_tree'
+			Result := l_result
 			if theta_count > 0 then
 				last_theta_average := last_theta_average / theta_count
 			end
@@ -103,20 +111,27 @@ feature {NONE} -- Implementation
 
 	traverse_tree (node: EG_QUAD_TREE; a_particle: like particle_type): G
 			-- Traverse `node' and calculate force with `a_particle'.
+		require
+			not_void: node /= Void
 		local
 			r: DOUBLE
 			d: INTEGER
 			prop: DOUBLE
-			cmp: EG_PARTICLE
+			cmp: detachable EG_PARTICLE
 			region: EV_RECTANGLE
-			childe: EG_QUAD_TREE
+			childe: detachable EG_QUAD_TREE
+			l_result: detachable like traverse_tree
+			l_particle: detachable EG_PARTICLE
 		do
 			if node.is_leaf then
-				Result := n_body_force (a_particle, node.particle)
+				l_particle := node.particle
+				check l_particle /= Void end -- Implied by `is_leaf'
+				l_result := n_body_force (a_particle, l_particle)
 			else
 				cmp := node.center_of_mass_particle
 				region := node.region
 					-- Distance to center of mass
+				check cmp /= Void end --FIXME: Implied by ...
 				r := distance (a_particle.x, a_particle.y, cmp.x, cmp.y)
 					-- size of the cell
 				d := region.width.max (region.height)
@@ -129,39 +144,41 @@ feature {NONE} -- Implementation
 				end
 				if prop < theta then
 						-- Approximate
-					Result := n_body_force (a_particle, cmp)
+					l_result := n_body_force (a_particle, cmp)
 				else
 						-- Inspect children
 					childe := node.childe_ne
-					if childe /= Void then
-						Result := traverse_tree (childe, a_particle)
+					if attached childe as l_childe then
+						l_result := traverse_tree (l_childe, a_particle)
 					end
 					childe := node.childe_nw
-					if childe /= Void then
-						if Result = Void then
-							Result := traverse_tree (childe, a_particle)
+					if attached childe as l_childe_2 then
+						if l_result = Void then
+							l_result := traverse_tree (l_childe_2, a_particle)
 						else
-							Result := Result + traverse_tree (childe, a_particle)
+							l_result := l_result + traverse_tree (l_childe_2, a_particle)
 						end
 					end
 					childe := node.childe_se
-					if childe /= Void then
-						if Result = Void then
-							Result := traverse_tree (childe, a_particle)
+					if attached childe as l_childe_3 then
+						if l_result = Void then
+							l_result := traverse_tree (l_childe_3, a_particle)
 						else
-							Result := Result + traverse_tree (childe, a_particle)
+							l_result := l_result + traverse_tree (l_childe_3, a_particle)
 						end
 					end
 					childe := node.childe_sw
-					if childe /= Void then
-						if Result = Void then
-							Result := traverse_tree (childe, a_particle)
+					if attached childe as l_childe_4 then
+						if l_result = Void then
+							l_result := traverse_tree (l_childe_4, a_particle)
 						else
-							Result := Result + traverse_tree (childe, a_particle)
+							l_result := l_result + traverse_tree (l_childe_4, a_particle)
 						end
 					end
 				end
 			end
+			check l_result /= Void end -- FIXME: Implied by ...
+			Result := l_result
 		ensure
 			Result_exists: Result /= Void
 		end
@@ -201,16 +218,20 @@ feature {NONE} -- Implementation
 				l_particles.after
 			loop
 				l_item := l_particles.item
-				if quad_tree = Void then
-					create quad_tree.make (world_size, l_item)
-				else
-					if not quad_tree.has (l_item) then
-						quad_tree.insert (l_item)
+				if attached quad_tree as l_quad_tree then
+					if not l_quad_tree.has (l_item) then
+						l_quad_tree.insert (l_item)
 					end
+				else
+					create quad_tree.make (world_size, l_item)
 				end
 				l_particles.forth
 			end
-			quad_tree.build_center_of_mass
+			if attached quad_tree as l_quad_tree_2 then
+				l_quad_tree_2.build_center_of_mass
+			else
+				check False end -- Implied by previous loop
+			end
 		ensure
 			build: quad_tree /= Void
 		end

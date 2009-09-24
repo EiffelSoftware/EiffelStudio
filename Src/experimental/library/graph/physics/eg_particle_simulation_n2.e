@@ -11,13 +11,14 @@ deferred class
 
 inherit
 	EG_PARTICLE_SIMULATION [G]
-	
+
 feature {NONE} -- Implementation
 
 	n_body_force_solver (a_particle: EG_PARTICLE): G
 			-- Solve n_nody_force O(n).
 		local
 			l_item: EG_PARTICLE
+			l_result: detachable like n_body_force_solver
 		do
 			from
 				particles.start
@@ -25,15 +26,17 @@ feature {NONE} -- Implementation
 				particles.after
 			loop
 				l_item := particles.item
-				if Result = Void then
-					Result := n_body_force (a_particle, l_item)
+				if l_result = Void then
+					l_result := n_body_force (a_particle, l_item)
 				else
-					Result := Result + n_body_force (a_particle, l_item)
+					l_result := l_result + n_body_force (a_particle, l_item)
 				end
 				particles.forth
 			end
+			check l_result /= Void end -- FIXME: Implied by ...
+			Result := l_result
 		end
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -10,7 +10,7 @@ class
 
 inherit
 	EG_FIGURE_FACTORY
-	
+
 feature -- Basic operations
 
 	new_node_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE
@@ -18,24 +18,25 @@ feature -- Basic operations
 		do
 			Result := create {EG_SIMPLE_NODE}.make_with_model (a_node)
 		end
-		
+
 	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE
 			-- Create a cluster figure for `a_cluster'.
 		do
 			Result := create {EG_SIMPLE_CLUSTER}.make_with_model (a_cluster)
 		end
-		
+
 	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE
 			-- Create a link figure for `a_link'.
 		do
 			Result := create {EG_SIMPLE_LINK}.make_with_model (a_link)
 		end
-		
-	model_from_xml (node: XM_ELEMENT): EG_ITEM
+
+	model_from_xml (node: XM_ELEMENT): detachable EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		local
-			node_name, source_name, target_name: STRING
-			a_source, a_target: EG_LINKABLE
+			source_name, target_name: detachable STRING
+			node_name: STRING
+			a_source, a_target: detachable EG_LINKABLE
 		do
 			node_name := node.name
 			if node_name.is_equal ("EG_SIMPLE_NODE") then
@@ -43,9 +44,17 @@ feature -- Basic operations
 			elseif node_name.is_equal ("EG_SIMPLE_CLUSTER") then
 				create {EG_CLUSTER} Result
 			elseif node_name.is_equal ("EG_SIMPLE_LINK") then
-				source_name := node.attribute_by_name ("SOURCE").value
-				target_name := node.attribute_by_name ("TARGET").value
-				
+				if attached node.attribute_by_name ("SOURCE") as l_attribute_by_name then
+					source_name := l_attribute_by_name.value
+				else
+					check False end -- FIXME: Implied by ...?
+				end
+				if attached node.attribute_by_name ("TARGET") as l_attribute_by_name_2 then
+					target_name := l_attribute_by_name_2.value
+				else
+					check False end -- FIXME: Implied by ...?
+				end
+
 				if source_name /= Void and then target_name /= Void and then world /= Void then
 					a_source := linkable_with_name (source_name)
 					if a_source /= Void then

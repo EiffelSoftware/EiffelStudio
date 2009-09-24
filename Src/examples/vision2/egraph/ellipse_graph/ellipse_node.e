@@ -18,10 +18,13 @@ inherit
 			figure_size,
 			xml_node_name
 		end
-	
+
 create
 	make_with_model
-	
+
+create {EG_SIMPLE_NODE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -35,7 +38,7 @@ feature {NONE} -- Initialization
 			disable_rotating
 			set_center
 		end
-		
+
 feature -- Access
 
 	xml_node_name: STRING
@@ -43,7 +46,7 @@ feature -- Access
 		do
 			Result := "ELLIPSE_NODE"
 		end
-	
+
 feature -- Element change
 
 	update
@@ -54,7 +57,7 @@ feature -- Element change
 			end
 			is_update_required := False
 		end
-	
+
 feature {NONE} -- Implementation
 
 	color: EV_COLOR
@@ -62,7 +65,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_with_rgb (0,0,1)
 		end
-		
+
 	figure_size: INTEGER
 			-- Size of figure in pixel.
 		do

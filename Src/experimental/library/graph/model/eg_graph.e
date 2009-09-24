@@ -88,8 +88,8 @@ feature -- Status report
 	has_linkable (a_linkable: EG_LINKABLE): BOOLEAN
 			-- Is `a_linkable' part of the model?
 		local
-			node: like node_type
-			cluster: EG_CLUSTER
+			node: detachable like node_type
+			cluster: detachable EG_CLUSTER
 		do
 			node ?= a_linkable
 			if node /= Void then
@@ -189,13 +189,13 @@ feature -- Element change
 			a_node_no_links: a_node.links.is_empty
 		do
 			nodes.prune_all (a_node)
-			if a_node.cluster /= Void then
-				a_node.cluster.prune_all (a_node)
+			if attached a_node.cluster as l_cluster then
+				l_cluster.prune_all (a_node)
 			end
 			node_remove_actions.call ([a_node])
 		ensure
 			not_has_a_node: not has_node (a_node)
-			removed_from_cluster: a_node.cluster /= Void implies not a_node.cluster.flat_linkables.has (a_node)
+			removed_from_cluster: attached a_node.cluster as le_cluster implies not le_cluster.flat_linkables.has (a_node)
 		end
 
 	remove_cluster (a_cluster: EG_CLUSTER)
@@ -206,13 +206,13 @@ feature -- Element change
 			a_cluster_is_empty: a_cluster.flat_linkables.is_empty
 		do
 			clusters.prune_all (a_cluster)
-			if a_cluster.cluster /= Void then
-				a_cluster.cluster.prune_all (a_cluster)
+			if attached a_cluster.cluster as l_cluster then
+				l_cluster.prune_all (a_cluster)
 			end
 			cluster_remove_actions.call ([a_cluster])
 		ensure
 			not_has_a_cluster: not has_cluster (a_cluster)
-			removed_from_cluster: old (a_cluster.cluster) /= Void implies not (old (a_cluster.cluster)).flat_linkables.has (a_cluster)
+			removed_from_cluster: attached (old (a_cluster.cluster)) as le_cluster implies not le_cluster.flat_linkables.has (a_cluster)
 		end
 
 	wipe_out
@@ -290,7 +290,12 @@ feature {EG_FIGURE_WORLD} -- Implementation
 
 	node_type: EG_NODE
 			-- Type of nodes in `nodes'.
+		local
+			l_result: detachable like node_type
 		do
+			check anchor_type_only: False end
+			check l_result /= Void end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
 feature {EG_ITEM} -- Implementation
@@ -300,8 +305,8 @@ feature {EG_ITEM} -- Implementation
 		require
 			a_cluster /= Void
 		local
-			l_cluster: EG_CLUSTER
-			l_node: like node_type
+			l_cluster: detachable EG_CLUSTER
+			l_node: detachable like node_type
 			l_linkables: ARRAYED_LIST [EG_LINKABLE]
 			i: INTEGER
 		do
@@ -316,6 +321,7 @@ feature {EG_ITEM} -- Implementation
 					remove_all (l_cluster)
 				else
 					l_node ?= l_linkables.i_th (i)
+					check l_node /= Void end -- FIXME: Implied by ...?
 					remove_links (l_node.links)
 					remove_node (l_node)
 					i := i + 1

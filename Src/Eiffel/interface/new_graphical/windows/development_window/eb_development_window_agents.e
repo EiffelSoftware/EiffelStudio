@@ -61,7 +61,7 @@ feature -- Text observer Agents
 			-- The main editor has just been wiped out
 			-- before loading a new file.
 		do
-			if not is_recycled then
+			if is_interface_usable and then develop_window.is_interface_usable then
 				-- We close a UN-FOCUSED editor by pointer, we should not disable formatters if there is/are still editor(s) opened.
 				if develop_window.editors_manager.editor_count <= 0 then
 					develop_window.address_manager.disable_formatters
@@ -79,7 +79,7 @@ feature -- Text observer Agents
 		local
 			l_str: STRING_32
 		do
-			if not is_recycled then
+			if is_interface_usable and then develop_window.is_interface_usable then
 				if not develop_window.text_edited then
 					l_str := develop_window.title.twin.as_string_32
 					if l_str @ 1 /= '*' then
@@ -103,7 +103,7 @@ feature -- Text observer Agents
 		local
 			str: STRING_32
 		do
-			if not is_recycled then
+			if is_interface_usable and then develop_window.is_interface_usable then
 				str := develop_window.title.twin.as_string_32
 				if str @ 1 = '*' then
 					str.keep_tail (str.count - 2)
@@ -120,7 +120,7 @@ feature -- Text observer Agents
 		local
 			l_context_refreshing_timer: EV_TIMEOUT
 		do
-			if not is_recycled then
+			if is_interface_usable and then develop_window.is_interface_usable then
 				if not develop_window.is_empty then
 					develop_window.refresh_cursor_position
 				end
@@ -140,7 +140,7 @@ feature -- Text observer Agents
 	on_text_fully_loaded
 			-- The main editor has just been reloaded.
 		do
-			if not is_recycled then
+			if is_interface_usable and then develop_window.is_interface_usable then
 				develop_window.update_paste_cmd
 				develop_window.update_formatters
 				if develop_window.syntax_is_correct then

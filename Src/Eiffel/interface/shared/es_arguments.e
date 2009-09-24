@@ -1,63 +1,35 @@
 note
-	description: "Core of the application"
+	description: "Summary description for {ES_ARGUMENTS}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_KERNEL
-
-inherit
 	ES_ARGUMENTS
 
-	SHARED_FLAGS
+inherit
+	ENVIRONMENT_ARGUMENTS
 
-	SHARED_COMPILER_PROFILE
+feature {NONE} -- Implementation
 
-	CONF_DEFAULT_OPTION_SETTING
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Create and map the first window: the system window.
-		local
-			compiler: ES_BATCH
-			graphic_compiler: ES_GRAPHIC
-			--| uncomment the following line when profiling
-			--prof_setting: PROFILING_SETTING
+	arguments_program_name: STRING
+			-- Associated program name
 		do
-			--| uncomment the following lines when profiling
-			--create prof_setting.make
-			--prof_setting.stop_profiling
+			Result := "ec"
+		ensure
+			result_attached: Result /= Void
+		end
 
-			initialize_from_arguments
-			if is_compatible_mode then
-				set_is_63_compatible (True)
-			end
-
-			if
-				argument_count > 0 and then
-				(index_of_word_option ("gui") > 0 or else
-				argument (1).is_equal ("-from_bench") or else argument (1).is_equal ("-bench"))
-			then
-				set_gui (True)
-				create graphic_compiler.make
-			else
-					-- Start the compilation in batch mode from the bench executable.
-				create compiler.make
-			end
-
-			--| uncomment the following line when profiling
-			--prof_setting.start_profiling
+	arguments_environment_name: STRING
+			-- Environment variable's name used to extend the command line
+		once
+			Result := "ISE_" + arguments_program_name.as_upper + "_FLAGS"
 		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -86,5 +58,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

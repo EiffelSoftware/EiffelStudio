@@ -11,7 +11,7 @@ class
 	ES
 
 inherit
-	ARGUMENTS
+	ES_ARGUMENTS
 
 	EB_SHARED_OUTPUT_TOOLS
 

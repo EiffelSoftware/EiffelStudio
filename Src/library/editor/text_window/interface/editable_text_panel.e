@@ -272,70 +272,76 @@ feature {NONE} -- Handle keystokes
 			scroll_to_cursor: BOOLEAN
 		do
 			scroll_to_cursor := True
-			inspect
-				ev_key.code
-			when Key_x then
-					-- Ctrl-X (cut)
-				run_if_editable (agent cut_selection)
-			when Key_c then
-					-- Ctrl-C (copy)
-				copy_selection
-				scroll_to_cursor := False
-			when Key_v then
-					-- Ctrl-V (paste)
-				run_if_editable (agent paste)
-			when Key_a then
-					-- Ctrl-A (select all)
-				select_all
-				scroll_to_cursor := False
-			when key_y then
-					-- Ctrl-Y (Redo)
-				if text_displayed.redo_is_possible then
-					redo
-				end
-			when key_z then
-					-- Ctrl-Z (Undo)
-				if text_displayed.undo_is_possible then
-					undo
-				end
-			when Key_insert then
-					-- Ctrl-Insert = Ctrl-C
-				copy_selection
-			when Key_delete then
-					-- Ctrl-Delete = Ctrl-X or delete word
-				if is_editable then
-					if has_selection then
-						cut_selection
-					else
-					l_num := number_of_lines
-					text_displayed.delete_word (False)
-					if l_num = number_of_lines then
-						invalidate_cursor_rect (True)
-					else
-						refresh_now
-					end
-					check_cursor_position
-					end
-				else
-					display_not_editable_warning_message
-				end
-			when Key_back_space then
-					-- Ctrl-Backspace
-				if is_editable then
-					l_num := number_of_lines
-					text_displayed.delete_word (True)
-					if l_num = number_of_lines then
-						invalidate_cursor_rect (True)
-					else
-						refresh_now
-					end
-					check_cursor_position
-				else
-					display_not_editable_warning_message
-				end
-			else
+			if Shifted_key then
 				Precursor (ev_key)
 				scroll_to_cursor := False
+			else
+					--| The following operation does not use [Shift]
+				inspect
+					ev_key.code
+				when Key_x then
+						-- Ctrl-X (cut)
+					run_if_editable (agent cut_selection)
+				when Key_c then
+						-- Ctrl-C (copy)
+					copy_selection
+					scroll_to_cursor := False
+				when Key_v then
+						-- Ctrl-V (paste)
+					run_if_editable (agent paste)
+				when Key_a then
+						-- Ctrl-A (select all)
+					select_all
+					scroll_to_cursor := False
+				when key_y then
+						-- Ctrl-Y (Redo)
+					if text_displayed.redo_is_possible then
+						redo
+					end
+				when key_z then
+						-- Ctrl-Z (Undo)
+					if text_displayed.undo_is_possible then
+						undo
+					end
+				when Key_insert then
+						-- Ctrl-Insert = Ctrl-C
+					copy_selection
+				when Key_delete then
+						-- Ctrl-Delete = Ctrl-X or delete word
+					if is_editable then
+						if has_selection then
+							cut_selection
+						else
+						l_num := number_of_lines
+						text_displayed.delete_word (False)
+						if l_num = number_of_lines then
+							invalidate_cursor_rect (True)
+						else
+							refresh_now
+						end
+						check_cursor_position
+						end
+					else
+						display_not_editable_warning_message
+					end
+				when Key_back_space then
+						-- Ctrl-Backspace
+					if is_editable then
+						l_num := number_of_lines
+						text_displayed.delete_word (True)
+						if l_num = number_of_lines then
+							invalidate_cursor_rect (True)
+						else
+							refresh_now
+						end
+						check_cursor_position
+					else
+						display_not_editable_warning_message
+					end
+				else
+					Precursor (ev_key)
+					scroll_to_cursor := False
+				end
 			end
 			if not meta_key_codes.has (ev_key.code) and then scroll_to_cursor then
 				check_cursor_position

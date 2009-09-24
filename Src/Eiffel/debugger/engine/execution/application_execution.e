@@ -167,10 +167,10 @@ feature -- Status
 
 feature -- Access
 
-	can_not_launch_system_message: STRING
+	can_not_launch_system_message: STRING_32
 			-- Message displayed when estudio is unable to launch the system
 		do
-			Result := debugger_names.w_Cannot_launch_system.as_string_8
+			Result := debugger_names.w_Cannot_launch_system
 		end
 
 	number_of_stack_elements: INTEGER

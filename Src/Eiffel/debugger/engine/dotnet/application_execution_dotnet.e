@@ -603,13 +603,13 @@ feature {NONE} -- Assertion change Implementation
 
 feature {APPLICATION_EXECUTION} -- Launching status
 
-	can_not_launch_system_message: STRING
+	can_not_launch_system_message: STRING_32
 			-- Message displayed when estudio is unable to launch the system
 		do
 			if il_debug_info_recorder /= Void and then il_debug_info_recorder.entry_point_feature_i = Void then
-				Result := debugger_names.w_System_has_no_entry_and_is_not_executable.as_string_8
+				Result := debugger_names.w_System_has_no_entry_and_is_not_executable
 			else
-				Result := debugger_names.w_Error_occurred_during_icordebug_initialization.as_string_8
+				Result := debugger_names.w_Error_occurred_during_icordebug_initialization
 			end
 		end
 

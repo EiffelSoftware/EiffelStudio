@@ -191,9 +191,9 @@ feature -- Menu
 					l_agent.call ([l_content])
 				end
 
-				if attached l_agent.last_result then
+				if attached l_agent.last_result as l_agent_last_result then
 					create l_result
-					l_result.append (l_result)
+					l_result.append (l_agent_last_result)
 				else
 					check something_wrong_in_agent: False end -- Implied by design of `title_bar_area_menu_items_agent'
 				end

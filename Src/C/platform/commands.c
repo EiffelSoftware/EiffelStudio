@@ -154,7 +154,7 @@ void eif_link_driver (EIF_OBJECT c_code_dir, EIF_OBJECT system_name, EIF_OBJECT 
 	if (cmd == (char *)0) {
 		enomem();
 	} else {
-		sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name),
+		sprintf(cmd, "\"%s\" \"%s\" \"%s/%s\"", eif_access(prelink_command_name),
 			 eif_access(driver_name), eif_access(c_code_dir),
 			 eif_access(system_name));
 

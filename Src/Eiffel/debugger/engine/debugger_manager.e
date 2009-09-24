@@ -631,7 +631,7 @@ feature -- Properties
 	controller: DEBUGGER_CONTROLLER
 			-- Debugger controller for run, resume ...
 
-	observer_provider: DEBUGGER_OBSERVER_PROVIDER
+	observer_provider: DEBUGGER_MANAGER_OBSERVER_PROVIDER
 			-- Debugger event observer service			
 
 	dump_value_factory: DUMP_VALUE_FACTORY
@@ -847,16 +847,16 @@ feature -- Events/Timers helpers
 			events_handler.remove_idle_action (v)
 		end
 
-feature {DEBUGGER_OBSERVER} -- Observer implementation
+feature {DEBUGGER_MANAGER_OBSERVER} -- Observer implementation
 
-	add_observer (o: DEBUGGER_OBSERVER)
+	add_observer (o: DEBUGGER_MANAGER_OBSERVER)
 		do
 			observers.force (o)
 		ensure
 			o_is_attached: o.is_attached_to (Current)
 		end
 
-	remove_observer (o: DEBUGGER_OBSERVER)
+	remove_observer (o: DEBUGGER_MANAGER_OBSERVER)
 		require
 			o_is_attached: o.is_attached_to (Current)
 		do
@@ -865,7 +865,7 @@ feature {DEBUGGER_OBSERVER} -- Observer implementation
 
 feature {DEBUGGER_MANAGER} -- Observer implementation
 
-	observers: ARRAYED_LIST [DEBUGGER_OBSERVER]
+	observers: ARRAYED_LIST [DEBUGGER_MANAGER_OBSERVER]
 			-- List of observers of `Current'.
 
 feature -- Settings
@@ -1466,7 +1466,7 @@ feature -- Debugging events
 			debugger_output_message (s)
 
 				--| Observers
-			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_launched (Current))
+			observers.do_all (agent {DEBUGGER_MANAGER_OBSERVER}.on_application_launched (Current))
 
 				--| Output information			
 			display_application_status
@@ -1491,7 +1491,7 @@ feature -- Debugging events
 			app_is_executing: safe_application_is_stopped
 		do
 				--| Observers
-			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_paused (Current))
+			observers.do_all (agent {DEBUGGER_MANAGER_OBSERVER}.on_application_paused (Current))
 		end
 
 	on_application_debugger_update
@@ -1499,7 +1499,7 @@ feature -- Debugging events
 			app_is_executing: safe_application_is_stopped
 		do
 				--| Observers
-			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_debugger_update (Current))
+			observers.do_all (agent {DEBUGGER_MANAGER_OBSERVER}.on_application_debugger_update (Current))
 		end
 
 	on_application_just_stopped
@@ -1513,7 +1513,7 @@ feature -- Debugging events
 			application.set_current_execution_stack_number (1)
 
 				--| Observers
-			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_stopped (Current))
+			observers.do_all (agent {DEBUGGER_MANAGER_OBSERVER}.on_application_stopped (Current))
 		end
 
 	on_application_before_resuming
@@ -1540,7 +1540,7 @@ feature -- Debugging events
 			end
 
 				--| Observers
-			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_resumed (Current))
+			observers.do_all (agent {DEBUGGER_MANAGER_OBSERVER}.on_application_resumed (Current))
 		end
 
 	frozen on_application_quit
@@ -1559,7 +1559,7 @@ feature -- Debugging events
 				debugger_status_message (debugger_names.t_Application_exited)
 
 					--| Observers
-				observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_exited (Current))
+				observers.do_all (agent {DEBUGGER_MANAGER_OBSERVER}.on_application_exited (Current))
 
 					--| Kept objects
 				application_status.clear_kept_objects
@@ -1597,7 +1597,7 @@ feature -- Debugging events
 			reset_class_c_data
 			debugger_ast_server.reset
 
-			observers.do_all (agent {DEBUGGER_OBSERVER}.on_debugging_terminated (Current))
+			observers.do_all (agent {DEBUGGER_MANAGER_OBSERVER}.on_debugging_terminated (Current))
 		end
 
 feature -- Actions

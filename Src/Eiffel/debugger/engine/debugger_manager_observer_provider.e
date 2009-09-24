@@ -6,10 +6,10 @@ note
 	revision: "$Revision$"
 
 class
-	DEBUGGER_OBSERVER_PROVIDER
+	DEBUGGER_MANAGER_OBSERVER_PROVIDER
 
 inherit
-	DEBUGGER_OBSERVER
+	DEBUGGER_MANAGER_OBSERVER
 		redefine
 			on_application_launched,
 			on_application_resumed,

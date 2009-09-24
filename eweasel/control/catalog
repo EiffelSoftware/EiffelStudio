@@ -1101,6 +1101,7 @@ test	tuple-special-twin-bug			runtime011	tcf pass runtime special
 test	overflow-special-resizing		runtime012	tcf pass runtime special manual
 test	overflow-special-expanded-resizing		runtime013	tcf pass runtime special expanded
 if WINDOWS test	console-in-windows-dll	runtime014	tcf pass runtime windows console input output dll
+test	array-allocation-failure		runtime015	tcf pass runtime special expanded array memory allocation exception
 
 -- Thread
 test	cond-timedwait-failure		thread001	tcf pass multithreaded

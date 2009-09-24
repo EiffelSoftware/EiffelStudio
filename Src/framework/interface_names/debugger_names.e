@@ -50,25 +50,47 @@ feature -- warnings
 	w_Cannot_launch_system: STRING_32
 		do Result := locale.translation ("Could not launch system.") end
 
-	w_Cannot_find_valid_ecdbgd (a_ecdbgd_path, a_env_var_str, a_env_var_name: STRING_GENERAL): STRING_32
+	w_Cannot_find_valid_ecdbgd_non_vms (a_ecdbgd_path, a_env_var_name: STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 					"The Eiffel debugger is not found or not executable%N%
 					%  current path = $1 %N%
 					%%NYou can change this value in the preferences%N%
-					% or restart after setting the $2 $3 %N"),
-					[a_ecdbgd_path, a_env_var_str, a_env_var_name]
+					% or restart after setting the environment variable $2 %N"),
+					[a_ecdbgd_path, a_env_var_name]
 				)
 		end
 
-	w_Cannot_launch_in_allotted_time (a_timeout: INTEGER_32; a_env_var_str, a_env_var_name: STRING_GENERAL): STRING_32
+	w_Cannot_find_valid_ecdbgd_vms (a_ecdbgd_path, a_env_var_name: STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation (
+					"The Eiffel debugger is not found or not executable%N%
+					%  current path = $1 %N%
+					%%NYou can change this value in the preferences%N%
+					% or restart after setting the logical name $2 %N"),
+					[a_ecdbgd_path, a_env_var_name]
+				)
+		end
+
+	w_Cannot_launch_in_allotted_time_non_vms (a_timeout: INTEGER_32; a_env_var_name: STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 					"The system could not be launched in allotted time:%N%
 					%%NYour current timeout is $1 second(s) %N%
 					%%NYou can change this value in the preferences%N%
-					% or restart after setting the $2 $3 %N"),
-					[a_timeout, a_env_var_str, a_env_var_name]
+					% or restart after setting the environment variable $2 %N"),
+					[a_timeout, a_env_var_name]
+				)
+		end
+
+	w_Cannot_launch_in_allotted_time_vms (a_timeout: INTEGER_32; a_env_var_name: STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation (
+					"The system could not be launched in allotted time:%N%
+					%%NYour current timeout is $1 second(s) %N%
+					%%NYou can change this value in the preferences%N%
+					% or restart after setting the logical name $2 %N"),
+					[a_timeout, a_env_var_name]
 				)
 		end
 

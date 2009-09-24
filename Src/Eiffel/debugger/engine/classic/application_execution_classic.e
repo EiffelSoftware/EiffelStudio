@@ -471,35 +471,43 @@ feature -- Query
 
 feature {APPLICATION_EXECUTION} -- Launching status
 
-	can_not_launch_system_message: STRING
+	can_not_launch_system_message: STRING_32
 			-- Message displayed when estudio is unable to launch the system
-		local
-			env_var_str: STRING_8
 		do
-			Result := debugger_names.w_Cannot_launch_system.as_string_8
-
-			if ipc_engine.is_vms then
-				env_var_str := "logical name"
-			else
-				env_var_str := "environment variable"
-			end
+			Result := debugger_names.w_Cannot_launch_system
 			Result.append_character ('%N')
 			if not ipc_engine.valid_ise_ecdbgd_executable then
-				Result.append_string_general (
-						debugger_names.w_Cannot_find_valid_ecdbgd (
-								ipc_engine.ise_ecdbgd_path,
-								env_var_str,
-								ipc_engine.ise_ecdbgd_varname
-							)
-					)
+				if ipc_engine.is_vms then
+					Result.append_string_general (
+							debugger_names.w_Cannot_find_valid_ecdbgd_vms (
+									ipc_engine.ise_ecdbgd_path,
+									ipc_engine.ise_ecdbgd_varname
+								)
+						)
+				else
+					Result.append_string_general (
+							debugger_names.w_Cannot_find_valid_ecdbgd_non_vms (
+									ipc_engine.ise_ecdbgd_path,
+									ipc_engine.ise_ecdbgd_varname
+								)
+						)
+				end
 			else
-				Result.append_string_general (
-						debugger_names.w_Cannot_launch_in_allotted_time (
-								ipc_engine.ise_timeout,
-								env_var_str,
-								ipc_engine.ise_timeout_varname
-							)
-					)
+				if ipc_engine.is_vms then
+					Result.append_string_general (
+							debugger_names.w_Cannot_launch_in_allotted_time_vms (
+									ipc_engine.ise_timeout,
+									ipc_engine.ise_timeout_varname
+								)
+						)
+				else
+					Result.append_string_general (
+							debugger_names.w_Cannot_launch_in_allotted_time_non_vms (
+									ipc_engine.ise_timeout,
+									ipc_engine.ise_timeout_varname
+								)
+						)
+				end
 			end
 		end
 

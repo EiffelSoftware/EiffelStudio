@@ -14,7 +14,7 @@ inherit
 			reset_all, launch, is_search_prepared
 		end
 
-	EC_ENCODING_UTINITIES
+	EC_ENCODING_UTILITIES
 
 create
 	make, make_empty

@@ -24,7 +24,7 @@ inherit
 			on_text_edited
 		end
 
-	EC_ENCODING_UTINITIES
+	EC_ENCODING_UTILITIES
 		export
 			{NONE} all
 		end

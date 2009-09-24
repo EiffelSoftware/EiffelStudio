@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	first_line: EIFFEL_EDITOR_LINE
+	first_line: detachable EIFFEL_EDITOR_LINE
 
 	cursor: EIFFEL_EDITOR_CURSOR
 
@@ -89,7 +89,7 @@ feature -- Feature click tool
 	set_feature_for_click (feat: E_FEATURE)
 			-- initialize feature click tool with feature `feat'
 		do
-			if feature_click_tool= Void then
+			if feature_click_tool = Void then
 				create feature_click_tool
 			end
 			if feat /= Void then
@@ -103,7 +103,7 @@ feature -- Feature click tool
 			Result := use_feature_click_tool and then feature_click_tool /= Void and then feature_click_tool.can_analyze_current_class
 		end
 
-	feature_click_tool: EB_CLICK_FEATURE_TOOL
+	feature_click_tool: detachable EB_CLICK_FEATURE_TOOL
 			-- tool that makes feature basic text clickable
 
 feature -- Pick and drop

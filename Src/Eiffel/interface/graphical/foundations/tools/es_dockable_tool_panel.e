@@ -887,7 +887,11 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			is_shown: is_shown
 		do
-			if attached last_focused_widget as l_widget and then not l_widget.has_focus then
+			if
+				attached last_focused_widget as l_widget and then
+				not l_widget.has_focus and then
+				l_widget.is_sensitive
+			then
 				l_widget.set_focus
 			end
 		end

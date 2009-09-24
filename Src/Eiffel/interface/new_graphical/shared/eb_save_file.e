@@ -42,7 +42,7 @@ inherit
 			{NONE} all
 		end
 
-	EC_ENCODING_UTINITIES
+	EC_ENCODING_UTILITIES
 		export
 			{NONE} all
 		end

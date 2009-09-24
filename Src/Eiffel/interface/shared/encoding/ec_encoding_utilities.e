@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	EC_ENCODING_UTINITIES
+	EC_ENCODING_UTILITIES
 
 inherit
 	EC_ENCODINGS

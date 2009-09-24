@@ -15,7 +15,7 @@ class
 	MSR_REPLACE_STRATEGY
 
 inherit
-	EC_ENCODING_UTINITIES
+	EC_ENCODING_UTILITIES
 
 feature -- Access
 

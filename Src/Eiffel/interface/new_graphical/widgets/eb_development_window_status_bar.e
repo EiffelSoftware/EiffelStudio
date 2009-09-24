@@ -31,7 +31,7 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
-	DEBUGGER_OBSERVER
+	DEBUGGER_MANAGER_OBSERVER
 		export
 			{NONE} all
 		redefine

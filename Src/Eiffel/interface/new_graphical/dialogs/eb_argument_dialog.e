@@ -43,7 +43,7 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	DEBUGGER_OBSERVER
+	DEBUGGER_MANAGER_OBSERVER
 		export
 			{NONE} all
 		undefine

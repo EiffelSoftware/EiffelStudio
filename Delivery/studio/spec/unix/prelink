@@ -1,4 +1,4 @@
-if test ! -f $2
+if test ! -f "$2"
 then
-	ln -s $1 $2
+	ln -s "$1" "$2"
 fi

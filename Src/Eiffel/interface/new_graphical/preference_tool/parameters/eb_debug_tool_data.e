@@ -183,6 +183,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 			else
 				create l_manager.make (preferences, "debug_tool")
 				Result := l_manager.new_string_preference_value (l_manager, grid_column_layout_prefix + grid_name, "")
+				Result.set_hidden (True)
 				grid_column_layout_preferences.put (Result, grid_name)
 			end
 		end

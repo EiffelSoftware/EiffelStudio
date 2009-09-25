@@ -211,13 +211,20 @@ feature -- Status report
 
 	has_heavy_capture: BOOLEAN
 			-- Does this window have the heavy capture?
+		obsolete
+			"Use `has_capture' instead."
+		do
+			Result := has_capture
+		end
 
 	heavy_capture_activated: BOOLEAN
 			-- Is the heavy capture currently running?
 			-- (i.e. is there a window in the current program
 			-- with `has_heavy_capture' to True?)
+		obsolete
+			"Use `has_capture' instead."
 		do
-			Result := cwel_get_hook_window /= Default_pointer
+			Result := has_capture
 		end
 
 	has_vertical_scroll_bar: BOOLEAN
@@ -644,11 +651,8 @@ feature -- Status setting
 		require
 			exists: exists
 			has_not_capture: not has_capture
-			has_not_heavy_capture: not has_heavy_capture
 		do
 			cwin_set_capture (item)
-		ensure
-			has_capture: has_capture
 		end
 
 	set_heavy_capture
@@ -659,14 +663,13 @@ feature -- Status setting
 			-- one window can have the mouse capture at a time.
 			--
 			-- Works for ALL windows.
+		obsolete
+			"Use `set_capture' instead."
 		require
 			exists: exists
-			has_not_heavy_capture: not has_heavy_capture
-			heavy_capture_deactivated: not heavy_capture_activated
+			has_not_capture: not has_capture
 		do
-			has_heavy_capture := cwel_hook_mouse (item)
-		ensure
-			heavy_capture_set: has_heavy_capture implies heavy_capture_activated
+			cwin_set_capture (item)
 		end
 
 	release_capture
@@ -684,15 +687,15 @@ feature -- Status setting
 	release_heavy_capture
 			-- Release the mouse capture after a call
 			-- to `set_heavy_capture'.
+		obsolete
+			"Use `release_capture' instead."
 		require
 			exists: exists
-			has_heavy_capture: has_heavy_capture
-			heavy_capture_activated: heavy_capture_activated
+			has_capture: has_capture
 		do
-			has_heavy_capture := not cwel_unhook_mouse
+			cwin_release_capture
 		ensure
-			heavy_capture_set: not has_heavy_capture
-			heavy_capture_deactivated: not heavy_capture_activated
+			not_has_capture: not has_capture
 		end
 
 	set_style (a_style: INTEGER)
@@ -2374,25 +2377,25 @@ feature {NONE} -- Externals
 	cwin_set_capture (hwnd: POINTER)
 			-- SDK SetCapture
 		external
-			"C [macro %"wel.h%"] (HWND)"
+			"C inline use %"wel_capture.h%""
 		alias
-			"SetCapture"
+			"cwel_capture ((HWND) $hwnd);"
 		end
 
 	cwin_release_capture
 			-- SDK ReleaseCapture
 		external
-			"C [macro %"wel.h%"]"
+			"C inline use %"wel_capture.h%""
 		alias
-			"ReleaseCapture ()"
+			"cwel_release_capture ();"
 		end
 
 	cwin_get_capture: POINTER
 			-- SDK GetCapture
 		external
-			"C [macro %"wel.h%"]: EIF_POINTER"
+			"C inline use %"wel_capture.h%""
 		alias
-			"GetCapture ()"
+			"return (EIF_POINTER) cwel_captured_window();"
 		end
 
 	cwin_show_window (hwnd: POINTER; cmd_show: INTEGER)
@@ -2667,21 +2670,6 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND): EIF_BOOLEAN"
 		alias
 			"LockWindowUpdate"
-		end
-
-	cwel_hook_mouse (hwnd: POINTER): BOOLEAN
-		external
-			"C (HWND): EIF_BOOLEAN | %"wel_mousehook.h%""
-		end
-
-	cwel_unhook_mouse: BOOLEAN
-		external
-			"C (): EIF_BOOLEAN | %"wel_mousehook.h%""
-		end
-
-	cwel_get_hook_window: POINTER
-		external
-			"C (): HWND | %"wel_mousehook.h%""
 		end
 
 	cwin_set_class_long (hwnd: POINTER; n_index: INTEGER; new_value: POINTER)

@@ -768,7 +768,7 @@ feature {NONE} -- Agents
 			-- Handle drop actions
 		local
 			l_screen: EV_SCREEN
-			l_item: like item_type
+			l_item: detachable like item_type
 			l_pointer_position: EV_COORDINATE
 		do
 			create l_screen
@@ -905,12 +905,12 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 	internal_pointer_pressed: BOOLEAN
 			-- If pointer button pressed?
 
-	item_at_position (a_screen_x, a_screen_y: INTEGER): like item_type
+	item_at_position (a_screen_x, a_screen_y: INTEGER): detachable like item_type
 			-- <Precursor>
+			-- Result maybe void since there are tool bar drag areas at head of tool bar
 		local
 			l_x, l_y: INTEGER
 			l_items: like internal_items
-			l_result: detachable like item_at_position
 		do
 			from
 				l_x := a_screen_x - screen_x
@@ -918,16 +918,14 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 				l_items := internal_items
 				l_items.start
 			until
-				l_items.after or l_result /= Void
+				l_items.after or Result /= Void
 			loop
-				l_result := l_items.item
-				if not l_result.rectangle.has_x_y (l_x, l_y) then
-					l_result := Void
+				Result := l_items.item
+				if not Result.rectangle.has_x_y (l_x, l_y) then
+					Result := Void
 				end
 				l_items.forth
 			end
-			check l_result /= Void end -- Implied by precondition `in_position'
-			Result := l_result
 		end
 
 	internal_content: detachable SD_TOOL_BAR_CONTENT
@@ -961,14 +959,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

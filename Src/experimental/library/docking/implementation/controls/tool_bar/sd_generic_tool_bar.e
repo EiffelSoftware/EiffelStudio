@@ -10,9 +10,9 @@ deferred class
 
 feature -- Docking query
 
-	item_at_position (a_screen_x, a_screen_y: INTEGER_32): SD_TOOL_BAR_ITEM
+	item_at_position (a_screen_x, a_screen_y: INTEGER_32): detachable SD_TOOL_BAR_ITEM
 			-- Item at `a_screen_x', `a_screen_y'
-			-- Result may be void when there wraps.
+			-- Result may be void when tool bar wraps.
 		require
 			in_position: is_item_position_valid (a_screen_x, a_screen_y)
 		deferred
@@ -369,14 +369,14 @@ feature {SD_WIDGET_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

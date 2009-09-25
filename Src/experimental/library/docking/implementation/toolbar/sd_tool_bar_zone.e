@@ -651,7 +651,7 @@ feature -- Query
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_item: SD_TOOL_BAR_ITEM
+			l_item: detachable SD_TOOL_BAR_ITEM
 		do
 			if tool_bar.is_item_position_valid (a_screen_x, a_screen_y) then
 				l_item := tool_bar.item_at_position (a_screen_x, a_screen_y)
@@ -666,7 +666,7 @@ feature -- Query
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_item: SD_TOOL_BAR_ITEM
+			l_item: detachable SD_TOOL_BAR_ITEM
 		do
 			if tool_bar.is_item_position_valid (a_screen_x, a_screen_y) then
 				l_item := tool_bar.item_at_position (a_screen_x, a_screen_y)

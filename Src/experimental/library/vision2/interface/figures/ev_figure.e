@@ -38,7 +38,8 @@ feature {NONE} -- Initialization
 			assign_draw_id
 			is_show_requested := True
 			internal_is_sensitive := True
-			create points.make (point_count)
+			create points.make (0)
+			points.resize (point_count)
 			create internal_invalid_rectangle
 			set_deny_cursor (Default_deny_cursor)
 			set_accept_cursor (Default_accept_cursor)

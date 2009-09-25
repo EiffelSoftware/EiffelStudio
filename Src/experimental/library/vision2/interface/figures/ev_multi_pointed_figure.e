@@ -15,9 +15,7 @@ feature -- Access
 	point_count: INTEGER
 			-- Dynamic number of points in `Current'.
 		do
-			if points /= Void then
-				Result := points.count
-			end
+			Result := points.count
 		end
 
 	i_th_point (i: INTEGER): EV_RELATIVE_POINT

@@ -69,6 +69,9 @@ feature -- Command
 			l_debug_menu.put_front (l_new_menu_item)
 			auto_recycle (l_new_menu_item)
 
+			l_new_menu_item := develop_window.commands.run_to_this_point_command.new_menu_item
+			l_debug_menu.put_front (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 				--| Debugging tools menu
 			l_debug_menu.put_front (create {EV_MENU_SEPARATOR})

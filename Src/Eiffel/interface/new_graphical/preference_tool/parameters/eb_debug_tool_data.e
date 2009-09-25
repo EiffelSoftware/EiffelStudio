@@ -144,6 +144,7 @@ feature -- Preference
 	edit_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
 	enable_remove_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
 	enable_disable_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
+	run_to_this_point_shortcut_preference: SHORTCUT_PREFERENCE
 
 feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 
@@ -257,6 +258,7 @@ feature -- Preference Strings
 	edit_bp_here_shortcut_string: STRING = "debugger.shortcuts.edit_bp_here"
 	enable_remove_here_shortcut_string: STRING = "debugger.shortcuts.enable_remove_here"
 	enable_disable_bp_here_shortcut_string: STRING = "debugger.shortcuts.enable_disable_bp_here"
+	run_to_this_point_shortcut_string: STRING = "debugger.shortcuts.run_to_this_point"
 
 feature {NONE} -- Implementation
 
@@ -299,6 +301,7 @@ feature {NONE} -- Implementation
 			edit_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, edit_bp_here_shortcut_string,  [False, True, False, "F9"])
 			enable_remove_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, enable_remove_here_shortcut_string,  [False, False, False, "F9"])
 			enable_disable_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, enable_disable_bp_here_shortcut_string,  [False, False, True, "F9"])
+			run_to_this_point_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, run_to_this_point_shortcut_string,  [False, True, False, "F10"])
 		end
 
 	preferences: PREFERENCES
@@ -328,6 +331,7 @@ invariant
 	edit_bp_here_shortcut_preference_not_void: edit_bp_here_shortcut_preference /= Void
 	enable_remove_here_shortcut_preference_not_void: enable_remove_bp_here_shortcut_preference /= Void
 	enable_disable_bp_here_shortcut_preference_not_void: enable_disable_bp_here_shortcut_preference /= Void
+	run_to_this_point_shortcut_preference_not_void: run_to_this_point_shortcut_preference /= Void
 	display_agent_details_preference_not_void: display_agent_details_preference /= Void
 	always_show_callstack_tool_when_stopping_preference_not_void: always_show_callstack_tool_when_stopping_preference /= Void
 

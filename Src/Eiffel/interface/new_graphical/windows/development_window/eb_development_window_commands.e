@@ -135,6 +135,9 @@ feature -- Query
 	enable_disable_bp_here_command: ES_TOGGLE_BREAKPOINT_HERE_CMD
 			-- Command that enable/disable bp on current location
 
+	run_to_this_point_command: ES_EXEC_RUN_TO_THIS_POINT_CMD
+			-- Command to run to the cursor's location
+
 	editor_font_zoom_in_command: EB_EDITOR_FONT_ZOOM_IN_COMMAND
 			-- Command that increase editor font
 
@@ -513,6 +516,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: enable_disable_bp_here_command = a_cmd
 		end
 
+	set_run_to_this_point_command (a_cmd: like run_to_this_point_command)
+			-- Set `run_to_this_point_command'
+		do
+			run_to_this_point_command := a_cmd
+		ensure
+			set: run_to_this_point_command = a_cmd
+		end
+
 	set_editor_font_zoom_in_command (a_cmd: like editor_font_zoom_in_command)
 			-- Set `editor_font_zoom_in_command'
 		do
@@ -647,6 +658,7 @@ feature -- Recycle
 			edit_bp_here_command.recycle
 			enable_remove_bp_here_command.recycle
 			enable_disable_bp_here_command.recycle
+			run_to_this_point_command.recycle
 
 			editor_font_zoom_in_command.recycle
 			editor_font_zoom_in_numpad_command.recycle

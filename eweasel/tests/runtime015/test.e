@@ -11,11 +11,11 @@ feature
 	make (args: ARRAY [STRING]) is
 			-- Run test.
 		local
-			list: ARRAYED_LIST [TEST2]
+			$DECLARATION
 			is_error: BOOLEAN
 		do
 			if not is_error then
-				create list.make (args.item (1).to_integer)
+				$CREATION
 			end
 		rescue
 			if not is_error then

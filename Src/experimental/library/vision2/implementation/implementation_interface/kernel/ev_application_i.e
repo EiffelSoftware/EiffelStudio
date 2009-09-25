@@ -524,7 +524,9 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			-- Screen object used for drawing PND transport line
 		once
 			create Result
-			Result.enable_dashed_line_style
+			if not is_display_remote then
+				Result.enable_dashed_line_style
+			end
 			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 			Result.set_invert_mode
 		end

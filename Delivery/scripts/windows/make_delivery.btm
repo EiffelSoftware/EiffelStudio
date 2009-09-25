@@ -233,9 +233,6 @@ iff not defined NO_COMPILE then
 	cdd %INIT_DIR
 	call update_libraries.btm %EIFFEL_SRC\experimental
 
-	copy %EIFFEL_SRC\library\wel\spec\msc\%ISE_PLATFORM\dll\wel_hook.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\
-	copy %EIFFEL_SRC\library\wel\spec\msc\%ISE_PLATFORM\dll\wel_hook.dll %STUDIO_DIR\esbuilder\spec\%ISE_PLATFORM\bin\
-	copy %EIFFEL_SRC\library\wel\spec\msc\%ISE_PLATFORM\dll\wel_hook.dll %STUDIO_DIR\vision2_demo\spec\%ISE_PLATFORM\bin\
 	cdd %INIT_DIR
 	give_time_to update libraries
 

@@ -275,7 +275,6 @@ feature {NONE} -- Implementation
 			end
 
 			foreground_color_imp := other_imp.foreground_color_imp
-			has_heavy_capture := other_imp.has_heavy_capture
 			help_enabled := other_imp.help_enabled
 			id := other_imp.id
 			internal_current_push_button := other_imp.internal_current_push_button

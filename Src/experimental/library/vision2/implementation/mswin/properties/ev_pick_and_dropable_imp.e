@@ -599,40 +599,14 @@ feature {EV_ANY_I} -- Implementation
 	internal_enable_capture
 			-- Grab all user events.
 			--| Not accessible through the interface of widget.
-		local
-			l_arguments: ARGUMENTS
-			l_path: STRING
 		do
-			inspect application_imp.capture_type
-			when {EV_APPLICATION_IMP}.Capture_heavy then
-				set_heavy_capture
-				if not has_heavy_capture then
-						-- If wel_hook.dll is not available the we fallback to an application wide capture.
-						-- We need to print out an error message
-					create l_arguments
-					l_path := l_arguments.argument (0);
-					l_path.keep_head (l_arguments.argument (0).count - l_arguments.argument (0).split ('\').last.count);
-					io.error.put_string ("'wel_hook.dll' is not present, please copy it over from '%%ISE_EIFFEL%%\studio\spec\%%ISE_PLATFORM%%\bin' to '" + l_path + "'.%N")
-					set_capture
-				end
-			when {EV_APPLICATION_IMP}.Capture_normal then
-				set_capture
-			end
+			set_capture
 		end
 
 	disable_capture
 			-- Release all user events.
 		do
-			inspect application_imp.capture_type
-			when {EV_APPLICATION_IMP}.Capture_heavy then
-				if has_heavy_capture then
-					release_heavy_capture
-				else
-					release_capture
-				end
-			when {EV_APPLICATION_IMP}.Capture_normal then
-				release_capture
-			end
+			release_capture
 		end
 
 	top_level_window_imp: detachable EV_WINDOW_IMP

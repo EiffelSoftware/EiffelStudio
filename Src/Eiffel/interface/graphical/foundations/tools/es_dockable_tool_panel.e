@@ -890,7 +890,7 @@ feature {NONE} -- Action handlers
 			if
 				attached last_focused_widget as l_widget and then
 				not l_widget.has_focus and then
-				l_widget.is_sensitive
+				l_widget.is_sensitive and l_widget.is_displayed
 			then
 				l_widget.set_focus
 			end

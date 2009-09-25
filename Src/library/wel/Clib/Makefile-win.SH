@@ -16,12 +16,12 @@ LINK = $link32
 DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
 OBJECTS = disptchr.$obj enumfont.$obj enum_child_windows.$obj estream.$obj msgboxpa.$obj \
-		diskspace.$obj drawstate.$obj dynload.$obj choose_folder.$obj mousehook.$obj
+		diskspace.$obj drawstate.$obj dynload.$obj choose_folder.$obj capture.$obj
 MT_OBJECTS = MTdisptchr.$obj MTenumfont.$obj MTenum_child_windows.$obj MTestream.$obj MTmsgboxpa.$obj \
-		MTdiskspace.$obj MTdrawstate.$obj MTdynload.$obj MTchoose_folder.$obj MTmousehook.$obj \
+		MTdiskspace.$obj MTdrawstate.$obj MTdynload.$obj MTchoose_folder.$obj MTcapture.$obj \
 		MTwel_thr_init.$obj
 IL_OBJECTS = ILdisptchr.$obj ILenumfont.$obj ILenum_child_windows.$obj ILestream.$obj ILmsgboxpa.$obj \
-		ILdiskspace.$obj ILdrawstate.$obj ILdynload.$obj ILchoose_folder.$obj ILmousehook.$obj
+		ILdiskspace.$obj ILdrawstate.$obj ILdynload.$obj ILchoose_folder.$obj ILcapture.$obj
 
 
 .c.$obj:
@@ -29,7 +29,7 @@ IL_OBJECTS = ILdisptchr.$obj ILenumfont.$obj ILenum_child_windows.$obj ILestream
 
 all:: lib_dir $output_libraries clean
 
-standard:: wel.lib ilwel.lib wel_hook.dll
+standard:: wel.lib ilwel.lib
 mtstandard:: mtwel.lib
 
 ..$(DIR)spec:
@@ -69,10 +69,6 @@ ilwel.lib: $(IL_OBJECTS)
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 
-wel_hook.dll: wel_hook.$obj
-	$(LINK) $(DLL_FLAGS) $? $(DLL_LIBS)
-	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)dll$(DIR)$@
-
 #Multithreaded targets.
 MTnetwork.$obj: network.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
@@ -104,7 +100,7 @@ MTdynload.$obj: dynload.c
 MTchoose_folder.$obj: choose_folder.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
-MTmousehook.$obj: mousehook.c
+MTcapture.$obj: capture.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTwel_thr_init.$obj: wel_thr_init.c
@@ -142,5 +138,5 @@ ILdynload.$obj: dynload.c
 ILchoose_folder.$obj: choose_folder.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
-ILmousehook.$obj: mousehook.c
+ILcapture.$obj: capture.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?

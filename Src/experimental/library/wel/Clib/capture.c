@@ -123,11 +123,10 @@ void cwel_capture (HWND hWnd) {
 		mouse_hook = SetWindowsHookEx (
 			WH_MOUSE_LL,			/* hook type */
 			cwel_mouse_hook_proc,	/* hook procedure */
-			eif_hInstance,			/* handle to application instance */
+			GetModuleHandle(NULL),	/* handle to application instance */
 			0						/* thread identifier */
 			);
 	}
-	return EIF_TRUE;
 }
 
 /*---------------------------------------------------------------------------*/

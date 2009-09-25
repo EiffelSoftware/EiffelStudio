@@ -213,30 +213,28 @@ feature -- Query
 			Result := wide_text.count
 		end
 
-	first_non_blank_token (a_line: like line): EDITOR_TOKEN
+	first_non_blank_token (a_line: like line): detachable EDITOR_TOKEN
 			-- First non blank token in `a_line'.
 		require
 			a_line_not_void: a_line /= Void
 		local
-			l_token: detachable EDITOR_TOKEN
 			l_found: BOOLEAN
 		do
-			from
-				l_token := a_line.first_token
-				if attached {EDITOR_TOKEN_BLANK} l_token then
-					l_found := True
-				end
-			until
-				l_found
-			loop
-				check l_token /= Void end -- Never, otherwise a bug
-				l_token := l_token.next
-				if attached {EDITOR_TOKEN_BLANK} l_token then
-					l_found := True
+			Result := a_line.first_token
+			if Result /= Void then
+				from
+					if not attached {EDITOR_TOKEN_BLANK} Result then
+						l_found := True
+					end
+				until
+					l_found
+				loop
+					Result := Result.next
+					if Result = void or else not attached {EDITOR_TOKEN_BLANK} Result then
+						l_found := True
+					end
 				end
 			end
-			check l_token /= Void end -- Never, otherwise a bug
-			Result := l_token
 		end
 
 	line_pos_in_chars (a_line: like line): INTEGER
@@ -401,7 +399,7 @@ feature {NONE} -- Text Loading
 			curr_string, l_current_string: STRING -- UTF-8
 			j: INTEGER
 		do
-			
+
 
 			lexer.set_tab_size (editor_preferences.tabulation_spaces)
 			lexer.set_in_verbatim_string (False)

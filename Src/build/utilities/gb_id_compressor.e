@@ -88,8 +88,8 @@ feature -- Basic operation
 				objects.forth
 			end
 
-			components.object_handler.objects.clear_all
-			components.object_handler.deleted_objects.clear_all
+			components.object_handler.objects.wipe_out
+			components.object_handler.deleted_objects.wipe_out
 
 				-- Now update all ids stored in objects.
 			from
@@ -188,7 +188,7 @@ feature -- Basic operation
 		do
 			linear := an_object.instance_referers.linear_representation
 				-- Remove all entries from the `instance_referers'.
-			an_object.instance_referers.clear_all
+			an_object.instance_referers.wipe_out
 			from
 				linear.start
 			until

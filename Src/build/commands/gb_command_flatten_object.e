@@ -137,7 +137,7 @@ feature -- Basic Operation
 				current_new_child.all_client_representations.merge_right (current_original_child.all_client_representations.twin)
 
 					-- Clear the instance_refers and merge those from the original object.
-				current_new_child.instance_referers.clear_all
+				current_new_child.instance_referers.wipe_out
 				current_new_child.instance_referers.merge (current_original_child.instance_referers)
 
 				new_children.forth

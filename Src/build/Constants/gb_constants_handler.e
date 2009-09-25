@@ -485,7 +485,7 @@ feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operation
 			pixmap_constants.wipe_out
 			directory_constants.wipe_out
 			components.tools.constants_dialog.reset_contents
-			all_constants.clear_all
+			all_constants.wipe_out
 		end
 
 feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation

@@ -615,7 +615,7 @@ feature -- Access
 			children.wipe_out
 			parent_object := Void
 			events.wipe_out
-			instance_referers.clear_all
+			instance_referers.wipe_out
 			from
 				constants.start
 			until
@@ -947,7 +947,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 				instance_objects.off
 			loop
 				actual_object := components.object_handler.deep_object_from_id (instance_objects.item_for_iteration)
-				all_dependents.clear_all
+				all_dependents.wipe_out
 				all_dependents_recursive (actual_object, all_dependents)
 				all_dependents.put (actual_object, actual_object.id)
 				from
@@ -1158,7 +1158,7 @@ feature {GB_ID_COMPRESSOR, GB_OBJECT} -- Basic operations
 			id := conversion_data @ id
 
 			linear := instance_referers.linear_representation
-			instance_referers.clear_all
+			instance_referers.wipe_out
 			from
 				linear.start
 			until

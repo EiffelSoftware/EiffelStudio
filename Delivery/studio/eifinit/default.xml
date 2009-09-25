@@ -9,8 +9,11 @@
 	<PREF NAME="debugger.delay_before_cleaning_objects_grid" DESCRIPTION="Delay (in milliseconds) before clearing the stacks and objects grid.  By tuning this value, you can reduce the potential flickering of the related grid."><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="debugger.display_agent_details" DESCRIPTION="Should the info about the agent object be displayed?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.dotnet_debugger" DESCRIPTION="Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."><LIST>[EiffelStudio Dbg];cordbg;DbgCLR</LIST></PREF>
-	<PREF NAME="debugger.shortcuts.move_up_watch_expression" DESCRIPTION="."><SHORTCUT ctrl="False" Alt="True" Shift="True">Up</SHORTCUT></PREF>
-	<PREF NAME="debugger.shortcuts.move_down_watch_expression" DESCRIPTION="."><SHORTCUT ctrl="False" Alt="True" Shift="True">Down</SHORTCUT></PREF>
+	<PREF NAME="debugger.shortcuts.edit_bp_here" DESCRIPTION="Edit the breakpoint located at the cursor."><SHORTCUT Ctrl="True" Alt="False" Shift="False">F9</SHORTCUT></PREF>
+<PREF NAME="debugger.shortcuts.enable_disable_bp_here" DESCRIPTION="Enable or Disable the breakpoint located at the cursor."><SHORTCUT Ctrl="False" Alt="False" Shift="True">F9</SHORTCUT></PREF>
+	<PREF NAME="debugger.shortcuts.enable_remove_here" DESCRIPTION="Enable or Remove the breakpoint located at the cursor."><SHORTCUT Ctrl="False" Alt="False" Shift="F9">F9</SHORTCUT></PREF>
+	<PREF NAME="debugger.shortcuts.move_up_watch_expression" DESCRIPTION="Move up the selected expressions from the active watch tool."><SHORTCUT Ctrl="False" Alt="True" Shift="True">Up</SHORTCUT></PREF>
+	<PREF NAME="debugger.shortcuts.move_down_watch_expression" DESCRIPTION="Move down the selected expressions from the active watch tool."><SHORTCUT Ctrl="False" Alt="True" Shift="True">Down</SHORTCUT></PREF>
 	<PREF NAME="debugger.colors.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="debugger.colors.grid_background_color" DESCRIPTION="Background color for the grids of the debugger's tools (default is white)."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="debugger.colors.grid_foreground_color" DESCRIPTION="Foreground color (i.e: text color) for the grids of the debugger's tools (default is black)."><COLOR>0;0;0</COLOR></PREF>
@@ -22,6 +25,7 @@
 	<PREF NAME="debugger.classic_debugger.timeout" DESCRIPTION="Timeout used to start the Eiffel debugger daemon (classic only). Leave it to 0 to use the default environment value."><INTEGER>0</INTEGER></PREF>
 	<PREF NAME="debugger.classic_debugger.debugger_location" DESCRIPTION="Path to the Eiffel debugger daemon (classic). Leave it empty to use the default environment value."><STRING></STRING></PREF>
 	<PREF NAME="debugger.always_compile_before_debug" DESCRIPTION="Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="debugger.always_show_callstack_tool_when_stopping" DESCRIPTION="Always show the callstack tool, when the execution stops (note: if the tool is closed, do not open it)."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.dotnet.keep_stepping_info_dotnet_feature" DESCRIPTION="Should we always try to debug non-Eiffel code in case it calls back into some Eiffel code?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.last_saved_stack_path" HIDDEN="true" DESCRIPTION="Disk location of last saved stack path information."><STRING></STRING></PREF>
 	<PREF NAME="debugger.left_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Properties;closed;0;0;0;0;Breakpoints;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Threads;closed;0;0;0;38;Call Stack;visible;0;0;0;38</LIST></PREF>

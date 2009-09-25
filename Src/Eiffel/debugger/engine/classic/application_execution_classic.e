@@ -226,14 +226,18 @@ feature -- Execution
 
 feature -- Remote access to RT_
 
-	remote_rt_object: ABSTRACT_DEBUG_VALUE
+	imp_remote_rt_object: detachable ABSTRACT_REFERENCE_VALUE
 			-- Return the remote rt_object
 		do
 			ewb_request.send_rqst_1 (rqst_rt_operation, rtop_dump_object)
 			ewb_request.reset_recv_value
 			ewb_request.recv_value (ewb_request)
-			Result := ewb_request.item
-			Result.set_hector_addr
+			if attached {like imp_remote_rt_object} ewb_request.item as ref then
+				Result := ref
+				Result.set_hector_addr
+			else
+				check ewb_request.item = Void end
+			end
 			ewb_request.reset_recv_value
 		end
 

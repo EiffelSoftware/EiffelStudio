@@ -107,7 +107,7 @@ feature -- Status report
 
 feature -- Error notification: main categories
 
-	notify_error (a_code: INTEGER; a_tag, a_msg: STRING_GENERAL)
+	notify_error (a_code: INTEGER; a_tag, a_msg: detachable STRING_GENERAL)
 			-- Notify error with `a_code', `a_tag' and `a_msg'
 		require
 			valid_code: a_code /= 0
@@ -127,17 +127,17 @@ feature -- Error notification: main categories
 			error_list.extend (err)
 		end
 
-	notify_error_syntax (mesg: STRING_GENERAL)
+	notify_error_syntax (mesg: detachable STRING_GENERAL)
 		do
 			notify_error (cst_error_syntax, Void, mesg)
 		end
 
-	notify_error_expression (mesg: STRING_GENERAL)
+	notify_error_expression (mesg: detachable STRING_GENERAL)
 		do
 			notify_error (cst_error_expression, Void, mesg)
 		end
 
-	notify_error_evaluation (mesg: STRING_GENERAL)
+	notify_error_evaluation (mesg: detachable STRING_GENERAL)
 		do
 			if mesg = Void then
 				notify_error (cst_error_evaluation, Void, Debugger_names.Cst_error_occurred)
@@ -153,12 +153,12 @@ feature -- Error notification: main categories
 
 feature -- Error notification: expression error
 
-	notify_error_expression_and_tag (mesg: STRING_GENERAL; t: STRING_GENERAL)
+	notify_error_expression_and_tag (mesg: detachable STRING_GENERAL; t: detachable STRING_GENERAL)
 		do
 			notify_error (cst_error_expression, t, mesg)
 		end
 
-	notify_error_list_expression_and_tag (a_error_list: LIST [ERROR])
+	notify_error_list_expression_and_tag (a_error_list: detachable LIST [ERROR])
 		local
 			l_error: ERROR
 			l_cursor: CURSOR
@@ -259,7 +259,7 @@ feature -- Error notification: evaluation error
 			notify_error_evaluation (Debugger_names.msg_error_vst1_on_class_context (cn, fn))
 		end
 
-	notify_error_evaluation_aborted (m: STRING_GENERAL)
+	notify_error_evaluation_aborted (m: detachable STRING_GENERAL)
 		do
 			if m = Void then
 				notify_error (Cst_error_evaluation_aborted, Void, Debugger_names.Cst_error_evaluation_aborted)
@@ -268,7 +268,7 @@ feature -- Error notification: evaluation error
 			end
 		end
 
-	notify_error_not_implemented (mesg: STRING_GENERAL)
+	notify_error_not_implemented (mesg: detachable STRING_GENERAL)
 		do
 			notify_error (cst_error_not_implemented, Void, mesg)
 		end
@@ -287,7 +287,7 @@ feature -- Error notification: evaluation error
 			notify_error_not_implemented (Debugger_names.msg_error_should_not_occur_during_evaluation (a))
 		end
 
-	notify_error_evaluation_creation_expression_not_implemented (tn: STRING_GENERAL)
+	notify_error_evaluation_creation_expression_not_implemented (tn: detachable STRING_GENERAL)
 		do
 			notify_error_not_implemented (Debugger_names.msg_error_unable_to_evaluate_creation_expression (tn))
 		end

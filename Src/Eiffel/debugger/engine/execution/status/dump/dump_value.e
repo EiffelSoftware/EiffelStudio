@@ -107,6 +107,8 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 
 	set_manifest_string_value (value: STRING; dtype: CLASS_C)
 			-- make a string item initialized to `value'
+		require
+			value_attached: value /= Void
 		do
 			value_string := value
 			type := Type_manifest_string

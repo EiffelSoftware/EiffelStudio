@@ -194,7 +194,7 @@ feature -- Messages
 	m_confirm_use_this_directory_question (a_d: STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation (" -> Use this directory [$1] ?"), [a_d]) end
 
-	m_error_invalid_value (a_s: STRING_GENERAL): STRING_32
+	m_error_invalid_value (a_s: detachable STRING_GENERAL): STRING_32
 			do
 				if a_s /= Void then
 					Result := locale.formatted_string (locale.translation (" (!) Please enter a valid value [$1]"), [a_s])
@@ -360,7 +360,7 @@ feature -- Expression evaluation messages
 			a_not_void: a /= Void
 		do Result := locale.formatted_string (locale.translation ("$1 => this should not occur during expression evaluation."), [a.generator]) end
 
-	msg_error_unable_to_evaluate_creation_expression (tn: STRING_GENERAL): STRING_32
+	msg_error_unable_to_evaluate_creation_expression (tn: detachable STRING_GENERAL): STRING_32
 		require
 			tn_attached: tn /= Void
 		do
@@ -477,7 +477,7 @@ feature -- Expression evaluation messages
 	Cst_error_cannot_find_complete_dynamic_type_of_expanded_type: STRING_32
 		do Result := locale.translation ("Cannot find complete dynamic type of an expanded type.") end
 
-	msg_error_native_array_partially_supported (fname: STRING_GENERAL): STRING_32
+	msg_error_native_array_partially_supported (fname: detachable STRING_GENERAL): STRING_32
 		do
 			if fname = Void then
 				Result := locale.translation ("NATIVE_ARRAY is not yet fully supported.")
@@ -486,7 +486,7 @@ feature -- Expression evaluation messages
 			end
 		end
 
-	msg_error_unable_to_evaluate_call (cname,fname: STRING_GENERAL; addr: STRING_GENERAL; desc: STRING_GENERAL): STRING_32
+	msg_error_unable_to_evaluate_call (cname,fname: STRING_GENERAL; addr: detachable STRING_GENERAL; desc: detachable STRING_GENERAL): STRING_32
 		require
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
@@ -529,12 +529,12 @@ feature -- Expression evaluation messages
 			fname_not_void: fname /= Void
 		do Result := locale.formatted_string (locale.translation ("Unable to evaluate (non once) routine {$1}.$2 on Void object or type name"), [cname, fname]) end
 
-	msg_error_exception_occurred_during_evaluation (cname, fname: STRING_GENERAL; a_trace: STRING_GENERAL): STRING_32
+	msg_error_exception_occurred_during_evaluation (cname, fname: STRING_GENERAL; a_trace: detachable STRING_GENERAL): STRING_32
 		require
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
 		local
-			l_trace: STRING_GENERAL
+			l_trace: detachable STRING_GENERAL
 		do
 			l_trace := a_trace
 			if l_trace = Void then
@@ -543,7 +543,7 @@ feature -- Expression evaluation messages
 			Result := locale.formatted_string (locale.translation ("Exception occurred during evaluation of {$1}.$2:%N$3"), [cname, fname, l_trace])
 		end
 
-	msg_error_once_evaluation_failed (fname: STRING_GENERAL; msg: STRING_GENERAL): STRING_32
+	msg_error_once_evaluation_failed (fname: STRING_GENERAL; msg: detachable STRING_GENERAL): STRING_32
 		require
 			fname_not_void: fname /= Void
 		do

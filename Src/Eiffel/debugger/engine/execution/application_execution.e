@@ -52,6 +52,7 @@ feature -- Recylcing
 	recycle
 			-- Clean debugging session data
 		do
+			clear_internals
 			debugger_manager.object_manager.reset
 			if is_running then
 				destroy_status
@@ -287,6 +288,7 @@ feature -- Execution
 			debug ("debugger_trace")
 				print (generator + ".continue %N")
 			end
+			clear_internals
 			release_all_but_kept_object
 			continue_ignoring_kept_objects
 		end
@@ -371,44 +373,69 @@ feature -- Execution
 		deferred
 		end
 
-feature -- Remote: Access to RT_
+	clear_internals
+			-- Clear internal values
+		do
+			if attached internal_remote_rt_object as rto then
+				rto.recycle
+				internal_remote_rt_object := Void
+			end
+			if attached internal_remote_rt_execution_recorder as rt_recorder then
+				rt_recorder.recycle
+				internal_remote_rt_execution_recorder := Void
+			end
+		end
 
-	remote_rt_object: ABSTRACT_DEBUG_VALUE
+feature -- Access: Remote access to RT_
+
+	remote_rt_object: detachable DBG_RT_EXTENSION_PROXY
+			-- Return the remote rt_object
+		do
+			Result := internal_remote_rt_object
+			if Result = Void and then attached imp_remote_rt_object as rto then
+				create Result.make (rto, Current)
+				internal_remote_rt_object := Result
+			end
+		end
+
+feature {NONE} -- Implementation: Remote
+
+	imp_remote_rt_object: detachable ABSTRACT_REFERENCE_VALUE
 			-- Return the remote rt_object
 		deferred
 		end
 
+	internal_remote_rt_object: like remote_rt_object
+			-- Cached value of `remote_rt_object'
+
+	internal_remote_rt_execution_recorder: like remote_rt_execution_recorder
+			-- Cached value of `remote_rt_execution_recorder'
+
 feature -- Remote: execution recorder on RT_
 
-	remote_rt_execution_recorder_value: DUMP_VALUE
+	remote_rt_execution_recorder: detachable DBG_RT_EXECUTION_RECORDER_PROXY
 			-- Return the remote rt_object.execution_recorder
 		do
-			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
-				Result := query_evaluation_on (rto, Void, rto.dynamic_class, "execution_recorder", Void)
+			Result := internal_remote_rt_execution_recorder
+			if Result = void and then attached remote_rt_object as rto then
+				Result := rto.execution_recorder
+				internal_remote_rt_execution_recorder := Result
 			end
 		end
 
 	activate_execution_replay_recording (b: BOOLEAN): BOOLEAN
 			-- Activate Execution replay recording on debuggee depending of `b'
 		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-			dv_fact: DUMP_VALUE_FACTORY
 			ct: CLASS_TYPE
 			fi: FEATURE_I
-			i32cl: CLASS_C
 			ref: DUMP_VALUE
 			cid,fid,dep,line: INTEGER
-			dbg: DEBUGGER_MANAGER
 		do
 			check execution_replay_recording_not_b: b /= status.replay_recording end
 			status.set_replay_recording (b)
 			check status.replay_recording = b end
 
-			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
-				dbg := debugger_manager
-				dv_fact := dbg.dump_value_factory
-				i32cl := dbg.compiler_data.integer_32_class_c
-
+			if attached remote_rt_object as rto then
 				cid := 0
 				fid := 0
 				dep := 1
@@ -432,18 +459,8 @@ feature -- Remote: execution recorder on RT_
 					end
 					dep := dep.max (current_call_stack_depth)
 				end
-				if ref = Void then
-					ref := dv_fact.new_void_value (dbg.compiler_data.any_class_c)
-				end
-				create params.make (6) -- 	(b: BOOLEAN; ref: ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; break_index: INTEGER)
-				params.extend (dv_fact.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
-				params.extend (ref) -- ref				
-				params.extend (dv_fact.new_integer_32_value (cid, i32cl)) -- cid
-				params.extend (dv_fact.new_integer_32_value (fid, i32cl)) -- fid
-				params.extend (dv_fact.new_integer_32_value (dep, i32cl)) -- dep
-				params.extend (dv_fact.new_integer_32_value (line, i32cl)) -- break_index
 
-				Result := command_evaluation_on (rto, Void, rto.dynamic_class, "activate_execution_replay_recording", params)
+				Result := rto.activate_execution_replay_recording (b, ref, cid, fid, dep, line)
 			end
 		ensure
 			execution_replay_recording: status.replay_recording = b
@@ -491,23 +508,9 @@ feature -- Remote: execution recorder on RT_
 
 	remote_activate_replay (b: BOOLEAN)
 			-- Remotely Activate replay
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-			dv_fact: DUMP_VALUE_FACTORY
-			dbg: DEBUGGER_MANAGER
-			res: BOOLEAN
 		do
-			if (attached remote_rt_execution_recorder_value as ex_rec_dv) and then not ex_rec_dv.is_void then
-				dbg := debugger_manager
-				dv_fact := dbg.dump_value_factory
-				create params.make (1)
-				params.extend (dv_fact.new_boolean_value (b, dbg.compiler_data.boolean_class_c))
-				res := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "activate_replay", params)
-				if res and then (attached current_replayed_call as rcse) then
-					status.set_current_replayed_call (rcse)
-				else
-					status.set_current_replayed_call (Void)
-				end
+			if attached remote_rt_execution_recorder as rt_recorder then
+				rt_recorder.activate_replay (b)
 			end
 		end
 
@@ -517,164 +520,43 @@ feature -- Remote: execution recorder on RT_
 		require
 			app_is_stopped: is_stopped
 			replay_activated: status.replay_activated
-		local
-			prev_d, d: INTEGER
-			params: ARRAYED_LIST [DUMP_VALUE]
-			dv_fact: DUMP_VALUE_FACTORY
-			i32cl: CLASS_C
-			dir, nb: INTEGER
-			dbg: DEBUGGER_MANAGER
 		do
-			dir := direction
-			prev_d := status.replayed_depth
-
-			nb := 1
-
-			if (attached remote_rt_execution_recorder_value as ex_rec_dv) and then not ex_rec_dv.is_void then
-				dbg := debugger_manager
-				dv_fact := dbg.dump_value_factory
-				i32cl := dbg.compiler_data.integer_32_class_c
-				create params.make (2)
-				params.extend (dv_fact.new_integer_32_value (dir, i32cl))
-				params.extend (dv_fact.new_integer_32_value (nb, i32cl))
-
-				if attached status.current_call_stack as ccs then
-					ccs.reset_call_stack_depth (prev_d)
-					Result := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replay", params)
-					if Result then
-						if attached current_replayed_call as rcse then
-							status.set_current_replayed_call (rcse)
-						else
-							check should_not_occur: False end
-						end
-					else
-						--| Error, so keep current data
-						--| Note: or maybe ... popup error message, and exit debugging ..?
---						status.set_current_replayed_call (Void)
-					end
-					d := status.replayed_depth
-					if d > 0 then
-						ccs.reset_call_stack_depth (d)
-					end
-					debugger_manager.incremente_debugging_operation_id
-				end
+			if attached remote_rt_execution_recorder as rt_recorder then
+				Result := rt_recorder.replay (direction)
 			end
 		end
 
 	replay_to_point (a_id: STRING): BOOLEAN
 			-- Replay to point identified by `a_id'
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-			dv_fact: DUMP_VALUE_FACTORY
-			dbg: DEBUGGER_MANAGER
-			prev_d,d1,d2: INTEGER
 		do
-			if (attached remote_rt_execution_recorder_value as ex_rec_dv) and then not ex_rec_dv.is_void then
-				prev_d := status.replayed_depth
-
-				dbg := debugger_manager
-				dv_fact := dbg.dump_value_factory
-				create params.make (1)
-				params.extend (dv_fact.new_manifest_string_value (a_id, dbg.compiler_data.string_8_class_c))
-				Result := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replay_to_point", params)
-				if Result then
-					if attached current_replayed_call as rcse then
-						status.set_current_replayed_call (rcse)
-					else
-						check should_not_occur: False end
-					end
-				else
-					--| Error, so keep current data
-					--| Note: or maybe ... popup error message, and exit debugging ..?
---						status.set_current_replayed_call (Void)
-				end
-				if attached status.current_call_stack as ccs then
-					from
-						d2 := status.replayed_depth
-						if d2 > prev_d then
-							d1 := prev_d
-						else
-							d1 := d2
-							d2 := prev_d
-						end
-					until
-						d1 > d2
-					loop
-						ccs.reset_call_stack_depth (d1)
-						d1 := d1 + 1
-					end
-				end
-				debugger_manager.incremente_debugging_operation_id
+			if attached remote_rt_execution_recorder as rt_recorder then
+				Result := rt_recorder.replay_to_point (a_id)
 			end
 		end
 
 	query_replay_status (direction: INTEGER): INTEGER
 			-- Query exec replay status for direction `direction'
 			-- Return the number of available steps.
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-			dv_fact: DUMP_VALUE_FACTORY
-			i32cl: CLASS_C
-			dv: DUMP_VALUE
-			dir: INTEGER
-			dbg: DEBUGGER_MANAGER
 		do
-			dir := direction
-			if (attached remote_rt_execution_recorder_value as ex_rec_dv) and then not ex_rec_dv.is_void then
-				dbg := debugger_manager
-				dv_fact := dbg.dump_value_factory
-				i32cl := dbg.compiler_data.integer_32_class_c
-				create params.make (1)
-				params.extend (dv_fact.new_integer_32_value (dir, i32cl))
-				dv := query_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replay_query", params)
-				if dv.is_basic then
-					Result := dv.as_dump_value_basic.value_integer_32
-				end
+			if attached remote_rt_execution_recorder as rt_recorder then
+				Result := rt_recorder.query_replay_status (direction)
 			end
 		end
 
 	current_replayed_call: REPLAYED_CALL_STACK_ELEMENT
-		local
-			dv_fact: DUMP_VALUE_FACTORY
-			dv: DUMP_VALUE
-			dbg: DEBUGGER_MANAGER
+			-- Current replayed call representation
 		do
-			if (attached remote_rt_execution_recorder_value as ex_rec_dv) and then not ex_rec_dv.is_void then
-				dbg := debugger_manager
-				dv_fact := dbg.dump_value_factory
-				dv := query_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replayed_call_details", Void)
-				if dv /= Void and then not dv.is_void then
-					if attached dv.string_representation as s32 and then s32.count > 0 then
-						create Result.make_from_string ("" , s32)
-					end
-				end
+			if attached remote_rt_execution_recorder as rt_recorder then
+				Result := rt_recorder.current_replayed_call
 			end
 		end
 
 	replay_callstack_details (a_id: STRING; nb: INTEGER): detachable REPLAYED_CALL_STACK_ELEMENT
 			-- Details related to replayed callstack identified by `a_id'
 			-- get the information for `nb' levels
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-			dv_fact: DUMP_VALUE_FACTORY
-			dv: DUMP_VALUE
-			dbg: DEBUGGER_MANAGER
 		do
-			if (attached remote_rt_execution_recorder_value as ex_rec_dv) and then not ex_rec_dv.is_void then
-				dbg := debugger_manager
-				dv_fact := dbg.dump_value_factory
-				create params.make (2)
-				params.extend (dv_fact.new_manifest_string_value (a_id, dbg.compiler_data.string_8_class_c))
-				params.extend (dv_fact.new_integer_32_value (nb, dbg.compiler_data.integer_32_class_c))
-				dv := query_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "callstack_record_details", params)
-				if dv /= Void and then not dv.is_void then
-					if
-						attached dv.string_representation as s32 and then
-						s32.count > 0
-					then
-						create Result.make_from_string (a_id , s32)
-					end
-				end
+			if attached remote_rt_execution_recorder as rt_recorder then
+				Result := rt_recorder.replay_callstack_details (a_id, nb)
 			end
 		end
 
@@ -683,50 +565,18 @@ feature -- Remote: Store/Load object on RT_
 	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN
 			-- Store in file `fn' on the application the object addressed by `oa'
 			-- Return True is succeed.
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-			dv_fact: DUMP_VALUE_FACTORY
-			ref_dv, fn_dv: DUMP_VALUE
-			dbg: DEBUGGER_MANAGER
 		do
-			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
-				dbg := debugger_manager
-				dv_fact := dbg.dump_value_factory
-				ref_dv := dv_fact.new_object_value (oa, Void)
-				fn_dv := dv_fact.new_manifest_string_value (fn, dbg.compiler_data.string_8_class_c)
-
-				create params.make (2)
-				params.extend (ref_dv) -- ref
-				params.extend (dv_fact.new_manifest_string_value (fn, dbg.compiler_data.string_8_class_c)) -- fn
-
-				Result := query_evaluation_on (rto, Void, rto.dynamic_class, "saved_object_to", params) /= Void
+			if attached remote_rt_object as rto then
+				Result := rto.store_object (oa, fn)
 			end
 		end
 
-	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): DUMP_VALUE
+	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): detachable DUMP_VALUE
 			-- Debug value related to remote loaded object from file `fn'.
 			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-			dv_fact: DUMP_VALUE_FACTORY
-			ref_dv, fn_dv: DUMP_VALUE
-			dbg: DEBUGGER_MANAGER
 		do
-			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
-				dbg := debugger_manager
-				dv_fact := dbg.dump_value_factory
-				if oa /= Void then
-					ref_dv := dv_fact.new_object_value (oa, Void)
-				else
-					ref_dv := dv_fact.new_void_value (dbg.compiler_data.any_class_c)
-				end
-				fn_dv := dv_fact.new_manifest_string_value (fn, dbg.compiler_data.string_8_class_c)
-
-				create params.make (2)
-				params.extend (ref_dv) -- ref
-				params.extend (dv_fact.new_manifest_string_value (fn, dbg.compiler_data.string_8_class_c)) -- fn
-
-				Result := query_evaluation_on (rto, Void, rto.dynamic_class, "object_loaded_from", params)
+			if attached remote_rt_object as rto then
+				Result := rto.loaded_object (oa, fn)
 			end
 		end
 
@@ -747,16 +597,14 @@ feature -- Debuggee: runtime
 			-- Get the `generating_type' as STRING by evaluation on the debuggee
 		require
 			a_value_attached: a_value /= Void
-		local
-			v: DBG_EVALUATED_VALUE
-			s: detachable like debugger_type_string_evaluation
 		do
 			if a_value.is_void then
 				Result := "NONE"
 			else
-				create v.make_with_value (a_value)
-				s := one_arg_resulting_string_evaluation ("debugger_type_string", v, 0,0, error_handler)
-				if s /= Void then
+				if
+					attached remote_rt_object as rto and then
+					attached rto.debugger_type_string_evaluation (a_value, error_handler) as s
+				then
 					Result := s
 				else
 					create Result.make_empty
@@ -768,87 +616,63 @@ feature -- Debuggee: runtime
 
 feature -- Debuggee: evaluation
 
-	tilda_equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
+	tilda_equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
 		require
-			a_value_attached: a_value /= Void
-			a_other_value_attached: a_other_value /= Void
+			a_value_attached: a_value /= Void and then a_value.has_value
+			a_other_value_attached: a_other_value /= Void and then a_other_value.has_value
 		do
-			Result := two_args_resulting_boolean_evaluation ("tilda_equal_evaluation", a_value, a_other_value, error_handler)
+			if attached remote_rt_object as rto then
+				if
+					attached a_value.value as l_value and
+					attached a_other_value.value as l_other_value
+				then
+					Result := rto.tilda_equal_evaluation (l_value, l_other_value, error_handler)
+				elseif attached error_handler as err then
+					err.notify_error_evaluation_report_to_support (Void)
+				end
+			end
 		end
 
-	is_equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
+	is_equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
 		require
 			a_value_attached: a_value /= Void
 			a_other_value_attached: a_other_value /= Void
 		do
-			Result := two_args_resulting_boolean_evaluation ("is_equal_evaluation", a_value, a_other_value, error_handler)
+			if attached remote_rt_object as rto then
+				if
+					attached a_value.value as l_value and
+					attached a_other_value.value as l_other_value
+				then
+					Result := rto.is_equal_evaluation (l_value, l_other_value, error_handler)
+				elseif attached error_handler as err then
+					err.notify_error_evaluation_report_to_support (Void)
+				end
+			end
 		end
 
-	equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: DBG_ERROR_HANDLER): BOOLEAN
+	equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
 		require
 			a_value_attached: a_value /= Void
 			a_other_value_attached: a_other_value /= Void
 		do
-			Result := two_args_resulting_boolean_evaluation ("equal_evaluation", a_value, a_other_value, error_handler)
+			if attached remote_rt_object as rto then
+				if
+					attached a_value.value as l_value and
+					attached a_other_value.value as l_other_value
+				then
+					Result := rto.equal_evaluation (l_value, l_other_value, error_handler)
+				elseif attached error_handler as err then
+					err.notify_error_evaluation_report_to_support (Void)
+				end
+			end
 		end
 
 feature -- Expression evaluation
 
-	one_arg_resulting_string_evaluation (a_featname: STRING; a_value: DBG_EVALUATED_VALUE; min,max: INTEGER; a_error_handler: detachable DBG_ERROR_HANDLER): STRING
-		require
-			a_value_attached: a_value /= Void
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-		do
-			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
-				create params.make (1)
-				params.extend (a_value.value)
-				if
-					attached query_evaluation_on (rto, Void, rto.dynamic_class, a_featname, params) as dv and then
-					dv.has_formatted_output
-				then
-					if min >= max then
-						Result := dv.string_representation
-					else
-						Result := dv.truncated_string_representation (min, max)
-					end
-				else
-					if a_error_handler /= Void then
-						a_error_handler.notify_error_evaluation_report_to_support (Void)
-					end
-				end
-			end
-		end
-
-	two_args_resulting_boolean_evaluation (a_featname: STRING; a_value, a_other_value: DBG_EVALUATED_VALUE; a_error_handler: DBG_ERROR_HANDLER): BOOLEAN
-		require
-			a_value_attached: a_value /= Void
-			a_other_value_attached: a_other_value /= Void
-		local
-			params: ARRAYED_LIST [DUMP_VALUE]
-		do
-			if attached {ABSTRACT_REFERENCE_VALUE} remote_rt_object as rto then
-				create params.make (2)
-				params.extend (a_value.value)
-				params.extend (a_other_value.value)
-				if
-					attached query_evaluation_on (rto, Void, rto.dynamic_class, a_featname, params) as dv and then
-					dv.is_valid_value and then
-					dv.is_type_boolean
-				then
-					Result := dv.as_dump_value_basic.value_boolean
-				else
-					if a_error_handler /= Void then
-						a_error_handler.notify_error_evaluation_report_to_support (Void)
-					end
-				end
-			end
-		end
-
 	string_field_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING): detachable STRING_32
 			-- String representation of `{cl}.fname' evaluated on `edv'.
 		require
-			edv_not_void: edv /= Void
+			target_not_void: e /= Void or edv /= Void
 			cl_not_void: cl /= Void
 		local
 			dv: DUMP_VALUE
@@ -859,7 +683,7 @@ feature -- Expression evaluation
 			end
 		end
 
-	query_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING; params: LIST [DUMP_VALUE]): DUMP_VALUE
+	query_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING; params: LIST [DUMP_VALUE]): detachable DUMP_VALUE
 			-- command `{cl}.fname' evaluation on `edv'
 			-- using `params' as argument if any
 		require
@@ -911,11 +735,12 @@ feature -- Expression evaluation
 			end
 		end
 
-	attribute_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C): DUMP_VALUE
+	attribute_evaluation_on (e: detachable ABSTRACT_REFERENCE_VALUE; obj: detachable DUMP_VALUE; f: FEATURE_I; cl: CLASS_C): DUMP_VALUE
 			-- Evaluation's result for `a_expr' in current context
 			-- (note: Result = Void implies an error occurred)
 		require
 			is_stopped: is_stopped
+			target_not_void: e /= Void or obj /= Void
 		local
 			dbg_eval: DBG_EVALUATOR
 			tgt: DUMP_VALUE

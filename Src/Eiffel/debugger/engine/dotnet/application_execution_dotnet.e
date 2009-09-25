@@ -385,14 +385,15 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remote_rt_object: EIFNET_ABSTRACT_DEBUG_VALUE
+	imp_remote_rt_object: detachable EIFNET_DEBUG_REFERENCE_VALUE
 			-- Return the remote rt_object
-		local
-			icdv: ICOR_DEBUG_VALUE
 		do
-			icdv := remote_rt_object_icd_value
-			if icdv /= Void and then (attached system.rt_extension_class as cl) then
-				Result := debug_value_from_icdv (icdv, cl.compiled_class)
+			if
+			 	attached system.rt_extension_class as cl and then
+				attached remote_rt_object_icd_value as icdv and then
+				attached {EIFNET_DEBUG_REFERENCE_VALUE} debug_value_from_icdv (icdv, cl.compiled_class) as ref
+			then
+				Result := ref
 			end
 		end
 
@@ -401,7 +402,6 @@ feature -- Remote access to RT_
 			-- Return True is succeed.
 		local
 			icdv, r: ICOR_DEBUG_VALUE
-			rto: like remote_rt_object
 			icdf: ICOR_DEBUG_FUNCTION
 			args: ARRAY [ICOR_DEBUG_VALUE]
 			i_ref, i_fn: ICOR_DEBUG_VALUE
@@ -409,8 +409,7 @@ feature -- Remote access to RT_
 			--| This is optimization for dotnet
 			--| do not call Precursor
 			if attached {EIFNET_ABSTRACT_DEBUG_VALUE} kept_object_item (oa) as dv then
-				rto := remote_rt_object
-				if rto /= Void then
+				if attached {EIFNET_ABSTRACT_DEBUG_VALUE} remote_rt_object as rto then
 					icdf := rto.icd_value_info.value_icd_function ("saved_object_to")
 					icdv := rto.icd_referenced_value
 					if icdf /= Void then
@@ -439,7 +438,7 @@ feature -- Remote access to RT_
 		do
 			--| This is optimization for dotnet
 			--| do not call Precursor
-			if attached remote_rt_object as rto then
+			if attached {EIFNET_ABSTRACT_DEBUG_VALUE} remote_rt_object as rto then
 				icdv := rto.icd_referenced_value
 				icdf := rto.icd_value_info.value_icd_function ("object_loaded_from")
 				if icdf /= Void then

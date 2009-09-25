@@ -1377,7 +1377,7 @@ feature -- Label texts
 	l_no_cluster_bra: STRING_32 			do Result := locale.translation ("(no_cluster)") end
 	l_no_views_are_available: STRING_32 	do Result := locale.translation ("No views are available for this cluster") end
 	l_no_information_available: STRING_32 		do Result := locale.translation ("No information") end
-	l_Not_in_system_no_info: STRING_32	do Result := locale.translation("Select a class which is fully compiled to have information about it.")	end
+	l_Not_in_system_no_info: STRING_32	do Result := locale.translation("Class has not been compiled, no information is available")	end
 	l_Not_yet_called: STRING_32			do Result := locale.translation("Not yet called")	end
 	l_Called: STRING_32					do Result := locale.translation("Called")	end
 	l_Cannot_create_test_case_files: STRING_32	do Result := locale.translation("Can't create test case files")	end

@@ -70,6 +70,7 @@ feature {NONE} -- Initialization
 				-- default tool.
 			create l_redirector.make (a_widget.editor.dev_window)
 			l_redirector.bind (a_widget.editor.editor_drawing_area, Current)
+			a_widget.editor.editor_drawing_area.drop_actions.set_veto_pebble_function (agent (s: STONE): BOOLEAN do Result := True end)
 			auto_recycle (l_redirector)
 
 				-- Recieve notifications when a new line has been added to the output. This ensures the output

@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 			make_with_tool
 			if text_area /= Void then
 				stone_director.bind (text_area.editor_drawing_area, Current)
+				text_area.editor_drawing_area.drop_actions.set_veto_pebble_function (agent (s: STONE): BOOLEAN do Result := True end)
 			end
 		end
 

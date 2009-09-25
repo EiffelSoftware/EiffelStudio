@@ -363,6 +363,7 @@ feature -- Command
 			l_dev_commands.set_edit_bp_here_command (create {ES_EDIT_BREAKPOINT_HERE_CMD}.make (develop_window))
 			l_dev_commands.set_enable_remove_bp_here_command (create {ES_TOGGLE_BREAKPOINT_HERE_CMD}.make_enable_remove (develop_window))
 			l_dev_commands.set_enable_disable_bp_here_command (create {ES_TOGGLE_BREAKPOINT_HERE_CMD}.make_enable_disable (develop_window))
+			l_dev_commands.set_run_to_this_point_command (create {ES_EXEC_RUN_TO_THIS_POINT_CMD}.make (develop_window))
 
 
 			create l_editor_font_zoom_in_command.make (develop_window)

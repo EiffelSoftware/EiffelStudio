@@ -1762,6 +1762,7 @@ test	storable-removing-attachment-marks	store021 tcf pass storable attached_type
 test	store-expanded-class-type-2	store022 tcf pass storable expanded
 test	store-volatile-attributes	store023 tcf pass storable
 test	stream-independent-store	store024 tcf pass storable stream special
+test	attached-independent-store	store025 tcf pass storable void-safe
 
 -- Flat, short, flatshort tests
 

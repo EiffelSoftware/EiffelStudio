@@ -1,0 +1,81 @@
+test_name 	 attached-independent-store
+test_description Using independent store to store/retrieve a string between void-safe and non void-safe systems fails.
+
+copy_raw test.e $CLUSTER test.e
+
+
+copy_sub Ace $TEST Ace
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result  ok
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_work NONE exec_output $TEST 0
+execute_result  ok
+
+execute_final NONE exec_output $TEST 2
+execute_result ok
+
+
+cleanup_compile
+copy_sub Ace.safe $TEST Ace
+
+compile_frozen
+compile_result  ok
+c_compile_work
+c_compile_result  ok
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+
+execute_work NONE exec_output $TEST 1
+execute_result  ok
+
+execute_final NONE exec_output $TEST 3
+execute_result ok
+
+execute_work NONE exec_output_1 $TEST
+execute_result  ok
+
+execute_final NONE exec_output_3 $TEST
+execute_result ok
+
+
+
+cleanup_compile
+copy_sub Ace $TEST Ace
+
+compile_frozen
+compile_result  ok
+c_compile_work
+c_compile_result  ok
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+
+execute_work NONE exec_output_0 $TEST
+execute_result  ok
+
+execute_final NONE exec_output_2 $TEST
+execute_result ok
+
+
+compare exec_output_0 output
+compare exec_output_1 output
+compare exec_output_2 output
+compare exec_output_3 output
+
+
+test_end

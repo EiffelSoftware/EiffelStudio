@@ -67,9 +67,19 @@ feature -- Properties
 
 	empty_widget: EV_WIDGET
 			-- Widget displayed when no information can be displayed.
+		local
+			l_frame: EV_FRAME
 		do
 			if internal_empty_widget = Void then
-				new_empty_widget
+				if widget_owner /= Void then
+					internal_empty_widget := widget_owner.empty_widget
+				else
+					create l_frame
+					l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
+					l_frame.set_background_color (preferences.editor_data.normal_background_color)
+					internal_empty_widget := l_frame
+					internal_empty_widget.drop_actions.extend (agent execute_with_stone)
+				end
 			end
 			Result := internal_empty_widget
 		end
@@ -651,22 +661,6 @@ feature {NONE} -- Implementation
 	internal_empty_widget: EV_WIDGET
 			-- Widget displayed when no information can be displayed.	
 
-	new_empty_widget
-			-- Initialize a default empty_widget.
-		local
-			l_frame: EV_FRAME
-		do
-			create l_frame
-			l_frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
-			l_frame.set_background_color (preferences.editor_data.normal_background_color)
-			internal_empty_widget := l_frame
-			if widget_owner /= Void then
-				internal_empty_widget.drop_actions.extend (agent widget_owner.drop_stone)
-			else
-				internal_empty_widget.drop_actions.extend (agent execute_with_stone)
-			end
-		end
-
 	retrieve_sorting_order
 			-- Retrieve last recored sorting order.
 		do
@@ -690,7 +684,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -714,11 +708,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_FORMATTER

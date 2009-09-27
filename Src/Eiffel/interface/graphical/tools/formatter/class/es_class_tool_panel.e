@@ -13,6 +13,8 @@ inherit
 	ES_FORMATTER_TOOL_PANEL_BASE
 		rename
 			last_stone as stone
+		redefine
+			tool_veto_pebble_function
 		end
 
 	ES_CLASS_TOOL_COMMANDER_I
@@ -257,6 +259,12 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+	tool_veto_pebble_function (a_stone: ANY): BOOLEAN
+			-- Veto pebble function for the tool.
+		do
+			Result := Precursor (a_stone) and then not attached {TARGET_STONE} a_stone
 		end
 
 note

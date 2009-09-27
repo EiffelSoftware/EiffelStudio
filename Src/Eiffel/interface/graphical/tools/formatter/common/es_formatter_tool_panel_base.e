@@ -69,11 +69,7 @@ feature{NONE} -- Initialization
 			initialize
 
 			register_action (content.drop_actions, agent on_item_dropped)
-			content.drop_actions.set_veto_pebble_function (agent (a_stone: ANY): BOOLEAN
-						do
-							Result := attached {STONE} a_stone as st and then st.is_storable
-						end
-					)
+			content.drop_actions.set_veto_pebble_function (agent tool_veto_pebble_function)
 
 			create history_manager.make (Current)
 			create address_manager.make (Current, True)
@@ -157,6 +153,7 @@ feature -- Access
 				l_frame.set_background_color (preferences.editor_data.normal_background_color)
 				Result := l_frame
 				l_frame.drop_actions.extend (agent drop_stone)
+				l_frame.drop_actions.set_veto_pebble_function (agent tool_veto_pebble_function)
 				empty_widget_internal := l_frame
 			end
 			Result := empty_widget_internal
@@ -580,6 +577,12 @@ feature{NONE} -- Implementation
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	tool_veto_pebble_function (a_stone: ANY): BOOLEAN
+			-- Veto pebble function for the tool.
+		do
+			Result := attached {STONE} a_stone as st and then st.is_storable
 		end
 
 feature{NONE} -- Implementation

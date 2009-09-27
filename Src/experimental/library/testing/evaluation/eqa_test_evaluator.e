@@ -124,6 +124,7 @@ feature -- Execution
 			else
 				io.set_file_default (l_old)
 			end
+			buffer.wipe_out
 		ensure
 			has_result: has_result
 		end

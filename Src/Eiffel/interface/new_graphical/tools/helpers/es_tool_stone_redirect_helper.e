@@ -68,6 +68,7 @@ feature -- Basic operations
 			a_widget_attached: a_widget /= Void
 		do
 			a_recycler.register_action (a_widget.drop_actions, agent on_drop)
+			a_widget.drop_actions.set_veto_pebble_function (agent tool_veto_pebble_function)
 		end
 
 	unbind (a_widget: detachable EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_recycler: detachable EB_RECYCLABLE)
@@ -81,6 +82,17 @@ feature -- Basic operations
 			a_widget_attached: a_widget /= Void
 		do
 			a_recycler.unregister_action (a_widget.drop_actions, agent on_drop)
+			a_widget.drop_actions.set_veto_pebble_function (Void)
+		end
+
+feature -- Veto function
+
+	tool_veto_pebble_function (a_stone: ANY): BOOLEAN
+			-- Veto pebble function for the tool.
+		do
+			Result := attached {STONE} a_stone as st and then
+						st.is_storable and then
+						not attached {TARGET_STONE} a_stone
 		end
 
 feature {NONE} -- Action handlers

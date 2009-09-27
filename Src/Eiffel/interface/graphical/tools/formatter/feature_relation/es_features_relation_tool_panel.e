@@ -18,7 +18,8 @@ inherit
 			retrieve_formatters,
 			force_last_stone,
 			on_file_changed,
-			initialize
+			initialize,
+			tool_veto_pebble_function
 		end
 
 	ES_FEATURE_RELATION_TOOL_COMMANDER_I
@@ -409,6 +410,12 @@ feature{NONE} -- Implementation
 						end
 					end
 			)
+		end
+
+	tool_veto_pebble_function (a_stone: ANY): BOOLEAN
+			-- Veto pebble function for the tool.
+		do
+			Result := Precursor (a_stone) and then not attached {TARGET_STONE} a_stone
 		end
 
 note

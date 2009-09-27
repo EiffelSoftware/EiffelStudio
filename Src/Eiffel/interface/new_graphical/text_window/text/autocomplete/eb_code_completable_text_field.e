@@ -26,7 +26,8 @@ inherit
 
 	EV_TEXT_FIELD
 		redefine
-			initialize
+			initialize,
+			set_focus
 		end
 
 	SHARED_WORKBENCH
@@ -53,6 +54,27 @@ feature {NONE} -- Initialization
 
 				-- Add handler to trap completion
 			set_default_key_processing_handler (agent on_default_key_processing)
+		end
+
+feature -- Status setting
+
+	set_focus
+			-- <Precursor>
+		local
+			l_caret_pos: INTEGER
+		do
+			if {PLATFORM}.is_unix then
+				l_caret_pos := caret_position
+			end
+			Precursor
+				-- This is a hack, because gtk automatically select all text
+				-- and forget the caret position when getting focus.
+			if {PLATFORM}.is_unix then
+				if has_selection then
+					disable_selection
+					set_caret_position (l_caret_pos)
+				end
+			end
 		end
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access

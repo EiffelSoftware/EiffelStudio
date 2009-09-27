@@ -112,6 +112,16 @@ feature {NONE} -- Access
 	byte_code_factory: ETEST_EVALUATOR_BYTE_CODE_FACTORY
 			-- Factory for creating byte code instructions
 
+	testing_directory: DIRECTORY_NAME
+			-- Directory in which tests should be executed
+		local
+			l_dir: STRING
+		do
+			l_dir := etest_suite.project_access.project.project_directory.testing_results_path
+			create Result.make_from_string (l_dir)
+			Result.extend (testing_directory_name)
+		end
+
 feature -- Status report
 
 	is_available: BOOLEAN
@@ -142,6 +152,7 @@ feature -- Status setting
 		do
 			occupied_controllers.do_all (agent launch_test)
 			task_cursor := occupied_controller_cursor
+			create_directory_safe (testing_directory)
 		end
 
 feature {TEST_EXECUTION_I, ETEST_COMPILATION_EXECUTOR} -- Status setting
@@ -276,6 +287,7 @@ feature {NONE} -- Status setting
 			l_result: EQA_RESULT
 			l_remove: BOOLEAN
 			l_tag_tree: TAG_TREE [TEST_I]
+			l_dir_name: DIRECTORY_NAME
 		do
 			l_task_data := task_cursor.item
 			l_controller := l_task_data.task
@@ -285,10 +297,15 @@ feature {NONE} -- Status setting
 				-- Try to retrieve result from controller
 			if not l_controller.is_running then
 				create {EQA_EMPTY_RESULT} l_result.make ("evaluator could not be launched", Void)
-			elseif l_controller.has_result then
-				l_result := l_controller.test_result
 			else
-				create {EQA_EMPTY_RESULT} l_result.make ("evaluator died", Void)
+				l_dir_name := testing_directory
+				l_dir_name.extend (l_test.name)
+				delete_directory_safe (l_dir_name)
+				if l_controller.has_result then
+					l_result := l_controller.test_result
+				else
+					create {EQA_EMPTY_RESULT} l_result.make ("evaluator died", Void)
+				end
 			end
 
 				-- Remove controller from `occupied_controllers'
@@ -358,15 +375,49 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	create_directory_safe (a_name: STRING)
+			-- Try to recursively create directory of given name.
+			--
+			-- `a_name': Name of directory to be created.
+		require
+			a_name_attached: a_name /= Void
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				(create {DIRECTORY}.make (a_name)).recursive_create_dir
+			end
+		rescue
+			l_retried := True
+			retry
+		end
+
+	delete_directory_safe (a_name: STRING)
+			-- Remove directory.
+			--
+			-- `a_name': Name of directory to be deleted.
+		require
+			a_name_attached: a_name /= Void
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				(create {DIRECTORY}.make (a_name)).recursive_delete
+			end
+		rescue
+			l_retried := True
+			retry
+		end
+
 feature {NONE} -- Factory
 
 	new_controller: ETEST_EVALUATOR_CONTROLLER
 			-- Create new controller
 		do
 			if test_execution.is_debugging then
-				create {ETEST_EVALUATOR_DEBUGGER_CONTROLLER} Result.make (etest_suite)
+				create {ETEST_EVALUATOR_DEBUGGER_CONTROLLER} Result.make (etest_suite, testing_directory)
 			else
-				create {ETEST_EVALUATOR_PROCESS_CONTROLLER} Result.make (etest_suite)
+				create {ETEST_EVALUATOR_PROCESS_CONTROLLER} Result.make (etest_suite, testing_directory)
 			end
 		end
 
@@ -405,6 +456,7 @@ feature {NONE} -- Clean up
 feature {NONE} -- Constants
 
 	isolate_prefix: STRING = "execution/isolated"
+	testing_directory_name: STRING = "execution"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

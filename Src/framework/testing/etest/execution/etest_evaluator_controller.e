@@ -16,14 +16,16 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_test_suite: like test_suite)
+	make (a_test_suite: like test_suite; a_testing_directory: like testing_directory)
 			-- Initialize `Current'.
 			--
 			-- `a_test_suite': Test suite containing tests.
+			-- `a_testing_directory': Directory in which tests are executed.
 		require
 			a_test_suite_attached: a_test_suite /= Void
 		do
 			test_suite := a_test_suite
+			testing_directory := a_testing_directory
 		ensure
 			test_suite_set: test_suite = a_test_suite
 		end
@@ -60,6 +62,9 @@ feature {NONE} -- Access
 
 	internal_connection: detachable ETEST_EVALUATOR_CONNECTION
 			-- Connection to evaluator
+
+	testing_directory: STRING
+			-- Directory in which tests should be executed
 
 	request: detachable TUPLE
 			-- Internal storage for byte code of `test'
@@ -145,12 +150,16 @@ feature -- Status setting
 				l_args.append_integer (a_evaluator_feature.real_body_id (a_evaluator_class.types.first) - 1)
 				l_args.append_character (' ')
 				l_args.append_integer (a_evaluator_feature.real_pattern_id (a_evaluator_class.types.first))
+				l_args.append (" %'")
+				l_args.append_string (testing_directory)
+				l_args.append_character ('%'')
 				l_args.append (" -eif_root ")
 				l_args.append ({ETEST_CONSTANTS}.eqa_evaluator_root)
 				l_args.append_character ('.')
 				l_args.append ({ETEST_CONSTANTS}.eqa_evaluator_creator)
 
 				has_died := False
+
 				start_evaluator (l_args)
 			end
 		ensure
@@ -184,6 +193,8 @@ feature -- Status setting
 
 	step
 			-- <Precursor>
+		local
+			l_dir: DIRECTORY_NAME
 		do
 			if
 				not connection.has_connection_died and then
@@ -244,6 +255,8 @@ feature {NONE} -- Clean up
 		end
 
 feature {NONE} -- Constants
+
+	testing_directory_name: STRING = "execution"
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

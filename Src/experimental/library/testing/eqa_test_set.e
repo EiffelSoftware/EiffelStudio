@@ -19,7 +19,21 @@ feature {NONE} -- Initialization
 
 	frozen default_create
 			-- <Precursor>
+		local
+			l_info: EQA_EVALUATION_INFO
+			l_directory_name: DIRECTORY_NAME
+			l_directory: DIRECTORY
 		do
+			create l_info
+			create l_directory_name.make_from_string (l_info.test_directory)
+
+			l_directory_name.extend (l_info.test_name)
+			create l_directory.make (l_directory_name)
+			assert ("testing_directory_already_exists", not l_directory.exists)
+			l_directory.create_dir
+			assert ("testing_directory_created", l_directory.exists)
+			(create {EXECUTION_ENVIRONMENT}).change_working_directory (l_directory_name)
+
 			on_prepare
 		ensure then
 			prepared: is_prepared

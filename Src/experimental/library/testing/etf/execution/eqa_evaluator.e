@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			port := l_args.argument (1).to_integer
 			byte_code_feature_body_id := l_args.argument (2).to_integer
 			byte_code_feature_pattern_id := l_args.argument (3).to_integer
+			set_test_directory (l_args.argument (4))
 		ensure
 			port_initialized: port > 0
 			body_id_initialized: byte_code_feature_body_id > 0
@@ -69,7 +70,7 @@ feature {NONE} -- Initialization
 			socket_open_write: socket.is_open_write
 		local
 			l_evaluator: like execute_test
-			l_bc: STRING
+			l_bc, l_name: STRING
 			l_done: BOOLEAN
 		do
 			from until

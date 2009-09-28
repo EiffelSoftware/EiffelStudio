@@ -38,10 +38,6 @@ execute_work NONE exec_output_2 $TEST 1
 execute_result  ok
 compare exec_output_2 output_simple
 
-execute_work NONE exec_output_3 $TEST
-execute_result  ok
-compare exec_output_3 output
-
 compile_final
 compile_result ok
 
@@ -51,6 +47,11 @@ c_compile_result ok
 execute_final NONE exec_output_4 $TEST 3
 execute_result ok
 compare exec_output_4 output_simple
+
+-- All files have been stored, we can now test retrieval.
+execute_work NONE exec_output_3 $TEST
+execute_result  ok
+compare exec_output_3 output
 
 execute_final NONE exec_output_5 $TEST
 execute_result ok

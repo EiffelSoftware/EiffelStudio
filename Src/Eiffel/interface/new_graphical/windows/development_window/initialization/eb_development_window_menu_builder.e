@@ -1304,10 +1304,10 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			a_menu.extend (l_menu_item)
 		end
 
-feature {EB_SAVE_LAYOUT_DIALOG} -- Exist docking layout sub menu
+feature {EB_SAVE_LAYOUT_DIALOG, EB_DEBUGGER_MANAGER} -- Exist docking layout sub menu
 
 	update_exist_layouts_menu
-			--
+			-- Update open layout menu with exist layout files
 		local
 			l_menu: EV_MENU
 			l_found: BOOLEAN

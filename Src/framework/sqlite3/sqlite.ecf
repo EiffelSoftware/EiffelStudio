@@ -21,6 +21,7 @@
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/examples$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

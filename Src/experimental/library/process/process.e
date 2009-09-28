@@ -413,7 +413,7 @@ feature -- Status setting
 		do
 			l_tbl := environment_variable_table
 			if l_tbl /= Void then
-				l_tbl.clear_all
+				l_tbl.wipe_out
 			else
 				create l_tbl.make (20)
 				environment_variable_table := l_tbl

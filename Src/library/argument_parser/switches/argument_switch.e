@@ -45,27 +45,24 @@ feature {NONE} -- Initialization
 			description_set: description = a_desc
 			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
-			lower_case_id_set: equal (lower_case_id, a_id.as_lower)
+			lower_case_id_set: lower_case_id ~ a_id.as_lower
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple)
+	make_hidden (a_id: like id; a_optional: like optional; a_allow_mutliple: like allow_multiple)
 			-- Initialize a new basic option.
 		require
 			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
 			a_id_is_valid_id: is_valid_id (a_id)
-			a_desc_attached: a_desc /= Void
-			not_a_desc_is_empty: not a_desc.is_empty
 		do
-			make (a_id, a_desc, a_optional, a_allow_mutliple)
+			make (a_id, internal_switch_description, a_optional, a_allow_mutliple)
 			is_hidden := True
 		ensure
 			id_set: id = a_id
-			description_set: description = a_desc
 			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
-			lower_case_id_set: equal (lower_case_id, a_id.as_lower)
+			lower_case_id_set: lower_case_id ~ a_id.as_lower
 			is_hidden: is_hidden
 		end
 
@@ -206,6 +203,11 @@ feature {NONE} -- Query
 
 	canocial_name_separator: CHARACTER = '|'
 			-- Character used to separate canonical names
+
+feature {NONE} -- Internationalization
+
+	internal_switch_description: STRING = "Internal switch."
+	internal_argument_description: STRING = "Internal."
 
 invariant
 	id_attached: id /= Void

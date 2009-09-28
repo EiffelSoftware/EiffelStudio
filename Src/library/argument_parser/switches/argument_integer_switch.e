@@ -39,12 +39,12 @@ feature {NONE} -- Initialization
 			max_set: max = {INTEGER_64}.max_value
 		end
 
-	make_hidden (a_id: like id; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional)
+	make_hidden (a_id: like id; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_val_optional: like is_value_optional)
 			-- Initialize a new value option.
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"			
 		do
-			Precursor (a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional)
+			Precursor (a_id, a_optional, a_allow_mutliple, a_arg_name, a_val_optional)
 		ensure then
 			min_set: min = {INTEGER_64}.min_value
 			max_set: max = {INTEGER_64}.max_value

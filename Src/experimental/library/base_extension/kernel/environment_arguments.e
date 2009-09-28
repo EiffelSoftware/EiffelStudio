@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 					create Result.make (r, r + 5)
 					create s.make_empty
 				until
-					i >= n
+					i > n
 				loop
 					c := l_flags.item (i)
 					if l_in_quote then
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 		end
 
 	base_arguments: ARGUMENTS
-			-- Standard command line arguments 
+			-- Standard command line arguments
 		once
 			create Result
 		end

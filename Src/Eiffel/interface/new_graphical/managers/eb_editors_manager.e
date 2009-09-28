@@ -863,16 +863,26 @@ feature -- Basic operations
 			-- `a_force_focus' means if force unmaximized other tool to show `a_editor'.
 		require
 			a_editor_attached: a_editor /= Void
+		local
+			l_content: SD_CONTENT
+			l_area: EV_DRAWING_AREA
 		do
 			if editors_internal.has (a_editor) then
-				if docking_manager.has_content (a_editor.docking_content) then
+				l_content := a_editor.docking_content
+				if docking_manager.has_content (l_content) then
 					if a_force_focus then
-						a_editor.docking_content.set_focus
+						if l_content.is_visible then
+							l_content.set_focus
+						else
+							l_content.show
+							l_content.set_focus
+						end
 					else
-						a_editor.docking_content.set_focus_no_maximized (a_editor.docking_content.user_widget)
+						l_content.set_focus_no_maximized (l_content.user_widget)
 					end
-					if a_editor.editor_drawing_area.is_sensitive and a_editor.editor_drawing_area.is_displayed then
-						a_editor.editor_drawing_area.set_focus
+					l_area := a_editor.editor_drawing_area
+					if l_area.is_sensitive and l_area.is_displayed then
+						l_area.set_focus
 					end
 				end
 			end

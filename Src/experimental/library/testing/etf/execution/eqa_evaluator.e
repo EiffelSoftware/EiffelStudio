@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			socket_open_write: socket.is_open_write
 		local
 			l_evaluator: like execute_test
-			l_bc, l_name: STRING
+			l_bc: STRING
 			l_done: BOOLEAN
 		do
 			from until

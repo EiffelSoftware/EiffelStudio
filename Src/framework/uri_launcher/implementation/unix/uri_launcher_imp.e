@@ -28,9 +28,12 @@ feature -- Basic operations
 			create l_app.make (256)
 			if not {PLATFORM}.is_mac then
 					-- Unix systems other than mac should be using 'xdg-open', Mac's use 'open'
-				l_app.append ("xdg-")
+				l_app.append ("%"xdg-")
 			end
 			l_app.append ("open")
+			if not {PLATFORM}.is_mac then
+				l_app.append_character ('%"')
+			end
 			Result := launch_with_app (a_uri, l_app)
 		end
 
@@ -45,7 +48,7 @@ feature {NONE} -- Basic operations
 			create l_cmd.make (a_app.count + 13)
 			l_cmd.append ("/bin/sh -c %'")
 			l_cmd.append_string_general (a_app)
-			l_cmd.append (" %"$url%" %'")
+			l_cmd.append (" %"$url%"%'")
 			Result := Precursor (a_uri, l_cmd)
 		end
 

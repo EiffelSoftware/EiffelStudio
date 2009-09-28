@@ -36,9 +36,9 @@ feature -- Basic operations
 			a_default_app_attached: a_default_app /= Void
 			not_a_default_app_is_empty: not a_default_app.is_empty
 		do
-			Result := launch (a_uri)
+			Result := launch_with_app (a_uri, a_default_app)
 			if not Result then
-				Result := launch_with_app (a_uri, a_default_app)
+				Result := launch (a_uri)
 			end
 		end
 

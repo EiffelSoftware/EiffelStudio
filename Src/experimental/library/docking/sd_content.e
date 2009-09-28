@@ -366,7 +366,12 @@ feature -- Set
 		do
 			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				if docking_manager.query.maximized_inner_container (a_zone) = Void then
-					set_focus
+					if is_visible then
+						set_focus
+					else
+						show
+						set_focus
+					end
 				end
 			end
 		end
@@ -978,14 +983,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

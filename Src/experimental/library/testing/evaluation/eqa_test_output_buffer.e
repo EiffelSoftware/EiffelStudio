@@ -123,7 +123,7 @@ feature -- Status setting
 	wipe_out
 			-- Empty buffer
 		do
-			buffer.clear_all
+			buffer.wipe_out
 			truncated_start_position := 0
 		end
 

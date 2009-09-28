@@ -156,7 +156,7 @@ feature {NONE} -- Usage
 			-- <Precursor>
 		once
 			create Result.make (1)
-			Result.extend (create {ARGUMENT_SWITCH}.make (manual_switch, "Supresses automatic configuration.", False, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (manual_switch, "Suppresses automatic configuration.", False, False))
 			if {PLATFORM_CONSTANTS}.is_64_bits then
 				Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Forces use of a 32bit environment.", True, False))
 			else
@@ -171,7 +171,7 @@ feature {NONE} -- Usage
 	switch_groups: attached ARRAYED_LIST [attached ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
-			create Result.make (2)
+			create Result.make (3)
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (x86_switch), switch_of_name (use_compiler_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (manual_switch), switch_of_name (aync_switch), switch_of_name (ignore_switch)>>, True))
 			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (list_compilers_switch), switch_of_name (x86_switch)>>, False))

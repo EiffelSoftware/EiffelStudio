@@ -1249,6 +1249,13 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation("Error on expression : %"$1%""), [a_expression])
 		end
 
+	l_breakable_indexes_range (a_upper: INTEGER): STRING_32
+		require
+			a_upper_valid: a_upper >= 1
+		do
+			Result := locale.formatted_string (locale.translation("Breakable indexes (1 - $1)?"), [a_upper])
+		end
+
 	l_Executing_command: STRING_32		do Result := locale.translation("Command is currently executing.%NPress OK to ignore the output.")	end
 	l_Execution_interrupted: STRING_32	do Result := locale.translation("Execution interrupted")	end
 	l_exception_double_click_text: STRING_32 do Result := locale.translation ("Double click to see Exception or Ctrl-C to copy to clipboard") end
@@ -2333,6 +2340,7 @@ feature -- Title part
 	t_finish_freezing_launch_error: STRING_32 	do Result := locale.translation("finish_freezing Launch Error")	end
 	t_bottom_reached: STRING_32 	do Result := locale.translation("Bottom reached.")	end
 	t_go_to_line: STRING_32				do Result := locale.translation ("Go to line") end
+	t_go_to_breakable: STRING_32				do Result := locale.translation ("Go to breakable index") end
 	t_refactoring_feature_rename: STRING_32	do Result := locale.translation("Refactoring: Feature Rename (Compiled Classes)")	end
 	t_refactoring_class_select: STRING_32 do Result := locale.translation("Select Class")	end
 	t_refactoring_class_rename: STRING_32 do Result := locale.translation("Refactoring: Class Rename")	end

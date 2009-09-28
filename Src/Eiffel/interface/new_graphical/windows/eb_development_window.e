@@ -145,6 +145,8 @@ inherit
 		-- ESS Interfaces
 	SHELL_WINDOW_I
 
+	EVS_HELPERS
+
 create {EB_DEVELOPMENT_WINDOW_DIRECTOR}
 	make
 
@@ -2089,14 +2091,45 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		end
 
 	goto
-			-- Display a dialog to select a line to go to in the editor.
+			-- Display a dialog to select a line to go to in the editor 
+			--	or a breakable index to go to in the flat formatter.
 		local
 			l_dialog: EB_GOTO_DIALOG
+			l_bp_dialog: ES_BREAKABLE_INDEX_GOTO_DIALOG
+			i: INTEGER
 		do
-			if attached {EB_CLICKABLE_EDITOR} editors_manager.current_editor as ed then
+			if
+				attached editors_manager.current_editor as ed and then
+				widget_has_recursive_focus (ed.widget)
+			then
 				create l_dialog.make (ed)
 				ui.set_goto_dialog (l_dialog)
 				l_dialog.show_modal_to_window (window)
+			elseif
+				attached tools.features_relation_tool as ft and then
+				attached {EB_ROUTINE_FLAT_FORMATTER} ft.flat_formatter as flatf and then
+				attached flatf.widget as ftw and then
+				widget_has_recursive_focus (ftw)
+			then
+				if attached {CLICKABLE_TEXT} flatf.editor.text_displayed as ftxt then
+					from
+						i := 1
+					until
+						i > ftxt.number_of_lines
+					loop
+						if attached {EIFFEL_EDITOR_LINE} ftxt.line (i) as l_line then
+							if attached {EDITOR_TOKEN_BREAKPOINT} l_line.breakpoint_token as l_bp then
+								if attached {BREAKABLE_STONE} l_bp.pebble as l_stone then
+									print (l_stone.index.out + "%N")
+								end
+							end
+						end
+						i := i + 1
+					end
+				end
+
+				create l_bp_dialog.make_with_editor (flatf.editor)
+				l_bp_dialog.show_on_active_window
 			end
 		end
 

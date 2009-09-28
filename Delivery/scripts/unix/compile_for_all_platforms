@@ -19,15 +19,15 @@
 (sh ./make_for_platform mojo.ise manus linux-x86 ; sh ./make_for_platform freebsd.ise manus freebsd-x86 ; sh ./make_for_platform freebsd_64.ise manus freebsd-x86-64) &
 
 #Let's compile for SGI in background
-(
-rsh iris.ise "\rm -f ~/local/freeware" ;
-rsh iris.ise "\ln -s ~/local/freeware32 ~/local/freeware" ;
-sh ./make_for_platform iris.ise manus irix-mips ;
-
-rsh iris.ise "\rm -f ~/local/freeware" ;
-rsh iris.ise "\ln -s ~/local/freeware64 ~/local/freeware" ;
-sh ./make_for_platform iris.ise manus irix-mips-64
-) &
+#(
+#rsh iris.ise "\rm -f ~/local/freeware" ;
+#rsh iris.ise "\ln -s ~/local/freeware32 ~/local/freeware" ;
+#sh ./make_for_platform iris.ise manus irix-mips ;
+#
+#rsh iris.ise "\rm -f ~/local/freeware" ;
+#rsh iris.ise "\ln -s ~/local/freeware64 ~/local/freeware" ;
+#sh ./make_for_platform iris.ise manus irix-mips-64
+#) &
 
 #Let's compile for Linux 64 bits in background
 (sh ./make_for_platform tokyo.ise manus linux-x86-64) &

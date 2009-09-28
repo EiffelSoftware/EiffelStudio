@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			port := l_args.argument (1).to_integer
 			byte_code_feature_body_id := l_args.argument (2).to_integer
 			byte_code_feature_pattern_id := l_args.argument (3).to_integer
+			set_test_directory (l_args.argument (4))
 		ensure
 			port_initialized: port > 0
 			body_id_initialized: byte_code_feature_body_id > 0
@@ -69,10 +70,11 @@ feature {NONE} -- Initialization
 			socket_open_write: socket.is_open_write
 		local
 			l_evaluator: like execute_test
-			l_bc: STRING
+			l_bc, l_name: STRING
+			l_done: BOOLEAN
 		do
 			from until
-				False
+				l_done
 			loop
 				if attached {TUPLE [byte_code, name: STRING]} socket.retrieved as l_retrieved then
 					l_bc := l_retrieved.byte_code
@@ -89,10 +91,18 @@ feature {NONE} -- Initialization
 					l_evaluator := execute_test
 					socket.put_boolean (True)
 					socket.independent_store (l_evaluator.last_result)
+				else
+						-- If we retrieved something unexpected, we close the socket and terminate.
+					if not socket.is_closed then
+						socket.close
+					end
+					l_done := True
 				end
 			end
 		rescue
-			socket.close
+			if not socket.is_closed then
+				socket.close
+			end
 		end
 
 feature {NONE} -- Access

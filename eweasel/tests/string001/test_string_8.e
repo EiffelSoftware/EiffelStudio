@@ -71,6 +71,7 @@ feature {NONE} -- Initialization
 			test_multiply
 			test_occurrences
 			test_out
+			test_plus_string_general
 			test_precede
 			test_prepend
 			test_prepend_boolean
@@ -1448,6 +1449,40 @@ feature {NONE} -- Implementation
 			check_equality ("out", ("123").out, "123")
 			check_equality ("out", ("1234").out, "1234")
 			check_equality ("out", ("12345").out, "12345")
+		end
+
+	test_plus_string_general is
+		local
+			is_32: IMMUTABLE_STRING_32
+			is_8: IMMUTABLE_STRING_8
+			s_32: STRING_32
+			s_8: STRING_8
+		do
+			is_32 := "12345"
+			s_32 := "12345"
+			is_8 := "67890"
+			s_8 := "67890"
+			check_equality ("plus_string_general", s_8.plus_string_general (is_32), "6789012345")
+			check_equality ("plus_string_general", s_8.plus_string_general (s_32), "6789012345")
+			check_equality ("plus_string_general", s_8.plus_string_general (is_8), "6789067890")
+			check_equality ("plus_string_general", s_8.plus_string_general (s_8), "6789067890")
+			check_equality ("plus_string_general", s_8.plus_string_general (""), "67890")
+
+			s_8 := ""
+			check_equality ("plus_string_general", s_8.plus_string_general (is_32), "12345")
+			check_equality ("plus_string_general", s_8.plus_string_general (s_32), "12345")
+			check_equality ("plus_string_general", s_8.plus_string_general (is_8), "67890")
+			check_equality ("plus_string_general", s_8.plus_string_general (s_8), "")
+			check_equality ("plus_string_general", s_8.plus_string_general (""), "")
+
+			is_32 := ""
+			s_32 := ""
+			is_8 := ""
+			check_equality ("plus_string_general", s_8.plus_string_general (is_32), "")
+			check_equality ("plus_string_general", s_8.plus_string_general (s_32), "")
+			check_equality ("plus_string_general", s_8.plus_string_general (is_8), "")
+			check_equality ("plus_string_general", s_8.plus_string_general (s_8), "")
+			check_equality ("plus_string_general", s_8.plus_string_general (""), "")
 		end
 
 	test_precede is

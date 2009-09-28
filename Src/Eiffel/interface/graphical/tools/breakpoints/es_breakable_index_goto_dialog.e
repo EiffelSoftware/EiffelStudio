@@ -63,12 +63,6 @@ feature {NONE} -- Initialization
 			breakable_index_spin.text_change_actions.extend (agent on_value_changed (-1))
 		end
 
-	on_shown
-			-- Called once the foundation widget has been shown.
-		do
-			breakable_index_spin.set_focus
-		end
-
 feature -- Access
 
 	editor: EB_CLICKABLE_EDITOR
@@ -106,6 +100,13 @@ feature -- Actions
 		end
 
 feature {NONE} -- Implementation
+
+	on_shown
+			-- Called once the foundation widget has been shown.
+		do
+			breakable_index_spin.set_focus
+			breakable_index_spin.select_all
+		end
 
 	get_breakable_indexes
 			-- Get editor's lines indexed by breakable indexes
@@ -173,10 +174,10 @@ feature {NONE} -- Implementation
 			-- (export status {NONE})
 			-- Key was pressed in line number text field box
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_enter and then breakable_index_spin.text.is_integer then
+			if not a_ctrl and a_key.code = {EV_KEY_CONSTANTS}.key_enter and then breakable_index_spin.text.is_integer then
 				go_button.enable_sensitive
 				Result := True
-				on_ok
+				on_dialog_button_pressed (goto_button_id)
 			end
 		end
 
@@ -216,6 +217,11 @@ feature -- Access
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
 			Result := dialog_buttons.ok_cancel_buttons
+		end
+
+	goto_button_id: INTEGER
+		do
+			Result := dialog_buttons.ok_button
 		end
 
 	default_button: INTEGER

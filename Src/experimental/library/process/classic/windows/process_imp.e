@@ -222,7 +222,7 @@ feature{PROCESS_TIMER} -- Process status checking
 					if l_threads_exited then
 						if not has_cleaned_up then
 							timer.destroy
-							input_buffer.clear_all
+							input_buffer.wipe_out
 							child_process.close_process_handle
 							child_process.close_io
 							has_cleaned_up := True

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 					create l_file_name.make_from_string (l_wdir)
 					l_file_name.extend (file_name (i))
 					create l_file.make_open_read (l_file_name)
-					if attached {TUPLE [string: STRING]} l_file.retrieved as l_retrieved then
+					if attached {TUPLE [string: detachable STRING]} l_file.retrieved as l_retrieved then
 						print (l_retrieved.string)
 					end
 					print ('%N')

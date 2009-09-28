@@ -50,14 +50,11 @@ feature {NONE} -- Initialization
 		do
 			create Result.make (50)
 			Result.append ("tuple")
-			if 0 < (a_int & 1) then
+			if (a_int & 1) = 1 then
 				Result.append (".void_safe")
 			end
-			if 0 < (a_int & 2) then
+			if (a_int & 2) = 2 then
 				Result.append (".finalized")
-			end
-			if 0 < (a_int & 4) then
-				Result.append (".experimental")
 			end
 		end
 

@@ -17,8 +17,8 @@ feature -- Access
 			index_large_enough: i >= 0
 			index_small_enough: i <= argument_count
 		do
-			if i <= base_arguments_.argument_count then
-				Result := base_arguments_.argument (i)
+			if i <= base_arguments.argument_count then
+				Result := base_arguments.argument (i)
 			else
 				Result := environment_argument_item (i)
 			end
@@ -41,11 +41,11 @@ feature -- Status report
 		local
 			i, n: INTEGER
 		do
-			Result := base_arguments_.index_of_word_option (opt)
+			Result := base_arguments.index_of_word_option (opt)
 			if Result = 0 then
 				n := argument_count
 				from
-					i := base_arguments_.argument_count + 1
+					i := base_arguments.argument_count + 1
 				until
 					i > n or else option_word_equal (environment_argument_item (i), opt)
 				loop
@@ -63,7 +63,7 @@ feature -- Status report
 			-- to be an option
 			-- Default is '-'
 		once
-			Result := base_arguments_.option_sign
+			Result := base_arguments.option_sign
 		end
 
 feature -- Status setting
@@ -73,7 +73,7 @@ feature -- Status setting
 			-- Use'%U' if no sign is necesary for the argument to
 			-- be an option
 		do
-			base_arguments_.set_option_sign (c)
+			base_arguments.set_option_sign (c)
 		end
 
 feature -- Measurement
@@ -82,7 +82,7 @@ feature -- Measurement
 			-- Number of arguments given to command that started
 			-- system execution (command name does not count)
 		do
-			Result := base_arguments_.argument_count + environment_arguments_.count
+			Result := base_arguments.argument_count + environment_arguments.count
 		ensure
 			argument_count_positive: Result >= 0
 		end
@@ -113,15 +113,16 @@ feature {NONE} -- Implementation
 	environment_argument_item (i: INTEGER): STRING
 			-- `i'-th argument of environment option
 		require
-			index_large_enough: i > base_arguments_.argument_count
+			index_large_enough: i > base_arguments.argument_count
 			index_small_enough: i <= argument_count
 		do
-			Result := environment_arguments_.item (i)
+			Result := environment_arguments.item (i)
 		ensure
 			argument_not_void: Result /= Void
 		end
 
-	environment_arguments_: ARRAY [STRING]
+	environment_arguments: ARRAY [STRING]
+			-- Arguments array extracted from environment
 		local
 			i,n,r: INTEGER
 			c: CHARACTER
@@ -134,13 +135,13 @@ feature {NONE} -- Implementation
 			l_flags := exec.get (arguments_environment_name)
 			if l_flags /= Void and then not l_flags.is_empty then
 				from
-					r := base_arguments_.argument_count + 1
+					r := base_arguments.argument_count + 1
 					i := 1
 					n := l_flags.count
 					create Result.make (r, r + 5)
 					create s.make_empty
 				until
-					i >= n
+					i > n
 				loop
 					c := l_flags.item (i)
 					if l_in_quote then
@@ -176,16 +177,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	base_arguments_: ARGUMENTS
+	base_arguments: ARGUMENTS
+			-- Standard command line arguments
 		once
 			create Result
 		end
 
 invariant
-	environment_arguments_valid: not environment_arguments_.is_empty implies (
-			argument_count > base_arguments_.argument_count and
-			environment_arguments_.lower = base_arguments_.argument_count + 1 and
-			environment_arguments_.upper = argument_count
+	environment_arguments_valid: not environment_arguments.is_empty implies (
+			argument_count > base_arguments.argument_count and
+			environment_arguments.lower = base_arguments.argument_count + 1 and
+			environment_arguments.upper = argument_count
 		)
 
 note

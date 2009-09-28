@@ -160,6 +160,46 @@ feature -- Status
 			Result := not warning_list.is_empty
 		end
 
+	has_error_of_type (a_type: TYPE [ERROR]): BOOLEAN
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_cursor: INTEGER
+		do
+			from
+				l_cursor := error_list.index
+				error_list.start
+			until
+				error_list.after or Result
+			loop
+				if error_list.item.generating_type.out.same_string (a_type.out) then
+					Result := True
+				end
+				error_list.forth
+			end
+			error_list.go_i_th (l_cursor)
+		end
+
+	first_error_of_type (a_type: TYPE [ERROR]): detachable ERROR
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_cursor: INTEGER
+		do
+			from
+				l_cursor := error_list.index
+				error_list.start
+			until
+				error_list.after or Result /= Void
+			loop
+				if error_list.item.generating_type.out.same_string (a_type.out) then
+					Result := error_list.item
+				end
+				error_list.forth
+			end
+			error_list.go_i_th (l_cursor)
+		end
+
 feature {COMPILER_EXPORTER} -- Output
 
 	clear_display

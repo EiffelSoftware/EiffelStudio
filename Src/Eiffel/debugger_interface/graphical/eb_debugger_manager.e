@@ -1447,6 +1447,7 @@ feature -- Status setting
 			l_docking_manager: SD_DOCKING_MANAGER
 			nwt: INTEGER
 			l_unlock: BOOLEAN
+			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
 		do
 			force_debug_mode_cmd.disable_sensitive
 			initialize_debugging_window
@@ -1540,6 +1541,9 @@ feature -- Status setting
 			update_all_debugging_tools_menu
 			unpopup_switching_mode
 			force_debug_mode_cmd.enable_sensitive
+
+			create l_builder.make (debugging_window)
+			l_builder.update_exist_layouts_menu
 		ensure
 			raised
 		end

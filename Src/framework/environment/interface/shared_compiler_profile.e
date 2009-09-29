@@ -16,7 +16,7 @@ feature -- Initialization
 	initialize_from_arguments
 			-- Initialize current based on the command line arguments from current execution.
 		local
-			l_args: ARGUMENTS
+			l_args: ES_ARGUMENTS
 		do
 				-- Reinitialize `flags'.
 			flags.put (0)

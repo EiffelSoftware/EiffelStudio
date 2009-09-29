@@ -66,7 +66,7 @@ feature -- Access
 			-- Flat list of all assemblies in all `assembly_folders'.
 		local
 			l_folders: like assembly_folders
-			l_folder: STRING_32
+			l_folder: STRING
 			l_cursor: CURSOR
 			l_dir: DIRECTORY
 			l_content: LIST [STRING_8]
@@ -83,7 +83,8 @@ feature -- Access
 				create l_pe_info
 				l_cursor := l_folders.cursor
 				from l_folders.start until l_folders.after loop
-					l_folder := l_folders.item
+					check string_8: l_folders.item.is_valid_as_string_8 end
+					l_folder := l_folders.item.to_string_8
 					check l_folder_has_no_trailing_separator: l_folder.item (l_folder.count) /= operating_environment.directory_separator end
 					create l_dir.make (l_folder)
 					if l_dir.exists then
@@ -128,7 +129,8 @@ feature -- Access
 			l_files := assemblies
 			create l_result.make
 			if not l_files.is_empty then
-				create l_reader.make (clr_version)
+				check string_8: clr_version.is_valid_as_string_8 end
+				create l_reader.make (clr_version.to_string_8)
 				l_cursor := l_files.cursor
 				from l_files.start until l_files.after loop
 					l_props := l_reader.retrieve_assembly_properties (l_files.item)
@@ -281,7 +283,7 @@ invariant
 	clr_version_has_v_prefix: (clr_version.item (1)).as_lower = 'v'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -294,22 +296,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {SYSTEM_ASSEMBLY_LIST_BUILDER}

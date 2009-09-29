@@ -24,6 +24,7 @@ inherit
 				Ev_application
 			{ANY} auto_recycle, delayed_auto_recycle
 		redefine
+			set_title,
 			show,
 			refresh,
 			refresh_all_commands,
@@ -108,6 +109,13 @@ inherit
 		end
 
 	SHARED_TEXT_ITEMS
+		export
+			{NONE} All
+		end
+
+	SHARED_COMPILER_PROFILE
+		rename
+			reset as reset_compiler_profile
 		export
 			{NONE} All
 		end
@@ -461,6 +469,25 @@ feature -- Settings
 		end
 
 feature -- Status setting
+
+	set_title (a_title: like title)
+			-- <Precursor>
+		local
+			l_title: STRING_32
+			l_different: BOOLEAN
+		do
+			l_different := (not attached title) or else not a_title.same_string (title)
+			Precursor (a_title)
+			if is_experimental_mode and then l_different then
+				create l_title.make (a_title.count + 10)
+				l_title.append_character ('[')
+				l_title.append (locale_formatter.translation (t_experimental))
+				l_title.append_character (']')
+				l_title.append_character (' ')
+				l_title.append_string_general (a_title)
+				window.set_title (l_title)
+			end
+		end
 
 	set_focus_to_main_editor
 			-- Set focus to main current editor.
@@ -1375,6 +1402,8 @@ feature -- Multiple editor management
 
 	update_paste_cmd
 			-- Update `editor_paste_cmd'. To be performed when an editor grabs the focus.
+		require
+			is_interface_usable: is_interface_usable
 		do
 			if update_paste_cmd_agent = Void then
 				update_paste_cmd_agent := agent
@@ -2091,7 +2120,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		end
 
 	goto
-			-- Display a dialog to select a line to go to in the editor 
+			-- Display a dialog to select a line to go to in the editor
 			--	or a breakable index to go to in the flat formatter.
 		local
 			l_dialog: EB_GOTO_DIALOG
@@ -2588,6 +2617,10 @@ feature {NONE} -- Internal implementation cache
 	internal_layout_manager: detachable like layout_manager
 			-- Cached version of `layout_manager'.
 			-- Note: Do not use directly!
+
+feature {NONE} -- Internationalization
+
+	t_experimental: STRING = "Experimental"
 
 invariant
 	commands_attached: not is_recycled implies commands /= Void

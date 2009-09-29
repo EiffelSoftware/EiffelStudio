@@ -868,6 +868,9 @@ feature {NONE} -- Events handlers
 				unregister_action (l_item.button.select_actions, agent set_output (a_output))
 					-- Remove from the modified list and the button from the toolbar.
 				l_outputs.remove (a_output.name)
+					-- Remove the tooltip from the button. This addresses bug#16262.
+				l_item.button.set_tooltip (Void)
+					-- Remove button from the tool bar.
 				l_tool_bar.prune (l_item.button)
 
 				if l_outputs.is_empty then

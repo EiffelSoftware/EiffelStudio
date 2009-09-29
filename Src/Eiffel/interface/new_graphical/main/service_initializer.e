@@ -22,6 +22,7 @@ feature -- Services
 			a_container.register_with_activator ({LOGGER_S}, agent new_logger_service, False)
 			a_container.register_with_activator ({OUTPUT_MANAGER_S}, agent new_output_manager_service, False)
 			a_container.register_with_activator ({SESSION_MANAGER_S}, agent new_session_manager_service, False)
+			a_container.register_with_activator ({DEBUGGER_S}, agent new_debugger_service, False)
 			a_container.register_with_activator ({TEST_SUITE_S}, agent new_testing_service, False)
 			a_container.register_with_activator ({ROTA_S}, agent new_rota_service, False)
 		end
@@ -84,6 +85,12 @@ feature {NONE} -- Factory
 			-- Create rota service
 		do
 			create {TTY_ROTA} Result.make
+		end
+
+	new_debugger_service: detachable DEBUGGER_S
+			-- <Precursor>
+		do
+			create {TTY_DEBUGGER} Result.make
 		end
 
 feature {NONE} -- Registeration: Environemtn

@@ -108,8 +108,12 @@ feature {NONE} -- Implementation
 
 	open_states_from_file (a_dialog: EV_FILE_OPEN_DIALOG)
 			-- Open memory analyzer's datas from a file
+		local
+			l_states: detachable like memory_states
 		do
-			memory_states ?= memory_states.retrieve_by_name (a_dialog.file_name)
+			l_states ?= memory_states.retrieve_by_name (a_dialog.file_name)
+			check attached l_states end -- FIXME: Implied by ...?
+			memory_states := l_states
 		ensure
 			states_not_void: memory_states /= Void
 		end

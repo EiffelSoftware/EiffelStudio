@@ -49,8 +49,12 @@ feature -- Measurrment
 			-- after routine found_type, return the count of founded item
 		require
 			founded_type_not_void: founded_type /= Void
+		local
+			l_item_founded: like item_founded
 		do
-			Result := item_founded.count_in_system
+			l_item_founded := item_founded
+			check l_item_founded /= Void end -- Implied by precondition
+			Result := l_item_founded.count_in_system
 		end
 
 	memory_used_eiffel: INTEGER
@@ -154,11 +158,18 @@ feature {NONE} -- Implementation
 	memory_c_used: INTEGER
 			-- c memory used of this state
 
-	item_founded: like state
+	item_founded: detachable like state
 			-- the founded item by routine found_type
 
 	state: TUPLE [type_name: STRING; count_in_system: INTEGER]
 			-- [type_name_of_type, number of instances of type_name_of_type present in system]
+		local
+			l_result: detachable like state
+		do
+			check False end -- Anchor type only
+			check l_result /= void end -- Satisfy void-safe compiler
+			Result := l_result
+		end
 
 	objects_states: ARRAYED_LIST [like state];
 			-- the count the objects, first argument is type name, second argument is the object instances count

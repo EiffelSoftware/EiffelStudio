@@ -20,15 +20,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_memory_spot_1, a_memory_spot_2, a_increased_object_result: EV_GRID)
 			-- Initialize `Current'.
+		require
+			not_void: attached a_memory_spot_1
+			not_void: attached a_memory_spot_2
+			not_void: attached a_increased_object_result
 		do
 			create states.make (10)
-			grid_from_state := main_window.memory_spot_1
-			grid_to_state := main_window.memory_spot_2
+			grid_from_state := a_memory_spot_1
+			grid_to_state := a_memory_spot_2
 			grid_from_state.enable_single_row_selection
 			grid_to_state.enable_single_row_selection
-			grid_changed := main_window.increased_object_result
+			grid_changed := a_increased_object_result
 
 			create grid_data.make (10)
 			init_grid
@@ -179,22 +183,27 @@ feature {NONE} -- Implemention
 
 	update_grid_increased_content
 			-- Show the increased objects in the bottom result grid.
+		require
+			set: attached grid_data_increased
 		local
 			l_int: INTEGER
 			l_item: EV_GRID_LABEL_ITEM
 			l_i: INTEGER
+			l_grid_data_increased: like grid_data_increased
 		do
 			from
-				grid_data_increased.start
+				l_grid_data_increased := grid_data_increased
+				check attached l_grid_data_increased end -- Implied by precondition `set'
+				l_grid_data_increased.start
 			until
-				grid_data_increased.after
+				l_grid_data_increased.after
 			loop
-				if not filter.filter_class (grid_data_increased.item_for_iteration.text) then
+				if not filter.filter_class (l_grid_data_increased.item_for_iteration.text) then
 					l_i := l_i + 1
-					create l_item.make_with_text (grid_data_increased.item_for_iteration.text)
+					create l_item.make_with_text (l_grid_data_increased.item_for_iteration.text)
 					l_item.set_pixmap (icons.object_grid_class_icon)
 					grid_changed.set_item (1, l_i, l_item)
-					l_int := grid_data_increased.item_for_iteration.nb
+					l_int := l_grid_data_increased.item_for_iteration.nb
 					create l_item.make_with_text (l_int.out)
 					if l_int > 0 then
 						l_item.set_foreground_color (increased_color)
@@ -203,7 +212,7 @@ feature {NONE} -- Implemention
 					end
 					grid_changed.set_item (2, l_i, l_item)
 				end
-				grid_data_increased.forth
+				l_grid_data_increased.forth
 			end
 		end
 
@@ -273,17 +282,24 @@ feature {NONE} -- Implemention
 
 	handle_pick_item (a_item: EV_GRID_LABEL_ITEM): MA_CLASS_STONE
 			-- User pick a item from grid to filter.
+		local
+			l_result: detachable like handle_pick_item
 		do
 			if a_item /= Void and a_item.column.index = 1 then
-				Result := create {MA_CLASS_STONE}.make (a_item.text)
+				l_result := create {MA_CLASS_STONE}.make (a_item.text)
 			end
+			check attached l_result end -- FIXME: Implied by ...?
+			Result := l_result
 		end
 
 	sort_data
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
+		require
+			set: attached grid_data_increased
 		local
 			l_sorter: QUICK_SORTER [like grid_data_increased_row]
 			l_agent_sorter: AGENT_EQUALITY_TESTER [like grid_data_increased_row]
+			l_grid_data_increased: like grid_data_increased
 		do
 			inspect
 				sorted_column
@@ -291,7 +307,9 @@ feature {NONE} -- Implemention
 			when 2 then create l_agent_sorter.make (agent sort_on_count)
 			end
 			create l_sorter.make (l_agent_sorter)
-			l_sorter.sort (grid_data_increased)
+			l_grid_data_increased := grid_data_increased
+			check attached l_grid_data_increased end -- Implied by precondition
+			l_sorter.sort (l_grid_data_increased)
 		end
 
 	sorting_order: BOOLEAN
@@ -331,10 +349,15 @@ feature {NONE} -- Implemention
 			-- first INTEGER is increased object count, second INTEGER is the increased objects type id
 		require
 			False
+		local
+			l_result: detachable like grid_data_increased_row
 		do
+			check False end -- Anchor type only
+			check attached l_result end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
-	grid_data_increased: ARRAYED_LIST [like grid_data_increased_row]
+	grid_data_increased: detachable ARRAYED_LIST [like grid_data_increased_row]
 			-- the objects increased, first INTEGER is increased object count, second INTEGER is the increased objects type id
 
 	grid_data: ARRAYED_LIST [like row_data]
@@ -343,6 +366,15 @@ feature {NONE} -- Implemention
 	row_data: TUPLE [type_name: STRING; e_mem: INTEGER; c_mem: INTEGER; type_id: INTEGER]
 			-- Type for the data inserted in grid
 			-- It is [Object Type Name, Eiffel Memory Used, C Memory Used, TypeId].
+		require
+			False
+		local
+			l_result: detachable like row_data
+		do
+			check False end -- Anchor type only
+			check attached l_result end -- Satisfy void-safe compiler
+			Result := l_result
+		end
 
 	grid_from_state, grid_to_state: EV_GRID -- Two grid show states.
 
@@ -359,7 +391,6 @@ invariant
 	grid_1_not_void: grid_from_state /= Void
 	grid_2_not_void: grid_to_state /= Void
 	grid_increased_not_void: grid_changed /= Void
-	main_window_not_void: main_window /= Void
 	grid_data_not_void: grid_data /= Void
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

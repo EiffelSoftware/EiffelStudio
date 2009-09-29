@@ -14,10 +14,10 @@ feature
 	pixmap_file_content (fn: STRING): EV_PIXMAP
 			-- Load a pixmap with name `fn'
 		local
-			full_path: FILE_NAME
+			full_path: detachable FILE_NAME
 			retried: BOOLEAN
 			warning_dialog: EV_WARNING_DIALOG
-			a_coord: TUPLE [x: INTEGER; y: INTEGER]
+			a_coord: detachable TUPLE [x: INTEGER; y: INTEGER]
 			a_row, a_column, a_x_offset, a_y_offset: INTEGER
 		do
 			if not retried then
@@ -39,6 +39,9 @@ feature
 					Result.set_with_named_file (full_path)
 				end
 			else
+				if not attached full_path then
+					create full_path.make_from_string ("")
+				end
 				create warning_dialog.make_with_text (
 					"Cannot read pixmap file:%N" + full_path + ".%N%
 					%Please make sure the installation is not corrupted.")

@@ -31,12 +31,16 @@ feature -- Basic operations
 			Result := create {MA_REFERENCE_LINK}.make_with_model (a_link)
 		end
 
-	model_from_xml (node: like xml_element_type): EG_ITEM
+	model_from_xml (node: attached like xml_element_type): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
---		local
+		local
 --			node_name, source_name, target_name: STRING
 --			a_source, a_target: EG_LINKABLE
+			l_result: detachable like model_from_xml
 		do
+			check not_implemented: False end
+			check attached l_result end -- Satisfy void-safe compiler
+			Result := l_result
 --			node_name := node.name
 --			if node_name.is_equal ("ELLIPSE_NODE") then
 --				create {EG_NODE} Result

@@ -26,13 +26,9 @@ inherit
 
 feature {NONE}-- Initialization
 
-	initialize
-			-- Initialize `Current'.
+	create_all_widgets
+			-- Create all widgets
 		do
-			Precursor {EV_TITLED_WINDOW}
-			initialize_constants
-
-				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_tool_bar_1
 			create refresh
@@ -205,6 +201,13 @@ feature {NONE}-- Initialization
 			create clear_graph
 			create l_ev_horizontal_separator_1
 			create object_drawing
+		end
+
+	initialize
+			-- Initialize `Current'.
+		do
+			Precursor {EV_TITLED_WINDOW}
+			initialize_constants
 
 			build_object_routes_panel
 
@@ -866,13 +869,18 @@ feature {NONE}-- Initialization
 			user_initialization
 		end
 
-	build_object_routes_panel
-			-- Build object routes panel.
+	create_object_routes_panel_objects
+			-- Create object routes panel objects
 		do
 			create object_routes_panel
 			create route_results_panel
-			route_results_panel.set_text ("Routes")
 			create search_route_button.make_with_text ("Search Next Route")
+		end
+
+	build_object_routes_panel
+			-- Build object routes panel.
+		do
+			route_results_panel.set_text ("Routes")
 
 			object_routes_panel.extend (search_route_button)
 			object_routes_panel.disable_item_expand (search_route_button)

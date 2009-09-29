@@ -29,11 +29,13 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an EG_SIMPLE_NODE.
 		do
-			Precursor {EG_LINKABLE_FIGURE}
-
 			figure_size := 80
 
 			create node_figure.make_with_positions ( 0, 0, figure_size, figure_size)
+			create text_underline
+
+			Precursor {EG_LINKABLE_FIGURE}
+
 			node_figure.set_background_color (color)
 
 			extend (node_figure)
@@ -42,7 +44,6 @@ feature {NONE} -- Initialization
 			disable_rotating
 			set_center
 
-			create text_underline.default_create
 			extend (text_underline)
 		end
 
@@ -51,14 +52,15 @@ feature {NONE} -- Initialization
 		require
 			a_model_not_void: a_model /= Void
 		do
-			default_create
 			model := a_model
+			default_create
+
 			initialize
 		end
 
 feature -- Access
 
-	model: EG_NODE
+	model: detachable EG_NODE
 			-- Model `Current' is a view for.
 
 	port_x: INTEGER

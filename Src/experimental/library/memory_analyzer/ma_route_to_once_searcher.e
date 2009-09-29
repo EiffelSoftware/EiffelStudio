@@ -57,34 +57,46 @@ feature -- Commands
 feature {NONE} -- Results
 
 	result_panel: EV_FRAME
-		-- Panel to put result grid
+			-- Panel to put result grid
 
-	grid: EV_GRID
-		-- Result grid
+	grid: detachable EV_GRID
+			-- Result grid
 
 	fill_results
-			--
+			-- Fill result
+		require
+			set: attached reference_table
+			set: attached name_table
+			set: attached route_stack
 		local
 			l_array: LIST [like start_index]
 			l_item: EV_GRID_LABEL_ITEM
 			l_column: INTEGER
-			l_grid: EV_GRID
 			l_text: STRING
 			l_next_index: like start_index
-			l_field_name, l_once: STRING
+			l_field_name: detachable STRING
+			l_once: STRING
 			l_last: BOOLEAN
-			l_tuple: TUPLE [referee: like start_index; data: ANY]
+			l_tuple: detachable TUPLE [referee: like start_index; data: detachable ANY]
+			l_reference_table: like reference_table
+			l_name_table: like name_table
+			l_name_table_item: detachable STRING
+			l_grid: like grid
+			l_route_stack: like route_stack
 		do
-			if grid = Void then
+			if attached grid then
+				l_grid := grid
+			else
 				create l_grid
 				grid := l_grid
 				init_grid (l_grid)
 				result_panel.extend (l_grid)
-			else
-				l_grid := grid
 			end
-			l_column := grid.column_count + 1
-			l_array := route_stack.linear_representation
+			check l_grid /= Void end -- Implied by previous if clause
+			l_column := l_grid.column_count + 1
+			l_route_stack := route_stack
+			check attached l_route_stack end -- Implied by precondition `set'
+			l_array := l_route_stack.linear_representation
 			l_grid.set_row_count_to (l_array.count.max (l_grid.row_count))
 			l_grid.set_column_count_to (l_column)
 			l_grid.column (l_column).set_title ("Route" + l_column.out)
@@ -99,9 +111,11 @@ feature {NONE} -- Results
 					l_last := True
 				end
 				if not l_last then
-					l_tuple := reference_table.references_by_referee (l_next_index).item (l_array.item)
+					l_reference_table := reference_table
+					check l_reference_table /= Void end -- Implied by precondition `set'
+					l_tuple := l_reference_table.references_by_referee (l_next_index).item (l_array.item)
 					if l_tuple /= Void then
-						l_field_name ?= reference_table.references_by_referee (l_next_index).item (l_array.item).data
+						l_field_name ?= l_tuple.data
 					else
 						l_field_name := once "(unknown)"
 					end
@@ -120,7 +134,11 @@ feature {NONE} -- Results
 				else
 					l_once := once ""
 				end
-				l_text := l_once + l_array.item.out + once ": {" + name_table.item (l_array.item) + once "}" + l_field_name
+				l_name_table := name_table
+				check l_name_table /= Void end -- Implied by precondition `set'
+				l_name_table_item := l_name_table.item (l_array.item)
+				check l_name_table_item /= Void end -- FIXME: Implied by ...?
+				l_text := l_once + l_array.item.out + once ": {" + l_name_table_item + once "}" + l_field_name
 				create l_item.make_with_text (l_text)
 				l_item.set_tooltip (l_text)
 				l_grid.set_item (l_column, l_array.index, l_item)
@@ -149,17 +167,23 @@ feature {NONE} -- Results
 			-- Support Copy.
 		require
 			a_key_not_void: a_key /= Void
+			grid_set: attached grid
 		local
 			l_env: EV_ENVIRONMENT
+			l_grid: like grid
 		do
 			create l_env
-			if l_env.application.ctrl_pressed then
+			if attached l_env.application as l_app and then l_app.ctrl_pressed then
 				inspect a_key.code
 				when {EV_KEY_CONSTANTS}.key_a then
-					select_all_row (grid)
+					l_grid := grid
+					check l_grid /= Void end -- Implied by precondition `grid_set'
+					select_all_row (l_grid)
 				when {EV_KEY_CONSTANTS}.key_c then
-					if not grid.selected_items.is_empty then
-						copy_selected_items (grid)
+					l_grid := grid
+					check l_grid /= Void end -- Implied by precondition `grid_set'					
+					if not l_grid.selected_items.is_empty then
+						copy_selected_items (l_grid)
 					end
 				else
 				end
@@ -192,7 +216,7 @@ feature {NONE} -- Results
 			i, j, l_column_count, l_row_count, l_column_selected_count: INTEGER
 			l_column: EV_GRID_COLUMN
 			l_row: EV_GRID_ROW
-			l_text_item: EV_GRID_LABEL_ITEM
+			l_text_item: detachable EV_GRID_LABEL_ITEM
 			l_text: STRING_32
 			l_states: SPECIAL [INTEGER]
 			l_none, l_part, l_full: INTEGER
@@ -269,21 +293,33 @@ feature {NONE} -- Results
 				end
 				i := i + 1
 			end
-			clipboard := (create {EV_ENVIRONMENT}).application.clipboard
-			clipboard.set_text (l_text)
+			if attached (create {EV_ENVIRONMENT}).application as l_app then
+				clipboard := l_app.clipboard
+				clipboard.set_text (l_text)
+			else
+				check False end -- Implied by application is running
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	build
 			-- Build route.
+		require
+			set: attached reference_table
+		local
+			l_reference_table: like reference_table
+			l_route_stack: like route_stack
 		do
-			create route_stack.make (1000)
-			create visited_references.make (reference_table.referee_count)
+			create l_route_stack.make (1000)
+			route_stack := l_route_stack
+			l_reference_table := reference_table
+			check l_reference_table /= Void end -- Implied by precondition `set'
+			create visited_references.make (l_reference_table.referee_count)
 			if deep_visit_node (start_index) then
 				-- Found route
 				check
-					route_stack_not_empty: not route_stack.is_empty
+					route_stack_not_empty: not l_route_stack.is_empty
 				end
 				fill_results
 				remove_last_link_to_once
@@ -296,30 +332,40 @@ feature {NONE} -- Implementation
 	snapshot_mediator: MA_OBJECT_SNAPSHOT_MEDIATOR
 			-- Snapshot mediator
 
-	name_table: HASH_TABLE [STRING, like start_index]
+	name_table: detachable HASH_TABLE [STRING, like start_index]
 			-- Names of type of objects
 
-	reference_table: MA_REFERENCES_TABLE [like start_index, like start_index]
+	reference_table: detachable MA_REFERENCES_TABLE [like start_index, like start_index]
 			-- All object relations
 
-	once_objects_table: HASH_TABLE [like start_index, like start_index]
+	once_objects_table: detachable HASH_TABLE [like start_index, like start_index]
 			-- All once objects
 
 feature {NONE} -- Implementation
 
 	deep_visit_node (a_referee: like start_index): BOOLEAN
 			-- Deep visit a node, Ture is found once object.
+		require
+			set: attached reference_table
+			set: attached route_stack
+			set: attached visited_references
 		local
-			l_all_referrers, l_visited_referrers: HASH_TABLE [TUPLE [like start_index, ANY], like start_index]
+			l_all_referrers, l_visited_referrers: HASH_TABLE [TUPLE [like start_index, detachable ANY], like start_index]
 			l_referrer: like start_index
 			l_all_referrers_count: INTEGER
 			l_visited_references: like visited_references
+			l_reference_table: like reference_table
+			l_route_stack: like route_stack
 		do
 			if is_visited (a_referee) then
 				Result := False
 			else
-				route_stack.put (a_referee)
-				l_all_referrers := reference_table.references_by_referee (a_referee)
+				l_route_stack := route_stack
+				check l_route_stack /= Void end -- Implied by precondition `set'
+				l_route_stack.put (a_referee)
+				l_reference_table := reference_table
+				check l_reference_table /= Void end -- Implied by precondition `set'
+				l_all_referrers := l_reference_table.references_by_referee (a_referee)
 				l_all_referrers_count := l_all_referrers.count
 				if l_all_referrers_count = 0 then
 						-- We reach the end. No referrer.
@@ -332,11 +378,12 @@ feature {NONE} -- Implementation
 					Result := True
 				else
 					l_visited_references := visited_references
+					check attached l_visited_references end -- Implied by precondition `set'
 					l_visited_referrers := l_visited_references.references_by_referee (a_referee)
 					if l_all_referrers_count = l_visited_referrers.count then
 							-- Go back one
 						Result := False
-						route_stack.remove
+						l_route_stack.remove
 					else
 						from
 							l_all_referrers.start
@@ -351,7 +398,7 @@ feature {NONE} -- Implementation
 							l_all_referrers.forth
 						end
 						if not Result then
-							route_stack.remove
+							l_route_stack.remove
 						end
 					end
 				end
@@ -361,33 +408,51 @@ feature {NONE} -- Implementation
 	remove_last_link_to_once
 			-- Remove last found link to once in `reference_table'.
 			-- So that next searching will not return found routes anymore.
+		require
+			ready: attached reference_table
 		local
 			l_referrer, l_referee: like start_index
 			l_route: ARRAYED_LIST [like start_index]
 		do
-			if route_stack /= Void and then route_stack.count > 1 then
-				l_route := route_stack.linear_representation
+			if attached route_stack as l_route_stack and then l_route_stack.count > 1 then
+				l_route := l_route_stack.linear_representation
 				l_referrer := l_route [1]
 				l_referee := l_route [2]
-				reference_table.remove (l_referrer, l_referee)
+				if attached reference_table as l_table then
+					l_table.remove (l_referrer, l_referee)
+				else
+					check False end -- Implied by precondition `ready'
+				end
 			end
 		end
 
 	is_visited (a_node: like start_index): BOOLEAN
 			-- Is `a_node' visited?
+		require
+			set: attached route_stack
+		local
+			l_route_stack: like route_stack
 		do
-			Result := route_stack.has (a_node)
+			l_route_stack := route_stack
+			check l_route_stack /= Void end -- Implied by precondition `set'
+			Result := l_route_stack.has (a_node)
 		end
 
 	is_once_object (a_object: like start_index): BOOLEAN
 			-- Is `a_object' once?
+		require
+			set: attached once_objects_table
+		local
+			l_table: like once_objects_table
 		do
-			Result := once_objects_table.has (a_object)
+			l_table := once_objects_table
+			check attached l_table end -- Implied by precondition `set'
+			Result := l_table.has (a_object)
 		end
 
-	route_stack: ARRAYED_STACK [like start_index]
+	route_stack: detachable ARRAYED_STACK [like start_index]
 
-	visited_references: MA_REFERENCES_TABLE [like start_index, like start_index]
+	visited_references: detachable MA_REFERENCES_TABLE [like start_index, like start_index]
 			-- Visited references.
 			-- `visited_backable_nodes.references_by_referee (a_node)' gives all visited references to `a_node'.
 

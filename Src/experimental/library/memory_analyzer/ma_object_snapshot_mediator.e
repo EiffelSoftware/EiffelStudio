@@ -17,6 +17,7 @@ create
 feature -- Initlization
 
 	make_with_grid (a_grid: EV_GRID)
+			-- Creation method
 		require
 			a_grid_not_void: a_grid /= Void
 		do
@@ -65,13 +66,14 @@ feature -- Command
 	show_memory_map
 			-- Show memory map
 		local
-			l_new_table, l_old_table: HASH_TABLE [INTEGER, INTEGER]
+			l_new_table: HASH_TABLE [INTEGER, INTEGER]
+			l_old_table: detachable HASH_TABLE [INTEGER, INTEGER]
 			i: INTEGER
 			l_int: INTERNAL
 			l_name: STRING
 			l_count, l_delta: INTEGER
 			l_data: like grid_data
-			l_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER_32]
+			l_map: detachable HASH_TABLE [ARRAYED_LIST [ANY], INTEGER_32]
 		do
 				-- Reduce as much as possible relations.
 			name_table := Void
@@ -109,6 +111,7 @@ feature -- Command
 				l_count := l_new_table.item_for_iteration
 
 				if finding_route_to_once then
+					check attached l_map end -- Implied by `finding_route_to_once'
 					add_to_reference_table (l_new_table.key_for_iteration, l_map)
 				end
 
@@ -165,11 +168,14 @@ feature {NONE} -- Implementation
 
 	pick_item (a_item: EV_GRID_LABEL_ITEM): MA_STONE
 			-- User pick one item from the grid.
+		require
+			set: attached a_item
+			valid: a_item.column.index = 1
 		do
 			if a_item /= Void and then a_item.column.index = 1 then
 				-- If is an item represent a object. Only an item represent an object has been setted the data.
-				if a_item.data /= Void then
-					create {MA_OBJECT_STONE} Result.make (a_item.data)
+				if attached a_item.data as l_data then
+					create {MA_OBJECT_STONE} Result.make (l_data)
 					object_grid.set_accept_cursor (accept_node)
 					object_grid.set_deny_cursor (deny_node)
 				else
@@ -178,6 +184,9 @@ feature {NONE} -- Implementation
 					object_grid.set_accept_cursor (accept_node_class)
 					object_grid.set_deny_cursor (deny_node_class)
 				end
+			else
+				check False end -- Implied by precondition
+				create {MA_CLASS_STONE} Result.make ("") -- Satisfy void-safe compiler
 			end
 		end
 
@@ -209,6 +218,7 @@ feature {NONE} -- Implementation
 		local
 			l_sorter: QUICK_SORTER [like row_data]
 			l_agent_sorter: AGENT_EQUALITY_TESTER [like row_data]
+			l_grid_data: like grid_data
 		do
 			inspect
 				sorted_column
@@ -217,7 +227,9 @@ feature {NONE} -- Implementation
 				when 3 then create l_agent_sorter.make (agent sort_on_delta)
 			end
 			create l_sorter.make (l_agent_sorter)
-			l_sorter.sort (grid_data)
+			l_grid_data := grid_data
+			check attached l_grid_data end -- Implied by precondition
+			l_sorter.sort (l_grid_data)
 		end
 
 	update_grid_content
@@ -238,6 +250,7 @@ feature {NONE} -- Implementation
 				l_grid := object_grid
 				grid_util.grid_remove_and_clear_all_rows (l_grid)
 				i := 1
+				check attached l_data end -- Implied by precondition `grid_data_not_void'
 				l_data.start
 			until
 				l_data.after
@@ -417,8 +430,8 @@ feature {NONE} -- Implementation
 		do
 			if a_check_item.selected then
 				last_selected_object := a_object
-				if selected_item /= Void then
-					selected_item.set_selected (False)
+				if attached selected_item as l_item then
+					l_item.set_selected (False)
 				end
 				selected_item := a_check_item
 			end
@@ -429,21 +442,34 @@ feature {NONE} -- Implementation
 		require
 			tables_created: reference_table /= Void and name_table /= Void
 			a_map_not_void: a_map /= Void
+			has: a_map.has (a_object_id)
+			set: attached object_table
+			set: attached name_table
+			set: attached reference_table
 		local
 			l_name, l_field_name: STRING
 			l_int: INTERNAL
-			l_objects_of_type: ARRAYED_LIST [ANY]
+			l_objects_of_type: detachable ARRAYED_LIST [ANY]
 			l_index: NATURAL
-			l_item, l_referee: ANY
+			l_item: ANY
+			l_referee: detachable ANY
 			l_field_count: INTEGER
 			i: INTEGER
-			l_special: SPECIAL [ANY]
-			l_tuple: TUPLE
+			l_special: detachable SPECIAL [ANY]
+			l_tuple: detachable TUPLE
 			l_is_special, l_is_tuple: BOOLEAN
+			l_object_table: like object_table
+			l_name_table: like name_table
+			l_reference_table: like reference_table
 		do
 			create l_int
 			l_name := l_int.type_name_of_type (a_object_id)
 			l_objects_of_type := a_map.item (a_object_id)
+			check attached l_objects_of_type end -- Implied by precondition `has'
+			l_object_table := object_table
+			check attached l_object_table end -- Implied by precondition `set'
+			l_reference_table := reference_table
+			check attached l_reference_table end -- Implied by precondition `set'						
 			l_field_count := l_int.field_count_of_type (a_object_id)
 			l_is_special := l_int.is_special_any_type (a_object_id)
 			l_is_tuple := l_int.is_tuple_type (a_object_id)
@@ -453,18 +479,21 @@ feature {NONE} -- Implementation
 				l_objects_of_type.after
 			loop
 				l_item := l_objects_of_type.item
-				l_index := object_table.index (l_item)
+				l_index := l_object_table.index (l_item)
 				if last_selected_object /= Void and then l_item = last_selected_object then
 					selected_index := l_index
 					last_selected_object := Void
 				end
 					--| Fixme: we don't know whether it is an once object or not.
-				name_table.put (l_name, l_index)
+				l_name_table := name_table
+				check attached l_name_table end -- Implied by precondition `set'
+				l_name_table.put (l_name, l_index)
 				check
-					not name_table.conflict
+					not l_name_table.conflict
 				end
 				if l_is_special then
 					l_special ?= l_item
+					check attached l_special end -- Implied by design of `a_map'
 					l_field_name := once "(special_field)"
 					from
 						i := l_special.lower
@@ -473,12 +502,13 @@ feature {NONE} -- Implementation
 					loop
 						l_referee := l_special.item (i)
 						if l_referee /= Void then
-							reference_table.extend (l_index, object_table.index (l_referee), l_field_name)
+							l_reference_table.extend (l_index, l_object_table.index (l_referee), l_field_name)
 						end
 						i := i + 1
 					end
 				elseif l_is_tuple then
 					l_tuple ?= l_item
+					check attached l_tuple end -- Implied by design of `a_map'
 					l_field_name := once "(tuple_field)"
 					from
 						i := l_tuple.lower
@@ -487,7 +517,7 @@ feature {NONE} -- Implementation
 					loop
 						l_referee := l_tuple.item (i)
 						if l_referee /= Void then
-							reference_table.extend (l_index, object_table.index (l_referee), l_field_name)
+							l_reference_table.extend (l_index, l_object_table.index (l_referee), l_field_name)
 						end
 						i := i + 1
 					end
@@ -500,7 +530,7 @@ feature {NONE} -- Implementation
 						l_referee := l_int.field (i, l_item)
 						if l_referee /= Void then
 							l_field_name := l_int.field_name (i, l_item)
-							reference_table.extend (l_index, object_table.index (l_referee), l_field_name)
+							l_reference_table.extend (l_index, l_object_table.index (l_referee), l_field_name)
 						end
 						i := i + 1
 					end
@@ -511,15 +541,20 @@ feature {NONE} -- Implementation
 
 	build_once_object_table
 			-- Record once object in `once_object_table'.
+		require
+			set: attached object_table
 		local
 			l_obj: like once_objects
 			i: INTEGER
 			l_item: ANY
 			l_index: like selected_index
 			l_int: INTERNAL
+			l_once_object_table: like once_object_table
+			l_object_table: like object_table
 		do
 			create l_int
-			create once_object_table.make (100)
+			create l_once_object_table.make (100)
+			once_object_table := l_once_object_table
 			l_obj := once_objects
 			from
 				i := l_obj.lower
@@ -528,8 +563,10 @@ feature {NONE} -- Implementation
 			loop
 				l_item := l_obj.item (i)
 				if l_item /= Void then
-					l_index := object_table.index (l_item)
-					once_object_table.force (l_index, l_index)
+					l_object_table := object_table
+					check attached l_object_table end -- Implied by precondition `set'
+					l_index := l_object_table.index (l_item)
+					l_once_object_table.force (l_index, l_index)
 				end
 				i := i + 1
 			end
@@ -561,7 +598,12 @@ feature {NONE} -- Fields
 	row_data: TUPLE [type_name: STRING; number_of_objects: INTEGER; variation_since_last_time: INTEGER; type_id: INTEGER]
 			-- Type for the data inserted in `output_grid'
 			-- It is [type_name, number_of_objects, variation_since_last_time, type_id].
+		local
+			l_result: detachable like row_data
 		do
+			check False end -- Anchor type only
+			check attached l_result end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
 	object_grid: EV_GRID
@@ -573,24 +615,24 @@ feature {NONE} -- Fields
 	sorting_order: BOOLEAN
 			-- If True, sorted from the smaller to the bigger.
 
-	last_table: HASH_TABLE [INTEGER, INTEGER]
+	last_table: detachable HASH_TABLE [INTEGER, INTEGER]
 			-- Result of last call to `mem.memory_map_count' in `show_memory_map'.
 
-	grid_data: ARRAYED_LIST [like row_data]
+	grid_data: detachable ARRAYED_LIST [like row_data]
 			-- Data used to fill grid.
 
 feature -- Access
 
-	reference_table: MA_REFERENCES_TABLE [like selected_index, like selected_index]
+	reference_table: detachable MA_REFERENCES_TABLE [like selected_index, like selected_index]
 			-- Reference addresses mapping at a certain time. [referrer index, referee index]
 
-	object_table: SED_OBJECTS_TABLE
+	object_table: detachable SED_OBJECTS_TABLE
 			-- Table to store all indice of objects.
 
-	once_object_table: HASH_TABLE [like selected_index, like selected_index]
+	once_object_table: detachable HASH_TABLE [like selected_index, like selected_index]
 			-- Table to store all once objects.
 
-	name_table: HASH_TABLE [STRING, like selected_index]
+	name_table: detachable HASH_TABLE [STRING, like selected_index]
 			-- Names of objects of addresses at a certain time. [Name, index]
 
 	selected_index: NATURAL
@@ -598,10 +640,10 @@ feature -- Access
 
 feature {NONE} -- Route building.
 
-	last_selected_object: ANY
+	last_selected_object: detachable ANY
 			-- A selected object.
 
-	selected_item: MA_GRID_CHECK_BOX_ITEM
+	selected_item: detachable MA_GRID_CHECK_BOX_ITEM
 			-- All selected items.		
 
 feature {NONE} -- Sorting Implemention

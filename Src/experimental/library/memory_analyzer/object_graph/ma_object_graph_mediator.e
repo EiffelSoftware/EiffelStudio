@@ -66,22 +66,25 @@ feature -- Command
 			a_object_not_void : a_object /= Void
 		local
 			l_obj_with_node : TUPLE [obj: ANY; node: EG_NODE]
+			l_result: detachable like find_draw_node_by_object
 		do
 			from
 				objects_already_draw.start
 			until
-				Result /= Void or objects_already_draw.after
+				l_result /= Void or objects_already_draw.after
 			loop
 				l_obj_with_node := objects_already_draw.item_for_iteration
 					-- Test the address.
 				if l_obj_with_node.obj = a_object then
-					Result := l_obj_with_node.node
+					l_result := l_obj_with_node.node
 					check
-						result_not_void: Result /= Void
+						result_not_void: l_result /= Void
 					end
 				end
 				objects_already_draw.forth
 			end
+			check attached l_result end -- FIXME: Implied by ...?
+			Result := l_result
 		ensure
 			result_not_void : Result /= Void
 		end
@@ -151,37 +154,40 @@ feature -- Command
 			ax_not_large_or_small: ax >= 0 and ax <= 2000
 			ay_not_large_or_small: ay >= 0 and ay <= 2000
 		local
-			fig: EG_FIGURE
+			fig: detachable EG_FIGURE
 			l_intro : STRING
 			l_tuple: TUPLE [obj: ANY; node: EG_NODE]
+			l_last_drawn_node: like last_drawn_node
 		do
 			node_counter := node_counter + 1
 
-			create last_drawed_node
+			create l_last_drawn_node
+			last_drawn_node := l_last_drawn_node
 
 			l_intro := a_object.out
 			if l_intro.count > 20 then
 				l_intro := internal.type_name (a_object)
 			end
-			last_drawed_node.set_name (node_counter.out + " : " + l_intro)
-			graph.add_node (last_drawed_node)
+			l_last_drawn_node.set_name (node_counter.out + " : " + l_intro)
+			graph.add_node (l_last_drawn_node)
 
-			fig := world.figure_from_model (last_drawed_node)
+			fig := world.figure_from_model (l_last_drawn_node)
+			check attached fig end -- Implied by `l_last_drawn_node' has been just added
 			fig.set_point_position (ax, ay)
 
 			-- Make new node figure a drop target
 			fig.set_accept_cursor (accept_node)
 			fig.set_deny_cursor (deny_node)
---			fig.drop_actions.extend (agent on_link_drop (?, last_drawed_node))
+--			fig.drop_actions.extend (agent on_link_drop (?, last_drawn_node))
 
 			-- Make new node figure pickable
---			fig.set_pebble (create {NODE_STONE}.make (last_drawed_node))
+--			fig.set_pebble (create {NODE_STONE}.make (last_drawn_node))
 
 			fig.pointer_button_release_actions.extend (agent on_select_node)
-			l_tuple := [a_object, last_drawed_node]
+			l_tuple := [a_object, l_last_drawn_node]
 			check
 				a_object /= Void
-				last_drawed_node /= Void
+				last_drawn_node /= Void
 			end
 			world.update
 			-- Put the object and the node into the hashtable
@@ -237,11 +243,15 @@ feature -- Implementation for agents
 			l_link_node: EG_NODE
 			l_linkable: EG_LINKABLE
 			l_info_dlg: EV_INFORMATION_DIALOG
+			l_item: detachable TUPLE [obj: ANY; node: EG_NODE]
+			l_last_drawn_node: like last_drawn_node
 		do
 			l_nodes := world.selected_figures
 			if l_nodes.count > 0 then
 				l_node := l_nodes.first
-				l_object :=	objects_already_draw.item (l_node).obj
+				l_item := objects_already_draw.item (l_node)
+				check attached l_item end -- FIXME: Implied by ...?
+				l_object :=	l_item.obj
 				l_refers := memory.referers (l_object)
 				from
 					l_int := 0
@@ -252,18 +262,24 @@ feature -- Implementation for agents
 					if object_already_draw(l_refers.item (l_int))  then
 						-- add link to two already drawed object
 						l_link_node := find_draw_node_by_object(l_refers.item (l_int))
-						l_linkable := objects_already_draw.item (l_node).node
+						l_item := objects_already_draw.item (l_node)
+						check attached l_item end -- FIXME: Implied by ...?
+						l_linkable := l_item.node
 						check
 							l_linkable /= Void
 						end
 						add_link (l_linkable, l_link_node )
 					else
 						add_node_random_pos(l_refers.item (l_int))
-						l_linkable := objects_already_draw.item (l_node).node
+						l_item := objects_already_draw.item (l_node)
+						check attached l_item end -- FIXME: Implied by ...?
+						l_linkable := l_item.node
 						check
 							l_linkable /= Void
 						end
-						add_link (l_linkable, last_drawed_node )
+						l_last_drawn_node := last_drawn_node
+						check attached l_last_drawn_node end -- FIXME: Implied by ...?
+						add_link (l_linkable, l_last_drawn_node)
 					end
 					l_int := l_int + 1
 				end
@@ -277,8 +293,8 @@ feature -- Implementation for agents
 	find_object_by_type_name (a_type_name: STRING)
 			-- Find all the objects in the system which type is "a_type_name".
 		local
-			l_temp : ANY
-			l_information:EV_INFORMATION_DIALOG
+			l_temp: detachable ANY
+			l_information: EV_INFORMATION_DIALOG
 		do
 			l_temp := object_finder.find_objects_by_type_name (a_type_name)
 			if l_temp = Void then
@@ -306,9 +322,9 @@ feature -- Implementation for agents
 	find_object_by_instance_name (a_object_name: STRING)
 			-- Find all the objects which name (the field name) is a_object_name then put then all on the graph.
 		local
-			l_object:ANY
-			l_information:EV_INFORMATION_DIALOG
-			object_drawed:BOOLEAN
+			l_object: detachable ANY
+			l_information: EV_INFORMATION_DIALOG
+			object_drawed: BOOLEAN
 		do
 			l_object := object_finder.find_objects_by_object_name (a_object_name)
 			if l_object /= Void then
@@ -335,7 +351,8 @@ feature {NONE} -- Graphics Implementation
 		local
 			l_links: ARRAYED_LIST [EG_LINK]
 			l_link: EG_LINK
-			l_ref_link: MA_REFERENCE_LINK
+			l_ref_link: detachable MA_REFERENCE_LINK
+			l_target_figure: detachable EG_FIGURE
 		do
 			l_links := graph.flat_links
 
@@ -351,9 +368,10 @@ feature {NONE} -- Graphics Implementation
 					l_ref_link ?= world.figure_from_model (l_link)
 					check l_ref_link /= Void end
 					l_ref_link.set_color
-					if not nodes_visited.has (world.figure_from_model (l_link.target)) then
-						nodes_visited.force (Void, world.figure_from_model (l_link.target))
-						node_reference_change_color (world.figure_from_model (l_link.target))
+					l_target_figure := world.figure_from_model (l_link.target)
+					if attached l_target_figure and then not nodes_visited.has (l_target_figure) then
+						nodes_visited.force (Void, l_target_figure)
+						node_reference_change_color (l_target_figure)
 					else
 						io.put_string ("%NThere is a circle relation in the graph. the class name is : ..."  )
 					end
@@ -368,7 +386,7 @@ feature {NONE} -- Graphics Implementation
 			-- Set the lines' color  which is should be orignal color.
 		local
 			l_links: ARRAYED_LIST [EG_LINK]
-			l_ref_link: MA_REFERENCE_LINK
+			l_ref_link: detachable MA_REFERENCE_LINK
 		do
 			l_links := graph.flat_links
 			from
@@ -394,7 +412,7 @@ feature {NONE} -- Low Level Logic Implementation
 			a_type_name_not_void: a_type_name /= Void
 		local
 			l_type_key: INTEGER
-			l_data: ARRAYED_LIST[ANY]
+			l_data: detachable ARRAYED_LIST[ANY]
 			l_row_index, i: INTEGER
 			l_item: ANY
 		do
@@ -424,16 +442,16 @@ feature {NONE} -- Low Level Logic Implementation
 
 feature {NONE} -- Fields
 
-	links_should_orignal_color: HASH_TABLE [ANY, EG_LINK]
-			-- Nodos which should be orignal color
+	links_should_orignal_color: HASH_TABLE [detachable ANY, EG_LINK]
+			-- Nodes which should be orignal color
 
-	nodes_visited: HASH_TABLE [ANY, EG_FIGURE]
+	nodes_visited: HASH_TABLE [detachable ANY, EG_FIGURE]
 			-- Nodes which should have been visited
 
 	grid_layout: EG_GRID_LAYOUT
 			-- Layout can layout the nodes in the figure
 
-	last_drawed_node:EG_NODE
+	last_drawn_node: detachable EG_NODE
 			--Node which was just drawed
 
 	objects_already_draw: HASH_TABLE [TUPLE [obj: ANY; node: EG_NODE], EG_FIGURE]

@@ -13,16 +13,34 @@ feature  -- Singletons
 
 	filter: MA_FILTER_SINGLETON
 			-- FILTER_SINGLETON instance
+		local
+			l_item: detachable MA_FILTER_SINGLETON
 		do
-			Result := internal_filter.item
+			l_item := internal_filter.item
+			if attached l_item then
+				Result := l_item
+			else
+				l_item := create {MA_FILTER_SINGLETON}.make
+				internal_filter.put (l_item)
+				Result := l_item
+			end
 		ensure
 			filter_not_void: Result /= Void
 		end
 
 	filter_window: MA_FILTER_WINDOW
-			--
+			-- FILTER_WINDOW instance
+		local
+			l_item: detachable MA_FILTER_WINDOW
 		do
-			Result := internal_filter_window.item
+			l_item := internal_filter_window.item
+			if attached l_item then
+				Result := l_item
+			else
+				l_item := create {MA_FILTER_WINDOW}.make
+				internal_filter_window.put (l_item)
+				Result := l_item
+			end
 		ensure
 			filter_window_not_void: Result /= Void
 		end
@@ -53,8 +71,14 @@ feature  -- Singletons
 
 	main_window: MA_WINDOW
 			-- MEMORY_TOOL_WINDOW instance
+		require
+			set: is_main_window_set
+		local
+			l_item: detachable MA_WINDOW
 		do
-			Result := internal_main_window.item
+			l_item := internal_main_window.item
+			check attached l_item end -- Implied by precondition
+			Result := l_item
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -83,6 +107,14 @@ feature  -- Singletons
 			icons_not_void: Result /= Void
 		end
 
+feature -- Query
+
+	is_main_window_set: BOOLEAN
+			-- If main window instance has been set?
+		do
+			Result := attached internal_main_window.item
+		end
+
 feature {MA_WINDOW} -- Access
 
 	set_main_window (a_window: like main_window)
@@ -91,8 +123,6 @@ feature {MA_WINDOW} -- Access
 			a_window_not_void: a_window /= Void
 		do
 			internal_main_window.put (a_window)
-			internal_filter.put (create {MA_FILTER_SINGLETON}.make)
-			internal_filter_window.put (create {MA_FILTER_WINDOW})
 		ensure
 			a_window_set: a_window = internal_main_window.item
 		end
@@ -171,19 +201,19 @@ feature -- Colors
 
 feature {NONE} -- misc
 
-	internal_main_window: CELL [MA_WINDOW]
+	internal_main_window: CELL [detachable MA_WINDOW]
 			-- MAIN_WINDOW instance's cell.
 		once
 			create Result.put (Void)
 		end
 
-	internal_filter: CELL [MA_FILTER_SINGLETON]
+	internal_filter: CELL [detachable MA_FILTER_SINGLETON]
 			-- MA_FILTER_SINGLETON instance's cell.
 		once
 			create Result.put (Void)
 		end
 
-	internal_filter_window: CELL [MA_FILTER_WINDOW]
+	internal_filter_window: CELL [detachable MA_FILTER_WINDOW]
 			-- MA_FILTER_WINDOW instance'e cell.
 		once
 			create Result.put (Void)

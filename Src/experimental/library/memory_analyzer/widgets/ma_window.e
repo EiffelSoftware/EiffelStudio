@@ -28,12 +28,24 @@ create
 	make
 
 feature {NONE} -- Initialization
+
 	make (a_dir: STRING)
-			--
+			-- Creation method
 		require
 			a_dir_not_void: a_dir /= Void
 		do
 			icons.set_pixmap_directory (a_dir)
+
+			create_all_widgets
+			create_object_routes_panel_objects
+
+			create analyze_gc.make
+			create analyze_object_gra.make_with_drawable (object_drawing)
+			create analyze_object_snap.make_with_grid (object_grid)
+			create analyze_route_searcher.make (analyze_object_snap, route_results_panel)
+			create timer
+			create increase_detector.make (memory_spot_1, memory_spot_2, increased_object_result)
+
 			default_create
 		ensure
 --			dir_set: icon
@@ -47,15 +59,9 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			set_main_window (Current)
-			create analyze_gc.make
-			create analyze_object_gra.make_with_drawable (object_drawing)
-			create analyze_object_snap.make_with_grid (object_grid)
-			create analyze_route_searcher.make (analyze_object_snap, route_results_panel)
-			create increase_detector.make
 
-			create timer
-			timer.actions.extend (agent timer_event)
-			timer.set_interval (refresh_interval)
+			attached_timer.actions.extend (agent timer_event)
+			attached_timer.set_interval (refresh_interval)
 			main_book.drop_actions.extend (agent main_book_drop_pebble)
 			main_book.drop_actions.set_veto_pebble_function (agent main_book_dropable)
 
@@ -78,7 +84,7 @@ feature {NONE} -- Initialization
 			search_route_button.select_actions.extend (agent search_route)
 		ensure then
 			main_window_set: main_window_not_void
-			timer_action_set: timer.actions.count > 0
+			timer_action_set: attached_timer.actions.count > 0
 			notebook_drop_action_set: main_book.drop_actions.count > 0
 			update_interval_set_normal: refresh_interval = refresh_interval_normal
 			auto_refresh_button_selected: auto_refresh.is_selected
@@ -132,8 +138,8 @@ feature -- Redefine
 	destroy
 			-- Destroy window, clear singleton.
 		do
-			timer.set_interval (0)
-			timer.actions.wipe_out
+			attached_timer.set_interval (0)
+			attached_timer.actions.wipe_out
 			timer := Void
 			main_book.drop_actions.wipe_out
 			filter_setting.drop_actions.wipe_out
@@ -193,14 +199,14 @@ feature {NONE} -- Implementation for agents
 			-- Enable or disable auto refresh memory graph.
 		do
 			if auto_refresh.is_selected then
-				timer.set_interval (refresh_interval)
+				attached_timer.set_interval (refresh_interval)
 				auto_refresh.set_tooltip ("Auto refresh enabled")
 			else
-				timer.set_interval (0)
+				attached_timer.set_interval (0)
 				auto_refresh.set_tooltip ("Auto refresh disabled")
 			end
 		ensure then
-			timer_state_changed: old timer.interval /= timer.interval
+			timer_state_changed: old attached_timer.interval /= attached_timer.interval
 			auto_refresh_tooltip_changed: old auto_refresh.tooltip /= auto_refresh.tooltip
 		end
 
@@ -215,32 +221,32 @@ feature {NONE} -- Implementation for agents
 				analyze_object_snap.set_finding_route_to_once (False)
 			end
 		ensure then
-			timer_state_changed: old timer.interval /= timer.interval
+--			timer_state_changed: old attached_timer.interval /= attached_timer.interval
 			auto_refresh_tooltip_changed: old auto_refresh.tooltip /= auto_refresh.tooltip
 		end
 
 	auto_refresh_change_speed
 			-- Change the refresh speed.
 		do
-			if timer.interval /= 0 then
+			if attached_timer.interval /= 0 then
 				inspect refresh_interval
 					when refresh_interval_low then
 						refresh_interval := refresh_interval_normal
-						timer.set_interval (refresh_interval)
+						attached_timer.set_interval (refresh_interval)
 						refresh_speed.set_tooltip ("Refresh speed is normal")
 					when refresh_interval_normal then
 						refresh_interval := refresh_interval_hi
-						timer.set_interval (refresh_interval)
+						attached_timer.set_interval (refresh_interval)
 						refresh_speed.set_tooltip ("Refresh speed is hi")
 					when refresh_interval_hi then
 						refresh_interval := refresh_interval_low
-						timer.set_interval (refresh_interval)
+						attached_timer.set_interval (refresh_interval)
 						refresh_speed.set_tooltip ("Refresh speed is low")
 				end
 			end
 		ensure then
-			refresh_speed_toollip_changed: timer.interval /= 0 implies old refresh_speed.tooltip /= refresh_speed.tooltip
-			timer_interval_changed: timer.interval /= 0 implies old timer.interval /= timer.interval
+			refresh_speed_toollip_changed: attached_timer.interval /= 0 implies old refresh_speed.tooltip /= refresh_speed.tooltip
+			timer_interval_changed: attached_timer.interval /= 0 implies old attached_timer.interval /= attached_timer.interval
 		end
 
 	arrange_circle_clicked
@@ -430,8 +436,22 @@ feature {NONE} -- Implementation
 	analyze_route_searcher: MA_ROUTE_TO_ONCE_SEARCHER
 			-- Searcher for routes to once object.
 
-	timer: EV_TIMEOUT
+	timer: detachable EV_TIMEOUT
 			-- The timer used for update histogram and history.
+
+	attached_timer: EV_TIMEOUT
+			-- Attached `timer'
+		require
+			set: attached timer
+		local
+			l_result: like timer
+		do
+			l_result := timer
+			check attached l_result end -- Implied by precondition
+			Result := l_result
+		ensure
+			not_void: attached Result
+		end
 
 	refresh_interval: INTEGER
 			-- The time of interval between refersh.

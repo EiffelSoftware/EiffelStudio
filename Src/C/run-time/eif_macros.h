@@ -2,7 +2,7 @@
 	description: "Macros used by C code at run time."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1406,8 +1406,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RT_SPECIAL_PADDED_DATA_SIZE	LNGPAD(3)
 #define RT_SPECIAL_DATA_SIZE	(3*sizeof(EIF_INTEGER))
 #define RT_SPECIAL_VISIBLE_SIZE(spec) ((rt_uint_ptr) RT_SPECIAL_COUNT(spec) * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(spec))
-#define RT_SPECIAL_MALLOC_COUNT(nb_items,item_size) \
-	((rt_uint_ptr) (CHRPAD((rt_uint_ptr) nb_items * (rt_uint_ptr) item_size) + RT_SPECIAL_PADDED_DATA_SIZE))
 
 #define RT_IS_SPECIAL(obj) \
 	((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == EO_SPEC)

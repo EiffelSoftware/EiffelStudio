@@ -882,7 +882,7 @@ rt_private void run_tests(void)
 
 	printf(">> Testing spmalloc (Eiffel special objects)\n");
 	for (i = 0; i < 8; i++)
-		(void) spmalloc(i * 40);
+		(void) spmalloc(i, 40, EIF_FALSE);
 	mem_status();
 
 	/* Test explosion of scavenge space if necessary */

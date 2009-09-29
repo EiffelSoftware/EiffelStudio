@@ -2,7 +2,7 @@
 	description: "Private declarations for malloc routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -162,6 +162,7 @@ extern EIF_REFERENCE eif_rt_xcalloc(size_t nelem, size_t elsize);		/* Calloc */
 extern void eif_rt_xfree(register void * ptr);				/* Free */
 extern void *crealloc(void *ptr, size_t nbytes);			/* Reallocate a C object */
 extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
+extern EIF_REFERENCE spmalloc(EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic);			/* Allocate an Eiffel special object */
 
 #ifdef ISE_GC
 extern EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes);				/* Garbage collector's allocation */

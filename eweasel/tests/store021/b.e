@@ -3,6 +3,6 @@ class
 
 feature
 
-	field: G
+	field: detachable G
 
 end

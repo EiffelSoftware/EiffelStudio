@@ -54,6 +54,11 @@ inherit
 			{NONE} all
 		end
 
+	ES_SHARED_LOCALE_FORMATTER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	init_size_and_position

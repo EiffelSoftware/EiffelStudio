@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			l_link: EVS_LINK_LABEL
 			l_hbox: EV_HORIZONTAL_BOX
 			l_shrinkable: EV_FIXED
+			l_string: STRING_32
 		do
 			a_container.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
@@ -238,6 +239,13 @@ feature {NONE} -- Initialization
 				-- Enable content items based on login state.
 			on_text_component_focused_out (synopsis_text, locale_formatter.translation (lb_enter_synopsis))
 			on_text_component_focused_out (description_text, default_description)
+			if description_text.text_length > 0 then
+				l_string := description_text.text
+				if l_string.item (1).is_character_8 and then l_string.item (1).to_character_8.is_space then
+						-- Rese the caret position, because the start of the text is blank.
+					description_text.set_caret_position (1)
+				end
+			end
 			enable_login
 			enable_login_content_widget (False)
 

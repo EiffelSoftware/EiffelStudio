@@ -49,6 +49,7 @@ feature {NONE} -- Creation
 			default_create
 			Precursor
 			if not is_destroyed then
+				uncaught_exception_actions.extend (agent handle_exceptions)
 				ev_launch
 			end
 		end
@@ -111,8 +112,36 @@ feature {NONE} -- Creation
 			end
 		end
 
+feature {NONE} -- Exception
+
+	handle_exceptions (an_exception: EXCEPTION)
+			-- Exception handler to replace the default Vision2 behavior.
+		require
+			an_exception_not_void: an_exception /= Void
+		local
+			l_dialog: like exception_dialog
+		do
+			if
+				attached an_exception.message as l_msg and then
+				l_msg.has_substring ("Interrupt")
+			then
+					-- Do nothing to react to Ctrl+C
+					-- Because ec will raise an exception dialog
+			else
+					-- Other unhandled exceptions.
+				if attached ev_implementation as l_imp then
+					create l_dialog
+					exception_dialog := l_dialog
+					l_imp.raise_default_exception_dialog (l_dialog, an_exception)
+				end
+			end
+		end
+
+	exception_dialog: detachable EV_DIALOG;
+			-- Dialog used for showing uncaught exceptions.
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -125,22 +154,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

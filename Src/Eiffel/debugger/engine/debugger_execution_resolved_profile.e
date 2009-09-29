@@ -53,11 +53,13 @@ feature {NONE} -- Initialization
 			end
 
 				--| Environment_variables
-			if attached environment_variables as envs and then not envs.is_empty then
+			if attached a_profile.environment_variables as envs and then not envs.is_empty then
 				environment_variables := envs.deep_twin
 			end
 
 			resolve
+		ensure
+			envs_set: (attached a_profile.environment_variables as el_envs and then not el_envs.is_empty) implies (attached environment_variables as el_r_envs and then not el_r_envs.is_empty)
 		end
 
 	resolve

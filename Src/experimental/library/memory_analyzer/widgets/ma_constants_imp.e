@@ -449,8 +449,12 @@ feature -- Access
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant (a_name)
+		local
+			l_item: detachable STRING
 		do
-			Result := (all_constants.item (a_name)).twin
+			l_item := all_constants.item (a_name)
+			check l_item /= Void end -- Implied by precondition `has_constant'
+			Result := l_item.twin
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -463,8 +467,11 @@ feature -- Access
 			has_constant (a_name)
 		local
 			l_string: STRING
+			l_item: detachable STRING
 		do
-			l_string := (all_constants.item (a_name)).twin
+			l_item := all_constants.item (a_name)
+			check l_item /= Void end -- Implied by precondition `has_constant'
+			l_string := l_item.twin
 			check
 				is_integer: l_string.is_integer
 			end

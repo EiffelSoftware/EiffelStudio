@@ -7,9 +7,9 @@ note
 
 deferred class
 	MA_DRAW_STATISTIC
-	
+
 feature -- Command
-	
+
 	draw_graph (a_used_percent, a_overhead_percent:DOUBLE)
 			-- Draw the graph of the statistics.
 		require
@@ -17,13 +17,13 @@ feature -- Command
 			overhead_percent_not_too_large_not_too_small : a_overhead_percent >= 0 and a_overhead_percent <= 1
 		deferred
 		end
-		
+
 	draw_text (a_info: STRING)
 			-- Draw some infomation on the graph.
 		do
 
 		end
-		
+
 	pixmap: EV_PIXMAP
 			-- Return the drawed graph.
 		do
@@ -31,7 +31,7 @@ feature -- Command
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	set_height (a_height: INTEGER)
 			-- Set the height of graph.
 		require
@@ -42,7 +42,7 @@ feature -- Command
 		ensure
 			a_height_set: graph_height = a_height
 		end
-		
+
 	set_width (a_width: INTEGER)
 			-- Set the width of graph.
 		require
@@ -55,7 +55,7 @@ feature -- Command
 		end
 
 feature -- Query
-	
+
 	inner_graph_width: INTEGER
 			-- The inner graph's width.
 		do
@@ -63,7 +63,7 @@ feature -- Query
 		ensure
 			result_greater_than_zero: Result > 0
 		end
-	
+
 	inner_graph_height: INTEGER
 			-- The inner graph's height.
 		do
@@ -71,7 +71,7 @@ feature -- Query
 		ensure
 			result_greater_than_zero: Result > 0
 		end
-	
+
 	inner_graph_draw_height (a_percent: DOUBLE): INTEGER
 			-- The inner graph's used/overhead height.
 		do
@@ -79,15 +79,15 @@ feature -- Query
 		ensure
 			result_positive: Result >= 0
 		end
-		
+
 	inner_graph_draw_height_y (a_percent: DOUBLE): INTEGER
 			-- The inner used graph's y position which can be used by EV_DRAWABLE.draw_sth.(x,y...).
 		do
 			Result := inner_graph_height - inner_graph_draw_height (a_percent) + left_top_y
 		ensure
-			result_positive: Result >= 0		
+			result_positive: Result >= 0
 		end
-		
+
 feature {NONE} -- Implemention
 
 	internal_pixmap: EV_PIXMAP
@@ -95,28 +95,28 @@ feature {NONE} -- Implemention
 
 	left_top_x: INTEGER = 30
 			-- The statistic graph left_top x point.
-	
+
 	left_top_y: INTEGER = 10
 			-- The statistic graph left_top y point.
-	
-	bottom_interval: INTEGER 
+
+	bottom_interval: INTEGER
 			-- The interval between the graph and the EV_DRAWABLE bottom which is used for draw texts.
-	
+
 	right_interval: INTEGER
 			-- The interval between the inner graph and the EV_DRAWABLE right side.
-	
+
 	graph_height: INTEGER
 			-- The max height of the graph.
-				
-	graph_width: INTEGER 
+
+	graph_width: INTEGER
 			--The max width of the graph.
-		
+
 	graph_used_color: EV_COLOR
 			-- The used section's color of the graph.
 		once
 			Result := (create {EV_STOCK_COLORS}).red
 		end
-		
+
 	graph_overhead_color: EV_COLOR
 			-- The overhead section's color of the graph.
 		once
@@ -124,7 +124,7 @@ feature {NONE} -- Implemention
 		ensure
 			reuslt_not_void: Result /= Void
 		end
-		
+
 	graph_grid_color: EV_COLOR
 			-- The grid color of the graphs.
 		once
@@ -132,7 +132,7 @@ feature {NONE} -- Implemention
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	graph_inner_background_color: EV_COLOR
 			-- The background color of the inner graphs.
 		once
@@ -140,7 +140,7 @@ feature {NONE} -- Implemention
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	graph_background_color: EV_COLOR
 			-- The background color of the inner graphs.
 		once
@@ -148,7 +148,7 @@ feature {NONE} -- Implemention
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	graph_pixmap_background_color: EV_COLOR
 			-- The background color of the whole graph.
 		once
@@ -156,7 +156,7 @@ feature {NONE} -- Implemention
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	graph_text_color: EV_COLOR
 			-- The color of the text in the graph.
 		once
@@ -164,16 +164,16 @@ feature {NONE} -- Implemention
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	grid_size: INTEGER = 20
 			-- The grid size of the graph.
-			
+
 invariant
 	pixmap_not_void: internal_pixmap /= Void
 	bottom_interval_not_zero: bottom_interval /= 0
 	inner_graph_width_valid: inner_graph_width >= 0 and inner_graph_width <= graph_width
 	inner_graph_height_valid: inner_graph_height >= 0 and inner_graph_height <= graph_height
-	graph_width_valid: graph_width >= 0 and graph_width <= 1000
+	graph_width_valid: graph_width >= 0
 	graph_height_valid: graph_height >= 0 and graph_height <= 200
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -14,7 +14,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	MA_CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -26,13 +26,9 @@ inherit
 
 feature {NONE}-- Initialization
 
-	initialize
-			-- Initialize `Current'.
+	create_all_widgets
+			-- Create all widgets
 		do
-			Precursor {EV_TITLED_WINDOW}
-			initialize_constants
-			
-				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_tool_bar_1
 			create file_open
@@ -41,7 +37,17 @@ feature {NONE}-- Initialization
 			create add_new_class_name
 			create del_class_name
 			create grid
-			
+		end
+
+	initialize
+			-- Initialize `Current'.
+		do
+			Precursor {EV_TITLED_WINDOW}
+			initialize_constants
+
+				-- Create all widgets.
+			create_all_widgets
+
 				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_tool_bar_1)
@@ -51,13 +57,13 @@ feature {NONE}-- Initialization
 			l_ev_tool_bar_1.extend (add_new_class_name)
 			l_ev_tool_bar_1.extend (del_class_name)
 			l_ev_vertical_box_1.extend (grid)
-			
+
 			l_ev_vertical_box_1.disable_item_expand (l_ev_tool_bar_1)
 			file_open.set_tooltip (tb_filter_open)
 			file_save.set_tooltip (tb_filter_save)
 			add_new_class_name.set_tooltip (tb_add_new_class_name)
 			set_title (wnd_filter_name)
-			
+
 				--Connect events.
 			file_open.select_actions.extend (agent open_clicked)
 			file_save.select_actions.extend (agent save_clicked)
@@ -90,32 +96,32 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	open_clicked
 			-- Called by `select_actions' of `file_open'.
 		deferred
 		end
-	
+
 	save_clicked
 			-- Called by `select_actions' of `file_save'.
 		deferred
 		end
-	
+
 	add_new_class_name_clicked
 			-- Called by `select_actions' of `add_new_class_name'.
 		deferred
 		end
-	
+
 	del_class_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_button_press_actions' of `del_class_name'.
 		deferred
 		end
-	
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

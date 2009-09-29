@@ -21,7 +21,7 @@ feature -- Set
 			create internal_pixmap_path.make_from_string (a_dir)
 			l_set_once := pixmap_path
 		ensure then
-			path_valid: internal_pixmap_path.is_valid
+			path_valid: attached internal_pixmap_path as le_path and then le_path.is_valid
 		end
 
 feature {NONE} -- Implementation
@@ -34,11 +34,15 @@ feature {NONE} -- Implementation
 
 	pixmap_path: DIRECTORY_NAME
 			-- Path containing all of the Memory Analyzer icons
-		once
-			Result := internal_pixmap_path
+		local
+			l_result: like internal_pixmap_path
+		do
+			l_result := internal_pixmap_path
+			check attached l_result end -- FIXME: Implied by ...?
+			Result := l_result
 		end
 
-	internal_pixmap_path: like pixmap_path
+	internal_pixmap_path: detachable like pixmap_path
 			-- Path where have icons image.
 
 	image_matrix: EV_PIXMAP

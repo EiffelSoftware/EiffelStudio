@@ -17,7 +17,17 @@ inherit
 			copy, default_create
 		end
 
+create
+	make
+
 feature {NONE} -- Initialization
+
+	make
+			-- Creation method
+		do
+			create_all_widgets
+			default_create
+		end
 
 	user_initialization
 			-- Called by `initialize'.
@@ -110,7 +120,7 @@ feature {NONE} -- Implementation
 	handle_check_box_value_changed (a_check_item: MA_GRID_CHECK_BOX_ITEM)
 			-- Handle the check box grid item valuse changed.
 		local
-			l_filter_data: TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING]
+			l_filter_data: detachable TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING]
 		do
 			l_filter_data ?= a_check_item.data
 			check l_filter_data /= Void end
@@ -131,7 +141,7 @@ feature {NONE} -- Implementation
 	open_filter_file (a_dlg: EV_FILE_OPEN_DIALOG)
 			-- Open a filter config file
 		local
-			l_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data]
+			l_datas: detachable MA_ARRAYED_LIST_STORABLE [like a_filter_data]
 		do
 			create l_datas.make (1)
 			l_datas ?= l_datas.retrieve_by_name (a_dlg.file_name)
@@ -167,10 +177,13 @@ feature {NONE} -- Implementation
 	add_new_class_name_clicked
 			-- Called by `select_actions' of `l_ev_tool_bar_button_3'.
 		local
-			l_item: EV_GRID_EDITABLE_ITEM
+			l_item: detachable EV_GRID_EDITABLE_ITEM
+			l_last_row: detachable EV_GRID_ROW
 		do
 			add_new_row (Void)
-			l_item ?= grid.last_visible_row.item (1)
+			l_last_row := grid.last_visible_row
+			check attached l_last_row end -- FIXME: Implied by ...?
+			l_item ?= l_last_row.item (1)
 			check l_item /= Void end
 			l_item.activate
 		end
@@ -189,7 +202,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_new_row (a_class_name: STRING)
+	add_new_row (a_class_name: detachable STRING)
 			-- Add a new row to `grid' then update filter datas.
 		local
 			l_item, l_item_2: EV_GRID_EDITABLE_ITEM
@@ -246,8 +259,8 @@ feature {NONE} -- Implementation
 			a_item_not_void: a_item /= Void
 			a_index_valid: a_index = 1 or a_index = 2 or a_index = 3
 		local
-			l_filter_data: like a_filter_data
-			l_check_box: MA_GRID_CHECK_BOX_ITEM
+			l_filter_data: detachable like a_filter_data
+			l_check_box: detachable MA_GRID_CHECK_BOX_ITEM
 		do
 			l_filter_data ?= a_item.data
 			check l_filter_data /= Void end
@@ -274,7 +287,12 @@ feature {NONE} -- Implementation
 			-- A anchor, should not be called
 		require
 			False
+		local
+			l_result: detachable like a_filter_data
 		do
+			check False end -- Anchor type only
+			check attached l_result end -- Satisfy void-safe compiler
+			Result := l_result
 		end
 
 	hash_table_datas_to_arrayed_list_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data]

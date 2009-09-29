@@ -20,10 +20,12 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method.
 		do
+			create selected_changed_actions
+			
 			default_create
 			expose_actions.extend (agent draw_overlay_pixmap)
 			pointer_button_press_actions.force_extend (agent handle_pointer_pressed)
-			create selected_changed_actions
+
 			set_required_width (40)
 		end
 
@@ -92,18 +94,22 @@ feature {NONE} -- Implementation
 			-- Draw the pixmap which represent whether current is selected.
 		require
 			a_drawable_not_void: a_drawable /= Void
+		local
+			l_parent_2: detachable EV_CONTAINER
 		do
-			if is_selected then
-				if parent.has_focus then
-					a_drawable.set_foreground_color (parent.focused_selection_color)
+			if is_selected and attached parent as l_parent then
+				if l_parent.has_focus then
+					a_drawable.set_foreground_color (l_parent.focused_selection_color)
 				else
-					a_drawable.set_foreground_color (parent.non_focused_selection_color)
+					a_drawable.set_foreground_color (l_parent.non_focused_selection_color)
 				end
 			else
-				if row.background_color = Void then
-					a_drawable.set_foreground_color (parent.background_color)
+				if attached row.background_color as l_row_background_color then
+					a_drawable.set_foreground_color (l_row_background_color)
 				else
-					a_drawable.set_foreground_color (row.background_color)
+					l_parent_2 := parent
+					check attached l_parent_2 end -- FIXME: Implied by ...?
+					a_drawable.set_foreground_color (l_parent_2.background_color)
 				end
 			end
 			a_drawable.fill_rectangle (0, 0, a_drawable.width, a_drawable.height)
@@ -119,7 +125,7 @@ feature {NONE} -- Implementation
 		local
 			l_data: like section_data
 		do
-			if is_selected and then parent.has_focus then
+			if is_selected and then (attached parent as l_parent and then l_parent.has_focus) then
 				a_drawable.set_foreground_color (white_color)
 			else
 				a_drawable.set_foreground_color (black_color)
@@ -168,7 +174,7 @@ feature {NONE} -- Implementation
 	draw_unselected (a_drawable: EV_DRAWABLE)
 			-- Draw the pixmap which is represent current is unseleted.
 		do
-			if is_selected and then parent.has_focus then
+			if is_selected and then (attached parent as l_parent and then l_parent.has_focus) then
 				a_drawable.set_foreground_color (white_color)
 			else
 				a_drawable.set_foreground_color (black_color)

@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	find_objects_by_object_name (a_object_name:STRING): ANY
+	find_objects_by_object_name (a_object_name:STRING): detachable ANY
 			-- Only the field name can be found (not include local instance names).
 		require
 			a_object_name_not_void: a_object_name /= Void or not a_object_name.is_equal ("")
@@ -86,34 +86,34 @@ feature
 			end
 		end
 
-	find_objects_by_type_name (a_type_name: STRING):ANY
+	find_objects_by_type_name (a_type_name: STRING): detachable ANY
 			--Find the SPECIAL[ANY] which represent a group of object have the same type.
 		local
 			l_ht: HASH_TABLE [ARRAYED_LIST[ANY], INTEGER]
 			l_list: ARRAYED_LIST[ANY]
 		do
-				l_ht:=	memory.memory_map
+			l_ht:=	memory.memory_map
+			from
+				l_ht.start
+			until
+				l_ht.after
+			loop
+
+				l_list := l_ht.item_for_iteration
+
 				from
-					l_ht.start
+					l_list.start
 				until
-					l_ht.after
+					l_list.after or Result /= Void
 				loop
-
-					l_list := l_ht.item_for_iteration
-
-					from
-						l_list.start
-					until
-						l_list.after or Result /= Void
-					loop
-						if l_list.item /= Void and then a_type_name.is_equal (l_list.item.generating_type) then
-							Result := l_list.item
-						end
-
-						l_list.forth
+					if l_list.item /= Void and then a_type_name.is_equal (l_list.item.generating_type) then
+						Result := l_list.item
 					end
-					l_ht.forth
+
+					l_list.forth
 				end
+				l_ht.forth
+			end
 		end
 
 note

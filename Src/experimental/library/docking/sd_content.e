@@ -366,12 +366,10 @@ feature -- Set
 		do
 			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				if docking_manager.query.maximized_inner_container (a_zone) = Void then
-					if is_visible then
-						set_focus
-					else
+					if not is_visible then
 						show
-						set_focus
 					end
+					set_focus
 				end
 			end
 		end

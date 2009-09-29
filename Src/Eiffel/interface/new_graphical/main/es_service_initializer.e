@@ -16,6 +16,7 @@ inherit
 			add_core_services,
 			new_output_manager_service,
 			new_rota_service,
+			new_debugger_service,
 			register_environment_variables,
 			register_outputs
 		end
@@ -110,6 +111,12 @@ feature {NONE} -- Factory
 			-- <Precursor>
 		do
 			create {EV_ROTA} Result.make
+		end
+
+	new_debugger_service: detachable DEBUGGER_S
+			-- <Precursor>
+		do
+			create {ES_DEBUGGER} Result.make
 		end
 
 feature {NONE} -- Registering: Code templates

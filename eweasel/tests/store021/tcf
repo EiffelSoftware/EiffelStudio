@@ -2,8 +2,8 @@ test_name	storable-removing-attachment-marks
 test_description Trying to store/retrieve a storable where attachment marks are removed.
 
 define SAVE "save (False)"
-define ATT "!"
-define DET "?"
+define ATT "attached "
+define DET "detachable "
 copy_sub 	Ace $TEST Ace
 copy_sub	test.e $CLUSTER test.e
 copy_sub	a.e $CLUSTER a.e
@@ -30,8 +30,8 @@ execute_result ok
 compare        exec_output_2 output_failure
 
 define SAVE ""
-define ATT ""
-define DET ""
+define ATT "detachable "
+define DET "detachable "
 copy_sub	test.e $CLUSTER test.e
 copy_sub	a.e $CLUSTER a.e
 

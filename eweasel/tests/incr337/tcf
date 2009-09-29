@@ -7,11 +7,15 @@ copy_raw 	test.e $CLUSTER test.e
 copy_raw	test1.def $CLUSTER test.def
 compile_melted
 compile_result 	ok
-compare		$EXEC_WORK\test.def output1
+c_compile_work
+c_compile_result ok
+copy_file	$EXEC_WORK\test.def $TEST\output exec_output_1
+compare		exec_output_1 output1
 
 copy_raw	test2.def $CLUSTER test.def
 compile_melted
 compile_result 	ok
-compare		$EXEC_WORK\test.def output2
+copy_file	$EXEC_WORK\test.def $TEST\output exec_output_2
+compare		exec_output_2 output2
 
 test_end

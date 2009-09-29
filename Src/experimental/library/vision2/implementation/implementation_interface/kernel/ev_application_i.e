@@ -720,18 +720,7 @@ feature -- Implementation
 		require
 			an_exception_not_void: an_exception /= Void
 		local
-			l_exception_string: detachable STRING_8
-			l_exception_dialog: like exception_dialog
-			l_label: EV_TEXT
-			l_label_box: EV_HORIZONTAL_BOX
-			l_vbox: EV_VERTICAL_BOX
-			l_hbox: EV_HORIZONTAL_BOX
-			l_font: EV_FONT
-			l_ignore, l_quit: EV_BUTTON
-			l_frame: EV_FRAME
-			l_error_box: EV_HORIZONTAL_BOX
-			l_error_label: EV_LABEL
-			l_exception_message: STRING
+			l_dialog: like exception_dialog
 		do
 				-- Clean up any locked windows of captures.
 			if attached locked_window as l_locked_window then
@@ -751,73 +740,93 @@ feature -- Implementation
 			else
 				if show_exception_dialog then
 						-- Show a basic exception dialog so that exception doesn't get lost if undealt with.
-					l_exception_string := an_exception.exception_trace
-					check l_exception_string /= Void end
-					l_exception_string := l_exception_string.twin
-					l_exception_string.prune_all ('%R')
-					create l_exception_dialog
-					exception_dialog := l_exception_dialog
-					create l_label
-					l_label.disable_word_wrapping
-					l_label.disable_edit
-					create l_font
-					l_font.set_family ({EV_FONT_CONSTANTS}.Family_typewriter)
-					l_label.set_font (l_font)
-					l_label.set_text (l_exception_string)
-					create l_vbox
-					create l_error_box
-					l_error_box.set_border_width (5)
-					l_error_box.set_padding (5)
-					l_error_box.extend ((create {EV_STOCK_PIXMAPS}).error_pixmap.twin)
-					l_error_box.disable_item_expand (l_error_box.first)
-					l_error_box.first.set_minimum_size (32, 32)
-					create l_error_label
-					l_error_label.align_text_left
-					l_error_label.set_text ("The following uncaught exception has occurred:%N%NClick Ignore to continue or Quit to exit the application")
-					l_error_box.extend (l_error_label)
-					l_vbox.extend (l_error_box)
-					l_vbox.disable_item_expand (l_error_box)
-
-
-					create l_frame
-					create l_label_box
-					l_frame.extend (l_label_box)
-					l_label_box.set_padding (5)
-					l_label_box.set_border_width (5)
-					l_label_box.extend (l_label)
-					l_frame.set_text ("Exception Trace")
-					l_vbox.extend (l_frame)
-					l_exception_dialog.extend (l_vbox)
-					create l_hbox
-					l_vbox.extend (l_hbox)
-					l_vbox.disable_item_expand (l_hbox)
-					create l_ignore.make_with_text ("Ignore")
-					l_ignore.select_actions.extend (agent l_exception_dialog.destroy)
-					l_hbox.extend (create {EV_CELL})
-					l_hbox.extend (l_ignore)
-					l_hbox.disable_item_expand (l_ignore)
-					create l_quit.make_with_text ("Quit")
-					l_quit.set_minimum_width (l_ignore.minimum_width)
-					l_quit.select_actions.extend (agent destroy)
-					l_hbox.extend (l_quit)
-					l_hbox.disable_item_expand (l_quit)
-					l_hbox.set_border_width (5)
-					l_hbox.set_padding (5)
-					if attached an_exception.message as l_message then
-						l_exception_message := l_message
-					else
-						l_exception_message := ""
-					end
-					l_exception_dialog.set_title ("Uncaught Exception: " + l_exception_message)
-					l_exception_dialog.set_minimum_height (350)
-					l_exception_dialog.set_size (500, 300)
-					l_exception_dialog.raise
-						--| FIXME Behavior would be better if dialog has full application modality.
-
-						-- Set "Ignore" as the default
-					l_ignore.set_focus
+					create l_dialog
+					exception_dialog := l_dialog
+					raise_default_exception_dialog (l_dialog, an_exception)
 				end
 			end
+		end
+
+	raise_default_exception_dialog (a_empty_dialog: EV_DIALOG; an_exception: EXCEPTION)
+			-- Raise the exception dialog
+		require
+			a_empty_dialog_valid: a_empty_dialog /= Void and then not a_empty_dialog.is_destroyed
+		local
+			l_exception_string: STRING_8
+			l_label: EV_TEXT
+			l_label_box: EV_HORIZONTAL_BOX
+			l_vbox: EV_VERTICAL_BOX
+			l_hbox: EV_HORIZONTAL_BOX
+			l_font: EV_FONT
+			l_ignore, l_quit: EV_BUTTON
+			l_frame: EV_FRAME
+			l_error_box: EV_HORIZONTAL_BOX
+			l_error_label: EV_LABEL
+			l_exception_message: STRING
+		do
+			l_exception_string := an_exception.exception_trace
+			check l_exception_string /= Void end
+			l_exception_string := l_exception_string.twin
+			l_exception_string.prune_all ('%R')
+			create l_label
+			l_label.disable_word_wrapping
+			l_label.disable_edit
+			create l_font
+			l_font.set_family ({EV_FONT_CONSTANTS}.Family_typewriter)
+			l_label.set_font (l_font)
+			l_label.set_text (l_exception_string)
+			create l_vbox
+			create l_error_box
+			l_error_box.set_border_width (5)
+			l_error_box.set_padding (5)
+			l_error_box.extend ((create {EV_STOCK_PIXMAPS}).error_pixmap.twin)
+			l_error_box.disable_item_expand (l_error_box.first)
+			l_error_box.first.set_minimum_size (32, 32)
+			create l_error_label
+			l_error_label.align_text_left
+			l_error_label.set_text ("The following uncaught exception has occurred:%N%NClick Ignore to continue or Quit to exit the application")
+			l_error_box.extend (l_error_label)
+			l_vbox.extend (l_error_box)
+			l_vbox.disable_item_expand (l_error_box)
+
+
+			create l_frame
+			create l_label_box
+			l_frame.extend (l_label_box)
+			l_label_box.set_padding (5)
+			l_label_box.set_border_width (5)
+			l_label_box.extend (l_label)
+			l_frame.set_text ("Exception Trace")
+			l_vbox.extend (l_frame)
+			a_empty_dialog.extend (l_vbox)
+			create l_hbox
+			l_vbox.extend (l_hbox)
+			l_vbox.disable_item_expand (l_hbox)
+			create l_ignore.make_with_text ("Ignore")
+			l_ignore.select_actions.extend (agent a_empty_dialog.destroy)
+			l_hbox.extend (create {EV_CELL})
+			l_hbox.extend (l_ignore)
+			l_hbox.disable_item_expand (l_ignore)
+			create l_quit.make_with_text ("Quit")
+			l_quit.set_minimum_width (l_ignore.minimum_width)
+			l_quit.select_actions.extend (agent destroy)
+			l_hbox.extend (l_quit)
+			l_hbox.disable_item_expand (l_quit)
+			l_hbox.set_border_width (5)
+			l_hbox.set_padding (5)
+			if attached an_exception.message as l_message then
+				l_exception_message := l_message
+			else
+				l_exception_message := ""
+			end
+			a_empty_dialog.set_title ("Uncaught Exception: " + l_exception_message)
+			a_empty_dialog.set_minimum_height (350)
+			a_empty_dialog.set_size (500, 300)
+			a_empty_dialog.raise
+				--| FIXME Behavior would be better if dialog has full application modality.
+
+				-- Set "Ignore" as the default
+			l_ignore.set_focus
 		end
 
 	exception_dialog: detachable EV_DIALOG

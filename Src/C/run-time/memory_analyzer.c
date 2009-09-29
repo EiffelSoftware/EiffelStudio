@@ -2,7 +2,7 @@
 	description: "Memory Analyzer"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -43,6 +43,7 @@ doc:<file name="memory_analyzer.c" header="eif_memory_analyzer.h" version="$Id$"
 #include "rt_garcol.h"
 #include "rt_types.h"
 #include "rt_macros.h"
+#include "rt_malloc.h"
 
 rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type) 
 	/* All once objects held by the system */
@@ -163,7 +164,7 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	gc_stopped = !eif_gc_ison();
 	eif_gc_stop();
 
-	Result = spmalloc (RT_SPECIAL_MALLOC_COUNT(l_found.count,sizeof (EIF_REFERENCE)), EIF_FALSE);
+	Result = spmalloc (l_found.count, sizeof (EIF_REFERENCE), EIF_FALSE);
 	zone = HEADER (Result);
 	zone->ov_flags |= EO_REF;
 	zone->ov_dftype = (EIF_TYPE_INDEX) result_type;

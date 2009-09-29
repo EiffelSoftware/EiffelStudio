@@ -2,7 +2,7 @@
 	description: "Traversal of objects. Useful for storing objects and/or recursively coying them."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -801,7 +801,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		 * We turn off GC since we do not want objects to be moved. */
 	gc_stopped = !eif_gc_ison();
 	eif_gc_stop();
-	Result = spmalloc (RT_SPECIAL_MALLOC_COUNT(l_found.count, sizeof (EIF_REFERENCE)), EIF_FALSE);
+	Result = spmalloc (l_found.count, sizeof (EIF_REFERENCE), EIF_FALSE);
 	zone = HEADER (Result);
 	zone->ov_flags |= EO_REF;
 	zone->ov_dftype = result_type;

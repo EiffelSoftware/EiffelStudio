@@ -2,7 +2,7 @@
 	description: "Eiffel retrieve mechanism."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -625,7 +625,7 @@ rt_private EIF_REFERENCE new_spref (int count)
 	static EIF_TYPE_INDEX spref_type;		/* dynamic type of SPECIAL [ANY] */
 	EIF_REFERENCE result;
 	union overhead *zone;
-	result = spmalloc (RT_SPECIAL_MALLOC_COUNT(count, sizeof(EIF_REFERENCE)), FALSE);
+	result = spmalloc (count, sizeof(EIF_REFERENCE), FALSE);
 	CHECK("result not null", result);
 	zone = HEADER (result);
 	if (spref_type == 0) {
@@ -1546,7 +1546,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 			if (flags & EO_TUPLE) {
 				newadd = RTLNT(dftype);
 			} else {
-				newadd = spmalloc(RT_SPECIAL_MALLOC_COUNT(spec_capacity,spec_elem_size), EIF_TEST(!(flags & EO_REF)));
+				newadd = spmalloc(spec_capacity, spec_elem_size, EIF_TEST(!(flags & EO_REF)));
 				RT_SPECIAL_COUNT(newadd) = spec_count;
 				RT_SPECIAL_ELEM_SIZE(newadd) = spec_elem_size;
 				RT_SPECIAL_CAPACITY(newadd) = spec_capacity;
@@ -1694,7 +1694,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 					xraise(EN_MEM);
 				}
 			} else {
-				newadd = spmalloc(RT_SPECIAL_MALLOC_COUNT(capacity, elm_size), EIF_TEST(!(flags & EO_REF)));
+				newadd = spmalloc(capacity, elm_size, EIF_TEST(!(flags & EO_REF)));
 				if (!newadd) {
 						/* Creation of Eiffel object failed */
 					xraise(EN_MEM);
@@ -1888,7 +1888,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 					xraise(EN_MEM);
 				}
 			} else {
-				newadd = spmalloc(RT_SPECIAL_MALLOC_COUNT(capacity, elm_size), EIF_TEST(!(flags & EO_REF)));
+				newadd = spmalloc(capacity, elm_size, EIF_TEST(!(flags & EO_REF)));
 				if (!newadd) {
 						/* Creation of Eiffel object failed */
 					xraise(EN_MEM);

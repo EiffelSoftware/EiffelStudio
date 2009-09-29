@@ -2,7 +2,7 @@
 	description: "Implementation of copying/cloning routines of ANY."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -58,6 +58,7 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 #include <string.h>
 #include "rt_assert.h"
 #include "rt_interp.h"		/* For routine call_copy */
+#include "rt_malloc.h"
 
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */
@@ -223,7 +224,7 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	flags = zone->ov_flags;
 	dtype = zone->ov_dtype;
 	dftype = zone->ov_dftype;
-	result = spmalloc(zone->ov_size & B_SIZE, EIF_TEST(!(flags & EO_REF)));
+	result = spmalloc(RT_SPECIAL_CAPACITY(source), RT_SPECIAL_ELEM_SIZE(source), EIF_TEST(!(flags & EO_REF)));
 
 		/* Keep the reference flag and the composite one and the type */
 	HEADER(result)->ov_flags |= flags & (EO_REF | EO_COMP);

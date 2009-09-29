@@ -989,7 +989,7 @@ rt_public EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF
 	EIF_REFERENCE result = NULL;
 	union overhead *zone;
 
-	result = spmalloc (RT_SPECIAL_MALLOC_COUNT(nb, element_size), atomic);
+	result = spmalloc (nb, element_size, atomic);
 
 		/* At this stage we are garanteed to have an initialized object, otherwise an
 		 * exception would have been thrown by the call to `spmalloc'. */
@@ -1128,7 +1128,7 @@ rt_public EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 coun
 	uint32 t;
 	REQUIRE("Is a tuple type", To_dtype(ftype) == egc_tup_dtype);
 
-	object = spmalloc(RT_SPECIAL_MALLOC_COUNT(count, sizeof(EIF_TYPED_VALUE)), atomic);
+	object = spmalloc(count, sizeof(EIF_TYPED_VALUE), atomic);
 
 	if (object == NULL) {
 		eraise ("Tuple allocation", EN_MEM);	/* signals no more memory */
@@ -1184,9 +1184,10 @@ rt_public EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 coun
 }
 
 /*
-doc:	<routine name="spmalloc" return_type="EIF_REFERENCE" export="public">
+doc:	<routine name="spmalloc" return_type="EIF_REFERENCE" export="shared">
 doc:		<summary>Memory allocation for an Eiffel special object. It either succeeds or raises the "No more memory" exception. The routine returns the pointer on a new special object holding at least 'nbytes'. `atomic' means that it is a special object without references.</summary>
-doc:		<param name="nbytes" type="rt_uint_ptr">Number of bytes to allocate.</param>
+doc:		<param name="nb" type="EIF_INTEGER">Number of elements to allocate.</param>
+doc:		<param name="element_size" type="uint32">Element size.</param>
 doc:		<param name="atomic" type="EIF_BOOLEAN">Does current special object to create has reference or not? True means no.</param>
 doc:		<return>A newly allocated TUPLE object if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
@@ -1195,12 +1196,19 @@ doc:		<synchronization>Done by different allocators to whom we request memory</s
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE spmalloc(rt_uint_ptr nbytes, EIF_BOOLEAN atomic)
+rt_shared EIF_REFERENCE spmalloc(EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic)
 {
 	EIF_REFERENCE object;		/* Pointer to the freshly created special object */
 #ifdef ISE_GC
 	rt_uint_ptr mod;
 #endif
+	rt_uint_ptr n = (rt_uint_ptr) nb * (rt_uint_ptr) element_size;
+	rt_uint_ptr nbytes = CHRPAD(n) + RT_SPECIAL_PADDED_DATA_SIZE;
+		/* Check if there is no overflow. */
+		/* The check should avoid division by zero when `element_size == 0' */
+	if (((element_size > 0) && (n / (rt_uint_ptr) element_size != (rt_uint_ptr) nb)) || (nbytes < n)) {
+		eraise("Special allocation", EN_MEM);	/* Overflow in calculating memory size. */
+	}
 	
 #if defined(BOEHM_GC) || defined(NO_GC)
 		/* No dispose routine associated, therefore `0' for second argument */
@@ -1387,7 +1395,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 			 * space to accomadate the resizing */
 		if (new_size > old_size) {
 				/* Reserve `new_size' bytes in GSZ if possible. */
-			object = spmalloc (new_size, EIF_TEST(!(zone->ov_flags & EO_REF)));
+			object = spmalloc (nbitems, (rt_uint_ptr) elem_size, EIF_TEST(!(zone->ov_flags & EO_REF)));
 		} else
 			object = ptr;
 

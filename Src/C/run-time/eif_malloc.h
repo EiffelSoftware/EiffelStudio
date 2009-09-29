@@ -2,7 +2,7 @@
 	description: "Declarations for malloc routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -97,7 +97,6 @@ RT_LNK EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype);
 RT_LNK EIF_REFERENCE tuple_malloc (EIF_TYPE_INDEX ftype);	/* Allocated tuple object */
 RT_LNK EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 count, EIF_BOOLEAN atomic);	/* Allocated tuple object */
 RT_LNK EIF_REFERENCE smart_emalloc (EIF_TYPE_INDEX ftype);
-RT_LNK EIF_REFERENCE spmalloc(rt_uint_ptr nbytes, EIF_BOOLEAN atomic);			/* Allocate an Eiffel special object */
 RT_LNK EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_INTEGER lower, EIF_INTEGER upper);	/* Initialize special object of expanded */
 
 RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */

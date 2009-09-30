@@ -2269,7 +2269,8 @@ test	basic-type-internal				reflection001 tcf pass reflection
 test	basic-type-internal-violation	reflection002 tcf pass reflection
 test	type-of-internal				reflection003 tcf pass reflection
 test	field-basic-type-inconsistency	reflection004 tcf pass reflection
- 
+test	field-type-inconsistency		reflection005 tcf pass reflection 
+
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet
 test tuple-insertions-assertions		dotnet002	tcf pass dotnet tuple

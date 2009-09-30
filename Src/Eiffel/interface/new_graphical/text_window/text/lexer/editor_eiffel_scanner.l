@@ -136,8 +136,6 @@ UTF8_tail	[\x80-\xBF]
 [aA][nN][dD]						|
 [aA][sS]						|
 [aA][sS][sS][iI][gG][nN]				|
-[aA][tT][tT][aA][cC][hH][eE][dD]		|
-[aA][tT][tT][rR][iI][bB][uU][tT][eE]	|
 [bB][iI][tT]					|
 [cC][hH][eE][cC][kK]					|
 [cC][lL][aA][sS][sS]					|
@@ -147,7 +145,6 @@ UTF8_tail	[\x80-\xBF]
 [cC][uU][rR][rR][eE][nN][tT]			|
 [dD][eE][bB][uU][gG]					|
 [dD][eE][fF][eE][rR][rR][eE][dD]		|
-[dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	|
 [dD][oO]								|
 [eE][lL][sS][eE]						|
 [eE][lL][sS][eE][iI][fF]				|
@@ -162,7 +159,6 @@ UTF8_tail	[\x80-\xBF]
 [fF][rR][oO][zZ][eE][nN]				|
 [iI][fF]								|
 [iI][mM][pP][lL][iI][eE][sS]			|
-[iI][nN][dD][eE][xX][iI][nN][gG]		|
 [iI][nN][fF][iI][xX]				|
 [iI][nN][hH][eE][rR][iI][tT]			|
 [iI][nN][sS][pP][eE][cC][tT]			|
@@ -172,7 +168,6 @@ UTF8_tail	[\x80-\xBF]
 [lL][oO][cC][aA][lL]					|
 [lL][oO][oO][pP]						|
 [nN][oO][tT]							|
-[nN][oO][tT][eE]							|
 [oO][bB][sS][oO][lL][eE][tT][eE]		|
 [oO][lL][dD]							|
 [oO][nN][cC][eE]						|
@@ -206,6 +201,37 @@ UTF8_tail	[\x80-\xBF]
 										end
 										update_token_list
 										}
+
+[aA][tT][tT][aA][cC][hH][eE][dD]		|
+[aA][tT][tT][rR][iI][bB][uU][tT][eE]		|
+[dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	|
+[nN][oO][tT][eE]				{
+							if syntax_version /= {EIFFEL_SCANNER}.obsolete_64_syntax then
+									-- Keyword
+								if not in_comments then
+									curr_token := new_keyword (text)
+								else
+									curr_token := new_comment (text)
+								end
+							else
+								curr_token := new_text (text)
+							end
+							update_token_list
+						}
+
+[iI][nN][dD][eE][xX][iI][nN][gG]		{
+							if syntax_version /= {EIFFEL_SCANNER}.ecma_syntax then
+									-- Keyword
+								if not in_comments then
+									curr_token := new_keyword (text)
+								else
+									curr_token := new_comment (text)
+								end
+							else
+								curr_token := new_text (text)
+							end
+							update_token_list
+						}
 
 
 ----------/** Eiffel identifiers **/--------------------------------------------

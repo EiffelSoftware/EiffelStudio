@@ -11,7 +11,7 @@ deferred class
 inherit
 	ANY
 
-	EB_SHARED_WINDOW_MANAGER
+	EB_SHARED_MANAGERS
 		export
 			{NONE} all
 		end
@@ -268,6 +268,7 @@ feature {NONE} -- undo handling
 			success: success
 		do
 			undo_stack.put (current_actions)
+			refactoring_committed
 		end
 
 feature {NONE} -- Implementation
@@ -311,6 +312,11 @@ feature {NONE} -- Implementation
 
 	undo_stack: STACK [LIST [ERF_ACTION]]
 			-- The stack of list of commands where all actions have to be registered for them to be undoable.
+
+	refactoring_committed
+			-- Do when refactor has just been committed.
+		do
+		end
 
 invariant
 	undo_stack_not_void: undo_stack /= Void

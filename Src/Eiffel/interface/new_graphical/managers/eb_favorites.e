@@ -206,6 +206,19 @@ feature -- Element change
 			end
 		end
 
+	feature_renamed (a_feat: E_FEATURE; a_new_name: STRING)
+			-- Feature has been renamed in the system, from `a'
+		require
+			a_feat_not_void: a_feat /= Void
+			a_new_name_not_void: a_new_name /= Void
+		do
+			renamed_feature := a_feat
+			renamed_feature_name := a_new_name
+			refresh
+			renamed_feature := Void
+			renamed_feature_name := Void
+		end
+
 feature {NONE} -- Implementation
 
 	parent: EB_FAVORITES_ITEM_LIST
@@ -258,15 +271,28 @@ feature {NONE} -- Implementation
 					f.forth
 				elseif l_item.is_feature then
 					conv_f ?= l_item
-					clc := conv_f.associated_class_c
-					if clc = Void or else clc.feature_named (conv_f.name) = Void then
-						f.remove
-					else
+					check conv_f /= void end
+					if attached conv_f.associated_e_feature as l_feat and then l_feat.is_valid then
+						if attached renamed_feature as l_rf and then l_feat.same_as (l_rf) then
+								-- A feature has been renamed.
+							if attached l_rf.associated_class.feature_with_name (renamed_feature_name) as l_nfeat then
+								conv_f.set_from_stone (create {FEATURE_STONE}.make (l_nfeat))
+							end
+						end
 						f.forth
+					else
+						f.remove
 					end
 				end
 			end
 		end
+
+	renamed_feature: detachable E_FEATURE
+			-- Renamed features.
+			-- To be wipe out when refreshed.
+
+	renamed_feature_name: detachable STRING
+			-- The name `renamed_feature' has been renamed.
 
 feature {NONE} -- Attributes
 
@@ -281,8 +307,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -294,22 +320,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_FAVORITES

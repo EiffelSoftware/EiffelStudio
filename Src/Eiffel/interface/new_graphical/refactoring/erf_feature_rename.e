@@ -13,7 +13,8 @@ inherit
 		redefine
 			preferences,
 			ask_run_settings,
-			refactor
+			refactor,
+			refactoring_committed
 		end
 
 	SHARED_WORKBENCH
@@ -165,6 +166,15 @@ feature {NONE} -- Implementation
 
 	feature_i: FEATURE_I;
 			-- The feature to rename.
+
+	refactoring_committed
+			-- <precursor>
+		do
+			if attached feature_i as l_feat then
+				favorites.feature_renamed (l_feat.api_feature (l_feat.written_in), preferences.new_feature_name)
+				window_manager.synchronize_all_favorites_tool
+			end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

@@ -166,11 +166,11 @@ feature -- Status update
 
 				if l_value = Void or else l_value.is_empty then
 					io.error.put_string (l_product_names.workbench_name)
-					io.error.put_string (": the environment variable $" + l_variable.var + " has not been set!%N")
+					io.error.put_string (": the environment variable " + l_variable.var + " has not been set!%N")
 					l_is_valid := False
 				elseif l_variable.is_directory and then not (create {DIRECTORY}.make (l_value)).exists then
 					io.error.put_string (l_product_names.workbench_name)
-					io.error.put_string (": the environment variable $" + {EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env + " points to a non-existing directory.%N")
+					io.error.put_string (": the environment variable " + {EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env + " points to a non-existing directory.%N")
 					l_is_valid := False
 				else
 						-- Set the environment variable, as it may have come from the Windows registry.

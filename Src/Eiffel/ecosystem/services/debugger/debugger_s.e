@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Events
 
-	application_launched_event: EVENT_TYPE [TUPLE [dbg: DEBUGGER_S]]
+	application_launched_event: EVENT_TYPE_I [TUPLE [dbg: DEBUGGER_S]]
 			-- Event call when application has just been launched.
 			--
 			-- dbg: The Current debugger object publishing the event.
@@ -64,7 +64,7 @@ feature -- Events
 			result_consistent: Result ~ application_launched_event
 		end
 
-	application_resumed_event: EVENT_TYPE [TUPLE [dbg: DEBUGGER_S]]
+	application_resumed_event: EVENT_TYPE_I [TUPLE [dbg: DEBUGGER_S]]
 			-- Event call when application has just been resumed.
 			--
 			-- dbg: The Current debugger object publishing the event.
@@ -88,7 +88,7 @@ feature -- Events
 			result_consistent: Result ~ application_stopped_event
 		end
 
-	application_exited_event: EVENT_TYPE [TUPLE [dbg: DEBUGGER_S]]
+	application_exited_event: EVENT_TYPE_I [TUPLE [dbg: DEBUGGER_S]]
 			-- Event call when application has just died (exited).
 			--
 			-- dbg: The Current debugger object publishing the event.
@@ -100,7 +100,7 @@ feature -- Events
 			result_consistent: Result ~ application_exited_event
 		end
 
-	debugging_terminated_event: EVENT_TYPE [TUPLE [dbg: DEBUGGER_S]]
+	debugging_terminated_event: EVENT_TYPE_I [TUPLE [dbg: DEBUGGER_S]]
 			-- Event call when debugging is terminated.
 			--
 			-- dbg: The Current debugger object publishing the event.

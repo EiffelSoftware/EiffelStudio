@@ -586,10 +586,13 @@ rt_private struct cecil_info *cecil_info_for_entry (struct rt_type *type_entry)
 			result = (struct cecil_info *) ct_value (&egc_ce_exp_type, l_name);
 		} else {
 				/* We found the type in the non-expanded classes table. Let's check
-				 * that indeed it is not declared as an expanded class. */
-			if (EIF_IS_TYPE_DECLARED_AS_EXPANDED(System(result->dynamic_type))) {
-					/* The class is an expanded class therefore we need to look into the
-					 * expanded table to find what we are looking for. */
+				 * that indeed it is not declared as an expanded class and if it is
+				 * we check in the expanded table to find what we are looking for. */
+			if (result->nb_param == 0) {
+				if (EIF_IS_TYPE_DECLARED_AS_EXPANDED(System(result->dynamic_type))) {
+					result = (struct cecil_info *) ct_value (&egc_ce_exp_type, l_name);
+				}
+			} else if (EIF_IS_TYPE_DECLARED_AS_EXPANDED(System(result->dynamic_types[0]))) {
 				result = (struct cecil_info *) ct_value (&egc_ce_exp_type, l_name);
 			}
 		}

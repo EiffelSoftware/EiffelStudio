@@ -293,6 +293,8 @@ feature {NONE} -- Implementation
 				end
 				finalize_retrieval (False)
 			end
+		ensure
+			not_retrieving: not is_retrieving
 		end
 
 	finalize_retrieval (a_remove: BOOLEAN)

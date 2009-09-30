@@ -114,6 +114,9 @@
 		<!-- library -->
 		<geant target="$_target_name_" dir="library" file="build.eant" 
 			reuse_variables="true" fork="false" />
+		<!-- experiment/library -->
+		<geant target="$_target_name_" dir="experimental/library" file="build.eant" 
+			reuse_variables="true" fork="false" />
 		<!-- framework -->
 		<geant target="$_target_name_" dir="framework" file="build.eant"
 			reuse_variables="true" fork="false" />

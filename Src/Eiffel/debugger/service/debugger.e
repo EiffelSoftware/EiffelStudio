@@ -37,24 +37,24 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_active: BOOLEAN
+	has_active_debugging_session: BOOLEAN
 		do
 			Result := attached debugger_manager as dm and then dm.is_debugging
 		end
 
-	in_execution: BOOLEAN
+	debuggee_exits: BOOLEAN
 			-- Is there an active execution?
 			-- (i.e: is the debugger running?)
 		do
 			Result := attached debugger_manager as dm and then dm.application_is_executing
 		end
 
-	is_running: BOOLEAN
+	debuggee_running: BOOLEAN
 		do
-			Result := in_execution and then not is_stopped
+			Result := debuggee_exits and then not debuggee_stopped
 		end
 
-	is_stopped: BOOLEAN
+	debuggee_stopped: BOOLEAN
 		do
 			Result := (attached {DEBUGGER_MANAGER} debugger_manager as dm) and then dm.safe_application_is_stopped
 		end

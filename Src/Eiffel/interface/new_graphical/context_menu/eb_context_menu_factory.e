@@ -564,7 +564,9 @@ feature {NONE} -- Menu section, Granularity 2.
 				extend_separator (a_menu)
 				extend_feature_formatter_menus (a_menu, l_feature_stone)
 				extend_feature_refactoring_menus (a_menu, l_feature_stone)
-				extend_debug_feature_menus (a_menu, l_feature_stone.e_feature)
+				if attached l_feature_stone.e_feature as l_feat then
+					extend_debug_feature_menus (a_menu, l_feat)
+				end
 				extend_add_to_menu (a_menu, l_stone)
 			elseif l_stonec /= Void then
 				extend_basic_opening_menus (a_menu, l_stonec, True)

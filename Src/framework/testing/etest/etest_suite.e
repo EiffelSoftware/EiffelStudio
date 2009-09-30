@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 				l_manager.compile_stop_agents.extend (agent retrieve_tests)
 				l_manager.load_agents.extend (agent retrieve_tests)
 			end
+			l_manager.close_agents.extend (agent on_project_close)
 
 			if test_suite.is_service_available then
 				l_test_suite := test_suite.service
@@ -249,6 +250,16 @@ feature {TEST_SUITE_S} -- Events: test suite
 			end
 		end
 
+feature {NONE} -- Events: project
+
+	on_project_close
+			-- Called when the Eiffel project is closed.
+		do
+			if project_access.is_initialized then
+				write_evaluator_root_class (create {DS_ARRAYED_LIST [EIFFEL_CLASS_I]}.make (0))
+			end
+		end
+
 feature -- Element change
 
 	retrieve_tests
@@ -334,55 +345,66 @@ feature {NONE} -- Implementation
 			-- If test classes have changed since last time `udpate_root_class' has been called, write
 			-- new class referencing all test classes and register it as root clas in system.
 		local
-			l_class_writer: ETEST_EVALUATOR_ROOT_WRITER
 			l_class_map: like class_map
 			l_list: DS_ARRAYED_LIST [EIFFEL_CLASS_I]
 			l_class: EIFFEL_CLASS_I
-			l_dir_NAME: DIRECTORY_NAME
+		do
+			stop_retrieval
+			if (is_etest_session_running or has_class_map_changed) and project_access.is_initialized then
+				has_class_map_changed := False
+				l_class_map := class_map
+				create l_list.make (l_class_map.count)
+				from
+					l_class_map.start
+				until
+					l_class_map.after
+				loop
+					l_class := l_class_map.item_for_iteration.eiffel_class
+					if file_system.file_exists (l_class.file_name) then
+						l_list.force_last (l_class)
+					end
+					l_class_map.forth
+				end
+				write_evaluator_root_class (l_list)
+			end
+		end
+
+	write_evaluator_root_class (a_list: DS_LINEAR [EIFFEL_CLASS_I])
+			-- Write anchor root class with classes in given list.
+			--
+			-- `a_list': A list containing class names to be referenced in root class.
+		require
+			a_list_attached: a_list /= Void
+			project_initialized: project_access.is_initialized
+		local
+			l_class_writer: ETEST_EVALUATOR_ROOT_WRITER
+			l_dir_name: DIRECTORY_NAME
 			l_file_name: FILE_NAME
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_system: SYSTEM_I
 		do
-			stop_retrieval
-			if (is_etest_session_running or has_class_map_changed) and project_access.is_initialized then
-				l_system := project_access.project.system.system
-				has_class_map_changed := False
-				create l_class_writer
-				l_dir_name := l_system.project_location.eifgens_cluster_path
-				if not file_system.directory_exists (l_dir_name) then
-					file_system.create_directory (l_dir_name)
-				end
-				create l_file_name.make_from_string (l_dir_name)
-				l_file_name.extend (l_class_writer.class_name.as_lower)
-				l_file_name.add_extension ("e")
-				create l_file.make (l_file_name)
-				if not l_file.exists then
-					l_system.force_rebuild
-				end
-				l_file.open_write
-				if l_file.is_open_write then
-					l_class_map := class_map
-					create l_list.make (l_class_map.count)
-					from
-						l_class_map.start
-					until
-						l_class_map.after
-					loop
-						l_class := l_class_map.item_for_iteration.eiffel_class
-						if file_system.file_exists (l_class.file_name) then
-							l_list.force_last (l_class)
-						end
-						l_class_map.forth
-					end
-					l_class_writer.write_source (l_file, l_list)
-					l_file.close
-					if not l_system.is_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name) then
-						l_system.add_explicit_root (Void, l_class_writer.class_name, l_class_writer.root_feature_name)
-					end
+			create l_class_writer
+			l_system := project_access.project.system.system
+			l_dir_name := l_system.project_location.eifgens_cluster_path
+			if not file_system.directory_exists (l_dir_name) then
+				file_system.recursive_create_directory (l_dir_name)
+			end
+			create l_file_name.make_from_string (l_dir_name)
+			l_file_name.extend (l_class_writer.class_name.as_lower)
+			l_file_name.add_extension ("e")
+			create l_file.make (l_file_name)
+			if not l_file.exists then
+				l_system.force_rebuild
+			end
+			l_file.open_write
+			if l_file.is_open_write then
+				l_class_writer.write_source (l_file, a_list)
+				l_file.close
+				if not l_system.is_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name) then
+					l_system.add_explicit_root (Void, l_class_writer.class_name, l_class_writer.root_feature_name)
 				end
 			end
 		end
-
 
 feature {NONE} -- Factory
 

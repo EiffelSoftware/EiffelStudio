@@ -696,6 +696,18 @@ feature -- Actions on all windows
 			for_all (agent synchronize_action)
 		end
 
+	synchronize_all_favorites_tool
+			-- Synchronize all Favorites tool
+		do
+			for_all (agent (a_window: EB_WINDOW)
+				do
+					if attached {EB_DEVELOPMENT_WINDOW} a_window as l_win and then attached l_win.favorites_manager as l_fav then
+						l_fav.refresh
+					end
+				end
+			)
+		end
+
 	display_message_and_percentage (m: STRING_GENERAL; a_value: INTEGER)
 			-- Display message `m' and `a_value' percentage in status bars of all development windows.
 		require

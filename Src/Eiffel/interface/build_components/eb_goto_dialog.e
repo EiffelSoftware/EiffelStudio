@@ -63,7 +63,6 @@ feature {NONE} -- Initialization
 			line_number_label.set_text (names.l_line_number)
 			go_button.set_text (names.b_go_to)
 			cancel_button.set_text (names.b_cancel)
-			close_request_actions.extend (agent destroy)
 			cancel_button.select_actions.extend (agent destroy)
 			set_default_cancel_button (cancel_button)
 			go_button.select_actions.extend (agent goto_line)

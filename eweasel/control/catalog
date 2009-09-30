@@ -1085,6 +1085,7 @@ test	finalize-inline-external-redef-constant	final081 tcf pass finalizing
 test	finalize-inherited-agent-redef-routine	final082 tcf pass finalizing
 test	finalize-inline-with-generic	final083 tcf pass finalizing
 test	finalize-wrong-type			final084 tcf pass finalizing
+test	finalize-min-used-crash		final085 tcf pass finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

@@ -17,16 +17,18 @@ inherit
 			connection as debugger_connection
 		end
 
-feature -- Status report
+feature -- Status report: debugger
 
-	is_active: BOOLEAN
+	has_active_debugging_session: BOOLEAN
 			-- Is there an active or starting execution?
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		end
 
-	in_execution: BOOLEAN
+feature -- Status report: debuggee
+
+	debuggee_exits: BOOLEAN
 			-- Is there an active execution?
 			-- (i.e: is the debugger running?)
 		require
@@ -34,20 +36,24 @@ feature -- Status report
 		deferred
 		end
 
-	is_running: BOOLEAN
+	debuggee_running: BOOLEAN
+			-- Is the debuggee running?
+			-- (i.e: exists and not stopped)
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			is_running_implies_in_execution: Result implies in_execution
+			is_running_implies_in_execution: Result implies debuggee_exits
 		end
 
-	is_stopped: BOOLEAN
+	debuggee_stopped: BOOLEAN
+			-- Is the debuggee stopped?
+			-- (i.e: exists and stopped at breakpoints, step completed, paused, ...)	
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			not_is_stopped_implies_in_execution: not Result implies not in_execution
+			not_is_stopped_implies_in_execution: not Result implies not debuggee_exits
 		end
 
 feature -- Events

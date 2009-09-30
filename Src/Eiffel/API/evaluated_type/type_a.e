@@ -1228,7 +1228,7 @@ feature -- Access
 		require
 			class_type_not_void: class_type /= Void
 			class_type_valid: class_type.associated_class.is_valid
-			class_typer_valid_for_current: is_valid_for_class (class_type.associated_class)
+			class_type_valid_for_current: is_valid_for_class (class_type.associated_class)
 		do
 			Result := Current
 		end

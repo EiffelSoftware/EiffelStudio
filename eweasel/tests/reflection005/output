@@ -1,0 +1,111 @@
+Attributes of type A [ANY, ANY]:
+g: ANY
+g_att: !ANY
+g_det: ANY
+l: !B [ANY]
+l_att: !B [!ANY]
+l_det: !B [ANY]
+m: !B [ANY]
+m_att: !B [!ANY]
+m_det: !B [ANY]
+
+Attributes of type A [ANY, !ANY]:
+g: ANY
+g_att: !ANY
+g_det: ANY
+l: !B [ANY]
+l_att: !B [!ANY]
+l_det: !B [ANY]
+m: !B [!ANY]
+m_att: !B [!ANY]
+m_det: !B [ANY]
+
+Attributes of type A [!ANY, ANY]:
+g: !ANY
+g_att: !ANY
+g_det: ANY
+l: !B [!ANY]
+l_att: !B [!ANY]
+l_det: !B [ANY]
+m: !B [ANY]
+m_att: !B [!ANY]
+m_det: !B [ANY]
+
+Attributes of type A [!ANY, !ANY]:
+g: !ANY
+g_att: !ANY
+g_det: ANY
+l: !B [!ANY]
+l_att: !B [!ANY]
+l_det: !B [ANY]
+m: !B [!ANY]
+m_att: !B [!ANY]
+m_det: !B [ANY]
+
+Attributes of type A [INTEGER_32, !ANY]:
+l: !B [INTEGER_32]
+l_att: !B [INTEGER_32]
+l_det: !B [INTEGER_32]
+m: !B [!ANY]
+m_att: !B [!ANY]
+m_det: !B [ANY]
+g: INTEGER_32
+g_att: INTEGER_32
+g_det: INTEGER_32
+
+Attributes of type A [!ANY, INTEGER_32]:
+g: !ANY
+g_att: !ANY
+g_det: ANY
+l: !B [!ANY]
+l_att: !B [!ANY]
+l_det: !B [ANY]
+m: !B [INTEGER_32]
+m_att: !B [INTEGER_32]
+m_det: !B [INTEGER_32]
+
+Attributes of type A [INTEGER_32, INTEGER_32]:
+l: !B [INTEGER_32]
+l_att: !B [INTEGER_32]
+l_det: !B [INTEGER_32]
+m: !B [INTEGER_32]
+m_att: !B [INTEGER_32]
+m_det: !B [INTEGER_32]
+g: INTEGER_32
+g_att: INTEGER_32
+g_det: INTEGER_32
+
+Attributes of type A [C [!STRING_8], !ANY]:
+l: !B [C [!STRING_8]]
+l_att: !B [C [!STRING_8]]
+l_det: !B [C [!STRING_8]]
+m: !B [!ANY]
+m_att: !B [!ANY]
+m_det: !B [ANY]
+g: C [!STRING_8]
+g_att: C [!STRING_8]
+g_det: C [!STRING_8]
+
+Attributes of type A [!ANY, C [!STRING_8]]:
+g: !ANY
+g_att: !ANY
+g_det: ANY
+l: !B [!ANY]
+l_att: !B [!ANY]
+l_det: !B [ANY]
+m: !B [C [!STRING_8]]
+m_att: !B [C [!STRING_8]]
+m_det: !B [C [!STRING_8]]
+
+Attributes of type A [C [!STRING_8], C [!STRING_8]]:
+l: !B [C [!STRING_8]]
+l_att: !B [C [!STRING_8]]
+l_det: !B [C [!STRING_8]]
+m: !B [C [!STRING_8]]
+m_att: !B [C [!STRING_8]]
+m_det: !B [C [!STRING_8]]
+g: C [!STRING_8]
+g_att: C [!STRING_8]
+g_det: C [!STRING_8]
+
+Execution completed

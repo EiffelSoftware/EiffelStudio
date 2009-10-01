@@ -32,7 +32,7 @@ create
 	make_with_string
 
 create {EB_FAVORITES}
-	make_filled
+	make, make_filled
 
 feature {NONE} -- Initialization
 

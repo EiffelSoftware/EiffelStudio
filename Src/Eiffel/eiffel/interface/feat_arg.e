@@ -55,7 +55,7 @@ create
 	make
 
 create {FEAT_ARG}
-	make_filled
+	old_make, make_filled
 
 feature {NONE} -- Implementation
 

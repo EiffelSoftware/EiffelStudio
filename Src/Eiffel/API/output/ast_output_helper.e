@@ -7,6 +7,8 @@ class
 	AST_OUTPUT_HELPER
 
 inherit
+	ANY
+
 	SHARED_TEXT_ITEMS
 		export
 			{NONE} all

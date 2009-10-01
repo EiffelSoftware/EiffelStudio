@@ -18,7 +18,7 @@ create
 	make
 
 create {CONF_NOTE_ELEMENT}
-	make_filled
+	make_list, make_filled
 
 feature {NONE} -- Initialization
 

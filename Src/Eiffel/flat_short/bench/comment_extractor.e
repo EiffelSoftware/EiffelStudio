@@ -18,6 +18,8 @@ class
 	COMMENT_EXTRACTOR
 
 inherit
+	ANY
+
 	SHARED_SERVER
 		export
 			{NONE} all

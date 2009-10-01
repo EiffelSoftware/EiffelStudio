@@ -96,6 +96,9 @@ inherit
 create
 	make
 
+create {FEATURE_TABLE}
+	internal_table_make
+
 feature {NONE} -- Creation
 
 	make (n: INTEGER)

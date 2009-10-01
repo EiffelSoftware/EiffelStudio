@@ -98,6 +98,9 @@ inherit
 create
 	make
 
+create {INHERIT_TABLE}
+	extend_tbl_make
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER)

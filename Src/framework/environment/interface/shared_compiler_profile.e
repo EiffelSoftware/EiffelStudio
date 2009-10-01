@@ -50,6 +50,16 @@ feature -- Access
 			end
 		end
 
+	mode: STRING
+		do
+			if is_compatible_mode then
+				Result := "compatible"
+			elseif is_experimental_mode then
+				Result := "experimental"
+			else
+				Result := ""
+			end
+		end
 feature -- Status report
 
 	is_compatible_mode: BOOLEAN

@@ -544,19 +544,11 @@ feature -- Access
 		end
 
 	skeleton_adapted_in (class_type: CLASS_TYPE): TYPE_A
-		local
-			l_type: TYPE_A
+			-- <Precursor>
 		do
-				-- For backward compatibility, if the associated actual
-				-- generic parameter of `class_type' is a basic type, we keep
-				-- it, otherwise we preserve the formal aspect of Current.
-				--| See eweasel test#store013 for an example where changing
-				--| `skeleton_adapted_in' to be similar to `adapted_in' would make
-				--| it fail.
-			l_type := class_type.type.generics.item (position)
-			if not l_type.is_true_expanded then
-				Result := l_type
-			else
+			Result := class_type.type.generics.item (position)	
+				-- We optimize the type only if it is a basic type which is not a TYPED_POINTER.
+			if not Result.is_basic or Result.is_typed_pointer then
 				Result := Current
 			end
 		end

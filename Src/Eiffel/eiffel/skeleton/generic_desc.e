@@ -79,18 +79,22 @@ feature -- Instantiation
 			-- Instantiation of the current description in		
 			-- `class_type'.
 		local
-			l_type: TYPE_A
+			l_type, l_generic_type: TYPE_A
 			l_exp: EXPANDED_DESC
-			l_formal: FORMAL_A
+			l_has_formal: BOOLEAN
 		do
-			if type_i.actual_type.is_formal then
-				l_formal ?= type_i.actual_type
-				check l_formal_not_void: l_formal /= Void end
-				l_type := class_type.type.generics.item (l_formal.position)
-			else
-				l_type := type_i.skeleton_adapted_in (class_type)
-			end
+				-- Instantiate the type.
+			l_type := type_i.skeleton_adapted_in (class_type)
 
+				-- If type is a formal and in `class_type' this formal is actually expanded,
+				-- we use the expanded type instead.
+			if attached {FORMAL_A} l_type as l_formal then
+				l_has_formal := True
+				l_generic_type := class_type.type.generics.item (l_formal.position)
+				if l_generic_type.is_expanded then
+					l_type := l_generic_type
+				end
+			end
 				-- If after the instantiation the resulting type is a reference or
 				-- an expanded, we need to store the original type `type_i' as part
 				-- of the description since `l_type' has been adapted to the current
@@ -104,21 +108,19 @@ feature -- Instantiation
 				--    an expanded class, then we still need to remember that we create a `like Current'
 				--    and not the expanded type we get from `skeleton_adapted_in'.
 			Result := l_type.instantiated_description
-			if l_formal /= Void or type_i.is_like_current then
+			if l_has_formal or type_i.is_like_current then
 				update_description (Result, type_i)
 			end
 
 				-- In order to properly handle expanded type, we need to record its associated
-				-- class type. Note that we use `adapted_in' and not `skeleton_adapted_in' but
-				-- at this stage I don't have a good explanation just the fact that `skeleton_adapted_in'
-				-- is just for backward compatibility for storable on `type_i' but `cl_type_i' is only
-				-- used for checking VLEC, not for code generation, so using `adapted_in' seems more
-				-- correct.
+				-- class type. Note that {EXPANDED_DESC}.instantiation_in uses `adapted_in' and
+				-- not `skeleton_adapted_in' but at this stage I don't have a good explanation
+				-- just the fact that `skeleton_adapted_in' is just for backward compatibility
+				-- for storable on `type_i' but `cl_type_i' is only used for checking VLEC, not
+				-- for code generation, so using `adapted_in' seems more correct.
 			l_exp ?= Result
 			if l_exp /= Void then
-				l_type := type_i.adapted_in (class_type)
-				l_exp.set_cl_type_i (l_type)
-				l_exp.set_class_type (l_type.associated_class_type (class_type.type))
+				Result := l_exp.instantiation_in (class_type)
 			end
 
 			Result.set_feature_id (feature_id)
@@ -158,7 +160,7 @@ feature -- Helper
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -171,22 +173,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

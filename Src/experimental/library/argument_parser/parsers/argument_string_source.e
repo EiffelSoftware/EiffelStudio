@@ -94,18 +94,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	application: STRING
-			-- <Precursor>
-		once
-			create Result.make_from_string ((create {ARGUMENTS}).argument (0))
-		end
-
-	application_base: STRING
-			-- <Precursor>
-		do
-			Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_attached
-		end
-
 	arguments: ARRAY [STRING]
 			-- <Precursor>
 

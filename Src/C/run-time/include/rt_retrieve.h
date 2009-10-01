@@ -107,6 +107,10 @@ typedef struct {
 		 * that attribute does not have a match in retrieving system.
 		 */
 	int new_index;
+
+		/* Is attribute found but retrieving system requires it to be attached, but it was
+		 * detachable in storing system? */
+	int is_attached_check_required;
 } attribute_detail;
 
 /* Special values for the `type_index' elements of `type_table' and the

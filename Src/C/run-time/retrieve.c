@@ -2808,49 +2808,53 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 	return result;
 }
 
-rt_private int attribute_type_matched (type_descriptor *context_type, EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **atype)
+rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_ptr att_index, EIF_TYPE_INDEX **gtype, EIF_TYPE_INDEX **atype, int level)
 {
 	RT_GET_CONTEXT
 	int result = 1;
 	EIF_TYPE_INDEX dftype = **gtype;
 	EIF_TYPE_INDEX aftype = **atype;
 
-	if (rt_kind_version < INDEPENDENT_STORE_5_5) {
-		result = old_attribute_type_matched (gtype, atype);
-	} else {
-		if (RT_HAS_ANNOTATION_TYPE(dftype)) {
-			while ((result) && (RT_HAS_ANNOTATION_TYPE(dftype))) {
-				if (RT_HAS_ANNOTATION_TYPE(aftype)) {
-						/* Both types have annotation, we only need to compare the actual annotation
-						 * when the old one is not attached, as if the old one is attached and the new one
-						 * is not then it is a match. The truth table is:
-								old	-> attached | detachable
-							new
-							 |
-							attached       1          0
-							detachable     1          1
-						 */
-					if (!RT_IS_ATTACHED_TYPE(aftype)) {
-						result = (aftype == dftype);
-					}
-					*atype += 1;
-					aftype = **atype;
+	while (result && RT_HAS_ANNOTATION_TYPE(dftype)) {
+		if (RT_HAS_ANNOTATION_TYPE(aftype)) {
+			if (RT_IS_ATTACHED_TYPE(dftype) && RT_IS_DETACHABLE_TYPE(aftype)) {
+				if (level == 0) {
+						/* This is not a mismatch, but we flag it to check later that all attributes
+						 * we retrieve are indeed attached. */
+					context_type->attributes[att_index].is_attached_check_required = 1;
 				} else {
-					result = RT_IS_DETACHABLE_TYPE(dftype);
+					result = 0;
 				}
-				*gtype += 1;
-				dftype = **gtype;
 			}
-		} else {
-				/* There we know that `dftype' has no annotation. So we can currently
-				 * safely consumes all annotations of `aftype' since anything conforms to
-				 * a detachable type. */
-			while (RT_HAS_ANNOTATION_TYPE(aftype)) {
-				*atype += 1;
-				aftype = **atype;
+			*atype += 1;
+			aftype = **atype;
+		} else if (RT_IS_ATTACHED_TYPE(dftype)) {
+			if (level == 0) {
+					/* This is not a mismatch, but we flag it to check later that all attributes
+					 * we retrieve are indeed attached. */
+				context_type->attributes[att_index].is_attached_check_required = 1;
+			} else {
+				result = 0;
 			}
 		}
-		if (result) {
+		*gtype += 1;
+		dftype = **gtype;
+	}
+
+	if (result) {
+			/* There we know that `dftype' has no annotation. So we can currently
+			 * safely consumes all annotations of `aftype' since anything conforms to
+			 * a detachable type. */
+		while (RT_HAS_ANNOTATION_TYPE(aftype)) {
+			*atype += 1;
+			aftype = **atype;
+		}
+
+		if (rt_kind_version < INDEPENDENT_STORE_5_5) {
+			result = old_attribute_type_matched (gtype, atype);
+		} else {
+
+				/* We are now checking the actual type. */
 			if (dftype == TUPLE_TYPE) {
 				if (aftype == TUPLE_TYPE) {
 					(*gtype) += TUPLE_OFFSET;
@@ -2921,7 +2925,7 @@ rt_private int attribute_type_matched (type_descriptor *context_type, EIF_TYPE_I
 	return result;
 }
 
-rt_private int attribute_types_matched (type_descriptor *context_type, EIF_TYPE_INDEX *gtypes, EIF_TYPE_INDEX *atypes)
+rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_ptr att_index, EIF_TYPE_INDEX *gtypes, EIF_TYPE_INDEX *atypes)
 {
 	RT_GET_CONTEXT
 	int result;
@@ -2961,25 +2965,31 @@ rt_private int attribute_types_matched (type_descriptor *context_type, EIF_TYPE_
 			free(l_cid);
 		}
 		result = (dftype == type_description (atype)->new_dftype);
-	}
-	else {
+	} else {
 		/* If `gtypes' is shorter than `atypes', we accept this, as it
 		 * means that generic parameters were removed.
 		 */
+		int level = 0;
 		result = 1;
 		for (; (result == 1) && (*gtypes != TERMINATOR); gtypes++, atypes++) {
-			result = attribute_type_matched (context_type, &gtypes, &atypes);
+			result = attribute_type_matched (context_type, att_index, &gtypes, &atypes, level);
+			level++;
 		}
 	}
 	return result;
 }
 
-/* The index of the attribute in `type' matching `att_type' and `att_name'
- * A result of -1 means no match found.
+/* Compute index of `att_index'-th attribute of `context_type' and store it in `new_index'.
+ * A stored value of -1 means no match found.
  */
-rt_private int find_attribute (type_descriptor *context_type, EIF_TYPE_INDEX dtype, char *att_name, uint32 att_type, EIF_TYPE_INDEX *atypes)
+rt_private void find_attribute (type_descriptor *context_type, rt_uint_ptr att_index)
 {
 	int result = -1;
+	EIF_TYPE_INDEX dtype = context_type->new_type;
+	attribute_detail *a = context_type->attributes + att_index;
+	uint32 att_type = a->basic_type;
+	EIF_TYPE_INDEX *atypes = a->types;
+	char *att_name = a->name;
 	if (dtype != INVALID_DTYPE) {
 		long num_attrib = System (dtype).cn_nbattr;
 		long i;
@@ -2993,7 +3003,7 @@ rt_private int find_attribute (type_descriptor *context_type, EIF_TYPE_INDEX dty
 				 * reference type detail matches the request, then we have
 				 * matched the attribute.
 				 */
-				if (atypes == NULL || attribute_types_matched (context_type, System (dtype).cn_gtypes[i]+1, atypes)) {
+				if (atypes == NULL || attribute_types_matched (context_type, att_index, System (dtype).cn_gtypes[i]+1, atypes)) {
 					result = i;
 				}
 			}
@@ -3011,7 +3021,8 @@ rt_private int find_attribute (type_descriptor *context_type, EIF_TYPE_INDEX dty
 		printf ("\n");
 #endif
 	}
-	return result;
+		/* Store index of attributes at index `att_index' in `context_type' in retrieving system. */
+	a->new_index = result;
 }
 
 rt_private void iread_header_new (EIF_CONTEXT_NOARG)
@@ -3265,7 +3276,8 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 					strcpy (attributes[j].name, vis_name);
 				attributes[j].basic_type = att_type;
 				attributes[j].types = NULL;
-				attributes[j].new_index = find_attribute (NULL, new_dtype, vis_name, att_type, NULL);
+				attributes[j].is_attached_check_required = 0;
+				find_attribute (conv, j);
 			}
 		}
 
@@ -3473,8 +3485,7 @@ rt_private void map_type_attributes (type_descriptor *t)
 #endif
 
 	for (i=0; i<t->attribute_count; i++) {
-		attribute_detail *a = t->attributes + i;
-		a->new_index = find_attribute (t, t->new_type, a->name, a->basic_type, a->types);
+		find_attribute (t, i);
 	}
 
 	check_mismatch (t);
@@ -3530,6 +3541,9 @@ rt_private void rread_attribute (attribute_detail *a)
 		xraise (EN_MEM);
 	ridr_multi_uint16 (a->types, num_atypes);
 	a->types[num_atypes] = TERMINATOR;
+
+	/* Reset value if attached check. */
+	a->is_attached_check_required = 0;
 
 #ifdef RECOVERABLE_DEBUG
 	printf ("        %s: ", a->name);
@@ -4067,6 +4081,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 		multi_value value;
 		uint32 old_attrib_type = attributes[i].basic_type;
 		int new_attrib_index = attributes[i].new_index;
+		int is_attached_check_required;
 		EIF_REFERENCE old_value = NULL;
 		void *attr_address = NULL;
 		rt_uint_ptr attrib_offset = 0;
@@ -4075,6 +4090,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 			char *obj_address = (char *) object + expanded_offset;
 			attrib_offset = get_offset (new_type, new_attrib_index);
 			attr_address = obj_address + attrib_offset;
+			is_attached_check_required = attributes[i].is_attached_check_required;
+		} else {
+			is_attached_check_required = 0;
 		}
 
 		memset(&value, 0, sizeof(multi_value));
@@ -4260,6 +4278,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_REFERENCE *) attr_address = value.vref;
 				if (mismatched) {
 					old_value = value.vref;
+				}
+				if (is_attached_check_required && !value.vref) {
+					eraise ("Got Void, expected non-void reference", EN_RETR);
 				}
 				break;
 			case SK_EXP: {

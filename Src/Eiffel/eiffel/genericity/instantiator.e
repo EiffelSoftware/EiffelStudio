@@ -36,6 +36,9 @@ inherit
 create
 	make
 
+create {INSTANTIATOR}
+	make_with_key_tester
+
 feature -- Attributes
 
 	dispatch (a_type: TYPE_A; a_class: CLASS_C)

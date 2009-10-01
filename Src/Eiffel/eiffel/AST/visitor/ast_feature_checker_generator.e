@@ -1556,10 +1556,8 @@ feature -- Implementation
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
 													context.supplier_ids.extend (l_conv_info.depend_unit)
-													if not is_inherited then
-														l_parameters.put_i_th (l_parameters.i_th (i).converted_expression (
-															create {PARENT_CONVERSION_INFO}.make (l_conv_info)), i)
-													end
+													l_parameters.put_i_th (l_parameters.i_th (i).converted_expression (
+														create {PARENT_CONVERSION_INFO}.make (l_conv_info)), i)
 												end
 													-- Generate conversion byte node only if we are not checking
 													-- a custom attribute. Indeed in that case, we do not want those
@@ -1715,14 +1713,20 @@ feature -- Implementation
 								error_handler.insert_error (l_vape)
 							end
 
-								-- Supplier dependances update
+								-- Supplier dependances update only for non-inherited code
 							if l_is_target_of_creation_instruction then
-								context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature,
-									{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
+								if not is_inherited then
+									context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature,
+										{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
+								end
 							else
-								if is_precursor then
-									context.supplier_ids.extend_depend_unit_with_level (a_precursor_type.associated_class.class_id, l_feature,
-										depend_unit_level)
+								if not is_inherited then
+									if is_precursor then
+										context.supplier_ids.extend_depend_unit_with_level (a_precursor_type.associated_class.class_id, l_feature,
+											depend_unit_level)
+									else
+										context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature, depend_unit_level)
+									end
 								end
 								if not is_qualified and then l_feature.is_replicated_directly and then not l_feature.from_non_conforming_parent then
 										-- We are unqualified-calling an inherited conforming feature that is replicated in the current class.
@@ -1732,7 +1736,6 @@ feature -- Implementation
 										Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
 									end
 								end
-								context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature, depend_unit_level)
 							end
 
 							if l_is_assigner_call then
@@ -2008,7 +2011,8 @@ feature -- Implementation
 							l_element_type := l_last_types.item (i)
 							if not l_element_type.conform_to (l_current_class, l_type_a) then
 								if not is_inherited and then l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type) then
-									if not is_inherited and then l_context.last_conversion_info.has_depend_unit then
+									if l_context.last_conversion_info.has_depend_unit then
+										context.supplier_ids.extend (l_context.last_conversion_info.depend_unit)
 										l_as.expressions.put_i_th (l_as.expressions.i_th (i).converted_expression (
 											create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
 									end
@@ -3363,9 +3367,10 @@ feature -- Implementation
 						l_vwst1.set_location (l_as.start_location)
 						error_handler.insert_error (l_vwst1)
 					else
-						create l_depend_unit.make (context.current_class.class_id,
-											l_attribute_i)
-						context.supplier_ids.extend (l_depend_unit)
+						if not is_inherited then
+							create l_depend_unit.make (context.current_class.class_id, l_attribute_i)
+							context.supplier_ids.extend (l_depend_unit)
+						end
 						if l_needs_byte_node then
 							l_strip.feature_ids.put (l_attribute_i.feature_id)
 						end
@@ -3651,8 +3656,10 @@ feature -- Implementation
 
 							if error_level = l_error_level then
 									-- Dependance
-								create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
-								context.supplier_ids.extend (l_depend_unit)
+								if not is_inherited then
+									create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+									context.supplier_ids.extend (l_depend_unit)
+								end
 
 								if l_needs_byte_node then
 									if l_feature.is_attribute then
@@ -3983,8 +3990,10 @@ feature -- Implementation
 							else
 
 									-- Suppliers update
-								create l_depend_unit.make_with_level (l_last_class.class_id, l_prefix_feature, depend_unit_level)
-								context.supplier_ids.extend (l_depend_unit)
+								if not is_inherited then
+									create l_depend_unit.make_with_level (l_last_class.class_id, l_prefix_feature, depend_unit_level)
+									context.supplier_ids.extend (l_depend_unit)
+								end
 
 									-- Assumes here that a prefix feature has no argument
 									-- Update the type stack; instantiate the result of the
@@ -4278,14 +4287,14 @@ feature -- Implementation
 								check
 									no_conversion_if_right_type_is_formal: not l_right_type.is_formal
 									therefore_l_right_constrained_not_void: l_right_constrained /= Void
+									not_inherited: not is_inherited
 								end
 								l_left_id := l_right_constrained.associated_class.class_id
+								check not_is_inherited: not is_inherited end
 								if l_target_conv_info.has_depend_unit then
 									context.supplier_ids.extend (l_target_conv_info.depend_unit)
-									if not is_inherited then
-										l_as.set_left (l_as.left.converted_expression (
-											create {PARENT_CONVERSION_INFO}.make (l_target_conv_info)))
-									end
+									l_as.set_left (l_as.left.converted_expression (
+										create {PARENT_CONVERSION_INFO}.make (l_target_conv_info)))
 								end
 								l_target_type := l_target_conv_info.target_type
 								if l_needs_byte_node then
@@ -4314,12 +4323,11 @@ feature -- Implementation
 							end
 
 							if last_infix_argument_conversion_info /= Void then
+								check not_inherited: not is_inherited end
 								if last_infix_argument_conversion_info.has_depend_unit then
 									context.supplier_ids.extend (last_infix_argument_conversion_info.depend_unit)
-									if not is_inherited then
-										l_as.set_right (l_as.right.converted_expression (
-											create {PARENT_CONVERSION_INFO}.make (last_infix_argument_conversion_info)))
-									end
+									l_as.set_right (l_as.right.converted_expression (
+										create {PARENT_CONVERSION_INFO}.make (last_infix_argument_conversion_info)))
 								end
 								if l_needs_byte_node then
 									l_right_expr ?= last_infix_argument_conversion_info.byte_node (l_right_expr)
@@ -4327,8 +4335,10 @@ feature -- Implementation
 							end
 
 								-- Suppliers update
-							create l_depend_unit.make_with_level (l_left_id, last_infix_feature, depend_unit_level)
-							context.supplier_ids.extend (l_depend_unit)
+							if not is_inherited then
+								create l_depend_unit.make_with_level (l_left_id, last_infix_feature, depend_unit_level)
+								context.supplier_ids.extend (l_depend_unit)
+							end
 
 								-- Update the type stack: instantiate result type of the
 								-- infixed feature
@@ -4511,7 +4521,7 @@ feature -- Implementation
 			l_conv_info: CONVERSION_INFO
 			l_binary: BINARY_B
 			l_vweq: VWEQ
-			l_needs_byte_node: BOOLEAN
+			l_needs_byte_node, l_conforming: BOOLEAN
 			l_is_byte_node_simplified: BOOLEAN
 			l_ne_as: BIN_NE_AS
 		do
@@ -4551,32 +4561,31 @@ feature -- Implementation
 					not (l_attached_left_type.conform_to (context.current_class, l_right_type.actual_type) or else
 					l_attached_right_type.conform_to (context.current_class, l_left_type.actual_type))
 				then
-					if l_right_type.convert_to (context.current_class, l_left_type.deep_actual_type) then
-						l_conv_info := context.last_conversion_info
-						if l_conv_info.has_depend_unit then
-							context.supplier_ids.extend (l_conv_info.depend_unit)
-							if not is_inherited then
-								l_as.set_right (l_as.right.converted_expression (
-									create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
-							end
-						end
-						if l_needs_byte_node then
-							l_right_expr := l_conv_info.byte_node (l_right_expr)
-						end
-					else
-						if l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
+					if not is_inherited then
+						if l_right_type.convert_to (context.current_class, l_left_type.deep_actual_type) then
 							l_conv_info := context.last_conversion_info
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
-								if not is_inherited then
-									l_as.set_left (l_as.left.converted_expression (
-										create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
-								end
+								l_as.set_right (l_as.right.converted_expression (
+									create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
 							end
 							if l_needs_byte_node then
-								l_left_expr := l_conv_info.byte_node (l_left_expr)
+								l_right_expr := l_conv_info.byte_node (l_right_expr)
 							end
-						elseif not is_inherited then
+							l_conforming := True
+						elseif l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
+							l_conv_info := context.last_conversion_info
+							if l_conv_info.has_depend_unit then
+								context.supplier_ids.extend (l_conv_info.depend_unit)
+								l_as.set_left (l_as.left.converted_expression (
+									create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
+							end
+							if l_needs_byte_node then
+									l_left_expr := l_conv_info.byte_node (l_left_expr)
+							end
+							l_conforming := True
+						end
+						if not l_conforming then
 							if
 								context.current_class.is_warning_enabled (w_vweq) and then
 								(l_left_type.is_none implies l_right_type.is_expanded) and then
@@ -5080,6 +5089,8 @@ feature -- Implementation
 							is_type_compatible.conversion_info /= Void and then
 							is_type_compatible.conversion_info.has_depend_unit
 						then
+								-- No need to record the depend_unit from `is_type_compatible.conversion_info'
+								-- because it was already saved in `process_type_compatibility'.
 							l_as.set_source (l_as.source.converted_expression (
 								create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
 						end
@@ -5197,6 +5208,8 @@ feature -- Implementation
 								is_type_compatible.conversion_info /= Void and then
 								is_type_compatible.conversion_info.has_depend_unit
 							then
+									-- No need to record the depend_unit from `is_type_compatible.conversion_info'
+									-- because it was already saved in `process_type_compatibility'.
 								l_as.set_source (l_as.source.converted_expression (
 									create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
 							end
@@ -7687,10 +7700,12 @@ feature {NONE} -- Implementation
 							l_vwoe1.set_formal_type (l_arg_type)
 							l_vwoe1.set_actual_type (a_right_type)
 							last_infix_error := l_vwoe1
+							last_infix_argument_conversion_info := Void
 						end
 					else
 						last_infix_arg_type := l_arg_type
 						last_infix_error := Void
+						last_infix_argument_conversion_info := Void
 					end
 				end
 			end
@@ -7751,7 +7766,7 @@ feature {NONE} -- Implementation
 				--|    a VNCE error.
 				--| 2- if target was a BIT type, we should generate a VNCB error.
 			if not l_source_type.conform_to (context.current_class, l_target_type) then
-				if l_source_type.convert_to (context.current_class, l_target_type.deep_actual_type) then
+				if not is_inherited and then l_source_type.convert_to (context.current_class, l_target_type.deep_actual_type) then
 					l_conv_info := context.last_conversion_info
 					is_type_compatible.conversion_info := l_conv_info
 					if l_conv_info.has_depend_unit then
@@ -7776,7 +7791,7 @@ feature {NONE} -- Implementation
 				else
 						-- Type does not convert neither, so we raise an error
 						-- about non-conforming types.
-						is_type_compatible.is_compatible := False
+					is_type_compatible.is_compatible := False
 				end
 			end
 		ensure
@@ -7813,7 +7828,9 @@ feature {NONE} -- Implementation
 						assigner_command_valid: l_assigner_command.argument_count >= 1
 					end
 						-- Suppliers update
-					context.supplier_ids.extend_depend_unit_with_level (l_target_class_id, l_assigner_command, depend_unit_level)
+					if not is_inherited then
+						context.supplier_ids.extend_depend_unit_with_level (l_target_class_id, l_assigner_command, depend_unit_level)
+					end
 					l_type := l_assigner_command.arguments.i_th (1).formal_instantiation_in (
 						a_target_type.as_implicitly_detachable, a_target_constrained_type.as_implicitly_detachable,
 						l_target_class_id).actual_type
@@ -8693,8 +8710,10 @@ feature {NONE} -- Agents
 
 				-- We need to record a dependance between the fake inline agent and the
 				-- enclosing routine being analyzed.
-			create l_depend_unit.make_with_level (l_cur_class.class_id, l_func, depend_unit_level)
-			context.supplier_ids.extend (l_depend_unit)
+			if not is_inherited then
+				create l_depend_unit.make_with_level (l_cur_class.class_id, l_func, depend_unit_level)
+				context.supplier_ids.extend (l_depend_unit)
+			end
 
 			last_byte_node := l_rout_creation
 		end
@@ -8834,6 +8853,10 @@ feature {NONE} -- Agents
 	init_inline_agent_dep (a_feat: FEATURE_I; a_new_feat_dep: FEATURE_DEPENDANCE)
 			-- When an inline agent X of an enclosing feature f is a client of
 			-- feature g, we make the enclosing feature f a client of g.
+		require
+			not_inherited: not is_inherited
+			a_feat_not_void: a_feat /= Void
+			a_new_feat_dep_not_void: a_new_feat_dep /= Void
 		local
 			l_cur_class: EIFFEL_CLASS_C
 

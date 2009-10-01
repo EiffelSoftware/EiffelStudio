@@ -1,48 +1,47 @@
 note
 	description: "[
-			An argument parser's arguments from the terminal.
-		]"
+		An extended version of {ARGUMENT_TERMINAL_SOURCE} that aguments the terminal command line
+		arguments with a value take from an environment variable.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ARGUMENT_TERMINAL_SOURCE
+	ARGUMENT_ENVIRONMENT_TERMINAL_SOURCE
 
 inherit
-	ARGUMENT_SOURCE
-
-feature -- Access
-
-	arguments: ARRAY [STRING]
-			-- <Precursor>
-		local
-			l_args: ARRAY [STRING]
-			l_arg: detachable STRING
-			l_count: INTEGER
-			i: INTEGER
-		once
-			l_args := terminal_arguments.argument_array
-			l_count := l_args.upper
-			create Result.make_filled ("", 1, l_count)
-			from i := 1 until i > l_count
-			loop
-				l_arg := l_args.item (i)
-				if l_arg = Void then
-					create l_arg.make_empty
-				end
-				Result.put (l_arg, i)
-				i := i + 1
-			end
+	ARGUMENT_TERMINAL_SOURCE
+		undefine
+			arguments,
+			terminal_arguments
+		redefine
+			is_empty
 		end
 
-feature {NONE} -- Access
+	ENVIRONMENT_ARGUMENTS
+		rename
+			environment_arguments as arguments,
+			base_arguments as terminal_arguments
+		end
 
-	terminal_arguments: ARGUMENTS
-			-- Command line arguments from the terminal/console.
-		once
-			create Result
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_var_name: READABLE_STRING_8)
+			-- Initializes an argument source with an environment variable.
+			--
+			-- `a_var_name': Name of the environment variable, see `variable_name'.
+		require
+			a_var_name_attached: attached a_var_name
+			not_a_var_name_is_empty: not a_var_name.is_empty
+		do
+			create arguments_environment_name.make_from_string (a_var_name)
+		ensure
+			arguments_environment_name_set: arguments_environment_name.same_string (a_var_name)
 		end
 
 feature -- Status report
@@ -50,12 +49,23 @@ feature -- Status report
 	is_empty: BOOLEAN
 			-- <Precursor>
 		do
-			Result := terminal_arguments.argument_count = 0
+			Result := argument_count > 0
+		ensure then
+			argument_count_positive: Result implies argument_count > 0
 		end
+
+feature {NONE} -- Implementation
+
+	arguments_environment_name: STRING
+			-- <Precursor>
+
+invariant
+	arguments_environment_name_attached: attached arguments_environment_name
+	not_arguments_environment_name_is_empty: not arguments_environment_name.is_empty
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

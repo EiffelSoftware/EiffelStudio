@@ -14,7 +14,8 @@ feature -- Access
 
 	application: STRING
 			-- The application's location argument
-		deferred
+		once
+			create Result.make_from_string ((create {ARGUMENTS}).argument (0))
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -23,7 +24,22 @@ feature -- Access
 	application_base: STRING
 			-- The application's base location, or the working directory if the base location cannot
 			-- be determined.
-		deferred
+		local
+			l_result: detachable STRING
+			l_path: STRING
+			i: INTEGER
+		once
+			l_path := (create {ARGUMENTS}).argument_array [0]
+			if l_path /= Void and then not l_path.is_empty then
+				i := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
+				if i > 0 then
+					l_result := l_path.substring (1, i - 1)
+				end
+			end
+			if l_result = Void or else l_result.is_empty then
+				l_result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			end
+			create {STRING} Result.make_from_string (l_result)
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

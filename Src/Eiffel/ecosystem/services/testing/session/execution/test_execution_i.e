@@ -44,28 +44,6 @@ feature -- Access
 			results_valid: Result.for_all (agent is_test_running (?))
 		end
 
-	execution_connection: EVENT_CONNECTION_I [TEST_EXECUTION_OBSERVER, TEST_EXECUTION_I]
-			-- <Precursor>
-		local
-			l_cache: like execution_connection_cache
-		do
-			l_cache := execution_connection_cache
-			if l_cache = Void then
-				l_cache := create {EVENT_CHAINED_CONNECTION [TEST_EXECUTION_OBSERVER, TEST_EXECUTION_I, TEST_SESSION_OBSERVER, TEST_SESSION_I]}.make
-					(agent (an_observer: TEST_EXECUTION_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
-						do
-							Result := <<
-								[test_running_event, agent an_observer.on_test_running],
-								[test_executed_event, agent an_observer.on_test_executed],
-								[test_removed_event, agent an_observer.on_test_removed]
-							>>
-						end,
-					connection)
-				execution_connection_cache := l_cache
-			end
-			Result := l_cache
-		end
-
 	initial_test_count: NATURAL
 			-- Number of tests queued when `Current' was launched.
 		require
@@ -194,7 +172,7 @@ feature {TEST_EXECUTOR_I} -- Basic operations
 
 feature {NONE} -- Events
 
-	test_running_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: TEST_I]]
+	test_running_event: EVENT_TYPE_I [TUPLE [session: TEST_EXECUTION_I; test: TEST_I]]
 			-- Events called when a test is being executed
 			--
 			-- session: `Current'
@@ -204,7 +182,7 @@ feature {NONE} -- Events
 		deferred
 		end
 
-	test_executed_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: TEST_I; test_result: EQA_RESULT]]
+	test_executed_event: EVENT_TYPE_I [TUPLE [session: TEST_EXECUTION_I; test: TEST_I; test_result: EQA_RESULT]]
 			-- Events called when a test is done executing
 			--
 			-- session: `Current'
@@ -214,7 +192,7 @@ feature {NONE} -- Events
 		deferred
 		end
 
-	test_removed_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: TEST_I]]
+	test_removed_event: EVENT_TYPE_I [TUPLE [session: TEST_EXECUTION_I; test: TEST_I]]
 			-- Events called when a test is removed from `Current' without being executed.
 			--
 			-- session: `Current'

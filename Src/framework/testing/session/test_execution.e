@@ -102,6 +102,30 @@ feature -- Access
 	initial_test_count: NATURAL
 			-- <Precursor>
 
+feature -- Access: connection point
+
+	execution_connection: EVENT_CONNECTION_I [TEST_EXECUTION_OBSERVER, TEST_EXECUTION_I]
+			-- <Precursor>
+		local
+			l_cache: like execution_connection_cache
+		do
+			l_cache := execution_connection_cache
+			if l_cache = Void then
+				l_cache := create {EVENT_CHAINED_CONNECTION [TEST_EXECUTION_OBSERVER, TEST_EXECUTION_I, TEST_SESSION_OBSERVER, TEST_SESSION_I]}.make
+					(agent (an_observer: TEST_EXECUTION_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := <<
+								[test_running_event, agent an_observer.on_test_running],
+								[test_executed_event, agent an_observer.on_test_executed],
+								[test_removed_event, agent an_observer.on_test_removed]
+							>>
+						end,
+					connection)
+				execution_connection_cache := l_cache
+			end
+			Result := l_cache
+		end
+
 feature {NONE} -- Access: task
 
 	task_cursor: DS_ARRAYED_LIST_CURSOR [like new_task_data]

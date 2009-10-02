@@ -169,6 +169,28 @@ feature -- Access
 			end
 		end
 
+	connection: EVENT_CONNECTION_I [TEST_RECORD_REPOSITORY_OBSERVER, TEST_RECORD_REPOSITORY_I]
+			-- <Precursor>
+		local
+			l_cache: like connection_cache
+		do
+			l_cache := connection_cache
+			if l_cache = Void then
+				l_cache := create {EVENT_CONNECTION [TEST_RECORD_REPOSITORY_OBSERVER, TEST_RECORD_REPOSITORY_I]}.make
+					(agent (an_observer: TEST_RECORD_REPOSITORY_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := <<
+									[record_added_event, agent an_observer.on_record_added],
+									[record_removed_event, agent an_observer.on_record_removed],
+									[record_updated_event, agent an_observer.on_record_updated],
+									[record_property_updated_event, agent an_observer.on_record_property_updated]
+								>>
+						end)
+				connection_cache := l_cache
+			end
+			Result := l_cache
+		end
+
 feature {NONE} -- Access
 
 	record_storage: DS_ARRAYED_LIST [TEST_SESSION_RECORD]

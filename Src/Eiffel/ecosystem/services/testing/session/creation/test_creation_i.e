@@ -25,28 +25,6 @@ inherit
 			connection as creation_connection
 		end
 
-feature -- Access
-
-	creation_connection: EVENT_CONNECTION_I [TEST_CREATION_OBSERVER, TEST_CREATION_I]
-			-- <Precursor>
-		local
-			l_cache: like creation_connection_cache
-		do
-			l_cache := creation_connection_cache
-			if l_cache = Void then
-				l_cache := create {EVENT_CHAINED_CONNECTION [TEST_CREATION_OBSERVER, TEST_CREATION_I, TEST_SESSION_OBSERVER, TEST_SESSION_I]}.make
-					(agent (an_observer: TEST_CREATION_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
-						do
-							Result := <<
-								[test_created_event, agent an_observer.on_test_created]
-							>>
-						end,
-					connection)
-				creation_connection_cache := l_cache
-			end
-			Result := l_cache
-		end
-
 feature {NONE} -- Access
 
 	creation_connection_cache: like creation_connection
@@ -56,7 +34,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Events
 
-	test_created_event: EVENT_TYPE [TUPLE [session: TEST_CREATION_I; test: READABLE_STRING_8]]
+	test_created_event: EVENT_TYPE_I [TUPLE [session: TEST_CREATION_I; test: READABLE_STRING_8]]
 			-- Events called when a new test has been created
 			--
 			-- session: `Current'.

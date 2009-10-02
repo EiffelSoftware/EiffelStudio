@@ -57,31 +57,9 @@ feature -- Basic operations
 		deferred
 		end
 
-feature -- Events
-
-	connection: EVENT_CONNECTION_I [ROTA_OBSERVER, ROTA_S]
-			-- <Precursor>
-		local
-			l_result: like connection_cache
-		do
-			l_result := connection_cache
-			if l_result = Void then
-				l_result := create {EVENT_CONNECTION [ROTA_OBSERVER, ROTA_S]}.make (
-					agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
-						do
-							Result := <<
-									[task_run_event, agent an_observer.on_task_run],
-									[task_finished_event, agent an_observer.on_task_finished],
-									[task_removed_event, agent an_observer.on_task_remove]
-								>>
-						end)
-			end
-			Result := l_result
-		end
-
 feature {NONE} -- Events
 
-	task_run_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
+	task_run_event: EVENT_TYPE_I [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
 			-- Events called when a task is run.
 			--
 			-- service: `Current'
@@ -91,7 +69,7 @@ feature {NONE} -- Events
 		deferred
 		end
 
-	task_finished_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
+	task_finished_event: EVENT_TYPE_I [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
 			-- Events called when a task is done.
 			--
 			-- service: `Current'
@@ -101,7 +79,7 @@ feature {NONE} -- Events
 		deferred
 		end
 
-	task_removed_event: EVENT_TYPE [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
+	task_removed_event: EVENT_TYPE_I [TUPLE [service: ROTA_S; task: ROTA_TIMED_TASK_I]]
 			-- Events called after a task was removed from `Current'.
 			--
 			-- service: `Current'

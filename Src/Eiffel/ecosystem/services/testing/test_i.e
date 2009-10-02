@@ -40,6 +40,8 @@ feature -- Basic operations
 			--       information on `a_result' by doing an object test.
 			--
 			-- `a_formatted': Formatter to which output should be printed to.
+		local
+			l_output: STRING
 		do
 			if a_result.is_pass then
 				a_formatter.process_basic_text ("pass")
@@ -54,6 +56,19 @@ feature -- Basic operations
 					a_formatter.process_basic_text (a_result.tag.as_string_8)
 					a_formatter.process_basic_text (")")
 				end
+			end
+			l_output := a_result.information.as_string_8
+			if not l_output.is_empty then
+				a_formatter.add_new_line
+				a_formatter.add_indent
+				a_formatter.process_basic_text ("[")
+				a_formatter.add_new_line
+				a_formatter.add_multiline_string (l_output.as_string_8, 2)
+				if l_output.item (l_output.count) /= '%N' then
+					a_formatter.add_new_line
+				end
+				a_formatter.add_indent
+				a_formatter.process_basic_text ("]")
 			end
 		end
 

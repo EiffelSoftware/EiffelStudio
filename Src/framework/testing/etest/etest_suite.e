@@ -22,6 +22,8 @@ inherit
 			on_session_finished
 		end
 
+	TEST_SESSION_FACTORY [ETEST_RETRIEVAL]
+
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
@@ -52,9 +54,9 @@ feature {NONE} -- Initialization
 
 			l_manager := project_access.project.manager
 			l_manager.compile_start_agents.extend (agent force_test_class_compilation)
+			l_manager.compile_stop_agents.extend (agent on_auto_retrieve)
+			l_manager.load_agents.extend (agent on_auto_retrieve)
 			if a_auto_retrieve then
-				l_manager.compile_stop_agents.extend (agent retrieve_tests)
-				l_manager.load_agents.extend (agent retrieve_tests)
 			end
 			l_manager.close_agents.extend (agent on_project_close)
 
@@ -62,6 +64,7 @@ feature {NONE} -- Initialization
 				l_test_suite := test_suite.service
 				if l_test_suite.is_interface_usable then
 					l_test_suite.test_suite_connection.connect_events (Current)
+					l_test_suite.register_factory (Current)
 				end
 			end
 		ensure
@@ -153,6 +156,11 @@ feature {TEST_SESSION_I, ETEST_EXECUTOR, ETEST_COMPILATION_EXECUTOR} -- Status r
 			Result := etest_session_count > 0
 		end
 
+feature -- Status report
+
+	is_auto_retrieving: BOOLEAN
+			-- Shoul tests be automatically retrieved after each compilation?
+
 feature {NONE} -- Status report
 
 	is_retrieving: BOOLEAN
@@ -165,6 +173,33 @@ feature {NONE} -- Status report
 
 	has_class_map_changed: BOOLEAN
 			-- Have keys of `class_map' changed since last call to `force_test_class_compilation'
+
+feature -- Status setting
+
+	set_auto_retrieve (an_auto_retrieve: like is_auto_retrieving)
+			-- Set `is_auto_retrieving' to given value.
+			--
+			-- `an_auto_retrieve': New value for `is_auto_retreiving'.
+		do
+			is_auto_retrieving := an_auto_retrieve
+		ensure
+			set: is_auto_retrieving = an_auto_retrieve
+		end
+
+feature {ETEST_RETRIEVAL} -- Status setting
+
+	start_retrieval (a_retrieval: like new_session)
+			-- Set given retrieval as current running retrieval.
+		require
+			a_retrieval_attached: a_retrieval /= Void
+			a_retrieval_usable: a_retrieval.is_interface_usable
+		do
+			library_cache := Void
+			stop_retrieval
+			retrieval := a_retrieval
+			old_class_map := class_map
+			class_map := new_class_map
+		end
 
 feature {TEST_SESSION_I, ETEST_EXECUTOR, ETEST_COMPILATION_EXECUTOR} -- Status setting
 
@@ -252,6 +287,14 @@ feature {TEST_SUITE_S} -- Events: test suite
 
 feature {NONE} -- Events: project
 
+	on_auto_retrieve
+			-- Called when project is loaded or done compiling.
+		do
+			if is_auto_retrieving then
+				retrieve_tests
+			end
+		end
+
 	on_project_close
 			-- Called when the Eiffel project is closed.
 		do
@@ -274,16 +317,10 @@ feature -- Element change
 
 			stop_retrieval
 
-			if test_suite.is_service_available and project_access.is_initialized then
+			if test_suite.is_service_available and project_access.is_initialized and then project_access.project.successful then
 				l_test_suite := test_suite.service
-				if
-					l_test_suite.is_interface_usable and
-					attached library_class ({ETEST_CONSTANTS}.eqa_test_set_name) as l_class
-				then
-					create l_retrieval.make (Current, l_test_suite, project_access.project.universe.target, l_class)
-					retrieval := l_retrieval
-					old_class_map := class_map
-					class_map := new_class_map
+				if l_test_suite.is_interface_usable then
+					create l_retrieval.make (Current, l_test_suite)
 					l_test_suite.launch_session (l_retrieval)
 				end
 			end
@@ -407,6 +444,12 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Factory
+
+	new_session (a_test_suite: TEST_SUITE_S): ETEST_RETRIEVAL
+			-- <Precursor>
+		do
+			create Result.make (Current, a_test_suite)
+		end
 
 	new_class_map: like class_map
 			-- Create new `class_map'

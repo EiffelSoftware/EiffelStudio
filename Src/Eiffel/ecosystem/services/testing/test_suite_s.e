@@ -164,6 +164,7 @@ feature -- Basic operations
 		deferred
 		ensure
 			result_conforms: Result /= Void implies a_type.attempt (Result) /= Void
+			results_usable: Result /= Void implies Result.is_interface_usable
 			result_valid: Result /= Void implies Result.test_suite = Current
 			result_not_running: Result /= Void implies not Result.has_next_step
 		end

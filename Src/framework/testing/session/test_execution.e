@@ -482,6 +482,9 @@ feature {NONE} -- Basic operations
 			a_formatter.process_basic_text (": ")
 			a_test.print_result (a_formatter, a_result)
 			a_formatter.add_new_line
+			if not a_result.is_pass then
+				a_test.print_result_details (a_formatter, a_result, 1)
+			end
 		end
 
 feature {TEST_SUITE_S} -- Events

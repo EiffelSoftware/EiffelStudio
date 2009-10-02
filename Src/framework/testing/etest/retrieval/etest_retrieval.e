@@ -31,28 +31,20 @@ create {ETEST_SUITE}
 feature {NONE} -- Initialization
 
 	make (an_etest_suite: like etest_suite;
-	      a_test_suite: like test_suite;
-	      a_target: like target;
-	      an_ancestor: like common_ancestor)
+	      a_test_suite: like test_suite)
 			-- Initialize `Current'.
 			--
 			-- `an_etest_suite': Test suite for which classes should be traversed.
 			-- `a_test_suite': {TEST_SUITE_S} running `Current'.
-			-- `a_target': Target in which Eiffel tests should be retrieved.
-			-- `an_ancestor': Class from which all test classes must inherit.
 		require
 			an_etest_suite_attached: an_etest_suite /= Void
-			a_target_attached: a_target /= Void
 			a_test_suite_attached: a_test_suite /= Void
-			an_ancestor_attached: an_ancestor /= Void
 		local
 			l_conf_items: like conf_items
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 		do
 			make_session (a_test_suite)
-			target := a_target
 			etest_suite := an_etest_suite
-			common_ancestor := an_ancestor
 			create conf_items.make_default
 			create traversed_descendants.make_default
 			create traversed_helpers.make_default
@@ -152,7 +144,7 @@ feature {NONE} -- Access
 			-- total: Total child items added to `conf_items'
 			-- remaining: Remaining items in `conf_items'
 
-	common_ancestor: EIFFEL_CLASS_I
+	common_ancestor: detachable EIFFEL_CLASS_I
 			-- Common ancestor of all test classes, Void if testing library is not included yet.
 
 	current_library: detachable CONF_LIBRARY
@@ -173,18 +165,39 @@ feature {TEST_SUITE_S} -- Status report
 		local
 			l_formatter: TEXT_FORMATTER
 		do
-			if project_access.is_initialized then
+			etest_suite.start_retrieval (Current)
+			append_output (agent (a_formatter: TEXT_FORMATTER)
+				do
+					a_formatter.process_basic_text ("Synchronizing test suite with project")
+					a_formatter.add_new_line
+					a_formatter.add_new_line
+				end)
+			if project_access.is_initialized and then attached project_access.project.universe.target as l_target then
+				if attached etest_suite.library_class ({ETEST_CONSTANTS}.eqa_test_set_name) as l_class then
+					common_ancestor := l_class
+					append_output (agent (a_formatter: TEXT_FORMATTER)
+						do
+							a_formatter.process_basic_text ("Parsing classes in cluster:")
+							a_formatter.add_new_line
+						end)
+
+					l_target.process (Current)
+					initialize_sub_task
+				else
+					append_output (agent (a_formatter: TEXT_FORMATTER)
+						do
+							a_formatter.process_basic_text ("Testing library must be included and compiled")
+							a_formatter.add_new_line
+							a_formatter.add_new_line
+						end)
+				end
+			else
 				append_output (agent (a_formatter: TEXT_FORMATTER)
 					do
-						a_formatter.process_basic_text ("Synchronizing test suite with project")
+						a_formatter.process_basic_text ("Project has not been compiled yet")
 						a_formatter.add_new_line
-						a_formatter.add_new_line
-						a_formatter.process_basic_text ("Parsing classes in cluster:")
 						a_formatter.add_new_line
 					end)
-
-				target.process (Current)
-				initialize_sub_task
 			end
 		end
 

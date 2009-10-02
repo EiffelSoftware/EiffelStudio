@@ -84,10 +84,11 @@ feature -- Query
 
 feature -- Basic operations
 
-	frozen execute_with_callback (a_callback: PROCEDURE [ANY, TUPLE [row: SQLITE_RESULT_ROW]])
+	frozen execute_with_callback (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN])
 			-- Executes the SQLite query statement and calls back a routine with a result row.
 			--
-			-- `a_callback': A callback routine accepting a result row as its argument.
+			-- `a_callback': A callback function accepting a result row as its argument.
+			--               Return True from the function to abort further calls when there is more result data.
 			--               Note: The row does not change between calls and values must be queried
 			--                     immediately.
 		require
@@ -105,10 +106,11 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	frozen execute_with_callback_and_arguments (a_callback: PROCEDURE [ANY, TUPLE [row: SQLITE_RESULT_ROW]]; a_bindings: ANY)
+	frozen execute_with_callback_and_arguments (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_bindings: ANY)
 			-- Executes the SQLite query statement with arguments and calls back a routine with a result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.
+			--               Return True from the function to abort further calls when there is more result data.
 			--               Note: The row does not change between calls and values must be queried
 			--                     immediately.
 			-- `a_bindings': The bound arguments to call the SQLite query statement with.

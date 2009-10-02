@@ -87,7 +87,7 @@ feature {NONE} -- Factory
 
 			create l_statement.make (l_sql, database)
 			check is_compiled: l_statement.is_compiled end
-			l_statement.execute_with_callback (agent (ia_row: SQLITE_RESULT_ROW; ia_result: CELL [BOOLEAN])
+			l_statement.execute_with_callback (agent (ia_row: SQLITE_RESULT_ROW; ia_result: CELL [BOOLEAN]): BOOLEAN
 				do
 					if ia_row.count > 0 and not ia_row.is_null (1) then
 						ia_result.put (ia_row.integer_value (1) /= 0)

@@ -137,29 +137,6 @@ feature {NONE} -- External: Experimental
 			"return (EIF_INTEGER)(FUNCTION_CAST(int, (int, ...)) $a_fptr) ($a_config);"
 		end
 
-feature {NONE} -- Externals: Constants
-
-	SQLITE_CONFIG_SINGLETHREAD: INTEGER
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_CONFIG_SINGLETHREAD"
-		end
-
-	SQLITE_CONFIG_MULTITHREAD: INTEGER
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_CONFIG_MULTITHREAD"
-		end
-
-	SQLITE_CONFIG_SERIALIZED: INTEGER
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_CONFIG_SERIALIZED"
-		end
-
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

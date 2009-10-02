@@ -308,10 +308,11 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			not_has_error: not has_error
 		end
 
-	execute_internal (a_callback: detachable PROCEDURE [ANY, TUPLE [row: SQLITE_RESULT_ROW]]; a_bindings: detachable ANY)
+	execute_internal (a_callback: detachable FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_bindings: detachable ANY)
 			-- Performs execution of the SQLite statement with a callback routine for each returned result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.
+			--               Return True from the function to abort further calls when there is more result data.
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
@@ -364,7 +365,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 						-- Increment the row index
 					l_row.index := l_row.index + 1
 						-- Call back with the result row.
-					a_callback.call ([l_row])
+					is_abort_requested := a_callback.item ([l_row]) or is_abort_requested
 				end
 
 

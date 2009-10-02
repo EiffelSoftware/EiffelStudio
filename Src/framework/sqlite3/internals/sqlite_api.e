@@ -48,11 +48,11 @@ feature {NONE} -- Initialize
 					-- Configure thread-safety mode (before initialization)
 				if is_thread_safe then
 						-- Set serialized threading mode so access to the database is serialized.
-					set_threading_mode (SQLITE_CONFIG_SERIALIZED)
+					set_threading_mode ({SQLITE_THREADING_MODE}.multi_threaded_serialized)
 				else
 						-- The library may be multi-threaded but system is no, set the mono-threaded mode.
 						-- Note: There may or may not be performance benifits from this.
-					set_threading_mode (SQLITE_CONFIG_SINGLETHREAD)
+					set_threading_mode ({SQLITE_THREADING_MODE}.single_threaded)
 				end
 
 				l_result := sqlite3_initialize (Current)
@@ -93,11 +93,11 @@ feature -- Access
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_p: like c_sqlite3_libversion
+			p: like sqlite3_libversion
 		once
-			l_p := sqlite3_libversion (Current)
-			if l_p /= default_pointer then
-				create Result.make_from_c (l_p)
+			p := sqlite3_libversion (Current)
+			if p /= default_pointer then
+				create Result.make_from_c (p)
 			else
 				create Result.make_empty
 			end
@@ -162,7 +162,7 @@ feature -- Element change
 		local
 			l_result: INTEGER
 		do
-			l_result := sqlite3_config (Current, SQLITE_CONFIG_SERIALIZED)
+			l_result := sqlite3_config (Current, {SQLITE_THREADING_MODE}.multi_threaded_serialized)
 			check success: sqlite_success (l_result) end
 		end
 

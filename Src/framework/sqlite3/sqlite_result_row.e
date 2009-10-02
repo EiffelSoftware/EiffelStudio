@@ -194,23 +194,28 @@ feature -- Query
 
 feature -- Query: Value affinity
 
---	blob_value (a_column: NATURAL): MANAGED_POINTER
---			-- Retrieves a blob representation of a column result value.
---			--
---			-- `a_column': The column to retrieve the result for.
---		require
---			is_interface_usable: is_interface_usable
---			is_connected: is_connected
---			a_column_positive: a_column > 0
---			a_column_small_enough: a_column <= count
---			acceptable_type: type (a_column) /= {SQLITE_TYPE}.sqlite_null
---		local
---			l_p: POINTER
---			l_offset: INTEGER
---		do
---			l_p := sqlite3_column_blob (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
-
---		end
+	blob_value (a_column: NATURAL): detachable MANAGED_POINTER
+			-- Retrieves a blob representation of a column result value.
+			--
+			-- `a_column': The column to retrieve the result for.
+		require
+			is_interface_usable: is_interface_usable
+			is_connected: is_connected
+			a_column_positive: a_column > 0
+			a_column_small_enough: a_column <= count
+			not_a_column_is_null: not is_null (a_column)
+		local
+			l_size: INTEGER
+			p: POINTER
+		do
+			p := sqlite3_column_blob (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
+			if p /= default_pointer then
+				l_size := sqlite3_column_bytes (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
+				if l_size >= 0 then
+					create Result.make_from_pointer (p, l_size)
+				end
+			end
+		end
 
 	integer_value (a_column: NATURAL): INTEGER
 			-- Retrieves a {INTEGER_32} representation of a column result value.
@@ -251,13 +256,21 @@ feature -- Query: Value affinity
 			a_column_small_enough: a_column <= count
 			not_a_column_is_null: not is_null (a_column)
 		local
+			l_string: C_STRING
+			l_size: INTEGER
 			p: POINTER
 		do
 			p := sqlite3_column_text (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
 			if p = default_pointer then
 				create Result.make_empty
 			else
-				create Result.make_from_c (p)
+				l_size := sqlite3_column_bytes (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
+				if l_size >= 0 then
+					create l_string.make_by_pointer_and_count (p, l_size)
+					Result := l_string.string
+				else
+					create Result.make_empty
+				end
 			end
 		end
 
@@ -288,7 +301,6 @@ feature -- Query: Value affinity
 		do
 			Result := sqlite3_column_double (sqlite_api, statement.internal_stmt, (a_column + 1).as_integer_32)
 		end
-
 
 invariant
 	statement_mark_positive: statement_mark > 0

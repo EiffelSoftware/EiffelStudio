@@ -97,7 +97,9 @@ feature -- Execution
 			l_test_set: detachable G
 			l_basic_test_set: EQA_TEST_SET
 			l_old: detachable PLAIN_TEXT_FILE
+			l_old_work_dir: STRING
 		do
+			l_old_work_dir := current_working_directory
 			create l_start_date.make_now
 			l_old := io.default_output
 			io.set_file_default (buffer)
@@ -124,6 +126,7 @@ feature -- Execution
 			else
 				io.set_file_default (l_old)
 			end
+			change_working_directory (l_old_work_dir)
 			buffer.wipe_out
 		ensure
 			has_result: has_result

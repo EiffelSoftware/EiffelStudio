@@ -170,7 +170,7 @@ feature -- Basic operations
 
 feature {NONE} -- Events
 
-	test_added_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
+	test_added_event: EVENT_TYPE_I [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
 			-- Events called after a test was added to `Current'.
 			--
 			-- test_suite: `Current'
@@ -180,7 +180,7 @@ feature {NONE} -- Events
 		deferred
 		end
 
-	test_removed_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
+	test_removed_event: EVENT_TYPE_I [TUPLE [test_suite: TEST_SUITE_S; test: like test]]
 			-- Events called after an item was removed from `items'.
 			--
 			-- test_suite: `Current'
@@ -190,45 +190,20 @@ feature {NONE} -- Events
 		deferred
 		end
 
-	session_launched_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; session: TEST_SESSION_I]]
+	session_launched_event: EVENT_TYPE_I [TUPLE [test_suite: TEST_SUITE_S; session: TEST_SESSION_I]]
 			-- Events called when a session is launched through `launch_session'.
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
-	session_finished_event: EVENT_TYPE [TUPLE [test_suite: TEST_SUITE_S; session: TEST_SESSION_I]]
+	session_finished_event: EVENT_TYPE_I [TUPLE [test_suite: TEST_SUITE_S; session: TEST_SESSION_I]]
 			-- Events called when a session is finished.
 		require
 			usable: is_interface_usable
 		deferred
 		end
 
-feature -- Event: Connection point
-
-	test_suite_connection: EVENT_CONNECTION_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
-			-- <Precursor>
-		local
-			l_result: like internal_test_suite_connection
-		do
-			l_result := internal_test_suite_connection
-			if l_result = Void then
-				create {EVENT_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S]} l_result.make (
-					agent (an_observer: TEST_SUITE_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
-						do
-							Result := <<
-									[test_added_event, agent an_observer.on_test_added],
-									[test_removed_event, agent an_observer.on_test_removed],
-									[session_launched_event, agent an_observer.on_session_launched],
-									[session_finished_event, agent an_observer.on_session_finished]
-								>>
-						end
-					)
-				internal_test_suite_connection := l_result
-				automation.auto_dispose (l_result)
-			end
-			Result := l_result
-		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

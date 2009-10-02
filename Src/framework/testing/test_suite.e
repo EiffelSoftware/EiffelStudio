@@ -72,6 +72,9 @@ feature -- Access
 	record_repository: TEST_RECORD_REPOSITORY
 			-- <Precursor>
 
+	tag_tree: TAG_TREE [like test]
+			-- <Precursor>
+
 feature -- Access: output
 
 	output (a_session: TEST_SESSION_I): detachable OUTPUT_I
@@ -88,10 +91,31 @@ feature -- Access: output
 			end
 		end
 
-feature -- Access: tagging
+feature -- Access: connection point
 
-	tag_tree: TAG_TREE [like test]
+	test_suite_connection: EVENT_CONNECTION_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
 			-- <Precursor>
+		local
+			l_result: like internal_test_suite_connection
+		do
+			l_result := internal_test_suite_connection
+			if l_result = Void then
+				create {EVENT_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S]} l_result.make (
+					agent (an_observer: TEST_SUITE_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := <<
+									[test_added_event, agent an_observer.on_test_added],
+									[test_removed_event, agent an_observer.on_test_removed],
+									[session_launched_event, agent an_observer.on_session_launched],
+									[session_finished_event, agent an_observer.on_session_finished]
+								>>
+						end
+					)
+				internal_test_suite_connection := l_result
+				automation.auto_dispose (l_result)
+			end
+			Result := l_result
+		end
 
 feature {NONE} -- Access
 

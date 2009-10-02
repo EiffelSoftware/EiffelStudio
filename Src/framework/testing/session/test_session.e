@@ -36,6 +36,26 @@ feature -- Access
 	test_suite: TEST_SUITE_S
 			-- <Precursor>
 
+	connection: EVENT_CONNECTION_I [TEST_SESSION_OBSERVER, TEST_SESSION_I]
+			-- <Precursor>
+		local
+			l_result: like connection_cache
+		do
+			l_result := connection_cache
+			if l_result = Void then
+				l_result := create {EVENT_CONNECTION [TEST_SESSION_OBSERVER, TEST_SESSION_I]}.make (
+					agent (an_observer: TEST_SESSION_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := <<
+									[proceeded_event, agent an_observer.on_proceeded],
+									[error_event, agent an_observer.on_error]
+								>>
+						end)
+				connection_cache := l_result
+			end
+			Result := l_result
+		end
+
 feature {NONE} -- Status setting
 
 	clean_record

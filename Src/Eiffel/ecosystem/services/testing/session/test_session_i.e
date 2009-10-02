@@ -109,31 +109,9 @@ feature {TEST_SUITE_S} -- Status setting
 			has_next_step_implies_unattached_record: has_next_step implies not record.is_attached
 		end
 
-feature -- Events
-
-	connection: EVENT_CONNECTION_I [TEST_SESSION_OBSERVER, TEST_SESSION_I]
-			-- <Precursor>
-		local
-			l_result: like connection_cache
-		do
-			l_result := connection_cache
-			if l_result = Void then
-				l_result := create {EVENT_CONNECTION [TEST_SESSION_OBSERVER, TEST_SESSION_I]}.make (
-					agent (an_observer: TEST_SESSION_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
-						do
-							Result := <<
-									[proceeded_event, agent an_observer.on_proceeded],
-									[error_event, agent an_observer.on_error]
-								>>
-						end)
-				connection_cache := l_result
-			end
-			Result := l_result
-		end
-
 feature {NONE} -- Events
 
-	proceeded_event: EVENT_TYPE [TUPLE [session: TEST_SESSION_I]]
+	proceeded_event: EVENT_TYPE_I [TUPLE [session: TEST_SESSION_I]]
 			-- Events called after `Current' proceeded
 			--
 			-- Note: implementers do not have to publish this event since it is already done by `step_task'.
@@ -144,7 +122,7 @@ feature {NONE} -- Events
 		deferred
 		end
 
-	error_event: EVENT_TYPE [TUPLE [session: TEST_SESSION_I; error: READABLE_STRING_GENERAL]]
+	error_event: EVENT_TYPE_I [TUPLE [session: TEST_SESSION_I; error: READABLE_STRING_GENERAL]]
 			-- Events called when `Current' encountered an error.
 			--
 			-- session: `Current'.

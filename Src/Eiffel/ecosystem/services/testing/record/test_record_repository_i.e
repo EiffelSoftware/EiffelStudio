@@ -48,31 +48,9 @@ feature -- Access
 				create {KL_COMPARABLE_COMPARATOR [TEST_SESSION_RECORD]}.make))
 		end
 
-	connection: EVENT_CONNECTION_I [TEST_RECORD_REPOSITORY_OBSERVER, TEST_RECORD_REPOSITORY_I]
-			-- <Precursor>
-		local
-			l_cache: like connection_cache
-		do
-			l_cache := connection_cache
-			if l_cache = Void then
-				l_cache := create {EVENT_CONNECTION [TEST_RECORD_REPOSITORY_OBSERVER, TEST_RECORD_REPOSITORY_I]}.make
-					(agent (an_observer: TEST_RECORD_REPOSITORY_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
-						do
-							Result := <<
-									[record_added_event, agent an_observer.on_record_added],
-									[record_removed_event, agent an_observer.on_record_removed],
-									[record_updated_event, agent an_observer.on_record_updated],
-									[record_property_updated_event, agent an_observer.on_record_property_updated]
-								>>
-						end)
-				connection_cache := l_cache
-			end
-			Result := l_cache
-		end
-
 feature {NONE} -- Access
 
-	record_added_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
+	record_added_event: EVENT_TYPE_I [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
 			-- Events called when a record is added to `Current'.
 			--
 			-- repository: `Current'.
@@ -82,7 +60,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	record_removed_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
+	record_removed_event: EVENT_TYPE_I [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
 			-- Events called after a record was removed from `Current'.
 			--
 			-- repository: `Current'.
@@ -92,7 +70,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	record_updated_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
+	record_updated_event: EVENT_TYPE_I [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
 			-- Events called after a record was updated.
 			--
 			-- repository: `Current'.
@@ -102,7 +80,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	record_property_updated_event: EVENT_TYPE [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
+	record_property_updated_event: EVENT_TYPE_I [TUPLE [repository: TEST_RECORD_REPOSITORY_I; record: TEST_SESSION_RECORD]]
 			-- Events called after a property of a record was changed.
 			--
 			-- Note: a property is considered any record dependent query in `Current'.

@@ -1,6 +1,6 @@
 note
 	description: "[
-		A statement class specific to processing INSERT statements.
+		A null/void-value binding argument value for use with executing a SQLite statement.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,39 +8,51 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_INSERT_STATEMENT
+	SQLITE_NULL_ARG
 
 inherit
-	SQLITE_MODIFY_STATEMENT
+	SQLITE_BIND_ARG [ANY]
+		rename
+			make as make_arg
 		redefine
-			on_before_execute,
-			on_after_execute
+			is_valid_value
 		end
 
 create
 	make
 
-feature -- Measurement
+feature {NONE} -- Initialization
 
-	last_row_id: INTEGER_64
-			-- Last inserted row
-
-feature {NONE} -- Action handlers
-
-	on_before_execute
-			-- <Precursor>
+	make (a_id: READABLE_STRING_8)
+			-- Initializes an argument.
+			--
+			-- `a_id': Variable name or index string.
+		require
+			a_id_attached: attached a_id
+			not_a_id_is_empty: not a_id.is_empty
+			a_id_is_valid_id: is_valid_id (a_id)
 		do
-			Precursor
-			last_row_id := 0
+			make_arg (a_id, Void)
+		ensure
+			id_set: id.same_string (a_id)
 		end
 
-	on_after_execute
+feature -- Status report
+
+	is_valid_value (a_value: like value): BOOLEAN
 			-- <Precursor>
 		do
-			Precursor
-			if is_connected and then database.is_readable then
-				last_row_id := sqlite3_last_insert_rowid (sqlite_api, internal_db)
-			end
+			Result := not attached a_value
+		ensure then
+			not_attached_a_value: Result implies not attached a_value
+		end
+
+feature {SQLITE_STATEMENT} -- Basic operations
+
+	bind_to_statement (a_statement: SQLITE_STATEMENT; a_index: INTEGER)
+			-- <Precursor>
+		do
+
 		end
 
 ;note

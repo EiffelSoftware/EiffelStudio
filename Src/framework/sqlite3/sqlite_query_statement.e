@@ -36,7 +36,7 @@ feature -- Meansurement
 feature -- Query
 
 	column_name (a_column: NATURAL): IMMUTABLE_STRING_8
-			-- Retrieve the name of a column in a statment.
+			-- Retrieve the name of a column in a statement.
 			--
 			-- `a_column': The column index to retrieve a name for.
 			-- `Result': A column name, or an
@@ -106,7 +106,7 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	frozen execute_with_callback_and_arguments (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_bindings: ANY)
+	frozen execute_with_callback_and_arguments (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_bindings: ARRAY [SQLITE_BIND_ARG [ANY]])
 			-- Executes the SQLite query statement with arguments and calls back a routine with a result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.
@@ -122,9 +122,10 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 			is_accessible: is_accessible
 			database_is_readable: database.is_readable
+			has_arguments: has_arguments
 			a_callback_attached: attached a_callback
 			a_bindings_attached: attached a_bindings
-			not_implemented: False
+			a_bindings_count_big_enough: a_bindings.count.as_natural_32 = arguments_count
 		do
 			execute_internal (a_callback, a_bindings)
 		ensure

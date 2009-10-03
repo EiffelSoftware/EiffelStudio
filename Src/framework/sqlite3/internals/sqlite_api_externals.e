@@ -56,6 +56,17 @@ feature -- Access
 			Result := c_sqlite3_libversion_number (a_api.api_pointer (sqlite3_libversion_number_api))
 		end
 
+feature {NONE} -- Status report
+
+	sqlite3_complete (a_api: SQLITE_API; a_sql: POINTER): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+			not_a_sql_is_null: a_sql /= default_pointer
+		do
+			Result := c_sqlite3_complete (a_api.api_pointer (sqlite3_complete_api), a_sql)
+		end
+
 feature {NONE} -- External: Experimental
 
 	sqlite3_config (a_api: SQLITE_API; a_config: INTEGER): INTEGER
@@ -74,6 +85,7 @@ feature {NONE} -- Constants
 	sqlite3_libversion_number_api: STRING = "sqlite3_libversion_number"
 	sqlite3_threadsafe_api: STRING        = "sqlite3_threadsafe"
 	sqlite3_shutdown_api: STRING          = "sqlite3_shutdown"
+	sqlite3_complete_api: STRING          = "sqlite3_complete"
 
 feature {NONE} -- Externals
 
@@ -123,6 +135,18 @@ feature {NONE} -- Externals
 			"C inline use <sqlite3.h>"
 		alias
 			"return (EIF_INTEGER)(FUNCTION_CAST(int, (void)) $a_fptr) ();"
+		end
+
+feature {NONE} -- External: Query
+
+	c_sqlite3_complete (a_fptr: POINTER; a_sql: POINTER): INTEGER
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
+			not_a_sql_is_null: a_sql /= default_pointer
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"return (EIF_INTEGER)(FUNCTION_CAST(int, (const char *)) $a_fptr) ($a_sql);"
 		end
 
 feature {NONE} -- External: Experimental

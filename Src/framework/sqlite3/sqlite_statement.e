@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 			a_db_attached: attached a_db
 			a_db_is_accessible: a_db.is_accessible
 			a_db_is_readable: a_db.is_readable
+			a_statement_is_complete: a_db.is_complete_statement (a_statement)
 		do
 			create statement_string.make_from_string (a_statement)
 			create string.make_from_string (a_statement)
@@ -121,7 +122,7 @@ feature -- Access
 
 	string: IMMUTABLE_STRING_8
 			-- The full statement string passed during initialization.
-			-- May contain multiple SQLite statments.
+			-- May contain multiple SQLite statements.
 
 	database: SQLITE_DATABASE
 			-- Database to execute the SQL statement on.
@@ -149,6 +150,14 @@ feature {NONE} -- Access
 		ensure
 			result_attached: attached Result
 			not_result_is_empty: not Result.is_empty
+		end
+
+feature -- Measurement
+
+	arguments_count: NATURAL
+			-- Number of arguments required to be bound to execute the statement.
+		do
+			Result := sqlite3_bind_parameter_count (sqlite_api, internal_stmt).as_natural_32
 		end
 
 feature {SQLITE_STATEMENT} -- Measurement
@@ -183,7 +192,7 @@ feature -- Status report
 		end
 
 	is_connected: BOOLEAN
-			-- Indicates if the statment is still connected to a database.
+			-- Indicates if the statement is still connected to a database.
 			-- Disconnection occurs when a database connection is closed. Even when reopen the statement
 			-- will still remain disconnected. Use `ensure_connected' to attempt to reconnect to the
 			-- associated database.
@@ -210,6 +219,14 @@ feature -- Status report
 		ensure
 			true_result: not {PLATFORM}.is_thread_capable implies (Result and database.is_accessible)
 			same_internal_thread_id: (Result and {PLATFORM}.is_thread_capable) implies internal_thread_id = get_current_thread_id.to_integer_32
+		end
+
+	has_arguments: BOOLEAN
+			-- Indicates if the statement has required arguments to execute.
+		do
+			Result := arguments_count > 0
+		ensure
+			has_arguments: Result = (arguments_count > 0)
 		end
 
 	has_error: BOOLEAN
@@ -293,7 +310,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 		end
 
 	reset_all
-			-- Resets any cached information from the last execution for all statments.
+			-- Resets any cached information from the last execution for all statements.
 		require
 			not_is_executing: not is_executing
 		do
@@ -308,11 +325,12 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			not_has_error: not has_error
 		end
 
-	execute_internal (a_callback: detachable FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_bindings: detachable ANY)
+	execute_internal (a_callback: detachable FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_bindings: detachable ARRAY [SQLITE_BIND_ARG [ANY]])
 			-- Performs execution of the SQLite statement with a callback routine for each returned result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.
 			--               Return True from the function to abort further calls when there is more result data.
+			-- `a_bindings': An array or binding arguments, or Void if the statement does not require any arguments.
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
@@ -321,6 +339,8 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			not_is_executing: not is_executing
 			is_accessible: is_accessible
 			database_is_readable: database.is_readable
+			a_bindings_attached: has_arguments implies attached a_bindings
+			a_bindings_count_big_enough: not attached a_bindings or else a_bindings.count.as_natural_32 = arguments_count
 		local
 			l_api: like sqlite_api
 			l_stmt: like internal_stmt
@@ -330,7 +350,32 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			l_done: BOOLEAN
 			l_locked: BOOLEAN
 			l_row: SQLITE_RESULT_ROW
+			i_upper, i: INTEGER
+			l_arg_id: C_STRING
+			l_arg_index: INTEGER
 		do
+				-- Perform bindings
+			if attached a_bindings as l_bindings then
+				from
+					i := l_bindings.lower
+					i_upper := l_bindings.upper
+				until
+					i > i_upper
+				loop
+					if attached l_bindings[i] as l_arg then
+						create l_arg_id.make (l_arg.id)
+						l_arg_index := sqlite3_bind_parameter_index (sqlite_api, internal_stmt, l_arg_id.item)
+						if l_arg_index > 0 then
+							create l_arg_id.make_by_pointer (sqlite3_bind_parameter_name (sqlite_api, internal_stmt, 1))
+							l_arg.bind_to_statement (Current, l_arg_index)
+						else
+							-- Silently ignore unknown variables.
+						end
+					end
+					i := i + 1
+				end
+			end
+
 				-- Change the mark number
 			mark := mark + 1
 
@@ -416,7 +461,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 					l_db.unlock -- (-1) 0
 				end
 				if attached next_statement as l_next then
-						-- There is another statment to execute, process this before unlocking the database.
+						-- There is another statement to execute, process this before unlocking the database.
 					l_next.execute_internal (a_callback, a_bindings)
 				end
 

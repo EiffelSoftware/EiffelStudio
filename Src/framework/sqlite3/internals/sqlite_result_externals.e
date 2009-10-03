@@ -1,6 +1,6 @@
 note
 	description: "[
-		Externals for interacting with SQLite statment (sqlite3_stmt *) results.
+		Externals for interacting with SQLite statement (sqlite3_stmt *) results.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

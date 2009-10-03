@@ -124,7 +124,7 @@ feature -- Status report
 feature -- Query
 
 	column_name (a_column: NATURAL): IMMUTABLE_STRING_8
-			-- Retrieve the name of a column in a statment.
+			-- Retrieve the name of a column in a statement.
 			--
 			-- `a_column': The column index to retrieve a name for.
 			-- `Result': A column name, or an

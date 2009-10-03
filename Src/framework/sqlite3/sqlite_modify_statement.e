@@ -35,7 +35,7 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	frozen execute_with_arguments (a_bindings: ANY)
+	frozen execute_with_arguments (a_bindings: ARRAY [SQLITE_BIND_ARG [ANY]])
 			-- Executes the SQLite modification statement with bound set of arguments.
 			--
 			-- `a_bindings': The bound arguments to call the SQLite query statement with.
@@ -43,10 +43,11 @@ feature -- Basic operations
 			is_compiled: is_compiled
 			is_connected: is_connected
 			not_is_executing: not is_executing
-			a_bindings_attached: attached a_bindings
 			is_accessible: is_accessible
 			database_is_readable: database.is_readable
-			not_implemented: False
+			has_arguments: has_arguments
+			a_bindings_attached: attached a_bindings
+			a_bindings_count_big_enough: a_bindings.count.as_natural_32 = arguments_count
 		do
 			execute_internal (Void, a_bindings)
 		ensure

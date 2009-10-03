@@ -26,6 +26,11 @@ inherit
 			{NONE} all
 		end
 
+	SQLITE_API_EXTERNALS
+		export
+			{NONE} all
+		end
+
 	SQLITE_DATABASE_EXTERNALS
 		export
 			{NONE} all
@@ -354,6 +359,32 @@ feature -- Status report
 			Result := last_exception /= Void
 		ensure
 			last_exception_attached: Result implies last_exception /= Void
+		end
+
+feature -- Status report: SQL
+
+	is_complete_statement (a_sql: READABLE_STRING_8): BOOLEAN
+			-- Determines if an SQLite SQL statement is complete.
+			-- Note: This does not parse the SQL statement for syntax validity, only checks for completion.
+			--       The function is useful for command-line tools where input is required.
+			--
+			-- `a_sql': An SQL statement.
+			-- `Result': True if the statement is complete; False otherwise.
+		require
+			is_interface_usable: is_interface_usable
+			a_sql_attached: attached a_sql
+			not_a_sql_is_empty: not a_sql.is_empty
+		local
+			l_sql: C_STRING
+			l_result: INTEGER
+		do
+			create l_sql.make (a_sql)
+			l_result := sqlite3_complete (sqlite_api, l_sql.item)
+			if l_result /= {SQLITE_RESULT_CODE}.e_no_mem then
+				Result := l_result /= 0
+			else
+				sqlite_raise_on_failure (l_result)
+			end
 		end
 
 feature -- Status report: Comparison

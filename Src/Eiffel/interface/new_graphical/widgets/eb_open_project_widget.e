@@ -460,6 +460,7 @@ feature {NONE} -- Initialization
 			f: ARRAYED_LIST [READABLE_STRING_32]
 		do
 				-- Now initialize grid behavior.
+			projects_list.enable_always_selected
 			projects_list.enable_single_row_selection
 			projects_list.enable_last_column_use_all_width
 			projects_list.enable_row_height_fixed

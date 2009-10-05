@@ -322,6 +322,7 @@ feature {NONE} -- Display profiles impl
 			g.enable_tree
 			g.hide_header
 			g.enable_border
+			g.enable_always_selected
 			g.set_separator_color (Stock_colors.color_3d_face)
 			g.enable_single_row_selection
 			g.enable_default_tree_navigation_behavior (True, True, True, True)

@@ -511,10 +511,11 @@ test	inline-agent-inherited-crash	svalid014 tcf pass system-validity
 test	svalid-multi-constraint-inheritance	svalid015 tcf pass system-validity multiconstraint
 test	svalid-conversion-validity-error	svalid016 tcf pass system-validity
 test	svalid-inherited-invariant-not-checked	svalid017 tcf fail system-validity
-test	svalid-invalid-parent			svalid018 tcf fail system-validity conversion
-test	svalid-conversion-with-binary	svalid019 tcf fail system-validity conversion
-test	svalid-undetected-vwoe			svalid020 tcf fail system-validity conversion
+test	svalid-invalid-parent			svalid018 tcf pass system-validity conversion
+test	svalid-conversion-with-binary	svalid019 tcf pass system-validity conversion
+test	svalid-undetected-vwoe			svalid020 tcf pass system-validity conversion
 test	svalid-conversion-detachable	svalid022 tcf fail system-validity conversion
+test	svalid-missing-recheck			svalid023 tcf fail system-validity conversion
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

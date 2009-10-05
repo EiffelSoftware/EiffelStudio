@@ -1,6 +1,7 @@
 test_name	 svalid-conversion-detachable
 test_description Compiler should reject conversion of detachable types
 
+-- First we test the conversion to.
 define	TARGET_MARK ""
 define	SOURCE_MARK ""
 copy_sub 	Ace $TEST Ace
@@ -25,6 +26,7 @@ copy_sub 	test.e $CLUSTER test.e
 compile_melted
 compile_result	ok
 
+-- Second we test the conversion from.
 define	TARGET_MARK ""
 define	SOURCE_MARK ""
 copy_sub 	test.e $CLUSTER test.e
@@ -40,6 +42,37 @@ copy_sub 	test.e $CLUSTER test.e
 
 compile_melted
 compile_result	validity_error TEST VJAR
+
+define	TARGET_MARK "detachable"
+define	SOURCE_MARK ""
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+-- Third we check conversion to a formal generic parameter
+define	TARGET_MARK ""
+define	SOURCE_MARK ""
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	c.e $CLUSTER c.e
+copy_raw 	d.e $CLUSTER d.e
+
+compile_melted
+compile_result	ok
+
+define	TARGET_MARK ""
+define	SOURCE_MARK "detachable"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define	TARGET_MARK "detachable"
+define	SOURCE_MARK "detachable"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
 
 define	TARGET_MARK "detachable"
 define	SOURCE_MARK ""

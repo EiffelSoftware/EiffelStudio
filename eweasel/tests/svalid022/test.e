@@ -4,17 +4,11 @@ create make
 
 feature
 	make is
+		local
+			target_a: $TARGET_MARK A
+			source_b: $SOURCE_MARK B
 		do
-			create text
+			target_a := source_b
 		end
 
-feature
-	text: $TARGET_MARK A
-
-feature -- Basic Operations
-
-	string_assignment (a_text: $SOURCE_MARK B) is
-		do
-			text := a_text
-		end
 end

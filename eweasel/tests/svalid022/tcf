@@ -1,10 +1,51 @@
 test_name	 svalid-conversion-detachable
 test_description Compiler should reject conversion of detachable types
 
+define	TARGET_MARK ""
+define	SOURCE_MARK ""
 copy_sub 	Ace $TEST Ace
-copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
 
 compile_melted
-compile_result	validity_error TEST V???
+compile_result	ok
+
+define	TARGET_MARK ""
+define	SOURCE_MARK "detachable"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VJAR
+
+define	TARGET_MARK "detachable"
+define	SOURCE_MARK ""
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define	TARGET_MARK ""
+define	SOURCE_MARK ""
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	a_rev1.e $CLUSTER a.e
+copy_raw 	b_rev1.e $CLUSTER b.e
+
+compile_melted
+compile_result	ok
+
+define	TARGET_MARK ""
+define	SOURCE_MARK "detachable"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VJAR
+
+define	TARGET_MARK "detachable"
+define	SOURCE_MARK ""
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
 
 test_end

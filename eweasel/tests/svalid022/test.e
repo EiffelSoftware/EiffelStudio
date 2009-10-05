@@ -5,14 +5,14 @@ create make
 feature
 	make is
 		do
-			string_assignment (Void)
 		end
 
 feature
-	text: detachable STRING_32
+	text: $TARGET_MARK A
 
 feature -- Basic Operations
-	string_assignment (a_text: detachable STRING_GENERAL) is
+
+	string_assignment (a_text: $SOURCE_MARK B) is
 		do
 			text := a_text
 		end

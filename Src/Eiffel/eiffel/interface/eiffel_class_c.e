@@ -783,9 +783,6 @@ feature -- Third pass: byte code production and type check
 							-- 'need_type_check' may be true if `Current' has replicated features.
 						feature_checker.type_check_only (feature_i,
 							is_safe_to_check_ancestor, class_id /= feature_i.written_in, feature_i.is_replicated_directly)
-						if is_full_class_checking then
-							record_suppliers (feature_i, dependances)
-						end
 					end
 
 					l_ast_context.clear_feature_context

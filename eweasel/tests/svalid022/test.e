@@ -5,6 +5,7 @@ create make
 feature
 	make is
 		do
+			create text
 		end
 
 feature

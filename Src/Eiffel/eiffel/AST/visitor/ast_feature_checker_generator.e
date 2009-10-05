@@ -4279,7 +4279,11 @@ feature -- Implementation
 
 						if l_error /= Void then
 								-- Raise error here
-							l_error.set_location (l_as.operator_location)
+							if attached {VWOE1} l_error then
+								l_error.set_location (l_as.right.start_location)
+							else
+								l_error.set_location (l_as.operator_location)
+							end
 							error_handler.insert_error (l_error)
 						else
 								-- Process conversion if any.

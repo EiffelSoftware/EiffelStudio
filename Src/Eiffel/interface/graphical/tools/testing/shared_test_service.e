@@ -39,15 +39,15 @@ feature {NONE} -- Access
 			-- Once instance of `{ETEST_SUITE}
 		local
 			l_helper: ES_TEST_PROJECT_HELPER
-			l_auto_retrieve: BOOLEAN
+			l_access: EC_PROJECT_ACCESS
 		once
+			create l_access.make ((create {SHARED_EIFFEL_PROJECT}).eiffel_project)
 			if (create {SHARED_FLAGS}).is_gui then
 				create l_helper
-				l_auto_retrieve := True
 			else
 				create {TEST_PROJECT_HELPER} l_helper
 			end
-			create Result.make (create {EC_PROJECT_ACCESS}.make ((create {SHARED_EIFFEL_PROJECT}).eiffel_project), l_helper, l_auto_retrieve)
+			create Result.make (l_access, l_helper)
 		end
 
 	default_filter_expression: STRING = "^class"

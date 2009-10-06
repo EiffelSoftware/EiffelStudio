@@ -116,6 +116,7 @@ feature -- Basic operation
 			else
 				a_parser.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
 			end
+			a_parser.set_is_ignoring_attachment_marks (a_options.void_safety.index = {CONF_OPTION}.void_safety_index_none)
 			parse (a_parser, a_text, a_ignore_errors, a_context_class)
 		end
 

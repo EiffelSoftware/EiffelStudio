@@ -10582,7 +10582,7 @@ debug ("GEYACC")
 end
 
 				yyval80 := ast_factory.new_like_id_as (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12))
-				if yyval80 /= Void then
+				if not is_ignoring_attachment_marks and yyval80 /= Void then
 					yyval80.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
 				end
 			
@@ -10669,7 +10669,7 @@ debug ("GEYACC")
 end
 
 				yyval80 := ast_factory.new_like_id_as (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12))
-				if yyval80 /= Void then
+				if not is_ignoring_attachment_marks and yyval80 /= Void then
 					yyval80.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
 				end
 			
@@ -10792,7 +10792,7 @@ debug ("GEYACC")
 end
 
 				yyval80 := ast_factory.new_like_current_as (yyvs9.item (yyvsp9), yyvs12.item (yyvsp12))
-				if yyval80 /= Void then
+				if not is_ignoring_attachment_marks and yyval80 /= Void then
 					yyval80.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
 				end
 			
@@ -10879,7 +10879,7 @@ debug ("GEYACC")
 end
 
 				yyval80 := ast_factory.new_like_current_as (yyvs9.item (yyvsp9), yyvs12.item (yyvsp12))
-				if yyval80 /= Void then
+				if not is_ignoring_attachment_marks and yyval80 /= Void then
 					yyval80.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
 				end
 			
@@ -11000,7 +11000,7 @@ debug ("GEYACC")
 end
 
 				yyval80 := yyvs80.item (yyvsp80)
-				if yyval80 /= Void then
+				if not is_ignoring_attachment_marks and yyval80 /= Void then
 					yyval80.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
 				end
 		
@@ -11022,7 +11022,7 @@ debug ("GEYACC")
 end
 
 				yyval80 := yyvs80.item (yyvsp80)
-				if yyval80 /= Void then
+				if not is_ignoring_attachment_marks and yyval80 /= Void then
 					yyval80.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
 				end
 		

@@ -132,6 +132,9 @@ feature {NONE} -- Implementation
 				elseif l_file /= Void then
 					check l_file_is_open_read: l_file.is_open_read end
 					set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
+					if attached {CLASS_C} current_class as l_class then
+						set_is_ignoring_attachment_marks (l_class.lace_class.is_void_unsafe)
+					end
 					parse_class (l_file, current_class)
 					l_file.close
 					l_class_as := root_node

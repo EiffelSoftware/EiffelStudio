@@ -351,6 +351,10 @@ feature
 				if error_handler.error_level /= l_error_level then
 					error_handler.raise_error
 				end
+			else
+					-- If the class had a conversion clause, we need to remove it.
+				a_class.set_convert_from (Void)
+				a_class.set_convert_to (Void)
 			end
 
 				-- Track generic types in the result and arguments of

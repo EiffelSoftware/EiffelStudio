@@ -34,29 +34,30 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project_access: like project_access; a_project_helper: like project_helper; a_auto_retrieve: BOOLEAN)
+	make (a_project_access: like project_access; a_project_helper: like project_helper)
 			-- Initialize `Current'.
 			--
 			-- `a_project_access': Access to Eiffel project.
 			-- `a_project_helper': Project helper for compiling, debugging and adding new classes.
-			-- `a_auto_retrieve': True if `Current' should retrieve new tests after loading/compiling the
-			--                    project. False otherwise.
 		require
 			a_project_access_attached: a_project_access /= Void
 			a_project_helper: a_project_helper /= Void
 		local
 			l_manager: EB_PROJECT_MANAGER
 			l_test_suite: TEST_SUITE_S
+			l_project_loaded: BOOLEAN
 		do
 			project_access := a_project_access
 			project_helper := a_project_helper
 			class_map := new_class_map
 
+			l_project_loaded := project_access.is_initialized
+
 			l_manager := project_access.project.manager
 			l_manager.compile_start_agents.extend (agent force_test_class_compilation)
 			l_manager.compile_stop_agents.extend (agent on_auto_retrieve)
-			l_manager.load_agents.extend (agent on_auto_retrieve)
-			if a_auto_retrieve then
+			if not l_project_loaded then
+				l_manager.load_agents.extend_kamikaze (agent retrieve_tests)
 			end
 			l_manager.close_agents.extend (agent on_project_close)
 
@@ -65,6 +66,10 @@ feature {NONE} -- Initialization
 				if l_test_suite.is_interface_usable then
 					l_test_suite.test_suite_connection.connect_events (Current)
 					l_test_suite.register_factory (Current)
+
+					if l_project_loaded then
+						l_test_suite.launch_session (new_session (l_test_suite))
+					end
 				end
 			end
 		ensure

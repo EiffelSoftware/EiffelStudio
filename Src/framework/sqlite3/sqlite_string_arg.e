@@ -1,6 +1,6 @@
 note
 	description: "[
-		A null/void-value binding argument value for use with executing a SQLite statement.
+		An string binding argument value for use with executing a SQLite statement.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,12 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_NULL_ARG
+	SQLITE_STRING_ARG
 
 inherit
-	SQLITE_BIND_ARG [ANY]
-		rename
-			make as make_arg
+	SQLITE_BIND_ARG [READABLE_STRING_8]
 		redefine
 			is_valid_value
 		end
@@ -21,59 +19,49 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_id: READABLE_STRING_8)
-			-- Initializes an argument.
-			--
-			-- `a_id': Variable name or index string.
-		require
-			a_id_attached: attached a_id
-			not_a_id_is_empty: not a_id.is_empty
-			a_id_is_valid_id: is_valid_id (a_id)
-		do
-			make_arg (a_id, Void)
-		ensure
-			id_set: id.same_string (a_id)
-		end
-
 feature -- Status report
 
 	is_valid_value (a_value: like value): BOOLEAN
 			-- <Precursor>
 		do
-			Result := not attached a_value
+			Result := attached a_value
 		ensure then
-			not_attached_a_value: Result implies not attached a_value
+			attached_a_value: Result implies attached a_value
 		end
 
 feature {SQLITE_STATEMENT} -- Basic operations
 
 	bind_to_statement (a_statement: SQLITE_STATEMENT; a_index: INTEGER)
 			-- <Precursor>
+		local
+			l_value: like value
 		do
-			sqlite_raise_on_failure (c_sqlite3_bind_null (sqlite_api.api_pointer (sqlite3_bind_null_api), a_statement.internal_stmt, a_index))
+			l_value := value
+			check l_value_attached: attached l_value end
+			sqlite_raise_on_failure (
+				c_sqlite3_bind_text (sqlite_api.api_pointer (sqlite3_bind_text_api), a_statement.internal_stmt, a_index, (create {C_STRING}.make (l_value)).item, l_value.count, default_pointer))
 		end
 
 feature {NONE} -- Externals
 
-	c_sqlite3_bind_null (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER): INTEGER
+	c_sqlite3_bind_text (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER a_text: POINTER; a_size: INTEGER; a_destructor: POINTER): INTEGER
 		require
 			not_a_fptr_is_null: a_fptr /= default_pointer
 			not_a_stmt_is_null: a_stmt /= default_pointer
 			a_index_positive: a_index > 0
+			not_a_text_is_null: a_text /= default_pointer
 		external
 			"C inline use <sqlite3.h>"
 		alias
 			"[
-				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *, int)) $a_fptr) (
-					(sqlite3_stmt *)$a_stmt, (int)$a_index);
+				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *, int, const char *, int, void(*)(void*))) $a_fptr) (
+					(sqlite3_stmt *)$a_stmt, (int)$a_index, (const char *)$a_text, (int)$a_size, (void(*)(void*))SQLITE_TRANSIENT);
 			]"
 		end
 
 feature {NONE} -- Constants
 
-	sqlite3_bind_null_api: STRING = "sqlite3_bind_null"
+	sqlite3_bind_text_api: STRING = "sqlite3_bind_text"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

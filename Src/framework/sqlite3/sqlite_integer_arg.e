@@ -1,6 +1,6 @@
 note
 	description: "[
-		A null/void-value binding argument value for use with executing a SQLite statement.
+		An integer binding argument value for use with executing a SQLite statement.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,56 +8,32 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_NULL_ARG
+	SQLITE_INTEGER_ARG
 
 inherit
-	SQLITE_BIND_ARG [ANY]
-		rename
-			make as make_arg
-		redefine
-			is_valid_value
-		end
+	SQLITE_BIND_ARG [INTEGER_64]
 
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_id: READABLE_STRING_8)
-			-- Initializes an argument.
-			--
-			-- `a_id': Variable name or index string.
-		require
-			a_id_attached: attached a_id
-			not_a_id_is_empty: not a_id.is_empty
-			a_id_is_valid_id: is_valid_id (a_id)
-		do
-			make_arg (a_id, Void)
-		ensure
-			id_set: id.same_string (a_id)
-		end
-
-feature -- Status report
-
-	is_valid_value (a_value: like value): BOOLEAN
-			-- <Precursor>
-		do
-			Result := not attached a_value
-		ensure then
-			not_attached_a_value: Result implies not attached a_value
-		end
 
 feature {SQLITE_STATEMENT} -- Basic operations
 
 	bind_to_statement (a_statement: SQLITE_STATEMENT; a_index: INTEGER)
 			-- <Precursor>
+		local
+			l_result: INTEGER
 		do
-			sqlite_raise_on_failure (c_sqlite3_bind_null (sqlite_api.api_pointer (sqlite3_bind_null_api), a_statement.internal_stmt, a_index))
+			if value <= {INTEGER_32}.max_value.to_integer_64 then
+				l_result := c_sqlite3_bind_int (sqlite_api.api_pointer (sqlite3_bind_int_api), a_statement.internal_stmt, a_index, value.as_integer_32)
+			else
+				l_result := c_sqlite3_bind_int64 (sqlite_api.api_pointer (sqlite3_bind_int_api), a_statement.internal_stmt, a_index, value)
+			end
+			sqlite_raise_on_failure (l_result)
 		end
 
 feature {NONE} -- Externals
 
-	c_sqlite3_bind_null (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER): INTEGER
+	c_sqlite3_bind_int (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER; a_value: INTEGER): INTEGER
 		require
 			not_a_fptr_is_null: a_fptr /= default_pointer
 			not_a_stmt_is_null: a_stmt /= default_pointer
@@ -66,14 +42,29 @@ feature {NONE} -- Externals
 			"C inline use <sqlite3.h>"
 		alias
 			"[
-				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *, int)) $a_fptr) (
-					(sqlite3_stmt *)$a_stmt, (int)$a_index);
+				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *, int, int)) $a_fptr) (
+					(sqlite3_stmt *)$a_stmt, (int)$a_index, (int)$a_value);
+			]"
+		end
+
+	c_sqlite3_bind_int64 (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER; a_value: INTEGER_64): INTEGER
+		require
+			not_a_fptr_is_null: a_fptr /= default_pointer
+			not_a_stmt_is_null: a_stmt /= default_pointer
+			a_index_positive: a_index > 0
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"[
+				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *, int, sqlite_int64)) $a_fptr) (
+					(sqlite3_stmt *)$a_stmt, (int)$a_index, (sqlite_int64)$a_value);
 			]"
 		end
 
 feature {NONE} -- Constants
 
-	sqlite3_bind_null_api: STRING = "sqlite3_bind_null"
+	sqlite3_bind_int_api: STRING = "sqlite3_bind_int"
+	sqlite3_bind_int64_api: STRING = "sqlite3_bind_int64"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

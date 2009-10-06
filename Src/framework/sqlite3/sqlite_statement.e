@@ -537,6 +537,7 @@ feature {NONE} -- Basic operations: Compilation
 			l_locked := True
 
 			l_internal_db := l_db.internal_db
+				-- FIXME: SQLITE_BUSY may be returned and so we should retry preparation until a default/specified timeout.
 			l_result := sqlite3_prepare_v2 (sqlite_api, l_internal_db, l_string.item, l_string.count + 1, $l_stmt_handle, $l_tail)
 			if sqlite_success (l_result) then
 				check not_l_stmt_handle_is_null: l_stmt_handle /= default_pointer end

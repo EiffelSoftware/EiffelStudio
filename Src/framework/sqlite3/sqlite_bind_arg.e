@@ -16,6 +16,16 @@ inherit
 			{NONE} all
 		end
 
+	SQLITE_INTERNALS
+		export
+			{NONE} all
+		end
+
+	SQLITE_SHARED_API
+		export
+			{NONE} all
+		end
+
 	ANY
 
 feature {NONE} -- Initialization

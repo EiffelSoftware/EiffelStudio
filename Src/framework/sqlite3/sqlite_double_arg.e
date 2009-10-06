@@ -1,6 +1,6 @@
 note
 	description: "[
-		A SQLite statement used to perform modification to the database.
+		An real binding argument value for use with executing a SQLite statement.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,51 +8,41 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_MODIFY_STATEMENT
+	SQLITE_DOUBLE_ARG
 
 inherit
-	SQLITE_STATEMENT
-		export
-			{ANY} changes_count
-		end
+	SQLITE_BIND_ARG [REAL_64]
 
 create
 	make
 
-feature -- Basic operations
+feature {SQLITE_STATEMENT} -- Basic operations
 
-	frozen execute
-			-- Executes the SQLite modification statement.
-		require
-			is_sqlite_available: is_sqlite_available
-			is_interface_usable: is_interface_usable
-			not_is_executing: not is_executing
-			is_accessible: is_accessible
-			database_is_writable: database.is_writable
+	bind_to_statement (a_statement: SQLITE_STATEMENT; a_index: INTEGER)
+			-- <Precursor>
 		do
-			execute_internal (Void, Void)
-		ensure
-			not_is_executing: not is_executing
+			sqlite_raise_on_failure (c_sqlite3_bind_double (sqlite_api.api_pointer (sqlite3_bind_double_api), a_statement.internal_stmt, a_index, value))
 		end
 
-	frozen execute_with_arguments (a_bindings: ARRAY [SQLITE_BIND_ARG [ANY]])
-			-- Executes the SQLite modification statement with bound set of arguments.
-			--
-			-- `a_bindings': The bound arguments to call the SQLite query statement with.
+feature {NONE} -- Externals
+
+	c_sqlite3_bind_double (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER; a_value: REAL_64): INTEGER
 		require
-			is_compiled: is_compiled
-			is_connected: is_connected
-			not_is_executing: not is_executing
-			is_accessible: is_accessible
-			database_is_writable: database.is_writable
-			has_arguments: has_arguments
-			a_bindings_attached: attached a_bindings
-			a_bindings_count_big_enough: a_bindings.count.as_natural_32 = arguments_count
-		do
-			execute_internal (Void, a_bindings)
-		ensure
-			not_is_executing: not is_executing
+			not_a_fptr_is_null: a_fptr /= default_pointer
+			not_a_stmt_is_null: a_stmt /= default_pointer
+			a_index_positive: a_index > 0
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"[
+				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *, int, double)) $a_fptr) (
+					(sqlite3_stmt *)$a_stmt, (int)$a_index, (double)$a_value);
+			]"
 		end
+
+feature {NONE} -- Constants
+
+	sqlite3_bind_double_api: STRING = "sqlite3_bind_double"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

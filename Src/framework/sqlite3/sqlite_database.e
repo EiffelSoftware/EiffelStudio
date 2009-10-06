@@ -339,6 +339,13 @@ feature -- Status report
 			is_open_write: Result implies (internal_flags & SQLITE_OPEN_READWRITE) = SQLITE_OPEN_READWRITE
 		end
 
+	is_in_transaction: BOOLEAN
+			-- Indicates if the database is currently in a transaction
+		require
+			is_accessible: is_accessible
+		attribute
+		end
+
 	is_closed: BOOLEAN
 			-- Indicates if the database is closed.
 		require
@@ -507,6 +514,7 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
+			not_is_in_transaction: not is_in_transaction
 			not_is_locked: not is_locked
 		local
 			l_db: like internal_db
@@ -602,6 +610,67 @@ feature -- Basic operations
 			is_readable: is_readable
 		do
 			sqlite3_interrupt (sqlite_api, internal_db)
+		end
+
+feature -- Basic operations: Transactions
+
+	begin_transaction (a_deferred: BOOLEAN)
+			-- Begin a commit based transaction.
+			--
+			-- `a_deferred': True to perform a deferred transaction; False and exclusive transaction.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_writable: is_writable
+			not_is_in_transaction: not is_in_transaction
+		local
+			l_statement: SQLITE_MODIFY_STATEMENT
+			l_stmt_string: READABLE_STRING_8
+		do
+			if a_deferred then
+				l_stmt_string := once "BEGIN DEFERRED TRANSACTION;"
+			else
+				l_stmt_string := once "BEGIN EXCLUSIVE TRANSACTION;"
+			end
+			create l_statement.make (l_stmt_string, Current)
+			l_statement.execute
+			is_in_transaction := True
+		ensure
+			is_in_transaction: is_in_transaction
+		end
+
+	commit
+			-- Commits an in-progress transaction
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_writable: is_writable
+			is_in_transaction: is_in_transaction
+		local
+			l_statement: SQLITE_MODIFY_STATEMENT
+		do
+			create l_statement.make (once "COMMIT TRANSACTION;", Current)
+			l_statement.execute
+			is_in_transaction := False
+		ensure
+			not_is_in_transaction: not is_in_transaction
+		end
+
+	rollback
+			-- Rollsback an in-progress transaction
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_writable: is_writable
+			is_in_transaction: is_in_transaction
+		local
+			l_statement: SQLITE_MODIFY_STATEMENT
+		do
+			create l_statement.make (once "ROLLBACK TRANSACTION;", Current)
+			l_statement.execute
+			is_in_transaction := False
+		ensure
+			not_is_in_transaction: not is_in_transaction
 		end
 
 feature {SQLITE_INTERNALS} -- Basic operations: Threading

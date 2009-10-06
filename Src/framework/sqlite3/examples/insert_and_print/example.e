@@ -1,6 +1,6 @@
 note
 	description: "[
-		Example 1
+		Example of using CREATE TABLE, INSERT and SELECT statements.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,40 +22,64 @@ feature {NONE} -- Initialization
 			-- Run application.
 		local
 			l_db: SQLITE_DATABASE
-			l_statement: SQLITE_MODIFY_STATEMENT
+			l_modify: SQLITE_MODIFY_STATEMENT
+			l_insert: SQLITE_INSERT_STATEMENT
 			l_query: SQLITE_QUERY_STATEMENT
-			i, i_count: INTEGER
+
+				-- To get around V/S bug
+			l_args: ARRAY [SQLITE_BIND_ARG [ANY]]
+			i: INTEGER
 		do
-				-- Opens (or creates if it does not exist) a hidden database file.
-			create l_db.make_create_read_write (".db")
-			check is_readable: l_db.is_readable end
+			print ("%NOpening Database...%N")
 
-				-- Drop any existing table
-			create l_statement.make ("DROP TABLE IF EXISTS my_table", l_db)
-			l_statement.execute
+				-- Open/create a Database.
+			create l_db.make_create_read_write ("data.sqlite")
 
-				-- Create the new table
-			create l_statement.make ("CREATE TABLE my_table (Id INTEGER PRIMARY KEY, Info TEXT, F1 FLOAT);", l_db)
-			l_statement.execute
+			print ("Creating Example Table...%N")
 
-				-- Fill in some test data
-			from
-				i := 1
-				i_count := 10
-			until
-				i > i_count
-			loop
-					-- We'll be able to use variable soon, but for now this is how we have to do it.
-				create l_statement.make ("INSERT INTO my_table (Info, F1) VALUES ('Row #" + i.out + "', 23.1);", l_db)
-				l_statement.execute
+				-- Remove any existing table
+			create l_modify.make ("DROP TABLE IF EXISTS Example;", l_db)
+			l_modify.execute
+
+				-- Create a new table
+			create l_modify.make ("CREATE TABLE Example (Id INTEGER PRIMARY KEY, Text TEXT, Value FLOAT);", l_db)
+			l_modify.execute
+
+			print ("Generating Example Data...%N")
+
+				-- Create a insert statement with variables
+			create l_insert.make ("INSERT INTO Example (Text, Value) VALUES (:TXT_VAR, :VAL_VAR);", l_db)
+			check l_insert_is_compiled: l_insert.is_compiled end
+
+				-- V/S bug handling for arguments array
+			create l_args.make_filled (create {SQLITE_NULL_ARG}.make ("VOID"), 1, 2)
+			l_args[1] := create {SQLITE_STRING_ARG}.make (":TXT_VAR", "Eiffel SQLite Rocks!")
+
+				-- Commit handling
+			l_db.begin_transaction (False)
+
+				-- Execute the statement multiple (10) times
+			from until i = 10 loop
+					-- Set the value argument base on the index `i'
+				l_args[2] := create {SQLITE_DOUBLE_ARG}.make (":VAL_VAR", (i * 3.14))
+					-- Execute the INSERT statement with the argument list.
+				l_insert.execute_with_arguments (l_args)
 				i := i + 1
 			end
 
-			create l_query.make ("SELECT * FROM my_table;", l_db)
-			l_query.execute_with_callback (agent (ia_row: SQLITE_RESULT_ROW)
+				-- Commit changes
+			l_db.commit
+
+			print ("Contents of Example Table:%N")
+
+				-- Query the contents of the Example table
+			create l_query.make ("SELECT * FROM Example LIMIT 10;", l_db)
+			l_query.execute_with_callback (agent (ia_row: SQLITE_RESULT_ROW): BOOLEAN
 				local
 					j, j_count: NATURAL
 				do
+					print ("> Row " + ia_row.index.out + ": ")
+
 					from
 						j := 1
 						j_count := ia_row.count
@@ -67,7 +91,11 @@ feature {NONE} -- Initialization
 						print (":")
 
 							-- Print the text value, regardless of type.
-						print (ia_row.string_value (j))
+						if not ia_row.is_null (j) then
+							print (ia_row.string_value (j))
+						else
+							print ("<NULL>")
+						end
 
 						if j < j_count then
 							print (", ")
@@ -75,12 +103,18 @@ feature {NONE} -- Initialization
 						j := j + 1
 					end
 					print ("%N")
-						-- Forget it
-					--a_row.statement.abort
+
+						-- Cut processing after 5 rows of data have been returned
+					Result := (ia_row.index \\ 5) = 0
+					if Result then
+						print ("--> We have 5 results, lets forget the rest%N")
+					end
 				end)
 
-				-- Let the GC handle the clean up (There's also a bug)
-			--l_db.close
+			print ("Closing Database...%N")
+
+				-- Perform final close.
+			l_db.close
 		end
 
 note

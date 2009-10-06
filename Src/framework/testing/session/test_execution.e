@@ -195,6 +195,9 @@ feature {NONE} -- Status report
 	one_per_step: BOOLEAN = False
 			-- <Precursor>
 
+	has_reported_first_result: BOOLEAN
+			-- Has `Current' reported any results yet?
+
 feature -- Status setting
 
 	start
@@ -203,6 +206,7 @@ feature -- Status setting
 				-- Mappings in `group_map' no longer needed
 			group_map.wipe_out
 			initial_test_count := test_count
+			has_reported_first_result := False
 
 			if has_availability_changed then
 					-- This means tests have actually been queued before launching `Current'
@@ -211,7 +215,7 @@ feature -- Status setting
 						a_formatter.process_basic_text ("Executing " + initial_test_count.out + " tests")
 						a_formatter.add_new_line
 						a_formatter.add_new_line
-					end)
+					end, True)
 				launch_available_executors
 			end
 		end
@@ -410,7 +414,8 @@ feature {NONE} -- Element change
 			l_test_suite: like test_suite
 		do
 			record.add_result (a_test, a_result)
-			append_output (agent print_test_result (?, a_test, a_result))
+			append_output (agent print_test_result (?, a_test, a_result), not has_reported_first_result)
+			has_reported_first_result := True
 			test_executed_event.publish ([Current, a_test, a_result])
 		ensure
 			result_added: record.has_result_for_test (a_test) and then
@@ -466,7 +471,7 @@ feature {NONE} -- Basic operations
 						a_formatter.add_new_line
 						a_formatter.process_basic_text ("Execution complete")
 						a_formatter.add_new_line
-					end)
+					end, True)
 			end
 			Precursor (a_force)
 		end

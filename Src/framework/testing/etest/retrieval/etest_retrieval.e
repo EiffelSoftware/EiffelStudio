@@ -171,7 +171,7 @@ feature {TEST_SUITE_S} -- Status report
 					a_formatter.process_basic_text ("Synchronizing test suite with project")
 					a_formatter.add_new_line
 					a_formatter.add_new_line
-				end)
+				end, True)
 			if project_access.is_initialized and then attached project_access.project.universe.target as l_target then
 				if attached etest_suite.library_class ({ETEST_CONSTANTS}.eqa_test_set_name) as l_class then
 					common_ancestor := l_class
@@ -179,7 +179,7 @@ feature {TEST_SUITE_S} -- Status report
 						do
 							a_formatter.process_basic_text ("Parsing classes in cluster:")
 							a_formatter.add_new_line
-						end)
+						end, True)
 
 					l_target.process (Current)
 					initialize_sub_task
@@ -189,7 +189,7 @@ feature {TEST_SUITE_S} -- Status report
 							a_formatter.process_basic_text ("Testing library must be included and compiled")
 							a_formatter.add_new_line
 							a_formatter.add_new_line
-						end)
+						end, True)
 				end
 			else
 				append_output (agent (a_formatter: TEXT_FORMATTER)
@@ -197,7 +197,7 @@ feature {TEST_SUITE_S} -- Status report
 						a_formatter.process_basic_text ("Project has not been compiled yet")
 						a_formatter.add_new_line
 						a_formatter.add_new_line
-					end)
+					end, True)
 			end
 		end
 
@@ -236,7 +236,7 @@ feature {NONE} -- Status setting
 						a_formatter.add_new_line
 						a_formatter.process_basic_text ("Synchronization complete")
 						a_formatter.add_new_line
-					end)
+					end, True)
 			end
 		end
 
@@ -306,7 +306,7 @@ feature -- Basis operations
 		local
 			l_formatter: TEXT_FORMATTER
 		do
-			append_output (agent print_library (?, a_library))
+			append_output (agent print_library (?, a_library), False)
 			current_library := a_library
 			process_target (a_library.library_target)
 		end
@@ -335,7 +335,7 @@ feature -- Basis operations
 				end
 
 				create sub_task.make (Current, a_cluster, l_class_i)
-				append_output (agent print_cluster (?, a_cluster, False))
+				append_output (agent print_cluster (?, a_cluster, False), False)
 			end
 		end
 

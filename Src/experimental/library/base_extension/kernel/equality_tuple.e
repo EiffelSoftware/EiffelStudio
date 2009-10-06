@@ -20,7 +20,7 @@ create
 	make
 
 convert
-	make ({G, attached G})
+	make ({G})
 
 feature {NONE} -- Initialization
 
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: attached G
+	item: G
 			-- Implementation item
 
 feature -- Comparison

@@ -520,21 +520,28 @@ feature -- Access
 			-- assuming that Current is written in class of id `written_id'.
 		local
 			t: ATTACHABLE_TYPE_A
+			l_class: CLASS_C
+			l_type_set: TYPE_SET_A
 		do
 			if attached {CL_TYPE_A} type.actual_type as l_cl_type then
 				Result := l_cl_type.instantiation_of (Current, written_id).to_other_attachment (Current)
 			else
 				Result := Current
 			end
-			if
-				not Result.is_attached and then
-				system.class_of_id (written_id).constrained_types (position).is_attached and then
-				attached {ATTACHABLE_TYPE_A} Result as a and then not a.has_detachable_mark
-			then
-					-- Promote attachment setting of the current contraint unless the formal has explicit detachable mark.
-				t := a.duplicate
-				t.set_is_attached
-				Result := t
+			if not Result.is_attached then
+				l_class := system.class_of_id (written_id)
+				if not l_class.lace_class.is_void_unsafe then
+					l_type_set := l_class.constrained_types (position)
+					if
+						l_type_set.is_attached and then
+						attached {ATTACHABLE_TYPE_A} Result as a and then not a.has_detachable_mark
+					then
+							-- Promote attachment setting of the current contraint unless the formal has explicit detachable mark.
+						t := a.duplicate
+						t.set_is_attached
+						Result := t
+					end
+				end
 			end
 		end
 

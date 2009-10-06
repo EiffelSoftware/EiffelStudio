@@ -139,11 +139,25 @@ feature -- Initialization/Checking
 										else
 											l_named_type.check_for_obsolete_class (a_class, Void)
 
-												-- Check that specified routine argument or return
-												-- type matches conversion type `l_named_type'.
-											check_conversion_type (a_class, a_feat_tbl, l_feat,
-												l_named_type)
+											if
+												not a_class.lace_class.is_void_unsafe and then
+												not l_named_type.is_attached
+											then
+												create l_vncp.make ("Type of conversion should always be attached.")
+												l_vncp.set_class (a_class)
+												l_vncp.set_location (l_feat.conversion_types.item.start_location)
+												Error_handler.insert_error (l_vncp)
+												has_error := True
+											else
+													-- Check that specified routine argument or return
+													-- type matches conversion type `l_named_type'.
+												check_conversion_type (a_class, a_feat_tbl, l_feat, l_named_type)
+											end
+
 											if not has_error then
+													-- Now we remove all attachment marks of `l_named_type' as this is the type
+													-- on which we are going to do our lookups when checking for conversion.
+												l_named_type := l_named_type.as_attachment_mark_free
 												if l_feat.is_creation_procedure then
 													if l_convert_from.has (l_named_type) then
 														create l_vncp.make
@@ -152,7 +166,7 @@ feature -- Initialization/Checking
 														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
-													elseif l_named_type.conform_to (a_class, a_class.constraint_actual_type) then
+													elseif l_named_type.conform_to (a_class, a_class.constraint_actual_type.as_attachment_mark_free) then
 														if a_class.is_generic then
 															Error_handler.insert_error (create {VYCP}.make
 																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 3))
@@ -172,7 +186,7 @@ feature -- Initialization/Checking
 														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
-													elseif a_class.constraint_actual_type.conform_to (a_class, l_named_type) then
+													elseif a_class.constraint_actual_type.as_attachment_mark_free.conform_to (a_class, l_named_type) then
 														if a_class.is_generic then
 															Error_handler.insert_error (create {VYCQ}.make
 																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 3))
@@ -282,6 +296,7 @@ feature -- Initialization/Checking
 			l_source_class, l_target_class: CLASS_C
 			l_convert_table: HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			l_conversion_type: TYPE_A
+			l_type: TYPE_A
 			l_feat_name_id: INTEGER
 			l_feat: FEATURE_I
 			l_cl_type: CL_TYPE_A
@@ -290,64 +305,18 @@ feature -- Initialization/Checking
 			last_conversion_check_successful := False
 			last_conversion_info := Void
 
-			if a_target_type.has_associated_class then
-				l_target_class := a_target_type.associated_class
-				l_convert_table := l_target_class.convert_from
-			end
-			if l_convert_table /= Void then
-				from
-					l_cl_type ?= a_target_type
-					l_convert_table.start
-				until
-					l_convert_table.after or l_success
-				loop
-					l_conversion_type := l_convert_table.key_for_iteration
-						-- Evaluate conversion type in context of `a_target_type'. This is needed
-						-- in the following case:
-						-- class A [G] convert make_from ({G}) ... end
-						-- a: A [X]
-						-- x: X
-						-- a := x
-						-- Instantiating `G' in context of `A [X]' will give us `X'
-						-- enabling us to convert from `X'.
-					if l_cl_type /= Void then
-						l_conversion_type := l_conversion_type.instantiated_in (l_cl_type)
-					end
-						-- In case there is a mismatch in attachment marks,
-						-- the types can still be the same if they conform to each other.
-					if a_source_type.same_as (l_conversion_type) or else
-						a_source_type.conform_to (a_context_class, l_conversion_type) and then
-						l_conversion_type.conform_to (a_context_class, a_source_type)
-					then
-						l_success := True
-						l_feat_name_id := l_convert_table.item_for_iteration
-					end
-					l_convert_table.forth
-				end
-				if l_success then
-					l_feat := l_target_class.feature_table.item_id (l_feat_name_id)
-					check
-						l_feat_not_void: l_feat /= Void
-						has_creation_procedures: l_target_class.creators /= Void
-						has_convert_creation_procedure:
-							l_target_class.creators.has (l_feat.feature_name)
-					end
-					l_success := l_target_class.creators.item (l_feat.feature_name).valid_for (
-						a_context_class)
-					if l_success then
-						create {FEATURE_CONVERSION_INFO} last_conversion_info.
-							make_from (a_source_type, a_target_type, l_target_class, l_feat)
-					end
-				end
-			end
-			if not l_success then
-				if a_source_type.has_associated_class then
-					l_source_class := a_source_type.associated_class
-					l_convert_table := l_source_class.convert_to
+				-- We do not allow conversion of the form `source.to_target' or
+				-- `create target.make_from (source)' if `source' is not attached
+				-- as otherwise this we would be breaking void-safety.
+			if a_source_type.is_attached or else not a_context_class.lace_class.is_void_safe_call then
+				if a_target_type.has_associated_class then
+					l_target_class := a_target_type.associated_class
+					l_convert_table := l_target_class.convert_from
 				end
 				if l_convert_table /= Void then
+					l_type := a_source_type.as_attachment_mark_free
 					from
-						l_cl_type ?= a_source_type
+						l_cl_type ?= a_target_type
 						l_convert_table.start
 					until
 						l_convert_table.after or l_success
@@ -355,20 +324,21 @@ feature -- Initialization/Checking
 						l_conversion_type := l_convert_table.key_for_iteration
 							-- Evaluate conversion type in context of `a_target_type'. This is needed
 							-- in the following case:
-							-- class A [G] convert to_formal: {G} ... end
+							-- class A [G] convert make_from ({G}) ... end
 							-- a: A [X]
 							-- x: X
-							-- x := a
+							-- a := x
 							-- Instantiating `G' in context of `A [X]' will give us `X'
 							-- enabling us to convert from `X'.
 						if l_cl_type /= Void then
 							l_conversion_type := l_conversion_type.instantiated_in (l_cl_type)
 						end
-							-- In case there is a mismatch in attachment marks,
+							-- In case there is a mismatch in attachment marks, or tuple vs. named tuple,
 							-- the types can still be the same if they conform to each other.
-						if a_target_type.same_as (l_conversion_type) or else
-							a_target_type.conform_to (a_context_class, l_conversion_type) and then
-							l_conversion_type.conform_to (a_context_class, a_target_type)
+						if
+							l_type.same_as (l_conversion_type) or else
+							l_type.conform_to (a_context_class, l_conversion_type) and then
+							l_conversion_type.conform_to (a_context_class, l_type)
 						then
 							l_success := True
 							l_feat_name_id := l_convert_table.item_for_iteration
@@ -376,14 +346,69 @@ feature -- Initialization/Checking
 						l_convert_table.forth
 					end
 					if l_success then
-						l_feat := l_source_class.feature_table.item_id (l_feat_name_id)
+						l_feat := l_target_class.feature_table.item_id (l_feat_name_id)
 						check
 							l_feat_not_void: l_feat /= Void
+							has_creation_procedures: l_target_class.creators /= Void
+							has_convert_creation_procedure:
+								l_target_class.creators.has (l_feat.feature_name)
 						end
-						l_success := l_feat.is_exported_for (a_context_class)
+						l_success := l_target_class.creators.item (l_feat.feature_name).valid_for (
+							a_context_class)
 						if l_success then
 							create {FEATURE_CONVERSION_INFO} last_conversion_info.
-								make_to (a_source_type, a_target_type, l_source_class, l_feat)
+								make_from (a_source_type, a_target_type, l_target_class, l_feat)
+						end
+					end
+				end
+				if not l_success then
+					if a_source_type.has_associated_class then
+						l_source_class := a_source_type.associated_class
+						l_convert_table := l_source_class.convert_to
+					else
+						l_convert_table := Void
+					end
+					if l_convert_table /= Void then
+						l_type := a_target_type.as_attachment_mark_free
+						from
+							l_cl_type ?= a_source_type
+							l_convert_table.start
+						until
+							l_convert_table.after or l_success
+						loop
+							l_conversion_type := l_convert_table.key_for_iteration
+								-- Evaluate conversion type in context of `a_target_type'. This is needed
+								-- in the following case:
+								-- class A [G] convert to_formal: {G} ... end
+								-- a: A [X]
+								-- x: X
+								-- x := a
+								-- Instantiating `G' in context of `A [X]' will give us `X'
+								-- enabling us to convert from `X'.
+							if l_cl_type /= Void then
+								l_conversion_type := l_conversion_type.instantiated_in (l_cl_type)
+							end
+								-- In case there is a mismatch in attachment marks,
+								-- the types can still be the same if they conform to each other.
+							if l_type.same_as (l_conversion_type) or else
+								l_type.conform_to (a_context_class, l_conversion_type) and then
+								l_conversion_type.conform_to (a_context_class, l_type)
+							then
+								l_success := True
+								l_feat_name_id := l_convert_table.item_for_iteration
+							end
+							l_convert_table.forth
+						end
+						if l_success then
+							l_feat := l_source_class.feature_table.item_id (l_feat_name_id)
+							check
+								l_feat_not_void: l_feat /= Void
+							end
+							l_success := l_feat.is_exported_for (a_context_class)
+							if l_success then
+								create {FEATURE_CONVERSION_INFO} last_conversion_info.
+									make_to (a_source_type, a_target_type, l_source_class, l_feat)
+							end
 						end
 					end
 				end

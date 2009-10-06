@@ -308,6 +308,7 @@ feature -- Action
 				else
 					parser.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
 				end
+				parser.set_is_ignoring_attachment_marks (lace_class.is_void_unsafe)
 				Inst_context.set_group (cluster)
 				parser.parse_class (file, Current)
 				if l_error_level = error_handler.error_level then

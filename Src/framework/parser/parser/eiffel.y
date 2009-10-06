@@ -1627,7 +1627,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 	|	TE_ATTACHED TE_LIKE Identifier_as_lower
 			{
 				$$ := ast_factory.new_like_id_as ($3, $2)
-				if $$ /= Void then
+				if not is_ignoring_attachment_marks and $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 			}
@@ -1646,7 +1646,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 	|	TE_DETACHABLE TE_LIKE Identifier_as_lower
 			{
 				$$ := ast_factory.new_like_id_as ($3, $2)
-				if $$ /= Void then
+				if not is_ignoring_attachment_marks and $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 			}
@@ -1667,7 +1667,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 	|	TE_ATTACHED TE_LIKE TE_CURRENT
 			{
 				$$ := ast_factory.new_like_current_as ($3, $2)
-				if $$ /= Void then
+				if not is_ignoring_attachment_marks and $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 			}
@@ -1686,7 +1686,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 	|	TE_DETACHABLE TE_LIKE TE_CURRENT
 			{
 				$$ := ast_factory.new_like_current_as ($3, $2)
-				if $$ /= Void then
+				if not is_ignoring_attachment_marks and $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 			}
@@ -1715,14 +1715,14 @@ Marked_class_or_tuple_type:
 	TE_DETACHABLE Attached_class_or_tuple_type
 			{
 				$$ := $2
-				if $$ /= Void then
+				if not is_ignoring_attachment_marks and $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 		}
 	| TE_ATTACHED Attached_class_or_tuple_type
 			{
 				$$ := $2
-				if $$ /= Void then
+				if not is_ignoring_attachment_marks and $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 		}

@@ -165,6 +165,7 @@ feature -- Initialization
 			counters.wipe_out
 			last_rsqure.wipe_out
 			current_class := Void
+			is_ignoring_attachment_marks := False
 		end
 
 feature -- Status report
@@ -195,6 +196,9 @@ feature -- Status report
 
 	entity_declaration_parser: BOOLEAN
 			-- Is current Eiffel parser a entity declaration parser ?
+
+	is_ignoring_attachment_marks: BOOLEAN
+			-- Are we simply ignoring attachment marks while parsing?
 
 feature -- Parsing
 
@@ -372,6 +376,16 @@ feature -- Removal
 			-- by the garbage collector. (This routine is called by
 			-- `parse' before exiting.)
 		do
+		end
+
+feature -- Settings
+
+	set_is_ignoring_attachment_marks (v: like is_ignoring_attachment_marks)
+			-- Set `is_ignoring_attachment_marks' to `v'.
+		do
+			is_ignoring_attachment_marks := v
+		ensure
+			is_ignoring_attachment_marks_set: is_ignoring_attachment_marks = v
 		end
 
 feature {NONE} -- Implementation

@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 				agent (a_formatter: TEXT_FORMATTER)
 					do
 						a_formatter.process_basic_text ("Compiling project%N")
-					end)
+					end, True)
 
 			create l_melt.make (etest_suite)
 			l_melt.start (True)
@@ -501,7 +501,7 @@ feature -- Basic operations
 					l_file.put_string (l_string)
 					l_file.flush
 				end
-				append_output (agent {TEXT_FORMATTER}.add_string (l_string))
+				append_output (agent {TEXT_FORMATTER}.add_string (l_string), False)
 				l_string.wipe_out
 			end
 		end

@@ -74,10 +74,12 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Basic operations
 
-	append_output (a_procedure: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]])
+	append_output (a_procedure: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]; a_activate: BOOLEAN)
 			-- Append output for `Current'.
 			--
 			-- `a_precedure': Procedure called with corresponding {TEXT_FORMATTER} instance.
+			-- `a_active': Force activation of {OUTPUT_I} instance before calling `a_procedure'
+			--             (make sure testing output window is visible).
 		require
 			a_procedure_attached: a_procedure /= Void
 		local
@@ -85,6 +87,9 @@ feature {NONE} -- Basic operations
 			l_tuple: TUPLE [TEXT_FORMATTER]
 		do
 			if attached test_suite.output (Current) as l_output then
+				if a_activate then
+					l_output.activate (True)
+				end
 				l_output.lock
 				l_formatter := l_output.formatter
 				l_tuple := a_procedure.empty_operands

@@ -49,8 +49,8 @@ feature {NONE} -- Initialization
 		require
 			a_icons_provider_attached: a_icons_provider /= Void
 		do
-			make_session_widget
 			icons_provider := a_icons_provider
+			make_session_widget
 		ensure
 			icons_provider_set: icons_provider = a_icons_provider
 		end

@@ -20,7 +20,7 @@ create
 	make
 
 convert
-	make ({G, attached G})
+	make ({G})
 
 feature {NONE} -- Initialization
 

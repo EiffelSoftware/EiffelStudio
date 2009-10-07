@@ -40,24 +40,31 @@ feature -- Access
 
 	command_line_profile_option: STRING
 			-- Command line option needed to mimic current profile
+		local
+			l_result: detachable STRING
 		do
 			if is_compatible_mode then
-				create Result.make (1 + compat_option_name.count)
-				Result.append_character ('-')
-				Result.append (compat_option_name)
+				create l_result.make (1 + compat_option_name.count)
+				l_result.append_character ('-')
+				l_result.append (compat_option_name)
 			elseif is_experimental_mode then
-				create Result.make (1 + experiment_option_name.count)
-				Result.append_character ('-')
-				Result.append (experiment_option_name)
+				create l_result.make (1 + experiment_option_name.count)
+				l_result.append_character ('-')
+				l_result.append (experiment_option_name)
 			end
 			if is_full_class_checking_mode then
-				if Result = Void then
-					create Result.make (1 + full_option_name.count)
+				if l_result = Void then
+					create l_result.make (1 + full_option_name.count)
 				else
-					Result.append_character (' ')
+					l_result.append_character (' ')
 				end
-				Result.append_character ('-')
-				Result.append (full_option_name)
+				l_result.append_character ('-')
+				l_result.append (full_option_name)
+			end
+			if l_result /= Void then
+				Result := l_result
+			else
+				Result := ""
 			end
 		end
 

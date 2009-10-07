@@ -22,7 +22,11 @@ feature -- Access
 	current_working_directory: STRING
 			-- Directory of current execution
 		do
-			Result := {ENVIRONMENT}.current_directory
+			if attached {ENVIRONMENT}.current_directory as l_dir then
+				Result := l_dir
+			else
+				Result := "."
+			end
 		end
 
 	default_shell: STRING
@@ -54,7 +58,13 @@ feature -- Access
 		require
 			home_directory_supported: Operating_environment.home_directory_supported
 		do
-			Result := {ENVIRONMENT}.get_folder_path ({SPECIAL_FOLDER_IN_ENVIRONMENT}.local_application_data)
+			if attached {ENVIRONMENT}.get_folder_path ({SPECIAL_FOLDER_IN_ENVIRONMENT}.local_application_data) as l_home then
+				Result := l_home
+			elseif attached get ("HOMEPATH") as l_home then
+				Result := l_home
+			else
+				Result := ""
+			end
 		end
 
 	root_directory_name: STRING
@@ -263,8 +273,8 @@ feature {NONE} -- Implementation
 			l_ext, l_paths: ARRAYED_LIST [STRING]
 			l_program_name: STRING
 		do
-			if {SYSTEM_FILE}.exists (a_cmd) then
-				Result := {PATH}.get_full_path (a_cmd)
+			if {SYSTEM_FILE}.exists (a_cmd) and then attached {PATH}.get_full_path (a_cmd) as l_path then
+				Result := l_path
 			else
 				l_ext := executable_extensions
 				l_paths:= search_directories
@@ -312,17 +322,16 @@ feature {NONE} -- Implementation
 			-- could manually modify environment variables between
 			-- calls. Plus the relative cost of repeating this code
 			-- with starting a windows process makes this operation cheap.
-		local
-			l_path: detachable STRING
-			l_assembly: detachable ASSEMBLY
 		do
 			create Result.make (100)
-			l_assembly := {ASSEMBLY}.get_entry_assembly
-			check l_assembly_attached: l_assembly /= Void end
-			Result.extend ({PATH}.get_directory_name (l_assembly.location))
+			if
+				attached {ASSEMBLY}.get_entry_assembly as l_assembly and then
+				attached {PATH}.get_directory_name (l_assembly.location) as l_location
+			then
+				Result.extend (l_location)
+			end
 			Result.extend (current_working_directory)
-			l_path := get ("PATH")
-			if l_path /= Void then
+			if attached get ("PATH") as l_path then
 				Result.append (l_path.split (';'))
 			end
 		end

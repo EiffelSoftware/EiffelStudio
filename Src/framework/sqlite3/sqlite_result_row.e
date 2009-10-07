@@ -17,6 +17,7 @@ class
 inherit
 	SQLITE_SHARED_API
 
+--inherit {NONE}
 	SQLITE_INTERNALS
 
 	SQLITE_RESULT_EXTERNALS
@@ -165,7 +166,7 @@ feature -- Query
 			l_type := type (a_column)
 			if l_type /= {SQLITE_TYPE}.null then
 				if l_type /= {SQLITE_TYPE}.blob then
-					--Result := blob_value (a_column)
+					Result := blob_value (a_column)
 				elseif l_type /= {SQLITE_TYPE}.float then
 					create {CELL [REAL_64]}Result.put (real_64_value (a_column))
 				elseif l_type /= {SQLITE_TYPE}.integer then

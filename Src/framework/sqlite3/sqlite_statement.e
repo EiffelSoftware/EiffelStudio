@@ -18,6 +18,8 @@ class
 inherit
 	DISPOSABLE
 
+	SQLITE_BINDING_HELPERS
+
 	SQLITE_SHARED_API
 
 --inherit {NONE}
@@ -32,6 +34,11 @@ inherit
 		end
 
 	SQLITE_STATEMENT_EXTERNALS
+		export
+			{NONE} all
+		end
+
+	SQLITE_BIND_ARG_MARSHALLER
 		export
 			{NONE} all
 		end
@@ -351,6 +358,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			l_locked: BOOLEAN
 			l_row: SQLITE_RESULT_ROW
 			i_upper, i: INTEGER
+			l_arg_variable: IMMUTABLE_STRING_8
 			l_arg_id: C_STRING
 			l_arg_index: INTEGER
 		do
@@ -363,10 +371,20 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 					i > i_upper
 				loop
 					if attached l_bindings[i] as l_arg then
-						create l_arg_id.make (l_arg.id)
+						l_arg_variable := l_arg.variable
+						create l_arg_id.make (l_arg_variable)
 						l_arg_index := sqlite3_bind_parameter_index (sqlite_api, internal_stmt, l_arg_id.item)
+						if l_arg_index = 0 and then l_arg_variable[1] = '?' then
+							l_arg_variable := l_arg_variable.substring (2, l_arg_variable.count)
+							if l_arg_variable.is_integer_32 then
+								l_arg_index := l_arg_variable.to_integer_32
+							else
+									-- Contracts in SQLITE_BIND_ARG should make this impossible.
+								check should_never_happen: False end
+							end
+						end
+
 						if l_arg_index > 0 then
-							create l_arg_id.make_by_pointer (sqlite3_bind_parameter_name (sqlite_api, internal_stmt, 1))
 							l_arg.bind_to_statement (Current, l_arg_index)
 						else
 							-- Silently ignore unknown variables.

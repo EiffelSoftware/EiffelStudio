@@ -23,18 +23,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: READABLE_STRING_8)
+	make (a_var: READABLE_STRING_8)
 			-- Initializes an argument.
 			--
-			-- `a_id': Variable name or index string.
+			-- `a_var': Variable name or index string.
 		require
-			a_id_attached: attached a_id
-			not_a_id_is_empty: not a_id.is_empty
-			a_id_is_valid_id: is_valid_id (a_id)
+			a_var_attached: attached a_var
+			not_a_var_is_empty: not a_var.is_empty
+			a_var_is_valid_variable_name: is_valid_variable_name (a_var)
 		do
-			make_arg (a_id, Void)
+			make_arg (a_var, Void)
 		ensure
-			id_set: id.same_string (a_id)
+			variable_set: variable.same_string (a_var)
 		end
 
 feature -- Status report

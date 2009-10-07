@@ -73,7 +73,7 @@ feature {NONE} -- Status report
 	is_expandable: BOOLEAN = True
 			-- <Precursor>
 
-feature {NONE} -- Basic operations
+feature {ES_TEST_EXECUTION_WIDGET} -- Basic operations
 
 	show_content
 			-- <Precursor>

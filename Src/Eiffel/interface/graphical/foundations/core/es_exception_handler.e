@@ -11,6 +11,8 @@ class
 	ES_EXCEPTION_HANDLER
 
 inherit
+	ANY
+
 	ES_SHARED_LOCALE_FORMATTER
 		export
 			{NONE} all

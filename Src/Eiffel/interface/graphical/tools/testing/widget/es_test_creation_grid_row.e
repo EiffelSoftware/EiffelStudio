@@ -63,7 +63,7 @@ feature {NONE} -- Status report
 
 	is_expandable: BOOLEAN = True
 
-feature {NONE} -- Basic operations
+feature {ES_TEST_CREATION_WIDGET} -- Basic operations
 
 	show_content
 			-- <Precursor>

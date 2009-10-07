@@ -14,6 +14,8 @@ class
 	ES_EIFFEL_TO_C_FUNCTION_MAPPER
 
 inherit
+	ANY
+
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all

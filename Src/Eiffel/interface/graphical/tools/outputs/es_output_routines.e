@@ -11,6 +11,8 @@ class
 	ES_OUTPUT_ROUTINES
 
 inherit
+	ANY
+
 	ES_SHARED_LOCALE_FORMATTER
 		export
 			{NONE} all

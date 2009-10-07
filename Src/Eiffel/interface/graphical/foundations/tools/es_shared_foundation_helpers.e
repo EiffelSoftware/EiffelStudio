@@ -11,6 +11,8 @@ class
 	ES_SHARED_FOUNDATION_HELPERS
 
 inherit
+	ANY
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all

@@ -189,7 +189,7 @@ feature -- Input
 			l_last_string: like last_string
 		do
 			l_last_string := last_string
-			l_last_string.clear_all
+			l_last_string.wipe_out
 			l_last_string.grow (nb_char)
 			create str_area.make (nb_char)
 			if attached internal_stream as l_stream then

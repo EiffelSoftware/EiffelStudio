@@ -174,7 +174,7 @@ feature -- Input
 			if attached internal_stream as l_stream then
 				from
 					l_last_string := last_string
-					l_last_string.clear_all
+					l_last_string.wipe_out
 					done := False
 					i := 0
 					str_cap := l_last_string.capacity

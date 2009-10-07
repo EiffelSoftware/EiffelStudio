@@ -120,7 +120,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
 feature {NONE} -- Implementation
 
-	draw_line_to_screen (x, y: INTEGER; a_line: EIFFEL_EDITOR_LINE; xline: INTEGER)
+	draw_line_to_screen (x, y: INTEGER; a_line: EDITOR_LINE; xline: INTEGER)
 			-- Update display by drawing `line' onto the `editor_drawing_area' directly at co-ordinates x,y.
 		local
  			curr_token	: EDITOR_TOKEN
@@ -168,8 +168,8 @@ feature {NONE} -- Implementation
 					else
 						line_token ?= curr_token
 						if line_token /= Void and then line_numbers_visible then
-							if not hidden_breakpoints then
-								line_token.display_with_offset (a_line.breakpoint_token.width, y, margin_area, text_panel)
+							if not hidden_breakpoints and then attached {EIFFEL_EDITOR_LINE} a_line as l_line then
+								line_token.display_with_offset (l_line.breakpoint_token.width, y, margin_area, text_panel)
 							else
 								line_token.display (y, margin_area, text_panel)
 							end
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -239,22 +239,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CLICKABLE_MARGIN

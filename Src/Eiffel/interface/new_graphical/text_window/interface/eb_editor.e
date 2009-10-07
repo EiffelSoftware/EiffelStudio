@@ -48,6 +48,7 @@ inherit
 
 	SHARED_EDITOR_FONT
 		export
+			{ANY} has_font
 			{NONE} all
 		undefine
 			default_create,

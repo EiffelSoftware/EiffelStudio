@@ -21,7 +21,7 @@ inherit
 				Warning_messages, Interface_names,
 				init_commands, Pixmaps
 			{EB_STONE_FIRST_CHECKER}
-				Ev_application
+				Ev_application, shared_environment
 			{ANY} auto_recycle, delayed_auto_recycle
 		redefine
 			set_title,

@@ -25,7 +25,7 @@ inherit
 		redefine
 			default_create,
 			put, force, extend, replace,
-			clear_all,
+			wipe_out,
 			out
 		end
 
@@ -97,7 +97,7 @@ feature -- Element change
 
 feature -- Removal
 
-	clear_all
+	wipe_out
 			-- Reset all items to default values; reset status.
 		do
 			Precursor

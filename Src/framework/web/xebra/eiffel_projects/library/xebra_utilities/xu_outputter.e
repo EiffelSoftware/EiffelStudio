@@ -139,7 +139,7 @@ feature -- Print
 			print_with_name ("[WARNING] " + a_msg, False)
 		end
 
-	eprint (a_msg: STRING; a_generating_type: TYPE [ANY])
+	eprint (a_msg: STRING; a_generating_type: TYPE [detachable ANY])
 			-- Prints an error message
 			--
 			-- `a_msg': The message to be printed

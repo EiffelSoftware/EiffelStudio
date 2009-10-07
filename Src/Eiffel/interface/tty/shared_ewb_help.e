@@ -100,6 +100,8 @@ feature {NONE}
 
 	freeze_help: STRING_GENERAL do Result := locale.translation ("freeze the system") end
 
+	full_help: STRING_GENERAL do Result := locale.translation ("with full class checking regardless of ECF settings") end
+
 	Generate_help: STRING_GENERAL do Result := locale.translation ("generate profile information for latest run") end
 
 	gui_help: STRING_GENERAL do Result := locale.translation ("start the graphical environment") end

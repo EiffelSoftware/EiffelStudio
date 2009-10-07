@@ -209,7 +209,7 @@ feature-- Versioning
 				Result.append_character (' ')
 				Result.append_character ('-')
 				Result.append_character (' ')
-				Result.append_string (l_profile.mode)
+				Result.append_string (l_profile.version_mode)
 			end
 		end
 

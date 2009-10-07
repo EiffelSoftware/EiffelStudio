@@ -377,6 +377,7 @@ feature -- Properties
 			Result.put (gc_stats_help, gc_stats_cmd_name)
 			Result.put (compat_help, compat_cmd_name)
 			Result.put (experiment_help, experiment_cmd_name)
+			Result.put (full_help, full_class_checking_cmd_name)
 			add_help_special_cmds
 		end
 
@@ -435,7 +436,7 @@ feature -- Output
 		do
 			localized_print (ewb_names.usage)
 			localized_print (argument (0))
-			io.put_string (" [-help | [-compat | -experiment] | -version |%N%T")
+			io.put_string (" [-help | [-compat | -experiment] | -version | -full%N%T")
 			io.put_string ("-batch | -clean | -verbose | -use_settings |%N%T")
 			io.put_string ("-freeze | -finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
 			io.put_string ("-loop | -debug | -quick_melt | -melt | ")
@@ -1268,6 +1269,9 @@ feature -- Update
 				else
 					set_experimental_mode
 				end
+			elseif option.is_equal ("-full") then
+					-- This options enables full class checking even if not specified in ECF.
+				set_full_class_checking_mode
 			elseif option.is_equal ("-auto_test") then
 				create l_at_args.make
 				from

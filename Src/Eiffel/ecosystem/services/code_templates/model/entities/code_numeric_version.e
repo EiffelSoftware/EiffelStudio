@@ -138,15 +138,15 @@ feature -- Element change
 
 feature -- Query
 
-	is_valid_version (a_version: like version): BOOLEAN
+	is_valid_version (a_version: READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {CODE_VERSION} (a_version)
 			if Result then
-				Result := format_utilities.version_regex.matches (a_version)
+				Result := format_utilities.version_regex.matches (a_version.as_string_8)
 			end
 		ensure then
-			a_version_matches_version_regex: Result implies format_utilities.version_regex.matches (a_version)
+			a_version_matches_version_regex: Result implies format_utilities.version_regex.matches (a_version.as_string_8)
 		end
 
 	is_compatible_with (a_other: CODE_VERSION): BOOLEAN

@@ -291,7 +291,11 @@ feature -- Access
 		require
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := id_to_eiffel_type.item (type_id).class_name
+			if attached id_to_eiffel_type.item (type_id).class_name as l_name then
+				Result := l_name
+			else
+				Result := "Unknown base class"
+			end
 		end
 
 	type_name (object: ANY): STRING
@@ -309,7 +313,11 @@ feature -- Access
 		require
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := pure_implementation_type (type_id).type_name
+			if attached pure_implementation_type (type_id).type_name as l_name then
+				Result := l_name
+			else
+				Result := "Unknown Type"
+			end
 		end
 
 	dynamic_type (object: ANY): INTEGER
@@ -519,7 +527,7 @@ feature -- Access
 		local
 			l_native_array: NATIVE_ARRAY [STRING]
 			l_members: NATIVE_ARRAY [FIELD_INFO]
-			l_name: STRING
+			l_name: detachable SYSTEM_STRING
 			l_eiffel_name: detachable EIFFEL_NAME_ATTRIBUTE
 			k, nb: INTEGER
 			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
@@ -549,7 +557,9 @@ feature -- Access
 					else
 						l_name := l_field.name
 					end
-					l_native_array.put (k, l_name)
+					if l_name /= Void then
+						l_native_array.put (k, l_name)
+					end
 					k := k + 1
 				end
 				id_to_fields_name.put (l_native_array, type_id)
@@ -1219,7 +1229,7 @@ feature {NONE} -- Cached data
 			internal_dynamic_type_string_table_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
+feature {TYPE, INTERNAL} -- Implementation
 
 	object_type: INTEGER = 17
 			-- System.Object type ID
@@ -1411,7 +1421,7 @@ feature {NONE} -- Implementation
 			interface_type_not_void: Result /= Void
 		end
 
-	dynamic_type_from_rt_class_type (a_class_type: RT_CLASS_TYPE): INTEGER
+	dynamic_type_from_rt_class_type (a_class_type: detachable RT_CLASS_TYPE): INTEGER
 			-- Dynamic type of `a_class_type'.
 		local
 			l_obj: detachable SYSTEM_OBJECT
@@ -1479,10 +1489,13 @@ feature {NONE} -- Implementation
 				-- Search for a non generic class type.
 			eiffel_meta_type_mapping.search (mapped_type (l_class_type_name))
 			if eiffel_meta_type_mapping.found and then attached {ARRAYED_LIST [RT_CLASS_TYPE]} eiffel_meta_type_mapping.found_item as l_found_list then
-					-- It is a non-generic Eiffel type which was recorded in `load_assemblies'.
-				check
-					only_one_element: l_found_list.count = 1
-				end
+					-- It is a non-generic Eiffel type which was recorded in `load_assemblies'
+					-- Or possibly a basic type with its various associated referenced types.
+					-- Nevertheless the check fails for CHARACTER_32 because it is mapped to a NATURAL_32, this
+					-- is why it is commented out for the meantime.
+--				check
+--					only_one_element: l_found_list.count = 1 or else attached {RT_BASIC_TYPE} l_found_list.first
+--				end
 				Result := l_found_list.first
 			else
 					-- Let's see if it is a partially well-formed Eiffel generic class:
@@ -1648,20 +1661,9 @@ feature {NONE} -- Implementation
 			-- Load all Eiffel types from `an_assembly'.
 		local
 			l_types: detachable NATIVE_ARRAY [detachable SYSTEM_TYPE]
-			l_name: detachable EIFFEL_NAME_ATTRIBUTE
-			l_cas: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
-			i, j, nb, l_count: INTEGER
+			i, nb: INTEGER
 			retried: BOOLEAN
-			l_class_type: RT_CLASS_TYPE
-			l_gen_type: RT_GENERIC_TYPE
-			l_array: detachable NATIVE_ARRAY [detachable SYSTEM_TYPE]
-			l_rt_array: NATIVE_ARRAY [RT_TYPE]
-			l_type, l_param_type: detachable SYSTEM_TYPE
-			l_any_type, l_interface_type: SYSTEM_TYPE
-			l_formal_type: RT_FORMAL_TYPE
-			l_list: ARRAYED_LIST [RT_CLASS_TYPE]
 			l_assembly_name: detachable ASSEMBLY_NAME
-			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
 		do
 			if not retried and then an_assembly /= Void then
 				l_assembly_name := an_assembly.get_name
@@ -1676,77 +1678,8 @@ feature {NONE} -- Implementation
 						until
 							i = nb
 						loop
-							l_type := l_types.item (i)
-							if l_type /= Void then
-								l_provider := l_type
-								l_cas := l_provider.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
-								if l_cas /= Void and then l_cas.count > 0 then
-									l_name ?= l_cas.item (0)
-									check l_name_not_void: l_name /= Void end
-									if l_name.is_generic then
-										l_array := l_name.generics
-										check has_generics: l_array /= Void end
-										l_count := l_array.count
-										create l_rt_array.make (l_count)
-										from
-											l_any_type := {ANY}
-											j := 0
-										until
-											j = l_count
-										loop
-											l_param_type := l_array.item (j)
-											check l_param_type_attached: l_param_type /= Void end
-												-- Special case here. If we load another Eiffel assembly which
-												-- contains its own version of ANY, then the comparison will fail.
-												-- Since the code was generated so that it is either ANY or a value type,
-												-- then if it is not a value type, then we need to do as if it was our ANY.
-											if l_param_type.equals (l_any_type) or else not l_param_type.is_value_type then
-													-- It is a formal
-												create l_formal_type.make
-												l_formal_type.set_position (j)
-												l_rt_array.put (j, l_formal_type)
-											else
-													-- It is an expanded type
-												check
-													l_param_type_is_value_type: l_param_type.is_value_type
-												end
-												l_rt_array.put (j,
-													associated_runtime_type (interface_type (l_param_type)))
-											end
-											j := j + 1
-										end
-										if l_count = 0 then
-												-- It should be a TUPLE type.
-											check
-												tuple_name: l_name.name ~ ("TUPLE").to_cil
-											end
-											create {RT_TUPLE_TYPE} l_gen_type.make
-										else
-											create l_gen_type.make
-										end
-										l_interface_type := interface_type (l_type)
-										l_gen_type.set_type (l_interface_type.type_handle)
-										l_gen_type.set_generics (l_rt_array)
-										l_class_type := l_gen_type
-									else
-										create l_class_type.make
-										l_interface_type := interface_type (l_type)
-										l_class_type.set_type (l_interface_type.type_handle)
-									end
-
-										-- Update `interface_to_implementation'
-									interface_to_implementation.add (l_interface_type, l_type)
-
-										-- Update `eiffel_meta_type_mapping'
-									eiffel_meta_type_mapping.search (mapped_type (l_name.name))
-									if eiffel_meta_type_mapping.found and then attached {ARRAYED_LIST [RT_CLASS_TYPE]} eiffel_meta_type_mapping.found_item as l_found_item then
-										l_found_item.extend (l_class_type)
-									else
-										create l_list.make (1)
-										l_list.extend (l_class_type)
-										eiffel_meta_type_mapping.force (l_list, l_name.name)
-									end
-								end
+							if attached l_types.item (i) as l_type then
+								load_eiffel_type_from_assembly (l_type)
 							end
 							i := i + 1
 						end
@@ -1756,6 +1689,105 @@ feature {NONE} -- Implementation
 		rescue
 				-- It could fail in `an_assembly.get_types' and we don't want to
 				-- prevent the assembly to load by failing here.
+			retried := True
+			retry
+		end
+
+	load_eiffel_type_from_assembly (a_type: SYSTEM_TYPE)
+			-- Load `a_type' if possible.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_name: detachable EIFFEL_NAME_ATTRIBUTE
+			l_cas: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
+			j, l_count: INTEGER
+			retried: BOOLEAN
+			l_class_type: RT_CLASS_TYPE
+			l_gen_type: RT_GENERIC_TYPE
+			l_array: detachable NATIVE_ARRAY [detachable SYSTEM_TYPE]
+			l_rt_array: NATIVE_ARRAY [RT_TYPE]
+			l_param_type: detachable SYSTEM_TYPE
+			l_any_type, l_interface_type: SYSTEM_TYPE
+			l_formal_type: RT_FORMAL_TYPE
+			l_list: ARRAYED_LIST [RT_CLASS_TYPE]
+			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
+		do
+			if not retried then
+				l_provider := a_type
+				l_cas := l_provider.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
+				if l_cas /= Void and then l_cas.count > 0 then
+					l_name ?= l_cas.item (0)
+					check l_name_not_void: l_name /= Void end
+					if l_name.is_generic then
+						l_array := l_name.generics
+						check has_generics: l_array /= Void end
+						l_count := l_array.count
+						create l_rt_array.make (l_count)
+						from
+							l_any_type := {ANY}
+							j := 0
+						until
+							j = l_count
+						loop
+							l_param_type := l_array.item (j)
+							check l_param_type_attached: l_param_type /= Void end
+								-- Special case here. If we load another Eiffel assembly which
+								-- contains its own version of ANY, then the comparison will fail.
+								-- Since the code was generated so that it is either ANY or a value type,
+								-- then if it is not a value type, then we need to do as if it was our ANY.
+							if l_param_type.equals (l_any_type) or else not l_param_type.is_value_type then
+									-- It is a formal
+								create l_formal_type.make
+								l_formal_type.set_position (j)
+								l_rt_array.put (j, l_formal_type)
+							else
+									-- It is an expanded type
+								check
+									l_param_type_is_value_type: l_param_type.is_value_type
+								end
+								l_rt_array.put (j,
+									associated_runtime_type (interface_type (l_param_type)))
+							end
+							j := j + 1
+						end
+						if l_count = 0 then
+								-- It should be a TUPLE type.
+							check
+								tuple_name: l_name.name ~ ("TUPLE").to_cil
+							end
+							create {RT_TUPLE_TYPE} l_gen_type.make
+						else
+							create l_gen_type.make
+						end
+						l_interface_type := interface_type (a_type)
+						l_gen_type.set_type (l_interface_type.type_handle)
+						l_gen_type.set_generics (l_rt_array)
+						l_class_type := l_gen_type
+					else
+						create l_class_type.make
+						l_interface_type := interface_type (a_type)
+						l_class_type.set_type (l_interface_type.type_handle)
+					end
+
+						-- Update `interface_to_implementation'
+					interface_to_implementation.add (l_interface_type, a_type)
+
+						-- Update `eiffel_meta_type_mapping' if we can get the name
+					if attached l_name.name as l_attribute_type_name then
+						eiffel_meta_type_mapping.search (mapped_type (l_attribute_type_name))
+						if eiffel_meta_type_mapping.found and then attached {ARRAYED_LIST [RT_CLASS_TYPE]} eiffel_meta_type_mapping.found_item as l_found_item then
+							l_found_item.extend (l_class_type)
+						else
+							create l_list.make (1)
+							l_list.extend (l_class_type)
+							eiffel_meta_type_mapping.force (l_list, l_attribute_type_name)
+						end
+					end
+				end
+			end
+		rescue
+				-- It could fail in for many reasons if the TYPE is invalid, but we still want to continue
+				-- processing of other types, so we silently ignore the problem'
 			retried := True
 			retry
 		end
@@ -1933,7 +1965,7 @@ feature {NONE} -- Implementation
 		local
 			allm: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
 			i, nb: INTEGER
-			l_cv_f_name: STRING
+			l_cv_f_name: detachable SYSTEM_STRING
 			l_type: detachable SYSTEM_TYPE
 			l_fields: ARRAYED_LIST [FIELD_INFO]
 		do
@@ -2080,7 +2112,7 @@ feature {NONE} -- Implementation
 			l_tuple_type_id: INTEGER
 			allm: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
 			i, nb: INTEGER
-			l_cv_f_name: STRING
+			l_cv_f_name: detachable SYSTEM_STRING
 			l_type: detachable SYSTEM_TYPE
 			l_result: detachable FIELD_INFO
 		once

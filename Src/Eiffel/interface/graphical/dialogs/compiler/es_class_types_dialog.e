@@ -124,6 +124,12 @@ feature -- Access
 	selected_class_type: detachable CLASS_TYPE
 			-- Last selected class type.
 
+	buttons: DS_SET [INTEGER]
+			-- <Precursor>
+		do
+			Result := dialog_buttons.ok_cancel_buttons
+		end
+
 feature {NONE} -- Access: User interface
 
 	icon: EV_PIXEL_BUFFER
@@ -136,12 +142,6 @@ feature {NONE} -- Access: User interface
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation (t_dialog_title)
-		end
-
-	buttons: DS_SET [INTEGER]
-			-- <Precursor>
-		do
-			Result := dialog_buttons.ok_cancel_buttons
 		end
 
 	default_button: INTEGER

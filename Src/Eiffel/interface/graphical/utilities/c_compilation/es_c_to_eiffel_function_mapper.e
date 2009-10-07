@@ -11,6 +11,8 @@ class
 	ES_C_TO_EIFFEL_FUNCTION_MAPPER
 
 inherit
+	ANY
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all

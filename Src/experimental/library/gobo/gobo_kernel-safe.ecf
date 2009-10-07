@@ -26,6 +26,7 @@
 			</option>
 			<file_rule>
 				<exclude>/basic/kl_special_routines.e$</exclude>
+				<exclude>/unicode/uc_string.e$</exclude>
 				<exclude>/unicode/uc_v410_ctype.e$</exclude>
 				<exclude>/unicode/uc_v410_ctype_uppercase.e$</exclude>
 				<exclude>/unicode/uc_v410_ctype_titlecase.e$</exclude>

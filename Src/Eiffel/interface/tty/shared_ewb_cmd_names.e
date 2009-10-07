@@ -94,6 +94,8 @@ feature {NONE}
 
 	freeze_cmd_name: STRING = "freeze"
 
+	full_class_checking_cmd_name: STRING = "full"
+
 	Generate_cmd_name: STRING = "generate"
 
 	gui_cmd_name: STRING = "gui"

@@ -26,12 +26,16 @@ feature -- Initialization
 			elseif l_args.index_of_word_option (experiment_option_name) > 0 then
 				set_experimental_mode
 			end
+			if l_args.index_of_word_option (full_option_name) > 0 then
+				set_full_class_checking_mode
+			end
 		end
 
 feature -- Access
 
 	compat_option_name: STRING = "compat"
 	experiment_option_name: STRING = "experiment"
+	full_option_name: STRING = "full"
 			-- Name of command line options that can be used to initialize Current
 
 	command_line_profile_option: STRING
@@ -45,12 +49,19 @@ feature -- Access
 				create Result.make (1 + experiment_option_name.count)
 				Result.append_character ('-')
 				Result.append (experiment_option_name)
-			else
-				Result := ""
+			end
+			if is_full_class_checking_mode then
+				if Result = Void then
+					create Result.make (1 + full_option_name.count)
+				else
+					Result.append_character (' ')
+				end
+				Result.append_character ('-')
+				Result.append (full_option_name)
 			end
 		end
 
-	mode: STRING
+	version_mode: STRING
 		do
 			if is_compatible_mode then
 				Result := "compatible"
@@ -80,12 +91,16 @@ feature -- Status report
 			Result := flags.item & experimental_mode_flag = experimental_mode_flag
 		end
 
+	is_full_class_checking_mode: BOOLEAN
+			-- Is the compiler being run in experimental mode?
+		do
+			Result := flags.item & full_mode_flag = full_mode_flag
+		end
+
 feature -- Settings
 
 	set_compatible_mode
 			-- Set compiler in compatible mode.
-		require
-			is_default_mode: is_default_mode
 		do
 			flags.put (flags.item | compatible_mode_flag)
 		ensure
@@ -94,12 +109,18 @@ feature -- Settings
 
 	set_experimental_mode
 			-- Set compiler in experimental mode.
-		require
-			is_default_mode: is_default_mode
 		do
 			flags.put (flags.item | experimental_mode_flag)
 		ensure
 			is_experimental_mode: is_experimental_mode
+		end
+
+	set_full_class_checking_mode
+			-- Set compiler in full class checking mode.
+		do
+			flags.put (flags.item | full_mode_flag)
+		ensure
+			is_experimental_mode: is_full_class_checking_mode
 		end
 
 	reset
@@ -120,6 +141,7 @@ feature {NONE}
 
 	compatible_mode_flag: NATURAL_8 = 1
 	experimental_mode_flag: NATURAL_8 = 2
+	full_mode_flag: NATURAL_8 = 4
 			-- Various flags.
 
 note

@@ -61,6 +61,13 @@ feature -- Access
 
 	apply_action: detachable PROCEDURE [ANY, TUPLE]
 
+
+	buttons: DS_SET [INTEGER_32]
+			-- <precursor>
+		once
+			Result := dialog_buttons.ok_cancel_buttons
+		end
+
 feature {NONE} -- Widgets
 
 	grid: ES_GRID
@@ -157,12 +164,6 @@ feature {NONE} -- Implementation
 			-- <precursor>
 		do
 			Result := locale_formatter.translation (locale_formatter.formatted_translation (t_edit_auto_node, [target.name]))
-		end
-
-	buttons: DS_SET [INTEGER_32]
-			-- <precursor>
-		once
-			Result := dialog_buttons.ok_cancel_buttons
 		end
 
 	default_button: INTEGER_32

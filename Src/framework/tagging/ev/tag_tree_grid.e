@@ -29,7 +29,7 @@ inherit
 	TAG_SHARED_EQUALITY_TESTER
 
 create
-	make, make_default
+	make
 
 feature {NONE} -- Initialization
 
@@ -54,13 +54,6 @@ feature {NONE} -- Initialization
 
 			initialize
 			set_disconnected
-		end
-
-	make_default
-			-- Initialize `Current' with default `filter' and `layout'.
-		do
-			make (create {TAG_DEFAULT_FILTER [G]},
-			      create {TAG_TREE_GRID_LAYOUT [G]}.make)
 		end
 
 	initialize
@@ -135,6 +128,19 @@ feature -- Access
 			Result := internal_selected_nodes.twin
 		end
 
+	grid_node: TAG_TREE_NODE [G]
+			-- Node which `Current' represents.
+		do
+			if hide_outside_nodes then
+				Result := common_parent
+				if not Result.is_root then
+					Result := Result.parent
+				end
+			else
+				Result := tree.root_node
+			end
+		end
+
 feature {NONE} -- Access
 
 	grid: like create_grid
@@ -168,19 +174,6 @@ feature {NONE} -- Access
 			-- <Precursor>
 		do
 			Result := Current
-		end
-
-	grid_node: TAG_TREE_NODE [G]
-			-- Node which `Current' represents.
-		do
-			if hide_outside_nodes then
-				Result := common_parent
-				if not Result.is_root then
-					Result := Result.parent
-				end
-			else
-				Result := tree.root_node
-			end
 		end
 
 	child_of_node (a_node: like common_parent): detachable TAG_TREE_GRID_NODE_CONTAINER [G]

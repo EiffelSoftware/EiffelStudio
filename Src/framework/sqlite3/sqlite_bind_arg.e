@@ -16,6 +16,12 @@ inherit
 			{NONE} all
 		end
 
+	SQLITE_BINDING_HELPERS
+		export
+			{NONE} all
+		end
+
+-- inherit {NONE}
 	SQLITE_INTERNALS
 		export
 			{NONE} all
@@ -30,57 +36,33 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_id: READABLE_STRING_8; a_value: like value)
+	make (a_var: READABLE_STRING_8; a_value: like value)
 			-- Initializes an argument.
 			--
-			-- `a_id': Variable name or index string.
+			-- `a_var': Variable or index string.
 			-- `a_value': Object to use with the SQL statement the argument is used in.
 		require
-			a_id_attached: attached a_id
-			not_a_id_is_empty: not a_id.is_empty
-			a_id_is_valid_id: is_valid_id (a_id)
+			a_var_attached: attached a_var
+			not_a_var_is_empty: not a_var.is_empty
+			a_var_is_valid_variable_name: is_valid_variable_name (a_var)
 			a_value_is_valid_value: is_valid_value (a_value)
 		do
-			create id.make_from_string (a_id)
+			create variable.make_from_string (a_var)
 			value := a_value
 		ensure
-			id_set: id.same_string (a_id)
+			variable_set: variable.same_string (a_var)
 			value_set: value ~ a_value
 		end
 
 feature -- Access
 
-	id: IMMUTABLE_STRING_8
+	variable: IMMUTABLE_STRING_8
 			-- Name/index of the argument to bind a value to.
 
 	value: detachable G
 			-- Value of bound argument.
 
 feature -- Status report
-
-	is_valid_id (a_id: READABLE_STRING_8): BOOLEAN
-			-- Determines if the identifier is valid.
-			--
-			-- `a_id': THe identifier to validate.
-			-- `Result': True if the identifier is valid; False otherwise.
-		require
-			a_id_attached: attached a_id
-		local
-			i: NATURAL_8
-		do
-			Result := not a_id.is_empty
-			if Result then
-					-- First determine it is a number.
-				if a_id.is_natural_64 or else a_id.is_integer_64 then
-						-- Valid only if the id is a lower enough index (1-999)
-					Result := a_id.is_natural_8
-					if Result then
-						i := a_id.to_natural_8
-						Result := i >= min_index_id and i <= max_index_id
-					end
-				end
-			end
-		end
 
 	is_valid_value (a_value: like value): BOOLEAN
 			-- Determines if an argument value is valid.
@@ -119,20 +101,10 @@ feature {SQLITE_STATEMENT} -- Basic operations
 		deferred
 		end
 
-feature {NONE} -- Externals
-
-	SQLITE_LIMIT_VARIABLE_NUMBER: INTEGER
-			-- Upper limit on a numerical id.
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_LIMIT_VARIABLE_NUMBER"
-		end
-
 invariant
-	id_attached: attached id
-	not_id_is_empty: not id.is_empty
-	id_is_valid_id: is_valid_id (id)
+	variable_attached: attached variable
+	not_variable_is_empty: not variable.is_empty
+	variable_is_valid_variable_name: is_valid_variable_name (variable)
 	value_is_valid_value: is_valid_value (value)
 
 ;note

@@ -84,7 +84,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	frozen execute_with_callback (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN])
+	frozen execute (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN])
 			-- Executes the SQLite query statement and calls back a routine with a result row.
 			--
 			-- `a_callback': A callback function accepting a result row as its argument.
@@ -106,14 +106,20 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	frozen execute_with_callback_and_arguments (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_bindings: ARRAY [SQLITE_BIND_ARG [ANY]])
+	frozen execute_with_arguments (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_arguments: TUPLE)
 			-- Executes the SQLite query statement with arguments and calls back a routine with a result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.
 			--               Return True from the function to abort further calls when there is more result data.
 			--               Note: The row does not change between calls and values must be queried
 			--                     immediately.
-			-- `a_bindings': The bound arguments to call the SQLite query statement with.
+			-- `a_arguments': The bound arguments to call the SQLite query statement with.
+			--                Valid arguments are those that descent {SQLITE_BIND_ARG} or
+			--                {READABLE_STRING_8}, or of type {INTEGER_*}, {NATURAL_*} (with the expection
+			--                of {NATURAL_64}), or {MANAGED_POINTER} (for blobs).
+			--                Note: If *not* using {SQLITE_BIND_ARG}, the SQLite statement should use ?NNN
+			--                      arguments and not named arguments.
+			--                      see http://sqlite.org/c3ref/bind_blob.html
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
@@ -124,10 +130,11 @@ feature -- Basic operations
 			database_is_readable: database.is_readable
 			has_arguments: has_arguments
 			a_callback_attached: attached a_callback
-			a_bindings_attached: attached a_bindings
-			a_bindings_count_big_enough: a_bindings.count.as_natural_32 = arguments_count
+			a_arguments_attached: attached a_arguments
+			a_arguments_count_correct: a_arguments.count.as_natural_32 = arguments_count
+			a_arguments_is_valid_arguments: is_valid_arguments (a_arguments)
 		do
-			execute_internal (a_callback, a_bindings)
+			execute_internal (a_callback, new_binding_argument_array (a_arguments))
 		ensure
 			not_is_executing: not is_executing
 		end

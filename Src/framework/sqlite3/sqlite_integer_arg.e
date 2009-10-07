@@ -31,6 +31,11 @@ feature {SQLITE_STATEMENT} -- Basic operations
 			sqlite_raise_on_failure (l_result)
 		end
 
+feature {NONE} -- Implemention: Internal cache
+
+	internal_value: INTEGER_64
+			-- Cached version of `value'.
+
 feature {NONE} -- Externals
 
 	c_sqlite3_bind_int (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER; a_value: INTEGER): INTEGER

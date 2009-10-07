@@ -35,10 +35,16 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	frozen execute_with_arguments (a_bindings: ARRAY [SQLITE_BIND_ARG [ANY]])
+	frozen execute_with_arguments (a_arguments: TUPLE)
 			-- Executes the SQLite modification statement with bound set of arguments.
 			--
-			-- `a_bindings': The bound arguments to call the SQLite query statement with.
+			-- `a_arguments': The bound arguments to call the SQLite query statement with.
+			--                Valid arguments are those that descent {SQLITE_BIND_ARG} or
+			--                {READABLE_STRING_8}, or of type {INTEGER_*}, {NATURAL_*} (with the expection
+			--                of {NATURAL_64}), or {MANAGED_POINTER} (for blobs).
+			--                Note: If *not* using {SQLITE_BIND_ARG}, the SQLite statement should use ?NNN
+			--                      arguments and not named arguments.
+			--                      see http://sqlite.org/c3ref/bind_blob.html
 		require
 			is_compiled: is_compiled
 			is_connected: is_connected
@@ -46,10 +52,11 @@ feature -- Basic operations
 			is_accessible: is_accessible
 			database_is_writable: database.is_writable
 			has_arguments: has_arguments
-			a_bindings_attached: attached a_bindings
-			a_bindings_count_big_enough: a_bindings.count.as_natural_32 = arguments_count
+			a_arguments_attached: attached a_arguments
+			a_arguments_count_correct: a_arguments.count.as_natural_32 = arguments_count
+			a_arguments_is_valid_arguments: is_valid_arguments (a_arguments)
 		do
-			execute_internal (Void, a_bindings)
+			execute_internal (Void, new_binding_argument_array (a_arguments))
 		ensure
 			not_is_executing: not is_executing
 		end

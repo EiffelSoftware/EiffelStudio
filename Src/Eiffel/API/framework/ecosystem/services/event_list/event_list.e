@@ -13,9 +13,6 @@ class
 
 inherit
 	EVENT_LIST_S
-		select
-			event_list_connection
-		end
 
 	DISPOSABLE_SAFE
 

@@ -241,7 +241,6 @@ feature {NONE} -- Implementation
 			conv_c: EB_FAVORITES_CLASS
 			conv_f: EB_FAVORITES_FEATURE
 			cli: CLASS_I
-			clc: CLASS_C
 			clu: CONF_GROUP
 		do
 			from

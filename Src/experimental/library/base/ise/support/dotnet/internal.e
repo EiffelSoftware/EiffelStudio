@@ -296,7 +296,11 @@ feature -- Access
 		require
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := id_to_eiffel_type.item (type_id).class_name
+			if attached id_to_eiffel_type.item (type_id).class_name as l_name then
+				Result := l_name
+			else
+				Result := "Unknown base class"
+			end
 		end
 
 	type_name (object: ANY): STRING
@@ -314,7 +318,11 @@ feature -- Access
 		require
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := pure_implementation_type (type_id).type_name
+			if attached pure_implementation_type (type_id).type_name as l_name then
+				Result := l_name
+			else
+				Result := "Unknown Type"
+			end
 		end
 
 	dynamic_type (object: ANY): INTEGER
@@ -524,7 +532,7 @@ feature -- Access
 		local
 			l_native_array: NATIVE_ARRAY [STRING]
 			l_members: NATIVE_ARRAY [FIELD_INFO]
-			l_name: STRING
+			l_name: detachable SYSTEM_STRING
 			l_eiffel_name: detachable EIFFEL_NAME_ATTRIBUTE
 			k, nb: INTEGER
 			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
@@ -554,7 +562,9 @@ feature -- Access
 					else
 						l_name := l_field.name
 					end
-					l_native_array.put (k, l_name)
+					if l_name /= Void then
+						l_native_array.put (k, l_name)
+					end
 					k := k + 1
 				end
 				id_to_fields_name.put (l_native_array, type_id)
@@ -1767,14 +1777,16 @@ feature {TYPE, INTERNAL} -- Implementation
 						-- Update `interface_to_implementation'
 					interface_to_implementation.add (l_interface_type, a_type)
 
-						-- Update `eiffel_meta_type_mapping'
-					eiffel_meta_type_mapping.search (mapped_type (l_name.name))
-					if eiffel_meta_type_mapping.found and then attached {ARRAYED_LIST [RT_CLASS_TYPE]} eiffel_meta_type_mapping.found_item as l_found_item then
-						l_found_item.extend (l_class_type)
-					else
-						create l_list.make (1)
-						l_list.extend (l_class_type)
-						eiffel_meta_type_mapping.force (l_list, l_name.name)
+						-- Update `eiffel_meta_type_mapping' if we can get the name
+					if attached l_name.name as l_attribute_type_name then
+						eiffel_meta_type_mapping.search (mapped_type (l_attribute_type_name))
+						if eiffel_meta_type_mapping.found and then attached {ARRAYED_LIST [RT_CLASS_TYPE]} eiffel_meta_type_mapping.found_item as l_found_item then
+							l_found_item.extend (l_class_type)
+						else
+							create l_list.make (1)
+							l_list.extend (l_class_type)
+							eiffel_meta_type_mapping.force (l_list, l_attribute_type_name)
+						end
 					end
 				end
 			end
@@ -1958,7 +1970,7 @@ feature {TYPE, INTERNAL} -- Implementation
 		local
 			allm: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
 			i, nb: INTEGER
-			l_cv_f_name: STRING
+			l_cv_f_name: detachable SYSTEM_STRING
 			l_type: detachable SYSTEM_TYPE
 			l_fields: ARRAYED_LIST [FIELD_INFO]
 		do
@@ -2105,7 +2117,7 @@ feature {TYPE, INTERNAL} -- Implementation
 			l_tuple_type_id: INTEGER
 			allm: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
 			i, nb: INTEGER
-			l_cv_f_name: STRING
+			l_cv_f_name: detachable SYSTEM_STRING
 			l_type: detachable SYSTEM_TYPE
 			l_result: detachable FIELD_INFO
 		once

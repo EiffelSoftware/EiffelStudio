@@ -18,7 +18,7 @@ create
 	set_with_eiffel_string, share_from_pointer, make_from_pointer
 
 convert
-	set_with_eiffel_string ({STRING_GENERAL, STRING, STRING_32, attached STRING_32})
+	set_with_eiffel_string ({STRING_GENERAL, STRING, STRING_32})
 
 feature {NONE} -- Initialization
 

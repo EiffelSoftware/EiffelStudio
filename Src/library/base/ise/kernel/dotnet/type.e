@@ -17,7 +17,7 @@ inherit
 create {NONE}
 
 convert
-	to_cil: {SYSTEM_TYPE, detachable SYSTEM_TYPE}
+	to_cil: {SYSTEM_TYPE}
 
 feature -- Conversion
 

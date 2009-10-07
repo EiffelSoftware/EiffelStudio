@@ -35,7 +35,7 @@ convert
 		--    generating_type: TYPE [like Current]
 	to_string_8: {STRING_8, STRING_GENERAL, READABLE_STRING_GENERAL, READABLE_STRING_8},
 	to_string_32: {STRING_32, READABLE_STRING_32},
-	to_cil: {SYSTEM_TYPE, detachable SYSTEM_TYPE}
+	to_cil: {SYSTEM_TYPE}
 
 feature -- Access
 

@@ -38,42 +38,13 @@ inherit
 
 create
 	make,
-	make_open,
-	make_with_source,
-	make_open_with_source
+	make_open_read,
+	make_open_read_write,
+	make_create_read_write
 
 feature {NONE} -- Initialization
 
-	frozen make (a_file_name: READABLE_STRING_GENERAL)
-			-- Creates a database from a local file, but does not open the database.
-			--
-			-- `a_file_name': The file where the database is located.
-		require
-			is_sqlite_available: is_sqlite_available
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
-		do
-			make_with_source (create {SQLITE_FILE_SOURCE}.make (a_file_name))
-		end
-
-	frozen make_open (a_file_name: READABLE_STRING_GENERAL; a_mode: SQLITE_OPEN_MODE)
-			-- Creates a database from a local file.
-			--
-			-- `a_file_name': The file where the database is located.
-			-- `a_mode': Mode to open the database connection with.
-		require
-			is_sqlite_available: is_sqlite_available
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
-			a_file_name_exists: a_mode /~ {SQLITE_OPEN_MODE}.create_read_write implies
-				(create {RAW_FILE}.make (a_file_name.as_string_8)).exists
-		do
-			make_open_with_source (create {SQLITE_FILE_SOURCE}.make (a_file_name), a_mode)
-		end
-
-	make_with_source (a_source: SQLITE_SOURCE)
+	make (a_source: SQLITE_SOURCE)
 			-- Initializes the database from a database source, which could be a file or in memory.
 			-- Note: The connection is not opened when using this approach, use one of the `open_*'
 			--       routines after initialization, or one of the `make_open_*' convenience routines.
@@ -91,21 +62,49 @@ feature {NONE} -- Initialization
 			source_set: source = a_source
 		end
 
-	frozen make_open_with_source (a_source: SQLITE_SOURCE; a_mode: SQLITE_OPEN_MODE)
-			-- Initializes the database from a database source, which could be a file or in memory.
-			-- Note: The connection is not opened when using this approach, use one of the `open_*'
-			--       routines after initialization, or one of the `make_open_*' convenience routines.
+	frozen make_open_read (a_file_name: READABLE_STRING_GENERAL)
+			-- Creates a database from a local file in a read-only mode.
 			--
-			-- `a_source': The source where the database is or should be located.
-			-- `a_mode': Mode to open the database connection with.
+			-- `a_file_name': The file where the database is located.
 		require
 			is_sqlite_available: is_sqlite_available
-			a_source_attached: attached a_source
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+			a_file_name_is_string_8: a_file_name.is_string_8
+			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
 		do
-			make_with_source (a_source)
-			open (a_mode)
-		ensure
-			source_set: source = a_source
+			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
+			open_read
+		end
+
+	frozen make_open_read_write (a_file_name: READABLE_STRING_GENERAL)
+			-- Creates a database from a local file in a read-write mode.
+			--
+			-- `a_file_name': The file where the database is located.
+		require
+			is_sqlite_available: is_sqlite_available
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+			a_file_name_is_string_8: a_file_name.is_string_8
+			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
+		do
+			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
+			open_read_write
+		end
+
+	frozen make_create_read_write (a_file_name: READABLE_STRING_GENERAL)
+			-- Creates a database from a local file in a read-write mode. In the event the database doesn't
+			-- exist then a new database will be created.
+			--
+			-- `a_file_name': The file where the database is located.
+		require
+			is_sqlite_available: is_sqlite_available
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+			a_file_name_is_string_8: a_file_name.is_string_8
+		do
+			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
+			open_create_read_write
 		end
 
 feature {NONE} -- Clean up
@@ -446,17 +445,41 @@ feature -- Status report: Threading
 
 feature -- Basic operations
 
-	open (a_mode: SQLITE_OPEN_MODE)
-			-- Opens the database connection.
-			--
-			-- `a_mode': A mode to open the connection using.
+	open_read
+			-- Opens the database connection in a read-only mode.
 		require
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_closed: is_closed
-			source_exists: a_mode /~ {SQLITE_OPEN_MODE}.create_read_write implies source.exists
+			source_exists: source.exists
 		do
-			open_internal (a_mode)
+			open_internal ({SQLITE_OPEN_MODE}.read_only)
+		end
+
+	open_read_write
+			-- Opens the database connection in a read/write mode.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_closed: is_closed
+			source_exists: source.exists
+		do
+			open_internal ({SQLITE_OPEN_MODE}.read_write)
+		ensure
+			is_writable: not is_closed implies is_writable
+		end
+
+	open_create_read_write
+			-- Opens the database connection in a read/write mode and creates the database if if does
+			-- not already exist.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_closed: is_closed
+		do
+			open_internal ({SQLITE_OPEN_MODE}.create_read_write)
+		ensure
+			is_writable: not is_closed implies is_writable
 		end
 
 	close
@@ -690,6 +713,7 @@ feature {NONE} -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_closed: is_closed
 			a_mode_attached: attached a_mode
+			source_exists: a_mode /~ {SQLITE_OPEN_MODE}.create_read_write implies source.exists
 		local
 			l_file_name: C_STRING
 			l_flags: INTEGER

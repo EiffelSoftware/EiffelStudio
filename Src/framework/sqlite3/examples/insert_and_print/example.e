@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			print ("%NOpening Database...%N")
 
 				-- Open/create a Database.
-			create l_db.make_open ("data.sqlite", {SQLITE_OPEN_MODE}.create_read_write)
+			create l_db.make_create_read_write ("data.sqlite")
 
 			print ("Creating Example Table...%N")
 

@@ -10,6 +10,8 @@ deferred class
 	BENCH_WIZARD_PROJECT_GENERATOR
 
 inherit
+	ANY
+
 	WIZARD_SHARED
 		export
 			{NONE} all

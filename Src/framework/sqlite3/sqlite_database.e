@@ -454,7 +454,7 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_closed: is_closed
-			source_exists: source.exists
+			source_exists: a_mode /~ {SQLITE_OPEN_MODE}.create_read_write implies source.exists
 		do
 			open_internal (a_mode)
 		end

@@ -50,6 +50,16 @@ feature -- Query: Error handling
 
 feature -- Basic operations
 
+	sqlite3_busy_timeout (a_api: SQLITE_API; a_db: POINTER; a_ms: INTEGER): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+			not_a_db_is_null: a_db /= default_pointer
+			a_ms_non_negative: a_ms >= 0
+		do
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_busy_timeout (a_db, a_ms)
+		end
+
 	sqlite3_interrupt (a_api: SQLITE_API; a_db: POINTER)
 		require
 			a_api_attached: attached a_api
@@ -145,7 +155,7 @@ feature -- Callbacks
 			{SQLITE_EXTERNALS}.c_sqlite3_progress_handler (a_db, a_flags, c_sqlite3_busy_callback, a_cb_data)
 		end
 
-	sqlite3_busy_handler (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
+	sqlite3_busy_handler (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): INTEGER
 		require
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable

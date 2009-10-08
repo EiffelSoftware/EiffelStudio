@@ -75,11 +75,18 @@ feature -- Externals
 			"return (EIF_INTEGER)sqlite3_bind_text((sqlite3_stmt *)$a_stmt, (int)$a_index, (const char *)$a_text, (int)$a_size, (void(*)(void*))SQLITE_TRANSIENT)"
 		end
 
-	c_sqlite3_busy_handler (a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
+	c_sqlite3_busy_timeout (a_db: POINTER; a_ms: INTEGER): INTEGER
 		external
 			"C inline use <sqlite3.h>"
 		alias
-			"return (EIF_POINTER)sqlite3_busy_handler((sqlite3 *)$a_db, (int (*)(void *, int))$a_callback, (void *)$a_data)"
+			"return (EIF_INTEGER)sqlite3_busy_timeout((sqlite3 *)$a_db, (int)$a_ms)"
+		end
+
+	c_sqlite3_busy_handler (a_db: POINTER; a_callback: POINTER; a_data: POINTER): INTEGER
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"return (EIF_INTEGER)sqlite3_busy_handler((sqlite3 *)$a_db, (int (*)(void *, int))$a_callback, (void *)$a_data)"
 		end
 
 	c_sqlite3_changes (a_db: POINTER): INTEGER

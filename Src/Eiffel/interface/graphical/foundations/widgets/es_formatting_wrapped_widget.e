@@ -20,7 +20,7 @@ create
 	make
 
 convert
-	widget: {EV_WIDGET, attached EV_WIDGET}
+	widget: {EV_WIDGET}
 
 feature {NONE} -- Initialization
 

@@ -18,7 +18,7 @@ inherit
 	ES_STONABLE_SYNCHRONIZED_I
 
 convert
-	widget: {EV_WIDGET, attached EV_WIDGET, G, attached G}
+	widget: {EV_WIDGET, G}
 
 feature {NONE} -- Basic operations
 

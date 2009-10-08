@@ -15,7 +15,7 @@ MKDIR_TARGET = $mkdir_target
 LINK = $link32
 DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
-OBJECTS = esqlite.$obj
+OBJECTS = esqlite.$obj sqlite3.obj
 MT_OBJECTS = MTesqlite.$obj
 IL_OBJECTS = ILesqlite.$obj
 
@@ -56,6 +56,10 @@ mtesqlite.lib: $(MT_OBJECTS)
 ilesqlite.lib: $(IL_OBJECTS)
 	$alib_line
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
+
+#Multithreaded targets.
+esqlite.$obj: esqlite.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 #Multithreaded targets.
 MTesqlite.$obj: esqlite.c

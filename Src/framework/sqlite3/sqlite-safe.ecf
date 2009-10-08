@@ -6,8 +6,8 @@
 		<file_rule>
 			<exclude>EIFGENs</exclude>
 			<exclude>tests</exclude>
-			<exclude>\.svn</exclude>
 			<exclude>examples</exclude>
+			<exclude>\.svn</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
@@ -31,16 +31,24 @@
 				<multithreaded value="true"/>
 			</condition>
 		</external_library>
-		<external_library location="$(EIFFEL_SRC)/framework/sqlite3/spec/$(ISE_PLATFORM)/lib/esqlite.lib">
+		<external_library location="$(EIFFEL_SRC)\framework\sqlite3\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\esqlite.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="false"/>
+				<dotnet value="false"/>
 			</condition>
 		</external_library>
-		<external_library location="$(EIFFEL_SRC)/framework/sqlite3/spec/$(ISE_PLATFORM)/lib/mtesqlite.lib">
+		<external_library location="$(EIFFEL_SRC)\framework\sqlite3\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtesqlite.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="true"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_library>
+		<external_library location="$(EIFFEL_SRC)\framework\sqlite3\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ilesqlite.lib">
+			<condition>
+				<platform value="windows"/>
+				<dotnet value="true"/>
 			</condition>
 		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>

@@ -178,6 +178,32 @@ feature -- Status report
 			is_thread_capable: Result implies {PLATFORM}.is_thread_capable
 		end
 
+feature -- Status report: SQL
+
+	is_complete_statement (a_sql: READABLE_STRING_8): BOOLEAN
+			-- Determines if an SQLite SQL statement is complete.
+			-- Note: This does not parse the SQL statement for syntax validity, only checks for completion.
+			--       The function is useful for command-line tools where input is required.
+			--
+			-- `a_sql': An SQL statement.
+			-- `Result': True if the statement is complete; False otherwise.
+		require
+			is_interface_usable: is_interface_usable
+			a_sql_attached: attached a_sql
+			not_a_sql_is_empty: not a_sql.is_empty
+		local
+			l_cstring: C_STRING
+			l_result: INTEGER
+		do
+			create l_cstring.make (a_sql)
+			l_result := sqlite3_complete (Current, l_cstring.item)
+			if l_result /= {SQLITE_RESULT_CODE}.e_no_mem then
+				Result := l_result /= 0
+			else
+				sqlite_raise_on_failure (l_result)
+			end
+		end
+
 invariant
 	initialization_count_not_negative: initialization_count.item >= 0
 

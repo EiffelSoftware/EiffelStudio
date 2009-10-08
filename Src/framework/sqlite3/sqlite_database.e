@@ -36,6 +36,11 @@ inherit
 			{NONE} all
 		end
 
+	SQLITE_STATEMENT_EXTERNALS
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_open_read,
@@ -328,10 +333,10 @@ feature -- Status report
 		require
 			is_accessible: is_accessible
 		do
-			Result := not is_closed and then (internal_flags & SQLITE_OPEN_READWRITE) = SQLITE_OPEN_READWRITE
+			Result := not is_closed and then (internal_flags & {SQLITE_OPEN_MODE}.read_write) = {SQLITE_OPEN_MODE}.read_write
 		ensure
 			not_is_closed: Result implies not is_closed
-			is_open_write: Result implies (internal_flags & SQLITE_OPEN_READWRITE) = SQLITE_OPEN_READWRITE
+			is_open_write: Result implies (internal_flags & {SQLITE_OPEN_MODE}.read_write) = {SQLITE_OPEN_MODE}.read_write
 		end
 
 	is_in_transaction: BOOLEAN
@@ -376,17 +381,8 @@ feature -- Status report: SQL
 			is_interface_usable: is_interface_usable
 			a_sql_attached: attached a_sql
 			not_a_sql_is_empty: not a_sql.is_empty
-		local
-			l_cstring: C_STRING
-			l_result: INTEGER
 		do
-			create l_cstring.make (a_sql)
-			l_result := sqlite3_complete (sqlite_api, l_cstring.item)
-			if l_result /= {SQLITE_RESULT_CODE}.e_no_mem then
-				Result := l_result /= 0
-			else
-				sqlite_raise_on_failure (l_result)
-			end
+			Result := sqlite_api.is_complete_statement (a_sql)
 		end
 
 feature -- Status report: Comparison
@@ -496,7 +492,6 @@ feature -- Basic operations
 			l_db: like internal_db
 			l_api: like sqlite_api
 			l_result: INTEGER
-			l_externals: SQLITE_STATEMENT_EXTERNALS
 			l_stmt: POINTER
 			l_is_locked: BOOLEAN
 		do
@@ -528,13 +523,12 @@ feature -- Basic operations
 						l_is_locked := True
 
 							-- Finalize (close) all statements
-						create l_externals
 						from
 							l_stmt := sqlite3_next_stmt (l_api, l_db, default_pointer)
 						until
 							l_stmt = default_pointer
 						loop
-							l_result := l_externals.sqlite3_finalize (l_api, l_stmt)
+							l_result := sqlite3_finalize (l_api, l_stmt)
 							check success: sqlite_success (l_result) end
 
 							l_stmt := sqlite3_next_stmt (l_api, l_db, l_stmt)

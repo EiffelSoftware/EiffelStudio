@@ -12,16 +12,47 @@
 		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<external_include location="$EIFFEL_SRC/framework/sqlite3/spec/include"/>
-		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf" readonly="false"/>
+		<external_include location="$(EIFFEL_SRC)/framework/sqlite3/spec/include"/>
+		<external_library location="`$(ISE_LIBRARY)/library/api_wrapper/implementation/unix/Clib/dl-config --library`">
+			<description>Required for linking SQLite</description>
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_library>
+		<external_library location="$(EIFFEL_SRC)/framework/sqlite3/spec/$(ISE_PLATFORM)/lib/libesqlite.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_library>
+		<external_library location="$(EIFFEL_SRC)/framework/sqlite3/spec/$(ISE_PLATFORM)/lib/libmtesqlite.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_library>
+		<external_library location="$(EIFFEL_SRC)/framework/sqlite3/spec/$(ISE_PLATFORM)/lib/esqlite.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_library>
+		<external_library location="$(EIFFEL_SRC)/framework/sqlite3/spec/$(ISE_PLATFORM)/lib/mtesqlite.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="enumerated_type" location="$EIFFEL_SRC\framework\enumerated_type\enumerated_type.ecf" readonly="false"/>
+		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false"/>
 		<cluster name="sqlite" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/CVS$</exclude>
+				<exclude>/spec$</exclude>
 				<exclude>/.svn$</exclude>
-				<exclude>/examples$</exclude>
+				<exclude>/Clib$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

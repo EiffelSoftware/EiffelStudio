@@ -10,9 +10,10 @@ note
 class
 	SQLITE_SHARED_API
 
-inherit -- {NONE}
-	ANY
+inherit
+	USABLE_I
 
+--inherit {NONE}
 	SQLITE_HELPERS
 		export
 			{NONE} all
@@ -29,10 +30,10 @@ feature {NONE} -- Access
 feature -- Status report
 
 	is_interface_usable: BOOLEAN
-			-- Indicates if the dynamic API interface can be used (i.e. not unloaded)
+			-- <Precursor>
 		do
 			Result := sqlite_api.is_interface_usable
-		ensure
+		ensure then
 			sqlite_api_is_interface_usable: Result implies sqlite_api.is_interface_usable
 		end
 

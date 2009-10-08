@@ -24,9 +24,9 @@ feature {SQLITE_STATEMENT} -- Basic operations
 			l_result: INTEGER
 		do
 			if value <= {INTEGER_32}.max_value.to_integer_64 then
-				l_result := c_sqlite3_bind_int (sqlite_api.api_pointer (sqlite3_bind_int_api), a_statement.internal_stmt, a_index, value.as_integer_32)
+				l_result := {SQLITE_EXTERNALS}.c_sqlite3_bind_int (a_statement.internal_stmt, a_index, value.as_integer_32)
 			else
-				l_result := c_sqlite3_bind_int64 (sqlite_api.api_pointer (sqlite3_bind_int_api), a_statement.internal_stmt, a_index, value)
+				l_result := {SQLITE_EXTERNALS}.c_sqlite3_bind_int64 (a_statement.internal_stmt, a_index, value)
 			end
 			sqlite_raise_on_failure (l_result)
 		end
@@ -35,41 +35,6 @@ feature {NONE} -- Implemention: Internal cache
 
 	internal_value: INTEGER_64
 			-- Cached version of `value'.
-
-feature {NONE} -- Externals
-
-	c_sqlite3_bind_int (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER; a_value: INTEGER): INTEGER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_stmt_is_null: a_stmt /= default_pointer
-			a_index_positive: a_index > 0
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *, int, int)) $a_fptr) (
-					(sqlite3_stmt *)$a_stmt, (int)$a_index, (int)$a_value);
-			]"
-		end
-
-	c_sqlite3_bind_int64 (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER; a_value: INTEGER_64): INTEGER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_stmt_is_null: a_stmt /= default_pointer
-			a_index_positive: a_index > 0
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *, int, sqlite_int64)) $a_fptr) (
-					(sqlite3_stmt *)$a_stmt, (int)$a_index, (sqlite_int64)$a_value);
-			]"
-		end
-
-feature {NONE} -- Constants
-
-	sqlite3_bind_int_api: STRING = "sqlite3_bind_int"
-	sqlite3_bind_int64_api: STRING = "sqlite3_bind_int64"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

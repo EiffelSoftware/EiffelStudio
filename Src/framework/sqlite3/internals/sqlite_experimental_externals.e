@@ -1,30 +1,22 @@
 note
 	description: "[
-		Shared helper class for allowing access to an SQLite API {SQLIITE_API} but means of a creation routine parameter.
+		Direct wrapping of SQLite experimental C functions.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	SQLITE_DYNAMIC_SHARED_API
+class
+	SQLITE_EXPERIMENTAL_EXTERNALS
 
-inherit
-	DYNAMIC_SHARED_API
+feature -- Externals
 
-feature {NONE} -- Initialize
-
-	initialize
-			-- <Precursor>
-		do
-		end
-
-feature -- Clean up
-
-	clean_up
-			-- <Precursor>
-		do
+	c_sqlite3_config (a_config: INTEGER): INTEGER
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"return (EIF_INTEGER)sqlite3_config((int)$a_config)"
 		end
 
 ;note

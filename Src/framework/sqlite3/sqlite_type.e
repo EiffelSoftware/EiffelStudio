@@ -1,6 +1,6 @@
 note
 	description: "[
-
+		SQLite basic column types.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

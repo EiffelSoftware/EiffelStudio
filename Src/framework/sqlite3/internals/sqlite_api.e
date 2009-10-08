@@ -1,6 +1,6 @@
 note
 	description: "[
-		Core wrapping of the SQLite dynamic library.
+		Core wrapping of the SQLite library.
 		
 		This class is no indended for pulic use and is used by the internals of the SQLite Eiffel
 		library. Please use the higher level classes such as {SQLITE_DATABASE}.
@@ -14,7 +14,7 @@ class
 	SQLITE_API
 
 inherit
-	DYNAMIC_API
+	USABLE_I
 
 --inherit {NONE}
 	SQLITE_INTERNALS
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialize
 
-	initialize
+	make
 			-- <Precursor>
 		local
 			l_count: like initialization_count
@@ -114,30 +114,15 @@ feature -- Access
 			Result := sqlite3_libversion_number (Current).as_natural_32
 		end
 
-feature -- Access: API
+--feature {NONE} -- Access: API
 
-	module_name: IMMUTABLE_STRING_8
-			-- <Precursor>
-		once
-			if {PLATFORM}.is_windows then
-				Result := "sqlite3"
-			else
-				Result := "libsqlite3"
-			end
-		end
-
-feature {NONE} -- Access: API
-
-	minimum_version: detachable READABLE_STRING_8
-			-- <Precursor>
-
-	initialization_config: SQLITE_INITIALIZATION_CONFIG
-			-- Configuration used to initialize the API.
-		once
-			create Result
-		ensure
-			api_set: Result.api = Current
-		end
+--	initialization_config: SQLITE_INITIALIZATION_CONFIG
+--			-- Configuration used to initialize the API.
+--		once
+--			create Result
+--		ensure
+--			api_set: Result.api = Current
+--		end
 
 feature {NONE} -- Measurement
 
@@ -168,10 +153,16 @@ feature -- Element change
 
 feature -- Status report
 
+	is_interface_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_initialized
+		ensure then
+			is_initialized: Result implies is_initialized
+		end
+
 	is_initialized: BOOLEAN
 			-- Indicates if the library has been initialized correctly and is ready for use.
-		require
-			is_interface_usable: is_interface_usable
 		do
 			Result := initialization_count.item > 0
 		ensure

@@ -1,6 +1,6 @@
 note
 	description: "[
-		An string binding argument value for use with executing a SQLite statement.
+		Mode used to open a database connection in SQLite.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,40 +8,47 @@ note
 	revision: "$Revision$"
 
 class
-	SQLITE_STRING_ARG
+	SQLITE_OPEN_MODE
 
 inherit
-	SQLITE_BIND_ARG [READABLE_STRING_8]
-		redefine
-			is_valid_value
-		end
+	ENUMERATED_TYPE [INTEGER]
 
 create
 	make
 
-feature -- Status report
+convert
+	make ({INTEGER}),
+	item: {INTEGER}
 
-	is_valid_value (a_value: like value): BOOLEAN
-			-- <Precursor>
-		do
-			Result := attached a_value
-		ensure then
-			attached_a_value: Result implies attached a_value
+feature -- Constants
+
+	read_only: INTEGER
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"return SQLITE_OPEN_READONLY"
 		end
 
-feature {SQLITE_STATEMENT} -- Basic operations
+	read_write: INTEGER
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"return SQLITE_OPEN_READWRITE"
+		end
 
-	bind_to_statement (a_statement: SQLITE_STATEMENT; a_index: INTEGER)
+	create_read_write: INTEGER
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"return SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE"
+		end
+
+feature {NONE} -- Factory
+
+	members: ARRAY [INTEGER]
 			-- <Precursor>
-		local
-			l_cstring: C_STRING
-			l_value: like value
-		do
-			l_value := value
-			check l_value_attached: attached l_value end
-
-			create l_cstring.make (l_value)
-			sqlite_raise_on_failure ({SQLITE_EXTERNALS}.c_sqlite3_bind_text (a_statement.internal_stmt, a_index, l_cstring.item, l_value.count, default_pointer))
+		once
+			Result := <<read_only, read_write, create_read_write>>
 		end
 
 ;note

@@ -12,32 +12,7 @@ class
 
 feature -- Status report
 
-	is_valid_arguments (a_args: TUPLE): BOOLEAN
-			-- Determines if an argument tuple is valid.
-			--
-			-- `a_args': A tuple of arguments to validate.
-			-- `Result': True if the supplied tuple contains valid value for arguments; False otherwise.
-		require
-			a_args_attached: attached a_args
-			not_a_args_is_empty: not a_args.is_empty
-		local
-			i_count, i: INTEGER
-		do
-			Result := a_args.count <= SQLITE_LIMIT_VARIABLE_NUMBER
-			from
-				i := 1
-				i_count := a_args.count
-			until
-				i > i_count or not Result
-			loop
-				Result := is_valid_value_type (a_args[i])
-				i := i + 1
-			end
-		ensure
-			a_args_small_enough: Result implies a_args.count <= SQLITE_LIMIT_VARIABLE_NUMBER
-		end
-
-	is_valid_value_type (a_value: detachable ANY): BOOLEAN
+	is_valid_argument (a_value: detachable ANY): BOOLEAN
 			-- Indicates if the value is of an accepted type.
 			--
 			-- `a_value': A value to check.
@@ -70,6 +45,31 @@ feature -- Status report
 					Result := False
 				end
 			end
+		end
+
+	is_valid_arguments (a_args: TUPLE): BOOLEAN
+			-- Determines if an argument tuple is valid.
+			--
+			-- `a_args': A tuple of arguments to validate.
+			-- `Result': True if the supplied tuple contains valid value for arguments; False otherwise.
+		require
+			a_args_attached: attached a_args
+			not_a_args_is_empty: not a_args.is_empty
+		local
+			i_count, i: INTEGER
+		do
+			Result := a_args.count <= SQLITE_LIMIT_VARIABLE_NUMBER
+			from
+				i := 1
+				i_count := a_args.count
+			until
+				i > i_count or not Result
+			loop
+				Result := is_valid_argument (a_args[i])
+				i := i + 1
+			end
+		ensure
+			a_args_small_enough: Result implies a_args.count <= SQLITE_LIMIT_VARIABLE_NUMBER
 		end
 
 	is_valid_variable_name (a_var: READABLE_STRING_8): BOOLEAN

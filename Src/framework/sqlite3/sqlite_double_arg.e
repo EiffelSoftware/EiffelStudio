@@ -21,33 +21,13 @@ feature {SQLITE_STATEMENT} -- Basic operations
 	bind_to_statement (a_statement: SQLITE_STATEMENT; a_index: INTEGER)
 			-- <Precursor>
 		do
-			sqlite_raise_on_failure (c_sqlite3_bind_double (sqlite_api.api_pointer (sqlite3_bind_double_api), a_statement.internal_stmt, a_index, value))
+			sqlite_raise_on_failure ({SQLITE_EXTERNALS}.c_sqlite3_bind_double (a_statement.internal_stmt, a_index, value))
 		end
 
 feature {NONE} -- Implemention: Internal cache
 
 	internal_value: REAL_64
 			-- Cached version of `value'.
-
-feature {NONE} -- Externals
-
-	c_sqlite3_bind_double (a_fptr: POINTER; a_stmt: POINTER; a_index: INTEGER; a_value: REAL_64): INTEGER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_stmt_is_null: a_stmt /= default_pointer
-			a_index_positive: a_index > 0
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3_stmt *, int, double)) $a_fptr) (
-					(sqlite3_stmt *)$a_stmt, (int)$a_index, (double)$a_value);
-			]"
-		end
-
-feature {NONE} -- Constants
-
-	sqlite3_bind_double_api: STRING = "sqlite3_bind_double"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

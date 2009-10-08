@@ -8,10 +8,10 @@ echo "This script will install Xebra."
 
 #Constants
 
-apache_dir="httpd-2.2.13"
+apache_dir="httpd-2.2.14"
 apache_file="$apache_dir.tar.gz"
 apache_url="http://www.apache.org/dist/httpd/$apache_file" 
-revision=81048
+revision=81057
 
 echo "Apache $apache_url will be installed..."
 echo "Xebra revision $revision will be installed..."

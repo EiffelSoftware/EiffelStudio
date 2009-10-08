@@ -10,6 +10,8 @@ deferred class
 	COMMON_TEST
 
 inherit
+	ANY
+
 	EV_UTILITIES
 		export
 			{NONE} all

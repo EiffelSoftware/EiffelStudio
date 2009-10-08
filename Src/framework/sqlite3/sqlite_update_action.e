@@ -1,6 +1,7 @@
 note
 	description: "[
-		SQLite C macros used to determine the action when calling back through the update action.
+		SQLite update action used when calling back through the update action.
+		See {SQLITE_DATABASE}.update_action for more information.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

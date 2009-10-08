@@ -36,20 +36,44 @@ inherit
 			{NONE} all
 		end
 
-	SQLITE_MEMORY_EXTERNALS
-		export
-			{NONE} all
-		end
-
 create
 	make,
-	make_open_read,
-	make_open_read_write,
-	make_create_read_write
+	make_open,
+	make_with_source,
+	make_open_with_source
 
 feature {NONE} -- Initialization
 
-	make (a_source: SQLITE_SOURCE)
+	frozen make (a_file_name: READABLE_STRING_GENERAL)
+			-- Creates a database from a local file, but does not open the database.
+			--
+			-- `a_file_name': The file where the database is located.
+		require
+			is_sqlite_available: is_sqlite_available
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+			a_file_name_is_string_8: a_file_name.is_string_8
+		do
+			make_with_source (create {SQLITE_FILE_SOURCE}.make (a_file_name))
+		end
+
+	frozen make_open (a_file_name: READABLE_STRING_GENERAL; a_mode: SQLITE_OPEN_MODE)
+			-- Creates a database from a local file.
+			--
+			-- `a_file_name': The file where the database is located.
+			-- `a_mode': Mode to open the database connection with.
+		require
+			is_sqlite_available: is_sqlite_available
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+			a_file_name_is_string_8: a_file_name.is_string_8
+			a_file_name_exists: a_mode /~ {SQLITE_OPEN_MODE}.create_read_write implies
+				(create {RAW_FILE}.make (a_file_name.as_string_8)).exists
+		do
+			make_open_with_source (create {SQLITE_FILE_SOURCE}.make (a_file_name), a_mode)
+		end
+
+	make_with_source (a_source: SQLITE_SOURCE)
 			-- Initializes the database from a database source, which could be a file or in memory.
 			-- Note: The connection is not opened when using this approach, use one of the `open_*'
 			--       routines after initialization, or one of the `make_open_*' convenience routines.
@@ -67,49 +91,21 @@ feature {NONE} -- Initialization
 			source_set: source = a_source
 		end
 
-	frozen make_open_read (a_file_name: READABLE_STRING_GENERAL)
-			-- Creates a database from a local file in a read-only mode.
+	frozen make_open_with_source (a_source: SQLITE_SOURCE; a_mode: SQLITE_OPEN_MODE)
+			-- Initializes the database from a database source, which could be a file or in memory.
+			-- Note: The connection is not opened when using this approach, use one of the `open_*'
+			--       routines after initialization, or one of the `make_open_*' convenience routines.
 			--
-			-- `a_file_name': The file where the database is located.
+			-- `a_source': The source where the database is or should be located.
+			-- `a_mode': Mode to open the database connection with.
 		require
 			is_sqlite_available: is_sqlite_available
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
-			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
+			a_source_attached: attached a_source
 		do
-			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
-			open_read
-		end
-
-	frozen make_open_read_write (a_file_name: READABLE_STRING_GENERAL)
-			-- Creates a database from a local file in a read-write mode.
-			--
-			-- `a_file_name': The file where the database is located.
-		require
-			is_sqlite_available: is_sqlite_available
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
-			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
-		do
-			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
-			open_read_write
-		end
-
-	frozen make_create_read_write (a_file_name: READABLE_STRING_GENERAL)
-			-- Creates a database from a local file in a read-write mode. In the event the database doesn't
-			-- exist then a new database will be created.
-			--
-			-- `a_file_name': The file where the database is located.
-		require
-			is_sqlite_available: is_sqlite_available
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
-		do
-			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
-			open_create_read_write
+			make_with_source (a_source)
+			open (a_mode)
+		ensure
+			source_set: source = a_source
 		end
 
 feature {NONE} -- Clean up
@@ -382,11 +378,11 @@ feature -- Status report: SQL
 			a_sql_attached: attached a_sql
 			not_a_sql_is_empty: not a_sql.is_empty
 		local
-			l_sql: C_STRING
+			l_cstring: C_STRING
 			l_result: INTEGER
 		do
-			create l_sql.make (a_sql)
-			l_result := sqlite3_complete (sqlite_api, l_sql.item)
+			create l_cstring.make (a_sql)
+			l_result := sqlite3_complete (sqlite_api, l_cstring.item)
 			if l_result /= {SQLITE_RESULT_CODE}.e_no_mem then
 				Result := l_result /= 0
 			else
@@ -450,60 +446,17 @@ feature -- Status report: Threading
 
 feature -- Basic operations
 
-	open
+	open (a_mode: SQLITE_OPEN_MODE)
 			-- Opens the database connection.
-		require
-			is_interface_usable: is_interface_usable
-			is_accessible: is_accessible
-			is_closed: is_closed
-			source_exists: source.exists
-		local
-			l_flags: INTEGER
-		do
-			l_flags := SQLITE_OPEN_READONLY
-			if {PLATFORM}.is_thread_capable and then sqlite_api.is_thread_safe then
-				l_flags := SQLITE_OPEN_FULLMUTEX
-			else
-				l_flags := SQLITE_OPEN_NOMUTEX
-			end
-			open_internal (l_flags)
-		end
-
-	open_read
-			-- Opens the database connection in a read-only mode.
+			--
+			-- `a_mode': A mode to open the connection using.
 		require
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 			is_closed: is_closed
 			source_exists: source.exists
 		do
-			open_internal (SQLITE_OPEN_READONLY)
-		end
-
-	open_read_write
-			-- Opens the database connection in a read/write mode.
-		require
-			is_interface_usable: is_interface_usable
-			is_accessible: is_accessible
-			is_closed: is_closed
-			source_exists: source.exists
-		do
-			open_internal (SQLITE_OPEN_READWRITE)
-		ensure
-			is_writable: not is_closed implies is_writable
-		end
-
-	open_create_read_write
-			-- Opens the database connection in a read/write mode and creates the database if if does
-			-- not already exist.
-		require
-			is_interface_usable: is_interface_usable
-			is_accessible: is_accessible
-			is_closed: is_closed
-		do
-			open_internal (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE)
-		ensure
-			is_writable: not is_closed implies is_writable
+			open_internal (a_mode)
 		end
 
 	close
@@ -728,7 +681,7 @@ feature {SQLITE_INTERNALS} -- Basic operations: Threading
 
 feature {NONE} -- Basic operations
 
-	open_internal (a_flags: INTEGER)
+	open_internal (a_mode: SQLITE_OPEN_MODE)
 			-- Opens the database connection with a set of flags.
 			-- Note: For internal use only!
 			--
@@ -736,6 +689,7 @@ feature {NONE} -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_closed: is_closed
+			a_mode_attached: attached a_mode
 		local
 			l_file_name: C_STRING
 			l_flags: INTEGER
@@ -743,25 +697,11 @@ feature {NONE} -- Basic operations
 			l_result: INTEGER
 			l_other_result: INTEGER
 		do
-			check
-				legal_mode_flags:
-					(a_flags & SQLITE_OPEN_READONLY) = SQLITE_OPEN_READONLY or
-					(a_flags & SQLITE_OPEN_READWRITE) = SQLITE_OPEN_READWRITE or
-					(a_flags & (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE)) = (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE)
-			end
-
-				-- Check and set thread related flags.
-			l_flags := a_flags
-			if
-				(a_flags & SQLITE_OPEN_NOMUTEX) = 0 and then
-				(a_flags & SQLITE_OPEN_FULLMUTEX) = 0
-			then
-					-- No thread-safety flags specified, use defaults
-				if {PLATFORM}.is_thread_capable and then sqlite_api.is_thread_safe then
-					l_flags := l_flags | SQLITE_OPEN_FULLMUTEX
-				else
-					l_flags := l_flags | SQLITE_OPEN_NOMUTEX
-				end
+				-- Set thread safety flags
+			if {PLATFORM}.is_thread_capable and then sqlite_api.is_thread_safe then
+				l_flags := a_mode.item | SQLITE_OPEN_FULLMUTEX
+			else
+				l_flags := a_mode.item | SQLITE_OPEN_NOMUTEX
 			end
 			internal_flags := l_flags
 
@@ -805,8 +745,8 @@ feature {NONE} -- Basic operations
 			end
 		ensure
 			internal_flags_set:
-				internal_flags = (a_flags | SQLITE_OPEN_FULLMUTEX) or
-				internal_flags = (a_flags | SQLITE_OPEN_NOMUTEX)
+				internal_flags = (a_mode.item | SQLITE_OPEN_FULLMUTEX) or
+				internal_flags = (a_mode.item | SQLITE_OPEN_NOMUTEX)
 		end
 
 feature {NONE} -- Basic operations: Callbacks
@@ -952,16 +892,16 @@ feature {NONE} -- Basic operations: Callbacks
 		do
 			if a_enable then
 					-- Create the callback data
-				l_data := new_cb_data ($on_busy, $Current)
+				internal_progress_handler_data := new_cb_data ($on_busy, $Current)
 
 					-- Request callbacls from SQLite
-				l_data := sqlite3_progress_handler (sqlite_api, internal_db, l_data)
-				check no_old_callback: l_data = default_pointer end
+				sqlite3_progress_handler (sqlite_api, internal_db, 1, l_data)
 			else
 					-- Prevent callbacks from SQLite
-				l_data := sqlite3_progress_handler (sqlite_api, internal_db, default_pointer)
-				if l_data /= default_pointer then
-					free_cb_data (l_data)
+				sqlite3_progress_handler (sqlite_api, internal_db, 0, default_pointer)
+				if internal_progress_handler_data /= default_pointer then
+					free_cb_data (internal_progress_handler_data)
+					internal_progress_handler_data := default_pointer
 				end
 			end
 		end
@@ -1040,6 +980,9 @@ feature {NONE} -- Implementation
 	internal_thread_id: INTEGER
 			-- The thread the database was connected using.
 			--|In mono-threaded systems this will always be 0.
+
+	internal_progress_handler_data: POINTER
+			-- Data used to call back a progress handler.
 
 feature {NONE} -- Externals
 

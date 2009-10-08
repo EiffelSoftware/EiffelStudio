@@ -491,6 +491,16 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			is_executing := False
 			l_result := sqlite3_reset (l_api, l_stmt)
 			check success: sqlite_success (l_result) end
+			if attached a_bindings then
+					-- `sqlite3_reset' does not reset the bindings! We have to do it as a second stage.
+					-- In a future release, when we might allow bindings to be set arbitrarily we might
+					-- not want to reset them. There is a performance gain for clients, because there is
+					-- not object marshalling required for arguments that do not change. Currently we have
+					-- to pass all arguments again when executing, and they are rebound (involving copy
+					-- operations etc.)
+				l_result := sqlite3_clear_bindings (l_api, l_stmt)
+				check success: sqlite_success (l_result) end
+			end
 		ensure
 			not_is_executing: not is_executing
 			mark_increased: mark > old mark

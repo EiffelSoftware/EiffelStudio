@@ -22,7 +22,7 @@ feature -- Status report
 			-- `a_value': A value to check.
 			-- `Result': True if no marshalling needs to be perform; False otherwise.
 		require
-			a_value_is_valid_value_type: is_valid_value_type (a_value)
+			a_value_is_valid_value_type: is_valid_argument (a_value)
 		do
 			Result := attached {SQLITE_BIND_ARG [ANY]} a_value
 		ensure
@@ -77,7 +77,7 @@ feature -- Query
 			-- `a_value': A value to create a binding argument for.
 			-- `Result': A bound argument, or `a_value' if the argument is already a binding argument.
 		require
-			a_value_is_valid_value_type: is_valid_value_type (a_value)
+			a_value_is_valid_argument: is_valid_argument (a_value)
 			a_var_attached: attached a_var
 			not_a_var_is_empty: not a_var.is_empty
 			a_var_is_valid_variable_name: is_valid_variable_name (a_var)

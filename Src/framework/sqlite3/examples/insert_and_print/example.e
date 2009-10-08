@@ -25,15 +25,12 @@ feature {NONE} -- Initialization
 			l_modify: SQLITE_MODIFY_STATEMENT
 			l_insert: SQLITE_INSERT_STATEMENT
 			l_query: SQLITE_QUERY_STATEMENT
-
-				-- To get around V/S bug
-			l_args: ARRAY [SQLITE_BIND_ARG [ANY]]
 			i: INTEGER
 		do
 			print ("%NOpening Database...%N")
 
 				-- Open/create a Database.
-			create l_db.make_create_read_write ("data.sqlite")
+			create l_db.make_open ("data.sqlite", {SQLITE_OPEN_MODE}.create_read_write)
 
 			print ("Creating Example Table...%N")
 
@@ -48,22 +45,19 @@ feature {NONE} -- Initialization
 			print ("Generating Example Data...%N")
 
 				-- Create a insert statement with variables
-			create l_insert.make ("INSERT INTO Example (Text, Value) VALUES (:TXT_VAR, :VAL_VAR);", l_db)
+			create l_insert.make ("INSERT INTO Example (Text, Value) VALUES (?1, :VAL_VAR);", l_db)
 			check l_insert_is_compiled: l_insert.is_compiled end
-
-				-- V/S bug handling for arguments array
-			create l_args.make_filled (create {SQLITE_NULL_ARG}.make ("VOID"), 1, 2)
-			l_args[1] := create {SQLITE_STRING_ARG}.make (":TXT_VAR", "Eiffel SQLite Rocks!")
 
 				-- Commit handling
 			l_db.begin_transaction (False)
 
 				-- Execute the statement multiple (10) times
 			from until i = 10 loop
-					-- Set the value argument base on the index `i'
-				l_args[2] := create {SQLITE_DOUBLE_ARG}.make (":VAL_VAR", (i * 3.14))
 					-- Execute the INSERT statement with the argument list.
-				l_insert.execute_with_arguments (l_args)
+				l_insert.execute_with_arguments ([
+						"Eiffel SQLite Rocks!", -- Using Eiffel object (unnamed variable @ index 1 will replace ?1)
+						create {SQLITE_DOUBLE_ARG}.make (":VAL_VAR", (i * 3.14)) -- Using a named argument (will replace :VAL_VAR)
+					])
 				i := i + 1
 			end
 
@@ -74,7 +68,7 @@ feature {NONE} -- Initialization
 
 				-- Query the contents of the Example table
 			create l_query.make ("SELECT * FROM Example LIMIT 10;", l_db)
-			l_query.execute_with_callback (agent (ia_row: SQLITE_RESULT_ROW): BOOLEAN
+			l_query.execute (agent (ia_row: SQLITE_RESULT_ROW): BOOLEAN
 				local
 					j, j_count: NATURAL
 				do

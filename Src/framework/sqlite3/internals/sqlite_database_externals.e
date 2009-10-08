@@ -18,7 +18,7 @@ feature -- Query: Error handling
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_errcode (a_api.api_pointer (sqlite3_errcode_api), a_db)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_errcode (a_db)
 		end
 
 	sqlite3_errmsg (a_api: SQLITE_API; a_db: POINTER): POINTER
@@ -27,7 +27,7 @@ feature -- Query: Error handling
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_errmsg (a_api.api_pointer (sqlite3_errmsg_api), a_db)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_errmsg (a_db)
 		end
 
 	sqlite3_extended_errcode (a_api: SQLITE_API; a_db: POINTER): INTEGER
@@ -36,7 +36,7 @@ feature -- Query: Error handling
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_extended_errcode (a_api.api_pointer (sqlite3_extended_errcode_api), a_db)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_extended_errcode (a_db)
 		end
 
 	sqlite3_last_insert_rowid (a_api: SQLITE_API; a_db: POINTER): INTEGER_64
@@ -45,7 +45,7 @@ feature -- Query: Error handling
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_last_insert_rowid (a_api.api_pointer (sqlite3_last_insert_rowid_api), a_db)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_last_insert_rowid (a_db)
 		end
 
 feature -- Basic operations
@@ -56,7 +56,7 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			c_sqlite3_interrupt (a_api.api_pointer (sqlite3_interrupt_api), a_db)
+			{SQLITE_EXTERNALS}.c_sqlite3_interrupt (a_db)
 		end
 
 	sqlite3_changes (a_api: SQLITE_API; a_db: POINTER): INTEGER
@@ -65,7 +65,7 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_changes (a_api.api_pointer (sqlite3_changes_api), a_db)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_changes (a_db)
 		end
 
 	sqlite3_close (a_api: SQLITE_API; a_db: POINTER): INTEGER
@@ -74,7 +74,7 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_close (a_api.api_pointer (sqlite3_close_api), a_db)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_close (a_db)
 		end
 
 	sqlite3_extended_result_codes (a_api: SQLITE_API; a_db: POINTER; a_onoff: INTEGER): INTEGER
@@ -83,7 +83,7 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_extended_result_codes (a_api.api_pointer (sqlite3_extended_result_codes_api), a_db, a_onoff)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_extended_result_codes (a_db, a_onoff)
 		end
 
 	sqlite3_open_v2 (a_api: SQLITE_API; a_file_name: POINTER; a_db: TYPED_POINTER [POINTER]; a_flags: INTEGER; a_vfs: POINTER): INTEGER
@@ -93,7 +93,7 @@ feature -- Basic operations
 			not_a_file_name_is_null: a_file_name /= default_pointer
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_open_v2 (a_api.api_pointer (sqlite3_open_v2_api), a_file_name, a_db, a_flags, a_vfs)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_open_v2 (a_file_name, a_db, a_flags, a_vfs)
 		end
 
 	sqlite3_next_stmt (a_api: SQLITE_API; a_db: POINTER; a_stmt: POINTER): POINTER
@@ -102,7 +102,7 @@ feature -- Basic operations
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_next_stmt (a_api.api_pointer (sqlite3_next_stmt_api), a_db, a_stmt)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_next_stmt (a_db, a_stmt)
 		end
 
 feature -- Basic operations: Threading
@@ -113,7 +113,7 @@ feature -- Basic operations: Threading
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_db_mutex (a_api.api_pointer (sqlite3_db_mutex_api), a_db)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_db_mutex (a_db)
 		end
 
 	sqlite3_mutex_enter (a_api: SQLITE_API; a_mutex: POINTER)
@@ -122,7 +122,7 @@ feature -- Basic operations: Threading
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_mutex_is_null: a_mutex /= default_pointer
 		do
-			c_sqlite3_mutex_enter (a_api.api_pointer (sqlite3_mutex_enter_api), a_mutex)
+			{SQLITE_EXTERNALS}.c_sqlite3_mutex_enter (a_mutex)
 		end
 
 	sqlite3_mutex_leave (a_api: SQLITE_API; a_mutex: POINTER)
@@ -131,18 +131,18 @@ feature -- Basic operations: Threading
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_mutex_is_null: a_mutex /= default_pointer
 		do
-			c_sqlite3_mutex_leave (a_api.api_pointer (sqlite3_mutex_leave_api), a_mutex)
+			{SQLITE_EXTERNALS}.c_sqlite3_mutex_leave (a_mutex)
 		end
 
 feature -- Callbacks
 
-	sqlite3_progress_handler (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
+	sqlite3_progress_handler (a_api: SQLITE_API; a_db: POINTER; a_flags: INTEGER; a_cb_data: POINTER)
 		require
 			a_api_attached: attached a_api
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_progress_handler (a_api.api_pointer (sqlite3_progress_handler_api), a_db, c_sqlite3_busy_callback, a_cb_data)
+			{SQLITE_EXTERNALS}.c_sqlite3_progress_handler (a_db, a_flags, c_sqlite3_busy_callback, a_cb_data)
 		end
 
 	sqlite3_busy_handler (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
@@ -151,7 +151,7 @@ feature -- Callbacks
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_busy_handler (a_api.api_pointer (sqlite3_busy_handler_api), a_db, c_sqlite3_busy_callback, a_cb_data)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_busy_handler (a_db, c_sqlite3_busy_callback, a_cb_data)
 		end
 
 	sqlite3_commit_hook (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
@@ -160,7 +160,7 @@ feature -- Callbacks
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_commit_hook (a_api.api_pointer (sqlite3_commit_hook_api), a_db, c_sqlite3_commit_callback, a_cb_data)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_commit_hook (a_db, c_sqlite3_commit_callback, a_cb_data)
 		end
 
 	sqlite3_rollback_hook (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
@@ -169,7 +169,7 @@ feature -- Callbacks
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_rollback_hook (a_api.api_pointer (sqlite3_rollback_hook_api), a_db, c_sqlite3_rollback_callback, a_cb_data)
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_rollback_hook (a_db, c_sqlite3_rollback_callback, a_cb_data)
 		end
 
 	sqlite3_update_hook (a_api: SQLITE_API; a_db: POINTER; a_cb_data: POINTER): POINTER
@@ -178,247 +178,7 @@ feature -- Callbacks
 			a_api_is_interface_usable: a_api.is_interface_usable
 			not_a_db_is_null: a_db /= default_pointer
 		do
-			Result := c_sqlite3_update_hook (a_api.api_pointer (sqlite3_update_hook_api), a_db, c_sqlite3_update_callback, a_cb_data)
-		end
-
---	sqlite3_unlock_notify (a_api: SQLITE_API; a_db: POINTER; a_callback: POINTER; a_arg: POINTER): INTEGER
---			-- Experimental interface!
---		require
---			a_api_attached: attached a_api
---			a_api_is_interface_usable: a_api.is_interface_usable
---			not_a_db_is_null: a_db /= default_pointer
---			not_a_callback_is_null a_callback /= default_pointer
---		do
---			Result := c_sqlite3_unlock_notify (a_api.api_pointer (sqlite3_unlock_notify_api), a_db, a_callback, a_arg)
---		end
-
-feature {NONE} -- Constants
-
-	sqlite3_busy_handler_api: STRING          = "sqlite3_busy_handler"
-	sqlite3_changes_api: STRING               = "sqlite3_changes"
-	sqlite3_close_api: STRING                 = "sqlite3_close"
-	sqlite3_commit_hook_api: STRING           = "sqlite3_commit_hook"
-	sqlite3_db_mutex_api: STRING              = "sqlite3_db_mutex"
-	sqlite3_errcode_api: STRING               = "sqlite3_errcode"
-	sqlite3_errmsg_api: STRING                = "sqlite3_errmsg"
-	sqlite3_extended_errcode_api: STRING      = "sqlite3_extended_errcode"
-	sqlite3_extended_result_codes_api: STRING = "sqlite3_extended_result_codes"
-	sqlite3_interrupt_api: STRING             = "sqlite3_interrupt"
-	sqlite3_last_insert_rowid_api: STRING     = "sqlite3_last_insert_rowid"
-	sqlite3_mutex_enter_api: STRING           = "sqlite3_mutex_enter"
-	sqlite3_mutex_leave_api: STRING           = "sqlite3_mutex_leave"
-	sqlite3_next_stmt_api: STRING             = "sqlite3_next_stmt"
-	sqlite3_open_v2_api:  STRING              = "sqlite3_open_v2"
-	sqlite3_progress_handler_api: STRING      = "sqlite3_progress_handler"
-	sqlite3_rollback_hook_api: STRING         = "sqlite3_rollback_hook"
-	sqlite3_update_hook_api:   STRING         = "sqlite3_update_hook"
-	sqlite3_unlock_notify_api: STRING         = "sqlite3_unlock_notify"
-
-feature {NONE} -- Externals
-
-	c_sqlite3_changes,
-	c_sqlite3_close (a_fptr: POINTER; a_db: POINTER): INTEGER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3 *)) $a_fptr) (
-					(sqlite3 *)$a_db);
-			]"
-		end
-
-	c_sqlite3_extended_result_codes (a_fptr: POINTER; a_db: POINTER; a_onoff: INTEGER): INTEGER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3 *, int)) $a_fptr) (
-					(sqlite3 *)$a_db, (int)$a_onoff);
-			]"
-		end
-
-	c_sqlite3_last_insert_rowid (a_fptr: POINTER; a_db: POINTER): INTEGER_64
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_INTEGER_64)(FUNCTION_CAST(int, (sqlite3 *)) $a_fptr) (
-					(sqlite3 *)$a_db);
-			]"
-		end
-
-	c_sqlite3_interrupt (a_fptr: POINTER; a_db: POINTER)
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				(FUNCTION_CAST(void, (sqlite3 *)) $a_fptr) (
-					(sqlite3 *)$a_db);
-			]"
-		end
-
-	c_sqlite3_next_stmt (a_fptr: POINTER; a_db: POINTER; a_stmt: POINTER): POINTER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_POINTER)(FUNCTION_CAST(sqlite3_stmt *, (sqlite3 *, sqlite3_stmt *)) $a_fptr) (
-					(sqlite3 *)$a_db, (sqlite3_stmt *)$a_stmt);
-			]"
-		end
-
-	c_sqlite3_open_v2 (a_fptr: POINTER; a_file_name: POINTER; a_db: TYPED_POINTER [POINTER]; a_flags: INTEGER; a_vfs: POINTER): INTEGER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_file_name_is_null: a_file_name /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_INTEGER)(FUNCTION_CAST(int, (const char *, sqlite3 **, int, const char *)) $a_fptr) (
-					(const char *)$a_file_name, (sqlite3 **)$a_db, (int)$a_flags, (const char *)$a_vfs);
-			]"
-		end
-
-feature {NONE} -- Externals: Error handling
-
-	c_sqlite3_errcode,
-	c_sqlite3_extended_errcode (a_fptr: POINTER; a_db: POINTER): INTEGER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_INTEGER)(FUNCTION_CAST(int, (sqlite3 *)) $a_fptr) (
-					(sqlite3 *)$a_db);
-			]"
-		end
-
-	c_sqlite3_errmsg (a_fptr: POINTER; a_db: POINTER): POINTER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_POINTER)(FUNCTION_CAST(const char *, (sqlite3 *)) $a_fptr) (
-					(sqlite3 *)$a_db);
-			]"
-		end
-
-feature {NONE} -- Externals: Threading
-
-	c_sqlite3_db_mutex (a_fptr: POINTER; a_db: POINTER): POINTER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_POINTER)(FUNCTION_CAST(sqlite3_mutex *, (sqlite3 *)) $a_fptr) (
-					(sqlite3 *)$a_db);
-			]"
-		end
-
-	c_sqlite3_mutex_enter,
-	c_sqlite3_mutex_leave (a_fptr: POINTER; a_mutex: POINTER)
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_mutex_is_null: a_mutex /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				(FUNCTION_CAST(void, (sqlite3_mutex *)) $a_fptr) (
-					(sqlite3_mutex *)$a_mutex);
-			]"
-		end
-
-feature {NONE} -- Callbacks
-
-	c_sqlite3_progress_handler (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_POINTER)(FUNCTION_CAST(void *, (sqlite3 *, int (*)(void *), void *)) $a_fptr) (
-					(sqlite3 *)$a_db, (int (*)(void *))$a_callback, (void *)$a_data);
-			]"
-		end
-
-	c_sqlite3_busy_handler (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_POINTER)(FUNCTION_CAST(void *, (sqlite3 *, int (*)(void *, int), void *)) $a_fptr) (
-					(sqlite3 *)$a_db, (int (*)(void *, int))$a_callback, (void *)$a_data);
-			]"
-		end
-
-	c_sqlite3_commit_hook (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_POINTER)(FUNCTION_CAST(void *, (sqlite3 *, int (*)(void *), void *)) $a_fptr) (
-					(sqlite3 *)$a_db, (int (*)(void *))$a_callback, (void *)$a_data);
-			]"
-		end
-
-	c_sqlite3_rollback_hook (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use <sqlite3.h>"
-		alias
-			"[
-				return (EIF_POINTER)(FUNCTION_CAST(void *, (sqlite3 *, void (*)(void *), void *)) $a_fptr) (
-					(sqlite3 *)$a_db, (void (*)(void *))$a_callback, (void *)$a_data);
-			]"
-		end
-
-	c_sqlite3_update_hook (a_fptr: POINTER; a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
-		require
-			not_a_fptr_is_null: a_fptr /= default_pointer
-			not_a_db_is_null: a_db /= default_pointer
-		external
-			"C inline use %"sqlite3.h%""
-		alias
-			"[
-				return (EIF_POINTER)(FUNCTION_CAST(void *, (sqlite3 *, void (*)(void *, int, char const *, char const *, sqlite3_int64), void *)) $a_fptr) (
-					(sqlite3 *)$a_db, (void (*)(void *, int, char const *, char const *, sqlite3_int64))$a_callback, (void *)$a_data);
-			]"
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_update_hook (a_db, c_sqlite3_update_callback, a_cb_data)
 		end
 
 feature {NONE} -- Externals: Eiffel callbacks

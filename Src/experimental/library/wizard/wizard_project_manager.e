@@ -11,11 +11,10 @@ deferred class
 
 inherit
 	EV_APPLICATION
-		undefine
-			help_engine
-		end
 
 	WIZARD_SHARED
+		rename
+			help_engine as wizard_help_engine
 		undefine
 			default_create, copy
 		end
@@ -29,6 +28,7 @@ feature {NONE} -- Initialization
 				io.put_string("wizard -arg1 [resource_path] [-arg2 [locale_id]]%N")
 			else
 				default_create
+				set_help_engine (wizard_help_engine)
 				set_application (Current)
 				prepare
 				launch

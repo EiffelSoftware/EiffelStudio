@@ -11,11 +11,7 @@ class
 	GB_OBJECT_EDITOR
 
 inherit
-
 	EV_VERTICAL_BOX
-		export
-			{NONE} all
-			{ANY} destroy, parent, is_destroyed, is_initialized
 		undefine
 			is_in_default_state
 		redefine
@@ -47,7 +43,7 @@ inherit
 			default_create, copy, is_equal
 		end
 		
-feature -- Initialization
+feature {EV_ANY} -- Initialization
 
 	initialize
 			-- Initialize `Current'.

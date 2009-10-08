@@ -10,6 +10,8 @@ class
 	WIDGET_TEST_SHARED
 
 inherit
+	ANY
+
 	INTERNAL
 		export
 			{NONE} all

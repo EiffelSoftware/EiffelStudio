@@ -31,16 +31,24 @@
 				<multithreaded value="true"/>
 			</condition>
 		</external_library>
-		<external_library location="$(EIFFEL_SRC)/framework/sqlite3/spec/$(ISE_PLATFORM)/lib/esqlite.lib">
+		<external_library location="$(EIFFEL_SRC)\framework\sqlite3\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\esqlite.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="false"/>
+				<dotnet value="false"/>
 			</condition>
 		</external_library>
-		<external_library location="$(EIFFEL_SRC)/framework/sqlite3/spec/$(ISE_PLATFORM)/lib/mtesqlite.lib">
+		<external_library location="$(EIFFEL_SRC)\framework\sqlite3\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtesqlite.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="true"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_library>
+		<external_library location="$(EIFFEL_SRC)\framework\sqlite3\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ilesqlite.lib">
+			<condition>
+				<platform value="windows"/>
+				<dotnet value="true"/>
 			</condition>
 		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>

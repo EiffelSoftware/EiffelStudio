@@ -199,6 +199,10 @@ feature -- Access: Error reporting
 
 feature -- Measurements
 
+	busy_timeout: NATURAL assign set_busy_timeout
+			-- Timeout, in milliseconds, before an SQLite statment gives up trying to access a busy database
+			-- connection. 0 represents no time out.
+
 	changes_count: NATURAL
 			-- Number of database rows affects during the last insertion/update/deletion.
 		require
@@ -210,6 +214,30 @@ feature -- Measurements
 		end
 
 feature -- Element change
+
+	set_busy_timeout (a_ms: NATURAL)
+			-- Sets a database busy operation timeout.
+			-- Note: When setting a timeout and `busy_handler' will be removed as these are mutally
+			--       exclusive in SQLite.
+			--
+			-- `a_ms': Timeout, in milliseconds, before a statement gives up trying to access a busy
+			--         database. Use 0 to reset the timeout.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_readable: is_readable
+			not_is_closed: not is_closed
+			busy_handler_already_set: not attached busy_handler
+			a_ms_small_enough: a_ms < {INTEGER_32}.max_value.as_natural_32
+		local
+			l_result: INTEGER
+		do
+			l_result := sqlite3_busy_timeout (sqlite_api, internal_db, a_ms.as_integer_32)
+			sqlite_raise_on_failure (l_result)
+			busy_timeout := a_ms
+		ensure
+			busy_timeout_set: busy_timeout = a_ms
+		end
 
 	set_commit_action (a_function: like commit_action)
 			-- Sets the commit callback action, called when a commit transaction is executed.
@@ -285,6 +313,7 @@ feature -- Element change
 
 	set_busy_handler (a_handler: like busy_handler)
 			-- Sets the database busy handler, called when a action is blocked from being processed.
+			-- Note: You may want to use `set_busy_timeout' instead as a timeout and a busy handler are mutally exclusive.
 			--
 			-- `a_handler': Handler function called to determine if a action should continue waiting.
 		require
@@ -298,6 +327,7 @@ feature -- Element change
 			enable_busy_callback (attached a_handler)
 		ensure
 			busy_handler_set: busy_handler = a_handler
+			busy_timeout_reset: attached a_handler implies busy_timeout = 0
 		end
 
 feature -- Status report
@@ -750,6 +780,10 @@ feature {NONE} -- Basic operations
 				end
 				if attached busy_handler then
 					enable_busy_callback (True)
+				else
+					if busy_timeout > 0 then
+						set_busy_timeout (busy_timeout)
+					end
 				end
 			else
 				if l_db /= default_pointer then
@@ -922,6 +956,8 @@ feature {NONE} -- Basic operations: Callbacks
 					internal_progress_handler_data := default_pointer
 				end
 			end
+		ensure
+			internal_progress_handler_data_is_null: not a_enable implies internal_progress_handler_data = default_pointer
 		end
 
 	on_progress: BOOLEAN
@@ -948,22 +984,30 @@ feature {NONE} -- Basic operations: Callbacks
 			not_is_closed: not is_closed
 			busy_handler_attached: a_enable implies attached busy_handler
 		local
-			l_data: POINTER
+			l_result: INTEGER
 		do
 			if a_enable then
 					-- Create the callback data
-				l_data := new_cb_data ($on_busy, $Current)
+				internal_busy_handler_data := new_cb_data ($on_busy, $Current)
 
 					-- Request callbacls from SQLite
-				l_data := sqlite3_busy_handler (sqlite_api, internal_db, l_data)
-				check no_old_callback: l_data = default_pointer end
+				l_result := sqlite3_busy_handler (sqlite_api, internal_db, internal_busy_handler_data)
+				sqlite_raise_on_failure (l_result)
+
+					-- Reset the timeout because the handler is mutally exclusive.
+				busy_timeout := 0
 			else
 					-- Prevent callbacks from SQLite
-				l_data := sqlite3_busy_handler (sqlite_api, internal_db, default_pointer)
-				if l_data /= default_pointer then
-					free_cb_data (l_data)
+				l_result := sqlite3_busy_handler (sqlite_api, internal_db, default_pointer)
+				if internal_busy_handler_data /= default_pointer then
+					free_cb_data (internal_busy_handler_data)
+					internal_busy_handler_data := default_pointer
 				end
+				sqlite_raise_on_failure (l_result)
 			end
+		ensure
+			internal_busy_handler_data_is_null: not a_enable implies internal_busy_handler_data = default_pointer
+			busy_timeout_reset: a_enable implies busy_timeout = 0
 		end
 
 	on_busy (a_count: NATURAL): BOOLEAN
@@ -1001,6 +1045,9 @@ feature {NONE} -- Implementation
 
 	internal_progress_handler_data: POINTER
 			-- Data used to call back a progress handler.
+
+	internal_busy_handler_data: POINTER
+			-- Data used to call back a busy handler.
 
 feature {NONE} -- Externals
 

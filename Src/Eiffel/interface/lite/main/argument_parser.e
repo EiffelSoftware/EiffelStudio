@@ -13,8 +13,7 @@ inherit
 		rename
 			make as make_parser
 		export
-			{NONE} all
-			{ANY} is_successful, execute, system_name
+			{ANY} system_name
 		redefine
 			switch_groups
 		end
@@ -248,7 +247,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Cleans project before compiling.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (interactive_switch, "When used the compiler will prompt for information when required.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Displays verbose compiler output.", True, False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make_hidden (alias_switch, "Sets a project alias for error reporting.", True, False, "Name", "Project alias name", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (alias_switch, "Sets a project alias for error reporting.", True, False, "Name", "Project alias name", False))
 		end
 
 	switch_groups: ARRAYED_LIST [attached ARGUMENT_GROUP]
@@ -315,7 +314,7 @@ feature {NONE} -- Option names
 	alias_switch: STRING = "alias"
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -339,11 +338,11 @@ feature {NONE} -- Option names
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {ARGUMENT_PARSER}

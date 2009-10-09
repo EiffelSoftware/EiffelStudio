@@ -278,6 +278,11 @@ feature -- Command
 			ole_ie.unembed_ie (ole_ie_window.item)
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	interface: EV_WEB_BROWSER
+			-- Vision2 widget interface
+
 feature {NONE} -- Implementation
 
 	ole_ie: EV_OLE_IE
@@ -285,9 +290,6 @@ feature {NONE} -- Implementation
 
 	ole_ie_window: WEL_CONTROL_WINDOW
 		-- WEL window for containing OLE IE
-
-	interface: EV_WEB_BROWSER
-			-- Vision2 widget interface
 
 	on_size (size_type, a_width, a_height: INTEGER_32)
 			-- Handle OLE IE resize actions

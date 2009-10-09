@@ -56,7 +56,7 @@ feature -- Access
 		do
 			Result := cwel_net_resource_get_scope (item)
 		ensure
-			valid_Result:
+			valid_result:
 				Result = Resource_connected or
 				Result = Resource_globalnet or
 				Result = Resource_remembered
@@ -68,7 +68,7 @@ feature -- Access
 		do
 			Result := cwel_net_resource_get_type (item)
 		ensure
-			valid_Result:
+			valid_result:
 				Result = Resource_type_any or
 				Result = Resource_type_disk or
 				Result = Resource_type_print
@@ -80,7 +80,7 @@ feature -- Access
 		do
 			Result := cwel_net_resource_get_display_type (item)
 		ensure
-			valid_Result:
+			valid_result:
 				Result = Resource_display_type_domain or
 				Result = Resource_display_type_server or
 				Result = Resource_display_type_share or
@@ -94,7 +94,7 @@ feature -- Access
 		do
 			Result := cwel_net_resource_get_display_type (item)
 		ensure
-			valid_Result:
+			valid_result:
 				Result = Resource_usage_connectable or
 				Result = Resource_usage_container
 		end
@@ -247,10 +247,11 @@ feature -- Element change
 			end
 			cwel_net_resource_set_local_name (item, string_pointer)
 		ensure
-			value_set: equal (local_name, a_value)
+			value_set_void: a_value = Void implies local_name.is_empty
+			value_set_attached: a_value /= Void implies equal (local_name, a_value)
 		end
 
-	set_remote_name (a_value: detachable STRING_GENERAL)
+	set_remote_name (a_value: STRING_GENERAL)
 			-- Set `remote_name' to `a_value'
 			--
 			-- The string can be MAX_PATH characters in length, and it must
@@ -289,7 +290,8 @@ feature -- Element change
 			end
 			cwel_net_resource_set_comment (item, string_pointer)
 		ensure
-			value_set: equal (comment, a_value)
+			value_set_void: a_value = Void implies comment.is_empty
+			value_set_attached: a_value /= Void implies equal (comment, a_value)
 		end
 
 	set_provider (a_value: detachable STRING_GENERAL)
@@ -307,7 +309,8 @@ feature -- Element change
 			end
 			cwel_net_resource_set_provider (item, string_pointer)
 		ensure
-			value_set: equal (provider, a_value)
+			value_set_void: a_value = Void implies provider.is_empty
+			value_set_attached: a_value /= Void implies equal (provider, a_value)
 		end
 
 feature -- Measurement
@@ -422,14 +425,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -188,14 +188,14 @@ feature {NONE} -- Implementation
 			-- On button clicked.
 		require
 			a_button_not_void: a_button /= Void
-			a_button_text_not_void: a_button.text /= Void
 		local
 			l_dialog: EV_INFORMATION_DIALOG
-			l_text: detachable STRING
 		do
-			l_text := a_button.text
-			check l_text /= Void end -- Implied by precondition `a_button_text_not_void'
-			create l_dialog.make_with_text (l_text.as_string_32 + " was clicked.")
+			if attached a_button.text as l_text then
+				create l_dialog.make_with_text (l_text + " was clicked.")
+			else
+				create l_dialog.make_with_text ("An unnamed button was clicked.")
+			end
 			l_dialog.show_modal_to_window (window)
 		end
 

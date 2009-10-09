@@ -11,6 +11,8 @@ class
 	ES_TWITTER_FEED_REQUEST
 
 inherit
+	ANY
+
 	THREAD
 		export
 			{NONE} all

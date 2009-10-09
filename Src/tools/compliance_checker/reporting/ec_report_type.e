@@ -18,17 +18,15 @@ inherit
 		end
 
 	COMPARABLE
-		export
-			{NONE} all
 		undefine
 			default_create,
 			is_equal,
 			copy
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_type: like type; a_parent: like parent)
@@ -44,7 +42,7 @@ feature {NONE} -- Initialization
 			type_set: type = a_type
 			parent_set: parent = a_parent
 		end
-		
+
 feature -- Access
 
 	report: EC_REPORT
@@ -55,10 +53,10 @@ feature -- Access
 
 	parent: EC_REPORT
 			-- Parent report entity.
-			
+
 	type: EC_CHECKED_TYPE
 			-- Type associated with report entity
-			
+
 	members: DYNAMIC_LIST [EC_REPORT_MEMBER]
 			-- List of checked report type members.
 		do
@@ -66,7 +64,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 feature {EC_REPORT_BUILDER} -- Basic Operations
 
 	add_member_report (a_report: EC_REPORT_MEMBER)
@@ -80,7 +78,7 @@ feature {EC_REPORT_BUILDER} -- Basic Operations
 		ensure
 			members_has_report: members.has (a_report)
 		end
-		
+
 feature -- Comparison {COMPARABLE}
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -88,26 +86,26 @@ feature -- Comparison {COMPARABLE}
 		do
 			Result := {SYSTEM_STRING}.compare (type.type.full_name, other.type.type.full_name) < 0
 		end
-		
+
 	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := {SYSTEM_STRING}.compare (type.type.full_name, other.type.type.full_name) = 0
 		end
-		
+
 feature {NONE} -- Internal Cached Information
 
 	internal_checked_members: ARRAYED_LIST [EC_REPORT_MEMBER]
 			-- Internal mutable list of report type members
-		
+
 invariant
 	parent_not_void: parent /= Void
 	type_not_void: type /= Void
 	internal_checked_members_not_void: internal_checked_members /= Void
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -120,21 +118,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_REPORT_TYPE

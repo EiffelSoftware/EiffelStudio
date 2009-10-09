@@ -14,7 +14,7 @@ class
 
 inherit
 	ANY
-	
+
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
@@ -22,8 +22,8 @@ inherit
 			default_create,
 			is_equal,
 			copy
-		end	
-		
+		end
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -31,7 +31,7 @@ inherit
 			default_create,
 			is_equal,
 			copy
-		end	
+		end
 
 create
 	make
@@ -56,7 +56,7 @@ feature {NONE} -- Agent Handlers
 		local
 			l_move_by: INTEGER
 		do
-			l_move_by := (- a_delta) * 5			
+			l_move_by := (- a_delta) * 5
 			a_grid.set_virtual_position (a_grid.virtual_x_position, (a_grid.virtual_y_position + (a_grid.row_height * l_move_by)).min (a_grid.maximum_virtual_y_position).max (0))
 		end
 
@@ -67,7 +67,7 @@ feature {NONE} -- Agent Handlers
 			a_key_not_void: a_key /= Void
 		do
 			inspect a_key.code
-					
+
 			when key_left, key_numpad_subtract then
 				on_shift_selection_left (a_grid)
 			when key_right, key_numpad_add, key_numpad_multiply then
@@ -88,7 +88,7 @@ feature {NONE} -- Agent Handlers
 				--| Do nothing...	
 			end
 		end
-		
+
 	on_grid_key_pressed (a_grid: EV_GRID; a_key: EV_KEY)
 			-- Called when user presses a key when output gird has focus.
 		require
@@ -96,7 +96,7 @@ feature {NONE} -- Agent Handlers
 			a_key_not_void: a_key /= Void
 		do
 			inspect a_key.code
-			
+
 			when key_page_up then
 				on_page_up (a_grid)
 			when key_page_down then
@@ -105,7 +105,7 @@ feature {NONE} -- Agent Handlers
 				--| Do nothing...
 			end
 		end
-		
+
 	on_grid_row_selected (a_row: EV_GRID_ROW)
 			-- Called when a grid row has been selected
 		require
@@ -113,7 +113,7 @@ feature {NONE} -- Agent Handlers
 		do
 			last_selected_row := a_row
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_shift_selection_left (a_grid: EV_GRID)
@@ -121,9 +121,9 @@ feature {NONE} -- Implementation
 		require
 			a_grid_not_void: a_grid /= Void
 		local
-			l_rows: ARRAY [EV_GRID_ROW]
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
-		do			
+		do
 			l_rows := a_grid.selected_rows
 			if l_rows.count = 1 then
 				l_row := l_rows[1]
@@ -137,15 +137,15 @@ feature {NONE} -- Implementation
 				l_row.ensure_visible
 			end
 		end
-		
+
 	on_shift_selection_right (a_grid: EV_GRID)
 			-- Preform a right shift selection.
 		require
 			a_grid_not_void: a_grid /= Void
 		local
-			l_rows: ARRAY [EV_GRID_ROW]
-			l_row: EV_GRID_ROW			
-		do			
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+		do
 			l_rows := a_grid.selected_rows
 			if l_rows.count = 1 then
 				l_row := l_rows[1]
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			l_count: INTEGER
 		do
 			l_count	:= a_grid.row_count
-			
+
 			if l_count > 0 then
 				l_row := a_grid.row (1)
 				if a_grid.is_multiple_row_selection_enabled and ev_application.shift_pressed then
@@ -195,15 +195,15 @@ feature {NONE} -- Implementation
 		local
 			l_row: EV_GRID_ROW
 			l_last_row: like last_selected_row
-			l_count: INTEGER	
+			l_count: INTEGER
 		do
 			l_count	:= a_grid.row_count
-			
+
 			if l_count > 0 then
 				l_row := a_grid.row (a_grid.row_count)
 				if l_row.parent_row /= Void then
 					if not l_row.parent_row_root.is_expanded then
-						l_row := l_row.parent_row_root	
+						l_row := l_row.parent_row_root
 					end
 				end
 				if a_grid.is_multiple_row_selection_enabled and ev_application.shift_pressed then
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 					deselect_all (a_grid)
 					l_row.enable_select
 				end
-				l_row.ensure_visible	
+				l_row.ensure_visible
 			end
 		end
 
@@ -227,14 +227,14 @@ feature {NONE} -- Implementation
 		do
 			select_range (a_grid, 1, a_grid.row_count)
 		end
-		
+
 	on_page_up (a_grid: EV_GRID)
 			-- Perform a page up selection
 		require
 			a_grid_not_void: a_grid /= Void
 			last_selected_row_not_void: last_selected_row /= Void
 		local
-			l_rows: ARRAY [EV_GRID_ROW]
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
 			i: INTEGER
 		do
@@ -255,18 +255,18 @@ feature {NONE} -- Implementation
 			a_grid_not_void: a_grid /= Void
 			last_selected_row_not_void: last_selected_row /= Void
 		local
-			l_rows: ARRAY [EV_GRID_ROW]
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
 			l_expanded_count: INTEGER
 			i: INTEGER
 		do
 			l_rows := a_grid.selected_rows
 			if l_rows.count > 0 then
-				
+
 				l_row := a_grid.row (a_grid.row_count)
 				if l_row.parent_row /= Void then
 					if not l_row.parent_row_root.is_expanded then
-						l_row := l_row.parent_row_root	
+						l_row := l_row.parent_row_root
 					end
 				end
 				l_expanded_count := l_row.index
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 				l_row.ensure_visible
 			end
 		end
-			
+
 	select_range (a_grid: EV_GRID; a_start: INTEGER a_end: INTEGER)
 			-- Selected a range of items from `a_start' to `a_end' in `a_grid'
 		require
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			a_end_in_range: a_end <= a_grid.row_count
 			a_grid_has_multiple_selection: a_grid.is_multiple_row_selection_enabled
 		local
-			l_rows: ARRAY [EV_GRID_ROW]
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
 			l_count: INTEGER
 			i: INTEGER
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 						i > a_end
 					loop
 						l_row := a_grid.row (i)
-						l_row.enable_select	
+						l_row.enable_select
 						i := i + 1
 					end
 				else
@@ -317,13 +317,13 @@ feature {NONE} -- Implementation
 		ensure
 			range_selected: a_grid.selected_rows.count = (a_end - a_start) + 1
 		end
-		
+
 	deselect_all (a_grid: EV_GRID)
 			-- Deselects all items
 		require
 			a_grid_not_void: a_grid /= Void
 		local
-			l_rows: ARRAY [EV_GRID_ROW]
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
 			l_count: INTEGER
 			i: INTEGER
@@ -343,14 +343,14 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			selected_count_is_zero: a_grid.selected_rows.count = 0	
+			selected_count_is_zero: a_grid.selected_rows.count = 0
 		end
 
 	last_selected_row: EV_GRID_ROW;
 			-- Last selected row
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -363,21 +363,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EV_GRID_DEFAULT_UI_PROCESSOR

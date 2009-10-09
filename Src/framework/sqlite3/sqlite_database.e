@@ -213,6 +213,16 @@ feature -- Measurements
 			Result := sqlite3_changes (sqlite_api, internal_db).as_natural_32
 		end
 
+	total_changes_count: NATURAL
+			-- Number of database rows affects since the database was opened.
+		require
+			is_interface_usable: is_interface_usable
+			is_accessible: is_accessible
+			is_readable: is_readable
+		do
+			Result := sqlite3_total_changes (sqlite_api, internal_db).as_natural_32
+		end
+
 feature -- Element change
 
 	set_busy_timeout (a_ms: NATURAL)

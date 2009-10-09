@@ -10,6 +10,26 @@ note
 class
 	SQLITE_DATABASE_EXTERNALS
 
+feature -- Measure
+
+	sqlite3_changes (a_api: SQLITE_API; a_db: POINTER): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+			not_a_db_is_null: a_db /= default_pointer
+		do
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_changes (a_db)
+		end
+
+	sqlite3_total_changes (a_api: SQLITE_API; a_db: POINTER): INTEGER
+		require
+			a_api_attached: attached a_api
+			a_api_is_interface_usable: a_api.is_interface_usable
+			not_a_db_is_null: a_db /= default_pointer
+		do
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_total_changes (a_db)
+		end
+
 feature -- Query: Error handling
 
 	sqlite3_errcode (a_api: SQLITE_API; a_db: POINTER): INTEGER
@@ -67,15 +87,6 @@ feature -- Basic operations
 			not_a_db_is_null: a_db /= default_pointer
 		do
 			{SQLITE_EXTERNALS}.c_sqlite3_interrupt (a_db)
-		end
-
-	sqlite3_changes (a_api: SQLITE_API; a_db: POINTER): INTEGER
-		require
-			a_api_attached: attached a_api
-			a_api_is_interface_usable: a_api.is_interface_usable
-			not_a_db_is_null: a_db /= default_pointer
-		do
-			Result := {SQLITE_EXTERNALS}.c_sqlite3_changes (a_db)
 		end
 
 	sqlite3_close (a_api: SQLITE_API; a_db: POINTER): INTEGER

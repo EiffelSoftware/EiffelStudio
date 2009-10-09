@@ -167,8 +167,6 @@ feature -- Measurement
 			Result := sqlite3_bind_parameter_count (sqlite_api, internal_stmt).as_natural_32
 		end
 
-feature {SQLITE_STATEMENT} -- Measurement
-
 	changes_count: NATURAL
 			-- The number of changes executing this statement caused
 		do
@@ -361,6 +359,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			l_arg_variable: IMMUTABLE_STRING_8
 			l_arg_id: C_STRING
 			l_arg_index: INTEGER
+			l_total_count: NATURAL
 		do
 				-- Perform bindings
 			if attached a_bindings as l_bindings then
@@ -412,6 +411,8 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 				-- are not affected by other threads.
 			l_db.lock -- (+1) 1
 			l_locked := True
+
+			l_total_count := l_db.total_changes_count
 
 			from
 				create l_row.make (Current)
@@ -474,6 +475,9 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 
 				l_exception.raise
 			else
+					-- Set the change count
+				internal_changes_count := l_db.total_changes_count - l_total_count
+
 				if l_locked then
 					l_locked := False
 					l_db.unlock -- (-1) 0

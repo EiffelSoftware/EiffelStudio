@@ -56,7 +56,7 @@ feature -- Access
 			-- Statement used when generating the row.
 
 	index: NATURAL assign set_index
-			-- Row result index.
+			-- Row result index (not the row id!)
 
 feature {NONE} -- Access
 

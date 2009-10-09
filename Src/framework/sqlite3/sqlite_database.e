@@ -410,9 +410,8 @@ feature -- Status report: SQL
 		require
 			is_interface_usable: is_interface_usable
 			a_sql_attached: attached a_sql
-			not_a_sql_is_empty: not a_sql.is_empty
 		do
-			Result := sqlite_api.is_complete_statement (a_sql)
+			Result := not a_sql.is_empty and then sqlite_api.is_complete_statement (a_sql)
 		end
 
 feature -- Status report: Comparison

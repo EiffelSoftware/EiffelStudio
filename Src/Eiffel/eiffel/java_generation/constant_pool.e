@@ -72,7 +72,7 @@ feature -- Access
 		do
 			put_class_by_object (repository.item (a_type_id))
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_CLASS")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_CLASS")
 		end
 			
 	put_class_by_object (a_class: JVM_CLASS)
@@ -85,7 +85,7 @@ feature -- Access
 			put_class (a_class.qualified_name_wo_l)
 			class_type_id_to_cpe.put (last_cpe_index, a_class.type_id)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_CLASS")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_CLASS")
 		end
 			
 	put_class (class_: STRING)
@@ -101,7 +101,7 @@ feature -- Access
 			create cpe_class.make (last_cpe_index)
 			put_element (cpe_class)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_CLASS")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_CLASS")
 		end
 			
 	put_feature_by_type_id (a_type_id, a_feature_type_id: INTEGER)
@@ -190,7 +190,7 @@ feature -- Access
 			create cpe.make (class_index, name_and_type_index)
 			put_element (cpe)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_METHOD_REF")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_METHOD_REF")
 		end
 			
 	put_interface_method_ref_by_object (f: JVM_WRITTEN_FEATURE)
@@ -212,7 +212,7 @@ feature -- Access
 			create cpe.make (class_index, name_and_type_index)
 			put_element (cpe)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_INTERFACE_METHOD_REF")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_INTERFACE_METHOD_REF")
 		end
 			
 	put_method_ref (method_name, method_signature, written_class: STRING)
@@ -240,7 +240,7 @@ feature -- Access
 			create cpe.make (class_index, name_type_index)
 			put_element (cpe)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_METHOD_REF")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_METHOD_REF")
 		end
 			
 	put_field_ref (name, type, class_: STRING)
@@ -262,7 +262,7 @@ feature -- Access
 			create cpe.make (class_index, name_type_index)
 			put_element (cpe)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_FIELD_REF")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_FIELD_REF")
 		end
 			
 	put_field_ref_by_object (f: JVM_WRITTEN_FEATURE)
@@ -275,7 +275,7 @@ feature -- Access
 		do
 			put_field_ref (f.external_name, f.signature, f.class_.qualified_name_wo_l)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_FIELD_REF")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_FIELD_REF")
 		end
 						
 	put_name_and_type_from_object (f: JVM_WRITTEN_FEATURE)
@@ -287,7 +287,7 @@ feature -- Access
 		do
 			put_name_and_type (f.external_name, f.signature)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_NAME_AND_TYPE")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_NAME_AND_TYPE")
 		end
 			
 	put_name_and_type (name, type: STRING)
@@ -307,7 +307,7 @@ feature -- Access
 			create cpe.make (name_index, type_index)
 			put_element (cpe)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_NAME_AND_TYPE")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_NAME_AND_TYPE")
 		end
 			
 	emit (file: RAW_FILE)
@@ -353,7 +353,7 @@ feature -- Access
 							-- by the class file.
 			end
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_DOUBLE")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_DOUBLE")
 		end
 			
 	put_float_constant (f: REAL)
@@ -364,7 +364,7 @@ feature -- Access
 			create cpe.make (f)
 			put_element (cpe)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_FLOAT")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_FLOAT")
 		end
 			
 	put_int_32_constant (i: INTEGER)
@@ -375,7 +375,7 @@ feature -- Access
 			create cpe.make (i)
 			put_element (cpe)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_INTEGER")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_INTEGER")
 		end
 			
 	put_int_64_constant_from_int (i: INTEGER)
@@ -400,7 +400,7 @@ feature -- Access
 							-- by the class file.
 			end
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_LONG")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_LONG")
 		end
 			
 	put_utf8_constant (s: STRING)
@@ -414,7 +414,7 @@ feature -- Access
 			create cpe.make (s)
 			put_element (cpe)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_UTF8")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_UTF8")
 		end
 			
 	put_string_constant (s: STRING)
@@ -426,7 +426,7 @@ feature -- Access
 			create cpe.make (last_cpe_index)
 			put_element (cpe)
 		ensure
-			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_STRING")
+			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_STRING")
 		end
 			
 feature {ANY} 

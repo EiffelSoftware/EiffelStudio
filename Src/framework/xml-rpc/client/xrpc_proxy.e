@@ -12,6 +12,8 @@ class
 	XRPC_PROXY
 
 inherit
+	ANY
+
 	XRPC_SHARED_MARSHALLER
 		export
 			{NONE} all

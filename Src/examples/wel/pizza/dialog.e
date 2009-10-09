@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 
 	update_price
 		local
-			price: REAL
+			price: REAL_64
 			l_static_price: like static_price
 			l_radio_stuff: like radio_stuff
 		do
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			if l_radio_stuff.checked then
 				price := price + 1
 			end
-			text_info.append_real (price)
+			text_info.append_double (price)
 			if text_info.has ('.') then
 				text_info.extend ('0')
 			else

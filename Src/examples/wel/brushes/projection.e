@@ -8,7 +8,7 @@ feature -- Access
 
 	x, y: INTEGER
 
-	xr, yr, zr: REAL
+	xr, yr, zr: REAL_64
 
 feature -- Element change
 
@@ -28,7 +28,7 @@ feature -- Element change
 			y_set: y = a_y
 		end
 
-	set_xr (a_xr: REAL)
+	set_xr (a_xr: REAL_64)
 			-- Set `xr' with `a_xr'
 		do
 			xr := a_xr
@@ -36,7 +36,7 @@ feature -- Element change
 			xr_set: xr = a_xr
 		end
 
-	set_yr (a_yr: REAL)
+	set_yr (a_yr: REAL_64)
 			-- Set `yr' with `a_yr'
 		do
 			yr := a_yr
@@ -44,7 +44,7 @@ feature -- Element change
 			yr_set: yr = a_yr
 		end
 
-	set_zr (a_zr: REAL)
+	set_zr (a_zr: REAL_64)
 			-- Set `zr' with `a_zr'
 		do
 			zr := a_zr

@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			test_case_grid_manager.build_columns
 
 				-- Enable sorting
-			enable_sorting_on_columns (test_case_grid_manager.all_columns)
+			enable_sorting_on_columns (test_case_grid_manager.all_columns.to_array)
 			enable_copy_to_clipboard
 		ensure then
 			set: test_case_grid = a_grid
@@ -204,7 +204,7 @@ feature -- Command
 			l_bar := progress_bar
 			if l_bar /= Void and then not l_bar.is_destroyed then
 				if a_total /= 0 then
-					l_proportion := a_already_run / a_total
+					l_proportion := (a_already_run / a_total).truncated_to_real
 					l_bar.set_proportion (l_proportion)
 				else
 					l_bar.set_proportion (0)

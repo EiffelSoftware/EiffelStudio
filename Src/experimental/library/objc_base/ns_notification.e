@@ -36,7 +36,7 @@ feature -- Getting Notification Information
 			create Result.share_from_pointer ({NS_NOTIFICATION_API}.name (item))
 		end
 
-	object: NS_OBJECT
+	object: detachable NS_OBJECT
 			-- Returns the object associated with the notification.
 		local
 			l_window: POINTER

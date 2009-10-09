@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	interface: detachable SD_DRAWING_AREA
+	interface: detachable SD_DRAWING_AREA note option: stable attribute end
 			-- <Precursor>
 
 feature {NONE} -- Implementation

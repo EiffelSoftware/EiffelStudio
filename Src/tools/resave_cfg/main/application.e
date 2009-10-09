@@ -11,6 +11,8 @@ class
 	APPLICATION
 
 inherit
+	ANY
+
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all

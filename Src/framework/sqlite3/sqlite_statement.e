@@ -567,11 +567,11 @@ feature {NONE} -- Basic operations: Compilation
 			l_internal_db := l_db.internal_db
 				-- FIXME: SQLITE_BUSY may be returned and so we should retry preparation until a default/specified timeout.
 			l_result := sqlite3_prepare_v2 (sqlite_api, l_internal_db, l_string.item, l_string.count + 1, $l_stmt_handle, $l_tail)
-			if sqlite_success (l_result) then
-				check not_l_stmt_handle_is_null: l_stmt_handle /= default_pointer end
+			if l_stmt_handle /= default_pointer then
 				internal_stmt := l_stmt_handle
 				internal_db := l_internal_db
 				last_exception := Void
+
 				if l_tail /= default_pointer then
 						-- There is more to process, which means there should not already be a next statement because
 						-- this is the first compilation.
@@ -604,7 +604,12 @@ feature {NONE} -- Basic operations: Compilation
 				end
 			else
 				reset_compilation_data
-				last_exception := l_db.last_exception
+				if sqlite_success (l_result) then
+						-- Happens when there statement is a empty one.
+					last_exception := sqlite_exception ({SQLITE_RESULT_CODE}.e_misuse, "no statement: syntax error")
+				else
+					last_exception := l_db.last_exception
+				end
 			end
 
 			l_locked := False

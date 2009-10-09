@@ -36,9 +36,9 @@ feature {NONE} -- Initialization
 			-- `a_manager': Session manager that owns Current.
 			-- `a_session': An inner session that Current aggregates.
 		require
-			a_manager_attached: a_manager /= Void
+			a_manager_attached: attached a_manager
 			a_manager_is_interface_usable: a_manager.is_interface_usable
-			a_session_attached: a_session /= Void
+			a_session_attached: attached a_session
 			a_session_is_interface_usable: a_session.is_interface_usable
 		do
 			make_session (a_per_project, a_manager)
@@ -57,16 +57,16 @@ feature {NONE} -- Initialization
 			-- `a_manager': Session manager that owns Current.
 			-- `a_session': An inner session that Current aggregates.
 		require -- from SESSION
-			a_window_attached: a_window /= Void
+			a_window_attached: attached a_window
 			a_window_is_interface_usable: a_window.is_interface_usable
-			a_manager_attached: a_manager /= Void
+			a_manager_attached: attached a_manager
 			a_manager_is_interface_usable: a_manager.is_interface_usable
-			a_session_attached: a_session /= Void
+			a_session_attached: attached a_session
 			a_session_is_interface_usable: a_session.is_interface_usable
 		do
 			make_per_window_session (a_per_project, a_window, a_manager)
 			set_inner_session (a_session)
-		ensure -- from SESSION
+		ensure
 			is_per_project_set: is_per_project = a_per_project
 			is_per_window: is_per_window
 			manager_set: manager = a_manager
@@ -97,29 +97,29 @@ feature {SESSION_MANAGER_S} -- Element change
 			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
-			a_session_is_interface_usable: a_session /= Void implies a_session.is_interface_usable
+			a_session_is_interface_usable: attached a_session implies a_session.is_interface_usable
 		do
-			if inner_session /= Void and then inner_session.is_interface_usable then
+			if attached inner_session as l_inner and then l_inner.is_interface_usable then
 					-- remove old event handler
-				inner_session.value_changed_event.unsubscribe (agent on_inner_session_value_changed)
+				l_inner.value_changed_event.unsubscribe (agent on_inner_session_value_changed)
 			end
 
 				-- Set extension name
-			if a_session /= Void then
+			if attached a_session then
 				set_extension_name (a_session.extension_name)
 			else
 				set_extension_name (Void)
 			end
 
 			inner_session := a_session
-			if a_session /= Void then
+			if attached a_session then
 					-- Set event handler for propagating value changed events
 				a_session.value_changed_event.subscribe (agent on_inner_session_value_changed)
 			end
 		ensure
 			inner_session_set: inner_session = a_session
-			extension_name_set: (a_session /= Void and then equal (extension_name, a_session.extension_name)) or else
-				(a_session = Void and then extension_name = Void)
+			extension_name_set: (attached a_session and then extension_name ~ a_session.extension_name) or else
+				(not attached a_session and then not attached extension_name)
 		end
 
 feature -- Query
@@ -181,7 +181,7 @@ feature {NONE} -- Event handlers
 		end
 
 invariant
-	extension_name_set: not (is_actively_disposing or is_disposed) implies inner_session /= Void and then equal (extension_name, inner_session.extension_name)
+	extension_name_set: not (is_actively_disposing or is_disposed) implies (attached inner_session as l_session and then extension_name ~ l_session.extension_name)
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

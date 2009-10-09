@@ -32,7 +32,9 @@ feature {NONE} -- Initialization
 			a_manager_attached: a_manager /= Void
 			a_manager_is_interface_usable: a_manager.is_interface_usable
 		do
-			create data.make_default
+			create data.make (7)
+			data.compare_objects
+
 			create value_changed_event
 			auto_dispose (value_changed_event)
 			is_per_project := a_per_project
@@ -49,9 +51,9 @@ feature {NONE} -- Initialization
 			-- `a_window': Window to initialize a per-window session for.
 			-- `a_manager': Session manager that owns Current.
 		require
-			a_window_attached: a_window /= Void
+			a_window_attached: attached a_window
 			a_window_is_interface_usable: a_window.is_interface_usable
-			a_manager_attached: a_manager /= Void
+			a_manager_attached: attached a_manager
 			a_manager_is_interface_usable: a_manager.is_interface_usable
 		do
 			make (a_per_project, a_manager)
@@ -65,10 +67,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Clean up
 
 	safe_dispose (a_disposing: BOOLEAN)
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
-			--
-			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
+			-- <Precursor>
 		do
 			if a_disposing then
 				if is_dirty and then manager.is_interface_usable then
@@ -81,13 +80,13 @@ feature {NONE} -- Clean up
 			not_is_dirty: a_disposing implies not is_dirty
 			data_is_empty: a_disposing implies (old data).is_empty
 			not_value_changed_event_is_interface_usable: a_disposing implies not (old value_changed_event).is_interface_usable
-			manager_detached: manager = Void
+			manager_detached: not attached manager
 		end
 
 feature -- Access
 
 	kind: UUID
-			-- Kind of session. See {SESSION_KINDS} for all representations.
+			-- <Precursor>
 		local
 			l_kinds: SESSION_KINDS
 		do
@@ -108,27 +107,27 @@ feature -- Access
 		end
 
 	window_id: NATURAL_32
-			-- Window identifier the session is attached to.
+			-- <Precursor>
 
 	manager: SESSION_MANAGER_S
 			-- Session manager current belongs to
 
 feature {SESSION_MANAGER_S, SESSION_I} -- Access
 
-	extension_name: detachable STRING_8 assign set_extension_name
-			-- Optional extension name for specialized categories
+	extension_name: detachable IMMUTABLE_STRING_8 assign set_extension_name
+			-- <Precursor>
 
 feature {SESSION_MANAGER_S} -- Access
 
 	frozen session_object: ANY assign set_session_object
-			-- Session object, used during serialization of data
+			-- <Precursor>
 		do
 			Result := data
 		end
 
 feature {NONE} -- Access
 
-	data: DS_HASH_TABLE [ANY, STRING_8]
+	data: HASH_TABLE [ANY, STRING_8]
 			-- Table containing session data
 			-- Key: Session data id
 			-- Value: Session data
@@ -136,12 +135,7 @@ feature {NONE} -- Access
 feature -- Element change
 
 	set_value (a_value: ANY; a_id: STRING_8)
-			-- Sets a piece of sessions data.
-			-- Note: Values cannot be of type {CELL} because they interfer with boxing and unboxing of expanded values,
-			--       required to ensure the data is serialized/deserialized correctly.
-			--
-			-- `a_value': Data to set in sessions, or Void to remove it.
-			-- `a_id': An id to index and store the session data with.
+			-- <Precursor>
 		local
 			l_old_value: ANY
 		do
@@ -176,8 +170,8 @@ feature {SESSION_MANAGER_S, SESSION_I} -- Element change
 	set_extension_name (a_name: like extension_name)
 			-- <Precursor>
 		do
-			if a_name /= Void then
-				extension_name := a_name.twin
+			if attached a_name then
+				create extension_name.make_from_string (a_name)
 			else
 				extension_name := Void
 			end
@@ -189,45 +183,34 @@ feature {SESSION_MANAGER_S} -- Element change
 			-- <Precursor>
 		local
 			l_old_data: like data
-			l_data: like data
-			l_cursor: DS_HASH_TABLE_CURSOR [ANY, STRING_8]
 			l_value: ANY
 			l_old_value: ANY
 			l_id: STRING_8
 			l_change_events: like value_changed_event
 		do
 			l_old_data := data
-
-			l_data ?= a_object
-			check
-				l_data_attached: l_data /= Void
-			end
-
-			if l_data /= Void then
+			if attached {like data} a_object as l_data then
 				l_change_events := value_changed_event
 				data := l_data.twin
 
-				l_data.do_all (agent (a_ia_value: ANY)
-						-- Set session as owner on new, loaded data.
-					do
-						if attached {SESSION_DATA_I} a_ia_value as l_session_data then
-							l_session_data.set_session (Current)
-						end
-					end)
+				from l_data.start until l_data.after loop
+					if attached {SESSION_DATA_I} l_data.item_for_iteration as l_session_data then
+						l_session_data.set_session (Current)
+					end
+					l_data.forth
+				end
 
 				if l_old_data.is_empty then
 						-- Notify subscribers of all new changes
-					l_cursor := l_data.new_cursor
-					from l_cursor.start until l_cursor.after loop
-						l_change_events.publish ([Current, l_cursor.key])
-						l_cursor.forth
+					from l_data.start until l_data.after loop
+						l_change_events.publish ([Current, l_data.key_for_iteration])
+						l_data.forth
 					end
 				else
 						-- Detects changes and publishes the events
-					l_cursor := l_data.new_cursor
-					from l_cursor.start until l_cursor.after loop
-						l_id := l_cursor.key
-						l_value := unbox_value (l_cursor.item)
+					from l_data.start until l_data.after loop
+						l_id := l_data.key_for_iteration
+						l_value := unbox_value (l_data.item_for_iteration)
 						if l_old_data.has (l_id) then
 							l_old_value := unbox_value (l_old_data.item (l_id))
 							if not equal (l_value, l_old_value) then
@@ -241,18 +224,17 @@ feature {SESSION_MANAGER_S} -- Element change
 								-- The value changed because the old data did not have the current session item.
 							l_change_events.publish ([Current, l_id])
 						end
-						l_cursor.forth
+						l_data.forth
 					end
 
 						-- Publish events for removed data
-					l_cursor := l_old_data.new_cursor
-					from l_cursor.start until l_cursor.after loop
-						if attached {SESSION_DATA_I} l_cursor.item as l_session_data then
+					from l_old_data.start until l_old_data.after loop
+						if attached {SESSION_DATA_I} l_old_data.item_for_iteration as l_session_data then
 								-- Remove session as owner of the data
 							l_session_data.set_session (Void)
 						end
-						l_change_events.publish ([Current, l_cursor.key])
-						l_cursor.forth
+						l_change_events.publish ([Current, l_old_data.key_for_iteration])
+						l_old_data.forth
 					end
 				end
 			end
@@ -261,28 +243,24 @@ feature {SESSION_MANAGER_S} -- Element change
 feature -- Query
 
 	value alias "[]" (a_id: STRING_8): ANY assign set_value
-			-- Retrieve a piece of sessions data, indexed by an ID.
-			--
-			-- `a_id': An id to retrieve session data for
+			-- <Precursor>
 		local
 			l_data: like data
 		do
 			l_data := data
 			if l_data.has (a_id) then
-				Result := unbox_value (l_data.item (a_id))
+				Result := unbox_value (l_data[a_id])
 			end
 		end
 
 	value_or_default (a_id: STRING_8; a_default_value: ANY): ANY
-			-- Retrieve a piece of sessions data, indexed by an ID.
-			--
-			-- `a_id': An id to retrieve session data for
+			-- <Precursor>
 		local
 			l_data: like data
 		do
 			l_data := data
 			if l_data.has (a_id) then
-				Result := unbox_value (l_data.item (a_id))
+				Result := unbox_value (l_data[a_id])
 			else
 				Result := a_default_value
 			end
@@ -293,13 +271,13 @@ feature -- Query
 feature -- Status report
 
 	is_dirty: BOOLEAN
-			-- Indicates if the session has modifications
+			-- <Precursor>
 
 	is_per_project: BOOLEAN
-			-- Indicates if the session is a per-project session object
+			-- <Precursor>
 
 	is_valid_session_value (a_value: ANY): BOOLEAN
-			-- Determines if `a_valud' is a valid session value
+			-- <Precursor>
 		local
 			l_internal: like internal
 			l_codes: like type_codes
@@ -314,7 +292,7 @@ feature -- Status report
 				Result := l_codes.has (l_id) or else
 					attached {READABLE_STRING_GENERAL} a_value as l_string or else
 					attached {SESSION_DATA_I} a_value as l_session_data or else
-					({TUPLE}) #? a_value /= Void or else -- TUPLE cannot be used with explict attachment mark (6.1.7.1179)
+					attached {TUPLE} or else -- TUPLE cannot be used with explict attachment mark (6.1.7.1179)
 					attached {CELL [ANY]} a_value as l_cell or else
 					attached {ARRAY [ANY]} a_value as l_array
 			end
@@ -329,7 +307,7 @@ feature -- Status report
 feature {SESSION_MANAGER_S} -- Status setting
 
 	reset_is_dirty
-			-- Resets dirty state of session
+			-- <Precursor>
 		do
 			is_dirty := False
 		end
@@ -341,7 +319,7 @@ feature {NONE} -- Helpers
 		once
 			create Result
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature -- Basic operations
@@ -356,67 +334,67 @@ feature -- Basic operations
 
 feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
-	notify_value_changed (a_value: attached SESSION_DATA_I)
-			-- Used by complex session data objects to notify the session that an inner value has changed.
-			--
-			-- `a_value': The changed session data value.
+	notify_value_changed (a_value: SESSION_DATA_I)
+			-- <Precursor>
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ANY, STRING_8]
+			l_data: like data
+			l_done: BOOLEAN
 		do
-				-- Locate value
-			l_cursor := data.new_cursor
-			l_cursor.start
-			l_cursor.search_forth (a_value)
-			if not l_cursor.after then
-					-- Post notification
+			l_data := data
+			l_data.start
+			if l_data.has_item (a_value) then
 				is_dirty := True
-				value_changed_event.publish ([Current, l_cursor.key])
-				l_cursor.go_after
+				from l_data.start until l_data.after or l_done loop
+					l_done := l_data.item_for_iteration = a_value
+					if l_done then
+						value_changed_event.publish ([Current, l_data.key_for_iteration])
+					else
+						l_data.forth
+					end
+				end
 			end
-			check gobo_cursor_cleanup: l_cursor.off end
 		end
 
 feature -- Events
 
-	value_changed_event: attached EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
-			-- Events fired when a value, indexed by an id, in the session object changes.
-			--
-			-- `session': The session where the change occured.
-			-- `id': The session data identifier index that the value changed for
+	value_changed_event: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
+			-- <Precursor>
 
 feature {SESSION_MANAGER_S} -- Action Handlers
 
 	on_begin_store
-			-- Called to notify the session that a store is about to take place.
+			-- <Precursor>
+		local
+			l_data: like data
 		do
-			data.do_all (agent (a_value: ANY)
-					-- Iterate the values and notify any session data of commencing storage.
-				do
-					if attached {SESSION_DATA_I} a_value as l_data and attached {SESSION_I} Current as l_session then
-						l_data.set_session (Void)
-						l_data.on_begin_store (l_session)
-					end
-				end)
+			l_data := data
+			from l_data.start until l_data.after loop
+				if attached {SESSION_DATA_I} l_data.item_for_iteration as l_item then
+					l_item.set_session (Void)
+					l_item.on_begin_store (Current)
+				end
+				l_data.forth
+			end
 		end
 
 	on_end_store
-			-- Called to notify the session that a store is complete.
+			-- <Precursor>
+		local
+			l_data: like data
 		do
-			data.do_all (agent (a_value: ANY)
-					-- Iterate the values and notify any session data of commencing storage.
-				require
-					a_value_attached: a_value /= Void
-				do
-					if attached {SESSION_DATA_I} a_value as l_data then
-						l_data.set_session (Current)
-						l_data.on_end_store
-					end
-				end)
+			l_data := data
+			from l_data.start until l_data.after loop
+				if attached {SESSION_DATA_I} l_data.item_for_iteration as l_item then
+					l_item.set_session (Current)
+					l_item.on_end_store
+				end
+				l_data.forth
+			end
 		end
 
 feature {NONE} -- Conversion
 
-	box_value (a_value: ANY): ANY
+	box_value (a_value: detachable ANY): detachable ANY
 			-- Boxes a a value so built-in expanded types can be corrected serialized/deserialized.
 			--
 			-- `a_value': A value to box.
@@ -474,19 +452,16 @@ feature {NONE} -- Conversion
 				end
 			end
 		ensure
-			result_attached: a_value /= Void implies Result /= Void
+			result_attached: attached a_value implies attached Result
 		end
 
-	unbox_value (a_value: ANY): ANY
+	unbox_value (a_value: detachable ANY): detachable ANY
 			-- Unboxes a value, boxed by `box_value', to it original form.
 			--
 			-- `a_value': A boxed value, or a possible boxed value.
 			-- `Result': The unboxed, orginal form of the passed value or `a_value' if the value was not boxed by `box_value'.
-		local
-			l_cell: CELL [ANY]
 		do
-			l_cell ?= a_value
-			if l_cell /= Void then
+			if attached {CELL [ANY]} a_value as l_cell then
 				Result := l_cell.item
 			else
 				Result := a_value
@@ -524,15 +499,16 @@ feature {NONE} -- Conversion type tables
 			-- `a_type': Type to retrieve a dynamic type id for.
 			-- `Result': Dynamic type id of the actualy type's type.
 		require
-			a_type_attached: a_type /= Void
+			a_type_attached: attached a_type
 		do
 			Result := internal.generic_dynamic_type (a_type, 1)
 		end
 
 invariant
-	manager_attached: not is_disposed implies manager /= Void
+	manager_attached: not is_disposed implies attached manager
 	manager_is_zombie: not is_disposed implies manager.is_interface_usable
-	data_attached: data /= Void
+	data_attached: attached data
+	data_compared_objects: data.object_comparison
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

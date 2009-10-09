@@ -18,12 +18,13 @@ inherit
 
 feature -- Access
 
-	active_sessions: attached DS_ARRAYED_LIST [SESSION_I]
+	active_sessions: ARRAYED_LIST [SESSION_I]
 			-- List of currently active sessions.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
+			result_attached: attached Result
 			result_has_attached_items: not Result.has (Void)
 		end
 
@@ -34,6 +35,7 @@ feature -- Clean up
 			--
 			-- `a_session': The session object to close.
 		require
+			a_session_attached: attached a_session
 			active_sessions_has_a_session: active_sessions.has (a_session)
 		deferred
 		ensure
@@ -49,7 +51,7 @@ feature -- Storage
 			-- `a_session': Session to store.
 		require
 			is_interface_usable: is_interface_usable
-			a_session_attached: a_session /= Void
+			a_session_attached: attached a_session
 			a_session_is_interface_usable: a_session.is_interface_usable
 		deferred
 		ensure
@@ -74,13 +76,13 @@ feature -- Retrieval
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_attached: not a_per_project implies Result /= Void
-			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
-			not_result_is_per_window: Result /= Void implies (not Result.is_per_window)
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_attached: not a_per_project implies attached Result
+			result_is_per_project: attached Result implies (a_per_project implies Result.is_per_project)
+			not_result_is_per_window: attached Result implies (not Result.is_per_window)
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_extended (a_per_project: BOOLEAN; a_extension: detachable STRING_8): detachable SESSION_I
+	retrieve_extended (a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
 			-- Retrieve's a session based on specified paramaters, using a extension name for non-global conflicting session objects.
 			--
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
@@ -89,14 +91,14 @@ feature -- Retrieval
 			--                Void will retrieve the global version of a session.
 		require
 			is_interface_usable: is_interface_usable
-			not_a_extension_is_empty: a_extension /= Void implies not a_extension.is_empty
+			not_a_extension_is_empty: attached a_extension implies not a_extension.is_empty
 		deferred
 		ensure
-			result_attached: not a_per_project implies Result /= Void
-			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
-			not_result_is_per_window: Result /= Void implies (not Result.is_per_window)
-			result_extension_set: Result /= Void implies equal (a_extension, Result.extension_name)
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_attached: not a_per_project implies attached Result
+			result_is_per_project: attached Result implies (a_per_project implies Result.is_per_project)
+			not_result_is_per_window: attached Result implies (not Result.is_per_window)
+			result_extension_set: attached Result implies ((attached a_extension as l_ext and attached Result.extension_name as l_other_ext) implies l_ext.same_string (l_other_ext))
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
 	retrieve_per_window (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN): detachable SESSION_I
@@ -107,18 +109,18 @@ feature -- Retrieval
 			--                  Note: If no project is loaded then no sessions can be retrieved and the Result will be Void.
 		require
 			is_interface_usable: is_interface_usable
-			a_window_attached: a_window /= Void
+			a_window_attached: attached a_window
 			a_window_is_interface_usable: a_window.is_interface_usable
 		deferred
 		ensure
-			result_attached: not a_per_project implies Result /= Void
-			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
-			result_is_per_window: Result /= Void implies Result.is_per_window
-			result_window_id_set: Result /= Void implies (Result.window_id = a_window.window_id)
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_attached: not a_per_project implies attached Result
+			result_is_per_project: attached Result implies (a_per_project implies Result.is_per_project)
+			result_is_per_window: attached Result implies Result.is_per_window
+			result_window_id_set: attached Result implies (Result.window_id = a_window.window_id)
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable STRING_8): detachable SESSION_I
+	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
 			-- Retrieve's a window session based on specified paramaters, using a extension name for non-global conflicting session objects.
 			--
 			-- `a_window': The window to retrieve a window-based session for.
@@ -128,30 +130,30 @@ feature -- Retrieval
 			--                Void will retrieve the global version of a session.
 		require
 			is_interface_usable: is_interface_usable
-			a_window_attached: a_window /= Void
+			a_window_attached: attached a_window
 			a_window_is_interface_usable: a_window.is_interface_usable
 		deferred
 		ensure
-			result_attached: not a_per_project implies Result /= Void
-			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
-			result_is_per_window: Result /= Void implies Result.is_per_window
-			result_window_id_set: Result /= Void implies (Result.window_id = a_window.window_id)
-			result_extension_set: Result /= Void implies equal (a_extension, Result.extension_name)
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_attached: not a_per_project implies attached Result
+			result_is_per_project: attached Result implies (a_per_project implies Result.is_per_project)
+			result_is_per_window: attached Result implies Result.is_per_window
+			result_window_id_set: attached Result implies (Result.window_id = a_window.window_id)
+			result_extension_set: attached Result implies ((attached a_extension as l_ext and attached Result.extension_name as l_other_ext) implies l_ext.same_string (l_other_ext))
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_from_disk (a_file_name: STRING_8): detachable SESSION_I
+	retrieve_from_disk (a_file_name: READABLE_STRING_8): detachable SESSION_I
 			-- Retrieves a session object from disk, if it exists.
 			-- If no file exists then a new session is created.
 			--
 			-- `a_file_name': The full path to a file on disk to retrieve session data from.
 		require
 			is_interface_usable: is_interface_usable
-			a_file_name_attached: a_file_name /= Void
+			a_file_name_attached: attached a_file_name
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		deferred
 		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_is_interface_usable: attached Result   implies Result.is_interface_usable
 		end
 
 	reload (a_session: SESSION_I)
@@ -160,7 +162,7 @@ feature -- Retrieval
 			-- `a_session': The session to reload
 		require
 			is_interface_usable: is_interface_usable
-			a_session_attached: a_session /= Void
+			a_session_attached: attached a_session
 			a_session_is_interface_usable: a_session.is_interface_usable
 		deferred
 		ensure
@@ -168,7 +170,7 @@ feature -- Retrieval
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -181,22 +183,22 @@ feature -- Retrieval
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

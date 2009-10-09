@@ -752,7 +752,7 @@ feature -- Implementation
 		require
 			a_empty_dialog_valid: a_empty_dialog /= Void and then not a_empty_dialog.is_destroyed
 		local
-			l_exception_string: STRING_8
+			l_exception_string: detachable STRING_8
 			l_label: EV_TEXT
 			l_label_box: EV_HORIZONTAL_BOX
 			l_vbox: EV_VERTICAL_BOX
@@ -765,16 +765,21 @@ feature -- Implementation
 			l_exception_message: STRING
 		do
 			l_exception_string := an_exception.exception_trace
-			check l_exception_string /= Void end
-			l_exception_string := l_exception_string.twin
-			l_exception_string.prune_all ('%R')
+			if l_exception_string /= Void then
+				l_exception_string := l_exception_string.twin
+				l_exception_string.prune_all ('%R')
+			end
 			create l_label
 			l_label.disable_word_wrapping
 			l_label.disable_edit
 			create l_font
 			l_font.set_family ({EV_FONT_CONSTANTS}.Family_typewriter)
 			l_label.set_font (l_font)
-			l_label.set_text (l_exception_string)
+			if l_exception_string /= Void then
+				l_label.set_text (l_exception_string)
+			else
+				l_label.set_text ("No trace available.")
+			end
 			create l_vbox
 			create l_error_box
 			l_error_box.set_border_width (5)

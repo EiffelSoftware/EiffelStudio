@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 					from until command = 'q' loop
 						command := {SYSTEM_CONSOLE}.read.to_character
 						if command = '+' then
-							timer.interval := {MATH}.max_real (1, timer.interval / 2)
+							timer.interval := (timer.interval / 2).max (1)
 						elseif command = '-' then
 							timer.interval := timer.interval * 2
 						end

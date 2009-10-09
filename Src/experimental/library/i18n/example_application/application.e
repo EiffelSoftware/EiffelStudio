@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 			-- Initialize and launch application
 		do
 			n := 1
-			amount_of_money := 200000.0
-			hovercraft_buy_cost := 54199.95
-			hovercraft_sell_cost := 44020.30
-			mortgage_rate := 5.31
+			amount_of_money := {REAL_32} 200000.0
+			hovercraft_buy_cost := {REAL_32} 54199.95
+			hovercraft_sell_cost := {REAL_32} 44020.30
+			mortgage_rate := {REAL_32} 5.31
 			default_create
 			prepare
 			launch

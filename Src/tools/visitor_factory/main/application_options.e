@@ -11,6 +11,8 @@ class
 	APPLICATION_OPTIONS
 
 inherit
+	ANY
+
 	SHARED_STATUS_MESSAGES
 		export
 			{NONE} all

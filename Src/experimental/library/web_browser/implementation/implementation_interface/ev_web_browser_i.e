@@ -18,7 +18,7 @@ inherit
 			interface
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_WEB_BROWSER
 			-- <Precursor>

@@ -87,7 +87,7 @@ feature -- Basic operations
 				file.close
 				text_mode := file_string.has ('%R')
 				eiffel_parser.reset
-				eiffel_parser.parse_from_string (file_string)
+				eiffel_parser.parse_from_string (file_string, Void)
 				if eiffel_parser.error_count > 0 then
 					init_error := true
 				else
@@ -107,7 +107,7 @@ feature -- Basic operations
 						text.replace_substring_all ("%N", "%R%N")
 					end
 					eiffel_parser.reset
-					eiffel_parser.parse_from_string (text)
+					eiffel_parser.parse_from_string (text, Void)
 					if eiffel_parser.error_count > 0 then
 						parse_failed := true
 					end
@@ -142,7 +142,7 @@ invariant
 		copyright_not_void: copyright /= Void
 		a_file_not_void: file /= Void
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -166,11 +166,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

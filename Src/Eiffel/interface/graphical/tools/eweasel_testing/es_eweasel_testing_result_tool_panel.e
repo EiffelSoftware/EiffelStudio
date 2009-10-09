@@ -72,7 +72,7 @@ feature {NONE} -- Redefine
 		do
 			test_run_result_grid_manager.build_columns
 			-- Enable sorting
-			enable_sorting_on_columns (test_run_result_grid_manager.all_columns)
+			enable_sorting_on_columns (test_run_result_grid_manager.all_columns.to_array)
 
 			enable_copy_to_clipboard
 

@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 		do
 			build_columns
 			init_grid_row
-			enable_sorting_on_columns (all_columns)
+			enable_sorting_on_columns (all_columns.to_array)
 		end
 
 	init_service
@@ -777,7 +777,7 @@ feature {NONE} -- Copy from {ES_EVENT_LIST_TOOL_PANEL_BASE} FIXIT: merge?
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -801,11 +801,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

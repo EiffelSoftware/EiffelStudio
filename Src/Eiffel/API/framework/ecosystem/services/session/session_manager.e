@@ -27,17 +27,14 @@ feature -- Clean up
 			-- Closes a session object.
 			--
 			-- `a_session': The session object to close.
-		local
-			l_sessions: detachable like internal_sessions
 		do
 			if is_interface_usable then
-				l_sessions := internal_sessions
-				if l_sessions /= Void and then l_sessions.has (a_session) then
+				if attached internal_sessions as l_sessions and then l_sessions.has (a_session) then
 						-- Removes the session object from the list of managed objects.
 					l_sessions.start
-					l_sessions.search_forth (a_session)
+					l_sessions.search (a_session)
 					check a_session_found: not l_sessions.after end
-					l_sessions.remove_at
+					l_sessions.remove
 
 						-- Cleans up the session object.
 					if a_session.is_interface_usable and then attached {DISPOSABLE_I} a_session as l_disposable then
@@ -51,22 +48,17 @@ feature {NONE} -- Clean up
 
 	safe_dispose (a_disposing: BOOLEAN)
 			-- <Precursor>
-		local
-			l_sessions: like internal_sessions
-			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
 		do
 			if a_disposing then
 					-- Store all unsaved session data
 				store_all
-				l_sessions := internal_sessions
-				if l_sessions /= Void then
+				if attached internal_sessions as l_sessions then
 						-- Clean up sessions
-					l_cursor := l_sessions.new_cursor
-					from l_cursor.start until l_cursor.after loop
-						if attached {DISPOSABLE} l_cursor.item as l_disposable then
+					from l_sessions.start until l_sessions.after loop
+						if attached {DISPOSABLE} l_sessions.item_for_iteration as l_disposable then
 							l_disposable.dispose
 						end
-						l_cursor.forth
+						l_sessions.forth
 					end
 				end
 			end
@@ -74,15 +66,20 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	active_sessions: attached DS_ARRAYED_LIST [SESSION_I]
+	active_sessions: ARRAYED_LIST [SESSION_I]
 			-- <Precursor>
 		do
-			create Result.make_from_linear (sessions)
+			if attached internal_sessions as l_sessions then
+				create Result.make (l_sessions.count)
+				Result.append (l_sessions)
+			else
+				create Result.make (0)
+			end
 		end
 
 feature {NONE} -- Access
 
-	sessions: attached DS_ARRAYED_LIST [SESSION_I]
+	sessions: ARRAYED_LIST [SESSION_I]
 			-- List of retrieve sessions
 		require
 			is_interface_usable: is_interface_usable
@@ -90,10 +87,11 @@ feature {NONE} -- Access
 			if attached internal_sessions as l_sessions then
 				Result := l_sessions
 			else
-				create Result.make_default
+				create Result.make (1)
 				internal_sessions := Result
 			end
 		ensure
+			result_attached: attached Result
 			result_consistent: Result = sessions
 		end
 
@@ -103,14 +101,14 @@ feature {NONE} -- Query
 			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
-			a_session_attached: a_session /= Void
+			a_session_attached: attached a_session
 			a_session_is_interface_usable: a_session.is_interface_usable
 			project_loaded: not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined
 		local
 			l_formatter: STRING_FORMATTER
 			l_kinds: SESSION_KINDS
 			l_kind: UUID
-			l_fn: STRING_8
+			l_fn: detachable STRING_8
 			l_path: FILE_NAME
 			l_conf_target: CONF_TARGET
 			l_ver: STRING_8
@@ -118,7 +116,7 @@ feature {NONE} -- Query
 			l_workbench: detachable WORKBENCH_I
 			l_window_id: NATURAL_32
 			l_extension: detachable STRING_8
-			l_name: detachable STRING_8
+			l_name: detachable IMMUTABLE_STRING_8
 		do
 			create l_formatter
 			create l_kinds
@@ -128,13 +126,13 @@ feature {NONE} -- Query
 			else
 					-- Determine session type		
 				l_kind := a_session.kind
-				if l_kind.is_equal (l_kinds.environment) then
+				if l_kind ~ l_kinds.environment then
 					l_fn := environment_file_name
-				elseif l_kind.is_equal (l_kinds.window) then
+				elseif l_kind ~ l_kinds.window then
 					l_fn := window_file_name
-				elseif l_kind.is_equal (l_kinds.project) then
+				elseif l_kind ~ l_kinds.project then
 					l_fn := project_file_name
-				elseif l_kind.is_equal (l_kinds.project_window) then
+				elseif l_kind ~ l_kinds.project_window then
 					l_fn := project_window_file_name
 				else
 						-- Unknown session kind
@@ -164,14 +162,14 @@ feature {NONE} -- Query
 
 					-- Extension name
 				l_name := a_session.extension_name
-				if l_name /= Void then
+				if attached l_name then
 					create l_extension.make (l_name.count + 1)
 					l_extension.append_character ('.')
 					l_extension.append (l_name.as_lower)
 				end
 
 				check
-					l_fn_attached: l_fn /= Void
+					l_fn_attached: attached l_fn
 					not_l_fn_is_empty: not l_fn.is_empty
 				end
 
@@ -191,12 +189,17 @@ feature {NONE} -- Helpers
 
 	logger_service: attached SERVICE_CONSUMER [LOGGER_S]
 			-- Access to logger service
+		local
+			l_site: like site
 		do
 			if attached internal_logger_service as l_service then
 				Result := l_service
 			else
-				check sited: site /= Void end
-				create Result.make_with_provider (site)
+				l_site := site
+				check
+					sited: is_sited and then attached l_site
+				end
+				create Result.make_with_provider (l_site)
 				internal_logger_service := Result
 			end
 		end
@@ -214,7 +217,7 @@ feature -- Storage
 		local
 			l_logger: like logger_service
 			l_file_name: like session_file_path
-			l_file: RAW_FILE
+			l_file: detachable RAW_FILE
 			l_sed_util: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_message: attached STRING_32
@@ -258,7 +261,7 @@ feature -- Storage
 				end
 			end
 
-			if l_file /= Void and then not l_file.is_closed then
+			if attached l_file and then not l_file.is_closed then
 				l_file.close
 			end
 		rescue
@@ -269,19 +272,17 @@ feature -- Storage
 	store_all
 			-- <Precursor>
 		local
-			l_sessions: like internal_sessions
-			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
+			l_cursor: CURSOR
 		do
-			l_sessions := internal_sessions
-			if l_sessions /= Void then
-				l_cursor := l_sessions.new_cursor
-				from l_cursor.start until l_cursor.after loop
-					store (l_cursor.item)
-					l_cursor.forth
+			if attached internal_sessions as l_sessions then
+				l_cursor := l_sessions.cursor
+				from l_sessions.start until l_sessions.after loop
+					store (l_sessions.item_for_iteration)
+					l_sessions.forth
 				end
 			end
 		ensure then
-			sessions_are_clean: internal_sessions /= Void implies internal_sessions.for_all (agent (a_ia_session: SESSION_I): BOOLEAN
+			sessions_are_clean: attached internal_sessions as l_sessions implies l_sessions.for_all (agent (a_ia_session: SESSION_I): BOOLEAN
 				do
 					Result := not a_ia_session.is_dirty
 				end)
@@ -294,43 +295,50 @@ feature -- Retrieval
 		do
 			Result := retrieve_extended (a_per_project, Void)
 		ensure then
-			sessions_has_result: Result /= Void implies sessions.has (Result)
-			result_consistent: Result /= Void implies Result = retrieve (a_per_project)
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			sessions_has_result: attached Result implies sessions.has (Result)
+			result_consistent: attached Result implies Result = retrieve (a_per_project)
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_extended (a_per_project: BOOLEAN; a_extension: detachable STRING_8): detachable SESSION_I
+	retrieve_extended (a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
 			-- <Precursor>
 		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
+			l_sessions: like sessions
 			l_session: SESSION_I
+			l_cursor: CURSOR
 		do
-			l_cursor := sessions.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				if Result = Void then
+			l_sessions := sessions
+			l_cursor := l_sessions.cursor
+			from l_sessions.start until l_sessions.after loop
+				if not attached Result then
 						-- We need to use a conditional check because of a memory leak with Gobo data structures.
 						-- The cursor has to be run out to avoid the leak.
-					l_session := l_cursor.item
+					l_session := l_sessions.item_for_iteration
 					if l_session.is_interface_usable then
-						if a_per_project = l_session.is_per_project and not l_session.is_per_window and then equal (l_session.extension_name, a_extension) then
+						if
+							a_per_project = l_session.is_per_project and then
+							not l_session.is_per_window and then
+							((attached a_extension as l_ext and attached l_session.extension_name as l_other_ext) implies l_ext.same_string (l_other_ext))
+						then
 							Result := l_session
 						end
 					end
 				end
-				l_cursor.forth
+				l_sessions.forth
 			end
+			l_sessions.go_to (l_cursor)
 
-			if Result = Void then
+			if not attached Result then
 					-- Create a new session
-				Result := create_new_session (Void, a_per_project, a_extension)
-				if Result /= Void then
-					sessions.force_last (Result)
+				Result := new_session (Void, a_per_project, a_extension)
+				if attached Result then
+					l_sessions.extend (Result)
 				end
 			end
 		ensure then
-			sessions_has_result: Result /= Void implies sessions.has (Result)
-			result_consistent: Result /= Void implies Result = retrieve_extended (a_per_project, a_extension)
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			sessions_has_result: attached Result implies sessions.has (Result)
+			result_consistent: attached Result implies Result = retrieve_extended (a_per_project, a_extension)
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
 	retrieve_per_window (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN): detachable SESSION_I
@@ -338,60 +346,68 @@ feature -- Retrieval
 		do
 			Result := retrieve_per_window_extended (a_window, a_per_project, Void)
 		ensure then
-			sessions_has_result: Result /= Void implies sessions.has (Result)
-			result_consistent: Result /= Void implies Result = retrieve_per_window (a_window, a_per_project)
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			sessions_has_result: attached Result implies sessions.has (Result)
+			result_consistent: attached Result implies Result = retrieve_per_window (a_window, a_per_project)
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable STRING_8): detachable SESSION_I
+	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
 			-- <Precursor>
 		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
+			l_sessions: like sessions
 			l_session: SESSION_I
+			l_cursor: CURSOR
 		do
-			l_cursor := sessions.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				if Result = Void then
-					l_session := l_cursor.item
+			l_sessions := sessions
+			l_cursor := l_sessions.cursor
+			from l_sessions.start until l_sessions.after loop
+				if not attached Result then
+					l_session := l_sessions.item_for_iteration
 					if l_session.is_interface_usable then
-						if a_per_project = l_session.is_per_project and then l_session.is_per_window and then l_session.window_id = a_window.window_id and then equal (l_session.extension_name, a_extension) then
+						if
+							a_per_project = l_session.is_per_project and then
+							l_session.is_per_window and then
+							l_session.window_id = a_window.window_id and then
+							((attached a_extension as l_ext and attached l_session.extension_name as l_other_ext) implies l_ext.same_string (l_other_ext))
+						then
 							Result := l_session
 						end
 					end
 				end
-				l_cursor.forth
+				l_sessions.forth
 			end
+			l_sessions.go_to (l_cursor)
 
-			if Result = Void then
+			if not attached Result then
 					-- Create a new session
-				Result := create_new_session (a_window, a_per_project, a_extension)
-				if Result /= Void then
-					sessions.force_last (Result)
+				Result := new_session (a_window, a_per_project, a_extension)
+				if attached Result then
+					l_sessions.extend (Result)
 				end
 			end
 		ensure then
-			sessions_has_result: Result /= Void implies sessions.has (Result)
-			result_consistent: Result /= Void implies Result = retrieve_per_window_extended (a_window, a_per_project, a_extension)
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			sessions_has_result: attached Result implies sessions.has (Result)
+			result_consistent: attached Result implies Result = retrieve_per_window_extended (a_window, a_per_project, a_extension)
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
 	retrieve_from_disk (a_file_name: attached STRING_8): detachable SESSION_I
 			-- <Precursor>
 		do
 				-- Create a new custom session
-			Result := create_new_custom_session (a_file_name)
-			if Result /= Void then
-				sessions.force_last (Result)
+			Result := new_custom_session (a_file_name)
+			if attached Result then
+				sessions.extend (Result)
 			end
 		ensure then
-			sessions_has_result: Result /= Void implies sessions.has (Result)
+			sessions_has_result: attached Result implies sessions.has (Result)
 		end
 
 	reload (a_session: SESSION_I)
 			-- <Precursor>
 		do
 			check
-				internal_sessions_attached: internal_sessions /= Void
+				internal_sessions_attached: attached internal_sessions
 				internal_sessions_has_a_session: internal_sessions.has (a_session)
 			end
 			set_session_object (a_session)
@@ -406,14 +422,14 @@ feature {NONE} -- Basic operation
 			-- `a_session': A session to set a session object for.
 		require
 			is_interface_usable: is_interface_usable
-			a_session_attached: a_session /= Void
+			a_session_attached: attached a_session
 			a_session_is_interface_usable: a_session.is_interface_usable
 			project_loaded: not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined
 		local
 			l_sed_util: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_object: ANY
-			l_file: RAW_FILE
+			l_file: detachable RAW_FILE
 			l_logger: SERVICE_CONSUMER [LOGGER_S]
 			l_message: attached STRING_32
 			retried: BOOLEAN
@@ -429,7 +445,7 @@ feature {NONE} -- Basic operation
 
 						-- Encode and emit object
 					l_object := l_sed_util.retrieved (l_reader, True)
-					if l_object /= Void then
+					if attached l_object then
 						a_session.set_session_object (l_object)
 					else
 							-- Problem with compatibility, log.
@@ -443,7 +459,7 @@ feature {NONE} -- Basic operation
 				end
 			end
 
-			if l_file /= Void and then not l_file.is_closed then
+			if attached l_file and then not l_file.is_closed then
 				l_file.close
 			end
 		ensure
@@ -455,17 +471,17 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Factory
 
-	create_new_session (a_window: detachable SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable STRING_8): detachable SESSION_I
+	new_session (a_window: detachable SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_window': The window to bind the session object to; False to make a session for the entire IDE.
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
 		require
 			is_interface_usable: is_interface_usable
-			a_window_is_interface_usable: a_window /= Void implies a_window.is_interface_usable
-			not_a_extension_is_empty: a_extension /= Void implies not a_extension.is_empty
+			a_window_is_interface_usable: attached a_window implies a_window.is_interface_usable
+			not_a_extension_is_empty: attached a_extension implies not a_extension.is_empty
 		local
-			l_inner_session: SESSION_I
+			l_inner_session: detachable SESSION_I
 			l_shared: SHARED_EIFFEL_PROJECT
 			l_set_object: BOOLEAN
 			l_existing_load_agents: ACTION_SEQUENCE [TUPLE]
@@ -475,7 +491,7 @@ feature {NONE} -- Factory
 			l_set_object := True
 
 				-- Fetch inner session for aggregation. See {AGGREGATED_SESSION} for details on session aggregation.
-			if a_window /= Void then
+			if attached a_window then
 					-- Retrieve higher level session for aggregation
 				if a_per_project then
 					l_inner_session := retrieve_per_window_extended (a_window, False, a_extension)
@@ -487,7 +503,7 @@ feature {NONE} -- Factory
 			end
 
 				-- Create session object
-			if l_inner_session /= Void then
+			if attached l_inner_session then
 				if a_window = Void then
 						-- Must be a per-project session because there is no parent window
 					check a_per_project: a_per_project end
@@ -551,42 +567,43 @@ feature {NONE} -- Factory
 				else
 					create {SESSION} Result.make_per_window (False, a_window, Current)
 				end
-				if a_extension /= Void then
+				if attached a_extension then
 					Result.set_extension_name (a_extension)
 				end
 			end
 
-			check result_attached: Result /= Void end
+			check result_attached: attached Result end
 
 			if l_set_object then
 				set_session_object (Result)
 			end
 			auto_dispose (Result)
 		ensure
-			result_attached: not a_per_project implies Result /= Void
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-			result_is_clean: Result /= Void implies not Result.is_dirty
-			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
-			result_is_per_window: (Result /= Void and a_window /= Void) implies Result.is_per_window
-			result_window_id_set: (Result /= Void and a_window /= Void) implies (Result.window_id = a_window.window_id)
-			result_extension_set: Result /= Void implies equal (a_extension, Result.extension_name)
+			result_attached: not a_per_project implies attached Result
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_clean: attached Result implies not Result.is_dirty
+			result_is_per_project: attached Result implies (a_per_project implies Result.is_per_project)
+			result_is_per_window: (attached Result and attached a_window) implies Result.is_per_window
+			result_window_id_set: (attached Result and attached a_window) implies (Result.window_id = a_window.window_id)
+			result_extension_set: (attached Result and attached a_extension) implies a_extension.same_string (Result.extension_name)
 		end
 
-	create_new_custom_session (a_file_name: attached STRING_8): detachable CUSTOM_SESSION_I
+	new_custom_session (a_file_name: READABLE_STRING_8): detachable CUSTOM_SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_file_name': The full path to a file on disk to retrieve session data from.
 		require
 			is_interface_usable: is_interface_usable
+			a_file_name_attached: attached a_file_name
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
 			create {CUSTOM_SESSION} Result.make (a_file_name, Current)
 			set_session_object (Result)
 			auto_dispose (Result)
 		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-			result_is_clean: Result /= Void implies not Result.is_dirty
-			result_file_name_set: Result /= Void implies a_file_name.is_equal (Result.file_name)
+			result_is_interface_usable: attached Result implies Result.is_interface_usable
+			result_is_clean: attached Result implies not Result.is_dirty
+			result_file_name_set: attached Result implies a_file_name.same_string (Result.file_name)
 		end
 
 feature {NONE} -- Constants

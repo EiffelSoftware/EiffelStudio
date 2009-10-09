@@ -32,8 +32,8 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_attached: Result /= Void
-			not_result_is_default: not Result.is_equal (create {UUID})
+			result_attached: attached Result
+			not_result_is_default: Result /~ create {UUID}
 		end
 
 	window_id: NATURAL_32
@@ -45,13 +45,13 @@ feature -- Access
 
 feature {SESSION_MANAGER_S, SESSION_I} -- Access
 
-	extension_name: detachable STRING_8 assign set_extension_name
+	extension_name: detachable IMMUTABLE_STRING_8 assign set_extension_name
 			-- Optional extension name for specialized categories
 		require
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			not_result_is_empty: Result /= Void implies not Result.is_empty
+			not_result_is_empty: attached Result implies not Result.is_empty
 		end
 
 feature {SESSION_MANAGER_S} -- Access
@@ -62,7 +62,7 @@ feature {SESSION_MANAGER_S} -- Access
 			is_interface_usable: is_interface_usable
 		deferred
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature -- Element change
@@ -74,14 +74,14 @@ feature -- Element change
 			-- `a_id': An id to index and store the session data with.
 		require
 			is_interface_usable: is_interface_usable
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
 			a_value_is_valid_session_value: is_valid_session_value (a_value)
 		deferred
 		ensure
-			value_set: equal (a_value, value (a_id))
-			is_dirty: not equal (a_value, old value (a_id)) implies is_dirty
-			session_set_on_session_data: attached {SESSION_DATA_I} a_value as l_session_data implies (({SESSION_DATA_I}) #? a_value).session = Current
+			value_set: a_value ~ value (a_id)
+			is_dirty: (a_value /~ old value (a_id)) implies is_dirty
+			session_set_on_session_data: attached {SESSION_DATA_I} a_value as l_session_data implies l_session_data.session = Current
 		end
 
 feature {SESSION_MANAGER_S, SESSION_I} -- Element change
@@ -91,7 +91,7 @@ feature {SESSION_MANAGER_S, SESSION_I} -- Element change
 			--
 		require
 			is_interface_usable: is_interface_usable
-			not_a_name_is_empty: a_name /= Void implies not a_name.is_empty
+			not_a_name_is_empty: attached a_name implies not a_name.is_empty
 		deferred
 		ensure
 			extension_name_set: equal (a_name, extension_name)
@@ -106,7 +106,7 @@ feature {SESSION_MANAGER_S, SESSION_I} -- Element change
 			-- `a_object': The new session object to set.
 		require
 			is_interface_usable: is_interface_usable
-			a_object_attached: a_object /= Void
+			a_object_attached: attached a_object
 			alternative_a_object: a_object /= session_object
 		deferred
 		end
@@ -119,7 +119,7 @@ feature -- Query
 			-- `a_id': An id to retrieve session data for
 		require
 			is_interface_usable: is_interface_usable
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
 		deferred
 		ensure
@@ -132,7 +132,7 @@ feature -- Query
 			-- `a_id': An id to retrieve session data for
 		require
 			is_interface_usable: is_interface_usable
-			a_id_attached: a_id /= Void
+			a_id_attached: attached a_id
 			not_a_id_is_empty: not a_id.is_empty
 		deferred
 		ensure
@@ -204,12 +204,13 @@ feature -- Basic operations
 
 feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
-	notify_value_changed (a_value: attached SESSION_DATA_I)
+	notify_value_changed (a_value: SESSION_DATA_I)
 			-- Used by complex session data objects to notify the session that an inner value has changed.
 			--
 			-- `a_value': The changed session data value.
 		require
 			is_interface_usable: is_interface_usable
+			a_value_attached: attached a_value
 			a_value_belongs_to_session: a_value.session = Current
 		deferred
 		ensure
@@ -218,7 +219,7 @@ feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
 feature -- Events
 
-	value_changed_event: attached EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
+	value_changed_event: EVENT_TYPE_I [TUPLE [session: SESSION_I; id: STRING_8]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
 			--
 			-- `session': The session where the change occured.
@@ -226,6 +227,8 @@ feature -- Events
 		require
 			is_interface_usable: is_interface_usable
 		deferred
+		ensure
+			result_attached: attached Result
 		end
 
 feature -- Events: Connection point
@@ -238,7 +241,7 @@ feature -- Events: Connection point
 			l_result := internal_session_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [SESSION_EVENT_OBSERVER, SESSION_I]} Result.make (
-					agent (ia_observer: SESSION_EVENT_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: SESSION_EVENT_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := << [value_changed_event, agent ia_observer.on_session_value_changed] >>
 						end)

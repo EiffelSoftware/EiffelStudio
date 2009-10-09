@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="cecil" uuid="98D410BA-DFF1-4C3D-A19B-3C0943717689">
-	<target name="classic">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffel2c_array" uuid="98D410BA-DFF1-4C3D-A19B-3C0943717689">
+	<target name="cecil">
 		<root cluster="root_cluster" class="ROOT_CLASS" feature="make"/>
 		<option warning="true">
 			<assertions precondition="true"/>

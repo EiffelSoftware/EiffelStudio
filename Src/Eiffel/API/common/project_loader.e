@@ -765,14 +765,10 @@ feature {NONE} -- Settings
 			l_path: STRING
 			l_target: CONF_TARGET
 			l_args: ARRAYED_LIST [STRING]
-			l_profile: STRING
 		do
 			l_target := a_precompile.target
 			create l_args.make (10)
-			l_profile := command_line_profile_option
-			if not l_profile.is_empty then
-				l_args.extend (l_profile)
-			end
+			l_args.merge_right (command_line_profile_option_list)
 			l_args.extend ("-config")
 			l_args.extend (a_precompile.location.evaluated_path)
 			l_args.extend ("-precompile")

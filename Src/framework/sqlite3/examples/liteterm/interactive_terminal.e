@@ -93,12 +93,14 @@ feature {NONE} -- Basic operations: Output
 			io.put_string ("Enter SQLite statements to execute, 'quit' to exit or 'help' for more help.%N%N")
 		end
 
-	put_database_report
+	put_statement_report (a_statement: SQLITE_STATEMENT)
 			-- Puts information pertaining to a last successful operation
+		require
+			a_statement_is_connected: a_statement.is_connected
 		local
 			l_count: NATURAL
 		do
-			l_count := database.changes_count
+			l_count := a_statement.changes_count
 			if l_count > 0 then
 				terminal.set_foreground_color ({TERMINAL_COLOR}.dim_magenta)
 				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
@@ -168,7 +170,7 @@ feature {NONE} -- Basic operations
 								create l_statement.make (l_input, database)
 								if l_statement.is_compiled then
 									l_statement.execute (agent on_result)
-									put_database_report
+									put_statement_report (l_statement)
 								else
 									if attached l_statement.last_exception as l_exception then
 										l_exception.raise

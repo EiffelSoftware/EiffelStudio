@@ -376,19 +376,19 @@ feature -- Externals
 			"return (EIF_INTEGER)sqlite3_threadsafe()"
 		end
 
+	c_sqlite3_total_changes (a_db: POINTER): INTEGER
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"return (EIF_INTEGER)sqlite3_total_changes((sqlite3 *)$a_db)"
+		end
+
 	c_sqlite3_update_hook (a_db: POINTER; a_callback: POINTER; a_data: POINTER): POINTER
 		external
 			"C inline use <sqlite3.h>"
 		alias
 			"return (EIF_POINTER)sqlite3_update_hook((sqlite3 *)$a_db, (void (*)(void *, int, char const *, char const *, sqlite3_int64))$a_callback, (void *)$a_data)"
 		end
-
-
---feature
-
-
-
-
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -11,13 +11,15 @@ deferred class
 	MATRIX_FILE_GENERATOR
 
 inherit
+	ANY
+
 	MULTI_ERROR_MANAGER
 		rename
 			make as make_error_manager,
 			reset as reset_error_manager
 		export
 			{NONE} all
-			{ANY} successful, trace_errors, trace_warnings, errors, warnings
+			{ANY} successful, trace_errors, trace_warnings, errors, warnings, has_errors, has_warnings
 		end
 
 feature {NONE} -- Initialization

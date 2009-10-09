@@ -32,7 +32,7 @@ inherit
 			item as transaction
 		export
 			{ANY} valid_index, valid_cursor_index
-			{MULTIPLE_TRANSACTION} cursor, go_to, area, i_th, upper,
+			{MULTIPLE_TRANSACTION} cursor, go_to, area_v2, i_th, upper,
 				valid_cursor, lower
 			{NONE} all
 		end
@@ -41,7 +41,7 @@ create
 	make
 
 create {MULTIPLE_TRANSACTION}
-	make_filled
+	make_filled, list_make
 
 feature {NONE} -- Initialization
 

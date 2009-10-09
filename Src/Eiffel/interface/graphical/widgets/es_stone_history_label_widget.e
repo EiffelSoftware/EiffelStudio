@@ -27,7 +27,7 @@ create
 	make
 
 convert
-	widget: {EV_WIDGET, attached EV_WIDGET, EV_HORIZONTAL_BOX, attached EV_HORIZONTAL_BOX}
+	widget: {EV_WIDGET, EV_HORIZONTAL_BOX}
 
 feature {NONE} -- Initialization
 

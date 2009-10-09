@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			tool_bar_buttons.extend (create {WEL_TOOL_BAR_BUTTON}.make_separator)
 			tool_bar_buttons.extend (create {WEL_TOOL_BAR_BUTTON}.make_check (bitmap_index2 + 8, Cmd_bullet))
 
-			l_tool_bar.add_buttons (tool_bar_buttons)
+			l_tool_bar.add_buttons (tool_bar_buttons.to_array)
 
 			on_menu_command (Cmd_new)
 		ensure

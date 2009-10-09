@@ -55,8 +55,7 @@ feature {NONE} -- Clean up
 			end
 		ensure then
 			internal_connections_is_empty:
-				attached {like internal_connections} old internal_connections as el_connections implies
-				el_connections.is_empty
+				attached old internal_connections as l_connections implies l_connections.is_empty
 		end
 
 feature {NONE} -- Access
@@ -77,7 +76,7 @@ feature {NONE} -- Access
 			result_consistent: Result = connections
 		end
 
-	frozen observer_event_action_map_fetch_action: FUNCTION [I, TUPLE [observer: G], ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]]
+	frozen observer_event_action_map_fetch_action: FUNCTION [I, TUPLE [observer: G], ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]]
 			-- A very confusing looking agent to retrieve an array of tuples, containing an event type and event handler routine on an observer {G}.
 			-- The function should be implemented on the interface {I}.
 
@@ -106,13 +105,13 @@ feature -- Event connection
 	connect_events (a_observer: G)
 			-- <Precursor>
 		local
-			l_event_maps: detachable ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
-			l_event_map: detachable TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
+			l_event_maps: detachable ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+			l_event_map: detachable TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
 			l_upper, i: INTEGER
 		do
 				-- Subscribe to events on the observer.
 			l_event_maps := observer_event_action_map_fetch_action.item ([a_observer])
-			check l_event_maps_attached: l_event_maps /= Void end
+			check l_event_maps_attached: attached l_event_maps end
 			if not l_event_maps.is_empty then
 				from
 					i := l_event_maps.lower
@@ -139,7 +138,7 @@ feature -- Event connection
 		local
 			l_connections: like connections
 			l_action: PROCEDURE [ANY, TUPLE]
-			l_event: EVENT_TYPE [TUPLE]
+			l_event: EVENT_TYPE_I [TUPLE]
 			l_upper, i: INTEGER
 		do
 				-- Remove the connection from the list of managed connections
@@ -180,7 +179,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 invariant
-	observer_event_action_map_fetch_action_attached: observer_event_action_map_fetch_action /= Void
+	observer_event_action_map_fetch_action_attached: attached observer_event_action_map_fetch_action
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

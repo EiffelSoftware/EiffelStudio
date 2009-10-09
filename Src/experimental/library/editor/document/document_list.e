@@ -6,7 +6,7 @@ note
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-deferred class
+class
 	DOCUMENT_LIST [G -> DOCUMENT_ITEM]
 
 inherit
@@ -15,6 +15,9 @@ inherit
 			remove,
 			extend
 		end
+
+create {DOCUMENT_LIST}
+	make, make_filled
 
 feature -- List operations
 

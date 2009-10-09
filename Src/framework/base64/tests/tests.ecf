@@ -14,7 +14,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="base64" location="$ISE_LIBRARY\library\base64\base64.ecf"/>
+		<library name="base64" location="$EIFFEL_SRC\framework\base64\base64.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<tests name="tests" location=".\" recursive="true"/>
 	</target>

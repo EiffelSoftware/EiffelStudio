@@ -40,7 +40,7 @@ feature -- Access
 		do
 			l_array_ptr := jni.get_double_array_elements (jarray, default_pointer)
 			jvalue.make_by_pointer (l_array_ptr + index * sizeof_jdouble)
-			Result := jvalue.double_value
+			Result := jvalue.double_value.truncated_to_real
 			jni.release_double_array_elements (jarray, l_array_ptr, 0)
 		end
 

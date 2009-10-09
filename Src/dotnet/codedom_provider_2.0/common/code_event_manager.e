@@ -10,9 +10,6 @@ class
 
 inherit
 	CODE_CONFIGURATION
-		export
-			{NONE} all
-		end
 
 feature -- Basic Operations
 

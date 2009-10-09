@@ -9,9 +9,6 @@ deferred class
 
 inherit
 	CODE_SETTINGS_MANAGER
-		export
-			{NONE} all
-		end
 
 feature -- Access
 
@@ -99,7 +96,7 @@ feature -- Basic Operation
 				set_setting (a_name, False_value)
 			end
 		end
-		
+
 	save_list (a_name: STRING; a_list: LIST [STRING])
 			-- Save `a_list' using key `a_name'.
 		require
@@ -127,7 +124,7 @@ feature -- Basic Operation
 				a_combo.set_text (a_list.first)
 			end
 		end
-		
+
 	initialize_combo (a_combo: EV_COMBO_BOX; a_name: STRING)
 			-- Fill `a_combo' with saved values with key `a_name' if any.
 			-- Will persist combo values in key with name `a_name'.
@@ -163,7 +160,7 @@ feature -- Basic Operation
 					a_combo.set_text (a_entry)
 				else
 					if not a_combo.text.is_equal (a_entry) then
-						a_combo.set_text (a_entry)						
+						a_combo.set_text (a_entry)
 					end
 					if not a_combo.strings_8.first.is_equal (a_entry) then
 						create {ARRAYED_LIST [STRING]} l_new_list.make (l_list.count)
@@ -206,7 +203,7 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_encoded_list: Result /= Void
 		end
-	
+
 	decoded_list (a_encoded_list: STRING): LIST [STRING]
 			-- List from encoded string created with `encoded_list'
 		require
@@ -216,7 +213,7 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_result: Result /= Void
 		end
-		
+
 feature {NONE} -- Private Access
 
 	X_pos_key: STRING = "x_pos"
@@ -236,7 +233,7 @@ feature {NONE} -- Private Access
 
 	True_value: INTEGER = 2
 			-- Number used to encode boolean `True' value
-	
+
 	False_value: INTEGER = 1;
 			-- Number used to encode boolean `False' value
 

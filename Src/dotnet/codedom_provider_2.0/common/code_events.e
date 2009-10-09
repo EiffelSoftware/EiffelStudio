@@ -10,6 +10,8 @@ class
 	CODE_EVENTS
 
 inherit
+	ANY
+
 	CODE_EVENTS_IDS
 		export
 			{NONE} all

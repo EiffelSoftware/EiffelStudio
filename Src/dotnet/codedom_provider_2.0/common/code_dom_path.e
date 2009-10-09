@@ -9,6 +9,8 @@ class
 	CODE_DOM_PATH
 
 inherit
+	ANY
+
 	CODE_REGISTRY_KEYS
 		export
 			{NONE} all

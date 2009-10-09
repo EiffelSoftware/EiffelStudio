@@ -12,8 +12,6 @@ inherit
 	CODE_CONFIGURATION
 		rename
 			assembly_prefix as config_assembly_prefix
-		export
-			{NONE} all
 		end
 create 
 	make,

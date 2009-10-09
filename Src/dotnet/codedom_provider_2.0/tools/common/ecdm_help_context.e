@@ -21,6 +21,9 @@ inherit
 create
 	make_from_string
 
+create {CODE_HELP_CONTEXT}
+	make
+
 convert
 	to_cil: {SYSTEM_STRING}
 

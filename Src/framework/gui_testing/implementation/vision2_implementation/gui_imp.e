@@ -260,14 +260,14 @@ feature {NONE} -- Implementation
 		do
 			-- TODO: regexp match of name
 			if an_info.name /= Void and an_info.type /= Void then
-				Result := an_identifiable.identifier_name.is_equal (an_info.name) and an_identifiable.generating_type.is_equal (an_info.type)
+				Result := an_identifiable.identifier_name.is_equal (an_info.name) and an_identifiable.generating_type.out.is_equal (an_info.type)
 			elseif an_info.name /= Void then
 				Result := an_identifiable.identifier_name.is_equal (an_info.name)
 			else
 				check
 					has_type: an_info.type /= Void
 				end
-				Result := an_identifiable.generating_type.is_equal (an_info.type)
+				Result := an_identifiable.generating_type.out.is_equal (an_info.type)
 			end
 		end
 
@@ -431,14 +431,35 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 
 end

@@ -7,14 +7,22 @@ feature -- Access
 			-- Name of current object's generating class
 			-- (base class of the type of which it is a direct instance)
 		do
-			Result := {ISE_RUNTIME}.generator (Current)
+			if attached {ISE_RUNTIME}.generator (Current) as l_string then
+				Result := l_string
+			else
+				Result := "Unable to get class name"
+			end
 		end
 
  	generating_type: STRING
 			-- Name of current object's generating type
 			-- (type of which it is a direct instance)
 		do
-			Result := {ISE_RUNTIME}.generating_type (Current)
+			if attached {ISE_RUNTIME}.generating_type (Current) as l_string then
+				Result := l_string
+			else
+				Result := "Unable to get type name"
+			end
  		end
 
 feature -- Status report
@@ -24,30 +32,24 @@ feature -- Status report
 			-- of `other' (as per Eiffel: The Language, chapter 13)?
 		local
 			l_cur: SYSTEM_OBJECT
-			l_cur_type: detachable SYSTEM_TYPE
 		do
 			l_cur := Current
-			l_cur_type := l_cur.get_type
-			check l_cur_type_attached: l_cur_type /= Void end
-			Result := l_cur_type.is_instance_of_type (other)
+			if attached l_cur.get_type as l_cur_type then
+				Result := l_cur_type.is_instance_of_type (other)
+			end
 		end
 
 	same_type (other: ANY): BOOLEAN
 			-- Is type of current object identical to type of `other'?
 		local
 			l_cur, l_other: SYSTEM_OBJECT
-			l_cur_type, l_other_type: detachable SYSTEM_TYPE
 		do
 			l_cur := Current
-			l_cur_type := l_cur.get_type
 			l_other := other
-			l_other_type := l_other.get_type
-			check
-				l_cur_type_attached: l_cur_type /= Void
-				l_other_type_attached: l_other_type /= Void
+			if attached l_cur.get_type as l_cur_type and attached l_other.get_type as l_other_type then
+				Result := l_cur_type.is_instance_of_type (other) and then
+					l_other_type.is_instance_of_type (Current)
 			end
-			Result := l_cur_type.is_instance_of_type (other) and then
-				l_other_type.is_instance_of_type (Current)
 		end
 
 feature -- Comparison

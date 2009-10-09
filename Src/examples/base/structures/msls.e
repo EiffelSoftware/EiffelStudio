@@ -5,13 +5,16 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class MSLS 
+class MSLS
 
 inherit
-	TWO_WAY_SORTED_SET [INTEGER] 
+	TWO_WAY_SORTED_SET [INTEGER]
 
 create
 	make
+
+create {MSLS}
+	make_sublist
 
 feature
 

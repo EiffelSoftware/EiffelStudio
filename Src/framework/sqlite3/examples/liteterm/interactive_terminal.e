@@ -105,11 +105,13 @@ feature {NONE} -- Basic operations: Output
 				io.put_natural (l_count)
 				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
 				terminal.set_foreground_color ({TERMINAL_COLOR}.magenta)
-				io.put_string (" change")
+				io.put_string (" change ")
 				if l_count > 1 then
-					io.put_character ('s')
+					io.put_string (" were")
+				else
+					io.put_string (" was")
 				end
-				io.put_string (" were just made to the database.")
+				io.put_string (" just made to the database.")
 				io.new_line
 				io.new_line
 				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
@@ -193,6 +195,83 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
+	read_response (a_question: READABLE_STRING_8; a_responses: TUPLE; a_default: detachable READABLE_STRING_8): NATURAL
+			-- Reads a response from the user, from a tuple of valid responses.
+			--
+			-- `a_question': A question to ask.
+			-- `a_responses': A tuple of objects to use as valid responses.
+			-- `a_default': An optional default response, if one if not provided.
+		require
+			not_a_question_is_empty: not a_question.is_empty
+			not_a_responses_is_empty: not a_responses.is_empty
+			not_a_default_is_empty: attached a_default implies not a_default.is_empty
+		local
+			i_count, i: INTEGER
+			l_default: detachable STRING
+			l_response: STRING
+			l_responses: ARRAYED_LIST [STRING]
+		do
+			i_count := a_responses.count
+
+				-- Create response string list, used to match responses later
+			create l_responses.make (i_count)
+			l_responses.compare_objects
+			from i := 1 until i > i_count loop
+				if attached a_responses.item (i) as l_item then
+					l_responses.extend (l_item.out.as_lower)
+				end
+				i := i + 1
+			end
+
+			if attached a_default then
+					-- Set the default
+				l_default := a_default.string.as_lower
+			end
+
+				-- Ask the question
+			io.put_string (a_question)
+			io.put_string (" [")
+			from l_responses.start until l_responses.after loop
+				l_response := l_responses.item
+				if l_response ~ l_default then
+					terminal_error.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
+					io.put_string (l_response.as_upper)
+					terminal_error.set_text_style ({TERMINAL_TEXT_STYLE}.none)
+				else
+					io.put_string (l_response)
+				end
+				if not l_responses.islast then
+					io.put_character ('|')
+				end
+				l_responses.forth
+			end
+			io.put_string ("]? ")
+
+				-- Get and parse result
+			io.read_line
+
+			l_response := io.last_string.as_lower
+			if l_response.is_empty then
+				if attached l_default then
+					l_response := l_default
+				end
+			end
+
+			if l_responses.has (l_response) then
+				l_responses.start
+				l_responses.search (l_response)
+				if not l_responses.after then
+					Result := l_responses.index.to_natural_32
+				end
+			end
+			if Result = 0 then
+					-- Not a valid response
+				Result := read_response (a_question, a_responses, a_default)
+			else
+				io.new_line
+			end
+		end
+
 	process_command (a_cmd: READABLE_STRING_8): BOOLEAN
 			-- Processes a built-in command.
 			--
@@ -252,8 +331,52 @@ feature {NONE} -- Action handler
 			-- Called when a new result row is available.
 			--
 			-- `a_row': SQLite result row from last executed statement.
+		local
+			l_index: NATURAL
+			i_count, i: NATURAL
 		do
+			l_index := a_row.index
 
+				-- Display columns
+			from
+				i := 1
+				i_count := a_row.count
+			until
+				i > i_count
+			loop
+				terminal.set_foreground_color ({TERMINAL_COLOR}.dim_magenta)
+				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
+				io.put_string (a_row.column_name (i))
+				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
+				terminal.set_foreground_color ({TERMINAL_COLOR}.none)
+				io.put_string (": ")
+				if a_row.type (i) /= {SQLITE_TYPE}.blob then
+					io.put_string (a_row.string_value (i))
+				else
+					io.put_string ("<Blob>")
+				end
+				io.new_line
+				i := i + 1
+			end
+
+			i_count := terminal.columns
+			if i_count > 0 then
+				io.put_string (create {STRING}.make_filled ('-', i_count.to_integer_32))
+			else
+				io.new_line
+			end
+
+			if l_index = 25 or else l_index = 200 then
+					-- Safety net.
+				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.bold)
+				io.put_natural (l_index)
+				terminal.set_text_style ({TERMINAL_TEXT_STYLE}.none)
+				terminal.set_foreground_color ({TERMINAL_COLOR}.none)
+				io.put_string (" results have already been returned.%N")
+
+					-- Check if user wants more results, as we have already seen a lot.
+				Result :=  read_response ("Do you want to view the rest", ["y", "n"], "n") = 2
+			end
 		end
 
 	on_update (a_action: SQLITE_UPDATE_ACTION; a_name: STRING_8; a_table: STRING_8; a_row: INTEGER_64)

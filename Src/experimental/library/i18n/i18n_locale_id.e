@@ -186,11 +186,14 @@ feature {NONE} -- Implementation
 				full_name.append ("_"+region)
 			end
 			if encoding /= Void then
-				full_name.append ("."+encoding)
+				full_name.append_character ('.')
+				full_name.append_string (encoding)
 			end
 			if script /= Void then
-				name.append("@"+script)
-				full_name.append("@"+script)
+				name.append_character ('@')
+				name.append_string (script)
+				full_name.append_character ('@')
+				full_name.append_string (script)
 			end
 		ensure
 			name_not_void: name /= Void

@@ -40,11 +40,10 @@ feature	-- Access
 		local
 			l_result: detachable I18N_DICTIONARY
 		do
-			if available_locales.has (a_locale) then
-				l_result := chain.get_file_dictionary (locale_file_list.item (a_locale))
-			elseif available_languages.has (a_locale.language_id) then
-				l_result := chain.get_file_dictionary (
-					language_file_list.item (a_locale.language_id))
+			if available_locales.has (a_locale) and then attached locale_file_list.item (a_locale) as l_locale then
+				l_result := chain.get_file_dictionary (l_locale)
+			elseif available_languages.has (a_locale.language_id) and then attached language_file_list.item (a_locale.language_id) as l_language_locale then
+				l_result := chain.get_file_dictionary (l_language_locale)
 			end
 			if l_result = Void then
 				create {I18N_DUMMY_DICTIONARY}l_result.make (0)

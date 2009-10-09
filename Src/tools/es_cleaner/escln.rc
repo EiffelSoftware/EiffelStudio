@@ -1,5 +1,0 @@
-// It should be
-// CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "ec.exe.manifest"
-// but on older version of VC or older version of the Platform SDK they
-// are not defined.
-1 24 "escln.exe.manifest"

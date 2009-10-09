@@ -9,16 +9,18 @@ note
 	date       : "$Date$"
 	revision   : "$Revision$"
 
-class 
+class
 	EC_REPORT_BUILDER
 
 inherit
+	ANY
+
 	EC_CHECK_PRINTER
 		export
 			{NONE} all
 		end
 
-create 
+create
 	make
 
 feature {NONE} -- Initialization
@@ -34,7 +36,7 @@ feature {NONE} -- Initialization
 			create percentage_completed_changed_actions
 			create report_completed_actions
 		end
-	
+
 feature -- Access
 
 	report: EC_REPORT
@@ -44,14 +46,14 @@ feature -- Action Subscriptions
 
 	type_report_added_actions: ACTION_SEQUENCE [TUPLE [EC_REPORT_TYPE]]
 			-- Actions called when a new type report has been added to `report'.
-			
+
 	type_member_report_added_actions: ACTION_SEQUENCE [TUPLE [EC_REPORT_TYPE, EC_REPORT_MEMBER]]
 			-- Actions called when a new type member report has been added to `report'.
-			
+
 	percentage_completed_changed_actions: ACTION_SEQUENCE [TUPLE [NATURAL_8]]
 			-- Actions called when overall percentage complete changes.
 			-- 100% ensures `report' is fully completed
-			
+
 	report_completed_actions: ACTION_SEQUENCE [TUPLE [BOOLEAN]]
 			-- Actions called when `report' is complete.
 			-- BOOLEAN indicates if report was fully generated.
@@ -71,7 +73,7 @@ feature -- Starting
 		do
 			report.set_is_being_built (True)
 		end
-		
+
 	start_type (a_type: SYSTEM_TYPE)
 			-- Called when checker is about to begin checking type `a_type'.
 		do
@@ -81,29 +83,29 @@ feature -- Starting
 			-- Called when checker is about to begin checking constructor `a_ctor'.
 		do
 		end
-		
+
 	start_method (a_method: METHOD_INFO)
 			-- Called when checker is about to begin checking method `a_method'.
 		do
 		end
-		
+
 	start_property (a_property: PROPERTY_INFO)
 			-- Called when checker is about to begin checking property `a_property'.
 		do
-		end	
-		
+		end
+
 	start_field (a_field: FIELD_INFO)
 			-- Called when checker is about to begin checking field `a_field'.
 		do
 		end
-	
+
 	start_event (a_event: EVENT_INFO)
 			-- Called when checker is about to begin checking ecent `a_event'.
 		do
-		end	
+		end
 
 feature -- Checked
-		
+
 	checked_type (a_type: EC_CHECKED_TYPE)
 			-- Called when checker is about to begin checking type `a_type'
 		local
@@ -126,7 +128,7 @@ feature -- Checked
 			create l_member.make (a_ctor, l_type)
 			l_type.add_member_report (l_member)
 		end
-		
+
 	checked_method (a_method: EC_CHECKED_MEMBER_METHOD)
 			-- Called when checker is about to begin checking method `a_method'
 		local
@@ -148,7 +150,7 @@ feature -- Checked
 			create l_member.make (a_property, l_type)
 			l_type.add_member_report (l_member)
 		end
-		
+
 	checked_field (a_field: EC_CHECKED_MEMBER_FIELD)
 			-- Called when checker is about to begin checking field `a_field'
 		local
@@ -159,7 +161,7 @@ feature -- Checked
 			create l_member.make (a_field, l_type)
 			l_type.add_member_report (l_member)
 		end
-	
+
 	checked_event (a_event: EC_CHECKED_MEMBER)
 			-- Called when checker is about to begin checking event `a_event'
 		local
@@ -170,7 +172,7 @@ feature -- Checked
 			create l_member.make (a_event, l_type)
 			l_type.add_member_report (l_member)
 		end
-		
+
 feature -- Endding
 
 	notify_end (a_complete: BOOLEAN)
@@ -180,38 +182,38 @@ feature -- Endding
 			report.set_is_being_built (False)
 			report_completed_actions.call ([a_complete])
 		end
-		
+
 	end_type
 			-- Called when checker is finished checking last started checked type.
 		do
 			type_report_added_actions.call ([last_report_type])
 			last_report_type := Void
 		end
-		
+
 	end_constructor
 			-- Called when checker is finished checking last started checked constructor.
 		do
 		end
-		
+
 	end_method
 			-- Called when checker is finished checking last started checked method.
 		do
 		end
-		
+
 	end_property
 			-- Called when checker is finished checking last started checked property.
 		do
-		end	
-		
+		end
+
 	end_field
 			-- Called when checker is finished checking last started checked field.
 		do
 		end
-	
+
 	end_event
 			-- Called when checker is about to begin checking event.
 		do
-		end	
+		end
 
 feature -- Percentage
 
@@ -220,12 +222,12 @@ feature -- Percentage
 		do
 			percentage_completed_changed_actions.call ([a_percent])
 		end
-	
+
 feature {NONE} -- Implementation
 
 	last_report_type: EC_REPORT_TYPE
 			-- Last report type
-	
+
 invariant
 	report_not_void: report /= Void
 	type_report_added_actions_not_void: type_report_added_actions /= Void
@@ -234,7 +236,7 @@ invariant
 	report_completed_actions_not_void: report_completed_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -247,21 +249,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_REPORT_BUILDER

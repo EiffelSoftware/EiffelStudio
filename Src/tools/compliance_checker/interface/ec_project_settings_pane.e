@@ -23,7 +23,7 @@ inherit
 			is_equal,
 			out
 		end
-		
+
 	EV_KEY
 		export
 			{NONE} all
@@ -33,7 +33,7 @@ inherit
 			is_equal,
 			out
 		end
-		
+
 feature {NONE} -- Initialization
 
 	user_initialization
@@ -45,15 +45,15 @@ feature {NONE} -- Initialization
 		local
 			l_grid: like grid_reference_paths
 			l_grid_processor: EV_GRID_DEFAULT_UI_PROCESSOR
-		do			
+		do
 			synchronize_project_with_interface
-		
+
 			--| `txt_assembly_path'
 			txt_assembly_path.change_actions.extend (agent on_assembly_changed)
-			
+
 			--| `btn_browse'
 			btn_browse.select_actions.extend (agent on_browse_for_assembly)
-		
+
 			--| `grid_reference_paths'
 			l_grid := grid_reference_paths
 			l_grid.set_column_count_to (1)
@@ -70,16 +70,16 @@ feature {NONE} -- Initialization
 			l_grid.enable_row_separators
 			l_grid.header.first.disable_user_resize
 			l_grid.key_release_actions.extend (agent on_grid_key_released)
-			
+
 			create l_grid_processor.make (l_grid)
-			
+
 			--| `btn_add_reference'
 			btn_add_reference.select_actions.extend (agent on_add_selected)
-			
+
 			--| `btn_remove_reference'
 			btn_remove_reference.select_actions.extend (agent on_remove_selected)
 			btn_remove_reference.disable_sensitive
-			
+
 			show_hide_assembly_error_pixmap
 		end
 
@@ -112,13 +112,13 @@ feature -- Basic Operation
 
 			l_cursor := l_list.cursor
 			l_grid := grid_reference_paths
-			from 
+			from
 			until
 				l_grid.row_count = 0
 			loop
 				l_grid.remove_row (1)
 			end
-			
+
 			from
 				l_list.start
 			until
@@ -140,7 +140,7 @@ feature {NONE} -- Agent Handlers
 			project.set_assembly (txt_assembly_path.text)
 			show_hide_assembly_error_pixmap
 		end
-		
+
 	on_browse_for_assembly
 			-- Called when user selected to browse for an assembly.
 		require
@@ -159,7 +159,7 @@ feature {NONE} -- Agent Handlers
 			if l_dir /= Void then
 				l_ofd.set_start_directory (l_dir)
 			end
-			
+
 			l_ofd.show_modal_to_window (owner_window)
 			l_file_name := l_ofd.file_name
 			if l_file_name /= Void and then not l_file_name.is_empty then
@@ -168,10 +168,10 @@ feature {NONE} -- Agent Handlers
 				txt_assembly_path.set_caret_position (l_file_name.count + 1)
 			end
 		end
-		
+
 	sticky_assembly_path: STRING
 			-- Last assembly path directory		
-				
+
 	on_grid_row_selection_changed (a_selected: BOOLEAN; a_row: EV_GRID_ROW)
 			-- Called when selection changes in `grid_reference_paths'.
 			-- `a_selected' indicates a selection or deselection.
@@ -193,17 +193,17 @@ feature {NONE} -- Agent Handlers
 				end
 			end
 		end
-		
+
 	on_grid_key_released (a_key: EV_KEY)
 			-- Called when user presses key on focused item in `grid_reference_paths'
 		require
 			a_key_not_void: a_key /= Void
 		local
-			l_rows: ARRAY [EV_GRID_ROW]
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_item: EV_GRID_EDITABLE_ITEM
 		do
 			inspect a_key.code
-			
+
 			when key_f2 then
 				l_rows := grid_reference_paths.selected_rows
 				if l_rows.count > 0 then
@@ -214,7 +214,7 @@ feature {NONE} -- Agent Handlers
 					if l_item /= Void then
 						l_item.ensure_visible
 						active_reference_text := l_item.text
-						l_item.activate	
+						l_item.activate
 						l_item.text_field.select_all
 					end
 				end
@@ -224,7 +224,7 @@ feature {NONE} -- Agent Handlers
 				--| Do nothing...	
 			end
 		end
-		
+
 	on_item_post_draw (a_drawable: EV_DRAWABLE; a_item: EV_GRID_ITEM; a_column: INTEGER; a_row: INTEGER)
 			-- Called after a item has been drawn.
 		do
@@ -232,7 +232,7 @@ feature {NONE} -- Agent Handlers
 				a_drawable.draw_pixmap (a_item.column.width - 17, 0, icon_open)
 			end
 		end
-		
+
 	on_grid_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Called when `grid_reference_paths' resizes
 		local
@@ -242,8 +242,8 @@ feature {NONE} -- Agent Handlers
 			l_grid.virtual_size_changed_actions.block
 			l_grid.column (1).set_width (l_grid.viewable_width - 1)
 			l_grid.virtual_size_changed_actions.resume
-		end		
-		
+		end
+
 	on_browse_path (a_item: EV_GRID_EDITABLE_ITEM; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when user selects to browse for an existing path (using folder icon on grid item)
 		require
@@ -259,14 +259,14 @@ feature {NONE} -- Agent Handlers
 							project.replace_reference_path (a_item.text, l_dir)
 							a_item.set_text (l_dir)
 							set_path_pixmap (a_item, l_dir)
-						else							
-							display_already_added_error	
+						else
+							display_already_added_error
 						end
 					end
 				end
-			end	
+			end
 		end
-		
+
 	on_double_click_reference_path (a_item: EV_GRID_EDITABLE_ITEM; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when user double left clicks on reference path item in `grid_reference_paths'.
 		require
@@ -278,7 +278,7 @@ feature {NONE} -- Agent Handlers
 				a_item.text_field.select_all
 			end
 		end
-		
+
 	on_end_edit_reference_path (a_item: EV_GRID_EDITABLE_ITEM)
 			-- Called when editable edit session reference path has ended.
 		require
@@ -305,11 +305,11 @@ feature {NONE} -- Agent Handlers
 				else
 					display_already_added_error
 					a_item.set_text (l_old_text)
-				end	
+				end
 			end
 			active_reference_text := Void
-		end	
-		
+		end
+
 	on_reference_path_pointer_move (a_item: EV_GRID_EDITABLE_ITEM; a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when mouse moved over grid item.
 		do
@@ -334,12 +334,12 @@ feature {NONE} -- Agent Handlers
 				if not l_project.reference_paths.has (l_dir) then
 					l_project.add_reference_path (l_dir)
 					add_reference_path (l_dir)
-				else					
+				else
 					display_already_added_error
 				end
 			end
 		end
-		
+
 	on_remove_selected
 			-- Called when `btn_remove' is selected.
 		require
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			l_grid := grid_reference_paths
 			i := l_grid.row_count + 1
 			l_grid.insert_new_row (i)
-			
+
 			create l_edit_item.make_with_text (a_path)
 			l_grid.set_item (1, i, l_edit_item)
 			l_edit_item.pointer_double_press_actions.extend (agent on_double_click_reference_path (l_edit_item, ?, ?, ?, ?, ?, ?, ?, ?))
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 			set_path_pixmap (l_edit_item, a_path)
 			l_edit_item.set_right_border (18)
 			if i = 1 then
-				l_edit_item.row.enable_select	
+				l_edit_item.row.enable_select
 			end
 		end
 
@@ -443,9 +443,9 @@ feature {NONE} -- Implementation
 				Result := l_dir
 			end
 		ensure
-			not_result_is_empty: Result /= Void implies not Result.is_empty 
+			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
-	
+
 	set_path_pixmap (a_item: EV_GRID_EDITABLE_ITEM; a_dir: STRING)
 			-- Sets pixmaps for `a_item' base on validity of `a_dir'
 		require
@@ -460,12 +460,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sticky_path: STRING 
+	sticky_path: STRING
 			-- Last selected path
-			
+
 	active_reference_text: STRING
 			-- Text take from activated editable item when first activated
-		
+
 feature {NONE} -- Dialogs
 
 	display_already_added_error
@@ -483,7 +483,7 @@ invariant
 	owner_window_not_void: owner_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -496,22 +496,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_PROJECT_SETTINGS_PANE
 

@@ -16,19 +16,17 @@ inherit
 		redefine
 			is_equal
 		end
-	
+
 	COMPARABLE
-		export
-			{NONE} all
 		undefine
 			default_create,
 			is_equal,
 			copy
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_member: like member; a_type: like parent)
@@ -43,7 +41,7 @@ feature {NONE} -- Initialization
 			member_set: member = a_member
 			parent_set: parent = a_type
 		end
-		
+
 feature -- Access
 
 	report: EC_REPORT
@@ -57,7 +55,7 @@ feature -- Access
 
 	member: EC_CHECKED_MEMBER
 			-- Member associated with report entity
-	
+
 feature -- Comparison {COMPARABLE}
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -65,20 +63,20 @@ feature -- Comparison {COMPARABLE}
 		do
 			Result := {SYSTEM_STRING}.compare (member.member.name, other.member.member.name) < 0
 		end
-		
+
 	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := {SYSTEM_STRING}.compare (member.member.name, other.member.member.name) = 0
 		end
-	
+
 invariant
 	parent_not_void: parent /= Void
 	member_not_void: member /= Void
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -91,21 +89,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_REPORT_MEMBER

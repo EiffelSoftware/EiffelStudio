@@ -9,6 +9,8 @@ class
 	ECDM_SAVED_SETTINGS
 
 inherit
+	ANY
+
 	ECDM_REGISTRY_KEYS
 		export
 			{NONE} all

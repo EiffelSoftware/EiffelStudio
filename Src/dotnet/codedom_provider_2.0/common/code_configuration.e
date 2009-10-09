@@ -51,6 +51,8 @@ class
 	CODE_CONFIGURATION
 
 inherit
+	ANY
+
 	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all

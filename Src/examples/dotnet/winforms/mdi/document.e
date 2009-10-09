@@ -122,7 +122,7 @@ feature -- Access
 	main_menu: WINFORMS_MAIN_MENU
 			-- System.Windows.Forms.MainMenu.
 
-	font_size: DOUBLE
+	font_size: REAL_32
 			-- Font face and size.
 
 	mi_format_font_checked,
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	font_sizes (a_size: STRING): DOUBLE
+	font_sizes (a_size: STRING): REAL_32
 			-- Return size correspondind to `a_size'.
 		require
 			non_void_a_size: a_size /= Void

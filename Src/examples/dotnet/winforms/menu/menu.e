@@ -137,7 +137,7 @@ feature -- Access
 	label_1_context_menu: WINFORMS_CONTEXT_MENU
 			-- System.Windows.Forms.ContextMenu.
 
-	font_size: DOUBLE
+	font_size: REAL_32
 			-- Font face and size.
 
 	mmi_sans_serif, mmi_serif, mmi_mono_space, mmi_small, mmi_medium,
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	font_sizes (a_size: STRING): DOUBLE
+	font_sizes (a_size: STRING): REAL_32
 			--  Comment out this structure to view menus.cs in the WinForms Designer.
 			--  Remember not to edit the menus in the designer. It will conflict
 			--  with the hand-written menu code. Remember to uncomment this

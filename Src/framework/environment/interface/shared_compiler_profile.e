@@ -41,30 +41,46 @@ feature -- Access
 	command_line_profile_option: STRING
 			-- Command line option needed to mimic current profile
 		local
-			l_result: detachable STRING
+			l_options: like command_line_profile_option_list
 		do
+			create Result.make (20)
+			from
+				l_options := command_line_profile_option_list
+				l_options.start
+			until
+				l_options.after
+			loop
+				if not l_options.isfirst then
+					Result.append_character (' ')
+				end
+				Result.append (l_options.item)
+				l_options.forth
+			end
+		end
+
+	command_line_profile_option_list: ARRAYED_LIST [STRING]
+			-- Command line option needed to mimic current profile
+		local
+			l_option: detachable STRING
+		do
+			create Result.make (2)
 			if is_compatible_mode then
-				create l_result.make (1 + compat_option_name.count)
-				l_result.append_character ('-')
-				l_result.append (compat_option_name)
+				create l_option.make (1 + compat_option_name.count)
+				l_option.append_character ('-')
+				l_option.append (compat_option_name)
 			elseif is_experimental_mode then
-				create l_result.make (1 + experiment_option_name.count)
-				l_result.append_character ('-')
-				l_result.append (experiment_option_name)
+				create l_option.make (1 + experiment_option_name.count)
+				l_option.append_character ('-')
+				l_option.append (experiment_option_name)
+			end
+			if l_option /= Void then
+				Result.extend (l_option)
 			end
 			if is_full_class_checking_mode then
-				if l_result = Void then
-					create l_result.make (1 + full_option_name.count)
-				else
-					l_result.append_character (' ')
-				end
-				l_result.append_character ('-')
-				l_result.append (full_option_name)
-			end
-			if l_result /= Void then
-				Result := l_result
-			else
-				Result := ""
+				create l_option.make (1 + full_option_name.count)
+				l_option.append_character ('-')
+				l_option.append (full_option_name)
+				Result.extend (l_option)
 			end
 		end
 

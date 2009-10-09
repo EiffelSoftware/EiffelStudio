@@ -6,7 +6,7 @@ note
 class
 	GDIP_TEXT
 
-inherit 
+inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
@@ -71,16 +71,16 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER
-			-- System.ComponentModel.Container 
+			-- System.ComponentModel.Container
 
 	background_brush, text_texture_brush: DRAWING_TEXTURE_BRUSH
 	title_shadow_brush: DRAWING_SOLID_BRUSH
 	linear_grad_brush: DRAWING_BRUSH
-			-- Brush 
+			-- Brush
 
 	title_font, text_font, japanese_font: DRAWING_FONT
 			-- Font
-			
+
 	flowed_text_1: SYSTEM_STRING
 			-- A text to draw.
 		once
@@ -101,8 +101,8 @@ So the boys'll know that I died standing up.
 		ensure
 			non_void_result: Result /= Void
 		end
-	
-	flowed_text_2: SYSTEM_STRING 
+
+	flowed_text_2: SYSTEM_STRING
 			-- A text to draw.
 		once
 			Result := "[
@@ -118,7 +118,7 @@ come tell me what i'm after
 		ensure
 			non_void_result: Result /= Void
 		end
-	
+
 	japanese_text: SYSTEM_STRING
 			-- A japanese text to draw.
 		local
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				if components /= Void then
-					components.dispose	
+					components.dispose
 				end
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			rectangle_11, rectangle_21: DRAWING_RECTANGLE_F
 			rectangle_12, rectangle_22: DRAWING_RECTANGLE
 			format: DRAWING_STRING_FORMAT
-			window_center, start_pos: DOUBLE
+			window_center, start_pos: REAL_32
 			string_size: DRAWING_SIZE_F
 		do
 			graph := e.graphics
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			text_to_draw := "Hello Symmetrical World"
 
 				-- Use Measure string to display a string at the center of the window
-			window_center := display_rectangle.width / 2
+			window_center := (display_rectangle.width / 2).truncated_to_real
 			string_size := e.graphics.measure_string (text_to_draw, text_font)
 			start_pos := window_center - (string_size.width / 2)
 			graph.draw_string (text_to_draw, text_font, create {DRAWING_SOLID_BRUSH}.make ({DRAWING_COLOR}.red), start_pos, 10)
@@ -247,9 +247,9 @@ feature {NONE} -- Implementation
 					-- Load the fonts we want to use
 				japanese_font := (create {DRAWING_FONT}.make ("MS Mincho", 36))
 				linear_grad_brush := create {DRAWING_LINEAR_GRADIENT_BRUSH}.make (
-													create {DRAWING_POINT}.make (0, 0), 
-													create {DRAWING_POINT}.make (0, 45), 
-													{DRAWING_COLOR}.Blue, 
+													create {DRAWING_POINT}.make (0, 0),
+													create {DRAWING_POINT}.make (0, 45),
+													{DRAWING_COLOR}.Blue,
 													{DRAWING_COLOR}.Red)
 			else
 				do_japanese_sample := False

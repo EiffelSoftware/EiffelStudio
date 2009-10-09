@@ -123,8 +123,7 @@ feature {NONE} -- Implementation
 			-- Find all test case classes and force compile
 		local
 			l_shared: SHARED_WORKBENCH
-			l_all_classes: DS_HASH_SET [CLASS_I]
-			l_cursor: DS_HASH_SET_CURSOR [CLASS_I]
+			l_all_classes: SEARCH_TABLE [CLASS_I]
 			l_system_i: SYSTEM_I
 			l_unref_classes: ARRAYED_LIST [CLASS_I]
 		do
@@ -134,24 +133,23 @@ feature {NONE} -- Implementation
 			all_test_case_classes.wipe_out
 			from
 				l_unref_classes := l_system_i.unref_classes_snapshot
-				l_cursor := l_all_classes.new_cursor
-				l_cursor.start
+				l_all_classes.start
 			until
-				l_cursor.after
+				l_all_classes.after
 			loop
-				if attached {CLASS_I} l_cursor.item as lt_class_i then
+				if attached {CLASS_I} l_all_classes.item_for_iteration as lt_class_i then
 					if is_test_case_class (lt_class_i) then
-						all_test_case_classes.extend (l_cursor.item)
+						all_test_case_classes.extend (lt_class_i)
 
-						if not l_cursor.item.group.is_used_in_library and then
-							not l_unref_classes.has (l_cursor.item) then
+						if not lt_class_i.group.is_used_in_library and then
+							not l_unref_classes.has (lt_class_i) then
 
-							l_system_i.add_unref_class (l_cursor.item)
+							l_system_i.add_unref_class (lt_class_i)
 						end
 					end
 				end
 
-				l_cursor.forth
+				l_all_classes.forth
 			end
 		end
 
@@ -201,7 +199,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -225,11 +223,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -93,7 +93,7 @@ feature -- Externals
 		external
 			"C inline use <sqlite3.h>"
 		alias
-			"return (EIF_INTEGER)sqlite3_close((sqlite3 *)$a_db)"
+			"return (EIF_INTEGER)sqlite3_changes((sqlite3 *)$a_db)"
 		end
 
 	c_sqlite3_clear_bindings (a_stmt: POINTER): INTEGER

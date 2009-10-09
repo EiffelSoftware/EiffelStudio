@@ -106,8 +106,8 @@ feature {NONE} -- Implementation
 
 	run_demo
 		local
-			x_min, x_max, y_min, y_max, z_min, z_max: REAL
-			ang, rap: REAL
+			x_min, x_max, y_min, y_max, z_min, z_max: REAL_64
+			ang, rap: REAL_64
 			nx, ny: INTEGER
 			number_bitmap: INTEGER
 			virtual_dc: WEL_MEMORY_DC
@@ -225,14 +225,14 @@ feature {NONE} -- Implementation
 		end
 
 	surface (nx, ny: INTEGER; x_min, x_max, y_min, y_max,
-			z_min, z_max, ang, rap: REAL)
+			z_min, z_max, ang, rap: REAL_64)
 			-- Draw the surface on the compatible dc
 		local
 			coord: ARRAY [PROJECTION]
 			x1, y1, color1, color2, xp, yp, ix, iy: INTEGER
-			zmax, zmin, xre, yre, zre, angle: REAL
-			c1, l1, h1, dx, dy, dz: REAL
-			p1, q1, s1, p2, r2, s2, xx, yy, z: REAL
+			zmax, zmin, xre, yre, zre, angle: REAL_64
+			c1, l1, h1, dx, dy, dz: REAL_64
+			p1, q1, s1, p2, r2, s2, xx, yy, z: REAL_64
 			x_screen, y_screen: INTEGER
 			ind: INTEGER
 			poly_coord: ARRAY [INTEGER]
@@ -367,10 +367,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_angle (x1, y1, z1, x2, y2, z2, x3, y3, z3: REAL): REAL
+	compute_angle (x1, y1, z1, x2, y2, z2, x3, y3, z3: REAL_64): REAL_64
 			-- Compute the angle between the surface and the light
 		local
-			loc_p1, loc_p2, loc_p3, loc_q1, loc_q2, loc_q3: REAL
+			loc_p1, loc_p2, loc_p3, loc_q1, loc_q2, loc_q3: REAL_64
 			norm1, norm2, norm3: DOUBLE
 			divisor: DOUBLE
 		do
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate (a_x, a_y: REAL): REAL
+	evaluate (a_x, a_y: REAL_64): REAL_64
 			-- Evaluate the function at `a_x', `a_y' point
 		do
 			Result :=  sine (sqrt (a_x * a_x + a_y * a_y) - phase )

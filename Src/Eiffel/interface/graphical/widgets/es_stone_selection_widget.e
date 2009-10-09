@@ -22,7 +22,7 @@ create
 	make
 
 convert
-	widget: {EV_WIDGET, attached EV_WIDGET}
+	widget: {EV_WIDGET}
 
 feature {NONE} -- User interface initialization
 
@@ -137,14 +137,14 @@ feature {NONE} -- User interface elements
 		local
 			l_names: SORTABLE_ARRAY [NAME_FOR_COMPLETION]
 			l_name: EB_CLASS_FOR_COMPLETION
-			l_classes: DS_HASH_SET [CLASS_I]
+			l_classes: SEARCH_TABLE [CLASS_I]
 			i: INTEGER
 		do
 			if workbench.system_defined then
 				l_classes := workbench.universe.all_classes
 				create l_names.make (1, l_classes.count)
 				from l_classes.start until l_classes.after loop
-					create l_name.make (l_classes.item_for_iteration)
+					create l_name.make (l_classes.item_for_iteration, Void)
 					--if l_classes.item_for_iteration.is_compiled then
 						i := i + 1
 						l_names.put (l_name, i)

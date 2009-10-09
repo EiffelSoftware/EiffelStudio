@@ -438,8 +438,8 @@ feature{NONE} -- Implementation
 			l_key, l_value: SYSTEM_STRING
 		do
 			create Result.make_from_file_name_and_arguments (executable, argument_line)
-			if working_directory /= Void then
-				Result.set_working_directory (working_directory)
+			if attached working_directory as l_dir then
+				Result.set_working_directory (l_dir)
 			end
 			if hidden then
 				Result.set_window_style ({SYSTEM_DLL_PROCESS_WINDOW_STYLE}.hidden)
@@ -702,8 +702,10 @@ feature{NONE} -- Implementation
 				until
 					i > l_upper
 				loop
-					create l_performance_counter.make_with_category_name (once "Process", once "ID Process", l_process_list.item (i), True)
-					l_prc_name_id_tbl.force (l_performance_counter.raw_value.as_integer_32, l_process_list.item (i))
+					if attached l_process_list.item (i) as l_process_name then
+						create l_performance_counter.make_with_category_name (once "Process", once "ID Process", l_process_name, True)
+						l_prc_name_id_tbl.force (l_performance_counter.raw_value.as_integer_32, l_process_name)
+					end
 					i := i + 1
 				end
 					-- Find out parent process id for each process in `l_prc_name_id_tbl'.
@@ -752,8 +754,8 @@ feature{NONE} -- Implementation
 						i := i + 1
 					end
 				end
-				if done then
-					Result := a_process_list.item (i)
+				if done and then attached a_process_list.item (i) as l_process_name then
+					Result := l_process_name
 				end
 			end
 		end

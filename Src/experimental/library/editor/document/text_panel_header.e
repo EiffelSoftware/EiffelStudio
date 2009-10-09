@@ -41,6 +41,9 @@ inherit
 create
 	make_with_panel
 
+create {TEXT_PANEL_HEADER}
+	make, make_filled
+
 feature -- Creation
 
 	make_with_panel (a_text_panel: TEXT_PANEL)

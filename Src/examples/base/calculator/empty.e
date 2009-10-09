@@ -1,34 +1,34 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class 
+class
 	EMPTY
 
-inherit 
+inherit
 	STATE
 		redefine
 			process
 		end
 
-feature 
+feature
 
-	operation 
+	operation
 			-- Empty the stack and set accumulator and register to 0.
-		do 
+		do
 			from
-				register := 0.0
+				register := {REAL_32} 0.0
 			until
 				operand_stack.count = 1
 			loop
 				operand_stack.remove
 			end
-			operand_stack.replace (0.0)
+			operand_stack.replace ({REAL_32} 0.0)
 		ensure then
-			register = 0.0;
+			register = {REAL_32} 0.0;
 			operand_stack.count = 1
-			operand_stack.item = 0.0
+			operand_stack.item = {REAL_32} 0.0
 		end
-	
+
 	process
 			-- Process user's answer.
 		do
@@ -47,5 +47,5 @@ note
 		]"
 
 
-end -- class EMPTY 
+end -- class EMPTY
 

@@ -16,7 +16,7 @@ create {NS_ENVIRONEMENT}
 
 feature -- Managing Notification Observers
 
-	add_observer (a_callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]]; a_notification_name: detachable NS_STRING; a_notification_sender: detachable NS_OBJECT)
+	add_observer (a_callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]]; a_notification_name: detachable NS_STRING_BASE; a_notification_sender: detachable NS_OBJECT)
 			-- Adds an entry to the receiver's dispatch table with an observer, a notification selector and optional criteria: notification name and sender.
 			-- `a_notification_name' is the name of the notification for which to register the observer; that is, only notifications with this
 			-- name are delivered to the observer. When `Void', the notification center doesn't use a notification's name
@@ -62,4 +62,14 @@ feature {NONE} -- Internal
 			create Result.make (100)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

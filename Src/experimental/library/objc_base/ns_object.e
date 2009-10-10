@@ -36,7 +36,7 @@ create {NS_OBJECT, OBJC_CLASS, OBJC_CALLBACK_MARSHAL}
 	make_from_pointer,
 	make_weak_from_pointer
 
-feature {OBJC_CLASS} -- Initialization
+feature {OBJC_CLASS, OBJC_CALLBACK_MARSHAL} -- Initialization
 
 	make_weak_from_pointer (a_ptr: POINTER)
 			-- Create a weak reference to a_ptr, the object will neither be retained nor
@@ -172,4 +172,14 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

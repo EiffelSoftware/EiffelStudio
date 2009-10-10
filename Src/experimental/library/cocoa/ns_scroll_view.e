@@ -21,7 +21,7 @@ feature {NONE} -- Creation
 
 	make
 		do
-			make_from_pointer ({NS_SCROLL_VIEW_API}.new)
+			make_from_pointer ({NS_SCROLL_VIEW_API}.init({NS_SCROLL_VIEW_API}.alloc))
 		end
 
 	make_with_flipped_content_view

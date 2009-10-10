@@ -25,13 +25,13 @@ feature -- Accessing Run Loops and Modes
 			make_from_pointer ({NS_RUN_LOOP_API}.current_run_loop ())
 		end
 
-	current_mode: NS_STRING
+	current_mode: NS_STRING_BASE
 			-- Returns the receiver`s current input mode.
 		do
 			create Result.share_from_pointer ({NS_RUN_LOOP_API}.current_mode (item))
 		end
 
-	limit_date_for_mode (a_mode: NS_STRING): NS_DATE
+	limit_date_for_mode (a_mode: NS_STRING_BASE): NS_DATE
 			-- Performs one pass through the run loop in the specified mode and returns the date at which the next timer is scheduled to fire.
 		do
 			create Result.share_from_pointer ({NS_RUN_LOOP_API}.limit_date_for_mode (item, a_mode.item))
@@ -45,7 +45,7 @@ feature -- Accessing Run Loops and Modes
 
 feature -- Managing Timers
 
-	add_timer_for_mode (a_timer: NS_TIMER; a_mode: NS_STRING)
+	add_timer_for_mode (a_timer: NS_TIMER; a_mode: NS_STRING_BASE)
 			-- Registers a given timer with a given input mode.
 		do
 			{NS_RUN_LOOP_API}.add_timer_for_mode (item, a_timer.item, a_mode.item)
@@ -53,13 +53,13 @@ feature -- Managing Timers
 
 feature -- Managing Ports
 
---	add_port_for_mode (a_port: NS_PORT; a_mode: NS_STRING)
+--	add_port_for_mode (a_port: NS_PORT; a_mode: NS_STRING_BASE)
 --			-- Adds a port as an input source to the specified mode of the run loop.
 --		do
 --			{NS_RUN_LOOP_API}.add_port_for_mode (item, a_port.item, a_mode.item)
 --		end
 
---	remove_port_for_mode (a_port: NS_PORT; a_mode: NS_STRING)
+--	remove_port_for_mode (a_port: NS_PORT; a_mode: NS_STRING_BASE)
 --			-- Removes a port from the specified input mode of the run loop.
 --		do
 --			{NS_RUN_LOOP_API}.remove_port_for_mode (item, a_port.item, a_mode.item)
@@ -73,7 +73,7 @@ feature -- Running a Loop
 			{NS_RUN_LOOP_API}.run (item)
 		end
 
-	run_mode_before_date (a_mode: NS_STRING; a_limit_date: NS_DATE): BOOLEAN
+	run_mode_before_date (a_mode: NS_STRING_BASE; a_limit_date: NS_DATE): BOOLEAN
 			-- Runs the loop once, blocking for input in the specified mode until a given date.
 		do
 			Result := {NS_RUN_LOOP_API}.run_mode_before_date (item, a_mode.item, a_limit_date.item)
@@ -85,7 +85,7 @@ feature -- Running a Loop
 			{NS_RUN_LOOP_API}.run_until_date (item, a_limit_date.item)
 		end
 
-	accept_input_for_mode_before_date (a_mode: NS_STRING; a_limit_date: NS_DATE)
+	accept_input_for_mode_before_date (a_mode: NS_STRING_BASE; a_limit_date: NS_DATE)
 			-- Runs the loop once or until the specified date, accepting input only for the specified mode.
 		do
 			{NS_RUN_LOOP_API}.accept_input_for_mode_before_date (item, a_mode.item, a_limit_date.item)
@@ -112,4 +112,14 @@ feature -- Scheduling and Canceling Messages
 --		end
 
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

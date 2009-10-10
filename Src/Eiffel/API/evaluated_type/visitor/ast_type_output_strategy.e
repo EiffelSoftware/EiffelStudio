@@ -31,11 +31,6 @@ inherit
 			{NONE} all
 		end
 
-	AST_OUTPUT_HELPER
-		export
-			{NONE} all
-		end
-
 create
 	default_create
 
@@ -244,7 +239,7 @@ feature {TYPE_A} -- Visitors
 			check
 				l_feat_not_void: l_feat /= Void
 			end
-			append_feature_name (l_feat, text_formatter)
+			l_feat.append_name (text_formatter)
 		end
 
 	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A)

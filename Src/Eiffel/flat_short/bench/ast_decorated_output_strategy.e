@@ -66,11 +66,6 @@ inherit
 			{NONE} all
 		end
 
-	AST_OUTPUT_HELPER
-		export
-			{NONE} all
-		end
-
 create
 	make, make_for_inline_agent
 
@@ -950,7 +945,7 @@ feature {NONE} -- Implementation
 							l_text_formatter_decorator.process_symbol_text (ti_dot)
 						end
 						if not has_error_internal then
-							append_feature_name (l_feat, l_text_formatter_decorator)
+							l_feat.append_name (l_text_formatter_decorator)
 						else
 							l_text_formatter_decorator.process_basic_text (l_as.access_name)
 						end
@@ -2507,7 +2502,7 @@ feature {NONE} -- Implementation
 						if processing_formal_dec then
 							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 						else
-							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix (l_feat.name), l_feat)
+							l_text_formatter_decorator.process_operator_text (l_feat.infix_symbol, l_feat)
 						end
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					elseif l_is_prefix then
@@ -2518,7 +2513,7 @@ feature {NONE} -- Implementation
 						if processing_formal_dec then
 							l_text_formatter_decorator.process_operator_text (l_as.visual_name, l_feat)
 						else
-							l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix (l_feat.name), l_feat)
+							l_text_formatter_decorator.process_operator_text (l_feat.prefix_symbol, l_feat)
 						end
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					else
@@ -2611,16 +2606,20 @@ feature {NONE} -- Implementation
 			else
 				l_text_formatter_decorator.process_basic_text (l_as.visual_name)
 			end
-			l_text_formatter_decorator.put_space
-			l_text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
-			l_text_formatter_decorator.put_space
-			l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-			if not has_error_internal then
-				l_text_formatter_decorator.process_operator_text (l_as.alias_name.value, l_feat)
-			else
-				l_text_formatter_decorator.process_basic_text (l_as.alias_name.value)
+
+			if has_error_internal or else l_feat.has_alias_name then
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_symbol_text (ti_double_quote)
+				if not has_error_internal then
+					l_text_formatter_decorator.process_operator_text (l_feat.alias_symbol, l_feat)
+				else
+					l_text_formatter_decorator.process_basic_text (l_as.alias_name.value)
+				end
+				l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 			end
-			l_text_formatter_decorator.process_symbol_text (ti_double_quote)
+
 			if l_as.has_convert_mark then
 				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.process_keyword_text (ti_convert_keyword, Void)
@@ -3500,7 +3499,7 @@ feature {NONE} -- Implementation
 				l_feat := feature_from_id_as (l_id)
 			end
 			if l_feat /= Void then
-				append_feature_name (l_feat, l_text_formatter_decorator)
+				l_feat.append_name (l_text_formatter_decorator)
 			else
 				l_as.lower.process (Current)
 			end
@@ -3515,7 +3514,7 @@ feature {NONE} -- Implementation
 					l_feat := feature_from_id_as (l_id)
 				end
 				if l_feat /= Void then
-					append_feature_name (l_feat, l_text_formatter_decorator)
+					l_feat.append_name (l_text_formatter_decorator)
 				else
 					l_as.upper.process (Current)
 				end

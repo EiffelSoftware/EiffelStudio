@@ -80,7 +80,7 @@ feature -- Accessing Data
 			Result := {NS_DATA_API}.bytes (item)
 		end
 
-	description: NS_STRING
+	description: NS_STRING_BASE
 		do
 			create Result.share_from_pointer ({NS_DATA_API}.description (item))
 		end
@@ -120,7 +120,7 @@ feature -- Testing Data
 
 feature -- Storing Data
 
-	write_to_file_atomically (a_path: NS_STRING; a_use_auxiliary_file: BOOLEAN): BOOLEAN
+	write_to_file_atomically (a_path: NS_STRING_BASE; a_use_auxiliary_file: BOOLEAN): BOOLEAN
 			-- Writes the bytes in the receiver to the file specified by a given path.
 			-- Returns True if the operation succeeds.
 		do
@@ -199,4 +199,14 @@ feature -- Storing Data
 --			{NS_DATA_API}.init_with_length (item, a_length, Result.item)
 --		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

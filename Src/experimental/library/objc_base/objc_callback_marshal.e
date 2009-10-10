@@ -146,7 +146,7 @@ feature {NONE}
 	callback_void_ptr (a_object: POINTER; a_selector: POINTER; arg1: POINTER): BOOLEAN
 		do
 			if attached {ROUTINE [ANY, TUPLE [POINTER]]} get_agent (a_object, a_selector) as l_agent then
-				if attached {NS_WINDOW} get_eiffel_object (a_object) as obj then
+				if attached get_eiffel_object (a_object) as obj then
 					l_agent.set_target (obj)
 				end
 				l_agent.call ([arg1])
@@ -203,7 +203,15 @@ feature {NONE}
 					create args_managed.own_from_pointer (args, nargs*4)
 					type := l_agent.empty_operands.generating_type.name
 					if type.is_equal ("TUPLE [!NS_RECT]") or type.is_equal ("TUPLE [NS_RECT]") then
-						arg := [create {NS_RECT}.make_by_pointer (args_managed.read_pointer (0))]
+						if attached {MEMORY_STRUCTURE} new_instance_of (dynamic_type_from_string ("NS_RECT")) as obj then
+							obj.make_by_pointer (args_managed.read_pointer (0))
+							arg := [obj]
+						else
+							check
+								error_creating_object: False
+							end
+						end
+--						arg := [create {NS_RECT}.make_by_pointer (args_managed.read_pointer (0))]
 					elseif type.is_equal ("TUPLE [!NS_OBJECT]") or type.is_equal ("TUPLE [NS_OBJECT]") then
 --						debug ("callbacks")
 --							io.put_string ("  -> argument1: " + argX.class_.name + ": " + argX.debug_output + "%N")
@@ -212,9 +220,25 @@ feature {NONE}
 					elseif type.is_equal ("TUPLE [!NS_NOTIFICATION]") or type.is_equal ("TUPLE [NS_NOTIFICATION]") then
 						arg := [create {NS_NOTIFICATION}.share_from_pointer (args_managed.read_pointer (0))]
 					elseif type.is_equal ("TUPLE [!NS_WINDOW]") or type.is_equal ("TUPLE [NS_WINDOW]") then
-						arg := [create {NS_WINDOW}.share_from_pointer (args_managed.read_pointer (0))]
+						if attached {NS_OBJECT} new_instance_of (dynamic_type_from_string ("NS_WINDOW")) as obj then
+							obj.share_from_pointer (args_managed.read_pointer (0))
+							arg := [obj]
+						else
+							check
+								error_creating_object: False
+							end
+						end
+						--arg := [create {NS_WINDOW}.share_from_pointer (args_managed.read_pointer (0))]
 					elseif type.is_equal ("TUPLE [!NS_EVENT]") or type.is_equal ("TUPLE [NS_EVENT]") then
-						arg := [create {NS_EVENT}.share_from_pointer (args_managed.read_pointer (0))]
+						if attached {NS_OBJECT} new_instance_of (dynamic_type_from_string ("NS_EVENT")) as obj then
+							obj.share_from_pointer (args_managed.read_pointer (0))
+							arg := [obj]
+						else
+							check
+								error_creating_object: False
+							end
+						end
+--						arg := [create {NS_EVENT}.share_from_pointer (args_managed.read_pointer (0))]
 					else
 						arg := [args_managed.read_pointer (0)]
 					end
@@ -312,4 +336,14 @@ feature {OBJC_CLASS} -- Externals, to be able to call the superclass or previous
 			"((void (*) (id, SEL, void*))$imp) ($a_object, $a_selector, $arg1);"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

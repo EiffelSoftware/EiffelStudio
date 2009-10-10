@@ -9,11 +9,25 @@ class
 
 feature
 
+	frozen alloc: POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [NSScrollView alloc];"
+		end
+
 	frozen new: POINTER
 		external
 			"C inline use <Cocoa/Cocoa.h>"
 		alias
 			"return [NSScrollView new];"
+		end
+
+	frozen init (a_scroll_view: POINTER): POINTER
+		external
+			"C inline use <Cocoa/Cocoa.h>"
+		alias
+			"return [(NSScrollView*)$a_scroll_view init];"
 		end
 
 	frozen document_visible_rect (a_scroll_view: POINTER; res: POINTER)

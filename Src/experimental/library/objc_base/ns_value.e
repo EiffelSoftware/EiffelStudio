@@ -90,12 +90,12 @@ feature -- Accessing Data
 -- Error generating rangeValue: Message signature for feature not set
 -- Error generating rectValue: Message signature for feature not set
 
-	size_value: NS_SIZE
-			-- Returns the receiver`s value as a pointer to void.
-		do
-			create Result.make
-			{NS_VALUE_API}.size_value (item, Result.item)
-		end
+--	size_value: NS_SIZE
+--			-- Returns the receiver`s value as a pointer to void.
+--		do
+--			create Result.make
+--			{NS_VALUE_API}.size_value (item, Result.item)
+--		end
 
 feature -- Comparing Objects
 
@@ -105,4 +105,14 @@ feature -- Comparing Objects
 			Result := {NS_VALUE_API}.is_equal_to_value (item, a_value.item)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -17,7 +17,9 @@ inherit
 			refresh
 		end
 
-	ES_SHARED_TEST_GRID_UTILITIES
+	EV_STOCK_PIXMAPS
+
+	EB_SHARED_WINDOW_MANAGER
 
 create
 	make, make_attached
@@ -68,8 +70,13 @@ feature -- Access
 	test_result: EQA_RESULT
 			-- Result displayed by current
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- <Precursor>
+		do
+		end
+
+	result_pixmap: EV_PIXMAP
+			-- Pixmap shown in first second item or `row'
 		local
 			l_result: like test_result
 		do
@@ -83,31 +90,99 @@ feature -- Access
 			end
 		end
 
+feature {NONE} -- Events
+
+	on_info_label_enter (a_label: EB_GRID_EDITOR_TOKEN_ITEM)
+			-- Called when label item is entered with pointer.
+			--
+			-- `a_label': Label that was hovered with mouse.
+		require
+			a_label_attached: a_label /= Void
+			a_label_not_destroyed: not a_label.is_destroyed
+		do
+			row.parent.set_pointer_style (hyperlink_cursor)
+		end
+
+	on_info_label_leave (a_label: EB_GRID_EDITOR_TOKEN_ITEM)
+			-- Called when label item is exited with pointer.
+			--
+			-- `a_label': Label that was hovered with mouse.
+		require
+			a_label_attached: a_label /= Void
+			a_label_not_destroyed: not a_label.is_destroyed
+		do
+			row.parent.set_pointer_style (standard_cursor)
+		end
+
+	on_info_label_press (x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER)
+			-- Called when pointer button is pressed on top of delete label.
+		local
+			l_dialog: ES_BASIC_EDITOR_DIALOG
+			l_string: STRING_32
+		do
+			if button = 1 then
+				token_writer.enable_multiline
+				print_result_details (token_writer, test_result, 0)
+				create l_string.make (1024)
+				token_writer.lines.do_all (
+					agent (a_line: EIFFEL_EDITOR_LINE; a_string: STRING_32)
+						do
+							a_string.append (a_line.wide_image)
+							a_string.append_character ('%N')
+						end (?, l_string))
+				reset_token_writer
+				create l_dialog.make (icon_pixmaps.general_information_icon_buffer, "Test Result Details")
+				l_dialog.set_text (l_string)
+				l_dialog.show_on_active_window
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	refresh
 			-- <Precursor>
 		local
-			l_eitem: EB_GRID_EDITOR_TOKEN_ITEM
+			l_eitem, l_label: EB_GRID_EDITOR_TOKEN_ITEM
 			l_token_writer: like token_writer
 			l_duration: REAL_64
 			l_seconds: INTEGER
 			l_fine: TIME
+			l_tag: STRING_32
 		do
 			Precursor
 			create l_eitem
 			l_token_writer := token_writer
-			l_token_writer.add_comment ("[")
+			l_tag := test_result.tag.as_string_32
+			l_token_writer.process_basic_text (l_tag)
+			l_token_writer.add_comment (" [")
 			l_duration := test_result.duration.fine_seconds_count
 			l_seconds := l_duration.truncated_to_integer
 			create l_fine.make_fine (0, 0, l_duration - l_seconds)
 			l_token_writer.add_comment (l_seconds.out)
 			l_token_writer.add_comment (l_fine.formatted_out (".ff4"))
-			l_token_writer.add_comment ("s] ")
-			l_token_writer.process_basic_text (test_result.tag.as_string_8)
+			l_token_writer.add_comment ("s]")
 			l_eitem.set_text_with_tokens (l_token_writer.last_line.content)
+			l_eitem.set_pixmap (result_pixmap)
 			reset_token_writer
 			row.set_item (2, l_eitem)
+
+			if not test_result.information.is_empty then
+				l_tag.append ("%N%N")
+				l_tag.append (test_result.information.as_string_32)
+			end
+			if not l_tag.is_empty then
+				l_eitem.set_tooltip (l_tag)
+				if attached row.item (1) as l_item then
+					l_item.set_tooltip (l_tag)
+				end
+			end
+
+			create l_label
+			l_label.set_pixmap (icon_pixmaps.general_information_icon)
+			l_label.pointer_enter_actions.extend (agent on_info_label_enter (l_label))
+			l_label.pointer_leave_actions.extend (agent on_info_label_leave (l_label))
+			l_label.pointer_button_press_actions.extend (agent on_info_label_press)
+			row.set_item (3, l_label)
 		end
 
 note

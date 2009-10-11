@@ -80,6 +80,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	grid: EV_GRID
+			-- <Precursor>
+		do
+			Result := row.parent
+		end
+
 	internal_test: detachable like test
 			-- Internal storage for `test'
 

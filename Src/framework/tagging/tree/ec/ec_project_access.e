@@ -96,6 +96,17 @@ feature -- Element retrival
 			end
 		end
 
+	feature_of_name (a_class: CLASS_I; a_feature: READABLE_STRING_8): detachable FEATURE_I
+			-- {FEATURE_I} instance from given class for given name, Void if class is not compiled or no
+			-- feature with that name exists.
+		do
+			if attached a_class.compiled_representation as l_class then
+				if attached l_class.feature_named (a_feature.as_string_8) as l_feature then
+					Result := l_feature
+				end
+			end
+		end
+
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

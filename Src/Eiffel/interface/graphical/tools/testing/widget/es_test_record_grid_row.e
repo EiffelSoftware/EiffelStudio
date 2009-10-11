@@ -156,6 +156,12 @@ feature {NONE} -- Access
 			result_valid: Result /= Void implies Result.name.same_string (a_name)
 		end
 
+	grid: EV_GRID
+			-- <Precursor>
+		do
+			Result := row.parent
+		end
+
 feature -- Status report
 
 	frozen is_running: BOOLEAN

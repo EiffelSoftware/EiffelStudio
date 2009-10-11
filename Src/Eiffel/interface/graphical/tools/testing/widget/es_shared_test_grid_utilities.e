@@ -6,8 +6,11 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	ES_SHARED_TEST_GRID_UTILITIES
+
+inherit
+	TEST_RESULT_FORMATTER
 
 feature {NONE} -- Access
 
@@ -15,6 +18,13 @@ feature {NONE} -- Access
 			-- Token writer used to create clickable items
 		once
 			create Result.make
+		end
+
+	grid: EV_GRID
+			-- Grid being displayed.
+			--
+			-- Note: this is only used by {ES_SHARED_TEST_GRID_UTILITES} and will be removed at some point.
+		deferred
 		end
 
 feature {NONE} -- Query: time
@@ -53,6 +63,7 @@ feature {NONE} -- Basic operations
 			-- Wipe out contents of `token_writer'.
 		do
 			token_writer.wipe_out_lines
+			token_writer.disable_multiline
 		end
 
 feature {NONE} -- Constants

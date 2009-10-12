@@ -329,7 +329,6 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 					col_index > column_max
 				loop
 					l_item := item_at_position (col_index, row_index)
-					check l_item /= Void end
 					new.put (l_item,
 						((row_index - 1) * a_column) + col_index)
 					col_index := col_index + 1
@@ -585,7 +584,7 @@ feature -- Element change
 			if index > 0 and then index <= count then
 				an_item := item
 			end
-			create {EV_DYNAMIC_LIST_CURSOR [detachable EV_WIDGET]} Result.make (an_item, index <= 0, index > count)
+			create {EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]} Result.make (an_item, index <= 0, index > count)
 		end
 
 	valid_cursor (p: CURSOR): BOOLEAN

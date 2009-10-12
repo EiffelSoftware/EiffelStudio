@@ -423,7 +423,6 @@ feature {NONE} -- Color
 			color: detachable EV_COLOR
 		do
 			color := bg_color_chooser.color
-			check color /= Void end
 			world_cell.set_new_figure_background_color (color)
 			from
 				world.selected_figures.start

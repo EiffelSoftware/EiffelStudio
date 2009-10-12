@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	create_interface_objects
 		do
 			create color_change_actions
-			create button_array.make (1, 10)
+			create button_list.make (10)
 			create last_choosen_color
 		end
 
@@ -53,12 +53,14 @@ feature {NONE} -- Initialization
 					loop
 						create button
 
-							button.set_background_color (get_color (i))
+							if attached get_color (i) as l_color then
+								button.set_background_color (l_color)
+							end
 							button.set_minimum_size (button_size, button_size)
 							button.select_actions.extend (agent on_button_select (i))
 
 						table.add (button, ((i-1) \\ 3) + 1, ((i - 1) // 3)  + 1, 1, 1)
-						button_array.put (button, i)
+						button_list.extend (button)
 
 						i := i + 1
 
@@ -71,7 +73,7 @@ feature {NONE} -- Initialization
 						button.enable_select
 						button.select_actions.extend (agent on_button_select (9))
 					table.add (button, 3, 3, 1, 1)
-					button_array.put (button, 9)
+					button_list.extend (button)
 
 					create button
 						create pixmap.make_with_size (button_size, button_size)
@@ -80,7 +82,7 @@ feature {NONE} -- Initialization
 						button.set_minimum_size (button_size, button_size)
 						button.select_actions.extend (agent on_button_select (10))
 					table.add (button, 1, 4, 1, 1)
-					button_array.put (button, 10)
+					button_list.extend (button)
 
 				v_box.extend (table)
 
@@ -112,9 +114,9 @@ feature -- Element change
 
 			last_choosen_color := a_color
 
-			button_array.item (10).remove_pixmap
-			button_array.item (10).set_background_color (a_color)
-			button_array.item (10).enable_select
+			button_list.last.remove_pixmap
+			button_list.last.set_background_color (a_color)
+			button_list.last.enable_select
 		ensure
 			set: color = a_color
 		end
@@ -131,7 +133,7 @@ feature -- Status settings
 			-- Set `none_color_selectable' to `False'.
 		do
 			none_color_selectable := False
-			button_array.item (9).disable_sensitive
+			button_list.i_th (9).disable_sensitive
 		ensure
 			set: none_color_selectable = False
 		end
@@ -140,7 +142,7 @@ feature -- Status settings
 			-- Set `none_color_selectable' to `True'.
 		do
 			none_color_selectable := True
-			button_array.item (9).enable_sensitive
+			button_list.i_th (9).enable_sensitive
 		ensure
 			set: none_color_selectable
 		end
@@ -179,28 +181,30 @@ feature {NONE} -- Implementation
 			Result := l_result
 		end
 
-	button_array: ARRAY [EV_TOGGLE_BUTTON]
+	button_list: ARRAYED_LIST [EV_TOGGLE_BUTTON]
 			-- All the toggle buttons
 
 	button_size: INTEGER = 20
 			-- The size of the colored pixmaps on the buttons
 
 	on_button_select (button_nr: INTEGER)
-			-- Button with `button_nr' in `button_array' was selected.
+			-- Button with `button_nr' in `button_list' was selected.
 		local
 			i: INTEGER
 		do
-			if button_array.item (button_nr).is_selected then
+			if button_list.i_th (button_nr).is_selected then
 				from
-					i := button_array.lower
+					button_list.start
+					i := 1
 				until
-					i > button_array.upper
+					button_list.after
 				loop
 					if i /= button_nr then
-						button_array.item (i).select_actions.block
-						button_array.item (i).disable_select
-						button_array.item (i).select_actions.resume
+						button_list.item.select_actions.block
+						button_list.item.disable_select
+						button_list.item.select_actions.resume
 					end
+					button_list.forth
 					i := i + 1
 				end
 				color := get_color (button_nr)
@@ -208,37 +212,41 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_color (nr: INTEGER): EV_COLOR
+	get_color (nr: INTEGER): detachable EV_COLOR
 			-- Return color for button with number `nr'.
 		require
 			nr_valid: nr > 0 and nr <= 10
 		do
-			if nr = 1 then
+			inspect nr
+			when 1 then
 				create Result.make_with_8_bit_rgb (255, 0, 0)
-			elseif nr = 2 then
+			when 2 then
 				create Result.make_with_8_bit_rgb (0, 255, 0)
-			elseif nr = 3 then
+			when 3 then
 				create Result.make_with_8_bit_rgb (0, 0, 255)
-			elseif nr = 4 then
+			when 4 then
 				create Result.make_with_8_bit_rgb (255, 255, 0)
-			elseif nr = 5 then
+			when 5 then
 				create Result.make_with_8_bit_rgb (255, 0, 255)
-			elseif nr = 6 then
+			when 6 then
 				create Result.make_with_8_bit_rgb (0, 255, 255)
-			elseif nr = 7 then
+			when 7 then
 				create Result.make_with_8_bit_rgb (255, 255, 255)
-			elseif nr = 8 then
+			when 8 then
 				create Result.make_with_8_bit_rgb (0, 0, 0)
-			elseif nr = 10 then
+			when 9 then
+				check none_color_selectable: none_color_selectable end
+				Result := Void
+			when 10 then
 				Result := last_choosen_color
-			else
-				check cannot_happen: False end
-				create Result
 			end
 		end
 
 	last_choosen_color: EV_COLOR;
 			-- Last color selected over color dialog by user.
+
+invariant
+	button_list_proper_count: button_list.count = 10
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

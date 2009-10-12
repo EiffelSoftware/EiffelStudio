@@ -310,7 +310,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			columns_resizeable: columns_resizable_to (a_column)
 			rows_resizeable: rows_resizable_to (a_row)
 		local
-			new: ARRAY [EV_WIDGET]
+			new: ARRAY [detachable EV_WIDGET]
 			col_index, row_index, column_max, row_max: INTEGER
 			l_item: detachable EV_WIDGET
 		do

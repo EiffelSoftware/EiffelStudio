@@ -55,6 +55,26 @@ feature -- Access
 			Result := is_fixed_width_cell.item
 		end
 
+feature -- Query
+
+	has_font: BOOLEAN
+			-- Is `header_font' set?
+		do
+			Result := font_cell.item /= Void
+		end
+
+	has_keyword_font: BOOLEAN
+			-- Is `header_font' set?
+		do
+			Result := keyword_font_cell.item /= Void
+		end
+
+	has_header_font: BOOLEAN
+			-- Is `header_font' set?
+		do
+			Result := header_font_cell.item /= Void
+		end
+
 feature {EDITOR_DATA} -- Implementation
 
 	font_cell: CELL [FONT_PREFERENCE]

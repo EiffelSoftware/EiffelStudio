@@ -119,7 +119,7 @@ feature -- Basic operations
 			-- automatically drawn correctly. This does not happen with the classic look and feel.
 		end
 
-	draw_theme_parent_background (wel_item: POINTER; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: WEL_BRUSH)
+	draw_theme_parent_background (wel_item: POINTER; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: detachable WEL_BRUSH)
 			-- For the  WEL_WINDOW represented by `wel_item', copy the background of it's parent into `a_hdc' bounded by
 			-- `a_rect'. `background_brush' is not used. Warning. If this is used recursively in nested widget structures,
 			-- it appears to slow things down a great deal.

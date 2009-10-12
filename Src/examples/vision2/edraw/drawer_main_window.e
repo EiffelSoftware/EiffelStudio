@@ -12,7 +12,6 @@ class
 inherit
 	MAIN_WINDOW
 		redefine
-			build_main_container,
 			build_standard_toolbar,
 			create_interface_objects
 		end

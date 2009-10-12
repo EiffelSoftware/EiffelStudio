@@ -44,6 +44,7 @@ inherit
 			copy
 		redefine
 			append,
+			force,
 			extend,
 			replace,
 			insert,
@@ -517,9 +518,9 @@ feature -- List change
 	insert (fig: like item; i: INTEGER)
 			-- Add `fig' to the group.
 		do
+			lookup_table.put (fig, fig.id)
 			Precursor {ARRAYED_LIST} (fig, i)
 			fig.set_group (Current)
-			lookup_table.put (fig, fig.id)
 			center_invalidate
 			invalidate
 			full_redraw
@@ -531,11 +532,23 @@ feature -- List change
 	extend (fig: like item)
 			-- Add `fig' to the group.
 		do
+			lookup_table.put (fig, fig.id)
 			Precursor {ARRAYED_LIST} (fig)
-			if fig /= Void then
-				fig.set_group (Current)
-				lookup_table.put (fig, fig.id)
-			end
+			fig.set_group (Current)
+			center_invalidate
+			invalidate
+			full_redraw
+		ensure then
+			fig_in_lookup_table: fig /= Void implies lookup_table.has (fig.id)
+			fig_in_group: fig /= Void implies fig.group = Current
+		end
+
+	force (fig: like item)
+			-- Add `fig' to the group.
+		do
+			lookup_table.put (fig, fig.id)
+			Precursor {ARRAYED_LIST} (fig)
+			fig.set_group (Current)
 			center_invalidate
 			invalidate
 			full_redraw
@@ -550,11 +563,8 @@ feature -- List change
 			item.unreference_group
 			lookup_table.remove (item.id)
 			Precursor {ARRAYED_LIST} (fig)
-
-			if fig /= Void then
-				fig.set_group (Current)
-				lookup_table.put (fig, fig.id)
-			end
+			fig.set_group (Current)
+			lookup_table.put (fig, fig.id)
 			center_invalidate
 			invalidate
 			full_redraw

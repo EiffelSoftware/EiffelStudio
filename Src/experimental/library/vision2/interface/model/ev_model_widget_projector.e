@@ -454,7 +454,6 @@ feature {NONE} -- Event implementation
 					until
 						event_fig = Void or else has_focus (event_fig)
 					loop
-						check event_fig /= Void end
 						action := event_fig.internal_pointer_leave_actions
 						if action /= Void and then event_fig.is_sensitive then
 							action.call (Void)
@@ -474,9 +473,8 @@ feature {NONE} -- Event implementation
 					from
 						event_fig := current_figure
 					until
-						event_fig = same_fig
+						event_fig = Void or else event_fig = same_fig
 					loop
-						check event_fig /= Void end
 						action := event_fig.internal_pointer_enter_actions
 						if action /= Void and then event_fig.is_sensitive then
 							action.call (Void)

@@ -11,7 +11,7 @@ note
 
 class
 	EV_SCALED_PIXMAP_FACTORY
-	
+
 inherit
 	ANY
 		redefine
@@ -39,7 +39,7 @@ feature -- Access
 			from
 				i := 1
 			until
-				i > max_table_size or else 
+				i > max_table_size or else
 				orginal_pixmaps.item (i) = Void or else
 				orginal_pixmaps.item (i) = a_pixmap
 			loop
@@ -49,13 +49,15 @@ feature -- Access
 		ensure
 			result_not_Void: Result /= Void
 		end
-		
+
 	scaled_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP; a_width, a_height: INTEGER): EV_PIXMAP
 			-- `an_id_pixmap' scaled to `a_height' and `a_width'.
 		require
 			an_id_pixmap_not_Void: an_id_pixmap /= Void
 			a_hight_positive: a_height > 0
 			a_width_positive: a_width > 0
+		local
+			l_result: detachable EV_PIXMAP
 		do
 			if an_id_pixmap.id > max_table_size then
 				Result := scaled_pixmap_internal (an_id_pixmap.pixmap, a_width, a_height)
@@ -63,10 +65,12 @@ feature -- Access
 				check
 					an_id_pixmap_is_in_table: orginal_pixmaps.item (an_id_pixmap.id) = an_id_pixmap.pixmap
 				end
-				Result := scaled_pixmaps.item (an_id_pixmap.id)
-				if Result = Void or else Result.height /= a_height or else Result.width /= a_width then
+				l_result := scaled_pixmaps.item (an_id_pixmap.id)
+				if l_result = Void or else l_result.height /= a_height or else l_result.width /= a_width then
 					Result := scaled_pixmap_internal (an_id_pixmap.pixmap, a_width, a_height)
-					scaled_pixmaps.put (Result, an_id_pixmap.id)
+					scaled_pixmaps.put (l_result, an_id_pixmap.id)
+				else
+					Result := l_result
 				end
 			end
 		end
@@ -86,15 +90,15 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	scaled_pixmaps: ARRAY [EV_PIXMAP]
+	scaled_pixmaps: ARRAY [detachable EV_PIXMAP]
 			-- Table of scaled pixmaps.
-	
-	orginal_pixmaps: ARRAY [EV_PIXMAP]
+
+	orginal_pixmaps: ARRAY [detachable EV_PIXMAP]
 			-- Table of orginal pixmaps for `scaled_pixmaps'.
-	
+
 	max_table_size: INTEGER = 20
 			-- Maxmimum size of `scaled_pixmaps' and `orginal_pixmaps'.
-	
+
 	scaled_pixmap_internal (a_pixmap: EV_PIXMAP; a_width, a_height: INTEGER): EV_PIXMAP
 			-- `a_font' scaled to `a_height'.
 		require

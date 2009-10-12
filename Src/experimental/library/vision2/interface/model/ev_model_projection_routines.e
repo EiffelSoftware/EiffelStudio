@@ -88,7 +88,6 @@ feature {NONE} -- Implementation
 		local
 			bbox: detachable EV_RECTANGLE
 			l_tuple: TUPLE [EV_MODEL]
-			l_draw_routine: PROCEDURE [ANY, TUPLE [EV_MODEL]]
 		do
 			if f.valid or else f.last_update_rectangle = Void then
 				bbox := f.bounding_box
@@ -107,11 +106,12 @@ feature {NONE} -- Implementation
 				--		2. If other figure intersects with f
 				--			it will be drawn since bounding_box of
 				--			f is now element of rect.
-				l_draw_routine := draw_routines.item (f.draw_id)
-				l_tuple := l_draw_routine.empty_operands
-				check valid_entry: l_tuple.valid_type_for_index (f, 1) end
-				l_tuple.put (f, 1)
-				l_draw_routine.call (l_tuple)
+				if attached draw_routines.item (f.draw_id) as l_draw_routine then
+					l_tuple := l_draw_routine.empty_operands
+					check valid_entry: l_tuple.valid_type_for_index (f, 1) end
+					l_tuple.put (f, 1)
+					l_draw_routine.call (l_tuple)
+				end
 				rect.merge (bbox)
 			end
 		end
@@ -159,18 +159,18 @@ feature {NONE} -- Implementation
 			f_show_requested: f.is_show_requested
 		local
 			l_tuple: TUPLE [EV_MODEL]
-			l_draw_routine: PROCEDURE [ANY, TUPLE [EV_MODEL]]
 		do
-			l_draw_routine := draw_routines.item (f.draw_id)
-			l_tuple := l_draw_routine.empty_operands
-			check valid_entry: l_tuple.valid_type_for_index (f, 1) end
-			l_tuple.put (f, 1)
-			l_draw_routine.call (l_tuple)
+			if attached draw_routines.item (f.draw_id) as l_draw_routine then
+				l_tuple := l_draw_routine.empty_operands
+				check valid_entry: l_tuple.valid_type_for_index (f, 1) end
+				l_tuple.put (f, 1)
+				l_draw_routine.call (l_tuple)
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	draw_routines: ARRAY [PROCEDURE [ANY, TUPLE [EV_MODEL]]]
+	draw_routines: ARRAY [detachable PROCEDURE [ANY, TUPLE [EV_MODEL]]]
 			-- Routine registration.
 
 	register_basic_figures

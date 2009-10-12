@@ -202,7 +202,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_new_figure_foreground_color (a_foreground_color: EV_COLOR)
+	set_new_figure_foreground_color (a_foreground_color: like new_figure_foreground_color)
 			-- Set `new_figure_foreground_color' to `a_foreground_color'.
 		do
 			new_figure_foreground_color := a_foreground_color

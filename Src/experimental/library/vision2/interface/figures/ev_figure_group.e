@@ -34,6 +34,7 @@ inherit
 		redefine
 			append,
 			extend,
+			force,
 			replace,
 			insert,
 			prune_all,
@@ -233,6 +234,14 @@ feature -- List operations
 		end
 
 	extend (fig: like item)
+			-- Add `fig' to the group.
+		do
+			Precursor {ARRAYED_LIST} (fig)
+			fig.set_group (Current)
+			full_redraw
+		end
+
+	force (fig: like item)
 			-- Add `fig' to the group.
 		do
 			Precursor {ARRAYED_LIST} (fig)

@@ -20,6 +20,9 @@ feature {NONE} -- Initialization
 	make_and_launch
 			-- Initialize and launch application
 		do
+				-- create and initialize the first window.
+			create first_window
+
 			default_create
 			prepare
 			launch
@@ -29,18 +32,14 @@ feature {NONE} -- Initialization
 			-- Prepare the first window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
-		local
-			li: LAYOUT_INSPECTOR
-			first_window: DRAWER_MAIN_WINDOW;
 		do
-				-- create and initialize the first window.
-			create first_window
-
 				-- Show the first window.
 			first_window.show
-
-			create li.default_create
 		end
+
+feature {NONE} -- Implementation
+
+	first_window: DRAWER_MAIN_WINDOW;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

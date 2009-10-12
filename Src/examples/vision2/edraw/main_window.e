@@ -92,8 +92,6 @@ feature {NONE} -- Menu Implementation
 
 	build_standard_menu_bar
 			-- Create and populate `standard_menu_bar'.
-		require
-			menu_bar_not_yet_created: standard_menu_bar = Void
 		do
 				-- Add the "File" menu
 			build_file_menu
@@ -117,8 +115,6 @@ feature {NONE} -- Menu Implementation
 
 	build_file_menu
 			-- Create and populate `file_menu'.
-		require
-			file_menu_not_yet_created: file_menu = Void
 		local
 			menu_item: EV_MENU_ITEM
 		do
@@ -156,8 +152,6 @@ feature {NONE} -- Menu Implementation
 
 	build_help_menu
 			-- Create and populate `help_menu'.
-		require
-			help_menu_not_yet_created: help_menu = Void
 		local
 			menu_item: EV_MENU_ITEM
 		do
@@ -177,8 +171,6 @@ feature {NONE} -- ToolBar Implementation
 
 	build_standard_toolbar
 			-- Create and populate the standard toolbar.
-		require
-			toolbar_not_yet_created: standard_toolbar = Void
 		local
 			toolbar_item: EV_TOOL_BAR_BUTTON
 			toolbar_pixmap: EV_PIXMAP
@@ -196,9 +188,8 @@ feature {NONE} -- ToolBar Implementation
 			toolbar_item.set_pixmap (toolbar_pixmap)
 			toolbar_item.select_actions.extend (agent on_save)
 			standard_toolbar.extend (toolbar_item)
-
 		ensure
-			toolbar_created: standard_toolbar /= Void and then  not standard_toolbar.is_empty
+			toolbar_created: standard_toolbar /= Void and then not standard_toolbar.is_empty
 		end
 
 feature {NONE} -- StatusBar Implementation
@@ -267,15 +258,7 @@ feature {NONE} -- Implementation
 
 	build_main_container
 			-- Create and populate `main_container'.
-		require
-			main_container_not_yet_created: main_container = Void
-		do
-			create main_container
-
-			main_container.extend (create {EV_TEXT})
-
-		ensure
-			main_container_created: main_container /= Void
+		deferred
 		end
 
 feature {NONE} -- Implementation / Constants

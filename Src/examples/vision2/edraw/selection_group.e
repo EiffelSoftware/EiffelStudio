@@ -49,8 +49,8 @@ feature {NONE} -- Implementation
 			l_item := selected_item
 			check l_item /= Void end
 			create manip.make (l_item)
-			manip.set_point_position (l_item.x, l_item.y)
-			extend (manip)
+			manip.parent_group.set_point_position (l_item.x, l_item.y)
+			extend (manip.parent_group)
 		ensure
 			first_not_moved: first = old first
 		end

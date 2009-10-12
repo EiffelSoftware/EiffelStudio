@@ -205,13 +205,13 @@ feature {NONE} -- Clean up
 			-- Recycle all.
 		local
 			l_session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
-			l_sessions: DS_ARRAYED_LIST_CURSOR [SESSION_I]
+			l_sessions: ARRAYED_LIST [SESSION_I]
 			l_session: SESSION_I
 		do
 			create l_session_manager
 			if l_session_manager.is_service_available then
 					-- Store and clear all session data related to the window.
-				l_sessions := l_session_manager.service.active_sessions.new_cursor
+				l_sessions := l_session_manager.service.active_sessions
 				from l_sessions.start until l_sessions.after loop
 					l_session := l_sessions.item
 					if l_session.is_interface_usable and then l_session.is_per_window and then l_session.window_id = window_id then

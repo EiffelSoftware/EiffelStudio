@@ -109,7 +109,7 @@ feature -- Basic operations
 			a_hdc_not_void: a_hdc /= Void
 			text_not_void: text /= Void
 			a_content_rect_not_void: a_content_rect /= Void
-			foreground_color_not_void: foreground_color /= void
+			foreground_color_not_void: foreground_color /= Void
 		deferred
 		end
 

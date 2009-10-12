@@ -48,7 +48,7 @@ feature -- Basic operations
 			-- Nothing to perform here as there is no theme data for the classic version.
 		end
 
-	draw_theme_background (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; a_rect, a_clip_rect: WEL_RECT; background_brush: WEL_BRUSH)
+	draw_theme_background (theme: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; a_rect: WEL_RECT; a_clip_rect: detachable WEL_RECT; background_brush: WEL_BRUSH)
 			-- Draw a background theme into `a_hdc' using `background_brush'. As this is the classic version, `theme',
 			-- `a_part_id', `a_state_id' and  `a_clip_rect' are not required.
 		do
@@ -67,7 +67,7 @@ feature -- Basic operations
 			a_hdc.fill_region (notebook.background_region (a_rect), background_brush)
 		end
 
-	draw_theme_parent_background (wel_item: POINTER; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: WEL_BRUSH)
+	draw_theme_parent_background (wel_item: POINTER; a_hdc: WEL_DC; a_rect: WEL_RECT; background_brush: detachable WEL_BRUSH)
 			-- For the  WEL_WINDOW represented by `wel_item', draw it's background into `a_hdc' using `a_rect' in the format
 			-- supplied by `background_brush'.
 		do

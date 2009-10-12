@@ -10,7 +10,9 @@ class
 	MANIPULATION_HANDLER
 
 inherit
-	EV_MODEL_GROUP
+	MATH_CONST
+
+	EV_MODEL_DOUBLE_MATH
 
 create
 	make
@@ -23,20 +25,20 @@ feature {NONE} -- Initialization
 			a_figure_not_void: a_figure /= Void
 		do
 			figure := a_figure
-			default_create
+			create parent_group
 
 			build_rotation_handle
-			extend (rotation_handle)
+			parent_group.extend (rotation_handle)
 			build_scale_x_handle
-			extend (scale_x_handle)
+			parent_group.extend (scale_x_handle)
 			build_scale_y_handle
-			extend (scale_y_handle)
+			parent_group.extend (scale_y_handle)
 			build_scale_handle
-			extend (scale_handle)
+			parent_group.extend (scale_handle)
 			build_move_handle
-			extend (move_handle)
+			parent_group.extend (move_handle)
 			build_center_handle
-			extend (center_handle)
+			parent_group.extend (center_handle)
 			center_handle.disable_moving
 			center_handle.disable_rotating
 			center_handle.disable_scaling
@@ -72,8 +74,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	parent_group: EV_MODEL_GROUP
+			-- Group for Current figure
+
 	figure: EV_MODEL
 			-- Figure `Current' manipulates.
+
+	world: detachable EV_MODEL_WORLD
+		do
+			Result := parent_group.world
+		end
 
 feature {NONE} -- Implementation
 
@@ -97,6 +107,12 @@ feature {NONE} -- Implementation
 
 	angle_indicator: EV_MODEL_PIE_SLICE
 			-- Figure showing the rotation angle.
+
+	default_colors: EV_STOCK_COLORS
+			-- Quick access to stock colors
+		once
+			create Result
+		end
 
 	build_scale_y_handle
 			-- Build `scale_y_handle'.
@@ -290,7 +306,7 @@ feature {NONE} -- Implementation interaction
 			-- Start scaling to x.
 		do
 			if button = 1 and then attached world as l_world
-							and then attached l_world.capture_figure then
+							and then not attached l_world.capture_figure then
 				start_x := ax
 				start_y := ay
 				do_scale_x := True
@@ -325,7 +341,7 @@ feature {NONE} -- Implementation interaction
 			-- Start scaling to y.
 		do
 			if button = 1 and then attached world as l_world
-							and then attached l_world.capture_figure then
+							and then not attached l_world.capture_figure then
 				start_x := ax
 				start_y := ay
 				do_scale_y := True
@@ -360,7 +376,7 @@ feature {NONE} -- Implementation interaction
 			-- Start scale to x and y.
 		do
 			if button = 1 and then attached world as l_world
-							and then attached l_world.capture_figure then
+							and then not attached l_world.capture_figure then
 				start_x := ax
 				start_y := ay
 				do_scale_y := True
@@ -383,7 +399,7 @@ feature {NONE} -- Implementation interaction
 			-- Start rotation.
 		do
 			if button = 1 and then attached world as l_world
-							and then attached l_world.capture_figure then
+							and then not attached l_world.capture_figure then
 				start_x := ax
 				start_y := ay
 				do_rotate := True
@@ -402,7 +418,7 @@ feature {NONE} -- Implementation interaction
 				cx := center_handle.x
 				cy := center_handle.y
 
-				new_angle := line_angle (point_x, point_y, ax, ay) - line_angle (point_x, point_y, start_x, start_y)
+				new_angle := line_angle (parent_group.point_x, parent_group.point_y, ax, ay) - line_angle (parent_group.point_x, parent_group.point_y, start_x, start_y)
 
 				figure.rotate_around (new_angle, cx, cy)
 
@@ -426,8 +442,8 @@ feature {NONE} -- Implementation interaction
 			-- Start moving.
 		do
 			if button = 1 and then attached world as l_world
-							and then attached l_world.capture_figure
-							and then attached group as l_group then
+							and then not attached l_world.capture_figure
+							and then attached parent_group.group as l_group then
 				start_x := ax - l_group.point_x
 				start_y := ay - l_group.point_y
 				do_move := True
@@ -439,20 +455,17 @@ feature {NONE} -- Implementation interaction
 			-- Move.
 		local
 			nx, ny: INTEGER
-			l_world: like world
-			l_group: like group
 		do
-			l_world := world
-			l_group := group
-			check l_world /= Void and l_group /= Void end
 			if do_move then
-				nx := ax - start_x
-				ny := ay - start_y
-				if l_world.grid_enabled then
-					nx := snapped_x (nx)
-					ny := snapped_y (ny)
+				if attached world as l_world and then attached parent_group.group as l_group then
+					nx := ax - start_x
+					ny := ay - start_y
+					if l_world.grid_enabled then
+						nx := snapped_x (nx)
+						ny := snapped_y (ny)
+					end
+					l_group.set_point_position (nx, ny)
 				end
-				l_group.set_point_position (nx, ny)
 			end
 		end
 
@@ -500,7 +513,7 @@ feature {NONE} -- Implementation interaction
 	on_recenter_center (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Set `center_handle' to center of `figure'.
 		do
-			center_handle.set_x_y (point_x, point_y)
+			center_handle.set_x_y (parent_group.point_x, parent_group.point_y)
 		end
 
 note

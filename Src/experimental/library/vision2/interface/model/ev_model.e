@@ -127,11 +127,10 @@ feature -- Access
 			-- The world `Current' is part of. Void if `Current' is
 			-- not part of a world
 		do
-			if group /= Void then
-				Result ?= group
-				if Result = Void and then attached group as l_group then
-					Result := l_group.world
-				end
+			if attached {like world} group as l_world then
+				Result := l_world
+			elseif attached group as l_group then
+				Result := l_group.world
 			end
 		end
 
@@ -214,10 +213,7 @@ feature -- Element change
 			l_point_array: SPECIAL [EV_COORDINATE]
 			l_coordinate: EV_COORDINATE
 			i, nb: INTEGER
-			l_group: like group
 		do
-			l_group := group
-			check l_group /= Void end
 			a_delta_y := a_y - y
 			a_delta_x := a_x - x
 			if a_delta_y /= 0 or a_delta_x /= 0 then
@@ -232,7 +228,7 @@ feature -- Element change
 					l_coordinate.set_precise (l_coordinate.x_precise + a_delta_x, l_coordinate.y_precise + a_delta_y)
 					i := i + 1
 				end
-				if is_in_group and then l_group.is_center_valid then
+				if is_in_group and then attached group as l_group and then l_group.is_center_valid then
 					l_group.center_invalidate
 				end
 				center.set (a_x, a_y)

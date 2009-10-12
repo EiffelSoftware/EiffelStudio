@@ -509,6 +509,32 @@ feature -- Object tool, Object Viewer and Watch tool menus
 			end
 		end
 
+feature -- EiffelStudio Error
+
+	exeception_dialog_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_editor: SELECTABLE_TEXT_PANEL)
+			-- Exception dialog menu
+		local
+			l_menu_item: EV_MENU_ITEM
+		do
+				-- Remove Pick
+			a_menu.wipe_out
+
+			--| Copy
+			l_menu_item := new_menu_item (names.m_copy)
+			a_menu.extend (l_menu_item)
+			l_menu_item.select_actions.extend (agent a_editor.copy_selection)
+			if a_editor.has_selection then
+				l_menu_item.enable_sensitive
+			else
+				l_menu_item.disable_sensitive
+			end
+
+			--| Select all ...
+			l_menu_item := new_menu_item (names.m_select_all)
+			a_menu.extend (l_menu_item)
+			l_menu_item.select_actions.extend (agent a_editor.select_all)
+		end
+
 feature -- Search scope menu
 
 	search_scope_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)

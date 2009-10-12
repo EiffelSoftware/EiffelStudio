@@ -91,6 +91,16 @@ feature {NONE} -- Initialize
 			exception_text_panel.set_cursors (create {EB_EDITOR_CURSORS})
 			exception_text_panel.disable_line_numbers
 			exception_text_panel.widget.set_minimum_size (400, 165)
+			if
+				is_interface_usable and then
+				(internal_development_window /= Void or else (is_initialized or is_initializing))
+			then
+				if attached development_window as l_dev_win then
+					exception_text_panel.editor_drawing_area.set_pebble_function (agent : ANY do Result := Current end)
+					exception_text_panel.editor_drawing_area.set_configurable_target_menu_mode
+					exception_text_panel.editor_drawing_area.set_configurable_target_menu_handler (agent (l_dev_win.menus.context_menu_factory).exeception_dialog_menu (?, ?, ?, ?, exception_text_panel))
+				end
+			end
 			if trace /= Void then
 				resize_exception_text_panel
 				exception_text_panel.load_text (trace)

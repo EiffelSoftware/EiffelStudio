@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="encoding" uuid="338C6117-0E18-4773-B72D-79B9452F6C68">
-	<target name="encoding">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="dotnet_encoding" uuid="338C6117-0E18-4773-B72D-79B9452F6C68">
+	<target name="dotnet_encoding">
 		<root cluster="encoding" class="CULTURE_AND_REGION" feature="main"/>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>

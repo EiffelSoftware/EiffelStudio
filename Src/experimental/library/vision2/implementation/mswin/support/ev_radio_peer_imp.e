@@ -135,10 +135,6 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			radio_group := a_list
 		end
 
-invariant
-
-	peers_not_void: peers /= Void
-
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -20,6 +20,12 @@ inherit
 			default_create
 		end
 
+create
+	default_create
+
+create {MULTI_SELECTION_WORLD}
+	make_filled, list_make
+
 feature {NONE} -- Initialization
 
 	default_create

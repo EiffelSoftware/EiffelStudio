@@ -41,7 +41,11 @@ feature -- Initialization
 			l_info := {CULTURE_INFO}.current_culture
 			check l_info_attached: l_info /= Void end
 			create culture_info.make_from_name (l_info.name)
-			create l_locale_id.make_from_string (culture_info.name)
+			if attached culture_info.name as l_culture_name then
+				create l_locale_id.make_from_string (l_culture_name)
+			else
+				create l_locale_id.make ("en", "US", Void)
+			end
 			create Result.make
 			fill (Result)
 			Result.set_id (l_locale_id)
@@ -52,7 +56,7 @@ feature -- Initialization
 	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO
 			-- Create locale with a_locale_id
 		do
-			if attached {STRING} a_locale_id.name.string as l_name then
+			if attached a_locale_id.name as l_name then
 				create culture_info.make_from_name (format_id_to_dotnet (l_name))
 			end
 			create Result.make
@@ -166,8 +170,11 @@ feature -- Informations
 				until
 					i > l_list.upper
 				loop
-					if attached l_list.item (i) as l_culture then
-						create l_locale_id.make_from_string (l_culture.name)
+					if
+						attached l_list.item (i) as l_culture and then
+						attached l_culture.name as l_culture_name
+					then
+						create l_locale_id.make_from_string (l_culture_name)
 						Result.extend (l_locale_id.twin)
 					end
 					i := i + 1
@@ -189,7 +196,6 @@ feature -- Informations
 		ensure then
 			result_exists: Result /= Void
 		end
-
 
 feature -- Date and time formatting
 
@@ -227,7 +233,11 @@ feature -- Date and time formatting
 	get_am_suffix  : STRING_32
 			--
 		do
-			Result := date_time_format.am_designator
+			if attached date_time_format.am_designator as l_am then
+				Result := l_am
+			else
+				Result := "AM"
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -235,7 +245,11 @@ feature -- Date and time formatting
 	get_pm_suffix : STRING_32
 			-- No description
 		do
-			Result := date_time_format.pm_designator
+			if attached date_time_format.pm_designator as l_pm then
+				Result := l_pm
+			else
+				Result := "PM"
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -243,7 +257,11 @@ feature -- Date and time formatting
 	get_date_separator : STRING_32
 			-- separator in the date pattern
 		do
-			Result := date_time_format.date_separator
+			if attached date_time_format.date_separator as l_sep then
+				Result := l_sep
+			else
+				Result := "/"
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -251,7 +269,11 @@ feature -- Date and time formatting
 	get_time_separator : STRING_32
 			-- separator in the time pattern
 		do
-			Result := date_time_format.time_separator
+			if attached date_time_format.time_separator as l_sep then
+				Result := l_sep
+			else
+				Result := ":"
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -392,7 +414,11 @@ feature	-- number formatting
 
 	get_value_decimal_separator: STRING_32
 		do
-			Result := number_format.number_decimal_separator
+			if attached number_format.number_decimal_separator as l_sep then
+				Result := l_sep
+			else
+				Result := "."
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -408,7 +434,11 @@ feature	-- number formatting
 	get_value_group_separator: STRING_32
 			--
 		do
-			Result := number_format.number_group_separator
+			if attached number_format.number_group_separator as l_sep then
+				Result := l_sep
+			else
+				Result := ","
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -426,7 +456,11 @@ feature	-- currency formatting
 	get_currency_symbol: STRING_32
 			--
 		do
-			Result := number_format.currency_symbol
+			if attached number_format.currency_symbol as l_symbol then
+				Result := l_symbol
+			else
+				Result := "$"
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -434,7 +468,11 @@ feature	-- currency formatting
 	get_currency_decimal_separator: STRING_32
 			--
 		do
-			Result := number_format.currency_decimal_separator
+			if attached number_format.currency_decimal_separator as l_sep then
+				Result := l_sep
+			else
+				Result := "."
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -450,7 +488,11 @@ feature	-- currency formatting
 	get_currency_group_separator: STRING_32
 			--
 		do
-			Result := number_format.currency_group_separator
+			if attached number_format.currency_group_separator as l_sep then
+				Result := l_sep
+			else
+				Result := ","
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -469,7 +511,11 @@ feature -- International currency formatting
 			-- get the interational currency symbol
 			-- like "USD"
 		do
-			Result := invariant_culture_number_format.currency_symbol
+			if attached invariant_culture_number_format.currency_symbol as l_symbol then
+				Result := l_symbol
+			else
+				Result := "USD"
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -477,7 +523,11 @@ feature -- International currency formatting
 	get_int_currency_decimal_separator: STRING_32
 			--
 		do
-			Result := invariant_culture_number_format.currency_decimal_separator
+			if attached invariant_culture_number_format.currency_decimal_separator as l_sep then
+				Result := l_sep
+			else
+				Result := "."
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -493,7 +543,11 @@ feature -- International currency formatting
 	get_int_currency_group_separator: STRING_32
 			--
 		do
-			Result := invariant_culture_number_format.currency_group_separator
+			if attached invariant_culture_number_format.currency_group_separator as l_sep then
+				Result := l_sep
+			else
+				Result := ","
+			end
 		ensure
 			result_exists: Result /= Void
 		end
@@ -510,30 +564,40 @@ feature -- International currency formatting
 
 feature -- General Information
 
-	name : STRING_32
+	name: STRING_32
 			-- name of current locale
 		do
-			Result := culture_info.name
+			if attached culture_info.name as l_culture_name then
+				Result := l_culture_name
+			else
+				Result := "en-US"
+			end
 		end
 
 	default_locale_id: I18N_LOCALE_ID
 			-- default locale id
-		local
-			l_culture_info: detachable CULTURE_INFO
 		do
-			l_culture_info := {CULTURE_INFO}.current_culture
-			check l_culture_info_attached: l_culture_info /= Void end
-			create Result.make_from_string (l_culture_info.name)
+			if
+				attached {CULTURE_INFO}.current_culture as l_culture and then
+				attached l_culture.name as l_culture_name
+			then
+				create Result.make_from_string (l_culture_name)
+			else
+				create Result.make ("en", "US", Void)
+			end
 		end
 
 	system_locale_id: I18N_LOCALE_ID
 			-- Default system locale id.
-		local
-			l_culture_info: detachable CULTURE_INFO
 		do
-			l_culture_info := {CULTURE_INFO}.installed_ui_culture
-			check l_culture_info_attached: l_culture_info /= Void end
-			create Result.make_from_string (l_culture_info.name)
+			if
+				attached {CULTURE_INFO}.installed_ui_culture as l_culture and then
+				attached l_culture.name as l_culture_name
+			then
+				create Result.make_from_string (l_culture_name)
+			else
+				create Result.make ("en", "US", Void)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -567,11 +631,8 @@ feature {NONE} -- Implementation
 	invariant_culture_number_format: NUMBER_FORMAT_INFO
 		local
 			l_result: detachable NUMBER_FORMAT_INFO
-			l_culture: detachable CULTURE_INFO
 		do
-			l_culture := culture_info.invariant_culture
-			check l_culture_attached: l_culture /= Void end
-			l_result := l_culture.number_format
+			l_result := {NUMBER_FORMAT_INFO}.invariant_info
 			check l_result_not_void: l_result /= Void end
 			Result := l_result
 		end
@@ -605,7 +666,7 @@ feature {NONE} -- Help fuction
 			end
 		end
 
-	format_id_to_dotnet (a_id: attached STRING): attached STRING
+	format_id_to_dotnet (a_id: STRING): STRING
 			-- Format id to dotnet style.
 			-- Replace "_", "@" and "." with "-"
 		local

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="lib_a" library_target="default" uuid="A3AF22C8-B186-4c9c-814B-C7FE9580E2CB">
+	<target name="default">
+		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="lib_b" location="$LIB_B\b.ecf"/>
+		<cluster name="A" location="$LIB_A"/>
+	</target>
+</system>

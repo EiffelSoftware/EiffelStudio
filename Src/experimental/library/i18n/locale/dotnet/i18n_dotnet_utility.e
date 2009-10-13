@@ -14,16 +14,19 @@ class I18N_DOTNET_UTILITY
 
 feature {I18N_HOST_LOCALE_IMP} -- Convertion functions
 
-	convert_format_string (s: STRING_32): STRING_32
+	convert_format_string (s: detachable SYSTEM_STRING): STRING_32
 			-- convert a .NET format string
 			-- to a format string supported by
 			-- Eiffel i18n library
 		do
-			if s.count = 2 and s.item (1).is_equal ('%%') then
-				-- it is a single format code
-				Result := convert_format_specifier (s.substring (2,2))
+			if s = Void then
+				create Result.make_empty
+			elseif s.length = 2 and s.chars (0) = '%%' then
+					-- it is a single format code
+				Result := s
+				Result := convert_format_specifier (Result)
 			else
-				-- a format string
+					-- a format string
 				Result := convert_format_specifier (s)
 			end
 		end

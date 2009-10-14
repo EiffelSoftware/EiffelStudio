@@ -73,15 +73,19 @@ feature -- Basic operation
 			-- <Precursor>
 		do
 			Precursor
-			compiler_output.lock
-			compiler_output.clear
+			if attached compiler_output as l_output then
+				l_output.lock
+				l_output.clear
+			end
 		end
 
 	put_end_output
 			-- <Precursor>
 		do
 			Precursor
-			compiler_output.unlock
+			if attached compiler_output as l_output then
+				l_output.unlock
+			end
 			window_manager.display_percentage (0)
 		end
 

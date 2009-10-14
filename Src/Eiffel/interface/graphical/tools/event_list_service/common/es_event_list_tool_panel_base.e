@@ -107,6 +107,11 @@ feature {NONE} -- Initialization
 				synchronize_event_list_items
 			end
 			update_content_applicable_widgets (item_count > 0)
+
+			if not event_list.is_service_available then
+					-- The event list service is not available to disable the tool.
+				widget.disable_sensitive
+			end
 		end
 
 feature {NONE} -- Clean up

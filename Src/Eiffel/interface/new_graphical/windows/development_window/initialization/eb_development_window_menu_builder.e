@@ -1179,10 +1179,14 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_FEATURE_RELATION_TOOL})
 			insert_show_tool_menu_item (Result, {ES_DEPENDENCY_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			insert_show_tool_menu_item (Result, {ES_OUTPUTS_TOOL})
+			if (create {SERVICE_CONSUMER [OUTPUT_MANAGER_S]}).is_service_available then
+				insert_show_tool_menu_item (Result, {ES_OUTPUTS_TOOL})
+			end
 			insert_show_tool_menu_item (Result, {ES_CONSOLE_TOOL})
-			Result.extend (create {EV_MENU_SEPARATOR})
-			insert_show_tool_menu_item (Result, {ES_ERROR_LIST_TOOL})
+			if (create {SERVICE_CONSUMER [EVENT_LIST_S]}).is_service_available then
+				Result.extend (create {EV_MENU_SEPARATOR})
+				insert_show_tool_menu_item (Result, {ES_ERROR_LIST_TOOL})
+			end
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_SEARCH_TOOL})
 			insert_show_tool_menu_item (Result, {ES_SEARCH_REPORT_TOOL})
@@ -1197,8 +1201,10 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_FAVORITES_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_BREAKPOINTS_TOOL})
-			Result.extend (create {EV_MENU_SEPARATOR})
-			insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
+			if (create {SERVICE_CONSUMER [TEST_SUITE_S]}).is_service_available then
+				Result.extend (create {EV_MENU_SEPARATOR})
+				insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
+			end
 
 --			l_customized_tools := develop_window.tools.customized_tools
 --			if not l_customized_tools.is_empty then

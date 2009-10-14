@@ -15,8 +15,6 @@ class
 inherit
 	EVENT_CONNECTION_POINT_I [TAG_SERVER_OBSERVER [G], TAG_SERVER [G]]
 
-	TAG_SHARED_EQUALITY_TESTER
-
 create
 	make_default, make
 
@@ -34,15 +32,11 @@ feature {NONE} -- Initialization
 			-- `a_formatter': Validator for validating/modifying tags.
 		require
 			a_validator_attached: a_validator /= Void
-		local
-			l_tag_table: like tag_table
 		do
 			validator := a_validator
 
-			create item_to_tags_table.make_default
-			create l_tag_table.make_default
-			l_tag_table.set_key_equality_tester (equality_tester)
-			tag_table := l_tag_table
+			create item_to_tags_table.make (10)
+			create tag_table.make (10)
 
 			create tag_added_event
 			create tag_remove_event
@@ -55,21 +49,23 @@ feature -- Access
 	validator: TAG_VALIDATOR
 			-- Validator used to validate/modify tags
 
-	items: DS_ARRAYED_LIST [G]
-			-- All items currently tagged in `Current'
-		do
-			create Result.make_from_linear (item_to_tags_table.keys)
-		ensure
-			result_attached: Result /= Void
-		end
+--	items: DS_ARRAYED_LIST [G]
+--			-- All items currently tagged in `Current'
+--		do
+--			create Result.make_from_linear (item_to_tags_table.keys)
+--		ensure
+--			result_attached: Result /= Void
+--		end
 
-	tags: DS_ARRAYED_LIST [READABLE_STRING_GENERAL]
-			-- Arrayed list of all tags currently used to tag `items'
-		do
-			create Result.make_from_linear (tag_table.keys)
-		end
+--	tags: DS_ARRAYED_LIST [READABLE_STRING_GENERAL]
+--			-- Arrayed list of all tags currently used to tag `items'
+--		do
+--			create Result.make_from_linear (tag_table.keys)
+--		ensure
+--			result_attached: Result /= Void
+--		end
 
-	tags_of_item (an_item: G): DS_HASH_SET [READABLE_STRING_GENERAL]
+	tags_of_item (an_item: G): TAG_SEARCH_TABLE
 			-- All tags with which an item is tagged
 			--
 			-- `an_item': Tagged item.
@@ -77,28 +73,25 @@ feature -- Access
 		require
 			an_item_attached: an_item /= Void
 			has_an_item: has_item (an_item)
-		local
-			l_list: DS_LINEAR [READABLE_STRING_GENERAL]
 		do
 			Result := item_to_tags_table.item (an_item).twin
 		ensure
 			result_attached: Result /= Void
-			results_attached: not Result.has_void
-			results_valid: Result.for_all (agent (a_tag: STRING): BOOLEAN
-				do
-					Result := validator.is_valid_tag (a_tag)
-				end)
+--			results_valid: Result.for_all (agent (a_tag: STRING): BOOLEAN
+--				do
+--					Result := validator.is_valid_tag (a_tag)
+--				end)
 		end
 
 feature {NONE} -- Access
 
-	tag_table: DS_HASH_TABLE [NATURAL, READABLE_STRING_GENERAL]
+	tag_table: TAG_HASH_TABLE [NATURAL]
 			-- Table containing all tags currently used to tag an item together with a reference counter
 			--
 			-- keys: Tags
 			-- values: Reference counter indicating how many times a tag is used
 
-	item_to_tags_table: DS_HASH_TABLE [DS_HASH_SET [READABLE_STRING_GENERAL], G]
+	item_to_tags_table: HASH_TABLE [like tags_of_item, G]
 			-- Table associating items with their corresponding tags
 			--
 			-- keys: Generic items
@@ -224,8 +217,8 @@ feature -- Element change
 			not_updating: not is_locked
 			a_tag_valid: is_valid_tag_for_item (an_item, a_tag)
 		local
-			l_set: DS_HASH_SET [READABLE_STRING_GENERAL]
-			l_new: detachable READABLE_STRING_GENERAL
+			l_set: like tags_of_item
+			l_new: IMMUTABLE_STRING_8
 			l_count: NATURAL
 			l_tag_table: like tag_table
 		do
@@ -233,17 +226,17 @@ feature -- Element change
 			if item_to_tags_table.has (an_item) then
 				l_set := item_to_tags_table.item (an_item)
 			else
-				l_set := new_tag_set
+				create l_set.make (10)
 				item_to_tags_table.force (l_set, an_item)
 			end
 			l_tag_table := tag_table
-			if l_tag_table.has (a_tag) then
-				l_new := l_tag_table.key (a_tag)
-				l_count := l_tag_table.item (l_new) + 1
+			l_tag_table.search (a_tag)
+			if l_tag_table.found then
+				l_count := l_tag_table.found_item + 1
 			else
-				l_new := validator.immutable_string (a_tag)
 				l_count := 1
 			end
+			l_new := l_tag_table.immutable_string (a_tag)
 			l_tag_table.force (l_count, l_new)
 			l_set.force (l_new)
 			tag_added_event.publish ([Current, an_item, l_new])
@@ -264,24 +257,27 @@ feature -- Element change
 			has_an_item: has_item (an_item)
 			has_a_tag: has_item_with_tag (an_item, a_tag)
 		local
-			l_set: DS_HASH_SET [READABLE_STRING_GENERAL]
+			l_set: like tags_of_item
 			l_count: NATURAL
 			l_table: like tag_table
+			l_tag: IMMUTABLE_STRING_8
 		do
 			lock
 			l_set := item_to_tags_table.item (an_item)
-			tag_remove_event.publish ([Current, an_item, l_set.item (a_tag)])
+			l_tag := l_set.immutable_string (a_tag)
+			check found: l_set.found end
+			tag_remove_event.publish ([Current, an_item, l_tag])
 			if l_set.count = 1 then
 				item_to_tags_table.remove (an_item)
 			else
-				l_set.remove (a_tag)
+				l_set.remove (l_tag)
 			end
 			l_table := tag_table
-			l_count := l_table.item (a_tag)
+			l_count := l_table.item (l_tag)
 			if l_count = 1 then
-				l_table.remove (a_tag)
+				l_table.remove (l_tag)
 			else
-				l_table.force (l_count - 1, a_tag)
+				l_table.force (l_count - 1, l_tag)
 			end
 			unlock
 		ensure
@@ -297,16 +293,16 @@ feature -- Element change
 			not_updating: not is_locked
 			has_an_item: has_item (an_item)
 		local
-			l_cursor: DS_LINEAR_CURSOR [READABLE_STRING_GENERAL]
+			l_table: like tags_of_item
 		do
 			from
-				l_cursor := tags_of_item (an_item).new_cursor
-				l_cursor.start
+				l_table := tags_of_item (an_item)
+				l_table.start
 			until
-				l_cursor.after
+				l_table.after
 			loop
-				remove_tag (an_item, l_cursor.item)
-				l_cursor.forth
+				remove_tag (an_item, l_table.item_for_iteration)
+				l_table.forth
 			end
 		ensure
 			item_removed: not has_item (an_item)
@@ -343,23 +339,21 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	new_tag_set: DS_HASH_SET [READABLE_STRING_GENERAL]
+	new_tag_set: TAG_SEARCH_TABLE
 			-- New set for storing tags.
 		do
-			create Result.make_default
-			Result.set_equality_tester (equality_tester)
+			create Result.make (10)
 		ensure
 			result_attached: Result /= Void
-			result_uses_equality_tester: Result.equality_tester = equality_tester
 		end
 
 invariant
 	item_table_attached: item_to_tags_table /= Void
-	item_table_valid: item_to_tags_table.for_all (
-		agent (a_item: DS_HASH_SET [READABLE_STRING_GENERAL]): BOOLEAN
-			do
-				Result := a_item.equality_tester = equality_tester
-			end)
+--	item_table_valid: item_to_tags_table.for_all (
+--		agent (a_item: DS_HASH_SET [READABLE_STRING_GENERAL]): BOOLEAN
+--			do
+--				Result := a_item.equality_tester = equality_tester
+--			end)
 	tag_added_event_attached: tag_added_event /= Void
 	tag_removed_event_attached: tag_remove_event /= Void
 	tag_table_attached: tag_table /= Void

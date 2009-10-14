@@ -8,7 +8,7 @@ deferred class
 	TAG_TREE_GRID_NODE_CONTAINER [G -> TAG_ITEM]
 
 inherit
-	TAG_SHARED_EQUALITY_TESTER
+	TAG_CONVERSION
 
 feature -- Access
 
@@ -53,7 +53,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access
 
-	child_table: detachable DS_HASH_TABLE [like new_child, READABLE_STRING_GENERAL]
+	child_table: detachable TAG_HASH_TABLE [like new_child]
 
 	new_row_start_index: INTEGER
 			-- Starting index of a new row
@@ -87,8 +87,7 @@ feature {TAG_TREE_GRID_NODE_CONTAINER} -- Status setting
 		local
 			l_table: like child_table
 		do
-			create l_table.make_default
-			l_table.set_key_equality_tester (equality_tester)
+			create l_table.make (10)
 			child_table := l_table
 			rebuild
 		ensure
@@ -107,7 +106,8 @@ feature {TAG_TREE_GRID_NODE_CONTAINER} -- Status setting
 			from until
 				l_table.is_empty
 			loop
-				remove_child (l_table.first.node)
+				l_table.start
+				remove_child (l_table.item_for_iteration.node)
 			end
 			if not node.is_leaf then
 				node.children.do_all (
@@ -125,6 +125,8 @@ feature {TAG_TREE_GRID_NODE_CONTAINER} -- Status setting
 feature -- Query
 
 	has_child_with_token (a_token: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does current contain a child for given token?
+
 		require
 			a_token_attached: a_token /= Void
 			connected: is_connected
@@ -186,7 +188,7 @@ feature {TAG_TREE_GRID_NODE_CONTAINER} -- Element change
 			end
 			insert_new_row (l_pos)
 			l_new := new_child (a_node, grid.row (l_pos))
-			l_table.force_last (l_new, a_node.tree.validator.immutable_string (l_token))
+			l_table.force (l_new, immutable_string (l_token))
 		ensure
 			has_child_with_token: has_child_with_token (a_node.token)
 		end

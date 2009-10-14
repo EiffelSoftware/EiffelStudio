@@ -26,8 +26,6 @@ inherit
 			child_table
 		end
 
-	TAG_SHARED_EQUALITY_TESTER
-
 create
 	make
 
@@ -45,10 +43,9 @@ feature {NONE} -- Initialization
 
 			layout := a_layout
 
-			create child_table.make_default
-			child_table.set_key_equality_tester (equality_tester)
+			create child_table.make (10)
 			create expanded_nodes.make
-			create internal_selected_nodes.make_default
+			create internal_selected_nodes.make (10)
 			create node_selected_actions
 			create node_deselected_actions
 
@@ -122,7 +119,7 @@ feature -- Access
 	widget: EV_BOX
 			-- Widget containing grid
 
-	selected_nodes: DS_HASH_SET [like common_parent]
+	selected_nodes: SEARCH_TABLE [like common_parent]
 			-- Nodes for which row is selected
 		do
 			Result := internal_selected_nodes.twin
@@ -164,10 +161,10 @@ feature {NONE} -- Access
 			end
 		end
 
-	expanded_nodes: DS_LINKED_LIST [like common_parent]
+	expanded_nodes: LINKED_LIST [like common_parent]
 			-- List containing nodes for which the row is expanded
 
-	internal_selected_nodes: DS_HASH_SET [like common_parent]
+	internal_selected_nodes: SEARCH_TABLE [like common_parent]
 			-- Set of nodes which are currently selected in `grid'
 
 	sparse_tree: TAG_TREE_GRID [G]
@@ -219,7 +216,7 @@ feature {NONE} -- Access
 			result_valid: attached Result implies Result.node = a_node
 		end
 
-	child_table: DS_HASH_TABLE [like new_child, READABLE_STRING_GENERAL]
+	child_table: TAG_HASH_TABLE [like new_child]
 			-- <Precursor>
 
 	new_row_start_index: INTEGER
@@ -432,38 +429,39 @@ feature {NONE} -- Events
 					l_child.evaluate
 				end
 				l_nodes := expanded_nodes
-				l_nodes.delete (l_child.node)
+				l_nodes.prune_all (l_child.node)
 				if l_nodes.count = max_expanded_nodes_count then
-					l_nodes.remove_last
+					l_nodes.go_i_th (l_nodes.count)
+					l_nodes.remove
 				end
-				l_nodes.force_first (l_child.node)
+				l_nodes.put_front (l_child.node)
 			end
 		end
 
 	on_row_collapse (a_row: EV_GRID_ROW)
 		do
 			if attached {like new_child} a_row.data as l_child then
-				expanded_nodes.delete (l_child.node)
+				expanded_nodes.prune_all (l_child.node)
 			end
 		end
 
 	on_node_remove (a_tree: TAG_TREE [G]; a_node: TAG_TREE_NODE [G])
 			-- <Precursor>
 		local
-			l_cursor: DS_LINKED_LIST_CURSOR [like common_parent]
+			l_nodes: like expanded_nodes
 			l_current: like common_parent
 		do
 			from
-				l_cursor := expanded_nodes.new_cursor
-				l_cursor.start
+				l_nodes := expanded_nodes
+				l_nodes.start
 			until
-				l_cursor.after
+				l_nodes.after
 			loop
-				l_current := l_cursor.item
+				l_current := l_nodes.item_for_iteration
 				if a_node = l_current or a_node.is_parent_of (l_current) then
-					l_cursor.remove
+					l_nodes.remove
 				else
-					l_cursor.forth
+					l_nodes.forth
 				end
 			end
 			Precursor (a_tree, a_node)

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			an_item_name_valid: not an_item_name.is_empty
 		do
 			make_node (a_parent, a_tag, a_tag_item)
-			name := tree.validator.immutable_string (an_item_name)
+			name := immutable_string (an_item_name)
 		ensure
 			active: is_active
 			valid_token: token.same_string (tree.formatter.first_token (a_tag))

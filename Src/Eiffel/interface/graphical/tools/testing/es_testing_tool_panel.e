@@ -357,7 +357,7 @@ feature {NONE} -- Events: test execution
 			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		local
 			l_item: TEST_I
-			l_list: DS_ARRAYED_LIST [TEST_I]
+			l_list: ARRAYED_LIST [TEST_I]
 			l_cursor: DS_LINEAR_CURSOR [TEST_I]
 		do
 			if test_suite.is_service_available then
@@ -372,7 +372,7 @@ feature {NONE} -- Events: test execution
 					-- FIXME: only execute failing once statistics are implemented
 					--if l_item.is_outcome_available then
 					--	if l_item.last_outcome.is_fail then
-							l_list.force_last (l_item)
+							l_list.force (l_item)
 					--	end
 					--end
 					l_cursor.forth
@@ -386,11 +386,10 @@ feature {NONE} -- Events: test execution
 			--
 			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		local
-			l_set: DS_HASH_SET [TEST_I]
+			l_tests: ARRAYED_LIST [TEST_I]
 		do
-			create l_set.make_default
-			test_tree.tag_tree.append_items_recursive (l_set)
-			launch_executor (l_set, a_debug)
+			l_tests := test_tree.tag_tree.items.linear_representation
+			launch_executor (l_tests, a_debug)
 		end
 
 	on_run_selected (a_debug: BOOLEAN)
@@ -398,11 +397,20 @@ feature {NONE} -- Events: test execution
 			--
 			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		local
-			l_set: DS_HASH_SET [TEST_I]
+			l_items: SEARCH_TABLE [TEST_I]
+			l_nodes: SEARCH_TABLE [TAG_TREE_NODE [TEST_I]]
 		do
-			create l_set.make_default
-			test_tree.tag_tree.selected_nodes.do_all (agent {TAG_TREE_NODE [TEST_I]}.append_items_recursive (l_set))
-			launch_executor (l_set, a_debug)
+			create l_items.make (10)
+			from
+				l_nodes := test_tree.tag_tree.selected_nodes
+				l_nodes.start
+			until
+				l_nodes.after
+			loop
+				l_nodes.item_for_iteration.append_items_recursive (l_items)
+				l_nodes.forth
+			end
+			launch_executor (l_items.linear_representation, a_debug)
 		end
 
 	on_stop

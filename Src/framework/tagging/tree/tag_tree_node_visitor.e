@@ -29,21 +29,21 @@ feature {NONE} -- Basic operations
 			a_node_attached: a_node /= Void
 			a_node_active: a_node.is_active
 		local
-			l_cursor: DS_LINEAR_CURSOR [TAG_TREE_NODE [G]]
+			l_children: ARRAYED_LIST [TAG_TREE_NODE [G]]
 			l_node: TAG_TREE_NODE [G]
 		do
 			if not a_node.is_leaf then
 				from
-					l_cursor := a_node.children.new_cursor
-					l_cursor.start
+					l_children := a_node.children
+					l_children.start
 				until
-					l_cursor.after
+					l_children.after
 				loop
-					l_node := l_cursor.item
+					l_node := l_children.item_for_iteration
 					if l_node.is_active then
 						l_node.process (Current)
 					end
-					l_cursor.forth
+					l_children.forth
 				end
 			end
 		end

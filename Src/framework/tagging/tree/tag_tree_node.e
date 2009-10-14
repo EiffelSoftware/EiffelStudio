@@ -12,7 +12,7 @@ class
 inherit
 	HASHABLE
 
-	TAG_SHARED_EQUALITY_TESTER
+	TAG_CONVERSION
 
 create
 	make_root,
@@ -30,8 +30,7 @@ feature {NONE} -- Initialization
 			l_table: like internal_child_table
 		do
 			initialize (a_tree)
-			create l_table.make_default
-			l_table.set_key_equality_tester (equality_tester)
+			create l_table.make (10)
 			internal_child_table := l_table
 		ensure
 			active: is_active
@@ -61,7 +60,7 @@ feature {NONE} -- Initialization
 			l_validator := tree.validator
 			l_token := l_formatter.first_token (a_tag)
 
-			internal_token := l_validator.immutable_string (l_formatter.first_token (a_tag))
+			internal_token := immutable_string (l_formatter.first_token (a_tag))
 
 			if l_token.count = a_tag.count then
 						-- Current node will become a leaf
@@ -78,7 +77,7 @@ feature {NONE} -- Initialization
 					make_root (tree)
 					add_tag_with_item (l_formatter.suffix (l_token, a_tag), an_item)
 			end
-			internal_token := l_validator.immutable_string (l_token)
+			internal_token := immutable_string (l_token)
 			internal_parent := a_parent
 		ensure
 			active: is_active
@@ -124,13 +123,24 @@ feature -- Access
 			Result := l_token
 		end
 
-	children: DS_ARRAYED_LIST [like child_with_token]
+	children: ARRAYED_LIST [like child_with_token]
 			-- Arrayed list containing child nodes
 		require
 			active: is_active
 			not_leaf: not is_leaf
+		local
+			l_table: like child_table
 		do
-			create Result.make_from_linear (child_table)
+			l_table := child_table
+			create Result.make (l_table.count)
+			from
+				l_table.start
+			until
+				l_table.after
+			loop
+				Result.force (l_table.item_for_iteration)
+				l_table.forth
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -250,7 +260,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: content
 
-	child_table: DS_HASH_TABLE [like child_with_token, READABLE_STRING_GENERAL]
+	child_table: TAG_HASH_TABLE [like child_with_token]
 			-- Table associating child nodes with their corresponding token
 			--
 			-- keys: token
@@ -323,13 +333,23 @@ feature {TAG_TREE_NODE} -- Status setting
 			-- Remove `Current' from tree.
 		require
 			active: is_active
+		local
+			l_table: like child_table
 		do
 			remove_internal
 			if is_leaf then
 				internal_item := Void
 			else
-				child_table.do_all (agent {like child_with_token}.remove)
-				child_table.wipe_out
+				from
+					l_table := child_table
+					l_table.start
+				until
+					l_table.after
+				loop
+					l_table.item_for_iteration.remove
+					l_table.forth
+				end
+				l_table.wipe_out
 				internal_child_table := Void
 			end
 			last_added_child := Void
@@ -502,18 +522,28 @@ feature -- Basic operations
 			a_visitor.process_node (Current)
 		end
 
-	append_items_recursive (a_hash_set: DS_HASH_SET [G])
+	append_items_recursive (a_hash_set: SEARCH_TABLE [G])
 			-- Recursively add items in children of `Current' to given hash set.
 			--
 			-- `a_hash_set': Hash set to which items will be added.
 		require
 			a_hash_set_attached: a_hash_set /= Void
 			active: is_active
+		local
+			l_table: like child_table
 		do
 			if is_leaf then
 				a_hash_set.force (item)
 			else
-				child_table.do_all (agent {like child_with_token}.append_items_recursive (a_hash_set))
+				from
+					l_table := child_table
+					l_table.start
+				until
+					l_table.after
+				loop
+					l_table.item_for_iteration.append_items_recursive (a_hash_set)
+					l_table.forth
+				end
 			end
 		end
 

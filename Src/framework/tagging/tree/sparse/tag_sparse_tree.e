@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			an_updater_attached: a_filter /= Void
 		do
 			filter := a_filter
-			create internal_root_nodes.make_default
-			create parent_nodes.make_default
+			create internal_root_nodes.make (10)
+			create parent_nodes.make (10)
 		ensure
 			filter_set: filter = a_filter
 		end
@@ -55,26 +55,26 @@ feature -- Access
 			Result := l_tree
 		end
 
-	items: DS_HASH_SET [G]
+	items: SEARCH_TABLE [G]
 			-- All items contained in nodes or child nodes of `root_nodes'
 			--
 			-- Note: this query is expensive as it traverses all nodes in `root_nodes' recursively.
 		require
 			connected: is_connected
 		do
-			create Result.make_default
-			internal_root_nodes.do_all (agent {like common_parent}.append_items_recursive (Result))
+			create Result.make (10)
+			append_items_recursive (Result)
 		end
 
 feature -- Access
 
-	root_nodes: DS_ARRAYED_LIST [TAG_TREE_NODE [G]]
-			-- Arrayed list of all nodes representing the root of a sub tree in `tree'
-		require
-			connected: is_connected
-		do
-			create Result.make_from_linear (internal_root_nodes)
-		end
+--	root_nodes: DS_ARRAYED_LIST [TAG_TREE_NODE [G]]
+--			-- Arrayed list of all nodes representing the root of a sub tree in `tree'
+--		require
+--			connected: is_connected
+--		do
+--			create Result.make_from_linear (internal_root_nodes)
+--		end
 
 	common_parent: TAG_TREE_NODE [G]
 			-- Greates common parent of `root_nodes'
@@ -99,12 +99,12 @@ feature {NONE}  -- Access
 	internal_tree: detachable like tree
 			-- Internal storage for `tree'
 
-	internal_root_nodes: DS_HASH_SET [like common_parent]
+	internal_root_nodes: SEARCH_TABLE [like common_parent]
 			-- Internal storage for `root_nodes'
 			--
 			-- Note: if `root_nodes' contains only a single node, `common_parent' points to that node.
 
-	parent_nodes: DS_HASH_TABLE [NATURAL, like common_parent]
+	parent_nodes: HASH_TABLE [NATURAL, like common_parent]
 			-- Table containing parent nodes of all `root_nodes' together with a reference counter
 			--
 			-- key: (indirect) parent of `root_nodes'
@@ -292,7 +292,7 @@ feature -- Element change
 						l_current := l_current.parent
 						l_parents.search (l_current)
 						if l_parents.found then
-							l_parents.replace_found_item (l_parents.found_item + 1)
+							l_parents.replace (l_parents.found_item + 1, l_current)
 							l_current := tree.root_node
 						else
 							l_parents.force (1, l_current)
@@ -327,7 +327,7 @@ feature -- Element change
 			l_current, l_parent, l_child: like common_parent
 			l_count: NATURAL
 			l_keep_parents: BOOLEAN
-			l_children: DS_ARRAYED_LIST [TAG_TREE_NODE [G]]
+			l_children: ARRAYED_LIST [TAG_TREE_NODE [G]]
 		do
 			l_nodes := internal_root_nodes
 			l_parents := parent_nodes
@@ -355,7 +355,7 @@ feature -- Element change
 					loop
 						l_child := l_children.item_for_iteration
 						if l_child /= l_current then
-							l_nodes.force_last (l_child)
+							l_nodes.force (l_child)
 						end
 						l_children.forth
 					end
@@ -440,15 +440,25 @@ feature {NONE} -- Element change
 
 feature -- Basic operations
 
-	append_items_recursive (a_hash_set: DS_HASH_SET [G])
+	append_items_recursive (a_hash_set: like items)
 			-- Recursively add items in children of `root_nodes' to given hash set.
 			--
 			-- `a_hash_set': Hash set to which items will be added.
 		require
 			a_hash_set_attached: a_hash_set /= Void
 			connected: is_connected
+		local
+			l_nodes: like internal_root_nodes
 		do
-			internal_root_nodes.do_all (agent {like common_parent}.append_items_recursive (a_hash_set))
+			from
+				l_nodes := internal_root_nodes
+				l_nodes.start
+			until
+				l_nodes.after
+			loop
+				l_nodes.item_for_iteration.append_items_recursive (a_hash_set)
+				l_nodes.forth
+			end
 		end
 
 feature {TAG_TREE} -- Events
@@ -600,7 +610,7 @@ feature {NONE} -- Implementation
 		local
 			l_parents: like parent_nodes
 			l_roots: like internal_root_nodes
-			l_children: DS_ARRAYED_LIST [like common_parent]
+			l_children: ARRAYED_LIST [like common_parent]
 			l_node: like common_parent
 		do
 			l_parents := parent_nodes
@@ -628,13 +638,16 @@ feature {NONE} -- Implementation
 		local
 			l_common_parent: like internal_common_parent
 			l_parents: like parent_nodes
+			l_nodes: like internal_root_nodes
 		do
+			l_nodes := internal_root_nodes
 				-- Recompute `common_parent'
-			inspect internal_root_nodes.count
+			inspect l_nodes.count
 			when 0 then
 					-- set `internal_common_parent' to Void
 			when 1 then
-				l_common_parent := internal_root_nodes.first
+				l_nodes.start
+				l_common_parent := l_nodes.item_for_iteration
 			else
 				from
 					l_parents := parent_nodes
@@ -680,7 +693,7 @@ feature {NONE} -- Implementation
 			a_node_not_inside: not is_inside_node (a_node)
 		local
 			l_parent, l_sibling: like common_parent
-			l_siblings: DS_ARRAYED_LIST [like common_parent]
+			l_siblings: ARRAYED_LIST [like common_parent]
 			b: BOOLEAN
 		do
 			l_parent := a_node.parent
@@ -715,7 +728,7 @@ feature {NONE} -- Implementation
 			a_node_valid: a_node.tree = tree
 		local
 			l_query: TUPLE [is_inside: BOOLEAN; check_children: BOOLEAN]
-			l_children: DS_ARRAYED_LIST [like common_parent]
+			l_children: ARRAYED_LIST [like common_parent]
 		do
 			l_query := filter.is_node_included (Current, a_node)
 			if l_query.is_inside /= is_inside_node (a_node) then

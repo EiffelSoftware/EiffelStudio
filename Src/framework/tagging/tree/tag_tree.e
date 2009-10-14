@@ -207,23 +207,23 @@ feature -- Basic operations
 			a_prefix_valid: validator.is_valid_tag (a_prefix) or else a_prefix.is_empty
 			an_item_tagged: has_item (an_item)
 		local
-			l_cursor: DS_HASH_SET_CURSOR [READABLE_STRING_GENERAL]
+			l_table: like tags_of_item
 			l_tag: READABLE_STRING_GENERAL
 			l_formatter: like formatter
 		do
 			Result := new_tag_set
 			from
-				l_cursor := item_to_tags_table.item (an_item).new_cursor
-				l_cursor.start
+				l_table := item_to_tags_table.item (an_item)
+				l_table.start
 				l_formatter := formatter
 			until
-				l_cursor.after
+				l_table.after
 			loop
-				l_tag := l_cursor.item
+				l_tag := l_table.item_for_iteration
 				if l_formatter.is_prefix (a_prefix, l_tag) then
-					Result.force_last (l_formatter.suffix (a_prefix, l_tag))
+					Result.force (l_formatter.suffix (a_prefix, l_tag))
 				end
-				l_cursor.forth
+				l_table.forth
 			end
 		end
 

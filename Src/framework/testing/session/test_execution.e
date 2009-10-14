@@ -225,7 +225,7 @@ feature -- Status setting
 	queue_test (a_test: TEST_I)
 			-- <Precursor>
 		local
-			l_groups: DS_HASH_SET [READABLE_STRING_GENERAL]
+			l_groups: TAG_SEARCH_TABLE
 			l_group_name: READABLE_STRING_GENERAL
 			l_group, l_new_group: NATURAL_64
 			l_group_map: like group_map

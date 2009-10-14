@@ -1,21 +1,28 @@
 note
-	description: "Summary description for {TAG_VALIDATOR}."
+	description: "[
+		Simple string conversion routines used by tagging classes.
+	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	TAG_VALIDATOR
+deferred class
+	TAG_CONVERSION
 
-feature -- Query
+feature -- Conversion
 
-	is_valid_tag (a_tag: READABLE_STRING_GENERAL): BOOLEAN
+	immutable_string (a_tag: READABLE_STRING_GENERAL): IMMUTABLE_STRING_8
 		require
 			a_tag_attached: a_tag /= Void
 		do
-			Result := not a_tag.is_empty
+			if attached {IMMUTABLE_STRING_8} a_tag as l_result then
+				Result := l_result
+			else
+				create Result.make_from_string (a_tag.as_string_8)
+			end
 		ensure
-			result_implies_not_empty: Result implies not a_tag.is_empty
+			result_attached: Result /= Void
+			result_equal: a_tag.same_string (Result)
 		end
 
 note

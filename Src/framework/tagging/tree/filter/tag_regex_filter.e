@@ -18,18 +18,18 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create positive_matchers.make_default
-			create negative_matchers.make_default
+			create positive_matchers.make (3)
+			create negative_matchers.make (3)
 		end
 
 feature {NONE} -- Access
 
-	positive_matchers: DS_ARRAYED_LIST [like new_matcher]
+	positive_matchers: ARRAYED_LIST [like new_matcher]
 			-- List of matchers which tags of node have to match
 			--
 			-- Note: if `positive_matchers' is empty, a node is included by default.
 
-	negative_matchers: DS_ARRAYED_LIST [like new_matcher]
+	negative_matchers: ARRAYED_LIST [like new_matcher]
 			-- List of matchers which nodes are not allowed to match
 
 feature -- Status report
@@ -82,9 +82,9 @@ feature -- Status setting
 						if not l_expr.is_empty then
 							l_new := new_matcher (l_expr)
 							if l_pos then
-								positive_matchers.force_last (l_new)
+								positive_matchers.force (l_new)
 							else
-								negative_matchers.force_last (l_new)
+								negative_matchers.force (l_new)
 							end
 						end
 						l_expr := Void

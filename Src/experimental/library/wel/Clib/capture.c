@@ -25,6 +25,7 @@ indexing
 static HWND hook_window;
 static HHOOK mouse_hook;
 static DWORD hook_process_id;
+static int already_captured = 0;
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: cwel_mouse_hook_proc                                                */
@@ -63,10 +64,11 @@ LRESULT CALLBACK cwel_mouse_hook_proc(int nCode, WPARAM wParam, LPARAM lParam)
 					HWND hover = WindowFromPoint(pInfo->pt);
 					DWORD l_process_id;
 						/* We limit our processing only when the mouse is not over a window
-						 * of the same process as `hook_window'. */
+						 * of the same process as `hook_window' or if someone else had already
+						 * called `SetCapture'. */
 					if (hover) {
 						(void) GetWindowThreadProcessId(hover, &l_process_id);
-						if (l_process_id != hook_process_id) {
+						if (already_captured || (l_process_id != hook_process_id)) {
 								/* The current window is not the target
 								 * window, so we simply post the message nothing the system to
 								 * forward the message to the current window
@@ -115,7 +117,11 @@ void cwel_capture (HWND hWnd) {
 		}
 
 		hook_window = hWnd;
-		SetCapture(hook_window);
+		if (!SetCapture(hook_window)) {
+			already_captured = 1;
+		} else {
+			already_captured = 0;
+		}
 
 		(void) GetWindowThreadProcessId (hook_window, &hook_process_id);
 

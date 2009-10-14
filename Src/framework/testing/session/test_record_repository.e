@@ -494,8 +494,8 @@ feature {NONE} -- Constants
 
 	record_directory_name: STRING = "records"
 			-- Subdirectory name where record should be stored permamently
-                                    --"[0]mm/[0]dd/yyyy hh12:[0]mi:[0]ss.ff3 AM"
-	file_name_format_string: STRING = "yyyy-[0]mm-[0]dd hh12:[0]mi:[0]ss.ff3 AM"
+                                    --"[0]mm/[0]dd/yyyy hh12-[0]mi-[0]ss.ff3 AM"
+	file_name_format_string: STRING = "yyyy-[0]mm-[0]dd hh12-[0]mi-[0]ss.ff3 AM"
 
 invariant
 	same_record_and_property_count: record_storage.count = property_storage.count

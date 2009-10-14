@@ -7,6 +7,9 @@ note
 deferred class
 	TAG_FORMATTER
 
+inherit
+	TAG_CONVERSION
+
 feature -- Access
 
 	validator: TAG_VALIDATOR
@@ -85,9 +88,9 @@ feature -- Basic operations
 		do
 			if a_prefix.is_empty or a_suffix.is_empty then
 				if a_prefix.is_empty then
-					Result := validator.string_copy (a_suffix)
+					Result := string_copy (a_suffix)
 				else
-					Result := validator.string_copy (a_prefix)
+					Result := string_copy (a_prefix)
 				end
 			else
 				create Result.make (a_prefix.count + a_suffix.count + 1)
@@ -108,8 +111,24 @@ feature -- Basic operations
 		ensure
 			a_prefix_valid: validator.is_valid_tag (a_prefix)
 			a_prefix_has_valid_count: a_prefix.count >= old a_prefix.count + a_suffix.count
-			a_prefix_starts_with_old_prefix: a_prefix.substring (1, old a_prefix.count).same_string (old validator.immutable_string (a_prefix))
+			a_prefix_starts_with_old_prefix: a_prefix.substring (1, old a_prefix.count).same_string (old immutable_string (a_prefix))
 			a_prefix_ends_with_suffix: a_prefix.substring (a_prefix.count - a_suffix.count + 1, a_prefix.count).same_string (a_suffix)
+		end
+
+feature {NONE} -- Basic operations
+
+	string_copy (a_tag: READABLE_STRING_GENERAL): STRING_8
+		require
+			a_tag_attached: a_tag /= Void
+		do
+			Result := a_tag.as_string_8
+			if Result = a_tag then
+				create Result.make_from_string (Result)
+			end
+		ensure
+			result_attached: Result /= Void
+			result_same_string: a_tag.same_string (Result)
+			result_is_copy: Result /= a_tag
 		end
 
 note

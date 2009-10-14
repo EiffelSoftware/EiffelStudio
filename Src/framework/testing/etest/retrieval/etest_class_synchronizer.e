@@ -235,7 +235,7 @@ feature {NONE} -- Implementation: tags
 			a_tag_tree_attached: a_tag_tree /= Void
 			a_test_attached: a_test /= Void
 		local
-			l_hash_set: detachable like class_tags
+			l_hash_set: detachable TAG_SEARCH_TABLE
 			l_cursor: DS_LINEAR_CURSOR [READABLE_STRING_GENERAL]
 			l_add: BOOLEAN
 		do
@@ -251,9 +251,9 @@ feature {NONE} -- Implementation: tags
 				l_add := True
 				if l_hash_set /= Void then
 					l_hash_set.search (l_cursor.item)
-					if l_hash_set.found then
+					if attached l_hash_set.found_item as l_tag then
 						l_add := False
-						l_hash_set.remove_found_item
+						l_hash_set.remove (l_tag)
 					end
 				end
 				if l_add and a_tag_tree.is_valid_tag_for_item (a_test, l_cursor.item) then
@@ -268,7 +268,13 @@ feature {NONE} -- Implementation: tags
 			end
 
 			if l_hash_set /= Void and then not l_hash_set.is_empty then
-				l_hash_set.do_all (agent a_tag_tree.remove_tag (a_test, ?))
+				from
+					l_hash_set.start
+				until
+					l_hash_set.after
+				loop
+					a_tag_tree.remove_tag (a_test, l_hash_set.item_for_iteration)
+				end
 			end
 		end
 

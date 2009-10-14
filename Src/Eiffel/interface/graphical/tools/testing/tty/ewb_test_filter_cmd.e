@@ -15,6 +15,21 @@ inherit
 
 feature {NONE} -- Access
 
+	sort_nodes (a_container: INDEXABLE [TAG_TREE_NODE [TEST_I], INTEGER])
+			-- Sort nodes in container using quick sort.
+		local
+			l_sorter: QUICK_SORTER [TAG_TREE_NODE [TEST_I]]
+			l_comparator: AGENT_EQUALITY_TESTER [TAG_TREE_NODE [TEST_I]]
+		do
+			create l_comparator.make (
+				agent (a_node1, a_node2: TAG_TREE_NODE [TEST_I]): BOOLEAN
+						do
+							Result := a_node1.token < a_node2.token
+						end)
+			create l_sorter.make (l_comparator)
+			l_sorter.sort (a_container)
+		end
+
 	node_sorter: DS_QUICK_SORTER [TAG_TREE_NODE [TEST_I]]
 			-- Sorter for {TAG_BASED_TREE_NODE}.
 		local
@@ -34,6 +49,21 @@ feature {NONE} -- Access
 		ensure
 			result_attached: Result /= Void
 			result_cached: Result = node_sorter_cache
+		end
+
+	sort_items (a_container: INDEXABLE [TEST_I, INTEGER])
+			-- Sort items in container using quick sort.
+		local
+			l_sorter: QUICK_SORTER [TEST_I]
+			l_comparator: AGENT_EQUALITY_TESTER [TEST_I]
+		do
+			create l_comparator.make (
+				agent (a_test1, a_test2: TEST_I): BOOLEAN
+						do
+							Result := a_test1.name < a_test2.name
+						end)
+			create l_sorter.make (l_comparator)
+			l_sorter.sort (a_container)
 		end
 
 	item_sorter: DS_QUICK_SORTER [TEST_I]
@@ -101,20 +131,16 @@ feature {NONE} -- Basic operations
 			item_sorter_cache := Void
 		end
 
-	print_test_list (a_list: DS_LINEAR [TEST_I]; a_indent: INTEGER_32)
+	print_test_list (a_list: SEARCH_TABLE [TEST_I]; a_indent: INTEGER_32)
 			-- Print list of tests.
 		require
 			a_list_attached: a_list /= Void
 			a_indent_not_negative: a_indent >= 0
 		local
-			l_list: DS_ARRAYED_LIST [TEST_I]
+			l_list: ARRAYED_LIST [TEST_I]
 		do
-			if attached {DS_ARRAYED_LIST [TEST_I]} a_list as l_array then
-				l_list := l_array
-			else
-				create l_list.make_from_linear (a_list)
-			end
-			l_list.sort (item_sorter)
+			l_list := a_list.linear_representation
+			sort_items (l_list)
 			l_list.do_all (agent print_test (?, a_indent))
 		end
 

@@ -91,14 +91,14 @@ feature {NONE} -- Implementation
 			a_node_attached: a_node /= Void
 			a_depth_not_negative: a_depth >= 0
 		local
-			l_children: DS_ARRAYED_LIST [TAG_TREE_NODE [TEST_I]]
+			l_children: ARRAYED_LIST [TAG_TREE_NODE [TEST_I]]
 			l_child: TAG_TREE_NODE [TEST_I]
 		do
 			if a_node.is_leaf then
 				print_test (a_node.item, a_depth)
 			else
 				l_children := a_node.children
-				l_children.sort (node_sorter)
+				sort_nodes (l_children)
 
 				from
 					l_children.start

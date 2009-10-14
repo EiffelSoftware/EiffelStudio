@@ -38,8 +38,11 @@ feature {NONE} -- Basic operations
 
 	execute_with_test_suite (a_test_suite: TEST_SUITE_S)
 			-- <Precursor>
+		local
+			l_tests: ARRAYED_LIST [TEST_I]
 		do
-			launch_executor (test_tree (a_test_suite).items, False)
+			l_tests := test_tree (a_test_suite).items.linear_representation
+			launch_executor (l_tests, False)
 
 			print_statistics (a_test_suite)
 		end

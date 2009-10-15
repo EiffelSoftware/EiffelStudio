@@ -48,13 +48,16 @@ feature {ROTA_S, ROTA_TASK_I} -- Status setting
 	cancel
 			-- <Precursor>
 		local
+			l_tasks: like tasks
 			l_task: G
 		do
-			from until
-				tasks.is_empty
+			from
+				l_tasks := tasks
+			until
+				l_tasks.is_empty
 			loop
-				task_cursor.start
-				l_task := task_cursor.item.task
+				l_tasks.start
+				l_task := tasks.item_for_iteration.task
 				if l_task.has_next_step then
 					l_task.cancel
 				end

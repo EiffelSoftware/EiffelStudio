@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			test_suite.test_suite_connection.connect_events (Current)
 
 				-- Task data structures
-			task_cursor := (create {DS_ARRAYED_LIST [like new_task_data]}.make (1)).new_cursor
+			create tasks.make_default
 
 				-- Test data structures
 			create test_queues.make (1)
@@ -130,7 +130,10 @@ feature -- Access: connection point
 
 feature {NONE} -- Access: task
 
-	task_cursor: DS_ARRAYED_LIST_CURSOR [like new_task_data]
+	tasks: DS_ARRAYED_LIST [like new_task_data]
+			-- <Precursor>
+
+	--task_cursor: DS_ARRAYED_LIST_CURSOR [like new_task_data]
 			-- <Precursor>
 
 feature {NONE} -- Access: testing
@@ -432,7 +435,7 @@ feature {NONE} -- Basic operations
 			l_abort: BOOLEAN
 			l_executor: TEST_EXECUTOR_I [TEST_I]
 		do
-			l_executor := task_cursor.item.task
+			l_executor := tasks.item_for_iteration.task
 			if not test_queues.has (l_executor.generator) then
 				l_executor.dispose
 			end
@@ -672,7 +675,6 @@ feature {NONE} -- Constants
 
 invariant
 	test_suite_attached: test_suite /= Void
-	task_cursor_attached: task_cursor /= Void
 	test_queues_attached: test_queues /= Void
 	available_executors_attached: available_executors /= Void
 	running_test_map_attached: running_test_map /= Void

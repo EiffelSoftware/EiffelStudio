@@ -55,9 +55,9 @@ feature {NONE} -- Initialization
 			test_execution := an_execution
 			etest_suite := an_etest_suite
 			create idle_controllers.make_default
-			empty_task_cursor := (create {DS_ARRAYED_LIST [like new_task_data]}.make (0)).new_cursor
-			occupied_controller_cursor := (create {DS_ARRAYED_LIST [like new_task_data]}.make_default).new_cursor
-			task_cursor := empty_task_cursor
+			create empty_tasks.make (0)
+			create occupied_controllers.make_default
+			tasks := empty_tasks
 			create byte_code_factory
 		ensure
 			test_execution_set: test_execution = an_execution
@@ -79,20 +79,14 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	task_cursor: DS_LIST_CURSOR [like new_task_data]
+	tasks: DS_LIST [like new_task_data]
 			-- <Precursor>
 
-	empty_task_cursor: like task_cursor
-			-- Task cursor always pointing to an empty list
+	empty_tasks: DS_ARRAYED_LIST [like new_task_data]
+			-- Task list which is always empty (does not contain any tasks)
 
-	occupied_controller_cursor: like task_cursor
-			-- Task cursor pointing to controllers currently occupied with a test
-
-	frozen occupied_controllers: DS_LIST [like new_task_data]
+	occupied_controllers: DS_ARRAYED_LIST [like new_task_data]
 			-- Controllers currently running a test
-		do
-			Result := occupied_controller_cursor.container
-		end
 
 	idle_controllers: DS_ARRAYED_LIST [like new_controller]
 			-- Controllers not running any test
@@ -151,7 +145,7 @@ feature -- Status setting
 			-- Start execution
 		do
 			occupied_controllers.do_all (agent launch_test)
-			task_cursor := occupied_controller_cursor
+			tasks := occupied_controllers
 			create_directory_safe (testing_directory)
 		end
 
@@ -160,20 +154,20 @@ feature {TEST_EXECUTION_I, ETEST_COMPILATION_EXECUTOR} -- Status setting
 	abort_test (a_test: TEST_I)
 			-- <Precursor>
 		local
-			l_cursor: like task_cursor
+			l_occupieds: like occupied_controllers
 		do
 			from
-				l_cursor := occupied_controllers.new_cursor
-				l_cursor.start
+				l_occupieds := occupied_controllers
+				l_occupieds.start
 			until
-				l_cursor.after
+				l_occupieds.after
 			loop
-				if l_cursor.item.test = a_test then
+				if l_occupieds.item_for_iteration.test = a_test then
 						-- Controller will be removed automatically during next `step'
-					l_cursor.item.task.stop
-					l_cursor.go_after
+					l_occupieds.item_for_iteration.task.stop
+					l_occupieds.go_after
 				else
-					l_cursor.forth
+					l_occupieds.forth
 				end
 			end
 		end
@@ -289,7 +283,7 @@ feature {NONE} -- Status setting
 			l_tag_tree: TAG_TREE [TEST_I]
 			l_dir_name: DIRECTORY_NAME
 		do
-			l_task_data := task_cursor.item
+			l_task_data := tasks.item_for_iteration
 			l_controller := l_task_data.task
 			l_test := l_task_data.test
 			check test_attached: l_test /= Void end
@@ -346,7 +340,7 @@ feature {NONE} -- Status setting
 					do
 						a_task_data.task.stop
 					end)
-			task_cursor := empty_task_cursor
+			tasks := empty_tasks
 		end
 
 feature {NONE} -- Implementation

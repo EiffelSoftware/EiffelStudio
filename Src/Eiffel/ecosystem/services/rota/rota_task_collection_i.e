@@ -18,28 +18,14 @@ inherit
 
 feature {NONE} -- Access
 
-	frozen tasks: DS_LIST [like new_task_data]
+	tasks: DS_LIST [like new_task_data]
 			-- List of tuples containing running tasks
-		require
-			interface_usable: is_interface_usable
-		do
-			Result := task_cursor.container
-		ensure
-			result_attached: Result /= Void
-			correct: Result = task_cursor.container
-		end
-
-	task_cursor: DS_LIST_CURSOR [like new_task_data]
-			-- Cursor used to iterate through `tasks'.
-			--
-			-- Note: only move cursor if you know what you are doing, or else certain tasks might not get
-			--       executed.
 		require
 			interface_usable: is_interface_usable
 		deferred
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = task_cursor
+			result_consistent: Result = tasks
 		end
 
 feature {NONE} -- Basic operations
@@ -55,7 +41,7 @@ feature {NONE} -- Basic operations
 			tasks.force_last (new_task_data (a_task))
 		ensure
 			tasks_increased: tasks.count = old tasks.count + 1
-			a_task_appended: tasks.last.task = a_task
+			a_task_appended: tasks.item (tasks.count).task = a_task
 		end
 
 	proceed_all_tasks
@@ -66,9 +52,9 @@ feature {NONE} -- Basic operations
 			interface_usable: is_interface_usable
 		do
 			from
-				task_cursor.start
+				tasks.start
 			until
-				task_cursor.after
+				tasks.after
 			loop
 				proceed_current_task
 			end
@@ -82,21 +68,20 @@ feature {NONE} -- Basic operations
 		require
 			interface_usable: is_interface_usable
 			tasks_not_empty: not tasks.is_empty
+			tasks_not_off: not tasks.off
 		local
-			l_cursor: like task_cursor
-			l_data: like new_task_data
+			l_tasks: like tasks
 			l_task: G
+			l_cursor: INTEGER_32
 		do
-			l_cursor := task_cursor
-			if l_cursor.off then
-				l_cursor.start
-			end
-			l_data := l_cursor.item
-			l_task := l_data.task
+			l_tasks := tasks
+			l_task := l_tasks.item_for_iteration.task
 			if l_task.has_next_step then
+				l_cursor := l_tasks.index
 				perform_step
+				l_tasks.go_i_th (l_cursor)
 				if l_task.has_next_step then
-					l_cursor.forth
+					tasks.forth
 				else
 					remove_task (False)
 				end
@@ -109,11 +94,15 @@ feature {NONE} -- Basic operations
 			-- Perform step on task at current position of `tasks'.
 		require
 			interface_usable: is_interface_usable
-			tasks_not_off: not task_cursor.off
+			tasks_not_off: not tasks.off
+			task_has_next_step: tasks.item_for_iteration.task.has_next_step
 		do
-			task_cursor.item.task.step
+			tasks.item_for_iteration.task.step
 		ensure
-			cursor_not_moved: task_cursor.index = old task_cursor.index
+			tasks_not_decreased: tasks.count >= old tasks.count
+			tasks_cursor_unchanged: tasks.valid_index (old tasks.index) and then
+				tasks.item (old tasks.index) = old tasks.item (tasks.index) and then
+				tasks.item (old tasks.index).task = old tasks.item (tasks.index).task
 		end
 
 	remove_task (a_force: BOOLEAN)
@@ -124,11 +113,12 @@ feature {NONE} -- Basic operations
 			-- `a_force': If True, task should not be removed without new ones being added.
 		require
 			interface_usable: is_interface_usable
-			tasks_not_off: not task_cursor.off
-			task_finished: not task_cursor.item.task.has_next_step
+			tasks_not_off: not tasks.off
+			task_finished: not tasks.item_for_iteration.task.has_next_step
 		do
-			task_cursor.remove
+			tasks.remove_at
 		ensure
+			tasks_consistent: old tasks = tasks
 			task_removed_if_forced: a_force implies tasks.count < old tasks.count
 		end
 

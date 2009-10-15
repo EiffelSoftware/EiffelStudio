@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			task_cursor := (create {DS_LINKED_LIST [like new_task_data]}.make).new_cursor
+			create tasks.make_default
 			create task_run_event
 			create task_finished_event
 			create task_removed_event
@@ -56,8 +56,8 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	task_cursor: DS_LINKED_LIST_CURSOR [like new_task_data]
-			-- <Precursor>
+	tasks: DS_LINKED_LIST [like new_task_data]
+			-- List of tuples containing running tasks
 
 	min_sleep_time: NATURAL
 			-- Minimum sleep time of all tasks in `tasks'
@@ -107,7 +107,7 @@ feature {NONE} -- Basic operations
 			l_now: TIME
 			l_duration: NATURAL
 		do
-			l_data := task_cursor.item
+			l_data := tasks.item_for_iteration
 			create l_now.make_now
 			l_duration := elapsed_milliseconds (l_data.last_step, l_now)
 			if l_data.sleep_time <= l_duration then
@@ -128,7 +128,7 @@ feature {NONE} -- Basic operations
 		local
 			l_task: ROTA_TIMED_TASK_I
 		do
-			l_task := task_cursor.item.task
+			l_task := tasks.item_for_iteration.task
 			task_finished_event.publish ([Current, l_task])
 			Precursor (a_force)
 			task_removed_event.publish_if ([Current, l_task],

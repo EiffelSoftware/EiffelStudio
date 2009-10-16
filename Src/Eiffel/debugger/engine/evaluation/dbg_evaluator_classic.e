@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 				end
 				reset_recv_value
 			else
-				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instantiation_of_type_raised_error (a_type_i.name))
 --				create_empty_instance_using_internal (a_type_i)
 --				if error_occurred or last_result_value = Void then
 --					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))

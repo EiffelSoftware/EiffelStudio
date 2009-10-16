@@ -345,7 +345,7 @@ feature {BYTE_NODE} -- Visitor
 					evaluate_routine (tmp_target_dump_value.address, tmp_target_dump_value, l_class, l_create_feat_i, l_arg_as_lst)
 					l_arg_as_lst := Void
 				else
-					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (l_type_i.name))
+					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instantiation_of_type_raised_error (l_type_i.name))
 				end
 				if not error_occurred then
 					tmp_target := l_call_value
@@ -390,7 +390,7 @@ feature {BYTE_NODE} -- Visitor
 							l_byte_list.forth
 						end
 						if error_occurred then
-							dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (l_type_i.name))
+							dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instantiation_of_type_raised_error (l_type_i.name))
 						end
 					end
 				end
@@ -1755,7 +1755,7 @@ feature {NONE} -- Visitor: implementation
 					end
 				end
 				if error_occurred or else l_dv = Void then
-					dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_can_not_instanciate_type (l_type_i.name, Debugger_names.cst_error_special_not_yet_supported))
+					dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_can_not_instantiate_type (l_type_i.name, Debugger_names.cst_error_special_not_yet_supported))
 				end
 			else
 				create_empty_instance_of (l_type_i)
@@ -1996,10 +1996,10 @@ feature {NONE} -- Evaluation: implementation
 				Dbg_evaluator.create_empty_instance_of (l_cl_type_i)
 				retrieve_dbg_evaluation
 				if error_occurred and l_cl_type_i.has_formal_generic then
-					dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_formal_type_not_yet_supported))
+					dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_can_not_instantiate_type (l_cl_type_i.name, Debugger_names.cst_error_formal_type_not_yet_supported))
 				end
 			else
-				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_not_compiled))
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_can_not_instantiate_type (l_cl_type_i.name, Debugger_names.cst_error_not_compiled))
 			end
 		end
 
@@ -2018,10 +2018,10 @@ feature {NONE} -- Evaluation: implementation
 				Dbg_evaluator.create_special_any_instance (l_cl_type_i, a_count)
 				retrieve_dbg_evaluation
 				if error_occurred and l_cl_type_i.has_formal_generic then
-					dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_formal_type_not_yet_supported))
+					dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_can_not_instantiate_type (l_cl_type_i.name, Debugger_names.cst_error_formal_type_not_yet_supported))
 				end
 			else
-				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_not_compiled))
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_can_not_instantiate_type (l_cl_type_i.name, Debugger_names.cst_error_not_compiled))
 			end
 		end
 

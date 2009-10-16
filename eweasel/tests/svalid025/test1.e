@@ -6,6 +6,8 @@ feature
 	f 
 		require
 			b: items.for_all (agent loader.g)
+			c: ({G}).has_default
+			c: ({LINKED_LIST [G]}).has_default
 		local
 			bool: BOOLEAN
 		do

@@ -144,12 +144,6 @@ feature {NONE} -- Initialization
 				--| Show logger tool
 			create l_menu_item.make_with_text_and_action ("Show Logger Tool", agent on_show_logger_tool)
 			a_menu.extend (l_menu_item)
-
-			if (create {SERVICE_CONSUMER [OUTPUT_MANAGER_S]}).is_service_available then
-					--| Show logger tool
-				create l_menu_item.make_with_text_and_action ("Show Outputs Tool (Experimental)", agent on_show_outputs_tool)
-				a_menu.extend (l_menu_item)
-			end
 		end
 
 	build_services_sub_menu (a_menu: attached EV_MENU)

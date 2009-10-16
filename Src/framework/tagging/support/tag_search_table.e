@@ -32,6 +32,9 @@ inherit
 create
 	make
 
+create {TAG_SEARCH_TABLE}
+	make_with_key_tester
+
 feature -- Query
 
 	has (key: READABLE_STRING_GENERAL): BOOLEAN

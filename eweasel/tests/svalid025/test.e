@@ -1,9 +1,9 @@
 class TEST
 
 inherit
-	TEST4 [STRING]
+	TEST1 [STRING]
 		redefine
-			force
+			f
 		end
 
 create
@@ -18,7 +18,7 @@ feature
 
 	t1: TEST3 [INTEGER, INTEGER]
 
-	force
+	f
 		do
 		end
 

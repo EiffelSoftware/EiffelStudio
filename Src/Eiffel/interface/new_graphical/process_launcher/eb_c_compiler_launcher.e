@@ -167,7 +167,7 @@ feature{NONE}  -- Actions
 			then
 				if
 					preferences.development_window_data.c_output_panel_prompted or else
-					l_tool.output = compiler_output
+					(l_tool.is_shown and then l_tool.output = compiler_output)
 				then
 						-- Force showing of the tool.
 					l_tool.show (False)

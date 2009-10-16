@@ -11,7 +11,7 @@ class
 	ES_EDITOR_WIDGET
 
 inherit
-	ES_TOOL_BAR_WIDGET [EV_WIDGET]
+	ES_TOOL_BAR_WIDGET [EV_VERTICAL_BOX]
 		redefine
 			internal_detach_entities,
 			is_tool_bar_separated
@@ -21,17 +21,21 @@ create
 	make
 
 convert
-	widget: {EV_WIDGET}
+	container_widget: {EV_WIDGET}
 
 feature {NONE} -- Initialization
 
-	build_tool_bar_widget_interface (a_widget: attached EV_WIDGET)
+	build_tool_bar_widget_interface (a_widget: attached EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
 			l_editor: like editor
 		do
+			a_widget.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
+
 			l_editor := editor
 			check l_editor_attached: l_editor /= Void end
+			a_widget.extend (l_editor.widget)
+
 			build_editor_interface (l_editor)
 		end
 
@@ -151,10 +155,10 @@ feature {NONE} -- Factory
 		do
 		end
 
-	frozen new_widget: attached EV_WIDGET
+	frozen new_widget: attached EV_VERTICAL_BOX
 			-- <Precursor>
 		do
-			Result := editor.widget.as_attached
+			create Result
 		ensure then
 			editor_attached: editor /= Void
 		end

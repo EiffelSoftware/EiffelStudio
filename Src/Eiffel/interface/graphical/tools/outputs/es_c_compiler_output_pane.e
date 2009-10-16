@@ -18,6 +18,8 @@ inherit
 			new_widget
 		end
 
+	ES_HELP_CONTEXT
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
@@ -47,6 +49,14 @@ feature {NONE} -- Initialization
 				create {ES_MSC_OUTPUT_ANALYZER} analyzer.make (notifier_formatter)
 				auto_recycle (analyzer)
 			end
+		end
+
+feature -- Access
+
+	help_context_id: STRING
+			-- <Precursor>
+		once
+			Result := "26525412-e8e5-8b1c-1074-58e00aed4c76"
 		end
 
 feature {NONE} -- Access

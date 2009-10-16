@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor (a_formatter)
+			is_error := True
 			error_list_preferences := preferences.error_list_tool_data
 		end
 
@@ -140,13 +141,13 @@ feature {NONE} -- Basic operations
 			message := Void
 			function_name := Void
 			line_number := 0
-			is_error := False
+			is_error := True
 		ensure
 			file_name_detached: not attached file_name
 			message_detached: not attached message
 			function_name_detached: not attached function_name
 			line_number_reset: line_number = 0
-			not_is_error: not is_error
+			--not_is_error: not is_error
 		end
 
 feature {NONE} -- Action handlers

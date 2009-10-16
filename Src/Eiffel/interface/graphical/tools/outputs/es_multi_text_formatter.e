@@ -204,10 +204,18 @@ feature -- Basic operations
 			 -- <Precursor>
 		local
 			l_formatters: like managed_formatters
+			l_count: like new_line_count
 		do
+			l_count := new_line_count
+			new_line_count := (l_count - 1).max (0)
+
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				if attached l_formatters.item as l_formatter then
+					if l_count > 0 then
+							-- Add single new line, if appropriate
+						l_formatter.process_new_line
+					end
 					l_formatter.end_processing
 				end
 				l_formatters.forth

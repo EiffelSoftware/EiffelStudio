@@ -36,7 +36,7 @@ feature {NONE} -- Basic operations
 				l_file_name := a_line.substring (1, i - 1)
 				l_file_name.right_adjust
 				l_file_name.left_adjust
-				if l_file_name /~ file_name then
+				if l_file_name /~ file_name and then l_file_name.substring (1, dot_text_offset.count.min (l_file_name.count)) /~ dot_text_offset then
 					process_last_error
 					file_name := l_file_name
 				end
@@ -48,15 +48,17 @@ feature {NONE} -- Basic operations
 					l_position := a_line.substring (j, i - 1)
 					l_position.right_adjust
 					l_position.left_adjust
-					if l_position.is_integer_32 then
-						l_line := l_position.to_integer_32
-						if l_line /= line_number then
-							if line_number > 0 then
-								process_last_error
-							end
+					if l_position.is_integer_32 or else l_position.substring (1, dot_text_offset.count.min (l_position.count)) ~ dot_text_offset then
+						if l_position.is_integer_32 then
+							l_line := l_position.to_integer_32
+							if l_line /= line_number then
+								if line_number > 0 then
+									process_last_error
+								end
 
-							file_name := l_file_name
-							line_number := l_line
+								file_name := l_file_name
+								line_number := l_line
+							end
 						end
 
 						j := i + 1
@@ -67,12 +69,16 @@ feature {NONE} -- Basic operations
 							l_message_type.right_adjust
 							l_message_type.left_adjust
 
-							if l_message_type.as_lower.substring_index (once "error", 1) > 0 then
-								is_error := True
+							if l_message_type.as_lower.substring_index (once "warning", 1) > 0 then
+								is_error := False
 							end
 						end
 					else
 						line_number := 0
+
+						if l_position.as_lower.substring_index (once "warning", 1) > 0 then
+							is_error := False
+						end
 
 							-- Not a line number.
 						l_exp := function_name_regexp
@@ -109,6 +115,10 @@ feature {NONE} -- Basic operations
 				process_last_error
 			end
 		end
+
+feature {NONE} -- Constants
+
+	dot_text_offset: STRING = "(.text+"
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

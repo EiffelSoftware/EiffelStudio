@@ -294,7 +294,7 @@ feature -- Error notification: evaluation error
 
 	notify_error_evaluation_instanciation_of_type_failed (tn: STRING_GENERAL)
 		do
-			notify_error_not_implemented (Debugger_names.msg_error_instanciation_of_type_raised_error (tn))
+			notify_error_not_implemented (Debugger_names.msg_error_instantiation_of_type_raised_error (tn))
 		end
 
 feature -- Error notification : exception error

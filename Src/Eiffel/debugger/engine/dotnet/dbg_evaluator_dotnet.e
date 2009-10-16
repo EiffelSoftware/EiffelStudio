@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instantiation_of_type_raised_error (a_type_i.name))
 			end
 		end
 
@@ -483,7 +483,7 @@ feature {NONE} -- Implementation
 					dbg_error_handler.notify_error_evaluation (Void)
 				end
 			else
-				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
+				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instantiation_of_type_raised_error (a_type_i.name))
 			end
 		end
 

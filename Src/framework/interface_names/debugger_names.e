@@ -392,13 +392,13 @@ feature -- Expression evaluation messages
 			add_not_void: add /= Void
 		do Result := locale.formatted_string (locale.translation ("Unable to get valid target object for $1"), [add]) end
 
-	msg_error_can_not_instanciate_type (tname, s: STRING_GENERAL): STRING_32
+	msg_error_can_not_instantiate_type (tname, s: STRING_GENERAL): STRING_32
 		require
 			tname_not_void: tname /= Void
 			s_not_void: s /= Void
-		do Result := locale.formatted_string (locale.translation ("Can not instanciate type {$1} : $2."), [tname, s]) end
+		do Result := locale.formatted_string (locale.translation ("Cannot instantiate type {$1} : $2."), [tname, s]) end
 
-	msg_error_instanciation_of_type_raised_error (tname: STRING_GENERAL): STRING_32
+	msg_error_instantiation_of_type_raised_error (tname: STRING_GENERAL): STRING_32
 		require
 			tname_not_void: tname /= Void
 		do Result := locale.formatted_string (locale.translation ("Creation of type {$1} raised an error."), [tname]) end

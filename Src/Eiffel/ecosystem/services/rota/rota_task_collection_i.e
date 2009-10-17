@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Access
 
-	tasks: DS_LIST [like new_task_data]
+	tasks: LIST [like new_task_data]
 			-- List of tuples containing running tasks
 		require
 			interface_usable: is_interface_usable
@@ -38,10 +38,10 @@ feature {NONE} -- Basic operations
 			interface_usable: is_interface_usable
 			a_task_attached: a_task /= Void
 		do
-			tasks.force_last (new_task_data (a_task))
+			tasks.force (new_task_data (a_task))
 		ensure
 			tasks_increased: tasks.count = old tasks.count + 1
-			a_task_appended: tasks.item (tasks.count).task = a_task
+			a_task_appended: tasks.i_th (tasks.count).task = a_task
 		end
 
 	proceed_all_tasks
@@ -101,8 +101,8 @@ feature {NONE} -- Basic operations
 		ensure
 			tasks_not_decreased: tasks.count >= old tasks.count
 			tasks_cursor_unchanged: tasks.valid_index (old tasks.index) and then
-				tasks.item (old tasks.index) = old tasks.item (tasks.index) and then
-				tasks.item (old tasks.index).task = old tasks.item (tasks.index).task
+				tasks.i_th (old tasks.index) = old tasks.i_th (tasks.index) and then
+				tasks.i_th (old tasks.index).task = old tasks.i_th (tasks.index).task
 		end
 
 	remove_task (a_force: BOOLEAN)
@@ -116,7 +116,7 @@ feature {NONE} -- Basic operations
 			tasks_not_off: not tasks.off
 			task_finished: not tasks.item_for_iteration.task.has_next_step
 		do
-			tasks.remove_at
+			tasks.remove
 		ensure
 			tasks_consistent: old tasks = tasks
 			task_removed_if_forced: a_force implies tasks.count < old tasks.count

@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			test_suite.test_suite_connection.connect_events (Current)
 
 				-- Task data structures
-			create tasks.make_default
+			create tasks.make (10)
 
 				-- Test data structures
 			create test_queues.make (1)
@@ -130,7 +130,7 @@ feature -- Access: connection point
 
 feature {NONE} -- Access: task
 
-	tasks: DS_ARRAYED_LIST [like new_task_data]
+	tasks: ARRAYED_LIST [like new_task_data]
 			-- <Precursor>
 
 	--task_cursor: DS_ARRAYED_LIST_CURSOR [like new_task_data]

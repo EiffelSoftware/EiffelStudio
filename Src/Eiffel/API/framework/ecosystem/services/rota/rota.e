@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create tasks.make_default
+			create tasks.make
 			create task_run_event
 			create task_finished_event
 			create task_removed_event
@@ -56,7 +56,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	tasks: DS_LINKED_LIST [like new_task_data]
+	tasks: LINKED_LIST [like new_task_data]
 			-- List of tuples containing running tasks
 
 	min_sleep_time: NATURAL
@@ -93,7 +93,7 @@ feature -- Basic operations
 	run_task (a_task: ROTA_TIMED_TASK_I)
 			-- <Precursor>
 		do
-			tasks.force_last (new_task_data (a_task))
+			append_task (a_task)
 			task_run_event.publish ([Current, a_task])
 		end
 

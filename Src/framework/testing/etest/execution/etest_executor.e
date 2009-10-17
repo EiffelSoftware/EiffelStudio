@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			etest_suite := an_etest_suite
 			create idle_controllers.make_default
 			create empty_tasks.make (0)
-			create occupied_controllers.make_default
+			create occupied_controllers.make (0)
 			tasks := empty_tasks
 			create byte_code_factory
 		ensure
@@ -79,13 +79,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	tasks: DS_LIST [like new_task_data]
+	tasks: LIST [like new_task_data]
 			-- <Precursor>
 
-	empty_tasks: DS_ARRAYED_LIST [like new_task_data]
+	empty_tasks: ARRAYED_LIST [like new_task_data]
 			-- Task list which is always empty (does not contain any tasks)
 
-	occupied_controllers: DS_ARRAYED_LIST [like new_task_data]
+	occupied_controllers: ARRAYED_LIST [like new_task_data]
 			-- Controllers currently running a test
 
 	idle_controllers: DS_ARRAYED_LIST [like new_controller]
@@ -160,12 +160,12 @@ feature {TEST_EXECUTION_I, ETEST_COMPILATION_EXECUTOR} -- Status setting
 				l_occupieds := occupied_controllers
 				l_occupieds.start
 			until
-				l_occupieds.after
+				l_occupieds.off
 			loop
 				if l_occupieds.item_for_iteration.test = a_test then
 						-- Controller will be removed automatically during next `step'
 					l_occupieds.item_for_iteration.task.stop
-					l_occupieds.go_after
+					l_occupieds.go_i_th (0)
 				else
 					l_occupieds.forth
 				end
@@ -192,7 +192,7 @@ feature {ETEST_COMPILATION_EXECUTOR, TEST_EXECUTION_I} -- Status setting
 			end
 			l_data := new_task_data (l_controller)
 			l_data.test := a_test
-			occupied_controllers.force_last (l_data)
+			occupied_controllers.force (l_data)
 			if has_next_step then
 				launch_test (l_data)
 			end
@@ -451,6 +451,9 @@ feature {NONE} -- Constants
 
 	isolate_prefix: STRING = "execution/isolated"
 	testing_directory_name: STRING = "execution"
+
+invariant
+	empty_tasks_empty: empty_tasks.is_empty
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

@@ -45,12 +45,11 @@ feature {NONE} -- Initialization
 		do
 			make_session (a_test_suite)
 			etest_suite := an_etest_suite
-			create conf_items.make_default
-			create traversed_descendants.make_default
-			create traversed_helpers.make_default
-			create traversed_libraries.make_default
-			traversed_libraries.set_equality_tester (create {KL_EQUALITY_TESTER [UUID]})
-			create progress_list.make_default
+			create conf_items.make (10)
+			create traversed_descendants.make (10)
+			create traversed_helpers.make (10)
+			create traversed_libraries.make (10)
+			create progress_list.make (10)
 		end
 
 feature -- Access
@@ -109,13 +108,13 @@ feature {ETEST_CLUSTER_RETRIEVAL} -- Access
 			create Result.make
 		end
 
-	traversed_descendants: DS_HASH_SET [EIFFEL_CLASS_I]
+	traversed_descendants: SEARCH_TABLE [EIFFEL_CLASS_I]
 			-- Cached classes which are descendants of {TEST_SET}
 			--
 			-- TODO: use {ETEST_CLASS} instances from test suite instead, this however requires that all
 			--       ancestors are kept even if they do not contain test routines.
 
-	traversed_helpers: DS_HASH_SET [EIFFEL_CLASS_I]
+	traversed_helpers: SEARCH_TABLE [EIFFEL_CLASS_I]
 			-- Cached ancestors which are not descendants of {TEST_SET}
 
 feature {NONE} -- Access
@@ -123,22 +122,22 @@ feature {NONE} -- Access
 	sub_task: detachable ETEST_CLUSTER_RETRIEVAL
 			-- <Precursor>
 
-	conf_items: DS_ARRAYED_LIST [CONF_VISITABLE]
+	conf_items: ARRAYED_LIST [CONF_VISITABLE]
 			-- {CONF_*} items of `target' which will be traversed by sub tasks to retrieve tests
 			--
 			-- Note: this serves as a stack, where always the last item is removed by `initialize_sub_task'
 			--       to be processed.
 
-	traversed_libraries: DS_HASH_SET [UUID]
+	traversed_libraries: SEARCH_TABLE [UUID]
 			-- UUID of libraries which have already been visited by `Current'
 
-	progress_list: DS_ARRAYED_LIST [TUPLE [conf_item: CONF_VISITABLE; total, remaining: INTEGER]]
+	progress_list: ARRAYED_LIST [TUPLE [conf_item: CONF_VISITABLE; total, remaining: INTEGER]]
 			-- List containing progress of current library/cluster depth
 			--
 			-- Note: `progress_list' uses the fact that `conf_items' has a stack structure and basically
 			--       keeps track how many items were added on top of the stack by `append_items' or
-			--       `append_table' and how many of these elements still remain on the stack. That way the
-			--       progress can be computed quite simple.
+			--       `append_table' and how many of these elements still remain on the stack. From that the
+			--       progress is computed in `progress'.
 			--
 			-- conf_item: CONF_[TARGET/GROUP]
 			-- total: Total child items added to `conf_items'
@@ -262,13 +261,15 @@ feature {NONE} -- Status setting
 				until
 					l_progress.remaining > 0
 				loop
-					l_progress_list.remove_last
+					l_progress_list.go_i_th (l_progress_list.count)
+					l_progress_list.remove
 					l_progress := l_progress_list.last
 				end
 				l_progress.remaining := l_progress.remaining - 1
 
 				l_item := l_conf_items.last
-				l_conf_items.remove_last
+				l_conf_items.go_i_th (l_conf_items.count)
+				l_conf_items.remove
 
 				l_item.process (Current)
 			end
@@ -287,7 +288,7 @@ feature -- Basis operations
 				-- We only check for an attached `common_ancestor' so we do not unecessarily continue if
 				-- testing library is not included.
 			if not traversed_libraries.has (l_uuid) and attached common_ancestor then
-				traversed_libraries.force_last (l_uuid)
+				traversed_libraries.force (l_uuid)
 
 					-- Add clusters to `conf_items'
 				l_old_count := conf_items.count
@@ -296,7 +297,7 @@ feature -- Basis operations
 				l_count := conf_items.count
 				if l_count > l_old_count then
 					l_total := l_count - l_old_count
-					progress_list.force_last ([a_target, l_total, l_total])
+					progress_list.force ([a_target, l_total, l_total])
 				end
 			end
 		end
@@ -330,7 +331,7 @@ feature -- Basis operations
 					if l_count > l_old_count then
 							-- We add one to account for current cluster
 						l_total := l_count - l_old_count
-						l_plist.force_last ([a_cluster, l_total + 1, l_total])
+						l_plist.force ([a_cluster, l_total + 1, l_total])
 					end
 				end
 
@@ -390,11 +391,11 @@ feature {NONE} -- Implementation
 				attached {CONF_LIBRARY} an_item as l_library and then
 				not l_library.is_readonly and then l_library.classes_set
 			then
-				conf_items.force_last (l_library)
+				conf_items.force (l_library)
 			elseif
 				attached {CONF_CLUSTER} an_item as l_cluster and then not l_cluster.is_internal
 			then
-				conf_items.force_last (l_cluster)
+				conf_items.force (l_cluster)
 			end
 		end
 

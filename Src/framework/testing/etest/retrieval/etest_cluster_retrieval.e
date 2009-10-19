@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parents_of_class (a_class: EIFFEL_CLASS_I): DS_LINEAR [EIFFEL_CLASS_I]
+	parents_of_class (a_class: EIFFEL_CLASS_I): LIST [EIFFEL_CLASS_I]
 			-- List of direct ancestors of `a_class'
 			--
 			-- `a_class': Class for which we want to retreive ancestors
@@ -213,8 +213,8 @@ feature {NONE} -- Implementation
 		local
 			l_universe: UNIVERSE_I
 			l_group: CONF_GROUP
-			l_cursor: DS_LINEAR_CURSOR [STRING]
-			l_list: DS_ARRAYED_LIST [EIFFEL_CLASS_I]
+			l_ancestors: LIST [STRING]
+			l_list: ARRAYED_LIST [EIFFEL_CLASS_I]
 			l_text: STRING_32
 		do
 			l_universe := session.project_access.project.universe
@@ -223,16 +223,16 @@ feature {NONE} -- Implementation
 			if l_text /= Void then
 				eiffel_parser_wrapper.parse_with_option (session.inheritance_parser, l_text, a_class.options, True, Void)
 				create l_list.make (session.inheritance_ast_factory.ancestors.count)
-				l_cursor := session.inheritance_ast_factory.ancestors.new_cursor
+				l_ancestors := session.inheritance_ast_factory.ancestors
 				from
-					l_cursor.start
+					l_ancestors.start
 				until
-					l_cursor.after
+					l_ancestors.after
 				loop
-					if attached {EIFFEL_CLASS_I} l_universe.safe_class_named (l_cursor.item, l_group) as l_class then
-						l_list.force_last (l_class)
+					if attached {EIFFEL_CLASS_I} l_universe.safe_class_named (l_ancestors.item_for_iteration, l_group) as l_class then
+						l_list.force (l_class)
 					end
-					l_cursor.forth
+					l_ancestors.forth
 				end
 				session.inheritance_ast_factory.reset
 				session.inheritance_parser.reset

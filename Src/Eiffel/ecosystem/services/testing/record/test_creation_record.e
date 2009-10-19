@@ -23,7 +23,7 @@ create {TEST_CREATION_I}
 
 feature {TEST_CREATION_I} -- Element change
 
-	add_test (a_name: READABLE_STRING_8)
+	add_test (a_name: IMMUTABLE_STRING_8)
 			-- Add name of newly created test and add it to end of `test_map'.
 			--
 			-- `a_name': Name of created test.
@@ -31,7 +31,7 @@ feature {TEST_CREATION_I} -- Element change
 			a_name_attached: a_name /= Void
 			not_added_yet: not has_date (a_name)
 		do
-			test_map.force_last (create {DATE_TIME}.make_now, a_name)
+			add_item (create {DATE_TIME}.make_now, a_name)
 			if is_attached then
 				repository.report_record_update (Current)
 			end

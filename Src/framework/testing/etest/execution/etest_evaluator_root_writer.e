@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	write_source (a_file: KI_TEXT_OUTPUT_STREAM; a_list: DS_LINEAR [EIFFEL_CLASS_I])
+	write_source (a_file: KI_TEXT_OUTPUT_STREAM; a_list: LIST [EIFFEL_CLASS_I])
 			-- Write anchor root class to file
 		require
 			a_file_open_write: a_file.is_open_write
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			stream.put_new_line
 		end
 
-	put_anchor_routine (a_list: DS_LINEAR [EIFFEL_CLASS_I])
+	put_anchor_routine (a_list: LIST [EIFFEL_CLASS_I])
 			-- Print references to test classes and important library classes to force their compilation.
 		require
 			stream_valid: is_writing

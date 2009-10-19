@@ -31,8 +31,7 @@ feature {NONE} -- Initialization
 			etest_suite := a_etest_suite
 			create path.make_empty
 			class_name := default_class_name
-			create internal_tags.make_default
-			internal_tags.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_8]})
+			create internal_tags.make (10)
 		ensure
 			test_suite_set: test_suite = a_test_suite
 			etest_suite_set: etest_suite = a_etest_suite
@@ -63,10 +62,10 @@ feature -- Access
 			--
 			-- Note: is used as prefix if `creates_multiple_classes' is True.
 
-	tags: DS_ARRAYED_LIST [READABLE_STRING_8]
+	tags: ARRAYED_LIST [READABLE_STRING_8]
 			-- Tags with which new test routine(s) are tagged.
 		do
-			create Result.make_from_linear (internal_tags)
+			Result := internal_tags.linear_representation
 		end
 
 feature {NONE} -- Access
@@ -80,7 +79,7 @@ feature {NONE} -- Access
 	cluster_name: detachable STRING
 			-- Optional name of cluster and path where new tests should be created
 
-	internal_tags: DS_HASH_SET [READABLE_STRING_8]
+	internal_tags: TAG_SEARCH_TABLE
 			-- Internal storage for `tags'
 
 feature {NONE} -- Status report
@@ -148,7 +147,7 @@ feature -- Status setting
 			a_tag_not_empty: not a_tag.is_empty
 			not_running: not has_next_step
 		do
-			internal_tags.force_last (a_tag.twin)
+			internal_tags.force (a_tag.twin)
 		ensure
 			added: tags.there_exists (agent {READABLE_STRING_8}.same_string (a_tag))
 		end

@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			an_executor_usable: an_executor.is_interface_usable
 		do
 			executor := an_executor
-			create group_map.make_default
+			create group_map.make (10)
 		end
 
 feature -- Access
@@ -29,7 +29,7 @@ feature -- Access
 	executor: TEST_EXECUTOR_I [TEST_I]
 			-- Executor capable of executing test groups in `group_map'
 
-	group_map: DS_HASH_TABLE [DS_HASH_SET [TEST_I], NATURAL_64]
+	group_map: HASH_TABLE [SEARCH_TABLE [TEST_I], NATURAL_64]
 			-- Table mapping execution groups to the their corresponding tests.
 			--
 			-- Note: an execution group is identified through a {NATURAL_64} bit pattern.
@@ -43,8 +43,18 @@ feature -- Status report
 			-- Does `group_map' contain given test in one of its test sets?
 		require
 			a_test_attached: a_test /= Void
+		local
+			l_group_map: like group_map
 		do
-			Result := group_map.there_exists (agent {DS_HASH_SET [TEST_I]}.has (a_test))
+			from
+				l_group_map := group_map
+				l_group_map.start
+			until
+				l_group_map.after or Result
+			loop
+				Result := l_group_map.item_for_iteration.has (a_test)
+				l_group_map.forth
+			end
 		end
 
 feature -- Basic operations
@@ -60,27 +70,27 @@ feature -- Basic operations
 			a_test_compatible: executor.is_test_compatible (a_test)
 		local
 			l_map: like group_map
-			l_test_set: DS_HASH_SET [TEST_I]
+			l_test_set: SEARCH_TABLE [TEST_I]
 		do
 			l_map := group_map
 			l_map.search (a_group)
 			if l_map.found then
 				l_test_set := l_map.found_item
 			else
-				create l_test_set.make_default
-				l_map.force_last (l_test_set, a_group)
+				create l_test_set.make (10)
+				l_map.force (l_test_set, a_group)
 			end
-			l_test_set.force_last (a_test)
+			l_test_set.force (a_test)
 		end
 
 invariant
 	executor_attached: executor /= Void
 	group_map_attached: group_map /= Void
 	executor_usable: executor.is_interface_usable
-	group_map_valid: group_map.for_all (
-		agent (a_set: DS_HASH_SET [TEST_I]): BOOLEAN
+	group_map_valid: group_map.linear_representation.for_all (
+		agent (a_set: SEARCH_TABLE [TEST_I]): BOOLEAN
 			do
-				Result := not a_set.is_empty and a_set.for_all (
+				Result := not a_set.is_empty and a_set.linear_representation.for_all (
 					agent (a_test: TEST_I): BOOLEAN
 				do
 					Result := a_test.is_interface_usable and then executor.is_test_compatible (a_test)

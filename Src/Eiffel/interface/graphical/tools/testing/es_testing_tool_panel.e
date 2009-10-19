@@ -278,40 +278,40 @@ feature {NONE} -- Status settings: widgets
 
 	update_run_labels
 			-- Update text in `runs_label' and `errors_label'.
-		local
-			l_text: STRING_32
-			l_ts: TEST_SUITE_S
-			l_tool_bar: like right_tool_bar_widget
 		do
-			if test_suite.is_service_available then
-				l_ts := test_suite.service
-				create l_text.make (10)
-				l_text.append ("Run: ")
-				--l_text.append_natural_32 (l_ts.count_executed)
-				l_text.append_natural_32 (0)
-				l_text.append_character ('/')
-				l_text.append_integer (l_ts.tests.count)
-				runs_label.set_text (l_text)
+			perform_with_test_suite (
+				agent (l_ts: TEST_SUITE_S)
+					local
+						l_text: STRING_32
+						l_tool_bar: like right_tool_bar_widget
+					do
+						create l_text.make (10)
+						l_text.append ("Run: ")
+						--l_text.append_natural_32 (l_ts.count_executed)
+						l_text.append_natural_32 (0)
+						l_text.append_character ('/')
+						l_text.append_integer (l_ts.tests.count)
+						runs_label.set_text (l_text)
 
-				create l_text.make (10)
-				l_text.append ("Failing: ")
-				--l_text.append_natural_32 (l_ts.count_failing)
-				l_text.append_natural_32 (0)
-				errors_label.set_text (l_text)
+						create l_text.make (10)
+						l_text.append ("Failing: ")
+						--l_text.append_natural_32 (l_ts.count_failing)
+						l_text.append_natural_32 (0)
+						errors_label.set_text (l_text)
 
-				if False then -- l_ts.count_failing > 0 then
-					errors_pixmap.enable_sensitive
-					errors_label.enable_sensitive
-				else
-					errors_pixmap.disable_sensitive
-					errors_label.disable_sensitive
-				end
+						if False then -- l_ts.count_failing > 0 then
+							errors_pixmap.enable_sensitive
+							errors_label.enable_sensitive
+						else
+							errors_pixmap.disable_sensitive
+							errors_label.disable_sensitive
+						end
 
-				l_tool_bar := right_tool_bar_widget
-				if l_tool_bar /= Void then
-					l_tool_bar.compute_minimum_size
-				end
-			end
+						l_tool_bar := right_tool_bar_widget
+						if l_tool_bar /= Void then
+							l_tool_bar.compute_minimum_size
+						end
+					end)
 		end
 
 feature {NONE} -- Events: wizard
@@ -358,24 +358,24 @@ feature {NONE} -- Events: test execution
 		local
 			l_item: TEST_I
 			l_list: ARRAYED_LIST [TEST_I]
-			l_cursor: DS_LINEAR_CURSOR [TEST_I]
+			l_tests: SEQUENCE [TEST_I]
 		do
 			if test_suite.is_service_available then
-				create l_list.make (test_suite.service.tests.count)
-				l_cursor := test_suite.service.tests.new_cursor
+				l_tests := test_suite.service.tests
+				create l_list.make (l_tests.count)
 				from
-					l_cursor.start
+					l_tests.start
 				until
-					l_cursor.after
+					l_tests.after
 				loop
-					l_item := l_cursor.item
+					l_item := l_tests.item_for_iteration
 					-- FIXME: only execute failing once statistics are implemented
 					--if l_item.is_outcome_available then
 					--	if l_item.last_outcome.is_fail then
 							l_list.force (l_item)
 					--	end
 					--end
-					l_cursor.forth
+					l_tests.forth
 				end
 				launch_executor (l_list, a_debug)
 			end

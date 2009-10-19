@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create internal_ancestors.make_default
+			create internal_ancestors.make (10)
 			reset
 		ensure
 			ancestors_empty: ancestors.is_empty
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ancestors: DS_LINEAR [STRING]
+	ancestors: LIST [STRING]
 			-- Name of ancestors which were found during last parse
 		do
 			Result := internal_ancestors
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_ancestors: DS_ARRAYED_LIST [STRING]
+	internal_ancestors: ARRAYED_LIST [STRING]
 			-- Internal storage for `ancestors'
 
 feature -- Status report
@@ -108,7 +108,7 @@ feature -- Query
 					create l_type.make (a_scn.text_count)
 					a_scn.append_text_to_string (l_type)
 					if not l_type.is_case_insensitive_equal ("NONE") then
-						internal_ancestors.force_last (l_type.as_upper)
+						internal_ancestors.force (l_type.as_upper)
 					end
 				end
 			end

@@ -126,7 +126,7 @@ feature {NONE} -- Access: project
 
 feature {NONE} -- Access: tests
 
-	class_map: DS_HASH_TABLE [ETEST_CLASS, READABLE_STRING_8]
+	class_map: TAG_HASH_TABLE [ETEST_CLASS]
 			-- Table mapping class names to corresponding {ETEST_CLASS}.
 			--
 			-- key: Class name
@@ -248,9 +248,9 @@ feature {ETEST_CLUSTER_RETRIEVAL} -- Basic operations
 
 			l_class_map.search (l_name)
 			if l_class_map.found then
-				l_name := l_class_map.found_key
+				l_name := l_class_map.immutable_string (l_name)
 				l_etest_class := l_class_map.found_item
-				l_class_map.remove_found_item
+				l_class_map.remove (l_name)
 
 				l_etest_class.set_eiffel_class (a_class)
 
@@ -275,7 +275,7 @@ feature {ETEST_CLUSTER_RETRIEVAL} -- Basic operations
 					if l_new then
 						has_class_map_changed := True
 					end
-					class_map.force_last (l_etest_class, l_name)
+					class_map.force (l_etest_class, l_name)
 				end
 			end
 		end
@@ -304,7 +304,7 @@ feature {NONE} -- Events: project
 			-- Called when the Eiffel project is closed.
 		do
 			if project_access.is_initialized then
-				write_evaluator_root_class (create {DS_ARRAYED_LIST [EIFFEL_CLASS_I]}.make (0))
+				write_evaluator_root_class (create {ARRAYED_LIST [EIFFEL_CLASS_I]}.make (0))
 			end
 		end
 
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 					synchronizer.synchronize (l_test_class, True)
 					has_class_map_changed := True
 				else
-					class_map.force_last (l_test_class, l_old_map.key_for_iteration)
+					class_map.force (l_test_class, l_old_map.key_for_iteration)
 				end
 				l_old_map.forth
 			end
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 			-- new class referencing all test classes and register it as root clas in system.
 		local
 			l_class_map: like class_map
-			l_list: DS_ARRAYED_LIST [EIFFEL_CLASS_I]
+			l_list: ARRAYED_LIST [EIFFEL_CLASS_I]
 			l_class: EIFFEL_CLASS_I
 		do
 			stop_retrieval
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 				loop
 					l_class := l_class_map.item_for_iteration.eiffel_class
 					if file_system.file_exists (l_class.file_name) then
-						l_list.force_last (l_class)
+						l_list.force (l_class)
 					end
 					l_class_map.forth
 				end
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	write_evaluator_root_class (a_list: DS_LINEAR [EIFFEL_CLASS_I])
+	write_evaluator_root_class (a_list: LIST [EIFFEL_CLASS_I])
 			-- Write anchor root class with classes in given list.
 			--
 			-- `a_list': A list containing class names to be referenced in root class.
@@ -459,8 +459,7 @@ feature {NONE} -- Factory
 	new_class_map: like class_map
 			-- Create new `class_map'
 		do
-			create Result.make_default
-			Result.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_8]})
+			create Result.make (10)
 		end
 
 invariant

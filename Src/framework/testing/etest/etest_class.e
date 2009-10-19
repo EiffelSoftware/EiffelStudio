@@ -46,7 +46,7 @@ feature -- Access
 
 feature {ETEST_SUITE, TEST_PROJECT, ETEST_CLASS_SYNCHRONIZER} -- Access
 
-	test_map: DS_HASH_TABLE [ETEST, READABLE_STRING_8]
+	test_map: TAG_HASH_TABLE [ETEST]
 			-- Table mapping test routine names to their corresponding {ETEST} instance.
 			--
 			-- key: test routine name
@@ -79,8 +79,7 @@ feature {ETEST_CLASS_SYNCHRONIZER} -- Factory
 	new_test_map: like test_map
 			-- Create new `test_map'
 		do
-			create Result.make_default
-			Result.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_8]})
+			create Result.make (10)
 		end
 
 note

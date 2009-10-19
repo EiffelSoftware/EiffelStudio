@@ -29,12 +29,12 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_test_suite, a_etest_suite)
 			create capturer.make
-			create internal_call_stack_levels.make_default
+			create internal_call_stack_levels.make (10)
 		end
 
 feature -- Access
 
-	call_stack_levels: DS_HASH_SET [INTEGER]
+	call_stack_levels: SEARCH_TABLE [INTEGER]
 			-- Levels in call stack which will be extraced.
 		do
 			Result := internal_call_stack_levels.twin
@@ -73,7 +73,7 @@ feature -- Status setting
 		require
 			valid_level: is_valid_call_stack_element (a_level)
 		do
-			internal_call_stack_levels.force_last (a_level)
+			internal_call_stack_levels.force (a_level)
 		ensure
 			added: call_stack_levels.has (a_level)
 		end
@@ -112,7 +112,7 @@ feature {NONE} -- Status setting
 			l_cs: detachable EIFFEL_CALL_STACK
 		do
 			create l_source_writer.make
-			capturer.observers.force_last (l_source_writer)
+			capturer.observers.force (l_source_writer)
 
 			l_source_writer.prepare (a_file, a_class_name)
 			l_app_stat := debugger_manager.application_status
@@ -141,11 +141,11 @@ feature {NONE} -- Status setting
 			end
 
 			capturer.observers.start
-			capturer.observers.search_forth (l_source_writer)
+			capturer.observers.search (l_source_writer)
 			check
 				observer_found: not capturer.observers.off
 			end
-			capturer.observers.remove_at
+			capturer.observers.remove
 		end
 
 feature -- Query

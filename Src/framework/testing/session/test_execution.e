@@ -50,9 +50,8 @@ feature {NONE} -- Initialization
 
 				-- Test data structures
 			create test_queues.make (1)
-			test_queues.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [STRING]})
-			create running_test_map.make_default
-			create group_map.make_default
+			create running_test_map.make (10)
+			create group_map.make (10)
 			create available_executors.make
 
 				-- create events
@@ -73,25 +72,30 @@ feature -- Access
 			end
 		end
 
-	running_tests: DS_ARRAYED_LIST [TEST_I]
+	running_tests: ARRAYED_LIST [TEST_I]
 			-- <Precursor>
 		do
-			create Result.make_from_linear (running_test_map.keys)
+			create Result.make (running_test_map.count)
+			running_test_map.current_keys.do_all (agent Result.force (?))
 		end
 
-	queued_tests: DS_HASH_SET [TEST_I]
+	queued_tests: ARRAYED_LIST [TEST_I]
 			-- <Precursor>
 		local
-			l_group_map: DS_HASH_TABLE [DS_HASH_SET [TEST_I], NATURAL_64]
+			l_group_map: HASH_TABLE [SEARCH_TABLE [TEST_I], NATURAL_64]
 		do
 			create Result.make (test_count.as_integer_32)
-			test_queues.do_all (
+			test_queues.linear_representation.do_all (
 				agent (a_set: TEST_EXECUTION_QUEUE; a_list: like queued_tests)
 					local
-						l_sets: DS_HASH_TABLE [DS_LINEAR [TEST_I], NATURAL_64]
+						l_sets: HASH_TABLE [SEARCH_TABLE [TEST_I], NATURAL_64]
 					do
 						l_sets := a_set.group_map
-						l_sets.do_all (agent a_list.extend_last (?))
+						l_sets.linear_representation.do_all (
+							agent (a_linear: SEARCH_TABLE [TEST_I]; a_l: like queued_tests)
+								do
+									a_linear.linear_representation.do_all (agent a_l.force)
+								end (?, a_list))
 					end (?, Result))
 		end
 
@@ -133,30 +137,27 @@ feature {NONE} -- Access: task
 	tasks: ARRAYED_LIST [like new_task_data]
 			-- <Precursor>
 
-	--task_cursor: DS_ARRAYED_LIST_CURSOR [like new_task_data]
-			-- <Precursor>
-
 feature {NONE} -- Access: testing
 
 	test_count: NATURAL
 			-- Current number of tests in `test_queues'
 
-	test_queues: DS_HASH_TABLE [TEST_EXECUTION_QUEUE, STRING]
+	test_queues: HASH_TABLE [TEST_EXECUTION_QUEUE, STRING]
 			-- Table mapping instantiated test executors to their corresponding queue of tests to be ran
 			--
 			-- key: type name of executor
 			-- valud: test queue for executor
 
-	available_executors: DS_LINKED_LIST [TEST_EXECUTOR_I [TEST_I]]
+	available_executors: LINKED_LIST [TEST_EXECUTOR_I [TEST_I]]
 			-- List of executor which are currently available
 
-	running_test_map: DS_HASH_TABLE [TUPLE [executor: TEST_EXECUTOR_I [TEST_I]; group: NATURAL_64], TEST_I]
+	running_test_map: HASH_TABLE [TUPLE [executor: TEST_EXECUTOR_I [TEST_I]; group: NATURAL_64], TEST_I]
 			-- Table mapping tests currently being run to their corresponding executor
 			--
 			-- key: Test being run.
 			-- value: Executor running test.
 
-	group_map: DS_HASH_TABLE [like running_groups, READABLE_STRING_GENERAL]
+	group_map: HASH_TABLE [like running_groups, READABLE_STRING_GENERAL]
 			-- Table mapping execution group name to an identifier represented by a single {NATURAL_64} bit
 			--
 			-- Note: the finite bit count for a identifier represents an limitations on how many groups can
@@ -251,7 +252,7 @@ feature -- Status setting
 					elseif l_group_map.count < 64 then
 						l_new_group := ({NATURAL_64} 1).bit_shift_left (l_group_map.count)
 						l_group := l_group.bit_or (l_new_group)
-						l_group_map.force_last (l_new_group, l_group_name)
+						l_group_map.force (l_new_group, l_group_name)
 					else
 							-- If we exceeded the max number of groups, we simply set the bit patterns to ones so the
 							-- test will always be executed by itself.
@@ -266,8 +267,8 @@ feature -- Status setting
 			if l_queue = Void then
 				l_executor := a_test.new_executor (Current)
 				create l_queue.make (l_executor)
-				test_queues.force_last (l_queue, l_executor.generator)
-				available_executors.force_last (l_executor)
+				test_queues.force (l_queue, l_executor.generator)
+				available_executors.force (l_executor)
 				has_availability_changed := True
 			end
 
@@ -280,8 +281,8 @@ feature -- Status setting
 			-- <Precursor>
 		local
 			l_executor: TEST_EXECUTOR_I [TEST_I]
-			l_group_map: DS_HASH_TABLE [DS_HASH_SET [TEST_I], NATURAL_64]
-			l_test_set: DS_HASH_SET [TEST_I]
+			l_group_map: HASH_TABLE [SEARCH_TABLE [TEST_I], NATURAL_64]
+			l_test_set: SEARCH_TABLE [TEST_I]
 		do
 			if is_test_running (a_test) then
 				remove_running_test (a_test, create {EQA_EMPTY_RESULT}.make ("User abort", Void))
@@ -332,7 +333,7 @@ feature {NONE} -- Element change
 			a_result_attached_implies_running: a_result /= Void implies has_next_step
 		local
 			l_queue: like queue_for_test
-			l_map: DS_HASH_TABLE [DS_HASH_SET [TEST_I], NATURAL_64]
+			l_map: HASH_TABLE [SEARCH_TABLE [TEST_I], NATURAL_64]
 		do
 			l_queue := queue_for_test (a_test)
 			check has_queue: l_queue /= Void end
@@ -384,7 +385,7 @@ feature {NONE} -- Element change
 			check found: l_map.found end
 			running_groups := running_groups.bit_xor (l_map.found_item.group)
 			l_executor := l_map.found_item.executor
-			l_map.remove_found_item
+			l_map.remove (a_test)
 			if l_executor.is_interface_usable and then l_executor.is_running_test (a_test) then
 				l_executor.abort_test (a_test)
 			end
@@ -394,7 +395,7 @@ feature {NONE} -- Element change
 				-- Add executor back to `available_executors' if there are still tests queued
 			if l_executor.is_interface_usable and then l_executor.is_available and then test_queues.has (l_executor.generator) then
 				if not available_executors.has (l_executor) then
-					available_executors.force_last (l_executor)
+					available_executors.force (l_executor)
 				end
 				has_availability_changed := True
 			end
@@ -528,26 +529,24 @@ feature {NONE} -- Implementation
 		require
 			availability_changed: has_availability_changed
 		local
-			l_cursor: DS_LINKED_LIST_CURSOR [TEST_EXECUTOR_I [TEST_I]]
+			l_executors: LINKED_LIST [TEST_EXECUTOR_I [TEST_I]]
 			l_executor, l_first: detachable TEST_EXECUTOR_I [TEST_I]
 			l_queue: TEST_EXECUTION_QUEUE
 			l_queues: like test_queues
-
-			--l_cursor: DS_HASH_TABLE_CURSOR [TEST_EXECUTION_QUEUE, STRING]
 			l_remove: BOOLEAN
 		do
 			has_availability_changed := False
 			from
 				l_queues := test_queues
-				l_cursor := available_executors.new_cursor
-				l_cursor.start
+				l_executors := available_executors
+				l_executors.start
 			until
-				l_cursor.after
+				l_executors.after
 			loop
-				l_executor := l_cursor.item
+				l_executor := l_executors.item_for_iteration
 				if l_first = l_executor then
 						-- We have reached the first executor again so it's time to return
-					l_cursor.go_after
+					l_executors.go_i_th (l_executors.count + 1)
 				else
 					if l_first = Void then
 						l_first := l_executor
@@ -555,7 +554,7 @@ feature {NONE} -- Implementation
 					l_queues.search (l_executor.generator)
 					check found: l_queues.found end
 					l_queue := l_queues.found_item
-					l_cursor.remove
+					l_executors.remove
 					launch_test (l_queue)
 					if has_launched_test then
 						test_count := test_count - 1
@@ -564,11 +563,11 @@ feature {NONE} -- Implementation
 						elseif l_executor.is_available then
 								-- If test has been launched but executor is still available, we move executor to end of
 								-- list so others will be checked first the next time around
-							available_executors.force_last (l_executor)
+							available_executors.force (l_executor)
 							has_availability_changed := True
 						end
 					else
-						available_executors.force_last (l_executor)
+						available_executors.force (l_executor)
 					end
 				end
 			end
@@ -584,8 +583,8 @@ feature {NONE} -- Implementation
 			executor_available: a_queue.executor.is_available
 		local
 			l_executor: TEST_EXECUTOR_I [TEST_I]
-			l_groups: DS_HASH_TABLE [DS_HASH_SET [TEST_I], NATURAL_64]
-			l_set: DS_HASH_SET [TEST_I]
+			l_groups: HASH_TABLE [SEARCH_TABLE [TEST_I], NATURAL_64]
+			l_set: SEARCH_TABLE [TEST_I]
 			l_group: NATURAL_64
 			l_test: TEST_I
 		do
@@ -595,13 +594,14 @@ feature {NONE} -- Implementation
 			from
 				l_groups.start
 			until
-				l_groups.after
+				l_groups.after or has_launched_test
 			loop
 				l_group := l_groups.key_for_iteration
 				if l_group.bit_and (running_groups) = 0 then
 					l_set := l_groups.item_for_iteration
 					check not_empty: not l_set.is_empty end
-					l_test := l_set.first
+					l_set.start
+					l_test := l_set.item_for_iteration
 					l_set.remove (l_test)
 					if l_set.is_empty then
 						l_groups.remove (l_group)
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 						append_task (l_executor)
 					end
 					running_groups := running_groups.bit_or (l_group)
-					running_test_map.force_last ([l_executor, l_group], l_test)
+					running_test_map.force ([l_executor, l_group], l_test)
 					l_executor.run_test (l_test)
 
 						-- We need to check if is actually running since the executor might have already reported
@@ -623,7 +623,6 @@ feature {NONE} -- Implementation
 						test_running_event.publish ([Current, l_test])
 					end
 					has_launched_test := True
-					l_groups.go_after
 				else
 					l_groups.forth
 				end
@@ -660,7 +659,7 @@ feature {NONE} -- Clean up
 			-- <Precursor>
 		do
 			if a_explicit then
-				test_queues.do_all (
+				test_queues.linear_representation.do_all (
 					agent (a_set: TEST_EXECUTION_QUEUE)
 						do
 							a_set.executor.dispose
@@ -686,15 +685,13 @@ invariant
 					test_queues.has (a_executor.generator)
 			end)
 	availability_changed_implies_available_executors: has_availability_changed implies not available_executors.is_empty
-	test_queues_valid: test_queues.for_all_with_key (
-		agent (a_queue: TEST_EXECUTION_QUEUE; a_key: STRING): BOOLEAN
-			do
-				Result := a_queue.executor.generator.same_string (a_key) and not a_queue.group_map.is_empty
-			end)
-	group_map_has_power_of_twos: group_map.for_all (
+--	test_queues_valid: test_queues.for_all_with_key (
+--		agent (a_queue: TEST_EXECUTION_QUEUE; a_key: STRING): BOOLEAN
+--			do
+--				Result := a_queue.executor.generator.same_string (a_key) and not a_queue.group_map.is_empty
+--			end)
+	group_map_has_power_of_twos: group_map.linear_representation.for_all (
 		agent (a_value: like running_groups): BOOLEAN
-			local
-
 			do
 				Result := a_value > 0 and (a_value - 1).bit_and (a_value) = 0
 			end)

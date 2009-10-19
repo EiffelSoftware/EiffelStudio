@@ -38,13 +38,13 @@ feature -- Access
 	type: STRING
 			-- Dynamic type for `called_feature'
 
-	operands: DS_LINEAR [STRING]
+	operands: LIST [STRING]
 			-- Operands needed to invoce `called_feature'
 		do
 			Result := internal_operands
 		end
 
-	types: DS_LINEAR [STRING]
+	types: LIST [STRING]
 			-- Types for `operands'
 		do
 			Result := internal_types
@@ -52,10 +52,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_operands: DS_ARRAYED_LIST [STRING]
+	internal_operands: ARRAYED_LIST [STRING]
 			-- Internal storage for `operands'
 
-	internal_types: DS_ARRAYED_LIST [STRING]
+	internal_types: ARRAYED_LIST [STRING]
 			-- Internal storage for `types'
 
 feature -- Status report
@@ -97,8 +97,39 @@ feature {TEST_CAPTURER} -- Element change
 		require
 			not_complete: not are_operands_complete
 		do
-			internal_operands.force_last (a_operand)
-			internal_types.force_last (a_type)
+			internal_operands.force (a_operand)
+			internal_types.force (a_type)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -45,8 +45,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create class_name.make_empty
-			create used_routine_names.make_default
-			used_routine_names.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [STRING]})
+			create used_routine_names.make (10)
 		end
 
 feature -- Access
@@ -65,7 +64,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	used_routine_names: DS_HASH_TABLE [NATURAL, STRING]
+	used_routine_names: TAG_HASH_TABLE [NATURAL]
 			-- Routine names which have been used in the current class
 			--
 			-- keys: routine names
@@ -217,7 +216,7 @@ feature {TEST_CAPTURER} -- Events
 			l_feat: E_FEATURE
 			l_name: STRING
 			l_count: NATURAL
-			l_cursor: DS_LINEAR_CURSOR [STRING]
+			l_list: LIST [STRING]
 			i: INTEGER
 		do
 			l_feat := a_stack_element.called_feature
@@ -257,19 +256,19 @@ feature {TEST_CAPTURER} -- Events
 				if l_feat.argument_count > 0 or a_stack_element.is_xfix then
 					stream.put_string ("(")
 					from
-						l_cursor := a_stack_element.types.new_cursor
-						l_cursor.start
+						l_list := a_stack_element.types
+						l_list.start
 						i := 1
 					until
-						l_cursor.after
+						l_list.after
 					loop
 						stream.put_string ("an_arg")
 						stream.put_integer (i)
 						stream.put_string (": ")
-						stream.put_string (l_cursor.item)
-						l_cursor.forth
+						stream.put_string (l_list.item_for_iteration)
+						l_list.forth
 						i := i + 1
-						if not l_cursor.after then
+						if not l_list.after then
 							stream.put_string ("; ")
 						end
 					end
@@ -328,14 +327,14 @@ feature {TEST_CAPTURER} -- Events
 			end
 			stream.put_string (", [")
 			from
-				l_cursor := a_stack_element.operands.new_cursor
-				l_cursor.start
+				l_list := a_stack_element.operands
+				l_list.start
 			until
-				l_cursor.after
+				l_list.after
 			loop
-				put_value (l_cursor.item)
-				l_cursor.forth
-				if not l_cursor.after then
+				put_value (l_list.item_for_iteration)
+				l_list.forth
+				if not l_list.after then
 					stream.put_string (", ")
 				end
 			end
@@ -464,7 +463,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	put_attributes (a_table: DS_HASH_TABLE [STRING, STRING])
+	put_attributes (a_table: HASH_TABLE [STRING, STRING])
 		do
 			from
 				a_table.start
@@ -475,16 +474,16 @@ feature {NONE} -- Output
 				stream.put_string (a_table.key_for_iteration)
 				stream.put_string ("%",  ")
 				put_value (a_table.item_for_iteration)
-				if a_table.is_last then
+				a_table.forth
+				if a_table.after then
 					stream.put_line ("")
 				else
 					stream.put_line (",")
 				end
-				a_table.forth
 			end
 		end
 
-	put_items (a_list: DS_LINEAR [STRING])
+	put_items (a_list: LIST [STRING])
 		local
 			l_count: INTEGER
 		do

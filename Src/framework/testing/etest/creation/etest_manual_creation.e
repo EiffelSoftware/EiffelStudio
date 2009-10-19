@@ -184,25 +184,24 @@ feature {NONE} -- Basic operations
 			-- Template parameters for creating actual class text from template file.
 		local
 			l_redefine, l_body, l_indexing, l_name: STRING
-			l_cursor: DS_LINEAR_CURSOR [READABLE_STRING_8]
 			l_count: INTEGER
-			l_tags: DS_LINEAR [READABLE_STRING_8]
+			l_tags: like tags
 		do
 			create Result.make_default
 			if attached cluster as l_cluster and then l_cluster.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
 					-- Use old syntax
-				Result.force_last ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
+				Result.force ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
 			else
 					-- Use new syntax
-				Result.force_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
+				Result.force ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
 			end
 			l_name := class_name
-			Result.force_last (l_name, v_class_name)
+			Result.force (l_name, v_class_name)
 			if False then--configuration.is_system_level_test then
 					-- TODO: switch to system level tests
-				Result.force_last (system_level_test_ancestor, v_test_set_ancestor)
+				Result.force (system_level_test_ancestor, v_test_set_ancestor)
 			else
-				Result.force_last (test_set_ancestor, v_test_set_ancestor)
+				Result.force (test_set_ancestor, v_test_set_ancestor)
 			end
 			if has_prepare or has_clean then
 				create l_body.make (100)
@@ -240,35 +239,34 @@ feature {NONE} -- Basic operations
 					l_redefine.append ({ETEST_CONSTANTS}.clean_routine_name)
 					l_redefine.append (l_body)
 				end
-				Result.force_last (l_redefine, v_redefine_events)
+				Result.force (l_redefine, v_redefine_events)
 			end
-			Result.force_last (test_routine_name, v_test_name)
+			Result.force (test_routine_name, v_test_name)
 			l_tags := tags
 			if not l_tags.is_empty then
 				create l_indexing.make (100)
 				l_indexing.append ("%T%Tindexing%N%T%T%Ttesting: ")
 				from
-					l_cursor := l_tags.new_cursor
-					l_cursor.start
+					l_tags.start
 				until
-					l_cursor.after
+					l_tags.after
 				loop
-					l_count := l_count + l_cursor.item.count
+					l_count := l_count + l_tags.item_for_iteration.count
 					if l_count > 80 then
 						l_indexing.append ("%N%T%T%T         ")
-						l_count := l_cursor.item.count
+						l_count := l_tags.item_for_iteration.count
 					end
 					l_indexing.append (" %"")
-					l_indexing.append (l_cursor.item)
+					l_indexing.append (l_tags.item_for_iteration)
 					l_indexing.append_character ('"')
-					l_cursor.forth
-					if not l_cursor.after then
+					l_tags.forth
+					if not l_tags.after then
 						l_indexing.append_character (',')
 					else
 						l_indexing.append_character ('%N')
 					end
 				end
-				Result.force_last (l_indexing, v_indexing)
+				Result.force (l_indexing, v_indexing)
 			end
 		end
 

@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 		local
 			l_rota: ROTA_S
 		do
-			create test_map.make_default
-			test_map.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_GENERAL]})
+			create test_map.make (10)
+			test_map.compare_objects
 
 				-- Events
 			create test_added_event
@@ -46,8 +46,8 @@ feature {NONE} -- Initialization
 					l_rota.connection.connect_events (Current)
 				end
 			end
-			create factories.make_default
-			create running_sessions.make_default
+			create factories.make (10)
+			create running_sessions.make (10)
 
 				-- register test executor
 			register_factory (create {TEST_DEFAULT_SESSION_FACTORY [TEST_EXECUTION]})
@@ -57,10 +57,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tests: DS_LINEAR [TEST_I]
+	tests: SEQUENCE [TEST_I]
 			-- <Precursor>
 		do
-			Result := test_map
+			Result := test_map.linear_representation
 		end
 
 	test (an_identifier: READABLE_STRING_GENERAL): TEST_I
@@ -119,7 +119,7 @@ feature -- Access: connection point
 
 feature {NONE} -- Access
 
-	test_map: DS_HASH_TABLE [like test, READABLE_STRING_GENERAL]
+	test_map: TAG_HASH_TABLE [like test]
 			-- Table mapping test names to their instances
 			--
 			-- key: Test name
@@ -127,10 +127,10 @@ feature {NONE} -- Access
 
 feature {NONE} -- Access: sessions
 
-	factories: DS_ARRAYED_LIST [TEST_SESSION_FACTORY [TEST_SESSION_I]]
+	factories: ARRAYED_LIST [TEST_SESSION_FACTORY [TEST_SESSION_I]]
 			-- List containing all registered factories
 
-	running_sessions: DS_ARRAYED_LIST [TUPLE [session: TEST_SESSION_I; record: TEST_SESSION_RECORD]]
+	running_sessions: ARRAYED_LIST [TUPLE [session: TEST_SESSION_I; record: TEST_SESSION_RECORD]]
 			-- List of running sessions
 
 	frozen rota: SERVICE_CONSUMER [ROTA_S]
@@ -225,7 +225,7 @@ feature -- Status setting: sessions
 			if a_session.has_next_step then
 				l_record := a_session.record
 				record_repository.append_record (l_record)
-				running_sessions.force_last ([a_session, l_record])
+				running_sessions.force ([a_session, l_record])
 				session_launched_event.publish ([Current, a_session])
 				if rota.is_service_available then
 					l_rota := rota.service
@@ -243,7 +243,7 @@ feature -- Element change
 	register_factory (a_factory: TEST_SESSION_FACTORY [TEST_SESSION_I])
 			-- <Precursor>
 		do
-			factories.force_last (a_factory)
+			factories.force (a_factory)
 		end
 
 feature -- Basic operations
@@ -294,7 +294,7 @@ feature {ROTA_S} -- Events: rota
 				l_running := running_sessions
 				l_running.start
 			until
-				l_running.after
+				l_running.off
 			loop
 				l_session := l_running.item_for_iteration.session
 				if l_session = a_task then
@@ -302,7 +302,7 @@ feature {ROTA_S} -- Events: rota
 						current_output_session := Void
 					end
 					session_finished_event.publish ([Current, l_session])
-					l_running.go_after
+					l_running.go_i_th (0)
 				else
 					l_running.forth
 				end
@@ -328,7 +328,7 @@ feature {NONE} -- Clean up
 
 invariant
 	test_map_attached: test_map /= Void
-	test_map_contains_usables: test_map.for_all (agent {TEST_I}.is_interface_usable)
+	test_map_contains_usables: test_map.linear_representation.for_all (agent {TEST_I}.is_interface_usable)
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

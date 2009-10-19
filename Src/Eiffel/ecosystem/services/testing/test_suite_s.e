@@ -43,7 +43,7 @@ feature -- Access
 			result_usable: Result.is_interface_usable
 		end
 
-	tests: DS_LINEAR [like test]
+	tests: SEQUENCE [like test]
 			-- All tests in `Current'
 			--
 			-- Note: this will be replaced by an arrayed list soon.

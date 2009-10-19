@@ -114,6 +114,16 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_cookielist: INTEGER
+			-- Declared as CURLOPT_COOKIELIST.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_COOKIELIST
+			]"
+		end
+
 	curlopt_ssl_verifypeer: INTEGER
 			-- Declared as CURLOPT_SSL_VERIFYPEER.
 		external
@@ -286,11 +296,32 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_encoding: INTEGER
+			-- Declared as CURLOPT_ENCODING.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_ENCODING;
+			]"
+		end
+
+	curlopt_timeout: INTEGER
+			-- Declared as CURLOPT_TIMEOUT.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_TIMEOUT
+			]"
+		end
+
 	is_valid (a_integer: INTEGER): BOOLEAN
 			-- If `a_integer' value valid?
 		do
 			Result := 	a_integer = curlopt_cookie or
 						a_integer = curlopt_cookiefile or
+						a_integer = curlopt_cookielist or
 						a_integer = curlopt_debugfunction or
 						a_integer = curlopt_followlocation or
 						a_integer = curlopt_httpheader or
@@ -314,16 +345,18 @@ feature -- Enumerations.
 						a_integer = curlopt_put or
 						a_integer = curlopt_readdata or
 						a_integer = curlopt_infilesize_large or
-						a_integer = curlopt_proxy
+						a_integer = curlopt_proxy or
+						a_integer = curlopt_encoding or
+						a_integer = curlopt_timeout
 		end
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

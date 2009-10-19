@@ -22,21 +22,21 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor (a_session)
-			create test_map.make_default
-			test_map.set_key_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_8]})
+			create test_map.make (10)
+			create internal_tests.make (10)
 		end
 
 feature -- Access
 
-	tests: DS_ARRAYED_LIST [READABLE_STRING_8]
+	frozen tests: ARRAYED_LIST [READABLE_STRING_8]
 			-- Name of tests which are part of `Current'
 			--
 			-- Note: names are sorted in the order they were originally added to `test_map'.
 		do
-			create Result.make_from_linear (test_map.keys)
+			Result := internal_tests.twin
 		ensure
 			result_attached: Result /= Void
-			--results_valid: Result.for_all (agent has_result (?))
+
 		end
 
 	item_for_name (a_name: READABLE_STRING_8): G
@@ -63,7 +63,11 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	test_map: DS_HASH_TABLE [G, READABLE_STRING_8]
+	internal_tests: ARRAYED_LIST [READABLE_STRING_8]
+			-- List containing all test names (keys of `test_map') in the order they are represented in by
+			-- `Current'
+
+	test_map: TAG_HASH_TABLE [G]
 			-- Table mapping names of tests to the corresponding information.
 			--
 			-- keys: Names of tests.
@@ -79,6 +83,8 @@ feature -- Status report
 			a_name_attached: a_name /= Void
 		do
 			Result := test_map.has (a_name)
+		ensure
+			definition: Result = test_map.has (a_name)
 		end
 
 	frozen has_item_for_test (a_test: TEST_I): BOOLEAN
@@ -94,8 +100,34 @@ feature -- Status report
 			definition: Result = has_item (a_test.name)
 		end
 
+feature {NONE} -- Element change
+
+	add_item (an_item: G; a_name: IMMUTABLE_STRING_8)
+			-- Add given item to `test_map' associated with name which is appended to then end of `tests'.
+			--
+			-- `an_item': Item to be added to `test_map'.
+			-- `a_name': Test name associated with `an_item'.
+		require
+			an_item_attached: an_item /= Void
+			a_name_attached: a_name /= Void
+			not_added_yet: not has_item (a_name)
+		do
+			internal_tests.force (a_name)
+			test_map.force (an_item, a_name)
+		ensure
+			added: has_item (a_name)
+			added_item: item_for_name (a_name) = an_item
+			added_last: internal_tests.last = a_name
+		end
+
 invariant
 	test_map_attached: test_map /= Void
+	internal_tests_count_equals_test_map_count: internal_tests.count = test_map.count
+	internal_tests_contains_test_map_keys: internal_tests.for_all (
+		agent (a_name: READABLE_STRING_8): BOOLEAN
+			do
+				Result := test_map.has (a_name)
+			end)
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

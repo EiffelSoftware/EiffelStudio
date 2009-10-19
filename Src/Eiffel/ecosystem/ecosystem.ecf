@@ -5,6 +5,7 @@
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="compiler" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>

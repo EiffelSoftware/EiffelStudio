@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	queued_tests: DS_LINEAR [TEST_I]
+	queued_tests: SEQUENCE [TEST_I]
 			-- All tests which are queued waiting to be executed
 		require
 			usable: is_interface_usable
@@ -34,7 +34,7 @@ feature -- Access
 			results_valid: Result.for_all (agent is_test_queued (?))
 		end
 
-	running_tests: DS_LINEAR [TEST_I]
+	running_tests: SEQUENCE [TEST_I]
 			-- All tests which are currently being executed through a {TEST_EXECUTOR_I}
 		require
 			usable: is_interface_usable

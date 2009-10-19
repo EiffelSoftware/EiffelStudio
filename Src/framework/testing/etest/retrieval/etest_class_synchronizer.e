@@ -61,13 +61,13 @@ feature {NONE} -- Access
 	test_class: detachable ETEST_CLASS
 			-- Test class currently being synchronized
 
-	old_test_map: detachable DS_HASH_TABLE [ETEST, READABLE_STRING_8]
+	old_test_map: detachable TAG_HASH_TABLE [ETEST]
 			-- Old `test_map' of `test_class' containing previously parsed {ETEST} instances
 
-	class_tags: DS_HASH_SET [READABLE_STRING_GENERAL]
+	class_tags: TAG_SEARCH_TABLE
 			-- Tags found in note clause of class being processed
 
-	feature_tags: DS_HASH_SET [READABLE_STRING_GENERAL]
+	feature_tags: TAG_SEARCH_TABLE
 			-- Tags found in note clause of feature being processed
 
 feature {NONE} -- Access: onces
@@ -196,8 +196,8 @@ feature {NONE} -- Implementation
 					l_old_map.search (a_routine_name)
 					if l_old_map.found then
 						l_test := l_old_map.found_item
-						l_name := l_old_map.found_key
-						l_old_map.remove_found_item
+						l_name := a_routine_name
+						l_old_map.remove (a_routine_name)
 					end
 				end
 				if l_test = Void or l_name = Void then
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 
 					-- Update tags
 				if l_test /= Void then
-					l_test_class.test_map.force_last (l_test, l_name)
+					l_test_class.test_map.force (l_test, l_name)
 					update_tags (l_test_suite.tag_tree, l_test)
 				end
 			end
@@ -236,34 +236,34 @@ feature {NONE} -- Implementation: tags
 			a_test_attached: a_test /= Void
 		local
 			l_hash_set: detachable TAG_SEARCH_TABLE
-			l_cursor: DS_LINEAR_CURSOR [READABLE_STRING_GENERAL]
+			l_set: like class_tags
 			l_add: BOOLEAN
 		do
 			if a_tag_tree.has_item (a_test) then
 				l_hash_set := a_tag_tree.tags_of_item (a_test)
 			end
 			from
-				l_cursor := class_tags.new_cursor
-				l_cursor.start
+				l_set := class_tags
+				l_set.start
 			until
-				l_cursor.after
+				l_set.after
 			loop
 				l_add := True
 				if l_hash_set /= Void then
-					l_hash_set.search (l_cursor.item)
+					l_hash_set.search (l_set.item_for_iteration)
 					if attached l_hash_set.found_item as l_tag then
 						l_add := False
 						l_hash_set.remove (l_tag)
 					end
 				end
-				if l_add and a_tag_tree.is_valid_tag_for_item (a_test, l_cursor.item) then
-					a_tag_tree.add_tag (a_test, l_cursor.item)
+				if l_add and a_tag_tree.is_valid_tag_for_item (a_test, l_set.item_for_iteration) then
+					a_tag_tree.add_tag (a_test, l_set.item_for_iteration)
 				end
 
-				l_cursor.forth
-				if l_cursor.after and l_cursor.container = class_tags then
-					l_cursor := feature_tags.new_cursor
-					l_cursor.start
+				l_set.forth
+				if l_set.after and l_set = class_tags then
+					l_set := feature_tags
+					l_set.start
 				end
 			end
 
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation: tags
 			l_uuid: detachable UUID
 			l_dir: detachable STRING
 			l_test_class: like test_class
-			l_cluster_stack: DS_ARRAYED_LIST [CONF_GROUP]
+			l_cluster_stack: ARRAYED_STACK [CONF_GROUP]
 		do
 			l_test_class := test_class
 			check l_test_class /= Void end
@@ -381,14 +381,14 @@ feature {NONE} -- Implementation: tags
 			end
 
 			if l_class /= Void then
-				create l_cluster_stack.make_default
+				create l_cluster_stack.make (10)
 				l_uni := project_access.project.universe
 				from
 					l_current := l_class.cluster
 				until
 					l_current = Void
 				loop
-					l_cluster_stack.force_last (l_current)
+					l_cluster_stack.force (l_current)
 					if attached {CONF_CLUSTER} l_current as l_cluster then
 						l_current := Void
 						if l_cluster.parent /= Void then
@@ -406,7 +406,7 @@ feature {NONE} -- Implementation: tags
 										if l_list.item_for_iteration.target = l_uni.target or
 										   l_list.item_for_iteration = l_list.last
 										then
-											l_cluster_stack.force_last (l_list.item_for_iteration)
+											l_cluster_stack.force (l_list.item_for_iteration)
 											l_list.finish
 										end
 										l_list.forth
@@ -421,22 +421,22 @@ feature {NONE} -- Implementation: tags
 				from until
 					l_cluster_stack.is_empty
 				loop
-					l_group := l_cluster_stack.last
+					l_group := l_cluster_stack.item
 					if attached {CONF_LIBRARY} l_group as l_lib then
 						a_tag.append ({EC_TAG_TREE_CONSTANTS}.library_prefix)
-						a_tag.append (l_cluster_stack.last.name)
+						a_tag.append (l_group.name)
 						a_tag.append_character ({EC_TAG_TREE_CONSTANTS}.delimiter_symbol)
 						a_tag.append (l_lib.library_target.system.uuid.out)
 					else
 						if l_group.is_override then
 							a_tag.append ({EC_TAG_TREE_CONSTANTS}.override_prefix)
-						elseif l_cluster_stack.last.is_cluster then
+						elseif l_group.is_cluster then
 							a_tag.append ({EC_TAG_TREE_CONSTANTS}.cluster_prefix)
 						end
 						a_tag.append (l_group.name)
 					end
 					a_tag.append_character ('/')
-					l_cluster_stack.remove_last
+					l_cluster_stack.remove
 				end
 				l_cluster_stack.wipe_out
 				l_path := l_class.path.split (unix_file_system.directory_separator)
@@ -636,8 +636,7 @@ feature {NONE} -- Factory
 	new_tag_set: like class_tags
 			-- Create new tag set
 		do
-			create Result.make_default
-			Result.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [READABLE_STRING_GENERAL]})
+			create Result.make (10)
 		end
 
 

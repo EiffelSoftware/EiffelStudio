@@ -33,23 +33,23 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create observers.make_default
+			create observers.make (10)
 		end
 
 feature -- Access
 
-	observers: DS_ARRAYED_LIST [TEST_CAPTURE_OBSERVER]
+	observers: ARRAYED_LIST [TEST_CAPTURE_OBSERVER]
 			-- Observers retrieving captured data
 
 feature {NONE} -- Access
 
-	object_map: detachable DS_HASH_TABLE [NATURAL, INTEGER_64]
+	object_map: detachable HASH_TABLE [NATURAL, INTEGER_64]
 			-- Map containing a table of all objects which `Current' has traversed.
 			--
 			-- values: Identifier for object.
 			-- key: Address in memeory where object is located.
 
-	object_queue: detachable DS_LINKED_QUEUE [TUPLE [object: ABSTRACT_DEBUG_VALUE; depth: NATURAL]]
+	object_queue: detachable LINKED_QUEUE [TUPLE [object: ABSTRACT_DEBUG_VALUE; depth: NATURAL]]
 			-- Queue containing objects of `object_map' which have not been captured yet.
 			--
 			-- object: Abstract debug value of object
@@ -325,7 +325,7 @@ feature {NONE} -- Basic operations
 			l_classi: EIFFEL_CLASS_I
 			l_type, l_dump: STRING
 			l_object: TEST_CAPTURED_OBJECT
-			l_children: detachable DS_LINEAR [ABSTRACT_DEBUG_VALUE]
+			l_children: detachable ARRAY [ABSTRACT_DEBUG_VALUE]
 		do
 			l_adv := object_queue.item.object
 			l_depth := object_queue.item.depth
@@ -352,7 +352,7 @@ feature {NONE} -- Basic operations
 					else
 						create {TEST_CAPTURED_ATTRIBUTE_OBJECT} l_object.make (l_id, l_type, l_adv.children.count)
 					end
-					l_children := l_adv.children
+					l_children := l_adv.children.to_array
 					if l_children /= Void then
 						fill_object (l_object, l_children, l_depth)
 					end
@@ -361,7 +361,7 @@ feature {NONE} -- Basic operations
 			observers.do_all (agent {attached TEST_CAPTURE_OBSERVER}.on_object_capture (l_object))
 		end
 
-	fill_object (a_object: TEST_CAPTURED_OBJECT; a_list: DS_LINEAR [ABSTRACT_DEBUG_VALUE]; a_depth: NATURAL)
+	fill_object (a_object: TEST_CAPTURED_OBJECT; a_list: ARRAY [ABSTRACT_DEBUG_VALUE]; a_depth: NATURAL)
 			-- Fill captured object with content retrieved from abstract debug values.
 			--
 			-- `a_object': Object to be filled with content.
@@ -373,13 +373,14 @@ feature {NONE} -- Basic operations
 			l_dbg_value: ABSTRACT_DEBUG_VALUE
 			l_value: like last_value
 			l_name: STRING
+			i: INTEGER
 		do
 			from
-				a_list.start
+				i := a_list.lower
 			until
-				a_list.after
+				i > a_list.upper
 			loop
-				l_dbg_value := a_list.item_for_iteration
+				l_dbg_value := a_list.item (i)
 				if l_dbg_value /= Void then
 					if
 						attached l_dbg_value.dump_value.generating_type_representation (True) as l_type and then
@@ -394,15 +395,15 @@ feature {NONE} -- Basic operations
 					l_value := last_value
 					if l_value /= Void then
 						if a_object.has_items then
-							a_object.items.force_last (l_value)
+							a_object.items.force (l_value)
 						else
 							l_name := l_dbg_value.name
 							check l_name /= Void end
-							a_object.attributes.force_last (l_value, l_name)
+							a_object.attributes.force (l_value, l_name)
 						end
 					end
 				end
-				a_list.forth
+				i := i + 1
 			end
 		end
 

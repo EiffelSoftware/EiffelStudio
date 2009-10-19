@@ -114,7 +114,7 @@ feature {NONE} -- Basic operations
 				end (?, a_type, a_procedure))
 		end
 
-	launch_executor (a_list: detachable ARRAYED_LIST [TEST_I]; a_debug: BOOLEAN)
+	launch_executor (a_list: detachable SEQUENCE [TEST_I]; a_debug: BOOLEAN)
 			-- Try to run all tests in a given list through the background executor. If of some reason
 			-- the tests can not be executed, show an error message.
 			--
@@ -122,7 +122,7 @@ feature {NONE} -- Basic operations
 			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		do
 			launch_session_type ({TEST_EXECUTION_I},
-				agent (a_exec: TEST_EXECUTION_I; a_dbg: BOOLEAN; a_tests: detachable ARRAYED_LIST [TEST_I])
+				agent (a_exec: TEST_EXECUTION_I; a_dbg: BOOLEAN; a_tests: detachable SEQUENCE [TEST_I])
 					do
 						a_exec.set_debugging (a_dbg)
 						if a_tests /= Void then

@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	records: DS_ARRAYED_LIST [TEST_SESSION_RECORD]
+	records: ARRAYED_LIST [TEST_SESSION_RECORD]
 			-- All records stored in `Current'.
 		require
 			usable: is_interface_usable
@@ -24,8 +24,8 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			results_valid: Result.for_all (agent has_record (?))
-			results_sorted: Result.sorted (create {DS_BUBBLE_SORTER [TEST_SESSION_RECORD]}.make (
-				create {KL_COMPARABLE_COMPARATOR [TEST_SESSION_RECORD]}.make))
+			results_sorted: (create {BUBBLE_SORTER [TEST_SESSION_RECORD]}.make (
+				create {COMPARABLE_COMPARATOR [TEST_SESSION_RECORD]})).sorted (Result)
 		end
 
 	records_of_type (a_type: TYPE [TEST_SESSION_RECORD]): like records
@@ -44,8 +44,8 @@ feature -- Access
 					do
 						Result := a_t.attempt (a_record) /= Void
 					end (a_type, ?))
-			results_sorted: Result.sorted (create {DS_BUBBLE_SORTER [TEST_SESSION_RECORD]}.make (
-				create {KL_COMPARABLE_COMPARATOR [TEST_SESSION_RECORD]}.make))
+			results_sorted: (create {BUBBLE_SORTER [TEST_SESSION_RECORD]}.make (
+				create {COMPARABLE_COMPARATOR [TEST_SESSION_RECORD]})).sorted (Result)
 		end
 
 feature {NONE} -- Access

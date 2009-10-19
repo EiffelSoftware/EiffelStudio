@@ -54,9 +54,9 @@ feature {NONE} -- Initialization
 		do
 			test_execution := an_execution
 			etest_suite := an_etest_suite
-			create idle_controllers.make_default
+			create idle_controllers.make (10)
 			create empty_tasks.make (0)
-			create occupied_controllers.make (0)
+			create occupied_controllers.make (10)
 			tasks := empty_tasks
 			create byte_code_factory
 		ensure
@@ -88,7 +88,7 @@ feature {NONE} -- Access
 	occupied_controllers: ARRAYED_LIST [like new_task_data]
 			-- Controllers currently running a test
 
-	idle_controllers: DS_ARRAYED_LIST [like new_controller]
+	idle_controllers: ARRAYED_LIST [like new_controller]
 			-- Controllers not running any test
 
 	controller_count: INTEGER
@@ -188,7 +188,7 @@ feature {ETEST_COMPILATION_EXECUTOR, TEST_EXECUTION_I} -- Status setting
 			else
 				l_idle.start
 				l_controller := l_idle.item_for_iteration
-				l_idle.remove_at
+				l_idle.remove
 			end
 			l_data := new_task_data (l_controller)
 			l_data.test := a_test
@@ -316,7 +316,7 @@ feature {NONE} -- Status setting
 				if l_task_data.isolated then
 					l_controller.stop
 				end
-				idle_controllers.force_last (l_controller)
+				idle_controllers.force (l_controller)
 			end
 
 				-- Report result

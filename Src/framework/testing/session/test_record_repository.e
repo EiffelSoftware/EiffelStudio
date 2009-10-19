@@ -36,8 +36,10 @@ feature {NONE} -- Initialization
 			l_project: like eiffel_project
 		do
 				-- TODO: retrieve `record_storage' from file system!
-			create record_storage.make_default
-			create property_storage.make_default
+			create record_storage.make (10)
+			create property_storage.make (10)
+			record_storage.compare_references
+			property_storage.compare_references
 
 			create record_added_event
 			create record_removed_event
@@ -77,7 +79,7 @@ feature {NONE} -- Initialization
 			l_file: RAW_FILE
 			l_existing: like record_storage
 		do
-			create l_existing.make_from_linear (record_storage)
+			l_existing := record_storage.twin
 			l_path := path
 			create l_directory.make (l_path)
 			if l_directory.exists then
@@ -144,13 +146,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	records: DS_ARRAYED_LIST [TEST_SESSION_RECORD]
+	records: ARRAYED_LIST [TEST_SESSION_RECORD]
 			-- <Precursor>
 		do
-			create Result.make_from_linear (record_storage)
+			Result := record_storage.twin
 		end
 
-	records_of_type (a_type: TYPE [TEST_SESSION_RECORD]): DS_ARRAYED_LIST [TEST_SESSION_RECORD]
+	records_of_type (a_type: TYPE [TEST_SESSION_RECORD]): ARRAYED_LIST [TEST_SESSION_RECORD]
 			-- <Precursor>
 		local
 			l_records: like record_storage
@@ -163,7 +165,7 @@ feature -- Access
 				l_records.after
 			loop
 				if attached a_type.attempt (l_records.item_for_iteration) as l_item then
-					l_records.force_last (l_item)
+					l_records.force (l_item)
 				end
 				l_records.forth
 			end
@@ -193,10 +195,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	record_storage: DS_ARRAYED_LIST [TEST_SESSION_RECORD]
+	record_storage: ARRAYED_LIST [TEST_SESSION_RECORD]
 			-- List of records in `Current'.
 
-	property_storage: DS_ARRAYED_LIST [like new_property_tuple]
+	property_storage: ARRAYED_LIST [like new_property_tuple]
 			-- List of properties associated with records in `record_storage'
 
 	path: DIRECTORY_NAME
@@ -280,8 +282,8 @@ feature {NONE} -- Status setting
 		do
 			l_storage := record_storage
 			l_storage.start
-			l_storage.search_forth (a_record)
-			check found: not l_storage.off end
+			l_storage.search (a_record)
+			check found: not l_storage.exhausted end
 			property_storage.go_i_th (l_storage.index)
 		ensure
 			storage_cursor_valid: not record_storage.off and then record_storage.item_for_iteration = a_record
@@ -335,10 +337,10 @@ feature {NONE} -- Element change
 			l_record: TEST_SESSION_RECORD
 		do
 			if not l_retried and is_project_initialized and has_retrieved_records then
-				l_record := record_storage.item (an_index)
+				l_record := record_storage.i_th (an_index)
 				create l_file.make (file_name (l_record))
 				l_file.create_read_write
-				l_file.independent_store ([l_record, property_storage.item (an_index)])
+				l_file.independent_store ([l_record, property_storage.i_th (an_index)])
 			end
 			if attached l_file and then not l_file.is_closed then
 				l_file.close
@@ -361,10 +363,11 @@ feature {NONE} -- Element change
 			l_file: RAW_FILE
 		do
 			l_records := record_storage
-			property_storage.remove (an_index)
+			property_storage.go_i_th (an_index)
+			property_storage.remove
 			l_records.go_i_th (an_index)
 			l_record := l_records.item_for_iteration
-			l_records.remove_at
+			l_records.remove
 
 			if is_project_initialized then
 				create l_file.make (file_name (l_record))
@@ -376,7 +379,7 @@ feature {NONE} -- Element change
 			l_record.detach_repository
 			record_removed_event.publish ([Current, l_record])
 		ensure
-			removed: not has_record (old record_storage.item (an_index))
+			removed: not has_record (old record_storage.i_th (an_index))
 		end
 
 	append_record_sorted (a_record: TEST_SESSION_RECORD; a_property: like new_property_tuple)
@@ -431,9 +434,9 @@ feature {NONE} -- Element change
 			end
 
 			l_storage.go_i_th (l_pos)
-			l_storage.force_right (a_record)
+			l_storage.put_right (a_record)
 			l_properties.go_i_th (l_pos)
-			l_properties.force_right (a_property)
+			l_properties.put_right (a_property)
 			a_record.attach_repository (Current)
 			record_added_event.publish ([Current, a_record])
 		end

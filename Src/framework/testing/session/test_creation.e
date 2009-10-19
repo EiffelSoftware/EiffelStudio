@@ -57,7 +57,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Basic operations
 
-	publish_test_creation (a_name: READABLE_STRING_8)
+	publish_test_creation (a_name: IMMUTABLE_STRING_8)
 			-- Notify observers of `Current' and `record' that new test was created.
 			--
 			-- `a_name': Name of new test.

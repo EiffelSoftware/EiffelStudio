@@ -146,7 +146,7 @@
 							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 							/>
 						<Shortcut Id="estudio.exe1" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) (Experimental mode)"
-							Description="EiffelStudio development environment using experimental facilities of EiffelStudio 6.4" Show="normal"
+							Description="EiffelStudio development environment using experimental facilities of EiffelStudio" Show="normal"
 							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 							Arguments="-experiment"
 							/>

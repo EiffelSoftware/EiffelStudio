@@ -26,7 +26,7 @@ feature {NONE} -- Initlization
 		do
 			create l_shared
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
-			is_sensitive := True
+			is_sensitive_internal := True
 			is_displayed := True
 			description := l_shared.interface_names.separator
 			name := generating_type
@@ -104,14 +104,14 @@ feature {SD_TOOL_BAR} -- Pick and drop issues.
 		end
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

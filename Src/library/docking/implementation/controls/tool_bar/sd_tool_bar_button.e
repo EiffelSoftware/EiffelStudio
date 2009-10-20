@@ -20,7 +20,7 @@ feature {NONE} -- Initlization
 			-- Creation method
 		do
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
-			is_sensitive := True
+			is_sensitive_internal := True
 			is_displayed := True
 			description := generating_type
 			name := generating_type
@@ -69,19 +69,19 @@ feature -- Command
 	enable_sensitive
 			-- Enable sensitive.
 		do
-			is_sensitive := True
+			is_sensitive_internal := True
 			update
 		ensure
-			set: is_sensitive = True
+			set: is_sensitive_internal = True
 		end
 
 	disable_sensitive
 			-- Disable sensitive.
 		do
-			is_sensitive := False
+			is_sensitive_internal := False
 			update
 		ensure
-			set: is_sensitive = False
+			set: is_sensitive_internal = False
 		end
 
 feature -- Query
@@ -335,14 +335,14 @@ feature{SD_TOOL_BAR} -- Implementation
 			if a_starting then
 				if not drop_actions.accepts_pebble (a_pebble) then
 					internal_sensitive_before := is_sensitive
-					is_sensitive := False
+					is_sensitive_internal := False
 					if internal_sensitive_before then
 						is_need_redraw := True
 					end
 				end
 			else
 				if internal_sensitive_before then
-					is_sensitive := True
+					is_sensitive_internal := True
 					is_need_redraw := True
 				end
 			end

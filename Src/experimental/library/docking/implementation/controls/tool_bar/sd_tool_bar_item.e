@@ -74,6 +74,13 @@ feature -- Query
 
 	is_sensitive: BOOLEAN
 			-- If Current sensitive?
+		do
+			if attached {EV_WIDGET} tool_bar as l_tool_bar and then	l_tool_bar.is_sensitive then
+				Result := is_sensitive_internal
+			else
+				Result := False
+			end
+		end
 
 	rectangle: EV_RECTANGLE
 			--  Button rectangle area
@@ -305,19 +312,22 @@ feature {NONE} -- Implementation
 	internal_drop_actions: detachable EV_PND_ACTION_SEQUENCE
 			-- Drop actions
 
+	is_sensitive_internal: BOOLEAN
+			-- If Current sensitive?
+
 invariant
 	not_void: name /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

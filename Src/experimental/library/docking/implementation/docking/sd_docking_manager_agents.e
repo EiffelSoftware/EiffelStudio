@@ -374,21 +374,25 @@ feature  -- Agents
 			l_screen_x, l_screen_y: INTEGER
 			l_screen: EV_SCREEN
 			l_position: EV_COORDINATE
+			l_widget: detachable EV_WIDGET
 		do
-			if attached {EV_WIDGET} a_target as l_widget then
-				create l_screen
-				l_position := l_screen.pointer_position
+			-- When set_capture, if pointer moving at area outside captured widget,
+			-- the `a_target' parameter in {EV_APPLICATION}.pnd_motion_actions is void
+			-- on both GTK and Windows platforms
+			l_widget ?= a_target
 
-				l_screen_x := l_position.x
-				l_screen_y := l_position.y
+			create l_screen
+			l_position := l_screen.pointer_position
 
-				if not notify_one_auto_hide_panel ({SD_ENUMERATION}.top, l_widget, l_screen_x, l_screen_y) then
-					if not notify_one_auto_hide_panel ({SD_ENUMERATION}.bottom, l_widget, l_screen_x, l_screen_y) then
-						if not notify_one_auto_hide_panel ({SD_ENUMERATION}.left, l_widget, l_screen_x, l_screen_y) then
-							if not notify_one_auto_hide_panel ({SD_ENUMERATION}.right, l_widget, l_screen_x, l_screen_y) then
-								if not pointer_in_tab then
-									focused_tab_stub := Void
-								end
+			l_screen_x := l_position.x
+			l_screen_y := l_position.y
+
+			if not notify_one_auto_hide_panel ({SD_ENUMERATION}.top, l_widget, l_screen_x, l_screen_y) then
+				if not notify_one_auto_hide_panel ({SD_ENUMERATION}.bottom, l_widget, l_screen_x, l_screen_y) then
+					if not notify_one_auto_hide_panel ({SD_ENUMERATION}.left, l_widget, l_screen_x, l_screen_y) then
+						if not notify_one_auto_hide_panel ({SD_ENUMERATION}.right, l_widget, l_screen_x, l_screen_y) then
+							if not pointer_in_tab then
+								focused_tab_stub := Void
 							end
 						end
 					end
@@ -406,7 +410,7 @@ feature  -- Agents
 	pointer_in_tab: BOOLEAN
 			-- During pick and drop, if pointer position with in a tab stub?
 
-	notify_one_auto_hide_panel (a_direction: INTEGER; a_target: EV_WIDGET; a_screen_x, a_screen_y: INTEGER): BOOLEAN
+	notify_one_auto_hide_panel (a_direction: INTEGER; a_target: detachable EV_WIDGET; a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Notify one auto hide
 			-- Result is if notified one tab stub
 		require
@@ -622,14 +626,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

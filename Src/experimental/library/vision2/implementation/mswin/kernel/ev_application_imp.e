@@ -609,9 +609,9 @@ feature {NONE} -- Implementation
 				else
 					l_process_events := True
 					if attached window_with_focus as l_window_with_focus and then l_window_with_focus.exists and then is_dialog (l_window_with_focus.wel_item) then
-							msg.process_dialog_message (l_window_with_focus.wel_item)
-							l_process_events := not msg.last_boolean_result
-								-- Only process events if the event was not a dialog message.
+						msg.process_dialog_message (l_window_with_focus.wel_item)
+						l_process_events := not msg.last_boolean_result
+							-- Only process events if the event was not a dialog message.
 					end
 					if l_process_events then
 							-- Dispatch message.

@@ -23,6 +23,11 @@ feature -- Configuration
 			Result := locale.formatted_string (locale.translation ("Project Settings ($1)"), [a_system_name])
 		end
 
+	readonly_warning: STRING_GENERAL
+		do
+			Result := locale.translation (" -- Readonly (Changes will not be saved.)")
+		end
+
 	browse: STRING_GENERAL do Result := locale.translation ("Browse...")	end
 
 feature -- Section names
@@ -531,7 +536,7 @@ feature -- Validation warnings
 	invalid_library_name: STRING = "The name of the library is invalid."
 	invalid_override_name: STRING = "The name of the override is invalid."
 	invalid_precompile_name: STRING = "The name of the precompile is invalid."
-	
+
 	group_already_exists (a_group: STRING): STRING
 		require
 			a_group_not_void: a_group /= Void

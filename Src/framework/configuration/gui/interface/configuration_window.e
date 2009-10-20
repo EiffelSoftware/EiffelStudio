@@ -144,13 +144,18 @@ feature {NONE}-- Initialization
 			vb: EV_VERTICAL_BOX
 			l_btn: EV_BUTTON
 			l_accel: EV_ACCELERATOR
+			l_title: STRING_32
 		do
 				-- set default layout values
 			set_padding_size (layout_constants.default_padding_size)
 
 				-- window
 			Precursor
-			set_title (conf_interface_names.configuration_title (conf_system.name))
+			l_title := conf_interface_names.configuration_title (conf_system.name)
+			if not conf_system.is_storable then
+				l_title.append (conf_interface_names.readonly_warning)
+			end
+			set_title (l_title)
 			set_icon_pixmap (conf_pixmaps.tool_config_icon)
 			enable_user_resize
 

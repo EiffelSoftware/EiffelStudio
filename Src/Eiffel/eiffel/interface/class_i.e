@@ -283,7 +283,8 @@ feature -- Access
 				options.syntax.index
 			when
 				{CONF_OPTION}.syntax_index_standard,
-				{CONF_OPTION}.syntax_index_transitional
+				{CONF_OPTION}.syntax_index_transitional,
+				{CONF_OPTION}.syntax_index_provisional
 			then
 				Result := True
 			else

@@ -633,6 +633,13 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
+	process_iteration_as (l_as: ITERATION_AS)
+			-- Process `l_as'.
+		require
+			l_as_attached: l_as /= Void
+		deferred
+		end
+
 feature {AST_EIFFEL} -- Expressions visitors
 
 	process_tagged_as (l_as: TAGGED_AS)
@@ -929,6 +936,13 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
+	process_loop_expr_as (l_as: LOOP_EXPR_AS)
+			-- Process `l_as'.
+		require
+			l_as_not_void: l_as /= Void
+		deferred
+		end
+
 	process_void_as (l_as: VOID_AS)
 			-- Process `l_as'.
 		require
@@ -1111,7 +1125,7 @@ feature {AST_EIFFEL} -- Clickable visitor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1135,12 +1149,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- AST_VISITOR
-

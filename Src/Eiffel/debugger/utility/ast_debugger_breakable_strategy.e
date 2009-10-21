@@ -425,6 +425,7 @@ feature {NONE} -- Iteration
 
 	process_loop_as (l_as: LOOP_AS)
 		do
+			safe_process (l_as.iteration)
 			safe_process (l_as.from_part)
 			safe_process (l_as.invariant_part)
 			safe_process (l_as.variant_part)

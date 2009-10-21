@@ -202,7 +202,8 @@ feature {NONE} -- Implementation
 				create {ARRAYED_LIST [STRING_32]}.make_from_array (
 					<<conf_interface_names.option_syntax_obsolete_name,
 					conf_interface_names.option_syntax_transitional_name,
-					conf_interface_names.option_syntax_standard_name>>),
+					conf_interface_names.option_syntax_standard_name,
+					conf_interface_names.option_syntax_provisional_name>>),
 				an_options.syntax,
 				c
 			)

@@ -30,12 +30,12 @@ inherit
 			new_eiffel_list_operand_as, new_eiffel_list_parent_as, new_eiffel_list_rename_as,
 			new_eiffel_list_string_as, new_eiffel_list_tagged_as, new_eiffel_list_type,
 			new_eiffel_list_type_dec_as, new_elseif_as, new_ensure_as, new_ensure_then_as,
-			new_export_item_as, new_expr_address_as, new_expr_call_as, new_external_as,
+			new_exit_condition_pair, new_export_item_as, new_expr_address_as, new_expr_call_as, new_external_as,
 			new_external_lang_as, new_feature_as, new_feature_clause_as, new_feature_list_as,
 			new_feature_name_alias_as, new_feature_name_id_as, new_formal_as, new_formal_dec_as, new_filled_id_as,
 			new_identifier_list, new_if_as, new_index_as, new_infix_as, new_inspect_as,
-			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_interval_as, new_invariant_as,
-			new_like_id_as, new_like_current_as, new_location_as, new_loop_as, new_nested_as,
+			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_interval_as, new_invariant_as, new_iteration_as,
+			new_like_id_as, new_like_current_as, new_location_as, new_loop_as, new_loop_expr_as, new_nested_as,
 			new_nested_expr_as, new_none_type_as, new_object_test_as, new_old_syntax_object_test_as,
 			new_once_as, new_operand_as, new_paran_as, new_parent_as,
 			new_precursor_as, new_prefix_as, new_real_as, new_rename_as, new_require_as, new_require_else_as,
@@ -183,6 +183,11 @@ feature -- Roundtrip: New AST node
 
 	new_invariant_pair (k_as: KEYWORD_AS; i_as: EIFFEL_LIST [TAGGED_AS]): PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]
 			-- New PAIR for a keyword and a tagged_as list.
+		do
+		end
+
+	new_exit_condition_pair (u: KEYWORD_AS; e: EXPR_AS): PAIR [KEYWORD_AS, EXPR_AS]
+			-- <Precursor>
 		do
 		end
 
@@ -879,6 +884,11 @@ feature -- Access
 		do
 		end
 
+	new_iteration_as (a: KEYWORD_AS; e: EXPR_AS; b: KEYWORD_AS; i: ID_AS): ITERATION_AS
+			-- <Precursor>
+		do
+		end
+
 	new_like_id_as (a: ID_AS; l_as: KEYWORD_AS): LIKE_ID_AS
 			-- New LIKE_ID AST node
 		do
@@ -894,11 +904,17 @@ feature -- Access
 		do
 		end
 
-	new_loop_as (f: EIFFEL_LIST [INSTRUCTION_AS]; i: EIFFEL_LIST [TAGGED_AS];
+	new_loop_as (t: detachable ITERATION_AS; f: EIFFEL_LIST [INSTRUCTION_AS]; i: EIFFEL_LIST [TAGGED_AS];
 			v: VARIANT_AS; s: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS];
 			e, f_as, i_as, u_as, l_as: KEYWORD_AS): LOOP_AS
 
 			-- New LOOP AST node
+		do
+		end
+
+	new_loop_expr_as (f: ITERATION_AS; w: KEYWORD_AS; i: EIFFEL_LIST [TAGGED_AS];
+			u: KEYWORD_AS; c: EXPR_AS; q: KEYWORD_AS; a: BOOLEAN; e: EXPR_AS; v: VARIANT_AS; k: KEYWORD_AS): LOOP_EXPR_AS
+			-- New LOOP expression AST node
 		do
 		end
 
@@ -1190,5 +1206,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class AST_FACTORY
-
+end

@@ -348,6 +348,7 @@ feature -- Processing
 			--
 			-- `a_as': Abstract syntax node to process.
 		do
+			safe_process (a_as.iteration)
 			safe_process (a_as.from_part)
 
 			reset_auto_spans
@@ -632,7 +633,7 @@ feature {NONE} -- Auto Span Declaration
 				TUPLE [i_start_line: INTEGER; i_start_index: INTEGER;
 						i_end_line: INTEGER; i_end_index: INTEGER;
 						i_text: STRING]
-				
+
 		do
 			Result := [a_line_start, a_index_start, a_line_end, a_index_end, a_text]
 		end
@@ -711,7 +712,7 @@ feature -- Conversion
 	null_text_span: TUPLE [i_start_line: INTEGER; i_start_index: INTEGER;
 						i_end_line: INTEGER; i_end_index: INTEGER;
 						i_text: STRING]
-		
+
 			-- A null TextSpan
 		note
 			once_status: global

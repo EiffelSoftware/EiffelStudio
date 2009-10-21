@@ -604,12 +604,28 @@ feature {NONE} -- Implementation
 			l_as.call.process (Current)
 		end
 
+	process_iteration_as (l_as: ITERATION_AS)
+		do
+			l_as.expression.process (Current)
+			l_as.identifier.process (Current)
+		end
+
 	process_loop_as (l_as: LOOP_AS)
 		do
+			safe_process (l_as.iteration)
 			safe_process (l_as.from_part)
 			safe_process (l_as.invariant_part)
 			l_as.stop.process (Current)
 			safe_process (l_as.compound)
+			safe_process (l_as.variant_part)
+		end
+
+	process_loop_expr_as (l_as: LOOP_EXPR_AS)
+		do
+			l_as.iteration.process (Current)
+			safe_process (l_as.invariant_part)
+			safe_process (l_as.exit_condition)
+			l_as.expression.process (Current)
 			safe_process (l_as.variant_part)
 		end
 

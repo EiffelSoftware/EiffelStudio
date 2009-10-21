@@ -150,13 +150,16 @@ feature -- Access
 			--   CLI specification (e.g., identifiers cannot be longer 0x1FFFFFFF bytes)
 
 	ecma_syntax: NATURAL_8 = 0x00
-			-- Syntax strictly follows the ECMA specification.
+			-- Syntax strictly follows the ECMA specification
 
 	obsolete_64_syntax: NATURAL_8 = 0x01
-			-- Allows pre-ECMA keywords and ignore new ECMA keywords such as `note', `attribute', `attached' and `detachable'.
+			-- Allows pre-ECMA keywords and ignore new ECMA keywords such as `note', `attribute', `attached' and `detachable'
 
 	transitional_64_syntax: NATURAL_8 = 0x2
-			-- Allows both pre and ECMA keywords.
+			-- Allows both pre and ECMA keywords
+
+	provisional_syntax: NATURAL_8 = 0x3
+			-- ECMA syntax + possible future extensions
 
 feature {NONE} -- Status
 
@@ -204,7 +207,7 @@ feature -- Settings
 	set_syntax_version (a_version: like syntax_version)
 			-- Set `syntax_version' to `a_version'.
 		require
-			valid_version: a_version = ecma_syntax or a_version = transitional_64_syntax or a_version = obsolete_64_syntax
+			valid_version: a_version = ecma_syntax or a_version = transitional_64_syntax or a_version = obsolete_64_syntax or a_version = provisional_syntax
 		do
 			syntax_version := a_version
 		ensure

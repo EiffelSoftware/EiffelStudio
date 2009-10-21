@@ -266,6 +266,14 @@ feature -- Access
 			create Result.make (k_as, i_as)
 		end
 
+	new_exit_condition_pair (u: KEYWORD_AS; e: EXPR_AS): PAIR [KEYWORD_AS, EXPR_AS]
+			-- New PAIR for an exit condition of a loop
+		require
+			e_attached: e /= Void
+		do
+			create Result.make (u, e)
+		end
+
 	new_typed_char_as (t_as: TYPE_AS; a_char: CHAR_AS): TYPED_CHAR_AS
 			-- New TYPED_CHAR AST node.
 		do
@@ -1527,6 +1535,14 @@ feature -- Access
 			create Result.initialize (a, once_manifest_string_count, i_as, object_test_locals)
 		end
 
+	new_iteration_as (a: KEYWORD_AS; e: EXPR_AS; b: KEYWORD_AS; i: ID_AS): ITERATION_AS
+			-- New ITERATION AST node
+		do
+			if e /= Void and i /= Void then
+				create Result.initialize (a, e, b, i)
+			end
+		end
+
 	new_like_id_as (a: ID_AS; l_as: KEYWORD_AS): LIKE_ID_AS
 			-- New LIKE_ID AST node
 		do
@@ -1554,15 +1570,24 @@ feature -- Access
 			create Result.make (l, c, p, s)
 		end
 
-	new_loop_as (f: EIFFEL_LIST [INSTRUCTION_AS]; i: EIFFEL_LIST [TAGGED_AS];
-			v: VARIANT_AS; s: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS];
+	new_loop_as (t: detachable ITERATION_AS; f: detachable EIFFEL_LIST [INSTRUCTION_AS]; i: detachable EIFFEL_LIST [TAGGED_AS];
+			v: detachable VARIANT_AS; s: detachable EXPR_AS; c: detachable EIFFEL_LIST [INSTRUCTION_AS];
 			e, f_as, i_as, u_as, l_as: KEYWORD_AS): LOOP_AS
-
 			-- New LOOP AST node
 		do
-			if s /= Void and e /= Void then
-				create Result.initialize (f, i, v, s, c, e, f_as, i_as, u_as, l_as)
+			if (t /= Void or s /= Void) and e /= Void then
+				create Result.initialize (t, f, i, v, s, c, e, f_as, i_as, u_as, l_as)
 			end
+		end
+
+	new_loop_expr_as (f: ITERATION_AS; w: KEYWORD_AS; i: EIFFEL_LIST [TAGGED_AS];
+			u: KEYWORD_AS; c: EXPR_AS; q: KEYWORD_AS; a: BOOLEAN; e: EXPR_AS; v: VARIANT_AS; k: KEYWORD_AS): LOOP_EXPR_AS
+			-- New LOOP expression AST node
+		require
+			f_attached: f /= Void
+			e_attached: e /= Void
+		do
+			create Result.initialize (f, w, i, u, c, q, a, e, v, k)
 		end
 
 	new_nested_as (t: ACCESS_AS; m: CALL_AS; d_as: SYMBOL_AS): NESTED_AS
@@ -1987,4 +2012,3 @@ note
 		]"
 
 end -- class AST_FACTORY
-

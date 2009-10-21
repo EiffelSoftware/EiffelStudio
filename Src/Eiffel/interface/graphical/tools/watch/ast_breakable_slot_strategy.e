@@ -1612,6 +1612,9 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
+			if attached l_as.iteration as i then
+				i.process (Current)
+			end
 			if l_as.from_part /= Void then
 				format_compound (l_as.from_part)
 			else
@@ -1623,7 +1626,9 @@ feature {NONE} -- Implementation
 				l_as.variant_part.process (Current)
 			end
 			put_breakable (l_as)
-			l_as.stop.process (Current)
+			if attached l_as.stop as s then
+				s.process (Current)
+			end
 			if l_as.compound /= Void then
 				format_compound (l_as.compound)
 			end

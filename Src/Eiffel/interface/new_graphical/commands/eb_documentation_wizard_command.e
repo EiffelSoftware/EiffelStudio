@@ -30,7 +30,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 create
 	make
 
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 				if attached compiler_output as l_output then
 					l_output.lock
 					l_output.clear
-					l_output.activate (preferences.development_window_data.output_tool_prompted)
+					l_output.activate (preferences.development_window_data.outputs_tool_prompted)
 				end
 				l_formatter := compiler_formatter
 

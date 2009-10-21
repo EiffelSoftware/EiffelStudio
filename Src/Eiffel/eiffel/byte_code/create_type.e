@@ -10,7 +10,7 @@ class CREATE_TYPE
 inherit
 	CREATE_INFO
 		redefine
-			created_in, generate, generate_cid, is_explicit
+			generate, generate_cid, is_explicit
 		end
 
 create
@@ -34,6 +34,21 @@ feature -- Access
 	type: TYPE_A
 			-- Type to create
 
+feature -- Update
+
+	updated_info: CREATE_INFO
+			-- <Precursor>
+		local
+			l_type: TYPE_A
+		do
+			l_type := context.descendant_type (type)
+			if l_type /= type and then not l_type.same_as (type) then
+				Result := l_type.create_info
+			else
+				Result := Current
+			end
+		end
+
 feature -- C code generation
 
 	analyze
@@ -49,15 +64,12 @@ feature -- C code generation
 
 	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate creation type id.
-		local
-			l_type : TYPE_A
 		do
-			l_type := context.creation_type (type)
-			if attached {GEN_TYPE_A} l_type then
+			if attached {GEN_TYPE_A} type then
 				buffer.put_string ("typres")
 				buffer.put_natural_32 (a_level)
 			else
-				buffer.put_integer (l_type.generated_id (final_mode, context.context_class_type.type))
+				buffer.put_integer (type.generated_id (final_mode, context.context_class_type.type))
 			end
 		end
 
@@ -115,30 +127,18 @@ feature -- IL code generation
 
 	generate_il
 			-- Generate IL code for a hardcoded creation type.
-		local
-			l_type: TYPE_A
 		do
-			l_type := context.creation_type (type)
-			il_generator.generate_creation (l_type)
-			if l_type.is_expanded and not l_type.is_bit then
+			il_generator.generate_creation (type)
+			if type.is_expanded and not type.is_bit then
 					-- Load value of a boxed value type object.
-				il_generator.generate_unmetamorphose (l_type)
+				il_generator.generate_unmetamorphose (type)
 			end
 		end
 
 	generate_il_type
 			-- Generate IL code to load type.
-		local
-			l_type: TYPE_A
 		do
-			l_type := context.creation_type (type)
-			l_type.generate_gen_type_il (il_generator, True)
-		end
-
-	created_in (other: CLASS_TYPE): TYPE_A
-			-- Resulting type of Current as if it was used to create object in `other'
-		do
-			Result := type
+			type.generate_gen_type_il (il_generator, True)
 		end
 
 feature -- Byte code generation
@@ -147,7 +147,7 @@ feature -- Byte code generation
 			-- Generate byte code for a hardcoded creation type
 		do
 			ba.append (Bc_ctype)
-			context.creation_type (type).make_full_type_byte_code (ba, context.context_class_type.type)
+			type.make_full_type_byte_code (ba, context.context_class_type.type)
 		end
 
 feature -- Generic conformance
@@ -170,7 +170,7 @@ feature -- Generic conformance
 
 	type_to_create : CL_TYPE_A
 		do
-			Result ?= context.creation_type (type)
+			Result ?= type
 		end
 
 invariant

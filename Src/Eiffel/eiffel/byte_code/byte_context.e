@@ -1,7 +1,7 @@
 note
+	description: "Context variables for code generation and utilities."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Context variables for code generation and utilities.
 
 class BYTE_CONTEXT
 
@@ -1163,18 +1163,6 @@ feature -- Access
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
-	real_type_in_fixed (type: TYPE_A; a_context_type: CL_TYPE_A): TYPE_A
-			-- Type `type' as seen in `a_context_type'
-		require
-			type_not_void: type /= Void
-			context_type_not_void: a_context_type /= Void
-		do
-			Result := real_type_in (type, a_context_type)
-		ensure
-			result_not_void: Result /= Void
-			result_not_formal: not Result.is_formal or Result.is_multi_constrained
-		end
-
 	real_type (type: TYPE_A): TYPE_A
 			-- Type `type' written in `class_type' as seen in `context_class_type'
 		require
@@ -1182,7 +1170,13 @@ feature -- Access
 			class_type_not_void: class_type /= Void
 			context_class_type_not_void: current_type /= Void
 		do
-			Result := creation_type (type)
+				-- If code is inherited, we first find out the type.
+			if class_type /= context_class_type then
+				Result := type.evaluated_type_in_descendant (class_type.associated_class,
+					context_class_type.associated_class, current_feature)
+			else
+				Result := type
+			end
 				-- And then we instantiate it in the context of `context_cl_type'.
 			Result := real_type_in (Result, context_cl_type)
 		ensure
@@ -1204,32 +1198,17 @@ feature -- Access
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
-	creation_type (type: TYPE_A): TYPE_A
-			-- Convenience
+	descendant_type (type: TYPE_A): TYPE_A
+			-- Given a type valid for `class_type' returns its meaningulness counterpart in `context_class_type'
 		require
 			type_not_void: type /= Void
 			class_type_not_void: class_type /= Void
+			context_class_type_not_void: context_class_type /= Void
 		do
 				-- If code is inherited, we first find out the type.
 			if class_type /= context_class_type then
-				if system.il_generation then
-						-- Currently our .NET code generation does things in a strange way and sometime
-						-- we already have resolved a type for the descendant class but the resolved type
-						-- does not make sense for the ancestor version (case where descendant is generic
-						-- but not the ancestor (See eweasel test#melt069 on .NET).
-					if type.is_valid_for_class (class_type.associated_class) then
-						Result := type.evaluated_type_in_descendant (class_type.associated_class,
-							context_class_type.associated_class, current_feature)
-					else
-						check
-							generating_expanded: context_class_type.is_expanded
-						end
-						Result := type
-					end
-				else
-					Result := type.evaluated_type_in_descendant (class_type.associated_class,
-						context_class_type.associated_class, Void)
-				end
+				Result := type.evaluated_type_in_descendant (class_type.associated_class,
+					context_class_type.associated_class, current_feature)
 			else
 				Result := type
 			end

@@ -54,6 +54,7 @@ feature
 			real_ty: GEN_TYPE_A
 			target_gen_type: TYPE_A
 		do
+			info := info.updated_info
 			info.analyze
 
 			real_ty ?= context.real_type (type)

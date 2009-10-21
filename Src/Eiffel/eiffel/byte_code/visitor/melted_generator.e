@@ -603,7 +603,7 @@ feature {NONE} -- Visitors
 						-- Say whether or not we should fill the SPECIAL.
 					ba.append_boolean (l_is_make_filled)
 					ba.append_boolean (a_node.is_special_make_empty)
-					a_node.info.make_byte_code (ba)
+					a_node.info.updated_info.make_byte_code (ba)
 					l_class_type.make_creation_byte_code (ba)
 					if l_is_make_filled then
 						create l_nested
@@ -622,7 +622,7 @@ feature {NONE} -- Visitors
 					ba.append_boolean (l_call /= Void)
 
 						-- Create associated object.
-					a_node.info.make_byte_code (ba)
+					a_node.info.updated_info.make_byte_code (ba)
 
 						-- Call creation procedure if any.
 					if l_call /= Void then
@@ -1378,7 +1378,7 @@ feature {NONE} -- Visitors
 				ba.append (bc_object_test)
 				ba.append_short_integer (context.object_test_local_position (a_node.target))
 					-- Generate type of target
-				a_node.info.make_byte_code (ba)
+				a_node.info.updated_info.make_byte_code (ba)
 			end
 		end
 
@@ -1498,7 +1498,7 @@ feature {NONE} -- Visitors
 				ba.append (a_node.target.reverse_code)
 				melted_assignment_generator.generate_assignment (ba, a_node.target)
 					-- Generate type of target
-				a_node.info.make_byte_code (ba)
+				a_node.info.updated_info.make_byte_code (ba)
 			end
 		end
 
@@ -1662,19 +1662,21 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_type_creator: CREATE_INFO
+			l_type_type: TYPE_A
 		do
 			ba.append (Bc_create_type)
 				-- There is no feature call:
 			ba.append_boolean (False)
 
-			l_type_creator := a_node.type_type.create_info
+			l_type_type := context.real_type (a_node.type_type)
+			l_type_creator := l_type_type.create_info
 			l_type_creator.make_byte_code (ba)
 
 				-- Because `l_type_creator' discards the attachment mark if any, we need
 				-- to take it into account to create the proper type.
 				-- First boolean is to figure out if there is an action to be taken, the
 				-- second which action.
-			if attached {ATTACHABLE_TYPE_A} a_node.type_type as l_type then
+			if attached {ATTACHABLE_TYPE_A} l_type_type as l_type then
 				if l_type.is_attached then
 					ba.append_boolean (True)
 					ba.append_boolean (True)

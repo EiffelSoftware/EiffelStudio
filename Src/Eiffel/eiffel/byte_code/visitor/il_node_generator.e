@@ -848,7 +848,7 @@ feature {NONE} -- Visitors
 			l_decl_type := l_real_ty.implemented_type (l_make_feat.origin_class_id)
 
 				-- Creation of Array
-			a_node.info.generate_il
+			a_node.info.updated_info.generate_il
 
 				-- Call creation procedure of ARRAY
 			il_generator.duplicate_top
@@ -1485,7 +1485,7 @@ feature {NONE} -- Visitors
 					a_node.call.set_parent (Void)
 				else
 						-- We called `default_create' on an external class.
-					a_node.info.generate_il
+					a_node.info.updated_info.generate_il
 				end
 			else
 				l_ext_call ?= a_node.call
@@ -1494,7 +1494,7 @@ feature {NONE} -- Visitors
 				end
 				if not l_is_il_external then
 						-- Standard creation call on non-il external.
-					a_node.info.generate_il
+					a_node.info.updated_info.generate_il
 				end
 				if a_node.call /= Void then
 					if l_creation_type.is_expanded then
@@ -2958,7 +2958,7 @@ feature {NONE} -- Visitors
 			else
 				fixme ("Instance should be unique.")
 				fixme ("We also need to use `a_node.type_type' when it is not an instance of CL_TYPE_A.")
-				l_type_creator := a_node.type_data.create_info
+				l_type_creator := context.real_type (a_node.type_data).create_info
 				l_type_creator.generate_il
 			end
 

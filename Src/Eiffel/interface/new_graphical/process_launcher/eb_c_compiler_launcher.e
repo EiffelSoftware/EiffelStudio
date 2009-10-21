@@ -166,7 +166,7 @@ feature{NONE}  -- Actions
 				attached {ES_OUTPUTS_TOOL} l_window.shell_tools.tool ({ES_OUTPUTS_TOOL}) as l_tool
 			then
 				if
-					preferences.development_window_data.c_output_panel_prompted or else
+					preferences.development_window_data.external_compilation_output_prompted or else
 					(l_tool.is_shown and then l_tool.output = compiler_output)
 				then
 						-- Force showing of the tool.

@@ -290,7 +290,7 @@ feature -- Execution
 						l_output := l_service.service.output ((create {OUTPUT_MANAGER_KINDS}).eiffel_compiler)
 						l_output.activate (False)
 					end
-					if preferences.development_window_data.output_tool_prompted then
+					if preferences.development_window_data.outputs_tool_prompted then
 							-- Request tool be shown.
 						l_window.shell_tools.show_tool ({ES_OUTPUTS_TOOL}, False)
 					end

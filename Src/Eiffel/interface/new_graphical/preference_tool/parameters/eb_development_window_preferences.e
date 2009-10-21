@@ -166,9 +166,9 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := graphical_output_disabled_preference.value
 		end
 
-	c_output_panel_prompted: BOOLEAN
+	external_compilation_output_prompted: BOOLEAN
 		do
-			Result := c_output_panel_prompted_preference.value
+			Result := external_compilation_output_prompted_preference.value
 		end
 
 	auto_hide_animation_speed: INTEGER
@@ -189,10 +189,10 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := show_all_applicable_docking_indicators_preference.value
 		end
 
-	output_tool_prompted: BOOLEAN
+	outputs_tool_prompted: BOOLEAN
 			-- If show up output tool if start compiling?
 		do
-			Result := output_tool_prompted_preference.value
+			Result := outputs_tool_prompted_preference.value
 		end
 
 feature {EB_SHARED_PREFERENCES} -- Preference
@@ -233,7 +233,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	use_animated_icons_preference: BOOLEAN_PREFERENCE
 
-	c_output_panel_prompted_preference: BOOLEAN_PREFERENCE
+	external_compilation_output_prompted_preference: BOOLEAN_PREFERENCE
 			-- Should C output panel prompt out when c compilation starts?
 
 	auto_hide_animation_speed_preference: INTEGER_PREFERENCE
@@ -246,7 +246,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	show_all_applicable_docking_indicators_preference: BOOLEAN_PREFERENCE
 			-- If we need to show all feedback indicators when dragging a zone?
 
-	output_tool_prompted_preference: BOOLEAN_PREFERENCE
+	outputs_tool_prompted_preference: BOOLEAN_PREFERENCE
 			-- If show up output tool if start compiling?
 
 feature -- Element change
@@ -330,11 +330,11 @@ feature {NONE} -- Preference Strings
 	link_tools_string: STRING = "interface.development_window.link_tools"
 	graphical_output_disabled_string: STRING = "interface.development_window.graphical_output_disabled"
 	use_animated_icons_string: STRING = "interface.development_window.use_animated_icons"
-	c_output_panel_prompted_string: STRING = "interface.development_window.c_output_panel_prompted"
+	external_compilation_output_prompted_string: STRING = "interface.development_window.external_compilation_output_prompted"
 	auto_hide_animation_speed_string: STRING = "interface.development_window.auto_hide_animation_speed"
 	undocked_window_lower_than_main_window_string: STRING = "interface.development_window.undocked_window_lower_than_main_window"
 	show_all_applicable_docking_indicators_string: STRING = "interface.development_window.show_all_applicable_docking_indicators"
-	output_tool_prompted_string: STRING = "interface.development_window.output_tool_prompted"
+	outputs_tool_prompted_string: STRING = "interface.development_window.outputs_tool_prompted"
 
 	estudio_dbg_menu_allowed_string: STRING = "interface.development_window.estudio_dbg_menu_allowed"
 	estudio_dbg_menu_accelerator_allowed_string: STRING = "interface.development_window.estudio_dbg_menu_accelerator_allowed"
@@ -362,11 +362,11 @@ feature {NONE} -- Implementation
 			link_tools_preference := l_manager.new_boolean_preference_value (l_manager, link_tools_string, False)
 			graphical_output_disabled_preference := l_manager.new_boolean_preference_value (l_manager, graphical_output_disabled_string, False)
 			use_animated_icons_preference := l_manager.new_boolean_preference_value (l_manager, use_animated_icons_string, True)
-			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)
+			external_compilation_output_prompted_preference := l_manager.new_boolean_preference_value (l_manager, external_compilation_output_prompted_string, False)
 			auto_hide_animation_speed_preference := l_manager.new_integer_preference_value (l_manager, auto_hide_animation_speed_string, 50)
 			undocked_window_lower_than_main_window_preference := l_manager.new_boolean_preference_value (l_manager, undocked_window_lower_than_main_window_string, False)
 			show_all_applicable_docking_indicators_preference := l_manager.new_boolean_preference_value (l_manager, show_all_applicable_docking_indicators_string, True)
-			output_tool_prompted_preference := l_manager.new_boolean_preference_value (l_manager, output_tool_prompted_string, True)
+			outputs_tool_prompted_preference := l_manager.new_boolean_preference_value (l_manager, outputs_tool_prompted_string, True)
 
 			estudio_dbg_menu_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_allowed_string, True)
 			estudio_dbg_menu_accelerator_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_accelerator_allowed_string, True)

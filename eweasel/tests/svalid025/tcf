@@ -10,4 +10,7 @@ copy_raw	test3.e $CLUSTER test3.e
 compile_melted
 compile_result 	ok
 
+compile_frozen
+compile_result	ok
+
 test_end

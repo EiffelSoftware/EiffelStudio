@@ -10,7 +10,7 @@ class CREATE_FEAT
 inherit
 	CREATE_INFO
 		redefine
-			created_in, generate_cid, make_type_byte_code,
+			generate_cid, make_type_byte_code,
 			generate_cid_array, generate_cid_init, is_explicit,
 			generate
 		end
@@ -71,6 +71,28 @@ feature -- Access
 
 	routine_id: INTEGER
 			-- Routine ID of feature.
+
+feature -- Update
+
+	updated_info: CREATE_INFO
+			-- <Precursor>
+		local
+			l_feat_id: like feature_id
+		do
+				-- Only recompute `feature_id' for `context.context_class_type' only when
+				-- it is different from `context.class_type' as we know that Current was
+				-- created for `context.class_type'.
+			if context.class_type /= context.context_class_type then
+				l_feat_id := context.context_class_type.associated_class.feature_of_rout_id (routine_id).feature_id
+				if l_feat_id /= feature_id then
+					create {CREATE_FEAT} Result.make (l_feat_id, routine_id)
+				else
+					Result := Current
+				end
+			else
+				Result := Current
+			end
+		end
 
 feature -- C code generation
 
@@ -173,7 +195,7 @@ feature -- C code generation
 					context.current_type.associated_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCT(")
-					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_static_type_id (context.context_class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					rout_info := System.rout_info_table.item (routine_id)
 					buffer.put_class_id (rout_info.origin)
@@ -181,7 +203,7 @@ feature -- C code generation
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("RTWCT(")
-					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_static_type_id (context.context_class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					buffer.put_integer (feature_id)
 				end
@@ -206,7 +228,7 @@ feature -- IL code generation
 			il_generator.generate_current_as_reference
 			il_generator.create_type
 
-			target_type := context.real_type (context.class_type.associated_class.anchored_features.item
+			target_type := context.real_type (context.context_class_type.associated_class.anchored_features.item
 				(routine_id).type)
 			if target_type.is_expanded then
 					-- Load value of a value type object.
@@ -220,13 +242,7 @@ feature -- IL code generation
 			-- Generate IL code to load type of anchored creation type.
 		do
 				-- Generate call to feature that will give the type we want to create.
-			il_generator.generate_type_feature_call (context.class_type.associated_class.anchored_features.item (routine_id))
-		end
-
-	created_in (other: CLASS_TYPE): TYPE_A
-			-- Resulting type of Current as if it was used to create object in `other'
-		do
-			Result := context.real_type_in (other.associated_class.feature_of_rout_id (routine_id).type, other.type)
+			il_generator.generate_type_feature_call (context.context_class_type.associated_class.anchored_features.item (routine_id))
 		end
 
 feature -- Byte code generation
@@ -238,13 +254,13 @@ feature -- Byte code generation
 		do
 			if context.current_type.associated_class.is_precompiled then
 				ba.append (Bc_pclike)
-				ba.append_short_integer (context.class_type.static_type_id - 1)
+				ba.append_short_integer (context.context_class_type.static_type_id - 1)
 				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append (Bc_clike)
-				ba.append_short_integer (context.class_type.static_type_id - 1)
+				ba.append_short_integer (context.context_class_type.static_type_id - 1)
 				ba.append_integer (feature_id)
 			end
 		end
@@ -322,7 +338,7 @@ feature -- Genericity
 					context.current_type.associated_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCT(")
-					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_static_type_id (context.context_class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					rout_info := System.rout_info_table.item (routine_id)
 					buffer.put_class_id (rout_info.origin)
@@ -330,7 +346,7 @@ feature -- Genericity
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("RTWCT(")
-					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_static_type_id (context.context_class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					buffer.put_integer (feature_id)
 				end
@@ -448,7 +464,7 @@ feature -- Genericity
 					context.current_type.associated_class.is_precompiled
 				then
 					buffer.put_string ("] = RTWPCT(")
-					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_static_type_id (context.context_class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					rout_info := System.rout_info_table.item (routine_id)
 					buffer.put_class_id (rout_info.origin)
@@ -456,7 +472,7 @@ feature -- Genericity
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("] = RTWCT(")
-					buffer.put_static_type_id (context.class_type.static_type_id)
+					buffer.put_static_type_id (context.context_class_type.static_type_id)
 					buffer.put_string (gc_comma)
 					buffer.put_integer (feature_id)
 				end
@@ -475,13 +491,13 @@ feature -- Genericity
 		do
 			if context.current_type.associated_class.is_precompiled then
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_pfeature_type)
-				ba.append_short_integer (context.class_type.static_type_id-1)
+				ba.append_short_integer (context.context_class_type.static_type_id-1)
 				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_feature_type)
-				ba.append_short_integer (context.class_type.static_type_id - 1)
+				ba.append_short_integer (context.context_class_type.static_type_id - 1)
 				ba.append_integer (feature_id)
 			end
 		end

@@ -11,7 +11,6 @@ class
 inherit
 	CREATE_INFO
 		redefine
-			created_in,
 			generate_cid, make_type_byte_code,
 			generate_cid_array, generate_cid_init,
 			generate_gen_type_conversion
@@ -20,6 +19,15 @@ inherit
 	SHARED_GENERATION
 		export
 			{NONE} all
+		end
+
+feature -- Update
+
+	updated_info: CREATE_INFO
+			-- <Precursor>
+		do
+				-- Nothing to do, creating Current never changes.
+			Result := Current
 		end
 
 feature -- C code generation
@@ -60,12 +68,6 @@ feature -- Il code generation
 		do
 			il_generator.generate_current_as_reference
 			il_generator.load_type
-		end
-
-	created_in (other: CLASS_TYPE): TYPE_A
-			-- Resulting type of Current as if it was used to create object in `other'
-		do
-			Result := other.type
 		end
 
 feature -- Byte code generation
@@ -131,7 +133,7 @@ feature -- Generic conformance
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -144,22 +146,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CREATE_CURRENT

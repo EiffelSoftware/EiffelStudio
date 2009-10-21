@@ -123,13 +123,16 @@ feature -- Code analyzis
 
 	analyze
 			-- Analyze the type
+		local
+			l_type_type: like type_type
 		do
 				-- We get a register to store the type because of the garbage
 				-- collector: assume we write f({X}, {Y}), then the GC
 				-- could be invoked while allocating {Y} and move {X} right
 				-- under the back of the C (without notifying it, how could I?).
 			get_register
-			type_type.create_info.analyze
+			l_type_type := context.descendant_type (type_type)
+			l_type_type.create_info.analyze
 		end
 
 feature -- C code generation
@@ -139,12 +142,14 @@ feature -- C code generation
 		local
 			buf: GENERATION_BUFFER
 			l_type_creator: CREATE_INFO
+			l_type_type: like type_type
 		do
 			buf := buffer
 				-- Type is not known at compile time, thus we compute the
 				-- proper type using `eif_typeof_type_of' which will know
 				-- which actual generic derivation to take.
-			l_type_creator := type_type.create_info
+			l_type_type := context.descendant_type (type_type)
+			l_type_creator := l_type_type.create_info
 			l_type_creator.generate_start (buf)
 			l_type_creator.generate_gen_type_conversion (0)
 			buf.put_new_line
@@ -152,7 +157,7 @@ feature -- C code generation
 			buf.put_string (" = RTLNTY(")
 				-- Because `l_type_creator' discards the attachment mark if any, we need
 				-- to take it into account to create the proper type.
-			if attached {ATTACHABLE_TYPE_A} type_type as l_type and then not l_type.is_expanded then
+			if attached {ATTACHABLE_TYPE_A} l_type_type as l_type and then not l_type.is_expanded then
 				if l_type.is_attached then
 					buf.put_string ("eif_attached_type(")
 					l_type_creator.generate_type_id (buf, context.final_mode, 0)

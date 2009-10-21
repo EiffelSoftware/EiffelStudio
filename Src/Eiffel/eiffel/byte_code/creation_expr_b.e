@@ -103,6 +103,7 @@ feature -- Analyze
 		do
 			l_type := real_type (type)
 			if not l_type.is_basic then
+				info := info.updated_info
 				info.analyze
 				get_register
 				l_call := call

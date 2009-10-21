@@ -50,6 +50,7 @@ feature -- C code generation
 				-- expression splitting).
 			target.set_register (No_register)
 			target.analyze
+			info := info.updated_info
 			info.analyze
 			source_type := context.real_type (expression.type)
 			target_type := context.real_type (target.type)

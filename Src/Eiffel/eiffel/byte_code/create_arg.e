@@ -11,7 +11,7 @@ class
 inherit
 	CREATE_INFO
 		redefine
-			created_in, generate_cid, make_type_byte_code,
+			generate_cid, make_type_byte_code,
 			generate_cid_array, generate_cid_init
 		end
 
@@ -34,16 +34,22 @@ feature -- Settings
 			position := i
 		end
 
+feature -- Update
+
+	updated_info: CREATE_INFO
+			-- <Precursor>
+		do
+				-- Nothing to be done as the position of the like argument will never change. The type
+				-- we get via `context.byte_code.arguments.item (position)' is always the proper type
+				-- for the context in which we generate the code, so no need to update it either.
+			Result := Current
+		end
+
 feature -- C code generation
 
 	analyze
 		do
-			if is_generic then
-				context.mark_current_used
-				context.add_dftype_current
-			elseif type_to_create = Void then
-				context.mark_current_used
-			end
+			associated_create_info.analyze
 		end
 
 	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
@@ -72,13 +78,6 @@ feature -- IL code generation
 			-- otherwise take its static type.
 		do
 			internal_generate_il (True)
-		end
-
-	created_in (other: CLASS_TYPE): TYPE_A
-			-- Resulting type of Current as if it was used to create object in `other'
-		do
-				-- Used to be `type_to_create.created_in' but I felt it was not really necessary.
-			Result := type_to_create
 		end
 
 feature {NONE} -- IL code generation
@@ -124,7 +123,7 @@ feature {NONE} -- IL code generation
 			il_generator.mark_label (end_label)
 
 			if not a_is_for_type then
-				il_generator.generate_check_cast (Void, context.real_type (l_type))
+				il_generator.generate_check_cast (Void, l_type)
 			end
 		end
 
@@ -194,7 +193,7 @@ feature -- Type information
 	argument_type: TYPE_A
 			-- Type of argument as declared.
 		do
-			Result := context.creation_type (context.byte_code.arguments.item (position))
+			Result := context.byte_code.arguments.item (position)
 		ensure
 			argument_type_not_void: Result /= Void
 		end
@@ -202,20 +201,15 @@ feature -- Type information
 	associated_create_info: CREATE_INFO
 		local
 			l_type: TYPE_A
-			l_formal: FORMAL_A
 		do
-			l_type := context.creation_type (argument_type)
+			l_type := argument_type
 			if l_type.is_like then
 				if l_type.is_like_current then
 					create {CREATE_CURRENT} Result
 				else
 					Result := l_type.create_info
 				end
-			elseif l_type.is_formal then
-				l_formal ?= l_type
-				check
-					l_formal_not_void: l_formal /= Void
-				end
+			elseif attached {FORMAL_A} l_type as l_formal then
 				create {CREATE_FORMAL_TYPE} Result.make (l_formal)
 			else
 				create {CREATE_TYPE} Result.make (l_type)

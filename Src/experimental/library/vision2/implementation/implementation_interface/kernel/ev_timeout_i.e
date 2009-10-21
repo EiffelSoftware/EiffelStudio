@@ -23,6 +23,13 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status report
+
+	count: INTEGER
+			-- Number of times `interface.actions' has been called.
+
+feature -- Status setting
+
 	set_interval (an_interval: INTEGER)
 			-- Assign `an_interval' in milliseconds to `interval'.
 			-- Zero disables.
@@ -32,13 +39,6 @@ feature -- Access
 		ensure
 			interval_assigned: interval = an_interval
 		end
-
-feature -- Status report
-
-	count: INTEGER
-			-- Number of times `interface.actions' has been called.
-
-feature -- Status setting
 
 	reset_count
 			-- Set `count' to 0.

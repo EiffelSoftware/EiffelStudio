@@ -896,6 +896,7 @@ feature
 			l_until: KEYWORD_AS
 			l_variant_processing_after: BOOLEAN
 		do
+			safe_process (l_as.iteration)
 			safe_process (l_as.from_keyword (match_list))
 			safe_process (l_as.from_part)
 			safe_process (l_as.invariant_keyword (match_list))
@@ -919,6 +920,27 @@ feature
 			if l_variant_processing_after then
 				l_as.variant_part.process (Current)
 			end
+			safe_process (l_as.end_keyword)
+		end
+
+	process_iteration_as (l_as: ITERATION_AS)
+		do
+			safe_process (l_as.across_keyword (match_list))
+			l_as.expression.process (Current)
+			safe_process (l_as.as_keyword (match_list))
+			l_as.identifier.process (Current)
+		end
+
+	process_loop_expr_as (l_as: LOOP_EXPR_AS)
+		do
+			l_as.iteration.process (Current)
+			safe_process (l_as.invariant_keyword (match_list))
+			safe_process (l_as.full_invariant_list)
+			safe_process (l_as.until_keyword (match_list))
+			safe_process (l_as.exit_condition)
+			safe_process (l_as.qualifier_keyword (match_list))
+			l_as.expression.process (Current)
+			safe_process (l_as.variant_part)
 			safe_process (l_as.end_keyword)
 		end
 

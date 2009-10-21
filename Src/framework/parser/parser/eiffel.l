@@ -231,6 +231,20 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Reserved words
 
+[aA][cC][rR][oO][sS][sS] {
+				if syntax_version = provisional_syntax then
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_ACROSS, Current)
+					last_token := TE_ACROSS
+				else
+					process_id_as
+					last_token := TE_ID
+					if has_syntax_warning then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Provisional keyword `across' is used as identifier."))
+					end
+				end
+			}
 [aA][gG][eE][nN][tT]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_AGENT, Current)
 				last_token := TE_AGENT
@@ -548,6 +562,20 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [sS][eE][pP][aA][rR][aA][tT][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_SEPARATE, Current)
 				last_token := TE_SEPARATE
+			}
+[sS][oO][mM][eE] {
+				if syntax_version = provisional_syntax then
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_SOME, Current)
+					last_token := TE_SOME
+				else
+					process_id_as
+					last_token := TE_ID
+					if has_syntax_warning then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Provisional keyword `some' is used as identifier."))
+					end
+				end
 			}
 [sS][tT][rR][iI][pP]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_STRIP, Current)

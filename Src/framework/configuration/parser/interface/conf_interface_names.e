@@ -337,6 +337,7 @@ feature -- Option names and descriptions
 	option_syntax_obsolete_name: STRING_GENERAL do Result := locale.translation ("Obsolete syntax") end
 	option_syntax_transitional_name: STRING_GENERAL do Result := locale.translation ("Transitional syntax") end
 	option_syntax_standard_name: STRING_GENERAL do Result := locale.translation ("Standard syntax") end
+	option_syntax_provisional_name: STRING_GENERAL do Result := locale.translation ("Provisional syntax") end
 
 	warning_names: HASH_TABLE [STRING_GENERAL, STRING]
 			-- Warning names.

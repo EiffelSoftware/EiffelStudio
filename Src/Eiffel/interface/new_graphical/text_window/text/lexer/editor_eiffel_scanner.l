@@ -130,6 +130,7 @@ UTF8_tail	[\x80-\xBF]
 ----------/** Reserved words **/------------------------------------------------
 
 "!!"									|
+[aA][cC][rR][oO][sS][sS]				|
 [aA][gG][eE][nN][tT]					|
 [aA][lL][iI][aA][sS]					|
 [aA][lL][lL]						|
@@ -183,6 +184,7 @@ UTF8_tail	[\x80-\xBF]
 [rR][eE][tT][rR][yY]					|
 [sS][eE][lL][eE][cC][tT]				|
 [sS][eE][pP][aA][rR][aA][tT][eE]		|
+[sS][oO][mM][eE]						|
 [sS][tT][rR][iI][pP]					|
 [tT][hH][eE][nN]						|
 [tT][rR][uU][eE]						|

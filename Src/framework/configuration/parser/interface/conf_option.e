@@ -224,12 +224,15 @@ feature -- Access: syntax
 	syntax_index_standard: NATURAL_8 = 3
 			-- Option index for standard syntax
 
+	syntax_index_provisional: NATURAL_8 = 4
+			-- Option index for provisional syntax
+
 feature {NONE} -- Access: syntax
 
 	syntax_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `syntax' option
 		once
-			Result := <<"obsolete", "transitional", "standard">>
+			Result := <<"obsolete", "transitional", "standard", "provisional">>
 		ensure
 			result_attached: Result /= Void
 		end

@@ -2942,6 +2942,77 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 
+	process_loop_expr_as (l_as: LOOP_EXPR_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
+			indent: PROCEDURE [ANY, TUPLE]
+			exdent: PROCEDURE [ANY, TUPLE]
+		do
+			l_text_formatter_decorator := text_formatter_decorator
+			if
+				l_as.invariant_part /= Void or else
+				l_as.exit_condition /= Void or else
+				l_as.variant_part /= Void
+			then
+				indent := agent
+					do
+						text_formatter_decorator.indent
+						text_formatter_decorator.put_new_line
+					end
+				exdent := agent
+					do
+						text_formatter_decorator.put_new_line
+						text_formatter_decorator.exdent
+					end
+			else
+				indent := agent text_formatter_decorator.put_space
+				exdent := indent
+			end
+			l_text_formatter_decorator.process_keyword_text (ti_across_keyword, Void)
+			l_text_formatter_decorator.set_separator (Void)
+			l_text_formatter_decorator.set_new_line_between_tokens
+			indent.call (Void)
+			l_text_formatter_decorator.new_expression
+			put_breakable
+			l_as.iteration.expression.process (Current)
+			text_formatter_decorator.put_space
+			l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
+			text_formatter_decorator.put_space
+			l_as.iteration.identifier.process (Current)
+			exdent.call (Void)
+			if l_as.invariant_part /= Void then
+				l_text_formatter_decorator.process_keyword_text (ti_invariant_keyword, Void)
+				indent.call (Void)
+				l_as.invariant_part.process (Current)
+				exdent.call (Void)
+			end
+			if l_as.exit_condition /= Void then
+				l_text_formatter_decorator.process_keyword_text (ti_until_keyword, Void)
+				indent.call (Void)
+				l_text_formatter_decorator.new_expression
+				put_breakable
+				l_as.exit_condition.process (Current)
+				exdent.call (Void)
+			end
+			if l_as.is_all then
+				l_text_formatter_decorator.process_keyword_text (ti_all_keyword, Void)
+			else
+				l_text_formatter_decorator.process_keyword_text (ti_some_keyword, Void)
+			end
+			indent.call (Void)
+			l_text_formatter_decorator.new_expression
+			put_breakable
+			l_as.expression.process (Current)
+			exdent.call (Void)
+			if l_as.variant_part /= Void then
+				l_text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
+				indent.call (Void)
+				l_as.variant_part.process (Current)
+				exdent.call (Void)
+			end
+			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+		end
+
 	process_retry_as (l_as: RETRY_AS)
 		do
 			check
@@ -3865,6 +3936,23 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			process_eiffel_list (l_as)
+		end
+
+	process_iteration_as (l_as: ITERATION_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
+		do
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			l_text_formatter_decorator := text_formatter_decorator
+			l_text_formatter_decorator.process_keyword_text (ti_across_keyword, Void)
+			l_text_formatter_decorator.put_space
+			l_as.expression.process (Current)
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
+			l_text_formatter_decorator.put_space
+			l_as.identifier.process (Current)
 		end
 
 feature -- Expression visitor

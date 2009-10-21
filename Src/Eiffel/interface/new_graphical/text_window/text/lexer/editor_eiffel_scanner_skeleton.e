@@ -44,6 +44,8 @@ feature {NONE} -- Status
 					Result := {EIFFEL_SCANNER}.obsolete_64_syntax
 				when {CONF_OPTION}.syntax_index_transitional then
 					Result := {EIFFEL_SCANNER}.transitional_64_syntax
+				when {CONF_OPTION}.syntax_index_provisional then
+					Result := {EIFFEL_SCANNER}.provisional_syntax
 				else
 					Result := {EIFFEL_SCANNER}.ecma_syntax
 				end

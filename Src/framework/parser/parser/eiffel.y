@@ -84,7 +84,7 @@ create
 %token <KEYWORD_AS> TE_THEN TE_UNDEFINE	TE_UNTIL TE_VARIANT TE_WHEN	
 %token <KEYWORD_AS> TE_XOR
 -- Special type for keywords that are either keyword or identifier
-%token <TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING] as keyword_id> TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE
+%token <TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING] as keyword_id> TE_ACROSS TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE TE_SOME
 
 %token <STRING_AS> TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
 %token <STRING_AS> TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
@@ -102,6 +102,7 @@ create
 %type <PAIR[KEYWORD_AS, STRING_AS]> External_name Obsolete
 %type <IDENTIFIER_LIST>		Identifier_list Strip_identifier_list
 %type <PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]> Invariant
+%type <PAIR [KEYWORD_AS, EXPR_AS]>                 Exit_condition_opt 
 %type <AGENT_TARGET_TRIPLE> Agent_target
 
 %type <ACCESS_AS>			A_feature Creation_target
@@ -147,7 +148,7 @@ create
 %type <INTERNAL_AS>			Internal
 %type <INTERVAL_AS>			Choice
 %type <INVARIANT_AS>		Class_invariant
-%type <LOOP_AS>				Loop
+%type <EXPR_AS>				Loop
 %type <NESTED_AS>			Call_on_feature_access
 %type <OPERAND_AS>			Delayed_actual
 %type <PARENT_AS>			Parent Parent_clause
@@ -167,7 +168,7 @@ create
 %type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group
-%type <VARIANT_AS>			Variant
+%type <VARIANT_AS>			Variant Variant_opt
 %type <FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
 
 %type <EIFFEL_LIST [ATOMIC_AS]>			Index_terms Note_values
@@ -190,6 +191,7 @@ create
 %type <CLASS_LIST_AS>					Client_list Class_list
 
 %type <INDEXING_CLAUSE_AS>			Indexing Index_list Note_list Dotnet_indexing
+%type <ITERATION_AS>			Iteration
 %type <EIFFEL_LIST [INSTRUCTION_AS]>	Compound Instruction_list
 %type <EIFFEL_LIST [INTERVAL_AS]>		Choices
 %type <EIFFEL_LIST [OPERAND_AS]>		Delayed_actual_list
@@ -208,7 +210,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 269
+%expect 343
 
 %%
 
@@ -1457,6 +1459,8 @@ Instruction_impl: Creation
 				if has_type then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
 						filename, "Expression cannot be used as an instruction"))
+				elseif attached {INSTRUCTION_WRAPPER_AS} $1 as w then
+					$$ := w.instruction
 				elseif $1 /= Void then
 					$$ := new_call_instruction_from_expression ($1)
 				end
@@ -1470,8 +1474,6 @@ Instruction_impl: Creation
 	|	Conditional
 			{ $$ := $1 }
 	|	Multi_branch
-			{ $$ := $1 }
-	|	Loop
 			{ $$ := $1 }
 	|	Debug
 			{ $$ := $1 }
@@ -2259,15 +2261,7 @@ Choice: Integer_constant
 	;
 
 Loop:
-	TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound TE_END
-			{
-				if $3 /= Void then
-					$$ := ast_factory.new_loop_as ($2, $3.second, Void, $5, $7, $8, $1, $3.first, $4, $6)
-				else
-					$$ := ast_factory.new_loop_as ($2, Void, Void, $5, $7, $8, $1, Void, $4, $6)
-				end
-			}
-	| TE_FROM Compound Invariant Variant TE_UNTIL Expression TE_LOOP Compound TE_END
+	TE_FROM Compound Invariant Variant TE_UNTIL Expression TE_LOOP Compound TE_END
 			{
 				if has_syntax_warning then
 					report_one_warning (
@@ -2275,19 +2269,74 @@ Loop:
 						once "Loop variant should appear just before the end keyword of the loop."))
 				end
 				if $3 /= Void then
-					$$ := ast_factory.new_loop_as ($2, $3.second, $4, $6, $8, $9, $1, $3.first, $5, $7)
+					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, $3.second, $4, $6, $8, $9, $1, $3.first, $5, $7))
 				else
-					$$ := ast_factory.new_loop_as ($2, Void, $4, $6, $8, $9, $1, Void, $5, $7)
+					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7))
 				end
+				has_type := False
 			}
-	| TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound Variant TE_END
+	| TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound Variant_opt TE_END
 			{
 				if $3 /= Void then
-					$$ := ast_factory.new_loop_as ($2, $3.second, $8, $5, $7, $9, $1, $3.first, $4, $6)
+					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, $3.second, $8, $5, $7, $9, $1, $3.first, $4, $6))
 				else
-					$$ := ast_factory.new_loop_as ($2, Void, $8, $5, $7, $9, $1, Void, $4, $6)
+					$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6))
 				end
+				has_type := False
 			}
+	| Iteration TE_FROM Compound Invariant Exit_condition_opt TE_LOOP Compound Variant_opt TE_END
+			{
+				if $4 /= Void then
+					if $5 /= Void then
+						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, $4.second, $8, $5.second, $7, $9, $2, $4.first, $5.first, $6))
+					else
+						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, $4.second, $8, Void, $7, $9, $2, $4.first, Void, $6))
+					end
+				else
+					if $5 /= Void then
+						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, Void, $8, $5.second, $7, $9, $2, Void, $5.first, $6))
+					else
+						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6))
+					end
+				end
+				has_type := False
+			}
+	| Iteration Invariant Exit_condition_opt TE_LOOP Compound Variant_opt TE_END
+			{
+				if $2 /= Void then
+					if $3 /= Void then
+						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, $2.second, $6, $3.second, $5, $7, Void, $2.first, $3.first, $4))
+					else
+						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, $2.second, $6, Void, $5, $7, Void, $2.first, Void, $4))
+					end
+				else
+					if $3 /= Void then
+						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, Void, $6, $3.second, $5, $7, Void, Void, $3.first, $4))
+					else
+						$$ := create {INSTRUCTION_WRAPPER_AS}.make (ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4))
+					end
+				end
+				has_type := False
+			}
+	| Iteration Invariant Exit_condition_opt TE_ALL Expression Variant_opt TE_END
+			{
+				if $2 /= Void then
+				else
+				end
+				has_type := True
+			}
+	| Iteration Invariant Exit_condition_opt TE_SOME Expression Variant_opt TE_END
+			{
+				if $2 /= Void then
+				else
+				end
+				has_type := True
+			}
+	;
+
+Iteration:
+	TE_ACROSS Expression TE_AS Identifier_as_lower
+			{ $$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, $3, $4) }
 	;
 
 Invariant: -- Empty
@@ -2309,6 +2358,17 @@ Class_invariant: -- Empty
 			}
 	;
 
+Exit_condition_opt:  -- Empty
+			-- { $$ := Void }
+	| TE_UNTIL Expression
+			{ $$ := ast_factory.new_exit_condition_pair ($1, $2) }
+	;
+
+Variant_opt: -- Empty
+			-- { $$ := Void }
+	| Variant
+			{ $$ := $1 }
+	;
 
 Variant:
 		TE_VARIANT Identifier_as_lower TE_COLON Expression
@@ -2927,6 +2987,8 @@ Bracket_target:
 			{ $$ := ast_factory.new_expr_call_as ($1); has_type := False }
 	|	Creation_expression
 			{ $$ := ast_factory.new_expr_call_as ($1); has_type := True }
+	|	Loop
+			{ $$ := $1 }
 	|	TE_LPARAN Expression TE_RPARAN
 			{ $$ := ast_factory.new_paran_as ($2, $1, $3); has_type := True }
 	;
@@ -2973,6 +3035,11 @@ Class_identifier: TE_ID
 				end
 				$$ := $1
 			}
+	|	TE_ACROSS
+			{
+					-- Keyword used as identifier
+				$$ := extract_id ($1)
+			}
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
@@ -2989,6 +3056,11 @@ Class_identifier: TE_ID
 				$$ := extract_id ($1)
 			}
 	|	TE_DETACHABLE
+			{
+					-- Keyword used as identifier
+				$$ := extract_id ($1)
+			}
+	|	TE_SOME
 			{
 					-- Keyword used as identifier
 				$$ := extract_id ($1)
@@ -3017,6 +3089,11 @@ Identifier_as_lower: TE_ID
 					$1.to_lower
 				end
 				$$ := $1
+			}
+	|	TE_ACROSS
+			{
+					-- Keyword used as identifier
+				$$ := extract_id ($1)
 			}
 	|	TE_ASSIGN
 			{

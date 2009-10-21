@@ -6487,6 +6487,14 @@ feature -- Implementation
 			end
 		end
 
+	process_loop_expr_as (l_as: LOOP_EXPR_AS)
+		do
+		end
+
+	process_iteration_as (l_as: ITERATION_AS)
+		do
+		end
+
 	process_retry_as (l_as: RETRY_AS)
 		local
 			l_vxrt: VXRT

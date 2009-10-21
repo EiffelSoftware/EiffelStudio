@@ -88,7 +88,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Meansurement
 
-	new_line_count: NATURAL_8
+	new_line_count: NATURAL
 			-- Number of cached new lines awaiting output.
 
 feature -- Status report
@@ -207,7 +207,9 @@ feature -- Basic operations
 			l_count: like new_line_count
 		do
 			l_count := new_line_count
-			new_line_count := (l_count - 1).max (0)
+			if l_count > 0 then
+				new_line_count := l_count - 1
+			end
 
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop

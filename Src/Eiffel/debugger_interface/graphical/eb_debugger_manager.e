@@ -501,7 +501,7 @@ feature -- tools
 				Result ?= debugging_window.shell_tools.tool ({ES_OBJECTS_TOOL})
 			end
 		ensure
-			result_attached: Result /= Void
+			result_attached: debugging_window /= Void implies Result /= Void
 		end
 
 	object_viewer_tool: ES_OBJECT_VIEWER_TOOL

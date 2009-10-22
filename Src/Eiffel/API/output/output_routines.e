@@ -64,6 +64,20 @@ feature -- Miscellaneous
 					text.process_basic_text ("disabled")
 				end
 				text.add_new_line
+
+				text.add_indent
+				text.process_indexing_tag_text ("console: ")
+				if Eiffel_ace.system.is_console_application then
+					text.process_basic_text ("True")
+				end
+				text.add_new_line
+
+				if eiffel_ace.system.check_for_void_target then
+					text.add_indent
+					text.process_indexing_tag_text ("void-safety: ")
+					text.process_basic_text ("enabled")
+					text.add_new_line
+				end
 			end
 
 			text.add_new_line

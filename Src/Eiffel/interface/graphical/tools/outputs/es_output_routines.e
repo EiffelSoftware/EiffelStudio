@@ -46,6 +46,8 @@ feature -- Output
 			l_location: STRING_32
 			l_compilation: STRING_32
 			l_multithreaded: STRING_32
+			l_console_application: STRING_32
+			l_void_safety: STRING_32
 			l_project_location: PROJECT_DIRECTORY
 			l_compiled: BOOLEAN
 			l_lace: LACE_I
@@ -58,6 +60,8 @@ feature -- Output
 			l_location := locale_formatter.translation (lb_location)
 			l_compilation := locale_formatter.translation (lb_compilation)
 			l_multithreaded := locale_formatter.translation (lb_multithreaded)
+			l_console_application := locale_formatter.translation (lb_console_application)
+			l_void_safety := locale_formatter.translation (lb_void_safety)
 			l_max_len := l_name.count.max (l_target.count).max (l_configuration.count).max (l_location.count).max (
 				l_compilation.count).max (l_multithreaded.count) + 1
 
@@ -135,6 +139,42 @@ feature -- Output
 			end
 			a_formatter.add_new_line
 
+			a_formatter.add_indent
+			a_formatter.process_indexing_tag_text (l_console_application)
+			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
+			l_count := l_console_application.count
+			if l_count < l_max_len then
+				a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
+			end
+
+			if
+				(l_compiled and then eiffel_ace.system.is_console_application) or else
+				(not l_compiled and then l_lace.target.setting_console_application)
+			then
+				a_formatter.process_basic_text (locale_formatter.translation (lb_yes))
+			else
+				a_formatter.process_basic_text (locale_formatter.translation (lb_no))
+			end
+			a_formatter.add_new_line
+
+			a_formatter.add_indent
+			a_formatter.process_indexing_tag_text (l_void_safety)
+			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
+			l_count := l_void_safety.count
+			if l_count < l_max_len then
+				a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
+			end
+
+			if
+				(l_compiled and then eiffel_ace.system.check_for_void_target) or else
+				(not l_compiled and then l_lace.target.setting_check_for_void_target)
+			then
+				a_formatter.process_basic_text (locale_formatter.translation (lb_yes))
+			else
+				a_formatter.process_basic_text (locale_formatter.translation (lb_no))
+			end
+			a_formatter.add_new_line
+
 			a_formatter.add_new_line
 			if l_compiled then
 				if not eiffel_system.system.root_creators.is_empty then
@@ -194,6 +234,9 @@ feature {NONE} -- Internationalization
 	lb_location: STRING = "location"
 	lb_compilation: STRING = "compilation"
 	lb_multithreaded: STRING = "multithreaded"
+	lb_console_application: STRING = "console"
+	lb_void_safety: STRING = "void-safety"
+
 	lb_enabled: STRING = "enabled"
 	lb_disabled: STRING = "disabled"
 	lb_yes: STRING = "yes"

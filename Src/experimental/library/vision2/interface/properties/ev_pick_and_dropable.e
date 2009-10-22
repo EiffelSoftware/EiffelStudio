@@ -126,7 +126,7 @@ feature -- Access
 				Result := l_result
 			end
 		ensure then
-			bridge_ok: Result = implementation.accept_cursor
+			cursor_valid: (attached implementation.accept_cursor implies Result = implementation.accept_cursor) or else Result = Default_pixmaps.standard_cursor
 		end
 
 	deny_cursor: EV_POINTER_STYLE
@@ -145,7 +145,7 @@ feature -- Access
 				Result := l_result
 			end
 		ensure then
-			bridge_ok: Result = implementation.deny_cursor
+			cursor_valid: (attached implementation.deny_cursor implies Result = implementation.deny_cursor) or else Result = Default_pixmaps.no_cursor
 		end
 
 	configurable_target_menu_handler: detachable PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]]

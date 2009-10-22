@@ -116,8 +116,10 @@ feature -- C code generation
 			source_class_type: CL_TYPE_A
 			target_class_type: CL_TYPE_A
 			basic_source_type: BASIC_A
+			l_target_solved_type: TYPE_A
 		do
 			buf := buffer
+			l_target_solved_type := context.descendant_type (target.type)
 			target_type := context.real_type (target.type)
 			source_type := context.real_type (expression.type)
 				-- First pre-compute the source and put it in the register
@@ -237,11 +239,11 @@ feature -- C code generation
 					else
 						if
 							is_void_check or else (
-							not target.type.has_like and then
-							(source_type.is_attached and then source_type.conform_to (context.context_class_type.associated_class, target.type) or else
-							not source_type.is_attached and then source_type.as_attached_type.conform_to (context.context_class_type.associated_class, target.type)) or else
-							target.type.same_as (expression.type) or else
-							(target.type.is_like and then attached {LIKE_FEATURE} target.type as t and then
+							not l_target_solved_type.has_like and then
+							(source_type.is_attached and then source_type.conform_to (context.context_class_type.associated_class, l_target_solved_type) or else
+							not source_type.is_attached and then source_type.as_attached_type.conform_to (context.context_class_type.associated_class, l_target_solved_type)) or else
+							l_target_solved_type.same_as (expression.type) or else
+							(l_target_solved_type.is_like and then attached {LIKE_FEATURE} l_target_solved_type as t and then
 							attached {CALL_ACCESS_B} expression as c and then c.feature_name_id = t.feature_name_id))
 						then
 								-- There is no need to check actual object type,

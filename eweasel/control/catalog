@@ -2184,6 +2184,7 @@ test	agent-on-tuple-label			agent008 tcf pass agents tuple
 test	agent-on-with-attached-operands	agent009 tcf fail agents tuple
 test	agent-calling-attribute-with-formal-type	agent010 tcf pass agents formal generic
 test	various-agent-creation-and-calls	agent011 tcf pass agents
+test	agent-basic-type-mismatch		agent012 tcf pass agents finalizing
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

@@ -1,0 +1,28 @@
+
+test_name	bogus-construct-not-supported
+test_description Moving a deferred routine involved in an agent call to a newly created deferred parent class that lists a creation procedure correctly elicits a VGCP(1) error from the compiler.  But when the creation clause is removed, the compiler reports a bogus "construct not supported" error if full class checking is enabled.
+
+define		INHERITANCE ""
+define		ROUTINE "do_something deferred end"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	abstract_test.e $CLUSTER abstract_test.e
+copy_sub 	child.e $CLUSTER child.e
+compile_melted
+compile_result 	ok
+
+define		INHERITANCE "inherit PARENT"
+define		ROUTINE ""
+define		CREATION "create make"
+copy_sub 	Ace $TEST Ace
+copy_sub 	child.e $CLUSTER child.e
+copy_sub 	parent.e $CLUSTER parent.e
+compile_melted
+compile_result 	validity_error PARENT VGCP(1)
+
+define		CREATION ""
+copy_sub 	parent.e $CLUSTER parent.e
+resume_compile
+compile_result 	ok
+
+test_end

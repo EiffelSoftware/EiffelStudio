@@ -1135,6 +1135,7 @@ feature {BYTE_NODE} -- Visitor
 			l_expr_value: DBG_EVALUATED_VALUE
 			l_res: BOOLEAN
 			cl: CLASS_C
+			ta: TYPE_A
 		do
 			l_tmp_target_backup := tmp_target
 			l_expr_value := standalone_evaluation_expr_b (a_node.expression)
@@ -1143,11 +1144,19 @@ feature {BYTE_NODE} -- Visitor
 				l_res := l_expr_value.has_attached_value
 				if l_res and not a_node.is_void_check then
 					cl := l_expr_value.dynamic_class
-					l_res := cl /= Void and then cl.actual_type.conform_to (context.class_c, a_node.info.type_to_create)
+					ta := a_node.expression.type
+					if ta /= Void then
+						l_res := cl /= Void and then cl.actual_type.conform_to (context.class_c, ta)
+					else
+						--| Note: could use `a_node.info.type_to_create' ?
+						dbg_error_handler.notify_error_exception_internal_issue
+					end
 				end
-				create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (l_res, debugger_manager.compiler_data.boolean_class_c))
-				if l_res and attached a_node.target as l_ot then
-					record_expression_object_test_locals (a_node.target, l_expr_value)
+				if not error_occurred then
+					create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (l_res, debugger_manager.compiler_data.boolean_class_c))
+					if l_res and attached a_node.target as l_ot then
+						record_expression_object_test_locals (a_node.target, l_expr_value)
+					end
 				end
 			end
 			tmp_target := l_tmp_target_backup

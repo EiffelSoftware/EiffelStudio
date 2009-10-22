@@ -113,32 +113,41 @@ feature -- Access
 	accept_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
+		local
+			l_result: detachable EV_POINTER_STYLE
 		do
 			check
 				not_destroyed: not is_destroyed
 			end
-			Result := implementation.accept_cursor
-			if Result = Void then
+			l_result := implementation.accept_cursor
+			if l_result = Void then
 				Result := Default_pixmaps.Standard_cursor
+			else
+				Result := l_result
 			end
 		ensure then
-			bridge_ok: Result = implementation.accept_cursor
+			cursor_valid: (attached implementation.accept_cursor implies Result = implementation.accept_cursor) or else Result = Default_pixmaps.standard_cursor
 		end
 
 	deny_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that does not accept `pebble' during pick and drop.
+		local
+			l_result: detachable EV_POINTER_STYLE
 		do
 			check
 				not_destroyed: not is_destroyed
 			end
-			Result := implementation.deny_cursor
-			if Result = Void then
+			l_result := implementation.deny_cursor
+			if l_result = Void then
 				Result := Default_pixmaps.No_cursor
+			else
+				Result := l_result
 			end
 		ensure then
-			bridge_ok: Result = implementation.deny_cursor
+			cursor_valid: (attached implementation.deny_cursor implies Result = implementation.deny_cursor) or else Result = Default_pixmaps.no_cursor
 		end
+
 
 	configurable_target_menu_handler: PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY]]
 			-- Agent used for customizing the Pick and Drop Target Menu of `Current'.

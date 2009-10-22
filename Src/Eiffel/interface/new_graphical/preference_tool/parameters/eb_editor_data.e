@@ -774,19 +774,17 @@ feature {NONE} -- Initialization
 			i: INTEGER
 			id: STRING
 			cnt: INTEGER
-			insert: ARRAY [STRING]
 			keyword_name: STRING
 			l_manager: EB_PREFERENCE_MANAGER
-			l_b_pref: BOOLEAN_PREFERENCE
-			l_s_pref: STRING_PREFERENCE
+			l_b_pref1, l_b_pref2: BOOLEAN_PREFERENCE
+			l_s_pref1, l_s_pref2, l_s_pref3, l_s_pref4: STRING_PREFERENCE
 			l_par_name,
 			l_child_name: STRING
 			a_list: ARRAYED_LIST [STRING]
 		do
 			from
-				create complete_keywords.make (1, 40)
-				create insert_after_keyword.make (1, 40)
-				cnt := complete_keywords.count
+				create autocomplete_prefs.make (40)
+				cnt := autocomplete_prefs.count
 				complete_keywords_names_keys.start
 			until
 				complete_keywords_names_keys.after
@@ -809,34 +807,29 @@ feature {NONE} -- Initialization
 					l_child_name := id.twin
 
 					id := l_child_name + ".autocomplete_" + keyword_name
-					l_b_pref := l_manager.new_boolean_preference_value (l_manager, id, True)
+					l_b_pref1 := l_manager.new_boolean_preference_value (l_manager, id, True)
+
 					id := l_child_name + ".use_default_" + keyword_name
-					l_b_pref := l_manager.new_boolean_preference_value (l_manager, id, True)
+					l_b_pref2 := l_manager.new_boolean_preference_value (l_manager, id, True)
 
-					complete_keywords.put (l_b_pref.value, i)
+					id := l_child_name + ".custom_" + keyword_name + "_space"
+					l_s_pref1 := l_manager.new_string_preference_value (l_manager, id, "")
+					l_s_pref1.change_actions.extend (agent update)
 
-					if l_b_pref.value then
-						insert_after_keyword.put (default_insert @ i, i)
+					id := l_child_name + ".custom_" + keyword_name + "_return"
+					l_s_pref2 := l_manager.new_string_preference_value (l_manager, id, "")
+					l_s_pref2.change_actions.extend (agent update)
 
-						create insert.make (1, 4)
-						id := l_child_name + ".custom_" + keyword_name + "_space"
-						l_s_pref := l_manager.new_string_preference_value (l_manager, id, "")
-						l_s_pref.change_actions.extend (agent update)
-						insert.put (l_s_pref.value, 1)
-						id := l_child_name + ".custom_" + keyword_name + "_return"
-						l_s_pref := l_manager.new_string_preference_value (l_manager, id, "")
-						l_s_pref.change_actions.extend (agent update)
-						insert.put (l_s_pref.value, 2)
-						id := l_child_name + ".custom_" + keyword_name + "_space_later"
-						l_s_pref := l_manager.new_string_preference_value (l_manager, id, "")
-						l_s_pref.change_actions.extend (agent update)
-						insert.put (l_s_pref.value, 3)
-						id := l_child_name + ".custom_" + keyword_name + "_return_later"
-						l_s_pref := l_manager.new_string_preference_value (l_manager, id, "")
-						l_s_pref.change_actions.extend (agent update)
-						insert.put (l_s_pref.value, 4)
-						insert_after_keyword.put (insert, i)
-					end
+					id := l_child_name + ".custom_" + keyword_name + "_space_later"
+					l_s_pref3 := l_manager.new_string_preference_value (l_manager, id, "")
+					l_s_pref3.change_actions.extend (agent update)
+
+					id := l_child_name + ".custom_" + keyword_name + "_return_later"
+					l_s_pref4 := l_manager.new_string_preference_value (l_manager, id, "")
+					l_s_pref4.change_actions.extend (agent update)
+
+					autocomplete_prefs.force ([l_b_pref1, l_b_pref2, l_s_pref1, l_s_pref2, l_s_pref3, l_s_pref4], keyword_name)
+
 					a_list.forth
 				end
 				complete_keywords_names_keys.forth
@@ -855,99 +848,146 @@ feature {NONE} -- Initialization
 			editor_select_all_shortcut.set_group (main_window_group)
 		end
 
-feature {NONE} -- Build preferences for autocomplete
+feature -- Auto-complete Access
 
-	default_insert: ARRAY [ARRAY [STRING]]
+	is_keyword_auto_complete (a_keyword: STRING): BOOLEAN
+			-- Is auto-complete for `a_keyword' enabled?
+		require
+			a_keyword_not_void: a_keyword /= Void
+		do
+			if attached autocomplete_prefs.item (a_keyword.as_lower) as l_prefs then
+				Result := l_prefs.autocomplete.value
+			end
+		end
+
+	keyword_inserts (a_keyword: STRING): TUPLE [custom_space, custom_return, custom_space_later, custom_return_later: STRING]
+			-- Default keyword inserts.
+		require
+			a_keyword_not_void: a_keyword /= Void
+		local
+			l_keyword: STRING
+			l_prefs: TUPLE [autocomplete: BOOLEAN_PREFERENCE;
+							use_default: BOOLEAN_PREFERENCE;
+							custom_space: STRING_PREFERENCE;
+							custom_return: STRING_PREFERENCE;
+							custom_space_later: STRING_PREFERENCE;
+							custom_return_later: STRING_PREFERENCE]
+
+		do
+			l_keyword := a_keyword.as_lower
+
+			l_prefs := autocomplete_prefs.item (l_keyword)
+			if not l_prefs.use_default.value then
+				Result := [l_prefs.custom_space.value, l_prefs.custom_return.value, l_prefs.custom_return_later.value, l_prefs.custom_return_later.value]
+			else
+				if attached default_insert.item (a_keyword) as l_def then
+					Result := l_def
+				end
+			end
+		end
+
+feature {NONE} -- Auto-complete
+
+	autocomplete_prefs: HASH_TABLE [TUPLE [autocomplete: BOOLEAN_PREFERENCE;
+											use_default: BOOLEAN_PREFERENCE;
+											custom_space: STRING_PREFERENCE;
+											custom_return: STRING_PREFERENCE;
+											custom_space_later: STRING_PREFERENCE;
+											custom_return_later: STRING_PREFERENCE],
+									STRING]
+			-- Preferences for all keyword auto-completion.
+
+	default_insert: HASH_TABLE [TUPLE [custom_space, custom_return, custom_space_later, custom_return_later: STRING], STRING]
 			-- default strings to be inserted after keywords
 		once
-			Result := <<
+			create Result.make (40)
 						-- indexing
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$"], "indexing")
 						-- class
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "class")
 						-- inherit
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "inherit")
 						-- creation
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "creation")
 						-- feature
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$"], "feature")
 
 						-- is
-					<<" $cursor$", "%N$indent$%%T%%T-- $cursor$%N$indent$%T", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T%%T-- $cursor$%N$indent$%T", " $cursor$", "%N$indent$$cursor$"], "is")
 						-- require
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "require")
 						-- require else
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "require else")
 						-- local
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "local")
 						-- attribute
-					<<" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$"], "attribute")
 						-- do
-					<<" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$"], "do")
 						-- once
-					<<" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$"], "once")
 						-- deferred
-					<<" end$cursor$", "%N$indent$end$cursor$", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" end$cursor$", "%N$indent$end$cursor$", " $cursor$", "%N$indent$$cursor$"], "deferred")
 						-- external
-					<<" %"$cursor$%" end", "%N$indent$%%T%"$cursor$%"%N$indent$end", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" %"$cursor$%" end", "%N$indent$%%T%"$cursor$%"%N$indent$end", " $cursor$", "%N$indent$$cursor$"], "external")
 						-- rescue
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "rescue")
 						-- ensure
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "ensure")
 						-- ensure then
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "ensure then")
 						-- alias
-					<<" %"$cursor$%"", "%N$indent$%%T%"$cursor$%"", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" %"$cursor$%"", "%N$indent$%%T%"$cursor$%"", " $cursor$", "%N$indent$$cursor$"], "alias")
 
 						-- if
-					<<" $cursor$ then%N$indent$%%T%N$indent$end", "%N$indent$%%T$cursor$%N$indent$then%N$indent$%%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$ then%N$indent$%%T%N$indent$end", "%N$indent$%%T$cursor$%N$indent$then%N$indent$%%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$"], "if")
 						-- then
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "then")
 						-- elseif
-					<<" $cursor$ then%N$indent$%%T", "%N$indent$%%T$cursor$%N$indent$then%N$indent$%%T", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$ then%N$indent$%%T", "%N$indent$%%T$cursor$%N$indent$then%N$indent$%%T", " $cursor$", "%N$indent$%T$cursor$"], "elseif")
 						-- else
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "else")
 						-- inspect
-					<<" $cursor$%N$indent$when  then%N$indent$%%T%N$indent$else%N$indent$%%T%N$indent$end", "%N$indent$%%T$cursor$%N$indent$when  then%N$indent$%%T%N$indent$else%N$indent$%%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$%N$indent$when  then%N$indent$%%T%N$indent$else%N$indent$%%T%N$indent$end", "%N$indent$%%T$cursor$%N$indent$when  then%N$indent$%%T%N$indent$else%N$indent$%%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$"], "inspect")
 						-- when
-					<<" $cursor$ then%N$indent$%%T", "%N$indent$%%T$cursor$%N$indent$then%N$indent$%%T", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$ then%N$indent$%%T", "%N$indent$%%T$cursor$%N$indent$then%N$indent$%%T", " $cursor$", "%N$indent$%T$cursor$"], "when")
 						-- from
-					<<" $cursor$%N$indent$until%N$indent$loop%N$indent$end", "%N$indent$%%T$cursor$%N$indent$until%N$indent$%%T%N$indent$loop%N$indent$%%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$%N$indent$until%N$indent$loop%N$indent$end", "%N$indent$%%T$cursor$%N$indent$until%N$indent$%%T%N$indent$loop%N$indent$%%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$"], "from")
 						-- variant
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "variant")
 						-- until
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "until")
 						-- loop
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "loop")
 						-- debug
-					<<" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$"], "debug")
 						-- check
-					<<" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$ end", "%N$indent$%%T$cursor$%N$indent$end", " $cursor$", "%N$indent$%T$cursor$"], "check")
 
 						-- rename
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "rename")
 						-- redefine
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "redefine")
 						-- undefine
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "undefine")
 						-- select
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "select")
 						-- export
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "export")
 
 						-- Precursor
-					<<" {$cursor$}", "%N$indent$$cursor$", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" {$cursor$}", "%N$indent$$cursor$", " $cursor$", "%N$indent$$cursor$"], "Precursor")
 						-- create
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$"], "create")
 						-- obsolete
-					<<" %"$cursor$%"", "%N$indent$%%T%"$cursor$%"", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" %"$cursor$%"", "%N$indent$%%T%"$cursor$%"", " $cursor$", "%N$indent$$cursor$"], "obsolete")
 						-- invariant
-					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$">>,
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$"], "invariant")
 						-- end
-					<<" $cursor$", "%N$indent$$cursor$", " $cursor$", "%N$indent$$cursor$">>
-
-				>>
+			Result.force ([" $cursor$", "%N$indent$$cursor$", " $cursor$", "%N$indent$$cursor$"], "end")
 		end
+
+feature {NONE} -- Keys
 
 	key_with_name (name: STRING): INTEGER
 			-- key code corresponding to `name'
@@ -1027,12 +1067,6 @@ feature -- Syntax Completion Customization
 			create Result.make_from_array (<<"precursor", "create", "obsolete", "invariant", "end">>)
 			Result.compare_objects
 		end
-
-	complete_keywords: ARRAY [BOOLEAN]
-			-- should the corresponding keyword in `completed_keywords' be completed ?
-
-	insert_after_keyword: ARRAY [ARRAY[STRING]]
-			-- strings to be inserted after keywords
 
 	complete_keywords_names: HASH_TABLE [ARRAYED_LIST[STRING], STRING]
 			-- should the corresponding keyword in `completed_keywords' be completed ?

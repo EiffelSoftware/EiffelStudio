@@ -568,24 +568,27 @@ feature -- Syntax completion
 		local
 			insert: STRING
 			kw: STRING
-			index: INTEGER
 		do
 			syntax_completed := False
 			kw := keyword.as_lower
-			index := editor_preferences.completed_keywords.index_of (kw, 1)
 
-			if index /= 0 and then editor_preferences.syntax_complete_enabled and then editor_preferences.complete_keywords.item (index) then
+			if
+				editor_preferences.syntax_complete_enabled and then
+				editor_preferences.is_keyword_auto_complete (kw) and then
+				attached editor_preferences.keyword_inserts (kw) as l_inserts
+			then
+
 				if keyword_already_present then
 					if newline then
-						insert := editor_preferences.insert_after_keyword.item (index).item (2)
+						insert := l_inserts.custom_return
 					else
-						insert := editor_preferences.insert_after_keyword.item (index).item (1)
+						insert := l_inserts.custom_space
 					end
 				else
 					if newline then
-						insert := editor_preferences.insert_after_keyword.item (index).item (4)
+						insert := l_inserts.custom_return_later
 					else
-						insert := editor_preferences.insert_after_keyword.item (index).item (3)
+						insert := l_inserts.custom_space_later
 					end
 				end
 				syntax_completed := True

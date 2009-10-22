@@ -2362,12 +2362,11 @@ feature -- C code generation: locals
 
 feature -- Object test code generation
 
-	add_object_test_locals (types: ARRAY [TYPE_A]; body_id: INTEGER; c: CLASS_TYPE; is_precondition: BOOLEAN)
-			-- Add object test locals from a precondition (if `is_precondition') or from a postcondition (otherwise)
-			-- of types `types' from feature of body id `body_id' in class type `c'.
+	add_object_test_locals (types: ARRAY [TYPE_A]; body_id: INTEGER; is_precondition: BOOLEAN)
+			-- Add object test locals from a precondition (if `is_precondition') or from a
+			-- postcondition (otherwise) of types `types' from feature of body id `body_id'.
 		require
 			different_body_id: body_id /= current_feature.body_index
-			c_attached: c /= Void
 		local
 			object_test_local_offset: HASH_TABLE [INTEGER, INTEGER]
 		do
@@ -2379,11 +2378,10 @@ feature -- Object test code generation
 			if types /= Void and then not object_test_local_offset.has (body_id) then
 				object_test_local_offset.force (local_list.count - types.lower + 1, body_id)
 				types.do_all (
-					agent (t: TYPE_A; ct: CLASS_TYPE)
+					agent (t: TYPE_A)
 						do
-							local_list.extend (real_type_in (t, ct.type))
+							local_list.extend (descendant_type (t))
 						end
-					(?, c)
 				)
 			end
 		end

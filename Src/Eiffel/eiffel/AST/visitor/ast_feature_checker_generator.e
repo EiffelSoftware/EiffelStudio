@@ -2482,7 +2482,7 @@ feature -- Implementation
 				l_type := l_local_info.type
 				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, last_type.associated_class.class_id)
 				if is_byte_node_enabled then
-					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index)
+					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index, l_type)
 				end
 				if not is_inherited then
 					l_as.enable_object_test_local
@@ -2621,7 +2621,7 @@ feature -- Implementation
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						if l_needs_byte_node then
-							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
+							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 							last_byte_node := l_local
 						end
 						if not is_inherited then
@@ -2748,7 +2748,7 @@ feature -- Implementation
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						if is_byte_node_enabled then
-							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
+							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 							last_byte_node := l_local
 						end
 						if not is_inherited then
@@ -3616,7 +3616,7 @@ feature -- Implementation
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						create {TYPED_POINTER_A} last_type.make_typed (l_type)
 						if l_needs_byte_node then
-							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
+							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 							create {HECTOR_B} last_byte_node.make_with_type (l_local, last_type)
 						end
 						if not is_inherited then
@@ -4885,7 +4885,7 @@ feature -- Implementation
 
 					if l_needs_byte_node then
 						expr ?= last_byte_node
-						create local_b.make (local_info.position, current_feature.body_index)
+						create local_b.make (local_info.position, current_feature.body_index, local_type)
 						create {OBJECT_TEST_B} last_byte_node.make (local_b, expr, local_type.create_info, l_as.type = Void)
 					end
 				elseif l_needs_byte_node then

@@ -26,14 +26,16 @@ create
 
 feature {NONE} -- Creation
 
-	make (p: like position; b: like body_id)
+	make (p: like position; b: like body_id; t: like type)
 			-- Create an object test local descriptor with position `p' in body `b'
 		do
 			position := p
 			body_id := b
+			type := t
 		ensure
 			position_set: position = p
 			body_id_set: body_id = b
+			type_set: type = t
 		end
 
 feature -- Visitor
@@ -57,19 +59,6 @@ feature -- Access
 
 	type: TYPE_A
 			-- Local type
-		local
-			p: like position
-		do
-			p := context.object_test_local_position (Current)
-			if not system.il_generation and system.in_final_mode and then system.inlining_on then
-					-- {BYTE_CONTEXT}.local_list might be not initialized,
-					-- but we can use recorded locals of the current feature
-					-- because the object test local is not inherited.
-				Result := context.byte_code.locals.item (p)
-			else
-				Result := context.local_list.i_th (p)
-			end
-		end
 
 feature -- Comparison
 
@@ -118,7 +107,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -131,22 +120,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

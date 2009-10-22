@@ -63,6 +63,12 @@ feature {NONE} -- Initialization
 
 			create g
 			grid := g
+			box.extend (g)
+			create_filter_bar (a_widget)
+			a_widget.extend (box)
+
+
+				--| Grid building
 			g.enable_tree
 			g.enable_multiple_row_selection
 			g.enable_border
@@ -92,18 +98,13 @@ feature {NONE} -- Initialization
 			register_action (g.drop_actions, agent on_stone_dropped)
 			g.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 
-			load_preferences
-
-			box.extend (g)
-
 			g.build_delayed_cleaning
 			g.set_delayed_cleaning_action (agent clean_breakpoints_info)
 
 			g.set_configurable_target_menu_mode
 			g.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).standard_compiler_item_menu)
 
-			create_filter_bar (a_widget)
-			a_widget.extend (box)
+			load_preferences
 		end
 
 	create_filter_bar (a_widget: EV_BOX)

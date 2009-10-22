@@ -3453,9 +3453,11 @@ feature -- Implementation
 				create l_vkcn3
 				context.init_error (l_vkcn3)
 				l_vkcn3.set_location (l_as.call.end_location)
-				l_list := match_list_of_class (context.written_class.class_id)
-				if l_list /= Void and then l_as.call.is_text_available (l_list) then
-					l_vkcn3.set_called_feature (l_as.call.text (l_list))
+				if attached context.written_class as cl then
+					l_list := match_list_of_class (cl.class_id)
+					if l_list /= Void and then l_as.call.is_text_available (l_list) then
+						l_vkcn3.set_called_feature (l_as.call.text (l_list))
+					end
 				end
 				error_handler.insert_error (l_vkcn3)
 				reset_types

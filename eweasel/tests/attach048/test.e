@@ -12,13 +12,15 @@ feature {NONE} -- Creation
 			b: BOOLEAN
 			c1: TEST1 [STRING, INTEGER]
 		do
+			a1 := ""
+			a2 := ""
 			b := a1 < a2
 			create c1
 		end
 
 feature -- Basic operations
 
-	plus alias "+" (other: !TEST): !TEST
+	plus alias "+" (other: TEST): TEST
 		do
 			Result := Current
 		end

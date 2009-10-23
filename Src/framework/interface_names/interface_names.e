@@ -1690,7 +1690,7 @@ feature -- Label texts
 		end
 
 	l_test_case_name_colon: STRING_32 		do Result := locale.translation("Test case name:")	end
-	l_history_discarded_string: STRING_32 	do Result := locale.translation ("--- History discarded ---") end
+	l_history_discarded_string: STRING_32 	do Result := locale.translation ("--- History is empty ---") end
 
 	l_item_is_attached_to (a_title, a_name: STRING_GENERAL): STRING_32
 		require

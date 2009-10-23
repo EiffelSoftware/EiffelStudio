@@ -280,7 +280,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR} --
 			a_config_data.set_selected_tab_index (selected_item_index)
 		end
 
-feature {SD_TAB_STATE} -- Internal issues.
+feature {SD_TAB_STATE, SD_ACCESS} -- Internal issues.
 
 	selected_item_index: INTEGER
 			-- Selected item index

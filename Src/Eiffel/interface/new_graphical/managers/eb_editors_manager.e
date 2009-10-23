@@ -384,6 +384,63 @@ feature -- Access
 			editors_unmoved: editors.cursor.is_equal (editors.cursor)
 		end
 
+	is_all_editors_valid: BOOLEAN
+			-- Check if all editors' statues are valid
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_item: SD_CONTENT
+			l_editor: EB_SMART_EDITOR
+			l_editor_count: INTEGER
+		do
+			from
+				Result := True
+				l_contents := docking_manager.contents
+				l_contents.start
+			until
+				l_contents.after or not Result
+			loop
+				l_item := l_contents.item
+				if l_item.type = {SD_ENUMERATION}.editor then
+					l_editor_count := l_editor_count + 1
+					Result := l_item.is_visible
+					if Result then
+						if attached l_item.user_widget.parent then
+							-- Main development window must contain the editor widget
+							Result := development_window.window.has_recursive (l_item.user_widget)
+						else
+							-- `l_item' must exists in SD_NOTEBOOK and not selected
+							if attached {SD_TAB_STATE} l_item.state as l_state then
+								Result := (l_state.zone.contents.count >= 2) and (not l_state.zone.is_content_selected (l_item))
+								if Result then
+									-- Main development window must contain the tab zone
+									Result := development_window.window.has_recursive (l_state.zone)
+								end
+							else
+								Result := False
+							end
+						end
+					end
+				end
+
+				l_contents.forth
+			end
+
+			Result := (l_editor_count = editors_internal.count)
+
+			if Result then
+				from
+					editors_internal.start
+				until
+					editors_internal.after or not Result
+				loop
+					l_editor := editors_internal.item
+					Result := l_editor.docking_content.type = {SD_ENUMERATION}.editor
+
+					editors_internal.forth
+				end
+			end
+		end
+
 feature {NONE} -- Access
 
 	docking_manager: SD_DOCKING_MANAGER
@@ -617,12 +674,12 @@ feature -- Element change
 		local
 			l_content: SD_CONTENT
 		do
+			check is_all_editors_valid end
 			if editor_with_stone (a_stone) = Void then
 				init_editor
 				l_content := create_docking_content (editor_number_factory.new_editor_name, last_created_editor, a_content)
 				last_created_editor.set_docking_content (l_content)
 			end
-
 			if a_stone /= Void then
 				on_drop (a_stone, last_created_editor)
 			end
@@ -1204,6 +1261,7 @@ feature {NONE} -- Agents
 		local
 			l_editor : like current_editor
 		do
+			check is_all_editors_valid end
 			if a_stone /= Void and then a_stone.is_valid then
 				development_window.set_dropping_on_editor (true)
 				l_editor := editor_with_stone (a_stone)
@@ -1374,6 +1432,7 @@ feature {NONE} -- Implementation
 			register_action (Result.focus_in_actions, agent on_focus (a_editor))
 			register_action (Result.close_request_actions, agent on_close (a_editor))
 			Result.set_type ({SD_ENUMERATION}.editor)
+
 			if a_content /= Void then
 				Result.set_tab_with (a_content, development_window.preferences.editor_data.new_tab_at_left)
 			else

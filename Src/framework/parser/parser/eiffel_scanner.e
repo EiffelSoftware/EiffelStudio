@@ -19,7 +19,7 @@ create
 
 feature -- Status report
 
-	valid_start_condition (sc: INTEGER): BOOLEAN is
+	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		do
 			Result := (INITIAL <= sc and sc <= PRAGMA)
@@ -27,7 +27,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		do
 			yy_nxt := yy_nxt_template
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			yy_acclist := yy_acclist_template
 		end
 
-	yy_execute_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
 			inspect yy_act
@@ -2659,7 +2659,7 @@ fatal_error ("scanner jammed")
 			end
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		do
 			inspect yy_sc
@@ -2731,7 +2731,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: SPECIAL [INTEGER] is
+	yy_nxt_template: SPECIAL [INTEGER]
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -2742,7 +2742,7 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_nxt_template_1 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_1 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			    0,   14,   15,   16,   15,   17,   18,   19,   20,   14,
@@ -2857,7 +2857,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_nxt_template_2 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_2 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  375,  375,  375,  375,  123,  675,  262,  460,   75,  216,
@@ -2972,7 +2972,7 @@ feature {NONE} -- Table templates
 			1, 1000, 1000)
 		end
 
-	yy_nxt_template_3 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_3 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  675,  675,  675,  675,  675,  675,  675,  675,  675,  675,
@@ -2985,7 +2985,7 @@ feature {NONE} -- Table templates
 			1, 68, 2000)
 		end
 
-	yy_chk_template: SPECIAL [INTEGER] is
+	yy_chk_template: SPECIAL [INTEGER]
 		local
 			an_array: ARRAY [INTEGER]
 		once
@@ -2996,7 +2996,7 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_chk_template_1 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_1 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -3111,7 +3111,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_chk_template_2 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_2 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  375,  375,  375,  375,   33,   13,  373,  355,    8,  338,
@@ -3226,7 +3226,7 @@ feature {NONE} -- Table templates
 			1, 1000, 1000)
 		end
 
-	yy_chk_template_3 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_3 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  675,  675,  675,  675,  675,  675,  675,  675,  675,  675,
@@ -3239,7 +3239,7 @@ feature {NONE} -- Table templates
 			1, 68, 2000)
 		end
 
-	yy_base_template: SPECIAL [INTEGER] is
+	yy_base_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,   90,   91,   99,  104, 1020, 1005,  109,
@@ -3320,7 +3320,7 @@ feature {NONE} -- Table templates
 			 1899, 1914, 1102, 1432, 1929, 1548, 1647, 1944, 1959, yy_Dummy>>)
 		end
 
-	yy_def_template: SPECIAL [INTEGER] is
+	yy_def_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,  675,    1,  676,  676,  677,  677,  678,  678,  679,
@@ -3401,7 +3401,7 @@ feature {NONE} -- Table templates
 			  675,  675,  675,  675,  675,  675,  675,  675,  675, yy_Dummy>>)
 		end
 
-	yy_ec_template: SPECIAL [INTEGER] is
+	yy_ec_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -3434,7 +3434,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: SPECIAL [INTEGER] is
+	yy_meta_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    2,    1,    3,    4,    3,    5,    6,
@@ -3449,7 +3449,7 @@ feature {NONE} -- Table templates
 			    3,    3,    3, yy_Dummy>>)
 		end
 
-	yy_accept_template: SPECIAL [INTEGER] is
+	yy_accept_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    2,    3,    4,    5,
@@ -3528,7 +3528,7 @@ feature {NONE} -- Table templates
 			  824,  824,  825,  825,  827,  828,  828, yy_Dummy>>)
 		end
 
-	yy_acclist_template: SPECIAL [INTEGER] is
+	yy_acclist_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,  184,  184,  186,  186,  217,  215,  216,    1,  215,
@@ -3626,50 +3626,50 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 1975
+	yyJam_base: INTEGER = 1975
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 675
+	yyJam_state: INTEGER = 675
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 676
+	yyTemplate_mark: INTEGER = 676
 			-- Mark between normal states and templates
 
-	yyNull_equiv_class: INTEGER is 1
+	yyNull_equiv_class: INTEGER = 1
 			-- Equivalence code for NULL character
 
-	yyReject_used: BOOLEAN is false
+	yyReject_used: BOOLEAN = false
 			-- Is `reject' called?
 
-	yyVariable_trail_context: BOOLEAN is true
+	yyVariable_trail_context: BOOLEAN = true
 			-- Is there a regular expression with
 			-- both leading and trailing parts having
 			-- variable length?
 
-	yyReject_or_variable_trail_context: BOOLEAN is true
+	yyReject_or_variable_trail_context: BOOLEAN = true
 			-- Is `reject' called or is there a
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 216
+	yyNb_rules: INTEGER = 216
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 217
+	yyEnd_of_buffer: INTEGER = 217
 			-- End of buffer rule code
 
-	yyLine_used: BOOLEAN is true
+	yyLine_used: BOOLEAN = true
 			-- Are line and column numbers used?
 
-	yyPosition_used: BOOLEAN is true
+	yyPosition_used: BOOLEAN = true
 			-- Is `position' used?
 
-	INITIAL: INTEGER is 0
-	SPECIAL_STR: INTEGER is 1
-	VERBATIM_STR1: INTEGER is 2
-	VERBATIM_STR2: INTEGER is 3
-	VERBATIM_STR3: INTEGER is 4
-	PRAGMA: INTEGER is 5
+	INITIAL: INTEGER = 0
+	SPECIAL_STR: INTEGER = 1
+	VERBATIM_STR1: INTEGER = 2
+	VERBATIM_STR2: INTEGER = 3
+	VERBATIM_STR3: INTEGER = 4
+	PRAGMA: INTEGER = 5
 			-- Start condition codes
 
 feature -- User-defined features

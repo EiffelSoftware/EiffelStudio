@@ -1613,6 +1613,7 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			if attached l_as.iteration as i then
+				put_breakable (i)
 				i.process (Current)
 			end
 			if l_as.from_part /= Void then

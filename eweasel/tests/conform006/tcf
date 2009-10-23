@@ -15,6 +15,7 @@ compare		exec_output_1 output
 cleanup_compile
 define	VOID_SAFE none
 copy_sub	Ace	$TEST Ace
+copy_raw	test.e $CLUSTER test.e
 
 compile_melted
 compile_result	ok
@@ -26,6 +27,7 @@ compare		exec_output_2 output_unsafe
 cleanup_compile
 define	VOID_SAFE initialization
 copy_sub	Ace	$TEST Ace
+copy_raw	test.e $CLUSTER test.e
 
 compile_melted
 compile_result	ok

@@ -8,7 +8,7 @@ feature
 
 	make 
 		local
-			l_g: G
+			l_g: detachable G
 		do
 			print (l_g)
 			io.put_new_line

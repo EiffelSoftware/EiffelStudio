@@ -2880,6 +2880,10 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator: like text_formatter_decorator
 			l_variant_after_body: BOOLEAN
 		do
+			if attached l_as.iteration as i then
+				i.process (Current)
+			end
+
 				--| for now, the debugger supports only previous declaration
 			l_variant_after_body := not is_with_breakable and then current_class.lace_class.is_syntax_standard
 
@@ -2915,14 +2919,16 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.exdent
 			end
-			l_text_formatter_decorator.process_keyword_text (ti_until_keyword, Void)
-			l_text_formatter_decorator.indent
-			l_text_formatter_decorator.put_new_line
-			l_text_formatter_decorator.new_expression
-			put_breakable
-			l_as.stop.process (Current)
-			l_text_formatter_decorator.exdent
-			l_text_formatter_decorator.put_new_line
+			if attached l_as.stop as s then
+				l_text_formatter_decorator.process_keyword_text (ti_until_keyword, Void)
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.new_expression
+				put_breakable
+				s.process (Current)
+				l_text_formatter_decorator.exdent
+				l_text_formatter_decorator.put_new_line
+			end
 			l_text_formatter_decorator.process_keyword_text (ti_loop_keyword, Void)
 			if l_as.compound /= Void then
 				l_text_formatter_decorator.indent
@@ -2950,9 +2956,13 @@ feature {NONE} -- Implementation
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			if
-				l_as.invariant_part /= Void or else
-				l_as.exit_condition /= Void or else
-				l_as.variant_part /= Void
+				true
+				-- Use multiline format all the time to facilitate debugging
+				-- Otherwise it would be possible to use single or multiline format
+				-- depending on what parts are present in the loop expression
+--				l_as.invariant_part /= Void or else
+--				l_as.exit_condition /= Void or else
+--				l_as.variant_part /= Void
 			then
 				indent := agent
 					do
@@ -3947,12 +3957,15 @@ feature {NONE} -- Implementation
 			end
 			l_text_formatter_decorator := text_formatter_decorator
 			l_text_formatter_decorator.process_keyword_text (ti_across_keyword, Void)
-			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.put_new_line
+			l_text_formatter_decorator.indent
 			l_as.expression.process (Current)
 			l_text_formatter_decorator.put_space
 			l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
 			l_text_formatter_decorator.put_space
 			l_as.identifier.process (Current)
+			l_text_formatter_decorator.exdent
+			l_text_formatter_decorator.put_new_line
 		end
 
 feature -- Expression visitor

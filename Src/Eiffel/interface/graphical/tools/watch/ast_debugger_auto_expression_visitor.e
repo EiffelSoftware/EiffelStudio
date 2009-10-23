@@ -335,11 +335,11 @@ feature -- Processing
 			l_atomic: ATOMIC_AS
 		do
 			reset_auto_spans
-			process_atomic_intervaa_as (a_as.lower)
+			process_atomic_interval_as (a_as.lower)
 			l_atomic := a_as.upper
 			if l_atomic /= Void then
 				reset_auto_spans
-				process_atomic_intervaa_as (l_atomic)
+				process_atomic_interval_as (l_atomic)
 			end
 		end
 
@@ -361,7 +361,7 @@ feature -- Processing
 			reset_auto_spans
 			set_can_add_auto_span (True)
 			set_is_expression_instruction (True)
-			a_as.stop.process (Current)
+			safe_process (a_as.stop)
 
 			safe_process (a_as.compound)
 		end
@@ -441,7 +441,7 @@ feature -- Processing
 
 feature {NONE} -- Generic Node Processing
 
-	process_atomic_intervaa_as (a_as: ATOMIC_AS)
+	process_atomic_interval_as (a_as: ATOMIC_AS)
 			-- Process atomic interval value for inspect when cases.
 			--
 			-- `a_as': Abstract syntax node to process.

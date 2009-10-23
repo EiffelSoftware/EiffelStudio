@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.iteration)
 			safe_process (l_as.from_part)
 			safe_process (l_as.invariant_part)
-			l_as.stop.process (Current)
+			safe_process (l_as.stop)
 			safe_process (l_as.compound)
 			safe_process (l_as.variant_part)
 		end

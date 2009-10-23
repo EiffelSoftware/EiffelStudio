@@ -391,7 +391,7 @@ feature {AST_EIFFEL} -- Visitor: compound
 			safe_process (a.iteration)
 			safe_process (a.from_part)
 			safe_process (a.invariant_part)
-			a.stop.process (Current)
+			safe_process (a.stop)
 			if a.compound /= Void then
 				attribute_initialization.keeper.enter_realm
 				attribute_initialization.keeper.save_sibling

@@ -19,7 +19,7 @@ define VOID_SAFETY_A "none"
 define VOID_SAFETY_TEST "all"
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	validity_error TEST VDRD(2) VDRD(2)
+compile_result	validity_error TEST VUTA(2) VUTA(2) VUTA(2) VEVI
 abort_compile
 
 define VOID_SAFETY_A "all"
@@ -52,7 +52,7 @@ define VOID_SAFETY_A "none"
 define VOID_SAFETY_TEST "all"
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	validity_error TEST VUAR(2) VEVI VUTA(2) VUTA(2) VJAR
+compile_result	validity_error TEST VEVI VUTA(2) VUTA(2) VUTA(2) VJAR VJAR
 abort_compile
 
 define VOID_SAFETY_A "all"

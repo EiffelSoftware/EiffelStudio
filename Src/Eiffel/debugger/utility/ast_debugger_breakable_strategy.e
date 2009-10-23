@@ -429,8 +429,10 @@ feature {NONE} -- Iteration
 			safe_process (l_as.from_part)
 			safe_process (l_as.invariant_part)
 			safe_process (l_as.variant_part)
-			register_breakable (l_as.stop)
-			l_as.stop.process (Current)
+			if attached l_as.stop as s then
+				register_breakable (s)
+				s.process (Current)
+			end
 			safe_process (l_as.compound)
 		end
 

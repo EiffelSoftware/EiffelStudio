@@ -98,6 +98,7 @@ feature -- Basic operation
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		local
 			l_parser: LACE_PARSER
+			l_error: CONF_ERROR_PARSE
 			l_ast: ACE_SD
 			l_desc: STRING
 		do
@@ -105,11 +106,9 @@ feature -- Basic operation
 			l_parser.parse_file (a_file, False)
 			l_ast ?= l_parser.ast
 			if l_ast = Void then
-				if l_parser.last_syntax_error /= Void then
-					set_error (create {CONF_ERROR_PARSE}.make (l_parser.last_syntax_error))
-				else
-					set_error (create {CONF_ERROR_PARSE})
-				end
+				create l_error
+				l_error.set_position (a_file, l_parser.line, l_parser.column)
+				set_error (l_error)
 			else
 				last_system := factory.new_system_generate_uuid (mask_special_characters_config (l_ast.system_name.as_lower))
 				current_target := factory.new_target (mask_special_characters_config (l_ast.system_name.as_lower), last_system)
@@ -924,7 +923,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -937,21 +936,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -6,8 +6,8 @@ create
 	from_comparable
 
 convert
-	to_test: {!TEST},
-	from_comparable ({!COMPARABLE})
+	to_test: {TEST},
+	from_comparable ({COMPARABLE})
 
 feature
 
@@ -107,36 +107,36 @@ feature
 			end
 		end
 
-	test1c (b: !TEST)
+	test1c (b: TEST)
 		local
 			a: ?TEST1 [G, H]
-			c: !TEST
+			c: TEST
 		do
 			c := a + b
 		end
 
-	test2c (b: !TEST)
+	test2c (b: TEST)
 		local
 			a: ?TEST1 [G, H]
-			c: !TEST
+			c: TEST
 		do
 			if a /= Void then
 				c := a + b
 			end
 		end
 
-	test3c (b: !TEST)
+	test3c (b: TEST)
 		local
 			a: ?TEST1 [G, H]
-			c: !TEST
+			c: TEST
 		do
 			c := b + a
 		end
 
-	test4c (b: !TEST)
+	test4c (b: TEST)
 		local
 			a: ?TEST1 [G, H]
-			c: !TEST
+			c: TEST
 		do
 			if a /= Void then
 				c := b + a
@@ -175,14 +175,14 @@ feature
 			end
 		end
 
-	test1g (a: !COMPARABLE)
+	test1g (a: COMPARABLE)
 		local
 			b: BOOLEAN
 		do
 			b := a < Current
 		end
 
-	test2g (a: !COMPARABLE)
+	test2g (a: COMPARABLE)
 		local
 			b: BOOLEAN
 		do
@@ -191,14 +191,14 @@ feature
 			end
 		end
 
-	test3g (a: !COMPARABLE)
+	test3g (a: COMPARABLE)
 		local
 			b: BOOLEAN
 		do
 			b := Current < a
 		end
 
-	test4g (a: !COMPARABLE)
+	test4g (a: COMPARABLE)
 		local
 			b: BOOLEAN
 		do
@@ -228,11 +228,11 @@ feature -- Basic operations
 
 feature -- Conversion
 
-	from_comparable (c: !COMPARABLE)
+	from_comparable (c: COMPARABLE)
 		do
 		end
 
-	to_test: !TEST
+	to_test: TEST
 		do
 			create Result.make (<<>>)
 		end

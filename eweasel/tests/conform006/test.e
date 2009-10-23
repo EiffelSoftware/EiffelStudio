@@ -7,11 +7,10 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			l: LINKED_LIST [!TUPLE [a: !STRING; b: !PROCEDURE [ANY, TUPLE]]]
+			t: !TUPLE [a: !STRING; b: !PROCEDURE [ANY, TUPLE]]
 		do
-			create l.make
-			l.extend (["TOTO", agent do_nothing])
-			print (l.first.generating_type)
+			t := ["TOTO", agent do_nothing]
+			print (t.generating_type)
 			print ("%N")
 		end
 

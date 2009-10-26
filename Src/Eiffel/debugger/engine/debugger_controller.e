@@ -505,8 +505,17 @@ feature -- Environment related
 				loop
 					k := env.key_for_iteration
 					v := env.item_for_iteration
-					if k /= Void and then v /= Void then
-						Result.force (v, k)
+					if k /= Void then
+						if
+							k.count > 2 and then
+							(k.item (1) = '&' and k.item (2) = '-')
+						then
+								--| Environment variable removal if started by "&-" such as "&-FOOBAR"
+								--| this is an internal representation to precise "removal"
+							Result.remove (k.substring (3, k.count))
+						elseif v /= Void then
+							Result.force (v, k)
+						end
 					end
 					env.forth
 				end

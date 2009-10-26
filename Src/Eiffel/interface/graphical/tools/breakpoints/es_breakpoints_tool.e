@@ -48,6 +48,22 @@ feature -- Basic operations
 			end
 		end
 
+	on_project_loaded
+			-- Handle project loaded actions	
+		do
+			if is_tool_instantiated then
+				panel.on_project_loaded
+			end
+		end
+
+	synchronize
+			-- Synchronize
+		do
+			if is_tool_instantiated then
+				panel.synchronize
+			end
+		end
+
 feature {NONE} -- Factory
 
 	new_tool: attached ES_BREAKPOINTS_TOOL_PANEL

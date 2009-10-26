@@ -1,4 +1,6 @@
-class TEST inherit
+class TEST
+inherit
+	ANY
 
 	EXCEPTIONS
 		export

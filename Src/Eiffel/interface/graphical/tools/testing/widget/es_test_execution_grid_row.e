@@ -22,7 +22,7 @@ inherit
 		redefine
 			on_test_running,
 			on_test_executed,
-			on_test_removed
+			on_test_aborted
 		end
 
 	SHARED_TEST_SERVICE
@@ -141,7 +141,7 @@ feature {TEST_EXECUTION_I} -- Events
 			end
 		end
 
-	on_test_removed (a_session: TEST_EXECUTION_I; a_test: TEST_I)
+	on_test_aborted (a_session: TEST_EXECUTION_I; a_test: TEST_I)
 			-- <Precursor>
 		do
 			if is_expanded then

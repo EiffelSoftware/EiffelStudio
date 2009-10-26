@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 			register_factory (create {TEST_DEFAULT_SESSION_FACTORY [TEST_EXECUTION]})
 
 			create tag_tree.make (create {TAG_DIRECTORY_FORMATTER}, create {EC_TAG_TREE_NODE_FACTORY [TEST_I]})
+			create statistics.make (Current)
 		end
 
 feature -- Access
@@ -73,6 +74,9 @@ feature -- Access
 			-- <Precursor>
 
 	tag_tree: TAG_TREE [like test]
+			-- <Precursor>
+
+	statistics: TEST_STATISTICS
 			-- <Precursor>
 
 feature -- Access: output
@@ -116,6 +120,10 @@ feature -- Access: connection point
 			end
 			Result := l_result
 		end
+
+	internal_test_suite_connection: detachable like test_suite_connection
+			-- Cached version of `test_suite_connection'.
+			-- Note: Do not use directly!
 
 feature {NONE} -- Access
 

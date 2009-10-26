@@ -1,17 +1,28 @@
 note
-	description: "[
-		Interface providing access to different statistics for tests.
-	]"
+	description: "Observer for events in {TEST_STATISTICS_I}"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TEST_STATISTICS_I
+	TEST_STATISTICS_OBSERVER
 
-feature -- Status report
+inherit
+	EVENT_OBSERVER_I
 
-	
+feature {TEST_STATISTICS_I} -- Events
+
+	on_test_statistics_updated (a_statistics: TEST_STATISTICS_I; a_test: TEST_I)
+			-- Called when statistics for a test have changed.
+			--
+			-- `a_statistics': Statistics which have changed.
+			-- `a_test': Test for which statistics have changed.
+		require
+			a_statistics_attached: a_statistics /= Void
+			a_test_attached: a_test /= Void
+		do
+
+		end
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

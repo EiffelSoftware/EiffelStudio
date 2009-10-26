@@ -61,7 +61,7 @@ feature {TEST_EXECUTION_I} -- Events
 			a_result_valid: a_session.record.result_for_test (a_test) = a_result
 		end
 
-	on_test_removed (a_session: TEST_EXECUTION_I; a_test: TEST_I)
+	on_test_aborted (a_session: TEST_EXECUTION_I; a_test: TEST_I)
 			-- Called when a test is removed from `Current' without being executed.
 			--
 			-- `a_session': Test execution session which triggered event.

@@ -1440,6 +1440,7 @@ test	manifest-type-expr-generating-type	exec314	tcf pass execution
 test	manifest-type-singletons		exec315	tcf pass execution
 test	wrong-type-creation				exec316	tcf fail execution
 test	long-string-to-double			exec317 tcf pass execution
+test	ref-exp-polymorphism			exec318 tcf fail execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

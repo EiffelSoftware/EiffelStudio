@@ -12,8 +12,8 @@ test_description Looking for bugs
 define ROOT "<root cluster="root_cluster" class="test" feature="make"/>"
 define CLASS "class TEST creation make feature make is do end x: TEST1 end"
 
-define CLASS1 "class TEST1 inherit TEST2 [DOUBLE_REF, TEST2 [DOUBLE_REF, DOUBLE_REF]] redefine make, f end TEST3 redefine make, f end creation make feature make is do end f is do end end"
-define CLASS2 "deferred class TEST2 [G -> DOUBLE_REF, H -> G] inherit DOUBLE_REF undefine out, is_equal end TEST3 redefine f, make end feature make is do end f is do end end"
+define CLASS1 "class TEST1 inherit TEST2 [DOUBLE_REF, TEST2 [DOUBLE_REF, DOUBLE_REF]] redefine make, f end TEST3 redefine make, f end DOUBLE_REF undefine out, is_equal end create default_create,make feature make is do end f is do end end"
+define CLASS2 "deferred class TEST2 [G -> DOUBLE_REF, H -> G] inherit DOUBLE_REF undefine out, is_equal, plus, zero, one, opposite, identity, quotient, product, minus end TEST3 redefine f, make end feature make is do end f is do end end"
 define CLASS3 "class TEST3 creation make feature make is do end f is do end end"
 	
 copy_sub 	 Ace $TEST Ace

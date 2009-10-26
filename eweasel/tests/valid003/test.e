@@ -10,4 +10,7 @@ inherit
 		export
 			{ WEASEL } all
 		end
+
+	ANY
+
 end 

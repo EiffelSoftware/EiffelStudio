@@ -10,6 +10,9 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
+
 creation
 	make
 feature

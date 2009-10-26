@@ -28,7 +28,7 @@ class ARRAYED_LIST [G] inherit
 			{NONE}
 				all
 			{ARRAYED_LIST}
-				array_make, subcopy
+				array_make, subcopy, area, lower, upper, all_default, subarray, same_items
 			{ANY}
 				array_valid_index, capacity
 		undefine
@@ -56,8 +56,10 @@ class ARRAYED_LIST [G] inherit
 		end
 
 create
-
 	make, make_filled, make_from_array
+
+create {ARRAYED_LIST}
+	array_make
 
 feature -- Initialization
 

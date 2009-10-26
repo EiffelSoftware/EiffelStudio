@@ -18,11 +18,12 @@ class CONSOLE inherit
 		export
 			{NONE}
 				all
+			{CONSOLE} open_read, close
 			{ANY}
 				separator, append, file_pointer, last_character, last_integer,
 				last_real, last_string, last_double, file_readable,
 				lastchar, lastint, lastreal, laststring, lastdouble,
-				extendible, readable, is_closed
+				extendible, readable, is_closed, is_open_write
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			read_integer, read_real, read_double, read_character,
@@ -33,6 +34,8 @@ class CONSOLE inherit
 			readword, putint, putbool, putreal, putdouble, putstring, putchar,
 			dispose, read_to_string
 		end
+
+	ANY
 
 create {STD_FILES}
 	make_open_stdin, make_open_stdout, make_open_stderr
@@ -76,6 +79,10 @@ feature -- Status report
 		do
 			Result := True
 		end
+
+	count: INTEGER is 1
+			-- Useless for CONSOLE class.
+			--| `count' is non null not to invalidate invariant clauses.
 
 feature -- Removal
 
@@ -287,10 +294,6 @@ feature -- Output
 		end
 
 feature {NONE} -- Inapplicable
-
-	count: INTEGER is 1
-			-- Useless for CONSOLE class.
-			--| `count' is non null not to invalidate invariant clauses.
 
 	is_empty: BOOLEAN is False
 			-- Useless for CONSOLE class.

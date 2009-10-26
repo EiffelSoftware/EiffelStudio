@@ -6,11 +6,12 @@ copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 
 compile_melted
-compile_result ok
+compile_result validity_error TEST VUTA(2) VUTA(2) VEVI;
 
 define	 	LIB_NAME "base-safe"
 copy_sub 	Ace $TEST Ace
-compile_melted
+
+resume_compile
 compile_result 	ok
 
 test_end

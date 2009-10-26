@@ -18,6 +18,9 @@ inherit
 create
 	make
 
+create {MY_TREE2}
+	tree_make
+
 feature {NONE} -- Initialization
 
 	make is

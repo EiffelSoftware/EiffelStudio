@@ -144,7 +144,7 @@ feature -- Status setting
 			create l_connection.make
 			internal_connection := l_connection
 			if l_connection.current_port > 0 then
-					create l_args.make (100)
+				create l_args.make (100)
 				l_args.append_integer (l_connection.current_port)
 				l_args.append_character (' ')
 				l_args.append_integer (a_evaluator_feature.real_body_id (a_evaluator_class.types.first) - 1)
@@ -184,9 +184,13 @@ feature -- Status setting
 		require
 			running: is_running
 		do
-			stop_evaluator
+			if is_evaluator_launched then
+				stop_evaluator
+			end
 			connection.terminate
 			internal_connection := Void
+			has_result := False
+			has_died := False
 		ensure
 			not_running: not is_running
 		end

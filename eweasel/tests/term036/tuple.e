@@ -12,19 +12,13 @@ inherit
 	ARRAY [ANY]
 		rename
 			make as array_make
-		export
-			{NONE} all
-			{ANY} item, put, infix "@", lower, upper, valid_index,
-			is_empty, count
-		end
-
-	ANY
-		undefine
-			is_equal, copy
 		end
 
 create
 	make
+
+create {TUPLE} 
+	array_make
 
 feature -- Creation
 

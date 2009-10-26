@@ -18,11 +18,12 @@ class CONSOLE inherit
 		export
 			{NONE}
 				all
+			{CONSOLE} open_read, close
 			{ANY}
 				separator, append, file_pointer, last_character, last_integer,
 				last_real, last_string, last_double, file_readable,
 				lastchar, lastint, lastreal, laststring, lastdouble,
-				readable, extendible, is_closed
+				extendible, readable, is_closed, is_open_write
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			read_integer, read_real, read_double, read_character,
@@ -33,6 +34,8 @@ class CONSOLE inherit
 			readword, putint, putbool, putreal, putdouble, putstring, putchar,
 			dispose, read_to_string
 		end
+
+	ANY
 
 create {STD_FILES}
 	make_open_stdin, make_open_stdout, make_open_stderr
@@ -76,6 +79,10 @@ feature -- Status report
 		do
 			Result := True
 		end
+
+	count: INTEGER is 1
+			-- Useless for CONSOLE class.
+			--| `count' is non null not to invalidate invariant clauses.
 
 feature -- Removal
 
@@ -278,10 +285,6 @@ feature -- Output
 
 feature {NONE} -- Inapplicable
 
-	count: INTEGER is 1
-			-- Useless for CONSOLE class.
-			--| `count' is non null not to invalidate invariant clauses.
-
 	is_empty: BOOLEAN is False
 			-- Useless for CONSOLE class.
 			--| `empty' is false not to invalidate invariant clauses.
@@ -356,25 +359,25 @@ feature {NONE} -- Implementation
 	console_readreal (file: POINTER): REAL is
 			-- Read a real number from the console
 		external
-			"C (FILE *): EIF_REAL | %"eif_console.h%""
+			"C blocking signature (FILE *): EIF_REAL use %"eif_console.h%""
 		end
 
 	console_readchar (file: POINTER): CHARACTER is
 			-- Read a character from the console
 		external
-			"C (FILE *): EIF_CHARACTER | %"eif_console.h%""
+			"C blocking signature (FILE *): EIF_CHARACTER use %"eif_console.h%""
 		end
 
 	console_readint (file: POINTER): INTEGER is
 			-- Read an integer from the console
 		external
-			"C (FILE *): EIF_INTEGER | %"eif_console.h%""
+			"C blocking signature (FILE *): EIF_INTEGER use %"eif_console.h%""
 		end
 
 	console_readdouble (file: POINTER): DOUBLE is
 			-- Read a double from the console
 		external
-			"C (FILE *): EIF_DOUBLE | %"eif_console.h%""
+			"C blocking signature (FILE *): EIF_DOUBLE use %"eif_console.h%""
 		end
 
 	console_readword (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
@@ -385,25 +388,25 @@ feature {NONE} -- Implementation
 			-- If it does not fit, result is `length' - `begin' + 1,
 			-- otherwise result is number of characters read.
 		external
-			"C (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER | %"eif_console.h%""
+			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_console.h%""
 		end
 
 	console_readline (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
-			"C (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER | %"eif_console.h%""
+			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_console.h%""
 		end
 
 	console_next_line (file: POINTER) is
 			-- Move to next input line on standard input.
 		external
-			"C (FILE *) | %"eif_console.h%""
+			"C blocking signature (FILE *) use %"eif_console.h%""
 		end
 
 	console_readstream (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
-			"C (FILE *, char *, EIF_INTEGER): EIF_INTEGER | %"eif_console.h%""
+			"C blocking signature (FILE *, char *, EIF_INTEGER): EIF_INTEGER use %"eif_console.h%""
 		end
 
 	file_close (file: POINTER) is

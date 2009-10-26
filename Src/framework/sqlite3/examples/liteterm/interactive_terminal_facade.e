@@ -1,59 +1,59 @@
 note
 	description: "[
-
+		Provides a facade implementation to the interactive terminal, exposing terminal manipulators and
+		writers to the terminal.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	APPLICATION
+deferred class
+	INTERACTIVE_TERMINAL_FACADE
 
-create
-	make
+feature -- Access
 
-feature {NONE} -- Initialization
-
-	make
-			-- Initializes the application.
-		local
-			results: ARRAY [STRING]
-			l_parser: ARGUMENT_PARSER
-		do
-			create l_parser.make
-			l_parser.execute (agent start (l_parser))
-			if not l_parser.is_successful then
-				(create {EXCEPTIONS}).die (1)
-			end
+	interactive_terminal: INTERACTIVE_TERMINAL
+			-- Terminal used for interaction.
+		deferred
 		end
 
-feature {NONE} -- Basic operations
+feature {NONE} -- Access
 
-	start (a_parser: ARGUMENT_PARSER)
-			-- Starts the application.
-			--
-			-- `a_parser': Parser used to collect command line information.
+	terminal: TERMINAL
+			-- Default output terminal.
 		require
-			a_parser_is_successful: a_parser.is_successful
-		local
-			l_source: SQLITE_FILE_SOURCE
-			l_database: SQLITE_DATABASE
-			l_console: INTERACTIVE_TERMINAL
+			interactive_terminal_is_interactive: interactive_terminal.is_interactive
 		do
-			create l_source.make (a_parser.file_name)
-			create l_database.make (l_source)
-			if a_parser.is_open_create_read_write then
-				l_database.open_create_read_write
-			elseif a_parser.is_open_read_write then
-				l_database.open_read_write
-			else
-				l_database.open_read
-			end
+			Result := interactive_terminal.terminal
+		ensure
+			result_is_writable: Result.is_writable
+		end
 
-			create l_console.make (l_database)
-			l_console.begin_interaction
-			l_database.close
+	terminal_error: TERMINAL
+			-- Error output terminal.
+		require
+			interactive_terminal_is_interactive: interactive_terminal.is_interactive
+		do
+			Result := interactive_terminal.terminal_error
+		ensure
+			result_is_writable: Result.is_writable
+		end
+
+	terminal_writer: FILE
+			-- File used to write to terminal.
+		require
+			interactive_terminal_is_interactive: interactive_terminal.is_interactive
+		do
+			Result := terminal.terminal
+		end
+
+	terminal_error_writer: FILE
+			-- File used to write to the error terminal.
+		require
+			interactive_terminal_is_interactive: interactive_terminal.is_interactive
+		do
+			Result := terminal_error.terminal
 		end
 
 ;note

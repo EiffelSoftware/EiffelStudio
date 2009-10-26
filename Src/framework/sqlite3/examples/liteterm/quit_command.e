@@ -1,6 +1,6 @@
 note
 	description: "[
-
+		Comamnd to quit the interactive terminal.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,52 +8,31 @@ note
 	revision: "$Revision$"
 
 class
-	APPLICATION
+	QUIT_COMMAND
+
+inherit
+	COMMAND
 
 create
 	make
 
-feature {NONE} -- Initialization
 
-	make
-			-- Initializes the application.
-		local
-			results: ARRAY [STRING]
-			l_parser: ARGUMENT_PARSER
-		do
-			create l_parser.make
-			l_parser.execute (agent start (l_parser))
-			if not l_parser.is_successful then
-				(create {EXCEPTIONS}).die (1)
-			end
+feature -- Access
+
+	description: IMMUTABLE_STRING_8
+			-- <Precursor>
+		once
+			Result := "Quits the interactive terminal."
 		end
 
-feature {NONE} -- Basic operations
+feature -- Basic operations
 
-	start (a_parser: ARGUMENT_PARSER)
-			-- Starts the application.
-			--
-			-- `a_parser': Parser used to collect command line information.
-		require
-			a_parser_is_successful: a_parser.is_successful
-		local
-			l_source: SQLITE_FILE_SOURCE
-			l_database: SQLITE_DATABASE
-			l_console: INTERACTIVE_TERMINAL
+	execute (a_args: detachable ARRAY [READABLE_STRING_8])
+			-- <Precursor>
 		do
-			create l_source.make (a_parser.file_name)
-			create l_database.make (l_source)
-			if a_parser.is_open_create_read_write then
-				l_database.open_create_read_write
-			elseif a_parser.is_open_read_write then
-				l_database.open_read_write
-			else
-				l_database.open_read
-			end
-
-			create l_console.make (l_database)
-			l_console.begin_interaction
-			l_database.close
+			interactive_terminal.end_interaction
+		ensure then
+			not_interactive_terminal_is_interactive: not interactive_terminal.is_interactive
 		end
 
 ;note

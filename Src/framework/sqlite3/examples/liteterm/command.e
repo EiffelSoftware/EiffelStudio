@@ -1,59 +1,65 @@
 note
 	description: "[
-
+		Abstract built-in executable command on the interactive terminal.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	APPLICATION
+deferred class
+	COMMAND
 
-create
-	make
+inherit
+	INTERACTIVE_TERMINAL_FACADE
 
-feature {NONE} -- Initialization
+feature {NONE} --Initialization
 
-	make
-			-- Initializes the application.
-		local
-			results: ARRAY [STRING]
-			l_parser: ARGUMENT_PARSER
+	make (a_terminal: like interactive_terminal)
+			-- Initialize the command using the source terminal.
+			--
+			-- `a_terminal': The terminal object.
 		do
-			create l_parser.make
-			l_parser.execute (agent start (l_parser))
-			if not l_parser.is_successful then
-				(create {EXCEPTIONS}).die (1)
-			end
+			interactive_terminal := a_terminal
+		ensure
+			interactive_terminal_set: interactive_terminal = a_terminal
 		end
 
-feature {NONE} -- Basic operations
+feature -- Access
 
-	start (a_parser: ARGUMENT_PARSER)
-			-- Starts the application.
+	interactive_terminal: INTERACTIVE_TERMINAL
+			-- Terminal used for interaction.
+
+	description: IMMUTABLE_STRING_8
+			-- Description of the command, used for quick help.
+		deferred
+		ensure
+			not_result_is_empty: not Result.is_empty
+			not_result_contains_new_line: not Result.has ('%N')
+		end
+
+feature -- Basic operations
+
+	execute (a_args: detachable ARRAY [READABLE_STRING_8])
+			-- Performs an interactive command.
 			--
-			-- `a_parser': Parser used to collect command line information.
+			-- `a_args': The arguments to use with the command.
 		require
-			a_parser_is_successful: a_parser.is_successful
-		local
-			l_source: SQLITE_FILE_SOURCE
-			l_database: SQLITE_DATABASE
-			l_console: INTERACTIVE_TERMINAL
-		do
-			create l_source.make (a_parser.file_name)
-			create l_database.make (l_source)
-			if a_parser.is_open_create_read_write then
-				l_database.open_create_read_write
-			elseif a_parser.is_open_read_write then
-				l_database.open_read_write
-			else
-				l_database.open_read
-			end
+			interactive_terminal_is_interactive: interactive_terminal.is_interactive
+		deferred
+		end
 
-			create l_console.make (l_database)
-			l_console.begin_interaction
-			l_database.close
+	display_help (a_args: detachable ARRAY [READABLE_STRING_8])
+			-- Displays command help.
+			--
+			-- `a_args': The arguments to use with the help command.
+		require
+			terminal_is_interactive: interactive_terminal.is_interactive
+		local
+			l_writer: like terminal_writer
+		do
+			l_writer := terminal_writer
+			l_writer.put_string (description)
 		end
 
 ;note

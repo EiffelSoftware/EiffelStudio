@@ -16,7 +16,7 @@ inherit
 			make as make_parser
 		export
 			{NONE} all
-			{ANY} is_successful, execute, has_executed
+			{ANY} is_successful, execute, has_executed, system_name
 		end
 
 	ANY

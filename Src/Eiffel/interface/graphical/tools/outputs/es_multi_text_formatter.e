@@ -830,9 +830,15 @@ feature {NONE} -- Basic operations
 				end
 				from l_formatters.finish until l_formatters.before loop
 					if attached l_formatters.item as l_formatter then
-						from i := 1 until i > l_new_lines loop
+						from
+							i := l_new_lines
+						until
+							i <= 0
+						loop
 							l_formatter.process_new_line
-							i := i + 1
+							i := i - 1
+						variant
+							i.to_integer_32
 						end
 					end
 					l_formatters.back

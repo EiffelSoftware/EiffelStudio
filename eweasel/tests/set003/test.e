@@ -1,4 +1,6 @@
-class TEST inherit
+class TEST
+inherit
+	ANY
 
 	BINARY_SEARCH_TREE_SET [INTEGER]
 		rename

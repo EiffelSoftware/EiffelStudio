@@ -16,7 +16,7 @@ feature
 			try;
 		end
 	
-feature {NONE}
+feature
 
 	prefix "+": DOUBLE is
 		do

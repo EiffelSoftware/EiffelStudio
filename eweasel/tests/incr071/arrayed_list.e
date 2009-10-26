@@ -30,7 +30,7 @@ class ARRAYED_LIST [G] inherit
 			{NONE}
 				all
 			{ARRAYED_LIST}
-				array_make, subcopy
+				array_make, subcopy, area, lower, upper, subarray, all_default, same_items
 			{ANY}
 				array_valid_index, capacity
 		undefine

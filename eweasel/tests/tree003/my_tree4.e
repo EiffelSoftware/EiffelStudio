@@ -19,6 +19,10 @@ inherit
 create
 	make, make_filled
 
+create {MY_TREE4}
+	tree_make,
+	tree_make_filled
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is

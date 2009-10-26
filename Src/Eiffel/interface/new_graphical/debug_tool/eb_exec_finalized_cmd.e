@@ -9,39 +9,10 @@ class
 	EB_EXEC_FINALIZED_CMD
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			tooltext
-		end
-
-	SYSTEM_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	PROJECT_CONTEXT
-		export
-			{NONE} all
-		end
-
-	SHARED_EIFFEL_PROJECT
-		export
-			{NONE} all
-		end
-
-	SHARED_DEBUGGER_MANAGER
-		export
-			{NONE} all
-		end
-
-	EB_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	EB_SHARED_WINDOW_MANAGER
-		export
-			{NONE} all
+			tooltext,
+			new_sd_toolbar_item
 		end
 
 create
@@ -59,13 +30,17 @@ feature -- Execution
 	execute
 			-- Execute Current.
 		do
-			debugger_manager.controller.start_finalized_application (debugger_manager.current_execution_parameters)
+			if attached debugger_manager as dbg then
+				dbg.controller.start_finalized_application (dbg.current_execution_parameters)
+			end
 		end
 
 	execute_with_parameters (params: DEBUGGER_EXECUTION_PROFILE)
 			-- Execute Current with parameters.
 		do
-			debugger_manager.controller.start_finalized_application (debugger_manager.resolved_execution_parameters (params))
+			if attached debugger_manager as dbg then
+				dbg.controller.start_finalized_application (dbg.resolved_execution_parameters (params))
+			end
 		end
 
 feature -- Properties
@@ -107,6 +82,25 @@ feature -- Properties
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Run_finalized
+		end
+
+feature -- Basic operations
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
+			-- Create a new docking tool bar button for this command.
+		do
+			Result := Precursor (display_text)
+			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
+		end
+
+	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+			-- Show the arguments dialog box when the user right clicks the button.
+		do
+			if a_button = {EV_POINTER_CONSTANTS}.right and is_sensitive then
+				if attached eb_debugger_manager.options_cmd as o then
+					o.open_execution_parameters_dialog (agent execute_with_parameters)
+				end
+			end
 		end
 
 note

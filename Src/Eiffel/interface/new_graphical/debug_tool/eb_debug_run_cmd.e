@@ -9,7 +9,7 @@ class
 	EB_DEBUG_RUN_CMD
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_sd_toolbar_item,
 			new_menu_item,
@@ -31,8 +31,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-	EB_SHARED_DEBUGGER_MANAGER
 
 	EB_SHARED_MANAGERS
 		export
@@ -77,7 +75,7 @@ feature -- Access
 		local
 			l_tool_bar: SD_GENERIC_TOOL_BAR
 		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
+			Result := Precursor {ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			l_tool_bar := Result.tool_bar
 			check not_void: l_tool_bar /= Void end
 			if attached {EV_WIDGET} l_tool_bar as lt_widget then
@@ -89,7 +87,7 @@ feature -- Access
 
 	new_menu_item: EB_COMMAND_MENU_ITEM
 		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+			Result := Precursor {ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			Result.select_actions.put_front (agent execute_from (Result))
 		end
 
@@ -106,12 +104,13 @@ feature -- Execution
 		do
 			if
 				Eiffel_project.initialized and then
-				not Eiffel_project.Workbench.is_compiling
+				not Eiffel_project.Workbench.is_compiling and then
+				attached debugger_manager as dbg
 			then
-				if debugger_manager.application_is_executing then
+				if dbg.application_is_executing then
 					resume_with_mode (execution_mode)
 				else -- not yet launched
-					launch_with_mode (execution_mode, debugger_manager.current_execution_parameters)
+					launch_with_mode (execution_mode, dbg.current_execution_parameters)
 				end
 			end
 		end
@@ -150,7 +149,7 @@ feature -- Execution
 					l_warning.set_title (interface_names.t_debugger_warning)
 					l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode, params))
 					l_warning.show_on_active_window
-				elseif not Debugger_manager.can_debug then
+				elseif attached debugger_manager as dbg and then not dbg.can_debug then
 						-- A class was removed since the last compilation.
 						-- It is VERY dangerous to launch the debugger in these conditions.
 						-- However, forbidding it completely may be too frustating.
@@ -174,13 +173,14 @@ feature -- Execution
 				--| At this point we define the 'type' on debug operation
 				--| either step next, step into, step out, continue ...
 				--| this will be used in APPLICATION_EXECUTION.continue_ignoring_kept_objects
+			if attached debugger_manager as dbg then
+				Debugger_manager.application.set_execution_mode (execution_mode)
 
-			Debugger_manager.application.set_execution_mode (execution_mode)
-
-					--| Application is already launched (precondition) |--
-			if debugger_manager.safe_application_is_stopped then
-					--| Application is already launched and is stopped |--
-				resume_application
+						--| Application is already launched (precondition) |--
+				if debugger_manager.safe_application_is_stopped then
+						--| Application is already launched and is stopped |--
+					resume_application
+				end
 			end
 		end
 
@@ -189,7 +189,6 @@ feature -- Execution
 		local
 			trigger: EV_CONTAINABLE
 			cont: EV_ANY
-			window: EV_WINDOW
 		do
 			from
 				trigger := widget
@@ -204,11 +203,11 @@ feature -- Execution
 					cont := Void
 				end
 			end
-			window ?= trigger
-			if window /= Void then
-				Eb_debugger_manager.set_debugging_window (
-					window_manager.development_window_from_window (window)
-				)
+			if
+				attached {EV_WINDOW} trigger as window and
+				attached eb_debugger_manager as dbg
+			then
+				dbg.set_debugging_window (window_manager.development_window_from_window (window))
 			else
 				prompts.show_error_prompt ("Could not initialize debugging tools", Void, Void)
 			end
@@ -221,19 +220,20 @@ feature -- Execution
 			f: E_FEATURE
 			body_index: INTEGER
 			hbp_exists: BOOLEAN
-			dbg: DEBUGGER_MANAGER
 			bm: BREAKPOINTS_MANAGER
 			hbp, nhbp: HIDDEN_BREAKPOINT
 			loc: BREAKPOINT_LOCATION
 		do
-			if Eiffel_project.successful then
+			if
+				Eiffel_project.successful and
+				attached debugger_manager as dbg
+			then
 				f := bs.routine
 				if f.is_debuggable then
 					index := bs.index
 					body_index := bs.body_index
 
-					dbg := Debugger_manager
-					bm := debugger_manager.breakpoints_manager
+					bm := dbg.breakpoints_manager
 
 						--| Remember the status of the breakpoint
 					loc := bm.breakpoint_location (f, index, True)
@@ -288,14 +288,18 @@ feature -- Execution
 		local
 			ctlr: DEBUGGER_CONTROLLER
 		do
-			ctlr := debugger_manager.controller
-			ctlr.debug_application (a_params, a_execution_mode)
+			if attached debugger_manager as dbg then
+				ctlr := dbg.controller
+				ctlr.debug_application (a_params, a_execution_mode)
+			end
 		end
 
 	resume_application
 			-- Continue the execution of the program (stepping ...)
 		do
-			debugger_manager.controller.resume_workbench_application
+			if attached debugger_manager as dbg then
+				debugger_manager.controller.resume_workbench_application
+			end
 		end
 
 feature {NONE} -- Implementation / Attributes

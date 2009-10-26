@@ -108,11 +108,11 @@ feature {NONE} -- Implementation
 		do
 			if
 				attached last_parameters as l_params and
-				attached eb_debugger_manager as a_dbgm
+				attached debugger_manager as dbg
 			then
 					-- Reload parameters
-				if attached a_dbgm.profiles.profile (l_params.uuid) as l_profile then
-					last_parameters := a_dbgm.resolved_execution_parameters (l_profile)
+				if attached dbg.profiles.profile (l_params.uuid) as l_profile then
+					last_parameters := dbg.resolved_execution_parameters (l_profile)
 				else
 					--| Could not find previous parameters
 					--| then keep same parameters ...
@@ -140,11 +140,14 @@ feature {NONE} -- Implementation
 	kill
 			-- Effectively kill the application.
 		require
-			valid_application: eb_debugger_manager.application_is_executing
+			valid_application: debugger_manager.application_is_executing
 		do
-			if eb_debugger_manager.application_is_executing then
+			if
+				attached debugger_manager as dbg and then
+				dbg.application_is_executing
+			then
 				kill_requested := True
-				eb_debugger_manager.application.kill
+				dbg.application.kill
 			end
 		end
 

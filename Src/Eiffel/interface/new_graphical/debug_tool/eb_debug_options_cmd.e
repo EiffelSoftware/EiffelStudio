@@ -10,7 +10,7 @@ class
 	EB_DEBUG_OPTIONS_CMD
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			tooltext
 		end
@@ -27,47 +27,47 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like debugger_manager)
-			-- Initialize `Current' and associate it with `a_manager'.
+	make
+			-- Initialize `Current'
 		do
-			debugger_manager := a_manager
 		end
 
 feature -- Formatting
 
 	launch_project (params: DEBUGGER_EXECUTION_PROFILE)
 		do
-			if is_sensitive then
-				debugger_manager.run_project_cmd.launch_with_parameters ({EXEC_MODES}.run, params)
+			if is_sensitive and attached eb_debugger_manager as dbg then
+				dbg.run_project_cmd.launch_with_parameters ({EXEC_MODES}.run, params)
 			end
 		end
 
 	execute
 			-- Set the execution format to `stone'.
-		local
-			args_dialog: EB_ARGUMENT_DIALOG
-			window: EB_DEVELOPMENT_WINDOW
-			dev: EV_WINDOW
 		do
 			if is_sensitive then
-				window ?= window_manager.last_focused_window
-				if window /= Void then
-					dev := window.window
-					if not argument_dialog_is_valid then
-						create args_dialog.make (window, agent launch_project)
-						set_argument_dialog (args_dialog)
-					else
-						argument_dialog.update
-					end
-					argument_dialog.raise
+				open_execution_parameters_dialog (agent launch_project)
+			end
+		end
+
+	open_execution_parameters_dialog (a_cmd: PROCEDURE [ANY, TUPLE [DEBUGGER_EXECUTION_PROFILE]])
+			-- Show the arguments dialog
+		local
+			args_dialog: EB_ARGUMENT_DIALOG
+			dev: EV_WINDOW
+		do
+			if attached {EB_DEVELOPMENT_WINDOW} window_manager.last_focused_window as window then
+				dev := window.window
+				if not argument_dialog_is_valid then
+					create args_dialog.make (window, a_cmd)
+					set_argument_dialog (args_dialog)
+				else
+					argument_dialog.update
 				end
+				argument_dialog.raise
 			end
 		end
 
 feature -- Properties
-
-	debugger_manager: EB_DEBUGGER_MANAGER
-			-- Manager in charge of all debugging operations.
 
 	tooltip: STRING_GENERAL
 			-- Tooltip for `Current'.

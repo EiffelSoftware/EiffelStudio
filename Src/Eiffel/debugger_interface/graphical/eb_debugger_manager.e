@@ -228,39 +228,39 @@ feature {NONE} -- Initialization
 			force_debug_mode_cmd.enable_sensitive
 			toolbarable_commands.extend (force_debug_mode_cmd)
 
-			create options_cmd.make (Current)
+			create options_cmd.make
 			toolbarable_commands.extend (options_cmd)
-			create step_cmd.make (Current)
+			create step_cmd.make
 			toolbarable_commands.extend (step_cmd)
-			create into_cmd.make (Current)
+			create into_cmd.make
 			toolbarable_commands.extend (into_cmd)
-			create out_cmd.make (Current)
+			create out_cmd.make
 			toolbarable_commands.extend (out_cmd)
-			create debug_cmd.make (Current)
+			create debug_cmd.make
 			toolbarable_commands.extend (debug_cmd)
-			create no_stop_cmd.make (Current)
+			create no_stop_cmd.make
 			toolbarable_commands.extend (no_stop_cmd)
 			create ignore_breakpoints_cmd.make
 			toolbarable_commands.extend (ignore_breakpoints_cmd)
-			create stop_cmd.make (Current)
+			create stop_cmd.make
 			toolbarable_commands.extend (stop_cmd)
-			create restart_cmd.make (Current)
+			create restart_cmd.make
 			toolbarable_commands.extend (restart_cmd)
-			create quit_cmd.make (Current)
+			create quit_cmd.make
 			toolbarable_commands.extend (quit_cmd)
 
-			create toggle_exec_replay_recording_mode_cmd.make (Current)
+			create toggle_exec_replay_recording_mode_cmd.make
 			toolbarable_commands.extend (toggle_exec_replay_recording_mode_cmd)
 
-			create toggle_exec_replay_mode_cmd.make (Current)
+			create toggle_exec_replay_mode_cmd.make
 			toolbarable_commands.extend (toggle_exec_replay_mode_cmd)
-			create exec_replay_back_cmd.make_back (Current)
+			create exec_replay_back_cmd.make_back
 			toolbarable_commands.extend (exec_replay_back_cmd)
-			create exec_replay_forth_cmd.make_forth (Current)
+			create exec_replay_forth_cmd.make_forth
 			toolbarable_commands.extend (exec_replay_forth_cmd)
-			create exec_replay_left_cmd.make_left (Current)
+			create exec_replay_left_cmd.make_left
 			toolbarable_commands.extend (exec_replay_left_cmd)
-			create exec_replay_right_cmd.make_right (Current)
+			create exec_replay_right_cmd.make_right
 			toolbarable_commands.extend (exec_replay_right_cmd)
 
 
@@ -438,7 +438,7 @@ feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
 	object_storage_management_cmd: ES_DBG_OBJECT_STORAGE_MANAGEMENT_COMMAND
 			-- Command controlling the remove object storage operation
 
-feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER} -- Command
+feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER, EB_EXEC_FINALIZED_CMD} -- Command
 
 	bkpt_info_cmd: EB_STANDARD_CMD
 			-- Command that can display info concerning the breakpoints in the system.

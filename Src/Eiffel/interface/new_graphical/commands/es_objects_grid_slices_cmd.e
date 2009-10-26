@@ -10,7 +10,7 @@ class
 	ES_OBJECTS_GRID_SLICES_CMD
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			mini_pixmap,
 			mini_pixel_buffer,
@@ -28,8 +28,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-	EB_SHARED_DEBUGGER_MANAGER
 
 create
 	make
@@ -101,27 +99,26 @@ feature -- Execution
 
 	execute
 			-- Change the default slice limits through a dialog box.
-		local
-			dm: like debugger_manager
 		do
-			dm := debugger_manager
-			get_slice_limits_on_global
+			if attached eb_debugger_manager as dbg then
+				get_slice_limits_on_global
 
-			dm.set_slices (slice_min, slice_max)
-			dm.set_displayed_string_size (displayed_string_size)
-			if set_as_default_requested then
-				set_as_default_requested := False
-				preferences.debugger_data.min_slice_preference.set_value (dm.min_slice)
-				preferences.debugger_data.max_slice_preference.set_value (dm.max_slice)
-				preferences.debugger_data.default_displayed_string_size_preference.set_value (dm.displayed_string_size)
-			end
+				dbg.set_slices (slice_min, slice_max)
+				dbg.set_displayed_string_size (displayed_string_size)
+				if set_as_default_requested then
+					set_as_default_requested := False
+					preferences.debugger_data.min_slice_preference.set_value (dbg.min_slice)
+					preferences.debugger_data.max_slice_preference.set_value (dbg.max_slice)
+					preferences.debugger_data.default_displayed_string_size_preference.set_value (dbg.displayed_string_size)
+				end
 
-			debug ("debugger_interface")
-				io.put_string ("Messages are displayed%N")
-			end
-			if refresh_tools_requested then
-				refresh_tools_requested := False
-				eb_debugger_manager.refresh_objects_grids
+				debug ("debugger_interface")
+					io.put_string ("Messages are displayed%N")
+				end
+				if refresh_tools_requested then
+					refresh_tools_requested := False
+					dbg.refresh_objects_grids
+				end
 			end
 		end
 
@@ -284,12 +281,14 @@ feature {NONE} -- Implementation
 				maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 					--| Set Value
-				if debugger_manager.displayed_string_size = -1 then
-					tf_disp_str_size.set_text (preferences.debugger_data.default_displayed_string_size.out)
-					cb_disp_str_limit.enable_select
-				else
-					tf_disp_str_size.set_text (debugger_manager.displayed_string_size.out)
-					cb_disp_str_limit.disable_select
+				if attached debugger_manager as dbg then
+					if dbg.displayed_string_size = -1 then
+						tf_disp_str_size.set_text (preferences.debugger_data.default_displayed_string_size.out)
+						cb_disp_str_limit.enable_select
+					else
+						tf_disp_str_size.set_text (dbg.displayed_string_size.out)
+						cb_disp_str_limit.disable_select
+					end
 				end
 				on_cb_disp_str_limit_cb (cb_disp_str_limit, tf_disp_str_size)
 				cb_disp_str_limit.select_actions.extend (agent on_cb_disp_str_limit_cb (cb_disp_str_limit, tf_disp_str_size))
@@ -500,9 +499,11 @@ feature {NONE} -- Implementation
 	get_current_values
 			-- Get current values
 		do
-			slice_min := debugger_manager.min_slice
-			slice_max := debugger_manager.max_slice
-			displayed_string_size := debugger_manager.displayed_string_size
+			if attached debugger_manager as dbg then
+				slice_min := dbg.min_slice
+				slice_max := dbg.max_slice
+				displayed_string_size := dbg.displayed_string_size
+			end
 		end
 
 	restore_default_values

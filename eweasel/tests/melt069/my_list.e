@@ -8,7 +8,7 @@ inherit
 		end
 
 create
-	default_create
+	default_create, make
 
 feature -- Initialization
 

@@ -9,7 +9,7 @@ class
 	ES_DBG_OBJECT_STORAGE_MANAGEMENT_COMMAND
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			tooltext,
 			mini_pixmap,
@@ -20,8 +20,6 @@ inherit
 	EB_CONSTANTS
 
 	EV_SHARED_APPLICATION
-
-	EB_SHARED_DEBUGGER_MANAGER
 
 create
 	make
@@ -131,7 +129,9 @@ feature -- Status report
 	associated_window: EV_WINDOW
 			-- Window to which the child dialogs will be modeless to.
 		do
-			Result := Eb_debugger_manager.debugging_window.window
+			if attached eb_debugger_manager as dbg then
+				Result := dbg.debugging_window.window
+			end
 		end
 
 feature -- Status report
@@ -158,7 +158,8 @@ feature -- Basic operations
 			dlg: ES_DBG_OBJECT_STORAGE_MANAGEMENT_DIALOG
 		do
 			if
-				debugger_manager.safe_application_is_stopped and then
+				attached debugger_manager as dbg and then
+				dbg.safe_application_is_stopped and then
 				load_operation_enabled
 			then
 				create dlg.make
@@ -192,7 +193,7 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Implementation
 		local
 			dlg: ES_DBG_OBJECT_STORAGE_MANAGEMENT_DIALOG
 		do
-			if debugger_manager.safe_application_is_stopped then
+			if attached debugger_manager as dbg and then dbg.safe_application_is_stopped then
 				create dlg.make
 				dlg.set_object_stone (st)
 --				dlg.enable_load_operation --| do not enable load operation
@@ -202,7 +203,7 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -226,11 +227,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (a_manager: like eb_debugger_manager)
+	make
 			-- Initialize `Current'.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -38,7 +38,7 @@ feature -- Initialization
 			menu_name := Interface_names.m_Debug_run
 			internal_tooltip := Interface_names.e_Exec_debug
 
-			Precursor (a_manager)
+			Precursor
 			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("run")
 			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			set_referred_shortcut (l_shortcut)
@@ -56,7 +56,9 @@ feature -- Execution
 	execute
 			-- <Precursor>
 		do
-			eb_debugger_manager.stop_at_breakpoints
+			if attached debugger_manager as dbg then
+				dbg.stop_at_breakpoints
+			end
 			Precursor
 		end
 
@@ -120,8 +122,7 @@ feature -- Access
 			create Result.make (Current)
 			initialize_sd_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
-
-			Result.select_actions.put_front (agent execute_from (eb_debugger_manager.debugging_window.window))
+			Result.select_actions.put_front (agent execute_from_debugging_window)
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 		end
 
@@ -176,96 +177,95 @@ feature {NONE} -- Attributes
 			profs: DEBUGGER_PROFILE_MANAGER
 			k: UUID
 			defprof: detachable UUID
-			dbg: EB_DEBUGGER_MANAGER
 		do
 			create Result
 
-			dbg := eb_debugger_manager
-
 			Result.extend (new_menu_item_unmanaged)
-			Result.extend (eb_debugger_manager.no_stop_cmd.new_menu_item_unmanaged)
+			if attached eb_debugger_manager as dbg then
+				Result.extend (dbg.no_stop_cmd.new_menu_item_unmanaged)
 
-			Result.extend (create {EV_MENU_SEPARATOR})
-
-				--| Breakpoints status
-			l_item := dbg.ignore_breakpoints_cmd.new_menu_item_unmanaged
-			Result.extend (l_item)
-
-				--| Catcall warning status
---| FIXME: we should create specific _CMD for thoses		
-			if attached dbg.exceptions_handler as exc_hdlr then
-				create l_cb_item.make_with_text (interface_names.m_Dbg_disable_catcall_console_warning)
-				Result.extend (l_cb_item)
-				if exc_hdlr.catcall_console_warning_disabled then
-					l_cb_item.enable_select
-					l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_console (True))
-				else
-					l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_console (False))
-				end
-
-				create l_cb_item.make_with_text (interface_names.m_Dbg_disable_catcall_debugger_warning)
-				Result.extend (l_cb_item)
-				if exc_hdlr.catcall_debugger_warning_disabled then
-					l_cb_item.enable_select
-					l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_debugger (True))
-				else
-					l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_debugger (False))
-				end
-			end
-
-				--| Execution replay recording status
-			Result.extend (dbg.toggle_exec_replay_recording_mode_cmd.new_menu_item_unmanaged)
-			Result.extend (create {EV_MENU_SEPARATOR})
-
-				-- Run (workbench)
-			Result.extend (dbg.run_workbench_cmd.new_menu_item_unmanaged)
-
-				-- Run (finalized)
-			Result.extend (dbg.run_finalized_cmd.new_menu_item_unmanaged)
-			Result.extend (create {EV_MENU_SEPARATOR})
-
-				--| Exception handling
-			Result.extend (dbg.exception_handler_cmd.new_menu_item_unmanaged)
-
-				--| Execution parameters
-			Result.extend (dbg.options_cmd.new_menu_item_unmanaged)
-
-				--| Execution profiles
-			profs := dbg.profiles
-			if profs /= Void and then profs.count > 0 then
 				Result.extend (create {EV_MENU_SEPARATOR})
 
-				create l_item.make_with_text (Interface_names.m_Execution_profiles)
+					--| Breakpoints status
+				l_item := dbg.ignore_breakpoints_cmd.new_menu_item_unmanaged
 				Result.extend (l_item)
-				l_item.disable_sensitive
 
-					--| Flat menu (no submenu)
-				l_submenu := Result
+					--| Catcall warning status
+--| FIXME: we should create specific _CMD for thoses		
+				if attached dbg.exceptions_handler as exc_hdlr then
+					create l_cb_item.make_with_text (interface_names.m_Dbg_disable_catcall_console_warning)
+					Result.extend (l_cb_item)
+					if exc_hdlr.catcall_console_warning_disabled then
+						l_cb_item.enable_select
+						l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_console (True))
+					else
+						l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_console (False))
+					end
 
-				defprof := profs.last_profile_uuid
-
-				create l_cb_item.make_with_text (Interface_names.l_default)
-				l_submenu.extend (l_cb_item)
-				if defprof = Void then
-					l_cb_item.enable_select
-				else
-					l_cb_item.select_actions.extend (agent profs.set_last_profile_by_uuid (Void))
+					create l_cb_item.make_with_text (interface_names.m_Dbg_disable_catcall_debugger_warning)
+					Result.extend (l_cb_item)
+					if exc_hdlr.catcall_debugger_warning_disabled then
+						l_cb_item.enable_select
+						l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_debugger (True))
+					else
+						l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_debugger (False))
+					end
 				end
 
-				from
-					profs.start
-				until
-					profs.after
-				loop
-					k := profs.key_for_iteration
-					create l_cb_item.make_with_text (profs.item_for_iteration.title)
+					--| Execution replay recording status
+				Result.extend (dbg.toggle_exec_replay_recording_mode_cmd.new_menu_item_unmanaged)
+				Result.extend (create {EV_MENU_SEPARATOR})
+
+					-- Run (workbench)
+				Result.extend (dbg.run_workbench_cmd.new_menu_item_unmanaged)
+
+					-- Run (finalized)
+				Result.extend (dbg.run_finalized_cmd.new_menu_item_unmanaged)
+				Result.extend (create {EV_MENU_SEPARATOR})
+
+					--| Exception handling
+				Result.extend (dbg.exception_handler_cmd.new_menu_item_unmanaged)
+
+					--| Execution parameters
+				Result.extend (dbg.options_cmd.new_menu_item_unmanaged)
+
+					--| Execution profiles
+				profs := dbg.profiles
+				if profs /= Void and then profs.count > 0 then
+					Result.extend (create {EV_MENU_SEPARATOR})
+
+					create l_item.make_with_text (Interface_names.m_Execution_profiles)
+					Result.extend (l_item)
+					l_item.disable_sensitive
+
+						--| Flat menu (no submenu)
+					l_submenu := Result
+
+					defprof := profs.last_profile_uuid
+
+					create l_cb_item.make_with_text (Interface_names.l_default)
 					l_submenu.extend (l_cb_item)
-					if defprof /= Void and then k ~ defprof then
+					if defprof = Void then
 						l_cb_item.enable_select
 					else
-						l_cb_item.select_actions.extend (agent profs.set_last_profile_by_uuid (k))
+						l_cb_item.select_actions.extend (agent profs.set_last_profile_by_uuid (Void))
 					end
-					profs.forth
+
+					from
+						profs.start
+					until
+						profs.after
+					loop
+						k := profs.key_for_iteration
+						create l_cb_item.make_with_text (profs.item_for_iteration.title)
+						l_submenu.extend (l_cb_item)
+						if defprof /= Void and then k ~ defprof then
+							l_cb_item.enable_select
+						else
+							l_cb_item.select_actions.extend (agent profs.set_last_profile_by_uuid (k))
+						end
+						profs.forth
+					end
 				end
 			end
 		ensure

@@ -11,14 +11,10 @@ class
 	EB_EXEC_DEBUG_REPLAY_CMD
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			tooltext
 		end
-
-	EB_CONSTANTS
-
-	EB_SHARED_WINDOW_MANAGER
 
 	EB_SHARED_PREFERENCES
 
@@ -30,33 +26,32 @@ create
 
 feature {NONE} -- Initialization
 
-	make_back (a_manager: like debugger_manager)
+	make_back
 			-- Initialize `Current'.
 		do
-			make_with_direction (a_manager, {APPLICATION_EXECUTION}.rtdbg_op_replay_back)
+			make_with_direction ({APPLICATION_EXECUTION}.rtdbg_op_replay_back)
 		end
 
-	make_forth (a_manager: like debugger_manager)
+	make_forth
 			-- Initialize `Current'.
 		do
-			make_with_direction (a_manager, {APPLICATION_EXECUTION}.rtdbg_op_replay_forth)
+			make_with_direction ({APPLICATION_EXECUTION}.rtdbg_op_replay_forth)
 		end
 
-	make_left (a_manager: like debugger_manager)
+	make_left
 			-- Initialize `Current'.
 		do
-			make_with_direction (a_manager, {APPLICATION_EXECUTION}.rtdbg_op_replay_left)
+			make_with_direction ({APPLICATION_EXECUTION}.rtdbg_op_replay_left)
 		end
 
-	make_right (a_manager: like debugger_manager)
+	make_right
 			-- Initialize `Current'.
 		do
-			make_with_direction (a_manager, {APPLICATION_EXECUTION}.rtdbg_op_replay_right)
+			make_with_direction ({APPLICATION_EXECUTION}.rtdbg_op_replay_right)
 		end
 
-	make_with_direction (a_manager: like debugger_manager; a_dir: like direction)
+	make_with_direction (a_dir: like direction)
 		do
-			debugger_manager := a_manager
 			direction := a_dir
 
 			inspect direction
@@ -86,22 +81,18 @@ feature -- Execution
 			replay_activated: debugger_manager.application_status.replay_activated
 		local
 			b: BOOLEAN
-			dm: like debugger_manager
 		do
-			dm := debugger_manager
-			if dm.safe_application_is_stopped then
-				b := dm.application.replay (direction)
+			if
+				attached eb_debugger_manager as dbg and then
+				dbg.safe_application_is_stopped
+			then
+				b := dbg.application.replay (direction)
 				if not b then
 					prompts.show_error_prompt ("Execution replay failed", Void, Void)
 				end
-				dm.update_execution_replay
+				dbg.update_execution_replay
 			end
 		end
-
-feature -- Access
-
-	debugger_manager: EB_DEBUGGER_MANAGER
-			-- Manager in charge of all debugging operations.
 
 feature {NONE} -- Attributes
 
@@ -196,7 +187,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -220,11 +211,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

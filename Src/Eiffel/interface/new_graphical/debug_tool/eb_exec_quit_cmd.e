@@ -12,14 +12,10 @@ class
 	EB_EXEC_QUIT_CMD
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			tooltext
 		end
-
-	EB_CONSTANTS
-
-	EB_SHARED_WINDOW_MANAGER
 
 	EB_SHARED_PREFERENCES
 
@@ -28,12 +24,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like debugger_manager)
+	make
 			-- Initialize `Current'.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
-			debugger_manager := a_manager
 			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("stop_application")
 			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			set_referred_shortcut (l_shortcut)
@@ -45,15 +40,12 @@ feature -- Formatting
 	execute
 			-- Pause the execution.
 		do
-			if debugger_manager.application_is_executing then
+			if attached debugger_manager as dbg and then dbg.application_is_executing then
 				ask_and_kill
 			end
 		end
 
 feature {NONE} -- Attributes
-
-	debugger_manager: DEBUGGER_MANAGER
-			-- Manager in charge of all debugging operations.
 
 	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
@@ -100,14 +92,12 @@ feature {NONE} -- Implementation
 			-- Pop up a discardable confirmation dialog before killing the application.
 		local
 			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
-			l_window: EB_WINDOW
 		do
 			create l_confirm.make_standard (interface_names.l_confirm_kill, "", create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_kill_preference, True))
 			l_confirm.set_title (interface_names.t_debugger_question)
 			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent kill)
 			l_confirm.show_on_active_window
-			l_window := window_manager.last_focused_window
-			if l_window /= Void then
+			if attached window_manager.last_focused_window as l_window then
 				l_window.show
 			end
 		end
@@ -117,8 +107,8 @@ feature {NONE} -- Implementation
 		require
 			valid_application: debugger_manager.application_is_executing
 		do
-			if debugger_manager.application_is_executing then
-				debugger_manager.application.kill
+			if attached debugger_manager as dbg and then dbg.application_is_executing then
+				dbg.application.kill
 			end
 		end
 

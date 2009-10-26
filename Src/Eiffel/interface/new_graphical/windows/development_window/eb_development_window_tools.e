@@ -140,12 +140,12 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	breakpoints_tool: ES_BREAKPOINTS_TOOL_PANEL
+	breakpoints_tool: ES_BREAKPOINTS_TOOL
 			-- Breakpoints tool.
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
+			Result ?= develop_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL})
 		ensure
 			result_attached: Result /= Void
 		end

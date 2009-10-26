@@ -123,7 +123,7 @@ feature -- Access: connection point
 							Result := <<
 								[test_running_event, agent an_observer.on_test_running],
 								[test_executed_event, agent an_observer.on_test_executed],
-								[test_removed_event, agent an_observer.on_test_removed]
+								[test_removed_event, agent an_observer.on_test_aborted]
 							>>
 						end,
 					connection)

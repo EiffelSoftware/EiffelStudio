@@ -64,6 +64,16 @@ feature -- Access
 			result_usable: Result.is_interface_usable
 		end
 
+	statistics: TEST_STATISTICS_I
+			-- Test statistics
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_usable: Result.is_interface_usable
+		end
+
 feature -- Access: output
 
 	output (a_session: TEST_SESSION_I): detachable OUTPUT_I
@@ -77,12 +87,6 @@ feature -- Access: output
 		ensure
 			result_attached_implies_usable: Result /= Void implies Result.is_interface_usable
 		end
-
-feature {NONE} -- Access
-
-	internal_test_suite_connection: detachable like test_suite_connection
-			-- Cached version of `test_suite_connection'.
-			-- Note: Do not use directly!
 
 feature -- Query
 
@@ -204,7 +208,6 @@ feature {NONE} -- Events
 			usable: is_interface_usable
 		deferred
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

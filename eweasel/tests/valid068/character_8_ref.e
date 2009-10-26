@@ -66,7 +66,7 @@ feature -- Comparison
 			Result := other.item = item
 		end
 
-	three_way_comparison (other: CHARACTER_REF): INTEGER is
+	three_way_comparison (other: like Current): INTEGER is
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 		do

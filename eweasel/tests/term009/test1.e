@@ -9,9 +9,9 @@ class
 feature
 	f (x: G) is
 		local
-			k: INTEGER;
 		do
-			k := x.count;
+			$INSTRUCTION
 		end;
+
 
 end

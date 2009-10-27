@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 		local
 			l_path: FILE_NAME
 			l_file: RAW_FILE
-			l_retrieval: FUNCTION [ANY, TUPLE [RAW_FILE], detachable like test_statistics]
+			l_retrieval: FUNCTION [ANY, TUPLE [RAW_FILE], detachable ANY]
 			l_test_suite: like test_suite
 		do
 			if not has_retrieved_statistics then
@@ -79,13 +79,13 @@ feature {NONE} -- Initialization
 				l_path.add_extension (statistics_file_extension)
 				create l_file.make (l_path)
 				if l_file.exists then
-					l_retrieval := agent (a_file: RAW_FILE): detachable like test_statistics
+					l_retrieval := agent (a_file: RAW_FILE): detachable ANY
 						local
 							l_retried: BOOLEAN
 						do
 							if not l_retried then
 								a_file.open_read
-								if attached {like test_statistics} a_file.retrieved as l_retrieved then
+								if attached a_file.retrieved as l_retrieved then
 									Result := l_retrieved
 								end
 							end
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 							retry
 						end
 
-					if attached l_retrieval.item ([l_file]) as l_statistics then
+					if attached {like test_statistics} l_retrieval.item ([l_file]) as l_statistics then
 						test_statistics := l_statistics
 						from
 							l_test_suite := test_suite
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 							l_statistics.after
 						loop
 							if l_test_suite.has_test (l_statistics.key_for_iteration) then
-								on_test_added (l_test_suite, l_test_suite.test (l_statistics.key_for_iteration))
+								account_result (l_statistics.item_for_iteration.last_result)
 							end
 							l_statistics.forth
 						end
@@ -122,6 +122,9 @@ feature -- Access
 			-- <Precursor>
 
 feature -- Access: general statistics
+
+	test_count: NATURAL
+			-- <Precursor>
 
 	executed_test_count: NATURAL
 			-- <Precursor>
@@ -172,6 +175,7 @@ feature {NONE} -- Access: event connection
 					agent (an_observer: TEST_STATISTICS_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
 						do
 							Result := <<
+									[statistics_updated_event, agent an_observer.on_statistics_updated],
 									[test_statistics_updated_event, agent an_observer.on_test_statistics_updated]
 								>>
 						end
@@ -215,19 +219,14 @@ feature {TEST_SUITE_S} -- Events: test suite
 			l_name: IMMUTABLE_STRING_8
 			l_stats: like test_statistics
 		do
+			test_count := test_count + 1
 			l_name := a_test.name
 			l_stats := test_statistics
 			if l_stats.has (l_name) then
-				if l_stats.item (l_name).last_result.is_pass then
-					passing_test_count := passing_test_count + 1
-				elseif l_stats.item (l_name).last_result.is_fail then
-					failing_test_count := failing_test_count + 1
-				else
-					unresolved_test_count := unresolved_test_count + 1
-				end
-				executed_test_count := executed_test_count + 1
-				statistics_updated_event.publish ([Current])
+				account_result (l_stats.item (l_name).last_result)
+				test_statistics_updated_event.publish ([Current, a_test])
 			end
+			statistics_updated_event.publish ([Current])
 		end
 
 	on_test_removed (a_test_suite: TEST_SUITE_S; a_test: TEST_I)
@@ -237,28 +236,21 @@ feature {TEST_SUITE_S} -- Events: test suite
 			l_stats: like test_statistics
 			l_result: EQA_RESULT
 		do
+			test_count := test_count - 1
 			l_name := a_test.name
 			l_stats := test_statistics
 			if l_stats.has (l_name) then
-				l_result := l_stats.item (l_name).last_result
-				if l_result.is_pass then
-					passing_test_count := passing_test_count - 1
-				elseif l_result.is_fail then
-					failing_test_count := failing_test_count - 1
-				else
-					unresolved_test_count := unresolved_test_count - 1
-				end
-				executed_test_count := executed_test_count - 1
+				discount_result (l_stats.item (l_name).last_result)
 				l_stats.remove (l_name)
-				statistics_updated_event.publish ([Current])
 			end
+			statistics_updated_event.publish ([Current])
 		end
 
 	on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
 			-- <Precursor>
 		do
 			if attached {TEST_EXECUTION_I} a_session as l_execution then
-				l_execution.connection.connect_events (Current)
+				l_execution.execution_connection.connect_events (Current)
 			end
 		end
 
@@ -266,7 +258,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			-- <Precursor>
 		do
 			if attached {TEST_EXECUTION_I} a_session as l_execution then
-				l_execution.connection.disconnect_events (Current)
+				l_execution.execution_connection.disconnect_events (Current)
 			end
 
 			if is_project_initialized then
@@ -288,26 +280,12 @@ feature {TEST_EXECUTION_I} -- Events: test execution
 				l_stats := test_statistics
 				if not l_stats.has (l_name) then
 					l_stats.force (new_statistics_data (a_result), l_name)
-					executed_test_count := executed_test_count + 1
 				else
 					l_data := l_stats.item (l_name)
-					l_data.execution_count := l_data.execution_count + 1
-					if l_data.last_result.is_pass then
-						passing_test_count := passing_test_count - 1
-					elseif l_data.last_result.is_fail then
-						failing_test_count := failing_test_count - 1
-					else
-						unresolved_test_count := unresolved_test_count - 1
-					end
+					discount_result (l_data.last_result)
 					l_data.last_result := a_result
 				end
-				if a_result.is_pass then
-					passing_test_count := passing_test_count + 1
-				elseif a_result.is_fail then
-					failing_test_count := failing_test_count + 1
-				else
-					unresolved_test_count := unresolved_test_count + 1
-				end
+				account_result (a_result)
 				test_statistics_updated_event.publish ([Current, a_test])
 				statistics_updated_event.publish ([Current])
 			end
@@ -350,6 +328,32 @@ feature {NONE} -- Implementation
 		rescue
 			l_retried := True
 			retry
+		end
+
+	account_result (a_result: EQA_RESULT)
+			-- Account for given result in `*_count' queries.
+		do
+			executed_test_count := executed_test_count + 1
+			if a_result.is_pass then
+				passing_test_count := passing_test_count + 1
+			elseif a_result.is_fail then
+				failing_test_count := failing_test_count + 1
+			else
+				unresolved_test_count := unresolved_test_count + 1
+			end
+		end
+
+	discount_result (a_result: EQA_RESULT)
+			-- Discount for given result in `*_count' queries.
+		do
+			executed_test_count := executed_test_count - 1
+			if a_result.is_pass then
+				passing_test_count := passing_test_count - 1
+			elseif a_result.is_fail then
+				failing_test_count := failing_test_count - 1
+			else
+				unresolved_test_count := unresolved_test_count - 1
+			end
 		end
 
 feature {NONE} -- Clean up

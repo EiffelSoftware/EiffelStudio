@@ -9,10 +9,10 @@ Block special: False
 Character special: False
 
 File name: my_link
-Regular file: False
+Regular file: True
 Device: False
 Directory: False
-Symlink: True
+Symlink: False
 Fifo: False
 Socket: False
 Block special: False

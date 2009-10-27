@@ -719,7 +719,7 @@
 	<PREF NAME="shortcuts.view.tools.show_features_tool" DESCRIPTION="Shortcut to display Features tool."><SHORTCUT Ctrl="True" Alt="True">T</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_clusters_tool" DESCRIPTION="Shortcut to display Clusters tool."><SHORTCUT Ctrl="True" Alt="True">U</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_metric_tool" DESCRIPTION="Shortcut to display Metric tool."><SHORTCUT Ctrl="True" Alt="True">M</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.view.tools.show_dependency_tool" DESCRIPTION="Shortcut to display Metric tool."><SHORTCUT Ctrl="True" Alt="True">Y</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.view.tools.show_dependency_tool" DESCRIPTION="Shortcut to display Dependency tool."><SHORTCUT Ctrl="True" Alt="True">Y</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_information_tool" DESCRIPTION="Shortcut to display Information (EIS) tool."><SHORTCUT Ctrl="True" Alt="True">Q</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_diagram_tool" DESCRIPTION="Shortcut to display Diagram tool."><SHORTCUT Ctrl="True" Alt="True">I</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_class_tool" DESCRIPTION="Shortcut to display Class tool."><SHORTCUT Ctrl="True" Alt="True">C</SHORTCUT></PREF>

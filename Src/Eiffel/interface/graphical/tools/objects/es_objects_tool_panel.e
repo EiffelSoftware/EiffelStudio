@@ -1252,10 +1252,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			if attached {EV_GRID_ROW} ost.ev_item as row then
 				if
 					(attached {ES_OBJECTS_GRID_OBJECT_LINE} row.data as gline)
-					and then (
-						(not attached {ES_OBJECTS_GRID_SPECIFIC_LINE} gline)
-						or else not gline.is_read_only
-					)
+					and then (is_removable_debugged_object_line (gline))
 				then
 					remove_debugged_object_line (gline)
 				end
@@ -1293,6 +1290,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 	remove_debugged_object_line (gline: ES_OBJECTS_GRID_OBJECT_LINE)
 		require
 			gline_not_void: gline /= Void
+			removable: is_removable_debugged_object_line (gline)
 		local
 			row: EV_GRID_ROW
 		do
@@ -1346,7 +1344,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			Result := is_removable_debugged_object_row (a_line.row)
 					and then is_removable_debugged_object_address (a_line.object_address)
 					and then (
-							(not attached {ES_OBJECTS_GRID_SPECIFIC_LINE} a_line) or else
+							(not attached {ES_OBJECTS_GRID_SPECIFIC_LINE} a_line) and
 							not a_line.is_read_only
 						) --| might be only `not line.is_read_only'
 		end

@@ -397,10 +397,10 @@ feature {NONE}  -- Implementation
 				l_zones.before or l_need_reposition
 			loop
 				l_zone := l_zones.item_for_iteration
-				if l_zones.item_for_iteration.assistant.last_state.position + l_zone.size < l_last_start_position then
+				if l_zone.assistant.last_state.position + l_zone.size < l_last_start_position then
 					if attached {EV_WIDGET} l_zone.tool_bar as lt_widget then
 						-- We can position it to orignal position
-						tool_bar_row.internal_set_item_position (lt_widget, l_zones.item_for_iteration.assistant.last_state.position)
+						tool_bar_row.internal_set_item_position (lt_widget, l_zone.assistant.last_state.position)
 					else
 						check not_possible: False end
 					end
@@ -829,14 +829,14 @@ feature {NONE}  -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

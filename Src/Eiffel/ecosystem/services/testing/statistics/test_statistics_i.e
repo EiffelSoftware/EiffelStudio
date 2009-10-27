@@ -28,6 +28,15 @@ feature -- Access
 
 feature -- Access: general statistics
 
+	test_count: NATURAL
+			-- Number of tests in `test_suite'
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			result_correct: Result = test_suite.tests.count.as_natural_32
+		end
+
 	executed_test_count: NATURAL
 			-- Number of executed tests in `test_suite'
 		require

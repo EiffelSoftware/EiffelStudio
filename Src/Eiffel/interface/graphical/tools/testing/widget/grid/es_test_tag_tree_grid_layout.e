@@ -81,12 +81,31 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_test: TEST_I
+			l_query: detachable FUNCTION [ANY, TUPLE [TEST_SUITE_S], detachable EV_GRID_ITEM]
 		do
 			if a_node.is_leaf and a_column > 1 then
 				l_test := a_node.item
-				if a_column = 2 then
-					Result := new_status_item (l_test)
-				end
+				l_query := agent (a_test: TEST_I; a_test_suite: TEST_SUITE_S; a_col: INTEGER): detachable EV_GRID_ITEM
+					local
+						l_result: detachable EQA_RESULT
+					do
+						if a_test_suite.statistics.execution_count (a_test) > 0 then
+							l_result := a_test_suite.statistics.last_result (a_test)
+						end
+						inspect
+							a_col
+						when 2 then
+							Result := new_status_item (a_test, l_result)
+						when 3 then
+							if l_result /= Void then
+								Result := new_date_time_item (l_result.finish_date)
+							end
+						else
+
+						end
+					end (l_test, ?, a_column)
+				perform_with_test_suite (l_query)
+				Result := l_query.last_result
 			else
 				Result := Precursor (a_column, a_grid, a_node)
 			end
@@ -161,7 +180,7 @@ feature {NONE} -- Implementation
 						l_text.append_character ('s')
 					end
 				else
-					l_mins := (l_secs // 60) + 1
+					l_mins := (l_secs // 60)
 					if l_mins > 59 then
 						l_text.append_integer_64 (l_hours)
 						l_text.append (" hour")
@@ -169,6 +188,7 @@ feature {NONE} -- Implementation
 							l_text.append_character ('s')
 						end
 					else
+						l_mins := l_mins.max (1)
 						l_text.append_integer_64 (l_mins)
 						l_text.append (" min")
 					end
@@ -188,17 +208,23 @@ feature {NONE} -- Implementation
 			Result := l_label
 		end
 
-	new_status_item (a_test: TEST_I): EV_GRID_ITEM
+	new_status_item (a_test: TEST_I; a_result: detachable EQA_RESULT): EV_GRID_ITEM
 			-- Add status item to row for given tast at index `status_column'.
 		local
+			l_text: STRING_32
 			l_tooltip: STRING
 			l_label: EV_GRID_LABEL_ITEM
 			l_icon: EV_PIXMAP
 		do
 			create l_label
-			l_label.set_text (status_text (a_test))
-			l_label.set_tooltip (status_text (a_test))
-			l_icon := status_icon (a_test)
+			l_text := status_text (a_test, a_result)
+			l_label.set_text (l_text)
+			if a_result /= Void and then not a_result.information.is_empty then
+				l_label.set_tooltip (a_result.information.as_string_32)
+			else
+				l_label.set_tooltip (l_text)
+			end
+			l_icon := status_icon (a_test, a_result)
 			if l_icon /= Void then
 				l_label.set_pixmap (l_icon)
 			end
@@ -206,18 +232,14 @@ feature {NONE} -- Implementation
 			Result := l_label
 		end
 
-	status_text (a_test: TEST_I): STRING_32
+	status_text (a_test: TEST_I; a_result: detachable EQA_RESULT): STRING_32
 			-- Status text for `a_test'.
-		local
---			l_outcome: EQA_RESULT
 		do
---			if a_test.is_queued then
---				Result := locale_formatter.translation (l_queued)
---			elseif a_test.is_running then
---				Result := locale_formatter.translation (l_running)
---			else
+			if a_result /= Void then
+				Result := a_result.tag.as_string_32
+			else
 				Result := locale_formatter.translation (l_not_tested)
---			end
+			end
 		end
 
 	exception_text (a_exception: EQA_TEST_INVOCATION_EXCEPTION): STRING_32
@@ -239,18 +261,18 @@ feature {NONE} -- Implementation
 			Result.append_character (')')
 		end
 
-	status_icon (a_test: TEST_I): detachable EV_PIXMAP
+	status_icon (a_test: TEST_I; a_result: detachable EQA_RESULT): detachable EV_PIXMAP
 			-- Icon representing status of `a_test'.
 		do
---			if not (a_test.is_queued or a_test.is_running) and a_test.is_outcome_available then
---				if a_test.last_outcome.is_pass then
---					Result := pixmaps.icon_pixmaps.general_tick_icon
---				elseif a_test.last_outcome.is_fail then
---					Result := pixmaps.icon_pixmaps.general_error_icon
---				else
---					Result := pixmaps.icon_pixmaps.general_warning_icon
---				end
---			end
+			if a_result /= Void then
+				if a_result.is_pass then
+					Result := pixmaps.icon_pixmaps.general_tick_icon
+				elseif a_result.is_fail then
+					Result := pixmaps.icon_pixmaps.general_error_icon
+				else
+					Result := pixmaps.icon_pixmaps.general_warning_icon
+				end
+			end
 		end
 
 feature {NONE} -- Internationalization

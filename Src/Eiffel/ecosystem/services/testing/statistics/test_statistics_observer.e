@@ -12,6 +12,19 @@ inherit
 
 feature {TEST_STATISTICS_I} -- Events
 
+	on_statistics_updated (a_statistics: TEST_STATISTICS_I)
+			-- Called when general statistics have changed.
+			--
+			-- `a_statistics': Statistics which have changed.
+		require
+			a_statistics_attached: a_statistics /= Void
+			a_statistics_usabel: a_statistics.is_interface_usable
+		do
+
+		ensure
+			a_statistics_usable: a_statistics.is_interface_usable
+		end
+
 	on_test_statistics_updated (a_statistics: TEST_STATISTICS_I; a_test: TEST_I)
 			-- Called when statistics for a test have changed.
 			--
@@ -20,8 +33,17 @@ feature {TEST_STATISTICS_I} -- Events
 		require
 			a_statistics_attached: a_statistics /= Void
 			a_test_attached: a_test /= Void
+			a_statistics_usable: a_statistics.is_interface_usable
+			a_test_usable: a_test.is_interface_usable
+			a_test_valid: a_statistics.test_suite.has_test (a_test.name) and then
+				a_statistics.test_suite.test (a_test.name) = a_test
 		do
 
+		ensure
+			a_statistics_usable: a_statistics.is_interface_usable
+			a_test_usable: a_test.is_interface_usable
+			a_test_valid: a_statistics.test_suite.has_test (a_test.name) and then
+				a_statistics.test_suite.test (a_test.name) = a_test
 		end
 
 note

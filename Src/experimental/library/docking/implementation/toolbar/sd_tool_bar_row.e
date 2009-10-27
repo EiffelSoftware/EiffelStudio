@@ -254,6 +254,7 @@ feature -- Query
 		local
 			l_sortable_array: SORTED_TWO_WAY_LIST [SD_TOOL_BAR_ZONE]
 			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_item: SD_TOOL_BAR_ZONE
 		do
 			l_zones := internal_zones.twin
 
@@ -263,7 +264,10 @@ feature -- Query
 			until
 				l_zones.after
 			loop
-				l_sortable_array.extend (l_zones.item)
+				l_item := l_zones.item
+
+				l_sortable_array.search_before (l_item)
+				l_sortable_array.put_right (l_item)
 
 				l_zones.forth
 			end
@@ -361,14 +365,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -717,6 +717,7 @@ feature -- Accelerator, focus label and menu name
 	t_setup_customized_formatter: STRING_32 do Result := locale.translation ("Setup Customized Formatters") end
 	t_sweeping_the_system_now: STRING_32		do Result := locale.translation ("Sweep the system now.")	end
 	f_customize_formatter: STRING_32 do Result := locale.translation ("Customize formatters") end
+	f_customized_formatter: STRING_32 do Result := locale.translation ("Customized formatters") end
 	f_add_formatter: STRING_32 do Result := locale.translation ("Add customized formatter") end
 	f_remove_formatter: STRING_32 do Result := locale.translation ("Remove selected customized formatter") end
 	l_formatter: STRING_32 do Result := locale.translation ("Formatter") end

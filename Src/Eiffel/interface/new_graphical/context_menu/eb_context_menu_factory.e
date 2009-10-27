@@ -1003,7 +1003,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 
 				-- Extend customized formatters.
-			create l_c_menu.make_with_text (names.f_customize_formatter)
+			create l_c_menu.make_with_text (names.f_customized_formatter)
 			l_menu.extend (l_c_menu)
 
 			extend_formatter (l_c_menu, dev_window.tools.class_tool.customized_formatters, dev_window.tools.class_tool, a_class_stone)
@@ -1065,7 +1065,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 
 				-- Extend customized formatters.
-			create l_c_menu.make_with_text (names.f_customize_formatter)
+			create l_c_menu.make_with_text (names.f_customized_formatter)
 			l_menu.extend (l_c_menu)
 
 			extend_formatter (l_c_menu, dev_window.tools.features_relation_tool.customized_formatters, dev_window.tools.features_relation_tool, a_feature_stone)

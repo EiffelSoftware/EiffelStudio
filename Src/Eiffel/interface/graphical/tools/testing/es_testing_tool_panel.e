@@ -31,10 +31,13 @@ inherit
 
 	TEST_SUITE_OBSERVER
 		redefine
-			on_test_added,
-			on_test_removed,
 			on_session_launched,
 			on_session_finished
+		end
+
+	TEST_STATISTICS_OBSERVER
+		redefine
+			on_statistics_updated
 		end
 
 	SESSION_EVENT_OBSERVER
@@ -108,22 +111,20 @@ feature {NONE} -- Initialization: widget status
 			-- <Precursor>
 		local
 			l_app: EV_APPLICATION
-			l_test_suite: TEST_SUITE_S
 			l_service_consumer: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
 			l_service: OUTPUT_MANAGER_S
 			l_key: UUID
 			l_output: ES_EDITOR_OUTPUT_PANE
 		do
 			Precursor
-			if test_suite.is_service_available then
-				l_test_suite := test_suite.service
-				if l_test_suite.is_interface_usable then
-					l_test_suite.test_suite_connection.connect_events (Current)
-				end
-			end
+			perform_with_test_suite (
+				agent (a_test_suite: TEST_SUITE_S)
+					do
+						a_test_suite.test_suite_connection.connect_events (Current)
+						a_test_suite.statistics.connection.connect_events (Current)
+						on_statistics_updated (a_test_suite.statistics)
+					end)
 			propagate_drop_actions (Void)
-
-			update_run_labels
 
 				-- Initialize testing output
 			create l_service_consumer
@@ -274,46 +275,6 @@ feature {NONE} -- Status setting: stones
 			end
 		end
 
-feature {NONE} -- Status settings: widgets
-
-	update_run_labels
-			-- Update text in `runs_label' and `errors_label'.
-		do
-			perform_with_test_suite (
-				agent (l_ts: TEST_SUITE_S)
-					local
-						l_text: STRING_32
-						l_tool_bar: like right_tool_bar_widget
-					do
-						create l_text.make (10)
-						l_text.append ("Run: ")
-						--l_text.append_natural_32 (l_ts.count_executed)
-						l_text.append_natural_32 (0)
-						l_text.append_character ('/')
-						l_text.append_integer (l_ts.tests.count)
-						runs_label.set_text (l_text)
-
-						create l_text.make (10)
-						l_text.append ("Failing: ")
-						--l_text.append_natural_32 (l_ts.count_failing)
-						l_text.append_natural_32 (0)
-						errors_label.set_text (l_text)
-
-						if False then -- l_ts.count_failing > 0 then
-							errors_pixmap.enable_sensitive
-							errors_label.enable_sensitive
-						else
-							errors_pixmap.disable_sensitive
-							errors_label.disable_sensitive
-						end
-
-						l_tool_bar := right_tool_bar_widget
-						if l_tool_bar /= Void then
-							l_tool_bar.compute_minimum_size
-						end
-					end)
-		end
-
 feature {NONE} -- Events: wizard
 
 	on_launch_wizard
@@ -461,18 +422,6 @@ feature {NONE} -- Events: labels
 
 feature {TEST_SUITE_S} -- Events: test suite
 
-	on_test_added (a_collection: TEST_SUITE_S; a_item: TEST_I)
-			-- <Precursor>
-		do
-			update_run_labels
-		end
-
-	on_test_removed (a_collection: TEST_SUITE_S; a_item: TEST_I)
-			-- <Precursor>
-		do
-			update_run_labels
-		end
-
 	on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
 			-- <Precursor>
 		do
@@ -490,6 +439,40 @@ feature {TEST_SUITE_S} -- Events: test suite
 		do
 			if attached {ETEST_RETRIEVAL} a_session then
 				retrieve_button.enable_sensitive
+			end
+		end
+
+feature {TEST_STATISTICS_I} -- Events
+
+	on_statistics_updated (a_statistics: TEST_STATISTICS_I)
+			-- <Precursor>
+		local
+			l_text: STRING_32
+			l_tool_bar: like right_tool_bar_widget
+		do
+			create l_text.make (10)
+			l_text.append ("Run: ")
+			l_text.append_natural_32 (a_statistics.executed_test_count)
+			l_text.append_character ('/')
+			l_text.append_natural_32 (a_statistics.test_count)
+			runs_label.set_text (l_text)
+
+			create l_text.make (10)
+			l_text.append ("Failing: ")
+			l_text.append_natural_32 (a_statistics.failing_test_count)
+			errors_label.set_text (l_text)
+
+			if a_statistics.failing_test_count > 0 then
+				errors_pixmap.enable_sensitive
+				errors_label.enable_sensitive
+			else
+				errors_pixmap.disable_sensitive
+				errors_label.disable_sensitive
+			end
+
+			l_tool_bar := right_tool_bar_widget
+			if l_tool_bar /= Void then
+				l_tool_bar.compute_minimum_size
 			end
 		end
 

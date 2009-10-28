@@ -2954,73 +2954,76 @@ feature {NONE} -- Implementation
 			indent: PROCEDURE [ANY, TUPLE]
 			exdent: PROCEDURE [ANY, TUPLE]
 		do
-			l_text_formatter_decorator := text_formatter_decorator
-			if
-				true
-				-- Use multiline format all the time to facilitate debugging
-				-- Otherwise it would be possible to use single or multiline format
-				-- depending on what parts are present in the loop expression
---				l_as.invariant_part /= Void or else
---				l_as.exit_condition /= Void or else
---				l_as.variant_part /= Void
-			then
-				indent := agent
-					do
-						text_formatter_decorator.indent
-						text_formatter_decorator.put_new_line
-					end
-				exdent := agent
-					do
-						text_formatter_decorator.put_new_line
-						text_formatter_decorator.exdent
-					end
-			else
-				indent := agent text_formatter_decorator.put_space
-				exdent := indent
-			end
-			l_text_formatter_decorator.process_keyword_text (ti_across_keyword, Void)
-			l_text_formatter_decorator.set_separator (Void)
-			l_text_formatter_decorator.set_new_line_between_tokens
-			indent.call (Void)
-			l_text_formatter_decorator.new_expression
-			put_breakable
-			l_as.iteration.expression.process (Current)
-			text_formatter_decorator.put_space
-			l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
-			text_formatter_decorator.put_space
-			l_as.iteration.identifier.process (Current)
-			exdent.call (Void)
-			if l_as.invariant_part /= Void then
-				l_text_formatter_decorator.process_keyword_text (ti_invariant_keyword, Void)
-				indent.call (Void)
-				l_as.invariant_part.process (Current)
-				exdent.call (Void)
-			end
-			if l_as.exit_condition /= Void then
-				l_text_formatter_decorator.process_keyword_text (ti_until_keyword, Void)
+			if not expr_type_visiting then
+				l_text_formatter_decorator := text_formatter_decorator
+				if
+					true
+					-- Use multiline format all the time to facilitate debugging
+					-- Otherwise it would be possible to use single or multiline format
+					-- depending on what parts are present in the loop expression
+--					l_as.invariant_part /= Void or else
+--					l_as.exit_condition /= Void or else
+--					l_as.variant_part /= Void
+				then
+					indent := agent
+						do
+							text_formatter_decorator.indent
+							text_formatter_decorator.put_new_line
+						end
+					exdent := agent
+						do
+							text_formatter_decorator.put_new_line
+							text_formatter_decorator.exdent
+						end
+				else
+					indent := agent text_formatter_decorator.put_space
+					exdent := indent
+				end
+				l_text_formatter_decorator.process_keyword_text (ti_across_keyword, Void)
+				l_text_formatter_decorator.set_separator (Void)
+				l_text_formatter_decorator.set_new_line_between_tokens
 				indent.call (Void)
 				l_text_formatter_decorator.new_expression
 				put_breakable
-				l_as.exit_condition.process (Current)
+				l_as.iteration.expression.process (Current)
+				text_formatter_decorator.put_space
+				l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
+				text_formatter_decorator.put_space
+				l_as.iteration.identifier.process (Current)
 				exdent.call (Void)
-			end
-			if l_as.is_all then
-				l_text_formatter_decorator.process_keyword_text (ti_all_keyword, Void)
-			else
-				l_text_formatter_decorator.process_keyword_text (ti_some_keyword, Void)
-			end
-			indent.call (Void)
-			l_text_formatter_decorator.new_expression
-			put_breakable
-			l_as.expression.process (Current)
-			exdent.call (Void)
-			if l_as.variant_part /= Void then
-				l_text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
+				if l_as.invariant_part /= Void then
+					l_text_formatter_decorator.process_keyword_text (ti_invariant_keyword, Void)
+					indent.call (Void)
+					l_as.invariant_part.process (Current)
+					exdent.call (Void)
+				end
+				if l_as.exit_condition /= Void then
+					l_text_formatter_decorator.process_keyword_text (ti_until_keyword, Void)
+					indent.call (Void)
+					l_text_formatter_decorator.new_expression
+					put_breakable
+					l_as.exit_condition.process (Current)
+					exdent.call (Void)
+				end
+				if l_as.is_all then
+					l_text_formatter_decorator.process_keyword_text (ti_all_keyword, Void)
+				else
+					l_text_formatter_decorator.process_keyword_text (ti_some_keyword, Void)
+				end
 				indent.call (Void)
-				l_as.variant_part.process (Current)
+				l_text_formatter_decorator.new_expression
+				put_breakable
+				l_as.expression.process (Current)
 				exdent.call (Void)
+				if l_as.variant_part /= Void then
+					l_text_formatter_decorator.process_keyword_text (ti_variant_keyword, Void)
+					indent.call (Void)
+					l_as.variant_part.process (Current)
+					exdent.call (Void)
+				end
+				l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 			end
-			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+			last_type := boolean_type
 		end
 
 	process_retry_as (l_as: RETRY_AS)

@@ -2336,7 +2336,11 @@ Loop:
 
 Iteration:
 	TE_ACROSS Expression TE_AS Identifier_as_lower
-			{ $$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, $3, $4) }
+			{
+				insert_supplier ("ITERABLE", $4)
+				insert_supplier ("ITERATION_CURSOR", $4)
+				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, $3, $4)
+			}
 	;
 
 Invariant: -- Empty

@@ -388,6 +388,20 @@ feature -- Settings
 			is_ignoring_attachment_marks_set: is_ignoring_attachment_marks = v
 		end
 
+feature -- Modification
+
+	insert_supplier (name: STRING; location: LOCATION_AS)
+		require
+			name_attached: name /= Void
+			location_attached: location /= Void
+		local
+			id: ID_AS
+		do
+			create id.initialize (name)
+			id.set_position (location.line, location.column, location.position, location.location_count)
+			suppliers.insert_supplier_id (id)
+		end
+
 feature {NONE} -- Implementation
 
 	set_is_parsing_class_head (a_flag_value: BOOLEAN)

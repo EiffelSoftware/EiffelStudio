@@ -162,10 +162,18 @@ rt_public void eif_show_console(void)
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		BOOL bLaunched;
 		int hCrt;
+		STARTUPINFO l_info;
 #ifndef EIF_BORLAND
 		FILE *hf;
 #endif
 		RT_GET_CONTEXT
+
+			/* Find out if the calling process has initialized the HANDLEs. */
+		memset(&l_info, 0, sizeof(STARTUPINFO));
+		GetStartupInfo(&l_info);
+		if ((l_info.dwFlags & STARTF_USESTDHANDLES) != STARTF_USESTDHANDLES) {
+			AllocConsole();
+		}
 
 			/* Get all default standard handles */
 		eif_conin = GetStdHandle (STD_INPUT_HANDLE);

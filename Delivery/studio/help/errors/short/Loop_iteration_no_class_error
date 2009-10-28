@@ -1,0 +1,2 @@
+Error: Cannot find a suitable class to generate loop iteration.
+What to do: make sure the corresponding class is available to the current class.

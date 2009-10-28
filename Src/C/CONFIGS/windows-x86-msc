@@ -39,7 +39,7 @@ alib_line='lib -OUT:$@ $**'
 optimize='-O2 -GS-'
 debug=''
 #optimize='-Od -GS'
-#debug='-Zi'
+#debug='-Zi -DISE_USE_ASSERT'
 
 warning_level='-W4 -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE'
 dll_flags='-nologo -subsystem:WINDOWS -dll -incremental:no -nodefaultlib:libc -OUT:$@'

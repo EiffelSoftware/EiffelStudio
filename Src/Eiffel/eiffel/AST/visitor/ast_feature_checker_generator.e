@@ -592,6 +592,9 @@ feature {NONE} -- Implementation: Access
 	last_access_writable: BOOLEAN
 			-- Is last ACCESS_AS node creatable?
 
+	is_object_test_local_initializing: BOOLEAN
+			-- Is an object test local being initialized, so that it can be used as a target of an assignment?
+
 	last_actual_feature_name: STRING
 			-- Whenever a feature name is required, use this to select the actually correct one.
 			--| If last_original_feature_name is 0 then last_feature_name will be selected
@@ -668,6 +671,7 @@ feature -- Settings
 			check_for_vaol := False
 			depend_unit_level := 0
 			last_access_writable := False
+			is_object_test_local_initializing := False
 			last_original_feature_name_id := 0
 			last_feature_name_id := 0
 			last_calls_target_type := Void
@@ -2471,7 +2475,8 @@ feature -- Implementation
 			l_local_info := context.object_test_local (l_as.feature_name.name_id)
 			if l_local_info /= Void then
 				l_local_info.set_is_used (True)
-				last_access_writable := False
+				last_access_writable := is_object_test_local_initializing
+				is_object_test_local_initializing := False
 				if l_as.parameters /= Void then
 					create l_vuar1
 					context.init_error (l_vuar1)
@@ -2616,7 +2621,8 @@ feature -- Implementation
 					l_local_info := context.object_test_local (l_as.feature_name.name_id)
 					if l_local_info /= Void then
 						l_local_info.set_is_used (True)
-						last_access_writable := False
+						last_access_writable := is_object_test_local_initializing
+						is_object_test_local_initializing := False
 						l_has_vuar_error := l_as.parameters /= Void
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
@@ -2737,7 +2743,8 @@ feature -- Implementation
 					l_local_info := context.object_test_local (l_as.feature_name.name_id)
 					if l_local_info /= Void then
 						l_local_info.set_is_used (True)
-						last_access_writable := False
+						last_access_writable := is_object_test_local_initializing
+						is_object_test_local_initializing := False
 						if l_as.parameters /= Void then
 							create l_vuar1
 							context.init_error (l_vuar1)
@@ -3613,7 +3620,8 @@ feature -- Implementation
 					l_local_info := context.object_test_local (l_as.feature_name.internal_name.name_id)
 					if l_local_info /= Void then
 						l_local_info.set_is_used (True)
-						last_access_writable := False
+						last_access_writable := is_object_test_local_initializing
+						is_object_test_local_initializing := False
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						create {TYPED_POINTER_A} last_type.make_typed (l_type)
@@ -6379,12 +6387,16 @@ feature -- Implementation
 			l_vwbe4: VWBE4
 			l_needs_byte_node: BOOLEAN
 			l_list: BYTE_LIST [BYTE_NODE]
+			l_list2: BYTE_LIST [BYTE_NODE]
 			l_expr: EXPR_B
 			l_loop: LOOP_B
 			l_variant: VARIANT_B
 			s: INTEGER
 			scope_matcher: AST_SCOPE_MATCHER
 			e: like error_level
+			operation_id_as: ID_AS
+			cursor_id_as: ID_AS
+			after_call_as: EXPR_CALL_AS
 		do
 			has_loop := True
 			l_needs_byte_node := is_byte_node_enabled
@@ -6399,9 +6411,25 @@ feature -- Implementation
 					-- Processing is done on the same level as the outer instructions
 					-- because the effective scope of setters is at that level
 				l_as.from_part.process (Current)
+				if l_needs_byte_node and then attached {BYTE_LIST [BYTE_NODE]} last_byte_node as from_part then
+					l_list := from_part
+					l_loop.set_from_part (from_part)
+				end
+			end
+			if attached l_as.iteration as it then
+					-- Save cursor name for future.
+				cursor_id_as := it.identifier
+					-- Process Iteration part.
+				it.process (Current)
 				if l_needs_byte_node then
-					l_list ?= last_byte_node
-					l_loop.set_from_part (l_list)
+					if l_list = Void then
+						create l_list2.make (1)
+					else
+						create l_list2.make (l_list.count + 1)
+						l_list2.append (l_list)
+					end
+					l_list2.extend (last_byte_node)
+					l_loop.set_from_part (l_list2)
 				end
 			end
 			if l_as.invariant_part /= Void then
@@ -6424,8 +6452,33 @@ feature -- Implementation
 					l_loop.set_variant_part (l_variant)
 				end
 			end
+
+			if cursor_id_as /= Void then
+					-- Build expression in the form
+					--    cursor.after
+				create operation_id_as.initialize ("after")
+				operation_id_as.set_position (cursor_id_as.line, cursor_id_as.column, cursor_id_as.position, cursor_id_as.name.count)
+				operation_id_as.set_index (cursor_id_as.index)
+				create after_call_as.initialize (
+					create {NESTED_AS}.initialize (
+						create {ACCESS_ID_AS}.initialize (cursor_id_as, Void),
+						create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
+						Void
+				))
+			end
+
 				-- Type check the exit test.
-			l_as.stop.process (Current)
+			if attached l_as.stop as ec then
+				if after_call_as /= Void then
+						-- Build exit condition in the form
+						--    cursor.after or else original_condition
+					(create {BIN_OR_ELSE_AS}.make (after_call_as, ec, Void, Void)).process (Current)
+				else
+					ec.process (Current)
+				end
+			elseif after_call_as /= Void then
+				after_call_as.process (Current)
+			end
 			if last_type /= Void then
 					-- Check if if is a boolean expression
 				if not last_type.actual_type.is_boolean then
@@ -6438,63 +6491,184 @@ feature -- Implementation
 					l_expr ?= last_byte_node
 					l_loop.set_stop (l_expr)
 				end
-
 				break_point_slot_count := break_point_slot_count + 1
-
-				if l_as.compound /= Void then
-						-- Type check the loop compound
-					context.enter_realm
-					from
-						e := error_level
-						create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
-						s := context.scope
-						check
-							has_at_least_one_iteration: not context.is_sibling_dominating
-						end
-					until
-						context.is_sibling_dominating or else e /= error_level
-					loop
-							-- Record most recent scope information before the loop body, so that
-							-- it can be compared with the information after the loop body on next iteration.
-						context.update_sibling
-						scope_matcher.add_scopes (l_as.stop)
-						process_compound (l_as.compound)
-							-- Save byte code if `is_byte_node_enabled' is set to `True'
-							-- and set it to `False' to avoid regenerating it next time.
-							-- The original value will be restored from `l_needs_byte_node'.
-						if is_byte_node_enabled then
-							l_list ?= last_byte_node
-							l_loop.set_compound (l_list)
-							is_byte_node_enabled := False
-						end
-						context.set_scope (s)
-					end
-					is_byte_node_enabled := l_needs_byte_node
-					context.leave_realm
-						-- Take exit condition into account.
-					create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
-					scope_matcher.add_scopes (l_as.stop)
-				end
-
-				if l_needs_byte_node then
-					l_loop.set_line_number (l_as.stop.start_location.line)
-					l_loop.set_end_location (l_as.end_keyword)
-					last_byte_node := l_loop
-				end
-
-					-- Record loop for optimizations in final mode
-				system.optimization_tables.force (
-					create {OPTIMIZE_UNIT}.make (context.current_class.class_id,
-						current_feature.body_index))
 			end
+
+			if l_as.compound = Void then
+					-- Make sure the compound byte code is empty in case we have Iteration part.
+				l_list := Void
+			else
+					-- Type check the loop compound
+				context.enter_realm
+				from
+					e := error_level
+					create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
+					s := context.scope
+					check
+						has_at_least_one_iteration: not context.is_sibling_dominating
+					end
+				until
+					context.is_sibling_dominating or else e /= error_level
+				loop
+						-- Record most recent scope information before the loop body, so that
+						-- it can be compared with the information after the loop body on next iteration.
+					context.update_sibling
+					scope_matcher.add_scopes (l_as.stop)
+					process_compound (l_as.compound)
+						-- Save byte code if `is_byte_node_enabled' is set to `True'
+						-- and set it to `False' to avoid regenerating it next time.
+						-- The original value will be restored from `l_needs_byte_node'.
+					if is_byte_node_enabled then
+						l_list ?= last_byte_node
+						l_loop.set_compound (l_list)
+						is_byte_node_enabled := False
+					end
+					context.set_scope (s)
+				end
+				is_byte_node_enabled := l_needs_byte_node
+				context.leave_realm
+			end
+
+			if cursor_id_as /= Void then
+					-- Generate cursor movement.
+				e := error_level
+				create operation_id_as.initialize ("forth")
+				operation_id_as.set_position (cursor_id_as.line, cursor_id_as.column, cursor_id_as.position, cursor_id_as.name.count)
+				operation_id_as.set_index (cursor_id_as.index)
+				(create {INSTR_CALL_AS}.initialize (
+					create {NESTED_AS}.initialize (
+						create {ACCESS_ID_AS}.initialize (cursor_id_as, Void),
+						create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
+						Void
+				))).process (Current)
+				if error_level = e and then l_needs_byte_node then
+					if l_list = Void then
+						create l_list2.make (1)
+					else
+						create l_list2.make (l_list.count + 1)
+						l_list2.append (l_list)
+					end
+					l_list2.extend (last_byte_node)
+					l_loop.set_compound (l_list2)
+				end
+			end
+
+			if attached l_as.stop as ec then
+					-- Take exit condition into account.
+				create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
+				scope_matcher.add_scopes (ec)
+			end
+
+			if l_needs_byte_node then
+				l_loop.set_line_number (l_as.stop.start_location.line)
+				l_loop.set_end_location (l_as.end_keyword)
+				last_byte_node := l_loop
+			end
+
+				-- Record loop for optimizations in final mode
+			system.optimization_tables.force (
+				create {OPTIMIZE_UNIT}.make (context.current_class.class_id,
+					current_feature.body_index))
 		end
 
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)
 		do
+			last_type := boolean_type
 		end
 
 	process_iteration_as (l_as: ITERATION_AS)
+		local
+			l_needs_byte_node: BOOLEAN
+			local_id: ID_AS
+			local_name_id: INTEGER
+			local_type: TYPE_A
+			local_info: LOCAL_INFO
+			assign_as: ASSIGN_AS
+			access_as: ACCESS_ID_AS
+			nested_expr_as: NESTED_EXPR_AS
+			new_cursor_id_as: ID_AS
+			new_cursor_access_as: ACCESS_FEAT_AS
 		do
+			l_needs_byte_node := is_byte_node_enabled
+
+				-- Type check iteration expression avoiding code generation to get type information
+			is_byte_node_enabled := False
+			l_as.expression.process (Current)
+			is_byte_node_enabled := l_needs_byte_node
+
+				-- Type check loop local name.
+			local_id := l_as.identifier
+			local_name_id := local_id.name_id
+			if not is_inherited then
+				if current_feature.has_argument_name (local_name_id) then
+						-- The local name is an argument name of the
+						-- current analyzed feature.
+					error_handler.insert_error (create {LOOP_VARIABLE_ERROR}.make (context, local_id))
+				elseif context.current_feature_table.has_id (local_name_id) then
+						-- The local name is a feature name of the
+						-- current analyzed class.
+					error_handler.insert_error (create {LOOP_VARIABLE_ERROR}.make (context, local_id))
+				end
+			end
+			if context.locals.has (local_name_id) then
+					-- The local name is a name of a feature local variable.
+				error_handler.insert_error (create {LOOP_VARIABLE_ERROR}.make (context, local_id))
+			end
+			if context.object_test_local (local_name_id) /= Void then
+					-- The local name is a name of an object test local.
+				error_handler.insert_error (create {LOOP_VARIABLE_ERROR}.make (context, local_id))
+			end
+
+			if last_type /= Void then
+					-- Calculate the type of an iteration local.
+				context.find_iteration_classes
+				if not attached context.iterable_class as i then
+					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERABLE [G]", local_id))
+				elseif not attached context.iteration_cursor_class as c then
+					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERATION_CURSOR [G]", local_id))
+				elseif not last_type.associated_class.conform_to (i) then
+					error_handler.insert_error (create {LOOP_ITERATION_NOT_ITERABLE_ERROR}.make (context, last_type, i.actual_type, local_id))
+				else
+						-- Evaluate a type of a cursor.
+					local_type := c.actual_type.evaluated_type_in_descendant (i, context.current_class, Void)
+					local_type := local_type.as_attached_in (context.current_class)
+					if current_feature.written_in = context.current_class.class_id then
+						Instantiator.dispatch (local_type, context.current_class)
+					end
+						-- Add the supplier in the feature_dependance list.
+					context.supplier_ids.add_supplier (c)
+						-- Avoid generating new object test local record when processing loop body multiple times.
+					local_info := context.unchecked_object_test_local (local_id)
+					if local_info = Void then
+						create local_info
+						local_info.set_type (local_type)
+						local_info.set_position (context.next_object_test_local_position)
+						context.add_object_test_local (local_info, local_id)
+						local_info.set_is_used (True)
+					end
+						-- Build and process AST tree that mimics the assignment
+						-- cursor := expression.new_cursor
+					create access_as.initialize (local_id, Void)
+					create new_cursor_id_as.initialize ("new_cursor")
+					new_cursor_id_as.set_position (local_id.line, local_id.column, local_id.position, local_id.name.count)
+					create nested_expr_as.initialize (
+						l_as.expression,
+						create {ACCESS_FEAT_AS}.initialize (new_cursor_id_as, Void),
+						Void,
+						Void,
+						Void
+					)
+					create assign_as.initialize (
+						access_as,
+						create {EXPR_CALL_AS}.initialize (nested_expr_as),
+						Void
+					)
+					context.add_object_test_instruction_scope (local_id)
+						-- Make the checker happy to see that the target of assignment is writable at this time.
+					is_object_test_local_initializing := True
+					assign_as.process (Current)
+				end
+			end
 		end
 
 	process_retry_as (l_as: RETRY_AS)

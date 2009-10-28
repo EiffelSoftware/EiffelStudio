@@ -72,6 +72,12 @@ feature -- Access
 			-- Class where the code is originally written.
 			-- (Used for checking inherited code in current context.)
 
+	iterable_class: CLASS_C
+			-- Class ITERABLE used to process Loop Iteration part
+
+	iteration_cursor_class: CLASS_C
+			-- Class ITERATION_CURSOR used to process Loop Iteration part
+
 	current_feature: FEATURE_I
 			-- Current analyzed feature.
 
@@ -205,13 +211,14 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 			-- Add a new object test local of type `t' with name `id' specified in the object test.
 		require
 			l_attached: l /= Void
+			id_attached: id /= Void
 		do
 			object_test_locals.force (l, id)
 		end
 
-	object_test_local (id: INTEGER_32): LOCAL_INFO
+	object_test_local (id: INTEGER_32): detachable LOCAL_INFO
 			-- Information about object-test local of name `id' if such
-			-- a local is currently in scope
+			-- a local is currently in scope or `Void' otherwise
 		local
 			i: INTEGER
 			l: INTEGER
@@ -224,7 +231,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 			loop
 				l := scopes [i]
 				if l = id then
-						-- The current evaulation position is in the scope of the name `id'.
+						-- The current evaluation position is in the scope of the name `id'.
 						-- Find the associated object test local information (if any).
 					from
 						i := object_test_scopes.count
@@ -248,7 +255,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 			end
 		end
 
-	unchecked_object_test_local (id: ID_AS): LOCAL_INFO
+	unchecked_object_test_local (id: ID_AS): detachable LOCAL_INFO
 			-- Information about object-test local of name `id' (if any) regardless of current scope
 		require
 			id_attached: id /= Void
@@ -492,7 +499,7 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 			local_initialization.set_result
 		end
 
-feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes: modification
+feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 
 	add_object_test_expression_scope (id: ID_AS)
 			-- Add a scope for an object-test local identified by `id'.
@@ -523,7 +530,7 @@ feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes: modification
 feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
 
 	remove_object_test_scopes (s: like scope)
-			-- Remove scopes of any known object test locals registered after scope identified by `s'.
+			-- Remove scopes of any known inner locals registered after scope identified by `s'.
 		local
 			i: INTEGER
 			j: INTEGER
@@ -640,7 +647,7 @@ feature -- Setting
 				-- Current is always attached.
 			current_class_type := current_class_type.as_attached_in (current_class)
 			current_feature_table := a_feat_tbl
-			written_class := Void
+			set_written_class (Void)
 			from
 				s := a_class.skeleton
 				if s /= Void then
@@ -675,6 +682,8 @@ feature -- Setting
 			-- Set `written_class' to `c'.
 		do
 			written_class := c
+			iterable_class := Void
+			iteration_cursor_class := Void
 		ensure
 			written_class_set: written_class = c
 		end
@@ -839,6 +848,34 @@ feature -- Setting
 			current_inline_agent_body := body
 		end
 
+feature -- Iteration classes
+
+	find_iteration_classes
+			-- Look for iteration classes and initialize `iterable_class' and `iteration_cursor'
+			-- if possible or report error otherwise.
+		do
+			if iterable_class = Void and then iteration_cursor_class = Void then
+				if
+					attached universe.class_named ("ITERABLE", current_class.group) as i and then
+					i.is_compiled and then
+					attached i.compiled_class as c and then
+					attached c.generics as g and then
+					g.count = 1
+				then
+					iterable_class := c
+				end
+				if
+					attached universe.class_named ("ITERATION_CURSOR", current_class.group) as i and then
+					i.is_compiled and then
+					attached i.compiled_class as c and then
+					attached c.generics as g and then
+					g.count = 1
+				then
+					iteration_cursor_class := c
+				end
+			end
+		end
+
 feature -- Managing the type stack
 
 	clear_all
@@ -859,7 +896,7 @@ feature -- Managing the type stack
 			current_feature := Void
 			last_conversion_info := Void
 			supplier_ids.wipe_out
-			written_class := Void
+			set_written_class (Void)
 			inline_agent_counter.reset
 			hidden_local_counter.reset
 			create inline_agents.make (1, 0)

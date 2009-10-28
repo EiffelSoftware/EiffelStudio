@@ -213,6 +213,7 @@ test	note-syntax				syntax055 tcf pass syntax
 test	attached-syntax				syntax056 tcf pass syntax attached
 test	external-with-invalid-use	syntax057 tcf pass syntax
 test	bracket-expression-on-manifest-type	syntax058 tcf pass syntax bracket_expression
+test	across-loop-syntax		syntax059 tcf pass syntax loop variant invariant across
 
 
 -- Validity tests

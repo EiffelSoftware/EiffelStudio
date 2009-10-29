@@ -165,15 +165,25 @@ feature {NONE} -- Status report
 			a_code_page_not_empty: not a_code_page.is_empty
 		local
 			l_error: INTEGER
+			l_retried: BOOLEAN
 		do
-			if not a_code_page.is_case_insensitive_equal (utf8) then
-				Result := c_codeset_valid (a_code_page, $l_error)
-				if l_error /= 0 then
-					conversion_exception (l_error).raise
+			if not l_retried then
+				if not a_code_page.is_case_insensitive_equal (utf8) then
+					Result := c_codeset_valid (a_code_page, $l_error)
+					if l_error /= 0 then
+						conversion_exception (l_error).raise
+					end
+				else
+					Result := True
 				end
-			else
-				Result := True
 			end
+		rescue
+				-- In the future, a proper mechanism should be worked out
+				-- to reflect such internal errors. For now the rescue
+				-- is mostly for debugging.
+			Result := False
+			l_retried := True
+			retry
 		end
 
 	is_two_byte_code_page (a_code_page: STRING): BOOLEAN

@@ -6396,7 +6396,7 @@ feature -- Implementation
 			e: like error_level
 			operation_id_as: ID_AS
 			cursor_id_as: ID_AS
-			after_call_as: EXPR_CALL_AS
+			exit_as: EXPR_AS
 		do
 			has_loop := True
 			l_needs_byte_node := is_byte_node_enabled
@@ -6459,7 +6459,7 @@ feature -- Implementation
 				create operation_id_as.initialize ("after")
 				operation_id_as.set_position (cursor_id_as.line, cursor_id_as.column, cursor_id_as.position, cursor_id_as.name.count)
 				operation_id_as.set_index (cursor_id_as.index)
-				create after_call_as.initialize (
+				create {EXPR_CALL_AS} exit_as.initialize (
 					create {NESTED_AS}.initialize (
 						create {ACCESS_ID_AS}.initialize (cursor_id_as, Void),
 						create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
@@ -6469,23 +6469,28 @@ feature -- Implementation
 
 				-- Type check the exit test.
 			if attached l_as.stop as ec then
-				if after_call_as /= Void then
+				if exit_as = Void then
+						-- Take exit condition directly from the loop exit condition.
+					exit_as := ec
+				else
 						-- Build exit condition in the form
 						--    cursor.after or else original_condition
-					(create {BIN_OR_ELSE_AS}.make (after_call_as, ec, Void, Void)).process (Current)
-				else
-					ec.process (Current)
+					create {BIN_OR_ELSE_AS} exit_as.make (exit_as, ec, Void, Void)
 				end
-			elseif after_call_as /= Void then
-				after_call_as.process (Current)
 			end
+				-- Either Iteration part is present or loop has explicit exit condition,
+				-- so `exit_as' should be attached.
+			check
+				exit_as /= Void
+			end
+			exit_as.process (Current)
 			if last_type /= Void then
 					-- Check if if is a boolean expression
 				if not last_type.actual_type.is_boolean then
 					create l_vwbe4
 					context.init_error (l_vwbe4)
 					l_vwbe4.set_type (last_type)
-					l_vwbe4.set_location (l_as.stop.end_location)
+					l_vwbe4.set_location (exit_as.end_location)
 					error_handler.insert_error (l_vwbe4)
 				elseif l_needs_byte_node then
 					l_expr ?= last_byte_node
@@ -6513,7 +6518,7 @@ feature -- Implementation
 						-- Record most recent scope information before the loop body, so that
 						-- it can be compared with the information after the loop body on next iteration.
 					context.update_sibling
-					scope_matcher.add_scopes (l_as.stop)
+					scope_matcher.add_scopes (exit_as)
 					process_compound (l_as.compound)
 						-- Save byte code if `is_byte_node_enabled' is set to `True'
 						-- and set it to `False' to avoid regenerating it next time.
@@ -6553,14 +6558,12 @@ feature -- Implementation
 				end
 			end
 
-			if attached l_as.stop as ec then
-					-- Take exit condition into account.
-				create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
-				scope_matcher.add_scopes (ec)
-			end
+				-- Take exit condition into account.
+			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
+			scope_matcher.add_scopes (exit_as)
 
 			if l_needs_byte_node then
-				l_loop.set_line_number (l_as.stop.start_location.line)
+				l_loop.set_line_number (exit_as.start_location.line)
 				l_loop.set_end_location (l_as.end_keyword)
 				last_byte_node := l_loop
 			end
@@ -6584,10 +6587,7 @@ feature -- Implementation
 			local_type: TYPE_A
 			local_info: LOCAL_INFO
 			assign_as: ASSIGN_AS
-			access_as: ACCESS_ID_AS
-			nested_expr_as: NESTED_EXPR_AS
 			new_cursor_id_as: ID_AS
-			new_cursor_access_as: ACCESS_FEAT_AS
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -6648,19 +6648,19 @@ feature -- Implementation
 					end
 						-- Build and process AST tree that mimics the assignment
 						-- cursor := expression.new_cursor
-					create access_as.initialize (local_id, Void)
 					create new_cursor_id_as.initialize ("new_cursor")
 					new_cursor_id_as.set_position (local_id.line, local_id.column, local_id.position, local_id.name.count)
-					create nested_expr_as.initialize (
-						l_as.expression,
-						create {ACCESS_FEAT_AS}.initialize (new_cursor_id_as, Void),
-						Void,
-						Void,
-						Void
-					)
 					create assign_as.initialize (
-						access_as,
-						create {EXPR_CALL_AS}.initialize (nested_expr_as),
+						create {ACCESS_ID_AS}.initialize (local_id, Void),
+						create {EXPR_CALL_AS}.initialize (
+							create {NESTED_EXPR_AS}.initialize (
+								l_as.expression,
+								create {ACCESS_FEAT_AS}.initialize (new_cursor_id_as, Void),
+								Void,
+								Void,
+								Void
+							)
+						),
 						Void
 					)
 					context.add_object_test_instruction_scope (local_id)

@@ -1345,7 +1345,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTWPP(x)			(egc_address_table[x])
 #define RTWO(x)
 
-#define WDBG(x,y)			is_debug(x,y)				/* Debug option */
+#define WDBG(x,y)			eif_is_debug(x,y)				/* Debug option */
 
 #define WASL(x,y,z)			waslist(x,y,z)		/* Assertion list evaluation */
 #define WASF(x)				wasfree(x)			/* Free assertion list */

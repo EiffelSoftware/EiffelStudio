@@ -120,7 +120,7 @@ feature {ENCODING} -- Status report
 	is_valid: BOOLEAN
 			-- Is current valid?
 		do
-			Result := encoding_i.is_code_page_valid (code_page)
+			Result := regular_encoding_imp.is_code_page_valid (code_page)
 		end
 
 	is_conversion_possible (a_to_encoding: ENCODING): BOOLEAN
@@ -130,7 +130,7 @@ feature {ENCODING} -- Status report
 			a_to_encoding_valid: a_to_encoding.is_valid
 			is_valid: is_valid
 		do
-			Result := encoding_i.is_code_page_convertable (code_page, a_to_encoding.code_page)
+			Result := regular_encoding_imp.is_code_page_convertable (code_page, a_to_encoding.code_page)
 		end
 
 feature {NONE} -- Implementation

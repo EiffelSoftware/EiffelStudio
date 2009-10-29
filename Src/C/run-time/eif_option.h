@@ -76,7 +76,7 @@ struct eif_opt {
 
 RT_LNK struct eif_opt *eoption;		/* Melted option table */
 
-RT_LNK int is_debug(int st_type, char *key);		/* Debug level query */
+RT_LNK int eif_is_debug(int st_type, char *key);		/* Debug level query */
 
 /*
  * Options for E-PROFILE && E-TRACE

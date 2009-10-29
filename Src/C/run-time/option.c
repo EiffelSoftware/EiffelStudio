@@ -285,7 +285,7 @@ rt_private double compute_percentage (rt_uint64, rt_uint64);
 
 #ifdef WORKBENCH
 
-rt_public int is_debug(int st_type, char *key)
+rt_public int eif_is_debug(int st_type, char *key)
 {
 	/* Is the debug option of the class of type `st_type' consistent
 	 * with `key'.

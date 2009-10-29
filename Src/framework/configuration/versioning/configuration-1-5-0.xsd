@@ -143,6 +143,7 @@
 					<xs:enumeration value="obsolete"/>
 					<xs:enumeration value="transitional"/>
 					<xs:enumeration value="standard"/>
+					<xs:enumeration value="provisional"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>

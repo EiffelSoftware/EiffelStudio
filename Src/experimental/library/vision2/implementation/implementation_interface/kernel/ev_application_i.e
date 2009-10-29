@@ -506,27 +506,33 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
 	draw_rubber_band
 			-- Draw a segment between initial pick point and `destination'.
+		local
+			l_screen: like pnd_screen
 		do
-			pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
+			l_screen := pnd_screen
+			l_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
+			l_screen.destroy
 			rubber_band_is_drawn := True
 		end
 
 	erase_rubber_band
 			-- Erase previously drawn rubber band.
+		local
+			l_screen: like pnd_screen
 		do
 			if rubber_band_is_drawn then
-				pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
+				l_screen := pnd_screen
+				l_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
+				l_screen.destroy
 				rubber_band_is_drawn := False
 			end
 		end
 
 	pnd_screen: EV_SCREEN
 			-- Screen object used for drawing PND transport line
-		once
+		do
 			create Result
-			if not is_display_remote then
-				Result.enable_dashed_line_style
-			end
+			Result.enable_dashed_line_style
 			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 			Result.set_invert_mode
 		end

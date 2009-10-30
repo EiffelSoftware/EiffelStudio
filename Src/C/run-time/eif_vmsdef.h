@@ -248,6 +248,8 @@ typedef unsigned short int ile_retlen_t;	/* type of returned length (see <iledef
 #define iconv       eifrt_vms_iconv
 
 /* 64 bit clean wrappers for iconv library */
+#define iconv_t eifrt_iconv_t
+typedef void* iconv_t;
 size_t eifrt_vms_iconv (iconv_t cd, const char **inpbuf, size_t *inpbytesleft, char **outbuf, size_t *outbytesleft) ;
 int eifrt_vms_iconv_close (iconv_t cd) ;
 iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode) ;

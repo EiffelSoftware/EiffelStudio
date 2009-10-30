@@ -256,6 +256,17 @@ feature -- Access
 			Result := feature_flags & has_convert_mark_mask = has_convert_mark_mask
 		end
 
+	frozen covariant_argument_checker_agent: PREDICATE [FEATURE_I, TUPLE [TYPE_A]]
+			-- Argument checker for `covariantly_redefined_features'
+		once
+				-- If all arguments are expanded or if they are a frozen class
+				-- then it cannot be covariantly redefined
+			Result := agent (v: TYPE_A): BOOLEAN
+						do
+							Result := v.is_expanded or (v.has_associated_class implies v.associated_class.is_frozen)
+						end
+		end
+
 	frozen covariantly_redefined_features (a_base_class: CLASS_C): HASH_TABLE [FEATURE_I, CLASS_C]
 			-- Return all the covariantly redefined routines of Current
 		require
@@ -264,36 +275,41 @@ feature -- Access
 		local
 			l_descendants: ARRAYED_LIST [CLASS_C]
 			l_feat: FEATURE_I
+			l_rout_id: INTEGER
 			l_covariant_features: like covariantly_redefined_features
+			i: INTEGER
 		do
 			if argument_count > 0 then
 					-- If all arguments are expanded or if they are a frozen class
 					-- then it cannot be covariantly redefined
 				if
-					not arguments.for_all (agent (v: TYPE_A): BOOLEAN
-						do
-							Result := v.is_expanded or (v.has_associated_class implies v.associated_class.is_frozen)
-						end)
+					not arguments.for_all (covariant_argument_checker_agent)
 				then
 					from
 						l_descendants := a_base_class.direct_descendants
-						create Result.make (l_descendants.count)
-						l_descendants.start
+						l_rout_id := rout_id_set.first
+						i := l_descendants.count
 					until
-						l_descendants.after
+						i = 0
 					loop
-						if l_descendants.item.conform_to (a_base_class) then
-							l_feat := l_descendants.item.feature_of_rout_id (rout_id_set.first)
+						if l_descendants [i].conform_to (a_base_class) then
+							l_feat := l_descendants [i].feature_of_rout_id (l_rout_id)
 								-- It could be Void in case of a non-conforming descendants.
 							if is_covariant_to (l_feat) then
-								Result.put (l_feat, l_descendants.item)
+								if Result = Void then
+									create Result.make (3)
+								end
+								Result.put (l_feat, l_descendants [i])
 							end
-							l_covariant_features := l_feat.covariantly_redefined_features (l_descendants.item)
+							l_covariant_features := l_feat.covariantly_redefined_features (l_descendants [i])
 							if l_covariant_features /= Void and then not l_covariant_features.is_empty then
+								if Result = Void then
+									create Result.make (3)
+								end
 								Result.merge (l_covariant_features)
 							end
 						end
-						l_descendants.forth
+						i := i - 1
 					end
 				end
 			end
@@ -304,18 +320,20 @@ feature -- Access
 		require
 			other_not_void: other /= Void
 			subset: other.rout_id_set.has (rout_id_set.first)
+		local
+			i: INTEGER
 		do
-			from
-				arguments.start
-				other.arguments.start
-			until
-				arguments.after or Result
-			loop
-					-- This is not the best way to check for covariance since `is_equivalent' will
-					-- return False on thing that are not covariantly redefined.
-				Result := not arguments.item.conformance_type.is_safe_equivalent (other.arguments.item.conformance_type)
-				arguments.forth
-				other.arguments.forth
+			if other /= Current then
+				from
+					i := arguments.count
+				until
+					i = 0 or else Result
+				loop
+						-- This is not the best way to check for covariance since `is_equivalent' will
+						-- return False on thing that are not covariantly redefined.
+					Result := not arguments.i_th (i).conformance_type.is_safe_equivalent (other.arguments.i_th (i).conformance_type)
+					i := i - 1
+				end
 			end
 		end
 

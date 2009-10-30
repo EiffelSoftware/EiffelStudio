@@ -251,11 +251,7 @@ feature {NONE} -- Implementation: tags
 			loop
 				l_add := True
 				if l_hash_set /= Void then
-					l_hash_set.search (l_set.item_for_iteration)
-					if attached l_hash_set.found_item as l_tag then
-						l_add := False
-						l_hash_set.remove (l_tag)
-					end
+					l_hash_set.remove (l_set.item_for_iteration)
 				end
 				if l_add and a_tag_tree.is_valid_tag_for_item (a_test, l_set.item_for_iteration) then
 					a_tag_tree.add_tag (a_test, l_set.item_for_iteration)
@@ -274,7 +270,9 @@ feature {NONE} -- Implementation: tags
 				until
 					l_hash_set.after
 				loop
-					if not a_tag_tree.formatter.is_prefix ("result", l_hash_set.item_for_iteration) then
+					if
+						not a_tag_tree.formatter.is_prefix ("result", l_hash_set.item_for_iteration)
+					then
 						a_tag_tree.remove_tag (a_test, l_hash_set.item_for_iteration)
 					end
 					l_hash_set.forth
@@ -299,8 +297,7 @@ feature {NONE} -- Implementation: tags
 			if
 				not (a_tag.starts_with ("class/") or
 				a_tag.starts_with ("covers/") or
-				a_tag.starts_with ("execution/") or
-				a_tag.starts_with ("type/"))
+				a_tag.starts_with ("execution/"))
 			then
 				l_final.append ("user/")
 			end

@@ -240,22 +240,14 @@ feature {NONE} -- Status setting: stones
 			-- <Precursor>
 		local
 			l_filter_text: STRING
-			l_is_test_class: BOOLEAN
 		do
 			if not is_in_stone_synchronization then
 				if attached {CLASSI_STONE} stone as l_class_stone and then attached {EIFFEL_CLASS_I} l_class_stone.class_i as l_class then
 					create l_filter_text.make (40)
-					if l_is_test_class then
-						l_filter_text.append ("^class")
-					else
-						l_filter_text.append ("^covers")
-					end
-					l_filter_text.append (".*")
 					l_filter_text.append ({EC_TAG_TREE_CONSTANTS}.class_prefix)
 					l_filter_text.append (l_class_stone.class_name)
 					if attached {FEATURE_STONE} stone as l_feature_stone then
-						l_filter_text.append ("/")
-						l_filter_text.append ({EC_TAG_TREE_CONSTANTS}.feature_prefix)
+						l_filter_text.append ("/.*")
 						l_filter_text.append (l_feature_stone.feature_name)
 					end
 				elseif attached {CLUSTER_STONE} stone as l_cluster then
@@ -701,8 +693,8 @@ feature {NONE} -- Internationalization
 
 feature {NONE} -- Constants
 
-	l_outcome_view: STRING = "^outcome/"
-	l_filter_not_passing: STRING = "^outcome/ -^outcome/passes/"
+	l_outcome_view: STRING = "^result"
+	l_filter_not_passing: STRING = "^result/(fail|unresolved)"
 
 	auto_retrieve_id: STRING = "com.eiffel.testing_tool.auto_retrieve"
 			-- Auto retrieve ID for session manager

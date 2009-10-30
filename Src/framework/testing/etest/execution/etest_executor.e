@@ -242,7 +242,7 @@ feature {NONE} -- Status setting
 
 						-- Set breakpoint if debugging
 					if test_execution.is_debugging then
-						set_breakpoint (a_task_data, l_evaluator_routine)
+						set_breakpoint (a_task_data, l_test_routine)
 					end
 
 						-- Pass byte code to available controller

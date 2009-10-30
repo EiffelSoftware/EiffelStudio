@@ -231,6 +231,7 @@ feature {NONE} -- Implementation: tags
 			--
 			-- `a_tag_tree': Tag tree in which tags should be updated.
 			-- `a_test': Test for which tags should be updated.
+			-- `an_old_tags': Old
 		require
 			a_tag_tree_attached: a_tag_tree /= Void
 			a_test_attached: a_test /= Void
@@ -273,7 +274,10 @@ feature {NONE} -- Implementation: tags
 				until
 					l_hash_set.after
 				loop
-					a_tag_tree.remove_tag (a_test, l_hash_set.item_for_iteration)
+					if not a_tag_tree.formatter.is_prefix ("result", l_hash_set.item_for_iteration) then
+						a_tag_tree.remove_tag (a_test, l_hash_set.item_for_iteration)
+					end
+					l_hash_set.forth
 				end
 			end
 		end

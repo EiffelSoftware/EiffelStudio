@@ -106,7 +106,8 @@ feature {NONE} -- Initialization
 							l_statistics.after
 						loop
 							if l_test_suite.has_test (l_statistics.key_for_iteration) then
-								account_result (l_statistics.item_for_iteration.last_result)
+								account_result (l_test_suite.test (l_statistics.key_for_iteration),
+								                l_statistics.item_for_iteration.last_result)
 							end
 							l_statistics.forth
 						end
@@ -223,7 +224,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			l_name := a_test.name
 			l_stats := test_statistics
 			if l_stats.has (l_name) then
-				account_result (l_stats.item (l_name).last_result)
+				account_result (a_test, l_stats.item (l_name).last_result)
 				test_statistics_updated_event.publish ([Current, a_test])
 			end
 			statistics_updated_event.publish ([Current])
@@ -285,7 +286,7 @@ feature {TEST_EXECUTION_I} -- Events: test execution
 					discount_result (l_data.last_result)
 					l_data.last_result := a_result
 				end
-				account_result (a_result)
+				account_result (a_test, a_result)
 				test_statistics_updated_event.publish ([Current, a_test])
 				statistics_updated_event.publish ([Current])
 			end
@@ -330,16 +331,36 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	account_result (a_result: EQA_RESULT)
+	account_result (a_test: TEST_I; a_result: EQA_RESULT)
 			-- Account for given result in `*_count' queries.
+		local
+			l_tag_tree: TAG_TREE [TEST_I]
+			l_table: TAG_SEARCH_TABLE
+			l_formatter: TAG_FORMATTER
 		do
+			l_tag_tree := test_suite.tag_tree
+			l_formatter := l_tag_tree.formatter
+			if l_tag_tree.has_item (a_test) then
+				l_table := l_tag_tree.item_suffixes (result_prefix, a_test)
+				from
+					l_table.start
+				until
+					l_table.after
+				loop
+					l_tag_tree.remove_tag (a_test, l_formatter.join_tags (result_prefix, l_table.item_for_iteration))
+					l_table.forth
+				end
+			end
 			executed_test_count := executed_test_count + 1
 			if a_result.is_pass then
 				passing_test_count := passing_test_count + 1
+				l_tag_tree.add_tag (a_test, l_formatter.join_tags (result_prefix, pass_suffix))
 			elseif a_result.is_fail then
 				failing_test_count := failing_test_count + 1
+				l_tag_tree.add_tag (a_test, l_formatter.join_tags (result_prefix, fail_suffix))
 			else
 				unresolved_test_count := unresolved_test_count + 1
+				l_tag_tree.add_tag (a_test, l_formatter.join_tags (result_prefix, unresolved_suffix))
 			end
 		end
 
@@ -379,6 +400,12 @@ feature {NONE} -- Constants
 	statistics_file_name: STRING = "statistics"
 	statistics_file_extension: STRING = "map"
 			-- Statistics file name
+
+	result_prefix: STRING = "result"
+	pass_suffix: STRING = "pass"
+	fail_suffix: STRING = "fail"
+	unresolved_suffix: STRING = "unresolved"
+			-- Tags for result status
 
 invariant
 	collect_stats_after_retrieving: test_statistics.count > 0 implies has_retrieved_statistics

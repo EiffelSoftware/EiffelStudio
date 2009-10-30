@@ -63,6 +63,10 @@ feature {NONE} -- Implementation
 			stream.indent
 			stream.put_line ("execute_test: EQA_TEST_EVALUATOR [EQA_TEST_SET]")
 			stream.indent
+			stream.indent
+			stream.put_line ("-- The body of this routine is replaced at runtime with a melted representation that")
+			stream.put_line ("-- calls the actual test routine.")
+			stream.dedent
 			stream.put_line ("local")
 			stream.indent
 			stream.put_line ("l_result: detachable like execute_test")

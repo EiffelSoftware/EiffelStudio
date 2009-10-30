@@ -62,11 +62,8 @@ feature
 			create {RESULT_BL} Result.make (type)
 		end
 
-	register_name: STRING
+	register_name: STRING = "Result"
 			-- The "Result" string
-		do
-			Result := "Result";
-		end;
 
 feature -- IL code generation
 

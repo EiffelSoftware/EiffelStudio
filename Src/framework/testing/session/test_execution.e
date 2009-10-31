@@ -352,6 +352,8 @@ feature {NONE} -- Element change
 			end
 			if l_map.is_empty then
 				test_queues.remove (l_queue.executor.generator)
+				available_executors.prune_all (l_queue.executor)
+				has_availability_changed := has_availability_changed and not available_executors.is_empty
 			end
 			test_count := test_count - 1
 			if a_result /= Void then

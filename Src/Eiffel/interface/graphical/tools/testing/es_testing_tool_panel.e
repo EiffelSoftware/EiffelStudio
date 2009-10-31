@@ -153,6 +153,9 @@ feature {NONE} -- Initialization: widget status
 				end
 			end
 
+			update_selection_state
+			update_running_state
+
 			l_app := (create {EV_SHARED_APPLICATION}).ev_application
 			l_app.add_idle_action_kamikaze (agent split_area.set_proportion ({REAL_32} 0.5))
 		end
@@ -366,7 +369,25 @@ feature {NONE} -- Events: test execution
 	on_stop
 			-- Stop any running test processor
 		do
-			-- TODO: implmement
+			perform_with_test_suite (
+				agent (a_test_suite: TEST_SUITE_S)
+					local
+						l_sessions: ARRAYED_LIST [TEST_SESSION_I]
+						l_session: TEST_SESSION_I
+					do
+						l_sessions := a_test_suite.running_sessions
+						from
+							l_sessions.start
+						until
+							l_sessions.after
+						loop
+							l_session := l_sessions.item_for_iteration
+							if l_session.has_next_step then
+								l_session.cancel
+							end
+							l_sessions.forth
+						end
+					end)
 		end
 
 	on_retrieve
@@ -421,6 +442,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 			elseif attached {ETEST_RETRIEVAL} a_session then
 				retrieve_button.disable_sensitive
 			end
+			update_running_state
 		end
 
 	on_session_finished (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
@@ -429,6 +451,25 @@ feature {TEST_SUITE_S} -- Events: test suite
 			if attached {ETEST_RETRIEVAL} a_session then
 				retrieve_button.enable_sensitive
 			end
+			update_running_state
+		end
+
+	update_running_state
+			-- Update buttons according to currently running test session in test suite.
+		do
+			perform_with_test_suite (
+				agent (a_test_suite: TEST_SUITE_S)
+					do
+						if a_test_suite.running_sessions.count > 0 then
+							if not stop_button.is_sensitive then
+								stop_button.enable_sensitive
+							end
+						else
+							if stop_button.is_sensitive then
+								stop_button.disable_sensitive
+							end
+						end
+					end)
 		end
 
 feature {TEST_STATISTICS_I} -- Events
@@ -455,9 +496,21 @@ feature {TEST_STATISTICS_I} -- Events
 				if not runs_button.is_sensitive then
 					runs_button.enable_sensitive
 				end
+				if not run_button.is_sensitive then
+					run_button.enable_sensitive
+				end
+				if not debug_button.is_sensitive then
+					debug_button.enable_sensitive
+				end
 			else
 				if runs_button.is_sensitive then
 					runs_button.disable_sensitive
+				end
+				if run_button.is_sensitive then
+					run_button.disable_sensitive
+				end
+				if debug_button.is_sensitive then
+					debug_button.disable_sensitive
 				end
 			end
 
@@ -465,9 +518,15 @@ feature {TEST_STATISTICS_I} -- Events
 				if not errors_button.is_sensitive then
 					errors_button.enable_sensitive
 				end
+				if not run_failing_menu.is_sensitive then
+					run_failing_menu.enable_sensitive
+				end
 			else
 				if errors_button.is_sensitive then
 					errors_button.disable_sensitive
+				end
+				if run_failing_menu.is_sensitive then
+					run_failing_menu.disable_sensitive
 				end
 			end
 
@@ -482,12 +541,22 @@ feature {NONE} -- Events: tree view
 	on_selection_change (a_node: TAG_TREE_NODE [TEST_I]; a_is_selected: BOOLEAN)
 			-- Called when item is selected or deselected.
 		do
+			update_selection_state
+		end
+
+	update_selection_state
+			-- Update buttons and menus according to selection state in `test_tree'
+		do
 			if test_tree.tag_tree.selected_nodes.is_empty then
 				run_selected_menu.disable_sensitive
 				debug_selected_menu.disable_sensitive
+				run_button.set_tooltip (locale_formatter.translation (m_run_all))
+				debug_button.set_tooltip (locale_formatter.translation (m_debug_all))
 			else
 				run_selected_menu.enable_sensitive
 				debug_selected_menu.enable_sensitive
+				run_button.set_tooltip (locale_formatter.translation (m_run_selected))
+				debug_button.set_tooltip (locale_formatter.translation (m_debug_selected))
 			end
 		end
 

@@ -550,13 +550,13 @@ feature {NONE} -- Events: tree view
 			if test_tree.tag_tree.selected_nodes.is_empty then
 				run_selected_menu.disable_sensitive
 				debug_selected_menu.disable_sensitive
-				run_button.set_tooltip (locale_formatter.translation (m_run_all))
-				debug_button.set_tooltip (locale_formatter.translation (m_debug_all))
+				run_button.set_tooltip (locale_formatter.translation (tt_run_filtered))
+				debug_button.set_tooltip (locale_formatter.translation (tt_debug_filtered))
 			else
 				run_selected_menu.enable_sensitive
 				debug_selected_menu.enable_sensitive
-				run_button.set_tooltip (locale_formatter.translation (m_run_selected))
-				debug_button.set_tooltip (locale_formatter.translation (m_debug_selected))
+				run_button.set_tooltip (locale_formatter.translation (tt_run_selected))
+				debug_button.set_tooltip (locale_formatter.translation (tt_debug_selected))
 			end
 		end
 
@@ -695,6 +695,7 @@ feature {NONE} -- Factory
 
 			create runs_button.make
 			runs_button.set_pixel_buffer (stock_pixmaps.run_animation_5_icon_buffer)
+			runs_button.set_tooltip (locale.translation (tt_runs_button))
 			register_action (runs_button.select_actions, agent on_run_label_select)
 			Result.force_last (runs_button)
 
@@ -702,6 +703,7 @@ feature {NONE} -- Factory
 
 			create errors_button.make
 			errors_button.set_pixel_buffer (stock_pixmaps.general_error_icon_buffer)
+			errors_button.set_tooltip (locale.translation (tt_errors_button))
 			register_action (errors_button.select_actions, agent on_error_label_select)
 			Result.force_last (errors_button)
 		end
@@ -715,18 +717,25 @@ feature {NONE} -- Internationalization
 	tt_wizard: STRING = "Create new tests"
 	f_run_button: STRING = "Run all tests in background"
 	f_debug_button: STRING = "Debug all tests in EiffelStudio"
-	f_stop_button: STRING = "Stop all execution"
+	f_stop_button: STRING = "Stop all test related tasks"
 	f_retrieve_button: STRING = "Refresh test suite"
 
 	m_run_all: STRING = "Run all"
 	m_run_failing: STRING = "Run failing"
 	m_run_filtered: STRING = "Run filtered"
 	m_run_selected: STRING = "Run selected"
+	tt_run_filtered: STRING = "Run filtered tests"
+	tt_run_selected: STRING = "Run selected tests"
 	m_debug_all: STRING = "Debug all"
 	m_debug_failing: STRING = "Debug failing"
 	m_debug_filtered: STRING = "Debug filtered"
 	m_debug_selected: STRING = "Debug selected"
+	tt_debug_filtered: STRING = "Debug filtered tests"
+	tt_debug_selected: STRING = "Run selected tests"
 	m_auto_retrieve: STRING = "Refresh after compilation"
+
+	tt_runs_button: STRING = "Filter tests by their last result"
+	tt_errors_button: STRING = "Show failing tests"
 
 feature {NONE} -- Constants
 

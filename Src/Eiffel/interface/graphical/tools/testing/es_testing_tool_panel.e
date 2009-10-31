@@ -191,14 +191,11 @@ feature {NONE} -- Access: widgets
 	notebook: EV_NOTEBOOK
 			-- Notebook for detailed information
 
-	runs_label: EV_LABEL
-			-- Label showing number of tests which have been executed
+	runs_button: SD_TOOL_BAR_BUTTON
+			-- Button displaying current number of executed tests
 
-	errors_label: EV_LABEL
-			-- Label showing number of tests currently failing
-
-	errors_pixmap: EV_PIXMAP
-			-- Pixmap with big error cross
+	errors_button: SD_TOOL_BAR_BUTTON
+			-- Button displaying current number of failing tests
 
 feature {NONE} -- Access: buttons
 
@@ -400,13 +397,13 @@ feature {NONE} -- Events: test execution
 
 feature {NONE} -- Events: labels
 
-	on_run_label_select (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tile, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER)
+	on_run_label_select
 			-- Called when user clicks on `runs_label'.
 		do
 			test_tree.set_filter (l_outcome_view)
 		end
 
-	on_error_label_select (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tile, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER)
+	on_error_label_select
 			-- Called when user clicks on `errors_label'.
 		do
 			test_tree.set_filter (l_filter_not_passing)
@@ -447,19 +444,31 @@ feature {TEST_STATISTICS_I} -- Events
 			l_text.append_natural_32 (a_statistics.executed_test_count)
 			l_text.append_character ('/')
 			l_text.append_natural_32 (a_statistics.test_count)
-			runs_label.set_text (l_text)
+			runs_button.set_text (l_text)
 
 			create l_text.make (10)
 			l_text.append ("Failing: ")
 			l_text.append_natural_32 (a_statistics.failing_test_count)
-			errors_label.set_text (l_text)
+			errors_button.set_text (l_text)
+
+			if a_statistics.test_count > 0 then
+				if not runs_button.is_sensitive then
+					runs_button.enable_sensitive
+				end
+			else
+				if runs_button.is_sensitive then
+					runs_button.disable_sensitive
+				end
+			end
 
 			if a_statistics.failing_test_count > 0 then
-				errors_pixmap.enable_sensitive
-				errors_label.enable_sensitive
+				if not errors_button.is_sensitive then
+					errors_button.enable_sensitive
+				end
 			else
-				errors_pixmap.disable_sensitive
-				errors_label.disable_sensitive
+				if errors_button.is_sensitive then
+					errors_button.disable_sensitive
+				end
 			end
 
 			l_tool_bar := right_tool_bar_widget
@@ -612,61 +621,20 @@ feature {NONE} -- Factory
 
 	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
-		local
-			l_vbox: EV_VERTICAL_BOX
-			l_box: EV_HORIZONTAL_BOX
-			l_pixmap: EV_PIXMAP
 		do
-			create Result.make (4)
+			create Result.make (3)
 
-				-- Runs
-			create l_vbox
-			l_vbox.extend (create {EV_CELL})
-
-			create l_box
-			l_box.set_border_width ({ES_UI_CONSTANTS}.notebook_border)
-			l_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
-
-			l_pixmap := stock_pixmaps.run_animation_5_icon.twin
-			register_action (l_pixmap.pointer_double_press_actions, agent on_run_label_select)
-
-			l_pixmap.set_minimum_size (l_pixmap.width, l_pixmap.height)
-			l_box.extend (l_pixmap)
-
-			create runs_label
-			runs_label.align_text_left
-			register_action (runs_label.pointer_double_press_actions, agent on_run_label_select)
-			l_box.extend (runs_label)
-
-			l_vbox.extend (l_box)
-			l_vbox.disable_item_expand (l_box)
-			l_vbox.extend (create {EV_CELL})
-			Result.force_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+			create runs_button.make
+			runs_button.set_pixel_buffer (stock_pixmaps.run_animation_5_icon_buffer)
+			register_action (runs_button.select_actions, agent on_run_label_select)
+			Result.force_last (runs_button)
 
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
-				-- Errors
-			create l_vbox
-			l_vbox.extend (create {EV_CELL})
-
-			create l_box
-			l_box.set_border_width ({ES_UI_CONSTANTS}.notebook_border)
-			l_box.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
-
-			create errors_pixmap.make_with_pixel_buffer (stock_pixmaps.general_error_icon_buffer)
-			errors_pixmap.set_minimum_size (errors_pixmap.width, errors_pixmap.height)
-			register_action (errors_pixmap.pointer_double_press_actions, agent on_error_label_select)
-			l_box.extend (errors_pixmap)
-
-			create errors_label
-			errors_label.align_text_left
-			register_action (errors_label.pointer_double_press_actions, agent on_error_label_select)
-			l_box.extend (errors_label)
-
-			l_vbox.extend (l_box)
-			l_vbox.disable_item_expand (l_box)
-			l_vbox.extend (create {EV_CELL})
-			Result.force_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+			create errors_button.make
+			errors_button.set_pixel_buffer (stock_pixmaps.general_error_icon_buffer)
+			register_action (errors_button.select_actions, agent on_error_label_select)
+			Result.force_last (errors_button)
 		end
 
 feature {NONE} -- Internationalization

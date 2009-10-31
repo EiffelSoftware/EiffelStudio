@@ -88,6 +88,25 @@ feature -- Access: output
 			result_attached_implies_usable: Result /= Void implies Result.is_interface_usable
 		end
 
+feature -- Access: sessions
+
+	running_sessions: ARRAYED_LIST [TEST_SESSION_I]
+			-- Sessions which have been launched through `Current' and are still running.
+			--
+			-- `Result': Running sessions.
+		require
+			usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			results_valid: Result.for_all (
+				agent (a_session: TEST_SESSION_I): BOOLEAN
+					do
+						Result := a_session.is_interface_usable and then
+						          a_session.test_suite = Current
+					end)
+		end
+
 feature -- Query
 
 	has_test (an_identifier: READABLE_STRING_GENERAL): BOOLEAN

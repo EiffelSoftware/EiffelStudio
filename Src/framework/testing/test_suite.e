@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 				end
 			end
 			create factories.make (10)
-			create running_sessions.make (10)
+			create internal_running_sessions.make (10)
 
 				-- register test executor
 			register_factory (create {TEST_DEFAULT_SESSION_FACTORY [TEST_EXECUTION]})
@@ -95,6 +95,25 @@ feature -- Access: output
 			end
 		end
 
+feature -- Access: sessions
+
+	running_sessions: ARRAYED_LIST [TEST_SESSION_I]
+			-- <Precursor>
+		local
+			l_sessions: like internal_running_sessions
+		do
+			l_sessions := internal_running_sessions
+			create Result.make (l_sessions.count)
+			from
+				l_sessions.start
+			until
+				l_sessions.after
+			loop
+				Result.force (l_sessions.item_for_iteration.session)
+				l_sessions.forth
+			end
+		end
+
 feature -- Access: connection point
 
 	test_suite_connection: EVENT_CONNECTION_I [TEST_SUITE_OBSERVER, TEST_SUITE_S]
@@ -138,7 +157,7 @@ feature {NONE} -- Access: sessions
 	factories: ARRAYED_LIST [TEST_SESSION_FACTORY [TEST_SESSION_I]]
 			-- List containing all registered factories
 
-	running_sessions: ARRAYED_LIST [TUPLE [session: TEST_SESSION_I; record: TEST_SESSION_RECORD]]
+	internal_running_sessions: ARRAYED_LIST [TUPLE [session: TEST_SESSION_I; record: TEST_SESSION_RECORD]]
 			-- List of running sessions
 
 	frozen rota: SERVICE_CONSUMER [ROTA_S]
@@ -233,7 +252,7 @@ feature -- Status setting: sessions
 			if a_session.has_next_step then
 				l_record := a_session.record
 				record_repository.append_record (l_record)
-				running_sessions.force ([a_session, l_record])
+				internal_running_sessions.force ([a_session, l_record])
 				session_launched_event.publish ([Current, a_session])
 				if rota.is_service_available then
 					l_rota := rota.service
@@ -295,11 +314,11 @@ feature {ROTA_S} -- Events: rota
 	on_task_finished (a_rota: ROTA_S; a_task: ROTA_TIMED_TASK_I)
 			-- <Precursor>
 		local
-			l_running: like running_sessions
+			l_running: like internal_running_sessions
 			l_session: TEST_SESSION_I
 		do
 			from
-				l_running := running_sessions
+				l_running := internal_running_sessions
 				l_running.start
 			until
 				l_running.off
@@ -309,6 +328,7 @@ feature {ROTA_S} -- Events: rota
 					if current_output_session = l_session then
 						current_output_session := Void
 					end
+					l_running.remove
 					session_finished_event.publish ([Current, l_session])
 					l_running.go_i_th (0)
 				else

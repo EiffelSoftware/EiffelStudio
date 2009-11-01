@@ -444,6 +444,7 @@ feature{NONE} -- Test result analyizing
 		local
 			l_system: like system
 			l_count: NATURAL
+			l_test_name: IMMUTABLE_STRING_8
 		do
 			l_system := system
 			check l_system /= Void end
@@ -455,6 +456,8 @@ feature{NONE} -- Test result analyizing
 			loop
 				source_writer.print_test_routine (current_results.last)
 				current_results.remove_last
+				create l_test_name.make_from_string (a_class_name + "." + source_writer.last_test_routine_name)
+				publish_test_creation (l_test_name)
 			end
 			source_writer.finish
 		ensure then

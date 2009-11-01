@@ -14,8 +14,7 @@ inherit
 		redefine
 			make_running,
 			detach_session,
-			show_content,
-			clear_content
+			show_content
 		end
 
 	TEST_CREATION_OBSERVER
@@ -69,12 +68,11 @@ feature {ES_TEST_CREATION_WIDGET} -- Basic operations
 			-- <Precursor>
 		do
 			Precursor
-		end
-
-	clear_content
-			-- <Precursor>
-		do
-			Precursor
+			record.tests.do_all (
+				agent (a_test_name: READABLE_STRING_8)
+					do
+						add_creation (a_test_name)
+					end)
 		end
 
 feature {ES_TEST_RECORDS_TAB} -- Status setting
@@ -91,15 +89,42 @@ feature {TEST_CREATION_I} -- Events
 	on_test_created (a_session: TEST_CREATION_I; a_test: READABLE_STRING_8)
 			-- <Precursor>
 		local
-			l_pos: INTEGER
-			l_label: EV_GRID_LABEL_ITEM
+			l_row: like row
 		do
 			if is_expanded then
-				l_pos := 1 + row.subrow_count_recursive
-				row.insert_subrow (l_pos)
-				create l_label.make_with_text (a_test.as_string_8)
-				row.subrow (l_pos).set_item (1, l_label)
+				add_creation (a_test)
+				l_row := row
+				if not l_row.is_expanded and l_row.is_expandable then
+					l_row.expand
+				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	add_creation (a_test_name: READABLE_STRING_8)
+			-- Add subrow to `row'.
+		require
+			a_test_name_attached: a_test_name /= Void
+			is_expanded: is_expanded
+		local
+			l_pos: INTEGER
+			l_row: like row
+			l_test: detachable TEST_I
+			l_subrow: ES_TEST_GRID_ROW
+		do
+			l_row := row
+			l_pos := l_row.subrow_count + 1
+			l_row.insert_subrow (l_pos)
+			if a_test_name /= Void then
+				l_test := test_from_name (a_test_name)
+			end
+			if l_test /= Void then
+				create l_subrow.make_attached (l_test, l_row.subrow (l_pos))
+			else
+				create l_subrow.make (a_test_name, l_row.subrow (l_pos))
+			end
+			subrows.force_last (l_subrow, a_test_name)
 		end
 
 note

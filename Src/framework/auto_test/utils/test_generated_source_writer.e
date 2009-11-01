@@ -28,6 +28,14 @@ feature -- Access
 	root_feature_name: attached STRING = ""
 			-- <Precursor>
 
+	last_test_routine_name: STRING
+			-- Name of test last printed to file
+		require
+			writing: is_writing
+		do
+			Result := test_writer.last_test_routine_name
+		end
+
 feature {NONE} -- Access
 
 	test_writer: detachable TEST_GENERATED_TEST_WRITER

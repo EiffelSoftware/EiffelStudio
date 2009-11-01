@@ -132,6 +132,9 @@ feature {NONE} -- Events
 						end (?, l_string))
 				reset_token_writer
 				create l_dialog.make (icon_pixmaps.general_information_icon_buffer, "Test Result Details")
+				if l_string.is_empty then
+					l_string.append ("Unable to retrieve any information from the evaluator.")
+				end
 				l_dialog.set_text (l_string)
 				l_dialog.show_on_active_window
 			end

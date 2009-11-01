@@ -14149,7 +14149,10 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval105 := ast_factory.new_iteration_as (extract_keyword (yyvs15.item (yyvsp15)), yyvs27.item (yyvsp27), yyvs12.item (yyvsp12), yyvs2.item (yyvsp2)) 
+				insert_supplier ("ITERABLE", yyvs2.item (yyvsp2))
+				insert_supplier ("ITERATION_CURSOR", yyvs2.item (yyvsp2))
+				yyval105 := ast_factory.new_iteration_as (extract_keyword (yyvs15.item (yyvsp15)), yyvs27.item (yyvsp27), yyvs12.item (yyvsp12), yyvs2.item (yyvsp2))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp105 := yyvsp105 + 1

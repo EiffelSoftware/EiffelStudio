@@ -50,7 +50,7 @@ feature -- Basic operations
 			end
 		end
 
-	print_result_details (a_formatter: TEXT_FORMATTER; a_result: EQA_RESULT; a_indent: NATURAL)
+	print_result_details (a_formatter: TEXT_FORMATTER; a_result: EQA_RESULT; a_indent: NATURAL; a_verbose: BOOLEAN)
 			-- Print formatted result details for given result on multiple lines.
 			--
 			-- Note: descendants which are aware of specialized output should redefine to provide more
@@ -59,6 +59,7 @@ feature -- Basic operations
 			-- `a_formatted': Formatter to which output should be printed to.
 			-- `a_result': Result to be printed.
 			-- `a_indent': Indentation of printed details.
+			-- `a_verbose': True if all possible information should be printed (call stack)
 		require
 			a_formatter_attached: a_formatter /= Void
 			a_result_attached: a_result /= Void
@@ -76,14 +77,14 @@ feature -- Basic operations
 			if attached {EQA_ETEST_PARTIAL_RESULT} a_result as l_part_result then
 				a_formatter.add_indents (a_indent.as_integer_32)
 				a_formatter.process_basic_text ("on_prepare: ")
-				print_invocation_details (a_formatter, l_part_result.setup_response, a_indent)
+				print_invocation_details (a_formatter, l_part_result.setup_response, a_indent, a_verbose)
 				if attached {EQA_ETEST_RESULT} a_result as l_result then
 					a_formatter.add_indents (a_indent.as_integer_32)
 					a_formatter.process_basic_text ("test routine: ")
-					print_invocation_details (a_formatter, l_result.test_response, a_indent)
+					print_invocation_details (a_formatter, l_result.test_response, a_indent, a_verbose)
 					a_formatter.add_indents (a_indent.as_integer_32)
 					a_formatter.process_basic_text ("on_clean: ")
-					print_invocation_details (a_formatter, l_result.teardown_response, a_indent)
+					print_invocation_details (a_formatter, l_result.teardown_response, a_indent, a_verbose)
 				end
 			end
 		end
@@ -127,7 +128,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	print_invocation_details (a_formatter: TEXT_FORMATTER; an_invocation: EQA_TEST_INVOCATION_RESPONSE; a_indent: NATURAL_32)
+	print_invocation_details (a_formatter: TEXT_FORMATTER; an_invocation: EQA_TEST_INVOCATION_RESPONSE; a_indent: NATURAL_32; a_verbose: BOOLEAN)
 			-- Print routine invocation details.
 		local
 			l_exception: EQA_TEST_INVOCATION_EXCEPTION
@@ -152,8 +153,10 @@ feature {NONE} -- Implementation
 				end
 				a_formatter.process_basic_text (")")
 				a_formatter.add_new_line
-				print_multiline_string (l_exception.trace.as_string_32, a_formatter, a_indent + 1)
-				a_formatter.add_new_line
+				if a_verbose then
+					print_multiline_string (l_exception.trace.as_string_32, a_formatter, a_indent + 1)
+					a_formatter.add_new_line
+				end
 			else
 				a_formatter.process_basic_text ("ok")
 				a_formatter.add_new_line

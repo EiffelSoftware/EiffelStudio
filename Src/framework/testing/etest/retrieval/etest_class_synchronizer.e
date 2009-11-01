@@ -617,9 +617,9 @@ feature {NONE} -- Implementation: AST
 			l_text: STRING_32
 			l_parser: like eiffel_parser
 		do
-			if a_class.is_compiled then
-				Result := a_class.compiled_representation.ast
-			else
+--			if a_class.is_compiled then
+--				Result := a_class.compiled_representation.ast
+--			else
 				l_text := a_class.text
 				if l_text /= Void then
 					l_parser := eiffel_parser
@@ -629,7 +629,7 @@ feature {NONE} -- Implementation: AST
 					end
 					l_parser.reset
 				end
-			end
+--			end
 		end
 
 feature {NONE} -- Factory

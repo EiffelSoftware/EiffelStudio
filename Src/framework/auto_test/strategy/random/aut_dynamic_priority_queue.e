@@ -142,7 +142,11 @@ feature -- Changing Priority
 				l_feat_table.after
 			loop
 				feature_i := l_feat_table.item_for_iteration
-				if not feature_i.is_prefix and then not feature_i.is_infix then
+				if
+					not feature_i.is_prefix and then
+					not feature_i.is_infix and then
+					not feature_i.is_obsolete
+				then
 						-- Normal exported features.
 					if feature_i.export_status.is_exported_to (l_any_class) then
 						register_feature (feature_i, a_type, False, a_priority)

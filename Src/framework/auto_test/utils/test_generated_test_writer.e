@@ -65,7 +65,7 @@ feature {NONE} -- Printing
 			print_indentation
 			counter := counter + 1
 			last_test_routine_name := "generated_test_" + counter.out
-			output_stream.put_string (last_test_routine_name)
+			output_stream.put_line (last_test_routine_name)
 
 			if current_result /= Void then
 				indent

@@ -2879,29 +2879,32 @@ feature {NONE} -- Implementation
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
 			l_variant_after_body: BOOLEAN
+			has_iteration: BOOLEAN
 		do
 			if attached l_as.iteration as i then
 				i.process (Current)
+				has_iteration := True
 			end
-
 				--| for now, the debugger supports only previous declaration
 			l_variant_after_body := not is_with_breakable and then current_class.lace_class.is_syntax_standard
-
 			l_text_formatter_decorator := text_formatter_decorator
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			l_text_formatter_decorator.process_keyword_text (ti_from_keyword, Void)
-			l_text_formatter_decorator.set_separator (Void)
-			l_text_formatter_decorator.set_new_line_between_tokens
-			if l_as.from_part /= Void then
-				l_text_formatter_decorator.indent
-				l_text_formatter_decorator.put_new_line
-				format_compound (l_as.from_part)
-				l_text_formatter_decorator.put_new_line
-				l_text_formatter_decorator.exdent
-			else
-				l_text_formatter_decorator.put_new_line
+				-- Avoid generating empty initialization part if iteration part is present.
+			if l_as.from_part /= Void or else not has_iteration then
+				l_text_formatter_decorator.process_keyword_text (ti_from_keyword, Void)
+				l_text_formatter_decorator.set_separator (Void)
+				l_text_formatter_decorator.set_new_line_between_tokens
+				if l_as.from_part /= Void then
+					l_text_formatter_decorator.indent
+					l_text_formatter_decorator.put_new_line
+					format_compound (l_as.from_part)
+					l_text_formatter_decorator.put_new_line
+					l_text_formatter_decorator.exdent
+				else
+					l_text_formatter_decorator.put_new_line
+				end
 			end
 			if l_as.invariant_part /= Void then
 				l_text_formatter_decorator.process_keyword_text (ti_invariant_keyword, Void)

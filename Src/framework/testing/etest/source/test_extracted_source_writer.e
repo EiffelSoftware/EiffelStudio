@@ -62,13 +62,13 @@ feature -- Access
 	root_feature_name: STRING = ""
 			-- <Precursor>
 
-feature {NONE} -- Access
-
 	used_routine_names: TAG_HASH_TABLE [NATURAL]
 			-- Routine names which have been used in the current class
 			--
 			-- keys: routine names
 			-- values: number of times routine name was used
+
+feature {NONE} -- Access
 
 	object_counter: NATURAL
 			-- Number of objects that have been captured
@@ -407,7 +407,7 @@ feature {NONE} -- Events
 		do
 			stream.put_line ("feature {NONE} -- Access%N")
 			stream.indent
-			stream.put_line ("context: !ARRAY [!TUPLE [type: !TYPE [ANY]; attributes: !TUPLE; inv: BOOLEAN]]")
+			stream.put_line ("context: ARRAY [TUPLE [type: TYPE [ANY]; attributes: TUPLE; inv: BOOLEAN]]")
 			stream.indent
 			stream.indent
 			stream.put_line ("-- <Precursor>")

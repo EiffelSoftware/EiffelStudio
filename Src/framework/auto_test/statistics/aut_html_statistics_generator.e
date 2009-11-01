@@ -440,19 +440,19 @@ feature {NONE} -- HTML Generation
 				file.close
 				create child_id_list.make (a_class.feature_table.count)
 				l_feat_table := a_class.feature_table
-				if not is_manual_test_class (a_class) then
-					from
-						l_feat_table.start
-					until
-						l_feat_table.after
-					loop
-						feature_i := l_feat_table.item_for_iteration
-						if feature_i /= Void and then (feature_i.is_attribute or feature_i.is_function) and then not feature_i.is_prefix and then not feature_i.is_infix then
-							generate_feature (a_class, feature_i, a_repository, child_id_list)
-						end
-						l_feat_table.forth
-					end
-				end
+--				if not is_manual_test_class (a_class) then
+--					from
+--						l_feat_table.start
+--					until
+--						l_feat_table.after
+--					loop
+--						feature_i := l_feat_table.item_for_iteration
+--						if feature_i /= Void and then (feature_i.is_attribute or feature_i.is_function) and then not feature_i.is_prefix and then not feature_i.is_infix then
+--							generate_feature (a_class, feature_i, a_repository, child_id_list)
+--						end
+--						l_feat_table.forth
+--					end
+--				end
 
 				from
 					l_feat_table.start
@@ -460,7 +460,11 @@ feature {NONE} -- HTML Generation
 					l_feat_table.after
 				loop
 					feature_i := l_feat_table.item_for_iteration
-					if feature_i /= Void and then not (feature_i.is_attribute or feature_i.is_function) and then not feature_i.is_prefix and then not feature_i.is_infix then
+					if
+						feature_i /= Void and then
+						not (feature_i.is_attribute or feature_i.is_function) and then
+						not feature_i.is_prefix and then not feature_i.is_infix
+					then
 						generate_feature (a_class, feature_i, a_repository, child_id_list)
 					end
 					l_feat_table.forth
@@ -506,6 +510,7 @@ feature {NONE} -- HTML Generation
 			filename: STRING
 			cs: DS_LINEAR_CURSOR [AUT_TEST_CASE_RESULT]
 			image_filename: STRING
+			l_count: NATURAL
 		do
 			set := a_repository.results_by_feature_and_class (a_feature, a_class)
 			if
@@ -567,56 +572,59 @@ feature {NONE} -- HTML Generation
 					generate_summary (set, file)
 					file.put_line ("<h1>Failed Test Cases:</h1>")
 					from
-
+						l_count := 1
 						cs := set.list.new_cursor
 						cs.start
 					until
-						cs.off
+							--| to limit the size of the HTML statistics we only generate 10
+							--| results per tested routine
+						cs.off or l_count > 10
 					loop
 						if cs.item.is_fail then
 							generate_test_case_result (cs.item, file)
+							l_count := l_count + 1
 						end
 						cs.forth
 					end
-					file.put_line ("<h1>Bad response Test Cases:</h1>")
-					from
+--					file.put_line ("<h1>Bad response Test Cases:</h1>")
+--					from
 
-						cs := set.list.new_cursor
-						cs.start
-					until
-						cs.off
-					loop
-						if cs.item.is_bad_response then
-							generate_test_case_result (cs.item, file)
-						end
-						cs.forth
-					end
-					file.put_line ("<h1>Passed Test Cases:</h1>")
-					from
+--						cs := set.list.new_cursor
+--						cs.start
+--					until
+--						cs.off
+--					loop
+--						if cs.item.is_bad_response then
+--							generate_test_case_result (cs.item, file)
+--						end
+--						cs.forth
+--					end
+--					file.put_line ("<h1>Passed Test Cases:</h1>")
+--					from
 
-						cs := set.list.new_cursor
-						cs.start
-					until
-						cs.off
-					loop
-						if cs.item.is_pass then
-							generate_test_case_result (cs.item, file)
-						end
-						cs.forth
-					end
-					file.put_line ("<h1>Invalid Test Cases:</h1>")
-					from
+--						cs := set.list.new_cursor
+--						cs.start
+--					until
+--						cs.off
+--					loop
+--						if cs.item.is_pass then
+--							generate_test_case_result (cs.item, file)
+--						end
+--						cs.forth
+--					end
+--					file.put_line ("<h1>Invalid Test Cases:</h1>")
+--					from
 
-						cs := set.list.new_cursor
-						cs.start
-					until
-						cs.off
-					loop
-						if cs.item.is_invalid then
-							generate_test_case_result (cs.item, file)
-						end
-						cs.forth
-					end
+--						cs := set.list.new_cursor
+--						cs.start
+--					until
+--						cs.off
+--					loop
+--						if cs.item.is_invalid then
+--							generate_test_case_result (cs.item, file)
+--						end
+--						cs.forth
+--					end
 					file.put_string (feature_summary_footer_template)
 					test_case_printer.set_output_stream (null_output_stream)
 					file.close
@@ -638,7 +646,7 @@ feature {NONE} -- HTML Generation
 			status: STRING
 			response_printer: AUT_RESPONSE_LOG_PRINTER
 		do
-			a_stream.put_string ("<h2>Test Case:")
+			a_stream.put_string ("<h2>Test Case: ")
 			if a_result.is_pass then
 				explain_link := "test_case_pass.html"
 				status := "pass"

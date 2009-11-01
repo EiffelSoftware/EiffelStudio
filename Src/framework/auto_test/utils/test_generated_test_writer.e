@@ -12,6 +12,7 @@ class
 inherit
 	AUT_TEST_CASE_PRINTER
 		redefine
+			make,
 			print_routine_header,
 			print_header,
 			print_footer
@@ -19,6 +20,20 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_system: like system; an_output_stream: like output_stream)
+			-- <Precursor>
+		do
+			Precursor (a_system, an_output_stream)
+			create last_test_routine_name.make_empty
+		end
+
+feature -- Access
+
+	last_test_routine_name: STRING
+			-- Name of last test that was printed to file
 
 feature {NONE} -- Access
 
@@ -49,8 +64,8 @@ feature {NONE} -- Printing
 			indent
 			print_indentation
 			counter := counter + 1
-			output_stream.put_string ("generated_test_")
-			output_stream.put_line (counter.out)
+			last_test_routine_name := "generated_test_" + counter.out
+			output_stream.put_string (last_test_routine_name)
 
 			if current_result /= Void then
 				indent

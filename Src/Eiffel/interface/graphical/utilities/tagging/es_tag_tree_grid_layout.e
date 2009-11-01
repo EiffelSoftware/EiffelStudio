@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			l_parent := a_node.parent
 			if not l_parent.is_root then
 				process_parents (l_parent)
-				token_writer.process_basic_text ("/ ")
+				token_writer.process_basic_text ("/")
 			end
 			a_node.process (Current)
 		end

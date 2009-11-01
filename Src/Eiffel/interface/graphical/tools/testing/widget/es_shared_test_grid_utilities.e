@@ -20,13 +20,6 @@ feature {NONE} -- Access
 			create Result.make
 		end
 
-	grid: EV_GRID
-			-- Grid being displayed.
-			--
-			-- Note: this is only used by {ES_SHARED_TEST_GRID_UTILITES} and will be removed at some point.
-		deferred
-		end
-
 feature {NONE} -- Query: time
 
 	now: DATE_TIME

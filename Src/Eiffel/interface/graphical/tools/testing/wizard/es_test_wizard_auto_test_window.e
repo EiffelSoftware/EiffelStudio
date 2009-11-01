@@ -368,7 +368,18 @@ feature {NONE} -- Events
 						if test_suite.is_service_available then
 							l_system := etest_suite.project_access.project.system.system
 							if not l_system.root_creators.is_empty then
-								l_root := l_system.root_creators.first
+								from
+									l_system.root_creators.start
+								until
+									l_system.root_creators.off
+								loop
+									l_root := l_system.root_creators.item_for_iteration
+									if l_root.cluster.is_internal then
+										l_system.root_creators.go_i_th (0)
+									else
+										l_system.root_creators.forth
+									end
+								end
 								l_root_group := l_root.cluster
 								l_root_class := l_root.root_class.compiled_class
 								if l_root_class /= Void then

@@ -57,9 +57,9 @@ feature -- Access
 					-- Auto resized
 				Result := 0
 			when 2 then
-				Result := 70
+				Result := 200
 			when 3 then
-				Result := 120
+				Result := 100
 			end
 		end
 
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			l_label.set_text_with_tokens (l_token_writer.last_line.content)
 			l_token_writer.wipe_out_lines
 			if a_result /= Void and then not a_result.information.is_empty then
-				l_label.set_tooltip (a_result.information.as_string_32)
+				l_label.set_tooltip (l_text + "%N%N" + a_result.information.as_string_32)
 			else
 				l_label.set_tooltip (l_text)
 			end

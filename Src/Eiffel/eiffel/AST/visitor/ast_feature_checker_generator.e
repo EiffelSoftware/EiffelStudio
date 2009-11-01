@@ -6392,6 +6392,7 @@ feature -- Implementation
 			l_loop: LOOP_B
 			l_variant: VARIANT_B
 			s: INTEGER
+			iteration_cursor_scope: INTEGER
 			scope_matcher: AST_SCOPE_MATCHER
 			e: like error_level
 			operation_id_as: ID_AS
@@ -6406,30 +6407,32 @@ feature -- Implementation
 				l_loop.set_line_pragma (l_as.line_pragma)
 			end
 
+			if attached l_as.iteration as it then
+					-- Save cursor name for future.
+				cursor_id_as := it.identifier
+					-- Record the state of inner locals before iteration to restore it after the loop.
+				iteration_cursor_scope := context.scope
+					-- Process Iteration part.
+				it.process (Current)
+				if l_needs_byte_node and then attached {BYTE_LIST [BYTE_NODE]} last_byte_node as iteration_part then
+					l_list := iteration_part
+					l_loop.set_from_part (l_list)
+				end
+			end
 			if l_as.from_part /= Void then
 					-- Type check the from part
 					-- Processing is done on the same level as the outer instructions
 					-- because the effective scope of setters is at that level
 				l_as.from_part.process (Current)
 				if l_needs_byte_node and then attached {BYTE_LIST [BYTE_NODE]} last_byte_node as from_part then
-					l_list := from_part
-					l_loop.set_from_part (from_part)
-				end
-			end
-			if attached l_as.iteration as it then
-					-- Save cursor name for future.
-				cursor_id_as := it.identifier
-					-- Process Iteration part.
-				it.process (Current)
-				if l_needs_byte_node then
 					if l_list = Void then
-						create l_list2.make (1)
+						l_loop.set_from_part (from_part)
 					else
-						create l_list2.make (l_list.count + 1)
+						create l_list2.make (l_list.count + from_part.count)
 						l_list2.append (l_list)
+						l_list2.append (from_part)
+						l_loop.set_from_part (l_list2)
 					end
-					l_list2.extend (last_byte_node)
-					l_loop.set_from_part (l_list2)
 				end
 			end
 			if l_as.invariant_part /= Void then
@@ -6556,6 +6559,8 @@ feature -- Implementation
 					l_list2.extend (last_byte_node)
 					l_loop.set_compound (l_list2)
 				end
+					-- Remove cursor's scope.
+				context.remove_object_test_scopes (iteration_cursor_scope)
 			end
 
 				-- Take exit condition into account.
@@ -6586,8 +6591,8 @@ feature -- Implementation
 			local_name_id: INTEGER
 			local_type: TYPE_A
 			local_info: LOCAL_INFO
-			assign_as: ASSIGN_AS
-			new_cursor_id_as: ID_AS
+			operation_id_as: ID_AS
+			code: BYTE_LIST [BYTE_NODE]
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -6630,7 +6635,7 @@ feature -- Implementation
 					error_handler.insert_error (create {LOOP_ITERATION_NOT_ITERABLE_ERROR}.make (context, last_type, i.actual_type, local_id))
 				else
 						-- Evaluate a type of a cursor.
-					local_type := c.actual_type.evaluated_type_in_descendant (i, context.current_class, Void)
+					local_type := c.actual_type.evaluated_type_in_descendant (i, last_type.associated_class, Void).instantiation_in (last_type, i.class_id)
 					local_type := local_type.as_attached_in (context.current_class)
 					if current_feature.written_in = context.current_class.class_id then
 						Instantiator.dispatch (local_type, context.current_class)
@@ -6646,27 +6651,42 @@ feature -- Implementation
 						context.add_object_test_local (local_info, local_id)
 						local_info.set_is_used (True)
 					end
+					context.add_object_test_instruction_scope (local_id)
+						-- Make the checker happy to see that the target of assignment is writable at this time.
+					is_object_test_local_initializing := True
 						-- Build and process AST tree that mimics the assignment
 						-- cursor := expression.new_cursor
-					create new_cursor_id_as.initialize ("new_cursor")
-					new_cursor_id_as.set_position (local_id.line, local_id.column, local_id.position, local_id.name.count)
-					create assign_as.initialize (
+					create operation_id_as.initialize ("new_cursor")
+					operation_id_as.set_position (local_id.line, local_id.column, local_id.position, local_id.name.count)
+					operation_id_as.set_index (local_id.index)
+					(create {ASSIGN_AS}.initialize (
 						create {ACCESS_ID_AS}.initialize (local_id, Void),
 						create {EXPR_CALL_AS}.initialize (
 							create {NESTED_EXPR_AS}.initialize (
 								l_as.expression,
-								create {ACCESS_FEAT_AS}.initialize (new_cursor_id_as, Void),
+								create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
 								Void,
 								Void,
 								Void
 							)
 						),
 						Void
-					)
-					context.add_object_test_instruction_scope (local_id)
-						-- Make the checker happy to see that the target of assignment is writable at this time.
-					is_object_test_local_initializing := True
-					assign_as.process (Current)
+					)).process (Current)
+					if l_needs_byte_node then
+						create code.make (2)
+						code.extend (last_byte_node)
+					end
+					operation_id_as.set_name ("start")
+					(create {INSTR_CALL_AS}.initialize (
+						create {NESTED_AS}.initialize (
+							create {ACCESS_ID_AS}.initialize (local_id, Void),
+							create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
+							Void
+					))).process (Current)
+					if code /= Void then
+						code.extend (last_byte_node)
+						last_byte_node := code
+					end
 				end
 			end
 		end

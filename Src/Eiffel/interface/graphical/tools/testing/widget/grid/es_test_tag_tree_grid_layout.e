@@ -153,17 +153,17 @@ feature {TAG_TREE_NODE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	new_date_time_item (a_date: DATE_TIME): EV_GRID_ITEM
+	new_date_time_item (a_date: DATE_TIME): EB_GRID_EDITOR_TOKEN_ITEM
 			-- Item displaying how long a given date is in the past.
 			--
 			-- `a_date': Date shown on item.
 		require
 			a_date_attached: a_date /= Void
 		local
-			l_label: EV_GRID_LABEL_ITEM
 			l_now: DATE_TIME
 			l_secs, l_days, l_hours, l_mins: INTEGER_64
 			l_text, l_tooltip: STRING
+			l_token_writer: like token_writer
 		do
 			create l_text.make (20)
 			create l_now.make_now
@@ -202,23 +202,28 @@ feature {NONE} -- Implementation
 			else
 				l_tooltip := time_format.create_string (a_date)
 			end
-			create l_label
-			l_label.set_text (l_text)
-			l_label.set_tooltip (l_tooltip)
-			Result := l_label
+			l_token_writer := token_writer
+			l_token_writer.add_comment (l_text)
+			create Result
+			Result.set_text_with_tokens (l_token_writer.last_line.content)
+			l_token_writer.wipe_out_lines
+			Result.set_tooltip (l_tooltip)
 		end
 
 	new_status_item (a_test: TEST_I; a_result: detachable EQA_RESULT): EV_GRID_ITEM
 			-- Add status item to row for given tast at index `status_column'.
 		local
 			l_text: STRING_32
-			l_tooltip: STRING
-			l_label: EV_GRID_LABEL_ITEM
+			l_label: EB_GRID_EDITOR_TOKEN_ITEM
+			l_token_writer: like token_writer
 			l_icon: EV_PIXMAP
 		do
 			create l_label
 			l_text := status_text (a_test, a_result)
-			l_label.set_text (l_text)
+			l_token_writer := token_writer
+			l_token_writer.process_basic_text (l_text)
+			l_label.set_text_with_tokens (l_token_writer.last_line.content)
+			l_token_writer.wipe_out_lines
 			if a_result /= Void and then not a_result.information.is_empty then
 				l_label.set_tooltip (a_result.information.as_string_32)
 			else
@@ -228,7 +233,6 @@ feature {NONE} -- Implementation
 			if l_icon /= Void then
 				l_label.set_pixmap (l_icon)
 			end
-			l_label.set_tooltip (l_tooltip)
 			Result := l_label
 		end
 

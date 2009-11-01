@@ -115,15 +115,11 @@ feature -- Element change
 				if attached l_ast.feature_of_name (a_feature.name, False) as l_feature then
 					if
 						attached {ROUTINE_AS} l_feature.body.content as l_routine and then
-						attached {EXTERNAL_AS} l_routine.routine_body as l_external
+						attached {EXTERNAL_AS} l_routine.routine_body as l_external and then
+						attached l_external.alias_name_literal as l_alias
 					then
-						if attached l_external.alias_name_literal as l_alias then
-							l_location := l_alias.start_location
-						else
-							l_location := l_feature.start_location
-						end
+						l_location := l_alias.start_location
 					else
-						check not_external: False end
 						l_location := l_feature.start_location
 					end
 

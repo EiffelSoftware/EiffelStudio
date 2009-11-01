@@ -110,6 +110,9 @@ feature {NONE} -- Status setting
 			l_source_writer: TEST_EXTRACTED_SOURCE_WRITER
 			l_app_stat: detachable APPLICATION_STATUS
 			l_cs: detachable EIFFEL_CALL_STACK
+			l_routines: detachable TAG_HASH_TABLE [NATURAL]
+			i: NATURAL
+			l_name: STRING
 		do
 			create l_source_writer.make
 			capturer.observers.force (l_source_writer)
@@ -134,6 +137,7 @@ feature {NONE} -- Status setting
 						end
 						l_cs.forth
 					end
+					l_routines := l_source_writer.used_routine_names.twin
 					capturer.capture_objects
 				end
 			else
@@ -146,6 +150,32 @@ feature {NONE} -- Status setting
 				observer_found: not capturer.observers.off
 			end
 			capturer.observers.remove
+
+			if l_routines /= Void then
+				from
+					l_routines.start
+				until
+					l_routines.after
+				loop
+					create l_name.make (30)
+					l_name.append (a_class_name)
+					l_name.append (".test_")
+					l_name.append (l_routines.key_for_iteration)
+					from
+						i := 1
+					until
+						i > l_routines.item_for_iteration
+					loop
+						if i > 1 then
+							publish_test_creation (l_name + "_" + i.out)
+						else
+							publish_test_creation (l_name)
+						end
+						i := i + 1
+					end
+					l_routines.forth
+				end
+			end
 		end
 
 feature -- Query

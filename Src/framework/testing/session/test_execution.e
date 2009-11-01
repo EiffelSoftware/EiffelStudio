@@ -496,7 +496,7 @@ feature {NONE} -- Basic operations
 			print_result (a_formatter, a_result)
 			a_formatter.add_new_line
 			if not a_result.is_pass then
-				print_result_details (a_formatter, a_result, 1)
+				print_result_details (a_formatter, a_result, 1, False)
 			end
 		end
 

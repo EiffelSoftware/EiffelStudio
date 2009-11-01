@@ -122,7 +122,7 @@ feature {NONE} -- Events
 		do
 			if button = 1 then
 				token_writer.enable_multiline
-				print_result_details (token_writer, test_result, 0)
+				print_result_details (token_writer, test_result, 0, True)
 				create l_string.make (1024)
 				token_writer.lines.do_all (
 					agent (a_line: EIFFEL_EDITOR_LINE; a_string: STRING_32)

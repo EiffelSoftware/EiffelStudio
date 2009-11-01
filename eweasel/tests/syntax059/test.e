@@ -9,7 +9,7 @@ feature {NONE} -- Creation
 			-- Execute test.
 		local
 			items: ARRAY [INTEGER]
-			i, j: NATURAL
+			i, j: INTEGER
 		do
 			items := <<1, 2, 3>>
 
@@ -100,13 +100,15 @@ feature {NONE} -- Creation
 			end
 
 				-- Simple iteration (invariant, variant)
+			i := 1
 			across
 				items as l_cursor
 			invariant
 				j = 0
 			loop
+				i := i + 1
 			variant
-				items.count - j
+				items.count - i + 1
 			end
 
 				-- Extra initialization (invariant, variant)
@@ -119,10 +121,11 @@ feature {NONE} -- Creation
 			loop
 				i := i + 1
 			variant
-				items.count - j
+				items.count - i + 1
 			end
 
 				-- Extra condition (invariant, variant)
+			i := 1
 			across
 				items as l_cursor
 			invariant
@@ -132,7 +135,7 @@ feature {NONE} -- Creation
 			loop
 				i := i + 1
 			variant
-				items.count - j
+				items.count - i + 1
 			end
 
 				-- Extra initialization and condition (invariant, variant)
@@ -147,7 +150,7 @@ feature {NONE} -- Creation
 			loop
 				i := i + 1
 			variant
-				items.count - j
+				items.count - i + 1
 			end
 
 		end

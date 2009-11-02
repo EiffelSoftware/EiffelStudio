@@ -1,0 +1,46 @@
+BOUNDED_QUEUE [INTEGER_32]
+Test #1:
+
+Test #2:
+1 2 3
+
+Test #3:
+3
+
+Test #4:
+3 4 5
+
+Test #5:
+3 4 5
+
+ARRAYED_QUEUE [INTEGER_32]
+Test #1:
+
+Test #2:
+1 2 3
+
+Test #3:
+3
+
+Test #4:
+3 4 5
+
+Test #5:
+3 4 5
+
+LINKED_QUEUE [INTEGER_32]
+Test #1:
+
+Test #2:
+1 2 3
+
+Test #3:
+3
+
+Test #4:
+3 4 5
+
+Test #5:
+3 4 5
+
+Execution completed

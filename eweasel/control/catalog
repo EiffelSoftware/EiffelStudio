@@ -44,6 +44,7 @@ test	two-way-list-merge		list014 tcf pass list
 
 test	priority-queue-basics	queue001 tcf pass queue
 test	heap-priority-queue-remove	queue002 tcf pass queue
+test	queue-linear			queue003 tcf pass queue
 
 test	disjoint-sets			set001  tcf pass set
 test	disjoint-sets-expanded		set001a tcf pass set

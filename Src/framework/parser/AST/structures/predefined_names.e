@@ -214,6 +214,7 @@ feature -- Constants
 	runtime_name_name_id: INTEGER = 201
 	generic_parameter_count_name_id: INTEGER = 202
 	generic_parameter_type_name_id: INTEGER = 203
+	make_from_special_name_id: INTEGER = 204
 
 feature -- Classification
 

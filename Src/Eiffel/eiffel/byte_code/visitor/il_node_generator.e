@@ -2355,6 +2355,15 @@ feature {NONE} -- Visitors
 
 		end
 
+	process_loop_expr_b (a_node: LOOP_EXPR_B)
+			-- <Precursor>
+		do
+			debug ("to_implement")
+				(create {REFACTORING_HELPER}).to_implement ("Loop expression IL code generation.")
+			end
+			il_generator.put_boolean_constant (False)
+		end
+
 	process_nat64_val_b (a_node: NAT64_VAL_B)
 			-- Process `a_node'.
 		do

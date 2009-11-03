@@ -1300,6 +1300,13 @@ feature {NONE} -- Visitors
 			ba.write_forward
 		end
 
+	process_loop_expr_b (a_node: LOOP_EXPR_B)
+			-- <Precursor>
+		do
+			ba.append (bc_bool)
+			ba.append_boolean (False)
+		end
+
 	process_nat64_val_b (a_node: NAT64_VAL_B)
 			-- Process `a_node'.
 		do

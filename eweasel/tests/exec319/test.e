@@ -48,6 +48,20 @@ feature {NONE} -- Creation
 			report (across data2 (data (<<>>), data (<<1>>), data (<<1, -2, 3>>)) as c2
 				some across c2.item as c all c.item > 0 end end
 			)
+				-- Loops with assertions
+			report (
+				across
+					data (<<6, 4, 2, 0>>) as c
+				invariant
+					c.item \\ 2 = 0
+				until
+					c.item = 0
+				all
+					c.item > 0
+				variant
+					c.item
+				end
+			)
 		end
 
 feature {NONE} -- Conversion

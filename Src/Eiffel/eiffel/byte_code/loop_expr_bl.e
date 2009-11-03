@@ -145,10 +145,6 @@ feature -- C code generation
 				buf.put_string (" = EIF_FALSE;")
 			end
 
-			buf.put_new_line
-			buf.put_string ("for (;;) {")
-			buf.indent
-
 			if context.workbench_mode then
 				workbench_mode := True
 				generate_test_start := agent generate_workbench_test
@@ -158,6 +154,9 @@ feature -- C code generation
 				generate_test_end := agent generate_end_final_mode_test
 			end
 
+				-- Record invariant and variant byte code.
+				-- First they are generated before the loop execution (at this time variant is set up).
+				-- Second they are generated before the loop end (the code generation for variant is different).
 			if workbench_mode or else context.assertion_level.is_loop then
 				if attached invariant_code as inv then
 					i := inv
@@ -184,6 +183,10 @@ feature -- C code generation
 				generate_test_end.call (Void)
 				context.set_assertion_type (0)
 			end
+
+			buf.put_new_line
+			buf.put_string ("for (;;) {")
+			buf.indent
 
 				-- Generate the exit condition.
 				-- This is done in two steps:
@@ -225,6 +228,24 @@ feature -- C code generation
 
 				-- Advance the cursor.
 			advance_code.generate
+
+				-- Generate the "invariant" part.
+			if i /= Void then
+				context.set_assertion_type (In_loop_invariant)
+				generate_test_start.call (Void)
+				i.generate
+				generate_test_end.call (Void)
+				context.set_assertion_type (0)
+			end
+
+				-- Generate the "variant" part.
+			if v /= Void then
+				context.set_assertion_type (In_loop_variant)
+				generate_test_start.call (Void)
+				v.print_register
+				generate_test_end.call (Void)
+				context.set_assertion_type (0)
+			end
 
 			buf.exdent
 			buf.put_new_line

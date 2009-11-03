@@ -2321,14 +2321,34 @@ Loop:
 	| Iteration Invariant Exit_condition_opt TE_ALL Expression Variant_opt TE_END
 			{
 				if $2 /= Void then
+					if $3 /= Void then
+						$$ := ast_factory.new_loop_expr_as ($1, $2.first, $2.second, $3.first, $3.second, $4, True, $5, $6, $7)
+					else
+						$$ := ast_factory.new_loop_expr_as ($1, $2.first, $2.second, Void, Void, $4, True, $5, $6, $7)
+					end
 				else
+					if $3 /= Void then
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, $3.first, $3.second, $4, True, $5, $6, $7)
+					else
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, $4, True, $5, $6, $7)
+					end
 				end
 				has_type := True
 			}
 	| Iteration Invariant Exit_condition_opt TE_SOME Expression Variant_opt TE_END
 			{
 				if $2 /= Void then
+					if $3 /= Void then
+						$$ := ast_factory.new_loop_expr_as ($1, $2.first, $2.second, $3.first, $3.second, extract_keyword ($4), False, $5, $6, $7)
+					else
+						$$ := ast_factory.new_loop_expr_as ($1, $2.first, $2.second, Void, Void, extract_keyword ($4), False, $5, $6, $7)
+					end
 				else
+					if $3 /= Void then
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, $3.first, $3.second, extract_keyword ($4), False, $5, $6, $7)
+					else
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, extract_keyword ($4), False, $5, $6, $7)
+					end
 				end
 				has_type := True
 			}

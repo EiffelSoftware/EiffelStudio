@@ -70,6 +70,7 @@ feature -- C code generation
 			-- Analyze loop expression.
 		local
 			workbench_mode: BOOLEAN
+			v: like variant_code
 		do
 			context.init_propagation
 			iteration_code.analyze
@@ -84,11 +85,12 @@ feature -- C code generation
 					end
 					i.analyze
 				end
-				if attached variant_code as v then
+				if attached variant_code as var then
 					if workbench_mode then
 						context.add_dt_current
 					end
-					v.analyze
+					var.analyze
+					v := var
 				end
 			end
 
@@ -98,7 +100,7 @@ feature -- C code generation
 			expression_code.analyze
 			advance_code.analyze
 
-			if attached variant_code as v then
+			if v /= Void then
 				v.free_register
 			end
 			exit_condition_code.free_register
@@ -114,8 +116,10 @@ feature -- C code generation
 	unanalyze
 			-- <Precursor>
 		do
-			if attached variant_code as v then
-				v.unanalyze
+			if context.workbench_mode or else context.assertion_level.is_loop then
+				if attached variant_code as v then
+					v.unanalyze
+				end
 			end
 			exit_condition_code.unanalyze
 			expression_code.unanalyze

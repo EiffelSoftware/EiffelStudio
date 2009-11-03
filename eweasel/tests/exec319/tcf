@@ -21,7 +21,7 @@ execute_work	NONE exec_output_w
 execute_result	ok
 compare		exec_output_w output
 
-compile_final
+compile_final_keep
 compile_result	ok
 
 c_compile_final

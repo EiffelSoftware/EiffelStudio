@@ -228,7 +228,7 @@ feature -- Access
 	last_created_editor: like current_editor
 			-- Last created editor
 
-	open_classes: HASH_TABLE [STRING, STRING]
+	open_classes: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]
 			-- Open classes. [ID, title]
 		local
 			l_classc_stone: CLASSC_STONE
@@ -249,7 +249,7 @@ feature -- Access
 						config_class_not_void: l_classc_stone.class_i.config_class /= Void
 					end
 					l_id := id_of_class (l_classc_stone.class_i.config_class)
-					Result.put (l_id, l_editors.item.docking_content.unique_title.as_string_8)
+					Result.extend ([l_id, l_editors.item.docking_content.unique_title.as_string_8])
 				end
 				l_editors.forth
 			end
@@ -257,7 +257,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	open_fake_classes: HASH_TABLE [STRING, STRING]
+	open_fake_classes: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]
 			-- Opened classes that in fake editors. [ID, title]
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -282,7 +282,7 @@ feature -- Access
 								config_class_not_void: l_classc_stone.class_i.config_class /= Void
 							end
 							l_id := id_of_class (l_classc_stone.class_i.config_class)
-							Result.put (l_id, l_contents.item.unique_title.as_string_8)
+							Result.extend ([l_id, l_contents.item.unique_title.as_string_8])
 						end
 					end
 				end
@@ -292,7 +292,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	open_clusters: HASH_TABLE [STRING, STRING]
+	open_clusters: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]
 			-- Open clusters. [ID, title]
 		local
 			l_cluster_stone: CLUSTER_STONE
@@ -309,13 +309,13 @@ feature -- Access
 				l_cluster_stone ?= l_editors.item.stone
 				if l_cluster_stone /= Void then
 					l_id := id_of_group (l_cluster_stone.group)
-					Result.put (l_id, l_editors.item.docking_content.unique_title.as_string_8)
+					Result.extend ([l_id, l_editors.item.docking_content.unique_title.as_string_8])
 				end
 				l_editors.forth
 			end
 		end
 
-	open_fake_clusters: HASH_TABLE [STRING, STRING]
+	open_fake_clusters: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]
 			-- Opened clusters that in fake editors. [ID, title]
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -336,7 +336,7 @@ feature -- Access
 						l_cluster_stone ?= l_fake_editor.stone
 						if l_cluster_stone /= Void then
 							l_id := id_of_group (l_cluster_stone.group)
-							Result.put (l_id, l_contents.item.unique_title.as_string_8)
+							Result.extend ([l_id, l_contents.item.unique_title.as_string_8])
 						end
 					end
 				end
@@ -391,33 +391,33 @@ feature -- Access
 			l_item: SD_CONTENT
 			l_editor: EB_SMART_EDITOR
 			l_editor_count: INTEGER
+			l_all_editors: like editors
 		do
 			from
 				Result := True
-				l_contents := docking_manager.contents
+				l_contents := docking_manager.query.contents_editors
 				l_contents.start
 			until
 				l_contents.after or not Result
 			loop
 				l_item := l_contents.item
-				if l_item.type = {SD_ENUMERATION}.editor then
-					l_editor_count := l_editor_count + 1
-					Result := l_item.is_visible
-					if Result then
-						if attached l_item.user_widget.parent then
-							-- Main development window must contain the editor widget
-							Result := development_window.window.has_recursive (l_item.user_widget)
-						else
-							-- `l_item' must exists in SD_NOTEBOOK and not selected
-							if attached {SD_TAB_STATE} l_item.state as l_state then
-								Result := (l_state.zone.contents.count >= 2) and (not l_state.zone.is_content_selected (l_item))
-								if Result then
-									-- Main development window must contain the tab zone
-									Result := development_window.window.has_recursive (l_state.zone)
-								end
-							else
-								Result := False
+				check l_item.type = {SD_ENUMERATION}.editor end
+				l_editor_count := l_editor_count + 1
+				Result := l_item.is_visible
+				if Result then
+					if attached l_item.user_widget.parent then
+						-- Main development window must contain the editor widget
+						Result := development_window.window.has_recursive (l_item.user_widget)
+					else
+						-- `l_item' must exists in SD_NOTEBOOK and not selected
+						if attached {SD_TAB_STATE} l_item.state as l_state then
+							Result := (l_state.zone.contents.count >= 2) and (not l_state.zone.is_content_selected (l_item))
+							if Result then
+								-- Main development window must contain the tab zone
+								Result := development_window.window.has_recursive (l_state.zone)
 							end
+						else
+							Result := False
 						end
 					end
 				end
@@ -425,18 +425,23 @@ feature -- Access
 				l_contents.forth
 			end
 
-			Result := (l_editor_count = editors_internal.count)
+			l_all_editors := editors
+			if attached fake_editors as l_fake_editors then
+				l_all_editors.append (l_fake_editors)
+			end
+
+			Result := (l_editor_count = l_all_editors.count)
 
 			if Result then
 				from
-					editors_internal.start
+					l_all_editors.start
 				until
-					editors_internal.after or not Result
+					l_all_editors.after or not Result
 				loop
-					l_editor := editors_internal.item
+					l_editor := l_all_editors.item
 					Result := l_editor.docking_content.type = {SD_ENUMERATION}.editor
 
-					editors_internal.forth
+					l_all_editors.forth
 				end
 			end
 		end
@@ -735,7 +740,7 @@ feature -- Element change
 			set: veto_pebble_function_internal = a_func
 		end
 
-	restore_editors (a_open_classes: HASH_TABLE [STRING, STRING]; a_open_clusters: HASH_TABLE [STRING, STRING]): BOOLEAN
+	restore_editors (a_open_classes: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]; a_open_clusters: ARRAYED_LIST [TUPLE [a_cluster_name: STRING; a_docking_name: STRING]]): BOOLEAN
 			-- Restore editors.
 			-- If really have editors to open, then result is True, otherwise is False
 		require
@@ -764,9 +769,10 @@ feature -- Element change
 				until
 					a_open_classes.after
 				loop
-					l_conf_class := class_of_id (a_open_classes.item_for_iteration)
+					l_conf_class := class_of_id (a_open_classes.item.a_class_name)
+
 					if l_conf_class /= Void then
-						l_content := create_docking_content_fake_one (a_open_classes.key_for_iteration)
+						l_content := create_docking_content_fake_one (a_open_classes.item.a_docking_name)
 
 						fake_editors.extend (last_created_editor)
 
@@ -778,7 +784,7 @@ feature -- Element change
 							l_class_i_not_void: l_class_i /= Void
 						end
 						l_content.set_pixmap (pixmap_from_class_i (l_class_i))
-						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_classes.key_for_iteration))
+						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_classes.item.a_docking_name))
 						if l_class_i.is_compiled then
 							create l_classc_stone.make (l_class_i.compiled_class)
 							last_created_editor.set_stone (l_classc_stone)
@@ -798,15 +804,15 @@ feature -- Element change
 				until
 					a_open_clusters.after
 				loop
-					l_group := group_of_id (a_open_clusters.item_for_iteration)
+					l_group := group_of_id (a_open_clusters.item.a_cluster_name)
 					if l_group /= Void then
 						create l_cluster_stone.make (l_group)
-						l_content := create_docking_content_fake_one (a_open_clusters.key_for_iteration)
+						l_content := create_docking_content_fake_one (a_open_clusters.item.a_docking_name)
 						fake_editors.extend (last_created_editor)
 						l_content.set_long_title (l_group.name)
 						l_content.set_short_title (l_group.name)
 						l_content.set_pixmap (pixmap_from_group (l_group))
-						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_clusters.key_for_iteration))
+						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_clusters.item.a_docking_name))
 						last_created_editor.set_stone (l_cluster_stone)
 						update_content_description (l_cluster_stone, last_created_editor.docking_content)
 						Result := True
@@ -821,7 +827,7 @@ feature -- Element change
 		end
 
 	fake_editors: ARRAYED_LIST [EB_SMART_EDITOR]
-			-- Fake editors which is for fast opening Eiffel Studio.
+			-- Fake editors which is used for fast opening Eiffel Studio.
 
 	show_editors_possible
 			-- Show editors which are possible to show.
@@ -889,28 +895,118 @@ feature -- Element change
 		end
 
 	synchronize_with_docking_manager
-			-- Becaues sometimes the editors datas we saved will not synchronized with docking editors data,
-			-- we want to make sure it's synchronized here.
+			-- Sometimes editors manager data would not synchronized with docking editor content statues,
+			-- synchronized here.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_item: SD_CONTENT
+			l_item_valid: BOOLEAN
+			l_editor_count: INTEGER
+			l_editors: like editors
+			l_editor_item: like current_editor
+			l_has, l_found_editor: BOOLEAN
 		do
 			from
-				l_contents := docking_manager.contents.twin
+				l_contents := docking_manager.query.contents_editors
 				l_contents.start
 			until
 				l_contents.after
 			loop
-				if l_contents.item.type = {SD_ENUMERATION}.editor then
-					if not l_contents.item.is_visible then
-						-- This editor not exists in saved docking layout, we should remove it.
-						remove_editor_of_content (l_contents.item)
+				l_item := l_contents.item
+				l_item_valid := True
 
-						-- Remove it from docking manager too.
-						l_contents.item.close
+				check l_item.type = {SD_ENUMERATION}.editor end
+				l_editor_count := l_editor_count + 1
+
+				if not l_contents.item.is_visible then
+					l_item_valid := False
+				else
+					if attached l_item.user_widget.parent then
+						-- Main development window must contain the editor widget
+						l_item_valid := development_window.window.has_recursive (l_item.user_widget)
+					else
+						-- `l_item' must exists in SD_NOTEBOOK and not selected
+						if attached {SD_TAB_STATE} l_item.state as l_state then
+							l_item_valid := (l_state.zone.contents.count >= 2) and (not l_state.zone.is_content_selected (l_item))
+							if l_item_valid then
+								-- Main development window must contain the tab zone
+								l_item_valid := development_window.window.has_recursive (l_state.zone)
+							end
+						else
+							l_item_valid := False
+						end
 					end
 				end
+
+				if not l_item_valid then
+					-- This editor not exists in saved docking layout, we should remove it.
+					remove_editor_of_content (l_item)
+
+					-- Remove it from docking manager too.
+					l_item.close
+				end
+
 				l_contents.forth
 			end
+
+			l_contents := docking_manager.query.contents_editors
+			l_editors := editors
+			if attached fake_editors as l_fake_editors then
+				l_editors.append (l_fake_editors)
+			end
+
+			if l_editors.count /= l_contents.count then
+
+				from
+					-- Remove useless editor(s) in `internal_editors'
+					l_editors.start
+				until
+					l_editors.after
+				loop
+					l_found_editor := False
+					l_editor_item := l_editors.item
+					from
+						l_contents.start
+					until
+						l_contents.after or l_found_editor
+					loop
+						l_item := l_contents.item
+						l_found_editor := (l_item.user_widget ~ l_editor_item.widget)
+
+						l_contents.forth
+					end
+					if not l_found_editor then
+						close_editor_perform (l_editor_item)
+					end
+					l_editors.forth
+				end
+
+				from
+					-- Remove useless editor(s) in docking manager contents
+					l_contents.start
+				until
+					l_contents.after
+				loop
+					l_item := l_contents.item
+					l_has := False
+					from
+						l_editors.start
+					until
+						l_editors.after or l_has
+					loop
+						l_editor_item := l_editors.item
+						l_has := (l_item.user_widget ~ l_editor_item.widget)
+						l_editors.forth
+					end
+					if not l_has then
+						l_item.close
+						docking_manager.contents.prune_all (l_item)
+					end
+					l_contents.forth
+				end
+			end
+		ensure
+			valid: is_all_editors_valid
 		end
 
 feature -- Basic operations

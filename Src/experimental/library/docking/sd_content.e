@@ -669,6 +669,7 @@ feature -- Command
 
 				docking_manager.contents.start
 				docking_manager.contents.prune (Current)
+				internal_docking_manager := Void
 			end
 		ensure
 			detached: not is_docking_manager_attached

@@ -24,6 +24,12 @@ feature {NONE} -- Initialization
 			s2 := "s2"
 			entries.put ("s1", "s1")
 			entries.put (s2, "s2")
+
+			create spec.make_filled (Void, 4)
+			spec.put ("a1", 0)
+			spec.put (Void, 1)
+			spec.put (a2, 2)
+			spec.put ("a3", 3)
 		end
 
 feature -- Access
@@ -31,6 +37,8 @@ feature -- Access
 	a1, a2: STRING
 
 	entries: HASH_TABLE [STRING, STRING]
+
+	spec: SPECIAL [detachable STRING]
 
 	s1, s2: STRING
 

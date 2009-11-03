@@ -1,7 +1,9 @@
 note
+	description: "Specific description of the ARRAY class which has special requirements for `check_validity'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
---- Compiled class ARRAY
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ARRAY_CLASS_B
@@ -35,7 +37,7 @@ feature
 			end;
 
 				-- Check if class has an attribute `area' of type SPECIAL [T].
-			area_feature ?= feature_table.item_id (names_heap.area_name_id)
+			area_feature ?= feature_table.item_id ({PREDEFINED_NAMES}.area_name_id)
 			if
 				(area_feature = Void)
 				or else not area_type.same_as (area_feature.type)
@@ -64,7 +66,7 @@ feature
 				loop
 					creat_feat := feature_table.item (creators.key_for_iteration);
 					if
-						creat_feat.feature_name_id = names_heap.make_name_id and then
+						creat_feat.feature_name_id = {PREDEFINED_NAMES}.make_name_id and then
 						creat_feat.same_signature (make_signature)
 					then
 						done := True
@@ -88,12 +90,12 @@ feature {NONE}
 		local
 			args: FEAT_ARG;
 		do
-			create args.make (2);
-			args.extend (Integer_type);
-			args.extend (Integer_type);
-			create Result;
-			Result.set_arguments (args);
-			Result.set_feature_name_id (names_heap.make_name_id, 0)
+			create args.make (2)
+			args.extend (Integer_type)
+			args.extend (Integer_type)
+			create Result
+			Result.set_arguments (args)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_name_id, 0)
 		end;
 
 	area_type: GEN_TYPE_A

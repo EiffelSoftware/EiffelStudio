@@ -237,7 +237,7 @@ feature -- Storage
 
 						-- Encode and emit object
 					a_session.on_begin_store
-					l_sed_util.independent_store (a_session.session_object, l_writer, False)
+					l_sed_util.independent_store (a_session.session_object, l_writer, True)
 					l_file.flush
 					a_session.on_end_store
 				end

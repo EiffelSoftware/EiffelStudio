@@ -1302,9 +1302,133 @@ feature {NONE} -- Visitors
 
 	process_loop_expr_b (a_node: LOOP_EXPR_B)
 			-- <Precursor>
+		local
+			local_list: ARRAYED_LIST [TYPE_A]
+			variant_local_number: INTEGER
+			result_local_number: INTEGER
+			invariant_breakpoint_slot: INTEGER
+			body_breakpoint_slot: INTEGER
+			l_context: like context
+			v: detachable VARIANT_B
+			i: detachable BYTE_LIST [BYTE_NODE]
 		do
+				-- Generate loop iteration part.
+			a_node.iteration_code.process (Current)
+
+			l_context := context
+			local_list := l_context.local_list
+
+				-- Add a local to keep the loop expression result.
+			l_context.add_local (boolean_type)
+			result_local_number := local_list.count
 			ba.append (bc_bool)
-			ba.append_boolean (False)
+			ba.append_boolean (a_node.is_all)
+			ba.append (bc_lassign)
+			ba.append_short_integer (result_local_number)
+
+			v := a_node.variant_code
+			if v /= Void then
+					-- Initialization of the variant control variable
+				l_context.add_local (integer_32_type)
+				variant_local_number := local_list.count
+				ba.append (Bc_init_variant)
+				ba.append_short_integer (variant_local_number)
+			end
+
+				-- Record context.
+			invariant_breakpoint_slot := l_context.get_breakpoint_slot
+
+			i := a_node.invariant_code
+			if i /= Void or else v /= Void then
+				ba.append (Bc_loop)
+					-- In case the loop assertion are not checked, we
+					-- have to put a jump value.
+				ba.mark_forward
+					-- Invariant loop byte code
+				if i /= Void then
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+					i.process (Current)
+				end
+					-- Variant loop byte code
+				if v /= Void then
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
+					v.process (Current)
+					ba.append_short_integer (variant_local_number)
+				end
+					-- Evaluation of the jump value
+				ba.write_forward
+				l_context.set_assertion_type (0)
+			end
+
+			ba.mark_backward
+
+				-- Generate byte code for result of loop expression.
+			ba.append (bc_local)
+			ba.append_short_integer (result_local_number)
+			if a_node.is_all then
+				ba.append (bc_jmp_f)
+			else
+				ba.append (bc_jmp_t)
+			end
+				-- Deferred writing of the jump relative value
+			ba.mark_forward
+
+				-- Generate byte code for exit expression
+			generate_melted_debugger_hook
+			a_node.exit_condition_code.process (Current)
+				-- Generate a test
+			ba.append (Bc_jmp_t)
+				-- Deferred writing of the jump relative value
+			ba.mark_forward
+
+			a_node.expression_code.process (Current)
+			ba.append (bc_lassign)
+			ba.append_short_integer (result_local_number)
+
+				-- Advance the loop cursor.
+			a_node.advance_code.process (Current)
+
+				-- Save hook context & restore recorded context.
+			body_breakpoint_slot := l_context.get_breakpoint_slot
+			l_context.set_breakpoint_slot (invariant_breakpoint_slot)
+
+			if i /= Void or else v /= Void then
+				ba.append (Bc_loop)
+					-- In case the loop assertion are not checked, we
+					-- have to put a jump value.
+				ba.mark_forward
+
+					-- Invariant loop byte code
+				if i /= Void then
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+					i.process (Current)
+				end
+					-- Variant loop byte code
+				if v /= Void then
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
+					v.process (Current)
+					ba.append_short_integer (variant_local_number)
+				end
+
+					-- Evaluation of the jump value
+				ba.write_forward
+				l_context.set_assertion_type (0)
+			end
+
+				-- Restore hook context
+			l_context.set_breakpoint_slot (body_breakpoint_slot)
+
+				-- Generate an unconditional jump
+			ba.append (Bc_jmp)
+				-- Write offset value for unconditinal jump
+			ba.write_backward
+
+				-- Write jump value for conditional exit
+			ba.write_forward
+			ba.write_forward
+
+			ba.append (bc_local)
+			ba.append_short_integer (result_local_number)
 		end
 
 	process_nat64_val_b (a_node: NAT64_VAL_B)

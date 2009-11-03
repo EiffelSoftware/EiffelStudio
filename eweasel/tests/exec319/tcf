@@ -4,12 +4,12 @@ test_description Minimal set of tests for loop expressions.
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
---compile_melted
---compile_result	ok
+compile_melted
+compile_result	ok
 
---execute_work	NONE exec_output_m
---execute_result	ok
---compare		exec_output_m output
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
 
 compile_frozen
 compile_result	ok

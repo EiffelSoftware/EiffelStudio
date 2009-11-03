@@ -62,6 +62,39 @@ feature {NONE} -- Creation
 					c.item
 				end
 			)
+				-- Loops with violated assertions
+			report_violation (
+				agent
+					local
+						b: BOOLEAN
+					do
+						b :=
+							across
+								data (<<6, 4, 1, 0>>) as c
+							invariant
+								c.item \\ 2 = 0
+							until
+								c.item = 0
+							all
+								c.item > 0
+							end
+					end
+			)
+			report_violation (
+				agent
+					local
+						b: BOOLEAN
+					do
+						b :=
+							across
+								data (<<2, 1, 1>>) as c
+							all
+								c.item > 0
+							variant
+								c.item
+							end
+					end
+			)
 		end
 
 feature {NONE} -- Conversion
@@ -108,6 +141,23 @@ feature {NONE} -- Output
 			io.put_new_line
 		ensure
 			count_incremented: count = old count + 1
+		end
+
+	report_violation (a: PROCEDURE [ANY, TUPLE])
+		require
+			a_attached: a /= Void
+		local
+			is_retried: BOOLEAN
+		do
+			if not is_retried then
+				a.call (Void)
+			end
+			report (is_retried)
+		rescue
+			if not is_retried then
+				is_retried := True
+				retry
+			end
 		end
 
 end

@@ -10,6 +10,7 @@ feature {NONE} -- Initialization
 			-- Run application.
 		do
 			print_list ("Original", (create {A}).entries.linear_representation)
+			print_special ("Original_special", (create {A}).spec)
 			save_to_file
 			retrieve_from_file
 		end
@@ -35,6 +36,7 @@ feature {NONE} -- Implementation
 					create l_facility
 					if attached {A} l_facility.retrieved (l_reader, True) as l_a then
 						print_list ("A", l_a.entries.linear_representation)
+						print_special ("Special", l_a.spec)
 					end
 				end
 				if not l_file.is_closed then
@@ -84,6 +86,27 @@ feature {NONE} -- Implementation
 					l.forth
 				end
 				io.put_new_line
+			end
+			io.put_new_line
+		end
+
+	print_special (tag: STRING; a_spec: SPECIAL [detachable STRING])
+		local
+			i, nb: INTEGER
+		do
+			io.put_string ("Test #" + tag + ":%N")
+			from
+				nb := a_spec.count
+			until
+				i = nb
+			loop
+				if attached a_spec.item (i) as l_string then
+					io.put_string (l_string)
+				else
+					io.put_string ("Void")
+				end
+				io.put_character (' ')
+				i := i + 1
 			end
 			io.put_new_line
 		end

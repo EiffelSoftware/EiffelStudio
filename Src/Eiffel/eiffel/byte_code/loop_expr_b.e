@@ -1,5 +1,5 @@
 note
-	description: "Byte node for a loop expression"
+	description: "Byte node for a loop expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "$Author$"
@@ -11,6 +11,22 @@ class
 
 inherit
 	EXPR_B
+		redefine
+			allocates_memory,
+			calls_special_features,
+			enlarged,
+			has_call,
+			has_gcable_variable,
+			inlined_byte_code,
+			optimized_byte_node,
+			pre_inlined_code,
+			size
+		end
+
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
 
 create
 
@@ -51,7 +67,7 @@ feature -- Visitor
 	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
---			v.process_object_test_b (Current)
+			v.process_loop_expr_b (Current)
 		end
 
 feature -- Access
@@ -87,6 +103,12 @@ feature
 
 feature -- C code generation
 
+	enlarged: LOOP_EXPR_BL
+			-- Enlarged current node
+		do
+			create Result.make (Current)
+		end
+
 	used (r: REGISTRABLE): BOOLEAN
 			-- Is register `r' used in local or forthcomming dot calls ?
 		do
@@ -99,6 +121,102 @@ feature -- C code generation
 				-- advance_code.used (r)
 		end
 
+feature -- Status report
+
+	has_gcable_variable: BOOLEAN = True
+			-- <Precursor>
+			-- This expression cannot be expanded into an inline return.
+
+	has_call: BOOLEAN = True
+			-- <Precursor>
+			-- Several calls are made during the execution of the loop.
+
+	allocates_memory: BOOLEAN = True
+			-- <Precursor>
+			-- It might be that there is no creation in `new_cursor',
+			-- but a general implementation allocates a new cursor.
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER_32): BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				iteration_code.calls_special_features (array_desc) or else
+				attached invariant_code as i and then i.calls_special_features (array_desc) or else
+				attached variant_code as v and then v.calls_special_features (array_desc) or else
+				exit_condition_code.calls_special_features (array_desc) or else
+				expression_code.calls_special_features (array_desc) or else
+				advance_code.calls_special_features (array_desc)
+		end
+
+	optimized_byte_node: like Current
+			-- <Precursor>
+		do
+			Result := Current
+			iteration_code := iteration_code.optimized_byte_node
+			if attached invariant_code as i then
+				invariant_code := i.optimized_byte_node
+			end
+			if attached variant_code as v then
+				variant_code := v.optimized_byte_node
+			end
+			exit_condition_code := exit_condition_code.optimized_byte_node
+			expression_code := expression_code.optimized_byte_node
+			advance_code := advance_code.optimized_byte_node
+		end
+
+feature -- Inlining
+
+	size: INTEGER_32
+			-- <Precursor>
+		do
+			Result := 1 + iteration_code.size + exit_condition_code.size + expression_code.size + advance_code.size
+			if attached invariant_code as i then
+				Result := Result + i.size
+			end
+			if attached variant_code as v then
+				Result := Result + v.size
+			end
+		end
+
+	pre_inlined_code: like Current
+			-- <Precursor>
+		do
+			Result := Current
+			iteration_code := iteration_code.pre_inlined_code
+			if attached invariant_code as i then
+				invariant_code := i.pre_inlined_code
+			end
+			if attached variant_code as v then
+				variant_code := v.pre_inlined_code
+			end
+			exit_condition_code := exit_condition_code.pre_inlined_code
+			expression_code := expression_code.pre_inlined_code
+			advance_code := advance_code.pre_inlined_code
+		end
+
+	inlined_byte_code: like Current
+			-- <Precursor>
+		do
+			Result := Current
+			iteration_code := iteration_code.inlined_byte_code
+			if attached invariant_code as i then
+				invariant_code := i.inlined_byte_code
+			end
+			if attached variant_code as v then
+				variant_code := v.inlined_byte_code
+			end
+			exit_condition_code := exit_condition_code.inlined_byte_code
+			expression_code := expression_code.inlined_byte_code
+			advance_code := advance_code.inlined_byte_code
+		end
+
+invariant
+	iteration_code_attached: iteration_code /= Void
+	exit_condition_code_attached: exit_condition_code /= Void
+	expression_code_attached: expression_code /= Void
+	advance_code_attached: advance_code /= Void
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

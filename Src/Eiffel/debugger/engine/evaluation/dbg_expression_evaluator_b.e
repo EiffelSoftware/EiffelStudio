@@ -1083,6 +1083,12 @@ feature {BYTE_NODE} -- Visitor
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
+	process_loop_expr_b (a_node: LOOP_EXPR_B)
+			-- <Precursor>
+		do
+			dbg_error_handler.notify_error_not_implemented (Debugger_names.msg_error_not_supported (a_node))
+		end
+
 	process_nat64_val_b (a_node: NAT64_VAL_B)
 			-- Process `a_node'.
 		local

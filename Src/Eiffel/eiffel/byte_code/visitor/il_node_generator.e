@@ -2357,11 +2357,120 @@ feature {NONE} -- Visitors
 
 	process_loop_expr_b (a_node: LOOP_EXPR_B)
 			-- <Precursor>
+		local
+			l_test_label, l_end_label, l_label: IL_LABEL
+			l_local_list: ARRAYED_LIST [TYPE_A]
+			l_result_local_number: INTEGER
+			l_variant_local_number: INTEGER
+			l_check_assertion: BOOLEAN
+			i: detachable BYTE_LIST [BYTE_NODE]
+			v: detachable VARIANT_B
 		do
-			debug ("to_implement")
-				(create {REFACTORING_HELPER}).to_implement ("Loop expression IL code generation.")
+			l_check_assertion := context.workbench_mode or
+				Context.class_type.associated_class.assertion_level.is_loop
+
+				-- Generate IL code for the iteration part
+			a_node.iteration_code.process (Current)
+
+				-- Initialize loop expression result variable.
+			l_local_list := context.local_list
+			context.add_local (boolean_type)
+			l_result_local_number := l_local_list.count
+			il_generator.put_dummy_local_info (boolean_type, l_result_local_number)
+			il_generator.put_boolean_constant (a_node.is_all)
+			il_generator.generate_local_assignment (l_result_local_number)
+
+			if l_check_assertion then
+				i := a_node.invariant_code
+				v := a_node.variant_code
 			end
-			il_generator.put_boolean_constant (False)
+			if v /= Void then
+					-- Initialization of the variant control variable
+				context.add_local (integer_32_type)
+				l_variant_local_number := l_local_list.count
+				il_generator.put_dummy_local_info (v.type, l_variant_local_number)
+			end
+
+			if i /= Void or else v /= Void then
+				l_label := il_generator.create_label
+				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_loop)
+				il_generator.branch_on_false (l_label)
+				il_generator.put_boolean_constant (True)
+				il_generator.generate_set_assertion_status
+				if i /= Void then
+					context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+					i.process (Current)
+					context.set_assertion_type (0)
+				end
+					-- Variant loop byte code
+				if v /= Void then
+					context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
+					generate_il_variant_init (v, l_variant_local_number)
+					context.set_assertion_type (0)
+				end
+				il_generator.put_boolean_constant (False)
+				il_generator.generate_set_assertion_status
+				il_generator.mark_label (l_label)
+			end
+
+				-- Loop labels
+			l_test_label := il_generator.create_label
+			l_end_label := il_generator.create_label
+
+			generate_il_line_info (a_node, True)
+
+			il_generator.mark_label (l_test_label)
+
+				-- Generate byte code for loop result variable check.
+			il_generator.generate_local (l_result_local_number)
+			if a_node.is_all then
+				il_generator.branch_on_false (l_end_label)
+			else
+				il_generator.branch_on_true (l_end_label)
+			end
+
+				-- Generate byte code for exit expression
+			a_node.exit_condition_code.process (Current)
+				-- Generate a test
+			il_generator.branch_on_true (l_end_label)
+
+				-- Evaluate loop expression and assign its value to the loop result variable.
+			a_node.expression_code.process (Current)
+			il_generator.generate_local_assignment (l_result_local_number)
+
+				-- Advance the loop cursor.
+			a_node.advance_code.process (Current)
+
+			if i /= Void or else v /= Void then
+				l_label := il_generator.create_label
+				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_loop)
+				il_generator.branch_on_false (l_label)
+				il_generator.put_boolean_constant (True)
+				il_generator.generate_set_assertion_status
+
+					-- Invariant loop byte code
+				if i /= Void then
+					context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+					i.process (Current)
+					context.set_assertion_type (0)
+				end
+
+					-- Variant loop byte code
+				if v /= Void then
+					context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
+					generate_il_variant_check (v, l_variant_local_number)
+					context.set_assertion_type (0)
+				end
+				il_generator.put_boolean_constant (False)
+				il_generator.generate_set_assertion_status
+				il_generator.mark_label (l_label)
+			end
+
+			il_generator.branch_to (l_test_label)
+
+			il_generator.mark_label (l_end_label)
+
+			il_generator.generate_local (l_result_local_number)
 		end
 
 	process_nat64_val_b (a_node: NAT64_VAL_B)

@@ -1,4 +1,3 @@
-
 test_name 	catcall-crash-is-covariant-to
 test_description A small set of class compiled with catcall detection enabled crashes the compiler in {EXTERNAL_FUNC_I}.is_covariant_to
 
@@ -23,6 +22,6 @@ copy_raw	kl_imported_any_routines.e $CLUSTER kl_imported_any_routines.e
 copy_raw	kl_part_comparator.e $CLUSTER kl_part_comparator.e 
 
 compile_melted
-compile_result ok
+compile_result validity_error TEST VUAR(2); TEST Catcall ; DS_BINARY_SEARCH_TREE_CONTAINER Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall  Catcall; DS_LINEAR Catcall Catcall; DS_TRAVERSABLE Catcall Catcall Catcall; DS_SEARCHABLE Catcall; DS_BILINEAR_CURSOR Catcall Catcall Catcall Catcall Catcall Catcall ; DS_LINEAR_CURSOR Catcall Catcall Catcall Catcall Catcall Catcall ; DS_CURSOR Catcall Catcall Catcall Catcall Catcall Catcall Catcall Catcall ; DS_BINARY_SEARCH_TREE_CONTAINER_NODE Catcall Catcall; KL_ANY_ROUTINES Catcall;
 
 test_end

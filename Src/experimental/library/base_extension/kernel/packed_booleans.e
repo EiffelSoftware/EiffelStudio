@@ -9,6 +9,12 @@ note
 class
 	PACKED_BOOLEANS
 
+inherit
+	ANY
+		redefine
+			copy
+		end
+
 create
 	make
 
@@ -145,6 +151,18 @@ feature -- Removal
 			default_items: area.filled_with (0, 0, area.upper)
 		end
 
+feature -- Duplication
+
+	copy (other: like Current)
+			-- <Precursor>
+		do
+			if other /= Current then
+				area := other.area.twin
+			end
+		ensure then
+			equal_areas: area ~ other.area
+		end
+
 feature -- Constants
 
 	Integer_size: INTEGER = 32
@@ -169,5 +187,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-		
+
 end

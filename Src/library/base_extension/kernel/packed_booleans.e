@@ -9,6 +9,12 @@ note
 class
 	PACKED_BOOLEANS
 
+inherit
+	ANY
+		redefine
+			copy
+		end
+
 create
 	make
 
@@ -19,7 +25,7 @@ feature -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			create area.make (1 + (n // Integer_size))
+			create area.make_filled (0, 1 + (n // Integer_size))
 		ensure
 			allocated: area /= Void
 			enough_entries: count >= n
@@ -129,7 +135,7 @@ feature -- Resizing
 		do
 			new_count := 1 + (n // Integer_size)
 			if new_count > area.count then
-				area := area.aliased_resized_area (new_count)
+				area := area.aliased_resized_area_with_default (0, new_count)
 			end
 		ensure
 			consistent_count: count >= n
@@ -140,9 +146,21 @@ feature -- Removal
 	clear_all
 			-- Reset all items to default values.
 		do
-			area.clear_all
+			area.fill_with (0, 0, area.upper)
 		ensure
-			default_items: area.all_default (0, area.upper)
+			default_items: area.filled_with (0, 0, area.upper)
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+			-- <Precursor>
+		do
+			if other /= Current then
+				area := other.area.twin
+			end
+		ensure then
+			equal_areas: area ~ other.area
 		end
 
 feature -- Constants
@@ -160,13 +178,14 @@ invariant
 	area_not_empty: area.count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
+
 end

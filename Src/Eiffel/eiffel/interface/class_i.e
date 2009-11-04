@@ -33,8 +33,6 @@ inherit
 
 	HASHABLE
 
-	SHARED_COMPILER_PROFILE
-
 	CONF_CONSTANTS
 		export
 			{NONE}
@@ -220,7 +218,7 @@ feature -- Access
 	is_full_class_checking: BOOLEAN
 			-- Is full class being checked, i.e. including inherited features?
 		do
-			Result := options.is_full_class_checking or else is_full_class_checking_mode
+			Result := options.is_full_class_checking or else system.is_full_class_checking_mode
 		end
 
 	is_cat_call_detection: BOOLEAN

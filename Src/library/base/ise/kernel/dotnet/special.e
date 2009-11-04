@@ -142,6 +142,16 @@ feature -- Access
 			Result := internal_native_array
 		end
 
+	to_array: ARRAY [T]
+			-- Build an array representation of Current from `1' to `count'.
+		do
+			create Result.make_from_special (Current, 1, count)
+		ensure
+			to_array_attached: Result /= Void
+			to_array_lower_set: Result.lower = 1
+			to_array_upper_set: Result.upper = count
+		end
+
 feature -- Measurement
 
 	lower: INTEGER = 0

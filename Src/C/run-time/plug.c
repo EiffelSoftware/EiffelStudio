@@ -122,7 +122,7 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 		/* We perform a hack here by letting the Eiffel code believe
 		 * we are using an ARRAY [detachable STRING_8]. We will restore
 		 * the real dynamic type after initializing the ARRAY. This
-		 * is to prevent the precondition violation inf {ARRAY}.make
+		 * is to prevent the precondition violation in {ARRAY}.make
 		 * which expects the actual generic type to be detachable
 		 * for calling `make' as otherwise a default value is requested. */
 	Dftype(array) = eif_typeof_array_of (egc_str_dtype);

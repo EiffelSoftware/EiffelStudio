@@ -44,12 +44,12 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 	current_target_type: BOOLEAN
 			-- Class if False, otherwise a group
 
-	open_classes: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]
+	open_classes: HASH_TABLE [STRING, STRING]
 			-- Open classes
 			-- 1st parametar is class name
 			-- 2nd parameter is docking content unique name
 
-	open_clusters: ARRAYED_LIST [TUPLE [a_cluster_name: STRING; a_docking_name: STRING]]
+	open_clusters: HASH_TABLE [STRING, STRING]
 			-- Open clusters
 			-- 1st parametar is cluster name
 			-- 2nd parameter is docking content unique name			

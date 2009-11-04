@@ -847,14 +847,14 @@ io.error.put_new_line
 end
 		end
 
-	class_type_of_id (type_id: INTEGER): CLASS_TYPE
-			-- Class type of type id `type_id'.
+	class_type_of_id (a_type_id: INTEGER): CLASS_TYPE
+			-- Class type of type id `a_type_id'.
 		require
-			index_small_enough: class_types.valid_index (type_id)
+			index_small_enough: class_types.valid_index (a_type_id)
 		do
-			Result := class_types.item (type_id)
+			Result := class_types.item (a_type_id)
 		ensure
-			valid_class_type: Result /= Void implies Result.type_id = type_id
+			valid_class_type: Result /= Void implies Result.type_id = a_type_id
 		end
 
 	class_type_of_static_type_id (id: INTEGER): CLASS_TYPE
@@ -885,13 +885,13 @@ end
 			no_class_type_present: class_types.valid_index (class_type.type_id) implies
 				class_types.item (class_type.type_id) = Void
 		local
-			type_id: INTEGER
+			a_type_id: INTEGER
 		do
-			type_id := class_type.type_id
-			if type_id > class_types.count then
-				class_types.conservative_resize (1, type_id + System_chunk)
+			a_type_id := class_type.type_id
+			if a_type_id > class_types.count then
+				class_types.conservative_resize (1, a_type_id + System_chunk)
 			end
-			class_types.put (class_type, type_id)
+			class_types.put (class_type, a_type_id)
 		end
 
 	remove_class_type (class_type: CLASS_TYPE)

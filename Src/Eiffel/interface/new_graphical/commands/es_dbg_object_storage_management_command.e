@@ -130,7 +130,9 @@ feature -- Status report
 			-- Window to which the child dialogs will be modeless to.
 		do
 			if attached eb_debugger_manager as dbg then
-				Result := dbg.debugging_window.window
+				if attached dbg.debugging_window as dw then
+					Result := dw.window
+				end
 			end
 		end
 

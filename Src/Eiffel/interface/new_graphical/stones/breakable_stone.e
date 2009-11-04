@@ -324,7 +324,7 @@ feature -- state of breakpoint
 			Result_attached: Result /= Void
 		end
 
-	associated_user_breakpoint: BREAKPOINT
+	associated_user_breakpoint: detachable BREAKPOINT
 			-- Associated BREAKPOINT if any
 		local
 			bpm: BREAKPOINTS_MANAGER
@@ -339,16 +339,15 @@ feature -- state of breakpoint
 			Result_attached_if_has_user_bp: has_associated_user_breakpoint implies Result /= Void
 		end
 
-	drop_bkpt (a_dropped_bp: BREAKABLE_STONE)
+	drop_bkpt (a_bp_stone: BREAKABLE_STONE)
 			-- `a_bp' dropped on Current
-		local
-			bp, dropped_bp: BREAKPOINT
+		require
+			a_bp_stone_attached: a_bp_stone /= Void
 		do
-			bp := associated_user_breakpoint
-			if bp = Void then
-				dropped_bp := a_dropped_bp.associated_user_breakpoint
-				if dropped_bp /= Void and then
-					dropped_bp.routine = routine
+			if associated_user_breakpoint = Void then
+				if
+					attached a_bp_stone.associated_user_breakpoint as dropped_bp and then
+					dropped_bp.routine ~ routine
 				then
 					breakpoints_manager.move_breakpoint_to (dropped_bp, breakpoint_location)
 				end

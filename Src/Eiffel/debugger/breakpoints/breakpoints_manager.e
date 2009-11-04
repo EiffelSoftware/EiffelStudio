@@ -900,7 +900,7 @@ feature -- Breakpoints change
 			a_bp_attached: a_bp /= Void
 			bploc_attached: bploc /= Void
 			no_bp_at_bploc: not is_breakpoint_set_at (bploc, a_bp.is_hidden)
-			same_routine: a_bp.routine = bploc.routine
+			same_routine: a_bp.routine ~ bploc.routine
 		do
 			breakpoints.remove (a_bp)
 			a_bp.set_location (bploc)

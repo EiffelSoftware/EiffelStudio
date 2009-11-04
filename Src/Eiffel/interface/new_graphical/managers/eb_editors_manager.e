@@ -228,7 +228,7 @@ feature -- Access
 	last_created_editor: like current_editor
 			-- Last created editor
 
-	open_classes: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]
+	open_classes: HASH_TABLE [STRING, STRING]
 			-- Open classes. [ID, title]
 		local
 			l_classc_stone: CLASSC_STONE
@@ -249,7 +249,7 @@ feature -- Access
 						config_class_not_void: l_classc_stone.class_i.config_class /= Void
 					end
 					l_id := id_of_class (l_classc_stone.class_i.config_class)
-					Result.extend ([l_id, l_editors.item.docking_content.unique_title.as_string_8])
+					Result.put (l_id, l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
 			end
@@ -257,7 +257,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	open_fake_classes: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]
+	open_fake_classes: HASH_TABLE [STRING, STRING]
 			-- Opened classes that in fake editors. [ID, title]
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -282,7 +282,7 @@ feature -- Access
 								config_class_not_void: l_classc_stone.class_i.config_class /= Void
 							end
 							l_id := id_of_class (l_classc_stone.class_i.config_class)
-							Result.extend ([l_id, l_contents.item.unique_title.as_string_8])
+							Result.put (l_id, l_contents.item.unique_title.as_string_8)
 						end
 					end
 				end
@@ -292,7 +292,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	open_clusters: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]
+	open_clusters: HASH_TABLE [STRING, STRING]
 			-- Open clusters. [ID, title]
 		local
 			l_cluster_stone: CLUSTER_STONE
@@ -309,13 +309,13 @@ feature -- Access
 				l_cluster_stone ?= l_editors.item.stone
 				if l_cluster_stone /= Void then
 					l_id := id_of_group (l_cluster_stone.group)
-					Result.extend ([l_id, l_editors.item.docking_content.unique_title.as_string_8])
+					Result.put (l_id, l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
 			end
 		end
 
-	open_fake_clusters: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]
+	open_fake_clusters: HASH_TABLE [STRING, STRING]
 			-- Opened clusters that in fake editors. [ID, title]
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -336,7 +336,7 @@ feature -- Access
 						l_cluster_stone ?= l_fake_editor.stone
 						if l_cluster_stone /= Void then
 							l_id := id_of_group (l_cluster_stone.group)
-							Result.extend ([l_id, l_contents.item.unique_title.as_string_8])
+							Result.extend (l_id, l_contents.item.unique_title.as_string_8)
 						end
 					end
 				end
@@ -740,7 +740,7 @@ feature -- Element change
 			set: veto_pebble_function_internal = a_func
 		end
 
-	restore_editors (a_open_classes: ARRAYED_LIST [TUPLE [a_class_name: STRING; a_docking_name: STRING]]; a_open_clusters: ARRAYED_LIST [TUPLE [a_cluster_name: STRING; a_docking_name: STRING]]): BOOLEAN
+	restore_editors (a_open_classes: HASH_TABLE [STRING, STRING]; a_open_clusters: HASH_TABLE [STRING, STRING]): BOOLEAN
 			-- Restore editors.
 			-- If really have editors to open, then result is True, otherwise is False
 		require
@@ -769,10 +769,10 @@ feature -- Element change
 				until
 					a_open_classes.after
 				loop
-					l_conf_class := class_of_id (a_open_classes.item.a_class_name)
+					l_conf_class := class_of_id (a_open_classes.item_for_iteration)
 
 					if l_conf_class /= Void then
-						l_content := create_docking_content_fake_one (a_open_classes.item.a_docking_name)
+						l_content := create_docking_content_fake_one (a_open_classes.key_for_iteration)
 
 						fake_editors.extend (last_created_editor)
 
@@ -784,7 +784,7 @@ feature -- Element change
 							l_class_i_not_void: l_class_i /= Void
 						end
 						l_content.set_pixmap (pixmap_from_class_i (l_class_i))
-						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_classes.item.a_docking_name))
+						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_classes.key_for_iteration))
 						if l_class_i.is_compiled then
 							create l_classc_stone.make (l_class_i.compiled_class)
 							last_created_editor.set_stone (l_classc_stone)
@@ -804,15 +804,15 @@ feature -- Element change
 				until
 					a_open_clusters.after
 				loop
-					l_group := group_of_id (a_open_clusters.item.a_cluster_name)
+					l_group := group_of_id (a_open_clusters.item_for_iteration)
 					if l_group /= Void then
 						create l_cluster_stone.make (l_group)
-						l_content := create_docking_content_fake_one (a_open_clusters.item.a_docking_name)
+						l_content := create_docking_content_fake_one (a_open_clusters.key_for_iteration)
 						fake_editors.extend (last_created_editor)
 						l_content.set_long_title (l_group.name)
 						l_content.set_short_title (l_group.name)
 						l_content.set_pixmap (pixmap_from_group (l_group))
-						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_clusters.item.a_docking_name))
+						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_clusters.key_for_iteration))
 						last_created_editor.set_stone (l_cluster_stone)
 						update_content_description (l_cluster_stone, last_created_editor.docking_content)
 						Result := True

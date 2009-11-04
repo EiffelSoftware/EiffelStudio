@@ -113,12 +113,16 @@ feature {NONE} -- Callbacks
 			if l_eb_debugger_manager /= Void and then l_eb_debugger_manager.raised then
 				l_eb_debugger_manager.enable_exiting_eiffel_studio
 			end
-				-- If an application was being debugged, kill it.			
-			if l_eb_debugger_manager.debug_mode_forced then
-				l_eb_debugger_manager.debugging_window.docking_layout_manager.save_debug_docking_layout
-			end
-			if l_eb_debugger_manager.application_is_executing then
-				l_eb_debugger_manager.application.kill
+				-- If an application was being debugged, kill it.	
+			if l_eb_debugger_manager /= Void then
+				if l_eb_debugger_manager.debug_mode_forced then
+	 				if attached l_eb_debugger_manager.debugging_window as dw then
+						dw.docking_layout_manager.save_debug_docking_layout
+	 				end
+				end
+				if l_eb_debugger_manager.application_is_executing then
+					l_eb_debugger_manager.application.kill
+				end
 			end
 
 				-- If we are going to kill the application, we'd better warn project observers

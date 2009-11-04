@@ -158,7 +158,9 @@ feature {NONE} -- Implementation
  			-- Execute from the current debugging window
  		do
  			if attached eb_debugger_manager as dbg then
- 				execute_from (dbg.debugging_window.window)
+ 				if attached dbg.debugging_window as dw then
+ 					execute_from (dw.window)
+ 				end
  			end
  		end
 

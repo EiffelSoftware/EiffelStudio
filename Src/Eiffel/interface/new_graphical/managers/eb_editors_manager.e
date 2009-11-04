@@ -249,7 +249,7 @@ feature -- Access
 						config_class_not_void: l_classc_stone.class_i.config_class /= Void
 					end
 					l_id := id_of_class (l_classc_stone.class_i.config_class)
-					Result.put (l_id, l_editors.item.docking_content.unique_title.as_string_8)
+					Result.force (l_id, l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
 			end
@@ -282,7 +282,7 @@ feature -- Access
 								config_class_not_void: l_classc_stone.class_i.config_class /= Void
 							end
 							l_id := id_of_class (l_classc_stone.class_i.config_class)
-							Result.put (l_id, l_contents.item.unique_title.as_string_8)
+							Result.force (l_id, l_contents.item.unique_title.as_string_8)
 						end
 					end
 				end
@@ -309,7 +309,7 @@ feature -- Access
 				l_cluster_stone ?= l_editors.item.stone
 				if l_cluster_stone /= Void then
 					l_id := id_of_group (l_cluster_stone.group)
-					Result.put (l_id, l_editors.item.docking_content.unique_title.as_string_8)
+					Result.force (l_id, l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
 			end
@@ -336,7 +336,7 @@ feature -- Access
 						l_cluster_stone ?= l_fake_editor.stone
 						if l_cluster_stone /= Void then
 							l_id := id_of_group (l_cluster_stone.group)
-							Result.extend (l_id, l_contents.item.unique_title.as_string_8)
+							Result.force (l_id, l_contents.item.unique_title.as_string_8)
 						end
 					end
 				end
@@ -740,7 +740,7 @@ feature -- Element change
 			set: veto_pebble_function_internal = a_func
 		end
 
-	restore_editors (a_open_classes: HASH_TABLE [STRING, STRING]; a_open_clusters: HASH_TABLE [STRING, STRING]): BOOLEAN
+	restore_editors (a_open_classes, a_open_clusters: HASH_TABLE [STRING, STRING]): BOOLEAN
 			-- Restore editors.
 			-- If really have editors to open, then result is True, otherwise is False
 		require

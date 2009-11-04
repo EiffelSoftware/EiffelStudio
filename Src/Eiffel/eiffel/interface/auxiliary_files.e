@@ -12,8 +12,6 @@ class
 inherit
 	SHARED_CODE_FILES
 
-	SHARED_COMPILER_PROFILE
-
 	COMPILER_EXPORTER
 
 	SHARED_GENERATION
@@ -931,7 +929,7 @@ feature -- Plug and Makefile file
 			buffer.put_string (";%N%Tegc_project_version = ")
 			buffer.put_integer (System.project_creation_time)
 
-			if is_experimental_mode then
+			if system.is_experimental_mode then
 				buffer.put_string (";%N%Tegc_has_old_special_semantic = 0")
 --				buffer.put_string (";%N%Tegc_has_old_copy_semantic = 0")
 			end

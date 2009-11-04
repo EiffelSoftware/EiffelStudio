@@ -77,6 +77,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_COMPILER_PROFILE
+
 create
 	make
 

@@ -56,13 +56,10 @@ feature -- Access
 
 	width: INTEGER
 			-- Width in pixels calculated based on which tokens should be displayed
-		local
-			l_bptok: EDITOR_TOKEN_BREAKPOINT
 		do
 		    Result := Precursor
 			if not hidden_breakpoints then
-				create l_bptok.make
-				Result := Result + l_bptok.width + separator_width
+				Result := Result + breakpoint_token_width + separator_width
 			end
 		end
 
@@ -78,6 +75,15 @@ feature -- Query
 		end
 
 feature {EB_CLICKABLE_MARGIN} -- Pick and drop
+
+	breakpoint_token_width: INTEGER is
+			-- Width in pixel of the bp token
+		local
+			l_bptok: EDITOR_TOKEN_BREAKPOINT
+		once
+			create l_bptok.make
+			Result := l_bptok.width
+		end
 
 	on_breakable_stone_dropped (a_bp: BREAKABLE_STONE)
 		do
@@ -110,7 +116,9 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			ln: EIFFEL_EDITOR_LINE
 			l_number: INTEGER
 		do
-			print ("breakable_stone_at (..," + a_abs_y.out + ")%N")
+			debug
+				print ("breakable_stone_at (..," + a_abs_y.out + ")%N")
+			end
 			l_number := (a_abs_y - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
 			if l_number <= text_panel.number_of_lines then
 				ln ?= text_panel.text_displayed.line (l_number)

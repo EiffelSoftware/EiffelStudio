@@ -26,6 +26,7 @@ test	array-consistency		array002 tcf pass array
 test	array-has			array003 tcf pass array
 test	array-occurrences		array004 tcf pass array
 test	array2-wipe-out			array005 tcf pass array
+test	manifest-array-invariant	array006 tcf pass array
 
 test	list-is-equal			list001 tcf pass list
 test	list-put-extend			list002 tcf pass list

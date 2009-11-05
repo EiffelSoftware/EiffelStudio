@@ -10,6 +10,14 @@ class
 
 feature {NONE} -- Implementation
 
+	is_void_safe: BOOLEAN
+			-- Is current system compiled in void-safe mode?
+		once
+				-- When compiled in non-void-safe mode the `detachable' keyword is discarded
+				-- and thus both TYPE instance should be the same and thus we will return False.
+			Result := {SPECIAL [ANY]} /= {SPECIAL [detachable ANY]}
+		end
+
 	is_special_flag: NATURAL_8 = 0x01
 	is_tuple_flag: NATURAL_8 = 0x02
 			-- Various flags for storing objects

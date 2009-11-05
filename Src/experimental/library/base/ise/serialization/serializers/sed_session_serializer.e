@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			create object_indexes.make (1)
 			traversable := breadth_first_traversable
 			serializer := a_serializer
-			is_for_fast_retrieval := False
+			is_for_fast_retrieval := is_void_safe
 		ensure
 			serializer_set: serializer = a_serializer
 		end
@@ -55,6 +55,7 @@ feature -- Status report
 
 	is_for_fast_retrieval: BOOLEAN
 			-- Is data stored for fast retrieval?
+			-- It is always True for a void-safe system.
 
 feature -- Element change
 
@@ -92,9 +93,12 @@ feature -- Element change
 	set_is_for_fast_retrieval (v: like is_for_fast_retrieval)
 			-- Set `is_for_fast_retrieval' with `v'.
 		do
-			is_for_fast_retrieval := v
+			if not is_void_safe then
+				is_for_fast_retrieval := v
+			end
 		ensure
-			is_for_fast_retrieval_set: is_for_fast_retrieval = v
+			is_for_fast_retrieval_set: not is_void_safe implies is_for_fast_retrieval = v
+			is_for_fast_retrieval_unchanged: is_void_safe implies is_for_fast_retrieval
 		end
 
 	set_serializer (a_serializer: like serializer)
@@ -887,6 +891,7 @@ invariant
 	traversable_not_void: traversable /= Void
 	serializer_not_void: serializer /= Void
 	object_indexes_not_void: object_indexes /= Void
+	fast_retrieval_active: is_void_safe implies is_for_fast_retrieval
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

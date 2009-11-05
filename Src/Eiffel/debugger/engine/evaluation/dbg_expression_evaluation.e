@@ -85,7 +85,7 @@ feature -- Evaluation: Access
 			a_left_attached: a_left /= Void
 			a_right_attached: a_right /= Void
 		do
-			Result := expression_evaluator.equal_evaluation_on_values (create {DBG_EVALUATED_VALUE}.make_with_value (a_left), create {DBG_EVALUATED_VALUE}.make_with_value (a_right))
+			Result := expression_evaluator.equal_sign_evaluation_on_values (create {DBG_EVALUATED_VALUE}.make_with_value (a_left), create {DBG_EVALUATED_VALUE}.make_with_value (a_right))
 		end
 
 	short_text_from_errors: STRING_32

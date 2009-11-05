@@ -71,12 +71,17 @@ feature -- Remote Invocation: Record and Replay
 
 feature -- Remote Invocation: Debuggee evaluation
 
+	tilda_equal_evaluation_feature_name: STRING = "tilda_equal_evaluation"
+	is_equal_evaluation_feature_name: STRING = "is_equal_evaluation"
+	equal_sign_evaluation_feature_name: STRING = "equal_sign_evaluation"
+	debugger_type_string_evaluation_feature_name: STRING = "debugger_type_string"
+
 	tilda_equal_evaluation (a_value, a_other_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
 		require
 			a_value_attached: a_value /= Void
 			a_other_value_attached: a_other_value /= Void
 		do
-			Result := two_args_resulting_boolean_evaluation ("tilda_equal_evaluation", a_value, a_other_value, error_handler)
+			Result := two_args_resulting_boolean_evaluation (tilda_equal_evaluation_feature_name, a_value, a_other_value, error_handler)
 		end
 
 	is_equal_evaluation (a_value, a_other_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
@@ -84,15 +89,15 @@ feature -- Remote Invocation: Debuggee evaluation
 			a_value_attached: a_value /= Void
 			a_other_value_attached: a_other_value /= Void
 		do
-			Result := two_args_resulting_boolean_evaluation ("is_equal_evaluation", a_value, a_other_value, error_handler)
+			Result := two_args_resulting_boolean_evaluation (is_equal_evaluation_feature_name, a_value, a_other_value, error_handler)
 		end
 
-	equal_evaluation (a_value, a_other_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
+	equal_sign_evaluation (a_value, a_other_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
 		require
 			a_value_attached: a_value /= Void
 			a_other_value_attached: a_other_value /= Void
 		do
-			Result := two_args_resulting_boolean_evaluation ("equal_evaluation", a_value, a_other_value, error_handler)
+			Result := two_args_resulting_boolean_evaluation (equal_sign_evaluation_feature_name, a_value, a_other_value, error_handler)
 		end
 
 	debugger_type_string_evaluation (a_value: DUMP_VALUE; error_handler: detachable DBG_ERROR_HANDLER): detachable STRING
@@ -100,7 +105,7 @@ feature -- Remote Invocation: Debuggee evaluation
 		require
 			a_value_is_not_void: a_value /= Void and then not a_value.is_void
 		do
-			Result := one_arg_resulting_string_evaluation ("debugger_type_string", a_value, 0,0, error_handler)
+			Result := one_arg_resulting_string_evaluation (debugger_type_string_evaluation_feature_name, a_value, 0,0, error_handler)
 		end
 
 feature -- Remote Invocation: Object Storage

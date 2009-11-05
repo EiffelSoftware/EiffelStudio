@@ -1552,7 +1552,7 @@ feature {NONE} -- Visitor: implementation
 
 			if not error_occurred then
 				if l /= Void and r /= Void then
-					b := equal_evaluation_on_values (l, r)
+					b := equal_sign_evaluation_on_values (l, r)
 					if a_is_not then
 						b := not b
 					end
@@ -2060,11 +2060,11 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	equal_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
+	equal_sign_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
 			-- Compare using ` = '
 		do
 			if attached application_execution as app then
-				Result := app.equal_evaluation (a_left, a_right, dbg_error_handler)
+				Result := app.equal_sign_evaluation (a_left, a_right, dbg_error_handler)
 			else
 				dbg_error_handler.notify_error_exception_internal_issue
 			end

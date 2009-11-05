@@ -28,7 +28,7 @@ feature -- Debugger helper
 			if a_obj /= Void then
 				Result := a_obj.generating_type.out
 			end
-		end	
+		end
 
 feature -- Evaluation helper
 
@@ -46,12 +46,11 @@ feature -- Evaluation helper
 			Result := a.is_equal (b)
 		end
 
-	equal_evaluation (a,b: detachable ANY): BOOLEAN
+	equal_evaluation, --| `equal_evaluation' is obsolete [2009-11-05] bad name, and will be removed in 6.6
+	equal_sign_evaluation (a,b: detachable ANY): BOOLEAN
 			-- Return the evaluation of `a = b'
-		require
-			a_b_attached: a /= Void and b /= Void
 		do
-			Result := equal (a, b)
+			Result := (a = b)
 		end
 
 feature -- Object storage Access

@@ -120,19 +120,21 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Is using `Current' safe?
 		local
-			l_feat_i: FEATURE_I
 			l_feat: E_FEATURE
 			cl: CLASS_C
 			first_rout_id: INTEGER
 		do
-			if not is_corrupted and routine /= Void then
-				cl := routine.associated_class
-				if cl /= Void and then routine.is_debuggable then
-					first_rout_id := routine.rout_id_set.first
-					if routine.is_inline_agent then
-						l_feat_i := cl.eiffel_class_c.inline_agent_of_rout_id (first_rout_id)
-						if l_feat_i /= Void then
-							l_feat := l_feat_i.api_feature (routine.written_in)
+			if
+				not is_corrupted and
+				attached routine as r and then
+				r.is_valid
+			then
+				cl := r.associated_class
+				if cl /= Void and then r.is_debuggable then
+					first_rout_id := r.rout_id_set.first
+					if r.is_inline_agent then
+						if attached cl.eiffel_class_c.inline_agent_of_rout_id (first_rout_id) as l_feat_i then
+							l_feat := l_feat_i.api_feature (r.written_in)
 						end
 					else
 						l_feat := cl.feature_with_rout_id (first_rout_id)
@@ -263,7 +265,7 @@ feature {NONE} -- Private constants
 	Application_breakpoint_not_set: INTEGER = 1
 
 ;note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -287,11 +289,11 @@ feature {NONE} -- Private constants
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -109,6 +109,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			io.put_new_line
+			io.put_new_line
 		end
 
 end

@@ -72,9 +72,9 @@ feature -- Status report
 			cl_id: like associated_class_id
 		do
 			cl_id := associated_class_id
-			if (cl_id > 0 and then eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void) then
+			if eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void then
 				cl_id := written_in
-				Result := (cl_id > 0 and then eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void)
+				Result := eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void
 			end
 		end
 

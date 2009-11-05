@@ -94,3 +94,4 @@ compare		exec_output_ucnn_urcnn output_ucnn_urcnn
 compare		exec_output_nn_ucnn_urcnn output_nn_ucnn_urcnn
 
 test_end
+

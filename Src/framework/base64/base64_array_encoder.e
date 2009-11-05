@@ -16,8 +16,6 @@ inherit
 			decode64 as decode64_to_buffer
 		end
 
-	STRING_HANDLER
-
 feature {NONE} -- Query
 
 	item_to_code (a_item: NATURAL_8): NATURAL_8

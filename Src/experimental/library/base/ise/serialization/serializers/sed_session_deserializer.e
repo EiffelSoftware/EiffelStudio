@@ -630,7 +630,7 @@ feature {NONE} -- Implementation
 
 			else
 				check an_item_type_valid: an_item_type = {INTERNAL}.reference_type end
-				if attached {SPECIAL [ANY]} an_obj as l_spec_any then
+				if attached {SPECIAL [detachable ANY]} an_obj as l_spec_any then
 					decode_special_reference (l_spec_any, an_index)
 				else
 					check l_spec_any_not_void: False end
@@ -904,15 +904,22 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_reference (a_spec: SPECIAL [ANY]; an_index: INTEGER)
-			-- Decode SPECIAL [ANY] whose index is `an_index'.
+	decode_special_reference (a_spec: SPECIAL [detachable ANY]; an_index: INTEGER)
+			-- Decode SPECIAL of reference whose index is `an_index'.
 		require
 			an_index_non_negative: an_index >= 0
 		local
 			i, nb: INTEGER
 		do
+			nb := a_spec.capacity
+
+				-- If we are in fast retrieval mode, nothing to be done
+				-- we are guaranteed to find all the elements of the SPECIAL.
+			if not is_for_fast_retrieval and not is_void_safe then
+				a_spec.fill_with (Void, 0, nb - 1)
+			end
+
 			from
-				nb := a_spec.capacity
 			until
 				i = nb
 			loop
@@ -947,21 +954,21 @@ feature {NONE} -- Implementation
 				if l_sub_obj /= Void then
 					update_reference (an_obj, l_sub_obj, an_index)
 				else
-					l_missing := missing_references
-					if l_missing = Void then
-						create l_missing.make_filled (Void, object_references.count)
-						missing_references := l_missing
-					end
+			l_missing := missing_references
+			if l_missing = Void then
+				create l_missing.make_filled (Void, object_references.count)
+				missing_references := l_missing
+			end
 					l_list := l_missing.item (l_index)
-					if l_list = Void then
-						l_list := new_list
+			if l_list = Void then
+				l_list := new_list
 						l_missing.put (l_list, l_index)
-					end
-					l_tuple := new_tuple
+			end
+			l_tuple := new_tuple
 					l_tuple.object_index := an_obj_index
 					l_tuple.field_position := an_index
-					l_list.extend (l_tuple)
-				end
+			l_list.extend (l_tuple)
+		end
 			elseif attached {SPECIAL [detachable ANY]} an_obj as l_spec then
 				l_spec.force (Void, an_index)
 			end
@@ -1102,5 +1109,6 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 
 end

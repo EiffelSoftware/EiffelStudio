@@ -24,6 +24,13 @@ feature {NONE} -- Initialization
 			value := a_value
 			dynamic_class := a_value.dynamic_class
 			set_associated_application (a_app)
+
+			if
+				attached a_value.address as add and then
+				not add.is_void
+			then
+				a_app.status.keep_object (add)
+			end
 		end
 
 feature -- Access

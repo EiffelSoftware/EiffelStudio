@@ -48,10 +48,8 @@ feature -- Evaluation helper
 
 	equal_evaluation (a,b: detachable ANY): BOOLEAN
 			-- Return the evaluation of `a = b'
-		require
-			a_b_attached: a /= Void and b /= Void
 		do
-			Result := equal (a, b)
+			Result := (a = b)
 		end
 
 feature -- Object storage Access

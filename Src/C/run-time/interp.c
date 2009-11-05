@@ -2147,7 +2147,9 @@ rt_private void interpret(int flag, int where)
 					case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
 					case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
 					case SK_POINTER: elem_size = sizeof(EIF_POINTER); break;
-					case SK_REF: elem_size = sizeof(EIF_REFERENCE); break;
+					case SK_REF:
+					case SK_BIT:
+						elem_size = sizeof(EIF_REFERENCE); break;
 					default:
 						eif_panic ("Illegal type");
 				}
@@ -2181,13 +2183,13 @@ rt_private void interpret(int flag, int where)
 				opush(&nb_item);
 			} else if (is_make_empty) {
 				RT_SPECIAL_COUNT(new_obj) = 0;
-			} else {
-				if (is_bit) {
-					bit_size = get_uint32(&IC);
-					for (i = 0; i < nb; i++) {
-						*((EIF_REFERENCE *) new_obj + i) = RTLB((uint16)bit_size);
-						RTAR(new_obj, *((EIF_REFERENCE *) new_obj + i));
-					}
+			}
+
+			if (is_bit) {
+				bit_size = get_uint32(&IC);
+				for (i = 0; i < nb; i++) {
+					*((EIF_REFERENCE *) new_obj + i) = RTLB((uint16)bit_size);
+					RTAR(new_obj, *((EIF_REFERENCE *) new_obj + i));
 				}
 			}
 		}
@@ -3002,110 +3004,87 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			int32 origin, ooffset;
-			long nbr_of_items;
-			EIF_REFERENCE new_obj;
 			EIF_REFERENCE sp_area;
-			short stype, dtype, feat_id;
+			short stype, feat_id;
 			unsigned long stagval;
-			int curr_pos;
-			EIF_TYPED_VALUE *it;
-			rt_uint_ptr elem_size;
+			EIF_TYPED_VALUE new_obj;
 			unsigned char *OLD_IC;
  
+				/* Pop SPECIAL from stack. */
+			sp_area = opop()->it_ref;
+
 			if (code == BC_PARRAY) {
-				EIF_TYPED_VALUE u_lower;
-				EIF_TYPED_VALUE u_upper;
-				origin = get_int32(&IC);		/* Get the origin class id */
-				ooffset = get_int32(&IC);		/* Get the offset in origin */
-				dtype = get_int16(&IC);			/* Get the static type */
+				origin = get_int32(&IC);	/* Get the origin class id */
+				ooffset = get_int32(&IC);	/* Get the offset in origin */
 
-					/*GENERIC CONFORMANCE */
-				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
-
-				nbr_of_items = get_int32(&IC);	  	/* Number of items in array */
 				stagval = tagval;
 				OLD_IC = IC;					/* Save IC counter */
-	 
-				new_obj = RTLN(dtype);			/* Create new object */
-				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-				u_lower.type = SK_INT32;
-				u_lower.it_i4 = 1;
-				u_upper.type = SK_INT32;
-				u_upper.it_i4 = nbr_of_items;
-				((void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) RTWPF(origin, ooffset, Dtype(new_obj))) (new_obj, u_lower, u_upper);
+				new_obj = (((EIF_TYPED_VALUE (*)(EIF_REFERENCE)) RTWPF(origin, ooffset, Dtype(sp_area))) (sp_area));
 			} else {
-				EIF_TYPED_VALUE u_lower;
-				EIF_TYPED_VALUE u_upper;
 				stype = get_int16(&IC);			/* Get the static type */
-				dtype = get_int16(&IC);			/* Get the static type */
-
-					/*GENERIC CONFORMANCE */
-				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
-
 				feat_id = get_int16(&IC);		  	/* Get the feature id */
-				nbr_of_items = get_int32(&IC);	  	/* Number of items in array */
+	 
 				stagval = tagval;
 				OLD_IC = IC;					/* Save IC counter */
-	 
-				new_obj = RTLN(dtype);			/* Create new object */
-				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-				u_lower.type = SK_INT32;
-				u_lower.it_i4 = 1;
-				u_upper.type = SK_INT32;
-				u_upper.it_i4 = nbr_of_items;
-				((void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) RTWF(stype, feat_id, Dtype(new_obj))) (new_obj, u_lower, u_upper);
+				new_obj = ((EIF_TYPED_VALUE (*)(EIF_REFERENCE)) RTWF(stype, feat_id, Dtype(sp_area))) (sp_area);
 			}
-
 			IC = OLD_IC;
-			if (tagval != stagval)
+			if (tagval != stagval) {
 				sync_registers(MTC scur, stop); /* If calls melted make of array */ 
-		
-			sp_area = *(EIF_REFERENCE *) new_obj;
-			RT_GC_PROTECT(sp_area);
-
-				/* Take into account that elements are pushed
-				 * in first-to-last order */
-			curr_pos = nbr_of_items;
-			while (curr_pos > 0) {
-				/* Fill the special area with the expressions
-				* for the manifest array.
-				*/
-
-				curr_pos--;
-				it = opop();		/* Pop expression off stack */
-				switch (it->type & SK_HEAD) {
-					case SK_BOOL:
-					case SK_CHAR: *((EIF_CHARACTER *) sp_area + curr_pos) = it->it_char; break;
-					case SK_WCHAR: *((EIF_WIDE_CHAR *) sp_area + curr_pos) = it->it_wchar; break;
-					case SK_BIT: *((EIF_REFERENCE *) sp_area + curr_pos) = it->it_bit; break;
-					case SK_UINT8: *((EIF_NATURAL_8 *) sp_area + curr_pos) = it->it_uint8; break;
-					case SK_UINT16: *((EIF_NATURAL_16 *) sp_area + curr_pos) = it->it_uint16; break;
-					case SK_UINT32: *((EIF_NATURAL_32 *) sp_area + curr_pos) = it->it_uint32; break;
-					case SK_UINT64: *((EIF_NATURAL_64 *) sp_area + curr_pos) = it->it_uint64; break;
-					case SK_INT8: *((EIF_INTEGER_8 *) sp_area + curr_pos) = it->it_int8; break;
-					case SK_INT16: *((EIF_INTEGER_16 *) sp_area + curr_pos) = it->it_int16; break;
-					case SK_INT32: *((EIF_INTEGER_32 *) sp_area + curr_pos) = it->it_int32; break;
-					case SK_INT64: *((EIF_INTEGER_64 *) sp_area + curr_pos) = it->it_int64; break;
-					case SK_REAL32: *((EIF_REAL_32 *) sp_area + curr_pos) = it->it_real32; break;
-					case SK_REAL64: *((EIF_REAL_64 *) sp_area + curr_pos) = it->it_real64; break;
-					case SK_POINTER: *((EIF_POINTER *) sp_area + curr_pos) = it->it_ptr; break;
-					case SK_EXP:
-						elem_size = RT_SPECIAL_ELEM_SIZE(sp_area);
-						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * (rt_uint_ptr) curr_pos);
-						break;
-					case SK_REF:
-						*((EIF_REFERENCE *) sp_area + curr_pos) = it->it_ref;
-						RTAR(sp_area, it->it_ref);
-						break;
-					default:
-						eif_panic(MTC RT_BOTCHED_MSG);
-				}
 			}
-			RT_GC_WEAN(sp_area);			/* Release protection of `sp_area' */
-			RT_GC_WEAN(new_obj);			/* and of `new_obj'. */
 			last = iget();
 			last->type = SK_REF;
-			last->it_ref = new_obj;
+			last->it_ref = new_obj.it_r;
+			break;
+		}
+
+	case BC_SPECIAL_EXTEND:
+		{
+			EIF_TYPED_VALUE *it;
+			EIF_REFERENCE sp_area;
+			rt_uint_ptr elem_size;
+			rt_uint_ptr l_index = (rt_uint_ptr) get_int32(&IC);
+
+				/* Get the expression value. */
+			it = opop();
+				/* Get the special but we leave it on top of stack. */
+			sp_area = otop()->it_ref;
+
+			CHECK("valid_index_for_old", (!egc_has_old_special_semantic) || (l_index < RT_SPECIAL_COUNT(sp_area)));
+			CHECK("valid_index_for_new", (egc_has_old_special_semantic) || (l_index <= RT_SPECIAL_COUNT(sp_area)));
+			CHECK("small_enough", l_index <= RT_SPECIAL_CAPACITY(sp_area));
+
+			switch (it->type & SK_HEAD) {
+				case SK_BOOL:
+				case SK_CHAR: *((EIF_CHARACTER *) sp_area + l_index) = it->it_char; break;
+				case SK_WCHAR: *((EIF_WIDE_CHAR *) sp_area + l_index) = it->it_wchar; break;
+				case SK_BIT: *((EIF_REFERENCE *) sp_area + l_index) = it->it_bit; break;
+				case SK_UINT8: *((EIF_NATURAL_8 *) sp_area + l_index) = it->it_uint8; break;
+				case SK_UINT16: *((EIF_NATURAL_16 *) sp_area + l_index) = it->it_uint16; break;
+				case SK_UINT32: *((EIF_NATURAL_32 *) sp_area + l_index) = it->it_uint32; break;
+				case SK_UINT64: *((EIF_NATURAL_64 *) sp_area + l_index) = it->it_uint64; break;
+				case SK_INT8: *((EIF_INTEGER_8 *) sp_area + l_index) = it->it_int8; break;
+				case SK_INT16: *((EIF_INTEGER_16 *) sp_area + l_index) = it->it_int16; break;
+				case SK_INT32: *((EIF_INTEGER_32 *) sp_area + l_index) = it->it_int32; break;
+				case SK_INT64: *((EIF_INTEGER_64 *) sp_area + l_index) = it->it_int64; break;
+				case SK_REAL32: *((EIF_REAL_32 *) sp_area + l_index) = it->it_real32; break;
+				case SK_REAL64: *((EIF_REAL_64 *) sp_area + l_index) = it->it_real64; break;
+				case SK_POINTER: *((EIF_POINTER *) sp_area + l_index) = it->it_ptr; break;
+				case SK_EXP:
+					elem_size = RT_SPECIAL_ELEM_SIZE(sp_area);
+					ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * (rt_uint_ptr) l_index);
+					break;
+				case SK_REF:
+					*((EIF_REFERENCE *) sp_area + l_index) = it->it_ref;
+					RTAR(sp_area, it->it_ref);
+					break;
+				default:
+					eif_panic(MTC RT_BOTCHED_MSG);
+			}
+
+			if (!egc_has_old_special_semantic) {
+				RT_SPECIAL_COUNT(sp_area)++;
+			}
 			break;
 		}
 

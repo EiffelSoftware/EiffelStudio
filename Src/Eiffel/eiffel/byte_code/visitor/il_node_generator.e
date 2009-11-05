@@ -832,38 +832,41 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_real_ty: GEN_TYPE_A
-			l_decl_type: CL_TYPE_A
 			l_target_type: TYPE_A
 			l_expr: EXPR_B
-			l_base_class: CLASS_C
 			i: INTEGER
-			l_feat_tbl: FEATURE_TABLE
-			l_make_feat, l_put_feat: FEATURE_I
+			l_special_feat_tbl: FEATURE_TABLE
+			l_special_to_array_feat, l_special_make_feat, l_put_feat: FEATURE_I
+			l_special_info: CREATE_TYPE
 		do
 			l_real_ty ?= context.real_type (a_node.type)
 			l_target_type := l_real_ty.generics.item (1)
-			l_base_class := l_real_ty.associated_class
-			l_feat_tbl := l_base_class.feature_table
-			l_make_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.make_name_id)
-			l_decl_type := l_real_ty.implemented_type (l_make_feat.origin_class_id)
 
-				-- Creation of Array
-			a_node.info.updated_info.generate_il
-
-				-- Call creation procedure of ARRAY
+				-- Creation of SPECIAL
+			l_special_info := a_node.special_info.updated_info
+			l_special_feat_tbl := l_special_info.type.associated_class.feature_table
+			l_special_info.generate_il
+				-- Call creation procedure `make_empty' or `make' depending on the compilation mode
 			il_generator.duplicate_top
-			il_generator.put_integer_32_constant (1)
- 			il_generator.put_integer_32_constant (a_node.expressions.count)
- 			il_generator.generate_feature_access (l_decl_type, l_make_feat.origin_feature_id,
-				l_make_feat.argument_count, l_make_feat.has_return_value, True)
+			il_generator.put_integer_32_constant (a_node.expressions.count)
+			if system.is_experimental_mode then
+				l_special_make_feat := l_special_feat_tbl.item_id ({PREDEFINED_NAMES}.make_empty_name_id)
+			else
+				l_special_make_feat := l_special_feat_tbl.item_id ({PREDEFINED_NAMES}.make_name_id)
+			end
+ 			il_generator.generate_feature_access (l_special_info.type, l_special_make_feat.origin_feature_id,
+				l_special_make_feat.argument_count, l_special_make_feat.has_return_value, True)
 
-				-- Find `put' from ARRAY
-			l_put_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
-			l_decl_type := l_real_ty.implemented_type (l_put_feat.origin_class_id)
-
+				-- Find `put' or `extend' from SPECIAL depending on the compilation mode
+			if system.is_experimental_mode then
+				l_put_feat := l_special_feat_tbl.item_id ({PREDEFINED_NAMES}.extend_name_id)
+			else
+				l_put_feat := l_special_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
+			end
+				-- Fill the SPECIAL
  			from
  				a_node.expressions.start
- 				i := 1
+ 				i := 0
  			until
  				a_node.expressions.after
  			loop
@@ -875,13 +878,21 @@ feature {NONE} -- Visitors
  					-- Generate expression
  				generate_expression_il_for_type (l_expr, l_target_type)
 
- 				il_generator.put_integer_32_constant (i)
-
- 				il_generator.generate_feature_access (l_decl_type, l_put_feat.origin_feature_id,
+				if not system.is_experimental_mode then
+ 					il_generator.put_integer_32_constant (i)
+				end
+ 				il_generator.generate_feature_access (l_special_info.type, l_put_feat.origin_feature_id,
 					l_put_feat.argument_count, l_put_feat.has_return_value, True)
+
  				i := i + 1
  				a_node.expressions.forth
  			end
+
+				-- Creation of the ARRAY by calling `to_array' from SPECIAL to create the ARRAY instance.
+			l_special_to_array_feat := l_special_feat_tbl.item_id ({PREDEFINED_NAMES}.to_array_name_id)
+ 			il_generator.generate_feature_access (l_special_info.type,
+				l_special_to_array_feat.origin_feature_id,
+				l_special_to_array_feat.argument_count, l_special_to_array_feat.has_return_value, True)
 		end
 
 	process_assert_b (a_node: ASSERT_B)
@@ -3079,7 +3090,6 @@ feature {NONE} -- Visitors
 				l_type_creator := context.real_type (a_node.type_data).create_info
 				l_type_creator.generate_il
 			end
-
 		end
 
 	process_typed_interval_b (a_node: TYPED_INTERVAL_B [INTERVAL_VAL_B])
@@ -4200,12 +4210,14 @@ feature {NONE} -- Implementation: Feature calls
 				generate_operating_environment (a_node, written_type, target_type)
 
 			when
-				{PREDEFINED_NAMES}.generating_type_name_id,
 				{PREDEFINED_NAMES}.generator_name_id,
 				{PREDEFINED_NAMES}.out_name_id,
 				{PREDEFINED_NAMES}.tagged_out_name_id
 			then
 				generate_string_routine (a_node, written_type)
+
+			when {PREDEFINED_NAMES}.generating_type_name_id then
+				generate_generating_type (a_node, written_type, target_type)
 
 			when
 				{PREDEFINED_NAMES}.clone_name_id,
@@ -4561,7 +4573,6 @@ feature {NONE} -- Implementation: Feature calls
 			a_node_not_void: a_node /= Void
 			written_type_not_void: written_type /= Void
 			valid_feature_name:
-				a_node.feature_name_id = {PREDEFINED_NAMES}.generating_type_name_id or
 				a_node.feature_name_id = {PREDEFINED_NAMES}.generator_name_id or
 				a_node.feature_name_id = {PREDEFINED_NAMES}.out_name_id or
 				a_node.feature_name_id = {PREDEFINED_NAMES}.tagged_out_name_id
@@ -4612,6 +4623,36 @@ feature {NONE} -- Implementation: Feature calls
 
 			if l_end_label /= Void then
 				il_generator.mark_label (l_end_label)
+			end
+		end
+
+	generate_generating_type (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A)
+			-- Generate inlined call to `generating_type'.
+		require
+			is_valid: is_valid
+			a_node_not_void: a_node /= Void
+			written_type_not_void: written_type /= Void
+			target_type_not_void: target_type /= Void
+		local
+			l_label: IL_LABEL
+		do
+			if not system.is_experimental_mode then
+					-- In non-experimental mode `generating_type' return STRING.
+				generate_string_routine (a_node, written_type)
+			else
+					-- Check validity of target.
+				generate_call_on_void_target (target_type, True)
+					-- Call feature on this object if its type inherits ANY.
+				l_label := il_generator.create_label
+				il_generator.generate_is_true_instance_of (any_type)
+				il_generator.duplicate_top
+				il_generator.branch_on_true (l_label)
+					-- For a non-Eiffel class we cannot easily get the actual type so for the time being we will
+					-- yield an exception.
+				il_generator.generate_raise_exception ({EXCEP_CONST}.precondition,
+						"Feature {ANY}.generating_type not implemented for .NET class")
+				il_generator.mark_label (l_label)
+				generate_il_normal_call (a_node, written_type, True)
 			end
 		end
 

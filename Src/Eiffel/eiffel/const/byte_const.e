@@ -222,8 +222,10 @@ feature -- Access
 		-- Type test
 	Bc_is_attached:		CHARACTER = '%/159/';
 
+		-- Special extend
+	bc_special_extend:	CHARACTER = '%/160/'
+
 		-- Unused opcode
-	Bc_notused_160:		CHARACTER = '%/160/';
 	Bc_notused_161:		CHARACTER = '%/161/';
 	Bc_notused_162:		CHARACTER = '%/162/';
 	Bc_notused_163:		CHARACTER = '%/163/';

@@ -25,7 +25,7 @@ feature -- Validity
 		local
 			special_error: SPECIAL_ERROR
 			feat_table: FEATURE_TABLE
-			item_feature, put_feature, make_feature: FEATURE_I
+			item_feature, put_feature, make_feature, to_array_feature: FEATURE_I
 		do
 				-- Check if class has one formal generic parameter
 			if generics = Void or else generics.count /= 1 or else not is_frozen then
@@ -90,6 +90,17 @@ feature -- Validity
 				create special_error.make (special_case_6, Current)
 				Error_handler.insert_error (special_error)
 			end
+
+				-- Check if class has a feature to_array: ARRAY [G#1]
+			to_array_feature := feat_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
+			if to_array_feature = Void
+				or else not (to_array_feature.written_in = class_id)
+				or else not to_array_feature.same_signature (to_array_signature)
+			then
+				create special_error.make (special_case_7, Current)
+				Error_handler.insert_error (special_error)
+			end
+
 		end
 
 feature -- Typing
@@ -304,6 +315,22 @@ feature {NONE} -- Implementation
 			Result.set_feature_name_id (Names_heap.item_name_id, 0)
 		ensure
 			item_signature_not_void: Result /= Void
+		end
+
+	to_array_signature: DYN_FUNC_I
+			-- Required signature for feature `to_array' of class SPECIAL
+		local
+			l_gen_type: GEN_TYPE_A
+		do
+			create Result
+			create l_gen_type.make (system.array_id, << create {FORMAL_A}.make (False, False, 1) >>)
+			if not lace_class.is_void_unsafe then
+				l_gen_type.set_is_attached
+			end
+			Result.set_type (l_gen_type, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.to_array_name_id, 0)
+		ensure
+			to_array_signature_not_void: Result /= Void
 		end
 
 	put_signature: DYN_PROC_I

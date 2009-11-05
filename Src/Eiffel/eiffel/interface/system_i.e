@@ -3681,6 +3681,10 @@ feature -- Dead code removal
 			l_class := array_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
 
+				-- Protection of `to_array' from SPECIAL
+			l_class := special_class.compiled_class
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id), l_class)
+
 				-- Protection of feature `make' of class STRING.
 			l_class := string_8_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)

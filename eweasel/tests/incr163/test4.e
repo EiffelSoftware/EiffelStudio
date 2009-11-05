@@ -7,4 +7,8 @@
 class TEST4 [G -> HASH_TABLE [STRING, DOUBLE]]
 inherit
 	TEST3
+
+create {TEST4}
+	make
+
 end

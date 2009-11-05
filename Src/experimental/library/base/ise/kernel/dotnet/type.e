@@ -13,14 +13,14 @@ inherit
 		rename
 			default as any_default
 		redefine
-			is_equal
+			is_equal, out
 		end
 
 	DEBUG_OUTPUT
 		rename
 			default as any_default
 		redefine
-			is_equal
+			is_equal, out
 		end
 
 create {NONE}
@@ -167,6 +167,12 @@ feature -- Comparison
 		end
 
 feature -- Output
+
+	out: STRING
+			-- <Precursor>
+		do
+			Result := name
+		end
 
 	debug_output: STRING
 			-- <Precursor>

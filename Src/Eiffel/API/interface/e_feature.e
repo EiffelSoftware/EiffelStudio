@@ -381,6 +381,8 @@ feature -- Access
 			-- Is feature debuggable?
 			--| Protecting code by return False when exception occurred
 			--| See bug#16186
+		require
+			is_valid: is_valid
 		local
 			cl: CLASS_C
 			rescued: BOOLEAN
@@ -407,7 +409,7 @@ feature -- Access
 				(not is_constant) and then
 				(not is_deferred) and then
 				(not is_unique) and then
-				(written_class /= Void and then written_class.is_debuggable)
+				(attached written_class as w_cl and then w_cl.is_debuggable)
 		rescue
 			rescued := True
 			retry
@@ -471,20 +473,23 @@ feature -- Access
 
 	associated_class: CLASS_C
 			-- Class where the feature was evaluated in
+		require
+			is_valid: is_valid
 		do
 			check
 				valid_class: associated_class_id /= 0
-			end;
-			Result := Eiffel_system.class_of_id (associated_class_id);
-		end;
+			end
+			Result := Eiffel_system.class_of_id (associated_class_id)
+		end
 
 	written_class: CLASS_C
 			-- Class where the feature is written in
 		require
-			good_written_in: written_in /= 0;
+			good_written_in: written_in /= 0
+			is_valid: is_valid
 		do
-			Result := Eiffel_system.class_of_id (written_in);
-		end;
+			Result := Eiffel_system.class_of_id (written_in)
+		end
 
 	is_compiled: BOOLEAN
 			-- Has the feature been compiled?

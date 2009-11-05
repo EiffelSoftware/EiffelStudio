@@ -68,9 +68,14 @@ feature -- Status report
 
 	is_valid: BOOLEAN
 			-- Is current feature still valid?
+		local
+			cl_id: like associated_class_id
 		do
-			Result := (associated_class_id > 0 and then eiffel_system.class_of_id (associated_class_id) /= Void) and then
-				(written_in > 0 and then eiffel_system.class_of_id (written_in) /= Void)
+			cl_id := associated_class_id
+			if (cl_id > 0 and then eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void) then
+				cl_id := written_in
+				Result := (cl_id > 0 and then eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void)
+			end
 		end
 
 feature -- Properties

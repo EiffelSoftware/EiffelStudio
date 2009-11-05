@@ -30,7 +30,8 @@ class ARRAY [G] inherit
 
 create
 	make,
-	make_from_array
+	make_from_array,
+	make_from_special
 
 feature -- Initialization
 
@@ -65,6 +66,16 @@ feature -- Initialization
 			lower := a.lower
 			upper := a.upper
 		end
+
+  make_from_special (a: SPECIAL [G]) is
+            -- Initialize from the items of `a'.
+        require
+            array_exists: a /= Void
+        do
+            area := a
+            lower := 1
+            upper := a.count
+        end
 
 feature -- Access
 

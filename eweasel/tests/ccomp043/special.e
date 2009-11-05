@@ -34,6 +34,10 @@ feature
 		do
 		end
 
+	to_array: ARRAY [T] is
+		do
+		end
+
 end -- class SPECIAL
 
 

@@ -14,7 +14,8 @@ class ARRAY [G] inherit
 	TO_SPECIAL [G]
 
 create
-	make
+	make,
+	make_from_special
 
 feature -- Initialization
 
@@ -24,6 +25,11 @@ feature -- Initialization
 			-- (Make array empty if `min_index' = `max_index' + 1).
 		do
 		end
+
+  make_from_special (a: SPECIAL [G]) is
+            -- Initialize from the items of `a'.
+        do
+        end
 
 feature -- Access
 

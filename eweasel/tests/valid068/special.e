@@ -153,6 +153,11 @@ feature -- Status report
 		do
 			Result := (0 <= i) and then (i < count)
 		end
+
+	frozen to_array: ARRAY [T] is
+		do
+			create Result.make_from_special (Current)
+		end
 		
 feature -- Element change
 

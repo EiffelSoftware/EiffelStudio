@@ -206,7 +206,7 @@ static  char    *names [] = {
 "BC_START_CATCALL" ,
 "BC_END_CATCALL" ,
 "BC_IS_ATTACHED" ,
-"BC_NOTUSED_160" ,
+"BC_SPECIAL_EXTEND" ,
 "BC_NOTUSED_161" ,
 "BC_NOTUSED_162" ,
 "BC_NOTUSED_163" ,
@@ -850,31 +850,21 @@ static  void    print_instructions (void)
 				}
 				break;
 
-			case  BC_ARRAY :    /* Have to check this */
-				/* Manifest array */
-				
-				/* Static type */
+			case  BC_ARRAY: /* Manifest array */
+					/* Static type */
 				print_ctype (get_int16(&ip));
-
-				/* Dynamic type */
-				print_ctype (get_int16(&ip));
-				print_cid ();
-				/* Feature id ('make') */
+					/* Feature id ('make') */
 				fprintf (ofp,"fid %d ", (int) get_int16(&ip));
-				/* Nr. of items */
-				fprintf (ofp,"%d", get_int32(&ip));
 				break;
-			case  BC_PARRAY :   /* Have to check this */
-				/* Manifest array precompiled */
-				/* Org. id (make) */
+			case  BC_PARRAY: /* Manifest array precompiled */
+					/* Org. id (make) */
 				fprintf (ofp,"oid %d ", get_int32(&ip));
-				/* Org. offset */
+					/* Org. offset */
 				fprintf (ofp,"ooff %d ", get_int32(&ip));
-				/* Dynamic type */
-				print_ctype (get_int16(&ip));
-				print_cid ();
-				/* Nr. of items */
-				fprintf (ofp,"%d", get_int32(&ip));
+				break;
+
+			case BC_SPECIAL_EXTEND:
+				fprintf (ofp, "Index %d ", get_int32(&ip));
 				break;
 
 			case BC_TUPLE_ACCESS:

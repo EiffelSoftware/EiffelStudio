@@ -11,7 +11,7 @@
 		<warning name="syntax" enabled="false"/></option>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="versionedcominterfaces" location="$CLUSTER\VersionedComInterfaces.dll"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

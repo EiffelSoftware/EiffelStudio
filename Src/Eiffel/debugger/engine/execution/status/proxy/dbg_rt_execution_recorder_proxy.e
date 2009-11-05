@@ -24,6 +24,13 @@ feature {NONE} -- Initialization
 			dump_value := a_dump_value
 			dynamic_class := a_dump_value.dynamic_class
 			set_associated_application (a_app)
+
+			if
+				attached a_dump_value.address as add and then
+				not add.is_void
+			then
+				a_app.status.keep_object (add)
+			end
 		end
 
 feature -- Status report

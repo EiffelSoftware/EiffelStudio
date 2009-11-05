@@ -99,7 +99,7 @@ feature -- Status report
 		deferred
 		end
 
-	equal_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
+	equal_sign_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
 			-- Compare using ` = '
 		require
 			a_left_attached: a_left /= Void

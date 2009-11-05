@@ -650,7 +650,7 @@ feature -- Debuggee: evaluation
 			end
 		end
 
-	equal_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
+	equal_sign_evaluation (a_value, a_other_value: DBG_EVALUATED_VALUE; error_handler: detachable DBG_ERROR_HANDLER): BOOLEAN
 		require
 			a_value_attached: a_value /= Void
 			a_other_value_attached: a_other_value /= Void
@@ -660,7 +660,7 @@ feature -- Debuggee: evaluation
 					attached a_value.value as l_value and
 					attached a_other_value.value as l_other_value
 				then
-					Result := rto.equal_evaluation (l_value, l_other_value, error_handler)
+					Result := rto.equal_sign_evaluation (l_value, l_other_value, error_handler)
 				elseif attached error_handler as err then
 					err.notify_error_evaluation_report_to_support (Void)
 				end

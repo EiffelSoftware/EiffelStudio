@@ -44,6 +44,8 @@ feature -- Access: SPECIAL
 
 	special_case_6: STRING = "Class SPECIAL must have a feature `put (G#1, INTEGER)'"
 
+	special_case_7: STRING = "Class SPECIAL must have a feature `to_array: ARRAY [G#1]'"
+
 feature -- Access: Basic types
 
 	basic_case_1: STRING = "Classes for basic types may not have generic parameters"

@@ -336,7 +336,7 @@ feature -- Generation
 				end
 				info.generate_start (buf)
 				info.generate_gen_type_conversion (0)
-				l_class_type.generate_creation (buf, info, register, parameter, l_is_make_filled, is_special_make_empty)
+				l_class_type.generate_creation (buf, info, register, parameter, l_is_make_filled, is_special_make_empty, True)
 				info.generate_end (buf)
 				l_generate_call := l_is_make_filled
 			else

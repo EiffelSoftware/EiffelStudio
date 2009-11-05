@@ -36,14 +36,19 @@ feature -- Access
 
 feature -- Update
 
-	updated_info: CREATE_INFO
+	updated_info: CREATE_TYPE
 			-- <Precursor>
 		local
 			l_type: TYPE_A
 		do
 			l_type := context.descendant_type (type)
 			if l_type /= type and then not l_type.same_as (type) then
-				Result := l_type.create_info
+				if attached {CREATE_TYPE} l_type.create_info as l_info then
+					Result := l_info
+				else
+					check should_not_happen: False end
+					create {CREATE_TYPE} Result.make (l_type)
+				end
 			else
 				Result := Current
 			end

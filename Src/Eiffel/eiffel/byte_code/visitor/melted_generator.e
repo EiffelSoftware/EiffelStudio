@@ -128,14 +128,48 @@ feature {NONE} -- Visitors
 			l_target_type: TYPE_A
 			l_base_class: CLASS_C
 			l_rout_info: ROUT_INFO
+			l_special_info: CREATE_TYPE
+			l_special_type: TYPE_A
+			l_special_class_type: SPECIAL_CLASS_TYPE
+			i: INTEGER
 		do
-			fixme ("We should use `info' to create byte code")
 			l_real_ty ?= context.real_type (a_node.type)
 			l_target_type := l_real_ty.generics.item (1)
-			l_base_class := l_real_ty.associated_class
-			l_feat_i := l_base_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
+
+				-- We first create a SPECIAL in which we will store the information above before
+				-- creating the ARRAY using `make_from_special'.
+				-- First push the number of elements in the SPECIAL
+			ba.append (Bc_int32)
+			ba.append_integer (a_node.expressions.count)
+				-- Then create an instance of the SPECIAL.
+			ba.append (bc_spcreate)
+			if system.is_experimental_mode then
+					-- We are going to use `make_empty'
+				ba.append_boolean (False)
+				ba.append_boolean (True)
+			else
+					-- We are going to use `make'
+				ba.append_boolean (False)
+				ba.append_boolean (False)
+			end
+			l_special_info := a_node.special_info.updated_info
+			l_special_info.make_byte_code (ba)
+			l_special_type := l_special_info.type
+			check
+				is_special_type: l_special_type /= Void and then l_special_type.associated_class.lace_class = System.special_class
+			end
+			l_special_class_type ?= l_special_type.associated_class_type (context.context_class_type.type)
+			check
+				l_class_type_not_void: l_special_class_type /= Void
+			end
+			l_special_class_type.make_creation_byte_code (ba)
+				-- Even if we do not need to, we have to check the invariant as the interpreter expects it.
+			ba.append (Bc_create_inv)
+
+				-- We compute the expressions and store them into the special
 			from
 				a_node.expressions.start
+				i := 0
 			until
 				a_node.expressions.after
 			loop
@@ -144,27 +178,25 @@ feature {NONE} -- Visitors
 					l_expr_not_void: l_expr /= Void
 				end
 				make_expression_byte_code_for_type (l_expr, l_target_type)
+				ba.append (bc_special_extend)
+				ba.append_integer (i)
+				i := i + 1
 				a_node.expressions.forth
 			end
+
+				-- Now we create the ARRAY instance vi the call to `to_array' from SPECIAL
+			l_base_class := l_special_class_type.associated_class
+			l_feat_i := l_base_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
 			if l_base_class.is_precompiled then
 				ba.append (Bc_parray)
 				l_rout_info := System.rout_info_table.item (l_feat_i.rout_id_set.first)
 				ba.append_integer (l_rout_info.origin)
 				ba.append_integer (l_rout_info.offset)
-				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
-				ba.append_short_integer (context.class_type.static_type_id - 1)
-				l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
-				ba.append_short_integer (-1)
 			else
 				ba.append (Bc_array)
-				ba.append_short_integer (l_real_ty.static_type_id (context.context_class_type.type) - 1)
-				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
-				ba.append_short_integer (context.class_type.static_type_id - 1)
-				l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
-				ba.append_short_integer (-1)
+				ba.append_type_id (l_special_class_type.static_type_id)
 				ba.append_short_integer (l_feat_i.feature_id)
 			end
-			ba.append_integer (a_node.expressions.count)
 		end
 
 	process_assert_b (a_node: ASSERT_B)

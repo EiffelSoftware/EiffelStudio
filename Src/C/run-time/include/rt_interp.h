@@ -264,7 +264,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_START_CATCALL	(unsigned char) 157
 #define BC_END_CATCALL		(unsigned char) 158
 #define BC_IS_ATTACHED		(unsigned char) 159
-#define BC_NOTUSED_160		(unsigned char) 160
+#define BC_SPECIAL_EXTEND	(unsigned char) 160
 #define BC_NOTUSED_161		(unsigned char) 161
 #define BC_NOTUSED_162		(unsigned char) 162
 #define BC_NOTUSED_163		(unsigned char) 163

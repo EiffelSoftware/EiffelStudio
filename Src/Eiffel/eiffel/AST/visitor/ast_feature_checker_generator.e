@@ -2152,8 +2152,7 @@ feature -- Implementation
 					last_type := l_array_type
 					l_as.set_array_type (last_type)
 					if is_byte_node_enabled then
-						create {ARRAY_CONST_B} last_byte_node.make (l_list,
-							l_array_type, l_array_type.create_info)
+						create {ARRAY_CONST_B} last_byte_node.make (l_list, l_array_type)
 					end
 				else
 					fixme ("Insert new validity error saying that manifest array is not valid")
@@ -8905,8 +8904,7 @@ feature {NONE} -- Agents
 						-- Create ARRAY_CONST_B which holds all open positions in
 						-- above generated tuple.
 					l_expressions.start
-					create l_array_of_opens.make (l_expressions, integer_array_type,
-						integer_array_type.create_info)
+					create l_array_of_opens.make (l_expressions, integer_array_type)
 				end
 
 					-- Initialize ROUTINE_CREATION_B instance
@@ -9117,7 +9115,7 @@ feature {NONE} -- Agents
 		do
 			create l_byte_list.make (1)
 			l_byte_list.extend (create {INTEGER_CONSTANT}.make_with_value (2))
-			create Result.make (l_byte_list, integer_array_type, integer_array_type.create_info)
+			create Result.make (l_byte_list, integer_array_type)
 		end
 
 	empty_omap_bc: ARRAY_CONST_B
@@ -9125,7 +9123,7 @@ feature {NONE} -- Agents
 			l_byte_list: BYTE_LIST [BYTE_NODE]
 		do
 			create l_byte_list.make (0)
-			create Result.make (l_byte_list, integer_array_type, integer_array_type.create_info)
+			create Result.make (l_byte_list, integer_array_type)
 		end
 
 	init_inline_agent_feature (a_feat, a_real_feat: FEATURE_I; a_current_class, a_written_class: EIFFEL_CLASS_C): FEATURE_I

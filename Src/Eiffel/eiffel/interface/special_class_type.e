@@ -94,7 +94,7 @@ feature -- Byte code generation
 
 feature -- C code generation
 
-	generate_creation (buffer: GENERATION_BUFFER; info: CREATE_INFO; target_register: REGISTRABLE; nb_register: PARAMETER_BL; a_make_filled, a_make_empty: BOOLEAN)
+	generate_creation (buffer: GENERATION_BUFFER; info: CREATE_INFO; target_register: REGISTRABLE; nb_register: PARAMETER_BL; a_make_filled, a_make_empty, a_check_prec: BOOLEAN)
 			-- Generate creation of a special instance using `info' to get the exact type
 			-- to create.
 		require
@@ -117,7 +117,7 @@ feature -- C code generation
 			type_c := gen_param.c_type
 
 				-- Check validity of call
-			if not final_mode or else associated_class.assertion_level.is_precondition then
+			if a_check_prec and (not final_mode or else associated_class.assertion_level.is_precondition) then
 				buffer.put_new_line
 				buffer.put_string ("if (")
 				nb_register.print_immediate_register
@@ -184,6 +184,7 @@ feature -- C code generation
 			end
 
 			if a_make_empty then
+				buffer.put_new_line
 				buffer.put_string ("RT_SPECIAL_COUNT(")
 				target_register.print_register
 				buffer.put_three_character (')', ' ', '=')

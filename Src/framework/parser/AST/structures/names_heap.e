@@ -370,7 +370,7 @@ feature {NONE} -- Implementation: access
 			put ("runtime_name") check found_item = runtime_name_name_id end
 			put ("generic_parameter_count") check found_item = generic_parameter_count_name_id end
 			put ("generic_parameter_type") check found_item = generic_parameter_type_name_id end
-			put ("make_from_special") check found_item = make_from_special_name_id end
+			put ("to_array") check found_item = to_array_name_id end
 		end
 
 invariant

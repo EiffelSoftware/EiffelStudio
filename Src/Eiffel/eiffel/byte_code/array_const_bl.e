@@ -22,7 +22,23 @@ inherit
 		end
 
 create
-	make
+	make_from_other
+
+feature {NONE} -- Initialization
+
+	make_from_other (a_other: ARRAY_CONST_B)
+			-- Initialize Current from `a_other' instance.
+		require
+			a_other_not_void: a_other /= Void
+		do
+			expressions := a_other.expressions
+			type := a_other.type
+			special_info := a_other.special_info
+		ensure
+			expression_set: expressions = a_other.expressions
+			type_set: type = a_other.type
+			special_info_set: special_info = a_other.special_info
+		end
 
 feature
 
@@ -35,11 +51,8 @@ feature
 	array_area_reg: REGISTER
 			-- Register for array area
 
-	arg1_register: REGISTER
-			-- Register for 1st argument of `make'
-
-	arg2_register: REGISTER
-			-- Register for 2nd argument of `make'
+	arg_count_parameter: PARAMETER_BL
+			-- Expression to hold SPECIAL count
 
 	set_register (r: REGISTRABLE)
 			-- Set `register' to `r'.
@@ -53,9 +66,10 @@ feature
 			expr: EXPR_B
 			real_ty: GEN_TYPE_A
 			target_gen_type: TYPE_A
+			l_count: INTEGER_CONSTANT
 		do
-			info := info.updated_info
-			info.analyze
+			special_info := special_info.updated_info
+			special_info.analyze
 
 			real_ty ?= context.real_type (type)
 			target_gen_type := real_ty.generics.item (1)
@@ -75,10 +89,12 @@ feature
 				expr.free_register
 				expressions.forth
 			end
-			if context.workbench_mode then
-				arg1_register := context.get_argument_register (int32_c_type)
-				arg2_register := context.get_argument_register (int32_c_type)
-			end
+
+			create l_count.make_with_value (expressions.count)
+			create arg_count_parameter
+			arg_count_parameter.set_attachment_type (integer_32_type)
+			arg_count_parameter.set_expression (l_count)
+			arg_count_parameter.analyze
 		end
 
 	unanalyze
@@ -97,9 +113,11 @@ feature
 				expr.unanalyze
 				expressions.forth
 			end;
+			if arg_count_parameter /= Void then
+				arg_count_parameter.unanalyze
+				arg_count_parameter := Void
+			end
 			item_register := Void
-			arg1_register := Void
-			arg2_register := Void
 		end
 
 	free_register
@@ -112,53 +130,79 @@ feature
 			if item_register /= Void then
 				item_register.free_register
 			end
-			if arg1_register /= Void then
-				arg1_register.free_register
-			end
-			if arg2_register /= Void then
-				arg2_register.free_register
+			if arg_count_parameter /= Void then
+				arg_count_parameter.free_register
 			end
 		end
 
 	generate
 			-- Generate expression
 		local
-			real_ty: GEN_TYPE_A
-			workbench_mode: BOOLEAN
+			real_ty: TYPE_A
 			target_gen_type: TYPE_A
 		do
-			real_ty ?= context.real_type (type)
+			real_ty := context.real_type_in (special_info.type, context.context_cl_type)
 			target_gen_type := real_ty.generics.item (1)
-			workbench_mode := context.workbench_mode
-			generate_array_creation (workbench_mode)
-			if workbench_mode then
+			generate_special_creation (target_gen_type)
+			fill_special (target_gen_type)
+			if context.workbench_mode then
 				generate_wk_array_make (real_ty)
 			else
 				generate_final_array_make (real_ty)
 			end;
-			fill_array (target_gen_type)
 		end
 
 feature {NONE} -- C code generation
 
-	generate_array_creation (workbench_mode: BOOLEAN)
+	generate_special_creation (target_type: TYPE_A)
 			-- Generate the object creation of
 			-- manifest array.
 		local
 			buf: GENERATION_BUFFER
+			l_special_type: TYPE_A
+			l_special_class_type: SPECIAL_CLASS_TYPE
 		do
 			buf := buffer
-			info.generate_start (buf)
-			info.generate_gen_type_conversion (0)
-			buf.put_new_line
-			print_register
-			buf.put_string (" = ")
-			info.generate
-			buf.put_character (';')
-			info.generate_end (buf)
+
+			l_special_type := special_info.type
+			check
+				is_special_type: l_special_type /= Void and then l_special_type.associated_class.lace_class = System.special_class
+			end
+			l_special_class_type ?= l_special_type.associated_class_type (Context.context_class_type.type)
+			check
+				l_class_type_not_void: l_special_class_type /= Void
+			end
+
+			arg_count_parameter.generate
+
+			special_info.generate_start (buf)
+			special_info.generate_gen_type_conversion (0)
+			l_special_class_type.generate_creation (buf, special_info, array_area_reg, arg_count_parameter, False, False, False)
+
+			if not target_type.is_true_expanded and then system.is_experimental_mode then
+				buffer.put_new_line
+				buffer.put_string ("RT_SPECIAL_COUNT(")
+				array_area_reg.print_register
+				buffer.put_four_character (')', ' ', '=', ' ')
+				buffer.put_integer (expressions.count)
+				buffer.put_two_character ('L', ';')
+					-- For arrays of basic type we initialize them in workbench mode
+					-- in case the debugger would show the SPECIAL content and we don't
+					-- want users to see garbage there.
+				if not target_type.is_basic or else context.workbench_mode then
+					buffer.put_new_line
+					buffer.put_string ("memset(")
+					array_area_reg.print_register
+					buffer.put_string (", 0, RT_SPECIAL_VISIBLE_SIZE(")
+					array_area_reg.print_register
+					buffer.put_string ("));")
+				end
+			end
+
+			special_info.generate_end (buf)
 		end
 
-	fill_array (target_type: TYPE_A)
+	fill_special (target_type: TYPE_A)
 			-- Generate the registers for the expressions
 			-- to fill the manifest array.
 		local
@@ -172,11 +216,6 @@ feature {NONE} -- C code generation
 		do
 			is_expanded := target_type.is_true_expanded;
 			buf := buffer
-			buf.put_new_line
-			array_area_reg.print_register;
-			buf.put_string (" = * (EIF_REFERENCE *) ");
-			print_register;
-			buf.put_character (';');
 			if (is_expanded and then expressions.count > 0) then
 				buf.put_new_line;
 				buf.put_character ('{');
@@ -259,6 +298,12 @@ feature {NONE} -- C code generation
 					end
 				end
 				buf.put_character (';')
+				if system.is_experimental_mode and target_type.is_true_expanded then
+						-- Count is already set in `generate_special_creation' for SPECIAL of references and basic types.
+					buf.put_string ("RT_SPECIAL_COUNT(")
+					array_area_reg.print_register
+					buf.put_string (")++;")
+				end
 				expressions.forth
 				position := position + 1
 			end
@@ -269,7 +314,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_final_array_make (real_ty: GEN_TYPE_A)
+	generate_final_array_make (real_ty: TYPE_A)
 				-- Generate code to call the make routine
 				-- of the manifest array in final mode.
 		local
@@ -277,7 +322,8 @@ feature {NONE} -- C code generation
 			internal_name: STRING
 			rout_id: INTEGER
 		do
-			rout_id := real_ty.associated_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id).rout_id_set.first;
+				-- Get the type of the SPECIAL.
+			rout_id := real_ty.associated_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id).rout_id_set.first;
 			rout_table ?= Eiffel_table.poly_table (rout_id);
 
 				-- Generate the signature of the function
@@ -287,22 +333,26 @@ feature {NONE} -- C code generation
 			end
 			internal_name := rout_table.feature_name.string
 			buffer.put_new_line
-			buffer.put_string ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))")
+			print_register
+			buffer.put_four_character (' ', '=', ' ', '(')
+			reference_c_type.generate_function_cast (buffer, << "EIF_REFERENCE" >>, False)
 			buffer.put_string (internal_name);
 			buffer.put_string (")")
 
 				-- Generate the arguments
-			generate_array_make_arguments;
+			buffer.put_character ('(');
+			array_area_reg.print_register;
+			buffer.put_two_character (')', ';');
 
 				-- Remember extern routine declaration
-				-- Since `make' from ARRAY is a procedure, the return type is `Void_type'
+				-- Since `make_from_special' from ARRAY is a procedure, the return type is `Void_type'
 				--| Note: it used to be `real_ty.c_type' but it was the C type of
 				--| the array itself and not of the `make' routine and thus was incorrect.
-			Extern_declarations.add_routine_with_signature (Void_c_type.c_string, internal_name,
-							<<"EIF_REFERENCE", "EIF_INTEGER", "EIF_INTEGER">>)
+			Extern_declarations.add_routine_with_signature (reference_c_type.c_string, internal_name,
+				<<"EIF_REFERENCE">>)
 		end;
 
-	generate_wk_array_make (real_ty: GEN_TYPE_A)
+	generate_wk_array_make (real_ty: TYPE_A)
 				-- Generate code to call the make routine
 				-- of the manifest array in workbench mode.
 		local
@@ -315,18 +365,12 @@ feature {NONE} -- C code generation
 		do
 			base_class := real_ty.associated_class
 			f_table := base_class.feature_table
-			feat_i := f_table.item_id ({PREDEFINED_NAMES}.make_name_id)
+			feat_i := f_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
 			buf := buffer
 			buf.put_new_line
-			arg1_register.print_register
-			buf.put_string (" = 1L;")
-			buf.put_new_line
-			arg2_register.print_register
-			buf.put_string (" = ")
-			buf.put_integer (expressions.count)
-			buf.put_string ("L;")
-			buf.put_new_line
-			buf.put_string ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE))");
+			print_register
+			buffer.put_four_character (' ', '=', ' ', '(')
+			reference_c_type.generate_function_cast (buffer, << "EIF_REFERENCE" >>, True)
 			if
 				Compilation_modes.is_precompiling or else
 				base_class.is_precompiled
@@ -345,15 +389,13 @@ feature {NONE} -- C code generation
 			end;
 			buf.put_string (gc_comma);
 			buf.put_string (gc_upper_dtype_lparan);
-			print_register;
+			array_area_reg.print_register
 			buf.put_string (")))");
 			buf.put_character ('(')
-			print_register
-			buf.put_string (gc_comma)
-			context.print_argument_register (arg1_register, buf)
-			buf.put_string (gc_comma)
-			context.print_argument_register (arg2_register, buf)
-			buf.put_string (gc_rparan_semi_c)
+			array_area_reg.print_register
+			buf.put_two_character (')', '.')
+			reference_c_type.generate_typed_field (buf)
+			buf.put_character (';')
 		end;
 
 	generate_array_make_arguments
@@ -386,7 +428,7 @@ feature {NONE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -399,22 +441,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

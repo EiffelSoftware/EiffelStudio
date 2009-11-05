@@ -7,4 +7,8 @@
 class TEST5 [G -> HASHABLE, H -> HASHABLE]
 inherit
 	$PARENT
+
+create {TEST5}
+	make
+
 end

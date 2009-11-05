@@ -7,4 +7,8 @@
 class TEST2 [G -> TEST3]
 inherit
 	TEST3
+
+create {TEST2}
+	make
+
 end

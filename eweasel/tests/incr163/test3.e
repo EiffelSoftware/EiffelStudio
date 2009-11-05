@@ -7,4 +7,8 @@
 class TEST3
 inherit
 	TEST5 [STRING, DOUBLE]
+
+create {TEST3}
+	make
+
 end

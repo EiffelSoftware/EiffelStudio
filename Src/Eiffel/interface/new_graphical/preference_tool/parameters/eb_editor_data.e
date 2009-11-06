@@ -985,6 +985,13 @@ feature {NONE} -- Auto-complete
 			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$"], "invariant")
 						-- end
 			Result.force ([" $cursor$", "%N$indent$$cursor$", " $cursor$", "%N$indent$$cursor$"], "end")
+
+						-- across
+			Result.force ([" $cursor$ as  all  end", "%N$indent$%%T$cursor$ as %N$indent$loop%N$indent$%%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$"], "across")
+						-- some
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "some")
+						-- all
+			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "all")
 		end
 
 feature {NONE} -- Keys
@@ -1057,7 +1064,7 @@ feature -- Syntax Completion Customization
 	control_completed_keywords: ARRAYED_LIST [STRING]
 			-- list of completed keywords
 		once
-			create Result.make_from_array (<<"if", "then", "elseif", "else", "inspect", "when", "from", "variant", "until", "loop", "debug", "check">>)
+			create Result.make_from_array (<<"if", "then", "elseif", "else", "inspect", "when", "from", "variant", "until", "loop", "debug", "check", "across", "some", "all">>)
 			Result.compare_objects
 		end
 

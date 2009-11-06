@@ -6386,7 +6386,6 @@ feature -- Implementation
 			l_vwbe4: VWBE4
 			l_needs_byte_node: BOOLEAN
 			l_list: BYTE_LIST [BYTE_NODE]
-			l_list2: BYTE_LIST [BYTE_NODE]
 			l_loop: LOOP_B
 			l_variant: VARIANT_B
 			s: INTEGER

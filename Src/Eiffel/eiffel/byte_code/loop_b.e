@@ -31,6 +31,9 @@ feature -- Visitor
 
 feature -- Access
 
+	iteration_initialization: detachable BYTE_LIST [BYTE_NODE]
+			-- Iteration initialization code
+
 	from_part: BYTE_LIST [BYTE_NODE]
 			-- From part {list of INSTR_B}: can be Void
 
@@ -40,16 +43,30 @@ feature -- Access
 	variant_part: VARIANT_B
 			-- Variant
 
-	stop: EXPR_B
-			-- Loop test
+	iteration_exit_condition: detachable EXPR_B
+			-- Iteration exit condition
 
-	compound: BYTE_LIST [BYTE_NODE]
+	stop: detachable EXPR_B
+			-- Loop exit condition
+
+	compound: detachable BYTE_LIST [BYTE_NODE]
 			-- Compound {list of INSTR_B}; can be Void
+
+	advance_code: detachable BYTE_LIST [BYTE_NODE]
+			-- Iteration advance code
 
 	end_location: LOCATION_AS
 			-- Line number where `end' keyword is located
 
 feature -- Setting
+
+	set_iteration_initialization (i: like iteration_initialization)
+			-- Assign `i' to `iteration_initialization'.
+		do
+			iteration_initialization := i
+		ensure
+			iteration_initialization_set: iteration_initialization = i
+		end
 
 	set_from_part (f: like from_part)
 			-- Assign `f' to `from_part'.
@@ -63,6 +80,14 @@ feature -- Setting
 			invariant_part := i
 		end
 
+	set_iteration_exit_condition (e: like iteration_exit_condition)
+			-- Set `iteration_exit_condition' to `e'.
+		do
+			iteration_exit_condition := e
+		ensure
+			iteration_exit_condition_set: iteration_exit_condition = e
+		end
+
 	set_stop (s: like stop)
 			-- Assign `s' to `stop'.
 		do
@@ -73,6 +98,14 @@ feature -- Setting
 			-- Assign `c' to `compound'.
 		do
 			compound := c
+		end
+
+	set_advance_code (a: like advance_code)
+			-- Set `advance_code' to `a'.
+		do
+			advance_code := a
+		ensure
+			advance_code_set: advance_code = a
 		end
 
 	set_variant_part (v: like variant_part)
@@ -105,36 +138,48 @@ feature -- Array optimization
 
 	assigns_to (i: INTEGER): BOOLEAN
 		do
-			Result := (from_part /= Void and then from_part.assigns_to (i))
-				or else (compound /= Void and then compound.assigns_to (i))
+			Result :=
+				attached iteration_initialization as ii and then ii.assigns_to (i)
+				or else from_part /= Void and then from_part.assigns_to (i)
+				or else compound /= Void and then compound.assigns_to (i)
+				or else attached advance_code as a and then a.assigns_to (i)
 		end
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
-			Result := (from_part /= Void and then from_part.calls_special_features (array_desc))
+			Result :=
+				attached iteration_initialization as ii and then ii.calls_special_features (array_desc)
+				or else from_part /= Void and then from_part.calls_special_features (array_desc)
 				or else loop_calls_special_features (array_desc)
 		end;
 
 	loop_calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
-			Result := (compound /= Void and then compound.calls_special_features (array_desc))
+			Result := compound /= Void and then compound.calls_special_features (array_desc)
+				or else attached advance_code as a and then a.calls_special_features (array_desc)
 				or else (invariant_part /= Void and then invariant_part.calls_special_features (array_desc))
 				or else (variant_part /= Void and then variant_part.calls_special_features (array_desc))
-				or else stop.calls_special_features (array_desc)
+				or else attached iteration_exit_condition as e and then e.calls_special_features (array_desc)
+				or else attached stop as s and then s.calls_special_features (array_desc)
 		end
 
 	is_unsafe: BOOLEAN
 		do
-			Result := (from_part /= Void and then from_part.is_unsafe)
+			Result :=
+				attached iteration_initialization as i and then i.is_unsafe
+				or else from_part /= Void and then from_part.is_unsafe
 				or else loop_is_unsafe
 		end
 
 	loop_is_unsafe: BOOLEAN
 		do
-			Result := (compound /= Void and then compound.is_unsafe)
+			Result :=
+				compound /= Void and then compound.is_unsafe
+				or else attached advance_code as a and then a.is_unsafe
 				or else (invariant_part /= Void and then invariant_part.is_unsafe)
 				or else (variant_part /= Void and then variant_part.is_unsafe)
-				or else stop.is_unsafe
+				or else attached iteration_exit_condition as e and then e.is_unsafe
+				or else attached stop as s and then s.is_unsafe
 		end
 
 	new_optimization_context: OPTIMIZATION_CONTEXT
@@ -163,7 +208,8 @@ feature -- Array optimization
 						-- It is safe to optimize if
 						--	- no assignment is done
 						--	- some special features are called
-					if not (compound /= Void and then compound.assigns_to (id)) and then
+					if not (compound /= Void and then compound.assigns_to (id) or else
+						attached advance_code as a and then a.assigns_to (id)) and then
 						loop_calls_special_features (id)
 					then
 							-- This local/Result is not assigned to
@@ -192,9 +238,13 @@ feature -- Array optimization
 
 				-- The from part must be optimized with the `old' context, i.e.
 				-- the new generated arrays cannot be used
+			if attached iteration_initialization as i then
+				iteration_initialization := i.optimized_byte_node
+			end
 			if from_part /= Void then
 				from_part := from_part.optimized_byte_node
 			end
+
 
 			unsafe := loop_is_unsafe
 
@@ -243,20 +293,29 @@ feature -- Array optimization
 			if generate_optimization then
 					-- It is safe to optimize array accesses
 
-				opt_loop.set_from_part (from_part);
+				opt_loop.set_iteration_initialization (iteration_initialization)
+				opt_loop.set_from_part (from_part)
 
 					-- The new generated arrays can be used now
 
 				if compound /= Void then
 					opt_loop.set_compound (compound.optimized_byte_node)
-				end;
+				end
+				if attached advance_code as a then
+					opt_loop.set_advance_code (a.optimized_byte_node)
+				end
 				if invariant_part /= Void then
 					opt_loop.set_invariant_part (invariant_part.optimized_byte_node)
-				end;
-				opt_loop.set_stop (stop.optimized_byte_node)
+				end
+				if attached iteration_exit_condition as e then
+					opt_loop.set_iteration_exit_condition (e.optimized_byte_node)
+				end
+				if attached stop as s then
+					opt_loop.set_stop (s.optimized_byte_node)
+				end
 				if variant_part /= Void then
 					opt_loop.set_variant_part (variant_part.optimized_byte_node)
-				end;
+				end
 				Result := opt_loop
 			else
 					-- The loop cannot be optimized but the `safe arrays' can be propagated
@@ -269,6 +328,9 @@ feature -- Array optimization
 					-- (the from part has already been optimized)
 				if compound /= Void then
 					compound := compound.optimized_byte_node
+				end
+				if attached advance_code as a then
+					advance_code := a.optimized_byte_node
 				end
 			end;
 
@@ -286,29 +348,47 @@ feature -- Inlining
 
 	size: INTEGER
 		do
-			Result := 1 + stop.size;
+			Result := 1
+			if attached iteration_initialization as i then
+				Result := Result + i.size
+			end
 			if from_part /= Void then
 				Result := Result + from_part.size
-			end;
-			if compound /= Void then
-				Result := Result + compound.size
 			end
 			if invariant_part /= Void then
 				Result := Result + invariant_part.size
-			end;
+			end
 			if variant_part /= Void then
 				Result := Result + variant_part.size
+			end
+			if attached iteration_exit_condition as e then
+				Result := Result + e.size
+			end
+			if attached stop as s then
+				Result := Result + s.size
+			end
+			if compound /= Void then
+				Result := Result + compound.size
+			end
+			if attached advance_code as a then
+				Result := Result + a.size
 			end
 		end
 
 	pre_inlined_code: like Current
 		do
 			Result := Current
+			if attached iteration_initialization as i then
+				iteration_initialization := i.pre_inlined_code
+			end
 			if from_part /= Void then
 				from_part := from_part.pre_inlined_code
 			end
 			if compound /= Void then
 				compound := compound.pre_inlined_code
+			end
+			if attached advance_code as a then
+				advance_code := a.pre_inlined_code
 			end
 			if invariant_part /= Void then
 				invariant_part := invariant_part.pre_inlined_code
@@ -316,17 +396,28 @@ feature -- Inlining
 			if variant_part /= Void then
 				variant_part := variant_part.pre_inlined_code
 			end
-			stop := stop.pre_inlined_code
-		end;
+			if attached iteration_exit_condition as e then
+				iteration_exit_condition := e.pre_inlined_code
+			end
+			if attached stop as s then
+				stop := s.pre_inlined_code
+			end
+		end
 
 	inlined_byte_code: like Current
 		do
 			Result := Current
+			if attached iteration_initialization as i then
+				iteration_initialization := i.inlined_byte_code
+			end
 			if from_part /= Void then
 				from_part := from_part.inlined_byte_code
 			end
 			if compound /= Void then
 				compound := compound.inlined_byte_code
+			end
+			if attached advance_code as a then
+				advance_code := a.inlined_byte_code
 			end
 			if invariant_part /= Void then
 				invariant_part := invariant_part.inlined_byte_code
@@ -334,11 +425,16 @@ feature -- Inlining
 			if variant_part /= Void then
 				variant_part := variant_part.inlined_byte_code
 			end
-			stop := stop.inlined_byte_code
+			if attached iteration_exit_condition as i then
+				iteration_exit_condition := i.inlined_byte_code
+			end
+			if attached stop as s then
+				stop := s.inlined_byte_code
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -351,22 +447,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

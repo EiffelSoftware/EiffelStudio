@@ -538,11 +538,14 @@ feature {BYTE_NODE} -- Visitors
 			-- Process `a_node'.
 		do
 			preorder_process (a_node)
+			safe_process (a_node.iteration_initialization)
 			safe_process (a_node.from_part)
 			safe_process (a_node.variant_part)
 			safe_process (a_node.invariant_part)
+			safe_process (a_node.iteration_exit_condition)
 			safe_process (a_node.stop)
 			safe_process (a_node.compound)
+			safe_process (a_node.advance_code)
 			postorder_process (a_node)
 		end
 
@@ -553,7 +556,8 @@ feature {BYTE_NODE} -- Visitors
 			a_node.iteration_code.process (Current)
 			safe_process (a_node.invariant_code)
 			safe_process (a_node.variant_code)
-			a_node.exit_condition_code.process (Current)
+			a_node.iteration_exit_condition_code.process (Current)
+			safe_process (a_node.exit_condition_code)
 			a_node.expression_code.process (Current)
 			a_node.advance_code.process (Current)
 			postorder_process (a_node)

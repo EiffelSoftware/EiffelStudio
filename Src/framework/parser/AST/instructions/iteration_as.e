@@ -34,11 +34,68 @@ feature {NONE} -- Initialization
 				as_keyword_index := b.index
 			end
 			identifier := i
+				-- Build initialization sequence in the form
+				--    `identifier' := `expression'.new_cursor
+				--    `identifier'.start
+			create initialization.make (2)
+			initialization.extend (
+				create {ASSIGN_AS}.initialize (
+					create {ACCESS_ID_AS}.initialize (i, Void),
+					create {EXPR_CALL_AS}.initialize (
+						create {NESTED_EXPR_AS}.initialize (
+							e,
+							create_access_feat_as ("new_cursor", i),
+							Void,
+							Void,
+							Void
+					)),
+					Void
+			))
+			initialization.extend (
+				create {INSTR_CALL_AS}.initialize (
+					create {NESTED_AS}.initialize (
+						create {ACCESS_ID_AS}.initialize (i, Void),
+						create_access_feat_as ("start", i),
+						Void
+			)))
+				-- Build exit condition in the form
+				--    `identifier'.after
+			create {EXPR_CALL_AS} exit_condition.initialize (
+				create {NESTED_AS}.initialize (
+					create {ACCESS_ID_AS}.initialize (i, Void),
+					create_access_feat_as ("after", i),
+					Void
+			))
+				-- Build advance code in the form
+				--    `identifier'.forth
+			create {INSTR_CALL_AS} advance.initialize (
+				create {NESTED_AS}.initialize (
+					create {ACCESS_ID_AS}.initialize (i, Void),
+					create_access_feat_as ("forth", i),
+					Void
+			))
 		ensure
 			across_keyword_set: a /= Void implies across_keyword_index = a.index
 			expression_set: expression = e
 			as_keyword_set: b /= Void implies as_keyword_index = b.index
 			identifier_set: identifier = i
+		end
+
+feature {NONE} -- Initialization
+
+	create_access_feat_as (n: STRING; i: like identifier): ACCESS_FEAT_AS
+			-- Create a new node for a feature call of name `n'
+			-- using the given ID `i' for location information
+		require
+			i_attached: attached i
+		local
+			f: like identifier
+		do
+			f := i.twin
+			f.set_name (n)
+			create Result.initialize (f, Void)
+		ensure
+			result_attached: attached Result
 		end
 
 feature -- Visitor
@@ -87,6 +144,21 @@ feature -- Attributes
 
 	identifier: ID_AS
 			-- Cursor of iteration
+
+	initialization: EIFFEL_LIST [INSTRUCTION_AS]
+			-- Code sequence used to initialize iteration
+			-- (Generated automatically to allow for subsequent checks in inherited code
+			-- that refers to the original class and routine IDs.)
+
+	exit_condition: EXPR_AS
+			-- Exit condition for the iteration part only
+			-- (Generated automatically to allow for subsequent checks in inherited code
+			-- that refers to the original class and routine IDs.)
+
+	advance: INSTRUCTION_AS
+			-- Instruction to advance the loop
+			-- (Generated automatically to allow for subsequent checks in inherited code
+			-- that refers to the original class and routine IDs.)
 
 feature -- Roundtrip/Token
 

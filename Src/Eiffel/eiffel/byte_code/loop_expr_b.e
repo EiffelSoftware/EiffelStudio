@@ -38,7 +38,8 @@ feature {NONE} -- Creation
 		it: BYTE_LIST [BYTE_NODE];
 		inv: detachable BYTE_LIST [BYTE_NODE];
 		var: detachable VARIANT_B;
-		exit: EXPR_B;
+		ie: EXPR_B;
+		oe: detachable EXPR_B;
 		expr: EXPR_B;
 		is_all_variant: BOOLEAN;
 		adv: BYTE_NODE
@@ -48,7 +49,8 @@ feature {NONE} -- Creation
 			iteration_code := it
 			invariant_code := inv
 			variant_code := var
-			exit_condition_code := exit
+			iteration_exit_condition_code := ie
+			exit_condition_code := oe
 			expression_code := expr
 			is_all := is_all_variant
 			advance_code := adv
@@ -56,7 +58,8 @@ feature {NONE} -- Creation
 			iteration_code_set: iteration_code = it
 			invariant_code_set: invariant_code = inv
 			variant_code_set: variant_code = var
-			exit_condition_code_set: exit_condition_code = exit
+			iteration_exit_condition_code_set: iteration_exit_condition_code = ie
+			exit_condition_code_set: exit_condition_code = oe
 			expression_code_set: expression_code = expr
 			is_all_set: is_all = is_all_variant
 			advance_code_set: advance_code = adv
@@ -81,8 +84,11 @@ feature -- Access
 	variant_code: detachable VARIANT_B
 			-- Variant code
 
-	exit_condition_code: EXPR_B
-			-- Exit condition code
+	iteration_exit_condition_code: EXPR_B
+			-- Iteration exit condition code
+
+	exit_condition_code: detachable EXPR_B
+			-- Optional exit condition code
 
 	expression_code: EXPR_B
 			-- Expression code
@@ -116,7 +122,8 @@ feature -- C code generation
 				-- iteration_code.used (r) or else
 				-- attached invariant_code as i and then i.used (r) or else
 				attached variant_code as v and then v.used (r) or else
-				exit_condition_code.used (r) or else
+				iteration_exit_condition_code.used (r) or else
+				attached exit_condition_code as e and then e.used (r) or else
 				expression_code.used (r)
 				-- advance_code.used (r)
 		end
@@ -145,7 +152,8 @@ feature -- Array optimization
 				iteration_code.calls_special_features (array_desc) or else
 				attached invariant_code as i and then i.calls_special_features (array_desc) or else
 				attached variant_code as v and then v.calls_special_features (array_desc) or else
-				exit_condition_code.calls_special_features (array_desc) or else
+				iteration_exit_condition_code.calls_special_features (array_desc) or else
+				attached exit_condition_code as e and then e.calls_special_features (array_desc) or else
 				expression_code.calls_special_features (array_desc) or else
 				advance_code.calls_special_features (array_desc)
 		end
@@ -161,7 +169,10 @@ feature -- Array optimization
 			if attached variant_code as v then
 				variant_code := v.optimized_byte_node
 			end
-			exit_condition_code := exit_condition_code.optimized_byte_node
+			iteration_exit_condition_code := iteration_exit_condition_code.optimized_byte_node
+			if attached exit_condition_code as e then
+				exit_condition_code := e.optimized_byte_node
+			end
 			expression_code := expression_code.optimized_byte_node
 			advance_code := advance_code.optimized_byte_node
 		end
@@ -171,12 +182,15 @@ feature -- Inlining
 	size: INTEGER_32
 			-- <Precursor>
 		do
-			Result := 1 + iteration_code.size + exit_condition_code.size + expression_code.size + advance_code.size
+			Result := 1 + iteration_code.size + iteration_exit_condition_code.size + expression_code.size + advance_code.size
 			if attached invariant_code as i then
 				Result := Result + i.size
 			end
 			if attached variant_code as v then
 				Result := Result + v.size
+			end
+			if attached exit_condition_code as e then
+				Result := Result + e.size
 			end
 		end
 
@@ -191,7 +205,10 @@ feature -- Inlining
 			if attached variant_code as v then
 				variant_code := v.pre_inlined_code
 			end
-			exit_condition_code := exit_condition_code.pre_inlined_code
+			iteration_exit_condition_code := iteration_exit_condition_code.pre_inlined_code
+			if attached exit_condition_code as e then
+				exit_condition_code := e.pre_inlined_code
+			end
 			expression_code := expression_code.pre_inlined_code
 			advance_code := advance_code.pre_inlined_code
 		end
@@ -207,14 +224,17 @@ feature -- Inlining
 			if attached variant_code as v then
 				variant_code := v.inlined_byte_code
 			end
-			exit_condition_code := exit_condition_code.inlined_byte_code
+			iteration_exit_condition_code := iteration_exit_condition_code.inlined_byte_code
+			if attached exit_condition_code as e then
+				exit_condition_code := e.inlined_byte_code
+			end
 			expression_code := expression_code.inlined_byte_code
 			advance_code := advance_code.inlined_byte_code
 		end
 
 invariant
 	iteration_code_attached: iteration_code /= Void
-	exit_condition_code_attached: exit_condition_code /= Void
+	iteration_exit_condition_code_attached: iteration_exit_condition_code /= Void
 	expression_code_attached: expression_code /= Void
 	advance_code_attached: advance_code /= Void
 note

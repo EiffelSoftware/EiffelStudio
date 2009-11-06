@@ -31,6 +31,9 @@ feature -- Access
 			workbench_mode: BOOLEAN
 			check_loop: BOOLEAN
 		do
+			if attached iteration_initialization as i then
+				i.analyze
+			end
 			if from_part /= Void then
 				from_part.analyze
 			end
@@ -54,11 +57,21 @@ feature -- Access
 				end
 			end
 
-			stop.propagate (No_register)
-			stop.analyze
+			if attached iteration_exit_condition as e then
+				e.propagate (No_register)
+				e.analyze
+			end
+			if attached stop as s then
+				s.propagate (No_register)
+				s.analyze
+			end
 
 			if compound /= Void then
 				compound.analyze
+			end
+
+			if attached advance_code as a then
+				a.analyze
 			end
 
 			if check_loop and then variant_part /= Void then
@@ -82,6 +95,11 @@ feature -- Access
 			if workbench_mode or else context.assertion_level.is_loop then
 				generate_variant := variant_part /= Void
 				generate_invariant := invariant_part /= Void
+			end
+
+				-- Generate iteration initialization.
+			if attached iteration_initialization as i then
+				i.generate
 			end
 
 				-- Generate the "from" part
@@ -146,21 +164,35 @@ feature -- Access
 				check_slot := get_current_frozen_debugger_hook
 			end
 
-				-- Generate the "until" clause (pre-while evaluation)
-			generate_frozen_debugger_hook
-			stop.generate
-				-- The code for the evaluation of the expression is
-				-- generated twice, once before the while and once at
-				-- the end of the while body.
-				-- FIXME: maybe if the expression is too complex, we should
-				-- use the old mechanism (pre 3.2.5) with label and goto
 			buffer.put_new_line
-			buf.put_string ("while (!(")
-			stop.print_register
-			buf.put_string (")) {")
+			buf.put_string ("for (;;) {")
 			buf.indent
+
+			if attached iteration_exit_condition as e then
+					-- Generate iteration exit condition.
+				e.generate
+				buffer.put_new_line
+				buf.put_string ("if (")
+				e.print_register
+				buf.put_string (") break;")
+			end
+
+			if attached stop as s then
+					-- Generate loop exit condition.
+				generate_frozen_debugger_hook
+				s.generate
+				buffer.put_new_line
+				buf.put_string ("if (")
+				s.print_register
+				buf.put_string (") break;")
+			end
+
 			if compound /= Void then
 				compound.generate
+			end
+
+			if attached advance_code as a then
+				a.generate
 			end
 
 			if workbench_mode or else system.exception_stack_managed then
@@ -203,10 +235,6 @@ feature -- Access
 					io.put_string ("LOOP_BL: Error in breakpoint slots generation for loop.%N")
 				end
 			end
-
-				-- Regenerate the "until" clause
-			generate_frozen_debugger_hook
-			stop.generate
 
 			if workbench_mode or else system.exception_stack_managed then
 					-- Restore the hook number
@@ -267,6 +295,10 @@ feature -- Access
 	fill_from (l: LOOP_B)
 			-- Fill in current node
 		do
+			iteration_initialization := l.iteration_initialization
+			if attached iteration_initialization as i then
+				i.enlarge_tree
+			end
 			from_part := l.from_part
 			if from_part /= Void then
 				from_part.enlarge_tree
@@ -279,10 +311,19 @@ feature -- Access
 			if variant_part /= Void then
 				variant_part := variant_part.enlarged
 			end
-			stop := l.stop.enlarged
+			if attached l.iteration_exit_condition as e then
+				iteration_exit_condition := e.enlarged
+			end
+			if attached l.stop as s then
+				stop := s.enlarged
+			end
 			compound := l.compound
 			if compound /= Void then
 				compound.enlarge_tree
+			end
+			advance_code := l.advance_code
+			if attached advance_code as a then
+				a.enlarge_tree
 			end
 			line_number := l.line_number
 		end
@@ -307,22 +348,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

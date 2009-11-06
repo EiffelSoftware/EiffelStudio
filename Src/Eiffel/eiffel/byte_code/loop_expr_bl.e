@@ -39,6 +39,7 @@ feature {NONE} -- Creation
 		local
 			i: detachable BYTE_LIST [BYTE_NODE]
 			v: detachable VARIANT_B
+			e: detachable EXPR_B
 		do
 			if attached other.invariant_code as inv then
 				i := inv.enlarged
@@ -47,11 +48,15 @@ feature {NONE} -- Creation
 			if attached other.variant_code as var then
 				v := var.enlarged
 			end
+			if attached other.exit_condition_code as exit then
+				e := exit.enlarged
+			end
 			make_b (
 				other.iteration_code.enlarged,
 				i,
 				v,
-				other.exit_condition_code.enlarged,
+				other.iteration_exit_condition_code.enlarged,
+				e,
 				other.expression_code.enlarged,
 				other.is_all,
 				other.advance_code.enlarged
@@ -94,8 +99,12 @@ feature -- C code generation
 				end
 			end
 
-			exit_condition_code.propagate (No_register)
-			exit_condition_code.analyze
+			iteration_exit_condition_code.propagate (No_register)
+			iteration_exit_condition_code.analyze
+			if attached exit_condition_code as e then
+				e.propagate (No_register)
+				e.analyze
+			end
 			expression_code.propagate (No_register)
 			expression_code.analyze
 			advance_code.analyze
@@ -103,7 +112,10 @@ feature -- C code generation
 			if v /= Void then
 				v.free_register
 			end
-			exit_condition_code.free_register
+			iteration_exit_condition_code.free_register
+			if attached exit_condition_code as e then
+				e.free_register
+			end
 			expression_code.free_register
 		end
 
@@ -121,7 +133,10 @@ feature -- C code generation
 					v.unanalyze
 				end
 			end
-			exit_condition_code.unanalyze
+			iteration_exit_condition_code.unanalyze
+			if attached exit_condition_code as e then
+				e.unanalyze
+			end
 			expression_code.unanalyze
 			register := Void
 		end
@@ -162,12 +177,8 @@ feature -- C code generation
 				-- First they are generated before the loop execution (at this time variant is set up).
 				-- Second they are generated before the loop end (the code generation for variant is different).
 			if workbench_mode or else context.assertion_level.is_loop then
-				if attached invariant_code as inv then
-					i := inv
-				end
-				if attached variant_code as var then
-					v := var
-				end
+				i := invariant_code
+				v := variant_code
 			end
 
 				-- Generate the "invariant" part.
@@ -193,9 +204,10 @@ feature -- C code generation
 			buf.indent
 
 				-- Generate the exit condition.
-				-- This is done in two steps:
+				-- This is done in the following steps:
 				--    1. Check whether the loop result is ready and terminate it if yes.
-				--    2. Check the normal exit condition.
+				--    2. Check the iteration exit condition.
+				--    3. Check the explicit exit condition if present.
 
 				-- Generate the check of the loop result.
 				-- For All_body the loop result is known if its intermediate value is False.
@@ -209,13 +221,22 @@ feature -- C code generation
 			register.print_register
 			buf.put_string (") break;")
 
-				-- Generate "normal" exit condition.
-			generate_frozen_debugger_hook
-			exit_condition_code.generate
+				-- Generate iteration exit condition.
+			iteration_exit_condition_code.generate
 			buf.put_new_line
 			buf.put_string ("if (")
-			exit_condition_code.print_register
+			iteration_exit_condition_code.print_register
 			buf.put_string (") break;")
+
+			if attached exit_condition_code as e then
+					-- Generate explicit exit condition.
+				generate_frozen_debugger_hook
+				e.generate
+				buf.put_new_line
+				buf.put_string ("if (")
+				e.print_register
+				buf.put_string (") break;")
+			end
 
 				-- Generate expression.
 			expression_code.generate

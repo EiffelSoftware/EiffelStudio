@@ -6387,16 +6387,14 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_list2: BYTE_LIST [BYTE_NODE]
-			l_expr: EXPR_B
 			l_loop: LOOP_B
 			l_variant: VARIANT_B
 			s: INTEGER
 			iteration_cursor_scope: INTEGER
 			scope_matcher: AST_SCOPE_MATCHER
 			e: like error_level
-			operation_id_as: ID_AS
-			cursor_id_as: ID_AS
 			exit_as: EXPR_AS
+			i: detachable ITERATION_AS
 		do
 			has_loop := True
 			l_needs_byte_node := is_byte_node_enabled
@@ -6406,16 +6404,14 @@ feature -- Implementation
 				l_loop.set_line_pragma (l_as.line_pragma)
 			end
 
-			if attached l_as.iteration as it then
-					-- Save cursor name for future.
-				cursor_id_as := it.identifier
+			i := l_as.iteration
+			if i /= Void then
 					-- Record the state of inner locals before iteration to restore it after the loop.
 				iteration_cursor_scope := context.scope
 					-- Process Iteration part.
-				it.process (Current)
+				i.process (Current)
 				if l_needs_byte_node and then attached {BYTE_LIST [BYTE_NODE]} last_byte_node as iteration_part then
-					l_list := iteration_part
-					l_loop.set_from_part (l_list)
+					l_loop.set_iteration_initialization (iteration_part)
 				end
 			end
 			if l_as.from_part /= Void then
@@ -6424,14 +6420,7 @@ feature -- Implementation
 					-- because the effective scope of setters is at that level
 				l_as.from_part.process (Current)
 				if l_needs_byte_node and then attached {BYTE_LIST [BYTE_NODE]} last_byte_node as from_part then
-					if l_list = Void then
-						l_loop.set_from_part (from_part)
-					else
-						create l_list2.make (l_list.count + from_part.count)
-						l_list2.append (l_list)
-						l_list2.append (from_part)
-						l_loop.set_from_part (l_list2)
-					end
+					l_loop.set_from_part (from_part)
 				end
 			end
 			if l_as.invariant_part /= Void then
@@ -6455,50 +6444,41 @@ feature -- Implementation
 				end
 			end
 
-			if cursor_id_as /= Void then
-					-- Build expression in the form
-					--    cursor.after
-				create operation_id_as.initialize ("after")
-				operation_id_as.set_position (cursor_id_as.line, cursor_id_as.column, cursor_id_as.position, cursor_id_as.name.count)
-				operation_id_as.set_index (cursor_id_as.index)
-				create {EXPR_CALL_AS} exit_as.initialize (
-					create {NESTED_AS}.initialize (
-						create {ACCESS_ID_AS}.initialize (cursor_id_as, Void),
-						create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
-						Void
-				))
+			if i /= Void then
+					-- Check iteration exit condition.
+				i.exit_condition.process (Current)
+				if last_type /= Void then
+						-- Check if it is a boolean expression.
+					if not last_type.actual_type.is_boolean then
+						create l_vwbe4
+						context.init_error (l_vwbe4)
+						l_vwbe4.set_type (last_type)
+						l_vwbe4.set_location (i.end_location)
+						error_handler.insert_error (l_vwbe4)
+					elseif l_needs_byte_node and then attached {EXPR_B} last_byte_node as ec then
+							-- Save generated code.
+						l_loop.set_iteration_exit_condition (ec)
+					end
+				end
 			end
 
 				-- Type check the exit test.
-			if attached l_as.stop as ec then
-				if exit_as = Void then
-						-- Take exit condition directly from the loop exit condition.
-					exit_as := ec
-				else
-						-- Build exit condition in the form
-						--    cursor.after or else original_condition
-					create {BIN_OR_ELSE_AS} exit_as.make (exit_as, ec, Void, Void)
+			exit_as := l_as.stop
+			if exit_as /= Void then
+				exit_as.process (Current)
+				if last_type /= Void then
+						-- Check if it is a boolean expression
+					if not last_type.actual_type.is_boolean then
+						create l_vwbe4
+						context.init_error (l_vwbe4)
+						l_vwbe4.set_type (last_type)
+						l_vwbe4.set_location (exit_as.end_location)
+						error_handler.insert_error (l_vwbe4)
+					elseif l_needs_byte_node and then attached {EXPR_B} last_byte_node as ec then
+						l_loop.set_stop (ec)
+					end
+					break_point_slot_count := break_point_slot_count + 1
 				end
-			end
-				-- Either Iteration part is present or loop has explicit exit condition,
-				-- so `exit_as' should be attached.
-			check
-				exit_as /= Void
-			end
-			exit_as.process (Current)
-			if last_type /= Void then
-					-- Check if it is a boolean expression
-				if not last_type.actual_type.is_boolean then
-					create l_vwbe4
-					context.init_error (l_vwbe4)
-					l_vwbe4.set_type (last_type)
-					l_vwbe4.set_location (exit_as.end_location)
-					error_handler.insert_error (l_vwbe4)
-				elseif l_needs_byte_node then
-					l_expr ?= last_byte_node
-					l_loop.set_stop (l_expr)
-				end
-				break_point_slot_count := break_point_slot_count + 1
 			end
 
 			if l_as.compound = Void then
@@ -6520,7 +6500,11 @@ feature -- Implementation
 						-- Record most recent scope information before the loop body, so that
 						-- it can be compared with the information after the loop body on next iteration.
 					context.update_sibling
-					scope_matcher.add_scopes (exit_as)
+					if exit_as /= Void then
+							-- It's safe to take loop exit condition into account even when iteration is present,
+							-- because if the loop is entered neither iteration nor loop exit conditions are True.
+						scope_matcher.add_scopes (exit_as)
+					end
 					process_compound (l_as.compound)
 						-- Save byte code if `is_byte_node_enabled' is set to `True'
 						-- and set it to `False' to avoid regenerating it next time.
@@ -6536,38 +6520,31 @@ feature -- Implementation
 				context.leave_realm
 			end
 
-			if cursor_id_as /= Void then
+			if i /= Void then
 					-- Generate cursor movement.
 				e := error_level
-				create operation_id_as.initialize ("forth")
-				operation_id_as.set_position (cursor_id_as.line, cursor_id_as.column, cursor_id_as.position, cursor_id_as.name.count)
-				operation_id_as.set_index (cursor_id_as.index)
-				(create {INSTR_CALL_AS}.initialize (
-					create {NESTED_AS}.initialize (
-						create {ACCESS_ID_AS}.initialize (cursor_id_as, Void),
-						create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
-						Void
-				))).process (Current)
+				i.advance.process (Current)
 				if error_level = e and then l_needs_byte_node then
-					if l_list = Void then
-						create l_list2.make (1)
-					else
-						create l_list2.make (l_list.count + 1)
-						l_list2.append (l_list)
-					end
-					l_list2.extend (last_byte_node)
-					l_loop.set_compound (l_list2)
+					create l_list.make (1)
+					l_list.extend (last_byte_node)
+					l_loop.set_advance_code (l_list)
 				end
 					-- Remove cursor's scope.
 				context.remove_object_test_scopes (iteration_cursor_scope)
 			end
 
-				-- Take exit condition into account.
-			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
-			scope_matcher.add_scopes (exit_as)
+			if i = Void and then exit_as /= Void then
+					-- Take exit condition into account if there is no iteration
+					-- because if iteration is present, the loop can be exited prematurely
+					-- ignoring the loop exit condition.
+				create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
+				scope_matcher.add_scopes (exit_as)
+			end
 
 			if l_needs_byte_node then
-				l_loop.set_line_number (exit_as.start_location.line)
+				if attached exit_as then
+					l_loop.set_line_number (exit_as.start_location.line)
+				end
 				l_loop.set_end_location (l_as.end_keyword)
 				last_byte_node := l_loop
 			end
@@ -6581,13 +6558,12 @@ feature -- Implementation
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)
 		local
 			iteration_as: ITERATION_AS
-			cursor_id_as: ID_AS
-			operation_id_as: ID_AS
 			exit_as: EXPR_AS
 			iteration_cursor_scope: INTEGER
 			iteration_code: detachable BYTE_LIST [BYTE_NODE]
 			invariant_code: detachable BYTE_LIST [BYTE_NODE]
 			variant_code: detachable VARIANT_B
+			iteration_exit_condition_code: detachable EXPR_B
 			exit_condition_code: detachable EXPR_B
 			expression_code: detachable EXPR_B
 			advance_code: detachable BYTE_NODE
@@ -6598,8 +6574,6 @@ feature -- Implementation
 		do
 			e := error_level
 			iteration_as := l_as.iteration
-				-- Save cursor name for future.
-			cursor_id_as := iteration_as.identifier
 				-- Record the state of inner locals before iteration to restore it after the loop.
 			iteration_cursor_scope := context.scope
 				-- Process Iteration part.
@@ -6636,62 +6610,68 @@ feature -- Implementation
 				end
 			end
 
-				-- Build expression in the form
-				--    cursor.after
-			create operation_id_as.initialize ("after")
-			operation_id_as.set_position (cursor_id_as.line, cursor_id_as.column, cursor_id_as.position, cursor_id_as.name.count)
-			operation_id_as.set_index (cursor_id_as.index)
-			create {EXPR_CALL_AS} exit_as.initialize (
-				create {NESTED_AS}.initialize (
-					create {ACCESS_ID_AS}.initialize (cursor_id_as, Void),
-					create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
-					Void
-			))
-
-				-- Type check the exit test.
-			if attached l_as.exit_condition as ec then
-				if exit_as = Void then
-						-- Take exit condition directly from the loop exit condition.
-					exit_as := ec
-				else
-						-- Build exit condition in the form
-						--    cursor.after or else original_condition
-					create {BIN_OR_ELSE_AS} exit_as.make (exit_as, ec, Void, Void)
-				end
-			end
-				-- `exit_as' is always attached.
-			check
-				exit_as /= Void
-			end
-			exit_as.process (Current)
+				-- Type check iteration exit condition.
+			iteration_as.exit_condition.process (Current)
 			if last_type /= Void then
 					-- Check if it is a boolean expression
 				if not last_type.actual_type.is_boolean then
 					create l_vwbe4
 					context.init_error (l_vwbe4)
 					l_vwbe4.set_type (last_type)
-					l_vwbe4.set_location (exit_as.end_location)
+					l_vwbe4.set_location (iteration_as.end_location)
 					error_handler.insert_error (l_vwbe4)
 						-- Skip code generation for next parts.
 					iteration_code := Void
 				elseif iteration_code /= Void then
-					if attached {EXPR_B} last_byte_node as exit_condition_part then
-						exit_condition_code := exit_condition_part
+					if attached {EXPR_B} last_byte_node as ec then
+						iteration_exit_condition_code := ec
 					else
 							-- Skip code generation for next parts.
 						iteration_code := Void
 					end
 				end
-				break_point_slot_count := break_point_slot_count + 1
 			else
 					-- Skip code generation for next parts.
 				iteration_code := Void
 			end
 
+				-- Type check the exit test.
+			exit_as := l_as.exit_condition
+			if exit_as /= Void then
+				exit_as.process (Current)
+				if last_type /= Void then
+						-- Check if it is a boolean expression
+					if not last_type.actual_type.is_boolean then
+						create l_vwbe4
+						context.init_error (l_vwbe4)
+						l_vwbe4.set_type (last_type)
+						l_vwbe4.set_location (exit_as.end_location)
+						error_handler.insert_error (l_vwbe4)
+							-- Skip code generation for next parts.
+						iteration_code := Void
+					elseif iteration_code /= Void then
+						if attached {EXPR_B} last_byte_node as exit_condition_part then
+							exit_condition_code := exit_condition_part
+						else
+								-- Skip code generation for next parts.
+							iteration_code := Void
+						end
+					end
+					break_point_slot_count := break_point_slot_count + 1
+				else
+						-- Skip code generation for next parts.
+					iteration_code := Void
+				end
+			end
+
 				-- Type check the loop expression
-			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
 			s := context.scope
-			scope_matcher.add_scopes (exit_as)
+			if exit_as /= Void then
+					-- It's safe to take loop exit condition into account even when iteration is present,
+					-- because if the loop is entered neither iteration nor loop exit conditions are True.
+				create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher.make (context)
+				scope_matcher.add_scopes (exit_as)
+			end
 			l_as.expression.process (Current)
 			if last_type /= Void then
 					-- Check if it is a boolean expression
@@ -6703,11 +6683,13 @@ feature -- Implementation
 					error_handler.insert_error (l_vwbe4)
 						-- Skip code generation for next parts.
 					iteration_code := Void
-				elseif attached {EXPR_B} last_byte_node as expression_part then
-					expression_code := expression_part
-				else
-						-- Skip code generation for next parts.
-					iteration_code := Void
+				elseif iteration_code /= Void then
+					if attached {EXPR_B} last_byte_node as expression_part then
+						expression_code := expression_part
+					else
+							-- Skip code generation for next parts.
+						iteration_code := Void
+					end
 				end
 			else
 					-- Skip code generation for next parts.
@@ -6716,15 +6698,7 @@ feature -- Implementation
 			context.set_scope (s)
 
 				-- Generate cursor movement.
-			create operation_id_as.initialize ("forth")
-			operation_id_as.set_position (cursor_id_as.line, cursor_id_as.column, cursor_id_as.position, cursor_id_as.name.count)
-			operation_id_as.set_index (cursor_id_as.index)
-			(create {INSTR_CALL_AS}.initialize (
-				create {NESTED_AS}.initialize (
-					create {ACCESS_ID_AS}.initialize (cursor_id_as, Void),
-					create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
-					Void
-			))).process (Current)
+			iteration_as.advance.process (Current)
 			if attached last_byte_node as advance_part then
 				advance_code := advance_part
 			else
@@ -6735,13 +6709,12 @@ feature -- Implementation
 				-- Remove cursor's scope.
 			context.remove_object_test_scopes (iteration_cursor_scope)
 
-				-- Take exit condition into account.
-			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher.make (context)
-			scope_matcher.add_scopes (exit_as)
+				-- As iteration may terminate before explicit exit condition is fulfilled
+				-- the latter does not affect the scopes after the loop expression.
 
 			if iteration_code /= Void then
 				check
-					exit_condition_code /= Void
+					iteration_exit_condition_code /= Void
 					expression_code /= Void
 					advance_code /= Void
 				end
@@ -6749,12 +6722,13 @@ feature -- Implementation
 					iteration_code,
 					invariant_code,
 					variant_code,
+					iteration_exit_condition_code,
 					exit_condition_code,
 					expression_code,
 					l_as.is_all,
 					advance_code
 				)
-			else
+			elseif is_byte_node_enabled then
 					-- Generate stub in case of errors.
 				create {BOOL_CONST_B} last_byte_node.make (False)
 			end
@@ -6769,8 +6743,6 @@ feature -- Implementation
 			local_name_id: INTEGER
 			local_type: TYPE_A
 			local_info: LOCAL_INFO
-			operation_id_as: ID_AS
-			code: BYTE_LIST [BYTE_NODE]
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -6829,42 +6801,12 @@ feature -- Implementation
 						context.add_object_test_local (local_info, local_id)
 						local_info.set_is_used (True)
 					end
+						-- Make iteration variable visible to the loop.
 					context.add_object_test_instruction_scope (local_id)
+						-- Process AST tree that initializes the iteration.
 						-- Make the checker happy to see that the target of assignment is writable at this time.
 					is_object_test_local_initializing := True
-						-- Build and process AST tree that mimics the assignment
-						-- cursor := expression.new_cursor
-					create operation_id_as.initialize ("new_cursor")
-					operation_id_as.set_position (local_id.line, local_id.column, local_id.position, local_id.name.count)
-					operation_id_as.set_index (local_id.index)
-					(create {ASSIGN_AS}.initialize (
-						create {ACCESS_ID_AS}.initialize (local_id, Void),
-						create {EXPR_CALL_AS}.initialize (
-							create {NESTED_EXPR_AS}.initialize (
-								l_as.expression,
-								create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
-								Void,
-								Void,
-								Void
-							)
-						),
-						Void
-					)).process (Current)
-					if l_needs_byte_node then
-						create code.make (2)
-						code.extend (last_byte_node)
-					end
-					operation_id_as.set_name ("start")
-					(create {INSTR_CALL_AS}.initialize (
-						create {NESTED_AS}.initialize (
-							create {ACCESS_ID_AS}.initialize (local_id, Void),
-							create {ACCESS_FEAT_AS}.initialize (operation_id_as, Void),
-							Void
-					))).process (Current)
-					if code /= Void then
-						code.extend (last_byte_node)
-						last_byte_node := code
-					end
+					l_as.initialization.process (Current)
 				end
 			end
 		end

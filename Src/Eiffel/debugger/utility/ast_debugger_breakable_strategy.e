@@ -430,24 +430,22 @@ feature {NONE} -- Iteration
 			l_expr: EXPR_AS
 		do
 			l_name := l_as.identifier
-			if l_name /= Void then
-				if attached l_as.initialization as l_init then
-					from
-							--| Let's find the assignment for the iterator local.
-							--| It should be the first one, but let's use a loop
-							--| in case the `initialization' changes in the future.
-						l_init.start
-					until
-						l_init.after or l_expr /= Void
-					loop
-						if attached {ASSIGN_AS} l_init.item as l_assign_as then
-							l_expr := l_assign_as.source
-						end
-						l_init.forth
+			if attached l_as.initialization as l_init then
+				from
+						--| Let's find the assignment for the iterator local.
+						--| It should be the first one, but let's use a loop
+						--| in case the `initialization' changes in the future.
+					l_init.start
+				until
+					l_init.after or l_expr /= Void
+				loop
+					if attached {ASSIGN_AS} l_init.item as l_assign_as then
+						l_expr := l_assign_as.source
 					end
+					l_init.forth
 				end
-				register_object_test_local (l_name, Void, l_expr)
 			end
+			register_object_test_local (l_name, Void, l_expr)
 			Precursor (l_as)
 		end
 

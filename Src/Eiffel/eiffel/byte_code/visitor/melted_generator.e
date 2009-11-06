@@ -1236,8 +1236,13 @@ feature {NONE} -- Visitors
 			invariant_breakpoint_slot: INTEGER
 			body_breakpoint_slot: INTEGER
 			l_context: like context
+			exit_count: NATURAL
 		do
 			l_context := context
+			if attached a_node.iteration_initialization as i then
+					-- Generate byte code for iteration initialization.
+				i.process (Current)
+			end
 			if a_node.from_part /= Void then
 					-- Generate byte code for the from part
 				a_node.from_part.process (Current)
@@ -1280,17 +1285,31 @@ feature {NONE} -- Visitors
 
 				-- Generate byte code for exit expression
 			ba.mark_backward
-			generate_melted_debugger_hook
-			a_node.stop.process (Current)
 
-				-- Generate a test
-			ba.append (Bc_jmp_t)
-
-				-- Deferred writing of the jump relative value
-			ba.mark_forward
+			if attached a_node.iteration_exit_condition as e then
+					-- Generate a test for iteration exit condition.
+				e.process (Current)
+				ba.append (Bc_jmp_t)
+					-- Deferred writing of the jump relative value
+				ba.mark_forward
+				exit_count := 1
+			end
+			if attached a_node.stop as s then
+					-- Generate breakpoint slot.
+				generate_melted_debugger_hook
+					-- Generate a test for loop exit condition.
+				s.process (Current)
+				ba.append (Bc_jmp_t)
+					-- Deferred writing of the jump relative value
+				ba.mark_forward
+				exit_count := exit_count + 1
+			end
 
 			if a_node.compound /= Void then
 				a_node.compound.process (Current)
+			end
+			if attached a_node.advance_code as a then
+				a.process (Current)
 			end
 
 				-- Save hook context & restore recorded context.
@@ -1328,8 +1347,14 @@ feature {NONE} -- Visitors
 				-- Write offset value for unconditinal jump
 			ba.write_backward
 
-				-- Write jump value for conditional exit
-			ba.write_forward
+				-- Write jump value for the conditional exit(s).
+			from
+			until
+				exit_count = 0
+			loop
+				ba.write_forward
+				exit_count := exit_count - 1
+			end
 		end
 
 	process_loop_expr_b (a_node: LOOP_EXPR_B)
@@ -1343,6 +1368,7 @@ feature {NONE} -- Visitors
 			l_context: like context
 			v: detachable VARIANT_B
 			i: detachable BYTE_LIST [BYTE_NODE]
+			exit_count: NATURAL
 		do
 				-- Generate loop iteration part.
 			a_node.iteration_code.process (Current)
@@ -1405,13 +1431,22 @@ feature {NONE} -- Visitors
 				-- Deferred writing of the jump relative value
 			ba.mark_forward
 
-				-- Generate byte code for exit expression
-			generate_melted_debugger_hook
-			a_node.exit_condition_code.process (Current)
-				-- Generate a test
+				-- Generate byte code for iteration exit condition.
+			a_node.iteration_exit_condition_code.process (Current)
 			ba.append (Bc_jmp_t)
-				-- Deferred writing of the jump relative value
+				-- Deferred writing of the jump relative value.
 			ba.mark_forward
+			exit_count := 2 -- One exit condition is controlled by the loop expression variable.
+
+			if attached a_node.exit_condition_code as e then
+					-- Generate byte code for optional exit condition.
+				generate_melted_debugger_hook
+				e.process (Current)
+				ba.append (Bc_jmp_t)
+					-- Deferred writing of the jump relative value.
+				ba.mark_forward
+				exit_count := 3
+			end
 
 			a_node.expression_code.process (Current)
 			ba.append (bc_lassign)
@@ -1455,9 +1490,14 @@ feature {NONE} -- Visitors
 				-- Write offset value for unconditinal jump
 			ba.write_backward
 
-				-- Write jump value for conditional exit
-			ba.write_forward
-			ba.write_forward
+				-- Write jump value for the conditional exits.
+			from
+			until
+				exit_count = 0
+			loop
+				ba.write_forward
+				exit_count := exit_count - 1
+			end
 
 			ba.append (bc_local)
 			ba.append_short_integer (result_local_number)

@@ -2276,6 +2276,11 @@ feature {NONE} -- Visitors
 			l_check_assertion := context.workbench_mode or
 				Context.class_type.associated_class.assertion_level.is_loop
 
+			if attached a_node.iteration_initialization as i then
+					-- Generate IL code for the iteration initialization.
+				i.process (Current)
+			end
+
 			if a_node.from_part /= Void then
 					-- Generate IL code for the from part
 				a_node.from_part.process (Current)
@@ -2315,19 +2320,29 @@ feature {NONE} -- Visitors
 			l_test_label := il_generator.create_label
 			l_end_label := il_generator.create_label
 
-			generate_il_line_info (a_node, True)
-			process_pragma (a_node)
-
 				-- Generate byte code for exit expression
 			il_generator.mark_label (l_test_label)
 
-			a_node.stop.process (Current)
+			if attached a_node.iteration_exit_condition as e then
+					-- Generate test for iteration exit condition.
+				e.process (Current)
+				il_generator.branch_on_true (l_end_label)
+			end
+			if attached a_node.stop as s then
+					-- Generate debug information.
+				generate_il_line_info (a_node, True)
+				process_pragma (a_node)
+					-- Generate test for loop exit condition.
+				s.process (Current)
+				il_generator.branch_on_true (l_end_label)
+			end
 
-				-- Generate a test
-			il_generator.branch_on_true (l_end_label)
 
 			if a_node.compound /= Void then
 				a_node.compound.process (Current)
+			end
+			if attached a_node.advance_code as a then
+				a.process (Current)
 			end
 
 			if l_check_assertion and then (a_node.invariant_part /= Void or else a_node.variant_part /= Void) then
@@ -2440,10 +2455,15 @@ feature {NONE} -- Visitors
 				il_generator.branch_on_true (l_end_label)
 			end
 
-				-- Generate byte code for exit expression
-			a_node.exit_condition_code.process (Current)
-				-- Generate a test
+				-- Generate byte code for iteration exit condition.
+			a_node.iteration_exit_condition_code.process (Current)
 			il_generator.branch_on_true (l_end_label)
+
+			if attached a_node.exit_condition_code as e then
+					-- Generate byte code for optional exit condition.
+				e.process (Current)
+				il_generator.branch_on_true (l_end_label)
+			end
 
 				-- Evaluate loop expression and assign its value to the loop result variable.
 			a_node.expression_code.process (Current)

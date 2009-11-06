@@ -87,11 +87,11 @@ feature -- Project file/directory warnings
 		end
 
 	w_project_build_precompile: STRING_32 do Result := locale.translation (
-			"The project needs to use a precompile library, which has not been compiled.%N%
+			"The project needs to use a precompiled library, which has not been compiled.%N%
 			%Should the precompile be built?")
 		end
 
-	w_project_build_precompile_error: STRING_32 do Result := locale.translation ("Could not generate needed precompile.") end
+	w_project_build_precompile_error: STRING_32 do Result := locale.translation ("Could not generate needed precompiled library.") end
 
 	w_Project_interrupted (dir_name: STRING_GENERAL): STRING_32
 		require

@@ -189,6 +189,9 @@ feature -- Comparison
 invariant
 	expression_attached: expression /= Void
 	identifier_attached: identifier /= Void
+	initialization_attached: initialization /= Void
+	exit_condition_attached: exit_condition /= Void
+	advance_attached: advance /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

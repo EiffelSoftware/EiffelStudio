@@ -2,6 +2,7 @@ test_name 	 loop-expression-smoke-test
 test_description Minimal set of tests for loop expressions.
 
 copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted

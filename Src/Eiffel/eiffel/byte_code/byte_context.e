@@ -187,6 +187,14 @@ feature -- Access
 	has_feature_name_stored: BOOLEAN
 			-- Is string representing feature name stored in local?
 
+	is_inside_hidden_code: BOOLEAN
+			-- Is inside hidden code?
+			--| used for sugar code such as new loop construct "across"
+
+	hidden_code_level: INTEGER
+			-- Level of hidden code (i.e: depth)
+
+
 feature -- Setting
 
 	set_first_precondition_block_generated (v: BOOLEAN)
@@ -281,6 +289,33 @@ feature -- Setting
 			has_feature_name_stored := v
 		ensure
 			has_feature_name_stored_set: has_feature_name_stored = v
+		end
+
+	set_hidden_code_level (a_level: like hidden_code_level)
+		do
+			hidden_code_level := a_level
+			is_inside_hidden_code := a_level > 0
+		end
+
+	enter_hidden_code
+			-- Enter level of hidden code
+		require
+			hidden_code_level_zero_if_not_hidden: not is_inside_hidden_code implies hidden_code_level = 0
+		do
+			set_hidden_code_level (hidden_code_level + 1)
+		ensure
+			hidden_code_level_positive: hidden_code_level > 0
+		end
+
+	exit_hidden_code
+			-- Exit level of hidden code
+		require
+			is_inside_hidden_code: is_inside_hidden_code
+			hidden_code_level_positive: hidden_code_level > 0
+		do
+			set_hidden_code_level (hidden_code_level - 1)
+		ensure
+			hidden_code_level_zero_if_not_hidden: not is_inside_hidden_code implies hidden_code_level = 0
 		end
 
 feature -- Code generation
@@ -2566,6 +2601,7 @@ feature -- Clearing
 			register_server.clear_all
 			precondition_object_test_local_offset.wipe_out
 			postcondition_object_test_local_offset.wipe_out
+			set_hidden_code_level (0)
 		end
 
 	clear_class_type_data

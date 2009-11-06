@@ -208,17 +208,19 @@ feature -- Eiffel source line information
 			ctx: like context
 		do
 			ctx := context
-			if not ctx.final_mode or else System.exception_stack_managed then
-				if ctx.current_feature /= Void and ctx.current_feature.supports_step_in then
-					lnr := ctx.get_next_breakpoint_slot
-					check
-						lnr > 0
+			if not ctx.is_inside_hidden_code then
+				if not ctx.final_mode or else System.exception_stack_managed then
+					if attached ctx.current_feature as cf and then cf.supports_step_in then
+						lnr := ctx.get_next_breakpoint_slot
+						check
+							lnr > 0
+						end
+						l_buffer := ctx.buffer
+						l_buffer.put_new_line
+						l_buffer.put_string(RTHOOK_OPEN)
+						l_buffer.put_integer(lnr)
+						l_buffer.put_two_character (')', ';')
 					end
-					l_buffer := context.buffer
-					l_buffer.put_new_line
-					l_buffer.put_string(RTHOOK_OPEN)
-					l_buffer.put_integer(lnr)
-					l_buffer.put_two_character (')', ';')
 				end
 			end
 		end
@@ -229,18 +231,22 @@ feature -- Eiffel source line information
 		local
 			l_buffer: like buffer
 			lnr: INTEGER
+			ctx: like context
 		do
-			if not context.final_mode or else System.exception_stack_managed then
-				if context.current_feature /= Void and then context.current_feature.supports_step_in then
-					lnr := context.get_next_breakpoint_slot
-					check
-						lnr > 0
+			ctx := context
+			if not ctx.is_inside_hidden_code then
+				if not ctx.final_mode or else System.exception_stack_managed then
+					if attached ctx.current_feature as cf and then cf.supports_step_in then
+						lnr := ctx.get_next_breakpoint_slot
+						check
+							lnr > 0
+						end
+						l_buffer := ctx.buffer
+						l_buffer.put_new_line
+						l_buffer.put_string (RTHOOK_OPEN)
+						l_buffer.put_integer (lnr)
+						l_buffer.put_two_character (')', ';')
 					end
-					l_buffer := context.buffer
-					l_buffer.put_new_line
-					l_buffer.put_string (RTHOOK_OPEN)
-					l_buffer.put_integer (lnr)
-					l_buffer.put_two_character (')', ';')
 				end
 			end
 		end
@@ -251,6 +257,7 @@ feature -- Eiffel source line information
 		local
 			lnr: INTEGER
 			l_buffer: like buffer
+			ctx: like context
 		do
 				-- used to generate a debugger hook in the middle of nested call
 				-- to be able to enter in the function applicated to the object
@@ -274,23 +281,24 @@ feature -- Eiffel source line information
 				-- call b.titi
 				--
 				-- Note: the line number is not increased !!
+			ctx := context
+			if not ctx.is_inside_hidden_code then
+				if not ctx.final_mode then
+					if attached ctx.current_feature as cf and then cf.supports_step_in then
+						lnr := ctx.get_breakpoint_slot
+							-- if lnr = 0 or -1 then we do nothing.
+						if lnr > 0 then
+							l_buffer := ctx.buffer
+							l_buffer.put_new_line
+							l_buffer.put_string(RTNHOOK_OPEN)
+							l_buffer.put_integer(lnr)
 
-			if not context.final_mode then
-				if context.current_feature /= Void and then context.current_feature.supports_step_in then
-					lnr := context.get_breakpoint_slot
-						-- if lnr = 0 or -1 then we do nothing.
-					if lnr > 0 then
-						l_buffer := context.buffer
-						l_buffer.put_new_line
-						l_buffer.put_string(RTNHOOK_OPEN)
-						l_buffer.put_integer(lnr)
+							lnr := ctx.get_next_breakpoint_nested_slot
+							l_buffer.put_character (',')
+							l_buffer.put_integer(lnr)
 
-						lnr := context.get_next_breakpoint_nested_slot
-						l_buffer.put_character (',')
-						l_buffer.put_integer(lnr)
-
-						l_buffer.put_two_character (')', ';')
-
+							l_buffer.put_two_character (')', ';')
+						end
 					end
 				end
 			end
@@ -300,13 +308,17 @@ feature -- Eiffel source line information
 			-- Record the breakable point corresponding to the end of the feature.
 		local
 			lnr: INTEGER
+			ctx: like context
 		do
-			if context.current_feature /= Void and then context.current_feature.supports_step_in then
-				lnr := context.get_next_breakpoint_slot
-				check
-					valid_line: lnr > 0
+			ctx := context
+			if not ctx.is_inside_hidden_code then
+				if attached ctx.current_feature as cf and then cf.supports_step_in then
+					lnr := ctx.get_next_breakpoint_slot
+					check
+						valid_line: lnr > 0
+					end
+					ba.generate_melted_debugger_hook (lnr)
 				end
-				ba.generate_melted_debugger_hook (lnr)
 			end
 		end
 
@@ -443,7 +455,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -456,22 +468,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -1237,11 +1237,18 @@ feature {NONE} -- Visitors
 			body_breakpoint_slot: INTEGER
 			l_context: like context
 			exit_count: NATURAL
+			l_old_hidden_code_level: INTEGER
 		do
 			l_context := context
+			l_old_hidden_code_level := l_context.hidden_code_level
+			l_context.set_hidden_code_level (0)
+
 			if attached a_node.iteration_initialization as i then
 					-- Generate byte code for iteration initialization.
+				generate_melted_debugger_hook
+				l_context.enter_hidden_code
 				i.process (Current)
+				l_context.exit_hidden_code
 			end
 			if a_node.from_part /= Void then
 					-- Generate byte code for the from part
@@ -1355,6 +1362,8 @@ feature {NONE} -- Visitors
 				ba.write_forward
 				exit_count := exit_count - 1
 			end
+
+			l_context.set_hidden_code_level (l_old_hidden_code_level)
 		end
 
 	process_loop_expr_b (a_node: LOOP_EXPR_B)
@@ -1369,11 +1378,18 @@ feature {NONE} -- Visitors
 			v: detachable VARIANT_B
 			i: detachable BYTE_LIST [BYTE_NODE]
 			exit_count: NATURAL
+			l_old_hidden_code_level: INTEGER
 		do
-				-- Generate loop iteration part.
-			a_node.iteration_code.process (Current)
-
 			l_context := context
+			l_old_hidden_code_level := l_context.hidden_code_level
+			l_context.set_hidden_code_level (0)
+
+				-- Generate loop iteration part.
+			generate_melted_debugger_hook
+			l_context.enter_hidden_code
+			a_node.iteration_code.process (Current)
+			l_context.exit_hidden_code
+
 			local_list := l_context.local_list
 
 				-- Add a local to keep the loop expression result.
@@ -1501,6 +1517,7 @@ feature {NONE} -- Visitors
 
 			ba.append (bc_local)
 			ba.append_short_integer (result_local_number)
+			l_context.set_hidden_code_level (l_old_hidden_code_level)
 		end
 
 	process_nat64_val_b (a_node: NAT64_VAL_B)
@@ -2340,13 +2357,17 @@ feature {NONE} -- Implementation
 			-- Record breakable point (standard)
 		local
 			lnr: INTEGER
+			ctx: like context
 		do
-			if context.current_feature /= Void and then context.current_feature.supports_step_in then
-				lnr := context.get_next_breakpoint_slot
-				check
-					valid_line: lnr > 0
+			ctx := context
+			if not ctx.is_inside_hidden_code then
+				if attached ctx.current_feature as cf and then cf.supports_step_in then
+					lnr := ctx.get_next_breakpoint_slot
+					check
+						valid_line: lnr > 0
+					end
+					ba.generate_melted_debugger_hook (lnr)
 				end
-				ba.generate_melted_debugger_hook (lnr)
 			end
 		end
 
@@ -2354,15 +2375,19 @@ feature {NONE} -- Implementation
 			-- Record breakable point for nested call
 		local
 			l_line, l_nested: INTEGER
+			ctx: like context
 		do
-			if context.current_feature /= Void and then context.current_feature.supports_step_in then
-				l_line := context.get_breakpoint_slot
-				if l_line > 0 then
-						-- Generate a hook when there is really need for one.
-						-- (E.g. we do not need a hook for the code generation
-						-- of an invariant).
-					l_nested := context.get_next_breakpoint_nested_slot
-					ba.generate_melted_debugger_hook_nested (l_line, l_nested)
+			ctx := context
+			if not ctx.is_inside_hidden_code then
+				if attached ctx.current_feature as cf and then cf.supports_step_in then
+					l_line := ctx.get_breakpoint_slot
+					if l_line > 0 then
+							-- Generate a hook when there is really need for one.
+							-- (E.g. we do not need a hook for the code generation
+							-- of an invariant).
+						l_nested := ctx.get_next_breakpoint_nested_slot
+						ba.generate_melted_debugger_hook_nested (l_line, l_nested)
+					end
 				end
 			end
 		end

@@ -2948,6 +2948,9 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.exdent
 			end
+			if has_iteration then
+				put_breakable
+			end
 			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 
@@ -3024,6 +3027,7 @@ feature {NONE} -- Implementation
 					l_as.variant_part.process (Current)
 					exdent.call (Void)
 				end
+				put_breakable
 				l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 			end
 			last_type := boolean_type
@@ -3965,6 +3969,7 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.process_keyword_text (ti_across_keyword, Void)
 			l_text_formatter_decorator.put_new_line
 			l_text_formatter_decorator.indent
+			put_breakable
 			l_as.expression.process (Current)
 			l_text_formatter_decorator.put_space
 			l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)

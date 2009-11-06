@@ -151,9 +151,20 @@ feature -- C code generation
 			generate_test_end: PROCEDURE [ANY, TUPLE]
 			i: like invariant_code
 			v: like variant_code
+			l_context: like context
+			l_old_hidden_code_level: INTEGER
 		do
 			buf := buffer
+			l_context := context
+
+			l_old_hidden_code_level := l_context.hidden_code_level
+			l_context.set_hidden_code_level (0)
+
+			generate_frozen_debugger_hook
+			l_context.enter_hidden_code
 			iteration_code.generate
+			l_context.exit_hidden_code
+
 
 				-- Initialize result of the loop expression.
 			buf.put_new_line
@@ -164,7 +175,7 @@ feature -- C code generation
 				buf.put_string (" = EIF_FALSE;")
 			end
 
-			if context.workbench_mode then
+			if l_context.workbench_mode then
 				workbench_mode := True
 				generate_test_start := agent generate_workbench_test
 				generate_test_end := agent generate_end_workbench_test
@@ -176,27 +187,27 @@ feature -- C code generation
 				-- Record invariant and variant byte code.
 				-- First they are generated before the loop execution (at this time variant is set up).
 				-- Second they are generated before the loop end (the code generation for variant is different).
-			if workbench_mode or else context.assertion_level.is_loop then
+			if workbench_mode or else l_context.assertion_level.is_loop then
 				i := invariant_code
 				v := variant_code
 			end
 
 				-- Generate the "invariant" part.
 			if i /= Void then
-				context.set_assertion_type (In_loop_invariant)
+				l_context.set_assertion_type (In_loop_invariant)
 				generate_test_start.call (Void)
 				i.generate
 				generate_test_end.call (Void)
-				context.set_assertion_type (0)
+				l_context.set_assertion_type (0)
 			end
 
 				-- Generate the "variant" part.
 			if v /= Void then
-				context.set_assertion_type (In_loop_variant)
+				l_context.set_assertion_type (In_loop_variant)
 				generate_test_start.call (Void)
 				v.generate
 				generate_test_end.call (Void)
-				context.set_assertion_type (0)
+				l_context.set_assertion_type (0)
 			end
 
 			buf.put_new_line
@@ -239,7 +250,11 @@ feature -- C code generation
 			end
 
 				-- Generate expression.
+			generate_frozen_debugger_hook
+			l_context.enter_hidden_code
 			expression_code.generate
+			l_context.exit_hidden_code
+
 				-- And save its result to the result variable.
 				-- In theory we should do
 				--    b := b and then expression -- for All_body
@@ -256,25 +271,27 @@ feature -- C code generation
 
 				-- Generate the "invariant" part.
 			if i /= Void then
-				context.set_assertion_type (In_loop_invariant)
+				l_context.set_assertion_type (In_loop_invariant)
 				generate_test_start.call (Void)
 				i.generate
 				generate_test_end.call (Void)
-				context.set_assertion_type (0)
+				l_context.set_assertion_type (0)
 			end
 
 				-- Generate the "variant" part.
 			if v /= Void then
-				context.set_assertion_type (In_loop_variant)
+				l_context.set_assertion_type (In_loop_variant)
 				generate_test_start.call (Void)
 				v.print_register
 				generate_test_end.call (Void)
-				context.set_assertion_type (0)
+				l_context.set_assertion_type (0)
 			end
 
 			buf.exdent
 			buf.put_new_line
 			buf.put_character ('}')
+
+			l_context.set_hidden_code_level (l_old_hidden_code_level)
 		end
 
 	print_register

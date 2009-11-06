@@ -81,10 +81,15 @@ feature -- Access
 
 	generate
 			-- Generate C code in `buffer'.
+		local
+			l_old_hidden_code_level: INTEGER
 		do
+			l_old_hidden_code_level := context.hidden_code_level
+			context.set_hidden_code_level (0)
 			generate_line_info
 			generate_assertions
 			generate_loop_body
+			context.set_hidden_code_level (l_old_hidden_code_level)
 		end
 
 	generate_assertions
@@ -99,7 +104,10 @@ feature -- Access
 
 				-- Generate iteration initialization.
 			if attached iteration_initialization as i then
+				generate_frozen_debugger_hook
+				context.enter_hidden_code
 				i.generate
+				context.exit_hidden_code
 			end
 
 				-- Generate the "from" part

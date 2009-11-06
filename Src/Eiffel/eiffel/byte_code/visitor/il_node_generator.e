@@ -2272,13 +2272,22 @@ feature {NONE} -- Visitors
 			l_local_list: ARRAYED_LIST [TYPE_A]
 			l_variant_local_number: INTEGER
 			l_check_assertion: BOOLEAN
+			l_context: like context
+			l_old_hidden_code_level: INTEGER
 		do
-			l_check_assertion := context.workbench_mode or
-				Context.class_type.associated_class.assertion_level.is_loop
+			l_context := context
+			l_old_hidden_code_level := l_context.hidden_code_level
+			l_context.set_hidden_code_level (0)
+
+			l_check_assertion := l_context.workbench_mode or
+				l_context.class_type.associated_class.assertion_level.is_loop
 
 			if attached a_node.iteration_initialization as i then
 					-- Generate IL code for the iteration initialization.
+				il_generator.put_line_info (i.first.line_number)
+				l_context.enter_hidden_code
 				i.process (Current)
+				l_context.exit_hidden_code
 			end
 
 			if a_node.from_part /= Void then
@@ -2288,8 +2297,8 @@ feature {NONE} -- Visitors
 
 			if l_check_assertion and then a_node.variant_part /= Void then
 					-- Initialization of the variant control variable
-				l_local_list := context.local_list
-				context.add_local (integer_32_type)
+				l_local_list := l_context.local_list
+				l_context.add_local (integer_32_type)
 				l_variant_local_number := l_local_list.count
 				il_generator.put_dummy_local_info (a_node.variant_part.type, l_variant_local_number)
 			end
@@ -2301,15 +2310,15 @@ feature {NONE} -- Visitors
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
 				if a_node.invariant_part /= Void then
-					context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
 					a_node.invariant_part.process (Current)
-					context.set_assertion_type (0)
+					l_context.set_assertion_type (0)
 				end
 					-- Variant loop byte code
 				if a_node.variant_part /= Void then
-					context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
 					generate_il_variant_init (a_node.variant_part, l_variant_local_number)
-					context.set_assertion_type (0)
+					l_context.set_assertion_type (0)
 				end
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
@@ -2379,6 +2388,7 @@ feature {NONE} -- Visitors
 
 			il_generator.put_silent_debug_info (a_node.end_location)
 
+			l_context.set_hidden_code_level (l_old_hidden_code_level)
 		end
 
 	process_loop_expr_b (a_node: LOOP_EXPR_B)
@@ -2391,12 +2401,22 @@ feature {NONE} -- Visitors
 			l_check_assertion: BOOLEAN
 			i: detachable BYTE_LIST [BYTE_NODE]
 			v: detachable VARIANT_B
+			l_context: like context
+			l_old_hidden_code_level: INTEGER
 		do
-			l_check_assertion := context.workbench_mode or
-				Context.class_type.associated_class.assertion_level.is_loop
+			l_context := context
+			l_old_hidden_code_level := l_context.hidden_code_level
+			l_context.set_hidden_code_level (0)
+
+			l_check_assertion := l_context.workbench_mode or
+				l_context.class_type.associated_class.assertion_level.is_loop
 
 				-- Generate IL code for the iteration part
+			il_generator.put_line_info (a_node.iteration_code.line_number)
+			l_context.enter_hidden_code
 			a_node.iteration_code.process (Current)
+			l_context.exit_hidden_code
+
 
 				-- Initialize loop expression result variable.
 			l_local_list := context.local_list
@@ -2466,7 +2486,11 @@ feature {NONE} -- Visitors
 			end
 
 				-- Evaluate loop expression and assign its value to the loop result variable.
+			il_generator.put_line_info (a_node.expression_code.line_number)
+			l_context.enter_hidden_code
 			a_node.expression_code.process (Current)
+			l_context.exit_hidden_code
+
 			il_generator.generate_local_assignment (l_result_local_number)
 
 				-- Advance the loop cursor.
@@ -2502,6 +2526,8 @@ feature {NONE} -- Visitors
 			il_generator.mark_label (l_end_label)
 
 			il_generator.generate_local (l_result_local_number)
+
+			l_context.set_hidden_code_level (l_old_hidden_code_level)
 		end
 
 	process_nat64_val_b (a_node: NAT64_VAL_B)

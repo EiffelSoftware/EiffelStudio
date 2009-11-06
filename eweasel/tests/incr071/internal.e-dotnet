@@ -124,6 +124,11 @@ feature -- Creation
 			count_set: Result.count = count
 		end
 
+	type_of_type (type_id: INTEGER): TYPE [detachable ANY]
+			-- Return type for type id `type_id'.
+		do
+		end
+
 feature -- Status report
 
 	is_special_any_type (type_id: INTEGER): BOOLEAN is
@@ -905,6 +910,19 @@ feature -- Marking
 			not_marked: not is_marked (obj)
 		end
 		
+feature {INTERNAL, TYPE}
+
+	internal_pure_interface_type (a_class_type: RT_CLASS_TYPE): detachable RT_CLASS_TYPE
+			-- Given `a_class_type' which might include some reference to implementation type,
+			-- returns the corresponding interface type.
+		do
+		end
+	
+	dynamic_type_from_rt_class_type (a_class_type: detachable RT_CLASS_TYPE): INTEGER
+			-- Dynamic type of `a_class_type'.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	object_type: INTEGER is 17

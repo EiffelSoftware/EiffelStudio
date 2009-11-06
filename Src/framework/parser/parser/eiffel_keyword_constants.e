@@ -12,6 +12,7 @@ class
 
 feature -- Keywords
 
+	across_keyword    : STRING = "across"
 	agent_keyword     : STRING = "agent"
 	alias_keyword     : STRING = "alias"
 	all_keyword       : STRING = "all"
@@ -64,6 +65,7 @@ feature -- Keywords
 	retry_keyword     : STRING = "retry"
 	select_keyword    : STRING = "select"
 	separate_keyword  : STRING = "separate"
+	some_keyword      : STRING = "some"
 	strip_keyword     : STRING = "strip"
 	then_keyword      : STRING = "then"
 	undefine_keyword  : STRING = "undefine"

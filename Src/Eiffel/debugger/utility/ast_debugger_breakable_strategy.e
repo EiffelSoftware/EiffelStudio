@@ -18,6 +18,7 @@ inherit
 			process_if_as,
 			process_inspect_as,
 			process_instr_call_as,
+			process_iteration_as,
 			process_loop_as,
 			process_variant_as,
 			process_retry_as,
@@ -420,6 +421,33 @@ feature {NONE} -- Iteration
 	process_instr_call_as (l_as: INSTR_CALL_AS)
 		do
 			register_breakable (l_as)
+			Precursor (l_as)
+		end
+
+	process_iteration_as (l_as: ITERATION_AS)
+		local
+			l_name: ID_AS
+			l_expr: EXPR_AS
+		do
+			l_name := l_as.identifier
+			if l_name /= Void then
+				if attached l_as.initialization as l_init then
+					from
+							--| Let's find the assignment for the iterator local.
+							--| It should be the first one, but let's use a loop
+							--| in case the `initialization' changes in the future.
+						l_init.start
+					until
+						l_init.after or l_expr /= Void
+					loop
+						if attached {ASSIGN_AS} l_init.item as l_assign_as then
+							l_expr := l_assign_as.source
+						end
+						l_init.forth
+					end
+				end
+				register_object_test_local (l_name, Void, l_expr)
+			end
 			Precursor (l_as)
 		end
 

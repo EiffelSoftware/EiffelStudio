@@ -161,7 +161,9 @@ feature {NONE} -- Evaluation
 					if (attached {EXPR_B} byte_node as expr) and then (attached expr.type as ta) then
 						create final_result.make
 						final_result.failed := True
-						final_result.suggest_static_class (ta.associated_class)
+						if attached ta.associated_class as cl then
+							final_result.suggest_static_class (cl)
+						end
 					end
 					check
 						error_occurred
@@ -752,7 +754,9 @@ feature {BYTE_NODE} -- Visitor
 					dbg_error_handler.notify_error_evaluation (Debugger_names.Cst_unable_to_get_current_object)
 				else
 					create tmp_result.make_with_value (dv)
-					tmp_result.suggest_static_class (context.class_c)
+					if attached context.class_c as cl then
+						tmp_result.suggest_static_class (cl)
+					end
 				end
 			end
 		end
@@ -1239,8 +1243,8 @@ feature {BYTE_NODE} -- Visitor
 				if dv /= Void then
 					create tmp_result.make_with_value (dv.dump_value)
 					cf := t.feat
-					if cf.type /= Void then
-						tmp_result.suggest_static_class (cf.type.associated_class)
+					if attached cf.type as cft and then attached cft.associated_class as cl then
+						tmp_result.suggest_static_class (cl)
 					end
 				end
 			else

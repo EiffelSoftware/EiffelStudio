@@ -4680,6 +4680,8 @@ feature {NONE} -- Implementation: Feature calls
 			a_node_not_void: a_node /= Void
 			written_type_not_void: written_type /= Void
 			target_type_not_void: target_type /= Void
+			valid_feature_name:
+				a_node.feature_name_id = {PREDEFINED_NAMES}.generating_type_name_id
 		local
 			l_label: IL_LABEL
 		do

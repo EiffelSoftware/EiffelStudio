@@ -299,9 +299,6 @@ feature {NONE} -- Constants
 			Result := {ETEST_CONSTANTS}.eqa_system_test_set_name
 		end
 
-invariant
-	test_routine_name_not_empty: not test_routine_name.is_empty
-
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

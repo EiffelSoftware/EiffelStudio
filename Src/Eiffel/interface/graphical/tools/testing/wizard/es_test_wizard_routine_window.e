@@ -92,6 +92,13 @@ feature {NONE} -- Initialization
 			l_hbox.extend (l_label)
 			create l_link_label.make_with_text (locale_formatter.translation (l_tag_help))
 			l_link_label.align_text_right
+			l_link_label.select_actions.extend (agent
+				local
+					l_launcher: EB_PROCESS_LAUNCHER
+				do
+					l_launcher := (create {EB_SHARED_MANAGERS}).external_launcher
+					l_launcher.open_url_in_web_browser ("http://docs.eiffel.com/isedoc/uuid/f1e7f63a-dc86-fefb-e669-3e3ea178c596")
+				end)
 			l_hbox.extend (l_link_label)
 
 			a_parent.extend (l_hbox)
@@ -185,19 +192,34 @@ feature {NONE} -- Initialization
 						first_window.reset_default_push_button
 					end)
 			create l_item
-			l_item.set_text (locale_formatter.translation ("Add class/feature under test tag"))
+			l_item.set_text ("Tag test with class/feature being covered")
+			l_item.set_tooltip ("Specify what class and feature are covered by the test.")
 			l_item.set_data (agent on_add_cover_tag)
 			template_list.extend (l_item)
 
 			create l_item
-			l_item.set_text (locale_formatter.translation ("Add isolated execution tag"))
+			l_item.set_text ("Run test in private evaluator")
+			l_item.set_tooltip ("For tests which rely on once routines being accessed the first time or tests which might leave memory in a corrupted state.")
 			l_item.set_data (
 				agent
 					do
-						conf.tags_cache.force ("execution/isolate")
+						conf.tags_cache.force ("execution/isolated")
 						update_tag_list
 					end)
 			template_list.extend (l_item)
+
+			create l_item
+			l_item.set_text ("Run test serially")
+			l_item.set_tooltip ("For tests which make use of some resource which has to be accessed serially. %N%
+								%It is possible to create subgroups by extending the tag with additional tokens (eg. execution/serial/db/customers)")
+			l_item.set_data (
+				agent
+					do
+						conf.tags_cache.force ("execution/serial")
+						update_tag_list
+					end)
+			template_list.extend (l_item)
+
 			l_hbox.extend (template_list)
 
 			add_template_button.set_text (locale_formatter.translation (l_add))

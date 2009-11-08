@@ -599,7 +599,11 @@ feature {NONE} -- Implementation
 				l_groups.after or has_launched_test
 			loop
 				l_group := l_groups.key_for_iteration
-				if l_group.bit_and (running_groups) = 0 then
+				if
+					l_group.bit_and (running_groups) = 0 and then
+						-- Temporary fix for a bug in HASH_TABLE when removing elements associated with default key (see bug #16419)
+					l_groups.has (l_groups.key_for_iteration)
+				then
 					l_set := l_groups.item_for_iteration
 					check not_empty: not l_set.is_empty end
 					l_set.start

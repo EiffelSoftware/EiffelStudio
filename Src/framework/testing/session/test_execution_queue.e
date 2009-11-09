@@ -88,17 +88,15 @@ invariant
 	group_map_attached: group_map /= Void
 	executor_usable: executor.is_interface_usable
 
--- Temporary fix for a bug in HASH_TABLE when removing elements associated with default key (see bug #16419)
---
---	group_map_valid: group_map.linear_representation.for_all (
---		agent (a_set: SEARCH_TABLE [TEST_I]): BOOLEAN
---			do
---				Result := not a_set.is_empty and a_set.linear_representation.for_all (
---					agent (a_test: TEST_I): BOOLEAN
---						do
---							Result := a_test.is_interface_usable and then executor.is_test_compatible (a_test)
---						end)
---			end)
+	group_map_valid: group_map.linear_representation.for_all (
+		agent (a_set: SEARCH_TABLE [TEST_I]): BOOLEAN
+			do
+				Result := not a_set.is_empty and a_set.linear_representation.for_all (
+					agent (a_test: TEST_I): BOOLEAN
+						do
+							Result := a_test.is_interface_usable and then executor.is_test_compatible (a_test)
+						end)
+			end)
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

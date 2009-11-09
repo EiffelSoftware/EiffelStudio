@@ -114,7 +114,7 @@ feature {NONE} -- Action handlers
 		local
 			l_locale: I18N_LOCALE
 			l_id: STRING
-			l_text: STRING
+			l_text: STRING_32
 		do
 			encoding := Void
 			l_text := locale_selection.text

@@ -172,6 +172,7 @@ feature {NONE} -- Basic operation
 			l_row: EV_GRID_ROW
 			l_tokens: LIST [EDITOR_TOKEN]
 			l_width: INTEGER
+			l_no_comment: STRING_32
 		do
 				-- Clear the contract grid
 			l_grid := contract_grid
@@ -218,7 +219,9 @@ feature {NONE} -- Basic operation
 							-- Create empty comments
 						create {ARRAYED_LIST [EDITOR_TOKEN]} l_tokens.make (2)
 						l_tokens.extend (create {EDITOR_TOKEN_TABULATION}.make (2))
-						l_tokens.extend (create {EDITOR_TOKEN_COMMENT}.make ("-- " + interface_names.h_no_comments_for_feature))
+						create l_no_comment.make_from_string ("-- ")
+						l_no_comment.append_string (interface_names.h_no_comments_for_feature)
+						l_tokens.extend (create {EDITOR_TOKEN_COMMENT}.make (l_no_comment))
 					end
 					if l_tokens /= Void then
 						l_editor_item.set_text_with_tokens (l_tokens)

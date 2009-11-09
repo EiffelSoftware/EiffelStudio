@@ -94,7 +94,7 @@ feature {NONE} -- Basic operations
 	put_start_degree (a_degree: INTEGER; a_total: INTEGER)
 			-- <Precursor>
 		local
-			l_degree_str: STRING_8
+			l_degree_str: STRING_32
 		do
 			total_number := a_total
 			degree := a_degree

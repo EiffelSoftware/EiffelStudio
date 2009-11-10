@@ -130,7 +130,6 @@ UTF8_tail	[\x80-\xBF]
 ----------/** Reserved words **/------------------------------------------------
 
 "!!"									|
-[aA][cC][rR][oO][sS][sS]				|
 [aA][gG][eE][nN][tT]					|
 [aA][lL][iI][aA][sS]					|
 [aA][lL][lL]						|
@@ -184,7 +183,6 @@ UTF8_tail	[\x80-\xBF]
 [rR][eE][tT][rR][yY]					|
 [sS][eE][lL][eE][cC][tT]				|
 [sS][eE][pP][aA][rR][aA][tT][eE]		|
-[sS][oO][mM][eE]						|
 [sS][tT][rR][iI][pP]					|
 [tT][hH][eE][nN]						|
 [tT][rR][uU][eE]						|
@@ -208,28 +206,46 @@ UTF8_tail	[\x80-\xBF]
 [aA][tT][tT][rR][iI][bB][uU][tT][eE]		|
 [dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	|
 [nN][oO][tT][eE]				{
-							if syntax_version /= {EIFFEL_SCANNER}.obsolete_64_syntax then
+							if in_comments then
+									-- Comment
+								curr_token := new_comment (text)
+							elseif syntax_version /= {EIFFEL_SCANNER}.obsolete_64_syntax then
 									-- Keyword
-								if not in_comments then
-									curr_token := new_keyword (text)
-								else
-									curr_token := new_comment (text)
-								end
+								curr_token := new_keyword (text)
 							else
+									-- Identifier
 								curr_token := new_text (text)
 							end
 							update_token_list
 						}
 
 [iI][nN][dD][eE][xX][iI][nN][gG]		{
-							if syntax_version /= {EIFFEL_SCANNER}.ecma_syntax then
+							if in_comments then
+									-- Comment
+								curr_token := new_comment (text)
+							elseif
+								syntax_version = {EIFFEL_SCANNER}.obsolete_64_syntax or else
+								syntax_version = {EIFFEL_SCANNER}.transitional_64_syntax
+							then
 									-- Keyword
-								if not in_comments then
-									curr_token := new_keyword (text)
-								else
-									curr_token := new_comment (text)
-								end
+								curr_token := new_keyword (text)
 							else
+								curr_token := new_text (text)
+							end
+							update_token_list
+						}
+
+
+[aA][cC][rR][oO][sS][sS]		|
+[sS][oO][mM][eE]				{
+							if in_comments then
+									-- Comment
+								curr_token := new_comment (text)
+							elseif syntax_version = {EIFFEL_SCANNER}.provisional_syntax then
+									-- Keyword
+								curr_token := new_keyword (text)
+							else
+									-- Identifier
 								curr_token := new_text (text)
 							end
 							update_token_list

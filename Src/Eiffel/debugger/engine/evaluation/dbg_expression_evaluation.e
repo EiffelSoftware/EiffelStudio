@@ -36,8 +36,8 @@ feature -- Destroy
 			-- Destroy Current
 		do
 			reset
-			if expression /= Void then
-				expression.unregister_evaluation (Current)
+			if attached expression as e then
+				e.unregister_evaluation (Current)
 			end
 		end
 

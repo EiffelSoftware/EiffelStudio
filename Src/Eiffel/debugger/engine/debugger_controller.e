@@ -487,7 +487,7 @@ feature -- Environment related
 				): detachable HASH_TABLE [STRING_32, STRING_32]
 			-- String representation of the Environment variables
 		local
-			k,v: STRING_32
+			k,v,n: STRING_32
 		do
 			if (env = Void or else env.is_empty) and return_void_if_unchanged then
 				--| Result := Void
@@ -512,7 +512,12 @@ feature -- Environment related
 						then
 								--| Environment variable removal if started by "&-" such as "&-FOOBAR"
 								--| this is an internal representation to precise "removal"
-							Result.remove (k.substring (3, k.count))
+							n := k.substring (3, k.count)
+							if n ~ "*" then
+								Result.wipe_out
+							else
+								Result.remove (n)
+							end
 						elseif v /= Void then
 							Result.force (v, k)
 						end
@@ -539,7 +544,7 @@ feature -- Environment related
 					k := env32.key_for_iteration
 					v := env32.item_for_iteration
 					if k /= Void and v /= Void then --| let's be careful ...
-						Result.force (env32.item_for_iteration.as_string_8, env32.key_for_iteration.as_string_8)
+						Result.force (v.as_string_8, k.as_string_8)
 					end
 					env32.forth
 				end

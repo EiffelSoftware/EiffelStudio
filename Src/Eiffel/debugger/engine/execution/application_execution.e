@@ -1210,7 +1210,7 @@ feature -- Environment related
 			k,v: STRING_32
 			lst: DS_LIST [STRING_32]
 		do
-			if env /= Void and then not env.is_empty then
+			if env /= Void then
 				lst := Debugger_manager.sorted_comparable_string32_keys_from (env)
 
 				create Result.make (512)

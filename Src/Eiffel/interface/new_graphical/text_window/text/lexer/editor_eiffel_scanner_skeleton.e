@@ -35,8 +35,8 @@ feature -- Element change
 feature {NONE} -- Status
 
 	syntax_version: NATURAL_8
-			-- Version of syntax used, one of the `ecma_syntax', `obsolete_64_syntax' and `transitional_64_syntax'
-			-- in {EIFFEL_SCANNER}.
+			-- Version of syntax used, one of the `ecma_syntax', `obsolete_64_syntax',
+			-- `transitional_64_syntax', `provisional_syntax' in {EIFFEL_SCANNER}.
 		do
 			if attached {EIFFEL_CLASS_I} current_class as l_class then
 				inspect l_class.options.syntax.index

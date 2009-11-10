@@ -34,30 +34,24 @@ feature {NONE} -- Initialization
 				as_keyword_index := b.index
 			end
 			identifier := i
-				-- Build initialization sequence in the form
-				--    `identifier' := `expression'.new_cursor
-				--    `identifier'.start
-			create initialization.make (2)
-			initialization.extend (
-				create {ASSIGN_AS}.initialize (
-					create {ACCESS_ID_AS}.initialize (i, Void),
-					create {EXPR_CALL_AS}.initialize (
-						create {NESTED_EXPR_AS}.initialize (
-							e,
-							create_access_feat_as ("new_cursor", i),
-							Void,
-							Void,
-							Void
-					)),
+				-- Build cursor creation expression in the form
+				--    `expression'.new_cursor
+			create {EXPR_CALL_AS} cursor_expression.initialize (
+				create {NESTED_EXPR_AS}.initialize (
+					e,
+					create_access_feat_as ("new_cursor", i),
+					Void,
+					Void,
 					Void
 			))
-			initialization.extend (
-				create {INSTR_CALL_AS}.initialize (
-					create {NESTED_AS}.initialize (
-						create {ACCESS_ID_AS}.initialize (i, Void),
-						create_access_feat_as ("start", i),
-						Void
-			)))
+				-- Build initialization code in the form
+				--    `identifier'.start
+			create {INSTR_CALL_AS} initialization.initialize (
+				create {NESTED_AS}.initialize (
+					create {ACCESS_ID_AS}.initialize (i, Void),
+					create_access_feat_as ("start", i),
+					Void
+			))
 				-- Build exit condition in the form
 				--    `identifier'.after
 			create {EXPR_CALL_AS} exit_condition.initialize (
@@ -145,8 +139,15 @@ feature -- Attributes
 	identifier: ID_AS
 			-- Cursor of iteration
 
-	initialization: EIFFEL_LIST [INSTRUCTION_AS]
-			-- Code sequence used to initialize iteration
+feature -- AST used during code generation
+
+	cursor_expression: EXPR_AS
+			-- Expression to obtain cursor for iteration
+			-- (Generated automatically to allow for subsequent checks in inherited code
+			-- that refers to the original class and routine IDs.)
+
+	initialization: INSTRUCTION_AS
+			-- Instruction to initialize iteration
 			-- (Generated automatically to allow for subsequent checks in inherited code
 			-- that refers to the original class and routine IDs.)
 
@@ -189,6 +190,7 @@ feature -- Comparison
 invariant
 	expression_attached: expression /= Void
 	identifier_attached: identifier /= Void
+	cursor_expression_attached: cursor_expression /= Void
 	initialization_attached: initialization /= Void
 	exit_condition_attached: exit_condition /= Void
 	advance_attached: advance /= Void

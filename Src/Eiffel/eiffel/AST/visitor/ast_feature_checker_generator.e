@@ -671,7 +671,6 @@ feature -- Settings
 			check_for_vaol := False
 			depend_unit_level := 0
 			last_access_writable := False
-			is_object_test_local_initializing := False
 			last_original_feature_name_id := 0
 			last_feature_name_id := 0
 			last_calls_target_type := Void
@@ -2474,8 +2473,7 @@ feature -- Implementation
 			l_local_info := context.object_test_local (l_as.feature_name.name_id)
 			if l_local_info /= Void then
 				l_local_info.set_is_used (True)
-				last_access_writable := is_object_test_local_initializing
-				is_object_test_local_initializing := False
+				last_access_writable := False
 				if l_as.parameters /= Void then
 					create l_vuar1
 					context.init_error (l_vuar1)
@@ -2620,8 +2618,7 @@ feature -- Implementation
 					l_local_info := context.object_test_local (l_as.feature_name.name_id)
 					if l_local_info /= Void then
 						l_local_info.set_is_used (True)
-						last_access_writable := is_object_test_local_initializing
-						is_object_test_local_initializing := False
+						last_access_writable := False
 						l_has_vuar_error := l_as.parameters /= Void
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
@@ -2742,8 +2739,7 @@ feature -- Implementation
 					l_local_info := context.object_test_local (l_as.feature_name.name_id)
 					if l_local_info /= Void then
 						l_local_info.set_is_used (True)
-						last_access_writable := is_object_test_local_initializing
-						is_object_test_local_initializing := False
+						last_access_writable := False
 						if l_as.parameters /= Void then
 							create l_vuar1
 							context.init_error (l_vuar1)
@@ -3619,8 +3615,7 @@ feature -- Implementation
 					l_local_info := context.object_test_local (l_as.feature_name.internal_name.name_id)
 					if l_local_info /= Void then
 						l_local_info.set_is_used (True)
-						last_access_writable := is_object_test_local_initializing
-						is_object_test_local_initializing := False
+						last_access_writable := False
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						create {TYPED_POINTER_A} last_type.make_typed (l_type)
@@ -5032,7 +5027,7 @@ feature -- Implementation
 				-- Init type stack
 			reset_for_unqualified_call_checking
 
-				-- Type check the target
+				-- Type check the target.
 			last_reinitialized_variable := 0
 			set_is_in_assignment (True)
 			last_access_writable := False
@@ -5057,91 +5052,91 @@ feature -- Implementation
 				if is_byte_node_enabled then
 					l_target_node ?= last_byte_node
 				end
+			end
 
-					-- Type check the source
-				l_as.source.process (Current)
-				l_source_type := last_type
+				-- Type check the source
+			l_as.source.process (Current)
+			l_source_type := last_type
 
-				if l_source_type /= Void then
-						-- Type checking
-					l_warning_count := error_handler.warning_list.count
-					process_type_compatibility (l_target_type)
-					if not is_inherited then
-						if l_target_type.is_like then
-							system.conformance_checks.like_target := system.conformance_checks.like_target + 1
-						end
-						if l_target_type.same_as (l_source_type) then
-							system.conformance_checks.same := system.conformance_checks.same + 1
-						end
-						system.conformance_checks.nb := system.conformance_checks.nb + 1
+			if l_source_type /= Void and then l_target_type /= Void then
+					-- Type checking
+				l_warning_count := error_handler.warning_list.count
+				process_type_compatibility (l_target_type)
+				if not is_inherited then
+					if l_target_type.is_like then
+						system.conformance_checks.like_target := system.conformance_checks.like_target + 1
 					end
-					if not is_type_compatible.is_compatible then
-						if l_source_type.is_bit then
-							create l_vncb
-							context.init_error (l_vncb)
-							l_vncb.set_target_name (l_as.target.access_name)
-							l_vncb.set_source_type (l_source_type)
-							l_vncb.set_target_type (l_target_type)
-							l_vncb.set_location (l_as.start_location)
-							error_handler.insert_error (l_vncb)
+					if l_target_type.same_as (l_source_type) then
+						system.conformance_checks.same := system.conformance_checks.same + 1
+					end
+					system.conformance_checks.nb := system.conformance_checks.nb + 1
+				end
+				if not is_type_compatible.is_compatible then
+					if l_source_type.is_bit then
+						create l_vncb
+						context.init_error (l_vncb)
+						l_vncb.set_target_name (l_as.target.access_name)
+						l_vncb.set_source_type (l_source_type)
+						l_vncb.set_target_type (l_target_type)
+						l_vncb.set_location (l_as.start_location)
+						error_handler.insert_error (l_vncb)
+					else
+						create l_vjar
+						context.init_error (l_vjar)
+						l_vjar.set_source_type (l_source_type)
+						l_vjar.set_target_type (l_target_type)
+						l_vjar.set_target_name (l_as.target.access_name)
+						l_vjar.set_location (l_as.start_location)
+						error_handler.insert_error (l_vjar)
+					end
+				else
+					if l_warning_count /= error_handler.warning_list.count then
+						error_handler.warning_list.last.set_location (l_as.start_location)
+					end
+					if
+						not is_inherited and then
+						is_type_compatible.conversion_info /= Void and then
+						is_type_compatible.conversion_info.has_depend_unit
+					then
+							-- No need to record the depend_unit from `is_type_compatible.conversion_info'
+							-- because it was already saved in `process_type_compatibility'.
+						l_as.set_source (l_as.source.converted_expression (
+							create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
+					end
+				end
+
+				if is_byte_node_enabled then
+					create l_assign
+					l_assign.set_target (l_target_node)
+					l_assign.set_line_number (l_as.target.start_location.line)
+					l_source_expr ?= last_byte_node
+					l_assign.set_source (l_source_expr)
+					l_assign.set_line_pragma (l_as.line_pragma)
+					last_byte_node := l_assign
+				end
+				if l_reinitialized_variable /= 0 then
+					if l_source_type.is_attached or else l_source_type.is_implicitly_attached then
+							-- Local variable is initialized to a non-void value.
+						if l_reinitialized_variable = result_name_id then
+							context.add_result_instruction_scope
+						elseif l_reinitialized_variable > 0 then
+							context.add_local_instruction_scope (l_reinitialized_variable)
 						else
-							create l_vjar
-							context.init_error (l_vjar)
-							l_vjar.set_source_type (l_source_type)
-							l_vjar.set_target_type (l_target_type)
-							l_vjar.set_target_name (l_as.target.access_name)
-							l_vjar.set_location (l_as.start_location)
-							error_handler.insert_error (l_vjar)
+							context.add_attribute_instruction_scope (- l_reinitialized_variable)
 						end
 					else
-						if l_warning_count /= error_handler.warning_list.count then
-							error_handler.warning_list.last.set_location (l_as.start_location)
-						end
-						if
-							not is_inherited and then
-							is_type_compatible.conversion_info /= Void and then
-							is_type_compatible.conversion_info.has_depend_unit
-						then
-								-- No need to record the depend_unit from `is_type_compatible.conversion_info'
-								-- because it was already saved in `process_type_compatibility'.
-							l_as.set_source (l_as.source.converted_expression (
-								create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
-						end
-					end
-
-					if is_byte_node_enabled then
-						create l_assign
-						l_assign.set_target (l_target_node)
-						l_assign.set_line_number (l_as.target.start_location.line)
-						l_source_expr ?= last_byte_node
-						l_assign.set_source (l_source_expr)
-						l_assign.set_line_pragma (l_as.line_pragma)
-						last_byte_node := l_assign
-					end
-					if l_reinitialized_variable /= 0 then
-						if l_source_type.is_attached or else l_source_type.is_implicitly_attached then
-								-- Local variable is initialized to a non-void value.
-							if l_reinitialized_variable = result_name_id then
-								context.add_result_instruction_scope
-							elseif l_reinitialized_variable > 0 then
-								context.add_local_instruction_scope (l_reinitialized_variable)
-							else
-								context.add_attribute_instruction_scope (- l_reinitialized_variable)
-							end
-						else
-								-- Local variable might become Void.
-							if l_reinitialized_variable = result_name_id then
-								context.remove_result_scope
-							elseif l_reinitialized_variable > 0 then
-								context.remove_local_scope (l_reinitialized_variable)
-							end
-						end
-							-- The variable is initialized.
+							-- Local variable might become Void.
 						if l_reinitialized_variable = result_name_id then
-							context.set_result
+							context.remove_result_scope
 						elseif l_reinitialized_variable > 0 then
-							context.set_local (l_reinitialized_variable)
+							context.remove_local_scope (l_reinitialized_variable)
 						end
+					end
+						-- The variable is initialized.
+					if l_reinitialized_variable = result_name_id then
+						context.set_result
+					elseif l_reinitialized_variable > 0 then
+						context.set_local (l_reinitialized_variable)
 					end
 				end
 			end
@@ -6394,6 +6389,9 @@ feature -- Implementation
 			e: like error_level
 			exit_as: EXPR_AS
 			i: detachable ITERATION_AS
+			local_info: LOCAL_INFO
+			local_type: TYPE_A
+			iteration_cursor_type: TYPE_A
 		do
 			has_loop := True
 			l_needs_byte_node := is_byte_node_enabled
@@ -6412,6 +6410,19 @@ feature -- Implementation
 				if l_needs_byte_node and then attached {BYTE_LIST [BYTE_NODE]} last_byte_node as iteration_part then
 					l_loop.set_iteration_initialization (iteration_part)
 				end
+					-- Record the type of the cursor that is used to drive the loop.
+				iteration_cursor_type := last_type
+				if iteration_cursor_type /= Void then
+					local_info := context.object_test_local (l_as.iteration.identifier.name_id)
+				end
+				if local_info /= Void then
+						-- Record original type of the cursor that is visible to the user.
+					local_type := local_info.type
+				end
+			end
+			if local_info = Void then
+					-- There was an error or there is no iteration part, so we do not care which local info to modify.
+				create local_info
 			end
 			if l_as.from_part /= Void then
 					-- Type check the from part
@@ -6444,8 +6455,10 @@ feature -- Implementation
 			end
 
 			if i /= Void then
-					-- Check iteration exit condition.
+					-- Check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
+				local_info.set_type (iteration_cursor_type)
 				i.exit_condition.process (Current)
+				local_info.set_type (local_type)
 				if last_type /= Void then
 						-- Check if it is a boolean expression.
 					if not last_type.actual_type.is_boolean then
@@ -6520,9 +6533,11 @@ feature -- Implementation
 			end
 
 			if i /= Void then
-					-- Generate cursor movement.
+					-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
 				e := error_level
+				local_info.set_type (iteration_cursor_type)
 				i.advance.process (Current)
+				local_info.set_type (local_type)
 				if error_level = e and then l_needs_byte_node then
 					create l_list.make (1)
 					l_list.extend (last_byte_node)
@@ -6557,6 +6572,9 @@ feature -- Implementation
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)
 		local
 			iteration_as: ITERATION_AS
+			local_info: LOCAL_INFO
+			local_type: TYPE_A
+			iteration_cursor_type: TYPE_A
 			exit_as: EXPR_AS
 			iteration_cursor_scope: INTEGER
 			iteration_code: detachable BYTE_LIST [BYTE_NODE]
@@ -6577,8 +6595,21 @@ feature -- Implementation
 			iteration_cursor_scope := context.scope
 				-- Process Iteration part.
 			iteration_as.process (Current)
+				-- Remember generated code.
 			if is_byte_node_enabled and then attached {BYTE_LIST [BYTE_NODE]} last_byte_node as iteration_part then
 				iteration_code := iteration_part
+			end
+				-- Record the type of the cursor that is used to drive the loop.
+			iteration_cursor_type := last_type
+			if iteration_cursor_type /= Void then
+				local_info := context.object_test_local (l_as.iteration.identifier.name_id)
+			end
+			if local_info /= Void then
+					-- Record original type of the cursor that is visible to the user.
+				local_type := local_info.type
+			else
+					-- There was an error, so we do not care where to set the type.
+				create local_info
 			end
 			if l_as.invariant_part /= Void then
 					-- Type check the invariant loop
@@ -6609,8 +6640,10 @@ feature -- Implementation
 				end
 			end
 
-				-- Type check iteration exit condition.
+				-- Type check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
+			local_info.set_type (iteration_cursor_type)
 			iteration_as.exit_condition.process (Current)
+			local_info.set_type (local_type)
 			if last_type /= Void then
 					-- Check if it is a boolean expression
 				if not last_type.actual_type.is_boolean then
@@ -6696,8 +6729,10 @@ feature -- Implementation
 			end
 			context.set_scope (s)
 
-				-- Generate cursor movement.
+				-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
+			local_info.set_type (iteration_cursor_type)
 			iteration_as.advance.process (Current)
+			local_info.set_type (local_type)
 			if attached last_byte_node as advance_part then
 				advance_code := advance_part
 			else
@@ -6736,12 +6771,17 @@ feature -- Implementation
 		end
 
 	process_iteration_as (l_as: ITERATION_AS)
+			-- <Precursor>
+			-- Set `last_type' to the type on which features "start", "after" and "forth" are to be called.
 		local
 			l_needs_byte_node: BOOLEAN
 			local_id: ID_AS
 			local_name_id: INTEGER
 			local_type: TYPE_A
 			local_info: LOCAL_INFO
+			iteration_cursor_type: TYPE_A
+			initialization_code: BYTE_LIST [INSTR_B]
+			assign_b: ASSIGN_B
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -6783,29 +6823,69 @@ feature -- Implementation
 				elseif not last_type.associated_class.conform_to (i) then
 					error_handler.insert_error (create {LOOP_ITERATION_NOT_ITERABLE_ERROR}.make (context, last_type, i.actual_type, local_id))
 				else
-						-- Evaluate a type of a cursor.
-					local_type := c.actual_type.evaluated_type_in_descendant (i, last_type.associated_class, Void).instantiation_in (last_type, i.class_id)
-					local_type := local_type.as_attached_in (context.current_class)
-					if current_feature.written_in = context.current_class.class_id then
-						Instantiator.dispatch (local_type, context.current_class)
-					end
-						-- Add the supplier in the feature_dependance list.
-					context.supplier_ids.add_supplier (c)
-						-- Avoid generating new object test local record when processing loop body multiple times.
-					local_info := context.unchecked_object_test_local (local_id)
-					if local_info = Void then
-						create local_info
+						-- Save `last_type' for evaluation of `iteration_cursor_type'.
+					iteration_cursor_type := last_type
+						-- Type check cursor creation code.
+					l_as.cursor_expression.process (Current)
+					local_type := last_type
+					if local_type /= Void then
+						local_type := local_type.as_attached_in (context.current_class)
+						if not last_type.conform_to (context.current_class, local_type) then
+error_handler.insert_error (create {LOOP_ITERATION_NOT_ITERABLE_ERROR}.make (context, last_type, i.actual_type, local_id))
+						elseif not last_type.associated_class.conform_to (c) then
+error_handler.insert_error (create {LOOP_ITERATION_NOT_ITERABLE_ERROR}.make (context, last_type, i.actual_type, local_id))
+						else
+								-- Evaluate a type of a cursor.
+							iteration_cursor_type := c.actual_type.evaluated_type_in_descendant
+								(i, iteration_cursor_type.associated_class, Void).instantiation_in (iteration_cursor_type, i.class_id)
+						end
+						if current_feature.written_in = context.current_class.class_id then
+							Instantiator.dispatch (local_type, context.current_class)
+							if iteration_cursor_type /= Void then
+								Instantiator.dispatch (iteration_cursor_type, context.current_class)
+							end
+						end
+							-- Avoid generating new object test local record when processing loop body multiple times.
+						local_info := context.unchecked_object_test_local (local_id)
+						if local_info = Void then
+							create local_info
+							local_info.set_type (local_type)
+							local_info.set_position (context.next_object_test_local_position)
+							context.add_object_test_local (local_info, local_id)
+							local_info.set_is_used (True)
+						end
+						if is_byte_node_enabled then
+							create initialization_code.make (2)
+							if attached {EXPR_B} last_byte_node as e then
+								create assign_b
+								assign_b.set_source (e)
+								assign_b.set_target (
+									create {OBJECT_TEST_LOCAL_B}.make (
+										local_info.position,
+										current_feature.body_index,
+										local_type
+									)
+								)
+								assign_b.set_line_number (l_as.start_location.line)
+								initialization_code.extend (assign_b)
+							end
+						end
+							-- Make iteration variable visible to the loop.
+						context.add_object_test_instruction_scope (local_id)
+							-- Process AST tree that initializes the iteration.
+						local_info.set_type (iteration_cursor_type)
+						l_as.initialization.process (Current)
 						local_info.set_type (local_type)
-						local_info.set_position (context.next_object_test_local_position)
-						context.add_object_test_local (local_info, local_id)
-						local_info.set_is_used (True)
+						if is_byte_node_enabled then
+							if attached {INSTR_B} last_byte_node as b then
+								initialization_code.extend (b)
+							end
+							last_byte_node := initialization_code
+						end
+							-- Set `last_type' to the type that is used to call
+							-- features in the automatically generated code.
+						last_type := iteration_cursor_type
 					end
-						-- Make iteration variable visible to the loop.
-					context.add_object_test_instruction_scope (local_id)
-						-- Process AST tree that initializes the iteration.
-						-- Make the checker happy to see that the target of assignment is writable at this time.
-					is_object_test_local_initializing := True
-					l_as.initialization.process (Current)
 				end
 			end
 		end

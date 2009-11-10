@@ -225,12 +225,16 @@ feature -- Evaluation: Access
 		require
 			evl_attached: evl /= Void
 			evl_expression_is_current: evl.expression = Current
+		local
+			e: like evaluations
 		do
-			if evaluations = Void then
-				create evaluations.make (1)
-				evaluations.compare_objects
+			e := evaluations
+			if e = Void then
+				create e.make (1)
+				e.compare_objects
+				evaluations := e
 			end
-			evaluations.extend (evl)
+			e.extend (evl)
 		end
 
 	unregister_evaluation (evl: DBG_EXPRESSION_EVALUATION)
@@ -239,11 +243,11 @@ feature -- Evaluation: Access
 			evl_attached: evl /= Void
 			evl_expression_is_current: evl.expression = Current
 		do
-			if evaluations /= Void then
-				evaluations.start
-				evaluations.search (evl)
-				if not evaluations.exhausted then
-					evaluations.remove
+			if attached evaluations as e then
+				e.start
+				e.search (evl)
+				if not e.exhausted then
+					e.remove
 				end
 			end
 		end
@@ -256,12 +260,12 @@ feature {NONE} -- Evaluation: access
 	reset_evaluations
 			-- Reset expression evaluations
 		do
-			if evaluations /= Void then
+			if attached evaluations as e then
 					--| We reset the evaluations data and analyses.
-				evaluations.do_all (agent {DBG_EXPRESSION_EVALUATION}.reset)
+				e.do_all (agent {DBG_EXPRESSION_EVALUATION}.reset)
 			end
 		ensure
-			evaluations_resetted: evaluations /= Void implies evaluations.for_all (agent {DBG_EXPRESSION_EVALUATION}.unevaluated)
+			evaluations_resetted: attached evaluations as l_e implies l_e.for_all (agent {DBG_EXPRESSION_EVALUATION}.unevaluated)
 		end
 
 feature -- Analysis: Status report

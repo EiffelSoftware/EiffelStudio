@@ -30,18 +30,9 @@ feature {NONE} -- Creation
 			-- Create a new instance to manage `n' different register types.
 		require
 			n_positive: n > 0
-		local
-			i: INTEGER
 		do
-			create managers.make (1, n)
-			from
-				i := n
-			until
-				i <= 0
-			loop
-				managers.put (create {REGISTER_MANAGER}.make, i)
-				i := i - 1
-			end
+			create managers.make_filled (default_register_manager, n + 1)
+				-- Make managers One-based indexing by adding 1 to required allocation.
 		ensure
 			count_set: count = n
 		end
@@ -51,7 +42,7 @@ feature -- Status report
 	count: INTEGER
 			-- Number of register types
 		do
-			Result := managers.count
+			Result := managers.count - 1
 		end
 
 	needed_registers_by_clevel (clevel: INTEGER): INTEGER
@@ -79,7 +70,9 @@ feature -- Duplication
 				i <= 1
 			loop
 				i := i - 1
-				m.put (m.item (i).duplicate, i)
+				if m [i] /= default_register_manager then
+					m.put (m.item (i).duplicate, i)
+				end
 			end
 		end
 
@@ -87,22 +80,16 @@ feature -- Modification
 
 	clear_all
 			-- Clear current data structure
-		local
-			i: INTEGER
 		do
-			from
-				i := count
-			until
-				i <= 0
-			loop
-				managers.item (i).clear_all
-				i := i - 1
-			end
+			managers.fill_with (default_register_manager, 0, count)
 		end
 
 	get_register (ctype: INTEGER): INTEGER
 			-- First free register of type `ctype'
 		do
+			if managers.item (ctype) = default_register_manager then
+				managers.put (default_register_manager.duplicate, ctype)
+			end
 			Result := managers.item (ctype).get_register
 		end
 
@@ -114,8 +101,14 @@ feature -- Modification
 
 feature {NONE} -- Implementation
 
-	managers: ARRAY [REGISTER_MANAGER];
+	managers: SPECIAL [REGISTER_MANAGER];
 			-- The available registers (one entry per C type)
+
+	default_register_manager: REGISTER_MANAGER
+			-- Default register manager.
+		once
+			create Result.make
+		end
 
 feature {REGISTER_SERVER} -- Modification
 
@@ -133,7 +126,7 @@ invariant
 	managers_attached: managers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -146,22 +139,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

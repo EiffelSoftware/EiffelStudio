@@ -35,8 +35,10 @@ create {NETWORK_STREAM_SOCKET}
 	create_from_descriptor
 
 create
-
 	make, make_client_by_port, make_server_by_port
+
+create {NETWORK_STREAM_SOCKET}
+	make_from_descriptor_and_address
 
 feature -- Initialization
 
@@ -100,6 +102,26 @@ feature -- Initialization
 			address.set_host_address (h_address);
 			address.set_port (a_port);
 			bind
+		end
+
+feature {NETWORK_STREAM_SOCKET} -- Initialization
+
+	make_from_descriptor_and_address (a_fd: INTEGER; a_address: like address)
+		require
+			a_fd_positive: a_fd > 0
+			a_address_positive: a_address /= Void
+		do
+			descriptor:= a_fd
+			address := a_address
+			family := a_address.family
+			descriptor_available := True
+			is_open_read := True
+			is_open_write := True
+			timeout := default_timeout
+		ensure
+			address_set: address = a_address
+			family_valid: family = a_address.family;
+			opened_all: is_open_write and is_open_read
 		end
 
 feature -- Status report

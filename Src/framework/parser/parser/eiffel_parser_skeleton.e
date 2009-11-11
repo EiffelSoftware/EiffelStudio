@@ -390,16 +390,20 @@ feature -- Settings
 
 feature -- Modification
 
-	insert_supplier (name: STRING; location: LOCATION_AS)
+	insert_supplier (name: STRING; location: ID_AS)
+			-- Insert supplier of the given `name' at the given `location'.
 		require
 			name_attached: name /= Void
-			location_attached: location /= Void
 		local
 			id: ID_AS
 		do
-			create id.initialize (name)
-			id.set_position (location.line, location.column, location.position, location.location_count)
-			suppliers.insert_supplier_id (id)
+				-- Similar to `new_class_type' the suppliers are not recorded
+				-- if the given `location' is Void.
+			if attached location as l then
+				create id.initialize (name)
+				id.set_position (l.line, l.column, l.position, l.location_count)
+				suppliers.insert_supplier_id (id)
+			end
 		end
 
 feature {NONE} -- Implementation

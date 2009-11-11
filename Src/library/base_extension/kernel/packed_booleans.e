@@ -49,6 +49,18 @@ feature -- Status Report
 			Result := (lower <= i) and (i <= upper)
 		end
 
+	same_items (other: like Current): BOOLEAN
+			-- Is `other' same as Current?
+		local
+			a, oa: like area
+		do
+			a := area
+			oa := other.area
+			if a.count = oa.count then
+				Result := a.same_items (oa, 0, 0, a.count)
+			end
+		end
+
 feature -- Measurement
 
 	lower: INTEGER = 0

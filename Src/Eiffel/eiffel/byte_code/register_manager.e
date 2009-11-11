@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			registers := other.registers.twin
 			needed_registers := other.needed_registers
 		ensure
-			registers_set: registers.is_equal (other.registers)
+			registers_set: registers.same_items (other.registers)
 			needed_registers_set: needed_registers = other.needed_registers
 		end
 

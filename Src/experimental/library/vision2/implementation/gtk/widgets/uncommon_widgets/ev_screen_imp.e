@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 
 	destroy
 		do
-			{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
+			dispose
 			set_is_destroyed (True)
 		end
 

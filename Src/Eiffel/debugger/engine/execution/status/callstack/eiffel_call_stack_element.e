@@ -127,11 +127,7 @@ feature -- Properties
 		do
 			locs := locals
 			if locs /= Void then
-				if attached routine.locals as lst then
-					pos := lst.count + i
-				else
-					pos := i
-				end
+				pos := routine.locals_count + i
 				if locs.valid_index (pos) then
 					Result := locs.i_th (pos)
 				end

@@ -89,7 +89,7 @@ feature -- Insertion
 		local
 			u: ENTRY
 			local_class_types: TYPE_LIST
-			i, nb: INTEGER
+			i: INTEGER
 			l_area: SPECIAL [DESCRIPTOR]
 		do
 			if f.has_entry then
@@ -123,7 +123,7 @@ feature -- Insertion
 			u: ENTRY
 			ri: ROUT_INFO
 			origin: INTEGER
-			offset, nb_routines, i, nb: INTEGER
+			offset, nb_routines, i: INTEGER
 			l_area: SPECIAL [DESCRIPTOR]
 			desc: DESCRIPTOR
 			du: DESC_UNIT

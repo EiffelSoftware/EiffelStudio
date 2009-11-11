@@ -16,7 +16,7 @@ inherit
 			{ANY} first, start, after, forth, item, is_empty, count,
 				remove, cursor, go_to, wipe_out, extend, valid_index,
 				valid_cursor, extendible, prunable, readable, index, off,
-				writable
+				writable, i_th
 			{TYPE_LIST} all
 		end
 

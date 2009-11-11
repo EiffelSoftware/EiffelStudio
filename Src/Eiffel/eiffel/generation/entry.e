@@ -91,7 +91,7 @@ feature -- Previously in POLY_UNIT
 
 feature -- previously in POLY_UNIT
 
-	entry (class_type: CLASS_TYPE): ENTRY
+	entry (class_type: CLASS_TYPE; a_alias: BOOLEAN): ENTRY
 			-- Entry in a poly-table for final mode
 		require
 			class_type_not_void: class_type /= Void

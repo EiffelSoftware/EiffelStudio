@@ -121,17 +121,14 @@ feature -- previously in ROUT_UNIT
 			Result := System.class_of_id (written_in)
 		end
 
-	entry (class_type: CLASS_TYPE): ROUT_ENTRY
+	entry (class_type: CLASS_TYPE; a_alias: BOOLEAN): ROUT_ENTRY
 			-- Entry for a routine
+			-- If `a_alias' then reuse `Current'.
 		local
 			l_written_type_id: INTEGER
+			l_pattern_id: INTEGER
 			l_access_type_id: INTEGER
 		do
-			create Result
-			Result.set_type_id (class_type.type_id)
-			Result.set_feature_id (feature_id)
-			Result.set_type (feature_type (class_type))
-			Result.set_body_index (body_index)
 debug
 io.error.put_string ("arg = ")
 io.error.put_string (class_type.type.associated_class.name)
@@ -140,8 +137,8 @@ io.error.put_string ("cur = ")
 io.error.put_string (access_class.name)
 io.error.put_new_line
 end
+
 			l_access_type_id := access_class.meta_type (class_type).type_id
-			Result.set_access_type_id (l_access_type_id)
 
 				-- Generate pattern info for result.
 			if written_in /= access_in then
@@ -149,9 +146,21 @@ end
 			else
 				l_written_type_id := l_access_type_id
 			end
+			l_pattern_id := pattern_table.c_pattern_id_in (pattern_id, System.class_type_of_id (l_written_type_id))
 
-			Result.set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, System.class_type_of_id (l_written_type_id)))
+			if a_alias then
+				Result := Current
+					-- If `a_alias' then we can safely reuse `Current'.
+			else
+				create Result
+			end
 
+			Result.set_type_id (class_type.type_id)
+			Result.set_feature_id (feature_id)
+			Result.set_type (feature_type (class_type))
+			Result.set_body_index (body_index)
+			Result.set_pattern_id (l_pattern_id)
+			Result.set_access_type_id (l_access_type_id)
 			if is_attribute then
 				Result.set_is_attribute
 			end
@@ -214,7 +223,7 @@ feature -- from ROUT_ENTRY
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -227,22 +236,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ROUT_ENTRY

@@ -265,7 +265,27 @@ feature -- Properties
 	locals: EIFFEL_LIST [TYPE_DEC_AS]
 			-- Locals for current feature
 		do
-		end;
+		end
+
+	locals_count: INTEGER
+			-- Count of local variables
+		do
+			if attached locals as lst then
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					if
+						attached lst.item as l_dec and then
+						attached l_dec.id_list as l_id_list
+					then
+						Result := Result + l_id_list.count
+					end
+					lst.forth
+				end
+			end
+		end
 
 	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
@@ -275,8 +295,8 @@ feature -- Properties
 	argument_count: INTEGER
 			-- Number of arguments of the feature
 		do
-			if arguments /= Void then
-				Result := arguments.count;
+			if attached arguments as l_args then
+				Result := l_args.count
 			end;
 		end;
 

@@ -12,7 +12,7 @@ class
 inherit
 	ANY
 		redefine
-			copy
+			copy, is_equal
 		end
 
 create
@@ -49,15 +49,20 @@ feature -- Status Report
 			Result := (lower <= i) and (i <= upper)
 		end
 
-	same_items (other: like Current): BOOLEAN
-			-- Is `other' same as Current?
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- <Precursor>
 		local
 			a, oa: like area
 		do
-			a := area
-			oa := other.area
-			if a.count = oa.count then
-				Result := a.same_items (oa, 0, 0, a.count)
+			Result := other = Current
+			if not Result then
+				a := area
+				oa := other.area
+				if a.count = oa.count then
+					Result := a.same_items (oa, 0, 0, a.count)
+				end
 			end
 		end
 

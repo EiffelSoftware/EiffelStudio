@@ -5,6 +5,6 @@ copy_raw	test.e $CLUSTER test.e
 copy_sub	Ace $TEST Ace
 
 compile_melted
-compile_result	validity_error TEST VEEN
+compile_result	validity_error TEST VEEN VEEN
 
 test_end

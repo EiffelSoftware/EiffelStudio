@@ -97,15 +97,15 @@ feature -- Insertion
 				if u /= Void then
 					from
 						local_class_types := class_types
-						local_class_types.start
 						l_area := area
-						nb := count
+						i := count - 1
 					until
-						i = nb
+						i < 0
 					loop
-						l_area.item (i).set_invariant_entry (u.entry (local_class_types.item))
-						local_class_types.forth
-						i := i + 1
+							-- `i = 0' is used to signify last iteration so that the entry
+							-- object may be aliased without side effect.
+						l_area.item (i).set_invariant_entry (u.entry (local_class_types.i_th (i + 1), i = 0))
+						i := i - 1
 					end
 				end
 			end
@@ -154,9 +154,9 @@ feature -- Insertion
 						local_class_types := class_types
 						local_class_types.start
 						l_area := area
-						nb := count
+						i := count - 1
 					until
-						i = nb
+						i < 0
 					loop
 							-- Get the descriptor of the class type.
 						desc := l_area.item (i)
@@ -175,9 +175,10 @@ feature -- Insertion
 						check
 							du.valid_index (offset)
 						end
-						du.put (u.entry (local_class_types.item), offset)
-						local_class_types.forth
-						i := i + 1
+							-- `i = 0' is used to signify last iteration so that the entry
+							-- object may be aliased without side effect.
+						du.put (u.entry (local_class_types.i_th (i + 1), i = 0), offset)
+						i := i - 1
 					end
 				end
 			end

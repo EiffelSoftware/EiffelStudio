@@ -1170,7 +1170,7 @@ feature -- Label texts
 
 	l_external_command_running: STRING_32
 		do Result := locale.translation("An external command is currently running.%N%
-								%It need to be terminated before EiffelStudio can exit.%N%N%
+								%It needs to be terminated before EiffelStudio can exit.%N%N%
 								%Terminate external command and exit?%N")	end
 
 	l_debugger_catcall_warning_message: STRING_32		do Result := locale.translation ("CatCall detected") end

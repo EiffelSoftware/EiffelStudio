@@ -82,7 +82,6 @@ rt_private EIF_INTEGER_16 wshort(void);
 rt_private int32 wint32(void);
 rt_private uint32 wuint32(void);
 rt_private EIF_TYPE_INDEX *wtype_array(EIF_TYPE_INDEX *);
-rt_private char *wclass_name(void);
 
 /* Writing constants (same as in interp.c!)*/
 rt_private void write_long(char *where, EIF_INTEGER value);				/* Write long constant */
@@ -1038,21 +1037,6 @@ rt_private EIF_TYPE_INDEX *wtype_array(EIF_TYPE_INDEX *target)
 		memcpy (tp,cid,cnt*sizeof(EIF_TYPE_INDEX));
 		return tp;
 	}
-}
-
-rt_private char *wclass_name(void)
-{
-	/* Next class name. Create new string. */
-
-	short str_count;		/* String count */
-	char *str;			/* String to allocate */
-
-	str_count = wshort();
-	SAFE_ALLOC(str, char, str_count + 1);
-	wread(str, str_count * sizeof(char));
-	str[str_count] = '\0';
-
-	return str;
 }
 
 rt_private void write_long(char *where, EIF_INTEGER value)

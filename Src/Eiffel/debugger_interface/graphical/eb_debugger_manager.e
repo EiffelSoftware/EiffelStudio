@@ -944,15 +944,32 @@ feature -- tools management
 		require
 			a_window_attached: a_window /= Void
 			a_window_is_interface_usable: a_window.is_interface_usable
+		local
+			l_watch_tool: ES_WATCH_TOOL
 		do
-				--| IMPORTANT: The following call has the side affect of creating the tool, do not remove it!				
-			if attached {ES_WATCH_TOOL} a_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False) as l_watch_tool then
-				if a_tool /= Void then
-					l_watch_tool.content.set_tab_with (a_tool.content, False)
-				else
-					l_watch_tool.show (False)
-				end
+			l_watch_tool := create_new_watch_tool (a_window)
+			if a_tool /= Void then
+				l_watch_tool.content.set_tab_with (a_tool.content, False)
+			else
+				l_watch_tool.show (False)
 			end
+		end
+
+	create_new_watch_tool (a_window: EB_DEVELOPMENT_WINDOW): ES_WATCH_TOOL
+			-- Create a new watch tool
+		require
+			a_window_attached: a_window /= Void
+		local
+			l_count: NATURAL_8
+		do
+			l_count := a_window.shell_tools.editions_of_tool ({ES_WATCH_TOOL}, False) + 1
+			if attached {ES_WATCH_TOOL} a_window.shell_tools.tool_edition ({ES_WATCH_TOOL}, l_count) as l_watch_tool then
+			 	Result := l_watch_tool
+			 else
+			 	check False end
+			 end
+		ensure
+			not_void: Result /= Void
 		end
 
 feature -- Windows observer
@@ -1495,7 +1512,7 @@ feature -- Status setting
 				until
 					watch_tool_list.count >= nwt --| Be sure to use `watch_tool_list' and not the cached list
 				loop
-					create_new_watch_tool_tabbed_with (debugging_window, l_tool)
+					l_tool := create_new_watch_tool (debugging_window)
 				end
 					-- `watch_tool_list' has changed, so fetch a new cache
 				l_wt_lst := watch_tool_list

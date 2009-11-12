@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract inferface for tools/UI where stones can set and synchronized.
 	]"
@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_data: !G; a_description: !like description)
+	make (a_data: attached G; a_description: attached like description)
 			-- Initializes a history stack item using a piece of data and a description.
 			--
 			-- `a_data': The history item's context data.
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	description: !READABLE_STRING_32
+	description: attached READABLE_STRING_32
 			-- <Precursor>
 
-	data: !G
+	data: attached G
 			-- <Precursor>
 
 feature -- Status report
@@ -44,12 +44,12 @@ feature -- Status report
 	is_applied: BOOLEAN
 			-- <Precursor>
 
-	is_valid_data (a_data: !ANY): BOOLEAN
+	is_valid_data (a_data: attached ANY): BOOLEAN
 			-- <Precursor>
 		do
-			Result := {l_data: G} a_data
+			Result := attached {G} a_data as l_data
 		ensure then
-			result_ensures_conformance: {l_result: G} a_data
+			result_ensures_conformance: attached {G} a_data as l_result
 		end
 
 feature {HISTORY_CONTAINER_I} -- Basic operations
@@ -113,7 +113,7 @@ feature {NONE} -- Basic operations
 			is_applied_unchaged: is_applied = old is_applied
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

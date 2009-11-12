@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 		]"
@@ -15,10 +15,10 @@ inherit
 
 feature -- Access
 
-	undo_items: !DS_STACK [!HISTORY_STACK_ITEM_I]
+	undo_items: attached DS_STACK [attached HISTORY_STACK_ITEM_I]
 			-- <Precursor>
 		local
-			l_result: !DS_ARRAYED_STACK [!HISTORY_STACK_ITEM_I]
+			l_result: attached DS_ARRAYED_STACK [attached HISTORY_STACK_ITEM_I]
 		do
 			create l_result.make_default
 			l_result.copy (undo_stack)
@@ -27,10 +27,10 @@ feature -- Access
 			result_not_cached: Result /~ undo_items
 		end
 
-	redo_items: !DS_STACK [!HISTORY_STACK_ITEM_I]
+	redo_items: attached DS_STACK [attached HISTORY_STACK_ITEM_I]
 			-- <Precursor>
 		local
-			l_result: !DS_ARRAYED_STACK [!HISTORY_STACK_ITEM_I]
+			l_result: attached DS_ARRAYED_STACK [attached HISTORY_STACK_ITEM_I]
 		do
 			create l_result.make_default
 			l_result.copy (redo_stack)
@@ -41,10 +41,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	undo_stack: !DS_ARRAYED_STACK [!HISTORY_STACK_ITEM_I]
+	undo_stack: attached DS_ARRAYED_STACK [attached HISTORY_STACK_ITEM_I]
 			-- The actual stack used to maintain undoable history items
 		do
-			if {l_result: DS_ARRAYED_STACK [!HISTORY_STACK_ITEM_I]} internal_undo_stack then
+			if attached {DS_ARRAYED_STACK [attached HISTORY_STACK_ITEM_I]} internal_undo_stack as l_result then
 				Result := l_result
 			else
 				create Result.make_default
@@ -54,10 +54,10 @@ feature {NONE} -- Access
 			result_consistent: Result = undo_stack
 		end
 
-	redo_stack: !DS_ARRAYED_STACK [!HISTORY_STACK_ITEM_I]
+	redo_stack: attached DS_ARRAYED_STACK [attached HISTORY_STACK_ITEM_I]
 			-- The paired redo stack used to maintain redoable history items
 		do
-			if {l_result: DS_ARRAYED_STACK [!HISTORY_STACK_ITEM_I]} internal_redo_stack then
+			if attached {DS_ARRAYED_STACK [attached HISTORY_STACK_ITEM_I]} internal_redo_stack as l_result then
 				Result := l_result
 			else
 				create Result.make_default
@@ -75,7 +75,7 @@ feature -- Status report
 			Result := True
 		end
 
-	has (a_item: !HISTORY_STACK_ITEM_I): BOOLEAN
+	has (a_item: attached HISTORY_STACK_ITEM_I): BOOLEAN
 			-- <Precursor>
 		local
 			l_undo: like internal_undo_stack
@@ -121,12 +121,12 @@ feature -- Status report
 
 feature -- Query
 
-	top_undo_items (a_count: NATURAL): !DS_LINEAR [!HISTORY_STACK_ITEM_I]
+	top_undo_items (a_count: NATURAL): attached DS_LINEAR [attached HISTORY_STACK_ITEM_I]
 			-- <Precursor>
 		local
-			l_result: DS_ARRAYED_LIST [!HISTORY_STACK_ITEM_I]
+			l_result: DS_ARRAYED_LIST [attached HISTORY_STACK_ITEM_I]
 			l_undo: like internal_undo_stack
-			l_undo_copy: DS_ARRAYED_STACK [!HISTORY_STACK_ITEM_I]
+			l_undo_copy: DS_ARRAYED_STACK [attached HISTORY_STACK_ITEM_I]
 			i: INTEGER
 		do
 			l_undo := internal_undo_stack
@@ -150,12 +150,12 @@ feature -- Query
 			Result := l_result
 		end
 
-	top_redo_items (a_count: NATURAL): !DS_LINEAR [!HISTORY_STACK_ITEM_I]
+	top_redo_items (a_count: NATURAL): attached DS_LINEAR [attached HISTORY_STACK_ITEM_I]
 			-- <Precursor>
 		local
-			l_result: DS_ARRAYED_LIST [!HISTORY_STACK_ITEM_I]
+			l_result: DS_ARRAYED_LIST [attached HISTORY_STACK_ITEM_I]
 			l_redo: like internal_redo_stack
-			l_redo_copy: DS_ARRAYED_STACK [!HISTORY_STACK_ITEM_I]
+			l_redo_copy: DS_ARRAYED_STACK [attached HISTORY_STACK_ITEM_I]
 			i: INTEGER
 		do
 			l_redo := internal_redo_stack
@@ -181,10 +181,10 @@ feature -- Query
 
 feature -- Extension
 
-	put (a_item: !HISTORY_STACK_ITEM_I)
+	put (a_item: attached HISTORY_STACK_ITEM_I)
 			-- <Precursor>
 		local
-			l_redo: !like redo_stack
+			l_redo: attached like redo_stack
 		do
 			a_item.set_owner (Current)
 			undo_stack.force (a_item)
@@ -205,9 +205,9 @@ feature -- Basic operations
 	clear
 			-- <Precursor>
 		local
-			l_stack: !DS_ARRAYED_STACK [!HISTORY_STACK_ITEM_I]
-			l_undo: !like undo_stack
-			l_redo: !like redo_stack
+			l_stack: attached DS_ARRAYED_STACK [attached HISTORY_STACK_ITEM_I]
+			l_undo: attached like undo_stack
+			l_redo: attached like redo_stack
 		do
 			l_undo := undo_stack
 			l_redo := redo_stack
@@ -236,9 +236,9 @@ feature -- Basic operations
 	undo
 			-- <Precursor>
 		local
-			l_undo: !like undo_stack
-			l_redo: !like redo_stack
-			l_item: ?HISTORY_STACK_ITEM_I
+			l_undo: attached like undo_stack
+			l_redo: attached like redo_stack
+			l_item: detachable HISTORY_STACK_ITEM_I
 			l_undone: BOOLEAN
 			retried: BOOLEAN
 		do
@@ -278,9 +278,9 @@ feature -- Basic operations
 	redo
 			-- <Precursor>
 		local
-			l_undo: !like undo_stack
-			l_redo: !like redo_stack
-			l_item: ?HISTORY_STACK_ITEM_I
+			l_undo: attached like undo_stack
+			l_redo: attached like redo_stack
+			l_item: detachable HISTORY_STACK_ITEM_I
 			l_redone: BOOLEAN
 			retried: BOOLEAN
 		do
@@ -314,7 +314,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	clean_item (a_item: !HISTORY_STACK_ITEM_I)
+	clean_item (a_item: attached HISTORY_STACK_ITEM_I)
 			-- Cleans a history item to ensure it is disposed of correctly.
 			--
 			-- `a_item': A history item to clean up.
@@ -322,7 +322,7 @@ feature {NONE} -- Basic operations
 			retried: BOOLEAN
 		do
 			if retried then
-				if {l_disposable: DISPOSABLE} a_item then
+				if attached {DISPOSABLE} a_item as l_disposable then
 					l_disposable.dispose
 				end
 			end
@@ -336,15 +336,15 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_undo_stack: ?like undo_stack
+	internal_undo_stack: detachable like undo_stack
 			-- Cached version of `undo_stack'.
 			-- Note: Do not use directly!
 
-	internal_redo_stack: ?like redo_stack
+	internal_redo_stack: detachable like redo_stack
 			-- Cached version of `redo_stack'.
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

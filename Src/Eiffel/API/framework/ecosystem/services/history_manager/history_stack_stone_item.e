@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 		]"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_stonable: !ES_STONABLE; a_old_stone: like stone)
+	make (a_stonable: attached ES_STONABLE; a_old_stone: like stone)
 			-- Initializes a stone based history stack item.
 			--
 			-- `a_stonable': The stoneable entity to control when undoing/redoing.
@@ -64,7 +64,7 @@ feature {HISTORY_OWNER_I} -- Status report
 
 feature {NONE} -- Query
 
-	stone_description (a_stone: ?STONE): !STRING_32
+	stone_description (a_stone: detachable STONE): attached STRING_32
 			-- Creates a stone description
 		do
 			if a_stone = Void then
@@ -102,7 +102,7 @@ feature {NONE} -- Basic operations
 	internal_undo
 			-- <Precursor>
 		local
-			l_stone: ?like stone
+			l_stone: detachable like stone
 		do
 			l_stone := stone
 			stone := stonable.stone
@@ -118,7 +118,7 @@ feature {NONE} -- Basic operations
 	internal_redo
 			-- <Precursor>
 		local
-			l_stone: ?like stone
+			l_stone: detachable like stone
 		do
 			l_stone := stone
 			stone := stonable.stone
@@ -131,7 +131,7 @@ feature {NONE} -- Basic operations
 			description := stone_description (stone)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

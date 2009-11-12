@@ -399,9 +399,9 @@ feature -- Modification
 		do
 				-- Similar to `new_class_type' the suppliers are not recorded
 				-- if the given `location' is Void.
-			if attached location as l then
+			if location /= Void then
 				create id.initialize (name)
-				id.set_position (l.line, l.column, l.position, l.location_count)
+				id.set_position (location.line, location.column, location.position, location.location_count)
 				suppliers.insert_supplier_id (id)
 			end
 		end

@@ -6708,11 +6708,8 @@ feature -- Implementation
 			if last_type /= Void then
 					-- Check if it is a boolean expression
 				if not last_type.actual_type.is_boolean then
-					create l_vwbe4
-					context.init_error (l_vwbe4)
-					l_vwbe4.set_type (last_type)
-					l_vwbe4.set_location (l_as.expression.end_location)
-					error_handler.insert_error (l_vwbe4)
+					error_handler.insert_error
+						(create {VWBE5}.make (last_type, l_as.expression.end_location, context))
 						-- Skip code generation for next parts.
 					iteration_code := Void
 				elseif iteration_code /= Void then
@@ -6817,10 +6814,13 @@ feature -- Implementation
 					-- Calculate the type of an iteration local.
 				context.find_iteration_classes
 				if not attached context.iterable_class as i then
+						-- Suitable class ITERABLE is not found.
 					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERABLE [G]", local_id))
 				elseif not attached context.iteration_cursor_class as c then
+						-- Suitable class ITERATION_CURSOR is not found.
 					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERATION_CURSOR [G]", local_id))
 				elseif not last_type.associated_class.conform_to (i) then
+						-- Iteration expression type does not conform to ITERABLE.
 					error_handler.insert_error (create {LOOP_ITERATION_NOT_ITERABLE_ERROR}.make (context, last_type, i.actual_type, local_id))
 				else
 						-- Save `last_type' for evaluation of `iteration_cursor_type'.
@@ -6829,11 +6829,16 @@ feature -- Implementation
 					l_as.cursor_expression.process (Current)
 					local_type := last_type
 					if local_type /= Void then
+							-- Use an attached variant of a cursor type if required.
 						local_type := local_type.as_attached_in (context.current_class)
-						if not last_type.conform_to (context.current_class, local_type) then
-error_handler.insert_error (create {LOOP_ITERATION_NOT_ITERABLE_ERROR}.make (context, last_type, i.actual_type, local_id))
-						elseif not last_type.associated_class.conform_to (c) then
-error_handler.insert_error (create {LOOP_ITERATION_NOT_ITERABLE_ERROR}.make (context, last_type, i.actual_type, local_id))
+						if not local_type.associated_class.conform_to (c) then
+								-- Type of a cursor does not conform to ITERATION_CURSOR.
+							error_handler.insert_error
+								(create {LOOP_ITERATION_NOT_ITERATION_CURSOR_ERROR}.make (context, last_type, local_id))
+						elseif not last_type.conform_to (context.current_class, local_type) then
+								-- Type of a cursor is not attached.
+							error_handler.insert_error
+								(create {LOOP_ITERATION_NOT_ATTACHED_ERROR}.make (context, last_type, local_id))
 						else
 								-- Evaluate a type of a cursor.
 							iteration_cursor_type := c.actual_type.evaluated_type_in_descendant

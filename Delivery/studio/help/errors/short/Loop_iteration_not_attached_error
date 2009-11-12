@@ -1,0 +1,3 @@
+Error: Type of the feature `new_cursor' called on an iteration expression
+  should be attached.
+What to do: make sure the type of `new_cursor' is attached.

@@ -14,8 +14,9 @@ inherit
 
 create
 	default_create
+
 create {EV_MODEL_GROUP}
-	list_make
+	list_make, make_filled
 
 feature -- Access
 

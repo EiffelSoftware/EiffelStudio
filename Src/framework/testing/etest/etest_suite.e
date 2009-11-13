@@ -304,7 +304,7 @@ feature {NONE} -- Events: project
 			-- Called when the Eiffel project is closed.
 		do
 			if project_access.is_initialized then
-				write_evaluator_root_class (create {ARRAYED_LIST [EIFFEL_CLASS_I]}.make (0))
+				write_evaluator_root_class (create {ARRAYED_LIST [EIFFEL_CLASS_I]}.make (0), False)
 			end
 		end
 
@@ -407,14 +407,16 @@ feature {NONE} -- Implementation
 					end
 					l_class_map.forth
 				end
-				write_evaluator_root_class (l_list)
+				write_evaluator_root_class (l_list, True)
 			end
 		end
 
-	write_evaluator_root_class (a_list: LIST [EIFFEL_CLASS_I])
+	write_evaluator_root_class (a_list: LIST [EIFFEL_CLASS_I]; a_create: BOOLEAN)
 			-- Write anchor root class with classes in given list.
 			--
 			-- `a_list': A list containing class names to be referenced in root class.
+			-- `a_create': True if creation of root class should be forced, otherwise it is only created
+			--             if the file already existed.
 		require
 			a_list_attached: a_list /= Void
 			project_initialized: project_access.is_initialized
@@ -428,22 +430,30 @@ feature {NONE} -- Implementation
 			create l_class_writer
 			l_system := project_access.project.system.system
 			l_dir_name := l_system.project_location.eifgens_cluster_path
-			if not file_system.directory_exists (l_dir_name) then
-				file_system.recursive_create_directory (l_dir_name)
-			end
 			create l_file_name.make_from_string (l_dir_name)
 			l_file_name.extend (l_class_writer.class_name.as_lower)
 			l_file_name.add_extension ("e")
 			create l_file.make (l_file_name)
-			if not l_file.exists then
+			if l_file.exists then
+				l_file.open_write
+			elseif a_create then
+				if not file_system.directory_exists (l_dir_name) then
+					file_system.recursive_create_directory (l_dir_name)
+				end
+				l_file.open_write
 				l_system.force_rebuild
 			end
-			l_file.open_write
 			if l_file.is_open_write then
 				l_class_writer.write_source (l_file, a_list)
 				l_file.close
-				if not l_system.is_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name) then
-					l_system.add_explicit_root (Void, l_class_writer.class_name, l_class_writer.root_feature_name)
+				if l_system.is_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name) then
+					if a_list.is_empty then
+						l_system.remove_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name)
+					end
+				else
+					if not a_list.is_empty then
+						l_system.add_explicit_root (Void, l_class_writer.class_name, l_class_writer.root_feature_name)
+					end
 				end
 			end
 		end

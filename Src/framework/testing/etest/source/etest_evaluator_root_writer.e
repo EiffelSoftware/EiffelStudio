@@ -34,8 +34,17 @@ feature -- Access
 	ancestor_names: ARRAY [STRING]
 			-- <Precursor>
 		do
-			Result := << {ETEST_CONSTANTS}.eqa_evaluator >>
+			if attached ancestor_names_cache as l_cache then
+				Result := l_cache
+			else
+				Result := << >>
+			end
 		end
+
+feature {NONE} -- Access
+
+	ancestor_names_cache: detachable ARRAY [STRING]
+			-- <Precursor>
 
 feature -- Basic operations
 
@@ -45,9 +54,16 @@ feature -- Basic operations
 			a_file_open_write: a_file.is_open_write
 		do
 			create stream.make (a_file)
+			if not a_list.is_empty then
+				ancestor_names_cache := << {ETEST_CONSTANTS}.eqa_evaluator >>
+			end
 			put_indexing
 			put_class_header
-			put_execute_test_routine
+			if a_list.is_empty then
+				put_launch_routine
+			else
+				put_execute_test_routine
+			end
 			put_anchor_routine (a_list)
 			put_class_footer
 			stream := Void
@@ -82,6 +98,24 @@ feature {NONE} -- Implementation
 			stream.put_new_line
 		end
 
+	put_launch_routine
+			-- Print `launch' routine if not inherited from EQA_EVALUATOR.
+		require
+			stream_valid: is_writing
+		do
+			stream.indent
+			stream.put_line ("launch")
+			stream.indent
+			stream.indent
+			stream.put_line ("-- Initialize `Current'")
+			stream.dedent
+			stream.put_line ("do")
+			stream.put_line ("end")
+			stream.dedent
+			stream.dedent
+			stream.put_new_line
+		end
+
 	put_anchor_routine (a_list: LIST [EIFFEL_CLASS_I])
 			-- Print references to test classes and important library classes to force their compilation.
 		require
@@ -102,17 +136,17 @@ feature {NONE} -- Implementation
 			stream.put_line ("l_type := {ANY}")
 
 			if not a_list.is_empty then
-			stream.put_line ("l_type := {EQA_EVALUATOR}")
-			stream.put_line ("l_type := {ITP_INTERPRETER}")
-			stream.put_line ("l_type := {EQA_EXTRACTED_TEST_SET}")
-			stream.put_line ("l_type := {EQA_COMMONLY_USED_ASSERTIONS}")
-			stream.put_line ("")
-			a_list.do_all (agent (a_class: EIFFEL_CLASS_I)
-				do
-					stream.put_string ("l_type := {EQA_TEST_EVALUATOR [")
-					stream.put_string (a_class.name)
-					stream.put_line ("]}")
-				end)
+				stream.put_line ("l_type := {EQA_EVALUATOR}")
+				stream.put_line ("l_type := {ITP_INTERPRETER}")
+				stream.put_line ("l_type := {EQA_EXTRACTED_TEST_SET}")
+				stream.put_line ("l_type := {EQA_COMMONLY_USED_ASSERTIONS}")
+				stream.put_line ("")
+				a_list.do_all (agent (a_class: EIFFEL_CLASS_I)
+					do
+						stream.put_string ("l_type := {EQA_TEST_EVALUATOR [")
+						stream.put_string (a_class.name)
+						stream.put_line ("]}")
+					end)
 			end
 			stream.dedent
 			stream.put_line ("end")

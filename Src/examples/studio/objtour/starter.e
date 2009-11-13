@@ -66,25 +66,25 @@ feature
 	first_value: REAL
 					-- A  value to be computed once: -6.5 (will be used)
 			once
-				Result := -6.5
+				Result := {REAL_32} -6.5
 			end;
 
 	second_value: REAL
 					-- A value to be computed once:  0.0 (will be used)
 			once
-				Result := 0.0
+				Result := {REAL_32} 0.0
 			end;
 
 	third_value: REAL
 					-- A value to be computed once: 3.5 (will be used)
 			once
-				Result := 3.5
+				Result := {REAL_32} 3.5
 			end;
 
 	fourth_value: REAL
 					-- A value to be computed once: 1.0 (will not be used)
 			once
-				Result := 1.0
+				Result := {REAL_32} 1.0
 			end;
 
 	my_subobject: expanded OTHER;

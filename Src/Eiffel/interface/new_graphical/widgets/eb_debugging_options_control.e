@@ -1055,6 +1055,10 @@ feature {NONE} -- Profile actions
 
 			create l_master_item.make_master (1)
 			l_master_item.set_font (title_font)
+			l_master_item.set_editable_font (Void)
+			l_master_item.set_editable_background_color (profiles_grid.background_color)
+			l_master_item.set_editable_foreground_color (profiles_grid.foreground_color)
+
 			a_row.set_item (1, l_master_item)
 
 

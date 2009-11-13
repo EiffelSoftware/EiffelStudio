@@ -16,6 +16,7 @@
 		<setting name="use_cluster_name_as_namespace" value="false"/>
 		<external_resource location="Form1.resx"/>
 		<external_resource location="Data.auto"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<assembly name="accessibility" location="${ISE_DOTNET_FRAMEWORK}\accessibility.dll" prefix="ACCESS_"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_LIBRARY\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>

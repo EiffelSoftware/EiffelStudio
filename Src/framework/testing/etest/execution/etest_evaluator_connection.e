@@ -160,6 +160,10 @@ feature -- Status setting
 				if not is_awaiting_result then
 					l_connection.close
 				end
+				if condition.is_set then
+					condition.broadcast
+					condition.destroy
+				end
 			else
 				create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, current_port)
 				l_socket.connect

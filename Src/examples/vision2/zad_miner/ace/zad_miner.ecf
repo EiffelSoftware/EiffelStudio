@@ -21,6 +21,7 @@
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
 		<setting name="multithreaded" value="False"/>
+		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>

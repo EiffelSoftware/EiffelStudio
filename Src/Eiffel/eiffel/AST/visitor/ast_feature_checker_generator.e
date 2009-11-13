@@ -6709,7 +6709,7 @@ feature -- Implementation
 					-- Check if it is a boolean expression
 				if not last_type.actual_type.is_boolean then
 					error_handler.insert_error
-						(create {VWBE5}.make (last_type, l_as.expression.end_location, context))
+						(create {VWBE5}.make (last_type, l_as.is_all, l_as.expression.end_location, context))
 						-- Skip code generation for next parts.
 					iteration_code := Void
 				elseif iteration_code /= Void then
@@ -6794,20 +6794,20 @@ feature -- Implementation
 				if current_feature.has_argument_name (local_name_id) then
 						-- The local name is an argument name of the
 						-- current analyzed feature.
-					error_handler.insert_error (create {LOOP_VARIABLE_ERROR}.make (context, local_id))
+					error_handler.insert_error (create {VOIT2}.make (context, local_id))
 				elseif context.current_feature_table.has_id (local_name_id) then
 						-- The local name is a feature name of the
 						-- current analyzed class.
-					error_handler.insert_error (create {LOOP_VARIABLE_ERROR}.make (context, local_id))
+					error_handler.insert_error (create {VOIT2}.make (context, local_id))
 				end
 			end
 			if context.locals.has (local_name_id) then
 					-- The local name is a name of a feature local variable.
-				error_handler.insert_error (create {LOOP_VARIABLE_ERROR}.make (context, local_id))
+				error_handler.insert_error (create {VOIT2}.make (context, local_id))
 			end
 			if context.object_test_local (local_name_id) /= Void then
 					-- The local name is a name of an object test local.
-				error_handler.insert_error (create {LOOP_VARIABLE_ERROR}.make (context, local_id))
+				error_handler.insert_error (create {VOIT2}.make (context, local_id))
 			end
 
 			if last_type /= Void then
@@ -6821,7 +6821,7 @@ feature -- Implementation
 					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERATION_CURSOR [G]", local_id))
 				elseif not last_type.associated_class.conform_to (i) then
 						-- Iteration expression type does not conform to ITERABLE.
-					error_handler.insert_error (create {LOOP_ITERATION_NOT_ITERABLE_ERROR}.make (context, last_type, i.actual_type, local_id))
+					error_handler.insert_error (create {VOIT1}.make (context, last_type, i.actual_type, local_id))
 				else
 						-- Save `last_type' for evaluation of `iteration_cursor_type'.
 					iteration_cursor_type := last_type

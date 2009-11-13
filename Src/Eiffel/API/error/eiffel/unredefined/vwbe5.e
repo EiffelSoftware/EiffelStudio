@@ -1,6 +1,6 @@
 note
 
-	description: "Loop expression is not of type BOOLEAN."
+	description: "All_body or Some_body expression is not of type BOOLEAN."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,28 +11,57 @@ class VWBE5
 inherit
 
 	VWBE
+		redefine
+			code,
+			subcode
+		end
 
 create
 
 	make
 
-feature -- Properties
-
-	where: STRING = "In loop expression"
-			-- <Precursor>
-
 feature {NONE} -- Creation
 
-	make (t: like type; l: LOCATION_AS; c: AST_CONTEXT)
-			-- Create error object for the type `t' at location `l' in context `c'.
+	make (t: like type; a: BOOLEAN; l: LOCATION_AS; c: AST_CONTEXT)
+			-- Create error object for the type `t' at location `l' in context `c'
+			-- used in All_body (`a = True') or Some_body (`a = False').
 		require
 			t_attached: t /= Void
 			l_attached: l /= Void
 			c_attached: c /= Void
 		do
 			set_type (t)
+			is_all := a
 			set_location (l)
 			c.init_error (Current)
+		ensure
+			type_set: type = t
+			is_all_set: is_all = a
+		end
+
+feature {NONE} -- Access
+
+	is_all: BOOLEAN
+			-- Is error being reported for All_body rather than Some_body?
+
+feature -- Error description
+
+	code: STRING = "ECMA-VWBE"
+			-- <Precursor>
+
+	subcode: INTEGER = 2
+			-- <Precursor>
+
+feature -- Properties
+
+	where: STRING
+			-- <Precursor>
+		do
+			if is_all then
+				Result := "In All_body of a loop expression"
+			else
+				Result := "In Some_body of a loop expression"
+			end
 		end
 
 note

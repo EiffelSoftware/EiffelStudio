@@ -5,13 +5,13 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class LOOP_VARIABLE_ERROR
+class VOIT2
 
 inherit
 	FEATURE_ERROR
 		redefine
 			build_explain,
-			help_file_name
+			subcode
 		end
 
 	SHARED_NAMES_HEAP
@@ -39,11 +39,11 @@ feature {NONE} -- Creation
 
 feature -- Error properties
 
-	code: STRING = "Loop variable error"
-			-- Error code
+	code: STRING = "VOIT2"
+			-- <Precursor>
 
-	help_file_name: STRING_8 = "Loop_variable_error"
-			-- Help file name
+	subcode: INTEGER = 2
+			-- <Precursor>
 
 feature -- Output
 

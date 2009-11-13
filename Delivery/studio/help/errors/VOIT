@@ -1,0 +1,17 @@
+VOIT
+
+     Iteration Validity rule
+
+     An Iteration is valid if and only if it satisfies the
+     following conditions:
+
+        1 The type of the Expression conforms to ITERABLE
+          [T] (based on the Kernel Library class ITERABLE)
+          for some type T. (By VHPR (5), this T is unique.)
+
+        2 The Identifier does not have the same lower name
+          as any feature of the enclosing class, or any
+          formal argument or local variable of any
+          enclosing feature or Inline_agent, or, if it
+          appears in any other Loop with an Iteration part,
+          its Identifier.

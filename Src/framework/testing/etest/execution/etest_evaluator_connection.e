@@ -164,12 +164,15 @@ feature -- Status setting
 					condition.broadcast
 					condition.destroy
 				end
+				connection := Void
 			else
 				create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, current_port)
 				l_socket.connect
 				l_socket.close
 			end
 			mutex.unlock
+		ensure
+			not_connected: not is_connected
 		end
 
 feature {NONE} -- Status setting

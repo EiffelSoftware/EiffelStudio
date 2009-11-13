@@ -14,6 +14,16 @@ class
 inherit
 	SQLITE_BINDING_HELPERS
 
+feature {NONE} -- Access
+
+	default_bind_arg: SQLITE_BIND_ARG [ANY]
+			-- Default binding argument for array creation (Void-Safe mode).
+		once
+			create {SQLITE_NULL_ARG} Result.make ("?1")
+		ensure
+			result_attached: attached Result
+		end
+
 feature -- Status report
 
 	is_value_marshalled (a_value: detachable ANY): BOOLEAN
@@ -42,17 +52,11 @@ feature -- Query
 			a_args_is_valid_arguments: is_valid_arguments (a_args)
 		local
 			i_count, i: INTEGER
-			l_check: BOOLEAN
 			l_arg: detachable ANY
 			l_var: STRING
 		do
 			i_count := a_args.count.min (SQLITE_LIMIT_VARIABLE_NUMBER)
-			l_check := {ISE_RUNTIME}.check_assert (False)
-			create Result.make (1, i_count)
-			if l_check then
-				{ISE_RUNTIME}.check_assert (True).do_nothing
-			end
-
+			create Result.make_filled (default_bind_arg, 1, i_count)
 			from i := 1 until i > i_count loop
 				l_arg := a_args[i]
 				if attached {SQLITE_BIND_ARG [ANY]} l_arg as l_bind_arg then

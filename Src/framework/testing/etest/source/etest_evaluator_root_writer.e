@@ -17,6 +17,11 @@ inherit
 			ancestor_names
 		end
 
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	class_name: STRING
@@ -85,7 +90,13 @@ feature {NONE} -- Implementation
 			stream.dedent
 			stream.put_line ("local")
 			stream.indent
-			stream.put_line ("l_result: detachable like execute_test")
+			stream.put_string ("l_result: ")
+			if eiffel_universe.target.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
+				stream.put_character ('?')
+			else
+				stream.put_string ({EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword)
+			end
+			stream.put_line (" like execute_test")
 			stream.dedent
 			stream.put_line ("do")
 			stream.indent
@@ -126,7 +137,13 @@ feature {NONE} -- Implementation
 			stream.indent
 			stream.put_line ("local")
 			stream.indent
-			stream.put_line ("l_type: detachable TYPE [ANY]")
+			stream.put_string ("l_type: ")
+			if eiffel_universe.target.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
+				stream.put_character ('?')
+			else
+				stream.put_string ({EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword)
+			end
+			stream.put_line (" TYPE [ANY]")
 			stream.dedent
 			stream.put_line ("do")
 			stream.indent

@@ -11,14 +11,42 @@ class
 inherit
 	EV_GRID_SPAN_LABEL_ITEM
 		redefine
+			set_font,
+			set_text,
 			activate_action,
-			deactivate
+			deactivate,
+			make_master
 		end
 
 create
 	make_span, make_master
 
+feature {NONE} -- Initialization
+
+	make_master (a_master_col: INTEGER_32)
+			-- <Precursor/>
+		do
+			Precursor (a_master_col)
+			must_recompute_text_dimensions := True
+		end
+
 feature -- Element change
+
+	set_text (v: STRING_GENERAL)
+			-- <Precursor/>
+		do
+			Precursor (v)
+			must_recompute_text_dimensions := True
+		end
+
+	set_font (v: like font)
+			-- <Precursor/> and set `editable_font' if Void
+		do
+			Precursor (v)
+			if is_master and editable_font = Void then
+				set_editable_font (v)
+			end
+		end
 
 	set_text_validation_agent (a_validation_agent: FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN])
 			-- Set the agent that validates the text of `text_field' on `deactivate'.
@@ -29,15 +57,44 @@ feature -- Element change
 			validation_agent_set: validation_agent = a_validation_agent
 		end
 
+	set_editable_font (f: like editable_font)
+			-- Set `editable_font' to `f'
+		do
+			if is_master then
+				editable_font := f
+				must_recompute_text_dimensions := True
+			end
+		end
+
+	set_editable_background_color (c: like editable_background_color)
+			-- Set `editable_background_color' to `c'
+		do
+			editable_background_color := c
+		end
+
+	set_editable_foreground_color (c: like editable_foreground_color)
+			-- Set `editable_foreground_color' to `c'
+		do
+			editable_foreground_color := c
+		end
+
 feature -- Access
 
 	validation_agent: detachable FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN]
-		-- Agent used to validate `text_field' text.
-
+			-- Agent used to validate `text_field' text.
 
 	text_field: detachable EV_TEXT_FIELD
-		-- Text field used to edit `Current' on `activate'.
-		-- Void when `Current' isn't being activated.
+			-- Text field used to edit `Current' on `activate'.
+			-- Void when `Current' isn't being activated.
+
+	editable_font: detachable EV_FONT
+			-- Font for the editing `text_field'	
+
+	editable_background_color: detachable EV_COLOR
+			-- Background color for the editing `text_field'
+
+	editable_foreground_color: detachable EV_COLOR
+			-- Foreground color for the editing `text_field'	
 
 feature -- Action
 
@@ -71,6 +128,7 @@ feature {NONE} -- Implementation
 			x_coord, y_coord: INTEGER
 			a_screen_x, a_screen_y: INTEGER
 			a_width, boundary_x, item_width, item_height: INTEGER
+			l_text_height: INTEGER
 			x_delta: INTEGER
 		do
 				-- Account for position of text relative to pixmap.
@@ -103,7 +161,6 @@ feature {NONE} -- Implementation
 						x_delta := a_screen_x - x_coord
 						x_coord := a_screen_x
 					end
-					y_coord := a_screen_y - l_parent.virtual_y_position + l_first.virtual_y_position + l_parent.viewable_y_offset
 
 					boundary_x := a_screen_x + l_parent.width
 					if l_parent.vertical_scroll_bar.is_displayed then
@@ -114,6 +171,12 @@ feature {NONE} -- Implementation
 					else
 						item_height := l_row.height
 					end
+					l_text_height := text_height
+					item_height := item_height.max (l_text_height)
+
+					y_coord := a_screen_y - l_parent.virtual_y_position + l_first.virtual_y_position + l_parent.viewable_y_offset
+								+ (item_height - l_text_height) // 2
+
 						-- Set default size and position.
 					a_width := (l_last.virtual_x_position + l_last.width - l_first.virtual_x_position).max (0)
 					item_width := a_width - x_delta
@@ -123,9 +186,47 @@ feature {NONE} -- Implementation
 					end
 
 					a_popup.set_position (x_coord, y_coord)
-					a_popup.set_size (item_width, item_height)
+					a_popup.set_size (item_width, l_text_height)
 				end
 			end
+		end
+
+	text_height: INTEGER
+			-- `Result' is height required to fully display `text' in `pixels'.
+			-- This function is optimized internally by `Current' and is therefore
+			-- faster than querying `font.string_size' directly.
+		do
+			recompute_text_dimensions
+			Result := internal_text_height
+		ensure
+			result_non_negative: Result >= 0
+		end
+
+	internal_text_height: like text_height
+			-- Cached value of `text_height'
+
+	must_recompute_text_dimensions: BOOLEAN
+			-- Must the dimensions of `text' be re-computed
+			-- before drawing.
+
+	recompute_text_dimensions
+			-- Recompute `internal_text_height'.
+		local
+			l_font: detachable EV_FONT
+		do
+			if must_recompute_text_dimensions then
+				l_font := font
+				if l_font = Void then
+					l_font := internal_default_font
+				end
+				internal_text_height := l_font.string_size (text).height
+			end
+		end
+
+	internal_default_font: EV_FONT
+			-- Default font used for `Current'.
+		once
+			create Result
 		end
 
 	handle_key (a_key: EV_KEY)
@@ -146,22 +247,33 @@ feature {NONE} -- Implementation
 			-- `Current' has been requested to be updated via `popup_window'.
 		local
 			l_text_field: like text_field
-			l_bg_color: EV_COLOR
+			l_fg_color: like editable_foreground_color
+			l_bg_color: like editable_background_color
 		do
 			create l_text_field
 			text_field := l_text_field
 				-- Hide the border of the text field.
 			l_text_field.implementation.hide_border
-			if attached font as l_font then
+			if attached editable_font as l_font then
 				l_text_field.set_font (l_font)
 			end
 
 			l_text_field.set_text (text)
 
-			l_bg_color := implementation.displayed_background_color
+			if attached editable_background_color as ebgc then
+				l_bg_color := ebgc
+			else
+				l_bg_color := implementation.displayed_background_color
+			end
+			if attached editable_foreground_color as efgc then
+				l_fg_color := efgc
+			else
+				l_fg_color := implementation.displayed_foreground_color
+			end
+
 			l_text_field.set_background_color (l_bg_color)
 			popup_window.set_background_color (l_bg_color)
-			l_text_field.set_foreground_color (implementation.displayed_foreground_color)
+			l_text_field.set_foreground_color (l_fg_color)
 
 			popup_window.extend (l_text_field)
 				-- Change `popup_window' to suit `Current'.

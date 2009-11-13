@@ -5,13 +5,13 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class LOOP_ITERATION_NOT_ITERABLE_ERROR
+class VOIT1
 
 inherit
 	FEATURE_ERROR
 		redefine
 			build_explain,
-			help_file_name
+			subcode
 		end
 
 create
@@ -39,11 +39,11 @@ feature {NONE} -- Creation
 
 feature -- Error properties
 
-	code: STRING = "Loop iteration not iterable"
-			-- Error code
+	code: STRING = "VOIT"
+			-- <Precursor>
 
-	help_file_name: STRING_8 = "Loop_iteration_not_iterable_error"
-			-- Help file name
+	subcode: INTEGER = 1
+			-- <Precursor>
 
 feature {NONE} -- Access
 

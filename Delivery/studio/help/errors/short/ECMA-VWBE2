@@ -1,0 +1,2 @@
+Type error: expression in All_body or Some_body is not of type BOOLEAN.
+What to do: use an expression of boolean type.

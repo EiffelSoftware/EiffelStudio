@@ -303,14 +303,22 @@ feature -- Externals
 		external
 			"C inline use <sqlite3.h>"
 		alias
-			"sqlite3_mutex_enter((sqlite3_mutex *)$a_mutex)"
+			"[
+#if defined(SQLITE_THREADSAFE) && SQLITE_THREADSAFE
+				sqlite3_mutex_enter((sqlite3_mutex *)$a_mutex);
+#endif
+			]"
 		end
 
 	c_sqlite3_mutex_leave (a_mutex: POINTER)
 		external
 			"C inline use <sqlite3.h>"
 		alias
-			"sqlite3_mutex_leave((sqlite3_mutex *)$a_mutex)"
+			"[
+#if defined(SQLITE_THREADSAFE) && SQLITE_THREADSAFE
+				sqlite3_mutex_leave((sqlite3_mutex *)$a_mutex);
+#endif
+			]"
 		end
 
 	c_sqlite3_next_stmt (a_db: POINTER; a_stmt: POINTER): POINTER

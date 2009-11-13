@@ -6,13 +6,22 @@
 		<file_rule>
 			<exclude>EIFGENs</exclude>
 			<exclude>tests</exclude>
-			<exclude>examples</exclude>
 			<exclude>\.svn</exclude>
+			<exclude>examples</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<external_include location="$(EIFFEL_SRC)/framework/sqlite3/spec/include"/>
+		<external_include location="$(EIFFEL_SRC)/framework/sqlite3/spec/include -DSQLITE_THREADSAFE=1">
+			<condition>
+				<multithreaded value="true"/>
+			</condition>
+		</external_include>
+		<external_include location="$(EIFFEL_SRC)/framework/sqlite3/spec/include -DSQLITE_THREADSAFE=0">
+			<condition>
+				<multithreaded value="false"/>
+			</condition>
+		</external_include>
 		<external_library location="`$(ISE_LIBRARY)/library/api_wrapper/implementation/unix/Clib/dl-config --library`">
 			<description>Required for linking SQLite</description>
 			<condition>

@@ -180,7 +180,7 @@ feature {TEST_SUITE_S} -- Status report
 							a_formatter.add_new_line
 						end, True)
 
-					l_target.process (Current)
+					process_target_items (l_target, True)
 					initialize_sub_task
 				else
 					append_output (agent (a_formatter: TEXT_FORMATTER)
@@ -277,8 +277,11 @@ feature {NONE} -- Status setting
 
 feature -- Basis operations
 
-	process_target (a_target: CONF_TARGET)
-			-- <Precursor>
+	process_target_items (a_target: CONF_TARGET; an_append_libraries: BOOLEAN)
+			-- Add items in `a_target' to `conf_items' if target has not yet been processed.
+			--
+			-- `a_target': Target to be processed.
+			-- `an_append_libraries': Should libraries in `a_target' also be processed?
 		local
 			l_uuid: UUID
 			l_old_count, l_count, l_total: INTEGER
@@ -292,7 +295,9 @@ feature -- Basis operations
 
 					-- Add clusters to `conf_items'
 				l_old_count := conf_items.count
-				append_table (a_target.libraries)
+				if an_append_libraries then
+					append_table (a_target.libraries)
+				end
 				append_table (a_target.clusters)
 				l_count := conf_items.count
 				if l_count > l_old_count then
@@ -309,7 +314,7 @@ feature -- Basis operations
 		do
 			append_output (agent print_library (?, a_library), False)
 			current_library := a_library
-			process_target (a_library.library_target)
+			process_target_items (a_library.library_target, False)
 		end
 
 	process_cluster (a_cluster: CONF_CLUSTER)
@@ -440,6 +445,11 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation: null routines
+
+	process_target (a_target: CONF_TARGET)
+			-- <Precursor>
+		do
+		end
 
 	process_system (a_system: CONF_SYSTEM)
 			-- <Precursor>

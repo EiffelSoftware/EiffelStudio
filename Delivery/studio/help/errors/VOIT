@@ -12,6 +12,6 @@ VOIT
         2 The Identifier does not have the same lower name
           as any feature of the enclosing class, or any
           formal argument or local variable of any
-          enclosing feature or Inline_agent, or, if it
-          appears in any other Loop with an Iteration part,
-          its Identifier.
+          enclosing feature or Inline_agent, or the
+          Object-test Local of any enclosing Object_test,
+          or the Identifier of any enclosing Iteration.

@@ -49,10 +49,10 @@ feature {NONE} -- Initialization
 			create statistics_updated_event
 			create test_statistics_updated_event
 
+			create test_statistics.make (0)
 			if is_project_initialized then
 				retrieve_statistics
 			else
-				create test_statistics.make (0)
 				eiffel_project.manager.load_agents.extend_kamikaze (agent retrieve_statistics)
 				eiffel_project.manager.compile_stop_agents.extend_kamikaze (agent retrieve_statistics)
 			end

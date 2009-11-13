@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="egraph" uuid="1C97309F-2EFC-48A2-A333-FB69BE1A40FB">
 	<target name="common" abstract="true">
 		<root cluster="root_cluster" class="APPLICATION" feature="make_and_launch"/>
-		<option warning="true">
+		<option warning="true" full_class_checking="true">
 			<assertions precondition="true"/>
 		</option>
 		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>

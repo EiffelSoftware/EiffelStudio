@@ -1583,11 +1583,10 @@ feature -- Access
 	new_loop_expr_as (f: ITERATION_AS; w: KEYWORD_AS; i: EIFFEL_LIST [TAGGED_AS];
 			u: KEYWORD_AS; c: EXPR_AS; q: KEYWORD_AS; a: BOOLEAN; e: EXPR_AS; v: VARIANT_AS; k: KEYWORD_AS): LOOP_EXPR_AS
 			-- New LOOP expression AST node
-		require
-			f_attached: f /= Void
-			e_attached: e /= Void
 		do
-			create Result.initialize (f, w, i, u, c, q, a, e, v, k)
+			if f /= Void and then e /= Void then
+				create Result.initialize (f, w, i, u, c, q, a, e, v, k)
+			end
 		end
 
 	new_nested_as (t: ACCESS_AS; m: CALL_AS; d_as: SYMBOL_AS): NESTED_AS

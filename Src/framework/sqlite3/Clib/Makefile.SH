@@ -18,8 +18,8 @@ SHELL = /bin/sh
 AR = ar rc
 CC = $cc
 CTAGS = ctags
-CFLAGS = $optimize $ccflags $large -I$rt_include -I"../spec/include"
-MTCFLAGS = $optimize $mtccflags $large -I$rt_include -I"../spec/include"
+CFLAGS = $optimize $ccflags $large -I$rt_include -I"../spec/include" -DSQLITE_THREADSAFE=0
+MTCFLAGS = $optimize $mtccflags $large -I$rt_include -I"../spec/include" -DSQLITE_THREADSAFE=1
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = -export-dynamic $ldsharedflags
 LN = $ln
@@ -53,18 +53,32 @@ SMODE = esqlite.c sqlite3.c
 LSRCS = $(SMODE)
 
 MT_OBJECTS = \
-	esqlite.o \
-	sqlite3.o
+	mtesqlite.o \
+	mtsqlite3.o
 
 OBJECTS = \
 	esqlite.o \
 	sqlite3.o
 
-ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 esqlite.o: esqlite.c
-	$(CC) -c $(MTCFLAGS) $? -o $@
+	$(CC) -c $(CFLAGS) $? -o $@
 
 sqlite3.o: sqlite3.c
+	$(CC) -c $(CFLAGS) $? -o $@
+
+libesqlite.a: $(OBJECTS)
+	$(RM) $@
+	$(AR) $@ $(OBJECTS)
+	$(RANLIB) $@
+
+libesqlite.so: $(OBJECTS)
+	$(RM) $@
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(OBJECTS)
+
+mtesqlite.o: esqlite.c
+	$(CC) -c $(MTCFLAGS) $? -o $@
+
+mtsqlite3.o: sqlite3.c
 	$(CC) -c $(MTCFLAGS) $? -o $@
 
 libmtesqlite.a: $(MT_OBJECTS)
@@ -75,15 +89,6 @@ libmtesqlite.a: $(MT_OBJECTS)
 libmtesqlite.so: $(MT_OBJECTS)
 	$(RM) $@
 	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_OBJECTS)
-
-libesqlite.a: $(OBJECTS)
-	$(RM) $@
-	$(AR) $@ $(OBJECTS)
-	$(RANLIB) $@
-
-libesqlite.so: $(OBJECTS)
-	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(OBJECTS)
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit

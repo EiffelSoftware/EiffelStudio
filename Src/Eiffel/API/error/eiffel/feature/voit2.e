@@ -39,7 +39,7 @@ feature {NONE} -- Creation
 
 feature -- Error properties
 
-	code: STRING = "VOIT2"
+	code: STRING = "VOIT"
 			-- <Precursor>
 
 	subcode: INTEGER = 2

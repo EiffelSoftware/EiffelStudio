@@ -137,6 +137,10 @@ safe_md %STUDIO_DIR\precomp\spec
 cd %STUDIO_DIR\precomp\spec
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform %ISE_PLATFORM
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
+cdd %ISE_PLATFORM
+fullrf *-safe.ecf
+cdd ..\%ISE_PLATFORM-dotnet
+fullrf *-safe.ecf
 cdd %STUDIO_DIR
 remtrace wizards
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/wizards wizards

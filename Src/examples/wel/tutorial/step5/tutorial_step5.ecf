@@ -2,12 +2,12 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="tutorial_step5" uuid="EB9C2DB0-E518-4FBA-8279-ADC9FA27494B">
 	<target name="common" abstract="true">
 		<root cluster="root_cluster" class="TUTORIAL_STEP5" feature="make"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
+		<option warning="true" full_class_checking="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<precompile name="wel_pre" location="$ISE_PRECOMP\wel-safe.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
+		<precompile name="wel_pre" location="$ISE_PRECOMP\wel.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="dotnet" extends="common">

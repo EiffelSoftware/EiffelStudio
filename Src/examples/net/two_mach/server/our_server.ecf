@@ -2,13 +2,13 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="two_mach_server" uuid="FB247839-75DC-4D04-97AC-5AC43EC0EA4A">
 	<target name="two_mach_server">
 		<root class="OUR_SERVER" feature="make"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
+		<option warning="true" full_class_checking="true">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<precompile name="precompile" location="$ISE_PRECOMP\base-safe.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
+		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<cluster name="common_classes" location="..\common\"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>

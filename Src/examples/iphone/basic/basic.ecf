@@ -2,10 +2,11 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="basic" uuid="F0E5A7A8-38C7-4ED8-92F7-2028C594121A">
 	<target name="basic">
 		<root class="APPLICATION" feature="make"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
+		<option warning="true" full_class_checking="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="iphone" location="$ISE_LIBRARY\library\iphone\iphone.ecf"/>
 		<cluster name="basic" location=".\" recursive="true">
 			<file_rule>

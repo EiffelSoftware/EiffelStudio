@@ -2,12 +2,12 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="ctlcolor" uuid="8973AA01-220F-4E58-BA1D-1F70AF5A9FE2">
 	<target name="common" abstract="true">
 		<root cluster="root_cluster" class="CTLCOLOR_DEMO" feature="make"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
+		<option warning="true" full_class_checking="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<precompile name="wel_pre" location="$ISE_PRECOMP\wel-safe.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
+		<precompile name="wel_pre" location="$ISE_PRECOMP\wel.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="dotnet" extends="common">

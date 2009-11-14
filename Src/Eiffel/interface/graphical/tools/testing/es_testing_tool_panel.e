@@ -102,7 +102,9 @@ feature {NONE} -- Initialization: widgets
 			notebook.extend (l_creation.widget)
 			l_tab := notebook.item_tab (l_creation.widget)
 			l_tab.set_text (locale.translation (t_creation))
-			l_tab.set_pixmap (test_creation_pixmap)
+				-- Using alternative icon for now as the overlay shows a black background for tab icons
+			--l_tab.set_pixmap (icons.general_test_icon)
+			l_tab.set_pixmap (icons.general_test_icon)
 		end
 
 feature {NONE} -- Initialization: widget status
@@ -174,10 +176,10 @@ feature {NONE} -- Access
 	test_creation_pixmap: EV_PIXMAP
 			-- Pixmap for test creation
 		do
-			Result := stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0).to_pixmap
+			Result := stock_pixmaps.icon_with_overlay (icons.general_test_icon, stock_pixmaps.overlay_new_icon_buffer, 0, 0)
 		end
 
-	test_creation_pixel_bugger: EV_PIXEL_BUFFER
+	test_creation_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer for test creation
 		do
 			Result := stock_pixmaps.icon_buffer_with_overlay (icons.general_test_icon_buffer, stock_pixmaps.overlay_new_icon_buffer, 0, 0)
@@ -608,7 +610,7 @@ feature {NONE} -- Factory
 			create wizard_button.make
 			wizard_button.set_tooltip (locale_formatter.translation (tt_wizard))
 			wizard_button.set_pixmap (test_creation_pixmap)
-			wizard_button.set_pixel_buffer (test_creation_pixel_bugger)
+			wizard_button.set_pixel_buffer (test_creation_pixel_buffer)
 			register_action (wizard_button.select_actions, agent on_launch_wizard)
 			Result.force_last (wizard_button)
 

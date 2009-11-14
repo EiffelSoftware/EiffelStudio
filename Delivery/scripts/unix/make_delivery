@@ -134,25 +134,13 @@ safe_md $INSTALL_DIR/experimental/precomp
 safe_md $INSTALL_DIR/experimental/precomp/spec
 cd $INSTALL_DIR/experimental/precomp/spec
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform platform 
-cd platform
-fullrd lex
-fullrd mel
-fullrd net
-fullrd net-mt
-fullrd parse
-fullrd vision
 
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform platform 
 cd platform
-fullrd lex
-fullrd mel
-fullrd net
-fullrd net-mt
-fullrd parse
-fullrd vision
+fullrf *-safe.ecf
 
 remtrace C_library
 safe_md $INSTALL_DIR/C_library

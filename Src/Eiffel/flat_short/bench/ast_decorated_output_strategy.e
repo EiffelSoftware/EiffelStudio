@@ -1762,7 +1762,10 @@ feature {NONE} -- Implementation
 				routine_id_is_zero: l_as.routine_ids.first /= 0
 			end
 			if not has_error_internal then
-				l_expr_type := expr_type (l_as.expr).actual_type
+				l_expr_type := expr_type (l_as.expr)
+				if not has_error_internal then
+					l_expr_type := l_expr_type.actual_type
+				end
 			end
 			if not has_error_internal then
 				if l_expr_type.is_formal then

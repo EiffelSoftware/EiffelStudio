@@ -1764,6 +1764,9 @@ feature {NONE} -- Implementation
 			if not has_error_internal then
 				l_expr_type := expr_type (l_as.expr)
 				if not has_error_internal then
+					check
+						l_expr_type_not_void: l_expr_type /= Void
+					end
 					l_expr_type := l_expr_type.actual_type
 				end
 			end

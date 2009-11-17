@@ -21,9 +21,10 @@ feature {NONE} -- Initialization
 			-- Initialize and launch application
 		do
 				-- create and initialize the first window.
+			default_create
+
 			create first_window
 
-			default_create
 			prepare
 			launch
 		end

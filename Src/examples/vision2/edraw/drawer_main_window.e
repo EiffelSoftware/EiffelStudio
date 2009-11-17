@@ -61,34 +61,34 @@ feature {NONE} -- Implementation
 		do
 			create hbox
 
-					create fixed
-						fg_color_chooser.color_change_actions.extend (agent fg_color_changed)
-						fg_color_chooser.disable_none_color_selectable
+			create fixed
+			fg_color_chooser.color_change_actions.extend (agent fg_color_changed)
+			fg_color_chooser.disable_none_color_selectable
 
-					fixed.extend (fg_color_chooser)
-					fixed.set_item_size (fg_color_chooser, 80, 130)
+			fixed.extend (fg_color_chooser)
+			fixed.set_item_size (fg_color_chooser, 80, 130)
 
-				settings_bar.extend (fixed)
+			settings_bar.extend (fixed)
 
-					create fixed
-						bg_color_chooser.color_change_actions.extend (agent bg_color_changed)
+			create fixed
+			bg_color_chooser.color_change_actions.extend (agent bg_color_changed)
 
-					fixed.extend (bg_color_chooser)
-					fixed.set_item_size (bg_color_chooser, 80, 130)
+			fixed.extend (bg_color_chooser)
+			fixed.set_item_size (bg_color_chooser, 80, 130)
 
-				settings_bar.extend (fixed)
+			settings_bar.extend (fixed)
 
-					create fixed
-						line_style_chooser.select_actions.extend (agent line_style_selected)
+			create fixed
+			line_style_chooser.select_actions.extend (agent line_style_selected)
 
-					fixed.extend (line_style_chooser)
-					fixed.set_item_width (line_style_chooser, 80)
+			fixed.extend (line_style_chooser)
+			fixed.set_item_width (line_style_chooser, 80)
 
-				settings_bar.extend (fixed)
+			settings_bar.extend (fixed)
 
-				create fixed
-				fixed.extend (settings_bar)
-				fixed.set_item_width (settings_bar, 82)
+			create fixed
+			fixed.extend (settings_bar)
+			fixed.set_item_width (settings_bar, 82)
 
 			hbox.extend (fixed)
 			hbox.disable_item_expand (fixed)

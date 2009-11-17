@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 						do
 							create l_fn.make_from_string (a_dir)
 							l_fn.set_file_name (a_file)
-							process_configuration (l_fn)
+							process_configuration (l_fn, a_dir)
 						end (a_directory, ?),
 					agent (a_file: STRING): BOOLEAN
 						local
@@ -152,10 +152,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_configuration (a_file: STRING)
-			-- Process configuration file `a_file'.
+	process_configuration (a_file, a_dir: STRING)
+			-- Process configuration file `a_file' located in `a_dir'
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
+			a_dir_ok: a_dir /= Void and then not a_dir.is_empty
 		local
 			l_loader: CONF_LOAD
 			l_ignored_targets: SEARCH_TABLE [STRING]
@@ -171,7 +172,7 @@ feature {NONE} -- Implementation
 				if l_loader.is_error then
 					display_error ("Could not retrieve configuration "+a_file+"!")
 				else
-					l_loader.last_system.compilable_targets.linear_representation.do_if (agent process_target, agent (a_target: CONF_TARGET; a_ignored_targets: SEARCH_TABLE [STRING]): BOOLEAN
+					l_loader.last_system.compilable_targets.linear_representation.do_if (agent process_target (?, a_dir), agent (a_target: CONF_TARGET; a_ignored_targets: SEARCH_TABLE [STRING]): BOOLEAN
 						do
 							Result := a_ignored_targets = Void or else not a_ignored_targets.has (a_target.name)
 						end (?, l_ignored_targets))
@@ -179,22 +180,23 @@ feature {NONE} -- Implementation
 			end
 	end
 
-	process_target (a_target: CONF_TARGET)
-			-- Compile `a_target'.
+	process_target (a_target: CONF_TARGET; a_dir: STRING)
+			-- Compile `a_target' located in `a_dir'.
 		require
 			a_target_ok: a_target /= Void
+			a_dir_ok: a_dir /= Void and then not a_dir.is_empty
 		do
 			if arguments.is_parse_only then
 				parse (a_target)
 			else
 				if arguments.is_melt then
-					compile ("melt", arguments.is_clean, a_target)
+					compile ("melt", arguments.is_clean, a_target, a_dir)
 				end
 				if arguments.is_freeze then
-					compile ("freeze", False, a_target)
+					compile ("freeze", False, a_target, a_dir)
 				end
 				if arguments.is_finalize then
-					compile ("finalize", False, a_target)
+					compile ("finalize", False, a_target, a_dir)
 				end
 			end
 		end
@@ -241,12 +243,13 @@ feature {NONE} -- Implementation
 			io.new_line
 		end
 
-	compile (a_action: STRING; a_clean: BOOLEAN; a_target: CONF_TARGET)
-			-- Compile `a_target' according to `a_action' clean before compilation if `a_clean'.
+	compile (a_action: STRING; a_clean: BOOLEAN; a_target: CONF_TARGET; a_dir: STRING)
+			-- Compile `a_target' located in `a_dir' according to `a_action' clean before compilation if `a_clean'.
 		require
 			a_action_ok: a_action /= Void and then (a_action.is_equal ("melt") or
 						a_action.is_equal ("freeze") or a_action.is_equal ("finalize"))
 			a_target_ok: a_target /= Void
+			a_dir_ok: a_dir /= Void and then not a_dir.is_empty
 		local
 			l_args: ARRAYED_LIST [STRING]
 			l_prc_factory: PROCESS_FACTORY
@@ -275,13 +278,16 @@ feature {NONE} -- Implementation
 				l_args.extend ("-clean")
 			end
 
+			l_args.extend ("-project_path")
 			if arguments.eifgen /= Void then
-				l_args.extend ("-project_path")
 				create l_dir_name.make_from_string (arguments.eifgen)
 				l_dir_name.extend (l_system)
 				create l_dir.make (l_dir_name)
 				l_dir.recursive_create_directory
 				l_args.extend (l_dir_name)
+			else
+					-- We always use the directory of the ECF by default
+				l_args.extend (a_dir)
 			end
 
 			if a_action.is_equal ("melt") then

@@ -11,6 +11,9 @@ class
 
 inherit
 	EV_APPLICATION
+		redefine
+			create_interface_objects
+		end
 
 create
 	make_and_launch
@@ -22,11 +25,14 @@ feature {NONE} -- Initialization
 		do
 				-- create and initialize the first window.
 			default_create
-
-			create first_window
-
 			prepare
 			launch
+		end
+
+	create_interface_objects
+		do
+			Precursor
+			create first_window
 		end
 
 	prepare

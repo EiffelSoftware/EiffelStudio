@@ -78,7 +78,7 @@ feature -- Basic operations
 							if l_state /= comment_state then
 								l_skip := True
 								inspect c
-								when section_start then
+								when {INI_CONSTANTS}.section_start then
 										--
 										-- '[' section start
 										--
@@ -89,7 +89,7 @@ feature -- Basic operations
 										l_error := True
 										a_callbacks.on_error (e_open_bracket_in_section_id, line, column)
 									end
-								when section_end then
+								when {INI_CONSTANTS}.section_end then
 										--
 										-- ']' section end
 										--
@@ -100,7 +100,7 @@ feature -- Basic operations
 										l_error := True
 										a_callbacks.on_error (e_unmatched_close_bracket, line, column)
 									end
-								when property_value_qualifier then
+								when {INI_CONSTANTS}.property_value_qualifier then
 										--
 										-- '=' value qualifier
 										--
@@ -122,7 +122,7 @@ feature -- Basic operations
 									else
 										-- Part of value or other state, allow to pass through.
 									end
-								when comment_pound, comment_semi_colon then
+								when {INI_CONSTANTS}.comment_pound, {INI_CONSTANTS}.comment_semi_colon then
 										--
 										-- ';' '#' comment start
 										--
@@ -227,15 +227,6 @@ feature -- Basic operations
 			l_error := True
 			a_callbacks.on_error (e_unknown_error, line, column)
 		end
-
-feature {NONE} -- Constants: Dictionary
-
-	comment_pound: CHARACTER = '#'
-	comment_semi_colon: CHARACTER = ';'
-	section_start: CHARACTER = '['
-	section_end: CHARACTER = ']'
-	property_value_qualifier: CHARACTER = '='
-	quote: CHARACTER = '%"'
 
 feature {NONE} -- Constants: Stats
 

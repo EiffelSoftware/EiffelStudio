@@ -29,7 +29,7 @@ BEGIN
                     6,22,136,8
     CTEXT	    "Interactive Software Engineering, Inc.",-1,6,34,
                     136,8
-    CTEXT	    "\xA9 Copyright 1997",-1,6,46,136,8
+    CTEXT	    "\xA9 Copyright 2009",-1,6,46,136,8
 END
 
 

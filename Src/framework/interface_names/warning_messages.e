@@ -1010,11 +1010,11 @@ feature -- Warning messages
 	w_Save_before_closing: STRING_32 do Result := locale.translation ("Do you want to save your changes%N%
 																			%before closing the window?") end
 
-	w_Stop_debugger: STRING_32 do Result := locale.translation ("This command will stop the debugger.") end
+	w_Stop_debugger: STRING_32 do Result := locale.translation ("This command will stop execution.") end
 
-	w_Exiting_stops_debugger: STRING_32 do Result := locale.translation ("Exiting will stop the debugger.") end
+	w_Exiting_stops_debugger: STRING_32 do Result := locale.translation ("Exiting will stop execution.") end
 
-	w_Closing_stops_debugger: STRING_32 do Result := locale.translation ("Closing the window will stop the debugger.") end
+	w_Closing_stops_debugger: STRING_32 do Result := locale.translation ("Closing the window will stop execution.") end
 
 	w_Unexisting_system: STRING_32 do Result := locale.translation ("System doesn't exist.") end
 

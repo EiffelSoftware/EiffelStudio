@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			io.new_line
 		end
 
-	compile (a_action: STRING; a_clean: BOOLEAN; a_target: CONF_TARGET; a_dir: STRING)
+	compile (a_action: STRING; a_clean: BOOLEAN;  a_target: CONF_TARGET; a_dir: STRING)
 			-- Compile `a_target' located in `a_dir' according to `a_action' clean before compilation if `a_clean'.
 		require
 			a_action_ok: a_action /= Void and then (a_action.is_equal ("melt") or
@@ -276,6 +276,10 @@ feature {NONE} -- Implementation
 
 			if a_clean then
 				l_args.extend ("-clean")
+			end
+
+			if arguments.is_experiment then
+				l_args.extend ("-experiment")
 			end
 
 			l_args.extend ("-project_path")

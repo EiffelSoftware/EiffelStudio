@@ -49,6 +49,7 @@ feature {NONE} -- Access
 			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (ignore_switch, "Ignore file with files/targets to ignore.", True, False, "ignore.ini", "INI file with the ignores.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (log_verbose_switch, "Verbose logging of actions?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (ecb_switch, "Use ecb instead of ec?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (experiment_switch, "Use experimental library during compilation?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Clean before compilation?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (c_compile_switch, "Compile generated C code?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (melt_switch, "Melt the project?", True, False))
@@ -108,6 +109,12 @@ feature -- Access
 			Result := has_option (ecb_switch)
 		end
 
+	is_experiment: BOOLEAN
+			-- Use experimental library?
+		once
+			Result := has_option (experiment_switch)
+		end
+
 	is_parse_only: BOOLEAN
 			-- Only parse and check dependencies?
 		once
@@ -154,6 +161,7 @@ feature {NONE} -- Switch names
 
 	location_switch: STRING = "l"
 	eifgen_switch: STRING = "eifgen"
+	experiment_switch: STRING = "experiment"
 	ignore_switch: STRING = "ignore"
 	log_verbose_switch: STRING = "log_verbose"
 	ecb_switch: STRING = "ecb"

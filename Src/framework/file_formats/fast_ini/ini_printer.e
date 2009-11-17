@@ -121,6 +121,8 @@ feature -- Basic operations: Output
 		do
 			medium.new_line
 			is_spacing_required := False
+
+			flush_buffer
 		end
 
 	put_comment (a_comment: READABLE_STRING_8)

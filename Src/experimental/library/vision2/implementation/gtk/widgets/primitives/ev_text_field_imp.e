@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 		do
 			a_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
-			entry_widget := {EV_GTK_EXTERNALS}.gtk_entry_new
+			entry_widget := new_entry_widget
 			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 			set_text (once "")
@@ -354,6 +354,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		-- Is `Current' in the process of calling `on_change_actions'
 
 feature {NONE} -- Implementation
+
+	new_entry_widget: POINTER
+			-- Create an uninitialized entry widget.
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_entry_new
+		end
 
 	entry_widget: POINTER
 		-- A pointer on the text field

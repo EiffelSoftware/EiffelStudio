@@ -40,7 +40,7 @@ feature -- Basic operations
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	single_spaced_values_from_list (list: ARRAYED_LIST [INTEGER]): STRING
 			-- `Result' is single spaced string representation of `list'.
 		require
@@ -63,7 +63,7 @@ feature -- Basic operations
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	remove_leading_and_trailing_spaces (string: STRING): STRING
 			-- Remove leading and trailing spaces from `string'.
 			-- i.e. "   a_string   " becomes "a_string"
@@ -76,7 +76,7 @@ feature -- Basic operations
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	escape_special_characters (string: STRING): STRING
 			-- Replace all occurances of '"' amd '%' in `string' with
 			-- an escaped version (%N prepended for each).
@@ -105,7 +105,7 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 			adjusted_size_correct: Result.count = string.count + string.occurrences ('%%') + string.occurrences ('"') + string.occurrences ('%N')
 		end
-		
+
 	directory_of_file (file_name: STRING): STRING
 			-- `Result' is directory path of `file_name'.
 			-- `file_name' must include full path to file.
@@ -117,7 +117,7 @@ feature -- Basic operations
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	name_and_type_from_object (an_object: GB_OBJECT): STRING
 			-- `Result' is name and type of object as STRING.
 		require
@@ -127,8 +127,8 @@ feature -- Basic operations
 		do
 			l_type := an_object.actual_type
 			if an_object.output_name.is_empty then
-				Result := l_type 
-			else		
+				Result := l_type
+			else
 				Result := an_object.output_name + ": " + l_type
 			end
 		ensure
@@ -155,9 +155,9 @@ feature -- Basic operations
 				class_text.replace_substring (new_name, index_of_old_name, index_of_old_name + old_name.count - 1)
 			end
 		ensure
-			count_changed_accordingly: old class_text.count = class_text.count + old_name.count - new_name.count
+			count_changed_accordingly: (old class_text.count = class_text.count + old_name.count - new_name.count) or (old class_text.count = class_text.count)
 		end
-		
+
 	integer_truncated (original, truncation: INTEGER): INTEGER
 			-- Truncate `original' to `truncation'.
 			-- For example, if `original' is 453 and `truncation' is 100, return 400.

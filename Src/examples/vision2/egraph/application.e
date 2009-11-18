@@ -9,9 +9,6 @@ note
 class
 	APPLICATION
 
-inherit
-	EV_APPLICATION
-
 create
 	make_and_launch
 
@@ -21,10 +18,15 @@ feature {NONE} -- Initialization
 			-- Initialize and launch application
 		do
 				-- create and initialize the first window.
-			create first_window
-			default_create
+			create ev_application
+			create_interface_objects
 			prepare
-			launch
+			ev_application.launch
+		end
+
+	create_interface_objects
+		do
+			create first_window
 		end
 
 	prepare
@@ -39,6 +41,9 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Implementation
+
+	ev_application: EV_APPLICATION
+			-- Vision2 application
 
 	first_window: GRAPH_MAIN_WINDOW;
 			-- Main window.

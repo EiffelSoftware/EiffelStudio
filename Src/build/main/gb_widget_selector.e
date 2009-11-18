@@ -103,6 +103,13 @@ inherit
 			add_alphabetically, default_create
 		end
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	make_with_components
 
@@ -836,25 +843,29 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					file.read_stream (file.count)
 					file.close
 					file_contents := file.last_string
-					l_eiffel_parser.parse_from_string (file_contents, Void)
+					parse_eiffel_class (l_eiffel_parser, file_contents)
 					l_class_as := l_eiffel_parser.root_node
-					create l_visitor
-					l_class_as.process (l_visitor)
-					file_contents.replace_substring (new_name.as_upper, l_visitor.name_start_position, l_visitor.name_end_position)
+					if l_class_as /= Void then
+						create l_visitor
+						l_class_as.process (l_visitor)
+						file_contents.replace_substring (new_name.as_upper, l_visitor.name_start_position, l_visitor.name_end_position)
 
-						-- As we are performing two replaces,we must update the character indexes of the second, by the difference
-						-- in characters between what was replaced, and the new string of the first replacement.
-					character_difference := old_name.count - new_name.count
-					file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper,
-						l_visitor.parent_start_position - character_difference, l_visitor.parent_end_position - character_difference)
+							-- As we are performing two replaces,we must update the character indexes of the second, by the difference
+							-- in characters between what was replaced, and the new string of the first replacement.
+						character_difference := old_name.count - new_name.count
+						file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper,
+							l_visitor.parent_start_position - character_difference, l_visitor.parent_end_position - character_difference)
 
-						-- Now replace the class name at end after comment.
-					replace_final_class_name_comment (file_contents, old_name.as_upper, new_name.as_upper)
+							-- Now replace the class name at end after comment.
+						replace_final_class_name_comment (file_contents, old_name.as_upper, new_name.as_upper)
 
-						-- Open the file, and write the contents back.
-					file.open_write
-					file.put_string (file_contents)
-					file.close
+							-- Open the file, and write the contents back.
+						file.open_write
+						file.put_string (file_contents)
+						file.close
+					else
+						-- FIXME: we should handled syntactically invalid class.						
+					end
 				end
 
 
@@ -869,18 +880,46 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					file.read_stream (file.count)
 					file.close
 					file_contents := file.last_string
-					l_eiffel_parser.parse_from_string (file_contents, Void)
+					parse_eiffel_class (l_eiffel_parser, file_contents)
 					l_class_as := l_eiffel_parser.root_node
-					create l_visitor
-					l_class_as.process (l_visitor)
-					file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper, l_visitor.name_start_position, l_visitor.name_end_position)
+					if l_class_as /= Void then
+						create l_visitor
+						l_class_as.process (l_visitor)
+						file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper, l_visitor.name_start_position, l_visitor.name_end_position)
 
 
-						-- Now replace the class name at end after comment.
-					replace_final_class_name_comment (file_contents, (old_name + Class_implementation_extension).as_upper, (new_name + Class_implementation_extension).as_upper)
-					file.open_write
-					file.put_string (file_contents)
-					file.close
+							-- Now replace the class name at end after comment.
+						replace_final_class_name_comment (file_contents, (old_name + Class_implementation_extension).as_upper, (new_name + Class_implementation_extension).as_upper)
+						file.open_write
+						file.put_string (file_contents)
+						file.close
+					else
+						-- FIXME: we should handled syntactically invalid class.
+					end
+				end
+			end
+		end
+
+	parse_eiffel_class (a_parser: EIFFEL_PARSER; a_buffer: STRING)
+			-- Using a parser, parse our code using different parser mode, to ensure that we can
+			-- indeed convert any kind of Eiffel classes.
+		require
+			a_parser_not_void: a_parser /= Void
+			a_buffer_not_void: a_buffer /= Void
+		do
+				-- First we do it using the old conventions.
+			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_64_syntax)
+			a_parser.parse_from_string (a_buffer, Void)
+			if error_handler.has_error then
+				error_handler.wipe_out
+					-- There was an error, let's try to see if the code is using transitional syntax.
+				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_64_syntax)
+				a_parser.parse_from_string (a_buffer, Void)
+				if error_handler.has_error then
+					error_handler.wipe_out
+						-- Still an error, let's try to see if the code is strictly ECMA compliant.
+					a_parser.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
+					a_parser.parse_from_string (a_buffer, Void)
 				end
 			end
 		end

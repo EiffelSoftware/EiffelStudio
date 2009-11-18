@@ -313,7 +313,7 @@ end
 			l_par: NESTED_BL
 			return_type_string: STRING
 		do
-			l_keep := system.keep_assertions
+			l_keep := context.final_mode and then system.keep_assertions
 			is_nested := not is_first
 			l_par := parent
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True)

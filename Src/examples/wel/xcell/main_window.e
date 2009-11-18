@@ -264,10 +264,8 @@ feature {NONE} -- Implementation
 			if started then
 				if move_is_finished then
 					move_is_finished := False
-					set_capture
 					game_manager.select_source (x_pos, y_pos)
 					if game_manager.source_selected then
-						release_capture
 						game_manager.select_destination_home_cell
 						if game_manager.move_card then
 							redraw_move (game_manager.source_is_column)

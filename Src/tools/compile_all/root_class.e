@@ -258,6 +258,8 @@ feature {NONE} -- Implementation
 			l_file: STRING
 			l_dir_name: DIRECTORY_NAME
 			l_dir: KL_DIRECTORY
+			l_info_file: RAW_FILE
+			l_info_filename: FILE_NAME
 		do
 			l_system := a_target.system.name
 			l_target := a_target.name
@@ -288,6 +290,12 @@ feature {NONE} -- Implementation
 				l_dir_name.extend (l_system)
 				create l_dir.make (l_dir_name)
 				l_dir.recursive_create_directory
+				create l_info_filename.make_from_string (l_dir.name)
+				l_info_filename.set_file_name ("ecf_location")
+				create l_info_file.make_create_read_write (l_info_filename)
+				l_info_file.put_string (a_target.system.file_name)
+				l_info_file.close
+				
 				l_args.extend (l_dir_name)
 			else
 					-- We always use the directory of the ECF by default

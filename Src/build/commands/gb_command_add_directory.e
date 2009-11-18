@@ -102,10 +102,7 @@ feature -- Basic Operation
 					-- the name is invalid. After creating the tmeporary dir and file, we delete them both. Directories
 					-- are only actually created when generating the project if actually needed, but we must create a file
 					-- with the correct name to catch if it is valid or not on the current platform.
-				create test_directory.make_open_read (test_directory_name)
-				check
-					test_directory_does_not_exist: not test_directory.exists
-				end
+				create test_directory.make (test_directory_name)
 				test_directory.create_dir
 				test_file_name := test_directory_name.twin
 				test_file_name.extend (directory_name)

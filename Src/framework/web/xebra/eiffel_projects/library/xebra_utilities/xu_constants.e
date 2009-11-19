@@ -84,6 +84,7 @@ feature -- Request Message
 	Request_http11: STRING = "HTTP/1.1"
 	Request_http10: STRING = "HTTP/1.0"
 	Request_space: STRING = " "
+	Request_questionmark: STRING = "?"
 	Request_hi: STRING = "#HI#"
 	Request_ho: STRING = "#HO#"
 	Request_end: STRING = "#E#"

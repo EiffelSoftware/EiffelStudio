@@ -73,7 +73,7 @@ feature -- Status report
 					i > i_count or else not Result
 				loop
 					c := a_name[i]
-					Result := c.is_printable and c /= {INI_CONSTANTS}.section_start and c /= {INI_CONSTANTS}.section_end
+					Result := c.is_printable and c /= {INI_CONSTANTS}.section_start and c /= {INI_CONSTANTS}.section_end and c /= '%N'
 					i := i + 1
 				end
 			end
@@ -91,18 +91,42 @@ feature -- Status report
 			c: CHARACTER
 			i, i_count: INTEGER
 		do
-			Result := a_name.count <= {INI_CONSTANTS}.max_name_length
+			i_count := a_name.count
+			Result := i_count > 0 and then i_count <= {INI_CONSTANTS}.max_name_length
 			if Result then
 				from
 					i := 1
-					i_count := a_name.count
 				until
 					i > i_count or else not Result
 				loop
 					c := a_name[i]
-					Result := c.is_printable and c /= {INI_CONSTANTS}.property_value_qualifier
+					Result := c.is_printable and c /= {INI_CONSTANTS}.property_value_qualifier and c /= '%N'
 					i := i + 1
 				end
+			end
+		end
+
+	is_valid_property_value (a_value: READABLE_STRING_8): BOOLEAN
+			-- Determines if a given property value is valid for an INI file.
+			--
+			-- `a_value': Property value to validate.
+			-- `Result': True of the property name is valid; False otherwise.
+		require
+			a_value_attached: attached a_value
+		local
+			c: CHARACTER
+			i, i_count: INTEGER
+		do
+			Result := True
+			from
+				i := 1
+				i_count := a_value.count
+			until
+				i > i_count or else not Result
+			loop
+				c := a_value[i]
+				Result := c.is_printable and c /= '%N'
+				i := i + 1
 			end
 		end
 
@@ -127,22 +151,37 @@ feature -- Basic operations: Output
 
 	put_comment (a_comment: READABLE_STRING_8)
 			-- Puts a new comment on the current line.
+			--
+			-- `a_comment': INI comment.
 		require
 			is_writable: is_writable
 			a_comment_attached: attached a_comment
 		local
+			l_lines: LIST [READABLE_STRING_8]
+			l_line: READABLE_STRING_8
+			l_line_count: INTEGER
 			l_buffer: like buffer
 			l_spacing: BOOLEAN
 		do
 			l_spacing := is_spacing_required
 
 			l_buffer := buffer
-			l_buffer.append_character ({INI_CONSTANTS}.comment_pound)
-			if not a_comment.is_empty then
-				l_buffer.append_character (' ')
-				l_buffer.append_string_general (a_comment)
+			l_lines := a_comment.split ('%N')
+			from l_lines.start until l_lines.after loop
+				l_buffer.append_character ({INI_CONSTANTS}.comment_pound)
+				l_line := l_lines.item
+				if not l_line.is_empty then
+					l_buffer.append_character (' ')
+					l_line_count := l_line.count
+					if l_line[l_line_count] = '%R' then
+						l_buffer.append_string_general (l_line.substring (1, l_line_count - 1))
+					else
+						l_buffer.append_string_general (l_line)
+					end
+				end
+				l_buffer.append_character ('%N')
+				l_lines.forth
 			end
-			l_buffer.append_character ('%N')
 
 			is_spacing_required := l_spacing
 		ensure
@@ -188,6 +227,7 @@ feature -- Basic operations: Output
 			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
 			a_name_is_valid_property_name: is_valid_property_name (a_name)
+			a_value_is_valid_property_value: attached a_value implies is_valid_property_value (a_value)
 		local
 			l_medium: like medium
 		do
@@ -195,8 +235,10 @@ feature -- Basic operations: Output
 
 			l_medium := medium
 			l_medium.put_string (a_name.as_string_8)
+			l_medium.put_character (' ')
+			l_medium.put_character ({INI_CONSTANTS}.property_value_qualifier)
 			if attached a_value and then not a_value.is_empty then
-				l_medium.put_character ({INI_CONSTANTS}.property_value_qualifier)
+				l_medium.put_character (' ')
 				l_medium.put_string (a_value.as_string_8)
 			end
 			put_new_line

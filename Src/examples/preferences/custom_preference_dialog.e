@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			create dlg.make_with_title ("Export preferences to file")
 			dlg.show_modal_to_window (Current)
 			s := dlg.file_name
-			if s /= Void then
+			if s /= Void and then not s.is_empty then
 				create stor.make_with_location (s)
 				preferences.export_to_storage (stor, False)
 			end
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			create dlg.make_with_title ("Import preferences from file")
 			dlg.show_modal_to_window (Current)
 			s := dlg.file_name
-			if s /= Void then
+			if s /= Void and then not s.is_empty then
 				create stor.make_with_location (s)
 				preferences.import_from_storage (stor)
 				if selected_preference_name /= Void then

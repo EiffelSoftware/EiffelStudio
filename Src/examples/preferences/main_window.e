@@ -41,10 +41,11 @@ feature -- Preference Testing
 			fr: FONT_PREFERENCE
 			cr: COLOR_PREFERENCE
 			df: EV_FONT
+			psf: PREFERENCES_STORAGE_FACTORY
 		do
 			create l_factory
-			create basic_preferences.make_with_defaults_and_storage (<<"default.conf">>, create {PREFERENCES_STORAGE_REGISTRY}.make_empty)
---			create basic_preferences.make_with_defaults_and_storage (<<"default.conf">>, create {PREFERENCES_STORAGE_XML}.make_with_location ("user.conf"))
+			create psf
+			create basic_preferences.make_with_defaults_and_storage (<<"default.conf">>, psf.storage_for_basic)
 
 			create df.make_with_values (1, 6, 10, 8)
 			df.preferred_families.extend ("verdana")
@@ -76,11 +77,10 @@ feature -- Preference Testing
 			br: BOOLEAN_PREFERENCE
 			dr: DIRECTORY_RESOURCE
 			cr: COLOR_PREFERENCE
+			psf: PREFERENCES_STORAGE_FACTORY
 		do
---			create custom_preferences.make
---			create custom_preferences.make_with_storage (create {PREFERENCES_STORAGE_REGISTRY}.make_empty)
---			create custom_preferences.make_with_storage (create {PREFERENCES_STORAGE_XML}.make_empty)
-			create custom_preferences.make_with_storage (create {PREFERENCES_STORAGE_REGISTRY}.make_with_location ("default.conf"))
+			create psf
+			create custom_preferences.make_with_storage (psf.storage_for_custom)
 
 			create l_manager.make (custom_preferences, "display")
 			br := l_manager.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)

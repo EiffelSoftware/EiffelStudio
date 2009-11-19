@@ -6,8 +6,6 @@ class PARENT feature
 	display
 			-- Display basic information.
 		do
-			io.put_string ("THIS IS SOME ADDED TEXT")
-			io.new_line
 			io.put_string ("In class PARENT")
 			io.new_line
 			io.put_string ("---------------")
@@ -21,7 +19,7 @@ class PARENT feature
 			io.putstring ("Message number 1")
 			io.new_line; io.new_line
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -2,6 +2,11 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="preferences_example" uuid="F824BD73-1E99-428F-8FC9-5BFF5D5C0ADA">
 	<target name="common" abstract="true">
 		<root class="APPLICATION" feature="make_and_launch"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/temp$</exclude>
+		</file_rule>
 		<option warning="true">
 			<assertions precondition="true"/>
 			<warning name="export_class_missing" enabled="false"/>
@@ -14,10 +19,14 @@
 	</target>
 	<target name="xml" extends="common">
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf"/>
-		<cluster name="root_cluster" location=".\"/>
+		<cluster name="root_cluster" location=".\" >
+			<cluster name="storage_factory" location="$/spec/xml" />
+		</cluster>
 	</target>
 	<target name="registry" extends="common">
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf"/>
-		<cluster name="root_cluster" location=".\"/>
+		<cluster name="root_cluster" location=".\" >
+			<cluster name="storage_factory" location="$/spec/registry" />
+		</cluster>
 	</target>
 </system>

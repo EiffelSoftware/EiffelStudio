@@ -5,6 +5,7 @@
 		<option warning="true" full_class_checking="true">
 			<assertions precondition="true"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="parse" location="$ISE_LIBRARY\library\parse\parse.ecf"/>

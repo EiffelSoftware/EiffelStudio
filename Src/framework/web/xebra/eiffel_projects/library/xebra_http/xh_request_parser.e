@@ -67,6 +67,7 @@ feature {NONE} -- Parser
 			key_post,
 			key_http ,
 			key_space,
+			key_questionmark,
 			key_hi,
 			key_ho,
 			key_end,
@@ -90,6 +91,7 @@ feature {NONE} -- Parser
 			key_http := stringp ({XU_CONSTANTS}.request_http11) | stringp ({XU_CONSTANTS}.request_http10)
 			key_http.fixate
 			key_space := stringp ({XU_CONSTANTS}.request_space)
+			key_questionmark := stringp ({XU_CONSTANTS}.request_questionmark)
 			key_hi := stringp ({XU_CONSTANTS}.request_hi)
 			key_ho := stringp ({XU_CONSTANTS}.request_ho)
 			key_end := stringp ({XU_CONSTANTS}.request_end)
@@ -100,7 +102,7 @@ feature {NONE} -- Parser
 
 				-- User fields
 			args := (-any).consumer
-			url := (-(key_space.negate + any)).consumer
+			url := (-((key_questionmark | key_space).negate + any)).consumer + (-(key_space.negate + any))
 			item_name := (-(key_t_value.negate + any)).consumer
 			item_value := (-((key_t_name.negate + key_end.negate) + any)).consumer
 

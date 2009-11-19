@@ -70,8 +70,6 @@ feature {NONE} -- Initialization
 			tool_bar_bitmap, standard_tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
 		do
 			make_top (Title)
-			set_menu (main_menu)
-			resize (450, 400)
 			create static.make (Current,
 				"To see tooltip controls, move the mouse on %
 				%the track bar, the progress bar or the toolbar %
@@ -147,6 +145,9 @@ feature {NONE} -- Initialization
 			l_tool.set_rect (l_progress_bar.client_rect)
 			l_tool.set_text ("This a tooltip for the progress bar") -- Use a string
 			l_tooltip.add_tool (l_tool)
+
+			set_menu (main_menu)
+			resize (450, 400)
 		end
 
 feature -- Access
@@ -291,12 +292,6 @@ feature {NONE} -- Implementation
 
 	Title: STRING = "WEL Common controls";
 			-- Window's title
-
-invariant
-	tool_bar_attached: tool_bar /= Void
-	status_window_attached: status_window /= Void
-	rich_edit_attached: rich_edit /= Void
-	progress_bar_attached: progress_bar /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

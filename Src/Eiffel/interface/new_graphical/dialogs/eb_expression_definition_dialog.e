@@ -91,7 +91,11 @@ feature {NONE} -- Initialization
 			stick_with_current_object := True
 			make
 			on_object_radio.enable_select
-			address_field.set_text (oa.as_string)
+			if attached oa as l_add then
+				address_field.set_text (l_add.as_string)
+			else
+				address_field.remove_text
+			end
 			set_expression_mode
 			disable_all_but_object_radios
 		end
@@ -108,7 +112,11 @@ feature {NONE} -- Initialization
 			stick_with_current_object := True
 			make
 			as_object_radio.enable_select
-			address_field.set_text (oa.as_string)
+			if attached oa as l_add then
+				address_field.set_text (l_add.as_string)
+			else
+				address_field.remove_text
+			end
 			object_name_field.set_text (on)
 			set_object_name_mode
 			disable_all_but_object_radios
@@ -138,7 +146,11 @@ feature {NONE} -- Initialization
 			on_object_context_class := ac
 			make
 			on_object_radio.enable_select
-			address_field.set_text (oa.as_string)
+			if attached oa as l_add then
+				address_field.set_text (l_add.as_string)
+			else
+				address_field.remove_text
+			end
 			object_name_field.set_text (on)
 			set_expression_mode
 			disable_all_but_object_radios
@@ -174,11 +186,11 @@ feature {NONE} -- Initialization
 			else
 				make_for_context
 			end
-			if expr.text /= Void then
-				expression_field.set_text (expr.text)
+			if attached expr.text as l_text then
+				expression_field.set_text (l_text)
 			end
-			if expr.name /= Void then
-				object_name_field.set_text (expr.name)
+			if attached expr.name as l_name then
+				object_name_field.set_text (l_name)
 			end
 			modified_expression := expr
 			if expr.keep_assertion_checking then

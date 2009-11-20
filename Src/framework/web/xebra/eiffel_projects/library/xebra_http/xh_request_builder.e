@@ -31,13 +31,16 @@ feature -- Basic operations
 			a_previous_request_attached: a_previous_request /= Void
 		local
 			l_parser: XH_REQUEST_PARSER
-			l_temp: STRING
+			l_request_message: STRING
+			l_previous_message_split: STRING
 		do
 			create Result.make_empty
 			create l_parser.make
-
-			l_temp := a_previous_request.method + " " + a_url + " " + a_previous_request.request_message.split (' ').i_th (3)
-			if attached {XH_REQUEST} l_parser.request (l_temp) as l_rec then
+			l_previous_message_split := a_previous_request.request_message.twin
+			l_previous_message_split.remove_head (l_previous_message_split.index_of (' ', 1))
+			l_previous_message_split.remove_head (l_previous_message_split.index_of (' ', 1))
+			l_request_message := a_previous_request.method + " " + a_url + " " + l_previous_message_split
+			if attached {XH_REQUEST} l_parser.request (l_request_message) as l_rec then
 				Result := l_rec
 			end
 		ensure

@@ -2,7 +2,6 @@ note
 	description: "Objects that represents a GRID containing Object values (for debugging)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -641,7 +640,14 @@ feature {NONE} -- Actions implementation
 		do
 			if ab = 1 then
 				if attached {ES_OBJECTS_GRID_CELL} a_item as ei then
-					activate_grid_item (ei)
+					if
+						ev_application.ctrl_pressed and then
+						attached {EV_GRID_LABEL_ITEM} ei as glab
+					then
+						ev_application.clipboard.set_text (glab.text)
+					else
+						activate_grid_item (ei)
+					end
 				end
 			end
 		end

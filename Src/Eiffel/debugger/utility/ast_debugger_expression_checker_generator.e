@@ -380,7 +380,6 @@ feature -- Type checking
 					type_a_checker.init_for_checking (a_feature, l_wc, Void, error_handler)
 					an_ast.process (Current)
 					reset
-					set_is_inherited (True)
 					context.restore (l_ctx)
 				end
 				context.init_attribute_scopes

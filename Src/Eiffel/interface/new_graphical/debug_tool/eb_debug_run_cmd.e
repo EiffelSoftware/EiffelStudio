@@ -298,7 +298,7 @@ feature -- Execution
 			-- Continue the execution of the program (stepping ...)
 		do
 			if attached debugger_manager as dbg then
-				debugger_manager.controller.resume_workbench_application
+				dbg.controller.resume_workbench_application
 			end
 		end
 

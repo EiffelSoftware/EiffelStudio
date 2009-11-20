@@ -33,7 +33,7 @@ feature -- Basic operations
 		require
 			a_contents_attached: attached a_contents
 			not_a_contents_is_empty: not a_contents.is_empty
-			a_callbacks_attached: a_callbacks /= Void
+			a_callbacks_attached: attached a_callbacks
 		local
 			l_buffer: READABLE_STRING_32
 			l_partial_buffer: STRING_32
@@ -226,6 +226,7 @@ feature -- Basic operations
 			is_successful := False
 			l_error := True
 			a_callbacks.on_error (e_unknown_error, line, column)
+			retry
 		end
 
 feature {NONE} -- Constants: Stats

@@ -83,7 +83,7 @@ feature {INI_FAST_PARSER}  -- Actions: Atomic
 			-- `a_comment': The comment string.
 		require
 			not_is_abort_requested: not is_abort_requested
-			a_comment_attached: a_comment /= Void
+			a_comment_attached: attached a_comment
 		do
 		end
 
@@ -91,7 +91,7 @@ feature {INI_FAST_PARSER}  -- Actions: Atomic
 			-- Called when a new section is parsed.
 		require
 			not_is_abort_requested: not is_abort_requested
-			a_name_attached: a_name /= Void
+			a_name_attached: attached a_name
 			not_a_name_is_empty: not a_name.is_empty
 		deferred
 		end

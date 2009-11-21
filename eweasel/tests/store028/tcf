@@ -1,0 +1,20 @@
+test_name	storable-with-tuple-type
+test_description When storing a type involving TUPLE but without any TUPLE object with independent store, upon retrieval it could cause a memory corruption.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+execute_work   NONE exec_output store
+execute_result ok
+compare        exec_output output
+
+execute_work   NONE exec_output retrieve
+execute_result ok
+compare        exec_output output
+
+
+test_end

@@ -13,8 +13,14 @@ create
 feature {NONE} -- Initialization
 
 	make is
+		do
+			test1
+			test2
+		end
+
+	test1 is
 		local
-			l_trans: HASH_TABLE [ANY, INTEGER]
+			l_trans: HASH_TABLE [detachable ANY, INTEGER]
 		do
 			create l_trans.make (5)
 			l_trans.force (Void, 1)
@@ -53,6 +59,55 @@ feature {NONE} -- Initialization
 			l_trans.force (Void, 1)
 			l_trans.force (Void, 2)
 			l_trans.force (Void, 3)
+		end
+
+	test2 is
+		local
+			h: HASH_TABLE [detachable ANY, INTEGER]
+		do
+			create h.make (10)
+
+			h.put (Void, 336)
+			h.put (Void, 337)
+			h.remove (336)
+			h.remove (337)
+
+			h.put (Void, 339)
+			h.remove (339)
+
+			h.put (Void, 327)
+			h.put (Void, 329)
+			h.remove (327)
+			h.remove (329)
+
+			h.put (Void, 331)
+			h.remove (331)
+
+			h.put (Void, 333)
+
+			h.put (Void, 323)
+			h.put (Void, 324)
+			h.put (Void, 325)
+			h.put (Void, 326)
+			h.put (Void, 338)
+			h.put (Void, 328)
+			h.put (Void, 330)
+			h.put (Void, 332)
+
+			h.remove (323)
+			h.remove (324)
+			h.remove (325)
+			h.remove (326)
+			h.remove (338)
+			h.remove (328)
+			h.remove (330)
+			h.remove (332)
+
+			h.put (Void, 334)
+			h.put (Void, 335)
+
+			h.remove (333)
+			print (h.has (333))
 		end
 
 end -- class TEST

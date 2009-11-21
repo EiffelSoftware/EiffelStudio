@@ -198,7 +198,8 @@ doc:	</routine>
 rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
 {
 	RT_GET_CONTEXT
-	EIF_TYPE_INDEX  *l_cidarr, i;
+	EIF_TYPE_INDEX  *l_cidarr;
+	rt_uint_ptr count, i;
 	EIF_TYPE_INDEX dtype;
 
 	dtype = To_dtype(dftype);
@@ -225,19 +226,21 @@ rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
 	if (dftype != dtype) {
 		/* Now insert generics if any */
 		l_cidarr = eif_gen_cid (dftype);
-		i = *(l_cidarr++); /* count */
+		count = *l_cidarr;
+		l_cidarr++; /* count */
 
-		while (i--)
-		{
-			dtype = *(l_cidarr++);
+		for (i = 0; i < count; i++, l_cidarr++) {
+			dtype = *l_cidarr;
 
 				/* There is an annotation, we can simply discard all of them. */
 			while (RT_HAS_ANNOTATION_TYPE(dtype)) {
-				dtype = *(l_cidarr++);
+				l_cidarr++;
+				dtype = *l_cidarr;
 			}
 
 			if (dtype == TUPLE_TYPE) {
-				i = i - TUPLE_OFFSET;
+				i = i + TUPLE_OFFSET;
+					/* We have already advanced the cursor, so we have to substract 1. */
 				l_cidarr += TUPLE_OFFSET;
 				dtype = *l_cidarr;
 			}

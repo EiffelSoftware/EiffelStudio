@@ -176,9 +176,6 @@ feature {NONE} -- Implementation
 			Result := "GDI Artist"
 		end;
 
-invariant
-	dc_attached: dc /= Void
-
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

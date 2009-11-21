@@ -8,13 +8,12 @@ copy_raw	a.e $CLUSTER a.e
 compile_melted
 compile_result ok
 
-execute_work   NONE exec_output store
+execute_work   NONE exec_output_1 store
 execute_result ok
-compare        exec_output output
 
 execute_work   NONE exec_output retrieve
 execute_result ok
-compare        exec_output output
+compare        exec_output_2 output
 
 
 test_end

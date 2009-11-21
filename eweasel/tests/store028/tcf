@@ -11,7 +11,7 @@ compile_result ok
 execute_work   NONE exec_output_1 store
 execute_result ok
 
-execute_work   NONE exec_output retrieve
+execute_work   NONE exec_output_2 retrieve
 execute_result ok
 compare        exec_output_2 output
 

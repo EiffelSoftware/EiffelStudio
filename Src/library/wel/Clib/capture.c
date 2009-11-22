@@ -31,8 +31,9 @@ indexing
 
 static HWND hook_window = NULL;
 static HWND captured_window = NULL;
-static int is_top_dialog = 0;
 static HANDLE hThread = NULL;
+static HANDLE thr_start_event = NULL;
+static HWND thr_window = NULL;
 static DWORD dwThreadId = 0;
 static DWORD hook_process_id;
 static int is_desktop_composition_active = 0;
@@ -99,12 +100,9 @@ LRESULT CALLBACK cwel_mouse_hook_proc(int nCode, WPARAM wParam, LPARAM lParam)
 						 * called `SetCapture'. */
 					if (hover) {
 						(void) GetWindowThreadProcessId(hover, &l_process_id);
-						if (is_top_dialog || (l_process_id != hook_process_id)) {
-								/* The current window is not the target
-								 * window, so we simply post the message nothing the system to
-								 * forward the message to the current window
-								 * (return 1), and we send an identical
-								 * message to the target window. */
+						if (l_process_id != hook_process_id) {
+								/* The `hover' window does not belong to our process, so we simply
+								 * forward the message to `hook_window'. */
 							DWORD dwMousePos;
 							RECT rect;
 								/* Retrieve target window coordinates & compute the coordinates relative
@@ -161,13 +159,36 @@ rt_private DWORD WINAPI cwel_main_for_capture (LPVOID param)
 		/* If we succeed in creating the hook, that's good otherwise it means that
 		 * capture will be limited to the current application. */
 	if (mouse_hook) {
-		while (GetMessage(&Msg, NULL, 0, 0) > 0) {
-			TranslateMessage(&Msg);
-			DispatchMessage(&Msg);
+			/* Small trick to create the event queue for the current thread. */
+		PeekMessage(&Msg, NULL, WM_USER, WM_USER, PM_NOREMOVE);
+
+			/* Create a Window used to receive the messages. If the window
+			 * cannot be created we simply do as if there was no hook. */
+		thr_window = CreateWindow(L"STATIC", L"WEL capture", 0,
+			0, 0, 0, 0,
+			HWND_MESSAGE,
+			NULL,
+			NULL,
+			NULL);
+
+			/* We signal that now we can go ahead and terminate `cwel_capture'. */
+		SetEvent(thr_start_event);
+
+		if (thr_window) {
+				/* Event loop. */
+			while (GetMessage(&Msg, NULL, 0, 0) > 0) {
+				TranslateMessage(&Msg);
+				DispatchMessage(&Msg);
+			}
+			DestroyWindow(thr_window);
+			thr_window = NULL;
 		}
 
 		UnhookWindowsHookEx(mouse_hook);
 		mouse_hook = NULL;
+	} else {
+			/* We signal that now we can go ahead and terminate `cwel_capture'. */
+		SetEvent(thr_start_event);
 	}
 
 	ExitThread(0);
@@ -194,8 +215,6 @@ HWND cwel_captured_window(void)
 void cwel_capture (HWND hWnd) {
 
 	if (hWnd && IsWindow(hWnd)) {
-		HWND top_window;
-
 			/* Find out if we are on Vista/Windows 7 with desktop composition. */
 		compute_desktop_composition();
 
@@ -205,12 +224,6 @@ void cwel_capture (HWND hWnd) {
 		}
 
 		hook_window = hWnd;
-		top_window = GetAncestor (hWnd, GA_ROOT);
-		if (top_window && GetWindowLongPtr(top_window, DWLP_DLGPROC)) {
-			is_top_dialog = 1;
-		} else {
-			is_top_dialog = 0;
-		}
 		captured_window = SetCapture (hook_window);
 			/* The code below is to restore the capture if there was already one. */
 		if (captured_window) {
@@ -226,13 +239,35 @@ void cwel_capture (HWND hWnd) {
 
 		(void) GetWindowThreadProcessId (hook_window, &hook_process_id);
 
-		hThread = CreateThread (
-			NULL,			/* default security attributes */
-			0,				/* use default stack size */
-			cwel_main_for_capture,	/* thread function */
-			NULL,			/* argument to thread function */
-			0,				/* use default creation flags */
-			&dwThreadId);	/* returns the thread identifier */
+			/* Because we need to wait for the thread to start, we create an event, and the spawned
+			 * thread will signal it to let us know that the Windows event queue has been properly
+			 * initialized so that we can safely synchronize with the thread in `cwel_release_capture'.
+			 */
+		thr_start_event = CreateEvent(NULL, FALSE, FALSE, NULL);
+		hThread = NULL;
+		thr_window = NULL;
+			/* If we can create the Event then we can go ahead and try the thread creation, otherwise
+			 * we do nothing and there is no capture outside our window. */
+		if (thr_start_event) {
+				/* If the creation of the thread fails, then that's ok, we will simply not get the benefit
+				 * of the capture outside our window. */
+			hThread = CreateThread (
+				NULL,			/* default security attributes */
+				0,				/* use default stack size */
+				cwel_main_for_capture,	/* thread function */
+				NULL,			/* argument to thread function */
+				0,				/* use default creation flags */
+				&dwThreadId);	/* returns the thread identifier */
+
+			if (hThread) {
+					/* Thread was successfully created, we wait for the `thr_start_event' to be signaled. */
+				WaitForSingleObject(thr_start_event, INFINITE);
+			}
+				/* Regardless of the event being signaled above or of the thread
+				 * creation failing, we need to clean the allocated resource for `thr_start_event'. */
+			CloseHandle(thr_start_event);
+			thr_start_event = NULL;
+		}
 	}
 }
 
@@ -245,7 +280,14 @@ void cwel_release_capture() {
 	hook_window = NULL;
 		/* If the hook was successful in `cwel_capture' we should release it. */
 	if (hThread) {
-		PostThreadMessage (dwThreadId, WM_QUIT, (WPARAM) 0, (LPARAM) 0);
+		BOOL post_result;
+			/* If the window was created, then we can post the WM_QUIT message. If no window exists
+			 * then there was some issue in the thread and we are sure that the thread as exited immediately
+			 * and thus calling `WaitForSingleObject' should return immediately. */
+		if (thr_window) {
+			post_result = PostMessage (thr_window, WM_QUIT, (WPARAM) 0, (LPARAM) 0);
+				/* No need to destroy `thr_window' it is done in the thread. */
+		}
 		WaitForSingleObject (hThread, INFINITE);
 		CloseHandle (hThread);
 		hThread = NULL;

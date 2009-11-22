@@ -392,8 +392,12 @@ feature {NONE} -- Implementation
 			l_item_imp := find_item_at_position (x_pos, y_pos)
 			if transport_executing then
 				if l_item_imp /= Void and then l_item_imp.is_transport_enabled and then
-					not parent_is_pnd_source and then l_item_imp.parent /= Void then
+					not parent_is_pnd_source and then l_item_imp.parent /= Void
+				then
 					l_item_imp.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+					if l_item_imp.motion_action = ev_pnd_execute then
+						disable_default_processing
+					end
 				elseif attached pnd_item_source as l_pnd_item_source then
 					l_pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end

@@ -15,6 +15,7 @@ inherit
 			set_pointer_style
 		redefine
 			pnd_press,
+			escape_pnd,
 			check_drag_and_drop_release
 		end
 
@@ -64,7 +65,7 @@ feature -- Access
 			-- of pick/drag and drop.
 		do
 			if press_action = Ev_pnd_start_transport then
-				-- We must now check that we are not currently in a pick and drop.
+					-- We must now check that we are not currently in a pick and drop.
 					-- If we are, then we should do nothing, as the event was generated
 					-- as a result of clicking on a widget while dropping.
 				if application_imp.pick_and_drop_source = Void then
@@ -110,6 +111,18 @@ feature -- Access
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
+			end
+		end
+
+	escape_pnd
+			-- <Precursor>
+		do
+			if attached pnd_original_parent as l_pnd_original_parent then
+					-- There is nothing on items to finish pick and drop, we have to finish it via the parent.
+				l_pnd_original_parent.escape_pnd
+			else
+					-- No parent, let's use inherited version.
+				Precursor
 			end
 		end
 

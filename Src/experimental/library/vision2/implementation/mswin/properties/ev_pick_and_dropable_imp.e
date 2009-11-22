@@ -142,13 +142,25 @@ feature -- Status setting
 
 	escape_pnd
 			-- Escape the pick and drop.
+		local
+			l_pnd_source: detachable EV_PICK_AND_DROPABLE_IMP
 		do
-			application_imp.clear_transport_just_ended
+			l_pnd_source := application_imp.pick_and_drop_source
 				-- If we are executing a pick and drop
-			if attached application_imp.pick_and_drop_source as l_pnd_source then
-					-- We use default values which cause pick and drop to end.
-				l_pnd_source.end_transport (0, 0, 2, 0, 0, 0,
-					0, 0)
+			if l_pnd_source /= Void then
+				if l_pnd_source = Current then
+					application_imp.clear_transport_just_ended
+						-- We use default values which cause pick and drop to end.
+					l_pnd_source.end_transport (0, 0, 2, 0, 0, 0, 0, 0)
+				else
+						-- We have to forward the call to the original source as otherwise the source internal
+						-- state data won't be properly reset. This would happen when you start P&D from widget A
+						-- and over widget B you press `Esc', then B receives the key event, but we actually need
+						-- to reset `A'.
+					l_pnd_source.escape_pnd
+				end
+			else
+				application_imp.clear_transport_just_ended
 			end
 		ensure
 			not_in_transport: not transport_executing

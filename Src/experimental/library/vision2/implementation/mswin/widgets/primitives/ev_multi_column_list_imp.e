@@ -1009,12 +1009,15 @@ feature {NONE} -- WEL Implementation
 				--| with `pnd_press'.
 			if pre_drop_mcl_row /= Void and then
 				pre_drop_mcl_row.is_transport_enabled and then not
-				parent_is_pnd_source and then pre_drop_mcl_row.parent /= Void then
-					pre_drop_mcl_row.pnd_press (
-						x_pos, y_pos, button, pt.x, pt.y)
-				elseif attached pnd_item_source as l_pnd_item_source then
-					l_pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				parent_is_pnd_source and then pre_drop_mcl_row.parent /= Void
+			then
+				pre_drop_mcl_row.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				if pre_drop_mcl_row.motion_action = ev_pnd_execute then
+					disable_default_processing
 				end
+			elseif attached pnd_item_source as l_pnd_item_source then
+				l_pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+			end
 
 			if item_is_pnd_source_at_entry = item_is_pnd_source then
 				pnd_press (x_pos, y_pos, button, pt.x, pt.y)

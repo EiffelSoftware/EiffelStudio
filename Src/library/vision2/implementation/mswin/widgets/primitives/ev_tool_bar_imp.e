@@ -683,8 +683,12 @@ feature -- Basic operation
 				--| with `pnd_press'.
 			if not item_is_dockable_source then
 				if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
-					not parent_is_pnd_source and pre_drop_it.parent /= Void then
+					not parent_is_pnd_source and pre_drop_it.parent /= Void
+				then
 					pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+					if pre_drop_it.motion_action = ev_pnd_execute then
+						disable_default_processing
+					end
 				elseif pnd_item_source /= Void then
 					pnd_item_source.pnd_press (
 						x_pos, y_pos, button, pt.x, pt.y)

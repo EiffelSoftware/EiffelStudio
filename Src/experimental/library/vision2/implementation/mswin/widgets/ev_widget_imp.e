@@ -554,11 +554,13 @@ feature {NONE} -- Implementation, mouse_button_events
 		local
 			t: like translate_coordinates
 		do
-			t := translate_coordinates (x_pos, y_pos)
-			if application_imp.pointer_button_release_actions_internal /= Void then
-				application_imp.pointer_button_release_actions.call ([attached_interface, button, t.screen_x, t.screen_y])
+			if motion_action /= ev_pnd_execute then
+				t := translate_coordinates (x_pos, y_pos)
+				if application_imp.pointer_button_release_actions_internal /= Void then
+					application_imp.pointer_button_release_actions.call ([attached_interface, button, t.screen_x, t.screen_y])
+				end
+				call_pointer_actions (pointer_button_release_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 			end
-			call_pointer_actions (pointer_button_release_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 		end
 
 	on_button_double_click (x_pos, y_pos, button: INTEGER)

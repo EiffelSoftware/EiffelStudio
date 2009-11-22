@@ -461,8 +461,12 @@ feature {EV_ANY_I} -- WEL Implementation
 				--| If the parent is now void then it has, and there is no need to continue
 				--| with `pnd_press'.
 			if pre_drop_it /= Void and then pre_drop_it.is_transport_enabled and
-				then not parent_is_pnd_source and then pre_drop_it.parent /= Void then
+				then not parent_is_pnd_source and then pre_drop_it.parent /= Void
+			then
 				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				if pre_drop_it.motion_action = ev_pnd_execute then
+					disable_default_processing
+				end
 			elseif attached pnd_item_source as l_pnd_item_source then
 				l_pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			end

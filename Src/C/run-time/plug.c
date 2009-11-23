@@ -635,7 +635,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 
 	EIF_GET_CONTEXT
 	EIF_TYPE_INDEX dtype;						/* Dunamic type of `obj' */
-	union overhead *zone = HEADER(obj);
+	union overhead *zone;
 	long i; /* %%ss removed , nb; */
 	long nb_exp = 0L;
 	long nb_ref;					/* Number of references in `obj' */
@@ -645,6 +645,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	EIF_TYPE_INDEX **cn_gtypes;
 	long nb_attr;
 	struct cnode *desc;
+	int has_expanded = 0;
 	RTLD;
 
 	/* We have to get GC hooks, in case the creation routines we call on the
@@ -654,7 +655,6 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	RTLI(2);
 	RTLR(0,obj);
 	RTLR(1,parent);
-	zone->ov_flags |= EO_COMP;				/* Set the composite flag of `obj' */
 
 	dtype = Dtype(obj);
 	desc = &System(dtype);
@@ -674,6 +674,9 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			uint32 exp_offset;				/* Attribute offset */
 			EIF_TYPE_INDEX orig_exp_dtype, exp_dtype;	/* Expanded dynamic type */
 			EIF_TYPE_INDEX *cid, dftype;
+
+				/* Current has some expanded objects, we need to make `obj' composite. */
+			has_expanded = 1;
 
 			CAttrOffs(exp_offset,cn_attr[i],dtype);
 			orig_exp_dtype = exp_dtype = (EIF_TYPE_INDEX) (type & SK_DTYPE);
@@ -726,6 +729,9 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			{
 			uint32 offset;					/* Attribute offset */
 		
+				/* Current has some expanded objects, we need to make `obj' composite. */
+			has_expanded = 1;
+
 			/* Set dynamic type for bit expanded object */	
 			CAttrOffs(offset,cn_attr[i],dtype);
 			zone = HEADER(obj + offset);
@@ -743,6 +749,12 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 		default:
 			break;
 		}
+	}
+
+		/* Current has some expanded objects, we need to make `obj' composite. */
+	if (has_expanded) {
+		zone = HEADER(obj);
+		zone->ov_flags |= EO_COMP;				/* Set the composite flag of `obj' */
 	}
 
 	RTLE;

@@ -74,6 +74,9 @@
  * @see template_preprocess()
  * @see template_preprocess_page()
  */
+
+include "eiffelsoftware-menu/menu.inc";
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language; ?>" lang="<?php print $language->language; ?>" dir="<?php print $language->dir; ?>">
@@ -82,10 +85,12 @@
   <title><?php print $head_title; ?></title>
   <?php print $head; ?>
   <?php print $styles; ?>
+  <?php eiffelsoftware_menu_print_style($base_path .$directory."/eiffelsoftware-menu/"); ?>
   <?php print $scripts; ?>
   <script type="text/javascript"><?php /* Needed to avoid Flash of Unstyled Content in IE */ ?> </script>
 </head>
 <body class="<?php print $body_classes; ?>">
+  <?php eiffelsoftware_menu_print_html(); ?>
   <div id="page">
     <div id="top-bar">
       <div id="user-info">
@@ -210,5 +215,17 @@
     <?php print $closure; ?>
 
   </div> <!-- /page -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." :
+"http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost +
+"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1289714-5");
+pageTracker._trackPageview();
+} catch(err) {}</script>
 </body>
 </html>

@@ -360,7 +360,9 @@
   }
 
   #top-bar {
-    /* position: relative; top: 15px; */
+    line-height: 0;
+    position: relative; 
+    top: 85px;
     margin: 0;
     padding: 0 20px 0 0px;
   }
@@ -859,3 +861,13 @@ div.geshifilter pre {
 span.geshifilter code {
     font-family: monospace;
 }
+
+/* others */
+
+hr {
+  height: 0px;
+  color: #000;
+  border: none;
+  border-top: solid 1px #999;
+}
+

@@ -164,6 +164,12 @@ function isedoc_node_ids_by_uuid($uuid) {
 	}
 }
 
+function isedoc_uuid_page_display(&$node) {
+	$output = t("Page %tit", array('%tit' => $node->title));
+	$output .= " (" . l(t("view"), $node->path) .")";
+	return $output;
+}
+
 /*
  * Query References
  */

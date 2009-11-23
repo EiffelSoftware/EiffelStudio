@@ -40,10 +40,4 @@ function isedoc_uuid_query($uuid,$a_section) {
 	return $output."<br/><br/>";
 }
 
-function isedoc_uuid_page_display(&$node) {
-	$output = t("Page %tit", array('%tit' => $node->title));
-	$output .= " (" . l(t("view"), $node->path) .")";
-	return $output;
-}
-
 ?>

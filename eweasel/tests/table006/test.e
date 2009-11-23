@@ -107,7 +107,10 @@ feature {NONE} -- Initialization
 			h.put (Void, 335)
 
 			h.remove (333)
-			print (h.has (333))
+			if h.has (333) then
+				io.put_string ("Not OK!")
+				io.put_new_line
+			end
 		end
 
 end -- class TEST

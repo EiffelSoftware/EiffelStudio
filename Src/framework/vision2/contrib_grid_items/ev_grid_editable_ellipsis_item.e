@@ -59,7 +59,7 @@ feature -- Status
 
 feature -- Access
 
-	button: EV_BUTTON
+	button: EV_WIDGET
 			-- Ellipsis button used to edit `Current' on activate.
 			-- Void when `Current' isn't beeing activated.
 
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			text_field.return_actions.extend (agent return_pressed)
 			text_field.focus_out_actions.extend (agent focus_lost)
 			button.focus_out_actions.extend (agent focus_lost)
-			button.select_actions.extend (agent call_ellipsis_actions)
+			button.pointer_button_release_actions.force_extend (agent call_ellipsis_actions)
 
 			text_field.set_focus
 			user_cancelled_activation := False
@@ -128,16 +128,17 @@ feature {NONE} -- Implementation
 			-- Activate action.
 		local
 			hb: EV_HORIZONTAL_BOX
+			p: EV_PIXMAP
+			cl: EV_CELL
+			d: EV_DRAWING_AREA
+			bgcolor,fgcolor: EV_COLOR
 		do
 			popup_window := a_popup_window
---			a_popup_window.set_x_position (a_popup_window.x_position + 1)
---			a_popup_window.set_size (a_popup_window.width - 1, a_popup_window.height -1 )
-
 			if is_text_editing then
 				create text_field
 				text_field.implementation.hide_border
-				if font /= Void then
-					text_field.set_font (font)
+				if attached font as ft then
+					text_field.set_font (ft)
 				end
 
 				if not is_text_editing then
@@ -145,19 +146,41 @@ feature {NONE} -- Implementation
 				end
 
 				text_field.set_text (text)
-
-				text_field.set_background_color (implementation.displayed_background_color)
-				a_popup_window.set_background_color (implementation.displayed_background_color)
-				text_field.set_foreground_color (implementation.displayed_foreground_color)
+				bgcolor := implementation.displayed_background_color
+				fgcolor := implementation.displayed_foreground_color
+				text_field.set_background_color (bgcolor)
+				a_popup_window.set_background_color (bgcolor)
+				text_field.set_foreground_color (fgcolor)
 
 				create hb
 				hb.extend (text_field)
 
-				create button
-				button.set_pixmap (ellipsis)
-				hb.extend (button)
-				hb.disable_item_expand (button)
-				button.set_minimum_height (a_popup_window.height)
+					--| ellipsis button
+				create d
+				d.set_background_color (bgcolor)
+				d.set_minimum_size (4 + ellipsis_width, (height - 1).max (2 + ellipsis_height))
+				hb.extend (d)
+				hb.disable_item_expand (d)
+				d.expose_actions.extend (agent draw_ellipsis (d, ?, ?, ?, ?))
+				d.pointer_enter_actions.extend (agent (ai_d: EV_DRAWING_AREA; ai_col: EV_COLOR)
+						local
+							old_c: EV_COLOR
+						do
+							old_c := ai_d.foreground_color
+							ai_d.set_foreground_color (ai_col)
+							ai_d.draw_rectangle (0, 0, ai_d.width, ai_d.height)
+							ai_d.set_foreground_color (old_c)
+						end(d, parent.separator_color))
+				d.pointer_leave_actions.extend (agent (ai_d: EV_DRAWING_AREA; ai_col: EV_COLOR)
+						local
+							old_c: EV_COLOR
+						do
+							old_c := ai_d.foreground_color
+							ai_d.set_foreground_color (ai_col)
+							ai_d.draw_rectangle (0, 0, ai_d.width, ai_d.height)
+							ai_d.set_foreground_color (old_c)
+						end(d, bgcolor))
+				button := d
 
 				a_popup_window.extend (hb)
 				update_popup_dimensions (a_popup_window)
@@ -165,7 +188,6 @@ feature {NONE} -- Implementation
 				a_popup_window.show_actions.extend_kamikaze (agent initialize_actions)
 				is_activated := True
 			else
---				update_popup_dimensions (a_popup_window)
 				call_ellipsis_actions
 			end
 		ensure then
@@ -177,21 +199,21 @@ feature {NONE} -- Implementation
 			-- Cleanup from previous call to `activate'.
 		do
 			Precursor {EV_GRID_EDITABLE_ITEM}
-			if button /= Void then
-				button.destroy
+			if attached button as b then
+				b.destroy
 				button := Void
 			end
-			if text_field /= Void then
-				text_field.destroy
+			if attached text_field as tf then
+				tf.destroy
 				text_field := Void
 			end
-			if popup_window /= Void then
-				popup_window.destroy
+			if attached popup_window as pw then
+				pw.destroy
 				popup_window := Void
 			end
 			is_activated := False
-			if parent /= Void and then not parent.is_destroyed and then parent.is_displayed then
-				parent.set_focus
+			if attached parent as pt and then not pt.is_destroyed and then pt.is_displayed then
+				pt.set_focus
 			end
 		ensure then
 			popup_window_void: popup_window = Void
@@ -201,9 +223,10 @@ feature {NONE} -- Implementation
 		end
 
 	inside_outter_edition: BOOLEAN
+			-- Is inside outter edition?
 
 	enter_outter_edition
-			--
+			-- Enter outter edition
 		require
 			is_activated: is_activated
 		do
@@ -220,18 +243,16 @@ feature {NONE} -- Implementation
 		end
 
 	leave_outter_edition
-			--
---		require
---			is_activated: is_activated
+			-- Leave outter edition
 		do
-			if popup_window /= Void then
-				popup_window.show
+			if attached popup_window as pw then
+				pw.show
 			end
-			if text_field /= Void then
-				text_field.enable_sensitive
+			if attached text_field as tf then
+				tf.enable_sensitive
 			end
-			if button /= Void then
-				button.enable_sensitive
+			if attached button as b then
+				b.enable_sensitive
 			end
 			inside_outter_edition := False
 		end
@@ -262,18 +283,36 @@ feature {NONE} -- Implementation
 			ellipsis_actions.call (Void)
 		end
 
+	draw_ellipsis (a_drawable: EV_DRAWABLE; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
+		local
+			l_x_offset, l_y_offset: INTEGER
+		do
+			a_drawable.clear
+			a_drawable.set_foreground_color (implementation.displayed_foreground_color)
+			l_x_offset := (a_width - ellipsis_width) // 2
+			l_y_offset := (a_height - ellipsis_height) // 2
+
+				-- Draw a drop down triangle.
+			a_drawable.fill_rectangle (l_x_offset + 0, l_y_offset + 0, 2, 2)
+			a_drawable.fill_rectangle (l_x_offset + 3, l_y_offset + 0, 2, 2)
+			a_drawable.fill_rectangle (l_x_offset + 6, l_y_offset + 0, 2, 2)
+		end
+
+	ellipsis_width: INTEGER = 8
+	ellipsis_height: INTEGER = 2
+
 	ellipsis: EV_PIXMAP
 			-- Icon for ellipsis
 		local
 			l_mask: EV_BITMAP
 		once
 				-- Draw a drop down triangle.
-			create Result.make_with_size (8, 2)
+			create Result.make_with_size (ellipsis_width, ellipsis_height)
 			Result.fill_rectangle (0, 0, 2, 2)
 			Result.fill_rectangle (3, 0, 2, 2)
 			Result.fill_rectangle (6, 0, 2, 2)
 
-			create l_mask.make_with_size (8, 2)
+			create l_mask.make_with_size (ellipsis_width, ellipsis_height)
 			l_mask.fill_rectangle (0, 0, 2, 2)
 			l_mask.fill_rectangle (3, 0, 2, 2)
 			l_mask.fill_rectangle (6, 0, 2, 2)
@@ -288,7 +327,7 @@ invariant
 	ellipsis_actions_not_void: ellipsis_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -301,22 +340,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

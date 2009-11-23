@@ -13,7 +13,8 @@ inherit
 	EV_GRID
 		redefine
 			initialize,
-			destroy
+			destroy,
+			implementation, create_implementation
 		end
 
 	EV_SHARED_APPLICATION
@@ -92,6 +93,14 @@ feature -- Access
 	auto_size_best_fit_column: INTEGER
 			-- Column index automatically resized to ensure all columns fit in view.
 			-- Note: 0 indicates no best-fitting
+
+	depth_in_tree (a_row_index: INTEGER): INTEGER
+			-- Depth in tree for `a_row'
+		require
+			valid_index: 0 < a_row_index and a_row_index <= row_count
+		do
+			Result := implementation.depth_in_tree (a_row_index)
+		end
 
 feature {NONE} -- Access
 
@@ -1162,11 +1171,24 @@ feature {NONE} -- Tree view behavior
 			result_attached: Result /= Void
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: ES_GRID_I
+		-- Responsible for interaction with native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_implementation
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {ES_GRID_IMP} implementation.make
+		end
+
 invariant
 	selected_rows_agent_attached: selected_rows_function /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1179,22 +1201,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

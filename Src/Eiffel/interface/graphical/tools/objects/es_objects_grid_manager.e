@@ -168,17 +168,16 @@ feature -- Clipboard related
 
 	update_clipboard_string_with_selection (grid: ES_OBJECTS_GRID)
 		local
-			dv: ABSTRACT_DEBUG_VALUE
-			s, text_data: STRING_32
+			s, l_text_data: STRING_32
 			lrows: LIST [EV_GRID_ROW]
 			lrows_index: SORTED_TWO_WAY_LIST [INTEGER]
+			lrows_depth: ARRAY [INTEGER]
 			lrow: EV_GRID_ROW
-			gline: ES_OBJECTS_GRID_LINE
-			c: INTEGER
-			gi: EV_GRID_LABEL_ITEM
+			i, c,d, doffset: INTEGER
 		do
 			lrows := grid.selected_rows
 			if lrows.count > 0 then
+					--| Keep only displayed selected rows, and sort them
 				from
 					create lrows_index.make
 					lrows.start
@@ -191,20 +190,41 @@ feature -- Clipboard related
 					end
 					lrows.forth
 				end
+
+					--| Compute common depth
 				from
-					create text_data.make_empty
+					create lrows_depth.make_filled (0, 1, lrows_index.count)
+					i := 1
 					lrows_index.start
+					doffset := -1
+				until
+					lrows_index.after
+				loop
+					d := grid.depth_in_tree (lrows_index.item)
+					lrows_depth[i] := d
+					if doffset = -1 then
+						doffset := d
+					else
+						doffset := doffset.min (d)
+					end
+					lrows_index.forth
+					i := i + 1
+				end
+
+					--| Get text representation
+				from
+					create l_text_data.make_empty
+					lrows_index.start
+					i := 1
 				until
 					lrows_index.after
 				loop
 					lrow := grid.row (lrows_index.item)
 					if lrow /= Void then
-						gline ?= lrow.data
-						if gline /= Void then
+						if attached {ES_OBJECTS_GRID_LINE} lrow.data as gline then
 							s := gline.text_data_for_clipboard
 						else
-							dv ?= grid_data_from_widget (lrow)
-							if dv /= Void then
+							if attached {ABSTRACT_DEBUG_VALUE} grid_data_from_widget (lrow) as dv then
 								s := dv.dump_value.full_output
 							else
 								s ?= lrow.data
@@ -217,8 +237,7 @@ feature -- Clipboard related
 							until
 								c > lrow.count
 							loop
-								gi ?= lrow.item (c)
-								if gi /= Void then
+								if attached {EV_GRID_LABEL_ITEM} lrow.item (c) as gi then
 									s.append (gi.text)
 								end
 								s.append_character ('%T')
@@ -226,15 +245,22 @@ feature -- Clipboard related
 							end
 						end
 						if s /= Void then
-							text_data.append (s)
-							text_data.append ("%N")
+							check lrows_depth_valid_index: lrows_depth.valid_index (i) end
+							d := lrows_depth[i]
+
+							if d > 0 then
+								l_text_data.append (create {STRING}.make_filled (' ', (d - doffset) * 2))
+							end
+							l_text_data.append (s)
+							l_text_data.append ("%N")
 						end
 					end
 					lrows_index.forth
+					i := i + 1
 				end
 			end
-			if text_data /= Void and then not text_data.is_empty then
-				ev_application.clipboard.set_text (text_data)
+			if l_text_data /= Void and then not l_text_data.is_empty then
+				ev_application.clipboard.set_text (l_text_data)
 			else
 				ev_application.clipboard.remove_text
 			end

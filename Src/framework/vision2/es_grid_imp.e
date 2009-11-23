@@ -10,6 +10,9 @@ class
 
 inherit
 	ES_GRID_I
+		undefine
+			propagate_foreground_color,
+			propagate_background_color
 		redefine
 			interface
 		end

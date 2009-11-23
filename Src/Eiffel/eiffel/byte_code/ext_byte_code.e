@@ -13,7 +13,7 @@ inherit
 			argument_names as std_argument_names,
 			argument_types as std_argument_types
 		redefine
-			generate, generate_compound, analyze,
+			generate, generate_compound, analyze, generate_return_exp,
 			is_external, pre_inlined_code, inlined_byte_code,
 			make_body_code
 		end
@@ -255,6 +255,44 @@ feature -- C code generation
 			if l_need_protection then
 				release_hector_variables
 				context.set_is_argument_protected (False)
+			end
+		end
+
+	generate_return_exp
+			-- Generate the return expression
+		local
+			l_type: TYPE_A
+			l_type_c: TYPE_C
+			buf: GENERATION_BUFFER
+			l_name: STRING
+			l_class_type: CLASS_TYPE
+		do
+			l_type := real_type (result_type)
+			if l_type.is_true_expanded then
+				buf := buffer
+					-- If the C externals failed into creating an expanded object, then we create a default one.
+				buf.put_new_line
+				buf.put_string ("if (!Result) {")
+				buf.indent
+				l_class_type := l_type.associated_class_type (Context.context_class_type.type)
+				l_name := Context.Result_register.Register_name
+				l_class_type.generate_expanded_creation (buf, l_name, result_type, Context.context_class_type)
+				l_class_type.generate_expanded_initialization (buf, l_name, l_name, True)
+				buf.generate_block_close
+
+				buf.put_new_line
+				if Context.workbench_mode then
+					l_type_c := l_type.c_type
+					buf.put_string (once "{ EIF_TYPED_VALUE r; r.")
+					l_type_c.generate_typed_tag (buf)
+					buf.put_string (once "; r.")
+					l_type_c.generate_typed_field (buf)
+					buf.put_string (once " = Result; return r; }")
+				else
+					buf.put_string ("return Result;")
+				end
+			else
+				Precursor
 			end
 		end
 

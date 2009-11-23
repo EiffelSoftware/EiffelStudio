@@ -824,10 +824,15 @@ end
 			if context.result_used then
 				type_i := real_type (result_type)
 				if type_i.is_true_expanded then
-					l_class_type := type_i.associated_class_type (context.context_class_type.type)
-					l_name := context.result_register.register_name
-					l_class_type.generate_expanded_creation (l_buffer, l_name, result_type, context.context_class_type)
-					l_class_type.generate_expanded_initialization (l_buffer, l_name, l_name, True)
+						-- If we have a C external returning an expanded, we let the external
+						-- create the expanded, and if it fails then it will perform the allocation
+						-- after calling it (done in {EXT_BYTE_CODE}.generate_return_exp).
+					if not is_external then
+						l_class_type := type_i.associated_class_type (context.context_class_type.type)
+						l_name := context.result_register.register_name
+						l_class_type.generate_expanded_creation (l_buffer, l_name, result_type, context.context_class_type)
+						l_class_type.generate_expanded_initialization (l_buffer, l_name, l_name, True)
+					end
 				elseif type_i.is_bit then
 					l_buffer.put_string (context.result_register.register_name)
 					l_buffer.put_three_character (' ', '=', ' ')

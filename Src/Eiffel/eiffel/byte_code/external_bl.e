@@ -484,10 +484,11 @@ feature {NONE} -- Status report
 			else
 				t := type.instantiated_in (context.current_type)
 				if
-					not t.is_expanded and then
+					t.is_true_expanded or else
+					(not t.is_expanded and then
 					(t.is_attached or else
 					t.is_formal or else
-					t.is_like and then not t.is_like_current and then not t.is_like_argument)
+					t.is_like and then not t.is_like_current and then not t.is_like_argument))
 				then
 						-- The external routine requires a check that the result is attached.
 					Result := True

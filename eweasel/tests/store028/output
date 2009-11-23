@@ -1,2 +1,2 @@
-A [TUPLE [STRING, INTEGER]]
+A [TUPLE [STRING_8, INTEGER_32]]
 Execution completed

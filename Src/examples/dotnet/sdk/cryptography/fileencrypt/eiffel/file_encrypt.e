@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			Result := (create {UNICODE_ENCODING}.make).get_bytes (a_str)
 		ensure
 			result_attached: Result /= Void
-			result_count_matches_input_length: a_str.length = Result.count
+			result_count_matches_input_length: a_str.length * 2 = Result.count
 		end
 
 note

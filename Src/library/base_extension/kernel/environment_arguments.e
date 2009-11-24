@@ -133,6 +133,9 @@ feature {NONE} -- Implementation
 		once
 			create exec
 			l_flags := exec.get (arguments_environment_name)
+			if l_flags /= Void then
+				l_flags.right_adjust --| To exclude flag with only whitespace
+			end
 			if l_flags /= Void and then not l_flags.is_empty then
 				from
 					r := base_arguments.argument_count + 1

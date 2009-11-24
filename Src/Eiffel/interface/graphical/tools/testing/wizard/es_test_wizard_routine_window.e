@@ -487,10 +487,10 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	sorter: DS_QUICK_SORTER [STRING]
+	sorter: DS_QUICK_SORTER [READABLE_STRING_8]
 			-- Tag sorter
 		once
-			create Result.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make)
+			create Result.make (create {KL_COMPARABLE_COMPARATOR [READABLE_STRING_8]}.make)
 		ensure
 			result_attached: Result /= Void
 		end

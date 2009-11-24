@@ -1,5 +1,5 @@
 <?php
-// $Id: trash.module,v 1.2 2008/02/21 17:42:15 roetzi Exp $
+// $Id: trash.module,v 1.2.2.1 2009/03/25 09:54:33 roetzi Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ function trash_menu_alter(&$callbacks) {
  * Access callback for 'Move to trash' tab.
  */
 function _trash_move_tab_access($node) {
-  return $node->nid && trash_enabled($node->type) && trash_move_to_trash_tab_enabled($node->type) && user_access("edit trash");
+  return $node->nid && trash_enabled($node->type) && trash_move_to_trash_tab_enabled($node->type) && user_access ('edit trash');
 }
 
 /**
@@ -178,8 +178,7 @@ function trash_form_alter(&$form, $form_state, $form_id) {
           unset($form['buttons']['delete']);
         }
         else {
-//FIXME: jfiat
-          //$form['buttons']['delete']['#value'] = t('Move to trash');
+//FIXME:jfiat: $form['buttons']['delete']['#value'] = t('Move to trash');
         }
       }
     }
@@ -252,7 +251,7 @@ function trash_delete_button_removing_enabled($node_type) {
  */
 function trash_deleted_message($node) {
   $output = '';
-  drupal_set_title(t('Trash:') . ' ' . $node->title);
+  drupal_set_title(t('Trash: @title', array('@title' => $node->title)));
   if (user_access('view trash')) {
     $output .= '<p>' . t('This page has been moved to the !trash.', array('!trash' => l(t('trash'), 'trash'))) . '</p>';
     $output .= '<p>' . t('You can') . '</p><ul>';
@@ -323,7 +322,7 @@ function trash_view() {
 function trash_view_node($node) {
   $output = '';
   if (node_access('view', $node) && $node->status == STATUS_TRASH) {
-    drupal_set_title(t('Trash:') . ' ' . check_plain($node->title));
+    drupal_set_title(t('Trash: @title', array('@title' => $node->title)));
     $output = node_view($node, FALSE, TRUE, TRUE);
   }
   else {

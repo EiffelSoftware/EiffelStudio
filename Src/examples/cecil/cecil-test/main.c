@@ -63,7 +63,7 @@ void eiffel_call(char *class_name, char *proc_name, EIF_OBJECT target)
    	printf ("\tEiffel procedure %s 0x%x\n", proc_name, e_proc);
 
 		/* Print direct reference to Eiffel object. */
-	printf ("\tEiffel object = 0x%x\n", (EIF_REFERENCE)eif_access (target)); 
+	printf ("\tEiffel object = 0x%x\n", eif_access (target)); 
 
 		/* Call Eiffel procedure on Eiffel object. */ 
 	(e_proc)(eif_access (target));	
@@ -101,8 +101,8 @@ void eiffel_call_1_arg(char *class_name,char *proc_name,EIF_OBJECT target, EIF_O
    	printf ("\tEiffel procedure %s 0x%x\n", proc_name, e_proc);
 
 		/* Print direct reference to Eiffel objects. */
-	printf ("\tEiffel object = 0x%x\n", (EIF_REFERENCE) eif_access (target));
-	printf ("\tEiffel object = 0x%x\n", (EIF_REFERENCE) eif_access (arg));
+	printf ("\tEiffel object = 0x%x\n", eif_access (target));
+	printf ("\tEiffel object = 0x%x\n", eif_access (arg));
 
 		/* Call Eiffel procedure on Eiffel object. */ 
 	printf ("Execute the Eiffel code `print (linked_list)' from the C side:\n");
@@ -168,9 +168,8 @@ void cecil_test() {
 	EIF_PROCEDURE p_forth;	/* `forth' from LINKED_LIST */
 	EIF_TYPE_ID string_id;		/* Type id of STRING */
 	EIF_TYPE_ID linked_list_id;	/* Type id of LINKED_LIST */
-	EIF_OBJECT i_linked_list;	/* safe pointer to `linked_list' from MAIN */
-	EIF_REFERENCE o_linked_list;	/* Direct reference (unsafe) to `linked_list'
-									 * from MAIN */
+	EIF_REFERENCE o_linked_list;	/* Direct (unsafe) reference to `linked_list' taken from MAIN */
+	EIF_REFERENCE i_linked_list;	/* Direct (unsafe) reference to `linked_list' taken from `linked_list' */
 		/* for visibility test */ 
 	char rout_name[64], class_name[64];	
 	int type_id;
@@ -178,9 +177,9 @@ void cecil_test() {
 	printf ("\n====== In cecil_test ======\n");
 
 		/* Get the protected "linked_list" field of the main object. */
-	o_linked_list = eif_field((EIF_REFERENCE) eif_access(main_obj), "linked_list", EIF_REFERENCE);	
+	o_linked_list = eif_field(eif_access(main_obj), "linked_list", EIF_REFERENCE);	
 		/* Protect `o_linked_listect'. Get its indirection `linked_list'. */
-	linked_list = (EIF_OBJECT) eif_protect(o_linked_list);
+	linked_list = eif_protect(o_linked_list);
 	printf ("\tprotected indirection of %x is %x\n", o_linked_list, linked_list);
 
 		/* Get and print the type id of class STRING. */

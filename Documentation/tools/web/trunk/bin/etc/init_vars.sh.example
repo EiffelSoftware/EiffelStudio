@@ -1,0 +1,6 @@
+#!/bin/sh
+
+DB_USER=root
+DB_PASS=ENTER_Your_SQL_password
+BACKUP_FOLDER=/home/isewww/sites/doc/backup
+

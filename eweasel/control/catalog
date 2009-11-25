@@ -1447,6 +1447,7 @@ test	wrong-type-creation				exec316	tcf fail execution
 test	long-string-to-double			exec317 tcf pass execution
 test	ref-exp-polymorphism			exec318 tcf fail execution
 test	loop-expression-smoke-test		exec319 tcf pass loop expression
+test	expanded-deep-physical-size		exec320 tcf fail execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

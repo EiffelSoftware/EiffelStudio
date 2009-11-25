@@ -136,6 +136,7 @@ feature -- Access
 
 	is_visible: BOOLEAN
 			-- If Current visible?
+			-- Note: if current is auto-hide (`user_widget' NOT dispalyed, only a tab stub is displayed), the value is True.
 
 	is_floating: BOOLEAN
 			-- If Current floating?

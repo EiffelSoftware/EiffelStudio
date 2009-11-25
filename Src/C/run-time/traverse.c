@@ -759,7 +759,9 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	marked_collection = &l_marked;
 
 		/* Traverse all stacks and root object to find objects matching `action_fnptr'. */
-	match_object (root_obj, action_fnptr);
+	if (root_obj) {
+		match_object (root_obj, action_fnptr);
+	}
 
 #ifdef ISE_GC
 	match_simple_stack (&hec_saved, action_fnptr);

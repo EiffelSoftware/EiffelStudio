@@ -122,9 +122,7 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 	exvect = exset((char *) 0, 0, (char *) 0); \
 	(exvect->ex_jbuf) = &exenv; \
 	if ( ((echval) = setjmp(exenv)) ) \
-		fail_func(); \
-	if (root_obj == (char *)0) \
-		root_obj = cmalloc(1);
+		fail_func();
 #else	/* !_CRAY */
 #define EIF_RT_BASIC_SETUP(fail_func) \
 	EIF_GET_CONTEXT \
@@ -136,9 +134,7 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 	exvect = exset((char *) 0, 0, (char *) 0); \
 	(exvect->ex_jbuf) = &exenv; \
 	if ( setjmp(exenv)) \
-		fail_func(); \
-	if (root_obj == (char *)0) \
-		root_obj = cmalloc(1);
+		fail_func();
 #endif	/* !_CRAY */
 
 #define EIF_RT_BASIC_CLEANUP \

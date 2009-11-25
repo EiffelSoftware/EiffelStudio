@@ -963,8 +963,9 @@ feature {NONE} -- Profile actions
 			create gi.make_with_text (interface_names.l_arguments)
 			srow.set_item (1, gi)
 			s := l_args
-			check s /= Void end
-
+			if s = Void then
+				create s.make_empty
+			end
 			create gti.make_with_text (s)
 			gti.set_dialog_title (interface_names.l_edit_text)
 			gti.set_ok_button_string (interface_names.b_ok)
@@ -986,7 +987,7 @@ feature {NONE} -- Profile actions
 			srow.set_item (1, gi)
 			s := l_cwd
 			if s = Void then
-				s := ""
+				create s.make_empty
 			end
 			create gdi.make_with_text (s)
 			gdi.change_actions.extend (agent

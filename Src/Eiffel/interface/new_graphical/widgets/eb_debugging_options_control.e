@@ -943,105 +943,113 @@ feature {NONE} -- Profile actions
 			was_expanded: BOOLEAN
 			s: STRING
 			was_changed: BOOLEAN
+			retried: BOOLEAN
 		do
-			was_changed := has_changed
-			p := profile_from_row (a_row)
-			l_title := p.title
-			l_cwd := p.working_directory
-			l_args := p.arguments
-			l_env := p.environment_variables
+			if not retried then
+				was_changed := has_changed
+				p := profile_from_row (a_row)
+				l_title := p.title
+				l_cwd := p.working_directory
+				l_args := p.arguments
+				l_env := p.environment_variables
 
-				-- Clean a_row
-			if a_row.subrow_count > 0 then
-				was_expanded := a_row.is_expanded
-				a_row.parent.remove_rows (a_row.index + 1, a_row.index + a_row.subrow_count_recursive)
-			end
+					-- Clean a_row
+				if a_row.subrow_count > 0 then
+					was_expanded := a_row.is_expanded
+					a_row.parent.remove_rows (a_row.index + 1, a_row.index + a_row.subrow_count_recursive)
+				end
 
-				--| Arguments
-			a_row.insert_subrow (a_row.subrow_count + 1)
-			srow := a_row.subrow (a_row.subrow_count)
-			create gi.make_with_text (interface_names.l_arguments)
-			srow.set_item (1, gi)
-			s := l_args
-			if s = Void then
-				create s.make_empty
-			end
-			create gti.make_with_text (s)
-			gti.set_dialog_title (interface_names.l_edit_text)
-			gti.set_ok_button_string (interface_names.b_ok)
-			gti.set_reset_button_string (interface_names.b_reset)
-			gti.set_cancel_button_string (interface_names.b_cancel)
-			gti.disable_multiline_string
-			gti.change_actions.extend (agent
-					(a_prof: like profile_from_row; a_gi: EV_GRID_LABEL_ITEM)
-						do
-							change_args_on (a_gi.text, a_prof)
-						end (p, gti)
-				)
-			srow.set_item (2, gti)
-
-				--| Working directory						
-			a_row.insert_subrow (a_row.subrow_count + 1)
-			srow := a_row.subrow (a_row.subrow_count)
-			create gi.make_with_text (interface_names.l_working_directory)
-			srow.set_item (1, gi)
-			s := l_cwd
-			if s = Void then
-				create s.make_empty
-			end
-			create gdi.make_with_text (s)
-			gdi.change_actions.extend (agent
-					(a_prof: like profile_from_row; a_gi: EV_GRID_LABEL_ITEM)
+					--| Arguments
+				a_row.insert_subrow (a_row.subrow_count + 1)
+				srow := a_row.subrow (a_row.subrow_count)
+				create gi.make_with_text (interface_names.l_arguments)
+				srow.set_item (1, gi)
+				s := l_args
+				if s = Void then
+					create s.make_empty
+				end
+				create gti.make_with_text (s)
+				gti.set_dialog_title (interface_names.l_edit_text)
+				gti.set_ok_button_string (interface_names.b_ok)
+				gti.set_reset_button_string (interface_names.b_reset)
+				gti.set_cancel_button_string (interface_names.b_cancel)
+				gti.disable_multiline_string
+				gti.change_actions.extend (agent
+						(a_prof: like profile_from_row; a_gi: EV_GRID_LABEL_ITEM)
 							do
-								change_cwd_on (a_gi.text, a_prof)
-							end (p, gdi)
-				)
-			gdi.set_start_directory (default_working_directory)
-			srow.set_item (2, gdi)
-
-				--| Environment
-			a_row.insert_subrow (a_row.subrow_count + 1)
-			srow := a_row.subrow (a_row.subrow_count)
-			create gi.make_with_text (interface_names.l_environment)
-			srow.set_item (1, gi)
-			if l_env /= Void then
-				fill_row_with_environment (srow, l_env)
-			end
-
-			create gli.make_with_text (interface_names.l_add_a_valuable)
-			gli.set_tooltip (interface_names.f_add_a_new_variable)
-
-			gli.pointer_button_press_actions.force_extend (agent on_environment_variables_row_clicked (srow, ?,?,?))
-			gli.set_font (Operation_font)
-			srow.set_item (2, gli)
-			create ctrler
-
-			ctrler.set_key_pressed_action (agent (r: EV_GRID_ROW; k: EV_KEY)
-						do
-							if k /= Void then
-								inspect k.code
-								when {EV_KEY_CONSTANTS}.key_enter then
-									if ev_application.ctrl_pressed then
-										on_environment_variables_row_clicked (r, 0,0,3)
-									else
-										on_new_environ_event (r)
-									end
-								else
-								end
-							end
-						end(srow, ?)
+								change_args_on (a_gi.text, a_prof)
+							end (p, gti)
 					)
-			srow.set_data (ctrler)
-			gli.pointer_double_press_actions.force_extend (agent on_new_environ_event (srow))
+				srow.set_item (2, gti)
 
-			if was_expanded and then a_row.is_expandable then
-				a_row.expand
+					--| Working directory						
+				a_row.insert_subrow (a_row.subrow_count + 1)
+				srow := a_row.subrow (a_row.subrow_count)
+				create gi.make_with_text (interface_names.l_working_directory)
+				srow.set_item (1, gi)
+				s := l_cwd
+				if s = Void then
+					create s.make_empty
+				end
+				create gdi.make_with_text (s)
+				gdi.change_actions.extend (agent
+						(a_prof: like profile_from_row; a_gi: EV_GRID_LABEL_ITEM)
+								do
+									change_cwd_on (a_gi.text, a_prof)
+								end (p, gdi)
+					)
+				gdi.set_start_directory (default_working_directory)
+				srow.set_item (2, gdi)
+
+					--| Environment
+				a_row.insert_subrow (a_row.subrow_count + 1)
+				srow := a_row.subrow (a_row.subrow_count)
+				create gi.make_with_text (interface_names.l_environment)
+				srow.set_item (1, gi)
+				if l_env /= Void then
+					fill_row_with_environment (srow, l_env)
+				end
+
+				create gli.make_with_text (interface_names.l_add_a_valuable)
+				gli.set_tooltip (interface_names.f_add_a_new_variable)
+
+				gli.pointer_button_press_actions.force_extend (agent on_environment_variables_row_clicked (srow, ?,?,?))
+				gli.set_font (Operation_font)
+				srow.set_item (2, gli)
+				create ctrler
+
+				ctrler.set_key_pressed_action (agent (r: EV_GRID_ROW; k: EV_KEY)
+							do
+								if k /= Void then
+									inspect k.code
+									when {EV_KEY_CONSTANTS}.key_enter then
+										if ev_application.ctrl_pressed then
+											on_environment_variables_row_clicked (r, 0,0,3)
+										else
+											on_new_environ_event (r)
+										end
+									else
+									end
+								end
+							end(srow, ?)
+						)
+				srow.set_data (ctrler)
+				gli.pointer_double_press_actions.force_extend (agent on_new_environ_event (srow))
+
+				if was_expanded and then a_row.is_expandable then
+					a_row.expand
+				end
+				profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
+				profiles_grid.safe_resize_column_to_content (profiles_grid.column (2), False, False)
+				if not was_changed then
+					set_changed (p, was_changed)
+				end
+			else
+				a_row.parent.remove_row (a_row.index)
 			end
-			profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
-			profiles_grid.safe_resize_column_to_content (profiles_grid.column (2), False, False)
-			if not was_changed then
-				set_changed (p, was_changed)
-			end
+		rescue
+			retried := True
+			retry
 		end
 
 	add_title_to_row (p: like profile_from_row; a_row: EV_GRID_ROW)

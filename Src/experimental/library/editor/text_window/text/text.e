@@ -100,7 +100,9 @@ feature -- Reinitialization
 			reading_text_finished := False
 			create current_string.make_empty
 			current_pos := 0
-			on_text_reset
+			if not is_notifying then
+				on_text_reset
+			end
 		end
 
 feature -- Access

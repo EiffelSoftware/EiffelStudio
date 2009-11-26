@@ -1154,7 +1154,11 @@ feature {BYTE_NODE} -- Visitor
 				l_res := l_expr_value.has_attached_value
 				if l_res and not a_node.is_void_check then
 					cl := l_expr_value.dynamic_class
-					ta := a_node.expression.type
+					if attached a_node.target as l_target then
+						ta := l_target.type
+					else
+						ta := a_node.expression.type
+					end
 					if ta /= Void then
 						l_res := cl /= Void and then cl.actual_type.conform_to (context.class_c, ta)
 					else
@@ -2126,12 +2130,17 @@ feature -- Context: Element change
 	init_context_with_current_callstack
 			-- Init context data with values from current callstack
 			-- i.e: current debugging contex	
+		do
+			init_context_with_callstack_element (application_status.current_call_stack_element)
+		end
+
+	init_context_with_callstack_element (cse: detachable CALL_STACK_ELEMENT)
+			-- Init context data with values from current callstack
+			-- i.e: current debugging contex	
 		local
-			cse: CALL_STACK_ELEMENT
 			ecse: EIFFEL_CALL_STACK_ELEMENT
 			fi: FEATURE_I
 		do
-			cse := application_status.current_call_stack_element
 			if cse = Void then
 				dbg_error_handler.notify_error_expression_during_context_preparation
 			else
@@ -2298,8 +2307,6 @@ feature {NONE} -- Implementation
 		require
 			context_feature_not_void: on_context implies context.feature_i /= Void
 			context_class_not_void: context.class_c /= Void
-		local
-
 		do
 			byte_node_computed := True
 			error_handler.wipe_out

@@ -54,7 +54,9 @@ feature -- Interactivity
 		local
 			l_conv_target: EB_CLASSES_TREE_TARGET_ITEM
 		do
-			Precursor (a_window)
+				-- Uncomment the following line, when dev window is ready
+				-- to print something for a target.
+			--Precursor (a_window)
 			from
 				start
 			until

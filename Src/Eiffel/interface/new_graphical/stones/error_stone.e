@@ -58,7 +58,7 @@ feature -- Access
 			Result := False
 		end
 
-	help_text: STRING
+	help_text: STRING_32
 			-- Content of the file where the help is.
 		do
 			Result := origin_text
@@ -67,9 +67,10 @@ feature -- Access
 			end
 		end
 
-	history_name: STRING
+	history_name: STRING_32
 		do
-			Result := interface_names.err_error.as_string_32 + header
+			create Result.make_from_string (interface_names.err_error)
+			Result.append_string (header.as_string_32)
 		end
 
 	file_name: STRING
@@ -99,7 +100,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -123,11 +124,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ERROR_STONE

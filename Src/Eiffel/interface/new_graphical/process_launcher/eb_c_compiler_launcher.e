@@ -306,32 +306,32 @@ feature{NONE}  -- Actions
 
 feature {NONE} -- Implementation
 
-	c_compilation_launched_msg: STRING
+	c_compilation_launched_msg: STRING_32
 			-- Message to indicate c compilation launched successfully
 		deferred
 		end
 
-	c_compilation_launch_failed_msg: STRING
+	c_compilation_launch_failed_msg: STRING_32
 			-- Message to indicate c compilation launch failed
 		deferred
 		end
 
-	c_compilation_succeeded_msg: STRING
+	c_compilation_succeeded_msg: STRING_32
 			-- Message to indicate c compilation exited successfully
 		deferred
 		end
 
-	c_compilation_failed_msg: STRING
+	c_compilation_failed_msg: STRING_32
 			-- Message to indicate c compilation failed
 		deferred
 		end
 
-	c_compilation_terminated_msg: STRING
+	c_compilation_terminated_msg: STRING_32
 			-- Message to indicate c compilation has been terminated
 		deferred
 		end
 
-	display_message_on_main_output (a_msg: STRING; a_suffix: BOOLEAN)
+	display_message_on_main_output (a_msg: STRING_32; a_suffix: BOOLEAN)
 			-- Display `a_msg' on main output panel.
 			-- If `a_suffix' is True, add ".%N" to end of `a_msg'.
 		require
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 			create Result.put (False)
 		end
 
-feature {NONE} -- Initialization
+feature {NONE} -- Internationalization
 
 	e_see_output: STRING = "Please review the External Compilation output of the Outputs Tool."
 	e_could_not_launch: STRING = "Could not launch C/C++ compiler."

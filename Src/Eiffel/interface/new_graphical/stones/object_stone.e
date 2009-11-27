@@ -77,10 +77,10 @@ feature -- Access
 			Result.append (object_address.output)
 		end
 
-	history_name: STRING_GENERAL
+	history_name: STRING_32
 			-- Name used in the history list
 		do
-			create {STRING_32}Result.make (0)
+			create Result.make (0)
 			Result.append (name)
 			Result.append (": ")
 			Result.append (dynamic_class.name_in_upper)

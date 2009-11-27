@@ -206,7 +206,7 @@ feature -- Application status
 			ccs: EIFFEL_CALL_STACK
 		do
 			if not appstatus.is_stopped then
-				st.add_string (interface_names.ee_Running)
+				st.add_string (interface_names.e_Running)
 				st.add_new_line
 			else -- Application is stopped.
 				-- Print object address.

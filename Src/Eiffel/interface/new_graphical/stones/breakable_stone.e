@@ -101,10 +101,11 @@ feature -- Access
 			Result := Cursors.cur_X_setstop
 		end
 
-	history_name: STRING
+	history_name: STRING_32
 			-- History name.
 		do
-			Result := "Breakpoint in " + routine.name
+			Result := locale.translation (e_break_point_in)
+			Result.append_string (routine.name)
 		end
 
 	is_storable: BOOLEAN
@@ -391,6 +392,10 @@ feature -- state of breakpoint
 			end
 			bpm.notify_breakpoints_changes
 		end
+
+feature {NONE} -- Internationalization
+
+	e_break_point_in: STRING = "Breakpoint in "
 
 note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software"

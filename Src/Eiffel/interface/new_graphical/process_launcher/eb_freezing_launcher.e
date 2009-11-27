@@ -45,34 +45,34 @@ feature{NONE} -- Generation path
 
 feature -- Message
 
-	c_compilation_launched_msg: STRING
+	c_compilation_launched_msg: STRING_32
 			-- Message to indicate c compilation launched successfully
 		do
-			Result := interface_names.ee_freezing_launched
+			Result := interface_names.e_freezing_launched
 		end
 
-	c_compilation_launch_failed_msg: STRING
+	c_compilation_launch_failed_msg: STRING_32
 			-- Message to indicate c compilation launch failed
 		do
-			Result := interface_names.ee_freezing_launch_failed
+			Result := interface_names.e_freezing_launch_failed
 		end
 
-	c_compilation_succeeded_msg: STRING
+	c_compilation_succeeded_msg: STRING_32
 			-- Message to indicate c compilation exited successfully
 		do
-			Result := interface_names.ee_freezing_succeeded
+			Result := interface_names.e_freezing_succeeded
 		end
 
-	c_compilation_failed_msg: STRING
+	c_compilation_failed_msg: STRING_32
 			-- Message to indicate c compilation failed
 		do
-			Result := interface_names.ee_freezing_failed
+			Result := interface_names.e_freezing_failed
 		end
 
-	c_compilation_terminated_msg: STRING
+	c_compilation_terminated_msg: STRING_32
 			-- Message to indicate c compilation has been terminated
 		do
-			Result := interface_names.ee_freezing_terminated
+			Result := interface_names.e_freezing_terminated
 		end
 
 feature -- Setting
@@ -86,7 +86,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -99,22 +99,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

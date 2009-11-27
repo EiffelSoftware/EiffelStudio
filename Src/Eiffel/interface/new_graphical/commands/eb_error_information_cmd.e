@@ -102,10 +102,14 @@ feature {NONE} -- Implementation
 	current_editor: SELECTABLE_TEXT_PANEL
 			-- Text in which the explanation texts are put.
 
-	execute_with_text (a_text: STRING)
+	execute_with_text (a_text: STRING_32)
 			-- Pop up a new dialog and display `a_text' inside it.
+		local
+			l_sys_enc: SYSTEM_ENCODINGS
 		do
 			create_new_dialog
+			create l_sys_enc
+			current_editor.set_encoding (l_sys_enc.utf32)
 			current_editor.load_text (a_text)
 			current_editor.disable_line_numbers
 			current_dialog.show_relative_to_window (Window_manager.last_focused_development_window.window)

@@ -101,10 +101,14 @@ feature -- Access
 			end
 		end
 
-	history_name: STRING_GENERAL
+	history_name: STRING_32
 			-- Name used in the history list
+		local
+			l_from_feat: STRING_32
 		do
-			Result := interface_names.l_from (Interface_names.s_feature_stone.as_string_32 + feature_name, e_class.class_signature)
+			l_from_feat := Interface_names.s_feature_stone.twin
+			l_from_feat.append_string (feature_name)
+			Result := interface_names.l_from (l_from_feat, e_class.class_signature)
 		end
 
 	stone_name: STRING_GENERAL
@@ -291,7 +295,7 @@ feature {NONE} -- Implementation
 			-- Line number of `internal_start_position'.
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -315,11 +319,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class FEATURE_STONE

@@ -20,6 +20,27 @@ feature -- Conversion
 			detected_encoding_attached: detected_encoding /= Void
 		end
 
+	localized_print (a_str: STRING_GENERAL)
+			-- Print `a_str' as localized encoding.
+			-- `a_str' is taken as a UTF-32 string.
+		deferred
+		end
+
+	localized_print_error (a_str: STRING_GENERAL)
+			-- Print an error, `a_str', as localized encoding.
+			-- `a_str' is taken as a UTF-32 string.
+		deferred
+		end
+
+	utf32_to_file_encoding (a_str: STRING_32): STRING
+			-- Convert utf32 to file encoding (utf8 as default)
+		require
+			a_str_attached: a_str /= Void
+		deferred
+		ensure
+			utf32_to_console_encoding_attached: Result /= Void
+		end
+
 feature -- Detection
 
 	detected_encoding: detachable ANY
@@ -37,7 +58,7 @@ feature -- Detection
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -61,11 +82,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

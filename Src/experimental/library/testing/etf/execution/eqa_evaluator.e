@@ -70,23 +70,26 @@ feature {NONE} -- Initialization
 			socket_open_write: socket.is_open_write
 		local
 			l_evaluator: like execute_test
-			l_bc: STRING
 			l_done: BOOLEAN
+			l_name, l_byte_code: detachable STRING
 		do
 			from until
 				l_done
 			loop
-				if attached {TUPLE [byte_code, name: STRING]} socket.retrieved as l_retrieved then
-					l_bc := l_retrieved.byte_code
+				if attached {TUPLE [byte_code, name: detachable STRING]} socket.retrieved as l_retrieved then
+					l_byte_code := l_retrieved.byte_code
+					check byte_code_attached: l_byte_code /= Void end
 
 						-- Replace byte code
 					eif_override_byte_code_of_body (
 						byte_code_feature_body_id,
 						byte_code_feature_pattern_id,
-						pointer_for_byte_code (l_bc), l_bc.count)
+						pointer_for_byte_code (l_byte_code), l_byte_code.count)
 
 						-- TODO: initialize working directory and environment variables for system level testing
-					set_test_name (l_retrieved.name)
+					l_name := l_retrieved.name
+					check l_name /= Void end
+					set_test_name (l_name)
 
 					l_evaluator := execute_test
 					socket.put_boolean (True)

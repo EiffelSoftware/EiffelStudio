@@ -193,10 +193,11 @@ feature {NONE} -- Handlers
 			last_request_attached: last_request /= Void
 			last_request_is_execute_request: last_request_type = execute_request_flag
 		local
-			l_bcode: STRING
+			l_bcode: detachable STRING
 		do
-			if attached {TUPLE [l_byte_code: STRING; l_data: detachable ANY]} last_request as l_last_request then
+			if attached {TUPLE [l_byte_code: detachable STRING; l_data: detachable ANY]} last_request as l_last_request then
 				l_bcode := l_last_request.l_byte_code
+				check l_bcode /= Void end
 				if l_bcode.count = 0 then
 					report_error (byte_code_length_error)
 				else

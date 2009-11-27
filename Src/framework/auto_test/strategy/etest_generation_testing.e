@@ -242,7 +242,7 @@ feature {NONE} -- Status setting
 		do
 			if not a_cancel then
 
-					-- We access the cache so if it wasnt initialized yet it won't be.
+					-- We access the cache so if it wasn't initialized yet it won't be.
 				if sub_task = minimize_task_cache then
 					l_witness := minimize_task.minimized_witness
 					if l_witness = Void then
@@ -254,7 +254,7 @@ feature {NONE} -- Status setting
 						-- We set `sub_task' back to `test_task' since for the random testing task `has_next_step'
 						-- is still True which makes `has_next_step' in `Current' also True.
 					sub_task := test_task
-					generation.print_test_set (l_witness.classifications)
+					generation.print_test_set (l_witness.classifications.twin)
 				end
 
 				start_minimization

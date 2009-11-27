@@ -158,12 +158,12 @@ feature {NONE} -- Compilation implementation
 		do
 			if Workbench.successful then
 				degree_output.put_new_line
-				degree_output.put_string (Interface_names.ee_compilation_succeeded)
+				degree_output.put_string (Interface_names.e_compilation_succeeded)
 				degree_output.put_new_line
 			else
 					-- Need extra break because failure is unexpected.
 				degree_output.put_new_line
-				degree_output.put_string (Interface_names.ee_compilation_failed)
+				degree_output.put_string (Interface_names.e_compilation_failed)
 				degree_output.put_new_line
 			end
 		end

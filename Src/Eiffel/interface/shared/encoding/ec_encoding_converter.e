@@ -16,6 +16,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	detected_encoding: attached ENCODING assign set_detected_encoding
@@ -51,6 +56,31 @@ feature -- Access
 				else
 					Result := a_stream.as_string_32
 				end
+			end
+		end
+
+	utf32_from_iso8259_1 (a_stream: STRING): STRING_32
+			-- <Precursor>
+		local
+			l_encoding: attached like detected_encoding
+		do
+			l_encoding := iso_8859_1
+			l_encoding.convert_to (utf32, a_stream)
+			if l_encoding.last_conversion_successful then
+				Result := l_encoding.last_converted_string.as_string_32
+			else
+				Result := a_stream.as_string_32
+			end
+		end
+
+	utf32_to_file_encoding (a_str: STRING_32): STRING
+			-- <precursor>
+		do
+			utf32.convert_to (utf8, a_str)
+			if utf32.last_conversion_successful then
+				Result := utf32.last_converted_stream
+			else
+				Result := a_str.as_string_8
 			end
 		end
 
@@ -91,7 +121,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Mutable version of `detected_encoding'.
 
 ;note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -104,22 +134,22 @@ feature {NONE} -- Implementation: Internal cache
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

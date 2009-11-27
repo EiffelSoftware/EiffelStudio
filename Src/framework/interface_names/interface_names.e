@@ -319,10 +319,10 @@ feature -- Graphical degree output
 
 feature -- Help text
 
-	h_No_help_available: STRING					do Result := locale.translation("No help available for this element").out	end
-	h_refactoring_compiled: STRING				do Result := locale.translation("Renames only occurrences of the class name in compiled classes.").out	end
-	h_refactoring_all_classes: STRING			do Result := locale.translation("Renames occurrences of the class name in any class. (Slow)").out	end
-	h_no_comments_for_feature: STRING			do Result := locale.translation("No comments for feature.").out	end
+	h_No_help_available: STRING_32					do Result := locale.translation("No help available for this element")	end
+	h_refactoring_compiled: STRING_32				do Result := locale.translation("Renames only occurrences of the class name in compiled classes.")	end
+	h_refactoring_all_classes: STRING_32			do Result := locale.translation("Renames occurrences of the class name in any class. (Slow)")	end
+	h_no_comments_for_feature: STRING_32			do Result := locale.translation("No comments for feature.")	end
 
 feature -- File names
 
@@ -2523,7 +2523,8 @@ feature -- Description texts
 										%on this button. Use right click for both%Npick and drop actions.")	end
 	e_Display_error_help: STRING_32		do Result := locale.translation("Give help on compilation errors")	end
 	e_Display_system_info: STRING_32		do Result := locale.translation("Display information concerning current system")	end
-	e_Drop_an_error_stone: STRING		do Result := locale.translation(ee_Drop_an_error_stone)	end
+	e_Drop_an_error_stone: STRING_32		do Result := locale.translation("Pick the code of a compilation error (such as VEEN, VTCT,...)%N%
+																		%and drop it here to have extended information about it.")	end
 	e_Edit_exported_feature: STRING_32	do Result := locale.translation("Edit the properties of the selected feature")	end
 	e_Edit_expression: STRING_32			do Result := locale.translation("Edit the selected expression")	end
 	e_Edited: STRING_32					do Result := locale.translation("Some classes were edited since last compilation")	end
@@ -2612,34 +2613,6 @@ feature -- Description texts
 	e_refactoring_redo_sure: STRING_32 do Result := locale.translation("Are you sure you want to redo the refactoring?%N If classes have been modified since the undo of the refactoring this can lead to corrupt classes and lost information!")	end
 	e_show_help: STRING_32 do Result := locale.translation("Click to show the help documentation.")	end
 	e_show_help_unavailable: STRING_32 do Result := locale.translation("No help provider is available to show help for this dialog!")	end
-
-
-feature -- Description text, no translation (for the editor).
-
-	ee_Compilation_failed: STRING =			"Eiffel Compilation Failed"
-	ee_Compilation_succeeded: STRING =			"Eiffel Compilation Succeeded"
-	ee_freezing_failed: STRING = 				"Background Workbench C Compilation Failed"
-	ee_finalizing_failed: STRING =				"Background Finalized C compilation Failed"
-	ee_freezing_launch_failed: STRING = 		"Background Workbench C Compilation Launch Failed"
-	ee_finalizing_launch_failed: STRING =		"Background Finalized C Compilation Launch Failed"
-	ee_freezing_launched: STRING = 			"Background Workbench C Compilation Launched"
-	ee_finalizing_launched: STRING = 			"Background Finalized C Compilation Launched"
-	ee_freezing_succeeded: STRING = 			"Background Workbench C Compilation Succeeded"
-	ee_finalizing_succeeded: STRING =			"Background Finalized C Compilation Succeeded"
-	ee_freezing_terminated: STRING = 			"Background Workbench C Compilation Terminated"
-	ee_finalizing_terminated: STRING =		 	"Background Finalized C Compilation Terminated"
-	ee_C_compilation_failed: STRING = 			"Background C Compilation Failed"
-	ee_C_compilation_launch_failed: STRING = 	"Background C Compilation Launch Failed"
-	ee_C_compilation_terminated: STRING = 		"Background C Compilation Terminated"
-	ee_C_compilication_launched: STRING = 		"Background C Compilation Launched"
-	ee_C_compilation_succeeded: STRING = 		"Background C Compilation Succeeded"
-	ee_C_compilation_running: STRING =  		"Background C Compilation in Progress"
-	ee_Compiling: STRING =						"System is being compiled"
-	ee_Drop_an_error_stone: STRING =	"Pick the code of a compilation error (such as VEEN, VTCT,...)%N%
-										%and drop it here to have extended information about it."
-	ee_Running: STRING =				"Application is running"
-	ee_Running_no_stop_points: STRING =	"Application is running (ignoring breakpoints)"
-
 
 	e_Activate_execution_recording: STRING_32	do Result := locale.translation("Activate execution recording")	end
 	e_Deactivate_execution_recording: STRING_32	do Result := locale.translation("Deactivate execution recording")	end

@@ -126,10 +126,11 @@ feature {NONE} -- Basic operations
 			window_manager.display_percentage (100)
 		end
 
-	put_degree (a_degree: STRING; a_to_go: INTEGER; a_name: STRING)
+	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: STRING)
 			-- <Precursor>
 		local
 			l_desc: STRING_32
+			l_msg: STRING_32
 		do
 			Precursor (a_degree, a_to_go, a_name)
 			if degree = 0 then
@@ -138,15 +139,19 @@ feature {NONE} -- Basic operations
 				l_desc := degree_description (degree)
 			end
 
+			create l_msg.make_from_string (l_desc)
 			if total_number > 1 then
-				window_manager.display_message_and_percentage (
-					l_desc  + " (" + (total_number - a_to_go + 1).out + "/" + total_number.out + "): " + a_name,
-					calculate_percentage (a_to_go))
+				l_msg.append (" (")
+				l_msg.append ((total_number - a_to_go + 1).out)
+				l_msg.append ("/")
+				l_msg.append (total_number.out)
+				l_msg.append ("): ")
+				l_msg.append (a_name)
 			else
-				window_manager.display_message_and_percentage (
-					l_desc + ": " + a_name, calculate_percentage (a_to_go))
+				l_msg.append (": ")
+				l_msg.append (a_name)
 			end
-
+			window_manager.display_message_and_percentage (l_msg, calculate_percentage (a_to_go))
 			flush_output
 		end
 
@@ -183,11 +188,11 @@ feature {NONE} -- Implementation
 
 feature -- Basic operations
 
-	put_message (a_message: STRING)
+	put_message (a_message: STRING_32)
 			-- <Precursor>
 		do
 			compiler_formatter.start_processing (True)
-			compiler_formatter.add (a_message.as_string_32)
+			compiler_formatter.add (a_message)
 			compiler_formatter.end_processing
 		end
 

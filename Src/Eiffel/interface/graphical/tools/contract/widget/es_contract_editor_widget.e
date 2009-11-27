@@ -1036,11 +1036,11 @@ feature {NONE} -- Population
 
 				-- Use an editor grid item to replicate the style
 			if attached {ES_PRECONDITION_CONTRACT_EDITOR_CONTEXT} context as l_pre then
-				create l_editor_item.make_with_text (interface_names.t_contract_no_preconditions.as_string_8)
+				create l_editor_item.make_with_text (interface_names.t_contract_no_preconditions)
 			elseif attached {ES_POSTCONDITION_CONTRACT_EDITOR_CONTEXT} context as l_post then
-				create l_editor_item.make_with_text (interface_names.t_contract_no_postcondtions.as_string_8)
+				create l_editor_item.make_with_text (interface_names.t_contract_no_postcondtions)
 			else
-				create l_editor_item.make_with_text (interface_names.t_contract_no_invariants.as_string_8)
+				create l_editor_item.make_with_text (interface_names.t_contract_no_invariants)
 			end
 			l_editor_item.set_pixmap (stock_pixmaps.general_warning_icon)
 			l_editor_item.set_left_border (tab_indent_spacing)

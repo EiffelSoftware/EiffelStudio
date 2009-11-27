@@ -13,6 +13,8 @@ class
 inherit
 	SHARED_ERROR_HANDLER
 
+	SHARED_ENCODING_CONVERTER
+
 feature -- Access
 
 	degree: INTEGER;
@@ -70,7 +72,7 @@ feature {NONE} -- Query
 		require
 			a_degree_valid: a_degree >= -3 and then a_degree <= 6
 		local
-			l_degree_str: STRING
+			l_degree_str: STRING_32
 		do
 			create Result.make (35)
 			l_degree_str := degree_short_description (a_degree)
@@ -434,7 +436,7 @@ feature -- Basic operations: Degrees
 
 feature -- Basic operations
 
-	put_string (a_message: STRING)
+	put_string (a_message: STRING_32)
 			-- Puts a string and new line to the output
 			--
 			-- `a_message': The message to write.
@@ -443,20 +445,20 @@ feature -- Basic operations
 			put_new_line
 		end
 
-	put_message (a_message: STRING)
+	put_message (a_message: STRING_32)
 			-- Puts a message on the output.
 			--
 			-- `a_message': The message to write.
 		require
 			a_message_attached: a_message /= Void
 		do
-			io.error.put_string (a_message.as_string_8)
+			encoding_converter.localized_print_error (a_message)
 		end
 
 	put_new_line
 			-- Puts a new line on the output.
 		do
-			io.error.put_new_line
+			encoding_converter.localized_print_error ("%N")
 		end
 
 feature -- Basic operations
@@ -499,7 +501,7 @@ feature -- Basic operations
 			last_degree_unchanged: last_degree = old last_degree
 		end
 
-	put_degree (a_degree: STRING; a_to_go: INTEGER; a_name: STRING)
+	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: STRING)
 			-- Puts a degree line message to the output.
 			--
 			-- `a_degree': A degree message string (or prefix).

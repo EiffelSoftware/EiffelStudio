@@ -74,13 +74,14 @@ feature -- Implementation
 		local
 			l_items_name, l_list_value, l_option_value: STRING
 			l_drop_down_objects: STRING
+			l_selected_index: STRING
 		do
 			if attached label as l_label then
 				a_servlet_class.render_html_page.append_expression (response_variable_append + 
 				"(%"<label for=%%%"" + a_name + "%%%">" + l_label.value (current_controller_id) +
 				"</label>%")")
 			end
-			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<select selectedIndex=%%%"" + selected_index.value (current_controller_id) + "%%%" name=%%%"" + a_name + "%%%">%")")
+			a_servlet_class.render_html_page.append_expression (response_variable_append + "(%"<select name=%%%"" + a_name + "%%%">%")")
 			l_drop_down_objects := a_servlet_class.new_variable ("HASH_TABLE [" + type.value (current_controller_id) + " , STRING]")
 			a_servlet_class.make_feature.append_expression ("create " + l_drop_down_objects + ".make (5)")
 			internal_drop_down_objects := l_drop_down_objects
@@ -89,6 +90,11 @@ feature -- Implementation
 					l_list_value := ll_drop_down_objects.plain_value (current_controller_id)
 				else
 					l_list_value := "%"" + ll_drop_down_objects.value (current_controller_id) + "%""
+				end
+				if selected_index.is_dynamic or selected_index.is_variable then
+					l_selected_index := selected_index.plain_value (current_controller_id)
+				else
+					l_selected_index := "%"" + selected_index.value (current_controller_id) + "%""
 				end
 
 				l_items_name := a_servlet_class.render_html_page.new_local ("LIST [STRING]")
@@ -101,9 +107,15 @@ feature -- Implementation
 				a_servlet_class.render_html_page.append_expression ("loop")
 				l_option_value := a_servlet_class.render_html_page.new_local ("STRING")
 				a_servlet_class.render_html_page.append_expression (l_option_value + " := unique_id")
+				a_servlet_class.render_html_page.append_expression ("if " + l_items_name + ".item.is_equal (" + l_selected_index + ") then");
+				a_servlet_class.render_html_page.append_expression
+						(response_variable_append + "(%"<option selected=%%%"true%%%" value=%%%"%"+" + l_option_value + "+%"%%%">%" + " +
+						l_items_name +".item.out + " + "%"</option>%")")
+				a_servlet_class.render_html_page.append_expression ("else")
 				a_servlet_class.render_html_page.append_expression
 						(response_variable_append + "(%"<option value=%%%"%"+" + l_option_value + "+%"%%%">%" + " +
 						l_items_name +".item.out + " + "%"</option>%")")
+				a_servlet_class.render_html_page.append_expression ("end")
 				a_servlet_class.render_html_page.append_expression (l_drop_down_objects + "[" + l_option_value + "] := " +
 						l_items_name + ".item")
 				a_servlet_class.render_html_page.append_expression (l_items_name + ".forth")

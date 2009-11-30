@@ -178,23 +178,6 @@ function isedoc_menu() {
     'file' => 'isedoc.uuid_query.inc',
     'type' => MENU_CALLBACK,
   );
-  $items['isedoc/eis/%'] = array(
-    'title' => t('Redirect using EIS entry'),
-    'page callback' => 'isedoc_eis_query',
-    'page arguments' => array(2),
-    'access arguments' => array('access content'),
-    'file' => 'isedoc.eis_query.inc',
-    'type' => MENU_CALLBACK,
-  );
-  $items['isedoc/edit/eis/%'] = array(
-    'title' => t('Edit EIS entry association'),
-    'page callback' => 'isedoc_eis_query_edit',
-    'page arguments' => array(2),
-    'access arguments' => array('edit content'),
-    'file' => 'isedoc.eis_query.inc',
-    'type' => MENU_CALLBACK,
-  );
-
   return $items;
 }
 

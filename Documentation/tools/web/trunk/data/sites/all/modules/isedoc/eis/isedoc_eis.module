@@ -1,0 +1,81 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_help().
+ */
+function isedoc_eis_help($path, $arg) {
+  switch ($path) {
+    case 'admin/content/isedoc_eis':
+      $output = '<p>'. t("Administrate the EIS mapping.") .'</p>';
+      return $output;
+    case 'admin/settings/isedoc_eis':
+      return t("Configure the ISE Doc EIS mapping's settings.");
+    default:
+      return null;
+  }
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function isedoc_eis_perm() {
+  return array('edit content');
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function isedoc_eis_menu() {
+  $items = array();
+  
+  $items['admin/content/isedoc_eis'] = array(
+    'title' => '(ISE) Edit EIS mapping ...',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('isedoc_eis_edit_form'),
+    'file' => 'isedoc_eis.admin.inc',
+    'access arguments' => array('edit content'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Edit EIS mapping.',
+  );
+
+  $items['admin/settings/isedoc/isedoc_eis'] = array(
+    'title' => 'EIS mapping',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('isedoc_eis_admin_settings'),
+    'file' => 'isedoc_eis.admin.inc',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['isedoc/eis/%'] = array(
+    'title' => t('Redirect using EIS entry'),
+    'page callback' => 'isedoc_eis_query',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'file' => 'isedoc_eis.query.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['isedoc/edit/eis/%'] = array(
+    'title' => t('Edit EIS entry association'),
+    'page callback' => 'isedoc_eis_query_edit',
+    'page arguments' => array(2),
+    'access arguments' => array('edit content'),
+    'file' => 'isedoc_eis.query.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_theme() registry.
+ **/
+function isedoc_eis_theme() {
+  return array(
+    'isedoc_eis_form' => array(
+      'arguments' => array('form' => NULL),
+      'file' => 'isedoc_eis.admin.inc',
+    ),
+  );
+}
+

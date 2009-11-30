@@ -1,6 +1,6 @@
 <?php
 
-require_once ("isedoc.lib.inc");
+require_once (dirname(__FILE__)."/../isedoc.lib.inc");
 
 function isedoc_eis_doc_database() {
 	return array (

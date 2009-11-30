@@ -1,7 +1,7 @@
 <?php
 
-require_once ("isedoc.lib.inc");
-require_once ("isedoc.eis_data.inc");
+require_once (dirname(__FILE__)."/../isedoc.lib.inc");
+require_once ("isedoc_eis.data.inc");
 
 function isedoc_eis_query($eis) {
 	$output = t("Query Documentation page for <strong>EIS=%eis</strong>.", array('%eis'=>$eis));

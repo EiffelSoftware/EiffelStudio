@@ -183,7 +183,7 @@ feature {NONE} -- Agents
 				l_offset := internal_shared.drag_offset
 				-- Only after user pointer moved `l_offset' pixels, then start calling `drag_actions'.
 				-- Otherwise, it's too sensitive. See bug#13038
-				if (a_screen_x < l_position.x - l_offset or a_screen_x > l_position.x + l_offset) and
+				if (a_screen_x < l_position.x - l_offset or a_screen_x > l_position.x + l_offset) or
 					(a_screen_y < l_position.y - l_offset or a_screen_y > l_position.y + l_offset) then
 					drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
 					first_press_position := Void

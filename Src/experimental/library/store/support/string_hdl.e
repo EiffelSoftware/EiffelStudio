@@ -45,8 +45,8 @@ feature -- Status setting
 			check l_ht_order /= Void end -- FIXME: Impplied by ...? bug?
 			l_ht_order.extend (key)
 		ensure
-			(attached ht as le_ht and attached old ht as le_old_ht) and then (le_ht.count = le_old_ht.count + 1)
-			(attached ht_order as le_ht_order and attached old ht_order as le_old_ht_order) and then le_ht_order.count = le_old_ht_order.count + 1
+			count_valid: (attached ht and old (attached ht)) and then hash_table_count (ht) = old (hash_table_count (ht)) + 1
+			count_valid: (attached ht_order and old (attached ht_order)) and then array_list_count (ht_order) = old (array_list_count (ht_order)) + 1
 			mapped: is_mapped (key)
 		end
 
@@ -68,8 +68,8 @@ feature -- Status setting
 			check l_ht_order /= Void end -- FIXME: implied by ...? bug?
 			l_ht_order.prune (key)
 		ensure
-			(attached ht as le_ht and attached old ht as le_old_ht) and then (le_ht.count = le_old_ht.count - 1)
-			(attached ht_order as le_ht_order and attached old ht_order as le_ht_old_order) and then le_ht_order.count = le_ht_old_order.count - 1
+			count_valid: (attached ht and old (attached ht)) and then hash_table_count (ht) = old (hash_table_count (ht)) - 1
+			count_valid: (attached ht_order and old (attached ht_order)) and then array_list_count (ht_order) = old (array_list_count (ht_order)) - 1
 		end
 
 feature -- Status report
@@ -112,10 +112,36 @@ feature -- Status report
 		-- Correspondence table between object references
 		-- and mapped keys
 
-	ht_order: detachable ARRAYED_LIST [STRING];
+	ht_order: detachable ARRAYED_LIST [STRING]
 		-- Keys of `ht' in order of mapping
 
-note
+feature -- Contract support
+
+	hash_table_count (a_hash_table: detachable  HASH_TABLE [ANY, STRING]): INTEGER
+			-- Count value of `a_hash_table'
+		require
+			ready: attached a_hash_table
+		do
+			if attached a_hash_table as l_ht then
+				Result := l_ht.count
+			else
+				check False end -- Implied by precondition `ready'
+			end
+		end
+
+	array_list_count (a_list: detachable ARRAYED_LIST [STRING]): INTEGER
+			-- Count value of `a_list'
+		require
+			ready: attached a_list
+		do
+			if attached a_list as l_list then
+				Result := l_list.count
+			else
+				check False end -- Implied by precondition `ready'
+			end
+		end
+
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -2563,6 +2563,7 @@ rt_shared char *name_of_attribute_type (EIF_TYPE_INDEX **type)
 
 rt_private char *name_of_old_attribute_type (EIF_TYPE_INDEX **type)
 {
+	RT_GET_CONTEXT
 	EIF_TYPE_INDEX dftype = **type;
 	static char buffer [512 + 9];
 
@@ -2626,6 +2627,7 @@ rt_private void print_attribute_type (EIF_TYPE_INDEX *gtypes)
 
 rt_shared char *generic_name (int32 gtype, int old_types)
 {
+	RT_GET_CONTEXT
 	static char buffer[512 + 9];
 	char *result;
 	if (gtype == SK_DTYPE)	/* To be kept for handling old storables which were using SK_DTYPE. */

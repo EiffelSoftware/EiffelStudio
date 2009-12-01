@@ -63,7 +63,7 @@ feature -- Status report
 			resulting_data: Result = data.count
 		end
 
-	column_name (position: INTEGER): STRING
+	column_name (position: INTEGER): detachable STRING
 			-- Name of the `position'-th column
 		do
 			Result := data.column_name (position)

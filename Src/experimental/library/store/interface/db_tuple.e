@@ -35,7 +35,7 @@ feature -- Status report
 			Result := implementation.item (index)
 		end
 
-	column_name (index: INTEGER): STRING
+	column_name (index: INTEGER): detachable STRING
 			-- Name of `index'-th item in Current tuple.
 		do
 			Result := implementation.column_name (index)

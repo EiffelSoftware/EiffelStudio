@@ -93,13 +93,13 @@ feature -- Accessing Data
 -- Error generating rangeValue: Message signature for feature not set
 -- Error generating rectValue: Message signature for feature not set
 
-	frozen size_value (a_ns_value: POINTER; res: POINTER)
-			-- - (NSSize)sizeValue
-		external
-			"C inline use <Foundation/NSValue.h>"
-		alias
-			"NSSize size = [(NSValue*)$a_ns_value sizeValue]; memcpy($res, &size, sizeof(NSSize));"
-		end
+--	frozen size_value (a_ns_value: POINTER; res: POINTER)
+--			-- - (NSSize)sizeValue
+--		external
+--			"C inline use <Foundation/NSValue.h>"
+--		alias
+--			"NSSize size = [(NSValue*)$a_ns_value sizeValue]; memcpy($res, &size, sizeof(NSSize));"
+--		end
 
 feature -- Comparing Objects
 

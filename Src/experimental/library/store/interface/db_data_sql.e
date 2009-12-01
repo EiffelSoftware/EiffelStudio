@@ -26,7 +26,7 @@ feature  -- Status report
 		deferred
 		end
 
-	column_name (index: INTEGER): STRING
+	column_name (index: INTEGER): detachable STRING
 			-- Name of the `index-th' column
 		require
 			select_name_not_void: is_select_name_attached
@@ -84,7 +84,7 @@ feature {NONE} -- Status report
 		deferred
 		end
 
-	select_name: detachable ARRAY [STRING]
+	select_name: detachable ARRAY [detachable STRING]
 			-- Array of selected column names listed in select clause
 		deferred
 		end

@@ -52,16 +52,16 @@ feature -- Status report
 			Result := index >0 and index <= count
 		end
 
-	column_name (index: INTEGER): STRING
+	column_name (index: INTEGER): detachable STRING
 			-- Name of the `index'-th column.
-		require else
-			index_in_range: index > 0 and index <= count
 		local
 			l_select_name: like select_name
+			l_result: detachable like column_name
 		do
 			l_select_name := select_name
-			check l_select_name /= Void end -- FIXME: implied by precursor's precondition `select_name_not_void', but `require else'...
-			Result := l_select_name.item (index)
+			if l_select_name /= Void and then l_select_name.valid_index (index) then
+				Result := l_select_name.item (index)
+			end
 		ensure then
 			returned_name: attached select_name as le_select_name and then Result = le_select_name.item (index)
 		end
@@ -90,7 +90,7 @@ feature -- Element change
 				ind > count
 			loop
 				buffer.wipe_out
-				buffer.append (column_name (ind))
+				buffer.append_string (column_name (ind))
 				buffer.to_lower
 				buffer.right_adjust
 				from
@@ -359,7 +359,7 @@ feature {NONE} -- Status report
 	value_type: detachable ARRAY [INTEGER]
 		-- Array of column result type coded according to Eiffel conventions
 
-	select_name: detachable ARRAY [STRING];
+	select_name: detachable ARRAY [detachable STRING];
 		-- Array of selected column names listed in select clause
 
 note

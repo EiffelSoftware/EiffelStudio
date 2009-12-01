@@ -115,7 +115,7 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 					create l_closing_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
 					internal_closing_timer := l_closing_timer
 					l_closing_timer.actions.extend (agent on_timer_for_close)
-					ev_application.pointer_motion_actions.extend (agent on_pointer_motion)
+					ev_application.pointer_motion_actions.extend (agent on_pointer_motion_attached)
 					internal_motion_procedure := ev_application.pointer_motion_actions.last
 					-- First, put the zone in a fixed, make a animation here.
 
@@ -224,6 +224,12 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 			end
 		ensure
 			timer_void: pointer_outside and not state.zone.has_focus implies internal_closing_timer = Void
+		end
+
+	on_pointer_motion_attached (a_widget: EV_WIDGET; a_screen_x, a_screen_y: INTEGER)
+			-- `on_pointer_motion' with attached argument `a_widget'
+		do
+			on_pointer_motion (a_widget, a_screen_x, a_screen_y)
 		end
 
 	on_pointer_motion (a_widget: detachable EV_WIDGET; a_screen_x, a_screen_y: INTEGER)

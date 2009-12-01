@@ -549,7 +549,7 @@ feature -- External
 			check
 				Result <= max_len
 			end
-			ar.resize (Result)
+			ar.grow (Result)
 			ar.set_count (Result)
 
 			from
@@ -569,7 +569,7 @@ feature -- External
 			l_data, l_null: POINTER
 		do
 			Result := odbc_put_data (no_descriptor, index, $l_data)
-			ar.resize (Result)
+			ar.grow (Result)
 			ar.set_count (Result)
 			if Result > 0 then
 				create l_area.share_from_pointer (l_data, Result)

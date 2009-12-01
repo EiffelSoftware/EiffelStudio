@@ -175,12 +175,22 @@ end
 	generate_access
 			-- Generate access call of feature in current on `current_register'
 		do
+				-- Reset value of variables.
+			is_right_parenthesis_needed.put (False)
+			is_deferred.put (False)
+			is_direct_once.put (False)
+
 			do_generate (Current_register)
 		end
 
 	generate_on (reg: REGISTRABLE)
 			-- Generate access call of feature in current on `current_register'
 		do
+				-- Reset value of variables.
+			is_right_parenthesis_needed.put (False)
+			is_deferred.put (False)
+			is_direct_once.put (False)
+
 			do_generate (reg)
 		end
 
@@ -318,9 +328,7 @@ end
 			l_par := parent
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True)
 			buf := buffer
-				-- Initialize variable being caried from `generate_access_on_type' to `generate_end'.
-			is_deferred.put (False)
-			is_direct_once.put (False)
+				-- Tell if we need the extra parenthesis in `generate_end'.
 			is_right_parenthesis_needed.put (l_keep)
 			type_i := real_type (type)
 			type_c := type_i.c_type

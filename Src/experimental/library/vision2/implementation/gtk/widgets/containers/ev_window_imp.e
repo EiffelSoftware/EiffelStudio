@@ -87,6 +87,7 @@ feature {NONE} -- Initialization
 			l_c_object: POINTER
 		do
 			set_is_initialized (False)
+			app_imp := app_implementation
 			set_c_object (new_gtk_window)
 			l_c_object := c_object
 
@@ -97,7 +98,6 @@ feature {NONE} -- Initialization
 
 			maximum_width := 32000
 			maximum_height := 32000
-			app_imp := app_implementation
 			l_gtk_marshal := app_imp.gtk_marshal
 
 			initialize_client_area

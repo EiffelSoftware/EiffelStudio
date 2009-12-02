@@ -1,138 +1,45 @@
 <?php
 
 require_once (dirname(__FILE__)."/../isedoc.lib.inc");
-require_once ("isedoc_eis.data.inc");
+require_once ("isedoc_eis.lib.inc");
 
 function isedoc_eis_query($eis) {
-	$output = t("Query Documentation page for <strong>EIS=%eis</strong>.", array('%eis'=>$eis));
-	$output .= '<br/>';
-/*
-        $args = arg();
-        //$eis_parts = explode ("@", $eis);
-        foreach($args as $n) {
-		if (!is_null($eis_parts)) {
-			$eis_parts[] = $n;
-		} elseif ($n == 'eis') { 
-			$eis_parts = array();
-			$eis_parts[] = $eis;
+	$eis_info = _isedoc_eis_arguments($eis);
+	if ($eis_info) {
+		if (!empty($eis_info['uuid'])) {
+			$doc_info = _isedoc_eis_docinfo($eis_info);
 		}
-        }
-*/
-	$eis_parts = explode ("@", $eis);
-	if (!is_null($eis_parts)) {
-		$c = count ($eis_parts);
-		$eis_info['uuid'] = $eis_parts[0];
-		$i = 0;
-		if ($i + $c >= 4) {
-			$i = $i + 1;
-			$eis_info['library'] = $eis_parts[$i];
-		}
-		if ($i + $c >= 3) {
-			$i = $i + 1;
-			$eis_info['cluster'] = $eis_parts[$i];
-		}
-		if ($i + $c >= 2) {
-			$i = $i + 1;
-			$eis_info['class'] = $eis_parts[$i];
-		} 
-		$info_params = "";
-		$output .= '<ul>';
-		foreach ($eis_info as $k => $p) {
-			$output .= '<li>' . $k . '=' . $p . '</li>';
-			$info_params .= " ($k=<b>$p</b>)";
-		}
-		drupal_set_message("EIS entry: " . $info_params);
-
-		$l_uuid = $eis_info['uuid'];
-		if (!empty($l_uuid)) {
-			$l_section = "";
-
-			$docinfo = isedoc_eis_docinfo($eis_info);
-			$docref = $docinfo['name'];
-			$docuuid = $docinfo['docuuid'];
-			$doc_suggested = $docinfo['suggested'] == true;
-			if ($doc_suggested) {
-				$output .= '<li>No exact matching entry, suggestion:<ul>';
-			}
-			$output .= '<li style="font-weight: bold;">Related to ' . $docref . ' =&gt; ' . $docuuid . '</li>';
-
-			$nids = isedoc_node_ids_by_uuid($docuuid);
-			if ($nids) {
-				$output .= "<ul>";
-				if (count($nids) == 1) {
-					end(&$nids);
-					$nid = key(&$nids);
-					$vid = current(&$nids);
-					$node =& node_load(array('nid' => $nid));
-					if ($node and $node->vid == $vid) {
-						// Check the version id...
-						//drupal_set_message(t("Accessed by the UUID=%uuid.",array('%uuid' => $uuid)), 'status');
-						if (!$doc_suggested) {
-							drupal_goto($node->path,NULL,$l_section);
-						}
-						$output .= '<li>' . isedoc_uuid_page_display(&$node) . '</li>';
-					} else {
-						// Should not occur ...
-						$output .= t("Unable to find referenced page.");
-					}
-				} else {
-					// Should not occur ...
-					foreach($nids as $nid => $vid) {
-						$node =& node_load(array('nid' => $nid));
-						if ($node) {
-							$output .= '<li>' . isedoc_uuid_page_display(&$node) . '</li>';
-						}
-					}
-				}
-				$output .= "</ul>";
-			} else {
-				$output .= t("Unable to find referenced page.");
-			}
-			if ($doc_suggested) {
-				$output .= '</ul></li>';
-			}
-
-		}
-		$output .= '</ul>';
 	}
-
-
-$output .= t ("Not Yet Implemented.");
-
-/*
-	$nids = isedoc_node_ids_by_uuid($uuid);
-	if ($nids) {
-		$output .= "<ul>";
-		if (count($nids) == 1) {
-			end(&$nids);
-                        $nid = key(&$nids);
-                        $vid = current(&$nids);
-			$node =& node_load(array('nid' => $nid));
-			if ($node and $node->vid == $vid) {
-				// Check the version id...
-				//drupal_set_message(t("Accessed by the UUID=%uuid.",array('%uuid' => $uuid)), 'status');
-				drupal_goto($node->path,NULL,$a_section);
-				$output .= '<li>' . isedoc_uuid_page_display(&$node) . '</li>';
-			} else {
-				// Should not occur ...
-				$output .= t("Unable to find referenced page.");
-			}
-		} else {
-			// Should not occur ...
-			foreach($nids as $nid => $vid) {
-				$node =& node_load(array('nid' => $nid));
-				if ($node) {
-					$output .= '<li>' . isedoc_uuid_page_display(&$node) . '</li>';
-				}
-			}
-		}
-		$output .= "</ul>";
-	} else {
-		$output .= t("Unable to find referenced page.");
-	}
-*/
+	$output = _isedoc_eis_mapping_to_string($eis,$eis_info,$doc_info, TRUE);
+	$output .= l(t("Edit mapping"), "isedoc/edit/eis/$eis");
 
 	return $output."<br/><br/>";
+}
+
+function isedoc_eis_mapping($node) {
+  drupal_set_title(check_plain($node->title));
+  $output = "<h1>EIS Mapping ...</h1>";
+  $l_docuuid = $node->field_uuid[0]['value'];
+  $output .= "UUID of current documentation page: <b>". l($l_docuuid, "isedoc/uuid/".$l_docuuid)."</b><br/>";
+  $l_mappers = _isedoc_eis_doc_mappers($l_docuuid);
+  if ($l_mappers) {
+	$output .= "<h3>" . count($l_mappers)  . " EIS mapper(s) found.</h3>";
+	$output .= "<ul>";
+	foreach ($l_mappers as $m) {
+		$s = $m['uuid'];
+		$eis = $s;
+		$s = $m['library']; if (strlen($s) > 0) { $eis .= "@$s";  }
+		$s = $m['cluster']; if (strlen($s) > 0) { $eis .= "@$s"; }
+		$s = $m['classname']; if (strlen($s) > 0) { $eis .= "@$s"; }
+		$output .= "<li>$eis ( ". l(t('view'), "isedoc/eis/$eis") . " , " . l(t('edit'), "isedoc/edit/eis/$eis") ." )</li>";
+	}
+	$output .= "</ul>";
+  } else {
+	$output .= "<h3>No EIS mapper found</h3>";
+  }
+  $output .= "<br/>" . l("Add a new mapper","isedoc/edit/eis/_/$l_docuuid"). "</h3>";
+
+  return $output;
 }
 
 

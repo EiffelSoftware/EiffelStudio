@@ -1,9 +1,19 @@
 <?php
 
+if (!defined('__isedoc_lib_inc__')) {
+define('__isedoc_lib_inc__',1);
 
 /*
  * Helpers
  */
+function textvar_dump_r(&$ref, $pre=TRUE) {
+	ob_start(); print_r($ref); $a = ob_get_contents(); ob_end_clean(); 
+	if ($pre) {
+		return "<pre>DUMP=".$a . '</pre>';
+	} else {
+		return 'DUMP='.$a;
+	}
+}
 
 function var_dump_r(&$ref, $pre=TRUE) {
 	ob_start(); var_dump($ref); $a=htmlspecialchars(ob_get_contents(),ENT_QUOTES); ob_end_clean(); 
@@ -164,9 +174,14 @@ function isedoc_node_ids_by_uuid($uuid) {
 	}
 }
 
-function isedoc_uuid_page_display(&$node) {
+function isedoc_uuid_page_display(&$node,$section='') {
 	$output = t("Page %tit", array('%tit' => $node->title));
-	$output .= " (" . l(t("view"), $node->path) .")";
+	$l_opts = array();
+	if (strlen($section) > 0) {
+		$l_opts['fragment'] = $section;
+		$output .= ' <em>[' . t('section: ') . $section . ']</em>';
+	}
+	$output .= " (" . l(t("view"), $node->path, $l_opts) .")";
 	return $output;
 }
 
@@ -175,7 +190,11 @@ function isedoc_uuid_page_display(&$node) {
  */
 
 function _isedoc_title_sql_in_regexp($a_title) {
-	$res = strtolower(mysql_real_escape_string($a_title));
+	//$res = strtolower(mysql_real_escape_string($a_title));
+	$res = strtolower(db_escape_string($a_title));
+	if (strlen($res) == 0 and strlen($a_title) > 0) {
+		$res = strtolower($a_title);
+	}
 	$res = str_replace('+', '\\\\+', $res);
 	return $res;
 }
@@ -238,5 +257,7 @@ function _isedoc_file_content($a_fn) {
 	fclose($l_fp);
 	return $contents;
 }
+
+} /* __isedoc_lib_inc__ defined */
 
 ?>

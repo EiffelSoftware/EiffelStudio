@@ -8,49 +8,96 @@ require_once (dirname(__FILE__)."/../isedoc.lib.inc");
  */
 function isedoc_eis_admin_settings() {
 
-	$form['isedoc_eis'] = array(
+	$form['isedoc_eis_admin_settings'] = array(
 		'#type' => 'fieldset',
 		'#title' => t('EIS mapping Settings')
 	);
 
-	$form['isedoc_eis']['isedoc_eis_default'] = array(
+	$form['isedoc_eis_admin_settings']['f_isedoc_eis_default_uuid'] = array(
 		'#type' => 'textfield',
-		'#title' => t('Default page'),
-		'#default_value' => variable_get('isedoc_eis_default', ''),
-		'#description' => t('Default mapping (can be empty), %link', array('%link' => 'admin/content/isedoc_eis')),
-		'#required' => TRUE,
+		'#title' => t('Default UUID'),
+		'#default_value' => variable_get('isedoc_eis_default_uuid', ''),
+		'#description' => t('Default mapping\'s uuid (can be empty)'),
+		'#required' => FALSE,
 	);
+	$form['isedoc_eis_admin_settings']['f_isedoc_eis_default_name'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Default Name'),
+		'#default_value' => variable_get('isedoc_eis_default_name', ''),
+		'#description' => t('Default mapping\'s name (can be empty)'),
+		'#required' => FALSE,
+	);
+	$form['#submit'][] = 'isedoc_eis_admin_settings_submit';
+	//$form['#validate'][] = 'isedoc_eis_admin_settings_validate';
 
 	return system_settings_form($form);
 }
 
-function isedoc_eis_settings_submit($form, &$form_state) {
-	drupal_set_message(t("Processed isedoc_eis_settings_submit ..."),'status');
-}
-function isedoc_eis_admin_settings_goto_eis($form, &$form_state) {
-	drupal_goto('admin/content/isedoc_eis');
+function isedoc_eis_admin_settings_validate($form, &$form_state) {
+	//drupal_set_message(t("Processed isedoc_eis_admin_settings_validate ..."),'status');
+//drupal_set_message(textvar_dump_r($form));
+	$l_uuid = $form_state['values']['f_isedoc_eis_default_uuid'];
+	$l_name = $form_state['values']['f_isedoc_eis_default_name'];
+	if (strlen($l_uuid) > 34) {
+		$l_ids = isedoc_node_ids_by_uuid($l_uuid);
+		if ($l_ids === FALSE or count($l_ids) == 0) {
+			form_set_error('f_isedoc_eis_default_uuid', t('Invalid UUID [%uuid]',array('%uuid' => $l_uuid)));
+		} else {
+			$l_id = array_shift($l_ids);
+			$n = node_load($l_id);
+			$l_name = $n->title;
+			form_set_value($form['isedoc_eis_admin_settings']['f_isedoc_eis_default_name'], $l_name, $form_state);
+		};
+	} else if (strlen($l_name) > 0) {
+		$l_ids = isedoc_node_ids_by_title($l_name);
+		if ($l_ids === FALSE or count($l_ids) == 0) {
+			form_set_error('f_isedoc_eis_default_name', t('Invalid NAME [%name]', array('%name' => $l_name)));
+		} else {
+			$l_id = array_shift($l_ids);
+			$n = node_load($l_id);
+			$l_uuid = $n->field_uuid[0]['value'];
+			form_set_value($form['isedoc_eis_admin_settings']['f_isedoc_eis_default_uuid'], $l_uuid, $form_state);
+		};
+	}
 }
 
+
+function isedoc_eis_admin_settings_submit($form, &$form_state) {
+	drupal_set_message(t("Processed isedoc_eis_admin_settings_submit ..."),'status');
+//drupal_set_message(textvar_dump_r($form_state,TRUE));
+
+	if (isset($form_state['values']['f_isedoc_eis_default_uuid'])) {
+		variable_set('isedoc_eis_default_uuid',$form_state['values']['f_isedoc_eis_default_uuid']);
+	}
+	if (isset($form_state['values']['f_isedoc_eis_default_name'])) {
+		variable_set('isedoc_eis_default_uuid',$form_state['values']['f_isedoc_eis_default_name']);
+	}
+}
 /**
  * Menu: admin/content/isedoc_eis
  */
 function isedoc_eis_form() {
+drupal_set_message("isedoc_eis_form");
 	$form = array();
 
-	$eis_default = variable_get('isedoc_eis_default', '');
+	$eis_default_uuid = variable_get('isedoc_eis_default_uuid', '');
+	$eis_default_name = variable_get('isedoc_eis_default_name', '');
 
 	return $form;
 }
 
 function isedoc_eis_edit_form() {
+drupal_set_message("isedoc_eis_edit_form");
 	$form = array();
 
-	$eis_default = variable_get('isedoc_eis_default', '');
+	$eis_default_uuid = variable_get('isedoc_eis_default_uuid', '');
+	$eis_default_name = variable_get('isedoc_eis_default_name', '');
 
 	return $form;
 }
 
 function theme_isedoc_eis_form($form) {
+drupal_set_message("theme_isedoc_eis_form");
 	return drupal_render($form);
 }
 

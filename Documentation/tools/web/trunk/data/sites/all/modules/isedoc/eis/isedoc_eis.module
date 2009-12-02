@@ -34,34 +34,53 @@ function isedoc_eis_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('isedoc_eis_edit_form'),
     'file' => 'isedoc_eis.admin.inc',
-    'access arguments' => array('edit content'),
+    'access arguments' => array('edit eis'),
     'type' => MENU_NORMAL_ITEM,
     'description' => 'Edit EIS mapping.',
   );
 
   $items['admin/settings/isedoc/isedoc_eis'] = array(
-    'title' => 'EIS mapping',
+    'title' => t('EIS mapping'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('isedoc_eis_admin_settings'),
     'file' => 'isedoc_eis.admin.inc',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
   );
+  $items['node/%node/eismapping'] = array(
+    'title' => t('EIS'),
+    'page callback' => 'isedoc_eis_mapping',
+    'page arguments' => array(1),
+    'access arguments' => array('edit eis'),
+    'file' => 'isedoc_eis.query.inc',
+    'weight' => 2,
+    'type' => MENU_LOCAL_TASK,
+  );
+
   $items['isedoc/eis/%'] = array(
     'title' => t('Redirect using EIS entry'),
     'page callback' => 'isedoc_eis_query',
     'page arguments' => array(2),
-    'access arguments' => array('access content'),
+    'access arguments' => array('access eis'),
     'file' => 'isedoc_eis.query.inc',
     'type' => MENU_CALLBACK,
   );
   $items['isedoc/edit/eis/%'] = array(
     'title' => t('Edit EIS entry association'),
     'page callback' => 'isedoc_eis_query_edit',
-    'page arguments' => array(2),
-    'access arguments' => array('edit content'),
-    'file' => 'isedoc_eis.query.inc',
+    'page arguments' => array(3),
     'type' => MENU_CALLBACK,
+    'access arguments' => array('edit eis'),
+    'file' => 'isedoc_eis.edit.inc',
+  );
+
+  $items['isedoc/edit/eis/%/%'] = array(
+    'title' => t('Edit EIS entry association'),
+    'page callback' => 'isedoc_eis_query_edit',
+    'page arguments' => array(3,4),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('edit eis'),
+    'file' => 'isedoc_eis.edit.inc',
   );
 
   return $items;

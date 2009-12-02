@@ -1,0 +1,111 @@
+<?php
+
+// $Id$ 
+
+/**
+ * @file
+ * Installation file for the isedoc_eis module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function isedoc_eis_install() {
+  drupal_install_schema('isedoc_eis');
+
+  drupal_set_message("isedoc_eis database tables created.");
+  _isedoc_eis_doc_database_initialize();
+
+}
+
+
+/**
+ * Implementation of hook_schema().
+ */
+function isedoc_eis_schema() {
+  $schema['isedoc_eis'] = array(
+    'description' => t('Table for tracking EIS mapping.'),
+    'fields' => array(
+      'uuid' => array(
+        'description' => t('Primary key: The UUID of the EIS entry.'),
+        'type' => 'varchar',
+        'length' => 36,
+        'not null' => TRUE,
+        'default' => '00000000-0000-0000-0000-000000000000',
+      ),
+      'library' => array(
+        'description' => t('Name of the related library.'),
+        'type' => 'text',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'cluster' => array(
+        'description' => t('Name of the related cluster.'),
+        'type' => 'text',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'classname' => array(
+        'description' => t('Name of the related classname.'),
+        'type' => 'text',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'puuid' => array(
+        'description' => t('UUID of the associated doc page.'),
+        'type' => 'varchar',
+        'length' => 36,
+        'not null' => TRUE,
+        'default' => '00000000-0000-0000-0000-000000000000',
+      ),
+      'psection' => array(
+        'description' => t('Name on the associated doc page.'),
+        'type' => 'varchar',
+        'length' => 36,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array(
+	'eis_uuid' => array('uuid')
+	),
+  );
+
+  return $schema;
+}
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function isedoc_eis_uninstall() {
+  drupal_uninstall_schema('isedoc_eis'); 
+}
+
+/**
+ * Insert elements...
+ */
+
+function _isedoc_eis_doc_database_initialize() {
+
+	$res = db_query("SELECT puuid FROM {isedoc_eis}");
+	if ($res === FALSE) {
+		drupal_set_message("ERROR with SELECT on isedoc_eis");
+	} else {
+		if (db_fetch_array($res) === FALSE) {
+drupal_set_message("EMPTY isedoc_eis");
+//db_query("INSERT INTO {isedoc_eis} (uuid, library, cluster, classname, puuid, psection) VALUES ('00000000-0000-0000-0000-000000000000','','','','00000000-0000-0000-0000-000000000000','Title')");
+db_query("INSERT INTO {isedoc_eis} (uuid, classname, puuid, psection) VALUES ('6D7FF712-BBA5-4AC0-AABF-2D9880493A01','','0153c1de-bf88-fa0d-52a5-e50ffcc4e8c8','')");
+db_query("INSERT INTO {isedoc_eis} (uuid, classname, puuid, psection) VALUES ('78D80981-EF3C-42EC-8919-EF7D7BB61701','','3d96626f-11f3-67a2-dec6-69f7faf4a8d6','')");
+db_query("INSERT INTO {isedoc_eis} (uuid, classname, puuid, psection) VALUES ('78D80981-EF3C-42EC-8919-EF7D7BB61701','DATE','195849fc-1a9c-d734-2d2b-acae78133886','DATE')");
+db_query("INSERT INTO {isedoc_eis} (uuid, classname, puuid, psection) VALUES ('78D80981-EF3C-42EC-8919-EF7D7BB61701','TIME','195849fc-1a9c-d734-2d2b-acae78133886','TIME')");
+db_query("INSERT INTO {isedoc_eis} (uuid, classname, puuid, psection) VALUES ('78D80981-EF3C-42EC-8919-EF7D7BB61701','DATE_TIME','195849fc-1a9c-d734-2d2b-acae78133886','DATE_TIME')");
+db_query("INSERT INTO {isedoc_eis} (uuid, classname, puuid, psection) VALUES ('1557CB9B-9C9F-11DB-B606-0800200C9A66','','','EiffelEncoding')");
+		}
+	}
+}
+
+?>

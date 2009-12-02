@@ -193,7 +193,7 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
 }
 
 /*
-doc:	<routine name="eif_dtype_to_sk_type" return_type="int" export="private">
+doc:	<routine name="eif_dtype_to_sk_type" return_type="int" export="shared">
 doc:		<summary>Given a cecil ID, returns the corresponding SK_XX abstract type.</summary>
 doc:		<param name="dtype" type="EIF_TYPE_INDEX">cecil ID.</param>
 doc:		<thread_safety>Safe</thread_safety>
@@ -236,6 +236,39 @@ rt_shared int32 eif_dtype_to_sk_type (EIF_TYPE_INDEX dtype)
 		} else {
 			return SK_REF;
 		}
+	}
+}
+
+/*
+doc:	<routine name="eif_sk_type_to_dtype" return_type="EIF_TYPE_INDEX" export="shared">
+doc:		<summary>Given a SK_XXX abstract type, returns the corresponding CECIL ID.</summary>
+doc:		<param name="sk_type" type="uint32">SK_XX type.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared EIF_TYPE_INDEX eif_sk_type_to_dtype (uint32 sk_type)
+{
+	switch (sk_type & SK_HEAD) {
+		case SK_CHAR: return egc_char_dtype;
+		case SK_WCHAR: return egc_wchar_dtype;
+		case SK_BOOL: return egc_bool_dtype;
+		case SK_UINT8: return egc_uint8_dtype;
+		case SK_UINT16: return egc_uint16_dtype;
+		case SK_UINT32: return egc_uint32_dtype;
+		case SK_UINT64: return egc_uint64_dtype;
+		case SK_INT8: return egc_int8_dtype;
+		case SK_INT16: return egc_int16_dtype;
+		case SK_INT32: return egc_int32_dtype;
+		case SK_INT64: return egc_int64_dtype;
+		case SK_REAL32: return egc_real32_dtype;
+		case SK_REAL64: return egc_real64_dtype;
+		case SK_POINTER: return egc_point_dtype;
+		case SK_REF:
+		case SK_EXP:
+			return (EIF_TYPE_INDEX) (sk_type & SK_DTYPE);
+		default:
+			return 0;
 	}
 }
 

@@ -2528,8 +2528,6 @@ rt_shared char *name_of_attribute_type (EIF_TYPE_INDEX **type)
 	static char buffer [512 + 9];
 	EIF_TYPE_INDEX dftype = **type;
 
-	REQUIRE ("Not a formal parameter", dftype != FORMAL_TYPE);
-
 	buffer[0] = (char) 0;
 
 		/* Skip all the annotations. */
@@ -2566,8 +2564,6 @@ rt_private char *name_of_old_attribute_type (EIF_TYPE_INDEX **type)
 	RT_GET_CONTEXT
 	EIF_TYPE_INDEX dftype = **type;
 	static char buffer [512 + 9];
-
-	REQUIRE ("Not a formal parameter", dftype != FORMAL_TYPE);
 
 	buffer[0] = (char) 0;
 
@@ -2877,32 +2873,14 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 				} else {
 						/* Attribute is not matching. This could happen if the storable was created with a
 						 * version <= 6.1 where formals in a generic derivation involving some basic types
-						 * where instantiated whereas in 6.2 and above we keep them. So let's check the
-						 * context type and see if there is indeed a formal generic at the expected position
-						 * and check if it is the same type. */
+						 * where instantiated whereas in 6.2 and above we keep them as formals.
+						 * So let's check the context type and see if there is indeed a formal generic at
+						 * the expected position and check if it is the same type. */
 					if ((context_type) && (aftype <= MAX_DTYPE) && type_defined (aftype)) {
 							/* We can resolve only if a context type was specified. */
 						EIF_TYPE_INDEX l_pos = **gtype;
 						if (context_type->generic_count <= l_pos) {
-							EIF_TYPE_INDEX l_new_dftype = type_description (aftype)->new_type;
-							switch (context_type->generics [l_pos - 1] & SK_HEAD) {
-								case SK_CHAR:	result = (egc_char_dtype == l_new_dftype); break;
-								case SK_WCHAR:	result = (egc_wchar_dtype == l_new_dftype); break;
-								case SK_BOOL:	result = (egc_bool_dtype == l_new_dftype); break;
-								case SK_UINT8:	result = (egc_uint8_dtype == l_new_dftype); break;
-								case SK_UINT16:	result = (egc_uint16_dtype == l_new_dftype); break;
-								case SK_UINT32:	result = (egc_uint32_dtype == l_new_dftype); break;
-								case SK_UINT64:	result = (egc_uint64_dtype == l_new_dftype); break;
-								case SK_INT8:	result = (egc_int8_dtype == l_new_dftype); break;
-								case SK_INT16:	result = (egc_int16_dtype == l_new_dftype); break;
-								case SK_INT32:	result = (egc_int32_dtype == l_new_dftype); break;
-								case SK_INT64:	result = (egc_int64_dtype == l_new_dftype); break;
-								case SK_REAL32:	result = (egc_real32_dtype == l_new_dftype); break;
-								case SK_REAL64:	result = (egc_real64_dtype == l_new_dftype); break;
-								case SK_POINTER:result = (egc_point_dtype == l_new_dftype); break;
-								default:
-									result = 0;
-							}
+							result = (type_description (aftype)->new_type == eif_sk_type_to_dtype(context_type->generics [l_pos - 1]));
 						} else {
 							result = 0;
 						}
@@ -2918,7 +2896,32 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 						result = 0;
 					}
 				} else {
-					result = (dftype == aftype ? 1 : 0);
+					if (aftype == FORMAL_TYPE) {
+						EIF_TYPE_INDEX l_pos;
+						
+							/* Get the formal position in the stored system. */
+						(*atype)++;
+						l_pos = **atype;
+							/* Attribute is not matching. This could happen if the storable was created with
+							 * a version <= 6.4 where formals in a generic derivation involving some basic
+							 * types where left as formals whereas in 6.5 and above we instantiate them as
+							 * basic types.
+							 * So let's check the context type and see if the actual type of the formal
+							 * generic type matches `dftype'.
+							 * See eweasel test#store026. */
+						if (context_type) {
+								/* We can resolve only if a context type was specified. */
+							if (context_type->generic_count <= l_pos) {
+								result = (dftype == eif_sk_type_to_dtype(context_type->generics [l_pos - 1]));
+							} else {
+								result = 0;
+							}
+						} else {
+							result = 0;
+						}
+					} else {
+						result = (dftype == aftype ? 1 : 0);
+					}
 				}
 			}
 		}

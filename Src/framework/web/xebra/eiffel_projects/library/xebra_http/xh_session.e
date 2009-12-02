@@ -103,7 +103,7 @@ feature -- Basic Operations
 		do
 			entries.force (a_value, a_key)
 		ensure
-			bigger:	entries.count > old entries.count
+			bigger:	entries.count >= old entries.count
 		end
 
 	item (a_key: STRING): detachable ANY

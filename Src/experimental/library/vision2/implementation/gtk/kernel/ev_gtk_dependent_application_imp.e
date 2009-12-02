@@ -297,7 +297,7 @@ feature -- Implementation
 			utf8_string: EV_GTK_C_STRING
 		once
 			retrieve_available_fonts (default_gtk_window, $a_name_array, $n_array_elements)
-			create Result.make_filled (n_array_elements)
+			create Result.make (n_array_elements)
 			from
 				i := 1
 					-- Create an initialize our reusable pointer.
@@ -306,7 +306,7 @@ feature -- Implementation
 				i > n_array_elements
 			loop
 				utf8_string.share_from_pointer (gchar_array_i_th (a_name_array, i))
-				Result.put_i_th (utf8_string.string, i)
+				Result.extend (utf8_string.string)
 				i := i + 1
 			end
 			Result.compare_objects
@@ -324,11 +324,11 @@ feature -- Implementation
 				i := 1
 				l_font_names := font_names_on_system
 				l_font_count := l_font_names.count
-				create Result.make_filled (l_font_count)
+				create Result.make (l_font_count)
 			until
 				i > l_font_count
 			loop
-				Result [i] := (l_font_names [i]).as_lower
+				Result.extend ((l_font_names [i]).as_lower)
 				i := i + 1
 			end
 			Result.compare_objects

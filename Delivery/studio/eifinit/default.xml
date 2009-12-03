@@ -630,16 +630,6 @@
 	<PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.general.smart_home" DESCRIPTION="Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.new_tab_at_left" DESCRIPTION="Place new editor tab at left side of editor's area?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="general.external_commands.external_command_0" DESCRIPTION="First external command."><STRING></STRING></PREF>
-	<PREF NAME="general.external_commands.external_command_1" DESCRIPTION="Second external command."><STRING></STRING></PREF>
-	<PREF NAME="general.external_commands.external_command_2" DESCRIPTION="Third external command."><STRING></STRING></PREF>
-	<PREF NAME="general.external_commands.external_command_3" DESCRIPTION="Forth external command."><STRING></STRING></PREF>
-	<PREF NAME="general.external_commands.external_command_4" DESCRIPTION="Fifth external command."><STRING></STRING></PREF>
-	<PREF NAME="general.external_commands.external_command_5" DESCRIPTION="Sixth external command."><STRING></STRING></PREF>
-	<PREF NAME="general.external_commands.external_command_6" DESCRIPTION="Seventh external command."><STRING></STRING></PREF>
-	<PREF NAME="general.external_commands.external_command_7" DESCRIPTION="Eighth external command."><STRING></STRING></PREF>
-	<PREF NAME="general.external_commands.external_command_8" DESCRIPTION="Ninth external command."><STRING></STRING></PREF>
-	<PREF NAME="general.external_commands.external_command_9" DESCRIPTION="Tenth external command."><STRING></STRING></PREF>
 
 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acrobat</STRING></PREF>
 	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>iexplore.exe $url</STRING></PREF>

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 				-- Active wait until thread is fully launched
 			from
 			until
-				is_launched
+				port /= 0
 			loop
 				sleep (1_000_000_000)
 			end
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			end
 
 			s.read_integer
-			if s.bytes_read >= 0 then
+			if s.bytes_read > 0 then
 				print ("No way%N")
 			end
 
@@ -50,9 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	port: INTEGER = 17530
-
-	is_launched: BOOLEAN
+	port: INTEGER
 
 feature {NONE} -- Implementation
 
@@ -60,8 +58,8 @@ feature {NONE} -- Implementation
 		local
 			s: NETWORK_STREAM_SOCKET
 		do
-			create s.make_server_by_port (port)
-			is_launched := True
+			create s.make_server_by_port (0)
+			port := s.port
 			s.listen(1)
 			s.accept
 				-- We do not close the socket as we don't want to have the recipient getting

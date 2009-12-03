@@ -481,33 +481,39 @@ feature -- Cleanup
 			i, nb: INTEGER
 			l_mem: MEMORY
 			l_module: IL_MODULE
+			retried: BOOLEAN
 		do
-				--| End recording session, (then Save IL Information used for eStudio .NET debugger)
-			Il_debug_info_recorder.end_recording_session
+			if not retried then
+					--| End recording session, (then Save IL Information used for eStudio .NET debugger)
+				Il_debug_info_recorder.end_recording_session
 
-			--| Clean up data
-			if internal_il_modules /= Void then
-				from
-					i := internal_il_modules.lower
-					nb := internal_il_modules.upper
-				until
-					i > nb
-				loop
-					l_module := internal_il_modules.item (i)
-					if l_module /= Void then
-						l_module.cleanup
+				--| Clean up data
+				if internal_il_modules /= Void then
+					from
+						i := internal_il_modules.lower
+						nb := internal_il_modules.upper
+					until
+						i > nb
+					loop
+						l_module := internal_il_modules.item (i)
+						if l_module /= Void then
+							l_module.cleanup
+						end
+						i := i + 1
 					end
-					i := i + 1
-				end
 
-					-- Now all underlying COM objects should have been unreferenced, so we
-					-- can safely collect them. We really have to collect them now because
-					-- some cannot wait. For example if you still have an instance of
-					-- DBG_DOCUMENT_WRITER of an Eiffel source file, it will refuse to create
-					-- a new instance if you haven't freed the first one.
-				create l_mem
-				l_mem.full_collect
+						-- Now all underlying COM objects should have been unreferenced, so we
+						-- can safely collect them. We really have to collect them now because
+						-- some cannot wait. For example if you still have an instance of
+						-- DBG_DOCUMENT_WRITER of an Eiffel source file, it will refuse to create
+						-- a new instance if you haven't freed the first one.
+					create l_mem
+					l_mem.full_collect
+				end
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Generation Structure
@@ -7844,7 +7850,7 @@ feature -- Inline agents
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -7857,22 +7863,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CIL_CODE_GENERATOR

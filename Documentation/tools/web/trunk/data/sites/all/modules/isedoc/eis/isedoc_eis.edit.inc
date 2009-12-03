@@ -86,8 +86,11 @@ function isedoc_eis_query_edit_form() {
 		'#title' => t('UUID'),
 		'#description' => t('UUID of the associated documentation page'),
 		'#default_value' => $doc_info['docuuid'],
-		'#required' => TRUE,
+		'#required' => FALSE,
 	);
+	if ($doc_info['suggested']) {
+		$form['isedoc_eis_query_edit_form_map']['puuid']['#prefix'] = '<div class="warning">'.t('This mapping is a suggestion (i.e: no exact mapping exists for now)').'</div>';
+	}
 	$form['isedoc_eis_query_edit_form_map']['psection'] = array(
 		'#type' => 'textfield',
 		'#title' => t('Section'),
@@ -97,6 +100,17 @@ function isedoc_eis_query_edit_form() {
 	);
 	$form['#submit'][] = 'isedoc_eis_query_edit_form_submit';
 	$form['#validate'][] = 'isedoc_eis_query_edit_form_validate';
+
+	if (!$doc_info['suggested']) {
+		$form['isedoc_eis_query_edit_form_map']['submit'] = array(
+			'#type' => 'submit',
+			'#title' => t('Delete'),
+			'#value' => t('Delete Mapper'),
+			'#validate' => array('isedoc_eis_query_edit_form_delete_mapper_validate'),
+			'#submit' => array('isedoc_eis_query_edit_form_delete_mapper'),
+			'#description' => t('Delete the associated mapper'),
+		);
+	}
 
 	return system_settings_form($form);
 }
@@ -131,6 +145,36 @@ function isedoc_eis_query_edit_form_submit($form, &$form_state) {
 	);
 
 	_isedoc_eis_save(&$info);
+	if (strlen($l_psection) > 0 ) {
+		$form_state['redirect'] = url("isedoc/uuid/$l_puuid", array('fragment' => $l_psection));
+	} else {
+		$form_state['redirect'] = url("isedoc/uuid/$l_puuid");
+	}
 }
+
+function isedoc_eis_query_edit_form_delete_mapper_validate($form, &$form_state) {
+}
+
+function isedoc_eis_query_edit_form_delete_mapper($form, &$form_state) {
+	drupal_set_message("Delete mapper...");
+	$l_uuid = $form_state['values']['uuid'];
+	$l_library = $form_state['values']['library'];
+	$l_cluster = $form_state['values']['cluster'];
+	$l_classname = $form_state['values']['classname'];
+	$l_puuid = $form_state['values']['puuid'];
+	$l_psection = $form_state['values']['psection'];
+
+	$info = array(
+		'uuid' => $l_uuid,
+		'library' => $l_library,
+		'cluster' => $l_cluster,
+		'classname' => $l_classname,
+		'puuid' => $l_puuid,
+		'psection' => $l_psection,
+	);
+
+	_isedoc_eis_delete(&$info);
+}
+
 
 ?>

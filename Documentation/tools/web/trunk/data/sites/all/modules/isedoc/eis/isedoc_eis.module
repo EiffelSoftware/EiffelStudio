@@ -20,7 +20,7 @@ function isedoc_eis_help($path, $arg) {
  * Implementation of hook_perm().
  */
 function isedoc_eis_perm() {
-  return array('edit content');
+  return array('access content','access eis', 'edit eis');
 }
 
 /**
@@ -30,13 +30,13 @@ function isedoc_eis_menu() {
   $items = array();
   
   $items['admin/content/isedoc_eis'] = array(
-    'title' => '(ISE) Edit EIS mapping ...',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('isedoc_eis_edit_form'),
+    'title' => '(ISE) EIS mapping ...',
+    'page callback' => 'isedoc_eis_admin_content',
+    'page arguments' => array(),
+    'access arguments' => array('access eis'),
+    'type' => MENU_CALLBACK,
     'file' => 'isedoc_eis.admin.inc',
-    'access arguments' => array('edit eis'),
-    'type' => MENU_NORMAL_ITEM,
-    'description' => 'Edit EIS mapping.',
+    'description' => 'List of all EIS mappers.',
   );
 
   $items['admin/settings/isedoc/isedoc_eis'] = array(
@@ -51,7 +51,7 @@ function isedoc_eis_menu() {
     'title' => t('EIS'),
     'page callback' => 'isedoc_eis_mapping',
     'page arguments' => array(1),
-    'access arguments' => array('edit eis'),
+    'access arguments' => array('access eis'),
     'file' => 'isedoc_eis.query.inc',
     'weight' => 2,
     'type' => MENU_LOCAL_TASK,
@@ -61,7 +61,7 @@ function isedoc_eis_menu() {
     'title' => t('Redirect using EIS entry'),
     'page callback' => 'isedoc_eis_query',
     'page arguments' => array(2),
-    'access arguments' => array('access eis'),
+    'access arguments' => array('access content'),
     'file' => 'isedoc_eis.query.inc',
     'type' => MENU_CALLBACK,
   );
@@ -88,7 +88,6 @@ function isedoc_eis_menu() {
 
 /**
  * Implementation of hook_theme() registry.
- **/
 function isedoc_eis_theme() {
   return array(
     'isedoc_eis_form' => array(
@@ -97,4 +96,6 @@ function isedoc_eis_theme() {
     ),
   );
 }
+ **/
 
+?>

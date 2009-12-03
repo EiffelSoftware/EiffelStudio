@@ -159,7 +159,8 @@ function isedoc_eis_query_edit_form_submit($form, &$form_state) {
 
 	_isedoc_eis_save(&$info);
 	if (strlen($l_psection) > 0 ) {
-		$form_state['redirect'] = url("isedoc/uuid/$l_puuid", array('fragment' => $l_psection));
+		$form_state['redirect'] = url("isedoc/uuid/$l_puuid/", array('fragment' => $l_psection));
+drupal_set_message($form_state['redirect']);
 	} else {
 		$form_state['redirect'] = url("isedoc/uuid/$l_puuid");
 	}

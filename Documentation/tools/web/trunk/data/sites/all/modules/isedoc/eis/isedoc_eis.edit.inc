@@ -47,6 +47,10 @@ function isedoc_eis_query_edit_form() {
 	$eis_info = variable_get('isedoc_eis_query_edit_tmp_eis',array('uuid' => '', 'library' => '', 'cluster' => '', 'classname' => ''));
 	$doc_info = variable_get('isedoc_eis_query_edit_tmp_doc',array('docuuid' => '', 'section' => ''));
 
+	if (empty($doc_info['section'])) {
+		$doc_info['section'] = $eis_info['classname'];
+	}
+
 	$form['isedoc_eis_query_edit_form_input'] = array(
 		'#type' => 'fieldset',
 		'#title' => t('EIS input')

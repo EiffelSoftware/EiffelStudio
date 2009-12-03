@@ -25,6 +25,10 @@ function _isedoc_eis_query_edit_eis($eis) {
 		}
 	}
 	$output = _isedoc_eis_mapping_to_string($eis,$eis_info,$doc_info,FALSE);
+	if (user_access('access eis')) {
+		$output .= '(note: click here to '. l(t('list all existing mappers'), 'admin/content/isedoc_eis') . ')<br/><br/>';
+	}
+
 	$output .= _isedoc_eis_query_edit_form($eis_info, $doc_info);
 
 	return $output."<br/><br/>";
@@ -116,10 +120,19 @@ function isedoc_eis_query_edit_form() {
 }
 
 
+function _isedoc_eis_is_valid_UUID($uuid){
+	$pattern = '/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i';
+	return preg_match($pattern, $uuid);
+}
+
 function isedoc_eis_query_edit_form_validate($form, &$form_state) {
-//drupal_set_message(textvar_dump_r($form_state));
+	$l_uuid = $form_state['values']['uuid'];
+	if (!_isedoc_eis_is_valid_UUID($l_uuid)) {
+		form_set_error('puuid', t('Invalid EIS UUID [%uuid]',array('%uuid' => $l_uuid)));
+	}
+
 	$l_puuid = $form_state['values']['puuid'];
-	if (strlen($l_puuid) > 34) {
+	if (_isedoc_eis_is_valid_UUID($l_puuid)) {
 		$l_ids = isedoc_node_ids_by_uuid($l_puuid);
 	}
 	if ($l_ids === FALSE or count($l_ids) == 0) {
@@ -156,7 +169,6 @@ function isedoc_eis_query_edit_form_delete_mapper_validate($form, &$form_state) 
 }
 
 function isedoc_eis_query_edit_form_delete_mapper($form, &$form_state) {
-	drupal_set_message("Delete mapper...");
 	$l_uuid = $form_state['values']['uuid'];
 	$l_library = $form_state['values']['library'];
 	$l_cluster = $form_state['values']['cluster'];

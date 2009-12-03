@@ -711,6 +711,9 @@ feature -- Status report
 			-- Will process be launched in a new process group?
 			-- Only has effect on Windows.
 
+	is_last_wait_timeout: BOOLEAN
+			-- Did the last `wait_for_exit_with_timeout' time out?
+
 feature -- Validation checking
 
 	is_input_redirection_valid (a_input_direction: INTEGER): BOOLEAN

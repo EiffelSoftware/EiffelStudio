@@ -20,24 +20,28 @@ function _isedoc_eis_doc_mapping($a_uuid,$a_library,$a_cluster,$a_classname) {
 	}
 }
 
-function _isedoc_eis_doc_mappers($a_docuuid,$a_section='') {
- 	$res = db_query("SELECT uuid,library,cluster,classname FROM {isedoc_eis} WHERE puuid='%s'", 
-			strtolower($a_docuuid)
- 		);
+function _isedoc_eis_doc_mappers($a_docuuid='',$a_section='') {
+	if (strlen($a_docuuid) == 0) {
+		$res = db_query("SELECT * FROM {isedoc_eis}");
+	} else {
+		if (strlen($a_section) == 0) {
+			$res = db_query("SELECT * FROM {isedoc_eis} WHERE puuid='%s'", strtolower($a_docuuid));
+		} else {
+			$res = db_query("SELECT * FROM {isedoc_eis} WHERE puuid='%s' AND psection='%s'", strtolower($a_docuuid), $a_section);
+		}
+	}
 	if ($res === FALSE) {
 		//drupal_set_message("isedoc_eis: error");
 	} else {
 		$mappers = array();
 		while ($r = db_fetch_array($res)) {
-			if ($a_section == '' or $r['psection'] == $a_section) {
-				$mappers[] = $r;
-			}
+			$mappers[] = $r;
 		}
 		return $mappers;
 	}
 }
 
-function _isedoc_eis_save ($info) {
+function _isedoc_eis_save($info) {
 	$res = db_query("SELECT * FROM {isedoc_eis} "
 		." WHERE uuid='%s' AND library='%s' AND cluster='%s' AND classname='%s' ",
 		strtoupper($info['uuid']), $info['library'], $info['cluster'], strtoupper($info['classname'])
@@ -54,6 +58,19 @@ function _isedoc_eis_save ($info) {
 			strtoupper($info['uuid']), $info['library'], $info['cluster'], strtoupper($info['classname']),
 			strtolower($info['puuid']), $info['psection']
 		);
+	}
+}
+
+function _isedoc_eis_delete($info) {
+	$res = db_query("DELETE FROM {isedoc_eis} "
+		." WHERE uuid='%s' AND library='%s' AND cluster='%s' AND classname='%s' AND puuid='%s' AND psection=LOWER('%s')",
+		strtoupper($info['uuid']), $info['library'], $info['cluster'], strtoupper($info['classname']),
+		strtolower($info['puuid']), $info['psection']
+	);
+	if ($res) {
+		drupal_set_message("Mapper deleted");
+	} else {
+		drupal_set_message("Error during Mapper deletion");
 	}
 }
 

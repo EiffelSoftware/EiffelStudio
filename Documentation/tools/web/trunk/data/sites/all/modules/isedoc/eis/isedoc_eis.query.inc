@@ -11,9 +11,20 @@ function isedoc_eis_query($eis) {
 		}
 	}
 	$output = _isedoc_eis_mapping_to_string($eis,$eis_info,$doc_info, TRUE);
-	$output .= l(t("Edit mapping"), "isedoc/edit/eis/$eis");
 
-	return $output."<br/><br/>";
+	// At this point, if we are not redirected, this means there is no EIS mapping
+	$output .= '<ul>';
+	$l_puuid = variable_get('isedoc_eis_default_uuid', '');
+	if (strlen($l_puuid) > 0) {
+		$output .= '<li>(Default mapping is ' . l($l_puuid, "isedoc/uuid/$l_puuid").')</li>';
+	}
+	if (user_access('edit eis')) {
+		$output .= '<li>'.l(t("Edit EIS mapping"), "isedoc/edit/eis/$eis").'</li>';
+	} else if (strlen($l_puuid) > 0) {
+		drupal_goto("isedoc/uuid/$l_puuid");
+	}
+	$output .= '</ul>';
+	return $output;
 }
 
 function isedoc_eis_mapping($node) {

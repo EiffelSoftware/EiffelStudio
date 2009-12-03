@@ -41,7 +41,12 @@ function _isedoc_eis_doc_mappers($a_docuuid='',$a_section='') {
 	}
 }
 
+function _isedoc_eis_info_to_string($info) {
+	return $info['uuid'].'@'.$info['library'].'@'.$info['cluster'].'@'.$info['classname'].'='.$info['puuid'].'#'.$info['psection'];
+}
+
 function _isedoc_eis_save($info) {
+	global $user;
 	$res = db_query("SELECT * FROM {isedoc_eis} "
 		." WHERE uuid='%s' AND library='%s' AND cluster='%s' AND classname='%s' ",
 		strtoupper($info['uuid']), $info['library'], $info['cluster'], strtoupper($info['classname'])
@@ -53,24 +58,42 @@ function _isedoc_eis_save($info) {
 			strtolower($info['puuid']), $info['psection'],
 			strtoupper($info['uuid']), $info['library'], $info['cluster'], strtoupper($info['classname'])
 		);
+		if ($res) {
+			watchdog('isedoc', 'User %user updated EIS mapping "%eis"', array('%user' => $user->name, '%eis' => _isedoc_eis_info_to_string($info)), WATCHDOG_INFO);
+		}
 	} else {
 		$res = db_query("INSERT INTO {isedoc_eis} (uuid, library, cluster, classname, puuid, psection) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
 			strtoupper($info['uuid']), $info['library'], $info['cluster'], strtoupper($info['classname']),
 			strtolower($info['puuid']), $info['psection']
 		);
+		if ($res) {
+			watchdog('isedoc', 'User %user added EIS mapping "%eis"', array('%user' => $user->name, '%eis' => _isedoc_eis_info_to_string($info)), WATCHDOG_INFO);
+		}
 	}
 }
 
 function _isedoc_eis_delete($info) {
-	$res = db_query("DELETE FROM {isedoc_eis} "
-		." WHERE uuid='%s' AND library='%s' AND cluster='%s' AND classname='%s' AND puuid='%s' AND psection=LOWER('%s')",
-		strtoupper($info['uuid']), $info['library'], $info['cluster'], strtoupper($info['classname']),
-		strtolower($info['puuid']), $info['psection']
+	global $user;
+	$res = db_query("SELECT * FROM {isedoc_eis} "
+		." WHERE uuid='%s' AND library='%s' AND cluster='%s' AND classname='%s' ",
+		strtoupper($info['uuid']), $info['library'], $info['cluster'], strtoupper($info['classname'])
 	);
-	if ($res) {
-		drupal_set_message("Mapper deleted");
+	if ($res and db_fetch_array($res)) {
+		$res = db_query("DELETE FROM {isedoc_eis} "
+			." WHERE uuid='%s' AND library='%s' AND cluster='%s' AND classname='%s' AND puuid='%s' AND psection=LOWER('%s')",
+			strtoupper($info['uuid']), $info['library'], $info['cluster'], strtoupper($info['classname']),
+			strtolower($info['puuid']), $info['psection']
+		);
+		if ($res) {
+			drupal_set_message("Mapper deleted");
+			if ($res) {
+				watchdog('isedoc', 'User %user deleted EIS mapping "%eis"', array('%user' => $user->name, '%eis' => _isedoc_eis_info_to_string($info)), WATCHDOG_INFO);
+			}
+		} else {
+			watchdog('isedoc', 'User %user tried to delete EIS mapping "%eis but ERROR occured"', array('%user' => $user->name, '%eis' => _isedoc_eis_info_to_string($info)), WATCHDOG_ERROR);
+		}
 	} else {
-		drupal_set_message("Error during Mapper deletion");
+		drupal_set_message("Inexistant EIS mapper => no deletion");
 	}
 }
 
@@ -160,10 +183,10 @@ function _isedoc_eis_mapping_to_string($eis,$eis_info,$docinfo,$view_mode=TRUE) 
 			$output .= $docuuid;
 			if (strlen($docref) > 0) { $output .= ' (section:' . $docref . ')'; }
 			$output .= '</h3>';
+			$output .= '<ul>';
 
 			$nids = isedoc_node_ids_by_uuid($docuuid);
 			if ($nids) {
-				$output .= "<ul>";
 				if (count($nids) == 1) {
 					end(&$nids);
 					$nid = key(&$nids);
@@ -190,13 +213,10 @@ function _isedoc_eis_mapping_to_string($eis,$eis_info,$docinfo,$view_mode=TRUE) 
 						}
 					}
 				}
-				$output .= "</ul>";
 			} else {
-				$output .= t("Unable to find referenced page.");
+				$output .= '<li>'.t("No associated documentation page.").'</li>';
 			}
-			if ($doc_suggested) {
-				$output .= '</ul></li>';
-			}
+			$output .= '</ul>';
 		}
 	}
 	return $output;

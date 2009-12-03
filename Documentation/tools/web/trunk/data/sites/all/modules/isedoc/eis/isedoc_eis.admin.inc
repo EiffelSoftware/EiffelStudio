@@ -106,13 +106,16 @@ function isedoc_eis_admin_content() {
  		$t_row_data['Library'] = $l_library;
  		$t_row_data['Cluster'] = $l_cluster;
  		$t_row_data['Classname'] = $l_classname;
+ 		$t_row_data['Documentation'] = $l_puuid;
+ 		$t_row_data['Section'] = $l_psection;
+
 		$eis = "$l_uuid@$l_library@$l_cluster@$l_classname";
 		if (strlen($l_psection) > 0) {
-			$t_row_data['Documentation'] = l($l_puuid.' # '.$l_psection, "isedoc/uuid/".$l_puuid, array('fragment' => $l_psection));
+			$s = l(t('View'), "isedoc/uuid/".$l_puuid, array('fragment' => $l_psection));
 		} else {
-			$t_row_data['Documentation'] = l($l_puuid, "isedoc/uuid/".$l_puuid);
+			$s = l(t('View'), "isedoc/uuid/".$l_puuid);
 		}
- 		$t_row_data['Operations'] = '('.l(t('Edit'),'isedoc/edit/eis/'.$eis) .')';
+ 		$t_row_data['Operations'] = '('.$s .' | ' . l(t('Edit'),'isedoc/edit/eis/'.$eis) .')';
 /*
 		foreach ($m as $k => $v) {
 			switch ($k) {
@@ -127,11 +130,19 @@ function isedoc_eis_admin_content() {
 */
 		$t_data[] = $t_row_data;
 	}
-	$output .= theme('table', //array( // Header
-				array("UUID", "Library", "Cluster","Classname", "Documentation","Operation"),
-				//'data' => array()
-			//), 
-			$t_data);
+	$output .= theme('table', array( 
+					array('data' => "UUID", 'field' => 'UUID'),
+					array('data' => "Library"),
+					array('data' => "Cluster"),
+					array('data' => "Classname"),
+					array('data' => "Documentation", 'field' => 'Documentation'),
+					array('data' => "Section"),
+					array('data' => "Operation")
+				),
+			$t_data,
+			array(
+			)
+		);
 	//$output .= theme('box', drupal_get_form('isedoc_eis_admin_content_form'));
 	return $output;
 }
@@ -145,18 +156,8 @@ function isedoc_eis_admin_content_form() {
 	return system_settings_form($form);
 };
 
-// function isedoc_eis_edit_form() {
-// drupal_set_message("isedoc_eis_edit_form");
-// 	$form = array();
-// 
-// 	$eis_default_uuid = variable_get('isedoc_eis_default_uuid', '');
-// 	$eis_default_name = variable_get('isedoc_eis_default_name', '');
-// 
-// 	return $form;
-// }
-// 
 function theme_isedoc_eis_admin_settings($form) {
- drupal_set_message("theme_isedoc_eis_form");
+ //drupal_set_message("theme_isedoc_eis_form");
  	$output .= drupal_render($form);
  	return $output;
 }

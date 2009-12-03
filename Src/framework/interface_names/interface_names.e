@@ -1307,6 +1307,7 @@ feature -- Label texts
 	l_Generate_profile_from_rtir: STRING_32 do Result := locale.translation("Generate profile from Run-time information record")	end
 	l_Generate_creation: STRING_32		do Result := locale.translation("Generate creation procedure")	end
 	l_generate_set_procedure: STRING_32	do Result := locale.translation ("Generate set procedure") end
+	l_generating_ini_file_failed: STRING_32	do Result := locale.translation ("Generating INI file failed") end
 	l_grid_column_layout: STRING_32		do Result := locale.translation ("Grid column layout") end
 			-- Preferece name prefix. For "debugger.grid_column_layout_XX".
 	l_Has_changed: STRING_32				do Result := locale.translation("Has Changed")	end

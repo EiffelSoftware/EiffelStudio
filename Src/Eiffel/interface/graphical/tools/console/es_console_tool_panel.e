@@ -368,24 +368,23 @@ feature -- Basic operation
 			-- `selected_cmd', if not Void, indicates the list item which
 			-- should be selected as defaulted.
 		local
-			ms: ARRAY [EB_EXTERNAL_COMMAND]
+			ms: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
 			ext_cmd: EB_EXTERNAL_COMMAND
 			lst_item: EV_LIST_ITEM
 			str: STRING
 			text_set: BOOLEAN
-			i: INTEGER
 		do
 			if cmd_lst.is_sensitive then
 				str := cmd_lst.text
-				ms := develop_window.commands.Edit_external_commands_cmd.commands
+				ms := develop_window.commands.Edit_external_commands_cmd.commands.twin
 				cmd_lst.wipe_out
 				from
-					i := ms.lower
+					ms.start
 					text_set := False
 				until
-					i > ms.upper
+					ms.after
 				loop
-					ext_cmd ?= ms.item (i)
+					ext_cmd ?= ms.item_for_iteration
 					if ext_cmd /= Void then
 						create lst_item.make_with_text (ext_cmd.external_command)
 
@@ -398,7 +397,7 @@ feature -- Basic operation
 							text_set := True
 						end
 					end
-					i := i + 1
+					ms.forth
 				end
 				if not text_set then
 					cmd_lst.set_text (str)
@@ -711,25 +710,26 @@ feature -- Status reporting
 			str: STRING
 			e_cmd: EB_EXTERNAL_COMMAND
 			done: BOOLEAN
-			i: INTEGER
+			l_commands: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
 		do
 			create str.make_from_string (cmd_lst.text)
 			str.left_adjust
 			str.right_adjust
 			if not str.is_empty then
 				from
-					i := 0
+					l_commands := develop_window.commands.edit_external_commands_cmd.commands
+					l_commands.start
 					done := False
 				until
-					i >= develop_window.commands.edit_external_commands_cmd.commands.count or done
+					l_commands.after or done
 				loop
-					e_cmd ?= develop_window.commands.edit_external_commands_cmd.commands.item (i)
+					e_cmd ?= l_commands.item_for_iteration
 					if e_cmd /= Void then
 						if e_cmd.external_command.is_equal (str) then
 							done := True
 						end
 					end
-					i := i + 1
+					l_commands.forth
 				end
 			end
 			if done then

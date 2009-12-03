@@ -1278,6 +1278,21 @@ feature -- Files (user)
 			not_result_is_empty: not Result.is_empty
 		end
 
+	user_extenral_file_name (a_file_name: STRING): FILE_NAME
+			-- Path to external commands ini file
+		require
+			is_valid_environment: is_valid_environment
+			is_user_files_supported: is_user_files_supported
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		do
+			create Result.make_from_string (user_settings_path)
+			Result.set_file_name (a_file_name)
+			Result.add_extension ("ini")
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature -- Obsolete
 
 	eiffel_home: DIRECTORY_NAME

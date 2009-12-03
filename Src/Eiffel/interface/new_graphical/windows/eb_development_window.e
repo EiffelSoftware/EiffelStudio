@@ -878,21 +878,20 @@ feature -- Stone process
 
 	refresh_external_commands
 			-- Refresh external commands.
+			-- FIXME: Move to EB_DEVELOPMENT_WINDOW_MENU_BUILDER
 		local
-			l_external_command: ARRAY [EB_EXTERNAL_COMMAND]
-			i, l_upper: INTEGER
+			l_external_command: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
 		do
 			l_external_command := commands.Edit_external_commands_cmd.commands
 			from
-				i := l_external_command.lower
-				l_upper := l_external_command.upper
+				l_external_command.start
 			until
-				i > l_upper
+				l_external_command.after
 			loop
-				if l_external_command.item (i) /= Void then
-					l_external_command.item (i).update (window)
+				if l_external_command.item_for_iteration /= Void then
+					l_external_command.item_for_iteration.update (window)
 				end
-				i := i + 1
+				l_external_command.forth
 			end
 			if commands.Edit_external_commands_cmd.list_exists then
 				commands.Edit_external_commands_cmd.refresh_list

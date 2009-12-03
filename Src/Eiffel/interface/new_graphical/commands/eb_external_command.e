@@ -51,24 +51,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (w: EV_WINDOW)
+	make (w: EV_WINDOW; a_editor: EB_EXTERNAL_COMMANDS_EDITOR)
 			-- Initialize `Current'.
 			-- Pop up a dialog modal to `w' to let the user initialize `Current'
 		require
 			valid_window: w /= Void
+			not_void: attached a_editor
 		do
 			old_index := -1
+			editor := a_editor
 			create_dialog
 
 				-- Find first available index for new command.
+			index := calculate_next_index
 
-			from
-				index := 0
-			until
-				index > 9 or commands.item (index) = Void
-			loop
-				index := index + 1
-			end
 			index_field.set_value (index)
 			dialog.show_modal_to_window (w)
 
@@ -109,7 +105,7 @@ feature {NONE} -- Initialization
 			end
 
 			enable_sensitive
-			write_to_preference
+			write_to_ini
 			external_output_manager.synchronize_command_list (Current)
 		end
 
@@ -164,25 +160,10 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	write_to_preference
-			-- Write `Current' external command to preference.
-		local
-			i: INTEGER
+	write_to_ini
+			-- Write `Current' external command to ini file.
 		do
-			from
-			until
-				i > 9
-			loop
-				if commands @ i = Current then
-					preferences.external_command_data.i_th_external_preference (i).set_value ((commands @ i).resource)
---				else
---						-- We use an empty string as value, because this is how the
---						-- preferences are initialized. That way, the entry is actually
---						-- removed from the preferences.
---					preferences.external_command_data.i_th_external_preference (i).set_value ("")
-				end
-				i := i + 1
-			end
+			editor.ini_manager.generate_ini
 		end
 
 feature{NONE} -- Command substitution
@@ -341,7 +322,7 @@ feature -- Status setting
 				end
 			end
 			old_index := -1
-			write_to_preference
+			write_to_ini
 			external_output_manager.synchronize_command_list (Current)
 		end
 
@@ -352,9 +333,11 @@ feature -- Status setting
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
-			l_shortcut := preferences.external_command_data.shortcuts.item ("shortcut_" + index.out)
-			set_referred_shortcut (l_shortcut)
-			set_accelerator (l_accelerators.item (index))
+			if index <= 9 then
+				l_shortcut := preferences.external_command_data.shortcuts.item ("shortcut_" + index.out)
+				set_referred_shortcut (l_shortcut)
+				set_accelerator (l_accelerators.item (index))
+			end
 		end
 
 feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
@@ -425,7 +408,6 @@ feature -- Status report
 			-- Is `Current' a valid command?
 		do
 			Result := index >= 0 and
-						index < 10 and
 						name /= Void and
 						external_command /= Void and then
 						(not name.is_empty and not external_command.is_empty)
@@ -450,10 +432,10 @@ feature {NONE} -- Widgets
 
 feature {NONE} -- Implementation
 
-	separator: CHARACTER = '['
+	separator: CHARACTER = '{'
 			-- Separator in resource representation.
 
-	commands: ARRAY [EB_EXTERNAL_COMMAND]
+	commands: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
 			-- Abstract representation of external commands.
 		do
 			Result := (create {EB_EXTERNAL_COMMANDS_EDITOR}.make).commands
@@ -499,7 +481,7 @@ feature {NONE} -- Implementation
 			create il.make_with_text (Interface_names.l_index)
 			create cl.make_with_text (Interface_names.l_Command_line)
 			create name_field
-			create index_field.make_with_value_range (0 |..| 9)
+			create index_field.make_with_value_range (0 |..| 999)
 			create command_field
 
 			create hb1.default_create
@@ -584,7 +566,7 @@ feature {NONE} -- Implementation
 			ix: INTEGER
 		do
 			ix := index_field.value
-			if name_field.text.is_empty or command_field.text.is_empty or ix < 0 or ix > 9 then
+			if name_field.text.is_empty or command_field.text.is_empty or ix < 0 then
 				prompts.show_error_prompt (Warning_messages.w_Invalid_options, dialog, Void)
 			else
 				if commands.item (ix) /= Void and then commands.item (ix) /= Current then
@@ -615,11 +597,46 @@ feature {NONE} -- Implementation
 			command_field := Void
 		end
 
-	old_index: INTEGER;
+	old_index: INTEGER
 			-- Index of `Current' before we edited its properties.
 
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	calculate_next_index: INTEGER
+			-- Calculate next minimum index
+		local
+			l_sort_arrary: SORTED_TWO_WAY_LIST [INTEGER]
+			l_commands: like commands
+			l_stop: BOOLEAN
+		do
+			from
+				create l_sort_arrary.make
+				l_commands := commands
+				l_commands.start
+			until
+				l_commands.after
+			loop
+				l_sort_arrary.extend (l_commands.key_for_iteration)
+				l_commands.forth
+			end
+
+			from
+				l_sort_arrary.start
+				Result := 0
+			until
+				l_sort_arrary.after or l_stop
+			loop
+				if Result /= l_sort_arrary.item then
+					l_stop := True
+				else
+					Result := Result + 1
+					l_sort_arrary.forth
+				end
+			end
+		end
+
+	editor: EB_EXTERNAL_COMMANDS_EDITOR
+			-- External commands edtitor
+;note
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -632,22 +649,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_EXTERNAL_COMMAND

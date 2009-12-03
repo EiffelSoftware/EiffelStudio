@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 			a_medium_is_open_write: attached {CONSOLE} a_medium or else a_medium.is_open_write
 		do
 			medium := a_medium
+
+			create buffer.make (100)
 		ensure
 			medium_set: medium = a_medium
 		end
@@ -39,9 +41,6 @@ feature {NONE} -- Access
 
 	buffer: STRING
 			-- Buffered content
-		attribute
-			create Result.make (100)
-		end
 
 feature -- Status report
 

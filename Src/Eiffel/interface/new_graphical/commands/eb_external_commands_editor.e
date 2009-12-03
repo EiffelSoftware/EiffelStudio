@@ -37,24 +37,10 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize `Current'.
-		local
-			i: INTEGER
-			s: STRING
-			c: EB_EXTERNAL_COMMAND
 		do
 			if not loaded.item then
 				loaded.put (True)
-				from
-				until
-					i > 9
-				loop
-					s := preferences.external_command_data.i_th_external_preference_value (i)
-					if not s.is_empty and not s.is_equal (" ") then
-						create c.make_from_string (s)
-						c.setup_managed_shortcut (accelerators)
-					end
-					i := i + 1
-				end
+				update_commands_from_ini_file
 			end
 			enable_displayed
 		end
@@ -71,25 +57,24 @@ feature -- Status report
 
 	menus: LIST [EB_COMMAND_MENU_ITEM]
 			-- Create a list of menu items that represent the list of external commands.
-		local
-			i: INTEGER
 		do
 			from
 				create {ARRAYED_LIST [EB_COMMAND_MENU_ITEM]} Result.make (10)
+				commands.start
 			until
-				i > 9
+				commands.after
 			loop
-				if commands @ i /= Void then
-					Result.extend ((commands @ i).new_menu_item)
+				if commands.item_for_iteration /= Void then
+					Result.extend ((commands.item_for_iteration).new_menu_item)
 				end
-				i := i + 1
+				commands.forth
 			end
 		end
 
-	commands: ARRAY [EB_EXTERNAL_COMMAND]
+	commands: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
 			-- Array of external commands.
-		once
-			create Result.make (0, 9)
+		do
+			Result := ini_manager.commands
 		end
 
 	accelerators: ARRAY [EV_ACCELERATOR]
@@ -164,6 +149,12 @@ feature -- Status report
 			Result := list /= Void
 		end
 
+	ini_manager: EB_EXTERNAL_COMMANDS_INI_MANAGER
+			-- External command ini file manager
+		once
+			create Result.make (Current)
+		end
+
 feature -- Actions
 
 	on_shortcut_change (i: INTEGER)
@@ -207,22 +198,28 @@ feature -- Basic operations
 		require
 			list_exists: list_exists
 		local
-			i: INTEGER
 			litem: EV_LIST_ITEM
 		do
 			from
 				list.wipe_out
+				commands.start
 			until
-				i > 9
+				commands.after
 			loop
-				if commands @ i /= Void then
+				if commands.item_for_iteration /= Void then
 					create litem
-					litem.set_text ((commands @ i).name)
-					litem.set_data (commands @ i)
+					litem.set_text ((commands.item_for_iteration).name)
+					litem.set_data (commands.item_for_iteration)
 					list.extend (litem)
 				end
-				i := i + 1
+				commands.forth
 			end
+		end
+
+	update_commands_from_ini_file
+			-- Update `commands' from ini file
+		do
+			ini_manager.update_from_ini_file
 		end
 
 feature{ES_CONSOLE_TOOL_PANEL} -- Synchronizing features used by EB_EXTERNAL_OUTPUT_TOOL
@@ -307,10 +304,7 @@ feature {NONE} -- Implementation
 				-- Set widget properties.
 			refresh_list
 			update_edit_buttons
-			if not commands.has (Void) then
-					-- All command indices are already taken.
-				add_button.disable_sensitive
-			end
+
 			dialog.set_title (Interface_names.t_external_commands)
 			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			dialog.set_default_push_button (close_button)
@@ -332,16 +326,12 @@ feature {NONE} -- Implementation
 			edit_button.select_actions.extend (agent edit_command)
 			delete_button.select_actions.extend (agent delete_command)
 
-			if commands.has (Void) then
-					-- It is not full
-				dialog.show_actions.extend (agent add_button.set_focus)
-			end
+			dialog.show_actions.extend (agent add_button.set_focus)
+
 		end
 
 	destroy_dialog
 			-- Free all widgets.
-		local
-			i: INTEGER
 		do
 			check
 				dialog /= Void
@@ -356,20 +346,6 @@ feature {NONE} -- Implementation
 			delete_button := Void
 			list := Void
 			update_menus
-			from
-			until
-				i > 9
-			loop
-				if commands @ i /= Void then
-					preferences.external_command_data.i_th_external_preference (i).set_value ((commands @ i).resource)
-				else
-						-- We use an empty string as value, because this is how the
-						-- preferences are initialized. That way, the entry is actually
-						-- removed from the preferences.
-					preferences.external_command_data.i_th_external_preference (i).set_value ("")
-				end
-				i := i + 1
-			end
 		end
 
 	update_edit_buttons
@@ -390,19 +366,17 @@ feature {NONE} -- Implementation
 			-- Create a new command.
 		require
 			dialog_exists: dialog /= Void and then not dialog.is_destroyed
-			room_left: commands.has (Void)
 		local
 			new_command: EB_EXTERNAL_COMMAND
 		do
-			create new_command.make (dialog)
-			new_command.setup_managed_shortcut (accelerators)
-			refresh_list
-			if not commands.has (Void) then
-				add_button.disable_sensitive
-				close_button.set_focus
+			create new_command.make (dialog, Current)
+			if new_command.is_valid then
+				update_commands_and_ini (new_command.index, commands, new_command)
+				new_command.setup_managed_shortcut (accelerators)
+				refresh_list
+				update_edit_buttons
+				shortcut_manager.update_external_commands
 			end
-			update_edit_buttons
-			shortcut_manager.update_external_commands
 		end
 
 	edit_command
@@ -412,15 +386,37 @@ feature {NONE} -- Implementation
 			has_selection: list.selected_item /= Void
 		local
 			comm: EB_EXTERNAL_COMMAND
+			l_old_index: INTEGER
 		do
 			comm ?= list.selected_item.data
+			l_old_index := comm.index
+
 			comm.edit_properties (dialog)
+
+			commands.replace (void, l_old_index)
+			update_commands_and_ini (comm.index, commands, comm)
+
 			comm.setup_managed_shortcut (accelerators)
 			shortcut_manager.update_external_commands
 			refresh_list
 			update_edit_buttons
 			dialog.set_focus
 		end
+
+	update_commands_and_ini (a_index: INTEGER; a_commands: like commands; a_new_command: detachable EB_EXTERNAL_COMMAND)
+				-- Update two `commands' lists and ini file
+			require
+				postive: a_index >= 0
+				not_void: attached a_commands
+			do
+				if commands.has (a_index) then
+					commands.replace (a_new_command, a_index)
+				else
+					commands.put (a_new_command, a_index)
+				end
+
+				ini_manager.generate_ini
+			end
 
 	delete_command
 			-- Delete an existing command.
@@ -431,7 +427,7 @@ feature {NONE} -- Implementation
 			comm: EB_EXTERNAL_COMMAND
 		do
 			comm ?= list.selected_item.data
-			commands.put (Void, comm.index)
+			update_commands_and_ini (comm.index, commands, Void)
 			refresh_list
 			update_edit_buttons
 			add_button.enable_sensitive
@@ -479,11 +475,8 @@ feature {NONE} -- Properties
 			Result := interface_names.m_Edit_external_commands
 		end
 
-invariant
-	invariant_clause: True -- Your invariant here
-
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -496,22 +489,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_EXTERNAL_COMMANDS_EDITOR

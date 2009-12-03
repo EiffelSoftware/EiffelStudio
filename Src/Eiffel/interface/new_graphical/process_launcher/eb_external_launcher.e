@@ -73,16 +73,14 @@ feature -- External commands status setting
 	set_external_commands_status (b: BOOLEAN)
 			-- Enable or disable sensitive of all external commands according to `b' (True for enable, False for disable).
 		local
-			i, cnt: INTEGER
 			eec: EB_EXTERNAL_COMMAND
 		do
 			from
-				i := commands.lower
-				cnt := commands.upper
+				commands.start
 			until
-				i > cnt
+				commands.after
 			loop
-				eec := commands.item (i)
+				eec := commands.item_for_iteration
 				if eec /= Void then
 					if b then
 						eec.enable_sensitive
@@ -90,7 +88,7 @@ feature -- External commands status setting
 						eec.disable_sensitive
 					end
 				end
-				i := i + 1
+				commands.forth
 			end
 		end
 
@@ -176,7 +174,7 @@ feature{NONE} -- Implementation
 	original_command_name: STRING
 			-- Original external name
 
-	commands: ARRAY [EB_EXTERNAL_COMMAND]
+	commands: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
 			-- Abstract representation of external commands.
 		do
 			Result := (create {EB_EXTERNAL_COMMANDS_EDITOR}.make).commands
@@ -208,7 +206,7 @@ feature{NONE} -- Process data storage
 			Result := external_storage
 		end
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -221,22 +219,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

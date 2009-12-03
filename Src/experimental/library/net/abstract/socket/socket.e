@@ -660,13 +660,15 @@ feature -- Input
 			l_last_read: INTEGER
 		do
 			from
-				l_last_read := -1
+				l_last_read := 1
 			until
-				l_read = nb_bytes or l_last_read = 0
+				l_read = nb_bytes or l_last_read <= 0
 			loop
 				l_last_read := c_read_stream (descriptor, nb_bytes - l_read,
 					p.item + start_pos + l_read)
-				l_read := l_read + l_last_read
+				if l_last_read >= 0 then
+					l_read := l_read + l_last_read
+				end
 			end
 			bytes_read := l_read
 		end

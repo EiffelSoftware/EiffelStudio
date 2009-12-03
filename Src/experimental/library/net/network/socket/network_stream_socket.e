@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 			l_fd := fd
 			l_fd1 := fd1
 			l_port := internal_port
-			c_connect ($l_fd, $l_fd1, $l_port, a_peer_address.socket_address.item, connect_timeout)
+			c_connect ($l_fd, $l_fd1, $l_port, a_peer_address.socket_address.item, connect_timeout, is_blocking)
 			fd := l_fd
 			fd1 := l_fd1
 			internal_port := l_port
@@ -382,7 +382,7 @@ feature {NONE} -- Externals
 			"en_socket_stream_create"
 		end
 
-	c_connect (a_fd, a_fd1, a_port: TYPED_POINTER [INTEGER]; an_address: POINTER; a_timeout: INTEGER)
+	c_connect (a_fd, a_fd1, a_port: TYPED_POINTER [INTEGER]; an_address: POINTER; a_timeout: INTEGER; a_is_blocking: BOOLEAN)
 		external
 			"C blocking"
 		alias

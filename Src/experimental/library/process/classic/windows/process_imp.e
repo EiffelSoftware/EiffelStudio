@@ -153,10 +153,8 @@ feature -- Control
 	wait_for_exit_with_timeout (a_timeout: INTEGER)
 			-- Wait launched process to exit for at most `a_timeout' milliseconds.
 			-- Check `has_exited' after to see if launched process has exited.
-		local
-			l_timeout: BOOLEAN
 		do
-			l_timeout := not timer.wait (a_timeout)
+			is_last_wait_timeout := not timer.wait (a_timeout)
 		end
 
 feature -- Interprocess data transmission

@@ -17,8 +17,12 @@ function isedoc_uuid_query($uuid,$a_section) {
 			if ($node and $node->vid == $vid) {
 				// Check the version id...
 				//drupal_set_message(t("Accessed by the UUID=%uuid.",array('%uuid' => $uuid)), 'status');
-				drupal_goto($node->path,NULL,$a_section);
-				$output .= '<li>' . isedoc_uuid_page_display(&$node) . '</li>';
+				$l_section = $a_section;
+				if (!empty($l_section) and $l_section[0] == '#') {
+					$l_section = substr($l_section, 1);
+				}
+				drupal_goto($node->path,NULL,$l_section);
+				$output .= '<li>' . isedoc_uuid_page_display(&$node,$l_section) . '</li>';
 			} else {
 				// Should not occur ...
 				$output .= t("Unable to find referenced page.");

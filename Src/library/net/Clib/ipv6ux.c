@@ -149,7 +149,7 @@ void en_socket_datagram_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 	*a_fd1 = 0;
 }
 
-void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr, EIF_INTEGER timeout) {
+void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr, EIF_INTEGER timeout, EIF_BOOLEAN is_blocking) {
 
 	SOCKETADDRESS h;
 	SOCKETADDRESS* him;
@@ -179,20 +179,30 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 
 	if (timeout <= 0) {
 		connect_res = connect(fd, (struct sockaddr *) him, SOCKETADDRESS_LEN(him));
+		if ((errno == EWOULDBLOCK) || (errno == EINPROGRESS)) {
+			connect_res = 0;
+			errno = 0;
+		}
 	} else {
 			/* A timeout was specified. We put the socket into non-blocking
 			 * mode, connect, and then wait for the connection to be 
 			 * established, fail, or timeout. */
-		SET_NONBLOCKING(fd);
+		if (is_blocking) {
+			SET_NONBLOCKING(fd);
+		}
 
 		connect_res = connect(fd, (struct sockaddr *)him, SOCKETADDRESS_LEN(him));
 
 			/* connection not established immediately */
 		if (connect_res != 0) {
-			if (errno != EINPROGRESS) {
-				SET_BLOCKING(fd);
+			if ((errno != EINPROGRESS) && (errno != EWOULDBLOCK)) {
+				if (is_blocking) {
+					SET_BLOCKING(fd);
+				}
 				eraise("Unable to establish connection", EN_PROG);
 				return;
+			} else {
+				errno = 0;
 			}
 			fd_set wr, ex;
 			struct timeval t;
@@ -228,7 +238,9 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 				}
 			}
 		}
-		SET_BLOCKING(fd);
+		if (is_blocking) {
+			SET_BLOCKING(fd);
+		}
 	}
 
 	if (connect_res) {

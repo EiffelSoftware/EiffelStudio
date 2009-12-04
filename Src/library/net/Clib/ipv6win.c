@@ -538,7 +538,7 @@ void en_socket_datagram_create (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1) {
 	}
 }
 
-void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr, EIF_INTEGER timeout) {
+void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr, EIF_INTEGER timeout, EIF_BOOLEAN is_blocking) {
 
 	SOCKETADDRESS* him;
 	int family;
@@ -589,14 +589,20 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 		connect_res = connect(fd, (struct sockaddr *) him, SOCKETADDRESS_LEN(him));
 		if (connect_res == SOCKET_ERROR) {
 			connect_res = WSAGetLastError();
+			if ((connect_res == WSAEWOULDBLOCK) || (connect_res == WSAEINPROGRESS)) {
+				connect_res = 0;
+				errno = 0;
+			}
 		}
 	} else {
 		u_long optval;
 		int optlen = sizeof(int);
 
 			/* make socket non-blocking */
-		optval = 1;
-		ioctlsocket( fd, FIONBIO, &optval );
+		if (is_blocking) {
+			optval = 1;
+			ioctlsocket( fd, FIONBIO, &optval );
+		}
 
 			/* initiate the connect */
 		connect_res = connect(fd, (struct sockaddr *) him, SOCKETADDRESS_LEN(him));
@@ -622,9 +628,11 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 				 * The socket should be closed immediately by the caller. */
 				if (connect_res == 0) {
 					shutdown( fd, SD_BOTH );
-					 	/* make socket blocking again - just in case */
-					optval = 0;
-					ioctlsocket( fd, FIONBIO, &optval );
+					if (is_blocking) {
+							/* make socket blocking again - just in case */
+						optval = 0;
+						ioctlsocket( fd, FIONBIO, &optval );
+					}
 					eraise("connect timed out", EN_PROG);
 					return;
 				}
@@ -656,9 +664,11 @@ void en_socket_stream_connect (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGE
 			}
 		}
 
-			/* make socket blocking again */
-		optval = 0;
-		ioctlsocket(fd, FIONBIO, &optval);
+		if (is_blocking) {
+				/* make socket blocking again */
+			optval = 0;
+			ioctlsocket(fd, FIONBIO, &optval);
+		}
 	}
 
 	if (connect_res) {

@@ -1096,7 +1096,7 @@ rt_private void remove_data_from_gc (struct stack_list *st_list, void *st)
 		i = i + 1;
 	}
 
-	CHECK("Is found", i < count);	/* We must have found entry that holds reference to `st' */
+	CHECK("Is found", i < count);   /* We must have found entry that holds reference to `st' */
 
 		/* Remove one element */
 	st_list->count = count - 1;
@@ -1235,9 +1235,8 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 		gc_thread_collection_count = 1;
 		gc_thread_status = EIF_THREAD_GC_RUNNING;
 
-			/* It is only usefull to iterate over the threads when there are more 
-			 * than one. */
-		if (rt_globals_list.count > 0) {
+			/* It is only useful to iterate over the threads when there are more than one. */
+		if (rt_globals_list.count > 1) {
 				/* We have acquired the lock, now, process all running threads and wait until
 				 * they are all not marked `EIF_THREAD_RUNNING'. */
 			memcpy(&all_thread_list, &rt_globals_list, sizeof(struct stack_list));

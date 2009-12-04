@@ -90,7 +90,7 @@ extern unsigned int TIMEOUT;	/* Time to let the child initialize */
 #ifndef EIF_WINDOWS
 /* To fight SIGPIPE signals */
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
-rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
+rt_private Signal_t broken(int);	/* Signal handler for SIGPIPE */
 #endif
 
 /* Function declaration */
@@ -375,9 +375,13 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 #else /* (not) EIF_VMS */
 		/* FIXME why is it necessary to close each twice??? -- David_sS */
 		r = close(pp2c[PIPE_WRITE]);
+		if (r == -1) {
+			r = close(pp2c[PIPE_WRITE]);
+		}
 		r = close(pc2p[PIPE_READ]);
-		r = close(pp2c[PIPE_WRITE]);
-		r = close(pc2p[PIPE_READ]);
+		if (r == -1) {
+			r = close(pc2p[PIPE_READ]);
+		}
 #endif /* EIF_VMS */
 
 		/* Start duping first allocated pipe, otherwise good luck!--RAM.
@@ -388,12 +392,20 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 		 */
 		if (pp2c[PIPE_READ] != EWBOUT) {
 			if (pc2p[PIPE_WRITE] != EWBOUT) {
-				dup2(pc2p[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
-				r = close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+					/* Child writes to ewbout */
+				if (-1 == dup2(pc2p[PIPE_WRITE], EWBOUT)) {
+					SPAWN_CHILD_FAILED(1);
+				} else {
+					r = close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+				}
 			}
 			if (pp2c[PIPE_READ] != EWBIN) {
-				dup2(pp2c[PIPE_READ], EWBIN);	/* Child reads from ewbin */
-				r = close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+					/* Child reads from ewbin */
+				if (-1 == dup2(pp2c[PIPE_READ], EWBIN)) {
+					SPAWN_CHILD_FAILED(1);
+				} else {
+					r = close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+				}
 			}
 		} else {
 			/* Bad case: pp2c[PIPE_READ] == EWBOUT. We cannot use the code above since
@@ -401,12 +413,20 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 			 * end which also need to be kept alive until dup2'ed! Ouch--RAM
 			 */
 			if (pp2c[PIPE_READ] != EWBIN) {
-				dup2(pp2c[PIPE_READ], EWBIN);	/* Child reads from ewbin */
-				r = close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+					/* Child reads from ewbin */
+				if (-1 == dup2(pp2c[PIPE_READ], EWBIN)) {
+					SPAWN_CHILD_FAILED(1);
+				} else {
+					r = close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+				}
 			}
 			if (pc2p[PIPE_WRITE] != EWBOUT) {
-				dup2(pc2p[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
-				r = close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+					/* Child writes to ewbout */
+				if (-1 == dup2(pc2p[PIPE_WRITE], EWBOUT)) {
+					SPAWN_CHILD_FAILED(1);
+				} else {
+					r = close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+				}
 			}
 		}
 		/* Now exec command. A successful launch should not return */
@@ -509,8 +529,7 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 	 * from here, and that it is not a normal user invocation.
 	 */
 
-	if (-1 == comfort_child(sp))
-	{
+	if (!sp || (-1 == comfort_child(sp))) {
 #ifdef USE_ADD_LOG
 		add_log(12, "could not comfort child");
 #endif
@@ -558,7 +577,7 @@ rt_private int comfort_child(STREAM *sp)
 	FD_ZERO(&mask);
 	FD_SET(writefd(sp), &mask);				/* We want to write to child */
 
-	oldpipe = signal(SIGPIPE, (void (*)(int))broken); /* Trap SIGPIPE within this function */
+	oldpipe = signal(SIGPIPE, broken); /* Trap SIGPIPE within this function */
 
 	/* If we get a SIGPIPE signal, come back here */
 	if (0 != setjmp(env)) {
@@ -672,22 +691,22 @@ rt_private int comfort_child(STREAM *sp)
 rt_private void close_on_exec(int fd)
 {
 	/* Set the close on exec flag for file descriptor 'fd' */
-
 #ifdef F_SETFD
-	if (-1 == (fcntl(fd, F_SETFD, 1))) {
-#ifdef USE_ADD_LOG
+#ifndef USE_ADD_LOG
+	(void) fcntl(fd, F_SETFD, 1);
+#else
+	int res = fcntl(fd, F_SETFD, 1);
+	if (res == -1) {
 		add_log(1, "SYSERR fcntl: %m (%e)");
 		add_log(2, "ERROR cannot set close-on-exec flag on fd #%d", fd);
-#endif
-	}
-#ifdef USE_ADD_LOG
-	else
+	} else {
 		add_log(12, "file #%d will be closed upon next exec()", fd);
+	}
 #endif
 #endif
 }
 
-rt_private Signal_t broken(void)
+rt_private Signal_t broken(int sig)
 {
 #ifdef USE_ADD_LOG
 	add_log(20, "SIGPIPE signal handler broken() called in child.c");

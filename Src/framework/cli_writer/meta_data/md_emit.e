@@ -110,13 +110,14 @@ feature -- Definition: access
 
 	define_member_ref (method_name: UNI_STRING; in_class_token: INTEGER;
 			a_signature: MD_SIGNATURE): INTEGER
-		
+
 			-- Create reference to member in class `in_class_token'.
 		require
 			method_name_not_void: method_name /= Void
 			method_name_not_empty: not method_name.is_empty
 			in_class_token_valid: in_class_token & Md_mask = Md_type_ref or
-				in_class_token & Md_mask = Md_type_def
+				in_class_token & Md_mask = Md_type_def or
+				in_class_token & md_mask = md_type_spec
 			signature_not_void: a_signature /= Void
 		do
 			last_call_success := c_define_member_ref (item, in_class_token,
@@ -146,7 +147,7 @@ feature -- Definition: creation
 
 	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: MD_PUBLIC_KEY): INTEGER
-		
+
 			-- Define a new assembly.
 		require
 			assembly_name_not_void: assembly_name /= Void
@@ -163,7 +164,7 @@ feature -- Definition: creation
 
 	define_manifest_resource (resource_name: UNI_STRING; implementation_token: INTEGER;
 			offset, resource_flags: INTEGER): INTEGER
-		
+
 			-- Define a new assembly.
 		require
 			resource_name_not_void: resource_name /= Void
@@ -182,7 +183,7 @@ feature -- Definition: creation
 
 	define_type (type_name: UNI_STRING; flags: INTEGER; extend_token: INTEGER;
 			implements: ARRAY [INTEGER]): INTEGER
-		
+
 			-- Create new type with name `type_name' and `flags' which inherits from
 			-- base class `extend_token' and implements interfaces `implements'.
 		require
@@ -229,7 +230,7 @@ feature -- Definition: creation
 
 	define_exported_type (type_name: UNI_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
-		
+
 				-- Create a row in ExportedType table.
 		require
 			type_name_not_void: type_name /= Void
@@ -264,7 +265,7 @@ feature -- Definition: creation
 	define_method (method_name: UNI_STRING; in_class_token: INTEGER;
 			method_flags: INTEGER; a_signature: MD_METHOD_SIGNATURE;
 			impl_flags: INTEGER): INTEGER
-		
+
 			-- Create new method in class `in_class_token'.
 		require
 			method_name_not_void: method_name /= Void
@@ -300,7 +301,7 @@ feature -- Definition: creation
 
 	define_property (type_token: INTEGER; name: UNI_STRING; flags: NATURAL_32;
 			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
-		
+
 			-- Define property `name' for a type `type_token'.
 		require
 			valid_type_token: type_token & Md_mask = Md_type_def
@@ -324,7 +325,7 @@ feature -- Definition: creation
 
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
 			import_name: UNI_STRING; module_ref: INTEGER)
-		
+
 			-- Further specification of a pinvoke method location defined by `method_token'.
 		require
 			method_token_valid:
@@ -342,7 +343,7 @@ feature -- Definition: creation
 
 	define_parameter (in_method_token: INTEGER; param_name: UNI_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
-		
+
 			-- Create a new parameter specification token for method `in_method_token'.
 		require
 			in_method_token_valid: in_method_token & Md_mask = Md_method_def
@@ -371,7 +372,7 @@ feature -- Definition: creation
 
 	define_field (field_name: UNI_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
-		
+
 			-- Create a new field in class `in_class_token'.
 		require
 			field_name_not_void: field_name /= Void
@@ -389,7 +390,7 @@ feature -- Definition: creation
 
 	define_string_constant (field_name: UNI_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_string: STRING): INTEGER
-		
+
 			-- Create a new field in class `in_class_token'.
 		require
 			field_name_not_void: field_name /= Void
@@ -501,7 +502,7 @@ feature {NONE} -- Implementation
 
 	c_define_custom_attribute (an_item: POINTER; owner, constructor: INTEGER;
 			blob: POINTER; blobl_len: INTEGER; ca_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineCustomAttribute'.
 		external
 			"[
@@ -517,7 +518,7 @@ feature {NONE} -- Implementation
 			flags: INTEGER; a_signature: POINTER; sig_length: INTEGER;
 			default_value_type: INTEGER; data: POINTER; data_length: INTEGER;
 			method_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineMethod'.
 		external
 			"[
@@ -532,7 +533,7 @@ feature {NONE} -- Implementation
 
 	c_set_field_marshal (an_item: POINTER; a_token: INTEGER; a_signature: POINTER;
 			a_sig_length: INTEGER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->SetFieldMarshal'.
 		external
 			"[
@@ -546,7 +547,7 @@ feature {NONE} -- Implementation
 
 	c_define_member_ref (an_item: POINTER; type_token: INTEGER; name: POINTER;
 			a_signature: POINTER; sig_length: INTEGER; member_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineMemberRef'.
 		external
 			"[
@@ -562,7 +563,7 @@ feature {NONE} -- Implementation
 	c_define_method (an_item: POINTER; type_token: INTEGER; name: POINTER;
 			flags: INTEGER; a_signature: POINTER; sig_length: INTEGER;
 			code_rva: INTEGER; impl_flags: INTEGER; method_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineMethod'.
 		external
 			"[
@@ -577,7 +578,7 @@ feature {NONE} -- Implementation
 
 	c_define_method_impl (an_item: POINTER; in_type_token: INTEGER; method_token: INTEGER;
 			used_method_declaration_token: INTEGER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineMethodImpl'.
 		external
 			"C++ IMetaDataEmit signature (mdTypeDef, mdToken, mdToken): EIF_INTEGER use <cor.h>"
@@ -587,7 +588,7 @@ feature {NONE} -- Implementation
 
 	c_define_module_ref (an_item: POINTER; module_name: POINTER;
 			module_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineModuleRef'.
 		external
 			"C++ IMetaDataEmit signature (LPCWSTR, mdModuleRef *): EIF_INTEGER use <cor.h>"
@@ -600,7 +601,7 @@ feature {NONE} -- Implementation
 			dwDefType: NATURAL_32; pValue: POINTER; cchValue: NATURAL_32;
 			mdSetter: INTEGER; mdGetter: INTEGER; rmdOtherMethods: POINTER;
 			pmdProp: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineProperty'.
 		external
 			"[
@@ -617,7 +618,7 @@ feature {NONE} -- Implementation
 			name: POINTER; flags: INTEGER; default_value_type: INTEGER;
 			default_value_data: POINTER; default_value_data_length: INTEGER;
 			param_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineParam'.
 		external
 			"[
@@ -632,7 +633,7 @@ feature {NONE} -- Implementation
 
 	c_define_pinvoke_map (an_item: POINTER; method_token, mapping_flags: INTEGER;
 			import_name: POINTER; module_ref: INTEGER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefinePinvokeMap'.
 		external
 			"[
@@ -645,7 +646,7 @@ feature {NONE} -- Implementation
 
 	c_define_type_spec (an_item: POINTER; a_signature: POINTER;
 			sig_length: INTEGER; sig_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->GetTokenFromTypeSpec'. See doc on unmanaged
 			-- Metadata API to see why we call it `c_define_type_spec'.
 		external
@@ -659,7 +660,7 @@ feature {NONE} -- Implementation
 
 	c_define_signature (an_item: POINTER; a_signature: POINTER;
 			sig_length: INTEGER; sig_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->GetTokenFromSig'. See doc on unmanaged
 			-- Metadata API to see why we call it `c_define_signature'.
 		external
@@ -673,7 +674,7 @@ feature {NONE} -- Implementation
 
 	c_define_user_string (an_item: POINTER; string: POINTER;
 			str_len: INTEGER; sig_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineUserString'.
 		external
 			"[
@@ -686,7 +687,7 @@ feature {NONE} -- Implementation
 
 	c_define_type_def (an_item, type_name: POINTER; type_flags: INTEGER; extend: INTEGER;
 			implements: POINTER; type_def: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataEmit->DefineTypeDef'.
 		external
 			"C++ IMetaDataEmit signature (LPCWSTR, DWORD, mdToken, mdToken *, mdTypeDef *): EIF_INTEGER use <cor.h>"
@@ -758,7 +759,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -771,22 +772,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class MD_EMIT

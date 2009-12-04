@@ -87,7 +87,7 @@ rt_public unsigned int TIMEOUT;		/* Time out for interprocess communications */
 #ifndef EIF_WINDOWS
 /* To fight SIGPIPE signals */
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
-rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
+rt_private Signal_t broken(int sig);	/* Signal handler for SIGPIPE */
 #endif
 
 /* Function declaration */
@@ -103,49 +103,62 @@ rt_private void create_dummy_window (void);
 
 rt_private char** envstr_to_envp (char* aenvir)
 {
-	char** res;
-	int i, n, len;
-	char* p;
-	n = 0;
-	for (p = aenvir; *p; p++) {
-		while (*p) { 
-			p++; 
+	char** res = NULL;
+	if (aenvir) {
+		int i, n, len;
+		char* p;
+		n = 0;
+			/* Calculate the number of environment variables. */
+		for (p = aenvir; *p; p++) {
+			while (*p) { 
+				p++; 
+			}
+			n = n + 1;
 		}
-		n = n + 1;
+		res = (char**) malloc ((1+n) * sizeof(char*));
+		if (res) {
+			for (p = aenvir, i = 0; i < n; i++) {
+				res[i] = p;
+				len = strlen (p);
+				p = p + len + 1;
+			}
+			res[n] = (char*) 0;
+		}
 	}
-	res = (char**) malloc ((1+n) * sizeof(char*));
-	p = aenvir;
-	for (i = 0; i < n; i++) {
-		res[i] = (char*) p;
-		len = strlen (res[i]);
-		p = p + len + 1;
-	}
-	res[n] = (char*) 0;
 	return res;
-
 }
 #endif
 
 rt_private char* safe_unquoted_path (char* a_path) 
 {
 	char* res = NULL;
-	int n = (int) strlen(a_path);
-	if (a_path[0] == '"' && a_path[n - 1] == '"') {
-		res = (char*) malloc (n - 1);
-		strncpy (res, a_path + 1, n - 2);
-		res[n - 2] = '\0';
-	} else if (a_path[0] == '"') {
-		res = (char*)malloc (n - 0);
-		strncpy (res, a_path + 1, n - 1);
-		res[n - 1] = '\0';
-	} else if (a_path[n - 1] == '"') {
-		res = (char*)malloc (n - 0);
-		strncpy (res, a_path, n - 1);
-		res[n - 1] = '\0';
-	} else {
-		res = (char*)malloc (n + 1);
-		strcpy (res, a_path);
-		res[n] = '\0';
+	if (a_path) {
+		int n = (int) strlen(a_path);
+		if (a_path[0] == '"' && a_path[n - 1] == '"') {
+			res = (char*) malloc (n - 1);
+			if (res) {
+				strncpy (res, a_path + 1, n - 2);
+				res[n - 2] = '\0';
+			}
+		} else if (a_path[0] == '"') {
+			res = (char*)malloc (n - 0);
+			if (res) {
+				strncpy (res, a_path + 1, n - 1);
+				res[n - 1] = '\0';
+			}
+		} else if (a_path[n - 1] == '"') {
+			res = (char*)malloc (n - 0);
+			if (res) {
+				strncpy (res, a_path, n - 1);
+				res[n - 1] = '\0';
+			}
+		} else {
+			res = (char*)malloc (n + 1);
+			if (res) {
+				strcpy (res, a_path);
+				res[n] = '\0';
+			}
+		}
 	}
 	return res;
 }
@@ -153,44 +166,54 @@ rt_private char* safe_unquoted_path (char* a_path)
 rt_private char* safe_quoted_path (char* a_path) 
 {
 	char* res = NULL;
-	int n = (int) strlen(a_path);
-	if (a_path[0] == '"' && a_path[n - 1] == '"') {
-		res = (char*) malloc (n + 1);
-		strcpy (res, a_path);
-		res[n] = '\0';
-	} else if (a_path[0] == '"') {
-		res = (char*) malloc (n + 3);
-		strcpy (res, a_path);
-		strcat (res, "\"");
-		res[n + 2] = '\0';
-	} else if (a_path[n - 1] == '"') {
-		res = (char*) malloc (n + 3);
-		strcpy (res, "\"");
-		strcat (res, a_path);
-		res[n + 2] = '\0';
-	} else {
-		res = (char*) malloc (n + 4);
-		strcpy (res, "\"");
-		strcat (res, a_path);
-		strcat (res, "\"");
-		res[n + 3] = '\0';
+	if (a_path) {
+		int n = (int) strlen(a_path);
+		if (a_path[0] == '"' && a_path[n - 1] == '"') {
+			res = (char*) malloc (n + 1);
+			if (res) {
+				strcpy (res, a_path);
+				res[n] = '\0';
+			}
+		} else if (a_path[0] == '"') {
+			res = (char*) malloc (n + 3);
+			if (res) {
+				strcpy (res, a_path);
+				strcat (res, "\"");
+				res[n + 2] = '\0';
+			}
+		} else if (a_path[n - 1] == '"') {
+			res = (char*) malloc (n + 3);
+			if (res) {
+				strcpy (res, "\"");
+				strcat (res, a_path);
+				res[n + 2] = '\0';
+			}
+		} else {
+			res = (char*) malloc (n + 4);
+			if (res) {
+				strcpy (res, "\"");
+				strcat (res, a_path);
+				strcat (res, "\"");
+				res[n + 3] = '\0';
+			}
+		}
 	}
 	return res;
 }
 
 rt_private void set_meltpath_environment (char* exe_path) 
 {
-		char *meltpath, *appname;
-		static char *envstring = NULL;	/* set MELT_PATH */
+	char *meltpath, *appname;
+	static char *envstring = NULL;	/* set MELT_PATH */
 #ifdef EIF_VMS
-		size_t dirname_size;
+	size_t dirname_size;
 #endif
 
-		meltpath = safe_unquoted_path (exe_path);
+	meltpath = safe_unquoted_path (exe_path);
 
-		if (meltpath == (char *)0){
-			SPAWN_CHILD_FAILED(1);
-		}
+	if (meltpath == (char *)0){
+		SPAWN_CHILD_FAILED(1);
+	} else {
 
 #if defined(EIF_VMS_V6_ONLY)
 		appname = strrchr (meltpath, ']');
@@ -229,21 +252,23 @@ rt_private void set_meltpath_environment (char* exe_path)
 		}
 		if (!envstring){
 			SPAWN_CHILD_FAILED(1);
+		} else {
+			sprintf (envstring, "MELT_PATH=%s", meltpath);
+			putenv (envstring);
 		}
-		sprintf (envstring, "MELT_PATH=%s", meltpath);
-		putenv (envstring);
 	
 //			/* Set working directory to where project is located. We look
 //			 * 17 characters before the end of `meltpath' to ensure there
 //			 * is only one occurrence of EIFGENs in `meltpath'. */
 //		/* FIXME JOCELYN new EIFGENs/target/W_code... 17 ??? */
 //		CHECK("Valid melted path", strlen (meltpath) >= 17);
-//					
+//				
 //		appname = strstr (meltpath + strlen (meltpath) - 17, "EIFGENs");
 //		if (appname) {
 //			*(appname - 1) = (char) 0;
 //		}
 		free (meltpath);
+	}
 }
 
 #ifdef EIF_WINDOWS
@@ -290,37 +315,57 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 #endif
 	STREAM *sp;							/* Stream used for communications with ewb */
 	char* quoted_exe_path;
-	char* exe_path, *cmdline;;
+	char* exe_path, *cmdline;
 
 	exe_path = safe_unquoted_path (a_exe_path);
+	if (!exe_path) {
+		SPAWN_CHILD_FAILED(1);
+	}
 	quoted_exe_path = safe_quoted_path (exe_path);
+	if (!quoted_exe_path) {
+		SPAWN_CHILD_FAILED(1);
+	}
 
 #ifdef EIF_WINDOWS
 		/* We encode 2 pointers, plus '"?' and '?"' plus a space and a null terminating character. */
 	uu_buffer_size = uuencode_buffer_size(2) + 6; /* 6 = "? + space + ?" + \0 */
 	if ((exe_args != NULL) && strlen(exe_args) > 0) {
 		cmdline = malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args) + uu_buffer_size);
-		strcpy (cmdline, quoted_exe_path);
-		strcat (cmdline, " ");
-		strcat (cmdline, exe_args);
+		if (!cmdline) {
+			SPAWN_CHILD_FAILED(1);
+		} else {
+			strcpy (cmdline, quoted_exe_path);
+			strcat (cmdline, " ");
+			strcat (cmdline, exe_args);
+		}
 	} else {
 		cmdline = malloc (strlen (quoted_exe_path) + uu_buffer_size);
-		strcpy (cmdline, quoted_exe_path);
+		if (!cmdline) {
+			SPAWN_CHILD_FAILED(1);
+		} else {
+			strcpy (cmdline, quoted_exe_path);
+		}
 	}
-
 #else
 	if ((exe_args != NULL) && strlen(exe_args) > 0) {
 		cmdline = malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args) + 1);
-		strcpy (cmdline, quoted_exe_path);
-		strcat (cmdline, " ");
-		strcat (cmdline, exe_args);
+		if (!cmdline) {
+			SPAWN_CHILD_FAILED(1);
+		} else {
+			strcpy (cmdline, quoted_exe_path);
+			strcat (cmdline, " ");
+			strcat (cmdline, exe_args);
+		}
 	} else {
 		cmdline = malloc (strlen (quoted_exe_path) + 1);
-		strcpy (cmdline, quoted_exe_path);
+		if (!cmdline) {
+			SPAWN_CHILD_FAILED(1);
+		} else {
+			strcpy (cmdline, quoted_exe_path);
+		}
 	}
 	argv = ipc_shword(cmdline);					/* Split command into words */
-
-	CHECK("Valid argv[0] = exe_path", strncmp (quoted_exe_path, argv[0], strlen(quoted_exe_path)) == 0);
+	CHECK("Valid argv[0] = exe_path", argv && strncmp (quoted_exe_path, argv[0], strlen(quoted_exe_path)) == 0);
 #endif
 
 		/* Set MELT_PATH */
@@ -344,6 +389,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 
 	if (!CreatePipe (&(pc2p[PIPE_READ]), &(pc2p[PIPE_WRITE]), &saAttr, 0)) {
 #else
+	memset(pc2p, 0, 2*sizeof(int));
 	if (-1 == pipe(pc2p)) {
 #endif
 #ifdef USE_ADD_LOG
@@ -357,6 +403,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 #ifdef EIF_WINDOWS
 	if (!CreatePipe (&(pp2c[PIPE_READ]), &(pp2c_write_to_dup), &saAttr, 0)) {
 #else
+	memset(pp2c, 0, 2*sizeof(int));
 	if (-1 == pipe(pp2c)) {
 #endif
 #ifdef USE_ADD_LOG
@@ -405,7 +452,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 
 		/* Working directory */
 	if (cwd) {
-		chdir (cwd);
+		(void) chdir (cwd);
 		free (startpath);
 		startpath = getcwd (NULL, PATH_MAX);
 	} else if (!handle_meltpath) {
@@ -584,12 +631,20 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 		 */
 		if (pp2c[PIPE_READ] != DBGOUT) {
 			if (pc2p[PIPE_WRITE] != DBGOUT) {
-				dup2(pc2p[PIPE_WRITE], DBGOUT);	/* Child writes to ewbout */
-				close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+					/* Child writes to ewbout */
+				if (-1 == dup2(pc2p[PIPE_WRITE], DBGOUT)) {
+					SPAWN_CHILD_FAILED(1);
+				} else {
+					close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+				}
 			}
 			if (pp2c[PIPE_READ] != DBGIN) {
-				dup2(pp2c[PIPE_READ], DBGIN);	/* Child reads from ewbin */
-				close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+					/* Child reads from ewbin */
+				if (-1 == dup2(pp2c[PIPE_READ], DBGIN)) {
+					SPAWN_CHILD_FAILED(1);
+				} else {
+					close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+				}
 			}
 		} else {
 			/* Bad case: pp2c[PIPE_READ] == DBGOUT. We cannot use the code above since
@@ -597,12 +652,20 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 			 * end which also need to be kept alive until dup2'ed! Ouch--RAM
 			 */
 			if (pp2c[PIPE_READ] != DBGIN) {
-				dup2(pp2c[PIPE_READ], DBGIN);	/* Child reads from ewbin */
-				close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+					/* Child reads from ewbin */
+				if (-1 == dup2(pp2c[PIPE_READ], DBGIN)) {
+					SPAWN_CHILD_FAILED(1);
+				} else {
+					close(pp2c[PIPE_READ]);			/* (avoid child running out of fd!) */
+				}
 			}
 			if (pc2p[PIPE_WRITE] != DBGOUT) {
-				dup2(pc2p[PIPE_WRITE], DBGOUT);	/* Child writes to ewbout */
-				close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+					/* Child writes to ewbout */
+				if (-1 == dup2(pc2p[PIPE_WRITE], DBGOUT)) {
+					SPAWN_CHILD_FAILED(1);
+				} else {
+					close(pc2p[PIPE_WRITE]);			/* Close dup'ed files before exec */
+				}
 			}
 		}
 		/* Now exec command. A successful launch should not return */
@@ -610,13 +673,9 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 
 				/* Working directory */
 			if (cwd) {
-				chdir (cwd);
+				(void) chdir (cwd);
 			}
-			if (envir == NULL) {
-				envp = NULL;
-			} else {
-				envp = (char**) envstr_to_envp (envir);
-			}
+			envp = envstr_to_envp (envir);
 
 #ifdef EIF_VMS
 /*DEBUG*/		ipcvms_fd_dump ("before execv (spawn child): pc2p[%d,%d], pp2c[%d,%d]", pc2p[0],pc2p[1],pp2c[0],pp2c[1]);
@@ -731,8 +790,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 	 * from here, and that it is not a normal user invocation.
 	 */
 
-	if (-1 == comfort_child(sp))
-	{
+	if ((!sp) || (-1 == comfort_child(sp))) {
 #ifdef USE_ADD_LOG
 		add_log(12, "could not comfort child");
 #endif
@@ -750,21 +808,24 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 			*child_process_id = piProcInfo.dwProcessId;
 	}
 
-	free (cmdline);
-	free (exe_path);
-	free (quoted_exe_path);
 	free (startpath);
 #else
-	if (child_pid != (Pid_t *) 0)
+	if (child_pid != (Pid_t *) 0) {
 		*child_pid = pid;
-	if (envp != NULL) {
+	}
+	if (envp) {
 		free(envp);
 	}
-	free (cmdline);
-	free (exe_path);
-	free (quoted_exe_path);
 #endif
-
+	if (cmdline) {
+		free (cmdline);
+	}
+	if (exe_path) {
+		free (exe_path);
+	}
+	if (quoted_exe_path) {
+		free (quoted_exe_path);
+	}
 	return sp;			/* Stream used to speak to child process */
 }
 
@@ -791,7 +852,7 @@ rt_private int comfort_child(STREAM *sp)
 	FD_ZERO(&mask);
 	FD_SET(writefd(sp), &mask);				/* We want to write to child */
 
-	oldpipe = signal(SIGPIPE, (void (*)(int))broken); /* Trap SIGPIPE within this function */
+	oldpipe = signal(SIGPIPE, broken); /* Trap SIGPIPE within this function */
 
 	/* If we get a SIGPIPE signal, come back here */
 	if (0 != setjmp(env)) {
@@ -907,20 +968,21 @@ rt_private void close_on_exec(int fd)
 	/* Set the close on exec flag for file descriptor 'fd' */
 
 #ifdef F_SETFD
-	if (-1 == (fcntl(fd, F_SETFD, 1))) {
-#ifdef USE_ADD_LOG
+#ifndef USE_ADD_LOG
+	(void) fcntl(fd, F_SETFD, 1);
+#else
+	int res = fcntl(fd, F_SETFD, 1);
+	if (res == -1) {
 		add_log(1, "SYSERR fcntl: %m (%e)");
 		add_log(2, "ERROR cannot set close-on-exec flag on fd #%d", fd);
-#endif
-	}
-#ifdef USE_ADD_LOG
-	else
+	} else {
 		add_log(12, "file #%d will be closed upon next exec()", fd);
+	}
 #endif
 #endif
 }
 
-rt_private Signal_t broken(void)
+rt_private Signal_t broken(int sig)
 {
 #ifdef USE_ADD_LOG
 	add_log(20, "SIGPIPE signal handler broken() called in child.c");

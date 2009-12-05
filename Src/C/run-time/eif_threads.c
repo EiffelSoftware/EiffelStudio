@@ -1299,7 +1299,11 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 #endif
 	}
 
-	ENSURE("Synchronized", eif_is_synchronized());
+		/* The postcondition cannot hold in most cases. For example, when launching quickly
+		 * new threads, the above code will assume N threads, but now we might have N + 1 threads
+		 * and the newly launched thread has not yet reached a synchronization point although we are
+		 * sure at 100% that no Eiffel code will be executed. */
+/*	ENSURE("Synchronized", eif_is_synchronized()); */
 }
 
 rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)

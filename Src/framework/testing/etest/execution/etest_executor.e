@@ -164,7 +164,7 @@ feature {TEST_EXECUTION_I, ETEST_COMPILATION_EXECUTOR} -- Status setting
 			loop
 				if l_occupieds.item_for_iteration.test = a_test then
 						-- Controller will be removed automatically during next `step'
-					l_occupieds.item_for_iteration.task.stop
+					l_occupieds.item_for_iteration.task.reset
 					l_occupieds.go_i_th (0)
 				else
 					l_occupieds.forth
@@ -249,21 +249,16 @@ feature {NONE} -- Status setting
 					l_controller := a_task_data.task
 					if l_controller.is_running then
 						l_tag_tree := test_execution.test_suite.tag_tree
-						if not l_controller.is_ready then
-							l_controller.stop
-						elseif
+						if
 							l_tag_tree.has_item (l_test) and then
 							not l_tag_tree.item_suffixes (isolate_prefix, l_test).is_empty
 						then
 								-- Restart controller if test should be executed isolated
-							l_controller.stop
+							l_controller.reset
 							a_task_data.isolated := True
 						end
 					end
-					if not l_controller.is_running then
-						l_controller.start (l_evaluator, l_evaluator_routine)
-					end
-					l_controller.execute_test ([l_byte_code, l_test.name.as_string_8])
+					l_controller.launch_test ([l_byte_code, l_test.name.as_string_8], l_evaluator, l_evaluator_routine)
 				else
 					test_execution.report_result (l_test, create {EQA_EMPTY_RESULT}.make ("test not properly compiled", Void))
 				end
@@ -314,7 +309,7 @@ feature {NONE} -- Status setting
 				-- Add to controller to `idle_controllers' and stop it if test was marked isolated
 			if not a_force then
 				if l_task_data.isolated then
-					l_controller.stop
+					l_controller.reset
 				end
 				idle_controllers.force (l_controller)
 			end
@@ -338,7 +333,7 @@ feature {NONE} -- Status setting
 			occupied_controllers.do_all (
 				agent (a_task_data: like new_task_data)
 					do
-						a_task_data.task.stop
+						a_task_data.task.reset
 					end)
 			tasks := empty_tasks
 		end
@@ -439,7 +434,7 @@ feature {NONE} -- Clean up
 					agent (a_controller: like new_controller)
 						do
 							if a_controller.is_running then
-								a_controller.stop
+								a_controller.reset
 							end
 							a_controller.dispose
 						end)

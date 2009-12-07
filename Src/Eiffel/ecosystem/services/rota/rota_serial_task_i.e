@@ -79,6 +79,8 @@ feature {NONE} -- Events
 			a_task_is_sub_task: a_task = sub_task
 			a_task_done: not a_task.has_next_step
 		do
+		ensure
+			cancel_implies_not_has_next_step: a_cancel implies not has_next_step
 		end
 
 note

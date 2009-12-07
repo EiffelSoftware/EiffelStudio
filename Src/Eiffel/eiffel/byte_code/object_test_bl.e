@@ -70,7 +70,9 @@ feature -- C code generation
 				expression.propagate (No_register)
 				register_for_metamorphosis := True
 				create {REGISTER} register.make (target.c_type)
-			else
+			elseif not source_type.is_reference then
+					-- Avoid propagation of "no_register" as the expression result can be used in a macro,
+					-- so we have to ensure the expression result is a real register.
 				expression.propagate (no_register)
 			end
 				-- Current needed in the access if target is generic.

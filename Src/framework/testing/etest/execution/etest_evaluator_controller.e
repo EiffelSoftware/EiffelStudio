@@ -37,10 +37,14 @@ feature -- Access
 		require
 			running: is_running
 			has_result: has_result
+		local
+			l_result: detachable like test_result
 		do
-			Result := connection.test_result
+			l_result := connection.last_result
+			check l_result /= Void end
+			Result := l_result
 		ensure
-			result_from_connection: Result = connection.test_result
+			result_from_connection: Result = connection.last_result
 		end
 
 feature {NONE} -- Access
@@ -50,6 +54,8 @@ feature {NONE} -- Access
 
 	connection: ETEST_EVALUATOR_CONNECTION
 			-- Connection to evaluator
+		require
+			running: is_running
 		local
 			l_connection: like internal_connection
 		do
@@ -66,9 +72,6 @@ feature {NONE} -- Access
 	testing_directory: STRING
 			-- Directory in which tests should be executed
 
-	request: detachable TUPLE
-			-- Internal storage for byte code of `test'
-
 feature -- Status report
 
 	is_running: BOOLEAN
@@ -79,30 +82,25 @@ feature -- Status report
 			result_implies_connection_attached: Result implies internal_connection /= Void
 		end
 
-	is_ready: BOOLEAN
-			-- Is `Current' ready to run a test?
-			--
-			-- Note: if `is_ready' is not true, although no test has been assigned yet or a result has been
-			--       retrieved for that test, the client is forced to restart `Current'.
+	has_result: BOOLEAN
+			-- Has a result been received for `test'?
 		require
 			running: is_running
 		do
-			Result := not has_died and not has_next_step
+			Result := connection.last_result /= Void
 		ensure
-			result_implies_not_died: Result implies not has_died
-			result_implies_no_next_step: Result implies not has_next_step
+			result_implies_result_attached: Result implies connection.last_result /= Void
 		end
-
-	has_result: BOOLEAN
-			-- Has a result been received for `test'?
 
 	has_next_step: BOOLEAN
 			-- <Precursor>
+
+	has_died: BOOLEAN
+			-- Has connection to evaluator died?
 		do
-			Result := is_running and not (has_result or has_died)
-		ensure then
-			result_implies_running: Result implies is_running
-			result_implies_not_result_or_died: Result implies not (has_result or has_died)
+			Result := connection.has_connection_died
+		ensure
+			result_implies_connection_died: Result implies connection.has_connection_died
 		end
 
 feature {NONE} -- Status report
@@ -122,34 +120,37 @@ feature {NONE} -- Status report
 		deferred
 		end
 
-	has_died: BOOLEAN
-			-- Has connection to evaluator died?
-
 feature -- Status setting
 
-	start (a_evaluator_class: EIFFEL_CLASS_C; a_evaluator_feature: FEATURE_I)
-			-- Launch evaluator
+	launch_test (a_request: TUPLE; an_evaluator_class: EIFFEL_CLASS_C; an_evaluator_feature: FEATURE_I)
+			-- Launch test through given evaluator class and feature.
+			--
+			-- `a_request': Evaluator request containing byte code for calling test routine.
+			-- `an_evaluator_class': CLASS_C instance of EQA_EVALUATOR_ROOT.
+			-- `an_evaluator_feature': Instance of root feature in EQA_EVALUATOR_ROOT.
 		require
-			a_evaluator_class_attached: a_evaluator_class /= Void
-			a_evaluator_feature_attached: a_evaluator_feature /= Void
-			a_evaluator_class_valid: a_evaluator_class.types.count = 1
-			a_evaluator_feature_valid: a_evaluator_feature.valid_body_id
-			not_running: not is_running
+			a_request_attached: a_request /= Void
+			an_evaluator_class_attached: an_evaluator_class /= Void
+			an_evaluator_feature_attached: an_evaluator_feature /= Void
+			an_evaluator_class_valid: an_evaluator_class.types.count = 1
+			an_evaluator_feature_valid: an_evaluator_feature.valid_body_id
+			not_has_next_step: not has_next_step
 		local
 			l_connection: like connection
 			l_args: STRING
-			l_id: INTEGER
 		do
-			has_result := True
-			create l_connection.make
-			internal_connection := l_connection
-			if l_connection.current_port > 0 then
+			if is_running and has_died then
+				reset
+			end
+			if not is_running then
+				create l_connection.make
+				internal_connection := l_connection
 				create l_args.make (100)
 				l_args.append_integer (l_connection.current_port)
 				l_args.append_character (' ')
-				l_args.append_integer (a_evaluator_feature.real_body_id (a_evaluator_class.types.first) - 1)
+				l_args.append_integer (an_evaluator_feature.real_body_id (an_evaluator_class.types.first) - 1)
 				l_args.append_character (' ')
-				l_args.append_integer (a_evaluator_feature.real_pattern_id (a_evaluator_class.types.first))
+				l_args.append_integer (an_evaluator_feature.real_pattern_id (an_evaluator_class.types.first))
 				l_args.append (" %"")
 				l_args.append_string (testing_directory)
 				l_args.append_character ('"')
@@ -157,30 +158,37 @@ feature -- Status setting
 				l_args.append ({ETEST_CONSTANTS}.eqa_evaluator_root)
 				l_args.append_character ('.')
 				l_args.append ({ETEST_CONSTANTS}.eqa_evaluator_creator)
-
-				has_died := False
-
 				start_evaluator (l_args)
 			end
+			connection.send_request (a_request)
+			has_next_step := True
 		ensure
 			running: is_running
-			ready: is_ready
 		end
 
-	execute_test (a_request: TUPLE)
-			-- Run test in evaluator
-		require
-			running: is_running
-			ready: is_ready
+	step
+			-- <Precursor>
+		local
+			l_has_next_step: BOOLEAN
 		do
-			has_result := False
-			request := a_request
-		ensure
-			has_next_step: has_next_step
+			if has_died then
+				if is_evaluator_launched then
+					stop_evaluator
+				end
+			elseif not is_evaluator_running then
+				connection.terminate
+				check died: has_died end
+			elseif not has_result then
+				l_has_next_step := True
+			end
+			has_next_step := l_has_next_step
+		ensure then
+			running: is_running
+			valid_state: not has_next_step implies (has_died or has_result)
 		end
 
-	stop
-			-- Stop evaluator
+	reset
+			-- Reset evaluator.
 		require
 			running: is_running
 		do
@@ -189,36 +197,14 @@ feature -- Status setting
 			end
 			connection.terminate
 			internal_connection := Void
-			has_result := False
-			has_died := False
 		ensure
 			not_running: not is_running
-		end
-
-	step
-			-- <Precursor>
-		local
-			l_dir: DIRECTORY_NAME
-		do
-			if
-				not connection.has_connection_died and then
-				is_evaluator_launched and then is_evaluator_running
-			then
-				if attached request as l_request and connection.is_connected then
-					connection.send_request (l_request)
-					request := Void
-				else
-					has_result := connection.has_result
-				end
-			else
-				has_died := True
-			end
 		end
 
 	cancel
 			-- <Precursor>
 		do
-			stop
+			reset
 		end
 
 feature {NONE} -- Status setting
@@ -253,7 +239,7 @@ feature {NONE} -- Clean up
 		do
 			if a_explicit then
 				if is_running then
-					stop
+					reset
 				end
 			end
 		end
@@ -261,6 +247,9 @@ feature {NONE} -- Clean up
 feature {NONE} -- Constants
 
 	testing_directory_name: STRING = "execution"
+
+invariant
+	has_next_step_implies_running: has_next_step implies (is_running and then is_evaluator_launched)
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

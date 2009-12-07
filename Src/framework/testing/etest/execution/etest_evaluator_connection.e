@@ -57,17 +57,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test_result: EQA_RESULT
-			-- Last received result
-		require
-			has_result: has_result
-		local
-			l_result: like last_result
-		do
-			l_result := last_result
-			check l_result /= Void end
-			Result := l_result
-		end
+	last_result: detachable EQA_RESULT
+			-- Last result received from client
 
 	current_port: INTEGER
 			-- Port used by `Current' for incoming connection
@@ -82,11 +73,11 @@ feature {NONE} -- Access
 	condition: CONDITION_VARIABLE
 			-- Condition variable receiving threads waits on before receiving result
 
+	next_request: detachable TUPLE
+			-- Request data that should be sent to the client next
+
 	connection: detachable NETWORK_STREAM_SOCKET
 			-- Connection to evaluator
-
-	last_result: detachable like test_result
-			-- Internal storage for `test_result'
 
 	port_counter: CELL [INTEGER]
 			-- Counter for port number `Current' listens to
@@ -102,21 +93,10 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_connected: BOOLEAN
-			-- Is `Current' connected to evaluator?
-		do
-			Result := connection /= Void
-		ensure
-			result_implies_attached: Result implies connection /= Void
-		end
-
 	is_awaiting_result: BOOLEAN
 			-- Is `Current' waiting to receive a result?
-
-	has_result: BOOLEAN
-			-- Did `Current' receive a new result?
 		do
-			Result := last_result /= Void
+			Result := next_request /= Void
 		end
 
 	has_connection_died: BOOLEAN
@@ -130,21 +110,15 @@ feature -- Status setting
 			-- `a_request': Tuple containing necessary information to launch a test routine.
 		require
 			a_request_attached: a_request /= Void
-			connected: is_connected
 			not_receiving: not is_awaiting_result
-		local
-			l_connection: like connection
 		do
 			mutex.lock
-			l_connection := connection
-			check l_connection /= Void end
-			l_connection.independent_store (a_request)
 			last_result := Void
-			is_awaiting_result := True
+			next_request := a_request.deep_twin
 			condition.signal
 			mutex.unlock
 		ensure
-			awaiting_or_received: is_awaiting_result or has_result
+			awaiting_or_received: is_awaiting_result or last_result /= Void
 		end
 
 	terminate
@@ -156,23 +130,18 @@ feature -- Status setting
 			l_socket: NETWORK_STREAM_SOCKET
 		do
 			mutex.lock
-			if attached connection as l_connection then
-				if not is_awaiting_result then
-					l_connection.close
-				end
-				if condition.is_set then
-					condition.broadcast
-					condition.destroy
-				end
-				connection := Void
-			else
+			last_result := Void
+			next_request := Void
+			if not has_connection_died then
 				create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, current_port)
 				l_socket.connect
 				l_socket.close
+				has_connection_died := True
+				condition.broadcast
 			end
 			mutex.unlock
 		ensure
-			not_connected: not is_connected
+			died: has_connection_died
 		end
 
 feature {NONE} -- Status setting
@@ -185,7 +154,7 @@ feature {NONE} -- Status setting
 			a_socket_attached: a_socket /= Void
 			a_socket_open_read: a_socket.is_open_read
 		local
-			l_connection: like connection
+			l_connection: detachable NETWORK_STREAM_SOCKET
 			l_has_lock: BOOLEAN
 		do
 			if not has_connection_died then
@@ -198,38 +167,49 @@ feature {NONE} -- Status setting
 						-- Start receiving results
 					from
 						mutex.lock
-						connection := l_connection
 					until
 						has_connection_died
 					loop
-							-- Wait until evaluator received work through `send_request'
-						condition.wait (mutex)
-						mutex.unlock
-						if l_connection.readable then
+						if attached next_request as l_request then
+							mutex.unlock
+							l_connection.independent_store (l_request)
 							l_connection.read_boolean
 							if
-								l_connection.last_boolean and
 								l_connection.readable and then
-								attached {EQA_RESULT} l_connection.retrieved as l_result
+								l_connection.last_boolean and then
+								attached {EQA_RESULT} l_connection.retrieved as l_retrieved
 							then
 								mutex.lock
-								last_result := l_result
-								is_awaiting_result := False
+								next_request := Void
+								last_result := l_retrieved
 							else
+									--| Need to lock in order to perform clean unlock at end of loop. Can not lock before
+									--| retrieval because `retrieved' can through exception.
+								mutex.lock
 								has_connection_died := True
 							end
 						else
-							has_connection_died := True
+								-- Wait until work is received through `send_request'
+							condition.wait (mutex)
 						end
 					end
+					mutex.unlock
+				else
+					has_connection_died := True
 				end
 			end
+			if l_connection /= Void and then not l_connection.is_closed then
+				l_connection.close
+			end
+		ensure
+			connection_dies: has_connection_died
 		rescue
 			has_connection_died := True
-				-- Note: no need to unlock `mutex' since it is never locked when using `connection' so we
-				--       assume there won't be an exception.
 			retry
 		end
+
+invariant
+	valid_port: not has_connection_died implies (min_port <= current_port and current_port <= max_port)
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

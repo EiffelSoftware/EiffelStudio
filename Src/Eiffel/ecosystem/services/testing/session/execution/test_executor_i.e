@@ -17,10 +17,6 @@ inherit
 	ROTA_TIMED_TASK_I
 
 	DISPOSABLE_I
-		export
-			{NONE} all
-			{TEST_EXECUTION_I} dispose
-		end
 
 feature -- Access
 

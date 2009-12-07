@@ -2,16 +2,26 @@ create a     :
 a := a       : 
 a ?= a       : 
 fa (a)       : 
+attached a   : 
+attached {A}a: 
 create {expanded A} a : 
 a := a       : expanded A := expanded A (1)
 a ?= a       : expanded A := expanded A (2)
 fa (a)       : expanded A := expanded A (3)
+attached a   : expanded A := expanded A (3)
+attached {A}a: expanded A := expanded A (3)
 create {expanded A} b : 
 a := b       : expanded A := expanded A (1)
 a ?= b       : expanded A := expanded A (1)
 fa (b)       : expanded A := expanded A (1)
+attached b   : expanded A := expanded A (1)
+attached {A}b: expanded A := expanded A (1)
 create {expanded A} b : 
 b := b       : expanded A := expanded A (1)
 b ?= b       : expanded A := expanded A (2)
+b ?= a       : expanded A := expanded A (2)
 fb (b)       : expanded A := expanded A (3)
+attached b   : expanded A := expanded A (3)
+attached {expanded A}b: expanded A := expanded A (3)
+attached {expanded A}a: expanded A := expanded A (2)
 Execution completed

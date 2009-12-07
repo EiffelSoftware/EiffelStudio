@@ -130,6 +130,10 @@ feature -- Status report
 			Result := occupied_controllers.there_exists (
 				agent (a_data: like new_task_data; a_t: TEST_I): BOOLEAN
 					do
+						if a_data.test = a_t then
+							if a_data.task.is_running then
+							end
+						end
 						Result := a_data.test = a_t and a_data.task.is_running
 					end (?, a_test))
 		end
@@ -276,7 +280,6 @@ feature {NONE} -- Status setting
 			l_result: EQA_RESULT
 			l_remove: BOOLEAN
 			l_tag_tree: TAG_TREE [TEST_I]
-			l_dir_name: DIRECTORY_NAME
 		do
 			l_task_data := tasks.item_for_iteration
 			l_controller := l_task_data.task
@@ -287,9 +290,7 @@ feature {NONE} -- Status setting
 			if not l_controller.is_running then
 				create {EQA_EMPTY_RESULT} l_result.make ("evaluator could not be launched", Void)
 			else
-				l_dir_name := testing_directory
-				l_dir_name.extend (l_test.name)
-				delete_directory_safe (l_dir_name)
+				delete_directory_safe (l_test)
 				if l_controller.has_result then
 					l_result := l_controller.test_result
 				else
@@ -332,8 +333,13 @@ feature {NONE} -- Status setting
 				-- False and relaunch them when `start' is called after compilation is done.
 			occupied_controllers.do_all (
 				agent (a_task_data: like new_task_data)
+					local
+						l_dir_name: DIRECTORY_NAME
 					do
 						a_task_data.task.reset
+						if attached a_task_data.test as l_test then
+							delete_directory_safe (l_test)
+						end
 					end)
 			tasks := empty_tasks
 		end
@@ -381,17 +387,20 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	delete_directory_safe (a_name: STRING)
+	delete_directory_safe (a_test: ETEST)
 			-- Remove directory.
 			--
-			-- `a_name': Name of directory to be deleted.
+			-- `a_test': Test for which working directory should be removed.
 		require
-			a_name_attached: a_name /= Void
+			a_test_attached: a_test /= Void
 		local
 			l_retried: BOOLEAN
+			l_directory: like testing_directory
 		do
 			if not l_retried then
-				(create {DIRECTORY}.make (a_name)).recursive_delete
+				l_directory := testing_directory
+				l_directory.extend (a_test.name)
+				(create {DIRECTORY}.make (l_directory)).recursive_delete
 			end
 		rescue
 			l_retried := True

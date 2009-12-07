@@ -2,16 +2,26 @@ create a     :
 a := a       : 
 a ?= a       : 
 fa (a)       : 
+attached a   : 
+attached {A}a: 
 create {B} a : 
 a := a       : B := B (1)
 a ?= a       : B := B (2)
 fa (a)       : B := B (3)
+attached a   : B := B (3)
+attached {A}a: B := B (3)
 create {B} b : 
 a := b       : B := B (1)
 a ?= b       : B := B (1)
 fa (b)       : B := B (1)
+attached b   : B := B (1)
+attached {A}b: B := B (1)
 create {B} b : 
 b := b       : B := B (1)
 b ?= b       : B := B (2)
+b ?= a       : B := B (2)
 fb (b)       : B := B (3)
+attached b   : B := B (3)
+attached {B}b: B := B (3)
+attached {B}a: B := B (2)
 Execution completed

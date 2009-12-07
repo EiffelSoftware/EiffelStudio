@@ -156,7 +156,11 @@ feature {NONE} -- Implementation
 			create l_eitem
 			l_token_writer := token_writer
 			l_tag := test_result.tag.as_string_32
-			l_token_writer.process_basic_text (l_tag)
+			if not l_tag.is_empty then
+				l_token_writer.add_char (' ')
+					--| Twin needed as we might change `l_tag' below while the editor token still refers to it
+				l_token_writer.process_basic_text (l_tag.twin)
+			end
 			l_token_writer.add_comment (" [")
 			l_duration := test_result.duration.fine_seconds_count
 			l_seconds := l_duration.truncated_to_integer

@@ -381,7 +381,6 @@ feature {NONE} -- Element change
 			l_executor := l_queue.executor
 			if l_executor.is_running_test (a_test) then
 				l_executor.abort_test (a_test)
-			else
 			end
 			l_map := running_test_map
 			running_groups := running_groups.bit_xor (l_map.item (a_test))

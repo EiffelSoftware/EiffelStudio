@@ -21,12 +21,12 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes XMI Export Module.
 		do
-			create xmi_clusters.make
-			create xmi_classes.make
-			create xmi_associations.make
-			create xmi_generalizations.make
-			create xmi_diagrams.make
-			create xmi_types.make
+			create xmi_clusters.make (1024)
+			create xmi_classes.make (1024)
+			create xmi_associations.make (1024)
+			create xmi_generalizations.make (1024)
+			create xmi_diagrams.make (1024)
+			create xmi_types.make (1024)
 			xmi_types.compare_objects
 			create doc_universe.make
 			id_counter := 1001
@@ -96,26 +96,28 @@ feature -- Actions
 					current_cluster_id := idref_counter
 					idref_counter := idref_counter + 1
 						-- Classes
-					from
-						current_cluster.start
-					until
-						current_cluster.after
-					loop
-						l_class_i ?= current_cluster.item_for_iteration
-						check l_class_i_not_void: l_class_i /= Void end
-						if l_class_i.is_compiled then
-							current_compiled_class := l_class_i.compiled_class
-							create new_xmi_class.make (id_counter, current_cluster_id, current_compiled_class)
-							last_class_x := last_class_x + ((id_counter \\ 4) - 1) * 300
-							last_class_y := last_class_y + 300
-							create new_xmi_class_presentation.make (idref_counter, new_xmi_class, last_class_x, last_class_y)
-							idref_counter := idref_counter + 1
-							id_counter := id_counter + 1
-							new_xmi_cluster.add_class (new_xmi_class)
-							new_xmi_diagram.add_presentation (new_xmi_class_presentation)
-							xmi_classes.extend (new_xmi_class)
+					if current_cluster /= Void then
+						from
+							current_cluster.start
+						until
+							current_cluster.after
+						loop
+							l_class_i ?= current_cluster.item_for_iteration
+							check l_class_i_not_void: l_class_i /= Void end
+							if l_class_i.is_compiled then
+								current_compiled_class := l_class_i.compiled_class
+								create new_xmi_class.make (id_counter, current_cluster_id, current_compiled_class)
+								last_class_x := last_class_x + ((id_counter \\ 4) - 1) * 300
+								last_class_y := last_class_y + 300
+								create new_xmi_class_presentation.make (idref_counter, new_xmi_class, last_class_x, last_class_y)
+								idref_counter := idref_counter + 1
+								id_counter := id_counter + 1
+								new_xmi_cluster.add_class (new_xmi_class)
+								new_xmi_diagram.add_presentation (new_xmi_class_presentation)
+								xmi_classes.put (new_xmi_class, current_compiled_class)
+							end
+							current_cluster.forth
 						end
-						current_cluster.forth
 					end
 					idref_counter := idref_counter + 1
 					xmi_clusters.extend (new_xmi_cluster)
@@ -205,6 +207,71 @@ feature -- Settings
 			directory_is_writable: p.is_writable
 		end
 
+feature {NONE} -- Cache
+
+	tmp_target_file: PLAIN_TEXT_FILE
+
+	max_string_cache: INTEGER = 1_000_000
+
+	string_cache: STRING
+
+	write_to_cache (a_str: STRING)
+			-- Write `a_str' to cache.
+			-- Put it into temporary file if too big.
+		require
+			a_str_not_void: a_str /= Void
+		local
+			l_tmp_filename: FILE_NAME
+		do
+			if string_cache = Void then
+				create string_cache.make (max_string_cache)
+			end
+			if string_cache.count + a_str.count < max_string_cache then
+				string_cache.append (a_str)
+			else
+				if tmp_target_file = Void then
+					create l_tmp_filename.make_temporary_name
+					create tmp_target_file.make_create_read_write (l_tmp_filename)
+				end
+				tmp_target_file.putstring (string_cache)
+				tmp_target_file.putstring (a_str)
+				string_cache.wipe_out
+			end
+		rescue
+			if tmp_target_file /= Void then
+				if not tmp_target_file.is_closed then
+					tmp_target_file.close
+				end
+				tmp_target_file := Void
+			end
+		end
+
+	commit_cache (a_file_name: STRING)
+			-- Commit the cache into `a_file_name'
+		require
+			a_file_name_not_void: a_file_name /= Void
+		local
+			l_tmp_filename: FILE_NAME
+		do
+			if tmp_target_file = Void then
+				create l_tmp_filename.make_temporary_name
+				create tmp_target_file.make_create_read_write (l_tmp_filename)
+			end
+			tmp_target_file.putstring (string_cache)
+			tmp_target_file.close
+			tmp_target_file.change_name (a_file_name)
+				-- Reset
+			string_cache.wipe_out
+			tmp_target_file := Void
+		rescue
+			if tmp_target_file /= Void then
+				if not tmp_target_file.is_closed then
+					tmp_target_file.close
+				end
+				tmp_target_file := Void
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	classes: ARRAYED_LIST [CONF_CLASS]
@@ -213,22 +280,22 @@ feature {NONE} -- Implementation
 	groups: ARRAYED_LIST [CONF_GROUP]
 			-- Clusters to be generated.
 
-	xmi_clusters: LINKED_LIST [XMI_CLUSTER]
+	xmi_clusters: ARRAYED_LIST [XMI_CLUSTER]
 			-- Representations of the system clusters for XMI.
 
-	xmi_classes: LINKED_LIST [XMI_CLASS]
+	xmi_classes: HASH_TABLE [XMI_CLASS, CLASS_C]
 			-- Representations of the system classes for XMI.
 
-	xmi_associations: LINKED_LIST [XMI_ASSOCIATION]
+	xmi_associations: ARRAYED_LIST [XMI_ASSOCIATION]
 			-- Representations of the system associations between classes for XMI.
 
-	xmi_generalizations: LINKED_LIST [XMI_GENERALIZATION]
+	xmi_generalizations: ARRAYED_LIST [XMI_GENERALIZATION]
 			-- Representations of the system inheritance relations for XMI.
 
-	xmi_diagrams: LINKED_LIST [XMI_DIAGRAM]
+	xmi_diagrams: ARRAYED_LIST [XMI_DIAGRAM]
 			-- Class diagrams representing the system in Rose.
 
-	xmi_types: LINKED_LIST [XMI_TYPE]
+	xmi_types: ARRAYED_LIST [XMI_TYPE]
 			-- Formal types or types associated with classes
 			-- not present in user's selection.
 
@@ -250,20 +317,15 @@ feature {NONE} -- Implementation
 	xmi_class_by_class_c (a_class_c: CLASS_C): XMI_CLASS
 			-- Search XMI representation of `a_class_c'.
 		require
-				compiled_class_not_void: a_class_c /= Void
+			compiled_class_not_void: a_class_c /= Void
 		local
 			xmi_class_cursor: CURSOR
 		do
 			xmi_class_cursor := xmi_classes.cursor
-			from
-				xmi_classes.start
-			until
-				Result /= Void or else xmi_classes.after
-			loop
-				if xmi_classes.item.compiled_class = a_class_c then
-					Result := xmi_classes.item
-				end
-				xmi_classes.forth
+			xmi_classes.start
+			xmi_classes.search (a_class_c)
+			if xmi_classes.found then
+				Result := xmi_classes.found_item
 			end
 			xmi_classes.go_to (xmi_class_cursor)
 		end
@@ -369,8 +431,8 @@ feature {NONE} -- Implementation
 				xmi_classes.after
 			loop
 
-				current_compiled_class := xmi_classes.item.compiled_class
-				current_xmi_class := xmi_classes.item
+				current_compiled_class := xmi_classes.item_for_iteration.compiled_class
+				current_xmi_class := xmi_classes.item_for_iteration
 				current_feature_list := current_compiled_class.written_in_features
 				from
 					current_feature_list.start
@@ -958,20 +1020,17 @@ feature {NONE} -- Implementation
 	generate_from_lists
 			-- Write XMI description to `target_file_name'.
 		local
-			fi: PLAIN_TEXT_FILE
-			src: STRING
 			src_depot: XMI_CODE
 		do
 			create src_depot.make
-			create fi.make_create_read_write (target_file_name)
-			src := src_depot.header
-			src.append (src_depot.content_start (idref_root_diagram))
+			write_to_cache (src_depot.header)
+			write_to_cache (src_depot.content_start (idref_root_diagram))
 			from
 				xmi_clusters.start
 			until
 				xmi_clusters.after
 			loop
-				src.append (xmi_clusters.item.code)
+				write_to_cache (xmi_clusters.item.code)
 				xmi_clusters.forth
 			end
 
@@ -980,7 +1039,7 @@ feature {NONE} -- Implementation
 			until
 				xmi_associations.after
 			loop
-				src.append (xmi_associations.item.code)
+				write_to_cache (xmi_associations.item.code)
 				xmi_associations.forth
 			end
 
@@ -989,7 +1048,7 @@ feature {NONE} -- Implementation
 			until
 				xmi_generalizations.after
 			loop
-				src.append (xmi_generalizations.item.code)
+				write_to_cache (xmi_generalizations.item.code)
 				xmi_generalizations.forth
 			end
 
@@ -998,27 +1057,27 @@ feature {NONE} -- Implementation
 			until
 				xmi_types.after
 			loop
-				src.append (xmi_types.item.code)
+				write_to_cache (xmi_types.item.code)
 				xmi_types.forth
 			end
 
-			src.append (src_depot.content_end)
+			write_to_cache (src_depot.content_end)
 
-			src.append (src_depot.extensions_start)
+			write_to_cache (src_depot.extensions_start)
 
 			from
 				xmi_diagrams.start
 			until
 				xmi_diagrams.after
 			loop
-				src.append (xmi_diagrams.item.code)
+				write_to_cache (xmi_diagrams.item.code)
 				xmi_diagrams.forth
 			end
 
-			src.append (src_depot.extensions_end)
-			src.append (src_depot.file_end)
-			fi.put_string (src)
-			fi.close
+			write_to_cache (src_depot.extensions_end)
+			write_to_cache (src_depot.file_end)
+
+			commit_cache (target_file_name)
 		end
 
 	set_target_file_name
@@ -1064,31 +1123,43 @@ feature {NONE} -- Implementation
 
 	full_class_name_from_generic_class (a_feature: E_FEATURE): STRING
 			-- Get the full string representation 'a_feature' including actual generic types.
+			-- |FIXME: We should use AST_TYPE_OUTPUT_STRATEGY to get this.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
 			full_type_name: STRING
 			l_cnt: INTEGER
 			l_multiple_generics: BOOLEAN
+			l_number: INTEGER
+			l_name: STRING
 		do
 			full_type_name := a_feature.type.associated_class.name_in_upper.twin
 			from
 				l_cnt := 1
+				l_number := a_feature.type.generics.count
 				full_type_name.append (" [")
 			until
-				l_cnt > a_feature.type.generics.count
+				l_cnt > l_number
 			loop
 				if l_multiple_generics then
 					if a_feature.type.generics.item (l_cnt).has_associated_class then
 						full_type_name.append ("," + a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
 					else
-						full_type_name.append ("," + a_feature.associated_class.generics.i_th (l_cnt).name.name)
+						if attached {FORMAL_A} a_feature.type.generics.item (l_cnt).actual_type as l_formal then
+								-- This is not proper until AST_TYPE_OUTPUT_STRATEGY is used.
+							l_name := a_feature.associated_class.generics.i_th (l_formal.position).name.name
+							full_type_name.append ("," + l_name)
+						end
 					end
 				else
 					if a_feature.type.generics.item (l_cnt).has_associated_class then
 						full_type_name.append (a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
 					else
-						full_type_name.append (a_feature.associated_class.generics.i_th (l_cnt).name.name)
+						if attached {FORMAL_A} a_feature.type.generics.item (l_cnt).actual_type as l_formal then
+								-- This is not proper until AST_TYPE_OUTPUT_STRATEGY is used.
+							l_name := a_feature.associated_class.generics.i_th (l_formal.position).name.name
+							full_type_name.append (l_name)
+						end
 					end
 					l_multiple_generics := True
 				end

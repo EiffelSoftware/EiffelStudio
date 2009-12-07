@@ -197,6 +197,7 @@ feature -- Status setting
 			end
 			connection.terminate
 			internal_connection := Void
+			has_next_step := False
 		ensure
 			not_running: not is_running
 		end

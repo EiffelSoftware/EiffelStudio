@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			l_file: PLAIN_TEXT_FILE
 		do
 			create Result.make_empty
-			create l_file.make (eiffel_layout.user_extenral_file_name (ini_file_name))
+			create l_file.make (eiffel_layout.user_external_command_file_name (ini_file_name))
 			if l_file.exists then
 				from
 					l_file.open_read
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 		local
 			l_text_file: PLAIN_TEXT_FILE
 		do
-			create l_text_file.make (eiffel_layout.user_extenral_file_name (ini_file_name))
+			create l_text_file.make (eiffel_layout.user_external_command_file_name (ini_file_name))
 			if not l_text_file.exists then
 				l_text_file.create_read_write
 			else

@@ -953,7 +953,11 @@ feature -- Directories (top-level user)
 		end
 
 	user_files_path: DIRECTORY_NAME
-			-- User based Eiffel files.
+			-- User based Eiffel files which are generally visible to the users
+			-- For example: it points to a location in "My Documents" under Windows so
+			-- user is free to make modifications to files itself.
+			-- When purge the ES stored configuration data, it will not erase the files
+			-- under this path
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
@@ -1015,7 +1019,7 @@ feature -- Directories (top-level user)
 feature -- Directories (user)
 
 	user_settings_path: DIRECTORY_NAME
-			-- Path to user setting.
+			-- Path to user setting which is located in a hidden folder on Windows and Linux
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
@@ -1278,7 +1282,7 @@ feature -- Files (user)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	user_extenral_file_name (a_file_name: STRING): FILE_NAME
+	user_external_command_file_name (a_file_name: STRING): FILE_NAME
 			-- Path to external commands ini file
 		require
 			is_valid_environment: is_valid_environment
@@ -1286,7 +1290,7 @@ feature -- Files (user)
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			create Result.make_from_string (user_settings_path)
+			create Result.make_from_string (user_files_path)
 			Result.set_file_name (a_file_name)
 			Result.add_extension ("ini")
 		ensure

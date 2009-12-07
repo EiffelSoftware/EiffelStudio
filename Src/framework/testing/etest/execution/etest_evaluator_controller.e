@@ -52,7 +52,7 @@ feature {NONE} -- Access
 	test_suite: ETEST_SUITE
 			-- Test suite containing {ETEST} instances
 
-	connection: ETEST_EVALUATOR_CONNECTION
+	connection: ETEST_EVALUATOR_CONNECTION [TUPLE, EQA_RESULT]
 			-- Connection to evaluator
 		require
 			running: is_running
@@ -66,7 +66,7 @@ feature {NONE} -- Access
 			result_equals_storage: Result = internal_connection
 		end
 
-	internal_connection: detachable ETEST_EVALUATOR_CONNECTION
+	internal_connection: detachable like connection
 			-- Connection to evaluator
 
 	testing_directory: STRING

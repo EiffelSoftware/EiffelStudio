@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 frozen class
-	ETEST_EVALUATOR_CONNECTION
+	ETEST_EVALUATOR_CONNECTION [G, H]
 
 create
 	make
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_result: detachable EQA_RESULT
+	last_result: detachable H
 			-- Last result received from client
 
 	current_port: INTEGER
@@ -73,7 +73,7 @@ feature {NONE} -- Access
 	condition: CONDITION_VARIABLE
 			-- Condition variable receiving threads waits on before receiving result
 
-	next_request: detachable TUPLE
+	next_request: detachable G
 			-- Request data that should be sent to the client next
 
 	connection: detachable NETWORK_STREAM_SOCKET
@@ -96,15 +96,15 @@ feature -- Status report
 	is_awaiting_result: BOOLEAN
 			-- Is `Current' waiting to receive a result?
 		do
-			Result := next_request /= Void
+			Result := next_request /= ({detachable G}).default
 		end
 
 	has_connection_died: BOOLEAN
 			-- Has connection been closed by evaluator?
 
-feature -- Status setting
+feature -- Implementation
 
-	send_request (a_request: TUPLE)
+	send_request (a_request: G)
 			-- Send tuple containing test routine information to evaluator.
 			--
 			-- `a_request': Tuple containing necessary information to launch a test routine.
@@ -113,7 +113,7 @@ feature -- Status setting
 			not_receiving: not is_awaiting_result
 		do
 			mutex.lock
-			last_result := Void
+			last_result := ({detachable H}).default
 			next_request := a_request.deep_twin
 			condition.signal
 			mutex.unlock
@@ -130,8 +130,8 @@ feature -- Status setting
 			l_socket: NETWORK_STREAM_SOCKET
 		do
 			mutex.lock
-			last_result := Void
-			next_request := Void
+			next_request := ({detachable G}).default
+			last_result := ({detachable H}).default
 			if not has_connection_died then
 				create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, current_port)
 				l_socket.connect
@@ -172,15 +172,19 @@ feature {NONE} -- Status setting
 					loop
 						if attached next_request as l_request then
 							mutex.unlock
+
+								-- Send request
 							l_connection.independent_store (l_request)
+
+								-- Wait for response
 							l_connection.read_boolean
 							if
 								l_connection.readable and then
 								l_connection.last_boolean and then
-								attached {EQA_RESULT} l_connection.retrieved as l_retrieved
+								attached {H} l_connection.retrieved as l_retrieved
 							then
 								mutex.lock
-								next_request := Void
+								next_request := ({detachable G}).default
 								last_result := l_retrieved
 							else
 									--| Need to lock in order to perform clean unlock at end of loop. Can not lock before

@@ -363,8 +363,11 @@ feature -- Basic operations
 								end
 							end
 						end
+						l_editors.forth
+					else
+							-- The editor is not applicable, remove it.
+						l_editors.remove
 					end
-					l_editors.forth
 				end
 
 				from l_editors.start until l_editors.after loop
@@ -374,46 +377,48 @@ feature -- Basic operations
 						-- Doing this make it possible to use more than one modifiers in one procedure.
 						-- Or `text_displayed.text_being_processed' is possible set with `True' (text loading is pending on idle),
 						-- Hence the second modifier can not applied to current editor.
-					if not l_editor.is_read_only and then l_editor.allow_edition then
-							-- Fetch position information.
-						l_first_line := l_editor.first_line_displayed
-						l_text := l_editor.text_displayed
-						if l_text /= Void then
-							l_line := l_text.cursor.y_in_lines
-							l_col := l_text.cursor.x_in_characters
+					check
+							-- Editors are removed in the above loop if they are not applicable.
+						applicable_editor: not l_editor.is_read_only and then l_editor.allow_edition
+					end
+						-- Fetch position information.
+					l_first_line := l_editor.first_line_displayed
+					l_text := l_editor.text_displayed
+					if l_text /= Void then
+						l_line := l_text.cursor.y_in_lines
+						l_col := l_text.cursor.x_in_characters
+					end
+
+						-- Set text, always using a merge.
+					l_new_text := merge_text (l_text.wide_text)
+					if attached l_new_text then
+							-- Set text to `modified_data' for use in `prepare'
+						if l_recent_editor ~ l_editor then
+								-- Set modified data text to the most recent editor
+							modified_data.text := l_new_text
+						elseif not attached l_recent_editor and then l_editors.islast then
+								-- No recent editor, just use the last editor's text
+							modified_data.text := l_new_text
 						end
 
-							-- Set text, always using a merge.
-						l_new_text := merge_text (l_text.wide_text)
-						if attached l_new_text then
-								-- Set text to `modified_data' for use in `prepare'
-							if l_recent_editor ~ l_editor then
-									-- Set modified data text to the most recent editor
-								modified_data.text := l_new_text
-							elseif not attached l_recent_editor and then l_editors.islast then
-									-- No recent editor, just use the last editor's text
-								modified_data.text := l_new_text
-							end
+						l_editor.select_all
+						l_editor.replace_selection (l_new_text)
+						l_set_in_editor := True
 
-							l_editor.select_all
-							l_editor.replace_selection (l_new_text)
-							l_set_in_editor := True
+						if logger.is_service_available then
+								-- Log change
+							logger.service.put_message_format ("Modified class {1} using {2} in IDE editor", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
+						end
 
-							if logger.is_service_available then
-									-- Log change
-								logger.service.put_message_format ("Modified class {1} using {2} in IDE editor", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
-							end
-
-								-- Reset position information.
-							l_line_count := l_editor.number_of_lines
-							l_editor.set_first_line_displayed (l_first_line.min (l_line_count), True)
-							l_cursor := l_editor.text_displayed.cursor
-							if l_line > 0 and then l_line_count > 0 then
-								l_cursor.set_y_in_lines (l_line.min (l_line_count))
-							end
-							if l_col > 0 then
-								l_cursor.set_x_in_characters (l_col)
-							end
+							-- Reset position information.
+						l_line_count := l_editor.number_of_lines
+						l_editor.set_first_line_displayed (l_first_line.min (l_line_count), True)
+						l_cursor := l_editor.text_displayed.cursor
+						if l_line > 0 and then l_line_count > 0 then
+							l_cursor.set_y_in_lines (l_line.min (l_line_count))
+						end
+						if l_col > 0 then
+							l_cursor.set_x_in_characters (l_col)
 						end
 					end
 					l_editors.forth
@@ -435,9 +440,14 @@ feature -- Basic operations
 						-- Set text to `modified_data' for use in `prepare'
 					modified_data.text := l_new_text
 
-						-- No editors, save directly to disk.
+						-- Save directly to disk.
 					create l_save
 					l_save.save (context_class.file_name, l_new_text, encoding_converter.detected_encoding)
+					from l_editors.start until l_editors.after loop
+						l_editor := l_editors.item
+						l_editor.continue_editing
+						l_editors.forth
+					end
 
 						-- Update class file data time stamp
 					original_file_date := context_class.file_date

@@ -2183,6 +2183,7 @@ test	wrong-type-in-expanded-generic-in-generic		expanded006 tcf pass expanded
 test	complex-expanded-generic-inheritance-crash		expanded007 tcf pass expanded
 test	expanded-with-references-crash					expanded008 tcf pass expanded
 test	external-with-expanded-crash					expanded009 tcf pass expanded
+test	expanded-attribute-crash-with-tiny				expanded010 tcf pass expanded
 
 
 test	filename-classname-mismatch-warning	warn001	tcf pass warning

@@ -1450,6 +1450,7 @@ test	long-string-to-double			exec317 tcf pass execution
 test	ref-exp-polymorphism			exec318 tcf fail execution
 test	loop-expression-smoke-test		exec319 tcf pass loop expression
 test	expanded-deep-physical-size		exec320 tcf fail execution
+test	check-instruction-smoke-test	exec321 tcf pass execution check instruction exception
 
 
 -- Compiler termination (exception trace, panic, etc.)

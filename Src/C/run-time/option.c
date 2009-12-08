@@ -207,7 +207,7 @@ rt_shared	EIF_LW_MUTEX_TYPE *eif_trace_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
 /*
 doc:	<routine name="process_time" return_type="void" export="private">
-doc:		<summary>Set `a_timee' with the current process time usage. This is the core of the profiling.</summary>
+doc:		<summary>Set `a_time' with the current process time usage. This is the core of the profiling.</summary>
 doc:		<param name="a_time" type="rt_uint64 *">Time argument</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>

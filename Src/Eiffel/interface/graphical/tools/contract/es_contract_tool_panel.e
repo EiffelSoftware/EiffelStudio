@@ -73,12 +73,12 @@ feature {NONE} -- Initialization
 			register_action (contract_editor.source_selection_actions, agent on_source_selected_in_editor)
 
 				-- Register action to edit on double click
-			register_action (contract_editor.widget.pointer_double_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32)
+			register_action (contract_editor.widget.pointer_double_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32; ia_item: EV_GRID_ITEM)
 				require
 					is_interface_usable: is_interface_usable
 					is_initialized: is_initialized
 				do
-					if ia_button = 1 and then contract_editor.widget.item_at_virtual_position (ia_x, ia_y) /= Void then
+					if ia_button = 1 and then ia_item /= Void then
 							-- The check above ensures there is actually an item at this location.
 						if has_stone and then contract_editor.selected_line /= Void and then contract_editor.selected_line.is_editable then
 							on_edit_contract
@@ -87,22 +87,19 @@ feature {NONE} -- Initialization
 				end)
 
 				-- Register action to show context menu on single click
-			register_action (contract_editor.widget.pointer_button_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32)
+			register_action (contract_editor.widget.pointer_button_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32; ia_item: EV_GRID_ITEM)
 				require
 					is_interface_usable: is_interface_usable
 					is_initialized: is_initialized
-				local
-					l_item: EV_GRID_ITEM
 				do
 					if ia_button = 3 then
-						l_item := contract_editor.widget.item_at_virtual_position (ia_x, ia_y)
-						if l_item /= Void then
-							if not l_item.is_selected then
+						if ia_item /= Void then
+							if not ia_item.is_selected then
 								contract_editor.widget.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
-								l_item.row.enable_select
+								ia_item.row.enable_select
 								contract_editor.widget.enable_selection_on_click
 							end
-							on_row_selected_in_contract_editor (l_item.row.as_attached, ia_x, ia_y + contract_editor.widget.header.height, ia_button)
+							on_row_selected_in_contract_editor (ia_item.row.as_attached, ia_x, ia_y + contract_editor.widget.header.height, ia_button)
 						end
 					end
 				end)

@@ -56,8 +56,12 @@ feature {NONE} -- Implementation
 
 	execute
 			-- <Precursor>
+		local
+			l_etest_suite: like etest_suite
 		do
-			etest_suite.retrieve_tests
+				-- Force test suite initialization and therefore initial test retrieval
+			l_etest_suite := etest_suite
+			
 			command_line_io.localized_print ("%N%N")
 			command_line_io.localized_print (locale.translation ("AutoTest menu:%N%N"))
 		end

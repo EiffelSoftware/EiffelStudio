@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			l_retry := True
 			l_excpt := exception_manager.last_exception
 			check l_excpt /= Void end
-			l_test_set_name := 	type_name_of_type (generic_dynamic_type (Current, 1))
+			l_test_set_name := class_name_of_type (generic_dynamic_type (Current, 1))
 			create l_texcpt.make (l_excpt, l_test_set_name, Void)
 			create last_invocation_response.make_exceptional (l_texcpt)
 			retry

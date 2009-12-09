@@ -88,19 +88,15 @@ feature {NONE} -- Basic operations
 		require
 			a_test_suite_usable: a_test_suite.is_interface_usable
 		local
-			l_total, l_executed, l_failing, l_passing, l_unresolved, l_filtered: NATURAL
 			l_translated: STRING_GENERAL
+			l_statistics: TEST_STATISTICS_I
 		do
-			l_total := a_test_suite.tests.count.to_natural_32
-			--l_filtered := filtered_tests (a_test_suite).items.count.to_natural_32
-			l_executed := 0 -- a_test_suite.count_executed
-			l_passing := 0 -- a_test_suite.count_passing
-			l_failing := 0 -- a_test_suite.count_failing
-			l_unresolved := l_executed - l_passing - l_failing
+			l_statistics := a_test_suite.statistics
 			l_translated := locale.translation (m_statistics)
 			print_string ("%N")
 			print_string (locale.formatted_string (l_translated,
-				[l_total, l_filtered, l_executed, l_passing, l_failing, l_unresolved]))
+				[l_statistics.test_count, 0, l_statistics.executed_test_count, 0,
+					l_statistics.failing_test_count, l_statistics.unresolved_test_count]))
 			print_string ("%N%N")
 		end
 

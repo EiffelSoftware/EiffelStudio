@@ -1,0 +1,354 @@
+- File: EIFFEL_SRC:[ES5SH]config32.eif (Eiffel 6.5.8.17770 test/development version)
+-- configuration file for Eiffel/VMS 6.x (32bit) ES5SH utility
+-- (where $(ISE_PLATFORM) is VMSAlpha32, VMSAlpha64, or VMSVAX)
+--
+--
+-- History:
+--  31-Mar-2009 - dz -- Eiffel 6.3
+--  14-Feb-2008 - dz -- Eiffel 6.x
+--  24-Oct-2006 - dz -- Eiffel 5.7.63441
+--   8-Aug-2006 - dz -- Eiffel 5.7
+--  21-Sep-2005 - David Schwartz
+--  	for Eiffel 5.6.1218 (32 bit pointers)
+--  01-Jan-2005	- David Schwartz
+--  	for Eiffel 5.6.0503 (32 bit pointers); use CC/WARN /DEBUG/NOOPT for compiling generated code 
+--  	for Eiffel 5.6.0504 (64 bit pointers); use CC/WARN /DEBUG/NOOPT for compiling generated code  
+--  09-Sept-2004 - David Schwartz
+--  	use CC/DEBUG (implies /OPT) for $optimize
+--  03-Feb-2004	- David Schwartz
+--  	for Eiffel 5.4.0904
+--
+--
+--
+-- On VMS, finish_freezing/es5sh uses this file to define replacement values for symbols in Makefile.SH
+-- To use an alternate configuration file, either specify the -c command line option:
+--	-c <my_configuration_file>
+-- or, before running finish_freezing, 
+--	$ DEFINE ES5SH_CONFIG my_eif_configuration_file
+-- (note: the use of ES5SH_CONFIG is deprecated in favor of the command line option.)
+--
+--
+-- As of this writing, the current version of GNU make for VMS (gmake 3.81) resolves the 
+-- longstanding problem with maximum DCL command line length;  gmake now works around the
+-- limit of 2048 characters for a DCL command line, and so gmake is now the recommended 
+-- tool for building Eiffel systems on VMS. A copy of gmake is included in the Eiffel distribution 
+-- (ISE_EIFFEL:[studio.spec.VMSAlphaxx.bin]).
+-- It may also be obtained from http://www.gnu.org/software/make/make.html
+--
+-- Also, as of this writing, MMS V3.1 does not properly handle suffix rules for files with 
+-- a lowercase type on ODS-5 volumes. MMK does not have this problem.
+--
+-- MMS refers to the VMS DECSet Module Management System layered product.
+-- MMK refers to the freeware MMS clone created by Matt Madison and Hunter Goatley.
+-- It can be obtained from  http://www.madgoat.com/mmk
+-- A complete copy of MMK is included in ISE_EIFFEL:[C_library.VMS]MMK.ZIP.
+--
+--
+--  Lines beginning with --  or # are comments.
+--  Lines beginning with == are symbol definitions.
+--  Symbol definitions are of the form
+--  == <symbol_name>
+--  <value>
+--  Where value consists of all the following nonblank non "--" prefixed lines 
+--  up to the next symbol definition or end of file.
+--
+--
+--
+-- 32/64 bit pointer related entries:
+--  ccflags, mtccflags:
+--	for 64 bit, add  /POINT=64
+--	***tbs*** determine this from ISE_PLATFORM
+--	(note: as of Eiffel 6.3, 32 bit is no longer supported on VMSAlpha)
+--  EIFFEL_SHAREABLE:
+--	now uses $(ISE_PLATFORM) to distinguish between 64- and 32-bit 
+--
+--
+
+
+-- The following options are required for correct Makefile generation
+
+-- Symbols used for compiline generated C code. Makefile.SH typically contains
+--   CC = $cc
+--   CFLAGS = $wkoptimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include \$(INCLUDE_PATH)
+-- or, for finalized code,
+--   CFLAGS = $optimize   $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include \$(INCLUDE_PATH)
+-- Since $wkoptimize/$optimize occurs before $ccflags in CFLAGS, $ccflags will override any options specified
+-- in $[wk]optimize and $[wk]optimize will override anything specified in $cc.
+-- To compile with debug, add /DEBUG (or /DEBUG/NOOPT) to wkoptimize or optimize (or cc) definition,
+
+-- cc: The C compile command: may be cc/decc, cc/vaxc, or just cc.
+-- To suppress C compiler warnings, add   /nowarn[ing].
+== cc
+cc
+
+-- *** wkoptimize and optimize - compile with /debug/noopt/check ***
+== optimize
+/debug/noopt/check
+
+== wkoptimize
+/debug/noopt/check
+
+
+-- ccflags: standard C compile flags.  
+--  /PREFIX=ALL is always required for DECC.
+--  GTK requires use of /NAME=(AS_IS,SHORTEN)/FLOAT=IEEE/IEEE=DENORM
+--  so all Eiffel libraries and applications are now compiled this way.
+--
+--  Special handling is performed for /DEFine and /INClude DCL qualifiers:
+--  All instances of /DEFine and /INClude are collected and specified as a
+--  single multiple valued qualifier.
+--  If using /DEFine to add macro definition(s), the macro value(s), if any, must
+--  be quoted and may not contain a right parenthesis.
+--  eg:  /DEF=("MAX=( (a) > (b) ? (a) : (b) )") is invalid.
+--  If a DCL qualifier with a value is specified, there must be no whitespace
+--  around the  =  that separates the qualifier and the value.
+--  Multiple definitions may also be specified in UNIX-style syntax
+--  eg: -DFOO  -DFOO=bar
+--  Note: Currently,   -DBUGS="Bugs Bunny"   does not work:
+--    in   -Dmacro=value   value must be unquoted.
+
+== ccflags
+/prefix=all/name=(as_is,shorten)/float=ieee/ieee=denorm
+-- add /POINT=64 for 64 bit pointers
+-- was: /prefix=all/name=(as_is,shorten)/float=ieee/ieee=denorm /define=(_VMS_,_WINDU_SOURCE)
+-- add /debug/noopt/check=(uninit,point=all) ??
+
+== mtccflags
+$ccflags /define=EIF_THREADS 
+
+== cpp
+
+== cppflags
+
+
+
+-- INCLUDE_PATH_PREFIX, INCLUDE_PATH_SUFFIX:
+--  These two values, if nonblank, are inserted at the beginning and end, 
+--  respectively, of the INCLUDE_PATH macro definition in Makefile.SH
+== INCLUDE_PATH_PREFIX
+ISE_EIFFEL:[C_library.VMS.Porting.include]
+--VMS_JACKETS_INCLUDE: 
+
+-- == INCLUDE_PATH_SUFFIX
+
+
+--
+-- (end C compile related symbols)
+--
+
+
+
+-- the names of the Eiffel runtime libraries, refered as: 
+--	EIFLIB = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/$prefix$wkeiflib$suffix
+-- or	EIFLIB = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/$prefix$eiflib$suffix
+-- or	EIFLIB = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/$prefix$mt_prefix$eiflib$suffix
+-- or   EIFLIB = "$rt_lib/$prefix$eiflib$suffix"
+
+== wkeiflib
+wkbench
+
+== eiflib
+finalized
+
+== prefix
+
+== mt_prefix
+MT
+
+== suffix
+.olb
+
+== sharedsuffix
+.exe
+
+
+
+== ldflags
+
+== libs
+
+== mkdep
+
+== cp
+COPY/log
+
+== mv
+COPY/log
+
+-- == ranlib
+
+-- rm (delete file command): this is a special case.
+-- Makefile.SH contains   RM = $rm -f. -
+-- Because the DCL DELETE command requires an explicit version number, any delete command will fail. 
+-- Further, there is no way to eliminate the -f option.
+-- It needs to be changed to a DCL comment.
+-- For MMK/MMS, define this as @! to make it a comment.
+-- For GNU make, a simple bang (!) will suffice.
+== rm
+purge/nolog
+
+
+
+-- taget_gnu_make:
+-- If True, es5sh will generate Makefile suitable for use by GNU make (gmake).
+-- This implies the following:
+--  make=gmake (the symbol  $make  is replaced by "gmake")
+--  Dollar sign charactes in DCL commands must be quoted with a '$'
+--  Colon characters in VMS filespecs are quoted with a '\'
+--  the  $(subst)  function will be used to convert spaces to commas in  $(OBJECTS)
+-- The symbols make, command_file, DCL_dollar_quote and quote_colon_in_VMS_dependencies are obsolete.
+
+== target_gnu_make
+True
+
+-- make: the make command.
+--  Can be MMK or MMS or (Gnu) make. If the latter, it must be defined externally as a foreign command,
+--  i.e.   make :== $ise_eiffel:[C_library.VMS.PORTING]MAKE_3_76_1_VMS_ALPHA.EXE
+--  Note that as of this writing, MMS V3.1 does not properly handle suffix rules when files have
+--  lower case filetypes (on ODS-5 volumes). MMK does not have this problem.
+--  This symbol is used to generate the MAKE.COM command procedures.
+--  If defined as "make" or not defined, then "make" must be defined as a foreign command.
+== make
+gmake
+
+
+
+== continuation
+\
+
+-- comment_prefix:  
+--  If defined (and not blank), then certain lines from
+--  Makefile.SH will be included as comments in generated Makefile.
+--  (trailing spaces will be included in the value)
+--  Note: certain lines will always be echoed as comments, preceded by "#--" or "#!"
+== comment_prefix
+#--
+
+
+== appl_make
+
+
+== precompile
+driver.exe : 
+	$(RM) driver.exe
+	$(RM) Makefile
+	$(RM) Makefile.SH
+#
+
+
+== cecil_make
+#
+
+
+
+-- default_rule:
+--  If this symbol is defined, its value is included in the generated Makefile.
+--  It is not required for GNU make. It seems to be required for MMK/MMS. 
+--== default_rule
+--.DEFAULT :
+--	continue
+
+
+-- xmotif_libs:
+--  If EXTERNALS contains any options (-L), append this to the generated link.com ***explain better ***tbs***
+--  Also see gtk_config_libs option
+== xmotif_libs
+sys$share:decwindows/library
+
+
+-- eiffel_shareable: shareable images (DLLs) required for execution of Eiffel generated applications.
+--  If eiffel_shareable is defined, it is included in the generated link options.
+== eiffel_shareable
+ISE_EIFFEL:[studio.spec.$(ISE_PLATFORM).bin]vms_jackets.exe/share
+
+
+
+-- Eiffel 5.1 added gtk-config shell commands to Makefiles.
+--
+-- gtk_config_cflags:
+--  This symbol is used to replace the `gtk-config --cflags` shell command.
+--  Values specified as DCL qualifiers (/INCLUDE=path) are passed as specified. 
+--  Values specified as UNIX options (-Ipath) syntax are converted to VMS syntax.
+--  Note that because DECC only appends relative include file paths to UNIX style
+--  include specifications, gtk and glib must be specified as DCL qualifiers
+--  with quoted UNIX style pathnames using /INCL as below.
+--  Defining  gtk_config_cflags  as 
+--	-I/ISE_EIFFEL/gtk_1210/gtk -I/ISE_EIFFEL/gtk_1210/glib
+--  doesnt work because it will be processed into a VMS-style include by es5sh.
+
+-- == gtk_config_cflags ** this doesn't work, DECC compiler requires Unix syntax for subdirectory includes **
+-- -I/ISE_EIFFEL/gtk_1210/gtk -I/ISE_EIFFEL/gtk_1210/glib
+== gtk_config_cflags
+/INCL=("/ISE_EIFFEL/C_library/VMS/gtk_1210/gtk","/ISE_EIFFEL/C_library/VMS/gtk_1210/glib")
+
+
+-- gtk_config_libs:
+--  This symbol is used to replace the `gtk-config --libs` shell command.
+--  It may contain macro(s) that are further processed, then added to the
+--  EXTERNALS list in the generated link.com file.
+== gtk_config_libs
+warning: this is test config.eif (intentional multiple macro definition)
+--***tbs*** put into a shareable image library: libgtk,libgdk,libgmodule,libglib
+== gtk_config_libs
+!***tbs***_put_these_into_a_shareable_image_library
+ISE_EIFFEL:[studio.spec.VMSAlpha32.bin]libgtk.exe/SHARE
+ISE_EIFFEL:[studio.spec.VMSAlpha32.bin]libgdk.exe/SHARE
+ISE_EIFFEL:[studio.spec.VMSAlpha32.bin]libgmodule.exe/SHARE
+ISE_EIFFEL:[studio.spec.VMSAlpha32.bin]libglib.exe/SHARE
+
+== end_gtk_config_yada_yada
+! from: -lpng -lz -lXtst 
+
+
+-- Eiffel 5.5 introduced the vision2-gtk-config shell script for providing c compile and link flags.
+-- The script is in ISE_EIFFEL:[library.vision2.implementation.gtk.Clib]vision2-gtk-config.
+--
+-- The following value will be substituted for the shell command
+--  `$EIFFEL_SRC/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`
+-- From vision2-gtk-config script: --include_path
+--  echo `gtk-config --cflags`
+== vision2-gtk-config--include_path
+`gtk-config --cflags`
+
+-- From vision2-gtk-config script: --object
+--  $ISE_LIBRARIES/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o
+--  $ISE_LIBRARIES/library/vision2/spec/$ISE_PLATFORM/lib/load_pixmap.o
+--  -L/usr/X11R6/lib -lXtst `gtk-config --libs`
+--  $ISE_LIBRARIES/C_library/libpng/libpng.a
+--  $ISE_LIBRARIES/C_library/zlib/libz.a
+== vision2-gtk-config--object
+ISE_EIFFEL:[library.vision2.spec.VMSAlpha32.lib]gtk_eiffel.obj
+ISE_EIFFEL:[library.vision2.spec.VMSAlpha32.lib]load_pixmap.obj
+`gtk-config --libs`
+ISE_EIFFEL:[C_library.libpng]libpng.olb/LIBR
+ISE_EIFFEL:[C_library.zlib]libz.olb/LIBR
+
+-- New symbols used in Eiffel 6.0 Makefiles:
+
+== rt_include
+/ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include
+
+== rt_lib
+/ISE_EIFFEL/studio/spec/$(ISE_PLATFORM)/lib
+
+
+-- Eiffel 6.3:
+
+--  $(rt_include) and $(rt_lib) no longer used.
+
+-- New constructs in Eiffel 6.3 Makefile.SH files:
+
+-- INCLUDE_PATH = -I"\$(EIFFEL_SRC)/C/bench" -I"\$(EIFFEL_SRC)/C/platform" -I"\$(ISE_LIBRARY)/library/i18n/spec/include" -I. 
+--	`\$ISE_LIBRARY/library/encoding/implementation/unix/Clib/iconv-config --include_path` -I"\$(ISE_LIBRARY)/library/encoding/implementation/include" 
+-- for  `\$ISE_LIBRARY/library/encoding/implementation/unix/Clib/iconv-config --include_path` -I"\$(ISE_LIBRARY)/library/encoding/implementation/include" 
+-- results in
+-- VMS_CINCLUDE = /INCLUDE=(ISE_EIFFEL:[C_library.VMS.Porting.include],ISE_EIFFEL:[studio.spec.VMSAlpha64.include],
+--	EIFFEL_SRC:[C.bench],EIFFEL_SRC:[C.platform],ISE_LIBRARY:[library.i18n.spec.include],ISE_LIBRARY:[library.encoding.implementation.include])
+== iconv_config_include_path
+
+== iconv_config_library
+
+
+
+
+== unused_symbol_to_mark_end_of_config_file

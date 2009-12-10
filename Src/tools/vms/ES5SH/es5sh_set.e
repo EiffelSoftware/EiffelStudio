@@ -1,4 +1,4 @@
-note
+indexing
 	description: "set of objects, traversable, indexable, linear"
 	author: "David Schwartz"
 	date: "$Date$"
@@ -27,13 +27,13 @@ create
 	
 feature {NONE} -- Initialization
 
-	make, make_empty, default_create
+	make, make_empty, default_create is
 		do
 			make_set (0)
 			compare_objects
 		end
 
-	make_from_array (a: ARRAY[G])
+	make_from_array (a: ARRAY[G]) is
 		do
 			make_set (0)
 			compare_objects	-- can only be called on empty set

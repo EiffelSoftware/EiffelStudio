@@ -1,28 +1,48 @@
-note
+indexing
 	description: "common ancestor/utility for ES5SH"
 	name: "EIFFEL_SRC:[ES5SH]ES5SH_COMMON.E"
 	author: "David Schwartz"
-	Version: "V6.2-001"
+	Version: "X6.5-003" -- should match `pretty_version' below
 	Date: "$Date$"
 	Revision: "$Revision$"
 	Id:		"$Id$"
 	Notes: "*** be sure to update pretty_version string below to match the Version here"
 
-class
-	ES5SH_COMMON
+class ES5SH_COMMON
 
 feature -- Access
 
-	pretty_name:	STRING =	"ES5SH"
-	pretty_version: STRING =	"es5sh X6.2-001"
-	default_date_time_format: STRING  = "[0]dd-mmm-yyyy [0]hh:[0]mi:[0]ss"
-	default_time_format: STRING = "[0]hh:[0]mi:[0]ss"
-	default_wrap_margin: INTEGER = 80
-	default_comment_prefix: STRING = "#--"
+	pretty_name:  STRING is "ES5SH"
+	pretty_ident: STRING is	"X6.5-003"
+	pretty_version: STRING
+			-- pretty name and version
+		once
+			create Result.make_from_string (pretty_name)
+			Result.to_lower
+			Result.append_character (space_character)
+			Result.append (pretty_ident)
+		end
+
+	default_date_time_format: STRING  is "[0]dd-mmm-yyyy [0]hh:[0]mi:[0]ss"
+	current_date_time: STRING
+			-- current date/time using `default_date_time_format'
+		do
+			Result := (create{DATE_TIME}.make_now).formatted_out (default_date_time_format)
+		end
+	default_time_format: STRING is "[0]hh:[0]mi:[0]ss"
+	current_time: STRING
+			-- current time using `default_time_format'
+		do
+			Result := (create{TIME}.make_now).formatted_out (default_time_format)
+		end
+
+	default_wrap_margin: INTEGER is 96
+
+	default_comment_prefix: STRING is "#--"
 
 	symbol_eiffel:	STRING --is  "ISE_EIFFEL"  	
 			-- eiffel macro name: one of ISE_EIFFEL, EIFFEL5, EIFFEL4
-	symbol_platform: STRING = "ISE_PLATFORM"	-- platform macro name, was PLATFORM
+	symbol_platform: STRING is "ISE_PLATFORM"	-- platform macro name, was PLATFORM
 
 -- VMS logical names (environment variables)
 	value_eiffel: STRING
@@ -33,21 +53,21 @@ feature -- Access
 	value_platform: STRING
 		-- value of $ISE_PLATFORM
 
-	macro_platform:	STRING	-- "$(ISE_PLATFORM)"
+	macro_platform:	STRING is	-- "$(ISE_PLATFORM)"
 		once
 			Result := "$(" + symbol_platform + ")"
 		end
 
-	space_character: CHARACTER = ' '
-	tab_character: CHARACTER = '%T'
+	space_character: CHARACTER is ' '
+	tab_character: CHARACTER is '%T'
 
-	whitespace_characters : ARRAY[CHARACTER]
+	whitespace_characters : ARRAY[CHARACTER] is
 		once
 			Result := << ' ', '%T', '%N' , '%R'>>
 			Result.compare_objects
 		end
 
-	path_delimiters : ARRAY[CHARACTER]	--STRING is ":[]<>/\"
+	path_delimiters : ARRAY[CHARACTER] is	--STRING is ":[]<>/\"
 				-- The set of filespec delimiters on all platforms (VMS/Unix/Windows)
 				-- (nb. excludes VMS intra-path delimiter '.')
 		once
@@ -67,13 +87,13 @@ feature -- Access
 			-- Makefile.SH where the shell script is now
 
 	out_makefile: ES5SH_TEXT_FILE --PLAIN_TEXT_FILE
-			-- Makefile to be created
+			-- Makefile being created
 
 	generate_object_libraries: BOOLEAN
 		-- if True, generate object libraries (.olb); else generate object modules (.obj)
 		-- used for transitioning/testing from object library to concatenated object module generation
-	generate_object_libraries_default: BOOLEAN = True
-	generated_object_file_type: STRING
+	--generate_object_libraries_default: BOOLEAN is False
+	generated_object_file_type: STRING is
 		once
 			if generate_object_libraries then
 				Result := ".olb"
@@ -82,23 +102,22 @@ feature -- Access
 			end
 		end
 
-
-	--execution_environment_: VMS_EXECUTION_ENVIRONMENT is (someday!)
-	Execution_environment_: ES5SH_EXECUTION_ENVIRONMENT
+	--Execution_environment_: VMS_EXECUTION_ENVIRONMENT is (someday!)
+	Execution_environment_: ES5SH_EXECUTION_ENVIRONMENT is
 		once create Result end
 
-	Operating_environment_: OPERATING_ENVIRONMENT
+	Operating_environment_: OPERATING_ENVIRONMENT is
 		once create Result end
 
-	Exceptions_: EXCEPTIONS
+	Exceptions_: EXCEPTIONS is
 		once create Result end
 
-	Arguments_: ARGUMENTS
+	Arguments_: ARGUMENTS is
 		once create Result end
 
 feature -- Configuration
 
-	configuration_item_once (a_key : STRING; a_default : STRING) : STRING
+	configuration_item_once (a_key : STRING; a_default : STRING) : STRING is
 			-- value of configuration option `a_key'.
 			-- If not defined, print warning message and define as `a_default' so the warning is issued only once.
 		require
@@ -120,9 +139,9 @@ feature -- Configuration
 				end
 				configuration.force (Result, a_key)	-- suppress further warnings for this name
 			end
-		end; -- get_configuration_item_once
+		end -- get_configuration_item_once
 
-	configuration_item (a_key : STRING; a_default : STRING) : STRING
+	configuration_item (a_key : STRING; a_default : STRING) : STRING is
 			-- Rvalue of configuration option `a_key'.
 		require
 			key_exists_nonblank: a_key /= Void and then not a_key.is_empty
@@ -134,11 +153,11 @@ feature -- Configuration
 			else
 				Result := a_default
 				end
-		end; -- configuration_option
+		end -- configuration_option
 
 feature -- String utility operations
 
-	remove_enclosing_quotes (a_str: STRING)
+	unquote (a_str: STRING) is
 			-- remove enclosing quotes, if any, from `a_str'
 		require
 			string_not_void: a_str /= Void
@@ -149,7 +168,7 @@ feature -- String utility operations
 			end
 		end
 
-	delimit_target_colon (a_line: STRING)
+	delimit_target_colon (a_line: STRING) is
 			-- insert spaces around the target (colon) delimiter of a target dependency specification ( target : dependents...)
 		require
 			line_nonblank: a_line /= Void and then not a_line.is_empty
@@ -175,35 +194,33 @@ feature -- String utility operations
 
 feature -- character classification
 
-	is_symbol_constituent (c : CHARACTER) : BOOLEAN
+	is_symbol_constituent (c : CHARACTER) : BOOLEAN is
 			-- is `c' a constituent of a symbol, in shell/makefile terms,
 			-- i.e. is it a digit, letter, or underscore?
 		do
 			-- ***FIXME*** why '.' ?  is this used for filenames somewhere?  precompile?
 			Result :=  (c.is_alpha or c.is_digit or c = '_' or c = '.')
-		end; -- is_symbol_constituent
+		end -- is_symbol_constituent
 
-	is_space_or_tab (c: CHARACTER): BOOLEAN
+	is_space_or_tab (c: CHARACTER): BOOLEAN is
 			-- is `c' a space or tab character?
 		do
 			Result := (c = space_character or else c = tab_character)
 		end
 
-	is_whitespace (c : CHARACTER) : BOOLEAN
+	is_whitespace (c : CHARACTER) : BOOLEAN is
 			-- is character 'c' a whitespace character?
-		local
-			-- alt	: CHARACTER is '%255'
 		do
 			Result := whitespace_characters.has (c)
-		end; -- is_whitespace
+		end -- is_whitespace
 
 
-feature -- primivite tokenization
+feature -- Tokenization
 
 			-- words are whitespace delimited
 			-- tokens are either symbols or special characters
 
-	next_word_index (str : STRING; start_pos : INTEGER) : INTEGER
+	next_word_index (str : STRING; start_pos : INTEGER) : INTEGER is
 			-- Returns the starting index of the next word in 'str', 0 if no more.
 			-- start_pos is 0 to find the first word,
 			-- otherwise it is the position of the last character of the current word, or
@@ -231,10 +248,10 @@ feature -- primivite tokenization
 			end
 		ensure
 			result_in_bounds:		Result >= 0 or Result <= str.count
-		end; -- next_word_index
+		end -- next_word_index
 
 
-	end_word_index (str : STRING; start_pos : INTEGER) : INTEGER
+	end_word_index (str : STRING; start_pos : INTEGER) : INTEGER is
 			-- return the index of the last character of the word that starts at start_pos in 'str'
 			-- if start_pos is whitespace, returns start_pos -1
 			-- if word starts with a quote character, retuns the index of the closing quote; if none,
@@ -282,11 +299,11 @@ feature -- primivite tokenization
 			end
 		ensure
 			result_in_bounds:			Result <= str.count
-		end; -- end_word_index
+		end -- end_word_index
 
 
 
-	first_token (a_str: STRING) : STRING
+	first_token (a_str: STRING) : STRING is
 			-- the first token in `a_str'; may be empty but never void
 		require
 			str_exists: a_str /= Void
@@ -300,7 +317,7 @@ feature -- primivite tokenization
 			result_exists:  Result /= Void
 		end -- first_token
 
-	second_token (a_str, token_1 : STRING) : STRING
+	second_token (a_str, token_1 : STRING) : STRING is
 			-- the second token in `a_str', given the first
 		require
 			str_exists: a_str /= void
@@ -313,7 +330,7 @@ feature -- primivite tokenization
 			result_exists:  Result /= Void
 		end -- second_token
 
-	next_token (a_str : STRING; start_pos : INTEGER) : STRING
+	next_token (a_str : STRING; start_pos : INTEGER) : STRING is
 			-- the "next" token in `a_str' beginning after `start_pos'
 		require
 			str_exists:	a_str /= Void
@@ -349,20 +366,20 @@ feature -- primivite tokenization
 
 		ensure
 			result_exists:  Result /= void
-		end;  -- next_token
+		end  -- next_token
 
 
 
 feature -- string utilities
 -- should be features of a class that inherits from STRING
 
-	is_nonblank (a_str: STRING) : BOOLEAN
+	is_nonblank (a_str: STRING) : BOOLEAN is
 			-- does `a_str' exist, and is it nonblank?
 		do
 			Result := a_str /= Void and then not is_blank (a_str)
 		end
 
-	is_blank (this : STRING) : BOOLEAN
+	is_blank (this : STRING) : BOOLEAN is
 			-- is `this' blank (all whitespace or empty)?
 		require
 			string_exists: this /= Void
@@ -383,9 +400,9 @@ feature -- string utilities
 					l_pos := l_pos + 1
 				end -- loop
 			end
-		end; -- is_blank
+		end -- is_blank
 
-	first_index_of_any (this: STRING; set: ARRAY[CHARACTER]; start_pos: INTEGER) : INTEGER
+	first_index_of_any (this: STRING; set: ARRAY[CHARACTER]; start_pos: INTEGER) : INTEGER is
 			-- index of first character in 'set' that appears in 'this' at or after start_pos; 0 if none
 		require
 			this_exists:	this /= Void
@@ -406,7 +423,7 @@ feature -- string utilities
 			end
 		end
 
-	starts_with (this : STRING; other : STRING) : BOOLEAN
+	starts_with (this : STRING; other : STRING) : BOOLEAN is
 			-- Does 'this' begin with 'other'? if other is empty, always True.
 		require
 			this_exists:	this /= Void
@@ -414,9 +431,9 @@ feature -- string utilities
 		do
 			Result := other.count <= this.count and then this.substring_index (other, 1) = 1
 			--Result := this.substring_index (other, 1) = 1
-		end; -- starts_with
+		end -- starts_with
 
-	starts_with_symbol (this : STRING; symbol: STRING) : BOOLEAN
+	starts_with_symbol (this : STRING; symbol: STRING) : BOOLEAN is
 			-- Does `this' begin with `symbol'? Symbol token is whitespace/non-alpha delimited.
 		require
 			this_exists: this /= Void
@@ -427,9 +444,9 @@ feature -- string utilities
 					symbol.count < this.count and then this.substring_index (symbol, 1) = 1
 					and then not is_symbol_constituent (this.item (symbol.count +1))
 			end
-		end; -- starts_with_symbol
+		end -- starts_with_symbol
 
-	ends_with (this: STRING; other: STRING) : BOOLEAN
+	ends_with (this: STRING; other: STRING) : BOOLEAN is
 			-- Does this end with other? If other is empty, always true.
 		require
 			this_exists:	this  /= Void
@@ -440,9 +457,9 @@ feature -- string utilities
 			l_pos := this.count - other.count + 1
 			Result := other.count <= this.count and then
 				this.substring_index (other, this.count - other.count + 1) > 0
-		end; -- ends_with
+		end -- ends_with
 
-		replace_first (this, first, new: STRING)
+		replace_first (this, first, new: STRING) is
 						-- replace "first" at end of "this" with "new" ("new" may be empty)
 		require
 			this_exists: this /= Void
@@ -460,7 +477,7 @@ feature -- string utilities
 					end
 			end
 
-	replace_end (this, last, new: STRING)
+	replace_end (this, last, new: STRING) is
 			-- replace 'last' at end of 'this' with 'new' ('new' may be empty)
 		require
 			this_exists: this /= Void
@@ -476,9 +493,9 @@ feature -- string utilities
 			this.replace_substring (new, this.count - last.count + 1, this.count)
 		ensure
 			replacement_done: ends_with (this, new)
-		end; -- replace_end
+		end -- replace_end
 
-	trimmed (a_str: STRING): STRING
+	trimmed (a_str: STRING): STRING is
 			-- string with all leading and trailing whitespace removed
 		do
 			if a_str /= Void then
@@ -487,7 +504,7 @@ feature -- string utilities
 			end
 		end
 
-	reduce_whitespace (this : STRING; start_pos : INTEGER)
+	reduce_whitespace (this : STRING; start_pos : INTEGER) is
 			-- remove leading and trailing whitespace,
 			-- reduce all other whitespace characters to single space
 		require
@@ -514,61 +531,101 @@ feature -- string utilities
 					l_pos := l_pos + 1
 				end -- loop				
 			end
-		end;
+		end
 
 
-feature -- Output
+--feature -- Output
 
-	print_undefined_symbol_warning (a_sym: STRING)
+--	makefile_put (a_strs: ARRAY[STRING])
+--			-- write elements of `a_strs' to `output_makefile' terminated by newline
+--		require
+--			makefile_not_void: out_makefile /= Void
+--			makefile_open_write: out_makefile.is_open_write or else out_makefile.is_open_append
+--			string_array_not_void: a_strs /= Void
+--		do
+--			--file_put_line (out_makefile, a_strs)
+--			out_makefile.put_line (a_strs)
+--		end
+
+--	file_put_line (a_file: ES5SH_TEXT_FILE; a_strs: ARRAY[STRING])
+--			-- write elements of `a_strs' to `a_file' terminated by newline
+--		obsolete "use {ES5SH_TEXT_FILE}.put_line"
+--		require
+--			file_not_void: a_file /= Void
+--			file_open_write: a_file.is_open_write or else a_file.is_open_append
+--			string_array_not_void: a_strs /= Void
+--		local
+--			l_big: STRING
+--		do
+--			create l_big.make (1000)
+--			a_strs.do_all (agent append_item_agent (?, l_big))
+--			a_file.put_string (l_big)
+--			a_file.new_line
+--		end
+
+feature -- Print
+
+	print_undefined_symbol_warning (a_sym: STRING) is
 			-- print a warning that an undefined symbol referenced
 		do
 			print_makefile_warning ("undefined symbol referenced: " + a_sym)
 		end
 
-	print_error_message (msg: STRING)
+	print_error_message (a_msg: STRING) is
+		require
+			message_not_void: a_msg /= Void
 		do
-			print_output_message ("Error: " + msg)
-		end; -- print_error_message
+			print_output_message (<< "Error: ", a_msg >>)
+		end -- print_error_message
 
-	print_warning_message (msg: STRING)
+	print_warning_message (msg: STRING) is
 		do
-			print_output_message ("Warning: " + msg)
-		end; -- print_warning_message
+			print_output_message (<< "Warning: " + msg >>)
+		end -- print_warning_message
 
-	print_makefile_warning (a_msg: STRING)
+	print_makefile_warning (a_msg: STRING) is
 		do
 			print_makefile_message ("Warning", a_msg)
 		end
 
-	print_makefile_error (a_msg: STRING)
+	print_makefile_error (a_msg: STRING) is
 		do
 			print_makefile_message ("Error", a_msg )
 		end
 
-	print_makefile_message (a_severity, a_msg: STRING)
+	print_makefile_message (a_severity, a_msg: STRING) is
 			-- print a message related to the current makefile, with line number
 		do
 			print_file_message (in_makefile, in_makefile.line_count, a_severity, a_msg + ":%N%T%"" + in_makefile.last_string + "%"%N")
 		end
 
-	print_file_message (a_file: ES5SH_TEXT_FILE; a_line_number: INTEGER; a_severity: STRING; a_msg: STRING)
+	print_file_message (a_file: ES5SH_TEXT_FILE; a_line_number: INTEGER; a_severity: STRING; a_msg: STRING) is
 			-- print a file-related message, with line number
 		do
-			print_output_message (a_severity + ": " + a_file.name + " line " + a_line_number.out + ": " + a_msg)
-		end; -- print_file_message
-
-	print_output_prefix: STRING
-		once
-				Result := pretty_name
+			print_output_message (<< a_severity, ": ", a_file.name, " line ", a_line_number.out, ": ", a_msg >>)
 		end
 
-	print_output_message (msg: STRING)
-				-- write message to stdout, prefixed by facility (program) name
-		do
-			print (pretty_name + ": " + msg)
-		end; -- print_output_message
+	print_output_prefix: STRING is
+		once
+				Result := pretty_name.as_upper
+		end
 
-	printable_value (a_val: STRING): STRING
+	print_output_message (a_msg: ARRAY[STRING]) is
+				-- write `a_msg' to stdout, prefixed by facility (program) name with newline
+		require
+			message_not_void: a_msg /= Void
+		local
+			l_msg: STRING
+		do
+			create l_msg.make (1000)
+			l_msg.append (print_output_prefix)
+			l_msg.append (": ")
+			l_msg.append (array_as_string (a_msg))
+			l_msg.append_character ('%N')
+			print (l_msg)
+		end
+
+	printable_value (a_val: STRING): STRING is
 			-- printable value of string; "<Void>" if non-existent, "blank" if empty
 		do
 			if a_val = Void then
@@ -582,59 +639,91 @@ feature -- Output
 			result_nonblank: Result /= Void and then not Result.is_empty
 		end
 
-	print_usage
+	print_usage is
 			-- print Usage: message. Use pretty_name to avoid full VMS path in command_name.
 		once
-			print ("Usage: " + pretty_name + " [ <options> ] [ <path> ] %N" +
-"{	
-  <path> is path of [..F_code or [..W_code] directory to process
-  <options> is one or more of:
-    -h output this message (inhibit other processing)
-    -m make system (compile/link generated code)
-    -c <configuration_file> (default: ISE_EIFFEL:[studio.config.$ISE_PLATFORM]config.eif)
-    -l generate object libraries (.OLB) in subdirectories
-    -o generate object files (.OBJ) in subdirectories
-    -t test (suppress Makefile generation and make)
-    -v verbose output 
-    -z bypass big_file (concatenated source file) generation
-nb: -l and -o are mutually exclusive; the default is
-}" )
-		if generate_object_libraries_default then
-			print (" -l (generate object libraries).%N%N")
-		else
-			print (" -o (generate object files).%N%N")
-		end
-	end; -- print_usage
+			print (array_as_string (<< "Usage: ", pretty_name, " [ <options> ] [ <path> ] %N",
+"[
+ <path> is path of [..F_code or [..W_code] directory to process
+ <options> is one or more of:
+   -h, -help  output this message (inhibit other processing)
+   -m	make system (compile/link generated code)
+   -c <configuration_file>  (default: ISE_EIFFEL:[studio.config.$ISE_PLATFORM]config.eif)
+   -l	generate object libraries (.OLB) in subdirectories (obsolete)
+   -o	generate object files (.OBJ) in subdirectories (default)
+   -s	concatenate source file contents (default: generate #include directives)
+   -t	test (suppress Makefile generation and make)
+   -v	display version (inhigit other processing)
+   -y, -verbose  generate verbose output
+   -z	bypass big_file (concatenated source file) generation
+nb: -l and -o are mutually exclusive; the default is -o (generate object files).
+]", "%N%N" >>))
+	end -- print_usage
 
-	print_help
+	print_help is
 		local
 			l_pretty: STRING
 		once
 			l_pretty := pretty_name + " "
 			print_usage
-			print (l_pretty + "[ 
+			print (array_as_string (<< l_pretty,  "[
 					is an Eiffel utility that helps to build an Eiffel system.
 					It runs as part of the FINISH_FREEZING process, which builds the
 					intermediate (C) code generated by the Eiffel compiler when freezing
 					freezing or finalizing, and creates an executable image.
-				]" + "%N%N" + l_pretty + "[ 
+				]", "%N%N", l_pretty, "[ 
 					is normally invoked by the FINISH_FREEZING.COM (DCL command procedure), which is
 					invoked by the Eiffel compiler after generating intermediate code, to build the system.
-				]" + "%N%N" + l_pretty + "[ 
+				]", "%N%N" + l_pretty, "[ 
 					generates Makefiles from the Makefile.SH (shell script) files produced
 					by the Eiffel compiler, concatenates the generated intermediate files 
 					in each subdirectory into a single file, then makes (builds) the system.
 					
 					By default (no arguments or options), 
-				]" + l_pretty + "[
+				]", l_pretty, "[
 					will generate Makefiles	
 					in the current working directory, using the configuration file
 						ISE_EIFFEL:[studio.config.$(ISE_PLATFORM)]config.eif
 					and then build the system.
-				]" + "%N")
-		end; -- print_help
+				]", "%N" >>))
+		end -- print_help
 
 feature {NONE} -- Implementation
+
+	array_as_string (a_ray: ARRAY[STRING]): STRING
+			-- items of `a_ray' concatenated together
+		require
+			array_not_void: a_ray /= Void
+		do
+			create Result.make (1000)  -- Texas-sized, ma'am
+			--a_ray.do_all (agent append_item_agent (?, Result))
+			a_ray.do_all (agent (a_item, a_other: STRING)
+					-- inline agent: append `a_item' to `a_other'
+				require other_not_void: a_other /= Void
+				do
+					if a_item /= Void then
+						a_other.append (a_item)
+					end
+				ensure
+					item_appended: a_item /= Void implies --a_other.count = old a_other.count + a_item.count and then
+							a_other.substring (old a_other.count + 1, a_other.count).is_equal (a_item)
+				end
+			(?, Result))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+--	append_item_agent (a_item, a_other: STRING)
+--			-- append `a_item' to `a_other'
+--		require
+--			other_not_ovid: a_other /= Void
+--		do
+--			if a_item /= Void then
+--				a_other.append (a_item)
+--			end
+--		ensure
+--			other_not_smaller: a_other.count >= old a_other.count
+--		end
 
 
 end -- class ES5SH_COMMON

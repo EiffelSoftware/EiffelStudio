@@ -2192,7 +2192,7 @@ end
 			is_syntactically_changed: changed
 			parents_not_void: parents /= Void
 		local
-			parent_type: CL_TYPE_A
+			parent_type, l_expanded_parent_type: CL_TYPE_A
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
 			l_parents: like parents
@@ -2207,11 +2207,12 @@ end
 				i = nb
 			loop
 				parent_type := l_area.item (i)
-					-- Because inheritance clause does not care about expanded
-					-- status, we remove it in case parent class is by default
-					-- expanded.
-				if parent_type.is_expanded then
-					parent_type := parent_type.reference_type
+				if parent_type.associated_class.is_expanded then
+						-- Original parent type is expanded so we have to make sure that the expanded version
+						-- of the parent type gets added to the list of available types.
+					l_expanded_parent_type := parent_type.duplicate
+					l_expanded_parent_type.set_expanded_mark
+					l_instantiator.dispatch (l_expanded_parent_type, Current)
 				end
 				l_instantiator.dispatch (parent_type, Current)
 				i := i + 1

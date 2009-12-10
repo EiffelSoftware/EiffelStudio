@@ -1,56 +1,51 @@
-note
+indexing
 	description: "Sortable"
 	author: "David Stevens"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	SORTABLE [G]
+deferred class SORTABLE [G]
 
 feature -- Access
 
 	found_index: INTEGER
 	found: BOOLEAN
 
-	count: INTEGER
-		do
-			Result := upper - lower + 1
-		end
-
-	lower, upper: INTEGER
-			-- Lower and upper indices.
+	valid_index (i: INTEGER): BOOLEAN is
 		deferred
 		end
 
-	valid_index (i: INTEGER): BOOLEAN
-		do
-			Result := lower <= i and i <= upper
-		end
-
-	--item (i: INTEGER): G is
-	item alias "[]" (i: INTEGER): G
+	item alias "[]" (i: INTEGER): G is
 			-- Entry at index `i'.
 		deferred
 		end
 
-	less_than (a, b: G): BOOLEAN
+	lower : INTEGER is
 		deferred
 		end
 
-	greater_than (a, b: G): BOOLEAN
+	upper : INTEGER is
+		deferred
+		end
+
+	less_than (a, b: G): BOOLEAN is
+		deferred
+		end
+
+	greater_than (a, b: G): BOOLEAN is
 		do
 			Result := not less_than (a, b) and not a.is_equal (b)
 		end
 
 feature -- Basic operations
 
-	linear_search (a_item: G)
+	linear_search (a_item: G) is
 		do
-			found := false
 			from
+				found := False
 				found_index := lower
 			until
-				found_index > upper or found
+				found_index > upper or else found
 			loop
 				found := item (found_index).is_equal (a_item)
 				if not found then
@@ -61,7 +56,7 @@ feature -- Basic operations
 			really_found: found implies a_item.is_equal (item (found_index))
 		end
 
-	binary_search (a_item: G)
+	binary_search (a_item: G) is
 		local
 			l_lower,l_upper: INTEGER
 		do
@@ -105,7 +100,7 @@ feature -- Basic operations
 			really_found: found implies a_item.is_equal (item (found_index))
 		end
 
-	dynamic_binary_search (a_compare: FUNCTION [ANY,TUPLE [G],INTEGER])
+	dynamic_binary_search (a_compare: FUNCTION [ANY,TUPLE [G],INTEGER]) is
 		local
 			l_lower,l_upper: INTEGER
 		do
@@ -149,12 +144,12 @@ feature -- Basic operations
 			really_found: found implies a_compare.item ([item (found_index)]) = 0
 		end
 
-	put (a_value: like item; i: INTEGER)
+	put (a_value: like item; i: INTEGER) is
 			-- Replace `i'-th entry.
 		deferred
 		end
 
-	sort
+	sort is
 			-- Taken from algorithm provided in "Combinatorial Algorithms, Theory and Practice" by
 			-- Edward M. Reingold, Jurg Nievergelt, and Narsingh Deo; Prentice-Hall Copyright 1977, page 289.
 			-- isbn 0-13-152447-X.
@@ -245,7 +240,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	integer_valued_less (a_1, a_2: G): INTEGER
+	integer_valued_less (a_1, a_2: G): INTEGER is
 		do
 			if less_than (a_1,a_2) then
 				Result := -1
@@ -254,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_swap (i, j: INTEGER)
+	internal_swap (i, j: INTEGER) is
 		local
 			l_temp_item: like item
 		do
@@ -263,4 +258,4 @@ feature {NONE} -- Implementation
 			put (l_temp_item, j)
 		end
 
-end -- class SORTABLE
+end

@@ -1,4 +1,4 @@
-note
+indexing
 	description: "Sortable_Array"
 	author: "David Stevens"
 	date: "$Date$"
@@ -10,7 +10,7 @@ deferred class
 inherit
 	SORTABLE [G]
 		undefine
-			copy, is_equal, count, valid_index
+			copy, is_equal
 		redefine
 			found_index
 		end
@@ -23,5 +23,12 @@ inherit
 feature
 
 	found_index: INTEGER
+	
+	found_item: G is
+		do
+			if found and found_index >= lower and found_index <= upper then
+				Result := item (found_index)
+			end
+		end
 
-end -- class SORTABLE_ARRAY
+end

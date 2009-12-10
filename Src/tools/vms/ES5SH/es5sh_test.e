@@ -1,4 +1,4 @@
-note
+indexing
     description: "Tester facilities for ES5SH"
     author: "David Schwartz"
     original: 01,Jan,1995
@@ -14,7 +14,7 @@ inherit
 
 feature
 
-    test (a_verbose: BOOLEAN)
+    test (a_verbose: BOOLEAN) is
     	local
     		l_msg: STRING
 		do
@@ -31,7 +31,7 @@ feature
 		end
 
 
-    test_all_dirname_basename (a_verbose: BOOLEAN)
+    test_all_dirname_basename (a_verbose: BOOLEAN) is
 		do
 			reset_counts
 		    print (" test dirname_basename: "+ dirname_basename_test_cases.count.out + " test cases.%N")
@@ -44,7 +44,7 @@ feature
 		end
 
 
-    test_dirname_basename_case (a_verbose: BOOLEAN; a_test_case: TUPLE [STRING,STRING,STRING])
+    test_dirname_basename_case (a_verbose: BOOLEAN; a_test_case: TUPLE [STRING,STRING,STRING]) is
 		local
 		    l_filespec, l_expected_dirname, l_expected_basename: STRING
 		    l_dirname, l_basename: STRING
@@ -72,7 +72,7 @@ feature
 		end
 
 
-    test_all_vms_filespec (a_verbose: BOOLEAN)
+    test_all_vms_filespec (a_verbose: BOOLEAN) is
 		local
 		    --l_foo: EXTENDABLE_BOUNDED_ARRAY[BOOLEAN]
 		    --l_bar: ROSE_LINEAR_ARRAY[INTEGER]
@@ -88,7 +88,7 @@ feature
 		end
 
 
-    test_vms_filespec_case (a_verbose: BOOLEAN; a_test_case: TUPLE [STRING,STRING])
+    test_vms_filespec_case (a_verbose: BOOLEAN; a_test_case: TUPLE [STRING,STRING]) is
 		local
 		    l_test, l_test_copy, l_expected, l_actual: STRING
 		do
@@ -113,7 +113,7 @@ feature
 		    end
 		end
 
-    test_all_is_relative_filespec (a_verbose: BOOLEAN)
+    test_all_is_relative_filespec (a_verbose: BOOLEAN) is
 		local
 		do
 		    reset_counts
@@ -127,7 +127,7 @@ feature
 		end
 
 
-    test_is_relative_filespec_case (a_verbose: BOOLEAN; a_test_case: TUPLE [STRING, BOOLEAN])
+    test_is_relative_filespec_case (a_verbose: BOOLEAN; a_test_case: TUPLE [STRING, BOOLEAN]) is
 		local
 		    l_test: STRING
 		    l_expected, l_actual: BOOLEAN
@@ -154,7 +154,7 @@ feature
     count, passed, failed: INTEGER
     total_count, total_failed, total_passed: INTEGER
 
-    reset_counts
+    reset_counts is
     	do
 			total_count := total_count + count
 		    total_passed := total_passed + passed
@@ -163,7 +163,7 @@ feature
     	end
 
 
-    vms_filespec_test_cases: ARRAY [ TUPLE [ STRING,STRING ] ]
+    vms_filespec_test_cases: ARRAY [ TUPLE [ STRING,STRING ] ] is
 		once
 			-- notes: a:b == a:[]b: "/a/b" ==> "a:b (a:[]b)
 		    create Result.make_from_array ( <<
@@ -180,7 +180,7 @@ feature
 			>> )
 		end
 
-    is_relative_filespec_test_cases: ROSE_LINEAR_ARRAY [ TUPLE [ STRING,BOOLEAN ] ]
+    is_relative_filespec_test_cases: ROSE_LINEAR_ARRAY [ TUPLE [ STRING,BOOLEAN ] ] is
 		once
 		    create Result.make_from_array ( <<
 			    	["",True], [".",True], ["a",True], ["./a",True], ["./a/",True],
@@ -192,7 +192,7 @@ feature
 				>> )
 		end
 
-    dirname_basename_test_cases: ROSE_LINEAR_ARRAY [ TUPLE [STRING, STRING, STRING] ]
+    dirname_basename_test_cases: ROSE_LINEAR_ARRAY [ TUPLE [STRING, STRING, STRING] ] is
 		once
 		    create Result.make_from_array ( << ["","",""], ["/", "/", ""],
 				["a", "", "a"], ["a/", "a/", ""], ["a/b", "a/", "b"],

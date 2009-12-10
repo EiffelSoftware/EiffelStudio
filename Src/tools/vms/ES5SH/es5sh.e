@@ -1,4 +1,4 @@
-note
+indexing
 	description: "System for converting Unix Makefile.SH files to VMS Makefile. files"
 	name: "EIFFEL_SRC:[ES5SH]ES5SH.E"
 	author: "David Morgan"
@@ -15,7 +15,6 @@ note
 -- working:
 --
 -- changes for Eiffel 6.x
---  remove enclosing quotes from -I specifiers
 --  update big_file generation (just make it a bunch of #includes), use .c for finalized (no more big_file*.x)
 --
 -- changes for Eiffel 5.7.65176
@@ -58,37 +57,34 @@ create make
 
 feature -- Initialization
 
-	make
+	make is
 			-- convert makefiles taking into account config.eif file
 		local
 			l_finished_file: PLAIN_TEXT_FILE
 			l_val, l_cwd: STRING
 			l_make_cmd: STRING
 		do
-			start_time := (create{DATE_TIME}.make_now).formatted_out (default_date_time_format)
-			print_output_message (pretty_version + " starting at " + start_time + ".%N")
-			print_output_message (" current working directory: " + execution_environment_.current_working_directory + "%N")
-			--generate_object_libraries := True -- default: upwards compatibility
-			--generate_object_libraries := False -- default: better performance
-			generate_object_libraries := generate_object_libraries_default
+			start_date_time := current_date_time
+			--print_output_message (<< pretty_version, " starting at ", start_date_time, "." >>)
+			print (array_as_string (<< pretty_version, " starting at ", start_date_time, ".%N" >>))
 
-			-- check for -h (-help) argument; if found, display help message and ignore others.
-			--if arguments_.argument_count >= 1 and then (arguments_.index_of_character_option ('?') > 0
-			if arguments_.argument_count >= 1 and then ( ("#/#/?#/h#/help#").has_substring ("#" + arguments_.argument(1) +"#")
-					or else arguments_.index_of_character_option ('?') > 0
-					or else arguments_.index_of_character_option ('h') > 0
-					or else arguments_.index_of_word_option ("help") > 0	) then
-				will_process_makefiles := False
-				print_help()
-			else
-				will_process_makefiles := True
+--			-- check for -h (-help) argument; if found, display help message and ignore others.
+--			--if arguments_.argument_count >= 1 and then (arguments_.index_of_character_option ('?') > 0
+--			if arguments_.argument_count >= 1 and then ( ("#/#/?#/h#/help#").has_substring ("#" + arguments_.argument(1) +"#")
+--					or else arguments_.index_of_character_option ('?') > 0
+--					or else arguments_.index_of_character_option ('h') > 0
+--					or else arguments_.index_of_word_option ("help") > 0	) then
+--				will_process_makefiles := False
+--				print_help()
+--			else
 				process_arguments()
-			end
+--			end
 
 			if will_process_makefiles then
+				print_output_message (<< " current working directory: ", execution_environment_.current_working_directory >>)
 				debug ("nocompile")
 					if will_perform_make then
-						print_output_message ("DEBUG(nocompile): inhibiting C compilation.%N")
+						print_output_message (<< "DEBUG(nocompile): inhibiting C compilation." >>)
 						will_perform_make := False
 					end
 				end -- debug
@@ -171,8 +167,7 @@ feature -- Initialization
 				end
 
 				--print (" debug: base_directory: " + printable_value (base_directory) + "%N")
-				print_output_message ("Processing options: "  + value_eiffel_string + ", "
-									+ symbol_platform + "=" + value_platform + "%N")
+				print_output_message (<< "Processing options: ",  value_eiffel_string, ", ", symbol_platform, "=", value_platform >>)
 				-- read configuration from configuration file
 				if configuration_file_name = Void then
 					-- check for logical name to specify configuration file
@@ -188,29 +183,27 @@ feature -- Initialization
 				end
 				create configuration.make (configuration_file_name, Current)
 
-				print_output_message ("Processing files in " + base_directory + " at "
-							+ (create {TIME}.make_now).formatted_out (default_time_format) + "%N")
+				print_output_message (<< "Processing files in ", base_directory, " at ", current_time >>)
 				process_makefiles
-				print_output_message ("Processing complete at "
-							+ (create {TIME}.make_now).formatted_out (default_time_format) + "%N")
+				print_output_message (<< "Processing complete at ", current_time >>)
 
 				if will_perform_make then
 					create l_finished_file.make ("complete.eif")
 					l_make_cmd := configuration.item ("make")
-					print_output_message ("Commencing C compilation  -- MAKE = " + l_make_cmd + "%N")
+					print_output_message (<< "Commencing C compilation  -- MAKE = ", l_make_cmd >>)
 					execution_environment_.system (l_make_cmd)
 					if execution_environment_.return_code /= 0 then
 						print_error_message ("Error from call to " + l_make_cmd + " -- return code: " + execution_environment_.return_code.out + "%N")
 					end
 					if not l_finished_file.exists then
-						print_output_message ("C compilation terminated with errors at " + (create {TIME}.make_now).formatted_out (default_time_format)
-							+ ".%NRun " + l_make_cmd + " in directory  " + base_directory + "  to see what has gone wrong.%N")
+						print_output_message (<< "C compilation terminated with errors at ", current_time, ".%NRun ", l_make_cmd,
+												" in directory  ", base_directory, "  to see what has gone wrong." >>)
 					else
-						print_output_message ("C compilation completed successfully at " + (create {TIME}.make_now).formatted_out (default_time_format) +"%N")
+						print_output_message (<< "C compilation completed successfully at ", current_time, "." >>)
 					end
 				end -- if will_perform_make
 			end -- if will_process_makefiles
-		end; -- make
+		end -- make
 
 --
 -----------------------------
@@ -263,8 +256,8 @@ feature -- Attributes
 		-- the eiffel runtime (runtime/finalized/workbench) object library (VMS filespec);
 		-- from EIFLIB macro definition (or deduced from the cecil target???)
 
-	start_time: STRING
-		-- will be the date/time string processing started ***TBS***
+	start_date_time: STRING
+		-- will be the date/time string processing started
 
 	will_process_makefiles: BOOLEAN
 		-- process makefiles in base_directory tree
@@ -275,10 +268,14 @@ feature -- Attributes
 	will_concatenate_source_files: BOOLEAN
 		-- if true, generate concatenated (big) source file in each subdirectory
 
+	will_concatenate_source_file_contents: BOOLEAN
+		-- if True, generate concatenated (big) source files by appending contents of individual source files,
+		-- else append a "#include" directive for each individual file
+
 	command_option_verbose: BOOLEAN
 		-- -v command line option
 
--- macro definitions encountered in each Makefile.SH (reset in open_files)
+-- macro definitions encountered in each Makefile.SH (reset in open_makefiles)
 	value_macro_OBJECTS, value_macro_OLDOBJECTS, value_macro_INCLUDE_PATH: STRING
 
 -- macro definitions encountered (expected) in top Makefile.SH
@@ -286,8 +283,7 @@ feature -- Attributes
 	value_macro_SUBDIRS: STRING
 
 
-
-	precompile_tag: STRING  =	"driver.exe"
+	precompile_tag: STRING  is	"driver.exe"
 	-- The tag that is used to determine that we are processing a precompile.
 	-- it was "precompile" in Eiffel3; it is "driver.exe" in Eiffel4 and Eiffel5
 
@@ -301,7 +297,7 @@ feature -- Attributes
 --		Result.compare_objects
 --	end
 
-	suppressed_macro_definitions: ARRAY [STRING]
+	suppressed_macro_definitions: ARRAY [STRING] is
 			-- macro definitions that are suppressed in the output Makefile
 			-- (unless handled as a special case in process_macro_definition)
 		once
@@ -309,7 +305,7 @@ feature -- Attributes
 			Result.compare_objects
 		end
 
-	echoed_unprocessed_macro_definitions: ARRAY [STRING]
+	echoed_unprocessed_macro_definitions: ARRAY [STRING] is
 			-- macro definitions that are always shown with unpreprocessed definition as a comment,
 			-- even if comment_prefix configuration option is not defined
 			-- includes suppressed_macro_definitions
@@ -324,14 +320,14 @@ feature -- Attributes
 			l_res.append_array (suppressed_macro_definitions)
 		end
 
-	unechoed_unprocessed_commands: ARRAY [STRING]
+	unechoed_unprocessed_commands: ARRAY [STRING] is
 			-- commands that are not echoed unprocessed as comments to output Makefile
 		once
 				Result := << "$(CC)","$(CPP)","$(X2C)", "$(RM)" >>
 				Result.compare_objects
 		end
 
-	unprocessed_targets: ES5SH_SET [STRING]
+	unprocessed_targets: ES5SH_SET [STRING] is
 			-- targets that are echoed without processing to  output Makefile
 		once
 			create Result.make_from_array (<< "sub_clean", "sub_clobber" >>)
@@ -339,11 +335,11 @@ feature -- Attributes
 		end
 
 ----------------------------------------------------------------------------
-feature -- Input/Output files
+feature -- Input/Output Makefiles
 --------------------------------------------------------------------------
 
-	open_files (a_subdirectory : STRING)
-			-- open input Makefile.SH and new Makefile in "current" (sub) directory
+	open_makefiles (a_subdirectory : STRING) is
+			-- open input Makefile.SH and new Makefile in `a_subdirectory' or
 			-- open in top level directory if a_subdirectory is Void
 		require
 			subdirectory_valid:	a_subdirectory = Void or else not a_subdirectory.is_empty
@@ -353,10 +349,10 @@ feature -- Input/Output files
 			file_path : DIRECTORY_NAME
 			l_msg, l_tag: STRING
 		do
-			-- (re)initialize all per-file values
-			value_macro_OBJECTS := Void
-			value_macro_OLDOBJECTS := Void
-			value_macro_INCLUDE_PATH := Void
+--			-- (re)initialize all per-file values
+--			value_macro_OBJECTS := Void
+--			value_macro_OLDOBJECTS := Void
+--			value_macro_INCLUDE_PATH := Void
 
 			-- open input file (Makefile.SH)
 			file_usage := "input"
@@ -367,7 +363,7 @@ feature -- Input/Output files
 			create file_name.make_from_string (file_path)
 			file_name.set_file_name ("Makefile.SH")
 			create in_makefile.make_open_read (file_name)
-			print_output_message ("  Processing " + in_makefile.name + "%N")
+			print_output_message (<< "  Processing ", in_makefile.name >>)
 			in_makefile.read_line
 
 			-- output file (Makefile.)
@@ -375,13 +371,18 @@ feature -- Input/Output files
 			create file_name.make_from_string (file_path)
 			file_name.set_file_name ("Makefile")
 			create out_makefile.make_open_write (file_name)
-			out_makefile.put_string (default_comment_prefix + " " + file_name + "%N")
-			out_makefile.put_string (default_comment_prefix + " generated by " + pretty_version + " at " + start_time + "%N")
-			out_makefile.put_string (default_comment_prefix + "   configuration file: " + configuration.file_name + "%N")
-			out_makefile.put_string (default_comment_prefix + "   " + value_eiffel_string
-									+ "  " + symbol_platform + "=" + value_platform + "%N%N")
+			out_makefile.put_line (<< default_comment_prefix, " ", file_name >>)
+			out_makefile.put_line (<< default_comment_prefix, " generated by ", pretty_version, " at " , start_date_time >>)
+			out_makefile.put_line (<< default_comment_prefix, "   configuration file: ", configuration.file_name >>)
+			out_makefile.put_line (<< default_comment_prefix, "   ", value_eiffel_string,
+									"  ", symbol_platform, "=", value_platform, "%N" >>)
 			put_comment_prefixed_line (" for replacing spaces with commas, viz. $(subst $(SPACE),$(COMMA),$(OBJECTS))")
-			out_makefile.put_string ("EMPTY =%NSPACE = $(EMPTY) $(EMPTY)%NCOMMA =,%N%N")
+			out_makefile.put_line (<< "EMPTY =%NSPACE = $(EMPTY) $(EMPTY)%NCOMMA =,%N" >>)
+
+		ensure
+			value_macros_are_void: value_macro_OBJECTS = Void and value_macro_OLDOBJECTS = Void and value_macro_INCLUDE_PATH = Void
+			input_makefile_open: in_makefile.is_open_read
+			output_makefile_open: out_makefile.is_open_write
 
 		rescue
 			l_msg := "Unable to open " + file_usage + " file " + file_name
@@ -395,19 +396,27 @@ feature -- Input/Output files
 			end
 			l_tag.append (" : " + exceptions_.meaning (exceptions_.exception))
 			print ("  " + l_tag + "%N")
-		end; -- open_files
+		end -- open_makefiles
 
 
-	close_files
-		-- close old and new makefile
+	close_makefiles is
+			-- close current Makefiles
 		do
+			-- (re)initialize all per-file values
+			value_macro_OBJECTS := Void
+			value_macro_OLDOBJECTS := Void
+			value_macro_INCLUDE_PATH := Void
 			in_makefile.close
 			out_makefile.close
-		end; -- close_files
+		ensure
+			value_macros_are_void: value_macro_OBJECTS = Void and value_macro_OLDOBJECTS = Void and value_macro_INCLUDE_PATH = Void
+			input_makefile_closed:  in_makefile.is_closed
+			output_makefile_closed: out_makefile.is_closed
+		end -- close_makefiles
 
 
-	current_input_file_name : STRING
-		-- the name of the current input file including the path ([.c1]Makefile.SH)
+	current_input_file_name : STRING is
+			-- the name of the current input file including the path ([.c1]Makefile.SH)
 		do
 			if in_makefile = Void then
 				print_error_message ("current_input_filename: in_makefile = Void!!!!%N")
@@ -415,7 +424,25 @@ feature -- Input/Output files
 			else
 				Result := in_makefile.name
 			end
-		end; -- current_input_file_name
+		end -- current_input_file_name
+
+
+	file_exists (a_name, a_ext: STRING; a_path: PATH_NAME): BOOLEAN
+			-- does a file named `a_name'.`a_ext' exist in `a_path?'
+		require
+			name_not_void: a_name /= Void
+			extension_not_void: a_ext /= Void
+			path_not_void: a_path /= Void
+		local
+			l_path: FILE_NAME
+			l_file: PLAIN_TEXT_FILE
+		do
+			create l_path.make_from_string (a_path)
+			l_path.set_file_name (a_name)
+			l_path.add_extension (a_ext)
+			create l_file.make (l_path)
+			Result := l_file.exists
+		end
 
 
 
@@ -428,7 +455,8 @@ feature -- Process arguments and configuration options
 -- If the path argument is specified, it generates Makefiles but does not perform the make.
 -- That behavior is still preserved, even after adding the processing of additional option arguments.
 
-	process_arguments
+	process_arguments is
+			-- process command line arguments
 		require
 			argument_0_is_command_name: arguments_.argument_array.lower = 0
 			argument_count_matches_array_upper: arguments_.argument_count = arguments_.argument_array.upper
@@ -438,6 +466,7 @@ feature -- Process arguments and configuration options
 			l_cmd, l_val: STRING
 			l_obj_file, l_obj_lib: BOOLEAN
 		do
+			--generate_object_libraries := generate_object_libraries_default
 			will_process_makefiles := True
 			will_perform_make := (arguments_.argument_count = 0)
 			will_concatenate_source_files := True
@@ -446,11 +475,13 @@ feature -- Process arguments and configuration options
 				print ("command: " + l_cmd + "%N")
 			end
 			-- check for -h (-help) argument; if found, display help message and ignore others.
-			if arguments_.argument_count >= 1 and then (arguments_.index_of_character_option ('?') > 0
+			if arguments_.argument_count >= 1 and then
+					(arguments_.argument (1).is_equal ("?") or else arguments_.argument (1).is_equal ("help")
+						or else arguments_.index_of_character_option ('?') > 0
 						or else arguments_.index_of_character_option ('h') > 0
 						or else arguments_.index_of_word_option ("help") > 0 ) then
-				print_help()
 				will_process_makefiles := False
+				print_help()
 			else
 				from
 					ii := 1		-- arguments_.argument_array.lower (arg[0] is command)
@@ -459,7 +490,6 @@ feature -- Process arguments and configuration options
 				loop
 					l_val := arguments_.argument_array.item(ii)
 					l_arg := arguments_.argument(ii)
-					--***tbs***
 					debug ("arguments")
 						print ("  debug: process argument " + ii.out + ": %"" + l_arg + "%" (" +  l_arg.count.out + ")%N")
 						from jj := 1; create l_val.make(l_arg.count * 2)
@@ -470,52 +500,87 @@ feature -- Process arguments and configuration options
 						end
 						print ("    " + l_arg.count.out + " characters: " + l_val + "%N")
 					end
-					if l_arg.count = 2 and then l_arg @ 1 = arguments_.option_sign then
-						inspect l_arg @ 2
-						when 'h' then	--	-help
-							print_help()
-							will_process_makefiles := False
-						when 'b' then	--	-build (synonyum for -make)
-							will_perform_make := True
-						when 'm' then	--	-make (synonym for -build)
-							will_perform_make := True
-						when 'c' then	--  -config <file>
-							if ii < arguments_.argument_count then
-								ii := ii + 1
-								create configuration_file_name.make_from_string (arguments_.argument(ii) )
-							else
-								print_error_message ("-c option requires <configuration_file>%N")
+					if l_arg.starts_with ("?") then
+						will_process_makefiles := False
+						print_help
+					elseif l_arg.count >= 2 and then l_arg @ 1 = arguments_.option_sign.item then
+							-- argument starts with a '-'
+						if l_arg.count = 2 then
+								-- single character argument
+							inspect l_arg @ 2
+							when '?' then	--	-help
 								will_process_makefiles := False
-							end
-						when 'l' then
-							if l_obj_file then
-								print_warning_message ("-l option conflicts with -o; -o ignored%N")
+								print_help()
+							when 'h' then	--	-help
+								will_process_makefiles := False
+								print_help()
+							when 'b' then	--	-build (synonyum for -make)
+								will_perform_make := True
+							when 'm' then	--	-make (synonym for -build)
+								will_perform_make := True
+							when 'c' then	--  -config <file>
+								if ii < arguments_.argument_count then
+									ii := ii + 1
+									create configuration_file_name.make_from_string (arguments_.argument(ii) )
+								else
+									print_error_message ("-c option requires <configuration_file>%N")
+									will_process_makefiles := False
+								end
+							when 'd' then
+									-- generate verbose (debug) messages
+								command_option_verbose := True
+							when 'l' then
+								if l_obj_file then
+									print_warning_message ("-l option conflicts with -o; -o ignored%N")
+									print_usage()
+								end
+								generate_object_libraries := True
+								l_obj_lib := True
+							when 'o' then
+								if l_obj_lib then
+									print_warning_message ("-o option conflicts with -l; -l ignored%N")
+									print_usage()
+								end
+								generate_object_libraries := False
+								l_obj_file := True
+							when 'q' then
+								command_option_verbose := False
+							when 's' then
+								will_concatenate_source_file_contents := True
+							when 't' then	--	-test
+								will_process_makefiles := False
+								will_perform_make := False
+								test()
+							when 'v' then	--	display version and exit
+								--print_version
+								will_process_makefiles := False
+							when 'y' then
+								command_option_verbose := True
+							when 'z' then	--	-z (dont concatenate source files)
+								will_concatenate_source_files := False
+							else
+								print_error_message ("invalid option: " + l_arg + "%N")
 								print_usage()
-							end
-							generate_object_libraries := True
-							l_obj_lib := True
-						when 'o' then
-							if l_obj_lib then
-								print_warning_message ("-o option conflicts with -l; -l ignored%N")
-								print_usage()
-							end
-							generate_object_libraries := False
-							l_obj_file := True
-						when 'q' then
-							command_option_verbose := False
-						when 't' then	--	-test
-							will_process_makefiles := False
-							will_perform_make := False
-							test()
-						when 'v' then	--	-verbose
-							command_option_verbose := True
-						when 'z' then	--	-z (dont concatenate source files)
-							will_concatenate_source_files := False
+								will_process_makefiles := False
+							end -- inspect
 						else
-							print_error_message ("invalid option: " + l_arg + "%N")
-							print_usage()
-							will_process_makefiles := False
-						end -- inspect
+							l_val := l_arg.substring (2, l_arg.count)
+							if l_val.is_equal ("help") then
+								will_process_makefiles := False
+								print_help
+							elseif l_val.is_equal ("help") then
+								will_process_makefiles := False
+								print_help
+							elseif l_val.is_equal ("verbose") then
+								command_option_verbose := True
+							elseif l_val.is_equal ("version") then
+								will_process_makefiles := False
+							else
+								will_process_makefiles := False
+								print_error_message ("invalid option: " + l_arg + "%N")
+								print_usage()
+							end
+						end
 					else
 						if ii = arguments_.argument_count then
 							create base_directory.make_from_string (arguments_.argument(ii))
@@ -528,14 +593,18 @@ feature -- Process arguments and configuration options
 					ii := ii + 1
 				end -- loop
 			end -- if -help not found in arguments
-		end; -- process_arguments
+			if not will_process_makefiles then
+				will_perform_make := False
+			end
+		end -- process_arguments
 
 
 -------------------------------------------------------------------------
 feature --  Process Makefile.SH files
 -----------------------------------------------------------------------
 
-	process_makefiles
+
+	process_makefiles is
 		do
 			create application_dependencies.make_empty
 			create dependent_subdirectories.make_empty
@@ -547,7 +616,7 @@ feature --  Process Makefile.SH files
 		end
 
 
-	process_top_level_makefile
+	process_top_level_makefile is
 			-- create a new Makefile for the top level
 		require
 			no_current_input_file:	in_makefile = Void
@@ -557,7 +626,7 @@ feature --  Process Makefile.SH files
 			check
 				dependent_subdirectories_off_initially: dependent_subdirectories.off
 			end
-			open_files (Void)
+			open_makefiles (Void)
 			process_case_stmt ()
 			process_case_stmt ()
 			process_echo_stmt ()
@@ -577,12 +646,12 @@ feature --  Process Makefile.SH files
 				dependent_subdirectories_off_after_process_spit2: dependent_subdirectories.off
 			end
 			--process_remainder()
-			close_files
 			produce_link_dot_com
+			close_makefiles
 		end -- process_top_level_makefile
 
 
-	process_subdirectory_makefiles
+	process_subdirectory_makefiles is
 			-- process Makefiles in each of `dependent_subdirectories'
 		local
 			l_saved_index: INTEGER
@@ -593,7 +662,7 @@ feature --  Process Makefile.SH files
 				dependent_subdirectories.off
 			loop
 				l_saved_index := dependent_subdirectories.index	-- ***debug***
-				open_files (dependent_subdirectories.item)
+				open_makefiles (dependent_subdirectories.item)
 				process_case_stmt ()
 				process_case_stmt ()
 				process_echo_stmt ()
@@ -601,18 +670,18 @@ feature --  Process Makefile.SH files
 				process_spit2_block (Void)
 				out_makefile.flush
 				--process_remainder ()
-				close_files
-				--produce_make_dot_com (dependent_subdirectories.item)
 				if will_produce_concatenated_source_file_in (dependent_subdirectories.item) then
 					produce_concatenated_source_file (dependent_subdirectories.item)
 				end
+				close_makefiles
+				--produce_make_dot_com (dependent_subdirectories.item)
 				check
 					dependent_subdirectories_position_unchanged:
 						l_saved_index = dependent_subdirectories.index
 				end
 				dependent_subdirectories.forth
 			end
-		end; -- process_subdirectory_makefiles
+		end -- process_subdirectory_makefiles
 
 
 
@@ -620,7 +689,7 @@ feature --  Process Makefile.SH files
 feature -- Process elements of Makefile.SH
 --------------------------------------------------------------------------
 
-	process_case_stmt ()
+	process_case_stmt () is
 			-- process a case block by ignoring it
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -634,7 +703,7 @@ feature -- Process elements of Makefile.SH
 				--starts_with_symbol (in_makefile.last_string, "case")
 				not token1.is_empty
 			loop
-				out_makefile.put_string (in_makefile.last_string + "%N")
+				out_makefile.put_line (<< in_makefile.last_string >>)
 				in_makefile.read_line
 				token1 := first_token (in_makefile.last_string)
 			end
@@ -656,10 +725,10 @@ feature -- Process elements of Makefile.SH
 				in_makefile.read_line
 			end
 			in_makefile.read_line
-		end; -- process_case_stmt
+		end -- process_case_stmt
 
 
-	process_echo_stmt
+	process_echo_stmt  is
 			-- process an echo statement by ignoring it
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -679,7 +748,7 @@ feature -- Process elements of Makefile.SH
 		end
 
 
-	get_spitshell_end_tag : STRING
+	get_spitshell_end_tag : STRING is
 			-- the tag that ends the spitshell block on the current line of the input makefile
 			-- if the tag is quoted (with single quotes), remove the enclosing quote characters
 			-- read the next input line
@@ -700,10 +769,10 @@ feature -- Process elements of Makefile.SH
 			end
 			in_makefile.read_line
 			end
-		end; -- get_spitshell_end_tag
+		end -- get_spitshell_end_tag
 
 
-	process_spit1_block ()
+	process_spit1_block () is
 			-- process the first spitshell block (contains macro definitions)
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -721,7 +790,7 @@ feature -- Process elements of Makefile.SH
 					out_makefile.put_new_line
 					in_makefile.read_line
 				elseif in_makefile.last_string @ 1 = '#' then
-					out_makefile.put_string (in_makefile.last_string + "%N")
+					out_makefile.put_line (<< in_makefile.last_string >>)
 					in_makefile.read_line
 				elseif (is_macro_definition (in_makefile.last_string)) then
 					process_macro_definition()
@@ -740,10 +809,10 @@ feature -- Process elements of Makefile.SH
 			debug
 				print ("Done with first spitshell block..." + in_makefile.last_string + "%N")
 			end -- debug
-		end;  -- process_spit1_block
+		end  -- process_spit1_block
 
 
-	process_spit2_block (a_end_tag: STRING)
+	process_spit2_block (a_end_tag: STRING) is
 			-- process second spitshell block (contains dependency rules)
 			-- for top level makefile, this is called after the objects and subdirectories and stuff
 			-- to process the rest of the block.
@@ -772,7 +841,7 @@ feature -- Process elements of Makefile.SH
 					out_makefile.put_new_line
 					in_makefile.read_line
 				elseif in_makefile.last_string @ 1 = '#' then
-					out_makefile.put_string (in_makefile.last_string + "%N")
+					out_makefile.put_line (<< in_makefile.last_string >>)
 					in_makefile.read_line
 				elseif is_macro_definition (in_makefile.last_string) then
 					process_macro_definition ()
@@ -781,7 +850,7 @@ feature -- Process elements of Makefile.SH
 				else
 					-- what else could this line be? Don't know; just output it as a comment
 					print_makefile_warning ("process_spit2_block: unprocessed line")
-					out_makefile.put_string (default_comment_prefix + " Warning: unprocessed: " + in_makefile.last_string + "%N")
+					out_makefile.put_line (<< default_comment_prefix, " Warning: unprocessed: ", in_makefile.last_string >>)
 					in_makefile.read_line
 				end
 			end -- loop until end of file or end of spitshell block
@@ -816,7 +885,7 @@ feature -- Process elements of Makefile.SH
 --		end
 
 
-	process_rule ()
+	process_rule () is
 			-- process target definition:    <target>... : [ <prerequisite>... ]
 			-- and following command and comment lines
 		require
@@ -834,7 +903,7 @@ feature -- Process elements of Makefile.SH
 			--if not is_whitespace (in_makefile.last_string @ 1) and then in_makefile.last_string.has (':') then
 			if l_colon_pos <= 0 or else is_whitespace (in_makefile.last_string @ 1) then
 				print_makefile_error ("process_rule: non target rule encountered")
-				out_makefile.put_string (in_makefile.last_string + "%N")
+				out_makefile.put_line (<< in_makefile.last_string >>)
 			else
 					-- a rule (dependency specification):  <target>... : [ <prerequisite>... ] (colon may be double)
 				l_target := in_makefile.last_string.substring (1, l_colon_pos -1)
@@ -853,7 +922,7 @@ feature -- Process elements of Makefile.SH
 					in_makefile.last_string.append_character (' ')
 					in_makefile.last_string.replace_substring_all (".o ", ".obj ")
 					in_makefile.last_string.right_adjust
-					out_makefile.put_string (in_makefile.last_string + "%N")
+					out_makefile.put_line (<< in_makefile.last_string >>)
 					in_makefile.read_line	-- consume current line
 				elseif l_target.is_equal ("all")  then
 					process_rule_all (l_target, l_prereq)
@@ -877,48 +946,48 @@ feature -- Process elements of Makefile.SH
 					--in_makefile.last_string.replace_substring_all (".o", generated_object_file_type)
 					l_target.replace_substring_all (".o", generated_object_file_type)
 					if generate_object_libraries or else dependent_subdirectories.off then
-						--out_makefile.put_string (in_makefile.last_string + "%N")
+						--out_makefile.put_line (<< in_makefile.last_string >>)
 					else
 						l_con_src := concatenated_source_file_name (dependent_subdirectories.item)
 						--in_makefile.last_string.replace_substring_all ("$(OBJECTS)", l_con_src + ".c")
-						--out_makefile.put_string (in_makefile.last_string + "%N")
+						--out_makefile.put_line (<< in_makefile.last_string >>)
 						l_prereq.replace_substring_all  ("$(OBJECTS)", l_con_src + ".c")
 					end
-					out_makefile.put_string (l_target + " : " + l_prereq + "%N")
+					out_makefile.put_line (<< l_target, " : ", l_prereq >>)
 					skip_rule_commands
 					if generate_object_libraries or else dependent_subdirectories.off then
 						if configuration.target_gnu_make then
-							out_makefile.put_string ("%Tlibrary/create $@ $(subst $(SPACE),$(COMMA),$(OBJECTS))%N")
+							out_makefile.put_line (<< "%Tlibrary/create $@ $(subst $(SPACE),$(COMMA),$(OBJECTS))" >>)
 						else
-							out_makefile.put_string ("%Tlibrary/create $@ *.obj%N")
+							out_makefile.put_line (<< "%Tlibrary/create $@ *.obj" >>)
 							if l_target.substring_index ("Eobj1.olb", 1) > 0 then
-								out_makefile.put_string ("%T- if f$search(%"emain.obj%") .nes. %"%" then library/delete=emain $@%N")
+								out_makefile.put_line (<< "%T- if f$search(%"emain.obj%") .nes. %"%" then library/delete=emain $@" >>)
 							end
 						end
 					else
-						--out_makefile.put_string ("#%T$(CP) $(subst $(SPACE),$(COMMA),$(OBJECTS)) $@%N")
-						out_makefile.put_string ("%T$(CC) $</obj=$@ $(CFLAGS)%N")
+						--out_makefile.put_line (<< "#%T$(CP) $(subst $(SPACE),$(COMMA),$(OBJECTS)) $@%N")
+						out_makefile.put_line (<< "%T$(CC) $</obj=$@ $(CFLAGS)" >>)
 					end
 					if configuration.has ("create_test") then
-						out_makefile.put_string ("%T$(CREATE_TEST)%N")
+						out_makefile.put_line (<< "%T$(CREATE_TEST)" >>)
 					end
 					out_makefile.put_new_line
 				elseif FALSE AND THEN unprocessed_targets.has (l_target) then
 					delimit_target_colon (in_makefile.last_string)
-					out_makefile.put_string (in_makefile.last_string +"%N")
+					out_makefile.put_line (<< in_makefile.last_string >>)
 					echo_rule_commands
 				else
 						-- generic target
 					delimit_target_colon (in_makefile.last_string)
 					--perform_inchoate_replacements (in_makefile.last_string)
-					out_makefile.put_string (in_makefile.last_string +"%N")
+					out_makefile.put_line (<< in_makefile.last_string >>)
 					process_rule_commands (l_target, l_prereq)
 				end
 			end -- (is target definition)
-		end; -- process_rule
+		end -- process_rule
 
 
-	process_suffix_rule (a_target: STRING)
+	process_suffix_rule (a_target: STRING) is
 			-- process a suffix rule (eg.  .c.o:)
 		require
 			input_file_readable: in_makefile /= Void  and then in_makefile.is_open_read
@@ -941,7 +1010,7 @@ feature -- Process elements of Makefile.SH
 			if l_target.is_equal (".o") then
 				l_target := ".obj"
 			end
-			out_makefile.put_string (l_source + l_target + " :%N")
+			out_makefile.put_line (<< l_source, l_target, " :" >>)
 			if True then
 				process_rule_commands (l_source + l_target, "")
 --			else
@@ -953,14 +1022,14 @@ feature -- Process elements of Makefile.SH
 --				loop
 --					in_makefile.last_string.replace_substring_all (" -c", "")
 --					--perform_inchoate_replacements (in_makefile.last_string)
---					out_makefile.put_string (in_makefile.last_string + "%N")
+--					out_makefile.put_line (<< in_makefile.last_string >>)
 --					in_makefile.read_line
 --				end -- loop
 			end
 		end -- end process_suffix_rule
 
 
-	process_subdirectory_rule (a_target, a_prerequisite: STRING)
+	process_subdirectory_rule (a_target, a_prerequisite: STRING) is
 			-- process a subdirectory rule (eg.  X99/Xobj99.o: Makefile)
 		require
 			input_file_readable: in_makefile /= Void  and then in_makefile.is_open_read
@@ -1016,40 +1085,40 @@ feature -- Process elements of Makefile.SH
 			elseif l_target_file.is_equal (subdirectory_object_filename(l_target_dir)) then
 					-- emit the commands for building the target subdirectory object,
 					-- skip past the current line and all its directives
-				out_makefile.put_string (l_target + " : " + l_prereq + "%N")
+				out_makefile.put_line (<< l_target, " : ", l_prereq >>)
 				skip_rule_commands
-				--out_makefile.put_string ("%T" + configuration.ignore_prefix + ...
-						--+ platform_specific_file_name (<<"studio","spec">>, <<"bin">>, "make.vms ") + " "
-						--+ "ISE_EIFFEL:[studio.spec." + value_platform + ".bin]make.vms " + l_target_dir_vms + "%N")
-				out_makefile.put_string (subdirectory_make_command (l_target_dir_vms, Void) + "%N")
+				--out_makefile.put_line (<< "%T", configuration.ignore_prefix,
+				--		platform_specific_file_name (<<"studio","spec">>, <<"bin">>, "make.vms "), " ",
+				--		"ISE_EIFFEL:[studio.spec.", value_platform, ".bin]make.vms ", l_target_dir_vms >>)
+				out_makefile.put_line (<< subdirectory_make_command (l_target_dir_vms, Void) >>)
 			elseif l_target_file.is_equal ("Makefile") then	-- ****FIXME**** make case insensitive comparison??
 					-- skip this subdirectory rule, output comment
 				--put_comment_prefixed_line (l_target + " : " + l_prereq)
-				out_makefile.put_string (l_target + " : " + l_prereq + "%N")
+				out_makefile.put_line (<< l_target, " : ", l_prereq >>)
 				skip_rule_commands
 				put_comment_prefixed_line ("%T(Makefile generated by finish_freezing/" + pretty_name + ")")
 			elseif l_target_file.is_equal ("emain") then
 				-- emit copy command for emain template
-				out_makefile.put_string (l_target + " : " + l_prereq + "%N")
+				out_makefile.put_line (<< l_target, " : ", l_prereq >>)
 				skip_rule_commands
 				-- force target extension to uppercase to workaround MMS suffix rule case sensitivity bug:
 				-- MMS does not run .c.obj: or .C.obj: rule for .c file (must be .C) on ODS5 volume
-				--out_makefile.put_string ("%TCOPY  "
+				--out_makefile.put_line (<< "%TCOPY  "
 				--		+ platform_specific_file_name (<<"studio","config">>, <<"templates">>, "emain.template")
 				--		+ "  " + l_target_dir_vms + "emain.C %N")
-				--out_makefile.put_string ("%T- COPY  " + emain_vms + "  " + l_target_dir_vms + "emain.C %N")
-				out_makefile.put_string ("%T" + configuration.ignore_prefix
-						+ "$(CP) ISE_EIFFEL:[studio.config.$(ISE_PLATFORM).templates]emain.template [.E1]emain.c%N")
-				out_makefile.put_string (subdirectory_make_command ("[.E1]", "emain.obj") + "%N")
+				--out_makefile.put_line (<< "%T- COPY  " + emain_vms + "  " + l_target_dir_vms + "emain.C %N")
+				out_makefile.put_line (<< "%T", configuration.ignore_prefix,
+							"$(CP) ISE_EIFFEL:[studio.config.$(ISE_PLATFORM).templates]emain.template [.E1]emain.c" >>)
+				out_makefile.put_line (<< subdirectory_make_command ("[.E1]", "emain.obj") >>)
 			else
-				out_makefile.put_string (l_target + " : " + l_prereq + "%N")
+				out_makefile.put_line (<< l_target, " : ", l_prereq >>)
 				--process_target_prerequisites
 				process_rule_commands (l_target, l_prereq)
 				end
-		end; -- process_subdirectory_rule
+		end -- process_subdirectory_rule
 
 
-	process_rule_all (a_target, a_prerequisite: STRING)
+	process_rule_all (a_target, a_prerequisite: STRING) is
 			-- process all: target
 			-- If this is the top level makefile, it will be  all: <appl>  (all: hello)
 			-- If a subdirectory, it will be   all: <subdirectory_object>  (all: Cobj1.o)
@@ -1080,10 +1149,10 @@ feature -- Process elements of Makefile.SH
 				else
 					l_appl_exe := application_name + ".exe"
 				end
-				out_makefile.put_string ("all : " + l_appl_exe + "%N")
+				out_makefile.put_line (<< "all : ", l_appl_exe >>)
 				skip_rule_commands
-				out_makefile.put_string ("%Topen/write fn complete.eif%N")
-				-- out_makefile.put_string ("%Tclose/nolog fn%N")
+				out_makefile.put_line (<< "%Topen/write fn complete.eif" >>)
+				-- out_makefile.put_line (<< "%Tclose/nolog fn" >>)
 				-- (file will be closed automatically, and this makes GNU make burp)
 				-- (because it spawns a new subprocess for each command)
 
@@ -1096,17 +1165,17 @@ feature -- Process elements of Makefile.SH
 						and then l_line.substring_index ("emain.obj", 1) = 0 then
 					l_line.replace_substring_all ("Eobj1" + generated_object_file_type, "Eobj1" + generated_object_file_type + " emain.obj")
 				end
-				out_makefile.put_string (l_line + "%N")
+				out_makefile.put_line (<< l_line >>)
 				skip_rule_commands
 				-- adding this line keeps MMS (and MMK?) from printing a warning. No effect with GNU make. ***FIXME*** MMS/MMK specific
 				if not configuration.target_gnu_make then
-					out_makefile.put_string ("%Tcontinue%N")
+					out_makefile.put_line (<< "%Tcontinue" >>)
 				end
 			end
 		end -- process_rule_all
 
 
-	process_rule_application (a_target, a_prerequisite: STRING)
+	process_rule_application (a_target, a_prerequisite: STRING) is
 			-- Process application target, eg:  <appl>: $(OBJECTS) E1/emain.o Makefile
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -1127,25 +1196,25 @@ feature -- Process elements of Makefile.SH
 
 			if configuration.comment_prefix /= Void then
 					-- output dependent_subdirectories and application_dependencies
-				out_makefile.put_string ("%N" + configuration.comment_prefix + " dependent_subdirectories:");
+				out_makefile.put_text (<< "%N", configuration.comment_prefix, " dependent_subdirectories:" >>)
 				from  dependent_subdirectories.start
 				until dependent_subdirectories.after
 				loop
-					out_makefile.put_string (" " + dependent_subdirectories.item)
+					out_makefile.put_text (<< " ", dependent_subdirectories.item >>)
 					dependent_subdirectories.forth
 				end -- loop to print out dependent_subdirectories
-				out_makefile.put_string ("%N" + configuration.comment_prefix + " application_dependencies:");
+				out_makefile.put_text (<< "%N", configuration.comment_prefix, " application_dependencies:" >>)
 				from  application_dependencies.start
 				until application_dependencies.after
 				loop
-					out_makefile.put_string (" " + application_dependencies.item)
+					out_makefile.put_text (<< " ", application_dependencies.item >>)
 					application_dependencies.forth
 				end -- loop to print out application_dependencies
 				out_makefile.put_string ("%N%N")
 			end
 
 			put_comment_prefixed_line (in_makefile.last_string)
-			--out_makefile.put_string (l_appl_rule + "%N")
+			--out_makefile.put_line (<< l_appl_rule >>)
 			create l_appl_rule.make_from_string (in_makefile.last_string)
 			l_target := first_token (l_appl_rule)
 			if l_target.is_equal (precompile_tag) then
@@ -1167,7 +1236,7 @@ feature -- Process elements of Makefile.SH
 			-- replace target string <appl>.exe or preobj_tag
 			l_colon_pos := l_appl_rule.index_of (':', 1)
 			l_appl_rule.replace_substring (l_line, 1, l_colon_pos)
-			out_makefile.put_string (l_appl_rule + "%N")
+			out_makefile.put_line (<< l_appl_rule >>)
 
 			-- position at first space
 
@@ -1196,7 +1265,7 @@ feature -- Process elements of Makefile.SH
 					strip_continuation (in_makefile.last_string)
 				end
 				if configuration.comment_prefix /= Void then
-					out_makefile.put_string (configuration.comment_prefix + in_makefile.last_string + "%N")
+					out_makefile.put_line (<< configuration.comment_prefix, in_makefile.last_string >>)
 				end
 
 				l_pos := in_makefile.last_string.index_of ('#', 1);
@@ -1237,7 +1306,7 @@ feature -- Process elements of Makefile.SH
 			end -- loop
 
 			-- write out the the action lines to build the appl
-			out_makefile.put_string ("%T" + configuration.commandfile + "link.com%N")
+			out_makefile.put_line (<< "%T" + configuration.commandfile + "link.com" >>)
 			if precompiled_library /= Void then
 				precompiled_library.left_adjust
 				precompiled_library.replace_substring_all ("\", "")
@@ -1254,10 +1323,10 @@ feature -- Process elements of Makefile.SH
 					application_dependencies.forth
 				end
 			end -- debug
-		end;  -- process_rule_application
+		end  -- process_rule_application
 
 
-	process_rule_cecil (a_target, a_prerequisite: STRING)
+	process_rule_cecil (a_target, a_prerequisite: STRING) is
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
 			is_cecil_target_definition:	starts_with (in_makefile.last_string, "cecil:")
@@ -1272,7 +1341,7 @@ feature -- Process elements of Makefile.SH
 				until
 					starts_with_symbol (in_makefile.last_string, "clean")
 				loop
-					out_makefile.put_string ("#! " + in_makefile.last_string + "%N")
+					out_makefile.put_line (<< "#! ", in_makefile.last_string >>)
 					in_makefile.read_line
 				end --
 				out_makefile.put_new_line
@@ -1311,9 +1380,8 @@ feature -- Process elements of Makefile.SH
 				end
 				deletable_objects := eiffel_library + ".obj;*"
 				-- extract modules from eiffel runtime library (finalized, mtfinalized, wkbench, runtime, or whatever)
-				out_makefile.put_string ("%Tlibrary/extract=*/output=eifrtlib.obj ")
-				--out_makefile.put_string (eiffel_library + ".obj " + eiffel_library_filespec + "%N")
-				out_makefile.put_string ("$(EIFLIB)%N")
+				out_makefile.put_line (<< "%Tlibrary/extract=*/output=eifrtlib.obj ", -- eiffel_library, ".obj ", eiffel_library_filespec >>)
+								"$(EIFLIB)%N" >>)
 
 				-- next line is "ar cr lib<appl>.a ...", ignore
 				in_makefile.read_line
@@ -1330,14 +1398,11 @@ feature -- Process elements of Makefile.SH
 					out_makefile.put_new_line
 					deletable_objects.append (",preobj.obj;*")
 				end
-				out_makefile.put_string ("%Tlibrary/create ")
-				out_makefile.put_string (application_name); out_makefile.put_string (".olb  *.obj,[.*]*.obj %N")
-				--out_makefile.put_string ("%T- if f$$search(%"emain.obj%") .nes. %"%" then library/delete=emain $@%N")
-				out_makefile.put_string ("%T- if ")
-				out_makefile.put_string (DCL_quoted_word ("f$search"))
-				out_makefile.put_string ("(%"emain.obj%") .nes. %"%" then library/delete=emain $@%N")
+				out_makefile.put_line (<< "%Tlibrary/create ", application_name, ".olb  *.obj,[.*]*.obj" >>)
+				--out_makefile.put_line (<< "%T- if f$$search(%"emain.obj%") .nes. %"%" then library/delete=emain $@%N")
+				out_makefile.put_line (<< "%T- if ", DCL_quoted_word ("f$search"), "(%"emain.obj%") .nes. %"%" then library/delete=emain $@" >>)
 				if deletable_objects /= Void then
-					out_makefile.put_string ("%T-delete " + deletable_objects + "%N")
+					out_makefile.put_line (<< "%T-delete ", deletable_objects >>)
 				end
 
 				-- ignore remaining lines...
@@ -1353,10 +1418,10 @@ feature -- Process elements of Makefile.SH
 					in_makefile.read_line
 				end
 			end
-		end; -- process_rule_cecil
+		end -- process_rule_cecil
 
 
-	process_target_prerequisites (a_dependents : STRING; initial_pos : INTEGER)
+	process_target_prerequisites (a_dependents : STRING; initial_pos : INTEGER) is
 			-- process prerequisites (dependents) of a target:
 			--  replace macro references with their values;
 			--  for each "word", translate filespec to VMS syntax if it is a unix filespec and
@@ -1411,10 +1476,10 @@ feature -- Process elements of Makefile.SH
 				end -- special word handling
 				start_pos := next_word_index (a_dependents, end_pos)
 			end -- loop: for each word in a_dependents
-		end; -- process_target_prerequisites
+		end -- process_target_prerequisites
 
 
-	process_rule_commands (a_target, a_prerequisite: STRING)
+	process_rule_commands (a_target, a_prerequisite: STRING) is
 			-- process the commands of the current target definition:
 			-- skip the current line (target rule dependency definition),
 			-- process successive lines (commands) that begin with comment or whitespace character.
@@ -1423,7 +1488,7 @@ feature -- Process elements of Makefile.SH
 			output_file_writable:   out_makefile /= Void and then out_makefile.extendible
 			target_exists_nonblank: a_target /= Void and then not a_target.is_empty
 		local
-			l_words: ROSE_DELIMITED_TEXT
+			l_words: DELIMITED_TEXT
 			l_cmd, l_source, l_target, l_directory: STRING
 		do
 			if unprocessed_targets.has (a_target) then
@@ -1441,7 +1506,7 @@ feature -- Process elements of Makefile.SH
 						put_comment_prefixed_line (in_makefile.last_string)
 					end
 --					perform_inchoate_replacements (in_makefile.last_string)
---					out_makefile.put_string (in_makefile.last_string + "%N")
+--					out_makefile.put_line (<< in_makefile.last_string >>)
 					from
 						l_words.start
 						l_directory := ""
@@ -1455,7 +1520,7 @@ feature -- Process elements of Makefile.SH
 							l_words.remove
 							l_target := l_words.first
 							l_words.remove
-							out_makefile.put_string ("%T" + l_cmd + " " + l_source + " " + l_target + "%N")
+							out_makefile.put_line (<< "%T", l_cmd, " ", l_source, " ", l_target >>)
 						elseif l_cmd.is_equal (";") then
 							do_nothing
 						elseif l_cmd.is_equal ("cd") then
@@ -1472,7 +1537,7 @@ feature -- Process elements of Makefile.SH
 									l_target.append (generated_object_file_type)
 								end
 							end
-							out_makefile.put_string (subdirectory_make_command (l_directory, l_target) + "%N")
+							out_makefile.put_line (<< subdirectory_make_command (l_directory, l_target) >>)
 						elseif l_cmd.is_equal ("$(RM)") then
 							from
 								l_target := ""
@@ -1491,22 +1556,22 @@ feature -- Process elements of Makefile.SH
 								end
 								l_target.append (l_source + ";*")
 							end
-							out_makefile.put_string ("%T" + l_cmd + " " + l_target + "%N")
+							out_makefile.put_line (<< "%T", l_cmd, " ", l_target >>)
 						else
 							--print_makefile_error ("process_rule_commands: unknown command %"" + l_cmd + "%"")
 							--skip_rule_commands
 							perform_inchoate_replacements (in_makefile.last_string)
-							out_makefile.put_string (in_makefile.last_string + "%N")
+							out_makefile.put_line (<< in_makefile.last_string >>)
 							l_words.wipe_out
 						end
 					end -- loop on words
 					in_makefile.read_line
 				end -- loop on in_makefile
 			end
-		end; -- process_rule_commands
+		end -- process_rule_commands
 
 
-	echo_rule_commands
+	echo_rule_commands is
 			-- skip past the current target definition and echoes its commands
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -1518,13 +1583,13 @@ feature -- Process elements of Makefile.SH
 				in_makefile.end_of_file or else in_makefile.last_string.is_empty or else
 						not is_whitespace (in_makefile.last_string @ 1)
 			loop
-				out_makefile.put_string (in_makefile.last_string + "%N")
+				out_makefile.put_line (<< in_makefile.last_string >>)
 				in_makefile.read_line
 			end -- read in_makefile loop
-		end; -- echo_rule_commands
+		end -- echo_rule_commands
 
 
-	skip_rule_commands
+	skip_rule_commands is
 			-- skip past the current target definition and its commands:
 			-- skip successive lines (directives) until we come to the next target entry -
 			-- (a line beginning with nonblank/noncomment character)
@@ -1542,15 +1607,15 @@ feature -- Process elements of Makefile.SH
 						not (in_makefile.last_string @ 1 = '#' or is_whitespace (in_makefile.last_string @ 1))
 			loop
 				if configuration.comment_prefix /= Void then
-					out_makefile.put_string (configuration.comment_prefix + in_makefile.last_string + "%N")
+					out_makefile.put_line (<< configuration.comment_prefix, in_makefile.last_string >>)
 				end
 				in_makefile.read_line
 			end -- read in_makefile loop
-		end; -- skip_rule_commands
+		end -- skip_rule_commands
 
 
 
-	perform_inchoate_replacements (a_str : STRING)
+	perform_inchoate_replacements (a_str : STRING) is
 			-- Perform general replacements that are needed because we don't parse the makefile lines
 			-- and act on them intelligently, just blindly perform replacements.
 			-- these are done in process_externals, process_spit2_line, etc.
@@ -1589,7 +1654,7 @@ feature -- Process elements of Makefile.SH
 						configuration.item ("rm").substring_index ("del" , 1) > 0 then
 					if build_precompile then
 						a_str.replace_substring_all ("%T$(RM)", "#%T$(RM)")
-						out_makefile.put_string ("#%T-- files not deleted for precompile...%N")
+						out_makefile.put_line (<< "#%T-- files not deleted for precompile..." >>)
 					else
 						a_str.append (";*")
 					end
@@ -1604,10 +1669,10 @@ feature -- Process elements of Makefile.SH
 					end
 				end
 			end -- a_str not is_empty
-		end; -- perform_inchoate_replacements
+		end -- perform_inchoate_replacements
 
 
-	subdirectory_name (a_subdir: STRING): STRING
+	subdirectory_name (a_subdir: STRING): STRING is
 			-- returns a subdirectory name, stripped of all path delimiters
 		require
 			subdirectory_exists: a_subdir /= Void
@@ -1627,10 +1692,10 @@ feature -- Process elements of Makefile.SH
 					ii := ii + 1
 				end
 			end -- loop
-		end;
+		end
 
 
-	subdirectory_object_filename (a_subdir: STRING): STRING
+	subdirectory_object_filename (a_subdir: STRING): STRING is
 			-- the file name (less extension) of the object file for a subdirectory (eg. Cobj1 for subdirectory C1/)
 		require
 			subdirectory_nonblank: a_subdir /= Void and then not a_subdir.is_empty
@@ -1641,7 +1706,7 @@ feature -- Process elements of Makefile.SH
 		end
 
 
-	is_current_subdirectory_object_file (a_fil: STRING): BOOLEAN
+	is_current_subdirectory_object_file (a_fil: STRING): BOOLEAN is
 			-- is `a_file' the object filename (including extension) for the current subdirectory (eg. Cobj3.o for C3/)?
 		do
 			if not dependent_subdirectories.off then
@@ -1650,7 +1715,7 @@ feature -- Process elements of Makefile.SH
 			end
 		end
 
-	is_subdirectory_object_file (a_fil, a_subdir: STRING): BOOLEAN
+	is_subdirectory_object_file (a_fil, a_subdir: STRING): BOOLEAN is
 			-- is `a_fil' the object file for `a_subdir' (eg. Cobj99.o of C99/)?
 		do
 			Result := a_fil.is_equal (subdirectory_object_filename (a_subdir) + ".o")
@@ -1661,7 +1726,7 @@ feature -- Process elements of Makefile.SH
 feature -- Produce output files
 --------------------------------------------------------------------------
 
-	produce_link_dot_com
+	produce_link_dot_com is
 			-- generate link.com (DCL command procedure) from application_dependencies
 		require
 			application_dependencies_exists:	application_dependencies /= Void
@@ -1669,7 +1734,7 @@ feature -- Produce output files
 			--eiffel_library_exists_nonblank: eiffel_library /= Void and then not eiffel_library.is_empty
 		local
 			l_fname : FILE_NAME
-			l_file: PLAIN_TEXT_FILE
+			l_file: ES5SH_TEXT_FILE
 			l_cmd: STRING
 			l_preobj, l_dep, l_opt: STRING
 			l_dep_max, ii: INTEGER
@@ -1680,7 +1745,7 @@ feature -- Produce output files
 			create l_fname.make_from_string (base_directory)
 			l_fname.set_file_name ("LINK.COM")
 			create {ES5SH_TEXT_FILE}l_file.make_open_write (l_fname)
-			l_file.put_string ("$!-- " + l_fname + " -- generated by " + pretty_version + " at " + start_time + "%N$!--%N")
+			l_file.put_line (<< "$!-- ", l_fname, " -- generated by ", pretty_version, " at ", start_date_time, "%N$!--" >>)
 			l_cmd := "$ write sys$output %"Linking " + application_name
 			if build_precompile then
 				if not application_name.is_equal ("driver.exe") then
@@ -1688,7 +1753,7 @@ feature -- Produce output files
 				end
 				application_name := "driver"
 			end
-			l_file.put_string (l_cmd + " ''p1' ''p2' ...%"%N$!%N")
+			l_file.put_line (<< l_cmd, " ''p1' ''p2' ...%"%N$!" >>)
 			if build_precompile then
 				l_file.put_string ("$ write sys$output %"build precompile object library starting at %'%'f$time()%'%"%N")
 				l_file.put_string ("$! Create the precompile object library file preobj.olb... %N")
@@ -1709,7 +1774,7 @@ feature -- Produce output files
 				if l_preobj @ l_preobj.count = ',' then
 					l_preobj.remove_tail (1)		-- remove trailing comma
 				end
-				l_file.put_string (l_preobj + "%N")
+				l_file.put_line (<< l_preobj >>)
 			end -- build_precompile
 
 			l_file.put_string ("$ write sys$output %"link started at %'%'f$time()%'%"%N")
@@ -1720,16 +1785,14 @@ feature -- Produce output files
 			until externals_list.off
 			loop
 				debug ("externals") -- David debug
-					print_output_message ("DEBUG(externals): %N  External item - in: %"" + externals_list.item + "%"%N")
-				end -- rend debug
+					print_output_message (<< "DEBUG(externals): %N  External item - in: %"", externals_list.item + "%"" >>)
+				end -- end debug
 				if ends_with (externals_list.item.as_lower, ".opt") then
 					l_cmd.append ("," + externals_list.item + "/options")
 				end
 				externals_list.forth
 			end -- loop externals_list
-			l_file.put_string (l_cmd + " 'p2'%N")
-			l_file.put_string ("[.E1]emain.obj%N")
-			l_file.put_string (eiffel_library_filespec.out + "/include=EIF_PROJECT%N")
+			l_file.put_line (<< l_cmd, " 'p2'%N[.E1]emain.obj%N", eiffel_library_filespec, "/include=EIF_PROJECT" >>)
 
 			-- preprocess application_dependencies: prepend SYS$DISK if no device (prevent defaulting from Eiffel library)
 			from
@@ -1744,13 +1807,11 @@ feature -- Produce output files
 					print (application_dependencies.item + "%N")
 				end
 				if command_option_verbose then
-					l_file.put_string ("!  " + application_dependencies.item)
+					l_file.put_text (<< "!  ", application_dependencies.item >>)
 				end
-				--if application_dependencies.item = application_dependencies.first then
 				application_dependencies.item.replace_substring_all ("[.", "sys$disk:[.")
-				--end
 				if command_option_verbose then
-					l_file.put_string ("  -->  " + application_dependencies.item + "%N")
+					l_file.put_line (<< "  -->  ", application_dependencies.item >>)
 				end
 				application_dependencies.forth
 			end -- application_dependencies loop
@@ -1789,19 +1850,19 @@ feature -- Produce output files
 						   l_file.put_string (application_dependencies.item + "/libr%N")
 					elseif ends_with (l_dep, ".obj") then
 						if ii = 1 then
-							l_file.put_string (application_dependencies.item + "%N")
+							l_file.put_line (<< application_dependencies.item >>)
 						end
 					elseif ends_with (l_dep, ".exe") then
 						if ii = 1 then
-							l_file.put_string (application_dependencies.item + "/share%N")
+							l_file.put_line (<< application_dependencies.item, "/share" >>)
 						end
 					else
-						l_file.put_string (application_dependencies.item + "%N")
+						l_file.put_line (<< application_dependencies.item >>)
 					end
 					application_dependencies.forth
 				end -- application_dependencies loop
 				-- emit eiffel library
-				l_file.put_string (eiffel_library_filespec.out + "/library%N")
+				l_file.put_line (<< eiffel_library_filespec.out, "/library" >>)
 				ii := ii + 1
 			end -- dependency instances loop
 
@@ -1809,8 +1870,8 @@ feature -- Produce output files
 			if precompiled_library /= Void then
 				l_vms_file := as_vms_filespec (precompiled_library)
 				replace_eiffel_symbols (l_vms_file)
-				l_file.put_string (l_vms_file + "/library%N")
-				l_file.put_string (eiffel_library_filespec.out + "/library%N")
+				l_file.put_line (<< l_vms_file, "/library" >>)
+				l_file.put_line (<< eiffel_library_filespec, "/library" >>)
 			end
 
 			-- emit externals
@@ -1818,7 +1879,7 @@ feature -- Produce output files
 				l_file.put_string ("! EXTERNALS:  (== external_prefix")
 				if configuration.has ("external_prefix") then
 					l_ext_prefix := configuration.item ("external_prefix")
-					l_file.put_string (": %"" + l_ext_prefix + "%")%N")
+					l_file.put_line (<< ": %"", l_ext_prefix, "%")" >>)
 				else
 					l_ext_prefix := ""
 					l_file.put_string (" not defined)%N")
@@ -1828,9 +1889,9 @@ feature -- Produce output files
 				loop
 					l_tmp := externals_list.item.as_lower
 					if ends_with (l_tmp, ".opt") then
-						l_file.put_string ("! " + externals_list.item + " -- option file in LINK command, above%N")
+						l_file.put_line (<< "! ", externals_list.item, " -- option file in LINK command, above" >>)
 					else
-						l_file.put_string (l_ext_prefix + externals_list.item)
+						l_file.put_line (<< l_ext_prefix, externals_list.item >>)
 						if ends_with (l_tmp, ".olb") then
 							l_file.put_string ("/libr%N")
 						elseif ends_with (l_tmp, ".exe") then
@@ -1848,39 +1909,38 @@ feature -- Produce output files
 			if configuration.has ("eiffel_shareable") then
 					-- Eiffel shareable image(s) (generally, VMS_JACKETS)
 				l_tmp := configuration.item ("eiffel_shareable")
-				l_file.put_string ("! option == eiffel_shareable: %'" + l_tmp + "%'%N")
+				l_file.put_line (<< "! option == eiffel_shareable: %'", l_tmp, "%'" >>)
 				replace_eiffel_symbols (l_tmp)
-				l_file.put_string ( replace_macros (l_tmp) + "%N")
+				l_file.put_line (<< replace_macros (l_tmp) >>)
 			end
 			if True or else not externals_options.is_empty then
 					-- DECWindows shareable images
 				l_file.put_string ("! externals_options: " + externals_options + "%N")
 				-- ***TBS*** add another copy of the eiffel library before shareables??
 				if configuration.has ("xmotif_libs") then
-					l_file.put_string ("! option %"== xmotif_libs%" used:%N" + configuration.item ("xmotif_libs") + "%N")
+					l_file.put_line (<< "! option %"== xmotif_libs%" used:%N", configuration.item ("xmotif_libs") >>)
 				else
-					l_file.put_string ("! " + pretty_name + " default (== xmotif_libs option not defined):%N")
-					--l_file.put_string("sys$share:decw$mrmlibshr12/share%N")
-					--l_file.put_string("sys$share:decw$xlibshr/share%N")
-					--l_file.put_string("sys$share:decw$xmlibshr12/share%N")
-					--l_file.put_string("sys$share:decw$xtlibshrr5/share%N")
-					l_file.put_string ("sys$share:decwindows.olb/libr%N")
+					l_file.put_line (<< "! ", pretty_name, " default (== xmotif_libs option not defined):" >>)
+					--l_file.put_line (<< "sys$share:decw$mrmlibshr12/share" >>)
+					--l_file.put_line (<< "sys$share:decw$xlibshr/share" >>)
+					--l_file.put_line (<< "sys$share:decw$xmlibshr12/share" >>)
+					--l_file.put_line (<< "sys$share:decw$xtlibshrr5/share" >>)
+					l_file.put_line (<< "sys$share:decwindows.olb/libN" >>)
 --				else
---					l_file.put_string ("! option %"xmotif_libs%" used:%N" + configuration.item ("xmotif_libs") + "%N%N")
+--					l_file.put_line (<< "! option %"xmotif_libs%" used:%N", configuration.item ("xmotif_libs"), "%N%N" >>)
 				end
 			end -- not externals_options.is_empty
-			l_file.put_string ("$ sts := '$status%N")
-			l_file.put_string ("$ write sys$output %"link ended at ''f$time()' with status: ''sts'%"%N")
-			l_file.put_string ("$! exit 'sts'	***force success***%N")
+			l_file.put_line (<< "$ sts := '$status" >>)
+			l_file.put_line (<< "$ write sys$output %"link ended at ''f$time()' with status: ''sts'%"" >>)
+			l_file.put_line (<< "$! exit 'sts'	***force success***" >>)
 			l_file.close
-		end; -- produce_link_dot_com
+		end -- produce_link_dot_com
 
-	append_dependent_objects_to_link_dot_com (l_file: ES5SH_TEXT_FILE)
-			-- append `a_deps' to `l_file'
-		do
+--	append_dependent_objects_to_link_dot_com (l_file: ES5SH_TEXT_FILE) is
+--			-- append `a_deps' to `l_file'
+--		do
 
-		end
-
+--		end
 
 --	produce_make_dot_com (a_subdir : STRING) is
 --			-- generate make.com (DCL command procedure) in subdirectory 'a_subdir'
@@ -1898,21 +1958,21 @@ feature -- Produce output files
 --			end
 --			l_filnam.set_file_name ("make.com")
 --			create l_fil.make_open_write (l_filnam)
---			l_fil.put_string ("$! " + l_filnam + "%N")
---			l_fil.put_string ("$ set verify%N")
---			l_fil.put_string ("$ current = %"''f$envir(%"default%")'%"%N")
---			l_fil.put_string ("$ set default " + l_subdir + "%N")
+--			l_fil.put_line (<< "$! " + l_filnam + "%N")
+--			l_fil.put_line (<< "$ set verify%N")
+--			l_fil.put_line (<< "$ current = %"''f$envir(%"default%")'%"%N")
+--			l_fil.put_line (<< "$ set default " + l_subdir + "%N")
 --			if configuration.has ("make") then
---				l_fil.put_string ("$ " + configuration.item ("make"))
+--				l_fil.put_line (<< "$ " + configuration.item ("make"))
 --			else
---				l_fil.put_string ("$ make")
+--				l_fil.put_line (<< "$ make")
 --			end
---			l_fil.put_string ("%N$ set default 'current'%N")
+--			l_fil.put_line (<< "$ set default 'current'%N")
 --			l_fil.close
---		end; -- produce_make_dot_com
+--		end -- produce_make_dot_com
 
 
-	will_produce_concatenated_source_file_in (a_subdir: STRING) : BOOLEAN
+	will_produce_concatenated_source_file_in (a_subdir: STRING) : BOOLEAN is
 			-- will we creating concatenated source file for subdirectory `a_subdir'?
 			-- True if we're doing it at all, unless the subdirectory is "E1"
 		require
@@ -1921,33 +1981,42 @@ feature -- Produce output files
 			Result := will_concatenate_source_files and then not a_subdir.is_equal ("E1") and then not a_subdir.is_empty
 		end
 
-	produce_concatenated_source_file (a_subdir : STRING)
+
+	produce_concatenated_source_file (a_subdir : STRING) is
 			-- produce concatenated source file for subdirectory `a_subdir'
 		require
 			will_produce_concatenated_source_file_in (a_subdir)
 			--in_subdirectory: not dependent_subdirectories.off
 			subdirectory_nonblank: a_subdir /= Void and then not a_subdir.is_empty
 		local
+			l_source: STRING -- source files in subdirectory
+			l_source_files: DELIMITED_TEXT -- source files in current subdirectory, from Makefile OBJECTS (or OLDOBJECTS) macro
 			l_path : DIRECTORY_NAME
 			l_subdir_name : STRING
-			l_big_file_name: FILE_NAME
-			l_big_file: ES5SH_TEXT_FILE  --PLAIN_TEXT_FILE
-			l_extension : STRING
-			l_objects : ROSE_DELIMITED_TEXT
-
+			l_file_name: FILE_NAME
+			l_big_file: ES5SH_TEXT_FILE -- concatenated source file
+			l_ext: STRING -- source file extension, "x" or "c"
 		do
---			debug
---				create l_objects.make ("foo", space_character)
---				create l_objects.make ("foo  bar", space_character)
---				create l_objects.make_ignoring_repeats ("foo  bar", space_character)
---			end
-			if finalized then
-				l_extension := "x"
-			else
-				l_extension := "c"
-			end
 			create l_path.make_from_string (base_directory)
 			l_path.extend (a_subdir)
+			if value_macro_OLDOBJECTS /= Void then
+				l_source := value_macro_OLDOBJECTS.twin
+			else
+				l_source := value_macro_OBJECTS.twin
+			end
+			l_source.replace_substring_all (".obj", "") -- remove all .obj
+			create l_source_files.make_ignoring_repeats (l_source, space_character)
+			check
+				source_files_not_empty: not l_source_files.is_empty
+			end
+			-- generate .x or .c file? check the first source file, see if a ".x" file exists, else generate .c file
+			if file_exists (l_source_files.first, "x", l_path) then
+				l_ext := "x"
+			else
+				l_ext := "c"
+			end
+
+			create l_file_name.make_from_string (l_path)
 			-- extract the subdirectory name
 			l_subdir_name := a_subdir.twin
 			l_subdir_name.prune_all_leading ('[');
@@ -1955,23 +2024,20 @@ feature -- Produce output files
 			if l_subdir_name.count >= 1 and then (l_subdir_name @ 1) = '.' then
 				l_subdir_name.remove (1)
 			end
-			create l_big_file_name.make_from_string (l_path)
-			--l_big_file_name.set_file_name ("big_file_" + l_subdir_name)
-			l_big_file_name.set_file_name (concatenated_source_file_name (a_subdir))
-			l_big_file_name.add_extension (l_extension)
-			create l_big_file.make_open_write (l_big_file_name)
-			l_big_file.put_string ("/***  " + l_big_file_name + " -- generated by " + pretty_version + " at " + start_time + " ***/%N%N")
-			if value_macro_OLDOBJECTS /= Void then
-				create l_objects.make_ignoring_repeats (value_macro_OLDOBJECTS, space_character)
-			else
-				create l_objects.make_ignoring_repeats (value_macro_OBJECTS, space_character)
+			l_file_name.set_file_name (concatenated_source_file_name (a_subdir))
+			l_file_name.add_extension (l_ext)
+			if command_option_verbose then
+				print ("%T   creating " + l_file_name + "%N")
 			end
-			-- for each file in list, append to big_file, skipping #line directives
-			l_objects.do_all (agent append_source_to_big_file_agent (?, l_big_file, l_path, l_extension))
+			create l_big_file.make_open_write (l_file_name)
+			l_big_file.put_line (<< "// **** ", l_big_file.name, " -- generated by ", pretty_version, " at ", start_date_time, " ****%N" >>)
+			-- append each source file to big_file
+			l_source_files.do_all_with_index (agent append_source_to_big_file_agent (?,?, l_big_file, l_path, l_ext))
+			l_big_file.put_line (<< "%N// **** end ", l_big_file.name, " ****" >>)
 			l_big_file.close
-		end; -- produce_concatenated_source_file
+		end -- produce_concatenated_source_file
 
-	concatenated_source_file_name (a_subdir: STRING) : STRING
+	concatenated_source_file_name (a_subdir: STRING) : STRING is
 			-- name of concatenated source file for subdirectory `a_subdir'
 		require
 			subdirectory_nonblank: a_subdir /= Void and then not a_subdir.is_empty
@@ -1983,76 +2049,89 @@ feature -- Produce output files
 			end
 		end
 
-	append_source_to_big_file_agent (a_source: STRING; a_big_file: ES5SH_TEXT_FILE; a_path: DIRECTORY_NAME; a_extension: STRING)
-			-- append file `a_source'.`a_extension' in `a_path' to big source file `a_big_file'
+	append_source_to_big_file_agent (a_source: STRING; a_index: INTEGER; a_big_file: ES5SH_TEXT_FILE; a_path: DIRECTORY_NAME; a_extension: STRING) is
+			-- append source `a_source'.`a_extension' in `a_path' to big source file `a_big_file'
+			-- may be accomplished by appending an #include directive or appending the contents of the file
 		require
 			source_exists: a_source /= Void
 			big_file_exists: a_big_file /= Void
 			big_file_is_open_write: a_big_file.is_open_write
 		local
-			l_name: STRING
 			l_source_file_name: FILE_NAME
 			l_source_file: ES5SH_TEXT_FILE
-			l_file_name_vms: STRING
 		do
-			l_name := a_source.twin
-			if ends_with (l_name, ".obj") then
-				l_name.remove_tail (4)
-			end
 			create l_source_file_name.make_from_string (a_path)
-			l_source_file_name.set_file_name (l_name)
+			l_source_file_name.set_file_name (a_source)
 			l_source_file_name.add_extension (a_extension)
 			create l_source_file.make (l_source_file_name)
-			-- if no .x file exists, try .c
-			if not l_source_file.exists and then ends_with (l_source_file.name, ".x") then
-				create l_source_file_name.make_from_string (a_path)
-				l_source_file_name.set_file_name (l_name)
-				l_source_file_name.add_extension ("c")
-				create l_source_file.make (l_source_file_name)
+			debug -- obsolete
+				-- if no .x file exists, try .c
+				if a_extension.is_case_insensitive_equal ("x") and then not l_source_file.exists then
+					create l_source_file_name.make_from_string (a_path)
+					l_source_file_name.set_file_name (a_source)
+					l_source_file_name.add_extension ("c")
+					create l_source_file.make (l_source_file_name)
+				end
 			end
 			if not l_source_file.exists then
 				print_error_message ("source file: " + l_source_file_name + " does not exist!%N")
 			else
-				l_source_file.open_read ()
-				if command_option_verbose then
-					--print ("   appending " + l_source_file.name + " to " + a_big_file.name + "%N")
-					print ("   appending " + basename (l_source_file.name) + " to " + basename (a_big_file.name)
-							+ " in " + dirname (l_source_file.name) + "%N")
-				end
-				l_file_name_vms := as_vms_filespec (make_absolute_filespec (l_source_file_name))
-				if value_platform.substring_index ("VMS", 1) > 0 then
-					a_big_file.put_string ("#line 1  %"" + l_file_name_vms + "%"  /* " + l_source_file_name + " */%N")
-				else
-					a_big_file.put_string ("#line 1  %"" + l_source_file_name + "%"  /* " + l_file_name_vms + " */%N")
-				end
-				from
-					l_source_file.read_line
-				until
-					l_source_file.end_of_file
-				loop
-					--if l_source_file.last_string.count > ("#line").count and then
-					if l_source_file.last_string.count > 5 and then l_source_file.last_string @ 1 = '#'
-							and then l_source_file.last_string.substring_index ("line", 2) >= 2 then
-						a_big_file.put_string ("/*** " + l_source_file.last_string + " ***/%N")
-					else
-						a_big_file.put_string (l_source_file.last_string + "%N")
+				if will_concatenate_source_file_contents then
+					if a_index > 1 then
+						a_big_file.put_line (<<"%F" >>)
 					end
-					l_source_file.read_line
-				end -- loop until l_source_file.end_of_file
-				l_source_file.close
-				a_big_file.put_string ("/*** end " + l_source_file_name + " ***/%N")
-				--if not objects.after then
-				a_big_file.put_string ("%F%N")
-				--end
-				a_big_file.flush
+					append_source_contents_to_big_file (l_source_file, a_big_file)
+				else
+					a_big_file.put_line (<< "#include %"", a_source, ".", a_extension, "%"%T%T// ", l_source_file.name >> )
+				end
 			end
+		end
+
+	append_source_contents_to_big_file (a_source_file, a_big_file: ES5SH_TEXT_FILE) is
+			-- append contents of file `a_source'.`a_extension' in `a_path' to big source file `a_big_file'
+			--  preceded by platform-appropriate #line directives, and with any embedded line directives commented out.
+		require
+			source_file_not_void: a_source_file /= Void
+			source_file_is_readable: a_source_file.is_readable
+			big_file_not_void: a_big_file /= Void
+			big_file_is_open_write: a_big_file.is_open_write
+		local
+			l_file_name_vms: STRING
+		do
+			a_source_file.open_read
+			if command_option_verbose then
+				print ("%T     append " + a_source_file.name + "%N")
+			end
+			l_file_name_vms := as_vms_filespec (make_absolute_filespec (a_source_file.name))
+			if value_platform.substring_index ("VMS", 1) > 0 then
+				a_big_file.put_line (<< "#line 1  %"", l_file_name_vms, "%"  // ", a_source_file.name >>)
+			else
+				a_big_file.put_line (<< "#line 1  %"", a_source_file.name, "%"  // ", l_file_name_vms >>)
+			end
+			from
+				a_source_file.read_line
+			until
+				a_source_file.end_of_file
+			loop
+				--if a_source_file.last_string.count > ("#line").count and then
+				if a_source_file.last_string.count > 5 and then a_source_file.last_string @ 1 = '#'
+						and then a_source_file.last_string.substring_index ("line", 2) >= 2 then
+					a_big_file.put_line (<< "// ", a_source_file.last_string >>)
+				else
+					a_big_file.put_line (<< a_source_file.last_string >>)
+				end
+				a_source_file.read_line
+			end -- loop until a_source_file.end_of_file
+			a_source_file.close
+			a_big_file.put_line (<< "%N// *** end ", a_source_file.name, " ***" >>)
+			--a_big_file.flush
 		end
 
 ----------------------------------------------------------------------------
 feature -- Process macro definitions
 --------------------------------------------------------------------------
 
-	is_macro_definition (line : STRING) : BOOLEAN
+	is_macro_definition (line : STRING) : BOOLEAN is
 			-- is this line a macro definition (of the form <name> = <value>) ?
 		local
 			l_token1, l_token2 : STRING
@@ -2071,7 +2150,7 @@ feature -- Process macro definitions
 		end -- is_macro_definition
 
 
-	is_macro_definition_of (a_line : STRING; a_macro_name : STRING) : BOOLEAN
+	is_macro_definition_of (a_line : STRING; a_macro_name : STRING) : BOOLEAN is
 			-- is `a_line' a macro definition of the specified macro `a_name' (NAME = <value>)
 			-- with optional whitespace around the =?
 		require
@@ -2097,7 +2176,7 @@ feature -- Process macro definitions
 		end -- is_macro_definition_of
 
 
-	process_macro_definition ()
+	process_macro_definition () is
 			-- process current line containing a macro definition
 			-- EIFLIB, CFLAGS, CPPFLAGS et. al. are handled specially here.
 		require
@@ -2140,7 +2219,7 @@ feature -- Process macro definitions
 						put_macro_definition ("X2C", "X2C")
 --					elseif l_macro.is_equal ("SHELL") then
 --						l_value := read_macro_value ("SHELL")
---						out_makefile.put_string (default_comment_prefix + "SHELL = " + l_value + "%N")
+--						out_makefile.put_line (<< default_comment_prefix + "SHELL = " + l_value + "%N")
 					else
 						-- not a known or special handled macro;
 						-- if it is not blank and not in suppressed_macro_definitions then output the processed definition
@@ -2148,17 +2227,17 @@ feature -- Process macro definitions
 						process_macro_value (l_value)
 						l_value := replace_macros (l_value)
 						if not l_value.is_empty and then not suppressed_macro_definitions.has (l_macro) then
-							--out_makefile.put_string (l_macro + " = " + l_value + "%N")
+							--out_makefile.put_line (<< l_macro + " = " + l_value + "%N")
 							put_macro_definition (l_macro, l_value)
 						else
 						end
 					end -- else l_macro is whatever
 				end -- second token is "="
 			end -- l_macro not empty
-		end; -- process_macro_definition
+		end -- process_macro_definition
 
 
-	process_macro_CFLAGS (a_macro_name : STRING)
+	process_macro_CFLAGS (a_macro_name : STRING) is
 			-- process CFLAGS or CPPFLAGS macro definition
 			-- a_macro_name is the macro name (CFLAGS or CPPFLAGS)
 			-- eg. CFLAGS = ... -DWORKBENCH -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include \$(INCLUDE_PATH)
@@ -2244,11 +2323,7 @@ feature -- Process macro definitions
 					l_word := ""
 				elseif starts_with (l_word, "-I") then
 					l_word.remove_head (2) -- remove leading "-I"
---					if l_word.count >= 2 and then l_word @ 1 = '%"' and then l_word @ (l_word.count) = '%"' then
---						l_word.remove_tail (1) -- remove trailing quote
---						l_word.remove_head (1) -- remove leading quote
---					end
-					remove_enclosing_quotes (l_word)
+					unquote (l_word)
 					if l_word.is_empty then
 						print_makefile_warning ("blank include directive ignored: " + l_orig)
 					elseif l_word.is_equal (".") then
@@ -2333,29 +2408,27 @@ feature -- Process macro definitions
 			reduce_whitespace (l_cflags, 1)
 			-- replace any remaining unprocessed macros
 			--l_cflags := replace_macros (l_cflags)
-			out_makefile.put_string (a_macro_name + " = " + l_cflags + " $(" + l_prefix + "DEFINES) $(" + l_prefix + "INCLUDE)%N")
+			out_makefile.put_line (<< a_macro_name, " = ", l_cflags, " $(", l_prefix, "DEFINES) $(", l_prefix, "INCLUDE)" >>)
 			-- Emit the /INCLUDE and /DEFINE qualifiers
-			out_makefile.put_string (l_prefix + "DEFINES = ")
-			if not l_defines.is_empty then
-				--l_cflags.append ("/DEFINE=")
-				--l_cflags.append (l_defines)
-				out_makefile.put_string ("/DEFINE=" + l_defines)
+			out_makefile.put_text (<< l_prefix, "DEFINES = " >>)
+			if l_defines.is_empty then
+				out_makefile.put_new_line
+			else
+				out_makefile.put_line (<< "/DEFINE=", l_defines >>)
 			end
-			out_makefile.put_string ("%N" + l_prefix + "INCLUDE = ")
-			if not l_includes.is_empty then
+			out_makefile.put_text (<<l_prefix, "INCLUDE = " >>)
+			if l_includes.is_empty then
+				out_makefile.put_new_line
+			else
 				replace_eiffel_symbols (l_includes)
-				--remove_redundant_DCL_filespecs (l_includes)  -- removed: CC/INCL does not do a default input parse any more (did it ever?)
-				--if not l_defines.is_empty then l_cflags.append_character (space_character) end
-				--l_cflags.append ("/INCLUDE=")
-				--l_cflags.append (l_includes)
-				out_makefile.put_string ("/INCLUDE=" + l_includes)
+				out_makefile.put_line (<< "/INCLUDE=", l_includes >>)
 			end
-			--out_makefile.put_string (a_macro_name + " = " + l_cflags + "%N")
-			out_makefile.new_line
-		end; -- process_macro_CFLAGS
+			--out_makefile.put_line (<< a_macro_name, " = ", l_cflags >>)
+			--out_makefile.new_line
+		end -- process_macro_CFLAGS
 
 
-	process_macro_EIFLIB (a_macro_name_unused: STRING)
+	process_macro_EIFLIB (a_macro_name_unused: STRING) is
 				-- process EIFLIB macro definition
 		--indexing "FIXME"
 		require
@@ -2371,16 +2444,15 @@ feature -- Process macro definitions
 			-- eg: EIFLIB = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/$prefix$wkeiflib$suffix
 			-- or  EIFLIB = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/$prefix$mt_prefix$eiflib$suffix
 			l_eiflib := read_macro_value ("EIFLIB")
-			remove_enclosing_quotes (l_eiflib)
+			unquote (l_eiflib)
 			l_eiflib := replace_macros (l_eiflib)
-			--out_makefile.put_string ("EIFLIB = " + l_eiflib + "%N")
 			eiffel_library := as_vms_filespec (l_eiflib)
 			put_macro_definition ("EIFLIB", eiffel_library)
 			--eiffel_library.replace_substring_all ("$(ISE_PLATFORM)", value_platform)
-	end; -- process_macro_EIFLIB
+	end -- process_macro_EIFLIB
 
 
-	process_macro_EXTERNALS (a_macro_name_unused: STRING)
+	process_macro_EXTERNALS (a_macro_name_unused: STRING) is
 			-- process EXTERNALS macro definition: for each word (filespec) make it VMS syntax, add to externals_list
 		require
 			input_file_readable: in_makefile /= Void and then in_makefile.is_open_read
@@ -2423,13 +2495,13 @@ feature -- Process macro definitions
 			end -- loop for each word
 
 			-- output externals list and externals options as comments
-			out_makefile.put_string (default_comment_prefix + " EXTERNALS list:%N")
+			out_makefile.put_line (<< default_comment_prefix, " EXTERNALS list:" >>)
 			from
 				externals_list.start
 			until
 				externals_list.after
 			loop
-				out_makefile.put_string (default_comment_prefix + "  " + externals_list.item + "%N")
+				out_makefile.put_line (<< default_comment_prefix, "  ", externals_list.item >>)
 				externals_list.forth
 			end -- externals_list loop
 			out_makefile.put_string (default_comment_prefix + " EXTERNALS options: ")
@@ -2440,13 +2512,13 @@ feature -- Process macro definitions
 			else
 				out_makefile.put_string (externals_options)
 			end
-		out_makefile.put_string ("%N%N")
+		out_makefile.put_string ("%N")
 
 		ensure
-		end; -- process_macro_EXTERNALS
+		end -- process_macro_EXTERNALS
 
 
-	process_macro_INCLUDE_PATH (a_macro_name_unused: STRING)
+	process_macro_INCLUDE_PATH (a_macro_name_unused: STRING) is
 			-- Process INCLUDE_PATH macro definition.
 			-- Most processing is deferred until the CFLAGS macro is processed
 			-- because all of the -I options have to be collected into a single DCL qualifier.
@@ -2498,12 +2570,12 @@ feature -- Process macro definitions
 				l_start := next_word_index (value_macro_INCLUDE_PATH, l_end)
 			end -- loop
 			if not l_initial_value.is_equal (value_macro_INCLUDE_PATH) then
-				out_makefile.put_string (default_comment_prefix + "INCLUDE_PATH = " + value_macro_INCLUDE_PATH + "%N")
+				out_makefile.put_line (<< default_comment_prefix, "INCLUDE_PATH = ", value_macro_INCLUDE_PATH >>)
 			end
-		end; -- process_macro_INCLUDE_PATH
+		end -- process_macro_INCLUDE_PATH
 
 
-	process_macro_OBJECTS (a_macro_name_unused: STRING)
+	process_macro_OBJECTS (a_macro_name_unused: STRING) is
 			-- process line containing OBJECTS macro definition
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -2541,10 +2613,10 @@ feature -- Process macro definitions
 				end
 			end
 			out_makefile.put_new_line
-		end; -- process_macro_OBJECTS
+		end -- process_macro_OBJECTS
 
 
-	process_macro_OLDOBJECTS (a_macro_name_unused: STRING)
+	process_macro_OLDOBJECTS (a_macro_name_unused: STRING) is
 			-- process line containing OLDOBJECTS macro definition
 			-- (only encountered when quick_finalize is run before ES5SH, which no longer happens on VMS)
 		require
@@ -2563,11 +2635,11 @@ feature -- Process macro definitions
 			value_macro_OLDOBJECTS := l_old_objects
 			--put_macro_definition ("OLDOBJECTS", value_macro_OLDOBJECTS)
 			-- macro definition is not ouptut until OBJECTS macro is read
-		end; -- process_macro_OLDOBJECTS
+		end -- process_macro_OLDOBJECTS
 
 
 
-	read_processed_macro_value (a_macro_name : STRING) : STRING
+	read_processed_macro_value (a_macro_name : STRING) : STRING is
 			-- The processed value of the macro defined on the current input line (plus any continuation lines).
 			-- Position in input file is advanced if necessary, to consume continued lines.
 			-- Only continued input lines are consumed.
@@ -2584,10 +2656,10 @@ feature -- Process macro definitions
 			process_macro_value (Result)
 		ensure
 			Result_exists: Result /= Void
-		end; -- read_processed_macro_value
+		end -- read_processed_macro_value
 
 
-	read_macro_value (a_macro_name: STRING) : STRING
+	read_macro_value (a_macro_name: STRING) : STRING is
 			-- The value of the macro defined on the current line of in_makefile (plus any continuation lines).
 			-- Position in input file is advanced if necessary, to consume continued lines.
 			-- The current input line, and all continued lines, are consumed. Commands and queries are a fool's mixture.
@@ -2604,7 +2676,7 @@ feature -- Process macro definitions
 			Result_exists: Result /= Void
 		end
 
-	effective_comment_prefix (a_macro_name: STRING) : STRING
+	effective_comment_prefix (a_macro_name: STRING) : STRING is
 			-- comment prefix to be used for original value of `a_macro_name' definition.
 			-- if `a_macro_name' is in `echoed_unprocessed_macro_definitions' then `default_comment_prefix'
 			-- otherwise the configuration comment prefix is used if defined (may be Void)
@@ -2617,7 +2689,7 @@ feature -- Process macro definitions
 		end
 
 
-	read_macro_value_echoed (a_macro_name: STRING; a_comment_prefix: STRING) : STRING
+	read_macro_value_echoed (a_macro_name: STRING; a_comment_prefix: STRING) : STRING is
 			-- The value of the macro defined on the current line of in_makefile, plus any continuation lines.
 			-- Position in input file is advanced if necessary, to consume continued lines.
 			-- The current input line, and all continued lines, are consumed. Commands and queries are a fool's mixture.
@@ -2676,10 +2748,10 @@ feature -- Process macro definitions
 					create l_echoed.make (in_makefile.last_string.count + a_comment_prefix.count)
 					l_echoed.append (a_comment_prefix)
 					l_echoed.append (in_makefile.last_string);
-					out_makefile.put_string (l_echoed + "%N")
+					out_makefile.put_line (<< l_echoed >>)
 				end
 				-- bottom of loop: read next input line (if continued)
-				-- out_makefile.put_string (in_makefile.last_string); out_makefile.put_new_line
+				-- out_makefile.put_line (<< in_makefile.last_string >>)
 				--done := not is_continued_line (in_makefile.last_string)
 				if is_continued_line (in_makefile.last_string) then
 					in_makefile.read_line
@@ -2692,14 +2764,14 @@ feature -- Process macro definitions
 			Result.right_adjust
 		ensure
 			Result_exists: Result /= Void
-		end; -- read_macro_value_echoed
+		end -- read_macro_value_echoed
 
 
 ----------------------------------------
 feature -- Macro replacement
 ----------------------------------------
 
-	process_macro_value (a_value : STRING)
+	process_macro_value (a_value : STRING) is
 			-- UNIX filespecs are translated to VMS syntax, shell commands are processed.
 		require
 			value_exists: a_value /= Void
@@ -2710,7 +2782,7 @@ feature -- Macro replacement
 				process_shell_commands (a_value, 1)
 				a_value.right_adjust
 			end
-		end; -- process_macro_value
+		end -- process_macro_value
 
 --	as_replaced_eiffel_symbols (a_str: STRING): STRING is
 --			-- `a_str' with EIFFEL and PLATFORM macros replaced by their values
@@ -2721,19 +2793,19 @@ feature -- Macro replacement
 --			replace_eiffel_symbols (Result)
 --		end
 
-	replace_eiffel_symbols (a_str : STRING)
+	replace_eiffel_symbols (a_str : STRING) is
 			-- replace EIFFEL and PLATFORM macros
 		require
 			string_exists:	a_str /= Void
 		do
 			 a_str.replace_substring_all (macro_platform, value_platform)
-		end; -- replace_eiffel_symbols
+		end -- replace_eiffel_symbols
 
 
-	macro_open_delimiters: STRING = "({["
-	macro_close_delimiters: STRING = ")}]"
+	macro_open_delimiters: STRING is "({["
+	macro_close_delimiters: STRING is ")}]"
 
-	replace_macros (a_str : STRING): STRING
+	replace_macros (a_str : STRING): STRING is
 			-- string with each macro ($-prefixed element) in `a_str' replaced with its value
 			-- escaped-$-prefixed words are passed without the escape
 			-- leading and trailing are removed, multiple spaces are replaced with a single space
@@ -2829,7 +2901,7 @@ feature -- Macro replacement
 --				end
 --				configuration.force (Result, a_key)	-- suppress further warnings for this name
 --			end
---		end; -- get_configuration_option_once
+--		end -- get_configuration_option_once
 
 
 
@@ -2845,7 +2917,7 @@ feature -- Macro replacement
 feature -- special purpose output
 --------------------------------------------------------------------------
 
-	put_comment_prefixed_line (a_line : STRING)
+	put_comment_prefixed_line (a_line : STRING) is
 			-- if comment_prefix is defined, ouput line to out_makefile as a comment with terminating newline,
 		require
 			line_exists:	a_line /= Void
@@ -2854,7 +2926,7 @@ feature -- special purpose output
 			if configuration.comment_prefix /= Void then
 				put_comment_prefixed_text (a_line + "%N")
 			end
-		end; -- put_comment_prefixed_line
+		end -- put_comment_prefixed_line
 
 --	put_comment_prefixed_strings (the_strings: ARRAY[STRING] ; prefix_suffix : STRING) is
 --			-- if comment_prefix is defined, ouput the_strings to out_makefile as a single comment line
@@ -2879,10 +2951,10 @@ feature -- special purpose output
 --				end -- loop
 --				out_makefile.put_new_line
 --			end
---		end; -- put_comment_prefixed_strings
+--		end -- put_comment_prefixed_strings
 
 
-	put_comment_prefixed_text (a_text : STRING)
+	put_comment_prefixed_text (a_text : STRING) is
 			-- if comment_prefix is defined, ouput text as a comment,
 		require
 			text_exists:	a_text /= Void
@@ -2903,10 +2975,10 @@ feature -- special purpose output
 --				end
 				out_makefile.put_string (l_text)
 			end
-		end; -- put_comment_prefixed_text
+		end -- put_comment_prefixed_text
 
 
-	put_macro_definition (a_macro_name : STRING; a_macro_value : STRING)
+	put_macro_definition (a_macro_name : STRING; a_macro_value : STRING) is
 			-- output macro definition to current output makefile
 		require
 			macro_name_nonblank:	a_macro_name /= Void and then not a_macro_name.is_empty
@@ -2920,7 +2992,7 @@ feature -- special purpose output
 	end ; -- put_macro_definition
 
 
-	put_continued_line (line : STRING; continuation_prefix : STRING; wrap_margin : INTEGER)
+	put_continued_line (line : STRING; continuation_prefix : STRING; wrap_margin : INTEGER) is
 			-- Output continued line with (optional) continuation prefix
 			-- using primitive (whitespace) tokenization.
 			-- If line exceeds wrap margin it is continued by using continuation string.
@@ -2965,7 +3037,7 @@ feature -- special purpose output
 			out_makefile.put_string (line.substring (start_pos, last_pos -1))
 			-- if more (next_pos > 0) output continuation, prefix
 			if last_pos <= line.count then
-				out_makefile.put_string (configuration.continuation_string + "%N")
+				out_makefile.put_line (<< configuration.continuation_string >>)
 				if continuation_prefix /= Void then
 					out_makefile.put_string (continuation_prefix)
 				else
@@ -2976,7 +3048,7 @@ feature -- special purpose output
 			end
 			start_pos := last_pos
 			end -- until (start_pos > line.count)
-		end; -- put_continued_line
+		end -- put_continued_line
 
 
 
@@ -2984,7 +3056,7 @@ feature -- special purpose output
 feature -- platform specific file names
 ----------------------------------------
 
-	subdirectory_make_command (a_subdir, a_target: STRING): STRING
+	subdirectory_make_command (a_subdir, a_target: STRING): STRING is
 			-- command string to perform make in subdirectory of (optional) target `a_target'
 			-- eg. <tab>-@ISE_EIFEL:[studio.spec.$(ISE_PLATFORM).bin]make.vms subidr target
 		require
@@ -3007,7 +3079,7 @@ feature -- platform specific file names
 			end
 		end
 
-	platform_specific_path_name (base, subdir: ARRAY[STRING]) : FILE_NAME
+	platform_specific_path_name (base, subdir: ARRAY[STRING]) : FILE_NAME is
 			-- build a VMS-syntax platform specific path name: ISE_EIFFEL:[<base>.$(ISE_platform).<subdir>]
 			-- typically <base> is studio.spec (i.e. <<"studio","spec">> or studio.config,
 			-- subdir
@@ -3042,7 +3114,7 @@ feature -- platform specific file names
 			l_hack := as_vms_filespec (Result)
 		end -- platform_specific_path_name
 
-	platform_specific_file_name (base, subdir: ARRAY[STRING]; filename: STRING) : FILE_NAME
+	platform_specific_file_name (base, subdir: ARRAY[STRING]; filename: STRING) : FILE_NAME is
 			-- build a VMS-syntax platform-specific file name: ISE_EIFFEL:[<base>.$ISE_PLATFORM.<subdir>]<filename>
 			-- typically <base> is studio.spec (i.e. <<"studio","spec">> or studio.config
 		local
@@ -3053,9 +3125,9 @@ feature -- platform specific file names
 				Result.set_file_name (filename)
 			end
 			l_hack := as_vms_filespec (Result)
-		end; -- platform_specific_file_name
+		end -- platform_specific_file_name
 
-	eiffel_library_filespec: STRING
+	eiffel_library_filespec: STRING is
 			-- VMS file specification of the Eiffel runtime/workbench object library (with platform macro replaced)
 			--   ISE_EIFFEL:[studio.spec.<ISE_platform>.lib]<prefix><eiffel_library><suffix>
 		require
@@ -3069,7 +3141,7 @@ feature -- platform specific file names
 			Result.replace_substring_all ("$(ISE_PLATFORM)", value_platform)
 		end -- eiffel_library_filespec
 
-	to_vms_filespecs (str : STRING; initial_pos : INTEGER)
+	to_vms_filespecs (str : STRING; initial_pos : INTEGER) is
 			-- for each "word" in `str', translate filespec to VMS syntax
 			-- also handle semantics for .a and .o extensions
 		require
@@ -3154,10 +3226,10 @@ feature -- platform specific file names
 				end -- special word handling
 				start_pos := next_word_index (str, end_pos)
 			end -- loop: for each word in str
-		end; -- to_vms_filespecs
+		end -- to_vms_filespecs
 
 
-	as_vms_filespec (a_filespec : STRING) : STRING
+	as_vms_filespec (a_filespec : STRING) : STRING is
 			-- a new string transformed from a unix filespec to vms syntax
 			-- enclosing quotes are removed
 			-- Rules:
@@ -3175,8 +3247,8 @@ feature -- platform specific file names
 			last_pos, next_pos : INTEGER
 		do
 			start_pos := 1		-- note: this should be a parameter ***TBS***
-			l_filespec := a_filespec.twin
-			remove_enclosing_quotes (l_filespec)
+			create l_filespec.make_from_string (a_filespec) -- a_filespec.twin causes catcalls when a_filespec is a FILE_NAME
+			unquote (l_filespec)
 			if starts_with (l_filespec, "\$") then
 				start_pos := start_pos + 1
 			end
@@ -3284,11 +3356,11 @@ feature -- platform specific file names
 					Result.append (l_filespec.substring (last_pos, l_filespec.count))
 				end
 			end -- filespec not empty
-		end; -- as_vms_filespec
+		end -- as_vms_filespec
 
 
 
-	is_vms_filespec (filespec : STRING) : BOOLEAN
+	is_vms_filespec (filespec : STRING) : BOOLEAN is
 			-- does string look like a VMS filespec?
 			-- if it has no unix filespec delimiters and doesnt begin with a symbol $(x),
 			-- then assume it is a VMS filespec
@@ -3304,10 +3376,10 @@ feature -- platform specific file names
 			else
 				Result := True
 			end
-		end; -- is_vms_filespec
+		end -- is_vms_filespec
 
 
-	is_relative_filespec (a_filespec: STRING) : BOOLEAN
+	is_relative_filespec (a_filespec: STRING) : BOOLEAN is
 		require
 			filespec_exists: a_filespec /= Void
 		local
@@ -3339,7 +3411,7 @@ feature -- platform specific file names
 			end
 		end
 
-	make_absolute_filespec (a_filespec: STRING) : STRING
+	make_absolute_filespec (a_filespec: STRING) : STRING is
 		require
 			filespec_exists: a_filespec /= Void
 		local
@@ -3361,7 +3433,7 @@ feature -- platform specific file names
 			end
 		end
 
-	dirname (a_filespec: STRING): STRING
+	dirname (a_filespec: STRING): STRING is
 			-- the directory name (path, excluding the filename) part of 'a_filespec'
 			-- including terminating path delimiter; empty if no path delimiter found
 		local
@@ -3378,7 +3450,7 @@ feature -- platform specific file names
 			dirname_exists: Result /= Void
 		end
 
-	basename (a_filespec: STRING) : STRING
+	basename (a_filespec: STRING) : STRING is
 			-- the filename (filespec less path); empty if filespec ends with path delimiter
 		require
 			filespec_exists: a_filespec /= Void
@@ -3398,7 +3470,7 @@ feature -- platform specific file names
 			basename_exists: Result /= Void
 		end
 
-	basename_index (a_filespec : STRING; start_pos: INTEGER) : INTEGER
+	basename_index (a_filespec : STRING; start_pos: INTEGER) : INTEGER is
 			-- the position (index) of the basename (filename part) in the (any platform syntax) file path.
 			-- may be start_pos if no directory delimiters found,
 			-- may be > a_filespec.count (a_filespec.count + 1) if no filename is present (ie. the last character is a path delimiter)
@@ -3428,7 +3500,7 @@ feature -- platform specific file names
 			end
 		ensure
 			correct_place:	Result >= start_pos and Result <= a_filespec.count + 1
-		end; -- basename_index
+		end -- basename_index
 
 
 
@@ -3436,7 +3508,7 @@ feature -- platform specific file names
 feature -- shell commands
 -------------------------------------------------------------
 
-	is_shell_command (a_str : STRING; a_start : INTEGER) : BOOLEAN
+	is_shell_command (a_str : STRING; a_start : INTEGER) : BOOLEAN is
 			-- is a shell command in `a_str' beginning at `a_start?'
 			-- examples: `foo' or $(foo)
 			--  where foo is a command followed by optional arguments, eg.
@@ -3472,9 +3544,9 @@ feature -- shell commands
 					end
 				end
 			end
-		end; -- is_shell_command
+		end -- is_shell_command
 
-	shell_command_end_index (a_str: STRING; a_start: INTEGER): INTEGER
+	shell_command_end_index (a_str: STRING; a_start: INTEGER): INTEGER is
 			-- the position in 'a_str' of the ending delimiter of the shell command that starts at 'a_start'.
 			-- zero if not found
 		require
@@ -3509,9 +3581,9 @@ feature -- shell commands
 					end
 				end
 			end
-		end; -- shell_command_end_index
+		end -- shell_command_end_index
 
-	process_shell_commands (a_str : STRING; a_start_pos : INTEGER )
+	process_shell_commands (a_str : STRING; a_start_pos : INTEGER ) is
 			-- process all shell commands in `a_str' beginning at `a_start_pos'
 		require
 			string_exists : a_str /= Void
@@ -3540,10 +3612,10 @@ feature -- shell commands
 				end
 				l_next := next_word_index (a_str, l_end)
 			end -- loop
-		end; -- process_shell_commands
+		end -- process_shell_commands
 
 
-	process_shell_command_at (a_str : STRING ; a_start_pos : INTEGER)
+	process_shell_command_at (a_str : STRING ; a_start_pos : INTEGER) is
 			-- replace the shell command in `a_str' starting at `a_start_pos'
 		require
 --			string_exists : a_str /= Void
@@ -3568,10 +3640,10 @@ feature -- shell commands
 		end
 
 
-	vision2_gtk_shell_script_name: STRING = "vision2-gtk-config"
+	vision2_gtk_shell_script_name: STRING is "vision2-gtk-config"
 	--vision2_gtk_shell_script_path: STRING is "$EIFFEL_SRC/library/vision2/implementation/gtk/Clib/"
-	vision2_gtk_shell_script_path: STRING = "/library/vision2/implementation/gtk/Clib/"
-	shell_command_result (a_str : STRING) : STRING
+	vision2_gtk_shell_script_path: STRING is "/library/vision2/implementation/gtk/Clib/"
+	shell_command_result (a_str : STRING) : STRING is
 			-- options resulting from shell command `a_str'
 		require
 			string_exists : a_str /= Void
@@ -3580,7 +3652,7 @@ feature -- shell commands
 			--l_end_pos: INTEGER		-- position of shell command end delimiter
 			--l_sh_cmd: STRING		-- the entire shell command, including delimiters
 			l_base, l_dir: STRING
-			l_shword: ROSE_DELIMITED_TEXT
+			l_shword: DELIMITED_TEXT
 			l_cmd, l_opt, l_top: STRING
 			l_key, l_default: STRING
 			ii: INTEGER
@@ -3658,7 +3730,7 @@ feature -- shell commands
 			end
 		ensure
 			result_not_void: Result /= Void
-		end; -- shell_command_result
+		end -- shell_command_result
 
 
 
@@ -3666,7 +3738,7 @@ feature -- shell commands
 feature -- DCL operations -- another missed opportunity to create a class
 --------------------------------------------------------------------------
 
-	append_DCL_value (a_str : STRING; a_value : STRING )
+	append_DCL_value (a_str : STRING; a_value : STRING ) is
 			-- append `a_value' to `a_str' using DCL rules for parentheses, commas, and quoting
 		require
 			this_exists:	a_str  /= Void
@@ -3698,10 +3770,10 @@ feature -- DCL operations -- another missed opportunity to create a class
 					a_str.append_character (')')
 				end
 			end
-		end; -- append_DCL_value
+		end -- append_DCL_value
 
 
-	DCL_qualifier_name_size ( a_str : STRING ; start_pos : INTEGER ) : INTEGER
+	DCL_qualifier_name_size ( a_str : STRING ; start_pos : INTEGER ) : INTEGER is
 			-- size of DCL qualifier at start of a_str, zero if not a DCL qualifier
 			-- size must be zero or >= 2, and always includes leading '/'
 		require
@@ -3735,7 +3807,7 @@ feature -- DCL operations -- another missed opportunity to create a class
 	end ; -- DCL_qualifier_name_size
 
 
-	DCL_qualifier_name ( a_str : STRING ; start_pos : INTEGER ) : STRING
+	DCL_qualifier_name ( a_str : STRING ; start_pos : INTEGER ) : STRING is
 			-- name of DCL qualifier at start_pos in a_str, Void if not a DCL qualifier
 		require
 		local
@@ -3745,9 +3817,9 @@ feature -- DCL operations -- another missed opportunity to create a class
 			if size > 0 then
 				Result := a_str.substring (start_pos, size)
 			end
-		end; -- DCL_qualifier_name
+		end -- DCL_qualifier_name
 
-	DCL_qualifier_matches ( DCL_qualifier: STRING ; minimum : INTEGER ; str : STRING ; start_pos : INTEGER ) : BOOLEAN
+	DCL_qualifier_matches ( DCL_qualifier: STRING ; minimum : INTEGER ; str : STRING ; start_pos : INTEGER ) : BOOLEAN is
 				-- does DCL_qualifier match that at start_pos in str?
 		require
 			str_exists: str /= Void
@@ -3784,10 +3856,10 @@ feature -- DCL operations -- another missed opportunity to create a class
 					Result := False
 				end
 			end
-		end; -- DCL_qualifier_matches
+		end -- DCL_qualifier_matches
 
 
-	DCL_quoted_word (word : STRING) : STRING
+	DCL_quoted_word (word : STRING) : STRING is
 				-- generate a DCL word with quoted '$' if required
 		require
 			word_exists:  word /= Void
@@ -3808,10 +3880,10 @@ feature -- DCL operations -- another missed opportunity to create a class
 					l_pos := Result.index_of ('$', l_pos + 1)
 				end
 			end
-		end; -- DCL_quoted_word
+		end -- DCL_quoted_word
 
 
-	remove_redundant_DCL_filespecs (a_value : STRING)
+	remove_redundant_DCL_filespecs (a_value : STRING) is
 			-- Remove redundant DCL file specifications from DCL value string `a_value'.
 			-- This is done solely to shorten the DCL command.
 			-- The device (and directory?) portions of a DCL value are redundant in
@@ -3859,21 +3931,21 @@ feature -- DCL operations -- another missed opportunity to create a class
 					start_pos := end_pos + 1
 				end -- loop
 			end -- if parenthesized value
-		end; -- remove_redundant_DCL_filespecs
+		end -- remove_redundant_DCL_filespecs
 
 ---------------------------------------------------------------
 feature -- continuation lines
 -------------------------------------------------------------
 
-	is_continued_line (a_line : STRING) : BOOLEAN
+	is_continued_line (a_line : STRING) : BOOLEAN is
 			-- returns True if input ends with continuation character, otherwise False
 		require
 			line_exists:		a_line /= Void
 		do
 			Result := continuation_character_index (a_line) > 0
-		end; -- is_continued_line
+		end -- is_continued_line
 
-	strip_continuation (a_line : STRING)
+	strip_continuation (a_line : STRING)  is
 			-- strip continuation indicator from input string
 		require
 			line_exists:		a_line /= Void
@@ -3887,9 +3959,9 @@ feature -- continuation lines
 				a_line.keep_head (last_pos -1)
 				-- else Result := False
 			end
-	end; -- strip_continuation
+	end -- strip_continuation
 
-	continuation_character_index (a_line : STRING) : INTEGER
+	continuation_character_index (a_line : STRING) : INTEGER is
 			-- returns index of continuation character in line, 0 if none
 		require
 			line_exists:	a_line /= Void
@@ -3908,13 +3980,13 @@ feature -- continuation lines
 				Result := last_pos
 			else Result := 0
 			end
-		end; -- continuation_character_index
+		end -- continuation_character_index
 
 
 
 feature -- Test
 
-	test
+	test is
 		local
 			l_test: ES5SH_TEST
 		do

@@ -39,7 +39,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <memory.h>
+#include <string.h>
 #include "rt_gen_types.h"
 #include "eif_interp.h"
 

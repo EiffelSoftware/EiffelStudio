@@ -40,6 +40,9 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 
 #include "eif_portable.h"
 #ifdef VXWORKS
+#include <sysLib.h>
+#include <taskLib.h>        /* 'thread' operations */
+#include <taskVarLib.h>     /* 'thread' 'specific data' */
 #include <envLib.h>
 #endif
 #ifdef EIF_WINDOWS
@@ -117,8 +120,8 @@ rt_public void eif_sleep(EIF_INTEGER_64 nanoseconds)
 	 */
 
 #ifdef VXWORKS
-		/* No sleep routine by default. We fake a sleep. */
-	EIF_THR_YIELD;
+	int n = (int) (((EIF_NATURAL_64) nanoseconds * (EIF_NATURAL_64) sysClkRateGet())/1000000000);
+	taskDelay(n);
 #else
 #ifdef HAS_NANOSLEEP
 	struct timespec req;

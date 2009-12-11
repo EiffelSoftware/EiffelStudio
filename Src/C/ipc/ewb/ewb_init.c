@@ -200,14 +200,13 @@ rt_public int launch_ecdbgd (char* progn, char* cmd, int eif_timeout)
 
 rt_public int close_ecdbgd (int eif_timeout) 
 {
-#ifndef EIF_WINDOWS
-	pid_t child_pid, wpid;
-	int status;
-#endif
-	send_rqst_0 (CLOSE_DBG);
-#ifdef EIF_WINDOWS
+#if defined(EIF_WINDOWS) || defined(VXWORKS)
+	send_rqst_0(CLOSE_DBG);
 	return 0;
 #else
+	pid_t child_pid, wpid;
+	int status;
+	send_rqst_0 (CLOSE_DBG);
 	child_pid = (pid_t) ewb_data.d_ecdbgd;
 	if (child_pid > 0) {
 		wpid = waitpid(child_pid, &status, WNOHANG | WUNTRACED

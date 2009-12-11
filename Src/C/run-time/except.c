@@ -1279,7 +1279,7 @@ rt_public void eraise(char *tag, long num)
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
 	/* INVARIANT_VIOLATION is not raised in here, so we don't care if entry or not. */
-	make_exception (num, signo, eno, echtg, reci_name, Origin(eclass), "", "", line_number, 0, 1); // FIXME:jfiat 
+	make_exception (num, signo, eno, echtg, reci_name, Origin(eclass), "", "", line_number, 0, 1); /* FIXME:jfiat  */
 
 #ifndef NOHOOK
 	exception(PG_RAISE);	/* Debugger hook -- explicitly raised exception */
@@ -2963,7 +2963,7 @@ rt_private void print_top(void (*append_trace)(char *))
 	/* create the 'routine_name@line_number' string. We limit ourself to the first 192
 	 * characters of `routine_name' otherwise we will do a buffer overflow. 
 	 * 189 = 192 - 3, 3 being characters of "..." */
-	if (line_number>0) { //FIXME:jfiat bpnested_index?
+	if (line_number>0) { /* FIXME:jfiat bpnested_index? */
 		/* the line number seems valid, so we are going to print it */
 		if (strlen (eif_except.rname) > 189) {
 			sprintf(rout_name_buffer, "%.189s... @%d", eif_except.rname, line_number);

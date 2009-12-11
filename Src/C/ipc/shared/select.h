@@ -42,6 +42,10 @@
 #include "timehdr.h"
 #endif
 
+#ifdef VXWORKS
+#include <selectLib.h>
+#endif
+
 /* List of error number which may be reported by the select routines. This list
  * must be kept in sync with the error arrays.
  */

@@ -65,8 +65,12 @@ doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option q
 #elif defined(HAS_GETRUSAGE)
 #elif defined(HAS_TIMES)
 #else
+#ifdef I_SYS_TIMEB
 #include <sys/timeb.h>
+#endif
+#ifdef I_TIME
 #include <time.h>
+#endif
 #endif
 
 struct prof_info {
@@ -233,11 +237,17 @@ rt_private rt_uint64 process_time (void)
 
 	times(&time);
 	return (time.tms_utime + time.tms_stime) / (rt_nb_ticks_per_second * NB_NANO_IN_ONE_SECOND);
-#else
+#elif defined(HAS_FTIME)
+	RT_GET_CONTEXT
 	struct timeb tm;
 
 	ftime(&tm);
 	return tm->time * NB_NANO_IN_ONE_SECOND + tm->millitm * NB_NANO_IN_ONE_MILLI - rt_start_time;
+#else
+	RT_GET_CONTEXT
+	time_t tv;
+	time(&tv);
+	return tv * NB_NANO_IN_ONE_SECOND - rt_start_time;
 #endif
 }
 
@@ -420,11 +430,17 @@ rt_public void initprf(void)
 #elif defined(HAS_GETRUSAGE)
 #elif defined(HAS_TIMES)
 		rt_nb_ticks_per_second = sysconf(_SC_CLK_TCK);
-#else
+#elif defined(HAS_FTIME)
 		{
 			struct timeb tm;
 			ftime(&tm);
 			rt_start_time = tm->time * NB_NANO_IN_ONE_SECOND + tm->millitm * NB_NANO_IN_ONE_MILLI;
+		}
+#else
+		{
+			time_t tv;
+			time(&tv);
+			rt_start_time = tv * NB_NANO_IN_ONE_SECOND;
 		}
 #endif
 

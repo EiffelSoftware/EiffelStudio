@@ -2290,7 +2290,6 @@ rt_public EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type,
 	} else {
 		if ((ip.value.type & SK_HEAD) != (a_rt_type & SK_HEAD)) {
 			if (((ip.value.type & SK_HEAD) == SK_VOID)) {
-				// ,...
 			} else {
 				print_err_msg (stderr,"[Execution recording] Error: rt_dbg_stack_value (dep=%d, loc_type=0x%X, loc_number=%d) -> ERROR ip: type:0x%X rt_type=0x%X\n", stack_depth, loc_type, loc_number, ip.value.type, a_rt_type & SK_HEAD);
 			}
@@ -2430,7 +2429,6 @@ rt_public int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint3
 	} else {
 		if ((ip.value.type & SK_HEAD) != (new_value->type & SK_HEAD)) {
 			if (((ip.value.type & SK_HEAD) == SK_REF) && ((new_value->type & SK_HEAD) == SK_VOID)) {
-				// ,...
 			} else {
 				print_err_msg(stderr,"[Execution replaying] Error: rt_dbg_set_stack_value (dep=%d, loc_type=0x%X, loc_number=%d) -> ERROR ip: type:0x%X new_value->type=0x%X\n", stack_depth, loc_type, loc_number, ip.value.type, new_value->type);
 			}

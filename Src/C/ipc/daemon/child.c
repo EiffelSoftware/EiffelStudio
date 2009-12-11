@@ -74,6 +74,15 @@
 #include "ipcvms.h"
 #endif
 
+#ifdef VXWORKS
+#include <stdlib.h>
+#include <envLib.h>
+#include <selectLib.h>
+#ifdef I_TIME
+#include <time.h>
+#endif
+#endif
+
 /* #define USE_ADD_LOG */
 
 #define PIPE_READ	0		/* File descriptor used for reading */
@@ -257,16 +266,17 @@ rt_private void set_meltpath_environment (char* exe_path)
 			putenv (envstring);
 		}
 	
-//			/* Set working directory to where project is located. We look
-//			 * 17 characters before the end of `meltpath' to ensure there
-//			 * is only one occurrence of EIFGENs in `meltpath'. */
-//		/* FIXME JOCELYN new EIFGENs/target/W_code... 17 ??? */
-//		CHECK("Valid melted path", strlen (meltpath) >= 17);
-//				
-//		appname = strstr (meltpath + strlen (meltpath) - 17, "EIFGENs");
-//		if (appname) {
-//			*(appname - 1) = (char) 0;
-//		}
+			/* Set working directory to where project is located. We look
+			 * 17 characters before the end of `meltpath' to ensure there
+			 * is only one occurrence of EIFGENs in `meltpath'. */
+/* FIXME JOCELYN new EIFGENs/target/W_code... 17 ???
+		CHECK("Valid melted path", strlen (meltpath) >= 17);
+				
+		appname = strstr (meltpath + strlen (meltpath) - 17, "EIFGENs");
+		if (appname) {
+			*(appname - 1) = (char) 0;
+		}
+*/
 		free (meltpath);
 	}
 }

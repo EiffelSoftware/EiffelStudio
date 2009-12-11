@@ -981,7 +981,7 @@ rt_public void dead_app(void)
 	 * of `waitpid' to be suspended if the child process is still
 	 * running (just in case!)).
 	 */
-#if !defined (EIF_WINDOWS) && !defined (EIF_VMS)
+#if !defined (EIF_WINDOWS) && !defined (EIF_VMS) && !defined(VXWORKS)
 	child_pid = waitpid((Pid_t) daemon_data.d_app, &status, WNOHANG);
 #endif
 

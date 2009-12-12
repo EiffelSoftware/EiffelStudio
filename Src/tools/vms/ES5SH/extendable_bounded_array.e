@@ -21,7 +21,7 @@ inherit
 		rename
 			subarray as array_subarray
 		export
-			{ROSE_LINEAR_ARRAY_OR_ONE} auto_resize
+			{LINEAR_ARRAY} auto_resize
 		undefine
 			linear_representation, prunable, prune, extendible
 		redefine

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 	path: "$File: //rose/source/kernel/infrastructure/containers/rose_linear_array.e $"
 
-class ROSE_LINEAR_ARRAY [G]
+class LINEAR_ARRAY [G]
 
 inherit
 	SORTABLE_ARRAY [G]
@@ -57,7 +57,7 @@ feature -- Access
 			from i := 1 until i > k loop
 				j := a_indices.item (l_lower + i - 1)
 				if not valid_index (j) then
-					(create {EXCEPTIONS}).raise ("Invalid index given to ROSE_LINEAR_ARRAY.subset")
+					(create {EXCEPTIONS}).raise ("Invalid index given to LINEAR_ARRAY.subset")
 				end
 				Result.put (item (j),i)
 				i := i + 1
@@ -76,7 +76,7 @@ feature -- Access
 			from i := 1 until i > k loop
 				j := a_indices.item (l_lower + i - 1)
 				if not valid_index (j) then
-					Print ("%NInvalid index given to ROSE_LINEAR_ARRAY.subset%N")
+					print ("%NInvalid index given to LINEAR_ARRAY.subset%N")
 				else
 					Result.put (item (j),i)
 				end
@@ -156,7 +156,7 @@ feature -- Access
 			end
 		end
 
-	valid_flags(a_valid : FUNCTION[ANY, TUPLE[G], BOOLEAN]) : ROSE_LINEAR_ARRAY[BOOLEAN] is
+	valid_flags(a_valid : FUNCTION[ANY, TUPLE[G], BOOLEAN]) : LINEAR_ARRAY[BOOLEAN] is
 		-- valid data item flags
 		local
 			i : INTEGER
@@ -218,27 +218,27 @@ feature -- Access
 			Result := (not a_order.item ([a_1, a_2])) and (not a_order.item ([a_2, a_1]))
 		end
 
-	quotient_with_less_than_function (a_order : FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): ROSE_LINEAR_ARRAY [ROSE_LINEAR_ARRAY [G]] is
+	quotient_with_less_than_function (a_order : FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): LINEAR_ARRAY [LINEAR_ARRAY [G]] is
 			-- create a quotient, just using less than function
 		do
 			Result := ordered_quotient (a_order, agent equivalent_from_order (a_order, ?, ?))
 		end
 
-	ordered_quotient (a_order : FUNCTION [ANY,TUPLE [G,G],BOOLEAN]; a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): ROSE_LINEAR_ARRAY [ROSE_LINEAR_ARRAY [G]] is
+	ordered_quotient (a_order : FUNCTION [ANY,TUPLE [G,G],BOOLEAN]; a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): LINEAR_ARRAY [LINEAR_ARRAY [G]] is
 			-- create ordered quotient
 		local
-			l_array : ROSE_LINEAR_ARRAY [G]
+			l_array : LINEAR_ARRAY [G]
 		do
 			create l_array.make_from_array (Current)
 			l_array.sort_by (a_order)
 			Result := l_array.quotient (a_equivalent)
 		end
 
-	quotient (a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): ROSE_LINEAR_ARRAY [ROSE_LINEAR_ARRAY [G]] is
+	quotient (a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): LINEAR_ARRAY [LINEAR_ARRAY [G]] is
 			-- create quotient; assumes you have sorted the array
 		local
 			l_last: G
-			l_array: ROSE_LINEAR_ARRAY [G]
+			l_array: LINEAR_ARRAY [G]
 		do
 			create Result.make_empty
 			from start until off loop
@@ -489,4 +489,4 @@ feature {NONE} -- Comparison
 			end
 		end
 
-end -- class ROSE_LINEAR_ARRAY
+end -- class LINEAR_ARRAY

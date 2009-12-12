@@ -7,14 +7,14 @@ indexing
 class DELIMITED_TEXT
 
 inherit
-	ROSE_LINEAR_ARRAY [STRING]
+	LINEAR_ARRAY [STRING]
 	    rename
 	    	make as extendable_bounded_make
 		end
 
 create
-   make, make_ignoring_repeats, make_removing_quotes, make_removing_spaces,
-   make_ignoring_quotes,extendable_bounded_make,make_empty,make_from_array
+   make, make_ignoring_repeats, make_removing_quotes, make_removing_spaces, make_ignoring_quotes
+   --extendable_bounded_make, make_empty, make_from_array
 
 feature -- Creation
 
@@ -24,7 +24,7 @@ feature -- Creation
 			a_text_not_void: a_text /= Void
 		do
 			make_empty
-			text := clone(a_text)
+			create text.make_from_string (a_text)
 			delimiter := a_delimiter
 			parse
 		end
@@ -60,6 +60,36 @@ feature -- Creation
 			remove_spaces := true
 			make (a_text, a_delimiter)
 		end
+
+--feature -- Moose
+
+--	count: INTEGER
+--			-- number of elements in parsed string
+--		do
+--			Result := array.count
+--		end
+--	first: STRING
+--			-- item at first position, if any
+--		do
+--			if array.valid_index (array.lower) then
+--				Result := array [array.lower]
+--			end
+--		end
+--	is_empty: BOOLEAN
+--			-- is parsed text empty?
+--		do
+--			Result := array.is_empty
+--		end
+--	item alias "[]", at alias "@", entry (i: INTEGER): STRING
+--			-- Entry at index `i', if in index interval
+--		do
+--			Result := array[i]
+--		end
+--	valid_index (i: INTEGER): BOOLEAN
+--			-- Is `i' within the bounds of the array?
+--		do
+--			Result := (array.lower <= i) and then (i <= array.upper)
+--		end
 
 feature -- Basic operations
 
@@ -139,8 +169,8 @@ feature -- Basic operations
 			repeated_delimiters_ignored := false
 		end
 
-	delimited_string(a_delimiter : CHARACTER) : STRING is
-			-- delimited string
+	delimited_string (a_delimiter: CHARACTER) : STRING is
+			-- delimited string in canonical form
 		local
 			i : INTEGER
 		do
@@ -151,4 +181,5 @@ feature -- Basic operations
 			end
 		end
 
-end -- class ROSE_DELIMITED_TEXT
+
+end -- class DELIMITED_TEXT

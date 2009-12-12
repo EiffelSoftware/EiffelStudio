@@ -10,10 +10,12 @@ indexing
 
 class ES5SH_COMMON
 
-feature -- Access
+feature -- Identification
 
 	pretty_name:  STRING is "ES5SH"
-	pretty_ident: STRING is	"X6.5-003"
+	pretty_ident: STRING is	"V6.5-004"
+	svn_keyword_revision: STRING = "$Revision: 81795$"
+	svn_keyword_id: STRING = "$ID: $"
 	pretty_version: STRING
 			-- pretty name and version
 		once
@@ -21,7 +23,36 @@ feature -- Access
 			Result.to_lower
 			Result.append_character (space_character)
 			Result.append (pretty_ident)
+			if pretty_revision.count > 2 then
+				Result.append (" rev ")
+				Result.append (pretty_revision)
+			end
 		end
+	pretty_revision: STRING
+			-- string of form "x.y.vvvv" extracted from svn revision
+		local
+			l_rev: INTEGER
+		once
+			Result := svn_keyword_revision.twin
+			if Result.is_empty then
+				Result := "?"
+			end
+			Result.replace_substring_all ("$Revision:", "")
+			if ends_with (Result, "$") then
+				Result.keep_head (Result.count - 1)
+			end
+			if starts_with (Result, " ") then
+				Result.keep_tail (Result.count - 1)
+			end
+			if Result.count >= 2 then
+				Result.insert (".", 2)
+			end
+--			if Result.count >= 4 then
+--				Result.insert (".", 4)
+--			end
+		end
+
+feature -- Access
 
 	default_date_time_format: STRING  is "[0]dd-mmm-yyyy [0]hh:[0]mi:[0]ss"
 	current_date_time: STRING
@@ -154,43 +185,6 @@ feature -- Configuration
 				Result := a_default
 				end
 		end -- configuration_option
-
-feature -- String utility operations
-
-	unquote (a_str: STRING) is
-			-- remove enclosing quotes, if any, from `a_str'
-		require
-			string_not_void: a_str /= Void
-		do
-			if a_str.count >= 2 and then a_str @ 1 = '%"' and then a_str @ (a_str.count) = '%"'  then
-				a_str.remove_tail (1)
-				a_str.remove_head (1)
-			end
-		end
-
-	delimit_target_colon (a_line: STRING) is
-			-- insert spaces around the target (colon) delimiter of a target dependency specification ( target : dependents...)
-		require
-			line_nonblank: a_line /= Void and then not a_line.is_empty
-			line_is_target_dependency_specification:
-				a_line.count >= 3 and then not is_whitespace (a_line @ 1) and then a_line.index_of (':', 2) > 0
-		local
-			l_pos: INTEGER
-		do
-			l_pos := a_line.index_of (':', 2)
-			if l_pos > 0 then
-				if a_line.count > l_pos and then a_line @ (l_pos + 1) /= ' ' then
-					if a_line @ (l_pos + 1) = ':' then
-						a_line.insert_character (' ', l_pos + 2)
-					else
-						a_line.insert_character (' ', l_pos + 1)
-					end
-				end
-				if l_pos > 1 and then a_line @ l_pos /= ' ' then
-					a_line.insert_character (' ', l_pos)
-				end
-			end
-		end
 
 feature -- character classification
 
@@ -369,9 +363,44 @@ feature -- Tokenization
 		end  -- next_token
 
 
-
 feature -- string utilities
--- should be features of a class that inherits from STRING
+
+	unquote (a_str: STRING) is
+			-- remove enclosing quotes, if any, from `a_str'
+		require
+			string_not_void: a_str /= Void
+		do
+			if a_str.count >= 2 and then a_str @ 1 = '%"' and then a_str @ (a_str.count) = '%"'  then
+				a_str.remove_tail (1)
+				a_str.remove_head (1)
+			end
+		end
+
+	delimit_target_colon (a_line: STRING) is
+			-- insert spaces around the target (colon) delimiter of a target dependency specification ( target : dependents...)
+		require
+			line_nonblank: a_line /= Void and then not a_line.is_empty
+			line_is_target_dependency_specification:
+				a_line.count >= 3 and then not is_whitespace (a_line @ 1) and then a_line.index_of (':', 2) > 0
+		local
+			l_pos: INTEGER
+		do
+			l_pos := a_line.index_of (':', 2)
+			if l_pos > 0 then
+				if a_line.count > l_pos and then a_line @ (l_pos + 1) /= ' ' then
+					if a_line @ (l_pos + 1) = ':' then
+						a_line.insert_character (' ', l_pos + 2)
+					else
+						a_line.insert_character (' ', l_pos + 1)
+					end
+				end
+				if l_pos > 1 and then a_line @ l_pos /= ' ' then
+					a_line.insert_character (' ', l_pos)
+				end
+			end
+		end
+
+feature -- String primitives
 
 	is_nonblank (a_str: STRING) : BOOLEAN is
 			-- does `a_str' exist, and is it nonblank?
@@ -454,6 +483,10 @@ feature -- string utilities
 		local
 			l_pos : INTEGER
 		do
+			-- debug:
+			if not other.is_empty and then other @ 1 = '.' then
+				Result := has_extension (this, other)
+			end
 			l_pos := this.count - other.count + 1
 			Result := other.count <= this.count and then
 				this.substring_index (other, this.count - other.count + 1) > 0
@@ -533,6 +566,186 @@ feature -- string utilities
 			end
 		end
 
+
+feature -- filename primitives
+
+	is_vms_filespec (filespec : STRING) : BOOLEAN is
+			-- does string look like a VMS filespec?
+			-- if it has no unix filespec delimiters and doesnt begin with a symbol $(x),
+			-- then assume it is a VMS filespec
+		require
+			filespec_exists:	filespec /= Void
+		do
+			if filespec.is_empty
+				--or else filespec.has (operating_environment_.directory_separator)
+				or else filespec.has ('/') or else filespec.has ('\')
+				or else filespec.substring_index ("$(", 1) = 1
+			then
+				Result := False
+			else
+				Result := True
+			end
+		end -- is_vms_filespec
+
+
+	is_relative_filespec (a_filespec: STRING) : BOOLEAN is
+		require
+			filespec_exists: a_filespec /= Void
+		local
+			--l_dir: STRING
+			l_pos1, l_pos2: INTEGER
+		do
+			--l_dir := basename (a_filespec)
+			if a_filespec.is_empty then
+				Result := True
+			elseif is_vms_filespec (a_filespec) then
+				l_pos1 := a_filespec.index_of ('[', 1)
+				l_pos2 := a_filespec.index_of ('<', 1)
+				if l_pos2 > 0 and then (l_pos1 = 0 or else l_pos2 < l_pos1) then
+					l_pos1 := l_pos2
+				end
+				Result := l_pos1 = 0 or else l_pos1 >= a_filespec.count or else (a_filespec @ (l_pos1 + 1) = '.' or else a_filespec @ (l_pos1 + 1) = ']')
+			--else Result := a_filespec @ 1 /= '/'
+			elseif a_filespec @ 1 = '.' then
+				Result := True
+			else
+				if a_filespec @ 1 = '/' or else starts_with (a_filespec, "\\") then
+					Result := False
+				else
+					l_pos1 := a_filespec.index_of (':', 1)
+					if l_pos1 < 1 or else l_pos1 >= a_filespec.count or else a_filespec @ (l_pos1 + 1) /= '\' then
+						Result := True
+					end
+				end
+			end
+		end
+
+	make_absolute_filespec (a_filespec: STRING) : STRING is
+		require
+			filespec_exists: a_filespec /= Void
+		local
+			l_cwd: STRING
+		do
+			if is_relative_filespec (a_filespec) then
+				Result := a_filespec.twin
+				l_cwd := execution_environment_.current_working_directory
+				if is_vms_filespec (l_cwd) then
+				else
+					if Result.count >= 2 and then Result @ 1 = '.' and then Result.index_of (operating_environment_.directory_separator, 2) = 2 then
+						Result.remove_head (2)
+					end
+					Result.prepend_character (operating_environment_.directory_separator)
+					Result.prepend (execution_environment_.current_working_directory)
+				end
+			else
+				Result := a_filespec.twin
+			end
+		end
+
+	dirname (a_filespec: STRING): STRING is
+			-- the directory name (path, excluding the filename) part of 'a_filespec'
+			-- including terminating path delimiter; empty if no path delimiter found
+		local
+			l_pos : INTEGER
+			unfinished: INTEGER
+		do
+			l_pos := basename_index (a_filespec, 1)
+			if l_pos > 1 then
+				Result := a_filespec.substring (1, l_pos -1)
+			else
+				create Result.make_empty
+			end
+		ensure
+			dirname_not_void: Result /= Void
+		end
+
+	basename (a_filespec: STRING) : STRING is
+			-- the filename (filespec less path); empty if filespec ends with path delimiter
+		require
+			filespec_exists: a_filespec /= Void
+		local
+			l_pos : INTEGER
+			unfinished: INTEGER
+		do
+			l_pos := basename_index (a_filespec, 1)
+			if l_pos = 0 then
+				Result := a_filespec.twin
+			elseif l_pos > a_filespec.count then
+				create Result.make_empty
+			else
+				Result := a_filespec.substring (l_pos, a_filespec.count)
+			end
+		ensure
+			basename_exists: Result /= Void
+		end
+
+	basename_index (a_filespec : STRING; start_pos: INTEGER) : INTEGER is
+			-- the position (index) of the basename (filename part) in the (any platform syntax) file path.
+			-- may be start_pos if no directory delimiters found,
+			-- may be > a_filespec.count (a_filespec.count + 1) if no filename is present (ie. the last character is a path delimiter)
+	 	require
+			filespec_exists: a_filespec /= Void
+			start_large_enough:	start_pos >= 1
+		local
+			l_delim, l_pos : INTEGER
+		do
+			if a_filespec.is_empty then
+				Result := start_pos
+			else
+				-- find the last directory delimiter at or after start_pos
+				-- if none, then simply return start_pos
+				from
+					Result := start_pos
+					l_delim := 1
+				until
+					l_delim > path_delimiters.count
+				loop
+					l_pos := a_filespec.last_index_of (path_delimiters @ l_delim, a_filespec.count)
+					if l_pos >= start_pos and then l_pos >= Result then
+						Result := l_pos + 1
+					end
+					l_delim := l_delim + 1
+				end -- loop
+			end
+		ensure
+			correct_place:	Result >= start_pos and Result <= a_filespec.count + 1
+		end -- basename_index
+
+	extension (a_filespec: STRING): STRING
+			-- extension from `a_filespec;' blank if none; includes leading '.'
+			-- ".a" is not considered an extension (filenames may begin with ".")
+		require
+			filespec_not_void: a_filespec /= Void
+		local
+			l_base, l_ext: INTEGER -- index of start of file (basename), extension
+		do
+			--create Result.make_empty
+			if not a_filespec.is_empty then
+				l_base := basename_index (a_filespec, 1)
+				if l_base <= a_filespec.count then
+					l_ext := a_filespec.last_index_of ('.', a_filespec.count)
+					if l_ext > l_base then
+						Result := a_filespec.substring (l_ext, a_filespec.count)
+					end
+				end
+			end
+			if Result = Void then
+				Result := ""
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	has_extension (a_filespec, a_other: STRING): BOOLEAN
+			-- does `a_filespec' contain extension `a_other?'
+		require
+			filespec_not_void: a_filespec /= Void
+			other_not_void: a_other /= Void
+			other_is_extension: a_other.count >= 1 and then a_other @ 1 = '.'
+		do
+			Result := a_filespec.count > a_other.count and then
+					a_other.is_case_insensitive_equal (a_filespec.substring (a_filespec.count - a_other.count +1, a_filespec.count))
+		end
 
 --feature -- Output
 

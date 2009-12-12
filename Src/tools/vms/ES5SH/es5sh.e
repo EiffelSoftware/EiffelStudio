@@ -1,6 +1,6 @@
 indexing
-	description: "System for converting Unix Makefile.SH files to VMS Makefile. files"
 	name: "EIFFEL_SRC:[ES5SH]ES5SH.E"
+	description: "System for converting Unix Makefile.SH files to VMS Makefile. files"
 	author: "David Morgan"
 	original: 01,Jan,1995
 	last: 22,Aug,1998
@@ -1787,7 +1787,7 @@ feature -- Produce output files
 				debug ("externals") -- David debug
 					print_output_message (<< "DEBUG(externals): %N  External item - in: %"", externals_list.item + "%"" >>)
 				end -- end debug
-				if ends_with (externals_list.item.as_lower, ".opt") then
+				if has_extension (externals_list.item, ".opt") then
 					l_cmd.append ("," + externals_list.item + "/options")
 				end
 				externals_list.forth
@@ -1846,13 +1846,13 @@ feature -- Produce output files
 					l_opt.wipe_out
 					if starts_with (l_dep, "emain.") or else starts_with (l_dep, "preobj.") then
 						do_nothing -- don't write the line that has emain.obj or preobj in it
-					elseif ends_with (l_dep, ".olb") then
+					elseif has_extension (l_dep, ".olb") then
 						   l_file.put_string (application_dependencies.item + "/libr%N")
-					elseif ends_with (l_dep, ".obj") then
+					elseif has_extension (l_dep, ".obj") then
 						if ii = 1 then
 							l_file.put_line (<< application_dependencies.item >>)
 						end
-					elseif ends_with (l_dep, ".exe") then
+					elseif has_extension (l_dep, ".exe") then
 						if ii = 1 then
 							l_file.put_line (<< application_dependencies.item, "/share" >>)
 						end
@@ -1888,14 +1888,14 @@ feature -- Produce output files
 				until externals_list.off
 				loop
 					l_tmp := externals_list.item.as_lower
-					if ends_with (l_tmp, ".opt") then
+					if has_extension (l_tmp, ".opt") then
 						l_file.put_line (<< "! ", externals_list.item, " -- option file in LINK command, above" >>)
 					else
-						l_file.put_line (<< l_ext_prefix, externals_list.item >>)
-						if ends_with (l_tmp, ".olb") then
-							l_file.put_string ("/libr%N")
-						elseif ends_with (l_tmp, ".exe") then
-							l_file.put_string ("/share%N")
+						--l_file.put_text (<< l_ext_prefix, externals_list.item >>)
+						if has_extension (l_tmp, ".olb") then
+							l_file.put_line (<< l_ext_prefix, externals_list.item, "/libr" >>)
+						elseif has_extension (l_tmp, ".exe") then
+							l_file.put_line (<< l_ext_prefix, externals_list.item, "/share" >>)
 						else
 							l_file.put_new_line
 						end
@@ -2078,7 +2078,7 @@ feature -- Produce output files
 			else
 				if will_concatenate_source_file_contents then
 					if a_index > 1 then
-						a_big_file.put_line (<<"%F" >>)
+						a_big_file.put_line (<< "%F" >>)
 					end
 					append_source_contents_to_big_file (l_source_file, a_big_file)
 				else
@@ -2483,7 +2483,7 @@ feature -- Process macro definitions
 							externals_options.append_character (space_character)
 						else
 							l_dbg := replace_macros (word)
-							if ends_with (word, ".lib") then
+							if has_extension (word, ".lib") then
 								replace_end (word, ".lib", ".olb")
 							end
 							externals_list.extend (word)
@@ -3359,151 +3359,6 @@ feature -- platform specific file names
 		end -- as_vms_filespec
 
 
-
-	is_vms_filespec (filespec : STRING) : BOOLEAN is
-			-- does string look like a VMS filespec?
-			-- if it has no unix filespec delimiters and doesnt begin with a symbol $(x),
-			-- then assume it is a VMS filespec
-		require
-			filespec_exists:	filespec /= Void
-		do
-			if filespec.is_empty
-				--or else filespec.has (operating_environment_.directory_separator)
-				or else filespec.has ('/') or else filespec.has ('\')
-				or else filespec.substring_index ("$(", 1) = 1
-			then
-				Result := False
-			else
-				Result := True
-			end
-		end -- is_vms_filespec
-
-
-	is_relative_filespec (a_filespec: STRING) : BOOLEAN is
-		require
-			filespec_exists: a_filespec /= Void
-		local
-			--l_dir: STRING
-			l_pos1, l_pos2: INTEGER
-		do
-			--l_dir := basename (a_filespec)
-			if a_filespec.is_empty then
-				Result := True
-			elseif is_vms_filespec (a_filespec) then
-				l_pos1 := a_filespec.index_of ('[', 1)
-				l_pos2 := a_filespec.index_of ('<', 1)
-				if l_pos2 > 0 and then (l_pos1 = 0 or else l_pos2 < l_pos1) then
-					l_pos1 := l_pos2
-				end
-				Result := l_pos1 = 0 or else l_pos1 >= a_filespec.count or else (a_filespec @ (l_pos1 + 1) = '.' or else a_filespec @ (l_pos1 + 1) = ']')
-			--else Result := a_filespec @ 1 /= '/'
-			elseif a_filespec @ 1 = '.' then
-				Result := True
-			else
-				if a_filespec @ 1 = '/' or else starts_with (a_filespec, "\\") then
-					Result := False
-				else
-					l_pos1 := a_filespec.index_of (':', 1)
-					if l_pos1 < 1 or else l_pos1 >= a_filespec.count or else a_filespec @ (l_pos1 + 1) /= '\' then
-						Result := True
-					end
-				end
-			end
-		end
-
-	make_absolute_filespec (a_filespec: STRING) : STRING is
-		require
-			filespec_exists: a_filespec /= Void
-		local
-			l_cwd: STRING
-		do
-			if is_relative_filespec (a_filespec) then
-				Result := a_filespec.twin
-				l_cwd := execution_environment_.current_working_directory
-				if is_vms_filespec (l_cwd) then
-				else
-					if Result.count >= 2 and then Result @ 1 = '.' and then Result.index_of (operating_environment_.directory_separator, 2) = 2 then
-						Result.remove_head (2)
-					end
-					Result.prepend_character (operating_environment_.directory_separator)
-					Result.prepend (execution_environment_.current_working_directory)
-				end
-			else
-				Result := a_filespec.twin
-			end
-		end
-
-	dirname (a_filespec: STRING): STRING is
-			-- the directory name (path, excluding the filename) part of 'a_filespec'
-			-- including terminating path delimiter; empty if no path delimiter found
-		local
-			l_pos : INTEGER
-			unfinished: INTEGER
-		do
-			l_pos := basename_index (a_filespec, 1)
-			if l_pos > 1 then
-				Result := a_filespec.substring (1, l_pos -1)
-			else
-				create Result.make_empty
-			end
-		ensure
-			dirname_exists: Result /= Void
-		end
-
-	basename (a_filespec: STRING) : STRING is
-			-- the filename (filespec less path); empty if filespec ends with path delimiter
-		require
-			filespec_exists: a_filespec /= Void
-		local
-			l_pos : INTEGER
-			unfinished: INTEGER
-		do
-			l_pos := basename_index (a_filespec, 1)
-			if l_pos = 0 then
-				Result := a_filespec.twin
-			elseif l_pos > a_filespec.count then
-				create Result.make_empty
-			else
-				Result := a_filespec.substring (l_pos, a_filespec.count)
-			end
-		ensure
-			basename_exists: Result /= Void
-		end
-
-	basename_index (a_filespec : STRING; start_pos: INTEGER) : INTEGER is
-			-- the position (index) of the basename (filename part) in the (any platform syntax) file path.
-			-- may be start_pos if no directory delimiters found,
-			-- may be > a_filespec.count (a_filespec.count + 1) if no filename is present (ie. the last character is a path delimiter)
-	 	require
-			filespec_exists: a_filespec /= Void
-			start_large_enough:	start_pos >= 1
-		local
-			l_delim, l_pos : INTEGER
-		do
-			if a_filespec.is_empty then
-				Result := start_pos
-			else
-				-- find the last directory delimiter at or after start_pos
-				-- if none, then simply return start_pos
-				from
-					Result := start_pos
-					l_delim := 1
-				until
-					l_delim > path_delimiters.count
-				loop
-					l_pos := a_filespec.last_index_of (path_delimiters @ l_delim, a_filespec.count)
-					if l_pos >= start_pos and then l_pos >= Result then
-						Result := l_pos + 1
-					end
-					l_delim := l_delim + 1
-				end -- loop
-			end
-		ensure
-			correct_place:	Result >= start_pos and Result <= a_filespec.count + 1
-		end -- basename_index
-
-
-
 -------------------------------------------------------------
 feature -- shell commands
 -------------------------------------------------------------
@@ -3687,8 +3542,7 @@ feature -- shell commands
 				until
 					ii > l_shword.count
 				loop
-					--l_opt := l_shword.i_th (ii)
-					l_opt := l_shword.item (ii)
+					l_opt := l_shword[ii]
 					if l_opt.is_equal ("--devel") then
 						l_top := "$EIFFEL_SRC"
 					elseif l_opt.is_equal ("--include_path") then
@@ -3710,7 +3564,7 @@ feature -- shell commands
 			elseif l_cmd.is_equal ("gtk-config") then
 					-- Hack time: replace `gtk-config --cflags` and `gtk-config --libs`
 					-- with corredsponding configuration options (gtk_config_cflags, gtk_config_whatsit)
-				l_opt := l_shword.item (2)
+				l_opt := l_shword[2]
 				if l_opt.is_equal ("--cflags") or else l_opt.is_equal ("--libs") then
 					l_key := "gtk_config_" + l_opt.substring (3, l_opt.count)
 					l_default := "$(GTK_" + l_opt.substring (3, l_opt.count) + ")"

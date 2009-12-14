@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test-engine-tests" uuid="DD3DA5DF-AE77-44CD-88D1-177058DDD673" library_target="test-engine-tests">
+	<description>Unit-tests for testing framework.</description>
+	<target name="test-engine-tests">
+		<root class="ANY" feature="default_create"/>
+		<file_rule>
+			<exclude>/EIFGENs</exclude>
+			<exclude>/tests</exclude>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option warning="true" namespace="EiffelSoftware.Framework">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="multithreaded" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" use_application_options="true"/>
+		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\ecosystem\ecosystem.ecf" use_application_options="true"/>
+		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" use_application_options="true"/>
+		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf" use_application_options="true"/>
+		<library name="testing_engine" location="$EIFFEL_SRC\framework\testing\testing.ecf" readonly="false" use_application_options="true"/>
+		<library name="testing_library" location="$ISE_LIBRARY\library\testing\testing.ecf" use_application_options="true"/>
+		<cluster name="tests" location=".\" recursive="true">
+			<option namespace="Tests">
+			</option>
+		</cluster>
+	</target>
+</system>

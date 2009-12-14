@@ -32,8 +32,6 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize `Current'.
-		local
-			l_project: like eiffel_project
 		do
 				-- TODO: retrieve `record_storage' from file system!
 			create record_storage.make (10)
@@ -76,7 +74,6 @@ feature {NONE} -- Initialization
 			l_directory: DIRECTORY
 			l_done: BOOLEAN
 			l_filename: FILE_NAME
-			l_file: RAW_FILE
 			l_existing: like record_storage
 		do
 			l_existing := record_storage.twin
@@ -358,7 +355,6 @@ feature {NONE} -- Element change
 			a_index_valid: 1 <= an_index and an_index <= record_storage.count
 		local
 			l_records: like record_storage
-			l_props: like property_storage
 			l_record: TEST_SESSION_RECORD
 			l_file: RAW_FILE
 		do

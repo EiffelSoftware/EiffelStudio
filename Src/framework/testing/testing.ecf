@@ -38,6 +38,7 @@
 			</option>
 			<file_rule>
 				<exclude>/spec$</exclude>
+				<exclude>/tests$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

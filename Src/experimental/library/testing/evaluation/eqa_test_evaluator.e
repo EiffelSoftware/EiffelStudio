@@ -138,7 +138,6 @@ feature {NONE} -- Implementation
 			-- Execute `procedure' in a protected way.
 		require
 			a_procedure_attached: a_procedure /= Void
-			buffer_empty: buffer.is_empty
 		local
 			l_retry: BOOLEAN
 			l_excpt: detachable EXCEPTION

@@ -2799,6 +2799,37 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 		end
 
+	process_guard_as (l_as: GUARD_AS)
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
+		do
+			l_text_formatter_decorator := text_formatter_decorator
+			put_breakable
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			l_text_formatter_decorator.process_keyword_text (ti_check_keyword, Void)
+			if l_as.check_list /= Void then
+				l_text_formatter_decorator.indent
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.set_new_line_between_tokens
+				l_as.check_list.process (Current)
+				l_text_formatter_decorator.exdent
+			else
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+			end
+			l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
+			l_text_formatter_decorator.put_new_line
+			if attached l_as.compound as c then
+				l_text_formatter_decorator.indent
+				format_compound (c)
+				l_text_formatter_decorator.put_new_line
+				l_text_formatter_decorator.exdent
+			end
+			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+		end
+
 	process_if_as (l_as: IF_AS)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator

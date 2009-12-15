@@ -1001,6 +1001,13 @@ feature {AST_EIFFEL} -- Instructions visitors
 		deferred
 		end
 
+	process_guard_as (l_as: GUARD_AS)
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_if_as (l_as: IF_AS)
 			-- Process `l_as'.
 		require

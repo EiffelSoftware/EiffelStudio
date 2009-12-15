@@ -90,6 +90,7 @@ inherit
 			process_check_as,
 			process_creation_as,
 			process_debug_as,
+			process_guard_as,
 			process_if_as,
 			process_inspect_as,
 			process_instr_call_as,
@@ -1563,6 +1564,20 @@ feature {NONE} -- Implementation
 			end
 			if l_as.compound /= Void then
 				format_compound (l_as.compound)
+			end
+		end
+
+	process_guard_as (l_as: GUARD_AS)
+		do
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			put_breakable (l_as)
+			if attached l_as.check_list as l then
+				l.process (Current)
+			end
+			if attached l_as.compound as c then
+				format_compound (c)
 			end
 		end
 

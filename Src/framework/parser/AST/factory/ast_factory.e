@@ -1430,6 +1430,13 @@ feature -- Access
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 		end
 
+	new_guard_as (c: KEYWORD_AS; a: EIFFEL_LIST [TAGGED_AS]; t: KEYWORD_AS;
+	              l: EIFFEL_LIST [INSTRUCTION_AS]; e: KEYWORD_AS): GUARD_AS
+			-- New CHECK with body AST node
+		do
+			create Result.initialize (c, a, t, l, e)
+		end
+
 	new_identifier_list (n: INTEGER): IDENTIFIER_LIST
 			-- New ARRAYED_LIST [INTEGER]
 		require

@@ -6181,6 +6181,46 @@ feature -- Implementation
 			end
 		end
 
+	process_guard_as (l_as: GUARD_AS)
+		local
+			a: BYTE_LIST [BYTE_NODE]
+			c: BYTE_LIST [BYTE_NODE]
+			b: GUARD_B
+			s: INTEGER
+			l_needs_byte_node: BOOLEAN
+		do
+			l_needs_byte_node := is_byte_node_enabled
+			context.enter_realm
+			s := context.scope
+			if attached l_as.check_list as l then
+					-- Type check assertions.
+				set_is_checking_check (True)
+				process_eiffel_list_with_matcher (l, create {AST_SCOPE_ASSERTION}.make (context), Void)
+				set_is_checking_check (False)
+				if l_needs_byte_node then
+					a ?= last_byte_node
+				end
+			end
+			if attached l_as.compound as l then
+					-- Type check compound.
+				process_compound (l)
+				if l_needs_byte_node then
+					c ?= last_byte_node
+				end
+			end
+			context.set_scope (s)
+			context.leave_realm
+
+			if l_needs_byte_node then
+				create b.make (a, c, l_as.end_keyword)
+				if attached l_as.start_location as l then
+					last_byte_node.set_line_number (l.line)
+				end
+				b.set_line_pragma (l_as.line_pragma)
+				last_byte_node := b
+			end
+		end
+
 	process_if_as (l_as: IF_AS)
 		local
 			l_vwbe1: VWBE1

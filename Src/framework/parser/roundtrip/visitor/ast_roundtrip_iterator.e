@@ -864,6 +864,15 @@ feature
 			safe_process (l_as.end_keyword)
 		end
 
+	process_guard_as (l_as: GUARD_AS)
+		do
+			safe_process (l_as.check_keyword (match_list))
+			safe_process (l_as.full_assertion_list)
+			safe_process (l_as.then_keyword (match_list))
+			safe_process (l_as.compound)
+			safe_process (l_as.end_keyword)
+		end
+
 	process_if_as (l_as: IF_AS)
 		do
 			safe_process (l_as.if_keyword (match_list))

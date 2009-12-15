@@ -139,6 +139,7 @@ create
 %type <FEATURE_SET_AS>		Feature_set
 %type <FORMAL_AS>			Formal_parameter
 %type <FORMAL_DEC_AS>		Formal_generic
+%type <GUARD_AS>			Guard
 %type <ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_operator Feature_name_for_call
 %type <IF_AS>				Conditional
 %type <INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
@@ -1479,6 +1480,8 @@ Instruction_impl: Creation
 			{ $$ := $1 }
 	|	Check
 			{ $$ := $1 }
+	|	Guard
+			{ $$ := $1 }
 	|	TE_RETRY
 			{ $$ := $1 }
 	;
@@ -2710,8 +2713,14 @@ Call: A_feature
 			{ $$ := $1 }
 	;
 
+-- Check instruction
+
 Check: TE_CHECK Assertion TE_END
 			{ $$ := ast_factory.new_check_as ($2, $1, $3) }
+	;
+
+Guard: TE_CHECK Assertion TE_THEN Compound TE_END
+			{ $$ := ast_factory.new_guard_as ($1, $2, $3, $4, $5) }
 	;
 
 

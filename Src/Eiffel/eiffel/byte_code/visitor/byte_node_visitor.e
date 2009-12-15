@@ -472,6 +472,15 @@ feature {BYTE_NODE} -- Visitors
 		deferred
 		end
 
+	process_guard_b (a_node: GUARD_B)
+			-- Process `a_node'.
+		require
+			is_valid: is_valid
+			a_node_not_void: a_node /= Void
+			a_node_valid: is_node_valid (a_node)
+		deferred
+		end
+
 	process_hector_b (a_node: HECTOR_B)
 			-- Process `a_node'.
 		require

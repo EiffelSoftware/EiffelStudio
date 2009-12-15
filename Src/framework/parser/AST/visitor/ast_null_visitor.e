@@ -434,6 +434,10 @@ feature -- Implementation
 		do
 		end
 
+	process_guard_as (l_as: GUARD_AS)
+		do
+		end
+
 	process_if_as (l_as: IF_AS)
 		do
 		end

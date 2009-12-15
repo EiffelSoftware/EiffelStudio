@@ -255,6 +255,11 @@ feature {BYTE_NODE} -- Visitors
 		do
 		end
 
+	process_guard_b (a_node: GUARD_B)
+			-- <Precursor>
+		do
+		end
+
 	process_hector_b (a_node: HECTOR_B)
 			-- Process `a_node'.
 		do

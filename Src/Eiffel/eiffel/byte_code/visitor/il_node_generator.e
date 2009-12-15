@@ -2023,6 +2023,31 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_guard_b (a_node: GUARD_B)
+			-- <Precursor>
+		local
+			i: INTEGER
+		do
+			process_pragma (a_node)
+			i := a_node.line_number
+			if i > 0 then
+				Il_generator.put_silent_line_info (i)
+			end
+			if attached a_node.check_list as c then
+					-- Generate assertions.
+				context.set_assertion_type ({ASSERT_TYPE}.in_check)
+				c.process (Current)
+				context.set_assertion_type (0)
+			end
+			if attached a_node.compound as c then
+					-- Generated compound.
+				c.process (Current)
+			end
+			if attached a_node.end_location as e then
+				il_generator.put_silent_debug_info (e)
+			end
+		end
+
 	process_hector_b (a_node: HECTOR_B)
 			-- Process `a_node'.
 		do

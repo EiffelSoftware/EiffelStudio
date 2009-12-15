@@ -15,6 +15,7 @@ inherit
 			process_assigner_call_as,
 			process_creation_as,
 			process_elseif_as,
+			process_guard_as,
 			process_if_as,
 			process_inspect_as,
 			process_instr_call_as,
@@ -401,6 +402,12 @@ feature {NONE} -- Iteration
 		end
 
 	process_elseif_as (l_as: ELSIF_AS)
+		do
+			register_breakable (l_as)
+			Precursor (l_as)
+		end
+
+	process_guard_as (l_as: GUARD_AS)
 		do
 			register_breakable (l_as)
 			Precursor (l_as)

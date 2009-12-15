@@ -22,6 +22,7 @@ inherit
 			process_debug_as,
 			process_eiffel_list,
 			process_elseif_as,
+			process_guard_as,
 			process_if_as,
 			process_inspect_as,
 			process_like_cur_as,
@@ -360,6 +361,14 @@ feature {AST_EIFFEL} -- Visitor: compound
 			a.expr.process (Current)
 			process_compound (a.compound)
 			attribute_initialization.keeper.save_sibling
+		end
+
+	process_guard_as (a: GUARD_AS)
+		do
+			safe_process (a.check_list)
+			attribute_initialization.keeper.enter_realm
+			process_compound (a.compound)
+			attribute_initialization.keeper.leave_realm
 		end
 
 	process_if_as (a: IF_AS)

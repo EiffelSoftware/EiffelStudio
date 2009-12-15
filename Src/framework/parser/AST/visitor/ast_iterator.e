@@ -584,6 +584,12 @@ feature {NONE} -- Implementation
 			safe_process (l_as.compound)
 		end
 
+	process_guard_as (l_as: GUARD_AS)
+		do
+			safe_process (l_as.check_list)
+			safe_process (l_as.compound)
+		end
+
 	process_if_as (l_as: IF_AS)
 		do
 			l_as.condition.process (Current)

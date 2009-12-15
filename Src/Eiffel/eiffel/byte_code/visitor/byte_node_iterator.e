@@ -443,6 +443,15 @@ feature {BYTE_NODE} -- Visitors
 			postorder_process (a_node)
 		end
 
+	process_guard_b (a_node: GUARD_B)
+			-- <Precursor>
+		do
+			preorder_process (a_node)
+			safe_process (a_node.check_list)
+			safe_process (a_node.compound)
+			postorder_process (a_node)
+		end
+
 	process_hector_b (a_node: HECTOR_B)
 			-- Process `a_node'.
 		do

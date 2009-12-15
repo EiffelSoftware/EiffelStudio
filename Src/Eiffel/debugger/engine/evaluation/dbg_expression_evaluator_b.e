@@ -944,6 +944,12 @@ feature {BYTE_NODE} -- Visitor
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
+	process_guard_b (a_node: GUARD_B)
+			-- <Precursor>
+		do
+			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
+		end
+
 	process_hector_b (a_node: HECTOR_B)
 			-- Process `a_node'.
 		do

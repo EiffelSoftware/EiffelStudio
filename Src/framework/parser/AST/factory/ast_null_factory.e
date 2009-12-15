@@ -33,7 +33,7 @@ inherit
 			new_exit_condition_pair, new_export_item_as, new_expr_address_as, new_expr_call_as, new_external_as,
 			new_external_lang_as, new_feature_as, new_feature_clause_as, new_feature_list_as,
 			new_feature_name_alias_as, new_feature_name_id_as, new_formal_as, new_formal_dec_as, new_filled_id_as,
-			new_identifier_list, new_if_as, new_index_as, new_infix_as, new_inspect_as,
+			new_guard_as, new_identifier_list, new_if_as, new_index_as, new_infix_as, new_inspect_as,
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_interval_as, new_invariant_as, new_iteration_as,
 			new_like_id_as, new_like_current_as, new_location_as, new_loop_as, new_loop_expr_as, new_nested_as,
 			new_nested_expr_as, new_none_type_as, new_object_test_as, new_old_syntax_object_test_as,
@@ -826,6 +826,12 @@ feature -- Access
 
 	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS
 			-- New empty ID AST node.
+		do
+		end
+
+	new_guard_as (c: KEYWORD_AS; a: EIFFEL_LIST [TAGGED_AS]; t: KEYWORD_AS;
+	              l: EIFFEL_LIST [INSTRUCTION_AS]; e: KEYWORD_AS): GUARD_AS
+			-- <Precursor>
 		do
 		end
 

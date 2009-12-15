@@ -32,15 +32,15 @@
         <?define LicenseFile = "gpl.rtf"?>
       <?endif?>
       <?ifdef x64?>
-        <?define ProductGuid = "58FC866D-ADA8-4423-80EA-0F9DF8AAEF9C" ?>
+        <?define ProductGuid = "C00CC70D-C7D1-4621-9530-F63B4BA9A2B8" ?>
       <?else?>
-        <?define ProductGuid = "9695E93B-5346-4766-A7F3-52B963C32BBE" ?>
+        <?define ProductGuid = "D03195A6-D70F-4b1b-A781-BA8ADAB47487" ?>
       <?endif?>
-      <?define UpgradeGuid = "8E03EB69-B7B0-4b38-A051-27351EA13F94" ?>
+      <?define UpgradeGuid = "EA684428-02B2-4026-B31C-25F36CE17541" ?>
       <?define Product = "EiffelStudio" ?>
-      <?define ProductVersion = "6.5" ?>
-      <?define ProductDescription = "EiffelStudio 6.5 Integrated Development Environment (IDE) Installer" ?>
-      <?define ProductKey = "Eiffel65" ?>
+      <?define ProductVersion = "6.6" ?>
+      <?define ProductDescription = "EiffelStudio 6.6 Integrated Development Environment (IDE) Installer" ?>
+      <?define ProductKey = "Eiffel66" ?>
     <?else?>
       <?ifdef EiffelEnvision?>
         <?ifdef Enterprise?>
@@ -59,7 +59,7 @@
         <?define Product = "EiffelEnvision" ?>
         <?define ProductVersion = "2.8" ?>
         <?define ProductDescription = "EiffelEnvision 2.8 The Eiffel for .NET Language Package for Visual Studio .NET 2005" ?>
-        <?define ProductKey = "Eiffel65" ?>
+        <?define ProductKey = "Eiffel66" ?>
       <?else?>
         <?define Edition = "Test"?>
         <?define LicenseFile = "gpl.rtf"?>
@@ -68,7 +68,7 @@
         <?define Product = "EiffelStudio" ?>
         <?define ProductVersion = "2.8" ?>
         <?define ProductDescription = "Test" ?>
-        <?define ProductKey = "Eiffel65" ?>
+        <?define ProductKey = "Eiffel66" ?>
       <?endif?>
     <?endif?>
     <?define ProductName = "$(var.Product) $(var.ProductVersion) ($(var.Platform)) $(var.Edition)" ?>

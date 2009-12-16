@@ -214,7 +214,7 @@ feature -- Access
 				Result := absolute_x
 			else
 				l_parent := parent_imp
-				if l_parent /= Void then
+				if l_parent /= Void and then not l_parent.is_destroyed then
 					Result := x_position + l_parent.screen_x
 					l_wind := top_level_window_imp
 					if l_parent = l_wind then
@@ -239,7 +239,7 @@ feature -- Access
 				Result := absolute_y
 			else
 				l_parent := parent_imp
-				if l_parent /= Void then
+				if l_parent /= Void and then not l_parent.is_destroyed then
 					Result := y_position + l_parent.screen_y
 					l_wind := top_level_window_imp
 					if l_wind = l_parent then

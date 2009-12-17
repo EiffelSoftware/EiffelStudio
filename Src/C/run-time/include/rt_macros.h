@@ -102,16 +102,16 @@ extern "C" {
 /* Macro used to protect concurrent running of GC. */
 #ifdef EIF_THREADS
 	/* For GC collection locking */
-#define EIF_GC_MUTEX_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_gc_mutex, "Could not lock GC mutex")
-#define EIF_GC_MUTEX_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_gc_mutex, "Could not unlock GC mutex")
+#define EIF_GC_MUTEX_LOCK	EIF_ASYNC_SAFE_CS_LOCK(eif_gc_mutex)
+#define EIF_GC_MUTEX_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_gc_mutex)
 
 	/* For insertion in various global set such as `rem_set', `moved_set' */
-#define EIF_GC_SET_MUTEX_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_gc_set_mutex, "Could not lock GC rem_set mutex");
-#define EIF_GC_SET_MUTEX_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_gc_set_mutex, "Could not unlock GC rem_set mutex")
+#define EIF_GC_SET_MUTEX_LOCK	EIF_ASYNC_SAFE_CS_LOCK(eif_gc_set_mutex)
+#define EIF_GC_SET_MUTEX_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_gc_set_mutex)
 
 	/* To protect access to `rt_g_data'. */
-#define EIF_G_DATA_MUTEX_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_rt_g_data_mutex, "Could not lock GC rem_set mutex");
-#define EIF_G_DATA_MUTEX_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_rt_g_data_mutex, "Could not unlock GC rem_set mutex")
+#define EIF_G_DATA_MUTEX_LOCK	EIF_ASYNC_SAFE_CS_LOCK(eif_rt_g_data_mutex)
+#define EIF_G_DATA_MUTEX_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_rt_g_data_mutex)
 
 	/* Values used to set the running status of a thread. */
 #define EIF_THREAD_RUNNING		0

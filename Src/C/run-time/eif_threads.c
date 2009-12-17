@@ -41,6 +41,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "eif_portable.h"
 #include "eif_eiffel.h"
 #include "rt_threads.h"
+#include "eif_posix_threads.h"
 #include "rt_lmalloc.h"
 #include "rt_globals.h"
 #include "rt_err_msg.h"
@@ -59,12 +60,12 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_except.h"
 #include "rt_memory.h"
 #include "rt_option.h"
-#include "rt_rw_lock.h"
 #include "rt_traverse.h"
 #include "rt_object_id.h"
 #include "rt_cecil.h"
 #include "rt_debug.h"
 #include "rt_main.h"
+#include "eif_error.h"
 #ifdef BOEHM_GC
 #include "rt_boehm.h"
 #endif
@@ -94,11 +95,7 @@ rt_public void eif_thr_mutex_destroy(EIF_POINTER);
 
 rt_private rt_global_context_t *eif_new_context (void);
 rt_private void eif_free_context (rt_global_context_t *);
-#ifdef VXWORKS
-rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE, int, int, int, int, int, int, int, int, int);
-#else
-rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
-#endif
+rt_private void eif_thr_entry(void *);
 
 	/* To update GC with thread specific data */
 rt_private void eif_remove_gc_stacks(rt_global_context_t *);
@@ -171,14 +168,14 @@ rt_shared EIF_TLS RT_TSD_TYPE rt_global_key;
 #endif
 
 /*
-doc:	<attribute name="eif_thread_launch_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="private">
+doc:	<attribute name="eif_thread_launch_mutex" return_type="EIF_CS_TYPE *" export="private">
 doc:		<summary>Mutex used to protect launching of a thread.</summary>
 doc:		<thread_safety>Safe, initialized once in `eif_thr_root_init'.</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:		<fixme>Mutex is not freed.</fixme>
 doc:	</attribute>
 */
-rt_private EIF_LW_MUTEX_TYPE *eif_thread_launch_mutex = NULL;
+rt_private EIF_CS_TYPE *eif_thread_launch_mutex = NULL;
 
 /*
 doc:	<attribute name="eif_is_gc_collecting" return_type="int" export="public">
@@ -278,35 +275,33 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr th_id) {
 }
 #endif
 
-#define LAUNCH_MUTEX_LOCK	\
-	EIF_LW_MUTEX_LOCK(eif_thread_launch_mutex, "Cannot lock mutex for the thread launcher\n")
-#define LAUNCH_MUTEX_UNLOCK \
-	EIF_LW_MUTEX_UNLOCK(eif_thread_launch_mutex, "Cannot unlock mutex for the thread launcher\n"); 
+#define LAUNCH_MUTEX_LOCK		RT_TRACE(eif_pthread_cs_lock(eif_thread_launch_mutex))
+#define LAUNCH_MUTEX_UNLOCK		RT_TRACE(eif_pthread_cs_unlock(eif_thread_launch_mutex))
 
 rt_private void eif_thr_init_global_mutexes (void)
 {
 #ifdef ISE_GC
-	EIF_LW_MUTEX_CREATE(eif_gc_mutex, 0, "Couldn't create GC mutex");
-	EIF_LW_MUTEX_CREATE(eif_gc_set_mutex, 4000, "Couldn't create GC set mutex");
-	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, 4000, "Couldn't create GSZ mutex");
-	EIF_LW_MUTEX_CREATE(eif_type_set_mutex, 4000, "Couldn't create TYPE set mutex");
-	EIF_LW_MUTEX_CREATE(eif_free_list_mutex, 4000, "Couldn't create free list mutex");
-	EIF_LW_MUTEX_CREATE(eiffel_usage_mutex, 4000, "Couldn't create eiffel_usage mutex");
-	EIF_LW_MUTEX_CREATE(trigger_gc_mutex, 4000, "Couldn't create trigger gc mutex");
-	EIF_LW_MUTEX_CREATE(eif_rt_g_data_mutex, 100, "Couln't create rt_g_data mutex");
+	RT_TRACE(eif_pthread_cs_create(&eif_gc_mutex, 0));
+	RT_TRACE(eif_pthread_cs_create(&eif_gc_set_mutex, 4000));
+	RT_TRACE(eif_pthread_cs_create(&eif_gc_gsz_mutex, 4000));
+	RT_TRACE(eif_pthread_cs_create(&eif_type_set_mutex, 4000));
+	RT_TRACE(eif_pthread_cs_create(&eif_free_list_mutex, 4000));
+	RT_TRACE(eif_pthread_cs_create(&eiffel_usage_mutex, 4000));
+	RT_TRACE(eif_pthread_cs_create(&trigger_gc_mutex, 4000));
+	RT_TRACE(eif_pthread_cs_create(&eif_rt_g_data_mutex, 100));
 #endif
-	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, -1, "Cannot create mutex for thread launcher\n");
-	EIF_LW_MUTEX_CREATE(eif_except_lock, -1, "Couldn't create exception lock");
-	EIF_LW_MUTEX_CREATE(eif_memory_mutex, -1, "Couldn't create memory mutex");
-	EIF_LW_MUTEX_CREATE(eif_trace_mutex, -1, "Couldn't create tracemutex");
-	EIF_LW_MUTEX_CREATE(eif_eo_store_mutex, -1, "Couldn't create EO_STORE mutex");
-	EIF_LW_MUTEX_CREATE(eif_global_once_set_mutex, 4000, "Couldn't create global once set mutex");
-	EIF_LW_MUTEX_CREATE(eif_object_id_stack_mutex, 4000, "Couldn't create object_id set mutex");
-	EIF_LW_MUTEX_CREATE(eif_gen_mutex, 100, "Cannot create mutex for eif_gen_conf\n");
-	EIF_LW_MUTEX_CREATE(eif_hec_saved_mutex, 100, "Cannot create mutex for hec_saved\n");
-	EIF_LW_MUTEX_CREATE(eif_cecil_mutex, -1, "Couldn't create cecil lock");
+	RT_TRACE(eif_pthread_cs_create(&eif_thread_launch_mutex, 0));
+	RT_TRACE(eif_pthread_cs_create(&eif_except_lock, 0));
+	RT_TRACE(eif_pthread_cs_create(&eif_memory_mutex, 0));
+	RT_TRACE(eif_pthread_cs_create(&eif_trace_mutex, 0));
+	RT_TRACE(eif_pthread_cs_create(&eif_eo_store_mutex, 0));
+	RT_TRACE(eif_pthread_cs_create(&eif_global_once_set_mutex, 4000));
+	RT_TRACE(eif_pthread_cs_create(&eif_object_id_stack_mutex, 4000));
+	RT_TRACE(eif_pthread_cs_create(&eif_gen_mutex, 100));
+	RT_TRACE(eif_pthread_cs_create(&eif_hec_saved_mutex, 100));
+	RT_TRACE(eif_pthread_cs_create(&eif_cecil_mutex, 0));
 #ifdef EIF_WINDOWS
-	EIF_LW_MUTEX_CREATE(eif_console_mutex, -1, "Couldn't create eif_console_mutex");
+	RT_TRACE(eif_pthread_cs_create(&eif_console_mutex, 0));
 #endif
 }
 
@@ -354,15 +349,15 @@ rt_shared void eif_thread_cleanup (void)
 		/* Free per thread data which is not free because root thread
 		 * does not go through `eif_thr_exit'. See `eif_thr_exit' for explanation. */
 	if (eif_thr_context->children_mutex) {
-		EIF_ASYNC_SAFE_MUTEX_LOCK (eif_thr_context->children_mutex, "Locking problem in eif_thr_exit()");
+		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
 		if (eif_thr_context->n_children == 0) destroy_mutex = 1; /* No children are alive */
-		EIF_ASYNC_SAFE_MUTEX_UNLOCK (eif_thr_context->children_mutex, "Unlocking problem in eif_thr_exit()");
+		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
 	}
 	if (destroy_mutex) {
-		EIF_MUTEX_DESTROY(eif_thr_context->children_mutex, "Couldn't destroy join mutex.");
+		RT_TRACE(eif_pthread_mutex_destroy(eif_thr_context->children_mutex));
 		eif_thr_context->children_mutex = NULL;
 #ifndef EIF_NO_CONDVAR
-		EIF_COND_DESTROY(eif_thr_context->children_cond, "Couldn't destroy join cond. var");
+		RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->children_cond));
 		eif_thr_context->children_cond = NULL;
 #endif
 			/* Context data if any */
@@ -379,27 +374,27 @@ rt_shared void eif_thread_cleanup (void)
 	eif_free_gc_stacks ();
 
 #ifdef ISE_GC
-	EIF_LW_MUTEX_DESTROY(eif_gc_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_gc_set_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_gc_gsz_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_type_set_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_free_list_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eiffel_usage_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(trigger_gc_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_rt_g_data_mutex, "Could not destroy mutex");
+	RT_TRACE(eif_pthread_cs_destroy(eif_gc_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_gc_set_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_gc_gsz_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_type_set_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_free_list_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eiffel_usage_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(trigger_gc_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_rt_g_data_mutex));
 #endif
-	EIF_LW_MUTEX_DESTROY(eif_thread_launch_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_except_lock, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_memory_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_trace_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_eo_store_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_global_once_set_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_object_id_stack_mutex, "Could not destroy mutex");
-	EIF_LW_MUTEX_DESTROY(eif_gen_mutex, "Cannot destroy mutex for eif_gen_conf\n");
-	EIF_LW_MUTEX_DESTROY(eif_hec_saved_mutex, "Cannot destroy mutex for hec_saved\n");
-	EIF_LW_MUTEX_DESTROY(eif_cecil_mutex, "Couldn't destroy cecil mutex");
+	RT_TRACE(eif_pthread_cs_destroy(eif_thread_launch_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_except_lock));
+	RT_TRACE(eif_pthread_cs_destroy(eif_memory_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_trace_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_eo_store_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_global_once_set_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_object_id_stack_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_gen_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_hec_saved_mutex));
+	RT_TRACE(eif_pthread_cs_destroy(eif_cecil_mutex));
 #ifdef EIF_WINDOWS
-	EIF_LW_MUTEX_DESTROY(eif_console_mutex, "Couldn't destroy eif_console_mutex");
+	RT_TRACE(eif_pthread_cs_destroy(eif_console_mutex));
 #endif
 
 	EIF_TSD_DESTROY(eif_global_key, "Could not free key");
@@ -681,9 +676,8 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 
 	rt_thr_context *routine_ctxt;
 	EIF_THR_TYPE *tid;
-#ifndef EIF_WINDOWS
 	EIF_THR_ATTR_TYPE attr;
-#endif
+	int res;
 
 	tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
 	if (!tid) {
@@ -704,37 +698,42 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 		if (!eif_thr_context->children_mutex) {
 				/* It is the first time this thread creates a subthread (hopefully!), so
 				 * we create a mutex and a condition variable for join and join_all */
-			EIF_MUTEX_CREATE(eif_thr_context->children_mutex, "Couldn't create join mutex");
+			RT_TRACE_KEEP(res, eif_pthread_mutex_create(&eif_thr_context->children_mutex));
+			if (res != T_OK) {
+				eif_thr_panic ("Couldn't create join mutex");
+			} else {
 #ifndef EIF_NO_CONDVAR
-			eif_thr_context->children_cond = (EIF_COND_TYPE *) eif_malloc (sizeof (EIF_COND_TYPE));
-			if (!eif_thr_context->children_cond) {
-				eif_thr_panic ("Cannot allocated children condition variable");
-			}
-			EIF_COND_INIT(eif_thr_context->children_cond, "Couldn't initialize cond. variable");
+				RT_TRACE_KEEP(res, eif_pthread_cond_create (&eif_thr_context->children_cond));
+				if (res != T_OK) {
+						/* Free previously allocated mutex. */
+					RT_TRACE(eif_pthread_mutex_destroy(eif_thr_context->children_mutex));
+					eif_thr_panic ("Cannot create children condition variable");
+				}
 #endif /* EIF_NO_CONDVAR */
+			}
 		}
-		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex, "Couldn't lock children mutex");
+		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
 		eif_thr_context->n_children++;	
-		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Couldn't unlock children mutex");
+		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
+
 		SIGBLOCK;
 		LAUNCH_MUTEX_LOCK;
 
 			/* Actual creation of the thread in the next 3 lines. */
-		EIF_THR_ATTR_INIT(attr,priority,policy,detach);
-		EIF_THR_CREATE_WITH_ATTR(eif_thr_entry, routine_ctxt, *tid, attr, "Cannot create thread\n");
-		EIF_THR_ATTR_DESTROY(attr);
+		attr.priority = priority;
+		attr.stack_size = 0;
+		RT_TRACE_KEEP(res, eif_pthread_create (tid, &attr, eif_thr_entry, routine_ctxt));
 
 		LAUNCH_MUTEX_UNLOCK;
 		SIGRESUME;
+		if (res == T_CANNOT_CREATE_THREAD) {
+			eraise("Cannot create thread", EN_EXT);
+		}
 		last_child = tid;
 	}
 }
 
-#ifdef VXWORKS
-rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE arg, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10)
-#else
-rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
-#endif
+rt_private void eif_thr_entry (void *arg)
 {
 	/*
 	 * This function is a wrapper to the Eiffel routine that will be
@@ -744,7 +743,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 
 	rt_thr_context *routine_ctxt = (rt_thr_context *) arg;
 		/* To prevent current thread to return too soon after call
-		 * to EIF_THR_CREATE or EIF_THR_CREATE_WITH_ATTR.
+		 * to eif_pthread_create.
 		 * That way `tid' is properly initialized and can be freed
 		 * safely later on */
 	LAUNCH_MUTEX_LOCK;
@@ -786,12 +785,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		exok();
 	}
 	eif_thr_exit ();
-#if (!defined SOLARIS_THREADS && !defined EIF_WINDOWS)
-	return (EIF_THR_ENTRY_TYPE) 0;	/* 	NOTREACHED. */
-#else
-	/* On solaris, EIF_ENTRY_TYPE is void: there is no Null void. */
 	return;
-#endif
 }
 
 rt_public void eif_thr_exit(void)
@@ -845,25 +839,24 @@ rt_public void eif_thr_exit(void)
 				 * one of the following calls is blocking. */
 			EIF_ENTER_C;
 			l_parent_children_mutex = eif_thr_context->parent_context->children_mutex;
-			EIF_ASYNC_SAFE_MUTEX_LOCK(l_parent_children_mutex, "Lock parent mutex");
+			EIF_ASYNC_SAFE_MUTEX_LOCK(l_parent_children_mutex);
 				/* Decrement the number of child threads of the parent */
 			eif_thr_context->parent_context->n_children -= 1;
 				/* Check if no children are alive and parent is dead. */
 			destroy_mutex = (!eif_thr_context->parent_context->is_alive) && (eif_thr_context->parent_context->n_children == 0);
 #ifndef EIF_NO_CONDVAR
-			EIF_COND_BROADCAST(eif_thr_context->parent_context->children_cond, "Pbl cond_broadcast");
+			RT_TRACE(eif_pthread_cond_broadcast(eif_thr_context->parent_context->children_cond));
 #endif
-			EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_parent_children_mutex, "Unlock parent mutex");
+			EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_parent_children_mutex);
 
 				/* If we are the last running child of our parent and that our parent does not exist anymore
 				 * we have to clean the resources. */
 			if (destroy_mutex) {
-				EIF_MUTEX_DESTROY(l_parent_children_mutex, "Couldn't destroy join mutex.");
+				RT_TRACE(eif_pthread_mutex_destroy(l_parent_children_mutex));
 #ifndef EIF_NO_CONDVAR
-				EIF_COND_DESTROY(eif_thr_context->parent_context->children_cond, "Couldn't destroy join cond. var");
+				RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->parent_context->children_cond));
 				eif_thr_context->parent_context->children_cond = NULL;
 #endif
-
 				eif_free (eif_thr_context->parent_context);
 				eif_thr_context->parent_context = NULL;
 			}
@@ -878,18 +871,18 @@ rt_public void eif_thr_exit(void)
 			 * otherwise we will let the last children alive do the cleaning. */
 		l_children_mutex = eif_thr_context->children_mutex;
 		if (l_children_mutex) {
-			EIF_ASYNC_SAFE_MUTEX_LOCK (l_children_mutex, "Locking problem in eif_thr_exit()");
+			EIF_ASYNC_SAFE_MUTEX_LOCK(l_children_mutex);
 				/* Find out if there are still some children running. */
 			destroy_mutex = eif_thr_context->n_children == 0;
-			EIF_ASYNC_SAFE_MUTEX_UNLOCK (l_children_mutex, "Unlocking problem in eif_thr_exit()");
+			EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_children_mutex);
 		} else {
 			destroy_mutex = 0;
 		}
 		if (destroy_mutex) {
-			EIF_MUTEX_DESTROY(l_children_mutex, "Couldn't destroy join mutex.");
+			RT_TRACE(eif_pthread_mutex_destroy(l_children_mutex));
 			eif_thr_context->children_mutex = NULL;
 #ifndef EIF_NO_CONDVAR
-			EIF_COND_DESTROY(eif_thr_context->children_cond, "Couldn't destroy join cond. var");
+			RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->children_cond));
 			eif_thr_context->children_cond = NULL;
 #endif
 				/* Context data if any */
@@ -926,7 +919,7 @@ rt_public void eif_thr_exit(void)
 
 #ifdef ISE_GC
 			/* We cannot use `eif_unsynchronize_gc' because `rt_globals' has been completely freed. */
-		EIF_LW_MUTEX_UNLOCK(eif_gc_mutex, "Cannot unlock GC mutex on thread exit");
+		RT_TRACE(eif_pthread_cs_unlock(eif_gc_mutex));
 #endif
 
 #ifdef VXWORKS
@@ -946,7 +939,7 @@ rt_public void eif_thr_exit(void)
 
 
 		if (l_has_parent_thread) {
-			EIF_THR_EXIT(0);
+			eif_pthread_exit(NULL);
 		}
 	}
 }	/* eif_thr_exit ().*/
@@ -1281,7 +1274,7 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 					 * we switch context to one of the remaining running thread. Not doing
 					 * so on a uniprocessor WinXP system, the execution was about 1000 times
 					 * slower than on a bi-processor WinXP system. */
-				EIF_THR_YIELD;
+				RT_TRACE(eif_pthread_yield());
 			}
 
 
@@ -1347,9 +1340,6 @@ rt_shared void eif_terminate_all_other_threads (void) {
 	rt_global_context_t *thread_globals;
 	int i, nb;
 	int is_main_thread_blocked = 0;
-#ifndef HAS_THREAD_CANCELLATION
-	int error;
-#endif
 	struct stack_list running_thread_list = {0, 0, { NULL }};
 
 		/* Block all running threads. */
@@ -1373,7 +1363,7 @@ rt_shared void eif_terminate_all_other_threads (void) {
 	EIF_ENTER_C;
 	nb = nb - 1;
 	for (i = 0; i < nb; i++) {
-		EIF_THR_YIELD;
+		RT_TRACE(eif_pthread_yield());
 	}
 	EIF_EXIT_C;
 
@@ -1397,7 +1387,7 @@ rt_shared void eif_terminate_all_other_threads (void) {
 							EIF_THR_CANCEL(*thread_globals->eif_thr_context_cx->tid);
 #else
 							load_stack_in_gc (&running_thread_list, thread_globals);
-							EIF_THR_KILL(*thread_globals->eif_thr_context_cx->tid, error);
+							RT_TRACE(eif_pthread_kill(*(thread_globals->eif_thr_context_cx->tid)));
 #endif
 						} else {
 								/* Thread has not been created by our runtime or the EiffelThread
@@ -1425,11 +1415,11 @@ rt_shared void eif_terminate_all_other_threads (void) {
 	EIF_ENTER_C;
 	if (is_main_thread_blocked) {
 		while (rt_globals_list.count > 2) {
-			EIF_THR_YIELD;
+			RT_TRACE(eif_pthread_yield());
 		}
 	} else {
 		while (rt_globals_list.count > 1) {
-			EIF_THR_YIELD;
+			RT_TRACE(eif_pthread_yield());
 		}
 	}
 	EIF_EXIT_C;
@@ -1516,21 +1506,10 @@ rt_public void eif_thr_yield(void)
 	 * undefined.
 	 */
 
-	EIF_THR_YIELD;
+	RT_TRACE(eif_pthread_yield());
 }
 
 
-#ifdef EIF_NO_JOIN_ALL
-rt_public void eif_thr_join_all(void)
-{
-	/*
-	 * With Solaris threads, it is possible to wait for the termination of the
-	 * first thread, so we can implement a simpler join_all mechanism 
-	 */
-
-	EIF_THR_JOIN_ALL;
-}
-#else
 rt_public void eif_thr_join_all(void)
 {
 	/* Our implementation of join_all: the parent thread keeps a record of the
@@ -1549,27 +1528,26 @@ rt_public void eif_thr_join_all(void)
 	if (eif_thr_context->children_mutex) {
 #ifdef EIF_NO_CONDVAR
 		int end = 0;
-		EIF_THR_YIELD;
+		RT_TRACE(eif_pthread_yield());
 		while (!end) {
-			EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex, "Failed lock mutex join_all");
+			EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
 			if (eif_thr_context->n_children != 0) {
-				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex,"Failed unlock mutex join_all");
-				EIF_THR_YIELD;
+				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
+				RT_TRACE(eif_pthread_yield());
 			} else {
 				end = 1;
-				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex,"Failed unlock mutex join_all");
+				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
 			}
 		}
 #else
-		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex, "Failed lock mutex join_all");
+		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
 		while (eif_thr_context->n_children != 0) {
-			EIF_COND_WAIT(eif_thr_context->children_cond, eif_thr_context->children_mutex, "pb wait");
+			RT_TRACE(eif_pthread_cond_wait(eif_thr_context->children_cond, eif_thr_context->children_mutex));
 		}
-		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex,"Failed unlock mutex join_all");
+		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
 #endif
 	}
 }
-#endif
 
 rt_public void eif_thr_wait (EIF_OBJECT Current)
 {
@@ -1606,15 +1584,15 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 		 * function can use much of the CPU time.
 		 */
 
-		EIF_THR_YIELD;
+		RT_TRACE(eif_pthread_yield());
 		while (!end) {
-			EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex, "Failed lock mutex join()");
+			EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
 			if (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
-				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex,"Failed unlock mutex join()");
-				EIF_THR_YIELD;
+				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
+				RT_TRACE(eif_pthread_yield());
 			} else {
 				end = 1;
-				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex,"Failed unlock mutex join()");
+				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
 			}
 		}
 #else
@@ -1624,10 +1602,11 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 		 * properly configured, ie compiled with POSIX_SCHED).
 		 */
 
-		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex, "Failed lock mutex join()");
-		while (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE)
-			EIF_COND_WAIT(eif_thr_context->children_cond, eif_thr_context->children_mutex, "pb wait");
-		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex,"Failed unlock mutex join()");
+		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
+		while (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
+			RT_TRACE(eif_pthread_cond_wait(eif_thr_context->children_cond, eif_thr_context->children_mutex));
+		}
+		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
 #endif
 	}
 	RT_GC_WEAN(thread_object);
@@ -1641,8 +1620,10 @@ rt_public void eif_thr_join (EIF_POINTER tid)
 	 * should be used (ie. `join' <-> eif_thr_wait)
 	 */
 
+	int res;
+
 	if (tid != (EIF_POINTER) 0) {
-		EIF_THR_JOIN(* (EIF_THR_TYPE *) tid);
+		RT_TRACE_KEEP(res, eif_pthread_join(*(EIF_THR_TYPE *)tid));
 	} else {
 		eraise ("Trying to join a thread whose ID is NULL", EN_EXT);
 	}
@@ -1655,15 +1636,15 @@ rt_public void eif_thr_join (EIF_POINTER tid)
  */
 
 rt_public EIF_INTEGER eif_thr_default_priority(void) {
-	return EIF_DEFAULT_PRIORITY;
+	return EIF_DEFAULT_THR_PRIORITY;
 }
 
 rt_public EIF_INTEGER eif_thr_min_priority(void) {
-	return EIF_MIN_PRIORITY;
+	return EIF_MIN_THR_PRIORITY;
 }
 
 rt_public EIF_INTEGER eif_thr_max_priority(void) {
-	return EIF_MAX_PRIORITY;
+	return EIF_MAX_THR_PRIORITY;
 }
 
 /*
@@ -1690,43 +1671,54 @@ rt_public EIF_POINTER eif_thr_last_thread(void) {
  
 rt_public EIF_POINTER eif_thr_mutex_create(void) {
 	EIF_MUTEX_TYPE *a_mutex_pointer;
-
-	EIF_MUTEX_CREATE(a_mutex_pointer, "cannot create mutex\n");
-	return (EIF_POINTER) a_mutex_pointer;
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_mutex_create(&a_mutex_pointer));
+	if (res != T_OK) {
+		eraise ("Cannot create mutex", EN_EXT);
+	}
+	return a_mutex_pointer;
 }
 
 rt_public void eif_thr_mutex_lock(EIF_POINTER mutex_pointer) {
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
-	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
-		EIF_MUTEX_LOCK(a_mutex_pointer, "cannot lock mutex\n");
-	} else 
-		eraise("Trying to lock a NULL mutex", EN_EXT);
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_mutex_lock(a_mutex_pointer));
+	if (res != T_OK) {
+		eraise ("Cannot lock mutex", EN_EXT);
+	}
 }
 
 rt_public void eif_thr_mutex_unlock(EIF_POINTER mutex_pointer) {
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
-	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
-		EIF_MUTEX_UNLOCK(a_mutex_pointer, "cannot unlock mutex\n");
-	} else
-		eraise("Trying to unlock a NULL mutex", EN_EXT);
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_mutex_unlock(a_mutex_pointer));
+	if (res != T_OK) {
+		eraise ("Cannot unlock mutex", EN_EXT);
+	}
 }
 
 rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer) {
-	int status = 0;
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
-	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
-		EIF_MUTEX_TRYLOCK(a_mutex_pointer, status, "cannot trylock mutex\n");
-	} else
-		eraise("Trying to lock a NULL mutex", EN_EXT);
-	return ((EIF_BOOLEAN)(!status));
+	int res;
+		/* We do not use `RT_TRACE_KEEP' because we might get T_BUSY. We will trace the error after. */
+	res = eif_pthread_mutex_trylock(a_mutex_pointer);
+	if (res == T_OK) {
+		return EIF_TRUE;
+	} else if (res == T_BUSY) {
+		return EIF_FALSE;
+	} else {
+		RT_TRACE(res);
+		eraise ("Cannot lock mutex", EN_EXT);
+		return EIF_FALSE;
+	}
 }
 
 rt_public void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer) {
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
-
-	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
-		EIF_MUTEX_DESTROY(a_mutex_pointer, "cannot destroy mutex\n");
-		a_mutex_pointer = (EIF_MUTEX_TYPE *) 0;
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_mutex_destroy(a_mutex_pointer));
+	if (res != T_OK) {
+		eraise ("Cannot destroy mutex", EN_EXT);
 	}
 }
 
@@ -1737,62 +1729,60 @@ rt_public void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer) {
 
 rt_public EIF_POINTER eif_thr_sem_create (EIF_INTEGER count)
 {
-#ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer;
-
-	EIF_SEM_CREATE(a_sem_pointer, count, "cannot create semaphore\n");
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_sem_create(&a_sem_pointer, 0, (unsigned int) count));
+	if (res != T_OK) {
+		eraise ("Cannot create semaphore", EN_EXT);
+	}
 	return (EIF_POINTER) a_sem_pointer;
-#else
-	return (EIF_POINTER) 0;
-#endif
 }
 
 rt_public void eif_thr_sem_wait (EIF_POINTER sem)
 {
-#ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
-	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
-		EIF_SEM_WAIT(a_sem_pointer, "cannot lock semaphore");
-	} else 
-		eraise("Trying to lock a NULL semaphore", EN_EXT);
-#endif
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_sem_wait(a_sem_pointer));
+	if (res != T_OK) {
+		eraise ("Cannot wait on semaphore", EN_EXT);
+	}
 }
 
 rt_public void eif_thr_sem_post (EIF_POINTER sem)
 {
-#ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
-	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
-		EIF_SEM_POST(a_sem_pointer, "cannot post semaphore");
-	} else 
-		eraise("Trying to post a NULL semaphore", EN_EXT);
-#endif
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_sem_post(a_sem_pointer));
+	if (res != T_OK) {
+		eraise ("Cannot post on semaphore", EN_EXT);
+	}
 }
 
 rt_public EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem)
 {
-#ifndef EIF_NO_SEM
-	int status = 0;
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
-	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
-		EIF_SEM_TRYWAIT(a_sem_pointer, status, "cannot trywait semaphore\n");
-	} else
-		eraise("Trying to trywait a NULL semaphore", EN_EXT);
-	return ((EIF_BOOLEAN)(!status));
-#else
-	return EIF_FALSE;	/* Not implemented. */
-#endif
+	int res;
+		/* We do not use `RT_TRACE_KEEP' because we might get T_BUSY. We will trace the error after. */
+	res = eif_pthread_sem_trywait(a_sem_pointer);
+	if (res == T_OK) {
+		return EIF_TRUE;
+	} else if (res == T_BUSY) {
+		return EIF_FALSE;
+	} else {
+		RT_TRACE(res);
+		eraise ("Cannot trywait on semaphore", EN_EXT);
+		return EIF_FALSE;
+	}
 }
 
 rt_public void eif_thr_sem_destroy (EIF_POINTER sem)
 {
-#ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
-	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
-		EIF_SEM_DESTROY(a_sem_pointer, "cannot destroy semaphore");
-		a_sem_pointer = (EIF_SEM_TYPE *) 0;
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_sem_destroy(a_sem_pointer));
+	if (res != T_OK) {
+		eraise ("Cannot destroy sem", EN_EXT);
 	}
-#endif
 }
 
 /*
@@ -1801,78 +1791,75 @@ rt_public void eif_thr_sem_destroy (EIF_POINTER sem)
 
 rt_public EIF_POINTER eif_thr_cond_create (void)
 {
-#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond;
-
-	EIF_COND_CREATE(cond, "cannot create cond. variable");
-	return (EIF_POINTER) cond;
-#else
-	return (EIF_POINTER) 0;
-#endif /* EIF_NO_CONDVAR */
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_cond_create (&cond));
+	if (res != T_OK) {
+		eraise ("Cannot create cond. variable", EN_EXT);
+	}
+	return cond;
 }
 
 rt_public void eif_thr_cond_broadcast (EIF_POINTER cond_ptr)
 {
-#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
-
-	if (cond != (EIF_COND_TYPE *) 0) {
-		EIF_COND_BROADCAST(cond, "cannot cond_broadcast");
-	} else
-		eraise ("Trying to cond_broadcast on NULL", EN_EXT);
-#endif /* EIF_NO_CONDVAR */
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_cond_broadcast(cond));
+	if (res != T_OK)  {
+		eraise ("Cannot broadcast on condition variable", EN_EXT);
+	}
 }
 
 rt_public void eif_thr_cond_signal (EIF_POINTER cond_ptr)
 {
-#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
-
-	if (cond != (EIF_COND_TYPE *) 0) {
-		EIF_COND_SIGNAL(cond, "cannot cond_signal");
-	} else
-		eraise ("Trying to cond_signal on NULL", EN_EXT);
-#endif /* EIF_NO_CONDVAR */
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_cond_signal(cond));
+	if (res != T_OK)  {
+		eraise ("Cannot signal on condition variable", EN_EXT);
+	}
 }
 
 rt_public void eif_thr_cond_wait (EIF_POINTER cond_ptr, EIF_POINTER mutex_ptr)
 {
-#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
 	EIF_MUTEX_TYPE *mutex = (EIF_MUTEX_TYPE *) mutex_ptr;
-
-	if (cond != (EIF_COND_TYPE *) 0) {
-		EIF_COND_WAIT(cond, mutex, "cannot cond_wait");
-	} else
-		eraise ("Trying to cond_wait on NULL", EN_EXT);
-#endif /* EIF_NO_CONDVAR */
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_cond_wait(cond, mutex));
+	if (res != T_OK) {
+		eraise ("Cannot wait on condition variable", EN_EXT);
+	}
 }
 
 rt_public EIF_INTEGER eif_thr_cond_wait_with_timeout (EIF_POINTER cond_ptr, EIF_POINTER mutex_ptr, EIF_INTEGER a_timeout)
 {
-#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
 	EIF_MUTEX_TYPE *mutex = (EIF_MUTEX_TYPE *) mutex_ptr;
-	int result_success = 0;
-
-	if (cond != (EIF_COND_TYPE *) 0) {
-		EIF_COND_WAIT_WITH_TIMEOUT(result_success, cond, mutex, a_timeout, "cannot cond_wait with timeout");
-		return result_success;
+	int res;
+		/* We do not use `RT_TRACE_KEEP' because we might get T_TIMEDOUT. We will trace the error after. */
+	res = eif_pthread_cond_wait_with_timeout(cond, mutex, (rt_uint_ptr) a_timeout);
+	if (res != T_OK) {
+		if (res == T_TIMEDOUT) {
+			return 0;
+		} else {
+			RT_TRACE(res);
+			eraise ("Cannot wait with timeout on condition variable", EN_EXT);
+				/* Not reachable. */
+			return -1;
+		}
 	} else {
-		eraise ("Trying to cond_wait_with_timeout on NULL", EN_EXT);
-		return 0;
+		return 1;
 	}
-#else
-	return 0;
-#endif /* EIF_NO_CONDVAR */
 }
 
 rt_public void eif_thr_cond_destroy (EIF_POINTER cond_ptr)
 {
-#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
-	EIF_COND_DESTROY(cond, "destroying condition variable");
-#endif /* EIF_NO_CONDVAR */
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_cond_destroy(cond));
+	if (res != T_OK) {
+		eraise("Cannot destroy condition variable", EN_EXT);
+	}
 }
 
 /*
@@ -1882,46 +1869,53 @@ rt_public void eif_thr_cond_destroy (EIF_POINTER cond_ptr)
 rt_public EIF_POINTER eif_thr_rwl_create (void)
 {
 	EIF_RWL_TYPE *rwlp;
-
-	EIF_RWL_CREATE(rwlp, "cannot create rwl variable");
-	return (EIF_POINTER) rwlp;
+	int res;
+	RT_TRACE_KEEP(res, eif_pthread_rwlock_create(&rwlp));
+	if (res != T_OK) {
+		eraise ("Cannot create rwl variable", EN_EXT);
+	}
+	return rwlp;
 }
 
 rt_public void eif_thr_rwl_rdlock (EIF_POINTER rwlp_ptr)
 {
 	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
-
-	REQUIRE("rwlp not null", rwlp);
-
-	EIF_RWL_RDLOCK(rwlp, "cannot read lock");
+	int res;
+	RT_TRACE_KEEP(res,eif_pthread_rwlock_rdlock(rwlp));
+	if (res != T_OK) {
+		eraise ("Cannot read lock", EN_EXT);
+	}
 }
 
 rt_public void eif_thr_rwl_wrlock (EIF_POINTER rwlp_ptr)
 {
 	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
-
-	REQUIRE("rwlp not null", rwlp);
-
-	EIF_RWL_WRLOCK(rwlp, "cannot write lock");
+	int res;
+	RT_TRACE_KEEP(res,eif_pthread_rwlock_rdlock(rwlp));
+	if (res != T_OK) {
+		eraise ("Cannot write lock", EN_EXT);
+	}
 }
 
 
 rt_public void eif_thr_rwl_unlock (EIF_POINTER rwlp_ptr)
 {
 	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
-
-	REQUIRE("rwlp not null", rwlp);
-
-	EIF_RWL_UNLOCK(rwlp, "cannot unlock");
+	int res;
+	RT_TRACE_KEEP(res,eif_pthread_rwlock_unlock(rwlp));
+	if (res != T_OK) {
+		eraise ("Cannot unlock read/write lock", EN_EXT);
+	}
 }
 
 rt_public void eif_thr_rwl_destroy (EIF_POINTER rwlp_ptr)
 {
 	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
-
-	REQUIRE("rwlp not null", rwlp);
-
-	EIF_RWL_DESTROY(rwlp, "cannot destroy rwl");
+	int res;
+	RT_TRACE_KEEP(res,eif_pthread_rwlock_destroy(rwlp));
+	if (res != T_OK) {
+		eraise ("Cannot destroy read/write lock", EN_EXT);
+	}
 }
 
 

@@ -106,13 +106,10 @@ doc:		<access>Read</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_shared EIF_LW_MUTEX_TYPE *eif_hec_saved_mutex = NULL;
+rt_shared EIF_CS_TYPE *eif_hec_saved_mutex = NULL;
 
-#define EIFMTX_LOCK \
-	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_hec_saved_mutex, "Cannot lock mutex for hec_saved\n");
-
-#define EIFMTX_UNLOCK \
-   	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_hec_saved_mutex, "Cannot unlock mutex for hec_saved\n"); \
+#define EIFMTX_LOCK		EIF_ASYNC_SAFE_CS_LOCK(eif_hec_saved_mutex)
+#define EIFMTX_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_hec_saved_mutex)
 
 #else
 /* Noop for locks in non-multithreaded mode. */
@@ -246,17 +243,17 @@ rt_public EIF_REFERENCE eif_wean(EIF_OBJECT object)
 	RT_GET_CONTEXT
 	EIF_REFERENCE ret;
 
-	EIFMTX_LOCK
+	EIFMTX_LOCK;
 		/* We need to ensure that `object' is indeed coming from an object protected via eif_protect.
 		 * If this is not the case then we can have some memory corruption later one. */
 	REQUIRE("object in hec_save", st_address_in_stack (&hec_saved, object));
 	if (!st_has(&free_stack, object)) {
 		if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
-			EIFMTX_UNLOCK
+			EIFMTX_UNLOCK;
 			plsc();									/* Run GC cycle */
-			EIFMTX_LOCK
+			EIFMTX_LOCK;
 			if (-1 == epush(&free_stack, object)) {	/* Again, we can't */
-				EIFMTX_UNLOCK
+				EIFMTX_UNLOCK;
 				eraise("hector weaning", EN_MEM);	/* No more memory */
 			}
 		}
@@ -274,7 +271,7 @@ rt_public EIF_REFERENCE eif_wean(EIF_OBJECT object)
 		ret = NULL;
 		CHECK("NULL object inside", ret == eif_access(object));
 	}
-	EIFMTX_UNLOCK
+	EIFMTX_UNLOCK;
 
 	return ret;				/* return unprotected address */
 }
@@ -354,11 +351,11 @@ rt_public EIF_OBJECT eif_protect(EIF_REFERENCE object)
 	RT_GET_CONTEXT
 	EIF_OBJECT address;						/* Address in hector */
 
-	EIFMTX_LOCK
+	EIFMTX_LOCK;
 	address = hpop();					/* Check for an already free location */
 	if (!address) {									/* No such luck */
 		if (-1 == epush(&hec_saved, object)) {		/* Cannot record object */
-			EIFMTX_UNLOCK
+			EIFMTX_UNLOCK;
 			eraise("hector remembering", EN_MEM);	/* No more memory */
 			return NULL;							/* They ignored it */
 		}
@@ -366,7 +363,7 @@ rt_public EIF_OBJECT eif_protect(EIF_REFERENCE object)
 	}
 	eif_access(address) = object;		/* Record object's physical address */
 
-	EIFMTX_UNLOCK
+	EIFMTX_UNLOCK;
 	return address;			/* Location in Hector table */
 }
 

@@ -61,15 +61,15 @@ rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INT
 
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="eif_object_id_stack_mutex" return_type="EIF_LW_MUTEX_TYPE" export="private">
+doc:	<attribute name="eif_object_id_stack_mutex" return_type="EIF_CS_TYPE" export="private">
 doc:		<summary>When modifying the content of `object_id_stack' we need to make sure that only one thread is doing that.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
 
-rt_shared EIF_LW_MUTEX_TYPE *eif_object_id_stack_mutex = NULL;
-#define EIF_OBJECT_ID_LOCK	EIF_LW_MUTEX_LOCK(eif_object_id_stack_mutex, "Cannot lock Object ID mutex.")
-#define EIF_OBJECT_ID_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_object_id_stack_mutex, "Cannot lock Object ID mutex.");
+rt_shared EIF_CS_TYPE *eif_object_id_stack_mutex = NULL;
+#define EIF_OBJECT_ID_LOCK		RT_TRACE(eif_pthread_cs_lock(eif_object_id_stack_mutex))
+#define EIF_OBJECT_ID_UNLOCK	RT_TRACE(eif_pthread_cs_unlock(eif_object_id_stack_mutex))
 #else
 #define EIF_OBJECT_ID_LOCK
 #define EIF_OBJECT_ID_UNLOCK

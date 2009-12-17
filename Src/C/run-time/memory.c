@@ -68,19 +68,19 @@ doc:	</attribute>
 rt_public EIF_BOOLEAN eif_is_in_final_collect = EIF_FALSE;
 
 #ifndef EIF_THREADS
-#define EIF_MEMORY_SETTING_LOCK	
-#define EIF_MEMORY_SETTING_UNLOCK 
+#define EIF_MEMORY_SETTING_LOCK
+#define EIF_MEMORY_SETTING_UNLOCK
 #else	/* EIF_THREADS */
 /*
-doc:	<attribute name="eif_memory_mutex" return_type="EIF_LW_MUTEX_TYPE" export="shared">
+doc:	<attribute name="eif_memory_mutex" return_type="EIF_CS_TYPE" export="shared">
 doc:		<summary>Ensure that all modification of GC/Memory parameters are done in a synchronized way. Variables protected by `eif_memory_mutex' don't need to be protected if already under the protection of `eif_gc_mutex'. This is because once you have the lock of `eif_gc_mutex' no other code can be executed at the same time.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-rt_shared	EIF_LW_MUTEX_TYPE *eif_memory_mutex = (EIF_LW_MUTEX_TYPE *) 0;
-#define EIF_MEMORY_SETTING_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_memory_mutex, "Couldn't lock memory mutex");
-#define EIF_MEMORY_SETTING_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_memory_mutex, "Couldn't unlock memory mutex");
+rt_shared	EIF_CS_TYPE *eif_memory_mutex = (EIF_CS_TYPE *) 0;
+#define EIF_MEMORY_SETTING_LOCK		EIF_ASYNC_SAFE_CS_LOCK(eif_memory_mutex)
+#define EIF_MEMORY_SETTING_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_memory_mutex)
 #endif /* EIF_THREADS */
 
 
@@ -133,7 +133,7 @@ rt_public void eif_mem_speed(void)
 
 #ifdef ISE_GC
 	RT_GET_CONTEXT
-	EIF_MEMORY_SETTING_LOCK
+	EIF_MEMORY_SETTING_LOCK;
 	if (!cc_for_speed) {	/* Is it alread compiled for speed */
 		cc_for_speed = 1;			/* We are compiled for speed from now on */
 		if (gen_scavenge == GS_OFF) {
@@ -142,7 +142,7 @@ rt_public void eif_mem_speed(void)
 			create_scavenge_zones();
 		}
 	}
-	EIF_MEMORY_SETTING_UNLOCK
+	EIF_MEMORY_SETTING_UNLOCK;
 #endif
 }
 
@@ -156,9 +156,9 @@ rt_public void eif_mem_slow(void)
 
 #ifdef ISE_GC
 	RT_GET_CONTEXT
-	EIF_MEMORY_SETTING_LOCK
+	EIF_MEMORY_SETTING_LOCK;
 	cc_for_speed = 0;			/* We are compiled for low memory from now on */
-	EIF_MEMORY_SETTING_UNLOCK
+	EIF_MEMORY_SETTING_UNLOCK;
 #endif
 }
 
@@ -235,9 +235,9 @@ rt_public void eif_mem_tset(long int value)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
-	EIF_MEMORY_SETTING_LOCK
+	EIF_MEMORY_SETTING_LOCK;
 	th_alloc = value;			/* Set new allocation threshold */
-	EIF_MEMORY_SETTING_UNLOCK
+	EIF_MEMORY_SETTING_UNLOCK;
 #endif
 }
 
@@ -254,9 +254,9 @@ rt_public void eif_mem_pset(long int value)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
-	EIF_MEMORY_SETTING_LOCK
+	EIF_MEMORY_SETTING_LOCK;
 	plsc_per = value;			/* Set new full collection period */
-	EIF_MEMORY_SETTING_UNLOCK
+	EIF_MEMORY_SETTING_UNLOCK;
 #endif
 }
 
@@ -286,9 +286,9 @@ rt_public void eif_gc_mon(char flag)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
-	EIF_MEMORY_SETTING_LOCK
+	EIF_MEMORY_SETTING_LOCK;
 	gc_monitor = (int) flag;	/* Turn GC statistics on/off */
-	EIF_MEMORY_SETTING_UNLOCK
+	EIF_MEMORY_SETTING_UNLOCK;
 #endif
 }
 
@@ -355,9 +355,9 @@ rt_public void eif_set_max_mem (EIF_INTEGER lim)
 
 #ifdef ISE_GC
 	RT_GET_CONTEXT
-	EIF_MEMORY_SETTING_LOCK
+	EIF_MEMORY_SETTING_LOCK;
 	eif_max_mem = (int) lim;
-	EIF_MEMORY_SETTING_UNLOCK
+	EIF_MEMORY_SETTING_UNLOCK;
 #endif
 }
 

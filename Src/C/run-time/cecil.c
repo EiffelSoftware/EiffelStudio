@@ -86,16 +86,16 @@ rt_private void *eif_default_pointer = NULL;
  */
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="eif_cecil_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:	<attribute name="eif_cecil_mutex" return_type="EIF_CS_TYPE *" export="shared">
 doc:		<summary>To protect multithreaded access to `eif_visible_is_off'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_shared EIF_LW_MUTEX_TYPE *eif_cecil_mutex = (EIF_LW_MUTEX_TYPE *) 0;
+rt_shared EIF_CS_TYPE *eif_cecil_mutex = (EIF_CS_TYPE *) 0;
 
 rt_shared void eif_cecil_init (void);
-#define EIF_CECIL_LOCK EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_cecil_mutex, "Couldn't lock cecil mutex");
-#define EIF_CECIL_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_cecil_mutex, "Couldn't unlock cecil mutex");
+#define EIF_CECIL_LOCK		EIF_ASYNC_SAFE_CS_LOCK(eif_cecil_mutex)
+#define EIF_CECIL_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_cecil_mutex)
 
 #else	/* EIF_THREADS */
 

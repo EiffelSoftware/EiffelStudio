@@ -590,59 +590,59 @@ rt_private EIF_REFERENCE external_reallocation (EIF_REFERENCE obj, uint32 nbytes
 
 #if defined(ISE_GC) && defined(EIF_THREADS)
 /*
-doc:	<attribute name="eif_gc_gsz_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:	<attribute name="eif_gc_gsz_mutex" return_type="EIF_CS_TYPE *" export="shared">
 doc:		<summary>Mutex used to protect GC allocation in scavenge zone.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_shared EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;
-#define EIF_GC_GSZ_LOCK EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex");
-#define EIF_GC_GSZ_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not unlock GSZ mutex")
+rt_shared EIF_CS_TYPE *eif_gc_gsz_mutex = NULL;
+#define EIF_GC_GSZ_LOCK		EIF_ASYNC_SAFE_CS_LOCK(eif_gc_gsz_mutex)
+#define EIF_GC_GSZ_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_gc_gsz_mutex)
 
 /*
-doc:	<attribute name="eif_free_list_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:	<attribute name="eif_free_list_mutex" return_type="EIF_CS_TYPE *" export="shared">
 doc:		<summary>Mutex used to protect access and update to private/shared member of this module.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
 
-rt_shared EIF_LW_MUTEX_TYPE *eif_free_list_mutex = NULL;
-#define EIF_FREE_LIST_MUTEX_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_free_list_mutex, "Could not lock free list mutex");
-#define EIF_FREE_LIST_MUTEX_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_free_list_mutex, "Could not unlock free list mutex");
+rt_shared EIF_CS_TYPE *eif_free_list_mutex = NULL;
+#define EIF_FREE_LIST_MUTEX_LOCK	EIF_ASYNC_SAFE_CS_LOCK(eif_free_list_mutex)
+#define EIF_FREE_LIST_MUTEX_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_free_list_mutex)
 
 /*
-doc:	<attribute name="eiffel_usage_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:	<attribute name="eiffel_usage_mutex" return_type="EIF_CS_TYPE *" export="shared">
 doc:		<summary>Mutex used to protect access and update `eiffel_usage'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
 
-rt_shared EIF_LW_MUTEX_TYPE *eiffel_usage_mutex = NULL;
-#define EIFFEL_USAGE_MUTEX_LOCK		EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eiffel_usage_mutex, "Could not lock eiffel_usage mutex");
-#define EIFFEL_USAGE_MUTEX_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eiffel_usage_mutex, "Could not unlock eiffel_usage mutex");
+rt_shared EIF_CS_TYPE *eiffel_usage_mutex = NULL;
+#define EIFFEL_USAGE_MUTEX_LOCK		EIF_ASYNC_SAFE_CS_LOCK(eiffel_usage_mutex)
+#define EIFFEL_USAGE_MUTEX_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eiffel_usage_mutex)
 
 /*
-doc:	<attribute name="trigger_gc_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:	<attribute name="trigger_gc_mutex" return_type="EIF_CS_TYPE *" export="shared">
 doc:		<summary>Mutex used to protect execution of `trigger_gc' routines. So that even if more than one threads enter this routine because there is a need to launch a GC cycle, hopefully one will run it, and not all of them.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
 
-rt_shared EIF_LW_MUTEX_TYPE *trigger_gc_mutex = NULL;
-#define TRIGGER_GC_LOCK		EIF_ASYNC_SAFE_LW_MUTEX_LOCK(trigger_gc_mutex, "Could not lock trigger gc mutex");
-#define TRIGGER_GC_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(trigger_gc_mutex, "Could not unlock trigger gc mutex");
+rt_shared EIF_CS_TYPE *trigger_gc_mutex = NULL;
+#define TRIGGER_GC_LOCK		EIF_ASYNC_SAFE_CS_LOCK(trigger_gc_mutex)
+#define TRIGGER_GC_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(trigger_gc_mutex)
 #endif
 
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="eif_type_set_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:	<attribute name="eif_type_set_mutex" return_type="EIF_CS_TYPE *" export="public">
 doc:		<summary>Mutex used to guarantee unique access to `rt_type_set'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_shared EIF_LW_MUTEX_TYPE *eif_type_set_mutex = NULL;
-#define TYPE_SET_MUTEX_LOCK		EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_type_set_mutex, "Could not lock type set mutex");
-#define TYPE_SET_MUTEX_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_type_set_mutex, "Could not unlock type set mutex");
+rt_shared EIF_CS_TYPE *eif_type_set_mutex = NULL;
+#define TYPE_SET_MUTEX_LOCK		EIF_ASYNC_SAFE_CS_LOCK(eif_type_set_mutex)
+#define TYPE_SET_MUTEX_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_type_set_mutex)
 #endif
 
 
@@ -1395,7 +1395,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 			 * space to accomadate the resizing */
 		if (new_size > old_size) {
 				/* Reserve `new_size' bytes in GSZ if possible. */
-			object = spmalloc (nbitems, (rt_uint_ptr) elem_size, EIF_TEST(!(zone->ov_flags & EO_REF)));
+			object = spmalloc (nbitems, elem_size, EIF_TEST(!(zone->ov_flags & EO_REF)));
 		} else
 			object = ptr;
 

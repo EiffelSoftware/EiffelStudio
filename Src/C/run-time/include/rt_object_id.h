@@ -48,7 +48,7 @@ extern struct stack object_id_stack;	/* Stack where objects referenced through `
 										 * See class IDENTIFIED */	
 
 #ifdef EIF_THREADS
-extern EIF_LW_MUTEX_TYPE *eif_object_id_stack_mutex;
+extern EIF_CS_TYPE *eif_object_id_stack_mutex;
 #endif
 
 #ifdef __cplusplus

@@ -92,13 +92,13 @@ rt_shared uint32 obj_nb;
 
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="eif_eo_store_mutex" return_type="EIF_LW_MUTEX_TYPE" export="shared">
+doc:	<attribute name="eif_eo_store_mutex" return_type="EIF_CS_TYPE" export="shared">
 doc:		<summary>When using EO_MARK to mark object, the full marking and unmarking process should be protected using this mutex. Not doing so, you might end up marking objects marked by a different thread or unmarking them, at the end it is a mess.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
 
-rt_shared EIF_LW_MUTEX_TYPE *eif_eo_store_mutex = NULL;
+rt_shared EIF_CS_TYPE *eif_eo_store_mutex = NULL;
 #endif
 
 #ifdef DEBUG

@@ -37,6 +37,10 @@
 #ifndef _eif_threads_h_
 #define _eif_threads_h_
 
+#include "eif_portable.h"
+#include "eif_posix_threads.h"
+#include "eif_cecil.h"
+
 #ifndef EIF_THREADS
 
 /* Empty stubs for EiffelThread library so that it may be compiled against a non-multithreaded run-time */
@@ -86,122 +90,6 @@
 #endif
 
 #else
-
-#include "eif_cecil.h"		/* Needed for inclusion of predefined macros */
-
-/*------------------------------------*/
-/*----- Platform specific tuning -----*/
-/*------------------------------------*/
-
-#ifdef EIF_FSUTHREADS		/* Tuning for FSU POSIX Threads */
-#define HASNT_SCHED_H
-#define EIF_POSIX_THREADS
-#define EIF_NONPOSIX_TSD
-#define HASNT_SCHEDPARAM
-#endif
-
-#ifdef EIF_LINUXTHREADS		/* Tuning for POSIX LinuxThreads */
-#define EIF_POSIX_THREADS
-#ifndef EIF_DFL_SIGUSR
-#define EIF_DFLT_SIGUSR
-#endif
-#endif
-
-#ifdef EIF_PCTHREADS		/* Tuning for POSIX PCThreads */
-#define HASNT_SCHED_H
-#ifdef SIGVTARLARM
-#define EIF_DFLT_SIGVTALARM
-#endif
-#define EIF_POSIX_THREADS
-#define EIF_NONPOSIX_TSD
-#endif
-
-#ifdef __Lynx__				/* Tuning for LynxOS */
-#define EIF_POSIX_THREADS
-#define POSIX_10034A
-#endif
-
-#ifdef _CRAY				/* Tuning for Cray */
-#define EIF_NO_SEM
-#define EIF_NO_POSIX_SEM
-#define HASNT_SCHED_H
-#define HASNT_SCHEDPARAM
-#endif
-
-#ifdef SOLARIS_THREADS		/* Tuning for Solaris Threads */
-#define HAS_SEMA
-#define HAS_RWL
-#endif
-
-#ifdef VXWORKS				/* Tuning for VxWorks */
-#define EIF_NO_CONDVAR
-#define EIF_NO_POSIX_SEM 	/* This can change if VxWorks compiled with option POSIX_SEM */
-#endif
-
-#ifdef EIF_WINDOWS			/* Tuning for Windows */
-#define EIF_NO_POSIX_SEM
-#endif
-
-#ifdef UNIXWARE_THREADS		/* Tuning for Unixware threads */
-#ifndef EIF_DFLT_SIGWAITING
-#define EIF_DFLT_SIGWAITING
-#endif
-#define SOLARIS_THREADS
-#define NEED_SYNCH_H
-#define HASNT_SCHED_H
-#define HASNT_SEMAPHORE_H
-#define HAS_SEMA
-#endif
-
-#ifdef EIF_VMS			/* VMS supports POSIX 1003.1c threads */
-#define EIF_POSIX_THREADS
-#define EIF_NO_SEM
-#define EIF_NO_POSIX_SEM
-#define HASNT_SCHED_H
-#define HASNT_SEMAPHORE_H
-#endif
-
-
-/*---------------------------*/
-/*---- Header inclusion -----*/
-/*---------------------------*/
-
-
-#ifdef _CRAY
-#include <unistd.h>		/* Avoid warning on C90 when also including <sched.h> */
-#endif
-
-#if defined(EIF_POSIX_THREADS) || defined(SOLARIS_THREADS)
-#ifdef EIF_POSIX_THREADS
-#include <pthread.h>
-#else
-#include <thread.h>
-#endif
-#ifndef HASNT_SCHED_H
-#include <sched.h>
-#endif
-#ifdef NEED_SYNCH_H
-#include <synch.h>
-#endif
-
-#elif defined EIF_WINDOWS
-#include <windows.h>
-#include <process.h>
-#include "eif_cond_var.h"
-
-#elif defined VXWORKS
-#include <taskLib.h>        /* 'thread' operations */
-#include <taskVarLib.h>     /* 'thread' 'specific data' */
-#include <semLib.h>         /* 'mutexes' and semaphores */
-#include <sched.h>          /* 'sched_yield' */
-
-#endif
-
-#ifndef EIF_NO_POSIX_SEM	/* Defaults for semaphore */
-#ifndef HASNT_SEMAPHORE_H
-#include <semaphore.h>
-#endif
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -258,70 +146,6 @@ extern "C" {
 #	define EIF_TSD_TYPE            eif_global_context_t *
 #endif
 
-/*------------------------------*/
-/*-----  Type definitions  -----*/
-/*------------------------------*/
-
-#ifdef EIF_POSIX_THREADS
-#define EIF_THR_ENTRY_TYPE      void *
-#define EIF_THR_ENTRY_ARG_TYPE  void *
-#define EIF_THR_ATTR_TYPE       pthread_attr_t
-#define EIF_THR_TYPE            pthread_t
-#define EIF_MUTEX_TYPE          pthread_mutex_t
-
-#elif defined(EIF_WINDOWS)
-#define EIF_THR_ENTRY_TYPE      void
-#define EIF_THR_ENTRY_ARG_TYPE  void *
-#define EIF_THR_ATTR_TYPE       unsigned char
-#define EIF_SEM_TYPE            HANDLE
-#define EIF_THR_TYPE            uintptr_t
-#define EIF_MUTEX_TYPE          HANDLE
-
-#elif defined SOLARIS_THREADS
-rt_public typedef struct {
-  int prio;
-  int pol;
-} eif_thr_attr_t;
-
-#define EIF_THR_ENTRY_TYPE      void
-#define EIF_THR_ENTRY_ARG_TYPE  void *
-#define EIF_THR_ATTR_TYPE       eif_thr_attr_t
-#define EIF_THR_TYPE            thread_t
-#define EIF_MUTEX_TYPE          mutex_t
-#ifndef EIF_NO_CONDVAR
-#define pthread_cond_t			cond_t
-#endif
-
-#elif defined VXWORKS
-#define EIF_THR_ENTRY_TYPE      void
-#define EIF_THR_ENTRY_ARG_TYPE  int
-#define EIF_THR_ATTR_TYPE       int
-#define EIF_THR_TYPE            int
-#define EIF_THR_ATTR_TYPE       int
-
-/* For consistency with the other platforms, EIF_MUTEX_TYPE shouldn't
-   be a pointer, that's why we use struct semaphore instead of SEM_ID
-   because SEM_ID is equivalent to (struct semaphore *)
-   */
-#define EIF_MUTEX_TYPE			struct semaphore
-
-#ifdef EIF_NO_POSIX_SEM
-#define EIF_SEM_TYPE            struct semaphore
-#endif
-
-#endif
-
-#ifdef EIF_NO_CONDVAR
-#define EIF_COND_TYPE		unsigned char
-#define EIF_COND_ATTR_TYPE  unsigned char
-#else
-#define EIF_COND_TYPE		pthread_cond_t
-#define EIF_COND_ATTR_TYPE	pthread_condattr_t
-#endif
-
-#ifndef EIF_NO_POSIX_SEM
-#define EIF_SEM_TYPE    sem_t
-#endif
 
 /*------------------------------*/
 /*---- Feature definitions -----*/
@@ -353,10 +177,7 @@ RT_LNK EIF_INTEGER eif_thr_max_priority(void);
 RT_LNK EIF_POINTER eif_thr_thread_id(void);
 RT_LNK EIF_POINTER eif_thr_last_thread(void);
 
-
-
 /* Constants common to all platforms */
-
 #define EIF_SCHED_DEFAULT 0
 #define EIF_SCHED_OTHER   1
 #define EIF_SCHED_FIFO    2  /* FIFO scheduling        */

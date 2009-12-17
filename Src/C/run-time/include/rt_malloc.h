@@ -148,11 +148,11 @@ extern rt_uint_ptr eiffel_usage;			/* For memory statistics */
 extern size_t eif_max_mem;				/* Maximum memory that can be allocated */
 
 #ifdef EIF_THREADS
-extern EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex;
-extern EIF_LW_MUTEX_TYPE *eif_free_list_mutex;
-extern EIF_LW_MUTEX_TYPE *eiffel_usage_mutex;
-extern EIF_LW_MUTEX_TYPE *trigger_gc_mutex;
-extern EIF_LW_MUTEX_TYPE *eif_type_set_mutex;
+extern EIF_CS_TYPE *eif_gc_gsz_mutex;
+extern EIF_CS_TYPE *eif_free_list_mutex;
+extern EIF_CS_TYPE *eiffel_usage_mutex;
+extern EIF_CS_TYPE *trigger_gc_mutex;
+extern EIF_CS_TYPE *eif_type_set_mutex;
 #endif
 
 #endif

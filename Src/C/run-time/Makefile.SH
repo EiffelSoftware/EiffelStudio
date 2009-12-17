@@ -9,7 +9,7 @@ case $CONFIG in
 	elif test -f ../../../config.sh; then TOP=../../..;
 	elif test -f ../../../../config.sh; then TOP=../../../..;
 	else
-		echo "Can't find config.sh."; exit 1
+	 echo "Can't find config.sh."; exit 1
 	fi
 	. $TOP/config.sh
 	;;
@@ -81,7 +81,6 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
 # $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
-
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -91,7 +90,6 @@ all:: .FORCE_DEPEND
 
 ########################################################################
 # Start of Jmakefile
-
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
@@ -115,7 +113,7 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	hector.c cecil.c bits.c file.c dir.c misc.c \
 	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
-	eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
+	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
 	option.c compress.c console.c offset.c main.c except.c
 
 WADD = debug.c interp.c update.c wbench.c
@@ -164,7 +162,7 @@ WOBJ = \
 	wobject_id.o \
 	weif_threads.o \
 	weif_project.o \
-	weif_rw_lock.o \
+	wposix_threads.o \
 	wgen_conf.o \
 	weif_type_id.o \
 	wrout_obj.o \
@@ -213,7 +211,7 @@ LOBJ = \
 	object_id.o \
 	eif_threads.o \
 	eif_project.o \
-	eif_rw_lock.o \
+	posix_threads.o \
 	gen_conf.o \
 	eif_type_id.o \
 	rout_obj.o \
@@ -268,7 +266,7 @@ MT_WOBJ = \
 	MTwobject_id.o \
 	MTweif_threads.o \
 	MTweif_project.o \
-	MTweif_rw_lock.o \
+	MTwposix_threads.o \
 	MTwgen_conf.o \
 	MTweif_type_id.o \
 	MTwrout_obj.o \
@@ -317,7 +315,7 @@ MT_LOBJ = \
 	MTobject_id.o \
 	MTeif_threads.o \
 	MTeif_project.o \
-	MTeif_rw_lock.o \
+	MTposix_threads.o \
 	MTgen_conf.o \
 	MTeif_type_id.o \
 	MTrout_obj.o \
@@ -436,7 +434,7 @@ weif_threads.o: eif_threads.c
 weif_project.o: eif_project.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
-weif_rw_lock.o: eif_rw_lock.c
+wposix_threads.o: posix_threads.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wgen_conf.o: gen_conf.c
@@ -575,7 +573,7 @@ MTeif_threads.o: eif_threads.c
 MTeif_project.o: eif_project.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTeif_rw_lock.o: eif_rw_lock.c
+MTposix_threads.o: posix_threads.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTgen_conf.o: gen_conf.c
@@ -714,7 +712,7 @@ MTweif_threads.o: eif_threads.c
 MTweif_project.o: eif_project.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-MTweif_rw_lock.o: eif_rw_lock.c
+MTwposix_threads.o: posix_threads.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwgen_conf.o: gen_conf.c
@@ -956,12 +954,12 @@ mt: mtwork mtfinal mtebench
 .FORCE:
 
 $(TOP)/ipc/app/network.o: .FORCE
-	@echo "Checking "network.o" in "$(TOP)/ipc/app"..."
+	@echo "Checking "network.o " in "$(TOP)/ipc/app "..."
 	cd $(TOP)/ipc/app; $(MAKE) network.o
 	@echo "Continuing in $(CURRENT)..."
 
 $(TOP)/idrs/idrs.o: .FORCE
-	@echo "Checking "idrs.o" in "$(TOP)/idrs"..."
+	@echo "Checking "idrs.o " in "$(TOP)/idrs "..."
 	cd $(TOP)/idrs; $(MAKE) idrs.o
 	@echo "Continuing in $(CURRENT)..."
 
@@ -976,12 +974,12 @@ $(LIB_SHARED)/$(LIB_MTIPCNAME): .FORCE
 	@echo "Continuing in $(CURRENT)..."
 
 $(TOP)/ipc/ewb/wewb_proto.o: .FORCE
-	@echo "Checking "wewb_proto.o" in "$(TOP)/ipc/ewb"..."
+	@echo "Checking "wewb_proto.o " in "$(TOP)/ipc/ewb "..."
 	cd $(TOP)/ipc/ewb; $(MAKE) wewb_proto.o
 	@echo "Continuing in $(CURRENT)..."
 
 $(TOP)/ipc/ewb/MTwewb_proto.o: .FORCE
-	@echo "Checking "MTwewb_proto.o" in "$(TOP)/ipc/ewb"..."
+	@echo "Checking "MTwewb_proto.o " in "$(TOP)/ipc/ewb "..."
 	cd $(TOP)/ipc/ewb; $(MAKE) MTwewb_proto.o
 	@echo "Continuing in $(CURRENT)..."
 
@@ -995,19 +993,19 @@ test: $(TESTS)
 	sram >>test 2>&1
 
 mram: malloc.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ malloc.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ malloc.c
 
 gram: garcol.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ garcol.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ garcol.c
 
 lram: local.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ local.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ local.c
 
 eram: except.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ except.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ except.c
 
 sram: sig.c
-	$(CC) $(JCFLAGS) -DTEST  -o $@ sig.c
+	$(CC) $(JCFLAGS) -DTEST -o $@ sig.c
 
 local_realclean::
 	$(RM) $(TESTS)
@@ -1082,4 +1080,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

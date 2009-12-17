@@ -1127,7 +1127,7 @@ test	exception-in-thread-failure	thread009	tcf pass multitheaded
 test	nested-thread-exit-failure-2	thread010	tcf pass multithreaded
 test	deadlock-when-not-joining	thread011	tcf fail multithreaded manual
 test	deadlock-when-thread-not-exiting	thread012	tcf pass multithreaded manual
-test	mutex						thread013	tcf pass multithreaded
+test	synchronization-objects				thread013	tcf pass multithreaded
 
 -- Execution
 

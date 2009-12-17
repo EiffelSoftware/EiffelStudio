@@ -6,6 +6,14 @@ create
 feature
 
 	make
+		do
+			test_mutex
+			test_semaphore
+		end
+
+feature {NONE} -- Mutex
+
+	test_mutex
 		local
 			mutex: MUTEX
 			worker_thread: WORKER_THREAD
@@ -62,6 +70,35 @@ feature
 			else
 				io.put_string ("Mutex CS2 Success%N")
 			end
+		end
+
+feature {NONE} -- Semaphore
+
+	test_semaphore
+		local
+			sem: SEMAPHORE
+			worker_thread_1, worker_thread_2: WORKER_THREAD
+		do
+			create sem.make (0)
+
+				-- Ensure that we haven't decremented the counter
+			if not sem.try_wait then
+				io.put_string ("Semaphore Wait Success%N")
+			end
+
+				-- Ensure that the wait will eventually return when the other thread will post.
+			create worker_thread_1.make (agent semaphore_wait (sem))
+			worker_thread_1.launch
+			create worker_thread_2.make (agent sem.post)
+			worker_thread_2.launch
+			worker_thread_2.join
+			worker_thread_1.join
+		end
+
+	semaphore_wait (a_sem: SEMAPHORE)
+		do
+			a_sem.wait
+			io.put_string ("Semaphore Wait Success%N")
 		end
 
 end

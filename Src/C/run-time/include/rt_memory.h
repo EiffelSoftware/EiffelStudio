@@ -44,7 +44,7 @@ extern "C" {
 #endif
 
 #ifdef EIF_THREADS
-extern EIF_LW_MUTEX_TYPE *eif_memory_mutex;
+extern EIF_CS_TYPE *eif_memory_mutex;
 #endif
 
 #ifdef __cplusplus

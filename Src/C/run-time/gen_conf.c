@@ -242,7 +242,7 @@ doc:		<access>Read</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_shared EIF_LW_MUTEX_TYPE *eif_gen_mutex = NULL;
+rt_shared EIF_CS_TYPE *eif_gen_mutex = NULL;
 
 rt_public EIF_TYPE_INDEX eifthd_compound_id (EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX *);
 rt_public EIF_TYPE_INDEX eifthd_final_id (EIF_TYPE_INDEX *, EIF_TYPE_INDEX **, EIF_TYPE_INDEX, int );
@@ -261,10 +261,10 @@ rt_public int eifthd_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 #define EIFMTX_LOCK \
 	{\
 		RT_GET_CONTEXT \
-		EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_gen_mutex, "Cannot lock mutex for eif_gen_conf\n");
+		EIF_ASYNC_SAFE_CS_LOCK(eif_gen_mutex)
 
 #define EIFMTX_UNLOCK \
-	   	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_gen_mutex, "Cannot unlock mutex for eif_gen_conf\n"); \
+		EIF_ASYNC_SAFE_CS_UNLOCK(eif_gen_mutex); \
 	}
 
 #else

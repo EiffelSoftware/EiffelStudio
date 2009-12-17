@@ -63,9 +63,8 @@ FINAL_OBJECTS = \
 	$(INDIR)path_name.$obj \
 	$(INDIR)object_id.$obj \
 	$(INDIR)compress.$obj \
+	$(INDIR)posix_threads.$obj \
 	$(INDIR)eif_threads.$obj \
-	$(INDIR)eif_cond_var.$obj \
-	$(INDIR)eif_rw_lock.$obj \
 	$(INDIR)eif_project.$obj \
 	$(INDIR)gen_conf.$obj \
 	$(INDIR)eif_type_id.$obj \
@@ -121,9 +120,8 @@ WORKBENCH_OBJECTS = \
 	$(INDIR)wpath_name.$obj \
 	$(INDIR)wobject_id.$obj \
 	$(INDIR)compress.$obj \
+	$(INDIR)posix_threads.$obj \
 	$(INDIR)weif_threads.$obj \
-	$(INDIR)weif_cond_var.$obj \
-	$(INDIR)eif_rw_lock.$obj \
 	$(INDIR)weif_project.$obj \
 	$(INDIR)wgen_conf.$obj \
 	$(INDIR)weif_type_id.$obj \
@@ -175,9 +173,8 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)MTpath_name.$obj \
 	$(INDIR)MTobject_id.$obj \
 	$(INDIR)MTcompress.$obj \
+	$(INDIR)MTposix_threads.$obj \
 	$(INDIR)MTeif_threads.$obj \
-	$(INDIR)MTeif_cond_var.$obj \
-	$(INDIR)MTeif_rw_lock.$obj \
 	$(INDIR)MTeif_project.$obj \
 	$(INDIR)MTgen_conf.$obj \
 	$(INDIR)MTeif_type_id.$obj \
@@ -233,9 +230,8 @@ MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTwpath_name.$obj \
 	$(INDIR)MTwobject_id.$obj \
 	$(INDIR)MTcompress.$obj \
+	$(INDIR)MTposix_threads.$obj \
 	$(INDIR)MTweif_threads.$obj \
-	$(INDIR)MTweif_cond_var.$obj \
-	$(INDIR)MTeif_rw_lock.$obj \
 	$(INDIR)MTweif_project.$obj \
 	$(INDIR)MTwgen_conf.$obj \
 	$(INDIR)MTweif_type_id.$obj \
@@ -359,11 +355,11 @@ $(INDIR)copy.$obj: $(RTSRC)copy.c
 $(INDIR)dir.$obj: $(RTSRC)dir.c
 	$(CC) $(JCFLAGS) $(RTSRC)dir.c
 
-$(INDIR)eif_cond_var.$obj: $(RTSRC)eif_cond_var.c
-	$(CC) $(JCFLAGS) $(RTSRC)eif_cond_var.c
-
 $(INDIR)eif_project.$obj: $(RTSRC)eif_project.c
 	$(CC) $(JCFLAGS) $(RTSRC)eif_project.c
+
+$(INDIR)posix_threads.$obj: $(RTSRC)posix_threads.c
+	$(CC) $(JCFLAGS) $(RTSRC)posix_threads.c
 
 $(INDIR)eif_threads.$obj: $(RTSRC)eif_threads.c
 	$(CC) $(JCFLAGS) $(RTSRC)eif_threads.c
@@ -482,9 +478,6 @@ $(INDIR)debug.$obj: $(RTSRC)debug.c
 $(INDIR)interp.$obj: $(RTSRC)interp.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)interp.c
 
-$(INDIR)eif_rw_lock.$obj : $(RTSRC)eif_rw_lock.c
-	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)eif_rw_lock.c
-	
 $(INDIR)wargv.$obj: $(RTSRC)argv.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)argv.c
 
@@ -508,9 +501,6 @@ $(INDIR)wcopy.$obj: $(RTSRC)copy.c
 
 $(INDIR)wdir.$obj: $(RTSRC)dir.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)dir.c
-
-$(INDIR)weif_cond_var.$obj: $(RTSRC)eif_cond_var.c
-	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)eif_cond_var.c
 
 $(INDIR)weif_project.$obj: $(RTSRC)eif_project.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)eif_project.c
@@ -654,11 +644,11 @@ $(INDIR)MTcopy.$obj: $(RTSRC)copy.c
 $(INDIR)MTdir.$obj: $(RTSRC)dir.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)dir.c
 
-$(INDIR)MTeif_cond_var.$obj: $(RTSRC)eif_cond_var.c
-	$(CC) $(JMTCFLAGS) $(RTSRC)eif_cond_var.c
-
 $(INDIR)MTeif_project.$obj: $(RTSRC)eif_project.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)eif_project.c
+
+$(INDIR)MTposix_threads.$obj: $(RTSRC)posix_threads.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)posix_threads.c
 
 $(INDIR)MTeif_threads.$obj: $(RTSRC)eif_threads.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)eif_threads.c
@@ -771,9 +761,6 @@ $(INDIR)MTdebug.$obj: $(RTSRC)debug.c
 $(INDIR)MTinterp.$obj: $(RTSRC)interp.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)interp.c
 
-$(INDIR)MTeif_rw_lock.$obj : $(RTSRC)eif_rw_lock.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)eif_rw_lock.c
-	
 $(INDIR)MTwargv.$obj: $(RTSRC)argv.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)argv.c
 
@@ -797,9 +784,6 @@ $(INDIR)MTwcopy.$obj: $(RTSRC)copy.c
 
 $(INDIR)MTwdir.$obj: $(RTSRC)dir.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)dir.c
-
-$(INDIR)MTweif_cond_var.$obj: $(RTSRC)eif_cond_var.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)eif_cond_var.c
 
 $(INDIR)MTweif_project.$obj: $(RTSRC)eif_project.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)eif_project.c
@@ -1051,10 +1035,10 @@ $(INDIR)weif_type_id.$obj : eif_gen_conf.h eif_struct.h eif_cecil.h
 $(INDIR)rout_obj.$obj : eif_rout_obj.h
 $(INDIR)wrout_obj.$obj : eif_rout_obj.h
 
-$(INDIR)eif_threads.$obj : eif_threads.h eif_cond_var.h include/rt_threads.h
-$(INDIR)MTeif_threads.$obj : eif_threads.h eif_cond_var.h include/rt_threads.h
-$(INDIR)eif_cond_var.$obj : eif_cond_var.h
+$(INDIR)eif_threads.$obj : eif_threads.h eif_posix_threads.h include/rt_threads.h
+$(INDIR)MTeif_threads.$obj : eif_threads.h eif_posix_threads.h include/rt_threads.h
+$(INDIR)posix_threads.$obj : eif_posix_threads.h
 
-$(INDIR)weif_threads.$obj : eif_threads.h eif_cond_var.h include/rt_threads.h
-$(INDIR)MTweif_threads.$obj : eif_threads.h eif_cond_var.h include/rt_threads.h
-$(INDIR)weif_cond_var.$obj : eif_cond_var.h
+$(INDIR)weif_threads.$obj : eif_threads.h eif_posix_threads.h include/rt_threads.h
+$(INDIR)MTweif_threads.$obj : eif_threads.h eif_posix_threads.h include/rt_threads.h
+$(INDIR)MTposix_threads.$obj : eif_posix_threads.h

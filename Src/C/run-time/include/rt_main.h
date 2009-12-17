@@ -69,7 +69,7 @@ extern unsigned TIMEOUT;		/* Time out on reads */
 extern void eif_console_cleanup (EIF_BOOLEAN);
 extern void eif_show_console (void);					/* Show the DOS console if needed */
 #ifdef EIF_THREADS
-extern EIF_LW_MUTEX_TYPE *eif_console_mutex;
+extern EIF_CS_TYPE *eif_console_mutex;
 #endif
 #endif
 

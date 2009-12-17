@@ -192,15 +192,15 @@ rt_private rt_uint64 init_date;
 #else	/* EIF_THREADS */
 
 /*
-doc:	<attribute name="eif_trace_mutex" return_type="EIF_LW_MUTEX_TYPE" export="shared">
+doc:	<attribute name="eif_trace_mutex" return_type="EIF_CS_TYPE" export="shared">
 doc:		<summary>Ensure that outputs of tracing are properly synchronized.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-rt_shared	EIF_LW_MUTEX_TYPE *eif_trace_mutex = (EIF_LW_MUTEX_TYPE *) 0;
-#define EIF_TRACE_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_trace_mutex, "Couldn't lock trace mutex");
-#define EIF_TRACE_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_trace_mutex, "Couldn't unlock trace mutex");
+rt_shared	EIF_CS_TYPE *eif_trace_mutex = (EIF_CS_TYPE *) 0;
+#define EIF_TRACE_LOCK		EIF_ASYNC_SAFE_CS_LOCK(eif_trace_mutex)
+#define EIF_TRACE_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_trace_mutex)
 
 #endif
 
@@ -686,7 +686,7 @@ rt_public void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dty
 
 	if (!eif_trace_disabled) {
 		if (trace_call_level != 0 && last_dtype != -1) {
-			EIF_TRACE_LOCK
+			EIF_TRACE_LOCK;
 			print_err_msg(stderr, "\n");
 #ifdef EIF_THREADS
 			print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_context->tid);
@@ -698,7 +698,7 @@ rt_public void start_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dty
 
 			if (last_dtype != last_origin)	/* Check if it is inherited... */
 				print_err_msg(stderr, " (%s)", Classname(last_origin));
-			EIF_TRACE_UNLOCK
+			EIF_TRACE_UNLOCK;
 		}
 
 		trace_call_level++;		/* Increase the call_level */
@@ -722,7 +722,7 @@ rt_public void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtyp
 
 	trace_call_level--;		/* Decrease the call_level */
 
-	EIF_TRACE_LOCK
+	EIF_TRACE_LOCK;
 	print_err_msg(stderr, "\n");
 #ifdef EIF_THREADS
 		print_err_msg(stderr, "Thread ID 0x%016" EIF_POINTER_DISPLAY ":", (rt_uint_ptr) eif_thr_context->tid);
@@ -743,7 +743,7 @@ rt_public void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtyp
 	if (dtype != origin)	/* Check if it is inherited... */
 		print_err_msg(stderr, " (%s)", Classname(origin));
 
-	EIF_TRACE_UNLOCK
+	EIF_TRACE_UNLOCK;
 }
 
 struct prof_info* prof_stack_pop(void)

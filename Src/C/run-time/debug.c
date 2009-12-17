@@ -179,29 +179,32 @@ rt_private struct dbglobalinfo d_globaldata = {
 
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="db_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="private">
+doc:	<attribute name="db_mutex" return_type="EIF_CS_TYPE *" export="private">
 doc:		<summary>Ensure that only one thread is stopped at a time in EiffelStudio debugger.</summary>
 doc:		<thread_safety>Safe as initialized in `dbreak_create_table'.</thread_safety>
 doc:	</attribute>
 */
-rt_private EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against concurrent accesses */
+rt_private EIF_CS_TYPE  *db_mutex;	/* Mutex to protect `dstop' against concurrent accesses */
 #endif /* EIF_THREADS */
 
 #ifdef EIF_THREADS
-#define DBGMTX_CREATE \
-	EIF_LW_MUTEX_CREATE(db_mutex, 1000, "Cannot create mutex for the debugger [dbreak]\n")
-#define DBGMTX_DESTROY \
-	EIF_LW_MUTEX_DESTROY(db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n");
-#define DBGMTX_LOCK	\
-	EIF_ENTER_C; EIF_ASYNC_SAFE_LW_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n"); EIF_EXIT_C; RTGC
-rt_private EIF_BOOLEAN dbgmtx_trylock(EIF_LW_MUTEX_TYPE *a_mutex) {
-	EIF_BOOLEAN result;
-	EIF_LW_MUTEX_TRYLOCK(db_mutex, result, "Cannot lock mutex for the debugger [dbreak]\n");
-	return result;
+#define DBGMTX_CREATE	RT_TRACE(eif_pthread_cs_create(&db_mutex, 1000))
+#define DBGMTX_DESTROY	RT_TRACE(eif_pthread_cs_destroy(db_mutex))
+#define DBGMTX_LOCK		EIF_ENTER_C; EIF_ASYNC_SAFE_CS_LOCK(db_mutex); EIF_EXIT_C; RTGC
+rt_private EIF_BOOLEAN dbgmtx_trylock(EIF_CS_TYPE *a_mutex) {
+	int res;
+	res = eif_pthread_cs_trylock(db_mutex);
+	if (res == T_OK) {
+		return EIF_TRUE;
+	} else if (res == T_BUSY) {
+		return EIF_FALSE;
+	} else {
+		RT_TRACE(res);
+		return EIF_FALSE;
+	}
 }
 #define DBGMTX_TRYLOCK	dbgmtx_trylock(db_mutex)
-#define DBGMTX_UNLOCK \
-	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(db_mutex, "Cannot unlock mutex for the debugger [dbreak]\n"); 
+#define DBGMTX_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(db_mutex)
 #else
 #define DBGMTX_CREATE 
 #define DBGMTX_DESTROY 

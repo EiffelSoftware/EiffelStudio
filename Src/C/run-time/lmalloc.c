@@ -83,12 +83,9 @@ rt_shared  int eif_lm_free (void);
 /*----------------------*/
 
 #ifdef EIF_THREADS
-rt_private EIF_LW_MUTEX_TYPE *lm_lock = NULL;
-#define EIF_LM_LOCK \
-	EIF_ASYNC_SAFE_LW_MUTEX_LOCK (lm_lock, "Couldn't lock lm lock"); \
-
-#define EIF_LM_UNLOCK \
-	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (lm_lock, "Couldn't lock lm lock"); 
+rt_private EIF_CS_TYPE *lm_lock = NULL;
+#define EIF_LM_LOCK		RT_TRACE(EIF_ASYNC_SAFE_CS_LOCK(lm_lock))
+#define EIF_LM_UNLOCK	RT_TRACE(EIF_ASYNC_SAFE_CS_UNLOCK(lm_lock))
 
 #else	/* EIF_THREADS */
 #define EIF_LM_LOCK
@@ -119,6 +116,7 @@ rt_private int lm_put (void *ptr, char *file, int line) {
 	struct lm_entry *ne;
 	
 #ifdef EIF_THREADS
+	int res;
 	static int alloc = 0;
 		
 	if (!lm_lock) {
@@ -128,7 +126,10 @@ rt_private int lm_put (void *ptr, char *file, int line) {
 			return 0;
 		}
 		alloc = 1;
-		EIF_LW_MUTEX_CREATE (lm_lock, "Couldn't create lm lock\n");
+		RT_TRACE_KEEP(res,eif_pthread_cs_create(&lm_lock));
+		if (res != T_OK) {
+			eraise ("Couldn't create lm lock", EN_EXT);
+		}
 		lm_put (lm_lock, "N/A", 0);
 	}  
 	CHECK ("lm already created", alloc == 1);
@@ -136,11 +137,11 @@ rt_private int lm_put (void *ptr, char *file, int line) {
 
 #endif /* EIF_THREADS */
 
-	EIF_LM_LOCK
+	EIF_LM_LOCK;
 
 	if (!lm) {
 		if (lm_create ()) {
-			EIF_LM_UNLOCK
+			EIF_LM_UNLOCK;
 			eif_panic ("Couldn't create lm linked list");
 		}
 	}
@@ -148,7 +149,7 @@ rt_private int lm_put (void *ptr, char *file, int line) {
 	ne = (struct lm_entry *) malloc (sizeof (struct lm_entry));
 
 	if (!ne)	{
-		EIF_LM_UNLOCK
+		EIF_LM_UNLOCK;
 		return -1;
 	}
 
@@ -174,22 +175,22 @@ rt_private int lm_remove (void *ptr) {
 		return 0;
 #endif
 
-	EIF_LM_LOCK
+	EIF_LM_LOCK;
 
 	CHECK ("lm exists", lm != (struct lm_entry **) 0);	
 
 	if (!ptr) {
-		EIF_LM_UNLOCK
+		EIF_LM_UNLOCK;
 		return 0;
 	}
 	
 	if (!lm) {	
-		EIF_LM_UNLOCK
+		EIF_LM_UNLOCK;
 		return -1;
 	}
 		
 	if (!(*lm)) {
-		EIF_LM_UNLOCK
+		EIF_LM_UNLOCK;
 		return -1;
 	}
 		
@@ -197,7 +198,7 @@ rt_private int lm_remove (void *ptr) {
 	if (cur->ptr == ptr) {
 		*lm = cur->next;
 		free (cur);
-		EIF_LM_UNLOCK
+		EIF_LM_UNLOCK;
 		return 0;
 	}
 
@@ -210,14 +211,14 @@ rt_private int lm_remove (void *ptr) {
 			fprintf (stderr, "(allocated at %s:%d) ", tmp->file, tmp->line);
 #endif
 			free (tmp);
-			EIF_LM_UNLOCK
+			EIF_LM_UNLOCK;
 			return 0;
 		}
 		cur = tmp;
 		tmp = cur->next;
 	}
 
-	EIF_LM_UNLOCK
+	EIF_LM_UNLOCK;
 	return -1;
 
 }
@@ -236,7 +237,7 @@ rt_shared int is_in_lm (void *ptr) {
 	}
 	for (cur = *lm; cur != NULL; cur = cur->next) {
 		if (ptr == cur->ptr) {
-			EIF_LM_UNLOCK
+			EIF_LM_UNLOCK;
 			return 1;
 		}
 	}
@@ -251,7 +252,7 @@ rt_shared void eif_lm_display (void) {
 	struct lm_entry *cur;
 
 #ifdef EIF_THREADS
-	REQUIRE ("lm_lock exists", lm_lock != (EIF_LW_MUTEX_TYPE *) 0);
+	REQUIRE ("lm_lock exists", lm_lock != (EIF_CS_TYPE *) 0);
 #endif
 	EIF_LM_LOCK;
 	if (!(*lm)) {
@@ -280,7 +281,7 @@ rt_shared int eif_lm_free (void) {
 #endif
 	EIF_LM_LOCK
 	if (!lm) {
-		EIF_LM_UNLOCK
+		EIF_LM_UNLOCK;
 		return -1;
 	}
 		
@@ -290,10 +291,10 @@ rt_shared int eif_lm_free (void) {
 		free (tmp);
 	}
 	free (lm);
-	EIF_LM_UNLOCK
+	EIF_LM_UNLOCK;
 #ifdef EIF_THREADS
 	fprintf (stderr, "*** Destroy and free lm lock 0x%lx\n", (unsigned long) lm_lock);
-	EIF_LW_MUTEX_DESTROY (lm_lock, "Couldn't destroy lm lock");
+	RT_TRACE(eif_pthread_cs_destroy(lm_lock));
 	lm_lock = NULL;
 #endif /* EIF_THREADS */
 	return 0;

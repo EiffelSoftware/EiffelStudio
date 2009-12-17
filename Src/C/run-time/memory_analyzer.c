@@ -69,7 +69,7 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 
 	/* Lock global once mutex. */
 #ifdef EIF_THREADS
-	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_global_once_set_mutex, "Could not lock global once mutex");
+	EIF_ASYNC_SAFE_CS_LOCK(eif_global_once_set_mutex);
 #endif
 
 #ifndef EIF_THREADS
@@ -155,7 +155,7 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 
 	/* Unlock global once mutex */
 #ifdef EIF_THREADS
-	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_global_once_set_mutex, "Could not unlock global once mutex");
+	EIF_ASYNC_SAFE_CS_UNLOCK(eif_global_once_set_mutex);
 #endif
 
 		/* Now `l_found' is properly populated so let's create

@@ -476,38 +476,38 @@ rt_public rt_uint_ptr volatile rt_type_set_count = 0;
 
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="eif_gc_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:	<attribute name="eif_gc_mutex" return_type="EIF_CS_TYPE *" export="public">
 doc:		<summary>Mutex used for run-time synchronization when performing a GC cycle. All running threads should be stopped on `eif_gc_mutex' or be blocked before starting a GC cycle</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_public EIF_LW_MUTEX_TYPE *eif_gc_mutex = NULL;
+rt_public EIF_CS_TYPE *eif_gc_mutex = NULL;
 
 /*
-doc:	<attribute name="eif_gc_set_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:	<attribute name="eif_gc_set_mutex" return_type="EIF_CS_TYPE *" export="public">
 doc:		<summary>Mutex used to access all the global sets `moved_set', `rem_set' and `memory_set'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_public EIF_LW_MUTEX_TYPE *eif_gc_set_mutex = NULL;
+rt_public EIF_CS_TYPE *eif_gc_set_mutex = NULL;
 
 #ifdef ISE_GC
 /*
-doc:	<attribute name="eif_g_data_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:	<attribute name="eif_g_data_mutex" return_type="EIF_CS_TYPE *" export="public">
 doc:		<summary>Mutex used to access `rt_g_data' when not protected by `eif_gc_mutex'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_public EIF_LW_MUTEX_TYPE *eif_rt_g_data_mutex = NULL;
+rt_public EIF_CS_TYPE *eif_rt_g_data_mutex = NULL;
 #endif
 
 /*
-doc:	<attribute name="eif_global_once_set_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:	<attribute name="eif_global_once_set_mutex" return_type="EIF_CS_TYPE *" export="public">
 doc:		<summary>Mutex used to protect insertion of global once result in `global_once_set'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_public EIF_LW_MUTEX_TYPE *eif_global_once_set_mutex = NULL;
+rt_public EIF_CS_TYPE *eif_global_once_set_mutex = NULL;
 #endif
 
 /*
@@ -5051,12 +5051,12 @@ doc:	</routine>
 rt_public void globalonceset(EIF_REFERENCE address)
 {
 	RT_GET_CONTEXT
-	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_global_once_set_mutex, "Could not lock global once mutex");
+	EIF_ASYNC_SAFE_CS_LOCK(eif_global_once_set_mutex);
 	if (-1 == epush(&global_once_set, address)) {
-		EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_global_once_set_mutex, "Could not unlock global once mutex");
+		EIF_ASYNC_SAFE_CS_UNLOCK(eif_global_once_set_mutex);
 		eraise("once function recording", EN_MEM);
 	}
-	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_global_once_set_mutex, "Could not unlock global once mutex");
+	EIF_ASYNC_SAFE_CS_UNLOCK(eif_global_once_set_mutex);
 }
 #endif
 

@@ -77,7 +77,7 @@ extern EIF_TYPE_INDEX eif_par_table2_size;
 extern EIF_TYPE_INDEX eif_next_gen_id;
 
 #ifdef EIF_THREADS
-extern EIF_LW_MUTEX_TYPE *eif_gen_mutex;
+extern EIF_CS_TYPE *eif_gen_mutex;
 #endif
 extern void eif_gen_conf_thread_init (void);
 extern void eif_gen_conf_thread_cleanup (void);

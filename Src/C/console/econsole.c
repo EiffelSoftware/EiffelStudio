@@ -45,7 +45,7 @@
 #include "eif_argcargv.h"
 #include "rt_err_msg.h"
 #include "rt_error.h"
-#include "rt_threads.h"
+#include "eif_posix_threads.h"
 #include "rt_dir.h"
 #include "rt_main.h"
 #include <io.h>
@@ -79,12 +79,14 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 
 		/* Now try to write error into `exception_trace.log' file */
 #ifdef EIF_THREADS
-	if (!eif_exception_trace_mutex)
-		EIF_MUTEX_CREATE(eif_exception_trace_mutex,
-			"Could not create mutex for saving the exception trace in a file\n");
+		/* FIXME: This is not thread safe at all. */
+	if (!eif_exception_trace_mutex) {
+		RT_TRACE(eif_pthread_mutex_create(&eif_exception_trace_mutex));
+	}
 
-	EIF_MUTEX_LOCK(eif_exception_trace_mutex,
-		"Could not lock mutex for saving the exception trace in a file\n");
+	if (eif_exception_trace_mutex) {
+		RT_TRACE(eif_pthread_mutex_lock(eif_exception_trace_mutex));
+	}
 #endif
 
 	getcwd(saved_cwd, PATH_MAX);
@@ -100,8 +102,9 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	chdir (saved_cwd);
 
 #ifdef EIF_THREADS
-	EIF_MUTEX_UNLOCK(eif_exception_trace_mutex,
-		"Could not unlock mutex for saving the exception trace in a file\n");
+	if (eif_exception_trace_mutex) {
+		RT_TRACE(eif_pthread_mutex_unlock(eif_exception_trace_mutex));
+	}
 #endif
 	return r;
 }
@@ -137,15 +140,15 @@ void eif_console_cleanup (EIF_BOOLEAN crashed)
  */
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="eif_console_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
+doc:	<attribute name="eif_console_mutex" return_type="EIF_CS_TYPE *" export="shared">
 doc:		<summary>To protect multithreaded access to `eif_console_allocated'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_shared EIF_LW_MUTEX_TYPE *eif_console_mutex = (EIF_LW_MUTEX_TYPE *) 0;
+rt_shared EIF_CS_TYPE *eif_console_mutex = (EIF_CS_TYPE *) 0;
 
-#define EIF_CONSOLE_LOCK EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_console_mutex, "Couldn't lock eif_console_mutex");
-#define EIF_CONSOLE_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_console_mutex, "Couldn't unlock eif_console_mutex");
+#define EIF_CONSOLE_LOCK EIF_ASYNC_SAFE_CS_LOCK(eif_console_mutex)
+#define EIF_CONSOLE_UNLOCK EIF_ASYNC_SAFE_CS_UNLOCK(eif_console_mutex)
 
 #else	/* EIF_THREADS */
 
@@ -217,7 +220,7 @@ rt_public void eif_show_console(void)
 			 *  duplicate the handle, unfortunately the solution does not work
 			 *  with Microsoft which explains the ifdef statement.
 			 */
-		EIF_CONSOLE_LOCK
+		EIF_CONSOLE_LOCK;
 		if (!eif_console_allocated) {
 			if (_get_osfhandle (_fileno (stdout)) != (intptr_t) eif_conout) {
 				hCrt = _open_osfhandle ((intptr_t) eif_conout, _O_TEXT);
@@ -264,6 +267,6 @@ rt_public void eif_show_console(void)
 
 			eif_console_allocated = TRUE;
 		}
-		EIF_CONSOLE_UNLOCK
+		EIF_CONSOLE_UNLOCK;
 	}
 }

@@ -160,19 +160,19 @@ doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_private struct exprint eif_except;		/* Where exception has been raised */
-#define EIF_EXCEPT_LOCK	
-#define EIF_EXCEPT_UNLOCK 
+#define EIF_EXCEPT_LOCK
+#define EIF_EXCEPT_UNLOCK
 #else	/* EIF_THREADS */
 /*
-doc:	<attribute name="eif_except_lock" return_type="EIF_LW_MUTEX_TYPE" export="shared">
+doc:	<attribute name="eif_except_lock" return_type="EIF_CS_TYPE" export="shared">
 doc:		<summary>Ensures that when a thread crashes, the complete stack trace is displayed in one shot, and not mixed with other thread's stack traces.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-rt_shared	EIF_LW_MUTEX_TYPE *eif_except_lock = (EIF_LW_MUTEX_TYPE *) 0;
-#define EIF_EXCEPT_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_except_lock, "Couldn't lock exception lock");
-#define EIF_EXCEPT_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_except_lock, "Couldn't unlock exception lock");
+rt_shared	EIF_CS_TYPE *eif_except_lock = (EIF_CS_TYPE *) 0;
+#define EIF_EXCEPT_LOCK		EIF_ASYNC_SAFE_CS_LOCK(eif_except_lock)
+#define EIF_EXCEPT_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(eif_except_lock)
 
 #endif /* EIF_THREADS */
 
@@ -2164,7 +2164,7 @@ rt_public void esfail(void)
 	}
 
 	/* Signals failure. If the out of memory flags are set, mention it */
-	EIF_EXCEPT_LOCK
+	EIF_EXCEPT_LOCK;
 	print_err_msg(stderr, "\n%s: system execution failed.\n", egc_system_name);
 	print_err_msg(stderr, "Following is the set of recorded exceptions");
 	if (echmem & MEM_FSTK) {
@@ -2185,7 +2185,7 @@ rt_public void esfail(void)
 	echmem |= MEM_PANIC;		/* Backtrack won't attempt any longjmp */
 	(void) backtrack();			/* Unwind the whole stack */
 	dump_trace_stack();			/* Print the stack */
-	EIF_EXCEPT_UNLOCK
+	EIF_EXCEPT_UNLOCK;
 #ifdef EIF_WINDOWS
 	eif_console_cleanup(EIF_TRUE);
 #endif

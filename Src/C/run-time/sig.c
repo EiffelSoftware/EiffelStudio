@@ -366,12 +366,6 @@ rt_shared void trapsig(Signal_t (*handler) (int))
 			break;
 #endif /* EIF_DFLT_SIGUSR */
 
-#ifdef EIF_DFLT_SIGVTALARM
-		/* So far, used in PCTHREADS (obsolete, anyway) */
-		case SIGVTALRM:
-			break;
-#endif /* EIF_DFLT_SIGVTALARM */
-
 #ifdef EIF_DFLT_SIGPTRESCHED
 		/* So far, used in Posix 1003.1c threads */
 		case SIGPTRESCHED:

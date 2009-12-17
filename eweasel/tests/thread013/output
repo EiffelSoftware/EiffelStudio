@@ -2,4 +2,6 @@ Mutex CS1 Success
 Mutex CS2 Success
 Mutex Rec Success
 Mutex CS1 Success
+Semaphore Wait 1 Success
+Semaphore Wait 2 Success
 Execution completed

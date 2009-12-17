@@ -83,7 +83,7 @@ feature {NONE} -- Semaphore
 
 				-- Ensure that we haven't decremented the counter
 			if not sem.try_wait then
-				io.put_string ("Semaphore Wait Success%N")
+				io.put_string ("Semaphore Wait 1 Success%N")
 			end
 
 				-- Ensure that the wait will eventually return when the other thread will post.
@@ -98,7 +98,7 @@ feature {NONE} -- Semaphore
 	semaphore_wait (a_sem: SEMAPHORE)
 		do
 			a_sem.wait
-			io.put_string ("Semaphore Wait Success%N")
+			io.put_string ("Semaphore Wait 2 Success%N")
 		end
 
 end

@@ -1,4 +1,6 @@
 class TEST
+inherit
+	EXECUTION_ENVIRONMENT
 
 create
 	make
@@ -9,6 +11,7 @@ feature
 		do
 			test_mutex
 			test_semaphore
+			test_condvar
 		end
 
 feature {NONE} -- Mutex
@@ -129,6 +132,84 @@ feature {NONE} -- Semaphore
 		do
 			a_sem.wait
 			io.put_string ("Semaphore wait 1 Success%N")
+		end
+
+feature {NONE} -- Condition variable
+
+	test_condvar
+		local
+			cond_var: CONDITION_VARIABLE
+			mutex: MUTEX
+			worker_thread_1, worker_thread_2: WORKER_THREAD
+			i: INTEGER
+		do
+			create cond_var.make
+			create mutex.make
+
+			cond_var.signal
+			cond_var.broadcast
+
+			mutex.lock
+			if not cond_var.wait_with_timeout (mutex, 10) then
+				io.put_string ("Condition variable wait 1 Success%N")
+			end
+			mutex.unlock
+
+				-- Testing signal
+			create worker_thread_1.make (agent condition_wait (mutex, cond_var))
+			worker_thread_1.launch
+
+			from
+				i := 1
+			until
+				i = 11
+			loop
+				mutex.lock
+				counter := i
+				mutex.unlock
+				cond_var.signal
+				sleep (100_000_000)
+				i := i + 1
+			end
+
+			worker_thread_1.join
+
+				-- Testing broadcast
+			create worker_thread_1.make (agent condition_wait (mutex, cond_var))
+			worker_thread_1.launch
+			create worker_thread_2.make (agent condition_wait (mutex, cond_var))
+			worker_thread_2.launch
+
+			from
+				i := 1
+			until
+				i = 11
+			loop
+				mutex.lock
+				counter := i
+				mutex.unlock
+				cond_var.broadcast
+				sleep (100_000_000)
+				i := i + 1
+			end
+
+			worker_thread_1.join
+			worker_thread_2.join
+		end
+
+	counter: INTEGER
+
+	condition_wait (a_mutex: MUTEX; a_cond_var: CONDITION_VARIABLE)
+		do
+			a_mutex.lock
+			from
+			until
+				counter = 10
+			loop
+				a_cond_var.wait (a_mutex)
+			end
+			io.put_string ("Condition variable wait 2 Success%N")
+			a_mutex.unlock
 		end
 
 end

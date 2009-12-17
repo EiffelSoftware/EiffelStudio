@@ -83,7 +83,7 @@ feature {NONE} -- Semaphore
 
 				-- Ensure that we haven't decremented the counter
 			if not sem.try_wait then
-				io.put_string ("Semaphore Wait 1 Success%N")
+				io.put_string ("Semaphore trywait 1 False%N")
 			end
 
 				-- Ensure that the wait will eventually return when the other thread will post.
@@ -93,12 +93,42 @@ feature {NONE} -- Semaphore
 			worker_thread_2.launch
 			worker_thread_2.join
 			worker_thread_1.join
+
+			create sem.make (2)
+			sem.wait
+			sem.wait
+
+				-- Ensure that we haven't decremented the counter
+			if not sem.try_wait then
+				io.put_string ("Semaphore trywait 2 False%N")
+			end
+
+			sem.post
+			sem.post
+
+			if sem.try_wait then
+				io.put_string ("Semaphore trywait 3 True%N")
+				sem.post
+			end
+
+				-- Ensure we can augment the initial count.
+			sem.post
+			sem.post
+
+			sem.wait
+			sem.wait
+			sem.wait
+			sem.wait
+
+			if not sem.try_wait then
+				io.put_string ("Semaphore trywait 4 False%N")
+			end
 		end
 
 	semaphore_wait (a_sem: SEMAPHORE)
 		do
 			a_sem.wait
-			io.put_string ("Semaphore Wait 2 Success%N")
+			io.put_string ("Semaphore wait 1 Success%N")
 		end
 
 end

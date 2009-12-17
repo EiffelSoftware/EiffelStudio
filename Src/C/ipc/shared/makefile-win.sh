@@ -50,10 +50,10 @@ standard:: ipc.$lib
 mtstandard:: mtipc.$lib
 
 ipc.$lib: $(OBJECTS)
-	$link_line
+	$alib_line
 
 mtipc.$lib: $(MT_OBJECTS)
-	$link_line
+	$alib_line
 
 MTcom.$obj: com.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?

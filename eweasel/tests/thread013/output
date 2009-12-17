@@ -11,4 +11,7 @@ Condition variable wait 1 Success
 Condition variable wait 2 Success
 Condition variable wait 2 Success
 Condition variable wait 2 Success
+Read Lock 1 Success
+Read Lock 2 Success
+Write Lock Success
 Execution completed

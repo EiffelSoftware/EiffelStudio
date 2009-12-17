@@ -12,6 +12,7 @@ feature
 			test_mutex
 			test_semaphore
 			test_condvar
+			test_read_write_lock
 		end
 
 feature {NONE} -- Mutex
@@ -210,6 +211,56 @@ feature {NONE} -- Condition variable
 			end
 			io.put_string ("Condition variable wait 2 Success%N")
 			a_mutex.unlock
+		end
+
+feature {NONE} -- Read/Write Lock
+
+	test_read_write_lock
+		local
+			lock: READ_WRITE_LOCK
+			launch_semaphore: SEMAPHORE
+			worker_thread_1, worker_thread_2: WORKER_THREAD
+		do
+			create lock.make
+				-- Verify it is recursive
+			lock.acquire_read_lock
+			lock.acquire_read_lock
+			lock.release_reader_lock
+			lock.release_reader_lock
+
+			lock.acquire_write_lock
+			lock.acquire_write_lock
+			lock.release_writer_lock
+			lock.release_writer_lock
+
+			lock.acquire_read_lock
+			io.put_string ("Read Lock 1 Success%N")
+				-- Use a semaphore to ensure that `worker_thread_1' locks before `worker_thread_2'.
+			create launch_semaphore.make (0)
+			create worker_thread_1.make (agent reader_lock (launch_semaphore, lock))
+			worker_thread_1.launch
+			launch_semaphore.wait
+			create worker_thread_2.make (agent writer_lock (lock))
+			worker_thread_2.launch
+			lock.release_reader_lock
+
+			worker_thread_1.join
+			worker_thread_2.join
+		end
+
+	writer_lock (a_lock: READ_WRITE_LOCK)
+		do
+			a_lock.acquire_write_lock
+			io.put_string ("Write Lock Success%N")
+			a_lock.release_writer_lock
+		end
+
+	reader_lock (a_sem: SEMAPHORE; a_lock: READ_WRITE_LOCK)
+		do
+			a_lock.acquire_read_lock
+			a_sem.post
+			io.put_string ("Read Lock 2 Success%N")
+			a_lock.release_reader_lock
 		end
 
 end

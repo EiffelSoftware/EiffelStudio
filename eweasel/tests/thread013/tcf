@@ -1,4 +1,4 @@
-test_name 	 mutex
+test_name 	 synchronization-objects
 test_description Various tests for mutexes
 
 copy_sub 	 Ace $TEST Ace

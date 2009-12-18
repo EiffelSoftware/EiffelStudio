@@ -1,5 +1,15 @@
 Ubuntu 8.10 (dual quad-core Xeon E5420 at 2.5GHz and 6MB of cache per CPU)
 
+6.6
+===
+
+6.6.8.1808 compiled by ecb (with full class checking):
+370.430u 13.160s 6:44.58 94.8%       0+0k 59368+2115568io 0pf+0w
+
+6.6.8.1808 RTEA (multithreaded version with full class checking, COMP size: 313MB):
+728.810u 14.020s 12:24.36 99.7%      0+0k 368+2115784io 0pf+0w
+
+
 6.4
 ===
 

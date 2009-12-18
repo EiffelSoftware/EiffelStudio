@@ -501,7 +501,7 @@ rt_public int eif_pthread_set_priority (EIF_THR_TYPE thread_id, rt_uint_ptr prio
 				l_win_priority = THREAD_PRIORITY_ABOVE_NORMAL;
 			}
 	}
-	if (SetThreadPriority(GetCurrentThread(), l_win_priority)) {
+	if (SetThreadPriority(thread_id, l_win_priority)) {
 		Result = T_OK;
 	} else {
 		Result = mapped_errno (GetLastError());

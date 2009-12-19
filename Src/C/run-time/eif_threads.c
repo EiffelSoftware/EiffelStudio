@@ -1891,7 +1891,7 @@ rt_public void eif_thr_rwl_wrlock (EIF_POINTER rwlp_ptr)
 {
 	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
 	int res;
-	RT_TRACE_KEEP(res,eif_pthread_rwlock_rdlock(rwlp));
+	RT_TRACE_KEEP(res,eif_pthread_rwlock_wrlock(rwlp));
 	if (res != T_OK) {
 		eraise ("Cannot write lock", EN_EXT);
 	}

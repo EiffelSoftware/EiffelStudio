@@ -222,15 +222,14 @@ feature {NONE} -- Read/Write Lock
 			worker_thread_1, worker_thread_2: WORKER_THREAD
 		do
 			create lock.make
-				-- Verify it is recursive
+				-- Verify read locks are recursive
 			lock.acquire_read_lock
 			lock.acquire_read_lock
 			lock.release_reader_lock
 			lock.release_reader_lock
 
+				-- Write locks are not recursive, we test simple sequence
 			lock.acquire_write_lock
-			lock.acquire_write_lock
-			lock.release_writer_lock
 			lock.release_writer_lock
 
 			lock.acquire_read_lock

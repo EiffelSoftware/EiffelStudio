@@ -259,6 +259,9 @@ feature {NONE} -- Read/Write Lock
 		do
 			a_lock.acquire_read_lock
 			a_sem.post
+				-- Put a sleep to ensure that `writer_lock' will indeed wait for the lock
+				-- to be released at the end of the routine and not before
+			sleep(100_000_000)
 			io.put_string ("Read Lock 2 Success%N")
 			a_lock.release_reader_lock
 		end

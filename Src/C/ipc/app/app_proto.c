@@ -94,14 +94,18 @@ rt_private void app_send_rt_uint_ptr_as_string (EIF_PSTREAM sp, rt_uint_ptr ref)
 rt_private EIF_REFERENCE rt_boxed_expanded_item_at_index (EIF_REFERENCE a_obj, int a_index);
 
 rt_private long sp_lower, sp_upper;					/* Special objects' bounds to be inspected */
-rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
+#ifdef EIF_THREADS
+rt_private EIF_THR_TYPE dthread_id;					/* Thread id used to precise current thread in debugger */
+#else
+rt_private rt_uint_ptr dthread_id;
+#endif
 
 rt_private void set_check_assert (int v) ;	/* Set current assertion checking off/on */
 rt_private void set_catcall_detection_mode (EIF_PSTREAM sp, int a_console, int a_dbg); /* Set catcall_detection mode */
 
 /* debugging macro */
 #ifdef EIF_THREADS
-rt_private rt_uint_ptr dthread_id_saved;			/* Thread id used to backup previous current thread in debugger */
+rt_private EIF_THR_TYPE dthread_id_saved;			/* Thread id used to backup previous current thread in debugger */
 #define dthread_prepare() 														\
 		CHECK("Thread context must be cleared", dthread_id_saved == 0); 		\
 		dthread_id_saved = dbg_switch_to_thread(dthread_id);
@@ -209,7 +213,11 @@ static int curr_modify = NO_CURRMODIF;
 		}
 		break;
 	case CHANGE_THREAD:					/* Thread id used to precise current thread in debugger */
-		dthread_id = (rt_uint_ptr) arg_1;
+#ifdef EIF_THREADS
+		dthread_id = (EIF_THR_TYPE) arg_3_p;
+#else
+		dthread_id = (rt_uint_ptr) arg_3_p;
+#endif
 		break;
 	case DUMP_VARIABLES:
 		dthread_prepare();
@@ -591,11 +599,11 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 		rqst.st_wh.wh_nested = wh.wh_nested;		/* breakable nested index */
 
 #ifdef EIF_THREADS
-		dthread_id = (rt_uint_ptr) eif_thr_context->tid;
+		dthread_id = eif_thr_context->thread_id;
 #else
 		dthread_id = (rt_uint_ptr) 0;
 #endif
-		rqst.st_wh.wh_thread_id = (rt_int_ptr) dthread_id; 	/* Current Thread id  -> rt_int_ptr for XDR */
+		rqst.st_wh.wh_thread_id = (rt_uint_ptr) dthread_id; 	/* Current Thread id  -> rt_uint_ptr for XDR */
 	}
 
 	app_send_packet(sp, &rqst);	/* Send stopped notification */

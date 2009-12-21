@@ -65,7 +65,7 @@ extern void eif_terminate_all_other_threads(void);
 
 /* Debugger usage */
 #ifdef WORKBENCH
-rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
+rt_shared EIF_THR_TYPE dbg_switch_to_thread (EIF_THR_TYPE);
 #endif
 
 /* --------------------------------------- */

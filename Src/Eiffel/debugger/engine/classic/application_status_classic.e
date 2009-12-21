@@ -95,7 +95,7 @@ feature -- Access
 		do
 			Precursor
 				--| At this point the ipc is/must-be initialized
-			ipc_request.send_rqst_1_ptr (rqst_change_thread, current_thread_id)
+			ipc_request.send_rqst_3 (rqst_change_thread, 0, 0, current_thread_id)
 		end
 
 feature {NONE} -- CallStack Impl

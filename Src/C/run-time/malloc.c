@@ -2521,9 +2521,9 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, size_t nbytes
 	r = selected->ov_size;
 #ifdef EIF_TID 
 #ifdef EIF_THREADS
-    selected->ovs_tid = eif_thr_context->tid; /* tid from eif_thr_context */
+    selected->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
 #else
-    selected->ovs_tid = NULL; /* In non-MT-mode, it is NULL by convention */
+    selected->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 
@@ -4003,9 +4003,9 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 
 #ifdef EIF_TID 
 #ifdef EIF_THREADS
-    zone->ovs_tid = eif_thr_context->tid; /* tid from eif_thr_context */
+    zone->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
 #else
-    zone->ovs_tid = NULL; /* In non-MT-mode, it is NULL by convention */
+    zone->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 
@@ -4084,9 +4084,9 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 
 #ifdef EIF_TID 
 #ifdef EIF_THREADS
-    zone->ovs_tid = eif_thr_context->tid; /* tid from eif_thr_context */
+    zone->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
 #else
-    zone->ovs_tid = NULL; /* In non-MT-mode, it is NULL by convention */
+    zone->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 

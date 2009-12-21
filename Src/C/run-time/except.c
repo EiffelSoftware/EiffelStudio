@@ -2625,7 +2625,7 @@ rt_private void dump_stack(void (*append_trace)(char *))
 	
 	if (!(eif_thr_is_root())) {
 		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", 
-				"Child thread", (rt_uint_ptr) eif_thr_context->tid, "(thread id)");
+				"Child thread", (rt_uint_ptr) eif_thr_context->thread_id, "(thread id)");
 	} else {
 		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", 
 				"Root thread", (rt_uint_ptr) 0, "(thread id)");

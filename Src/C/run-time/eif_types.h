@@ -334,7 +334,7 @@ union overhead {
 		uint32 dummy;
 #endif
 #ifdef EIF_TID
-        void *ovs_tid;          /* thread id of creator thread */
+        rt_uint_ptr ovs_tid;          /* thread id of creator thread */
 #endif  /* EIF_TID */
 	} ov_head;
 #if MEM_ALIGNBYTES > 8

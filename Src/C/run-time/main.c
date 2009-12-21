@@ -693,7 +693,7 @@ rt_private void notify_root_thread (void)
 	 * and send the thread id
 	 */
 	RT_GET_CONTEXT
-	dnotify_create_thread((EIF_THR_TYPE) eif_thr_context->tid);
+	dnotify_create_thread(eif_thr_context->thread_id);
 }
 #endif
 #endif

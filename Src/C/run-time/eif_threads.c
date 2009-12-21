@@ -96,6 +96,7 @@ rt_public void eif_thr_mutex_destroy(EIF_POINTER);
 rt_private rt_global_context_t *eif_new_context (void);
 rt_private void eif_free_context (rt_global_context_t *);
 rt_private void eif_thr_entry(void *);
+rt_private EIF_THR_TYPE eif_thr_current_thread(void);
 
 	/* To update GC with thread specific data */
 rt_private void eif_remove_gc_stacks(rt_global_context_t *);
@@ -186,17 +187,6 @@ doc:	</attribute>
 */
 rt_public int volatile eif_is_gc_collecting = 0;
 
-#ifdef EIF_WINDOWS
-/*
-doc:	<attribute name="yield_address" return_type="FARPROC" export="private">
-doc:		<summary>Address of `yield' routine for Windows. Only implemented on Windows NT and above.</summary>
-doc:		<thread_safety>Save, initialized once in `eif_thr_root_init'.</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:	</attribute>
-*/
-rt_private FARPROC yield_address = NULL;
-#endif
-
 /*
 doc:	<attribute name="rt_globals_list" return_type="struct stack_list" export="private">
 doc:		<summary>Used to store all per thread data of all running threads.</summary>
@@ -220,7 +210,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock. (i.e: encapsulated in eif_synchronize_gc and eif_unsynchronize_gc</synchronization>
 doc:	</routine>
 */
-rt_private int get_thread_index(rt_uint_ptr th_id)
+rt_private int get_thread_index(EIF_THR_TYPE th_id)
 {
 #ifdef EIF_THREADS
 	int count;
@@ -231,7 +221,7 @@ rt_private int get_thread_index(rt_uint_ptr th_id)
 	count = rt_globals_list.count;
 	lst = (rt_global_context_t **) rt_globals_list.threads.data;
 	for (i = 0; i < count; i++) {
-		if (th_id == (rt_uint_ptr) ((EIF_THR_TYPE) ((rt_global_context_t*)lst[i])->eif_thr_context_cx->tid)) {
+		if (th_id == (((rt_global_context_t*)lst[i])->eif_thr_context_cx->thread_id)) {
 			break;
 		}
 	}
@@ -249,12 +239,12 @@ doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' loc
 doc:	</routine>
 */
 
-rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr th_id) {
+rt_shared EIF_THR_TYPE dbg_switch_to_thread (EIF_THR_TYPE th_id) {
 	RT_GET_CONTEXT
 	rt_global_context_t ** p_rtglob;
 	eif_global_context_t ** p_eifglob;
-	rt_uint_ptr thid;
-	thid = (rt_uint_ptr) rt_globals->eif_thr_context_cx->tid;
+	EIF_THR_TYPE thid;
+	thid = rt_globals->eif_thr_context_cx->thread_id;
 
 #define thread_rt_globals(th_id) ( ((rt_global_context_t **) rt_globals_list.threads.data)[get_thread_index(th_id)] ) 
 
@@ -323,12 +313,6 @@ rt_public void eif_thr_init_root(void)
 #ifdef ISE_GC
 	create_scavenge_zones();
 #endif
-#ifdef EIF_WINDOWS
-	{
-		HMODULE kernel_module = LoadLibrary("kernel32.dll");
-		yield_address = GetProcAddress (kernel_module, "SwitchToThread");
-	}
-#endif
 }
 
 /*
@@ -356,13 +340,10 @@ rt_shared void eif_thread_cleanup (void)
 	if (destroy_mutex) {
 		RT_TRACE(eif_pthread_mutex_destroy(eif_thr_context->children_mutex));
 		eif_thr_context->children_mutex = NULL;
-#ifndef EIF_NO_CONDVAR
 		RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->children_cond));
 		eif_thr_context->children_cond = NULL;
-#endif
 			/* Context data if any */
-		eif_free (eif_thr_context->tid); /* Free id of the current thread */
-		eif_thr_context->tid = NULL;
+		eif_thr_context->thread_id = (EIF_THR_TYPE) 0;
 		eif_free (eif_thr_context);		/* Thread context passed by parent */
 		eif_thr_context = NULL;
 	}
@@ -446,15 +427,10 @@ rt_public void eif_thr_register(int is_external)
 				memset (eif_thr_context, 0, sizeof (rt_thr_context));
 				eif_thr_context->is_alive = 1;
 				eif_thr_context->is_root = 1;
-				eif_thr_context->tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
-				if (eif_thr_context->tid == NULL) {
-					eif_free(eif_thr_context);
-					eif_panic ("Couldn't allocate thread ID");
+				eif_thr_context->thread_id = eif_thr_current_thread();
 #ifdef WORKBENCH
-				} else {
-					dnotify_create_thread((EIF_THR_TYPE) eif_thr_context->tid);
+				dnotify_create_thread(eif_thr_context->thread_id);
 #endif
-				}
 			}
 		}
 			/* Is current thread created by the EiffelThread library or by a third party library */
@@ -462,11 +438,83 @@ rt_public void eif_thr_register(int is_external)
 	}
 }
 
+/*
+doc:	<routine name="eif_set_thr_context" export="public">
+doc:		<summary>Initialize thread context for non Eiffel threads. There is not much to initialize, but this is necessary so that `eif_thr_is_root' can distinguish the root thread from the others.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+
+rt_public void eif_set_thr_context (void) {
+		/* Initialize thread context for non Eiffel Threads.
+		 * There is not much to initialize, but this is necessary
+		 * so that `eif_thr_is_root ()' can distinguish the root thread
+		 * from the others.	*/
+	RT_GET_CONTEXT	
+	if (rt_globals && !eif_thr_context) {
+		eif_thr_context = (rt_thr_context *) eif_malloc (sizeof (rt_thr_context));
+		if (eif_thr_context == NULL) {
+			eif_panic ("Couldn't allocate thread context");
+		} else {
+			memset (eif_thr_context, 0, sizeof (rt_thr_context));
+			eif_thr_context->is_alive = 1;
+			eif_thr_context->is_root = 0;
+			eif_thr_context->thread_id = eif_thr_current_thread();
+		}
+	}
+}
+
+/*
+doc:	<routine name="eif_thr_current_thread" return_type="EIF_THR_TYPE" export="private">
+doc:		<summary>Helper routine to be called only once per thread to avoid leaks (HANDLE leak under Windows). Which will give the associated thread identifier for either the main thread or a thread that was not started by the Eiffel runtime.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_private EIF_THR_TYPE eif_thr_current_thread(void)
+{
+	EIF_THR_TYPE Result;
+
+#ifdef EIF_WINDOWS
+		/* On Windows, `eif_pthread_self' returns a pseudo handle to the Current thread, so we have to do
+		 * something special on Windows. */
+	Result = OpenThread(THREAD_ALL_ACCESS, FALSE, GetCurrentThreadId());
+	CHECK("Cannot be null", Result);
+#else
+	Result = eif_pthread_self();
+#endif
+	return Result;
+}
+
+/*
+doc:	<routine name="eif_thr_root_object" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Return the root object associated with the Current thread. It can be Void in case the thread was not started by the Eiffel runtime.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_REFERENCE eif_thr_root_object(void)
+{
+	RT_GET_CONTEXT
+	if (rt_globals && !(eif_thr_context->is_root)) {
+		return eif_access(eif_thr_context->current);
+	} else {
+		return root_obj;
+	}
+}
+
+/*
+doc:	<routine name="eif_thr_is_root" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>True if the calling thread is the Eiffel root thread. False otherwise.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
 rt_public EIF_BOOLEAN eif_thr_is_root(void)
 {
 		/* Returns True is the calling thread is the Eiffel root thread,
 		 * False otherwise. */
-
 	RT_GET_CONTEXT
 	if (rt_globals) {
 		return EIF_TEST(eif_thr_context->is_root);
@@ -675,23 +723,17 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	RT_GET_CONTEXT
 
 	rt_thr_context *routine_ctxt;
-	EIF_THR_TYPE *tid;
 	EIF_THR_ATTR_TYPE attr;
 	int res;
 
-	tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
-	if (!tid) {
-		eif_thr_panic ("No more memory to create thread ID");
-	}
 	routine_ctxt = (rt_thr_context *) eif_malloc(sizeof(rt_thr_context));
 	if (!routine_ctxt) {
-		eif_free (tid);
 		eif_thr_panic("No more memory to launch new thread\n");
 	} else {
 		memset(routine_ctxt, 0, sizeof(rt_thr_context));
 		routine_ctxt->current = eif_adopt (thr_root_obj);
 		routine_ctxt->routine = init_func;
-		routine_ctxt->tid = tid;
+		routine_ctxt->thread_id = (EIF_THR_TYPE) 0;
 		routine_ctxt->parent_context = eif_thr_context;
 		routine_ctxt->is_alive = 1;
 
@@ -702,14 +744,12 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 			if (res != T_OK) {
 				eif_thr_panic ("Couldn't create join mutex");
 			} else {
-#ifndef EIF_NO_CONDVAR
 				RT_TRACE_KEEP(res, eif_pthread_cond_create (&eif_thr_context->children_cond));
 				if (res != T_OK) {
 						/* Free previously allocated mutex. */
 					RT_TRACE(eif_pthread_mutex_destroy(eif_thr_context->children_mutex));
 					eif_thr_panic ("Cannot create children condition variable");
 				}
-#endif /* EIF_NO_CONDVAR */
 			}
 		}
 		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
@@ -722,14 +762,13 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 			/* Actual creation of the thread in the next 3 lines. */
 		attr.priority = priority;
 		attr.stack_size = 0;
-		RT_TRACE_KEEP(res, eif_pthread_create (tid, &attr, eif_thr_entry, routine_ctxt));
-
+		RT_TRACE_KEEP(res, eif_pthread_create (&routine_ctxt->thread_id, &attr, eif_thr_entry, routine_ctxt));
+		last_child = routine_ctxt->thread_id;
 		LAUNCH_MUTEX_UNLOCK;
 		SIGRESUME;
 		if (res == T_CANNOT_CREATE_THREAD) {
 			eraise("Cannot create thread", EN_EXT);
 		}
-		last_child = tid;
 	}
 }
 
@@ -744,7 +783,7 @@ rt_private void eif_thr_entry (void *arg)
 	rt_thr_context *routine_ctxt = (rt_thr_context *) arg;
 		/* To prevent current thread to return too soon after call
 		 * to eif_pthread_create.
-		 * That way `tid' is properly initialized and can be freed
+		 * That way `thread' is properly initialized and can be freed
 		 * safely later on */
 	LAUNCH_MUTEX_LOCK;
 	LAUNCH_MUTEX_UNLOCK;
@@ -777,7 +816,7 @@ rt_private void eif_thr_entry (void *arg)
 #endif
 			/* Call the `execute' routine of the thread */
 #ifdef WORKBENCH
-		dnotify_create_thread((EIF_THR_TYPE) eif_thr_context->tid);
+		dnotify_create_thread(eif_thr_context->thread_id);
 #endif
 		init_emnger(); /* Initialize objects hold by exception manager */
 		(FUNCTION_CAST(void,(EIF_REFERENCE)) eif_thr_context->routine)(eif_access(routine_ctxt->current));
@@ -818,7 +857,7 @@ rt_public void eif_thr_exit(void)
 		l_has_parent_thread = (eif_thr_context->current) && (eif_thr_context->parent_context);
 #ifdef WORKBENCH
 		if (l_has_parent_thread) {
-			dnotify_exit_thread((EIF_THR_TYPE) eif_thr_context->tid);
+			dnotify_exit_thread(eif_thr_context->thread_id);
 		}
 #endif
 		exitprf();
@@ -844,19 +883,15 @@ rt_public void eif_thr_exit(void)
 			eif_thr_context->parent_context->n_children -= 1;
 				/* Check if no children are alive and parent is dead. */
 			destroy_mutex = (!eif_thr_context->parent_context->is_alive) && (eif_thr_context->parent_context->n_children == 0);
-#ifndef EIF_NO_CONDVAR
 			RT_TRACE(eif_pthread_cond_broadcast(eif_thr_context->parent_context->children_cond));
-#endif
 			EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_parent_children_mutex);
 
 				/* If we are the last running child of our parent and that our parent does not exist anymore
 				 * we have to clean the resources. */
 			if (destroy_mutex) {
 				RT_TRACE(eif_pthread_mutex_destroy(l_parent_children_mutex));
-#ifndef EIF_NO_CONDVAR
 				RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->parent_context->children_cond));
 				eif_thr_context->parent_context->children_cond = NULL;
-#endif
 				eif_free (eif_thr_context->parent_context);
 				eif_thr_context->parent_context = NULL;
 			}
@@ -881,13 +916,10 @@ rt_public void eif_thr_exit(void)
 		if (destroy_mutex) {
 			RT_TRACE(eif_pthread_mutex_destroy(l_children_mutex));
 			eif_thr_context->children_mutex = NULL;
-#ifndef EIF_NO_CONDVAR
 			RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->children_cond));
 			eif_thr_context->children_cond = NULL;
-#endif
 				/* Context data if any */
-			eif_free (eif_thr_context->tid); /* Free id of the current thread */
-			eif_thr_context->tid = NULL;
+			eif_thr_context->thread_id = (EIF_THR_TYPE) 0;
 			eif_free (eif_thr_context);		/* Thread context passed by parent */
 			eif_thr_context = NULL;
 		} else {
@@ -1384,10 +1416,10 @@ rt_shared void eif_terminate_all_other_threads (void) {
 					if (thread_globals->eif_thr_context_cx) {
 						if (!thread_globals->eif_globals->is_external_cx) {
 #ifdef HAS_THREAD_CANCELLATION
-							EIF_THR_CANCEL(*thread_globals->eif_thr_context_cx->tid);
+							EIF_THR_CANCEL(thread_globals->eif_thr_context_cx->thread_id);
 #else
 							load_stack_in_gc (&running_thread_list, thread_globals);
-							RT_TRACE(eif_pthread_kill(*(thread_globals->eif_thr_context_cx->tid)));
+							RT_TRACE(eif_pthread_kill(thread_globals->eif_thr_context_cx->thread_id));
 #endif
 						} else {
 								/* Thread has not been created by our runtime or the EiffelThread
@@ -1526,26 +1558,11 @@ rt_public void eif_thr_join_all(void)
 
 		/* If no thread has been launched, the mutex isn't initialized */
 	if (eif_thr_context->children_mutex) {
-#ifdef EIF_NO_CONDVAR
-		int end = 0;
-		RT_TRACE(eif_pthread_yield());
-		while (!end) {
-			EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
-			if (eif_thr_context->n_children != 0) {
-				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
-				RT_TRACE(eif_pthread_yield());
-			} else {
-				end = 1;
-				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
-			}
-		}
-#else
 		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
 		while (eif_thr_context->n_children != 0) {
 			RT_TRACE(eif_pthread_cond_wait(eif_thr_context->children_cond, eif_thr_context->children_mutex));
 		}
 		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
-#endif
 	}
 }
 
@@ -1561,9 +1578,6 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
-#ifdef EIF_NO_CONDVAR
-	int end = 0;
-#endif
 	int ret;	/* Return Status of "eifaddr". */
 	EIF_INTEGER offset;	/* location of `terminated' in Current */
 	EIF_REFERENCE thread_object = NULL;
@@ -1578,39 +1592,51 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 
 		/* If no thread has been launched, the mutex isn't initialized */
 	if (eif_thr_context->children_mutex) {
-#ifdef EIF_NO_CONDVAR
-		/* This version is for platforms that don't support condition
-		 * variables. If the platform doesn't support yield() either, this
-		 * function can use much of the CPU time.
-		 */
-
-		RT_TRACE(eif_pthread_yield());
-		while (!end) {
-			EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
-			if (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
-				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
-				RT_TRACE(eif_pthread_yield());
-			} else {
-				end = 1;
-				EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
-			}
-		}
-#else
-
-		/* This version is for platforms that support condition variables, like
-		 * the platforms supporting POSIX threads, Solaris and Vxworks (if
-		 * properly configured, ie compiled with POSIX_SCHED).
-		 */
-
 		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
 		while (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
 			RT_TRACE(eif_pthread_cond_wait(eif_thr_context->children_cond, eif_thr_context->children_mutex));
 		}
 		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
-#endif
 	}
 	RT_GC_WEAN(thread_object);
 }
+
+rt_public EIF_BOOLEAN eif_thr_wait_with_timeout (EIF_OBJECT Current, EIF_NATURAL_64 a_timeout_ms)
+{
+	/*
+	 * Waits until a thread sets `terminated' from `Current' to True or reaching `a_timeout_ms'.
+	 * This function is called by `join_with_timeout'. The calling thread must be the direct parent
+	 * of the thread, or the function might loop indefinitely --PCV */
+
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+
+	int res;
+	EIF_INTEGER offset;	/* location of `terminated' in Current */
+	EIF_REFERENCE thread_object = NULL;
+
+		/* We need to protect thread_object, because the protected
+		 * reference `eif_access (Current)' will be cleaned when
+		 * Current thread exit. */
+	RT_GC_PROTECT(thread_object);
+	thread_object = eif_access(Current);
+	offset = eifaddr_offset (thread_object, "terminated", &res);
+	CHECK("terminated attribute exists", res == EIF_CECIL_OK);
+
+		/* If no thread has been launched, the mutex isn't initialized */
+	res = T_OK;
+	if (eif_thr_context->children_mutex) {
+		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
+		while ((*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) || (res == T_TIMEDOUT)) {
+			res = eif_pthread_cond_wait_with_timeout(eif_thr_context->children_cond, eif_thr_context->children_mutex, a_timeout_ms);
+		}
+		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
+	}
+	RT_GC_WEAN(thread_object);
+
+	return (res == T_TIMEDOUT ? EIF_FALSE : EIF_TRUE);
+}
+
 
 rt_public void eif_thr_join (EIF_POINTER tid)
 {
@@ -1623,7 +1649,7 @@ rt_public void eif_thr_join (EIF_POINTER tid)
 	int res;
 
 	if (tid != (EIF_POINTER) 0) {
-		RT_TRACE_KEEP(res, eif_pthread_join(*(EIF_THR_TYPE *)tid));
+		RT_TRACE_KEEP(res, eif_pthread_join((EIF_THR_TYPE) tid));
 	} else {
 		eraise ("Trying to join a thread whose ID is NULL", EN_EXT);
 	}
@@ -1655,7 +1681,7 @@ rt_public EIF_INTEGER eif_thr_max_priority(void) {
 
 rt_public EIF_POINTER eif_thr_thread_id(void) {
 	RT_GET_CONTEXT
-	return (EIF_POINTER) eif_thr_context->tid;
+	return (EIF_POINTER) eif_thr_context->thread_id;
 }
 
 rt_public EIF_POINTER eif_thr_last_thread(void) {

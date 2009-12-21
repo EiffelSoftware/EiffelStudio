@@ -48,11 +48,13 @@
 #define eif_thr_yield()
 #define eif_thr_join_all()
 #define eif_thr_wait(term)
+#define eif_thr_wait_with_timeout(term,tms) EIF_FALSE
 #define eif_thr_join(term)
 
 #define eif_thr_thread_id() NULL
 #define eif_thr_last_thread() NULL
 #define eif_thr_exit()
+#define eif_thr_root_object()	root_obj
 #define eif_thr_default_priority() 0
 #define eif_thr_min_priority() 0
 #define eif_thr_max_priority() 0
@@ -163,6 +165,7 @@ RT_LNK pid_t eif_thread_fork(void);
 RT_LNK void eif_thr_init_root(void);
 RT_LNK void eif_thr_register(int is_external);
 RT_LNK int eif_thr_is_initialized(void);
+RT_LNK EIF_REFERENCE eif_thr_root_object(void);
 RT_LNK EIF_BOOLEAN eif_thr_is_root(void);
 RT_LNK void eif_thr_create(EIF_OBJECT, EIF_POINTER);
 RT_LNK void eif_thr_exit(void);
@@ -170,6 +173,7 @@ RT_LNK void eif_thr_yield(void);
 RT_LNK void eif_thr_join_all(void);
 RT_LNK void eif_thr_join(EIF_POINTER);
 RT_LNK void eif_thr_wait(EIF_OBJECT);
+RT_LNK EIF_BOOLEAN eif_thr_wait_with_timeout(EIF_OBJECT, EIF_NATURAL_64);
 RT_LNK void eif_thr_create_with_args(EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
 RT_LNK EIF_INTEGER eif_thr_default_priority(void);
 RT_LNK EIF_INTEGER eif_thr_min_priority(void);

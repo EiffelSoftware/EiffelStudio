@@ -697,31 +697,6 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 	return (char *) 0;			/* Item was not found */
 }
 
-/*----------------------------------------*/
-/* Eiffel Threads initialization.         */
-/*----------------------------------------*/
-
-#ifdef EIF_THREADS
-rt_shared void eif_set_thr_context (void) {
-		/* Initialize thread context for non Eiffel Threads.
-		 * There is not much to initialize, but this is necessary
-		 * so that `eif_thr_is_root ()' can distinguish the root thread
-		 * from the others.	*/
-	RT_GET_CONTEXT	
-	if (rt_globals && !eif_thr_context) {
-		rt_thr_context *l_context = (rt_thr_context *) eif_malloc (sizeof (rt_thr_context));
-		if (l_context == NULL) {
-			eif_panic ("Couldn't allocate thread context");
-		} else {
-			memset (l_context, 0, sizeof (rt_thr_context));
-			l_context->tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
-			l_context->is_alive = 1;
-		}
-		eif_thr_context = l_context;
-	}
-}
-#endif	/* EIF_THREADS */
-
 /*
 doc:</file>
 */

@@ -76,10 +76,8 @@ struct tag_rt_thr_context {
 	volatile int n_children;		/* Number of direct thread children. */
 	volatile int is_alive;			/* Is Current thread still alive? */
 	volatile int is_root;			/* Is Current thread the thread that started all? */
-#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *children_cond;	/* For `join_all'. */
-#endif  
-	EIF_THR_TYPE *tid;				/* Thread id of new thread. */
+	EIF_THR_TYPE thread_id;			/* Thread identifier for associated thread. */
 	rt_thr_context *parent_context;	/* Context of parent thread, NULL if root class. */
 };
 
@@ -98,7 +96,7 @@ typedef struct tag_rt_globals
 		/* eif_threads.c */
 	eif_global_context_t *eif_globals;
 	rt_thr_context *eif_thr_context_cx;
-	EIF_THR_TYPE *last_child_cx;		/* Task id of the last created thread */
+	EIF_THR_TYPE last_child_cx;		/* Task id of the last created thread */
 #ifdef ISE_GC
 		/* Synchronizations for GC*/
 	int volatile gc_thread_status_cx;

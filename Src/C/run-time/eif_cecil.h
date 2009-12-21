@@ -335,10 +335,10 @@ RT_LNK void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-tim
 extern char *ct_value(struct ctable *ct, register char *key);				/* Hash table query */
 
 #ifdef EIF_THREADS
+
 /*
  * Initialization of non Eiffel Threads.
  */
-
 RT_LNK void eif_set_thr_context (void);
 
 #endif	/* EIF_THREADS */

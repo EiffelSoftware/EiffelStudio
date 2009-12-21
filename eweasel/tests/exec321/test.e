@@ -9,7 +9,13 @@ feature {NONE} -- Creation
 			-- Run tests.
 		local
 			i: NATURAL_32
+			s: STRING
 		do
+			if attached {CHECK_VIOLATION} (create {EXCEPTION_MANAGER}).last_exception then
+				s := "OK"
+			else
+				s := "FAILED"
+			end
 			if i = 0 then
 				check
 					-- Nothing really
@@ -55,7 +61,7 @@ feature {NONE} -- Creation
 				io.put_string ("Test 7: FAILED")
 				io.put_new_line
 			elseif i = 1 then
-				io.put_string ("Test 7: OK")
+				io.put_string ("Test 7: " + s)
 				io.put_new_line
 				check
 					false
@@ -64,7 +70,7 @@ feature {NONE} -- Creation
 					io.put_new_line
 				end
 			elseif i = 2 then
-				io.put_string ("Test 8: OK")
+				io.put_string ("Test 8: " + s)
 				io.put_new_line
 				check
 					correct: Current /= Current
@@ -73,7 +79,7 @@ feature {NONE} -- Creation
 					io.put_new_line
 				end
 			elseif i = 3 then
-				io.put_string ("Test 9: OK")
+				io.put_string ("Test 9: " + s)
 				io.put_new_line
 				check
 					Current = Current
@@ -83,7 +89,7 @@ feature {NONE} -- Creation
 					io.put_new_line
 				end
 			elseif i = 4 then
-				io.put_string ("Test 10: OK")
+				io.put_string ("Test 10: " + s)
 				io.put_new_line
 				check
 					Current /= Current
@@ -93,7 +99,7 @@ feature {NONE} -- Creation
 					io.put_new_line
 				end
 			elseif i = 5 then
-				io.put_string ("Test 11: OK")
+				io.put_string ("Test 11: " + s)
 				io.put_new_line
 			else
 				io.put_string ("Unknown test")

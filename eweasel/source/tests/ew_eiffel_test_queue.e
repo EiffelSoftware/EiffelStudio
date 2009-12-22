@@ -34,15 +34,15 @@ feature -- Properties
 	all_tests_added: BOOLEAN
 			-- Has producer finished adding tests to
 			-- the queue?
-	
+
 	results_in_catalog_order: BOOLEAN
 			-- Should test execution results be reported
 			-- in order tests appear in catalog?
 			-- If not, test results are reported as soon as
 			-- they are available.
 			-- Ignored if single threaded
-	
-	
+
+
 feature -- Modification
 
 	set_results_in_catalog_order (b: BOOLEAN)
@@ -117,7 +117,11 @@ feature -- Modification
 						completed_queue.extend (entry)
 					end
 				end
-				queue.forth
+					-- We have to protect the call because the previous call
+					-- to `queue.remove' may have render `queue.after' True.
+				if not queue.after then
+					queue.forth
+				end
 			end
 			debug ("threaded_eweasel")
 				print_debug_worker ("Signalling more completed tests in mark_test_completed" )
@@ -146,7 +150,7 @@ feature -- Modification
 			entry: EW_EIFFEL_TEST_QUEUE_ENTRY
 		do
 			from
-				
+
 			until
 				Result /= Void or no_tests
 			loop
@@ -344,7 +348,7 @@ feature {NONE} -- Implementation
 			-- tests that are currently executing
 			-- Otherwise, it is empty (not used)
 
-	completed_queue: ARRAYED_LIST [EW_EIFFEL_TEST_QUEUE_ENTRY] 
+	completed_queue: ARRAYED_LIST [EW_EIFFEL_TEST_QUEUE_ENTRY]
 			-- If not `results_in_catalog_order', this is
 			-- queue of tests that are have completed but
 			-- whose status has not yet been reported.
@@ -356,13 +360,13 @@ feature {NONE} -- Obsolete
 			-- Lock `Current' to gain exclusive access to it
 			-- (so other threads don't change it)
 		do
-			mutex.lock			
+			mutex.lock
 		end
 
 	unlock
 			-- Unlock `Current' to allow other threads access
 		do
-			mutex.unlock			
+			mutex.unlock
 		end
 
 note

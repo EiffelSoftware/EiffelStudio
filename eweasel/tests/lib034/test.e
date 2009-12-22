@@ -20,6 +20,10 @@ feature {NONE} -- Initialization
 			if f2.last_string /~ "S" then
 				io.put_string ("Not OK!%N")
 			end
+
+			io.input.flush
+			io.output.flush
+			io.error.flush
 		end
 
 end

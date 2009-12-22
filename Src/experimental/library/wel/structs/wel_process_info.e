@@ -44,8 +44,6 @@ feature -- Element Settings
 
 	set_process_handle (a_handle: like process_handle)
 			-- Set `process_handle' with `a_handle'.
-		require
-			valid_handle: a_handle /= default_pointer
 		do
 			cwel_process_info_set_process_handle (item, a_handle)
 		ensure
@@ -54,8 +52,6 @@ feature -- Element Settings
 
 	set_thread_handle (a_handle: like thread_handle)
 			-- Set `thread_handle' with `a_handle'.
-		require
-			valid_handle: a_handle /= default_pointer
 		do
 			cwel_process_info_set_thread_handle (item, a_handle)
 		ensure
@@ -65,7 +61,7 @@ feature -- Element Settings
 	set_process_id (a_id: like process_id)
 			-- Set `process_id' with `a_id'.
 		require
-			valid_id: a_id > 0
+			valid_id: a_id >= 0
 		do
 			cwel_process_info_set_process_id (item, a_id)
 		ensure
@@ -75,7 +71,7 @@ feature -- Element Settings
 	set_thread_id (a_id: like thread_id)
 			-- Set `thread_id' with `a_id'.
 		require
-			valid_id: a_id > 0
+			valid_id: a_id >= 0
 		do
 			cwel_process_info_set_thread_id (item, a_id)
 		ensure

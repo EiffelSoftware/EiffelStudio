@@ -19,7 +19,7 @@ feature -- Path name operations
 			-- File name which represents null input or output
 		deferred
 		end
-	
+
 	full_file_name (dir_name, f_name: STRING): STRING
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
@@ -43,7 +43,7 @@ feature -- Path name operations
 		end;
 
 	full_directory_name (dir_name, subdir: STRING): STRING
-			-- Full name of subdirectory `subdir' of directory 
+			-- Full name of subdirectory `subdir' of directory
 			-- `dir_name'
 		require
 			dir_name_not_void: dir_name /= Void;
@@ -54,9 +54,9 @@ feature -- Path name operations
 		end;
 
 feature -- File operations
-	
+
 	delete_directory_tree (dir_name: STRING)
-			-- Try to delete the directory tree rooted at 
+			-- Try to delete the directory tree rooted at
 			-- `dir_name'.  Ignore any errors
 		require
 			directory_not_void: dir_name /= Void;
@@ -66,7 +66,9 @@ feature -- File operations
 		do
 			if not retried then
 				create l_dir.make (dir_name)
-				l_dir.recursive_delete
+				if l_dir.exists then
+					l_dir.recursive_delete
+				end
 			end
 		rescue
 			retried := True
@@ -74,7 +76,7 @@ feature -- File operations
 		end;
 
 feature -- Date and time
-	
+
 	current_time_in_seconds: INTEGER
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)

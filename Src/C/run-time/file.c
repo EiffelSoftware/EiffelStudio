@@ -419,8 +419,10 @@ rt_public void file_flush (FILE *fp)
 	    esys();				/* Flush failed, raise exception */
 #ifdef EIF_WINDOWS
 		/* On Windows, it does not write directly to disk, so we have to force it. See KB66052:
-		 * http://support.microsoft.com/kb/66052 */
-	if (0 != _commit(fileno(fp))) {
+		 * http://support.microsoft.com/kb/66052
+		 * We ignore bad file descriptor case, as it is most likely when calling it on one of the standard
+		 * input/outputs. */
+	if ((0 != _commit(fileno(fp))) && (errno != EBADF)) {
 		esys();
 	}
 #elif defined(EIF_VMS	/* VMS: flush RMS buffers (shouldn't this be done on other platforms also?) */

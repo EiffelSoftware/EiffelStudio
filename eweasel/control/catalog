@@ -1828,6 +1828,7 @@ test	file-type-queries-wrong		lib030	 tcf pass library file
 test	file-append-not-thread-safe	lib031	 tcf pass library file multithreaded
 test	boolean-class-invariant		lib032	 tcf pass library basic invariant
 test	file-read-write-access		lib033	 tcf fail library file
+test	file-flush					lib034	 tcf pass library file
 
 
 

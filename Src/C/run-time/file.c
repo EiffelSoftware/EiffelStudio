@@ -417,7 +417,13 @@ rt_public void file_flush (FILE *fp)
 	errno = 0;
 	if (0 != fflush(fp))
 	    esys();				/* Flush failed, raise exception */
-#ifdef EIF_VMS	/* VMS: flush RMS buffers (shouldn't this be done on other platforms also?) */
+#ifdef EIF_WINDOWS
+		/* On Windows, it does not write directly to disk, so we have to force it. See KB66052:
+		 * http://support.microsoft.com/kb/66052 */
+	if (0 != _commit(fileno(fp))) {
+		esys();
+	}
+#elif defined(EIF_VMS	/* VMS: flush RMS buffers (shouldn't this be done on other platforms also?) */
 	if (0 != fsync(fileno(fp))) {
 	    err = (errno == EVMSERR ? vaxc$errno : errno);
 	    esys();

@@ -1,7 +1,6 @@
 
 class TEST
 inherit
-	THREAD_CONTROL
 	MEMORY
 	EXCEPTIONS
 
@@ -13,17 +12,19 @@ feature
 		local
 			k, count: INTEGER
 			initial_used, curr_used, diff: INTEGER
+			l_thread: WORKER_THREAD
 		do
 			count := args.item (1).to_integer
 			info := memory_statistics (Total_memory)
 			info.update (Total_memory)
 			initial_used := info.used
+			create l_thread.make (agent print ("Hello"))
 			from
 				k := 1
 			until
 				k > count
 			loop
-				join
+				l_thread.join
 				info.update (Total_memory)
 				curr_used := info.used
 				diff := curr_used - initial_used

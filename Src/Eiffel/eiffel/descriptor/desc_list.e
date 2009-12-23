@@ -47,29 +47,21 @@ feature -- Creation
 			-- `c', and initialize the size of the
 			-- individual descriptors to `s'.
 		local
-			desc: DESCRIPTOR
-			local_class_types: TYPE_LIST
-			l_area: SPECIAL [DESCRIPTOR]
 			i, nb, nb_entries: INTEGER
 		do
 			base_class := c
 			class_types := c.types
-			local_class_types := class_types
 
-			nb := local_class_types.count
+			nb := class_types.count
 			make_filled (nb)
 				-- Compute the size of the DESCRIPTOR table.
 			nb_entries := c.number_of_ancestors + 1
 			from
-				l_area := area
 				nb := count
-				local_class_types.start
 			until
 				i = nb
 			loop
-				create desc.make (local_class_types.item, nb_entries)
-				l_area.put (desc, i)
-				local_class_types.forth
+				area.put (create {DESCRIPTOR}.make (class_types.i_th (i + 1), nb_entries), i)
 				i := i + 1
 			end
 		end

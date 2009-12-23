@@ -410,12 +410,16 @@ feature -- Settings
 		local
 			i, j, count: INTEGER
 			temp: STRING
+			l_current_str, l_arg_str: STRING
+			l_is_workbench_classic: BOOLEAN
 		do
+			l_current_str := once "Current"
+			l_arg_str := once "arg"
 			if arguments /= Void then
 				count := arguments.count
 				if generate_current then
 					create Result.make (1, count + 1)
-					Result.put ("Current", 1)
+					Result.put (l_current_str, 1)
 					j := 2
 				else
 					create Result.make (1, count)
@@ -423,12 +427,14 @@ feature -- Settings
 				end
 				from
 					i := 1
+					l_is_workbench_classic := context.workbench_mode and then not system.il_generation
 				until
 					i > count
 				loop
-					temp := "arg"
+					create temp.make (5)
+					temp.append (l_arg_str)
 					temp.append_integer (i)
-					if context.workbench_mode and then not system.il_generation then
+					if l_is_workbench_classic then
 						temp.append_character ('x')
 					end
 					Result.put (temp, j)
@@ -437,7 +443,7 @@ feature -- Settings
 				end
 			elseif generate_current then
 				create Result.make (1, 1)
-				Result.put ("Current", 1)
+				Result.put (l_current_str, 1)
 			else
 				create Result.make (1, 0)
 			end
@@ -451,12 +457,14 @@ feature -- Settings
 		local
 			type_name: STRING
 			i, j, count: INTEGER
+			l_is_workbench: BOOLEAN
 		do
 			if arguments /= Void then
+				l_is_workbench := context.workbench_mode
 				count := arguments.count
 				if generate_current then
 					create Result.make (1, count + 1)
-					Result.put ("EIF_REFERENCE", 1)
+					Result.put (once "EIF_REFERENCE", 1)
 					j := 2
 				else
 					create Result.make (1, count)
@@ -467,7 +475,7 @@ feature -- Settings
 				until
 					i > count
 				loop
-					if context.workbench_mode then
+					if l_is_workbench then
 						type_name := once "EIF_TYPED_VALUE"
 					else
 						type_name := real_type (arguments.item (i)).c_type.c_string
@@ -478,7 +486,7 @@ feature -- Settings
 				end
 			elseif generate_current then
 				create Result.make (1, 1)
-				Result.put ("EIF_REFERENCE", 1)
+				Result.put (once "EIF_REFERENCE", 1)
 			else
 				create Result.make (1, 0)
 			end

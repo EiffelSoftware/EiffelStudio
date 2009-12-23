@@ -38,6 +38,6 @@ if "%~1" == "" (
 	if "%~1" == "no" (
 		echo "Eweasel not launched per user request"
 	) else (
-		%EWEASEL_COMMAND% -catalog %EWEASEL%\control\catalog > %output_file%
+		%EWEASEL_COMMAND% -order -catalog %EWEASEL%\control\catalog > %output_file%
 	)
 )

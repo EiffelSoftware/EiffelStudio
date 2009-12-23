@@ -282,13 +282,13 @@ feature -- Access
 			if argument_count > 0 then
 					-- If all arguments are expanded or if they are a frozen class
 					-- then it cannot be covariantly redefined
+				l_descendants := a_base_class.direct_descendants
+				i := l_descendants.count
 				if
-					not arguments.for_all (covariant_argument_checker_agent)
+					i > 0 and then not arguments.for_all (covariant_argument_checker_agent)
 				then
 					from
-						l_descendants := a_base_class.direct_descendants
 						l_rout_id := rout_id_set.first
-						i := l_descendants.count
 					until
 						i = 0
 					loop

@@ -1,14 +1,20 @@
 deferred class TEST_SETUP
 
-inherit
-	THREAD
-
 feature -- Execution
 
+	execute
+		deferred
+		end
+
 	run is
+		local
+			worker_thread: WORKER_THREAD
+			control: THREAD_CONTROL
 		do
-			launch
-			join_all
+			create worker_thread.make (agent execute)
+			worker_thread.launch
+			create control
+			control.join_all
 		end
 
 end

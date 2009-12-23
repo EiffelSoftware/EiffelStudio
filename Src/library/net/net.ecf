@@ -44,33 +44,19 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<cluster name="abstract" location="abstract\" recursive="true">
-			<option namespace="Common">
-			</option>
-		</cluster>
+		<cluster name="abstract" location="abstract\" recursive="true"/>
 		<cluster name="local" location="local\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
 		</cluster>
-		<cluster name="mail" location="mail\" recursive="true">
-			<option namespace="Mail">
-			</option>
-		</cluster>
-		<cluster name="network" location="network\" recursive="true">
-			<option namespace="Networking">
-			</option>
-		</cluster>
+		<cluster name="mail" location="mail\" recursive="true"/>
+		<cluster name="network" location="network\" recursive="true"/>
 		<cluster name="polling" location="polling\" recursive="true">
-			<option namespace="Polling">
-			</option>
 			<file_rule>
 				<exclude>/wel_socket_poller\.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="transfer" location="transfer\" recursive="true">
-			<option namespace="Transfer">
-			</option>
-		</cluster>
+		<cluster name="transfer" location="transfer\" recursive="true"/>
 	</target>
 </system>

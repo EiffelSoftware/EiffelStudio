@@ -90,8 +90,10 @@ feature -- Duplication
 			-- Reinitialize by copying characters of `other'.
 			-- (This is also used by `clone')
 		do
-			make (other.count)
-			data.copy (other.data)
+			if other /= Current then
+				standard_copy (other)
+				data := other.data.twin
+			end
 		ensure then
 			size_valid: count = other.count
 		end

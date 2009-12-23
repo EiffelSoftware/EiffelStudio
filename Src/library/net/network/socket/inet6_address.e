@@ -179,11 +179,11 @@ feature {NETWORK_SOCKET_ADDRESS}
 
 	sockaddr (a_port: INTEGER): MANAGED_POINTER
 		local
-			a: ANY
+			a: MANAGED_POINTER
 		do
 			create Result.make (sockaddr_size)
-			a := the_address.to_c
-			fill_ipv6 (Result.item, $a, a_port, the_scope_id)
+			create a.make_from_array (the_address)
+			fill_ipv6 (Result.item, a.item, a_port, the_scope_id)
 		end
 
 feature {NONE} -- Implementation

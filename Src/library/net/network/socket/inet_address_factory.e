@@ -32,7 +32,7 @@ feature
 		end
 
 	create_localhost: INET_ADDRESS
-			-- Local host address
+			--
 		local
 			localhostname: STRING
 			l_result: detachable INET_ADDRESS
@@ -46,7 +46,7 @@ feature
 		end
 
 	create_from_name (hostname: STRING): detachable INET_ADDRESS
-			-- host address from `hostname'.
+			--
 		local
 			r: detachable ARRAY [INET_ADDRESS]
 		do
@@ -57,7 +57,7 @@ feature
 		end
 
 	create_from_address (address: ARRAY [NATURAL_8]): detachable INET_ADDRESS
-			-- host address from `address'.
+			--
 		require
 			valid_address: address /= Void
 		local
@@ -76,7 +76,7 @@ feature
 		end
 
 	create_from_sockaddr (sockaddr: POINTER): detachable INET_ADDRESS
-			-- host address from pointer `sockaddr'.
+			--
 		require
 			valid_sockaddr: sockaddr /= default_pointer
 		local
@@ -574,10 +574,13 @@ feature {NONE} -- Implementation
 					ai = Void
 				loop
 					l_family := ai.family
-					if l_family = {ADDRINFO}.af_inet then
+						-- We could use `{ADDRINFO}.af_inet' and `{ADDRINFO}.af_inet6' but on
+						-- .NET it does not work since `ADDRINFO' is deferred. Instead we use
+						-- the `ai' insance to get those constants.
+					if l_family = ai.af_inet then
 						create {INET4_ADDRESS} ia.make_from_host_and_pointer (host, ai.addr)
 						Result.force (ia, Result.count+1)
-					elseif l_family = {ADDRINFO}.af_inet6 then
+					elseif l_family = ai.af_inet6 then
 						if is_ipv6_available then
 							create {INET6_ADDRESS} ia.make_from_host_and_pointer (host, ai.addr)
 							Result.force (ia, Result.count+1)

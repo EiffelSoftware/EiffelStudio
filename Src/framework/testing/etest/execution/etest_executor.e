@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			--
 			-- `an_execution': Execution which launches `Current'.
 			-- `an_etest_suite': ETEST_SUITE instance.
+			-- `a_max_controller_count': Maximum number of controllers that can be launched in parallel.
 		require
 			an_execution_attached: an_execution /= Void
 			an_etest_suite_attached: an_etest_suite /= Void
@@ -59,6 +60,7 @@ feature {NONE} -- Initialization
 			create occupied_controllers.make (10)
 			tasks := empty_tasks
 			create byte_code_factory
+			max_controller_count := etest_suite.preferences.evaluator_count.value
 		ensure
 			test_execution_set: test_execution = an_execution
 			etest_suite_set: etest_suite = an_etest_suite
@@ -97,11 +99,14 @@ feature {NONE} -- Access
 			if test_execution.is_debugging then
 				Result := 1
 			else
-				Result := 4
+				Result := max_controller_count
 			end
 		ensure
 			result_valid: Result > 0
 		end
+
+	max_controller_count: INTEGER
+			-- Maximum number of controllers the can be launched in parallel
 
 	byte_code_factory: ETEST_EVALUATOR_BYTE_CODE_FACTORY
 			-- Factory for creating byte code instructions

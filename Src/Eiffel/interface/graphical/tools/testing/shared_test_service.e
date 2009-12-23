@@ -47,7 +47,7 @@ feature {NONE} -- Access
 			else
 				create {TEST_PROJECT_HELPER} l_helper
 			end
-			create Result.make (l_access, l_helper)
+			create Result.make (l_access, l_helper, (create {EC_SHARED_PREFERENCES}).preferences.testing_tool_data)
 		end
 
 	default_filter_expression: STRING = "^class"

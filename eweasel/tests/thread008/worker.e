@@ -42,7 +42,7 @@ feature
 			create list.make (1000)
 			list.extend (s)
 			n := referers (s).count
-			if n /= 1 then
+			if n /= 1 and not {PLATFORM}.is_dotnet then
 				print (n.out + " objects refer to string%N")
 			end
 		end

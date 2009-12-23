@@ -19,7 +19,7 @@ inherit
 
 	DISPOSABLE_SAFE
 
-create {TEST_PROJECT_I, ETEST_CLASS_SYNCHRONIZER}
+create {ETEST_CLASS_SYNCHRONIZER}
 	make
 
 feature {NONE} -- Initialization

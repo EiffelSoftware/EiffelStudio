@@ -5,19 +5,18 @@ note
 	revision: "$Revision$"
 
 deferred class
-
 	ADDRINFO
 
 feature -- Constants
 
-	AF_INET: INTEGER
+	frozen AF_INET: INTEGER
 		external
 			"C"
 		alias
 			"en_addrinfo_af_inet"
 		end
 
-	AF_INET6: INTEGER
+	frozen AF_INET6: INTEGER
 		external
 			"C"
 		alias

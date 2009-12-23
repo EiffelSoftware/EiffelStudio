@@ -16,12 +16,20 @@ inherit
 		end
 
 create
-	make
+	make, make1, make2
 
 feature {NONE} -- Creation
 
 	make is
 			-- Run tests.
+		local
+			t1, t2: TEST
+		do
+			create t1.make1
+			create t2.make2
+		end
+
+	make1
 		do
 			launch
 			test_precondition_1
@@ -34,6 +42,10 @@ feature {NONE} -- Creation
 				1)
 			is_checked_1 := false
 			is_checked_2 := false
+		end
+
+	make2
+		do
 			launch
 			twin.do_nothing
 			join

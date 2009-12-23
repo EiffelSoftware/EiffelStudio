@@ -33,7 +33,7 @@ feature  -- Creation
 	make_and_execute (args: ARRAY [STRING])
 			-- Make and execute tests in catalog file
 		do
-			make (args)			
+			make (args)
 			if args_ok then
 				execute
 			end
@@ -47,7 +47,7 @@ feature -- Commands
 			able_to_execute: args_ok
 		do
 			display_version
-			do_tests		
+			do_tests
 		end
 
 feature -- Access
@@ -226,11 +226,11 @@ feature  {NONE} -- Implementation
 				output.append_error ("No initial test control file specified (-init option omitted)", True)
 				args_ok := False;
 			end;
-			if test_catalog_names.is_empty then	
+			if test_catalog_names.is_empty then
 				output.append_error ("No test catalogs specified (-catalog option omitted)", True)
 				args_ok := False;
 			end;
-			if test_suite_directory = Void then	
+			if test_suite_directory = Void then
 				output.append_error ("No test output directory specified (-output option omitted)", True)
 				args_ok := False;
 			end;
@@ -320,7 +320,7 @@ feature  {NONE} -- Implementation
 				end
 				test_catalog_names.forth
 			end
-			
+
 			if ok then
 				suite := new_test_suite (tests, test_suite_options)
 				suite.execute (test_suite_options);
@@ -398,12 +398,12 @@ feature  {NONE} -- Implementation
 			output.append ("  (version 1.0.001)", True)
 		end;
 
-	
+
 feature  -- Status
 
 	args_ok: BOOLEAN;
 			-- Were command line arguments valid?
-	
+
 feature  {NONE} -- Implementation
 
 	new_test_suite (tests: LIST [EW_NAMED_EIFFEL_TEST] opts: EW_TEST_SUITE_OPTIONS): EW_EIFFEL_TEST_SUITE
@@ -418,11 +418,11 @@ feature  {NONE} -- Implementation
 			-- Name of control file to be read initially,
 			-- to set up the environment with which all
 			-- tests are to be started.
-	
+
 	test_catalog_names: LIST [STRING]
 			-- Name of the test catalog file, which lists
 			-- all possible tests.
-	
+
 	test_suite_directory: STRING;
 			-- Name of the test directory.  Each test is
 			-- conducted in a sub-directory of the test

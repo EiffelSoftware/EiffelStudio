@@ -9,7 +9,7 @@ class EW_EWEASEL_MT
 inherit
 	EW_EWEASEL
 
-create	
+create
 	make,
 	make_and_execute
 

@@ -83,8 +83,7 @@ rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(int is_external);
 rt_public int eif_thr_is_initialized(void);
-rt_public void eif_thr_create_with_args(EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER,
-										EIF_INTEGER, EIF_BOOLEAN);
+rt_public void eif_thr_create_with_attr(EIF_OBJECT, EIF_PROCEDURE, EIF_THR_ATTR_TYPE *);
 rt_public void eif_thr_exit(void);
 
 rt_public EIF_POINTER eif_thr_mutex_create(void);
@@ -696,11 +695,9 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 	EIF_TSD_SET(eif_global_key, NULL, "Couldn't bind private context to TSD.");
 }
 
-rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj, 
+rt_public void eif_thr_create_with_attr (EIF_OBJECT thr_root_obj, 
 										 EIF_PROCEDURE init_func,
-										 EIF_INTEGER priority,
-										 EIF_INTEGER policy,
-										 EIF_BOOLEAN detach)
+										 EIF_THR_ATTR_TYPE *attr)
 {
 	/*
 	 * Creates a new Eiffel thread. This function is only called from
@@ -708,7 +705,7 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	 * - the object (whose class inherits from THREAD) a clone of which
 	 *   will become the root object of the new thread
 	 * - the Eiffel routine it will execute
-	 * - the priority, the policy and the detached state.
+	 * - the priority, the stack size.
 	 *
 	 * These arguments are part of the routine context that will be
 	 * passed to the new thread via the low-level platform-dependant
@@ -723,7 +720,6 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	RT_GET_CONTEXT
 
 	rt_thr_context *routine_ctxt;
-	EIF_THR_ATTR_TYPE attr;
 	int res;
 
 	routine_ctxt = (rt_thr_context *) eif_malloc(sizeof(rt_thr_context));
@@ -760,9 +756,7 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 		LAUNCH_MUTEX_LOCK;
 
 			/* Actual creation of the thread in the next 3 lines. */
-		attr.priority = priority;
-		attr.stack_size = 0;
-		RT_TRACE_KEEP(res, eif_pthread_create (&routine_ctxt->thread_id, &attr, eif_thr_entry, routine_ctxt));
+		RT_TRACE_KEEP(res, eif_pthread_create (&routine_ctxt->thread_id, attr, eif_thr_entry, routine_ctxt));
 		last_child = routine_ctxt->thread_id;
 		LAUNCH_MUTEX_UNLOCK;
 		SIGRESUME;
@@ -813,9 +807,7 @@ rt_private void eif_thr_entry (void *arg)
 
 #ifdef WORKBENCH
 		xinitint();
-#endif
 			/* Call the `execute' routine of the thread */
-#ifdef WORKBENCH
 		dnotify_create_thread(eif_thr_context->thread_id);
 #endif
 		init_emnger(); /* Initialize objects hold by exception manager */
@@ -849,6 +841,7 @@ rt_public void eif_thr_exit(void)
 		int ret;	/* Return Status of "eifaddr_offset". */
 		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 		EIF_MUTEX_TYPE *l_children_mutex, *l_parent_children_mutex;
+		EIF_THR_TYPE l_thread_id = eif_thr_context->thread_id;
 
 		thread_exiting = 1;
 
@@ -866,7 +859,7 @@ rt_public void eif_thr_exit(void)
 			offset = eifaddr_offset (eif_access(eif_thr_context->current), "terminated", &ret);
 			CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
-				/* Set the `terminated' field of the twin thread object to True so that
+				/* Set the `terminated' field of the thread object to True so that
 				 * it knows the thread is terminated */
 			*(EIF_BOOLEAN *) (eif_access(eif_thr_context->current) + offset) = EIF_TRUE;
 				
@@ -970,8 +963,9 @@ rt_public void eif_thr_exit(void)
 #endif	/* VXWORKS */
 
 
+			/* Only call the platform specific exit when thread was not created by the Eiffel runtime. */
 		if (l_has_parent_thread) {
-			eif_pthread_exit(NULL);
+			eif_pthread_exit(l_thread_id);
 		}
 	}
 }	/* eif_thr_exit ().*/

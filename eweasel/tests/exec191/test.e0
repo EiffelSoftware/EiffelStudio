@@ -1,7 +1,7 @@
 class TEST
 
 inherit
-	$THREAD
+	TEST_THREAD
 		rename
 			execute as make
 		end

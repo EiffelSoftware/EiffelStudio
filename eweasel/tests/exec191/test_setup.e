@@ -1,7 +1,7 @@
 deferred class TEST_SETUP
 
 inherit
-	$THREAD
+	TEST_THREAD
 
 feature {NONE} -- Status
 

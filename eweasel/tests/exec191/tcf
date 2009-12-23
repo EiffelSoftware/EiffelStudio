@@ -328,10 +328,9 @@ copy_sub test_.e $CLUSTER test_ps_s.e
 
 -- Single-threaded tests
 
-define THREAD "TEST_THREAD"
 copy_sub Ace-st $TEST Ace
 copy_sub test.e0 $CLUSTER test.e
-copy_sub test_thread.e $CLUSTER test_thread.e
+copy_sub test_thread_st.e $CLUSTER test_thread.e
 
 compile_frozen
 compile_result ok
@@ -402,9 +401,9 @@ cleanup_compile
 
 -- Multi-threaded tests
 
-define THREAD "THREAD"
 copy_sub Ace-mt $TEST Ace
 copy_sub test.e0 $CLUSTER test.e
+copy_raw test_thread_mt.e $CLUSTER test_thread.e
 
 compile_frozen
 compile_result ok

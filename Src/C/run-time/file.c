@@ -425,7 +425,7 @@ rt_public void file_flush (FILE *fp)
 	if ((0 != _commit(fileno(fp))) && (errno != EBADF)) {
 		esys();
 	}
-#elif defined(EIF_VMS	/* VMS: flush RMS buffers (shouldn't this be done on other platforms also?) */
+#elif defined(EIF_VMS)	/* VMS: flush RMS buffers (shouldn't this be done on other platforms also?) */
 	if (0 != fsync(fileno(fp))) {
 	    err = (errno == EVMSERR ? vaxc$errno : errno);
 	    esys();

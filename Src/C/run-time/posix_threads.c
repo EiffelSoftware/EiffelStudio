@@ -311,29 +311,29 @@ rt_public int eif_pthread_create (EIF_THR_TYPE *thread_id, EIF_THR_ATTR_TYPE *th
 doc:	<routine name="eif_pthread_exit" return_type="int" export="public">
 doc:		<summary>Exit the current thread using `value_ptr' content as exit value.</summary>
 doc:		<return>T_OK on success, and specific error otherwise (see eif_error.h for details).</return>
-doc:		<param name="value_ptr" type="void *">Value give to threads waiting for current thread to exit.</param>
+doc:		<param name="thread_id" type="EIF_THR_TYPE">Thread Identifier of thread being exited.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_public int eif_pthread_exit (void *value_ptr) 
+rt_public int eif_pthread_exit (EIF_THR_TYPE thread_id)
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS
-	pthread_exit(value_ptr);
+	pthread_exit(NULL);
 	Result = T_OK;
 #elif defined(SOLARIS_THREADS)
-	thr_exit(value_ptr);
+	thr_exit(NULL);
 	Result = T_OK;
 #elif defined(EIF_WINDOWS)
-	if (value_ptr) {
-		_endthreadex(*(int *) value_ptr);
+	if (!CloseHandle(thread_id)) {
+		Result = mapped_errno(GetLastError());
 	} else {
-		_endthreadex(0);
+		Result = T_OK;
 	}
-	Result = T_OK;
+	_endthreadex(0);
 #elif defined(VXWORKS)
-	if (taskDelete(taskIdSelf()) == ERROR) {
+	if (taskDelete(thread_id) == ERROR) {
 		Result = T_CANNOT_TERMINATE_THREAD;
 	} else {
 		Result = T_OK;
@@ -623,12 +623,7 @@ rt_public int eif_pthread_mutex_create (EIF_MUTEX_TYPE **mutex)
 		Result = T_CANNOT_CREATE_MUTEX;
 	}
 #elif defined(EIF_WINDOWS)
-	*mutex = CreateMutex(NULL, FALSE, NULL);
-	if (*mutex) {
-		Result = T_OK;
-	} else {
-		Result = mapped_errno(GetLastError());
-	}
+	Result = eif_pthread_cs_create(mutex, 4000);
 #elif defined(VXWORKDS)
 	*mutex = semMCreate(SEM_Q_FIFO);
 	if (*mutex == NULL) {
@@ -659,11 +654,7 @@ rt_public int eif_pthread_mutex_destroy (EIF_MUTEX_TYPE *mutex)
 		Result = mapped_errno(pthread_mutex_destroy (mutex));
 		eif_free (mutex);
 #elif defined(EIF_WINDOWS)
-		if (!CloseHandle(mutex)) {
-			Result = mapped_errno(GetLastError());
-		} else {
-			Result = T_OK;
-		}
+		Result = eif_pthread_cs_destroy(mutex);
 #elif defined(VXWORKS)
 		if (semDelete(mutex) != OK) {
 			Result = T_CANNOT_DESTROY_MUTEX;
@@ -694,15 +685,7 @@ rt_public int eif_pthread_mutex_lock (EIF_MUTEX_TYPE *mutex)
 #if defined(EIF_POSIX_THREADS) || defined(SOLARIS_THREADS)
 	Result = mapped_errno(pthread_mutex_lock (mutex));
 #elif defined(EIF_WINDOWS)
-	DWORD ret;
-	ret = WaitForSingleObject(mutex, INFINITE);
-	if (ret == WAIT_FAILED) {
-		Result = mapped_errno(GetLastError());
-	} else if (ret == WAIT_ABANDONED) {
-		Result = T_UNKNOWN_ERROR;
-	} else {
-		Result = T_OK;
-	}
+	Result = eif_pthread_cs_lock(mutex);
 #elif defined(VXWORKS)
 	if (semTake(mutex, WAIT_FOREVER) == OK) {
 		Result = T_OK;
@@ -730,17 +713,7 @@ rt_public int eif_pthread_mutex_trylock (EIF_MUTEX_TYPE *mutex)
 #if defined(EIF_POSIX_THREADS) || defined(SOLARIS_THREADS)
 	Result = mapped_errno(pthread_mutex_trylock (mutex));
 #elif defined(EIF_WINDOWS)
-	DWORD ret;
-	ret = WaitForSingleObject(mutex, 0);
-	if (ret == WAIT_FAILED) {
-		Result = mapped_errno(GetLastError());
-	} else if (ret == WAIT_ABANDONED) {
-		Result = T_UNKNOWN_ERROR;
-	} else if (ret == WAIT_TIMEOUT) {
-		Result = T_BUSY;
-	} else {
-		Result = T_OK;
-	}
+	Result = eif_pthread_cs_trylock(mutex);
 #elif defined(VXWORKS)
 	Result = semTake(mutex, NO_WAIT);
 	if (Result == OK) {
@@ -771,12 +744,7 @@ rt_public int eif_pthread_mutex_unlock (EIF_MUTEX_TYPE *mutex)
 #if defined(EIF_POSIX_THREADS) || defined(SOLARIS_THREADS)
 	Result = mapped_errno(pthread_mutex_unlock (mutex));
 #elif defined(EIF_WINDOWS)
-	Result = ReleaseMutex(mutex);
-	if (Result) {
-		Result = mapped_errno(GetLastError());
-	} else {
-		Result = T_OK;
-	}
+	Result = eif_pthread_cs_unlock(mutex);
 #elif defined(VXWORKS)
 	Result = semGive(mutex);
 	if (Result == OK) {

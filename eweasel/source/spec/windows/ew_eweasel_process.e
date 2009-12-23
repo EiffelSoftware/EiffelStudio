@@ -129,6 +129,7 @@ feature -- Control
 			-- it to exit and get its status
 		local
 			a_boolean: BOOLEAN
+			l_handle: POINTER
 		do
 			close
 			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
@@ -141,8 +142,16 @@ feature -- Control
 					sleep (1000000)
 					a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
 				end
-				cwin_close_handle (process_info.thread_handle)
-				cwin_close_handle (process_info.process_handle)
+				l_handle := process_info.thread_handle
+				if l_handle /= default_pointer then
+					process_info.set_thread_handle (default_pointer)
+					cwin_close_handle (l_handle)
+				end
+				l_handle := process_info.process_handle
+				if l_handle /= default_pointer then
+					process_info.set_process_handle (default_pointer)
+					cwin_close_handle (l_handle)
+				end
 			end
 			suspended := False
 		end
@@ -153,15 +162,26 @@ feature -- Control
 		local
 			a_boolean: BOOLEAN
 			terminated: BOOLEAN
+			l_handle: POINTER
 		do
 			close
-			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
-			if a_boolean then
-				if last_process_result = cwin_still_active then
-					terminated := cwin_terminate_process (process_info.process_handle, 0)
+			if process_info.process_handle /= default_pointer then
+				a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
+				if a_boolean then
+					if last_process_result = cwin_still_active then
+						terminated := cwin_terminate_process (process_info.process_handle, 0)
+					end
+					l_handle := process_info.thread_handle
+					if l_handle /= default_pointer then
+						process_info.set_thread_handle (default_pointer)
+						cwin_close_handle (l_handle)
+					end
+					l_handle := process_info.process_handle
+					if l_handle /= default_pointer then
+						process_info.set_process_handle (default_pointer)
+						cwin_close_handle (l_handle)
+					end
 				end
-				cwin_close_handle (process_info.thread_handle)
-				cwin_close_handle (process_info.process_handle)
 			end
 			suspended := False
 		end

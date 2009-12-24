@@ -974,6 +974,7 @@ test	dollar-with-expanded-attribute-in-generic	melt094  tcf fail execution melti
 test	wrong-line-number-in-trace	melt095  tcf fail execution melting
 test	bad-melted-infix		melt096  tcf pass execution melting
 test	new-type-type-melted	melt097  tcf pass execution melting
+test	melted-type-of-generic	melt098  tcf pass execution melting reflection
 
 -- Freezing
 

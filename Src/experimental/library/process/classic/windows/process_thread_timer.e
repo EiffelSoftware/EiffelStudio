@@ -12,21 +12,6 @@ inherit
 	PROCESS_TIMER
 
 	THREAD
-		rename
-			sleep as obsolete_thread_sleep
-		end
-
-	EXECUTION_ENVIRONMENT
-		rename
-			launch as execution_environment_launch
-		export
-			{NONE} all
-		end
-
-	WEL_PROCESS_LAUNCHER
-		rename
-			launch as process_launch
-		end
 
 create
 	make
@@ -44,7 +29,7 @@ feature {NONE} -- Implementation
 			create mutex.make
 			has_started := False
 		ensure
-			slee_time_set: sleep_time = a_sleep_time
+			sleep_time_set: sleep_time = a_sleep_time
 			destroyed_set: destroyed = True
 		end
 
@@ -54,7 +39,6 @@ feature -- Control
 		do
 			mutex.lock
 			should_destroy := False
-			terminated := False
 			launch
 			has_started := True
 			mutex.unlock
@@ -68,15 +52,13 @@ feature -- Control
 		end
 
 	wait (a_timeout: INTEGER): BOOLEAN
-		local
-			l_timeout: INTEGER
 		do
 			if a_timeout = 0 then
-				l_timeout := cwin_wait_for_single_object (handle_from_thread_id (thread_id), cwin_infinite)
+				join
+				Result := True
 			else
-				l_timeout := cwin_wait_for_single_object (handle_from_thread_id (thread_id), a_timeout)
+				Result := join_with_timeout (a_timeout.to_natural_64)
 			end
-			Result := l_timeout = cwin_wait_object_0
 		end
 
 	destroyed: BOOLEAN
@@ -108,22 +90,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_from_thread_id (a_thread_id: POINTER): POINTER
-			-- Thread handle from `a_thread_id'.
-		require
-			a_thread_id_not_void: a_thread_id /= default_pointer
-		external
-			"C inline"
-		alias
-			"[
-			#ifdef EIF_THREADS
-			return (EIF_POINTER) (*(EIF_THR_TYPE *) $a_thread_id);
-			#else
-			return NULL;
-			#endif
-			]"
-		end
-
 feature{NONE} -- Implementation
 
 	should_destroy: BOOLEAN
@@ -140,10 +106,10 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

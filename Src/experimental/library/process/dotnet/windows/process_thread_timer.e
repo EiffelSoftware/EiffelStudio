@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 			interval_positive: a_sleep_time > 0
 		do
 			sleep_time := a_sleep_time
-			create mutex
+			create mutex.make
 			has_started := False
 		ensure
 			slee_time_set: sleep_time = a_sleep_time
@@ -54,10 +54,10 @@ feature -- Control
 	wait (a_timeout: INTEGER): BOOLEAN
 		do
 			if a_timeout = 0 then
-				thread_imp.join
+				join
 				Result := True
 			else
-				Result := thread_imp.join_integer_32 (a_timeout)
+				Result := join_with_timeout (a_timeout.to_natural_64)
 			end
 		end
 
@@ -74,13 +74,13 @@ feature {NONE} -- Implementation
 		local
 			l_sleep_time: INTEGER_64
 		do
-			if attached {PROCESS_IMP} process_launcher as prc_imp then
+			if attached {PROCESS_IMP} process_launcher as l_prc_imp then
 				from
-					l_sleep_time := sleep_time.to_integer_64 * 1000000
+					l_sleep_time := sleep_time.to_integer_64 * 1_000_000
 				until
 					should_destroy
 				loop
-					prc_imp.check_exit
+					l_prc_imp.check_exit
 					if not should_destroy then
 						sleep (l_sleep_time)
 					end

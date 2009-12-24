@@ -17,6 +17,13 @@ inherit
 			default_create
 		end
 
+	THREAD_ENVIRONMENT
+		export
+			{NONE} all
+		redefine
+			default_create
+		end
+
 create
 	default_create,
 	make
@@ -48,6 +55,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	owner: like current_thread_id
+			-- Debugging facility to know the THREAD owning Current. The `owner' field might be invalid
+			-- when Current is used with a condition variable.
+
+feature -- Status report
+
 	is_set: BOOLEAN
 			-- Is mutex initialized?
 
@@ -61,6 +74,7 @@ feature -- Status setting
 			l_lock_succeed: BOOLEAN
 		do
 			l_lock_succeed := mutex_imp.wait_one
+			owner := current_thread_id
 		end
 
 	try_lock: BOOLEAN
@@ -69,6 +83,9 @@ feature -- Status setting
 			is_set: is_set
 		do
 			Result := mutex_imp.wait_one (0, True)
+			if Result then
+				owner := current_thread_id
+			end
 		end
 
 	unlock
@@ -76,6 +93,7 @@ feature -- Status setting
 		require
 			is_set: is_set
 		do
+			owner := default_pointer
 			mutex_imp.release_mutex
 		end
 
@@ -109,14 +127,14 @@ invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

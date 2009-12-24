@@ -21,7 +21,7 @@ feature -- Initialization
 			thread_capable: {PLATFORM}.is_thread_capable
 			count_positive:	a_count >= 0
 		do
-			count := a_count
+			create semaphore.make (a_count, {INTEGER}.max_value)
 		ensure
 			is_set: is_set
 		end
@@ -31,7 +31,7 @@ feature -- Access
 	is_set: BOOLEAN
 			-- Is mutex initialized?
 		do
-			Result := count >= 0
+			Result := semaphore /= Void
 		end
 
 feature -- Status setting
@@ -42,7 +42,7 @@ feature -- Status setting
 		require
 			valid_semaphore: is_set
 		do
-			Result := wait_with_timeout (0)
+			Result := semaphore.wait_one (0, False)
 		end
 
 	wait
@@ -53,33 +53,17 @@ feature -- Status setting
 		local
 			dummy_boolean: BOOLEAN
 		do
-			{MONITOR}.enter (Current)
-			from
-			until
-				count > 0
-			loop
-				dummy_boolean := {MONITOR}.wait (Current)
-				check
-					dummy_boolean
-				end
-			end
-			count := count - 1
-			{MONITOR}.exit (Current)
-		rescue
-			{MONITOR}.exit (Current)
+			dummy_boolean := semaphore.wait_one
 		end
 
 	post
 			-- Increment semaphore count.
 		require
 			valid_semaphore: is_set
+		local
+			dummy_count: INTEGER
 		do
-			{MONITOR}.enter (Current)
-			count := count + 1
-			{MONITOR}.pulse (Current)
-			{MONITOR}.exit (Current)
-		rescue
-			{MONITOR}.exit (Current)
+			dummy_count := semaphore.release
 		end
 
 	destroy
@@ -87,7 +71,20 @@ feature -- Status setting
 		require
 			valid_semaphore: is_set
 		do
-			count := -1
+			semaphore.close
+		end
+
+feature -- Obsolete
+
+	trywait: BOOLEAN
+			-- Has client been successful in decrementing semaphore
+			-- count without waiting?
+		obsolete
+			"Use try_wait instead"
+		require
+			valid_semaphore: is_set
+		do
+			Result := try_wait
 		end
 
 feature {CONDITION_VARIABLE} -- Implementation
@@ -97,47 +94,36 @@ feature {CONDITION_VARIABLE} -- Implementation
 			-- count with only `a_timeout' ?
 		local
 		do
-			{MONITOR}.enter (Current)
-			Result := (count > 0) 
-				and then {MONITOR}.wait (Current, a_timeout)
-			if Result then
-				count := count - 1
-			end
-			{MONITOR}.exit (Current)
-		rescue
-			{MONITOR}.exit (Current)
+			Result := semaphore.wait_one (a_timeout, False)
 		end
 
 	post_count (nb: INTEGER)
 			-- Increment semaphore count by `nb'.
 		require
 			nb > 0
+		local
+			dummy_count: INTEGER
 		do
-			{MONITOR}.enter (Current)
-			count := count + nb
-			{MONITOR}.pulse (Current)
-			{MONITOR}.exit (Current)
-		rescue
-			{MONITOR}.exit (Current)
+			dummy_count := semaphore.release (nb)
 		end
 
 feature {NONE} -- Implementation
 
-	count: INTEGER
-			-- Semaphore count.
+	semaphore: SYSTEM_SEMAPHORE
+			-- .NET reference to the mutex.
 
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

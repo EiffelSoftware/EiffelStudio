@@ -22,14 +22,14 @@ feature -- Operations
 			n := thread_count_cell.item
 			n := n + 1
 			thread_count_cell.put (n)
-			thread_table.put (n, get_current_id)
+			thread_table.put (n, current_thread_id)
 			debug_mutex.unlock
 		end
 
 	print_debug_main (s: STRING)
 			-- Display `s' along with thread ID of
-			-- current thread, followed by new line.  Intended 
-			-- to be called by "main" thread for debugging 
+			-- current thread, followed by new line.  Intended
+			-- to be called by "main" thread for debugging
 			-- purposes only
 		do
 			print_debug (s, Main_type)
@@ -37,8 +37,8 @@ feature -- Operations
 
 	print_debug_worker (s: STRING)
 			-- Display `s' along with thread ID of
-			-- current thread, followed by new line.  Intended 
-			-- to be called by "worker" thread for debugging 
+			-- current thread, followed by new line.  Intended
+			-- to be called by "worker" thread for debugging
 			-- purposes only
 		do
 			print_debug (s, Worker_type)
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			id: STRING
 		do
 			debug_mutex.lock
-			tid := get_current_id
+			tid := current_thread_id
 			if a_type.is_equal (Main_type) then
 				id := "  "
 			else
@@ -74,26 +74,26 @@ feature {NONE} -- Implementation
 			-- Mutex to control access to output facilities
 			-- when debugging threaded eweasel
 		note
-            		once_status: global 
+            		once_status: global
 		once
 			create Result.make
-		end		
+		end
 
 	thread_table: HASH_TABLE [INTEGER, POINTER]
 			-- Thread numbers indexed by thread pointer
 		note
-            		once_status: global 
+            		once_status: global
 		once
 			create Result.make (100)
-		end		
+		end
 
 	thread_count_cell: CELL [INTEGER]
 			-- Cell with next available thread number
 		note
-            		once_status: global 
+            		once_status: global
 		once
 			create Result.put (0)
-		end		
+		end
 
 	Main_type: STRING = "Main  ";
 

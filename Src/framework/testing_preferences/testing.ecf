@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="testing_preferences" uuid="d75121b6-b9db-4426-9e76-b2efaa9e011a" library_target="testing_preferences">
+	<target name="testing_preferences">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option namespace="EiffelSoftware.Framework">
+			<assertions precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf" readonly="false">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf" readonly="false">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</library>
+		<cluster name="preferences" location=".\" recursive="true">
+			<option namespace="Testing">
+			</option>
+			<file_rule>
+				<exclude>/tests$</exclude>
+				<exclude>/spec$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

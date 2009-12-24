@@ -225,12 +225,12 @@ feature {NONE} -- Read/Write Lock
 				-- Verify read locks are recursive
 			lock.acquire_read_lock
 			lock.acquire_read_lock
-			lock.release_reader_lock
-			lock.release_reader_lock
+			lock.release_read_lock
+			lock.release_read_lock
 
 				-- Write locks are not recursive, we test simple sequence
 			lock.acquire_write_lock
-			lock.release_writer_lock
+			lock.release_write_lock
 
 			lock.acquire_read_lock
 			io.put_string ("Read Lock 1 Success%N")
@@ -241,7 +241,7 @@ feature {NONE} -- Read/Write Lock
 			launch_semaphore.wait
 			create worker_thread_2.make (agent writer_lock (lock))
 			worker_thread_2.launch
-			lock.release_reader_lock
+			lock.release_read_lock
 
 			worker_thread_1.join
 			worker_thread_2.join
@@ -251,7 +251,7 @@ feature {NONE} -- Read/Write Lock
 		do
 			a_lock.acquire_write_lock
 			io.put_string ("Write Lock Success%N")
-			a_lock.release_writer_lock
+			a_lock.release_write_lock
 		end
 
 	reader_lock (a_sem: SEMAPHORE; a_lock: READ_WRITE_LOCK)
@@ -262,7 +262,7 @@ feature {NONE} -- Read/Write Lock
 				-- to be released at the end of the routine and not before
 			sleep(100_000_000)
 			io.put_string ("Read Lock 2 Success%N")
-			a_lock.release_reader_lock
+			a_lock.release_read_lock
 		end
 
 end

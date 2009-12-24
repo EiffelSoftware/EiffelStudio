@@ -106,7 +106,7 @@ feature -- Process operations
 		do
 			l_process_info := process_info
 			check l_process_info /= Void end
-			last_operation_successful := cwin_exit_code_process (l_process_info.process_handle,$last_process_result)
+			last_operation_successful := cwin_exit_code_process (l_process_info.process_handle, $last_process_result)
 		end
 
 feature -- Status setting
@@ -320,7 +320,9 @@ feature -- Handle operation
 			l_process_info := process_info
 			check l_process_info /= Void end
 			last_operation_successful := file_handle.close (l_process_info.thread_handle)
+			l_process_info.set_thread_handle (default_pointer)
 			last_operation_successful := file_handle.close (l_process_info.process_handle)
+			l_process_info.set_process_handle (default_pointer)
 		end
 
 feature
@@ -471,10 +473,10 @@ note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

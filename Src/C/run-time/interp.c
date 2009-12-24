@@ -3787,10 +3787,8 @@ rt_private void interpret(int flag, int where)
 			}
 		}
 	} else {
-		if (flag == INTERP_CMPD) {
-				/* Initialize expanded locals */
-			create_expanded_locals (scur, stop, create_result);
-		}
+			/* Initialize expanded locals */
+		create_expanded_locals (scur, stop, create_result);
 			/* Register rescue handler (if any). */
 		CHECK("exvect not null", exvect);
 		SET_RESCUE;

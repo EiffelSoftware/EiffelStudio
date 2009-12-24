@@ -1,5 +1,49 @@
 note
-	description: "Class describing a condition variable."
+	description: "[
+		Condition variables allow threads to synchronize based on the content of a shared data, whereas
+		mutexes only synchronize access to the data. In other words, a condition variable is a
+		synchronization object that enables threads to wait until a particular condition occurs.
+
+		When a thread executes a `wait' call on a condition variable, it must hold an associated `mutex'
+		(used for checking that condition). Then, it is immediately suspended and put into the waiting
+		queue. The thread is suspended and is waiting for the condition to occur.
+
+		Eventually, when the condition has occurred, a thread will `signal' it. Two possible scenarios:
+		- if there are threads waiting, then one of the waiting thread will resume its execution and
+		  will get the `mutex' in a locked state.
+		- if there are no threads waiting, nothing is done
+
+		For the simple usage of a condition variable, it is very similar to using a semaphore.
+
+		In addition you have `broadcast' that will resume all waiting threads at once, and
+		`wait_with_timeout' that will wait only a certain amount of time before abandonning the wait.
+
+		The `signal' and `broadcast' routines can be called by a thread whether or not it currently owns
+		the mutex that threads calling `wait' or `wait_with_timeout' have associated with the condition
+		variable during their waits. If, however, predictable scheduling behavior is required, then that
+		mutex should be locked by the thread prior to calling `signal' or `broadcast'.
+
+		Assuming `shared_data' an INTEGER initially set to zero, then a typical usage of condition variable
+		to wait until `shared_data' becomes one, could be written as followed in thread A:
+
+			mutex.lock
+			from
+			until
+				shared_data = 1
+			loop
+				condition_variable.wait
+			end
+			mutex.unlock
+
+		and in thread B:
+
+			mutex.lock
+			shared_data := 1
+			condition_variable.signal
+			mutex.unlock
+
+		Thread A will be blocked until thread B signal that now `shared_data' is 1.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -117,7 +161,7 @@ feature -- Status setting
 			end
 			cv_waiters_lock.unlock
 
-			--| Always regain the external mutex since that's 
+			--| Always regain the external mutex since that's
 			--| the guarantee that we give to our callers.
 			a_mutex.lock
 		end
@@ -169,9 +213,19 @@ feature -- Status setting
 			end
 			cv_waiters_lock.unlock
 
-			--| Always regain the external mutex since that's 
+			--| Always regain the external mutex since that's
 			--| the guarantee that we give to our callers.
 			a_mutex.lock
+		end
+
+	destroy
+			-- Destroy condition variable
+		require
+			is_set: is_set
+		do
+			cv_sema.destroy
+			cv_waiters_done.close
+			cv_waiters_lock.destroy
 		end
 
 feature {NONE} -- Implementation
@@ -186,14 +240,14 @@ invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -69,7 +69,7 @@ feature -- Status setting
 			item.acquire_writer_lock (-1)
 		end
 
-	release_reader_lock
+	release_read_lock
 			-- Unlock Reader lock.
 		require
 			exists: is_set
@@ -77,12 +77,15 @@ feature -- Status setting
 			item.release_reader_lock
 		end
 
-	release_writer_lock
+	release_write_lock
 			-- Unlock writer lock.
 		require
 			exists: is_set
 		do
-			item.release_writer_lock
+				-- We do not use `item.release_writer_lock' because when calling this routine
+				-- we must have the lock, in which case the documentation states that it calls
+				-- `item.release_writer_lock'. This is consistent with our implementation for classic Eiffel.
+			item.release_reader_lock
 		end
 
 	destroy
@@ -91,6 +94,18 @@ feature -- Status setting
 			exists: is_set
 		do
 			is_set := False
+		end
+
+feature -- Obsolete
+
+	release_reader_lock, release_writer_lock
+			-- Unlock Reader or Writer lock.
+		obsolete
+			"Use `release_read_lock' or `release_write_lock'."
+		require
+			exists: is_set
+		do
+			item.release_reader_lock
 		end
 
 feature {NONE} -- Implementation
@@ -102,14 +117,14 @@ invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -50,7 +50,6 @@ feature
 --					t.join
 					if i = 49 then
 						execution_environment.sleep (1_000_000_000)
-						exit
 					end
 				end
 			end

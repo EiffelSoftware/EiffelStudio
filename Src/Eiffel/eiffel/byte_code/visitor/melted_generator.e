@@ -1222,15 +1222,8 @@ feature {NONE} -- Visitors
 			a_node.byte_list.process (Current)
 			ba.append (Bc_inv_null)
 
-			from
-				l_tmp_ba.append_short_integer (l_local_list.count)
-				l_local_list.start
-			until
-				l_local_list.after
-			loop
-				l_tmp_ba.append_integer (l_local_list.item.sk_value (context.context_class_type.type))
-				l_local_list.forth
-			end
+				-- Generate information about types of locals.
+			generate_local_types (l_local_list, l_tmp_ba)
 
 			l_context.byte_prepend (ba, l_tmp_ba)
 
@@ -2411,6 +2404,31 @@ feature {NONE} -- Implementation
 						ba.generate_melted_debugger_hook_nested (l_line, l_nested)
 					end
 				end
+			end
+		end
+
+feature -- Type information
+
+	generate_local_types (l: ARRAYED_LIST [TYPE_A]; b: BYTE_ARRAY)
+			-- Generate types of locals `l' into byte array `b'.
+		require
+			l_attached: attached l
+			b_attached: attached b
+		do
+			b.append_short_integer (l.count)
+			l.do_all (agent generate_local_type (?, b))
+		end
+
+	generate_local_type (t: TYPE_A; b: BYTE_ARRAY)
+			-- Generate type information for a local of type `t' into byte array `b'.
+		local
+			r: TYPE_A
+		do
+			r := context.real_type (t)
+			b.append_integer (r.sk_value (context.context_class_type.type))
+			if r.is_true_expanded and then not r.is_bit then
+					-- Generate full type info.
+				t.make_full_type_byte_code (b, context.context_class_type.type)
 			end
 		end
 

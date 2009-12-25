@@ -62,8 +62,6 @@ doc:<file name="sig.c" header="eif_sig.h" version="$Id$" summary="Signal handlin
 /*#define DEBUG 1 */		/**/
 #define dprintf(n)		if (DEBUG & (n)) printf
 
-#define DESC_LEN	29		/* Maximum length for signal description */
-
 /*
 doc:	<attribute name="esig" return_type="Signal_t (*)(int) [EIF_NSIG]" export="private">
 doc:		<summary>Array of signal handlers used by the run-time to dispatch signals as they arrive. The array is modified via class EXCEPTION. If no signal handler is provided, then the signal is delivered to the process after beeing reset to its default behaviour (of course, we do this only when the default behaviour is not SIG_IGN).</summary>

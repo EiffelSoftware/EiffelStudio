@@ -809,7 +809,6 @@ rt_private void spush(int sig)
 	 int oldmask;	/* To save old signal blocking mask */ /* %%ss addded #if ..#endif */
 #endif
 #endif
-	static char desc[DESC_LEN + 1];	/* Signal's description for panic */
 
 #ifdef DEBUG
 	dprintf(1)("spush: max = %d, min = %d, signal = %d\n",
@@ -824,8 +823,7 @@ rt_private void spush(int sig)
 	 * rather than being stacked if the default Eiffel handler is on.
 	 */
 	if (dangerous(sig) && esig[sig] == (Signal_t (*)(int)) 0) { /* %%ss added cast int */
-		sprintf(desc, "%s", signame(sig));	/* Translate into English name */
-		eif_panic(MTC desc);						/* And raise a run-time eif_panic */
+		eif_panic(signame(sig));	/* Translate into English name and raise a run-time eif_panic */
 	} else {
 		int last = (sig_stk.s_max ? sig_stk.s_max : SIGSTACK) - 1;
 		if (sig == sig_stk.s_buf[last])

@@ -586,9 +586,9 @@ rt_public void file_append(FILE *f, FILE *other, EIF_INTEGER l)
             		/* Source file */
               		/* Amount of bytes from `other' to be appended */
 {
-	/*	Append a copy of `otherile' to `f' */
+	/*	Append a copy of `other' to `f' */
 
-	static char buffer[BUFSIZ];
+	char buffer[BUFSIZ];
 	size_t amount;
 
 	errno = 0;

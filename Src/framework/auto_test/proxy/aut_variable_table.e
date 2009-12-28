@@ -11,13 +11,10 @@ note
 class AUT_VARIABLE_TABLE
 
 inherit
-
 	AUT_SHARED_RANDOM
 		export {NONE} all end
 
 	ITP_VARIABLE_CONSTANTS
-
-	THREAD_CONTROL
 
 create
 

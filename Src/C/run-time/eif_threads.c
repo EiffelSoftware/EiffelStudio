@@ -822,7 +822,7 @@ rt_private void eif_thr_entry (void *arg)
 rt_public void eif_thr_exit(void)
 {
 	/*
-	 * Function called to terminate a thread launched by Eiffel with eif_thr_create_with_args().
+	 * Function called to terminate a thread launched by Eiffel with eif_thr_create_with_attr().
 	 * All the memory allocated with eif_malloc() for the thread context is freed
 	 * This function must be called from the thread itself (not the parent).
 	 */
@@ -893,7 +893,7 @@ rt_public void eif_thr_exit(void)
 		}
 
 			/* Every thread that has created a child thread with
-			 * eif_thr_create_with_args() has created a mutex and a condition 
+			 * eif_thr_create_with_attr() has created a mutex and a condition 
 			 * variable to be able to do a join_all (or a join). If no children are
 			 * still alive, we destroy eif_children_mutex and eif_children_cond,
 			 * otherwise we will let the last children alive do the cleaning. */

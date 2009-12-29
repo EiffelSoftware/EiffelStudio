@@ -81,9 +81,10 @@ feature {NONE} -- Initialization
 			set_non_focused_selection_text_color (color_from_state (text_style, {EV_GTK_EXTERNALS}.gtk_state_active_enum))
 
 			Precursor {EV_CELL_IMP}
+
+			initialize_grid
 				-- Force a resize of all internal items to make sure everything is updated correctly.
 			{EV_GTK_EXTERNALS}.gtk_container_check_resize (c_object)
-			initialize_grid
 
 			set_is_initialized (True)
 		end

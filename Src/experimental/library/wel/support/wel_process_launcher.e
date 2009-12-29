@@ -118,7 +118,10 @@ feature -- Basic Operations
 				last_launch_successful := cwin_exit_code_process (l_process_info.process_handle,
 					$last_process_result)
 			end
+			cwin_close_handle (l_process_info.thread_handle)
+			l_process_info.set_thread_handle (default_pointer)
 			cwin_close_handle (l_process_info.process_handle)
+			l_process_info.set_process_handle (default_pointer)
 			l_output_pipe.close_output
 
 			l_input_pipe := input_pipe
@@ -146,8 +149,7 @@ feature -- Basic Operations
 			loop
 				l_process_info := process_info
 				check l_process_info /= Void end
-				a_boolean := cwin_exit_code_process (l_process_info.process_handle,
-					$last_process_result)
+				a_boolean := cwin_exit_code_process (l_process_info.process_handle, $last_process_result)
 				check
 					valid_external_call_2: a_boolean
 				end
@@ -175,14 +177,16 @@ feature -- Basic Operations
 		do
 			if last_launch_successful then
 				l_process_info := process_info
-				check l_process_info /= VOid end
+				check l_process_info /= Void end
 				l_boolean := cwin_exit_code_process (l_process_info.process_handle, $last_process_result)
 				if l_boolean then
 					if last_process_result = cwin_still_active then
 						l_boolean := cwin_terminate_process (l_process_info.process_handle, 0)
 					end
 					cwin_close_handle (l_process_info.thread_handle)
+					l_process_info.set_thread_handle (default_pointer)
 					cwin_close_handle (l_process_info.process_handle)
+					l_process_info.set_process_handle (default_pointer)
 				end
 			end
 		end

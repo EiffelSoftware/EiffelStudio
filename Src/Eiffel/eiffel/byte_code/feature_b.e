@@ -189,7 +189,6 @@ feature -- Access
 	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B
 			-- Enlarged byte node evaluated in the context of `type_i'.
 		local
-			feature_bl: FEATURE_BL
 			c: CL_TYPE_A
 			l_type: TYPE_A
 			f: FEATURE_I
@@ -217,12 +216,10 @@ feature -- Access
 			if f = Void then
 					-- Process feature as an internal routine.
 				if context.final_mode then
-					create feature_bl.make
+					create {FEATURE_BL} Result.fill_from (Current)
 				else
-					create {FEATURE_BW} feature_bl.make
+					create {FEATURE_BW} Result.fill_from (Current)
 				end
-				feature_bl.fill_from (Current)
-				Result := feature_bl
 			else
 					-- Create new byte node and process it instead of the current one.
 				Result ?= byte_node (f, type_i).enlarged

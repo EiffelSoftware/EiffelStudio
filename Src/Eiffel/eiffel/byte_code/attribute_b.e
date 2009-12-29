@@ -21,6 +21,36 @@ inherit
 			need_target, set_is_attachment
 		end
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a: FEATURE_I)
+			-- Initialization
+		require
+			good_argument: a /= Void
+			is_attribute: a.is_attribute
+		local
+			l_attr: ATTRIBUTE_I
+		do
+			l_attr ?= a
+			attribute_name_id := l_attr.feature_name_id
+			routine_id := l_attr.rout_id_set.first
+			if System.il_generation then
+				attribute_id := l_attr.origin_feature_id
+				written_in := l_attr.origin_class_id
+			else
+				attribute_id := l_attr.feature_id
+				written_in := l_attr.written_in
+			end
+			if l_attr.extension /= Void then
+				need_target := l_attr.extension.need_current (l_attr.extension.type)
+			else
+				need_target := True
+			end
+		end
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)
@@ -56,31 +86,6 @@ feature
 			-- Assign `t' to `type'.
 		do
 			type := t
-		end
-
-	init (a: FEATURE_I)
-			-- Initialization
-		require
-			good_argument: a /= Void
-			is_attribute: a.is_attribute
-		local
-			l_attr: ATTRIBUTE_I
-		do
-			l_attr ?= a
-			attribute_name_id := l_attr.feature_name_id
-			routine_id := l_attr.rout_id_set.first
-			if System.il_generation then
-				attribute_id := l_attr.origin_feature_id
-				written_in := l_attr.origin_class_id
-			else
-				attribute_id := l_attr.feature_id
-				written_in := l_attr.written_in
-			end
-			if l_attr.extension /= Void then
-				need_target := l_attr.extension.need_current (l_attr.extension.type)
-			else
-				need_target := True
-			end
 		end
 
 	need_target: BOOLEAN
@@ -146,29 +151,20 @@ feature
 	enlarged: CALL_ACCESS_B
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
-		local
-			f: FEATURE_B
-			feature_bl: FEATURE_BL
-			attr_bl: ATTRIBUTE_BL
 		do
-			f := wrapper
-			if f /= Void then
+			if attached wrapper as f then
 					-- Call a wrapper that performs the required initialization.
 				if context.final_mode then
-					create feature_bl.make
+					create {FEATURE_BL} Result.fill_from (f)
 				else
-					create {FEATURE_BW} feature_bl.make
+					create {FEATURE_BW} Result.fill_from (f)
 				end
-				feature_bl.fill_from (f)
-				Result := feature_bl
 			else
 				if context.final_mode then
-					create attr_bl
+					create {ATTRIBUTE_BL} Result.fill_from (Current)
 				else
-					create {ATTRIBUTE_BW} attr_bl
+					create {ATTRIBUTE_BW} Result.fill_from (Current)
 				end
-				attr_bl.fill_from (Current)
-				Result := attr_bl
 			end
 		end
 
@@ -232,22 +228,18 @@ feature -- Inlining
 		end
 
 	pre_inlined_code: ATTRIBUTE_B
-		local
-			inlined_attr_b: INLINED_ATTR_B
 		do
 				-- Adapt type in current context for better results.
 			type := type.instantiated_in (context.current_type)
 			if parent /= Void then
 				Result := Current
 			else
-				create inlined_attr_b
-				inlined_attr_b.fill_from (Current)
-				Result := inlined_attr_b
+				create {INLINED_ATTR_B} Result.fill_from (Current)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -260,22 +252,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -26,14 +26,27 @@ inherit
 		end
 
 create
-	make
+	fill_from
 
 feature {NONE} --Initialisation
 
-	make
+	fill_from (f: FEATURE_B)
+			-- Fill in node with feature `f'
 		do
-			need_invariant := True;
-		end;
+			need_invariant := True
+			feature_name_id := f.feature_name_id
+			feature_id := f.feature_id
+			type := f.type
+			set_parameters (f.parameters)
+			precursor_type := f.precursor_type
+			routine_id := f.routine_id
+			body_index := f.body_index
+			is_once := f.is_once
+			is_process_relative := f.is_process_relative
+			multi_constraint_static := f.multi_constraint_static
+			enlarge_parameters
+		end
+
 feature
 
 	parent: NESTED_BL
@@ -473,22 +486,6 @@ end
 					end
 				end
 			end
-		end
-
-	fill_from (f: FEATURE_B)
-			-- Fill in node with feature `f'
-		do
-			feature_name_id := f.feature_name_id
-			feature_id := f.feature_id
-			type := f.type
-			set_parameters (f.parameters)
-			precursor_type := f.precursor_type
-			routine_id := f.routine_id
-			body_index := f.body_index
-			is_once := f.is_once
-			is_process_relative := f.is_process_relative
-			multi_constraint_static := f.multi_constraint_static
-			enlarge_parameters
 		end
 
 	enlarge_parameters

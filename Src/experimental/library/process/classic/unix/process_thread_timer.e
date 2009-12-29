@@ -28,33 +28,28 @@ create
 
 feature {NONE} -- Implementation
 
-	make (interval: INTEGER)
-			-- Set time interval which this timer will be triggered with `interval'.
-			-- Unit of `interval' is milliseconds.
+	make (a_sleep_time: INTEGER)
+			-- Set time interval which this timer will be triggered with `a_sleep_time'.
+			-- Unit of `a_sleep_time' is milliseconds.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
-			interval_positive: interval > 0
+			interval_positive: a_sleep_time > 0
 		do
-			sleep_time := interval
+			sleep_time := a_sleep_time
 			create mutex.make
 			has_started := False
 		ensure
-			sleep_time_set: sleep_time = interval
+			sleep_time_set: sleep_time = a_sleep_time
 			destroyed_set: destroyed = True
 		end
 
 feature -- Control
 
 	start
-		local
-			l_thread_attribute: THREAD_ATTRIBUTES
 		do
 			mutex.lock
 			should_destroy := False
-			terminated := False
-			create l_thread_attribute.make
-			l_thread_attribute.set_detached (True)
-			launch_with_attributes (l_thread_attribute)
+			launch
 			has_started := True
 			mutex.unlock
 		end
@@ -123,7 +118,7 @@ feature {NONE} -- Implementation
 		do
 			if attached {PROCESS_IMP} process_launcher as l_prc_imp then
 				from
-					l_sleep_time := sleep_time.to_integer_64 * 1000000
+					l_sleep_time := sleep_time.to_integer_64 * 1_000_000
 				until
 					should_destroy
 				loop

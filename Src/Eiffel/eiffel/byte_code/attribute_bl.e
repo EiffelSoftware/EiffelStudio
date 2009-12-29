@@ -25,6 +25,9 @@ inherit
 			{NONE} all
 		end
 
+create
+	fill_from
+
 feature
 
 	parent: NESTED_B
@@ -219,6 +222,7 @@ end
 			type := a.type
 			routine_id := a.routine_id
 			multi_constraint_static := a.multi_constraint_static
+			is_attachment := a.is_attachment
 		end
 
 note

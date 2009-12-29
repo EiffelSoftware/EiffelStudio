@@ -4766,8 +4766,8 @@ feature -- Implementation
 						l_is_qualified_call := is_qualified_call
 						is_qualified_call := True
 						process_call (last_type, Void, id_feature_name, bracket_feature, l_as.operands, False, False, True, False)
+						is_qualified_call := l_is_qualified_call
 						if error_level = l_error_level then
-							is_qualified_call := l_is_qualified_call
 							if is_byte_node_enabled then
 								create nested_b
 								create target_access

@@ -243,8 +243,7 @@ feature -- Element Change
 					-- Call a generic wrapper.
 				Result := Precursor (access_type, static_type, is_qualified)
 			else
-				create attribute_b
-				attribute_b.init (Current)
+				create attribute_b.make (Current)
 				attribute_b.set_type (l_type)
 				Result := attribute_b
 			end

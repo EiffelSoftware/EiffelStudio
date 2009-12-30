@@ -171,7 +171,7 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
 		do
 			create Result.make (1)
-			create l_hash.make (22)
+			create l_hash.make (23)
 			l_hash.put ([True, True, False, key_strings.item (Key_f).twin.as_string_8], "show_search_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_r).twin.as_string_8], "show_search_report_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_o).twin.as_string_8], "show_outputs_tool")
@@ -191,6 +191,7 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([True, True, False, key_strings.item (Key_n).twin.as_string_8], "show_windows_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_b).twin.as_string_8], "show_breakpoints_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_8).twin.as_string_8], "show_testing_tool")
+			l_hash.put ([True, True, False, key_strings.item (Key_9).twin.as_string_8], "show_testing_results_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_q).twin.as_string_8], "show_information_tool")
 			Result.extend ([l_hash, main_window_group])
 		end

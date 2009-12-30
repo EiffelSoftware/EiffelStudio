@@ -90,56 +90,6 @@ feature -- Access
 			end
 		end
 
-feature {NONE} -- Events
-
-	on_info_label_enter (a_label: EB_GRID_EDITOR_TOKEN_ITEM)
-			-- Called when label item is entered with pointer.
-			--
-			-- `a_label': Label that was hovered with mouse.
-		require
-			a_label_attached: a_label /= Void
-			a_label_not_destroyed: not a_label.is_destroyed
-		do
-			row.parent.set_pointer_style (hyperlink_cursor)
-		end
-
-	on_info_label_leave (a_label: EB_GRID_EDITOR_TOKEN_ITEM)
-			-- Called when label item is exited with pointer.
-			--
-			-- `a_label': Label that was hovered with mouse.
-		require
-			a_label_attached: a_label /= Void
-			a_label_not_destroyed: not a_label.is_destroyed
-		do
-			row.parent.set_pointer_style (standard_cursor)
-		end
-
-	on_info_label_press (x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER)
-			-- Called when pointer button is pressed on top of delete label.
-		local
-			l_dialog: ES_BASIC_EDITOR_DIALOG
-			l_string: STRING_32
-		do
-			if button = 1 then
-				token_writer.enable_multiline
-				print_result_details (token_writer, test_result, 0, True)
-				create l_string.make (1024)
-				token_writer.lines.do_all (
-					agent (a_line: EIFFEL_EDITOR_LINE; a_string: STRING_32)
-						do
-							a_string.append (a_line.wide_image)
-							a_string.append_character ('%N')
-						end (?, l_string))
-				reset_token_writer
-				create l_dialog.make (icon_pixmaps.general_information_icon_buffer, "Test Result Details")
-				if l_string.is_empty then
-					l_string.append ("Unable to retrieve any information from the evaluator.")
-				end
-				l_dialog.set_text (l_string)
-				l_dialog.show_on_active_window
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	refresh
@@ -183,13 +133,6 @@ feature {NONE} -- Implementation
 					l_item.set_tooltip (l_tag)
 				end
 			end
-
-			create l_label
-			l_label.set_pixmap (icon_pixmaps.general_information_icon)
-			l_label.pointer_enter_actions.extend (agent on_info_label_enter (l_label))
-			l_label.pointer_leave_actions.extend (agent on_info_label_leave (l_label))
-			l_label.pointer_button_press_actions.extend (agent on_info_label_press)
-			row.set_item (3, l_label)
 		end
 
 note

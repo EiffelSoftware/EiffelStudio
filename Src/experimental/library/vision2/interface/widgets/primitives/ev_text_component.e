@@ -38,7 +38,7 @@ feature -- Access
 		do
 			Result := implementation.text_length
 		ensure
-			bridge_ok: Result.is_equal (implementation.text_length)
+			bridge_ok: Result = implementation.text_length
 			Result_not_negative: Result >= 0
 		end
 

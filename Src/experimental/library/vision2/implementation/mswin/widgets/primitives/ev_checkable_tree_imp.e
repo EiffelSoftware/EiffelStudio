@@ -135,7 +135,7 @@ feature {EV_ANY_I} -- Implementation
 				-- Send a Tvm_hittest message to determine the pointed node.
 			{WEL_API}.send_message (wel_item, Tvm_hittest, to_wparam (0), info.item)
 				-- Check if the click was performed on the check box state icon.
-			if info.flags.is_equal (tvht_onitemstateicon) then
+			if info.flags = tvht_onitemstateicon then
 					-- Retreive the tree item that was clicked.
 				tree_node ?= (all_ev_children @ info.hitem)
 					-- Post a custom message, `Um_checkable_tree_state_change' in order to respond to the

@@ -1024,7 +1024,7 @@ feature {NONE} -- Copied from Eiffel Build project GB_TIP_OF_THE_DAY_DIALOG
 			until
 				l_counter > l_modified_tip.count
 			loop
-				if l_modified_tip.item (l_counter).is_equal(Operating_environment.directory_separator) then
+				if l_modified_tip.item (l_counter) = Operating_environment.directory_separator then
 					l_all_space_indexes.extend (l_counter)
 				end
 				l_counter := l_counter + 1

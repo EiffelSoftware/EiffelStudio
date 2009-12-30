@@ -628,11 +628,7 @@ feature {NONE} -- Event handling
 				elseif on_object_radio.is_selected or as_object_radio.is_selected then
 						-- We try to create an expression related to a class.
 					t := address_field.text.as_string_8.as_upper
-					if
-						t.item (1).is_equal ('0')
-						and then t.item (2).is_equal ('X')
-						and t.count > 2
-					then
+					if t.item (1) = '0' and then t.item (2) = 'X' and t.count > 2 then
 						t := t.substring (3, t.count)
 					end
 					t.prepend ("0x")

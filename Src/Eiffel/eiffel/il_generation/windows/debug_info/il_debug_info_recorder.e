@@ -894,7 +894,7 @@ feature {NONE} -- Record processing
 		require
 			a_feat_not_void: a_feat /= Void
 		do
-			Result := a_feat.feature_name.item(1).is_equal ('_')
+			Result := a_feat.feature_name.item (1) = '_'
 --| NOTA JFIAT: 2004/05/28 : fix invariant cursor in call stack
 --| When we'll decide to fix the cursor in call stack on invariant
 --| this may be a start ..

@@ -1204,6 +1204,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			if (create {SERVICE_CONSUMER [TEST_SUITE_S]}).is_service_available then
 				Result.extend (create {EV_MENU_SEPARATOR})
 				insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
+				insert_show_tool_menu_item (Result, {ES_TESTING_RESULTS_TOOL})
 			end
 
 --			l_customized_tools := develop_window.tools.customized_tools

@@ -134,8 +134,12 @@ feature -- Basic operations: Standard persona
 			development_window.close_all_tools
 
 				-- Right bottom tools
-			l_tool := l_shell_tools.tool ({ES_ERROR_LIST_TOOL})
+			l_tool := l_shell_tools.tool ({ES_TESTING_RESULTS_TOOL})
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
+			l_last_tool := l_tool
+
+			l_tool := l_shell_tools.tool ({ES_ERROR_LIST_TOOL})
+			l_tool.content.set_tab_with (l_last_tool.content, True)
 			l_last_tool := l_tool
 
 			l_tool := l_shell_tools.tool ({ES_OUTPUTS_TOOL})

@@ -258,7 +258,7 @@ feature {EV_ANY_I} -- Status Setting
 			check l_rich_text /= Void end
 
 			last_load_successful := True
-			if rtf_text.item (1).is_equal (rtf_open_brace_character) then
+			if rtf_text.item (1) = rtf_open_brace_character then
 				create format_stack.make (8)
 				create all_fonts.make (0, 50)
 				create all_colors.make (0, 50)
@@ -813,9 +813,9 @@ feature {NONE} -- Implementation
 				depth = 0
 			loop
 				current_character := get_character (rtf_text, start_index + l_index)
-				if current_character.is_equal (rtf_open_brace_character) then
+				if current_character = rtf_open_brace_character then
 					depth := depth + 1
-				elseif current_character.is_equal (rtf_close_brace_character) then
+				elseif current_character = rtf_close_brace_character then
 					depth := depth - 1
 				end
 				if depth /= 0 then

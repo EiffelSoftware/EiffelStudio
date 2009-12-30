@@ -352,8 +352,8 @@ feature -- Status report
 			Result := implementation.string_size (a_string)
 		ensure
 			result_not_void: Result /= Void
-			bridge_ok: Result.width.is_equal (implementation.string_size (a_string).width) and
-				Result.height.is_equal (implementation.string_size (a_string).height)
+			bridge_ok: Result.width = implementation.string_size (a_string).width and
+				Result.height = implementation.string_size (a_string).height
 		end
 
 feature -- Basic operations

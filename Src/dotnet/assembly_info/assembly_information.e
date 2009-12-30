@@ -260,7 +260,7 @@ feature {NONE} -- Status Setting
 				if parameters.has (' ') or parameters.has (';') then
 					Result := False
 				else
-					if parameters.item (1).is_equal ('(') and parameters.item (parameters.count).is_equal (')') then
+					if parameters.item (1) = '(' and parameters.item (parameters.count) = ')' then
 						if parameters.count > 2 then
 							Result := True
 						end

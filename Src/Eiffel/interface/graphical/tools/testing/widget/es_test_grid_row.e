@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 		do
 			test_name := a_test_name
 			row := a_row
+			row.set_data (Current)
 			refresh
 		ensure
 			test_name_set: test_name = a_test_name

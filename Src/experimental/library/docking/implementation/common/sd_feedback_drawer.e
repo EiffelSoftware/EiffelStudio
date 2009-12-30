@@ -122,7 +122,7 @@ feature -- Basic operations
 							g := l_item.item (3 * i + 1)
 							b := l_item.item (3 * i + 2)
 							if r /= 255 or g /= 255 or b /= 255 then
-								if first_draw_stop_point.off or first_draw_stop_point.item.is_equal (i) then
+								if first_draw_stop_point.off or first_draw_stop_point.item = i then
 									l_white_found := false
 									l_edge_found := false
 									if not first_draw_stop_point.off then
@@ -221,14 +221,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

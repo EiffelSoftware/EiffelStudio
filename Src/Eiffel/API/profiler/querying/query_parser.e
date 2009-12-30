@@ -12,7 +12,7 @@ class QUERY_PARSER
 feature -- Parsing
 
 	parse (str: STRING; sqv: SHARED_QUERY_VALUES): BOOLEAN
-			-- Parse `str', put results in 'sqv' and 
+			-- Parse `str', put results in 'sqv' and
 			-- return 'true' if the query has a good syntax
 		require
 			string_not_void: str /= Void;
@@ -62,13 +62,13 @@ feature {NONE} -- Implementation
 						--!! index_ref;
 						--index_ref.set_item (index);
 						if index <= str.count then
-							end_index := stricly_positive_min (str.substring_index (" and ", index), str.substring_index (" or ", index), str.count); 
+							end_index := stricly_positive_min (str.substring_index (" and ", index), str.substring_index (" or ", index), str.count);
 							value := value_str (str, index, end_index);
 							index := end_index;
 						else
 							value := void
 						end
-						
+
 						if value = Void then
 							error := True
 						else
@@ -150,17 +150,15 @@ feature {NONE} -- Implementation
 			create operator.make(0)
 			create Result.make(0)
 			operator := str.substring (idx, idx + 1)
-			
-			if operator.is_equal("<=") 
-			   or else operator.is_equal(">=") 
-			   or else operator.is_equal("/=") 
+
+			if operator.is_equal("<=")
+			   or else operator.is_equal(">=")
+			   or else operator.is_equal("/=")
 			then
 				Result := operator
 				expects_bounded := false;
-				
-			elseif operator.item (1).is_equal('>') 
-					or else operator.item (1).is_equal('<') 
-					or else operator.item (1).is_equal('=') then
+
+			elseif operator.item (1) = '>' or else operator.item (1) = '<' or else operator.item (1) = '=' then
 				Result.extend ( operator.item(1) )
 				expects_bounded := false
 
@@ -195,7 +193,7 @@ feature {NONE} -- Implementation
 					or else (expects_real and value.is_real) or else (expects_real and is_computed_value(value))
 					or else (expects_string and not value.has (' ')) or else (expects_bounded and is_bounded(value))
 		end
-			
+
 	is_computed_value ( value: STRING ) : BOOLEAN
 		do
 			if value.is_equal("max") or else value.is_equal("min") or else value.is_equal("avg") then
@@ -204,7 +202,7 @@ feature {NONE} -- Implementation
 				Result := false
 			end
 		end
-		
+
 	is_bounded ( value: STRING ) : BOOLEAN
 		local
 			range_position : INTEGER;
@@ -229,7 +227,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end  --| Guillaume - 09/18/97
-	
+
 	boolean_operator (str: STRING; idx: INTEGER): STRING
 			-- Get boolean operator in `str' at `idx'.
 		do
@@ -270,7 +268,7 @@ feature {NONE} -- Implementation
 		do
 			Result := str @ idx = '-'
 		end
-		
+
 	stricly_positive_min (a, b, c : INTEGER): INTEGER
 			-- The min of a, b and c that is not zero
 			-- a < c and b < c
@@ -307,17 +305,17 @@ feature {NONE} -- Attributes
 
 	expects_int,
 		-- The expected type of the subquery 'value' is a integer
-		
+
 	expects_real,
 		-- The expected type of the subquery 'value' is a real
-	
+
 	expects_string,
 		-- The expected type of the subquery 'value' is a string
-	
+
 	expects_bounded: BOOLEAN;
 		-- The expected type of the subquery 'value' is a bounded value
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -330,22 +328,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class QUERY_PARSER

@@ -707,7 +707,7 @@ feature -- Breakpoints access with feature,index
 					bp := bplst.item_for_iteration
 					loc := bp.location
 					if
-						loc.body_index.is_equal (f_body_index) and then
+						loc.body_index = f_body_index and then
 						bp.is_set and then
 						(include_hidden or not bp.is_hidden)
 					then
@@ -969,7 +969,7 @@ feature -- Breakpoints addition
 				loop
 					bp := bplst.item_for_iteration
 					if
-						bp.body_index.is_equal (f_body_index) and then
+						bp.body_index = f_body_index and then
 						bp.is_set and then not bp.is_hidden
 					then
 						bp.enable
@@ -1113,7 +1113,7 @@ feature -- Breakpoints removal
 					if
 						bp.is_set and then
 						not bp.is_hidden and then
-						bp.body_index.is_equal (f_body_index)
+						bp.body_index = f_body_index
 					then
 						delete_breakpoint (bp)
 					end
@@ -1252,7 +1252,7 @@ feature -- Breakpoints change
 				loop
 					bp := bps.item_for_iteration
 					if
-						bp.body_index.is_equal (f_body_index) and then
+						bp.body_index = f_body_index and then
 						bp.is_set and then
 						not bp.is_hidden
 					then

@@ -100,7 +100,7 @@ feature -- Data
 
 	dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER]
 		once
-			create Result.make(0)
+			create Result.make (0)
 		end
 
 feature -- DYNAMIC_LIB Exports processing.
@@ -164,7 +164,7 @@ feature -- DYNAMIC_LIB Exports processing.
 
 					dl_exp_list.extend (dl_exp)
 				else
-					dl_exp_list.go_i_th(i)
+					dl_exp_list.go_i_th (i)
 					dl_exp_list.remove
 					if dl_exp_list.is_empty then
 						dynamic_lib_exports.remove (d_class.class_id)
@@ -259,7 +259,7 @@ feature -- DYNAMIC_LIB Exports processing.
 				lastline.left_adjust
 				lastline.right_adjust
 
-				if not lastline.substring(1,2).is_equal("--") and then not lastline.is_empty then
+				if not lastline.substring (1,2).is_equal ("--") and then not lastline.is_empty then
 					from
 						pos := 0
 						done := 0
@@ -267,9 +267,9 @@ feature -- DYNAMIC_LIB Exports processing.
 						pos >= lastline.count or done > 0
 					loop
 						pos := pos + 1
-						if lastline.item(pos).is_equal('(') then
+						if lastline.item (pos) = '(' then
 							done := 1
-						elseif lastline.item(pos).is_equal(':') then
+						elseif lastline.item (pos) = ':' then
 							done := 2
 						end
 					end
@@ -278,7 +278,7 @@ feature -- DYNAMIC_LIB Exports processing.
 						mark := pos+1
 
 						--Class
-						t_class := lastline.substring(1,pos-1)
+						t_class := lastline.substring (1,pos-1)
 
 						if done = 1 then
 								--creation
@@ -287,7 +287,7 @@ feature -- DYNAMIC_LIB Exports processing.
 								pos >= lastline.count or done > 1
 							loop
 								pos := pos + 1
-								if lastline.item(pos).is_equal(')') then
+								if lastline.item (pos) = ')' then
 									done := 3
 								end
 							end
@@ -295,7 +295,7 @@ feature -- DYNAMIC_LIB Exports processing.
 
 						if done > 1 then
 							if done = 3 then
-								t_creation := lastline.substring(mark,pos-1)
+								t_creation := lastline.substring (mark,pos-1)
 							elseif done = 2 then
 								t_creation := Void
 							end
@@ -311,10 +311,10 @@ feature -- DYNAMIC_LIB Exports processing.
 								pos >= lastline.count or done > 1
 							loop
 								pos := pos + 1
-								if lastline.item(pos).is_equal(':') then
+								if lastline.item (pos) = ':' then
 									done := 1
 									mark := pos + 1
-								elseif lastline.item(pos).is_equal('@') then
+								elseif lastline.item (pos) = '@' then
 									done := done + 2
 									index_mark := pos
 								end
@@ -377,15 +377,15 @@ feature -- DYNAMIC_LIB Exports processing.
 							elseif done = 1  then
 									-- We only found a routine name.
 								if call_type_mark /= 0 then
-									t_routine := lastline.substring(mark, alias_mark.min (call_type_mark) - 1)
+									t_routine := lastline.substring (mark, alias_mark.min (call_type_mark) - 1)
 								else
-									t_routine := lastline.substring(mark, alias_mark - 1)
+									t_routine := lastline.substring (mark, alias_mark - 1)
 								end
 							elseif done = 3 then
 									-- We found a routine name and the `@' sign.
 								t_routine := lastline.substring (mark, index_mark - 1)
 								if call_type_mark /= 0 then
-									t_index := lastline.substring (index_mark + 1, alias_mark.min(call_type_mark) - 1)
+									t_index := lastline.substring (index_mark + 1, alias_mark.min (call_type_mark) - 1)
 								else
 									t_index := lastline.substring (index_mark + 1, alias_mark - 1)
 								end
@@ -433,7 +433,7 @@ feature -- DYNAMIC_LIB Exports processing.
 					t_creation	:= t_routine.twin
 				end
 
-				add_export_feature_from_file(t_class,t_creation,t_routine,t_index, t_alias, t_call_type)
+				add_export_feature_from_file (t_class,t_creation,t_routine,t_index, t_alias, t_call_type)
 
 				t_class := Void
 				t_creation := Void
@@ -452,10 +452,10 @@ feature -- DYNAMIC_LIB Exports processing.
 			out_text: STRING
 		do
 			create out_text.make (200)
-			out_text.append ("%N-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY %N-- SYSTEM : " )
+			out_text.append ("%N-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY %N-- SYSTEM : ")
 
-			out_text.append( eiffel_system.name )
-			out_text.append( "%N" )
+			out_text.append (eiffel_system.name)
+			out_text.append ("%N")
 
 			from
 				dynamic_lib_exports.start
@@ -466,13 +466,13 @@ feature -- DYNAMIC_LIB Exports processing.
 					dynamic_lib_exports.item_for_iteration /= Void and then
 					not dynamic_lib_exports.item_for_iteration.is_empty
 				then
-					out_text.append( "%N-- CLASS [" )
+					out_text.append ("%N-- CLASS [")
 
 					dynamic_lib_exports.item_for_iteration.start
 					class_name := dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper
-					out_text.append(class_name)
+					out_text.append (class_name)
 
-					out_text.append( "]%N" )
+					out_text.append ("]%N")
 					from
 					until
 						dynamic_lib_exports.item_for_iteration.after

@@ -2,7 +2,7 @@ note
 	description:
 		"[
 			Container that holds only one widget.
-		"]
+		]"
 	appearance:
 		"[
 			---------------

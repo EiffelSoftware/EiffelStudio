@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 	refresh
 			-- <Precursor>
 		local
-			l_eitem, l_label: EB_GRID_EDITOR_TOKEN_ITEM
+			l_eitem: EB_GRID_EDITOR_TOKEN_ITEM
 			l_token_writer: like token_writer
 			l_duration: REAL_64
 			l_seconds: INTEGER
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

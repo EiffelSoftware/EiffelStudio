@@ -30,7 +30,7 @@ feature -- Access
 		require
 			valid_column: a_column > 0 and a_column <= column_count
 		do
-			Result := 250
+			Result := 150
 		ensure
 			result_not_negative: Result >= 0
 		end
@@ -121,7 +121,7 @@ invariant
 	column_count_positive: column_count > 0
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

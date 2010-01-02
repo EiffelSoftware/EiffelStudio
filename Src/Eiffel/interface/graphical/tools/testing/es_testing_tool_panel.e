@@ -35,11 +35,6 @@ inherit
 			on_session_finished
 		end
 
-	TEST_STATISTICS_OBSERVER
-		redefine
-			on_statistics_updated
-		end
-
 	SESSION_EVENT_OBSERVER
 		redefine
 			on_session_value_changed
@@ -65,7 +60,7 @@ feature {NONE} -- Initialization: widgets
 		do
 			create split_area
 			build_test_tree
-			build_notebook
+			build_execution_widget
 			a_widget.extend (split_area)
 		end
 
@@ -82,29 +77,22 @@ feature {NONE} -- Initialization: widgets
 			register_action (l_tag_tree.node_deselected_actions, agent on_selection_change (?, False))
 		end
 
-	build_notebook
+	build_execution_widget
 			-- Create `notebook' and add permament tabs.
 		local
 			l_execution: ES_TEST_EXECUTION_WIDGET
-			l_creation: ES_TEST_CREATION_WIDGET
-			l_tab: EV_NOTEBOOK_TAB
+			l_statistics: ES_TEST_STATISTICS_WIDGET
+			l_box: EV_VERTICAL_BOX
 		do
-			create notebook
-			split_area.set_second (notebook)
+			create l_box
+			create l_statistics.make (Current)
+			l_box.extend (l_statistics.widget)
+			l_box.disable_item_expand (l_statistics.widget)
+			split_area.set_second (l_box)
 
 			create l_execution.make (Current)
-			notebook.extend (l_execution.widget)
-			l_tab := notebook.item_tab (l_execution.widget)
-			l_tab.set_text (locale.translation (t_execution))
-			l_tab.set_pixmap (stock_pixmaps.debug_run_icon)
-
-			create l_creation.make (Current)
-			notebook.extend (l_creation.widget)
-			l_tab := notebook.item_tab (l_creation.widget)
-			l_tab.set_text (locale.translation (t_creation))
-				-- Using alternative icon for now as the overlay shows a black background for tab icons
-			--l_tab.set_pixmap (icons.general_test_icon)
-			l_tab.set_pixmap (icons.general_test_icon)
+			l_box.extend (l_execution.widget)
+			auto_recycle (l_execution)
 		end
 
 feature {NONE} -- Initialization: widget status
@@ -123,8 +111,6 @@ feature {NONE} -- Initialization: widget status
 				agent (a_test_suite: TEST_SUITE_S)
 					do
 						a_test_suite.test_suite_connection.connect_events (Current)
-						a_test_suite.statistics.connection.connect_events (Current)
-						on_statistics_updated (a_test_suite.statistics)
 					end)
 			propagate_drop_actions (Void)
 
@@ -196,12 +182,6 @@ feature {NONE} -- Access: widgets
 	notebook: EV_NOTEBOOK
 			-- Notebook for detailed information
 
-	runs_button: SD_TOOL_BAR_BUTTON
-			-- Button displaying current number of executed tests
-
-	errors_button: SD_TOOL_BAR_BUTTON
-			-- Button displaying current number of failing tests
-
 feature {NONE} -- Access: buttons
 
 	wizard_button: SD_TOOL_BAR_BUTTON
@@ -267,6 +247,18 @@ feature {NONE} -- Status setting: stones
 					test_tree.set_filter (l_filter_text)
 				end
 			end
+		end
+
+feature -- Basic operations
+
+	set_test_tree_filter (a_filter: STRING_GENERAL)
+			-- Set filter in `test_tree'.
+			--
+			-- `a_filter': New filter expression.
+		require
+			a_filter_attached: a_filter /= Void
+		do
+			test_tree.set_filter (a_filter)
 		end
 
 feature {NONE} -- Events: wizard
@@ -418,32 +410,18 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-feature {NONE} -- Events: labels
-
-	on_run_label_select
-			-- Called when user clicks on `runs_label'.
-		do
-			test_tree.set_filter (l_outcome_view)
-		end
-
-	on_error_label_select
-			-- Called when user clicks on `errors_label'.
-		do
-			test_tree.set_filter (l_filter_not_passing)
-		end
-
 feature {TEST_SUITE_S} -- Events: test suite
 
 	on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
 			-- <Precursor>
 		do
-			if attached {TEST_EXECUTION_I} a_session then
-				notebook.select_item (notebook.at (1))
-			elseif attached {TEST_CREATION_I} a_session then
-				notebook.select_item (notebook.at (2))
-			elseif attached {ETEST_RETRIEVAL} a_session then
-				retrieve_button.disable_sensitive
-			end
+--			if attached {TEST_EXECUTION_I} a_session then
+--				notebook.select_item (notebook.at (1))
+--			elseif attached {TEST_CREATION_I} a_session then
+--				notebook.select_item (notebook.at (2))
+--			elseif attached {ETEST_RETRIEVAL} a_session then
+--				retrieve_button.disable_sensitive
+--			end
 			update_running_state
 		end
 
@@ -472,70 +450,6 @@ feature {TEST_SUITE_S} -- Events: test suite
 							end
 						end
 					end)
-		end
-
-feature {TEST_STATISTICS_I} -- Events
-
-	on_statistics_updated (a_statistics: TEST_STATISTICS_I)
-			-- <Precursor>
-		local
-			l_text: STRING_32
-			l_tool_bar: like right_tool_bar_widget
-		do
-			create l_text.make (10)
-			l_text.append ("Run: ")
-			l_text.append_natural_32 (a_statistics.executed_test_count)
-			l_text.append_character ('/')
-			l_text.append_natural_32 (a_statistics.test_count)
-			runs_button.set_text (l_text)
-
-			create l_text.make (10)
-			l_text.append ("Failing: ")
-			l_text.append_natural_32 (a_statistics.failing_test_count)
-			errors_button.set_text (l_text)
-
-			if a_statistics.test_count > 0 then
-				if not runs_button.is_sensitive then
-					runs_button.enable_sensitive
-				end
-				if not run_button.is_sensitive then
-					run_button.enable_sensitive
-				end
-				if not debug_button.is_sensitive then
-					debug_button.enable_sensitive
-				end
-			else
-				if runs_button.is_sensitive then
-					runs_button.disable_sensitive
-				end
-				if run_button.is_sensitive then
-					run_button.disable_sensitive
-				end
-				if debug_button.is_sensitive then
-					debug_button.disable_sensitive
-				end
-			end
-
-			if a_statistics.failing_test_count > 0 then
-				if not errors_button.is_sensitive then
-					errors_button.enable_sensitive
-				end
-				if not run_failing_menu.is_sensitive then
-					run_failing_menu.enable_sensitive
-				end
-			else
-				if errors_button.is_sensitive then
-					errors_button.disable_sensitive
-				end
-				if run_failing_menu.is_sensitive then
-					run_failing_menu.disable_sensitive
-				end
-			end
-
-			l_tool_bar := right_tool_bar_widget
-			if l_tool_bar /= Void then
-				l_tool_bar.compute_minimum_size
-			end
 		end
 
 feature {NONE} -- Events: tree view
@@ -693,21 +607,21 @@ feature {NONE} -- Factory
 	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
-			create Result.make (3)
+--			create Result.make (3)
 
-			create runs_button.make
-			runs_button.set_pixel_buffer (stock_pixmaps.run_animation_5_icon_buffer)
-			runs_button.set_tooltip (locale.translation (tt_runs_button))
-			register_action (runs_button.select_actions, agent on_run_label_select)
-			Result.force_last (runs_button)
+--			create runs_button.make
+--			runs_button.set_pixel_buffer (stock_pixmaps.run_animation_5_icon_buffer)
+--			runs_button.set_tooltip (locale.translation (tt_runs_button))
+--			register_action (runs_button.select_actions, agent on_run_label_select)
+--			Result.force_last (runs_button)
 
-			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+--			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
-			create errors_button.make
-			errors_button.set_pixel_buffer (stock_pixmaps.general_error_icon_buffer)
-			errors_button.set_tooltip (locale.translation (tt_errors_button))
-			register_action (errors_button.select_actions, agent on_error_label_select)
-			Result.force_last (errors_button)
+--			create errors_button.make
+--			errors_button.set_pixel_buffer (stock_pixmaps.general_error_icon_buffer)
+--			errors_button.set_tooltip (locale.translation (tt_errors_button))
+--			register_action (errors_button.select_actions, agent on_error_label_select)
+--			Result.force_last (errors_button)
 		end
 
 feature {NONE} -- Internationalization
@@ -736,19 +650,13 @@ feature {NONE} -- Internationalization
 	tt_debug_selected: STRING = "Run selected tests"
 	m_auto_retrieve: STRING = "Refresh after compilation"
 
-	tt_runs_button: STRING = "Filter tests by their last result"
-	tt_errors_button: STRING = "Show failing tests"
-
 feature {NONE} -- Constants
-
-	l_outcome_view: STRING = "^result"
-	l_filter_not_passing: STRING = "^result/(fail|unresolved)"
 
 	auto_retrieve_id: STRING = "com.eiffel.testing_tool.auto_retrieve"
 			-- Auto retrieve ID for session manager
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

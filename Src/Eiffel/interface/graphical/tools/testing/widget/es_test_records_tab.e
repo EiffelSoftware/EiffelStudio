@@ -59,6 +59,8 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			initialize_grid
+			a_widget.set_border_width (1)
+			a_widget.set_background_color (colors.stock_colors.gray)
 			a_widget.extend (grid)
 		end
 
@@ -80,7 +82,7 @@ feature {NONE} -- Initialization
 			l_col.header_item.set_text ("Results")
 
 			l_col := l_grid.column (2)
-			l_col.set_width (250)
+			l_col.set_width (150)
 
 			l_col := l_grid.column (3)
 			l_col.set_width (20)
@@ -352,7 +354,44 @@ feature {NONE} -- Factory
 
 	create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
+		local
+			l_menu_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+			l_button: SD_TOOL_BAR_BUTTON
+			l_menu: EV_MENU
+			l_item: EV_MENU_ITEM
 		do
+			create Result.make (5)
+
+			create l_menu_button.make
+			--l_menu_button.set_text ("History")
+			l_menu_button.set_pixel_buffer (stock_pixmaps.general_document_icon_buffer)
+			create l_menu
+			create l_item.make_with_text ("OlderOlderOlder%Tasdf")
+			l_menu.extend (l_item)
+			create l_item.make_with_text ("Older%Tasdf")
+			l_menu.extend (l_item)
+			l_menu_button.set_menu (l_menu)
+			Result.force_last (l_menu_button)
+
+			create l_button.make
+			l_button.set_text ("Compare")
+			Result.force_last (l_button)
+
+			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+			create l_button.make
+			l_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
+			Result.force_last (l_button)
+
+			create l_menu_button.make
+			l_menu_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
+			create l_menu
+			l_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Delete All"))
+			l_menu_button.set_menu (l_menu)
+			Result.force_last (l_menu_button)
+
+				-- Not in use yet
+			Result := Void
 		end
 
 feature {NONE} -- Clean up
@@ -369,7 +408,7 @@ feature {NONE} -- Clean up
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

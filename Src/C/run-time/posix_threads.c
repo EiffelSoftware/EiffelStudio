@@ -368,7 +368,11 @@ rt_public int eif_pthread_kill (EIF_THR_TYPE thread_id)
 		Result = mapped_errno (GetLastError());
 	}
 #elif defined(VXWORKDS)
-	Result = T_NOT_IMPLEMENTED;
+	if (taskDelete(thread_id) == ERROR) {
+		Result = T_CANNOT_TERMINATE_THREAD;
+	} else {
+		Result = T_OK;
+	}
 #else
 	Result = T_NOT_IMPLEMENTED;
 #endif
@@ -519,10 +523,21 @@ rt_public int eif_pthread_is_alive(EIF_THR_TYPE thread_id)
 		 * the validity of `thread_id'. */
 	return mapped_errno(thr_kill(thread_id, 0));
 #elif defined(EIF_WINDOWS)
-	return T_OK;
+	DWORD ret;
+	ret = WaitForSingleObject(thread_id, 0);
+	if (ret == WAIT_TIMEOUT) {
+		return T_OK;
+	} else {
+		return T_NO_THREAD_WITH_ID;
+	}
 #elif defined(VXWORKS)
-	return T_OK;
+	if (taskIdVerify(thread_id) == ERROR) {
+		return T_NO_THREAD_WITH_ID;
+	} else {
+		return T_OK;
+	}
 #else
+		/* We return T_OK even if it means a possible infinite loop when the thread is actually gone. */
 	return T_OK;
 #endif
 }

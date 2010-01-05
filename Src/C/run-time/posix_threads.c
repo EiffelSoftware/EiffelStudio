@@ -50,6 +50,7 @@ doc:<file name="eif_posix_threads.c" header="eif_posix_threads.h" version="$Id$"
 #include "rt_timer.h"
 #include <signal.h>
 #include <limits.h>
+#include "rt_sig.h"
 
 #ifdef VXWORKS
 #include <sysLib.h>
@@ -462,6 +463,67 @@ rt_public EIF_THR_TYPE eif_pthread_self()
 	return taskIdSelf();
 #else
 	return NULL;
+#endif
+}
+
+/*
+doc:	<routine name="eif_pthread_is_alive" return_type="int" export="public">
+doc:		<summary>If thread is alive returns T_OK, otherwise returns T_NO_THREAD_WITH_ID.</summary>
+doc:		<return>If thread is alive returns T_OK, otherwise returns T_NO_THREAD_WITH_ID.</return>
+doc:		<param name="thread_id" type="EIF_THR_TYPE">ID of thread which we are testing.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+#ifdef EIF_POSIX_THREADS
+rt_private jmp_buf jmp;
+rt_private pthread_mutex_t jmp_mutex = PTHREAD_MUTEX_INITIALIZER;
+rt_private int is_checking_kill = 0;
+rt_private Signal_t (*old_handler)(int) = NULL;	/* Old signal handler */
+rt_private Signal_t rt_thread_signal_handler(int sig)
+{
+		/* If we are checking `pthread_kill' and we get a SIGSEGV
+		 * we simply ignore the call and resume it via `longjmp'.
+		 * Otherwise we call our previous handler. */
+	if (is_checking_kill && (sig == SIGSEGV)) {
+		longjmp(jmp, 1);
+	}
+	if (old_handler) {
+		old_handler(sig);
+	}
+}
+#endif
+
+rt_public int eif_pthread_is_alive(EIF_THR_TYPE thread_id)
+{
+#ifdef EIF_POSIX_THREADS
+	int Result;
+	pthread_mutex_lock(&jmp_mutex);
+	old_handler = NULL;
+	is_checking_kill = 1;
+	if (setjmp(jmp)) {
+		Result = T_NO_THREAD_WITH_ID;
+	} else {
+		old_handler = rt_signal(SIGSEGV, rt_thread_signal_handler);
+			/* Per the specification of `pthread_kill' using signal 0, will check 
+			 * the validity of `thread_id'. */
+		Result = mapped_errno(pthread_kill(thread_id, 0));
+	}
+	is_checking_kill = 0;
+	rt_signal(SIGSEGV, old_handler);
+	old_handler = NULL;
+	pthread_mutex_unlock(&jmp_mutex);
+	return Result;
+#elif defined(SOLARIS_THREADS)
+		/* Per the specification of `thr_kill' using signal 0, will check 
+		 * the validity of `thread_id'. */
+	return mapped_errno(thr_kill(thread_id, 0));
+#elif defined(EIF_WINDOWS)
+	return T_OK;
+#elif defined(VXWORKS)
+	return T_OK;
+#else
+	return T_OK;
 #endif
 }
 

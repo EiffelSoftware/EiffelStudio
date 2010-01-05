@@ -226,6 +226,7 @@ extern EIF_THR_TYPE eif_pthread_self (void);
 extern int eif_pthread_join (EIF_THR_TYPE thread_id);
 extern int eif_pthread_set_priority (EIF_THR_TYPE thread_id, rt_uint_ptr priority);
 extern int eif_pthread_get_priority (EIF_THR_TYPE thread_id, rt_uint_ptr *priority);
+extern int eif_pthread_is_alive(EIF_THR_TYPE thread_id);
 
 /* Mutex */
 extern int eif_pthread_mutex_create (EIF_MUTEX_TYPE **mutex);

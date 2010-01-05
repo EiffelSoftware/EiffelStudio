@@ -1170,9 +1170,7 @@ feature {NONE} -- Implementation
 				figure_change_end_actions.call (Void)
 				is_figure_moved := False
 			end
-
-			--FIXME: Conflict with invariant `selected_figures_not_void'
---			selected_figure := Void
+			selected_figure := Void
 		end
 
 	multi_select_rectangle: detachable EV_MODEL_RECTANGLE

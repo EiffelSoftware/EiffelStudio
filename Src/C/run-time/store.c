@@ -1002,7 +1002,7 @@ rt_public void st_write(EIF_REFERENCE object, int has_volatile_attributes)
 	 */
 
 	union overhead *zone;
-	rt_uint_ptr i, count, elem_size, capacity;
+	rt_uint_ptr i, count, elem_size;
 	rt_uint_ptr attrib_offset;
 	uint16 flags;
 	EIF_TYPE_INDEX dtype;
@@ -1027,13 +1027,15 @@ rt_public void st_write(EIF_REFERENCE object, int has_volatile_attributes)
 
 	if (flags & EO_SPEC) {
 			/* We have to send the complete specila information. */
-		count = RT_SPECIAL_COUNT(object);
-		nb_char = count;
-		buffer_write((char *)(&count), sizeof(uint32));
+		uint32 l_uint32;
+		nb_char = RT_SPECIAL_COUNT(object);
+		l_uint32 = (uint32) nb_char;
+		buffer_write((char *)(&l_uint32), sizeof(uint32));
 		elem_size = RT_SPECIAL_ELEM_SIZE(object);
-		buffer_write((char *)(&elem_size), sizeof(uint32));
-		capacity = RT_SPECIAL_CAPACITY(object);
-		buffer_write((char *)(&capacity), sizeof(uint32));
+		l_uint32 = (uint32) elem_size;
+		buffer_write((char *)(&l_uint32), sizeof(uint32));
+		l_uint32 = (uint32) RT_SPECIAL_CAPACITY(object);
+		buffer_write((char *)(&l_uint32), sizeof(uint32));
 			/* Compute actual number of bytes we need to store. */
 		nb_char = nb_char * (rt_uint_ptr) elem_size;
 		if (nb_char > 0) {

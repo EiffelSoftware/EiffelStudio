@@ -153,7 +153,7 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG);				/* Dispatch queued signals */
 rt_shared void initsig(void);				/* Run-time initialization for trapping */
 rt_private void spush(int sig);				/* Queue signal in a FIFO stack */
 rt_private int spop(void);					/* Extract signals from queued stack */
-rt_private Signal_t (*rt_signal (int sig, Signal_t (*handler)(int)))(int); /* Install signal handler */
+rt_shared Signal_t (*rt_signal (int sig, Signal_t (*handler)(int)))(int); /* Install signal handler */
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -162,7 +162,7 @@ rt_private Signal_t (*rt_signal (int sig, Signal_t (*handler)(int)))(int); /* In
 #endif
 #endif
 
-Signal_t (*rt_signal (int sig, Signal_t (*handler)(int)))(int) 
+rt_shared Signal_t (*rt_signal (int sig, Signal_t (*handler)(int)))(int) 
 {
 #ifndef HAS_SIGACTION
 	return signal(sig, handler);

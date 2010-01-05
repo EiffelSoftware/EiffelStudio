@@ -1241,6 +1241,7 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 		struct stack_list all_thread_list;
 		struct stack_list running_thread_list = {0, 0, { NULL }};
 		rt_global_context_t *thread_globals;
+		rt_thr_context *ctxt;
 		int status, i;
 
 			/* We are marking ourself to show that we are requesting a safe access
@@ -1284,7 +1285,13 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 					if (thread_globals != rt_globals) {
 						status = thread_globals->gc_thread_status_cx;
 						if (status == EIF_THREAD_RUNNING) {
-							load_stack_in_gc (&running_thread_list, thread_globals);
+							ctxt = thread_globals->eif_thr_context_cx;
+							if (ctxt && ctxt->is_alive && eif_pthread_is_alive (ctxt->thread_id) != T_OK) {
+									/* Thread has died, we have to remove it from our internal list. */
+								eif_remove_gc_stacks (thread_globals);
+							} else {
+								load_stack_in_gc (&running_thread_list, thread_globals);
+							}
 						}
 					}
 				}
@@ -1364,6 +1371,7 @@ doc:	</routine>
 rt_shared void eif_terminate_all_other_threads (void) {
 	RT_GET_CONTEXT
 	rt_global_context_t *thread_globals;
+	rt_thr_context *ctxt;
 	int i, nb;
 	int is_main_thread_blocked = 0;
 	struct stack_list running_thread_list = {0, 0, { NULL }};
@@ -1398,31 +1406,36 @@ rt_shared void eif_terminate_all_other_threads (void) {
 	eif_synchronize_gc (rt_globals);
 	nb = rt_globals_list.count;
 		
-	if (nb > 1) {
+	while (nb > 1) {
 		for (i = 0; i < nb; i++) {
 			thread_globals = (rt_global_context_t *) rt_globals_list.threads.data[i];
 			if (thread_globals != rt_globals) {	
+					/* Worst case scenario, some threads are still running (see eweasel test#thread012). */
 				if
 					((thread_globals->gc_thread_status_cx == EIF_THREAD_BLOCKED) &&
 					!(thread_globals->thread_exiting_cx))
 				{
-						/* Worst case scenario, some threads are still running. */
-					if (thread_globals->eif_thr_context_cx) {
-						if (!thread_globals->eif_globals->is_external_cx) {
+					if (!thread_globals->eif_globals->is_external_cx) {
+						ctxt = thread_globals->eif_thr_context_cx;
+						if (ctxt && !ctxt->is_root) {
+							if (ctxt->is_alive && eif_pthread_is_alive (ctxt->thread_id) != T_OK) {
+									/* Thread was just killed. */
+								load_stack_in_gc (&running_thread_list, thread_globals);
+							} else {
 #ifdef HAS_THREAD_CANCELLATION
-							EIF_THR_CANCEL(thread_globals->eif_thr_context_cx->thread_id);
+								EIF_THR_CANCEL(ctxt->thread_id);
 #else
-							load_stack_in_gc (&running_thread_list, thread_globals);
-							RT_TRACE(eif_pthread_kill(thread_globals->eif_thr_context_cx->thread_id));
+								RT_TRACE(eif_pthread_kill(ctxt->thread_id));
 #endif
+							}
 						} else {
-								/* Thread has not been created by our runtime or the EiffelThread
-								 * library, we simply record it for removing its data from the runtime. */
-							load_stack_in_gc (&running_thread_list, thread_globals);
+								/* Main thread is blocked this is bad. */
+							is_main_thread_blocked = 1;
 						}
 					} else {
-							/* Main thread is blocked this is bad. */
-						is_main_thread_blocked = 1;
+							/* Thread has not been created by our runtime or the EiffelThread
+							 * library, we simply record it for removing its data from the runtime. */
+						load_stack_in_gc (&running_thread_list, thread_globals);
 					}
 				}
 			}
@@ -1433,22 +1446,21 @@ rt_shared void eif_terminate_all_other_threads (void) {
 				eif_remove_gc_stacks ((rt_global_context_t *) running_thread_list.threads.data[i]);
 			}
 		}
-	}
+			/* Let's wait for the termination of non-blocked thread. */
+		eif_unsynchronize_gc (rt_globals);
+		EIF_ENTER_C;
+		RT_TRACE(eif_pthread_yield());
+		EIF_EXIT_C;
 
+			/* Prepare next iteration of loop. */
+		eif_synchronize_gc (rt_globals);
+		nb = rt_globals_list.count;
+		if (is_main_thread_blocked) {
+			nb--;
+		}
+		is_main_thread_blocked = 0;
+	}
 	eif_unsynchronize_gc (rt_globals);
-
-		/* Let's wait for the termination of non-blocked thread. */
-	EIF_ENTER_C;
-	if (is_main_thread_blocked) {
-		while (rt_globals_list.count > 2) {
-			RT_TRACE(eif_pthread_yield());
-		}
-	} else {
-		while (rt_globals_list.count > 1) {
-			RT_TRACE(eif_pthread_yield());
-		}
-	}
-	EIF_EXIT_C;
 }
 
 #endif /* ISE_GC */
@@ -1737,9 +1749,6 @@ rt_public void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer) {
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	int res;
 	RT_TRACE_KEEP(res, eif_pthread_mutex_destroy(a_mutex_pointer));
-	if (res != T_OK) {
-		eraise ("Cannot destroy mutex", EN_EXT);
-	}
 }
 
 
@@ -1800,9 +1809,6 @@ rt_public void eif_thr_sem_destroy (EIF_POINTER sem)
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 	int res;
 	RT_TRACE_KEEP(res, eif_pthread_sem_destroy(a_sem_pointer));
-	if (res != T_OK) {
-		eraise ("Cannot destroy sem", EN_EXT);
-	}
 }
 
 /*
@@ -1877,9 +1883,6 @@ rt_public void eif_thr_cond_destroy (EIF_POINTER cond_ptr)
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
 	int res;
 	RT_TRACE_KEEP(res, eif_pthread_cond_destroy(cond));
-	if (res != T_OK) {
-		eraise("Cannot destroy condition variable", EN_EXT);
-	}
 }
 
 /*
@@ -1933,9 +1936,6 @@ rt_public void eif_thr_rwl_destroy (EIF_POINTER rwlp_ptr)
 	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
 	int res;
 	RT_TRACE_KEEP(res,eif_pthread_rwlock_destroy(rwlp));
-	if (res != T_OK) {
-		eraise ("Cannot destroy read/write lock", EN_EXT);
-	}
 }
 
 

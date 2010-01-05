@@ -73,6 +73,7 @@ extern char *signame(int sig);			/* Give English description of a signal */
 extern void trapsig(void (*handler) (int));			/* Set a trap for most of the signals */
 extern Signal_t exfpe(int sig);		/* Routine trapped for floating point exception */
 extern Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int);
+extern Signal_t (*rt_signal (int sig, Signal_t (*handler)(int)))(int); /* Install signal handler */
 
 #ifndef HAS_SYS_SIGLIST
 	extern char *sys_siglist[];

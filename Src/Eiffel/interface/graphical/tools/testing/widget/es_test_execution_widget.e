@@ -10,24 +10,10 @@ class
 	ES_TEST_EXECUTION_WIDGET
 
 inherit
-	ES_TEST_RECORDS_TAB [TEST_EXECUTION_I, TEST_EXECUTION_RECORD, ES_TEST_EXECUTION_GRID_ROW]
-		redefine
-			record,
-			on_after_initialized
-		end
+	ES_TEST_RECORDS_TAB
 
 create
 	make
-
-feature {NONE} -- Initialization
-
-	on_after_initialized
-			-- <Precursor>
-		do
-			Precursor
-			grid.row_select_actions.extend (agent on_row_select)
-			grid.row_deselect_actions.extend (agent on_row_deselect)
-		end
 
 feature {NONE} -- Access
 
@@ -45,7 +31,7 @@ feature {NONE} -- Events
 		local
 			l_tools: ES_SHELL_TOOLS
 		do
-			l_tools := icons_provider.tool.window.shell_tools
+			l_tools := icons_provider.develop_window.shell_tools
 			if
 				attached {ES_TEST_RESULT_GRID_ROW} a_row.data as l_result_row and
 				attached {ES_TESTING_RESULTS_TOOL} l_tools.tool ({ES_TESTING_RESULTS_TOOL}) as l_tool
@@ -65,23 +51,15 @@ feature {NONE} -- Events
 		do
 			if
 				last_selected_row = a_row and
-				attached {ES_TESTING_RESULTS_TOOL} icons_provider.tool.window.shell_tools.tool ({ES_TESTING_RESULTS_TOOL}) as l_tool
+				attached {ES_TESTING_RESULTS_TOOL} icons_provider.develop_window.shell_tools.tool ({ES_TESTING_RESULTS_TOOL}) as l_tool
 			then
 				l_tool.clear
 				last_selected_row := Void
 			end
 		end
 
-feature {NONE} -- Access
-
-	record (a_session: TEST_EXECUTION_I): TEST_EXECUTION_RECORD
-			-- <Precursor>
-		do
-			Result := a_session.record
-		end
-
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

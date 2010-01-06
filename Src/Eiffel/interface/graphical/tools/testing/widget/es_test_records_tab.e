@@ -6,30 +6,18 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	ES_TEST_RECORDS_TAB [G -> TEST_SESSION_I, H -> TEST_SESSION_RECORD, J -> ES_TEST_RECORD_GRID_ROW [G, H] create make, make_running end]
+class
+	ES_TEST_RECORDS_TAB
 
 inherit
-	ES_TEST_SESSION_WIDGET [G]
-		rename
-			make as make_session_widget
-		undefine
-			internal_detach_entities
-		redefine
-			on_test_added,
-			on_test_removed,
-			on_before_initialize,
-			on_after_initialized,
-			internal_recycle
-		end
-
 	ES_NOTEBOOK_WIDGET [EV_VERTICAL_BOX]
 		rename
 			make as make_session_widget
 		undefine
-			on_before_initialize,
-			on_after_initialized,
 			internal_recycle
+		redefine
+			create_right_tool_bar_items,
+			on_after_initialized
 		end
 
 	TEST_RECORD_REPOSITORY_OBSERVER
@@ -39,6 +27,13 @@ inherit
 			on_record_updated,
 			on_record_property_updated
 		end
+
+	ES_SHARED_TEST_SERVICE
+
+	ES_SHARED_TEST_GRID_UTILITIES
+
+create
+	make
 
 feature {NONE} -- Initialization
 
@@ -58,293 +53,285 @@ feature {NONE} -- Initialization
 	build_notebook_widget_interface (a_widget: EV_VERTICAL_BOX)
 			-- <Precursor>
 		do
-			initialize_grid
+			create record_widget_cell
 			a_widget.set_border_width (1)
 			a_widget.set_background_color (colors.stock_colors.gray)
-			a_widget.extend (grid)
-		end
-
-	initialize_grid
-			-- Initialize `grid'
-		local
-			l_grid: like grid
-			l_col: EV_GRID_COLUMN
-		do
-			create l_grid
-			l_grid.enable_tree
-			l_grid.hide_tree_node_connectors
-			l_grid.enable_single_row_selection
-			--l_grid.disable_selection_on_click
-
-			l_grid.set_column_count_to (5)
-			l_grid.enable_auto_size_best_fit_column (1)
-			l_col := l_grid.column (1)
-			l_col.header_item.set_text ("Results")
-
-			l_col := l_grid.column (2)
-			l_col.set_width (150)
-
-			l_col := l_grid.column (3)
-			l_col.set_width (20)
-
-			l_col := l_grid.column (4)
-			l_col.set_width (20)
-
-			l_col := l_grid.column (5)
-			l_col.set_width (10)
-
-			grid := l_grid
-		end
-
-	on_before_initialize
-			-- <Precursor>
-		do
-			Precursor {ES_TEST_SESSION_WIDGET}
-			create records.make_default
+			a_widget.extend (record_widget_cell)
 		end
 
 	on_after_initialized
 			-- <Precursor>
 		do
-			Precursor {ES_TEST_SESSION_WIDGET}
+			Precursor
 			perform_with_test_suite (
 				agent (a_test_suite: TEST_SUITE_S)
-					local
-						l_repo: TEST_RECORD_REPOSITORY_I
 					do
-						l_repo := a_test_suite.record_repository
-						l_repo.connection.connect_events (Current)
-						l_repo.records.do_all (agent on_record_added (l_repo, ?))
+						a_test_suite.record_repository.connection.connect_events (Current)
 					end)
+			display_empty_widget
 		end
 
 feature {NONE} -- Access
 
-	grid: ES_TESTING_TOOL_GRID
-			-- Grid displaying records in root rows
-
-	records: DS_ARRAYED_LIST [J]
-			-- List containing displayed records in displayed order
-
-	record (a_session: G): H
-			-- Retrieve record from session
-			--
-			-- Note: this routines serves as a type brigde between a session of type {G} providing records
-			--       of type {H}.
-			--
-			-- `a_session': Session providing certain type of record displayed in `Current'.
-		require
-			a_session_attached: a_session /= Void
-		deferred
-		ensure
-			result_valid: Result = a_session.record
-		end
-
-	record_row (a_record: like record): detachable J
-			-- Return grid row for given `a_record' if it has been added yet. Ohterwise return row where
-			-- given record should be added according to it's creation date. If Void is returned, the record
-			-- should be added to the end of `grid'.
-			--
-			-- `a_record': Record for which corresponding wor should be returned.
-		require
-			a_record_attached: a_record /= Void
-		local
-			l_records: like records
-			l_row: J
-			l_row_record: like record
-		do
-			from
-				l_records := records
-				l_records.start
-			until
-				l_records.after
-			loop
-				l_row := l_records.item_for_iteration
-				l_row_record := l_row.record
-				if a_record = l_row_record then
-					Result := l_row
-					l_records.go_after
-				else
-					if a_record.creation_date < l_row_record.creation_date then
-						if Result = Void or else Result.record.creation_date < l_row_record.creation_date then
-							Result := l_row
-						end
-					end
-					l_records.forth
-				end
-			end
-		ensure
-			result_valid: (Result = Void or else Result.record /= a_record) implies
-				not records.there_exists (agent (a_row: J; a_r: like record): BOOLEAN
-					do
-						Result := a_row.record = a_r
-					end (?, a_record))
-		end
-
-	icons_provider: ES_TOOL_ICONS_PROVIDER_I [ES_TESTING_TOOL_ICONS]
+	icons_provider: ES_TESTING_TOOL_PANEL
 			-- Icons provider for testing tool icons.
 
-feature {TEST_SUITE_S} -- Events: test suite
+	record_widget_cell: EV_VERTICAL_BOX
+			-- Box in which `record_widget' is shown
 
-	on_test_added (a_test_suite: TEST_SUITE_S; a_test: TEST_I)
-			-- <Precursor>
+	record_widget: ES_TEST_RECORD_WIDGET [TEST_SESSION_I]
+			-- Widget currently displaying a record
+		require
+			record_displayed: is_record_displayed
+		local
+			l_result: like internal_record_widget
 		do
-			Precursor (a_test_suite, a_test)
-			records.do_all (
-				agent (a_row: J; a_t: TEST_I)
-					do
-						a_row.on_test_added (a_t)
-					end (?, a_test))
+			l_result := internal_record_widget
+			check l_result /= Void end
+			Result := l_result
 		end
 
-	on_test_removed (a_test_suite: TEST_SUITE_S; a_test: TEST_I)
-			-- <Precursor>
+	internal_record_widget: detachable like record_widget
+			-- Internal storage for `record_widget'
+
+	records_menu: EV_MENU
+			-- Menu displayed when the user clicks on the `records_button'
+		local
+
 		do
-			Precursor (a_test_suite, a_test)
-			records.do_all (
-				agent (a_row: J; a_t: TEST_I)
-					do
-						a_row.on_test_remove (a_t)
-					end (?, a_test))
+			if attached records_menu_cache as l_cache then
+				Result := l_cache
+			else
+				create Result
+				perform_with_test_suite (agent fill_records_menu (?, Result))
+				Result.item_select_actions.extend (agent on_record_menu_select)
+				records_menu_cache := Result
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	records_menu_cache: detachable like records_menu
+			-- Cache for `records_menu'
+
+feature {NONE} -- Status report
+
+	is_record_displayed: BOOLEAN
+			-- Is a record currently being displayed in `widget'?
+		do
+			Result := internal_record_widget /= Void
+		end
+
+feature {NONE} -- Query
+
+	is_valid_record (a_record: TEST_SESSION_RECORD): BOOLEAN
+			-- Is given record valid to be displayed in `Current'?
+		do
+			Result := attached {TEST_CREATION_RECORD} a_record or
+				attached {TEST_EXECUTION_RECORD} a_record
 		end
 
 feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 
 	on_record_added (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
-		local
-			l_records: like records
-			l_pos: INTEGER
-			l_record_row, l_new: J
-			l_done: BOOLEAN
 		do
-			if attached {H} a_record as l_record then
-					-- Add record.
-				l_records := records
-				from
-					l_records.start
-				until
-					l_records.after
-				loop
-					l_record_row := l_records.item_for_iteration
-					if l_record_row.is_expanded and not l_record_row.is_running then
-						l_record_row.row.collapse
-					end
-					l_records.forth
+			records_menu_cache := Void
+			if is_valid_record (a_record) and a_record.is_running then
+				if is_record_displayed then
+					remove_displayed_record
 				end
-				from
-					l_records.start
-					l_pos := 1
-				until
-					l_done
-				loop
-					if l_records.after then
-						l_pos := grid.row_count + 1
-						l_done := True
-					else
-						l_record_row := l_records.item_for_iteration
-						if l_record_row.record < l_record then
-							l_records.forth
-						else
-							l_pos := l_record_row.row.index
-							l_done := True
-						end
-					end
-				end
-				grid.insert_new_row (l_pos)
-				if l_record.is_running and then attached {G} l_record.session as l_session then
-					create l_new.make_running (l_session, grid.row (l_pos), icons_provider)
-				else
-					create l_new.make (l_record, grid.row (l_pos), icons_provider)
-				end
-				l_records.put_left (l_new)
+				display_record (a_record)
 			end
 		end
 
 	on_record_removed (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
-		local
-			l_records: like records
-			l_row_data: J
 		do
-			if attached {H} a_record then
-				from
-					l_records := records
-					l_records.start
-				until
-					l_records.after
-				loop
-					l_row_data := l_records.item_for_iteration
-					if l_row_data.record = a_record then
-						grid.remove_row (l_row_data.row.index)
-						l_records.remove_at
-						l_records.go_after
-					else
-						l_records.forth
-					end
-				end
+			records_menu_cache := Void
+			if is_record_displayed and then record_widget.record = a_record then
+				remove_displayed_record
 			end
 		end
 
 	on_record_property_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		do
-			if attached {H} a_record as l_record then
-				update_record_row (l_record, False)
+			records_menu_cache := Void
+			if is_record_displayed and then record_widget.record = a_record then
+				record_widget.on_record_property_update
 			end
 		end
 
 	on_record_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		do
-			if attached {H} a_record as l_record then
-				update_record_row (l_record, True)
+			if is_record_displayed and then record_widget.record = a_record then
+				record_widget.on_record_update
 			end
+		end
+
+feature {NONE} -- Events: button
+
+	on_record_menu_select (an_item: EV_MENU_ITEM)
+			-- Called when item is selected in menu of `records_button'.
+			--
+			-- `an_item': Item that was selected.
+		require
+			an_item_attached: an_item /= Void
+		do
+			if
+				attached {TEST_SESSION_RECORD} an_item.data as l_record and then
+				(not is_record_displayed or else record_widget.record /= l_record)
+			then
+				if is_record_displayed then
+					remove_displayed_record
+				end
+				display_record (l_record)
+			end
+		end
+
+feature {NONE} -- Basic operations
+
+	display_record (a_record: TEST_SESSION_RECORD)
+			-- Display record through `record_widget'.
+		require
+			not_record_displayed: not is_record_displayed
+			a_record_valid: is_valid_record (a_record)
+		local
+			l_widget: like record_widget
+		do
+			record_widget_cell.wipe_out
+			if a_record.is_running then
+				l_widget := create_record_widget_from_session (a_record.session)
+			else
+				l_widget := create_record_widget (a_record)
+			end
+			internal_record_widget := l_widget
+			record_widget_cell.extend (l_widget.widget)
+			if attached records_menu_cache as l_menu then
+				from
+					l_menu.start
+				until
+					l_menu.after
+				loop
+					if attached {EV_CHECK_MENU_ITEM} l_menu.item_for_iteration as l_item then
+						if l_item.data = a_record then
+							if not l_item.is_selected then
+								l_item.enable_select
+							end
+						else
+							if l_item.is_selected then
+								l_item.disable_select
+							end
+						end
+					end
+					l_menu.forth
+				end
+			end
+		ensure
+			record_displayed: is_record_displayed
+			a_record_displayed: record_widget.record = a_record
+		end
+
+	remove_displayed_record
+			-- Remove current record being displayed in `record_widget'.	
+		require
+			record_displayed: is_record_displayed
+		do
+			display_empty_widget
+			record_widget.recycle
+			internal_record_widget := Void
+		ensure
+			not_record_displayed: not is_record_displayed
 		end
 
 feature {NONE} -- Implementation
 
-	update_record_row (a_record: H; a_update_content: BOOLEAN)
-			-- Update record row in `records' for given record.
-			--
-			-- `a_record': Record for which row should be updated.
-			-- `a_update_content': True if contents (subwrows) should also be updated.
-		require
-			a_record_attached: a_record /= Void
+	display_empty_widget
+			-- Display an empty white cell in `record_widget_cell'.
 		local
-			l_records: like records
-			l_row: J
-			l_rebuild_content: BOOLEAN
+			l_cell: EV_CELL
 		do
+			record_widget_cell.wipe_out
+			create l_cell
+			l_cell.set_background_color ((create {EV_STOCK_COLORS}).white)
+			record_widget_cell.extend (l_cell)
+		end
+
+	fill_records_menu (a_test_suite: TEST_SUITE_S; a_menu: EV_MENU)
+			-- Fill given menu with records form the current test suite.
+			--
+			-- `a_test_suite': Test suite containing records.
+			-- `a_menu': Menu to initialized for selecting a specific record.
+		require
+			a_test_suite_attached: a_test_suite /= Void
+			a_menu_attached: a_menu /= Void
+		local
+			l_records: ARRAYED_LIST [TEST_SESSION_RECORD]
+			l_record: TEST_SESSION_RECORD
+			l_item: EV_CHECK_MENU_ITEM
+			l_separator_pos: INTEGER
+			l_label: STRING_32
+		do
+			l_records := a_test_suite.record_repository.records
 			from
-				l_records := records
 				l_records.start
 			until
 				l_records.after
 			loop
-				l_row := l_records.item_for_iteration
-				if l_row.record = a_record then
-					if not a_record.is_running then
-							-- As an optimization, even if `a_update_content' is true we assume the row will update
-							-- itself through the events of the running session `a_record.session'.
-						if l_row.is_running then
-							l_row.detach_session
+				l_record := l_records.item_for_iteration
+				if is_valid_record (l_record) then
+					create l_label.make (50)
+					l_label.append (date_time (l_record.creation_date))
+					create l_item
+					l_item.set_pixmap (stock_pixmaps.debug_run_icon)
+					l_item.set_data (l_record)
+					if is_record_displayed and then record_widget.record = l_record then
+						l_item.enable_select
+					end
+					if l_record.is_running then
+						if l_separator_pos > 0 then
+							a_menu.put_front (create {EV_MENU_SEPARATOR})
+							l_separator_pos := 1
 						end
-						l_rebuild_content := a_update_content
+						a_menu.put_i_th (l_item, l_separator_pos)
+						l_separator_pos := l_separator_pos + 1
+					else
+						if attached {TEST_EXECUTION_RECORD} l_record as l_exec_record then
+							l_label.append_string (" (")
+							l_label.append_integer (l_exec_record.tests.count)
+							l_label.append_string (" tests)")
+						end
+						a_menu.force (l_item)
 					end
-					l_row.refresh
-					if l_rebuild_content and l_row.is_expanded then
-						l_row.clear_content
-						l_row.show_content
-					end
-					l_records.go_after
-				else
-					l_records.forth
+					l_item.set_text (l_label)
 				end
+				l_records.forth
 			end
 		end
 
 feature {NONE} -- Factory
+
+	create_record_widget (a_record: TEST_SESSION_RECORD): like record_widget
+			-- Create a new `record_widget' from a given record.
+		do
+			if attached {TEST_EXECUTION_RECORD} a_record as l_execution then
+				create {ES_TEST_EXECUTION_TAB} Result.make (icons_provider.develop_window, l_execution)
+			else
+				create Result.make (icons_provider.develop_window, a_record)
+			end
+		end
+
+	create_record_widget_from_session (a_session: TEST_SESSION_I): like record_widget
+			-- Create a new `record_widget' from a running session.
+		do
+			if attached {TEST_EXECUTION_I} a_session as l_execution then
+				create {ES_TEST_EXECUTION_TAB} Result.make_running (icons_provider.develop_window, l_execution)
+			else
+				create Result.make_running (icons_provider.develop_window, a_session)
+			end
+		end
 
 	create_notebook_widget: like widget
 			-- <Precursor>
@@ -355,32 +342,37 @@ feature {NONE} -- Factory
 	create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
-			l_menu_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+			l_menu_button: SD_TOOL_BAR_POPUP_BUTTON
 			l_button: SD_TOOL_BAR_BUTTON
-			l_menu: EV_MENU
-			l_item: EV_MENU_ITEM
 		do
 			create Result.make (5)
 
 			create l_menu_button.make
 			--l_menu_button.set_text ("History")
+
 			l_menu_button.set_pixel_buffer (stock_pixmaps.general_document_icon_buffer)
-			create l_menu
-			create l_item.make_with_text ("OlderOlderOlder%Tasdf")
-			l_menu.extend (l_item)
-			create l_item.make_with_text ("Older%Tasdf")
-			l_menu.extend (l_item)
-			l_menu_button.set_menu (l_menu)
+			l_menu_button.set_menu_function (agent records_menu)
 			Result.force_last (l_menu_button)
 
 			create l_button.make
 			l_button.set_text ("Compare")
 			Result.force_last (l_button)
+		end
 
-			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
-
+	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- <Precursor>
+		local
+			l_menu_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
+			l_button: SD_TOOL_BAR_BUTTON
+			l_menu: EV_MENU
+		do
+			create Result.make (3)
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
+			Result.force_last (l_button)
+
+			create l_button.make
+			l_button.set_pixel_buffer (stock_pixmaps.command_send_to_external_editor_icon_buffer)
 			Result.force_last (l_button)
 
 			create l_menu_button.make
@@ -389,9 +381,6 @@ feature {NONE} -- Factory
 			l_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Delete All"))
 			l_menu_button.set_menu (l_menu)
 			Result.force_last (l_menu_button)
-
-				-- Not in use yet
-			Result := Void
 		end
 
 feature {NONE} -- Clean up
@@ -399,12 +388,11 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		do
-			Precursor {ES_TEST_SESSION_WIDGET}
-			records.do_all (
-				agent (a_row: J)
-					do
-						a_row.recycle
-					end)
+			Precursor
+			perform_with_test_suite (agent (a_test_suite: TEST_SUITE_S)
+				do
+					a_test_suite.record_repository.connection.disconnect_events (Current)
+				end)
 		end
 
 note

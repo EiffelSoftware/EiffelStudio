@@ -1440,11 +1440,15 @@ rt_shared void eif_terminate_all_other_threads (void) {
 				}
 			}
 		}
-		if (running_thread_list.count > 0) {
-			nb = running_thread_list.count;
+		nb = running_thread_list.count;
+		if (nb > 0) {
 			for (i = 0; i < nb; i++) {
 				eif_remove_gc_stacks ((rt_global_context_t *) running_thread_list.threads.data[i]);
 			}
+				/* We need to wipe out the content of `running_thread_list' to
+				 * prevent multiple removal of the same data in `rt_globals_list'. */
+			eif_free (running_thread_list.threads.data);
+			memset(&running_thread_list, 0, sizeof(struct stack_list));
 		}
 			/* Let's wait for the termination of non-blocked thread. */
 		eif_unsynchronize_gc (rt_globals);

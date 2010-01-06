@@ -14,12 +14,8 @@ inherit
 			make_attached as make_attached_row
 		redefine
 			pixmap,
-			refresh
+			print_test
 		end
-
-	EV_STOCK_PIXMAPS
-
-	EB_SHARED_WINDOW_MANAGER
 
 create
 	make, make_attached
@@ -72,11 +68,6 @@ feature -- Access
 
 	pixmap: detachable EV_PIXMAP
 			-- <Precursor>
-		do
-		end
-
-	result_pixmap: EV_PIXMAP
-			-- Pixmap shown in first second item or `row'
 		local
 			l_result: like test_result
 		do
@@ -92,10 +83,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	refresh
+	print_test
 			-- <Precursor>
 		local
-			l_eitem: EB_GRID_EDITOR_TOKEN_ITEM
 			l_token_writer: like token_writer
 			l_duration: REAL_64
 			l_seconds: INTEGER
@@ -103,7 +93,6 @@ feature {NONE} -- Implementation
 			l_tag: STRING_32
 		do
 			Precursor
-			create l_eitem
 			l_token_writer := token_writer
 			l_tag := test_result.tag.as_string_32
 			if not l_tag.is_empty then
@@ -118,19 +107,17 @@ feature {NONE} -- Implementation
 			l_token_writer.add_comment (l_seconds.out)
 			l_token_writer.add_comment (l_fine.formatted_out (".ff4"))
 			l_token_writer.add_comment ("s]")
-			l_eitem.set_text_with_tokens (l_token_writer.last_line.content)
-			l_eitem.set_pixmap (result_pixmap)
-			reset_token_writer
-			row.set_item (2, l_eitem)
+			--l_eitem.set_text_with_tokens (l_token_writer.last_line.content)
+			--row.set_item (2, l_eitem)
 
 			if not test_result.information.is_empty then
 				l_tag.append ("%N%N")
 				l_tag.append (test_result.information.as_string_32)
 			end
 			if not l_tag.is_empty then
-				l_eitem.set_tooltip (l_tag)
+			--	l_eitem.set_tooltip (l_tag)
 				if attached row.item (1) as l_item then
-					l_item.set_tooltip (l_tag)
+				--	l_item.set_tooltip (l_tag)
 				end
 			end
 		end

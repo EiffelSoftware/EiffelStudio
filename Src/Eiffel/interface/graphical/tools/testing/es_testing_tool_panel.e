@@ -80,7 +80,7 @@ feature {NONE} -- Initialization: widgets
 	build_execution_widget
 			-- Create `notebook' and add permament tabs.
 		local
-			l_execution: ES_TEST_EXECUTION_WIDGET
+			l_execution: ES_TEST_RECORDS_TAB
 			l_statistics: ES_TEST_STATISTICS_WIDGET
 			l_box: EV_VERTICAL_BOX
 		do

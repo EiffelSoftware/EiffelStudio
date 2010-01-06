@@ -10,7 +10,7 @@ deferred class
 	ES_TEST_SESSION_WIDGET [G -> TEST_SESSION_I]
 
 inherit
-	ES_WIDGET [EV_VERTICAL_BOX]
+	ES_WINDOW_WIDGET [EV_VERTICAL_BOX]
 		redefine
 			on_before_initialize,
 			on_after_initialized,
@@ -142,7 +142,7 @@ feature {NONE} -- Clean up
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

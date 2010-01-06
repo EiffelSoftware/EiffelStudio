@@ -265,7 +265,7 @@ feature
 			--
 		require
 			p_non_void: p /= Void
-			valid_file: attached file as l_file and then l_file.is_open_write
+			valid_file: attached file as l_file and then l_file.is_open_read
 		local
 			l_file_loc: like file
 		do

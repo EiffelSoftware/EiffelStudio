@@ -1,0 +1,20 @@
+test_name 	expanded-generic-crash
+test_description A generic class is mark expanded and it crashes while freezing.
+
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_sub	Ace $TEST Ace
+
+compile_frozen
+compile_result	ok
+
+cleanup_compile
+
+copy_raw	test_rev1.e $CLUSTER test.e
+copy_raw	a_rev1.e $CLUSTER a.e
+
+compile_frozen
+compile_result	ok
+
+test_end

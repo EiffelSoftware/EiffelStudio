@@ -1,0 +1,31 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 inherit-chg-skip-pass
+test_description VWBE violation corrected by removing an inheritance clause
+
+copy_sub 	 Ace $TEST Ace
+
+define		 INHERITANCE "inherit TEST;"
+define		 BOOL_TYPE "TEST1"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_frozen
+compile_result 	 validity_error TEST VWBE
+
+define		 INHERITANCE ""
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST VWBE
+
+define		 BOOL_TYPE "BOOLEAN"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

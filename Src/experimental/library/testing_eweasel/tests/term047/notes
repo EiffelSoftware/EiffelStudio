@@ -1,0 +1,5 @@
+A class with two creation clauses (`creation make' and `creation')
+where `make' is a procedure of the enclosing class causes silent
+termination of the compiler after pass 4 on the class.
+
+Discovered in Release 3.2.3b.

@@ -1,0 +1,4 @@
+The instruction "print ('%U')" does not output a single null
+character.  It does not output anything.
+
+Discovered in Release 3.2.4.

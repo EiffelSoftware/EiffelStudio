@@ -1,0 +1,17 @@
+test_name 	 assertion-regeneration-crash
+test_description A routine which has in its signature a like argument calling a query in its precondition that has a like argument too causes the compiler to crash.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

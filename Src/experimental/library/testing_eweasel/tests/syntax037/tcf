@@ -1,0 +1,17 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 cast-arg-type-with-parens
+test_description An external routine has a Special_external_decl which casts the arguments.  If the type to which an argument is cast includes any parentheses, then the first closing parentheses in the cast type incorrectly terminates the argument list in parentheses.  This causes the compiler to report a syntax error.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_frozen
+compile_result 	 ok
+
+test_end

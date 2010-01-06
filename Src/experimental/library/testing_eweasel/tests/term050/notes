@@ -1,0 +1,4 @@
+A class with header `class WEASEL [G, H -> WEASEL [G, G]]' causes
+silent termination of the compiler during pass 5.
+
+Discovered in Release 3.2.3b.

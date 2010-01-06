@@ -1,0 +1,11 @@
+test_name 	 selecting-renamed-feature
+test_description Select should be applied only to the features that have 2 or more versions in a descendant.
+
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST VMSS
+
+test_end

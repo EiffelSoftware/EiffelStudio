@@ -1,0 +1,30 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 invalid-actual-generic4
+test_description An actual generic parameter which is invalid (because it is itself a generic derivation but too many actual generic parameters are supplied)
+
+copy_sub 	 Ace $TEST Ace
+define		 ACTUAL "TEST1 [STRING, STRING]"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VTUG(2)
+
+define		 ACTUAL "TEST1 [STRING]"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VTCG
+-- VTGD(2)
+
+define		 ACTUAL "STRING"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

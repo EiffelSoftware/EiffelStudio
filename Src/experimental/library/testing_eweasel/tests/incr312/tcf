@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 generate-final-c-body-crash
+test_description A sequence of changes causes the compiler to crash with a call on Void target in {ADDRESS_TABLE}.generate_final_c_body
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test_rev1.e $CLUSTER test.e
+compile_final
+compile_result 	ok
+
+-- c_compile_final
+-- c_compile_result ok
+
+test_end

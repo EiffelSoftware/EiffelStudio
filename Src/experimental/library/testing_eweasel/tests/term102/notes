@@ -1,0 +1,16 @@
+Finalizing a particular large system with over 600 classes 
+causes the compiler to die with a "no such file or directory"
+error in SERVER_FILE.
+
+Discovered in Release 5.0.024.
+
+It was fixed by the following commit:
+r26916 | manus | 2001-08-13 11:01:17 -0700 (Mon, 13 Aug 2001) | 14 lines
+
+Fixed bug in finalization due to an out-of-bound access in the PACKED_BOOLEANS structure. The bug only occurs when finalizing with a precompiled library. The reason is that `I' thought that `type_id' of CLASS_TYPE were alwasy numbered using the topological sort of inheritance, but this is not always the case.
+It can happen in two situations:
+- incremental compilation: new added classes are not ordered.
+- using a precompiled library, all the classes added to the system are not
+  ordered.
+The bug has been revealed through test `term102' of the EiffelWeasel test suite.
+In this case, the deferred class A had a type id largely bigger than its implementation with the bigger type_id. So when in class A, we were trying to evaluate the polymorphism status in A of a routine f deferred implemented in some descendants, we got the out-of-bound access.

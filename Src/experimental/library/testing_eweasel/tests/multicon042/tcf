@@ -1,0 +1,13 @@
+-- This is a test control file
+
+test_name multi-constraint-rename-clause-crash
+test_description Reveals bug#12775. An empty rename clause causees the compiler to crash.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+
+compile_melted
+compile_result syntax_error TEST1 2
+test_end

@@ -1,0 +1,31 @@
+test_name 	raise-and-catch-user-defined-exception
+test_description Raise and catch user defined exception corretly. Ojbect should be maintained, and `original' points to the original exception
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	my_exception.e $CLUSTER my_exception.e
+copy_raw 	application.e $CLUSTER application.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_final_keep
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output2
+execute_result ok
+compare		exec_output2 output
+ 
+test_end

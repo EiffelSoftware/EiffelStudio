@@ -1,0 +1,9 @@
+After initial compilation where the system is frozen, a class that
+prints the value of a boolean constant, which is False, works
+correctly.  When the constant value is changed to True and system
+refrozen, the correct value is still printed.  Then the system is
+finalized and execution prints False.  Similar problem for reals and
+doubles.
+
+Reported by Manu on October 11, 2002.
+

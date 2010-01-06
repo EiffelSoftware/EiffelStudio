@@ -1,0 +1,11 @@
+test_name	svalid-rename-constant-inspect
+test_description A constant used in an inspect instruction is renamed causing the code to not type check in descendant class.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	test1.e	$CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+test_end

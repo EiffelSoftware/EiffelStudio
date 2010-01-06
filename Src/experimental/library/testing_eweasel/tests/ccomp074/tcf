@@ -1,0 +1,18 @@
+test_name 	 expanded-generic-wrong-c-with-multiple-ancestor
+test_description A routine call involving a formal is implemented as inheriting from an ancestor without formal. When this ancestor version is generated, there is no point in generating multiple polymorphic wrapper, but when generating the table for the routine call coming from the formal version, then we use a suffix which causes a C compiler error.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test1.e $CLUSTER test1.e
+copy_raw	 test2.e $CLUSTER test2.e
+copy_raw	 test3.e $CLUSTER test3.e
+copy_raw	 test4.e $CLUSTER test4.e
+copy_raw	 test5.e $CLUSTER test5.e
+
+compile_final
+compile_result 	ok
+	
+c_compile_final
+c_compile_result ok
+
+test_end

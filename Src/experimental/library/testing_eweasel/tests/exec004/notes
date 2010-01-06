@@ -1,0 +1,5 @@
+The power operator (infix "^") does not seem to be implemented for
+either INTEGERs, REALs or DOUBLEs.
+
+Still not fixed in Prerelease 93.02.17.
+

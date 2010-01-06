@@ -1,0 +1,19 @@
+test_name wrong-dynamic-dispatch-on-generic
+test_description When optimizing dispatch we could do the optimization wrongly and have a static call when a dynamic one is necessary.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_final
+compile_result   ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

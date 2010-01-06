@@ -1,0 +1,8 @@
+A class has a routine with an assignment whose source entity is an an
+attribute of the class.  After initial compilation where the system is
+melted, the type of the source entity is changed to another type which
+is a parent of the original source entity type and the system is
+frozen.  System execution then ends with a segmentation fault.
+
+Discovered in Release 3.2.3b.
+

@@ -1,0 +1,5 @@
+After initial compilation, deleting the feature to which another
+feature is anchored and recompiling results in a compiler exception trace.
+
+Discovered in Prerelease 93.07.15.
+

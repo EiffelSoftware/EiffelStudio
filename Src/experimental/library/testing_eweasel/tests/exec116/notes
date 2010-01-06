@@ -1,0 +1,6 @@
+A class has an agent whose target is an expanded type, is non-Void and
+has no open operands.  The system compiles fine when frozen or
+finalized but dies with a "Feature call on Void target" exception when
+executed.
+
+Discovered in Release 5.0.016.

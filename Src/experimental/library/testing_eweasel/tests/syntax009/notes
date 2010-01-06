@@ -1,0 +1,5 @@
+A strip expression with no attributes in its parenthesized attribute
+list (strip ()) is reported as a syntax error.
+
+Still not fixed in Prerelease 93.02.17.
+

@@ -1,0 +1,10 @@
+A system which seems to be correct concatenates and prints the strings
+of a manifest array many times, but eventually dies with an exception
+trace.  The trace indicates that the array of string passed to the
+`concat' function contained a void reference, which appears to
+indicate a compiler or run-time system bug, since the actual argument
+is a manifest array with 3 elements which all look like they can not
+be void .
+
+Discovered in Prerelease 93.05.17.
+

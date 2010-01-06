@@ -1,0 +1,68 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vsrp2-one-bad-arg
+test_description Violate validity constraint VSRP2 with one argument which is not of type ARRAY [STRING]
+copy_sub 	 Ace $TEST Ace
+
+define		 ARG_TYPE STRING
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE INTEGER
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE BOOLEAN
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE POINTER
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE REAL
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE DOUBLE
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE TEST
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE "LINKED_LIST [STRING]"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE "ARRAY [DOUBLE]"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE "ARRAY [HASH_TABLE [STRING, STRING]]"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARG_TYPE "like anchor"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

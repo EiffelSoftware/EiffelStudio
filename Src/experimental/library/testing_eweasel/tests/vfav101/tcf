@@ -1,0 +1,203 @@
+test_name validity-vfav1-basic
+test_description Validity rules for operator alias.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw a.e    $CLUSTER a.e
+copy_raw aup.e   $CLUSTER aup.e
+copy_raw abp.e   $CLUSTER abp.e
+copy_raw b.e    $CLUSTER b.e
+
+-- Operator alias: it should be a query
+
+copy_raw coq01.e $CLUSTER c.e
+compile_melted
+compile_result validity_error C VFAV(1)
+
+copy_raw coq02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw coq03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw coq04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw coq05.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw coq06.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+-- Operator alias: it should be unary or binary
+
+copy_raw coa01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw coa02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+-- Unary operator: it should be a query
+
+copy_raw cuq01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cuq02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cuq03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cuq04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cuq05.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cuq06.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+-- Unary operator: it should have no arguments
+
+copy_raw cua01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cua02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cua03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cua04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+-- Unary operator: there should not be the same alias
+
+copy_raw cus01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cus02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cus03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cus04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cus05.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cus06.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cus07.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cus08.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+-- Binary operator: it should be a query
+
+copy_raw cbq01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbq02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbq03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbq04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbq05.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbq06.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+-- Binary operator: it should have one argument
+
+copy_raw cba01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cba02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cba03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cba04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+-- Binary operator: there should not be the same alias
+
+copy_raw cbs01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbs02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbs03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbs04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbs05.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbs06.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbs07.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+copy_raw cbs08.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(1)
+
+test_end

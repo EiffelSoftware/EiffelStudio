@@ -1,0 +1,14 @@
+test_name 	 generic-attached-attribute-init
+test_description Ensures a generic class with a creation constration self-initializes generic attached attributes.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	generic.e $CLUSTER generic.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

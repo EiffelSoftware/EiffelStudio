@@ -1,0 +1,6 @@
+Changing the number of formal generic parameters in an inherited class
+which is already generic results in an exception traceback.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.07.15.
+

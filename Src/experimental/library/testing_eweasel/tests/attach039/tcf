@@ -1,0 +1,16 @@
+test_name 	 void-safe-inherited-precursor
+test_description Precursor in a void-safe mode should cause a compiler crash if the feature is inherited.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+test_end

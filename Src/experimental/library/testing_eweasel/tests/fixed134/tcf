@@ -1,0 +1,12 @@
+test_name 	 crash-degree-minus-1
+test_description A call to a feature on a formal type which is constraint to NONE causes the compiler to crash.
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+compile_frozen
+compile_result	ok
+
+test_end

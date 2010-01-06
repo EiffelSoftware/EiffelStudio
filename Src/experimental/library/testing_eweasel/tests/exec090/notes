@@ -1,0 +1,5 @@
+The instructions `c := '1'; print (c.is_digit)' where `c' is of type
+CHARACTER print the wrong result.  If `io.putbool' is used instead of
+`print' the output is correct.
+
+Discovered in Release 3.2.4.

@@ -1,0 +1,5 @@
+A violation of VLEC involving an expanded client cycle where both
+classes in the cycle are generic causes the compiler to go into an
+infinite loop.
+
+Discovered in Release 3.2.

@@ -1,0 +1,32 @@
+test_name 	melted-creation-crash
+test_description If you have a manifest string or an agent creation in melted code for which it calls melted routine/attributes of STRING/ROUTINE the interpreter callstack is messed up because we do not save the IC pointer.
+
+define	VALUE	TEST
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define	VALUE	TEST2
+define_file	STRING_FILE $ISE_EIFFEL library base elks kernel string_8.e
+define_file	ROUTINE_FILE $ISE_EIFFEL library base elks kernel routine.e
+copy_sub	test.e $CLUSTER test.e
+copy_file $STRING_FILE $CLUSTER string_8.e
+copy_file $ROUTINE_FILE $CLUSTER routine.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

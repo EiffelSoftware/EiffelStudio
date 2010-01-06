@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vlcp-basic
+test_description Violate validity constraint VLCP with a class name in a Clients part which is not a class in the universe
+
+copy_sub 	 Ace $TEST Ace
+
+define		 CLIENTS "{WEASEL}"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+-- Modified to match compiler, since VLCP is probably going to be abandonned
+compile_result 	validity_warning TEST VTCM 
+
+-- copy_sub 	 weasel.e  $CLUSTER weasel.e
+-- resume_compile
+-- compile_result 	 ok
+
+test_end

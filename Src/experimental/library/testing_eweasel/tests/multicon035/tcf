@@ -1,0 +1,15 @@
+-- This is a test control file
+
+test_name multi-constraint-nested-calls
+test_description This test reveals a bug in the multiconstraint handling of nested calls.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	multi.e $CLUSTER multi.e
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output1
+compare exec_output1 output1
+
+test_end

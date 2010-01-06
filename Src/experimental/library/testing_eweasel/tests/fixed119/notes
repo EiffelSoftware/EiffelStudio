@@ -1,0 +1,8 @@
+Freezing a system and then removing a particular cluster from the Ace
+file and recompiling violates VTCT, which compiler correctly reports.
+Adding the cluster back in the Ace file and hitting return causes
+compiler to resume, but it later dies with an exception trace.
+
+Discovered in Prerelease 93.04.21.
+Fixed in Prerelease 93.07.15.
+

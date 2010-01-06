@@ -1,0 +1,26 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	melted-profinfo-wrong-dir
+test_description A system whose Ace specifies `profile (yes)' is melted.  When the system is executed with the EIFGEN/W_code directory as the current directory with the MELT_PATH environment variable not set, system execution attempts to create the "profinfo" file in the wrong place (not in the EIFGEN/W_code directory).
+
+define_file	PROFINFO_NAME $EXEC_WORK profinfo
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1 0
+execute_result 	ok
+compare		exec_output1 output
+
+execute_work 	NONE 	exec_output2 1
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

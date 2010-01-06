@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name	detect-override
+test_description Test if an added class in an override cluster is picked up during a quick compile.
+
+define_directory OVERRIDE_CLUSTER $TEST override
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $OVERRIDE_CLUSTER b.e
+
+compile_quick_melted
+compile_result ok
+
+copy_raw	a_over.e $OVERRIDE_CLUSTER a_over.e
+compile_quick_melted
+compile_result validity_error A VEEN 
+
+test_end

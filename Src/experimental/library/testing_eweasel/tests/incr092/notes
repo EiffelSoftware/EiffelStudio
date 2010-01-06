@@ -1,0 +1,8 @@
+After initial compilation a constant attribute in an ancestor class is
+changed from a unique constant to a constant integer, thereby
+introducing a VOMB(5) error.  When the compiler detects the error, the
+constant integer is changed to an integer function with no arguments.
+The compiler still reports a VOMB(5) error when there is actually a
+VOMB(2) error.
+
+Discovered in Release 3.2.1.

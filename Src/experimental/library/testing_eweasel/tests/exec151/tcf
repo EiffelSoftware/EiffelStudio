@@ -1,0 +1,34 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 huge-memory-leak
+test_description After initial compilation where the system is frozen, a class with routines which raise and rescue a developer exception is modified to add another routine into the call chain.  Also, the routine that raises the developer exception is modified by adding a `print (Void)' instruction.  After melting changes, system execution uses an enormous amount of memory (nearly 2 GB) before execution ends with a segmentation fault.
+
+copy_sub 	 Ace $TEST Ace
+define		 INSTRUCTION ""
+define		 NEW_ROUTINE ""
+define		 CALLED_ROUTINE "try"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+define		 INSTRUCTION "print (Void)"
+define		 NEW_ROUTINE "try2 (max: INTEGER) is do try (max) end"
+define		 CALLED_ROUTINE "try2"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1 20 1
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

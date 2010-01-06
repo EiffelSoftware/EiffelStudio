@@ -1,0 +1,26 @@
+
+test_name	generic-attach-mark-change-bogus-vevi
+test_description Changing an attachment mark on a formal generic parameter to "?" causes the compiler to incorrectly continue to report a VEVI error instead of the expected VJAR error
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+copy_raw test1_rev1.e $CLUSTER test1.e
+
+compile_melted
+compile_result validity_error TEST2 VEVI
+
+copy_raw test1_rev2.e $CLUSTER test1.e
+resume_compile
+compile_result validity_error TEST1 VEVI
+
+copy_raw test1_rev3.e $CLUSTER test1.e
+resume_compile
+compile_result validity_error TEST2 VJAR
+
+test_end

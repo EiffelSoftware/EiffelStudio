@@ -1,0 +1,6 @@
+Floor and ceiling called on a REAL do not work correctly when
+code is frozen.
+
+Reported by Manu on January 14, 2003.
+
+

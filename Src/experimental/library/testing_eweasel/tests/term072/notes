@@ -1,0 +1,5 @@
+Finalizing a system with a class which has a call to a deferred
+routine with no descendants causes the compiler to die during degree
+-5 on the class, but only if the Ace specifies `inlining (yes).
+
+Discovered in Release 3.3.3.

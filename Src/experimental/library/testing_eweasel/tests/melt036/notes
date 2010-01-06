@@ -1,0 +1,6 @@
+A routine has a manifest array, each of whose elements is a function
+call.  The elements of the array are evaluated in reverse order of
+their appearance when the code is melted, but in order of appearance
+when frozen.
+
+Discovered in Release 3.2.4.

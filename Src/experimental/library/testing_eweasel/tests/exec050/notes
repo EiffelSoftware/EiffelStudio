@@ -1,0 +1,8 @@
+A class inherits three deferred features and joins and effects them.
+The flatshort form of the heir class looks as expected, with all
+alternative preconditions present in the expected order.  But when the
+system is executed, only one of the preconditions of the deferred
+features is executed.  In this case, postconditions seem to work correctly.
+
+Discovered in Release 3.2.3b.
+

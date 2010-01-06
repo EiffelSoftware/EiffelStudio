@@ -1,0 +1,7 @@
+A system has an attribute of an expanded type, where the base class of
+this type also has an expanded attribute.  The system compiles fine
+when finalized, but when the system is executed the creation
+procedures are called in the wrong order.  If the system is instead
+melted or frozen, system execution works as expected.
+
+Discovered in Release 3.2.4.

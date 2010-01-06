@@ -1,0 +1,10 @@
+test_name 	 attached_tuple_element
+test_description The compiler should accept attached types in tuples.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

@@ -1,0 +1,4 @@
+expanded class
+	A
+
+end

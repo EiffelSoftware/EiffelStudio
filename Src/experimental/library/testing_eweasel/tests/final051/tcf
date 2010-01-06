@@ -1,0 +1,19 @@
+test_name	wrong-polymorphic-wrapper
+test_description We generate wrapper for routines using anchors where we should not since they do not use a formal generic parameter, this causes the program to fail at runtime when expected type is larger than a reference (case of REAL_64 on 32-bit platform).
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test1.e $CLUSTER test1.e
+copy_raw	 test2.e $CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+	
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	compare-frozen-high-bit-chars
+test_description A system sets a variable to the character constants `%/128/' and `%/255/' and then checks to see if the variable is equal to the value just assigned to it.  The system compiles fine when frozen, but thinks the variable is not equal to the character just assigned to it for characters `%/128/' and above.  Melted code works correctly.
+
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

@@ -1,0 +1,19 @@
+test_name 	 undetected-vycq-error
+test_description A system compiled in void safe mode fails to detect a VYCQ validity error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST2 VYCQ(3)
+
+abort_compile
+
+cleanup_compile
+copy_sub 	Ace_rev1 $TEST Ace
+
+compile_melted
+compile_result 	validity_error TEST2 VYCQ(3)
+
+test_end

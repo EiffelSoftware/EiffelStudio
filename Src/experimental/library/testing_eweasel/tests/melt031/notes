@@ -1,0 +1,8 @@
+A routine has a postcondition which references an "old" expression.
+The body of the routine raises an exception which is retried by the
+rescue clause.  When postconditions are monitored and the system is
+melted, the "old" expression is incorrectly evaluated again when the
+retry instruction is executed.  Frozen code does not re-evaluate the
+"old" expression when it does a retry.
+
+Discovered in Release 3.2.4.

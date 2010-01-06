@@ -1,0 +1,22 @@
+test_name 	 unresolved-c-externals-2
+test_description When a class removes one of its externals it causes a C compilation error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result	ok
+
+copy_raw 	test1_rev1.e $CLUSTER test1.e
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+test_end

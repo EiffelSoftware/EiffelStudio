@@ -1,0 +1,29 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 operator-feat-export-to-self
+test_description Class A has an operator feature exported only to itself and its descendants.  When class B (which is not a descendant of class A) tries to call this feature, the compiler should report a VUEX(2) error.
+
+copy_sub 	 Ace $TEST Ace
+define		 EXPRESSION "x + n"
+copy_sub 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VUEX(2)
+
+define		 EXPRESSION "+ x"
+copy_sub 	 test.e $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VUEX(2)
+
+define		 EXPRESSION "x.weasel"
+copy_sub 	 test.e $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VUEX(2)
+
+test_end

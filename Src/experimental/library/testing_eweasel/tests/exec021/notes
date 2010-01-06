@@ -1,0 +1,5 @@
+A call to deep_clone on a deep object structure (>= 43664 on my
+machine) causes system execution to end with "illegal instruction".
+
+Discovered in Prerelease 93.05.17.
+

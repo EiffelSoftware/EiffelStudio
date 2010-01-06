@@ -1,0 +1,8 @@
+Executing a system with a class invariant violation works correctly
+when melted and invariants are monitored.  However, the top of the
+exception trace shows Invalid_object as the object when code is
+melted.  Frozen code works correctly.
+
+Discovered in release 5.4.0515.
+
+

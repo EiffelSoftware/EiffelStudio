@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name non-conforming-parent-can-be-frozen
+test_description Test that non-conforming parent can be frozen.
+
+copy_sub Ace $TEST Ace
+
+copy_raw application.e $CLUSTER application.e
+copy_raw p1.e $CLUSTER p1.e
+
+compile_melted
+compile_result 	ok
+c_compile_work
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+test_end

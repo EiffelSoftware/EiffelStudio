@@ -1,0 +1,7 @@
+A redefinition of a routine with no postcondition uses just "ensure"
+for its postcondition, rather than "ensure then".  The compiler
+accepts it instead of reporting a VDRD(3) error.
+
+Reported by Manu on 16 Jan 2003.
+
+

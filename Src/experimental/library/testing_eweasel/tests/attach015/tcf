@@ -1,0 +1,13 @@
+test_name 	 scope-after-combined-expression
+test_description If an expression that starts void-safe scope of an entity is combined by a conjunctive or disjunctive expression, the scope should still can be applied.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

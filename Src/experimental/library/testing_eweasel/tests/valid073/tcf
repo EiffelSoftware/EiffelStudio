@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 undefine-external-make-internal
+test_description Constraint VDRD(7) prohibits redefining an external routine as an internal one or conversely.  But a class which circumvents this prohibition by first undefining the external routine is accepted by the compiler.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+compile_frozen
+compile_result 	 ok
+
+test_end

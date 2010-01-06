@@ -1,0 +1,37 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 add-unused-formal-generic
+test_description After initial compilation, an extra unused formal generic parameter is added to a generic class and an extra actual generic parameter is added to the only generic derivation of this class.  After recompilation, system execution output should be unchanged, but execution instead terminates with a segmentation fault.  The initial compilation and recompilation can be (melt, melt) or (freeze, freeze).
+
+copy_sub 	 Ace $TEST Ace
+define		 ACTUAL_GENERICS "[G]"
+define		 GENERIC_HEADER "class TEST2 [G]"
+copy_raw 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+copy_sub 	 test2.e  $CLUSTER test2.e
+copy_raw 	 test3.e  $CLUSTER test3.e
+compile_melted
+compile_result 	 ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		 ACTUAL_GENERICS "[G, G]"
+define		 GENERIC_HEADER "class TEST2 [G, H]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+copy_sub 	 test2.e  $CLUSTER test2.e
+compile_melted
+compile_result 	 ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

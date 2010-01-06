@@ -1,0 +1,5 @@
+A class that prints $x where `x' is an attribute whose type is
+expanded causes the compiler to die in degree -1.
+
+Discovered in Release 5.5.1012.
+

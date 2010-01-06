@@ -1,0 +1,7 @@
+A class assigns a manifest array with elements which are integer
+constants to a local of type ARRAY [DOUBLE] and prints one of these
+elements.  Executing the system yields the wrong results when the
+class is melted, but not when it is frozen.
+
+Discovered in Release 3.2 beta.
+

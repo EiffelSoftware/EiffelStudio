@@ -1,0 +1,6 @@
+A generic class with a single formal generic parameter which is
+constrained by the invalid Class_type ARRAY (actual generic parameter
+missing) is accepted by the compiler.
+
+Discovered in Prerelease 93.04.21.
+

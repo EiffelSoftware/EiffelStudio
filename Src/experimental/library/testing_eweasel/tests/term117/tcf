@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	inline-numeric-plus-numeric
+test_description A generic class whose formal generic parameter is constrained by NUMERIC has a function `value: G is do Result := x + x end' where `x' is of type G.  Another class has a call to this function.  If the system is finalized with inlining, the compiler dies during degree -3 on the class.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

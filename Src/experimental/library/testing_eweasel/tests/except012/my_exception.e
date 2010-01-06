@@ -1,0 +1,7 @@
+class
+	MY_EXCEPTION
+
+inherit
+	DEVELOPER_EXCEPTION
+
+end

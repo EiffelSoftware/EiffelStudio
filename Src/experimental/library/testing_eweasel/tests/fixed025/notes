@@ -1,0 +1,6 @@
+An invalid generic derivation for an actual generic parameter is not
+noticed by the compiler until after all pass 5's have completed, when
+it causes an exception trace.
+
+Fixed in Prerelease 93.02.17.
+

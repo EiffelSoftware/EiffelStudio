@@ -1,0 +1,17 @@
+test_name	missing-marking-with-no-gc
+test_description If GC is disabled for a long period of time, then it is possible that resizing a SPECIAL object would not mark it as beeing remembered if some of its items are still in the scavenge zone.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

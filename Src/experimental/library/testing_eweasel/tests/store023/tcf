@@ -1,0 +1,14 @@
+test_name	store-volatile-attributes
+test_description Test that storing/retrieving volatile attributes work properly.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

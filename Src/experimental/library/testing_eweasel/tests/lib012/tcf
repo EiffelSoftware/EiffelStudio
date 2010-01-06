@@ -1,0 +1,16 @@
+-- This is a test control file
+
+test_name 	ptf-file-read-character
+test_description Test `read_character' on ptf file
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+copy_bin	file.txt $EXEC_WORK file.txt
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

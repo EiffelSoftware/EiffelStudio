@@ -1,0 +1,32 @@
+test_name 	c-header-mismatch-3
+test_description Finalizing a system that has a generic class used directly or via its descendant which does not have a formal generic parameter causes the C generated code to be incorrect.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	a2.e $CLUSTER a2.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+copy_raw 	test_rev1.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+copy_raw 	test_rev2.e $CLUSTER test.e
+copy_raw 	a_rev2.e $CLUSTER a.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

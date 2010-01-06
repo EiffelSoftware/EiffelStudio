@@ -1,0 +1,6 @@
+A class has a procedure with a local entity of type BIT N, where N is
+>= 2 ^ 24.  The system compiles fine, but when executed it dies with a
+run-time panic if it was melted.  Frozen code works fine for BIT sizes
+up to at least 200_000_000.
+
+Discovered in Release 3.2.4.

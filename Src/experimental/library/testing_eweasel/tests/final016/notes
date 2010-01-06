@@ -1,0 +1,6 @@
+A system creates an array of strings and puts one string in it.  It
+then constructs a copy of the first array and prints it.  System
+execution ends with a segmentation fault, but only if the system is
+finalized and array_optimization is on.
+
+Discovered in Release 4.2F.

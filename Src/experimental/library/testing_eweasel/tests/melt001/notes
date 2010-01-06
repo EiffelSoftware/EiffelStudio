@@ -1,0 +1,7 @@
+The division `40 / 5' executes correctly after compiling and freezing.
+When the enclosing feature is modified and the compiler is rerun
+(presumably causing melting), execution of the system fails with a
+run-time PANIC.
+
+Still not fixed in Prerelease 93.02.17.
+

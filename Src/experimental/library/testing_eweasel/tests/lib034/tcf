@@ -1,0 +1,15 @@
+test_name 	file-flush
+test_description On Windows (possibly other OSes) calling `flush' after writing something to a file will actually not flush the content to disk immediately, causing a failure if you are trying to read the recently added data.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE exec_output
+execute_result 	ok
+
+compare 	exec_output output
+
+test_end

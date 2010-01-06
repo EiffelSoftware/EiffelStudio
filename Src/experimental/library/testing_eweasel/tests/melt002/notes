@@ -1,0 +1,5 @@
+Operations on BIT types work correctly after the system is frozen.
+These same operations cause a run-time panic after melting.
+
+Discovered in Prerelease 93.04.21.
+

@@ -1,0 +1,6 @@
+An external feature with an alias which is the empty string ("")
+causes a compiler exception trace during pass2 on the class containing
+the feature declaration.
+
+Discovered in Prerelease 93.05.17.
+

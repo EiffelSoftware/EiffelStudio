@@ -1,0 +1,5 @@
+A system whose Ace file specifies `dynamic_runtime (yes)' generates a
+Makefile with a wrong library name, so C code won't link for frozen or
+finalized case.  The ".so" suffix is missing on Solaris platform.
+
+Discovered in Release 5.0.016.

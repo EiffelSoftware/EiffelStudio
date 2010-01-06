@@ -1,0 +1,6 @@
+A system which calls a once function whose result type is an expanded
+type should execute correctly, but dies with an exception trace or
+with illegal instruction if it is partially melted.
+
+Discovered in Release 3.2.
+

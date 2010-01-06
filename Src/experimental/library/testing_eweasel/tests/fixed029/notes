@@ -1,0 +1,10 @@
+A class TEST has an enity of type TEST1 (non-BOOLEAN) as the
+Boolean_expression in a conditional instruction.  The compiler
+correctly detects the VWBE violation and reports it.  But removing an
+inheritance clause from TEST1 and hitting return to retry the
+compilation causes the compiler to skip some passes on both TEST and
+TEST1.  This omission proves disastrous when the compiler later tries
+to freeze the system.
+
+Fixed in Prerelease 93.02.17.
+

@@ -1,0 +1,5 @@
+System execution does not check the class invariant before and after a
+qualified call to a routine, but only if the system is finalized and
+assertions are kept.
+
+Added for release 5.4.0515.

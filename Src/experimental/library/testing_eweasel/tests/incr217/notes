@@ -1,0 +1,6 @@
+A system has an external function of type INTEGER_8 which is inline C.
+After initial compilation where the system is frozen, the function
+return type is changed to INTEGER and changes are melted.  System
+execution then produces the wrong output.
+
+Discovered in release 5.4.0610.

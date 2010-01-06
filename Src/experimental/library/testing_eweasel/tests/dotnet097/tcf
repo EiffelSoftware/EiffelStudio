@@ -1,0 +1,14 @@
+test_name ca-basic-custom-attribute
+test_description Ensure Eiffel custom attributes can be authored
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+
+test_end

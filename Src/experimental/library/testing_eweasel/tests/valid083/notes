@@ -1,0 +1,9 @@
+Class A has an operator feature exported only to itself and its
+descendants.  When class B (which is not a descendant of class A)
+tries to call this feature, the compiler should report a VUEX(2)
+error.  Instead, it accepts the invalid classes.  If the feature is an
+identifier feature, the compiler correctly reports VUEX(2).
+
+Discovered in Release 3.2.3b.
+
+

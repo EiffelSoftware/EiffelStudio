@@ -1,0 +1,46 @@
+test_name catcall-at-runtime-detection
+test_description Showing limitation of catcall detection at runtime when you have a routine involving `like Current' we still need to check for catcalls if there is an attribute assignment.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output1
+
+copy_raw test1_rev1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output3
+execute_result 	ok
+compare		exec_output3 output2
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output4
+execute_result 	ok
+compare		exec_output4 output2
+
+
+test_end

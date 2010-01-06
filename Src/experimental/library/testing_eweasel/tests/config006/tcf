@@ -1,0 +1,190 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name	config-debugs
+test_description Test the various debug levels.
+
+-- debugs disabled
+define DEBUG "false"
+define DBG_UN "true"
+define DBG_FOO "true"
+define DBG_BAR "true"
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_quick_melted
+compile_result ok 
+
+execute_work NONE exec_output1_m
+execute_result ok
+compare exec_output1_m output1
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output1_f
+execute_result ok
+compare exec_output1_f output1
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output1_fin
+execute_result ok
+compare exec_output1_fin output1
+
+-- all debugs disabled 
+cleanup_compile
+
+define DEBUG "true"
+define DBG_UN "false"
+define DBG_FOO "false"
+define DBG_BAR "false"
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_quick_melted
+compile_result ok 
+
+execute_work NONE exec_output2_m
+execute_result ok
+compare exec_output2_m output2
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output2_f
+execute_result ok
+compare exec_output2_f output2
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output2_fin
+execute_result ok
+compare exec_output2_fin output2
+
+-- only unnamed
+cleanup_compile
+
+define DEBUG "true"
+define DBG_UN "true"
+define DBG_FOO "false"
+define DBG_BAR "false"
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_quick_melted
+compile_result ok 
+
+execute_work NONE exec_output3_m
+execute_result ok
+compare exec_output3_m output3
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output3_f
+execute_result ok
+compare exec_output3_f output3
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output3_fin
+execute_result ok
+compare exec_output3_fin output3
+
+-- only named
+cleanup_compile
+
+define DEBUG "true"
+define DBG_UN "false"
+define DBG_FOO "true"
+define DBG_BAR "false"
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_quick_melted
+compile_result ok 
+
+execute_work NONE exec_output4_m
+execute_result ok
+compare exec_output4_m output4
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output4_f
+execute_result ok
+compare exec_output4_f output4
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output4_fin
+execute_result ok
+compare exec_output4_fin output4
+
+-- both 
+cleanup_compile
+
+define DEBUG "true"
+define DBG_UN "true"
+define DBG_FOO "true"
+define DBG_BAR "false"
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_quick_melted
+compile_result ok 
+
+execute_work NONE exec_output5_m
+execute_result ok
+compare exec_output5_m output5
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output5_f
+execute_result ok
+compare exec_output5_f output5
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output5_fin
+execute_result ok
+compare exec_output5_fin output5
+
+test_end

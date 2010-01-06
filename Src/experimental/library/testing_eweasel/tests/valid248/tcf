@@ -1,0 +1,17 @@
+test_name 	 infix-prefix-alias-compatibility
+test_description A system use various combination of infix and prefix routines along with the new alias one. The compiler should compile it without any problem.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+copy_raw	test4.e $CLUSTER test4.e
+copy_raw	test5.e $CLUSTER test5.e
+copy_raw	test6.e $CLUSTER test6.e
+copy_raw	test8.e $CLUSTER test8.e
+
+compile_melted
+compile_result 	ok
+
+test_end

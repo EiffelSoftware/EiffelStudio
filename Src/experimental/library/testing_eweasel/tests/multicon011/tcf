@@ -1,0 +1,20 @@
+test_name multi-constraint-formal-creation-constraint
+test_description Checks convertibility to a generic which contains multi constraint generics.
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+
+
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output_melted
+execute_result	ok
+compare		exec_output_melted output
+
+test_end
+

@@ -1,0 +1,11 @@
+CHARACTER_8 tests
+e
+e
+e
+e
+True
+CHARACTER_32 tests
+U+12345678
+U+00000100
+U+000001FF
+Execution completed

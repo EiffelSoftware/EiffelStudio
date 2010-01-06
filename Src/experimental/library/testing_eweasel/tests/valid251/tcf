@@ -1,0 +1,11 @@
+
+test_name 	 bogus-veen-on-object-test-local
+test_description An object test on an expression which is a qualified call that has a validity error causes the compiler to report a bogus VEEN error on references to the object test local
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error TEST VUAR(2) VUAR(2) VWOE VUAR(2) VWOE
+
+test_end

@@ -1,0 +1,5 @@
+A once function which calls itself before setting Result reveals that
+Result is not properly initialized, but only if system is melted.
+Frozen and finalized code work as expected.
+
+Discovered in Release 5.0.005.

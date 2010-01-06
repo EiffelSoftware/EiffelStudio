@@ -1,0 +1,15 @@
+test_name 	runtime-stack-corruption
+test_description When you have a lot of locals on the operation stack of the interpreter that are passed to a funtion with the $ operator and that you need to access some items between two chunks it might corrupt the stack. One has to set EIF_STACK_CHUNK to a low value to easily reproduce the bug.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+setenv		 EIF_STACK_CHUNK 100
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

@@ -1,0 +1,110 @@
+test_name	 svalid-conversion-detachable
+test_description Compiler should reject conversion of detachable types
+
+-- First we test the conversion to.
+define	TARGET_MARK ""
+define	SOURCE_MARK ""
+define	CREATE_SOURCE ""
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+
+compile_melted
+compile_result	validity_error TEST VEVI
+
+define CREATE_SOURCE "create source_b"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+
+define	TARGET_MARK "detachable"
+define	SOURCE_MARK ""
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define	TARGET_MARK ""
+define	SOURCE_MARK "detachable"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define	CREATE_SOURCE ""
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error TEST VJAR
+
+exit_compile
+
+-- Second we test the conversion from.
+define	TARGET_MARK ""
+define	SOURCE_MARK ""
+define	CREATE_SOURCE ""
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	a_rev1.e $CLUSTER a.e
+copy_raw 	b_rev1.e $CLUSTER b.e
+
+compile_melted
+compile_result	validity_error TEST VEVI
+
+define CREATE_SOURCE "create source_b"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+
+define	TARGET_MARK "detachable"
+define	SOURCE_MARK ""
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define	TARGET_MARK ""
+define	SOURCE_MARK "detachable"
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define	CREATE_SOURCE ""
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error TEST VJAR
+
+exit_compile
+
+-- Third we check conversion to a formal generic parameter
+define	TARGET_MARK ""
+define	SOURCE_MARK ""
+copy_sub 	test_rev1.e $CLUSTER test.e
+copy_raw 	c.e $CLUSTER c.e
+copy_raw 	d.e $CLUSTER d.e
+
+compile_melted
+compile_result	ok
+
+define	TARGET_MARK ""
+define	SOURCE_MARK "detachable"
+copy_sub 	test_rev1.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define	TARGET_MARK "detachable"
+define	SOURCE_MARK "detachable"
+copy_sub 	test_rev1.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define	TARGET_MARK "detachable"
+define	SOURCE_MARK ""
+copy_sub 	test_rev1.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

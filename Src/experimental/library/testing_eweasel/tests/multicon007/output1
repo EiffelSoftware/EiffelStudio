@@ -1,0 +1,29 @@
+make of B
+make of A
+make of C
+9
+make of B
+f of A
+42
+f of B
+73
+f of C
+g of A
+g of B
+ABC
+g of C
+1.337
+make of A
+make of B
+make of C
+9
+f of A
+42
+f of B
+73
+f of C
+g of A
+g of B
+g of C
+1.337
+Execution completed

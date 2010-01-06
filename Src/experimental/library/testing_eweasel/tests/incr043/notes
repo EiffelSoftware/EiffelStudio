@@ -1,0 +1,9 @@
+Attributes declared as unique and introduced in the same class are
+supposed to all have different values according to page 266.  But
+unique attributes added to an existing unique declaration can
+sometimes get the same value as an existing unique attribute when
+melting is involved.
+
+Still not fixed in Prerelease 93.02.17.
+Actually, it now causes a PANIC and core dump.
+

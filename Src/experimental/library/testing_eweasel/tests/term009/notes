@@ -1,0 +1,7 @@
+A system which appears to violate the Call rule on page 367 causes an
+exception trace in pass 4 of the compiler (before freezing).  The
+example involves a class which inherits from a constrained generic
+class and provides NONE as actual generic parameter.
+
+Still not fixed in Prerelease 93.02.17.
+

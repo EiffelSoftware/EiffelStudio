@@ -1,0 +1,12 @@
+test_name multi-constraint-rename-formal
+test_description Checks that an error is reported when one applies a renaming to a constraint which is a formal.
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	multi.e $CLUSTER multi.e
+
+
+compile_melted
+compile_result validity_error MULTI VTMC(3)
+
+test_end
+

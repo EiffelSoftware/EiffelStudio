@@ -1,0 +1,17 @@
+test_name 	change-base-library-to-base-safe
+test_description After initial compilation where the "base" library is used, the compiler correctly reports some VEVI errors.  When the problem is corrected by changing the configuration file to use the "base-safe" library, resuming compilation causes the compiler to crashes in degree 6.
+
+define	 	LIB_NAME "base"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VUTA(2) VUTA(2) VEVI;
+
+define	 	LIB_NAME "base-safe"
+copy_sub 	Ace $TEST Ace
+
+resume_compile
+compile_result 	ok
+
+test_end

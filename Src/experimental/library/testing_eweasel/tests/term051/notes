@@ -1,0 +1,5 @@
+A system with a generic class with a formal generic parameter
+constrained by `ARRAY [TEST]' causes the compiler to die while
+freezing the system, but only if class TEST is expanded.
+
+Discovered in Release 3.2.3b.

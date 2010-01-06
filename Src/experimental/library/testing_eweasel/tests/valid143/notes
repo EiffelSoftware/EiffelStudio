@@ -1,0 +1,6 @@
+An external "C++" routine which is a delete for a C++ class is
+required to have a single argument of type POINTER.  An argument which
+is anchored to an attribute of type POINTER is rejected as an EXT_CPP
+error, but should be accepted.
+
+Discovered in release 5.4.0515.

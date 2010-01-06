@@ -1,0 +1,16 @@
+test_name 	 override-bogus-export-error
+test_description While compiling CLASS2 and CLASS3 which belongs to an override cluster, a bogus export validity error is generated.
+
+define_directory OVERRIDE $CLUSTER dev
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	class2.e	$CLUSTER class2.e
+copy_raw	class3.e	$CLUSTER class3.e
+copy_raw	class2_override.e	$OVERRIDE class2.e
+copy_raw	class3_override.e	$OVERRIDE class3.e
+
+compile_melted
+compile_result validity_warning TEST Unused_local_warning
+
+test_end

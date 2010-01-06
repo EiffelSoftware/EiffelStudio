@@ -1,0 +1,14 @@
+test_name	agent-on-with-attached-operands
+test_description When an agent with an open operand which is attached, then the `valid_operands' call fail because we check the type of the actual argument against the attached version which is wrong since we are talking about object's type.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE 	exec_output
+execute_result	ok
+compare	exec_output output
+
+test_end

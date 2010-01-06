@@ -1,0 +1,7 @@
+An exported routine has a precondition `a.b'.  Feature `b' is not
+available to all classes so the compiler should report a VAPE error
+but it does not.
+
+Discovered in Release 3.2.3b.
+
+

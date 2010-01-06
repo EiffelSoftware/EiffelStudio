@@ -1,0 +1,12 @@
+test_name	nested-generics-creation-readiness	
+test_description Nested generics caused to compiler to report an error because of non-creation readiness. This should not be the case unless we inherit, create from the type or the type is expaned.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	gen_class_1.e	$CLUSTER gen_class_1.e
+copy_raw	gen_class_2.e	$CLUSTER gen_class_2.e
+
+compile_melted
+compile_result ok
+
+test_end

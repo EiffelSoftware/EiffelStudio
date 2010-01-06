@@ -1,0 +1,6 @@
+Compiling a system with a debug instruction with debug key that
+contains an interior null character ("weas%Uel") works fine, but when
+the system is executed with an Ace file that specifies `debug
+("weas%Uxx")' the debug instructions inside the block with the tag are
+executed, but should not be.
+

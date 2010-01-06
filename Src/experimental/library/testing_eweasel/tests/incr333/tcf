@@ -1,0 +1,17 @@
+
+test_name	ececil-undefined-symbol-2
+test_description A routine that is referenced via $routine in the class invariant is changed to a constant and the invariant is removed.  Finalizing the system and keeping assertions then generates C code that won't link due to an undefined symbol in ececil.c
+
+copy_sub Ace $TEST Ace
+copy_raw test_rev1.e $CLUSTER test.e
+compile_melted
+compile_result ok
+
+copy_raw test_rev2.e $CLUSTER test.e
+compile_final_keep
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

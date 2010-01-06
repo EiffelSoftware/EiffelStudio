@@ -1,0 +1,6 @@
+When a second precompiled cluster is added to the Ace after
+compilation and the system is recompiled, the VD38 violation is not
+detected.
+
+Discovered in Release 3.2.
+

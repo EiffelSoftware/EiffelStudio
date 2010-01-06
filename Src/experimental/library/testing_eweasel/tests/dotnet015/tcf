@@ -1,0 +1,14 @@
+test_name none-usage-in-internal-type-comparison
+test_description When creating a tuple with `Void' as elements, it would crash in INTERNAL. Also added test to ensure that TYPE[G] instances are properly compared.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

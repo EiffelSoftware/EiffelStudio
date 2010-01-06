@@ -1,0 +1,8 @@
+A class has attributes of a generic type using INTEGER_8 as actual
+generic parameter.  The generic class has a routine that prints the
+generating type of its single generic attribute.  When code is frozen or
+finalized, the generating type displayed is INTEGER instead of
+INTEGER_8.  Melted code works correctly.
+
+Discovered in Release 5.0.016.
+

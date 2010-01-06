@@ -1,0 +1,39 @@
+test_name	vtcg-expanded
+test_description A generic type TEST1 which has one formal with a creation constraint that is not empty is used with TEST1 [NONE], TEST1 [NUMERIC], TEST1 [ANY]. Each of the types is made expanded. VTCG should be reported except for TEST1 [ANY].
+
+define EXPANDED_1 "expanded"
+define EXPANDED_2 ""
+define EXPANDED_3 "" 
+
+copy_sub	Ace	$TEST Ace
+copy_sub	test.e	$CLUSTER test.e
+copy_raw	test1.e	$CLUSTER test1.e
+
+compile_melted
+compile_result validity_error TEST VTCG
+
+define EXPANDED_1 ""
+define EXPANDED_2 "expanded"
+define EXPANDED_3 ""
+
+copy_sub	test.e	$CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VTCG
+
+define EXPANDED_1 ""
+define EXPANDED_2 ""
+define EXPANDED_3 "expanded"
+
+copy_sub	test.e	$CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VTCG
+
+define EXPANDED_1 ""
+define EXPANDED_2 ""
+define EXPANDED_3 ""
+
+copy_sub	test.e	$CLUSTER test.e
+resume_compile
+compile_result ok
+
+test_end

@@ -1,0 +1,9 @@
+A routine with no precondition (i.e., an implicit precondition of
+`true') is redefined in a descendant with alternative precondition
+`false'.  The full precondition of the redefined routine is therefore
+`true or else false'.  But when the system is compiled with `assertion
+(require)' and executed, the redefined routine's precondition is
+violated.
+
+Discovered in Prerelease 93.07.15.
+

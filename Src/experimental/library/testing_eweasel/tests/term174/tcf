@@ -1,0 +1,12 @@
+
+test_name 	create-generic-constrained-by-none
+test_description A generic class whose formal generic parameter G is constrained by NONE does `create Result' in a function of type G.  This causes the compiler to crash in {AST_FEATURE_CHECKER_GENERATOR}.process_abstract_creation due to a call on Void target.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST2 V???
+
+test_end

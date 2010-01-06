@@ -1,0 +1,6 @@
+After initial compilation, the inheritance clause in a class used in a
+formal generic constraint is changed, introducing a VTCG error.  When
+the system is recompiled, the compiler does not detect the error.
+
+Discovered in Release 3.3.7.
+

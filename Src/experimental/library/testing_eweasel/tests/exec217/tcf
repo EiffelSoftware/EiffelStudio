@@ -1,0 +1,13 @@
+test_name 	 inherited-expanded-generic
+test_description Test for an execution problem if we inherit from a non expanded type and set the type to a generic and then use an expanded type for the generic.
+
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	test.e $CLUSTER test.e
+
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error B VDRD(6)
+
+test_end

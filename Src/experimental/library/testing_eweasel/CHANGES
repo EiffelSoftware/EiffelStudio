@@ -1,0 +1,206 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General Public
+--| License version 2.
+
+Bugs and deficiencies which have been fixed in EiffelWeasel release 1.0
+=======================================================================
+
+1. EiffelWeasel has been modified to compile with the 5.0 version
+   of the compiler.  The compile_result instruction now allows
+   validity_warning as one of the possibilities.  Syntax is the
+   same as for validity_error, but EiffelWeasel expects compilation
+   to finish if result is validity_warning in the test control file.
+   This was added to support Unused_local_warning.  All existing
+   tests with unused locals have had their test control files
+   modified to use validity_warning.
+
+2. EiffelWeasel should compile on Linux without any changes to the
+   C code.  I assume your compiler on Linux defines the preprocessor
+   symbol __linux.  If not, contact me and I'll fix it.
+
+
+Bugs and deficiencies which have been fixed in EiffelWeasel release 0.9
+=======================================================================
+
+1. EiffelWeasel has been modified to compile with the 4.2 version
+   of the compiler.  The OS interface has been reworked and should be
+   in better condition than before.
+
+2. EiffelWeasel now works on both SunOS and Solaris.  The C file unix_os.c,
+   which has code for externals used by the operating system interface
+   (class UNIX_OS), must be compiled with the symbol __SVR4 defined if
+   you are compiling EiffelWeasel for Solaris.  If you use the
+   SPARCWorks C compiler `acc' this happens automatically.  If you use
+   `gcc' you will probably need to include a "-D__SVR4" flag on the
+   command line to compile unix_os.c.
+
+3. There are now several different init files in the control directory.
+   Each one corresponds to a specific platform and compiler version.
+   They are:
+   	
+	init_sunos_4.1
+	init_solaris_4.1
+	init_solaris_4.2
+   
+   You shouldn't have to change them, but you will need to change the
+   following files to reflect the correct value for the EIFFEL4 variable:
+   	
+	solaris_rel4.1
+	solaris_rel4.2
+	sunos_rel4.1
+	sunos_rel4.2
+
+
+   
+Bugs and deficiencies which have been fixed in EiffelWeasel release 0.8
+=======================================================================
+
+1. EiffelWeasel has been modified to compile with the 3.3.7 version
+   of the compiler.
+   
+2. Previously, there were too many cases where a compile_result
+   of "unknown" was displayed.  These cases occurred because EiffelWeasel 
+   did not know about compiler exceptions.  It now knows when
+   the compiler terminated due to an exception and it reports
+   the exception tag, such as "segmentation fault".
+   
+3. All tests in the test catalog now have either "pass" or "fail"
+   as their first keyword.  This makes it easy to do regression testing
+   by including `-f "kw pass"' on the command line and to see what has
+   been fixed in a new release by including `-f "kw fail"'.
+
+
+Bugs and deficiencies which have been fixed in EiffelWeasel release 0.7
+=======================================================================
+
+1. EiffelWeasel has been modified to compile with the 3.3 beta
+   of the compiler.
+   
+2. The current buglist has been included in the `doc' subdirectory.
+   That directory also contains (part of) an initial proposal for
+   changing command line options to EiffelWeasel.
+
+
+Bugs and deficiencies which have been fixed in EiffelWeasel release 0.6
+=======================================================================
+
+1. EiffelWeasel has been modified to compile with the 3.2.3b version
+   of the compiler.  There was one VAPE error, which the previous
+   compiler did not check.  No real change to EiffelWeasel itself.
+   
+
+
+Bugs and deficiencies which have been fixed in EiffelWeasel release 0.5
+=======================================================================
+
+1. The syntax of the compile_result instruction has been extended to
+   allow specification of validity errors on multiple classes.  Validity
+   error phrases may now be separated by semicolons.  Extra semicolons
+   do not cause any problems.  For example,
+	compile_result	validity_error TEST VTCG; TEST1 VFFD(7);;; TEST3 VRXC
+
+2. Eweasel is a lot smarter about the waiting needed to avoid problems
+   due to the fact the compiler only looks at the seconds of file time
+   of last modification.  It now only waits when it really might be
+   necessary - that is, when all of the following conditions are met: 
+	
+	A) An Eiffel compilation has been started or resumed
+   AND  B) The time when the last compilation started or resumed is the
+   	   same as the current time in seconds 
+   AND  C) No wait has already been done since the last compilation.  
+   
+   These modifications should eliminate all unecessary waiting.
+   
+
+Bugs and deficiencies which have been fixed in EiffelWeasel release 0.4
+=======================================================================
+
+1. All characters of a violated validity code are checked against the
+   validity code(s) specified in the test control files.  This means
+   that you should now specify a validity compilation error as (for
+   example):
+
+	compile_result	validity_error TEST VGCP(4) VLEL(2)
+   
+   All test control files have been updated accordingly.
+
+2. Two keywords are reserved in the test catalog and have special
+   meaning.  Any test with the keyword `manual' will be skipped and
+   its status will be printed as "manual" instead of "passed" or
+   "failed.  Any test with the keyword `skip' will be skipped and its
+   status will be printed as "skipped" instead of "passed" or "failed.
+   `Manual' is intended for tests which cannot be executed
+   automatically, either because they have not been automated (perhaps
+   they cannot be automated) or because they should not be executed
+   automatically (for example, if they cause loss of license and there
+   are a limited number of licenses).
+
+
+Bugs and deficiencies which have been fixed in EiffelWeasel release 0.3
+=======================================================================
+
+1. Two new test instructions have been added.  The `cleanup'
+   instruction deletes the EIFFELGEN subdirectory of the test
+   directory.  The `abort_compile' instruction aborts a suspended
+   Eiffel compilation (awaiting resumption) and also does a `cleanup'.
+   See file "eweasel.doc" for details.
+
+2. Includes cycles are now detected and reported as an include cycle
+   parsing error.  Only cycles which use exactly the same file name
+   (after subsitution) as the test control file for a test or a
+   currently open include file are detected.
+
+3. The `compile_result', `c_compile_result' and `execute_result'
+   instructions now fail if there is no pending Eiffel compilation, C
+   compilation or execution result (respectively) to be checked.  They
+   also "use up" the result so that errors such as checking a
+   compilation result a second time without an intervening compilation
+   will be detected.
+
+4. Suspended Eiffel compilations are now terminated gracefully via `q'
+   instead of being killed by a SIGKILL signal (9).  This means that
+   EiffelWeasel can now be run without any problems when the license
+   daemon is running.
+
+
+Bugs and deficiencies which have been fixed in EiffelWeasel release 0.2
+=======================================================================
+
+1. The copy_sub and copy_raw instructions now create the destination
+   directory if it does not exist.
+
+2. The directory tree generated by each test is automatically deleted
+   (via /bin/rm -r) if the test passes and is retained if the test fails.
+   To always retain the output of each test regardless of pass/fail status,
+   use the -k option (keep) to eweasel.
+
+3. The batch compiler does not always detect that a file has changed
+   if the change occurs less than one second after the previous
+   change.  Due to this bug, I have modified eweasel to wait for one
+   second after each file copy.  This slows it down considerably on my
+   machine, but ensures that incrementality tests give the correct
+   results.
+
+4. Primitive facilities for selecting catalog tests have been added
+   via the -f command line option (for `filter').  The default filter
+   (used if no filter is specified) selects all tests in the catalog
+   for execution.  The -f option provides simple filtering by test
+   name (-f 'test empty-export-feature-list') or by a single keyword
+   (-f 'kw syntax').
+
+5. The test name in the catalog is always printed, but the test name
+   in the test control file is only printed (in brackets) if it does
+   not match the name in the catalog.  The last component of the
+   source directory for the test is printed in parentheses.  If a test
+   fails, its description is now displayed.
+
+6. The c_compile instruction has been replaced by the two instructions
+   c_compile_work and c_compile_final.  The execute instruction has
+   been replaced by the two instructions execute_work and
+   execute_final.
+
+7. Approximately 150 new tests have been added.  Some of these tests
+   are really new.  Others check on bugs which have previously been
+   fixed (or are modifications of these bug scenarios).

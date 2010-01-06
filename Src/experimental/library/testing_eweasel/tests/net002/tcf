@@ -1,0 +1,21 @@
+test_name 	net-connect-failure
+test_description If you connect a socket in non-blocking mode it reports it is not connected where in fact it is, plus it ends up blocking indefinitely when connected with a timeout.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output_1
+execute_result 	ok
+compare		exec_output_1 output
+
+execute_work 	NONE 	exec_output_2 10
+execute_result 	ok
+compare		exec_output_2 output
+
+test_end

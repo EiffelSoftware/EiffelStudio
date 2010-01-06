@@ -1,0 +1,5 @@
+A static call `feature {NONE}.value' causes the compiler to die with a
+segmentation fault in degree 3.
+
+Discovered in release 5.2.0928.
+

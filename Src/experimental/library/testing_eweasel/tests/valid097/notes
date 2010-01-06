@@ -1,0 +1,9 @@
+An attribute `weasel' of a class has the type of the formal generic
+parameter, which is constrained by `LINKED_LIST [STRING]'.  The
+expression `weasel.i_th (1)' should therefore be of type STRING.  But
+an assignment to a local of type STRING is rejected as a VJAR error.
+The compiler seems to think the expression is of type `Generic #1'.
+
+Discovered in Release 3.2.3b.
+
+

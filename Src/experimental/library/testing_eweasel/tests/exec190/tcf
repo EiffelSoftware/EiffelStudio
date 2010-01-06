@@ -1,0 +1,330 @@
+test_name once-in-generic-class
+test_description Once functions should return the same result regardless of generic derivation they are called from.
+
+-- Tests without replication of once routines
+
+define REPLICATION "--"
+define NO_REPLICATION ""
+
+-- Single-threaded tests
+copy_sub Ace-st $TEST Ace
+copy_sub test_setup.e-st $CLUSTER test_setup.e
+copy_sub test.e0 $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+-- Melted code
+define X "CHARACTER"
+define Y "DOUBLE"
+
+copy_sub test.e $CLUSTER test.e
+copy_sub a.e $CLUSTER a.e
+copy_sub b.e $CLUSTER b.e
+copy_raw c.e $CLUSTER c.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_snm
+execute_result ok
+
+compare exec_output_snm output
+
+-- Frozen code
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output_snf
+execute_result ok
+
+compare exec_output_snf output
+
+-- Melted code with frozen code
+define X "NATURAL_8"
+define Y "POINTER"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_snr
+execute_result ok
+
+compare exec_output_snr output
+
+-- Final code without assertions
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_sni
+execute_result ok
+
+compare exec_output_sni output
+
+-- Final code with assertions
+
+compile_final_keep
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_snk
+execute_result ok
+
+compare exec_output_snk output
+
+cleanup_compile
+
+-- Multi-threaded tests
+copy_sub Ace-mt $TEST Ace
+copy_sub test_setup.e-mt $CLUSTER test_setup.e
+copy_sub test.e0 $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+-- Melted code
+define X "CHARACTER"
+define Y "DOUBLE"
+
+copy_sub test.e $CLUSTER test.e
+copy_sub a.e $CLUSTER a.e
+copy_sub b.e $CLUSTER b.e
+copy_raw c.e $CLUSTER c.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_mnm
+execute_result ok
+
+compare exec_output_mnm output
+
+-- Frozen code
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output_mnf
+execute_result ok
+
+compare exec_output_mnf output
+
+-- Melted code with frozen code
+define X "NATURAL_8"
+define Y "POINTER"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_mnr
+execute_result ok
+
+compare exec_output_mnr output
+
+-- Final code without assertions
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_mni
+execute_result ok
+
+compare exec_output_mni output
+
+-- Final code with assertions
+
+compile_final_keep
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_mnk
+execute_result ok
+
+compare exec_output_mnk output
+
+cleanup_compile
+
+-- Tests with replication of once routines
+
+define REPLICATION ""
+define NO_REPLICATION "--"
+
+-- Single-threaded tests
+copy_sub Ace-st $TEST Ace
+copy_sub test_setup.e-st $CLUSTER test_setup.e
+copy_sub test.e0 $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+-- Melted code
+define X "CHARACTER"
+define Y "DOUBLE"
+
+copy_sub test.e $CLUSTER test.e
+copy_sub a.e $CLUSTER a.e
+copy_sub b.e $CLUSTER b.e
+copy_raw c.e $CLUSTER c.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_srm
+execute_result ok
+
+compare exec_output_srm output
+
+-- Frozen code
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output_srf
+execute_result ok
+
+compare exec_output_srf output
+
+-- Melted code with frozen code
+define X "NATURAL_8"
+define Y "POINTER"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_srr
+execute_result ok
+
+compare exec_output_srr output
+
+-- Final code without assertions
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_sri
+execute_result ok
+
+compare exec_output_sri output
+
+-- Final code with assertions
+
+compile_final_keep
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_srk
+execute_result ok
+
+compare exec_output_srk output
+
+cleanup_compile
+
+-- Multi-threaded tests
+copy_sub Ace-mt $TEST Ace
+copy_sub test_setup.e-mt $CLUSTER test_setup.e
+copy_sub test.e0 $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+-- Melted code
+define X "CHARACTER"
+define Y "DOUBLE"
+
+copy_sub test.e $CLUSTER test.e
+copy_sub a.e $CLUSTER a.e
+copy_sub b.e $CLUSTER b.e
+copy_raw c.e $CLUSTER c.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_mrm
+execute_result ok
+
+compare exec_output_mrm output
+
+-- Frozen code
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output_mrf
+execute_result ok
+
+compare exec_output_mrf output
+
+-- Melted code with frozen code
+define X "NATURAL_8"
+define Y "POINTER"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_mrr
+execute_result ok
+
+compare exec_output_mrr output
+
+-- Final code without assertions
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_mri
+execute_result ok
+
+compare exec_output_mri output
+
+-- Final code with assertions
+
+compile_final_keep
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_mrk
+execute_result ok
+
+compare exec_output_mrk output
+
+cleanup_compile
+
+test_end

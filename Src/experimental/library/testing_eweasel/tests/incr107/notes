@@ -1,0 +1,7 @@
+After initial compilation with a root class of NONE, one of the
+clusters is removed from the Ace file.  When the system is recompiled,
+the compiler terminates silently right after announcing the compiler
+version number.
+
+Discovered in Release 3.2.3b.
+

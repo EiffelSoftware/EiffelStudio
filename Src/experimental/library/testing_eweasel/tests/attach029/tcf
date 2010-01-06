@@ -1,0 +1,10 @@
+test_name 	 full-void-safe-compilation
+test_description Ensures the rudimentary basic class can be compiled with full class checking, void-safe and attached by default options turned on. 
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

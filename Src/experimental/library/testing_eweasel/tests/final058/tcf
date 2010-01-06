@@ -1,0 +1,24 @@
+test_name 	 inlining-missing-gc-hooks
+test_description Inlining a call in a routine that does not require GC hooks but the inlined routine requires some would fail to generate the hooks and thus causes a crash at runtime when a GC cycle is triggered.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output_1
+execute_result	ok
+compare exec_output_1 output
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_2
+execute_result	ok
+compare	exec_output_2 output
+
+test_end

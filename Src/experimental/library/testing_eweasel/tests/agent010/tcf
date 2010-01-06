@@ -1,0 +1,11 @@
+test_name agent-calling-attribute-with-formal-type
+test_description An agent calling an attribute having a formal type, crashes the compiler.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+test_end

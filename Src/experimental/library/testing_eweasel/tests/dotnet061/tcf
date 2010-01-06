@@ -1,0 +1,12 @@
+test_name external-name-conflict-validation
+test_description Ensure that an external class name and Eiffel formatted class cannot be the same in the generated assembly.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw class_a.e $CLUSTER class_a.e
+copy_raw external_class_a.e $CLUSTER external_class_a.e
+
+compile_melted
+compile_result ok
+
+test_end

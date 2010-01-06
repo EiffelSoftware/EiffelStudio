@@ -1,0 +1,19 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 generic-create-deferred
+test_description A class has a generic parameter G of type XXX with a generic creation clause `create default_create end'.  It also has a creation instruction whose target is an attribute of type G.  If XXX is a deferred class, the compiler should report a VGCC(1) error but it does not.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	xxx.e $CLUSTER xxx.e
+copy_raw 	yyy.e $CLUSTER yyy.e
+compile_melted
+compile_result 	validity_error XXX VGCC(1)
+
+test_end

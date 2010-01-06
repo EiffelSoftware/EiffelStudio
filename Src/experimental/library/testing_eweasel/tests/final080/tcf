@@ -1,0 +1,33 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	finalize-inline-attribute-body-2
+test_description Finalizing a system with a call to an attribute with a body that is redefined in a descendant to an attribute with a different body causes incorrect system execution output if inlining is enabled
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

@@ -1,0 +1,29 @@
+test_name 	old-expression-exception
+test_description Raise an OLD_EXPRESSION if old expression is evaluated in postcondition and was evaluated with exception at entry of the routine
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_final_keep
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output2
+execute_result ok
+compare		exec_output2 output
+ 
+test_end

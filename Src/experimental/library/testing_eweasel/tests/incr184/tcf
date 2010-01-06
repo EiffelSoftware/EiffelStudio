@@ -1,0 +1,57 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 turn-off-multithreaded
+test_description Initially, the system is frozen with an Ace file using no precompiled library that specifies either `multithreaded (yes)' or `shared_library_definition ("/foo/bar")'.  Then the Ace file is changed to indicate `multithreaded (no)' or to delete the line with the shared_library_definition specification and the system is refrozen. 
+
+define SETTING "<setting name="multithreaded" value="true"/>"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define SETTING "<setting name="multithreaded" value="false"/>"
+copy_sub 	Ace $TEST Ace
+compile_frozen
+if not DOTNET compile_result validity_warning NONE VD83	
+if DOTNET compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+define SETTING "<setting name="shared_library_definition" value="/foo/bar"/>"
+copy_sub 	Ace $TEST Ace
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+
+define SETTING ""
+copy_sub 	Ace $TEST Ace
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output3
+execute_result 	ok
+compare		exec_output3 output
+
+test_end

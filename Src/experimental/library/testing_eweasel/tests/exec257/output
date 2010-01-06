@@ -1,0 +1,22 @@
+{INTEGER_8} 1 = {NATURAL_8} 1   False
+{INTEGER_8} 1 = {NATURAL_16} 1   False
+{INTEGER_8} 1 = {NATURAL_32} 1   False
+{INTEGER_8} 1 = {NATURAL_64} 1   False
+{INTEGER_16} 1 = {NATURAL_16} 1   False
+{INTEGER_16} 1 = {NATURAL_32} 1   False
+{INTEGER_16} 1 = {NATURAL_64} 1   False
+{INTEGER_32} 1 = {NATURAL_32} 1   False
+{INTEGER_32} 1 = {NATURAL_64} 1   False
+{INTEGER_64} 1 = {NATURAL_64} 1   False
+{NATURAL_8} 1 = {INTEGER_8} 1   False
+{NATURAL_16} 1 = {INTEGER_8} 1   False
+{NATURAL_16} 1 = {INTEGER_16} 1   False
+{NATURAL_32} 1 = {INTEGER_8} 1   False
+{NATURAL_32} 1 = {INTEGER_16} 1   False
+{NATURAL_32} 1 = {INTEGER_32} 1   False
+{NATURAL_64} 1 = {INTEGER_8} 1   False
+{NATURAL_64} 1 = {INTEGER_16} 1   False
+{NATURAL_64} 1 = {INTEGER_32} 1   False
+{NATURAL_64} 1 = {INTEGER_64} 1   False
+c = d   False
+Execution completed

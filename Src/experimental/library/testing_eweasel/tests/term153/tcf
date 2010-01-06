@@ -1,0 +1,11 @@
+test_name 	crash-for-redefined-feature-with-wrong-anchor
+test_description A system redefines a feature but the redefined version redefines it with a type involving an anchor to a non-existing routine. The compiler crashes instead of reporting the VEEN error.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error	TEST VEEN
+
+test_end

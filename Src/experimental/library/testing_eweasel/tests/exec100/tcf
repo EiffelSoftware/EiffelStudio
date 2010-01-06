@@ -1,0 +1,32 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 generic-constrained-by-double
+test_description A class declares a local of type `FOO [expanded DOUBLE]' where FOO is a generic class with a single formal generic parameter constrained by DOUBLE.  A routine of the generic class assigns something of type `Generic #1' to something of type DOUBLE.  The system compiles fine, but dies with an "illegal metamorphose type" panic when executed.  If the system is frozen, the C code for the generic class won't compile.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output2
+execute_result	 ok
+compare		 exec_output2 output
+
+test_end

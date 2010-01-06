@@ -1,0 +1,6 @@
+After initial compilation, a VUPR(2) error is introduced by removing
+an inheritance clause for ANY, where a routine is calling `{ANY}
+precursor'.  The compiler does not detect the newly introduced VUPR(2)
+error.
+
+Discovered in release 5.4.0515.

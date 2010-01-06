@@ -1,0 +1,6 @@
+A class with a Multi_branch which does not include the optional
+When_part_list (page 239) is rejected - the compiler reports a syntax
+error.
+
+Fixed in Prerelease 93.02.17.
+

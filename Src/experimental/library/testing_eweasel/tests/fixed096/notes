@@ -1,0 +1,9 @@
+Removing one of the formal generic parameters from a generic class
+causes the compiler to accept it as valid, even though another class
+now has an entity with the wrong number of actual generic parameters.
+
+Still not fixed in Prerelease 93.02.17.  However, the compiler does not
+die with an exception trace once it discovers the VTUG violation and
+the violation is corrected.
+
+Fixed in Prerelease 93.07.15.

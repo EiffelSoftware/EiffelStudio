@@ -1,0 +1,7 @@
+A class calls a routine and the routine calls its precursor.  After
+initial compilation, system execution works correctly.  Then a rename
+is removed, which causes the routine with the precursor call to have a
+different precursor.  Recompilation works but execution output is
+wrong.
+
+Discovered in Release 4.2F.

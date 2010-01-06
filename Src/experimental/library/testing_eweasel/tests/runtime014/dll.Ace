@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test">
+	<target name="test">
+		<root cluster="root_cluster" class="TEST" feature="make"/>
+		<option warning="true"/>
+		<setting name="multithreaded" value="$MULTITHREADED"/>
+		<precompile name="precompile" location="$PRECOMPILE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="root_cluster" location="$TEST\dll"/>
+		<setting name="shared_library_definition" value="$TEST\dll\test.def"/>
+	</target>
+</system>

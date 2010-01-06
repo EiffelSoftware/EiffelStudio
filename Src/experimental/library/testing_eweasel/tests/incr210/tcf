@@ -1,0 +1,33 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 unexpand-class-no-conformance
+test_description After initial compilation, a class TEST1 is changed so that it is no longer expanded.  A class that inherits from TEST1 should now conform to it, but when changes are melted `type_conforms_to (dynamic_type (t2), dynamic_type (t1))' returns False.
+
+define EXPANDED "expanded"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output1
+
+define EXPANDED ""
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+execute_work	 NONE exec_output2
+execute_result	 ok
+compare		 exec_output2 output2
+
+test_end

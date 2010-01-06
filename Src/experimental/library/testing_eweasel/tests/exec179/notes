@@ -1,0 +1,9 @@
+A generic class `TEST1 [G, ARRAY_TYPE -> ARRAY[G] create make end]'
+has a function of type ARRAY_TYPE that creates an object of type
+ARRAY_TYPE.  A second class TEST2 generic inherits `TEST1 [G, ARRAY
+[G]]'.  Another class creates an instance of TEST2, calls the function
+and prints `area.generating_type' on the result.  It prints SPECIAL
+[INTEGER_8] instead of SPECIAL [STRING].
+
+Reported by Manu on February 6, 2004.
+

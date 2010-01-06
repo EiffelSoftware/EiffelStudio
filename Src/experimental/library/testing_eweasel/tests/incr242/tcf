@@ -1,0 +1,29 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 remove-two-classes-crash
+test_description After initial compilation, we removed 2 class from the system, and one was inheriting from the other. Compiler crashes at the end of degree 5.
+
+copy_sub 	Ace $TEST Ace
+define		TEST2_REFERENCE  "a: TEST2"
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+define		TEST2_REFERENCE  ""
+copy_sub 	test.e $CLUSTER test.e
+delete	$CLUSTER test1.e
+delete	$CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+test_end

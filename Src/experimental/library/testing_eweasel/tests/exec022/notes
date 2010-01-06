@@ -1,0 +1,7 @@
+A class with a routine which has 1000 local variables compiles fine
+and the C code compiles (as long as one doesn't use the -O option).
+When the system is executed, it dies with an "out of locals" run-time
+panic.
+
+Discovered in Prerelease 93.05.17.
+

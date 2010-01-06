@@ -1,0 +1,14 @@
+test_name 	bad-c-inline-agent
+test_description In finalized code, inlined agents of routines might be missing their arguments if we generate a call to a deferred routine before optimizing the agent function call.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e  $CLUSTER test.e
+copy_raw	test1.e  $CLUSTER test1.e
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

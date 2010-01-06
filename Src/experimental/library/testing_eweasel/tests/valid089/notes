@@ -1,0 +1,7 @@
+A class TEST calls (on an entity of type TEST1) a feature which should
+be exported to it.  The compiler incorrectly rejects the class as
+violating VUEX(2).  If an export restriction is changed from `{TEST1}'
+to `{NONE}', which if anything ought to make fewer features exported
+to TEST, the compiler correctly accepts the classes.
+
+Discovered in release 3.2.3b.

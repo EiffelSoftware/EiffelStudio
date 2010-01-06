@@ -1,0 +1,33 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vdrd3-ensure-then
+test_description A redefinition of a routine with no postcondition uses just "ensure" for its postcondition, rather than "ensure then".  The compiler accepts it instead of reporting a VDRD(3) error.
+
+define PRE ""
+define POST "ensure True"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_sub 	b.e $CLUSTER b.e
+compile_melted
+compile_result 	validity_error B VDRD(3)
+
+define PRE "require True"
+define POST ""
+copy_sub 	b.e $CLUSTER b.e
+resume_compile
+compile_result 	validity_error B VDRD(3)
+
+define PRE "require else True"
+define POST "ensure then True"
+copy_sub 	b.e $CLUSTER b.e
+resume_compile
+compile_result 	ok
+
+test_end

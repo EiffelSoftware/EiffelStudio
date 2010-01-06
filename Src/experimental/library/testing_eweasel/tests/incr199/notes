@@ -1,0 +1,8 @@
+After initial compilation where the system is finalized, a creation
+procedure is changed to take an argument, introducing a VUAR error.
+When the system is re-finalized, the compiler detects the error.  Then
+the error is removed and compilation completes successfully, but the
+generated C code won't compile, due to conflicting declarations for
+the creation procedure's routine.
+
+Discovered in Release 5.4.0403.

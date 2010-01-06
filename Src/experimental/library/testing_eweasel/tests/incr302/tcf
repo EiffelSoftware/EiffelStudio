@@ -1,0 +1,52 @@
+
+test_name pattern-of-id-crash
+test_description After a sequence of changes, the compiler crashes with a call on Void target in {PATTERN_TABLE}.pattern_of_id
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+copy_raw test_rev1.e $CLUSTER test.e
+copy_raw test1_rev1.e $CLUSTER test1.e
+
+compile_melted
+compile_result validity_error TEST VEEN
+
+copy_raw test_rev2.e $CLUSTER test.e
+
+resume_compile
+compile_result ok
+
+copy_raw test_rev3.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VEEN
+
+copy_raw test1_rev2.e $CLUSTER test1.e
+
+resume_compile
+compile_result validity_error TEST VTUG(2)
+
+copy_raw test_rev4.e $CLUSTER test.e
+copy_raw test1_rev3.e $CLUSTER test1.e
+
+resume_compile
+compile_result validity_error TEST1 VGCC(1)
+
+copy_raw test_rev5.e $CLUSTER test.e
+copy_raw test1_rev4.e $CLUSTER test1.e
+
+resume_compile
+compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

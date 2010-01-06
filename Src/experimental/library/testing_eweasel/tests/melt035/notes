@@ -1,0 +1,7 @@
+A routine has a precondition, postcondition, old expression in the
+postcondition and a local entity of an expanded type.  The local of
+expanded type is initialized at the wrong time (before the routine's
+precondition is even checked), but only if the system is melted.
+Frozen code works correctly.
+
+Discovered in Release 3.2.4.

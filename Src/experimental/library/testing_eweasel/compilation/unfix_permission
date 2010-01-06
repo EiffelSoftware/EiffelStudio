@@ -1,0 +1,7 @@
+#!/bin/sh
+
+unfixperm="chmod u-rwx"
+
+# Fix permissions of files that need to be made readable to produce tar file
+
+echo "Fixing permissions of test files that need to be made unreadable"

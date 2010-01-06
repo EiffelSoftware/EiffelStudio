@@ -1,0 +1,5 @@
+Empty Choices in Multi_branch When_part called syntax error, but is supposed
+to be legal.
+
+Still not fixed in Prerelease 93.02.17.
+

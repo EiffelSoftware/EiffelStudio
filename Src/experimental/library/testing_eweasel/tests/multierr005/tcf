@@ -1,0 +1,13 @@
+test_name error-in-manifest-array-tuple
+test_description This test should report 2 VEEN errors but was crashing the compiler instead.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error	TEST VEEN VEEN VEEN VEEN
+
+resume_compile
+compile_result validity_error	TEST VEEN VEEN VEEN VEEN
+
+test_end

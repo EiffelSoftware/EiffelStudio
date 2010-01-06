@@ -1,0 +1,11 @@
+
+test_name validity-vsrp2-multi-procedures	
+test_description A root creation procedure with wrong arguments is selected amongst many other.
+
+copy_sub 	 Ace $TEST Ace
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result	validity_error TEST VSRP(2)
+
+test_end

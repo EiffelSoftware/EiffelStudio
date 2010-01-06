@@ -1,0 +1,6 @@
+A class that undefines an inherited external routine and then
+effects it with an internal routine that calls precursor
+causes the compiler to die in degree 3.
+
+Discovered in Release 5.0.005.
+

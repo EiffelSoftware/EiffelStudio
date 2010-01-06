@@ -1,0 +1,7 @@
+A generic class whose formal generic parameter is constrained by
+NUMERIC has a function `value: G is do Result := x + x end' where `x'
+is of type G.  Another class has a call to this function.  If the
+system is finalized with inlining, the compiler dies during degree -3
+on the class.
+
+Discovered in release 5.4.0403.

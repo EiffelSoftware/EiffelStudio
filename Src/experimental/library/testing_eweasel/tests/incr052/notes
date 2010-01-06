@@ -1,0 +1,7 @@
+After initial compilation, a rename subclause of an inheritance clause
+is deleted, which introduces a VRFA violation.  The compiler detects
+the violation, but when the rename subclause is added back and
+compilation is resumed, the compiler reports a bogus VD27 error.
+
+Discovered in Release 3.1.1.
+

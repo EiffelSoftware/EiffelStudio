@@ -1,0 +1,25 @@
+
+test_name 	 operations-on-numeric-generic
+test_description Arithmetic operations on an attribute of a generic type, where the generic is constrained by NUMERIC, give the wrong result for division when frozen (should be Nan but is not) or cause a panic (prefix +) when melted
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output
+
+test_end

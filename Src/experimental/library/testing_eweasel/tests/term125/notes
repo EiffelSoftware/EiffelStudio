@@ -1,0 +1,5 @@
+A routine of the form "if false then something elseif true then
+something end" causes the compiler to die when finalizing, regardless
+of whether inlining is requested or not.
+
+Reported on ISE users mailing list on November 18, 2003.

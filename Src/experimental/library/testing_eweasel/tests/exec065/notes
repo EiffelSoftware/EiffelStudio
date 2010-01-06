@@ -1,0 +1,5 @@
+A class repeatedly allocates an array whose length is determined by a
+random number generator.  When the system is frozen and then executed,
+it goes into an infinite loop.
+
+Discovered in Release 3.2.4.

@@ -1,0 +1,7 @@
+After initial compilation, a VJAW error is introduced.  When the
+compiler detects it, the creation clause is removed from the root
+class and the cluster mark and creation procedure name are removed
+from the Ace.  When compilation is resumed, the compiler detects the
+VJAW error but dies trying to report it.
+
+Discovered in Release 3.2.

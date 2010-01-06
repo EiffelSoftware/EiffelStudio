@@ -1,0 +1,7 @@
+A system has a class TEST1 with 10 attributes of an expanded type,
+where the base class of the expanded type does not contain any
+attributes (doesn't matter if it has attributes or not).  Repeated
+creation of instances of TEST1 causes a run-time panic when executed.
+
+Discovered in Release 3.2.
+

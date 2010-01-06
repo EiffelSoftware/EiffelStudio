@@ -1,0 +1,5 @@
+Particular sequence of changes involving inheritance and unique attributes
+causes exception trace.
+
+Fixed in Prerelease 93.02.17.
+

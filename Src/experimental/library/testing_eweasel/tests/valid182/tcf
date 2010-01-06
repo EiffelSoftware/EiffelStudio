@@ -1,0 +1,12 @@
+test_name 	 expanded-conformance
+test_description A code using a descendant type of an expanded type should be refused but was accepted in some version of the compiler.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	test1.e	$CLUSTER test1.e
+copy_raw	test2.e	$CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error	TEST VUAR(2)
+
+test_end

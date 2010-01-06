@@ -1,0 +1,6 @@
+A generic class TEST1 [G -> TEST2] with an attribute `s: G' has a
+creation instruction `!TEST2!s.make'.  The compiler should report a
+VGCC(3) error but does not.  The generated code acts as if the
+creation instruction was `!!s.make'.
+
+Discovered in Release 5.0.016.

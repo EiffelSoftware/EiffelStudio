@@ -1,0 +1,7 @@
+A class inherits twice from a generic class, using DOUBLE and STRING
+as the actual generic parameter and renaming the single routine in the
+generic class to replicate it.  The system compiles fine, but dies
+with a bus error when executed due to the fact that the wrong routine
+is being called.
+
+Discovered in Release 3.2.4.

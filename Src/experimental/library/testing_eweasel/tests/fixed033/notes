@@ -1,0 +1,8 @@
+According to ETL page 240, a Multi_branch which has an Else_part
+should have the same effect as the Compound in that Else_part if no
+inspect constant matches the inspect expression (and should *not*
+trigger an exception).  But a Multi_branch with an Else_part whose
+Compound is empty triggers an "Unmatched inspect value" exception.
+
+Fixed in Prerelease 93.02.17.
+

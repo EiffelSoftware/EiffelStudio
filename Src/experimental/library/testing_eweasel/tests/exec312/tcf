@@ -1,0 +1,16 @@
+
+test_name 	small-eif-memory-scavenge
+test_description Executing a system with environment variable EIF_MEMORY_SCAVENGE set to 8184 or less causes a panic in the final reclaim
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+setenv		EIF_MEMORY_SCAVENGE 8184
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

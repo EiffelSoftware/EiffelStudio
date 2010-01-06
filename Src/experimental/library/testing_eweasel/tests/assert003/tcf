@@ -1,0 +1,16 @@
+test_name 	undefined-assertion-merge
+test_description Inheriting assertions from an undefined routine should work when merged.
+define OPTION ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	d.e $CLUSTER d.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

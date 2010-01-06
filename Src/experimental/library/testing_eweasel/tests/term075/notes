@@ -1,0 +1,4 @@
+A routine with the instruction `s := create {NONE} s.make' where
+s is a STRING causes compiler to die.
+
+Discovered in Release 4.3-17.

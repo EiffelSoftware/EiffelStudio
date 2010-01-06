@@ -1,0 +1,9 @@
+test_name 	 named-tuple-same-labels-crash
+test_description A named tuple with multiple times the same label in the same entity declaration list would cause a crash when reporting an error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error TEST VREG; TEST VREG; TEST VREG
+
+test_end

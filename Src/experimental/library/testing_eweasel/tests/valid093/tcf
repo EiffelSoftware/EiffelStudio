@@ -1,0 +1,19 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vtcg-instead-of-vtug2
+test_description A generic class CHILD has an inheritance clause `TEST1 [CHILD]', which should elicit a VTUG(2) error.  Instead, the compiler reports a VTCG error in the generic constraint of a different class.  But in order to discover the VTCG violation, the compiler should have had to analyse CHILD enough to detect the VTUG error.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+copy_raw 	 child.e $CLUSTER child.e
+compile_melted
+compile_result 	 validity_error CHILD VTUG(2)
+
+test_end

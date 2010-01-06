@@ -1,0 +1,10 @@
+test_name ca-incorrect-context-usage
+test_description The compiler should raise a warning when using a custom attribute in the wrong context
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_warning TEST NONE
+
+test_end

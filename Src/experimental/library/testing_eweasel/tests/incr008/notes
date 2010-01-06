@@ -1,0 +1,6 @@
+After initial compilation, a class header is changed to make the class
+expanded.  This introduces an Assignment Attempt rule violation, but
+the compiler does not detect it.
+
+Discovered in Prerelease 93.07.15.
+

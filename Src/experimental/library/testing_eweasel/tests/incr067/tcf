@@ -1,0 +1,33 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 del-creation-proc-add-two
+test_description After initial compilation, the name of the single creation procedure is removed from the creation clause, then it is added back twice
+
+copy_sub 	 Ace $TEST Ace
+define		 CREATION "creation make"
+copy_sub	 test.e $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+define		 CREATION "creation"
+copy_sub	 test.e $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error NONE VD27
+
+define		 CREATION "creation make, make"
+copy_sub	 test.e $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VGCP(3)
+
+define		 CREATION "creation make"
+copy_sub	 test.e $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

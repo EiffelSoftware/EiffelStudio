@@ -1,0 +1,6 @@
+
+A valid feature rename in inheritance clause (x ==> y, y ==> z) is not
+accepted.
+
+Still not fixed in Prerelease 93.02.17.
+

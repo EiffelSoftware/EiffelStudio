@@ -1,0 +1,6 @@
+An expression that appears to be syntactically legal (and even valid)
+according to pages 376-378 of ETL is not accepted by the compiler.
+0 = 0.
+
+Still not fixed in Prerelease 93.02.17.
+

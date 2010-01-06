@@ -1,0 +1,4 @@
+If the environment variable EIF_MEMORY_CHUNK is set to 200000000,
+compiler dies with an "out of memory" exception.
+
+Discovered in release 5.4.0709.

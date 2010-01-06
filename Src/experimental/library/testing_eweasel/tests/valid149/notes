@@ -1,0 +1,4 @@
+A class that attempts to undefine an external routine causes the
+compiler to incorrectly report a VDUS(2) error.
+
+Discovered in release 5.4.0709.

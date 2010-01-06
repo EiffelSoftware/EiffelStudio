@@ -1,0 +1,10 @@
+An assignment to a feature which is a function violates VJAW.  When
+this function takes no arguments, the compiler reports VJAW.  But when
+the feature which is the target of the assignment takes arguments, the
+compiler incorrectly reports a VUAR(1) error.  This cannot be correct
+since no feature calls are involved in the instruction.  An attempt to
+add arguments to the feature produces a syntax error.
+
+Discovered in Release 3.2.1.
+
+

@@ -1,0 +1,6 @@
+A sequence of changes where system is melted several times, with
+various errors but with no external or deferred routines involved,
+causes the compiler to die with a segmentation fault in
+`set_has_loop'.
+
+Discovered in Release 5.0.015.

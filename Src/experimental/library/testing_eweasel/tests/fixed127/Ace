@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test" uuid="2b05ec8b-1138-4715-8427-6867146b2c23">
+	<target name="test">
+		<description>--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+</description>
+		<root cluster="root_cluster" class="test" feature="make"/>
+		<option warning="true">
+			<assertions precondition="false" postcondition="true" check="false" invariant="false" loop="false"/>
+		<warning name="syntax" enabled="false"/></option>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="0"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

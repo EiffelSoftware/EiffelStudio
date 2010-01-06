@@ -1,0 +1,6 @@
+A system with a syntax error is compiled.  When the error is reported,
+the Ace file is deleted or renamed.  When compilation is resumed, the
+compiler dies with exception tag "No such file or directory".
+
+Discovered in Release 3.2.4.
+

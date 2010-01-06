@@ -1,0 +1,11 @@
+test_name 	 assigner-wrong-vbac
+test_description The compiler would report a VBAC error when none should be reported when you have to assigner calls in a row.
+
+-- Testing the correct cases first
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+test_end

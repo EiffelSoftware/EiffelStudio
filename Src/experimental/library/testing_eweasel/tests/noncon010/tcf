@@ -1,0 +1,15 @@
+test_name no-repeated-non-conforming-inheritance
+test_description Repeated inheritance should take into account only conforming parents to dispatch feature calls.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw p1.e $CLUSTER p1.e
+copy_raw p2.e $CLUSTER p2.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+test_end

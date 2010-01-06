@@ -1,0 +1,54 @@
+
+test_name ececil-undefined-symbol
+test_description After a sequence of changes, C compilation fails with undefined symbols in ececil.c
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+copy_raw test2_rev1.e $CLUSTER test2.e
+
+compile_frozen
+compile_result validity_error TEST2 VJAR
+
+copy_raw test2_rev2.e $CLUSTER test2.e
+
+resume_compile
+compile_result validity_error TEST2 VJAR
+
+copy_raw test2_rev3.e $CLUSTER test2.e
+
+resume_compile
+compile_result validity_error TEST2 VEVI
+
+copy_raw test2_rev4.e $CLUSTER test2.e
+
+resume_compile
+compile_result syntax_error TEST2 14
+
+copy_raw test2_rev5.e $CLUSTER test2.e
+
+resume_compile
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+copy_raw test_rev1.e $CLUSTER test.e
+copy_raw test2_rev6.e $CLUSTER test2.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

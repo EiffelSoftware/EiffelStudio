@@ -1,0 +1,7 @@
+An entity of type `HASH_TABLE [STRING, DOUBLE]' is correctly reported
+to violate VTCG.  But when the error is fixed by changing DOUBLE to
+STRING (which does conform to HASHABLE) and compilation is resumed,
+the compiler dies with an exception trace.
+
+Discovered in Release 3.1.1.
+

@@ -1,0 +1,16 @@
+test_name uncompiled-managed-resource-embeddeding
+test_description Tests uncompiled managed resources can be embedded into a produced assembly
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw resources.resx $CLUSTER resources.resx
+copy_bin icon.ico $CLUSTER icon.ico
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

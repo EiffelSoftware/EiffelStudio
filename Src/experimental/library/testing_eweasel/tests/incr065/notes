@@ -1,0 +1,7 @@
+After initial compilation, several infix features of the same name
+(differing only by case) are introduced.  When the system is
+recompiled, the compiler detects the VMFN violations but also reports
+a nonexistent VMRC violation.
+
+Discovered in Release 3.2.
+

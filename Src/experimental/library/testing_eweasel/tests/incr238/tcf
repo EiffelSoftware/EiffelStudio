@@ -1,0 +1,81 @@
+test_name infinite-recompilation
+test_description After changes (possibly no changes) in the constraint clause of a class, compiler triggers an infinite degree 5 if the number of classes added to the recompilation after modififying the constraint clause is greater than the size of the AST_SERVER cache.
+
+copy_sub Ace $TEST Ace
+define CODE "do_nothing"
+copy_sub a.e $CLUSTER a.e
+copy_raw b.e $CLUSTER b.e
+define TEMPLATE "A1"
+copy_sub template.e $CLUSTER A1.e
+define TEMPLATE "A2"
+copy_sub template.e $CLUSTER A2.e
+define TEMPLATE "A3"
+copy_sub template.e $CLUSTER A3.e
+define TEMPLATE "A4"
+copy_sub template.e $CLUSTER A4.e
+define TEMPLATE "A5"
+copy_sub template.e $CLUSTER A5.e
+define TEMPLATE "A6"
+copy_sub template.e $CLUSTER A6.e
+define TEMPLATE "A7"
+copy_sub template.e $CLUSTER A7.e
+define TEMPLATE "A8"
+copy_sub template.e $CLUSTER A8.e
+define TEMPLATE "A9"
+copy_sub template.e $CLUSTER A9.e
+define TEMPLATE "A10"
+copy_sub template.e $CLUSTER A10.e
+define TEMPLATE "A11"
+copy_sub template.e $CLUSTER A11.e
+define TEMPLATE "A12"
+copy_sub template.e $CLUSTER A12.e
+define TEMPLATE "A13"
+copy_sub template.e $CLUSTER A13.e
+define TEMPLATE "A14"
+copy_sub template.e $CLUSTER A14.e
+define TEMPLATE "A15"
+copy_sub template.e $CLUSTER A15.e
+define TEMPLATE "A16"
+copy_sub template.e $CLUSTER A16.e
+define TEMPLATE "A17"
+copy_sub template.e $CLUSTER A17.e
+define TEMPLATE "A18"
+copy_sub template.e $CLUSTER A18.e
+define TEMPLATE "A19"
+copy_sub template.e $CLUSTER A19.e
+define TEMPLATE "A20"
+copy_sub template.e $CLUSTER A20.e
+define TEMPLATE "A21"
+copy_sub template.e $CLUSTER A21.e
+define TEMPLATE "A22"
+copy_sub template.e $CLUSTER A22.e
+define TEMPLATE "A23"
+copy_sub template.e $CLUSTER A23.e
+define TEMPLATE "A24"
+copy_sub template.e $CLUSTER A24.e
+define TEMPLATE "A25"
+copy_sub template.e $CLUSTER A25.e
+define TEMPLATE "A26"
+copy_sub template.e $CLUSTER A26.e
+define TEMPLATE "A27"
+copy_sub template.e $CLUSTER A27.e
+define TEMPLATE "A28"
+copy_sub template.e $CLUSTER A28.e
+define TEMPLATE "A29"
+copy_sub template.e $CLUSTER A29.e
+define TEMPLATE "A30"
+copy_sub template.e $CLUSTER A30.e
+
+define ATTRIBUTES "a1: A1 a2: A2 a3: A3 a4: A4 a5: A5 a6: A6 a7: A7 a8: A8 a9: A9 a10: A10 a11: A11 a12: A12 a13: A13 a14: A14 a15: A15 a16: A16 a17: A17 a18: A18 a19: A19 a20: A20 a21: A21 a22: A22 a23: A23 a24: A24 a25: A25 a26: A26 a27: A27 a28: A28 a29: A29 a30: A30"
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+define CODE ""
+copy_sub a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+
+test_end

@@ -1,0 +1,31 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 redef-external-chg-to-effect
+test_description A class inherits an external routine and tries to redefine it, but includes some locals in the redefined external routine.  The compiler catches the VRRR(2) error.  Then the parent version is changed to a deferred feature and the child version is changed to a non-external routine.
+
+copy_sub 	 Ace $TEST Ace
+define		 REDEFINE "redefine make end"
+define		 TEST_BODY "local x: INTEGER external "C""
+copy_sub 	 test.e  $CLUSTER test.e
+define		 HEADER_MARK ""
+define		 TEST1_BODY "external "C""
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VRRR(2)
+
+define		 REDEFINE ""
+define		 TEST_BODY "once"
+copy_sub 	 test.e  $CLUSTER test.e
+define		 HEADER_MARK "deferred"
+define		 TEST1_BODY "deferred"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+test_end

@@ -1,0 +1,6 @@
+For an external feature which is declared as an infix feature, the
+compiler passes two arguments to the external C routine if there is no
+signature specified in the External_declaration, but only one argument
+if a signature is specified.  It should always pass only one argument.
+
+Seems to be fixed in release 5.4.0610.

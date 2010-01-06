@@ -1,0 +1,21 @@
+test_name 	 trace_has_no_pass
+test_description Shows the problem that if an exception is raised at assertion evaluation, trace printed has a "Pass" element.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+test_end

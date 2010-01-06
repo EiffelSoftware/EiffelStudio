@@ -1,0 +1,10 @@
+test_name 	 anchored-attached-type-failure-no-defaults
+test_description Ensures using like and !like with detachable types compiles without crashing the compiler
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+test_end

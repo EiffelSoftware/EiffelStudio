@@ -1,0 +1,27 @@
+test_name	config-override-crash
+test_description Test moving a class which was initially only in the override cluster and then move it to its actual cluster causes a crash of the compiler at degree 4 because the compiler incorrectly remove that class from the system.
+
+define_directory OVERRIDE_CLUSTER $TEST override
+define OVERRIDE "<override name="over" location="$OVERRIDE_CLUSTER"/>"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test1.e $OVERRIDE_CLUSTER test1.e
+copy_raw	a.e $OVERRIDE_CLUSTER a.e
+
+compile_melted
+compile_result  ok
+
+copy_raw	a_rev1.e $OVERRIDE_CLUSTER a.e
+copy_raw	a_rev1.e $CLUSTER a.e
+
+compile_melted
+compile_result  ok
+
+copy_raw	a.e $OVERRIDE_CLUSTER a.e
+copy_raw	test1_rev1.e $OVERRIDE_CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+test_end

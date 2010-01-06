@@ -1,0 +1,7 @@
+After initial compilation, a VCCH(2) error is introduced.  When it is
+detected, it is removed, which produces a VMFN error.  But when the
+offending feature is deleted in the inherited class the compiler
+reports a bogus VD27 error.
+
+Discovered in Release 3.1.1.
+

@@ -1,0 +1,39 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	vjrv-sneak
+test_description Make class expanded, introducing Assignment Attempt rule violation
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	parent.e $CLUSTER parent.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	parent_rev1.e $CLUSTER parent.e
+compile_melted
+compile_result	validity_warning TEST VJRV(1)
+
+copy_raw 	parent.e $CLUSTER parent.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	parent_rev1.e $CLUSTER parent.e
+compile_melted
+compile_result	validity_warning TEST VJRV(1)
+
+copy_raw 	parent.e $CLUSTER parent.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	parent_rev1.e $CLUSTER parent.e
+compile_melted
+compile_result	validity_warning TEST VJRV(1)
+
+test_end

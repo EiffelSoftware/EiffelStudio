@@ -1,0 +1,5 @@
+A system which builds a fairly long linked list compiles fine, but
+ends with "illegal instruction" when executed.
+
+Discovered in Prerelease 93.07.15.
+

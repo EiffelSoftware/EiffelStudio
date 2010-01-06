@@ -1,0 +1,110 @@
+test_name 	inline-agents-and-generics
+test_description to come
+
+define MELT1 1
+define MELT2 1
+define MELT3 1
+define MELT4 1
+define MELT5 1
+define MELT6 1
+define MELT7 1
+define MELT8 1
+define MELT9 1
+define MELT10 1
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE output_1
+execute_result ok
+
+-- Step 1
+
+define MELT1 2
+define MELT2 1
+define MELT3 2
+define MELT4 1
+define MELT5 2
+define MELT6 1
+define MELT7 2
+define MELT8 1
+define MELT9 2
+define MELT10 1
+
+copy_sub 	test.e $CLUSTER test.e
+copy_sub	a.e $CLUSTER a.e
+compile_melted
+compile_result 	ok
+execute_work NONE output_2
+execute_result ok
+
+-- Step 2
+
+define MELT1 3
+define MELT2 1
+define MELT3 2
+define MELT4 1
+define MELT5 3
+define MELT6 1
+define MELT7 2
+define MELT8 1
+define MELT9 3
+define MELT10 1
+
+copy_sub 	test.e $CLUSTER test.e
+copy_sub	a.e $CLUSTER a.e
+compile_melted
+compile_result 	ok
+execute_work NONE output_3
+execute_result ok
+
+-- Step 3
+
+define MELT1 3
+define MELT2 4
+define MELT3 2
+define MELT4 4
+define MELT5 3
+define MELT6 4
+define MELT7 2
+define MELT8 4
+define MELT9 3
+define MELT10 4
+
+copy_sub 	test.e $CLUSTER test.e
+copy_sub	a.e $CLUSTER a.e
+compile_melted
+compile_result 	ok
+execute_work NONE output_4
+execute_result ok
+
+-------------------
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE output_5
+execute_result ok
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE output_6
+execute_result ok
+
+
+
+test_end

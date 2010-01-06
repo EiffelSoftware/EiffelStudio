@@ -1,0 +1,22 @@
+test_name 	 static_buffer_for_trace_not_thread_safe
+test_description Reveals the problem static buffer for trace printing is not thread safe.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 worker.e  $CLUSTER worker.e
+copy_raw 	 worker1.e  $CLUSTER worker1.e
+copy_raw 	 worker2.e  $CLUSTER worker2.e
+copy_raw 	 worker3.e  $CLUSTER worker3.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output1 100 10000
+execute_result 	ok
+compare		exec_output1 output
+execute_final	NONE exec_output2 10000 100
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

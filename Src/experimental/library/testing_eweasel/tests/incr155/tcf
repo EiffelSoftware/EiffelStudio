@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vjar-sneak
+test_description After initial compilation, a VJAR error is introduced and the system is recompiled.  The compiler does not detect the VJAR error.  This case involves changing an actual generic parameter in an inheritance clause from G to STRING.  The redefined function calls precursor.
+
+copy_sub 	Ace $TEST Ace
+define		ACTUAL_GENERIC "G"
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define		ACTUAL_GENERIC "STRING"
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST1 VJAR
+
+test_end

@@ -1,0 +1,17 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 invariant-delayed-closed-target
+test_description A class with a reference to `s~make' in the invariant causes compiler to die.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VEEN
+	
+test_end

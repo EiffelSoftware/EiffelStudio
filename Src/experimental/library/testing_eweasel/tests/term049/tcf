@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 anchored-generic-multi-dot-call
+test_description A class has an attribute `x' of type `LINKED_LIST [like weasel]', where weasel is of type `LINKED_LIST [STRING]'.  A reference to the first item of the first list in `x', which is of the form `x.i_th (1).i_th (1)' causes termination of the compiler after pass 3 on the class.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

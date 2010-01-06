@@ -1,0 +1,5 @@
+When I try to finalize a system, I get pretty far.  But cc dies trying
+to compile Eattr1.c, which seems to have illegal '@' characters.
+
+Still not fixed in Prerelease 93.02.17.
+

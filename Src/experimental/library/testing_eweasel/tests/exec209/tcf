@@ -1,0 +1,48 @@
+test_name 	 once-manifest-string-in-once
+test_description Once manifest strings have to be supported in thread-relative and process-relative once routines.
+
+copy_raw 	 test.e  $CLUSTER test.e
+
+define BASE "$PRECOMPILED_BASE"
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output_sm
+execute_result	ok
+compare		exec_output_sm output
+
+compile_frozen
+compile_result 	ok
+execute_work	NONE exec_output_sw
+execute_result	ok
+compare		exec_output_sw output
+
+compile_final
+compile_result 	ok
+execute_work	NONE exec_output_sf
+execute_result	ok
+compare		exec_output_sf output
+
+define BASE "$PRECOMPILED_BASE_MT"
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output_mm
+execute_result	ok
+compare		exec_output_mm output
+
+compile_frozen
+compile_result 	ok
+execute_work	NONE exec_output_mw
+execute_result	ok
+compare		exec_output_mw output
+
+compile_final
+compile_result 	ok
+execute_work	NONE exec_output_mf
+execute_result	ok
+compare		exec_output_mf output
+
+test_end

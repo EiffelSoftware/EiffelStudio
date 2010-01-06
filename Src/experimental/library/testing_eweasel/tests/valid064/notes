@@ -1,0 +1,9 @@
+An expanded class which has more than one creation procedure in
+separate Creation_clause's violates the Creation_clause rule VGCP(4)
+but the compiler does not complain.  Actually, the example class does
+not technically violate VGCP(4), but it violates the spirit of this
+constraint since the class will never be able to be used as an
+expanded type.
+
+Discovered in Release 3.1.1.
+

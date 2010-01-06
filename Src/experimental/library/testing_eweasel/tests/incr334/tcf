@@ -1,0 +1,24 @@
+
+test_name	efrozen-undefined-symbol
+test_description A class inherits a routine from two parents, undefining the version from one parent.  Then the undefine is removed and the routine that was being undefined is changed to a deferred routine.  When the system is frozen, the resulting C code won't link due to an undefined symbol in efrozen.c 
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test_rev1.e $CLUSTER test.e
+copy_raw 	test5_rev1.e $CLUSTER test5.e
+copy_raw	test6_rev1.e $CLUSTER test6.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test_rev2.e $CLUSTER test.e
+copy_raw	test6_rev2.e $CLUSTER test6.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

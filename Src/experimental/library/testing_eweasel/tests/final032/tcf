@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	finalize-manifest-type-expr
+test_description Finalizing a system with that prints ({STRING}).generating_type generates C code which won't compile if system is finalized. Melted and frozen code work fine.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

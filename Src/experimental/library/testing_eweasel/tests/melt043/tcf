@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	expanded-creation-alloc-memory
+test_description A class repeatedly creates an instance of another class which has one attribute of an expanded type.  The base class of the expanded type has a creation procedure which allocates a small amount of memory to initialize the value of a string attribute.  If the system is melted, a segmentation fault occurs when the system is executed.  Frozen code works fine.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

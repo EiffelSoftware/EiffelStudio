@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vcch1-del-def-header
+test_description After initial compilation, violate validity constraint VCCH1 by deleting the deferred header mark of a class with a deferred feature
+copy_sub 	 Ace $TEST Ace
+
+define		 HEADER_MARK deferred
+copy_raw 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 HEADER_MARK ""
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VCCH(1)
+
+test_end

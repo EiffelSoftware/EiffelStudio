@@ -1,0 +1,15 @@
+test_name system-object-remapped-in-mscorlib-only
+test_description Checks the consumer remaps System.Object to SYSTEM_OBJECT from mscorlib only and not other assemblies
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_bin a.dll $CLUSTER a.dll
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

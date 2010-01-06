@@ -1,0 +1,29 @@
+test_name 	 wrong-label-in-generics
+test_description A class using a labeled tuple as actual generic parameter, and the labeled tuple is using one of the routine of TUPLE as label, or repeating a label. The compiler fails to detect this error.
+
+copy_sub	Ace $TEST Ace
+define BAD_VALUE "x"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define BAD_VALUE "x, x"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VREG
+
+define BAD_VALUE "item"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result validity_error TEST VRFT
+
+define BAD_VALUE "x"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	ok
+
+test_end

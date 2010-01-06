@@ -1,0 +1,98 @@
+test_name 	 self-init-attribute-non-void-safe
+test_description A call to a self-initializing attribute has no effect in non-void safe mode.
+
+define ATTACHED "true"
+copy_sub	Ace_safe $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output
+
+compile_final_keep
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output3
+execute_result	ok
+compare		exec_output3 output
+
+cleanup_compile
+define ATTACHED "true"
+copy_sub	Ace_unsafe $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output1
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output1
+
+compile_final_keep
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output3
+execute_result	ok
+compare		exec_output3 output1
+
+cleanup_compile
+define ATTACHED "false"
+copy_sub	Ace_unsafe $TEST Ace
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output1
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output1
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output3
+execute_result	ok
+compare		exec_output3 output1
+
+test_end

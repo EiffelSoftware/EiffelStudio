@@ -1,0 +1,43 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name basic-type-generic-deriv
+test_description Violate VTUG with generic derivation of basic class
+copy_sub Ace $TEST Ace
+
+define 		TYPE "BOOLEAN [ARRAY [INTEGER]]"
+copy_sub test.e $CLUSTER test.e
+compile_melted
+compile_result validity_error TEST VTUG(1)
+
+define 		TYPE "CHARACTER [ARRAY [INTEGER]]"
+copy_sub test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VTUG(1)
+
+define 		TYPE "INTEGER [ARRAY [INTEGER]]"
+copy_sub test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VTUG(1)
+
+define 		TYPE "REAL [ARRAY [INTEGER]]"
+copy_sub test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VTUG(1)
+
+define 		TYPE "DOUBLE [ARRAY [INTEGER]]"
+copy_sub test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VTUG(1)
+
+define 		TYPE "POINTER [ARRAY [INTEGER]]"
+copy_sub test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VTUG(1)
+
+test_end

@@ -1,0 +1,8 @@
+When a system is compiled and then a violation of the Expanded Type
+rule is introduced, the compiler detects the VTEC violation.  But when
+the offending class is returned to its original state (thereby
+removing the violation) and compilation is resumed, an exception trace
+results.
+
+Found in Prerelease 93.07.15.
+

@@ -1,0 +1,10 @@
+test_name 	 object-test-with-local-use-failure
+test_description Ensures the locally scoped object test variable cannot be used in the test
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST VEEN
+
+test_end

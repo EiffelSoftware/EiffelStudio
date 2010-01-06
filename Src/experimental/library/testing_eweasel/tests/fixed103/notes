@@ -1,0 +1,7 @@
+A class with an internal routine compiles fine.  When the
+internal body is replaced by an external body and the system is
+recompiled, a compiler exception trace results.
+
+Discovered in Prerelease 93.05.17.
+Fixed in Prerelease 93.07.15.
+

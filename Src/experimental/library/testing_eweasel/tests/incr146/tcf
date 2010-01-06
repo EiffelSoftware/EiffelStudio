@@ -1,0 +1,36 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 add-remove-constraint-vtcg
+test_description After initial compilation, a constraint on a formal generic parameter of a class that is used in the generic constraint of another class is changed.  When the system is recompiled, the compiler correctly reports a VTCG error.  But when the constraint is changed back to its original valid form and compilation is resumed, the compiler dies with a bus error.
+
+copy_sub 	 Ace $TEST Ace
+define		 ACTUAL_GENERIC "G"
+define		 GENERIC_CONSTRAINT "STRING"
+copy_raw 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+copy_sub 	 test3.e  $CLUSTER test3.e
+compile_melted
+compile_result 	 ok
+
+define		 ACTUAL_GENERIC "SEQ_STRING"
+define		 GENERIC_CONSTRAINT "SEQ_STRING"
+copy_sub 	 test1.e  $CLUSTER test1.e
+copy_sub 	 test3.e  $CLUSTER test3.e
+compile_melted
+compile_result 	 validity_error TEST2 VTCG
+
+define		 ACTUAL_GENERIC "G"
+define		 GENERIC_CONSTRAINT "STRING"
+copy_sub 	 test1.e  $CLUSTER test1.e
+copy_sub 	 test3.e  $CLUSTER test3.e
+resume_compile
+compile_result 	 ok
+
+test_end

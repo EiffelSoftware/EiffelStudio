@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 inherit-create-like-attr
+test_description A routine which prints `(create {like x}).generating_type' is written in class A and inherited by class B.  Class B redefines the type of `x' from ANY to MEM_CONST.  When the routine is called on an object of type B, it prints "ANY" instead of "MEM_CONST".
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 a.e  $CLUSTER a.e
+copy_raw 	 b.e  $CLUSTER b.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

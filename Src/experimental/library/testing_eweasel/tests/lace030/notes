@@ -1,0 +1,4 @@
+An Ace which includes the option `inlining_size ("47_weasels")' should
+provoke a VD15 error, but the compiler accepts it.
+
+Discovered in Release 3.3.3.

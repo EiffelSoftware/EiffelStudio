@@ -1,0 +1,5 @@
+A class with a boolean expression which has 200 occurrences of an
+`and' or `or' operator causes the compiler to die with a panic during
+pass 3 on the enclosing class.
+
+Discovered in Release 3.2.4.

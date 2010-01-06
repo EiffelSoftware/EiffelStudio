@@ -1,0 +1,5 @@
+Finalizing a system with an instruction `print ($x)' where `x' is a
+local of type POINTER generates C code which won't compile.
+
+Discovered in Release 5.5.1012.
+

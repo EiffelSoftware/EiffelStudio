@@ -1,0 +1,9 @@
+A class calls a function whose return type is an expanded type.  The
+expanded class on which the expanded type is based has a creation
+procedure.  If the system is finalized with dead code removal on, the
+generated C code will compile but won't link.  This appears to be a
+dead code removal problem.
+
+Discovered in Release 3.2.3b.
+
+

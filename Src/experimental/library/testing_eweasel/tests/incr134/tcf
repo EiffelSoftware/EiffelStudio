@@ -1,0 +1,44 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	remove-part-of-external-decl
+test_description After initial compilation where the system is frozen, an external routine which has a Special_external_declaration, Signature and Include_files has its External part simplified to just `external "C"'. When the system is refrozen, the C code incorrectly uses the old information about the external routine (prior to the change).  Same problem with finalizing and re-finalizing code.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+define		EXTERNAL_STRING "C [macro %"weasel.h%"] | <stdio.h>"
+copy_sub 	test2.e $CLUSTER test2.e
+compile_frozen
+compile_result 	ok
+
+define		EXTERNAL_STRING "C inline"
+copy_sub 	test2.e $CLUSTER test2.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+cleanup_compile
+
+copy_sub 	Ace1 $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+define		EXTERNAL_STRING "C [macro %"weasel.h%"] | <stdio.h>"
+copy_sub 	test2.e $CLUSTER test2.e
+compile_final
+compile_result 	 ok
+
+define		EXTERNAL_STRING "C inline"
+copy_sub 	test2.e $CLUSTER test2.e
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

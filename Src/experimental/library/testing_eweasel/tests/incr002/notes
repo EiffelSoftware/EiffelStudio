@@ -1,0 +1,6 @@
+Compiling a valid class with a multi-branch and then changing the type
+of one of the choices (which is a constant attribute) from INTEGER to
+DOUBLE and recompiling causes the VOMB violation to go undetected.
+
+Discovered in Prerelease 93.07.15.
+

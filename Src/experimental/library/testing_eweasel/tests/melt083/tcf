@@ -1,0 +1,25 @@
+
+test_name 	melted-agent-call-on-void-target
+test_description An agent call on a void target in an assertion gets a seg fault when system is melted.  Frozen code correctly gets a call on Void target exception.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

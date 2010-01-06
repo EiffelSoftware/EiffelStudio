@@ -1,0 +1,31 @@
+test_name 	 polymorphic-call-leak
+test_description A system disable the GC and perform a dynamic call that should not in theory creates any objects. But we quickly ran out of memory.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 a.e  $CLUSTER a.e
+copy_raw 	 b.e  $CLUSTER b.e
+copy_raw 	 c.e  $CLUSTER c.e
+copy_raw 	 d.e  $CLUSTER d.e
+copy_raw 	 my_string.e  $CLUSTER my_string.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1 1000000
+execute_result	 ok
+compare		 exec_output1 output
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output2 1000000
+execute_result	ok
+compare		exec_output2 output
+
+test_end

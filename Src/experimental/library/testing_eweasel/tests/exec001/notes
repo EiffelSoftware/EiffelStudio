@@ -1,0 +1,5 @@
+A procedure which prints out some double constants prints correct
+values, but `print' does not print many of the significant digits
+(io.putdouble does).
+
+Found in Prerelease 93.07.15.

@@ -1,0 +1,12 @@
+
+test_name bogus-vevi-on-inspect-empty-interval
+test_description A routine has an inspect instruction with a when clause that has an empty interval 4..3.  Even though this branch sets Result, the compiler reports a spurious VEVI error.
+-- FIXME: Change Ace to use precompile of base.ecf and change base-safe.ecf to base.ecf
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

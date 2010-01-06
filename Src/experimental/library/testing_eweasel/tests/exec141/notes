@@ -1,0 +1,6 @@
+An when clause of an inspect instruction does not work
+correctly if the constant is of type CHARACTER and is > '%/127/.
+
+Reported by Manu on November 5, 2002.
+
+

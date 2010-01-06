@@ -1,0 +1,13 @@
+
+test_name 	 undetected-vuot-error
+test_description The compiler does not detect a VUOT(1) error in an expression with this error if the expression is the actual argument to a routine call or is the expression of an object test
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	validity_error TEST VUOT(1) VUOT(1)
+
+test_end

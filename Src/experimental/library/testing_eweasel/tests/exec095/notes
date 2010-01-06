@@ -1,0 +1,8 @@
+An internal routine A with no rescue clause calls a second internal
+routine B, passing it some feature addresses.  Routine B raises an
+exception.  After initial compilation where the system is frozen, the
+routine B is modified to cause it to be melted.  When routine A is
+called repeatedly, more and more C memory is used, which seems to
+indicate a memory leak.
+
+Discovered in Release 3.2.4.

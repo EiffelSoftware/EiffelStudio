@@ -1,0 +1,7 @@
+A generic class whose formal generic parameter G is constrained by
+STRING has a call to an agent whose open target is {G}.  After initial
+compilation, the generic constraint is removed.  When the system is
+recompiled, the compiler does not detect the newly introduced VEEN
+error.
+
+Discovered in release 5.4.0610.

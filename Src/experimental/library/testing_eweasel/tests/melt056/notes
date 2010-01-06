@@ -1,0 +1,7 @@
+A system has a call whose target is of an expanded type `expanded
+FOO', where class FOO is not declared as an expanded class.  The call
+is to a function whose return type is `like Current'.  Melting the
+system works fine but when the system is executed it dies with a
+segmentation fault.  Frozen code works fine.
+
+Discovered in release 5.4.0403.

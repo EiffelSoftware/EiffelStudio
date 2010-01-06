@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 finalize-array-opt-remove-dead
+test_description Finalizing a system with an Ace which specifies both `dead_code_removal (no)' and `array_optimization (yes)' causes the compiler to die while generating `eplug.c'.  Finalizing with the -keep option to retain assertions suppresses dead code removal so it also causes the compiler to die if array optimization is on.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test1.e $CLUSTER test1.e
+compile_final
+compile_result 	 ok
+	
+test_end

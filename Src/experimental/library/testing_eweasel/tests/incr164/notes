@@ -1,0 +1,6 @@
+After initial compilation, an inheritance clause is deleted,
+thereby introducing a VTCG error because actual generic #2
+no longer conforms to actual generic #1, as required by generic class.
+The compiler does not detect the error.
+
+Discovered in Release 5.0.015.

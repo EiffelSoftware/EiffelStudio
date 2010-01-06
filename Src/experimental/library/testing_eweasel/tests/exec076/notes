@@ -1,0 +1,7 @@
+A class repeatedly creates a manifest array with a single element of
+type BIT 32.  Executing the system results in a segmentation fault or
+run-time panic after a large number of iterations.  If garbage
+collection is off or the BIT 32 array element is not a local entity,
+the system executes correctly.
+
+Discovered in Release 3.2.4.

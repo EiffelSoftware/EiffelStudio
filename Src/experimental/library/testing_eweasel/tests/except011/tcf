@@ -1,0 +1,33 @@
+test_name 	exception-in-rescue
+test_description Exception previous to exception in rescue should be thrown away
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	application.e $CLUSTER application.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output
+execute_result ok
+if DOTNET compare		exec_output output1
+if not DOTNET compare		exec_output output
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output1
+execute_result 	ok
+if DOTNET compare		exec_output1 output1
+if not DOTNET compare		exec_output1 output
+
+compile_final_keep
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output2
+execute_result ok
+compare		exec_output2 output1
+ 
+test_end

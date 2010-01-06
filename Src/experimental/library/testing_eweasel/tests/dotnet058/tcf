@@ -1,0 +1,25 @@
+test_name expected-any-type-name
+test_description A simple check that the kernel classes are located in the correct namespace, and use .NET naming convention.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+cleanup_compile
+
+copy_sub Ace-mt $TEST Ace
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

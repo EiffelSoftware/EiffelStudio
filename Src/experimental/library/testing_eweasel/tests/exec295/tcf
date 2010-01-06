@@ -1,0 +1,36 @@
+
+test_name 	 check-invariant-attached-by-default
+test_description A system has a routine with a qualified call to an inherited routine.  If invariants are monitored and is_attached_by_default="true", system execution ends with a seg fault.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output
+
+compile_final_keep
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output3
+execute_result	ok
+compare		exec_output3 output
+
+test_end

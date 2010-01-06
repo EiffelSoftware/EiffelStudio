@@ -1,0 +1,19 @@
+test_name 	 inlining-with-formal-2
+test_description Inlining a routine in a class where the parent class only generic parameter is actually the second or greater generic parameter of the current class crashes during degree minus 3.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw	t_cursor.e $CLUSTER t_cursor.e
+copy_raw	t_linear.e $CLUSTER t_linear.e
+copy_raw	t_linear_cursor.e $CLUSTER t_linear_cursor.e
+copy_raw	t_table.e $CLUSTER t_table.e
+copy_raw	t_table_cursor.e $CLUSTER t_table_cursor.e
+copy_raw	t_traversable.e $CLUSTER t_traversable.e
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

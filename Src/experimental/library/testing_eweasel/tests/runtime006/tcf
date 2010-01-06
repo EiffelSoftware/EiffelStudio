@@ -1,0 +1,28 @@
+test_name gc-expanded-allocating-memory-in-special-2
+test_description SPECIAL containing expanded objects without references should not cause crash at run-time in finalized mode when the expanded objects as a creation routine that triggers some GC cycle memory or when calling a routine that also triggers a GC cycle.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1	100 1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE 	exec_output2	100 1
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

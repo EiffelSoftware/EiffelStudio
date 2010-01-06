@@ -1,0 +1,13 @@
+-- This is a test control file
+
+test_name multi-constraint-tuples
+test_description Two TUPLE types as constraint types.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	multi.e $CLUSTER multi.e
+
+
+compile_melted
+compile_result validity_error MULTI VTMC(1) VTMC(1)
+test_end

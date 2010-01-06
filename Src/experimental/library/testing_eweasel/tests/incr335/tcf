@@ -1,0 +1,26 @@
+
+test_name	ececil-undefined-symbol-3
+test_description After initial compilation, a generic class is changed to non-generic and the inheritance clause of its only descendant is adjusted according.  When the system is frozen, it won't link due to an undefined symbol in ececil.c
+
+define	 	FORMAL_GENERICS "[G]"
+define	 	ACTUAL_GENERICS "[STRING]"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+define	 	FORMAL_GENERICS ""
+define	 	ACTUAL_GENERICS ""
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

@@ -1,0 +1,17 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 missing-vuar-on-argument-anchor
+test_description A feature call should report a VUAR error but does not when the argument anchor is within the actual generic parameter of a generic type appearing in the signature of the routine.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VUAR(2)
+
+test_end

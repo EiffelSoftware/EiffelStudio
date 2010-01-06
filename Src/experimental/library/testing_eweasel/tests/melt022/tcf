@@ -1,0 +1,29 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	ensure-extend-linked-list
+test_description After initial melting of a root class whose creation procedure has an empty body, a local of type LINKED_LIST [STRING] is added and the routine body is modified to create the linked list and extend it with one string.  The assertion level is `ensure'.  When the system is recompiled and executed, system execution ends with a segmentation fault in `go_to' of LINKED_LIST.
+
+copy_sub 	Ace $TEST Ace
+define		LOCALS ""
+define		BODY ""
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+define		LOCALS "list: LINKED_LIST [STRING]"
+define		BODY "!!list.make; list.extend ("weasel"); io.putstring (list.i_th (1)); io.new_line;"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

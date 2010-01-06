@@ -1,0 +1,9 @@
+A system has a class that inherits a deferred feature `value', which
+is of type string, and effects it with a string constant.  After
+initial compilation, the effecting feature name is changed,
+introducing a VCCH(1) error.  When compiler reports the error, feature
+is changed back to `value' and compilation finishes.  But when the
+system is then frozen, the compiler dies with a segmentation fault in
+`real_body_id'.
+
+Discovered in release 5.2.0914.

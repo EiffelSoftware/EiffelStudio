@@ -1,0 +1,15 @@
+test_name deferred-property-function-on-single
+test_description Ensures the correct code is generated for an effective portion of a deferred property declaration
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw base.e $CLUSTER base.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

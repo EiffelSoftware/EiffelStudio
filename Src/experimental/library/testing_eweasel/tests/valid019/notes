@@ -1,0 +1,7 @@
+A feature name appears in the Redefine subclause and the Features part
+of the class contains a redeclaration which effects the feature.  The
+compiler does not complain although this appears to violate VDRS4 on
+page 159.
+
+Still not fixed in Prerelease 93.02.17.
+

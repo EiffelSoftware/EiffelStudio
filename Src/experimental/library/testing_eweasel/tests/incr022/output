@@ -1,0 +1,17 @@
+[  0% - 15] Degree 6 cluster root_cluster
+Processing options
+[  0% - 1] Degree 5 class TEST
+-------------------------------------------------------------------------------
+
+Error code: VSRC(1)
+Lace error: system's root is generic class.
+What to do: make sure system uses non-generic class as root.
+
+Class: TEST [G]
+
+-------------------------------------------------------------------------------
+
+Press <Return> to resume compilation or <Q> to quit
+
+Eiffel compilation manager
+  (version 4.1 c)

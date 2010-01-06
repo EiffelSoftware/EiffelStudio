@@ -1,0 +1,81 @@
+test_name 	 attached-syntax
+test_description Verification that the Eiffel compiler follows the ECMA specification.
+
+define	EXPRESSION	"True"
+copy_sub 	 Ace $TEST Ace
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result   ok
+
+define	EXPRESSION	"attached u + u as w"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached {STRING} u + u as w"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached {STRING} old u + u as w"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached old u + u as w"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached old u + old u as w"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached {STRING} old u + old u as w"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached o = u as bool"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached o ~ u as bool"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached o /= u as bool"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached o /~ u as bool"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached {STRING} o = u as bool"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached {STRING} o ~ u as bool"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached {STRING} o /= u as bool"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+define	EXPRESSION	"attached {STRING} o /~ u as bool"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 20
+
+test_end

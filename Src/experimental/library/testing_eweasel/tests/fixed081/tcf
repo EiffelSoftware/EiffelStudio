@@ -1,0 +1,54 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 invalid-characters
+test_description Class text with the following characters: ~ % ? ` \ _ (tilde, percent, question mark, backquote, backslash, underscore)
+
+copy_sub 	 Ace $TEST Ace
+
+define		 INSTRUCTION "~~~~"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 syntax_error TEST 19
+
+define		 INSTRUCTION "%%%%"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 syntax_error TEST 19
+
+define		 INSTRUCTION "????"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 syntax_error TEST 19
+
+define		 INSTRUCTION "````"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 syntax_error TEST 19
+
+define		 INSTRUCTION "\ \ \ \"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 syntax_error TEST 19
+
+define		 INSTRUCTION "_____"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 syntax_error TEST 19
+
+define		 INSTRUCTION "print (5 \\\ 3);"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 syntax_error TEST 19
+
+define		 INSTRUCTION ";"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

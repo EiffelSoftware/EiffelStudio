@@ -1,0 +1,9 @@
+After initial compilation, an attribute listed in a strip expression
+is changed to a constant attribute, which elicits a VWST(1) error
+report.  Then an inheritance clause is added and the constant
+attribute is moved to an heir class.  The compiler still reports
+VWST(1), but cannot find the feature name (it says "Exception occurred
+while displaying error message.").  Resuming compilation causes a
+segmentation fault and license is not returned.
+
+Discovered in Release 3.2.1.

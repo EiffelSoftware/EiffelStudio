@@ -1,0 +1,8 @@
+A certain class causes an exception trace in the compiler during
+freezing.  Adding the following line to the only feature in the class
+and compiling from scratch prevents the error from occurring:
+		io.putstring ("In violate_loop%N");
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.07.15.
+

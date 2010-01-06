@@ -1,0 +1,19 @@
+test_name wrong-catcall-reported-on-generic-expanded
+test_description When handling an expanded generic derivation, we may trigger catcalls when there is none.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw my_list.e $CLUSTER my_list.e
+copy_raw exp.e $CLUSTER exp.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

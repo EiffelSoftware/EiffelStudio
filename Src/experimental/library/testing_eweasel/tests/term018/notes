@@ -1,0 +1,6 @@
+A class which provides NONE as actual generic parameter in a generic
+derivation of LINKED_LIST causes a run-time panic in the compiler
+during pass 3 on class DISPENSER.
+
+Discovered in Prerelease 93.05.17.
+

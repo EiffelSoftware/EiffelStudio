@@ -31,7 +31,7 @@ feature -- Initialization
 			frontend := a_frontend
 			port := a_port
 			create server_socket.make_bound (port)
-			create mutex
+			create mutex.make
 		end
 
 feature

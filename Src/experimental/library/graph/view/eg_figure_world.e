@@ -1145,8 +1145,11 @@ feature {NONE} -- Implementation
 					nodes.after
 				loop
 					if nodes.item.bounding_box.intersects (l_bbox) then
-						selected_figures.extend (nodes.item)
-						set_figure_selection_state (nodes.item, True)
+						if not selected_figures.has (nodes.item) then
+							selected_figures.extend (nodes.item)
+							set_figure_selection_state (nodes.item, True)
+							figure_was_selected := True
+						end
 					end
 					nodes.forth
 				end

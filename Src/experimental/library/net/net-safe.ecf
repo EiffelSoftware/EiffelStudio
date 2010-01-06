@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library.Net">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library.Net">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a">

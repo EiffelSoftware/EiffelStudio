@@ -81,17 +81,17 @@ feature
 			lrm, lwm, lem: POINTER
 			l_mask: POLL_MASK
 		do
-			if not ignore_read and then not read_command_list.all_default then
+			if not ignore_read and then not internal_read_command_list.is_empty then
 				l_mask := read_mask.twin
 				lrm := l_mask.mask.item
 				last_read_mask := l_mask
 			end;
-			if not ignore_write and then not write_command_list.all_default then
+			if not ignore_write and then not internal_write_command_list.is_empty then
 				l_mask := write_mask.twin
 				lwm := l_mask.mask.item
 				last_write_mask := l_mask
 			end;
-			if not ignore_exception and then not exception_command_list.all_default then
+			if not ignore_exception and then not internal_exception_command_list.is_empty then
 				l_mask := except_mask.twin
 				lem := l_mask.mask.item
 				last_except_mask := l_mask
@@ -133,65 +133,56 @@ feature -- process set commands
 		require
 			valid_number: number_of_selected > 0
 		local
-			counter, counter1: INTEGER;
-			a_command: detachable POLL_COMMAND
+			counter: INTEGER;
+			a_command: POLL_COMMAND
 			l_last_mask: detachable POLL_MASK
 		do
-			if not ignore_read and then not read_command_list.all_default then
+			if not ignore_read and then not internal_read_command_list.is_empty then
 				from
 					l_last_mask := last_read_mask
 					check l_last_mask_attached: l_last_mask /= Void end
-					counter1 := read_command_list.lower
+					internal_read_command_list.start
 				until
-					counter1 > read_command_list.upper or else
-						not (counter < number_of_selected)
+					internal_read_command_list.after or else not (counter < number_of_selected)
 				loop
-					a_command := read_command_list.item (counter1);
-					if a_command /= Void then
-						if l_last_mask.is_medium_ready (a_command.active_medium) then
-							a_command.execute (Void);
-							counter := counter + 1
-						end
-					end;
-					counter1 := counter1 + 1
+					a_command := internal_read_command_list.item_for_iteration
+					if l_last_mask.is_medium_ready (a_command.active_medium) then
+						a_command.execute (Void);
+						counter := counter + 1
+					end
+					internal_read_command_list.forth
 				end
 			end;
-			if not ignore_write and then counter < number_of_selected and then not write_command_list.all_default then
+			if not ignore_write and then counter < number_of_selected and then not internal_write_command_list.is_empty then
 				from
 					l_last_mask := last_write_mask
 					check l_last_mask_attached: l_last_mask /= Void end
-					counter1 := write_command_list.lower
+					internal_write_command_list.start
 				until
-					counter1 > write_command_list.upper or else
-						not (counter < number_of_selected)
+					internal_write_command_list.after or else not (counter < number_of_selected)
 				loop
-					a_command := write_command_list.item (counter1);
-					if a_command /= Void then
-						if l_last_mask.is_medium_ready (a_command.active_medium) then
-							a_command.execute (Void);
-							counter := counter + 1
-						end
-					end;
-					counter1 := counter1 + 1
+					a_command := internal_write_command_list.item_for_iteration
+					if l_last_mask.is_medium_ready (a_command.active_medium) then
+						a_command.execute (Void);
+						counter := counter + 1
+					end
+					internal_write_command_list.forth
 				end
 			end;
-			if not ignore_exception and then counter < number_of_selected and then not exception_command_list.all_default then
+			if not ignore_exception and then counter < number_of_selected and then not internal_exception_command_list.is_empty then
 				from
 					l_last_mask := last_except_mask
 					check l_last_mask_attached: l_last_mask /= Void end
-					counter1 := exception_command_list.lower
+					internal_exception_command_list.start
 				until
-					counter1 > exception_command_list.upper or else
-					   not (counter < number_of_selected)
+					internal_exception_command_list.after or else not (counter < number_of_selected)
 				loop
-					a_command := exception_command_list.item (counter1);
-					if a_command /= Void then
-						if l_last_mask.is_medium_ready (a_command.active_medium) then
-							a_command.execute (Void);
-							counter := counter + 1
-						end
-					end;
-					counter1 := counter1 + 1
+					a_command := internal_exception_command_list.item_for_iteration
+					if l_last_mask.is_medium_ready (a_command.active_medium) then
+						a_command.execute (Void);
+						counter := counter + 1
+					end
+					internal_exception_command_list.forth
 				end
 			end
 		end
@@ -284,14 +275,81 @@ feature -- booleans to decide whether to include each mask in the select call
 			write_not_used: ignore_write
 		end
 
+feature -- Status Report
+
+	has_read_command (a_command: POLL_COMMAND): BOOLEAN
+			-- Is `a_command' part of the read commands list?
+		do
+			Result := internal_read_command_list.has_item (a_command)
+		end
+
+	has_write_command (a_command: POLL_COMMAND): BOOLEAN
+			-- Is `a_command' part of the write commands list?
+		do
+			Result := internal_write_command_list.has_item (a_command)
+		end
+
+	has_exception_command (a_command: POLL_COMMAND): BOOLEAN
+			-- Is `a_command' part of the exception commands list?
+		do
+			Result := internal_exception_command_list.has_item (a_command)
+		end
+
+	has_associated_read_handle (a_handle: INTEGER): BOOLEAN
+			-- Is `a_command' part of the read commands list?
+		do
+			Result := internal_read_command_list.has (a_handle)
+		end
+
+	has_associated_write_handle (a_handle: INTEGER): BOOLEAN
+			-- Is `a_command' part of the write commands list?
+		do
+			Result := internal_write_command_list.has (a_handle)
+		end
+
+	has_associated_exception_handle (a_handle: INTEGER): BOOLEAN
+			-- Is `a_command' part of the exception commands list?
+		do
+			Result := internal_exception_command_list.has (a_handle)
+		end
+
 feature -- commands to be executed
 
-	read_command_list: ARRAY [detachable POLL_COMMAND]
+	read_command_list: ARRAY [POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for read event.
-		once
-			create Result.make (0, 10)
-		end;
+		obsolete
+			"[
+				It is a read only structure for backward compatibility, use `put_read_command' and
+				`remove_read_command' to modify its content.
+			]"
+		do
+			Result := internal_read_command_list.linear_representation.to_array
+		end
+
+	write_command_list: ARRAY [POLL_COMMAND]
+			-- List of poll commands to be called
+			-- when their medium is selected for write event.
+		obsolete
+			"[
+				It is a read only structure for backward compatibility, use `put_write_command' and
+				`remove_write_command' to modify its content.
+			]"
+		do
+			Result := internal_write_command_list.linear_representation.to_array
+		end
+
+	exception_command_list: ARRAY [POLL_COMMAND]
+			-- List of poll commands to be called
+			-- when their medium is selected for exception event.
+		obsolete
+			"[
+				It is a read only structure for backward compatibility, use `put_exception_command' and
+				`remove_exception_command' to modify its content.
+			]"
+		do
+			Result := internal_exception_command_list.linear_representation.to_array
+		end
 
 	put_read_command (a_command: POLL_COMMAND)
 			-- Set `a_command' to be called when read event is
@@ -301,41 +359,34 @@ feature -- commands to be executed
 			not_empty_medium: a_command.active_medium /= Void
 		do
 			read_mask.set_medium (a_command.active_medium);
-			read_command_list.force (a_command, a_command.active_medium.handle)
+			internal_read_command_list.force (a_command, a_command.active_medium.handle)
 		ensure
-			command_added: read_command_list.has (a_command)
+			command_added: has_read_command (a_command)
 		end;
 
 	remove_read_command (a_command: POLL_COMMAND)
 			-- Remove `a_command' from read registered media.
 		require
 			valid_command: a_command /= Void;
-			has_command: read_command_list.has (a_command);
+			has_command: has_read_command (a_command)
 			not_empty_medium: a_command.active_medium /= Void
 		do
-			read_command_list.put (Void, a_command.active_medium.handle);
+			internal_read_command_list.remove (a_command.active_medium.handle);
 			read_mask.clear_medium (a_command.active_medium)
 		ensure
-			command_removed: not read_command_list.has (a_command)
+			command_removed: not has_read_command (a_command)
 		end;
 
 	remove_associated_read_command (s: IO_MEDIUM)
 			-- Remove command associated with medium `s' from
 			-- read registered media.
 		require
-				has_command: read_command_list.upper >= s.handle
+			has_command: has_associated_read_handle (s.handle)
 		do
-			read_command_list.put (Void, s.handle);
+			internal_read_command_list.remove (s.handle);
 			read_mask.clear_medium (s)
 		ensure
-			command_removed: read_command_list.item (s.handle) = Void
-		end;
-
-	write_command_list: ARRAY [detachable POLL_COMMAND]
-			-- List of poll commands to be called
-			-- when their medium is selected for write event.
-		once
-			create Result.make (0, 10)
+			command_removed: not has_associated_read_handle (s.handle)
 		end;
 
 	put_write_command (a_command: POLL_COMMAND)
@@ -346,39 +397,32 @@ feature -- commands to be executed
 			not_empty_medium: a_command.active_medium /= Void
 		do
 			write_mask.set_medium (a_command.active_medium);
-			write_command_list.force (a_command, a_command.active_medium.handle)
+			internal_write_command_list.force (a_command, a_command.active_medium.handle)
 		ensure
-			command_added: write_command_list.has (a_command)
+			command_added: has_write_command (a_command)
 		end;
 
 	remove_write_command (a_command: POLL_COMMAND)
 			-- Remove `a_command' from write registered media.
 		require
-			has_command: write_command_list.has (a_command)
+			has_command: has_write_command (a_command)
 		do
-			write_command_list.put (Void, a_command.active_medium.handle);
+			internal_write_command_list.remove (a_command.active_medium.handle)
 			write_mask.clear_medium (a_command.active_medium)
 		ensure
-			command_removed: not write_command_list.has (a_command)
+			command_removed: not has_write_command (a_command)
 		end;
 
 	remove_associated_write_command (s: IO_MEDIUM)
 			-- Remove command associated with medium `s' from
 			-- write registered media.
 		require
-			has_command: write_command_list.upper >= s.handle
+			has_command: has_associated_write_handle (s.handle)
 		do
-			write_command_list.put (Void, s.handle);
+			internal_write_command_list.remove (s.handle);
 			write_mask.clear_medium (s)
 		ensure
-			command_removed: write_command_list.item (s.handle) = Void
-		end;
-
-	exception_command_list: ARRAY [detachable POLL_COMMAND]
-			-- List of poll commands to be called
-			-- when their medium is selected for exception event.
-		once
-			create Result.make (0, 10)
+			command_removed: not has_associated_write_handle (s.handle)
 		end;
 
 	put_exception_command (a_command: POLL_COMMAND)
@@ -389,41 +433,62 @@ feature -- commands to be executed
 			not_empty_medium: a_command.active_medium /= Void
 		do
 			except_mask.set_medium (a_command.active_medium);
-			exception_command_list.force (a_command, a_command.active_medium.handle)
+			internal_exception_command_list.force (a_command, a_command.active_medium.handle)
 		ensure
-			command_added: exception_command_list.has (a_command)
+			command_added: has_exception_command (a_command)
 		end;
 
 	remove_exception_command (a_command: POLL_COMMAND)
 			-- Remove `a_command' from exception registered media.
 		require
-			has_command: exception_command_list.has (a_command)
+			has_command: has_exception_command (a_command)
 		do
-			exception_command_list.put (Void, a_command.active_medium.handle);
+			internal_exception_command_list.remove (a_command.active_medium.handle);
 			except_mask.clear_medium (a_command.active_medium)
 		ensure
-			command_removed: not exception_command_list.has (a_command)
+			command_removed: not has_exception_command (a_command)
 		end;
 
 	remove_associated_exception_command (s: IO_MEDIUM)
 			-- Remove command associated with medium `s' from
 			-- exception registered media.
 		require
-			has_command: exception_command_list.upper >= s.handle
+			has_command: has_associated_exception_handle (s.handle)
 		do
-			exception_command_list.put (Void, s.handle);
+			internal_exception_command_list.remove (s.handle);
 			except_mask.clear_medium (s)
 		ensure
-			command_removed: exception_command_list.item (s.handle) = Void
+			command_removed: not has_associated_exception_handle (s.handle)
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	c_select (nfds: INTEGER; rmask, wmask, emask: POINTER; time_sec, time_millisec: INTEGER): INTEGER
 			-- External C routine designed for asynchronous IO
 		external
 			"C blocking"
 		end
+
+	internal_read_command_list: HASH_TABLE [POLL_COMMAND, INTEGER]
+			-- List of poll commands to be called
+			-- when their medium is selected for read event.
+		once
+			create Result.make (10)
+		end;
+
+	internal_write_command_list: HASH_TABLE [POLL_COMMAND, INTEGER]
+			-- List of poll commands to be called
+			-- when their medium is selected for write event.
+		once
+			create Result.make (10)
+		end;
+
+	internal_exception_command_list: HASH_TABLE [POLL_COMMAND, INTEGER]
+			-- List of poll commands to be called
+			-- when their medium is selected for exception event.
+		once
+			create Result.make (10)
+		end;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

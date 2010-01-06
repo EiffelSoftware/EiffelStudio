@@ -47,12 +47,9 @@ feature
 
 	create_from_name (hostname: STRING): detachable INET_ADDRESS
 			--
-		local
-			r: detachable ARRAY [INET_ADDRESS]
 		do
-			r := get_all_by_name (hostname)
-			if r /= Void and then not r.is_empty then
-				Result := r.item (1)
+			if attached get_all_by_name (hostname) as r and then not r.is_empty then
+				Result := r.first
 			end
 		end
 
@@ -106,7 +103,7 @@ feature {NONE} -- Implementation
 
 	INT16SZ: INTEGER = 2
 
-    get_all_by_name (a_host: STRING): detachable ARRAY[INET_ADDRESS]
+    get_all_by_name (a_host: STRING): detachable ARRAYED_LIST [INET_ADDRESS]
     	local
     		ipv6_expected: BOOLEAN
     		host: STRING
@@ -120,8 +117,8 @@ feature {NONE} -- Implementation
 			host := a_host
 			numeric_zone := -1
 			if host = Void or else host.is_empty then
-				create Result.make (1, 1)
-				Result.put (impl.loopback_address, 1)
+				create Result.make (1)
+				Result.extend (impl.loopback_address)
 			else
 				failed := False
 				if host.item (1) = '[' then
@@ -129,8 +126,8 @@ feature {NONE} -- Implementation
 						host := host.substring (2, host.count - 1)
 						ipv6_expected := True;
 					else
-						-- This was supposed to be a IPv6 address, but it's not!
-						-- TODO report error
+							-- This was supposed to be a IPv6 address, but it's not!
+							-- TODO report error
 						failed := True
 					end
 				end
@@ -147,14 +144,14 @@ feature {NONE} -- Implementation
 							end
 							addr_array := text_to_numeric_format_v6 (host);
 						elseif  ipv6_expected then
-							-- Means an IPv4 litteral between brackets!
-							-- TODO throw new UnknownHostException("["+host+"]");
-							-- TODO report error
+								-- Means an IPv4 litteral between brackets!
+								-- TODO throw new UnknownHostException("["+host+"]");
+								-- TODO report error
 							failed := True
 						end
 						if not failed then
 							if addr_array /= Void then
-								create Result.make (1, 1)
+								create Result.make (1)
 								if addr_array.count = {INET4_ADDRESS}.INADDRSZ then
 									create {INET4_ADDRESS} addr.make_from_host_and_address (Void, addr_array)
 								else
@@ -164,13 +161,13 @@ feature {NONE} -- Implementation
 										create {INET6_ADDRESS} addr.make_from_host_and_address_and_scope (Void, addr_array, numeric_zone)
 									end
 								end
-								Result.put (addr, 1)
+								Result.extend (addr)
 							end
 						end
 					elseif ipv6_expected then
-						-- TODO We were expecting an IPv6 Litteral, but got something else
-						-- throw new UnknownHostException("["+host+"]");
-						-- TODO report error
+							-- TODO We were expecting an IPv6 Litteral, but got something else
+							-- throw new UnknownHostException("["+host+"]");
+							-- TODO report error
 						failed := True
 						Result := Void
 					end
@@ -223,7 +220,7 @@ feature {NONE} -- Implementation
     	require
     		valid_src: src /= Void
     	local
-			splitted: ARRAY[STRING]
+			splitted: ARRAYED_LIST [STRING]
 			val: INTEGER
 			i: INTEGER
     	do
@@ -232,8 +229,8 @@ feature {NONE} -- Implementation
 				splitted := split (src, '.')
 			    inspect splitted.count
 			    when 1 then
-			    	if splitted.item(1).is_integer_32 then
-						val := splitted.item(1).to_integer_32
+			    	if splitted.i_th (1).is_integer_32 then
+						val := splitted.i_th (1).to_integer_32
 						if val >= 0 and then val <= 0xffffffff then
 							Result.put (((val |>> 24) & 0xff).as_natural_8, 1)
 							Result.put ((((val & 0xffffff) |>> 16) & 0xff).as_natural_8, 2)
@@ -246,12 +243,12 @@ feature {NONE} -- Implementation
 						Result := Void
 					end
 			    when 2 then
-			    	if splitted.item(1).is_integer_32 then
-						val := splitted.item(1).to_integer_32
+			    	if splitted.i_th (1).is_integer_32 then
+						val := splitted.i_th (1).to_integer_32
 						if val >= 0 and then val <= 0xff then
 							Result.put ((val & 0xff).as_natural_8, 1)
-							if splitted.item(2).is_integer_32 then
-								val := splitted.item(2).to_integer_32
+							if splitted.i_th (2).is_integer_32 then
+								val := splitted.i_th (2).to_integer_32
 								if val >= 0 and then val <= 0xffffffff then
 									Result.put (((val |>> 16) & 0xff).as_natural_8, 2)
 									Result.put ((((val & 0xffff) |>> 8) & 0xff).as_natural_8, 3)
@@ -272,8 +269,8 @@ feature {NONE} -- Implementation
 			    	until
 			    		i > 2 or else Result = Void
 			    	loop
-			    		if splitted.item(i).is_integer_32 then
-			    			val := splitted.item(i).to_integer_32
+			    		if splitted.i_th (i).is_integer_32 then
+			    			val := splitted.i_th (i).to_integer_32
 		    				if val >= 0 and then val <= 0xff then
 		    					Result.put ((val & 0xff).as_natural_8, i)
 		    				else
@@ -284,8 +281,8 @@ feature {NONE} -- Implementation
 		    			end
 		    			i := i + 1
 			    	end
-			    	if splitted.item(3).is_integer_32 then
-			    		val := splitted.item(3).to_integer_32
+			    	if splitted.i_th (3).is_integer_32 then
+			    		val := splitted.i_th (3).to_integer_32
 		    			if val >= 0 and then val <= 0xffff then
 		    				check result_attached: Result /= Void end
 							Result.put (((val |>> 8) & 0xff).as_natural_8, 3)
@@ -302,8 +299,8 @@ feature {NONE} -- Implementation
 			    	until
 			    		i > 4 or else Result = Void
 			    	loop
-			    		if splitted.item(i).is_integer_32 then
-			    			val := splitted.item(i).to_integer_32
+			    		if splitted.i_th (i).is_integer_32 then
+			    			val := splitted.i_th (i).to_integer_32
 		    				if val >= 0 and then val <= 0xff then
 		    					Result.put ((val & 0xff).as_natural_8, i)
 		    				else
@@ -511,14 +508,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	split (src: STRING; delimiter: CHARACTER): ARRAY[STRING]
+	split (src: STRING; delimiter: CHARACTER): ARRAYED_LIST [STRING]
 		require
     		valid_src: src /= Void
     	local
     		i: INTEGER
     		token: STRING
 		do
-			create Result.make (1, 0)
+			create Result.make (10)
 			if not src.is_empty then
 				from
 					i := 1
@@ -527,13 +524,13 @@ feature {NONE} -- Implementation
 					i > src.count
 				loop
 					if src.item (i) = delimiter then
-						Result.force (token, Result.count+1)
+						Result.extend (token)
 						create token.make_empty
 					elseif i = src.count then
 						token.extend(src.item (i))
-						Result.force (token, Result.count+1)
+						Result.extend (token)
 					else
-						token.extend(src.item (i))
+						token.extend (src.item (i))
 					end
 					i := i + 1
 				end
@@ -560,7 +557,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_all_by_name_0 (host: STRING): detachable ARRAY[INET_ADDRESS]
+	get_all_by_name_0 (host: STRING): detachable ARRAYED_LIST [INET_ADDRESS]
 		local
 			ai: detachable ADDRINFO
 			ia: INET_ADDRESS
@@ -568,7 +565,7 @@ feature {NONE} -- Implementation
 		do
 			ai := getaddrinfo(host)
 			if ai /= Void then
-				create Result.make (1, 0)
+				create Result.make (1)
 				from
 				until
 					ai = Void
@@ -579,11 +576,11 @@ feature {NONE} -- Implementation
 						-- the `ai' insance to get those constants.
 					if l_family = ai.af_inet then
 						create {INET4_ADDRESS} ia.make_from_host_and_pointer (host, ai.addr)
-						Result.force (ia, Result.count+1)
+						Result.extend (ia)
 					elseif l_family = ai.af_inet6 then
 						if is_ipv6_available then
 							create {INET6_ADDRESS} ia.make_from_host_and_pointer (host, ai.addr)
-							Result.force (ia, Result.count+1)
+							Result.extend (ia)
 						end
 					end
 					ai := ai.next

@@ -7,7 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
-		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
+		<precompile name="precompile" location="$ISE_PRECOMP\base-mt.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>

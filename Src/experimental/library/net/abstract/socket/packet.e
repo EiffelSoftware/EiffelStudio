@@ -48,7 +48,7 @@ feature -- Measurement
 
 feature -- Access
 
-	element alias "[]", infix "@" (i: INTEGER): CHARACTER assign put_element
+	element alias "[]", at alias "@" (i: INTEGER): CHARACTER assign put_element
 			-- Entry at index `i'.
 		require
 			valid_position: valid_position (i)

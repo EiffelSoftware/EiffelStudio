@@ -361,7 +361,7 @@ feature -- Removal
 			transactions.wipe_out
 			readable_set.wipe_out
 			writable_set.wipe_out
-			resource_hash.clear_all
+			resource_hash.wipe_out
 			optimized_transactions := Void
 			transfer_manager := Void
 		ensure

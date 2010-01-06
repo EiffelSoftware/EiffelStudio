@@ -648,7 +648,7 @@ feature -- Input
 				ext.set_count (return_val)
 				last_string := ext.substring (1, return_val)
 			else
-				last_string.clear_all
+				last_string.wipe_out
 			end
 		end
 

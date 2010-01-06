@@ -202,7 +202,7 @@ feature {NONE} -- Basic operations
 			l_header := memory_resource.header (H_from)
 			check l_header_attached: l_header /= Void end
 			l_header_from:= extracted_email (l_header.unique_entry)
-			sub_header.clear_all
+			sub_header.wipe_out
 			set_recipients
 			build_sub_header
 			send_all (l_header_from)

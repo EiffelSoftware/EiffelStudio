@@ -1,0 +1,7 @@
+A system with two classes is compiled.  The compiler detects the
+syntax error on the second class.  Then the root class is changed so
+that the second class is no longer reachable from the root.  When
+compilation is resumed, the compiler still reports a syntax error on
+the unreachable class.
+
+Discovered in Release 4.3-18.

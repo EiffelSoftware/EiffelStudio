@@ -1,0 +1,18 @@
+
+test_name	config-system-name-with-space
+test_description Compiling a system whose configuration file specified a system name with a space character caused C compilation to fail
+
+define SYS_NAME "te st"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result  validity_error NONE VD00
+
+define SYS_NAME "test"
+copy_sub 	Ace $TEST Ace
+
+resume_compile
+compile_result  ok
+
+test_end

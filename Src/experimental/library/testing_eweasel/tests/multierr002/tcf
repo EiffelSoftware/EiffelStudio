@@ -1,0 +1,14 @@
+test_name degree-5-forget-error
+test_description This test should not forget about an error that we haven't fixed.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error TEST1 VCFG(1)
+
+resume_compile
+compile_result	validity_error TEST1 VCFG(1)
+
+test_end

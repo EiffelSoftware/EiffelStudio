@@ -1,0 +1,7 @@
+A sequence of changes where system is melted several times, with
+varying versions of a routine (external, deferred, once) moved back
+and forth between two classes and with several errors along the way
+(VXRC, VDRD(7), VMFN, EXT_SAME_SIGN) causes the compiler to die with a
+segmentation fault in `set_has_loop'.
+
+Discovered in Release 5.0.015.

@@ -1,0 +1,5 @@
+A class with an external routine whose language is "C++" causes the
+compiler to die in `external_name'.
+
+Discovered in Release 5.0.016.
+

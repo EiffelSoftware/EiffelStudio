@@ -1,0 +1,21 @@
+class TEST
+
+create
+	make
+
+feature {NONE} -- Creation
+
+	make is
+			-- Execute test.
+		local
+			i8: INTEGER_8
+			i16: INTEGER_16
+		do
+			io.put_string ("")
+			io.put_integer (i8)
+			io.put_integer (i16)
+			io.put_boolean (true)
+			io.put_new_line
+		end
+		
+end

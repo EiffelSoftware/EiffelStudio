@@ -1,0 +1,5 @@
+A class with a Multi_branch whose only Choice seems to be
+syntactically illegal is accepted by the compiler.
+
+Still not fixed in Prerelease 93.02.17.
+

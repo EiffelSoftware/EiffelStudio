@@ -1,0 +1,6 @@
+A system creates an ARRAY [BIT 32] and tries to print item 1 without
+putting any items in the array.  It compiles fine, but dies with a
+run-time panic when executed (bit copy panic).
+
+Discovered in Release 3.2.3b.
+

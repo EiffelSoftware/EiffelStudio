@@ -1,0 +1,14 @@
+test_name	 argument-type-correct
+test_description At runtime the type of the root class argument should be ARRAY [!STRING_8] and not just ARRAY [?STRING_8] which causes a catcall as users usually simply write ARRAY [STRING_8] in void-safe mode with attached by default.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

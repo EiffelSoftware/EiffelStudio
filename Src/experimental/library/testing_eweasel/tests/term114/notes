@@ -1,0 +1,6 @@
+After initial compilation, a generic class TEST1 [G] is changed to a
+non-generic class and the class that inherits from TEST1 is changed
+correspondingly.  When the system is frozen, the compiler dies in
+degree -1.
+
+Discovered in release 5.4.0403.

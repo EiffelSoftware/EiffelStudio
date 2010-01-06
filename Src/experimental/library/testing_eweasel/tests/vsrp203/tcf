@@ -1,0 +1,16 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vsrp2-one-conform-arg
+test_description Root class which does not violate validity constraint VSRP2 because creation procedure takes one argument of a type which conforms to ARRAY [STRING]
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 my_string.e  $CLUSTER my_string.e
+compile_melted
+compile_result 	 validity_error TEST VSRP(2)
+test_end

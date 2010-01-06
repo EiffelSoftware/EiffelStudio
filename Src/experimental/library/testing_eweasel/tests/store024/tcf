@@ -1,0 +1,13 @@
+test_name	 stream-independent-store
+test_description Storing large amount of data in STREAM should not cause a crash.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

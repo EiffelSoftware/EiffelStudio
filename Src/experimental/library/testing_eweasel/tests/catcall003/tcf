@@ -1,0 +1,15 @@
+test_name catcall-check-failure-recursive-generic
+test_description Simple detection of a catcall where target of the call involves a recursive constraint generic crashes the catcall checker.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test_more_constraint.e $CLUSTER test_more_constraint.e
+copy_raw test_simple.e $CLUSTER test_simple.e
+copy_raw test1_bis.e $CLUSTER test1_bis.e
+copy_raw test_array.e $CLUSTER test_array.e
+
+compile_melted
+compile_result validity_warning TEST_ARRAY Catcall; TEST Catcall Catcall Catcall Catcall Catcall; NONE Catcall
+
+test_end

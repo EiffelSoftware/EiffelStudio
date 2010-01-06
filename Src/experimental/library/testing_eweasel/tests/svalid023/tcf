@@ -1,0 +1,18 @@
+test_name	 svalid-missing-recheck
+test_description Compiler should check code when a supplier changes.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+
+compile_melted
+compile_result	ok
+
+copy_raw	b_rev1.e $CLUSTER b.e
+
+compile_melted
+compile_result	validity_error TEST VUAR(2)
+
+test_end

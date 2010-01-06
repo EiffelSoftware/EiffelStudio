@@ -1,0 +1,7 @@
+A system is compiled with an Ace file which specifies a nonexistent
+library via `object: "-lweasel"'.  Then the `object' clause is removed
+completely from the Ace and system is melted.  When the previously
+generated C code is compiled, it won't link because the (nonexistent)
+library is still referenced.
+
+Discovered in release 5.4.0709.

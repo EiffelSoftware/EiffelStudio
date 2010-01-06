@@ -1,0 +1,7 @@
+If a client A of a class B has a valid creation instruction to create
+an instance of B, and B is then modified so that the creation
+instruction in A is no longer valid, the error is not detected.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.05.17.
+

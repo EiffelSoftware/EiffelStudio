@@ -1,0 +1,22 @@
+test_name 	 object-test-in-inherited-assertions
+test_description Object tests inherited in both pre- and postconditions should not cause a compiler crash.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+test_end

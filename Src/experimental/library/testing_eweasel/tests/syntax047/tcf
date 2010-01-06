@@ -1,0 +1,23 @@
+test_name multi-syntax-error
+test_description Test that all classes reachable from the root class are compiled and that we get a list of classes with syntax errors in them.
+
+define SYNTAX_ERROR "inherit"
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_sub test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+copy_sub test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result syntax_error TEST1 11; TEST3 11
+
+define SYNTAX_ERROR ""
+
+copy_sub test1.e $CLUSTER test1.e
+copy_sub test3.e $CLUSTER test3.e
+
+resume_compile
+compile_result ok
+
+test_end

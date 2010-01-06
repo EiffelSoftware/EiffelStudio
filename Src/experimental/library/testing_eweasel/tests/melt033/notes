@@ -1,0 +1,6 @@
+A routine whose rescue clause tries to display the meaning of the
+exception dies with an exception trace if the original exception is
+two levels down, the called routine also has a rescue clause and the
+code is melted.  Frozen code works fine.
+
+Discovered in Release 3.2.4.

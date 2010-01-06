@@ -1,0 +1,5 @@
+A fairly involved sequence of changes causes the compiler to die with
+an internal error after pass 3.
+
+Discovered in Release 3.2.
+

@@ -1,0 +1,17 @@
+test_name large-date-time-duration
+test_description When a duration is larger than an INTEGER_32, we have an overflow which results in a negative seconds_count, or an invalid `fine_seconds_count' in DATE_TIME_DURATION implementation
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output1
+execute_result ok
+
+compare exec_output1 output
+
+test_end

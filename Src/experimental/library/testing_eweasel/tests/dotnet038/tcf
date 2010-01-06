@@ -1,0 +1,15 @@
+test_name compatible-single-and-interface
+test_description It should be possible to inherit a .NET implementation type and a .NET interface in the same Eiffel class
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+
+test_end

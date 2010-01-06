@@ -1,0 +1,46 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 change-numeric-formal-argument
+test_description A class has routines which take an argument of type INTEGER, REAL, DOUBLE or ANY and calls to these routines passing an INTEGER. REAL or DOUBLE constant or variable.  After initial compilation where the system is frozen, formal argument types are change to a more general type (e.g., INTEGER is changed to REAL or DOUBLE or ANY, etc).  When changes are melted, system execution produces the wrong output and then a segmentation fault.
+
+copy_sub 	 Ace $TEST Ace
+define		 ARG_TYPE1 "INTEGER"
+define		 ARG_TYPE2 "INTEGER"
+define		 ARG_TYPE3 "INTEGER"
+define		 ARG_TYPE4 "REAL"
+define		 ARG_TYPE5 "REAL"
+define		 ARG_TYPE6 "DOUBLE"
+define		 ARG_TYPE7 "ANY"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		 ARG_TYPE1 "REAL"
+define		 ARG_TYPE2 "DOUBLE"
+define		 ARG_TYPE3 "ANY"
+define		 ARG_TYPE4 "DOUBLE"
+define		 ARG_TYPE5 "ANY"
+define		 ARG_TYPE6 "ANY"
+define		 ARG_TYPE7 "DOUBLE"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

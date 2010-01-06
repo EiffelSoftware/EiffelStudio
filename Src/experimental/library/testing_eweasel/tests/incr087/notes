@@ -1,0 +1,5 @@
+After initial compilation, an inherited integer constant attribute
+which is an inspect constant in the heir is changed to a function with
+no arguments.  The compiler does not detect the VOMB error.
+
+Discovered in Release 3.2.

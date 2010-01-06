@@ -1,0 +1,18 @@
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name multi-constraint-single-constraint-renaming2
+test_description This test checks single constraints can be renamed too and that they produce the same error messages as multi constraint renaming issues.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a1.e $CLUSTER a1.e
+compile_melted
+compile_result validity_error A1 VTGC(2)
+
+
+test_end

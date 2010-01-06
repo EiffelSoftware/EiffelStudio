@@ -1,0 +1,19 @@
+
+test_name 	 out-on-long-attribute-buffer-overflow
+test_description Calling `out' on an object with an attribute with a very long name (longer than about 512 characters) causes a buffer overflow and seg fault when system is executed
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	worker.e $CLUSTER worker.e
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output1 1 1
+execute_result	ok
+compare		exec_output1 output
+
+test_end

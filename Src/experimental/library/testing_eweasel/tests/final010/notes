@@ -1,0 +1,7 @@
+A system allocates an ARRAYED_LIST each of whose elements is an
+ARRAYED_LIST [STRING].  It then randomly assigns into the main list a
+random-length list of strings, each of whose STRING elements is a
+random length.  System execution ends with a run-time panic, but only
+if the system is finalized and array_optimization is on.
+
+Discovered in Release 3.3.3.

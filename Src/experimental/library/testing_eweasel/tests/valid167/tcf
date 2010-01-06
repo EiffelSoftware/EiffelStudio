@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 like-boolean-in-boolean-expressions
+test_description An entity is anchored to a feature whose type is BOOLEAN. Using this entity in a `if', `elseif', `loop' or assertion statement would be rejected by the compiler.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+test_end

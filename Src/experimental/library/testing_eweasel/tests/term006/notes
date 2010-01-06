@@ -1,0 +1,5 @@
+A class with a function which takes 700 arguments of type INTEGER and
+one call to that function causes the compiler to die with a PANIC.
+
+Still not fixed in Prerelease 93.02.17.
+

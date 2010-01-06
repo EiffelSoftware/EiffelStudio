@@ -1,0 +1,6 @@
+After initial compilation, the creation clause in root class is
+removed, introducing a VD27 error.  Then a generic parameters is added
+to root class and later removed.  Finally, the VD27 error is removed.
+The compiler dies in degree 4 with a run-time panic.
+
+Discovered in Release 5.0.015.

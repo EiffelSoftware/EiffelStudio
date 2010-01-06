@@ -1,0 +1,4 @@
+A class with an explicit creation type in a creation expression that
+appears in the class invariant causes compiler to die.
+
+Discovered in Release 4.3-17.

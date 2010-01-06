@@ -1,0 +1,14 @@
+test_name	attached-tuple-element-validity
+test_description A TUPLE with some attached types should also verify that the passed arguments are indeed valid.
+
+copy_sub	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

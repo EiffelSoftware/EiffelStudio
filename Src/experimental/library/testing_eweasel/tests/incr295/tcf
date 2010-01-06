@@ -1,0 +1,29 @@
+test_name generic-replication-nc-crash
+test_description Demonstrate a compiler crash after changes containing generic class, replication and non-conforming inheritance.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw a.e $CLUSTER a.e
+copy_raw b.e $CLUSTER b.e
+
+compile_frozen
+compile_result ok
+
+copy_raw a1.e $CLUSTER a.e
+copy_raw b1.e $CLUSTER b.e
+copy_raw np.e $CLUSTER np.e
+copy_raw test1.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+compile_frozen
+compile_result ok
+
+copy_raw a.e $CLUSTER a.e
+copy_raw b.e $CLUSTER b.e
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

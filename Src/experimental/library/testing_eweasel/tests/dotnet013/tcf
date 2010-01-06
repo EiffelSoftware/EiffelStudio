@@ -1,0 +1,15 @@
+test_name nested-external-call-which-is-static
+test_description Doing a nest call on an external which is actually a static call would generate incorrect code because it was still doing the call as a normal call.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output
+execute_result ok
+
+compare exec_output output
+
+test_end

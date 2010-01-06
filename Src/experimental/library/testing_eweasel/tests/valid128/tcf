@@ -1,0 +1,19 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	generic-static-vtcg
+test_description A call to a static feature `feature {FOO [DOUBLE]}.value' where FOO is declared as FOO [G -> STRING] should elicit a VTCG error but the compiler accepts the invalid type.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST VTCG
+-- VTGD(2)
+
+test_end

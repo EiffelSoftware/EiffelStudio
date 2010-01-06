@@ -1,0 +1,12 @@
+test_name repeated-non-conforming-inheritance-of-generic-type-from-parents
+test_description Allow shared features from repeated non-conforming inheritance of the same generaic types from parents.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw p1.e $CLUSTER p1.e
+copy_raw p2.e $CLUSTER p2.e
+
+compile_melted
+compile_result 	ok
+
+test_end

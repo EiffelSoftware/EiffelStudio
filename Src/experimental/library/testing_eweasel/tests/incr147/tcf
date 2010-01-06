@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 melt-then-empty-ace
+test_description After initial compilation, the entire contents of the Ace file is deleted so that it is a completely empty file.  When the system is recompiled, the compiler dies.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+copy_sub 	 Ace_rev1 $TEST Ace
+compile_melted
+compile_result 	 validity_error NONE VD00
+
+resume_compile
+compile_result 	 validity_error NONE VD00
+
+test_end

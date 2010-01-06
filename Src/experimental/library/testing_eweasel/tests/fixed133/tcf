@@ -1,0 +1,10 @@
+test_name 	 generic-constraint-to-none
+test_description A call to a feature on a formal type which is constraint to NONE causes the compiler to crash.
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST1 VUEX(2)
+
+test_end

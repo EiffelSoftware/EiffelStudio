@@ -1,0 +1,5 @@
+Finalizing a system with a call to an inline C external routine with
+10 or more arguments, where the call passes a single local for all the
+actual arguments, generates C code that won't compile.
+
+Discovered in release 5.4.0515.

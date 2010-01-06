@@ -1,0 +1,133 @@
+#!/bin/sh
+
+# Note: add -v or -x option to /bin/sh line above to debug any problems
+
+# Compile EiffelWeasel (finalize it), both single-threaded and 
+# multi-threaded versions.
+# Compile the generated C code and copy the executable to:
+#	
+#	$EWEASEL/spec/$ISE_PLATFORM/bin/eweasel
+#	$EWEASEL/spec/$ISE_PLATFORM/bin/eweasel-mt
+
+# Check command line arguments
+
+keep=0
+if [ $# -gt 0 ]; then
+	arg=$1
+	if [ "$arg" != "keep" -a "$arg" != "-keep" ] ; then
+		echo "Usage: compile_eweasel [ -keep ]"
+		exit 1
+	fi
+	keep=1
+fi
+
+# Check that required environment variables are set and are valid
+
+if [ "$EWEASEL" = "" ] ; then
+	echo "Environment variable \$EWEASEL is not set"
+	echo "Please set it to eweasel root directory"
+	exit 1
+fi
+if [ ! -d "$EWEASEL" ] ; then
+	echo "Value of \$EWEASEL environment variable is not a directory"
+	echo "\$EWEASEL = $EWEASEL"
+	exit 1
+fi
+
+if [ "$ISE_EIFFEL" = "" ] ; then
+	echo "Environment variable \$ISE_EIFFEL is not set"
+	exit 1
+fi
+if [ ! -d "$ISE_EIFFEL" ] ; then
+	echo "Value of \$ISE_EIFFEL environment variable is not a directory"
+	echo "\$ISE_EIFFEL = $ISE_EIFFEL"
+	exit
+fi
+
+if [ "$ISE_PLATFORM" = "" ] ; then
+	echo "Environment variable \$ISE_PLATFORM is not set"
+	exit
+fi
+if [ ! -d "$EWEASEL/spec" ] ; then
+	mkdir $EWEASEL/spec
+fi
+if [ ! -d "$EWEASEL/spec/$ISE_PLATFORM" ] ; then
+	mkdir $EWEASEL/spec/$ISE_PLATFORM
+fi
+if [ ! -d "$EWEASEL/spec/$ISE_PLATFORM/bin" ] ; then
+	mkdir $EWEASEL/spec/$ISE_PLATFORM/bin
+fi
+if [ ! -d "$EWEASEL/spec/$ISE_PLATFORM/project" ] ; then
+	mkdir $EWEASEL/spec/$ISE_PLATFORM/project
+fi
+if [ ! -d "$EWEASEL/spec/$ISE_PLATFORM/lib" ] ; then
+	mkdir $EWEASEL/spec/$ISE_PLATFORM/lib
+fi
+
+# Set up parameters to make script more readable
+
+. $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include/config.sh
+
+announce="echo Compiling"
+rm="rm"
+
+EWEASEL_PLATFORM="$EWEASEL/spec/$ISE_PLATFORM"
+export EWEASEL_PLATFORM
+
+# Check existence of Eiffel compiler
+
+version=`ec -version`
+echo "Using $version"
+
+# Compile single-threaded EiffelWeasel (Eiffel and C compilations)
+
+cd $EWEASEL_PLATFORM/project
+echo "Compiling EiffelWeasel (single-threaded version)"
+ec -config $EWEASEL/compilation/eweasel.ecf -target eweasel_st -finalize -c_compile -project_path $EWEASEL_PLATFORM/project
+
+# Check compilation results and copy executable to bin directory
+
+EWEASEL_BINARY="$EWEASEL_PLATFORM/project/EIFGENs/eweasel_st/F_code/eweasel"
+export EWEASEL_BINARY
+
+if [ ! -f "$EWEASEL_BINARY" ] ; then
+	echo "EiffelWeasel compilation failed"
+	echo "File $EWEASEL_BINARY not found"
+	exit
+fi
+
+cp $EWEASEL_BINARY $EWEASEL_PLATFORM/bin
+
+if [ $keep -eq 0 ] ; then
+	echo "Deleting $EWEASEL_PLATFORM/project/EIFGENs"
+	cd $EWEASEL_PLATFORM/project
+	$rm -r EIFGENs
+fi
+
+# Compile multi-threaded EiffelWeasel (Eiffel and C compilations)
+
+cd $EWEASEL_PLATFORM/project
+echo "Compiling EiffelWeasel (multi-threaded version)"
+ec -config $EWEASEL/compilation/eweasel.ecf -target eweasel_mt -finalize -c_compile -project_path $EWEASEL_PLATFORM/project
+
+# Check compilation results and copy executable to bin directory
+
+EWEASEL_BINARY="$EWEASEL_PLATFORM/project/EIFGENs/eweasel_mt/F_code/eweasel-mt"
+export EWEASEL_BINARY
+
+if [ ! -f "$EWEASEL_BINARY" ] ; then
+	echo "EiffelWeasel compilation failed"
+	echo "File $EWEASEL_BINARY not found"
+	exit
+fi
+
+cp $EWEASEL_BINARY $EWEASEL_PLATFORM/bin
+
+if [ $keep -eq 0 ] ; then
+	echo "Deleting $EWEASEL_PLATFORM/project/EIFGENs"
+	cd $EWEASEL_PLATFORM/project
+	$rm -r EIFGENs
+fi
+
+echo "EiffelWeasel installation completed for platform $ISE_PLATFORM"
+exit

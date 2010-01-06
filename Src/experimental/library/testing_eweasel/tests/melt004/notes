@@ -1,0 +1,8 @@
+Passing an actual argument which is a reference type to a routine
+whose corresponding formal argument is the expanded version of that
+reference type compiles fine, but when the resulting system is
+executed an exception trace occurs.  The exception trace only occurs
+when the classes are melted, not when they are frozen.
+
+Discovered in Prerelease 93.07.15.
+

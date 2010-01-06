@@ -1,0 +1,8 @@
+A system has one cluster, initially with only the root class in it.
+Each class the compiler says is missing (via a VD23 error or a VTCT
+error) is copied into the cluster's directory.  The result is a set of
+classes which, when compiled from scratch, cause the compiler to
+report a VEEN error on `default' in feature `is_hashable' in class HASHABLE.
+
+Discovered in Release 3.2.1.
+

@@ -1,0 +1,5 @@
+BIT types do not conform to any - rejected by compiler with VJAR message.
+Discovered in prerelease 92.12.08.
+
+Still not fixed in prerelease 93.02.17.
+Fixed in prerelease 93.04.21.

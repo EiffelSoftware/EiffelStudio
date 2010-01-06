@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 gc-expanded-expanded-attrs
+test_description A class has an attribute of an expanded type, which has 100 expanded attributes, where the class for each attribute has 100 attributes of type DOUBLE. The system compiles fine when melted or frozen, but dies with a panic when `full_collect' is called.  Finalized code works correctly.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

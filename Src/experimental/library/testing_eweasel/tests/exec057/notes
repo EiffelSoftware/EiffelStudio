@@ -1,0 +1,7 @@
+A class creates an ARRAY [expanded FOO] and then fills it up with
+elements of type `expanded FOO'.  When the system is frozen with
+`assertion (ensure)' and then executed it dies with a segmentation
+fault while evaluating the postcondition `insertion_done' of `put' in ARRAY.
+
+Discovered in Release 3.2.3b.
+

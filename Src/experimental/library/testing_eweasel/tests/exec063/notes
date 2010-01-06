@@ -1,0 +1,7 @@
+A class repeatedly creates a LINKED_LIST [STRING] whose number of
+elements is guided by a random number generator and then deep clones
+this list several times.  The system compiles fine, but dies with a
+run-time panic when executed.
+
+Discovered in Release 3.2.4.
+

@@ -1,0 +1,17 @@
+test_name self-init-attribute-crash
+test_description Compiling a class with a self-initializing attribute crashes when a class inherits from it.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+cleanup_compile
+copy_sub Ace_rev1 $TEST Ace
+
+compile_melted
+compile_result ok
+
+test_end

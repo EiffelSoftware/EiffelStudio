@@ -1,0 +1,7 @@
+After initial compilation, a constraint is added to an unconstrained
+formal generic parameter of a generic class, thereby introducing a
+VTGG violation.  When the system is recompiled, the compiler dies with
+an exception trace.
+
+Discovered in Prerelease 93.07.15.
+

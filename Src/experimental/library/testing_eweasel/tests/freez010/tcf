@@ -1,0 +1,27 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 deep-clone-frozen-not-equal
+test_description A class has pattern of creation of small STRINGs guided by a random number generator.  It also has an attribute which is a BIT_REF and it calls deep_clone on the current object after each STRING creation. The system compiles fine when frozen with `assertion (all)', but violates postcondition `deep_equal' of routine `deep_clone' when it is executed.  Melted code seems to work fine.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+-- Passes if add next line
+-- setenv EIF_MEMORY_CHUNK 262144
+
+execute_work	 NONE exec_output1 10 20
+execute_result	 ok
+compare		 exec_output1 output1
+
+test_end

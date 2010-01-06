@@ -1,0 +1,12 @@
+
+test_name	 vevi-missed-for-once-routine
+test_description A default_create routine that calls a once routine that sets an attribute does not guarantee void safety, since the routine will only be executed for the first created object.  The compiler should report a VEVI error but does not.  System execution ends with a call on Void target.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST2 VEVI
+
+test_end

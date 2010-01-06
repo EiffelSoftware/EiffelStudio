@@ -1,0 +1,7 @@
+A system with one class is compiled.  Then the root class is changed
+to a different class, the system name is changed as well and changes
+are melted.  Finally, the system name is changed back to its original
+value and system is recompiled again.  The compiler then dies with a
+bus error.
+
+Discovered in release 5.4.0403.

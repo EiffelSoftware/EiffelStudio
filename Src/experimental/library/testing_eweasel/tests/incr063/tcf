@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 bogus-vaol2
+test_description An `old' expression in a postcondition invariant references an unknown identifier and then the reference to this identifier is removed
+
+copy_sub 	 Ace $TEST Ace
+define		 POSTCONDITION "old a = old b"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VEEN VEEN
+
+define		 POSTCONDITION "old 1 = old 2"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

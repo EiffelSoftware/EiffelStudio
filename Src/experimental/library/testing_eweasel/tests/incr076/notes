@@ -1,0 +1,6 @@
+After initial compilation, an inherited variable attribute referenced
+in a `strip' expression is changed to a function with no arguments.
+When the system is recompiled, the compiler does not detect the VWST
+violation.
+
+Discovered in Release 3.2.

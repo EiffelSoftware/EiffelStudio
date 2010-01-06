@@ -1,0 +1,35 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 test1
+test_description Looking for bugs
+
+define ROOT "<root cluster="root_cluster" class="test" feature="make"/>"
+define CLASS "class TEST creation make feature make is do end x: TEST1 end"
+
+define CLASS1 "class TEST1 inherit TEST2 [DOUBLE_REF, TEST2 [DOUBLE_REF, DOUBLE_REF]] redefine make, f end TEST3 redefine make, f end DOUBLE_REF undefine out, is_equal end create default_create,make feature make is do end f is do end end"
+define CLASS2 "deferred class TEST2 [G -> DOUBLE_REF, H -> G] inherit DOUBLE_REF undefine out, is_equal, plus, zero, one, opposite, identity, quotient, product, minus end TEST3 redefine f, make end feature make is do end f is do end end"
+define CLASS3 "class TEST3 creation make feature make is do end f is do end end"
+	
+copy_sub 	 Ace $TEST Ace
+copy_sub	 test.e $CLUSTER test.e
+copy_sub	 test1.e $CLUSTER test1.e
+copy_sub	 test2.e $CLUSTER test2.e
+copy_sub	 test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+define CLASS2 "deferred class TEST2 [G -> DOUBLE_REF, H -> G] inherit TEST3 redefine f, make end feature make is do end f is do end end"
+	
+copy_sub	 test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	validity_error TEST1 VTCG
+-- VTGD(2)
+
+test_end
+

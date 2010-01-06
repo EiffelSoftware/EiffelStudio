@@ -1,0 +1,22 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vcfg1-called-vffd7
+test_description A class with a once function whose return type is a formal generic parameter is correctly reported to violate VFFD(7).  Then a class with the same name as the formal parameter is added to one of the clusters, introducing a VCFG(1) violation
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VFFD(7)
+
+copy_raw 	 weasel.e  $CLUSTER weasel.e
+resume_compile
+compile_result 	 validity_error TEST1 VCFG(1)
+
+test_end

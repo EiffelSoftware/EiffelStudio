@@ -1,0 +1,4 @@
+The compiler correctly detects a VUAR violation, but reports it as
+`Error VUAR2 (VUAR2)' instead of `Error VUAR (VUAR2)'.
+
+Discovered in Prerelease 93.07.15.

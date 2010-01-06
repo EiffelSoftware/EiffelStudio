@@ -1,0 +1,26 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vgcc-remove-generic-creator
+test_description After initial compilation, a procedure name is removed from a generic constraint.  When the system is recompiled, the VGCC(8) error is not detected.
+
+define GENERIC_CREATORS "make1, make2"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define GENERIC_CREATORS "make1"
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST1 VGCC(8)
+
+
+test_end

@@ -1,0 +1,35 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 static-access-generic-function
+test_description A "C inline" external function `value (n: G): G' in a generic class has body "$n", so that it just returns its argument.  If this function is called normally from another routine in the class, the result is correct.  But if the function is called via a static access and if there is more than one generic derivation of the enclosing generic class, a class invariant is violated due to the wrong routine being called.  If code is finalized, generated C code won't compile due to conflicting function prototypes.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+compile_final
+compile_result 	 ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	 NONE exec_output2
+execute_result	 ok
+compare		 exec_output2 output
+
+test_end

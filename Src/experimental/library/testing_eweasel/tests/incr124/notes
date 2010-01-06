@@ -1,0 +1,6 @@
+After initial compilation, the order of two parent classes in an
+inheritance clause is switched.  After recompilation, alternate
+postconditions of an inherited routine should be evaluated in a
+different order, but they are not.
+
+Discovered in Release 3.2.4.

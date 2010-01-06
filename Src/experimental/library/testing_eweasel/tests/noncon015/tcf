@@ -1,0 +1,20 @@
+test_name non-conform-generic-class
+test_description Crash of the compiler when simply inheriting from a generic class in a non-conforming way.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output_1
+execute_result	ok
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
+test_end

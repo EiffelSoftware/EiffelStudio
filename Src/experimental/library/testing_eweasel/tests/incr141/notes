@@ -1,0 +1,6 @@
+A class has a feature of type `PROCEDURE [TEST, NONE]'.  After the
+compiler correctly detects a VJAR error, NONE is changed to TUPLE,
+thereby making the class correct.  When compilation is resumed, the
+compiler dies.
+
+Discovered in Release 4.3-17.

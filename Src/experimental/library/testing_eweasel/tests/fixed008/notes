@@ -1,0 +1,4 @@
+The big strings problem (allocating 1MB string then 2MB, etc) is stil
+not fixed with 93.01.05 release.  First reported 12/15/92.
+
+Fixed in prerelease 93.02.17.

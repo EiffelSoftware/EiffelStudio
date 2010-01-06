@@ -1,0 +1,5 @@
+A routine with a local of type ARRAY [EXPANDED_TYPE] dies with a
+segmentation fault if finalized with `array_optimization (yes)'.  If
+array optimization is off, the generated C code works fine.
+
+Discovered in Release 3.3.7.

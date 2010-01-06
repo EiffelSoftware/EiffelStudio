@@ -1,0 +1,23 @@
+test_name 	 property-assigner-generation
+test_description Tests attachement of an assigner to .NET properties where a setter is available.
+
+copy_sub 	 Ace $TEST Ace
+
+copy_raw 	 test1.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VBAC(2)
+
+copy_raw 	 test2.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+copy_raw 	 test3.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VBAC(2)
+
+copy_raw 	 test4.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+
+test_end

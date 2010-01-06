@@ -1,0 +1,6 @@
+After initial compilation where the system is finalized, a once
+routine is changed to a normal routine (non-once) and the system is
+re-finalized.  The resulting C code will not compile.
+
+Discovered in Release 5.0.005.
+

@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 generic-creation-no-constraint
+test_description A class with a generic creation which omits the constraint (e.g., TEST1 [G create make end]) causes the compiler to die in degree 4.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	syntax_error TEST1 7
+	
+test_end

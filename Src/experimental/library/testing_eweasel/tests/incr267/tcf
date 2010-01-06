@@ -1,0 +1,18 @@
+test_name resume-after-error-in-class-with-inline-agent
+test_description The compiler crashes after incremental refreezing when there was an error in a feature. And an other correct feature contained an inline-agent
+
+copy_sub Ace $TEST Ace
+
+copy_raw test.e $CLUSTER test.e
+compile_frozen
+compile_result validity_error TEST VEEN VEEN
+
+copy_raw test_rev_1.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VEEN VEEN
+
+copy_raw test_rev_2.e $CLUSTER test.e
+resume_compile 
+compile_result ok
+
+test_end

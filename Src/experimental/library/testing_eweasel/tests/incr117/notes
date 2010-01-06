@@ -1,0 +1,8 @@
+A system is compiled with an Ace which references a precompiled
+cluster that is invalid, so it cannot be retrieved.  After the VD41
+error is reported, the Ace is changed to indicate a valid precompiled
+cluster.  But the compiler reports a VD41 on the new (valid)
+precompiled cluster.
+
+Discovered in Release 3.2.4.
+

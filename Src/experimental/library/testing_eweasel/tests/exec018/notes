@@ -1,0 +1,7 @@
+A Strip expression with Void in its Attribute_list is accepted (and
+seems to be valid, since Void is a variable attribute of the class, at
+least technically).  But the generated C code appears to be incorrect
+and does the wrong thing.
+
+Discovered in Prerelease 93.04.21.
+

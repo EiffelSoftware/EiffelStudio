@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 negative-eiffel-memory-used
+test_description A system repeatedly allocates a string of size `k', where `k' starts at 1 and is incremented by one after each iteration.  When the system is executed, the amount of "used" Eiffel memory as indicated by the memory statistics facilities of class MEM_INFO soon becomes negative.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1 1000 20000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

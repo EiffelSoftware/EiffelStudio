@@ -1,0 +1,4 @@
+An inspect with an INTEGER_8 constant that has value 0x8f does not
+work correctly, but only when code is frozen.
+
+Reported by Manu on September 7, 2003.

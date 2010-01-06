@@ -1,0 +1,5 @@
+A class has a creation instruction `create {expanded TEST1} x.make'
+where `x' is of type TEST1, which is not an expanded class.  The
+system compiles fine but dies with a segmentation fault when executed.
+
+Discovered in Release 5.4.0403.

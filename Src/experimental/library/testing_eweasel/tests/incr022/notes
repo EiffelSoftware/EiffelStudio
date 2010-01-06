@@ -1,0 +1,9 @@
+After initial compilation, the root class is changed to a generic
+class by adding a single formal generic parameter.  When the system is
+recompiled, the compiler detects the VSRC violation but first does
+pass 1 twice on the root class.  After the problem is corrected by
+removing the formal generic parameter, the compiler again does pass 1
+twice.
+
+Discovered in Prerelease 93.07.15.
+

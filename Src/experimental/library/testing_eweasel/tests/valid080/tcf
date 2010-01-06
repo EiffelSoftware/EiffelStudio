@@ -1,0 +1,17 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 double-assigned-to-real
+test_description An assignment of an entity of type DOUBLE to an entity of type REAL should be a VJAR violation
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error	TEST VJAR
+
+test_end

@@ -1,0 +1,9 @@
+After initial compilation where the system is frozen, an entity name
+in a postcondition is changed to the name of a nonexistent entity.
+When the compiler reports the VEEN error, the entity name is changed
+back to its original value and compilation completes.  But execution
+of the resulting system ends with a run-time panic which states
+"invalid assertion level".
+
+Discovered in Release 3.2.3b.
+

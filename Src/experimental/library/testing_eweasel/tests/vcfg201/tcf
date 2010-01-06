@@ -1,0 +1,40 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vcfg2-basic
+test_description Violate validity constraint VCFG2 with a generic class which has the same formal generic name used more than once
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+define		 GENERICS "G, G"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VCFG(2)
+
+define		 GENERICS "G, H, I, J, G"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST1 VCFG(2)
+
+define		 GENERICS "G, G, G, G, G, G, G, G, G, G, G, G"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST1 VCFG(2)
+
+define		 GENERICS "G, G, G, G, G, H, H, H, H, H, WEASEL, WEASEL, WEASEL, ANY"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST1 VCFG(2)
+
+define		 GENERICS "G"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+test_end

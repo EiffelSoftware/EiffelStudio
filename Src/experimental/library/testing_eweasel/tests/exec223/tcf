@@ -1,0 +1,52 @@
+test_name 	extended-agent-test
+test_description Tests inline agents and agents on attributes
+
+copy_raw	i_sortable_array.e $CLUSTER i_sortable_array.e
+copy_raw	test1.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_frozen 
+compile_result	validity_warning TEST Unused_local_warning Unused_local_warning Unused_local_warning
+
+c_compile_work
+c_compile_result ok
+
+copy_raw	i_sortable_array.e $CLUSTER i_sortable_array.e
+copy_raw	test2.e $CLUSTER test.e
+compile_melted
+compile_result	validity_warning TEST Unused_local_warning Unused_local_warning Unused_local_warning
+
+execute_work	NONE exec_output_1
+execute_result	ok
+compare		exec_output_1 output1
+
+copy_raw	i_sortable_array.e $CLUSTER i_sortable_array.e
+copy_raw	test3.e $CLUSTER test.e
+compile_melted
+compile_result ok
+
+execute_work	NONE exec_output_2
+execute_result	ok
+compare		exec_output_2 output2
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_3
+execute_result ok
+compare exec_output_3 output2
+
+compile_final_keep
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_4
+execute_result ok
+compare exec_output_4 output2
+
+test_end

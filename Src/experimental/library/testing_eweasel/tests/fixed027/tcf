@@ -1,0 +1,33 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 invalid-select-change
+test_description A system has a class which violates the Select Subclause rule (same feature name appears twice).  The inheritance structure is changed after compiler detects VMSS violation
+
+copy_sub 	 Ace $TEST Ace
+
+define		 INHERITANCE "inherit REPEATED"
+define		 SELECT_LIST "try, try"
+copy_raw 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+copy_sub 	 test2.e  $CLUSTER test2.e
+copy_raw 	 repeated.e  $CLUSTER repeated.e
+compile_melted
+compile_result 	 validity_error TEST2 VMSS(2)
+
+define		 INHERITANCE ""
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST2 VMSS(2)
+
+define		 SELECT_LIST ""
+copy_sub 	 test2.e  $CLUSTER test2.e
+resume_compile
+compile_result 	 ok
+
+test_end

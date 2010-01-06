@@ -1,0 +1,10 @@
+test_name invariant-encapsulated-inline-agents
+test_description Crash when several inline agents are encapsulated in an invariant. Especially with an attribute fake inline agent
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

@@ -1,0 +1,7 @@
+An external routine which does not take any arguments is declared as a
+macro and includes the signature `(EIF_INTEGER)'.  The compiler
+detects an error during degree 3, but prints "exception occurred while
+displaying error message".  Repeatedly resuming the compilation causes
+compiler termination after about 40 attempts.
+
+Discovered in Release 3.3 beta.

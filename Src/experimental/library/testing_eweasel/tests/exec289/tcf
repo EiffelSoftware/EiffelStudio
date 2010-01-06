@@ -1,0 +1,24 @@
+test_name 	 wrong-finalized-invariant-check
+test_description The invariant for the root creation procedure is checked on entry instead of on exit.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_final_keep
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
+execute_final	NONE exec_output3
+execute_result	ok
+compare		exec_output3 output
+
+test_end

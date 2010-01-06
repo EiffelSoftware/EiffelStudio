@@ -1,0 +1,6 @@
+A class creates an ARRAYED_LIST [FOO] where FOO is an expanded class
+and appends two elements to it and then prints the `value' attribute
+of the first item in the list.  The system dies with a bus error but
+only if the system is finalized with inlining.
+
+Discovered in release 5.6.0709.

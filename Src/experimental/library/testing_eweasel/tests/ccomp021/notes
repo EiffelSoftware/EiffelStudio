@@ -1,0 +1,6 @@
+A class which inherits from INTEGER and evaluates the expression
+`Current \\ 29' compiles fine but generates C code which won't
+compile.  If the code is instead melted, the result is a panic with
+the message "operational stack botched".
+
+Discovered in Release 3.2.4.

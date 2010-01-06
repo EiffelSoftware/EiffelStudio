@@ -1,0 +1,4 @@
+A system with classes that use the `precursor' construct produces
+incorrect output when the system is finalized with inlining.
+
+Discovered in Release 4.2F.

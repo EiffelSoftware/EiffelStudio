@@ -1,0 +1,6 @@
+A class has an inspect of a local of type INTEGER_64, which has value
+12345678912345.  When executed, the value does not match a when clause
+whose constant value is 12345678912345.  It does not matter whether
+code is melted, frozen or finalized.
+
+Discovered in Release 5.4.0403.

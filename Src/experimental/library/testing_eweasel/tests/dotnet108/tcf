@@ -1,0 +1,10 @@
+test_name anchored-creation-crash
+test_description A creation of Result which type depends a `like x' where x is a function crashes the compiler at degree 1.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

@@ -1,0 +1,7 @@
+class
+	EXCEPTION
+
+feature
+
+
+end

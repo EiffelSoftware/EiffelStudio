@@ -1,0 +1,5 @@
+A class with a token of length >= 8192 (where tokens include comments
+and white space) causes the compiler to terminate with the message
+"token too large, exceeds YYLMAX".
+
+Discovered in Release 3.3.3.

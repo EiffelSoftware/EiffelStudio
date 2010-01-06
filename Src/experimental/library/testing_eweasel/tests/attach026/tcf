@@ -1,0 +1,14 @@
+test_name 	 attached-attribute-init
+test_description Ensures the multitude of ways self-initializing attributes can be initialized.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	attributes.e $CLUSTER attributes.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

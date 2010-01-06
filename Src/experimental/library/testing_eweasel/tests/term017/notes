@@ -1,0 +1,6 @@
+A class with a feature of type ARRAY [BIT n] causes a compiler
+exception trace while freezing when `n' is very large (250_000_000 on
+my machine).
+
+Discovered in Prerelease 93.05.17.
+

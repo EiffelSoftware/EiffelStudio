@@ -1,0 +1,8 @@
+Duplicate length: 3
+Original list: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+Duplicated list (cursor at `before'): Precondition 'not_off_unless_after' ... OK
+Duplicated list (cursor at 4th item): 4, 5, 6
+Duplicated list (cursor at 9th item): 9, 10
+Duplicated list (cursor at 10th item): 10
+Duplicated list (cursor at `after'): Empty? True
+Execution completed

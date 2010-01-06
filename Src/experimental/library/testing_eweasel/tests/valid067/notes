@@ -1,0 +1,5 @@
+The expression `old Void' should be accepted in a postcondition, but
+the compiler reports a VAOL(2) error.
+
+Discovered in Release 3.2.1.
+

@@ -1,0 +1,67 @@
+
+The following are OK, but test needs to be fixed (I haven't figure out
+how to fix it yet).
+
+	remove-part-of-external-decl
+
+The following test failure seems to be due to a change in what will
+be accepted in the Ace file.  Can you explain this change?
+
+	lace-bogus-gen-lang
+
+The following passed on 4.5 but do not pass in 5.0.001 due to changes in
+the way compiler looks for changes to the file system.  These are
+incrementality bugs in the sense that the error (or lack of error)
+the compiler reports after an incremental change is different than
+the result obtained by re-compiling from scratch.
+
+	vscn-sneak
+	vcfg-sneak
+	vd29-sneak
+	vd10-becomes-syntax-error
+	chg-root-class-name
+	add-vscn-violation
+	bogus-vd27
+	delete-generic-class-header
+	no-precomp-chg-class-name
+	vtct-vtcg-die-degree-5
+	class-name-confusion
+	validity-vscn-add-class
+	validity-vcfg1-add-class
+	lace-vd08-basic
+	lace-vd09-basic
+	cluster-modified-viol
+	chg-class-to-nonexistent
+	misleading-vmfn-error
+
+The following test causes the compiler to go into an infinite loop.
+It would be really nice if it could be fixed since it is the only
+known case of a compiler infinite loop (at least, the only case I
+know of).
+
+	validity-vlec1-other-generic
+
+The following passed at one time (on some platform and compiler version)
+but now do not pass.  They did not pass in version 4.5 either.
+
+	illegal-attributes	Variables like x(): STRING
+				Constants like x(): INTEGER is 13
+
+	string-to-bit1		Change constant STRING to BIT 1, recompile
+				System execution fails.
+
+	deep-exception-in-rescue	Exception in rescue clause deep nesting
+
+	strip-with-expanded-attr
+
+	redefine-expanded-as-attribute
+
+	long-identifiers
+
+	lace-no-cluster-props
+
+	finalize-call-undef-external
+
+	lace-vd12-basic
+
+	none-conform-bit-expanded

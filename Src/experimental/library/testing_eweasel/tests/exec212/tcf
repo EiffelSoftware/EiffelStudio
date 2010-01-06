@@ -1,0 +1,15 @@
+test_name 	 bad-invariant-code-in-expanded
+test_description Invariant in an expanded class should not cause incorrect code to be generated.
+
+copy_raw	export_status.e   $CLUSTER export_status.e
+copy_raw	extended_status.e $CLUSTER extended_status.e
+copy_raw	test.e            $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

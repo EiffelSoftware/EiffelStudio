@@ -1,0 +1,5 @@
+An expression with a division by constant 0 or 0.0 compiles fine, but
+the generated C code won't compile using `cc'.
+
+Discovered in Prerelease 93.05.17.
+

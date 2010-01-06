@@ -1,0 +1,5 @@
+Finalizing a trivial system with an Ace which specifies both `inlining
+(yes)' and `dead_code_removal (no)' causes the compiler to die during
+degree -5 on class GENERAL.
+
+Discovered in Release 3.3 beta.

@@ -1,0 +1,9 @@
+In a class which has an inheritance clause with a parent based on a
+generic class, replacing the actual generic parameter with a more
+complicated one and recompiling causes an exception trace.  A similar
+trace has been previously reported, but under very different
+circumstances.
+
+Discovered in Prerelease 93.05.17.
+Fixed in Prerelease 93.07.15.
+

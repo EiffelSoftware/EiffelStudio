@@ -1,0 +1,7 @@
+A boolean operator (and, or, and then, or else, xor, implies, not)
+whose first operand is a constant True or False causes an exception
+trace.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.04.21.
+

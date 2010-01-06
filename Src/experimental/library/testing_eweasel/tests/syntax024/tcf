@@ -1,0 +1,16 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 manifest-string-blank-lines
+test_description A manifest string in the extended form which contains lines with only white space (blanks and tabs) but no leading and trailing percent sign
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 syntax_error TEST 12
+test_end

@@ -1,0 +1,3 @@
+A routine which prints `ANY.generator' prints NONE instead of ANY.
+
+Discovered in release 5.4.0730.

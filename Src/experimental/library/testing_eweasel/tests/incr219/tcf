@@ -1,0 +1,46 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 expand-unexpand-agent-target
+test_description A generic class whose formal generic parameter G is constrained by non-expanded class FOO has a routine that takes an argument of type G and passes it as the target in a call to an agent with an open target of type FOO.  A second class inherits this class and provides FOO as actual generic parameter.  The actual argument in the call to the routine is of type `expanded FOO'.  After initial compilation where the system is frozen, the actual generic parameter is changed to `expanded FOO' and changes are melted.  Then the actual generic is changed back to `FOO'.  System execution then dies with a segmentation fault.
+
+define EXPANDED ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_sub 	test3.e $CLUSTER test3.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define EXPANDED "expanded"
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+define EXPANDED ""
+copy_sub 	test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output3
+execute_result 	ok
+compare		exec_output3 output
+
+test_end

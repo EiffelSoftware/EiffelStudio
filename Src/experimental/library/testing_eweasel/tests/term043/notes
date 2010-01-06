@@ -1,0 +1,6 @@
+A particular pair of classes which each have two formal generic
+parameters and which each have a constraint on one of the parameters
+which is a generic derivation of the other class causes silent
+termination of the compiler after pass 5.
+
+Discovered in Release 3.2.1.

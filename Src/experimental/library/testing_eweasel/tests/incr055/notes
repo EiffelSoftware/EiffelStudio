@@ -1,0 +1,8 @@
+A system with a VDRD violation is compiled and the compiler detects
+the violation.  Then the offending external routine is deleted and a
+routine with the same name but a `do' body is added to the inheriting
+class.  When compilation is resumed, the compiler dies with an
+exception trace while freezing the system.
+
+Discovered in Release 3.1.1.
+

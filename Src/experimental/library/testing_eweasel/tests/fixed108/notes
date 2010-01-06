@@ -1,0 +1,7 @@
+Violation of the Expanded Client rule (VLEC) in a class is detected,
+but retrying the compilation by hitting return without changing the
+offending class just resumes the compilation, which later dies a
+horrible death.  Gets "illegal instruction (core dumped)".
+
+Still not fixed in Prerelease 93.02.17.
+

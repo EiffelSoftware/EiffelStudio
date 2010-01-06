@@ -1,0 +1,7 @@
+A class has two attributes of type `expanded TEST1 [STRING]'.  TEST1
+is a generic class with parent `ARRAY [expanded TEST1 [G]]'.  The
+system compiles fine, but dies with an exception trace when executed.
+Turning off garbage collection allows the program to run correctly.
+
+Discovered in Release 3.2.3b.
+

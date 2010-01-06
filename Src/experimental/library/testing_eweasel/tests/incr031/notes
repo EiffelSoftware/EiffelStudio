@@ -1,0 +1,6 @@
+A known sequence of changes causes an exception trace in the compiler
+during freezing.  Based on the trace, it seems to be related to
+external functions.
+
+Discovered in Prerelease 93.07.15.
+

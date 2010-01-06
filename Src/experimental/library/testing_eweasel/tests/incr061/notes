@@ -1,0 +1,7 @@
+After the compiler detects a VJAW violation, the feature which is the
+target of the assignment is changed from an argumentless function to
+an attribute.  When compilation is resumed, the compiler later reports
+that it cannot write the .UPDT file.
+
+Discovered in Release 3.1.1.
+

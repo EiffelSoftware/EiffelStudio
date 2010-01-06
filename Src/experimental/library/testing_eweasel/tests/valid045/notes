@@ -1,0 +1,7 @@
+In a generic class, an attempt to use, as a type, a generic parameter
+which occurs at or after the 5th position in the formal generic
+parameter list causes the compiler to report a VTCT violation for the
+class with the same name as that particular formal generic.
+
+Discovered in Prerelease 93.07.15.
+

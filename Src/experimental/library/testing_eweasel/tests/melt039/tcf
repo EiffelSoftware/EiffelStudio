@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	generic-local-expanded-actual
+test_description An generic class with formal generic parameter `G' has a routine `foo' with a local entity of type `G'.  The body of the routine calls `generator' on this local.  Another class inherits from the generic class and provides an expanded type as actual generic parameter.  When the system is executed, it correctly prints the local's generating class, but then dies with a panic if if the system was melted.  Frozen code works fine.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

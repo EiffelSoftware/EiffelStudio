@@ -1,0 +1,10 @@
+test_name renaming-native-dotnet-feature-with-redefine-default-create
+test_description test renaming native .NET feature in which class `default_create' is redefined.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

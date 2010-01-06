@@ -1,0 +1,13 @@
+test_name equal-on-dotnet-string-and-eiffel-string
+test_description test equal on System.String and STRING
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE output
+execute_result 	ok
+
+test_end

@@ -1,0 +1,184 @@
+test_name 	 change-unique-in-inspect
+test_description Recompilation should take care about any unique constants that might change their value.
+
+copy_sub 	 Ace $TEST Ace
+
+define C1 "--"
+define C2 "--"
+define C3 "--"
+define C4 "--"
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	 ok
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output_1
+execute_result	 ok
+compare		 exec_output_1 output
+
+define C1 ""
+define C2 "--"
+define C3 "--"
+define C4 "--"
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_2
+execute_result	 ok
+compare		 exec_output_2 output
+
+define C1 ""
+define C2 ""
+define C3 "--"
+define C4 "--"
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_3
+execute_result	 ok
+compare		 exec_output_3 output
+
+define C1 ""
+define C2 ""
+define C3 ""
+define C4 "--"
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_4
+execute_result	 ok
+compare		 exec_output_4 output
+
+define C1 ""
+define C2 ""
+define C3 ""
+define C4 ""
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_5
+execute_result	 ok
+compare		 exec_output_5 output
+
+define C1 ""
+define C2 ""
+define C3 ""
+define C4 ""
+define C5 ""
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_6
+execute_result	 ok
+compare		 exec_output_6 output
+
+define C1 ""
+define C2 ""
+define C3 ""
+define C4 ""
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_7
+execute_result	 ok
+compare		 exec_output_7 output
+
+define C1 ""
+define C2 ""
+define C3 ""
+define C4 "--"
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_8
+execute_result	 ok
+compare		 exec_output_8 output
+
+define C1 ""
+define C2 ""
+define C3 "--"
+define C4 "--"
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_9
+execute_result	 ok
+compare		 exec_output_9 output
+
+define C1 ""
+define C2 "--"
+define C3 "--"
+define C4 "--"
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_10
+execute_result	 ok
+compare		 exec_output_10 output
+
+define C1 "--"
+define C2 "--"
+define C3 "--"
+define C4 "--"
+define C5 "--"
+copy_sub 	 a.e  $CLUSTER a.e
+copy_sub 	 b.e  $CLUSTER b.e
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	 NONE exec_output_11
+execute_result	 ok
+compare		 exec_output_11 output
+
+test_end

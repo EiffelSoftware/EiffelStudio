@@ -1,0 +1,12 @@
+A class has a routine which obtains the address of a procedure via $p.
+A descendant class redefines procedure `p'.  In the descendant, $p
+incorrectly returns the address of the ancestor's version of the
+routine instead of the redefined routine.
+
+Discovered in Release 5.0.015.
+
+Answer for explaining updated output file:
+- One should look not at the value but at the behavior as the function pointer given
+  is simply a wrapper to a routine that properly does the dispatch to the right version
+  of `weasel' depending on the dynamic type.
+

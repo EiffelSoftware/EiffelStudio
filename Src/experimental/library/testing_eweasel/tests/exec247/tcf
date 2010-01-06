@@ -1,0 +1,14 @@
+test_name type-check-invariant-inline-agent
+test_description Semantic checking fails when an invariant with an inline agent is only type checked.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+copy_raw	test_rev_1.e $CLUSTER test.e
+compile_melted
+compile_result ok
+
+test_end

@@ -1,0 +1,25 @@
+test_name 	creation-information-lost
+test_description While trying to improved `creation_type', we found that `real_type' is not a good replacement.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work	NONE exec_output2
+execute_result	ok
+compare		exec_output2 output
+
+test_end

@@ -1,0 +1,10 @@
+test_name	agent-dotnet-failure
+test_description When an agent is defined from a feature which has some anchors it crashes the compiler in .NET mode.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

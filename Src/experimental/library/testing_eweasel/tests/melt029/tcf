@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	named-constant-call-out
+test_description A class prints `x.out' where `x' is a constant of various types (INTEGER, DOUBLE, BOOLEAN, etc).  The system compiles fine, but if it was melted system execution ends with an exception trace.  Frozen code works fine.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

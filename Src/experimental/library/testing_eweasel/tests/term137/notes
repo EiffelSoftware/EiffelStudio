@@ -1,0 +1,7 @@
+Compiling a system that prints `{UNKNOWN} 1' where UNKNOWN is
+a class that is not in the universe causes compiler to crash
+in degree 5.
+
+Discovered in release 5.6.1128.
+
+

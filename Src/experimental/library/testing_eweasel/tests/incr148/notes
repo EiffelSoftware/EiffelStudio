@@ -1,0 +1,7 @@
+When a system with a VTCG error (creation procedure named in
+constraint does not exist) is compiled, the compiler detects the
+error.  However, when the system is melted again to resume
+compilation, the compiler accepts the classes even though the error is
+still there.
+
+Discovered in Release 4.3-17.

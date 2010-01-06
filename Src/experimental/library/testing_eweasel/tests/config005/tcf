@@ -1,0 +1,31 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name	config-remove-library
+test_description Remove a library that is still used in another part of the configuration should detect VTCT problems because the library is not accessible from some parts anymore.
+
+define LIBRARY "<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_quick_melted
+compile_result ok
+
+define LIBRARY ""
+copy_sub 	Ace $TEST Ace
+
+compile_quick_melted
+compile_result validity_error TEST VTCT 
+
+define LIBRARY "<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>"
+copy_sub 	Ace $TEST Ace
+
+resume_compile
+compile_result ok
+
+test_end

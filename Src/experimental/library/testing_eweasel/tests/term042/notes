@@ -1,0 +1,7 @@
+A class which inherits a deferred feature `feat' once from one class
+and an effective feature `feat' with the same signature twice from a
+second class (as both `feat' and `renamed_feat') and also redefines
+`feat' so that its return type is anchored to `renamed_feat' causes
+silent termination of the compiler after pass 1.
+
+Discovered in Release 3.2.1.

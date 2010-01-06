@@ -1,0 +1,6 @@
+A Cluster_mark in the Ace indicating which cluster the root class is
+in is case-sensitive, but should not be since it does not refer to an
+outside element.
+
+Discovered in Release 3.1.1.
+

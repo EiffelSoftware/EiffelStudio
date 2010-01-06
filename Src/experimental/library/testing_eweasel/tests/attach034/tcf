@@ -1,0 +1,11 @@
+test_name 	 anchored-generic-carries-attachment
+test_description Ensures entity types anchored to a generic typed entity, carry the attachment mark.s
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	generic.e $CLUSTER anchor_generic.e
+
+compile_melted
+compile_result ok
+
+test_end

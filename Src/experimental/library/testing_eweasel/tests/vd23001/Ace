@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="395c9e04-b1e6-4268-9726-459d1bc4056e">
+	<target name="test">
+		<description>--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+</description>
+		<root cluster="root_cluster" class="test" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<warning name="vjrv" enabled="false"/>
+			<warning name="syntax" enabled="false"/>
+		</option>
+		<mapping old_name="STRING" new_name="STRING_8"/>
+		<mapping old_name="INTEGER" new_name="INTEGER_32"/>
+		<mapping old_name="NATURAL" new_name="NATURAL_32" />
+		<mapping old_name="CHARACTER" new_name="CHARACTER_8" />
+		<mapping old_name="WIDE_CHARACTER" new_name="CHARACTER_32" />
+		<mapping old_name="REAL" new_name="REAL_32" />
+		<mapping old_name="DOUBLE" new_name="REAL_64" />
+		<mapping old_name="INTEGER_REF" new_name="INTEGER_32_REF" />
+		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF" />
+		<mapping old_name="WIDE_CHARACTER_REF" new_name="CHARACTER_32_REF" />
+		<mapping old_name="REAL_REF" new_name="REAL_32_REF" />
+		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF" />
+
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<cluster name="exceptoins_ise" location="$EXCEPTIONS_ISE\" recursive="True"/>
+		<cluster name="kernel" location="$KERNEL\">
+			<file_rule>
+				$EXCLUDE
+			</file_rule>
+		</cluster>
+		$KERNEL_DOTNET
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

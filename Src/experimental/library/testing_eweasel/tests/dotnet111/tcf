@@ -1,0 +1,23 @@
+test_name	assigner-name-incrementality
+test_description Show an incremental bug in .NET when adding an assigner and at the same time making the class single (i.e. inheriting from a .NET class) it crashes the compiler because `SYSTEM_I.set_current_class' is called without storing the previous value in `EIFFEL_CLASS_C.melt_all'.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+copy_raw	test1_rev1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST1 VTCT
+
+copy_raw	test1_rev2.e $CLUSTER test1.e
+
+resume_compile
+compile_result	ok
+
+
+test_end

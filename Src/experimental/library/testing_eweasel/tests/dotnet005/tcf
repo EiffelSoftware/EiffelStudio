@@ -1,0 +1,21 @@
+test_name multithreaded-once-routine
+test_description Once routines are by default per-thread rather than per-process
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw a.e $CLUSTER a.e
+copy_raw b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+
+compile_melted
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output
+execute_result ok
+
+compare exec_output output
+
+test_end

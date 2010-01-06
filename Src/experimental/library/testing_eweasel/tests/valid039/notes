@@ -1,0 +1,7 @@
+A Redefine subclause which lists a feature name which is `once'
+routine in the parent class causes the compiler to complain about
+violation of VDRS, regardless of whether the new declaration is a
+`once' routine.
+
+Still not fixed in Prerelease 93.02.17.
+

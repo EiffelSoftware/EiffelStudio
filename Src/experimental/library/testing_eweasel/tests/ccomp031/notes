@@ -1,0 +1,4 @@
+Finalizing a class with a BIT attribute produces C code that
+won't compile in esize.c.
+
+Discovered in Release 4.3-17.

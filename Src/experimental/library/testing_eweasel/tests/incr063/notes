@@ -1,0 +1,6 @@
+An `old' expression in a postcondition invariant references an unknown
+identifier.  But when the reference to this identifier is removed, the
+compiler still reports a VAOL violation.
+
+Discovered in Release 3.1.1.
+

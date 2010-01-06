@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	malloc-free-collect-coalesce
+test_description A system which calls malloc, free and str_blank and also calls routines allocate_tiny, full_collect and full_coalesce in class MEMORY
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output1 
+execute_result	ok
+compare		exec_output1 output1
+
+test_end

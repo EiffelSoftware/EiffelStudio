@@ -1,0 +1,6 @@
+A class redefines an inherited function into an attribute.  The
+function has a postcondition, but this postcondition is not added to
+the class invariant.
+
+Discovered in Release 3.2.3b.
+

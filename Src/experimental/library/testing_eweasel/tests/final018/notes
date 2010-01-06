@@ -1,0 +1,5 @@
+A system has a routine with a call to a procedure that takes an
+argument of type NONE and clones it.  When the system is finalized
+with inlining, the compiler dies.
+
+Discovered in Release 4.3-19.

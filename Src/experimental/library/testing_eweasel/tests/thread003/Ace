@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="033403FA-F9A7-4D84-A920-43F31BEF0C84">
+	<target name="test">
+		<root cluster="root_cluster" class="test" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<warning name="syntax" enabled="false"/>
+		</option>
+		<setting name="multithreaded" value="True"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

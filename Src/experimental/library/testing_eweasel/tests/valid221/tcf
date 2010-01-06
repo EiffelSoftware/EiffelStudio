@@ -1,0 +1,12 @@
+test_name	vtug2-not-reported-crash
+test_description Mismatch in the number of actual and formal parameters.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	a.e	$CLUSTER a.e
+copy_raw	b.e	$CLUSTER b.e
+copy_raw	test.e	$CLUSTER test.e
+
+compile_melted
+compile_result	validity_error B VTUG(2)
+
+test_end

@@ -1,0 +1,8 @@
+Constraint VDRD(7) prohibits redefining an external routine as an
+internal one or conversely.  But a class which circumvents this
+prohibition by first undefining the external routine is accepted by
+the compiler.  The resulting system dies with a run-time panic when executed.
+
+Discovered in Release 3.2.1.
+
+

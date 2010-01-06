@@ -1,0 +1,10 @@
+test_name 	 vkcn-error-reporting-failure
+test_description A routine which has an instruction in a routine which returns a `like argument' causes the compiler to crash instead of reporting an error.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VKCN(1); TEST VKCN(3)
+
+test_end

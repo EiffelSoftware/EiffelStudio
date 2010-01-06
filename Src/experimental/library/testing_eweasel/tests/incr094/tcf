@@ -1,0 +1,30 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 bogus-vdrs
+test_description After initial compilation an inherited variable attribute in a grandparent is changed to a constant attribute, thereby introducing a VDRS(2) violation.  Then the constant attribute is changed back to a variable attribute.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+define		 FEATURE "try: INTEGER is do end"
+copy_sub 	 test2.e  $CLUSTER test2.e
+compile_melted
+compile_result 	 ok
+
+define		 FEATURE "try: INTEGER is 1"
+copy_sub 	 test2.e  $CLUSTER test2.e
+compile_melted
+compile_result 	 validity_error TEST VDRS(2)
+
+define		 FEATURE "try: INTEGER is do end"
+copy_sub 	 test2.e  $CLUSTER test2.e
+resume_compile
+compile_result 	 ok
+
+test_end

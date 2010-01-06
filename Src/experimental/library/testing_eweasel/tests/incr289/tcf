@@ -1,0 +1,25 @@
+test_name 	 change-system-crash
+test_description When some classes have been changed or removed the compiler crashes during an incremental recompilation.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+copy_raw 	test_rev1.e $CLUSTER test.e
+copy_raw 	test1_rev1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+
+test_end

@@ -1,0 +1,9 @@
+A class A repeatedly calls a procedure on an instance of another class
+B.  Class B has a class invariant with a call to a function of class
+B, which in turn calls a function on an attribute of type C.  The
+system compiles fine, but when executed it quickly runs out of memory
+if the system was melted and if `assertion (invariant)' is specified
+in the Ace.
+
+Discovered in Release 3.2.3b.
+

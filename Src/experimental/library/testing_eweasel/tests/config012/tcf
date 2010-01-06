@@ -1,0 +1,10 @@
+test_name	config-root-class-file-name-mismatch
+test_description Compiling a system where a class content has a different class name than the file should generate a VD20 error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result  validity_error NONE VD20
+
+test_end

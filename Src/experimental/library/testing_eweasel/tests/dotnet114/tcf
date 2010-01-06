@@ -1,0 +1,14 @@
+test_name 	dotnet-array-data-copy
+test_description Shows a postcondition violation at SPEICAL.copy_data.
+
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw	dotnet_excep_trace $CLUSTER dotnet_excep_trace
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+
+test_end

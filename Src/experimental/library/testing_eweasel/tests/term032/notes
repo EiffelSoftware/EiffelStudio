@@ -1,0 +1,5 @@
+A system with a reference to `Current.Void' causes the compiler to
+report that it cannot generate C code.
+
+Discovered in Release 3.1.1.
+

@@ -1,0 +1,39 @@
+-- This is a test control file
+
+test_name add-remove-inline-agent
+test_description When an inline agent replaces a normal agent the compiler breaks
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw d.e $CLUSTER d.e
+copy_raw e.e $CLUSTER e.e
+
+compile_melted
+compile_result ok
+
+copy_raw d_rev_1.e $CLUSTER d.e
+compile_melted
+compile_result ok
+
+copy_raw d.e $CLUSTER d.e
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+copy_raw d_rev_1.e $CLUSTER d.e
+compile_melted
+compile_result ok
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE output
+execute_result ok
+
+
+test_end

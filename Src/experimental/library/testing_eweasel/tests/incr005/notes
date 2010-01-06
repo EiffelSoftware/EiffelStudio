@@ -1,0 +1,8 @@
+A system with a generic class with formal parameter G compiles fine.
+When a new class G is added to the universe, the (numerous) VCFG
+violations introduced are detected.  But when return is pressed, the
+compiler proceeds merrily with the compilation, ignoring the
+still-present VCFG violations.
+
+Discovered in Prerelease 93.07.15.
+

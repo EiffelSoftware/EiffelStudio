@@ -1,0 +1,7 @@
+A routine `f' has a local of an expanded type, but does not reference
+this local in the routine body.  The base class of the expanded type
+has a creation procedure.  When the system is executed, the creation
+procedure of the expanded class is not invoked when `f' is called, but
+only if the system was frozen.  A melted system works correctly.
+
+Discovered in Release 3.2.4.

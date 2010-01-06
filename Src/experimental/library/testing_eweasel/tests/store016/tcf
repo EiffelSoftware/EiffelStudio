@@ -1,0 +1,21 @@
+test_name	storable-formats-3
+test_description Retrieve a storable from version 5.4 or older could crash the runtime upon retrieval.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+
+compile_melted
+compile_result ok
+
+define_directory EIFGEN $TEST EIFGENs
+define_directory TARGET $EIFGEN test
+define_directory WCODE $TARGET W_code
+copy_bin	data54 $WCODE data54
+
+execute_work   NONE exec_output
+execute_result ok
+compare        exec_output output
+
+test_end

@@ -1,0 +1,6 @@
+A class repeatedly does `clone (clone (c))' where `c' is of an
+expanded type.  If the system is melted and garbage collection is
+enabled, a segmentation fault occurs when the system is executed.
+Frozen code works fine.
+
+Discovered in Release 3.2.4.

@@ -1,0 +1,6 @@
+A generic class which has a constraint `ARRAY -> [BIT Weasel_bits]' on
+its formal generic parameter causes the compiler to correctly report a
+VTCG violatio, but the compiler dies while trying to report the type
+to which the actual generic parameter should conform.
+
+Discovered in Release 3.2.2.

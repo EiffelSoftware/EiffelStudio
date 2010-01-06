@@ -1,0 +1,7 @@
+If the root class named in the Ace file cannot be found in the
+universe, VD20 violation is reported.  Hitting return to retry
+compilation then causes exception trace.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.04.21.
+

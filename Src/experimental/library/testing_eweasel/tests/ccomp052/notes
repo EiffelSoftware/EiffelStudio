@@ -1,0 +1,7 @@
+Freezing or finalizing a system with a generic class `TESt2 [G ->
+DOUBLE create default_create end]' whose creation procedure creates an
+attribute of type G generates C code that won't compile.  Melted code
+dies with an "illegal cast operation" panic.
+
+Discovered in Release 5.5.1012.
+

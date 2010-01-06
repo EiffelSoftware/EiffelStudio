@@ -1,0 +1,6 @@
+Binary free operators have lower precedence than most other binary
+operators, but they should have higher precedence than all binary
+operators.
+
+Discovered in Prerelease 93.05.17.
+

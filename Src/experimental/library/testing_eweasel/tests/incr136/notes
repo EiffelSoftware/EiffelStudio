@@ -1,0 +1,9 @@
+A system has an Ace which specifies a visible class FOO, where FOO is
+reachable from the root class.  After initial compilation where the
+system is frozen or finalized, a local is removed, making class FOO
+unreachable from the root.  When the system is recompiled, the
+compiler correctly detects the VD31 error.  But when the local is
+added back in and compilation is resumed, the compiler dies during
+degree -3 (during dead code removal if system was finalized).
+
+Discovered in Release 3.3.7.

@@ -1,0 +1,222 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name	multi-constraint-assertions
+test_description Testing assertions which use multi-constrained formals.
+
+define VIOLATE_TEST_1 "False"
+define VIOLATE_TEST_2 "False"
+define VIOLATE_TEST_3 "False"
+define VIOLATE_TEST_4 "False"
+define VIOLATE_TEST_5 "False"
+
+
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+copy_sub 	multi.e $CLUSTER multi.e
+copy_raw 	abc.e $CLUSTER abc.e
+copy_raw 	abc2.e $CLUSTER abc2.e
+
+-----------------------------------------------
+-- M E L T E D   T E S T S
+
+compile_melted
+compile_result ok
+execute_work NONE melted_output0
+execute_result ok
+compare melted_output0 output0
+
+define VIOLATE_TEST_1 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_melted
+compile_result 	ok
+execute_work NONE melted_output1
+execute_result ok
+compare melted_output1 output1
+define VIOLATE_TEST_1 "False"
+
+define VIOLATE_TEST_2 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_melted
+compile_result 	ok
+execute_work NONE melted_output2
+execute_result ok
+compare melted_output2 output2
+define VIOLATE_TEST_2 "False"
+
+define VIOLATE_TEST_3 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_melted
+compile_result 	ok
+execute_work NONE melted_output3
+execute_result ok
+compare melted_output3 output3
+define VIOLATE_TEST_3 "False"
+
+define VIOLATE_TEST_4 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_melted
+compile_result 	ok
+execute_work NONE melted_output4
+execute_result ok
+compare melted_output4 output4
+define VIOLATE_TEST_4 "False"
+
+define VIOLATE_TEST_5 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_melted
+compile_result 	ok
+execute_work NONE melted_output5
+execute_result ok
+compare melted_output5 output5
+define VIOLATE_TEST_5 "False"
+
+-----------------------------------------------
+-- F R O Z E N   T E S T S
+
+copy_sub 	multi.e $CLUSTER multi.e
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work NONE frozen_output0
+execute_result ok
+compare frozen_output0 output0
+
+define VIOLATE_TEST_1 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work NONE frozen_output1
+execute_result ok
+compare frozen_output1 output1
+define VIOLATE_TEST_1 "False"
+
+define VIOLATE_TEST_2 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work NONE frozen_output2
+execute_result ok
+compare frozen_output2 output2
+define VIOLATE_TEST_2 "False"
+
+
+define VIOLATE_TEST_3 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work NONE frozen_output3
+execute_result ok
+compare frozen_output3 output3
+define VIOLATE_TEST_3 "False"
+
+define VIOLATE_TEST_4 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work NONE frozen_output4
+execute_result ok
+compare frozen_output4 output4
+define VIOLATE_TEST_4 "False"
+
+define VIOLATE_TEST_5 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work NONE frozen_output5
+execute_result ok
+compare frozen_output5 output5
+define VIOLATE_TEST_5 "False"
+
+
+-----------------------------------------------
+-- F I N A L I Z E D   T E S T S
+
+copy_sub 	multi.e $CLUSTER multi.e
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_work NONE final_output0
+execute_result ok
+compare final_output0 output0
+
+define VIOLATE_TEST_1 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_work NONE final_output1
+execute_result ok
+compare final_output1 output1
+define VIOLATE_TEST_1 "False"
+
+define VIOLATE_TEST_2 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_work NONE final_output2
+execute_result ok
+compare final_output2 output2
+define VIOLATE_TEST_2 "False"
+
+
+define VIOLATE_TEST_3 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_work NONE final_output3
+execute_result ok
+compare final_output3 output3
+define VIOLATE_TEST_3 "False"
+
+
+define VIOLATE_TEST_4 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_work NONE final_output4
+execute_result ok
+compare final_output4 output4
+define VIOLATE_TEST_4 "False"
+
+define VIOLATE_TEST_5 "True"
+copy_sub 	multi.e $CLUSTER multi.e
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_work NONE final_output5
+execute_result ok
+compare final_output5 output5
+define VIOLATE_TEST_5 "False"
+
+test_end
+

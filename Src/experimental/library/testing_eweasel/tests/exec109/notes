@@ -1,0 +1,6 @@
+A class calls `print (i = i.default)' on an INTEGER i.  T N and just
+returns its argument.  The system compiles fine when melted, but when
+executed it dies with "operational stack botched".  Frozen code works
+correctly.
+
+Submitted by Manu for release 4.5.

@@ -1,0 +1,5 @@
+A function whose return type is and expanded type has a local of this
+return type and body `Result := x'.  When the system is finalized, the
+code generated for the routine won't compile.
+
+Discovered in Release 3.2.4.

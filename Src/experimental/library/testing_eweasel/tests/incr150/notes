@@ -1,0 +1,7 @@
+After initial compilation, a VEEN error is introduced by changing an
+identifier in a class invariant.  When the compiler detects it, the
+error is removed and compilation resumes and finishes normally.  But a
+subsequent attempt to freeze the system with no further changes causes
+the compiler to die.
+
+Discovered in Release 4.3-19.

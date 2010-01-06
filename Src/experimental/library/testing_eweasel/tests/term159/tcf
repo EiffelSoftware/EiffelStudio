@@ -1,0 +1,14 @@
+test_name 	 conversion-in-closed-argument-crash
+test_description When a closed argument is provided at agent creation time and that there is a conversion the compiler crashes.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

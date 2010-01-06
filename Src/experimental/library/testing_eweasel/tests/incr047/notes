@@ -1,0 +1,7 @@
+After initial compilation, an actual generic parameter is changed from
+`expanded A' to `A'.  The system recompiles fine, but executing it
+results in a run-time panic instead of the expected "feature applied
+to void reference" exception.
+
+Discovered in Prerelease 93.07.15.
+

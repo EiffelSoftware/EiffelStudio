@@ -1,0 +1,7 @@
+A routine calls another routine and violates its precondition.  The
+routine's rescue clause calls another routine to display the exception
+status and this routine calls a third routine.  If this last routine
+also has a non-empty rescue clause, then execution terminates with a
+run-time panic while trying to display the meaning of `exception'.
+
+Discovered in Release 3.2.4.

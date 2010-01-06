@@ -1,0 +1,6 @@
+A procedure takes the negation (`not') of a local of type BIT
+2_000_000 and prints the first and last bits of the result.  System
+execution ends with a run-time panic, but only if garbage collection
+is on.
+
+Discovered in Release 3.2.4.

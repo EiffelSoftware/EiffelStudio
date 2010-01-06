@@ -1,0 +1,8 @@
+   在 EiffelSoftware.Runtime.ISE_RUNTIME.raise(Exception e)%R
+   在 EiffelSoftware.Library.Base.Kernel.Dotnet.Impl.IseExceptionManager.$$Raise(IseExceptionManager Current, Exception a_exception) 位置 e:\64dev\library\base\ise\kernel\dotnet\ise_exception_manager.e:行号 47%R
+   在 EiffelSoftware.Library.Base.Kernel.Dotnet.Impl.IseExceptionManager.Raise(Exception a_exception)%R
+   在 EiffelSoftware.Library.Base.Kernel.Dotnet.Exception.Raise() 位置 e:\64dev\library\base\ise\kernel\dotnet\exception.e:行号 53%R
+   在 EiffelSoftware.Library.Base.Kernel.Exceptions.DeveloperException.Raise()%R
+   在 EiffelSoftware.Library.Base.Kernel.Dotnet.Impl.Exceptions.$$Raise(Exceptions Current, String_8 name) 位置 e:\64dev\library\base\ise\kernel\dotnet\exceptions.e:行号 205%R
+   在 RootCluster.Impl.Application.Raise(String_8 name)%R
+   在 RootCluster.Impl.Application.$$Make(Application Current) 位置 e:\eiffel_projects\dotnet_special\application.e:行号 26

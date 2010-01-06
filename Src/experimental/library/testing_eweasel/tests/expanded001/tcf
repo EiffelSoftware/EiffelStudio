@@ -1,0 +1,33 @@
+-- This is a test control file
+
+test_name expanded-array-attached-reference-array
+test_description This test related to bug#11918. An array of expanded (DOUBLE) is attached to a reference array (ARRAY [ANY]). Calling features on this type causes the sytem to crash.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+execute_work NONE actual_output1
+execute_result ok
+compare actual_output1 output1
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+execute_work NONE actual_output2
+execute_result ok
+compare actual_output2 output1
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+execute_final NONE actual_output3
+execute_result ok
+compare actual_output3 output1
+
+
+
+test_end

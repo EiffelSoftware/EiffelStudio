@@ -1,0 +1,8 @@
+After initial compilation, a constraint on a formal generic parameter
+of a class that is used in the generic constraint of another class is
+changed.  When the system is recompiled, the compiler correctly
+reports a VTCG error.  But when the constraint is changed back to its
+original valid form and compilation is resumed, the compiler dies with
+a bus error.
+
+Discovered in Release 4.3-17.

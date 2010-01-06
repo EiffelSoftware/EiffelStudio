@@ -1,0 +1,6 @@
+A particular sequence of changes causes a segmentation fault in
+routine `make_update' while melting changes.
+
+Discovered in Prerelease 93.05.17.
+Fixed in Prerelease 93.07.15.
+

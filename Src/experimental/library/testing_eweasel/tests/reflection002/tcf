@@ -1,0 +1,14 @@
+test_name basic-type-internal-violation
+test_description If you use {INTERNAL} to get the type of INTEGER via its string representation you get a check violation in INTERNAL.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

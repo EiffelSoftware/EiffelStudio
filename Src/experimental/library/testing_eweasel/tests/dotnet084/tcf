@@ -1,0 +1,25 @@
+test_name ctor-single-default-ctor
+test_description Checks only one ctor is created for an Eiffel class
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+
+copy_raw a_2.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_2
+execute_result 	ok
+
+compare		exec_output output
+compare		exec_output_2 output
+
+test_end

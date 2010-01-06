@@ -1,0 +1,11 @@
+test_name 	 attached-like-feature-formal-crash
+test_description A type is an anchor to a feature whose type is an attached formal. The compiler crashes while trying to compile the class.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+test_end

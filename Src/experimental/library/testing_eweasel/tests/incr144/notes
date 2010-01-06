@@ -1,0 +1,5 @@
+After initial compilation, a creation feature named in a generic
+constraint is removed entirely from the class.  When the system is
+recompiled, the VTCG validity error is not detected.
+
+Discovered in Release 4.3-17.

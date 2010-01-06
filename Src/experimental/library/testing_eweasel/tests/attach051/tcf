@@ -1,0 +1,13 @@
+test_name detach-to-attach-assignment
+test_description Trying to assign a detached type to an attached type should raise a VJAR error but does not in .NET when type is SYSTEM_OBJECT.
+
+if DOTNET define CLASS "SYSTEM_OBJECT"
+if not DOTNET define CLASS "ANY"
+
+copy_sub Ace $TEST Ace
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VJAR
+
+test_end

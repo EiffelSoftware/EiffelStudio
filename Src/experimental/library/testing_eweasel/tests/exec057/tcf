@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 array-of-expanded-insert-fails
+test_description A class creates an ARRAY [expanded FOO] and then fills it up with elements of type `expanded FOO'.  When the system is frozen with `assertion (ensure)' and then executed it dies with a segmentation fault while evaluating the postcondition `insertion_done' of `put' in ARRAY.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1 1000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

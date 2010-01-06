@@ -1,0 +1,20 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	infinite-loop-expanded-generics
+test_description Compiling a system with an expanded generic class causes the compiler to go in an infinite loop trying to instantiate all possible generic derivation of an expanded generic class although there should be only one.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	c.e $CLUSTER c.e
+
+compile_melted
+compile_result 	ok
+
+test_end

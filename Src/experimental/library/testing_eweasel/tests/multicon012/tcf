@@ -1,0 +1,19 @@
+test_name multi-constraint-formal-heavy-renaming
+test_description This test checks the correct handling and binding of creation features in the multi constraint case. It does this by declaring G of TEST1 should have a feature `make_a' available for creation. G of TEST2 has A descendant B as a constraint which renamed his creation feature. None the less the creation constraint of TEST1 should be met by G of B. C inherits twice from B and renames/redefines one feature and selects the other. The selected feature should be called no matter how the names are.
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output_melted
+execute_result	ok
+compare		exec_output_melted output
+
+test_end
+

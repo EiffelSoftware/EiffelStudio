@@ -1,0 +1,8 @@
+A creation instruction is applied to an entity (local or attribute)
+which is already attached to an object and the current value of the
+entity is passed to the creation procedure (e.g., !!x.make (x)).  If
+the code is melted, the newly created object is passed to the creation
+procedure instead of the object to which the entity is attached before
+the creation instruction.  Frozen code works correctly.
+
+Discovered in Release 3.3.7.

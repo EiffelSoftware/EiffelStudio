@@ -1,0 +1,63 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name void-as-bool-or-int
+test_description Violate validity constraint VWBE with Void
+copy_sub 	Ace $TEST Ace
+
+define		ROUTINE "require Void do end"
+copy_sub test.e $CLUSTER test.e
+compile_melted
+compile_result validity_error TEST VWBE
+
+define		ROUTINE "do ensure Void end"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VWBE
+
+define		ROUTINE "do end invariant Void"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VWBE
+
+define		ROUTINE "do from invariant Void until false loop end end"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VWBE
+
+define		ROUTINE "do from variant Void until false loop end end"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VAVE
+
+define		ROUTINE "do from until Void loop end end"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VWBE
+
+define		ROUTINE "do if Void then end end"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VWBE
+
+define		ROUTINE "local c: CHARACTER; do inspect c when Void then end end"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result syntax_error TEST 19
+
+define		ROUTINE "do inspect Void when 3 then end end"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VOMB(1)
+
+define		ROUTINE "local c: CHARACTER do inspect Void when c then end end"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VOMB(1)
+
+test_end

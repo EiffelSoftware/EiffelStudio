@@ -1,0 +1,16 @@
+
+test_name 	create-constrained-generic-crash
+test_description A generic class whose formal generic parameter G is constrained by HASH_TABLE [ANY, DOUBLE] and that has a generic creation constraint creates an attribute of type G.  If the actual generic is HASH_TABLE [DOUBLE, DOUBLE] the compiler crashes.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+test_end

@@ -1,0 +1,113 @@
+test_name 	 assigner-validity-rules
+test_description Verify that the compiler checks the proper validity rules for assigners.
+
+-- Testing the correct cases first
+define ACTUAL_TYPE "TEST1"
+define FORMAL_TYPE "TEST1"
+define ASSIGNER_ARGUMENTS ""
+define ACTUAL_ARGUMENTS ""
+define FORMAL_ARGUMENTS ""
+define FEATURE_NAME "set_a"
+define TARGET_NAME "a"
+copy_sub 	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+define ACTUAL_TYPE "TEST2"
+define FORMAL_TYPE "TEST1"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+define ACTUAL_TYPE "TEST2"
+define FORMAL_TYPE "TEST2"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+-- Testing argument checking of source.
+define ACTUAL_TYPE "TEST1"
+define FORMAL_TYPE "TEST2"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error TEST VBAC(1)
+
+-- Testing argument checking of source.
+define ACTUAL_TYPE "TEST1"
+define FORMAL_TYPE "TEST1"
+define TARGET_NAME "b"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	validity_error TEST VEEN
+
+define TARGET_NAME "c"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	validity_error TEST VBAC(2)
+
+-- Test VFAC validity errors 
+define TARGET_NAME "a"
+define ACTUAL_TYPE "TEST1"
+define FORMAL_TYPE "TEST1"
+define ACTUAL_ARGUMENTS ""
+define FORMAL_ARGUMENTS ""
+
+define FEATURE_NAME "set_b"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	validity_error TEST VFAC(1)
+
+define FEATURE_NAME "set_c"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	validity_error TEST VFAC(1)
+
+define FEATURE_NAME "set_d"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	validity_error TEST VFAC(2)
+
+define FEATURE_NAME "set_a"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	ok
+
+define FORMAL_TYPE "TEST3"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VFAC(3)
+
+define FORMAL_TYPE "TEST1"
+define FORMAL_ARGUMENTS "; arg1: TEST1"
+define ASSIGNER_ARGUMENTS "(arg1: TEST1)"
+define ACTUAL_ARGUMENTS "(create {TEST1})"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	ok
+
+define FORMAL_TYPE "TEST1"
+define FORMAL_ARGUMENTS "; arg1: TEST1"
+define ASSIGNER_ARGUMENTS "(arg1: TEST2)"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error TEST VFAC(4)
+
+
+test_end

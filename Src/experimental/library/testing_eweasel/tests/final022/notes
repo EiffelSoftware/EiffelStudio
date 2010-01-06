@@ -1,0 +1,7 @@
+A generic class `TEST1 [G]' has a routine `value2: G is do end'.  If
+the actual generic parameter is an expanded class, then `value2'
+returns Void when the system is finalized with inlining, but should
+not.  Melted code, frozen code and finalized code without inlining
+work correctly.
+
+Discovered in release 5.4.0403.

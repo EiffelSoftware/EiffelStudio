@@ -1,0 +1,6 @@
+A system which calls a once function whose result type is BIT type
+should execute correctly, but dies with a run-time panic if frozen (or
+with a segmentation fault if completely melted).
+
+Discovered in Release 3.2.3b.
+

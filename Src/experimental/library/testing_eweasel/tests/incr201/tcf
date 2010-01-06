@@ -1,0 +1,33 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vtcg-then-syntax-error-then-ok
+test_description A generic class has a formal generic parameter constrained by a nonexistent and invalid creation procedure `infix "@"'.  The compiler correctly reports VTCG error.  Then a syntax error is added to the class.  The compiler detects the error, but says "Exception occurred while displaying error message" when it tries to print the name of the class.
+
+define SYNTAX_ERROR ""
+define CREATION_INSTRUCTION "create x.make"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST VTCG
+
+define SYNTAX_ERROR "+"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	syntax_error TEST1 14
+
+define CREATION_INSTRUCTION ""
+define SYNTAX_ERROR ""
+
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result ok
+
+test_end

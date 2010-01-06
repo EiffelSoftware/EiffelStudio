@@ -1,0 +1,43 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 manifest-string-vqmc-sneak
+test_description A class with a declaration `c: CHARACTER is "abc"' should be rejected as a VQMC but the compiler accepts it.  Also incorrectly accepts other basic types (INTEGER, REAL, DOUBLE, POINTER, BOOLEAN) when the constant is a manifest string.
+
+define		TYPE BOOLEAN
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VQMC
+
+define		TYPE CHARACTER
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST VQMC
+
+define		TYPE DOUBLE
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST VQMC
+
+define		TYPE INTEGER
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST VQMC
+
+define		TYPE POINTER
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST VQMC
+
+define		TYPE REAL
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST VQMC
+
+test_end

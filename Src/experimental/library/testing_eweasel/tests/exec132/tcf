@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 is-integer-accepts-invalid
+test_description Routine `is_integer' from STRING accepts `(+|-)[a-zA-Z]*[0-9]*' which is incorrect (for example, returns True for `("-wer123").is_integer'.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_warning TEST Unused_local_warning
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

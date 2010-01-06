@@ -1,0 +1,6 @@
+A class that has an assignment of a manifest INTEGER constant whose
+value is the minimum value for an INTEGER (-2147483648) is rejected by
+the compiler as a VJAR error.  Similarly for INTEGER_8, and INTEGER_16
+(INTEGER_64 works correctly).
+
+Discovered in release 5.4.0403.

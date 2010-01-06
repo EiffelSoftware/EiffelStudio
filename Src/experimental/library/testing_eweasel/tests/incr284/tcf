@@ -1,0 +1,20 @@
+test_name removing-formal-crashes
+test_description Changing a particular class from generic to non-generic and recompiling causes the compiler to crash in degree 1.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+copy_raw 	test_new.e $CLUSTER test.e
+copy_raw 	test1_new.e $CLUSTER test1.e
+copy_raw 	test2_new.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+test_end
+

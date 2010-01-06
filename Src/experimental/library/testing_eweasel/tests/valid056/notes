@@ -1,0 +1,7 @@
+An assignment whose source is an address expression `$x' (which is of
+type pointer) and whose target is a reference type other than ANY should
+be rejected, since POINTER does not conform to any reference type besides
+ANY.  But the compiler accepts the assignment.
+
+Discovered in Prerelease 93.07.15.
+

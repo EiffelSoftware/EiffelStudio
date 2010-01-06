@@ -1,0 +1,9 @@
+A system with a generically derived type whose actual generic
+parameter is itself a generic derivation results in a class TEST1 with
+an attribute of an expanded type.  When an instance of TEST1 is
+created, the attribute is not initialized to the appropriate default
+value.  Instead, it seems to be Void, which should not be possible for
+an entity of an expanded type.
+
+Discovered in Release 3.2.
+

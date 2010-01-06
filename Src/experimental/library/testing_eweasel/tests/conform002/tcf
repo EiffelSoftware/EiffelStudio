@@ -1,0 +1,38 @@
+test_name 	 formal-conformance
+test_description Ensures that conformance at runtime is properly handled for formal generic parameters.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	c.e $CLUSTER c.e
+
+compile_melted
+compile_result	ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
+execute_final NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

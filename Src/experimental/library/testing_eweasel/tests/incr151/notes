@@ -1,0 +1,6 @@
+After initial compilation where a system is finalized, an attribute is
+moved to a parent class and the parent's name is changed to the
+child's name (child is renamed to something unused).  When the system
+is recompiled, the compiler dies.
+
+Discovered in Release 4.5.

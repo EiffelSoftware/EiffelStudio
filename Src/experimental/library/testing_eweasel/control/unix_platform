@@ -1,0 +1,13 @@
+-- Platform specific tools
+define_file		EWEASEL_COMPILE	$ISE_EIFFEL studio spec $ISE_PLATFORM bin ec
+define_file		EWEASEL_FREEZE	$EWEASEL bin eiffel_freeze
+define_file		EWEASEL_EXECUTE $EWEASEL bin eiffel_execute
+
+-- EiffelBase platform specific directories
+define	KERNEL_CLASSIC	"<cluster name="kernel" location="$ISE_LIBRARY\library\base\elks\kernel"/><cluster name="exceptions" location="$ISE_LIBRARY\library\base\ise\kernel\exceptions"/><cluster name="elks_exceptions" location="$ISE_LIBRARY\library\base\elks\kernel\exceptions"/>"
+define	KERNEL_DOTNET	""
+define	SUPPORT_DOTNET	""
+
+-- Dotnet specific options
+define	EWEASEL_DOTNET_SETTING	""
+define	KERNEL_DOTNET_NO_EXCEPTION ""

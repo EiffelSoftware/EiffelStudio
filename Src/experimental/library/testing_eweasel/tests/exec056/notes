@@ -1,0 +1,9 @@
+A class inherits a deferred feature from one class and an effective
+feature of the same name from another class.  Both features have a
+precondition and a postcondition.  The flatshort form of the heir
+class looks as expected, with all alternative preconditions present.
+But when the system is executed, the precondition and postcondition of
+the deferred precursor feature are not monitored.
+
+Discovered in Release 3.2.3b.
+

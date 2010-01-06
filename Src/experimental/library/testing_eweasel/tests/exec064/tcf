@@ -1,0 +1,68 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 random-string-blank-panic
+test_description A class repeatedly allocates a string whose length is determined by a random number generator and fills the string with blanks.  When the system is frozen, system execution quickly ends with a panic.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1 70056 10
+execute_result	 ok
+compare		 exec_output1 output
+
+execute_work	 NONE exec_output2 80008 10
+execute_result	 ok
+compare		 exec_output2 output
+
+execute_work	 NONE exec_output3 87999 10
+execute_result	 ok
+compare		 exec_output3 output
+
+execute_work	 NONE exec_output4 101010 10
+execute_result	 ok
+compare		 exec_output4 output
+
+execute_work	 NONE exec_output5 101010 10
+execute_result	 ok
+compare		 exec_output5 output
+
+execute_work	 NONE exec_output6 129999 10
+execute_result	 ok
+compare		 exec_output6 output
+
+execute_work	 NONE exec_output7 200001 10
+execute_result	 ok
+compare		 exec_output7 output
+
+execute_work	 NONE exec_output8 249997 10
+execute_result	 ok
+compare		 exec_output8 output
+
+execute_work	 NONE exec_output9 299997 10
+execute_result	 ok
+compare		 exec_output9 output
+
+execute_work	 NONE exec_output10 399997 10
+execute_result	 ok
+compare		 exec_output10 output
+
+execute_work	 NONE exec_output11 499997 10
+execute_result	 ok
+compare		 exec_output11 output
+
+execute_work	 NONE exec_output12 999999 10
+execute_result	 ok
+compare		 exec_output12 output
+
+test_end

@@ -1,0 +1,7 @@
+The compiler correctly detects and reports a VCFG violation when a
+generic class has a formal generic parameter with the same name as a
+class in the universe.  But when an inheritance clause is deleted,
+thereby removing the generic class from the universe, the compiler
+still reports a VCFG violation on the generic class.
+
+Discovered in Release 3.2.

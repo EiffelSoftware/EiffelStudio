@@ -1,0 +1,6 @@
+Catcall detected in {TEST2}.test_formals for arg#3: expected STRING_8 but got Void
+Catcall detected in {TEST1}.test_anchors_1 for arg#1: expected STRING_8 but got Void
+Catcall detected in {TEST1}.test_anchors_2 for arg#1: expected STRING_8 but got Void
+Catcall detected in {TEST2}.test_formals for arg#1: expected STRING_8 but got Void
+Catcall detected in {TEST2}.test_formals for arg#3: expected STRING_8 but got Void
+Execution completed

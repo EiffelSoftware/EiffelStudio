@@ -1,0 +1,13 @@
+test_name 	 dll-generation-failure
+test_description An external routine with the `dll32' C external kind would fail to C compile in workbench mode.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

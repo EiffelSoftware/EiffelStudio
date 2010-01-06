@@ -1,0 +1,44 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vmfn-new-deferred-ancestor
+test_description After initial compilation where the system is melted, a deferred routine effected by an attribute is changed to a constant attribute. When the VMFN error is reported, it is changed back to a deferred routine and compilation finishes normally.  Then a new class with a deferred version of the routine is inherited and called with dynamic type Current.  After changes are melted, execution ends with a segmentation fault.
+
+define PARENT ""
+define ATTRIBUTES ""
+define INSTRUCTIONS ""
+define BODY "deferred end"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define BODY ""abc""
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST VMFN
+
+define BODY "deferred end"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+define PARENT "TEST2"
+define ATTRIBUTES "y: TEST2"
+define INSTRUCTIONS "y := Current; io.put_string (y.attr); io.new_line;"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+execute_work NONE exec_output1
+execute_result ok
+compare exec_output1 output
+
+test_end

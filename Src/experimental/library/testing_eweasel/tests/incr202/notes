@@ -1,0 +1,10 @@
+A system has a root class which explicitly names `default_create' as
+creation procedure and redefines `default_create' to print something.
+The Ace file specifies the root class, but does not specify a creation
+procedure.  After initial compilation where the system is melted,
+system execution correctly calls the redefined default_create.  But
+when the system is finalized with no changes, the finalized system
+produces no output and the redefined `default_create' has been removed
+by dead code removal.
+
+Discovered in Release 5.4.0403.

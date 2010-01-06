@@ -1,0 +1,96 @@
+test_name library-named-namespace-generation-rules
+test_description Ensure the library namespaces generated for a given cluster hierarchy conform to the rules of a direct project target
+
+copy_sub Ace $TEST Ace
+copy_sub library $CLUSTER library
+copy_raw test.e $CLUSTER test.e
+copy_raw library_cluster\a.e $CLUSTER\library_cluster a.e
+copy_raw library_cluster\cluster\b.e $CLUSTER\library_cluster\cluster b.e
+copy_raw library_cluster\cluster\subcluster\c.e $CLUSTER\library_cluster\cluster\subcluster c.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+
+cleanup_compile
+
+copy_sub library_nn $CLUSTER library
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_nn
+execute_result 	ok
+
+cleanup_compile
+
+copy_sub library_ucnn $CLUSTER library
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_ucnn
+execute_result 	ok
+
+cleanup_compile
+
+copy_sub library_urcnn $CLUSTER library
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_urcnn
+execute_result 	ok
+
+cleanup_compile
+
+copy_sub library_nn_ucnn $CLUSTER library
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_nn_ucnn
+execute_result 	ok
+
+cleanup_compile
+
+copy_sub library_nn_urcnn $CLUSTER library
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_nn_urcnn
+execute_result 	ok
+
+cleanup_compile
+
+copy_sub library_ucnn_urcnn $CLUSTER library
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_ucnn_urcnn
+execute_result 	ok
+
+cleanup_compile
+
+copy_sub library_nn_ucnn_urcnn $CLUSTER library
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_nn_ucnn_urcnn
+execute_result 	ok
+
+compare		exec_output output
+compare		exec_output_nn output_nn
+compare		exec_output_ucnn output_ucnn
+compare		exec_output_urcnn output_urcnn
+compare		exec_output_nn_ucnn output_nn_ucnn
+compare		exec_output_nn_urcnn output_nn_urcnn
+compare		exec_output_ucnn_urcnn output_ucnn_urcnn
+compare		exec_output_nn_ucnn_urcnn output_nn_ucnn_urcnn
+
+test_end

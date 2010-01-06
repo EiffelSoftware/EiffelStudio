@@ -1,0 +1,9 @@
+A class has a routine `try (t: like n): like t' which just returns its
+argument, where `n: INTEGER is 47'.  After initial compilation where
+the system is melted, the declaration of `n' is changed to `n: DOUBLE
+is 13.25' and the system is finalized.  System execution then produces
+the wrong result (13 if finalized with inlining, -NaN if finalized
+without inlining and -O2, internal compiler error in gcc 3.2.2 if
+finalized without inlining and -O3).
+
+Discovered in Release 5.4.0610.

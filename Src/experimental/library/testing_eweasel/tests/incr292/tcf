@@ -1,0 +1,18 @@
+test_name 	 bogus-vmrc-2
+test_description When a class is updated the compiler reports a bogus VMRC-2 error when none should appear.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+
+compile_melted
+compile_result 	validity_error TEST VUEX(2)
+
+copy_raw 	c_rev1.e $CLUSTER c.e
+
+resume_compile
+compile_result	ok
+
+test_end

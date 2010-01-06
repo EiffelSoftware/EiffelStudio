@@ -1,0 +1,12 @@
+test_name multi-constraint-rename-conflict
+test_description Checks that an error is reported when two features are renamed to the same name and they come from different baseclasses.
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	multi.e $CLUSTER multi.e
+
+
+compile_melted
+compile_result validity_error TEST Unused_local_warning; MULTI VTMC(2)
+
+test_end
+

@@ -1,0 +1,12 @@
+test_name 	svalid-invalid-parent
+test_description A class compiled in void-safe mode inherits from a class compiled in non-void-safe mode which contains some unsafe void code. The compiler crashes if one is using a conversion on an unattached entities.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	parent.e $CLUSTER parent.e
+copy_raw 	child.e $CLUSTER child.e
+
+compile_melted
+compile_result	validity_error CHILD VUTA(2)
+
+test_end

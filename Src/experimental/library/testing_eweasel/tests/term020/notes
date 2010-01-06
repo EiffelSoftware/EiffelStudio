@@ -1,0 +1,6 @@
+A violation of the Expanded Client rule (VLEC) is not detected when it
+involves two classes, neither of which inherits from the other.  The
+compilation is terminated by an illegal instruction after pass 5.
+
+Discovered in Prerelease 93.07.15.
+

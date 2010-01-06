@@ -1,0 +1,23 @@
+test_name 	 internal-incrementality
+test_description After initial compilation, a function used as an anchor for an attribute type changes, but INTERNAL still reports the old type for the attribute, not the new one.
+
+define TYPE 	"STRING"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+define TYPE 	"PATH_NAME"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output2
+
+test_end

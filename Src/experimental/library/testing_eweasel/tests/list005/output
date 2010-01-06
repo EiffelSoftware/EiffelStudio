@@ -1,0 +1,7 @@
+Before: 1, 2, 3, 4, 5
+After removing 5: 1, 2, 3, 4
+Before: 1, 2, 3, 4, 5
+After removing 3: 1, 2, 4, 5
+Before: 1, 2, 1, 2, 3, 2, 1, 4, 1
+After pruning all 1's: 2, 2, 3, 2, 4
+Execution completed

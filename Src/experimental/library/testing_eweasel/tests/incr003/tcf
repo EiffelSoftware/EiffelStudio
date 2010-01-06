@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name vscn-sneak
+test_description Introduce VSCN violation (two classes with same name) and try to resume compilation
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+compile_melted
+compile_result ok
+copy_raw test1_rev1.e $CLUSTER test1.e
+compile_melted
+compile_result validity_error NONE VD71
+resume_compile
+compile_result validity_error NONE VD71
+test_end

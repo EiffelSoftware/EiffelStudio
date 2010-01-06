@@ -1,0 +1,8 @@
+Test 1: False False True
+Test 2: True False False
+Test 3: True True False
+Test 4: True True False
+Test 5: True True False
+Test 6: True False False
+Test 7: False False True
+Execution completed

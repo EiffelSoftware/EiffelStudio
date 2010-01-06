@@ -1,0 +1,6 @@
+A particular sequence of changes causes a compiler error and violation
+of precondition `good_cluster'.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.05.17.
+

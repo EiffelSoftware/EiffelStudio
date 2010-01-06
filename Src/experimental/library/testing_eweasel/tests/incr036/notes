@@ -1,0 +1,6 @@
+After initial compilation, changing the name of the root class in
+class text and recompiling causes a compiler exception trace.
+
+Discovered in Prerelease 93.05.17.
+In Prerelease 93.07.15, it now causes an exception trace.
+

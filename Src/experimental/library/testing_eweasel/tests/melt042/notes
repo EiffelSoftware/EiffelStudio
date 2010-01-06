@@ -1,0 +1,5 @@
+A routine with the instruction `io.put_double (5 / 2)' gives incorrect
+output, but only when melted.  The instruction `io.put_real (5 / 2)'
+gives correct output whether melted or frozen.
+
+Discovered in Release 3.3.3.

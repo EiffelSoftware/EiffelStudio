@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	retrieve-corrupted-file
+test_description A class tries to retrieve an object which was stored into a file using `independent_store'.  If the file contents is manually modified to delete a character (to simulate a corrupted file), the retrieve operation goes into an infinite loop.
+
+copy_sub 	Ace $TEST Ace
+define_file	CORRUPTED_FILE  $OUTPUT bad_file
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	bad_file $OUTPUT bad_file
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

@@ -1,0 +1,34 @@
+test_name        retrieve-mismatch-serialization-failure
+test_description Retrieve from serialized data with field changed. Exception is able to be correctly raised and caught.
+
+define_directory EIFGEN $TEST EIFGENs
+define_directory TARGET $EIFGEN test
+define_directory WCODE $TARGET W_code
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work   NONE exec_output stored_a s
+execute_result ok
+compare        exec_output output
+
+copy_raw	b_modified.e $CLUSTER b.e
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work   NONE exec_output2 stored_a r
+execute_result ok
+compare        exec_output2 output2
+
+test_end

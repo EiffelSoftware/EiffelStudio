@@ -1,0 +1,9 @@
+A system without a needed cluster is compiled without precompilation
+info.  When the compiler correctly detects the VTCT error, the kernel
+cluster is removed and compilation is resumed.  The VD23 error is
+detected.  But when the kernel cluster is added back to the Ace, along
+with the missing needed cluster and compilation is resumed again, the
+compiler dies with an exception trace.
+
+Discovered in Prerelease 93.07.15.
+

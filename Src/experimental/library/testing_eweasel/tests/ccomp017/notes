@@ -1,0 +1,5 @@
+A routine with an assignment attempt whose source is of a a basic
+type (INTEGER, REAL, etc.)  compiles fine when frozen, but
+generates C code which won't compile.
+
+Discovered in Release 3.2.4.

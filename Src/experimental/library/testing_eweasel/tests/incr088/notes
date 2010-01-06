@@ -1,0 +1,8 @@
+A system whose root class inherits from a class TEST2 which exists in
+two different clusters correctly elicits a VSCN error report from the
+compiler.  But when the Ace is changed to indicate a different root
+class, which does not depend on TEST2, the compiler still reports a
+VSCN error.  If the final versions of the classes are compiled from
+scratch, no errors are reported.
+
+Discovered in Release 3.2.

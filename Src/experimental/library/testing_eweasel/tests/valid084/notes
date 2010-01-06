@@ -1,0 +1,8 @@
+A routine with an insufficiently exported entity in a precondition
+violates VAPE.  The compiler accepts it, but only if the entity
+Current is explicitly involved (e.g. as `Current.feature_name' or
+`Current + value').
+
+Discovered in Release 3.2.3b.
+
+

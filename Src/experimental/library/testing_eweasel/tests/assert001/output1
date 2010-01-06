@@ -1,0 +1,8 @@
+1: call_a_a caused precondition violation
+2: call_a_b caused precondition violation
+Invalidated invariant without violation 
+3: invariant_test caused invariant violation
+4: creation caused invariant violation
+1
+5: creation caused postcondition violation
+Execution completed

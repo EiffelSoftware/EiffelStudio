@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 misleading-vhrc2-and-vhrc3
+test_description A class with an inheritance clause which renames some inherited features violates either VHRC(2) or VHRC(3) and also violates VHRC(1) is not reported as violating VHRC(1).  It seems to me that it should.
+
+copy_sub 	 Ace $TEST Ace
+define		 RENAME "wimp as wimp"
+copy_sub 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VHRC(1)
+
+define		 RENAME "wimp as wimp1, wimp as wimp2"
+copy_sub 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST VHRC(2)
+
+test_end

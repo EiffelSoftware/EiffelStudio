@@ -1,0 +1,9 @@
+A particular system is compiled, finish_freezing is done and the
+system executes correctly.  Then all instructions are deleted from the
+body of the root creation procedure and es3 is rerun.  When the system
+is executed again, the old deleted body appears to be still executed.
+Running es3 again with no changes results in an exception trace.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.04.21.
+

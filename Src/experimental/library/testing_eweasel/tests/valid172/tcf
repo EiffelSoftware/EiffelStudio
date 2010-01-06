@@ -1,0 +1,13 @@
+test_name 	 conversion-on-type-with-like-current
+test_description Conversion should work on types with actual generics of "like Current" type.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	test1.e	$CLUSTER test1.e
+copy_raw	test2.e	$CLUSTER test2.e
+copy_raw	my_array.e	$CLUSTER my_array.e
+
+compile_melted
+compile_result	ok
+
+test_end

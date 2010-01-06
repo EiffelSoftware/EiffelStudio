@@ -1,0 +1,8 @@
+A generic class whose formal generic parameter G is constrained by
+STRING has a call to `n.count' where `n: G'.  After initial
+compilation, the generic constraint is removed.  When the system is
+recompiled, the compiler does not detect the newly introduced VEEN
+error and dies during degree 2 on the class.
+
+Discovered in release 5.4.0610.
+

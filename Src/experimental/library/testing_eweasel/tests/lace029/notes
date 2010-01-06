@@ -1,0 +1,7 @@
+An Ace with a Visible clause which makes two classes visible to
+external software under the same name is accepted by the compiler, but
+should not be.  Similarly, an Ace with a Visible clause which makes
+two features in a class visible under the same name should not be
+accepted.
+
+Discovered in Release 3.3 beta.

@@ -1,0 +1,52 @@
+test_name once-status-change
+test_description Change of once routine status from per-process to per-thread and back is not reflected in generated code.
+
+-- .NET-specific settings: workaround for different inheritance hierarchy
+
+if DOTNET define THREAD_CONTROL ""
+if not DOTNET define THREAD_CONTROL "THREAD_CONTROL"
+
+copy_sub Ace $TEST Ace
+
+-- Compile with reversed status of once routines
+
+define PROCESS_STATUS "thread"
+define THREAD_STATUS "global"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+-- Compile with correct status of once routines
+
+define PROCESS_STATUS "global"
+define THREAD_STATUS "thread"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output
+execute_result ok
+compare exec_output output
+
+-- Check that once routine status is reflected in finalized code
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output
+execute_result ok
+compare exec_output output
+
+cleanup_compile
+
+test_end

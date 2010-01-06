@@ -1,0 +1,8 @@
+A constant attribute which has declared type of `like Current' causes
+the compiler to report a bogus VFFD(7) error when the constant used in
+the declaration is a string or a bit type (i.e.  in addition to the
+VQMC(5) or VQMC(6) error).
+
+Discovered in Release 3.2.1.
+
+

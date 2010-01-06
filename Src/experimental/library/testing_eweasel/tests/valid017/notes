@@ -1,0 +1,8 @@
+Void, which is of type NONE (not BOOLEAN or INTEGER) is accepted as a
+boolean expression and as an integer expression.  According to ETL, it
+should not be.  The generated C code cannot be compiled.
+
+Partially fixed in Prerelease 93.02.17.  Void is still accepted, but
+generated C code compiles OK.
+Executing the system results in an "invalid inspect type" PANIC.
+

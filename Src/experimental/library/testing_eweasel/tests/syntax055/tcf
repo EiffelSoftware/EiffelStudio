@@ -1,0 +1,47 @@
+test_name 	 note-syntax
+test_description Verification that the Eiffel compiler follows the ECMA specification.
+
+define	NOTE	""
+copy_sub 	 Ace $TEST Ace
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result   ok
+
+define	NOTE	"test:"
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	syntax_error TEST 4
+
+define	NOTE	"test: test"
+copy_sub 	 test.e  $CLUSTER test.e
+
+resume_compile
+compile_result	ok
+
+define	NOTE	"test: test;"
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	syntax_error TEST 4
+
+define	NOTE	"test: test; test"
+copy_sub 	 test.e  $CLUSTER test.e
+
+resume_compile
+compile_result	syntax_error TEST 4
+
+define	NOTE	"test: test; test: test"
+copy_sub 	 test.e  $CLUSTER test.e
+
+resume_compile
+compile_result	ok
+
+define	NOTE	"test: test; test: test;"
+copy_sub 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result	syntax_error TEST 4
+
+test_end

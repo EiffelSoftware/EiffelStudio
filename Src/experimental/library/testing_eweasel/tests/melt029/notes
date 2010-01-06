@@ -1,0 +1,6 @@
+A class prints `x.out' where `x' is a constant of various types
+(INTEGER, DOUBLE, BOOLEAN, etc).  The system compiles fine, but if it
+was melted system execution ends with an exception trace.  Frozen code
+works fine.
+
+Discovered in Release 3.2.4.

@@ -1,0 +1,9 @@
+An invalid type used as actual generic parameters in an explicit type
+in a creation expression or an agent expression should cause the
+compiler to report a VTCG error, but it does not.
+
+Discovered in Release 5.0.024.
+
+
+
+

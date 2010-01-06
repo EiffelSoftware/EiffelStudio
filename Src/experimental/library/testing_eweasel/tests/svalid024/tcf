@@ -1,0 +1,17 @@
+test_name	inspect-inherited-static-access-missing-library
+test_description If you inherit from a class with an inspect value which is a static access to a class which is not directly reachable in your ECF, then the compiler fails to find the class and crashes.
+
+define_directory LIB_A	$CLUSTER	A
+define_directory LIB_B	$CLUSTER	B
+
+copy_raw	test.e	$CLUSTER	test.e
+copy_raw	b.e	$LIB_B	b.e
+copy_raw	a.e	$LIB_A	a.e
+copy_sub	b.ecf	$LIB_B	b.ecf
+copy_sub	a.ecf	$LIB_A	a.ecf
+copy_sub 	Ace	$TEST	Ace
+
+compile_melted
+compile_result	ok
+
+test_end

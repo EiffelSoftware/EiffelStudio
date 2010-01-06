@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vtcg-remove-creation-clause
+test_description After initial compilation, the creation procedure named in a generic constraint is removed from the creation clause in its class, but the feature is left there.  When the system is recompiled, the VTCG validity error is not detected.
+
+copy_sub 	 Ace $TEST Ace
+define		 CREATION "creation make"
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_sub 	 test2.e  $CLUSTER test2.e
+compile_melted
+compile_result 	 ok
+
+define		 CREATION "creation"
+copy_sub 	 test2.e  $CLUSTER test2.e
+compile_melted
+compile_result 	 validity_error TEST VTCG
+
+test_end

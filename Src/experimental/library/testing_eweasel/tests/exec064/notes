@@ -1,0 +1,5 @@
+A class repeatedly allocates a string whose length is determined by a
+random number generator and fills the string with blanks.  When the
+system is frozen, system execution quickly ends with a panic.
+
+Discovered in Release 3.2.4.

@@ -1,0 +1,13 @@
+test_name 	 like-current-object-test-no-defaults
+test_description Uses like Current with an explict attached type mark, no using any attached type or void-safe defaults
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

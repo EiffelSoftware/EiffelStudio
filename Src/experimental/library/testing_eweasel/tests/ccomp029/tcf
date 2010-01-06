@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	finalize-wont-trace-visible
+test_description A system's Ace has a visible clause which makes one routine of a class visible.  The class inherits the routine to be made visible from another class along with another routine called by the first and renames both routines.  When the system is finalized with `dead_code_removal (yes)', the generated C code won't compile.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+compile_final
+compile_result 	 ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

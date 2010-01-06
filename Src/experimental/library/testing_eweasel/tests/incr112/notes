@@ -1,0 +1,7 @@
+After initial compilation, the value of a constant integer attribute
+is changed, thereby introducing a VTBT violation in a type used as an
+actual generic parameter.  When the system is recompiled, the compiler
+does not detect the VTBT violation.
+
+Discovered in Release 3.2.3b.
+

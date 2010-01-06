@@ -1,0 +1,8 @@
+class
+	CHILD_CLASS
+
+$INHERITANCE_CLAUSE
+	PARENT_CLASS
+
+
+end

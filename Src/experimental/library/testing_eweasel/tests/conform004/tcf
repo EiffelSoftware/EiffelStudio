@@ -1,0 +1,25 @@
+test_name 	 tuple-conformance-broken
+test_description If you manipulate an attached TUPLE type, then the code for extracting its detachable version type so that it can be used for object creation and others is broken and you end up loosing all the generic parameter of the TUPLE.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+test_end

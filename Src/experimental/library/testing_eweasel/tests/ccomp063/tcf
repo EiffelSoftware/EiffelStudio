@@ -1,0 +1,217 @@
+test_name 	 feature-call-via-cecil
+test_description Calls to Eiffel features using CECIL in different modes should be supported.
+
+-- 0. No source code, not visible
+
+define VISIBLE ""
+define INCREMENT "1"
+define G "--"
+copy_sub	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output00
+
+-- 1. Source code, visible
+
+define VISIBLE "<visible class="TEST" feature="f"/><visible class="TEST" feature="g"/>"
+define G ""
+copy_sub	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output11
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output11
+
+-- 2. Source code, not visible
+
+define VISIBLE "<visible class="TEST" feature="f"/>"
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output10
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output10
+
+-- 3. No source code, visible
+
+define VISIBLE "<visible class="TEST" feature="f"/><visible class="TEST" feature="g"/>"
+define G "--"
+copy_sub	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output10
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output10
+
+-- 4. Source code, visible
+
+define G ""
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output11
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output11
+
+-- 5. No source code, visible
+
+define G "--"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output10
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output10
+
+-- 6. Source code, not visible
+
+define VISIBLE "<visible class="TEST" feature="f"/>"
+define G ""
+copy_sub	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output10
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output10
+
+-- 7. Source code, visible
+
+define VISIBLE "<visible class="TEST" feature="f"/><visible class="TEST" feature="g"/>"
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output11
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output11
+
+-- 8. Modified source code, visible
+
+define INCREMENT "2"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output22
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output22
+
+-- 9. No source code, not visible
+
+define VISIBLE ""
+define G "--"
+copy_sub	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output00
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output00
+
+test_end

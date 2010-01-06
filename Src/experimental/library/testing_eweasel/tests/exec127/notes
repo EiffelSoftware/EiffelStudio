@@ -1,0 +1,5 @@
+A call to `print (0x12345081234567)' does not print the correct
+answer.  It prints -1 on Solaris and -2128394905 on Windows.
+
+Reported by Manu on Release 5.1.12.
+

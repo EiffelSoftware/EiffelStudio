@@ -1,0 +1,7 @@
+An expanded class FOO has a function `weasel' whose return type is
+`like Current'.  A routine declares a local entity of type FOO and
+calls `weasel' on it, passing this result to another routine.  When
+the system is executed, it dies with a segmentation fault, but only if
+the system is melted.  Frozen code works fine.
+
+Discovered in Release 3.2.4.

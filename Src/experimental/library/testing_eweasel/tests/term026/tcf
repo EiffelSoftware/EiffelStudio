@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	bad-generic-deriv-creation-type2
+test_description An invalid type (ARRAY, which is invalid because ARRAY is a generic class but no generic parameter is supplied) used as explicit creation type
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VTUG(2)
+
+test_end
+

@@ -1,0 +1,80 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vrle1-basic
+test_description Violate validity constraint VRLE1 with a local which has the same name as a feature of the enclosing class
+
+copy_sub 	 Ace $TEST Ace
+
+define		 TEST1_FEATURE "z"
+copy_sub 	 test1.e  $CLUSTER test1.e
+
+define		 INHERITANCE "inherit TEST1"
+define		 LOCALS "local x: INTEGER"
+define		 FEATURE "x: INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VRLE(1)
+
+define		 LOCALS "local x: REAL"
+define		 FEATURE "x: INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VRLE(1)
+
+define		 LOCALS "local y: REAL"
+define		 FEATURE "x: INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_warning TEST Unused_local_warning
+
+define		 LOCALS "local x: INTEGER"
+define		 FEATURE "x: INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VRLE(1)
+
+define		 LOCALS "local x: INTEGER"
+define		 FEATURE "y: INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_warning TEST Unused_local_warning
+
+define		 TEST1_FEATURE "x"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VRLE(1)
+
+define		 INHERITANCE ""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_warning TEST Unused_local_warning
+
+define		 INHERITANCE "inherit TEST1"
+define		 TEST1_FEATURE "z"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_warning TEST Unused_local_warning 
+
+define		 INHERITANCE "inherit TEST1 rename z as x end"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VRLE(1)
+
+define		 INHERITANCE "inherit TEST1 rename z as x end"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VRLE(1)
+
+define		 LOCALS "local w: INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_warning TEST Unused_local_warning
+
+test_end

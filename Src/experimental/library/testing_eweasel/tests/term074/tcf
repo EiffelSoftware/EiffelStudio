@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 finalize-inline-strip-expr
+test_description The creation procedure of a class creates an instance of another class and calls a feature on it which contains a "strip" expression.  If the system is finalized and the Ace specifies `inlining (yes)' the compiler dies during degree -5 on the first class.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test1.e $CLUSTER test1.e
+compile_final
+compile_result 	 ok
+	
+c_compile_final
+c_compile_result ok
+	
+test_end

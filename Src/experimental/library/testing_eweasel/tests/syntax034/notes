@@ -1,0 +1,7 @@
+A qualified call to a feature whose name is `e' followed by an
+unsigned integer (e.g., `e47') should be legal, but the compiler
+reports a syntax error.  The `.e47' in the call `my_feature.e47' is
+misinterpreted as a Real constant.  First reported by Bertrand Meyer
+on NICE Eiffel Language mailing list.
+
+Discovered in Release 3.3.3.

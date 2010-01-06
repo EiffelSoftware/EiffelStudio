@@ -1,0 +1,5 @@
+The class invariant should be checked after creation/initialization of
+an entity of an expanded type, but it is not.  Invariant checking
+works correctly for non-expanded types.
+
+Discovered in Release 3.2.4.

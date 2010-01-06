@@ -1,0 +1,30 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 switch-to-conforming-inheritance
+test_description After initial compilation where the system is frozen, a non-conforming inheritance clause is changed to conforming inheritance.  When the system is refrozen, the C code won't link due to undefined symbols in efrozen.c.
+
+
+define		PARENT "{NONE} EXCEPTIONS"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+define		PARENT "EXCEPTIONS"
+copy_sub 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

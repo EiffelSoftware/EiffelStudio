@@ -1,0 +1,36 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	finalize-inherited-agent-redef-routine
+test_description A routine in an expanded class has an invocation of an agent that is constructed from a function call, where the function is redefined in a descendant class.  When the system is executed, the ancestor function is called instead of the descendant, but only if the system is finalized (with or without inlining)
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

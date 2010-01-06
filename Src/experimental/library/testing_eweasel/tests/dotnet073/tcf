@@ -1,0 +1,11 @@
+test_name property-name-clash-named-inherited
+test_description Eiffel .NET properties declarations should be able to use the same property name when property features are declared in different decendents.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw base.e $CLUSTER base.e
+
+compile_melted
+compile_result	ok
+
+test_end

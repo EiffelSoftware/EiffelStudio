@@ -1,0 +1,12 @@
+test_name	 inherited-generic-agent-argument
+test_description When evaluated in a descendant, the correct context should be used to evaluate formal and actual type of an agent argument.
+
+copy_sub Ace $TEST Ace
+copy_raw a.e	$CLUSTER a.e
+copy_raw b.e	$CLUSTER b.e
+copy_raw test.e	$CLUSTER test.e
+
+compile_melted
+compile_result OK
+
+test_end

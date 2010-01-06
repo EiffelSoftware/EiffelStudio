@@ -1,0 +1,5 @@
+When an inherited constant integer attribute used as the number of
+bits in a BIT type which is a formal argument type is given a smaller
+value, the compiler does not detect the newly introduced VUAR error.
+
+Discovered in Release 3.2.

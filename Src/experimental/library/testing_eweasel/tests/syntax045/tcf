@@ -1,0 +1,296 @@
+test_name verbatim-manifest-string
+test_description Verbatim manifest strings
+
+-- Verbatim strings with braces and "old_verbatim_strings (yes)"
+
+define INDENT "%T%T%T%T"
+define SPACE " "
+define OPEN "{"
+define OPEN_CODE "123"
+define CLOSE "}"
+define CLOSE_CODE "125"
+define CLOSE_OTHER "]"
+define CLOSE_OTHER_CODE "93"
+define OLD_VERBATIM_STRINGS "<setting name="old_verbatim_strings" value="true"/>"
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+
+copy_sub Ace $TEST Ace
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE old_brace_output
+execute_result ok
+
+compare old_brace_output output
+
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="true"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+-- Verbatim strings with braces and "old_verbatim_strings (no)"
+
+define OLD_VERBATIM_STRINGS "<setting name="old_verbatim_strings" value="false"/>"
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+
+copy_sub Ace $TEST Ace
+
+compile_melted
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE new_brace_output
+execute_result ok
+
+compare new_brace_output output
+
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="true"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+-- Verbatim strings with braces and no special options
+
+define OLD_VERBATIM_STRINGS ""
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+
+copy_sub Ace $TEST Ace
+
+compile_melted
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE brace_output
+execute_result ok
+
+compare brace_output output
+
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="true"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+-- Verbatim strings with brackets and "<setting name="old_verbatim_strings" value="true"/>"
+
+define INDENT ""
+define SPACE ""
+define OPEN "["
+define OPEN_CODE "91"
+define CLOSE "]"
+define CLOSE_CODE "93"
+define CLOSE_OTHER "}"
+define CLOSE_OTHER_CODE "125"
+define OLD_VERBATIM_STRINGS "<setting name="old_verbatim_strings" value="true"/>"
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+
+copy_sub Ace $TEST Ace
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE old_bracket_output
+execute_result ok
+
+compare old_bracket_output output
+
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="true"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+-- Verbatim strings with brackets and "old_verbatim_strings (no)"
+
+define INDENT ""
+define SPACE ""
+define OLD_VERBATIM_STRINGS "<setting name="old_verbatim_strings" value="false"/>"
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+
+copy_sub Ace $TEST Ace
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE new_bracket_output
+execute_result ok
+
+compare new_bracket_output output
+
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="true"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+-- Verbatim strings with brackets and no special options
+
+define OLD_VERBATIM_STRINGS ""
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+
+copy_sub Ace $TEST Ace
+
+compile_melted
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE bracket_output
+execute_result ok
+
+compare bracket_output output
+
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="true"/>"
+copy_sub Ace $TEST Ace
+compile_melted
+compile_result ok
+cleanup_compile
+
+-- Test for invalid strings
+
+define OLD_VERBATIM_STRINGS ""
+define OLD_VERBATIM_STRINGS_WARNING "<warning name="old_verbatim_strings" enabled="false"/>"
+copy_sub Ace $TEST Ace
+
+define LINE1 ""
+define LINE2 ""
+
+define LINE1 """
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 15
+abort_compile
+
+define LINE1 ""a"
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 15
+abort_compile
+
+define LINE1 ""["
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 19
+abort_compile
+
+define LINE1 ""{"
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 19
+abort_compile
+
+define LINE1 ""a["
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 19
+abort_compile
+
+define LINE1 ""a{"
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 19
+abort_compile
+
+define LINE1 "a""
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 15
+abort_compile
+
+define LINE1 ""%"
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 15
+abort_compile
+
+define LINE1 ""a["
+define LINE2 "]b""
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 19
+abort_compile
+
+define LINE1 ""a{"
+define LINE2 "}b""
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 19
+abort_compile
+
+define LINE1 ""["
+define LINE2 "}""
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 19
+abort_compile
+
+define LINE1 ""{"
+define LINE2 "]""
+copy_sub test_invalid_syntax.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 19
+abort_compile
+
+test_end

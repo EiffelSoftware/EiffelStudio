@@ -1,0 +1,15 @@
+test_name 	 native_error_number_ise_io_error
+test_description Test the native signal number is set in IO_FAILURE raised as runtime io error.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output
+execute_result 	ok
+if not DOTNET compare		exec_output output
+
+test_end

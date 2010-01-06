@@ -1,0 +1,32 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	when-init-expanded-local
+test_description A routine has a precondition, postcondition, old expression in the postcondition and a local entity of an expanded type.  The local of expanded type is initialized at the wrong time (before the routine's precondition is even checked), but only if the system is melted. Frozen code works correctly.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

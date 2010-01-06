@@ -1,0 +1,54 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	print-array-anchored-generic
+test_description A system has a routine that prints its argument, where the type of he argument is `ARRAY [like item]' and item is `item: X [like toto]' where `toto' is of type A.  When the system is finalized, he compiler dies during degree -3.
+
+define INST "print (a_arg)"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	a.e $CLUSTER a.e
+copy_raw 	x.e $CLUSTER x.e
+compile_melted
+compile_result 	ok
+
+execute_work NONE exec_output1
+execute_result  ok
+
+define INST ""
+copy_sub 	a.e $CLUSTER a.e
+compile_melted
+compile_result 	ok
+
+execute_work NONE exec_output2
+execute_result  ok
+compare 	exec_output2 output
+
+cleanup_compile
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output3
+execute_result  ok
+compare 	exec_output3 output
+
+define INST "print (a_arg)"
+copy_sub 	a.e $CLUSTER a.e
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output4
+execute_result  ok
+
+test_end

@@ -1,0 +1,5 @@
+A function which takes one argument of an expanded type and has body
+`Result := arg' does not work correctly, but only if the system is
+finalized.  This appears to be a code generation problem.
+
+Discovered in Release 3.2.4.

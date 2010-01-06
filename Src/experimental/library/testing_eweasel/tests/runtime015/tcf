@@ -1,0 +1,44 @@
+test_name 	 array-allocation-failure
+test_description When a too large array is allocated the memory allocation failure should be reported rather than a system crash.
+
+copy_sub	Ace $TEST Ace
+define DECLARATION "list: ARRAYED_LIST [TEST2]"
+define CREATION    "create list.make (args.item (1).to_integer)"
+copy_sub	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE	exec_output1 16000000
+execute_result	ok
+compare exec_output1 output
+
+execute_work	NONE	exec_output2 16300000
+execute_result	ok
+compare exec_output2 output
+
+execute_work	NONE	exec_output3 17000000
+execute_result	ok
+compare exec_output3 output
+
+define DECLARATION "array: ARRAY [DOUBLE]"
+define CREATION    "create array.make (1, args.item (1).to_integer)"
+copy_sub	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE	exec_output4 16777214
+execute_result	ok
+compare exec_output4 output
+
+execute_work	NONE	exec_output5 16777215
+execute_result	ok
+compare exec_output5 output
+
+test_end

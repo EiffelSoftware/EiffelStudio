@@ -1,0 +1,53 @@
+abc
+True
+123
+123
+0
+1
+C.f
+2
+2
+1
+C.g
+3
+3
+1
+3
+1
+C.f
+4
+4
+1
+C.g
+5
+5
+1
+x = 0
+x = 6
+C.f
+x = 7
+x = 7
+x = 6
+C.g
+x = 8
+x = 8
+x = 6
+x = 8
+x = 6
+C.f
+x = 9
+x = 9
+x = 6
+C.g
+x = 10
+x = 10
+x = 6
+C.p
+11
+D.p
+def
+E.p
+xyz
+E.p
+12
+Execution completed

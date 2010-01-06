@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	none-as-actual-generic
+test_description A class which inherits from a constrained generic class and provides NONE as actual generic parameter
+
+define INSTRUCTION "x.count.do_nothing"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_frozen
+compile_result 	validity_error TEST VUEX(2)
+
+define INSTRUCTION ""
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+test_end
+

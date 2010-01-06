@@ -1,0 +1,15 @@
+test_name 	 array-with-anchor-crash
+test_description When a manifest array is used as an argument to a routine that has a type with some anchors the compiler crashes in .NET mode while generating the code for the type of the manifest array.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

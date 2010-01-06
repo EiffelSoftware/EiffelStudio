@@ -1,0 +1,13 @@
+test_name renamed-feature-from-interface
+test_description A renamed feature inherited from an interface should not cause a compiler crash.
+
+copy_sub Ace $TEST Ace
+copy_raw a.e $CLUSTER a.e
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+
+test_end

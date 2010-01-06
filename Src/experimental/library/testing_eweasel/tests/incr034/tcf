@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	unsolved-type
+test_description Delete the feature to which another feature is anchored and recompile
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	test_rev1.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VEEN
+
+test_end

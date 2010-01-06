@@ -1,0 +1,6 @@
+A system puts a string into a list 3 times and then calls `referers'
+from class MEMORY and prints its count.  If the list is a local (not
+an attribute) and if code is melted, execution incorrectly prints 0
+instead of 3.
+
+Discovered in release 5.4.0515.

@@ -1,0 +1,28 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 new-ace-root-still-vscn
+test_description A system whose root class inherits from a class TEST2 which exists in two different clusters correctly elicits a VSCN error report from the compiler.  Then the Ace is changed to indicate a different root class, which does not depend on TEST2.
+
+define		 ROOT_CLASS "TEST1"
+define_directory CLUSTER1 $CLUSTER cluster1
+define_directory CLUSTER2 $CLUSTER cluster2
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER1 test.e
+copy_raw 	 test1.e  $CLUSTER1 test1.e
+copy_raw 	 test2.e  $CLUSTER1 test2.e
+copy_raw 	 test2.e  $CLUSTER2 test2.e
+compile_melted
+compile_result 	 validity_error NONE VSCN
+
+define		 ROOT_CLASS "TEST"
+copy_sub 	 Ace $TEST Ace
+resume_compile
+compile_result 	 ok
+
+test_end

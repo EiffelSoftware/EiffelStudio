@@ -1,0 +1,35 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vtcg-in-generic-constraint
+test_description After initial compilation, a constraint is added to the formal generic parameter of a class which is used in the generic constraint of another class.  When the system is recompiled, the compiler correctly reports a VTCG error.  But when the newly added constraint is removed and compilation is resumed, the compiler dies with a segmentation fault during degree 2.
+
+copy_sub 	 Ace $TEST Ace
+define		 GENERIC_CONSTRAINT ""
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_sub 	 test2.e  $CLUSTER test2.e
+
+compile_melted
+compile_result 	 ok
+
+define		 GENERIC_CONSTRAINT "-> TEST"
+copy_sub 	 test2.e  $CLUSTER test2.e
+compile_melted
+compile_result 	 validity_error TEST1 VTCG
+
+define		 GENERIC_CONSTRAINT ""
+copy_sub 	 test2.e  $CLUSTER test2.e
+resume_compile
+compile_result 	 ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

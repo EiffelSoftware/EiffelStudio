@@ -1,0 +1,6 @@
+A deferred function of type INTEGER in an inherited class is effected
+by an attribute of type NONE.  The compiler does not report any
+validity violations, but it dies with a run-time panic while melting
+changes (after pass -3 if freezing system).
+
+Discovered in Release 3.2.

@@ -1,0 +1,8 @@
+test_name basic-non-conforming-inheritance
+test_description Testing basic non-conforming inheritance
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+compile_melted
+compile_result OK
+test_end

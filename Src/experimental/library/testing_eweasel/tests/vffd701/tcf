@@ -1,0 +1,54 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vffd7-once-generic
+test_description Violate validity constraint VFFD7 with a class which has a once function with a generic result type
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+define		 GENERICS "GWEASEL, HWEASEL -> STRING"
+define		 FEATURE "try: GWEASEL is once end"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VFFD(7)
+
+define		 FEATURE "try: HWEASEL is once end"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST1 VFFD(7)
+
+define		 FEATURE "try: HWEASEL is do end"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+define		 FEATURE "try: HWEASEL is once end"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VFFD(7)
+
+define		 GENERICS "JWEASEL, KWEASEL -> STRING"
+define		 FEATURE "try: HWEASEL is once end"
+copy_sub 	 test1.e  $CLUSTER test1.e
+copy_raw 	 hweasel.e  $CLUSTER hweasel.e
+resume_compile
+compile_result 	ok
+
+define		 GENERICS "GWEASEL, HWEASEL -> STRING"
+delete		 $CLUSTER hweasel.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VFFD(7)
+
+define		 FEATURE "try: HWEASEL is external "C" end"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+test_end

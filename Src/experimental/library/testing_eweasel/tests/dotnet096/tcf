@@ -1,0 +1,27 @@
+test_name ca-correct-assignment
+test_description Checks the compiler correctly assigns the metadata on the entities they are supposed to be paired with
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw base.e $CLUSTER base.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+cleanup_compile
+
+copy_raw base_2.e $CLUSTER base.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output_2
+execute_result 	ok
+
+compare		exec_output_2 output_2
+
+test_end

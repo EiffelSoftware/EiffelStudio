@@ -1,0 +1,32 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 expanded-type-hidden
+test_description Compiling a system and then introducing a violation of the Expanded Type rule in a particular manner
+
+copy_sub 	 Ace $TEST Ace
+define		 FEATURE ""
+copy_sub 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 FEATURE "a: expanded TEST1;"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+copy_raw 	 test1_rev1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VTEC(1)
+
+copy_raw 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+test_end

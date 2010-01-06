@@ -1,0 +1,7 @@
+A system has a call to an agent with an open target of type TEST2.
+After initial compilation where the system is frozen, execution gives
+correct results.  Then the target type of the agent is changed to
+`expanded TEST2' and changes are melted.  System execution then dies
+with a segmentation fault.
+
+Discovered in release 5.4.0610.

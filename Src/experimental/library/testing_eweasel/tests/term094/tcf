@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 inherit-generic-and-any
+test_description A generic class which inherits from ARRAY [Generic #2] and ANY causes the compiler to terminate with the tag "Compiler error".  If the inheritance is from ARRAY [Generic #1], the compiler correctly reports a VMFN error instead of dying.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST1 VMFN VMFN
+	
+test_end

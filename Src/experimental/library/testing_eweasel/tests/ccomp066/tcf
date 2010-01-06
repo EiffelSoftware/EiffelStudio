@@ -1,0 +1,17 @@
+test_name 	 expanded-generic-conformance-c-bad-finalization
+test_description A routine which implements two deferred feature coming from classes which involved a generic parameter
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	rose_expression.e $CLUSTER rose_expression.e
+copy_raw	dynamic_expression.e $CLUSTER dynamic_expression.e
+copy_raw	dynamic_double_expression.e $CLUSTER dynamic_double_expression.e
+copy_raw	double_expression.e $CLUSTER double_expression.e
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

@@ -1,0 +1,14 @@
+test_name 	 agent-with-like-bad-declaration
+test_description An agent defined on a routine involving a like argument generates a bad signature in finalized code
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test1.e $CLUSTER test1.e
+
+compile_final
+compile_result 	ok
+	
+c_compile_final
+c_compile_result ok
+
+test_end

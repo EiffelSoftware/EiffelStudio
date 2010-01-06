@@ -1,0 +1,5 @@
+A class has a routine which repeatedly creates a manifest array of 80
+strings, each of whose elements is "w".  The system compiles fine when
+frozen, but execution soon ends with a run-time panic.
+
+Discovered in Release 3.3.3.

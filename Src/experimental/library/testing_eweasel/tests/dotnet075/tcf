@@ -1,0 +1,10 @@
+test_name illegal-routine-properties
+test_description Checks compiler does not accept property declarations on proedures
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VIPS VIPS
+
+test_end

@@ -1,0 +1,12 @@
+
+test_name 	undetected-vycp-vycq-with-generic
+test_description A system with two types which convert to each other via both a conversion procedure and a conversion query should be a VYCQ or VYCP error but the compiler does not issue any errors.  The generic class has a conversion procedure and conversion query that convert to or from the generic parameter G.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result validity_error TEST VYCQ
+
+test_end

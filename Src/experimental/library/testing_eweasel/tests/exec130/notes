@@ -1,0 +1,3 @@
+Negative INTEGER_8 values do not print correctly on some architectures.
+
+Reported by Manu on Release 5.1.12.

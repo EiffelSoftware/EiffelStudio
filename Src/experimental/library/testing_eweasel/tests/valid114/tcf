@@ -1,0 +1,19 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 generic-constraint-not-used
+test_description A class has Generic #2 constrained by Generic #1, but the compiler won't use this fact to allow an inheritance of another generic class that requires Generic #2 to conform to Generic #1.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+copy_raw 	 test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	 ok
+
+test_end

@@ -1,0 +1,17 @@
+Mutex CS1 Success
+Mutex CS2 Success
+Mutex Rec Success
+Mutex CS1 Success
+Semaphore trywait 1 False
+Semaphore wait 1 Success
+Semaphore trywait 2 False
+Semaphore trywait 3 True
+Semaphore trywait 4 False
+Condition variable wait 1 Success
+Condition variable wait 2 Success
+Condition variable wait 2 Success
+Condition variable wait 2 Success
+Read Lock 1 Success
+Read Lock 2 Success
+Write Lock Success
+Execution completed

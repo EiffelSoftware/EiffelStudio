@@ -1,0 +1,7 @@
+A class repeated creates a manifest array whose elements are an
+expanded type.  If the routine which does this creation the array and
+the elements are all melted and there are four or more elements in the
+manifest array, a segmentation fault occurs when the system is
+executed.  Frozen code works fine.
+
+Discovered in Release 3.2.4.

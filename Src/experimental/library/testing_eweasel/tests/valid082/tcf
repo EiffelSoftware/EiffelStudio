@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 selective-export-operator-feat
+test_description A class calls (on an entity of another type) a feature which is exported to it.  The compiler rejects the class as violating VUEX(2), but only if the feature is an operator feature.
+
+copy_sub 	 Ace $TEST Ace
+define		 EXPRESSION "x + n"
+copy_sub 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 EXPRESSION "+ x"
+copy_sub 	 test.e $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+test_end

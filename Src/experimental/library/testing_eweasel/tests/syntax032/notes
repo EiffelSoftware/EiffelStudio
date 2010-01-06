@@ -1,0 +1,7 @@
+A class with an external feature which is a procedure and which
+includes a signature that specifies a return type should be called a
+syntax error (or validity error), but the compiler accepts it.  When
+the system is frozen, the generated C code won't compile since a void
+function cannot return a value.
+
+Discovered in Release 3.3 beta.

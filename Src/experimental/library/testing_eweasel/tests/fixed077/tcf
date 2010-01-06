@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 lace-remove-creation-proc
+test_description Compile with an Ace which specifies creation procedure `make', then remove VD27 violation by deleting this specification
+
+define		 ROOT_PROC "feature="make""
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error NONE VD27
+
+define		 ROOT_PROC ""
+copy_sub 	 Ace $TEST Ace
+resume_compile
+compile_result 	 ok
+
+test_end

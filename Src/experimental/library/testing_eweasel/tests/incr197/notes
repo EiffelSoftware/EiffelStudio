@@ -1,0 +1,8 @@
+A system with one cluster preceded by the keyword "all" in the Ace
+file is compiled, where the cluster does not exist.  The compiler
+correctly reports a VD01 error (nonexistent cluster path in Ace file).
+Then the cluster is created with one sub-cluster `sub' which contains
+the root class.  When compilation is resumed, the compiler reports a
+bogus VD30 error.
+
+Discovered in release 5.4.0403.

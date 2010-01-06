@@ -1,0 +1,9 @@
+Assertion monitoring in concurrent threads could be broken if
+process-relative run-time variables are used to record current assertion
+monitoring state instead of thread-relative ones. Assertion monitoring
+state is changed either by entering an assertion clause (assertions are not
+checked recursively) or by executing "magic" run-time code (like the code
+for "clone" or "twin" defined in terms of "copy", when class invariants
+should be temporary disabled).
+
+Discovered in release 5.6.0503 for .NET code generation.

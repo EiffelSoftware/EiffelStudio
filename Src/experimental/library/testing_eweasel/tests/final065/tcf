@@ -1,0 +1,21 @@
+test_name 	inline-expanded-return
+test_description In finalized code, we do not inline functions that returns an expanded type because it causes a creation that we do not handle. However the inliner only works on a class by class basis and when a class is generic, if we process the reference generic derivation before the expanded one, then we will inline the code for the expanded which is currently incorrect.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e  $CLUSTER test.e
+copy_raw	test1.e  $CLUSTER test1.e
+copy_raw	test2.e  $CLUSTER test2.e
+copy_raw	expanded_class.e  $CLUSTER expanded_class.e
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+
+test_end

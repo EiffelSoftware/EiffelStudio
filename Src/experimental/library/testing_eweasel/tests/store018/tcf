@@ -1,0 +1,22 @@
+test_name	storable-with-attached-type-by-62
+test_description Trying to store/retrieve a storable with attached type with a modified version of 6.2 that does not recognize attachment mark.
+
+define_directory EIFGEN $TEST EIFGENs
+define_directory TARGET $EIFGEN test
+define_directory WCODE $TARGET W_code
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+
+compile_melted
+compile_result ok
+
+copy_bin	data $WCODE data
+
+execute_work   NONE exec_output
+execute_result ok
+compare        exec_output output
+
+test_end

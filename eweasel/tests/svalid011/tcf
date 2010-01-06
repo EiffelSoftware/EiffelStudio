@@ -1,5 +1,5 @@
 test_name	conversion-take-deanchored-form
-test_description A conversion from has a target which is using an anchor, the created type should rely on the deanchored form of the target to follow the ECMA specification. Note that the test is not using full class checking, the reason is that if it was the code would be rejected since invalid, we are only checking here the code generation to ensure that the creation is indeed using the deanchored form.
+test_description With full class checking we should detect an error and because this should be on by default we certainly expect the error. The following is the former description of the tests when full class checking was not the norm which explains the few commented line below: "A conversion from has a target which is using an anchor, the created type should rely on the deanchored form of the target to follow the ECMA specification. Note that the test is not using full class checking, the reason is that if it was the code would be rejected since invalid, we are only checking here the code generation to ensure that the creation is indeed using the deanchored form."
 
 copy_sub	Ace	$TEST Ace
 copy_raw	test.e	$CLUSTER test.e
@@ -9,10 +9,10 @@ copy_raw	test3.e	$CLUSTER test3.e
 copy_raw	test4.e	$CLUSTER test4.e
 
 compile_melted
-compile_result	ok
+compile_result	validity_error TEST VJAR
 
-execute_work 	NONE 	exec_output1
-execute_result 	ok
-compare		exec_output1 output
+--execute_work 	NONE 	exec_output1
+--execute_result 	ok
+--compare		exec_output1 output
 
 test_end

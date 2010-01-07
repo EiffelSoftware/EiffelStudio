@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="event-test" uuid="DBFB2B07-17B0-4F22-81A4-CDAAD5B95C28">
+	<target name="event-test">
+		<root class="EVENT_TEST" feature="make"/>
+		<option warning="true" is_attached_by_default="true" void_safety="all">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="libevent" location="$ISE_LIBRARY\library\libevent\libevent.ecf" readonly="false"/>
+		<cluster name="event-test" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="event-test_dotnet" extends="event-test">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

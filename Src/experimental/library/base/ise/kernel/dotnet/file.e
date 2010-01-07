@@ -1071,16 +1071,18 @@ feature -- Element change
 			buf: NATIVE_ARRAY [NATURAL_8]
 			bs, rd: INTEGER
 			st, ost: like internal_stream
+			l_f: FILE
 		do
 				-- Open in append mode.
 			open_append
 				-- Open `f' in read mode.
-			f.open_read
-				-- Append contents of `f'.
+			l_f := f
+			l_f.open_read
+				-- Append contents of `l_f'.
 			bs := 10000
 			from
 				st := internal_stream
-				ost := f.internal_stream
+				ost := l_f.internal_stream
 				check
 					ost_attached: ost /= Void
 					st_attached: st /= Void
@@ -1095,7 +1097,7 @@ feature -- Element change
 			end
 				-- Close both files.
 			close
-			f.close
+			l_f.close
 		ensure then
 			new_count: count = old count + f.count
 			files_closed: f.is_closed and is_closed

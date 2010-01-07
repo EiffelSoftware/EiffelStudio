@@ -4,13 +4,13 @@ class
 inherit
 	TEST2
 		redefine
-			g
+			f, g
 		end
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make is
 		local
@@ -18,6 +18,11 @@ feature {NONE} -- Initialization
 		do
 			t1.make
 			f (6)
+		end
+
+	f (i: INTEGER)
+		do
+			Precursor (i)
 		end
 
 	g (i: INTEGER): BOOLEAN is

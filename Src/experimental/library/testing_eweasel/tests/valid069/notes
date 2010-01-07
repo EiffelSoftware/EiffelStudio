@@ -1,7 +1,0 @@
-A multi-branch with a unique constant which occurs in more than one
-"when" branch is reported as violating VOMB(4), which is correct.  But
-the compiler also reports a spurious VOMB(3) error (VOMB(3) does not
-apply since there are no non-Unique inspect constants in the example).
-
-Discovered in Release 3.2.1.
-

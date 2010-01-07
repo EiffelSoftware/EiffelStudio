@@ -1,9 +1,0 @@
-After compilation, freezing and finish_freezing, a system prints
-`true' when executed, which is correct behavior.  When an
-`io.new_line' line is removed and es3 is rerun, the resulting system
-prints `false' when executed.  The feature involved has arithmetic and
-comparison with REAL constants.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.04.21.
-

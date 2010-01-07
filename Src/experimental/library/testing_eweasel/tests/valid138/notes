@@ -1,5 +1,0 @@
-A class with a single argument `args: like x' where `x: ARRAY
-[STRING]' should be accepted (since "like" is now just syntactic
-sugar) but the compiler reports a VSRP(2) error.
-
-Discovered in release 5.4.0403.

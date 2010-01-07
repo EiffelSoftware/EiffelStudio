@@ -1,6 +1,0 @@
-A routine passes `clone (k)' where `k' is of type INTEGER to a routine
-whose formal argument is of type DOUBLE.  If the system is melted,
-system execution ends with an "Illegal cast operation" run-time panic.
-Frozen code instead produces incorrect output.
-
-Discovered in Release 3.2.4.

@@ -1,8 +1,0 @@
-A system with a 1000 class deep client dependency chain compiles fine.
-But when the root class attribute declaration which links it to the
-client dependency chain is cut (thereby removing all client
-dependencies) and the system is recompiled, a compiler exception trace
-results.
-
-Discovered in Prerelease 93.05.17.
-

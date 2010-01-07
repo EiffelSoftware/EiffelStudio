@@ -1,7 +1,0 @@
-A violation of the assignment rule in an inherited class is correctly
-detected.  When the client structure is modified by removing two local
-declarations from the inheriting class and <return> is pressed to
-retry compilation, an exception trace results.
-
-Fixed in Prerelease 93.02.17.
-

@@ -1,6 +1,0 @@
-A class with a conversion routine `make_from_array ({ARRAY [NONE]})'
-where `make_from_array' is a creation procedure with a single argument of
-type 'ARRAY [NONE]' should be accepted, but the compiler reports a
-VNCP error.
-
-Discoverd in release 5.5.0820.

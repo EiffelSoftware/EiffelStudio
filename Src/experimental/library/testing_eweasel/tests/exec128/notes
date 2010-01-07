@@ -1,9 +1,0 @@
-A routine in class A does an assignment attempt whose target is an
-attribute of type B and is the routine's class.  A descendant A1 of
-class A redefines the type of the attribute to be a descendant of B.
-When the routine is executed in A1 with a passed-in argument that is
-used as the source of the assignment attempt, it incorrectly allows
-the assignment attempt to succeed.
-
-Reported by Manu on Release 5.1.12.
-

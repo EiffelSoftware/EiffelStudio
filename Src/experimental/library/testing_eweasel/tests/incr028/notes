@@ -1,6 +1,0 @@
-A system compiles fine.  Adding a feature to a generic class A which
-references a new class B where B inherits from A and then recompiling
-causes a compiler exception trace.
-
-Discovered in Prerelease 93.07.15.
-

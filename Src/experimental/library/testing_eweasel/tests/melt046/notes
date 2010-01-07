@@ -1,5 +1,0 @@
-Melting a system which prints the address of an attribute works fine,
-but when the system is executed it dies with an illegal metamorphose
-type panic.
-
-Discovered in Release 5.0.015.

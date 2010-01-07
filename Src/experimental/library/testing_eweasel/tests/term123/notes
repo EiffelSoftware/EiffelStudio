@@ -1,4 +1,0 @@
-An assignment `p := ($x)' where `p: POINTER' causes compiler to die
-during degree 2.
-
-Reported by Manu on September 23, 2003.

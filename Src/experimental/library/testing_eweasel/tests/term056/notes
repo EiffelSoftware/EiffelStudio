@@ -1,4 +1,0 @@
-A long stretch of consecutive white space (6000 characters) causes the
-compiler to terminate during pass 5 on the class with the white space.
-
-Discovered in Release 3.2.4.

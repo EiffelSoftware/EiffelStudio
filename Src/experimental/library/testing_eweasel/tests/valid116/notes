@@ -1,4 +1,0 @@
-A reference to `$Result' is allowed in a class invariant, but should
-be a VEEN(2) error.
-
-Discovered in Release 5.0.015.

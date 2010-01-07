@@ -1,8 +1,0 @@
-A class has a recursive routine `f' which at the depths of its
-recursion calls a routine `weasel' which raises an exception.  Routine
-`weasel' has a rescue clause which first calls `f' and then retries
-and succeeds.  When the system is executed, it dies with a panic
-(segmentation fault) if the depth of "exception in rescue clause"
-nesting is greater than 256.
-
-Discovered in Release 3.2.4.

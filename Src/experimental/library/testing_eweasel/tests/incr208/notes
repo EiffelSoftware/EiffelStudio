@@ -1,8 +1,0 @@
-A class prints the generating type of the expression `create {TEST1
-[BIT n]' where `n: INTEGER is 8'.  When the system is frozen, system
-execution works, except that it prints "TEST1 [BIT_REF]" instead of
-the expected "TEST1 [BIT 8]".  When a trivial change is made to the
-routine and changes are melted, execution ends with an illegal opcode
-panic.
-
-Discovered in release 5.4.0515.

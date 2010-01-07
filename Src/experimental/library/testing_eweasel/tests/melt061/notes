@@ -1,6 +1,0 @@
-Subtracting one from an INTEGER_16 attribute with a large positive
-value gives the attribute a value of 0, but only when code is melted.
-Frozen code works correctly.  Other sizes of integers work correctly
-whether code is melted or frozen.
-
-Discovered in release 5.4.0403.

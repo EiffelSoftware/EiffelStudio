@@ -1,5 +1,0 @@
-A manifest array with one element of type INTEGER should conform
-to ANY, but the compiler reports a VJAR violation.
-
-Discovered in Prerelease 93.04.21.
-

@@ -1,7 +1,0 @@
-After initial compilation, a VJAR error is introduced and the system
-is recompiled.  The compiler does not detect the VJAR error.  This
-case involves changing an actual generic parameter in an inheritance
-clause from G to STRING.  The redefined function calls
-precursor.
-
-Discovered in Release 5.0.005.

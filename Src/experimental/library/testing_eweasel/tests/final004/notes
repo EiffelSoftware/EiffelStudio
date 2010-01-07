@@ -1,5 +1,0 @@
-Finalizing the "Hello weasel" program with `assertion (ensure)'
-produces C code which won't compile, but only if a precompiled base
-library is used and `dead_code_removal (no)' is specified in the Ace.
-
-Discovered in Release 3.2.4.

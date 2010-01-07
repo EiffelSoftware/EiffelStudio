@@ -1,7 +1,0 @@
-A class has a routine which prints `t.count' where `t' is of type
-`expanded LINKED_LIST [like Current]'.  The root class, which is
-expanded, inherits this routine and makes it a creation procedure.  If
-the system is melted, execution dies with a segmentation fault.
-Frozen code works fine.
-
-Discovered in release 5.4.0610.

@@ -1,6 +1,0 @@
-A system calls a routine `double_to_integer (n: DOUBLE): INTEGER' and
-passes `i.bit_shift (1)', where `i' is an INTEGER.  If the system is
-melted, execution ends with an "illegal cast operation" panic.  Frozen
-code works correctly.
-
-Discovered in release 5.4.0403.

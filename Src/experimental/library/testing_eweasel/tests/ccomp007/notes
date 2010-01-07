@@ -1,6 +1,0 @@
-Finalizing a system with `assertion (all)' specified in the Ace produces
-C code which will not compile.
-
-Discovered in Release 3.1.1.
-
-

@@ -1,8 +1,0 @@
-After initial compilation, the type of an entity in a generic class is
-changed from `FOO [G]' (where G is the name of the formal parameter of
-the enclosing generic class) to `FOO [STRING], thereby introducing a
-VEEN error.  When the system is recompiled, the compiler does not
-detect the error, but only if a generic generic constraint is also
-added to the single formal generic parameter of FOO.
-
-Discovered in Release 3.2.4.

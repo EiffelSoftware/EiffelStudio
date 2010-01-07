@@ -1,5 +1,0 @@
-A class with an attribute right before a trailing indexing clause
-causes the compiler to report a syntax error, but only if the
-attribute declaration does not end with a semicolon.
-
-Discovered in Release 5.0.036.

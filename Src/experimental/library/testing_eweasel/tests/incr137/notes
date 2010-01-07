@@ -1,7 +1,0 @@
-After initial compilation, a VEEN error is added to a class.  When the
-compiler detects the error, it is corrected by inheriting from a
-different class.  This introduces a VRFA error which the compiler
-catches, but it also says "Exception occurred while displaying error
-message" while trying to display the name of the feature involved.
-
-Discovered in Release 3.3.7.

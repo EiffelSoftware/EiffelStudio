@@ -1,6 +1,0 @@
-An attempt to list a `once' routine in an Undefine inheritance
-subclause causes the compiler to report violation of validity
-constraint VDUS.
-
-Still not fixed in Prerelease 93.02.17.
-

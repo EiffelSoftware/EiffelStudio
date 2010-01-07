@@ -1,5 +1,0 @@
-Calls to `clone' with integer, boolean or character arguments do not
-return the expected result.  Also, frozen and melted code produce
-different results.
-
-Discovered in Release 3.2.4.

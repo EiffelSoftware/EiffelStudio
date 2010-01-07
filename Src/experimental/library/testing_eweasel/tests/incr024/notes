@@ -1,6 +1,0 @@
-When one of the formal generic parameters is removed from a generic
-class the compiler detects the VTUG violation thereby introduced.  But
-resuming the compilation with no change to any classes results in an
-exception trace.
-
-Found in Prerelease 93.07.15.

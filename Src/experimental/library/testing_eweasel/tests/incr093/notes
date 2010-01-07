@@ -1,7 +1,0 @@
-A class with a once function whose return type is a formal generic
-parameter is correctly reported to violate VFFD(7).  Then a class with
-the same name as the formal parameter is added to one of the clusters.
-When compilation is resumed, the compiler still reports VFFD(7)
-instead of VCFG(1).
-
-Discovered in Release 3.2.1.

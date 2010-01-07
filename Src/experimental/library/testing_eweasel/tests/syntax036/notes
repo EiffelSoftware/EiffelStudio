@@ -1,7 +1,0 @@
-An assignment whose source is an address expression `$x' (which is of
-type pointer) and whose target is of type POINTER should be accepted,
-but the compiler reports a syntax error.  Replacing `$x' with `ptr
-($x)', where `ptr' just returns its argument, causes the compiler to
-accept the class.
-
-Discovered in Release 3.3.3.

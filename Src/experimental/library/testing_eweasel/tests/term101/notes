@@ -1,5 +1,0 @@
-An Ace file with a cluster named "a/b" causes the compiler to die 
-while trying to create a directory in `backup_directory'.
-
-Discovered in Release 5.0.016.
-

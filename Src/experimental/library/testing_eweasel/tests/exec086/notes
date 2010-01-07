@@ -1,6 +1,0 @@
-A routine has a call to `equal' where both operands are bit constants
-which are all zeroes and the second operand is `0B'.  The call
-incorrectly returns false if the length of the first operand is 63
-bits or greater.
-
-Discovered in Release 3.2.4.

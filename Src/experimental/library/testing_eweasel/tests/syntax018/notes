@@ -1,5 +1,0 @@
-Some things ETL says are OK are called syntax errors by the compiler.
-Other things which ETL says aren't OK are accepted.
-
-Still not fixed in Prerelease 93.02.17.
-

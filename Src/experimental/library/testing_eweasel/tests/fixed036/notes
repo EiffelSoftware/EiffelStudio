@@ -1,6 +1,0 @@
-A routine violates the precondition of a routine it calls.  The
-calling routine has a rescue clause.  After a number of rescue
-attempts, system execution ends with a PANIC and core dump.
-
-Fixed in Prerelease 93.02.17.
-

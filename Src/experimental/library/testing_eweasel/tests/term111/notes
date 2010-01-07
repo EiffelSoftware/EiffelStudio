@@ -1,4 +1,0 @@
-A class with a particular nested if causes the compiler to crash when
-the system is finalized.
-
-Reported by Manu on 4.4 compiler on 07 November, 2002.

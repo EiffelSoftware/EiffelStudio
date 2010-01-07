@@ -1,7 +1,0 @@
-A class calls a routine and violates its precondition.  The exception
-is not rescued but printing of exception trace on failure is turned
-off.  The class has a `dispose' routine which does nothing, but has an
-empty rescue clause.  System execution ends with a segmentation fault
-when the system is frozen.  Melted code works correctly.
-
-Discovered in release 5.4.0403.

@@ -1,5 +1,0 @@
-After initial compilation, the type of an actual generic parameter
-which is part of a generic derivation is changed.  When the system is
-recompiled, the compiler reports a nonexistent VLEC violation.
-
-Discovered in Release 3.2.

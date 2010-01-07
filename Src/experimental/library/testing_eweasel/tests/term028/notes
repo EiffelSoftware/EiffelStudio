@@ -1,5 +1,0 @@
-An Ace which references a precompiled cluster causes an exception
-trace if it does not list all the clusters which were precompiled.
-
-Discovered in Release 3.1.1.
-

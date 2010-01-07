@@ -1,8 +1,0 @@
-A system has a cluster "base", whose path name contains and
-environment variable enclosed in braces, and a subcluster of "base".
-After initial compilation, the date of modification of the Ace file is
-changed without changing the file's contents.  When the system is
-recompiled, the compiler reports a bogus VD01 error.
-
-Reported by Manu on release 5.1.12.
-

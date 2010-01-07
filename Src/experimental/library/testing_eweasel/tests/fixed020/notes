@@ -1,6 +1,0 @@
-According to page 245 of ETL, a Debug_key_list consists of zero or
-more Debug_key.  But es3 reports a syntax error on a class with an
-empty Debug_key_list.
-
-Fixed in Prerelease 93.02.17.
-

@@ -1,6 +1,0 @@
-A call which seems to be export-valid (obeys VUEX) and violates
-argument-validity (constraint VUAR) is reported as violating VUEX
-instead.
-
-Discovered in Prerelease 93.04.21.
-

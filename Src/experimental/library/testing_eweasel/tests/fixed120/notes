@@ -1,8 +1,0 @@
-A particular system compiles fine.  Four clusters are removed from the
-Ace and the compiler detects and reports the VTCT violation.  When the
-clusters are added back to the Ace and compilation is resumed, a pass
-2 exception trace results.
-
-Discovered in Prerelease 93.05.17.
-Fixed in Prerelease 93.07.15.
-

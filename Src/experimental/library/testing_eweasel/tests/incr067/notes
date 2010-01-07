@@ -1,9 +1,0 @@
-After initial compilation, the name of the single creation procedure
-is removed from the creation clause, leaving it empty.  When the
-system is recompiled, the compiler detects the VD27 violation.  Then
-the creation procedure name is added back but twice, resulting in
-`creation make, make'.  The compiler detects the VGCP(3) error but
-dies with an internal error trying to report it.
-
-Discovered in Release 3.2.
-

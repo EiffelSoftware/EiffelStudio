@@ -1,7 +1,0 @@
-A system whose Ace specifies `syntax_warning (yes)' is compiled and
-the compiler issues warning about obsolete syntax.  Then this clause
-is removed from the Ace file and a new use of obsolete syntax is
-added.  The compiler warns about the new use of obsolete syntax, but
-it should not.
-
-Discovered in Release 5.4.0403.

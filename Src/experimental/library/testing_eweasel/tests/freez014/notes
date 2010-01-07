@@ -1,5 +1,0 @@
-A tuple composed of an integer and an expanded type works properly
-when melted, but not when frozen or finalized.  This appears to
-be a code generation bug.
-
-Discovered in Release 5.0.005.

@@ -1,4 +1,0 @@
-A sequence of changes where a VSRT(3) error is added and then removed
-causes the compiler to die.
-
-Discovered in Release 4.3-17.

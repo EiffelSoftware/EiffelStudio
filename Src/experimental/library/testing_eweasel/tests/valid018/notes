@@ -1,7 +1,0 @@
-Validity constraint VZAA on page 405 of ETL states that in an actual
-argument of the Address form ($arg), `arg' must be the final name of a
-feature of the enclosing class which is not a constant attribute.  But
-the compiler does not enforce this constraint.
-
-Still not fixed in Prerelease 93.02.17.
-

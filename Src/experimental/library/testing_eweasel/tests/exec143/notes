@@ -1,7 +1,0 @@
-A class that calls `is_special_any_type' on the dynamic type of the
-`area' of an ARRAY incorrectly returns False, but only if the class
-also contains an array whose elements are of an expanded type.
-
-Reported by Manu on December 9, 2002.
-
-

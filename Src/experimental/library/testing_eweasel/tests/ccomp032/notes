@@ -1,4 +1,0 @@
-Freezing a class with a creation expression whose type is a generic
-(create {TEST1 [STRING]}) produces C code that won't compile. 
-
-Discovered in Release 4.3-17.

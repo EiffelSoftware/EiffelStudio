@@ -1,8 +1,0 @@
-An operator feature which is a prefix feature implemented as an
-attribute cannot be named in a strip expression.  This is (possibly) a
-language design problem rather than a compiler bug, since ETL allows
-only a list of Identifiers inside the parentheses of a strip
-expression.
-
-Discovered in Prerelease 93.05.17.
-

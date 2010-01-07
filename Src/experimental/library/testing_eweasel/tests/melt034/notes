@@ -1,8 +1,0 @@
-A routine has a local of an expanded type, where the base class of
-this type has a creation procedure that raises an exception.  If the
-system is melted, the recipient of the exception is not the routine
-containing the declaration of the local but that routine's caller.  If
-the system is frozen, the routine containing the declaration of the
-expanded local is the recipient of the exception.
-
-Discovered in Release 3.2.4.

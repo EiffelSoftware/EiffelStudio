@@ -1,7 +1,0 @@
-A routine creates a local of type ` LINKED_LIST [like arg]', where
-`arg' is the routine's formal argument and prints its generating type.
-Two consecutive calls to the routine with actual arguments of type
-STRING and ARRAY [STRING] produces wrong results if system is frozen
-or finalized.  Melted code works correctly.
-
-Reported by Manu on September 9, 2003.

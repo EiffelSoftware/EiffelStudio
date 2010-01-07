@@ -1,6 +1,0 @@
-The compiler incorrectly reports a VUEX(2) error on class which tries
-to call a feature on an entity of type FOO.  If the order of the
-parent clauses in the inheritance inside FOO is switched the VUEX
-error magically disappears.
-
-Discovered in release 3.2.3b.

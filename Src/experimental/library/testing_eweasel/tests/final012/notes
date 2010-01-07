@@ -1,9 +1,0 @@
-An external routine has a signature specified (e.g., "C (double):
-long") to cause casting of a result before it is passed back to the
-Eiffel side.  The external routine is redefined in a descendant.  In a
-call to the routine which is statically bound, the cast is not applied
-to the result of the function call in the generated C code if the
-system is finalized.  This results in wrong results when the system is
-executed.  A frozen system works correctly.
-
-Discovered in Release 3.3.7.

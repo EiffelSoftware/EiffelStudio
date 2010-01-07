@@ -1,8 +1,0 @@
-A class does a comparison INTEGER_REF > INTEGER.  This should be
-legal, since INTEGER conforms to INTEGER_REF, and the compiler accepts
-it.  But executing the system results in an exception trace
-(segmentation fault or bus error).  Same thing for REALs, DOUBLEs and
-CHARACTERs.
-
-Discovered in Release 3.2.3b.
-

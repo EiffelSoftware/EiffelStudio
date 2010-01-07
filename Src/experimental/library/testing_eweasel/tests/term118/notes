@@ -1,5 +1,0 @@
-Finalizing a system with an expanded class that has 2000 attributes
-which are of an expanded type causes the compiler to die with a
-"special reallocation" exception.
-
-Discovered in release 5.4.0515.

@@ -1,5 +1,0 @@
-A class which prints `- (- d.truncated_to_integer)' where `d' has
-value 1.3 correctly prints 1 when melted but prints 0 when code is
-frozen.
-
-Discovered in release 5.4.0403.

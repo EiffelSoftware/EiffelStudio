@@ -1,6 +1,0 @@
-A class inherits twice from another class, redefining the single
-feature and also renaming it.  When the redefinition attempts to call
-precursor, the compiler reports a VUPR(2) error though it appears that
-it should accept the classes.
-
-Discovered in Release 5.0.015.

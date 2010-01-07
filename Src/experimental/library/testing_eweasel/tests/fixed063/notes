@@ -1,7 +1,0 @@
-Class with an attribute whose type is an anchored type and type of anchor is
-an expanded type compiles OK, but when it is changed to a constant INTEGER
-and recompiled an exception trace results.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in prereleased 93.04.21.
-

@@ -1,7 +1,0 @@
-Melting a system which evalutes `x < x' where x is of type
-WIDE_CHARACTER works fine, but when the system is executed it dies
-with an operational stack botched panic.  Frozen and finalized code
-work fine.
-
-Discovered in Release 5.1.003.
-

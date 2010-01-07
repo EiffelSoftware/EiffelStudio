@@ -1,6 +1,0 @@
-Melting a system with a debug instruction with debug key that contains
-a null character ("weasel%U") works fine, but when the system is
-executed it dies with an illegal opcode panic.  Frozen and finalized
-code work correctly.
-
-Discovered in Release 5.0.016.

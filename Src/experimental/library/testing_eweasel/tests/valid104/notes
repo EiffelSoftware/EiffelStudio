@@ -1,8 +1,0 @@
-Two features are both declared as `z: like out' in separate classes.
-A third class inherits from both of these classes.  The features
-appear to have identical signatures, since they both have the same
-version of `out', but the compiler reports a VDJR error.
-
-Discovered in Release 3.2.3b.
-
-

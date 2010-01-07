@@ -1,7 +1,0 @@
-A call to a static feature `feature {FOO [like Current]}.value' where
-FOO is declared as FOO [G] causes the compiler to report a VSTA(1)
-error, which says to make sure "FOO [like Current]" is just a class
-name and not a type specification.  But the compiler accepts `feature
-{FOO [STRING]}.value' and "FOO [STRING]" is a type specification.
-
-Discovered in release 5.2.0928.

@@ -1,8 +1,0 @@
-After initial compilation, the name of an attribute in an inherited
-class is changed, thereby introducing a VHRC violation.  The compiler
-detects the violation, but when it is removed by deleting both the
-attribute and the rename clause in the heir and compilation is
-resumed, the compiler dies with an exception trace.
-
-Discovered in Prerelease 93.07.15.
-

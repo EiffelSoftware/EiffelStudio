@@ -1,6 +1,0 @@
-After initial compilation, the root creation procedure is changed from
-`make is do end' to `make (args: ARRAY [STRING]) is do end' and
-changes are melted.  System execution then ends with a segmentation
-fault.
-
-Discovered in Release 5.1.003.

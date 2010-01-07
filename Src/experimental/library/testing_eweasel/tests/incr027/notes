@@ -1,7 +1,0 @@
-A root class with one formal generic parameter is correctly reported
-to violate VSRC.  When a 2nd formal generic parameter of the same name
-is added, the newly introduced VCFG violation is detected but the
-compiler dies with an exception trace while trying to report it.
-
-Discovered in Prerelease 93.07.15.
-

@@ -1,6 +1,0 @@
-After initial compilation where the system is finalized, the types of
-two local variables are changed so that they no longer involve
-expanded types and the system is finalized again.  The resulting C
-code compiles, but will not link due to an undefined symbol.
-
-Discovered in Release 3.2.4.

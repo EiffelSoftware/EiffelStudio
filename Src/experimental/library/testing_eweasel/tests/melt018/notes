@@ -1,9 +1,0 @@
-A class declares a local entity of an expanded type and then calls a
-feature on the entity, passing the local itself as an actual argument
-in the call.  The called feature evaluates `arg = Current'.  When the
-system is executed, it dies with a run-time panic and the message
-"operational stack botched", but only if the system is melted.  Frozen
-code works fine.
-
-Discovered in Release 3.2.3b.
-

@@ -1,5 +1,0 @@
-A syntax error with the invalid character Ctrl-@ or Ctrl-A causes the
-compiler to report the wrong line number and position for the error.
-
-Discovered in Release 3.1.1.
-

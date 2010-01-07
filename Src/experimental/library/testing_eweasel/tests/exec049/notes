@@ -1,9 +1,0 @@
-A class inherits different versions of a routine with the same name
-and signature from different parents, but redefines the feature.  The
-flatshort form looks as expected, with all preconditions of redefined
-versions of the feature in the expected order.  But when the system is
-executed, the preconditions are checked in a different order than that
-indicated by the flatshort form.  Same problem for postconditions.
-
-Discovered in Release 3.2.3b.
-

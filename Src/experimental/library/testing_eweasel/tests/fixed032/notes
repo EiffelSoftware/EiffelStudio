@@ -1,5 +1,0 @@
-A feature with 100 nested calls to `clone' causes the compiler to die
-with an exception trace in pass 1 on the class.
-
-Fixed in Prerelease 93.02.17.
-

@@ -1,5 +1,0 @@
-A set of fairly deeply nested multi-branch instructions (49 deep)
-causes a panic cascade in the compiler.
-
-Discovered in Prerelease 93.05.17.
-

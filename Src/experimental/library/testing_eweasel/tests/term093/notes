@@ -1,6 +1,0 @@
-A generic class whose generic parameter is constrained by itself (G ->
-G) and that also creates a result of this generic type causes the
-compiler to go into infinite recursion in `internal_conform_to' and
-eventually run out of memory and die.
-
-Discovered in Release 5.0.015.

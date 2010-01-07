@@ -1,7 +1,0 @@
-Compiling a system with a call to an inline C external routine that
-has formal arguments `a, ab, abc: INTEGER' and alias "$a + $ab +
-$abc" produces C code that won't compile.  Perhaps there needs to be a
-validity check that none of the formal argument names is a prefix of
-another formal argument name for a "C inline" external routine.
-
-Discovered in release 5.4.0515.

@@ -1,8 +1,0 @@
-After initial compilation, a class TEST2 which is used as an actual
-generic parameter (where the corresponding formal generic parameter
-has creation procedures specified and is used to declare attributes)
-is changed so that it is an expanded class.  One of the creation
-procedure names is also removed from the generic constraint.  When the
-system is recompiled, system execution dies with a segmentation fault.
-
-Discovered in release 5.4.0515.

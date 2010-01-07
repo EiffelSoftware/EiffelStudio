@@ -1,5 +1,0 @@
-A call to a static feature `feature {FOO}.value' causes the compiler
-to die with a segmentation fault if FOO is a generic class that
-contains a constant integer feature `value'.
-
-Discovered in release 5.2.0914.

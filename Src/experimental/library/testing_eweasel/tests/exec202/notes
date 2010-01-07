@@ -1,6 +1,0 @@
-A routine raises a developer exception and passes a string that
-includes a null character.  When the exception is rescued, calling
-`is_developer_exception_of_name' and passing in the same string passed
-to `raise' returns False.  It should return True.
-
-Discovered in release 5.6.0906.

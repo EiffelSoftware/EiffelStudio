@@ -1,6 +1,0 @@
-After initial compilation, a procedure is changed to a STRING and a
-call of the procedure is changed to a `print' on this (Void) string.
-After recompilation, system execution should ends with a panic.
-
-Discovered in Prerelease 93.07.15.
-

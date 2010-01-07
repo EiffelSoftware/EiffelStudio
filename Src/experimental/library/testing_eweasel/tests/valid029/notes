@@ -1,7 +1,0 @@
-A system with a root class which is deferred violates the Root Class
-rule (VSRC) [as modified by Bertrand following my suggestion], but is
-accepted by the compiler.  Executing the system results in a "Create
-on deferred" exception.
-
-Discovered in Prerelease 93.07.15.
-

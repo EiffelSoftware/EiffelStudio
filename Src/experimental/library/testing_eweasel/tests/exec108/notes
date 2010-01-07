@@ -1,4 +1,0 @@
-An expanded feature is redefined as an attribute in a descendant
-class.  System execution fails when assertion (all) is specified.
-
-Submitted by Manu for release 4.5.

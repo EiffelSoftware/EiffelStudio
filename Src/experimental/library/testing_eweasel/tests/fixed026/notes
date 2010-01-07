@@ -1,6 +1,0 @@
-According to the Entity rule on page 276 (VEEN2A), the Local entity
-`Result' cannot appear in the Precondition of a routine.  But a
-feature which violates this rule is accepted without complaint.
-
-Fixed in Prerelease 93.02.17.
-

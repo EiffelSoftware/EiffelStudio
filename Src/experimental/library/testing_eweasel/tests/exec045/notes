@@ -1,9 +1,0 @@
-A class declares an attribute of type `expanded A', where A contains
-an attribute of type `expanded B' (a sub-object).  Neither classes A
-nor B are themselves expanded.  Class B has a function which returns
-`Current' as its result.  It appears that a caller is able to get and
-save a reference to a sub-object.  Wasting memory to cause a garbage
-collection then causes execution to terminate with a run-time panic.
-
-Discovered in Release 3.2.2.
-

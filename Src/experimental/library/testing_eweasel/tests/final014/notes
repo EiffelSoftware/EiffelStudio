@@ -1,6 +1,0 @@
-An external routine implemented as a C macro is redefined in two
-descendants.  For a call to the routine which cannot be statically
-bound, incorrect C code is generated if the system is finalized (the
-`()' after the function call is omitted).
-
-Discovered in Release 3.3.7.

@@ -1,5 +1,0 @@
-A system which keeps appending a string to itself until it runs
-out of memory dies with a panic when executed, even though the
-No_more_memory exception is rescued.
-
-Submitted by Manu for release 4.5.

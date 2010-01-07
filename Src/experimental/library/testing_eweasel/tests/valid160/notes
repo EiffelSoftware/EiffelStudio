@@ -1,7 +1,0 @@
-A routine that assigns an entity of type `ARRAY [NONE]' to an entity
-of type `ARRAY [DOUBLE]' is accepted without complaint but seems like
-it should be some kind of validity error.  Melted code dies with
-"operational stack botched".
-
-Discoverd in release 5.5.1012.
-

@@ -1,6 +1,0 @@
-All default initializations are supposed to be applied before the
-creation procedure (if any) is called.  In the case of nested
-sub-objects, the creation procedures are called in the wrong order.
-
-Discovered in Prerelease 93.07.15.
-

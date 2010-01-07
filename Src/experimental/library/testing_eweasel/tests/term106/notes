@@ -1,6 +1,0 @@
-A system has a routine that prints its argument, where the type of he
-argument is `ARRAY [like item]' and item is `item: X [like toto]'
-where `toto' is of type A.  When the system is finalized, he compiler
-dies during degree -3.
-
-Reported by Manu on 31 December 2001.

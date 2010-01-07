@@ -1,7 +1,0 @@
-Finalizing a system with an expanded class which has an inherited
-(rather than immediate) creation procedure produces C code which won't
-link.  Turning off dead_code_removal does not help.
-
-Discovered in Release 3.2.3b.
-
-

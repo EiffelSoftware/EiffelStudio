@@ -1,9 +1,0 @@
-A class has an external function which specifies a cast of the return
-type (i.e., `external "C :EIF_INTEGER"').  After initial compilation
-where the system is frozen, system execution works but produces the
-wrong result.  Then some white space is added inside the Language_name
-portion of the external, leaving its semantics unchanged and the
-system is melted.  System execution then ends with a segmentation
-fault.
-
-Discovered in Release 3.3.7.

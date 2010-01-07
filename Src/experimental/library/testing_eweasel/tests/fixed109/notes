@@ -1,8 +1,0 @@
-A small class with a loop invariant (both class and loop invariant
-appear to be valid) causes the "Make_byte_code applied to void
-reference" error.
-
-Still not fixed in Prerelease 93.02.17.  However, it now dies with
-violation of precondition of `generate_workbench_tes' instead.
-
-Fixed in Prerelease 93.07.15.

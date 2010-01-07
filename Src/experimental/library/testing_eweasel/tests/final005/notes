@@ -1,7 +1,0 @@
-Finalizing a particular system with a function call whose argument is
-a manifest array produces C code which compiles fine.  But when the
-system is executed, a segmentation fault occurs.  If the system is
-instead melted or frozen, system execution works as expected.  This
-appears to be a code generator problem.
-
-Discovered in Release 3.2.4.

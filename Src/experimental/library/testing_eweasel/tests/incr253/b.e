@@ -1,5 +1,0 @@
-class
-	$NAME	
-
-end
-

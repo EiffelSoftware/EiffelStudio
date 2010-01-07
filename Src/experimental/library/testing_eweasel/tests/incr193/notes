@@ -1,9 +1,0 @@
-A system with two classes is compiled, where one of the classes is
-mentioned in an option clause in the Ace file.  Both classes are in
-the same cluster and the Ace file uses "all" to include all classes in
-the entire directory tree.  Then a new sub-directory is created and
-the class is moved into that sub-directory.  When the system is
-recompiled, the compiler reports a bogus VD16 error.
-
-Discovered in release 5.3.0620.
-

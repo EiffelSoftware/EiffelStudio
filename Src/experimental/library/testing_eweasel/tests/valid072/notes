@@ -1,7 +1,0 @@
-A call `!!x' with `x' of type TEST1 where TEST1 has a Creators part
-with no creation procedures listed should be a VGCC(5) error but the
-compiler reports VGCC(6).
-
-Discovered in Release 3.2.1.
-
-

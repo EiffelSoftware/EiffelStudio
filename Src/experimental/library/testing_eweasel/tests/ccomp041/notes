@@ -1,6 +1,0 @@
-A generic class `TEST1 [G -> ANY create default_create end]' declares
-a local of y: G and then does `create y'.  A client class declares a
-local of type `TEST1 [DOUBLE]'.  The system compiles fine when frozen,
-but the generated C code won't compile.  Melted code works fine.
-
-Discovered in release 5.4.0403.

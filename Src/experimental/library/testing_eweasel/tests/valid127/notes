@@ -1,4 +1,0 @@
-A class with the instruction `j := 32 \\ i' where `j' is of type
-INTEGER causes the compiler to report a VWOE error.
-
-Reported by Manu on 11 July 2002.

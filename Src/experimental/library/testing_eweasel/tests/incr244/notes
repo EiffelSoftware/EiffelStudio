@@ -1,8 +1,0 @@
-After initial compilation, a constrained generic parameter is added to
-root class with unknown actual generic in constraint.  When VTCT error
-is corrected, VCFG error is reported since parameter has same name as
-a class.  When it is fixed there is a VSRT(1) error since root class
-cannot be generic.  After this is corrected, compilation dies in
-degree 1.
-
-Discovered in Release 5.0.015.

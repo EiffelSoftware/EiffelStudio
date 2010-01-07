@@ -1,6 +1,0 @@
-A generic class has a function with a generic result type.  If this
-function tries to reference the delayed call expression `Result~make',
-the compiler dies in degree 3.
-
-Discovered in Release 5.0.005.
-

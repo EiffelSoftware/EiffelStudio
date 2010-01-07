@@ -1,8 +1,0 @@
-A system has a class B that inherits from class A and redefines a
-function into an attribute.  After the system is frozen, class B is
-changed so that it renames the function instead of redefining it, but
-it still includes the attribute that was the redefinition.  When the
-system is refrozen, the resulting C code compiles, but will not link
-due to an undefined symbol.
-
-Reported by Manu on 3 January 2002.

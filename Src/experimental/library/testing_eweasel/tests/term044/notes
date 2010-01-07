@@ -1,6 +1,0 @@
-The instruction `!CHILD [STRING]!res.make' where `res' is declared as
-`res: PARENT [STRING]', PARENT is deferred and CHILD inherits from
-parent and has creation procedure `make' causes termination of the
-compiler during pass 2.
-
-Discovered in Release 3.2.1.

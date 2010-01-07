@@ -1,7 +1,0 @@
-After initial compilation, a VSCN violation is introduced.  The
-compiler detects the violation, but when return is pressed to resume
-compilation the compiler proceeds instead of reporting the VSCN
-violation again.
-
-Discovered in Prerelease 93.07.15.
-

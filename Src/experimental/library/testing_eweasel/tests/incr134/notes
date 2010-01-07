@@ -1,8 +1,0 @@
-After initial compilation where the system is frozen, an external
-routine which has a Special_external_declaration, Signature and
-Include_files has its External part simplified to just `external "C"'.
-When the system is refrozen, the C code incorrectly uses the old
-information about the external routine (prior to the change).  Same
-problem with finalizing and re-finalizing code.
-
-Discovered in Release 3.3 beta.

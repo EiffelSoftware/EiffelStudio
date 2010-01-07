@@ -1,8 +1,0 @@
-A class with "identifiers" used as feature names which start with
-underscore ("_") are accepted without complaint.  In such names all
-the leading underscores seem to be ignored.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.07.15.
-
-

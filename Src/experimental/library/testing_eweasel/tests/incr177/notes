@@ -1,6 +1,0 @@
-After initial compilation where the system is finalized, the Ace is
-changed to indicate a new root class and changes are melted.
-Execution of the melted system then executes the old root creation
-procedure instead of the new one.
-
-Discovered in Release 5.0.015.

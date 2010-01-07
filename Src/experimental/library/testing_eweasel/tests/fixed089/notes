@@ -1,6 +1,0 @@
-
-Compiling a class and then removing the inheritance clause and
-recompiling causes an exception trace.
-
-Still not fixed in prerelease 93.02.17.
-Fixed in Prerelease 93.07.15.

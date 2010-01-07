@@ -1,8 +1,0 @@
-Semicolons are still not optional in the following places:
-	Between parent clauses
-	Between assertion clauses
-	Between local entity declarations
-	Between instructions
-	Between feature declarations
-Not fixed - prerelease 92.12.08.
-Not fixed - prerelease 93.02.17.

@@ -1,5 +1,0 @@
-A generic class with an explicit creation type in an instruction that
-creates an attribute of a generic type appears to be correct but the
-compiler dies on it.
-
-Discovered in Release 4.3-17.

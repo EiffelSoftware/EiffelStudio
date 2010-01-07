@@ -1,7 +1,0 @@
-A system with an Expanded client rule violation (VLEC) is compiled.
-When the compiler correctly detects the violation, the violation is
-removed and the compilation is resumed, but the compiler still reports
-a VLEC violation.
-
-Discovered in Prerelease 93.07.15.
-

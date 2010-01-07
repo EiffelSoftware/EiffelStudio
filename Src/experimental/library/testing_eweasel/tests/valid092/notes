@@ -1,8 +1,0 @@
-A multi-branch instruction lists an inspect "constant" which is
-actually a local variable.  The compiler should report a VOMB(2) error
-but it instead reports VEEN (unknown identifier) on the local entity
-which is non-constant and/or of the wrong type.
-
-Discovered in Release 3.2.3b.
-
-

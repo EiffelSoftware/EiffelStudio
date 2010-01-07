@@ -1,4 +1,0 @@
-A class with a reference to `s~make' in the invariant causes
-compiler to die.
-
-Discovered in Release 4.3-18.

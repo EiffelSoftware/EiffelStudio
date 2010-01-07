@@ -1,6 +1,0 @@
-A class declares a named constant via `b: BIT 8 is 11B' and prints
-`b'.  When the system is frozen and executed, the value displayed has
-not been extended with trailing zeroes and so is only 2 bits long
-instead of 8 bits.
-
-Discovered in Release 3.2.4.

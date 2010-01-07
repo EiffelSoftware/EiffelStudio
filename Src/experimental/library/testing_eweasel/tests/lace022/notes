@@ -1,5 +1,0 @@
-Compiling a system whose Ace has a visible clause with an export
-restriction which lists a nonexistent feature name causes the compiler
-to terminate with an exception trace.
-
-Discovered in Release 3.2.

@@ -1,7 +1,0 @@
-Compiling a system and then making a particular sequence of changes
-causes the compiler to report a violation of the Feature Name rule
-(VMFN), when in fact the error is violation of VCCH on page 51.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.04.21.
-

@@ -1,6 +1,0 @@
-A class creates an ARRAYED_LIST [STRING] and then clones it.  The
-class compiles fine, but when the system is executed the postcondition
-of `clone' is violated.
-
-Discovered in Release 3.2.3b.
-

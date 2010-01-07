@@ -1,6 +1,0 @@
-A class with a multi_branch instruction which appears to be
-syntactically legal and valid (according to ETL page 239) is rejected
-as violating validity constraint VOMB.
-
-Still not fixed in Prerelease 93.02.17.
-

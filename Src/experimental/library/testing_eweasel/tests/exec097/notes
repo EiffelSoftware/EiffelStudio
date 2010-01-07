@@ -1,6 +1,0 @@
-A generic class with a single formal generic parameter G has two
-attributes of type G.  When the actual generic generic parameter is a
-basic type and the two attributes have the same (default) value, they
-are equal according to `=' but not according to `equal'.
-
-Discovered in Release 3.2.4.

@@ -1,8 +1,0 @@
-A system has a debug instruction with every character except null in
-its debug key.  When the system is melted, the debug instruction is
-not executed, although it should be.  Freezing produces C code that
-won't compile.  Finalizing produces code that compiles and executes
-correctly.
-
-Discovered in Release 5.0.016.
-

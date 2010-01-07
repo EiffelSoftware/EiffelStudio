@@ -1,4 +1,0 @@
-A class which inherits from CHAIN causes the compiler to
-die in degree 4.
-
-Reported by Manu on 4.4 compiler on 06 December, 2002.

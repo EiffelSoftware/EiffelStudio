@@ -1,6 +1,0 @@
-Introducing a type error by modifying the types of inherited
-attributes and then fixing the error causes the compiler to not
-recognize that the error has been corrected.
-
-Still not fixed in Prerelease 93.02.17.
-

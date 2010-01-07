@@ -1,6 +1,0 @@
-An inspect instruction with when clause `when 0..2000000000 then'
-causes the compiler to die with "no more memory" when the system is
-frozen.  The problem does not occur if code is melted instead.
-
-Discovered in release 5.4.0610.
-

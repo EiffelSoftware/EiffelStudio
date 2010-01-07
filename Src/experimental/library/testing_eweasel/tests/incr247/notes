@@ -1,7 +1,0 @@
-After initial compilation, a routine correctly prints the value of
-{like Current}.generating_type.  When the expression is changed
-to {ARRAY [like Current]}.generating_type and system is recompiled,
-execution prints the wrong value (the one before the change).
-
-Discovered in Release 5.6.1128.
-

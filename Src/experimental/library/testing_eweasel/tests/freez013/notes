@@ -1,7 +1,0 @@
-A routine's precondition calls a routine which raises an exception and
-then retries and succeeds.  After freezing, system execution works
-correctly except that after the last instruction of the root creation
-procedure is executed system execution ends with a segmentation fault.
-Melted code works fine.
-
-Discovered in Release 4.3-19.

@@ -1,7 +1,0 @@
-After initial compilation, a class TEST2 which is used as an actual
-generic parameter (where the corresponding formal generic parameter is
-used to declare an attribute) is changed so that it is an expanded
-class.  After system recompilation, system execution should call the
-creation procedure of TEST2 but it does not.
-
-Discovered in Release 3.2.

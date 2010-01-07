@@ -1,5 +1,0 @@
-A class that copies a string whose count and capacity are 10 into a
-string whose capacity is 9 causes violation of invariant with tag
-`valid_count'.
-
-Reported by Manu on 4.4 compiler on 06 November, 2002.

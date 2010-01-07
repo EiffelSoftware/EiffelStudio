@@ -1,9 +1,0 @@
-A class CHILD has an inheritance clause `TEST1 [CHILD]', which should
-elicit a VTUG(2) error.  Instead, the compiler reports a VTCG error in
-the generic constraint of a different class.  But in order to discover
-the VTCG violation, the compiler should have had to analyse CHILD
-enough to detect the VTUG error, which is the real problem.
-
-Discovered in Release 3.2.3b.
-
-

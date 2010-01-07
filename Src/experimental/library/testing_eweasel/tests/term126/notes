@@ -1,5 +1,0 @@
-Freezing a system with a visible clause that names a generic class
-that is not reachable from the root class (i.e., that would not be
-included without the visible clause) causes the compiler to die.
-
-Reported by Manu on February 8, 2004.

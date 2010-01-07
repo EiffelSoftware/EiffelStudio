@@ -1,5 +1,0 @@
-A class creates strings of size 1, 2, 3, etc.  If the EIF_GS_LIMIT
-environment variable is set to 5000 before execution, to set
-`generation_object_limit', system execution ends with a panic.
-
-Discovered in Release 5.4.0403.

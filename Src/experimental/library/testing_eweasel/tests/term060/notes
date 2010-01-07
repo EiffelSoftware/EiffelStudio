@@ -1,5 +1,0 @@
-A class with an invariant which has any reference to a feature address
-`$x' causes the compiler to terminate with a segmentation fault during
-degree 3.
-
-Discovered in Release 3.2.4.

@@ -1,7 +1,0 @@
-A class has a generic parameter G of type XXX with a generic creation
-clause `create default_create end'.  It also has a creation
-instruction whose target is an attribute of type G.  If XXX is a
-deferred class, the compiler should report a VGCC(1) error but it does
-not.
-
-Discovered in release 5.3.0612.

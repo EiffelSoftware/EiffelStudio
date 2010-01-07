@@ -1,4 +1,0 @@
-A agent expression with zero arguments in the argument list, such as
-`agent try ()' should be accepted but compiler reports a syntax error.
-
-Discovered in release 5.4.0906.

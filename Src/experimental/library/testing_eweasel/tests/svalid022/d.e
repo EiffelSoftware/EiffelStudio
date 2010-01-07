@@ -1,4 +1,0 @@
-class
-	D
-
-end

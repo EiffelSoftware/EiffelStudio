@@ -1,4 +1,0 @@
-Printing `(<< << "A" >> , << 47 >> >>).generating_type' displays
-"ARRAY [ARRAY [STRING]]" but should display "ARRAY [ARRAY [ANY]]".
-
-Discovered in Release 5.4.0403.

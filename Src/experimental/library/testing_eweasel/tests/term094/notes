@@ -1,6 +1,0 @@
-A generic class which inherits from ARRAY [Generic #2] and ANY causes
-the compiler to terminate with the tag "Compiler error".  If the
-inheritance is from ARRAY [Generic #1], the compiler correctly reports
-a VMFN error instead of dying.
-
-Discovered in Release 5.0.015.

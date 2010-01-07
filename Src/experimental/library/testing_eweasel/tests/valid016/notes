@@ -1,6 +1,0 @@
-A routine which is not a redeclaration of another routine has `require
-else' and `ensure then' in its precondition and postcondition.  The
-compiler does not complain.
-
-Still not fixed in Prerelease 93.02.17.
-

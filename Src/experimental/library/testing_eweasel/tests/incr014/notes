@@ -1,7 +1,0 @@
-After initial compilation, a class which is not reachable from the
-root is modified so that it has the same name as the root class.  The
-Ace file does not specify what cluster the root class is in.  When the
-system is recompiled, the compiler does not detect the VD29 violation.
-
-Discovered in Prerelease 93.07.15.
-

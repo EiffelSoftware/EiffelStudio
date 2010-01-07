@@ -1,5 +1,0 @@
-After initial compilation, an inherited class is changed to a frozen
-class.  This introduces a VIFI error but the compiler does not detect
-it.
-
-Discovered in Release 5.5.0820.

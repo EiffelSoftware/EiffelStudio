@@ -1,6 +1,0 @@
-An external routine which takes a string argument has a precondition
-involving the argument.  The code compiles fine (though the C code
-compilation generates warnings) but the precondition is violated when
-system is executed, though it should not be.
-
-Discovered in release 5.4.0610.

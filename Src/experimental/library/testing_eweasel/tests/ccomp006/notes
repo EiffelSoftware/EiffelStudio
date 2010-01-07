@@ -1,6 +1,0 @@
-When a system is being finalized and the Ace specifies that the class
-STRING should be visible, the `finish_freezing' step fails due to
-undefined symbols.
-
-Discovered in Prerelease 93.07.15.
-

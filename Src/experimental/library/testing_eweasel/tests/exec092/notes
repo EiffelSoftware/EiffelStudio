@@ -1,7 +1,0 @@
-When a class has two or more parents, the invariant of the heir class
-is supposed to start with the invariants of all parents in the order
-of appearance of the parent clauses in the heir.  But when the system
-is executed, the invariants are monitored in reverse order of the
-parent clauses.
-
-Discovered in Release 3.2.4.

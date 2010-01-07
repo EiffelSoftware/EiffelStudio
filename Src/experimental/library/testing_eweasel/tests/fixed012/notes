@@ -1,5 +1,0 @@
-An invalid free operator (one with zero characters) makes the compiler
-die with an exception trace.
-
-Fixed in Prerelease 93.02.17.
-

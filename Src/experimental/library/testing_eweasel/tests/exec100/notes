@@ -1,8 +1,0 @@
-A class declares a local of type `FOO [expanded DOUBLE]' where FOO is
-a generic class with a single formal generic parameter constrained by
-DOUBLE.  A routine of the generic class assigns something of type
-`Generic #1' to something of type DOUBLE.  The system compiles fine,
-but dies with an "illegal metamorphose type" panic when executed.  If
-the system is frozen, the C code for the generic class won't compile.
-
-Discovered in Release 3.2.4.

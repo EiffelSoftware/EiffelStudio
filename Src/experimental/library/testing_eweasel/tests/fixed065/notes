@@ -1,8 +1,0 @@
-Compiling a system where A inherits an effective feature from B and
-undefines and redefines it works fine.  If the feature in B is changed
-to a deferred feature and es3 is rerun, the violation of VDUS3
-(Undefine Subclause rule) is not detected.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.04.21.
-

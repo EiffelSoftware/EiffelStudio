@@ -1,6 +1,0 @@
-A class with a generic creation which omits the constraint
-(e.g., TEST1 [G create make end]) causes the compiler to die
-in degree 4.
-
-Discovered in Release 4.5.
-

@@ -1,5 +1,0 @@
-The expression `f = Void', where `f' is a procedure, violates VKCN but
-the compiler accepts it.  If the system is being frozen, the compiler
-terminates during degree -2.
-
-Discovered in Release 3.2.4.

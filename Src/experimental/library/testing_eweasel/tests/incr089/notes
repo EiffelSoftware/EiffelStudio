@@ -1,6 +1,0 @@
-A system compiles correctly.  Then most of the class header of one of
-the (generic) classes is deleted, except for the word class.  When the
-system is recompiled, the compiler detects the VTCT error but dies
-with an exception trace trying to report it.
-
-Discovered in Release 3.2.

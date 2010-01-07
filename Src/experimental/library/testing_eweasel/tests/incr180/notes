@@ -1,6 +1,0 @@
-After initial compilation where the system is melted, a constant
-attribute is changed to a variable attribute and the system is frozen.
-The resulting C code compiles, but will not link due to undefined
-symbols.
-
-Discovered in Release 5.0.016.

@@ -1,6 +1,0 @@
-For a class with invariant `0 = 0', the compiler generates C code
-which will not compile.
-
-Discovered in Release 3.2.
-
-

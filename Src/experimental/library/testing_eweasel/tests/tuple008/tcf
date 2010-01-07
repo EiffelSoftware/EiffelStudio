@@ -1,9 +1,0 @@
-test_name 	 named-tuple-same-labels
-test_description A named tuple with multiple times the same label is not detected as a validity error.
-
-copy_sub 	Ace $TEST Ace
-copy_raw 	test.e $CLUSTER test.e
-compile_melted
-compile_result	validity_error TEST VREG; TEST VREG
-
-test_end

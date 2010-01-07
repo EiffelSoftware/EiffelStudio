@@ -1,7 +1,0 @@
-A pattern of object allocation and resizing guided by a pair of random
-number generators and a pair of size limits compiles fine when it is
-frozen, but dies with a run-time panic when executed with certain
-large values.  Many other values do not cause a run-time panic.
-
-Discovered in Release 3.2.1.
-

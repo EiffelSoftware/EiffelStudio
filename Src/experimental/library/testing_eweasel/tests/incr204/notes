@@ -1,6 +1,0 @@
-After initial compilation an expanded class is changed to a deferred
-class but another class still tries to create an instance of it.  The
-compiler correctly detects the VGCC(2) error.  But when the create
-instructions are removed, the compiler reports a bogus VTEC(1) error.
-
-Discovered in release 5.4.0403.

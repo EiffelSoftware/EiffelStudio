@@ -1,8 +1,0 @@
-A class with a formal generic parameter G constrained by ARRAY [STRING] 
-declares an attribute of type G.  An assignment of one of the elements
-of the attribute to the attribute itself violates the Assignment Rule,
-but the compiler does not detect the VJAR violation.  Execution of the
-resulting system ends with a bus error.
-
-Discovered in Prerelease 93.05.17.
-

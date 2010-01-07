@@ -1,6 +1,0 @@
-When a secret attribute inherited from another class has its name
-changed after initial compilation, the compiler does not detect the
-VEEN violation when the system is recompiled.
-
-Discovered in Release 3.1.1.
-

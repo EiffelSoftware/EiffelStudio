@@ -1,7 +1,0 @@
-A system has a class which creates a manifest array of strings with
-25000 elements.  The system compiles fine when frozen, but when
-executed it dies with a run-time panic while creating the manifest
-array.  Turning off garbage collection allows the system to execute
-correctly.
-
-Discovered in Release 3.2.4.

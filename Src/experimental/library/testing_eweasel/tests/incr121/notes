@@ -1,7 +1,0 @@
-A class has a feature of type `HASH_TABLE [STRING, NONE]'.  After the
-compiler correctly detects a VUAR error, NONE is changed to STRING,
-thereby making the class correct.  When compilation is resumed, the
-compiler dies with a segmentation fault during degree -1 on
-HASH_TABLE.
-
-Discovered in Release 3.2.4.

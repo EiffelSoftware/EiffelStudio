@@ -1,5 +1,0 @@
-A routine calls `s.replace_substring (s, 4, 6)' to replace a portion
-of itself with its original value.  The replace_substring call does
-gives the wrong result.
-
-Reported by Manu on 17 December 2001.

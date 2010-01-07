@@ -1,5 +1,0 @@
-A class with a constant attribute which is of a Bit_type is reported
-to violate VQMC if the length of the Bit_constant is not identical to
-the length specified in the Bit_type.
-
-

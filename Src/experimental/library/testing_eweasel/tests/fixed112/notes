@@ -1,7 +1,0 @@
-A class with a single procedure with an empty body which has 125 locals
-of type STRING causes the compiler to die with an exception trace.
-The exception trace does not occur if the body assigns Void to each local.
-
-Discovered in Prerelease 93.05.17.
-Fixed in Prerelease 93.07.15.
-

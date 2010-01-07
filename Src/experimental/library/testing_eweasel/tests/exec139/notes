@@ -1,9 +1,0 @@
-A class does an `independent_store' of an object that has two expanded
-attributes, where each expanded object has an INTEGER attribute,
-another attribute of an expanded type and a third attribute that is an
-array of expanded.  Freezing the system works fine, but during
-execution the retrieved object is not deep_equal to the original
-stored object.
-
-Reported by Manu on October 3, 2002.
-

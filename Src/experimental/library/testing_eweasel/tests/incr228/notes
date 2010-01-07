@@ -1,8 +1,0 @@
-A system has a static call to a frozen external procedure.  After initial 
-compilation where the system is frozen, system execution works
-correctly.  Then a postcondition is added to the external
-procedure.  After the compiler correctly detects the VSTA(2)
-error, the postcondition is removed and compilation finishes.  But
-system execution then evaluates the removed postcondition.
-
-Discovered in release 5.4.0722.

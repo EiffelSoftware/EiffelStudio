@@ -1,7 +1,0 @@
-After initial compilation, the file with class FINITE (in a local
-directory) is deleted.  When the system is recompiled, the compiler
-detects the VTCT violation.  Then FINITE is added back to the cluster
-and compilation is resumed.  The compiler later dies with an exception
-trace.
-
-Discovered in Release 3.2.

@@ -1,5 +1,0 @@
-Changing a deferred function to a constant attribute after initial
-compilation and recompiling causes a compiler exception trace.
-
-Discovered in Prerelease 93.07.15.
-

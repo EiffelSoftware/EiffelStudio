@@ -1,5 +1,0 @@
-Finalizing a system that calls a routine that prints a "once"
-string crashes the compiler, but only if `inlining (yes)' is specified.
-
-Discovered in release 5.6.1128.
-

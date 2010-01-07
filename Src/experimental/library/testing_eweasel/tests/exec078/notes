@@ -1,8 +1,0 @@
-A class has a routine which repeatedly creates a manifest array, each
-of whose elements is `strip ()'.  The class has one attribute, of type
-ARRAY [ANY].  Executing the system results in a run-time panic.
-Reducing the number of "strip ()" elements below 49 or turning off
-garbage collection allows the system to execute correctly for a huge
-number of iterations.
-
-Discovered in Release 3.2.4.

@@ -1,6 +1,0 @@
-A routine repeatedly does `deep_clone (b)' where `b' is of type BIT
-32.  System execution ends with an exception trace (on the first
-iteration if system is frozen or after a large number of iterations if
-system is melted).
-
-Discovered in Release 3.2.4.

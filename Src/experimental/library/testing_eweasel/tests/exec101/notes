@@ -1,8 +1,0 @@
-A class with one attribute, which is of type LINKED_LIST [STRING],
-repeatedly calls `strip ()' and checks the result.  The system
-compiles fine, but executing it yields some `strip' result arrays
-whose first element does not conform to LINKED_LIST [STRING].  Trying
-to print the offending first element terminates system execution with
-an illegal instruction.
-
-Discovered in Release 3.3 beta.

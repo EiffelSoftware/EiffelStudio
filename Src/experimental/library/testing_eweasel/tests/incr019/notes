@@ -1,7 +1,0 @@
-After initial compilation, the class header of a class which is part
-of the signature of a redefined feature is changed so that the class
-is expanded.  When the system is recompiled, the compiler reports a
-VDRD violation although there is no violation.
-
-Discovered in Prerelease 93.07.15.
-

@@ -1,4 +1,0 @@
-A very long comment causes the compiler to terminate during pass 5 on
-the class with the comment.
-
-Discovered in Release 3.2.4.

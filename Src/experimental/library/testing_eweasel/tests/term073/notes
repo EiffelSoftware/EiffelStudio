@@ -1,7 +1,0 @@
-Finalizing a system with an Ace which specifies both
-`dead_code_removal (no)' and `array_optimization (yes)' causes the
-compiler to die while generating `eplug.c'.  Finalizing with the -keep
-option to retain assertions suppresses dead code removal so it also
-causes the compiler to die if array optimization is on.
-
-Discovered in Release 3.3.3.

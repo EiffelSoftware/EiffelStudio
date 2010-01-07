@@ -1,6 +1,0 @@
-After initial compilation, an attribute of type STRING which is the
-anchor for another feature is changed to a procedure with no
-arguments.  When the system is recompiled, the compiler silently
-terminates after pass 4.
-
-Discovered in Release 3.2.1.

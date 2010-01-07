@@ -1,7 +1,0 @@
-Finalizing a particular system with `assertion (no)' but allowing dead
-code removal to be done produces C code which will not compile.  The
-C compiler reports a parse error near void.
-
-Discovered in Release 3.2.
-
-

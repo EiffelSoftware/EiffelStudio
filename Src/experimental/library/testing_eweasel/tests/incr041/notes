@@ -1,7 +1,0 @@
-After initial compilation, a VWOE error is introduced in the class
-invariant.  When the compiler complains, the entire class invariant is
-deleted and compilation is resumed.  This causes a compiler exception
-trace.
-
-Discovered in Prerelease 93.07.15.
-

@@ -1,7 +1,0 @@
-A system is frozen and then executed, producing the correct output.
-Then a class which was expanded is modified so that it is no longer
-expanded and changes are melted.  When the resulting system is
-executed, it dies with an exception trace while trying to create an
-instance of the now non-expanded class.
-
-Discovered in Release 3.2.

@@ -1,6 +1,0 @@
-class
-	$NAME
-
-$INHERIT
-
-end

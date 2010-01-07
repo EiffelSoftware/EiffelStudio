@@ -1,4 +1,0 @@
-An expanded class with header `expanded class TEST1 [G -> TEST1 [STRING]]'
-causes silent termination of the compiler after pass 5.
-
-Discovered in Release 3.2.1.

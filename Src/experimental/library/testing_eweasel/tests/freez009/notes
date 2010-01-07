@@ -1,7 +1,0 @@
-A routine has an assignment attempt whose source is of type expanded
-FOO and whose target is of type FOO.  When executed, the assignment
-attempt correctly succeeds.  However, after wasting some memory and
-presumably causing garbage collection, system execution ends with a
-segmentation fault.  The generated C code appears to be incorrect.
-
-Discovered in Release 3.2.4.

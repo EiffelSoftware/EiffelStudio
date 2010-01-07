@@ -1,5 +1,0 @@
-A manifest string which contains the illegal "character" '% ' (percent
-followed by space) is accepted, but only if there are an even number
-of consecutive occurrences of this invalid character.  ETL page 420.
-
-Discovered in Release 3.2.4.

@@ -1,7 +1,0 @@
-A function that returns an expanded type has a postcondition that
-states that `old Result' is not equal to the value of the function,
-where the body of the function sets an attribute of Result to a
-non-default value.  Melted code incorrectly violates the
-postcondition, while frozen code does not.
-
-Discovered in release 5.4.0515.

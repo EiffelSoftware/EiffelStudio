@@ -1,7 +1,0 @@
-When a VSCN violation is introduced after initial compilation, the
-compiler does not detect it.  The violation is introduced by changing
-the name of an existing class to match the name of a class in the
-kernel cluster.
-
-Discovered in Release 3.1.1.
-

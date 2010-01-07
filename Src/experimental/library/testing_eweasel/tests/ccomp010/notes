@@ -1,6 +1,0 @@
-The C code generated for some bit operations will not compile.  I
-believe these operations are `not', infix "^" and infix "#".
-
-Discovered in Release 3.2.
-
-

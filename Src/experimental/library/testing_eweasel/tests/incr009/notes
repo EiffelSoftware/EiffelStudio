@@ -1,8 +1,0 @@
-After initial compilation, an attribute which is a string constant is
-changed to a variable attribute of another type, thereby introducing a
-VUAR violation.  The compiler detects the violation, but when return
-is pressed it continues with the compilation even though nothing has
-changed.
-
-Discovered in Prerelease 93.07.15.
-

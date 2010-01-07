@@ -1,5 +1,0 @@
-Calling routine `start' of UNIX_FILE (from class FILE) on an open file
-which has zero characters causes violation of precondition
-`is_readable' of `readchar'.
-
-Found in Release 3.2.4.

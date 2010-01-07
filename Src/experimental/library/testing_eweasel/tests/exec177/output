@@ -1,3 +1,0 @@
-FUNCTION [TEST3, TUPLE [TEST3], BOOLEAN]
-True
-Execution completed

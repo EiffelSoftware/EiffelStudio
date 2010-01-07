@@ -1,5 +1,0 @@
-Class with inheritance clause with empty undefine, redefine or select
-is reported as a syntax error.
-
-Fixed in Prerelease 93.02.17.
-

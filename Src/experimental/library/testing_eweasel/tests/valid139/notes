@@ -1,8 +1,0 @@
-A class FOO has a generic parameter G of type XXX with a generic
-creation clause `create default_create end'.  Another class declares
-an attribute of type FOO [XXX], where `default_create' is not listed
-as a creation procedure of XXX.  The compiler should report a VTCG
-error but does not.
-
-Discovered in release 5.4.0515.
-

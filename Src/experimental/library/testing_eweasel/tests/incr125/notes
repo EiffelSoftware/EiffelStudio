@@ -1,9 +1,0 @@
-A class has routines which take an argument of type INTEGER, REAL,
-DOUBLE or ANY and calls to these routines passing an INTEGER. REAL or
-DOUBLE constant or variable.  After initial compilation where the
-system is frozen, formal argument types are change to a more general
-type (e.g., INTEGER is changed to REAL or DOUBLE or ANY, etc).  When
-changes are melted, system execution produces the wrong output and
-then a segmentation fault.
-
-Discovered in Release 3.2.4.

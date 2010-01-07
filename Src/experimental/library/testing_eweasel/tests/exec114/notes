@@ -1,4 +1,0 @@
-Routine `is_integer' from STRING completely ignores null characters,
-which is incorrect ("%/0/1%/0/" is not a valid integer).
-
-Discovered in Release 5.0.016.

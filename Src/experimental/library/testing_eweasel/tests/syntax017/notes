@@ -1,5 +1,0 @@
-A standard operator name which is not completely in lower case (has
-one or more uppercase letters) is not accepted, but it should be.
-
-Discovered in Prerelease 93.07.15.
-

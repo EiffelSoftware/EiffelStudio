@@ -1,9 +1,0 @@
-After initial compilation where the system is frozen, an inherited
-external BOOLEAN function is changed to an internal BOOLEAN function
-and changes are melted.  System execution then ends with a run-time
-panic which states "invalid assertion level".  The problem does not
-occur if the changed routine is introduced directly in the class which
-calls it, instead of appearing in an heir.
-
-Discovered in Release 3.2.2.
-

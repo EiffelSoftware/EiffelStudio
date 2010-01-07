@@ -1,7 +1,0 @@
-A routine creates does a creation on an attribute of type `TEST1 [BIT
-8]' where TEST1 [G] has a creation procedure with a single formal
-argument of type G.  This creation procedure calls `out' on the formal
-argument to display it.  The system compiles fine, but dies with a
-precondition violation in `put' of BIT_REF.
-
-Discovered in Release 3.2.4.

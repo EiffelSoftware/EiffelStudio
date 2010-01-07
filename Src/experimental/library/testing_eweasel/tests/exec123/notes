@@ -1,4 +1,0 @@
-Creating a TUPLE with 9 or more generic parameters corrupts memory.
-Does not always crash.
-
-Reported by Manu on 26 November 2001.

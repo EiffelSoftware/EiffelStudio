@@ -1,8 +1,0 @@
-In a generic class TEST1 [G, H -> NONE], an assignment of Void (which
-is of type NONE) to an entity of type G is permitted.  But an
-assignment of an entity of type H (which conforms to NONE) to an
-entity of type G is rejected as a violation of the Assignment Rule
-(VJAR).
-
-Still not fixed in Prerelease 93.02.17.
-

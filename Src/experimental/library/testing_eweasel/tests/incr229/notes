@@ -1,6 +1,0 @@
-After initial compilation, a generic constraint is added to the formal
-generic parameter G of a class and changes are recompiled.  Printing
-the generating type of `agent {G}.generator' then produces the wrong
-output (same as before the change).
-
-Discovered in release 5.5.0205.

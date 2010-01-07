@@ -1,9 +1,0 @@
-A generic class with formal generic parameter `G' has a routine `foo'
-with a local entity of type `G'.  The body of the routine calls
-`generator' on this local.  Another class inherits from the generic
-class and provides an expanded type as actual generic parameter.  When
-the system is executed, it correctly prints the local's generating
-class, but then dies with a panic if the system was melted.  Frozen
-code works fine.
-
-Discovered in Release 3.2.4.

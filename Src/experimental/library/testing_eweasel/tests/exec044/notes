@@ -1,6 +1,0 @@
-A class which repeatedly extend an ARRAYED_LIST [X], where `X' is an
-expanded type, compiles fine.  When it is executed, it quickly dies
-with a segmentation fault in `auto_resize'.
-
-Discovered in Release 3.2.2.
-

@@ -1,5 +1,0 @@
-A class with a `strip' expression compiles fine, but the generated C
-code for the class won't compile with `cc' from Sun.
-
-Discovered in Prerelease 93.04.21.
-

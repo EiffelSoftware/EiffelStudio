@@ -1,6 +1,0 @@
-A routine with precondition "str @ index /= '%N'", where str is of
-type STRING causes the compiler to report a bogus VEEN error when it
-should accept the class.
-
-Reported by Manu on February 3, 2004.
-

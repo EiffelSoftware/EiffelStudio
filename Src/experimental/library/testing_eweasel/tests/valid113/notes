@@ -1,7 +1,0 @@
-Putting a procedure call (rather than a function call) as an element
-in a tuple causes the compiler to die in degree -1 if system is being
-frozen.  Melting is successful, but executing the resulting system
-gives an "operational stack botched" error.  Seems like there is a
-missing validity constraint.
-
-Discovered in Release 5.0.005

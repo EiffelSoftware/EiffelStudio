@@ -1,6 +1,0 @@
-After initial compilation, the names of two classes are switched.
-When the system is recompiled, the compiler reports a VSCN violation
-although none is present.
-
-Discovered in Prerelease 93.07.15.
-

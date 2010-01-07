@@ -1,7 +1,0 @@
-A class calls a recursive routine which creates 255 strings, all
-fairly short.  If the depth of recursion is 22 or greater, a run-time
-panic occurs when the system is executed.  If the routine only creates
-200 strings, then the system executes correctly up to a recursion
-depth of at least 1000.
-
-Discovered in Release 3.2.4.

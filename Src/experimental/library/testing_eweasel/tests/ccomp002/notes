@@ -1,6 +1,0 @@
-A class with a declaration and call of an operator feature which
-contains an embedded double-quote character (written %") appears to be
-valid and the compiler accepts it.  But the generated C code won't compile.
-
-Discovered in Prerelease 93.05.17.
-

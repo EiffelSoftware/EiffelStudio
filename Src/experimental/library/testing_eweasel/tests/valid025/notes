@@ -1,5 +1,0 @@
-An external routine with a non-existent Language_name is accepted by
-the compiler without complaint. 
-
-Discovered in Prerelease 93.05.17.
-

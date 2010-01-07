@@ -1,7 +1,0 @@
-Adding an export restriction which causes a validity violation after
-compilation and then recompiling causes exception trace.
-
-Still not fixed in Prerelease 93.02.17.
-Partially fixed in Prerelease 93.04.21.
-Fixed in Prerelease 93.05.17.
-

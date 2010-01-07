@@ -1,8 +1,0 @@
-A generic class constrains its single formal generic parameter to
-conform to DOUBLE.  A class which inherits from this class and
-provides an actual generic parameter of REAL (which does not conform
-to DOUBLE) is accepted without complaint.
-
-Basicly fixed in Prerelease 93.02.17.
-Only problem left is that real.conforms_to(double) is false.
-Still not fixed in Prerelease 93.04.21.

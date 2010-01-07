@@ -1,4 +1,0 @@
-
-class ERROR_PROCESSING_OPTIONS
-end
-

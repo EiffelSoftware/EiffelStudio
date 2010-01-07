@@ -1,6 +1,0 @@
-A declaration of a routine with zero arguments which includes the
-parentheses around an empty argument list, such as `try () is do end'
-should be accepted but is not.
-
-Discovered in Release 3.2.
-

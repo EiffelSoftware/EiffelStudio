@@ -1,6 +1,0 @@
-An external function which takes one argument is declared as a macro,
-but the signature omits the argument and supplies only the return type
-`:EIF_INTEGER'.  The compiler accepts the class, but terminates during
-degree -2.
-
-Discovered in Release 3.3 beta.

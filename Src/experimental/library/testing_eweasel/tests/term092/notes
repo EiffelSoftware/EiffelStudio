@@ -1,6 +1,0 @@
-A generic class with the header
-"class TEST2 [G -> NONE create make end]" 
-causes the compiler to die in degree 4.
-
-Discovered in Release 5.0.005.
-

@@ -1,4 +1,0 @@
-Freezing a system which calls a feature `r: REAL is 64.0' generates C
-code that won't compile.
-
-Discovered in release 5.2.0928.

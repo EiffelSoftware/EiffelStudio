@@ -1,7 +1,0 @@
-A system has a class which declares a local that is of a non-basic
-expanded type and calls a routine on that local.  When the system is
-finalized, a run-time panic occurs in the compiler during pass 6 on
-the class.
-
-Discovered in Prerelease 93.07.15.
-

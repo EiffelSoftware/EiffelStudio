@@ -1,7 +1,0 @@
-A feature rename clause which renames an infix feature to a prefix
-feature and *should* be invalid is accepted.  But when this change is
-introduced after freezing and the resulting system is executed, a
-run-time PANIC no longer results.
-
-Partially fixed in Prerelease 93.02.17.
-

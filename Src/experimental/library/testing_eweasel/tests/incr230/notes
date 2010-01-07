@@ -1,8 +1,0 @@
-A system with a VTCG error caused by type `expanded STRING' as an
-actual generic parameter that does not conform to ANY is compiled.
-The compiler correctly detects the error.  When the actual generic is
-changed to STRING, the compiler still reports a VTCG error though none
-is present.
-
-Discovered in Release 5.5.0820.
-

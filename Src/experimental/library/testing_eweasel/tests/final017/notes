@@ -1,5 +1,0 @@
-A system has a routine with a delayed call expression for a deferred
-routine.  When the system is finalized with inlining, system execution
-produces incorrect output.
-
-Discovered in Release 4.3-18.

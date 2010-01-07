@@ -1,5 +1,0 @@
-A Conditional with a true boolean expression and an empty Compound in
-a Then_part does not behave correctly, but only after melting.
-
-Fixed in Prerelease 93.02.17.
-

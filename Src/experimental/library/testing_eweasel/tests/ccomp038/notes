@@ -1,5 +1,0 @@
-Finalizing a system with a call to a prefix feature which is an
-inherited integer constant generates C code which won't link if system is
-finalized, whether inlining or not.
-
-Discovered in Release 5.0.015.

@@ -1,5 +1,0 @@
-The call `io.putreal' often does not print the correct value of a real
-number when the calling routine is melted.
-
-Discovered in Prerelease 93.07.15.
-

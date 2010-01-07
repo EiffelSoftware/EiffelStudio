@@ -1,6 +1,0 @@
-A class creates an array of an expanded class, where that class has
-attributes that are also expanded.  The system compiles fine but dies
-with a panic when executed with `assertion (all)'.
-
-Discovered in release 5.9.0909.
-

@@ -1,5 +1,0 @@
-A creation instruction with an explicit creation type which is
-expanded violates constraint VGCC3, but is accepted.
-
-Fixed in Prerelease 93.02.17.
-

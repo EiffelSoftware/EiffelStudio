@@ -1,7 +1,0 @@
-If a class in the universe has no class header or a malformed class
-header, VD10 violation is reported.  Hitting return to retry
-compilation then causes exception trace.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.04.21.
-

@@ -1,6 +1,0 @@
-A recursive routine recurses 15 levels deep and then calls a routine
-on a Void target.  The exception is supposed to be caught but system
-dies with a run-time panic if frozen.  If a similar class with all
-unused local variables removed is frozen, it executes correctly.
-
-Reported by Manu on November 28, 2003.

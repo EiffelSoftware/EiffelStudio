@@ -1,6 +1,0 @@
-Two small classes which are invalid due to the actual generic
-parameter not conforming to the formal generic parameter cause an
-exception trace.
-
-Fixed in Prerelease 93.02.17.
-

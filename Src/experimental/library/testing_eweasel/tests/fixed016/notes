@@ -1,5 +1,0 @@
-The previously reported problem of violation of precondition
-`has_a_new_name' can now be reproduced.
-
-Seems to be fixed in Prerelease 93.02.17.  Cannot reproduce any longer.
-

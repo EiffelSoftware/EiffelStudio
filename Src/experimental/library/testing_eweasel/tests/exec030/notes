@@ -1,4 +1,0 @@
-Null characters (%U) are dropped from a manifest string.
-
-Discovered in Prerelease 93.07.15.
-

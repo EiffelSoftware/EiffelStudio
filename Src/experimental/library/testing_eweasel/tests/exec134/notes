@@ -1,5 +1,0 @@
-A class creates a hash table of ANY indexed by INTEGER.  Inserting an
-element under index 0 causes a postcondition violation.
-
-Reported by Manu (from ISE user group posting) on Sept. 17, 2002.
-

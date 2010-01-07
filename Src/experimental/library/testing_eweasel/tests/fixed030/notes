@@ -1,7 +1,0 @@
-Compiling two classes fully, adding an inheritance clause to each (one
-with an error) and then removing one of the newly added inheritance
-clauses when the compiler correctly reports violation of VDCC causes
-the compiler to die with an exception trace.
-
-Fixed in Prerelease 93.02.17.
-

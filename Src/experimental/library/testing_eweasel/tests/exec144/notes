@@ -1,7 +1,0 @@
-If a class does an `independent_store' of an ARRAY [STRING] whose
-count is more than 65536, GC memory is corrupted which later causes a
-crash.
-
-Reported by Manu on December 12, 2002.
-
-

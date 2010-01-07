@@ -1,7 +1,0 @@
-A small system compiles fine.  When I change the type of an
-argumentless function from BOOLEAN to INTEGER, thereby violating
-validity constraint VWBE, the violation is detected but es3 dies in
-middle of reporting the error.
-
-Still not fixed in Prerelease 93.02.17.
-

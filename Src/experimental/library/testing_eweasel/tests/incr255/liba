@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="C7C94D97-EAE9-4C3B-974F-D349268D3DA0" library_target="test">
-	<target name="test">
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		$LIB_A
-		<cluster name="a" location="a"/>
-	</target>
-</system>

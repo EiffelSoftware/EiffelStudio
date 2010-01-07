@@ -1,5 +1,0 @@
-A number of words which are supposed to be reserved words are actually
-not reserved, since one can declare a feature with their names.
-
-Discovered in Prerelease 93.05.17.
-

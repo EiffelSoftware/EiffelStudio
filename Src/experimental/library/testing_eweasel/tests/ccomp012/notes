@@ -1,6 +1,0 @@
-Finalizing a system whose root creation procedure is an external
-routine produces C code which won't link.
-
-Discovered in Release 3.2.1.
-
-

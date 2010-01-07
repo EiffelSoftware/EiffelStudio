@@ -1,9 +1,0 @@
-A compilation is started, but the compiler correctly reports a VSCN
-validity violation because there are two supplier classes TEST1, each
-in a different cluster.  If one of the clusters is removed from the
-Ace completely, the compilation should be able to proceed, but the
-compiler keeps issuing the same VSCN error message.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.04.21.
-

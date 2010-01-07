@@ -1,6 +1,0 @@
-A class repeatedly calls a routine which creates a tuple with 400
-elements, each element being itself the tuple [13].  The system
-compiles fine when melted or frozen, but dies with a bus error when
-executed.
-
-Discovered in version 5.1.12.

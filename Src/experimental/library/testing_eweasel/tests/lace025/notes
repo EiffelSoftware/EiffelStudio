@@ -1,8 +1,0 @@
-A Visible clause in the Ace which names a class (or a feature in its
-export subclause) is case-sensitive if the name is enclosed in double
-quotes, but should not be since it does not refer to an outside
-element.  The compiler incorrectly reports a VD25 violation.  In the
-case of a feature, the compiler thinks the feature is missing so it
-dies (a previously reported bug).
-
-Discovered in Release 3.2.2.

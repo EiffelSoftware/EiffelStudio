@@ -1,3 +1,0 @@
-An empty Feature_list in a New_export_item is still reported as a
-syntax error.  Prerelease 92.12.08.
-Still not fixed in prerelease 93.02.17.

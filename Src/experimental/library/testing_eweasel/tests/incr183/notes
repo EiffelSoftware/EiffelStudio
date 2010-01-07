@@ -1,6 +1,0 @@
-After initial compilation, a redefined `default_create' with an empty
-body is changed so that the body has an instruction.  After
-recompilation, the new version of `default_create' should be executed
-but is not.
-
-Discovered in Release 5.0.016.

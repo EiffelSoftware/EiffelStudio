@@ -1,8 +1,0 @@
-A class has a routine which has 1000 instructions, each of which
-is `a := << 1 >>'.  The system compiles fine when frozen and the C code
-compiles (as long as one doesn't use the -O option).  When the
-system is executed, it dies with an "out of locals" run-time
-panic.
-
-Discovered in some ancient release.
-

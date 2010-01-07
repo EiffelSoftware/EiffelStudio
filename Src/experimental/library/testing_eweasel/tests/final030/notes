@@ -1,3 +1,0 @@
-When inlining a call to a routine where Void is one of the argument, compiler may generates incorrect C code depending on how the argument is used in the routine.
-
-Discovered in release 5.5.1002.

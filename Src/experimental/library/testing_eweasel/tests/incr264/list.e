@@ -1,3 +1,0 @@
-class $OVERNAME 
-
-end

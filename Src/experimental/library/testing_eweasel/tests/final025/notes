@@ -1,8 +1,0 @@
-A class `TEST1' has a routine `f (x: like Current): like x' with body
-`Result := x'.  A second class `expanded TEST2' inherits from TEST1.
-A third class calls `f' and passes it an object of type TEST2.  System
-execution dies with a segmentation fault, but only if the system is
-finalized with inlining.  Melted code, frozen code and finalized code
-without inlining work correctly.
-
-Discovered in release 5.4.0515.

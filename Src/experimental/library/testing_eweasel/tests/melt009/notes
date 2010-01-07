@@ -1,7 +1,0 @@
-A inherited function of type `like Current' is called from the
-inheriting class.  The violation of the class invariant at execution
-time is reported.  However a run-time panic also occurs when the
-classes are melted, but not when they are frozen.
-
-Discovered in Release 3.2.
-

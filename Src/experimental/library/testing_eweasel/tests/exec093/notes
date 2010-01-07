@@ -1,4 +1,0 @@
-Preconditions, postconditions and class invariants are not monitored
-For an external routine when the Ace specifies `assertion (invariant)'.
-
-Discovered in Release 3.2.4.

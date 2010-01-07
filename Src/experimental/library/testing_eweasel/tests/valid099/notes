@@ -1,8 +1,0 @@
-A system has a generic class with constraint `-> ARRAY [TEST2]'.  If
-another class inherits from the generic class, providing ARRAY
-[TEST2]' as actual generic parameter *and* if TEST2 is an expanded
-class, then the compiler incorrectly reports a VTCG error.
-
-Discovered in Release 3.2.3b.
-
-

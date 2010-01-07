@@ -1,5 +1,0 @@
-A system which prints the character constants `%/1/' through `%/255/'
-compiles fine when frozen, but prints incorrect values for characters
-`%/128/' and above.  Melted code works correctly.
-
-Discovered in Release 3.2.4.

@@ -1,8 +1,0 @@
-A system which is compiled using precompiled EiffelBase and which
-declares an external routine identical to one that is already in the
-precompiled library compiles fine when melted.  But executing the
-system results in a segmentation fault.  Frozen code works
-correctly.
-
-Discovered in Release 5.0.015.
-

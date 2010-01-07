@@ -1,3 +1,0 @@
-Renaming a feature to itself causes an infinite loop.
-Still not fixed in prerelease 92.12.08.
-Still not fixed in prerelease 93.02.17.

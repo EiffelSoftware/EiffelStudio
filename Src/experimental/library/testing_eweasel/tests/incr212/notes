@@ -1,7 +1,0 @@
-After initial compilation, an external routine which is "C inline" has
-the order of its formal arguments changed.  When changes are melted,
-system execution produces the wrong output (same output as before).
-Looks like the compiler needs to freeze when any changes are made to
-the list of formal argument names.
-
-Discovered in release 5.4.0515.

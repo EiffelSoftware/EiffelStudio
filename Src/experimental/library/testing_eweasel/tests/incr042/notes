@@ -1,8 +1,0 @@
-A class with a VEEN violation in the invariant is compiled and the
-compiler detects the violation.  Then the invariant assertion is
-deleted and the compilation completes fine.  But when the same invalid
-assertion is added back into the invariant and the system is
-recompiled, an exception trace results.
-
-Discovered in Prerelease 93.07.15.
-

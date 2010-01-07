@@ -1,7 +1,0 @@
-An Ace file that specifies a long system name (512 characters) causes
-the compiler to die after generation of auxiliary files with "file
-name too long".  If the system is melted instead, the compiler does
-not die.
-
-Discovered in Release 5.0.015.
-

@@ -1,5 +1,0 @@
-Last exception is not changed by a call to a routine without rescue clause
-that completed normally. However, it was changed by a call to a routine
-with rescue clause that also completed normally.
-
-Discovered in release 5.6.0503 for C code generation.

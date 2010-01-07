@@ -1,7 +1,0 @@
-A system which calls malloc, free and str_blank and also calls
-routines allocate_tiny, full_collect and full_coalesce in class MEMORY
-compiles fine.  Executing the system results in an exception trace
-while garbage collecting.
-
-Discovered in Prerelease 93.07.15.
-

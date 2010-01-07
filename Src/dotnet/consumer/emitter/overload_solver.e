@@ -334,6 +334,7 @@ feature {NONE} -- Internal Statur Setting
 				l_len := get_prefix.length
 				if l_dn_name.length > l_len and then {SYSTEM_STRING}.compare (get_prefix, l_dn_name.substring (0, l_len), True) = 0 then
 					l_dn_name := l_dn_name.substring (l_len)
+					check l_dn_name_attached: l_dn_name /= Void end
 				end
 			end
 			name := l_dn_name

@@ -157,9 +157,10 @@ feature {NONE} -- Usage
 			if
 				attached ({EMITTER}).to_cil.assembly as l_assembly and then
 				attached l_assembly.get_name as l_ass_name and then
-				attached l_ass_name.version as l_version
+				attached l_ass_name.version as l_version and then
+				attached l_version.to_string as l_version_string
 			then
-				Result := l_version.to_string
+				Result := l_version_string
 			else
 				create Result.make_from_string ("0.0.0.0")
 			end

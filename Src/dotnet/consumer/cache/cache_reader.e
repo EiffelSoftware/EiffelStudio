@@ -85,8 +85,9 @@ feature -- Access
 				l_assembly := l_consumed_assemblies.item
 				if l_path = Void then
 					l_path := l_assembly.format_path (a_path)
-					l_path := {PATH}.get_full_path (l_path)
-					check l_path_attached: l_path /= Void end
+					if attached {PATH}.get_full_path (l_path) as l_full_path then
+						l_path := l_full_path
+					end
 				end
 				if l_assembly.has_same_ready_formatted_path (l_path) then
 					Result := l_assembly
@@ -382,8 +383,8 @@ feature {NONE} -- Implementation
 			l_ca: detachable CONSUMED_ASSEMBLY
 		do
 			l_ca := consumed_assembly_from_path (assembly_location (a_type))
-			if l_ca /= Void then
-				Result := type_position_from_type_name (l_ca, a_type.full_name)
+			if l_ca /= Void and then attached a_type.full_name as l_type_name then
+				Result := type_position_from_type_name (l_ca, l_type_name)
 			else
 				Result := -1
 			end

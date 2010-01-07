@@ -3,8 +3,8 @@
 	<target name="consumer_library">
 		<version major="6" minor="4" release="7" build="7751"/>
 		<file_rule>
-			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
 		</file_rule>
 		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.MetadataConsumer">
 			<assertions/>
@@ -14,6 +14,7 @@
 		<setting name="dead_code_removal" value="true"/>
 		<setting name="dotnet_naming_convention" value="false"/>
 		<setting name="executable_name" value="EiffelSoftware.MetadataConsumer"/>
+		<setting name="line_generation" value="true"/>
 		<setting name="msil_assembly_compatibility" value="None"/>
 		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<setting name="msil_generation" value="true"/>
@@ -42,9 +43,9 @@
 				<dotnet value="true"/>
 			</condition>
 			<file_rule>
-				<exclude>/interop$</exclude>
-				<exclude>/resources$</exclude>
 				<exclude>main</exclude>
+				<exclude>/resources$</exclude>
+				<exclude>/interop$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="consumer_classic" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
@@ -52,19 +53,19 @@
 				<dotnet value="false"/>
 			</condition>
 			<file_rule>
-				<exclude>/interop$</exclude>
 				<exclude>/emitter$</exclude>
-				<exclude>/cache$</exclude>
+				<exclude>/support/notifier$</exclude>
 				<exclude>/resources$</exclude>
 				<exclude>/support/errors$</exclude>
-				<exclude>/support/helpers$</exclude>
+				<exclude>/interop$</exclude>
+				<exclude>/cache$</exclude>
 				<exclude>/support/interop$</exclude>
-				<exclude>/support/notifier$</exclude>
 				<exclude>/main$</exclude>
+				<exclude>/support/helpers$</exclude>
 			</file_rule>
 			<file_rule>
-				<exclude>/.svn$</exclude>
 				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="interop" location="$EIFFEL_SRC\dotnet\consumer\support\interop\" recursive="true">

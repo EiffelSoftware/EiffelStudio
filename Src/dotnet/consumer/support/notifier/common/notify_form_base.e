@@ -72,7 +72,9 @@ feature -- Status Setting
 		require
 			a_message_attached: a_message /= Void
 		do
-			notify_info ({SYSTEM_STRING}.format ("Consuming assembly: {0}", a_message.assembly_path))
+			if attached {SYSTEM_STRING}.format ("Consuming assembly: {0}", a_message.assembly_path) as l_msg then
+				notify_info (l_msg)
+			end
 		ensure
 			last_notification_set: last_notification ~ old notify_string.to_cil
 		end

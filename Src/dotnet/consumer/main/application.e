@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			l_cache_writer: CACHE_WRITER
 			l_writer: like writer
 			l_error: BOOLEAN
+			l_domain: detachable APP_DOMAIN
 			l_receiver: detachable SYSTEM_OBJECT
 		do
 			if a_parser.use_specified_cache then
@@ -68,10 +69,12 @@ feature {NONE} -- Initialization
 
 			l_writer := writer
 
-			l_writer.put_string ("Using runtime directory: ")
-			l_writer.put_string ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
-			l_writer.new_line
-			l_writer.new_line
+			if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
+				l_writer.put_string ("Using runtime directory: ")
+				l_writer.put_string (l_runtime_dir)
+				l_writer.new_line
+				l_writer.new_line
+			end
 
 			if a_parser.add_assemblies then
 				l_assemblies := a_parser.assemblies
@@ -80,7 +83,9 @@ feature {NONE} -- Initialization
 				l_info_only := a_parser.add_information_only
 
 				create l_resolver.make (l_assemblies)
-				l_resolver.add_resolve_path ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
+				if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
+					l_resolver.add_resolve_path (l_runtime_dir)
+				end
 				if not l_references.is_empty then
 					l_references.do_all (agent (a_resolver: AR_RESOLVER; a_path: STRING)
 						require
@@ -91,7 +96,9 @@ feature {NONE} -- Initialization
 							a_resolver.add_resolve_path (a_path)
 						end (l_resolver, ?))
 				end
-				resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+				l_domain := {APP_DOMAIN}.current_domain
+				check domain_attached: l_domain /= Void end
+				resolve_subscriber.subscribe (l_domain, l_resolver)
 				assembly_loader.set_resolver (l_resolver)
 
 					-- Preload assemblies
@@ -119,7 +126,7 @@ feature {NONE} -- Initialization
 					l_assemblies.forth
 				end
 				assembly_loader.set_resolver (Void)
-				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
+				resolve_subscriber.unsubscribe (l_domain, l_resolver)
 			elseif a_parser.remove_assemblies then
 				l_assemblies := a_parser.assemblies
 

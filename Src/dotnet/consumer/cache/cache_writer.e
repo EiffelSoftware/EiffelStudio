@@ -115,7 +115,7 @@ feature -- Basic Operations
 			l_info: detachable CACHE_INFO
 			l_assembly_path: STRING
 			l_assembly_info_updated: BOOLEAN
-			l_lower_path: like a_path
+			l_lower_path: detachable SYSTEM_STRING
 			l_reader: like cache_reader
 			l_reason: SYSTEM_STRING
 			retried: BOOLEAN
@@ -140,12 +140,16 @@ feature -- Basic Operations
 					end
 				end
 
-				l_assembly := assembly_loader.load_from_gac_or_path (l_lower_path)
-				if l_assembly /= Void then
+				if l_lower_path /= Void then
+					l_assembly := assembly_loader.load_from_gac_or_path (l_lower_path)
+				else
+					l_lower_path := a_path.as_lower
+				end
+				if l_assembly /= Void and then attached l_assembly.location as l_location then
 					create l_consumer.make (Current)
 					a_processed.extend (l_lower_path)
 
-					l_assembly_path := l_assembly.location
+					l_assembly_path := l_location
 					l_assembly_path.to_lower
 
 					if l_ca = Void and l_reader.is_initialized then
@@ -291,9 +295,11 @@ feature -- Basic Operations
 								l_name := l_names.item (i)
 								if l_name /= Void then
 									l_assembly := assembly_loader.load (l_name)
-									if l_assembly /= Void and then not a_processed.has (l_assembly.location) and then not (l_reader.is_assembly_in_cache (l_assembly.location, True) or else cache_reader.is_assembly_stale (l_assembly.location)) then
+									if
+										l_assembly /= Void and then attached l_assembly.location as l_ass_location and then
+										not a_processed.has (l_ass_location) and then not (l_reader.is_assembly_in_cache (l_ass_location, True) or else cache_reader.is_assembly_stale (l_ass_location)) then
 											-- Adds only lookup info
-										l_assembly_path := l_assembly.location
+										l_assembly_path := l_ass_location
 										add_assembly_ex (l_assembly_path,
 											a_info_only or else
 												(a_other_assemblies = Void or else
@@ -306,8 +312,11 @@ feature -- Basic Operations
 							end
 						end
 						if l_assembly_info_updated and l_ca /= Void then
-							if attached notifier as l_notifier then
-								l_notifier.notify_info ({SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.absolute_consume_path))
+							if
+								attached notifier as l_notifier and then
+								attached {SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.absolute_consume_path) as l_msg
+							then
+								l_notifier.notify_info (l_msg)
 							end
 							update_assembly_mappings (l_ca)
 							update_client_assembly_mappings (l_ca)
@@ -321,10 +330,10 @@ feature -- Basic Operations
 			else
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to consume assembly '{0}'.", a_path))
 
-				if l_name /= Void then
-					set_error (Assembly_not_found_error, l_name.to_string)
-				elseif l_assembly /= Void then
-					set_error (Assembly_dependancies_not_found_error, l_assembly.full_name)
+				if l_name /= Void and then attached l_name.to_string as l_error_msg then
+					set_error (Assembly_not_found_error, l_error_msg)
+				elseif l_assembly /= Void and then attached l_assembly.full_name as l_ass_full_name then
+					set_error (Assembly_dependancies_not_found_error, l_ass_full_name)
 				else
 					set_error (Assembly_not_found_error, a_path)
 				end
@@ -543,23 +552,27 @@ feature -- Basic Operations
 			valid_path: not a_path.is_empty
 			valid_assembly_path: assembly_loader.load_from_gac_or_path (a_path) /= Void
 		local
-			l_id: STRING
-			l_path: like a_path
+			l_id_upper: STRING
+			l_path: detachable SYSTEM_STRING
 			retried: BOOLEAN
 		do
 			if not retried then
 				guard.lock
 				l_path := {PATH}.get_full_path (a_path)
-				if cache_reader.is_initialized then
-					Result := cache_reader.consumed_assembly_from_path (l_path)
-				end
-				if Result = Void then
-					l_id := {GUID}.new_guid.to_string
-					l_id.to_upper
-					Result := create_consumed_assembly_from_path (l_id, l_path)
-					if Result /= Void and attached cache_reader.info as l_info then
-						l_info.add_assembly (Result)
-						update_info (l_info)
+				if l_path /= Void then
+					if cache_reader.is_initialized then
+						Result := cache_reader.consumed_assembly_from_path (l_path)
+					end
+					if Result = Void then
+						if attached {GUID}.new_guid.to_string as l_id then
+							l_id_upper := l_id
+							l_id_upper.to_upper
+							Result := create_consumed_assembly_from_path (l_id_upper, l_path)
+							if Result /= Void and attached cache_reader.info as l_info then
+								l_info.add_assembly (Result)
+								update_info (l_info)
+							end
+						end
 					end
 				end
 			end
@@ -670,7 +683,7 @@ feature {NONE} -- Implementation
 			folder_name: STRING
 		do
 			l_assembly := assembly_loader.load_from_gac_or_path (a_path)
-			if l_assembly /= Void then
+			if l_assembly /= Void and then attached l_assembly.location as l_location then
 				l_name := l_assembly.get_name
 				check l_name_attached: l_name /= Void end
 				l_key := public_key_token_from_array (l_name.get_public_key_token)
@@ -692,7 +705,7 @@ feature {NONE} -- Implementation
 					folder_name.append (a_id)
 				end
 
-				create Result.make (a_id, folder_name, l_ass_name, l_version, l_culture, l_key, a_path, l_assembly.location, l_is_in_gac)
+				create Result.make (a_id, folder_name, l_ass_name, l_version, l_culture, l_key, a_path, l_location, l_is_in_gac)
 			end
 		ensure
 			non_void_result: Result /= Void

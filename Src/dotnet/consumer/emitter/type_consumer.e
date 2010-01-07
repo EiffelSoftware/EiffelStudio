@@ -1201,6 +1201,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			l_params: detachable NATIVE_ARRAY [detachable PARAMETER_INFO]
 			l_param: detachable PARAMETER_INFO
 			l_res: detachable STRING_BUILDER
+			l_result: detachable SYSTEM_STRING
 			l_count, i: INTEGER
 		do
 			create l_res.make (30)
@@ -1229,7 +1230,9 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			end
 			l_res := l_res.append (')')
 			check l_res_attached: l_res /= Void end
-			Result := l_res.to_string
+			l_result := l_res.to_string
+			check l_result_attached: l_result /= Void end
+			Result := l_result
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -1338,19 +1341,22 @@ feature {NONE} -- Added features for ENUM types.
 	attribute_setter_feature (a_field: FIELD_INFO; a_field_name: STRING): CONSUMED_PROCEDURE
 			-- attribute setter feature.
 		require
-			non_void_field: a_field /= Void
+			non_void_field: a_field /= Void and then a_field.name /= Void
 			public_field: is_public_field (a_field)
 			valid_field_name: a_field_name /= Void and then not a_field_name.is_empty
 		local
 			l_eiffel_name: STRING
 			l_arg: CONSUMED_ARGUMENT
 			l_type: detachable SYSTEM_TYPE
+			l_dotnet_field_name: detachable SYSTEM_STRING
 		do
 			l_eiffel_name := "set_" + a_field_name + "_field"
 			l_type := a_field.field_type
 			check l_type_attached: l_type /= Void end
 			create l_arg.make ("a_value", "a_value", referenced_type_from_type (l_type))
-			create Result.make_attribute_setter (l_eiffel_name, a_field.name,
+			l_dotnet_field_name := a_field.name
+			check l_dotnet_field_name_attached: l_dotnet_field_name /= Void end
+			create Result.make_attribute_setter (l_eiffel_name, l_dotnet_field_name,
 												l_arg,
 												internal_referenced_type,
 												a_field.is_static)

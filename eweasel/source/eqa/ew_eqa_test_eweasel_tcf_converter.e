@@ -178,36 +178,105 @@ feature {NONE} -- Implementation
 			write_content_to_file (l_converted, a_output_class_name + ".e")
 		end
 
+	test_description: detachable STRING
+			-- Test description
+
+	test_name: detachable STRING
+			-- Test name
+
+	digits_of (a_routine_name: STRING): STRING
+			-- Digits of `a_routine_name'
+		require
+			not_void: a_routine_name /= Void
+		do
+			from
+				Result := a_routine_name.twin
+			until
+				Result.is_integer or Result.count < 2
+			loop
+				Result := Result.substring (2, Result.count)
+			end
+		ensure
+			not_void: Result /= Void
+			not_same_instance: Result /= a_routine_name
+		end
+
 	convert_one_tcf (a_input_file: STRING; a_routine_name: STRING): STRING
 			-- Convert instructions in `a_input_file' to correspond Eiffel codes
 		require
 			not_void: a_input_file /= Void
 			not_void: a_routine_name /= Void
+			cleared: test_description = Void and test_name = Void
 		local
 			l_instructions: LIST [EW_TEST_INSTRUCTION]
+			l_temp_string: like convert_instruction_to_one_line
+			l_index: INTEGER
+			l_digits, l_final_arguments: STRING
+			l_list: DYNAMIC_LIST [STRING]
 		do
 			create control_file.make_for_convertion
 			l_instructions := control_file.parse_file (a_input_file)
 
 			from
 				l_instructions.start
-				Result := "%N%Ttest_" + a_routine_name + " is"
+				l_digits := digits_of (a_routine_name)
+				Result := "%N%Ttest_" + l_digits
+
 				Result.append ("%N%T%T%T-- Test " + a_routine_name)
+				-- Insert test name and test description here
+				l_index := Result.count
 				Result.append ("%N%T%Tdo")
 
+				catalog_converter.clear_test_arguments
 				catalog_converter.append_related_setup (a_routine_name, Result)
 
 			until
 				l_instructions.after
 			loop
-				Result.append ("%N%T%T%T" + convert_instruction_to_one_line (l_instructions.item))
+				l_temp_string := convert_instruction_to_one_line (l_instructions.item)
+				if l_temp_string /= Void and then not l_temp_string.is_empty then
+					Result.append ("%N%T%T%T" + l_temp_string)
+				end
 
 				l_instructions.forth
 			end
 
 			Result.append ("%N%T%Tend")
+
+			l_index := l_index + 1
+
+			if attached catalog_converter.test_arguments as l_arguments and then not l_arguments.is_empty then
+				l_arguments.right_adjust
+				l_list := broken_into_words (l_arguments)
+				from
+					create l_final_arguments.make_empty
+					l_list.start
+				until
+					l_list.after
+				loop
+					l_final_arguments.append ("eweasel/" + l_list.item)
+					if l_list.index /= l_list.count then
+						l_final_arguments.append (", ")
+					end
+					l_list.forth
+				end
+				Result.insert_string ("%N%T%T%Ttesting: %"" + l_final_arguments + "%"", l_index)
+				Result.insert_string ("%N%T%Tnote", l_index)
+			end
+
+			if attached test_description as l_description then
+				Result.insert_string ("%N%T%T%T-- " + l_description, l_index)
+				test_description := Void
+			end
+
+			if attached test_name as l_name then
+				Result.insert_string ("%N%T%T%T-- " + l_name, l_index)
+				test_name := Void
+			end
+
 		ensure
 			not_void: Result /= Void
+			cleared: test_description = Void and test_name = Void
 		end
 
 	create_file (a_file_name: FILE_NAME): IO_MEDIUM
@@ -281,7 +350,7 @@ feature {NONE} -- Implementation
 			Result.set_file_name ("all_eweasel_test_case_template.e")
 		end
 
-	convert_instruction_to_one_line (a_instruction: EW_TEST_INSTRUCTION): STRING
+	convert_instruction_to_one_line (a_instruction: EW_TEST_INSTRUCTION): detachable STRING
 			-- Convert one testing instruction
 		require
 			not_void: a_instruction /= Void
@@ -290,6 +359,7 @@ feature {NONE} -- Implementation
 			l_arg: STRING
 			l_list: LIST [STRING]
 			l_array: STRING
+			l_instruction: EW_TEST_INSTRUCTION
 		do
 			l_keyword := a_instruction.command
 
@@ -501,13 +571,23 @@ feature {NONE} -- Implementation
 					l_arg.left_adjust
 					decorate_quote (l_arg, True)
 
-					Result := "if_not (%"" + l_list.i_th (2) + "%", %"" + l_arg + "%")"
+					Result := "if not has_env (%"" + l_list.i_th (2) + "%") then"
+					-- Recursive convert
+					l_instruction := one_line_to_instruction (l_arg)
+					check not_void: attached l_instruction end
+					Result.append ("%N" + convert_instruction_to_one_line (l_instruction))
+					Result.append ("%N%T%T%Tend")
 				else
 					l_arg.remove_substring (1, l_list.i_th (1).count + 1)
 					l_arg.left_adjust
 					decorate_quote (l_arg, True)
 
-					Result := "if_ (%"" + l_list.i_th (1) + "%", %"" + l_arg + "%")"
+					Result := "if has_env (%"" + l_list.i_th (1) + "%") then"
+					-- Recursive convert
+					l_instruction := one_line_to_instruction (l_arg)
+					check not_void: attached l_instruction end
+					Result.append ("%N" + convert_instruction_to_one_line (l_instruction))
+					Result.append ("%N%T%T%Tend")
 				end
 			elseif l_keyword.is_equal (include_keyword) then
 				l_arg := a_instruction.orig_arguments
@@ -534,13 +614,15 @@ feature {NONE} -- Implementation
 
 				decorate_quote (l_arg, True)
 
-				Result := "test_description (%"" + l_arg + "%")"
+				check test_description = Void end
+				test_description := l_arg
 			elseif l_keyword.is_equal (test_end_keyword) then
-				Result := "test_end"
+				-- Test end keyword ignored
 			elseif l_keyword.is_equal (test_name_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
-				Result := "test_name (%"" + l_arg + "%")"
+				check test_name = Void end
+				test_name := l_arg
 			elseif l_keyword.is_equal (undefine_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
@@ -550,8 +632,79 @@ feature {NONE} -- Implementation
 			else
 				print ("%NError! Eweasel tcf converter instruction not found!")
 			end
-		ensure
-			not_void: Result /= Void
+		end
+
+	one_line_to_instruction (a_line: STRING): detachable EW_TEST_INSTRUCTION
+			-- Convert `a_line' to {EW_TEST_INSTRUCTION}
+			-- Adapted from {EW_IF_INST}.inst_initialize
+		require
+			not_void: attached a_line
+		local
+			l_args: LIST [STRING]
+			l_count, l_pos: INTEGER
+			l_val, l_controlled_inst, l_cmd, l_table_cmd, l_rest, l_variable: STRING
+			l_init_ok, l_positive: BOOLEAN
+			l_failure_explanation: STRING
+			l_factory: EW_EQA_TEST_FACTORY
+		do
+			l_args := broken_into_words (a_line)
+			l_count := l_args.count
+			if l_count < 1 then
+				l_failure_explanation := "argument count must be at least 1"
+				l_init_ok := False
+			else
+				if l_args.first.as_lower.is_equal (Not_keyword) then
+					l_positive := False
+					if l_count < 2 then
+						l_failure_explanation := "argument count for instruction with %"" + Not_keyword + "%" must be at least 2"
+						l_init_ok := False
+					else
+						l_pos := 2
+						l_init_ok := True
+					end
+				else
+					l_positive := True
+					l_pos := 1
+					l_init_ok := True
+				end
+			end
+			if l_init_ok then	-- OK so far
+				l_variable := l_args.i_th (l_pos)
+				create l_factory
+				if attached l_factory.environment.value (l_variable) as l_attached_val then
+					l_val := l_attached_val
+				else
+					l_val := l_variable
+				end
+				if l_positive and l_val /= Void or not l_positive and l_val = Void then
+					-- Condition satisified
+					l_controlled_inst := a_line
+					l_pos :=  first_white_position (l_controlled_inst)
+
+					if l_pos <= 0 then
+						l_cmd := l_controlled_inst
+						create l_rest.make (0)
+					else
+						l_cmd := l_controlled_inst.substring (1, l_pos - 1)
+						l_rest := l_controlled_inst.substring (l_pos + 1, l_controlled_inst.count)
+					end
+					l_cmd.to_lower
+					l_table_cmd := l_cmd
+					if not control_file.command_table.has (l_cmd) then
+						l_table_cmd := Unknown_keyword
+					end
+					check
+						known_command: control_file.command_table.has (l_table_cmd)
+					end
+					Result := control_file.command_table.item (l_table_cmd).twin
+					Result.initialize_for_conditional (control_file, l_cmd, l_rest)
+					l_init_ok := Result.init_ok
+					-- FIXME: add text about "if"
+					l_failure_explanation := Result.failure_explanation
+				else
+					Result := Void
+				end
+			end
 		end
 
 	decorate_quote (a_string: STRING; a_decorate_head_and_tail: BOOLEAN)
@@ -576,7 +729,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-note
+;note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

@@ -28,22 +28,32 @@ feature -- Command
 
 	append_related_setup (a_folder_name: STRING; a_content_to_append: STRING)
 			-- Append related setup line to `a_content_to_append'
+			-- Set `test_arguments' if possible
 		require
 			ready: is_ready
 			not_void: a_folder_name /= Void
 			not_void: a_content_to_append /= Void
+			cleared: test_arguments = Void
 		local
 			l_item: TUPLE [a_description, a_argument: STRING]
 		do
 			l_item := catalog_file.all_test_instructions.item (a_folder_name)
 			if l_item /= Void then
-				a_content_to_append.append ("%N%T%T%Ttest_setup.setup_one_test_case (")
-				a_content_to_append.append ("%"" + l_item.a_description + "%", ")
-				a_content_to_append.append ("%"" + a_folder_name + "%", ")
-				a_content_to_append.append ("%"" + l_item.a_argument + "%")")
+				a_content_to_append.append ("%N%T%T%Tinit (")
+				a_content_to_append.append ("%"" + a_folder_name + "%")")
+
+				test_arguments := l_item.a_argument
 			else
 				a_content_to_append.append ("%N%T%T%T--not found in catalog file")
 			end
+		end
+
+	clear_test_arguments
+			-- Set `test_arguments' with void
+		do
+			test_arguments := Void
+		ensure
+			cleared: test_arguments = Void
 		end
 
 feature -- Query
@@ -61,6 +71,9 @@ feature -- Query
 		do
 			Result := catalog_file.all_test_instructions.has (a_test_folder_name)
 		end
+
+	test_arguments: detachable STRING
+			-- Test arguments if available
 
 feature {NONE} -- Implementation
 

@@ -356,7 +356,7 @@ feature -- Command
 		end
 
 	write_all_converted_classes_to_file (a_output_file: FILE_NAME)
-			--
+			-- Write all cnverted classes to `a_output_file'
 		require
 			a_output_file_not_void: a_output_file /= Void
 			all_converted_classes_not_void: all_converted_classes /= Void

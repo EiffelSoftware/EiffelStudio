@@ -250,7 +250,7 @@ feature {EW_TEST_INSTRUCTION} -- Modification
 			errors.add_list (list);
 		end;
 
-feature {EW_TEST_INSTRUCTION} -- State
+feature {EW_TEST_INSTRUCTION, EW_EQA_TEST_EWEASEL_TCF_CONVERTER} -- State
 
 	command_table: HASH_TABLE [EW_TEST_INSTRUCTION, STRING];
 			-- Table for translating commands to test
@@ -280,7 +280,7 @@ feature {EW_TEST_INSTRUCTION} -- State
 feature {NONE} -- State
 
 	test_end_required: BOOLEAN;
-			-- Is it an error if the file has no test end 
+			-- Is it an error if the file has no test end
 			-- instruction?
 
 feature {EW_TEST_INSTRUCTION} -- State

@@ -71,27 +71,28 @@ feature {NONE} -- Initialization: widgets
 		do
 			create test_tree.make (develop_window, Current)
 			l_tag_tree := test_tree.tag_tree
-
-			split_area.set_first (test_tree.widget)
 			register_action (l_tag_tree.node_selected_actions, agent on_selection_change (?, True))
 			register_action (l_tag_tree.node_deselected_actions, agent on_selection_change (?, False))
+			split_area.set_first (test_tree.widget)
 		end
 
 	build_execution_widget
 			-- Create `notebook' and add permament tabs.
 		local
-			l_execution: ES_TEST_RECORDS_TAB
-			l_statistics: ES_TEST_STATISTICS_WIDGET
 			l_box: EV_VERTICAL_BOX
+			l_statistics: ES_TEST_STATISTICS_WIDGET
+			l_execution: ES_TEST_RECORDS_TAB
 		do
 			create l_box
+
 			create l_statistics.make (Current)
 			l_box.extend (l_statistics.widget)
 			l_box.disable_item_expand (l_statistics.widget)
-			split_area.set_second (l_box)
 
 			create l_execution.make (Current)
 			l_box.extend (l_execution.widget)
+
+			split_area.set_second (l_box)
 			auto_recycle (l_execution)
 		end
 

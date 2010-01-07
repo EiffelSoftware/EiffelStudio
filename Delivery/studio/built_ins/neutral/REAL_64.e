@@ -14,6 +14,13 @@ feature -- Comparison
 			Result := Precursor (other)
 		end
 
+feature -- Status report
+
+	is_nan: BOOLEAN
+		do
+			Result := Precursor
+		end
+
 feature -- Conversion
 
 	truncated_to_integer: INTEGER_32 is

@@ -63,7 +63,7 @@ feature {NONE} -- Constants
 
 	date_format: STRING = "[0]mm/[0]dd/yyyy"
 
-	time_format: STRING = "Today, [0]hh:[0]mi"
+	time_format: STRING = "[0]hh:[0]mi"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

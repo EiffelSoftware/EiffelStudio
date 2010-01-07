@@ -21,7 +21,7 @@ feature -- Access
 		require
 			non_void_type: t /= Void
 		local
-			l_name: STRING
+			l_name: detachable SYSTEM_STRING
 			am: like assembly_mapping
 			l_type: detachable SYSTEM_TYPE
 			l_assembly: detachable ASSEMBLY
@@ -41,6 +41,7 @@ feature -- Access
 				am.search (l_full_name)
 				check found: am.found end
 				l_name := t.full_name
+				check l_name_attached: l_name /= Void end
 				if t.is_array then
 					l_type := t.get_element_type
 					check l_type_attached: l_type /= Void end

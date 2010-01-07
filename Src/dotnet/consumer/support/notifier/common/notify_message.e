@@ -80,8 +80,8 @@ feature -- Access
 			l_functions: like functions
 			l_pattern: SYSTEM_DLL_REGEX
 			l_match: detachable SYSTEM_DLL_MATCH
-			l_var: detachable STRING
-			l_func: detachable STRING
+			l_var: detachable SYSTEM_STRING
+			l_func: detachable SYSTEM_STRING
 			l_value: STRING
 			l_count: INTEGER
 			i: INTEGER
@@ -112,13 +112,9 @@ feature -- Access
 									l_func := l_second_group.value
 									if l_func /= Void and then l_functions.has (l_func) then
 										l_value := evaluate_function (l_func)
-									else
-										l_value := l_var
+										Result.replace_substring_all (create {STRING_8}.make_from_cil (l_var), l_value)
 									end
-								else
-									l_value := l_var
 								end
-								Result.replace_substring_all (l_var, l_value)
 							end
 						end
 						i := i + 1
@@ -144,6 +140,7 @@ feature {NONE} -- Evaluation
 			l_names: LIST [STRING]
 			l_ns: STRING
 			l_func: STRING
+			l_result: detachable SYSTEM_STRING
 		do
 			l_names := a_name.as_lower.split (namespace_delimiter)
 			if l_names.count = 2 then
@@ -151,54 +148,46 @@ feature {NONE} -- Evaluation
 				l_func := l_names.i_th (2)
 				if module_namespace.same_string (l_ns) then
 					if l_func.same_string (name_function) then
-						Result := current_assembly_name.name
+						l_result := current_assembly_name.name
 					elseif l_func.same_string (version_function) and then attached current_assembly_name.version as l_version then
-						Result := l_version.to_string
+						l_result := l_version.to_string
 					elseif l_func.same_string (culture_function) and then attached current_assembly_name.culture_info as l_culture then
-						Result := l_culture.to_string
+						l_result := l_culture.to_string
 					elseif l_func.same_string (key_function) then
-						Result := current_assembly_name.name
+						l_result := current_assembly_name.name
 					elseif l_func.same_string (full_name_function) then
-						Result := current_assembly_name.full_name
+						l_result := current_assembly_name.full_name
 					elseif l_func.same_string (path_function) then
-						Result := current_assembly.location
+						l_result := current_assembly.location
 					elseif l_func.same_string (clr_function) and then attached {ENVIRONMENT}.version as l_version then
-						Result := l_version.to_string
-					else
-						create Result.make_empty
-						check False end
+						l_result := l_version.to_string
 					end
 				elseif assembly_namespace.same_string (l_ns) then
 					if l_func.same_string (name_function) then
-						Result := assembly.name
+						l_result := assembly.name
 					elseif l_func.same_string (version_function) then
-						Result := assembly.version
+						l_result := assembly.version
 					elseif l_func.same_string (culture_function) then
-						Result := assembly.culture
+						l_result := assembly.culture
 					elseif l_func.same_string (key_function) then
-						Result := assembly.key
+						l_result := assembly.key
 					elseif l_func.same_string (full_name_function) then
-						Result := {SYSTEM_STRING}.format (({SYSTEM_STRING})["{0}, Ver={1}, Cul={2}, PKT={3}"], ({NATIVE_ARRAY [detachable SYSTEM_STRING]})[<<({SYSTEM_STRING})[assembly.name], ({SYSTEM_STRING})[assembly.version], ({SYSTEM_STRING})[assembly.culture], ({SYSTEM_STRING})[assembly.key]>>])
+						l_result := {SYSTEM_STRING}.format (({SYSTEM_STRING})["{0}, Ver={1}, Cul={2}, PKT={3}"], ({NATIVE_ARRAY [detachable SYSTEM_STRING]})[<<({SYSTEM_STRING})[assembly.name], ({SYSTEM_STRING})[assembly.version], ({SYSTEM_STRING})[assembly.culture], ({SYSTEM_STRING})[assembly.key]>>])
 					elseif l_func.same_string (path_function) then
-						Result := assembly_path
-					else
-						create Result.make_empty
-						check False end
+						l_result := assembly_path
 					end
 				elseif consume_namespace.same_string (l_ns) then
 					if l_func.same_string (reason_function) then
-						Result := reason
+						l_result := reason
 					elseif l_func.same_string (cache_id_function) then
-						Result := assembly.folder_name
+						l_result := assembly.folder_name
 					elseif l_func.same_string (cache_path_function) then
-						Result := cache_path
-					else
-						create Result.make_empty
-						check False end
+						l_result := cache_path
 					end
-				else
-					create Result.make_empty
 				end
+			end
+			if l_result /= Void then
+				Result := l_result
 			else
 				create Result.make_empty
 			end

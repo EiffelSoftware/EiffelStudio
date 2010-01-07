@@ -100,15 +100,17 @@ feature -- Basic Oprtations
 			last_error_message := ""
 
 			l_assembly := assembly_loader.load_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
-			if l_assembly /= Void then
+			if l_assembly /= Void and then attached l_assembly.location as l_location then
 				create l_resolver.make (create {ARRAYED_LIST [STRING]}.make (0))
-				l_resolver.add_resolve_path ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
-				l_resolver.add_resolve_path_from_file_name (l_assembly.location)
+				if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
+					l_resolver.add_resolve_path (l_runtime_dir)
+				end
+				l_resolver.add_resolve_path_from_file_name (l_location)
 				l_current_domain := {APP_DOMAIN}.current_domain
 				check l_current_domain_attached: l_current_domain /= Void end
 				resolve_subscriber.subscribe (l_current_domain, l_resolver)
 				assembly_loader.set_resolver (l_resolver)
-				cache_writer.add_assembly_ex (l_assembly.location, a_info_only, Void, create {ARRAYED_LIST [STRING]}.make (0))
+				cache_writer.add_assembly_ex (l_location, a_info_only, Void, create {ARRAYED_LIST [STRING]}.make (0))
 				assembly_loader.set_resolver (Void)
 				resolve_subscriber.unsubscribe (l_current_domain, l_resolver)
 			end
@@ -136,7 +138,9 @@ feature -- Basic Oprtations
 			l_paths.compare_objects
 
 			create l_files.make (30)
-			l_files.extend ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
+			if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
+				l_files.extend (l_runtime_dir)
+			end
 			l_files.append (l_paths)
 
 			if a_references /= Void then
@@ -204,14 +208,14 @@ feature -- Basic Oprtations
 			l_assembly: detachable ASSEMBLY
 		do
 			l_assembly := assembly_loader.load_from (a_path)
-			if l_assembly /= Void then
-				l_ca := cache_writer.consumed_assembly_from_path (l_assembly.location)
+			if l_assembly /= Void and then attached l_assembly.location as l_location then
+				l_ca := cache_writer.consumed_assembly_from_path (l_location)
 			end
 			if l_ca = Void then
 					-- Try load assembly from GAC
 				l_assembly := assembly_loader.load_from_gac_or_path (a_path)
-				if l_assembly /= Void then
-					l_ca := cache_writer.consumed_assembly_from_path (l_assembly.location)
+				if l_assembly /= Void and then attached l_assembly.location as l_location then
+					l_ca := cache_writer.consumed_assembly_from_path (l_location)
 				end
 			end
 			if l_ca /= Void then
@@ -248,8 +252,8 @@ feature -- Basic Oprtations
 			l_assembly: detachable ASSEMBLY
 		do
 			l_assembly := assembly_loader.load_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
-			if l_assembly /= Void then
-				Result := cache_writer.consumed_assembly_from_path (l_assembly.location)
+			if l_assembly /= Void and then attached l_assembly.location as l_location then
+				Result := cache_writer.consumed_assembly_from_path (l_location)
 			end
 		end
 

@@ -63,7 +63,7 @@ feature -- Basic Exportations
 		do
 			eac_path := a_path
 			create cr
-			cr.set_internal_eiffel_cache_path (eac_path)
+			cr.set_internal_eiffel_cache_path (a_path)
 
 			initialize
 			if not cr.is_initialized then

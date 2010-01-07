@@ -72,13 +72,15 @@ feature -- Basic Operations
 			reset_assembly_mapping
 			if
 				attached ass.get_referenced_assemblies as referenced_assemblies and then
-				attached cache_writer.consumed_assembly_from_path (ass.location) as ca
+				attached ass.location as l_ass_location and then
+				attached ass.full_name as l_ass_full_name and then
+				attached cache_writer.consumed_assembly_from_path (l_ass_location) as ca
 			then
 				count := referenced_assemblies.count
 				assembly_ids.wipe_out
 				last_index := 1
 				assembly_ids.extend (ca)
-				assembly_mapping.put (last_index, ass.full_name)
+				assembly_mapping.put (last_index, l_ass_full_name)
 				assembly_mapping.compare_objects
 				build_referenced_assemblies (ass, a_loader)
 				prepare_consumed_types (ass, a_info_only)
@@ -162,13 +164,15 @@ feature {NONE} -- Implementation
 				loop
 					if
 						attached referenced_assemblies.item (i - 1) as l_assembly_name and then
-						attached a_loader.load (l_assembly_name) as l_ref_ass
+						attached a_loader.load (l_assembly_name) as l_ref_ass and then
+						attached l_ref_ass.location as l_ref_ass_location and then
+						attached l_ref_ass.full_name as l_ref_ass_full_name
 					then
-						ca := cache_writer.consumed_assembly_from_path (l_ref_ass.location)
-						if ca /= Void and then not assembly_mapping.has (l_ref_ass.full_name) then
+						ca := cache_writer.consumed_assembly_from_path (l_ref_ass_location)
+						if ca /= Void and then not assembly_mapping.has (l_ref_ass_full_name) then
 							last_index := last_index + 1
 							assembly_ids.extend (ca)
-							assembly_mapping.put (last_index, l_ref_ass.full_name)
+							assembly_mapping.put (last_index, l_ref_ass_full_name)
 								-- add also referenced assemblies of assembly referenced.
 							build_referenced_assemblies (l_ref_ass, a_loader)
 						end

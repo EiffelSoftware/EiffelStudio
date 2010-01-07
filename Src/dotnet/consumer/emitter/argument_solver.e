@@ -39,15 +39,15 @@ feature -- Access
 			loop
 				p := params.item (i)
 				check p_attached: p /= Void end
-				if p.name = Void then
-					en := formatted_argument_name ("", i + 1)
-					dn := en.twin
-				else
-					dn := p.name
+				if attached p.name as l_arg_name then
+					dn := l_arg_name
 					en := formatted_argument_name (dn, i + 1)
 					if dn.is_empty then
 						dn := en.twin
 					end
+				else
+					en := formatted_argument_name ("", i + 1)
+					dn := en.twin
 				end
 				t := p.parameter_type
 				check t_attached: t /= Void end

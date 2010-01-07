@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 	build_widget_interface (a_widget: like create_widget)
 			-- <Precursor>
 		do
-			a_widget.set_padding (5)
-			a_widget.set_border_width (2)
+			a_widget.set_padding (2)
+			a_widget.set_border_width (1)
 			build_label_bar (a_widget)
 			build_status_bar (a_widget)
 		end
@@ -226,32 +226,28 @@ feature {NONE} -- Implementation
 			-- Called when `status_bar' must be redrawn.
 		local
 			l_bar: like status_bar
-			l_total, l_test_count: NATURAL
-			l_position, l_width: INTEGER
+			l_test_count: NATURAL
+			l_position, l_total, i, l_width: INTEGER
+			l_colors: ARRAY [EV_COLOR]
+			l_widths: ARRAY [NATURAL]
 		do
 			l_bar := status_bar
 			l_test_count := test_count
 			if l_test_count > 0 then
-				l_total := l_bar.width.as_natural_32
-
-				l_width := ((pass_count * l_total) // l_test_count).as_integer_32
-				l_bar.set_foreground_color (pass_color)
-				l_bar.fill_rectangle (l_position, 0, l_position + l_width, l_bar.height)
-				l_position := l_position + l_width
-
-				l_width := ((unresolved_count * l_total) // l_test_count).as_integer_32
-				l_bar.set_foreground_color (unresolved_color)
-				l_bar.fill_rectangle (l_position, 0, l_position + l_width, l_bar.height)
-				l_position := l_position + l_width
-
-				l_width := ((fail_count * l_total) // l_test_count).as_integer_32
-				l_bar.set_foreground_color (fail_color)
-				l_bar.fill_rectangle (l_position, 0, l_position + l_width, l_bar.height)
-				l_position := l_position + l_width
-
-				l_width := (((test_count - executed_count) * l_total) // l_test_count).as_integer_32
-				l_bar.set_foreground_color (untested_color)
-				l_bar.fill_rectangle (l_position, 0, l_position + l_width, l_bar.height)
+				l_colors := << pass_color, unresolved_color, fail_color, untested_color >>
+				l_widths := << pass_count, unresolved_count, fail_count, l_test_count - executed_count >>
+				l_total := l_bar.width
+				from
+					i := l_widths.lower
+				until
+					i > l_widths.upper
+				loop
+					l_width := ((l_widths.item (i) / l_test_count) * l_total).rounded
+					l_bar.set_foreground_color (l_colors.item (i))
+					l_bar.fill_rectangle (l_position, 0, l_position + l_width, l_bar.height)
+					l_position := l_position + l_width
+					i := i + 1
+				end
 			else
 				l_bar.clear
 			end

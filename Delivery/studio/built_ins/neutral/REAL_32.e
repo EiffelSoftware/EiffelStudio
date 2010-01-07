@@ -20,6 +20,16 @@ feature -- Status report
 			Result := Precursor
 		end
 
+	is_negative_infinity: BOOLEAN
+		do
+			Result := Precursor
+		end
+
+	is_positive_infinity: BOOLEAN
+		do
+			Result := Precursor
+		end
+		
 feature -- Conversion
 
 	truncated_to_integer: INTEGER_32 is

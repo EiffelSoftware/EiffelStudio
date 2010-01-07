@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			maximum_y := Max_integer
 			is_snapping := True
 			is_moving := True
-			is_scaling := True
+			is_scaling := False
 			is_rotating := True
 			move_button := 1
 			scale_button := 3
@@ -359,7 +359,6 @@ feature {NONE} -- Events
 			-- User pressed pointer button on `Current'.
 		do
 			if attached world as l_world and then l_world.capture_figure = Void then
-
 				if (attached ev_application as l_ev_app and then not l_ev_app.ctrl_pressed) or else ev_application = Void then
 
 					if b = move_button and is_moving then

@@ -35,6 +35,64 @@ feature -- Access
 	last_created_file: detachable PLAIN_TEXT_FILE
 			-- File last created through `create_file_from_path'
 
+feature -- Command
+
+	delete_directory_tree (a_dir_name: STRING)
+			-- Try to delete the directory tree rooted at
+			-- `a_dir_name'.  Ignore any errors
+		require
+			directory_not_void: a_dir_name /= Void;
+		local
+			l_dir: DIRECTORY
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				create l_dir.make (a_dir_name)
+				l_dir.recursive_delete
+			end
+		rescue
+			l_retried := True
+			retry
+		end
+
+	copy_file (a_src: FILE; a_env: EQA_SYSTEM_ENVIRONMENT; a_dest: FILE; a_substitute: BOOLEAN)
+			-- Append lines of file `a_src', with environment
+			-- variables substituted according to `a_env' (but
+			-- only if `substitute' is true) to
+			-- file `a_dest'.
+		require
+			source_not_void: a_src /= Void
+			destination_not_void: a_dest /= Void
+			environment_not_void: a_env /= Void
+			source_is_closed: a_src.is_closed
+			destination_is_closed: a_dest.is_closed
+		local
+			l_line: STRING
+		do
+			from
+				a_src.open_read
+				a_dest.open_write
+			until
+				a_src.end_of_file
+			loop
+				a_src.read_line
+				if a_substitute then
+					l_line := a_env.substitute (a_src.last_string)
+				else
+					l_line := a_src.last_string
+				end
+				if not a_src.end_of_file then
+					a_dest.put_string (l_line)
+					a_dest.new_line
+				elseif not l_line.is_empty then
+					a_dest.put_string (l_line)
+				end
+			end;
+			a_src.close
+			a_dest.flush
+			a_dest.close
+		end
+
 feature -- Query
 
 	build_source_path (a_path: EQA_SYSTEM_PATH): STRING
@@ -147,6 +205,29 @@ feature -- Query
 			end
 			l_file1.close
 			l_file2.close
+		end
+
+	executable_file_exists (s: STRING): detachable STRING
+			-- If file `s' does not exist or is not a file or
+			-- is not executable, string describing the
+			-- problem.  Void otherwise
+		local
+			f: RAW_FILE
+			l_fname: STRING
+		do
+			if s /= Void then
+				l_fname := s
+			else
+				l_fname := "(Void file name)"
+			end
+			create f.make (l_fname)
+			if not f.exists then
+				Result := "file " + l_fname + " not found"
+			elseif not f.is_plain then
+				Result := "file " + l_fname + " not a plain file"
+			elseif not f.is_executable then
+				Result := "file " + l_fname + " not executable"
+			end
 		end
 
 feature {NONE} -- Query
@@ -319,6 +400,26 @@ feature {NONE} -- Implementation
 			a_tag_attached: a_tag /= Void
 		do
 			environment.test_set.assert (a_tag, a_condition)
+		end
+
+	full_file_name (a_dir_name, a_f_name: STRING): STRING
+			-- Full name of file in directory `a_dir_name'
+			-- with name `a_f_name'.
+		require
+			not_void: a_dir_name /= Void and then not a_dir_name.is_empty
+			not_void: a_f_name /= Void and then not a_f_name.is_empty
+		local
+			l_os: OPERATING_ENVIRONMENT
+		do
+			create Result.make (a_dir_name.count + a_f_name.count + 1)
+			if not a_dir_name.is_empty then
+				Result.append (a_dir_name)
+				create l_os
+				if a_dir_name.item (a_dir_name.count) /= l_os.Directory_separator then
+					Result.extend (l_os.Directory_separator)
+				end
+			end
+			Result.append (a_f_name)
 		end
 
 note

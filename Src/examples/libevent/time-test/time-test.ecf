@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="time-test" uuid="A8911C52-EA27-441E-8EBE-5128D7227D6B">
+	<target name="time-test">
+		<root class="TIME_TEST" feature="make"/>
+		<option warning="true" is_attached_by_default="true" void_safety="all">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="libevent" location="$ISE_LIBRARY\library\libevent\libevent.ecf" readonly="false"/>
+		<cluster name="time-test" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="time-test_dotnet" extends="time-test">
+		<setting name="msil_generation" value="true"/>
+	</target>
+</system>

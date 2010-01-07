@@ -8,7 +8,7 @@ class
 	$TEST_CLASS_NAME
 
 inherit
-	EW_EQA_TEST_CONTROL_INSTRUCTIONS
+	EQA_EW_SYSTEM_TEST_SET
 
 feature -- Command$TCF_CONTENT
 

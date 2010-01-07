@@ -74,21 +74,16 @@ feature {NONE} -- Resolution
 			a_args_not_void: a_args /= Void
 		local
 			l_domain: detachable APP_DOMAIN
-			l_parts: LIST [detachable STRING]
-			l_name: detachable STRING
+			l_parts: like split_assembly_name
 		do
 			l_domain ?= a_sender
-			check
-				l_domain_not_void: l_domain /= Void
+			if l_domain /= Void and then attached a_args.name as l_args_name then
+					-- Split assembly name to be resolved into relivent chunks
+				l_parts := split_assembly_name (l_args_name)
+
+					-- Attempt to resolve assembly dependency
+				Result := resolve_assembly_by_name (l_domain, l_parts.name, l_parts.version, l_parts.culture, l_parts.public_key_token)
 			end
-
-				-- Split assembly name to be resolved into relivent chunks
-			l_parts := split_assembly_name (a_args.name)
-
-				-- Attempt to resolve assembly dependency
-			l_name := l_parts [1]
-			check l_name_attached: l_name /= Void end
-			Result := resolve_assembly_by_name (l_domain, l_name, l_parts [2], l_parts [3], l_parts [4])
 		end
 
 feature -- Resolution
@@ -99,16 +94,15 @@ feature -- Resolution
 			a_domain_not_void: a_domain /= Void
 			a_name_not_void: a_name /= Void
 		local
-			l_parts: LIST [detachable STRING]
-			l_name: detachable STRING
+			l_parts: like split_assembly_name
 		do
-				-- Split assembly name to be resolved into relivent chunks
-			l_parts := split_assembly_name (a_name.to_string)
+			if attached a_name.to_string as l_ass_name then
+					-- Split assembly name to be resolved into relivent chunks
+				l_parts := split_assembly_name (l_ass_name)
 
-				-- Attempt to resolve assembly dependency
-			l_name := l_parts [1]
-			check l_name_attached: l_name /= Void end
-			Result := resolve_by_name (a_domain, l_name, l_parts [2], l_parts [3], l_parts [4])
+					-- Attempt to resolve assembly dependency
+				Result := resolve_by_name (a_domain, l_parts.name, l_parts.version, l_parts.culture, l_parts.public_key_token)
+			end
 		ensure
 			not_resolve_paths_moved: resolve_paths.cursor.is_equal (old resolve_paths.cursor)
 			not_result_is_empty: Result /= Void implies not Result.is_empty
@@ -221,16 +215,21 @@ feature -- Query
 			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
 		local
 			l_key: detachable NATIVE_ARRAY [NATURAL_8]
-			l_string: detachable SYSTEM_STRING
 		do
-			Result := a_name.is_equal (a_asm_name.name)
-			if Result and then a_version /= Void and then attached {VERSION} a_asm_name.version as l_asm_version then
-				Result := is_near_version_match (a_version, l_asm_version.to_string)
+			if attached a_asm_name.name as l_ass_name then
+				Result := a_name.is_equal (l_ass_name)
 			end
-			if Result and then a_culture /= Void and then attached {CULTURE_INFO} a_asm_name.culture_info as l_asm_culture then
-				l_string := l_asm_culture.to_string
-				check l_string_attached: l_string /= Void end
-				Result := a_culture.as_lower.is_equal (l_string.to_lower)
+			if
+				Result and then a_version /= Void and then attached {VERSION} a_asm_name.version as l_asm_version and then
+				attached l_asm_version.to_string as l_version_string
+			then
+				Result := is_near_version_match (a_version, l_version_string)
+			end
+			if
+				Result and then a_culture /= Void and then attached {CULTURE_INFO} a_asm_name.culture_info as l_asm_culture and then
+				attached l_asm_culture.to_string as l_culture_string
+			then
+				Result := a_culture.is_case_insensitive_equal (l_culture_string)
 			end
 			if Result and then a_key /= Void then
 				l_key := a_asm_name.get_public_key_token
@@ -404,22 +403,25 @@ feature {NONE} -- Implementation
 			valid_file_name: not a_file_name.is_empty
 			a_file_name_has_not_forward_slash: a_file_name.occurrences ('/') = 0
 		local
-			l_location: STRING
+			l_location: detachable SYSTEM_STRING
+			l_path: STRING
 			l_is_network_path: BOOLEAN
 		do
-			l_location := a_file_name.twin
-			if l_location.count > 2 and then l_location.substring (1, 2).is_equal ("\\") then
+			if  a_file_name.count > 2 and then a_file_name.substring (1, 2).is_equal ("\\") then
 					-- `PATH' doesn't evaluate network paths correctly so leading '\\'
 					-- requires removal.
 				l_is_network_path := True
-				l_location.prune_all_leading ('\')
+				l_path := a_file_name.twin
+				l_path.prune_all_leading ('\')
+			else
+				l_path := a_file_name
 			end
-			l_location := {PATH}.get_directory_name (l_location)
-			if not l_location.is_empty then
-				if l_is_network_path then
-					l_location.prepend ("\\")
-				end
+			l_location := {PATH}.get_directory_name (l_path)
+			if l_location /= Void and then l_location.length > 0 then
 				Result := l_location
+				if l_is_network_path then
+					Result.prepend ("\\")
+				end
 			else
 					-- If there is no directory then file is relative to CWD.
 				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
@@ -429,19 +431,17 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	split_assembly_name (a_full_name: STRING): LIST [detachable STRING]
+	split_assembly_name (a_full_name: STRING): TUPLE [name: STRING; version, culture, public_key_token: detachable STRING]
 			-- Splits `a_full_name' into a 4 part list
 			-- @ 1: Assembly Name
 			-- @ 2: Version
 			-- @ 3: Culture
 			-- @ 4: Public Key Token
-			-- @ ?: For subclasses to define as custom data - this data is not extracted here.
 			-- Note: items 2-? will be void if they are not specified in `a_full_name'
 		require
 			a_full_name_not_void: a_full_name /= Void
 			not_a_full_name_is_empty: not a_full_name.is_empty
 		local
-			l_res: ARRAYED_LIST [detachable STRING]
 			l_parts: LIST [STRING]
 			l_name: STRING
 			l_item: STRING
@@ -451,7 +451,6 @@ feature {NONE} -- Implementation
 			l_set_for_it: BOOLEAN
 			i: INTEGER
 		do
-			create l_res.make (4)
 			l_parts := a_full_name.split (',')
 			check
 				l_parts_has_name: l_parts.count >= 1
@@ -496,11 +495,7 @@ feature {NONE} -- Implementation
 					l_parts.forth
 				end
 			end
-			l_res.extend (l_name)
-			l_res.extend (l_version)
-			l_res.extend (l_culture)
-			l_res.extend (l_key)
-			Result := l_res
+			Result := [l_name, l_version, l_culture, l_key]
 		ensure
 			result_not_void: Result /= Void
 			result_count_is_4: Result.count >= 4
@@ -571,13 +566,14 @@ feature {NONE} -- Implementation
 		local
 			l_file: FILE_INFO
 			l_type: SYSTEM_TYPE
-			l_assembly: detachable ASSEMBLY
 		do
 			l_type := {AR_RESOLVER}
-			l_assembly := l_type.assembly
-			check l_assembly_attached: l_assembly /= Void end
-			create l_file.make (l_assembly.location)
-			add_resolve_path (l_file.directory_name)
+			if attached l_type.assembly as l_assembly then
+				create l_file.make (l_assembly.location)
+				if attached l_file.directory_name as l_dir then
+					add_resolve_path (l_dir)
+				end
+			end
 		end
 
 	internal_resolve_paths: ARRAYED_LIST [STRING]

@@ -19,7 +19,7 @@ inherit
 			on_clean_frozen
 		end
 
-feature {EQA_SYSTEM_EXECUTION} -- Access
+feature {EQA_SYSTEM_EXECUTION, EQA_ACCESS} -- Access
 
 	file_system: EQA_FILE_SYSTEM
 			-- File system for creating directories and files
@@ -139,6 +139,7 @@ feature {NONE} -- Basic operations
 		do
 			l_exec := current_execution
 			check l_exec /= Void end
+			l_exec.clear_argument
 			a_args.do_all (agent (a_arg: STRING; a_exec: attached like current_execution)
 				require
 					a_arg_attached: a_arg /= Void
@@ -201,7 +202,7 @@ invariant
 	file_system_cache_valid: attached {like file_system} file_system_cache as l_fs implies l_fs.environment = environment
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

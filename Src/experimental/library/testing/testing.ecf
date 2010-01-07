@@ -3,14 +3,15 @@
 	<target name="testing">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
 			<exclude>/tests$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option namespace="EiffelSoftware.Library">
 		</option>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>

@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	ES_TEST_EXECUTION_TAB
+	ES_TEST_EXECUTION_WIDGET
 
 inherit
 	ES_TEST_RECORD_WIDGET [TEST_EXECUTION_I]

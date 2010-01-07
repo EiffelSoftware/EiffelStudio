@@ -1,6 +1,6 @@
 note
 	description: "[
-		Grid row that can be used as a subrow of {ES_TEST_RECORD_GRID_ROW} displaying a single test.
+		Grid row that can be used to display information about a single test.
 	]"
 	author: ""
 	date: "$Date$"
@@ -162,7 +162,7 @@ invariant
 		(l_test.is_interface_usable and then l_test.name.same_string (test_name))
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

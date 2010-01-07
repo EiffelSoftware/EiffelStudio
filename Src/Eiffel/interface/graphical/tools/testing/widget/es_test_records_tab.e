@@ -317,7 +317,7 @@ feature {NONE} -- Factory
 			-- Create a new `record_widget' from a given record.
 		do
 			if attached {TEST_EXECUTION_RECORD} a_record as l_execution then
-				create {ES_TEST_EXECUTION_TAB} Result.make (icons_provider.develop_window, l_execution)
+				create {ES_TEST_EXECUTION_WIDGET} Result.make (icons_provider.develop_window, l_execution)
 			else
 				create Result.make (icons_provider.develop_window, a_record)
 			end
@@ -327,7 +327,7 @@ feature {NONE} -- Factory
 			-- Create a new `record_widget' from a running session.
 		do
 			if attached {TEST_EXECUTION_I} a_session as l_execution then
-				create {ES_TEST_EXECUTION_TAB} Result.make_running (icons_provider.develop_window, l_execution)
+				create {ES_TEST_EXECUTION_WIDGET} Result.make_running (icons_provider.develop_window, l_execution)
 			else
 				create Result.make_running (icons_provider.develop_window, a_session)
 			end

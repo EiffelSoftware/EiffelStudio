@@ -1,6 +1,0 @@
-A routine in a generic class has an assignment attempt whose right
-hand side is of type Generic #1.  If the actual generic parameter is
-an expanded type and if the call to the routine is inlined, system
-execution ends with a segmentation fault.
-
-Discovered in Release 5.0.015.

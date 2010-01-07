@@ -1,6 +1,0 @@
-A manifest array used as the target of a feature call causes an
-exception trace during compilation (violation of assertion
-`last_type_exists').
-
-Discovered in Prerelease 93.05.17.
-

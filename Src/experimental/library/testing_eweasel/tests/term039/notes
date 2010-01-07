@@ -1,6 +1,0 @@
-A system is compiled with an Ace which specifies NONE as the root
-class and also specifies a root creation procedure.  Compilation
-proceeds without problems until the compiler tries to melt changes,
-when it dies with an exception trace.  Also dies if the system is frozen.
-
-Discovered in Release 3.2.

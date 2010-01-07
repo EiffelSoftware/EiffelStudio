@@ -1,8 +1,0 @@
-A class has a routine which repeatedly applies the `strip' operator to
-the current object and puts the resulting array in a local variable.
-The class has 4 INTEGER attributes.  Executing the system results in a
-run-time panic.  Reducing the number of attributes to 3 or turning off
-garbage collection allows the system to execute correctly for a huge
-number of iterations.
-
-Discovered in Release 3.2.4.

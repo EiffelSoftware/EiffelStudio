@@ -1,5 +1,0 @@
-An `old' expression which would be valid in a postcondition elicits an
-incorrect VAOL(2) error report if it appears in a precondition.
-
-Discovered in Release 3.1.1.
-

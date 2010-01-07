@@ -1,5 +1,0 @@
-A routine prints the value of `x * x', where `x' is a DOUBLE constant.
-If the system is finalized, the wrong value is printed.  Melted and
-frozen code work fine.
-
-Reported by Manu on March 20, 2003.

@@ -1,9 +1,0 @@
-An assignment whose source appears to conform to its target according
-to the definition of General Conformance is rejected as a violation of
-the Assignment rule (VJAR).  I suspect that this is really an error in
-condition 4 of General Conformance - it should specify that T is a
-reference type.
-
-Discovered in Prerelease 93.02.17.
-Fixed in Prerelease 93.07.15.
-

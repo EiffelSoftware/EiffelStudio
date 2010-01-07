@@ -1,9 +1,0 @@
-A class has a routine with a postcondition which references `old arg'
-where `arg' (the routine's argument) is of an expanded type.  When
-postconditions are monitored and the system is melted, evaluation of
-the postcondition appears to incorrectly cause some creations of
-objects of the expanded type.  Frozen code works as expected, with no
-hidden object creations.
-
-Discovered in Release 3.2.3b.
-

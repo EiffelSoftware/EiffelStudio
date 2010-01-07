@@ -1,6 +1,0 @@
-A class name which is an empty Manifest_string ("") in the Visible of
-a Cluster_properties in an Ace causes an exception trace.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.04.21.
-

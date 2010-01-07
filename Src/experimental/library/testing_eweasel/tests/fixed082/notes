@@ -1,7 +1,0 @@
-A class with a deferred feature but no "deferred" header mark
-still causes the validity code VDCC to be reported, but it is not
-documented and doesn't appear in the book.
-
-Prerelease 92.12.08.
-Still not fixed - prerelease 93.02.17.
-Fixed in Prerelease 93.07.15.

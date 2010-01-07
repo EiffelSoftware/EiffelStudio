@@ -1,7 +1,0 @@
-A type `ARRAY' should be a VTUG(2) error since ARRAY is a generic
-class with one generic parameter.  The compiler reports a VTUG(1)
-error for this type, but only when it is used in a constraint on a
-formal generic parameter.  Other uses are correctly reported as VTUG(2).
-
-Discovered in Release 3.2.1.
-

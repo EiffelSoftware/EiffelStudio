@@ -1,7 +1,0 @@
-A class has an attribute of an expanded type, which has 100 expanded
-attributes, where the class for each attribute has 100 attributes of
-type DOUBLE. The system compiles fine when melted or frozen, but dies
-with a panic when `full_collect' is called.  Finalized code works
-correctly.
-
-Discovered in Release 5.4.0515.

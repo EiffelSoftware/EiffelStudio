@@ -1,7 +1,0 @@
-A creation instruction has an explicit creation type which violates
-VGCC3.  The compiler reports this violation, but also erroneously
-reports a VGCC2 violation if the target entity of the creation is of a
-type based on a deferred class.
-
-Discovered in Prerelease 93.07.15.
-

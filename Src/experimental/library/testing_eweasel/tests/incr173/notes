@@ -1,4 +1,0 @@
-A sequence of changes causes the compiler to die with a segmentation
-fault in `byte_node'.
-
-Discovered in Release 5.0.015.

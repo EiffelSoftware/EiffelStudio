@@ -1,5 +1,0 @@
-A divide by real zero (0.0) should trigger an exception, but does not.
-When the result of the division is printed, it comes out as `Inf'.
-
-Discovered in Prerelease 93.05.17.
-

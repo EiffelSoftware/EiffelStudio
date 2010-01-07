@@ -1,6 +1,0 @@
-If the precondition is violated on the first call to a once routine,
-the body of the routine is not executed on that call (naturally) or on
-any subsequent calls to the routine.
-
-Still not fixed in Prerelease 93.02.17.
-

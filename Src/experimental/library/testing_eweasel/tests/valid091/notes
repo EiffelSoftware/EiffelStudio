@@ -1,7 +1,0 @@
-A valid multi-branch containing another valid multi-branch in one of
-its `when' clauses is rejected by the compiler as violating VOMB(2).
-The problem only seems to occur when one of the inspect expressions is
-of type INTEGER and the other is of type CHARACTER.
-First reported by Timur Tabi on comp.lang.eiffel.
-
-Discovered in release 3.2.3b.

@@ -1,7 +1,0 @@
-According to page 245, letter case is not significant for a Debug_key.
-But a debug instruction with key "WEASEL" is not executed when the Ace
-specifies `debug ("weasel")'.
-
-Discovered in Prerelease 93.04.21.
-Fixed in Prerelease 93.05.17.
-

@@ -1,5 +1,0 @@
-A routine with an assignment attempt whose source is a `$x', where `x'
-is a local which is of a basic type (INTEGER, REAL, etc.)  compiles
-fine when frozen, but generates C code which won't compile.
-
-Discovered in Release 3.2.4.

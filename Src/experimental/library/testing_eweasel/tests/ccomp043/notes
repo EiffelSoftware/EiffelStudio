@@ -1,5 +1,0 @@
-In some cases, the compiler might generate a call to the wrong
-creation procedure in a finalized system.  This is a test to check
-for regression for a bug Manu fixed.
-
-Reported by Manu on July 14, 2003.

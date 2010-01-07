@@ -1,6 +1,0 @@
-The type `TEST1 [INTEGER, ARRAY [INTEGER]' where TEST1 is declared as
-`TEST1 [G, H -> ARRAY [G]]' seems like it should be accepted, but the
-compiler reports a VTGG violation.
-
-Discovered in Prerelease 93.07.15.
-

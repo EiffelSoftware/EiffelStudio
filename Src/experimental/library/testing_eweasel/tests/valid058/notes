@@ -1,6 +1,0 @@
-The compiler accepts variable and constant attributes which violate
-VFFD1 because they have a Formal_arguments part, even though its
-Entity_declaration_list is empty.
-
-Discovered in Prerelease 93.07.15.
-

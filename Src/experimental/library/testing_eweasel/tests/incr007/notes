@@ -1,8 +1,0 @@
-After initial compilation, a boolean variable referenced in the
-expression of a conditional is changed to an integer constant.  The
-compiler detects the VWBE violation.  But when the declaration is
-moved to a parent class, the compiler accepts the classes even though
-the VWBE violation is still present.
-
-Discovered in Prerelease 93.07.15.
-

@@ -1,5 +1,0 @@
-Finalizing a system with a simple root class causes the compiler to
-die during degree -5 on the root class, but only if the Ace specifies
-`inlining (yes)' and a very large value of `inlining_size' (1000000).
-
-Discovered in Release 3.3 beta.

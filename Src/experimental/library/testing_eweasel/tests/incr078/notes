@@ -1,5 +1,0 @@
-After initial compilation where the system is frozen, an attribute of
-an expanded class is changed from a constant STRING to BIT 1.  The
-changes are refrozen.  System execution then produces the wrong output.
-
-Discovered in Release 3.2.

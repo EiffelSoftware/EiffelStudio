@@ -1,8 +1,0 @@
-If the compiler discovers a validity violation on the root class class
-(at least in pass 3) and stops and then the name of the root class is
-changed so that it is the same as the name of another class in the
-cluster, an exception trace results.  It is the previously reported
-`cluster_modified' assertion violation.
-
-Fixed in Prerelease 93.02.17.
-

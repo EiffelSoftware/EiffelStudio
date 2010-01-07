@@ -1,2 +1,0 @@
-expanded class GUID
-end

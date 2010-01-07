@@ -1,9 +1,0 @@
-A routine which prints `(create {like Current}).generating_type' is
-written in class A and inherited by class B.  When the routine is
-called on an object of type B, it prints "A" instead of "B".  If
-`create {like Current}' is assigned to an attribute of type `like
-Current', the generating type of this attribute is also incorrect in
-class B.  But if it is assigned to a local instead, the generating
-type in B is correct.
-
-Discovered in Release 5.4.0403.

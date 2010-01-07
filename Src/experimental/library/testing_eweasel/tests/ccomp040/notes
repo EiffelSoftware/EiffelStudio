@@ -1,5 +1,0 @@
-Freezing a particular system generates C code that has a different
-declarations for the same function, causing compilation to fail.
-
-Sent by Manu on June 5, 2003.
-

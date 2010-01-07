@@ -1,6 +1,0 @@
-If a Creation_clause has a non-empty Clients part and an empty
-Feature_list, it is reported as a syntax error even though it conforms
-to the syntax on page 285.
-
-Still not fixed in Prerelease 93.02.17.
-

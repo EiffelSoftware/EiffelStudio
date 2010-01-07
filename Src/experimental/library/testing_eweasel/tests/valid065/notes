@@ -1,7 +1,0 @@
-A VREG violation involving a formal argument is reported once for each
-occurrence of a duplicate argument, but if it involves a local entity
-it is reported (number of occurrences - 1 times).  It should be
-reported once for each duplicate identifier.
-
-Discovered in Release 3.1.1.
-

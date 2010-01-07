@@ -1,8 +1,0 @@
-The expression `True xor Current /= Void' incorrectly evaluates to
-True when code is frozen, but correctly evaluates to False when code
-is melted.  Compiling the generated C code elicits compiler warnings
-such as "illegal combination of pointer and integer, op !=".  This
-appears to be a precedence problem since fully parenthesized
-expressions involving xor produce the correct result when frozen.
-
-Discovered in Release 3.2.2.

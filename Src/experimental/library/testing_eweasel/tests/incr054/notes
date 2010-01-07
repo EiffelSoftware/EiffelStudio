@@ -1,6 +1,0 @@
-When a violation of VDRD(7) is introduced after initial compilation by
-changing an inherited routine with an internal body to have an
-external body, the compiler does not detect it.
-
-Discovered in Release 3.1.1.
-

@@ -1,6 +1,0 @@
-An assignment `b := a.new_b' in a generic class `C [G -> A]', where a
-is of type A, b is of type B [G] and new_b is of type `B [like
-Current]' should be accepted because the type of `a.new_b' is
-effectively B [G], but the compiler reports a VJAR error.
-
-Reported by Manu on 05 January 2002.

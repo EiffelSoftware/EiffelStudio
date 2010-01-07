@@ -1,6 +1,0 @@
-An anchored type which appears to be valid according to ETL (page 214)
-is rejected as violating VTAT.  The example involves the type 
-`x: ARRAY [like x]'.
-
-Discovered in Prerelease 93.07.15.
-

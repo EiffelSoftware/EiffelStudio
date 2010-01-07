@@ -1,6 +1,0 @@
-A routine has a rescue clause and a local of an expanded type.  The
-creation procedure of this type's base class raises an exception.  In
-the rescue clause, the expanded local is void which causes execution
-to terminate with a segmentation fault.
-
-Discovered in Release 3.2.4.

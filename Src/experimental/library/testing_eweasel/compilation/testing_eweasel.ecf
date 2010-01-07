@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="testing_eweasel" uuid="811A5BF8-16CC-462C-A517-D1E11E521589" library_target="testing_eweasel">
+	<target name="testing_eweasel">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/gui$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<file_rule>
+			<exclude>/unix$</exclude>
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</file_rule>
+		<file_rule>
+			<exclude>/windows$</exclude>
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</file_rule>
+		<option warning="true" full_class_checking="true" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true"/>
+		</option>
+		<setting name="exception_trace" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="eweasel" location="..\source\" recursive="true"/>
+	</target>
+</system>

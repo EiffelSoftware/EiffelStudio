@@ -1,6 +1,0 @@
-A routine has 400 locals of an expanded type, where the base class of
-the expanded type has 400 attributes of type DOUBLE.  The system
-compiles fine, but dies with a segmentation fault when melted if
-garbage collection is on.
-
-Discovered in Release 3.2.4.

@@ -1,9 +1,0 @@
-The "Hello weasel" program compiles and executes fine with `assertion
-(all)' and no precompiled cluster.  Then file "string_8.e" is excluded
-from the kernel cluster.  After the VD23 errors are reported, the
-exclude clause is removed and compilation completes.  But when the
-system is executed again, class invariant `name_exists' is violated in
-routine `output' in UNIX_STD.
-
-Discovered in Release 3.2.
-

@@ -1,8 +1,0 @@
-A class inherits an external routine and tries to redefine it, but
-includes some locals in the redefined external routine.  The compiler
-catches the VRRR(2) error.  Then the parent version is changed to a
-deferred feature and the child version is changed to a non-external
-routine.  When compilation is resumed, the compiler terminates
-silently after pass 2 on the parent class.
-
-Discovered in Release 3.2.1.

@@ -1,8 +1,0 @@
-After initial compilation, a class header is modified so that the
-class is expanded.  The system is recompiled without incident, but
-when it is executed, an attribute which is now of an expanded type
-does not get initalized properly (creation procedure of expanded class
-is not called).
-
-Discovered in Prerelease 93.07.15.
-

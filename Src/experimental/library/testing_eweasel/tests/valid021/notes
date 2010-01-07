@@ -1,7 +1,0 @@
-A class TEST which violates the Expanded Type rule by declaring an
-attribute of an expanded type, where the creation procedure of the
-expanded type's base class is secret (not available to TEST) is
-accepted by the compiler without complaint.
-
-First discovered in Prerelease 93.02.17.
-

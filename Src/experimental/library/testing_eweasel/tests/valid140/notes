@@ -1,6 +1,0 @@
-A class with a clients part that includes two or more occurrences of
-the same class name should possibly be a validity violation, but there
-is no validity constraint which prevents this.
-
-Discovered in release 5.4.0515.
-

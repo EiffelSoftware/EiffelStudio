@@ -1,7 +1,0 @@
-According to page 130 of ETL, the Expression in a Variant is valid if
-and only if it is of type INTEGER.  But the compiler accepts an
-expression (Void) of type NONE and later dies while trying to freeze
-the system.
-
-Still not fixed in Prerelease 93.02.17.
-

@@ -1,8 +1,0 @@
-A class creates an instance of a second class stores it in a file
-using `independent_store' and then opens the file and retrieves
-what was previously stored.  After initial compilation, system
-execution works correctly.  Then a local of type `ARRAY [expanded
-A]' is added and system is recompiled (frozen).  Execution then
-incorrectly ends with a mismatch retrieval error.
-
-Reported by Manu on April 7, 2003.

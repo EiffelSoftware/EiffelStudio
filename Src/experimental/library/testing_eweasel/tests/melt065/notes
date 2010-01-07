@@ -1,7 +1,0 @@
-A system whose Ace specifies `profile (yes)' is melted.  When the
-system is executed with the EIFGEN/W_code directory as the current
-directory with the MELT_PATH environment variable not set, system
-execution attempts to create the "profinfo" file in the wrong place
-(not in the EIFGEN/W_code directory).
-
-Discovered in release 5.4.0403.

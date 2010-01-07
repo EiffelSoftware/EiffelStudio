@@ -1,9 +1,0 @@
-An attribute `weasel' of a generic class is anchored to another
-attribute whose type is the formal generic parameter.  A second
-generic class has a constraint involving the first.  This second class
-has a multi-dot call involving a nonexistent feature, but it is not
-detected.
-
-Discovered in Release 3.2.3b.
-
-

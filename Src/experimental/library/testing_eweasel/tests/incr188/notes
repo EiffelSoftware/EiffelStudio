@@ -1,8 +1,0 @@
-A system creates an instance of a class and prints the value of its
-only feature, which is a constant INTEGER attribute.  After initial
-compilation, the constant is changed to an INTEGER variable.  System
-execution still produces the correct result.  Then the feature is
-changed back to an INTEGER constant and changes are melted.  System
-execution then dies with a segmentation violation.
-
-Discovered in release 5.1.12.

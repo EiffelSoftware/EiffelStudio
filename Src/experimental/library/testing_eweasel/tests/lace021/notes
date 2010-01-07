@@ -1,4 +1,0 @@
-A class named NONE should probably elicit some kind of validity error
-(VD??) from the compiler.
-
-Discovered in Release 3.2.

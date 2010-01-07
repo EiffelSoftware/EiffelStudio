@@ -1,9 +1,0 @@
-Depending on the order of formal generic parameters in a class (one
-constrained and one unconstrained), the compiler interprets G as
-either a formal generic or as a class.  It seems that if there is a
-class G, then G should be interpreted as a class (and a VCFG error
-signaled).  If there is no class G, then G should always be treated as
-a formal generic parameter, regardless of order.
-
-Discovered in Prerelease 93.07.15.
-

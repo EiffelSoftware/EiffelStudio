@@ -1,7 +1,0 @@
-A generic class has a constraint `-> TEST2 [STRING]' on its formal
-generic parameter, which is invalid since TEST2 is indeed a generic
-class but its formal generic parameter is constrained by `LIST
-[STRING]'.  The compiler correctly reports a VTCG violation, but dies
-while trying to report the name of the class on which the error occurred.
-
-Discovered in Release 3.2.3b.

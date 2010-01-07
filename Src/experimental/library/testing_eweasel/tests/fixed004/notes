@@ -1,4 +1,0 @@
-All kinds of invalid feature declaration declarations are either
-silently accepted or cause an exception trace.
-
-Fixed in prerelease 93.02.17.

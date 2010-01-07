@@ -1,4 +1,0 @@
-deferred class
-	BASE
-
-end

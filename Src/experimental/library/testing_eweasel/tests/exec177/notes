@@ -1,8 +1,0 @@
-A routine which prints `(agent {G}.is_stopable).generating_type' where
-formal generic parameter G -> TEST2 displays FUNCTION [TEST2, TUPLE
-[TEST2], BOOLEAN] but the actual generic parameter is TEST3 so this is
-wrong.  An assignment attempt of `agent {G}.is_stopable' to a local of
-type FUNCTION [G, TUPLE [G], BOOLEAN] assigns Void to the local, but
-should not.
-
-Discovered in release 5.5.0205.

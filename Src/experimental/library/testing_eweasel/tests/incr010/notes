@@ -1,6 +1,0 @@
-When a VTAT violation is introduced after initial compilation, the
-compiler detects it.  But pressing return to resume causes the
-compiler to finish compiling, even though the violation is still there.
-
-Discovered in Prerelease 93.07.15.
-

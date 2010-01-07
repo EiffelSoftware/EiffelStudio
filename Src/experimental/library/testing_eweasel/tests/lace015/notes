@@ -1,5 +1,0 @@
-Removing an unneeded cluster from the Ace and recompiling causes an
-exception trace.
-
-Discovered in Release 3.1.1.
-

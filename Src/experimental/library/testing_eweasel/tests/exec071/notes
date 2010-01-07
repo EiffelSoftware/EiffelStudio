@@ -1,6 +1,0 @@
-A class calls a recursive routine which takes a substring of a string.
-If the recursion is fairly deep (approximately 350) and garbage
-collection is enabled, a run-time panic occurs when the system is
-executed.
-
-Discovered in Release 3.2.4.

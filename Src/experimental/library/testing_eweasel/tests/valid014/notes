@@ -1,7 +1,0 @@
-A constraint on a formal generic parameter which is syntactically
-illegal (and not even meaningful anyway since it references a
-non-existent entity) is accepted by the compiler when all generic
-derivations use the actual generic parameter NONE.
-
-Still not fixed in Prerelease 93.02.17.
-

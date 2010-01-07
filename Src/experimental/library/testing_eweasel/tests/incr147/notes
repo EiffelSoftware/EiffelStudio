@@ -1,5 +1,0 @@
-After initial compilation, the entire contents of the Ace file is
-deleted so that it is a completely empty file.  When the system is
-recompiled, the compiler dies.
-
-Discovered in Release 4.3-17.

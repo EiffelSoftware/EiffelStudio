@@ -1,5 +1,0 @@
-A valid class (I *think* it's valid) with an anchored type as explicit
-creation type in a creation instruction causes an exception trace.
-
-Still not fixed in Prerelease 93.02.17.
-

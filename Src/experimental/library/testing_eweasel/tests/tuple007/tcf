@@ -1,9 +1,0 @@
-test_name 	 named-tuple-assignment
-test_description Verify that a manifest tuple can be assigned to a named tuple specify using a like feature.
-
-copy_sub 	Ace $TEST Ace
-copy_raw 	test.e $CLUSTER test.e
-compile_melted
-compile_result	ok
-
-test_end

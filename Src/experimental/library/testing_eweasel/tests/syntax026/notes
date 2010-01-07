@@ -1,6 +1,0 @@
-According to page 418 of ETL, there is no limit to the length of
-identifiers.  But the compiler reports a syntax error for identifiers
-longer than 511 characters.
-
-Discovered in Release 3.2.
-

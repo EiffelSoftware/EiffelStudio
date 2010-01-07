@@ -1,5 +1,0 @@
-Trying to print INTEGER_8 value -127 or INTEGER_16 value -32768
-when system was compiled with assertion (all) results in violation
-of class invariant "sign_times_abs".
-
-Discovered in Release 5.0.032.

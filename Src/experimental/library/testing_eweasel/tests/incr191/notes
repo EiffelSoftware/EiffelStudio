@@ -1,7 +1,0 @@
-A system is finalized and assertions are discarded, using the command
-line compiler.  When the system is re-finalized while keeping
-assertions, no new C code is generated so system execution does not
-monitor assertions.
-
-Discovered in Release 5.2.0914.
-

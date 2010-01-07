@@ -1,5 +1,0 @@
-A class with a generic class whose constrained generic parameter names
-a nonexistent feature in the constraining class causes causes compiler
-to die.
-
-Discovered in Release 4.3-17.

@@ -1,6 +1,0 @@
-A call to a routine that multiplies two REAL values and returns the
-result violates the routine's postcondition, which is `Result = a_real
-* another_real'.  This only happens on some platforms (Windows) and
-only when code is frozen.
-
-Reported by Manu on September 4, 2003.

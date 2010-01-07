@@ -1,7 +1,0 @@
-After initial compilation where the system is melted, a constant
-attribute is changed to a variable attribute and changes are melted.
-Then the variable attribute is changed to a function with no arguments
-and changes are melted.  System execution then ends with a
-segmentation fault.
-
-Discovered in Release 5.0.016.

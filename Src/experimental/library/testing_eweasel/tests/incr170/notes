@@ -1,9 +1,0 @@
-After initial compilation where the system is melted, a deferred
-routine effected by an attribute is changed to a constant attribute.
-When the VMFN error is reported, it is changed back to a deferred
-routine and compilation finishes normally.  Then a new class with a
-deferred version of the routine is inherited and called with dynamic
-type Current.  After changes are melted, execution ends with a
-segmentation fault.
-
-Discovered in Release 5.0.015.

@@ -1,6 +1,0 @@
-A class inherits from a second class and redefines an external "C
-inline" routine to an internal routine.  The internal routine calls
-precursor.  The system compiles fine but goes into an infinite
-recursion when executed.
-
-Discovered in release 5.4.0709.

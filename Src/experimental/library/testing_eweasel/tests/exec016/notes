@@ -1,8 +1,0 @@
-A class with an integer divide-by-zero correctly executes the rescue
-clause, but when that rescue clause does a "retry" the second
-divide-by-zero causes the program to print "Floating exception" and
-terminate, with no exception trace.  It should keep getting "rescued"
-indefinitely.
-
-Discovered in Prerelease 93.02.17.
-

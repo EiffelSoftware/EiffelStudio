@@ -1,9 +1,0 @@
-A generic class with zero generic parameters is accepted, but the
-inheriting class must use
-	inherit GENERIC
-instead of
-	inherit GENERIC []
-	
-The latter form is reported as a syntax error.
-
-Still not fixed - 93.02.17 tape.

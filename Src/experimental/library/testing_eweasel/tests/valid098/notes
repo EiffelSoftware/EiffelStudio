@@ -1,8 +1,0 @@
-The type `expanded TEST1 [DOUBLE]' should not conform to the type
-`expanded TEST1 [STRING]'.  But the compiler accepts an assignment
-involving these two types.  Executing the resulting system naturally
-ends in disaster.
-
-Discovered in Release 3.2.3b.
-
-

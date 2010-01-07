@@ -1,8 +1,0 @@
-A class inherits from a generic class which has a routine that creates
-an entity of the generic type and prints its generating type.  After
-initial compilation where the system is melted, the printed result is
-correct.  Then the type of the actual generic is changed from STRING
-to SEQ_STRING and changes are melted.  Execution then produces the
-wrong result (the same result as before).
-
-Discovered in Release 5.0.015.

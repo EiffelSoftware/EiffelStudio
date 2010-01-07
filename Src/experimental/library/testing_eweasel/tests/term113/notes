@@ -1,4 +1,0 @@
-Specifying the option `msil_generation (yes)' causes the compiler to
-die, presumably only an inappropriate platform.
-
-Discovered in release 5.4.0403.

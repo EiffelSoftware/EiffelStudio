@@ -1,6 +1,0 @@
-Finalizing a system with that prints ({STRING}).generating_type
-generates C code which won't compile if system is finalized.
-Melted and frozen code work fine.
-
-Discovered in release 5.6.1128.
-

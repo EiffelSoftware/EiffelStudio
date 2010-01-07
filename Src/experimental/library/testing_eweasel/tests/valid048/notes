@@ -1,6 +1,0 @@
-A class which violates VDRD7 (Redeclaration rule) is not accepted by
-the compiler, but the validity constraint code reported is not VDRD7
-but VE01, which is undocumented.
-
-Still not fixed in Prerelease 93.02.17.
-

@@ -1,6 +1,0 @@
-A generic class with a Constraint_creators that has an empty
-Feature_list should be accepted, but the compiler reports a syntax
-error.
-
-Discovered in release 5.4.0515.
-

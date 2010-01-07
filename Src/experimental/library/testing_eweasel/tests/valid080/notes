@@ -1,7 +1,0 @@
-An assignment of an entity of type DOUBLE to an entity of type REAL
-should be a VJAR violation, but the compiler accepts it.  ETL pages
-229 and 311.
-
-Discovered in Release 3.2.1.
-
-

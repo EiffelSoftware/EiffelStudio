@@ -1,8 +1,0 @@
-After initial compilation, a constraint is added to the formal generic
-parameter of a class which is used in the generic constraint of
-another class.  When the system is recompiled, the compiler correctly
-reports a VTCG error.  But when the newly added constraint is removed
-and compilation is resumed, the compiler dies with a segmentation
-fault during degree 2.
-
-Discovered in Release 3.2.3b.

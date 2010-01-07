@@ -1,5 +1,0 @@
-A function which has a local of type `x: expanded FOO' has as its body
-`Result := x'.  When the system is finalized, the code generated for
-the enclosing class won't compile.
-
-Discovered in Release 3.2.4.

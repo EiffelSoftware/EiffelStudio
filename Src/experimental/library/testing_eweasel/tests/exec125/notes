@@ -1,8 +1,0 @@
-A class FOO inherits a generic class twice providing different actual
-generic parameters and renaming the single routine `f' in the generic
-class.  Routine `f' creates a local of type G and prints its
-generating type.  The root class creates an instance of FOO and calls
-both versions of `f'.  the system compiles fine, but produces the
-wrong results when executed.
-
-Reported by Manu on 27 December 2001.

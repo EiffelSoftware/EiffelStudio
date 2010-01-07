@@ -1,4 +1,0 @@
-A class which prints `- - 3.5' works fine when melted, but when frozen
-or finalized the generated C code won't compile.
-
-Discovered in release 5.4.0403.

@@ -1,4 +1,0 @@
-An assignment attempt `a ?= << <<"A","1">> , <<"B","2">> >>' where `a'
-is of type ANY causes the compiler to crash.
-
-Reported by Manu on 4.4 compiler on 22 November, 2002.

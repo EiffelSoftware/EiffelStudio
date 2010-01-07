@@ -1,9 +1,0 @@
-A routine with an insufficiently exported entity in a precondition
-violates VAPE, but the compiler accepts it.  It appears that the
-compiler accepts any case where both the routine with the precondition
-and the entity referenced in the precondition have an export
-restriction and the entity is not completely secret.
-
-Discovered in Release 3.2.3b.
-
-

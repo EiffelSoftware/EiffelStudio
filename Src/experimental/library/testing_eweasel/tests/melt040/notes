@@ -1,8 +1,0 @@
-A call to a routine which is implemented as an infix operator
-sometimes gives the wrong results when the formal argument is of a
-heavier type than the actual argument (e.g., formal is DOUBLE and
-actual is REAL).  Also, in some cases passing a REAL to a REAL formal
-argument does not give correct results.  In some cases, frozen and
-melted code give different results.
-
-Discovered in Release 3.2.4.

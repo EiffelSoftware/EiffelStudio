@@ -1,4 +1,0 @@
-A class with a formal generic parameter G declares an attribute of
-type `expanded G'. The compiler should report an error, but does not.
-
-Discoverd in release 5.5.0820.

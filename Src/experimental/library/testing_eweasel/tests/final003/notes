@@ -1,6 +1,0 @@
-A system has class with a manifest array of STRINGs, one of whose
-elements is an expression which is a function call with an argument
-that involves another feature call.  When the system is finalized, the
-generated C code will not compile.
-
-Discovered in Release 3.2.4.

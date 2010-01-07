@@ -1,9 +1,0 @@
-A system has a generic class FOO with an inline C external function
-that just returns its argument.  When another class creates an
-instance of FOO [DOUBLE] and calls the external function on it, the
-result is correct.  Then the type in the creation expression is
-changed to FOO [ARRAY [DOUBLE]] and changes are melted.  Finally the
-creation expression type is changed back to FOO [DOUBLE] and changes
-are melted again.  System execution then produces the wrong output.
-
-Discovered in release 5.4.0610.

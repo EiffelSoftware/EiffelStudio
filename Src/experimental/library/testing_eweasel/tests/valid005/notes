@@ -1,6 +1,0 @@
-The Local Entity rule (page 115 of ETL) states that no formal
-argument of a routine can have the same identifier as a local
-entity of that routine.  But es3 still does not enforce
-this validity constraint.  Prerelease 92.12.08.
-
-Still not fixed in prerelease 93.02.17.

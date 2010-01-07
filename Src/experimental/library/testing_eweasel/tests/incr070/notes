@@ -1,6 +1,0 @@
-After initial compilation, the type of an inherited attribute
-referenced in the invariant of the heir class is changed from BOOLEAN
-to INTEGER.  When the system is recompiled, the compiler dies with an
-exception trace.
-
-Discovered in Release 3.2.

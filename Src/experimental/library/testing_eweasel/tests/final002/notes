@@ -1,6 +1,0 @@
-A class has a debug instruction with Debug_key "weasel".  The Ace
-specifies `debug ("weasel")' in the defaults section.  The Compound in
-the debug instruction is not executed, but only if the system is
-finalized.  It is executed if the Ace specifies `debug (yes)'.
-
-Discovered in Release 3.2.3b.

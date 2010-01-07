@@ -1,6 +1,0 @@
-Compiling a system and then adding an inheritance clause which
-introduces an inheritance cycle and recompiling results in an
-exception trace.
-
-Still not fixed in Prerelease 93.02.17.
-

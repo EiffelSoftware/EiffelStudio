@@ -1,8 +1,0 @@
-A system involving several generic derivations has an
-assignment attempt.  A call `a2.f' works before the assignment
-attempt, but the same call fails after the instruction `a ?= a2'
-where a2 is the source of the assignment attempt.
-
-Reported by Manu in release 5.1.003.
-
-

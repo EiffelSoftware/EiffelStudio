@@ -1,6 +1,0 @@
-A class has a routine with a single argument `a: ARRAY [like c]' where
-`c: expanded TEST1'.  A call to this routine with actual argument << c
->> should be accepted but is rejected as a VUAR(2) error.  If `c' is
-not of an expanded type, compiler accepts the class.
-
-Discovered in release 5.4.0610.

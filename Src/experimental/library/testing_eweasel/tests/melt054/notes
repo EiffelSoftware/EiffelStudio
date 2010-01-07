@@ -1,7 +1,0 @@
-A routine `try' which has a precondition calls another routine `try2'
-which raises an exception.  If the calling routine catches the
-exception and retries, the precondition is evaluated again if code is
-melted.  Frozen code works correctly - it does not re-evaluate the
-precondition in the routine which catches the exception.
-
-Discovered in release 5.3.0620.

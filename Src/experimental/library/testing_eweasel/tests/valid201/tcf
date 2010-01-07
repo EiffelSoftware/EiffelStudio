@@ -1,9 +1,0 @@
-test_name formal-as-base-type-for-generic
-test_description Formal as base class for a generic type. This is not allowed and should yield in an error.
-
-copy_sub	Ace $TEST Ace
-copy_raw	test.e $CLUSTER test.e
-copy_raw	a.e $CLUSTER a.e
-compile_melted
-compile_result validity_error A VTCT
-test_end

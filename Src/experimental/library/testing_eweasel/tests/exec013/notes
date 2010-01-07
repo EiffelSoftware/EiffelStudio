@@ -1,7 +1,0 @@
-Equal does not give the correct results for bit strings of different
-lengths.  The shorter bit string is supposed to be extended with
-either leading or trailing zeros (not sure which one) before the
-comparison, but it is not.
-
-Discovered in Prerelease 93.07.15.
-

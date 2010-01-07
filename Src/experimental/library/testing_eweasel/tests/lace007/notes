@@ -1,6 +1,0 @@
-An Ace with no creation procedure specified is accepted, even if the
-root class has a creation clause with zero or multiple creation
-procedures listed.
-
-Discovered in Prerelease 93.04.21.
-

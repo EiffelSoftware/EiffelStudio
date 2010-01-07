@@ -1,7 +1,0 @@
-According to ETL page 405, an argument of the Address form is of type
-POINTER.  But when the corresponding formal argument is declared to be
-of type POINTER, the compiler rejects the class as violating
-constraint VUAR.
-
-Still not fixed in Prerelease 93.02.17.
-

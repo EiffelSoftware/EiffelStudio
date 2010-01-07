@@ -1,8 +1,0 @@
-Compiling a system whose root class has a formal generic parameter
-causes the compiler to correctly report the VSRC violation.  Removing
-the formal generic parameter from the root class and resuming
-compilation causes an exception trace.
-
-Discovered in Prerelease 93.04.21.
-Fixed in Prerelease 93.05.17.
-

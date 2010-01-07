@@ -1,5 +1,0 @@
-A generic class which prints $x and $y, where x and y are attributes
-of a generic type, generates C code which won't compile when system
-is frozen or finalized.
-
-Discovered in Release 5.0.015.

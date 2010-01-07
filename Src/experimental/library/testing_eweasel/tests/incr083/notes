@@ -1,7 +1,0 @@
-A system compiles correctly without a precompiled cluster.  Then file
-"any.e" is excluded from the kernel cluster.  After the VD23 errors
-are reported, the exclude clause is removed.  When compilation is
-resumed, the compiler dies with an exception trace.
-
-Discovered in Release 3.2.
-

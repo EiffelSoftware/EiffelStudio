@@ -1,8 +1,0 @@
-A system sets a variable to the character constants `%/128/' and
-`%/255/' and then checks to see if the variable is equal to the value
-just assigned to it.  The system compiles fine when frozen, but thinks
-the variable is not equal to the character just assigned to it for
-characters `%/128/' and above.  Melted code works correctly.
-
-Discovered in Release 3.3.7.
-

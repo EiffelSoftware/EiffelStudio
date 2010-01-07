@@ -1,5 +1,0 @@
-After initial compilation, the type of an attribute is changed from
-one expanded type to another.  System execution should call the
-creation procedure of the new expanded class but it does not.
-
-Discovered in Release 3.2.

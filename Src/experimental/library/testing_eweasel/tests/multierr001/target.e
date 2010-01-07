@@ -1,4 +1,0 @@
-class
-	TARGET[G]
-
-end

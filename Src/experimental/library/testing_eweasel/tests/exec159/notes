@@ -1,6 +1,0 @@
-A class calls a routine with a long name (> 500 characters) and the
-routine raises an exception.  The caller rescues the exception and
-then tries to get the exception trace.  System execution ends with a
-segmentation fault.
-
-Discovered in Release 5.4.0403.

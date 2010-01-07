@@ -1,6 +1,0 @@
-A known sequence of changes involving changes to actual generic
-parameters of the genericly derived return type of an external
-function causes a compiler exception trace.
-
-Discovered in Release 3.1.1.
-

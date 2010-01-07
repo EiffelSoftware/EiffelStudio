@@ -1,7 +1,0 @@
-A system's Ace has a visible clause which makes one routine of a class
-visible.  The class inherits the routine to be made visible from
-another class along with another routine called by the first and
-renames both routines.  When the system is finalized with
-`dead_code_removal (yes)', the generated C code won't compile.
-
-Discovered in Release 3.3.7.

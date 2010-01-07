@@ -1,9 +1,0 @@
-A class creates an instance of a second class, stores it in a file
-using `independent_store' and then opens the file and retrieves what
-was previously stored.  After initial compilation, system execution
-works correctly.  Then an instruction is added to a routine and
-changes are melted.  Execution then incorrectly ends with a mismatch
-retrieval error.
-
-Discovered in release 5.4.0403.
-

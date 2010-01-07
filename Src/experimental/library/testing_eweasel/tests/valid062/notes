@@ -1,6 +1,0 @@
-The expression `old Result' is accepted in a postcondition.  Since ETL
-allows this, but it doesn't make sense, this is really a language
-specification problem.
-
-Discovered in Release 3.1.1.
-

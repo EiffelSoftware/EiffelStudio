@@ -1,7 +1,0 @@
-A trivial system compiles fine.  When the Ace is changed to indicate a
-different root class which is almost identical to the original root
-class, but has one inheritance clause, the compiler dies with an
-exception trace while refreezing the system.
-
-Discovered in prerelease 93.05.17.
-Fixed in Prerelease 93.07.15.

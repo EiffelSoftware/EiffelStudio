@@ -1,4 +1,0 @@
-Calling EXCEPTIONS.exception_trace when no exceptions have
-occurred causes segmentation fault in `exception_trace.
-
-Discovered in release 5.4.0906.

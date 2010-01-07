@@ -1,6 +1,0 @@
-An attribute with an anchored type, whose anchor has a
-Formal_generic_name for its type appears to violate VTAT1 on page 214,
-but is accepted by the compiler.
-
-First reported in Prerelease 93.02.17.
-

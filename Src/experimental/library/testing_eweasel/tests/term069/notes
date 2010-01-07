@@ -1,5 +1,0 @@
-An external routine which takes two arguments includes the signature
-`(long, long, long)' causes the compiler to die on degree 3 on the
-class.
-
-Discovered in Release 3.3 beta.

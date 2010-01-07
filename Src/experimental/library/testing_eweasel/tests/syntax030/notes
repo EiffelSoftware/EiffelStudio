@@ -1,7 +1,0 @@
-An External_declaration has a list of include files with more than one
-file in the list.  If the final include file name is missing the final
-`>' or `%"' delimiter and there is no white space around the comma
-separating the last two file names then the class is accepted, but
-should not be.
-
-Discovered in Release 3.3 beta.

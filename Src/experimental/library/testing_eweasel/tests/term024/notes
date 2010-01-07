@@ -1,6 +1,0 @@
-A creation instruction with an explicit creation type which is a BIT
-type with (what looks like) a constant attribute expressing the number
-of bits in the BIT type causes a compiler exception trace.
-
-Discovered in Prerelease 93.07.15.
-

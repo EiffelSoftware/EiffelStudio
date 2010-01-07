@@ -1,7 +1,0 @@
-A system with an invalid generic derivation of a generic class with
-two formal generic parameters A and B, where B is constrained by `LIST
-[A]' is accepted by the compiler, but should not be.  This results in
-an undetected type error and a segmentation fault when the system is
-executed.
-
-Discovered in Release 3.2.4.

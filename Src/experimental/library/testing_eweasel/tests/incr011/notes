@@ -1,7 +1,0 @@
-After initial compilation, an attribute is deleted, which introduces a
-VEEN violation.  The compiler reports the violation, but when return
-is pressed it proceeds with and finishes compilation, even though the
-violation is still there.
-
-Discovered in Prerelease 93.07.15.
-

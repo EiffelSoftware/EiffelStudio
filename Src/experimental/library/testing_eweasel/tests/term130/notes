@@ -1,3 +1,0 @@
-A call to a routine `prune_all' of a generic class using formals that maybe converted to their associated constraint causes the compiler to die when routine is inlined.
-
-Reported on ISE users mailing list on September 7, 2004.

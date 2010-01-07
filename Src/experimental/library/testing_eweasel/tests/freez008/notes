@@ -1,7 +1,0 @@
-A routine redefines an inherited routine that returns an expanded type
-or a BIT type and replaces it with an attribute.  It also includes
-references to the attribute.  The code compiles fine, but dies with a
-segmentation fault or "feature applied to void reference" if it was
-frozen.  Melted code works fine.  This appears to be a code generation bug.
-
-Discovered in Release 3.2.4.

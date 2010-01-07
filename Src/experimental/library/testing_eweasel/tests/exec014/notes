@@ -1,6 +1,0 @@
-A class which prints the address of a variable attribute compiles
-fine.  But when the system is executed, the value of the attribute is
-printed instead of its address.
-
-Discovered in Prerelease 93.07.15.
-

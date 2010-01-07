@@ -1,7 +1,0 @@
-After initial compilation, an actual generic parameter in a generic
-constraint is changed, thereby introducing a VTCG error.  When the
-system is recompiled, the compiler does not detect the error, but only
-if the generic class is also an expanded class.
-
-Discovered in Release 3.2.3b.
-

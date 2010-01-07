@@ -1,8 +1,0 @@
-A system has a class which inherits from another class three times,
-renaming one of its features in two of the Parent parts and selecting
-the renamed feature twice.  This violates the letter of VMRC(2), but
-the compiler does not complain.  ETL page 191.
-
-Discovered in Release 3.2.1.
-
-

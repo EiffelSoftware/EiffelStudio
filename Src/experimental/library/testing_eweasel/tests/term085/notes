@@ -1,4 +1,0 @@
-Finalizing a system with a delayed call and specifying `inlining (yes)'
-causes compiler to die.
-
-Discovered in Release 4.3-18.

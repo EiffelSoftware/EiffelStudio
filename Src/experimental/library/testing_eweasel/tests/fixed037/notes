@@ -1,5 +1,0 @@
-A procedure which is a `once' routine is not accepted as a creation
-procedure.  Violation of VGCP is reported.
-
-Fixed in Prerelease 93.02.17.
-

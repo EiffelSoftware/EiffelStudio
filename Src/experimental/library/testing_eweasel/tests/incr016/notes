@@ -1,7 +1,0 @@
-A system with a VTCT violation is compiled and the compiler detects
-it.  But when the name of a class is changed so that the missing class
-is present and the compilation is resumed, the compiler still reports
-the same VTCT violation.
-
-Discovered in Prerelease 93.07.15.
-

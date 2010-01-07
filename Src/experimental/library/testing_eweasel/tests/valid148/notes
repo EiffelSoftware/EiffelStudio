@@ -1,4 +1,0 @@
-A call `io.put_string (<< << "A" >> , << 47 >> >> @ 2 @ 1)' should be
-rejected as a VUAR(2) error but the compiler accepts it.
-
-Discovered in release 5.4.0610.

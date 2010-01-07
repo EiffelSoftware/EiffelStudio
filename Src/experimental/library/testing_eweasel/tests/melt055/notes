@@ -1,7 +1,0 @@
-A system calls an external routine that takes a REAL and returns a
-DOUBLE.  The signature specifies that the argument should be cast to
-double before being passed to the external routine.  After freezing,
-system produces correct output.  Changing the routine with the call
-and melting yields a system that produces incorrect output.
-
-Reported by Manu on April 25, 2003.

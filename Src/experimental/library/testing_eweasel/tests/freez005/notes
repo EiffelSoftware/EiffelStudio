@@ -1,8 +1,0 @@
-A routine has a postcondition with an `old' expression which involves
-a function call.  An exception is raised during execution of this
-function.  If the system is frozen, the recipient of the exception is
-not the routine containing the `old' expression, but that routine's
-caller.  If the system is melted, the routine containing the `old'
-expression is the recipient of the exception.
-
-Discovered in Release 3.2.4.

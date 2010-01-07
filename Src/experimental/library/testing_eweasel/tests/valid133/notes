@@ -1,8 +1,0 @@
-A class TEST1 that contains an attribute of type "like Current" is
-used in a declaration for a local of type "expanded TEST1".  This
-creates an expanded client cycle, so the compiler report a validity
-error, but does not.
-
-Reported by Manu on 05 Feb 2003.
-
-

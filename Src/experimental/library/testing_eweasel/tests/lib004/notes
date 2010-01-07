@@ -1,5 +1,0 @@
-Routine `put' in EXECUTION_ENVIRONMENT is missing preconditions that
-state that `value' and `key' cannot contain null characters.  Routine
-`get' may need a similar precondition.
-
-Discovered in release 5.4.0610.

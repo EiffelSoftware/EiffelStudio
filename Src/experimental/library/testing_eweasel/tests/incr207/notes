@@ -1,5 +1,0 @@
-After initial compilation, the tag in an indexing clause is changed
-from "weasel" to "attribute_field".  This introduces a VEEN error but the
-compiler does not detect it.
-
-Discovered in release 5.4.0515.

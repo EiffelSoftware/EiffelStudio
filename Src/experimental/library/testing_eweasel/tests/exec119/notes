@@ -1,8 +1,0 @@
-A class calls a routine which recurses a few times and then raises a
-developer exception.  The exception is rescued and the rescue clause
-calls another routine which calls the recursive routine and retries
-the exception.  System execution should terminate normally, but ends
-with the second developer exception.
-
-Sent in by Manu for release 5.0.036.
-

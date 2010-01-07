@@ -1,8 +1,0 @@
-A class creates several threads.  Each thread repeatedly creates a
-string whose length is determined by a random number generator and
-fills the string with blanks.  System execution ends with an
-exception, but should not.
-
-Discovered in release 5.1.003.
-
-

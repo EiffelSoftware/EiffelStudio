@@ -1,9 +1,0 @@
-A class inherits a feature `weasel: TEST3 [like Current]' where TEST3
-is an expanded class.  In an instance of the parent class `weasel' is
-non-Void (it better be since it is of an expanded type).  But in the
-inheriting class `weasel' is Void, which should be impossible.  If
-some Class_type is used as the actual generic parameter, instead of
-`like Current', then the attribute is non-Void in both parent and child.
-
-Discovered in Release 3.2.3b.
-

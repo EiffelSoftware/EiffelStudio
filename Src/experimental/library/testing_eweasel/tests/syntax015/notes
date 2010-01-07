@@ -1,5 +1,0 @@
-A manifest string constant with 5119 or more characters is reported as
-a syntax error (string too long).
-
-Discovered in Release 3.2.
-

@@ -1,5 +1,0 @@
-Finalizing a system with a trivial root class when using precompiled
-EiffelBase with dead code removal turned off produces C code which
-won't compile in ececil.c.
-
-Discovered in release 5.4.0515.

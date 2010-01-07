@@ -1,6 +1,0 @@
-LIBRARY test.dll
-
-EXPORTS
-
-; CLASS [TEST]
-	g

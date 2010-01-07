@@ -1,5 +1,0 @@
-A routine that compares an INTEGER local with `feature
-{INTEGER}.Min_value' minus another local displays the wrong result,
-but only when code is finalized.
-
-Reported by Manu on September 8, 2003.

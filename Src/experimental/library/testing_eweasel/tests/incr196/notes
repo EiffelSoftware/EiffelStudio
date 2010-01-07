@@ -1,7 +1,0 @@
-A system with two classes is compiled.  Both classes are in the same
-cluster and the Ace file uses "all" to include all classes in the
-entire directory tree.  Then a new sub-directory is created and a
-class with the same name is added to it.  When the system is
-recompiled, the compiler does not detect the VSCN error.
-
-Discovered in release 5.4.0403.

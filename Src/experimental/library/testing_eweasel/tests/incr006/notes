@@ -1,6 +1,0 @@
-When an inheritance clause is deleted, a former CHILD class no longer
-conforms to PARENT.  This introduces a violation of the Redeclaration
-rule (VDRD), but the compiler does not detect it.
-
-Discovered in Prerelease 93.07.15.
-

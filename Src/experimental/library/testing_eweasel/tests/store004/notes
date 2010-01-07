@@ -1,7 +1,0 @@
-A system creates a TWO_WAY_LIST, each of whose elements is an object
-of an expanded type.  The list is stored in a file, using
-`independent_store'.  When the list is retrieved, system execution
-dies with a retrieve error but only if the system is melted.
-
-Discovered in release 5.4.0515.
-

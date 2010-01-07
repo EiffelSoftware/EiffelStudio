@@ -1,7 +1,0 @@
-A class with a prefix feature that is an attribute compiles fine when
-frozen, but the generated C code won't compile.  Melted code works
-fine.  Fixing the generated C code by adding the missing "\" escape
-characters before double quote characters inside a C string allows the
-code to compile and produce the correct result.
-
-Discovered in release 5.4.0403.

@@ -1,4 +1,0 @@
-A generic class with a formal generic parameter constrained by
-a TUPLE type causes compiler to die.
-
-Discovered in Release 4.3-17.

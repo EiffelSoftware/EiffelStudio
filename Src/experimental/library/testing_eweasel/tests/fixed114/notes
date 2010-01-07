@@ -1,6 +1,0 @@
-According to page 519, the Cluster_mark part of a Root is optional.
-But es3 reports a syntax error if the Cluster_mark is missing.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.07.15.
-

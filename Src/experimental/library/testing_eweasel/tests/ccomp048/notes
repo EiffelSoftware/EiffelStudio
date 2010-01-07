@@ -1,4 +1,0 @@
-A call `f (Void)' where `f (d: DOUBLE)' generates C code that
-won't compile when system is frozen.  
-
-Reported by Manu on March 11, 2004.

@@ -1,8 +1,0 @@
-After initial compilation where the system is frozen, but without C
-code compilation, an inheritance clause is removed, which removes a
-class from the system.  Changes are melted.  When system cannot be
-executed (because C code wasn't compiled), an attempt is made to
-compile the C code.  However, it won't link due to an undefined
-symbol.
-
-Discovered in release 5.4.0610.

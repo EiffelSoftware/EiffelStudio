@@ -1,6 +1,0 @@
-After initial compilation, a class TEST1 is changed so that it is no
-longer expanded.  A class that inherits from TEST1 should now conform
-to it, but when changes are melted `type_conforms_to (dynamic_type
-(t2), dynamic_type (t1))' returns False.
-
-Discovered in release 5.4.0515.

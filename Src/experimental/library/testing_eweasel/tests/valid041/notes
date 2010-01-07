@@ -1,6 +1,0 @@
-A function whose return type is NONE and which references the
-predefined entity Result is reported to violate the Local Entity rule
-(VRLE).  It appears to be valid.
-
-Still not fixed in Prerelease 93.02.17.
-

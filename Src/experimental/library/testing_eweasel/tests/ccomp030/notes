@@ -1,7 +1,0 @@
-A system calls a routine which tries to create an instance of a
-deferred type, where this invalid creation is not detected at compile
-time because the target of the creation is anchored.  When the system
-is finalized the generated C code won't link, even if dead code
-removal is off.
-
-Discovered in Release 3.3.7.

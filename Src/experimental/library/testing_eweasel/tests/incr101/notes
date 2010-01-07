@@ -1,6 +1,0 @@
-After initial compilation, a constant integer attribute referenced in
-a BIT type is given a larger value.  This introduces a VNCB violation
-(assigning `BIT n' to `BIT p' where n > p), but upon recompile the
-error is not detected.
-
-Discovered in Release 3.2.2.

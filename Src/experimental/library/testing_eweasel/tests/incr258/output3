@@ -1,7 +1,0 @@
-PROCEDURE [A [INTEGER_8], TUPLE [INTEGER_8]]
-5
-
-PROCEDURE [A [STRING_8], TUPLE [STRING_8]]
-string
-
-Execution completed

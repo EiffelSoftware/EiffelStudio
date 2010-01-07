@@ -1,7 +1,0 @@
-Code generation for character intervals incorrectly calculates lower bound
-for else-part subinterval. This subinterval is included in "switch" IL
-instruction, but its lower index is off by 1. The "switch" instruction
-should start at '%/51/' and include all indexes up to '%/62/', but in
-actual code the instruction starts at '%/50/'.
-
-Discovered in release 5.6.0530 for .NET code generation.

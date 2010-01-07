@@ -1,5 +1,0 @@
-A deferred class which constructs a delayed call on a deferred
-routine compiles fine when finalized, but the generated C code 
-won't compile when dead code removal is turned off.
-
-Discovered in Release 5.0.005.

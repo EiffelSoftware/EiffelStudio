@@ -1,7 +1,0 @@
-Bit operations on INTEGER_64 do not always works correctly.  Bit_shift
-causes an "operational stack botched" panic when code is melted.  Some
-of the values computed are wrong for frozen/finalized code - shift of
-64 positions doesn't work correctly and all values are wrong for
-bit_shift.
-
-Discovered in Release 5.4.0403.

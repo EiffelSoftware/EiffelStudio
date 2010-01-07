@@ -1,7 +1,0 @@
-An expanded class with an attribute of type `like Current' is
-correctly reported as a VLEC error.  But when compilation is resumed
-with no change to any classes, the compiler goes into infinite
-recursion in SKELETON.equiv.
-
-Discovered in release 5.4.0709.
-

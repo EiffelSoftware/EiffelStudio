@@ -1,6 +1,0 @@
-After initial compilation, a routine that prints ({STRING}).generating_type
-is changed to print ({NONE}).generating_type.  When the system
-is recompiled, the compiler dies in degree 4.
-
-Discovered in Release 5.6.1128.
-

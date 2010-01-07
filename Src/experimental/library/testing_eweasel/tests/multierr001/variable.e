@@ -1,7 +1,0 @@
-class
-	VARIABLE[H->TARGET[FILE_NAME]]
-
-inherit
-	Y_VARIABLE[FILE_NAME,H]
-
-end

@@ -1,7 +1,0 @@
-A constrained generic class which is syntactically illegal because the
-constraint is `like Current' causes no complaints in pass 1 or pass 2.
-But when es3 does pass 2 on the class which inherits from the illegal
-class, it dies with an exception trace.
-
-Still not fixed in Prerelease 93.02.17.
-

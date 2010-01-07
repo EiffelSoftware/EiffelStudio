@@ -1,6 +1,0 @@
-A root class with a VWBE violation is detected by the compiler.  When
-everything is deleted except the class header and the closing `end'
-and the compilation is retried, an exception trace results.
-
-Discovered in Prerelease 93.05.17.
-

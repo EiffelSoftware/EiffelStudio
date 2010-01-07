@@ -1,4 +1,0 @@
-Finalizing a system with two small classes causes compiler to die 
-while inlining.
-
-Discovered in Release 4.3-17.

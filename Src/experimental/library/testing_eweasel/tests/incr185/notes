@@ -1,6 +1,0 @@
-A system with a class that has a C++ external is frozen.  Then the
-external feature is changed to a C external and the system is
-refrozen.  The resulting C code compiles, but will not link due to
-calling "cpp" to do the link instead of "gcc".
-
-Discovered in Release 5.0.024.

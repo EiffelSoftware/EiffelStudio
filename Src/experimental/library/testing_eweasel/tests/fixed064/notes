@@ -1,6 +1,0 @@
-Changing an inherited class from non-generic to generic and then
-recompiling results in an exception traceback.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.04.21.
-

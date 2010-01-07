@@ -1,6 +1,0 @@
-A class which inherits from itself is correctly reported to violate VHPR.
-But when the inheritance clause is removed, the compiler still reports
-a VHPR violation although none is present.
-
-Discovered in Release 3.1.1.
-

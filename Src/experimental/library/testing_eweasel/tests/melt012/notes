@@ -1,8 +1,0 @@
-A routine which conditionally raises an exception has a rescue clause
-which at first calls the routine itself before retrying, then later
-just unconditionally retries.  Executing the system gives the expected
-output when the system is frozen, but when it is melted a run-time
-panic occurs during execution.
-
-Discovered in Release 3.2.1.
-

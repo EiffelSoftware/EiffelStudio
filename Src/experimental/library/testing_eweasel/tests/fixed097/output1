@@ -1,5 +1,0 @@
-print (9.876534): 9.8765339999999995
-io.putreal (9.876534): 9.87653
-print (9.876534) double: 9.8765339999999995
-io.putdouble (9.876534): 9.8765339999999995
-Execution completed

@@ -1,8 +1,0 @@
-After initial compilation, an Expanded Type rule violation (VTEC) is
-added.  When the compiler detects the violation, the creation clause
-is removed from the class which is being declared expanded by the
-client, thereby removing the violation.  But the compiler still
-reports a VTEC violation.
-
-Discovered in Prerelease 93.07.15.
-

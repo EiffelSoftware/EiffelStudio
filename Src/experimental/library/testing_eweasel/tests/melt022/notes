@@ -1,9 +1,0 @@
-After initial melting of a root class whose creation procedure has an
-empty body, a local of type LINKED_LIST [STRING] is added and the
-routine body is modified to create the linked list and extend it with
-one string.  The assertion level is `ensure'.  When the system is
-recompiled and executed, system execution ends with a segmentation
-fault in `go_to' of LINKED_LIST.
-
-Discovered in Release 3.2.3b.
-

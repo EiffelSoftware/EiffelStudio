@@ -1,6 +1,0 @@
-After initial compilation, an integer constant attribute is changed to
-a function with no arguments.  The compiler does not detect the newly
-introduced VSTA error (reference to a static feature which is not a
-constant or external).
-
-Discovered in release 5.2.0914.

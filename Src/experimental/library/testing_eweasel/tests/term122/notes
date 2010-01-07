@@ -1,5 +1,0 @@
-A class with a creation expression `create {like x}' where `x: NONE'
-causes compiler to die during degree 3.
-
-Discovered in release 5.4.0709.
-

@@ -1,8 +1,0 @@
-According to page 120, an Assertion_clause is an optional Tag_mark
-followed by an Unlabeled_assertion_clause.  But when the
-Unlabeled_assertion_clause is a Comment, a preceding tag is rejected
-as a syntax error.
-
-Discovered in Prerelease 93.04.21.
-Fixed in Prerelease 93.07.15.
-

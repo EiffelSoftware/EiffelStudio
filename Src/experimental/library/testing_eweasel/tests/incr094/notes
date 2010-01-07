@@ -1,7 +1,0 @@
-After initial compilation an inherited variable attribute in a
-grandparent is changed to a constant attribute, thereby introducing a
-VDRS(2) violation.  But when the constant attribute is changed back to
-a variable attribute, the compiler still reports a VDRS(2) error
-though none is present.
-
-Discovered in Release 3.2.1.

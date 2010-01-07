@@ -1,6 +1,0 @@
-A known sequence of changes which involves changing the name of a
-class to elicit a VTCT error and changing the actual generic parameter
-in a type in a generic constraint to elicit a VTCG error causes the
-compiler to terminate with a segmentation fault during degree 5.
-
-Discovered in Release 3.2.4.

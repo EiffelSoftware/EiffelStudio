@@ -1,5 +1,0 @@
-Executing a system which assigns an INTEGER_8, INTEGER_16 or
-INTEGER_64 variable to itself results in an "unknown entity type"
-run-time panic.
-
-Discovered in Release 5.0.016.

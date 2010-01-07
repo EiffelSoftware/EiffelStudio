@@ -1,7 +1,0 @@
-A class with the instruction `c := c + 1' where `c' is a local of type
-CHARACTER compiles fine when melted, but execution ends with a
-run-time panic and "operational stack botched".  Frozen and finalized
-code work correctly.
-
-Discovered in release 5.5.1012.
-

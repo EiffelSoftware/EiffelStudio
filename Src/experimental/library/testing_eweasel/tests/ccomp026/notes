@@ -1,7 +1,0 @@
-A system has a class with an external routine and another class which
-inherits the first class and undefines the external routine.  There is
-also a call to the undefined version of the external routine (which
-cannot work at run-time, of course).  When the system is finalized,
-the generated C code won't compile.
-
-Discovered in Release 3.3.7.

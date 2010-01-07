@@ -1,7 +1,0 @@
-An explicit creation type which is an expanded type violates VGCC(3),
-but the compiler does not detect the violation when it is introduced
-after initial compilation by changing a class header to `expanded
-class'.
-
-Discovered in Release 3.1.1.
-

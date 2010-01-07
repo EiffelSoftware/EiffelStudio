@@ -1,9 +1,0 @@
-An assignment with source type `PARENT' and target type `like Current'
-is correctly allowed in a feature of the class PARENT.  But when CHILD
-inherits PARENT the assignment becomes invalid since the target type
-`like Current' becomes effectively CHILD, so we have PARENT assigned
-to CHILD which violates the Assignment rule.  The compiler does not
-detect this violation.
-
-Still not fixed in Prerelease 93.02.17.
-

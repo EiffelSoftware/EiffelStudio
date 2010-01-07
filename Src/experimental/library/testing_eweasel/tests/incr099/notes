@@ -1,6 +1,0 @@
-After initial compilation, a feature which is the target of an
-assignment is changed from a variable attribute of type TEST1 to a
-constant attribute of type STRING.  The compiler does not detect the
-VJAW error.
-
-Discovered in Release 3.2.1.

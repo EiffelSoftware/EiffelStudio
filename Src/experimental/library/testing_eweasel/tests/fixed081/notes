@@ -1,7 +1,0 @@
-In many contexts, the following characters seem to be completely
-ignored: ~ % ? ` \ _ (tilde, percent, question mark, backquote,
-backslash, underscore).  They should instead cause the compiler to
-report a syntax error.
-
-Discovered in Prerelease 93.05.17.
-Fixed in Prerelease 93.07.15.

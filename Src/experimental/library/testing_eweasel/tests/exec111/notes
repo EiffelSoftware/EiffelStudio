@@ -1,7 +1,0 @@
-Melted/frozen, finalized and finalized-with-inlining code give
-different results for some numerical operations (floor and ceiling),
-as well as in cases where a real must be converted to a double or an
-integer must be converted to a real.
-
-Discovered in Release 5.0.015.
-

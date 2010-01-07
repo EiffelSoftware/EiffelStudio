@@ -1,5 +1,0 @@
-A manifest array with no expression in its list (<< >>) is reported as
-a syntax error.
-
-Still not fixed in Prerelease 93.02.17.
-

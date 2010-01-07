@@ -1,5 +1,0 @@
-A class appears to violate both VTAT1 and VTAT2 (page 214), but is
-accepted by the compiler without complaint.
-
-Still not fixed in Prerelease 93.02.17.
-

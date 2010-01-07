@@ -1,7 +1,0 @@
-A system has a class which violates the Select Subclause rule (same
-feature name appears twice).  The compiler detects the VMSS violation.
-Changing the inheritance structure and then hitting return at the
-"Another compilation needed..." prompt causes an exception trace.
-
-Fixed in Prerelease 93.02.17.
-

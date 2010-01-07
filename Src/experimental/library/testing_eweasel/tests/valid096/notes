@@ -1,9 +1,0 @@
-A class A declares an entity of type `expanded B [like Current]'.
-Since B inherits from A, there should be an expanded client cycle
-involving only B.  But the compiler does not detect the VLEC error.
-If the entity type is instead `expanded B [A]' the VLEC error is
-detected.
-
-Discovered in Release 3.2.3b.
-
-

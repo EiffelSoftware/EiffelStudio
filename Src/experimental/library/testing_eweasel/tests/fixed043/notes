@@ -1,7 +1,0 @@
-Running es3 on an Ace file with a syntax error and then hitting return
-at the "Another compilation needed..." prompt without changing the Ace
-file at all results in an exception trace.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.04.21.
-

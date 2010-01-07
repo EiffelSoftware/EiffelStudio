@@ -1,7 +1,0 @@
-An option clause in an Ace file specifies that one debug key is to be
-enabled for classes A and B and a second debug key is to be enabled
-only for class A.  When the system is executed, the second debug key
-is monitored for both classes A and B.  Reversing the order of the
-debug clauses corrects the problem.
-
-Discovered in Release 3.2.2.

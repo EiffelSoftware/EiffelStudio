@@ -1,4 +1,0 @@
-A call `print (True)' or `print (False)' produces no visible output.
-
-Still not fixed in Prerelease 93.02.17.
-

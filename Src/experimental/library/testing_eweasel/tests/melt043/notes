@@ -1,8 +1,0 @@
-A class repeatedly creates an instance of another class which has one
-attribute of an expanded type.  The base class of the expanded type
-has a creation procedure which allocates a small amount of memory to
-initialize the value of a string attribute.  If the system is melted,
-a segmentation fault occurs when the system is executed.  Frozen code
-works fine.
-
-Discovered in Release 3.3.7.

@@ -1,7 +1,0 @@
-A pair of generic classes that mention each other in their formal
-generic constraints is invalid.  After the compiler correctly detects
-the VTCG error, one of the actual generics in the constraint is
-changed.  Compilation then terminates with a segmentation violation
-and no exception trace at all.
-
-Discovered in Release 5.0.015.

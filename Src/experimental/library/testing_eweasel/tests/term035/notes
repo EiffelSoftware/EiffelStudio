@@ -1,5 +1,0 @@
-A class has a creation instruction whose target is a double constant
-with a negative value.  The compiler starts reporting a VGCC(7) error
-and dies while trying to report it.
-
-Discovered in Release 3.2.

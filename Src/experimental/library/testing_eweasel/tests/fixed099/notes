@@ -1,8 +1,0 @@
-A class with a VUAR violation is compiled and the compiler detects the
-error.  When the type of the actual argument is changed to fix the
-error, the compiler later dies with an exception trace.  The trace
-indicates that `update_types' was applied to a void reference.
-
-Still not fixed in Prerelease 93.02.17.
-Fixed in Prerelease 93.07.15.
-

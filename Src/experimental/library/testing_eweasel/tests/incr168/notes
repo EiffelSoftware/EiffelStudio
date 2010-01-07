@@ -1,9 +1,0 @@
-After initial compilation where the system is melted, the name of a
-routine in a parent class is changed, yielding a third inherited
-version of a redefined feature.  The new inherited version of the
-feature has no precondition, which should make the alternative
-precondition of the redefined feature true.  But the precondition is
-violated when the system is executed.  Execution works correctly when
-the system is melted from scratch.
-
-Discovered in Release 5.0.015.

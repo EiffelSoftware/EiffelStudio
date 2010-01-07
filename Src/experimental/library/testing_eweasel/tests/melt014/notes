@@ -1,8 +1,0 @@
-The creation procedure of a class assigns Void to the attribute to
-which the creation procedure is being applied (by the root creation
-procedure).  Executing the system results in a segmentation fault, but
-only if the system is melted.  If non-Void value is assigned instead,
-the result is incorrect system execution output.
-
-Discovered in Release 3.2.2.
-

@@ -1,4 +1,0 @@
-A sequence of changes involving expanded classes results in a frozen
-system which, when executed, panics with "main entry point vanished".
-
-Discovered in release 5.5.1012.

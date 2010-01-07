@@ -1,6 +1,0 @@
-A BIT type whose length is specified by a constant attribute which is
-not an integer correctly elicits a VTBT violation report, but the
-compiler also reports a VTAT violation though no anchored types are used.
-
-Discovered in Prerelease 93.07.15.
-

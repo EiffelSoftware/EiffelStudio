@@ -1,7 +1,0 @@
-A class with a declaration and call of an operator feature which ends
-with a backslash character appears to be valid and the compiler
-accepts it.  But the generated C code won't compile.  Also, the same
-problems with characters %" and \ occur with debug keys.
-
-Discovered in Prerelease 93.05.17.
-

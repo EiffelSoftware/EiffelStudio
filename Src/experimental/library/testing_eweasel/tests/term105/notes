@@ -1,7 +1,0 @@
-A generic class `C [G]' has a function `f (i: like item): LIST [C
-[G]]' and also has a feature `item: G'.  A descendant class redefines
-the function so that its signature is `f (i: like item): LIST [C [like
-item]]' and it calls Precursor.  The compiler dies in degree 3 when
-compiling the system.
-
-Reported by Manu on 26 December 2001.

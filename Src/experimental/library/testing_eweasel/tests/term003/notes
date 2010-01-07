@@ -1,5 +1,0 @@
-Long identifiers still cause problems.  Got Illegal instruction (core dumped).
-Prerelease 92.12.08.
-Not fixed yet - Prerelease 93.02.17.
-Not fixed yet - Prerelease 93.04.21.  However, it now seems to cause an
-	infinite loop.

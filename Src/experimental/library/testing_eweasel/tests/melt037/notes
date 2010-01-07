@@ -1,6 +1,0 @@
-A routine has a postcondition which includes more than one `old'
-expression.  The old expressions are evaluated in reverse order of
-their appearance when the code is melted, but in order of appearance
-when it is frozen.
-
-Discovered in Release 3.2.4.

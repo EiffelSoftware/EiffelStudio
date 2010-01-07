@@ -1,4 +1,0 @@
-Finalizing a system with a function whose body is
-`Result := create {SEQ_STRING} .make (47)' causes compiler to die.
-
-Discovered in Release 4.3-17.

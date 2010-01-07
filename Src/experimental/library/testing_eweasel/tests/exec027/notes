@@ -1,8 +1,0 @@
-A system which allocates a number of fairly large strings (approx 0.4
-MB each) and calls routines allocate_tiny, full_collect and
-full_coalesce in class MEMORY compiles fine. When the system is
-executed it eventually runs out of memory, which appears to indicate a
-memory leak.
-
-Discovered in Prerelease 93.07.15.
-

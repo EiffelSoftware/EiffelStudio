@@ -1,9 +1,0 @@
-In the Undefine, Redefine and Select inheritance subclauses, ETL does
-not address the case where `fname' is the final name in C of more than
-one feature inherited from B, due to renaming.  How can one merge two
-features inherited from the same class, one of which is effective and
-the other deferred, and have the resulting feature be deferred?
-
-Discovered in Release 3.2.1.
-
-

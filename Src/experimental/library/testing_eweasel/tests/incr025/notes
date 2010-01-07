@@ -1,8 +1,0 @@
-A generic derivation of a class with a constrained formal generic
-parameter (using `like Current' as actual generic parameter) is
-rejected as violating validity constraint VE04, but only when used as
-a type in an inheritance clause.  Hitting return to retry compilation
-with no change causes an exception trace.
-
-Still not fixed in Prerelease 93.02.17.
-

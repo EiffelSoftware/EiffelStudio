@@ -1,5 +1,0 @@
-If a class starts without any leading white space at all, then it is
-rejected with validity error VD10.
-
-Still not fixed - release 92.12.08.
-Fixed in release 93.02.17.

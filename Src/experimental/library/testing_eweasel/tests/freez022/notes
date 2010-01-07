@@ -1,6 +1,0 @@
-A class has a routine `value (r: DOUBLE): like r' which just returns
-the value of `r'.  When the routine is called with an INTEGER_8 actual
-argument, the result is wrong but only if the system is frozen.
-Melted code works correctly.
-
-Discovered in release 5.4.0610.

@@ -1,7 +1,0 @@
-After initial compilation where the system is melted, an expanded
-class with no creation procedure adds a redefinition of
-default_create.  The system is recompiled without error but the
-creation procedure of the expanded class is called twice (it is only
-called once if final classes are compiled from scratch).
-
-Discovered in Release 5.4.0403.

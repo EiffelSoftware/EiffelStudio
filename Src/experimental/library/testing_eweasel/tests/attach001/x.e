@@ -1,3 +1,0 @@
-expanded class X
-
-end

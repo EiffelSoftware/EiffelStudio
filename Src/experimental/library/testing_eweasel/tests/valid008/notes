@@ -1,5 +1,0 @@
-Class with entity name and assertion tag which are reserved word INTEGER
-is accepted without complaint.
-
-Still not fixed in Prerelease 93.02.17.
-

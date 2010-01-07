@@ -1,5 +1,0 @@
-After initial compilation, a VTEC(2) error is introduced by removing
-an inheritance clause.  When the system is recompiled, the compiler
-does not detect the error.
-
-Discovered in release 5.4.0403.

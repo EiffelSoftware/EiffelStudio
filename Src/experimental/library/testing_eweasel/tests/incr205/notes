@@ -1,5 +1,0 @@
-After initial compilation, a procedure name is removed from a generic
-constraint.  When the system is recompiled, the VGCC(8) error is not
-detected.
-
-Discovered in release 5.4.0515.

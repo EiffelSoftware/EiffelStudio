@@ -1,7 +1,0 @@
-A class calls an external routine with a precondition that is false.
-When the system is executed, the precondition is violated and an
-exception is raised, which is correct.  Then the precondition is
-changed so that it is true and changes are melted.  System execution
-still violates the precondition, but should not.
-
-Reported by Manu on August 5, 2003.

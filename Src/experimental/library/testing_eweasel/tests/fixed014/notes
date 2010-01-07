@@ -1,5 +1,0 @@
-A feature which is both frozen and deferred (violates validity
-constraint VFFD4 on page 69) causes es3 to die with exception trace.
-
-Fixed in Prerelease 93.02.17.
-

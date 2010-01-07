@@ -1,4 +1,0 @@
-Finalizing a system with `assertion (all)' specified in the Ace when
-precompiled EiffelBase is used produces C code which won't link.
-
-Discovered in Release 4.5.018.

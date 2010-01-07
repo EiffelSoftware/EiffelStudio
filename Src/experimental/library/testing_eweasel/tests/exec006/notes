@@ -1,5 +1,0 @@
-In certain cases, the functions `bottom_int_div' and `up_int_div' in
-class BASIC_ROUTINES give the wrong results.
-
-Still not fixed in Prerelease 93.02.17.
-

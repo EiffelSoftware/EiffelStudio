@@ -1,5 +1,0 @@
-After initial compilation, a constrained generic parameter [G -> STRING]
-is added to the root class.  When the compiler detects the VSRT(1)
-error, the generic parameter is removed.  The compiler then dies.
-
-Discovered in Release 4.3.

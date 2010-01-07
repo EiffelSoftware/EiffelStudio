@@ -1,6 +1,0 @@
-After initial compilation where a class plus EiffelBase is precompiled
-the system is precompiled again using precomp.epr file.  The compiler
-dies with a segmentation fault in FILE_NAME.make_from_string.
-Compiler should probably say that project is read-only.
-
-Discovered in Release 5.4.0610.

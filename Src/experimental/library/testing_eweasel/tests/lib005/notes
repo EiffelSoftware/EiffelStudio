@@ -1,5 +1,0 @@
-Calling ARRAYED_LIST.append and passing an ARRAYED_LIST with zero
-elements as actual argument causes violation of precondition
-`good_indices' of ARRAY.resize.
-
-Discovered in release 5.4.0730.

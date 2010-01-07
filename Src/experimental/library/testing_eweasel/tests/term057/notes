@@ -1,7 +1,0 @@
-A class with an assignment of a 20000 element manifest array of
-strings to an attribute of type ARRAY [STRING] causes termination of
-the compiler during pass 4 on the class, but only under very
-particular circumstances.  Innocuous changes cause the system to be
-compiled correctly.
-
-Discovered in Release 3.2.4.

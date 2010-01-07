@@ -1,6 +1,0 @@
-After initial compilation, formal generics in an inheritance clause
-are switched, causing a type involved in a redefined feature to no
-longer conform to the ancestor feature's type.  The compiler does not
-detect the newly introduced VDRD(2) error.
-
-Discovered in Release 5.0.015.

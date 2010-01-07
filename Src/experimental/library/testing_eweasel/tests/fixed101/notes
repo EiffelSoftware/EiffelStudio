@@ -1,9 +1,0 @@
-A correct system compiles fine.  Then the generic constraint in an
-inherited class is changed.  The compiler correctly detects the VTGG
-violation.  But when the generic constraint is changed back to its
-original form, the compiler reports a VD27 violation, even though the
-Parent part in the inheriting class is now valid.
-
-Discovered in Prerelease 93.05.17.
-Fixed in Prerelease 93.07.15.
-

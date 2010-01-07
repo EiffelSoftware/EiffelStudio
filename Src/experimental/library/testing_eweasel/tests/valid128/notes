@@ -1,5 +1,0 @@
-A call to a static feature `feature {FOO [DOUBLE]}.value' where FOO is
-declared as FOO [G -> STRING] should elicit a VTCG error but the
-compiler accepts the invalid type.
-
-Discovered in release 5.2.0928.

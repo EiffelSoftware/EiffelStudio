@@ -1,4 +1,0 @@
-A declaration of an external routine which uses "c" for the language
-name instead of "C" should be accepted, but is not.
-
-Discovered in Release 3.3 beta.

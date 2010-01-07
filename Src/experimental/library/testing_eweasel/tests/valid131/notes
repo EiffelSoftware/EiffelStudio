@@ -1,9 +1,0 @@
-A class A has a deferred routine with an argument anchor to an
-attribute `a'.  A second class B inherits A and has an identical
-deferred routine with the same name, where the routine in B is also
-anchored to `a'.  Class C inherits both A and B.  The compiler
-incorrectly reports a VDJR error and a VD43 warning.
-
-Reported by Manu for release 5.2.1102.
-
-

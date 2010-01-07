@@ -1,5 +1,0 @@
-Finalizing a class with a routine with an argument of type ARRAY
-[EXPANDED_TYPE] causes compiler to die while inlining.  Actually, I'm
-not sure that is the cause of the problem but the compiler does die.
-
-Discovered in Release 4.3-17.

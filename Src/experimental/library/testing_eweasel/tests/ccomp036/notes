@@ -1,5 +1,0 @@
-A class which undefines `default_rescue' and then tries to print
-$default_rescue generates C code which won't compile when system is
-frozen or finalized.
-
-Discovered in Release 5.0.015.

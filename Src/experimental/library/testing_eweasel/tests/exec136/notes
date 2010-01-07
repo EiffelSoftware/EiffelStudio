@@ -1,9 +1,0 @@
-A class does an `independent_store' of an object that has two expanded
-attributes, where each expanded object has an INTEGER attribute and
-another attribute of an expanded type.  Freezing the system works
-fine, but during execution when the stored object is retrieved, a
-floating point exception occurs.  Finalizing the system produces C
-code that won't compile.
-
-Reported by Manu on October. 1, 2002.
-

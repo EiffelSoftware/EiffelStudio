@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 class-name-mismatch-internal-error
+test_description After initial compilation a system that references class TEST1 is changed to reference TEST2 and a copy of TEST1 is created in test2.e.  When the system is recompiled, the compiler reports an INTERNAL_ERROR error with message "Class mismatch found".
+
+copy_sub 	Ace $TEST Ace
+define		CLASS_NAME "TEST1"
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+define		CLASS_NAME "TEST2"
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test2.e
+compile_quick_melted
+compile_result 	validity_error NONE VD71
+
+test_end

@@ -1525,7 +1525,9 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 				Result := develop_window.tools.default_feature_tool
 			else
 				show
-				set_focus
+				if widget.is_displayed and then widget.is_sensitive then
+					set_focus
+				end
 				Result := Current
 			end
 		ensure
@@ -2410,7 +2412,7 @@ invariant
 	shortcut_table_not_void: shortcut_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

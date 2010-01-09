@@ -147,6 +147,9 @@ feature -- Basic operations
 				t ?= action
 				check t /= Void end
 				action_array ?= t.item (1)
+				if action_array = Void and then attached {ARRAYED_LIST [ANY]} t.item (1) as l_arrayed_list then
+					action_array := l_arrayed_list.to_array
+				end
 				check action_array /= Void end
 				do_agent := (agent procedure_array_call (action_array))
 			end
@@ -157,6 +160,9 @@ feature -- Basic operations
 				t ?= undo_procedure
 				check t /= Void end
 				undo_array ?= t.item (1)
+				if undo_array = Void and then attached {ARRAYED_LIST [ANY]} t.item (1) as l_arrayed_list then
+					undo_array := l_arrayed_list.to_array
+				end
 				check undo_array /= Void end
 				undo_agent := (agent procedure_array_call (undo_array))
 			end
@@ -222,6 +228,9 @@ feature -- Basic operations
 				t ?= action
 				check t /= Void end
 				action_array ?= t.item (1)
+				if action_array = Void and then attached {ARRAYED_LIST [ANY]} t.item (1) as l_arrayed_list then
+					action_array := l_arrayed_list.to_array
+				end
 				check action_array /= Void end
 				do_agent := (agent procedure_array_call (action_array))
 			end
@@ -232,6 +241,9 @@ feature -- Basic operations
 				t ?= undo_procedure
 				check t /= Void end
 				undo_array ?= t.item (1)
+				if undo_array = Void and then attached {ARRAYED_LIST [ANY]} t.item (1) as l_arrayed_list then
+					undo_array := l_arrayed_list.to_array
+				end
 				check undo_array /= Void end
 				undo_agent := (agent procedure_array_call (undo_array))
 			end
@@ -396,7 +408,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

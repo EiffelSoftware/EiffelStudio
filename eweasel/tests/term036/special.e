@@ -14,9 +14,20 @@ frozen class
 
 create
 	make,
-	make_filled
+	make_filled,
+	make_empty
 
 feature {NONE} -- Initialization
+
+	frozen make_empty (n: INTEGER) is
+			-- Creates a special object for `n' entries.
+		require
+			non_negative_argument: n >= 0
+		do
+			-- Built-in
+		ensure
+			area_allocated: count = 0
+		end
 
 	frozen make (n: INTEGER) is
 			-- Creates a special object for `n' entries.

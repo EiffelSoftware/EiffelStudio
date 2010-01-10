@@ -14,9 +14,14 @@ frozen class
 
 create
 	make,
-	make_filled
+	make_filled,
+	make_empty
 
 feature
+
+	make_empty (i: INTEGER) is
+		do
+		end
 
 	make (i: INTEGER) is
 		do

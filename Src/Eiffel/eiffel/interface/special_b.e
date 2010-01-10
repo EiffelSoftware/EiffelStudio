@@ -36,17 +36,7 @@ feature -- Validity
 			feat_table := feature_table
 
 				-- Check if class has a feature `make (INTEGER)' or `make_empty (INTEGER)'.
-			make_feature := feat_table.item_id ({PREDEFINED_NAMES}.make_name_id)
-			if make_feature /= Void then
-				if
-					not (make_feature.written_in = class_id) or else
-					not make_feature.same_signature (make_signature) or else
-					not has_creation_routine (make_feature)
-				then
-					create special_error.make (special_case_2, Current)
-					Error_handler.insert_error (special_error)
-				end
-			else
+			if system.is_experimental_mode then
 				make_feature := feat_table.item_id ({PREDEFINED_NAMES}.make_empty_name_id)
 				if
 					make_feature = Void or else
@@ -55,6 +45,17 @@ feature -- Validity
 					not has_creation_routine (make_feature)
 				then
 					create special_error.make (special_case_3, Current)
+					Error_handler.insert_error (special_error)
+				end
+			else
+				make_feature := feat_table.item_id ({PREDEFINED_NAMES}.make_name_id)
+				if
+					make_feature = Void or else
+					not (make_feature.written_in = class_id) or else
+					not make_feature.same_signature (make_signature) or else
+					not has_creation_routine (make_feature)
+				then
+					create special_error.make (special_case_2, Current)
 					Error_handler.insert_error (special_error)
 				end
 			end
@@ -351,7 +352,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

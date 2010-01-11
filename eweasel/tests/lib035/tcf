@@ -1,0 +1,19 @@
+
+test_name 	file-position-bad-file-pointer
+test_description A call to `position' on a PLAIN_TEXT_FILE or RAW_FILE should raise an exception if `file_pointer' is invalid
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work 
+c_compile_result ok
+
+execute_work 	NONE exec_output
+execute_result 	ok
+
+compare 	exec_output output
+
+test_end

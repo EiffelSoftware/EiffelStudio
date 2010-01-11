@@ -1,10 +1,8 @@
 note
-
-	description:
-		"References to objects containing a real value"
-	legal: "See notice at end of class."
-
-	status: "See notice at end of class."
+	description: "References to objects containing a real value"
+	library: "Free implementation of ELKS library"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,7 +25,7 @@ class REAL_32_REF inherit
 
 feature -- Access
 
-	item: REAL
+	item: REAL_32
 			-- Numeric real value
 
 	hash_code: INTEGER
@@ -62,6 +60,24 @@ feature -- Access
 			Result.set_item ({REAL_32} 0.0)
 		end
 
+	nan: REAL_32
+			-- Representation of not a number (NaN)
+		external
+			"built_in static"
+		end
+
+	negative_infinity: REAL_32
+			-- Representation of negative infinity
+		external
+			"built_in static"
+		end
+
+	positive_infinity: REAL_32
+			-- Representation of positive infinity
+		external
+			"built_in static"
+		end
+
 feature -- Comparison
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -77,7 +93,7 @@ feature -- Comparison
 			Result := other.item = item
 		end
 
-	three_way_comparison (other: like Current): INTEGER
+	three_way_comparison (other: like Current): INTEGER_32
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 		do
@@ -90,7 +106,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	frozen set_item (r: REAL)
+	set_item (r: REAL_32)
 			-- Make `r' the value of `item'.
 		do
 			item := r
@@ -98,7 +114,7 @@ feature -- Element change
 
 feature -- Status report
 
-	divisible (other: like Current): BOOLEAN
+	divisible (other: REAL_32_REF): BOOLEAN
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0.0
@@ -128,21 +144,39 @@ feature -- Status report
 			Result := item /= 0.0
 		end
 
+	is_nan: BOOLEAN
+			-- Is current the representation of `nan'?
+		do
+			Result := item.is_nan
+		end
+
+	is_negative_infinity: BOOLEAN
+			-- Is current the representation of `negative_infinity'?
+		do
+			Result := item.is_negative_infinity
+		end
+
+	is_positive_infinity: BOOLEAN
+			-- Is current the representation of `positive_infinity'?
+		do
+			Result := item.is_positive_infinity
+		end
+
 feature {NONE} -- Initialization
 
-	make_from_reference (v: REAL_REF)
+	make_from_reference (v: REAL_32_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
 		do
-			item := v.item
+			set_item (v.item)
 		ensure
 			item_set: item = v.item
 		end
 
 feature -- Conversion
 
-	to_reference: REAL_REF
+	to_reference: REAL_32_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -151,89 +185,81 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	truncated_to_integer: INTEGER
+	truncated_to_integer: INTEGER_32
 			-- Integer part (same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			if item >= 0.0 then
-				Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor (item))
-			else
-				Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.ceiling (item))
-			end
+			Result := item.truncated_to_integer
 		end
 
 	truncated_to_integer_64: INTEGER_64
 			-- Integer part (same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			if item >= 0.0 then
-				Result := {SYSTEM_CONVERT}.to_int_64_double ({MATH}.floor (item))
-			else
-				Result := {SYSTEM_CONVERT}.to_int_64_double ({MATH}.ceiling (item))
-			end
+			Result := item.truncated_to_integer_64
 		end
 
-	to_double: DOUBLE
+	to_double: REAL_64
 			-- Current seen as a double
 		do
 			Result := item.to_double
 		end
 
-	ceiling: INTEGER
+	ceiling: INTEGER_32
 			-- Smallest integral value no smaller than current object
 		do
-			Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.ceiling (item))
+			Result := ceiling_real_32.truncated_to_integer
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
 		end
 
-	floor: INTEGER
+	floor: INTEGER_32
 			-- Greatest integral value no greater than current object
 		do
-			Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor (item))
+			Result := floor_real_32.truncated_to_integer
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
 		end
 
-	rounded: INTEGER
+	rounded: INTEGER_32
 			-- Rounded integral value
 		do
-			Result := sign * {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor ({MATH}.abs_real (item) + 0.5))
+			Result := sign * ((abs + 0.5).floor)
 		ensure
 			definition: Result = sign * ((abs + 0.5).floor)
 		end
 
-	ceiling_real_32: REAL
+	ceiling_real_32: REAL_32
 			-- Smallest integral value no smaller than current object
 		do
-			Result := {MATH}.ceiling (item).truncated_to_real
+			Result := item.ceiling_real_32
 		ensure
 			result_no_smaller: Result >= item
 			close_enough: Result - item < item.one
 		end
 
-	floor_real_32: REAL
+	floor_real_32: REAL_32
 			-- Greatest integral value no greater than current object
 		do
-			Result := {MATH}.floor (item).truncated_to_real
+			Result := item.floor_real_32
 		ensure
 			result_no_greater: Result <= item
 			close_enough: item - Result < Result.one
 		end
 
-	rounded_real_32: REAL
+	rounded_real_32: REAL_32
 			-- Rounded integral value
 		do
-			Result := (sign * {MATH}.floor ({MATH}.abs_real (item) + 0.5)).truncated_to_real
+			Result := sign * ((abs + {REAL_32} 0.5).floor_real_32)
 		ensure
 			definition: Result = sign * ((abs + {REAL_32} 0.5).floor_real_32)
 		end
 
 feature -- Basic operations
 
-	abs: REAL
+	abs: REAL_32
 			-- Absolute value
 		do
 			Result := abs_ref.item
@@ -270,7 +296,7 @@ feature -- Basic operations
 			Result.set_item (item / other.item)
 		end
 
-	power alias "^" (other: DOUBLE): DOUBLE
+	power alias "^" (other: REAL_64): REAL_64
 			-- Current real to the power `other'
 		do
 			Result := item ^ other
@@ -300,7 +326,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	abs_ref: REAL_REF
+	abs_ref: like Current
 			-- Absolute value
 		do
 			if item >= 0.0 then
@@ -310,23 +336,10 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_exists: Result /= Void
-			same_absolute_value: equal (Result, Current) or equal (Result, - Current)
+			same_absolute_value: (Result ~ Current) or (Result ~ -Current)
 		end
 
 invariant
-
-	sign_times_abs: sign * abs = item
-
-note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
+	sign_times_abs: not item.is_nan implies sign * abs = item
 
 end

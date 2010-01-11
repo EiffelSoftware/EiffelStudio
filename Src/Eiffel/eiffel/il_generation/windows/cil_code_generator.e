@@ -3746,6 +3746,46 @@ feature -- IL Generation
 			end
 		end
 
+	generate_runtime_builtin_call (a_feature: FEATURE_I)
+			-- Generate the call to the corresponding builtin routine in ISE_RUNTIME for the implementation of `a_feature'
+		local
+			l_token: INTEGER
+			l_method_sig: like method_sig
+			i, nb: INTEGER
+		do
+			if attached {BUILT_IN_EXTENSION_I} a_feature.extension as l_ext then
+				l_method_sig := method_sig
+				l_method_sig.reset
+				l_method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+
+				nb := a_feature.argument_count
+				if l_ext.is_static then
+					l_method_sig.set_parameter_count (nb)
+				else
+					generate_current
+					l_method_sig.set_parameter_count (nb + 1)
+				end
+				if a_feature.has_return_value then
+					set_method_return_type (l_method_sig, a_feature.type, current_class_type)
+				end
+				if nb > 0 then
+					from
+						a_feature.arguments.start
+					until
+						a_feature.arguments.after
+					loop
+						set_signature_type (l_method_sig, a_feature.arguments.item, current_class_type)
+						generate_argument (a_feature.arguments.index)
+						a_feature.arguments.forth
+					end
+				end
+				uni_string.set_string ("builtin_" + a_feature.written_class.name + "_" + a_feature.feature_name)
+				l_token := md_emit.define_member_ref (uni_string, current_module.ise_runtime_type_token, l_method_sig)
+				method_body.put_static_call (l_token, nb, a_feature.has_return_value)
+				generate_return (a_feature.has_return_value)
+			end
+		end
+
 	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER;
 			is_virtual: BOOLEAN)
@@ -6650,54 +6690,63 @@ feature -- Basic feature
 			method_body.put_static_call (l_query_token, 1, True)
 		end
 
-	generate_min (type: TYPE_A)
-			-- Generate `min' on basic types.
+	generate_is_query_on_real (is_real_32: BOOLEAN; query_name: STRING)
+			-- Generate static call `query_name' on REAL_32 taking a REAL_32 as argument
+			-- if `is_real_32', otherwise using REAL_64, and returning a boolean.
 		local
-			l_min_token: INTEGER
+			l_query_token: INTEGER
 			l_sig: like method_sig
 		do
 			l_sig := method_sig
 			l_sig.reset
 
 			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_sig.set_parameter_count (2)
-			set_method_return_type (l_sig, type, current_class_type)
-			set_signature_type (l_sig, type, current_class_type)
-			set_signature_type (l_sig, type, current_class_type)
+			l_sig.set_parameter_count (1)
+			set_method_return_type (l_sig, Boolean_type, current_class_type)
+			if is_real_32 then
+				set_signature_type (l_sig, Real_32_type, current_class_type)
+			else
+				set_signature_type (l_sig, Real_64_type, current_class_type)
+			end
 
-			uni_string.set_string ("Min")
-			l_min_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
-				l_sig)
+			uni_string.set_string (query_name)
+			if is_real_32 then
+				l_query_token := md_emit.define_member_ref (uni_string, current_module.real_32_type_token, l_sig)
+			else
+				l_query_token := md_emit.define_member_ref (uni_string, current_module.real_64_type_token, l_sig)
+			end
 
-			method_body.put_static_call (l_min_token, 2, True)
+			method_body.put_static_call (l_query_token, 1, True)
 		end
 
-	generate_max (type: TYPE_A)
-			-- Generate `max' on basic types.
+	generate_constant_access_on_real (is_real_32: BOOLEAN; field_name: STRING)
+			-- Upload value of `field_name' of type REAL_32, if `is_real_32', otherwise REAL_64
+			-- on the evaluation stack.
 		local
-			l_max_token: INTEGER
-			l_sig: like method_sig
+			l_sig: like field_sig
+			l_field_token: INTEGER
 		do
-			l_sig := method_sig
+			l_sig := field_sig
 			l_sig.reset
-
-			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_sig.set_parameter_count (2)
-			set_method_return_type (l_sig, type, current_class_type)
-			set_signature_type (l_sig, type, current_class_type)
-			set_signature_type (l_sig, type, current_class_type)
-
-			uni_string.set_string ("Max")
-			l_max_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
-				l_sig)
-
-			method_body.put_static_call (l_max_token, 2, True)
+			if is_real_32 then
+				set_signature_type (l_sig, real_32_type, current_class_type)
+			else
+				set_signature_type (l_sig, real_64_type, current_class_type)
+			end
+			uni_string.set_string (field_name)
+			if is_real_32 then
+				l_field_token := md_emit.define_member_ref (uni_string, current_module.real_32_type_token, l_sig)
+			else
+				l_field_token := md_emit.define_member_ref (uni_string, current_module.real_64_type_token, l_sig)
+			end
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, l_field_token)
 		end
 
-	generate_abs (type: TYPE_A)
-			-- Generate `abs' on basic types.
+	generate_math_one_argument (a_name: STRING; type: TYPE_A)
+			-- Generate `a_name' feature call on basic types using a Math function where
+			-- the signature is "(type): type"
 		local
-			l_abs_token: INTEGER
+			l_math_token: INTEGER
 			l_sig: like method_sig
 		do
 			create l_sig.make
@@ -6705,11 +6754,34 @@ feature -- Basic feature
 			l_sig.set_parameter_count (1)
 			set_method_return_type (l_sig, type, current_class_type)
 			set_signature_type (l_sig, type, current_class_type)
-			uni_string.set_string ("Abs")
-			l_abs_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
+			uni_string.set_string (a_name)
+			l_math_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
 				l_sig)
 
-			method_body.put_static_call (l_abs_token, 1, True)
+			method_body.put_static_call (l_math_token, 1, True)
+		end
+
+	generate_math_two_arguments (a_name: STRING; type: TYPE_A)
+			-- Generate `a_name' feature call on basic types using a Math function where
+			-- the signature is "(type, type): type"
+		local
+			l_math_token: INTEGER
+			l_sig: like method_sig
+		do
+			l_sig := method_sig
+			l_sig.reset
+
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_parameter_count (2)
+			set_method_return_type (l_sig, type, current_class_type)
+			set_signature_type (l_sig, type, current_class_type)
+			set_signature_type (l_sig, type, current_class_type)
+
+			uni_string.set_string (a_name)
+			l_math_token := md_emit.define_member_ref (uni_string, current_module.math_type_token,
+				l_sig)
+
+			method_body.put_static_call (l_math_token, 2, True)
 		end
 
 	generate_to_string
@@ -7850,7 +7922,7 @@ feature -- Inline agents
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

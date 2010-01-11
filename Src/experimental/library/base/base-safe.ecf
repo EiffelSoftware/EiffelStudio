@@ -41,7 +41,6 @@
 				<exclude>/support/class_name_translations.e$</exclude>
 				<exclude>/support/double_math.e$</exclude>
 				<exclude>/support/execution_environment.e$</exclude>
-				<exclude>/support/identified_routines.e$</exclude>
 				<exclude>/support/internal.e$</exclude>
 				<exclude>/support/managed_pointer.e$</exclude>
 				<exclude>/support/mismatch_information.e$</exclude>

@@ -78,6 +78,11 @@ feature -- IL Generation
 		do
 		end
 
+	generate_runtime_builtin_call (a_feature: FEATURE_I)
+			-- Generate the call to the corresponding builtin routine in ISE_RUNTIME
+		do
+		end
+
 	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER;
 			is_virtual: BOOLEAN)
@@ -817,13 +822,20 @@ feature -- Unary operator generation
 
 feature -- Basic feature
 
-	generate_min (type: TYPE_A)
-			-- Generate `min' on basic types.
+	generate_is_query_on_character (query_name: STRING)
+			-- Generate is_`query_name' on CHARACTER returning a boolean.
 		do
 		end
 
-	generate_is_query_on_character (query_name: STRING)
-			-- Generate is_`query_name' on CHARACTER returning a boolean.
+	generate_is_query_on_real (is_real_32: BOOLEAN; query_name: STRING)
+			-- Generate static call `query_name' on REAL_32 taking a REAL_32 as argument
+			-- if `is_real_32', otherwise using REAL_64, and returning a boolean.
+		do
+		end
+
+	generate_constant_access_on_real (is_real_32: BOOLEAN; field_name: STRING)
+			-- Upload value of `field_name' of type REAL_32, if `is_real_32', otherwise REAL_64
+			-- on the evaluation stack.
 		do
 		end
 
@@ -831,13 +843,15 @@ feature -- Basic feature
 		do
 		end
 
-	generate_max (type: TYPE_A)
-			-- Generate `max' on basic types.
+	generate_math_one_argument (a_name: STRING; type: TYPE_A)
+			-- Generate `a_name' feature call on basic types using a Math function where
+			-- the signature is "(type): type"
 		do
 		end
 
-	generate_abs (type: TYPE_A)
-			-- Generate `abs' on basic types.
+	generate_math_two_arguments (a_name: STRING; type: TYPE_A)
+			-- Generate `a_name' feature call on basic types using a Math function where
+			-- the signature is "(type, type): type"
 		do
 		end
 

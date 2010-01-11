@@ -1318,7 +1318,7 @@ feature -- Conveniences
 			ext: EXTERNAL_EXT_I
 		do
 			ext := extension
-			Result := ext /= Void and then not ext.is_il
+			Result := ext /= Void and then (not ext.is_il and not ext.is_built_in)
 		ensure
 			not_is_il_external: Result implies not is_il_external
 		end
@@ -1693,7 +1693,7 @@ feature -- IL code generation
 		local
 			byte_code: BYTE_CODE
 		do
-			if not is_attribute and then not is_external then
+			if not is_attribute and then not is_c_external and not is_il_external then
 				byte_code := Byte_server.disk_item (body_index)
 				byte_context.set_byte_code (byte_code)
 				byte_context.set_current_feature (Current)
@@ -1707,7 +1707,7 @@ feature -- IL code generation
 		local
 			byte_code: BYTE_CODE
 		do
-			if not is_attribute and then not is_external and then not is_il_external then
+			if not is_attribute and not is_c_external and not is_il_external then
 				if Byte_server.has (body_index) then
 					byte_code := Byte_server.item (body_index)
 					Result := byte_code.custom_attributes
@@ -3249,7 +3249,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

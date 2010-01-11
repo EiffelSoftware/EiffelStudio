@@ -371,6 +371,12 @@ feature {NONE} -- Implementation: access
 			put ("generic_parameter_count") check found_item = generic_parameter_count_name_id end
 			put ("generic_parameter_type") check found_item = generic_parameter_type_name_id end
 			put ("to_array") check found_item = to_array_name_id end
+			put ("is_nan") check found_item = is_nan_name_id end
+			put ("is_negative_infinity") check found_item = is_negative_infinity_name_id end
+			put ("is_positive_infinity") check found_item = is_positive_infinity_name_id end
+			put ("nan") check found_item = nan_name_id end
+			put ("negative_infinity") check found_item = negative_infinity_name_id end
+			put ("positive_infinity") check found_item = positive_infinity_name_id end
 		end
 
 invariant
@@ -380,7 +386,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

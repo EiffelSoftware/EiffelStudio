@@ -38,6 +38,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	has (feat: FEATURE_B; target_type: CL_TYPE_A): BOOLEAN
@@ -52,8 +57,8 @@ feature -- Access
 				inspect
 					type_of (target_type)
 				when
-					boolean_type, character_type, integer_type, real_32_type,
-					real_64_type, pointer_type
+					boolean_type_id, character_type_id, integer_type_id, real_32_type_id,
+					real_64_type_id, pointed_type_id
 				then
 					Result := basic_type_table.has_key (feat.feature_name_id)
 					function_type := basic_type_table.found_item
@@ -229,7 +234,7 @@ feature -- IL code generation
 					valid_count: parameters.count = 1
 				end
 				parameters.process (a_generator)
-				il_generator.generate_min (type)
+				il_generator.generate_math_two_arguments ("Min", type)
 
 			when max_type then
 				check
@@ -237,7 +242,7 @@ feature -- IL code generation
 					valid_count: parameters.count = 1
 				end
 				parameters.process (a_generator)
-				il_generator.generate_max (type)
+				il_generator.generate_math_two_arguments ("Max", type)
 
 			when three_way_comparison_type then
 				check
@@ -260,6 +265,20 @@ feature -- IL code generation
 			when to_real_64_type then
 				il_generator.convert_to_real_64
 
+			when ceiling_real_type then
+				il_generator.convert_to_real_64
+				il_generator.generate_math_one_argument ("Ceiling", real_64_type)
+				if type.is_real_32 then
+					il_generator.convert_to_real_32
+				end
+
+			when floor_real_type then
+				il_generator.convert_to_real_64
+				il_generator.generate_math_one_argument ("Floor", real_64_type)
+				if type.is_real_32 then
+					il_generator.convert_to_real_32
+				end
+
 			when out_type then
 				il_generator.generate_out (type)
 
@@ -273,7 +292,7 @@ feature -- IL code generation
 				il_generator.convert_to_character_32
 
 			when abs_type then
-				il_generator.generate_abs (type)
+				il_generator.generate_math_one_argument ("Abs", type)
 
 			when generator_type then
 				il_generator.pop
@@ -314,6 +333,15 @@ feature -- IL code generation
 			when twin_type, as_attached_type then
 					-- Nothing to do, top of the stack has correct value
 
+			when is_nan_type then
+				il_generator.generate_is_query_on_real (type.is_real_32, "IsNaN")
+
+			when is_negative_infinity_type then
+				il_generator.generate_is_query_on_real (type.is_real_32, "IsNegativeInfinity")
+
+			when is_positive_infinity_type then
+				il_generator.generate_is_query_on_real (type.is_real_32, "IsPositiveInfinity")
+
 			else
 
 			end
@@ -338,6 +366,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_32_type, truncated_to_integer_name_id)
 			Result.put (to_integer_32_type, to_integer_name_id)
 			Result.put (to_integer_64_type, to_integer_64_name_id)
+			Result.put (to_integer_64_type, truncated_to_integer_64_name_id)
 			Result.put (as_natural_8_type, as_natural_8_name_id)
 			Result.put (as_natural_16_type, as_natural_16_name_id)
 			Result.put (as_natural_32_type, as_natural_32_name_id)
@@ -392,6 +421,13 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (lower_type, lower_name_id)
 			Result.put (is_upper_type, is_upper_name_id)
 			Result.put (is_lower_type, is_lower_name_id)
+			Result.put (is_nan_type, is_nan_name_id)
+			Result.put (is_negative_infinity_type, is_negative_infinity_name_id)
+			Result.put (is_positive_infinity_type, is_positive_infinity_name_id)
+			Result.put (ceiling_real_type, ceiling_real_32_name_id)
+			Result.put (ceiling_real_type, ceiling_real_64_name_id)
+			Result.put (floor_real_type, floor_real_32_name_id)
+			Result.put (floor_real_type, floor_real_64_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (memory_copy, memory_copy_name_id)
@@ -457,7 +493,12 @@ feature -- Fast access to feature name
 	set_bit_with_mask_type: INTEGER = 53
 	to_character_32_type: INTEGER = 54
 	as_attached_type: INTEGER = 55
-	max_type_id: INTEGER = 55
+	ceiling_real_type: INTEGER = 56
+	floor_real_type: INTEGER = 57
+	is_nan_type: INTEGER = 58
+	is_negative_infinity_type: INTEGER = 59
+	is_positive_infinity_type: INTEGER = 60
+	max_type_id: INTEGER = 60
 
 feature {NONE} -- IL code generation
 
@@ -492,7 +533,7 @@ feature {NONE} -- IL code generation
 		do
 			inspect
 				type_of (type)
-			when boolean_type then
+			when boolean_type_id then
 					-- Remove top of type (i.e. boolean value)
 					-- and put `1' instead.
 				il_generator.pop
@@ -721,22 +762,22 @@ feature {NONE} -- IL code generation
 
 feature {NONE} -- Type information
 
-	boolean_type: INTEGER = 1
-	character_type: INTEGER = 2
-	integer_type: INTEGER = 3
-	pointer_type: INTEGER = 4
-	real_32_type: INTEGER = 5
-	real_64_type: INTEGER = 6
-	any_type: INTEGER = 7
-	unknown_type: INTEGER = 8
+	boolean_type_id: INTEGER = 1
+	character_type_id: INTEGER = 2
+	integer_type_id: INTEGER = 3
+	pointed_type_id: INTEGER = 4
+	real_32_type_id: INTEGER = 5
+	real_64_type_id: INTEGER = 6
+	any_type_id: INTEGER = 7
+	unknown_type_id: INTEGER = 8
 			-- Constant defining type
 
 	is_signed_integer: BOOLEAN
-			-- Is integer_type corresponding to INTEGER_A?
+			-- Is `integer_type_id' corresponding to INTEGER_A?
 			-- False when corresponding to NATURAL_A.
 
 	is_wide: BOOLEAN
-			-- Is `character_type' returned by `type_of' a WIDE_CHARACTER?
+			-- Is `character_type_id' returned by `type_of' a WIDE_CHARACTER?
 
 	type_of (t: CL_TYPE_A): INTEGER
 			-- Returns corresponding type constants to `t'.
@@ -749,47 +790,47 @@ feature {NONE} -- Type information
 			inspect
 				t.hash_code
 			when {SHARED_HASH_CODE}.Character_code, {SHARED_HASH_CODE}.Wide_char_code then
-				Result := character_type
-			when {SHARED_HASH_CODE}.Boolean_code then Result := boolean_type
+				Result := character_type_id
+			when {SHARED_HASH_CODE}.Boolean_code then Result := boolean_type_id
 			when
 				{SHARED_HASH_CODE}.Integer_8_code, {SHARED_HASH_CODE}.Integer_16_code,
 				{SHARED_HASH_CODE}.Integer_32_code, {SHARED_HASH_CODE}.Integer_64_code
 			then
-				Result := integer_type
+				Result := integer_type_id
 				is_signed_integer := True
 
 			when
 				{SHARED_HASH_CODE}.natural_8_code, {SHARED_HASH_CODE}.natural_16_code,
 				{SHARED_HASH_CODE}.natural_32_code, {SHARED_HASH_CODE}.natural_64_code
 			then
-				Result := integer_type
+				Result := integer_type_id
 				is_signed_integer := False
 
-			when {SHARED_HASH_CODE}.Real_32_code then Result := real_32_type
-			when {SHARED_HASH_CODE}.Real_64_code then Result := real_64_type
-			when {SHARED_HASH_CODE}.Pointer_code then Result := pointer_type
+			when {SHARED_HASH_CODE}.Real_32_code then Result := real_32_type_id
+			when {SHARED_HASH_CODE}.Real_64_code then Result := real_64_type_id
+			when {SHARED_HASH_CODE}.Pointer_code then Result := pointed_type_id
 			else
 				l_typed_pointer ?= t
 				if l_typed_pointer /= Void then
-					Result := pointer_type
+					Result := pointed_type_id
 				elseif t.associated_class.is_class_any then
-					Result := any_type
+					Result := any_type_id
 				else
-					Result := unknown_type
+					Result := unknown_type_id
 				end
 			end
 		ensure
-			valid_type: Result = boolean_type or else Result = character_type or else
-						Result = integer_type or else Result = pointer_type or else
-						Result = real_32_type or else Result = real_64_type or else
-						Result = any_type or else Result = unknown_type
+			valid_type: Result = boolean_type_id or else Result = character_type_id or else
+						Result = integer_type_id or else Result = pointed_type_id or else
+						Result = real_32_type_id or else Result = real_64_type_id or else
+						Result = any_type_id or else Result = unknown_type_id
 		end
 
 invariant
 	il_generation: System.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

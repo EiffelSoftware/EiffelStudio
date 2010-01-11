@@ -65,7 +65,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the value or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("6.2.7.1629")]
+[assembly: AssemblyVersion("6.6.8.2033")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
@@ -86,10 +86,7 @@ using System.Runtime.CompilerServices;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
-#if !VS_DEVEL
-#if !CS_20
-[assembly: AssemblyKeyFile("ise_runtime.key")]
-#endif
-#endif
+//This is now obsolete and it is passed as argument to the C# compiler
+//[assembly: AssemblyKeyFile("ise_runtime.key")]
 [assembly: AssemblyKeyName("")]
 [assembly: CLSCompliantAttribute (true)]

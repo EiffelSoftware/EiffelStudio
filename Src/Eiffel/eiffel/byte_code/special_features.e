@@ -115,6 +115,15 @@ feature -- Byte code special generation
 				if basic_type.is_real_32 then
 					ba.append (bc_cast_real32)
 				end
+			when is_nan_type then
+				ba.append (bc_basic_operations)
+				ba.append (bc_is_nan)
+			when is_negative_infinity_type then
+				ba.append (bc_basic_operations)
+				ba.append (bc_is_negative_infinity)
+			when is_positive_infinity_type then
+				ba.append (bc_basic_operations)
+				ba.append (bc_is_positive_infinity)
 			when ceiling_real_type then
 				ba.append (bc_cast_real64)
 				ba.append (bc_ceil)
@@ -252,6 +261,25 @@ feature -- C special code generation
 				buffer.put_character (')')
 					-- Add `<math.h>' for C declaration of `floor'.
 				shared_include_queue.put ({PREDEFINED_NAMES}.math_header_name_id)
+
+			when is_nan_type, is_negative_infinity_type, is_positive_infinity_type then
+				buffer.put_four_character ('e', 'i', 'f', '_')
+				inspect function_type
+				when is_nan_type then buffer.put_string ("is_nan_")
+				when is_negative_infinity_type then buffer.put_string ("is_negative_infinity_")
+				when is_positive_infinity_type then buffer.put_string ("is_positive_infinity_")
+				end
+				if basic_type.is_real_32 then
+					buffer.put_string ("real_32")
+				else
+					buffer.put_string ("real_64")
+				end
+				buffer.put_two_character (' ', '(')
+				target.print_register
+				buffer.put_character (')')
+					-- Add `eif_helpers.h' for C declaration of `floor'.
+				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+
 			when offset_type then
 				generate_offset (buffer, type_of (basic_type), target, parameter)
 			when out_type then
@@ -381,6 +409,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (ceiling_real_type, {PREDEFINED_NAMES}.ceiling_real_64_name_id)
 			Result.put (floor_real_type, {PREDEFINED_NAMES}.floor_real_32_name_id)
 			Result.put (floor_real_type, {PREDEFINED_NAMES}.floor_real_64_name_id)
+			Result.put (is_nan_type, {PREDEFINED_NAMES}.is_nan_name_id)
+			Result.put (is_negative_infinity_type, {PREDEFINED_NAMES}.is_negative_infinity_name_id)
+			Result.put (is_positive_infinity_type, {PREDEFINED_NAMES}.is_positive_infinity_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -450,6 +481,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (ceiling_real_type, {PREDEFINED_NAMES}.ceiling_real_64_name_id)
 			Result.put (floor_real_type, {PREDEFINED_NAMES}.floor_real_32_name_id)
 			Result.put (floor_real_type, {PREDEFINED_NAMES}.floor_real_64_name_id)
+			Result.put (is_nan_type, {PREDEFINED_NAMES}.is_nan_name_id)
+			Result.put (is_negative_infinity_type, {PREDEFINED_NAMES}.is_negative_infinity_name_id)
+			Result.put (is_positive_infinity_type, {PREDEFINED_NAMES}.is_positive_infinity_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -512,7 +546,10 @@ feature {NONE} -- Fast access to feature name
 	ceiling_real_type: INTEGER = 54
 	floor_real_type: INTEGER = 55
 	as_attached_type: INTEGER = 56
-	max_type_id: INTEGER = 56
+	is_nan_type: INTEGER = 57
+	is_negative_infinity_type: INTEGER = 58
+	is_positive_infinity_type: INTEGER = 59
+	max_type_id: INTEGER = 59
 
 feature {NONE} -- Byte code generation
 
@@ -1204,7 +1241,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

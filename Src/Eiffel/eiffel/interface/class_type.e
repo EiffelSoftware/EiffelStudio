@@ -1161,7 +1161,7 @@ feature -- IL code generation
 		require
 			feature_not_void: f /= Void
 		do
-			if not f.is_external then
+			if not f.is_c_external and not f.is_il_external then
 				f.generate_il
 			end
 		end
@@ -1997,7 +1997,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

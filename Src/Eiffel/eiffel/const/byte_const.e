@@ -171,6 +171,9 @@ feature -- Access
 	Bc_zero:			CHARACTER = '%/005/'
 	Bc_one:			CHARACTER = '%/006/'
 	Bc_three_way_comparison: CHARACTER = '%/007/'
+	bc_is_nan:		CHARACTER = '%/008/'
+	bc_is_negative_infinity:		CHARACTER = '%/009/'
+	bc_is_positive_infinity:		CHARACTER = '%/010/'
 
 		-- Special instructions for Bit operations
 	Bc_int_bit_op:		CHARACTER = '%/138/'
@@ -239,7 +242,7 @@ feature -- Access
 	Bc_ptuple:				CHARACTER = '%/169/';
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

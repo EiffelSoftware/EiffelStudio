@@ -4579,6 +4579,40 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 				}
 			break;
 
+		case BC_IS_NAN:
+			first = otop();	/* First operand will be replaced by result. */
+			CHECK("first not null", first);
+			switch(first->type & SK_HEAD) {
+				case SK_REAL32: first->it_char = EIF_TEST(first->it_real32 != first->it_real32); break;
+				case SK_REAL64: first->it_char = EIF_TEST(first->it_real64 != first->it_real64); break;
+				default: eif_panic (RT_BOTCHED_MSG);
+			}
+			first->type = SK_BOOL;
+			break;
+
+		case BC_IS_NEGATIVE_INFINITY:
+			first = otop();	/* First operand will be replaced by result. */
+			CHECK("first not null", first);
+			switch(first->type & SK_HEAD) {
+				case SK_REAL32: first->it_char = EIF_TEST(first->it_real32 == eif_real_32_negative_infinity); break;
+				case SK_REAL64: first->it_char = EIF_TEST(first->it_real64 == eif_real_64_negative_infinity); break;
+				default: eif_panic (RT_BOTCHED_MSG);
+			}
+			first->type = SK_BOOL;
+			break;
+
+		case BC_IS_POSITIVE_INFINITY:
+			first = otop();	/* First operand will be replaced by result. */
+			CHECK("first not null", first);
+			switch(first->type & SK_HEAD) {
+				case SK_REAL32: first->it_char = EIF_TEST(first->it_real32 == eif_real_32_positive_infinity); break;
+				case SK_REAL64: first->it_char = EIF_TEST(first->it_real64 == eif_real_64_positive_infinity); break;
+				default: eif_panic (RT_BOTCHED_MSG);
+			}
+			first->type = SK_BOOL;
+			break;
+
+
 		default: eif_panic (RT_BOTCHED_MSG);
 	}
 }

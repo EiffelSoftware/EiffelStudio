@@ -39,6 +39,7 @@
 
 #include "eif_eiffel.h"
 #include "eif_misc.h"
+#include "eif_helpers.h"
 #include "eif_argv.h"
 #include "eif_internal.h"
 #include "eif_gen_conf.h"
@@ -75,6 +76,10 @@ extern "C" {
 
 /* EXCEPTION_MANAGER class */
 #define eif_builtin_ISE_EXCEPTION_MANAGER_developer_raise(object, code, meaning, message)			draise(code, meaning, message)
+
+/* IDENTIFIED_CONTROLLER class */
+#define eif_builtin_IDENTIFIED_CONTROLLER_object_id_stack_size(obj)			eif_object_id_stack_size();
+#define eif_builtin_IDENTIFIED_CONTROLLER_extend_object_id_stack(obj,nb)	eif_extend_object_id_stack(nb);
 
 /* IDENTIFIED_ROUTINES class */
 #define eif_builtin_IDENTIFIED_ROUTINES_eif_current_object_id(object)	eif_reference_id(object)
@@ -153,6 +158,14 @@ extern "C" {
 #define eif_builtin_PLATFORM_real_bytes 				sizeof(EIF_REAL_32)
 #define eif_builtin_PLATFORM_double_bytes 				sizeof(EIF_REAL_64)
 #define eif_builtin_PLATFORM_pointer_bytes 				sizeof(EIF_POINTER)
+
+#define eif_builtin_REAL_32_REF_nan						eif_real_32_nan
+#define eif_builtin_REAL_32_REF_negative_infinity		eif_real_32_negative_infinity
+#define eif_builtin_REAL_32_REF_positive_infinity		eif_real_32_positive_infinity
+
+#define eif_builtin_REAL_64_REF_nan						eif_real_64_nan
+#define eif_builtin_REAL_64_REF_negative_infinity		eif_real_64_negative_infinity
+#define eif_builtin_REAL_64_REF_positive_infinity		eif_real_64_positive_infinity
 
 /* SPECIAL class */
 #define eif_builtin_SPECIAL_aliased_resized_area(area, n)	arycpy (area, n, RT_SPECIAL_COUNT (area))

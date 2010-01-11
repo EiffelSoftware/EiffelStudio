@@ -215,6 +215,12 @@ feature -- Constants
 	generic_parameter_count_name_id: INTEGER = 202
 	generic_parameter_type_name_id: INTEGER = 203
 	to_array_name_id: INTEGER = 204
+	is_nan_name_id: INTEGER = 205
+	is_negative_infinity_name_id: INTEGER = 206
+	is_positive_infinity_name_id: INTEGER = 207
+	nan_name_id: INTEGER = 208
+	negative_infinity_name_id: INTEGER = 209
+	positive_infinity_name_id: INTEGER = 210
 
 feature -- Classification
 
@@ -236,7 +242,7 @@ feature -- Classification
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

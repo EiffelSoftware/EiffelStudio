@@ -1099,6 +1099,7 @@ test	finalize-inline-with-generic	final083 tcf pass finalizing
 test	finalize-wrong-type			final084 tcf pass finalizing
 test	finalize-min-used-crash		final085 tcf pass finalizing
 test	finalize-object-test-side-effects	final086 tcf pass finalizing
+test	finalize-inline-merged-routine	final087 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

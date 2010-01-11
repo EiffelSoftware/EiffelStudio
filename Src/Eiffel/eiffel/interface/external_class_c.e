@@ -540,6 +540,7 @@ feature {NONE} -- Initialization
 				l_member := a_features.item
 
 				l_external_type := internal_type_from_consumed_type (True, l_member.declared_type)
+				add_syntactical_supplier (l_external_type)
 
 				if l_member.has_return_value then
 					l_external_type := internal_type_from_consumed_type (True, l_member.return_type)
@@ -555,8 +556,7 @@ feature {NONE} -- Initialization
 					until
 						j > k
 					loop
-						l_external_type := internal_type_from_consumed_type (True,
-							l_args.item (j).type)
+						l_external_type := internal_type_from_consumed_type (True, l_args.item (j).type)
 						add_syntactical_supplier (l_external_type)
 						l := l + 1
 						j := j + 1
@@ -1412,16 +1412,17 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if not Result.is_expanded then
-				Result := Result.duplicate
-				Result.set_detachable_mark
+				-- If there is no error we can go on.
+			if vtct = Void then
+				if not Result.is_expanded then
+					Result := Result.duplicate
+					Result.set_detachable_mark
+				end
+				if c.is_by_ref then
+						-- We need to create an instance of TYPED_POINTER here.
+					create {TYPED_POINTER_A} Result.make_typed (Result)
+				end
 			end
-			if c.is_by_ref then
-					-- We need to create an instance of TYPED_POINTER here.
-				create {TYPED_POINTER_A} Result.make_typed (Result)
-			end
-		ensure
-			result_not_void: force_compilation implies Result /= Void
 		end
 
 	set_constant_value (a_constant: CONSTANT_I; a_external_type: CL_TYPE_A; a_value: STRING)
@@ -1534,21 +1535,21 @@ feature {NONE} -- Implementation
 
 	add_syntactical_supplier (cl: CL_TYPE_A)
 			-- Add every class mentioned in `cl' to `syntactical_suppliers' list.
-		require
-			cl_not_void: cl /= Void
 		do
-			syntactical_suppliers.force (cl.associated_class)
-			if cl.has_generics then
-				check
-					one_generic_parameter: cl.generics.count = 1
-					lower_is_one: cl.generics.lower = 1
-					has_class: cl.generics.item (1).associated_class /= Void
+			if cl /= Void then
+				syntactical_suppliers.force (cl.associated_class)
+				if cl.has_generics then
+					check
+						one_generic_parameter: cl.generics.count = 1
+						lower_is_one: cl.generics.lower = 1
+						has_class: cl.generics.item (1).associated_class /= Void
+					end
+					syntactical_suppliers.force (cl.generics.item (1).associated_class)
 				end
-				syntactical_suppliers.force (cl.generics.item (1).associated_class)
 			end
 		ensure
-			inserted_class: syntactical_suppliers.has (cl.associated_class)
-			inserted_generic_parameter: cl.has_generics implies
+			inserted_class: cl /= Void implies syntactical_suppliers.has (cl.associated_class)
+			inserted_generic_parameter: (cl /= Void and then cl.has_generics) implies
 				syntactical_suppliers.has (cl.generics.item (1).associated_class)
 		end
 
@@ -1664,7 +1665,7 @@ invariant
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

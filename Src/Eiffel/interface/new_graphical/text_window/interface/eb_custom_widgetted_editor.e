@@ -549,16 +549,12 @@ feature {NONE} -- Action hanlders
 	on_mouse_idle (a_abs_x, a_abs_y: INTEGER; a_screen_x, a_screen_y: INTEGER)
 			-- Called when the pointer has remained idle over the same place for a interval.
 			-- The interval is dictated by `mouse_mode_idle_internal'.
-		require
-			is_interface_usable: is_interface_usable
-			text_displayed_attached: text_displayed /= Void
-			not_is_empty: not is_empty
 		local
 			l_handler: like token_handler
 			l_cursor: EIFFEL_EDITOR_CURSOR
 			l_instant: BOOLEAN
 		do
-			if text_is_fully_loaded then
+			if is_interface_usable and then not is_empty and then text_is_fully_loaded then
 				l_handler := token_handler
 				if l_handler /= Void then
 					if attached {CLICKABLE_TEXT} text_displayed as l_clickable_text then
@@ -798,7 +794,7 @@ feature {NONE} -- Internal implentation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

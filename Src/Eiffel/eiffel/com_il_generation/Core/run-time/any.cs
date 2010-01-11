@@ -332,7 +332,7 @@ feature -- Comparison
 						// `traversed_objects' is a correspondance between processed
 						// objects reachable from `obj' and newly created one that
 						// are reachable from `target'.
-					traversed_objects = new Hashtable (100, null, new RT_REFERENCE_COMPARER ());
+					traversed_objects = new Hashtable (100, new RT_REFERENCE_COMPARER ());
 
 						// Add `other' and associates it with `some' to
 						// resolve future references to `other' into `some'.
@@ -497,7 +497,7 @@ feature -- Duplication
 				// `traversed_objects' is a correspondance between processed
 				// objects reachable from `obj' and newly created one that
 				// are reachable from `Result'.
-			traversed_objects = new Hashtable (100, null, new RT_REFERENCE_COMPARER ());
+			traversed_objects = new Hashtable (100, new RT_REFERENCE_COMPARER ());
 			
 				// Create an empty copy of `Current'.
 			Result = GENERIC_CONFORMANCE.create_like_object(Current);

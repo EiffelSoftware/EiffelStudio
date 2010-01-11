@@ -303,17 +303,21 @@ feature {NONE} -- Implementation
 					-- and then removed in one compilation, they are not removed from EXTERNALS because
 					-- we are always comparing against the original feature table which did not have them.
 				if ext /= Void then
-						-- We found that it might be Void time to time, thus
-						-- the if statement in addition to the check so that in
-						-- production we do not fail, but at least when debugging
-						-- we get an exception.
-					if ext.extension.is_cpp then
-						is_cpp := True
-						if a_for_cpp then
+						-- We only generate the code for non-builtin externals,
+						-- the builtin ones are in the runtime.
+					if not ext.extension.is_built_in then
+							-- We found that it might be Void time to time, thus
+							-- the if statement in addition to the check so that in
+							-- production we do not fail, but at least when debugging
+							-- we get an exception.
+						if ext.extension.is_cpp then
+							is_cpp := True
+							if a_for_cpp then
+								ext.generate (class_type, buffer)
+							end
+						elseif not a_for_cpp then
 							ext.generate (class_type, buffer)
 						end
-					elseif not a_for_cpp then
-						ext.generate (class_type, buffer)
 					end
 				else
 					a_s.remove (a_s.item_for_iteration)
@@ -331,7 +335,7 @@ feature {NONE} -- Previous version
 			-- Old version of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -344,22 +348,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EXTERNALS

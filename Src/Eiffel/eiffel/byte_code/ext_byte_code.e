@@ -15,7 +15,7 @@ inherit
 		redefine
 			generate, generate_compound, analyze, generate_return_exp,
 			is_external, pre_inlined_code, inlined_byte_code,
-			make_body_code
+			make_body_code, generate_il
 		end
 
 create
@@ -113,35 +113,48 @@ feature -- Byte code generation
 
 	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR)
 		local
-			l_builtin: BUILT_IN_EXTENSION_I
 			l_class: CLASS_C
 		do
-			l_builtin ?= context.current_feature.extension
-			check l_builtin_not_void: l_builtin /= Void end
-			ba.append (bc_builtin)
-			l_class := context.current_feature.written_class
-			if l_class = system.type_class.compiled_class then
-				inspect
-					context.current_feature.feature_name_id
+			if attached context.current_feature.extension as l_ext and then l_ext.is_built_in then
+				ba.append (bc_builtin)
+				l_class := context.current_feature.written_class
+				if l_class = system.type_class.compiled_class then
+					inspect
+						context.current_feature.feature_name_id
 
-				when {PREDEFINED_NAMES}.has_default_name_id then
-					ba.append (bc_builtin_type__has_default)
-				when {PREDEFINED_NAMES}.default_name_id then
-					ba.append (bc_builtin_type__default)
-				when {PREDEFINED_NAMES}.type_id_name_id then
-					ba.append (bc_builtin_type__type_id)
-				when {PREDEFINED_NAMES}.runtime_name_name_id then
-					ba.append (bc_builtin_type__runtime_name)
-				when {PREDEFINED_NAMES}.generic_parameter_type_name_id then
-					ba.append (bc_builtin_type__generic_parameter_type)
-				when {PREDEFINED_NAMES}.generic_parameter_count_name_id then
-					ba.append (bc_builtin_type__generic_parameter_count)
+					when {PREDEFINED_NAMES}.has_default_name_id then
+						ba.append (bc_builtin_type__has_default)
+					when {PREDEFINED_NAMES}.default_name_id then
+						ba.append (bc_builtin_type__default)
+					when {PREDEFINED_NAMES}.type_id_name_id then
+						ba.append (bc_builtin_type__type_id)
+					when {PREDEFINED_NAMES}.runtime_name_name_id then
+						ba.append (bc_builtin_type__runtime_name)
+					when {PREDEFINED_NAMES}.generic_parameter_type_name_id then
+						ba.append (bc_builtin_type__generic_parameter_type)
+					when {PREDEFINED_NAMES}.generic_parameter_count_name_id then
+						ba.append (bc_builtin_type__generic_parameter_count)
 
+					else
+						ba.append (bc_builtin_unknown)
+					end
 				else
 					ba.append (bc_builtin_unknown)
 				end
 			else
-				ba.append (bc_builtin_unknown)
+				Precursor (ba, a_generator)
+			end
+		end
+
+feature -- Il code generation
+
+	generate_il
+			-- Generate the IL code for an external.
+		do
+			if attached context.current_feature.extension as l_ext and then l_ext.is_built_in then
+				il_generator.generate_runtime_builtin_call (context.current_feature)
+			else
+				Precursor
 			end
 		end
 
@@ -416,7 +429,7 @@ invariant
 	external_name_id_positive: external_name_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

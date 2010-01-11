@@ -43,6 +43,13 @@
 extern "C" {
 #endif
 
+RT_LNK EIF_REAL_32 eif_real_32_nan;
+RT_LNK EIF_REAL_32 eif_real_32_negative_infinity;
+RT_LNK EIF_REAL_32 eif_real_32_positive_infinity;
+RT_LNK EIF_REAL_64 eif_real_64_nan;
+RT_LNK EIF_REAL_64 eif_real_64_negative_infinity;
+RT_LNK EIF_REAL_64 eif_real_64_positive_infinity;
+
 /* Special conversion from EIF_NATURAL_64 to EIF_REAL_32 and EIF_REAL_64 as it is not
  * supported by all C compilers. */
 #ifdef HAS_BUILTIN_CONVERSION_FROM_UINT64_TO_FLOATING_POINT
@@ -200,46 +207,23 @@ rt_private EIF_INTEGER_32 eif_twc_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
 }
 
 /* INF and NaN tests */
-rt_private EIF_BOOLEAN eif_is_inf_real_32 (EIF_REAL_32 x) {
-	EIF_REAL_32 *l_x = &x;
-	return EIF_TEST( ((*((EIF_NATURAL_32 *)(l_x)) & 0x7F800000)==0x7F800000) &&
-             ((*((EIF_NATURAL_32 *)(l_x)) & 0x007FFFFF)==0x00000000) );
-}
-rt_private EIF_BOOLEAN eif_is_inf_real_64 (EIF_REAL_64 x) {
-	EIF_REAL_64 *l_x = &x;
-	return EIF_TEST( ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x7FF0000000000000))==RTU64C(0x7FF0000000000000)) &&
-             ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x000FFFFFFFFFFFFF))==RTU64C(0x0000000000000000)) );
-}
 rt_private EIF_BOOLEAN eif_is_nan_real_32 (EIF_REAL_32 x) {
-	EIF_REAL_32 *l_x = &x;
-	return EIF_TEST( ((*((EIF_NATURAL_32 *)(l_x)) & 0x7F800000)==0x7F800000) &&
-	         (*((EIF_NATURAL_32 *)(l_x)) & 0x007FFFFF) );
+	return EIF_TEST(x != x);
 }
-
 rt_private EIF_BOOLEAN eif_is_nan_real_64 (EIF_REAL_64 x) {
-	EIF_REAL_64 *l_x = &x;
-	return EIF_TEST( ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x7FF0000000000000))==RTU64C(0x7FF0000000000000)) &&
-	          (*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x000FFFFFFFFFFFFF)) );
+	return EIF_TEST(x != x);
 }
-rt_private EIF_BOOLEAN eif_is_quiet_nan_real_32 (EIF_REAL_32 x) {
-	EIF_REAL_32 *l_x = &x;
-	return EIF_TEST( ((*((EIF_NATURAL_32 *)(l_x)) & 0x7FC00000)==0x7FC00000) &&
-              (*((EIF_NATURAL_32 *)(l_x)) & 0x007FFFFF) );
+rt_private EIF_BOOLEAN eif_is_negative_infinity_real_32 (EIF_REAL_32 x) {
+	return EIF_TEST(x == eif_real_32_negative_infinity);
 }
-rt_private EIF_BOOLEAN eif_is_quiet_nan_real_64 (EIF_REAL_64 x) {
-	EIF_REAL_64 *l_x = &x;
-	return EIF_TEST( ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x7FF8000000000000))==RTU64C(0x7FF8000000000000)) &&
-              (*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x000FFFFFFFFFFFFF)) );
+rt_private EIF_BOOLEAN eif_is_negative_infinity_real_64 (EIF_REAL_64 x) {
+	return EIF_TEST(x == eif_real_64_negative_infinity);
 }
-rt_private EIF_BOOLEAN eif_is_signaling_nan_real_32 (EIF_REAL_32 x) {
-	EIF_REAL_32 *l_x = &x;
-	return EIF_TEST( ((*((EIF_NATURAL_32 *)(l_x)) & 0x7FC00000)==0x7F800000) &&
-	          (*((EIF_NATURAL_32 *)(l_x)) & 0x007FFFFF) );
+rt_private EIF_BOOLEAN eif_is_positive_infinity_real_32 (EIF_REAL_32 x) {
+	return EIF_TEST(x == eif_real_32_positive_infinity);
 }
-rt_private EIF_BOOLEAN eif_is_signaling_nan_real_64 (EIF_REAL_64 x) {
-	EIF_REAL_64 *l_x = &x;
-	return EIF_TEST( ((*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x7FF8000000000000))==RTU64C(0x7FF0000000000000)) &&
-              (*((EIF_NATURAL_64 *)(l_x)) & RTU64C(0x000FFFFFFFFFFFFF)) );
+rt_private EIF_BOOLEAN eif_is_positive_infinity_real_64 (EIF_REAL_64 x) {
+	return EIF_TEST(x == eif_real_64_positive_infinity);
 }
 
 /* Floating point is_equal computation */
@@ -248,28 +232,6 @@ rt_private EIF_BOOLEAN eif_fpeq_real_32 (EIF_REAL_32 i, EIF_REAL_32 j) {
 }
 rt_private EIF_BOOLEAN eif_fpeq_real_64 (EIF_REAL_64 i, EIF_REAL_64 j) {
 	return EIF_TEST(eif_is_nan_real_64(i) ? eif_is_nan_real_64(j) : i == j);
-}
-
-/* NaN constants */
-rt_private EIF_REAL_32 eif_signaling_nan_real_32 (void) {
-	EIF_NATURAL_32 s_nan = 0x7FA00000;
-	EIF_NATURAL_32 *l_s_nan = &s_nan;
-	return * ((EIF_REAL_32 *) l_s_nan);
-}
-rt_private EIF_REAL_64 eif_signaling_nan_real_64 (void) {
-	EIF_NATURAL_64 s_nan = RTU64C(0x7FF4000000000000);
-	EIF_NATURAL_64 *l_s_nan = &s_nan;
-	return * ((EIF_REAL_64 *) l_s_nan);
-}
-rt_private EIF_REAL_32 eif_quiet_nan_real_32 (void) {
-	EIF_NATURAL_32 q_nan = 0x7FC00000;
-	EIF_NATURAL_32 *l_q_nan = &q_nan;
-	return * ((EIF_REAL_32 *) l_q_nan);
-}
-rt_private EIF_REAL_64 eif_quiet_nan_real_64 (void) {
-	EIF_NATURAL_64 q_nan = RTU64C(0x7FF8000000000000);
-	EIF_NATURAL_64 *l_q_nan = &q_nan;
-	return * ((EIF_REAL_64 *) l_q_nan);
 }
 
 #ifdef __cplusplus

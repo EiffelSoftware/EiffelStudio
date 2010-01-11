@@ -200,6 +200,12 @@ feature -- Access: tokens
 	math_type_token: INTEGER
 			-- Token for `System.Math' type in `mscorlib'.
 
+	real_32_type_token: INTEGER
+			-- Token for `System.Single' type in `mscorlib'.
+
+	real_64_type_token: INTEGER
+			-- Token for `System.Double' type in `mscorlib'.
+
 	char_type_token: INTEGER
 			-- Token for `System.Char' type in `mscorlib'.
 
@@ -3053,6 +3059,10 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make (type_handle_class_name), mscorlib_token)
 			math_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Math"), mscorlib_token)
+			real_32_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.Single"), mscorlib_token)
+			real_64_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.Double"), mscorlib_token)
 			char_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Char"), mscorlib_token)
 			system_exception_token := md_emit.define_type_ref (
@@ -3180,9 +3190,9 @@ feature {NONE} -- Once per modules being generated.
 				-- Define `ise_runtime_token'.
 			create l_ass_info.make
 			l_ass_info.set_major_version (6)
-			l_ass_info.set_minor_version (2)
-			l_ass_info.set_build_number (7)
-			l_ass_info.set_revision_number (1629)
+			l_ass_info.set_minor_version (6)
+			l_ass_info.set_build_number (8)
+			l_ass_info.set_revision_number (2033)
 
 			create l_pub_key.make_from_array (
 				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
@@ -3611,7 +3621,7 @@ invariant
 	dll_or_console_valid: not is_assembly_module implies (is_dll and is_console_application)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -3624,22 +3634,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class IL_MODULE

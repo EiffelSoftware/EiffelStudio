@@ -82,6 +82,66 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #endif
 
 /*
+doc:	<attribute name="eif_real_32_nan" return_type="EIF_REAL_32" export="public">
+doc:		<summary>Eiffel representation of NaN</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once in `eif_rtinit'.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REAL_32 eif_real_32_nan;
+
+/*
+doc:	<attribute name="eif_real_32_negative_infinity" return_type="EIF_REAL_32" export="public">
+doc:		<summary>Eiffel representation of negative infinity</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once in `eif_rtinit'.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REAL_32 eif_real_32_negative_infinity;
+
+/*
+doc:	<attribute name="eif_real_32_positive_infinity" return_type="EIF_REAL_32" export="public">
+doc:		<summary>Eiffel representation of positive infinity</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once in `eif_rtinit'.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REAL_32 eif_real_32_positive_infinity;
+
+/*
+doc:	<attribute name="eif_real_64_nan" return_type="EIF_REAL_64" export="public">
+doc:		<summary>Eiffel representation of NaN</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once in `eif_rtinit'.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REAL_64 eif_real_64_nan;
+
+/*
+doc:	<attribute name="eif_real_64_negative_infinity" return_type="EIF_REAL_64" export="public">
+doc:		<summary>Eiffel representation of negative infinity</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once in `eif_rtinit'.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REAL_64 eif_real_64_negative_infinity;
+
+/*
+doc:	<attribute name="eif_real_64_positive_infinity" return_type="EIF_REAL_64" export="public">
+doc:		<summary>Eiffel representation of positive infinity</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once in `eif_rtinit'.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REAL_64 eif_real_64_positive_infinity;
+
+/*
 doc:	<attribute name="eif_no_reclaim" return_type="int" export="public">
 doc:		<summary>Tell if runtime should reclaim all objects at the very end of execution.</summary>
 doc:		<access>Read/Write once</access>
@@ -444,6 +504,38 @@ doc:	</attribute>
 */
 rt_shared int catcall_detection_mode = default_catcall_detection_mode;	/* Assume we detect catcall at runtime */
 
+/*
+doc:	<routine name="ieee_init" return_type="void" export="private">
+doc:		<summary>Initialized the various IEEE values.</summary>
+doc:		<thread_safety>Safe when called upon runtime initialization</thread_safety>
+doc:	</routine>
+*/
+
+rt_private void ieee_init (void) {
+	EIF_NATURAL_32 val_32;
+	EIF_NATURAL_32 *l_val_32 = &val_32;
+	EIF_NATURAL_64 val_64;
+	EIF_NATURAL_64 *l_val_64 = &val_64;
+
+		/* Computation of NaN. */
+	val_32 = 0x7FC00000;
+	eif_real_32_nan = *((EIF_REAL_32 *) l_val_32);
+	val_64 = RTU64C(0x7FF8000000000000);
+	eif_real_64_nan = *((EIF_REAL_64 *) l_val_64);
+
+		/* Computation of Negative Infinity. */
+	val_32 = 0xFF800000;
+	eif_real_32_negative_infinity = *((EIF_REAL_32 *) l_val_32);
+	val_64 = RTU64C(0xFFF0000000000000);
+	eif_real_64_negative_infinity = *((EIF_REAL_64 *) l_val_64);
+
+		/* Computation of Positive Infinity. */
+	val_32 = 0x7F800000;
+	eif_real_32_positive_infinity = *((EIF_REAL_32 *) l_val_32);
+	val_64 = RTU64C(0x7FF0000000000000);
+	eif_real_64_positive_infinity = *((EIF_REAL_64 *) l_val_64);
+}
+
 rt_public void once_init (void)
 {
 	EIF_GET_CONTEXT
@@ -764,6 +856,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	GC_register_displacement (OVERHEAD);
 #endif
 
+	ieee_init();
 	starting_working_directory = (char *) eif_malloc (PATH_MAX + 1);
 
 	ufill();							/* Get urgent memory chunks */

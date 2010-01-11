@@ -108,6 +108,14 @@ feature -- IL Generation
 		deferred
 		end
 
+	generate_runtime_builtin_call (a_feature: FEATURE_I)
+			-- Generate the call to the corresponding builtin routine in ISE_RUNTIME
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_builtin: attached a_feature.extension as l_extension and then l_extension.is_built_in
+		deferred
+		end
+
 	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER;
 			is_virtual: BOOLEAN)
@@ -1043,14 +1051,6 @@ feature -- Unary operator generation
 
 feature -- Basic feature
 
-	generate_min (type: TYPE_A)
-			-- Generate `min' on basic types.
-		require
-			type_not_void: type /= Void
-			basic_type: type.is_basic
-		deferred
-		end
-
 	generate_is_query_on_character (query_name: STRING)
 			-- Generate is_`query_name' on CHARACTER returning a boolean.
 		require
@@ -1058,21 +1058,45 @@ feature -- Basic feature
 		deferred
 		end
 
+	generate_is_query_on_real (is_real_32: BOOLEAN; query_name: STRING)
+			-- Generate static call `query_name' on REAL_32 taking a REAL_32 as argument
+			-- if `is_real_32', otherwise using REAL_64, and returning a boolean.
+		require
+			query_name_not_void: query_name /= Void
+			query_name_not_empty: not query_name.is_empty
+		deferred
+		end
+
+	generate_constant_access_on_real (is_real_32: BOOLEAN; field_name: STRING)
+			-- Upload value of `field_name' of type REAL_32, if `is_real_32', otherwise REAL_64
+			-- on the evaluation stack.
+		require
+			field_name_not_void: field_name /= Void
+			field_name_not_empty: not field_name.is_empty
+		deferred
+		end
+
 	generate_upper_lower (is_upper: BOOLEAN)
 		deferred
 		end
 
-	generate_max (type: TYPE_A)
-			-- Generate `max' on basic types.
+	generate_math_one_argument (a_name: STRING; type: TYPE_A)
+			-- Generate `a_name' feature call on basic types using a Math function where
+			-- the signature is "(type): type"
 		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 			type_not_void: type /= Void
 			basic_type: type.is_basic
 		deferred
 		end
 
-	generate_abs (type: TYPE_A)
-			-- Generate `abs' on basic types.
+	generate_math_two_arguments (a_name: STRING; type: TYPE_A)
+			-- Generate `a_name' feature call on basic types using a Math function where
+			-- the signature is "(type, type): type"
 		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 			type_not_void: type /= Void
 			basic_type: type.is_basic
 		deferred
@@ -1213,7 +1237,7 @@ feature -- Generic conformance
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1226,22 +1250,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CIL_CODE_GENERATOR

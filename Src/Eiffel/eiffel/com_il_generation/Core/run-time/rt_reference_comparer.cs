@@ -42,17 +42,19 @@ using System.Collections;
 namespace EiffelSoftware.Runtime {
 
 [System.Runtime.InteropServices.ComVisibleAttribute (false)]
-public class RT_REFERENCE_COMPARER : IComparer {
+public class RT_REFERENCE_COMPARER : IEqualityComparer {
 /*
 feature -- Comparison
 */
-	public int Compare (object a, object b) { 
-		if (a == b) {
-			return 0;
-		} else {
-			return 1;
-		}
-	} 
+	public new bool Equals (object a, object b) { 
+		return a == b;
+	}
+
+	public int GetHashCode(object obj)
+	{
+		return obj.GetHashCode();
+	}
+
 }
 
 }

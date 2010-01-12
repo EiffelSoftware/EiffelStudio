@@ -728,7 +728,7 @@ rt_public EIF_REFERENCE c_outi64(EIF_INTEGER_64 i)
 
 rt_public EIF_REFERENCE c_outr32(EIF_REAL_32 f)
 {
-	RT_GET_CONTEXT;
+	RT_GET_CONTEXT
 	int len;
 	len = c_buffero_outr32(f);
 	return makestr(buffero, len);
@@ -736,12 +736,11 @@ rt_public EIF_REFERENCE c_outr32(EIF_REAL_32 f)
 
 rt_public EIF_REFERENCE c_outr64(EIF_REAL_64 d)
 {
-	RT_GET_CONTEXT;
+	RT_GET_CONTEXT
 	int len;
 	len = c_buffero_outr64(d);
 	return makestr(buffero, len);
 }
-
 
 rt_public EIF_REFERENCE c_outc(EIF_CHARACTER c)
 {

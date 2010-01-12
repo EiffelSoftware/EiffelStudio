@@ -1037,6 +1037,8 @@ feature {NONE} -- Implementation
 					end
 					figure_was_selected := True
 				end
+			elseif not ev_application.ctrl_pressed and then not figure_was_selected then
+				deselect_all
 			end
 			selected_figure := figure
 		end

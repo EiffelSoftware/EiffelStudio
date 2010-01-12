@@ -3120,6 +3120,8 @@ feature -- Implementation
 				elseif not l_has_invalid_locals then
 						-- Set mark of context
 					is_in_rescue := True
+						-- Remove any previously started variable scopes.
+					context.init_attribute_scopes
 					context.init_local_scopes
 					process_compound (l_as.rescue_clause)
 					if l_needs_byte_node and then error_level = l_error_level then
@@ -10130,7 +10132,7 @@ feature {NONE} -- Implementation: catcall check
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

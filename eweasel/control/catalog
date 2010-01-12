@@ -874,7 +874,6 @@ if WINDOWS test	shared-library-definition-update	incr337 tcf pass incrementality
 test	bogus-construct-not-supported	incr338	tcf fail incrementality
 test	bracket-trigger-c-compilation-error	incr339 tcf pass incrementality c_compilation
 test	class-name-mismatch-internal-error	incr340 tcf fail incrementality
-test	class-name-mismatch-internal-error	incr340 tcf fail incrementality
 test	nonexistent-veen			incr341 tcf fail incrementality
 test	formulate-inherited-assertions-crash	incr342 tcf fail incrementality
 test	feature_b-process-crash			incr343 tcf fail incrementality

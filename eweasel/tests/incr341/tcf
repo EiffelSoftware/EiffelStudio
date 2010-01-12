@@ -1,0 +1,17 @@
+
+test_name	nonexistent-veen
+test_description After initial compilation, an inheritance clause is removed from a class and other changes are made. The compiler then reports a nonexistent VEEN error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw	parent.e $CLUSTER parent.e 
+copy_raw	child.e $CLUSTER child.e 
+
+compile_melted
+compile_result 	ok
+
+copy_raw	parent_rev2.e $CLUSTER parent.e 
+compile_melted
+compile_result 	ok
+
+test_end

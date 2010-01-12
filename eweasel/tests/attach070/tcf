@@ -1,0 +1,10 @@
+test_name 	 stable-attribute-in-rescue
+test_description Stable attribute set in routine body should not be considered attached in rescue.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST VUTA(2)
+
+test_end

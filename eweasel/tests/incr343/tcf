@@ -1,0 +1,17 @@
+
+test_name	feature_b-process-crash
+test_description A class inherits from a fully deferred class and effects both a routine and a deferred precondition of that routine.  After initial compilation, the inheritance clause is removed.  This causes the compiler to crash with a call on Void target in {FEATURE_B}.process
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	child.e $CLUSTER child.e 
+copy_raw 	parent.e $CLUSTER parent.e 
+
+compile_melted
+compile_result 	ok
+
+copy_raw	parent_rev2.e $CLUSTER parent.e 
+compile_melted
+compile_result 	ok
+
+test_end

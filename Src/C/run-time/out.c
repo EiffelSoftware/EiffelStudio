@@ -41,7 +41,8 @@ doc:<file name="out.c" header="eif_out.h" version="$Id$" summary="Routines for p
 #include "eif_portable.h"
 #include "eif_project.h"
 #include "eif_eiffel.h"
-#include "eif_out.h"
+#include "rt_out.h"
+#include "eif_helpers.h"
 #include "eif_plug.h"
 #include "rt_struct.h"
 #include "rt_hashin.h"
@@ -65,14 +66,14 @@ doc:<file name="out.c" header="eif_out.h" version="$Id$" summary="Routines for p
 
 #ifndef EIF_THREADS
 /*
-doc:	<attribute name="buffero" return_type="char [TAG_SIZE]" export="private">
+doc:	<attribute name="buffero" return_type="char [TAG_SIZE]" export="shared">
 doc:		<summary>Buffer for printing an object in a string.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_private char buffero[TAG_SIZE];
+rt_shared char buffero[TAG_SIZE];
 
 /*
 doc:	<attribute name="tagged_out" return_type="char *" export="private">
@@ -115,6 +116,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab);		/* Write tu
 rt_private void buffer_allocate(void);	/* Allocate initial buffer */
 rt_public char *eif_out(EIF_REFERENCE object);		/* Build a copy of "tagged_out" for CECIL programmer. */
 rt_shared char *build_out(EIF_REFERENCE object);		/* Build `tagged_out' string */
+
 
 /*
  * Routine for printing representation
@@ -309,13 +311,17 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			break;
 		case SK_REAL32:
 			/* Real attribute */
-			sprintf(buffero, "REAL = %g\n", *(EIF_REAL_32 *)o_ref);
+			write_string("REAL_32 = ");
+			c_buffero_outr32(*(EIF_REAL_32 *) o_ref);
 			write_string(buffero);
+			write_string("\n");
 			break;
 		case SK_REAL64:
 			/* Double attribute */
-			sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_REAL_64 *)o_ref);
+			write_string("REAL_64 = ");
+			c_buffero_outr64(*(EIF_REAL_64 *) o_ref);
 			write_string(buffero);
+			write_string("\n");
 			break;	
 		case SK_BIT:
 			{		
@@ -467,11 +473,15 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					}
 					write_char('\n');
 				} else if (dtype == egc_sp_real32) {
-					sprintf(buffero, "REAL = %g\n", *(EIF_REAL_32 *)o_ref);
+					write_string("REAL_32 = ");
+					c_buffero_outr32(*(EIF_REAL_32 *) o_ref);
 					write_string(buffero);
+					write_string("\n");
 				} else if (dtype == egc_sp_real64) {
-					sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_REAL_64 *)o_ref);
+					write_string("REAL_64 = ");
+					c_buffero_outr64(*(EIF_REAL_64 *) o_ref);
 					write_string(buffero);
+					write_string("\n");
 				} else if (dtype == egc_sp_pointer) {
 					sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n",
 						(rt_uint_ptr) (*(fnptr *)o_ref));
@@ -535,12 +545,16 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 				write_attribute_character (eif_character_item(object,i));
 				break;
 			case EIF_REAL_64_CODE:
-				sprintf(buffero, "DOUBLE = %.17g\n", eif_real_64_item(object,i));
+				write_string("REAL_64 = ");
+				c_buffero_outr64(eif_real_64_item(object,i));
 				write_string(buffero);
+				write_string("\n");
 				break;
 			case EIF_REAL_32_CODE:
-				sprintf(buffero, "REAL = %g\n", eif_real_32_item(object,i));
+				write_string("REAL_32 = ");
+				c_buffero_outr32(eif_real_32_item(object,i));
 				write_string(buffero);
+				write_string("\n");
 				break;
 			case EIF_POINTER_CODE:
 				sprintf(buffero, "POINTER = 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) eif_pointer_item(object,i));
@@ -714,19 +728,20 @@ rt_public EIF_REFERENCE c_outi64(EIF_INTEGER_64 i)
 
 rt_public EIF_REFERENCE c_outr32(EIF_REAL_32 f)
 {
-	RT_GET_CONTEXT
-	register int len;
-	len = sprintf(buffero, "%g", f);
+	RT_GET_CONTEXT;
+	int len;
+	len = c_buffero_outr32(f);
 	return makestr(buffero, len);
 }
 
 rt_public EIF_REFERENCE c_outr64(EIF_REAL_64 d)
 {
-	RT_GET_CONTEXT
-	register int len;
-	len = sprintf(buffero, "%.17g", d);
+	RT_GET_CONTEXT;
+	int len;
+	len = c_buffero_outr64(d);
 	return makestr(buffero, len);
 }
+
 
 rt_public EIF_REFERENCE c_outc(EIF_CHARACTER c)
 {
@@ -740,6 +755,35 @@ rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
 	len = sprintf(buffero, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) p);
 	return makestr(buffero, len);
 }
+
+rt_shared int c_buffero_outr32 (EIF_REAL_32 f)
+{
+	RT_GET_CONTEXT
+	if (f != f) {
+		return sprintf(buffero, "NaN");
+	} else if (f == eif_real_32_negative_infinity) {
+		return sprintf(buffero, "-Infinity");
+	} else if (f == eif_real_32_positive_infinity) {
+		return sprintf(buffero, "Infinity");
+	} else {
+		return sprintf(buffero, "%g", f);
+	}
+}
+
+rt_shared int c_buffero_outr64 (EIF_REAL_64 d)
+{
+	RT_GET_CONTEXT
+	if (d != d) {
+		return sprintf(buffero, "NaN");
+	} else if (d == eif_real_64_negative_infinity) {
+		return sprintf(buffero, "-Infinity");
+	} else if (d == eif_real_64_positive_infinity) {
+		return sprintf(buffero, "Infinity");
+	} else {
+		return sprintf(buffero, "%.17g", d);
+	}
+}
+
 
 /*
 doc:</file>

@@ -876,6 +876,7 @@ test	bracket-trigger-c-compilation-error	incr339 tcf pass incrementality c_compi
 test	class-name-mismatch-internal-error	incr340 tcf fail incrementality
 test	class-name-mismatch-internal-error	incr340 tcf fail incrementality
 test	nonexistent-veen			incr341 tcf fail incrementality
+test	formulate-inherited-assertions-crash	incr342 tcf fail incrementality
 
 
 -- Melting

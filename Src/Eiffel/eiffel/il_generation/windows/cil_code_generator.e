@@ -3751,7 +3751,7 @@ feature -- IL Generation
 		local
 			l_token: INTEGER
 			l_method_sig: like method_sig
-			i, nb: INTEGER
+			nb: INTEGER
 		do
 			if attached {BUILT_IN_EXTENSION_I} a_feature.extension as l_ext then
 				l_method_sig := method_sig

@@ -877,6 +877,7 @@ test	class-name-mismatch-internal-error	incr340 tcf fail incrementality
 test	nonexistent-veen			incr341 tcf fail incrementality
 test	formulate-inherited-assertions-crash	incr342 tcf fail incrementality
 test	feature_b-process-crash			incr343 tcf fail incrementality
+test	new-generic-deriv-attribute-agent	incr344 tcf fail incrementality
 
 
 -- Melting

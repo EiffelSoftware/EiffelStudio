@@ -270,6 +270,12 @@ static  char    *basic_op_names [] = {
 "BC_ZERO" ,
 "BC_ONE",
 "BC_THREE_WAY_COMPARISON"
+"BC_IS_NAN"
+"BC_IS_NEGATIVE_INFINITY"
+"BC_IS_POSITIVE_INFINITY"
+"BC_NAN"
+"BC_NEGATIVE_INFINITY"
+"BC_POSITIVE_INFINITY"
 };
 
 static  char    *bit_op_names [] = {

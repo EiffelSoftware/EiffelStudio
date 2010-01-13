@@ -1,0 +1,24 @@
+
+test_name	new-generic-deriv-attribute-agent
+test_description Freezing a generic class with a routine that has an agent call constructed on an attribute of a generic type works fine.  Adding a new generic derivation of the class and calling the routine with the agent call and melting causes system execution to end with a seg fault
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+copy_raw 	test_rev2.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

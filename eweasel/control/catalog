@@ -961,7 +961,7 @@ test	invariant-check-melted-agent-callee melt076  tcf pass melting execution
 test	dollar-with-tuple		melt077  tcf pass melting execution tuple
 test	dollar-with-expanded-attribute	melt078  tcf pass melting execution
 test	runtime-stack-corruption	melt079  tcf pass melting execution
-test	nan-comparison			melt080  tcf pass melting execution
+test	nan-comparison			melt080  tcf pass melting execution ieee
 test	melted-special-creation-crash	melt081  tcf pass melting execution special
 test	melted-external-call	melt082  tcf pass melting execution
 test	melted-agent-call-on-void-target	melt083  tcf fail execution melting
@@ -1385,7 +1385,7 @@ test	invariant-encapsulated-inline-agents exec244 tcf pass execution
 test	remove-fake-inline-agent-from-invariant exec245 tcf pass execution
 test	remove-feature-with-inline-agent exec246 tcf pass execution
 test	type-check-invariant-inline-agent exec247 tcf pass execution
-test	nan-min-max					exec248 tcf pass execution
+test	nan-min-max					exec248 tcf pass execution ieee
 test	agent-in-nested-call-failure	exec249 tcf pass execution
 test	feature-only-referenced-by-dollar-op exec250 tcf pass execution
 test	dollar-op-to-deferred-feature exec251 tcf pass execution
@@ -1440,7 +1440,7 @@ test	invariant-crash-with-attached-parent	exec299 tcf pass execution
 test	deep-twin-expanded-type			exec300 tcf fail execution
 test	attempt-on-type-none			exec301 tcf fail execution
 test	self-init-attribute-call-to-precursor	exec302 tcf fail execution manual
-test	out-on-nan-violates-invariant		exec303 tcf fail execution
+test	out-on-nan-violates-invariant		exec303 tcf fail execution ieee
 test	operations-on-numeric-generic		exec304 tcf fail execution
 test	expanded-object-test-infinite-recursion	exec305 tcf fail execution manual
 test	expanded-generic-call-on-void-target	exec306 tcf fail execution
@@ -1459,6 +1459,7 @@ test	ref-exp-polymorphism			exec318 tcf fail execution
 test	loop-expression-smoke-test		exec319 tcf pass loop expression
 test	expanded-deep-physical-size		exec320 tcf fail execution
 test	check-instruction-smoke-test	exec321 tcf pass execution check instruction exception
+test	ieee-arithmetic					exec322 tcf pass execution ieee
 
 
 -- Compiler termination (exception trace, panic, etc.)

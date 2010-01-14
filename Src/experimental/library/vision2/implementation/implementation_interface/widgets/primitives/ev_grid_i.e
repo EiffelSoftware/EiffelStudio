@@ -2253,6 +2253,16 @@ feature -- Status report
 		-- Does `drawable' or any of the drawables representing locked rows currently
 		-- have the focus? If `False' then selection should be grayed.
 
+	depth_in_tree (a_row_index: INTEGER): INTEGER
+			-- Depth in tree for `a_row_index'
+		require
+			valid_index: 0 < a_row_index and a_row_index <= row_count
+		do
+			if attached row (a_row_index) as r then
+				Result := r.implementation.depth_in_tree
+			end
+		end
+
 feature -- Element change
 
 	enable_drawables_have_focus

@@ -1,11 +1,9 @@
 note
-
 	description: "[
 		Basic mathematical operations, double-precision.
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,94 +16,91 @@ inherit
 
 feature -- Access
 
-	log_2 (v: DOUBLE): DOUBLE
+	log_2 (v: REAL_64): REAL_64
 			-- Base 2 logarithm of `v'
-		local
-			a: DOUBLE
 		do
-			a := 2.0
-			Result := log (v) / log (a)
+			Result := log (v) / log ({REAL_64} 2.0)
 		end
 
-	cosine (v: DOUBLE): DOUBLE
+	cosine (v: REAL_64): REAL_64
 			-- Trigonometric cosine of radian `v' approximated
 			-- in the range [-pi/4, +pi/4]
 		do
 			Result := {MATH}.cos (v)
 		end
 
-	arc_cosine (v: DOUBLE): DOUBLE
+	arc_cosine (v: REAL_64): REAL_64
 			-- Trigonometric arccosine of radian `v'
 			-- in the range [0, pi]
 		do
 			Result := {MATH}.acos (v)
 		end
 
-	sine (v: DOUBLE): DOUBLE
+	sine (v: REAL_64): REAL_64
 			-- Trigonometric sine of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		do
 			Result := {MATH}.sin (v)
 		end
 
-	arc_sine (v: DOUBLE): DOUBLE
+	arc_sine (v: REAL_64): REAL_64
 			-- Trigonometric arcsine of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		do
 			Result := {MATH}.asin (v)
 		end
 
-	tangent (v: DOUBLE): DOUBLE
+	tangent (v: REAL_64): REAL_64
 			-- Trigonometric tangent of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		do
 			Result := {MATH}.tan (v)
 		end
 
-	arc_tangent (v: DOUBLE): DOUBLE
+	arc_tangent (v: REAL_64): REAL_64
 			-- Trigonometric arctangent of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		do
 			Result := {MATH}.atan (v)
 		end
 
-	sqrt (v: DOUBLE): DOUBLE
+	sqrt (v: REAL_64): REAL_64
 			-- Square root of `v'
 		do
 			Result := {MATH}.sqrt (v)
 		end
 
-	exp (v: DOUBLE): DOUBLE
+	exp (v: REAL_64): REAL_64
 			-- Exponential of `v'.
 		do
 			Result := {MATH}.exp (v)
 		end
 
-	log (v: DOUBLE): DOUBLE
+	log (v: REAL_64): REAL_64
 			-- Natural logarithm of `v'
 		do
 			Result := {MATH}.log (v)
 		end
 
-	log10 (v: DOUBLE): DOUBLE
+	log10 (v: REAL_64): REAL_64
 			-- Base 10 logarithm of `v'
 		do
 			Result := {MATH}.log_10 (v)
 		end
 
-	floor (v: DOUBLE): DOUBLE
+	floor (v: REAL_64): REAL_64
 			-- Greatest integral less than or equal to `v'
 		do
 			Result := {MATH}.floor (v)
 		end
 
-	ceiling (v: DOUBLE): DOUBLE
+	ceiling (v: REAL_64): REAL_64
 			-- Least integral greater than or equal to `v'
 		do
 			Result := {MATH}.ceiling (v)
 		end
 
-	dabs (v: DOUBLE): DOUBLE
+	dabs (v: REAL_64): REAL_64
 			-- Absolute of `v'
 		do
 			Result := {MATH}.abs_double (v)

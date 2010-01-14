@@ -1,4 +1,4 @@
-class TEST
+class TEST_REAL_64
 
 create
 	make

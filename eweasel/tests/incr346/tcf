@@ -1,0 +1,27 @@
+
+test_name	is-expanded-crash
+test_description A sequence of changes causes the compiler to crash in degree -1 in {CL_TYPE_A}.is_expanded.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test3.e $CLUSTER test3.e
+compile_frozen
+compile_result 	ok
+
+copy_raw 	test1_rev2.e $CLUSTER test1.e
+compile_frozen
+compile_result 	validity_error TEST1 VUAR(1)
+
+copy_raw 	test1_rev3.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

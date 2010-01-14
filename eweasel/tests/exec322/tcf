@@ -1,7 +1,10 @@
 test_name 	 ieee-arithmetic
 test_description Calling out on a REAL_64 that is NaN violates the class invariant sign_times_abs
+
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
+copy_raw	test_real_32.e $CLUSTER test_real_32.e
+copy_raw	test_real_64.e $CLUSTER test_real_64.e
 
 compile_melted
 compile_result	ok

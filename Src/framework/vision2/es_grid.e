@@ -13,8 +13,7 @@ inherit
 	EV_GRID
 		redefine
 			initialize,
-			destroy,
-			implementation, create_implementation
+			destroy
 		end
 
 	EV_SHARED_APPLICATION
@@ -93,14 +92,6 @@ feature -- Access
 	auto_size_best_fit_column: INTEGER
 			-- Column index automatically resized to ensure all columns fit in view.
 			-- Note: 0 indicates no best-fitting
-
-	depth_in_tree (a_row_index: INTEGER): INTEGER
-			-- Depth in tree for `a_row'
-		require
-			valid_index: 0 < a_row_index and a_row_index <= row_count
-		do
-			Result := implementation.depth_in_tree (a_row_index)
-		end
 
 feature {NONE} -- Access
 
@@ -1171,24 +1162,11 @@ feature {NONE} -- Tree view behavior
 			result_attached: Result /= Void
 		end
 
-feature {EV_ANY, EV_ANY_I} -- Implementation
-
-	implementation: ES_GRID_I
-		-- Responsible for interaction with native graphics toolkit.
-
-feature {NONE} -- Implementation
-
-	create_implementation
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			create {ES_GRID_IMP} implementation.make
-		end
-
 invariant
 	selected_rows_agent_attached: selected_rows_function /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

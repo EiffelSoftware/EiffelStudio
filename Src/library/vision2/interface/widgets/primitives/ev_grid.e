@@ -2017,6 +2017,14 @@ feature -- Status report
 			Result := implementation.are_columns_drawn_above_rows
 		end
 
+	depth_in_tree (a_row_index: INTEGER): INTEGER
+			-- Depth in tree for `a_row'
+		require
+			valid_index: 0 < a_row_index and a_row_index <= row_count
+		do
+			Result := implementation.depth_in_tree (a_row_index)
+		end
+
 feature -- Element change
 
 	insert_new_row (i: INTEGER)

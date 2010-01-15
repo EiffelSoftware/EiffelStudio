@@ -2091,7 +2091,7 @@ feature {TYPE, INTERNAL} -- Implementation
 	marked_objects: HASHTABLE
 			-- Contains all objects marked.
 		once
-			create Result.make (internal_chunk_size, Void, create {RT_REFERENCE_COMPARER}.make)
+			create Result.make (internal_chunk_size, create {RT_REFERENCE_COMPARER}.make)
 		end
 
 	internal_chunk_size: INTEGER = 50;

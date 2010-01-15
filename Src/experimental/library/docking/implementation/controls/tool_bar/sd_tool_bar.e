@@ -71,6 +71,8 @@ feature {SD_TOOL_BAR} -- Internal initlization
 
 	initialize
 			-- Initlialize
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			Precursor {SD_DRAWING_AREA}
 
@@ -84,6 +86,10 @@ feature {SD_TOOL_BAR} -- Internal initlization
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_leave_actions.extend (agent on_pointer_leave)
 			pointer_enter_actions.extend (agent on_pointer_enter)
+
+			create l_env
+			l_env.application.focus_out_actions.extend (agent on_app_focus_out)
+			focus_in_actions.extend (agent on_focus_in)
 
 			drop_actions.extend (agent on_drop_action)
 			drop_actions.set_veto_pebble_function (agent on_veto_pebble_function)
@@ -826,6 +832,24 @@ feature {NONE} -- Agents
 			end
 		end
 
+	on_app_focus_out (a_widget: EV_WIDGET)
+			-- Handle application focus out action
+		do
+			last_focused_widget := a_widget
+		end
+
+	on_focus_in
+			-- Hanlde focus in action
+		do
+			if attached last_focused_widget as l_widget then
+				l_widget.set_focus
+				last_focused_widget := void
+			end
+		end
+
+	last_focused_widget: detachable EV_WIDGET
+			-- Last focused widget set by `on_app_focus_out'
+
 feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 
 	set_content (a_content: like content)
@@ -959,7 +983,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

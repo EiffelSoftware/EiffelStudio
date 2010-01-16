@@ -174,6 +174,9 @@ feature -- Access
 	bc_is_nan:		CHARACTER = '%/008/'
 	bc_is_negative_infinity:		CHARACTER = '%/009/'
 	bc_is_positive_infinity:		CHARACTER = '%/010/'
+	bc_nan:			CHARACTER = '%/011/'
+	bc_negative_infinity:		CHARACTER = '%/012/'
+	bc_positive_infinity:		CHARACTER = '%/013/'
 
 		-- Special instructions for Bit operations
 	Bc_int_bit_op:		CHARACTER = '%/138/'

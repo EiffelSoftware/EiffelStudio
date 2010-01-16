@@ -45,10 +45,10 @@ inherit
 
 feature -- Access
 
-	has (feat: FEATURE_B; target_type: CL_TYPE_A): BOOLEAN
-			-- Does Current have `feat.feature_name_id'?
+	has (feature_name_id: INTEGER; target_type: CL_TYPE_A): BOOLEAN
+			-- Does Current have `feature_name_id'?
 		require
-			valid_feat: feat /= Void
+			valid_feature_name_id: feature_name_id > 0
 			target_type_not_void: target_type /= Void
 		do
 			Result := (target_type.is_basic and not target_type.is_bit) or else target_type.is_enum
@@ -60,7 +60,7 @@ feature -- Access
 					boolean_type_id, character_type_id, integer_type_id, real_32_type_id,
 					real_64_type_id, pointed_type_id
 				then
-					Result := basic_type_table.has_key (feat.feature_name_id)
+					Result := basic_type_table.has_key (feature_name_id)
 					function_type := basic_type_table.found_item
 					if function_type = out_type then
 							-- {REAL_32}.out and {REAL_64}.out are processed
@@ -75,7 +75,7 @@ feature -- Access
 					if target_type.is_enum then
 						Result := True
 						inspect
-							feat.feature_name_id
+							feature_name_id
 						when infix_bit_and_name_id, bit_and_name_id then
 							function_type := basic_type_table.item (infix_bit_and_name_id)
 						when infix_bit_or_name_id, bit_or_name_id then
@@ -112,7 +112,7 @@ feature -- Status
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B])
+	generate_il (a_generator: IL_NODE_GENERATOR; feat: CALL_ACCESS_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B])
 			-- Generate IL code sequence that will be used with basic types.
 		require
 			a_generator_not_void: a_generator /= Void
@@ -342,6 +342,35 @@ feature -- IL code generation
 			when is_positive_infinity_type then
 				il_generator.generate_is_query_on_real (type.is_real_32, "IsPositiveInfinity")
 
+			when nan_type then
+				if feat.need_target then
+					il_generator.pop
+				end
+				if type.is_real_32 then
+					il_generator.put_real_32_constant ({REAL_32}.nan)
+				else
+					il_generator.put_real_64_constant ({REAL_64}.nan)
+				end
+			when negative_infinity_type then
+				if feat.need_target then
+					il_generator.pop
+				end
+				if type.is_real_32 then
+					il_generator.put_real_32_constant ({REAL_32}.negative_infinity)
+				else
+					il_generator.put_real_64_constant ({REAL_64}.negative_infinity)
+				end
+
+			when positive_infinity_type then
+				if feat.need_target then
+					il_generator.pop
+				end
+				if type.is_real_32 then
+					il_generator.put_real_32_constant ({REAL_32}.positive_infinity)
+				else
+					il_generator.put_real_64_constant ({REAL_64}.positive_infinity)
+				end
+
 			else
 
 			end
@@ -428,6 +457,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (ceiling_real_type, ceiling_real_64_name_id)
 			Result.put (floor_real_type, floor_real_32_name_id)
 			Result.put (floor_real_type, floor_real_64_name_id)
+			Result.put (nan_type, nan_name_id)
+			Result.put (negative_infinity_type, negative_infinity_name_id)
+			Result.put (positive_infinity_type, positive_infinity_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (memory_copy, memory_copy_name_id)
@@ -498,7 +530,10 @@ feature -- Fast access to feature name
 	is_nan_type: INTEGER = 58
 	is_negative_infinity_type: INTEGER = 59
 	is_positive_infinity_type: INTEGER = 60
-	max_type_id: INTEGER = 60
+	nan_type: INTEGER = 61
+	negative_infinity_type: INTEGER = 62
+	positive_infinity_type: INTEGER = 63
+	max_type_id: INTEGER = 63
 
 feature {NONE} -- IL code generation
 
@@ -607,7 +642,7 @@ feature {NONE} -- IL code generation
 			il_generator.mark_label (l_end_label)
 		end
 
-	generate_set_item (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B])
+	generate_set_item (a_generator: IL_NODE_GENERATOR; feat: CALL_ACCESS_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B])
 			-- Generate IL code sequence that will be used with basic types.
 		require
 			a_generator_not_void: a_generator /= Void

@@ -990,7 +990,7 @@ feature {NONE} -- Visitors
 					l_attribute_cl_type ?= l_r_type
 					if
 						l_feature_call /= Void and then
-						il_special_routines.has (l_feature_call, l_attribute_cl_type) and then
+						il_special_routines.has (l_feature_call.feature_name_id, l_attribute_cl_type) and then
 						il_special_routines.function_type =
 							{IL_SPECIAL_FEATURES}.set_item_type
 					then
@@ -1621,17 +1621,33 @@ feature {NONE} -- Visitors
 			is_in_external_creation_call := False
 			is_this_argument_current := False
 
-			if not a_node.extension.is_il then
+				-- Type of object on which we are performing call to Current.
+			if a_node.is_static_call then
+				l_cl_type ?= context.real_type (a_node.static_class_type)
+			else
+				l_cl_type ?= a_node.context_type
+			end
+			check
+				cl_type_not_void: l_cl_type /= Void
+			end
+
+				-- Let's find out if we are performing a call on a basic type
+				-- or on an enum type. This happens only when we are calling
+				-- magically added feature on basic types.
+			if il_special_routines.has (a_node.feature_name_id, l_cl_type) then
+				if not a_node.is_static_call and then a_node.is_first then
+						-- Because the code is generated for a basic type,
+						-- the value has to be loaded.
+					il_generator.generate_current_as_basic
+				end
+				il_special_routines.generate_il (Current, a_node, l_cl_type, a_node.parameters)
+			elseif not a_node.extension.is_il then
 					-- Generate call to C external.
 				generate_il_c_call (a_node, not l_is_in_creation)
 			else
 				l_il_ext ?= a_node.extension
-					-- Type of object on which we are performing call to Current.
-				l_cl_type ?= a_node.context_type
-
 				check
 					il_ext_not_void: l_il_ext /= Void
-					cl_type_not_void: l_cl_type /= Void
 				end
 
 				if l_cl_type.is_expanded then
@@ -1762,7 +1778,7 @@ feature {NONE} -- Visitors
 				-- Let's find out if we are performing a call on a basic type
 				-- or on an enum type. This happens only when we are calling
 				-- magically added feature on basic types.
-			if il_special_routines.has (a_node, l_cl_type) then
+			if il_special_routines.has (a_node.feature_name_id, l_cl_type) then
 				if a_node.is_first then
 						-- Because the code is generated for a basic type,
 						-- the value has to be loaded.
@@ -2576,7 +2592,6 @@ feature {NONE} -- Visitors
 			l_local_number: INTEGER
 			l_type: TYPE_A
 			l_need_attribute_to_be_assigned_back: BOOLEAN
-			l_external: EXTERNAL_B
 		do
 			is_object_load_required := False
 			l_can_discard_target := not a_node.message.need_target
@@ -2623,16 +2638,6 @@ feature {NONE} -- Visitors
 
 			if l_can_discard_target and l_is_target_generated then
 				il_generator.pop
-				l_external ?= l_call_access
-				if l_external /= Void then
-						-- Modify call so that we do it as if it was a static call.
-						-- This is ok because eventhough the code looks like:
-						-- f.static_external (args) where f is of type A
-						-- it should have been written as:
-						-- {A}.static_external (args)
-					l_external.enable_static_call
-					l_external.set_parent (Void)
-				end
 			end
 
 				-- Generate call
@@ -3253,7 +3258,7 @@ feature {NONE} -- Implementation
 
 						-- We do not load the address if it is an optimized call of the compiler.
 					l_feature_b ?= l_call_access
-					Result := l_feature_b = Void or else not il_special_routines.has (l_feature_b, l_cl_type)
+					Result := l_feature_b = Void or else not il_special_routines.has (l_feature_b.feature_name_id, l_cl_type)
 					if Result then
 						l_ext ?= l_call_access
 						if l_ext /= Void then
@@ -4836,7 +4841,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

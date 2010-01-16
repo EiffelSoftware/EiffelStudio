@@ -3,17 +3,17 @@
 	<target name="espawn">
 		<description>eSpawn, a tool to launching multiple processes asynchronously with the same environment established in finish_freezing.</description>
 		<root class="APPLICATION" feature="make"/>
-		<option warning="true">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
-		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
-		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf"/>
-		<library name="environment" location="${EIFFEL_SRC}\framework\environment\environment.ecf"/>
-		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
+		<library name="base" location="${ISE_LIBRARY}\library\base\base-safe.ecf"/>
+		<library name="environment" location="${EIFFEL_SRC}\framework\environment\environment-safe.ecf"/>
+		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing-safe.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<cluster name="espawn" location="${EIFFEL_SRC}\tools\espawn\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

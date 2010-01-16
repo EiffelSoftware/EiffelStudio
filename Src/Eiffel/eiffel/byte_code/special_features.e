@@ -124,6 +124,15 @@ feature -- Byte code special generation
 			when is_positive_infinity_type then
 				ba.append (bc_basic_operations)
 				ba.append (bc_is_positive_infinity)
+			when nan_type then
+				ba.append (bc_basic_operations)
+				ba.append (bc_nan)
+			when negative_infinity_type then
+				ba.append (bc_basic_operations)
+				ba.append (bc_negative_infinity)
+			when positive_infinity_type then
+				ba.append (bc_basic_operations)
+				ba.append (bc_positive_infinity)
 			when ceiling_real_type then
 				ba.append (bc_cast_real64)
 				ba.append (bc_ceil)
@@ -280,6 +289,21 @@ feature -- C special code generation
 					-- Add `eif_helpers.h' for C declaration of `floor'.
 				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 
+			when nan_type, negative_infinity_type, positive_infinity_type then
+				buffer.put_four_character ('e', 'i', 'f', '_')
+				if basic_type.is_real_32 then
+					buffer.put_string ("real_32_")
+				else
+					buffer.put_string ("real_64_")
+				end
+				inspect function_type
+				when nan_type then buffer.put_string ("nan")
+				when negative_infinity_type then buffer.put_string ("negative_infinity")
+				when positive_infinity_type then buffer.put_string ("positive_infinity")
+				end
+					-- Add `eif_helpers.h' for C declaration of `floor'.
+				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+
 			when offset_type then
 				generate_offset (buffer, type_of (basic_type), target, parameter)
 			when out_type then
@@ -412,6 +436,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_nan_type, {PREDEFINED_NAMES}.is_nan_name_id)
 			Result.put (is_negative_infinity_type, {PREDEFINED_NAMES}.is_negative_infinity_name_id)
 			Result.put (is_positive_infinity_type, {PREDEFINED_NAMES}.is_positive_infinity_name_id)
+			Result.put (nan_type, {PREDEFINED_NAMES}.nan_name_id)
+			Result.put (negative_infinity_type, {PREDEFINED_NAMES}.negative_infinity_name_id)
+			Result.put (positive_infinity_type, {PREDEFINED_NAMES}.positive_infinity_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -484,6 +511,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_nan_type, {PREDEFINED_NAMES}.is_nan_name_id)
 			Result.put (is_negative_infinity_type, {PREDEFINED_NAMES}.is_negative_infinity_name_id)
 			Result.put (is_positive_infinity_type, {PREDEFINED_NAMES}.is_positive_infinity_name_id)
+			Result.put (nan_type, {PREDEFINED_NAMES}.nan_name_id)
+			Result.put (negative_infinity_type, {PREDEFINED_NAMES}.negative_infinity_name_id)
+			Result.put (positive_infinity_type, {PREDEFINED_NAMES}.positive_infinity_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -549,7 +579,10 @@ feature {NONE} -- Fast access to feature name
 	is_nan_type: INTEGER = 57
 	is_negative_infinity_type: INTEGER = 58
 	is_positive_infinity_type: INTEGER = 59
-	max_type_id: INTEGER = 59
+	nan_type: INTEGER = 60
+	negative_infinity_type: INTEGER = 61
+	positive_infinity_type: INTEGER = 62
+	max_type_id: INTEGER = 62
 
 feature {NONE} -- Byte code generation
 

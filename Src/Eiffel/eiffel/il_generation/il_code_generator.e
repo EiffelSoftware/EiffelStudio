@@ -1067,15 +1067,6 @@ feature -- Basic feature
 		deferred
 		end
 
-	generate_constant_access_on_real (is_real_32: BOOLEAN; field_name: STRING)
-			-- Upload value of `field_name' of type REAL_32, if `is_real_32', otherwise REAL_64
-			-- on the evaluation stack.
-		require
-			field_name_not_void: field_name /= Void
-			field_name_not_empty: not field_name.is_empty
-		deferred
-		end
-
 	generate_upper_lower (is_upper: BOOLEAN)
 		deferred
 		end

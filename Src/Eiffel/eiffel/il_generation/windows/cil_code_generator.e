@@ -6719,29 +6719,6 @@ feature -- Basic feature
 			method_body.put_static_call (l_query_token, 1, True)
 		end
 
-	generate_constant_access_on_real (is_real_32: BOOLEAN; field_name: STRING)
-			-- Upload value of `field_name' of type REAL_32, if `is_real_32', otherwise REAL_64
-			-- on the evaluation stack.
-		local
-			l_sig: like field_sig
-			l_field_token: INTEGER
-		do
-			l_sig := field_sig
-			l_sig.reset
-			if is_real_32 then
-				set_signature_type (l_sig, real_32_type, current_class_type)
-			else
-				set_signature_type (l_sig, real_64_type, current_class_type)
-			end
-			uni_string.set_string (field_name)
-			if is_real_32 then
-				l_field_token := md_emit.define_member_ref (uni_string, current_module.real_32_type_token, l_sig)
-			else
-				l_field_token := md_emit.define_member_ref (uni_string, current_module.real_64_type_token, l_sig)
-			end
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, l_field_token)
-		end
-
 	generate_math_one_argument (a_name: STRING; type: TYPE_A)
 			-- Generate `a_name' feature call on basic types using a Math function where
 			-- the signature is "(type): type"

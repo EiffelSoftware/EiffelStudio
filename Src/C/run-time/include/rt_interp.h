@@ -224,6 +224,9 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_IS_NAN			(unsigned char) 8
 #define BC_IS_NEGATIVE_INFINITY	(unsigned char) 9
 #define BC_IS_POSITIVE_INFINITY	(unsigned char) 10
+#define BC_NAN			(unsigned char) 11
+#define BC_NEGATIVE_INFINITY	(unsigned char) 12
+#define BC_POSITIVE_INFINITY	(unsigned char) 13
 #define BC_INT_BIT_OP		(unsigned char) 138
 #define BC_INT_BIT_AND		(unsigned char) 1
 #define BC_INT_BIT_OR		(unsigned char) 2

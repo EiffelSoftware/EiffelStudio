@@ -833,12 +833,6 @@ feature -- Basic feature
 		do
 		end
 
-	generate_constant_access_on_real (is_real_32: BOOLEAN; field_name: STRING)
-			-- Upload value of `field_name' of type REAL_32, if `is_real_32', otherwise REAL_64
-			-- on the evaluation stack.
-		do
-		end
-
 	generate_upper_lower (is_upper: BOOLEAN)
 		do
 		end

@@ -1,10 +1,18 @@
 test_name 	 stable-attribute-in-rescue
 test_description Stable attribute set in routine body should not be considered attached in rescue.
 
-copy_raw	test.e $CLUSTER test.e
 copy_sub	Ace $TEST Ace
+
+define REQUIRE "True"
+copy_sub	test.e $CLUSTER test.e
 
 compile_melted
 compile_result	validity_error TEST VUTA(2)
+
+define REQUIRE "a /= Void"
+copy_sub	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	ok
 
 test_end

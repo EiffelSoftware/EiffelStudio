@@ -156,8 +156,15 @@ feature {NONE} -- Implementation
 			]"
 		end
 
+	internal_shared: SD_SHARED
+			-- All singletons
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
 	implementation: SD_FEEDBACK_RECT_I
 			-- <Precursor>
+
+feature {NONE} -- Implementation
 
 	create_implementation
 			-- <Precursor>
@@ -165,11 +172,9 @@ feature {NONE} -- Implementation
 			create {SD_FEEDBACK_RECT_IMP} implementation.make (Current)
 		end
 
-	internal_shared: SD_SHARED
-			-- All singletons
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

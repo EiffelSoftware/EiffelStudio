@@ -3,14 +3,14 @@ test_description Stable attribute set in routine body should not be considered a
 
 copy_sub	Ace $TEST Ace
 
-define REQUIRE "True"
-copy_sub	test.e $CLUSTER test.e
+copy_raw	a1.e $CLUSTER a.e
+copy_raw	test1.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error TEST VUTA(2)
+compile_result	validity_error TEST VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2); A VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2)
 
-define REQUIRE "a /= Void"
-copy_sub	test.e $CLUSTER test.e
+copy_raw	a2.e $CLUSTER a.e
+copy_raw	test2.e $CLUSTER test.e
 
 resume_compile
 compile_result	ok

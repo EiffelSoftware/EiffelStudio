@@ -87,7 +87,7 @@ feature {NONE} -- Externals
 			"eif_thr_join"
 		end
 
-	get_current_id: POINTER
+	current_thread_id, get_current_id: POINTER
 			-- Returns a pointer to the thread-id of the thread.
 		external
 			"C use %"eif_threads.h%""

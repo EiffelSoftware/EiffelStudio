@@ -28,6 +28,9 @@
 		<cluster name="kernel" location="svn\library\kernel\" recursive="true">
 			<option namespace="Kernel">
 			</option>
+			<file_rule>
+				<exclude>/unicode/uc_string.e$</exclude>
+			</file_rule>
 		</cluster>
 		<cluster name="lexical" location="svn\library\lexical\" recursive="true">
 			<option namespace="Lexical">

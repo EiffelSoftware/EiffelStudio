@@ -43,12 +43,14 @@ feature {NONE}  -- Implementation
 			Result := Precursor {EV_POPUP_WINDOW_IMP} | {WEL_WS_CONSTANTS}.Ws_ex_noactivate
 		end
 
+feature {EV_ANY_I} -- Implementation
+
 	interface: SD_FEEDBACK_RECT
 			-- <Precursor>
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

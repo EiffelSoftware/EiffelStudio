@@ -104,10 +104,12 @@ feature -- Query
 			Result := implementation.exists
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: SD_FEEDBACK_INDICATOR_I
 			-- <Precursor>
+
+feature {NONE} -- Implementation
 
 	create_implementation
 			-- <Precursor>
@@ -117,7 +119,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

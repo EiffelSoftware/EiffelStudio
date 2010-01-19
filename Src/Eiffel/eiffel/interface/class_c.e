@@ -378,6 +378,23 @@ feature -- Status report
 			end
 		end
 
+	has_stable_attribute: BOOLEAN
+			-- Does class contain any stable attribute?
+		do
+			Result :=
+				attached skeleton as s and then
+				s.there_exists (
+					agent (a: ATTR_DESC): BOOLEAN
+						local
+							f: FEATURE_I
+						do
+							f := feature_of_rout_id (a.rout_id)
+							check f /= Void end
+							Result := f.is_attribute and then f.is_stable
+						end
+				)
+		end
+
 feature -- Action
 
 	record_precompiled_class_in_system
@@ -4685,7 +4702,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

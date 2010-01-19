@@ -7,8 +7,20 @@ copy_raw	test.e $CLUSTER test.e
 compile_melted
 compile_result	ok
 
-execute_work	NONE exec_output_m
+execute_work	NONE exec_output_m_1
 execute_result	ok
-compare		exec_output_m output
+compare		exec_output_m_1 output
+
+cleanup_compile
+copy_sub	Ace_safe $TEST Ace
+copy_raw	test_safe.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m_2
+execute_result	ok
+compare		exec_output_m_2 output
+
 
 test_end

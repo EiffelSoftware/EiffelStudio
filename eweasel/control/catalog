@@ -1019,6 +1019,7 @@ test	freeze-with-unused-locals	freez027  tcf pass freezing
 test	freeze-with-conversion		freez028  tcf pass freezing
 test	object-test-with-generic-type	freez029  tcf pass freezing
 test	invariant-qualified-call-on-constant	freez030  tcf fail freezing
+test	expanded-like-current-void-precursor	freez031  tcf fail freezing
 
 -- Finalizing
 

@@ -1,0 +1,37 @@
+LINKED_LIST [STRING_8]
+7
+5
+3
+1
+
+ARRAYED_LIST [STRING_8]
+7
+5
+3
+1
+
+TWO_WAY_LIST [STRING_8]
+7
+5
+3
+1
+
+HASH_TABLE [STRING_8, STRING_8]
+7
+5
+3
+1
+
+ARRAY [STRING_8]
+7
+5
+3
+1
+
+STRING_8
+7
+5
+3
+1
+
+Execution completed

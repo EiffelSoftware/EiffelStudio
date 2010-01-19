@@ -1,0 +1,38 @@
+test_name basic-iterations
+test_description Basic testing of various iterations on EiffelBase datastructure.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output1 1 2 3 4 5 6 7
+execute_result ok
+compare		exec_output1 output
+
+execute_work NONE exec_output2 2
+execute_result ok
+compare		exec_output2 output_reversed
+
+execute_work NONE exec_output3 3
+execute_result ok
+compare		exec_output3 output_with_step_2
+
+execute_work NONE exec_output4 4
+execute_result ok
+compare		exec_output4 output_with_step_4
+
+execute_work NONE exec_output5 5
+execute_result ok
+compare		exec_output5 output_reversed_with_step_2
+
+execute_work NONE exec_output6 6
+execute_result ok
+compare		exec_output6 output_reversed_with_step_4
+
+execute_work NONE exec_output7 7
+execute_result ok
+compare		exec_output7 output_with_step_2
+
+test_end

@@ -323,10 +323,13 @@ feature {AST_CONTEXT} -- Local scopes
 	object_test_scopes: ARRAYED_LIST [ID_AS]
 			-- Currently active scopes of object test locals
 
-feature {AST_CREATION_PROCEDURE_CHECKER, AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Attribute positions
+feature {AST_CREATION_PROCEDURE_CHECKER, AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT, AST_SCOPE_COMBINED_PRECONDITION} -- Attribute positions
 
 	attributes: HASH_TABLE [INTEGER_32, INTEGER_32]
 			-- Attribute indecies indexed by their feature ID
+
+	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
+			-- Tracker of initialized stable attributes
 
 feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 
@@ -393,9 +396,6 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 
 	local_scope: AST_LOCAL_SCOPE_TRACKER
 			-- Tracker of scopes of non-void locals
-
-	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
-			-- Tracker of initialized stable attributes
 
 	is_sibling_dominating: BOOLEAN
 			-- Does variable information of a sibling dominate the previous one (if any)?
@@ -947,7 +947,7 @@ invariant
 	inline_agents_normalized: inline_agents.lower = 1
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,10 +12,10 @@ note
 	revision: "$Revision$"
 
 class
-	EQA_ETEST_RESULT
+	EQA_RESULT
 
 inherit
-	EQA_ETEST_PARTIAL_RESULT
+	EQA_PARTIAL_RESULT
 		rename
 			make as make_result
 		redefine

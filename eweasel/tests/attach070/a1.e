@@ -72,7 +72,8 @@ feature {NONE} -- Test
 		do
 			create a.make_empty
 		rescue
-			a.do_nothing
+-- The current implementation does not support "False" in immediate assertion.
+--			a.do_nothing
 		end
 
 	f10

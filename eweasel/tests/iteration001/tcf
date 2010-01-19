@@ -65,5 +65,9 @@ execute_work NONE exec_output14 14
 execute_result ok
 compare		exec_output14 output_empty
 
+execute_work NONE exec_output15 15
+execute_result ok
+compare		exec_output15 output_hashtable
+
 
 test_end

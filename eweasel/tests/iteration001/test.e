@@ -131,6 +131,15 @@ feature {NONE} -- Creation
 					test_indexable_incremented_decremented (new_empty_array)
 					test_indexable_incremented_decremented ("")
 
+				when 15 then
+					test_iterable (new_hash_table2)
+					test_indexable_reversed (new_hash_table2)
+					test_indexable_with_step (new_hash_table2, 2)
+					test_indexable_with_step (new_hash_table2, 4)
+					test_indexable_reversed_with_step (new_hash_table2, 2)
+					test_indexable_reversed_with_step (new_hash_table2, 4)
+					test_indexable_incremented_decremented (new_hash_table2)
+
 				end
 			end
 		end
@@ -258,7 +267,31 @@ feature -- Containers
 			Result.put ("6", "6")
 			Result.put ("7", "7")
 		end
-		
+
+	new_hash_table2: HASH_TABLE [STRING, STRING]
+		once
+			create Result.make (7)
+			Result.put ("1", "1")
+			Result.put ("2", "2")
+			Result.put ("3", "3")
+			Result.put ("4", "4")
+			Result.put ("5", "5")
+			Result.put ("6", "6")
+			Result.put ("7", "7")
+			Result.remove ("1")
+			Result.remove ("2")
+			Result.remove ("3")
+			Result.remove ("4")
+			Result.remove ("5")
+			Result.remove ("6")
+			Result.put ("1", "1")
+			Result.put ("2", "2")
+			Result.put ("3", "3")
+			Result.put ("4", "4")
+			Result.put ("5", "5")
+			Result.put ("6", "6")
+		end
+	
 	new_empty_array: ARRAY [STRING]
 		once
 			create Result.make (1, 0)

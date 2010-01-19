@@ -1,0 +1,73 @@
+TEST
+1
+2
+3
+4
+5
+6
+7
+
+ARRAY [STRING_8]
+1
+2
+3
+4
+5
+6
+7
+
+LINKED_LIST [STRING_8]
+1
+2
+3
+4
+5
+6
+7
+
+ARRAYED_LIST [STRING_8]
+1
+2
+3
+4
+5
+6
+7
+
+TWO_WAY_LIST [STRING_8]
+1
+2
+3
+4
+5
+6
+7
+
+HASH_TABLE [STRING_8, STRING_8]
+1
+2
+3
+4
+5
+6
+7
+
+ARRAY [STRING_8]
+1
+2
+3
+4
+5
+6
+7
+
+STRING_8
+1
+2
+3
+4
+5
+6
+7
+
+Execution completed

@@ -27,6 +27,7 @@ test	array-has			array003 tcf pass array
 test	array-occurrences		array004 tcf pass array
 test	array2-wipe-out			array005 tcf pass array
 test	manifest-array-invariant	array006 tcf pass array
+test	array-force				array007 tcf pass array
 
 test	list-is-equal			list001 tcf pass list
 test	list-put-extend			list002 tcf pass list
@@ -67,11 +68,13 @@ test	insert-default-key		table001 tcf pass table
 test	replace_key_cycle		table002 tcf pass table
 test	replace_key_conflict_not_found	table003 tcf pass table
 test	replace_key_replace_item	table004 tcf pass table
-test	iteration-with-default-key	table005 tcf pass table
+test	iteration-with-default-key	table005 tcf pass table iteration
 test	infinite-loop-on-removal-then-addition	table006 tcf pass table
 test	remove-default-key		table007 tcf pass table
 
 test	recursive-delete-with-symlinks	directory001 tcf pass directory
+
+test	basic-iterations		iteration001 tcf pass iteration
 
 -- EiffelNet test
 test	net-out-of-descriptor	net001 tcf pass net
@@ -217,7 +220,7 @@ test	note-syntax				syntax055 tcf pass syntax
 test	attached-syntax				syntax056 tcf pass syntax attached
 test	external-with-invalid-use	syntax057 tcf pass syntax
 test	bracket-expression-on-manifest-type	syntax058 tcf pass syntax bracket_expression
-test	across-loop-syntax		syntax059 tcf pass syntax loop variant invariant across
+test	across-loop-syntax		syntax059 tcf pass syntax loop variant invariant across iteration
 
 
 -- Validity tests

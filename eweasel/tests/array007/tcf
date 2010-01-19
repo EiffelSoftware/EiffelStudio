@@ -1,0 +1,14 @@
+test_name 	 array-force
+test_description Ensure that using {ARRAY}.force works properly regardless of the order of insertion in the ARRAY and the changes in `lower' or `upper' bound.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

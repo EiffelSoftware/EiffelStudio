@@ -3065,6 +3065,14 @@ feature -- Implementation
 			end
 
 			if not l_has_invalid_locals then
+				if l_as.rescue_clause /= Void and then not l_as.routine_body.is_built_in then
+						-- Make it possible to remove variable scopes so that
+						-- rescue clause can be processed in a state where only
+						-- variable scopes started in the precondition are recorded.
+						-- Built-in features are not handled in this way, because
+						-- the scope information is cleaned when they are processed.
+					context.enter_realm
+				end
 					-- Check body
 				l_as.routine_body.process (Current)
 				if l_needs_byte_node and then error_level = l_error_level then
@@ -3105,6 +3113,10 @@ feature -- Implementation
 						-- Reset the level
 					set_is_checking_postcondition (False)
 				end
+				if l_as.rescue_clause /= Void and then not l_as.routine_body.is_built_in then
+						-- Ensure the variable scopes do not affect rescue clause.
+					context.leave_optional_realm
+				end
 			end
 
 				-- Check rescue-clause
@@ -3120,8 +3132,7 @@ feature -- Implementation
 				elseif not l_has_invalid_locals then
 						-- Set mark of context
 					is_in_rescue := True
-						-- Remove any previously started variable scopes.
-					context.init_attribute_scopes
+						-- Remove any previously started local scopes.
 					context.init_local_scopes
 					process_compound (l_as.rescue_clause)
 					if l_needs_byte_node and then error_level = l_error_level then

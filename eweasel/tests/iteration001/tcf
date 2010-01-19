@@ -7,6 +7,7 @@ copy_raw 	test.e $CLUSTER test.e
 compile_melted
 compile_result ok
 
+-- Non-empty structures
 execute_work NONE exec_output1 1 2 3 4 5 6 7
 execute_result ok
 compare		exec_output1 output
@@ -34,5 +35,35 @@ compare		exec_output6 output_reversed_with_step_4
 execute_work NONE exec_output7 7
 execute_result ok
 compare		exec_output7 output_with_step_2
+
+-- Empty structures
+execute_work NONE exec_output8 8
+execute_result ok
+compare		exec_output8 output_empty
+
+execute_work NONE exec_output9 9
+execute_result ok
+compare		exec_output9 output_empty
+
+execute_work NONE exec_output10 10
+execute_result ok
+compare		exec_output10 output_empty
+
+execute_work NONE exec_output11 11
+execute_result ok
+compare		exec_output11 output_empty
+
+execute_work NONE exec_output12 12
+execute_result ok
+compare		exec_output12 output_empty
+
+execute_work NONE exec_output13 13
+execute_result ok
+compare		exec_output13 output_empty
+
+execute_work NONE exec_output14 14
+execute_result ok
+compare		exec_output14 output_empty
+
 
 test_end

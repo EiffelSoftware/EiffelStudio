@@ -77,6 +77,13 @@ feature{NONE} -- Initialization
 
 			build_formatters
 			fill_in
+
+			propagate_action (widget, agent (ia_widget: EV_WIDGET)
+				do
+					register_action (ia_widget.focus_in_actions, agent set_last_focused_widget (ia_widget))
+				end, Void)
+			register_action (content.focus_in_actions, agent on_focus_in)
+
 			on_select
 		end
 
@@ -596,6 +603,44 @@ feature{NONE} -- Implementation
 	on_metric_loaded_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_metric_loaded'
 
+	on_focus_in
+			-- Called when the panel receives focus.
+		require
+			is_interface_usable: is_interface_usable
+			is_shown: is_shown
+		local
+			l_widget: like widget
+		do
+			if
+				attached last_focused_widget as l_widget_2 and then
+				not l_widget_2.has_focus and then
+				(l_widget_2.is_sensitive and l_widget_2.is_displayed)
+			then
+				l_widget_2.set_focus
+			else
+				l_widget := widget
+				if not l_widget.is_destroyed and then l_widget.is_sensitive
+					 and then l_widget.is_displayed then
+					l_widget.set_focus
+				end
+			end
+		end
+
+	set_last_focused_widget (a_widget: EV_WIDGET)
+			-- Set last focused widget, used when the content recieves focus.
+			--
+			-- `a_widget': Last focused widget.
+		require
+			is_interface_usable: is_interface_usable
+			a_widget_attached: attached a_widget
+			not_a_widget_is_destroyed: not a_widget.is_destroyed
+		do
+			last_focused_widget := a_widget
+		end
+
+	last_focused_widget: EV_WIDGET
+			-- Last focused widget the user selected
+
 	window: EV_WINDOW
 			-- Window dialogs can refer to.
 		local
@@ -919,7 +964,7 @@ invariant
 	veto_format_function_agent_attached: veto_format_function_agent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

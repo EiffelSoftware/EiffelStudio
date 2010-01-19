@@ -242,9 +242,11 @@ feature {NONE} -- Implementation
 				until
 					i > l_widths.upper
 				loop
-					l_width := ((l_widths.item (i) / l_test_count) * l_total).rounded
+						-- Using `ceiling' to make sure bar is filled up all the way
+					l_width := ((l_widths.item (i) / l_test_count) * l_total).ceiling
 					l_bar.set_foreground_color (l_colors.item (i))
 					l_bar.fill_rectangle (l_position, 0, l_position + l_width, l_bar.height)
+
 					l_position := l_position + l_width
 					i := i + 1
 				end

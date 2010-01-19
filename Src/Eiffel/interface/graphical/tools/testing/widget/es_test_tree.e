@@ -10,7 +10,7 @@ class
 	ES_TEST_TREE
 
 inherit
-	ES_TEST_SESSION_WIDGET [TEST_RETRIEVAL_I]
+	ES_TEST_SESSION_WIDGET
 		rename
 			make as make_session_widget
 		redefine
@@ -269,6 +269,14 @@ feature {NONE} -- Status setting: view
 				tag_tree.reset
 			end
 			develop_window.unlock_update
+		end
+
+feature {NONE} -- Query
+
+	is_valid_session (a_session: TEST_SESSION_I): BOOLEAN
+			-- <Precursor>
+		do
+			Result := attached {TEST_RETRIEVAL_I} a_session
 		end
 
 feature {NONE} -- Factory

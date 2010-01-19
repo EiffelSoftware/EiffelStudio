@@ -32,14 +32,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test_result: EQA_RESULT
+	test_result: EQA_ETEST_PARTIAL_RESULT
 			-- Result received for `test'
 		require
 			running: is_running
 			has_result: has_result
 		local
 			l_result: detachable like test_result
+			l_type: TYPE [EQA_ETEST_PARTIAL_RESULT]
 		do
+				-- Referencing different result types to make sure they are compiled and can be received
+			l_type := {EQA_ETEST_RESULT}
+			l_type := {EQA_ETEST_PARTIAL_RESULT}
+
 			l_result := connection.last_result
 			check l_result /= Void end
 			Result := l_result
@@ -52,7 +57,7 @@ feature {NONE} -- Access
 	test_suite: ETEST_SUITE
 			-- Test suite containing {ETEST} instances
 
-	connection: ETEST_EVALUATOR_CONNECTION [TUPLE, EQA_RESULT]
+	connection: ETEST_EVALUATOR_CONNECTION [TUPLE, like test_result]
 			-- Connection to evaluator
 		require
 			running: is_running
@@ -253,7 +258,7 @@ invariant
 	has_next_step_implies_running: has_next_step implies (is_running and then is_evaluator_launched)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -10,6 +10,8 @@ class
 inherit
 	SHARED_LOCALE
 
+	EC_SHARED_PROJECT_ACCESS
+
 feature {NONE} -- Access
 
 	test_suite: SERVICE_CONSUMER [TEST_SUITE_S]
@@ -39,15 +41,13 @@ feature {NONE} -- Access
 			-- Once instance of `{ETEST_SUITE}
 		local
 			l_helper: ES_TEST_PROJECT_HELPER
-			l_access: EC_PROJECT_ACCESS
 		once
-			create l_access.make ((create {SHARED_EIFFEL_PROJECT}).eiffel_project)
 			if (create {SHARED_FLAGS}).is_gui then
 				create l_helper
 			else
 				create {TEST_PROJECT_HELPER} l_helper
 			end
-			create Result.make (l_access, l_helper, (create {EC_SHARED_PREFERENCES}).preferences.testing_tool_data)
+			create Result.make (l_helper, (create {EC_SHARED_PREFERENCES}).preferences.testing_tool_data)
 		end
 
 	default_filter_expression: STRING = "^class"
@@ -179,7 +179,7 @@ feature {NONE} -- Internationalization
 	e_unkonwn_error: STRING = "Unable to launch processor"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

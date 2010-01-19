@@ -62,7 +62,7 @@ feature {TEST_EXECUTION_I} -- Events
 			add_running_test (a_test)
 		end
 
-	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: EQA_RESULT)
+	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- <Precursor>
 		do
 			remove_subrow (a_test.name)
@@ -94,7 +94,7 @@ feature {NONE} -- Events: grid
 
 feature {NONE} -- Implementation
 
-	append_result (a_test: READABLE_STRING_8; a_result: detachable EQA_RESULT)
+	append_result (a_test: READABLE_STRING_8; a_result: detachable TEST_RESULT_I)
 		local
 			l_grid: like grid
 			l_pos: INTEGER
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_subrow (a_test: READABLE_STRING_8; a_result: EQA_RESULT; a_row: EV_GRID_ROW; a_test_suite: TEST_SUITE_S)
+	add_subrow (a_test: READABLE_STRING_8; a_result: TEST_RESULT_I; a_row: EV_GRID_ROW; a_test_suite: TEST_SUITE_S)
 		local
 			l_row: ES_TEST_RESULT_GRID_ROW
 			l_test: TEST_I
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	add_result (a_test: detachable TEST_I; a_test_name: detachable READABLE_STRING_8; a_result: EQA_RESULT)
+	add_result (a_test: detachable TEST_I; a_test_name: detachable READABLE_STRING_8; a_result: TEST_RESULT_I)
 			-- Add result subrow to `row'.
 			--
 			-- `a_test': Test.

@@ -1,44 +1,54 @@
 note
 	description: "[
-		Test record containing results from any type of test execution.
+		Class that provides basic operations for {TEST_RESULT_I} implementations.	
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	TEST_RESULT_RECORD
+deferred class
+	TEST_RESULT
 
 inherit
-	TEST_COMMON_SESSION_RECORD [TEST_RESULT_I]
-		rename
-			has_item as has_result,
-			has_item_for_test as has_result_for_test,
-			item_for_name as result_for_name,
-			item_for_test as result_for_test
-		end
+	TEST_RESULT_I
 
-feature {TEST_EXECUTION_I} -- Element change
+feature {NONE} -- Basic operations
 
-	add_result (a_test: TEST_I; a_result: like result_for_test)
-			-- Add new test result to the end of `test_map'.
+	print_multiline_string (a_string: STRING_32; a_formatter: TEXT_FORMATTER; a_indent: NATURAL)
+			-- Print given text on multiple lines respecting indentation.
 			--
-			-- `a_test': Name of test for which item should be added
-			-- `a_result': New result for test named `a_name'.
+			-- Note: no new line character at end.
 		require
-			a_test_attached: a_test /= Void
-			a_result_attached: a_result /= Void
-			a_test_usable: a_test.is_interface_usable
-			not_added_yet: not has_result_for_test (a_test)
+			a_string_attached: a_string /= Void
+			a_formatter_attached: a_formatter /= Void
+		local
+			l_newline: CHARACTER_32
+			l_pos, l_previous: INTEGER
 		do
-			add_item (a_result, a_test.name)
-			if is_attached then
-				repository.report_record_update (Current)
+			l_newline := '%N'
+			l_pos := a_string.index_of (l_newline, 1)
+			if l_pos > 0 then
+				from
+					l_previous := 1
+				until
+					l_previous > a_string.count
+				loop
+					if l_previous > 1 then
+						a_formatter.add_new_line
+					end
+					a_formatter.add_indents (a_indent.to_integer_32)
+					if l_pos = 0 then
+						print_multiline_string (a_string.substring (l_previous, a_string.count), a_formatter, a_indent)
+						l_previous := a_string.count + 1
+					else
+						print_multiline_string (a_string.substring (l_previous, l_pos - 1), a_formatter, a_indent)
+						l_previous := l_pos + 1
+						l_pos := a_string.index_of (l_newline, l_previous)
+					end
+				end
+			else
+				a_formatter.process_string_text (a_string, Void)
 			end
-		ensure
-			has_result_for_test: has_result_for_test (a_test)
-			valid_result: result_for_test (a_test) = a_result
-			result_is_last: internal_tests.last.same_string (a_test.name)
 		end
 
 note

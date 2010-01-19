@@ -32,8 +32,6 @@ inherit
 
 	DISPOSABLE_SAFE
 
-	TEST_RESULT_FORMATTER
-
 create
 	make
 
@@ -305,7 +303,7 @@ feature -- Status setting
 			l_queue: like queue_for_test
 		do
 			if is_test_running (a_test) then
-				remove_running_test (a_test, create {EQA_EMPTY_RESULT}.make ("User abort", Void))
+				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make ("User abort", ""))
 			else
 				remove_queued_test (a_test)
 			end
@@ -328,7 +326,7 @@ feature -- Status setting
 
 feature {TEST_EXECUTOR_I} -- Status setting
 
-	report_result (a_test: TEST_I; a_result: EQA_RESULT)
+	report_result (a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- <Precursor>
 		do
 			remove_running_test (a_test, a_result)
@@ -360,7 +358,7 @@ feature {TEST_EXECUTOR_QUEUE} -- Element change
 
 feature {NONE} -- Element change
 
-	remove_running_test (a_test: TEST_I; a_result: EQA_RESULT)
+	remove_running_test (a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- Add result for running test to record and inform observers after removing the test.
 			--
 			-- `a_test': Currently running test.
@@ -393,7 +391,7 @@ feature {NONE} -- Element change
 				record.result_for_test (a_test) = a_result
 		end
 
-	publish_test_result (a_test: TEST_I; a_result: EQA_RESULT)
+	publish_test_result (a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- Add result to record and call observers.
 			--
 			-- `a_test': Test for which result should be added.
@@ -454,13 +452,13 @@ feature {NONE} -- Basic operations
 						running_tests.do_all (
 							agent (a_test: TEST_I)
 								do
-									remove_running_test (a_test, create {EQA_EMPTY_RESULT}.make ("User abort", Void))
+									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make ("User abort", ""))
 								end)
 					else
 						running_tests.do_all (
 							agent (a_test: TEST_I)
 								do
-									remove_running_test (a_test, create {EQA_EMPTY_RESULT}.make ("Executor failed to report results", Void))
+									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make ("Executor failed to report results", ""))
 								end)
 					end
 					check running_test_map_empty: running_test_map.is_empty end
@@ -485,7 +483,7 @@ feature {NONE} -- Basic operations
 			Precursor (a_force)
 		end
 
-	print_test_result (a_formatter: TEXT_FORMATTER; a_test: TEST_I; a_result: EQA_RESULT)
+	print_test_result (a_formatter: TEXT_FORMATTER; a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- Print formatted output for new test result
 		require
 			a_formatter_attached: a_formatter /= Void
@@ -494,10 +492,10 @@ feature {NONE} -- Basic operations
 		do
 			a_test.print_test (a_formatter)
 			a_formatter.process_basic_text (": ")
-			print_result (a_formatter, a_result)
+			a_result.print_result (a_formatter)
 			a_formatter.add_new_line
 			if not a_result.is_pass then
-				print_result_details (a_formatter, a_result, 1, False)
+				a_result.print_details_indented (a_formatter, True, 1)
 			end
 		end
 
@@ -507,7 +505,7 @@ feature {TEST_SUITE_S} -- Events
 			-- <Precursor>
 		do
 			if is_test_running (a_test) then
-				remove_running_test (a_test, create {EQA_EMPTY_RESULT}.make ("Removed from test suite", Void))
+				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make ("Removed from test suite", ""))
 			elseif is_test_queued (a_test) then
 				remove_queued_test (a_test)
 			end
@@ -518,7 +516,7 @@ feature {NONE} -- Events
 	test_running_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: TEST_I]]
 			-- <Precursor>
 
-	test_executed_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: TEST_I; test_result: EQA_RESULT]]
+	test_executed_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: TEST_I; test_result: TEST_RESULT_I]]
 			-- <Precursor>
 
 	test_removed_event: EVENT_TYPE [TUPLE [session: TEST_EXECUTION_I; test: TEST_I]]
@@ -585,7 +583,7 @@ invariant
 			end)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

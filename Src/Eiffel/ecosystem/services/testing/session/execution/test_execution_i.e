@@ -149,7 +149,7 @@ feature -- Status setting
 
 feature {TEST_EXECUTOR_I} -- Basic operations
 
-	report_result (a_test: TEST_I; a_result: EQA_RESULT)
+	report_result (a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- Report new obtained test result for test.
 			--
 			-- Note: test executors calling this routine should not have to check `is_test_running', since
@@ -182,7 +182,7 @@ feature {NONE} -- Events
 		deferred
 		end
 
-	test_executed_event: EVENT_TYPE_I [TUPLE [session: TEST_EXECUTION_I; test: TEST_I; test_result: EQA_RESULT]]
+	test_executed_event: EVENT_TYPE_I [TUPLE [session: TEST_EXECUTION_I; test: TEST_I; test_result: TEST_RESULT_I]]
 			-- Events called when a test is done executing
 			--
 			-- session: `Current'
@@ -211,7 +211,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -152,7 +152,7 @@ feature -- Access: test statistics
 			end
 		end
 
-	last_result (a_test: TEST_I): EQA_RESULT
+	last_result (a_test: TEST_I): TEST_RESULT_I
 			-- <Precursor>
 		do
 			Result := test_statistics.item (a_test.name).last_result
@@ -235,7 +235,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 		local
 			l_name: IMMUTABLE_STRING_8
 			l_stats: like test_statistics
-			l_result: EQA_RESULT
+			l_result: TEST_RESULT_I
 		do
 			test_count := test_count - 1
 			l_name := a_test.name
@@ -269,7 +269,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 
 feature {TEST_EXECUTION_I} -- Events: test execution
 
-	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: EQA_RESULT)
+	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- <Precursor>
 		local
 			l_name: IMMUTABLE_STRING_8
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	account_result (a_test: TEST_I; a_result: EQA_RESULT)
+	account_result (a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- Account for given result in `*_count' queries.
 		local
 			l_tag_tree: TAG_TREE [TEST_I]
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	discount_result (a_result: EQA_RESULT)
+	discount_result (a_result: TEST_RESULT_I)
 			-- Discount for given result in `*_count' queries.
 		do
 			executed_test_count := executed_test_count - 1
@@ -387,7 +387,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Factory
 
-	new_statistics_data (a_result: EQA_RESULT): TUPLE [execution_count: NATURAL; last_result: EQA_RESULT]
+	new_statistics_data (a_result: TEST_RESULT_I): TUPLE [execution_count: NATURAL; last_result: TEST_RESULT_I]
 			-- Create new statistics tuple
 		do
 			Result := [{NATURAL} 1, a_result]
@@ -411,7 +411,7 @@ invariant
 	collect_stats_after_retrieving: test_statistics.count > 0 implies has_retrieved_statistics
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

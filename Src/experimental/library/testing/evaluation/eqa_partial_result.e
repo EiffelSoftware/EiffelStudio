@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	EQA_ETEST_PARTIAL_RESULT
+	EQA_PARTIAL_RESULT
 
 inherit
 	MISMATCH_CORRECTOR

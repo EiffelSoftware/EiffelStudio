@@ -32,18 +32,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test_result: EQA_ETEST_PARTIAL_RESULT
+	test_result: EQA_PARTIAL_RESULT
 			-- Result received for `test'
 		require
 			running: is_running
 			has_result: has_result
 		local
 			l_result: detachable like test_result
-			l_type: TYPE [EQA_ETEST_PARTIAL_RESULT]
+			l_type: TYPE [EQA_PARTIAL_RESULT]
 		do
 				-- Referencing different result types to make sure they are compiled and can be received
-			l_type := {EQA_ETEST_RESULT}
-			l_type := {EQA_ETEST_PARTIAL_RESULT}
+			l_type := {EQA_RESULT}
+			l_type := {EQA_PARTIAL_RESULT}
 
 			l_result := connection.last_result
 			check l_result /= Void end

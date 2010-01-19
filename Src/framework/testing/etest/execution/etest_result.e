@@ -63,7 +63,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	original_result: EQA_ETEST_PARTIAL_RESULT
+	original_result: EQA_PARTIAL_RESULT
 			-- Result originally received from executor
 
 feature -- Basic operations
@@ -81,11 +81,11 @@ feature -- Basic operations
 				print_multiline_string (l_output.as_string_32, a_formatter, an_indent + 1)
 				a_formatter.add_new_line
 			end
-			if attached {EQA_ETEST_PARTIAL_RESULT} original_result as l_part_result then
+			if attached {EQA_PARTIAL_RESULT} original_result as l_part_result then
 				a_formatter.add_indents (an_indent.as_integer_32)
 				a_formatter.process_basic_text ("on_prepare: ")
 				print_invocation_details (a_formatter, l_part_result.setup_response, an_indent, a_verbose)
-				if attached {EQA_ETEST_RESULT} l_part_result as l_result then
+				if attached {EQA_RESULT} l_part_result as l_result then
 					a_formatter.add_indents (an_indent.as_integer_32)
 					a_formatter.process_basic_text ("test routine: ")
 					print_invocation_details (a_formatter, l_result.test_response, an_indent, a_verbose)

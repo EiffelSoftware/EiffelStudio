@@ -526,6 +526,7 @@ test	svalid-conversion-detachable	svalid022 tcf fail system-validity conversion
 test	svalid-missing-recheck			svalid023 tcf fail system-validity conversion
 test	inspect-inherited-static-access-missing-library	svalid024 tcf pass system-validity
 test	svalid-inherited-agent-with-formal-switch	svalid025 tcf pass system-validity agent
+test	svalid-redefined-precursor-not-checked	svalid026 tcf fail system-validity
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

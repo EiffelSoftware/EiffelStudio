@@ -1,0 +1,13 @@
+
+test_name 	svalid-redefined-precursor-not-checked
+test_description An inherited redefined routine that is called via `precursor' should be rechecked for validity in descendant class when full_class_checking is enabled but is not
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST2 VGCC(3)
+
+test_end

@@ -10,7 +10,7 @@ class
 	ES_TEST_RECORD_WIDGET [G -> TEST_SESSION_I]
 
 inherit
-	ES_TEST_SESSION_WIDGET [TEST_SESSION_I]
+	ES_TEST_SESSION_WIDGET
 		rename
 			make as make_session_widget
 		end
@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			a_session_running: a_session.has_next_step
 		do
 			make (a_window, record_from_session (a_session))
+			append_session (a_session.test_suite, a_session)
 		end
 
 	build_widget_interface (a_widget: like create_widget)
@@ -118,6 +119,14 @@ feature {NONE} -- Status report
 			Result := record.is_running
 		ensure
 			result_implies_record_running: Result implies record.is_running
+		end
+
+feature {NONE} -- Query
+
+	is_valid_session (a_session: TEST_SESSION_I): BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_running and then session = a_session
 		end
 
 feature {ES_TEST_RECORDS_TAB} -- Basic operations

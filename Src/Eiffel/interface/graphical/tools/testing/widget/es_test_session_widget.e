@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ES_TEST_SESSION_WIDGET [G -> TEST_SESSION_I]
+	ES_TEST_SESSION_WIDGET
 
 inherit
 	ES_WINDOW_WIDGET [EV_VERTICAL_BOX]
@@ -49,28 +49,36 @@ feature {NONE} -- Access
 	sessions: LINKED_LIST [ES_TEST_SESSION_STATUS_WIDGET]
 			-- List of displayed sessions
 
+feature {NONE} -- Query
+
+	is_valid_session (a_session: TEST_SESSION_I): BOOLEAN
+			-- Should a status widget be displayed for given session?
+			--
+			-- `a_session': A session.
+			-- `Result': True if `Current' should display a status widget for `a_session', False otherwise.
+		deferred
+		end
+
 feature {TEST_SUITE_S} -- Events
 
 	frozen on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
 			-- <Precursor>
 		do
-			if attached {G} a_session as l_session then
-				on_typed_session_launched (a_test_suite, l_session)
+			if is_valid_session (a_session) then
+				append_session (a_test_suite, a_session)
 			end
 		end
 
 	frozen on_session_finished (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
 			-- <Precursor>
 		do
-			if attached {G} a_session as l_session then
-				on_typed_session_finished (a_test_suite, l_session)
-			end
+			remove_session (a_test_suite, a_session)
 		end
 
 feature {NONE} -- Events
 
-	on_typed_session_launched (a_test_suite: TEST_SUITE_S; a_session: G)
-			-- Called when test suite launches a session of type {G}.
+	append_session (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
+			-- Append status widget for given session.
 			--
 			-- `a_test_suite': Test suite that triggered event.
 			-- `a_session': Session which was launched by test suite.
@@ -83,18 +91,30 @@ feature {NONE} -- Events
 		local
 			l_status_bar: ES_TEST_SESSION_STATUS_WIDGET
 			l_widget: EV_WIDGET
+			l_append: BOOLEAN
 		do
-			create l_status_bar.make (a_session)
-			l_widget := l_status_bar.widget
-			widget.extend (l_widget)
-			widget.disable_item_expand (l_widget)
-			sessions.force (l_status_bar)
+			from
+				l_append := True
+				sessions.start
+			until
+				not l_append or sessions.after
+			loop
+				l_append := sessions.item_for_iteration.session /= a_session
+				sessions.forth
+			end
+			if l_append then
+				create l_status_bar.make (a_session)
+				l_widget := l_status_bar.widget
+				widget.extend (l_widget)
+				widget.disable_item_expand (l_widget)
+				sessions.force (l_status_bar)
+			end
 		ensure
 			a_session_usable: a_session.is_interface_usable
 		end
 
-	on_typed_session_finished (a_test_suite: TEST_SUITE_S; a_session: G)
-			-- Called when a session of type {G} is finished.
+	remove_session (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
+			-- Remove any status widget for given session.
 			--
 			-- `a_test_suite': Test suite that triggered event.
 			-- `a_session': Session which was launched by test suite and is finished now.

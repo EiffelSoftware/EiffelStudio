@@ -164,19 +164,12 @@ feature {TEST_EXECUTION_I} -- Status setting
 
 feature {ETEST_EXECUTOR} -- Basic operations
 
-	frozen report_result (a_test: ETEST; a_result: EQA_RESULT)
+	frozen report_result (a_test: ETEST; a_result: TEST_RESULT_I)
 			-- Report result to test suite
 			--
 			-- `a_test': Test which was executed.
 			-- `a_result': Corresponding test result.
-		local
-			l_type: TYPE [EQA_RESULT]
 		do
-				-- Referencing different result types to make sure they are compiled
-			l_type := {EQA_EMPTY_RESULT}
-			l_type := {EQA_ETEST_RESULT}
-			l_type := {EQA_ETEST_PARTIAL_RESULT}
-
 			test_execution.report_result (a_test, a_result)
 		end
 
@@ -195,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

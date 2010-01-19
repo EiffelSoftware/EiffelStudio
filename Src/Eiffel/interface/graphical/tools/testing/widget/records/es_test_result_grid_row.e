@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test_result: EQA_RESULT
+	test_result: TEST_RESULT_I
 			-- Result displayed by current
 
 	pixmap: detachable EV_PIXMAP
@@ -110,10 +110,6 @@ feature {NONE} -- Implementation
 			--l_eitem.set_text_with_tokens (l_token_writer.last_line.content)
 			--row.set_item (2, l_eitem)
 
-			if not test_result.information.is_empty then
-				l_tag.append ("%N%N")
-				l_tag.append (test_result.information.as_string_32)
-			end
 			if not l_tag.is_empty then
 			--	l_eitem.set_tooltip (l_tag)
 				if attached row.item (1) as l_item then

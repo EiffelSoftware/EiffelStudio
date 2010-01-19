@@ -1,44 +1,71 @@
 note
 	description: "[
-		Test record containing results from any type of test execution.
+		Implementation of a {TEST_RESULT_I} representing an unresolved outcome where tag and details are
+		provided directly through strings.
 	]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TEST_RESULT_RECORD
+	TEST_UNRESOLVED_RESULT
 
 inherit
-	TEST_COMMON_SESSION_RECORD [TEST_RESULT_I]
-		rename
-			has_item as has_result,
-			has_item_for_test as has_result_for_test,
-			item_for_name as result_for_name,
-			item_for_test as result_for_test
+	TEST_RESULT
+
+	SHARED_LOCALE
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_tag, a_details: like tag)
+			-- Initialize `Current'.
+			--
+			-- `a_tag': Tag describing state.
+			-- `a_details': Detailed information about `Current'
+		do
+			create start_date.make_now
+			create {IMMUTABLE_STRING_8} tag.make_from_string (a_tag)
+			create {IMMUTABLE_STRING_8} details.make_from_string (a_details)
 		end
 
-feature {TEST_EXECUTION_I} -- Element change
+feature -- Access
 
-	add_result (a_test: TEST_I; a_result: like result_for_test)
-			-- Add new test result to the end of `test_map'.
-			--
-			-- `a_test': Name of test for which item should be added
-			-- `a_result': New result for test named `a_name'.
-		require
-			a_test_attached: a_test /= Void
-			a_result_attached: a_result /= Void
-			a_test_usable: a_test.is_interface_usable
-			not_added_yet: not has_result_for_test (a_test)
+	start_date: DATE_TIME
+			-- <Precursor>
+
+	finish_date: DATE_TIME
+			-- <Precursor>
 		do
-			add_item (a_result, a_test.name)
-			if is_attached then
-				repository.report_record_update (Current)
-			end
-		ensure
-			has_result_for_test: has_result_for_test (a_test)
-			valid_result: result_for_test (a_test) = a_result
-			result_is_last: internal_tests.last.same_string (a_test.name)
+			Result := start_date
+		end
+
+	tag: READABLE_STRING_8
+			-- <Precursor>
+			--
+			-- Note: before printing the tag will first be translated through `locale'
+
+	details: READABLE_STRING_8
+			-- Detailed information about `Current'
+			--
+			-- Note: before printing the tag will first be translated through `locale'
+
+feature -- Status report
+
+	is_pass: BOOLEAN = False
+			-- <Precursor>
+
+	is_fail: BOOLEAN = False
+			-- <Precursor>
+
+feature -- Basic operations
+
+	print_details_indented (a_formatter: TEXT_FORMATTER; a_verbose: BOOLEAN; an_indent: NATURAL_32)
+			-- <Precursor>
+		do
+
 		end
 
 note

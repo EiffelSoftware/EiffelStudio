@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	show_result (a_result: EQA_RESULT)
+	show_result (a_result: TEST_RESULT_I)
 			-- Display details for given result.
 			--
 			-- `a_result': Testing result.
@@ -80,7 +80,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "AutoTest Results"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

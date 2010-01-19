@@ -269,10 +269,10 @@ feature {NONE} -- Status setting
 					end
 					l_controller.launch_test ([l_byte_code, l_test.name.as_string_8], l_evaluator, l_evaluator_routine)
 				else
-					test_execution.report_result (l_test, create {EQA_EMPTY_RESULT}.make ("test not properly compiled", Void))
+					test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make ("test not properly compiled", ""))
 				end
 			else
-				test_execution.report_result (l_test, create {EQA_EMPTY_RESULT}.make ("test not compiled", Void))
+				test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make ("test not compiled", Void))
 			end
 		end
 
@@ -282,7 +282,7 @@ feature {NONE} -- Status setting
 			l_task_data: like new_task_data
 			l_controller: like new_controller
 			l_test: detachable ETEST
-			l_result: EQA_RESULT
+			l_result: TEST_RESULT_I
 			l_remove: BOOLEAN
 			l_tag_tree: TAG_TREE [TEST_I]
 		do
@@ -293,13 +293,13 @@ feature {NONE} -- Status setting
 
 				-- Try to retrieve result from controller
 			if not l_controller.is_running then
-				create {EQA_EMPTY_RESULT} l_result.make ("evaluator could not be launched", Void)
+				create {TEST_UNRESOLVED_RESULT} l_result.make ("evaluator could not be launched", "")
 			else
 				delete_directory_safe (l_test)
 				if l_controller.has_result then
-					l_result := l_controller.test_result
+					create {ETEST_RESULT} l_result.make (l_controller.test_result)
 				else
-					create {EQA_EMPTY_RESULT} l_result.make ("evaluator died", Void)
+					create {TEST_UNRESOLVED_RESULT} l_result.make ("evaluator died", "")
 				end
 			end
 
@@ -465,7 +465,7 @@ invariant
 	empty_tasks_empty: empty_tasks.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

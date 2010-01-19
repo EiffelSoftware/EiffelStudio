@@ -32,7 +32,7 @@ feature {TEST_EXECUTION_I} -- Events
 			a_test_runing: a_session.is_test_running (a_test)
 		end
 
-	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: EQA_RESULT)
+	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- Called when a test is finished executing.
 			--
 			-- Note: a call to `on_test_executed' implies that the test will be immediately removed
@@ -82,7 +82,7 @@ feature {TEST_EXECUTION_I} -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

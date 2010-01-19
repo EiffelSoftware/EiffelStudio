@@ -10,10 +10,7 @@ class
 	ES_TESTING_RESULTS_TOOL_PANEL
 
 inherit
-
 	ES_DOCKABLE_TOOL_PANEL [EV_VERTICAL_BOX]
-
-	TEST_RESULT_FORMATTER
 
 create {ES_TESTING_RESULTS_TOOL}
 	make
@@ -67,7 +64,7 @@ feature {NONE} -- Access
 
 feature {ES_TESTING_RESULTS_TOOL} -- Basic operations
 
-	show_result (a_result: EQA_RESULT)
+	show_result (a_result: TEST_RESULT_I)
 			-- Display details for given result.
 			--
 			-- `a_result': Testing result.
@@ -77,7 +74,7 @@ feature {ES_TESTING_RESULTS_TOOL} -- Basic operations
 			clear
 			notebook.select_item (editor_widget)
 			editor_widget.editor.handle_before_processing (True)
-			print_result_details (editor_widget.editor.text_displayed, a_result, 0, True)
+			a_result.print_details (editor_widget.editor.text_displayed, True)
 			editor_widget.editor.handle_after_processing
 		end
 
@@ -106,7 +103,7 @@ feature {NONE} -- Internationalization
 	t_comparison_title: STRING = "Comparison"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

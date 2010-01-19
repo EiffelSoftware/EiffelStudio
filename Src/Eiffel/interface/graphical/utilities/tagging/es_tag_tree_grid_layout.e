@@ -55,13 +55,6 @@ feature {NONE} -- Access
 	token_writer: EB_EDITOR_TOKEN_GENERATOR
 			-- Token writer used to create clickable items
 
-	project_access: EC_PROJECT_ACCESS
-			-- Project access for creating clickable content
-		do
-				-- TODO: retrieve once instance of project access from somewhere else (Arno 09/14/2009)
-			Result := etest_suite.project_access
-		end
-
 	last_pixmap: detachable EV_PIXMAP
 			-- Last set pixmap to be used in item
 
@@ -226,7 +219,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

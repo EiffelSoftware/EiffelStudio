@@ -79,7 +79,7 @@ feature -- Access: test statistics
 		deferred
 		end
 
-	last_result (a_test: TEST_I): EQA_RESULT
+	last_result (a_test: TEST_I): TEST_RESULT_I
 			-- Result of last execution
 		require
 			a_test_attached: a_test /= Void
@@ -112,7 +112,7 @@ invariant
 	valid_counts: passing_test_count + failing_test_count + unresolved_test_count <= executed_test_count
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

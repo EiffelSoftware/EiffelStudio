@@ -87,7 +87,7 @@ feature -- Access
 				l_test := a_node.item
 				l_query := agent (a_test: TEST_I; a_test_suite: TEST_SUITE_S; a_col: INTEGER): detachable EV_GRID_ITEM
 					local
-						l_result: detachable EQA_RESULT
+						l_result: detachable TEST_RESULT_I
 					do
 						if a_test_suite.statistics.execution_count (a_test) > 0 then
 							l_result := a_test_suite.statistics.last_result (a_test)
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			Result.set_tooltip (l_tooltip)
 		end
 
-	new_status_item (a_test: TEST_I; a_result: detachable EQA_RESULT): EV_GRID_ITEM
+	new_status_item (a_test: TEST_I; a_result: detachable TEST_RESULT_I): EV_GRID_ITEM
 			-- Add status item to row for given tast at index `status_column'.
 		local
 			l_text: STRING_32
@@ -224,11 +224,7 @@ feature {NONE} -- Implementation
 			l_token_writer.process_basic_text (l_text)
 			l_label.set_text_with_tokens (l_token_writer.last_line.content)
 			l_token_writer.wipe_out_lines
-			if a_result /= Void and then not a_result.information.is_empty then
-				l_label.set_tooltip (l_text + "%N%N" + a_result.information.as_string_32)
-			else
-				l_label.set_tooltip (l_text)
-			end
+			l_label.set_tooltip (l_text)
 			l_icon := status_icon (a_test, a_result)
 			if l_icon /= Void then
 				l_label.set_pixmap (l_icon)
@@ -236,7 +232,7 @@ feature {NONE} -- Implementation
 			Result := l_label
 		end
 
-	status_text (a_test: TEST_I; a_result: detachable EQA_RESULT): STRING_32
+	status_text (a_test: TEST_I; a_result: detachable TEST_RESULT_I): STRING_32
 			-- Status text for `a_test'.
 		do
 			if a_result /= Void then
@@ -265,7 +261,7 @@ feature {NONE} -- Implementation
 			Result.append_character (')')
 		end
 
-	status_icon (a_test: TEST_I; a_result: detachable EQA_RESULT): detachable EV_PIXMAP
+	status_icon (a_test: TEST_I; a_result: detachable TEST_RESULT_I): detachable EV_PIXMAP
 			-- Icon representing status of `a_test'.
 		do
 			if a_result /= Void then
@@ -323,7 +319,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

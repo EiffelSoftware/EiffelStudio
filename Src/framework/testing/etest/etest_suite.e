@@ -29,19 +29,22 @@ inherit
 			{NONE} all
 		end
 
+	EC_SHARED_PROJECT_ACCESS
+		export
+			{ANY} project_access
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_project_access: like project_access; a_project_helper: like project_helper; a_preferences: like preferences)
+	make (a_project_helper: like project_helper; a_preferences: like preferences)
 			-- Initialize `Current'.
 			--
-			-- `a_project_access': Access to Eiffel project.
 			-- `a_project_helper': Project helper for compiling, debugging and adding new classes.
 			-- `a_preferences': Preferences containing test specific settings.
 		require
-			a_project_access_attached: a_project_access /= Void
 			a_project_helper_attached: a_project_helper /= Void
 			a_preferences_attached: a_preferences /= Void
 		local
@@ -49,7 +52,6 @@ feature {NONE} -- Initialization
 			l_test_suite: TEST_SUITE_S
 			l_project_loaded: BOOLEAN
 		do
-			project_access := a_project_access
 			project_helper := a_project_helper
 			preferences := a_preferences
 			class_map := new_class_map
@@ -80,9 +82,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	project_access: EC_PROJECT_ACCESS
-			-- Access to Eiffel project
 
 	project_helper: TEST_PROJECT_HELPER_I
 			-- Project helper for compiling, debugging and adding new classes.
@@ -482,7 +481,7 @@ invariant
 	retrieval_attached_equals_old_class_map_attached: (retrieval /= Void) = (old_class_map /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

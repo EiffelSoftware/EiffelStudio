@@ -9,9 +9,6 @@ note
 deferred class
 	ES_SHARED_TEST_GRID_UTILITIES
 
-inherit
-	TEST_RESULT_FORMATTER
-
 feature {NONE} -- Access
 
 	token_writer: EB_EDITOR_TOKEN_GENERATOR

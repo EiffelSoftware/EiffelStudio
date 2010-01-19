@@ -31,7 +31,7 @@ feature {NONE} -- Creation
 					test_indexable_reversed (new_linked_list)
 					test_indexable_reversed (new_arrayed_list)
 					test_indexable_reversed (new_two_way_list)
---					test_indexable_reversed (new_hash_table)
+					test_indexable_reversed (new_hash_table)
 					test_indexable_reversed (new_array)
 					test_indexable_reversed ("1234567")
 
@@ -39,7 +39,7 @@ feature {NONE} -- Creation
 					test_indexable_with_step (new_linked_list, 2)
 					test_indexable_with_step (new_arrayed_list, 2)
 					test_indexable_with_step (new_two_way_list, 2)
---					test_indexable_with_step (new_hash_table, 2)
+					test_indexable_with_step (new_hash_table, 2)
 					test_indexable_with_step (new_array, 2)
 					test_indexable_with_step ("1234567", 2)
 
@@ -47,7 +47,7 @@ feature {NONE} -- Creation
 					test_indexable_with_step (new_linked_list, 4)
 					test_indexable_with_step (new_arrayed_list, 4)
 					test_indexable_with_step (new_two_way_list, 4)
---					test_indexable_with_step (new_hash_table, 4)
+					test_indexable_with_step (new_hash_table, 4)
 					test_indexable_with_step (new_array, 4)
 					test_indexable_with_step ("1234567", 4)
 
@@ -55,7 +55,7 @@ feature {NONE} -- Creation
 					test_indexable_reversed_with_step (new_linked_list, 2)
 					test_indexable_reversed_with_step (new_arrayed_list, 2)
 					test_indexable_reversed_with_step (new_two_way_list, 2)
---					test_indexable_reversed_with_step (new_hash_table, 2)
+					test_indexable_reversed_with_step (new_hash_table, 2)
 					test_indexable_reversed_with_step (new_array, 2)
 					test_indexable_reversed_with_step ("1234567", 2)
 
@@ -63,7 +63,7 @@ feature {NONE} -- Creation
 					test_indexable_reversed_with_step (new_linked_list, 4)
 					test_indexable_reversed_with_step (new_arrayed_list, 4)
 					test_indexable_reversed_with_step (new_two_way_list, 4)
---					test_indexable_reversed_with_step (new_hash_table, 4)
+					test_indexable_reversed_with_step (new_hash_table, 4)
 					test_indexable_reversed_with_step (new_array, 4)
 					test_indexable_reversed_with_step ("1234567", 4)
 
@@ -71,7 +71,7 @@ feature {NONE} -- Creation
 					test_indexable_incremented_decremented (new_linked_list)
 					test_indexable_incremented_decremented (new_arrayed_list)
 					test_indexable_incremented_decremented (new_two_way_list)
---					test_indexable_incremented_decremented (new_hash_table)
+					test_indexable_incremented_decremented (new_hash_table)
 					test_indexable_incremented_decremented (new_array)
 					test_indexable_incremented_decremented ("1234567")
 				end
@@ -100,61 +100,41 @@ feature {NONE} -- Creation
 			io.put_new_line
 		end
 
-	test_indexable_reversed (a: INDEXABLE [ANY, INTEGER])
+	test_indexable_reversed (a: READABLE_INDEXABLE [ANY])
 		do
 			io.put_string (a.generating_type) io.put_new_line
-			if attached {INDEXABLE_ITERATION_CURSOR [STRING]} a.new_cursor as l_cursor then
-				across l_cursor.reversed as c loop
-					io.put_string (c.item.out)
-					io.put_new_line
-				end
-			else
-				io.put_string ("Not indexable...")
+			across a.new_cursor.reversed as c loop
+				io.put_string (c.item.out)
 				io.put_new_line
 			end
 			io.put_new_line
 		end
 
-	test_indexable_with_step (a: INDEXABLE [ANY, INTEGER]; a_step: INTEGER)
+	test_indexable_with_step (a: READABLE_INDEXABLE [ANY]; a_step: INTEGER)
 		do
 			io.put_string (a.generating_type) io.put_new_line
-			if attached {INDEXABLE_ITERATION_CURSOR [STRING]} a.new_cursor as l_cursor then
-				across l_cursor.with_step (a_step) as c loop
-					io.put_string (c.item.out)
-					io.put_new_line
-				end
-			else
-				io.put_string ("Not indexable...")
+			across a.new_cursor.with_step (a_step) as c loop
+				io.put_string (c.item.out)
 				io.put_new_line
 			end
 			io.put_new_line
 		end
 
-	test_indexable_reversed_with_step (a: INDEXABLE [ANY, INTEGER]; a_step: INTEGER)
+	test_indexable_reversed_with_step (a: READABLE_INDEXABLE [ANY]; a_step: INTEGER)
 		do
 			io.put_string (a.generating_type) io.put_new_line
-			if attached {INDEXABLE_ITERATION_CURSOR [STRING]} a.new_cursor as l_cursor then
-				across l_cursor.with_step (a_step).reversed as c loop
-					io.put_string (c.item.out)
-					io.put_new_line
-				end
-			else
-				io.put_string ("Not indexable...")
+			across a.new_cursor.with_step (a_step).reversed as c loop
+				io.put_string (c.item.out)
 				io.put_new_line
 			end
 			io.put_new_line
 		end
 
-	test_indexable_incremented_decremented (a: INDEXABLE [ANY, INTEGER])
+	test_indexable_incremented_decremented (a: READABLE_INDEXABLE [ANY])
 		do
 			io.put_string (a.generating_type) io.put_new_line
-			if attached {INDEXABLE_ITERATION_CURSOR [STRING]} a.new_cursor as l_cursor then
-				across l_cursor.incremented (2).decremented (1) as c loop
-					io.put_string (c.item.out)
-					io.put_new_line
-				end
-			else
-				io.put_string ("Not indexable...")
+			across a.new_cursor.incremented (2).decremented (1) as c loop
+				io.put_string (c.item.out)
 				io.put_new_line
 			end
 			io.put_new_line

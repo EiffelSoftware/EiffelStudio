@@ -49,6 +49,8 @@ remtrace store
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/store store
 remtrace testing
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/testing testing
+remtrace text
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/text text
 remtrace thread
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/thread thread
 remtrace time

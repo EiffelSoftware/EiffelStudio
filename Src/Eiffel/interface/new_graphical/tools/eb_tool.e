@@ -337,6 +337,45 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	propagate_action (a_start_widget: EV_WIDGET; a_action: PROCEDURE [ANY, TUPLE [EV_WIDGET]]; a_excluded: ARRAY [EV_WIDGET])
+			-- Propagates a performed action to all child widgets of an initial widget.
+			--
+			-- `a_start_widget': The starting widget to apply an action, as well as to all it's children widgets.
+			-- `a_action': The action to be performed.
+			-- `a_excluded': An array of widgets to excluding the propagation of actions, or Void to include all widgets
+		require
+			is_interface_usable: is_interface_usable
+			a_start_widget_attached: a_start_widget /= Void
+			not_a_start_widget_is_destroyed: not a_start_widget.is_destroyed
+			a_action_attached: a_action /= Void
+		local
+			l_cursor: CURSOR
+		do
+			if a_excluded = Void or else not a_excluded.has (a_start_widget) then
+					-- Perform action
+				a_action.call ([a_start_widget])
+			end
+
+			if attached {EV_WIDGET_LIST} a_start_widget as l_list then
+				l_cursor := l_list.cursor
+				from l_list.start until l_list.after loop
+					if attached l_list.item as l_widget and then not l_widget.is_destroyed then
+							-- Perform action on all child widgets
+						propagate_action (l_widget, a_action, a_excluded)
+					end
+					l_list.forth
+				end
+				l_list.go_to (l_cursor)
+			elseif attached {EV_SPLIT_AREA} a_start_widget as l_split then
+				if attached l_split.first as l_first and then not l_first.is_destroyed then
+					propagate_action (l_first, a_action, a_excluded)
+				end
+				if attached l_split.second as l_second and then not l_second.is_destroyed then
+					propagate_action (l_second, a_action, a_excluded)
+				end
+			end
+		end
+
 feature {NONE} -- Memory management
 
 	internal_recycle
@@ -378,7 +417,7 @@ invariant
 	--tool_descriptor_attached: not is_recycled implies tool_descriptor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

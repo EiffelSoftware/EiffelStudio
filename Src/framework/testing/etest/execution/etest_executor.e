@@ -269,10 +269,10 @@ feature {NONE} -- Status setting
 					end
 					l_controller.launch_test ([l_byte_code, l_test.name.as_string_8], l_evaluator, l_evaluator_routine)
 				else
-					test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make ("test not properly compiled", ""))
+					test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make (e_no_bytecode_tag, e_no_bytecode_details, [l_test.name]))
 				end
 			else
-				test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make ("test not compiled", Void))
+				test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_not_compiled_tag, e_test_not_compiled_details, [l_test.name, l_test.class_name]))
 			end
 		end
 
@@ -293,13 +293,13 @@ feature {NONE} -- Status setting
 
 				-- Try to retrieve result from controller
 			if not l_controller.is_running then
-				create {TEST_UNRESOLVED_RESULT} l_result.make ("evaluator could not be launched", "")
+				create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_launch_tag, e_evaluator_launch_details, [l_test.name])
 			else
 				delete_directory_safe (l_test)
 				if l_controller.has_result then
 					create {ETEST_RESULT} l_result.make (l_controller.test_result)
 				else
-					create {TEST_UNRESOLVED_RESULT} l_result.make ("evaluator died", "")
+					create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, [l_test.name, l_controller.last_exit_code, l_controller.last_output])
 				end
 			end
 
@@ -460,6 +460,32 @@ feature {NONE} -- Constants
 
 	isolate_prefix: STRING = "execution/isolated"
 	testing_directory_name: STRING = "execution"
+
+feature {NONE} -- Internationalization
+
+	e_evaluator_launch_tag: STRING = "No Evaluator"
+	e_evaluator_launch_details: STRING = "[
+			The evaluator needed to execute test $1 could not be launched. Most likely the last compilation
+			of the current project did not succeed.
+		]"
+
+	e_evaluator_died_tag: STRING = "Evaluator Died"
+	e_evaluator_died_details: STRING = "[
+			The evaluator process which was executing test $1 terminated unexpectedly with exit code $2. Any output from the
+			evaluator is printed below.
+			
+			$3
+		]"
+
+	e_test_not_compiled_tag: STRING = "Not Compiled"
+	e_test_not_compiled_details: STRING = "[
+			Test $1 could not be executed as the class containing it ($2) is not compiled.
+		]"
+
+	e_no_bytecode_tag: STRING = "Not Compiled"
+	e_no_bytecode_details: STRING = "[
+			Test $1 could not be executed because the required bytecode could not be generated.
+		]"
 
 invariant
 	empty_tasks_empty: empty_tasks.is_empty

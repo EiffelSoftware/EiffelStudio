@@ -11,9 +11,32 @@ class
 
 inherit
 	ETEST_EVALUATOR_CONTROLLER
+		redefine
+			make
+		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_test_suite: like test_suite; a_testing_directory: like testing_directory)
+			-- <Precursor>
+		do
+			Precursor (a_test_suite, a_testing_directory)
+			create mutex.make
+			create output.make (1000)
+		end
+
+feature -- Access
+
+	last_output: STRING
+			-- <Precursor>
+		do
+			mutex.lock
+			create Result.make_from_string (output)
+			mutex.unlock
+		end
 
 feature {NONE} -- Access
 
@@ -31,6 +54,16 @@ feature {NONE} -- Access
 
 	internal_process: detachable like PROCESS
 			-- Storage for `process'
+
+feature {NONE} -- Access: output
+
+	mutex: MUTEX
+			-- Mutex synchronizing access to `output'
+
+	output: STRING
+			-- Buffer containing output of `process'
+			--
+			-- Note: do not access directly, use `append_output', `last_output' or `clear_output'.
 
 feature {NONE} -- Status report
 
@@ -73,7 +106,7 @@ feature {NONE} -- Status setting
 				--| Note: we do not really need input redirection, however on windows with a non console
 				--|       application this is needed or the process will crash.
 			l_process.redirect_input_to_stream
-			l_process.redirect_output_to_agent (agent {STRING}.do_nothing)
+			l_process.redirect_output_to_agent (agent append_output)
 			l_process.redirect_error_to_same_as_output
 
 			l_process.launch
@@ -90,11 +123,32 @@ feature {NONE} -- Status setting
 				l_process.terminate
 				l_process.wait_for_exit
 			end
+			last_exit_code := l_process.exit_code
 			internal_process := Void
 		end
 
+feature {NONE} -- Basic operations
+
+	append_output (an_output: like output)
+			-- Append given output to `output'
+		require
+			an_output_attached: an_output /= Void
+		do
+			mutex.lock
+			output.append (an_output)
+			mutex.unlock
+		end
+
+	clear_output
+			-- Wipe out contents of `output'
+		do
+			mutex.lock
+			output.wipe_out
+			mutex.unlock
+		end
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

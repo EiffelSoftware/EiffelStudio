@@ -53,6 +53,21 @@ feature -- Drawing operations
 		deferred
 		end
 
+	enable_focus_on_press
+			-- Enable focus on press handling.
+		do
+			focus_on_press_disabled := False
+		end
+
+	disable_focus_on_press
+			-- Disable default focus handling when mouse button is pressed on drawing area.
+		do
+			focus_on_press_disabled := True
+		end
+
+	focus_on_press_disabled: BOOLEAN
+			-- Is focus on mouse press default handling disabled?
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DRAWING_AREA note option: stable attribute end;

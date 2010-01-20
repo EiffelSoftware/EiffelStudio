@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			-- Redefined as the button press does not set the
 			-- focus automatically.
 		do
-			set_focus
+			mouse_button_down
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			-- Redefined as the button press does not set the
 			-- focus automatically.
 		do
-			set_focus
+			mouse_button_down
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
@@ -225,8 +225,16 @@ feature {NONE} -- Implementation
 			-- Redefined as the button press does not set the
 			-- focus automatically.
 		do
-			set_focus
+			mouse_button_down
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
+		end
+
+	mouse_button_down
+			-- Default handling for when a mouse button is pressed.
+		do
+			if not focus_on_press_disabled then
+				set_focus
+			end
 		end
 
 	clear_and_redraw_rectangle (x1, y1, a_width, a_height: INTEGER)

@@ -122,15 +122,14 @@ feature {NONE} -- Implementation
 					a_formatter.process_basic_text (l_exception.recipient_name.as_string_8)
 				end
 				a_formatter.process_basic_text (")")
-				a_formatter.add_new_line
 				if a_verbose then
-					print_multiline_string (l_exception.trace.as_string_32, a_formatter, a_indent + 1)
 					a_formatter.add_new_line
+					print_multiline_string (l_exception.trace.as_string_32, a_formatter, a_indent + 1)
 				end
 			else
 				a_formatter.process_basic_text ("ok")
-				a_formatter.add_new_line
 			end
+			a_formatter.add_new_line
 		end
 
 note

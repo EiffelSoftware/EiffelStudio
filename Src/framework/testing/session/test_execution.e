@@ -303,7 +303,7 @@ feature -- Status setting
 			l_queue: like queue_for_test
 		do
 			if is_test_running (a_test) then
-				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make ("User abort", ""))
+				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_aborted_tag, e_test_aborted_details, [a_test.name]))
 			else
 				remove_queued_test (a_test)
 			end
@@ -452,13 +452,13 @@ feature {NONE} -- Basic operations
 						running_tests.do_all (
 							agent (a_test: TEST_I)
 								do
-									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make ("User abort", ""))
+									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_aborted_tag, e_test_aborted_details, [a_test.name]))
 								end)
 					else
 						running_tests.do_all (
 							agent (a_test: TEST_I)
 								do
-									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make ("Executor failed to report results", ""))
+									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_executor_failure_tag, e_executor_failure_details, [a_test.generating_type, a_test.name]))
 								end)
 					end
 					check running_test_map_empty: running_test_map.is_empty end
@@ -495,7 +495,7 @@ feature {NONE} -- Basic operations
 			a_result.print_result (a_formatter)
 			a_formatter.add_new_line
 			if not a_result.is_pass then
-				a_result.print_details_indented (a_formatter, True, 1)
+				a_result.print_details_indented (a_formatter, False, 1)
 			end
 		end
 
@@ -505,7 +505,7 @@ feature {TEST_SUITE_S} -- Events
 			-- <Precursor>
 		do
 			if is_test_running (a_test) then
-				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make ("Removed from test suite", ""))
+				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_removed_tag, e_test_removed_details, [a_test.name]))
 			elseif is_test_queued (a_test) then
 				remove_queued_test (a_test)
 			end
@@ -569,6 +569,19 @@ feature {NONE} -- Constants
 
 	group_prefix: STRING = "execution/serial"
 			-- Prefix for execution group tags
+
+feature {NONE} -- Internationalization
+
+	e_test_removed_tag: STRING = "Removed"
+	e_test_removed_details: STRING = "Test $1 was removed from the test suite before it was executed"
+
+	e_test_aborted_tag: STRING = "Aborted"
+	e_test_aborted_details: STRING = "The execution of $1 was aborted by the user"
+
+	e_executor_failure_tag: STRING = "Internal Failure"
+	e_executor_failure_details: STRING = "[
+			The executor for a test of type $1 failed to report a test result for test $2
+		]"
 
 invariant
 	test_suite_attached: test_suite /= Void

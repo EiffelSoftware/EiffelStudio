@@ -20,15 +20,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag, a_details: like tag)
+	make (a_tag, a_details: like tag; a_token_values: like token_values)
 			-- Initialize `Current'.
 			--
 			-- `a_tag': Tag describing state.
 			-- `a_details': Detailed information about `Current'
+			-- `a_token_values': Token values used for translation of `details'
 		do
 			create start_date.make_now
-			create {IMMUTABLE_STRING_8} tag.make_from_string (a_tag)
-			create {IMMUTABLE_STRING_8} details.make_from_string (a_details)
+			original_tag := a_tag.to_string_8
+			details := a_details.to_string_8
+			token_values := a_token_values
 		end
 
 feature -- Access
@@ -45,12 +47,23 @@ feature -- Access
 	tag: READABLE_STRING_8
 			-- <Precursor>
 			--
-			-- Note: before printing the tag will first be translated through `locale'
+			-- Note: this is a translated version of `original_tag' which does not use `token_values'.
+		do
+			Result := locale.translation (original_tag)
+		end
 
-	details: READABLE_STRING_8
+feature {NONE} -- Access
+
+	original_tag: STRING_8
+			-- Short tag describing the status of `Current'
+
+	details: STRING_8
 			-- Detailed information about `Current'
 			--
-			-- Note: before printing the tag will first be translated through `locale'
+			-- Note: before printing the tag will first be translated through `locale'.
+
+	token_values: TUPLE
+			-- Token values used for translation of `details'
 
 feature -- Status report
 
@@ -65,7 +78,8 @@ feature -- Basic operations
 	print_details_indented (a_formatter: TEXT_FORMATTER; a_verbose: BOOLEAN; an_indent: NATURAL_32)
 			-- <Precursor>
 		do
-
+			print_multiline_string (locale.formatted_string (details, token_values), a_formatter, an_indent)
+			a_formatter.add_new_line
 		end
 
 note

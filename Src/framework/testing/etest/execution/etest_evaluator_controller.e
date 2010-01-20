@@ -52,6 +52,18 @@ feature -- Access
 			result_from_connection: Result = connection.last_result
 		end
 
+	last_exit_code: INTEGER
+			-- Exit code last returned from evaluator
+			--
+			-- Note: only valid if `has_died' is true.
+
+	last_output: STRING
+			-- Output printed by evaluator since last call to `launch_test'
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Access
 
 	test_suite: ETEST_SUITE

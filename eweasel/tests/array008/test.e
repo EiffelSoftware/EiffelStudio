@@ -11,6 +11,14 @@ feature {NONE} -- Creation
 			b: ARRAY2 [detachable ANY]
 			i, j: INTEGER
 		do
+				-- Check proper initialization
+			create a.make (2, 3)
+			a.initialize ("1")
+			print_matrix (a)
+
+			a.wipe_out
+			print_matrix (a)
+
 				-- Check proper resizing
 			create a.make_filled ("1", 1, 1)
 			print_matrix (a)

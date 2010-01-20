@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 		do
 				-- Make sure the tooltip is hidden if any button events occur.
 			update_tooltip (False)
-			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget) & {EV_GTK_EXTERNALS}.gtk_has_focus_enum = 0 and then (a_button = 1 and then a_button <= 3) then
+			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget) & {EV_GTK_EXTERNALS}.gtk_has_focus_enum = 0 and then (a_button = 1 and then a_button <= 3) and then not focus_on_press_disabled then
 					-- As a button has been pressed on the drawing area then
 				set_focus
 			end

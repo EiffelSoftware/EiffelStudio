@@ -885,6 +885,7 @@ test	feature_b-process-crash			incr343 tcf fail incrementality
 test	new-generic-deriv-attribute-agent	incr344 tcf fail incrementality
 test	supports-step-in-crash			incr345 tcf fail incrementality
 test	is-expanded-crash			incr346 tcf fail incrementality
+test	class-removal-crash-freeze		incr347 tcf fail incrementality
 
 
 -- Melting

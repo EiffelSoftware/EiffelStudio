@@ -1,0 +1,25 @@
+test_name 	 class-removal-crash-freeze
+test_description When there is an error during class removal the compiler should not keep old references to the class when generating code.
+
+copy_sub	Ace $TEST Ace
+
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	c.e $CLUSTER c.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+
+copy_raw	b2.e $CLUSTER b.e
+copy_raw	d2.e $CLUSTER d.e
+
+compile_frozen
+compile_result	validity_error A VUAR(2)
+
+copy_raw	a3.e $CLUSTER a.e
+
+resume_compile
+compile_result	ok
+
+test_end

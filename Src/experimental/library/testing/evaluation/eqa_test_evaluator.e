@@ -35,7 +35,7 @@ inherit
 
 feature -- Access
 
-	last_result: EQA_ETEST_PARTIAL_RESULT
+	last_result: EQA_PARTIAL_RESULT
 			-- Result last produced by `execute'
 		local
 			l_cache: like last_result_cache
@@ -119,7 +119,7 @@ feature -- Execution
 				safe_execute (agent l_basic_test_set.clean (l_test.is_exceptional))
 				l_clean := last_invocation_response
 				check l_clean /= Void end
-				create {EQA_ETEST_RESULT} last_result_cache.make (l_start_date, l_prepare, l_test, l_clean, buffered_output)
+				create {EQA_RESULT} last_result_cache.make (l_start_date, l_prepare, l_test, l_clean, buffered_output)
 			end
 			if l_old = Void then
 				io.set_output_default
@@ -180,7 +180,7 @@ feature {NONE} -- Constants
 	m_truncated: STRING = "%N%N---------------------------%NTruncated section%N---------------------------%N%N"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

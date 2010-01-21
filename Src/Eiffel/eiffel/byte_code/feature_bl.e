@@ -213,16 +213,13 @@ end
 			-- `reg' is the entity on which the access is made.
 		local
 			type_i: TYPE_A
-			class_type: CL_TYPE_A
 			access: ACCESS_B
 			void_register: REGISTER
 			is_polymorphic_access: BOOLEAN
 		do
 			type_i := context_type
-			class_type ?= type_i
 			is_polymorphic_access := not type_i.is_basic and then precursor_type = Void and then
-					class_type /= Void and then
-					Eiffel_table.is_polymorphic (routine_id, class_type, context.context_class_type, True) >= 0
+					Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 			end
@@ -242,13 +239,11 @@ end
 	is_polymorphic: BOOLEAN
 			-- Is access polymorphic ?
 		local
-			class_type: CL_TYPE_A
 			type_i: TYPE_A
 		do
 			type_i := context_type
 			if not type_i.is_basic and then precursor_type = Void then
-				class_type ?= type_i -- Cannot fail
-				Result := Eiffel_table.is_polymorphic (routine_id, class_type, context.context_class_type, True) >= 0
+				Result := Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0
 			end
 		end
 
@@ -542,7 +537,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

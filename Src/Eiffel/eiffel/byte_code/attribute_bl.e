@@ -122,16 +122,11 @@ end
 			-- Check whether we need to compute the dynamic type of current
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
-		local
-			class_type: CL_TYPE_A
 		do
 				-- Do nothing if `reg' is not the current entity
 			if reg.is_current then
-				class_type ?= context_type
-				if class_type /= Void then
-					if Eiffel_table.is_polymorphic (routine_id, class_type, context.context_class_type, False) >= 0 then
-						context.add_dt_current
-					end
+				if Eiffel_table.is_polymorphic (routine_id, context_type, context.context_class_type, False) >= 0 then
+					context.add_dt_current
 				end
 			end
 		end
@@ -139,13 +134,11 @@ end
 	is_polymorphic: BOOLEAN
 			-- Is access polymorphic ?
 		local
-			class_type: CL_TYPE_A
 			type_i: TYPE_A
 		do
 			type_i := context_type
 			if not type_i.is_basic then
-				class_type ?= type_i;	-- Cannot fail
-				Result := Eiffel_table.is_polymorphic (routine_id, class_type, context.context_class_type, False) >= 0
+				Result := Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, False) >= 0
 			end
 		end
 
@@ -226,7 +219,7 @@ end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

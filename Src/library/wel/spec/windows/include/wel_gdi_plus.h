@@ -146,6 +146,12 @@ typedef enum GpFillModeEnum
 	Winding =1
 }GpFillMode;
 
+typedef enum
+{
+	FlushIntentionFlush = 0,
+	FlushIntentionSync = 1	
+}GpFlushIntention;
+
 typedef float REAL;
 
 #define    PixelFormatIndexed      0x00010000 

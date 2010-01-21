@@ -316,8 +316,11 @@ feature -- Access
 	formal_generics_end_position: INTEGER
 			-- End of formal generics, if present
 
-	inheritance_end_position: INTEGER
-			-- End of inheritance clause
+	conforming_inheritance_end_position: INTEGER
+			-- End of conforming inheritance clause
+
+	non_conforming_inheritance_end_position: INTEGER
+			-- End of non-conforming inheritance clause
 
 	features_end_position: INTEGER
 			-- End of feature clauses

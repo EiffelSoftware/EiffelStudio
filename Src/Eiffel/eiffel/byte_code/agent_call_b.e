@@ -56,10 +56,21 @@ feature -- Attributes
 			Result := not is_item
 			if not Result then
 				l_type := context_type
-				if l_type.associated_class.eiffel_class_c.class_id = system.predicate_class_id then
+				if l_type.associated_class.class_id = system.predicate_class_id then
 					Result := True
 				else
 					Result := l_type.instantiated_in (context.context_class_type.type).generics.item (3).is_basic
+				end
+			end
+		end
+
+feature -- Status report
+
+	is_polymorphic: BOOLEAN
+		do
+			if context.final_mode then
+				if precursor_type = Void then
+					Result := Eiffel_table.is_polymorphic (routine_id, context_type, context.context_class_type, True) >= 0
 				end
 			end
 		end
@@ -73,13 +84,17 @@ feature -- Access
 			l_assert: ASSERTION_I
 		do
 			if context.final_mode then
-				if system.keep_assertions then
-					l_assert := context_type.associated_class.lace_class.assertion_level
-					if (not l_assert.is_precondition and not l_assert.is_invariant) and is_result_optimizable then
+					-- The call to `call' or `item' is polymorphic, there is not much we can actually do,
+					-- so we generate a normal call to `call' or `item'.
+				if not is_polymorphic then
+					if system.keep_assertions then
+						l_assert := context_type.associated_class.lace_class.assertion_level
+						if (not l_assert.is_precondition and not l_assert.is_invariant) and is_result_optimizable then
+							create {AGENT_CALL_BL} Result.init (Current)
+						end
+					elseif is_result_optimizable then
 						create {AGENT_CALL_BL} Result.init (Current)
 					end
-				elseif is_result_optimizable then
-					create {AGENT_CALL_BL} Result.init (Current)
 				end
 			end
 			if Result = Void then
@@ -87,15 +102,13 @@ feature -- Access
 			end
 		end
 
-	is_polymorphic: BOOLEAN = False
-
 	inlined_byte_code: ACCESS_B
 		do
 			Result := Current
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -108,22 +121,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -361,11 +361,10 @@ feature -- Inlining
 			if not is_once then
 				type_i := context_type
 				if not type_i.is_basic then
-					cl_type ?= type_i -- Cannot fail
 						-- Inline only if it is not polymorphic and if it can be inlined.
-					if Eiffel_table.is_polymorphic (routine_id, cl_type, context.context_class_type, True) = -1 then
+					if Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) = -1 then
 						l_rout_table ?= eiffel_table.poly_table (routine_id)
-						l_rout_table.goto_implemented (cl_type, context.context_class_type)
+						l_rout_table.goto_implemented (type_i, context.context_class_type)
 							-- Only if it is implemented that we can inline it.
 						if l_rout_table.is_implemented then
 							inliner := System.remover.inliner
@@ -379,6 +378,7 @@ feature -- Inlining
 			end
 
 			if inline then
+				cl_type ?= type_i -- Cannot fail
 					-- Get information on the routine being inlined.
 				f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
 					-- Ensure the feature is not redeclared into attribute or external routine

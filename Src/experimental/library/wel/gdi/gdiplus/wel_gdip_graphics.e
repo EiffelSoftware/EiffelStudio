@@ -53,6 +53,17 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
+	flush (a_intention: INTEGER)
+			-- Flushes all pending graphics operations
+		require
+			valid: (create {WEL_GDIP_FLUSH_INTENTION}).is_valid (a_intention)
+		local
+			l_result: INTEGER
+		do
+			c_gdip_flush (gdi_plus_handle, item, a_intention, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
 	draw_line (a_pen: WEL_GDIP_PEN;  a_x_1, a_y_1, a_x_2, a_y_2: INTEGER)
 			-- Draw a line
 		require
@@ -330,6 +341,31 @@ feature -- Destroy
 		end
 
 feature {NONE} -- C externals
+
+	c_gdip_flush (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_flush_intention: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
+			-- Flushes all pending graphics operations
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipFlush = NULL;
+				GpGraphics *l_result = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipFlush) {
+					GdipFlush = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipFlush");
+				}
+				if (GdipFlush) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpFlushIntention)) GdipFlush)
+								((GpGraphics *) $a_graphics,
+								(GpFlushIntention) $a_flush_intention);
+				}									
+			}
+			]"
+		end
 
 	c_gdip_create_from_hdc (a_gdiplus_handle: POINTER; a_dc: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create a graphics object from a win32 `a_dc'.

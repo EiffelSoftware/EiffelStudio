@@ -6,6 +6,15 @@ CG = Code Generation
 6.2
 ===
 
+6.2.7.4113 non-RTEA (2532 classes, exe size: 14833360):
+175.75u 13.36s 3:59.76 78.8%
+176.11u 13.35s 3:42.35 85.2%
+175.38u 13.23s 3:42.22 84.8%
+
+
+6.2
+===
+
 6.2.7.3416 non-RTEA:
 174.93u 13.01s 3:51.08 81.3% (non-multithreaded, exe size: 14633544)
 222.86u 13.55s 4:29.32 87.7% (multithreaded without __thread TLS qualifier, exe size: 15593040)

@@ -25,6 +25,7 @@ feature {NONE} -- Creation
 					test_iterable (new_two_way_list)
 					test_iterable (new_hash_table)
 					test_iterable (new_array)
+					test_iterable (new_special)
 					test_iterable ("1234567")
 
 				when 2 then
@@ -33,6 +34,7 @@ feature {NONE} -- Creation
 					test_indexable_reversed (new_two_way_list)
 					test_indexable_reversed (new_hash_table)
 					test_indexable_reversed (new_array)
+					test_indexable_reversed (new_special)
 					test_indexable_reversed ("1234567")
 
 				when 3 then
@@ -41,6 +43,7 @@ feature {NONE} -- Creation
 					test_indexable_with_step (new_two_way_list, 2)
 					test_indexable_with_step (new_hash_table, 2)
 					test_indexable_with_step (new_array, 2)
+					test_indexable_with_step (new_special, 2)
 					test_indexable_with_step ("1234567", 2)
 
 				when 4 then
@@ -49,6 +52,7 @@ feature {NONE} -- Creation
 					test_indexable_with_step (new_two_way_list, 4)
 					test_indexable_with_step (new_hash_table, 4)
 					test_indexable_with_step (new_array, 4)
+					test_indexable_with_step (new_special, 4)
 					test_indexable_with_step ("1234567", 4)
 
 				when 5 then
@@ -57,6 +61,7 @@ feature {NONE} -- Creation
 					test_indexable_reversed_with_step (new_two_way_list, 2)
 					test_indexable_reversed_with_step (new_hash_table, 2)
 					test_indexable_reversed_with_step (new_array, 2)
+					test_indexable_reversed_with_step (new_special, 2)
 					test_indexable_reversed_with_step ("1234567", 2)
 
 				when 6 then
@@ -65,6 +70,7 @@ feature {NONE} -- Creation
 					test_indexable_reversed_with_step (new_two_way_list, 4)
 					test_indexable_reversed_with_step (new_hash_table, 4)
 					test_indexable_reversed_with_step (new_array, 4)
+					test_indexable_reversed_with_step (new_special, 4)
 					test_indexable_reversed_with_step ("1234567", 4)
 
 				when 7 then
@@ -73,6 +79,7 @@ feature {NONE} -- Creation
 					test_indexable_incremented_decremented (new_two_way_list)
 					test_indexable_incremented_decremented (new_hash_table)
 					test_indexable_incremented_decremented (new_array)
+					test_indexable_incremented_decremented (new_special)
 					test_indexable_incremented_decremented ("1234567")
 
 				when 8 then
@@ -81,6 +88,7 @@ feature {NONE} -- Creation
 					test_iterable (new_empty_two_way_list)
 					test_iterable (new_empty_hash_table)
 					test_iterable (new_empty_array)
+					test_iterable (new_empty_special)
 					test_iterable ("")
 
 				when 9 then
@@ -89,6 +97,7 @@ feature {NONE} -- Creation
 					test_indexable_reversed (new_empty_two_way_list)
 					test_indexable_reversed (new_empty_hash_table)
 					test_indexable_reversed (new_empty_array)
+					test_indexable_reversed (new_empty_special)
 					test_indexable_reversed ("")
 
 				when 10 then
@@ -97,6 +106,7 @@ feature {NONE} -- Creation
 					test_indexable_with_step (new_empty_two_way_list, 2)
 					test_indexable_with_step (new_empty_hash_table, 2)
 					test_indexable_with_step (new_empty_array, 2)
+					test_indexable_with_step (new_empty_special, 2)
 					test_indexable_with_step ("", 2)
 
 				when 11 then
@@ -105,6 +115,7 @@ feature {NONE} -- Creation
 					test_indexable_with_step (new_empty_two_way_list, 4)
 					test_indexable_with_step (new_empty_hash_table, 4)
 					test_indexable_with_step (new_empty_array, 4)
+					test_indexable_with_step (new_empty_special, 4)
 					test_indexable_with_step ("", 4)
 
 				when 12 then
@@ -113,6 +124,7 @@ feature {NONE} -- Creation
 					test_indexable_reversed_with_step (new_empty_two_way_list, 2)
 					test_indexable_reversed_with_step (new_empty_hash_table, 2)
 					test_indexable_reversed_with_step (new_empty_array, 2)
+					test_indexable_reversed_with_step (new_empty_special, 2)
 					test_indexable_reversed_with_step ("", 2)
 
 				when 13 then
@@ -121,6 +133,7 @@ feature {NONE} -- Creation
 					test_indexable_reversed_with_step (new_empty_two_way_list, 4)
 					test_indexable_reversed_with_step (new_empty_hash_table, 4)
 					test_indexable_reversed_with_step (new_empty_array, 4)
+					test_indexable_reversed_with_step (new_empty_special, 4)
 					test_indexable_reversed_with_step ("", 4)
 
 				when 14 then
@@ -129,6 +142,7 @@ feature {NONE} -- Creation
 					test_indexable_incremented_decremented (new_empty_two_way_list)
 					test_indexable_incremented_decremented (new_empty_hash_table)
 					test_indexable_incremented_decremented (new_empty_array)
+					test_indexable_incremented_decremented (new_empty_special)
 					test_indexable_incremented_decremented ("")
 
 				when 15 then
@@ -207,6 +221,18 @@ feature {NONE} -- Creation
 		end
 
 feature -- Containers
+
+	new_special: SPECIAL [STRING]
+		once
+			create Result.make_empty (7)
+			Result.extend ("1")
+			Result.extend ("2")
+			Result.extend ("3")
+			Result.extend ("4")
+			Result.extend ("5")
+			Result.extend ("6")
+			Result.extend ("7")
+		end
 
 	new_array: ARRAY [STRING]
 		once
@@ -295,6 +321,11 @@ feature -- Containers
 	new_empty_array: ARRAY [STRING]
 		once
 			create Result.make (1, 0)
+		end
+
+	new_empty_special: SPECIAL [STRING]
+		once
+			create Result.make_empty (7)
 		end
 
 	new_empty_linked_list: LINKED_LIST [STRING]

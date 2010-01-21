@@ -8,6 +8,8 @@ HASH_TABLE [STRING_8, STRING_8]
 
 ARRAY [STRING_8]
 
+SPECIAL [STRING_8]
+
 STRING_8
 
 Execution completed

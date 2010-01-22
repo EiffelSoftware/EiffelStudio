@@ -2,12 +2,12 @@ class REAL_32
 
 feature -- Comparison
 
-	is_less alias "<" (other: REAL_32): BOOLEAN is
+	is_less alias "<" (other: REAL_32): BOOLEAN
 			-- Is `other' greater than current real?
 		do
 			Result := Precursor (other)
 		end
-	infix "<" (other: REAL_32): BOOLEAN is
+	infix "<" (other: REAL_32): BOOLEAN
 			-- Is `other' greater than current real?
 		do
 			Result := Precursor (other)
@@ -32,33 +32,33 @@ feature -- Status report
 		
 feature -- Conversion
 
-	truncated_to_integer: INTEGER_32 is
+	truncated_to_integer: INTEGER_32
 			-- Integer part (same sign, largest absolute
 			-- value no greater than current object's)
 		do
 			Result := Precursor
 		end
 
-	truncated_to_integer_64: INTEGER_64 is
+	truncated_to_integer_64: INTEGER_64
 			-- Integer part (same sign, largest absolute
 			-- value no greater than current object's)
 		do
 			Result := Precursor
 		end
 
-	to_double: REAL_64 is
+	to_double: REAL_64
 			-- Current seen as a double
 		do
 			Result := Precursor
 		end
 
-	ceiling_real_32: REAL_32 is
+	ceiling_real_32: REAL_32
 			-- Smallest integral value no smaller than current object
 		do
 			Result := Precursor
 		end
 
-	floor_real_32: REAL_32 is
+	floor_real_32: REAL_32
 			-- Greatest integral value no greater than current object
 		do
 			Result := Precursor
@@ -66,85 +66,85 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	plus alias "+" (other: REAL_32): REAL_32 is
+	plus alias "+" (other: REAL_32): REAL_32
 			-- Sum with `other'
 		do
 			Result := Precursor (other)
 		end
 
-	minus alias "-" (other: REAL_32): REAL_32 is
+	minus alias "-" (other: REAL_32): REAL_32
 			-- Result of subtracting `other'
 		do
 			Result := Precursor (other)
 		end
 
-	product alias "*" (other: REAL_32): REAL_32 is
+	product alias "*" (other: REAL_32): REAL_32
 			-- Product by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	quotient alias "/" (other: REAL_32): REAL_32 is
+	quotient alias "/" (other: REAL_32): REAL_32
 			-- Division by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	power alias "^" (other: REAL_64): REAL_64 is
+	power alias "^" (other: REAL_64): REAL_64
 			-- Current real to the power `other'
 		do
 			Result := Precursor (other)
 		end
 
-	identity alias "+": REAL_32 is
+	identity alias "+": REAL_32
 			-- Unary plus
 		do
 			Result := Precursor
 		end
 
-	opposite alias "-": REAL_32 is
+	opposite alias "-": REAL_32
 			-- Unary minus
 		do
 			Result := Precursor
 		end
 
-	infix "+" (other: REAL_32): REAL_32 is
+	infix "+" (other: REAL_32): REAL_32
 			-- Sum with `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "-" (other: REAL_32): REAL_32 is
+	infix "-" (other: REAL_32): REAL_32
 			-- Result of subtracting `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "*" (other: REAL_32): REAL_32 is
+	infix "*" (other: REAL_32): REAL_32
 			-- Product by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "/" (other: REAL_32): REAL_32 is
+	infix "/" (other: REAL_32): REAL_32
 			-- Division by `other'
 		do
 			Result := Precursor (other)
 		end
 
-	infix "^" (other: REAL_64): REAL_64 is
+	infix "^" (other: REAL_64): REAL_64
 			-- Current real to the power `other'
 		do
 			Result := Precursor (other)
 		end
 
-	prefix "+": REAL_32 is
+	prefix "+": REAL_32
 			-- Unary plus
 		do
 			Result := Precursor
 		end
 
-	prefix "-": REAL_32 is
+	prefix "-": REAL_32
 			-- Unary minus
 		do
 			Result := Precursor
@@ -152,7 +152,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of real value
 		do
 			Result := Precursor

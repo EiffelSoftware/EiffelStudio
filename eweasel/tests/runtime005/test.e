@@ -11,7 +11,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			d: WORKER_THREAD
 			i, j: INTEGER
@@ -91,7 +91,7 @@ feature
 
 	queue: OBJECT_QUEUE
 
-	protect_objects (n: INTEGER) is
+	protect_objects (n: INTEGER)
 			-- Protect a lot of objects
 		local
 			s: STRING
@@ -109,7 +109,7 @@ feature
 			end
 		end
 
-	freeze_objects (n: INTEGER) is
+	freeze_objects (n: INTEGER)
 			-- Protect a lot of objects
 		local
 			s: STRING
@@ -142,7 +142,7 @@ feature
 			end
 		end
 
-	execute_free is
+	execute_free
 			-- Pop all elements of `queue' and free them
 		local
 			s: STRING
@@ -163,7 +163,7 @@ feature
 			end
 		end
 
-	execute_unfreeze is
+	execute_unfreeze
 			-- Unfreeze until no more.
 		local
 			a: ANY
@@ -178,7 +178,7 @@ feature
 			end
 		end
 
-	execute (n: INTEGER; identifier: CHARACTER) is
+	execute (n: INTEGER; identifier: CHARACTER)
 			-- Repeat `n'-th times
 		local
 			s: STRING
@@ -209,7 +209,7 @@ feature
 
 feature {NONE} -- C externals
 
-	eif_freeze (a: ANY): ANY is
+	eif_freeze (a: ANY): ANY
 			-- Wrapper for `eif_freeze'.
 			-- We currently not use `inline' because inlining does not do the automatic protection
 			-- this is another bug and it will have its own eweasel test.
@@ -219,7 +219,7 @@ feature {NONE} -- C externals
 			"eif_freeze"
 		end
 
-	eif_unfreeze (p: POINTER) is
+	eif_unfreeze (p: POINTER)
 			-- Wrapper for `eif_unfreeze'.
 		external
 			"C inline use %"eif_hector.h%""
@@ -228,7 +228,7 @@ feature {NONE} -- C externals
 		end
 
 
-	eif_adopt (a: ANY): POINTER is
+	eif_adopt (a: ANY): POINTER
 			-- Wrapper for `eif_adopt'.
 			-- We currently not use `inline' because inlining does not do the automatic protection
 			-- this is another bug and it will have its own eweasel test.
@@ -238,7 +238,7 @@ feature {NONE} -- C externals
 			"eif_adopt"
 		end
 
-	eif_wean (p: POINTER): ANY is
+	eif_wean (p: POINTER): ANY
 			-- Wrapper for `eif_wean'.
 		external
 			"C inline use %"eif_hector.h%""
@@ -247,7 +247,7 @@ feature {NONE} -- C externals
 		end
 
 
-	allocate_memory is
+	allocate_memory
 			--
 		local
 			s: STRING

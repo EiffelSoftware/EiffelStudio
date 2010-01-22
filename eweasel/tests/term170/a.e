@@ -3,7 +3,7 @@ class
 
 feature
 
-	f: LIST [G] is
+	f: LIST [G]
 		local
 			a: LIST [G]
 		attribute

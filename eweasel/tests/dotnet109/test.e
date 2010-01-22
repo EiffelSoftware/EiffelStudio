@@ -6,7 +6,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			l_io: ANY
 		do

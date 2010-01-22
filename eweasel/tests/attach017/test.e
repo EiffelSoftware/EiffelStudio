@@ -10,7 +10,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run test.
 		do
 		end

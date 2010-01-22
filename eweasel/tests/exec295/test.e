@@ -9,7 +9,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			print (Current.weasel);
 			io.new_line

@@ -3,7 +3,7 @@ class
 
 feature
 
-	f is
+	f
 		do
 			if attached {STD_FILES} io as a then
 			end

@@ -3,7 +3,7 @@ deferred class
 
 feature
 	
-	f is
+	f
 		deferred
 		ensure
 			position: index = old index + 1

@@ -1,4 +1,4 @@
-indexing
+note
 	version: $VERSION
 
 class TEST
@@ -7,7 +7,7 @@ create
 	make
 
 feature
-	make is
+	make
 		local
 			t: TEST1
 		do

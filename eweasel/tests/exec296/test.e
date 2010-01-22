@@ -6,7 +6,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			print (n); io.new_line
 		end

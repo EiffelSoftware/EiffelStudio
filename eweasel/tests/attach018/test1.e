@@ -5,7 +5,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run test.
 		local
 			i, j: INTEGER
@@ -15,7 +15,7 @@ feature {NONE} -- Creation
 			end
 		end
 
-	f: detachable STRING is
+	f: detachable STRING
 		do
 		end
 

@@ -12,7 +12,7 @@ feature {NONE} -- Initialization
 			execute_byte_code
 		end
 
-	execute_byte_code is
+	execute_byte_code
 		do
 				-- Please comment out the following line, and do a c compilation.
 				-- After that, uncomment the line and then do a melting.
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 $COMMENT			record_query (agent foo)
 		end
 
-	record_query (a_query: FUNCTION [ANY, TUPLE, detachable ANY]) is
+	record_query (a_query: FUNCTION [ANY, TUPLE, detachable ANY])
 		require
 			a_query_attached: a_query /= Void
 		local
@@ -35,7 +35,7 @@ $COMMENT			record_query (agent foo)
 			retry
 		end
 
-	foo: INTEGER is
+	foo: INTEGER
 		do
 		ensure
 			Result = 1

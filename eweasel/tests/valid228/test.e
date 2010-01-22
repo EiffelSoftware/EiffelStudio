@@ -6,7 +6,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			print (z.out)
 		end

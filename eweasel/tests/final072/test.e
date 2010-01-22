@@ -6,7 +6,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			print (x.generating_type); io.new_line
 		end

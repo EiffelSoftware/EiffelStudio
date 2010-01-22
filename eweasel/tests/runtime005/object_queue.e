@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Safe list of actions for multithreaded system."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current
 		do
 			create mutex.make
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	push_protected (an_object: POINTER) is
+	push_protected (an_object: POINTER)
 			-- Insert element in queue.
 		require
 			an_object_not_null: an_object /= default_pointer
@@ -31,7 +31,7 @@ feature -- Element change
 			mutex.unlock
 		end
 
-	push_frozen (an_object: ANY) is
+	push_frozen (an_object: ANY)
 			-- Insert element in queue.
 		require
 			an_object_not_null: an_object /= Void
@@ -43,7 +43,7 @@ feature -- Element change
 
 feature -- Statu
 
-	pop_protected: POINTER is
+	pop_protected: POINTER
 			-- Return last element of queue.
 		do
 			mutex.lock
@@ -54,7 +54,7 @@ feature -- Statu
 			mutex.unlock
 		end
 
-	pop_frozen: ANY is
+	pop_frozen: ANY
 			-- Return last element of `frozen_objects'.
 		do
 			mutex.lock

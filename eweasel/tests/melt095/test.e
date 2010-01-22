@@ -8,7 +8,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			tried: BOOLEAN
 		do

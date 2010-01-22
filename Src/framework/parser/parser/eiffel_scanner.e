@@ -915,12 +915,18 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				if syntax_version /= ecma_syntax then
-					last_keyword_as_value := ast_factory.new_keyword_as (TE_INDEXING, Current)
-					last_token := TE_INDEXING
-				else
+				if syntax_version = ecma_syntax or else syntax_version = provisional_syntax then
 					process_id_as
 					last_token := TE_ID
+				else
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_INDEXING, Current)
+					last_token := TE_INDEXING
+					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Usage of `indexing' has been replace by `note'."))
+					end
+
 				end
 			
 when 76 then
@@ -975,8 +981,19 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_IS, Current)
-				last_token := TE_IS
+				if syntax_version = ecma_syntax or else syntax_version = provisional_syntax then
+					process_id_as
+					last_token := TE_ID
+				else
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_IS, Current)
+					last_token := TE_IS
+					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Usage of `is' has now been deprecated."))
+					end
+				end
+
 			
 when 81 then
 	yy_column := yy_column + 4

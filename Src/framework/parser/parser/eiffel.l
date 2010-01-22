@@ -409,12 +409,18 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_IMPLIES
 			}
 [iI][nN][dD][eE][xX][iI][nN][gG]	{
-				if syntax_version /= ecma_syntax then
-					last_keyword_as_value := ast_factory.new_keyword_as (TE_INDEXING, Current)
-					last_token := TE_INDEXING
-				else
+				if syntax_version = ecma_syntax or else syntax_version = provisional_syntax then
 					process_id_as
 					last_token := TE_ID
+				else
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_INDEXING, Current)
+					last_token := TE_INDEXING
+					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Usage of `indexing' has been replace by `note'."))
+					end
+
 				end
 			}
 [iI][nN][fF][iI][xX]	{
@@ -434,8 +440,19 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_INVARIANT
 			}
 [iI][sS]	{
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_IS, Current)
-				last_token := TE_IS
+				if syntax_version = ecma_syntax or else syntax_version = provisional_syntax then
+					process_id_as
+					last_token := TE_ID
+				else
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_IS, Current)
+					last_token := TE_IS
+					if has_syntax_warning and then syntax_version /= obsolete_64_syntax then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Usage of `is' has now been deprecated."))
+					end
+				end
+
 			}
 [lL][iI][kK][eE]	{
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_LIKE, Current)

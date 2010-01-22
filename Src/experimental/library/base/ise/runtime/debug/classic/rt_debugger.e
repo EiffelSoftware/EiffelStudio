@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Set of features to access ISE debugger functionality from debuggee.	
 		
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			Result := a_mode = 0 or a_mode = 1
 		end
 
-    rt_set_debug_mode (a_mode: INTEGER) is
+    rt_set_debug_mode (a_mode: INTEGER)
             -- Set runtime value for `debug_mode'
             -- a_debug_mode = 0: disable debugger
             -- a_debug_mode = 1: enable debugger
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			debug_mode_set: rt_debug_mode_set (a_mode)
         end
 
-    rt_debug_mode: INTEGER is
+    rt_debug_mode: INTEGER
             -- Runtime value for `debug_mode'
             -- 0: debugger disabled
             -- 1: debugger enabled
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
            	result_mode_valid: rt_valid_debug_mode (Result)
         end
 
-    rt_debug_mode_set (a_mode: INTEGER): BOOLEAN is
+    rt_debug_mode_set (a_mode: INTEGER): BOOLEAN
             -- Runtime value for `debug_mode' is set to `a_mode'?
             --| Warning: do not try to evaluate it in watch tool
         external
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			]"
         end
 
-indexing
+note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

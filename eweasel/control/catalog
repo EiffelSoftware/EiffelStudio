@@ -2300,6 +2300,7 @@ test	call-on-detachable-generic				attach067 tcf pass void_safe attached_types g
 test	conversion-from-cap-attached				attach068 tcf pass void_safe attached_types conversion
 test	attached-special-creation						attach069 tcf pass attached_types special
 test	stable-attribute-in-rescue				attach070 tcf pass void_safe validity stable attribute scope
+test	self-init-attribute-non-void-safe			attach071 tcf fail attached_types self_init void_safe
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

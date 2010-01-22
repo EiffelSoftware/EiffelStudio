@@ -3,7 +3,7 @@ class
 
 feature {NONE} -- External
 
-	frozen ccom_hresult (an_exception_code: POINTER): INTEGER is
+	frozen ccom_hresult (an_exception_code: POINTER): INTEGER
 		external
 			"C inline"
 		alias
@@ -30,7 +30,7 @@ feature {NONE} -- External
 			]"
 		end
 
-	frozen ccom_hresult_code (an_hresult: INTEGER): INTEGER is
+	frozen ccom_hresult_code (an_hresult: INTEGER): INTEGER
 		external
 			"C inline use %"eif_com_exception.h%""
 		alias
@@ -43,7 +43,7 @@ feature {NONE} -- External
 			]"
 		end
 
-	frozen ccom_hresult_facility (an_hresult: INTEGER): INTEGER is
+	frozen ccom_hresult_facility (an_hresult: INTEGER): INTEGER
 		external
 			"C inline use %"eif_com_exception.h%""
 		alias
@@ -56,7 +56,7 @@ feature {NONE} -- External
 			]"
 		end
 
-	frozen cwin_error_text (a_code: INTEGER): POINTER is
+	frozen cwin_error_text (a_code: INTEGER): POINTER
 			-- Get text from error `a_code'. It is up to the caller to free
 			-- the returned buffer using `cwin_local_free'.
 		external

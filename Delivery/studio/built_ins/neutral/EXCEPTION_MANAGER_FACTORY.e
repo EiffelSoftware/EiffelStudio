@@ -3,7 +3,7 @@ class
 
 feature -- Access
 
-	exception_manager: EXCEPTION_MANAGER is
+	exception_manager: EXCEPTION_MANAGER
 			-- Exception manager
 		once
 			create {ISE_EXCEPTION_MANAGER}Result

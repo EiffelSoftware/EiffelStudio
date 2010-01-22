@@ -2,7 +2,7 @@ class POINTER
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := Precursor
@@ -10,13 +10,13 @@ feature -- Access
 
 feature -- Operations
 
-	plus alias "+" (offset: INTEGER): POINTER is
+	plus alias "+" (offset: INTEGER): POINTER
 			-- Pointer moved by an offset of `offset' bytes.
 		do
 			Result := Precursor (offset)
 		end
 
-	infix "+" (offset: INTEGER): POINTER is
+	infix "+" (offset: INTEGER): POINTER
 			-- Pointer moved by an offset of `offset' bytes.
 		do
 			Result := Precursor (offset)
@@ -24,7 +24,7 @@ feature -- Operations
 
 feature -- Conversion
 
-	to_integer_32: INTEGER_32 is
+	to_integer_32: INTEGER_32
 			-- Convert `item' into an INTEGER_32 value.
 		do
 			Result := Precursor
@@ -32,7 +32,7 @@ feature -- Conversion
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of pointer value
 		do
 			Result := Precursor

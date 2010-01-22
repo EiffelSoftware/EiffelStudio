@@ -1666,7 +1666,7 @@ end;
 			end
 		end
 
-	init_inherited_feature (inherit_info: INHERIT_INFO; inherit_feat: INHERIT_FEAT; a_add_to_table: BOOLEAN) is
+	init_inherited_feature (inherit_info: INHERIT_INFO; inherit_feat: INHERIT_FEAT; a_add_to_table: BOOLEAN)
 			-- Initialization of an inherited feature
 		require
 			a_feature_valid: inherit_info /= Void and then inherit_info.internal_a_feature /= Void
@@ -1986,7 +1986,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -3,7 +3,7 @@ class
 
 feature
 
-	f is
+	f
 		require
 			toot: side_effect (create {LINKED_LIST [G]}.make)
 			titi: ({detachable G}) #? (" ") /= Void

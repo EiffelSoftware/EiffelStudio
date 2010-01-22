@@ -7,7 +7,7 @@ create
 
 feature
 	
-	make is
+	make
 		do
 			f
 		end

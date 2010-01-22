@@ -41,7 +41,7 @@ define KW "indexing"
 copy_sub test.e $CLUSTER test.e
 
 resume_compile
-compile_result ok
+compile_result syntax_warning TEST 1; TEST 28
 
 define ID "name"
 define KW "note"
@@ -57,7 +57,7 @@ define KW "indexing"
 copy_sub test.e $CLUSTER test.e
 
 compile_melted
-compile_result syntax_error TEST 5
+compile_result syntax_error TEST 1; TEST 5
 
 define ID "indexing"
 define KW "note"
@@ -65,7 +65,7 @@ define KW "note"
 copy_sub test.e $CLUSTER test.e
 
 resume_compile
-compile_result syntax_error TEST 5
+compile_result syntax_error TEST 5; TEST 5
 
 -- Standard syntax
 

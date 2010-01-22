@@ -5,7 +5,7 @@ create
 
 feature
 	
-	make is
+	make
 		local
 			a: attached ANY
 			t: detachable TEST

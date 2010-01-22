@@ -9,7 +9,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		local
 			is_retried: BOOLEAN
 		do
@@ -24,7 +24,7 @@ feature -- Initialization
 			retry
 		end
 
-	read is
+	read
 		external
 			"C inline"
 		alias

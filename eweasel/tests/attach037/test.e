@@ -6,7 +6,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			if True then
 				s := "Weasel"

@@ -9,7 +9,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		local
 			is_retried: BOOLEAN
 		do

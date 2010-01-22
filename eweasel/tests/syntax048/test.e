@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Execute test.
 		do
 			$ID

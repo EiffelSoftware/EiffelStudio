@@ -6,7 +6,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			s := "Hamster"
 			print (s); io.new_line

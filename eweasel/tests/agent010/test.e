@@ -4,7 +4,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			l_any: ANY
 		do

@@ -8,7 +8,7 @@ inherit
 
 feature
 
-	f is
+	f
 		local
 			list1: LINKED_LIST [G]
 			list2: LINKED_LIST [attached G]

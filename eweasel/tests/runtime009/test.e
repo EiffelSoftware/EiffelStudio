@@ -6,7 +6,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Run application.
 		local
 			l_string: STRING
@@ -44,7 +44,7 @@ feature -- Initialization
 		end
 
 
-	is_done (obj: ANY): BOOLEAN is
+	is_done (obj: ANY): BOOLEAN
 		require
 			obj_not_void: obj /= Void
 		external

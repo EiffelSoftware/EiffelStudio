@@ -2879,7 +2879,7 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 					if ((context_type) && (aftype <= MAX_DTYPE) && type_defined (aftype)) {
 							/* We can resolve only if a context type was specified. */
 						EIF_TYPE_INDEX l_pos = **gtype;
-						if (context_type->generic_count <= l_pos) {
+						if (context_type->generic_count >= l_pos) {
 							result = (type_description (aftype)->new_type == eif_sk_type_to_dtype(context_type->generics [l_pos - 1]));
 						} else {
 							result = 0;
@@ -2911,7 +2911,7 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 							 * See eweasel test#store026. */
 						if (context_type) {
 								/* We can resolve only if a context type was specified. */
-							if (context_type->generic_count <= l_pos) {
+							if (context_type->generic_count >= l_pos) {
 								result = (dftype == eif_sk_type_to_dtype(context_type->generics [l_pos - 1]));
 							} else {
 								result = 0;

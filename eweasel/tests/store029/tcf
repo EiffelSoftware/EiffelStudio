@@ -1,0 +1,57 @@
+test_name 	 storable-formats-63-2
+test_description Using independent store to store/retrieve a set of classes stored with 6.3 cannot be retrieved with 6.5
+
+define_directory EIFGEN $TEST EIFGENs
+define_directory TARGET $EIFGEN test
+define_directory WCODE $TARGET W_code
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw aa.e $CLUSTER aa.e
+copy_raw bb.e $CLUSTER bb.e
+copy_raw zz.e $CLUSTER zz.e
+
+copy_raw my_avl_tree.e $CLUSTER my_avl_tree.e
+
+copy_raw ds_avl_tree.e $CLUSTER ds_avl_tree.e
+copy_raw ds_avl_tree_container.e $CLUSTER ds_avl_tree_container.e
+copy_raw ds_avl_tree_container_cursor.e $CLUSTER ds_avl_tree_container_cursor.e
+copy_raw ds_avl_tree_container_node.e $CLUSTER ds_avl_tree_container_node.e
+copy_raw ds_avl_tree_cursor.e $CLUSTER ds_avl_tree_cursor.e
+copy_raw ds_avl_tree_node.e $CLUSTER ds_avl_tree_node.e
+copy_raw ds_bilinear.e $CLUSTER ds_bilinear.e
+copy_raw ds_bilinear_cursor.e $CLUSTER ds_bilinear_cursor.e
+copy_raw ds_bilinear_table.e $CLUSTER ds_bilinear_table.e
+copy_raw ds_bilinear_table_cursor.e $CLUSTER ds_bilinear_table_cursor.e
+copy_raw ds_binary_search_tree.e $CLUSTER ds_binary_search_tree.e
+copy_raw ds_binary_search_tree_container.e $CLUSTER ds_binary_search_tree_container.e
+copy_raw ds_binary_search_tree_container_cursor.e $CLUSTER ds_binary_search_tree_container_cursor.e
+copy_raw ds_binary_search_tree_container_node.e $CLUSTER ds_binary_search_tree_container_node.e
+copy_raw ds_binary_search_tree_cursor.e $CLUSTER ds_binary_search_tree_cursor.e
+copy_raw ds_binary_search_tree_node.e $CLUSTER ds_binary_search_tree_node.e
+copy_raw ds_container.e $CLUSTER ds_container.e
+copy_raw ds_cursor.e $CLUSTER ds_cursor.e
+copy_raw ds_linear.e $CLUSTER ds_linear.e
+copy_raw ds_linear_cursor.e $CLUSTER ds_linear_cursor.e
+copy_raw ds_searchable.e $CLUSTER ds_searchable.e
+copy_raw ds_table.e $CLUSTER ds_table.e
+copy_raw ds_traversable.e $CLUSTER ds_traversable.e
+copy_raw kl_any_routines.e $CLUSTER kl_any_routines.e
+copy_raw kl_clonable.e $CLUSTER kl_clonable.e
+copy_raw kl_comparable_comparator.e $CLUSTER kl_comparable_comparator.e
+copy_raw kl_comparator.e $CLUSTER kl_comparator.e
+copy_raw kl_equality_tester.e $CLUSTER kl_equality_tester.e
+copy_raw kl_imported_any_routines.e $CLUSTER kl_imported_any_routines.e
+copy_raw kl_part_comparator.e $CLUSTER kl_part_comparator.e
+copy_raw kl_values.e $CLUSTER kl_values.e
+
+compile_melted
+compile_result	ok
+
+copy_bin	zz.store $WCODE zz.store
+
+execute_work NONE exec_output
+execute_result  ok
+compare exec_output output
+
+test_end

@@ -607,13 +607,13 @@ feature{NONE} -- Implementation
 			-- Called when the panel receives focus.
 		require
 			is_interface_usable: is_interface_usable
-			is_shown: is_shown
 		local
 			l_widget: like widget
 		do
 			if
 				attached last_focused_widget as l_widget_2 and then
-				not l_widget_2.has_focus and then
+				(not l_widget_2.is_destroyed) and then
+				(not l_widget_2.has_focus) and then
 				(l_widget_2.is_sensitive and l_widget_2.is_displayed)
 			then
 				l_widget_2.set_focus

@@ -162,7 +162,7 @@ feature -- Access
 				l_records.after
 			loop
 				if attached a_type.attempt (l_records.item_for_iteration) as l_item then
-					l_records.force (l_item)
+					Result.force (l_item)
 				end
 				l_records.forth
 			end
@@ -500,7 +500,7 @@ invariant
 	same_record_and_property_count: record_storage.count = property_storage.count
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

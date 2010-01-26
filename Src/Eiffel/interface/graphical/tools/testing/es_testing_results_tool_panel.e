@@ -46,12 +46,10 @@ feature {NONE} -- Initialization
 
 	build_comparison_widget
 			-- Initialize `comparison_widget'.
-		local
-			l_cell: EV_CELL
 		do
-			create l_cell
-			notebook.extend (l_cell)
-			notebook.item_tab (l_cell).set_text (locale.translation (t_comparison_title))
+			create comparison_widget.make (develop_window)
+			notebook.extend (comparison_widget.widget)
+			notebook.item_tab (comparison_widget.widget).set_text (locale.translation (t_comparison_title))
 		end
 
 feature {NONE} -- Access
@@ -60,7 +58,10 @@ feature {NONE} -- Access
 			-- Notebook for switching between result details/comparison
 
 	editor_widget: ES_EDITOR_WIDGET
-			-- Editor showing results details	
+			-- Editor showing results details
+
+	comparison_widget: ES_TEST_COMPARISON_WIDGET
+			-- Widget used to compare different test suite states	
 
 feature {ES_TESTING_RESULTS_TOOL} -- Basic operations
 
@@ -76,6 +77,15 @@ feature {ES_TESTING_RESULTS_TOOL} -- Basic operations
 			editor_widget.editor.handle_before_processing (True)
 			a_result.print_details (editor_widget.editor.text_displayed, True)
 			editor_widget.editor.handle_after_processing
+		end
+
+	compare_states (a_file_name: READABLE_STRING_8)
+			-- Compare current test suite state with results from file.
+			--
+			-- `a_file_name': File name in which exported results are stored.
+		do
+			notebook.select_item (comparison_widget.widget)
+			comparison_widget.compare_states (a_file_name)
 		end
 
 	clear

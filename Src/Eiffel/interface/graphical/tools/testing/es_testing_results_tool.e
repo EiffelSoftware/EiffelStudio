@@ -53,6 +53,16 @@ feature -- Basic operations
 			end
 		end
 
+	compare_states (a_file_name: READABLE_STRING_8)
+			-- Compare current test suite state with results from file.
+			--
+			-- `a_file_name': File name in which exported results are stored.
+		do
+			if is_tool_instantiated then
+				panel.compare_states (a_file_name)
+			end
+		end
+
 	clear
 			-- Remove any result details.
 		do

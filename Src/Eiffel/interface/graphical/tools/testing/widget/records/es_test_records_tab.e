@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 				agent (a_test_suite: TEST_SUITE_S)
 					do
 						a_test_suite.record_repository.connection.connect_events (Current)
+						update_toolbar (a_test_suite.record_repository)
 					end)
 			display_empty_widget
 		end
@@ -93,6 +94,26 @@ feature {NONE} -- Access
 
 	internal_record_widget: detachable like record_widget
 			-- Internal storage for `record_widget'
+
+feature {NONE} -- Access: buttons
+
+	records_button: SD_TOOL_BAR_POPUP_BUTTON
+			-- Button for selecting a record
+
+	export_button: SD_TOOL_BAR_BUTTON
+			-- Button for exporting current test suite state
+
+	compare_button: SD_TOOL_BAR_BUTTON
+			-- Button to compare different test suite states
+
+	store_button: SD_TOOL_BAR_BUTTON
+			-- Button for permanently storing a record
+
+	delete_button: SD_TOOL_BAR_POPUP_BUTTON
+			-- Button for deleting a record
+
+	delete_button_menu: EV_MENU
+			-- Menu for `delete_button'
 
 	records_menu: EV_MENU
 			-- Menu displayed when the user clicks on the `records_button'
@@ -136,7 +157,7 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 	on_record_added (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		do
-			records_menu_cache := Void
+			update_toolbar (a_repo)
 			if is_valid_record (a_record) and a_record.is_running then
 				if is_record_displayed then
 					remove_displayed_record
@@ -148,7 +169,7 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 	on_record_removed (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		do
-			records_menu_cache := Void
+			update_toolbar (a_repo)
 			if is_record_displayed and then record_widget.record = a_record then
 				remove_displayed_record
 			end
@@ -157,7 +178,7 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 	on_record_property_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		do
-			records_menu_cache := Void
+			update_toolbar (a_repo)
 			if is_record_displayed and then record_widget.record = a_record then
 				record_widget.on_record_property_update
 			end
@@ -188,6 +209,44 @@ feature {NONE} -- Events: button
 					remove_displayed_record
 				end
 				display_record (l_record)
+			end
+		end
+
+	on_compare_button_selected
+			-- Called when `compare_button' is pressed.
+		local
+			l_dialog: EV_FILE_OPEN_DIALOG
+			l_tools: ES_SHELL_TOOLS
+		do
+			create l_dialog
+			l_dialog.show_modal_to_window (window)
+			if not l_dialog.file_name.is_empty then
+				l_tools := icons_provider.develop_window.shell_tools
+				l_tools.show_tool ({ES_TESTING_RESULTS_TOOL}, True)
+				if attached {ES_TESTING_RESULTS_TOOL} l_tools.tool ({ES_TESTING_RESULTS_TOOL}) as l_tool then
+					l_tool.compare_states (l_dialog.file_name)
+				end
+			end
+		end
+
+	on_export_button_selected
+			-- Called when `export_button' is pressed.
+		local
+			l_dialog: EV_FILE_SAVE_DIALOG
+			l_prompt: ES_QUESTION_PROMPT
+			l_file: RAW_FILE
+		do
+			create l_dialog
+			l_dialog.show_modal_to_window (window)
+			if not l_dialog.file_name.is_empty then
+				create l_file.make (l_dialog.file_name)
+				if l_file.exists then
+					create l_prompt.make_standard (locale.translation (q_file_exists))
+					l_prompt.set_button_action (l_prompt.default_confirm_button, agent export_state (l_dialog.file_name))
+					l_prompt.show (window)
+				else
+					export_state (l_dialog.file_name)
+				end
 			end
 		end
 
@@ -229,6 +288,12 @@ feature {NONE} -- Basic operations
 					l_menu.forth
 				end
 			end
+			if a_record.repository.is_record_persistent (a_record) then
+				store_button.disable_sensitive
+			else
+				store_button.enable_sensitive
+			end
+			delete_button_menu.i_th (2).enable_sensitive
 		ensure
 			record_displayed: is_record_displayed
 			a_record_displayed: record_widget.record = a_record
@@ -242,11 +307,42 @@ feature {NONE} -- Basic operations
 			display_empty_widget
 			record_widget.recycle
 			internal_record_widget := Void
+			store_button.disable_sensitive
+			delete_button_menu.i_th (2).disable_sensitive
 		ensure
 			not_record_displayed: not is_record_displayed
 		end
 
 feature {NONE} -- Implementation
+
+	update_toolbar (a_repo: TEST_RECORD_REPOSITORY_I)
+			-- Update toolbar buttons according to current record repository state. Also reset
+			-- `records_manu_cache'.
+			--
+			-- `a_repo': Current record repository.
+		require
+			a_repo_attached: a_repo /= Void
+			a_repo_usable: a_repo.is_interface_usable
+		do
+			records_menu_cache := Void
+			if a_repo.records_of_type ({TEST_RESULT_RECORD}).is_empty then
+				if records_button.is_sensitive then
+					records_button.disable_sensitive
+				end
+				if delete_button.is_sensitive then
+					delete_button.disable_sensitive
+				end
+			else
+				if not records_button.is_sensitive then
+					records_button.enable_sensitive
+				end
+				if not delete_button.is_sensitive then
+					delete_button.enable_sensitive
+				end
+			end
+		ensure
+			records_menu_cache_reset: records_menu_cache = Void
+		end
 
 	display_empty_widget
 			-- Display an empty white cell in `record_widget_cell'.
@@ -311,6 +407,38 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	export_state (a_file_name: READABLE_STRING_8)
+			-- Export test suite state to file.
+			--
+			-- `a_file_name': Name of file in which state is written.
+		require
+			a_file_name_attached: a_file_name /= Void
+		local
+			l_exporter: TEST_STATE_SERIALIZER
+			l_prompt: ES_PROMPT
+			l_message: STRING_32
+			l_success: BOOLEAN
+		do
+			create l_exporter
+			l_exporter.serialize_to_file (a_file_name)
+			inspect
+				l_exporter.last_error_code
+			when {TEST_STATE_SERIALIZER}.test_suite_unavailable then
+				l_message := locale.translation (e_service_not_available)
+			when {TEST_STATE_SERIALIZER}.file_not_writable then
+				l_message := locale.formatted_string (e_file_not_writable, [a_file_name])
+			else
+				l_success := True
+				l_message := locale.formatted_string (m_state_exported, [a_file_name])
+			end
+			if l_success then
+				create {ES_INFORMATION_PROMPT} l_prompt.make_standard (l_message)
+			else
+				create {ES_ERROR_PROMPT} l_prompt.make_standard (l_message)
+			end
+			l_prompt.show (window)
+		end
+
 feature {NONE} -- Factory
 
 	create_record_widget (a_record: TEST_SESSION_RECORD): like record_widget
@@ -341,46 +469,43 @@ feature {NONE} -- Factory
 
 	create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
-		local
-			l_menu_button: SD_TOOL_BAR_POPUP_BUTTON
-			l_button: SD_TOOL_BAR_BUTTON
 		do
-			create Result.make (5)
+			create Result.make (4)
 
-			create l_menu_button.make
-			--l_menu_button.set_text ("History")
+			create records_button.make
+			records_button.set_pixel_buffer (stock_pixmaps.general_document_icon_buffer)
+			records_button.set_menu_function (agent records_menu)
+			Result.force_last (records_button)
 
-			l_menu_button.set_pixel_buffer (stock_pixmaps.general_document_icon_buffer)
-			l_menu_button.set_menu_function (agent records_menu)
-			Result.force_last (l_menu_button)
+			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
-			create l_button.make
-			l_button.set_text ("Compare")
-			Result.force_last (l_button)
+			create compare_button.make
+			compare_button.set_text ("Compare")
+			register_action (compare_button.select_actions, agent on_compare_button_selected)
+			Result.force_last (compare_button)
+
+			create export_button.make
+			export_button.set_pixel_buffer (stock_pixmaps.command_send_to_external_editor_icon_buffer)
+			register_action (export_button.select_actions, agent on_export_button_selected)
+			Result.force_last (export_button)
 		end
 
 	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
-		local
-			l_menu_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
-			l_button: SD_TOOL_BAR_BUTTON
-			l_menu: EV_MENU
 		do
-			create Result.make (3)
-			create l_button.make
-			l_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
-			Result.force_last (l_button)
+			create Result.make (2)
 
-			create l_button.make
-			l_button.set_pixel_buffer (stock_pixmaps.command_send_to_external_editor_icon_buffer)
-			Result.force_last (l_button)
+			create store_button.make
+			store_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
+			Result.force_last (store_button)
 
-			create l_menu_button.make
-			l_menu_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
-			create l_menu
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Delete All"))
-			l_menu_button.set_menu (l_menu)
-			Result.force_last (l_menu_button)
+			create delete_button.make
+			delete_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
+			create delete_button_menu
+			delete_button_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Delete"))
+			delete_button_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Delete All"))
+			delete_button.set_menu (delete_button_menu)
+			Result.force_last (delete_button)
 		end
 
 feature {NONE} -- Clean up
@@ -394,6 +519,23 @@ feature {NONE} -- Clean up
 					a_test_suite.record_repository.connection.disconnect_events (Current)
 				end)
 		end
+
+feature {NONE} -- Internationalization
+
+	q_file_exists: STRING = "Are you sure you want to overwrite the existing file?"
+
+	m_state_exported: STRING = "[
+			Test results were successfully exported to
+			
+			$1
+		]"
+
+
+	e_file_not_writable: STRING = "[
+			Unable to write test result to file:
+			
+			$1
+		]"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

@@ -31,7 +31,7 @@ note
 			until
 				shared_data = 1
 			loop
-				condition_variable.wait
+				condition_variable.wait (mutex)
 			end
 			mutex.unlock
 
@@ -55,19 +55,19 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create and initialize condition variable.
-		require
-			thread_capable: {PLATFORM}.is_thread_capable
 		do
-			cv_waiters_count := 0
-			cv_was_broadcast := False
-			create cv_sema.make (0)
-			create cv_waiters_lock.make
-			create cv_waiters_done.make (False)
+			waiters_count := 0
+			was_broadcast := False
+			create sema.make (0)
+			create waiters_lock.make
+			create waiters_done.make (False)
 			is_set := True
+		ensure
+			is_set: is_set
 		end
 
 feature -- Access
@@ -85,8 +85,8 @@ feature -- Status setting
 			--| If there aren't any waiters, then this
 			--| is a no-op.
 
-			if cv_waiters_count > 0 then
-				cv_sema.post
+			if waiters_count > 0 then
+				sema.post
 			end
 		end
 
@@ -97,23 +97,23 @@ feature -- Status setting
 		local
 			l_wait_succeed: BOOLEAN
 		do
-			if cv_waiters_count > 0 then
+			if waiters_count > 0 then
 				-- We are broadcasting even if there is just one waiter
 
 				--| Record that we are broadcasting.
 				--| This helps optimize cond_wait().
-				cv_was_broadcast := True
+				was_broadcast := True
 
 				--| Wake up all the waiters.
-				cv_sema.post_count (cv_waiters_count)
+				sema.post_count (waiters_count)
 
 				--| Wait for all the awakened threads to
 				--| acquire the counting semaphore.
-				l_wait_succeed := cv_waiters_done.wait_one
+				l_wait_succeed := waiters_done.wait_one
 				check
-					l_wait_succeed
+					wait_succeeded: l_wait_succeed
 				end
-				cv_was_broadcast := False
+				was_broadcast := False
 			end
 		end
 
@@ -128,7 +128,7 @@ feature -- Status setting
 			--| It's ok to increment the number
 			--| of waiters since <a_mutex>
 			--| must be locked by the caller.
-			cv_waiters_count := cv_waiters_count + 1
+			waiters_count := waiters_count + 1
 
 			--| Keep the lock held just long enough to
 			--| increment the count of waiters by one.
@@ -142,24 +142,24 @@ feature -- Status setting
 
 			--| Wait to be awakened by a `cond_signal' or
 			--| `cond_broadcast'.
-			cv_sema.wait
+			sema.wait
 
 			--| Reacquire lock to avoid race conditions
-			cv_waiters_lock.lock
+			waiters_lock.lock
 
 			--| We're no longer waiting...
-			cv_waiters_count := cv_waiters_count - 1
+			waiters_count := waiters_count - 1
 
 			--| If we're the last waiter thread
 			--| during this particular broadcast then
 			--| let all the other threads proceed.
-			if cv_was_broadcast and then cv_waiters_count = 0 then
-				l_set_signal_succeed := cv_waiters_done.set
+			if was_broadcast and then waiters_count = 0 then
+				l_set_signal_succeed := waiters_done.set
 				check
-					l_set_signal_succeed
+					l_signal_succeeded: l_set_signal_succeed
 				end
 			end
-			cv_waiters_lock.unlock
+			waiters_lock.unlock
 
 			--| Always regain the external mutex since that's
 			--| the guarantee that we give to our callers.
@@ -168,8 +168,7 @@ feature -- Status setting
 
 	wait_with_timeout (a_mutex: MUTEX; a_timeout: INTEGER): BOOLEAN
 			-- Block calling thread on current condition variable for at most `a_timeout' milliseconds.
-			--| Return `True' is we got the condition variable on time
-			--| Otherwise return `False'
+			-- Return `True' is we got the condition variable on time, otherwise return `False'
 		require
 			is_set: is_set
 			a_mutex_not_void: a_mutex /= Void
@@ -180,7 +179,7 @@ feature -- Status setting
 			--| It's ok to increment the number
 			--| of waiters since <a_mutex>
 			--| must be locked by the caller.
-			cv_waiters_count := cv_waiters_count + 1
+			waiters_count := waiters_count + 1
 
 			--| Keep the lock held just long enough to
 			--| increment the count of waiters by one.
@@ -194,24 +193,24 @@ feature -- Status setting
 
 			--| Wait to be awakened by a `cond_signal' or `cond_broadcast'.
 			--| but until `a_timeout'
-			Result := cv_sema.wait_with_timeout (a_timeout)
+			Result := sema.wait_with_timeout (a_timeout)
 
 			--| Reacquire lock to avoid race conditions
-			cv_waiters_lock.lock
+			waiters_lock.lock
 
 			--| We're no longer waiting...
-			cv_waiters_count := cv_waiters_count - 1
+			waiters_count := waiters_count - 1
 
 			--| If we're the last waiter thread
 			--| during this particular broadcast then
 			--| let all the other threads proceed.
-			if cv_was_broadcast and then cv_waiters_count = 0 then
-				l_set_signal_succeed := cv_waiters_done.set
+			if was_broadcast and then waiters_count = 0 then
+				l_set_signal_succeed := waiters_done.set
 				check
-					l_set_signal_succeed
+					l_signal_succeeded: l_set_signal_succeed
 				end
 			end
-			cv_waiters_lock.unlock
+			waiters_lock.unlock
 
 			--| Always regain the external mutex since that's
 			--| the guarantee that we give to our callers.
@@ -223,24 +222,25 @@ feature -- Status setting
 		require
 			is_set: is_set
 		do
-			cv_sema.destroy
-			cv_waiters_done.close
-			cv_waiters_lock.destroy
+			sema.destroy
+			waiters_done.close
+			waiters_lock.destroy
+			is_set := False
+		ensure
+			not_set: not is_set
 		end
 
 feature {NONE} -- Implementation
 
-	cv_waiters_count: INTEGER
-	cv_sema: SEMAPHORE
-	cv_was_broadcast: BOOLEAN
-	cv_waiters_done: AUTO_RESET_EVENT
-	cv_waiters_lock: MUTEX;
-
-invariant
-	is_thread_capable: {PLATFORM}.is_thread_capable
-
+	waiters_count: INTEGER
+	sema: SEMAPHORE
+	was_broadcast: BOOLEAN
+	waiters_done: AUTO_RESET_EVENT
+	waiters_lock: MUTEX;
+			-- Synchronization object necessary to proper implementation
+			-- of condition variable on .NET
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -250,6 +250,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CONDITION_VARIABLE
-
+end

@@ -38,7 +38,8 @@ feature {THREAD_CONTROL} -- Implementation
 			end
 		end
 
-	add_child_to_parent (parent_thread_id:  like current_thread_id; child_thread: THREAD)
+	add_child_to_parent (parent_thread_id: like current_thread_id; child_thread: THREAD)
+			-- Add `child_thread' to the list of threads own by thread of ID `parent_thread_id'.
 		require
 			thread_exists: child_thread /= Void
 		local
@@ -51,6 +52,7 @@ feature {THREAD_CONTROL} -- Implementation
 		end
 
 	remove_child_from_parent (parent_thread_id: like current_thread_id; child_thread: THREAD)
+			-- Remove `child_thread' to the list of threads own by thread of ID `parent_thread_id'.
 		require
 			thread_exists: child_thread /= Void
 		local
@@ -65,6 +67,7 @@ feature {THREAD_CONTROL} -- Implementation
 		end
 
 	current_thread_id: POINTER
+			-- Thread identifier for current thread of execution.
 		do
 			if attached {SYSTEM_THREAD}.current_thread as l_thread then
 				Result := default_pointer + l_thread.managed_thread_id
@@ -74,6 +77,7 @@ feature {THREAD_CONTROL} -- Implementation
 feature {NONE} -- Implementation
 
 	childrens_mutex: MUTEX
+			-- Synchronization object for all operations on `childrens_by_thread_id'.
 		note
 			once_status: global
 		once
@@ -81,6 +85,7 @@ feature {NONE} -- Implementation
 		end
 
 	childrens_by_thread_id: HASH_TABLE [ARRAYED_LIST [THREAD], POINTER]
+			-- Table of all children threads for a given thread.
 		note
 			once_status: global
 		once
@@ -108,11 +113,8 @@ feature {NONE} -- Implementation
 			childrens_mutex.unlock
 		end
 
-invariant
-	is_thread_capable: {PLATFORM}.is_thread_capable
-
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -121,6 +123,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

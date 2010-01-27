@@ -31,7 +31,7 @@ note
 			until
 				shared_data = 1
 			loop
-				condition_variable.wait
+				condition_variable.wait (mutex)
 			end
 			mutex.unlock
 			
@@ -58,14 +58,14 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create and initialize condition variable.
-		require
-			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			cond_pointer := eif_thr_cond_create
+		ensure
+			is_set: is_set
 		end
 
 feature -- Access
@@ -105,8 +105,7 @@ feature -- Status setting
 
 	wait_with_timeout (a_mutex: MUTEX; a_timeout_ms: INTEGER): BOOLEAN
 			-- Block calling thread on current condition variable for at most `a_timeout' milliseconds.
-			--| Return `True' is we got the condition variable on time
-			--| Otherwise return `False'
+			-- Return `True' is we got the condition variable on time, otherwise return `False'
 		require
 			is_set: is_set
 			a_mutex_not_void: a_mutex /= Void
@@ -122,6 +121,8 @@ feature -- Status setting
 		do
 			eif_thr_cond_destroy (cond_pointer)
 			cond_pointer := default_pointer
+		ensure
+			not_set: not is_set
 		end
 
 feature {NONE} -- Implementation
@@ -177,7 +178,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

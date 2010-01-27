@@ -15,8 +15,6 @@ feature {NONE} -- Initialization
 
 	make
 			-- Set default values to the thread attributes.
-		require
-			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			set_priority (default_priority)
 			set_stack_size (0)
@@ -138,7 +136,7 @@ invariant
 	priority_bounded: min_priority <= priority and priority <= max_priority
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

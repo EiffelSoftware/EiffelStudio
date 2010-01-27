@@ -13,39 +13,19 @@ class
 
 inherit
 	ANY
-		redefine
-			default_create
-		end
 
 	THREAD_ENVIRONMENT
 		export
 			{NONE} all
-		redefine
-			default_create
 		end
 
 create
-	default_create,
 	make
 
 feature {NONE} -- Initialization
 
-	default_create
-			-- Create mutex.
-		obsolete
-			"Use make instead"
-		require else
-			thread_capable: {PLATFORM}.is_thread_capable
-		do
-			make
-		ensure then
-			is_set: is_set
-		end
-
 	make
 			-- Create mutex.
-		require
-			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			create mutex_imp.make
 			is_set := True
@@ -104,6 +84,8 @@ feature -- Status setting
 		do
 			mutex_imp.close
 			is_set := False
+		ensure
+			not_set: not is_set
 		end
 
 feature -- Obsolete
@@ -120,14 +102,11 @@ feature -- Obsolete
 
 feature {NONE} -- Implementation
 
-	mutex_imp: SYSTEM_MUTEX
+	mutex_imp: SYSTEM_MUTEX;
 			-- .NET reference to the mutex.
 
-invariant
-	is_thread_capable: {PLATFORM}.is_thread_capable
-
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -137,6 +116,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class MUTEX
-
+end

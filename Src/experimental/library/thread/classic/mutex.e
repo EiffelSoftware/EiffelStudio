@@ -12,39 +12,19 @@ class
 
 inherit
 	DISPOSABLE
-		redefine
-			default_create
-		end
 
 	THREAD_ENVIRONMENT
 		export
 			{NONE} all
-		undefine
-			default_create
 		end
 
 create
-	default_create,
 	make
 
 feature {NONE} -- Initialization
 
-	default_create
-			-- Create mutex.
-		obsolete
-			"Use make instead"
-		require else
-			thread_capable: {PLATFORM}.is_thread_capable
-		do
-			make
-		ensure then
-			is_set: is_set
-		end
-
 	make
 			-- Create mutex.
-		require
-			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			mutex_pointer := eif_thr_mutex_create
 		ensure
@@ -103,6 +83,8 @@ feature -- Status setting
 		do
 			eif_thr_mutex_destroy (mutex_pointer)
 			mutex_pointer := default_pointer
+		ensure
+			not_set: not is_set
 		end
 
 feature -- Obsolete
@@ -160,11 +142,8 @@ feature {NONE} -- Externals
 			"C use %"eif_threads.h%""
 		end
 
-invariant
-	is_thread_capable: {PLATFORM}.is_thread_capable
-
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -175,4 +154,3 @@ note
 		]"
 
 end
-

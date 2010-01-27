@@ -16,12 +16,12 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (count: INTEGER)
-			-- Create semaphore.
+			-- Create semaphore with an initial count of `a_count'
+			-- allow `a_count' threads to go into a critical section.
 		require
-			thread_capable: {PLATFORM}.is_thread_capable
 			count_positive:	count >= 0
 		do
 			sem_pointer := eif_thr_sem_create (count)
@@ -72,6 +72,8 @@ feature -- Status setting
 		do
 			eif_thr_sem_destroy (sem_pointer)
 			sem_pointer := default_pointer
+		ensure
+			not_set: not is_set
 		end
 
 feature -- Obsolete
@@ -130,19 +132,15 @@ feature {NONE} -- Externals
 			"C use %"eif_threads.h%""
 		end
 
-invariant
-	is_thread_capable: {PLATFORM}.is_thread_capable
-
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end
-

@@ -13,15 +13,16 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_count: INTEGER)
-			-- Create semaphore.
+			-- Create semaphore with an initial count of `a_count'
+			-- allow `a_count' threads to go into a critical section.
 		require
-			thread_capable: {PLATFORM}.is_thread_capable
 			count_positive:	a_count >= 0
 		do
 			create semaphore.make (a_count, {INTEGER}.max_value)
+			is_set := True
 		ensure
 			is_set: is_set
 		end
@@ -30,9 +31,6 @@ feature -- Access
 
 	is_set: BOOLEAN
 			-- Is mutex initialized?
-		do
-			Result := semaphore /= Void
-		end
 
 feature -- Status setting
 
@@ -72,6 +70,9 @@ feature -- Status setting
 			valid_semaphore: is_set
 		do
 			semaphore.close
+			is_set := False
+		ensure
+			not_set: not is_set
 		end
 
 feature -- Obsolete
@@ -92,7 +93,6 @@ feature {CONDITION_VARIABLE} -- Implementation
 	wait_with_timeout (a_timeout: INTEGER): BOOLEAN
 			-- Has client been successful in decrementing semaphore
 			-- count with only `a_timeout' ?
-		local
 		do
 			Result := semaphore.wait_one (a_timeout, False)
 		end
@@ -109,14 +109,11 @@ feature {CONDITION_VARIABLE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	semaphore: SYSTEM_SEMAPHORE
+	semaphore: SYSTEM_SEMAPHORE;
 			-- .NET reference to the mutex.
 
-invariant
-	is_thread_capable: {PLATFORM}.is_thread_capable
-
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -126,6 +123,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class SEMAPHORE
-
+end

@@ -9,34 +9,13 @@ note
 class
 	READ_WRITE_LOCK
 
-inherit
-	ANY
-		redefine
-			default_create
-		end
-
 create
-	default_create,
 	make
 
-feature -- Initialization
-
-	default_create
-			-- Create read/write lock.
-		obsolete
-			"Use make instead"
-		require else
-			thread_capable: {PLATFORM}.is_thread_capable
-		do
-			make
-		ensure then
-			item_set: is_set
-		end
+feature {NONE} -- Initialization
 
 	make
 			-- Create read/write lock.
-		require
-			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			create item.make
 			is_set := True
@@ -54,7 +33,7 @@ feature -- Status setting
 	acquire_read_lock
 			-- Lock current on a read.
 		require
-			exists: is_set
+			is_set: is_set
 		do
 				-- (-1) to force an infinite wait.
 			item.acquire_reader_lock (-1)
@@ -63,7 +42,7 @@ feature -- Status setting
 	acquire_write_lock
 			-- Lock current on a write.
 		require
-			exists: is_set
+			is_set: is_set
 		do
 				-- (-1) to force an infinite wait.
 			item.acquire_writer_lock (-1)
@@ -72,7 +51,7 @@ feature -- Status setting
 	release_read_lock
 			-- Unlock Reader lock.
 		require
-			exists: is_set
+			is_set: is_set
 		do
 			item.release_reader_lock
 		end
@@ -80,7 +59,7 @@ feature -- Status setting
 	release_write_lock
 			-- Unlock writer lock.
 		require
-			exists: is_set
+			is_set: is_set
 		do
 				-- We do not use `item.release_writer_lock' because when calling this routine
 				-- we must have the lock, in which case the documentation states that it calls
@@ -91,9 +70,11 @@ feature -- Status setting
 	destroy
 			-- Destroy read/write lock.
 		require
-			exists: is_set
+			is_set: is_set
 		do
 			is_set := False
+		ensure
+			not_set: not is_set
 		end
 
 feature -- Obsolete
@@ -103,7 +84,7 @@ feature -- Obsolete
 		obsolete
 			"Use `release_read_lock' or `release_write_lock'."
 		require
-			exists: is_set
+			is_set: is_set
 		do
 			item.release_reader_lock
 		end
@@ -113,11 +94,8 @@ feature {NONE} -- Implementation
 	item: READER_WRITER_LOCK;
 			-- Underlying .NET object.
 
-invariant
-	is_thread_capable: {PLATFORM}.is_thread_capable
-
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -127,6 +105,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class READ_WRITE_LOCK
-
+end

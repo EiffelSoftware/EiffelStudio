@@ -1,8 +1,7 @@
 note
-	description: "Objects that ..."
+	description: "Class defining an Eiffel thread of execution using an agent for its internal action."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,12 +15,11 @@ inherit
 		end
 
 create
-
 	make, make_with_procedure
 
 feature {NONE} -- Initialization
 
-	make, make_with_procedure (a_action: PROCEDURE [ANY, TUPLE])
+	make (a_action: PROCEDURE [ANY, TUPLE])
 			-- Create worker thread for `a_action'.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -29,17 +27,30 @@ feature {NONE} -- Initialization
 			thread_procedure := a_action
 		end
 
-feature {NONE} -- Implementation
+	make_with_procedure (a_action: PROCEDURE [ANY, TUPLE])
+			-- Create worker thread for `a_action'.
+		obsolete
+			"[2010-01-26] Use `make' instead."
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
+		do
+			thread_procedure := a_action
+		end
 
-	thread_procedure: PROCEDURE [ANY, TUPLE]
+feature -- Initialization
 
 	execute_procedure
 		do
 			thread_procedure.call (Void)
 		end
 
+feature {NONE} -- Implementation
+
+	thread_procedure: PROCEDURE [ANY, TUPLE];
+			-- Action executed when thread starts its execution.
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -13,18 +13,18 @@ inherit
 
 feature -- Access
 
-    frozen thread_id: POINTER
-            -- Thread-id of the current thread object.
+	thread_id: POINTER
+			-- Thread-id of the current thread object.
 			--| Updates have to be protected with `launch_mutex'.
 
-	frozen terminated: BOOLEAN
+	terminated: BOOLEAN
 			-- True if the thread has terminated.
 			--| Updates have to be protected with `launch_mutex'.
 
 feature -- Basic operations
 
 	execute
-			-- Routine executed by new thread.
+			-- Routine executed when thread is launched.
 		deferred
 		end
 
@@ -34,11 +34,8 @@ feature -- Basic operations
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
 			is_launchable: is_launchable
-		local
-			l_attr: THREAD_ATTRIBUTES
 		do
-			create l_attr.make
-			launch_with_attributes (l_attr)
+			launch_with_attributes (create {THREAD_ATTRIBUTES}.make)
 		end
 
 	frozen launch_with_attributes (attr: THREAD_ATTRIBUTES)
@@ -49,12 +46,16 @@ feature -- Basic operations
 			is_launchable: is_launchable
 		do
 				-- Safe creation of `launch_mutex'.
-			global_launch_mutex.lock
-			create launch_mutex.make
-			global_launch_mutex.unlock
+			if launch_mutex = Void then
+				global_launch_mutex.lock
+				if launch_mutex = Void then
+					create launch_mutex.make
+				end
+				global_launch_mutex.unlock
+			end
 
 			launch_mutex.lock
-			if terminated then
+			if not is_launchable then
 					-- This happens if multiple threads call `launch' or `launch_with_attributes'
 					-- on the same THREAD object.
 				is_last_launch_successful_cell.put (False)
@@ -85,8 +86,6 @@ feature -- Basic operations
 	sleep (nanoseconds: INTEGER_64)
 			-- Suspend thread execution for interval specified in
 			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
-		obsolete
-			"Use `{EXECUTION_ENVIRONMENT}.sleep' instead."
 		require
 			self: current_thread_id = thread_id
 			non_negative_nanoseconds: nanoseconds >= 0
@@ -130,7 +129,7 @@ feature -- Synchronization
 	join_with_timeout (a_timeout_ms: NATURAL_64): BOOLEAN
 			-- The calling thread waits for the current child thread to
 			-- terminate for at most `a_timeout_ms' milliseconds.
-			-- True if wait terminate within `a_timeout_ms'.
+			-- True if wait terminates within `a_timeout_ms', False otherwise.
 		do
 			if terminated then
 				Result := True
@@ -165,7 +164,7 @@ feature {NONE} -- Implementation
 			launch_mutex.unlock
 		end
 
-	launch_mutex: detachable MUTEX  note option: stable attribute end
+	launch_mutex: detachable MUTEX note option: stable attribute end
 			-- Mutex used to ensure that no two threads call `launch' or `launch_with_attributes'
 			-- on the same object. This ensures the validity of querying `thread_id' from
 			-- the launch routines.
@@ -180,7 +179,7 @@ feature {NONE} -- Implementation
 
 	is_last_launch_successful_cell: CELL [BOOLEAN]
 			-- Internal storage for `is_last_launch_successful'.
-			-- It is a once per object and not an attribute because if you have multiple threads
+			-- It is a once per thread and not an attribute because if you have multiple threads
 			-- calling `launch' on the same object, one will set it to True, and the other will
 			-- override the value with False.
 		once
@@ -224,11 +223,8 @@ feature {NONE} -- Externals
 			"eif_thr_last_thread"
 		end
 
-invariant
-	is_thread_capable: {PLATFORM}.is_thread_capable
-
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

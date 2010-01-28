@@ -500,7 +500,7 @@
 
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.across.autocomplete_across" DESCRIPTION="Autocomplete across?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.across.use_default_across" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.across.custom_across_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ as  all  end</STRING></PREF>
+	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.across.custom_across_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$ as  loop  end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.across.custom_across_return" DESCRIPTION="Customized autocomplete (Return after keyword was typed)"><STRING>%N$indent$%T$cursor$ as %N$indent$loop%N$indent$%T%N$indent$end</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.across.custom_across_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.control_structure_keywords.across.custom_across_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$%T$cursor$</STRING></PREF>

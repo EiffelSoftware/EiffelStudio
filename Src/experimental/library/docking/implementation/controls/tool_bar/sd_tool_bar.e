@@ -74,8 +74,6 @@ feature {SD_TOOL_BAR} -- Internal initlization
 
 	initialize
 			-- Initlialize
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			Precursor {SD_DRAWING_AREA}
 

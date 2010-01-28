@@ -304,7 +304,7 @@ rt_private void rt_update1(register EIF_REFERENCE old, register EIF_OBJECT new_o
 rt_private void rt_update2(EIF_REFERENCE old_obj, EIF_REFERENCE new_obj, EIF_REFERENCE parent);			/* Fields updating */
 rt_public EIF_REFERENCE rt_make(void);				/* Do the retrieve */
 rt_public EIF_REFERENCE rt_nmake(long int objectCount);			/* Retrieve n objects */
-rt_private void read_header(char rt_type);
+rt_private void read_header(void);
 
 
 
@@ -1039,11 +1039,11 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 		retrieved = rrt_make();
 		retrieved_i = eif_protect (retrieved);
 	} else if (rt_kind == GENERAL_STORE) {
-		read_header(rt_type);					/* Make correspondance table */
+		read_header();					/* Make correspondance table */
 		retrieved = grt_make();
 	} else {
 		if (rt_kind)
-			read_header(rt_type);			/* Make correspondance table */
+			read_header();			/* Make correspondance table */
 
 		/* Retrieve */
 		retrieved = rt_make();
@@ -2335,7 +2335,7 @@ rt_private char *next_item (char *ptr)
 	return (ptr);
 }
 
-rt_private void read_header(char rt_type)
+rt_private void read_header(void)
 {
 	/* Read header and make the dynamic type correspondance table */
 	RT_GET_CONTEXT

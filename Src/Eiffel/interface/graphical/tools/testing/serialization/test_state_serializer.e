@@ -151,7 +151,6 @@ feature -- Basic operations
 			l_results: like last_result
 			l_parse: detachable like parse_test_state
 			l_details, l_line: STRING
-			i, j: INTEGER
 		do
 			create l_file.make (a_file_name)
 			if not l_retried then

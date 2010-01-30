@@ -53,11 +53,14 @@ feature {NONE} -- Initlization
 			l_env: EV_ENVIRONMENT
 			l_app_imp: EV_APPLICATION_IMP
 		do
+			default_create
 			create l_env
 			l_app_imp ?= l_env.application.implementation
-			check not_void: l_app_imp /= Void end
-
-			implementation.init_common (a_pixel_buffer, l_app_imp.silly_main_window)
+			if l_app_imp /= Void then
+				implementation.init_common (a_pixel_buffer, l_app_imp.silly_main_window)
+			else
+				check False end -- Implied by application is running
+			end
 		end
 
 feature -- Command

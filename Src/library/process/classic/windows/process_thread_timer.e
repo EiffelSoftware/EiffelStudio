@@ -72,9 +72,9 @@ feature -- Control
 			l_timeout: INTEGER
 		do
 			if a_timeout = 0 then
-				l_timeout := cwin_wait_for_single_object (handle_from_thread_id (thread_id), cwin_infinite)
+				l_timeout := cwin_wait_for_single_object (thread_id, cwin_infinite)
 			else
-				l_timeout := cwin_wait_for_single_object (handle_from_thread_id (thread_id), a_timeout)
+				l_timeout := cwin_wait_for_single_object (thread_id, a_timeout)
 			end
 			Result := l_timeout = cwin_wait_object_0
 		end
@@ -108,22 +108,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_from_thread_id (a_thread_id: POINTER): POINTER
-			-- Thread handle from `a_thread_id'.
-		require
-			a_thread_id_not_void: a_thread_id /= default_pointer
-		external
-			"C inline"
-		alias
-			"[
-			#ifdef EIF_THREADS
-			return (EIF_POINTER) (*(EIF_THR_TYPE *) $a_thread_id);
-			#else
-			return NULL;
-			#endif
-			]"
-		end
-
 feature{NONE} -- Implementation
 
 	should_destroy: BOOLEAN
@@ -137,13 +121,13 @@ invariant
 	mutex_not_void: mutex /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

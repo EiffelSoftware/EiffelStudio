@@ -49,7 +49,7 @@ feature -- Access
 				Result := 1
 				count := registers.count
 			until
-				Result > count or not registers.item (Result)
+				Result >= count or not registers.item (Result)
 			loop
 				Result := Result + 1
 			end
@@ -83,6 +83,7 @@ feature -- Element change
 	free_register (n: INTEGER)
 			-- Free register number `n'
 		require
+			valid_index: registers.valid_index (n)
 			register_used: registers.item (n)
 		do
 			registers.put (False, n)
@@ -92,7 +93,7 @@ invariant
 	registers_not_void: registers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -4156,10 +4156,10 @@ feature -- Generation
 			loop
 				if used.item (i) then
 					table := l_tmp_poly_server.item (i)
-					if used_for_routines.item (i) then
+					if used_for_routines.valid_index (i) and then used_for_routines.item (i) then
 						table.write
 					end
-					if used_for_types.item (i) then
+					if used_for_types.valid_index (i) and then used_for_types.item (i) then
 						table.write_for_type
 					end
 				end
@@ -4195,10 +4195,10 @@ feature -- Generation
 			loop
 				if used.item (i) then
 					table := l_tmp_poly_server.item (i)
-					if used_for_routines.item (i) then
+					if used_for_routines.valid_index (i) and then used_for_routines.item (i) then
 						table.generate_initialization (l_buf, l_header_buf)
 					end
-					if used_for_types.item (i) then
+					if used_for_types.valid_index (i) and then used_for_types.item (i) then
 						l_table_name := l_encoder.type_table_name (i)
 							-- Declare initialization routine for table
 						l_header_buf.put_new_line
@@ -6162,7 +6162,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

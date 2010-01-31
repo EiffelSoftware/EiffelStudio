@@ -35,7 +35,7 @@ inherit
 
 feature -- Access
 
-	last_result: EQA_ETEST_PARTIAL_RESULT
+	last_result: EQA_PARTIAL_RESULT
 			-- Result last produced by `execute'
 		local
 			l_cache: like last_result_cache
@@ -119,7 +119,7 @@ feature -- Execution
 				safe_execute (agent l_basic_test_set.clean (l_test.is_exceptional))
 				l_clean := last_invocation_response
 				check l_clean /= Void end
-				create {EQA_ETEST_RESULT} last_result_cache.make (l_start_date, l_prepare, l_test, l_clean, buffered_output)
+				create {EQA_RESULT} last_result_cache.make (l_start_date, l_prepare, l_test, l_clean, buffered_output)
 			end
 			if l_old = Void then
 				io.set_output_default
@@ -138,7 +138,6 @@ feature {NONE} -- Implementation
 			-- Execute `procedure' in a protected way.
 		require
 			a_procedure_attached: a_procedure /= Void
-			buffer_empty: buffer.is_empty
 		local
 			l_retry: BOOLEAN
 			l_excpt: detachable EXCEPTION
@@ -155,7 +154,7 @@ feature {NONE} -- Implementation
 			l_retry := True
 			l_excpt := exception_manager.last_exception
 			check l_excpt /= Void end
-			l_test_set_name := 	type_name_of_type (generic_dynamic_type (Current, 1))
+			l_test_set_name := class_name_of_type (generic_dynamic_type (Current, 1))
 			create l_texcpt.make (l_excpt, l_test_set_name, Void)
 			create last_invocation_response.make_exceptional (l_texcpt)
 			retry
@@ -181,7 +180,7 @@ feature {NONE} -- Constants
 	m_truncated: STRING = "%N%N---------------------------%NTruncated section%N---------------------------%N%N"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			test_suffix := l_suffix
 		end
 
-feature -- Access
+feature -- Query
 
 	test_set: EQA_SYSTEM_TEST_SET
 			-- Current test set
@@ -83,7 +83,7 @@ feature -- Access
 			--
 			-- Note: this should be unique for all tests, so each test has its private testing directory
 
-feature -- Status setting
+feature -- Command
 
 	set_source_directory (a_source_directory: like source_directory)
 			-- Set `source_directory' to `a_source_directory'.
@@ -107,6 +107,105 @@ feature -- Status setting
 			create {STRING} target_directory.make_from_string (a_target_directory)
 		ensure
 			testing_directory_set: target_directory ~ a_target_directory
+		end
+
+	substitute_recursive (a_line: STRING): STRING
+			-- Call `substitute' recursively util no '$' found anymore
+		require
+			not_void: a_line /= Void
+		local
+			l_temp: STRING
+			l_stop: BOOLEAN
+		do
+			from
+				Result := a_line
+			until
+				not Result.has ('$') or l_stop
+			loop
+				l_temp := substitute (Result)
+				if l_temp.is_equal (Result) then
+					l_stop := True
+				else
+					l_stop := False
+					Result := l_temp
+				end
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	substitute (a_line: STRING): STRING
+			-- `line' with all environment variables replaced
+			-- by their values (or left alone if not in
+			-- environment)
+		require
+			line_not_void: a_line /= Void
+		local
+			k, l_count, l_start: INTEGER
+			c: CHARACTER
+			l_word: STRING
+			l_replacement: detachable STRING
+			l_subst_started, l_in_group: BOOLEAN
+		do
+			create Result.make (a_line.count)
+			from
+				l_count := a_line.count
+				k := 1
+			until
+				k > l_count
+			loop
+				c := a_line.item (k)
+				if c = Substitute_char then
+					if l_subst_started then
+						l_subst_started := False
+						Result.extend (c)
+					else
+						l_subst_started := True
+					end
+				elseif l_subst_started then
+					if c = Left_group_char then
+						l_in_group := True
+					else
+						from
+							l_start := k
+						until
+							k > l_count or not is_identifier_char (a_line.item (k))
+						loop
+							k := k + 1
+						end
+						k := k - 1
+						l_word := a_line.substring (l_start, k)
+						l_replacement := value (l_word)
+						if l_replacement /= Void then
+							Result.append (l_replacement)
+						else
+							Result.extend (Substitute_char)
+							Result.append (l_word)
+						end
+						if l_in_group then
+							l_in_group := False
+							k := k + 1
+							-- Skip right paren
+						end
+						l_subst_started := False
+					end
+				else
+					Result.extend (c)
+				end
+				k := k + 1
+			end
+			if l_subst_started then
+				Result.extend (c)
+			end
+		end
+
+	value (a_var: STRING): detachable STRING
+			-- Value associated with environment variable
+			-- `var' (Void if no associated value)
+		require
+			variable_not_void: a_var /= Void
+		do
+			Result := get (a_var)
 		end
 
 feature {NONE} -- Constants
@@ -133,6 +232,26 @@ feature {NONE} -- Constants
 			else
 				Result := "/tmp/testing"
 			end
+		end
+
+	Substitute_char: CHARACTER = '$'
+			-- Character which triggers environment variable
+			-- substitution
+
+	Left_group_char: CHARACTER = '('
+	Right_group_char: CHARACTER = ')'
+			-- Characters which are used for setting environment
+			-- variable name off from surrounding text
+
+feature {NONE} -- Implementation
+
+	is_identifier_char (c: CHARACTER): BOOLEAN
+			-- Is `c' an identifier character?
+		do
+			Result := (c >= 'A' and c <= 'Z') or
+				(c >= 'a' and c <= 'z') or
+				(c >= '0' and c <= '9') or
+				(c = '_');
 		end
 
 invariant

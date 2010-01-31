@@ -282,6 +282,12 @@ feature -- Basic operations
 
 feature -- Element change
 
+	clear_argument
+			-- Wipe out `arguments'
+		do
+			arguments.wipe_out
+		end
+
 	add_argument (a_argument: READABLE_STRING_8)
 			-- Add `a_arguments' to end of `arguments'.
 		require

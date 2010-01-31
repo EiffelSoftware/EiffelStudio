@@ -7,14 +7,9 @@ note
 	revision: "$Revision$"
 
 class
-	EQA_ETEST_PARTIAL_RESULT
+	EQA_PARTIAL_RESULT
 
 inherit
-	EQA_RESULT
-		rename
-			information as output
-		end
-
 	MISMATCH_CORRECTOR
 		redefine
 			correct_mismatch
@@ -48,19 +43,27 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	start_date: DATE_TIME
-			-- <Precursor>
+			-- Date/time when test was launched
 
 	finish_date: DATE_TIME
-			-- <Precursor>
+			-- Date and time when `Current' was obtained
+
+	frozen duration: DATE_TIME_DURATION
+			-- Duration of test execution
+		do
+			Result := finish_date.relative_duration (start_date)
+		ensure
+			result_attached: Result /= Void
+		end
 
 	setup_response: EQA_TEST_INVOCATION_RESPONSE
 			-- Response from setup stage
 
 	output: IMMUTABLE_STRING_8
-			-- <Precursor>
+			-- More detailed information regarding the test result
 
 	tag: READABLE_STRING_8
-			-- <Precursor>
+			-- Short tag describing status of `Current'
 		local
 			l_exception: EQA_TEST_INVOCATION_EXCEPTION
 		do
@@ -75,13 +78,21 @@ feature -- Access
 feature -- Status report
 
 	is_pass: BOOLEAN
-			-- <Precursor>
+			-- Did test pass?
 		do
 		end
 
 	is_fail: BOOLEAN
-			-- <Precursor>
+			-- Did test fail?
 		do
+		end
+
+	is_unresolved: BOOLEAN
+			-- Is test judgment unresolvable?
+		do
+			Result := not (is_pass or is_fail)
+		ensure
+			definition: Result = not (is_pass or is_fail)
 		end
 
 	is_maintenance_required: BOOLEAN
@@ -108,8 +119,11 @@ feature {NONE} -- Constants
 
 	output_name: STRING = "output"
 
+invariant
+	pass_or_fail_or_unresolved: is_pass or is_fail or is_unresolved
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

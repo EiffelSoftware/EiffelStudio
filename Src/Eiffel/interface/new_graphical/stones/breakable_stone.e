@@ -257,13 +257,37 @@ feature -- operation on breakpoint
 
 	new_breakpoint_dialog: ES_BREAKPOINT_DIALOG
 			-- New breakpoint dialog.
+		local
+			l_last_dialogs: like last_dialogs
+			l_bp: like associated_user_breakpoint
  		do
- 			create Result.make
- 			Result.set_stone (Current)
- 			Result.set_is_modal (False)
- 			last_dialogs.extend (Result)
- 			breakpoints_manager.update_breakpoints_tags_provider
- 			Result.register_kamikaze_action (Result.hide_actions, agent last_dialogs.prune_all (Result))
+				--| Do not open two bp dialog for the same breakpoint location
+				--| otherwise we'll end up with conflict
+ 			l_bp := associated_user_breakpoint
+ 			if l_bp /= Void then
+	 			from
+	 				l_last_dialogs := last_dialogs
+	 				l_last_dialogs.start
+	 			until
+	 				l_last_dialogs.after or Result /= Void
+	 			loop
+	 				if
+	 					attached l_last_dialogs.item.associated_breakpoint as bp
+	 					and then bp.same_breakpoint_key (l_bp)
+	 				then
+	 					Result := l_last_dialogs.item
+	 				end
+	 				l_last_dialogs.forth
+	 			end
+ 			end
+ 			if Result = Void then
+	 			create Result.make
+	 			Result.set_stone (Current)
+	 			Result.set_is_modal (False)
+	 			last_dialogs.extend (Result)
+	 			breakpoints_manager.update_breakpoints_tags_provider
+	 			Result.register_kamikaze_action (Result.hide_actions, agent last_dialogs.prune_all (Result))
+ 			end
  		ensure
  			Result_not_void: Result /= Void
 		end
@@ -398,7 +422,7 @@ feature {NONE} -- Internationalization
 	e_break_point_in: STRING = "Breakpoint in "
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

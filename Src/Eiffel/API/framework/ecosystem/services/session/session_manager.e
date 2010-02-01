@@ -317,10 +317,18 @@ feature -- Retrieval
 					if l_session.is_interface_usable then
 						if
 							a_per_project = l_session.is_per_project and then
-							not l_session.is_per_window and then
-							((attached a_extension as l_ext and attached l_session.extension_name as l_other_ext) implies l_ext.same_string (l_other_ext))
+							not l_session.is_per_window
 						then
-							Result := l_session
+							if attached a_extension as l_ext then
+								if 
+									attached l_session.extension_name as l_other_ext and then
+									l_ext.same_string (l_other_ext) 
+								then
+									Result := l_session
+								end
+							elseif l_session.extension_name = Void then 
+								Result := l_session
+							end
 						end
 					end
 				end
@@ -624,7 +632,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

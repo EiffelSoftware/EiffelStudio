@@ -626,7 +626,7 @@ feature -- Output
 		do
 			l_sep := format.separator
 			if l_sep /= Void and then l_sep /= ti_empty then
-				if l_sep = ti_comma or else l_sep = ti_semi_colon then
+				if l_sep = ti_comma or else l_sep = ti_semi_colon or else l_sep = ti_dot then
 					text_formatter.process_symbol_text (l_sep)
 				elseif l_sep = ti_new_line then
 					put_new_line

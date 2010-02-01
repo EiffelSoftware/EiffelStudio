@@ -11,7 +11,7 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			is_like_current, has_associated_class,
+			has_associated_class,
 			associated_class, conform_to, internal_is_valid_for_class,
 			evaluated_type_in_descendant, instantiated_in, instantiation_in
 		end
@@ -22,8 +22,7 @@ inherit
 		end
 
 create
-	make,
-	make_current
+	make
 
 feature {NONE} -- Initialization
 
@@ -36,15 +35,6 @@ feature {NONE} -- Initialization
 			anchor_name_id := names_heap.found_item
 		ensure
 			set: anchor.is_equal (a_string)
-		end
-
-	make_current
-			-- Initialize `anchor' to `Current'.
-		do
-			make (Like_current)
-			is_like_current := True
-		ensure
-			is_like_current_set: is_like_current
 		end
 
 feature -- Visitor
@@ -68,9 +58,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_like_current: BOOLEAN
-			-- Is Current like Current?
-
 	has_associated_class: BOOLEAN = False
 			-- Does Current have associated class?
 
@@ -87,7 +74,6 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := anchor_name_id = other.anchor_name_id and then
-				is_like_current = other.is_like_current and then
 				has_attached_mark = other.has_attached_mark and then
 				has_detachable_mark = other.has_detachable_mark
 		end
@@ -163,15 +149,11 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	Like_current: STRING = "Current"
-			-- String constant for `Current'.
-
 invariant
 	non_void_anchor: anchor /= Void
-	is_like_current_implies_current_anchor: is_like_current implies anchor.is_equal (Like_current)
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -184,22 +166,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class UNEVALUATED_LIKE_TYPE

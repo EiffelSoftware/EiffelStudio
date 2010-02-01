@@ -7100,6 +7100,11 @@ feature -- Implementation
 			check_type (l_as)
 		end
 
+	process_qualified_anchored_type_as (l_as: QUALIFIED_ANCHORED_TYPE_AS)
+		do
+			check_type (l_as)
+		end
+
 	process_formal_as (l_as: FORMAL_AS)
 		do
 			check_type (l_as)

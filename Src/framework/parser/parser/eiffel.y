@@ -165,7 +165,8 @@ create
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Marked_class_or_tuple_type Tuple_type Type_no_id Constraint_type
+%type <TYPE_AS>				Type Anchored_type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Marked_class_or_tuple_type Tuple_type Type_no_id Unqualified_anchored_type Constraint_type
+%type <QUALIFIED_ANCHORED_TYPE>	Qualified_anchored_type
 %type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group
@@ -1600,7 +1601,7 @@ Type_no_id:
 			{ $$ := $1 }
 	|	Non_class_type
 			{ $$ := $1 }
-	| Marked_class_or_tuple_type
+	|	Marked_class_or_tuple_type
 			{ $$ := $1 }
 	;
 	
@@ -1627,19 +1628,19 @@ Non_class_type: TE_EXPANDED Attached_class_type
 			{ $$ := ast_factory.new_bits_as ($2, $1) }
 	|	TE_BIT Identifier_as_lower
 			{ $$ := ast_factory.new_bits_symbol_as ($2, $1) }
-	|	TE_LIKE Identifier_as_lower
-			{ $$ := ast_factory.new_like_id_as ($2, $1) }
-	|	TE_ATTACHED TE_LIKE Identifier_as_lower
+	|	Anchored_type
+			{ $$ := $1 }
+	|	TE_ATTACHED Anchored_type
 			{
-				$$ := ast_factory.new_like_id_as ($3, $2)
-				if not is_ignoring_attachment_marks and $$ /= Void then
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 			}
-	|	TE_BANG TE_LIKE Identifier_as_lower
+	|	TE_BANG Unqualified_anchored_type
 			{
-				$$ := ast_factory.new_like_id_as ($3, $2)
-				if $$ /= Void then
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
 					$$.set_attachment_mark ($1, True, False)
 				end
 				if has_syntax_warning then
@@ -1648,17 +1649,17 @@ Non_class_type: TE_EXPANDED Attached_class_type
 						once "Use the `attached' keyword instead of !."))
 				end
 			}
-	|	TE_DETACHABLE TE_LIKE Identifier_as_lower
+	|	TE_DETACHABLE Anchored_type
 			{
-				$$ := ast_factory.new_like_id_as ($3, $2)
-				if not is_ignoring_attachment_marks and $$ /= Void then
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 			}
-	|	TE_QUESTION TE_LIKE Identifier_as_lower
+	|	TE_QUESTION Unqualified_anchored_type
 			{
-				$$ := ast_factory.new_like_id_as ($3, $2)
-				if $$ /= Void then
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
 					$$.set_attachment_mark ($1, False, True)
 				end
 				if has_syntax_warning then
@@ -1667,46 +1668,6 @@ Non_class_type: TE_EXPANDED Attached_class_type
 						once "Use the `detachable' keyword instead of ?."))
 				end
 			}
-	|	TE_LIKE TE_CURRENT
-			{ $$ := ast_factory.new_like_current_as ($2, $1) }
-	|	TE_ATTACHED TE_LIKE TE_CURRENT
-			{
-				$$ := ast_factory.new_like_current_as ($3, $2)
-				if not is_ignoring_attachment_marks and $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), True, False)
-				end
-			}
-	|	TE_BANG TE_LIKE TE_CURRENT
-			{
-				$$ := ast_factory.new_like_current_as ($3, $2)
-				if $$ /= Void then
-					$$.set_attachment_mark ($1, True, False)
-				end
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the `attached' keyword instead of !."))
-				end
-	}
-	|	TE_DETACHABLE TE_LIKE TE_CURRENT
-			{
-				$$ := ast_factory.new_like_current_as ($3, $2)
-				if not is_ignoring_attachment_marks and $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), False, True)
-				end
-			}
-	|	TE_QUESTION TE_LIKE TE_CURRENT
-			{
-				$$ := ast_factory.new_like_current_as ($3, $2)
-				if $$ /= Void then
-					$$.set_attachment_mark ($1, False, True)
-				end
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the `detachable' keyword instead of ?."))
-				end
-	}
 	;
 
 Class_or_tuple_type:
@@ -1788,6 +1749,33 @@ Generics:	TE_LSQURE Type_list TE_RSQURE
 				if $$ /= Void then
 					$$.set_positions ($1, $2)
 				end	
+			}
+	;
+
+Anchored_type:
+		Unqualified_anchored_type
+			{ $$ := $1 }
+	|	Qualified_anchored_type
+			{ $$ := $1 }
+	;
+Unqualified_anchored_type:
+		TE_LIKE Identifier_as_lower
+			{ $$ := ast_factory.new_like_id_as ($2, $1) }
+	|	TE_LIKE TE_CURRENT
+			{ $$ := ast_factory.new_like_current_as ($2, $1) }
+	;
+
+Qualified_anchored_type:
+		Unqualified_anchored_type TE_DOT Identifier_as_lower
+			{ $$ := ast_factory.new_qualified_anchored_type ($1, $2, $3) }
+	|       TE_LIKE Typed TE_DOT Identifier_as_lower
+			{ $$ := ast_factory.new_qualified_anchored_type_with_type ($1, $2, $3, $4) }
+	|       Qualified_anchored_type TE_DOT Identifier_as_lower
+			{
+				$$ := $1
+				if attached $$ as q then
+					q.extend ($2, $3)
+				end
 			}
 	;
 

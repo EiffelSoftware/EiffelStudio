@@ -38,7 +38,8 @@ inherit
 			new_like_id_as, new_like_current_as, new_location_as, new_loop_as, new_loop_expr_as, new_nested_as,
 			new_nested_expr_as, new_none_type_as, new_object_test_as, new_old_syntax_object_test_as,
 			new_once_as, new_operand_as, new_paran_as, new_parent_as,
-			new_precursor_as, new_prefix_as, new_real_as, new_rename_as, new_require_as, new_require_else_as,
+			new_precursor_as, new_prefix_as, new_qualified_anchored_type, new_qualified_anchored_type_with_type,
+			new_real_as, new_rename_as, new_require_as, new_require_else_as,
 			new_result_as, new_retry_as, new_reverse_as, new_routine_as, new_routine_creation_as,
 			new_static_access_as, new_string_as, new_tagged_as,
 			new_tuple_as, new_type_dec_as, new_type_expr_as, new_un_free_as, new_un_minus_as,
@@ -982,6 +983,16 @@ feature -- Access
 		do
 		end
 
+	new_qualified_anchored_type (t: TYPE_AS; d: SYMBOL_AS; f: ID_AS): QUALIFIED_ANCHORED_TYPE_AS
+			-- <Precursor>
+		do
+		end
+
+	new_qualified_anchored_type_with_type (l: KEYWORD_AS; t: TYPE_AS; d: SYMBOL_AS; f: ID_AS): QUALIFIED_ANCHORED_TYPE_AS
+			-- <Precursor>
+		do
+		end
+
 	new_real_as (t: TYPE_AS; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): REAL_AS
 			-- New REAL AST node
 		do
@@ -1181,7 +1192,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

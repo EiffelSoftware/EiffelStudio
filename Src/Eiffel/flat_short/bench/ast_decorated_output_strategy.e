@@ -844,8 +844,8 @@ feature {NONE} -- Implementation
 			elseif l_as.is_tuple_access then
 				if not expr_type_visiting then
 					l_text_formatter_decorator.process_symbol_text (ti_dot)
-						l_text_formatter_decorator.process_local_text (l_as.access_name)
-					end
+					l_text_formatter_decorator.process_local_text (l_as.access_name)
+				end
 			else
 				if not has_error_internal then
 					if last_type /= Void then
@@ -3423,6 +3423,51 @@ feature {NONE} -- Implementation
 			end
 			if not expr_type_visiting then
 				type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
+			end
+		end
+
+	process_qualified_anchored_type_as (l_as: QUALIFIED_ANCHORED_TYPE_AS)
+			-- <Precursor>
+		local
+			l_text_formatter_decorator: like text_formatter_decorator
+			is_implicit: BOOLEAN
+		do
+			check_type (l_as)
+			if processing_locals then
+				last_actual_local_type := last_type
+			end
+			if not expr_type_visiting then
+				if last_type /= Void then
+					type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
+				else
+					l_text_formatter_decorator := text_formatter_decorator
+						-- Figure out if qualifier can be used without adding an additional "like" keyword.
+					is_implicit := attached {LIKE_CUR_AS} l_as.qualifier or else attached {LIKE_ID_AS} l_as.qualifier
+					if l_as.has_attached_mark then
+						l_text_formatter_decorator.process_keyword_text (ti_attached_keyword, Void)
+						l_text_formatter_decorator.add_space
+							-- The type is of the form "attached like {T}.something"
+						is_implicit := False
+					elseif l_as.has_detachable_mark then
+						l_text_formatter_decorator.process_keyword_text (ti_detachable_keyword, Void)
+						l_text_formatter_decorator.add_space
+							-- The type is of the form "detachable like {T}.something"
+						is_implicit := False
+					end
+					if is_implicit then
+						l_as.qualifier.process (Current)
+					else
+						l_text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
+						l_text_formatter_decorator.add_space
+						l_text_formatter_decorator.process_symbol_text (ti_l_curly)
+						l_as.qualifier.process (Current)
+						l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+					end
+					l_text_formatter_decorator.set_separator (ti_dot)
+					l_text_formatter_decorator.set_no_new_line_between_tokens
+					l_text_formatter_decorator.process_symbol_text (ti_dot)
+					l_as.chain.process (Current)
+				end
 			end
 		end
 

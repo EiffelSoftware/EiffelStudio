@@ -105,6 +105,7 @@ inherit
 			process_parent_as,
 			process_like_id_as,
 			process_like_cur_as,
+			process_qualified_anchored_type_as,
 			process_formal_as,
 			process_formal_dec_as,
 			process_class_type_as,
@@ -1839,6 +1840,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_qualified_anchored_type_as (l_as: QUALIFIED_ANCHORED_TYPE_AS)
+		do
+			check_type (l_as)
+			if processing_locals then
+				last_actual_local_type := last_type
+			end
+		end
+
 	process_formal_as (l_as: FORMAL_AS)
 		do
 			process_type_as (l_as)
@@ -1850,7 +1859,6 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 				not_processing_locals: not processing_locals
 			end
-
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS)

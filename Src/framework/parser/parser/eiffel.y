@@ -166,7 +166,7 @@ create
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
 %type <TYPE_AS>				Type Anchored_type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Marked_class_or_tuple_type Tuple_type Type_no_id Unqualified_anchored_type Constraint_type
-%type <QUALIFIED_ANCHORED_TYPE>	Qualified_anchored_type
+%type <QUALIFIED_ANCHORED_TYPE_AS>	Qualified_anchored_type
 %type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group

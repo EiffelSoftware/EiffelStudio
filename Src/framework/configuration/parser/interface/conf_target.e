@@ -401,22 +401,7 @@ feature -- Access queries for settings
 					Result := l_settings.found_item.to_boolean
 				end
 			else
-				if
-					a_name.is_equal (s_check_generic_creation_constraint) or
-					a_name.is_equal (s_il_verifiable) or
-					a_name.is_equal (s_use_cluster_name_as_namespace) or
-					a_name.is_equal (s_use_all_cluster_name_as_namespace) or
-					a_name.is_equal (s_check_vape) or
-					a_name.is_equal (s_check_for_void_target) or
-					a_name.is_equal (s_check_for_catcall_at_runtime) or
-					a_name.is_equal (s_cls_compliant) or
-					a_name.is_equal (s_dead_code_removal) or
-					a_name.is_equal (s_inlining)
-				then
-					Result := True
-				else
-					Result := False
-				end
+				Result := true_boolean_settings.has (a_name)
 			end
 		end
 
@@ -692,6 +677,12 @@ feature -- Access queries for settings
 			end
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+	setting_total_order_on_reals: BOOLEAN
+			-- Value for the total_order_on_reals setting.
+		do
+			Result := setting_boolean (s_total_order_on_reals)
 		end
 
 	setting_use_cluster_name_as_namespace: BOOLEAN
@@ -1419,7 +1410,7 @@ invariant
 	environ_variables_not_void: environ_variables /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1432,21 +1423,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -1716,7 +1716,7 @@ feature {NONE} -- Implementation content processing
 
 feature {NONE} -- Processing of options
 
-	set_default_options (t: like current_target; namespace: like namespace_1_0_0)
+	set_default_options (t: like current_target; namespace: like latest_namespace)
 			-- Set default options depending on the supplied schema.
 		require
 			t_attached: t /= Void
@@ -1729,7 +1729,7 @@ feature {NONE} -- Processing of options
 				if o = Void then
 					o := factory.new_option
 				end
-				if namespace ~ namespace_1_5_0 then
+				if namespace ~ namespace_1_6_0 or namespace ~ namespace_1_5_0 then
 						-- Use the defaults of ES 6.4.
 					o.merge (default_options_6_4)
 				elseif

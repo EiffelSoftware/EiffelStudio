@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_line_generation_name, current_target.setting_line_generation)
 			l_bool_prop.set_description (conf_interface_names.target_line_generation_description)
-			add_boolean_setting_actions (l_bool_prop, s_line_generation, False)
+			add_boolean_setting_actions (l_bool_prop, s_line_generation)
 			properties.add_property (l_bool_prop)
 
 			add_dotnet_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, current_target.setting_msil_generation)
@@ -184,32 +184,32 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_address_expression_name, current_target.setting_address_expression)
 			l_bool_prop.set_description (conf_interface_names.target_address_expression_description)
-			add_boolean_setting_actions (l_bool_prop, s_address_expression, False)
+			add_boolean_setting_actions (l_bool_prop, s_address_expression)
 			properties.add_property (l_bool_prop)
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_automatic_backup_name, current_target.setting_automatic_backup)
 			l_bool_prop.set_description (conf_interface_names.target_automatic_backup_description)
-			add_boolean_setting_actions (l_bool_prop, s_automatic_backup, False)
+			add_boolean_setting_actions (l_bool_prop, s_automatic_backup)
 			properties.add_property (l_bool_prop)
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_check_vape_name, current_target.setting_check_vape)
 			l_bool_prop.set_description (conf_interface_names.target_check_vape_description)
-			add_boolean_setting_actions (l_bool_prop, s_check_vape, True)
+			add_boolean_setting_actions (l_bool_prop, s_check_vape)
 			properties.add_property (l_bool_prop)
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_check_for_void_target_name, current_target.setting_check_for_void_target)
 			l_bool_prop.set_description (conf_interface_names.target_check_for_void_target_description)
-			add_boolean_setting_actions (l_bool_prop, s_check_for_void_target, False)
+			add_boolean_setting_actions (l_bool_prop, s_check_for_void_target)
 			properties.add_property (l_bool_prop)
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_console_application_name, current_target.setting_console_application)
 			l_bool_prop.set_description (conf_interface_names.target_console_application_description)
-			add_boolean_setting_actions (l_bool_prop, s_console_application, False)
+			add_boolean_setting_actions (l_bool_prop, s_console_application)
 			properties.add_property (l_bool_prop)
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_dead_code_removal_name, current_target.setting_dead_code_removal)
 			l_bool_prop.set_description (conf_interface_names.target_dead_code_removal_description)
-			add_boolean_setting_actions (l_bool_prop, s_dead_code_removal, True)
+			add_boolean_setting_actions (l_bool_prop, s_dead_code_removal)
 			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_dynamic_runtime_name, current_target.setting_dynamic_runtime)
 			l_bool_prop.set_description (conf_interface_names.target_dynamic_runtime_description)
-			add_boolean_setting_actions (l_bool_prop, s_dynamic_runtime, False)
+			add_boolean_setting_actions (l_bool_prop, s_dynamic_runtime)
 			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -225,12 +225,12 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_enforce_unique_class_names_name, current_target.setting_enforce_unique_class_names)
 			l_bool_prop.set_description (conf_interface_names.target_enforce_unique_class_names_description)
-			add_boolean_setting_actions (l_bool_prop, s_enforce_unique_class_names, False)
+			add_boolean_setting_actions (l_bool_prop, s_enforce_unique_class_names)
 			properties.add_property (l_bool_prop)
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_exception_trace_name, current_target.setting_exception_trace)
 			l_bool_prop.set_description (conf_interface_names.target_exception_trace_description)
-			add_boolean_setting_actions (l_bool_prop, s_exception_trace, False)
+			add_boolean_setting_actions (l_bool_prop, s_exception_trace)
 			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_inlining_name, current_target.setting_inlining)
 			l_bool_prop.set_description (conf_interface_names.target_inlining_description)
-			add_boolean_setting_actions (l_bool_prop, s_inlining, True)
+			add_boolean_setting_actions (l_bool_prop, s_inlining)
 			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_multithreaded_name, current_target.setting_multithreaded)
 			l_bool_prop.set_description (conf_interface_names.target_multithreaded_description)
-			add_boolean_setting_actions (l_bool_prop, s_multithreaded, False)
+			add_boolean_setting_actions (l_bool_prop, s_multithreaded)
 			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -287,6 +287,14 @@ feature {NONE} -- Implementation
 			l_file_prop.add_filters (all_files_filter, all_files_description)
 			properties.add_property (l_file_prop)
 
+			l_bool_prop := new_boolean_property (conf_interface_names.target_total_order_on_reals, current_target.setting_total_order_on_reals)
+			l_bool_prop.set_description (conf_interface_names.target_total_order_on_reals)
+			add_boolean_setting_actions (l_bool_prop, s_total_order_on_reals)
+			if l_il_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+
 			create l_dir_prop.make (conf_interface_names.target_library_root_name)
 			l_dir_prop.set_description (conf_interface_names.target_library_root_description)
 			add_string_setting_actions (l_dir_prop, s_library_root, "")
@@ -299,7 +307,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_msil_use_optimized_precompile_name, current_target.setting_msil_use_optimized_precompile)
 			l_bool_prop.set_description (conf_interface_names.target_msil_use_optimized_precompile_description)
-			add_boolean_setting_actions (l_bool_prop, s_msil_use_optimized_precompile, False)
+			add_boolean_setting_actions (l_bool_prop, s_msil_use_optimized_precompile)
 			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -307,7 +315,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_use_cluster_name_as_namespace_name, current_target.setting_use_cluster_name_as_namespace)
 			l_bool_prop.set_description (conf_interface_names.target_use_cluster_name_as_namespace_description)
-			add_boolean_setting_actions (l_bool_prop, s_use_cluster_name_as_namespace, True)
+			add_boolean_setting_actions (l_bool_prop, s_use_cluster_name_as_namespace)
 			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -315,7 +323,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_use_all_cluster_name_as_namespace_name, current_target.setting_use_all_cluster_name_as_namespace)
 			l_bool_prop.set_description (conf_interface_names.target_use_all_cluster_name_as_namespace_description)
-			add_boolean_setting_actions (l_bool_prop, s_use_all_cluster_name_as_namespace, True)
+			add_boolean_setting_actions (l_bool_prop, s_use_all_cluster_name_as_namespace)
 			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -323,7 +331,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_dotnet_naming_convention_name, current_target.setting_dotnet_naming_convention)
 			l_bool_prop.set_description (conf_interface_names.target_dotnet_naming_convention_description)
-			add_boolean_setting_actions (l_bool_prop, s_dotnet_naming_convention, False)
+			add_boolean_setting_actions (l_bool_prop, s_dotnet_naming_convention)
 			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -331,7 +339,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_il_verifiable_name, current_target.setting_il_verifiable)
 			l_bool_prop.set_description (conf_interface_names.target_il_verifiable_description)
-			add_boolean_setting_actions (l_bool_prop, s_il_verifiable, True)
+			add_boolean_setting_actions (l_bool_prop, s_il_verifiable)
 			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -339,7 +347,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_cls_compliant_name, current_target.setting_cls_compliant)
 			l_bool_prop.set_description (conf_interface_names.target_cls_compliant_description)
-			add_boolean_setting_actions (l_bool_prop, s_cls_compliant, True)
+			add_boolean_setting_actions (l_bool_prop, s_cls_compliant)
 			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -409,7 +417,7 @@ feature {NONE} -- Implementation
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_force_32bits_name, current_target.setting_force_32bits)
 			l_bool_prop.set_description (conf_interface_names.target_force_32bits_description)
-			add_boolean_setting_actions (l_bool_prop, s_force_32bits, False)
+			add_boolean_setting_actions (l_bool_prop, s_force_32bits)
 			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
@@ -440,7 +448,7 @@ feature {NONE} -- Implementation helper
 			update_inheritance_setting (a_name, a_property)
 		end
 
-	add_boolean_setting_actions (a_property: BOOLEAN_PROPERTY; a_name: STRING; a_default: BOOLEAN)
+	add_boolean_setting_actions (a_property: BOOLEAN_PROPERTY; a_name: STRING)
 			-- Add actions that deal with boolean settings.
 		require
 			a_property_not_void: a_property /= Void
@@ -449,7 +457,7 @@ feature {NONE} -- Implementation helper
 		do
 			a_property.set_refresh_action (agent current_target.setting_boolean (a_name))
 			a_property.refresh
-			a_property.change_value_actions.extend (agent set_boolean_setting (a_name, a_default, ?))
+			a_property.change_value_actions.extend (agent set_boolean_setting (a_name, true_boolean_settings.has (a_name), ?))
 			a_property.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_setting (a_name, a_property)))
 			a_property.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			a_property.use_inherited_actions.extend (agent current_target.update_setting (a_name, Void))
@@ -632,7 +640,7 @@ feature {NONE} -- Wrappers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

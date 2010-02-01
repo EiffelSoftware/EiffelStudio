@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feat: E_FEATURE) is
+	make (a_feat: E_FEATURE)
 			-- Initialize `Current'.
 		require
 			a_feat_attached: a_feat /= Void

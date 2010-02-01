@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			l_yyvs79_default_item: ROUTINE_CREATION_AS
 			l_yyvs80_default_item: TUPLE_AS
 			l_yyvs81_default_item: TYPE_AS
-			l_yyvs82_default_item: QUALIFIED_ANCHORED_TYPE
+			l_yyvs82_default_item: QUALIFIED_ANCHORED_TYPE_AS
 			l_yyvs83_default_item: PAIR [SYMBOL_AS, TYPE_AS]
 			l_yyvs84_default_item: CLASS_TYPE_AS
 			l_yyvs85_default_item: TYPE_DEC_AS
@@ -11160,7 +11160,7 @@ end
 	yy_do_action_252
 			--|#line <not available> "eiffel.y"
 		local
-			yyval82: QUALIFIED_ANCHORED_TYPE
+			yyval82: QUALIFIED_ANCHORED_TYPE_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -11197,7 +11197,7 @@ end
 	yy_do_action_253
 			--|#line <not available> "eiffel.y"
 		local
-			yyval82: QUALIFIED_ANCHORED_TYPE
+			yyval82: QUALIFIED_ANCHORED_TYPE_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -11235,7 +11235,7 @@ end
 	yy_do_action_254
 			--|#line <not available> "eiffel.y"
 		local
-			yyval82: QUALIFIED_ANCHORED_TYPE
+			yyval82: QUALIFIED_ANCHORED_TYPE_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -25144,8 +25144,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines81: KL_SPECIAL_ROUTINES [TYPE_AS]
 			-- Routines that ought to be in SPECIAL [TYPE_AS]
 
-	yyvs82: SPECIAL [QUALIFIED_ANCHORED_TYPE]
-			-- Stack for semantic values of type QUALIFIED_ANCHORED_TYPE
+	yyvs82: SPECIAL [QUALIFIED_ANCHORED_TYPE_AS]
+			-- Stack for semantic values of type QUALIFIED_ANCHORED_TYPE_AS
 
 	yyvsc82: INTEGER
 			-- Capacity of semantic value stack `yyvs82'
@@ -25153,8 +25153,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp82: INTEGER
 			-- Top of semantic value stack `yyvs82'
 
-	yyspecial_routines82: KL_SPECIAL_ROUTINES [QUALIFIED_ANCHORED_TYPE]
-			-- Routines that ought to be in SPECIAL [QUALIFIED_ANCHORED_TYPE]
+	yyspecial_routines82: KL_SPECIAL_ROUTINES [QUALIFIED_ANCHORED_TYPE_AS]
+			-- Routines that ought to be in SPECIAL [QUALIFIED_ANCHORED_TYPE_AS]
 
 	yyvs83: SPECIAL [PAIR [SYMBOL_AS, TYPE_AS]]
 			-- Stack for semantic values of type PAIR [SYMBOL_AS, TYPE_AS]

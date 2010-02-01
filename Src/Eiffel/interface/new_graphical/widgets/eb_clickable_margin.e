@@ -76,7 +76,7 @@ feature -- Query
 
 feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
-	breakpoint_token_width: INTEGER is
+	breakpoint_token_width: INTEGER
 			-- Width in pixel of the bp token
 		local
 			l_bptok: EDITOR_TOKEN_BREAKPOINT
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

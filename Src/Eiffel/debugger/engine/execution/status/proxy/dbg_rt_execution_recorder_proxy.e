@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dump_value: DUMP_VALUE; a_app: APPLICATION_EXECUTION) is
+	make (a_dump_value: DUMP_VALUE; a_app: APPLICATION_EXECUTION)
 			-- Initialize `Current'.
 		require
 			a_value_attached: a_dump_value /= Void
@@ -250,7 +250,7 @@ invariant
 	dump_value_attached: dump_value /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

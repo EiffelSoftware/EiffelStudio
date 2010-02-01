@@ -12,6 +12,7 @@ inherit
 	AST_NULL_VISITOR
 		redefine
 			process_like_id_as, process_like_cur_as,
+			process_qualified_anchored_type_as,
 			process_formal_as, process_class_type_as,
 			process_generic_class_type_as, process_none_type_as,
 			process_bits_as, process_bits_symbol_as,
@@ -137,6 +138,35 @@ feature {NONE} -- Visitor implementation
 				l_cur.set_detachable_mark
 			end
 			last_type := l_cur
+		end
+
+	process_qualified_anchored_type_as (l_as: QUALIFIED_ANCHORED_TYPE_AS)
+			-- <Precursor>
+		local
+			t: UNEVALUATED_QUALIFIED_ANCHORED_TYPE
+			n: SPECIAL [INTEGER_32]
+		do
+			l_as.qualifier.process (Current)
+			if attached last_type as q then
+					-- Qualifier type is processed without an error.
+					-- Make an array of names in the chain.
+				create n.make_filled (0, l_as.chain.count)
+				l_as.chain.do_all_with_index (
+					agent (f: ID_AS; s: SPECIAL [INTEGER_32]; i: INTEGER)
+						do
+								-- Items in SPECIAL start at index 0.
+							s [i - 1] := f.name_id
+						end
+					(?, n, ?)
+				)
+				create t.make (q, n)
+				if l_as.has_attached_mark then
+					t.set_attached_mark
+				elseif l_as.has_detachable_mark then
+					t.set_detachable_mark
+				end
+				last_type := t
+			end
 		end
 
 	process_formal_as (l_as: FORMAL_AS)
@@ -366,7 +396,7 @@ feature {NONE} -- Visitor implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

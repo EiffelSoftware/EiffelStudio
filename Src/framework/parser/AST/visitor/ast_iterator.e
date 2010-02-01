@@ -703,6 +703,11 @@ feature {NONE} -- Implementation
 				-- Nothing to be done
 		end
 
+	process_qualified_anchored_type_as (l_as: QUALIFIED_ANCHORED_TYPE_AS)
+		do
+				-- Nothing to be done
+		end
+
 	process_formal_as (l_as: FORMAL_AS)
 		do
 				-- Nothing to be done
@@ -936,7 +941,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

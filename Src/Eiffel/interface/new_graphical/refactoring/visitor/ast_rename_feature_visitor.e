@@ -18,6 +18,7 @@ inherit
 			process_parent_as,
 			process_create_as,
 			process_like_id_as,
+			process_qualified_anchored_type_as,
 			process_feat_name_id_as, process_infix_prefix_as,
 			process_feature_as, process_body_as,
 			process_access_feat_as,
@@ -247,6 +248,13 @@ feature {NONE} -- Visitor implementation
 					has_modified := True
 				end
 			end
+		end
+
+	process_qualified_anchored_type_as (l_as: QUALIFIED_ANCHORED_TYPE_AS)
+			-- <Precursor>
+		do
+			safe_process (l_as.qualifier)
+			safe_process (l_as.chain)
 		end
 
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)

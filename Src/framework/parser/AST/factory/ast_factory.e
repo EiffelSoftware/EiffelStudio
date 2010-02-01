@@ -1683,6 +1683,24 @@ feature -- Access
 			end
 		end
 
+	new_qualified_anchored_type (t: TYPE_AS; d: SYMBOL_AS; f: ID_AS): QUALIFIED_ANCHORED_TYPE_AS
+			-- New QUALIFIED_ANCHORED_TYPE AST node for an anchored type of the form "t.f" where "t" is known to be an anchored type.
+		require
+			attached t implies (attached {LIKE_CUR_AS} t or attached {LIKE_ID_AS} t)
+		do
+			if attached t and attached f then
+				create Result.make_anchored (t, d, f)
+			end
+		end
+
+	new_qualified_anchored_type_with_type (l: KEYWORD_AS; t: TYPE_AS; d: SYMBOL_AS; f: ID_AS): QUALIFIED_ANCHORED_TYPE_AS
+			-- New QUALIFIED_ANCHORED_TYPE AST node for an anchored type of the form "like {t}.f".
+		do
+			if attached t and attached f then
+				create Result.make_explicit (l, t, d, f)
+			end
+		end
+
 	new_real_as (t: TYPE_AS; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): REAL_AS
 			-- New REAL AST node
 		do
@@ -1986,7 +2004,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

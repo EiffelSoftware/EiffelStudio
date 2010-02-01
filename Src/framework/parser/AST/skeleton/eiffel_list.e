@@ -45,6 +45,10 @@ feature -- Roundtrip
 
 	separator_list: CONSTRUCT_LIST [INTEGER]
 			-- List to store terminals that appear in between every 2 items of this list
+		note
+			option: stable
+		attribute
+		end
 
 	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): LEAF_AS
 			-- Terminals at position `i' in `separator_list' using `a_list'.
@@ -72,6 +76,24 @@ feature -- Roundtrip
 				end
 			end
 			separator_list.reverse_extend (l_as.index)
+		end
+
+	extend_separator (l: LEAF_AS)
+			-- Add `l' at the end of the `separator_list'.
+		require
+			l_attached: attached l
+		local
+			s: like separator_list
+		do
+			s := separator_list
+			if not attached s then
+				create s.make (1)
+				separator_list := s
+			end
+			s.extend (l.index)
+		ensure
+			separator_list_attached: attached separator_list
+			l_added: separator_list.last = l.index
 		end
 
 feature -- Visitor
@@ -176,7 +198,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

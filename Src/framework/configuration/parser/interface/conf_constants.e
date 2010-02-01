@@ -72,6 +72,7 @@ feature -- Settings
 	s_enforce_unique_class_names: STRING = "enforce_unique_class_names"
 	s_exception_trace: STRING = "exception_trace"
 	s_executable_name: STRING = "executable_name"
+	s_external_runtime: STRING = "external_runtime"
 	s_il_verifiable: STRING = "il_verifiable"
 	s_inlining: STRING = "inlining"
 	s_inlining_size: STRING = "inlining_size"
@@ -91,8 +92,8 @@ feature -- Settings
 	s_old_verbatim_strings: STRING = "old_verbatim_strings"
 	s_old_feature_replication: STRING = "old_feature_replication"
 	s_platform: STRING = "platform"
-	s_external_runtime: STRING = "external_runtime"
 	s_shared_library_definition: STRING = "shared_library_definition"
+	s_total_order_on_reals: STRING = "total_order_on_reals"
 	s_use_cluster_name_as_namespace: STRING = "use_cluster_name_as_namespace"
 	s_use_all_cluster_name_as_namespace: STRING = "use_all_cluster_name_as_namespace"
 
@@ -139,7 +140,7 @@ feature -- Extension
 invariant
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -152,21 +153,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

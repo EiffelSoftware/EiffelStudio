@@ -58,20 +58,29 @@ feature {NONE} -- Constants
 			Result := namespace_1_5_0 +" http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd"
 		end
 
+	namespace_1_6_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-6-0"
+			-- Namespace of the 6.6 release
+
+	schema_1_6_0: STRING
+			-- Schema of the 6.6 release
+		once
+			Result := namespace_1_6_0 +" http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd"
+		end
+
 	Latest_namespace: STRING
 			-- Latest configuration namespace
 		once
-			Result := namespace_1_5_0
+			Result := namespace_1_6_0
 		end
 
 	Latest_schema: STRING
 			-- Latest schema location
 		once
-			Result := schema_1_5_0
+			Result := schema_1_6_0
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

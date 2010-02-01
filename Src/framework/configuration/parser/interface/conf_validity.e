@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 	valid_settings: SEARCH_TABLE [STRING]
 			-- The codes of valid settings.
 		once
-			create Result.make (37)
+			create Result.make (40)
 			Result.force (s_address_expression)
 			Result.force (s_array_optimization)
 			Result.force (s_automatic_backup)
@@ -250,6 +250,7 @@ feature {NONE} -- Implementation
 			Result.force (s_platform)
 			Result.force (s_external_runtime)
 			Result.force (s_shared_library_definition)
+			Result.force (s_total_order_on_reals)
 			Result.force (s_use_cluster_name_as_namespace)
 			Result.force (s_use_all_cluster_name_as_namespace)
 			Result.force (s_old_feature_replication)
@@ -289,8 +290,27 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
+	true_boolean_settings: SEARCH_TABLE [STRING]
+			-- Settings that have a boolean value True by default if not specified in configuration.
+		once
+			create Result.make (23)
+			Result.force (s_check_generic_creation_constraint)
+			Result.force (s_check_vape)
+			Result.force (s_check_for_void_target)
+			Result.force (s_check_for_catcall_at_runtime)
+			Result.force (s_cls_compliant)
+			Result.force (s_dead_code_removal)
+			Result.force (s_inlining)
+			Result.force (s_il_verifiable)
+			Result.force (s_total_order_on_reals)
+			Result.force (s_use_cluster_name_as_namespace)
+			Result.force (s_use_all_cluster_name_as_namespace)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -303,21 +323,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -1206,6 +1206,20 @@ feature {NONE} -- Implementation
 				shared_library_definition_stamp := 0
 			end
 
+			l_s := l_settings.item (s_total_order_on_reals)
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_total_order_on_reals (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name (s_total_order_on_reals)
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_total_order_on_reals (true_boolean_settings.has (s_total_order_on_reals))
+			end
+
 			l_s := l_settings.item (s_use_cluster_name_as_namespace)
 			if l_s /= Void then
 				if l_s.is_boolean then
@@ -1353,7 +1367,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

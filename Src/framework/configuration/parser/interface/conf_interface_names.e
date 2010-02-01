@@ -153,6 +153,8 @@ feature -- Target names and descriptions
 	target_platform_name: STRING_GENERAL do Result := locale.translation ("Platform")	end
 	target_platform_description: STRING_GENERAL do Result := locale.translation ("Override the detected platform to use in conditions.")	end
 	target_shared_library_definition_name: STRING_GENERAL do Result := locale.translation ("Shared Library Definition")	end
+	target_total_order_on_reals: STRING_GENERAL do Result := locale.translation ("Total Order on REALs") end
+	target_total_order_on_reals_description: STRING_GENERAL do Result := locale.translation ("When enabled NaN values will be lower than any other real values, and comparing NaN with another NaN will yield True and not False as usually done in IEEE arithmetic.") end
 	target_shared_library_definition_description: STRING_GENERAL do Result := locale.translation ("Specify the file the compiler uses to generate the exported functions.")	end
 	target_library_root_name: STRING_GENERAL do Result := locale.translation ("Library Root")	end
 	target_library_root_description: STRING_GENERAL do Result := locale.translation ("Absolute path to use as base for relative paths.")	end
@@ -841,7 +843,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

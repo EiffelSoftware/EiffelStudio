@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 				set_error (create {CONF_ERROR_UUID})
 			end
 		ensure
-			No_error_implies_Result: not is_error implies Result
+			no_error_implies_result: not is_error implies Result
 		end
 
 	check_version (a_value: STRING)
@@ -110,7 +110,8 @@ feature {NONE} -- Implementation
 					-- No namespace is specified.
 				set_error (create {CONF_ERROR_VERSION})
 			elseif namespace = Void then
-					-- This is a top-level element, its namespace will be used for processing of the complete configuration file.
+					-- This is a top-level element, its namespace will be used for processing
+					-- of the complete configuration file.
 				if a_value.is_equal (namespace_1_0_0) then
 						-- 5.7 release
 						-- this is fully compatible with the current version
@@ -120,6 +121,7 @@ feature {NONE} -- Implementation
 				elseif a_value.is_equal (namespace_1_3_0) then namespace := namespace_1_3_0
 				elseif a_value.is_equal (namespace_1_4_0) then namespace := namespace_1_4_0
 				elseif a_value.is_equal (namespace_1_5_0) then namespace := namespace_1_5_0
+				elseif a_value.is_equal (namespace_1_6_0) then namespace := namespace_1_6_0
 				elseif a_value.is_equal (latest_namespace) then namespace := latest_namespace
 						-- current version
 				else
@@ -132,7 +134,8 @@ feature {NONE} -- Implementation
 				current_namespace := namespace
 			elseif namespace /~ a_value then
 					-- Nested element has some different namespace.
-					-- Instead of reporting an error it's possible to skip the elements from a different namespace.
+					-- Instead of reporting an error it's possible to skip the elements from a
+					-- different namespace.
 					-- The XML schema should be adjusted to allow this.
 				set_error (create {CONF_ERROR_VERSION})
 			end

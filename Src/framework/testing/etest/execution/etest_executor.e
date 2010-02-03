@@ -285,6 +285,7 @@ feature {NONE} -- Status setting
 			l_result: TEST_RESULT_I
 			l_remove: BOOLEAN
 			l_tag_tree: TAG_TREE [TEST_I]
+			l_last_output: STRING
 		do
 			l_task_data := tasks.item_for_iteration
 			l_controller := l_task_data.task
@@ -299,7 +300,12 @@ feature {NONE} -- Status setting
 				if l_controller.has_result then
 					create {ETEST_RESULT} l_result.make (l_controller.test_result)
 				else
-					create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, [l_test.name, l_controller.last_exit_code, l_controller.last_output])
+					l_last_output := l_controller.last_output
+					if l_last_output.is_empty then
+						create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, [l_test.name, l_controller.last_exit_code])
+					else
+						create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details + "%N%N$3", [l_test.name, l_controller.last_exit_code, l_last_output])
+					end
 				end
 			end
 
@@ -473,8 +479,6 @@ feature {NONE} -- Internationalization
 	e_evaluator_died_details: STRING = "[
 			The evaluator process which was executing test $1 terminated unexpectedly with exit code $2. Any output from the
 			evaluator is printed below.
-			
-			$3
 		]"
 
 	e_test_not_compiled_tag: STRING = "Not Compiled"

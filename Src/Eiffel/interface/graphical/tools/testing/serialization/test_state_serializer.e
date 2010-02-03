@@ -125,6 +125,8 @@ feature -- Basic operations
 									if not l_test_result.is_pass then
 										l_test_result.print_details_indented (a_file, True, 1)
 									end
+								else
+									a_file.put_new_line
 								end
 								l_tests.forth
 							end
@@ -268,7 +270,9 @@ feature {NONE} -- Implementation
 						l_sub := a_line.substring (a, b-1)
 						if Result.name = Void then
 								-- Remove ':' at end
-							l_sub.remove_tail (1)
+							if l_sub.item (l_sub.count) = ':' then
+								l_sub.remove_tail (1)
+							end
 							Result.name := l_sub
 						elseif Result.tag = Void then
 							if l_sub.is_case_insensitive_equal ("pass") then

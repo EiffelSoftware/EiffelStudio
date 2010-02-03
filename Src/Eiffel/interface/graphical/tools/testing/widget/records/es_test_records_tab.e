@@ -480,7 +480,7 @@ feature {NONE} -- Factory
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			create compare_button.make
-			compare_button.set_text ("Compare")
+			compare_button.set_pixel_buffer (stock_pixmaps.metric_basic_icon_buffer)
 			register_action (compare_button.select_actions, agent on_compare_button_selected)
 			Result.force_last (compare_button)
 

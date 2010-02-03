@@ -63,8 +63,36 @@ feature {NONE} -- Events
 			prompts.show_error_prompt (a_error, current_window, Void)
 		end
 
+feature {NONE} -- Constants
+
+	untested_color: EV_COLOR
+			-- Color for passing tests
+		once
+			--Result := (create {EV_STOCK_COLORS}).grey
+
+			create Result.make_with_8_bit_rgb (200, 200, 200)
+		end
+
+	pass_color: EV_COLOR
+			-- Color for passing tests
+		once
+			create Result.make_with_8_bit_rgb (60, 183, 0)
+		end
+
+	fail_color: EV_COLOR
+			-- Color for failing tests
+		once
+			create Result.make_with_8_bit_rgb (208, 41, 27)
+		end
+
+	unresolved_color: EV_COLOR
+			-- Color for unresolved tests
+		once
+			create Result.make_with_8_bit_rgb (221, 222, 5)
+		end
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

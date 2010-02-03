@@ -263,30 +263,6 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-	untested_color: EV_COLOR
-			-- Color for passing tests
-		once
-			create Result.make_with_8_bit_rgb (230, 230, 230)
-		end
-
-	pass_color: EV_COLOR
-			-- Color for passing tests
-		once
-			create Result.make_with_8_bit_rgb (60, 183, 0)
-		end
-
-	fail_color: EV_COLOR
-			-- Color for failing tests
-		once
-			create Result.make_with_8_bit_rgb (208, 41, 27)
-		end
-
-	unresolved_color: EV_COLOR
-			-- Color for unresolved tests
-		once
-			create Result.make_with_8_bit_rgb (235, 235, 21)
-		end
-
 feature {NONE} -- Helpers
 
 	extend_no_expand (a_box: EV_BOX; a_widget: EV_WIDGET)

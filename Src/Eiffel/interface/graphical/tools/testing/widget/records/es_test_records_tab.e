@@ -399,7 +399,8 @@ feature {NONE} -- Implementation
 							l_label.append_integer (l_exec_record.tests.count)
 							l_label.append_string (" tests)")
 						end
-						a_menu.force (l_item)
+						a_menu.go_i_th (l_separator_pos)
+						a_menu.put_right (l_item)
 					end
 					l_item.set_text (l_label)
 				end

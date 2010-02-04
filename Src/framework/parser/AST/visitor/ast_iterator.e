@@ -881,7 +881,7 @@ feature {NONE} -- Implementation
 			l_as.arguments.process (Current)
 		end
 
-	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS)
+	process_key_list_as (l_as: KEY_LIST_AS)
 			-- Process `l_as'.
 		do
 			l_as.keys.process (Current)

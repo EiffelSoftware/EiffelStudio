@@ -1025,7 +1025,7 @@ feature -- Access
 			end
 		end
 
-	new_debug_as (k: DEBUG_KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS
+	new_debug_as (k: KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS
 			-- New DEBUG AST node
 		do
 			if e /= Void then
@@ -1937,8 +1937,8 @@ feature -- Access
 			create Result.make (l, l_as, r_as)
 		end
 
-	new_debug_key_list_as (l: EIFFEL_LIST [STRING_AS]; l_as, r_as: SYMBOL_AS): DEBUG_KEY_LIST_AS
-			-- New DEBUG_KEY_LIST AST node
+	new_key_list_as (l: EIFFEL_LIST [STRING_AS]; l_as, r_as: SYMBOL_AS): KEY_LIST_AS
+			-- New KEY_LIST AST node
 		do
 			create Result.make (l, l_as, r_as)
 		end

@@ -83,7 +83,7 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	internal_keys: DEBUG_KEY_LIST_AS
+	internal_keys: KEY_LIST_AS
 			-- Internal debug keys, in which "(" and ")" are stored		
 
 feature -- Roundtrip/Token

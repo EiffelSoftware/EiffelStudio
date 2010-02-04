@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			l_yyvs112_default_item: EIFFEL_LIST [RENAME_AS]
 			l_yyvs113_default_item: RENAME_CLAUSE_AS
 			l_yyvs114_default_item: EIFFEL_LIST [STRING_AS]
-			l_yyvs115_default_item: DEBUG_KEY_LIST_AS
+			l_yyvs115_default_item: KEY_LIST_AS
 			l_yyvs116_default_item: TYPE_LIST_AS
 			l_yyvs117_default_item: TYPE_DEC_LIST_AS
 			l_yyvs118_default_item: LOCAL_DEC_LIST_AS
@@ -14574,7 +14574,7 @@ end
 	yy_do_action_349
 			--|#line <not available> "eiffel.y"
 		local
-			yyval115: DEBUG_KEY_LIST_AS
+			yyval115: KEY_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -14608,14 +14608,14 @@ end
 	yy_do_action_350
 			--|#line <not available> "eiffel.y"
 		local
-			yyval115: DEBUG_KEY_LIST_AS
+			yyval115: KEY_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval115 := ast_factory.new_debug_key_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+yyval115 := ast_factory.new_key_list_as (Void, yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp115 := yyvsp115 + 1
@@ -14643,14 +14643,14 @@ end
 	yy_do_action_351
 			--|#line <not available> "eiffel.y"
 		local
-			yyval115: DEBUG_KEY_LIST_AS
+			yyval115: KEY_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval115 := ast_factory.new_debug_key_list_as (yyvs114.item (yyvsp114), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+yyval115 := ast_factory.new_key_list_as (yyvs114.item (yyvsp114), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp115 := yyvsp115 + 1
@@ -25540,8 +25540,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines114: KL_SPECIAL_ROUTINES [EIFFEL_LIST [STRING_AS]]
 			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [STRING_AS]]
 
-	yyvs115: SPECIAL [DEBUG_KEY_LIST_AS]
-			-- Stack for semantic values of type DEBUG_KEY_LIST_AS
+	yyvs115: SPECIAL [KEY_LIST_AS]
+			-- Stack for semantic values of type KEY_LIST_AS
 
 	yyvsc115: INTEGER
 			-- Capacity of semantic value stack `yyvs115'
@@ -25549,8 +25549,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp115: INTEGER
 			-- Top of semantic value stack `yyvs115'
 
-	yyspecial_routines115: KL_SPECIAL_ROUTINES [DEBUG_KEY_LIST_AS]
-			-- Routines that ought to be in SPECIAL [DEBUG_KEY_LIST_AS]
+	yyspecial_routines115: KL_SPECIAL_ROUTINES [KEY_LIST_AS]
+			-- Routines that ought to be in SPECIAL [KEY_LIST_AS]
 
 	yyvs116: SPECIAL [TYPE_LIST_AS]
 			-- Stack for semantic values of type TYPE_LIST_AS

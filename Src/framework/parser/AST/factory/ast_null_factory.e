@@ -950,7 +950,7 @@ feature -- Access
 		do
 		end
 
-	new_once_as (c: EIFFEL_LIST [INSTRUCTION_AS]; k_as: KEYWORD_AS): ONCE_AS
+	new_once_as (o: KEYWORD_AS; k: KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]): ONCE_AS
 			-- New ONCE AST node
 		do
 		end

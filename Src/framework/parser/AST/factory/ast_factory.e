@@ -1636,10 +1636,10 @@ feature -- Access
 			end
 		end
 
-	new_once_as (c: EIFFEL_LIST [INSTRUCTION_AS]; k_as: KEYWORD_AS): ONCE_AS
+	new_once_as (o: KEYWORD_AS; k: KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]): ONCE_AS
 			-- New ONCE AST node
 		do
-			create Result.make (c, k_as)
+			create Result.make (o, k, c)
 		end
 
 	new_operand_as (c: TYPE_AS; t: ACCESS_AS; e: EXPR_AS): OPERAND_AS

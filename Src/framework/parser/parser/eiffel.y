@@ -202,7 +202,7 @@ create
 %type <EIFFEL_LIST [RENAME_AS]>			Rename_list
 %type <RENAME_CLAUSE_AS>				Rename 
 %type <EIFFEL_LIST [STRING_AS]>			String_list
-%type <KEY_LIST_AS>			Debug_keys
+%type <KEY_LIST_AS>			Key_list
 %type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list
 %type <TYPE_LIST_AS>	Generics Generics_opt Type_list Type_list_impl Actual_parameter_list
 %type <TYPE_DEC_LIST_AS>		Entity_declaration_list Named_parameter_list 
@@ -212,7 +212,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 343
+%expect 344
 
 %%
 
@@ -1403,8 +1403,8 @@ External_name: -- Empty
 
 Internal: TE_DO Compound
 			{ $$ := ast_factory.new_do_as ($2, $1) }
-	|	TE_ONCE Compound
-			{ $$ := ast_factory.new_once_as ($2, $1) }
+	|	TE_ONCE Key_list Compound
+			{ $$ := ast_factory.new_once_as ($1, $2, $3) }
 	|	TE_ATTRIBUTE Compound
 			{ $$ := ast_factory.new_attribute_as ($2, extract_keyword ($1)) }
 	;
@@ -2392,14 +2392,14 @@ Variant:
 			{ $$ := ast_factory.new_variant_as (Void, $2, $1, Void) }
 	;
 
-Debug: TE_DEBUG Debug_keys Compound TE_END
+Debug: TE_DEBUG Key_list Compound TE_END
 			{ $$ := ast_factory.new_debug_as ($2, $3, $1, $4) }
 	;
 
-Debug_keys: -- Empty
+Key_list: -- Empty
 			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-		{ $$ := ast_factory.new_key_list_as (Void, $1, $2) }
+			{ $$ := ast_factory.new_key_list_as (Void, $1, $2) }
 	|	TE_LPARAN Add_counter String_list Remove_counter TE_RPARAN
 			{ $$ := ast_factory.new_key_list_as ($3, $1, $5) }
 	;

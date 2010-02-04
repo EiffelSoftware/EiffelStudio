@@ -1695,8 +1695,11 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			if l_as.compound /= Void then
-				format_compound (l_as.compound)
+			if attached l_as.keys as k and then not k.is_empty then
+				k.process (Current)
+			end
+			if attached l_as.compound as c then
+				format_compound (c)
 			end
 		end
 

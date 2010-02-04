@@ -2777,8 +2777,8 @@ feature {NONE} -- Implementation
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			l_text_formatter_decorator.process_keyword_text (ti_debug_keyword, Void)
-			l_text_formatter_decorator.put_space
 			if l_as.keys /= Void and then not l_as.keys.is_empty then
+				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 				l_text_formatter_decorator.set_separator (ti_comma)
@@ -3160,6 +3160,16 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			l_text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
+			if attached l_as.keys as k and then not k.is_empty then
+				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+				l_text_formatter_decorator.set_separator (ti_comma)
+				l_text_formatter_decorator.set_no_new_line_between_tokens
+				k.process (Current)
+				l_text_formatter_decorator.set_without_tabs
+				l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+			end
 			l_text_formatter_decorator.put_new_line
 			if l_as.compound /= Void then
 				l_text_formatter_decorator.indent

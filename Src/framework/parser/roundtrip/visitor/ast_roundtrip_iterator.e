@@ -976,6 +976,7 @@ feature
 	process_once_as (l_as: ONCE_AS)
 		do
 			safe_process (l_as.once_keyword (match_list))
+			safe_process (l_as.internal_keys)
 			safe_process (l_as.compound)
 		end
 

@@ -577,7 +577,7 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS)
+	process_key_list_as (l_as: KEY_LIST_AS)
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void

@@ -3971,7 +3971,7 @@ feature {NONE} -- Implementation
 			l_as.arguments.process (Current)
 		end
 
-	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS)
+	process_key_list_as (l_as: KEY_LIST_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting

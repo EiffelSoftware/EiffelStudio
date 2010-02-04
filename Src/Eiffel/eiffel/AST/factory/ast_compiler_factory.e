@@ -143,7 +143,7 @@ feature -- Access
 			end
 		end
 
-	new_debug_as (k: DEBUG_KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS
+	new_debug_as (k: KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS
 		local
 			l_str: STRING
 		do

@@ -1,13 +1,12 @@
 note
-	description: "Object that represents a list of debug keys"
+	description: "List of keys that are non-empty manifest strings in parentheses."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	DEBUG_KEY_LIST_AS
+	KEY_LIST_AS
 
 inherit
 	PARAN_LIST_AS [EIFFEL_LIST [STRING_AS]]
@@ -23,11 +22,11 @@ feature -- Visitor
 	process (v: AST_VISITOR)
 			-- Visitor feature.
 		do
-			v.process_debug_key_list_as (Current)
+			v.process_key_list_as (Current)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -58,4 +57,3 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 end
-

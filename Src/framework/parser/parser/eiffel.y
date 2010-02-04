@@ -202,7 +202,7 @@ create
 %type <EIFFEL_LIST [RENAME_AS]>			Rename_list
 %type <RENAME_CLAUSE_AS>				Rename 
 %type <EIFFEL_LIST [STRING_AS]>			String_list
-%type <DEBUG_KEY_LIST_AS>	Debug_keys
+%type <KEY_LIST_AS>			Debug_keys
 %type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list
 %type <TYPE_LIST_AS>	Generics Generics_opt Type_list Type_list_impl Actual_parameter_list
 %type <TYPE_DEC_LIST_AS>		Entity_declaration_list Named_parameter_list 
@@ -2399,9 +2399,9 @@ Debug: TE_DEBUG Debug_keys Compound TE_END
 Debug_keys: -- Empty
 			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-		{ $$ := ast_factory.new_debug_key_list_as (Void, $1, $2) }
+		{ $$ := ast_factory.new_key_list_as (Void, $1, $2) }
 	|	TE_LPARAN Add_counter String_list Remove_counter TE_RPARAN
-			{ $$ := ast_factory.new_debug_key_list_as ($3, $1, $5) }
+			{ $$ := ast_factory.new_key_list_as ($3, $1, $5) }
 	;
 
 String_list: Non_empty_string

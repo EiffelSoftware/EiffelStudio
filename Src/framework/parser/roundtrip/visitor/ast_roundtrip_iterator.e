@@ -1285,7 +1285,7 @@ feature
 			safe_process (l_as.rparan_symbol (match_list))
 		end
 
-	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS)
+	process_key_list_as (l_as: KEY_LIST_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.lparan_symbol (match_list))

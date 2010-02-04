@@ -64,7 +64,7 @@ inherit
 			create_break_as, create_break_as_with_data,
 			new_filled_id_as_with_existing_stub,
 			new_feature_keyword_as,
-			new_class_list_as, new_local_dec_list_as, new_formal_argu_dec_list_as, new_debug_key_list_as,
+			new_class_list_as, new_local_dec_list_as, new_formal_argu_dec_list_as, new_key_list_as,
 			new_delayed_actual_list_as, new_parameter_list_as,
 			new_rename_clause_as, new_export_clause_as, new_undefine_clause_as, new_redefine_clause_as, new_select_clause_as,
 			new_creation_constrain_triple, new_named_tuple_type_as, new_line_pragma
@@ -615,7 +615,7 @@ feature -- Access
 		do
 		end
 
-	new_debug_as (k: DEBUG_KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS
+	new_debug_as (k: KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS
 			-- New DEBUG AST node
 		do
 		end
@@ -1146,8 +1146,8 @@ feature -- Access
 		do
 		end
 
-	new_debug_key_list_as (l: EIFFEL_LIST [STRING_AS]; l_as, r_as: SYMBOL_AS): DEBUG_KEY_LIST_AS
-			-- New DEBUG_KEY_LIST AST node
+	new_key_list_as (l: EIFFEL_LIST [STRING_AS]; l_as, r_as: SYMBOL_AS): KEY_LIST_AS
+			-- New KEY_LIST AST node
 		do
 		end
 

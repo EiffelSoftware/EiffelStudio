@@ -1,0 +1,18 @@
+
+test_name 	create-constrained-generic-crash-2
+test_description A generic class whose formal generic parameter G is constrained by TEST1 [ANY] and that has a generic creation constraint creates an attribute of type G.  A descendant with the same generic constraints inherits this class.   If the actual generic for the descendant DOUBLE the compiler crashes with a call on Void target in {GEN_TYPE_A}.static_type_id
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

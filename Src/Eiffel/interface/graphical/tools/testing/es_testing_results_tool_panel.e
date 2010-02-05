@@ -84,8 +84,8 @@ feature {ES_TESTING_RESULTS_TOOL} -- Basic operations
 			--
 			-- `a_file_name': File name in which exported results are stored.
 		do
-			notebook.select_item (comparison_widget.widget)
 			comparison_widget.compare_states (a_file_name)
+			notebook.select_item (comparison_widget.widget)
 		end
 
 	clear

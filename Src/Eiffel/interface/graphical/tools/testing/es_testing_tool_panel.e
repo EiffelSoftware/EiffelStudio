@@ -13,7 +13,6 @@ inherit
 	ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
 			on_after_initialized,
-			create_right_tool_bar_items,
 			internal_recycle
 		end
 
@@ -416,13 +415,6 @@ feature {TEST_SUITE_S} -- Events: test suite
 	on_session_launched (a_test_suite: TEST_SUITE_S; a_session: TEST_SESSION_I)
 			-- <Precursor>
 		do
---			if attached {TEST_EXECUTION_I} a_session then
---				notebook.select_item (notebook.at (1))
---			elseif attached {TEST_CREATION_I} a_session then
---				notebook.select_item (notebook.at (2))
---			elseif attached {ETEST_RETRIEVAL} a_session then
---				retrieve_button.disable_sensitive
---			end
 			update_running_state
 		end
 
@@ -603,26 +595,6 @@ feature {NONE} -- Factory
 			retrieve_button.set_menu (l_menu)
 
 			Result.force_last (retrieve_button)
-		end
-
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			-- <Precursor>
-		do
---			create Result.make (3)
-
---			create runs_button.make
---			runs_button.set_pixel_buffer (stock_pixmaps.run_animation_5_icon_buffer)
---			runs_button.set_tooltip (locale.translation (tt_runs_button))
---			register_action (runs_button.select_actions, agent on_run_label_select)
---			Result.force_last (runs_button)
-
---			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
-
---			create errors_button.make
---			errors_button.set_pixel_buffer (stock_pixmaps.general_error_icon_buffer)
---			errors_button.set_tooltip (locale.translation (tt_errors_button))
---			register_action (errors_button.select_actions, agent on_error_label_select)
---			Result.force_last (errors_button)
 		end
 
 feature {NONE} -- Internationalization

@@ -35,17 +35,69 @@ feature {NONE} -- Initialization
 
 	build_widget_interface (a_widget: like create_widget)
 			-- <Precursor>
+		local
+			l_split: EV_HORIZONTAL_SPLIT_AREA
 		do
-			build_statistics (a_widget)
-			build_grid (a_widget)
+			create l_split
+			build_left (l_split)
+			build_grid (l_split)
+
+			a_widget.extend (l_split)
 		end
 
-	build_statistics (a_widget: like create_widget)
+	build_left (a_split: EV_HORIZONTAL_SPLIT_AREA)
+			-- Build left part of split area (toolbar and statistics).
+		require
+			a_split_attached: a_split /= Void
+		local
+			l_box: EV_VERTICAL_BOX
+		do
+			create l_box
+			l_box.set_border_width (2)
+			l_box.set_padding (2)
+			build_file_widget (l_box)
+			build_statistics (l_box)
+			a_split.set_first (l_box)
+		end
+
+	build_file_widget (a_widget: EV_BOX)
+			-- Initialize file text field
+		require
+			a_widget_attached: a_widget /= Void
+		local
+			l_frame: EV_FRAME
+			l_toolbar: SD_TOOL_BAR
+			l_button: SD_TOOL_BAR_BUTTON
+			l_hbox: EV_HORIZONTAL_BOX
+		do
+			create l_hbox
+			l_hbox.set_border_width (4)
+
+			create file_text
+			file_text.disable_edit
+			l_hbox.extend (file_text)
+
+			create l_toolbar.make
+			create l_button.make
+			l_button.set_pixel_buffer (stock_pixmaps.metric_common_criteria_icon_buffer)
+			register_action (l_button.select_actions, agent on_compare_button_select)
+			l_toolbar.extend (l_button)
+			l_toolbar.compute_minimum_size
+			l_hbox.extend (l_toolbar)
+			l_hbox.disable_item_expand (l_toolbar)
+
+			create l_frame.make_with_text (locale.translation (f_result_file))
+			l_frame.extend (l_hbox)
+			a_widget.extend (l_frame)
+			a_widget.disable_item_expand (l_frame)
+		end
+
+	build_statistics (a_widget: EV_BOX)
 			-- Initialize statistics widget.
 		require
 			a_widget_attached: a_widget /= Void
 		local
-			l_vbox, l_cbox: EV_VERTICAL_BOX
+			l_cbox: EV_VERTICAL_BOX
 			l_rbox, l_bbox, l_pbox: EV_HORIZONTAL_BOX
 			l_frame: EV_FRAME
 			l_label: EV_LABEL
@@ -53,9 +105,6 @@ feature {NONE} -- Initialization
 			i, j: INTEGER
 			l_bars: like create_bars
 		do
-			create l_vbox
-			l_vbox.set_border_width (3)
-
 			create l_pbox
 			l_pbox.set_border_width (4)
 
@@ -63,24 +112,13 @@ feature {NONE} -- Initialization
 			l_rbox.set_border_width (1)
 			l_rbox.set_background_color (colors.stock_colors.grey)
 
-			create statistic_labels.make_filled (create {EV_LABEL}, statistic_count, 3)
+			create statistic_labels.make_filled ([create {EV_LABEL}, create {EV_LABEL}], 1, statistic_count)
 			from
-				i := 1
+				i := 2
 			until
 				i > statistic_count
 			loop
-				from
-					j := 1
-				until
-					j > 3
-				loop
-					if (i /= 1 or j /= 1) then
-						create l_label
-						l_label.align_text_right
-						statistic_labels.put (l_label, i, j)
-					end
-					j := j + 1
-				end
+				statistic_labels.put ([create {EV_LABEL}, create {EV_LABEL}], i)
 				i := i + 1
 			end
 
@@ -88,13 +126,13 @@ feature {NONE} -- Initialization
 			create l_cbox
 			l_cbox.set_border_width (2)
 			l_cbox.set_background_color (colors.stock_colors.white)
-			create l_cell
-			l_cell.set_minimum_height (bar_height)
-			l_cell.set_background_color (colors.stock_colors.white)
-			l_cbox.extend (l_cell)
 			create l_label
 			l_label.set_background_color (colors.stock_colors.white)
 			l_cbox.extend (l_label)
+			l_cbox.disable_item_expand (l_label)
+			create l_cell
+			l_cell.set_background_color (colors.stock_colors.white)
+			l_cbox.extend (l_cell)
 			from
 				i := 1
 			until
@@ -104,118 +142,102 @@ feature {NONE} -- Initialization
 				l_label.set_background_color (colors.stock_colors.white)
 				l_label.align_text_left
 				l_cbox.extend (l_label)
+				l_cbox.disable_item_expand (l_label)
 				i := i + 1
 			end
+			l_cbox.set_minimum_width (90)
 			l_rbox.extend (l_cbox)
+			l_rbox.disable_item_expand (l_cbox)
 
 			from
 				i := 1
 			until
-				i > 3
+				i > 2
 			loop
 				create l_cbox
 				l_cbox.set_border_width (2)
 				l_cbox.set_padding_width (2)
 				l_cbox.set_background_color (colors.stock_colors.white)
-
 				inspect
 					i
 				when 1 then
 					create l_label.make_with_text (locale.translation (t_previous))
 				when 2 then
 					create l_label.make_with_text (locale.translation (t_current))
-				else
-					create l_label
 				end
 				l_label.set_background_color (colors.stock_colors.white)
 				l_label.align_text_right
 				l_cbox.extend (l_label)
+				l_cbox.disable_item_expand (l_label)
 
-				if i = 3 then
-					create l_cell
-					l_cell.set_minimum_height (bar_height)
-					l_cell.set_background_color (colors.stock_colors.white)
-					l_cbox.extend (l_cell)
+				l_bars := create_bars
+				if i = 1 then
+					previous_bars := l_bars
 				else
-					l_bars := create_bars
-					if i = 1 then
-						previous_bars := l_bars
-					else
-						current_bars := l_bars
-					end
-					create l_bbox
-					l_bbox.set_padding_width (2)
-					l_bbox.set_background_color (colors.stock_colors.white)
-					create l_cell
-					l_cell.set_background_color (colors.stock_colors.white)
-					l_bbox.extend (l_cell)
-					from
-						j := 1
-					until
-						j > 4
-					loop
-						l_bars.item (j).set_minimum_height (bar_height)
-						l_bars.item (j).set_minimum_width (10)
-						l_bars.item (j).set_background_color (colors.stock_colors.white)
-						l_bbox.extend (l_bars.item (j))
-						l_bbox.disable_item_expand (l_bars.item (j))
-						j := j + 1
-					end
-					l_cbox.extend (l_bbox)
+					current_bars := l_bars
 				end
+				create l_bbox
+				l_bbox.set_padding_width (2)
+				l_bbox.set_background_color (colors.stock_colors.white)
+				create l_cell
+				l_cell.set_background_color (colors.stock_colors.white)
+				l_bbox.extend (l_cell)
+				from
+					j := 1
+				until
+					j > 4
+				loop
+					l_bars.item (j).set_minimum_width (10)
+					l_bars.item (j).set_background_color (colors.stock_colors.white)
+					l_bbox.extend (l_bars.item (j))
+					l_bbox.disable_item_expand (l_bars.item (j))
+					j := j + 1
+				end
+				l_cbox.extend (l_bbox)
+
 				from
 					j := 1
 				until
 					j > statistic_count
 				loop
 					create l_bbox
-					l_bbox.set_background_color (colors.stock_colors.white)
+					l_bbox.set_background_color (statistic_color (j))
 					l_bbox.set_border_width (1)
 					l_bbox.set_padding (2)
-					if i < 3 then
-						inspect
-							j
-						when fail_id then
-							l_bbox.set_background_color (fail_color)
-						when pass_id then
-							l_bbox.set_background_color (pass_color)
-						when unresolved_id then
-							l_bbox.set_background_color (unresolved_color)
-						when untested_id then
-							l_bbox.set_background_color (untested_color)
-						end
+					if i = 1 then
+						l_label := statistic_labels.item (j).prev
+					else
+						l_label := statistic_labels.item (j).new
 					end
-					l_label := statistic_labels.item (j, i)
 					l_label.set_background_color (colors.stock_colors.white)
 					l_label.align_text_right
 					l_bbox.extend (l_label)
 					l_cbox.extend (l_bbox)
+					l_cbox.disable_item_expand (l_bbox)
 					j := j + 1
 				end
+
+
+				l_cbox.set_minimum_width (80)
+
 				l_rbox.extend (l_cbox)
 				i := i + 1
 			end
 
 			l_pbox.extend (l_rbox)
 
-			create l_frame.make_with_text ("Statistics")
-			l_frame.set_minimum_width (300)
+			create l_frame.make_with_text (locale.translation (f_statistics))
 			l_frame.extend (l_pbox)
-			a_widget.disable_sensitive
+			l_frame.disable_sensitive
+			statistic_widget := l_frame
 
-			l_vbox.extend (l_frame)
-			l_vbox.disable_item_expand (l_frame)
-
-			l_vbox.extend (create {EV_CELL})
-
-			a_widget.extend (l_vbox)
-			a_widget.disable_item_expand (l_vbox)
+			a_widget.extend (l_frame)
 		end
 
-	build_grid (a_widget: like create_widget)
+	build_grid (a_split: EV_HORIZONTAL_SPLIT_AREA)
 			-- Initialize `grid'.
 		require
-			a_widget_attached: a_widget /= Void
+			a_split_attached: a_split /= Void
 		local
 			l_vbox: EV_VERTICAL_BOX
 		do
@@ -231,14 +253,15 @@ feature {NONE} -- Initialization
 			grid.enable_tree
 			grid.hide_tree_node_connectors
 			grid.enable_single_row_selection
-
-			register_action (grid.row_expand_actions, agent (a_row: EV_GRID_ROW) do grid.request_columns_auto_resizing end)
+			grid.disable_sensitive
+			grid.enable_partial_dynamic_content
+			grid.set_dynamic_content_function (agent grid_item)
 
 			create l_vbox
 			l_vbox.set_border_width (1)
 			l_vbox.set_background_color (colors.stock_colors.gray)
 			l_vbox.extend (grid)
-			a_widget.extend (l_vbox)
+			a_split.set_second (l_vbox)
 		end
 
 	on_after_initialized
@@ -247,12 +270,22 @@ feature {NONE} -- Initialization
 			Precursor
 			register_action (previous_bars.item (1).expose_actions, agent redraw_statistic_bars)
 			register_action (previous_bars.item (1).resize_actions, agent redraw_statistic_bars)
+			register_action (grid.row_expand_actions, agent (a_row: EV_GRID_ROW) do grid.request_columns_auto_resizing end)
 		end
 
 feature {NONE} -- Access
 
 	grid: ES_TESTING_TOOL_GRID
 			-- Grid used to compare different test suite states
+
+	compare_button: SD_TOOL_BAR_BUTTON
+			-- Button to initiate a new comparison
+
+	file_text: EV_TEXT_FIELD
+			-- Text field containing current file name
+
+	statistic_widget: EV_WIDGET
+			-- Widget to be made sensitive once statistics are shown
 
 feature {NONE} -- Access: rows
 
@@ -271,11 +304,11 @@ feature {NONE} -- Access: rows
 	category_statistics: ARRAY [like create_statistics]
 			-- Statistics for each category
 
-	statistic_labels: ARRAY2 [EV_LABEL]
-			-- 2D array containing statistic labels
+	statistic_labels: ARRAY [TUPLE [prev, new: EV_LABEL]]
+			-- Array containing statistic labels
 			--
-			-- rows: previous, new and changes
-			-- columns: statistic categories
+			-- prev: label for previous number of tests in some category
+			-- new: label for current number of tests in some category
 
 	previous_bars, current_bars: like create_bars
 			-- Set of bars for visualizing statistics
@@ -284,6 +317,85 @@ feature {NONE} -- Status report
 
 	has_printed_test: BOOLEAN
 			-- Has `print_formatted_test' printed any thing to `token_writer'?
+
+	has_requested_bar_redraw: BOOLEAN
+			-- Has there already been a call to `redraw_statistic_bars' since last idle?
+
+feature {NONE} -- Query
+
+	statistic_id (a_state: detachable TEST_STATE): like category_count
+			-- Statistic ID according to given state
+		do
+			if a_state /= Void then
+				if a_state.is_tested then
+					if a_state.is_pass then
+						Result := pass_id
+					elseif a_state.is_fail then
+						Result := fail_id
+					else
+						Result := unresolved_id
+					end
+				else
+					Result := untested_id
+				end
+			else
+				Result := removed_id
+			end
+		ensure
+			result_valid: 0 < Result and Result <= category_count
+		end
+
+	grid_item (a_column, a_row: INTEGER): EV_GRID_ITEM
+			-- Return dynamically computed grid item for given row and column.
+		local
+			l_row: EV_GRID_ROW
+			l_span: EV_GRID_SPAN_LABEL_ITEM
+			l_state: detachable TEST_STATE
+			l_id: like statistic_id
+			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			l_row := grid.row (a_row)
+			if attached {TUPLE [name: READABLE_STRING_8; prev, new: detachable TEST_STATE]} l_row.data as l_stuple then
+				if a_column = 1 then
+					Result := create_test_item (l_stuple.name)
+				else
+					if a_column = 2 then
+						l_state := l_stuple.prev
+					else
+						l_state := l_stuple.new
+					end
+					l_id := statistic_id (l_state)
+					create l_item
+					inspect
+						l_id
+					when pass_id then
+						l_item.set_pixmap (stock_pixmaps.general_tick_icon)
+					when fail_id then
+						l_item.set_pixmap (stock_pixmaps.general_error_icon)
+					when unresolved_id then
+						l_item.set_pixmap (stock_pixmaps.general_warning_icon)
+					when untested_id then
+						token_writer.add_comment ("not tested")
+					when removed_id then
+						token_writer.add_comment ("unknown test")
+					end
+					if l_state /= Void and then l_state.is_tested and then not l_state.is_pass then
+						token_writer.process_basic_text (l_state.tag.as_string_32)
+					end
+					l_item.set_text_with_tokens (token_writer.last_line.content)
+					reset_token_writer
+					Result := l_item
+				end
+			elseif attached {like category_count} l_row.data as l_cid then
+				if a_column = 1 then
+					create l_span.make_master (1)
+					l_span.set_text (locale_formatter.formatted_translation (category_labels[l_cid] + " ($1)", [category_statistics[l_cid].new]))
+				else
+					create l_span.make_span (1)
+				end
+				Result := l_span
+			end
+		end
 
 feature -- Basic operations
 
@@ -297,9 +409,7 @@ feature -- Basic operations
 			l_serializer: TEST_STATE_SERIALIZER
 			l_old, l_new: ARRAYED_LIST [TEST_STATE]
 			l_lstate, l_rstate: detachable TEST_STATE
-			l_item: EV_GRID_SPAN_LABEL_ITEM
 			i: INTEGER
-			l_label: STRING_32
 		do
 			reset_grid
 			window.lock_update
@@ -352,49 +462,31 @@ feature -- Basic operations
 				end
 
 				from
-					i := rows.lower
-				until
-					i > rows.upper
-				loop
-					if attached rows.item (i) as l_row then
-						create l_item.make_master (1)
-						l_item.set_text (locale.formatted_string (category_labels.item (i) + " ($1)", [category_statistics.item (i).new]))
-						l_row.set_item (1, l_item)
-						create l_item.make_span (1)
-						l_row.set_item (2, l_item)
-						create l_item.make_span (1)
-						l_row.set_item (3, l_item)
-					end
-					i := i + 1
-				end
-
-
-				from
 					i := 1
 				until
 					i > statistic_count
 				loop
-					statistic_labels.item (i, 1).set_text (category_statistics[i].prev.out)
-					statistic_labels.item (i, 2).set_text (category_statistics[i].new.out)
-					create l_label.make (10)
-					if 0 < category_statistics[i].add then
-						l_label.append_character ('+')
-						l_label.append_natural_32 (category_statistics[i].add)
+					statistic_labels.item (i).prev.set_text (category_statistics[i].prev.out)
+					if category_statistics[i].prev > 0 then
+						statistic_labels.item (i).prev.parent.enable_sensitive
+					else
+						statistic_labels.item (i).prev.parent.disable_sensitive
 					end
-					if 0 < category_statistics[i].sub then
-						if 0 < category_statistics[i].add then
-							l_label.append_string ("   ")
-						end
-						l_label.append_character ('-')
-						l_label.append_natural_32 (category_statistics[i].sub)
+					statistic_labels.item (i).new.set_text (category_statistics[i].new.out)
+					if category_statistics[i].new > 0 then
+						statistic_labels.item (i).new.parent.enable_sensitive
+					else
+						statistic_labels.item (i).new.parent.disable_sensitive
 					end
-					statistic_labels.item (i, 3).set_text (l_label)
 					i := i + 1
 				end
 
-				widget.enable_sensitive
+				statistic_widget.enable_sensitive
+				grid.enable_sensitive
+				file_text.set_text (a_file_name.to_string_32)
 			end
 
+			request_statistic_bars_redraw
 			window.unlock_update
 			grid.request_columns_auto_resizing
 		end
@@ -404,7 +496,27 @@ feature {NONE} -- Events
 	redraw_statistic_bars (a_x, a_y, a_width, a_height: INTEGER)
 			-- Request status bar redraw
 		do
-			redraw_bars
+			request_statistic_bars_redraw
+		end
+
+	request_statistic_bars_redraw
+			-- Request that `previous_bars' and `current_bars' are redrawn on next idle
+		do
+			if not has_requested_bar_redraw then
+				ev_application.add_idle_action_kamikaze (agent redraw_bars)
+				has_requested_bar_redraw := True
+			end
+		end
+
+	on_compare_button_select
+			-- Calledn when `compare_button' is selected.
+		local
+			l_tools: ES_SHELL_TOOLS
+		do
+			l_tools := develop_window.shell_tools
+			if attached {ES_TESTING_RESULTS_TOOL} l_tools.tool ({ES_TESTING_RESULTS_TOOL}) as l_tool then
+				l_tool.compare_states
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -417,20 +529,21 @@ feature {NONE} -- Implementation
 			both_attached_implies_equal: (an_old_state /= Void and a_new_state /= Void) implies
 			                             an_old_state.test_name.same_string (a_new_state.test_name)
 		local
-			l_litem, l_ritem: like create_state_item
+			l_lid, l_rid: like statistic_id
 			l_row_id, l_pos, i: INTEGER
-			l_row, l_subrow: detachable EV_GRID_ROW
+			l_row: detachable EV_GRID_ROW
+			l_data: ANY
 		do
-			l_litem := create_state_item (an_old_state)
-			l_ritem := create_state_item (a_new_state)
-			category_statistics.item (l_litem.row).prev := category_statistics.item (l_litem.row).prev + 1
-			category_statistics.item (l_ritem.row).new := category_statistics.item (l_ritem.row).new + 1
-			if l_litem.row = l_ritem.row then
+			l_lid := statistic_id (an_old_state)
+			l_rid := statistic_id (a_new_state)
+			category_statistics.item (l_lid).prev := category_statistics.item (l_lid).prev + 1
+			category_statistics.item (l_rid).new := category_statistics.item (l_rid).new + 1
+			if l_lid = l_rid then
 				l_row_id := unchanged_id
 				category_statistics.item (l_row_id).new := category_statistics.item (l_row_id).new + 1
 			else
-				l_row_id := l_ritem.row
-				category_statistics.item (l_litem.row).sub := category_statistics.item (l_litem.row).sub + 1
+				l_row_id := l_rid
+				category_statistics.item (l_lid).sub := category_statistics.item (l_lid).sub + 1
 				category_statistics.item (l_row_id).add := category_statistics.item (l_row_id).add + 1
 			end
 			l_row := rows.item (l_row_id)
@@ -450,16 +563,15 @@ feature {NONE} -- Implementation
 				grid.insert_new_row (l_pos)
 				l_row := grid.row (l_pos)
 				rows.put (l_row, l_row_id)
+				l_row.set_data (l_row_id)
 			end
 			l_row.insert_subrow (l_row.subrow_count + 1)
-			l_subrow := l_row.subrow (l_row.subrow_count)
 			if an_old_state /= Void then
-				l_subrow.set_item (1, create_test_item (an_old_state.test_name))
+				l_data := [an_old_state.test_name, an_old_state, a_new_state]
 			else
-				l_subrow.set_item (1, create_test_item (a_new_state.test_name))
+				l_data := [a_new_state.test_name, an_old_state, a_new_state]
 			end
-			l_subrow.set_item (2, l_litem.grid_item)
-			l_subrow.set_item (3, l_ritem.grid_item)
+			l_row.subrow (l_row.subrow_count).set_data (l_data)
 		end
 
 	reset_grid
@@ -510,24 +622,16 @@ feature {NONE} -- Implementation
 			until
 				i > statistic_count
 			loop
-				inspect
-					i
-				when fail_id then
-					l_color := fail_color
-				when pass_id then
-					l_color := pass_color
-				when unresolved_id then
-					l_color := unresolved_color
-				when untested_id then
-					l_color := untested_color
-				end
+				l_color := statistic_color (i)
 				draw_proportion (previous_bars.item (i), category_statistics[i].prev, l_max, l_color)
 				draw_proportion (current_bars.item (i), category_statistics[i].new, l_max, l_color)
 				i := i + 1
 			end
+			has_requested_bar_redraw := False
 		end
 
 	draw_proportion (a_bar: EV_DRAWING_AREA; a_prop, a_max: NATURAL; a_color: EV_COLOR)
+			-- Draw porportions for some vertical bar.
 		local
 			l_height, l_width, l_prop: INTEGER
 		do
@@ -535,7 +639,7 @@ feature {NONE} -- Implementation
 			l_width := a_bar.width
 			a_bar.clear
 			if a_max > 0 then
-				l_prop := ((a_prop/a_max)*l_height).ceiling
+				l_prop := ((a_prop/a_max)*l_height).floor
 				a_bar.set_foreground_color (a_color)
 				a_bar.fill_rectangle (0, l_height - l_prop, l_width, l_height)
 			end
@@ -562,41 +666,6 @@ feature {NONE} -- Factory
 			end
 			Result.set_text_with_tokens (token_writer.last_line.content)
 			reset_token_writer
-		end
-
-	create_state_item (a_state: detachable TEST_STATE): TUPLE [grid_item: EV_GRID_ITEM; row: INTEGER]
-			-- Create new grid item for given test state
-		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_row: INTEGER
-		do
-			create l_item
-			if a_state /= Void then
-				if a_state.is_tested then
-					if a_state.is_pass then
-						l_row := pass_id
-						l_item.set_pixmap (stock_pixmaps.general_tick_icon)
-					else
-						token_writer.process_basic_text (a_state.tag.as_string_32)
-						if a_state.is_fail then
-							l_row := fail_id
-							l_item.set_pixmap (stock_pixmaps.general_error_icon)
-						else
-							l_row := unresolved_id
-							l_item.set_pixmap (stock_pixmaps.general_warning_icon)
-						end
-					end
-				else
-					l_row := untested_id
-					token_writer.add_comment ("not tested")
-				end
-			else
-				l_row := removed_id
-				token_writer.add_comment ("unknown test")
-			end
-			l_item.set_text_with_tokens (token_writer.last_line.content)
-			reset_token_writer
-			Result := [l_item, l_row]
 		end
 
 	create_statistics: TUPLE [prev, new, sub, add: NATURAL]
@@ -634,7 +703,23 @@ feature {NONE} -- Constants
 	statistic_count: INTEGER = 4
 			-- n-th first categories for which a statistic is shown
 
-	bar_height: INTEGER = 100
+	statistic_color (an_id: like statistic_count): EV_COLOR
+			-- Associated color for given statistic id
+		require
+			an_id_valid: 0 < an_id and an_id <= statistic_count
+		do
+			inspect
+				an_id
+			when fail_id then
+				Result := fail_color
+			when pass_id then
+				Result := pass_color
+			when unresolved_id then
+				Result := unresolved_color
+			when untested_id then
+				Result := untested_color
+			end
+		end
 
 feature {NONE} -- Internationalization
 
@@ -652,9 +737,12 @@ feature {NONE} -- Internationalization
 	t_previous: STRING = "Previous"
 	t_current: STRING = "Current"
 
+	f_result_file: STRING = "Result File"
+	f_statistics: STRING = "Statistics"
+
 invariant
 	category_statistics_valid: category_statistics.count = statistic_count
-	statistic_labels_valid: statistic_labels.width = 3 and statistic_labels.height = statistic_count
+	statistic_labels_valid: statistic_labels.count = statistic_count
 	previous_bars_valid: previous_bars.count = statistic_count
 	current_bars_valid: current_bars.count = statistic_count
 

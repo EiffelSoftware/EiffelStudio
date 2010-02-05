@@ -670,7 +670,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 			not_void: Result /= Void
 		end
 
-	drag_offset: INTEGER is 1
+	drag_offset: INTEGER = 1
 			-- How many pixels user's pointer moved before calling drag actions
 
 feature {NONE} -- Implementation
@@ -797,7 +797,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

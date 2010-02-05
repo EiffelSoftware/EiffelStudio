@@ -53,13 +53,29 @@ feature -- Basic operations
 			end
 		end
 
-	compare_states (a_file_name: READABLE_STRING_8)
+	compare_states
 			-- Compare current test suite state with results from file.
 			--
 			-- `a_file_name': File name in which exported results are stored.
+		local
+			l_dialog: EV_FILE_OPEN_DIALOG
 		do
-			if is_tool_instantiated then
-				panel.compare_states (a_file_name)
+			create l_dialog
+			l_dialog.show_modal_to_window (window.window)
+			if
+				attached window.session_data as l_session and then
+				attached {STRING_GENERAL} l_session.value (compare_file_id) as l_file_name
+			then
+				if l_dialog.valid_file_name (l_file_name) then
+				--	l_dialog.set_file_name (l_file_name.twin)
+				end
+			end
+			if not l_dialog.file_name.is_empty then
+				if attached window.session_data as l_session then
+					l_session.set_value (l_dialog.file_name.twin, compare_file_id)
+				end
+				show (True)
+				panel.compare_states (l_dialog.file_name)
 			end
 		end
 
@@ -84,6 +100,11 @@ feature {NONE} -- Factory
 		do
 			create Result.make (window.shell_tools.tool ({ES_TESTING_TOOL}), once "icons")
 		end
+
+feature {NONE} -- Constants
+
+	compare_file_id: STRING = "com.eiffel.testing_tool.compare_file"
+			-- Auto retrieve ID for session manager
 
 feature {NONE} -- Internationalization
 

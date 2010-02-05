@@ -215,17 +215,11 @@ feature {NONE} -- Events: button
 	on_compare_button_selected
 			-- Called when `compare_button' is pressed.
 		local
-			l_dialog: EV_FILE_OPEN_DIALOG
 			l_tools: ES_SHELL_TOOLS
 		do
-			create l_dialog
-			l_dialog.show_modal_to_window (window)
-			if not l_dialog.file_name.is_empty then
-				l_tools := icons_provider.develop_window.shell_tools
-				l_tools.show_tool ({ES_TESTING_RESULTS_TOOL}, True)
-				if attached {ES_TESTING_RESULTS_TOOL} l_tools.tool ({ES_TESTING_RESULTS_TOOL}) as l_tool then
-					l_tool.compare_states (l_dialog.file_name)
-				end
+			l_tools := icons_provider.develop_window.shell_tools
+			if attached {ES_TESTING_RESULTS_TOOL} l_tools.tool ({ES_TESTING_RESULTS_TOOL}) as l_tool then
+				l_tool.compare_states
 			end
 		end
 
@@ -481,7 +475,7 @@ feature {NONE} -- Factory
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			create compare_button.make
-			compare_button.set_pixel_buffer (stock_pixmaps.metric_basic_icon_buffer)
+			compare_button.set_pixel_buffer (stock_pixmaps.metric_common_criteria_icon_buffer)
 			register_action (compare_button.select_actions, agent on_compare_button_selected)
 			Result.force_last (compare_button)
 

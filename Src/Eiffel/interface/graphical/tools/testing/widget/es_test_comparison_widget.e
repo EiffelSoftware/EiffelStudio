@@ -439,73 +439,79 @@ feature -- Basic operations
 			create l_serializer
 			l_serializer.deserialize_from_file (a_file_name)
 			l_old := l_serializer.last_result
-			l_serializer.serialize_test_suite
-			l_new := l_serializer.last_result
 			if l_old = Void then
-				-- TODO: error handling
-			elseif l_new = Void then
-				-- TODO: error handling
+				if l_serializer.last_error_code = l_serializer.file_not_readable then
+					prompts.show_error_prompt (locale_formatter.formatted_translation (e_file_not_readable, [a_file_name]), window, Void)
+				elseif l_serializer.last_error_code = l_serializer.file_not_valid then
+					prompts.show_error_prompt (locale_formatter.formatted_translation (e_file_not_valid, [a_file_name]), window, Void)
+				end
 			else
-				from
-					l_old.start
-					l_new.start
-				until
-					l_old.after and l_new.after
-				loop
-					if l_old.after then
-						l_lstate := Void
-					else
-						l_lstate := l_old.item_for_iteration
-					end
-					if l_new.after then
-						l_rstate := Void
-					else
-						l_rstate := l_new.item_for_iteration
-					end
-					if l_lstate = Void then
-						l_new.forth
-					elseif l_rstate = Void then
-						l_old.forth
-					else
-						if l_lstate.test_name.same_string (l_rstate.test_name) then
+				l_serializer.serialize_test_suite
+				l_new := l_serializer.last_result
+				if l_new = Void then
+					prompts.show_error_prompt (locale.translation (e_test_suite_unavailable), window, Void)
+				else
+					from
+						l_old.start
+						l_new.start
+					until
+						l_old.after and l_new.after
+					loop
+						if l_old.after then
+							l_lstate := Void
+						else
+							l_lstate := l_old.item_for_iteration
+						end
+						if l_new.after then
+							l_rstate := Void
+						else
+							l_rstate := l_new.item_for_iteration
+						end
+						if l_lstate = Void then
 							l_new.forth
+						elseif l_rstate = Void then
 							l_old.forth
 						else
-							if l_lstate.test_name < l_rstate.test_name then
-								l_rstate := Void
+							if l_lstate.test_name.same_string (l_rstate.test_name) then
+								l_new.forth
 								l_old.forth
 							else
-								l_lstate := Void
-								l_new.forth
+								if l_lstate.test_name < l_rstate.test_name then
+									l_rstate := Void
+									l_old.forth
+								else
+									l_lstate := Void
+									l_new.forth
+								end
 							end
 						end
+						append_state (l_lstate, l_rstate)
 					end
-					append_state (l_lstate, l_rstate)
-				end
 
-				from
-					i := 1
-				until
-					i > statistic_count
-				loop
-					statistic_labels.item (i).prev.set_text (category_statistics[i].prev.out)
-					if category_statistics[i].prev > 0 then
-						statistic_labels.item (i).prev.parent.enable_sensitive
-					else
-						statistic_labels.item (i).prev.parent.disable_sensitive
+					from
+						i := 1
+					until
+						i > statistic_count
+					loop
+						statistic_labels.item (i).prev.set_text (category_statistics[i].prev.out)
+						if category_statistics[i].prev > 0 then
+							statistic_labels.item (i).prev.parent.enable_sensitive
+						else
+							statistic_labels.item (i).prev.parent.disable_sensitive
+						end
+						statistic_labels.item (i).new.set_text (category_statistics[i].new.out)
+						if category_statistics[i].new > 0 then
+							statistic_labels.item (i).new.parent.enable_sensitive
+						else
+							statistic_labels.item (i).new.parent.disable_sensitive
+						end
+						i := i + 1
 					end
-					statistic_labels.item (i).new.set_text (category_statistics[i].new.out)
-					if category_statistics[i].new > 0 then
-						statistic_labels.item (i).new.parent.enable_sensitive
-					else
-						statistic_labels.item (i).new.parent.disable_sensitive
-					end
-					i := i + 1
-				end
 
-				statistic_widget.enable_sensitive
-				grid.enable_sensitive
-				file_text.set_text (a_file_name.to_string_32)
+					statistic_widget.enable_sensitive
+					grid.enable_sensitive
+					file_text.set_text (a_file_name.to_string_32)
+				end
 			end
 
 			request_statistic_bars_redraw
@@ -782,6 +788,10 @@ feature {NONE} -- Internationalization
 
 	f_result_file: STRING = "Result File"
 	f_statistics: STRING = "Statistics"
+
+	e_test_suite_unavailable: STRING = "Unable to fetch results from test suite"
+	e_file_not_readable: STRING = "Unable to read results from file%N$1"
+	e_file_not_valid: STRING = "$1%Nis not a valid test result file"
 
 invariant
 	category_statistics_valid: category_statistics.count = statistic_count

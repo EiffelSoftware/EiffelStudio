@@ -34,6 +34,10 @@ feature -- Access: error codes
 	file_not_readable: like last_error_code = 3
 			-- Error code indicating that `Current' failed to read from a file
 
+	file_not_valid: like last_error_code = 4
+			-- Error code indicating that `Current' failed to read from a file becuase it did not contain
+			-- valid AutoTest results
+
 feature -- Basic operations
 
 	serialize_test_suite
@@ -88,8 +92,15 @@ feature -- Basic operations
 			reset
 			last_error_code := test_suite_unavailable
 			create l_file.make (a_file_name.as_string_8)
-			l_file.open_file
+			l_file.open_write
 			if l_file.extendible then
+				l_file.put_string (header_string)
+				l_file.put_string (" for ")
+				l_file.put_string ((create {SHARED_EIFFEL_PROJECT}).eiffel_system.name)
+				l_file.put_string (" (")
+				l_file.put_string ((create {DATE_TIME}.make_now).formatted_out (date_time_format))
+				l_file.put_character (')')
+				l_file.put_new_line
 				perform_with_test_suite (agent (a_test_suite: TEST_SUITE_S; a_file: FILE_WINDOW)
 					local
 						l_tests: SEQUENCE [TEST_I]
@@ -160,32 +171,42 @@ feature -- Basic operations
 				l_file.open_read
 				create l_results.make (100)
 				create l_details.make (4096)
-				from
-					l_file.start
-				until
-					l_file.off
-				loop
+
+				l_file.start
+				if l_file.after then
+					last_error_code := file_not_valid
+				else
 					l_file.read_line
 					l_line := l_file.last_string
-					if not l_line.is_empty then
-						if l_line.item (1).is_space then
-							l_line.remove_head (1)
-							l_details.append (l_line)
-						elseif l_line.item (1) /= '#' then
-							if l_parse /= Void and then attached l_parse.name as l_name then
-								append_state (l_name, l_parse.tag, l_details, l_parse.is_pass, l_parse.is_fail, l_results)
-								l_details.wipe_out
+					if l_line.starts_with (header_string) then
+						from until
+							l_file.off
+						loop
+							l_file.read_line
+							l_line := l_file.last_string
+							if not (l_line.is_empty or else l_line.item (1) = '#') then
+								if l_line.item (1).is_space then
+									l_line.remove_head (1)
+									l_details.append (l_line)
+								elseif l_line.item (1) /= '#' then
+									if l_parse /= Void and then attached l_parse.name as l_name then
+										append_state (l_name, l_parse.tag, l_details, l_parse.is_pass, l_parse.is_fail, l_results)
+										l_details.wipe_out
+									end
+									l_parse := parse_test_state (l_line)
+								end
 							end
-							l_parse := parse_test_state (l_line)
 						end
+						if l_parse /= Void and then attached l_parse.name as l_name then
+							append_state (l_name, l_parse.tag, l_details, l_parse.is_pass, l_parse.is_fail, l_results)
+						end
+							-- We bubble sort here as normally the input file is already sorted
+						(create {BUBBLE_SORTER [TEST_STATE]}.make (comparator)).sort (l_results)
+						last_result := l_results
+					else
+						last_error_code := file_not_valid
 					end
 				end
-				if l_parse /= Void and then attached l_parse.name as l_name then
-					append_state (l_name, l_parse.tag, l_details, l_parse.is_pass, l_parse.is_fail, l_results)
-				end
-					-- We bubble sort here as normally the input file is already sorted
-				(create {BUBBLE_SORTER [TEST_STATE]}.make (comparator)).sort (l_results)
-				last_result := l_results
 			end
 			if not l_file.is_closed then
 				l_file.close
@@ -311,6 +332,11 @@ feature {NONE} -- Factory
 		once
 			create Result
 		end
+
+feature {NONE} -- Constants
+
+	header_string: STRING = "# AutoTest results"
+	date_time_format: STRING = "[0]mm/[0]dd/yyyy [0]hh:[0]mi"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

@@ -44,8 +44,11 @@ feature
 		end
 
 	ocall is
+		local
+			l_exception: DEVELOPER_EXCEPTION
 		once
-			(create {DEVELOPER_EXCEPTION}).raise
+			create l_exception
+			l_exception.raise
 		end
 
 end

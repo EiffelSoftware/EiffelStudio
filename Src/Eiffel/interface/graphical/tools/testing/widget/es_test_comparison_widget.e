@@ -79,7 +79,8 @@ feature {NONE} -- Initialization
 
 			create l_toolbar.make
 			create l_button.make
-			l_button.set_pixel_buffer (stock_pixmaps.metric_common_criteria_icon_buffer)
+			l_button.set_pixel_buffer (stock_pixmaps.general_open_icon_buffer)
+			l_button.set_tooltip (locale.translation ({ES_TESTING_RESULTS_TOOL}.l_compare_states))
 			register_action (l_button.select_actions, agent on_compare_button_select)
 			l_toolbar.extend (l_button)
 			l_toolbar.compute_minimum_size
@@ -266,10 +267,28 @@ feature {NONE} -- Initialization
 
 	on_after_initialized
 			-- <Precursor>
+		local
+			i, l_id: INTEGER
+			l_new: BOOLEAN
+			l_bar: EV_DRAWING_AREA
 		do
 			Precursor
-			register_action (previous_bars.item (1).expose_actions, agent redraw_statistic_bars)
-			register_action (previous_bars.item (1).resize_actions, agent redraw_statistic_bars)
+			from
+				i := 1
+			until
+				i > 2*statistic_count
+			loop
+				l_id := (i+1)//2
+				l_new := i\\2 = 0
+				if l_new then
+					l_bar := current_bars.item (l_id)
+				else
+					l_bar := previous_bars.item (l_id)
+				end
+				register_action (l_bar.expose_actions, agent redraw_statistic_bars (?, ?, ?, ?, l_bar, l_id, l_new))
+				register_action (l_bar.resize_actions, agent redraw_statistic_bars (?, ?, ?, ?, l_bar, l_id, l_new))
+				i := i + 1
+			end
 			register_action (grid.row_expand_actions, agent (a_row: EV_GRID_ROW) do grid.request_columns_auto_resizing end)
 		end
 
@@ -312,6 +331,9 @@ feature {NONE} -- Access: rows
 
 	previous_bars, current_bars: like create_bars
 			-- Set of bars for visualizing statistics
+
+	max_statistic_count: NATURAL
+			-- Max value of any statistic in `category_statistics'
 
 feature {NONE} -- Status report
 
@@ -493,10 +515,28 @@ feature -- Basic operations
 
 feature {NONE} -- Events
 
-	redraw_statistic_bars (a_x, a_y, a_width, a_height: INTEGER)
-			-- Request status bar redraw
+	redraw_statistic_bars (a_x, a_y, a_width, a_height: INTEGER; a_bar: EV_DRAWING_AREA; an_id: like statistic_count; a_new: BOOLEAN)
+			-- Request status bar redraw.
+		require
+			a_bar_attached: a_bar /= Void
+			an_id_valid: 0 < an_id and an_id <= statistic_count
+		local
+			l_height, l_width, l_prop: INTEGER
+			l_stat: NATURAL
 		do
-			request_statistic_bars_redraw
+			if a_new then
+				l_stat := category_statistics[an_id].new
+			else
+				l_stat := category_statistics[an_id].prev
+			end
+			l_height := a_bar.height
+			l_width := a_bar.width
+			a_bar.clear
+			if max_statistic_count > 0 then
+				l_prop := ((l_stat/max_statistic_count)*l_height).floor
+				a_bar.set_foreground_color (statistic_color (an_id))
+				a_bar.fill_rectangle (0, l_height - l_prop, l_width, l_height)
+			end
 		end
 
 	request_statistic_bars_redraw
@@ -537,14 +577,18 @@ feature {NONE} -- Implementation
 			l_lid := statistic_id (an_old_state)
 			l_rid := statistic_id (a_new_state)
 			category_statistics.item (l_lid).prev := category_statistics.item (l_lid).prev + 1
+			if l_lid <= statistic_count then
+				max_statistic_count := max_statistic_count.max (category_statistics.item (l_lid).prev)
+			end
 			category_statistics.item (l_rid).new := category_statistics.item (l_rid).new + 1
+			if l_rid <= statistic_count then
+				max_statistic_count := max_statistic_count.max (category_statistics.item (l_rid).new)
+			end
 			if l_lid = l_rid then
 				l_row_id := unchanged_id
 				category_statistics.item (l_row_id).new := category_statistics.item (l_row_id).new + 1
 			else
 				l_row_id := l_rid
-				category_statistics.item (l_lid).sub := category_statistics.item (l_lid).sub + 1
-				category_statistics.item (l_row_id).add := category_statistics.item (l_row_id).add + 1
 			end
 			l_row := rows.item (l_row_id)
 			if l_row = Void then
@@ -581,6 +625,7 @@ feature {NONE} -- Implementation
 		do
 			grid.remove_and_clear_all_rows
 			rows.clear_all
+			max_statistic_count := 0
 			from
 				i := 1
 			until
@@ -668,15 +713,13 @@ feature {NONE} -- Factory
 			reset_token_writer
 		end
 
-	create_statistics: TUPLE [prev, new, sub, add: NATURAL]
+	create_statistics: TUPLE [prev, new: NATURAL]
 			-- Default statistic tuple
 			--
 			-- prev: Total number of results previously in category
 			-- new: Total number of result currently in category
-			-- sub: Total number of tests which moved to different category
-			-- add: Total number of tests which moved into category
 		do
-			Result := [{NATURAL_32} 0, {NATURAL_32} 0, {NATURAL_32} 0, {NATURAL_32} 0]
+			Result := [{NATURAL_32} 0, {NATURAL_32} 0]
 		end
 
 	create_bars: ARRAY [EV_DRAWING_AREA]

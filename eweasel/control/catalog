@@ -1798,13 +1798,14 @@ test	storable-with-attached-type-1	store019 tcf pass storable attached_types
 test	storable-with-attached-type-by-63	store020 tcf pass storable attached_types
 test	storable-removing-attachment-marks	store021 tcf pass storable attached_types
 test	store-expanded-class-type-2	store022 tcf pass storable expanded
-test	store-volatile-attributes	store023 tcf pass storable
+test	store-transient-attributes	store023 tcf pass storable
 test	stream-independent-store	store024 tcf pass storable stream special
 test	attached-independent-store	store025 tcf pass storable void-safe
 test	storable-formats-63			store026 tcf pass storable
 test	storable-with-special-type	store027 tcf pass storable
 test	storable-with-tuple-type	store028 tcf pass storable
 test	storable-formats-63-2		store029 tcf pass storable
+test	store-retrieve-transient-attributes	store030 tcf pass storable
 
 -- Flat, short, flatshort tests
 

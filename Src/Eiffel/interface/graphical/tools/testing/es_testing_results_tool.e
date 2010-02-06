@@ -106,9 +106,11 @@ feature {NONE} -- Constants
 	compare_file_id: STRING = "com.eiffel.testing_tool.compare_file"
 			-- Auto retrieve ID for session manager
 
-feature {NONE} -- Internationalization
+feature -- Internationalization
 
 	t_tool_title: STRING = "AutoTest Results"
+
+	l_compare_states: STRING = "Compare current test suite state to one previously exported to a file"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 			-- Initialize `editor_widget'.
 		local
 			l_editor: EB_CLICKABLE_EDITOR
-			l_tab: EV_NOTEBOOK_TAB
 		do
 			create editor_widget.make (develop_window)
 			l_editor := editor_widget.editor
@@ -40,8 +39,8 @@ feature {NONE} -- Initialization
 			l_editor.set_read_only (True)
 			l_editor.set_focus
 			notebook.extend (editor_widget)
-			l_tab := notebook.item_tab (editor_widget)
-			l_tab.set_text (locale.translation (t_details_title))
+			notebook.item_tab (editor_widget).set_text (locale.translation (t_details_title))
+			notebook.item_tab (editor_widget).set_pixmap (tool_descriptor.icon_pixmap)
 		end
 
 	build_comparison_widget
@@ -50,6 +49,7 @@ feature {NONE} -- Initialization
 			create comparison_widget.make (develop_window)
 			notebook.extend (comparison_widget.widget)
 			notebook.item_tab (comparison_widget.widget).set_text (locale.translation (t_comparison_title))
+			notebook.item_tab (comparison_widget.widget).set_pixmap (stock_pixmaps.metric_common_criteria_icon)
 		end
 
 feature {NONE} -- Access

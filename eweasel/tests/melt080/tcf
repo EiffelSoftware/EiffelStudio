@@ -1,5 +1,5 @@
 test_name 	nan-comparison
-test_description When you compare 2 NaNs it returns True instead of False in melted mode. It works fine in frozen or finalized mode.
+test_description When you compare 2 NaNs it should return a consistent value related to the `total order on REALs' setting from the project settings. By default NaN = NaN, but without the default order NaN /= NaN.
 
 define TOTAL_ORDER "false"
 copy_sub 	Ace $TEST Ace

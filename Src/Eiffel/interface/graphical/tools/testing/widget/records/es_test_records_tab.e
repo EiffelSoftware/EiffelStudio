@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 				end
 				a_menu.force (create {EV_MENU_SEPARATOR})
 				create l_ditem.make_with_text (locale.translation (l_remove_terminated))
-				if l_has_terminated then
+				if not l_has_terminated then
 					l_ditem.disable_sensitive
 				end
 				register_action (l_ditem.select_actions, agent on_remove_terminated_records)

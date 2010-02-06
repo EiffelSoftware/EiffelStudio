@@ -1,0 +1,27 @@
+test_name	store-retrieve-transient-attributes
+test_description Test that storing/retrieving transient attributes work properly.
+
+define COMMENT	"--"
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m1 1
+execute_result	ok
+compare		exec_output_m1 output
+
+define COMMENT	""
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m2 0
+execute_result	ok
+compare		exec_output_m2 output
+
+
+test_end

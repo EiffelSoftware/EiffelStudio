@@ -16,7 +16,6 @@ inherit
 		undefine
 			internal_recycle
 		redefine
-			create_right_tool_bar_items,
 			on_after_initialized
 		end
 
@@ -67,7 +66,6 @@ feature {NONE} -- Initialization
 				agent (a_test_suite: TEST_SUITE_S)
 					do
 						a_test_suite.record_repository.connection.connect_events (Current)
-						update_toolbar (a_test_suite.record_repository)
 					end)
 			display_empty_widget
 		end
@@ -106,34 +104,16 @@ feature {NONE} -- Access: buttons
 	compare_button: SD_TOOL_BAR_BUTTON
 			-- Button to compare different test suite states
 
-	store_button: SD_TOOL_BAR_BUTTON
-			-- Button for permanently storing a record
-
-	delete_button: SD_TOOL_BAR_POPUP_BUTTON
-			-- Button for deleting a record
-
-	delete_button_menu: EV_MENU
-			-- Menu for `delete_button'
-
 	records_menu: EV_MENU
 			-- Menu displayed when the user clicks on the `records_button'
 		local
 
 		do
-			if attached records_menu_cache as l_cache then
-				Result := l_cache
-			else
-				create Result
-				perform_with_test_suite (agent fill_records_menu (?, Result))
-				Result.item_select_actions.extend (agent on_record_menu_select)
-				records_menu_cache := Result
-			end
+			create Result
+			perform_with_test_suite (agent fill_records_menu (?, Result))
 		ensure
 			result_attached: Result /= Void
 		end
-
-	records_menu_cache: detachable like records_menu
-			-- Cache for `records_menu'
 
 feature {NONE} -- Status report
 
@@ -157,7 +137,6 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 	on_record_added (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		do
-			update_toolbar (a_repo)
 			if is_valid_record (a_record) and a_record.is_running then
 				if is_record_displayed then
 					remove_displayed_record
@@ -169,7 +148,6 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 	on_record_removed (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		do
-			update_toolbar (a_repo)
 			if is_record_displayed and then record_widget.record = a_record then
 				remove_displayed_record
 			end
@@ -178,7 +156,6 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 	on_record_property_updated (a_repo: TEST_RECORD_REPOSITORY_I; a_record: TEST_SESSION_RECORD)
 			-- <Precursor>
 		do
-			update_toolbar (a_repo)
 			if is_record_displayed and then record_widget.record = a_record then
 				record_widget.on_record_property_update
 			end
@@ -194,22 +171,25 @@ feature {TEST_RECORD_REPOSITORY_I} -- Events: record repository
 
 feature {NONE} -- Events: button
 
-	on_record_menu_select (an_item: EV_MENU_ITEM)
-			-- Called when item is selected in menu of `records_button'.
+	on_record_menu_select (a_record: TEST_SESSION_RECORD)
+			-- Called when record in `records_menu' is selected.
 			--
-			-- `an_item': Item that was selected.
+			-- `a_record': Record that was selected.
 		require
-			an_item_attached: an_item /= Void
+			an_item_attached: a_record /= Void
 		do
-			if
-				attached {TEST_SESSION_RECORD} an_item.data as l_record and then
-				(not is_record_displayed or else record_widget.record /= l_record)
-			then
+			if not is_record_displayed or else record_widget.record /= a_record then
 				if is_record_displayed then
 					remove_displayed_record
 				end
-				display_record (l_record)
+				display_record (a_record)
 			end
+		end
+
+	on_remove_terminated_records
+			-- Called when menu item to remove terminated records is selected.
+		do
+			perform_with_test_suite (agent remove_record)
 		end
 
 	on_compare_button_selected
@@ -235,7 +215,7 @@ feature {NONE} -- Events: button
 			if not l_dialog.file_name.is_empty then
 				create l_file.make (l_dialog.file_name)
 				if l_file.exists then
-					create l_prompt.make_standard (locale.translation (q_file_exists))
+					create l_prompt.make_standard (locale.translation (d_file_exists))
 					l_prompt.set_button_action (l_prompt.default_confirm_button, agent export_state (l_dialog.file_name))
 					l_prompt.show (window)
 				else
@@ -262,32 +242,6 @@ feature {NONE} -- Basic operations
 			end
 			internal_record_widget := l_widget
 			record_widget_cell.extend (l_widget.widget)
-			if attached records_menu_cache as l_menu then
-				from
-					l_menu.start
-				until
-					l_menu.after
-				loop
-					if attached {EV_CHECK_MENU_ITEM} l_menu.item_for_iteration as l_item then
-						if l_item.data = a_record then
-							if not l_item.is_selected then
-								l_item.enable_select
-							end
-						else
-							if l_item.is_selected then
-								l_item.disable_select
-							end
-						end
-					end
-					l_menu.forth
-				end
-			end
-			if a_record.repository.is_record_persistent (a_record) then
-				store_button.disable_sensitive
-			else
-				store_button.enable_sensitive
-			end
-			delete_button_menu.i_th (2).enable_sensitive
 		ensure
 			record_displayed: is_record_displayed
 			a_record_displayed: record_widget.record = a_record
@@ -301,42 +255,11 @@ feature {NONE} -- Basic operations
 			display_empty_widget
 			record_widget.recycle
 			internal_record_widget := Void
-			store_button.disable_sensitive
-			delete_button_menu.i_th (2).disable_sensitive
 		ensure
 			not_record_displayed: not is_record_displayed
 		end
 
 feature {NONE} -- Implementation
-
-	update_toolbar (a_repo: TEST_RECORD_REPOSITORY_I)
-			-- Update toolbar buttons according to current record repository state. Also reset
-			-- `records_manu_cache'.
-			--
-			-- `a_repo': Current record repository.
-		require
-			a_repo_attached: a_repo /= Void
-			a_repo_usable: a_repo.is_interface_usable
-		do
-			records_menu_cache := Void
-			if a_repo.records_of_type ({TEST_RESULT_RECORD}).is_empty then
-				if records_button.is_sensitive then
-					records_button.disable_sensitive
-				end
-				if delete_button.is_sensitive then
-					delete_button.disable_sensitive
-				end
-			else
-				if not records_button.is_sensitive then
-					records_button.enable_sensitive
-				end
-				if not delete_button.is_sensitive then
-					delete_button.enable_sensitive
-				end
-			end
-		ensure
-			records_menu_cache_reset: records_menu_cache = Void
-		end
 
 	display_empty_widget
 			-- Display an empty white cell in `record_widget_cell'.
@@ -361,8 +284,10 @@ feature {NONE} -- Implementation
 			l_records: ARRAYED_LIST [TEST_SESSION_RECORD]
 			l_record: TEST_SESSION_RECORD
 			l_item: EV_CHECK_MENU_ITEM
+			l_ditem: EV_MENU_ITEM
 			l_separator_pos: INTEGER
 			l_label: STRING_32
+			l_has_records, l_has_terminated: BOOLEAN
 		do
 			l_records := a_test_suite.record_repository.records
 			from
@@ -372,26 +297,27 @@ feature {NONE} -- Implementation
 			loop
 				l_record := l_records.item_for_iteration
 				if is_valid_record (l_record) then
+					l_has_records := True
 					create l_label.make (50)
 					l_label.append (date_time (l_record.creation_date))
 					create l_item
-					l_item.set_pixmap (stock_pixmaps.debug_run_icon)
-					l_item.set_data (l_record)
+					register_action (l_item.select_actions, agent on_record_menu_select (l_record))
 					if is_record_displayed and then record_widget.record = l_record then
 						l_item.enable_select
 					end
+					l_item.set_pixmap (stock_pixmaps.debug_run_icon)
+					l_item.set_data (l_record)
 					if l_record.is_running then
-						if l_separator_pos > 0 then
-							a_menu.put_front (create {EV_MENU_SEPARATOR})
-							l_separator_pos := 1
-						end
-						a_menu.put_i_th (l_item, l_separator_pos)
+						a_menu.put_front (l_item)
 						l_separator_pos := l_separator_pos + 1
+						l_label.append_character ('%T')
+						l_label.append_string (locale.translation (l_running))
 					else
+						l_has_terminated := True
 						if attached {TEST_EXECUTION_RECORD} l_record as l_exec_record then
-							l_label.append_string (" (")
+							l_label.append_character ('%T')
 							l_label.append_integer (l_exec_record.tests.count)
-							l_label.append_string (" tests)")
+							l_label.append_string (" tests")
 						end
 						a_menu.go_i_th (l_separator_pos)
 						a_menu.put_right (l_item)
@@ -400,6 +326,22 @@ feature {NONE} -- Implementation
 				end
 				l_records.forth
 			end
+			if l_has_records then
+				if l_has_terminated and l_separator_pos > 0 then
+					a_menu.go_i_th (l_separator_pos)
+					a_menu.put_right (create {EV_MENU_SEPARATOR})
+				end
+				a_menu.force (create {EV_MENU_SEPARATOR})
+				create l_ditem.make_with_text (locale.translation (l_remove_terminated))
+				if l_has_terminated then
+					l_ditem.disable_sensitive
+				end
+				register_action (l_ditem.select_actions, agent on_remove_terminated_records)
+			else
+				create l_ditem.make_with_text (locale.translation (l_no_results))
+				l_ditem.disable_sensitive
+			end
+			a_menu.force (l_ditem)
 		end
 
 	export_state (a_file_name: READABLE_STRING_8)
@@ -421,10 +363,10 @@ feature {NONE} -- Implementation
 			when {TEST_STATE_SERIALIZER}.test_suite_unavailable then
 				l_message := locale.translation (e_service_not_available)
 			when {TEST_STATE_SERIALIZER}.file_not_writable then
-				l_message := locale.formatted_string (e_file_not_writable, [a_file_name])
+				l_message := locale.formatted_string (d_file_not_writable, [a_file_name])
 			else
 				l_success := True
-				l_message := locale.formatted_string (m_state_exported, [a_file_name])
+				l_message := locale.formatted_string (d_state_exported, [a_file_name])
 			end
 			if l_success then
 				create {ES_INFORMATION_PROMPT} l_prompt.make_standard (l_message)
@@ -432,6 +374,26 @@ feature {NONE} -- Implementation
 				create {ES_ERROR_PROMPT} l_prompt.make_standard (l_message)
 			end
 			l_prompt.show (window)
+		end
+
+	remove_record (a_test_suite: TEST_SUITE_S)
+			-- Remove all terminated records from repository.
+		require
+			a_test_suite_attached: a_test_suite /= Void
+		local
+			l_records: ARRAYED_LIST [TEST_SESSION_RECORD]
+		do
+			l_records := a_test_suite.record_repository.records
+			from
+				l_records.start
+			until
+				l_records.after
+			loop
+				if not l_records.item_for_iteration.is_running then
+					a_test_suite.record_repository.remove_record (l_records.item_for_iteration)
+				end
+				l_records.forth
+			end
 		end
 
 feature {NONE} -- Factory
@@ -469,6 +431,7 @@ feature {NONE} -- Factory
 
 			create records_button.make
 			records_button.set_pixel_buffer (stock_pixmaps.general_document_icon_buffer)
+			records_button.set_tooltip (locale.translation (l_test_executions))
 			records_button.set_menu_function (agent records_menu)
 			Result.force_last (records_button)
 
@@ -476,31 +439,15 @@ feature {NONE} -- Factory
 
 			create compare_button.make
 			compare_button.set_pixel_buffer (stock_pixmaps.metric_common_criteria_icon_buffer)
+			compare_button.set_tooltip (locale.translation ({ES_TESTING_RESULTS_TOOL}.l_compare_states))
 			register_action (compare_button.select_actions, agent on_compare_button_selected)
 			Result.force_last (compare_button)
 
 			create export_button.make
 			export_button.set_pixel_buffer (stock_pixmaps.command_send_to_external_editor_icon_buffer)
+			export_button.set_tooltip (locale.translation (l_export_state))
 			register_action (export_button.select_actions, agent on_export_button_selected)
 			Result.force_last (export_button)
-		end
-
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			-- <Precursor>
-		do
-			create Result.make (2)
-
-			create store_button.make
-			store_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
-			Result.force_last (store_button)
-
-			create delete_button.make
-			delete_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
-			create delete_button_menu
-			delete_button_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Delete"))
-			delete_button_menu.extend (create {EV_MENU_ITEM}.make_with_text ("Delete All"))
-			delete_button.set_menu (delete_button_menu)
-			Result.force_last (delete_button)
 		end
 
 feature {NONE} -- Clean up
@@ -517,16 +464,23 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Internationalization
 
-	q_file_exists: STRING = "Are you sure you want to overwrite the existing file?"
+	l_test_executions: STRING = "Test execution results"
+	l_export_state: STRING = "Export test suite state to file"
+	l_running: STRING = "running"
+	l_remove_terminated: STRING = "Remove terminated"
+	l_no_results: STRING = "No results"
 
-	m_state_exported: STRING = "[
+	m_remove_current: STRING = "Remove shown"
+	m_remove_older: STRING = "Remove older"
+	m_remove_all: STRING = "Remove all"
+
+	d_file_exists: STRING = "Are you sure you want to overwrite the existing file?"
+	d_state_exported: STRING = "[
 			Test results were successfully exported to
 			
 			$1
 		]"
-
-
-	e_file_not_writable: STRING = "[
+	d_file_not_writable: STRING = "[
 			Unable to write test result to file:
 			
 			$1

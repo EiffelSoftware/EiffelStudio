@@ -190,6 +190,12 @@ feature {TYPE_A} -- Visitors
 			process_cl_type_a (a_type)
 		end
 
+	process_qualified_anchored_type_a (a_type: QUALIFIED_ANCHORED_TYPE_A)
+			-- Process `a_type'.
+		do
+			ctxt.process_string_text (a_type.dump, Void)
+		end
+
 	process_real_32_a (a_type: REAL_32_A)
 			-- Process `a_type'.
 		do
@@ -221,6 +227,12 @@ feature {TYPE_A} -- Visitors
 		end
 
 	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE)
+			-- Process `a_type'.
+		do
+			ctxt.process_string_text (a_type.dump, Void)
+		end
+
+	process_unevaluated_qualified_anchored_type (a_type: UNEVALUATED_QUALIFIED_ANCHORED_TYPE)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text (a_type.dump, Void)

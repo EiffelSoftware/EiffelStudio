@@ -318,6 +318,46 @@ feature {TYPE_A} -- Visitors
 			process_cl_type_a (a_type)
 		end
 
+	process_qualified_anchored_type_a (a_type: QUALIFIED_ANCHORED_TYPE_A)
+			-- Process `a_type'.
+		local
+			c: CLASS_C
+			n: INTEGER_32
+			i: INTEGER
+		do
+			if a_type.has_attached_mark then
+				text_formatter.process_keyword_text (ti_attached_keyword, Void)
+				text_formatter.add_space
+			elseif a_type.has_detachable_mark then
+				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
+				text_formatter.add_space
+			end
+			if a_type.qualifier.is_like then
+				a_type.qualifier.process (Current)
+			else
+				text_formatter.process_keyword_text (ti_like_keyword, Void)
+				text_formatter.add_space
+				text_formatter.process_symbol_text (ti_l_curly)
+				a_type.qualifier.process (Current)
+				text_formatter.process_symbol_text (ti_r_curly)
+			end
+			from
+				c := a_type.qualifier.associated_class
+			until
+				i >= a_type.chain.count
+			loop
+				text_formatter.process_symbol_text (ti_dot)
+				n := a_type.chain [i]
+				if c /= Void and then attached c.feature_with_name_id (n) as f then
+					f.append_name (text_formatter)
+					c := f.type.associated_class
+				else
+					text_formatter.process_feature_name_text (names_heap.item (n), c)
+				end
+				i := i + 1
+			end
+		end
+
 	process_real_32_A (a_type: REAL_32_A)
 			-- Process `a_type'.
 		do
@@ -371,6 +411,35 @@ feature {TYPE_A} -- Visitors
 			text_formatter.process_local_text (a_type.anchor)
 		end
 
+	process_unevaluated_qualified_anchored_type (a_type: UNEVALUATED_QUALIFIED_ANCHORED_TYPE)
+			-- Process `a_type'.
+		do
+			if a_type.has_attached_mark then
+				text_formatter.process_keyword_text (ti_attached_keyword, Void)
+				text_formatter.add_space
+			elseif a_type.has_detachable_mark then
+				text_formatter.process_keyword_text (ti_detachable_keyword, Void)
+				text_formatter.add_space
+			end
+			if a_type.qualifier.is_like then
+				a_type.qualifier.process (Current)
+			else
+				text_formatter.process_keyword_text (ti_like_keyword, Void)
+				text_formatter.add_space
+				text_formatter.process_symbol_text (ti_l_curly)
+				a_type.qualifier.process (Current)
+				text_formatter.process_symbol_text (ti_r_curly)
+			end
+			a_type.chain.do_all_in_bounds (
+				agent (n: INTEGER_32)
+					do
+						text_formatter.process_symbol_text (ti_dot)
+						text_formatter.process_local_text (names_heap.item (n))
+					end
+				(),
+				0, a_type.chain.count - 1)
+		end
+
 	process_void_a (a_type: VOID_A)
 			-- Process `a_type'.
 		do
@@ -378,7 +447,7 @@ feature {TYPE_A} -- Visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

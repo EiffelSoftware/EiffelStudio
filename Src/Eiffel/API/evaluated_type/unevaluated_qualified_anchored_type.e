@@ -44,7 +44,7 @@ feature -- Visitor
 	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
---			v.process_unevaluated_like_type (Current)
+			v.process_unevaluated_qualified_anchored_type (Current)
 		end
 
 feature -- Access

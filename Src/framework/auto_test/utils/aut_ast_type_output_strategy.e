@@ -1,7 +1,7 @@
 note
 	description: "[
 		AutoTest specific type output strategy which does not print formal types, only their
-		corresponding actual type.	
+		corresponding actual type.
 	]"
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,8 @@ inherit
 		redefine
 			process_like_feature,
 			process_like_current,
-			process_like_argument
+			process_like_argument,
+			process_qualified_anchored_type_a
 		end
 
 feature -- Process
@@ -38,9 +39,14 @@ feature -- Process
 			a_type.actual_type.process (Current)
 		end
 
+	process_qualified_anchored_type_a (a_type: QUALIFIED_ANCHORED_TYPE_A)
+			-- Process `a_type'.
+		do
+			a_type.actual_type.process (Current)
+		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

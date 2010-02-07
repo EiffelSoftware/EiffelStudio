@@ -46,7 +46,7 @@ feature -- Status report
 			a_unevaluated_type_not_void: a_unevaluated_type /= Void
 			has_error_reporting: not has_error_reporting
 		do
-			like_control.turn_off
+			like_control.reset
 			associated_type_ast := a_type_as
 			a_unevaluated_type.process (Current)
 			Result := last_type
@@ -61,7 +61,7 @@ feature -- Status report
 			a_unevaluated_type_not_void: a_unevaluated_type /= Void
 			has_error_reporting: has_error_reporting
 		do
-			like_control.turn_off
+			like_control.reset
 			associated_type_ast := a_type_as
 			a_unevaluated_type.process (Current)
 			Result := last_type
@@ -632,6 +632,12 @@ feature {TYPE_A} -- Visitors
 			last_type := a_type
 		end
 
+	process_qualified_anchored_type_a (a_type: QUALIFIED_ANCHORED_TYPE_A)
+			-- Process `a_type'.
+		do
+			update_qualified_anchored_type (a_type)
+		end
+
 	process_real_32_A (a_type: REAL_32_A)
 			-- Process `a_type'.
 		do
@@ -763,6 +769,25 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
+	process_unevaluated_qualified_anchored_type (t: UNEVALUATED_QUALIFIED_ANCHORED_TYPE)
+			-- Process `t'.
+		local
+			q: TYPE_A
+			r: QUALIFIED_ANCHORED_TYPE_A
+		do
+			t.qualifier.process (Current)
+			q := last_type
+			if attached q then
+				create r.make (q, t.chain)
+				if t.has_attached_mark then
+					r.set_attached_mark
+				elseif t.has_detachable_mark then
+					r.set_detachable_mark
+				end
+				update_qualified_anchored_type (r)
+			end
+		end
+
 	process_void_a (a_type: VOID_A)
 			-- Process `a_type'.
 		do
@@ -779,14 +804,11 @@ feature {NONE} -- Implementation
 			a_type_not_void: a_type /= Void
 		local
 			l_vtat1a: VTAT1A
-			l_controler_state: BOOLEAN
 			l_like_control: like like_control
 		do
 			l_like_control := like_control
-
 				-- Found argument
-			l_controler_state := l_like_control.is_on
-			if l_controler_state and l_like_control.has_argument (a_type.position) then
+			if l_like_control.has_argument (a_type.position) then
 					-- Cycle involving anchors on arguments
 				last_type := Void
 				if has_error_reporting then
@@ -798,21 +820,12 @@ feature {NONE} -- Implementation
 					error_handler.insert_error (l_vtat1a)
 				end
 			else
-				if not l_controler_state then
-						-- Enable like controler only if not already enabled.
-					l_like_control.turn_on
-				end
 				l_like_control.put_argument (a_type.position)
 				a_feature.arguments.i_th (a_type.position).process (Current)
 				l_like_control.remove_argument
 				if last_type /= Void then
 					a_type.set_actual_type (last_type)
 					last_type := a_type
-				end
-				if not l_controler_state then
-						-- Disable like controler only if it was not enabled before
-						-- entering current routine.
-					l_like_control.turn_off
 				end
 			end
 		end
@@ -823,74 +836,100 @@ feature {NONE} -- Implementation
 		require
 			a_feature_not_void: a_feature /= Void
 			a_type_not_void: a_type /= Void
-		local
-			l_anchor_type: TYPE_A
-			l_rout_id: INTEGER
-			l_vtat1: VTAT1
-			l_controler_state: BOOLEAN
-			l_like_control: like like_control
 		do
-				-- It is an anchored type on a feature: check if the
-				-- anchor feature has not an anchored type itself.
-			l_rout_id := a_feature.rout_id_set.first
+			process_anchor (a_feature, a_type)
+			if attached last_type as a then
+				a_type.set_actual_type (a.actual_type)
+				last_type := a_type
+			end
+		ensure
+			last_type_set: last_type = Void or else last_type = a_type
+		end
 
+	update_qualified_anchored_type (t: QUALIFIED_ANCHORED_TYPE_A)
+		require
+			t_attached: attached t
+		local
+			l_veen: VEEN
+			q: TYPE_A
+			i: INTEGER
+		do
+			t.qualifier.process (Current)
+			from
+				q := last_type
+			until
+				not attached q or else i >= t.chain.count
+			loop
+				q := q.actual_type
+				if attached q.associated_class.feature_table.item_id (t.chain [i]) as f then
+					process_anchor (f, t)
+					q := last_type
+				elseif has_error_reporting then
+					create l_veen
+					l_veen.set_class (current_class)
+					l_veen.set_feature (current_feature)
+					l_veen.set_identifier (system.names.item (t.chain [i]))
+					error_handler.insert_error (l_veen)
+				end
+				i := i + 1
+			end
+			if attached q then
+				t.set_actual_type (q.actual_type)
+				last_type := t
+			else
+				last_type := Void
+			end
+		ensure
+			last_type_set: last_type = Void or else last_type = t
+		end
+
+	process_anchor (f: FEATURE_I; t: TYPE_A)
+			-- Process anchor `f' being a part of type `t' and record it's type in `last_type'.
+			-- Report cyclic anchors if `has_error_reporting'.
+		require
+			f_attached: attached f
+		local
+			l_rout_id: INTEGER_32
+			l_like_control: like like_control
+			l_vtat1: VTAT1
+		do
 			l_like_control := like_control
-
-			l_controler_state := l_like_control.is_on
-
-			if l_controler_state and then l_like_control.has_routine_id (l_rout_id) then
+			l_rout_id := f.rout_id_set.first
+			if l_like_control.has_routine_id (l_rout_id) then
 					-- Error because of cycle
 				last_type := Void
 				if has_error_reporting then
-					create l_vtat1.make (a_type, a_type.feature_name)
+					create l_vtat1.make (t, f.feature_name)
 					l_vtat1.set_class (current_class)
 					l_vtat1.set_feature (current_feature)
 					error_handler.insert_error (l_vtat1)
 				end
 			else
-				if not l_controler_state then
-						-- Enable like controler only if not already enabled.
-					l_like_control.turn_on
-				end
-					-- Update anchored type controler
 				l_like_control.put_routine_id (l_rout_id)
 					-- Process type referenced by anchor.
-				a_feature.type.process (Current)
-					-- Update anchored type controler
+				f.type.process (Current)
+				-- Update anchored type controler
 				l_like_control.remove_routine_id
-
-				l_anchor_type := last_type
-
-				if l_anchor_type = Void then
+				if not attached last_type as a then
 						-- Nothing to be done, error if any was already reported.
-				elseif l_anchor_type.is_void then
+				elseif a.is_void then
 					last_type := Void
 					if has_error_reporting then
 						fixme ("What is the error for an anchor to a procedure")
-						create l_vtat1.make (a_type, a_type.feature_name)
+						create l_vtat1.make (t, f.feature_name)
 						l_vtat1.set_class (current_class)
 						l_vtat1.set_feature (current_feature)
 						error_handler.insert_error (l_vtat1)
 					end
 				else
-					fixme ("Use something else for `actual_type' which does the same thing with a different name.")
-					a_type.set_actual_type (l_anchor_type.actual_type)
-					last_type := a_type
 					if suppliers /= Void then
 							-- There is a dependance between `current_feature' and
 							-- the `a_feature'.
 							-- Record it for the propagation of the recompilations
-						suppliers.extend_depend_unit_with_level (current_class.class_id, a_feature, 0)
+						suppliers.extend_depend_unit_with_level (current_class.class_id, f, 0)
 					end
 				end
-				if not l_controler_state then
-						-- Disable like controler only if it was not enabled before
-						-- entering current routine.
-					l_like_control.turn_off
-				end
 			end
-		ensure
-			last_type_set: last_type = Void or else last_type = a_type
 		end
 
 feature {NONE} -- Implementation
@@ -917,7 +956,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -930,21 +969,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

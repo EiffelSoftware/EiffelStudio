@@ -93,7 +93,7 @@ feature -- Access
 			from
 				c := qualifier.associated_class
 			until
-				i > chain.count
+				i >= chain.count
 			loop
 				if attached c then
 					f := c.feature_table.item_id (chain [i])
@@ -137,7 +137,7 @@ feature -- IL code generation
 			from
 				c := qualifier.associated_class
 			until
-				i > chain.count
+				i >= chain.count
 			loop
 				if attached c then
 					f := c.feature_table.item_id (chain [i])
@@ -165,13 +165,9 @@ feature -- Output
 			elseif has_detachable_mark then
 				Result.append_character ('?')
 			end
-			if qualifier.is_like then
-				Result.append (qualifier.dump)
-			else
-				Result.append ("like {")
-				Result.append (qualifier.dump)
-				Result.append ("}")
-			end
+			Result.append ("like {")
+			Result.append (qualifier.dump)
+			Result.append ("}")
 			chain.do_all_in_bounds (
 				agent (i: INTEGER_32; r: STRING)
 					do
@@ -198,19 +194,15 @@ feature -- Output
 				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_detachable_keyword, Void)
 				st.add_space
 			end
-			if qualifier.is_like then
-				qualifier.ext_append_to (st, c)
-			else
-				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
-				st.add_space
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_curly)
-				qualifier.ext_append_to (st, c)
-				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_curly)
-			end
+			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
+			st.add_space
+			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_curly)
+			qualifier.ext_append_to (st, c)
+			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_curly)
 			from
 				q := qualifier.associated_class
 			until
-				i > chain.count
+				i >= chain.count
 			loop
 				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_dot)
 				if attached q and then q.has_feature_table then
@@ -250,7 +242,7 @@ feature -- Primitives
 					c := qualifier.associated_class
 					q := qualifier.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
 				until
-					i > chain.count
+					i >= chain.count
 				loop
 					if attached c then
 						f := c.feature_table.item_id (chain [i])

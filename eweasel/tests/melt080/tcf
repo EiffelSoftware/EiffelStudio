@@ -34,14 +34,7 @@ compare		exec_output3 ieee_output
 
 cleanup_compile
 define TOTAL_ORDER "true"
-copy_sub 	Ace $TEST Ace
-
-compile_melted
-compile_result	ok
-
-execute_work 	NONE exec_output4
-execute_result 	ok
-compare		exec_output4 output
+copy_sub 	Ace_2 $TEST Ace
 
 compile_frozen
 compile_result	ok
@@ -49,9 +42,20 @@ compile_result	ok
 c_compile_work
 c_compile_result	ok
 
-execute_work 	NONE exec_output5
-execute_result 	ok
-compare		exec_output5 output
+execute_work	NONE exec_output3
+execute_result	ok
+compare		exec_output3 output
+
+-- Let's force a melt here.
+define DATA "TOTO"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work	NONE exec_output4
+execute_result ok
+compare		exec_output4 output
 
 compile_final
 compile_result	ok
@@ -59,9 +63,9 @@ compile_result	ok
 c_compile_final
 c_compile_result	ok
 
-execute_final 	NONE exec_output6
+execute_final 	NONE exec_output5
 execute_result 	ok
-compare		exec_output6 output
+compare		exec_output5 output
 
 
 

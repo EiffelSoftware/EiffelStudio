@@ -17,7 +17,7 @@ inherit
 
 	CONSTRUCT_LIST [T]
 		export
-			{ANY} area
+			{ANY} area, do_all_with_index
 		redefine
 			make, make_filled
 		end

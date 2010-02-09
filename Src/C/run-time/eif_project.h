@@ -98,6 +98,7 @@ extern "C" {
 
 	RT_LNK int egc_has_old_special_semantic;
 	RT_LNK int egc_has_old_copy_semantic;
+	RT_LNK int egc_has_ieee_semantic;
 
 	RT_LNK EIF_TYPE_INDEX egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK EIF_TYPE_INDEX egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */

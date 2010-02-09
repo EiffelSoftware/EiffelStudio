@@ -72,6 +72,121 @@ rt_private EIF_REAL_64 eif_uint64_to_real64 (EIF_NATURAL_64 v) {
 }
 #endif
 
+/* Bit representations of REALs. */
+rt_private EIF_NATURAL_32 eif_real_32_bits (EIF_REAL_32 x) {
+		/* We use an union instead of *((EIF_NATURAL_32 *) &x) to avoid a `type-punned pointer'
+		 * warning with gcc. */
+	union {
+		EIF_REAL_32 r32;
+		EIF_NATURAL_32 n32;
+	} xconvert;
+	xconvert.r32 = x;
+	return xconvert.n32;
+}
+rt_private EIF_NATURAL_64 eif_real_64_bits (EIF_REAL_64 x) {
+		/* We use an union instead of *((EIF_NATURAL_32 *) &x) to avoid a `type-punned pointer'
+		 * warning with gcc. */
+	union {
+		EIF_REAL_64 r64;
+		EIF_NATURAL_64 n64;
+	} xconvert;
+	xconvert.r64 = x;
+	return xconvert.n64;
+}
+
+/* INF and NaN tests */
+rt_private int eif_is_nan_real_32 (EIF_REAL_32 v) {
+#ifndef EIF_NAN_NON_NATIVE_METHOD
+		/* See http://dev.eiffel.com/ieee_arithmetic which shows that the native implementation
+		 * is usually faster regardless of the platform. */
+	return v != v;
+#else
+		/* We keep the implementation that does not use any floating point operations to find out
+		 * if we have a NaN. First we clear the sign mark, then we ensure that it starts with 0x7ff
+		 * and that the mantissa is not 0. */
+	EIF_NATURAL_32 value = eif_real_32_bits (v);
+	value &= ~0x80000000;
+	return (value > 0x7ff00000);
+#endif
+}
+rt_private int eif_is_nan_real_64 (EIF_REAL_64 v) {
+#ifndef EIF_NAN_NON_NATIVE_METHOD
+		/* See http://dev.eiffel.com/ieee_arithmetic which shows that the native implementation
+		 * is usually faster regardless of the platform. */
+	return v != v;
+#else
+		/* We keep the implementation that does not use any floating point operations to find out
+		 * if we have a NaN. First we clear the sign mark, then we ensure that it starts with 0x7f8
+		 * and that the mantissa is not 0. */
+	EIF_NATURAL_64 value = eif_real_64_bits (v);
+	value &= ~RTU64C(0x8000000000000000);
+	return (value > RTU64C(0x7ff0000000000000));
+#endif
+}
+rt_private int eif_is_negative_infinity_real_32 (EIF_REAL_32 x) {
+	return x == eif_real_32_negative_infinity;
+}
+rt_private int eif_is_negative_infinity_real_64 (EIF_REAL_64 x) {
+	return x == eif_real_64_negative_infinity;
+}
+rt_private int eif_is_positive_infinity_real_32 (EIF_REAL_32 x) {
+	return x == eif_real_32_positive_infinity;
+}
+rt_private int eif_is_positive_infinity_real_64 (EIF_REAL_64 x) {
+	return x == eif_real_64_positive_infinity;
+}
+
+#ifndef EIF_IEEE_BEHAVIOR
+/* For comparison purposes, we actually assume that NaN is the lowest value.
+ * Per http://dev.eiffel.com/ieee_arithmetic the following algorithm are the 
+ * ones which are running the quickest most of the time. It is a tradeoff.
+ */
+
+/* For REAL_32 */
+rt_private int eif_is_equal_real_32 (EIF_REAL_32 d1, EIF_REAL_32 d2) {
+	return (d1 == d1 ? d1 == d2 : d2 != d2);
+}
+
+rt_private int eif_is_less_real_32 (EIF_REAL_32 d1, EIF_REAL_32 d2) {
+	return (d1 == d1 ? d1 < d2 : d2 == d2);
+}
+
+rt_private int eif_is_less_equal_real_32 (EIF_REAL_32 d1, EIF_REAL_32 d2) {
+	return (d1 == d1 ? d1 <= d2 : 1);
+}
+
+rt_private int eif_is_greater_real_32 (EIF_REAL_32 d1, EIF_REAL_32 d2) {
+	return (d2 == d2 ? d1 > d2 : d1 == d1);
+}
+
+rt_private int eif_is_greater_equal_real_32 (EIF_REAL_32 d1, EIF_REAL_32 d2) {
+	return (d2 == d2 ? d1 >= d2 : 1);
+}
+
+/* For REAL_64 */
+rt_private int eif_is_equal_real_64 (EIF_REAL_64 d1, EIF_REAL_64 d2) {
+	return (d1 == d1 ? d1 == d2 : d2 != d2);
+}
+
+rt_private int eif_is_less_real_64 (EIF_REAL_64 d1, EIF_REAL_64 d2) {
+	return (d1 == d1 ? d1 < d2 : d2 == d2);
+}
+
+rt_private int eif_is_less_equal_real_64 (EIF_REAL_64 d1, EIF_REAL_64 d2) {
+	return (d1 == d1 ? d1 <= d2 : 1);
+}
+
+rt_private int eif_is_greater_real_64 (EIF_REAL_64 d1, EIF_REAL_64 d2) {
+	return (d2 == d2 ? d1 > d2 : d1 == d1);
+}
+
+rt_private int eif_is_greater_equal_real_64 (EIF_REAL_64 d1, EIF_REAL_64 d2) {
+	return (d2 == d2 ? d1 >= d2 : 1);
+}
+
+
+#endif
+
 /* Absolute value computation */
 rt_private EIF_INTEGER_8 eif_abs_int8 (EIF_INTEGER_8 i) {
 	return (i > 0 ? i : -i);
@@ -124,10 +239,18 @@ rt_private EIF_WIDE_CHAR eif_max_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i > j ? i : j);
 }
 rt_private EIF_REAL_32 eif_max_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
+#ifdef EIF_IEEE_BEHAVIOR
 	return ((i != i) || (i > j) ? i : j);
+#else
+	return (eif_is_greater_equal_real_32(i, j) ? i : j);
+#endif
 }
 rt_private EIF_REAL_64 eif_max_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
+#ifdef EIF_IEEE_BEHAVIOR
 	return ((i != i) || (i > j) ? i : j);
+#else
+	return (eif_is_greater_equal_real_64(i, j) ? i : j);
+#endif
 }
 
 /* Min computation */
@@ -162,10 +285,18 @@ rt_private EIF_WIDE_CHAR eif_min_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i < j ? i : j);
 }
 rt_private EIF_REAL_32 eif_min_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
+#ifdef EIF_IEEE_BEHAVIOR
 	return ((i != i) || (i < j) ? i : j);
+#else
+	return (eif_is_less_equal_real_32(i, j) ? i : j);
+#endif
 }
 rt_private EIF_REAL_64 eif_min_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
+#ifdef EIF_IEEE_BEHAVIOR
 	return ((i != i) || (i < j) ? i : j);
+#else
+	return (eif_is_less_equal_real_64(i, j) ? i : j);
+#endif
 }
 
 /* Three way comparison computation */
@@ -200,39 +331,20 @@ rt_private EIF_INTEGER_32 eif_twc_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
 rt_private EIF_INTEGER_32 eif_twc_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
+#ifdef EIF_IEEE_BEHAVIOR
 	return (i < j ? -1 : (j < i) ? 1 : 0);
+#else
+	return (eif_is_less_real_32(i, j) ? -1 : eif_is_less_real_32(j, i) ? 1 : 0);
+#endif
 }
 rt_private EIF_INTEGER_32 eif_twc_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
+#ifdef EIF_IEEE_BEHAVIOR
 	return (i < j ? -1 : (j < i) ? 1 : 0);
+#else
+	return (eif_is_less_real_64(i, j) ? -1 : eif_is_less_real_64(j, i) ? 1 : 0);
+#endif
 }
 
-/* INF and NaN tests */
-rt_private EIF_BOOLEAN eif_is_nan_real_32 (EIF_REAL_32 x) {
-	return EIF_TEST(x != x);
-}
-rt_private EIF_BOOLEAN eif_is_nan_real_64 (EIF_REAL_64 x) {
-	return EIF_TEST(x != x);
-}
-rt_private EIF_BOOLEAN eif_is_negative_infinity_real_32 (EIF_REAL_32 x) {
-	return EIF_TEST(x == eif_real_32_negative_infinity);
-}
-rt_private EIF_BOOLEAN eif_is_negative_infinity_real_64 (EIF_REAL_64 x) {
-	return EIF_TEST(x == eif_real_64_negative_infinity);
-}
-rt_private EIF_BOOLEAN eif_is_positive_infinity_real_32 (EIF_REAL_32 x) {
-	return EIF_TEST(x == eif_real_32_positive_infinity);
-}
-rt_private EIF_BOOLEAN eif_is_positive_infinity_real_64 (EIF_REAL_64 x) {
-	return EIF_TEST(x == eif_real_64_positive_infinity);
-}
-
-/* Floating point is_equal computation */
-rt_private EIF_BOOLEAN eif_fpeq_real_32 (EIF_REAL_32 i, EIF_REAL_32 j) {
-	return EIF_TEST(eif_is_nan_real_32(i) ? eif_is_nan_real_32(j) : i == j);
-}
-rt_private EIF_BOOLEAN eif_fpeq_real_64 (EIF_REAL_64 i, EIF_REAL_64 j) {
-	return EIF_TEST(eif_is_nan_real_64(i) ? eif_is_nan_real_64(j) : i == j);
-}
 
 #ifdef __cplusplus
 }

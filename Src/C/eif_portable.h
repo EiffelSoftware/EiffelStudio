@@ -314,14 +314,6 @@ typedef EIF_INTEGER_64	rt_int64;
 #define chis_digit(c) (EIF_TEST(isdigit(c)))
 #define chis_alpha(c) (EIF_TEST(isalpha(c)))
 
-#define eif_abs_double	eif_abs_real64
-#define eif_abs_real	eif_abs_real32
-#define eif_min_double	eif_min_real64
-#define eif_max_double	eif_max_real64
-#define eif_min_real	eif_min_real32
-#define eif_max_real	eif_max_real32
-
-
 #ifdef __cplusplus
 }
 #endif

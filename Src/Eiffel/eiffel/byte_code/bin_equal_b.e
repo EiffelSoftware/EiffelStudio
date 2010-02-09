@@ -13,7 +13,8 @@ inherit
 			free_register, unanalyze, is_type_fixed,
 			is_commutative, print_register, type,
 			generate, analyze, is_unsafe, optimized_byte_node,
-			calls_special_features, pre_inlined_code, inlined_byte_code
+			calls_special_features, pre_inlined_code, inlined_byte_code,
+			is_binary_comparison, generate_real_comparison_routine_name
 		end
 
 	SHARED_TYPE_I
@@ -32,6 +33,9 @@ feature -- Status report
 	is_type_fixed: BOOLEAN = True
 			-- Is type of the expression statically fixed,
 			-- so that there is no variation at run-time?
+
+	is_binary_comparison: BOOLEAN = True
+			-- <Precursor>
 
 feature
 
@@ -127,20 +131,24 @@ feature
 			left_type: TYPE_A;
 			right_type: TYPE_A;
 		do
-			left_type := context.real_type (left.type);
-			right_type := context.real_type (right.type);
-			left.analyze;
-			right.analyze;
-			if (left_type.is_basic and not (right_type.is_none or
-				right_type.is_basic)) or (right_type.is_basic and not
-				(left_type.is_none or left_type.is_basic))
-			then
-				if left_type.is_basic then
-					get_left_register;
-				else
-					get_right_register;
+			if is_real_comparison then
+				Precursor
+			else
+				left_type := context.real_type (left.type);
+				right_type := context.real_type (right.type);
+				left.analyze;
+				right.analyze;
+				if (left_type.is_basic and not (right_type.is_none or
+					right_type.is_basic)) or (right_type.is_basic and not
+					(left_type.is_none or left_type.is_basic))
+				then
+					if left_type.is_basic then
+						get_left_register;
+					else
+						get_right_register;
+					end;
 				end;
-			end;
+			end
 		end;
 
 	unanalyze
@@ -186,6 +194,20 @@ feature
 			end
 		end
 
+	generate_real_comparison_routine_name (buf: GENERATION_BUFFER)
+			-- <Precursor>
+		do
+			if attached {BIN_NE_B} Current then
+				buf.put_character ('!')
+			end
+			buf.put_string ("eif_is_equal_real_")
+			if context.real_type (left.type).is_real_32 then
+				buf.put_two_character ('3', '2')
+			else
+				buf.put_two_character ('6', '4')
+			end
+		end
+
 	print_register
 			-- Print expression value
 		local
@@ -193,47 +215,51 @@ feature
 			right_type: TYPE_A;
 			buf: GENERATION_BUFFER
 		do
-			left_type := context.real_type (left.type);
-			right_type := context.real_type (right.type);
-
-			if
-				(left_type.is_none and right_type.is_basic) or
-				(left_type.is_basic and right_type.is_none)
-			then
-					-- Simple type can never be Void
-				generate_boolean_constant;
-			elseif left_type.is_true_expanded or right_type.is_true_expanded or
-				left_register /= Void or right_register /= Void
-			then
-				generate_negation
-				generate_equal_macro ("RTEQ")
-			elseif left_type.is_bit or right_type.is_bit then
-				generate_negation
-				generate_equal_macro ("RTEB")
-			elseif
-				left_type.is_reference and then
-				right_type.is_reference and then
-				left.is_dynamic_clone_required (left_type) and then
-				right.is_dynamic_clone_required (right_type)
-			then
-				generate_negation
-				generate_equal_macro ("RTCEQ")
+			if is_real_comparison then
+				Precursor
 			else
-				buf := buffer
-				buf.put_string ("(EIF_BOOLEAN)(")
-				if left_register = Void then
-					left.print_register;
+				left_type := context.real_type (left.type);
+				right_type := context.real_type (right.type);
+
+				if
+					(left_type.is_none and right_type.is_basic) or
+					(left_type.is_basic and right_type.is_none)
+				then
+						-- Simple type can never be Void
+					generate_boolean_constant;
+				elseif left_type.is_true_expanded or right_type.is_true_expanded or
+					left_register /= Void or right_register /= Void
+				then
+					generate_negation
+					generate_equal_macro ("RTEQ")
+				elseif left_type.is_bit or right_type.is_bit then
+					generate_negation
+					generate_equal_macro ("RTEB")
+				elseif
+					left_type.is_reference and then
+					right_type.is_reference and then
+					left.is_dynamic_clone_required (left_type) and then
+					right.is_dynamic_clone_required (right_type)
+				then
+					generate_negation
+					generate_equal_macro ("RTCEQ")
 				else
-					left_register.print_register;
+					buf := buffer
+					buf.put_string ("(EIF_BOOLEAN)(")
+					if left_register = Void then
+						left.print_register;
+					else
+						left_register.print_register;
+					end;
+					generate_operator (buf)
+					if right_register = Void then
+						right.print_register;
+					else
+						right_register.print_register;
+					end;
+					buf.put_character (')')
 				end;
-				generate_operator (buf)
-				if right_register = Void then
-					right.print_register;
-				else
-					right_register.print_register;
-				end;
-				buf.put_character (')')
-			end;
+			end
 		end;
 
 feature -- Array optimization
@@ -274,7 +300,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -287,22 +313,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

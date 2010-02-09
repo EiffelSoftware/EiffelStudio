@@ -147,6 +147,7 @@ static  void    prepare_types (void)
 	char    *dname;
 
 	(void) rchar ();	/* Is there something to read */
+	(void) rchar ();	/* Are we biding to IEEE arithmetic .*/
 	(void) rlong ();	/* class types count */
 	(void) rlong ();	/* class count */
 	(void) rlong ();	/* number of original routine bodies */
@@ -307,6 +308,12 @@ static  void    analyze_file (void)
 
 	
 	print_line ();
+
+	if (rchar ()) {
+		fprintf (mfp, "Non-IEEE comparison for floating points\n");
+	} else {
+		fprintf (mfp, "IEEE comparison for floating points\n");
+	}
 
 	fprintf (mfp,"Nr. of class types             : %d\n", rlong ());
 	fprintf (mfp,"Nr. of classes                 : %d\n", rlong ());

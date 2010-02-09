@@ -13,7 +13,7 @@ inherit
 		redefine
 			analyze, unanalyze, free_register,
 			generate, print_register,
-			generate_operator
+			generate_operator, generate_real_comparison_routine_name
 		end
 
 create
@@ -75,18 +75,22 @@ feature -- C code generation
 			left_type: TYPE_A
 			right_type: TYPE_A
 		do
-			left_type := context.real_type (left.type)
-			right_type := context.real_type (right.type)
-			left.analyze
-			right.analyze
-			if
-				(left_type.is_basic and not (right_type.is_none or right_type.is_basic)) or
-			 	(right_type.is_basic and not (left_type.is_none or left_type.is_basic))
-			then
-				if left_type.is_basic then
-					get_left_register
-				else
-					get_right_register
+			if is_real_comparison then
+				Precursor
+			else
+				left_type := context.real_type (left.type)
+				right_type := context.real_type (right.type)
+				left.analyze
+				right.analyze
+				if
+					(left_type.is_basic and not (right_type.is_none or right_type.is_basic)) or
+				 	(right_type.is_basic and not (left_type.is_none or left_type.is_basic))
+				then
+					if left_type.is_basic then
+						get_left_register
+					else
+						get_right_register
+					end
 				end
 			end
 		end
@@ -134,6 +138,20 @@ feature -- C code generation
 			end
 		end
 
+	generate_real_comparison_routine_name (buf: GENERATION_BUFFER)
+			-- <Precursor>
+		do
+			if attached {BIN_NOT_TILDE_BL} Current then
+				buf.put_character ('!')
+			end
+			buf.put_string ("eif_is_equal_real_")
+			if context.real_type (left.type).is_real_32 then
+				buf.put_two_character ('3', '2')
+			else
+				buf.put_two_character ('6', '4')
+			end
+		end
+
 	print_register
 			-- Print expression value
 		local
@@ -141,47 +159,51 @@ feature -- C code generation
 			right_type: TYPE_A
 			buf: GENERATION_BUFFER
 		do
-			left_type := context.real_type (left.type)
-			right_type := context.real_type (right.type)
-
-			if left_type.is_basic and right_type.is_basic then
-					-- From the byte node generation, we know that they must
-					-- be of the same type, otherwise something else than a
-					-- BIN_TILDE_B node is generated.
-				check
-					same_basic_type: left_type.same_as (right_type)
-				end
-				buf := buffer
-				buf.put_character ('(')
-				left.print_register
-				generate_operator (buffer)
-				right.print_register
-				buf.put_character (')')
-			elseif
-				(left_type.is_none and right_type.is_expanded) or
-				(left_type.is_expanded and right_type.is_none)
-			then
-					-- Simple type can never be Void
-				generate_boolean_constant
+			if is_real_comparison then
+				Precursor
 			else
-				buf := buffer
-				generate_negation
-					-- FIXME: This call assumes that `is_equal' from ANY always takes
-					-- `like Current' as argument, but actually it could be different.
-				buf.put_string ("RTEQ")
-				buf.put_character ('(')
-				if left_register = Void then
+				left_type := context.real_type (left.type)
+				right_type := context.real_type (right.type)
+
+				if left_type.is_basic and right_type.is_basic then
+						-- From the byte node generation, we know that they must
+						-- be of the same type, otherwise something else than a
+						-- BIN_TILDE_B node is generated.
+					check
+						same_basic_type: left_type.same_as (right_type)
+					end
+					buf := buffer
+					buf.put_character ('(')
 					left.print_register
-				else
-					left_register.print_register
-				end
-				buf.put_string (gc_comma)
-				if right_register = Void then
+					generate_operator (buffer)
 					right.print_register
+					buf.put_character (')')
+				elseif
+					(left_type.is_none and right_type.is_expanded) or
+					(left_type.is_expanded and right_type.is_none)
+				then
+						-- Simple type can never be Void
+					generate_boolean_constant
 				else
-					right_register.print_register
+					buf := buffer
+					generate_negation
+						-- FIXME: This call assumes that `is_equal' from ANY always takes
+						-- `like Current' as argument, but actually it could be different.
+					buf.put_string ("RTEQ")
+					buf.put_character ('(')
+					if left_register = Void then
+						left.print_register
+					else
+						left_register.print_register
+					end
+					buf.put_string (gc_comma)
+					if right_register = Void then
+						right.print_register
+					else
+						right_register.print_register
+					end
+					buf.put_character (')')
 				end
-				buf.put_character (')')
 			end
 		end
 
@@ -204,7 +226,7 @@ feature -- Settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -217,22 +239,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

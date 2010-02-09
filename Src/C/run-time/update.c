@@ -298,6 +298,9 @@ rt_public void update(char ignore_updt, char *argv0)
 		return;
 	}
 
+		/* Are we using IEEE comparison, or total order on REAL_XX? */
+	wread(&c, 1);
+	egc_has_ieee_semantic = (c == '\0');
 	count = (EIF_TYPE_INDEX) wint32();	/* Read the count of class types */
 	ccount = wint32();			/* Read the count of classes */
 	eif_nb_org_routines = wint32();		/* Read the number of original routine bodies */

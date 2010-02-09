@@ -4226,8 +4226,20 @@ rt_private void eif_interp_gt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 		case SK_INT16: f->it_char = EIF_TEST(f->it_int16 > s->it_int16); break;
 		case SK_INT32: f->it_char = EIF_TEST(f->it_int32 > s->it_int32); break;
 		case SK_INT64: f->it_char = EIF_TEST(f->it_int64 > s->it_int64); break;
-		case SK_REAL32: f->it_char = EIF_TEST(f->it_real32 > s->it_real32); break;
-		case SK_REAL64: f->it_char = EIF_TEST(f->it_real64 > s->it_real64); break;
+		case SK_REAL32:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real32 > s->it_real32);
+			} else {
+				f->it_char = EIF_TEST(eif_is_greater_real_32(f->it_real32, s->it_real32));
+			}
+			break;
+		case SK_REAL64:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real64 > s->it_real64);
+			} else {
+				f->it_char = EIF_TEST(eif_is_greater_real_64(f->it_real64, s->it_real64));
+			}
+			break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	f->type = SK_BOOL;		/* Result is a boolean */
@@ -4245,8 +4257,20 @@ rt_private void eif_interp_lt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 		case SK_INT16: f->it_char = EIF_TEST(f->it_int16 < s->it_int16); break;
 		case SK_INT32: f->it_char = EIF_TEST(f->it_int32 < s->it_int32); break;
 		case SK_INT64: f->it_char = EIF_TEST(f->it_int64 < s->it_int64); break;
-		case SK_REAL32: f->it_char = EIF_TEST(f->it_real32 < s->it_real32); break;
-		case SK_REAL64: f->it_char = EIF_TEST(f->it_real64 < s->it_real64); break;
+		case SK_REAL32:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real32 < s->it_real32);
+			} else {
+				f->it_char = EIF_TEST(eif_is_less_real_32(f->it_real32, s->it_real32));
+			}
+			break;
+		case SK_REAL64:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real64 < s->it_real64);
+			} else {
+				f->it_char = EIF_TEST(eif_is_less_real_64(f->it_real64, s->it_real64));
+			}
+			break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	f->type = SK_BOOL;		/* Result is a boolean */
@@ -4265,8 +4289,20 @@ rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 		case SK_INT16: f->it_char = EIF_TEST(f->it_int16 == s->it_int16); break;
 		case SK_INT32: f->it_char = EIF_TEST(f->it_int32 == s->it_int32); break;
 		case SK_INT64: f->it_char = EIF_TEST(f->it_int64 == s->it_int64); break;
-		case SK_REAL32: f->it_char = EIF_TEST(f->it_real32 == s->it_real32); break;
-		case SK_REAL64: f->it_char = EIF_TEST(f->it_real64 == s->it_real64); break;
+		case SK_REAL32:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real32 == s->it_real32);
+			} else {
+				f->it_char = EIF_TEST(eif_is_equal_real_32(f->it_real32, s->it_real32));
+			}
+			break;
+		case SK_REAL64:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real64 == s->it_real64);
+			} else {
+				f->it_char = EIF_TEST(eif_is_equal_real_64(f->it_real64, s->it_real64));
+			}
+			break;
 		case SK_POINTER: f->it_char = EIF_TEST(f->it_ptr == s->it_ptr); break;
 		case SK_BIT:
 		case SK_EXP:
@@ -4326,7 +4362,9 @@ rt_private void eif_interp_min_max (int code)
 	 * that the last poped value remains uccorrupted in a non-freed chunk--RAM.
 	 */
 #define EIF_MAX(a,b) ((a)>(b)? (a) : (b))
+#define EIF_MAX_REAL(a,b) (((a) != (a)) || ((a) > (b)) ? (a) : (b))
 #define EIF_MIN(a,b) ((a)<(b)? (a) : (b))
+#define EIF_MIN_REAL(a,b) (((a) != (a)) || ((a) < (b)) ? (a) : (b))
 
 	EIF_TYPED_VALUE *second;		/* Second operand */
 	EIF_TYPED_VALUE *first;			/* First operand */
@@ -4348,8 +4386,20 @@ rt_private void eif_interp_min_max (int code)
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MAX(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MAX(first->it_int32, second->it_int32); break;
 				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) EIF_MAX(first->it_int64, second->it_int64); break;
-				case SK_REAL32: first->it_real32 = (EIF_REAL_32) eif_max_real32(first->it_real32, second->it_real32); break;
-				case SK_REAL64: first->it_real64 = (EIF_REAL_64) eif_max_real64(first->it_real64, second->it_real64); break;
+				case SK_REAL32:
+					if (egc_has_ieee_semantic) {
+						first->it_real32 = EIF_MAX_REAL(first->it_real32, second->it_real32);
+					} else {
+						first->it_real32 = (eif_is_greater_equal_real_32(first->it_real32, second->it_real32) ? first->it_real32 : second->it_real32);
+					}
+					break;
+				case SK_REAL64:
+					if (egc_has_ieee_semantic) {
+						first->it_real64 = EIF_MAX_REAL(first->it_real64, second->it_real64);
+					} else {
+						first->it_real64 = (eif_is_greater_equal_real_64(first->it_real64, second->it_real64) ? first->it_real64 : second->it_real64);
+					}
+					break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 			break;
@@ -4365,8 +4415,20 @@ rt_private void eif_interp_min_max (int code)
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MIN(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MIN(first->it_int32, second->it_int32); break;
 				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) EIF_MIN(first->it_int64, second->it_int64); break;
-				case SK_REAL32: first->it_real32 = (EIF_REAL_32) eif_min_real32(first->it_real32, second->it_real32); break;
-				case SK_REAL64: first->it_real64 = (EIF_REAL_64) eif_min_real64(first->it_real64, second->it_real64); break;
+				case SK_REAL32:
+					if (egc_has_ieee_semantic) {
+						first->it_real32 = EIF_MIN_REAL(first->it_real32, second->it_real32);
+					} else {
+						first->it_real32 = (eif_is_less_equal_real_32(first->it_real32, second->it_real32) ? first->it_real32 : second->it_real32);
+					}
+					break;
+				case SK_REAL64:
+					if (egc_has_ieee_semantic) {
+						first->it_real64 = EIF_MIN_REAL(first->it_real64, second->it_real64);
+					} else {
+						first->it_real64 = (eif_is_less_equal_real_64(first->it_real64, second->it_real64) ? first->it_real64 : second->it_real64);
+					}
+					break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 			break;
@@ -4407,8 +4469,22 @@ rt_private void eif_three_way_comparison (void)
 		case SK_INT16: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int16, second->it_int16); break;
 		case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int32, second->it_int32); break;
 		case SK_INT64: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int64, second->it_int64); break;
-		case SK_REAL32: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_real32, second->it_real32); break;
-		case SK_REAL64: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_real64, second->it_real64); break;
+		case SK_REAL32:
+			if (egc_has_ieee_semantic) {
+				first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_real32, second->it_real32);
+			} else {
+				first->it_int32 = (eif_is_less_real_32(first->it_real32, second->it_real32) ? -1 :
+					eif_is_less_real_32(second->it_real32, first->it_real32) ? 1 : 0);
+			}
+			break;
+		case SK_REAL64:
+			if (egc_has_ieee_semantic) {
+				first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_real64, second->it_real64);
+			} else {
+				first->it_int32 = (eif_is_less_real_64(first->it_real64, second->it_real64) ? -1 :
+					eif_is_less_real_64(second->it_real64, first->it_real64) ? 1 : 0);
+			}
+			break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 

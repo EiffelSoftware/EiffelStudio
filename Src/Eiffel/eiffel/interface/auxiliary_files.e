@@ -933,6 +933,9 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N%Tegc_has_old_special_semantic = 0")
 --				buffer.put_string (";%N%Tegc_has_old_copy_semantic = 0")
 			end
+			if not system.total_order_on_reals then
+				buffer.put_string (";%N%Tegc_has_ieee_semantic = 1")
+			end
 
 				-- Generate the number of dynamic types.
 			buffer.put_string (";%N%Tscount = ")
@@ -1248,7 +1251,7 @@ feature -- Plug and Makefile file
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

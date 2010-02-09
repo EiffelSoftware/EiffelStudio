@@ -20,6 +20,8 @@ inherit
 			is_simple_expr
 		end
 
+	SHARED_INCLUDE
+
 	IL_CONST
 
 feature {NONE} -- Initialization
@@ -119,6 +121,25 @@ feature -- Status report
 	is_built_in: BOOLEAN
 			-- Is the current binary operator a built-in one ?
 		deferred
+		end
+
+	is_real_comparison: BOOLEAN
+			-- Is the current binary operator a comparison between REAL_xx that needs to be specifically
+			-- handled for our support of total order on IEEE reals?
+		local
+			l_type: TYPE_A
+		do
+			if is_binary_comparison and then system.total_order_on_reals then
+				l_type := context.real_type (left.type)
+				if l_type.is_real_32 or l_type.is_real_64 then
+					Result := l_type.same_as (context.real_type (right.type))
+				end
+			end
+		end
+
+	is_binary_comparison: BOOLEAN
+			-- Is the current binary operator a comparison, =, /=, <, <=, > or >=?
+		do
 		end
 
 	has_gcable_variable: BOOLEAN
@@ -273,15 +294,34 @@ feature -- C code generation
 		do
 			buf := buffer
 			type.c_type.generate_cast (buf)
-			buf.put_character ('(')
-			left.print_register
-			generate_operator (buf)
-			right.print_register
-			buf.put_character (')')
+			if is_real_comparison then
+					-- Add "eif_helpers.h" for C declaration of the various comparison routine.
+				shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				generate_real_comparison_routine_name (buf)
+				buf.put_two_character (' ', '(')
+				left.print_register
+				buf.put_two_character (',', ' ')
+				right.print_register
+				buf.put_character (')')
+			else
+				buf.put_character ('(')
+				left.print_register
+				generate_operator (buf)
+				right.print_register
+				buf.put_character (')')
+ 			end
 		end
 
 	generate_operator (a_buffer: GENERATION_BUFFER)
 			-- Generate operator in C
+		require
+			a_buffer_not_void: a_buffer /= Void
+		do
+		end
+
+	generate_real_comparison_routine_name (a_buffer: GENERATION_BUFFER)
+			-- Generate comparison between two REAL_xx values to take into account our modified
+			-- understanding of equality and comparison with NaN values.
 		require
 			a_buffer_not_void: a_buffer /= Void
 		do
@@ -341,7 +381,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -354,22 +394,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

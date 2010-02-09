@@ -2505,9 +2505,9 @@ end
 			if not empty then
 				file_pointer := melted_file.file_pointer
 
-					-- Write wether or not we use IEEE arithmetic or not
+					-- Write whether or not we use IEEE arithmetic or not
 				melted_file.put_boolean (total_order_on_reals)
-					-- Write first the number of dynamic types now available
+					-- Write the number of dynamic types now available
 				write_int (file_pointer, type_id_counter.value)
 					-- Write the number of classes now available
 				write_int (file_pointer, class_counter.count)

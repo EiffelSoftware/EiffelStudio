@@ -1209,7 +1209,16 @@ feature {NONE} -- Implementation
 			l_s := l_settings.item (s_total_order_on_reals)
 			if l_s /= Void then
 				if l_s.is_boolean then
-					system.set_total_order_on_reals (l_s.to_boolean)
+					l_b := l_s.to_boolean
+						-- Value cannot change from a precompile or in a compiled system
+					if l_b /= system.total_order_on_reals and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+						if not is_force_new_target then
+							create vd83.make (s_multithreaded, system.has_multithreaded.out.as_lower, l_s)
+							Error_handler.insert_warning (vd83)
+						end
+					else
+						system.set_total_order_on_reals (l_b)
+					end
 				else
 					create vd15
 					vd15.set_option_name (s_total_order_on_reals)
@@ -1217,7 +1226,9 @@ feature {NONE} -- Implementation
 					Error_handler.insert_error (vd15)
 				end
 			else
-				system.set_total_order_on_reals (true_boolean_settings.has (s_total_order_on_reals))
+				if a_target.precompile = Void and then not workbench.has_compilation_started then
+					system.set_total_order_on_reals (true_boolean_settings.has (s_total_order_on_reals))
+				end
 			end
 
 			l_s := l_settings.item (s_use_cluster_name_as_namespace)

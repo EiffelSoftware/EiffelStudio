@@ -302,7 +302,6 @@ feature {NONE} -- Implementation
 			Result.force (s_dead_code_removal)
 			Result.force (s_inlining)
 			Result.force (s_il_verifiable)
-			Result.force (s_total_order_on_reals)
 			Result.force (s_use_cluster_name_as_namespace)
 			Result.force (s_use_all_cluster_name_as_namespace)
 		ensure

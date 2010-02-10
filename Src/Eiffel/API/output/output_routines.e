@@ -72,10 +72,10 @@ feature -- Miscellaneous
 				end
 				text.add_new_line
 
-				if eiffel_ace.system.check_for_void_target then
+				if eiffel_ace.system.is_experimental_mode then
 					text.add_indent
-					text.process_indexing_tag_text ("void-safety: ")
-					text.process_basic_text ("enabled")
+					text.process_indexing_tag_text ("experimental mode: ")
+					text.process_basic_text ("True")
 					text.add_new_line
 				end
 			end
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

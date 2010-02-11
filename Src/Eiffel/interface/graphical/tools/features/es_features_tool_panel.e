@@ -321,10 +321,9 @@ feature {NONE} -- Action handlers
 							if attached l_tree.selected_row as l_row then
 								l_row.disable_select
 							end
-
 							if attached l_class_ast.features as l_clauses then
 									-- Build tree from AST nodes
-								l_tree.build_tree (l_clauses, l_class)
+								l_tree.build_tree (l_clauses, l_class, l_class_ast)
 							else
 									-- No items
 								l_tree.extend_item (create {EV_GRID_LABEL_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
@@ -423,7 +422,7 @@ invariant
 		show_signatures_button /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

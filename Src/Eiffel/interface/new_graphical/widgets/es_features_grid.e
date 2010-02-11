@@ -205,30 +205,33 @@ feature -- Basic operations
 
 feature -- Basic operations
 
-	nagivate_to_feature (a_feature: attached E_FEATURE)
+	navigate_to_feature (a_feature: E_FEATURE)
 			-- Navigates to a feature in using a default view.
 			--
 			-- `a_feature': A feature to navigate to.
+		require
+			a_feature_attached: a_feature /= Void
 		local
 			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			l_window := features_tool.develop_window
 			l_window.set_feature_locating (True)
-			l_window.set_stone (create {attached FEATURE_STONE}.make (a_feature))
+			l_window.set_stone (create {FEATURE_STONE}.make (a_feature))
 			l_window.set_feature_locating (False)
 		end
 
-	nagivate_to_feature_by_name (a_feature: attached STRING)
+	navigate_to_feature_by_name (a_feature: STRING)
 			-- Navigates to a feature in using a default view.
 			--
 			-- `a_feature': A feature name used to navigate to a feature.
 		require
+			a_feature_attached: a_feature /= Void
 			not_a_feature_is_empty: not a_feature.is_empty
 		local
 			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			l_window := features_tool.develop_window
-			if attached {EB_SMART_EDITOR} l_window.editors_manager.current_editor as l_editor then
+			if attached l_window.editors_manager.current_editor as l_editor then
 				if attached {EB_BASIC_TEXT_FORMATTER} l_window.pos_container as l_formatter then
 					l_window.managed_main_formatters.first.execute
 				end
@@ -236,22 +239,35 @@ feature -- Basic operations
 			end
 		end
 
-	nagivate_to_feature_clause (a_clause: attached FEATURE_CLAUSE_AS; a_focus: BOOLEAN)
+	navigate_to_feature_clause (a_clause: FEATURE_CLAUSE_AS; a_focus: BOOLEAN)
 			-- Navigates to a feature clause in the default view.
 			--
 			-- `a_clause': The feature clause to navigate too.
 			-- `a_focus': True to set focus, False otherwise.
+		require
+			a_clause_attached: a_clause /= Void
+		do
+			navigate_to_ast (a_clause, a_focus)
+		end
+
+	navigate_to_ast (a_ast: AST_EIFFEL; a_focus: BOOLEAN)
+			-- Navigates to a inherit clause in the default view.
+			--
+			-- `a_ast': The inherit clause to navigate too.
+			-- `a_focus': True to set focus, False otherwise.
+		require
+			a_ast_attached: a_ast /= Void
 		local
 			l_text: STRING_32
 			l_line, l_pos: INTEGER
 			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			check
-				a_clause_is_valid: a_clause.start_position > 0
+				a_ast_is_valid: a_ast.start_position > 0
 			end
 			l_window := features_tool.develop_window
-			if attached {EB_SMART_EDITOR} l_window.editors_manager.current_editor as l_editor then
-				if attached {CLASS_I} last_class as l_class then
+			if attached l_window.editors_manager.current_editor as l_editor then
+				if attached last_class as l_class then
 					l_text := l_class.text
 				end
 				if l_text = Void then
@@ -262,7 +278,7 @@ feature -- Basic operations
 						-- Ensure we are in edit mode in the editor.
 
 						-- Fetch line number
-					l_pos := a_clause.start_position
+					l_pos := a_ast.start_position
 					if l_pos <= l_text.count then
 						l_text := l_text.substring (1, l_pos)
 					end
@@ -280,6 +296,7 @@ feature -- Basic operations
 				check False end
 			end
 		end
+
 
 feature {NONE} -- Basic operations
 
@@ -385,7 +402,7 @@ feature -- Tree construction
 			extended_new_subrow (a_row).set_item (1, a_grid_item)
 		end
 
-	build_tree (fcl: EIFFEL_LIST [FEATURE_CLAUSE_AS]; a_class: CLASS_C)
+	build_tree (fcl: EIFFEL_LIST [FEATURE_CLAUSE_AS]; a_class: CLASS_C; a_class_ast: CLASS_AS)
 			-- Build the feature tree corresponding to current class.
 		require
 			feature_clause_list_not_void: fcl /= Void
@@ -406,6 +423,20 @@ feature -- Tree construction
 
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
 				l_match_list := match_list_server.item (a_class.class_id)
+
+				if attached a_class_ast.conforming_parents as l_conforming_parents then
+					l_row := extended_parent_list_row (l_conforming_parents, "Inherit", a_class, l_match_list, expand_tree)
+					if expand_tree and l_row.is_expandable then
+						l_row.expand
+					end
+				end
+				if attached a_class_ast.non_conforming_parents as l_non_conforming_parents then
+					l_row := extended_parent_list_row (l_non_conforming_parents, "Inherit {NONE}", a_class, l_match_list, expand_tree)
+					if expand_tree and l_row.is_expandable then
+						l_row.expand
+					end
+				end
+
 					--| Features
 				from
 					fcl.start
@@ -562,12 +593,12 @@ feature {NONE} -- Context menu handler
 			if is_clickable then
 				l_factory := features_tool.develop_window.menus.context_menu_factory
 				if attached {FEATURE_STONE} a_pebble as fst then
-					if attached {E_FEATURE} fst.e_feature as fe and then fe.is_compiled then
+					if attached fst.e_feature as fe and then fe.is_compiled then
 						l_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
 					else
 						l_factory.uncompiled_feature_item_menu (a_menu, a_target_list, a_source, a_pebble, fst.feature_name)
 					end
-				elseif attached {FEATURE_CLAUSE_AS} (data_from_row (selected_row)) as fc then
+				elseif attached {FEATURE_CLAUSE_AS} data_from_row (selected_row) as fc then
 					l_factory.feature_clause_item_menu (a_menu, a_target_list, a_source, a_pebble, fc)
 				end
 			end
@@ -611,6 +642,8 @@ feature {NONE} -- Event handler
 					d := data_from_item (a_item)
 					if attached {E_FEATURE} d as ef  then
 						create {FEATURE_STONE} Result.make (ef)
+					elseif attached {CLASS_I} d as ci then
+						create {CLASSI_STONE} Result.make (ci)
 					end
 				end
 			end
@@ -641,14 +674,14 @@ feature {NONE} -- Event handler
 		do
 				-- When features grid is created, there is no element and therefore
 				-- no selected items.
-			if attached {EV_GRID_ROW} selected_row as l_row then
+			if attached selected_row as l_row then
 				l_data := data_from_row (l_row)
 			end
 			if a_key.code = {EV_KEY_CONSTANTS}.Key_enter and then l_data /= Void then
 				if attached {E_FEATURE} l_data as l_feature then
-					nagivate_to_feature (l_feature)
+					navigate_to_feature (l_feature)
 				elseif attached {FEATURE_CLAUSE_AS} l_data as l_clause then
-					nagivate_to_feature_clause (l_clause, True)
+					navigate_to_feature_clause (l_clause, True)
 				end
 			end
 		end
@@ -662,9 +695,9 @@ feature {NONE} -- Event handler
 		local
 			l_stone: FEATURE_STONE
 		do
-			if attached {E_FEATURE} ef as l_ef then
+			if attached ef as l_ef then
 				if a_button = 1 then
-					nagivate_to_feature (l_ef)
+					navigate_to_feature (l_ef)
 				elseif a_button = 3 then
 					if ev_application.ctrl_pressed then
 						create l_stone.make (ef)
@@ -680,13 +713,84 @@ feature {NONE} -- Event handler
 						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
 						 a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Target `features_tool' to `fclause'.
-		require
-			fclause_not_void: fclause /= Void
 		do
-			if a_button = 1 and attached {FEATURE_CLAUSE_AS} fclause as l_clause then
-				nagivate_to_feature_clause (l_clause, False)
+			if a_button = 1 and fclause /= Void then
+				navigate_to_feature_clause (fclause, False)
 			end
 		end
+
+	button_go_to_ast (a_ast: AST_EIFFEL; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
+						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
+						 a_screen_x: INTEGER; a_screen_y: INTEGER)
+			-- Target `features_tool' to `fclause'.
+		require
+			a_ast_attached: a_ast /= Void
+		do
+			if a_button = 1 and a_ast /= Void then
+				navigate_to_ast (a_ast, False)
+			end
+		end
+
+	extended_parent_list_row (a_parent_list: PARENT_LIST_AS; s: STRING; a_class: CLASS_C; a_match_list: LEAF_AS_LIST; a_expanded: BOOLEAN): EV_GRID_ROW
+			-- Build the grid row corresponding to inherit clause
+		require
+			a_parent_list_attached: a_parent_list /= Void
+			a_class_attached: a_class /= Void
+			a_match_list_attached: a_match_list /= Void
+		local
+			pix: EV_PIXMAP
+			l_parent: PARENT_AS
+			l_parent_cname, l_parent_text: STRING
+			l_parent_class_i: detachable CLASS_I
+			l_row: like extended_new_row
+		do
+			Result := extended_new_row
+			pix := pixmaps.icon_pixmaps.class_ancestors_icon
+			add_tree_item_for_parent_list (Result, a_parent_list, s, pix)
+
+			from
+				a_parent_list.start
+			until
+				a_parent_list.after
+			loop
+				l_parent := a_parent_list.item
+				l_parent_text := l_parent.type.text (a_match_list)
+				if attached l_parent.type.generics as l_gen then
+					l_parent_text.append_character (' ')
+					l_parent_text.append_string (l_gen.text (a_match_list))
+				end
+
+				l_parent_cname := l_parent.type.class_name.text (a_match_list)
+				if Workbench.universe_defined then
+					l_parent_class_i := universe.class_named (l_parent_cname, a_class.group)
+				end
+				l_row := extended_parent_item_subrow (Result, l_parent, l_parent_class_i, l_parent_text, a_class)
+				if a_expanded and l_row.is_expandable then
+					l_row.expand
+				end
+				a_parent_list.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	extended_parent_item_subrow (a_row: EV_GRID_ROW; a_parent: PARENT_AS; a_parent_class_i: detachable CLASS_I; s: STRING; a_class: CLASS_C): EV_GRID_ROW
+			-- Build the grid row corresponding to inherit clause
+		require
+			a_parent_attached: a_parent /= Void
+			a_class_attached: a_class /= Void
+		local
+			pix: EV_PIXMAP
+		do
+			Result := extended_new_subrow (a_row)
+			if a_parent_class_i /= Void then
+				pix := pixel_buffer_from_class_i (a_parent_class_i)
+			end
+			add_tree_item_for_parent (Result, a_parent, a_parent_class_i, s, pix)
+		ensure
+			result_attached: Result /= Void
+		end
+
 
 	extended_folder_row (fc: FEATURE_CLAUSE_AS; n: STRING_GENERAL; a_class: CLASS_C): EV_GRID_ROW
 			-- Build the grid row corresponding to feature clause named `n'.
@@ -884,6 +988,39 @@ feature {NONE} -- Tree item factory
 			Result := [esw.label_font_table, esw.label_font_height]
 		end
 
+	add_tree_item_for_parent_list (a_row: EV_GRID_ROW; a_parent_list: PARENT_LIST_AS; a_text: STRING_GENERAL; pix: EV_PIXMAP)
+		local
+			lab: EV_GRID_LABEL_ITEM
+		do
+			create lab.make_with_text (a_text)
+			lab.set_pixmap (pix)
+			lab.set_data (a_parent_list)
+			if is_clickable then
+				lab.pointer_button_press_actions.extend (agent button_go_to_ast (a_parent_list, ?, ?, ?, ?, ?, ?, ?, ?))
+			end
+			a_row.set_data (a_parent_list)
+			a_row.set_item (1, lab)
+		end
+
+	add_tree_item_for_parent (a_row: EV_GRID_ROW; a_parent: PARENT_AS; a_parent_class_i: detachable CLASS_I; a_text: STRING_GENERAL; pix: EV_PIXMAP)
+		local
+			lab: EV_GRID_LABEL_ITEM
+		do
+			create lab.make_with_text (a_text)
+			lab.set_pixmap (pix)
+
+			if is_clickable then
+				lab.pointer_button_press_actions.extend (agent button_go_to_ast (a_parent, ?, ?, ?, ?, ?, ?, ?, ?))
+			end
+			if a_parent_class_i /= Void then
+				lab.set_data (a_parent_class_i)
+			else
+				lab.set_data (a_parent)
+			end
+			a_row.set_data (lab.data)
+			a_row.set_item (1, lab)
+		end
+
 	add_tree_item_for_e_feature (a_row: EV_GRID_ROW; ef: E_FEATURE; pix: EV_PIXMAP)
 		local
 			lab: EV_GRID_LABEL_ITEM
@@ -926,8 +1063,8 @@ feature {NONE} -- Tree item factory
 			lab.set_pixmap (pix)
 			lab.set_data (a_text)
 			if is_clickable then
-				if attached {STRING_8} ffn as l_feature_name then
-					lab.pointer_button_press_actions.force_extend (agent nagivate_to_feature_by_name (l_feature_name))
+				if attached ffn as l_feature_name then
+					lab.pointer_button_press_actions.force_extend (agent navigate_to_feature_by_name (l_feature_name))
 				end
 			end
 			a_row.set_item (1, lab)
@@ -962,7 +1099,7 @@ feature {NONE} -- Tree item factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

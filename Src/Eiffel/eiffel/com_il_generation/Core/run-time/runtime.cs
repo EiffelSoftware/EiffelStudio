@@ -650,6 +650,72 @@ feature -- Builtin implementations for Eiffel classes, see Eiffel classes for co
 	}
 
 /*
+feature -- IEEE comparisons of REAL_32 and REAL_64
+*/
+// Disabling warning is necessary
+#pragma warning disable 1718
+
+	public static bool is_equal_real_32 (float d1, float d2) {
+		return (d1 == d1 ? d1 == d2 : d2 != d2);
+	}
+
+	public static bool is_less_real_32 (float d1, float d2) {
+		return (d1 == d1 ? d1 < d2 : d2 == d2);
+	}
+
+	public static bool is_less_equal_real_32 (float d1, float d2) {
+		return (d1 == d1 ? d1 <= d2 : true);
+	}
+
+	public static bool is_greater_real_32 (float d1, float d2) {
+		return (d2 == d2 ? d1 > d2 : d1 == d1);
+	}
+
+	public static bool is_greater_equal_real_32 (float d1, float d2) {
+		return (d2 == d2 ? d1 >= d2 : true);
+	}
+
+	public static bool is_equal_real_64 (double d1, double d2) {
+		return (d1 == d1 ? d1 == d2 : d2 != d2);
+	}
+
+	public static bool is_less_real_64 (double d1, double d2) {
+		return (d1 == d1 ? d1 < d2 : d2 == d2);
+	}
+
+	public static bool is_less_equal_real_64 (double d1, double d2) {
+		return (d1 == d1 ? d1 <= d2 : true);
+	}
+
+	public static bool is_greater_real_64 (double d1, double d2) {
+		return (d2 == d2 ? d1 > d2 : d1 == d1);
+	}
+
+	public static bool is_greater_equal_real_64 (double d1, double d2) {
+		return (d2 == d2 ? d1 >= d2 : true);
+	}
+
+	public static float min_real_32 (float i, float j) {
+		return (is_less_equal_real_32(i, j) ? i : j);
+	}
+	public static double min_real_64 (double i, double j) {
+		return (is_less_equal_real_64(i, j) ? i : j);
+	}
+	public static float max_real_32 (float i, float j) {
+		return (is_greater_equal_real_32(i, j) ? i : j);
+	}
+	public static double max_real_64 (double i, double j) {
+		return (is_greater_equal_real_64(i, j) ? i : j);
+	}
+	public static int three_way_comparison_real_32 (float i, float j) {
+		return (is_less_real_32(i, j) ? -1 : is_less_real_32(j, i) ? 1 : 0);
+	}
+	public static int three_way_comparison_real_64 (double i, double j) {
+		return (is_less_real_64(i, j) ? -1 : is_less_real_64(j, i) ? 1 : 0);
+	}
+
+#pragma warning restore 1718
+/*
 feature -- Redirection to feature of ANY class
 */
 	public static bool conforms_to (Object obj1, Object obj2)

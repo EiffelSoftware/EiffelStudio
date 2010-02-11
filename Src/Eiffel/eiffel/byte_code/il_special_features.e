@@ -234,7 +234,11 @@ feature -- IL code generation
 					valid_count: parameters.count = 1
 				end
 				parameters.process (a_generator)
-				il_generator.generate_math_two_arguments ("Min", type)
+				if system.total_order_on_reals and then (type.is_real_32 or type.is_real_64) then
+					il_generator.generate_real_comparison_routine (il_min, type.is_real_32, type)
+				else
+					il_generator.generate_math_two_arguments ("Min", type)
+				end
 
 			when max_type then
 				check
@@ -242,14 +246,23 @@ feature -- IL code generation
 					valid_count: parameters.count = 1
 				end
 				parameters.process (a_generator)
-				il_generator.generate_math_two_arguments ("Max", type)
+				if system.total_order_on_reals and then (type.is_real_32 or type.is_real_64) then
+					il_generator.generate_real_comparison_routine (il_max, type.is_real_32, type)
+				else
+					il_generator.generate_math_two_arguments ("Max", type)
+				end
 
 			when three_way_comparison_type then
 				check
 					parameters_not_void: parameters /= Void
 					valid_count: parameters.count = 1
 				end
-				generate_three_way_comparison (a_generator, type, parameters.i_th (1))
+				if system.total_order_on_reals and then (type.is_real_32 or type.is_real_64) then
+					parameters.process (a_generator)
+					il_generator.generate_real_comparison_routine (il_three_way_comparison, type.is_real_32, integer_32_type)
+				else
+					generate_three_way_comparison (a_generator, type, parameters.i_th (1))
+				end
 
 			when offset_type then
 				check

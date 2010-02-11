@@ -1041,6 +1041,19 @@ feature -- Binary operator generation
 		deferred
 		end
 
+	generate_real_comparison_routine (a_code: INTEGER; is_real_32: BOOLEAN; a_return_type: TYPE_A)
+			-- Generate a binary operator comparison for REAL_XX types when
+			-- user chose to have a total order on REALs.
+		require
+			a_code_valid: a_code = {IL_CONST}.il_ne or a_code = {IL_CONST}.il_eq or
+				a_code = {IL_CONST}.il_le or a_code = {IL_CONST}.il_lt or
+				a_code = {IL_CONST}.il_ge or a_code = {IL_CONST}.il_gt
+			a_return_type_not_void: a_return_type /= Void
+			a_return_type_valid: a_return_type.is_boolean or a_return_type.is_integer or
+				a_return_type.is_real_32 or a_return_type.is_real_64
+		deferred
+		end
+
 feature -- Unary operator generation
 
 	generate_unary_operator (code: INTEGER)

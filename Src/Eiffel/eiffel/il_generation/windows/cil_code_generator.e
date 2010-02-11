@@ -6625,6 +6625,96 @@ feature -- Binary operator generation
 			end
 		end
 
+	generate_real_comparison_routine (a_code: INTEGER; is_real_32: BOOLEAN; a_return_type: TYPE_A)
+			-- <Precursor>
+		local
+			l_routine_name: STRING
+			l_return_type: STRING
+		do
+			inspect a_code
+			when il_eq, il_ne then
+				if is_real_32 then
+					l_routine_name := once "is_equal_real_32"
+				else
+					l_routine_name := once "is_equal_real_64"
+				end
+
+			when il_le then
+				if is_real_32 then
+					l_routine_name := once "is_less_equal_real_32"
+				else
+					l_routine_name := once "is_less_equal_real_64"
+				end
+
+			when il_lt then
+				if is_real_32 then
+					l_routine_name := once "is_less_real_32"
+				else
+					l_routine_name := once "is_less_real_64"
+				end
+
+			when il_ge then
+				if is_real_32 then
+					l_routine_name := once "is_greater_equal_real_32"
+				else
+					l_routine_name := once "is_greater_equal_real_64"
+				end
+
+			when il_gt then
+				if is_real_32 then
+					l_routine_name := once "is_greater_real_32"
+				else
+					l_routine_name := once "is_greater_real_64"
+				end
+
+			when il_min then
+				if is_real_32 then
+					l_routine_name := once "min_real_32"
+				else
+					l_routine_name := once "min_real_64"
+				end
+
+			when il_max then
+				if is_real_32 then
+					l_routine_name := once "max_real_32"
+				else
+					l_routine_name := once "max_real_64"
+				end
+
+			when il_three_way_comparison then
+				if is_real_32 then
+					l_routine_name := once "three_way_comparison_real_32"
+				else
+					l_routine_name := once "three_way_comparison_real_64"
+				end
+
+			end
+
+			if a_return_type.is_boolean then
+				l_return_type := "System.Boolean"
+			elseif attached {INTEGER_A} a_return_type as l_type then
+				l_return_type := "System.Int"
+				l_return_type.append_integer (l_type.size)
+			elseif a_return_type.is_real_32 then
+				l_return_type := "System.Single"
+			elseif a_return_type.is_real_64 then
+				l_return_type := "System.Double"
+			end
+
+			if is_real_32 then
+				internal_generate_external_call (current_module.ise_runtime_token, current_module.ise_runtime_type_token,
+					Void, l_routine_name, static_type, <<"System.Single", "System.Single">>, l_return_type, False)
+			else
+				internal_generate_external_call (current_module.ise_runtime_token, current_module.ise_runtime_type_token,
+					Void, l_routine_name, static_type, <<"System.Double", "System.Double">>, l_return_type, False)
+			end
+
+			if a_code = il_ne then
+				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
+			end
+		end
+
 feature -- Unary operator generation
 
 	generate_unary_operator (code: INTEGER)

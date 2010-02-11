@@ -281,6 +281,8 @@ feature {NONE} -- Basic operations
 					l_input_file.close
 				end
 				a_process.redirect_input_to_file (l_input_file.name)
+			else
+				a_process.redirect_input_to_stream
 			end
 		end
 
@@ -315,7 +317,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

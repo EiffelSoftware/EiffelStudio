@@ -1263,7 +1263,11 @@ feature {NONE} -- Visitors
 				end
 				a_node.left.process (Current)
 				a_node.right.process (Current)
-				il_generator.generate_binary_operator (il_eq, l_lt.is_natural)
+				if a_node.is_real_comparison then
+					il_generator.generate_real_comparison_routine (il_eq, l_lt.is_real_32, boolean_type)
+				else
+					il_generator.generate_binary_operator (il_eq, l_lt.is_natural)
+				end
 			elseif (l_lt.is_expanded and then l_rt.is_none) or else (l_lt.is_none and then l_rt.is_expanded) then
 					-- An expanded type is neither Void, so we simply evaluate the expressions and
 					-- then remove them from the stack to insert the expected value.
@@ -3456,10 +3460,18 @@ feature {NONE} -- Implementation: binary operators
 					end
 				end
 
-				if l_same_type then
-					il_generator.generate_binary_operator (an_opcode, l_left_type.is_natural)
+				if a_node.is_real_comparison then
+					if l_same_type then
+						il_generator.generate_real_comparison_routine (an_opcode, l_left_type.is_real_32, boolean_type)
+					else
+						il_generator.generate_real_comparison_routine (an_opcode, l_type.is_real_32, boolean_type)
+					end
 				else
-					il_generator.generate_binary_operator (an_opcode, l_type.is_natural)
+					if l_same_type then
+						il_generator.generate_binary_operator (an_opcode, l_left_type.is_natural)
+					else
+						il_generator.generate_binary_operator (an_opcode, l_type.is_natural)
+					end
 				end
 			else
 				a_node.nested_b.process (Current)

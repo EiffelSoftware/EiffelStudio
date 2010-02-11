@@ -10,4 +10,16 @@ s = NON_VOLATILE
 vol_s = Void
 i = 123123
 vol_i = 0
+s = NON_VOLATILE
+vol_s = Void
+i = 123123
+vol_i = 0
+s = NON_VOLATILE
+vol_s = Void
+i = 123123
+vol_i = 0
+s = NON_VOLATILE
+vol_s = Void
+i = 123123
+vol_i = 0
 Execution completed

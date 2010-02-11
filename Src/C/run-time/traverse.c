@@ -400,7 +400,7 @@ rt_private void internal_traversal(EIF_REFERENCE object, int for_persistence, in
 		for (i = 0; i < count; i++) {
 			reference = *((char **) object + i);
 				/* Only account for non-volatile attributes in `for_persistence' mode. */
-			if (reference && (!for_persistence || (!EIF_IS_VOLATILE_ATTRIBUTE(System(zone->ov_dtype),i)))) {
+			if (reference && (!for_persistence || (!EIF_IS_TRANSIENT_ATTRIBUTE(System(zone->ov_dtype),i)))) {
 				internal_traversal(reference, for_persistence, p_accounting, 0);
 			}
 		}

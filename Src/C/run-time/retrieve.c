@@ -3463,7 +3463,7 @@ rt_private void check_mismatch (type_descriptor *t)
 		/* Determine if every attribute in new type has match in old type */
 	count = System (t->new_type).cn_nbattr;
 	for (i=0; i < count; i++) {
-		if (!EIF_IS_VOLATILE_ATTRIBUTE(System(t->new_type),i)) {
+		if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(t->new_type),i)) {
 			int found = 0;
 			uint32 k;
 			for (k = 0; k < t->attribute_count && !found; k++)

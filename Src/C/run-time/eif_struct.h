@@ -136,9 +136,9 @@ struct cnode {
 #define SK_INVALID	0xffffffff			/* Invalid value, may be used as flag */
 
 /* Macros to access `cn_attr_flags'. */
-#define EIF_IS_VOLATILE_ATTRIBUTE_FLAG	0x0001
+#define EIF_IS_TRANSIENT_ATTRIBUTE_FLAG	0x0001
 
-#define EIF_IS_VOLATILE_ATTRIBUTE(node,pos)	(((node).cn_attr_flags [pos]) == EIF_IS_VOLATILE_ATTRIBUTE_FLAG) 
+#define EIF_IS_TRANSIENT_ATTRIBUTE(node,pos)	(((node).cn_attr_flags [pos]) == EIF_IS_TRANSIENT_ATTRIBUTE_FLAG) 
 /*
  * Conformance table
  */

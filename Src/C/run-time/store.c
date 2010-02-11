@@ -981,7 +981,7 @@ rt_private void st_store(EIF_REFERENCE object)
 		) {
 			o_ref = *(EIF_REFERENCE *)o_ptr;
 			if (o_ref) {
-				if (!EIF_IS_VOLATILE_ATTRIBUTE(System(zone->ov_dtype), i)) {
+				if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(zone->ov_dtype), i)) {
 					st_store(o_ref);
 				} else {
 					has_volatile_attributes = 1;
@@ -1080,7 +1080,7 @@ rt_public void st_write(EIF_REFERENCE object, int has_volatile_attributes)
 							elem_size = 0;
 							eise_io("General store: not an Eiffel object.");
 					}
-					if (!EIF_IS_VOLATILE_ATTRIBUTE(System(dtype), i)) {
+					if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(dtype), i)) {
 						buffer_write (object + attrib_offset, elem_size);
 					} else {
 						buffer_write ((char*) &val, elem_size);
@@ -1296,7 +1296,7 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 					elem_size = 0;
 					eise_io("General store: not an Eiffel object.");
 			}
-			if (!EIF_IS_VOLATILE_ATTRIBUTE(System(dtype), num_attrib)) {
+			if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(dtype), num_attrib)) {
 				if (sk_type == SK_BIT) {
 					struct bit *bptr = (struct bit *)(object + attrib_offset);
 					store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
@@ -1491,7 +1491,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 	if (num_attrib > 0) {
 		for (; num_attrib > 0;) {
 			attrib_offset = get_offset(dtype, --num_attrib);
-			if (!EIF_IS_VOLATILE_ATTRIBUTE(System(dtype), num_attrib)) {
+			if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(dtype), num_attrib)) {
 				switch (*(System(dtype).cn_types + num_attrib) & SK_HEAD) {
 						/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
 						 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
@@ -2053,7 +2053,7 @@ rt_private void widr_type_attributes (int16 dtype)
 #endif
 	widr_multi_int16 (&persistent_num_attrib, 1);
 	for (i=0; i<num_attrib; i++) {
-		if (!EIF_IS_VOLATILE_ATTRIBUTE(System(dtype),i)) {
+		if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(dtype),i)) {
 			widr_type_attribute (dtype, i);
 		}
 	}

@@ -290,7 +290,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 		) {
 			o_ref = *(EIF_REFERENCE *)o_ptr;
 			if (o_ref) {
-				if (!EIF_IS_VOLATILE_ATTRIBUTE(System(zone->ov_dtype), i)) {
+				if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(zone->ov_dtype), i)) {
 					a_object_count = pst_store(o_ref, a_object_count);
 				} else {
 					has_volatile_attributes = 1;

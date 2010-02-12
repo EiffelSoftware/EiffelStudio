@@ -262,11 +262,11 @@ feature -- HASH_TABLE like feature
 			end
 		end
 
-	replace (new: FEATURE_I; key: INTEGER; new_is_aliased: BOOLEAN)
+	replace (new: FEATURE_I; key: INTEGER)
 		do
 			if item_id (key) /= new then
 				remove (key)
-				put (new, key, new_is_aliased)
+				put (new, key, False)
 			end
 		end
 
@@ -1201,7 +1201,7 @@ invariant
 	related_select_table: is_computed implies select_table.feature_table = Current
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

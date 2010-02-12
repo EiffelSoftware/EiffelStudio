@@ -153,7 +153,7 @@ feature -- Selection
 				if l_replicated_features_present then
 						-- Make sure that the code id is reset so feature is not treated as a new seed.
 					l_selected_feature.set_code_id (new_t.item_id (l_selected_feature.feature_name_id).code_id)
-					new_t.replace (l_selected_feature, l_selected_feature.feature_name_id, False)
+					new_t.replace (l_selected_feature, l_selected_feature.feature_name_id)
 				end
 				--l_selected_feature.set_is_selected (True)
 				check
@@ -384,7 +384,7 @@ end;
 
 				-- Add unselected feature to feature table, replacing the previous one.
 			a_feature.set_is_selected (False)
-			new_t.replace (a_feature, feature_name_id, False);
+			new_t.replace (a_feature, feature_name_id)
 
 			check
 				is_replicated_directly_correctly_set: a_feature.is_replicated_directly implies a_feature.access_class = System.current_class
@@ -469,7 +469,7 @@ end;
 			end;
 		end;
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -482,22 +482,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

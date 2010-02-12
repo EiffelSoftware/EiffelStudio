@@ -69,27 +69,27 @@ else
 fi
 
 # Copy esbuilder
-cp $ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin/esbuilder $BIN_DIR/esbuilder$PRODUCT_VERSION
+cp $ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin/esbuilder $BIN_DIR/esbuilder-$VERSION
 cp -r $ISE_EIFFEL/esbuilder $SHARE_DIR
 rm -r $SHARE_DIR/esbuilder/spec
 
 # Copy vision2_demo
-cp $ISE_EIFFEL/vision2_demo/spec/$ISE_PLATFORM/bin/vision2_demo $BIN_DIR/vision2_demo$PRODUCT_VERSION
+cp $ISE_EIFFEL/vision2_demo/spec/$ISE_PLATFORM/bin/vision2_demo $BIN_DIR/vision2_demo-$VERSION
 cp -r $ISE_EIFFEL/vision2_demo $SHARE_DIR
 cp $ISE_EIFFEL/vision2_demo/readme.html $DOC_DIR/readme-vision2_demo.html
 rm -r $SHARE_DIR/vision2_demo/spec
 rm -f $SHARE_DIR/vision2_demo/readme.html
 
 # Copy internal binaries
-cp $SRC_BIN_DIR/ecdbgd $LIB_BIN_DIR/ecdbgd
-cp $SRC_BIN_DIR/prelink $LIB_BIN_DIR/prelink
-cp $SRC_BIN_DIR/quick_finalize $LIB_BIN_DIR/quick_finalize
-cp $SRC_BIN_DIR/x2c $LIB_BIN_DIR/x2c
+cp $SRC_BIN_DIR/ecdbgd $LIB_BIN_DIR/ecdbgd-$VERSION
+cp $SRC_BIN_DIR/prelink $LIB_BIN_DIR/prelink-$VERSION
+cp $SRC_BIN_DIR/quick_finalize $LIB_BIN_DIR/quick_finalize-$VERSION
+cp $SRC_BIN_DIR/x2c $LIB_BIN_DIR/x2c-$VERSION
 
 # Copy main binaries
-cp $SRC_BIN_DIR/ec $BIN_DIR/ec$PRODUCT_VERSION
-cp $SRC_BIN_DIR/estudio $BIN_DIR/estudio$PRODUCT_VERSION
-cp $SRC_BIN_DIR/finish_freezing $BIN_DIR/finish_freezing$PRODUCT_VERSION
+cp $SRC_BIN_DIR/ec $BIN_DIR/ec-$VERSION
+cp $SRC_BIN_DIR/estudio $BIN_DIR/estudio-$VERSION
+cp $SRC_BIN_DIR/finish_freezing $BIN_DIR/finish_freezing-$VERSION
 
 # Copy wizards
 cp -r $ISE_EIFFEL/studio/wizards $LIB_BIN_DIR
@@ -104,17 +104,23 @@ rm -r $SHARE_DIR/studio/wizards
 mv $PACKAGING_DIR/make_install $SHARE_DIR/
 
 # Copy application information
-cp $PACKAGING_DIR/desktop $APPLICATIONS_DIR/eiffelstudio.desktop
-cp $PACKAGING_DIR/logo.png $ICONS_DIR/eiffelstudio.png
+. $PACKAGING_DIR/desktop.sh
+#cp $PACKAGING_DIR/desktop $APPLICATIONS_DIR/eiffelstudio.desktop
+cp $PACKAGING_DIR/logo.png $ICONS_DIR/$PRODUCT.png
 
 OLD_PWD=`pwd`
 # Create symlinks
 cd $DST_DIR/usr/bin
-ln -s ec$PRODUCT_VERSION ec
-ln -s estudio$PRODUCT_VERSION estudio
-ln -s finish_freezing$PRODUCT_VERSION finish_freezing
-ln -s esbuilder$PRODUCT_VERSION esbuilder
-ln -s vision2_demo$PRODUCT_VERSION vision2_demo
+ln -s ec-$VERSION ec
+ln -s ec-$VERSION ec$PRODUCT_VERSION
+ln -s estudio-$VERSION estudio
+ln -s estudio-$VERSION estudio$PRODUCT_VERSION
+ln -s finish_freezing-$VERSION finish_freezing
+ln -s finish_freezing-$VERSION finish_freezing$PRODUCT_VERSION
+ln -s esbuilder-$VERSION esbuilder
+ln -s esbuilder-$VERSION esbuilder$PRODUCT_VERSION
+ln -s vision2_demo-$VERSION vision2_demo
+ln -s vision2_demo-$VERSION vision2_demo$PRODUCT_VERSION
 cd $OLD_PWD
 
 if [ $ISE_PLATFORM != "unix" ]; then

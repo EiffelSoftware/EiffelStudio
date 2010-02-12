@@ -154,9 +154,11 @@ feature -- Initialization
 			-- Initialize dotnet runtime, to be sure to use the correct version of the
 			-- runtime after while
 		local
+			l_cli_com: CLI_COM
 			l_host: CLR_HOST
 		once
-			(create {CLI_COM}).initialize_com
+			create l_cli_com
+			l_cli_com.initialize_com
 			l_host := (create {CLR_HOST_FACTORY}).runtime_host (Eiffel_system.System.clr_runtime_version)
 		end
 
@@ -2440,7 +2442,7 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

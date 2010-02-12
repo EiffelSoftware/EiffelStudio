@@ -105,7 +105,6 @@ mv $PACKAGING_DIR/make_install $SHARE_DIR/
 
 # Copy application information
 . $PACKAGING_DIR/desktop.sh
-#cp $PACKAGING_DIR/desktop $APPLICATIONS_DIR/eiffelstudio.desktop
 cp $PACKAGING_DIR/logo.png $ICONS_DIR/$PRODUCT.png
 
 OLD_PWD=`pwd`

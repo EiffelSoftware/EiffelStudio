@@ -212,17 +212,8 @@ feature -- Property
 			-- Does Current AST represent a deferred feature?
 		require
 			body_has_content: body.content /= Void
-		local
-			rout: ROUT_BODY_AS
-			routine_as: ROUTINE_AS
 		do
-			routine_as ?= body.content
-			if routine_as /= Void then
-				rout := routine_as.routine_body
-				if rout /= Void then
-					Result := rout.is_deferred
-				end
-			end
+			Result := attached {ROUTINE_AS} body.content as l_routine_as and then l_routine_as.is_deferred
 		end
 
 	is_constant: BOOLEAN
@@ -326,19 +317,21 @@ feature -- Access
 			-- Does this feature have the name `n'?
 		local
 			cur: INTEGER
+			l_names: like feature_names
 		do
-			cur := feature_names.index
+			l_names := feature_names
+			cur := l_names.index
 
 			from
-				feature_names.start
+				l_names.start
 			until
-				feature_names.after or else Result
+				l_names.after or else Result
 			loop
-				Result := feature_names.item >= n and feature_names.item <= n
-				feature_names.forth
+				Result := l_names.item >= n and l_names.item <= n
+				l_names.forth
 			end
 
-			feature_names.go_i_th (cur)
+			l_names.go_i_th (cur)
 		end
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN
@@ -357,40 +350,49 @@ feature -- Access
 	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
-			if indexes /= Void then
-				Result := indexes.custom_attributes
+			if attached indexes as ids then
+				Result := ids.custom_attributes
 			end
 		end
 
 	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Class custom attributes of current class if any.
 		do
-			if indexes /= Void then
-				Result := indexes.class_custom_attributes
+			if attached indexes as ids then
+				Result := ids.class_custom_attributes
 			end
 		end
 
 	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Interface custom attributes of current class if any.
 		do
-			if indexes /= Void then
-				Result := indexes.interface_custom_attributes
+			if attached indexes as ids then
+				Result := ids.interface_custom_attributes
 			end
 		end
 
 	property_name: STRING
 			-- Name of the associated property (if any).
 		do
-			if indexes /= Void then
-				Result := indexes.property_name
+			if attached indexes as ids then
+				Result := ids.property_name
 			end
 		end
 
 	property_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of a property (if any).
 		do
-			if indexes /= Void then
-				Result := indexes.property_custom_attributes
+			if attached indexes as ids then
+				Result := ids.property_custom_attributes
+			end
+		end
+
+
+	once_as: detachable ONCE_AS
+			-- Related Once part (if any).
+		do
+			if attached {ROUTINE_AS} body.content as l_routine_as then
+				Result := l_routine_as.routine_body.as_once
 			end
 		end
 
@@ -456,11 +458,11 @@ feature {COMPILER_EXPORTER} -- Incrementality
 		do
 			Result := body.is_body_equiv (other.body)
 			if Result then
-				if indexes /= Void then
-					is_process_context := indexes.has_global_once
+				if attached indexes as ids then
+					is_process_context := ids.has_global_once
 				end
-				if other.indexes /= Void then
-					other_is_process_context := other.indexes.has_global_once
+				if attached other.indexes as o_ids then
+					other_is_process_context := o_ids.has_global_once
 				end
 				Result := is_process_context = other_is_process_context
 			end
@@ -481,7 +483,7 @@ invariant
 	next_position_non_negative: next_position >= 0
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -505,11 +507,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class FEATURE_AS

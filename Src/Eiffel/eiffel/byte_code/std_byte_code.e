@@ -42,10 +42,23 @@ feature -- Access
 
 feature -- Status
 
-	is_global_once: BOOLEAN
+	is_process_relative_once: BOOLEAN
 			-- Is current once compiled in multithreaded mode with global status?
 		do
 			-- False
+		end
+
+	is_object_relative_once: BOOLEAN
+			-- Is current once compiled as once per object?
+		do
+			-- False
+		end
+
+
+	is_thread_relative_once: BOOLEAN
+			-- Is current once to be generated in multithreaded mode has a once per thread (default)?
+		do
+			Result := not (is_process_relative_once or is_object_relative_once)
 		end
 
 feature -- Access
@@ -494,7 +507,8 @@ feature -- Analyzis
 				if not type_c.is_void then
 					buf.put_string ("return ")
 				end
-				l_context.generate_once_optimized_call_start (type_c, body_index, is_global_once, buf)
+				--FIXME:2010-02-10:jfiat: check about once per object
+				l_context.generate_once_optimized_call_start (type_c, body_index, is_process_relative_once, buf)
 				buf.put_string (name)
 				buf.put_string (",(")
 				from
@@ -1762,7 +1776,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

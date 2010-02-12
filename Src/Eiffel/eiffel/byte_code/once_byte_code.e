@@ -9,7 +9,7 @@ inherit
 	STD_BYTE_CODE
 		redefine
 			append_once_mark,
-			is_once, is_global_once,
+			is_once, is_process_relative_once, is_object_relative_once,
 			pre_inlined_code, inlined_byte_code_type, generate_once_declaration,
 			generate_once_data, generate_once_prologue, generate_once_epilogue
 		end
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Status
 
-	internal_is_global_once: BOOLEAN
+	internal_is_process_relative_once: BOOLEAN
 			-- Is current once to be generated in multithreaded mode has a global once?
 
 feature -- Status
@@ -26,20 +26,42 @@ feature -- Status
 	is_once: BOOLEAN = True;
 			-- Is the current byte code relative to a once feature ?
 
-	is_global_once: BOOLEAN
+	is_process_relative_once: BOOLEAN
 			-- Is current once compiled in multithreaded mode with global status?
 		do
-			Result := (System.has_multithreaded or else System.il_generation) and then internal_is_global_once
+			Result := (System.has_multithreaded or else System.il_generation) and then internal_is_process_relative_once
 		end
+
+	is_object_relative_once: BOOLEAN
+			-- Is current once compiled as per object once?
 
 feature -- Setting
 
-	set_is_global_once (v: BOOLEAN)
-			-- Assign `v' to `internal_is_global_once'.
+	set_is_process_relative_once
+			-- Set once as per process (global).
 		do
-			internal_is_global_once := v
+			is_object_relative_once := False
+			internal_is_process_relative_once := True
 		ensure
-			internal_is_global_once_set: internal_is_global_once = v
+			internal_is_process_relative_once_set: internal_is_process_relative_once
+		end
+
+	set_is_thread_relative_once
+			-- Set once as per thread (default).
+		do
+			internal_is_process_relative_once := False
+			is_object_relative_once := False
+		ensure
+			is_thread_relative_once_set: is_thread_relative_once
+		end
+
+	set_is_object_relative_once
+			-- Set once as per object.
+		do
+			internal_is_process_relative_once := False
+			is_object_relative_once := True
+		ensure
+			is_object_relative_once_set: is_object_relative_once
 		end
 
 feature -- Byte code generation
@@ -50,9 +72,11 @@ feature -- Byte code generation
 			-- and associated information (code index)
 		do
 				-- The once mark
-			if is_global_once then
+			if is_process_relative_once then
 				ba.append (once_mark_process_relative)
-			else
+			elseif is_object_relative_once then
+				check not_yet_implemented: False end
+			else --| default: if is_thread_relative_once then
 				ba.append (once_mark_thread_relative)
 			end
 				-- Record routine body index
@@ -126,9 +150,11 @@ feature -- C code generation
 			declaration_macro_prefix: STRING
 		do
 				-- Register once code index
-			if is_global_once then
+			if is_process_relative_once then
 				context.add_process_relative_once (a_type, body_index)
-			else
+			elseif is_object_relative_once then
+				check not_yet_implemented: False end
+			else --| default: if is_thread_relative_once then
 				context.add_thread_relative_once (a_type, body_index)
 			end
 			if context.workbench_mode then
@@ -141,10 +167,14 @@ feature -- C code generation
 			else
 					-- Once result is kept in global static fields
 				buf := context.header_buffer
-				if is_global_once then
+				if is_process_relative_once then
 					declaration_macro_prefix := "RTOPH"
-				elseif not System.has_multithreaded then
-					declaration_macro_prefix := "RTOSH"
+				elseif is_object_relative_once then
+					check not_yet_implemented: False end
+				else --| default: if is_thread_relative_once then
+					if not System.has_multithreaded then
+						declaration_macro_prefix := "RTOSH"
+					end
 				end
 				if declaration_macro_prefix /= Void then
 						-- Generate static declaration and definition of `once_done'
@@ -172,14 +202,18 @@ feature -- C code generation
 		do
 			buf := buffer
 			if context.workbench_mode then
-				if is_global_once then
+				if is_process_relative_once then
 					generate_once_result_definition ("RTOQR", "RTOQD")
-				else
+				elseif is_object_relative_once then
+					check not_yet_implemented: False end
+				else --| default: if is_thread_relative_once then
 					generate_once_result_definition ("RTOTR", "RTOTD")
 				end
 				buf.put_string (generated_c_feature_name)
 				buf.put_string (gc_rparan_semi_c)
-			elseif not is_global_once and then System.has_multithreaded then
+			elseif is_object_relative_once then
+				check not_yet_implemented: False end
+			elseif is_thread_relative_once and then System.has_multithreaded then
 					-- Generate locals for thread-relative once routine
 				generate_once_result_definition ("RTOTR", "RTOUD")
 				buf.put_integer (context.thread_relative_once_index (body_index))
@@ -196,7 +230,7 @@ feature -- C code generation
 		do
 			buf := buffer
 			if context.workbench_mode then
-				if is_global_once then
+				if is_process_relative_once then
 						-- Once is accessed using code index
 					buf.put_new_line
 					buf.put_string ("RTOQP;")
@@ -206,12 +240,14 @@ feature -- C code generation
 							buf.put_string ("RTOC_GLOBAL(Result);")
 						end
 					end
-				else
+				elseif is_object_relative_once then
+					check not_yet_implemented: False end
+				else --| default: if is_thread_relative_once then
 						-- Once is accessed using local variable
 					buf.put_new_line
 					buf.put_string ("RTOTP;")
 				end
-			elseif is_global_once then
+			elseif is_process_relative_once then
 					-- Once is accessed using code index
 				buf.put_new_line
 				buf.put_string ("RTOPP (")
@@ -227,24 +263,28 @@ feature -- C code generation
 						buf.put_string ("RTOC_GLOBAL(Result);")
 					end
 				end
-			elseif System.has_multithreaded then
-					-- Once is accessed using pre-calculated once index
-				buf.put_new_line
-				buf.put_string ("RTOTP;")
-			else
-					-- Once is accessed using code index
-				buf.put_new_line
-				buf.put_string ("RTOSP (")
-				buf.put_integer (body_index)
-				buf.put_string (");")
-				if context.result_used then
-					buf.put_new_line_only
-					buf.put_string ("#define Result RTOSR(")
+			elseif is_object_relative_once then
+				check not_yet_implemented: False end
+			else --| default: if is_thread_relative_once then
+				if System.has_multithreaded then
+						-- Once is accessed using pre-calculated once index
+					buf.put_new_line
+					buf.put_string ("RTOTP;")
+				else
+						-- Once is accessed using code index
+					buf.put_new_line
+					buf.put_string ("RTOSP (")
 					buf.put_integer (body_index)
-					buf.put_character (')')
-					if real_type(result_type).c_type.is_pointer then
-						buf.put_new_line
-						buf.put_string ("RTOC_NEW(Result);")
+					buf.put_string (");")
+					if context.result_used then
+						buf.put_new_line_only
+						buf.put_string ("#define Result RTOSR(")
+						buf.put_integer (body_index)
+						buf.put_character (')')
+						if real_type(result_type).c_type.is_pointer then
+							buf.put_new_line
+							buf.put_string ("RTOC_NEW(Result);")
+						end
 					end
 				end
 			end
@@ -259,21 +299,27 @@ feature -- C code generation
 			buf := context.buffer
 			buf.put_new_line
 			if context.workbench_mode then
-				if is_global_once then
+				if is_process_relative_once then
 					buf.put_string ("RTOQE;")
-				else
+				elseif is_object_relative_once then
+					check not_yet_implemented: False end
+				else --| default: if is_thread_relative_once then
 					buf.put_string ("RTOTE;")
 				end
-			elseif is_global_once then
+			elseif is_process_relative_once then
 				buf.put_string ("RTOPE (");
 				buf.put_integer (body_index)
 				buf.put_string (");")
-			elseif System.has_multithreaded then
-				buf.put_string ("RTOTE;")
-			else
-				buf.put_string ("RTOSE (")
-				buf.put_integer (body_index)
-				buf.put_string (");")
+			elseif is_object_relative_once then
+				check not_yet_implemented: False end
+			else --| default: if is_thread_relative_once then
+				if System.has_multithreaded then
+					buf.put_string ("RTOTE;")
+				else
+					buf.put_string ("RTOSE (")
+					buf.put_integer (body_index)
+					buf.put_string (");")
+				end
 			end
 		end
 
@@ -328,7 +374,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -341,22 +387,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

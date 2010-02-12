@@ -2118,6 +2118,12 @@ feature -- Binary operator generation
 		do
 		end
 
+	generate_real_comparison_routine (a_code: INTEGER; is_real_32: BOOLEAN; a_return_type: TYPE_A)
+			-- Generate a binary operator comparison for REAL_XX types when
+			-- user chose to have a total order on REALs.
+		do
+		end
+
 feature -- Unary operator generation
 
 	generate_unary_operator (code: INTEGER)

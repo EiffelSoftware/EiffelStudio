@@ -7065,8 +7065,12 @@ feature -- Implementation
 					l_body_not_void: l_body /= Void
 				end
 
-				if l_body.indexes /= Void then
-					l_once_byte_code.set_is_global_once (l_body.indexes.has_global_once)
+				if l_as.has_key_process (l_body) then
+					l_once_byte_code.set_is_process_relative_once
+				elseif l_as.has_key_object then
+					l_once_byte_code.set_is_object_relative_once				
+				else --| default: if l_as.has_key_thread then
+					l_once_byte_code.set_is_thread_relative_once
 				end
 
 				last_byte_node := l_once_byte_code

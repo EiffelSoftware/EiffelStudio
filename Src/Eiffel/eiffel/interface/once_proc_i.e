@@ -28,14 +28,42 @@ feature -- Status report
 	is_process_relative: BOOLEAN
 			-- Is once routine process-wide (rather than thread-specific)?
 
+	is_thread_relative: BOOLEAN
+			-- Is once routine thread-specific?
+		do
+			Result := not (is_process_relative or is_object_relative)
+		end
+
+	is_object_relative: BOOLEAN
+			-- Is once routine per object?
+
 feature -- Status setting
 
-	set_is_process_relative (value: BOOLEAN)
-			-- Set `is_process_relative' to `value'.
+	set_is_process_relative
+			-- Set `is_process_relative'.
 		do
-			is_process_relative := value
+			is_object_relative := False
+			is_process_relative := True
 		ensure
-			is_process_relative_set: is_process_relative = value
+			is_process_relative_set: is_process_relative
+		end
+
+	set_is_thread_relative
+			-- Set `is_thread_relative'.
+		do
+			is_object_relative := False
+			is_process_relative := False
+		ensure
+			is_thread_relative_set: is_thread_relative
+		end
+
+	set_is_object_relative
+			-- Set `is_object_relative'.
+		do
+			is_process_relative := False
+			is_object_relative := True
+		ensure
+			is_object_relative_set: is_object_relative
 		end
 
 feature -- Adaptation
@@ -44,14 +72,26 @@ feature -- Adaptation
 			-- Transfer data from Current into `other'.
 		do
 			Precursor (other)
-			other.set_is_process_relative (is_process_relative)
+			if is_process_relative then
+				other.set_is_process_relative
+			elseif is_object_relative then
+				other.set_is_object_relative
+			else
+				other.set_is_thread_relative
+			end
 		end
 
 	transfer_from (other: ONCE_PROC_I)
 			-- Transfer data from Current into `other'.
 		do
 			Precursor (other)
-			set_is_process_relative (other.is_process_relative)
+			if other.is_process_relative then
+				set_is_process_relative
+			elseif other.is_object_relative then
+				set_is_object_relative
+			else
+				set_is_thread_relative
+			end
 		end
 
 	replicated (in: INTEGER): FEATURE_I
@@ -93,8 +133,14 @@ feature {NONE} -- Implementation
 			f.set_once (True)
 		end
 
+invariant
+	one_of_process_thread_object:
+				(    is_process_relative and not is_thread_relative and not is_object_relative) or
+				(not is_process_relative and     is_thread_relative and not is_object_relative) or
+				(not is_process_relative and not is_thread_relative and     is_object_relative)
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -107,22 +153,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

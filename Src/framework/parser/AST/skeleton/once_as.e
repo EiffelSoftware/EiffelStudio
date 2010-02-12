@@ -10,13 +10,14 @@ class ONCE_AS
 inherit
 	INTERNAL_AS
 		redefine
-			process, is_once
+			process, is_once, as_once,
+			is_equivalent
 		end
 
 create
 	make
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (o: like once_keyword; k: detachable KEY_LIST_AS; c: like compound)
 			-- Create new DO AST node.
@@ -70,6 +71,12 @@ feature -- Properties
 	is_once: BOOLEAN = True
 			-- Is the current routine body a once one ?
 
+	as_once: detachable ONCE_AS
+			-- See `content' as an instance of ONCE_AS.
+		do
+			Result := Current
+		end
+
 	keys: detachable EIFFEL_LIST [STRING_AS]
 			-- Once keys
 		do
@@ -79,6 +86,63 @@ feature -- Properties
 		ensure
 			good_result: (internal_keys = Void implies Result = Void) and
 						 (internal_keys /= Void implies Result = internal_keys.meaningful_content)
+		end
+
+feature -- Status report
+
+	has_key_conflict (a_feature_as: FEATURE_AS): BOOLEAN
+			-- Current once presents a conflict in keys and indexing?
+		local
+			is_p,is_t,is_o: BOOLEAN
+			l_keys: like keys
+		do
+			l_keys := keys
+			is_p := has_key_inside ("PROCESS", l_keys)
+					or (attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once)
+			is_t := has_key_inside ("THREAD", l_keys)
+			is_o := has_key_inside ("OBJECT", l_keys)
+
+			Result := (is_p and is_t) or (is_p and is_o) or (is_p and is_t)
+		end
+
+	has_key_inside (a_key: READABLE_STRING_8; a_keys: like keys): BOOLEAN
+			-- Has key inside `a_keys' or inside `keys'?
+		require
+			a_key_attached: a_key /= Void
+		do
+			if a_keys /= Void then
+				from
+					a_keys.start
+				until
+					a_keys.after or Result
+				loop
+					Result := a_keys.item.value.is_case_insensitive_equal (a_key)
+					a_keys.forth
+				end
+			end
+		end
+
+	has_key (a_key: READABLE_STRING_8): BOOLEAN
+		require
+			a_key_attached: a_key /= Void
+		do
+			Result := has_key_inside (a_key, keys)
+		end
+
+	has_key_process (a_feature_as: FEATURE_AS): BOOLEAN
+		do
+			Result := has_key (once "PROCESS")
+					or (attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once)
+		end
+
+	has_key_thread: BOOLEAN
+		do
+			Result := has_key (once "THREAD")
+		end
+
+	has_key_object: BOOLEAN
+		do
+			Result := has_key (once "OBJECT")
 		end
 
 feature -- Roundtrip/Token
@@ -103,6 +167,16 @@ feature -- Roundtrip/Token
 			elseif a_list /= Void then
 				Result := once_keyword (a_list)
 			end
+		end
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN
+			-- Is `other' equivalent to the current object ?
+		do
+				--| We might be smarter, and be flexible on keys' case and order
+				--| which does not really matters.
+			Result := Precursor (other) and equivalent (internal_keys, other.internal_keys)
 		end
 
 note

@@ -44,8 +44,6 @@ feature -- Factory
 			a_node_not_void: a_node /= Void
 			a_class_not_void: a_class /= Void
 			a_name_id_positive: a_name_id >= 0
-		local
-			l_once: ONCE_PROC_I
 		do
 			current_class := a_class
 			feature_name_id := a_name_id
@@ -55,15 +53,27 @@ feature -- Factory
 			Result := last_feature
 			last_feature := Void
 			feature_name_id := 0
-			if a_node.indexes /= Void then
-				if Result.is_once then
-					l_once ?= Result
-					if l_once /= Void then
-						l_once.set_is_process_relative (a_node.indexes.has_global_once)
+			if Result.is_once then
+				if
+					attached {ONCE_PROC_I} Result as l_once
+				then
+					if attached a_node.once_as as l_once_as then
+						if l_once_as.has_key_process (a_node) then
+							l_once.set_is_process_relative
+						elseif l_once_as.has_key_object then
+							l_once.set_is_object_relative
+						else --| default: if l_once_as.has_key_thread
+							l_once.set_is_thread_relative
+						end
 					else
-						fixme ("support process-relative constants (e.g., string constants)")
+						check is_once_should_has_corresponding_once_as: False end
 					end
-				elseif Result.is_attribute then
+				else
+					fixme ("support process-relative constants (e.g., string constants)")
+				end
+			end
+			if a_node.indexes /= Void then
+				if Result.is_attribute then
 					if a_node.indexes.is_stable and then attached {ATTRIBUTE_I} Result as a then
 						a.set_is_stable (True)
 					elseif a_node.indexes.is_transient and then attached {ATTRIBUTE_I} Result as a then

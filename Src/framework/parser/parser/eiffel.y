@@ -755,6 +755,30 @@ ASemi: -- Empty
 Feature_declaration: Add_counter New_feature_list Remove_counter Declaration_body Optional_semicolons
 			{
 				$$ := ast_factory.new_feature_as ($2, $4, feature_indexes, position)
+				if has_syntax_warning then
+					if attached feature_indexes as fi and then fi.has_global_once then
+						if attached fi.once_status_index_as as fi_tok then
+							report_one_warning (
+								create {SYNTAX_WARNING}.make (token_line (fi_tok), token_column (fi_tok), filename,
+								once "Specifying once_status in indexing note is Obsolete, please use once (%"PROCESS%")."))
+						else
+							check indexes_has_once_status_index: False end
+						end
+					end
+				end
+				if 
+					attached ($$) as l_feature_as and then 
+					attached l_feature_as.once_as as l_once_as
+				then
+					if l_once_as.has_key_conflict ($$) then
+						report_one_error (create {SYNTAX_ERROR}.make (token_line (l_once_as), token_column (l_once_as), filename, once "Conflict in once's keys"))
+					elseif l_once_as.has_key_object then
+						report_one_error (
+							create {SYNTAX_ERROR}.make (token_line (l_once_as), token_column (l_once_as), filename,
+							once "Once per object is not yet implemented."))
+					end
+				end
+
 				feature_indexes := Void
 			}
 	;

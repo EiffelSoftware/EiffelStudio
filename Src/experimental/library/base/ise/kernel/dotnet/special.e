@@ -19,6 +19,12 @@ inherit
 			debug_output
 		end
 
+	READABLE_INDEXABLE [T]
+		redefine
+			is_equal,
+			copy
+		end
+
 create
 	make_empty,
 	make_filled,
@@ -75,9 +81,6 @@ feature -- Access
 	item alias "[]" (i: INTEGER): T assign put
 			-- Item at `i'-th position
 			-- (indices begin at 0)
-		require
-			index_big_enough: i >= 0
-			index_small_enough: i < count
 		do
 			Result := internal_native_array.item (i)
 		end
@@ -86,8 +89,7 @@ feature -- Access
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require
-			index_big_enough: i >= 0
-			index_small_enough: i < count
+			valid_index: valid_index (i)
 		do
 			Result := item (i)
 		end
@@ -152,6 +154,12 @@ feature -- Access
 			to_array_attached: Result /= Void
 			to_array_lower_set: Result.lower = 1
 			to_array_upper_set: Result.upper = count
+		end
+
+	index_set: INTEGER_INTERVAL
+			-- <Precursor>
+		do
+			create Result.make (lower, upper)
 		end
 
 feature -- Measurement
@@ -241,8 +249,6 @@ feature -- Status report
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (0 <= i) and (i < count)
-		ensure
-			definition: Result = ((0 <= i) and (i < count))
 		end
 
 feature -- Comparison
@@ -269,12 +275,13 @@ feature -- Element change
 			-- Replace `i'-th item by `v'.
 			-- (Indices begin at 0.)
 		require
-			index_big_enough: i >= 0
-			index_small_enough: i < count
+			valid_index: valid_index (i)
 		do
 			internal_native_array.put (i, v)
 		ensure
 			inserted: item (i) = v
+			same_count: count = old count
+			same_capacity: capacity = old capacity
 		end
 
 	force (v: T; i: INTEGER)
@@ -823,8 +830,11 @@ feature {NONE} -- Implementation
 
 feature {SPECIAL} -- Implementation: Access
 
-	internal_native_array: like native_array;
+	internal_native_array: like native_array
 			-- Access to memory location.
+
+invariant
+	count_less_than_capacity: count <= capacity
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

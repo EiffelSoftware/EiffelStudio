@@ -121,6 +121,14 @@ feature {NONE} -- Implementation: Access
 	is_for_fast_retrieval: BOOLEAN
 			-- Was current data stored for fast retrieval?
 
+	is_transient_retrieval_required: BOOLEAN
+			-- Do we need to retrieve transient attribute with their default value?
+			-- This is necessary for Session/Basic storing where we expect the same
+			-- object layout.
+		do
+			Result := True
+		end
+
 	error_factory: SED_ERROR_FACTORY
 			-- Once access to the error factory.
 		once
@@ -234,6 +242,40 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	read_default_value (a_abstract_type: INTEGER)
+			-- Read from the stream the default value that corresponds to `a_abstract_type'.
+		local
+			l_deser: like deserializer
+		do
+			l_deser := deserializer
+			inspect a_abstract_type
+			when {INTERNAL}.boolean_type then l_deser.read_boolean.do_nothing
+			when {INTERNAL}.character_8_type then l_deser.read_character_8.do_nothing
+			when {INTERNAL}.character_32_type then l_deser.read_character_32.do_nothing
+			when {INTERNAL}.natural_8_type then l_deser.read_natural_8.do_nothing
+			when {INTERNAL}.natural_16_type then l_deser.read_natural_16.do_nothing
+			when {INTERNAL}.natural_32_type then l_deser.read_natural_32.do_nothing
+			when {INTERNAL}.natural_64_type then l_deser.read_natural_64.do_nothing
+			when {INTERNAL}.integer_8_type then l_deser.read_integer_8.do_nothing
+			when {INTERNAL}.integer_16_type then l_deser.read_integer_16.do_nothing
+			when {INTERNAL}.integer_32_type then l_deser.read_integer_32.do_nothing
+			when {INTERNAL}.integer_64_type then l_deser.read_integer_64.do_nothing
+			when {INTERNAL}.real_32_type then l_deser.read_real_32.do_nothing
+			when {INTERNAL}.real_64_type then l_deser.read_real_64.do_nothing
+			when {INTERNAL}.pointer_type then l_deser.read_pointer.do_nothing
+			when {INTERNAL}.reference_type then l_deser.read_compressed_natural_32.do_nothing
+			else
+				check False end
+			end
+		end
+
+	read_persistent_field_count (a_dtype: INTEGER): INTEGER
+			-- Number of fields we are going to read from the retrieved system.
+		do
+				-- We read the same number of fields because the transient fields are serialized.
+			Result := internal.field_count_of_type (a_dtype)
+		end
+
 	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER
 			-- Given `a_old_type_id', dynamic type id in stored system, retrieve dynamic
 			-- type id in current system.
@@ -248,13 +290,14 @@ feature {NONE} -- Implementation
 	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER
 			-- Given attribute offset `a_old_offset' in the stored object whose dynamic type id
 			-- is now `a_new_type_id', retrieve new offset in `a_new_type_id'.
+			-- If not found 0 in which case it is an error.
 		require
 			a_new_type_id_non_negative: a_new_type_id >= 0
 			a_old_offset_positive: a_old_offset > 0
 		do
 			Result := a_old_offset
 		ensure
-			new_attribute_offset_positive: Result > 0
+			new_attribute_offset_non_negative: Result >= 0
 		end
 
 	decode_objects (a_count: NATURAL_32)
@@ -364,7 +407,7 @@ feature {NONE} -- Implementation
 		end
 
 	decode_normal_object (an_obj: ANY; a_dtype, an_index: INTEGER)
-			-- Decode an object of type `dtype' and index `an_index' in `an_obj'.
+			-- Decode an object of type `a_dtype' and index `an_index' in `an_obj'.
 		require
 			an_obj_not_void: an_obj /= Void
 			an_obj_valid: internal.dynamic_type (an_obj) = a_dtype
@@ -378,56 +421,64 @@ feature {NONE} -- Implementation
 		do
 			l_int := internal
 			l_deser := deserializer
-
 			from
 				i := 1
-				nb := l_int.field_count_of_type (a_dtype) + 1
+				nb := read_persistent_field_count (a_dtype) + 1
 			until
 				i = nb
 			loop
 				l_new_offset := new_attribute_offset (a_dtype, i)
-				inspect l_int.field_type_of_type (l_new_offset, a_dtype)
-				when {INTERNAL}.boolean_type then
-					l_int.set_boolean_field (l_new_offset, an_obj, l_deser.read_boolean)
+				check l_new_offset_positive: l_new_offset > 0 end
+				if not l_int.is_field_transient_of_type (l_new_offset, a_dtype) then
+					inspect l_int.field_type_of_type (l_new_offset, a_dtype)
+					when {INTERNAL}.boolean_type then
+						l_int.set_boolean_field (l_new_offset, an_obj, l_deser.read_boolean)
 
-				when {INTERNAL}.character_8_type then
-					l_int.set_character_8_field (l_new_offset, an_obj, l_deser.read_character_8)
-				when {INTERNAL}.character_32_type then
-					l_int.set_character_32_field (l_new_offset, an_obj, l_deser.read_character_32)
+					when {INTERNAL}.character_8_type then
+						l_int.set_character_8_field (l_new_offset, an_obj, l_deser.read_character_8)
+					when {INTERNAL}.character_32_type then
+						l_int.set_character_32_field (l_new_offset, an_obj, l_deser.read_character_32)
 
-				when {INTERNAL}.natural_8_type then
-					l_int.set_natural_8_field (l_new_offset, an_obj, l_deser.read_natural_8)
-				when {INTERNAL}.natural_16_type then
-					l_int.set_natural_16_field (l_new_offset, an_obj, l_deser.read_natural_16)
-				when {INTERNAL}.natural_32_type then
-					l_int.set_natural_32_field (l_new_offset, an_obj, l_deser.read_natural_32)
-				when {INTERNAL}.natural_64_type then
-					l_int.set_natural_64_field (l_new_offset, an_obj, l_deser.read_natural_64)
+					when {INTERNAL}.natural_8_type then
+						l_int.set_natural_8_field (l_new_offset, an_obj, l_deser.read_natural_8)
+					when {INTERNAL}.natural_16_type then
+						l_int.set_natural_16_field (l_new_offset, an_obj, l_deser.read_natural_16)
+					when {INTERNAL}.natural_32_type then
+						l_int.set_natural_32_field (l_new_offset, an_obj, l_deser.read_natural_32)
+					when {INTERNAL}.natural_64_type then
+						l_int.set_natural_64_field (l_new_offset, an_obj, l_deser.read_natural_64)
 
-				when {INTERNAL}.integer_8_type then
-					l_int.set_integer_8_field (l_new_offset, an_obj, l_deser.read_integer_8)
-				when {INTERNAL}.integer_16_type then
-					l_int.set_integer_16_field (l_new_offset, an_obj, l_deser.read_integer_16)
-				when {INTERNAL}.integer_32_type then
-					l_int.set_integer_32_field (l_new_offset, an_obj, l_deser.read_integer_32)
-				when {INTERNAL}.integer_64_type then
-					l_int.set_integer_64_field (l_new_offset, an_obj, l_deser.read_integer_64)
+					when {INTERNAL}.integer_8_type then
+						l_int.set_integer_8_field (l_new_offset, an_obj, l_deser.read_integer_8)
+					when {INTERNAL}.integer_16_type then
+						l_int.set_integer_16_field (l_new_offset, an_obj, l_deser.read_integer_16)
+					when {INTERNAL}.integer_32_type then
+						l_int.set_integer_32_field (l_new_offset, an_obj, l_deser.read_integer_32)
+					when {INTERNAL}.integer_64_type then
+						l_int.set_integer_64_field (l_new_offset, an_obj, l_deser.read_integer_64)
 
-				when {INTERNAL}.real_32_type then
-					l_int.set_real_32_field (l_new_offset, an_obj, l_deser.read_real_32)
-				when {INTERNAL}.real_64_type then
-					l_int.set_real_64_field (l_new_offset, an_obj, l_deser.read_real_64)
+					when {INTERNAL}.real_32_type then
+						l_int.set_real_32_field (l_new_offset, an_obj, l_deser.read_real_32)
+					when {INTERNAL}.real_64_type then
+						l_int.set_real_64_field (l_new_offset, an_obj, l_deser.read_real_64)
 
-				when {INTERNAL}.pointer_type then
-					l_int.set_pointer_field (l_new_offset, an_obj, l_deser.read_pointer)
+					when {INTERNAL}.pointer_type then
+						l_int.set_pointer_field (l_new_offset, an_obj, l_deser.read_pointer)
 
-				when {INTERNAL}.reference_type then
-					decode_reference (an_obj, an_index, l_new_offset)
-
+					when {INTERNAL}.reference_type then
+						decode_reference (an_obj, an_index, l_new_offset)
+					else
+						check
+							False
+						end
+					end
 				else
 					check
-						False
+							-- In independent store we should not come here since any mismatch if detected
+							-- was already detected.
+						session_basic_only: is_transient_retrieval_required
 					end
+					read_default_value (l_int.field_type_of_type (l_new_offset, a_dtype))
 				end
 				i := i + 1
 			end

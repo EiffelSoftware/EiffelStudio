@@ -12,11 +12,20 @@ class
 inherit
 	SED_BASIC_SERIALIZER
 		redefine
-			write_header
+			write_header, is_transient_storage_required
 		end
 
 create
 	make
+
+feature {NONE} -- Status Report
+
+	is_transient_storage_required: BOOLEAN
+			-- <Precursor>
+		do
+				-- We do not need transient attribute to be stored, only persistent one.
+			Result := False
+		end
 
 feature {NONE} -- Implementation
 
@@ -110,10 +119,12 @@ feature {NONE} -- Implementation
 				until
 					i = nb
 				loop
-					l_dtype := l_int.field_static_type_of_type (i, l_obj_dtype)
-					if not a_type_table.has (l_dtype) then
-							-- Only add types that are not already in `a_type_table'.
-						Result.put (l_dtype, l_dtype)
+					if not l_int.is_field_transient_of_type (i, l_obj_dtype) then
+						l_dtype := l_int.field_static_type_of_type (i, l_obj_dtype)
+						if not a_type_table.has (l_dtype) then
+								-- Only add types that are not already in `a_type_table'.
+							Result.put (l_dtype, l_dtype)
+						end
 					end
 					i := i + 1
 				end
@@ -136,17 +147,17 @@ feature {NONE} -- Implementation
 			l_ser := serializer
 			from
 				i := 1
-				nb := l_int.field_count_of_type (a_dtype)
-				l_ser.write_compressed_natural_32 (nb.to_natural_32)
-				nb := nb + 1
+				l_ser.write_compressed_natural_32 (l_int.persistent_field_count_of_type (a_dtype).to_natural_32)
+				nb := l_int.field_count_of_type (a_dtype) + 1
 			until
 				i = nb
 			loop
-					-- Write attribute static type
-				l_ser.write_compressed_natural_32 (l_int.field_static_type_of_type (i, a_dtype).to_natural_32)
-					-- Write attribute name
-				l_ser.write_string_8 (l_int.field_name_of_type (i, a_dtype))
-
+				if not l_int.is_field_transient_of_type (i, a_dtype) then
+						-- Write attribute static type
+					l_ser.write_compressed_natural_32 (l_int.field_static_type_of_type (i, a_dtype).to_natural_32)
+						-- Write attribute name
+					l_ser.write_string_8 (l_int.field_name_of_type (i, a_dtype))
+				end
 				i := i + 1
 			end
 		end

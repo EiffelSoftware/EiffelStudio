@@ -57,6 +57,16 @@ feature -- Status report
 			-- Is data stored for fast retrieval?
 			-- It is always True for a void-safe system.
 
+feature {NONE} -- Status report
+
+	is_transient_storage_required: BOOLEAN
+			-- Do we need to store transient attribute with their default value?
+			-- This is necessary for Session/Basic storing where we expect the same
+			-- object layout.
+		do
+			Result := True
+		end
+
 feature -- Element change
 
 	set_breadth_first_traversing_mode
@@ -131,6 +141,8 @@ feature -- Basic operations
 				l_mem.collection_off
 			end
 
+				-- We ignore transient attributes for storing.
+			traversable.set_is_skip_transient (True)
 			traversable.traverse
 			l_list := traversable.visited_objects
 			if l_list /= Void then
@@ -272,6 +284,33 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	write_default_value (a_abstract_type: INTEGER)
+			-- Write to the stream the default value that corresponds to `a_abstract_type'.
+		local
+			l_ser: like serializer
+		do
+			l_ser := serializer
+			inspect a_abstract_type
+			when {INTERNAL}.boolean_type then l_ser.write_boolean (False)
+			when {INTERNAL}.character_8_type then l_ser.write_character_8 ('%/000/')
+			when {INTERNAL}.character_32_type then l_ser.write_character_32 ('%/000/')
+			when {INTERNAL}.natural_8_type then l_ser.write_natural_8 (0)
+			when {INTERNAL}.natural_16_type then l_ser.write_natural_16 (0)
+			when {INTERNAL}.natural_32_type then l_ser.write_natural_32 (0)
+			when {INTERNAL}.natural_64_type then l_ser.write_natural_64 (0)
+			when {INTERNAL}.integer_8_type then l_ser.write_integer_8 (0)
+			when {INTERNAL}.integer_16_type then l_ser.write_integer_16 (0)
+			when {INTERNAL}.integer_32_type then l_ser.write_integer_32 (0)
+			when {INTERNAL}.integer_64_type then l_ser.write_integer_64 (0)
+			when {INTERNAL}.real_32_type then l_ser.write_real_32 (0)
+			when {INTERNAL}.real_64_type then l_ser.write_real_64 (0)
+			when {INTERNAL}.pointer_type then l_ser.write_pointer (default_pointer)
+			when {INTERNAL}.reference_type then encode_reference (Void)
+			else
+				check False end
+			end
+		end
+
 	encode_objects (a_list: ARRAYED_LIST [ANY])
 			-- Encode all objects referenced in `a_list'.
 		require
@@ -388,47 +427,51 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				inspect l_int.field_type_of_type (i, a_dtype)
-				when {INTERNAL}.boolean_type then
-					l_ser.write_boolean (l_int.boolean_field (i, an_object))
+				if not l_int.is_field_transient (i, an_object) then
+					inspect l_int.field_type_of_type (i, a_dtype)
+					when {INTERNAL}.boolean_type then
+						l_ser.write_boolean (l_int.boolean_field (i, an_object))
 
-				when {INTERNAL}.character_8_type then
-					l_ser.write_character_8 (l_int.character_8_field (i, an_object))
-				when {INTERNAL}.character_32_type then
-					l_ser.write_character_32 (l_int.character_32_field (i, an_object))
+					when {INTERNAL}.character_8_type then
+						l_ser.write_character_8 (l_int.character_8_field (i, an_object))
+					when {INTERNAL}.character_32_type then
+						l_ser.write_character_32 (l_int.character_32_field (i, an_object))
 
-				when {INTERNAL}.natural_8_type then
-					l_ser.write_natural_8 (l_int.natural_8_field (i, an_object))
-				when {INTERNAL}.natural_16_type then
-					l_ser.write_natural_16 (l_int.natural_16_field (i, an_object))
-				when {INTERNAL}.natural_32_type then
-					l_ser.write_natural_32 (l_int.natural_32_field (i, an_object))
-				when {INTERNAL}.natural_64_type then
-					l_ser.write_natural_64 (l_int.natural_64_field (i, an_object))
+					when {INTERNAL}.natural_8_type then
+						l_ser.write_natural_8 (l_int.natural_8_field (i, an_object))
+					when {INTERNAL}.natural_16_type then
+						l_ser.write_natural_16 (l_int.natural_16_field (i, an_object))
+					when {INTERNAL}.natural_32_type then
+						l_ser.write_natural_32 (l_int.natural_32_field (i, an_object))
+					when {INTERNAL}.natural_64_type then
+						l_ser.write_natural_64 (l_int.natural_64_field (i, an_object))
 
-				when {INTERNAL}.integer_8_type then
-					l_ser.write_integer_8 (l_int.integer_8_field (i, an_object))
-				when {INTERNAL}.integer_16_type then
-					l_ser.write_integer_16 (l_int.integer_16_field (i, an_object))
-				when {INTERNAL}.integer_32_type then
-					l_ser.write_integer_32 (l_int.integer_32_field (i, an_object))
-				when {INTERNAL}.integer_64_type then
-					l_ser.write_integer_64 (l_int.integer_64_field (i, an_object))
+					when {INTERNAL}.integer_8_type then
+						l_ser.write_integer_8 (l_int.integer_8_field (i, an_object))
+					when {INTERNAL}.integer_16_type then
+						l_ser.write_integer_16 (l_int.integer_16_field (i, an_object))
+					when {INTERNAL}.integer_32_type then
+						l_ser.write_integer_32 (l_int.integer_32_field (i, an_object))
+					when {INTERNAL}.integer_64_type then
+						l_ser.write_integer_64 (l_int.integer_64_field (i, an_object))
 
-				when {INTERNAL}.real_32_type then
-					l_ser.write_real_32 (l_int.real_32_field (i, an_object))
-				when {INTERNAL}.real_64_type then
-					l_ser.write_real_64 (l_int.real_64_field (i, an_object))
+					when {INTERNAL}.real_32_type then
+						l_ser.write_real_32 (l_int.real_32_field (i, an_object))
+					when {INTERNAL}.real_64_type then
+						l_ser.write_real_64 (l_int.real_64_field (i, an_object))
 
-				when {INTERNAL}.pointer_type then
-					l_ser.write_pointer (l_int.pointer_field (i, an_object))
+					when {INTERNAL}.pointer_type then
+						l_ser.write_pointer (l_int.pointer_field (i, an_object))
 
-				when {INTERNAL}.reference_type then
-					encode_reference (l_int.field (i, an_object))
-				else
-					check
-						False
+					when {INTERNAL}.reference_type then
+						encode_reference (l_int.field (i, an_object))
+					else
+						check
+							False
+						end
 					end
+				elseif is_transient_storage_required then
+					write_default_value (l_int.field_type_of_type (i, a_dtype))
 				end
 				i := i + 1
 			end

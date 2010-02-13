@@ -15,7 +15,9 @@ inherit
 		redefine
 			read_header,
 			new_attribute_offset,
-			clear_internal_data
+			read_persistent_field_count,
+			clear_internal_data,
+			is_transient_retrieval_required
 		end
 
 create
@@ -30,27 +32,22 @@ feature {NONE} -- Implementation: access
 	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER
 			-- Given attribute offset `a_old_offset' in the stored object whose dynamic type id
 			-- is now `a_new_type_id', retrieve new offset in `a_new_type_id'.
-		local
-			a: like attributes_mapping
-			l_map: detachable SPECIAL [INTEGER]
 		do
-			a := attributes_mapping
-			if a /= Void then
-				check
-					attributes_mapping_has_dtype: a.valid_index (a_new_type_id)
-				end
-				l_map := a.item (a_new_type_id)
-				check
-					attributes_mapping_not_void_item: l_map /= Void
-					attributes_mapping_has_offset: l_map.valid_index (a_old_offset)
-					attributes_mapping_has_mapping: l_map.item (a_old_offset) >= 0
-				end
-				Result := l_map.item (a_old_offset)
-			else
-				check
-					attributes_mapping_not_void: False
-				end
+			if
+				attached attributes_mapping as l_map and then l_map.valid_index (a_new_type_id) and then
+				attached l_map.item (a_new_type_id) as l_entry and then l_entry.valid_index (a_old_offset)
+			then
+				Result := l_entry.item (a_old_offset)
 			end
+		end
+
+feature {NONE} -- Status report
+
+	is_transient_retrieval_required: BOOLEAN
+			-- <Precursor>
+		do
+				-- We do not need transient attribute to be retrieved, only persistent one.			
+			Result := False
 		end
 
 feature {NONE} -- Implementation
@@ -161,6 +158,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	read_persistent_field_count (a_dtype: INTEGER): INTEGER
+			-- Number of fields we are going to read from the retrieved system.
+		do
+			if
+				attached attributes_mapping as l_map and then l_map.valid_index (a_dtype) and then
+				attached l_map.item (a_dtype) as l_entry
+			then
+				Result := l_entry.count - 1
+			else
+				set_error (error_factory.new_internal_error ("Cannot retrieve stored count"))
+			end
+		end
+
 	read_attributes (a_dtype: INTEGER)
 			-- Read attribute description for `a_dtype' where `a_dtype' is a dynamic type
 			-- from the current system.
@@ -172,7 +182,7 @@ feature {NONE} -- Implementation
 			l_map: like attributes_map
 			l_mapping: SPECIAL [INTEGER]
 			l_name: STRING
-			l_old_dtype, l_dtype, l_field_count: INTEGER
+			l_old_dtype, l_dtype: INTEGER
 			i, nb: INTEGER
 			a: like attributes_mapping
 			l_item: detachable TUPLE [position, dtype: INTEGER]
@@ -181,17 +191,15 @@ feature {NONE} -- Implementation
 			l_deser := deserializer
 
 				-- Compare count of attributes
-			l_field_count := internal.field_count_of_type (a_dtype)
 			nb := l_deser.read_compressed_natural_32.to_integer_32
-
-			if nb /= l_field_count then
+			if nb /= internal.persistent_field_count_of_type (a_dtype) then
 					-- Stored type has a different number of attributes than the type
 					-- from the retrieving system.
 				set_error (error_factory.new_attribute_count_mismatch (a_dtype, nb))
 			else
 				from
 					i := 1
-					l_map := attributes_map (a_dtype, l_field_count)
+					l_map := attributes_map (a_dtype)
 					nb := nb + 1
 					create l_mapping.make_empty (nb)
 					l_mapping.extend (0)
@@ -201,7 +209,7 @@ feature {NONE} -- Implementation
 						-- Read attribute static type
 					l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
 					l_dtype := new_dynamic_type_id (l_old_dtype)
-						-- Write attribute name
+						-- Read attribute name
 					l_name := l_deser.read_string_8
 
 					l_map.search (l_name)
@@ -235,12 +243,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	attributes_map (a_dtype, a_field_count: INTEGER): HASH_TABLE [TUPLE [position, dtype: INTEGER], STRING]
+	attributes_map (a_dtype: INTEGER): HASH_TABLE [TUPLE [position, dtype: INTEGER], STRING]
 			-- Attribute map for dynamic type `a_dtype' which records
 			-- position and dynamic type for a given attribute name.
 		require
 			a_dtype_non_negative: a_dtype >= 0
-			a_field_count_non_negative: a_field_count >= 0
 		local
 			l_int: like internal
 			i, nb: INTEGER
@@ -249,8 +256,9 @@ feature {NONE} -- Implementation
 
 			from
 				i := 1
-				create Result.make (a_field_count)
-				nb := a_field_count + 1
+				nb := l_int.field_count_of_type (a_dtype)
+				create Result.make (nb)
+				nb := nb + 1
 			until
 				i = nb
 			loop

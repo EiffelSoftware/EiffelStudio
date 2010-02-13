@@ -2159,6 +2159,10 @@ feature -- Signature checking
 						-- Check types of arguments
 					arguments.check_type_validity (a_context_class, Current, type_a_checker, False)
 				end
+					-- If an attribute is transient, then we cannot accept it if it is a formal type,
+					-- a user defined expanded or an attached type. The first and last restrictions
+					-- are definitely a language restriction, the other is a limitation in our
+					-- implementation at the runtime level.
 				if
 					is_transient and then (l_type.is_formal or l_type.is_true_expanded or
 					(not l_type.is_expanded and l_type.is_attached))
@@ -2167,6 +2171,9 @@ feature -- Signature checking
 				end
 			end
 
+				-- For an inherited attributem we make sure that it is not inherited in a user defined
+				-- expanded class as our runtime would not cope properly with that (i.e. it needs all
+				-- attributes, not just a subset).
 			if is_transient and then (a_context_class.is_expanded and not a_context_class.is_basic) then
 				error_handler.insert_error (create {VRVA}.make_invalid_context (Current, a_context_class, written_class))
 			end

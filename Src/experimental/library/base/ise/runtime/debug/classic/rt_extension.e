@@ -269,9 +269,7 @@ feature {NONE} -- Execution replay
 
 	execution_recorder_parameters: RT_DBG_EXECUTION_PARAMETERS
 			-- Once per thread record parameters.
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.make
 		ensure
 			result_attached: Result /= Void

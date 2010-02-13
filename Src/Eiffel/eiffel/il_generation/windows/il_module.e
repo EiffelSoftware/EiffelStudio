@@ -314,7 +314,8 @@ feature -- Access: tokens
 	ise_eiffel_class_type_mark_attr_ctor_token,
 	type_handle_class_token,
 	ise_assertion_level_enum_token,
-	ise_class_type_mark_enum_token: INTEGER
+	ise_class_type_mark_enum_token,
+	dotnet_non_serialized_attr_ctor_token: INTEGER
 			-- Token for run-time types used in code generation.
 
 feature {NONE} -- Custom attributes: access
@@ -3050,6 +3051,7 @@ feature {NONE} -- Once per modules being generated.
 			l_com_visible_token: INTEGER
 			l_debugger_step_through_token: INTEGER
 			l_debugger_hidden_token: INTEGER
+			l_non_serialized_attribute_token: INTEGER
 		do
 			object_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Object"), mscorlib_token)
@@ -3080,6 +3082,9 @@ feature {NONE} -- Once per modules being generated.
 			l_com_visible_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Runtime.InteropServices.ComVisibleAttribute"),
 				mscorlib_token)
+			l_non_serialized_attribute_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (non_serialized_attribute_class_name), mscorlib_token)
+
 			uni_string.set_string (".ctor")
 
 				-- Define `.ctor' from `System.CLSCompliantAttribute' and
@@ -3118,6 +3123,10 @@ feature {NONE} -- Once per modules being generated.
 
 			debugger_step_through_ctor_token := md_emit.define_member_ref (uni_string,
 				l_debugger_step_through_token, l_sig)
+
+				-- Get token for the .ctor of `System.NonSerializedAttribute'
+			dotnet_non_serialized_attr_ctor_token := md_emit.define_member_ref (uni_string,
+				l_non_serialized_attribute_token, l_sig)
 		ensure
 			object_type_token_set: object_type_token /= 0
 			value_type_token_set: value_type_token /= 0

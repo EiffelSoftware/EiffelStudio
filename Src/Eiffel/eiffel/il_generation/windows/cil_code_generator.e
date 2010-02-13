@@ -2461,6 +2461,10 @@ feature -- Features info
 					define_custom_attribute (l_meth_token,
 						current_module.ise_eiffel_name_attr_ctor_token, l_name_ca)
 
+					if feat.is_transient then
+						define_custom_attribute (l_meth_token, current_module.dotnet_non_serialized_attr_ctor_token, empty_ca)
+					end
+
 						-- Define name of routine used to find out the attribute static type
 						-- if it is generic or a formal.
 					l_type_a := feat.type.actual_type

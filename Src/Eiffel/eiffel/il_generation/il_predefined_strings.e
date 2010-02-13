@@ -29,6 +29,7 @@ feature -- Access
 	system_object_class_name: STRING = "System.Object"
 	system_type_class_name: STRING = "System.Type"
 	type_handle_class_name: STRING = "System.RuntimeTypeHandle"
+	non_serialized_attribute_class_name: STRING = "System.NonSerializedAttribute"
 	eiffel_name_attribute: STRING = "EiffelSoftware.Runtime.CA.EIFFEL_NAME_ATTRIBUTE"
 	type_feature_attribute: STRING = "EiffelSoftware.Runtime.CA.TYPE_FEATURE_ATTRIBUTE"
 	assertion_level_class_name_attribute: STRING = "EiffelSoftware.Runtime.CA.ASSERTION_LEVEL_ATTRIBUTE"
@@ -48,7 +49,7 @@ feature -- Access
 			-- Prefix for property getter and setter methods.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -61,22 +62,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class IL_PREDEFINED_STRINGS

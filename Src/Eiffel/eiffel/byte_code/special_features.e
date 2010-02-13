@@ -176,6 +176,11 @@ feature -- Byte code special generation
 
 			when twin_type, as_attached_type then
 					-- Nothing to do, top of the stack has correct value
+
+			when do_nothing_type then
+					-- We simply pop the top of the stack.
+				ba.append (bc_pop)
+				ba.append_uint32_integer (1)
 			end
 		end
 
@@ -349,6 +354,8 @@ feature -- C special code generation
 			when twin_type, as_attached_type then
 					-- There is nothing to do, just print the previous value.
 				target.print_register
+			when do_nothing_type then
+					-- There is nothing to do.
 			end
 		end
 
@@ -439,6 +446,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (nan_type, {PREDEFINED_NAMES}.nan_name_id)
 			Result.put (negative_infinity_type, {PREDEFINED_NAMES}.negative_infinity_name_id)
 			Result.put (positive_infinity_type, {PREDEFINED_NAMES}.positive_infinity_name_id)
+			Result.put (do_nothing_type, {PREDEFINED_NAMES}.do_nothing_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -514,6 +522,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (nan_type, {PREDEFINED_NAMES}.nan_name_id)
 			Result.put (negative_infinity_type, {PREDEFINED_NAMES}.negative_infinity_name_id)
 			Result.put (positive_infinity_type, {PREDEFINED_NAMES}.positive_infinity_name_id)
+			Result.put (do_nothing_type, {PREDEFINED_NAMES}.do_nothing_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -582,7 +591,8 @@ feature {NONE} -- Fast access to feature name
 	nan_type: INTEGER = 60
 	negative_infinity_type: INTEGER = 61
 	positive_infinity_type: INTEGER = 62
-	max_type_id: INTEGER = 62
+	do_nothing_type: INTEGER = 63
+	max_type_id: INTEGER = 63
 
 feature {NONE} -- Byte code generation
 

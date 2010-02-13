@@ -384,6 +384,10 @@ feature -- IL code generation
 					il_generator.put_real_64_constant ({REAL_64}.positive_infinity)
 				end
 
+			when do_nothing_type then
+					-- Simply remove top of the stack as we do not care about its value.
+				il_generator.pop
+
 			else
 
 			end
@@ -473,6 +477,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (nan_type, nan_name_id)
 			Result.put (negative_infinity_type, negative_infinity_name_id)
 			Result.put (positive_infinity_type, positive_infinity_name_id)
+			Result.put (do_nothing_type, do_nothing_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (memory_copy, memory_copy_name_id)
@@ -546,7 +551,8 @@ feature -- Fast access to feature name
 	nan_type: INTEGER = 61
 	negative_infinity_type: INTEGER = 62
 	positive_infinity_type: INTEGER = 63
-	max_type_id: INTEGER = 63
+	do_nothing_type: INTEGER = 64
+	max_type_id: INTEGER = 64
 
 feature {NONE} -- IL code generation
 

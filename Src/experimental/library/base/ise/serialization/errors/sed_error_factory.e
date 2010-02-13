@@ -10,6 +10,16 @@ class
 
 feature -- Access
 
+	new_internal_error (a_msg: STRING): SED_ERROR
+			-- Generic error message when something fails internally
+		require
+			a_msg_not_void: a_msg /= Void
+		do
+			create Result.make_with_string (a_msg)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	new_missing_type_error (a_type: STRING): SED_ERROR
 			-- Return a error representing a missing type `a_type'.
 		require
@@ -42,7 +52,8 @@ feature -- Access
 			l_type: STRING
 		do
 			l_type := internal.class_name_of_type (a_type_id)
-			create Result.make_with_string ("Attribute count mismatch in class " + l_type + " Expected " + internal.field_count_of_type (a_type_id).out + ", Received " + a_received_attribute_count.out)
+			create Result.make_with_string ("Attribute count mismatch in class " + l_type +
+				" Expected " + internal.persistent_field_count_of_type (a_type_id).out + ", Received " + a_received_attribute_count.out)
 		ensure
 			result_not_void: Result /= Void
 		end

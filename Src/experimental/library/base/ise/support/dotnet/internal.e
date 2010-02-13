@@ -244,6 +244,65 @@ feature -- Status report
 			Result := False
 		end
 
+	is_field_transient (i: INTEGER; object: ANY): BOOLEAN
+			-- Is `i'-th field of `object' a transient attribute?
+			-- I.e. an attribute that does not need to be stored?
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+		do
+			Result := is_field_transient_of_type (i, dynamic_type (object))
+		end
+
+	is_field_transient_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
+			-- Is `i'-th field of `object' a transient attribute?
+			-- I.e. an attribute that does not need to be stored?
+		require
+			a_type_non_negative: a_type_id >= 0
+			index_large_enough: i >= 1
+			index_small_enought: i <= field_count_of_type (a_type_id)
+		local
+			l_transients: ARRAYED_LIST [BOOLEAN]
+			l_members: like get_members
+			l_is_transient: BOOLEAN
+			l_field_ca: detachable NON_SERIALIZED_ATTRIBUTE
+			k, nb: INTEGER
+			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
+			l_field: FIELD_INFO
+			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
+		do
+			if attached id_to_fields_transient.item (a_type_id) as l_result then
+				Result := l_result.i_th (i)
+			else
+				from
+					l_members := get_members (a_type_id)
+					k := 1
+					nb := l_members.count
+					create l_transients.make (nb)
+				until
+					k > nb
+				loop
+					l_field := l_members.i_th (k)
+					l_provider := l_field
+					l_attributes := l_provider.get_custom_attributes_type ({NON_SERIALIZED_ATTRIBUTE}, False)
+					if l_attributes /= Void and then l_attributes.count > 0 then
+						check
+							valid_number_of_custom_attributes: l_attributes.count = 1
+						end
+						l_field_ca ?= l_attributes.item (0)
+						l_is_transient := l_field_ca /= Void
+					else
+						l_is_transient := False
+					end
+					l_transients.extend (l_is_transient)
+					k := k + 1
+				end
+				id_to_fields_transient.put (l_transients, a_type_id)
+				Result := l_transients.i_th (i)
+			end
+		end
+
 feature -- Access
 
 	none_type: INTEGER = -2
@@ -1116,6 +1175,43 @@ feature -- Measurement
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := get_members (type_id).count
+		end
+
+	persistent_field_count (object: ANY): INTEGER
+			-- Number of logical fields in `object' that are not transient.
+		require
+			object_not_void: object /= Void
+		do
+			Result := persistent_field_count_of_type (dynamic_type (object))
+		ensure
+			count_positive: Result >= 0
+		end
+
+	persistent_field_count_of_type (a_type_id: INTEGER): INTEGER
+			-- Number of logical fields in dynamic type `type_id' that are not transient.
+		require
+			a_type_non_negative: a_type_id >= 0
+		local
+			i, nb: INTEGER
+		do
+			Result := persistent_field_counts.item (a_type_id)
+			if Result = -1 then
+				from
+					i := 1
+					nb := field_count_of_type (a_type_id)
+					Result := 0
+				until
+					i > nb
+				loop
+					if not is_field_transient_of_type (i, a_type_id) then
+						Result := Result + 1
+					end
+					i := i + 1
+				end
+				persistent_field_counts.put (Result, a_type_id)
+			end
+		ensure
+			count_positive: Result >= 0
 		end
 
 	bit_size (i: INTEGER; object: ANY): INTEGER
@@ -2069,6 +2165,8 @@ feature {TYPE, INTERNAL} -- Implementation
 				id_to_fields_static_type.conservative_resize (0, l_new_count)
 				id_to_fields_abstract_type.conservative_resize (0, l_new_count)
 				id_to_fields_name.conservative_resize (0, l_new_count)
+				id_to_fields_transient.conservative_resize (0, l_new_count)
+				persistent_field_counts.conservative_resize_with_default (-1, 0, l_new_count)
 			end
 		end
 
@@ -2118,6 +2216,22 @@ feature {TYPE, INTERNAL} -- Implementation
 			create Result.make (min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_name_not_void: Result /= Void
+		end
+
+	id_to_fields_transient: ARRAY [detachable ARRAYED_LIST [BOOLEAN]]
+			-- Buffer for `is_field_transient_of_type' lookups index by type_id.
+		once
+			create Result.make (min_predefined_type, array_upper_cell.item)
+		ensure
+			id_to_fields_name_not_void: Result /= Void
+		end
+
+	persistent_field_counts: ARRAY [INTEGER]
+			-- Buffer for persistent count
+		once
+			create Result.make_filled (-1, min_predefined_type, array_upper_cell.item)
+		ensure
+			persistent_field_counts_not_void: Result /= Void
 		end
 
 	marked_objects: HASHTABLE

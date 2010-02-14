@@ -2,7 +2,14 @@
 #define _EIFFEL_LIBEVENT_H_
 
 #include "eif_eiffel.h"
-#include "event.h"
+
+#ifdef EIF_WINDOWS
+#include "event2\event.h"
+#include "event2\event_struct.h"
+#else
+#include "event2/event.h"
+#include "event2/event_struct.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {

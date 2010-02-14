@@ -62,42 +62,42 @@ feature -- Constants
 
 	frozen ev_timeout: INTEGER
 		external
-			"C macro use %"event.h%""
+			"C macro use %"eiffel_libevent.h%""
 		alias
 			"EV_TIMEOUT"
 		end
 
 	frozen ev_read: INTEGER
 		external
-			"C macro use %"event.h%""
+			"C macro use %"eiffel_libevent.h%""
 		alias
 			"EV_READ"
 		end
 
 	frozen ev_write: INTEGER
 		external
-			"C macro use %"event.h%""
+			"C macro use %"eiffel_libevent.h%""
 		alias
 			"EV_WRITE"
 		end
 
 	frozen ev_signal: INTEGER
 		external
-			"C macro use %"event.h%""
+			"C macro use %"eiffel_libevent.h%""
 		alias
 			"EV_SIGNAL"
 		end
 
 	frozen ev_persist: INTEGER
 		external
-			"C macro use %"event.h%""
+			"C macro use %"eiffel_libevent.h%""
 		alias
 			"EV_PERSIST"
 		end
 
 	frozen ev_et: INTEGER
 		external
-			"C macro use %"event.h%""
+			"C macro use %"eiffel_libevent.h%""
 		alias
 			"EV_ET"
 		end

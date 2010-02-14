@@ -73,6 +73,21 @@
 				<dotnet value="true"/>
 			</condition>
 		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\libevent\Clib\libevent\libevent.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\libevent\Clib\libevent\libevent_core.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\libevent\Clib\libevent\libevent_extras.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="libevent" location=".\">
 			<file_rule>

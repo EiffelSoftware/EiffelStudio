@@ -36,8 +36,8 @@ void c_event_callback(int fd, short event, void *arg)
 		(l_func (
 #ifndef EIF_IL_DLL
 				eif_access (l_cb_data->o),
-				event
 #endif
+				event
 			)
 		);
 	}

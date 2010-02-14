@@ -16,6 +16,11 @@
 		<external_include location="$(ISE_LIBRARY)/library/libevent/Clib/libevent"/>
 		<external_include location="$(ISE_LIBRARY)/library/libevent/Clib/libevent/include"/>
 		<external_include location="$(ISE_LIBRARY)/library/libevent/spec/include"/>
+		<external_include location="$(ISE_LIBRARY)/library/libevent/Clib/libevent/WIN32-Code">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
 		<external_object location="$(ISE_LIBRARY)/library/libevent/spec/$(ISE_PLATFORM)/lib/eiffel_libevent.o">
 			<condition>
 				<platform excluded_value="windows"/>

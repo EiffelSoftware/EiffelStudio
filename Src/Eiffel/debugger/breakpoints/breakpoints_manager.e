@@ -511,23 +511,28 @@ feature -- Breakpoints access
 			end
 		end
 
-	breakpoint_at (loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BREAKPOINT
+	internal_breakpoint_at (loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BREAKPOINT
 			-- Breakpoint located at `loc'.
 		require
-			valid_breakpoint: is_breakpoint_set_at (loc, is_hidden)
+			valid_breakpoint: is_internal_breakpoint_at (loc, is_hidden)
 		do
 			error_in_bkpts := False
-				-- create a 'fake' breakpoint, in order to get the real one in hash table
-
 			if not loc.is_corrupted then
 					-- is the breakpoint known ?
 				if breakpoints.has_key (new_breakpoint_key (loc, is_hidden)) then
-						-- yes, the breakpoint is already known, so remove its condition.
 					Result := breakpoints.found_item
 				end
 			else
 				error_in_bkpts := True
 			end
+		end
+
+	breakpoint_at (loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BREAKPOINT
+			-- Breakpoint located at `loc'.
+		require
+			valid_breakpoint: is_breakpoint_set_at (loc, is_hidden)
+		do
+			Result := internal_breakpoint_at (loc, is_hidden)
 		end
 
 	user_breakpoint_at (loc: BREAKPOINT_LOCATION): BREAKPOINT
@@ -550,6 +555,16 @@ feature -- Breakpoints access
 			Result_not_void: Result /= Void
 		end
 
+	internal_user_breakpoint_at (loc: BREAKPOINT_LOCATION): BREAKPOINT
+			-- User Breakpoint located at `loc'.
+		require
+			valid_breakpoint: is_internal_breakpoint_at (loc, False)
+		do
+			Result := internal_breakpoint_at (loc, False)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	is_any_breakpoint_set_at (loc: BREAKPOINT_LOCATION): BOOLEAN
 			-- Is breakpoint set at `loc' ? (enabled or disabled)
 		do
@@ -561,6 +576,17 @@ feature -- Breakpoints access
 				if not Result and breakpoints.has_key (new_hidden_breakpoint_key (loc)) then
 					Result := breakpoints.found_item.is_set
 				end
+			else
+				error_in_bkpts := True
+			end
+		end
+
+	is_internal_breakpoint_at (loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BOOLEAN
+			-- Is breakpoint at `loc' ? (enabled or disabled or discarded)
+		do
+			error_in_bkpts := False
+			if not loc.is_corrupted then
+				Result := breakpoints.has_key (new_breakpoint_key (loc, is_hidden))
 			else
 				error_in_bkpts := True
 			end
@@ -1401,7 +1427,7 @@ invariant
 	breakpoints_not_void: breakpoints /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

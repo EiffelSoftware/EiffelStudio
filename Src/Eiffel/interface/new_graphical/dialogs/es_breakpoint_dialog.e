@@ -1393,7 +1393,13 @@ feature -- Action
 			if bp = Void then
 				new := True
 				loc := bpm.breakpoint_location (breakpoint_routine, breakpoint_index, True)
-				bp := bpm.new_user_breakpoint (loc)
+				bp := bpm.internal_user_breakpoint_at (loc)
+				if bp /= Void then
+					check bp_unset: not bp.is_set end
+					bp.enable
+				else
+					bp := bpm.new_user_breakpoint (loc)
+				end
 				bpm.add_breakpoint (bp)
 			end
 			check bp /= Void end
@@ -1590,7 +1596,7 @@ feature -- Access
 			-- Indicates if the size and position information is remembered for the dialog	
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

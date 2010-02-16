@@ -2323,6 +2323,7 @@ test	basic-type-internal-violation	reflection002 tcf pass reflection
 test	type-of-internal				reflection003 tcf pass reflection
 test	field-basic-type-inconsistency	reflection004 tcf pass reflection
 test	field-type-inconsistency		reflection005 tcf pass reflection 
+test	storable-version-data			reflection006 tcf pass reflection storable
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

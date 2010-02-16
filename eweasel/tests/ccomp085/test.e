@@ -5,7 +5,7 @@ create
 	make
 feature
 	
-	make is
+	make
 		do
 			c_code_first
 			c_code_second

@@ -1,0 +1,13 @@
+test_name 	 qat-evaluation-order
+test_description Evaluation order should not break type checking of qualified acnhored types.
+
+copy_raw	a.e    $CLUSTER a.e
+copy_raw	b.e    $CLUSTER b.e
+copy_raw	c.e    $CLUSTER c.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+test_end

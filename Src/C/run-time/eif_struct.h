@@ -88,6 +88,7 @@ struct cnode {
 	void (*cn_inv)();			/* Pointer on invariant routine if any */
 	long *cn_offsets;			/* Attribute offsets */
 #endif
+	char *cn_version;			/* Version of the class, used for storable. */
 };
 
 /* Values used to encode the type of each attribute. Dynamic type is encoded on

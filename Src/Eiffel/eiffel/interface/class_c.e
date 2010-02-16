@@ -323,6 +323,9 @@ feature -- Access
 	assembly_info: ASSEMBLY_INFO
 			-- Information about assembly in which current class is being generated
 
+	storable_version: detachable STRING
+			-- Version if specified for the current class used for storable to detect mismatches.
+
 feature -- Access: Convertibility
 
 	convert_to: HASH_TABLE [INTEGER, NAMED_TYPE_A]
@@ -1743,7 +1746,7 @@ feature -- Propagation
 			end
 		end
 
-feature -- Convenience features
+feature -- Status Settings
 
 	set_changed (b: BOOLEAN)
 			-- Mark the associated lace class changed.
@@ -1875,6 +1878,16 @@ feature -- Convenience features
 		ensure
 			is_single_set: is_single = v
 		end
+
+	set_storable_version (v: like storable_version)
+			-- Set `storable_version' with `v'
+		do
+			storable_version := v
+		ensure
+			storable_version_set: storable_version = v
+		end
+
+feature -- Convenience features
 
 	add_descendant (c: CLASS_C)
 			-- Insert class `c' into the descendant list

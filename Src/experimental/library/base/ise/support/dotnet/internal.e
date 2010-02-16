@@ -487,6 +487,45 @@ feature -- Access
 			dynamic_type_nonnegative: Result >= 0
 		end
 
+	storable_version_of_type (a_type_id: INTEGER): detachable IMMUTABLE_STRING_8
+			-- Storable version if any specified.
+		require
+			a_type_id_nonnegative: a_type_id >= 0
+		local
+			l_cas: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
+			l_result: detachable IMMUTABLE_STRING_8
+		do
+			if attached id_to_storable_version.item (a_type_id) as l_version_string then
+				if l_version_string.is_empty then
+					Result := Void
+				else
+					Result := l_version_string
+				end
+			else
+				if
+					attached pure_implementation_type (a_type_id) as l_rt_class_type and then
+					attached {SYSTEM_TYPE}.get_type_from_handle (l_rt_class_type.type) as l_current_type
+				then
+							-- Get storable version.
+					l_cas := l_current_type.get_custom_attributes_type ({EIFFEL_VERSION_ATTRIBUTE}, False)
+					if
+						l_cas /= Void and then l_cas.count > 0 and then
+						attached {EIFFEL_VERSION_ATTRIBUTE} l_cas.item (0) as l_version and then
+						attached l_version.version as l_version_string
+					then
+						l_result := l_version_string
+						Result := l_result
+					else
+						l_result := internal_empty_string
+					end
+				else
+					l_result := internal_empty_string
+				end
+					-- We do not store `Voids' in `id_to_storable_version' to have an efficient caching.
+				id_to_storable_version.put (l_result, a_type_id)
+			end
+		end
+
 	field (i: INTEGER; object: ANY): detachable ANY
 			-- Object attached to the `i'-th field of `object'
 			-- (directly or through a reference)
@@ -2161,6 +2200,7 @@ feature {TYPE, INTERNAL} -- Implementation
 				array_upper_cell.put (l_new_count)
 				id_to_eiffel_type.conservative_resize (0, l_new_count)
 				id_to_eiffel_implementation_type.conservative_resize (0, l_new_count)
+				id_to_storable_version.conservative_resize (0, l_new_count)
 				id_to_fields.conservative_resize (0, l_new_count)
 				id_to_fields_static_type.conservative_resize (0, l_new_count)
 				id_to_fields_abstract_type.conservative_resize (0, l_new_count)
@@ -2184,6 +2224,14 @@ feature {TYPE, INTERNAL} -- Implementation
 			create Result.make (min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_eiffel_type_not_void: Result /= Void
+		end
+
+	id_to_storable_version: ARRAY [detachable IMMUTABLE_STRING_8]
+			-- Buffer for `storable_version_of_type' lookups index by type_id.
+		once
+			create Result.make (min_predefined_type, array_upper_cell.item)
+		ensure
+			id_to_storable_version_not_void: Result /= Void
 		end
 
 	id_to_fields: ARRAY [detachable ARRAYED_LIST [FIELD_INFO]]
@@ -2249,6 +2297,15 @@ feature {TYPE, INTERNAL} -- Implementation
 			create Result.put (internal_chunk_size)
 		ensure
 			array_upper_cell: Result /= Void
+		end
+
+	internal_empty_string: IMMUTABLE_STRING_8
+			-- Constant to represent an empty string
+		once
+			create Result.make (0)
+		ensure
+			internal_empty_string_not_void: Result /= Void
+			internal_empty_string_empty: Result.is_empty
 		end
 
 	tuple_native_array_field_info: detachable FIELD_INFO

@@ -4786,8 +4786,8 @@ feature -- Generation
 
 				if not l_has_visible then
 					buffer.put_string ("%Nstruct ctable egc_ce_rname_init[")
-					buffer.put_string (Type_id_counter.value.out)
-					buffer.put_string ("];%N")
+					buffer.put_integer (Type_id_counter.value)
+					buffer.put_three_character (']', ';', '%N')
 				else
 					buffer.put_string ("%Nstruct ctable egc_ce_rname_init[] = {%N")
 					from
@@ -4802,10 +4802,11 @@ feature -- Generation
 						else
 							buffer.put_string (once "{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
 						end
-						buffer.put_two_character (',', '%N')
+						buffer.put_character (',')
 						i := i + 1
 					end
-					buffer.put_string ("};%N")
+					buffer.put_new_line
+					buffer.put_three_character ('}', ';', '%N')
 				end
 			end
 

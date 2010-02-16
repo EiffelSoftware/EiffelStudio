@@ -277,6 +277,12 @@ feature -- Access
 			end
 		end
 
+	storable_version: detachable STRING
+			-- Description.
+		do
+			Result := string_value (storable_version_header)
+		end
+
 feature -- Query
 
 	index_as_of_tag_name (tag: READABLE_STRING_GENERAL): detachable INDEX_AS
@@ -370,6 +376,9 @@ feature {NONE} -- Constants
 	Enum_type_header: STRING = "enum_type"
 			-- Type of enum elements.
 
+	storable_version_header: STRING = "storable_version"
+			-- Index name under which we will store the version of a class.
+
 	global_value: STRING = "global"
 			-- Value name of `Once_status_header'.
 
@@ -425,7 +434,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	string_value (tag: READABLE_STRING_GENERAL): STRING
+	string_value (tag: READABLE_STRING_GENERAL): detachable STRING
 			-- String associated with `tag'
 			-- Void if not a string or not tag `tag'
 		require

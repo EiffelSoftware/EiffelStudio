@@ -45,7 +45,6 @@ extern "C" {
 
 /* Returns the number of logical fields in `object'. */
 #define ei_count_field_of_type(type_id)		(System(To_dtype(type_id)).cn_nbattr)
-#define ei_count_persistent_field_of_type(type_id)		(System(To_dtype(type_id)).cn_persistent_nbattr)
 
 /* Returns name of the i_th logical field of `object'. */
 #define ei_field_name_of_type(i,type_id)	(System(To_dtype(type_id)).cn_names[i])

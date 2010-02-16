@@ -8,7 +8,7 @@ create
 
 feature
 	
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 			-- Run test.
 		local
 			$DECLARATION

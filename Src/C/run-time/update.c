@@ -595,8 +595,22 @@ rt_public void cnode_updt(void)
 	dprintf(4)("\tsize = %ld\n", node->cn_size);
 #endif
 
-	node->cn_creation_id = wint32();	/* Creation feature id */
-	node->cn_static_id = wint32();			/* Static id of Class */
+		/* 9. Creation feature ID */
+	node->cn_creation_id = wint32();
+
+		/* 10. Static ID */
+	node->cn_static_id = wint32();
+
+		/* 11. Storable version */
+	str_count = wshort();
+	if (str_count > 0) {
+		SAFE_ALLOC(str, char, str_count + 1);
+		node->cn_version = str;
+		wread(str, str_count * sizeof(char));
+		str[str_count] = '\0';
+	} else {
+		node->cn_version = NULL;
+	}
 }
 
 rt_public void routid_updt(void)

@@ -38,6 +38,7 @@ feature -- Access
 	class_type_mark_enum_class_name: STRING = "EiffelSoftware.Runtime.Enums.CLASS_TYPE_MARK_ENUM"
 	class_type_mark_attribute_name: STRING = "EiffelSoftware.Runtime.CA.EIFFEL_CLASS_TYPE_MARK_ATTRIBUTE"
 	eiffel_consumable_attribute: STRING = "EiffelSoftware.Runtime.CA.EIFFEL_CONSUMABLE_ATTRIBUTE"
+	eiffel_version_attribute: STRING = "EiffelSoftware.Runtime.CA.EIFFEL_VERSION_ATTRIBUTE"
 			-- Type used by code generation.
 
 	override_prefix: STRING = "__"

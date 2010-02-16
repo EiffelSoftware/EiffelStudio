@@ -1449,7 +1449,7 @@ feature {NONE} -- Class initialization
 			changed_status, changed_frozen: BOOLEAN
 			is_exp, changed_generics, changed_expanded: BOOLEAN
 			gens: like generics
-			obs_msg: like obsolete_message
+			l_old_storable_version: like storable_version
 		do
 				-- Assign external name clause
 			if System.il_generation then
@@ -1473,14 +1473,21 @@ feature {NONE} -- Class initialization
 				private_external_name := Void
 			end
 
+				-- Record the storable_version if one specified.
+			l_old_storable_version := storable_version
+			if ast_b.top_indexes /= Void then
+				set_storable_version (ast_b.top_indexes.storable_version)
+			elseif ast_b.bottom_indexes /= Void then
+				set_storable_version (ast_b.bottom_indexes.storable_version)
+			end
+
 				-- Check if obsolete clause was present.
 				-- (Void if none was present)
-			if ast_b.obsolete_message /= Void then
-				obs_msg := ast_b.obsolete_message.value
+			if attached ast_b.obsolete_message as l_msg then
+				set_obsolete_message (l_msg.value)
 			else
-				obs_msg := Void
+				set_obsolete_message (Void)
 			end
-			set_obsolete_message (obs_msg)
 			old_parents := parents_classes
 
 				-- We set `need_new_parents' so that we trigger a
@@ -2260,7 +2267,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

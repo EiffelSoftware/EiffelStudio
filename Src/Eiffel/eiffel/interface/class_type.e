@@ -1448,10 +1448,8 @@ feature -- Skeleton generation
 				if not skeleton_empty then
 					buffer.put_string ("offsets")
 					buffer.put_integer (type_id)
-					buffer.put_new_line
 				else
-					buffer.put_string
-						("(long *) 0%N")
+					buffer.put_string ("(long *) 0")
 				end
 			else
 					-- Routine id array of attributes
@@ -1518,11 +1516,15 @@ feature -- Skeleton generation
 					buffer.put_string ("(int32 *) 0")
 				end
 				buffer.put_character (',')
-
-				if a_class.has_visible then
-						-- Generate cecil structure if any
-					generate_cecil (buffer)
-				end
+					-- Generate cecil structure if any
+				generate_cecil (buffer)
+			end
+			buffer.put_character (',')
+			buffer.put_new_line
+			if attached associated_class.storable_version as l_version and then not l_version.is_empty then
+				buffer.put_string_literal (l_version)
+			else
+				buffer.put_string ("NULL")
 			end
 			buffer.generate_block_close
 		end
@@ -1737,21 +1739,20 @@ feature -- Cecil generation
 
 	generate_cecil (buffer: GENERATION_BUFFER)
 			-- Generation of the Cecil table
-		require
-			has_visible: associated_class.has_visible
-		local
-			final_mode: BOOLEAN
 		do
-			final_mode := byte_context.final_mode
 			buffer.put_new_line
-			buffer.put_character ('{')
-			buffer.put_string (once "(int32) ")
-			buffer.put_integer (associated_class.visible_table_size)
-			buffer.put_string (once ", sizeof(char *(*)()), cl")
-			buffer.put_integer (associated_class.class_id)
-			buffer.put_string (once ", (char *) cr")
-			buffer.put_integer (type_id)
-			buffer.put_character ('}')
+			if associated_class.has_visible then
+				buffer.put_character ('{')
+				buffer.put_string (once "(int32) ")
+				buffer.put_integer (associated_class.visible_table_size)
+				buffer.put_string (once ", sizeof(char *(*)()), cl")
+				buffer.put_integer (associated_class.class_id)
+				buffer.put_string (once ", (char *) cr")
+				buffer.put_integer (type_id)
+				buffer.put_character ('}')
+			else
+				buffer.put_string (once "{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+			end
 		end
 
 feature -- Byte code generation
@@ -1797,7 +1798,7 @@ feature -- Byte code generation
 				-- 8. Skeleton size
 			skeleton.make_size_byte_code (ba)
 
-				-- Creation feature id if any.
+				-- 9. Creation feature id if any.
 			creation_feature := associated_class.creation_feature
 			if creation_feature /= Void then
 				ba.append_integer_32 (creation_feature.feature_id)
@@ -1805,8 +1806,15 @@ feature -- Byte code generation
 				ba.append_integer_32 (0)
 			end
 
-				-- Static type id
+				-- 10. Static type id
 			ba.append_integer_32 (static_type_id - 1)
+
+				-- 11. Storable version if any
+			if attached associated_class.storable_version as l_version and then not l_version.is_empty then
+				ba.append_string (associated_class.storable_version)
+			else
+				ba.append_string ("")
+			end
 
 			Result := ba.feature_table
 		end

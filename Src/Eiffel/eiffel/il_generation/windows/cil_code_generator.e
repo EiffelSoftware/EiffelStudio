@@ -1315,6 +1315,11 @@ feature -- Class info
 					current_module.ise_eiffel_name_attr_ctor_token, l_ca)
 			end
 
+			if attached class_type.associated_class.storable_version as l_version and then not l_version.is_empty then
+				create l_ca.make
+				l_ca.put_string (l_version)
+				define_custom_attribute (l_class_token, current_module.ise_eiffel_version_attr_ctor_token, l_ca)
+			end
 			if not class_type.type.has_no_mark then
 				create l_ca.make
 				l_ca.put_integer_32 (class_type.type.declaration_mark)

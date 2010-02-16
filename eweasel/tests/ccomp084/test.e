@@ -5,7 +5,7 @@ create
 	make
 feature
 	
-	make is
+	make
 		local
 			x: like a
 			y: like b
@@ -17,7 +17,7 @@ feature
 		end
 
 	
-	a: REAL is 1.01E+2000000000
-	b: DOUBLE is 1.01E+2000000000
+	a: REAL = 1.01E+2000000000
+	b: DOUBLE = 1.01E+2000000000
 
 end

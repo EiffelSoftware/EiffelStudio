@@ -12,13 +12,13 @@ create
 
 feature
 
-	default_create is
+	default_create
 		do
 			create s.make (10)
 			s.append ("toto")
 		end
 
-	is_equal (o: like Current): BOOLEAN is
+	is_equal (o: like Current): BOOLEAN
 		do
 			Result := s.is_equal (o.s)
 		end

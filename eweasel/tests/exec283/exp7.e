@@ -7,7 +7,7 @@ inherit
 
 feature
 
-	copy (other: like Current) is
+	copy (other: like Current)
 		do
 			print ("Being called {EXP7}.copy.%N")
 		end

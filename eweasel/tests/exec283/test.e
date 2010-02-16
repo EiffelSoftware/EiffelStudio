@@ -152,7 +152,7 @@ feature
 			check_all_default (l_exp7, exp7)
 		end
 
-	display_info (a_spec: SPECIAL [ANY]) is
+	display_info (a_spec: SPECIAL [ANY])
 		require
 			a_spec_not_void: a_spec /= Void
 		do
@@ -162,7 +162,7 @@ feature
 			print (" elements.%N")
 		end
 
-	check_all_default (a_spec: SPECIAL [ANY]; a_def: ANY) is
+	check_all_default (a_spec: SPECIAL [ANY]; a_def: ANY)
 		require
 			a_spec_not_void: a_spec /= Void
 		do

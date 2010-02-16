@@ -12,7 +12,7 @@ create
 
 feature
 
-	default_create is
+	default_create
 		do
 			i := 5
 		end

@@ -9,7 +9,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			print (x.y); io.new_line
 		end

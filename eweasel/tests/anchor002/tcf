@@ -1,0 +1,18 @@
+test_name 	 qat-redeclaration-check
+test_description Compiler should detect errors in redeclarations involving qualified anchored types.
+
+copy_raw	a.e    $CLUSTER a.e
+copy_raw	b.e    $CLUSTER b.e
+copy_raw	c1.e   $CLUSTER c.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error VDRD(1) B
+
+copy_raw	c2.e   $CLUSTER c.e
+resume_compile
+compile_result	ok
+
+
+test_end

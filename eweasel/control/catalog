@@ -2325,6 +2325,10 @@ test	field-basic-type-inconsistency	reflection004 tcf pass reflection
 test	field-type-inconsistency		reflection005 tcf pass reflection 
 test	storable-version-data			reflection006 tcf pass reflection storable
 
+-- Tests for anchored types
+test	qat-evaluation-order			anchor001 tcf pass anchored_type
+test	qat-redeclaration-check			anchor002 tcf pass anchored_type redeclaration validity conformance
+
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet
 test tuple-insertions-assertions		dotnet002	tcf pass dotnet tuple

@@ -1265,7 +1265,7 @@ feature {NONE} -- Implementation
 
 feature -- Text Loading	
 
-	load_file (a_file_name: FILE_NAME)
+	load_file (a_file_name: STRING)
 			-- Load file named `a_file_name' in the editor.
 		do
 			if (not load_without_save) and then changed then
@@ -1909,7 +1909,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

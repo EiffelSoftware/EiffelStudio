@@ -392,7 +392,13 @@ feature -- Access
 			-- Related Once part (if any).
 		do
 			if attached {ROUTINE_AS} body.content as l_routine_as then
-				Result := l_routine_as.routine_body.as_once
+				if attached {BUILT_IN_AS} l_routine_as.routine_body as l_rout_body then
+					if attached l_rout_body.body as l_feat_as then
+						Result := l_feat_as.once_as
+					end
+				else
+					Result := l_routine_as.routine_body.as_once
+				end
 			end
 		end
 

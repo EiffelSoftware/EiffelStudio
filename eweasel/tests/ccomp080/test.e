@@ -8,7 +8,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			create x
 			print (x.hamster (3)); io.new_line

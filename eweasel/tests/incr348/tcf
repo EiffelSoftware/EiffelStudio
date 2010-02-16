@@ -1,0 +1,31 @@
+
+test_name 	 melted-agent-creation-crash
+test_description When a routine with an agent creation is melted after being frozen and the body of the agent is also melted due to being changed, system execution ends with a seg fault
+
+copy_sub	Ace $TEST Ace
+
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	anonymous_operation.e $CLUSTER anonymous_operation.e
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+copy_raw	test2_rev1.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output2
+
+
+test_end

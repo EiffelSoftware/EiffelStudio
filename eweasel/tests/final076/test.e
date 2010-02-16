@@ -11,7 +11,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			x: TEST3
 		do

@@ -886,6 +886,7 @@ test	new-generic-deriv-attribute-agent	incr344 tcf fail incrementality
 test	supports-step-in-crash			incr345 tcf fail incrementality
 test	is-expanded-crash			incr346 tcf fail incrementality
 test	class-removal-crash-freeze		incr347 tcf fail incrementality
+test	melted-agent-creation-crash		incr348 tcf fail incrementality
 
 
 -- Melting

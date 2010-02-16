@@ -11,7 +11,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			print ((agent : STRING attribute Result := "weasel" end).item ([])); io.new_line
 		end

@@ -34,9 +34,12 @@ copy_raw	finite.e $CLUSTER finite.e
 copy_raw	hash_table.e $CLUSTER hash_table.e 
 copy_raw	hash_table_cursor.e $CLUSTER hash_table_cursor.e 
 copy_raw	indexable.e $CLUSTER indexable.e 
+copy_raw	indexable_iteration_cursor.e $CLUSTER indexable_iteration_cursor.e 
 copy_raw	infinite.e $CLUSTER infinite.e 
 if not DOTNET copy_raw	internal.e $CLUSTER internal.e 
 if DOTNET copy_raw	internal.e-dotnet $CLUSTER internal.e 
+copy_raw	iterable.e $CLUSTER iterable.e 
+copy_raw	iteration_cursor.e $CLUSTER iteration_cursor.e 
 copy_raw	linear.e $CLUSTER linear.e 
 copy_raw	linked_list_cursor.e $CLUSTER linked_list_cursor.e 
 copy_raw	list.e $CLUSTER list.e 
@@ -46,6 +49,7 @@ copy_raw	mismatch_information.e $CLUSTER mismatch_information.e
 copy_raw	mismatch_corrector.e $CLUSTER mismatch_corrector.e
 copy_raw	primes.e $CLUSTER primes.e 
 copy_raw	process.e $CLUSTER process.e 
+copy_raw	readable_indexable.e $CLUSTER readable_indexable.e 
 copy_raw	resizable.e $CLUSTER resizable.e 
 copy_raw	set.e $CLUSTER set.e 
 copy_raw	sequence.e $CLUSTER sequence.e 

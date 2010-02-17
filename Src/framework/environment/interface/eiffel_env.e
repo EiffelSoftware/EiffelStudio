@@ -44,7 +44,7 @@ feature -- Access
 			-- Versioned name of the product.
 		once
 			if is_unix_layout then
-				create Result.make_from_string (product_name + "-" + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
+				create Result.make_from_string (product_name + release_suffix)
 				Result.to_lower
 			else
 				create Result.make_from_string (product_name + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
@@ -121,6 +121,14 @@ feature {NONE} -- Access
 			end
 		ensure
 			result_contains: Result.for_all (agent (a_item: STRING_8): BOOLEAN do Result := not a_item.is_empty end)
+		end
+
+	release_suffix: STRING
+			-- Suffix containing release version which is used for unix layout
+		require
+			unix_layout: is_unix_layout
+		once
+			Result := "-" + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out
 		end
 
 feature -- Status update
@@ -1568,7 +1576,7 @@ feature -- Executable names
 		once
 			create Result.make_from_string ("estudio")
 			if is_unix_layout then
-				Result.append ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
+				Result.append (release_suffix)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1586,7 +1594,7 @@ feature -- Executable names
 				create Result.make (6)
 				Result.append ("ec")
 				if is_unix_layout then
-					Result.append ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
+					Result.append (release_suffix)
 				end
 			end
 		ensure
@@ -1598,7 +1606,7 @@ feature -- Executable names
 		once
 			create Result.make_from_string ("finish_freezing")
 			if is_unix_layout then
-				Result.append ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
+				Result.append (release_suffix)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -2101,7 +2109,7 @@ feature -- Preferences
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

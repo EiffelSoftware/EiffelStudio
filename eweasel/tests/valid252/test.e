@@ -4,7 +4,7 @@ create
 	make
 feature
 	
-	make is
+	make
 		do
 			if value (attached {TEST2} Current as x and then attached {TEST3} Current as x) then
 			end

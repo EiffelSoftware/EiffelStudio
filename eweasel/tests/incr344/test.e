@@ -4,7 +4,7 @@ create
 	make
 feature
 	
-	make is
+	make
 		do
 			test_it
 			create x

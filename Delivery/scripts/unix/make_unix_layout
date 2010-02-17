@@ -25,9 +25,11 @@ ICONS_DIR=$BASE_PATH/share/icons
 DOC_DIR=$BASE_PATH/share/doc/$PRODUCT
 SRC_BIN_DIR=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin
 
-echo "Creating unix layout in $DST_DIR"
-echo "(binaries in /usr/bin will have suffix $PRODUCT_VERSION -> e.g. ec$PRODUCT_VERSION)"
+MAIN_BINS="estudio ec ecb finish_freezing"
+LIB_BINS="ecdbgd prelink quick_finalize x2c"
 
+
+echo "Creating unix layout in $DST_DIR"
 
 # Create basic directory layout
 if test -d $DST_DIR; then
@@ -69,27 +71,28 @@ else
 fi
 
 # Copy esbuilder
-cp $ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin/esbuilder $BIN_DIR/esbuilder-$VERSION
+cp $ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin/esbuilder $BIN_DIR/esbuilder$VERSION_SUFFIX
 cp -r $ISE_EIFFEL/esbuilder $SHARE_DIR
 rm -r $SHARE_DIR/esbuilder/spec
 
 # Copy vision2_demo
-cp $ISE_EIFFEL/vision2_demo/spec/$ISE_PLATFORM/bin/vision2_demo $BIN_DIR/vision2_demo-$VERSION
+cp $ISE_EIFFEL/vision2_demo/spec/$ISE_PLATFORM/bin/vision2_demo $BIN_DIR/vision2_demo$VERSION_SUFFIX
 cp -r $ISE_EIFFEL/vision2_demo $SHARE_DIR
 cp $ISE_EIFFEL/vision2_demo/readme.html $DOC_DIR/readme-vision2_demo.html
 rm -r $SHARE_DIR/vision2_demo/spec
 rm -f $SHARE_DIR/vision2_demo/readme.html
 
 # Copy internal binaries
-cp $SRC_BIN_DIR/ecdbgd $LIB_BIN_DIR/ecdbgd-$VERSION
-cp $SRC_BIN_DIR/prelink $LIB_BIN_DIR/prelink-$VERSION
-cp $SRC_BIN_DIR/quick_finalize $LIB_BIN_DIR/quick_finalize-$VERSION
-cp $SRC_BIN_DIR/x2c $LIB_BIN_DIR/x2c-$VERSION
+for BIN in $LIB_BINS;
+do
+	cp $SRC_BIN_DIR/$BIN $LIB_BIN_DIR/$BIN
+done
 
 # Copy main binaries
-cp $SRC_BIN_DIR/ec $BIN_DIR/ec-$VERSION
-cp $SRC_BIN_DIR/estudio $BIN_DIR/estudio-$VERSION
-cp $SRC_BIN_DIR/finish_freezing $BIN_DIR/finish_freezing-$VERSION
+for BIN in $MAIN_BINS;
+do
+	cp $SRC_BIN_DIR/$BIN $BIN_DIR/$BIN$VERSION_SUFFIX
+done
 
 # Copy wizards
 cp -r $ISE_EIFFEL/studio/wizards $LIB_BIN_DIR
@@ -108,18 +111,14 @@ mv $PACKAGING_DIR/make_install $SHARE_DIR/
 cp $PACKAGING_DIR/logo.png $ICONS_DIR/$PRODUCT.png
 
 OLD_PWD=`pwd`
-# Create symlinks
-cd $DST_DIR/usr/bin
-ln -s ec-$VERSION ec
-ln -s ec-$VERSION ec$PRODUCT_VERSION
-ln -s estudio-$VERSION estudio
-ln -s estudio-$VERSION estudio$PRODUCT_VERSION
-ln -s finish_freezing-$VERSION finish_freezing
-ln -s finish_freezing-$VERSION finish_freezing$PRODUCT_VERSION
-ln -s esbuilder-$VERSION esbuilder
-ln -s esbuilder-$VERSION esbuilder$PRODUCT_VERSION
-ln -s vision2_demo-$VERSION vision2_demo
-ln -s vision2_demo-$VERSION vision2_demo$PRODUCT_VERSION
+# Create symlinks for binaries in /usr/bin
+cd $BIN_DIR
+for BIN in $MAIN_BINS esbuilder vision2_demo;
+do
+	ln -s $BIN$VERSION_SUFFIX $BIN
+	ln -s $BIN$VERSION_SUFFIX $BIN$RELEASE_SUFFIX
+done
+
 cd $OLD_PWD
 
 if [ $ISE_PLATFORM != "unix" ]; then

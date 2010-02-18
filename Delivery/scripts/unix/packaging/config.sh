@@ -9,14 +9,14 @@ if [ ! "$ISE_PLATFORM" ]; then
         echo '$ISE_PLATFORM not defined. Cannot continue'
         exit 1
 fi
-echo "ISE_EIFFEL: $ISE_EIFFEL"
-echo "ISE_PLATFORM: $ISE_PLATFORM"
+echo \$ISE_EIFFEL: $ISE_EIFFEL
+echo \$ISE_PLATFORM: $ISE_PLATFORM
 
 # Extract EiffelStudio version
 EC="$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -version"
 eval "$EC" > /dev/null
 export VERSION=`$EC | sed "s/^[A-Za-z ]*\([0-9][0-9\.]*\).*/\1/"`
-echo "VERSION: $VERSION"
+echo \$VERSION: $VERSION
 
 # Common variables
 MAJOR_NUMBER=`echo $VERSION | sed "s/^\([0-9]\).*/\1/"`

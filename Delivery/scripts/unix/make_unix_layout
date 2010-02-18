@@ -10,6 +10,15 @@ if `echo $0 | grep make_unix_layout$ > /dev/null`; then
 	. ./packaging/config.sh
 fi
 
+if test -d $DST_DIR; then
+	echo $DST_DIR already exists, please remove it or choose a different directory
+fi
+mkdir -p $DST_DIR
+OLD_PWD=`pwd`
+cd $DST_DIR
+DST_DIR=`pwd`
+echo Creating unix layout in $DST_DIR
+
 # some helper variables
 UNIX_PLATFORM=unix
 UNIX_BASE_PATH=/usr
@@ -28,15 +37,6 @@ SRC_BIN_DIR=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin
 MAIN_BINS="estudio ec ecb finish_freezing"
 LIB_BINS="ecdbgd prelink quick_finalize x2c"
 
-
-echo "Creating unix layout in $DST_DIR"
-
-# Create basic directory layout
-if test -d $DST_DIR; then
-    echo $0: $DST_DIR exists already, please remove or choose a different directory for unix layout
-    exit 1
-fi
-
 mkdir -p $BIN_DIR
 mkdir -p $INCLUDE_DIR
 mkdir -p $LIB_DIR
@@ -52,12 +52,20 @@ cp -r $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/lib/* $LIB_DIR
 
 # Copy library
 cp -r $ISE_EIFFEL/library $LIB_DIR
+if test -d "$ISE_EIFFEL/experimental/library"; then
+	mkdir $LIB_DIR/experimental
+	cp -r $ISE_EIFFEL/experimental/library $LIB_DIR/experimental
+fi
 
 # Copy precompile without EIFGENs and remove WEL files
 mkdir -p $LIB_DIR/precomp/spec/$UNIX_PLATFORM
-cp $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/* $LIB_DIR/precomp/spec/$UNIX_PLATFORM/
+cp $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/*.ecf $LIB_DIR/precomp/spec/$UNIX_PLATFORM/
 rm -f $LIB_DIR/precomp/spec/$UNIX_PLATFORM/wel*
-
+if test -d "$ISE_EIFFEL/experimental/precomp/spec/$ISE_PLATFORM"; then
+	mkdir -p $LIB_DIR/experimental/precomp/spec/$UNIX_PLATFORM
+	cp $ISE_EIFFEL/experimental/precomp/spec/$ISE_PLATFORM/*.ecf $LIB_DIR/experimental/precomp/spec/$UNIX_PLATFORM/
+	rm -f $LIB_DIR/experimental/precomp/spec/$UNIX_PLATFORM/wel*
+fi
 
 # Copy documentation
 cp $ISE_EIFFEL/VERSION $DOC_DIR
@@ -67,7 +75,7 @@ cp -r $ISE_EIFFEL/examples $DOC_DIR
 if test -d "$ISE_EIFFEL/docs"; then
     cp -r $ISE_EIFFEL/docs $DOC_DIR
 else
-    echo $0: New unix layout will not contain eiffel documentation
+    echo $ISE_EIFFEL/docs does not exist - new unix layout will not contain Eiffel documentation
 fi
 
 # Copy esbuilder
@@ -110,16 +118,13 @@ mv $PACKAGING_DIR/make_install $SHARE_DIR/
 . $PACKAGING_DIR/desktop.sh
 cp $PACKAGING_DIR/logo.png $ICONS_DIR/$PRODUCT.png
 
-OLD_PWD=`pwd`
 # Create symlinks for binaries in /usr/bin
 cd $BIN_DIR
 for BIN in $MAIN_BINS esbuilder vision2_demo;
 do
-	ln -s $BIN$VERSION_SUFFIX $BIN
 	ln -s $BIN$VERSION_SUFFIX $BIN$RELEASE_SUFFIX
+	ln -s $BIN$RELEASE_SUFFIX $BIN
 done
-
-cd $OLD_PWD
 
 if [ $ISE_PLATFORM != "unix" ]; then
     mv $LIB_BIN_DIR/wizards/new_projects/vision2/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/new_projects/vision2/spec/unix
@@ -130,3 +135,4 @@ if [ $ISE_PLATFORM != "unix" ]; then
     mv $LIB_DIR/library/obsolete/net/spec/$ISE_PLATFORM $LIB_DIR/library/obsolete/net/spec/unix
     mv $SHARE_DIR/studio/config/$ISE_PLATFORM $SHARE_DIR/studio/config/unix
 fi
+cd $OLD_PWD

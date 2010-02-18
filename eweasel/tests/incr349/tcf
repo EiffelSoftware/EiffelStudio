@@ -1,0 +1,56 @@
+test_name storable-version-update
+test_description Verify that using {INTERNAL} to get the storable version of a type works properly and that changes to it are properly taken into account
+
+define	VERSION ""
+copy_sub	Ace $TEST Ace
+copy_sub	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_1
+execute_result 	ok
+compare		exec_output_1 output_2
+
+define	VERSION "storable_version: "1.0""
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_2
+execute_result 	ok
+compare		exec_output_2 output_1
+
+define	VERSION "storable_version: """
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_3
+execute_result 	ok
+compare		exec_output_3 output_2
+
+define	VERSION "storable_version: "1.0""
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_2
+execute_result 	ok
+compare		exec_output_2 output_1
+
+define	VERSION ""
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_3
+execute_result 	ok
+compare		exec_output_3 output_2
+
+test_end

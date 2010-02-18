@@ -1,0 +1,74 @@
+test_name	store-retrieve-with-version
+test_description Test that storing/retrieving takes into account the storable_version information in independent store.
+
+define VERSION	""
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m1 1
+execute_result	ok
+compare		exec_output_m1 output
+
+define VERSION	"storable_version: """
+copy_sub	a.e $CLUSTER a.e
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m2 0
+execute_result	ok
+compare		exec_output_m2 output
+
+-- Going from one version to the same
+define VERSION	"storable_version: "1.0""
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m3 1
+execute_result	ok
+compare		exec_output_m3 output
+
+define VERSION	"storable_version: "1.0""
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m4 0
+execute_result	ok
+compare		exec_output_m4 output
+
+-- Going from one version to another same
+define VERSION	"storable_version: "2.0""
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m5 0
+execute_result	ok
+compare		exec_output_m5 output_mismatch
+
+-- Going from one version to empty version
+define VERSION	"storable_version: """
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m6 0
+execute_result	ok
+compare		exec_output_m6 output_mismatch
+
+-- Going from one version to no version
+define VERSION	""
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m7 0
+execute_result	ok
+compare		exec_output_m7 output_mismatch
+
+
+test_end

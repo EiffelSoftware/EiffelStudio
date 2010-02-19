@@ -33,4 +33,4 @@ ren default_vision2_icon.ico vision2_demo.ico
 
 
 REM Remove all temporary checked out files.
-rm -rf Delivery
+rd /Q /S Delivery

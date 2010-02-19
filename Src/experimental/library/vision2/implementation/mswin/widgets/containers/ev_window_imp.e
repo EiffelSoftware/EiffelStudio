@@ -869,12 +869,16 @@ feature {EV_ANY_I} -- Implementation
 				--| We need to pass the mouse_button to `source_at_pointer_position'.
 				--| This enables it to only call `pebble_function' if really necessary,
 				--| i.e. the pressed button matches the type of transport.
-			if msg = Wm_lbuttondown then
-				source := source_at_pointer_position (1)
-			elseif msg = Wm_rbuttondown then
-				source := source_at_pointer_position (3)
-			else
-				source := Void
+
+			if not has_focus then
+					-- We only need to prevent activation on PND if the window doesn't have focus.
+				if msg = Wm_lbuttondown then
+					source := pnd_source_at_pointer_position (1)
+				elseif msg = Wm_rbuttondown then
+					source := pnd_source_at_pointer_position (3)
+				else
+					source := Void
+				end
 			end
 
 				--| We set `override movement' to False. It is easier to then assign `True
@@ -942,11 +946,12 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	source_at_pointer_position (button_pressed: INTEGER): detachable EV_PICK_AND_DROPABLE_IMP
+	pnd_source_at_pointer_position (button_pressed: INTEGER): detachable EV_PICK_AND_DROPABLE_IMP
 			-- `Result' is EV_PICK_AND_DROPABLE at current pointer_position.
 			-- `button_pressed' is pointer button which caused this feature to be
 			-- called. This allows us to avoid excessive processing when we know
 			-- that the type of transport of the widget does not match the button.
+			-- Used in conjunction with preventing activation when in pick or drag and drop mode.
 		local
 			wel_window: detachable WEL_WINDOW
 			wel_point: WEL_POINT
@@ -970,11 +975,11 @@ feature {EV_ANY_I} -- Implementation
 						widget_imp := combo_field.parent
 					end
 				end
-				if widget_imp /= Void then
+				if widget_imp /= Void and then not widget_imp.mode_is_target_menu then
 						--| We only need to perform further processing if the pointer
 						--| button matches the type of transport of `widget_imp'.
 					if (button_pressed = 1 and widget_imp.mode_is_drag_and_drop) or
-						(button_pressed = 3 and (widget_imp.mode_is_pick_and_drop or widget_imp.mode_is_target_menu)) then
+						(button_pressed = 3 and widget_imp.mode_is_pick_and_drop) then
 						if application_imp.pick_and_drop_source = Void then
 							l_pebble_function := widget_imp.pebble_function
 							widget_imp.call_pebble_function (wel_point.x - widget_imp.screen_x,

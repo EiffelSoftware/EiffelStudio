@@ -6,7 +6,7 @@ iff not defined INIT_DIR then
 	set INIT_DIR=%@EXECSTR[cd]
 endiff
 
-set SVN_VERSION=%@EXECSTR[bash set_version.sh %EIFFEL_SRC]
+set SVN_VERSION=%@EXECSTR[bash -o igncr set_version.sh %EIFFEL_SRC]
 
 cdd %INIT_DIR\install
 safe_md %INIT_DIR\install\bin

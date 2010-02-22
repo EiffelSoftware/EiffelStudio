@@ -11,11 +11,6 @@ deferred class
 inherit
 	SED_READER_WRITER
 
-	PLATFORM
-		export
-			{NONE} all
-		end
-
 feature -- Status report
 
 	is_ready_for_reading: BOOLEAN
@@ -58,10 +53,10 @@ feature -- Access
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (natural_8_bytes)
+			check_buffer ({PLATFORM}.natural_8_bytes)
 			l_pos := buffer_position
 			Result := buffer.read_natural_8 (l_pos)
-			l_pos := l_pos + natural_8_bytes
+			l_pos := l_pos + {PLATFORM}.natural_8_bytes
 			buffer_position := l_pos
 		end
 
@@ -70,14 +65,14 @@ feature -- Access
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (natural_16_bytes)
+			check_buffer ({PLATFORM}.natural_16_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				Result := buffer.read_natural_16_le (l_pos)
 			else
 				Result := buffer.read_natural_16_be (l_pos)
 			end
-			l_pos := l_pos + natural_16_bytes
+			l_pos := l_pos + {PLATFORM}.natural_16_bytes
 			buffer_position := l_pos
 		end
 
@@ -86,14 +81,14 @@ feature -- Access
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (natural_32_bytes)
+			check_buffer ({PLATFORM}.natural_32_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				Result := buffer.read_natural_32_le (l_pos)
 			else
 				Result := buffer.read_natural_32_be (l_pos)
 			end
-			l_pos := l_pos + natural_32_bytes
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
 			buffer_position := l_pos
 		end
 
@@ -102,14 +97,14 @@ feature -- Access
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (natural_64_bytes)
+			check_buffer ({PLATFORM}.natural_64_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				Result := buffer.read_natural_64_le (l_pos)
 			else
 				Result := buffer.read_natural_64_be (l_pos)
 			end
-			l_pos := l_pos + natural_64_bytes
+			l_pos := l_pos + {PLATFORM}.natural_64_bytes
 			buffer_position := l_pos
 		end
 
@@ -117,7 +112,7 @@ feature -- Access
 			-- Read next integer_8
 		do
 			check
-				correct_size: natural_8_bytes = integer_8_bytes
+				correct_size: {PLATFORM}.natural_8_bytes = {PLATFORM}.integer_8_bytes
 			end
 			Result := read_natural_8.as_integer_8
 		end
@@ -126,7 +121,7 @@ feature -- Access
 			-- Read next integer_16
 		do
 			check
-				correct_size: natural_16_bytes = integer_16_bytes
+				correct_size: {PLATFORM}.natural_16_bytes = {PLATFORM}.integer_16_bytes
 			end
 			Result := read_natural_16.as_integer_16
 		end
@@ -135,7 +130,7 @@ feature -- Access
 			-- Read next integer_32
 		do
 			check
-				correct_size: natural_32_bytes = integer_32_bytes
+				correct_size: {PLATFORM}.natural_32_bytes = {PLATFORM}.integer_32_bytes
 			end
 			Result := read_natural_32.as_integer_32
 		end
@@ -144,7 +139,7 @@ feature -- Access
 			-- Read next integer_64
 		do
 			check
-				correct_size: natural_64_bytes = integer_64_bytes
+				correct_size: {PLATFORM}.natural_64_bytes = {PLATFORM}.integer_64_bytes
 			end
 			Result := read_natural_64.as_integer_64
 		end
@@ -154,14 +149,14 @@ feature -- Access
 		local
 			l_pos: INTEGER_32
 		do
-			check_buffer (real_32_bytes)
+			check_buffer ({PLATFORM}.real_32_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				Result := buffer.read_real_32_le (l_pos)
 			else
 				Result := buffer.read_real_32_be (l_pos)
 			end
-			l_pos := l_pos + real_32_bytes
+			l_pos := l_pos + {PLATFORM}.real_32_bytes
 			buffer_position := l_pos
 		end
 
@@ -170,14 +165,14 @@ feature -- Access
 		local
 			l_pos: INTEGER_32
 		do
-			check_buffer (real_64_bytes)
+			check_buffer ({PLATFORM}.real_64_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				Result := buffer.read_real_64_le (l_pos)
 			else
 				Result := buffer.read_real_64_be (l_pos)
 			end
-			l_pos := l_pos + real_64_bytes
+			l_pos := l_pos + {PLATFORM}.real_64_bytes
 			buffer_position := l_pos
 		end
 
@@ -189,31 +184,31 @@ feature -- Access
 		do
 			if is_pointer_value_stored then
 				check_buffer (stored_pointer_bytes)
-				if pointer_bytes = stored_pointer_bytes then
-					if pointer_bytes = natural_32_bytes then
+				if {PLATFORM}.pointer_bytes = stored_pointer_bytes then
+					if {PLATFORM}.pointer_bytes = {PLATFORM}.natural_32_bytes then
 						l_val32 := read_natural_32;
-						($Result).memory_copy ($l_val32, natural_32_bytes)
-					elseif pointer_bytes = natural_64_bytes then
+						($Result).memory_copy ($l_val32, {PLATFORM}.natural_32_bytes)
+					elseif {PLATFORM}.pointer_bytes = {PLATFORM}.natural_64_bytes then
 						l_val64 := read_natural_64;
-						($Result).memory_copy ($l_val64, natural_64_bytes)
+						($Result).memory_copy ($l_val64, {PLATFORM}.natural_64_bytes)
 					else
 						check
 							not_supported: False
 						end
 					end
-				elseif pointer_bytes > stored_pointer_bytes then
+				elseif {PLATFORM}.pointer_bytes > stored_pointer_bytes then
 					check
-						expected_size: pointer_bytes = natural_64_bytes and stored_pointer_bytes = natural_32_bytes
+						expected_size: {PLATFORM}.pointer_bytes = {PLATFORM}.natural_64_bytes and stored_pointer_bytes = {PLATFORM}.natural_32_bytes
 					end
 					l_val32 := read_natural_32;
-					($Result + natural_32_bytes).memory_copy ($l_val32, natural_32_bytes)
+					($Result + {PLATFORM}.natural_32_bytes).memory_copy ($l_val32, {PLATFORM}.natural_32_bytes)
 				else
 					check
-						expected_size: pointer_bytes = natural_32_bytes and stored_pointer_bytes = natural_64_bytes
+						expected_size: {PLATFORM}.pointer_bytes = {PLATFORM}.natural_32_bytes and stored_pointer_bytes = {PLATFORM}.natural_64_bytes
 					end
 						-- We may loose some data here
 					l_val32 := read_natural_64.as_natural_32;
-					($Result).memory_copy ($l_val32, natural_32_bytes)
+					($Result).memory_copy ($l_val32, {PLATFORM}.natural_32_bytes)
 				end
 			end
 		end
@@ -225,10 +220,10 @@ feature -- Element change
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (natural_8_bytes)
+			check_buffer ({PLATFORM}.natural_8_bytes)
 			l_pos := buffer_position
 			buffer.put_natural_8 (v, l_pos)
-			l_pos := l_pos + natural_8_bytes
+			l_pos := l_pos + {PLATFORM}.natural_8_bytes
 			buffer_position := l_pos
 		end
 
@@ -237,14 +232,14 @@ feature -- Element change
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (natural_16_bytes)
+			check_buffer ({PLATFORM}.natural_16_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				buffer.put_natural_16_le (v, l_pos)
 			else
 				buffer.put_natural_16_be (v, l_pos)
 			end
-			l_pos := l_pos + natural_16_bytes
+			l_pos := l_pos + {PLATFORM}.natural_16_bytes
 			buffer_position := l_pos
 		end
 
@@ -253,14 +248,14 @@ feature -- Element change
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (natural_32_bytes)
+			check_buffer ({PLATFORM}.natural_32_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				buffer.put_natural_32_le (v, l_pos)
 			else
 				buffer.put_natural_32_be (v, l_pos)
 			end
-			l_pos := l_pos + natural_32_bytes
+			l_pos := l_pos + {PLATFORM}.natural_32_bytes
 			buffer_position := l_pos
 		end
 
@@ -269,14 +264,14 @@ feature -- Element change
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (natural_64_bytes)
+			check_buffer ({PLATFORM}.natural_64_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				buffer.put_natural_64_le (v, l_pos)
 			else
 				buffer.put_natural_64_be (v, l_pos)
 			end
-			l_pos := l_pos + natural_64_bytes
+			l_pos := l_pos + {PLATFORM}.natural_64_bytes
 			buffer_position := l_pos
 		end
 
@@ -284,7 +279,7 @@ feature -- Element change
 			-- Write `v'.
 		do
 			check
-				correct_size: natural_8_bytes = integer_8_bytes
+				correct_size: {PLATFORM}.natural_8_bytes = {PLATFORM}.integer_8_bytes
 			end
 			write_natural_8 (v.as_natural_8)
 		end
@@ -293,7 +288,7 @@ feature -- Element change
 			-- Write `v'.
 		do
 			check
-				correct_size: natural_16_bytes = integer_16_bytes
+				correct_size: {PLATFORM}.natural_16_bytes = {PLATFORM}.integer_16_bytes
 			end
 			write_natural_16 (v.as_natural_16)
 		end
@@ -302,7 +297,7 @@ feature -- Element change
 			-- Write `v'.
 		do
 			check
-				correct_size: natural_32_bytes = integer_32_bytes
+				correct_size: {PLATFORM}.natural_32_bytes = {PLATFORM}.integer_32_bytes
 			end
 			write_natural_32 (v.as_natural_32)
 		end
@@ -311,7 +306,7 @@ feature -- Element change
 			-- Write `v'.
 		do
 			check
-				correct_size: natural_64_bytes = integer_64_bytes
+				correct_size: {PLATFORM}.natural_64_bytes = {PLATFORM}.integer_64_bytes
 			end
 			write_natural_64 (v.as_natural_64)
 		end
@@ -321,14 +316,14 @@ feature -- Element change
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (real_32_bytes)
+			check_buffer ({PLATFORM}.real_32_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				buffer.put_real_32_le (v, l_pos)
 			else
 				buffer.put_real_32_be (v, l_pos)
 			end
-			l_pos := l_pos + real_32_bytes
+			l_pos := l_pos + {PLATFORM}.real_32_bytes
 			buffer_position := l_pos
 		end
 
@@ -337,14 +332,14 @@ feature -- Element change
 		local
 			l_pos: INTEGER
 		do
-			check_buffer (real_64_bytes)
+			check_buffer ({PLATFORM}.real_64_bytes)
 			l_pos := buffer_position
 			if is_little_endian_storable then
 				buffer.put_real_64_le (v, l_pos)
 			else
 				buffer.put_real_64_be (v, l_pos)
 			end
-			l_pos := l_pos + real_64_bytes
+			l_pos := l_pos + {PLATFORM}.real_64_bytes
 			buffer_position := l_pos
 		end
 
@@ -355,11 +350,11 @@ feature -- Element change
 			l_val64: NATURAL_64
 		do
 			if is_pointer_value_stored then
-				if pointer_bytes = natural_32_bytes then
-					($l_val32).memory_copy ($v, natural_32_bytes)
+				if {PLATFORM}.pointer_bytes = {PLATFORM}.natural_32_bytes then
+					($l_val32).memory_copy ($v,{PLATFORM}.natural_32_bytes)
 					write_natural_32 (l_val32)
-				elseif pointer_bytes = natural_64_bytes then
-					($l_val64).memory_copy ($v, natural_64_bytes)
+				elseif {PLATFORM}.pointer_bytes = {PLATFORM}.natural_64_bytes then
+					($l_val64).memory_copy ($v, {PLATFORM}.natural_64_bytes)
 					write_natural_64 (l_val64)
 				else
 					check

@@ -1970,26 +1970,8 @@ feature {NONE} -- Implementation
 		end
 
 	process_client_as (l_as: CLIENT_AS)
-		local
-			temp: STRING
-			cluster: CONF_GROUP
-			client_classi: CLASS_I
-			l_export_status: EXPORT_I
 		do
-			check
-				not_expr_type_visiting: not expr_type_visiting
-			end
-			cluster := system.class_of_id (current_class.class_id).group
-			l_export_status := export_status_generator.export_status (system, current_class, l_as)
-			from
-				l_as.clients.start
-			until
-				l_as.clients.after
-			loop
-				temp := l_as.clients.item.name
-				client_classi := universe.safe_class_named (temp, cluster)
-				l_as.clients.forth
-			end
+			--| For the breakable info; this is useless to process CLIENT_AS
 		end
 
 	process_case_as (l_as: CASE_AS)
@@ -2802,7 +2784,7 @@ invariant
 	has_error_implies_error_message_not_empty: has_error implies not error_message.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -19,6 +19,11 @@ inherit
 			medium
 		end
 
+	PLATFORM
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_with_buffer
@@ -74,13 +79,13 @@ feature -- Header/Footer
 		do
 				-- Before doing any writing we need to setup the attributes
 				-- that control how the data will be stored. So far just one
-			buffer_position := integer_32_bytes
+			buffer_position := {PLATFORM}.integer_32_bytes
 			is_little_endian_storable := is_little_endian
 
 				-- Write the header describing how the data is stored.
 			write_boolean (is_little_endian_storable)
 			write_boolean (is_pointer_value_stored)
-			write_integer_32 (pointer_bytes)
+			write_integer_32 ({PLATFORM}.pointer_bytes)
 		end
 
 	write_footer
@@ -132,17 +137,17 @@ feature {NONE} -- Buffer update
 			is_ready: is_ready_for_reading
 		do
 				-- Read the amount of data we are suppose to read
-			medium.read_to_managed_pointer (buffer, 0, integer_32_bytes)
-			if medium.bytes_read = integer_32_bytes then
+			medium.read_to_managed_pointer (buffer, 0, {PLATFORM}.integer_32_bytes)
+			if medium.bytes_read = {PLATFORM}.integer_32_bytes then
 				buffer_size := buffer.read_integer_32_be (0)
 					-- Resize `buffer' if necessary.
 				if buffer.count < buffer_size then
 					buffer.resize (buffer_size)
 				end
 					-- Read the data.
-				if buffer_size > integer_32_bytes then
-					medium.read_to_managed_pointer (buffer, integer_32_bytes, buffer_size - integer_32_bytes)
-					if medium.bytes_read /= buffer_size - integer_32_bytes then
+				if buffer_size > {PLATFORM}.integer_32_bytes then
+					medium.read_to_managed_pointer (buffer, {PLATFORM}.integer_32_bytes, buffer_size - {PLATFORM}.integer_32_bytes)
+					if medium.bytes_read /= buffer_size - {PLATFORM}.integer_32_bytes then
 							-- What should we do when we cannot read the expected number of bytes?
 							-- Raise an exception or flag it?
 					end
@@ -152,7 +157,7 @@ feature {NONE} -- Buffer update
 				end
 
 					-- Put the position at the right place.
-				buffer_position := integer_32_bytes
+				buffer_position := {PLATFORM}.integer_32_bytes
 			else
 					-- What should we do when we cannot read the expected number of bytes?
 					-- Raise an exception or flag it?
@@ -171,7 +176,7 @@ feature {NONE} -- Buffer update
 			medium.put_managed_pointer (buffer, 0, buffer_position)
 
 				-- Put the position at the right place.
-			buffer_position := integer_32_bytes
+			buffer_position := {PLATFORM}.integer_32_bytes
 		end
 
 invariant

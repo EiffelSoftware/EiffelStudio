@@ -19,6 +19,11 @@ inherit
 			medium
 		end
 
+	PLATFORM
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_with_buffer
@@ -38,7 +43,7 @@ feature {NONE} -- Initialization
 
 	make_with_buffer (a_medium: IO_MEDIUM; a_buffer_size: INTEGER)
 			-- Initialize current to read or write from `a_medium' using a buffer of size `a_buffer_size'.
-			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used 
+			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used
 			-- when writing.
 		require
 			a_medium_not_void: a_medium /= Void
@@ -60,9 +65,9 @@ feature -- Header/Footer
 				-- Read header
 			medium.read_to_managed_pointer (buffer, 0, header_size)
 			is_little_endian_storable := buffer.read_boolean (0)
-			is_pointer_value_stored := buffer.read_boolean (natural_8_bytes)
-			buffer_size := buffer.read_integer_32_le (2 * natural_8_bytes)
-			stored_pointer_bytes := buffer.read_integer_32_le (2 * natural_8_bytes + integer_32_bytes)
+			is_pointer_value_stored := buffer.read_boolean ({PLATFORM}.natural_8_bytes)
+			buffer_size := buffer.read_integer_32_le (2 * {PLATFORM}.natural_8_bytes)
+			stored_pointer_bytes := buffer.read_integer_32_le (2 * {PLATFORM}.natural_8_bytes + {PLATFORM}.integer_32_bytes)
 
 				-- Initialize buffer for next read operation
 			medium.read_to_managed_pointer (buffer, 0, buffer_size)
@@ -76,9 +81,9 @@ feature -- Header/Footer
 		do
 			is_little_endian_storable := is_little_endian
 			buffer.put_boolean (is_little_endian_storable, 0)
-			buffer.put_boolean (is_pointer_value_stored, natural_8_bytes)
-			buffer.put_integer_32_le (buffer_size, 2 * natural_8_bytes)
-			buffer.put_integer_32_le (pointer_bytes, 2 * natural_8_bytes + integer_32_bytes)
+			buffer.put_boolean (is_pointer_value_stored, {PLATFORM}.natural_8_bytes)
+			buffer.put_integer_32_le (buffer_size, 2 * {PLATFORM}.natural_8_bytes)
+			buffer.put_integer_32_le ({PLATFORM}.pointer_bytes, 2 * {PLATFORM}.natural_8_bytes + {PLATFORM}.integer_32_bytes)
 
 			medium.put_managed_pointer (buffer, 0, header_size)
 			buffer_position := 0
@@ -118,11 +123,11 @@ feature {NONE} -- Implementation: Status report
 	header_size: INTEGER
 			-- Size for header storing properties of data stored in `medium'
 		do
-			Result := 
-				natural_8_bytes 		-- `is_little_endian_storable'
-				+ natural_8_bytes		-- `is_pointer_value_stored'
-				+ integer_32_bytes	-- `buffer_size'
-				+ integer_32_bytes	-- `stored_pointer_bytes'
+			Result :=
+				{PLATFORM}.natural_8_bytes 		-- `is_little_endian_storable'
+				+ {PLATFORM}.natural_8_bytes	-- `is_pointer_value_stored'
+				+ {PLATFORM}.integer_32_bytes	-- `buffer_size'
+				+ {PLATFORM}.integer_32_bytes	-- `stored_pointer_bytes'
 		end
 
 feature {NONE} -- Buffer update

@@ -198,7 +198,9 @@ rt_private char *RT_UNKNOWN_TYPE_MSG = "unknown entity type";
 rt_private void monadic_op(int code);				/* Execute a monadic operation */
 rt_private void diadic_op(int code);				/* Execute a diadic operation */
 rt_private void eif_interp_gt(EIF_TYPED_VALUE *first, EIF_TYPED_VALUE *second);	/* > operation */
+rt_private void eif_interp_ge(EIF_TYPED_VALUE *first, EIF_TYPED_VALUE *second);	/* >= operation */
 rt_private void eif_interp_lt(EIF_TYPED_VALUE *first, EIF_TYPED_VALUE *second);	/* < operation */
+rt_private void eif_interp_le(EIF_TYPED_VALUE *first, EIF_TYPED_VALUE *second);	/* <= operation */
 rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s);			/* == operation */
 
 /* Min and max operation */
@@ -4013,8 +4015,7 @@ rt_private void diadic_op(int code)
 
 	/* Lesser or equal operation. */
 	case BC_LE:
-		eif_interp_gt(f, s);
-		f->it_char = EIF_TEST (!f->it_char);
+		eif_interp_le(f, s);
 		break;
 
 	/* Lesser than operation. */
@@ -4024,8 +4025,7 @@ rt_private void diadic_op(int code)
 
 	/* Greater or equal operation. */
 	case BC_GE:
-		eif_interp_lt (f, s);
-		f->it_char = EIF_TEST(!f->it_char);
+		eif_interp_ge (f, s);
 		break;
 
 	/* Greater than operation. */
@@ -4245,6 +4245,37 @@ rt_private void eif_interp_gt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	f->type = SK_BOOL;		/* Result is a boolean */
 }
 
+rt_private void eif_interp_ge(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
+	switch(f->type & SK_HEAD) {
+		case SK_CHAR: f->it_char = EIF_TEST(f->it_char >= s->it_char); break;
+		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar >= s->it_wchar); break;
+		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 >= s->it_uint8); break;
+		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 >= s->it_uint16); break;
+		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 >= s->it_uint32); break;
+		case SK_UINT64: f->it_char = EIF_TEST(f->it_uint64 >= s->it_uint64); break;
+		case SK_INT8: f->it_char = EIF_TEST(f->it_int8 >= s->it_int8); break;
+		case SK_INT16: f->it_char = EIF_TEST(f->it_int16 >= s->it_int16); break;
+		case SK_INT32: f->it_char = EIF_TEST(f->it_int32 >= s->it_int32); break;
+		case SK_INT64: f->it_char = EIF_TEST(f->it_int64 >= s->it_int64); break;
+		case SK_REAL32:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real32 >= s->it_real32);
+			} else {
+				f->it_char = EIF_TEST(eif_is_greater_equal_real_32(f->it_real32, s->it_real32));
+			}
+			break;
+		case SK_REAL64:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real64 >= s->it_real64);
+			} else {
+				f->it_char = EIF_TEST(eif_is_greater_equal_real_64(f->it_real64, s->it_real64));
+			}
+			break;
+		default: eif_panic(MTC RT_BOTCHED_MSG);
+	}
+	f->type = SK_BOOL;		/* Result is a boolean */
+}
+
 rt_private void eif_interp_lt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	switch(f->type & SK_HEAD) {
 		case SK_CHAR: f->it_char = EIF_TEST(f->it_char < s->it_char); break;
@@ -4269,6 +4300,37 @@ rt_private void eif_interp_lt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 				f->it_char = EIF_TEST(f->it_real64 < s->it_real64);
 			} else {
 				f->it_char = EIF_TEST(eif_is_less_real_64(f->it_real64, s->it_real64));
+			}
+			break;
+		default: eif_panic(MTC RT_BOTCHED_MSG);
+	}
+	f->type = SK_BOOL;		/* Result is a boolean */
+}
+
+rt_private void eif_interp_le(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
+	switch(f->type & SK_HEAD) {
+		case SK_CHAR: f->it_char = EIF_TEST(f->it_char <= s->it_char); break;
+		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar <= s->it_wchar); break;
+		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 <= s->it_uint8); break;
+		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 <= s->it_uint16); break;
+		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 <= s->it_uint32); break;
+		case SK_UINT64: f->it_char = EIF_TEST(f->it_uint64 <= s->it_uint64); break;
+		case SK_INT8: f->it_char = EIF_TEST(f->it_int8 <= s->it_int8); break;
+		case SK_INT16: f->it_char = EIF_TEST(f->it_int16 <= s->it_int16); break;
+		case SK_INT32: f->it_char = EIF_TEST(f->it_int32 <= s->it_int32); break;
+		case SK_INT64: f->it_char = EIF_TEST(f->it_int64 <= s->it_int64); break;
+		case SK_REAL32:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real32 <= s->it_real32);
+			} else {
+				f->it_char = EIF_TEST(eif_is_less_equal_real_32(f->it_real32, s->it_real32));
+			}
+			break;
+		case SK_REAL64:
+			if (egc_has_ieee_semantic) {
+				f->it_char = EIF_TEST(f->it_real64 <= s->it_real64);
+			} else {
+				f->it_char = EIF_TEST(eif_is_less_equal_real_64(f->it_real64, s->it_real64));
 			}
 			break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);

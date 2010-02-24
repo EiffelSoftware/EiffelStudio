@@ -1705,21 +1705,21 @@ Marked_class_or_tuple_type:
 	TE_DETACHABLE Attached_class_or_tuple_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and $$ /= Void then
+				if not is_ignoring_attachment_marks and then $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), False, True)
 				end
 		}
 	| TE_ATTACHED Attached_class_or_tuple_type
 			{
 				$$ := $2
-				if not is_ignoring_attachment_marks and $$ /= Void then
+				if not is_ignoring_attachment_marks and then $$ /= Void then
 					$$.set_attachment_mark (extract_keyword ($1), True, False)
 				end
 		}
 	| TE_BANG Attached_class_or_tuple_type
 			{
 				$$ := $2
-				if $$ /= Void then
+				if not is_ignoring_attachment_marks and then $$ /= Void then
 					$$.set_attachment_mark ($1, True, False)
 				end
 				if has_syntax_warning then
@@ -1731,7 +1731,7 @@ Marked_class_or_tuple_type:
 	| TE_QUESTION Attached_class_or_tuple_type
 			{
 				$$ := $2
-				if $$ /= Void then
+				if not is_ignoring_attachment_marks and then $$ /= Void then
 					$$.set_attachment_mark ($1, False, True)
 				end
 				if has_syntax_warning then

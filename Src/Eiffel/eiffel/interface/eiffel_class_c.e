@@ -1479,6 +1479,8 @@ feature {NONE} -- Class initialization
 				set_storable_version (ast_b.top_indexes.storable_version)
 			elseif ast_b.bottom_indexes /= Void then
 				set_storable_version (ast_b.bottom_indexes.storable_version)
+			else
+				set_storable_version (Void)
 			end
 
 				-- Check if obsolete clause was present.

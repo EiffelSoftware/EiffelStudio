@@ -265,7 +265,7 @@ doc:	<routine name="traversal" export="shared">
 doc:		<summary>First pass of the store mechanism consisting in marking objects with the EO_STORE flag.</summary>
 doc:		<param name="object" type="EIF_REFERENCE">Object from which we start the marking mechanism.</param>
 doc:		<param name="for_persistence" type="int">Is traversal for persistence?.</param>
-doc:		<param name="p_accounting" type="int">Type of possible accounting (TR_PLAIN, TR_ACCOUNT, TR_MAP, TR_ACCOUNT_ATTR, INDEPEND_ACCOUNT or RECOVER_ACCOUNT).</param>
+doc:		<param name="p_accounting" type="int">Type of possible accounting (TR_PLAIN, TR_ACCOUNT, TR_MAP, TR_ACCOUNT_ATTR, RECOVER_ACCOUNT).</param>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>

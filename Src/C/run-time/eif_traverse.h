@@ -48,7 +48,6 @@ extern "C" {
 #define TR_ACCOUNT		0x01		/* Accounting of objects in obj_nb */
 #define TR_MAP			0x02		/* Build a maping table in obj_table */
 #define TR_ACCOUNT_ATTR	0x04		/* Accounting of types of attributes */
-#define INDEPEND_ACCOUNT 0x11
 #define RECOVER_ACCOUNT	0x15
 
 RT_LNK EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_type);

@@ -127,12 +127,23 @@ enum type_state {
 	TYPE_UNRESOLVED_GENERIC = 0xFFFC
 };
 
+/* Flags for various possible mismatch during a retrieval. */
+enum type_mismatched {
+	MISMATCH_DIFFERENT_VERSION = 0x00000001,
+	MISMATCH_ADDED_ATTRIBUTE = 0x00000002,
+	MISMATCH_REMOVED_ATTRIBUTE = 0x00000004,
+	MISMATCH_DIFFERENT_TYPE = 0x00000008
+};
+
 /* Describes a type in the storing system, with sufficient information to
  * convert it into a type in the retrieving system.
  */
 typedef struct {
 		/* Name of type in storing system */
 	char *name;
+
+		/* Storable version if any, NULL otherwise. */
+	char *version;
 
 		/* Array of length `attribute_count' indexed by attribute in
 		 * storing system and containing the type of the attribute in the
@@ -167,7 +178,7 @@ typedef struct {
 		/* Count of generic arguments in storing system */
 	uint16 generic_count;
 
-		/* Were attributes added to type in retrieving system? */
+		/* Were there a mismatch between the storing and retrieving system? */
 	uint32 mismatched;
 
 } type_descriptor;
@@ -276,6 +287,7 @@ RT_LNK struct htable *rt_table;	/* Table used for solving references */
 RT_LNK int32 nb_recorded;		/* Number of items recorded in Hector */
 RT_LNK char rt_kind;
 extern char rt_kind_version;
+extern char rt_kind_properties;
 RT_LNK size_t end_of_buffer;
 
 extern size_t (*retrieve_read_func)(void);
@@ -284,8 +296,8 @@ extern size_t (*retrieve_read_func)(void);
  * Utilities
  */
 
-RT_LNK char *rt_make(void);			/* Retrieve object graph */
-RT_LNK char *rt_nmake(EIF_CONTEXT long int objectCount);		/* Retrieve `n' objects */
+extern char *rt_make(void);			/* Retrieve object graph */
+extern char *rt_nmake(EIF_CONTEXT long int objectCount);		/* Retrieve `n' objects */
 
 extern size_t old_retrieve_read(void);
 extern size_t retrieve_read(void);

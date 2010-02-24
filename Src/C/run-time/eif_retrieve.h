@@ -56,7 +56,7 @@ extern "C" {
 RT_LNK void eif_set_discard_pointer_values(EIF_BOOLEAN);
 
 /* Recoverable storable */
-RT_LNK void set_mismatch_information_access (EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE);
+RT_LNK void set_mismatch_information_access (EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE, EIF_PROCEDURE);
 RT_LNK void class_translation_put (char *new_name, char *old_name);
 RT_LNK void class_translation_clear (void);
 RT_LNK EIF_INTEGER class_translation_count (void);

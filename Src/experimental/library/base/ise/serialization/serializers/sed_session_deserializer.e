@@ -137,6 +137,15 @@ feature {NONE} -- Implementation: Access
 			result_not_void: Result /= Void
 		end
 
+	has_version: BOOLEAN
+			-- Does format support reading of a version number?
+		do
+			Result := True
+		end
+
+	version: NATURAL_32
+			-- Internal version of the storable being retrieved (See SED_VERSIONS for possible values).
+
 feature {NONE} -- Implementation: Settings
 
 	set_error (a_error: like error)
@@ -174,7 +183,13 @@ feature {NONE} -- Implementation
 	read_header (a_count: NATURAL_32)
 			-- Read header of serialized data which has `a_count' objects.
 		do
-			read_object_table (a_count)
+			check has_version: has_version end
+			version := deserializer.read_compressed_natural_32
+			if version /= {SED_VERSIONS}.session_version then
+				set_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.session_version))
+			else
+				read_object_table (a_count)
+			end
 		end
 
 	read_object_table (a_count: NATURAL_32)

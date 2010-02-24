@@ -245,6 +245,14 @@ feature -- Access
 			end
 		end
 
+	cleanup
+			-- When a reading is stopped, perform the necessary cleanup to perform
+			-- another reading or writing.
+		require
+			is_ready: is_ready_for_reading
+		do
+		end
+
 feature -- Element change
 
 	write_character_8 (v: CHARACTER_8)

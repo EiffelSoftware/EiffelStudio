@@ -17,7 +17,8 @@ inherit
 			new_attribute_offset,
 			read_persistent_field_count,
 			clear_internal_data,
-			is_transient_retrieval_required
+			is_transient_retrieval_required,
+			has_version
 		end
 
 create
@@ -50,6 +51,14 @@ feature {NONE} -- Status report
 			Result := False
 		end
 
+	has_version: BOOLEAN
+			-- Does format support reading of a version number?
+		do
+				-- Because versioning was added after the initial release of SED, in order
+				-- to not break existing storables, SED_INDEPENDENT_DESERIALIZER does not support
+				-- the reading of a version.
+		end
+
 feature {NONE} -- Implementation
 
 	read_header (a_count: NATURAL_32)
@@ -62,47 +71,34 @@ feature {NONE} -- Implementation
 			l_table: like dynamic_type_table
 			l_old_dtype, l_new_dtype: INTEGER
 			l_type_str: STRING
+			l_old_version: detachable STRING
 		do
 			l_int := internal
 			l_deser := deserializer
 
-				-- Number of dynamic types in storable
-			nb := l_deser.read_compressed_natural_32.to_integer_32
-			create l_table.make_filled (0, nb)
-			create attributes_mapping.make_filled (Void, nb)
+			if has_version then
+				version := l_deser.read_compressed_natural_32
+				inspect version
+				when {SED_VERSIONS}.recoverable_version_6_6 then
 
-				-- Read table which will give us mapping between the old dynamic types
-				-- and the new ones.
-			from
-				i := 0
-			until
-				i = nb
-			loop
-					-- Read old dynamic type
-				l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
-
-					-- Read type string associated to `l_old_dtype' and find dynamic type
-					-- in current system.
-				l_type_str := l_deser.read_string_8
-				l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
-				if l_new_dtype = -1 then
-					set_error (error_factory.new_missing_type_error (l_type_str))
-					i := nb - 1 -- Jump out of loop
 				else
-					if not l_table.valid_index (l_old_dtype) then
-						l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
-					end
-					l_table.put (l_new_dtype, l_old_dtype)
+						-- Unknown version read or not a independent/recoverable format.
+					set_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.session_version))
 				end
-				i := i + 1
+			else
+				version := 0
 			end
 
 			if not has_error then
+					-- Number of dynamic types in storable
+				nb := l_deser.read_compressed_natural_32.to_integer_32
+				create l_table.make_filled (0, nb)
+				create attributes_mapping.make_filled (Void, nb)
+
 					-- Read table which will give us mapping between the old dynamic types
 					-- and the new ones.
 				from
 					i := 0
-					nb := l_deser.read_compressed_natural_32.to_integer_32
 				until
 					i = nb
 				loop
@@ -121,38 +117,81 @@ feature {NONE} -- Implementation
 							l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
 						end
 						l_table.put (l_new_dtype, l_old_dtype)
+
+							-- Read the type storable version if format supports it.
+						if version >= {SED_VERSIONS}.recoverable_version_6_6 then
+								-- Do we have a version to read?
+							if l_deser.read_boolean then
+								l_old_version := l_deser.read_string_8
+							else
+								l_old_version := Void
+							end
+							if l_old_version /~ l_int.storable_version_of_type (l_new_dtype) then
+								set_error (error_factory.new_storable_version_mismatch_error (l_new_dtype, l_old_version))
+							end
+						end
 					end
+
 					i := i + 1
 				end
 
 				if not has_error then
-						-- Now set `dynamic_type_table' as all old dynamic type IDs have
-						-- be read and resolved.
-					dynamic_type_table := l_table
-
-						-- Read attributes map for each dynamic type.
+						-- Read table which will give us mapping between the old dynamic types
+						-- and the new ones.
 					from
 						i := 0
 						nb := l_deser.read_compressed_natural_32.to_integer_32
 					until
 						i = nb
 					loop
-							-- Read old dynamic type.
+							-- Read old dynamic type
 						l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
 
-							-- Read attributes description
-						read_attributes (l_table.item (l_old_dtype))
-						if has_error then
-								-- We had an error while retrieving stored attributes
-								-- for `l_old_dtype'.
-							i := nb - 1	-- Jump out of loop
+							-- Read type string associated to `l_old_dtype' and find dynamic type
+							-- in current system.
+						l_type_str := l_deser.read_string_8
+						l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
+						if l_new_dtype = -1 then
+							set_error (error_factory.new_missing_type_error (l_type_str))
+							i := nb - 1 -- Jump out of loop
+						else
+							if not l_table.valid_index (l_old_dtype) then
+								l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
+							end
+							l_table.put (l_new_dtype, l_old_dtype)
 						end
 						i := i + 1
 					end
 
 					if not has_error then
-							-- Read object_table if any.
-						read_object_table (a_count)
+							-- Now set `dynamic_type_table' as all old dynamic type IDs have
+							-- be read and resolved.
+						dynamic_type_table := l_table
+
+							-- Read attributes map for each dynamic type.
+						from
+							i := 0
+							nb := l_deser.read_compressed_natural_32.to_integer_32
+						until
+							i = nb
+						loop
+								-- Read old dynamic type.
+							l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
+
+								-- Read attributes description
+							read_attributes (l_table.item (l_old_dtype))
+							if has_error then
+									-- We had an error while retrieving stored attributes
+									-- for `l_old_dtype'.
+								i := nb - 1	-- Jump out of loop
+							end
+							i := i + 1
+						end
+
+						if not has_error then
+								-- Read object_table if any.
+							read_object_table (a_count)
+						end
 					end
 				end
 			end

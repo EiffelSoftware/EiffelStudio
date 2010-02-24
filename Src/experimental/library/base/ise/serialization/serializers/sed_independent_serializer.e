@@ -1,5 +1,5 @@
 note
-	description: "Encoding of arbitrary objects graphs between sessions %
+	description: "Encoding of arbitrary objects graphs between different version %
 		%of programs containing the same types."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 inherit
 	SED_BASIC_SERIALIZER
 		redefine
-			write_header, is_transient_storage_required
+			write_header, is_transient_storage_required, setup_version
 		end
 
 create
@@ -29,6 +29,14 @@ feature {NONE} -- Status Report
 
 feature {NONE} -- Implementation
 
+	setup_version
+			-- Set `version' with the appropriate version number.
+			--| By default it is 0 for SED_INDEPENDENT_SERIALIZER and different of 0 for descendants.
+			--| See SED_VERSIONS for a complete list of version numbers
+		do
+			version := 0
+		end
+
 	write_header (a_list: ARRAYED_LIST [ANY])
 			-- Write header of storable.
 		local
@@ -39,6 +47,16 @@ feature {NONE} -- Implementation
 		do
 			l_ser := serializer
 			l_int := internal
+
+				-- Write the version of storable used to create it.
+				-- This is useful for versioning of formats upon retrieval to
+				-- quickly detect incompatibilities.
+				-- However to not break old SED_INDEPENDENT_SERIALIZER instances,
+				-- we do not store it, it will be stored if we have a non-zero
+				-- version which is the case for the descendants of this class.
+			if version > 0 then
+				l_ser.write_compressed_natural_32 (version)
+			end
 
 			l_dtype_table := type_table (a_list)
 
@@ -56,6 +74,16 @@ feature {NONE} -- Implementation
 					-- Write type name
 				l_ser.write_string_8 (l_int.type_name_of_type (l_dtype))
 				l_dtype_table.forth
+					-- Write the storable version number for that type, but only
+					-- if the format supports it.
+				if version >= {SED_VERSIONS}.recoverable_version_6_6 then
+					if attached l_int.storable_version_of_type (l_dtype) as l_version and then not l_version.is_empty then
+						l_ser.write_boolean (True)
+						l_ser.write_string_8 (l_version)
+					else
+						l_ser.write_boolean (False)
+					end
+				end
 			end
 
 				-- Write mapping dynamic type and their string representation for static type
@@ -173,10 +201,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

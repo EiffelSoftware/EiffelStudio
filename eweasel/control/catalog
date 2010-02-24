@@ -1474,6 +1474,8 @@ test	loop-expression-smoke-test		exec319 tcf pass loop expression
 test	expanded-deep-physical-size		exec320 tcf fail execution
 test	check-instruction-smoke-test	exec321 tcf pass execution check instruction exception
 test	ieee-arithmetic					exec322 tcf pass execution ieee
+test	eiffel-ieee-comparison			exec323 tcf pass execution ieee
+test	do-nothing-optimization			exec324 tcf pass execution
 
 
 -- Compiler termination (exception trace, panic, etc.)

@@ -1025,9 +1025,6 @@ rt_public void gst_write(EIF_REFERENCE object, int has_volatile_attributes)
 	 * used for general store
 	 */
 
-#ifdef EIF_ASSERTIONS
-	RT_GET_CONTEXT
-#endif
 	union overhead *zone;
 	uint32 store_flags;
 	uint16 flags;
@@ -1069,9 +1066,6 @@ rt_public void ist_write(EIF_REFERENCE object, int has_volatile_attributes)
 	 * used for independent store
 	 */
 
-#ifdef EIF_ASSERTIONS
-	RT_GET_CONTEXT
-#endif
 	union overhead *zone;
 	uint32 store_flags;
 	uint16 flags;

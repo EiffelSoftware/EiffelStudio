@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			l_directory_name.extend (l_info.test_name)
 			create l_directory.make (l_directory_name)
 			assert ("testing_directory_already_exists", not l_directory.exists)
-			l_directory.create_dir
+			l_directory.recursive_create_dir
 			assert ("testing_directory_created", l_directory.exists)
 			(create {EXECUTION_ENVIRONMENT}).change_working_directory (l_directory_name)
 
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			-- Once per object storage for `asserter'.
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

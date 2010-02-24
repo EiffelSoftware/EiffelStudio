@@ -355,7 +355,14 @@ feature -- C special code generation
 					-- There is nothing to do, just print the previous value.
 				target.print_register
 			when do_nothing_type then
-					-- There is nothing to do.
+				if not target.is_predefined then
+						-- There is something to do when `target' is not a predefined entities.
+						-- See eweasel test#exec191 and test#exec324.
+					buffer.put_string ("eif_do_nothing_value.")
+					basic_type.c_type.generate_typed_field (buffer)
+					buffer.put_three_character (' ', '=', ' ')
+					target.print_register
+				end
 			end
 		end
 

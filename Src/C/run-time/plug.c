@@ -96,6 +96,16 @@ doc:	</attribute>
 rt_public EIF_TYPED_VALUE eif_optimized_return_value;
 #endif /* EIF_THREADS */
 
+/*
+doc:	<attribute name="eif_do_nothing_value" return_type="EIF_TYPED_VALUE" export="public">
+doc:		<summary>When a call to {ANY}.do_nothing is performed on a basic type, usually C compilers optimize it away causing some computation that should trigger an exception "(1 // (i - i)).do_nothing" to do nothing at all. This fixes test#exec191 and test#exec324.</summary>
+doc:		<access>Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>We do not care because we never read the value.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_TYPED_VALUE eif_do_nothing_value;
+
 rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int where);		/* Internal invariant control loop */
 
 /*

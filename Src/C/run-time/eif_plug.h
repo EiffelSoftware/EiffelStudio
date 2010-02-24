@@ -51,6 +51,8 @@ RT_LNK int eif_optimize_return;	/* Signals a polymorphic call to not create an E
 RT_LNK EIF_TYPED_VALUE eif_optimized_return_value;		/* Location where optimized call store result. */
 #endif
 
+RT_LNK EIF_TYPED_VALUE eif_do_nothing_value;	/* To store values of computation of `x.do_something'. */
+
 /* Structure used to represent bits in the object. The first long integer
  * is the length of the bit field. It is then followed by enough long integers
  * to store the value of the bits.

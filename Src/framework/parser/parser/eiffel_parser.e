@@ -10788,7 +10788,7 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				if not is_ignoring_attachment_marks and yyval81 /= Void then
+				if not is_ignoring_attachment_marks and then yyval81 /= Void then
 					yyval81.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), False, True)
 				end
 		
@@ -10810,7 +10810,7 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				if not is_ignoring_attachment_marks and yyval81 /= Void then
+				if not is_ignoring_attachment_marks and then yyval81 /= Void then
 					yyval81.set_attachment_mark (extract_keyword (yyvs15.item (yyvsp15)), True, False)
 				end
 		
@@ -10832,7 +10832,7 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				if yyval81 /= Void then
+				if not is_ignoring_attachment_marks and then yyval81 /= Void then
 					yyval81.set_attachment_mark (yyvs4.item (yyvsp4), True, False)
 				end
 				if has_syntax_warning then
@@ -10859,7 +10859,7 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				if yyval81 /= Void then
+				if not is_ignoring_attachment_marks and then yyval81 /= Void then
 					yyval81.set_attachment_mark (yyvs4.item (yyvsp4), False, True)
 				end
 				if has_syntax_warning then

@@ -638,7 +638,7 @@ feature {NONE} -- Implementation
 				check
 					a_item_type_valid: a_item_type = {INTERNAL}.reference_type
 				end
-				if attached {SPECIAL [ANY]} an_object as l_spec_any then
+				if attached {SPECIAL [detachable ANY]} an_object as l_spec_any then
 					encode_special_reference (l_spec_any)
 				else
 					check l_spec_any_not_void: False end
@@ -912,7 +912,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_reference (a_spec: SPECIAL [ANY])
+	encode_special_reference (a_spec: SPECIAL [detachable ANY])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void

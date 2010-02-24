@@ -315,7 +315,9 @@ feature -- Status setting
 			l_avail: INTEGER_32
 		do
 			l_avail := maximum_split_position - minimum_split_position
-			if l_avail >= 0 then
+			if l_avail = 0 then
+				l_proportion := 0.5
+			elseif l_avail > 0 then
 				l_proportion := ((split_position - minimum_split_position) / l_avail).truncated_to_real
 			else
 				l_proportion := -1

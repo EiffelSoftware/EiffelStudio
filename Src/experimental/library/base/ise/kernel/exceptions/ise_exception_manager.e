@@ -63,7 +63,7 @@ feature -- Raise
 
 feature -- Status setting
 
-	ignore (a_exception: TYPE [EXCEPTION])
+	ignore (a_exception: TYPE [detachable EXCEPTION])
 			-- Make sure that any exception of type `a_exception' will be
 			-- ignored. This is not the default.
 		local
@@ -73,7 +73,7 @@ feature -- Status setting
 			ignored_exceptions.force (l_type, l_type)
 		end
 
-	catch (a_exception: TYPE [EXCEPTION])
+	catch (a_exception: TYPE [detachable EXCEPTION])
 			-- Set type of `a_exception' `is_ignored'.
 		local
 			l_type: INTEGER
@@ -82,7 +82,7 @@ feature -- Status setting
 			ignored_exceptions.remove (l_type)
 		end
 
-	set_is_ignored (a_exception: TYPE [EXCEPTION]; a_ignored: BOOLEAN)
+	set_is_ignored (a_exception: TYPE [detachable EXCEPTION]; a_ignored: BOOLEAN)
 			-- Set type of `a_exception' to be `a_ignored'.
 		do
 			if a_ignored then
@@ -94,25 +94,25 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN
+	is_ignorable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is ignorable.
 		do
 			Result := not unignorable_exceptions.has (a_exception.type_id)
 		end
 
-	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN
+	is_raisable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raisable.
 		do
 			Result := not unraisable_exceptions.has (a_exception.type_id)
 		end
 
-	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN
+	is_ignored (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is not raised.
 		do
 			Result := ignored_exceptions.has (a_exception.type_id)
 		end
 
-	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN
+	is_caught (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raised.
 		do
 			Result := not ignored_exceptions.has (a_exception.type_id)
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 	is_code_ignored (a_code: INTEGER): BOOLEAN
 			-- Is exception of `a_code' ignored?
 		do
-			if attached {TYPE [EXCEPTION]} type_of_code (a_code) as l_type then
+			if attached {TYPE [detachable EXCEPTION]} type_of_code (a_code) as l_type then
 				Result := is_ignored (l_type)
 			else
 				Result := True

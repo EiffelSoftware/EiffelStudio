@@ -21,11 +21,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test_a: !STRING
+	test_a: attached STRING
 
-	test_b: !STRING
+	test_b: attached STRING
 
-	test_c: !STRING
+	test_c: attached STRING
 		attribute
 			Result := "C"
 		end

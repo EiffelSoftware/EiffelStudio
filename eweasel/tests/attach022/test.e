@@ -9,16 +9,16 @@ feature {NONE} -- Creation
 			-- Run tests.
 		do
 			test (
-				agent (o: ?TEST): ?TEST
+				agent (o: detachable TEST): detachable TEST
 					do
 						Result := f (o)
 					end,
 				True
 			)
 			test (
-				agent (o: ?TEST): ?TEST
+				agent (o: detachable TEST): detachable TEST
 					local
-						a: A [!TEST]
+						a: A [attached TEST]
 					do
 						create a
 						Result := a.f (o)
@@ -26,9 +26,9 @@ feature {NONE} -- Creation
 				True
 			)
 			test (
-				agent (o: ?TEST): ?TEST
+				agent (o: detachable TEST): detachable TEST
 					local
-						a: A [!TEST]
+						a: A [attached TEST]
 					do
 						create a
 						Result := a.g (o)
@@ -36,9 +36,9 @@ feature {NONE} -- Creation
 				True
 			)
 			test (
-				agent (o: ?TEST): ?TEST
+				agent (o: detachable TEST): detachable TEST
 					local
-						a: A [!TEST]
+						a: A [attached TEST]
 					do
 						create a
 						Result := a.h (o)
@@ -46,9 +46,9 @@ feature {NONE} -- Creation
 				False
 			)
 			test (
-				agent (o: ?TEST): ?TEST
+				agent (o: detachable TEST): detachable TEST
 					local
-						a: A [!TEST]
+						a: A [attached TEST]
 					do
 						create a
 						Result := a.i (o)
@@ -56,41 +56,41 @@ feature {NONE} -- Creation
 				False
 			)
 			test (
-				agent (o: ?TEST): ?TEST
+				agent (o: detachable TEST): detachable TEST
 					local
-						a: A [?TEST]
+						a: A [detachable TEST]
 					do
-						create {A [!TEST]} a
+						create {A [attached TEST]} a
 						Result := a.f (o)
 					end,
 				True
 			)
 			test (
-				agent (o: ?TEST): ?TEST
+				agent (o: detachable TEST): detachable TEST
 					local
-						a: A [?TEST]
+						a: A [detachable TEST]
 					do
-						create {A [!TEST]} a
+						create {A [attached TEST]} a
 						Result := a.g (o)
 					end,
 				True
 			)
 			test (
-				agent (o: ?TEST): ?TEST
+				agent (o: detachable TEST): detachable TEST
 					local
-						a: A [!TEST]
+						a: A [attached TEST]
 					do
-						create {B [!TEST]} a
+						create {B [attached TEST]} a
 						Result := a.h (o)
 					end,
 				True
 			)
 			test (
-				agent (o: ?TEST): ?TEST
+				agent (o: detachable TEST): detachable TEST
 					local
-						a: A [!TEST]
+						a: A [attached TEST]
 					do
-						create {B [!TEST]} a
+						create {B [attached TEST]} a
 						Result := a.i (o)
 					end,
 				True
@@ -102,7 +102,7 @@ feature {NONE} -- Test
 	test_number: INTEGER
 			-- Number of the test
 
-	test (c: FUNCTION [ANY, TUPLE [?TEST], ?TEST]; e: BOOLEAN)
+	test (c: attached FUNCTION [ANY, TUPLE [detachable TEST], detachable TEST]; e: BOOLEAN)
 		local
 			i: INTEGER
 		do
@@ -137,7 +137,7 @@ feature {NONE} -- Test
 			retry
 		end
 
-	f (a: ?TEST): !TEST
+	f (a: detachable TEST): attached TEST
 		external "C inline"
 			alias "return eif_access($a);"
 		end

@@ -7,12 +7,13 @@ feature {NONE} -- Creation
 
 	make
 		do
+			create att_x.make (10)
 			create y.make (10)
 		end
 
 feature
 
-	test_formals (v1: G; v2: ?G; v3: G) is
+	test_formals (v1: G; v2: detachable G; v3: G) is
 		do
 		end
 
@@ -20,15 +21,15 @@ feature
 		do
 		end
 
-	test_anchors_2 (v1: like y; v2: !like y; v3: ?like y) is
+	test_anchors_2 (v1: like y; v2: attached like y; v3: detachable like y) is
 		do
 		end
 
-	y: ?STRING
+	y: detachable STRING
 
 	x: like y
-	att_x: !like y
-	det_x: ?like y
+	att_x: attached like y
+	det_x: detachable like y
 
 
 end

@@ -7,20 +7,21 @@ feature {NONE} -- Initialization
 
 	make
 		do
+			create b.make_filled ("", 1, 1)
 			det_b := << "TEST" >>
 			set_b
 			set_a ("TEST")
 		end
 
-	a: !STRING
-	b: !ARRAY [STRING]
-	det_b: ?like b
+	a: attached STRING
+	b: attached ARRAY [STRING]
+	det_b: detachable like b
 
 	set_b is
 		do
 			if {l_b: like b} det_b then
 				b := l_b.twin
-				io.put_string (b.item (1))
+				print (b.item (1))
 				io.put_new_line
 			end
 		end

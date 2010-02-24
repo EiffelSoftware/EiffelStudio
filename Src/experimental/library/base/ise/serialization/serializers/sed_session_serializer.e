@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			traversable := breadth_first_traversable
 			serializer := a_serializer
 			is_for_fast_retrieval := is_void_safe
+			setup_version
 		ensure
 			serializer_set: serializer = a_serializer
 		end
@@ -193,7 +194,17 @@ feature {NONE} -- Implementation: Access
 			Result := create {OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE}
 		end
 
+	version: NATURAL_32
+			-- Internal version of the format (See SED_VERSIONS for possible values).
+
 feature {NONE} -- Implementation
+
+	setup_version
+			-- Set `version' with the appropriate version number.
+			--| See SED_VERSIONS for a complete list of version numbers
+		do
+			version := {SED_VERSIONS}.session_version_6_6
+		end
 
 	write_header (a_list: ARRAYED_LIST [ANY])
 			-- Operation performed before `encoding_objects'.
@@ -201,6 +212,10 @@ feature {NONE} -- Implementation
 			a_list_not_void: a_list /= Void
 			a_list_not_empty: not a_list.is_empty
 		do
+				-- Write the version of storable used to create it.
+				-- This is useful for versioning of formats upon retrieval to
+				-- quickly detect incompatibilities.
+			serializer.write_compressed_natural_32 (version)
 			write_object_table (a_list)
 		end
 
@@ -221,12 +236,12 @@ feature {NONE} -- Implementation
 			l_obj: ANY
 			l_area: SPECIAL [ANY]
 		do
+			l_ser := serializer
 			if is_for_fast_retrieval then
 					-- Mark data with information that shows we have a mapping
 					-- between reference IDs and objects.
-				serializer.write_boolean (True)
+				l_ser.write_boolean (True)
 				l_int := internal
-				l_ser := serializer
 				l_object_indexes := object_indexes
 				l_spec_mapping := special_type_mapping
 
@@ -280,7 +295,7 @@ feature {NONE} -- Implementation
 				end
 			else
 					-- No mapping here.
-				serializer.write_boolean (False)
+				l_ser.write_boolean (False)
 			end
 		end
 

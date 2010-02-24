@@ -153,6 +153,7 @@ typedef struct tag_rt_globals
 	int32 nb_recorded_cx;
 	char rt_kind_cx;
 	char rt_kind_version_cx;
+	char rt_kind_properties_cx;
 	EIF_BOOLEAN eif_discard_pointer_value_cx;
 	type_table *type_conversions_cx;
 	mismatch_table *mismatches_cx;
@@ -167,7 +168,6 @@ typedef struct tag_rt_globals
 	int (*char_read_func_cx)(char *, int);
 	size_t (*old_retrieve_read_func_cx)(void);
 	int (*old_char_read_func_cx)(char *, int);
-	char old_rt_kind_cx;
 	size_t old_buffer_size_cx;
 	size_t end_of_buffer_cx;
 	char *stream_buffer_cx;
@@ -176,6 +176,7 @@ typedef struct tag_rt_globals
 	EIF_TYPE_INDEX cidarr_cx[CIDARR_SIZE];
 	EIF_PROCEDURE mismatch_information_initialize_cx;
 	EIF_PROCEDURE mismatch_information_add_cx;
+	EIF_PROCEDURE mismatch_information_set_versions_cx;
 	EIF_OBJECT mismatch_information_object_cx;
 	EIF_BOOLEAN eif_use_old_independent_retrieve_cx;
 
@@ -211,8 +212,6 @@ typedef struct tag_rt_globals
 	void (*old_make_header_func_cx)(void);
 	int accounting_cx;
 	int old_accounting_cx;
-	EIF_BOOLEAN eif_is_new_independent_format_cx;
-	EIF_BOOLEAN eif_is_new_recoverable_format_cx;
 	EIF_BOOLEAN eif_is_discarding_attachment_marks_cx;
 	char *account_cx;
 	unsigned int **sorted_attributes_cx;
@@ -373,6 +372,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define nb_recorded						(rt_globals->nb_recorded_cx)
 #define rt_kind							(rt_globals->rt_kind_cx)
 #define rt_kind_version					(rt_globals->rt_kind_version_cx)
+#define rt_kind_properties				(rt_globals->rt_kind_properties_cx)
 #define eif_discard_pointer_values		(rt_globals->eif_discard_pointer_value_cx)
 #define type_conversions				(rt_globals->type_conversions_cx)
 #define mismatches						(rt_globals->mismatches_cx)
@@ -387,7 +387,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define char_read_func					(rt_globals->char_read_func_cx)
 #define old_retrieve_read_func			(rt_globals->old_retrieve_read_func_cx)
 #define old_char_read_func				(rt_globals->old_char_read_func_cx)
-#define old_rt_kind						(rt_globals->old_rt_kind_cx)
 #define old_buffer_size					(rt_globals->old_buffer_size_cx)
 #define end_of_buffer					(rt_globals->end_of_buffer_cx)
 #define stream_buffer					(rt_globals->stream_buffer_cx)
@@ -397,6 +396,7 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define mismatch_information_initialize	(rt_globals->mismatch_information_initialize_cx)
 #define mismatch_information_add		(rt_globals->mismatch_information_add_cx)
 #define mismatch_information_object		(rt_globals->mismatch_information_object_cx)
+#define mismatch_information_set_versions	(rt_globals->mismatch_information_set_versions_cx)
 #define eif_use_old_independent_retrieve (rt_globals->eif_use_old_independent_retrieve_cx)
 
 	/* run_idr.c */
@@ -431,8 +431,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define old_make_header_func			(rt_globals->old_make_header_func_cx)
 #define accounting						(rt_globals->accounting_cx)
 #define old_accounting					(rt_globals->old_accounting_cx)
-#define eif_is_new_independent_format	(rt_globals->eif_is_new_independent_format_cx)
-#define eif_is_new_recoverable_format	(rt_globals->eif_is_new_recoverable_format_cx)
 #define eif_is_discarding_attachment_marks	(rt_globals->eif_is_discarding_attachment_marks_cx)
 #define account							(rt_globals->account_cx)
 #define sorted_attributes				(rt_globals->sorted_attributes_cx)

@@ -102,6 +102,10 @@ rt_public char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 	current_position = 0;
 	end_of_buffer = 0;
 
+	rt_kind = BASIC_STORE;
+	rt_kind_version = BASIC_STORE_6_6;
+	rt_kind_properties = 0;
+
 	result = rt_nmake(nb_obj);			/* Retrieve `nb_obj' objects */
 	ht_free(rt_table);                  /* Free hash table descriptor */
 #ifdef ISE_GC
@@ -125,6 +129,11 @@ rt_public char *retrieve_all(EIF_INTEGER f_desc, long position)
 
 	current_position = 0;
 	end_of_buffer = 0;
+
+	rt_kind = BASIC_STORE;
+	rt_kind_version = BASIC_STORE_6_6;
+	rt_kind_properties = 0;
+
 	result = rt_make();
 	ht_free(rt_table);					/* Free hash table descriptor */
 #ifdef ISE_GC

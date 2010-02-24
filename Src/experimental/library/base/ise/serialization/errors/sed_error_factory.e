@@ -20,6 +20,14 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	new_format_mismatch (a_old_version, a_new_version: NATURAL_32): SED_ERROR
+			-- Return an error when the format is different from what we expected upon retrieval
+		do
+			create Result.make_with_string ("Storable format mismatch, got " + a_old_version.out + " but expected " + a_new_version.out + ".")
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	new_missing_type_error (a_type: STRING): SED_ERROR
 			-- Return a error representing a missing type `a_type'.
 		require
@@ -43,6 +51,36 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+
+	new_storable_version_mismatch_error (a_type_id: INTEGER; a_old_version_str: detachable STRING): SED_ERROR
+			-- Return an error representing a mismatch in the storable_version attribute in type `a_type'.
+		require
+			a_type_id_non_negative: a_type_id >= 0
+		local
+			l_type, l_error_msg: STRING
+			l_new_version: detachable STRING
+		do
+			l_type := internal.class_name_of_type (a_type_id)
+			l_new_version := internal.storable_version_of_type (a_type_id)
+			create l_error_msg.make (256)
+			l_error_msg.append ("Different version in class " + l_type + ".%N")
+			l_error_msg.append ("Old version: ")
+			if a_old_version_str = Void then
+				l_error_msg.append ("None")
+			else
+				l_error_msg.append (a_old_version_str)
+			end
+			l_error_msg.append ("New version: ")
+			if l_new_version = Void then
+				l_error_msg.append ("None")
+			else
+				l_error_msg.append (l_new_version)
+			end
+			create Result.make_with_string (l_error_msg)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 
 	new_attribute_count_mismatch (a_type_id: INTEGER; a_received_attribute_count: INTEGER): SED_ERROR
 			-- Return an error representing an attribute count mismatch for type `a_type' with a received attribute count of `a_received_attribute_count'.

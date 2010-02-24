@@ -174,6 +174,16 @@ doc:	</attribute>
 rt_shared char rt_kind_version;
 
 /*
+doc:	<attribute name="rt_kind_properties" return_type="char" export="shared">
+doc:		<summary>Properties of the storable. So far it says if we have kept the attachment marks, or if we are using the old special semantic.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:	</attribute>
+*/
+rt_shared char rt_kind_properties;
+
+/*
 doc:	<attribute name="eif_discard_pointer_value" return_type="EIF_BOOLEAN" export="private">
 doc:		<summary>To discard or not the pointer value upon retrieval. By default we do not keep the value as a pointer value represent allocated memory which might not be present at retrieval time.</summary>
 doc:		<access>Read/Write</access>
@@ -292,18 +302,17 @@ rt_private class_translations_table class_translations;	/* Table of class name t
 rt_public EIF_REFERENCE eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
 rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER *);	/* Retrieve object store in stream */
 rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int));
-
-rt_public EIF_REFERENCE rrt_make(void);
-rt_public EIF_REFERENCE grt_make(void);			/* Do the general retrieve (3.3 and later) */
-rt_public EIF_REFERENCE rrt_nmake(long int objectCount);
-rt_public EIF_REFERENCE grt_nmake(long int objectCount);			/* Retrieve n objects general form*/
+rt_private EIF_REFERENCE grt_make (void);
+rt_private EIF_REFERENCE grt_nmake (long int objectCount);
+rt_private EIF_REFERENCE rrt_make (void);
+rt_private EIF_REFERENCE rrt_nmake (long int objectCount);
 rt_private void iread_header_new(EIF_CONTEXT_NOARG);
 rt_private void rread_header(EIF_CONTEXT_NOARG);
 rt_private void rt_clean(void);			/* Clean data structure */
 rt_private void rt_update1(register EIF_REFERENCE old, register EIF_OBJECT new_obj);			/* Reference correspondance update */
 rt_private void rt_update2(EIF_REFERENCE old_obj, EIF_REFERENCE new_obj, EIF_REFERENCE parent);			/* Fields updating */
-rt_public EIF_REFERENCE rt_make(void);				/* Do the retrieve */
-rt_public EIF_REFERENCE rt_nmake(long int objectCount);			/* Retrieve n objects */
+rt_shared EIF_REFERENCE rt_make(void);				/* Do the retrieve */
+rt_shared EIF_REFERENCE rt_nmake(long int objectCount);			/* Retrieve n objects */
 rt_private void read_header(void);
 
 
@@ -372,16 +381,6 @@ doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
 rt_private int (*old_char_read_func)(char *, int) = char_read;
-
-/*
-doc:	<attribute name="old_rt_kind" return_type="char" export="private">
-doc:		<summary>Old kind of storable.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private char old_rt_kind;			/* Kind of storable */
 
 /*
 doc:	<attribute name="old_buffer_size" return_type="size_" export="private">
@@ -476,7 +475,6 @@ rt_public void rt_init_retrieve(size_t (*retrieve_function) (void), int (*char_r
 	old_retrieve_read_func = retrieve_read_func;
 	old_char_read_func = char_read_func;
 	old_buffer_size = buffer_size;
-	old_rt_kind = rt_kind;
 
 		/* Set the retrieving functions which are going to be used for the current retrieving
 		 * operation */
@@ -493,7 +491,6 @@ rt_public void rt_reset_retrieve(void) {
 	retrieve_read_func = old_retrieve_read_func;
 	char_read_func = old_char_read_func;
 	buffer_size = old_buffer_size;
-	rt_kind = old_rt_kind;
 }
 
 rt_private type_table *new_type_conversion_table (EIF_TYPE_INDEX max_types, EIF_TYPE_INDEX num_types)
@@ -515,9 +512,9 @@ rt_private type_table *new_type_conversion_table (EIF_TYPE_INDEX max_types, EIF_
 			result->count = num_types;
 			memset (result->descriptions, 0, table_size);
 			for (i=0; i<num_types; i++) {
-				result->descriptions[i].old_type = (EIF_TYPE_INDEX) TYPE_UNDEFINED;
-				result->descriptions[i].new_type = (EIF_TYPE_INDEX) TYPE_UNDEFINED;
-				result->descriptions[i].new_dftype = (EIF_TYPE_INDEX) TYPE_UNDEFINED;
+				result->descriptions[i].old_type = TYPE_UNDEFINED;
+				result->descriptions[i].new_type = TYPE_UNDEFINED;
+				result->descriptions[i].new_dftype = TYPE_UNDEFINED;
 			}
 
 			index_size = max_types * sizeof (EIF_TYPE_INDEX);
@@ -528,7 +525,7 @@ rt_private type_table *new_type_conversion_table (EIF_TYPE_INDEX max_types, EIF_
 				xraise (EN_MEM);
 			} else {
 				for (i=0; i<max_types; i++)
-					result->type_index[i] = (EIF_TYPE_INDEX) TYPE_UNDEFINED;
+					result->type_index[i] = TYPE_UNDEFINED;
 			}
 		}
 	}
@@ -570,6 +567,10 @@ rt_private void free_type_conversion_table (type_table *table)
 				if (t->name != NULL) {
 					eif_rt_xfree (t->name);
 					t->name = NULL;
+				}
+				if (t->version != NULL) {
+					eif_rt_xfree (t->version);
+					t->version = NULL;
 				}
 			}
 			eif_rt_xfree ((char *) table->descriptions);
@@ -732,10 +733,21 @@ doc:	</attribute>
 */
 rt_private EIF_OBJECT mismatch_information_object;
 
+/*
+doc:	<attribute name="mismatch_information_set_versions" return_type="EIF_PROCEDURE" export="private">
+doc:		<summary>Set storable versions for the mismatch.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
+doc:		<eiffel_classes>MISMATCH_CORRECTOR, MISMATCH_INFORMATION</eiffel_classes>
+doc:	</attribute>
+*/
+rt_private EIF_PROCEDURE mismatch_information_set_versions;
+
 #endif
 
 rt_public void set_mismatch_information_access (
-		EIF_OBJECT object, EIF_PROCEDURE init, EIF_PROCEDURE add)
+		EIF_OBJECT object, EIF_PROCEDURE init, EIF_PROCEDURE add, EIF_PROCEDURE set_vers)
 {
 	RT_GET_CONTEXT
 	if (mismatch_information_object != NULL)
@@ -743,6 +755,7 @@ rt_public void set_mismatch_information_access (
 	mismatch_information_object = eif_adopt (object);
 	mismatch_information_initialize = init;
 	mismatch_information_add = add;
+	mismatch_information_set_versions = set_vers;
 }
 
 rt_private void set_mismatch_information (
@@ -765,6 +778,15 @@ rt_private void set_mismatch_information (
 	/* Store class name in table */
 	class_name = eif_gen_typename_of_type (new_dftype);
 	mismatch_information_add (eif_access (mismatch_information_object), class_name, "class");
+
+	/* Store the storable versions */
+	if (conv->version || System(To_dtype(new_dftype)).cn_version) {
+		mismatch_information_set_versions (eif_access (mismatch_information_object), RTMS(conv->version),
+			RTMS(System(To_dtype(new_dftype)).cn_version));
+	} else {
+			/* No version number we simply set both to Voids */
+		mismatch_information_set_versions (eif_access (mismatch_information_object), NULL, NULL);
+	}
 
 	/* Store atribute values in table */
 	for (i=0; i<conv->attribute_count; i++) {
@@ -897,6 +919,7 @@ rt_private EIF_REFERENCE correct_mismatches (EIF_OBJECT retrieved_i)
 
 	if (mismatch_information_object == NULL  ||
 		mismatch_information_initialize == NULL  ||
+		mismatch_information_set_versions == NULL  ||
 		mismatch_information_add == NULL)
 	{
 		return eif_wean (retrieved_i);
@@ -964,6 +987,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 	EIF_OBJECT retrieved_i = NULL;
 	char rt_type = (char) 0;
 	EIF_BOOLEAN recoverable_tables = EIF_FALSE;
+	char l_store_properties = 0;
 
 #if EIF_OS == EIF_OS_ALPHA
 		/* The conversion from a FILE pointer to a file descriptor
@@ -986,13 +1010,14 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 
 	rt_kind_version = rt_type;
 	switch (rt_type) {
-		case BASIC_STORE_4_0:			/* New Basic store */
+		case BASIC_STORE_6_6:			/* New Basic store */
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
 			break;
 		case GENERAL_STORE_4_0:
 		case GENERAL_STORE_6_4:
+		case GENERAL_STORE_6_6:
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
@@ -1009,12 +1034,23 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 		case INDEPENDENT_STORE_6_0:
 		case INDEPENDENT_STORE_6_3:
 		case INDEPENDENT_STORE_6_4:
+		case INDEPENDENT_STORE_6_6:
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			rt_kind = RECOVERABLE_STORE;
 			independent_retrieve_init (RETRIEVE_BUFFER_SIZE);
 			break;
 		default: 			/* If not one of the above, error!! */
 			eraise("invalid retrieve type", EN_RETR);	
+	}
+
+		/* We read the Store properties which have appeared after revision 6.6 of the storable mechanism. */
+	if (rt_type >= BASIC_STORE_6_6) {
+		if (char_read_function(&l_store_properties, sizeof (char)) < (int) sizeof (char)) {
+			eise_io("Retrieve: unable to read properties of storable.");
+		}
+		rt_kind_properties = l_store_properties;
+	} else {
+		rt_kind_properties = (char) 0;
 	}
 
 #ifdef DEBUG
@@ -1134,6 +1170,7 @@ rt_shared EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a
 	EIF_GET_CONTEXT
 	EIF_REFERENCE retrieved = (EIF_REFERENCE) 0;
 	char rt_type = (char) 0;
+	char l_store_properties = (char) 0;
 
 	rt_kind = BASIC_STORE;
 	r_fides = f_desc;
@@ -1155,10 +1192,14 @@ rt_shared EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a
 	nb_recorded = 0;
 
 	/* Read the kind of stored hierachy */
-	if (char_read(&rt_type, sizeof (char)) < sizeof (char))
+	if (char_read(&rt_type, sizeof (char)) < sizeof (char)) {
 		eise_io("Retrieve: unable to read type of storable.");
-
-	CHECK ("Valid basic storable type", rt_type == BASIC_STORE_4_0);
+	}
+	CHECK ("Valid basic storable type", rt_type == BASIC_STORE_6_6);
+	if (char_read(&l_store_properties, sizeof (char)) < (int) sizeof (char)) {
+		eise_io("Retrieve: unable to read properties of storable.");
+	}
+	rt_kind_properties = l_store_properties;
 
 	rt_init_retrieve(retrieve_function, char_read, RETRIEVE_BUFFER_SIZE);
 	allocate_gen_buffer ();
@@ -1463,7 +1504,7 @@ rt_private uint32 rt_special_element_size(int is_tuple, EIF_TYPE_INDEX dtype) {
 }
 
 
-rt_public EIF_REFERENCE rt_make(void)
+rt_shared EIF_REFERENCE rt_make(void)
 {
 		/* Make the retrieve of all objects in file */
 	uint32 objectCount;
@@ -1474,7 +1515,7 @@ rt_public EIF_REFERENCE rt_make(void)
 	return rt_nmake(objectCount);
 }
 
-rt_public EIF_REFERENCE rt_nmake(long int objectCount)
+rt_shared EIF_REFERENCE rt_nmake(long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
@@ -1681,7 +1722,12 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 					/* We read `elm_size' even if we actually don't use it. */
 				buffer_read((char *) &elm_size, sizeof(uint32));
 				capacity = count;
+			} else if (rt_kind_properties & STORE_OLD_SPECIAL_SEMANTIC) {
+					/* New storable format using old special semantic, in this case
+					 * capacity and count are the same. */
+				capacity = count;
 			} else {
+					/* We are reading a SPECIAL with the new semantic. */
 				buffer_read((char *) &capacity, sizeof(uint32));
 			}
 			dtype = To_dtype(dftype);
@@ -1745,7 +1791,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	return newadd;
 }
 
-rt_public EIF_REFERENCE rrt_make (void)
+rt_private EIF_REFERENCE rrt_make (void)
 {
 	/* Make the retrieve of all objects in file */
 	uint32 objectCount = 0;
@@ -1801,7 +1847,7 @@ rt_private void rt_dropped (register EIF_REFERENCE old, EIF_TYPE_INDEX old_type)
 	info->rtu_data.old_type = old_type;
 }
 
-rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
+rt_private EIF_REFERENCE rrt_nmake (long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrieved object.
@@ -1873,7 +1919,12 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 					/* We read `elm_size' even if we actually don't use it. */
 				ridr_norm_int (&elm_size);
 				capacity = count;
+			} else if (rt_kind_properties & STORE_OLD_SPECIAL_SEMANTIC) {
+					/* New storable format using old special semantic, in this case
+					 * capacity and count are the same. */
+				capacity = count;
 			} else {
+					/* We are reading a SPECIAL with the new semantic. */
 				ridr_norm_int (&capacity);
 			}
 			dtype = To_dtype(dftype);
@@ -2344,13 +2395,15 @@ rt_private void read_header(void)
 	EIF_TYPE_INDEX dtype, new_dtype;
 	int read_dtype;
 	long size;
-	uint32 nb_gen;
+	uint32 nb_gen, l_length;
 	size_t bsize = 1024;
 	char vis_name[512];
+	char *l_storable_version, *l_new_storable_version;
 	char * temp_buf;
 	jmp_buf exenv;
 	RTYD;
 
+	REQUIRE("general store", rt_kind == GENERAL_STORE);
 	errno = 0;
 
 	excatch(&exenv);	/* Record pseudo execution vector */
@@ -2374,18 +2427,16 @@ rt_private void read_header(void)
 		xraise(EN_MEM);
 	}
 
-	if (rt_kind == GENERAL_STORE) {
-		sorted_attributes = (unsigned int **) eif_rt_xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
+	sorted_attributes = (unsigned int **) eif_rt_xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attributes);
 #endif
-		if (sorted_attributes == (unsigned int **)0) {
-			eif_rt_xfree ((char *) dtypes);
-			dtypes = NULL;
-			xraise(EN_MEM);
-			}
-		}
-		memset (sorted_attributes, 0, scount * sizeof(unsigned int *));
+	if (sorted_attributes == (unsigned int **)0) {
+		eif_rt_xfree ((char *) dtypes);
+		dtypes = NULL;
+		xraise(EN_MEM);
+	}
+	memset (sorted_attributes, 0, scount * sizeof(unsigned int *));
 
 	/* Read the number of lines */
 	if (readline(r_buffer, bsize) <= 0)
@@ -2485,8 +2536,34 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 		}
 		dtypes[dtype] = new_dtype;
 
-		if (rt_kind == GENERAL_STORE) {
-			sort_attributes(new_dtype);
+		sort_attributes(new_dtype);
+
+		if (rt_kind_version >= GENERAL_STORE_6_6) {
+				/* Read version number if any and verify it is the same. */
+			buffer_read((char *)&l_length, sizeof(uint32));
+			if (l_length > 0) {
+				l_storable_version = (char *) eif_rt_xmalloc(l_length + 1, C_T, GC_OFF);
+				if (!l_storable_version) {
+					xraise(EN_MEM);
+				} else {
+					buffer_read(l_storable_version, l_length);
+				}
+			} else {
+				l_storable_version = NULL;
+			}
+			l_new_storable_version = System(new_dtype).cn_version;
+			if (l_storable_version && l_new_storable_version) {
+					/* Check that they have the same version otherwise we raise an exception. */
+				if ((l_length != strlen(l_new_storable_version)) || (strncmp(l_storable_version, l_new_storable_version, l_length) != 0)) {
+					eraise(vis_name, EN_RETR);
+				}
+			} else if (l_storable_version || l_new_storable_version) {
+					/* One has a version not the other, it is a mismatch. */
+				eraise(vis_name, EN_RETR);
+			}
+			if (l_storable_version) {
+				eif_rt_xfree(l_storable_version);
+			}
 		}
 	}
 	eif_rt_xfree (r_buffer);
@@ -3298,7 +3375,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 					printf ("        %s: %s (--ADDED--)\n", System (new_dtype).cn_names[j],
 							type2name (System (new_dtype).cn_types[j]));
 #endif
-					conv->mismatched = 1;
+					conv->mismatched |= MISMATCH_ADDED_ATTRIBUTE;
 					break;
 				}
 			}
@@ -3363,6 +3440,7 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 {
 	RT_GET_CONTEXT
 	int result = 0;
+	char *l_storable_version, *l_new_storable_version;
 	char *name = class_translation_lookup (conv->name);
 	struct cecil_info *ginfo = cecil_info (conv, name); 
 	if (ginfo != NULL && ginfo->nb_param == conv->generic_count) {
@@ -3398,8 +3476,24 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 		conv->new_type = TYPE_NOT_PRESENT;
 		result = 1;
 	}
-	if (result && conv->new_type <= MAX_DTYPE)
+	if (result && conv->new_type <= MAX_DTYPE) {
 		dtypes[conv->old_type] = conv->new_type;
+	}
+
+		/* If we have found a type, then we can compare the storable version. */
+	if (conv->new_type <= MAX_DTYPE) {
+		l_storable_version = conv->version;
+		l_new_storable_version = System(conv->new_type).cn_version;
+		if (l_storable_version && l_new_storable_version) {
+				/* Check that they have the same version otherwise we raise an exception. */
+			if (strcmp(l_storable_version, l_new_storable_version) != 0) {
+				conv->mismatched |= MISMATCH_DIFFERENT_VERSION;
+			}
+		} else if (l_storable_version || l_new_storable_version) {
+				/* One has a version not the other, it is a mismatch. */
+			conv->mismatched |= MISMATCH_DIFFERENT_VERSION;
+		}
+	}
 
 #ifdef RECOVERABLE_DEBUG
 	if (result) {
@@ -3458,7 +3552,7 @@ rt_private void check_mismatch (type_descriptor *t)
 		((To_dtype(t->new_type) == egc_tup_dtype) &&
 		 (System(t->new_type).cn_nbattr != (long) t->attribute_count))
 	{
-		t->mismatched = 1;
+		t->mismatched |= MISMATCH_REMOVED_ATTRIBUTE;
 	}
 		/* Determine if every attribute in new type has match in old type */
 	count = System (t->new_type).cn_nbattr;
@@ -3469,7 +3563,7 @@ rt_private void check_mismatch (type_descriptor *t)
 			for (k = 0; k < t->attribute_count && !found; k++)
 				found = (t->attributes[k].new_index == i);
 			if (!found) {
-				t->mismatched = 1;
+				t->mismatched |= MISMATCH_ADDED_ATTRIBUTE;
 #ifdef RECOVERABLE_DEBUG
 				printf ("      + %s: ", System (t->new_type).cn_names[i]);
 				print_attribute_type (System (t->new_type).cn_gtypes[i]+1);
@@ -3560,9 +3654,10 @@ rt_private void rread_attribute (attribute_detail *a)
 rt_private void rread_type (EIF_TYPE_INDEX type_index)
 {
 	RT_GET_CONTEXT
-	char *vis_name;
+	char *vis_name, *l_storable_version;
 	type_descriptor *conv;
 	int16 nb_gen, num_attrib, name_length;
+	uint32 l_length;
 	EIF_TYPE_INDEX dtype;
 	int32 flags;
 
@@ -3582,7 +3677,22 @@ rt_private void rread_type (EIF_TYPE_INDEX type_index)
 		flags = 0;
 	}
 	ridr_multi_uint16 (&dtype, 1);
-	ridr_multi_int16 (&nb_gen, 1);
+
+	if (rt_kind_version >= INDEPENDENT_STORE_6_6) {
+			/* Read storable version */
+		ridr_multi_uint32 (&l_length, 1);
+		if (l_length > 0) {
+			l_storable_version = (char *) eif_rt_xmalloc (l_length + 1, C_T, GC_OFF);
+			if (l_storable_version == NULL)
+				xraise (EN_MEM);
+			ridr_multi_char ((EIF_CHARACTER *) l_storable_version, l_length);
+			l_storable_version[l_length] = '\0';
+		} else {
+			l_storable_version = NULL;
+		}
+	} else {
+		l_storable_version = NULL;
+	}
 
 	type_conversions->type_index[dtype] = type_index;
 	conv = type_conversions->descriptions + type_index;
@@ -3591,11 +3701,12 @@ rt_private void rread_type (EIF_TYPE_INDEX type_index)
 	CHECK ("valid flags", (flags & 0x0000FFFF) == flags);
 	conv->flags = (uint16) flags;
 	conv->old_type = dtype;
+	conv->version = l_storable_version;
 
+	ridr_multi_int16 (&nb_gen, 1);
 #ifdef RECOVERABLE_DEBUG
 	printf ("Type %d %s%s", (int) dtype, vis_name, nb_gen > 0 ? " " : "");
 #endif
-
 	/* Determine dynamic type in current system corresponding to type
 	 * in storing system */
 	if (nb_gen > 0) {
@@ -4641,12 +4752,12 @@ rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name)
 	RT_GET_CONTEXT
 	struct cecil_info * result;
 
-	REQUIRE("valid_conv", (rt_kind_version < INDEPENDENT_STORE_5_5) || (rt_kind_version == GENERAL_STORE_6_4) || (conv != NULL));
+	REQUIRE("valid_conv", (rt_kind_version < INDEPENDENT_STORE_5_5) || (rt_kind == GENERAL_STORE) || (conv != NULL));
 
 		/* Get updated name */
 	name = eif_pre_ecma_mapped_type (name);
 
-	if ((rt_kind_version >= INDEPENDENT_STORE_5_5) && (rt_kind_version != GENERAL_STORE_6_4)) {
+	if ((rt_kind_version >= INDEPENDENT_STORE_5_5) && (rt_kind != GENERAL_STORE)) {
 		if (conv->flags & EIF_IS_EXPANDED_FLAG) {
 			result = (struct cecil_info *) ct_value (&egc_ce_exp_type, name);
 		} else {

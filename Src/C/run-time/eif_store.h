@@ -71,11 +71,10 @@ extern "C" {
 #define INDEPENDENT_STORE_6_3	0x10
 #define GENERAL_STORE_6_4		0x11
 #define INDEPENDENT_STORE_6_4	0x12
+#define BASIC_STORE_6_6			0x13
+#define GENERAL_STORE_6_6		0x14
+#define INDEPENDENT_STORE_6_6	0x15
 
-/* Setting of `eif_is_new_independent_format' */
-RT_LNK void eif_set_new_independent_format(EIF_BOOLEAN v);
-RT_LNK EIF_BOOLEAN eif_is_new_recoverable_format_active (void);
-RT_LNK void eif_set_new_recoverable_format (EIF_BOOLEAN);
 RT_LNK void eif_set_is_discarding_attachment_marks (EIF_BOOLEAN);
 
 /*
@@ -112,7 +111,6 @@ RT_LNK void gst_write(EIF_REFERENCE object, int);
 RT_LNK void store_write(size_t);
 RT_LNK void make_header(void);				/* Make header */
 RT_LNK void rmake_header(void);				/* Make header */
-RT_LNK void imake_header(void);				/* Make header */
 
 #ifdef __cplusplus
 }

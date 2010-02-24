@@ -56,34 +56,40 @@ feature {NONE} -- Implementation
 			l_int := internal
 			l_deser := deserializer
 
-				-- Number of dynamic types in storable
-			nb := l_deser.read_compressed_natural_32.to_integer_32
-			create l_table.make_filled (0, nb)
+			check has_version: has_version end
+			version := l_deser.read_compressed_natural_32
+			if version /= {SED_VERSIONS}.basic_version then
+				set_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.basic_version))
+			else
+					-- Number of dynamic types in storable
+				nb := l_deser.read_compressed_natural_32.to_integer_32
+				create l_table.make_filled (0, nb)
 
-				-- Read table which will give us mapping between the old dynamic types
-				-- and the new ones.
-			from
-				i := 0
-			until
-				i = nb
-			loop
-				l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
-				l_type_str := l_deser.read_string_8
-				l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
-				if l_new_dtype = -1 then
-					set_error (error_factory.new_missing_type_error (l_type_str))
-					i := nb - 1 -- Jump out of loop
-				else
-					if not l_table.valid_index (l_old_dtype) then
-						l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
+					-- Read table which will give us mapping between the old dynamic types
+					-- and the new ones.
+				from
+					i := 0
+				until
+					i = nb
+				loop
+					l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
+					l_type_str := l_deser.read_string_8
+					l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
+					if l_new_dtype = -1 then
+						set_error (error_factory.new_missing_type_error (l_type_str))
+						i := nb - 1 -- Jump out of loop
+					else
+						if not l_table.valid_index (l_old_dtype) then
+							l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
+						end
+						l_table.put (l_new_dtype, l_old_dtype)
 					end
-					l_table.put (l_new_dtype, l_old_dtype)
+					i := i + 1
 				end
-				i := i + 1
-			end
-			dynamic_type_table := l_table
+				dynamic_type_table := l_table
 
-			read_object_table (a_count)
+				read_object_table (a_count)
+			end
 		end
 
 feature {NONE} -- Cleaning

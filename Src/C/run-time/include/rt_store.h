@@ -43,6 +43,10 @@
 extern "C" {
 #endif
 
+/* Properties configuring how the storable was made. */
+#define STORE_DISCARD_ATTACHMENT_MARKS 0x01
+#define STORE_OLD_SPECIAL_SEMANTIC 0x02
+
 /*
  * Utilities
  */

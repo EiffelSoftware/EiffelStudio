@@ -11,13 +11,19 @@ class
 inherit
 	SED_SESSION_SERIALIZER
 		redefine
-			write_header
+			write_header, setup_version
 		end
 
 create
 	make
 
 feature {NONE} -- Implementation
+
+	setup_version
+			-- <Precursor>
+		do
+			version := {SED_VERSIONS}.basic_version_6_6
+		end
 
 	write_header (a_list: ARRAYED_LIST [ANY])
 			-- Write header of storable.
@@ -27,8 +33,12 @@ feature {NONE} -- Implementation
 			l_int: like internal
 			l_dtype: INTEGER
 		do
+			l_ser := serializer
+				-- Write the version of storable used to create it.
+				-- This is useful for versioning of formats upon retrieval to
+				-- quickly detect incompatibilities.
+			l_ser.write_compressed_natural_32 (version)
 			from
-				l_ser := serializer
 				l_int := internal
 				l_dtype_table := type_table (a_list)
 				l_ser.write_compressed_natural_32 (l_dtype_table.count.to_natural_32)

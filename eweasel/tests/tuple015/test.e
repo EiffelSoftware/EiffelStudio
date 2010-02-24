@@ -7,8 +7,8 @@ feature
 
 	make is
 		local
-			l_det_s: TUPLE [STRING]
-			l_att_s: TUPLE [!STRING]
+			l_det_s: TUPLE [detachable STRING]
+			l_att_s: TUPLE [attached STRING]
 		do
 			create l_det_s
 			create l_att_s

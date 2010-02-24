@@ -6,10 +6,10 @@ feature {NONE}
 
 	make
 		local
-			a: PROCEDURE [ANY, TUPLE [!STRING]]
+			a: PROCEDURE [detachable ANY, detachable TUPLE [attached STRING]]
 		do
 			a := agent f
-			if not a.valid_operands ([("STRING").as_attached]) then
+			if not a.valid_operands (["STRING"]) then
 				io.put_string ("not OK")
 				io.put_new_line
 			end
@@ -19,7 +19,7 @@ feature {NONE}
 			end
 		end
 
-	f (a: !STRING) is
+	f (a: attached STRING) is
 		do
 		end
 

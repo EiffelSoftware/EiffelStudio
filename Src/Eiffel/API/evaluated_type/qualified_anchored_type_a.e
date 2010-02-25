@@ -156,6 +156,7 @@ feature -- Output
 			-- Dumped trace
 		local
 			s: STRING
+			i, nb: INTEGER
 		do
 			s := actual_type.dump
 			create Result.make (20 + s.count)
@@ -168,13 +169,16 @@ feature -- Output
 			Result.append ("like {")
 			Result.append (qualifier.dump)
 			Result.append ("}")
-			chain.do_all_in_bounds (
-				agent (i: INTEGER_32; r: STRING)
-					do
-						r.append_character ('.')
-						r.append_string (names_heap.item (i))
-					end
-				(?, Result), 0, chain.count - 1)
+			from
+				i := 0
+				nb := chain.count
+			until
+				i = nb
+			loop
+				Result.append_character ('.')
+				Result.append_string (names_heap.item (chain.item (i)))
+				i := i + 1
+			end
 			Result.append ("] ")
 			Result.append (s)
 		end

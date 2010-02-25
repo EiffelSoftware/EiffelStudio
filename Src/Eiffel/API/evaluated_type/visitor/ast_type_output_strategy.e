@@ -413,6 +413,8 @@ feature {TYPE_A} -- Visitors
 
 	process_unevaluated_qualified_anchored_type (a_type: UNEVALUATED_QUALIFIED_ANCHORED_TYPE)
 			-- Process `a_type'.
+		local
+			i, nb: INTEGER
 		do
 			if a_type.has_attached_mark then
 				text_formatter.process_keyword_text (ti_attached_keyword, Void)
@@ -430,14 +432,16 @@ feature {TYPE_A} -- Visitors
 				a_type.qualifier.process (Current)
 				text_formatter.process_symbol_text (ti_r_curly)
 			end
-			a_type.chain.do_all_in_bounds (
-				agent (n: INTEGER_32)
-					do
-						text_formatter.process_symbol_text (ti_dot)
-						text_formatter.process_local_text (names_heap.item (n))
-					end
-				(),
-				0, a_type.chain.count - 1)
+			from
+				i := 0
+				nb := a_type.chain.count
+			until
+				i = nb
+			loop
+				text_formatter.process_symbol_text (ti_dot)
+				text_formatter.process_local_text (names_heap.item (a_type.chain.item (i)))
+				i := i + 1
+			end
 		end
 
 	process_void_a (a_type: VOID_A)

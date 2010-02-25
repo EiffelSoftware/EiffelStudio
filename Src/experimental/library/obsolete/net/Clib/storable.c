@@ -339,14 +339,10 @@ rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
 
 rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 {
-#define RECOVERABLE_SCAFFOLDING
 #ifndef EIF_IL_DLL
 	GTCX
 	socket_fides = file_desc;
 
-#ifdef RECOVERABLE_SCAFFOLDING
-	if (eif_is_new_recoverable_format_active()) {
-#endif
 	rt_init_store(
 		store_write,
 		net_char_write,
@@ -354,17 +350,6 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 		ist_write,
 		rmake_header,
 		RECOVER_ACCOUNT);
-#ifdef RECOVERABLE_SCAFFOLDING
-	} else {
-	rt_init_store(
-		store_write,
-		net_char_write,
-		idr_flush,
-		ist_write,
-		imake_header,
-		INDEPEND_ACCOUNT);
-}
-#endif
 
 	independent_free_store (object);
 	rt_reset_store();

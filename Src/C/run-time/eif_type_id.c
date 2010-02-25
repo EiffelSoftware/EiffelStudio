@@ -781,7 +781,7 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 		sdata.count = 2 + (a_type->is_attached ? 1 : 0) + TUPLE_OFFSET + a_type->count + 1;
 
 		l_cecil_id = eifcid(a_type);
-		if (l_cecil_id == EIF_NO_TYPE) {
+		if (l_cecil_id == INVALID_DTYPE) {
 				/* Could not find `a_type' in system. Trigger the error. */
 			sdata.has_error = 1;	
 		} else {

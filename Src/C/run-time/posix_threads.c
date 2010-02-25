@@ -124,6 +124,11 @@ rt_private int mapped_errno (DWORD err) {
 	}
 }
 #else
+#if EIF_OS == EIF_OS_OPENBSD
+#ifndef ENOTSUP
+#define ENOTSUP EOPNOTSUPP
+#endif
+#endif
 rt_private int mapped_errno (int err) {
 	switch (err) {
 		case ESRCH: return T_NO_THREAD_WITH_ID; break;
@@ -1041,7 +1046,7 @@ rt_private int eif_pthread_sem_wait_with_timeout (EIF_SEM_TYPE *sem, rt_uint_ptr
 {
 	int Result;
 #ifdef EIF_POSIX_THREADS
-#if defined(__SunOS_5_8) || defined (__SunOS_5_9)
+#if defined(__SunOS_5_8) || defined (__SunOS_5_9) || (EIF_OS == EIF_OS_OPENBSD)
 	Result = T_NOT_IMPLEMENTED;
 #else
 	struct timespec tspec = rt_timeout_to_timespec(timeout);

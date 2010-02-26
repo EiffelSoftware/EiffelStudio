@@ -2217,8 +2217,9 @@ test	expanded-with-references-crash					expanded008 tcf pass expanded
 test	external-with-expanded-crash					expanded009 tcf pass expanded
 test	expanded-attribute-crash-with-tiny				expanded010 tcf pass expanded
 
-
 test	filename-classname-mismatch-warning	warn001	tcf pass warning
+
+test	ephemeral-basics				ephemeral001 tcf pass ephemeral
 
 -- test for agents
 test	agent-optimization-failure		agent001 tcf fail agents

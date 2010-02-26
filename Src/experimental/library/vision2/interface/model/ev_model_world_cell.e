@@ -72,14 +72,20 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_CELL}
 
+			autoscroll_border := 25
+			world_border := 5
+			is_autoscroll_enabled := True
+			is_resize_enabled := True
+			scroll_speed := 1.0
+
 			drawing_area.set_minimum_size (1, 1)
 			drawing_area.clear
 			drawing_area.flush
 
 			create horizontal_box
-			vertical_scrollbar.set_step (15)
+			vertical_scrollbar.set_step (autoscroll_border)
 			vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
-			horizontal_scrollbar.set_step (15)
+			horizontal_scrollbar.set_step (autoscroll_border)
 			horizontal_scrollbar.change_actions.extend (agent on_horizontal_scroll)
 			horizontal_box.extend (drawing_area)
 			horizontal_box.extend (vertical_scrollbar)
@@ -102,12 +108,6 @@ feature {NONE} -- Initialization
 			autoscroll.actions.extend (agent on_autoscroll_time_out)
 
 			extend (vertical_box)
-
-			autoscroll_border := 50
-			world_border := 20
-			is_autoscroll_enabled := True
-			is_resize_enabled := True
-			scroll_speed := 1.0
 		end
 
 feature -- Status report
@@ -139,13 +139,13 @@ feature -- Access
 			-- Horizontal scroll bar.
 
 	autoscroll_border: INTEGER
-			-- Distance to the frame border wher scrolling starts.
+			-- Distance to the frame border where scrolling starts.
 
 	world_border: INTEGER
 			-- Minimal distance between world borders and frame borders.
 
 	scroll_speed: DOUBLE
-			-- Speed of auto scroll. Autoscroll happens every 50 milliseconds for
+			-- Speed of auto scroll. Autoscroll happens every 200 milliseconds for
 			-- scroll_speed * (distance between `autoscroll_border' and cursor)
 			-- Pixels. Meaning the nearer the cursor is to the cell border the
 			-- faster the scroll plus the higher the scroll_speed value the faster
@@ -335,10 +335,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	normal_timeout_interval: INTEGER = 500
+	normal_timeout_interval: INTEGER = 1000
 		-- Normal millesecond timeout interval for autoscrolling
 
-	scroll_timeout_interval: INTEGER = 50
+	scroll_timeout_interval: INTEGER = 200
 		-- Active millesecond timeout interval for autoscrolling
 
 	autoscroll: EV_TIMEOUT
@@ -403,8 +403,11 @@ feature {NONE} -- Implementation
 		do
 			if button = 1 then
 				if projector.is_figure_selected then
+					is_autoscroll_enabled := True
 					is_scroll := True
 				elseif not ev_application.ctrl_pressed then
+					is_autoscroll_enabled := False
+					is_scroll := False
 					drawing_area.set_pointer_style (default_pixmaps.wait_cursor)
 					drawing_area.enable_capture
 					is_hand := True
@@ -413,6 +416,7 @@ feature {NONE} -- Implementation
 					start_horizontal_value := horizontal_scrollbar.value
 					start_vertical_value := vertical_scrollbar.value
 				else
+					is_autoscroll_enabled := True
 					is_scroll := True
 				end
 			end
@@ -434,6 +438,7 @@ feature {NONE} -- Implementation
 	on_pointer_button_release_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 			-- Pointer button was released over `drawing_area'.
 		do
+			is_autoscroll_enabled := False
 			is_scroll := False
 			is_hand := False
 			if drawing_area.has_capture then
@@ -512,7 +517,7 @@ feature {NONE} -- Implementation
 					scrolled := True
 				end
 				if scrolled then
-					projector.simulate_mouse_move (cursor_x, cursor_y)
+					projector.simulate_mouse_move (cursor_x.max (autoscroll_border // 2).min (drawing_area.width), cursor_y.max (0).min (drawing_area.height - (autoscroll_border // 2)))
 					autoscroll.set_interval (scroll_timeout_interval)
 				end
 				world.show

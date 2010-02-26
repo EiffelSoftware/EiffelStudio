@@ -316,7 +316,7 @@ feature -- Access
 	formal_generics_end_position: INTEGER
 			-- End of formal generics, if present
 
-	inheritance_end_position: INTEGER
+	conforming_inheritance_end_position: INTEGER
 			-- End of conforming inheritance clause
 
 	non_conforming_inheritance_end_position: INTEGER
@@ -853,7 +853,7 @@ invariant
 	is_partial_class_not_set: not il_parser implies not is_partial_class
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

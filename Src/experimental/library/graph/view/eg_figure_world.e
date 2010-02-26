@@ -419,6 +419,24 @@ feature -- Element change
 			set: factory = a_factory
 		end
 
+	select_displayed_nodes
+			-- Select all displayed nodes on the diagram
+		local
+			i: INTEGER
+		do
+			from
+				i  := nodes.count
+			until
+				i = 0
+			loop
+				if nodes [i].is_show_requested and then not selected_figures.has (nodes [i]) then
+					selected_figures.extend (nodes [i])
+					set_figure_selection_state (nodes [i], True)
+				end
+				i := i - 1
+			end
+		end
+
 	deselect_all
 			-- Deselect all Figures.
 		do
@@ -1037,7 +1055,7 @@ feature {NONE} -- Implementation
 					end
 					figure_was_selected := True
 				end
-			elseif not ev_application.ctrl_pressed and then not figure_was_selected then
+			elseif not ev_application.ctrl_pressed and then not figure_was_selected and then button = 1 then
 				deselect_all
 			end
 			selected_figure := figure
@@ -1116,13 +1134,15 @@ feature {NONE} -- Implementation
 				is_multiselection_mode := True
 				selected_figure := multi_select_rectangle
 				enable_capture
-			elseif button = 1 and then selected_figure /= Void then
-				is_figure_moved := True
-				figure_change_start_actions.call (Void)
-			else
+			elseif button = 1 then
+				if selected_figure /= Void then
+					is_figure_moved := True
+					figure_change_start_actions.call (Void)
+				else
 					-- If there is a selection and we click in a blank area
 					-- then deselect all figures.
-				deselect_all
+					deselect_all
+				end
 			end
 			figure_was_selected := False
 		end

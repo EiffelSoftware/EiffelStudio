@@ -274,6 +274,7 @@ feature {NONE} -- Implementation
 			new_classes: LIST [ES_CLASS]
 			layout: EIFFEL_INHERITANCE_LAYOUT
 			l_shift_pressed: BOOLEAN
+			l_editor: EB_SMART_EDITOR
 		do
 			if button = 1 then
 				l_shift_pressed := ev_application.shift_pressed
@@ -346,6 +347,13 @@ feature {NONE} -- Implementation
 					world.context_editor.develop_window.tools.set_stone (create {CLASSI_STONE}.make (model.class_i))
 				elseif l_shift_pressed then
 					world.context_editor.develop_window.tools.set_stone (create {CLASSI_STONE}.make (model.class_i))
+				else
+						-- Attempt to open `Current' in an available editor.
+					l_editor := world.context_editor.develop_window.editors_manager.editor_with_stone (create {CLASSI_STONE}.make (model.class_i))
+					if l_editor = Void then
+						world.context_editor.develop_window.editors_manager.create_editor
+					end
+					world.context_editor.develop_window.advanced_set_stone (create {CLASSI_STONE}.make (model.class_i))
 				end
 			end
 		end

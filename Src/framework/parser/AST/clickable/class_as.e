@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			s: like suppliers;
 			o: like obsolete_message;
 			ed: like end_keyword)
-		
+
 			-- Create a new CLASS AST node.
 		require
 			n_not_void: n /= Void
@@ -480,8 +480,11 @@ feature -- Attributes
 	feature_clause_insert_position: INTEGER
 			-- Position at end of features
 
-	inherit_clause_insert_position: INTEGER
+	conforming_inherit_clause_insert_position: INTEGER
 			-- Position at end of inherit clause.
+
+	non_conforming_inherit_clause_insert_position: INTEGER
+			-- Position at end of non-conforming inherit clause.
 
 	generics_start_position: INTEGER
 			-- Position at start of formal generics.
@@ -568,19 +571,22 @@ feature -- Roundtrip/Token
 
 feature {EIFFEL_PARSER_SKELETON} -- Element change
 
-	set_text_positions (ge, ip, fp: INTEGER)
+	set_text_positions (ge, cip, ncip, fp: INTEGER)
 			-- Set positions in class text.
 		require
 			ge_positive_or_not_present: ge >= 0
-			ip_positive: ip >= 0 and ip >= ge
-			fp_positive: fp > 0 and fp >= ip
+			cip_positive: cip >= 0 and cip >= ge
+			ncip_positive: ncip >= 0 and ncip >= cip
+			fp_positive: fp > 0 and fp >= cip
 		do
 			generics_end_position := ge
-			inherit_clause_insert_position := ip
+			conforming_inherit_clause_insert_position := cip
+			non_conforming_inherit_clause_insert_position := ncip
 			feature_clause_insert_position := fp
 		ensure
 			generics_end_position: generics_end_position = ge
-			inherit_clause_insert_position_set: inherit_clause_insert_position = ip
+			conforming_inherit_clause_insert_position_set: conforming_inherit_clause_insert_position = cip
+			non_conforming_inherit_clause_insert_position_set: non_conforming_inherit_clause_insert_position = ncip
 			feature_clause_insert_position_set: feature_clause_insert_position = fp
 		end
 
@@ -614,21 +620,77 @@ feature -- Access
 		local
 			cur: INTEGER
 			pn: STRING
+			l_parents: like parents
 		do
-			if parents /= Void then
-				cur := parents.index
+			l_parents := parents
+			if l_parents /= Void then
+				cur := l_parents.index
 				from
-					parents.start
+					l_parents.start
 				until
-					parents.after or else Result /= Void
+					l_parents.after or else Result /= Void
 				loop
-					pn := parents.item.type.class_name.name
+					pn := l_parents.item.type.class_name.name
 					if pn.is_equal (n) then
-						Result := parents.item
+						Result := l_parents.item
 					end
-					parents.forth
+					l_parents.forth
 				end
-				parents.go_i_th (cur)
+				l_parents.go_i_th (cur)
+			end
+		end
+
+	conforming_parent_with_name (n: STRING): PARENT_AS
+			-- Conforming Parent AST with class name `n'.
+		require
+			n_not_void: n /= Void
+		local
+			cur: INTEGER
+			pn: STRING
+			l_parents: like conforming_parents
+		do
+			l_parents := conforming_parents
+			if l_parents /= Void then
+				cur := l_parents.index
+				from
+					l_parents.start
+				until
+					l_parents.after or else Result /= Void
+				loop
+					pn := l_parents.item.type.class_name.name
+					if pn.is_equal (n) then
+						Result := l_parents.item
+					end
+					l_parents.forth
+				end
+				l_parents.go_i_th (cur)
+			end
+		end
+
+	non_conforming_parent_with_name (n: STRING): PARENT_AS
+			-- Non-conforming Parent AST with class name `n'.
+		require
+			n_not_void: n /= Void
+		local
+			cur: INTEGER
+			pn: STRING
+			l_parents: like non_conforming_parents
+		do
+			l_parents := non_conforming_parents
+			if l_parents /= Void then
+				cur := l_parents.index
+				from
+					l_parents.start
+				until
+					l_parents.after or else Result /= Void
+				loop
+					pn := l_parents.item.type.class_name.name
+					if pn.is_equal (n) then
+						Result := l_parents.item
+					end
+					l_parents.forth
+				end
+				l_parents.go_i_th (cur)
 			end
 		end
 
@@ -912,7 +974,7 @@ invariant
 	date_valid: date >= -1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -925,22 +987,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CLASS_AS

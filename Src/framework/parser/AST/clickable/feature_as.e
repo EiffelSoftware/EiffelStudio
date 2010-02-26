@@ -208,6 +208,12 @@ feature -- Property
 			Result := body.type /= Void and not is_attribute
 		end
 
+	is_procedure: BOOLEAN
+			-- Does Current AST represent a procedure?
+		do
+			Result := body.type = Void
+		end
+
 	is_deferred: BOOLEAN
 			-- Does Current AST represent a deferred feature?
 		require

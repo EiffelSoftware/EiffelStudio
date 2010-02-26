@@ -31,27 +31,58 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Fill for test purposes.
+		local
+			l_vbox: EV_VERTICAL_BOX
 		do
 			Precursor
+
+			create l_vbox
+
 			create generic_type_selectors.make
 			create generic_box
 			create selector.make_with_strings (initial_strings)
-			selector.set_text ("INTEGER")
-			selector.set_minimum_width (100)
-			extend (selector)
-			extend (generic_box)
-			disable_item_expand (generic_box)
+
+				-- Add Class Completion
+			create text_completion.make (system.any_class.compiled_class, Void)
+			text_completion.set_code_completable (selector)
+
+			selector.set_completion_possibilities_provider (text_completion)
+			selector.set_completing_feature (False)
+
+			selector.set_text (selector.first.text)
+			selector.set_minimum_width (150)
+			l_vbox.extend (selector)
+			l_vbox.disable_item_expand (selector)
+
+			create detachable_check_box
+			detachable_check_box.set_text ("Detachable?")
+			l_vbox.extend (detachable_check_box)
+			l_vbox.disable_item_expand (detachable_check_box)
+
 			selector.change_actions.extend (agent on_selection_change)
-			expanded_needed := False
+			extend (l_vbox)
+			disable_item_expand (last)
+
+			create l_vbox
+			l_vbox.extend (generic_box)
+			l_vbox.disable_item_expand (generic_box)
+
+			extend (l_vbox)
+			disable_item_expand (last)
 		end
 
 feature -- Access
 
-	selector: EV_COMBO_BOX
+	selector: EB_CODE_COMPLETABLE_COMBO_BOX
 			-- Text box with list of possible types.
+
+	text_completion: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 
 	generic_type_selectors: LINKED_LIST [EB_TYPE_SELECTOR]
 			-- All type selectors in `generic_box'.
+
+	detachable_check_box: EV_CHECK_BUTTON
+			-- Check box for determining if types should be detachable.
 
 	code: STRING
 			-- Type currently selected by user.
@@ -59,8 +90,8 @@ feature -- Access
 		local
 			gts: like generic_type_selectors
 			generic_type_name: STRING
-			type_as_class_c: CLASS_C
-			l: LIST [CLASS_I]
+--			type_as_class_c: CLASS_C
+--			l: LIST [CLASS_I]
 		do
 			Result := selector.text
 			if Result.is_empty or Result.index_of (' ', 1) > 0 then
@@ -68,17 +99,20 @@ feature -- Access
 					-- or simply an anchore type `like x'.
 			else
 				Result.to_upper
-				if expanded_needed then
-					l := Universe.compiled_classes_with_name (Result)
-					if not l.is_empty then
-						type_as_class_c := l.first.compiled_class
-						if not type_as_class_c.is_basic and not type_as_class_c.is_expanded then
-							Result.prepend ("expanded ")
-						end
-					else
-						Result.prepend ("expanded ")
-					end
+				if detachable_check_box.is_selected and then detachable_check_box.is_sensitive then
+					Result.prepend ("detachable ")
 				end
+--				if expanded_needed then
+--					l := Universe.compiled_classes_with_name (Result)
+--					if not l.is_empty then
+--						type_as_class_c := l.first.compiled_class
+--						if not type_as_class_c.is_basic and not type_as_class_c.is_expanded then
+--							Result.prepend ("expanded ")
+--						end
+--					else
+--						Result.prepend ("expanded ")
+--					end
+--				end
 				gts := generic_type_selectors
 				if not gts.is_empty then
 					Result.append (" [")
@@ -110,19 +144,6 @@ feature -- Status report
 			Result := t /= Void and then not t.is_empty
 		end
 
-	expanded_needed: BOOLEAN
-			-- Does return type have to be expanded?
-
-feature {EB_QUERY_EDITOR} -- Status setting
-
-	enable_expanded_needed
-			-- Set `expanded_needed' to `True'.
-		do
-			expanded_needed := True
-		ensure
-			expanded_needed_set: expanded_needed = True
-		end
-
 feature -- Element change
 
 	set_from_other (other: like Current)
@@ -144,9 +165,6 @@ feature -- Element change
 				end
 				generic_type_selectors.i_th (gts.index).set_from_other (gts.item)
 				gts.forth
-			end
-			if other.expanded_needed then
-				enable_expanded_needed
 			end
 		end
 
@@ -185,8 +203,15 @@ feature {NONE} -- Implementation
 
 				-- Find what the user entered
 			s := selector.text
-			s.to_lower
-			is_tuple := s.is_equal ("tuple")
+			s.to_upper
+
+				-- Make sure that `s' is a valid class name in selector.
+			if s.has_substring (" [") then
+				s := s.substring (1, (s.index_of (' ', 1) - 1).max (1))
+				selector.set_text (s)
+			end
+
+			is_tuple := s.is_equal ("TUPLE")
 
 			if is_tuple then
 				if not l_was_tuple then
@@ -201,7 +226,7 @@ feature {NONE} -- Implementation
 					generic_box.disable_item_expand (generic_box.last)
 				end
 			elseif not s.is_empty then
-				gen_count := generics_count (selector.text.as_upper)
+				gen_count := generics_count (s)
 				if
 					generic_count /= gen_count or
 					(generic_count = 0 and not generic_box.is_empty)
@@ -212,6 +237,7 @@ feature {NONE} -- Implementation
 						fill_generic_box
 				end
 			end
+			update_detachable_status (s)
 		end
 
 	fill_generic_box
@@ -228,6 +254,11 @@ feature {NONE} -- Implementation
 						generic_box.extend (new_label (", "))
 					end
 					create ts
+					if supplier_type /= Void then
+						ts.set_initial_types (client_type, supplier_type)
+						ts.update_list_strings (False)
+					end
+
 					-- ts.set_constraint (...)
 					generic_type_selectors.extend (ts)
 					generic_box.extend (ts)
@@ -235,6 +266,25 @@ feature {NONE} -- Implementation
 				end
 				generic_box.extend (new_label ("]"))
 				generic_box.disable_item_expand (generic_box.last)
+			end
+		end
+
+	update_detachable_status (a_class_name: STRING)
+			-- Update detachable status for `a_class_name'.
+		local
+			l_class_i: CLASS_I
+			l_is_expanded: BOOLEAN
+		do
+			if a_class_name /= Void and then not a_class_name.is_empty then
+				l_class_i := class_i_by_name (a_class_name)
+			end
+			if l_class_i /= Void then
+				l_is_expanded := l_class_i.compiled_class /= Void and then l_class_i.compiled_class.is_expanded
+			end
+			if l_is_expanded then
+				detachable_check_box.disable_sensitive
+			else
+				detachable_check_box.enable_sensitive
 			end
 		end
 
@@ -246,16 +296,20 @@ feature {NONE} -- Implementation
 		local
 			class_i: CLASS_I
 			class_c: CLASS_C
+			l_class_text: STRING
 		do
-			class_i := class_i_by_name (a_class_name)
-			if class_i /= Void then
-				class_c := class_i.compiled_class
-				if class_c /= Void then
-					if class_c.generics /= Void then
-						Result := class_c.generics.count
+			l_class_text := a_class_name.substring (a_class_name.index_of (' ', 1) + 1, a_class_name.count)
+			if not l_class_text.is_empty then
+				class_i := class_i_by_name (l_class_text)
+				if class_i /= Void then
+					class_c := class_i.compiled_class
+					if class_c /= Void then
+						if class_c.generics /= Void then
+							Result := class_c.generics.count
+						end
+					else
+						--| FIXME parse class text and find it!
 					end
-				else
-					--| FIXME parse class text and find it!
 				end
 			end
 		end
@@ -284,18 +338,89 @@ feature {NONE} -- Implementation
 			--| FIXME Get favorites, previously entered names, etc.
 		once
 			Result := <<
-				"ARRAY",
+				"ANY",
 				"BOOLEAN",
-				"CHARACTER",
-				"DOUBLE",
-				"FUNCTION",
-				"INTEGER",
-				"LIST",
-				"PROCEDURE",
-				"REAL",
-				"STRING",
-				"TUPLE"
+				"CHARACTER_8",
+				"NATURAL_32",
+				"INTEGER_32",
+				"REAL_32",
+				"REAL_64",
+				"STRING_8",
+				"STRING_32",
+				"like Current",
+				"ARRAYED_LIST [..]",
+				"LINKED_LIST [..]",
+				"HASH_TABLE [..]",
+				"FUNCTION [..]",
+				"PROCEDURE [..]",
+				"POINTER",
+				"TUPLE [..]"
 			>>
+		end
+
+feature {EB_FEATURE_EDITOR, EB_TYPE_SELECTOR} -- Access
+
+	client_type, supplier_type: ES_CLASS
+
+	set_initial_types (a_client_type, a_supplier_type: ES_CLASS)
+		do
+			client_type := a_client_type
+			supplier_type := a_supplier_type
+		end
+
+	update_list_strings (a_initial_list: BOOLEAN)
+			-- Update types listed in selector.
+		local
+			l_list: ARRAY [STRING_8]
+			i: INTEGER
+		do
+			l_list := strings_from_type (client_type, supplier_type)
+			if a_initial_list then
+					-- Initial setting of list so we don't need to block the change actions.
+				selector.set_strings (l_list)
+			else
+				selector.change_actions.block
+				selector.set_strings (l_list)
+					-- Select the first non generic item in the list.
+				from
+					i := 1
+				until
+					i > l_list.count
+				loop
+					if l_list [i].index_of ('[', 1) = 0 then
+						selector.set_text (l_list [i])
+						i := l_list.count
+					end
+					i := i + 1
+				end
+				selector.change_actions.resume
+			end
+		end
+
+	strings_from_type (a_client_type, a_supplier_type: ES_CLASS): ARRAY [STRING]
+			-- Return default type selector strings for `a_client_type' and `a_supplier_type'.
+		local
+			l_list: ARRAYED_LIST [STRING]
+			l_str: STRING
+		do
+			create l_list.make (2 + initial_strings.count)
+
+
+			l_str := a_supplier_type.name.string
+			if generics_count (l_str) > 0 then
+				l_str.append (" [..]")
+			end
+			l_list.extend (l_str)
+
+			if a_client_type /= a_supplier_type then
+				l_str := a_client_type.name.string
+				if generics_count (l_str) > 0 then
+					l_str.append (" [..]")
+				end
+				l_list.extend (l_str)
+			end
+			l_list.fill (initial_strings)
+			Result := l_list.to_array
 		end
 
 feature {EV_ANY} -- Contract support
@@ -311,7 +436,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -324,22 +449,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_TYPE_SELECTOR

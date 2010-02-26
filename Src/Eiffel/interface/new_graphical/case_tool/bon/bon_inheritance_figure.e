@@ -20,7 +20,9 @@ inherit
 			xml_element,
 			xml_node_name,
 			set_with_xml_element,
-			recycle
+			set_foreground_color,
+			recycle,
+			default_create
 		end
 
 	BON_FIGURE
@@ -49,6 +51,15 @@ create {BON_INHERITANCE_FIGURE}
 
 feature {NONE} -- Initialization
 
+	default_create
+			-- <Precursor>
+		do
+			Precursor {EIFFEL_INHERITANCE_FIGURE}
+			create non_conforming_figure
+			extend (non_conforming_figure)
+			non_conforming_figure.set_line_width (2)
+		end
+
 	make_with_model (a_model: ES_INHERITANCE_LINK)
 			-- Create a BON_INHERITANCE_FIGURE showing `a_model'.
 		do
@@ -58,6 +69,11 @@ feature {NONE} -- Initialization
 			initialize
 
 			preferences.diagram_tool_data.add_observer (Current)
+
+			if not model.is_non_conforming then
+				non_conforming_figure.hide
+			end
+			model.is_non_conforming_changed.extend (agent on_is_non_conforming_change)
 
 			retrieve_preferences
 
@@ -112,11 +128,21 @@ feature -- Element change
 			real_line_width := a_line_width
 		end
 
+	set_foreground_color (a_color: EV_COLOR)
+			-- Set `foreground_color' to `a_color'.
+		do
+			Precursor {EIFFEL_INHERITANCE_FIGURE} (a_color)
+			non_conforming_figure.set_foreground_color (a_color)
+		end
+
 	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_INHERITANCE_FIGURE}
 			preferences.diagram_tool_data.remove_observer (Current)
+			if model /= Void then
+				model.is_non_conforming_changed.prune_all (agent on_is_non_conforming_change)
+			end
 		end
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
@@ -130,6 +156,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 		do
 			if is_high_quality then
 				Precursor {EIFFEL_INHERITANCE_FIGURE}
+				set_non_conforming_figure_position (non_conforming_figure_distance)
 			else
 				l_point_array := low_quality_line.point_array
 				p0 := l_point_array.item (0)
@@ -231,6 +258,64 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	non_conforming_figure: EV_MODEL_LINE
+			-- Figure indicating that `Current' `is_non_conforming'.
+
+	non_conforming_figure_distance: INTEGER
+			-- Distance in pixel `non_conforming_figure' has from `end_point'
+		do
+			Result := (real_arrow_head_size * 3).truncated_to_integer
+		ensure
+			Result_positive: Result >= 0
+		end
+
+	non_conforming_figure_length: INTEGER
+			-- Length of aggregate figure.
+		do
+			Result := real_arrow_head_size.truncated_to_integer
+		ensure
+			Result_positive: Result >= 0
+		end
+
+	set_non_conforming_figure_position (a_distance: INTEGER)
+			-- Set `non_conforming_figure' `a_distance' away from `end_point'.
+		local
+			an_angle: DOUBLE
+			s: INTEGER
+			cos, sin, dcos, dsin, hssin, hscos: DOUBLE
+			a_point, b_point: EV_COORDINATE
+			px, py: INTEGER
+		do
+			a_point := line.point_array.item (line.point_count - 1)
+			b_point := line.point_array.item (line.point_count - 2)
+			an_angle := line_angle (a_point.x_precise, a_point.y_precise, b_point.x_precise, b_point.y_precise)
+
+			s := non_conforming_figure_length + line_width
+
+			cos := cosine (an_angle)
+			sin := sine (an_angle)
+			dcos := a_distance * cos
+			dsin := a_distance * sin
+			hssin := -s / 2 * sin
+			hscos := -s / 2 * cos
+
+			px := a_point.x
+			py := a_point.y
+
+			non_conforming_figure.set_point_a_position (px + as_integer (dcos - hssin), py + as_integer (dsin + hscos))
+			non_conforming_figure.set_point_b_position (px + as_integer (dcos + hssin), py + as_integer (dsin - hscos))
+		end
+
+	on_is_non_conforming_change
+			-- `model'.`is_non_conforming was changed.
+		do
+			if model.is_non_conforming then
+				non_conforming_figure.show
+			else
+				non_conforming_figure.hide
+			end
+		end
+
 	retrieve_preferences
 			-- Retrive preferences from shared resources.
 		do
@@ -238,8 +323,11 @@ feature {NONE} -- Implementation
 			set_foreground_color (bon_inheritance_color)
 		end
 
+invariant
+	non_conforming_figure_not_void: non_conforming_figure /= Void
+
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -121,23 +121,26 @@ feature -- Access
 			descendant, ancestor: ES_CLASS
 			e_item: ES_INHERITANCE_LINK
 			link: EIFFEL_INHERITANCE_FIGURE
+			l_is_non_conforming: BOOLEAN
 		do
 			link := a_stone.source
 			descendant := link.model.descendant
 			ancestor := link.model.ancestor
 			if ancestor /= Void and then descendant /= Void then
 				ctm := descendant.code_generator
-
 				e_item ?= a_stone.source.model
 				check
 					e_item_not_void: e_item /= Void
 				end
+
+				l_is_non_conforming := a_stone.source.model.is_non_conforming
+
 				e_item.disable_needed_on_diagram
 
 				tool.history.do_named_undoable (
-					interface_names.t_diagram_delete_inheritance_link_cmd (ancestor.name, descendant.name),
-					agent remove_ancestor (ctm, ancestor.name, e_item),
-					agent add_ancestor (ctm, ancestor.name, e_item))
+					interface_names.t_diagram_delete_inheritance_link_cmd (ancestor.name, descendant.name, l_is_non_conforming),
+					agent remove_ancestor (ctm, ancestor.name, e_item, l_is_non_conforming),
+					agent add_ancestor (ctm, ancestor.name, e_item, l_is_non_conforming))
 			end
 		end
 
@@ -340,19 +343,19 @@ feature {NONE} -- Implementation
 			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}
 		end
 
-	remove_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK)
+	remove_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK; is_non_conforming: BOOLEAN)
 			-- Remove ancestor with `a_name' and hide `a_link' if succesfull.
 		do
-			a_ctm.remove_ancestor (a_name)
+			a_ctm.remove_ancestor (a_name, is_non_conforming)
 			if not a_ctm.class_modified_outside_diagram then
 				a_link.disable_needed_on_diagram
 			end
 		end
 
-	add_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK)
+	add_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK; is_non_conforming: BOOLEAN)
 			--Add ancestor with `a_name' and show `a_link' if succesfull.
 		do
-			a_ctm.add_ancestor (a_name)
+			a_ctm.add_ancestor (a_name, is_non_conforming)
 			if not a_ctm.class_modified_outside_diagram then
 				a_link.enable_needed_on_diagram
 			end
@@ -461,7 +464,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -474,22 +477,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DELETE_DIAGRAM_ITEM_COMMAND

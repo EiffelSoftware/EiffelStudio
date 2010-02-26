@@ -11,10 +11,7 @@ class
 inherit
 	EB_FEATURE_COMPOSITION_WIZARD
 		redefine
-			feature_editor,
-			set_default_editor,
-			feature_type,
-			on_proc_select
+			set_default_editor
 		end
 
 create
@@ -32,53 +29,9 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature -- Status setting
-
-	set_type (s: STRING)
-			-- Create a supplier of type `s'.
-			-- (Could disable user selection...)
-		do
-			feature_editor.set_type (s)
-		end
-
-	set_name_number (a_number: INTEGER)
-			-- Assign `a_number' to `name_number'.
-		do
-			feature_editor.set_name_number (a_number)
-		ensure
-			a_number_assigned: feature_editor.name_number = a_number
-		end
-
-feature {CLASS_TEXT_MODIFIER} -- Status setting
-
-	enable_expanded_needed
-			-- Set `expanded_needed' to `True' in `feature_editor'.
-		do
-			feature_editor.enable_expanded_needed
-		end
-
-feature -- Access
-
-	feature_type: STRING
-			-- Return type if attribute or function.
-		do
-			Result := feature_editor.type
-		end
-
-feature {NONE} -- Implementation
-
-	feature_editor: EB_QUERY_EDITOR
-
-	on_proc_select
-			-- User selected "procedure".
-		do
-			check
-				should_not_be_called: False
-			end
-		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -91,22 +44,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_QUERY_COMPOSITION_WIZARD

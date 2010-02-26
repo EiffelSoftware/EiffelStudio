@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Create as function/procedure wizard.
 		local
-			vb, fake_vb: EV_VERTICAL_BOX
+			vb, fake_vb, fake_vb2: EV_VERTICAL_BOX
 			name_hb, hb: EV_HORIZONTAL_BOX
 			tab, tab2: EV_CELL
 		do
@@ -36,20 +36,26 @@ feature {NONE} -- Initialization
 
 			create fake_vb
 			create name_hb
-			create feature_name_field.make_with_text ("new_feature")
-			name_hb.extend (new_tab (1))
-			name_hb.disable_item_expand (name_hb.last)
-			name_hb.extend (feature_name_field)
-			name_hb.extend (new_label (" ("))
-			name_hb.disable_item_expand (name_hb.last)
 			fake_vb.extend (name_hb)
 			fake_vb.disable_item_expand (name_hb)
+			create feature_name_field.make_with_text ("new")
+
+			create fake_vb2
+			fake_vb2.extend (new_label (" ("))
+			fake_vb2.disable_item_expand (fake_vb2.last)
+			fake_vb2.extend (create {EV_CELL})
+
+			name_hb.extend (feature_name_field)
+			name_hb.extend (fake_vb2)
+			name_hb.disable_item_expand (name_hb.last)
+
 			create tab2
 			fake_vb.extend (tab2)
 			fake_vb.disable_item_expand (tab2)
 
 			create hb
 			hb.extend (fake_vb)
+			hb.disable_item_expand (hb.last)
 			create vb
 			hb.extend (vb)
 			create argument_list
@@ -61,34 +67,49 @@ feature {NONE} -- Initialization
 			extend (hb)
 			disable_item_expand (hb)
 
-			create local_field
-			create require_field
+			create require_list
+			add_require_button := new_create_button
+			add_require_button.select_actions.extend (agent on_new_require)
+			create hb
+			hb.extend (add_require_button)
+			hb.disable_item_expand (hb.last)
+			hb.extend (create {EV_CELL})
+			require_list.extend (hb)
+
+			create ensure_list
+			add_ensure_button := new_create_button
+			add_ensure_button.select_actions.extend (agent on_new_ensure)
+			create hb
+			hb.extend (add_ensure_button)
+			hb.disable_item_expand (hb.last)
+			hb.extend (create {EV_CELL})
+			ensure_list.extend (hb)
+
 			build_body_type_box
-			create body_field
 			create ensure_field
 
 			add_comment_field
+
 			add_label ("require", 2)
-			add_indented (require_field, 3, True)
-			add_label ("local", 2)
-			add_indented (local_field, 3, True)
+			add_indented (require_list, 3, True)
 			extend (body_type_box)
 			disable_item_expand (body_type_box)
-			add_indented (body_field, 3, True)
 			add_label ("ensure", 2)
-			add_indented (ensure_field, 3, True)
+			add_indented (ensure_list, 3, True)
 			add_label ("end", 2)
+
+			extend (create {EV_CELL})
 		end
 
 	routine_is_part: EV_HORIZONTAL_BOX
-			-- Procedure: "[!!]): is"
-			-- Function: "[!!]): <typefield> is"
+			-- Procedure: "[!!]): "
+			-- Function: "[!!]): <typefield>"
 		require
 			argument_button_not_void: add_argument_button /= Void
 		deferred
 		ensure
 			not_void: Result /= Void
-			argument_button_added: Result.has (add_argument_button)
+			argument_button_added: Result.has_recursive (add_argument_button)
 		end
 
 	build_body_type_box
@@ -147,6 +168,18 @@ feature -- Access
 			on_new_argument
 		end
 
+	add_require
+			-- Add a require to `require_list'.
+		do
+			on_new_require
+		end
+
+	add_ensure
+			-- Add am ensure to `ensure_list'.
+		do
+			on_new_ensure
+		end
+
 	i_th_argument (i: INTEGER): EB_ARGUMENT_SELECTOR
 		do
 			Result ?= argument_list.i_th (i)
@@ -161,7 +194,7 @@ feature -- Element change
 		do
 			name_number := a_number
 			if name_number /= 0 then
-				feature_name_field.set_text	("new_feature" + "_" + name_number.out)
+				feature_name_field.set_text	("new" + "_" + name_number.out)
 			end
 		end
 
@@ -174,7 +207,6 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (10)
 			if not argument_list.is_empty then
-				Result.append (" (")
 				from
 					argument_list.start
 				until
@@ -185,12 +217,11 @@ feature {NONE} -- Implementation
 						asc_not_void: asc /= Void
 					end
 					Result.append (asc.code)
-					argument_list.forth
-					if not argument_list.after then
+					if not argument_list.islast then
 						Result.append ("; ")
 					end
+					argument_list.forth
 				end
-				Result.append (")")
 			end
 		end
 
@@ -200,10 +231,7 @@ feature {NONE} -- Implementation
 			Result := require_code
 			if is_deferred then
 				Result.append ("%T%Tdeferred%N")
-			elseif is_external then
-				Result.append (body_code)
 			else
-				Result.append (local_code)
 				Result.append (body_code)
 			end
 			Result.append (ensure_code)
@@ -213,33 +241,23 @@ feature {NONE} -- Implementation
 	require_code: STRING
 			-- Code for precondition.
 		do
-			Result := code_for_field (require_field, "require")
-		end
-
-	local_code: STRING
-			-- Code for local symbol declaration.
-		do
-			Result := code_for_field (local_field, "local")
+			Result := code_for_contract_list (require_list, "require")
 		end
 
 	body_code: STRING
 			-- Code for routine body.
 		do
-			if body_field.text.is_empty then
-				create Result.make (8)
-				Result.append_character ('%T')
-				Result.append_character ('%T')
-				Result.append (body_type_label.text)
-				Result.append_character ('%N')
-			else
-				Result := code_for_field (body_field, body_type_label.text)
-			end
+			create Result.make (8)
+			Result.append_character ('%T')
+			Result.append_character ('%T')
+			Result.append (body_type_label.text)
+			Result.append_character ('%N')
 		end
 
 	ensure_code: STRING
 			-- Code for postcondition.
 		do
-			Result := code_for_field (ensure_field, "ensure")
+			Result := code_for_contract_list (ensure_list, "ensure")
 		end
 
 	code_for_field (f: EV_TEXT_FIELD; kw: STRING): STRING
@@ -266,16 +284,88 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	code_for_contract_list (a_list: EV_BOX; a_keyword: STRING): STRING
+			-- Code for contract list `a_list' for keyword `a_keyword'.
+		local
+			cs: detachable EB_CONTRACT_SELECTOR
+		do
+			create Result.make (10)
+			if a_list.count > 1 then
+				Result.append_string ("%T%T")
+				Result.append (a_keyword + "%N")
+				from
+					a_list.start
+				until
+					a_list.after
+				loop
+					cs ?= a_list.item
+					if cs /= Void then
+						Result.append ("%T%T%T" + cs.code + "%N")
+					end
+					a_list.forth
+				end
+			end
+		end
+
+	on_new_require
+			-- Add contract selector to require list.
+		local
+			csc: EB_CONTRACT_SELECTOR
+			l_dialog: ES_ADD_CONTRACT_DIALOG
+		do
+			create l_dialog.make
+			l_dialog.show_on_active_window
+			if l_dialog.dialog_result = l_dialog.default_confirm_button then
+				create csc
+				csc.set_remove_procedure (agent on_require_removed (csc))
+				require_list.extend (csc)
+
+				csc.set_tag (l_dialog.contract.tag)
+				csc.contract_selector.set_text (l_dialog.contract.contract)
+			end
+		end
+
+	on_require_removed (req: EB_CONTRACT_SELECTOR)
+			-- Remove `req' from require list.
+		do
+			require_list.prune (req)
+			add_require_button.set_focus
+		end
+
+	on_new_ensure
+			-- Add contract selector to require list.
+		local
+			csc: EB_CONTRACT_SELECTOR
+			l_dialog: ES_ADD_CONTRACT_DIALOG
+		do
+			create l_dialog.make
+			l_dialog.show_on_active_window
+			if l_dialog.dialog_result = l_dialog.default_confirm_button then
+				create csc
+				csc.set_remove_procedure (agent on_ensure_removed (csc))
+				ensure_list.extend (csc)
+
+				csc.set_tag (l_dialog.contract.tag)
+				csc.contract_selector.set_text (l_dialog.contract.contract)
+				csc.tag_field.set_focus
+			end
+		end
+
+	on_ensure_removed (req: EB_CONTRACT_SELECTOR)
+			-- Remove `req' from require list.
+		do
+			ensure_list.prune (req)
+			add_ensure_button.set_focus
+		end
+
 	on_new_argument
 			-- Add argument selector to `argument_list'.
 		local
 			asc: EB_ARGUMENT_SELECTOR
 		do
-			if not argument_list.is_empty then
-				asc ?= argument_list.last
-				asc.add_semicolon
-			end
 			create asc
+			asc.type_selector.set_initial_types (client_type, supplier_type)
+			asc.type_selector.update_list_strings (True)
 			asc.set_remove_procedure (agent on_argument_removed (asc))
 			argument_list.extend (asc)
 			asc.set_name ("arg" + argument_list.count.out)
@@ -291,10 +381,6 @@ feature {NONE} -- Implementation
 			asc: EB_ARGUMENT_SELECTOR
 		do
 			argument_list.prune (arg)
-			if not argument_list.is_empty then
-				asc ?= argument_list.last
-				asc.remove_semicolon
-			end
 			add_argument_button.set_focus
 		ensure
 			argument_removed: not argument_list.has (arg)
@@ -303,16 +389,6 @@ feature {NONE} -- Implementation
 	on_body_change (new_body: STRING)
 			-- User selected different routine body type.
 		do
-			if new_body.is_equal ("deferred") then
-				body_field.disable_sensitive
-				local_field.disable_sensitive
-			elseif new_body.is_equal ("external") then
-				body_field.enable_sensitive
-				local_field.disable_sensitive
-			else
-				body_field.enable_sensitive
-				local_field.enable_sensitive
-			end
 			body_type_label.set_text (new_body)
 		end
 
@@ -321,15 +397,19 @@ feature {EB_FEATURE_EDITOR} -- Access
 	add_argument_button: EV_BUTTON
 	argument_list: EV_VERTICAL_BOX
 
+	add_require_button: EV_BUTTON
+	require_list: EV_VERTICAL_BOX
+
+	add_ensure_button: EV_BUTTON
+	ensure_list: EV_VERTICAL_BOX
+
 	require_field: EV_TEXT_FIELD
-	local_field: EV_TEXT_FIELD
 	body_type_label: EV_LABEL
 	body_type_box: EV_HORIZONTAL_BOX
-	body_field: EV_TEXT_FIELD
 	ensure_field: EV_TEXT_FIELD;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -342,22 +422,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_ROUTINE_EDITOR

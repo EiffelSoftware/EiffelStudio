@@ -120,10 +120,10 @@ feature -- Access
 						if source /= Void and target /= Void then
 							if node_name.is_equal (xml_client_supplier_figure_node_name) then
 								if source.has_supplier (target) then
-									create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target)
+									create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target, True)
 								end
 							else
-								create {ES_INHERITANCE_LINK} Result.make_with_classes (source, target)
+								create {ES_INHERITANCE_LINK} Result.make (source, target, True)
 							end
 						end
 					else
@@ -209,7 +209,7 @@ feature {NONE} -- Constants
 		-- Xml string constants
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

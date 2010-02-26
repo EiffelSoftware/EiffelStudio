@@ -28,25 +28,39 @@ feature {NONE} -- Initialization
 			-- Build interface.
 		local
 			hb: EV_HORIZONTAL_BOX
+			vb: EV_VERTICAL_BOX
 		do
 			Precursor
 			create hb
 			create name_field
 			name_field.set_minimum_width (60)
-			extend (name_field)
-			disable_item_expand (last)
-			extend (new_label (": "))
-			disable_item_expand (last)
-			create type_selector
-			hb.extend (type_selector)
+			hb.extend (name_field)
 			hb.disable_item_expand (hb.last)
+			hb.extend (new_label (": "))
+			hb.disable_item_expand (hb.last)
+
+			create vb
+			vb.extend (hb)
+			vb.disable_item_expand (vb.last)
+			vb.extend (create {EV_CELL})
+
+			extend (vb)
+			disable_item_expand (vb)
+
+			create type_selector
+			extend (type_selector)
+			--disable_item_expand (last)
+
+			create vb
 			create remove_button
 			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
 			remove_button.set_minimum_size (16, 16)
-			hb.extend (remove_button)
-			hb.disable_item_expand (hb.last)
-			hb.set_padding (Layout_constants.small_padding_size)
-			extend (hb)
+			vb.extend (remove_button)
+			vb.disable_item_expand (vb.last)
+			vb.extend (create {EV_CELL})
+			set_padding (Layout_constants.small_padding_size)
+			extend (vb)
+			disable_item_expand (vb)
 		end
 
 feature -- Access
@@ -142,7 +156,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -155,22 +169,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_ARGUMENT_SELECTOR

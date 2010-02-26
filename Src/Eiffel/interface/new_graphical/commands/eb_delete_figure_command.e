@@ -146,13 +146,15 @@ feature -- Basic operations
 			l_item: ES_ITEM
 			fig: EIFFEL_INHERITANCE_FIGURE
 			l_projector: EIFFEL_PROJECTOR
+			l_is_non_conforming: BOOLEAN
 		do
 			fig := a_stone.source
 			l_item ?= fig.model
 			if l_item /= Void then
 				l_projector := tool.projector
+				l_is_non_conforming := a_stone.source.model.is_non_conforming
 				history.do_named_undoable (
-					interface_names.t_diagram_delete_inheritance_link_cmd (fig.model.ancestor.name, fig.model.descendant.name),
+					interface_names.t_diagram_delete_inheritance_link_cmd (fig.model.ancestor.name, fig.model.descendant.name, l_is_non_conforming),
 					[<<agent l_item.disable_needed_on_diagram, agent l_projector.full_project>>],
 					[<<agent l_item.enable_needed_on_diagram, agent l_projector.full_project>>])
 			end
@@ -311,7 +313,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -324,22 +326,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DELETE_FIGURE_COMMAND

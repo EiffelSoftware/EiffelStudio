@@ -26,14 +26,25 @@ feature {NONE} -- Initialization
 		end
 
 	routine_is_part: EV_HORIZONTAL_BOX
-			-- Box with `add_argument_button' and "): is".
+			-- Box with `add_argument_button' and "):".
 		local
 			c: EV_CELL
+			l_vbox: EV_VERTICAL_BOX
 		do
 			create Result
-			Result.extend (add_argument_button)
+			create l_vbox
+			l_vbox.extend (add_argument_button)
+			l_vbox.disable_item_expand (l_vbox.last)
+			l_vbox.extend (create {EV_CELL})
+			Result.extend (l_vbox)
 			Result.disable_item_expand (Result.last)
-			Result.extend (new_label (") is"))
+
+
+			create l_vbox
+			l_vbox.extend (new_label (")"))
+			l_vbox.disable_item_expand (l_vbox.last)
+			l_vbox.extend (create {EV_CELL})
+			Result.extend (l_vbox)
 			Result.disable_item_expand (Result.last)
 			create c
 			extend (c)
@@ -44,20 +55,40 @@ feature -- Access
 
 	code: STRING
 			-- Current text of the feature in the wizard.
+		local
+			l_arguments_code: STRING
 		do
 			create Result.make (100)
-			Result.append ("%T" + feature_name_field.text + arguments_code + " is%N")
+			Result.append ("%T" + feature_name_field.text)
+			l_arguments_code := arguments_code
+			if
+				l_arguments_code /= Void and then not l_arguments_code.is_empty
+			then
+				Result.append (" (" + l_arguments_code + ")")
+			end
+			Result.append ("%N")
 			Result.append (comments_code)
 			Result.append (routine_code)
 		end
+
+	type: STRING
+			-- Full type as string.
 
 feature -- Status report
 
 	is_procedure: BOOLEAN = True;
 			-- Is `Current' a procedure editor?
 
+feature -- Element change
+
+	set_type (a_type: STRING)
+			-- Set content of `type_field' to `a_type'.
+		do
+			type := a_type.string
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -70,22 +101,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_PROCEDURE_EDITOR

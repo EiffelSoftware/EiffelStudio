@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 				-- Create the controls.
 			create class_name_entry.make
 			class_name_entry.change_actions.extend (agent on_class_name_entry_changed)
-			create classes_tree.make_without_targets (a_context_menu_factory)
+			create classes_tree.make_for_class_selection (a_context_menu_factory)
 			classes_tree.set_minimum_width (l_layouts.dialog_unit_to_pixels(300))
 			classes_tree.set_minimum_height (l_layouts.dialog_unit_to_pixels(200))
 
@@ -186,15 +186,30 @@ feature {NONE} -- Vision2 events
 		local
 			l_button: EV_BUTTON
 			l_class_i: CLASS_I
+			l_text: STRING
+			l_caret_pos: INTEGER
 		do
 			l_button := dialog_window_buttons.item (default_button)
 			check not_void: l_button /= Void end
 			l_class_i ?= class_name_entry.data
+			l_text := class_name_entry.text.as_upper
+
 			if l_class_i /= Void then
 				l_button.enable_sensitive
 			else
-				l_button.disable_sensitive
+				if not l_text.is_empty and then eiffel_universe.classes_with_name (l_text).count = 1 then
+					l_button.enable_sensitive
+				else
+					l_button.disable_sensitive
+				end
 			end
+
+			class_name_entry.change_actions.block
+			l_caret_pos := class_name_entry.caret_position
+
+			class_name_entry.set_text (l_text)
+			class_name_entry.set_caret_position (l_caret_pos)
+			class_name_entry.change_actions.resume
 		end
 
 feature {NONE} -- Controls
@@ -206,7 +221,7 @@ feature {NONE} -- Controls
 			-- Tree where the user can choose its class.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -219,22 +234,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CHOOSE_CLASS_DIALOG

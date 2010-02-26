@@ -228,7 +228,9 @@ feature {NONE} -- Buffer update
 			medium.read_to_managed_pointer (buffer, 0, {PLATFORM}.integer_32_bytes)
 			if medium.bytes_read = {PLATFORM}.integer_32_bytes then
 				buffer_size := buffer.read_integer_32_be (0)
-				is_last_chunk := False
+					-- By default `is_last_chunk' is always True so that retrieving
+					-- an old format would not try to read indefinitely in `cleanup'.
+				is_last_chunk := True
 				if buffer_size = -1 then
 						-- This is the new format, first we read the version information.
 					l_is_new_format := True

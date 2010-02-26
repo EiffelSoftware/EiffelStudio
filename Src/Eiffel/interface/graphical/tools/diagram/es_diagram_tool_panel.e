@@ -178,7 +178,6 @@ feature {NONE} -- Initialization
 			create create_new_links_cmd.make (Current)
 			auto_recycle (create_new_links_cmd)
 			create_new_links_cmd.enable_displayed
-			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
 
 			create change_color_cmd.make (Current)
 			auto_recycle (change_color_cmd)
@@ -727,6 +726,10 @@ feature -- Status settings.
 			view_selector.disable_sensitive
 			view_menu_button.disable_sensitive
 			force_settings_cmd.disable_sensitive
+			toggle_selected_classes_ancestors_cmd.disable_sensitive
+			toggle_selected_classes_clients_cmd.disable_sensitive
+			toggle_selected_classes_descendents_cmd.disable_sensitive
+			toggle_selected_classes_suppliers_cmd.disable_sensitive
 		end
 
 	enable_toolbar
@@ -1135,6 +1138,7 @@ feature -- Element change
 			-- or similar action that needs resynchonization.
 		do
 			if widget.is_displayed then
+				reset_tool_bar_for_readonly_status
 				graph.synchronize
 				reset_history
 				projector.full_project
@@ -1387,30 +1391,30 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 			end
 		end
 
-	is_link_client, is_link_inheritance, is_link_aggregate: BOOLEAN
+	is_link_client, is_link_conforming_inheritance, is_link_non_conforming_inheritance: BOOLEAN
 
 	on_new_client_click
 			-- The user wants a new client-supplier link.
 		do
 			is_link_client := True
-			is_link_inheritance := False
-			is_link_aggregate := False
+			is_link_conforming_inheritance := False
+			is_link_non_conforming_inheritance := False
 		end
 
-	on_new_agg_client_click
+	on_new_non_conforming_inheritance_click
 			-- The user wants a new client-supplier link.
 		do
 			is_link_client := False
-			is_link_inheritance := False
-			is_link_aggregate := True
+			is_link_conforming_inheritance := False
+			is_link_non_conforming_inheritance := True
 		end
 
-	on_new_inherit_click
+	on_new_conforming_inheritance_click
 			-- The user wants a new inheritance link.
 		do
 			is_link_client := False
-			is_link_inheritance := True
-			is_link_aggregate := False
+			is_link_conforming_inheritance := True
+			is_link_non_conforming_inheritance := False
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
@@ -2140,14 +2144,37 @@ feature {NONE} -- Implementation
 			toggle_cluster_cmd.enable_sensitive
 		end
 
+	reset_tool_bar_for_readonly_status
+			-- Reset toolbar for readonly status of stone.
+		local
+			l_is_readonly: BOOLEAN
+		do
+			if class_stone /= Void and then class_stone.group.is_readonly then
+				l_is_readonly := True
+			elseif cluster_stone /= Void and then cluster_stone.group.is_readonly then
+				l_is_readonly := True
+			end
+
+			if l_is_readonly then
+				create_class_cmd.disable_sensitive
+				trash_cmd.disable_sensitive
+				delete_cmd.disable_sensitive
+				create_new_links_cmd.disable_sensitive
+			else
+				create_class_cmd.enable_sensitive
+				trash_cmd.enable_sensitive
+				delete_cmd.enable_sensitive
+				create_new_links_cmd.enable_sensitive
+			end
+		end
+
 	reset_toolbar
 			-- Set toolbar for all views.
 		do
 			zoom_selector.enable_sensitive
-			create_class_cmd.enable_sensitive
-			delete_cmd.enable_sensitive
-			create_new_links_cmd.enable_sensitive
-			trash_cmd.enable_sensitive
+
+			reset_tool_bar_for_readonly_status
+
 			link_tool_cmd.enable_sensitive
 			toggle_inherit_cmd.enable_sensitive
 			toggle_supplier_cmd.enable_sensitive
@@ -2175,6 +2202,11 @@ feature {NONE} -- Implementation
 			view_menu_button.enable_sensitive
 			toggle_force_cmd.enable_sensitive
 			force_settings_cmd.enable_sensitive
+
+			toggle_selected_classes_ancestors_cmd.enable_sensitive
+			toggle_selected_classes_clients_cmd.enable_sensitive
+			toggle_selected_classes_descendents_cmd.enable_sensitive
+			toggle_selected_classes_suppliers_cmd.enable_sensitive
 		end
 
 	project_close_agent: PROCEDURE [ANY, TUPLE]
@@ -2330,12 +2362,14 @@ feature {NONE} -- Implementation keyboard shortcuts
 			accelerators: LIST [EV_ACCELERATOR]
 			l_item: EV_ACCELERATOR
 			alt_pressed, ctrl_pressed, shift_pressed: BOOLEAN
+			l_has_selected_figures: BOOLEAN
 		do
 			accelerators := shortcut_table.item (a_key.code)
+			ctrl_pressed := ev_application.ctrl_pressed
+			alt_pressed := ev_application.alt_pressed
+			shift_pressed := ev_application.shift_pressed
 			if accelerators /= Void then
-				alt_pressed := ev_application.alt_pressed
-				ctrl_pressed := ev_application.ctrl_pressed
-				shift_pressed := ev_application.shift_pressed
+					-- Process accelerators
 				from
 					accelerators.start
 				until
@@ -2350,6 +2384,48 @@ feature {NONE} -- Implementation keyboard shortcuts
 						l_item.actions.call (Void)
 					end
 					accelerators.forth
+				end
+			end
+			if ctrl_pressed and then not alt_pressed and then not shift_pressed then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_a then
+					world.select_displayed_nodes
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_d then
+						-- Conflicts with depth command
+					--world.deselect_all
+				end
+			end
+
+			if not ctrl_pressed and then not alt_pressed and then not shift_pressed then
+				l_has_selected_figures := not world_cell.world.selected_figures.is_empty
+				-- Handle world navigation
+				if a_key.code = {EV_KEY_CONSTANTS}.key_up then
+					-- Key up
+					if l_has_selected_figures then
+
+					else
+						world_cell.vertical_scrollbar.step_backward
+					end
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_down then
+					-- Key down
+					if l_has_selected_figures then
+
+					else
+						world_cell.vertical_scrollbar.step_forward
+					end
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_left then
+					-- Key left
+					if l_has_selected_figures then
+
+					else
+						world_cell.horizontal_scrollbar.step_backward
+					end
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_right then
+					-- Key right
+					if l_has_selected_figures then
+
+					else
+						world_cell.horizontal_scrollbar.step_forward
+					end
 				end
 			end
 		end

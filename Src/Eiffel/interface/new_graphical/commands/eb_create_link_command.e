@@ -28,7 +28,8 @@ feature {NONE} -- Initialization
 			-- Client-supplier links are selected by default.
 		do
 			Precursor (a_target)
-			selected_type := Inheritance
+			selected_type := supplier
+			execute
 		end
 
 feature -- Basic operations
@@ -36,16 +37,16 @@ feature -- Basic operations
 	execute
 			-- Perform operation.
 		do
-			if selected_type = inheritance then
-				tool.on_new_inherit_click
+			if selected_type = conforming_inheritance then
+				tool.on_new_conforming_inheritance_click
+			elseif selected_type = non_conforming_inheritance then
+				tool.on_new_non_conforming_inheritance_click
 			elseif selected_type = Supplier then
 				tool.on_new_client_click
-			else
-				tool.on_new_agg_client_click
 			end
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -54,7 +55,7 @@ feature -- Basic operations
 			create Result.make (Current)
 			initialize_sd_toolbar_item (Result, display_text)
 			current_sd_button := Result
-			Result.select_actions.extend (agent show_text_menu)
+			Result.set_menu_function (agent new_menu)
 		end
 
 feature -- Status report
@@ -62,17 +63,17 @@ feature -- Status report
 	selected_type: INTEGER
 			-- Currently selected type of new links
 
-	inheritance: INTEGER = 1
-	supplier: INTEGER = 2
-	aggregate: INTEGER = 3
+	supplier: INTEGER = 1
+	conforming_inheritance: INTEGER = 2
+	non_conforming_inheritance: INTEGER = 3
 			-- Possible values for `selected_type'.
 
 feature -- Status setting
 
 	select_type (a_type: INTEGER)
-			-- Set current type of link to `Supplier', `Inheritance' or`Aggregate'.
+			-- Set current type of link to `Supplier', `conforming_inheritance' or `non_conforming_inheritance'.
 		require
-			valid_type: a_type = Inheritance or else a_type = Supplier or else a_type = Aggregate
+			valid_type: a_type = conforming_inheritance or else a_type = non_conforming_inheritance or else a_type = Supplier
 		local
 			l_sd_button: like new_sd_toolbar_item
 			tt: STRING_GENERAL
@@ -111,36 +112,36 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
-			if selected_type = inheritance then
+			if selected_type = conforming_inheritance then
 				Result := pixmaps.icon_pixmaps.new_inheritance_link_icon
+			elseif selected_type = non_conforming_inheritance then
+				Result := pixmaps.icon_pixmaps.new_aggregate_supplier_link_icon
 			elseif selected_type = Supplier then
 				Result := pixmaps.icon_pixmaps.new_supplier_link_icon
-			else
-				Result := pixmaps.icon_pixmaps.new_aggregate_supplier_link_icon
 			end
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
-			if selected_type = inheritance then
+			if selected_type = conforming_inheritance then
 				Result := pixmaps.icon_pixmaps.new_inheritance_link_icon_buffer
+			elseif selected_type = non_conforming_inheritance then
+				Result := pixmaps.icon_pixmaps.new_aggregate_supplier_link_icon
 			elseif selected_type = Supplier then
 				Result := pixmaps.icon_pixmaps.new_supplier_link_icon_buffer
-			else
-				Result := pixmaps.icon_pixmaps.new_aggregate_supplier_link_icon_buffer
 			end
 		end
 
 	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
-			if selected_type = inheritance then
-				Result := Interface_names.f_diagram_create_inheritance_links
+			if selected_type = conforming_inheritance then
+				Result := Interface_names.f_diagram_create_conforming_inheritance_links
+			elseif selected_type = non_conforming_inheritance then
+				Result := Interface_names.f_diagram_create_non_conforming_inheritance_links
 			elseif selected_type = Supplier then
 				Result := Interface_names.f_diagram_create_supplier_links
-			else
-				Result := Interface_names.f_diagram_create_aggregate_supplier_links
 			end
 		end
 
@@ -160,34 +161,45 @@ feature {NONE} -- Implementation
 			Result := tooltip
 		end
 
+	new_menu: EV_MENU
+		local
+			menu_item: EV_CHECK_MENU_ITEM
+		do
+			create Result
+
+			create menu_item
+			menu_item.set_text (Interface_names.f_diagram_create_supplier_links)
+			Result.extend (menu_item)
+			if selected_type = Supplier then
+				menu_item.enable_select
+			end
+			menu_item.select_actions.extend (agent select_type (Supplier))
+
+			create menu_item
+			menu_item.set_text (Interface_names.f_diagram_create_conforming_inheritance_links)
+			if selected_type = conforming_inheritance then
+				menu_item.enable_select
+			end
+			menu_item.select_actions.extend (agent select_type (conforming_inheritance))
+			Result.extend (menu_item)
+
+			create menu_item
+			menu_item.set_text (Interface_names.f_diagram_create_non_conforming_inheritance_links)
+			if selected_type = non_conforming_inheritance then
+				menu_item.enable_select
+			end
+			menu_item.select_actions.extend (agent select_type (non_conforming_inheritance))
+			Result.extend (menu_item)
+		end
+
 	show_text_menu
 			-- Show menu to enable selection of link type.
 		local
 			menu: EV_MENU
 			menu_item: EV_CHECK_MENU_ITEM
 		do
-			create menu
-			create menu_item
-			menu_item.set_text (Interface_names.f_diagram_create_inheritance_links)
-			if selected_type = Inheritance then
-				menu_item.enable_select
-			end
-			menu_item.select_actions.extend (agent select_type (Inheritance))
-			menu.extend (menu_item)
-			create menu_item
-			menu_item.set_text (Interface_names.f_diagram_create_supplier_links)
-			menu.extend (menu_item)
-			if selected_type = Supplier then
-				menu_item.enable_select
-			end
-			menu_item.select_actions.extend (agent select_type (Supplier))
-			create menu_item
-			menu_item.set_text (Interface_names.f_diagram_create_aggregate_supplier_links)
-			if selected_type = Aggregate then
-				menu_item.enable_select
-			end
-			menu_item.select_actions.extend (agent select_type (Aggregate))
-			menu.extend (menu_item)
+			menu := new_menu
+
 			menu.show_at (current_widget, current_widget.pointer_position.x, button_height)
 		end
 
@@ -213,7 +225,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Implementation
 			-- Current toggle button.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -237,11 +249,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_CREATE_LINK_COMMAND

@@ -33,8 +33,51 @@ feature -- Access
 		deferred
 		end
 
+	arguments_code: STRING
+			-- Arguments needed for feature if any.
+		deferred
+		end
+
 	name_number: INTEGER
 			-- Number to append to initial feature name.
+
+feature -- Access
+
+	type: STRING
+			-- Full type as string.
+		deferred
+		end
+
+	client_type: ES_CLASS
+			-- Client type of `type'
+
+	supplier_type: ES_CLASS
+			-- Supplier type.
+
+feature -- Element change
+
+	set_client_type (a_type: ES_CLASS)
+			-- Set content of `client_type' to `a_type'.
+		do
+			client_type := a_type
+			if a_type /= Void then
+				feature_clause_selector.export_field.extend (create {EV_LIST_ITEM}.make_with_text (a_type.name))
+			end
+		end
+
+	set_supplier_type (a_type: ES_CLASS)
+			-- Set content of `supplier_type' to `a_type'.
+		do
+			supplier_type := a_type
+			if a_type /= Void and then a_type /= client_type then
+				feature_clause_selector.export_field.extend (create {EV_LIST_ITEM}.make_with_text (a_type.name))
+			end
+		end
+
+	set_type (a_type: STRING)
+			-- Set content of `type_field' to `a_type'.
+		deferred
+		end
 
 feature -- Element change
 
@@ -97,19 +140,21 @@ feature {NONE} -- Implementation
 			l_text: STRING
 		do
 			l_text := comment_field.text
+			create Result.make (7 + l_text.count)
+			Result.append_character ('%T')
+			Result.append_character ('%T')
+			Result.append_character ('%T')
+			Result.append_character ('-')
+			Result.append_character ('-')
+			Result.append_character (' ')
 			if not l_text.is_empty then
-				create Result.make (7 + l_text.count)
-				Result.append_character ('%T')
-				Result.append_character ('%T')
-				Result.append_character ('%T')
-				Result.append_character ('-')
-				Result.append_character ('-')
-				Result.append_character (' ')
 				Result.append (l_text)
-				Result.append_character ('%N')
 			else
-				create Result.make_empty
+				Result.append_character ('`')
+				Result.append (feature_name_field.text)
+				Result.append_character (''')
 			end
+			Result.append_character ('%N')
 		end
 
 	add_label (a_text: STRING; ind: INTEGER)
@@ -134,6 +179,7 @@ feature {NONE} -- Implementation
 			-- Add `a_widget' to `Current', indented.
 		local
 			hb: EV_HORIZONTAL_BOX
+			vb: EV_VERTICAL_BOX
 			tab: EV_CELL
 		do
 			create hb
@@ -141,9 +187,15 @@ feature {NONE} -- Implementation
 			hb.extend (tab)
 			hb.disable_item_expand (tab)
 			hb.extend (a_widget)
-			extend (hb)
+
+			create vb
+			vb.extend (hb)
+			vb.disable_item_expand (vb.last)
+			vb.extend (create {EV_CELL})
+
+			extend (vb)
 			if not enable_resizing then
-				disable_item_expand (hb)
+				vb.disable_item_expand (hb)
 			end
 		end
 
@@ -151,8 +203,11 @@ feature {NONE} -- Implementation
 			-- Add `comment_field' to `Current'.
 		local
 			hb: EV_HORIZONTAL_BOX
+			vb: EV_VERTICAL_BOX
 			tab: EV_CELL
 		do
+			create vb
+
 			create hb
 			tab := new_tab (3)
 			hb.extend (tab)
@@ -161,7 +216,12 @@ feature {NONE} -- Implementation
 			hb.disable_item_expand (hb.last)
 			create comment_field
 			hb.extend (comment_field)
-			extend (hb)
+
+			vb.extend (hb)
+			vb.disable_item_expand (vb.last)
+			vb.extend (create {EV_CELL})
+
+			extend (vb)
 		end
 
 feature -- Adaptation
@@ -171,6 +231,13 @@ feature -- Adaptation
 		local
 			tmpstr: STRING
 		do
+			set_client_type (other.client_type)
+			set_supplier_type (other.supplier_type)
+			set_type (other.type)
+
+			feature_clause_selector.export_field.set_text (other.feature_clause_selector.export_field.text)
+			feature_clause_selector.comment_field.set_text (other.feature_clause_selector.comment_field.text)
+
 			tmpstr := other.feature_name_field.text
 			if tmpstr /= Void and then not tmpstr.is_empty then
 				feature_name_field.set_text (tmpstr)
@@ -193,6 +260,12 @@ feature {EB_FEATURE_EDITOR, EB_FEATURE_COMPOSITION_WIZARD} -- Access
 
 	comment_field: EV_TEXT_FIELD
 
+	syntax_checker: EIFFEL_SYNTAX_CHECKER
+			-- Syntax checking.
+		once
+			create Result
+		end
+
 feature {EV_ANY} -- Contract support
 
 	is_in_default_state: BOOLEAN
@@ -202,7 +275,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -215,22 +288,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_FEATURE_EDITOR

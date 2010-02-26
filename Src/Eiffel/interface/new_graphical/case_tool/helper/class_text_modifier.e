@@ -224,10 +224,16 @@ feature -- Status setting
 			-- Update `date'.
 		local
 			class_file: PLAIN_TEXT_FILE
+			l_prev_date: like date
 		do
+			l_prev_date := date
 			create class_file.make (class_i.file_name)
 			if class_file.exists then
 				date := class_file.date
+			end
+			if date /= l_prev_date then
+					-- If the file modification date has changed then we must reset 'text' as it is now in an invalid state.
+				text := Void
 			end
 		end
 
@@ -314,7 +320,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	remove_ancestor (a_name: STRING)
+	remove_ancestor (a_name: STRING; is_non_conforming: BOOLEAN)
 			-- Remove `a_name' from the parent list of `class_as'.
 		require
 			a_name_not_void: a_name /= Void
@@ -331,26 +337,40 @@ feature -- Modification (Add/Remove feature)
 			end
 			prepare_for_modification
 			if valid_syntax then
-				p := class_as.parent_with_name (a_name)
+				if not is_non_conforming then
+					p := class_as.conforming_parent_with_name (a_name)
+				else
+					p := class_as.non_conforming_parent_with_name (a_name)
+				end
+
 				if p /= Void then
-					remove_code (p.start_position, p.end_position)
-					reparse
-					if valid_syntax then
-						if class_as.conforming_parents = Void or else class_as.conforming_parents.is_empty then
+					if not is_non_conforming then
+						if class_as.conforming_parents.count = 1 then
+								-- There is only one class in the conforming inheritance clause so we remove all of the clause
 							remove_code (
-								position_before_inherit,
-								class_as.inherit_clause_insert_position - 1)
-							reparse
+								position_before_inherit (False),
+								class_as.conforming_inherit_clause_insert_position - 1)
+						else
+								-- Remove the inherited parent declaration
+							remove_code (p.complete_start_position (match_list), p.complete_end_position (match_list))
+						end
+					else
+						if class_as.non_conforming_parents.count = 1 then
+								-- There is only one class in the non-conforming inheritance clause so we remove all of the clause
+							remove_code (
+								position_before_inherit (True),
+								class_as.non_conforming_inherit_clause_insert_position - 1)
+						else
+								-- Remove the inherited parent declaration.
+							remove_code (p.complete_start_position (match_list), p.complete_end_position (match_list))
 						end
 					end
-					if valid_syntax then
-						commit_modification
-					end
+					commit_modification
 				end
 			end
 		end
 
-	add_ancestor (a_name: STRING)
+	add_ancestor (a_name: STRING; is_non_conforming: BOOLEAN)
 			-- Reinclude `code' to inheritance clause.
 		require
 			a_name /= Void
@@ -366,9 +386,25 @@ feature -- Modification (Add/Remove feature)
 			end
 			prepare_for_modification
 			if valid_syntax then
-				insertion_position := class_as.inherit_clause_insert_position
-				if class_as.conforming_parents = Void then
-					insert_code ("inherit%N")
+				if not is_non_conforming then
+						-- Conforming inheritance
+					if class_as.conforming_parents = Void then
+						if class_as.non_conforming_parents /= Void then
+								-- We need to find the position before non-conforming inheritance clause.
+							insertion_position := position_before_inherit (False)
+						else
+							insertion_position := class_as.conforming_inherit_clause_insert_position
+						end
+						insert_code ("inherit%N")
+					else
+						insertion_position := class_as.conforming_inherit_clause_insert_position
+					end
+				else
+						-- Non conforming inheritance
+					insertion_position := class_as.non_conforming_inherit_clause_insert_position
+					if class_as.non_conforming_parents = Void then
+						insert_code ("inherit {NONE}%N")
+					end
 				end
 				insert_code ("%T" + a_name + "%N%N")
 				commit_modification
@@ -535,61 +571,29 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	new_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER)
-			-- Complete steps for adding a supplier of `preset_type'.
+	new_feature_from_diagram (client_type, supplier_type: ES_CLASS; x_pos, y_pos, screen_w, screen_h: INTEGER; query_only: BOOLEAN)
+			-- Complete steps for adding a supplier of `supplier_type' to `client_type'.
 		require
-			preset_type_not_void: preset_type /= Void
+			supplier_type_not_void: supplier_type /= Void
 		local
 			l_error: ES_ERROR_PROMPT
-			qcw: EB_QUERY_COMPOSITION_WIZARD
+			qcw: EB_FEATURE_COMPOSITION_WIZARD
 			x, y: INTEGER
 		do
 			context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Wait_cursor)
 			last_feature_as := Void
 			prepare_for_modification
 			if valid_syntax then
-				create qcw.make
-				qcw.set_type (preset_type)
-				qcw.set_name_number (context_editor.graph.next_feature_name_number)
-				if x_pos + qcw.width > screen_w then
-					x := screen_w - qcw.width - 150
+				if query_only then
+					create {EB_QUERY_COMPOSITION_WIZARD} qcw.make
 				else
-					x := (x_pos - 150).max (0)
+					create qcw.make
 				end
-				if y_pos + qcw.height > screen_h then
-					y := screen_h - qcw.height - 180
-				else
-					y := (y_pos - 150).max (0)
-				end
-				qcw.set_position (x, y)
-				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
-				execute_wizard_from_diagram (qcw)
-			else
-				create l_error.make_standard (Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
-				l_error.show_on_active_window
-				extend_from_diagram_successful := False
-				invalidate_text
-				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
-			end
-		end
 
-	new_aggregate_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER)
-			-- Complete steps for adding a supplier of `preset_type'.
-		require
-			preset_type_not_void: preset_type /= Void
-		local
-			l_error: ES_ERROR_PROMPT
-			qcw: EB_QUERY_COMPOSITION_WIZARD
-			x, y: INTEGER
-		do
-			context_editor.develop_window.window.set_pointer_style (context_editor.Default_pixmaps.Wait_cursor)
-			last_feature_as := Void
-			prepare_for_modification
-			if valid_syntax then
-				create qcw.make
-				qcw.set_type (preset_type)
+				qcw.set_client_type (client_type)
+				qcw.set_supplier_type (supplier_type)
+
 				qcw.set_name_number (context_editor.graph.next_feature_name_number)
-				qcw.enable_expanded_needed
 				if x_pos + qcw.width > screen_w then
 					x := screen_w - qcw.width - 150
 				else
@@ -601,14 +605,14 @@ feature -- Modification (Add/Remove feature)
 					y := (y_pos - 150).max (0)
 				end
 				qcw.set_position (x, y)
-				context_editor.develop_window.window.set_pointer_style (context_editor.Default_pixmaps.Standard_cursor)
+				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
 				execute_wizard_from_diagram (qcw)
 			else
 				create l_error.make_standard (Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
 				l_error.show_on_active_window
 				extend_from_diagram_successful := False
 				invalidate_text
-				context_editor.develop_window.window.set_pointer_style (context_editor.Default_pixmaps.Standard_cursor)
+				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
 			end
 		end
 
@@ -628,6 +632,8 @@ feature -- Modification (Add/Remove feature)
 						set_position_by_feature_clause ("", fc_Element_change)
 						insert_code (setter_procedure (
 							fcw.feature_name,
+							fcw.setter_name,
+							fcw.feature_arguments,
 							fcw.feature_type,
 							fcw.precondition
 							))
@@ -989,11 +995,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setter_procedure (a_attribute, a_type, a_pc: STRING): STRING
-			-- Add in "Element change" for `a_attribute'.
+	setter_procedure (a_name, a_setter_name, a_arguments, a_type, a_pc: STRING): STRING
+			-- Add in "Element change" for `a_name'.
 			-- If `a_pc' not Void, add as precondition.
 		require
-			a_attribute_not_void: a_attribute /= Void
+			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 		local
 			s: STRING
@@ -1001,24 +1007,34 @@ feature {NONE} -- Implementation
 			preposition: STRING
 		do
 			create s.make (60)
-			first_character := a_attribute.item (1)
+			first_character := a_name.item (1)
 			if first_character = 'a' or first_character = 'e' or first_character = 'i' or
 				first_character = 'o' or first_character = 'u' then
-
 				preposition := "an_"
 			else
 				preposition := "a_"
 			end
-			s.append ("%Tset_" + a_attribute + " (" + preposition + a_attribute + ": like " + a_attribute + ") is%N")
-			s.append ("%T%T%T-- Set `" + a_attribute + "' to `" + preposition + a_attribute + "'.%N")
-			if a_pc /= Void then
+			s.append ("%T" + a_setter_name + " (" + preposition + a_name + ": like " + a_name)
+			if a_arguments /= Void then
+				s.append ("; " + a_arguments)
+			end
+			s.append (")%N")
+			s.append ("%T%T%T-- Assign `" + a_name + "' with `" + preposition + a_name + "'.%N")
+			if a_pc /= Void and then a_arguments = Void then
 				s.append ("%T%Trequire%N")
 				s.append ("%T%T%T" + a_pc + "%N")
 			end
 			s.append ("%T%Tdo%N")
-			s.append ("%T%T%T" + a_attribute + " := " + preposition + a_attribute + "%N")
-			s.append ("%T%Tensure%N")
-			s.append ("%T%T%T" + a_attribute + "_assigned: " + a_attribute + " = " + preposition + a_attribute + "%N")
+			if a_arguments = Void then
+				s.append ("%T%T%T" + a_name + " := " + preposition + a_name + "%N")
+			else
+				s.append ("%T%T%T--| Assigner code%N")
+			end
+
+			if a_arguments = Void then
+				s.append ("%T%Tensure%N")
+				s.append ("%T%T%T" + a_name + "_assigned: " + a_name + " = " + preposition + a_name + "%N")
+			end
 			s.append ("%T%Tend%N")
 			s.append ("%N")
 			Result := s
@@ -1199,18 +1215,26 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	position_before_inherit: INTEGER
+	position_before_inherit (is_non_conforming: BOOLEAN): INTEGER
 			-- Position in `text' before inherit keyword.
 		local
 			i: INTEGER
+			l_inherit_string: STRING
+			l_end_pos: INTEGER
 		do
 			from
-				i := class_as.inherit_clause_insert_position
+				if not is_non_conforming then
+					l_end_pos := class_as.conforming_inherit_clause_insert_position
+				else
+					l_end_pos := class_as.non_conforming_inherit_clause_insert_position
+				end
+				i := l_end_pos - 1
+				l_inherit_string := "inherit"
 			until
-				i <= 0 or Result > 0
+				Result > 0 and then Result < l_end_pos
 			loop
+				Result := text.substring_index (l_inherit_string, i)
 				i := i - 1
-				Result := text.substring_index ("inherit", i)
 			end
 		end
 
@@ -1282,6 +1306,8 @@ feature {NONE} -- Implementation
 					set_position_by_feature_clause ("", fc_Element_change)
 					new_code := setter_procedure (
 						fcw.feature_name,
+						fcw.setter_name,
+						fcw.feature_arguments,
 						fcw.feature_type,
 						fcw.precondition
 						)
@@ -1357,7 +1383,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

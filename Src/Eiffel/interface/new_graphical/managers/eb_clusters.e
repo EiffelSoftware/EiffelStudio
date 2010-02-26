@@ -513,6 +513,9 @@ feature -- Element change
 			system.add_unref_class (l_new_class)
 
 			last_added_class := l_new_class
+
+			system.do_recompilation (True, False, False)
+			window_manager.synchronize_all
 		ensure
 			last_added_class_set: last_added_class /= Void
 		end
@@ -932,7 +935,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

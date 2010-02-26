@@ -15,8 +15,7 @@ inherit
 	EB_QUERY_EDITOR
 		redefine
 			initialize,
-			is_attribute,
-			enable_expanded_needed
+			is_attribute
 		end
 
 	EB_ASSERTION_GENERATOR
@@ -30,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Create as attribute wizard.
 		local
 			hb: EV_HORIZONTAL_BOX
+			vb: EV_VERTICAL_BOX
 			tab: EV_CELL
 		do
 			Precursor
@@ -43,19 +43,31 @@ feature {NONE} -- Initialization
 			extend (tab)
 			disable_item_expand (tab)
 
+
+
 			create hb
 			hb.extend (new_tab (1))
 			hb.disable_item_expand (hb.last)
-			create feature_name_field.make_with_text ("new_feature")
+			create feature_name_field.make_with_text ("new")
 			feature_name_field.change_actions.force_extend (agent on_declaration_change)
-			feature_name_field.set_minimum_width (70)
+
+
 			hb.extend (feature_name_field)
 			hb.extend (new_label (": "))
 			hb.disable_item_expand (hb.last)
+
+			create vb
+			vb.extend (hb)
+			vb.disable_item_expand (vb.last)
+			vb.extend (create {EV_CELL})
+
+			create hb
+			hb.extend (vb)
+
 			create type_selector
 			type_selector.selector.change_actions.extend (agent on_declaration_change)
 			hb.extend (type_selector)
-			hb.extend (create {EV_CELL})
+
 			extend (hb)
 			disable_item_expand (hb)
 			add_comment_field
@@ -66,11 +78,14 @@ feature {NONE} -- Initialization
 			invariant_field.focus_in_actions.extend (agent on_invariant_focus_gain)
 			add_indented (invariant_field, 1, False)
 
-			create procedure_check_box.make_with_text (interface_names.l_generate_set_procedure)
-			extend (procedure_check_box)
-			disable_item_expand (procedure_check_box)
+			create tab
+			tab.set_minimum_height (10)
+			extend (tab)
+			disable_item_expand (tab)
 
+			add_setter
 		end
+
 
 feature -- Access
 
@@ -78,9 +93,24 @@ feature -- Access
 			-- Current text of the feature in the wizard.
 		do
 			create Result.make (100)
-			Result.append ("%T" + feature_name_field.text + ": " + type_selector.code + "%N")
-			Result.append (comments_code)
+			Result.append ("%T" + feature_name_field.text + ": " + type_selector.code)
+			if assigner_check_box.is_selected then
+				Result.append (" assign " + setter_text.text)
+			end
 			Result.append ("%N")
+			Result.append (comments_code)
+
+			if type_selector.detachable_check_box.is_sensitive and then not type_selector.detachable_check_box.is_selected then
+				Result.append ("%T%Tattribute Result := ({like " + feature_name_field.text + "}).default end --| Remove line when attached attribute is correctly assigned%N")
+			end
+			Result.append ("%N")
+		end
+
+
+	arguments_code: STRING
+			-- <Precursor>
+		do
+			-- No arguments needed for attribute so return Void
 		end
 
 	precondition: STRING
@@ -113,36 +143,15 @@ feature -- Element change
 		do
 			name_number := a_number
 			if name_number /= 0 then
-				feature_name_field.set_text	("new_feature" + "_" + name_number.out)
+				feature_name_field.set_text	("new_" + name_number.out)
 			end
 		end
 
 feature -- Status report
 
-	generate_setter_procedure: BOOLEAN
-			-- Should a set-procedure be generated?
-		do
-			Result := procedure_check_box.is_selected
-		end
-
 	is_attribute: BOOLEAN = True
 			-- Is `Current' an attribute editor?
 
-feature {EB_QUERY_COMPOSITION_WIZARD} -- Status setting
-
-	enable_expanded_needed
-			-- Set `expanded_needed' to `True'.
-		local
-			hb_type: EV_HORIZONTAL_BOX
-		do
-			Precursor
-			hb_type ?= type_selector.parent
-			check hb_type /= Void end
-			hb_type.prune (type_selector)
-			hb_type.extend (new_label ("expanded "))
-			hb_type.disable_item_expand (hb_type.last)
-			hb_type.extend (type_selector)
-		end
 
 feature {NONE} -- Implementation
 
@@ -238,16 +247,12 @@ feature {NONE} -- Implementation
 			-- Editor that lets the user type an invariant
 			-- for current attribute.
 
-	procedure_check_box: EV_CHECK_BUTTON
-			-- Selector for automatic generation of set-procedure
-			-- for current attribute in "Element change".
-
 	precondition_selector: EV_COMBO_BOX;
 			-- Edit field where the user can select from
 			-- generated preconditions or type her own.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -260,22 +265,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_ATTRIBUTE_EDITOR

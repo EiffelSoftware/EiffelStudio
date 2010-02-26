@@ -944,7 +944,7 @@ feature {NONE} -- Execution
 					workbench.is_in_stable_state
 				then
 					if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (ctxt) then
-						create new_class_win.make_default (parent)
+						create new_class_win.make_default (parent, False)
 						new_class_win.set_stone_when_finished
 						new_class_win.call (class_address.text)
 					else
@@ -2635,7 +2635,7 @@ feature {NONE} -- Choice Positioning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -15,32 +15,55 @@ inherit
 		undefine
 			adapt
 		redefine
-			is_function
+			is_function,
+			initialize,
+			body_code
 		end
 
 	EB_QUERY_EDITOR
 		undefine
 			initialize
 		redefine
-			is_function,
-			enable_expanded_needed
+			is_function
 		end
 
 feature {NONE} -- Initialization
 
+	initialize
+			-- <Precursor>
+		do
+			Precursor {EB_ROUTINE_EDITOR}
+			add_setter
+		end
+
 	routine_is_part: EV_HORIZONTAL_BOX
-			-- Box with `add_argument_button' and "): is".
+			-- Box with `add_argument_button' and "): ".
 		local
 			c: EV_CELL
+			l_vbox: EV_VERTICAL_BOX
 		do
 			create Result
-			Result.extend (add_argument_button)
+			create l_vbox
+			l_vbox.extend (add_argument_button)
+			l_vbox.disable_item_expand (l_vbox.last)
+			l_vbox.extend (create {EV_CELL})
+			Result.extend (l_vbox)
 			Result.disable_item_expand (Result.last)
-			Result.extend (new_label ("): "))
+
+
+			create l_vbox
+			l_vbox.extend (new_label ("): "))
+			l_vbox.disable_item_expand (l_vbox.last)
+			l_vbox.extend (create {EV_CELL})
+			Result.extend (l_vbox)
 			Result.disable_item_expand (Result.last)
+
+			create l_vbox
 			create type_selector
-			Result.extend (type_selector)
-			Result.extend (new_label (" is"))
+			l_vbox.extend (type_selector)
+			l_vbox.disable_item_expand (l_vbox.last)
+			l_vbox.extend (create {EV_CELL})
+			Result.extend (l_vbox)
 			Result.disable_item_expand (Result.last)
 			create c
 			extend (c)
@@ -51,11 +74,35 @@ feature -- Access
 
 	code: STRING
 			-- Current text of the feature in the wizard.
+		local
+			l_arguments_code: STRING
 		do
 			create Result.make (100)
-			Result.append ("%T" + feature_name_field.text + arguments_code + ": " + type_selector.code + " is%N")
+			Result.append ("%T" + feature_name_field.text)
+			l_arguments_code := arguments_code
+			if
+				l_arguments_code /= Void and then not l_arguments_code.is_empty
+			then
+				Result.append (" (" + l_arguments_code + ")")
+			end
+			 Result.append (": " + type_selector.code)
+			if assigner_check_box.is_selected then
+				Result.append (" assign " + setter_text.text)
+			end
+			Result.append ("%N")
 			Result.append (comments_code)
 			Result.append (routine_code)
+		end
+
+feature {NONE} -- Implementation
+
+	body_code: STRING
+			-- Code for routine body.
+		do
+			Result := Precursor
+			if (once_button.is_selected or do_button.is_selected) and then type_selector.detachable_check_box.is_sensitive and then not type_selector.detachable_check_box.is_selected then
+				Result.append ("%T%T%TResult := ({like " + feature_name_field.text + "}).default -- Remove line when function is implemented.%N")
+			end
 		end
 
 feature -- Status report
@@ -63,27 +110,8 @@ feature -- Status report
 	is_function: BOOLEAN = True
 			-- Is `Current' a function editor?
 
-feature {EB_QUERY_COMPOSITION_WIZARD} -- Status setting
-
-	enable_expanded_needed
-			-- Set `expanded_needed' to `True'.
-		local
-			hb_type: EV_HORIZONTAL_BOX
-		do
-			Precursor
-			hb_type ?= type_selector.parent
-			check hb_type /= Void end
-			hb_type.prune (hb_type.last)
-			hb_type.prune (hb_type.last)
-			hb_type.extend (new_label ("expanded "))
-			hb_type.disable_item_expand (hb_type.last)
-			hb_type.extend (type_selector)
-			hb_type.extend (new_label (" is"))
-			hb_type.disable_item_expand (hb_type.last)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -96,22 +124,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_FUNCTION_EDITOR

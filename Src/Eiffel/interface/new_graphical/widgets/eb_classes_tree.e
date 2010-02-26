@@ -71,7 +71,8 @@ inherit
 create
 	make,
 	make_without_targets,
-	make_with_options
+	make_with_options,
+	make_for_class_selection
 
 feature {NONE} -- Initialization
 
@@ -100,6 +101,14 @@ feature {NONE} -- Initialization
 		do
 			make (a_context_menu_factory)
 			has_targets := False
+		end
+
+	make_for_class_selection (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY)
+			-- Create a tree where only existing classes may be shown.
+		do
+			make (a_context_menu_factory)
+			has_targets := False
+			is_class_selection_only := True
 		end
 
 	make_with_options (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_show_targets, a_show_classes: BOOLEAN)
@@ -223,14 +232,20 @@ feature -- Activation
 			loop
 				l_item ?= a_list.item
 				if l_item /= Void then
-					l_item.set_associated_textable (a_textable)
-
 					if l_item.text.is_equal (l_item.dummy_string) then
 						-- Current `a_list' contain dummy node, we set `a_textable' with it in expand actions
 						l_actions ?= a_list
 						if l_actions /= Void then
 							l_actions.expand_actions.extend_kamikaze (agent associate_textable_recursively (a_textable, a_list))
 						end
+					end
+					if is_class_selection_only then
+						if attached {EB_CLASSES_TREE_CLASS_ITEM} l_item then
+								-- We only want class items to change the textable.
+							l_item.set_associated_textable (a_textable)
+						end
+					else
+						l_item.set_associated_textable (a_textable)
 					end
 				end
 
@@ -905,6 +920,7 @@ feature {NONE} -- Implementation
 			end
 			if not a_header.is_empty then
 				a_list.extend (a_header)
+				a_header.expand
 			end
 		end
 
@@ -1032,6 +1048,9 @@ feature {NONE} -- Implementation
 	is_show_classes: BOOLEAN
 			-- Show classes notes?
 
+	is_class_selection_only: BOOLEAN
+			-- Is tree only used for the purpose of selecting an existing class from the universe?
+
 feature {NONE} -- Factory
 
 	create_folder_item (a_group: EB_SORTED_CLUSTER): EB_CLASSES_TREE_FOLDER_ITEM
@@ -1074,7 +1093,7 @@ invariant
 	expanded_clusters_not_void: expanded_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

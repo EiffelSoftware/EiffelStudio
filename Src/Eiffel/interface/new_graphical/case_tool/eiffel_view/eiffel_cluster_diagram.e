@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			drop_y := context_editor.pointer_position.y
 			is_dropped_on_diagram := True
 			clf := top_cluster_at (Current, drop_x, drop_y)
-			create dial.make_default (context_editor.develop_window)
+			create dial.make_default (context_editor.develop_window, True)
 			if clf /= Void then
 				l_cluster ?= clf.model.group
 				if l_cluster /= Void then
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 			is_dropped_on_diagram := False
 		end
 
-feature {NONE} -- Cluster manger observer
+feature {NONE} -- Cluster manager observer
 
 	on_class_moved (a_class: CONF_CLASS; old_cluster: CONF_GROUP; old_path: STRING)
 			-- `a_class' has been moved away from `old_cluster'.
@@ -554,15 +554,7 @@ feature {NONE} -- Cluster manger observer
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	window_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
-			-- Status bar of window
-		do
-			Result := context_editor.develop_window.status_bar
-		ensure
-			Result_not_void: Result /= Void
-		end
+feature {EB_CREATE_CLASS_DIAGRAM_COMMAND} -- Element Change
 
 	add_to_diagram (a_class: CLASS_I)
 			-- Add `a_class' to diagram
@@ -685,6 +677,16 @@ feature {NONE} -- Implementation
 			if is_right_angles then
 				apply_right_angles
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	window_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
+			-- Status bar of window
+		do
+			Result := context_editor.develop_window.status_bar
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	move_class (a_fig: EIFFEL_CLASS_FIGURE; drop_x, drop_y: INTEGER)
@@ -1171,7 +1173,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1184,22 +1186,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_CLUSTER_DIAGRAM

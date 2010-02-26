@@ -86,7 +86,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default (a_target: EB_HISTORY_OWNER)
+	make_default (a_target: EB_HISTORY_OWNER; a_from_diagram: BOOLEAN)
 		require
 			a_target_not_void: a_target /= Void
 		local
@@ -105,14 +105,17 @@ feature {NONE} -- Initialization
 
 			make_with_title (Interface_names.t_new_class)
 			set_icon_pixmap (pixmaps.icon_pixmaps.new_class_icon)
-			set_height (Layout_constants.dialog_unit_to_pixels (400))
-			set_width (Layout_constants.dialog_unit_to_pixels (300))
+
+			if not a_from_diagram then
+				set_height (Layout_constants.dialog_unit_to_pixels (400))
+				set_width (Layout_constants.dialog_unit_to_pixels (300))
+			end
 
 				-- Build the widgets
 			create class_entry
 			class_entry.change_actions.extend (agent update_file_entry)
 			create file_entry
-			create creation_entry
+			create creation_entry.make_with_text ("make")
 			l_window := window_manager.last_focused_development_window
 			if l_window /= Void then
 				l_factory := l_window.menus.context_menu_factory
@@ -125,7 +128,6 @@ feature {NONE} -- Initialization
 			create expanded_check.make_with_text (Interface_names.L_expanded)
 			expanded_check.select_actions.extend (agent on_expanded)
 			create empty_check.make_with_text (Interface_names.L_not_empty)
-			empty_check.enable_select
 			create creation_check.make_with_text (Interface_names.l_generate_creation)
 			creation_check.select_actions.extend (agent on_creation_check)
 			create parents_list.make (agent compute_group)
@@ -149,12 +151,15 @@ feature {NONE} -- Initialization
 			extend_no_expand (bbox, name_label)
 			bbox.extend (class_entry)
 			extend_no_expand (vb, bbox)
-			create bbox
-			extend_no_expand (bbox, file_label)
-			bbox.extend (file_entry)
-			extend_no_expand (vb, bbox)
-			extend_no_expand (vb, cluster_label)
-			vb.extend (cluster_list)
+--| IEK File name should always be class name.
+--			create bbox
+--			extend_no_expand (bbox, file_label)
+--			bbox.extend (file_entry)
+--			extend_no_expand (vb, bbox)
+			if not a_from_diagram then
+				extend_no_expand (vb, cluster_label)
+				vb.extend (cluster_list)
+			end
 			vb.set_border_width (Layout_constants.Small_border_size)
 			identification_frame.extend (vb)
 
@@ -180,6 +185,7 @@ feature {NONE} -- Initialization
 			properties_frame.extend (vb)
 
 			create parents_frame.make_with_text (Interface_names.l_parents)
+
 			create vb
 			vb.extend (parents_list)
 			vb.set_border_width (Layout_constants.Small_border_size)
@@ -205,8 +211,11 @@ feature {NONE} -- Initialization
 			vb.extend (identification_frame)
 			vb.extend (properties_frame)
 			vb.disable_item_expand (properties_frame)
-			vb.extend (parents_frame)
-			vb.disable_item_expand (parents_frame)
+			if not a_from_diagram then
+				vb.extend (parents_frame)
+				vb.disable_item_expand (parents_frame)
+			end
+
 			extend_no_expand (vb, buttons_box)
 
 				-- Add the main container to the dialog.
@@ -267,7 +276,7 @@ feature -- Basic operations
 	call_default
 			-- Create a new dialog with a pre-computed class name.
 		do
-			call ("NEW_CLASS_" + new_class_counter.item.out)
+			call ("NEW_" + new_class_counter.item.out)
 			new_class_counter.put (new_class_counter.item + 1)
 		end
 
@@ -278,7 +287,7 @@ feature -- Basic operations
 		local
 			class_n, str: STRING
 		do
-			class_n := "NEW_CLASS_" + new_class_counter.item.out
+			class_n := "NEW_" + new_class_counter.item.out
 			new_class_counter.put (new_class_counter.item + 1)
 			cluster_list.show_subfolder (a_stone.group, a_stone.path)
 			str := class_n.as_upper
@@ -589,10 +598,12 @@ feature {NONE} -- Implementation
 		local
 			curr_selected_item: EV_TREE_NODE
 		do
-				--| Make sure the currently selected item is visible
-			curr_selected_item := cluster_list.selected_item
-			if curr_selected_item /= Void then
-				cluster_list.ensure_item_visible (curr_selected_item)
+			if cluster_list.is_displayed then
+					--| Make sure the currently selected item is visible
+				curr_selected_item := cluster_list.selected_item
+				if curr_selected_item /= Void then
+					cluster_list.ensure_item_visible (curr_selected_item)
+				end
 			end
 
 				--| Make sure the text in the class entry is entirely visible
@@ -609,7 +620,7 @@ feature {NONE} -- Implementation
 		local
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
-			l_classes := cluster.classes
+			l_classes := cluster.accessible_classes
 			if l_classes.has_key (class_name) and then l_classes.found_item.is_valid then
 				aok := False
 				prompts.show_error_prompt (Warning_messages.w_class_already_exists (class_name), Current, Void)
@@ -816,7 +827,7 @@ invariant
 	cluster_implies_path: cluster /= Void implies path /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -840,11 +851,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

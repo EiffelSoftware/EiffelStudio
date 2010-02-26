@@ -177,7 +177,7 @@ feature -- Access
 		do
 			l_a_class_cluster := a_class.cluster
 			l_group := a_class.class_i.group
-			create Result.make (100)
+			create Result.make (10)
 			if l_a_class_cluster = Void then
 				l_target := a_class.class_i.group.target
 				from
@@ -266,7 +266,7 @@ feature -- Access
 			cluster_from_interface_not_void: Result /= Void
 		end
 
-	inheritance_link_connecting (a_descendant, an_ancestor: EG_LINKABLE): ES_INHERITANCE_LINK
+	inheritance_link_connecting (a_descendant, an_ancestor: EG_LINKABLE; is_non_conforming: BOOLEAN): ES_INHERITANCE_LINK
 			-- Inheritance link connection `a_descendant' with `an_ancestor' if any.
 		require
 			a_descendant_not_void: a_descendant /= Void
@@ -278,6 +278,9 @@ feature -- Access
 			inheritance_links_lookup.search (l_tuple)
 			if inheritance_links_lookup.found then
 				Result := inheritance_links_lookup.found_item
+				if Result /= Void and then Result.is_non_conforming /= is_non_conforming then
+					Result := Void
+				end
 			end
 		end
 
@@ -579,44 +582,9 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 
 	add_ancestor_relations (a_class: ES_CLASS)
 			-- Add links to ancestors classes of `a_class' in the graph.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_compiled: a_class.class_i.is_compiled
-		local
-			l: FIXED_LIST [CL_TYPE_A]
-			cl: CLASS_I
-			es_class: ES_CLASS
-			es_classes: ARRAYED_LIST [ES_CLASS]
-			l_link: ES_INHERITANCE_LINK
 		do
-			l := a_class.class_i.compiled_class.conforming_parents
-				--| FIXME IEK Add non-conforming parents when diagramming support has been added.
-			if l /= Void then
-				from l.start until l.after loop
-					cl := l.item.associated_class.original_class
-					if cl /= Void then
-						es_classes := possible_linkable_node (a_class)
-						from
-							es_classes.start
-						until
-							es_classes.after
-						loop
-							es_class := es_classes.item
-							if es_class.class_i = cl and then es_class.is_needed_on_diagram then
-								l_link := inheritance_link_connecting (a_class, es_class)
-								if l_link = Void then
-									create {ES_INHERITANCE_LINK} l_link.make_with_classes (a_class, es_class)
-									add_link (l_link)
-								elseif not l_link.is_needed_on_diagram then
-									l_link.enable_needed_on_diagram
-								end
-							end
-							es_classes.forth
-						end
-					end
-					l.forth
-				end
-			end
+			add_ancestor_relations_internal (a_class, False)
+			add_ancestor_relations_internal (a_class, True)
 		end
 
 	add_descendant_relations (a_class: ES_CLASS)
@@ -630,6 +598,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			es_class: ES_CLASS
 			es_classes: ARRAYED_LIST [ES_CLASS]
 			l_link: ES_INHERITANCE_LINK
+			l_is_non_conforming: BOOLEAN
 		do
 			l := a_class.class_i.compiled_class.direct_descendants
 			if l /= Void then
@@ -643,11 +612,12 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 							es_classes.after
 						loop
 							es_class := es_classes.item
-								-- For now only add conforming descendents.
-							if es_class.class_i = cl and then es_class.is_needed_on_diagram and then (es_class.class_c.non_conforming_parents = Void or else not es_class.class_c.non_conforming_parents_classes.has (a_class.class_c)) then
-								l_link := inheritance_link_connecting (es_class, a_class)
+							if es_class.class_i = cl and then es_class.is_needed_on_diagram then
+								l_is_non_conforming := es_class.class_c.non_conforming_parents /= Void and then es_class.class_c.non_conforming_parents_classes.has (a_class.class_c)
+								l_link := inheritance_link_connecting (es_class, a_class, l_is_non_conforming)
 								if l_link = Void then
-									create {ES_INHERITANCE_LINK} l_link.make_with_classes (es_class, a_class)
+									create {ES_INHERITANCE_LINK} l_link.make (es_class, a_class, False)
+									l_link.set_is_non_conforming (l_is_non_conforming)
 									add_link (l_link)
 								elseif not l_link.is_needed_on_diagram then
 									l_link.enable_needed_on_diagram
@@ -681,7 +651,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 				if cf.is_needed_on_diagram and then cf.has_supplier (a_class) then
 					cs_link ?= client_supplier_link_connecting (cf, a_class)
 					if cs_link = Void then
-						create cs_link.make (cf, a_class)
+						create cs_link.make (cf, a_class, True)
 						add_link (cs_link)
 					elseif not cs_link.is_needed_on_diagram then
 						cs_link.enable_needed_on_diagram
@@ -708,7 +678,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 				if cf.is_needed_on_diagram and then a_class.has_supplier (cf) then
 					cs_link ?= client_supplier_link_connecting (a_class, cf)
 					if cs_link = Void then
-						create cs_link.make (a_class, cf)
+						create cs_link.make (a_class, cf, True)
 						add_link (cs_link)
 					elseif not cs_link.is_needed_on_diagram then
 						cs_link.enable_needed_on_diagram
@@ -731,6 +701,55 @@ feature {CLASS_TEXT_MODIFIER} -- Status report
 		end
 
 feature {NONE} -- Implementation
+
+
+	add_ancestor_relations_internal (a_class: ES_CLASS; is_non_conforming: BOOLEAN)
+			-- Add links to ancestors classes of `a_class' in the graph.
+			-- If `is_non_conforming' then iterate the non-conforming parents.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_compiled: a_class.class_i.is_compiled
+		local
+			l: FIXED_LIST [CL_TYPE_A]
+			cl: CLASS_I
+			es_class: ES_CLASS
+			es_classes: ARRAYED_LIST [ES_CLASS]
+			l_link: ES_INHERITANCE_LINK
+		do
+			if not is_non_conforming then
+				l := a_class.class_i.compiled_class.conforming_parents
+			else
+				l := a_class.class_i.compiled_class.non_conforming_parents
+			end
+
+			if l /= Void then
+				from l.start until l.after loop
+					cl := l.item.associated_class.original_class
+					if cl /= Void then
+						es_classes := possible_linkable_node (a_class)
+						from
+							es_classes.start
+						until
+							es_classes.after
+						loop
+							es_class := es_classes.item
+							if es_class.class_i = cl and then es_class.is_needed_on_diagram then
+								l_link := inheritance_link_connecting (a_class, es_class, is_non_conforming)
+								if l_link = Void then
+									create {ES_INHERITANCE_LINK} l_link.make (a_class, es_class, False)
+									l_link.set_is_non_conforming (is_non_conforming)
+									add_link (l_link)
+								elseif not l_link.is_needed_on_diagram then
+									l_link.enable_needed_on_diagram
+								end
+							end
+							es_classes.forth
+						end
+					end
+					l.forth
+				end
+			end
+		end
 
 	lookup_name_of_class (a_class: CLASS_I): STRING
 			-- Unique lookup name of `a_class'
@@ -936,7 +955,7 @@ invariant
 	client_supplier_links_lookup_not_void: client_supplier_links_lookup /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -949,22 +968,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ES_GRAPH

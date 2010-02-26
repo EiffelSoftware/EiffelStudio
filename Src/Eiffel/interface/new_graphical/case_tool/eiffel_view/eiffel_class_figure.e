@@ -273,11 +273,13 @@ feature {NONE} -- Implementation
 			ce: ES_DIAGRAM_TOOL_PANEL
 			new_classes: LIST [ES_CLASS]
 			layout: EIFFEL_INHERITANCE_LAYOUT
+			l_shift_pressed: BOOLEAN
 		do
 			if button = 1 then
+				l_shift_pressed := ev_application.shift_pressed
 				ce := world.context_editor
 				cg := ce.class_graph
-				if cg /= Void then
+				if cg /= Void and then l_shift_pressed then
 					old_es_center := cg.center_class
 					old_center ?= world.figure_from_model (old_es_center)
 					check
@@ -342,6 +344,8 @@ feature {NONE} -- Implementation
 					end
 					world.update_cluster_legend
 					world.context_editor.develop_window.tools.set_stone (create {CLASSI_STONE}.make (model.class_i))
+				elseif l_shift_pressed then
+					world.context_editor.develop_window.tools.set_stone (create {CLASSI_STONE}.make (model.class_i))
 				end
 			end
 		end
@@ -383,17 +387,16 @@ feature {NONE} -- Implementation (adding relations)
 					interface_names.l_class_is_not_editable.as_string_32 + warning_messages.w_file_not_exist (a_stone.class_i.file_name),
 					world.context_editor.develop_window.window, Void)
 			elseif class_file.is_writable and then not a_stone.class_i.group.is_readonly then
-				if world.context_editor.is_link_inheritance then
+				if world.context_editor.is_link_client then
+					add_client_relation (a_stone.source)
+				else
+						-- We are adding an inheritance link.
 					if drop_allowed (a_stone) then
-						add_inheritance_relation (a_stone.source)
+						add_inheritance_relation (a_stone.source, world.context_editor.is_link_non_conforming_inheritance)
 					else
 						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
-							interface_names.l_inheritance_cycle_was_created, world.context_editor.develop_window.window, agent add_inheritance_relation (a_stone.source), Void)
+							interface_names.l_inheritance_cycle_was_created, world.context_editor.develop_window.window, agent add_inheritance_relation (a_stone.source, world.context_editor.is_link_non_conforming_inheritance), Void)
 					end
-				elseif world.context_editor.is_link_client then
-					add_client_relation (a_stone.source, False)
-				elseif world.context_editor.is_link_aggregate then
-					add_client_relation (a_stone.source, True)
 				end
 			else
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (
@@ -401,7 +404,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	add_inheritance_relation (other: EIFFEL_CLASS_FIGURE)
+	add_inheritance_relation (other: EIFFEL_CLASS_FIGURE; is_non_conforming: BOOLEAN)
 			-- Add `Current' to others inheritance clause.
 		local
 			es_link: ES_INHERITANCE_LINK
@@ -409,44 +412,44 @@ feature {NONE} -- Implementation (adding relations)
 		do
 			if world.model.has_node (other.model) then
 				other_model := other.model
-				other_model.code_generator.add_ancestor (model.class_i.name)
+				other_model.code_generator.add_ancestor (model.class_i.name, is_non_conforming)
 				if not other_model.code_generator.class_modified_outside_diagram then
-					es_link ?= model.graph.inheritance_link_connecting (other_model, model)
+					es_link ?= model.graph.inheritance_link_connecting (other_model, model, is_non_conforming)
 					if es_link = Void then
-						create es_link.make_with_classes (other_model, model)
+						create es_link.make (other_model, model, False)
+						es_link.set_is_non_conforming (is_non_conforming)
 						model.graph.add_link (es_link)
 					elseif not es_link.is_needed_on_diagram then
 						es_link.enable_needed_on_diagram
 					end
 					world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_add_inh_link_cmd (es_link.ancestor.name, es_link.descendant.name),
-						agent add_ancestor (other_model, es_link),
-						agent remove_ancestor (other_model, es_link))
+						interface_names.t_diagram_add_inh_link_cmd (es_link.ancestor.name, es_link.descendant.name, is_non_conforming),
+						agent add_ancestor (other_model, es_link, is_non_conforming),
+						agent remove_ancestor (other_model, es_link, is_non_conforming))
 				end
 			end
 		end
 
-	add_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK)
-			-- Add `Current' to `an_other's inheritance clause, show `a_link' if succesfull.
+	add_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK; is_non_conforming: BOOLEAN)
+			-- Add `Current' to `an_other's inheritance clause, show `a_link' if successful.
 		do
-			an_other.code_generator.add_ancestor (model.class_i.name)
+			an_other.code_generator.add_ancestor (model.class_i.name, is_non_conforming)
 			if not an_other.code_generator.class_modified_outside_diagram then
 				a_link.enable_needed_on_diagram
 			end
 		end
 
-	remove_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK)
-			-- Remove `Current' from `an_other's inheritance clause, hide `a_link' if succesfull.
+	remove_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK; is_non_conforming: BOOLEAN)
+			-- Remove `Current' from `an_other's inheritance clause, hide `a_link' if successful.
 		do
-			an_other.code_generator.remove_ancestor (model.class_i.name)
+			an_other.code_generator.remove_ancestor (model.class_i.name, is_non_conforming)
 			if not an_other.code_generator.class_modified_outside_diagram then
 				a_link.disable_needed_on_diagram
 			end
 		end
 
-	add_client_relation (client: EIFFEL_CLASS_FIGURE; is_aggregated: BOOLEAN)
+	add_client_relation (client: EIFFEL_CLASS_FIGURE)
 			-- Add relation with `Current' as supplier and `client' as client
-			-- expanded if `is_aggregated'.
 		require
 			client_not_void: client /= Void
 		local
@@ -467,49 +470,52 @@ feature {NONE} -- Implementation (adding relations)
 				y_pos := (port_y + client.port_y) // 2 + world.context_editor.widget.screen_y - world.bounding_box.y
 				client_model := client.model
 				cg := client_model.code_generator
-				if not is_aggregated then
-					cg.new_query_from_diagram (model.name, x_pos, y_pos, screen_w, screen_h)
-				else
-					cg.new_aggregate_query_from_diagram (model.name, x_pos, y_pos, screen_w, screen_h)
-				end
-				-- Reflect new added code in diagram if any is added.
-				if cg.extend_from_diagram_successful then
-					last_query := cg.last_feature_as
-					client_model.add_query (last_query)
+				cg.new_feature_from_diagram (client_model, model, x_pos, y_pos, screen_w, screen_h, False)--client /= Current)
 
+					-- Reflect new added code in diagram if any is added.
+				last_query := cg.last_feature_as
+				if cg.extend_from_diagram_successful and then last_query /= Void then
 					added_code := cg.last_added_code.twin
+					if last_query.body.type /= Void then
+							-- We have a query as the body has a return type.
+						client_model.add_query (last_query)
+						es_link ?= model.graph.client_supplier_link_connecting (client_model, model)
+						if es_link = Void or else not es_link.is_needed_on_diagram then
+							if es_link = Void then
+								create es_link.make (client_model, model, False)
+								model.graph.add_link (es_link)
+							else
+								es_link.enable_needed_on_diagram
+								es_link.synchronize
+							end
 
-					es_link ?= model.graph.client_supplier_link_connecting (client_model, model)
-
-					if es_link = Void or else not es_link.is_needed_on_diagram then
-						if es_link = Void then
-							create es_link.make (client_model, model)
-							model.graph.add_link (es_link)
+							world.context_editor.history.register_named_undoable (
+								interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
+								agent reinclude_removed_feature_and_link (client_model, added_code, last_query, es_link),
+								agent remove_added_feature_and_link (client_model, added_code, last_query, es_link))
 						else
-							es_link.enable_needed_on_diagram
 							es_link.synchronize
+							world.context_editor.history.register_named_undoable (
+								interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
+								agent reinclude_removed_feature_and_link (client_model, added_code, last_query, es_link),
+								agent remove_added_feature (client_model, added_code, last_query, es_link))
 						end
-
-						world.context_editor.history.register_named_undoable (
-							interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
-							agent reinclude_removed_feature_and_link (client_model, added_code, last_query, es_link),
-							agent remove_added_feature_and_link (client_model, added_code, last_query, es_link))
 					else
-
-						es_link.synchronize
+							-- We are adding a procedure via the diagram tool so no link is needed
 						world.context_editor.history.register_named_undoable (
-							interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
-							agent reinclude_removed_feature_and_link (client_model, added_code, last_query, es_link),
-							agent remove_added_feature (client_model, added_code, last_query, es_link))
+							interface_names.t_diagram_add_cs_link_cmd (client_model.name, model.name),
+							agent reinclude_added_code (model, added_code),
+							agent remove_added_code (model, added_code))
+
 					end
 				end
 			end
 		end
 
 	reinclude_removed_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
-			--
+			-- Reinclude code in `a_client' with associating `a_link'.
 		do
-			a_client.code_generator.undelete_code (added_code)
+			reinclude_added_code (a_client, added_code)
 			if not a_client.code_generator.class_modified_outside_diagram then
 				a_client.add_query (added_feature)
 				a_link.enable_needed_on_diagram
@@ -518,7 +524,7 @@ feature {NONE} -- Implementation (adding relations)
 		end
 
 	remove_added_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
-			--
+			-- Remove code from `a_client' represented by `a_link'.
 		do
 			a_client.code_generator.delete_code (added_code)
 			if not a_client.code_generator.class_modified_outside_diagram then
@@ -528,13 +534,25 @@ feature {NONE} -- Implementation (adding relations)
 		end
 
 	remove_added_feature (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
-			--
+			-- Remove added code from `a_client'
 		do
-			a_client.code_generator.delete_code (added_code)
+			remove_added_code (a_client, added_code)
 			if not a_client.code_generator.class_modified_outside_diagram then
 				a_client.remove_query (added_feature)
 				a_link.synchronize
 			end
+		end
+
+	remove_added_code (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]])
+			-- Remove code represented by `added_code' from `a_client'
+		do
+			a_client.code_generator.delete_code (added_code)
+		end
+
+	reinclude_added_code (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]])
+			-- Readd the code represented by `added_code' to `a_client'.
+		do
+			a_client.code_generator.undelete_code (added_code)
 		end
 
 	drop_allowed (a_stone: CLASSI_FIGURE_STONE): BOOLEAN
@@ -542,10 +560,10 @@ feature {NONE} -- Implementation (adding relations)
 		local
 			new_child: CLASS_I
 		do
-			if world.context_editor.is_link_inheritance then
+			if not world.context_editor.is_link_client then
 				new_child := a_stone.class_i
 				if new_child.is_compiled and model.class_i.is_compiled then
-					Result := not model.class_i.compiled_class.conform_to (new_child.compiled_class)
+					Result := not model.class_i.compiled_class.inherits_from (new_child.compiled_class)
 				else
 					Result := not model.class_i.name.is_equal ("ANY")
 				end
@@ -564,15 +582,13 @@ feature {NONE} -- Implementation (move)
 			l_class_fig_stone: CLASSI_FIGURE_STONE
 			l_world: EIFFEL_CLUSTER_DIAGRAM
 		do
-			if model /= Void and then not model.class_i.is_read_only then
+			if model /= Void then --and then not model.class_i.is_read_only then
 				l_class_fig_stone ?= a_any
 				if l_class_fig_stone /= Void then
 					Result := True
 					l_world ?= world
-					if l_world /= Void then
-						if l_class_fig_stone.source = Current or else
-							not l_world.classes_in_same_scope (l_class_fig_stone.source.model, model)
-						then
+					if l_world /= Void and then attached {CONF_CLASS} model.class_i as l_conf_class then
+						if not l_class_fig_stone.group.accessible_classes.has_item (l_conf_class) then
 							Result := False
 						end
 					end
@@ -634,6 +650,9 @@ feature {NONE} -- Implementation (move)
 			if world.is_right_angles then
 				world.apply_right_angles
 			end
+
+			world.context_editor.
+
 			world.context_editor.restart_force_directed
 		end
 
@@ -680,7 +699,7 @@ feature {NONE} -- Implementation (move)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -693,22 +712,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_CLASS_FIGURE

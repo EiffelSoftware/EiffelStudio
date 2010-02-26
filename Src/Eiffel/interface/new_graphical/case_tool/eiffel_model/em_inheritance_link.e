@@ -8,7 +8,7 @@ note
 
 class
 	EM_INHERITANCE_LINK
-	
+
 inherit
 	EG_LINK
 		rename
@@ -17,13 +17,14 @@ inherit
 		redefine
 			default_create
 		end
-	
+
 feature {NONE} -- Initialization
 
 	default_create
 			-- Create an EIFFEL_INHERITANCE_LINK.
 		do
 			Precursor {EG_LINK}
+			create is_non_conforming_changed
 		end
 
 	make_with_classes (a_descendant, an_ancestor: EM_CLASS)
@@ -37,8 +38,33 @@ feature {NONE} -- Initialization
 			set: descendant = a_descendant and ancestor = an_ancestor
 		end
 
+feature -- Status report
+
+	is_non_conforming: BOOLEAN
+			-- Is `Current' an non-conforming inheritance link?.
+
+	is_non_conforming_changed: EV_NOTIFY_ACTION_SEQUENCE
+			-- Called when `is_non_conforming is changed.
+
+feature -- Status settings
+
+	set_is_non_conforming (b: BOOLEAN)
+			-- Set `is_non_conforming' to `b'.
+		do
+			if b /= is_non_conforming then
+				is_non_conforming := b
+				is_non_conforming_changed.call (Void)
+			end
+		ensure
+			set: is_non_conforming = b
+		end
+
+invariant
+	is_non_conforming_changed_not_void: is_non_conforming_changed /= Void
+
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -51,22 +77,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EM_INHERITANCE_LINK

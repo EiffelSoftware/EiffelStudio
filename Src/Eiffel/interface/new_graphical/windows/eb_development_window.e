@@ -636,7 +636,17 @@ feature -- Update
 --			tools.class_tool.invalidate
 --			tools.features_relation_tool.invalidate
 			if eiffel_layout.has_diagram then
-				tools.diagram_tool.synchronize
+					-- Target diagram stone to root cluster if no stone is set.
+				if
+					tools.diagram_tool.last_stone = Void and then
+					l_system /= Void and then
+					eiffel_project.initialized and then
+					eiffel_system.workbench.is_already_compiled and then
+					not l_system.root_creators.is_empty
+				then
+					l_root := l_system.root_creators.first
+					tools.diagram_tool.advanced_set_stone (create {CLUSTER_STONE}.make (l_root.cluster))
+				end
 			end
 
 			history_manager.synchronize
@@ -2631,7 +2641,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

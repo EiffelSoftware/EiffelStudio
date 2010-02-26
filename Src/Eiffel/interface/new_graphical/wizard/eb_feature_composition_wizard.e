@@ -67,16 +67,16 @@ feature {NONE} -- Initialization
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
 			show_actions.extend (agent (feature_editor.feature_name_field).select_all)
-			show_actions.extend (agent set_focus_to_feature_selector)
+			show_actions.extend (agent set_focus_to_feature_name_field)
 		end
 
 	set_default_editor
 			-- Select the default editor.
 		do
-			create {EB_PROCEDURE_EDITOR} feature_editor
+			create {EB_FUNCTION_EDITOR} feature_editor
 			feature_editor_frame.extend (feature_editor)
-			if not proc_button.is_selected then
-				proc_button.enable_select
+			if not func_button.is_selected then
+				func_button.enable_select
 			end
 		end
 
@@ -148,14 +148,36 @@ feature -- Access
 			end
 		end
 
+	feature_arguments: STRING
+			-- Arguments of current feature if any.
+		local
+			qe: EB_QUERY_EDITOR
+		do
+			qe ?= feature_editor
+			if qe /= Void then
+				Result := qe.arguments_code
+			end
+		end
+
 	generate_setter_procedure: BOOLEAN
 			-- Should a set-procedure be generated?
 		local
-			e: EB_ATTRIBUTE_EDITOR
+			e: EB_QUERY_EDITOR
 		do
 			e ?= feature_editor
 			if e /= Void then
 				Result := e.generate_setter_procedure
+			end
+		end
+
+	setter_name: STRING
+			-- Name of set-procedure if any.
+		local
+			e: EB_QUERY_EDITOR
+		do
+			e ?= feature_editor
+			if e /= Void then
+				Result := e.setter_name
 			end
 		end
 
@@ -180,6 +202,35 @@ feature -- Access
 			if e /= Void then
 				Result := e.invariant_part
 			end
+		end
+
+feature -- Status setting
+
+	set_client_type (c: ES_CLASS)
+			-- Set client type to `c'.
+		do
+			feature_editor.set_client_type (c)
+		end
+
+	set_supplier_type (s: ES_CLASS)
+			-- Create a supplier of type `s'.
+			-- (Could disable user selection...)
+		do
+			feature_editor.set_supplier_type (s)
+			feature_editor.set_type (s.name)
+		end
+
+	set_name_number (a_number: INTEGER)
+			-- Assign `a_number' to `name_number'.
+		local
+			qe: EB_QUERY_EDITOR
+		do
+			qe ?= feature_editor
+			if qe /= Void then
+				qe.set_name_number (a_number)
+			end
+		ensure
+			a_number_assigned: feature_editor.name_number = a_number
 		end
 
 feature -- Status report
@@ -256,10 +307,10 @@ feature {NONE} -- Implementation
 			hide
 		end
 
-	set_focus_to_feature_selector
-			-- Assign focus to the first enabled radio button selected within
+	set_focus_to_feature_name_field
+			-- Assign focus to feature name field.
 		do
-			proc_button.selected_peer.set_focus
+			feature_editor.feature_name_field.set_focus
 		end
 
 	feature_select: EV_FRAME
@@ -275,7 +326,7 @@ feature {NONE} -- Implementation
 			-- Container of `feature_editor'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -288,22 +339,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_FEATURE_COMPOSITION_WIZARD

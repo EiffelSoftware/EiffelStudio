@@ -388,7 +388,7 @@ feature -- Accelerator, focus label and menu name
 	m_Contents: STRING_32				do Result := locale.translation("&Contents")	end
 	m_Customize_general: STRING_32		do Result := locale.translation("&Customize Standard Toolbar...")	end
 	m_Customize_project: STRING_32		do Result := locale.translation("Customize P&roject Toolbar...")	end
-	m_Customize_refactoring: STRING_32	do Result := locale.translation("Customize Re&factoring Toolbar...")	end
+	m_Customize_refactoring: STRING_32	do Result := locale.translation("Customize Re&factor Toolbar...")	end
 	m_Cut: STRING_32						do Result := locale.translation("Cu&t%TCtrl+X")	end
 	f_Cut: STRING_32						do Result := locale.translation("Cut (Ctrl+X)")	end
 	m_Call_stack_tool: STRING_32			do Result := locale.translation("Call stack")	end
@@ -413,8 +413,8 @@ feature -- Accelerator, focus label and menu name
 	f_Create_new_library: STRING_32		do Result := locale.translation("Add a library")	end
 	f_Create_new_assembly: STRING_32		do Result := locale.translation("Add an assembly")	end
 	f_Create_new_precompile: STRING_32 	do Result := locale.translation("Add a precompile")	end
-	f_Create_new_class: STRING_32		do Result := locale.translation("Create a new class")	end
-	f_Create_new_feature: STRING_32		do Result := locale.translation("Create a new feature")	end
+	f_Create_new_class: STRING_32		do Result := locale.translation("Add a new class")	end
+	f_Create_new_feature: STRING_32		do Result := locale.translation("Add a new feature")	end
 	f_create_new_watch: STRING_32		do Result := locale.translation ("Create New watch") end
 	f_clear_watch_tool_expressions: STRING_32	do Result := locale.translation ("Clear Expressions") end
 	f_copy_watch_tool_selected_expressions_to_clipboard: STRING_32	do Result := locale.translation ("Copy Selected Expressions To Clipboard") end
@@ -474,6 +474,8 @@ feature -- Accelerator, focus label and menu name
 	l_diagram_add_descendents: STRING_32 do Result := locale.translation("Add class descendants to diagram")	end
 	l_diagram_add_suppliers: STRING_32 	do Result := locale.translation("Add class suppliers to diagram")	end
 	l_diagram_add_clients: STRING_32 	do Result := locale.translation("Add class clients to diagram")	end
+	l_diagram_new_class: STRING_32		do Result := locale.translation("Create new class in current cluster and add to diagram") end
+	l_diagram_existing_class: STRING_32		do Result := locale.translation("Add existing class to diagram") end
 
 	f_diagram_hide_labels: STRING_32		do Result := locale.translation("Hide labels")	end
 	f_diagram_show_labels: STRING_32		do Result := locale.translation("Show labels")	end
@@ -501,11 +503,11 @@ feature -- Accelerator, focus label and menu name
 	f_diagram_history: STRING_32			do Result := locale.translation("History tool")	end
 	f_diagram_remove: STRING_32			do Result := locale.translation("Hide figure")	end
 	l_diagram_remove: STRING_32			do Result := locale.translation("Delete graphical items")	end
-	f_diagram_create_supplier_links: STRING_32	do Result := locale.translation("Create new client-supplier links")	end
-	f_diagram_create_aggregate_supplier_links: STRING_32 do Result := locale.translation("Create new aggregate client-supplier links")	end
-	f_diagram_create_inheritance_links: STRING_32 do Result := locale.translation("Create new inheritance links")	end
+	f_diagram_create_supplier_links: STRING_32	do Result := locale.translation("Client-Supplier / Feature Creation Mode (Pick from client class and drop on desired supplier class)")	end
+	f_diagram_create_conforming_inheritance_links: STRING_32 do Result := locale.translation("Conforming Inheritance Creation Mode (Pick from child class and drop on desired conforming parent class)")	end
+	f_diagram_create_non_conforming_inheritance_links: STRING_32 do Result := locale.translation("Non-Conforming Inheritance Creation Mode (Pick from child class and drop on desired non-conforming parent class)")	end
 	l_diagram_create_links: STRING_32	do Result := locale.translation("Select type of new links")	end
-	f_diagram_new_class: STRING_32		do Result := locale.translation("Create a new class")	end
+	f_diagram_new_class: STRING_32		do Result := locale.translation("Add a new class")	end
 	f_diagram_change_header: STRING_32	do Result := locale.translation("Change class name and generics")	end
 	f_diagram_change_color: STRING_32	do Result := locale.translation("Change color")	end
 	f_diagram_force_directed_on: STRING_32	do Result := locale.translation("Turn on physics")	end
@@ -615,7 +617,7 @@ feature -- Accelerator, focus label and menu name
 	m_Properties_tool: STRING_32			do Result := locale.translation("Pr&operties")	end
 	m_Profile_tool: STRING_32			do Result := locale.translation("Pro&filer...")	end
 	m_Project_toolbar: STRING_32			do Result := locale.translation("&Project Bar")	end
-	m_Refactoring_toolbar: STRING_32		do Result := locale.translation("Re&factoring Bar")	end
+	m_Refactoring_toolbar: STRING_32		do Result := locale.translation("Re&factor Bar")	end
 	f_refactoring_pull: STRING_32		do Result := locale.translation("Pull up Feature")	end
 	f_refactoring_rename: STRING_32		do Result := locale.translation("Rename Feature/Class")	end
 	f_refactoring_undo: STRING_32		do Result := locale.translation("Undo Last Refactoring (only works as long as no file that was refactored has been changed by hand)")	end
@@ -934,7 +936,7 @@ feature -- Menu mnenomics
 	m_When_hits: STRING_32				do Result := locale.translation("When Hits ...")	end
 
 	m_Window: STRING_32					do Result := locale.translation("&Window")	end
-	m_Refactoring: STRING_32				do Result := locale.translation("&Refactoring")	end
+	m_Refactoring: STRING_32				do Result := locale.translation("&Refactor")	end
 
 feature -- Context menu
 
@@ -1306,7 +1308,7 @@ feature -- Label texts
 	l_general: STRING_32					do Result := locale.translation("General")	end
 	l_Generate_profile_from_rtir: STRING_32 do Result := locale.translation("Generate profile from Run-time information record")	end
 	l_Generate_creation: STRING_32		do Result := locale.translation("Generate creation procedure")	end
-	l_generate_set_procedure: STRING_32	do Result := locale.translation ("Generate set procedure") end
+	l_generate_assigner_procedure: STRING_32	do Result := locale.translation ("Assigner?") end
 	l_generating_ini_file_failed: STRING_32	do Result := locale.translation ("Generating INI file failed") end
 	l_grid_column_layout: STRING_32		do Result := locale.translation ("Grid column layout") end
 			-- Preferece name prefix. For "debugger.grid_column_layout_XX".
@@ -1455,6 +1457,7 @@ feature -- Label texts
 	l_Put_text_right_text: STRING_32 	do Result := locale.translation("Show selective text on the right of buttons")	end
 	l_run_before_each: STRING_32			do Result := "run_before_each" end
 	l_run_after_each: STRING_32			do Result := "run_after_each" end
+	l_setter: STRING_32					do Result := locale.translation ("Setter") end
 	l_Show_all_text: STRING_32			do Result := locale.translation("Show text labels")	end
 	l_Switching_to_execution_mode: STRING_32 do Result := locale.translation("Switching to execution mode...")	end
 	l_Switching_to_normal_mode: STRING_32 do Result := locale.translation("Switching to edit mode...")	end
@@ -2138,7 +2141,8 @@ feature -- Title part
 	t_Find_test_case_classes: STRING_32			do Result := locale.translation("Find test case classes")	end
 	t_finish_freezing_status: STRING_32			do Result := locale.translation("Finish Freezing Status")	end
 	t_Index: STRING_32							do Result := locale.translation("Index")	end
-	t_New_class: STRING_32						do Result := locale.translation("New Class")	end
+	t_New_class: STRING_32						do Result := locale.translation("Add New Class")	end
+	t_Existing_class: STRING_32					do Result := locale.translation("Add Existing Class")	end
 	t_Next_failed_test: STRING_32				do Result := locale.translation("Show next failed test")	end
 	t_New_cluster: STRING_32						do Result := locale.translation("Add Cluster")	end
 	t_New_expression: STRING_32					do Result := locale.translation("New Expression")	end
@@ -2234,11 +2238,16 @@ feature -- Title part
 			Result := locale.formatted_string(locale.translation("Add Client-Supplier Relation Between '$1' and '$2'"), [client_name, supplier_name])
 		end
 
-	t_Diagram_add_inh_link_cmd (ancestor_name, descendant_name: STRING_GENERAL): STRING_32
+	t_Diagram_add_inh_link_cmd (ancestor_name, descendant_name: STRING_GENERAL; is_non_conforming: BOOLEAN): STRING_32
 		require
 			exists: ancestor_name /= Void and descendant_name /= Void
 		do
-			Result := locale.formatted_string(locale.translation("Add Inheritance Relation Between '$1' and '$2'"), [ancestor_name, descendant_name])
+			if not is_non_conforming then
+				Result := locale.formatted_string(locale.translation("Add Inheritance Relation Between '$1' and '$2'"), [ancestor_name, descendant_name])
+			else
+				Result := locale.formatted_string(locale.translation("Add Non-conforming Inheritance Relation Between '$1' and '$2'"), [ancestor_name, descendant_name])
+			end
+
 		end
 
 	t_Diagram_include_class_cmd (a_name: STRING_GENERAL): STRING_32
@@ -2286,11 +2295,16 @@ feature -- Title part
 			Result := locale.formatted_string(locale.translation("Delete Client Link '$1'") , [a_name])
 		end
 
-	t_Diagram_delete_inheritance_link_cmd (an_ancestor, a_descendant: STRING_GENERAL): STRING_32
+	t_Diagram_delete_inheritance_link_cmd (an_ancestor, a_descendant: STRING_GENERAL; is_non_conforming: BOOLEAN): STRING_32
 		require
 			exists: an_ancestor /= Void and a_descendant /= Void
 		do
-			Result := locale.formatted_string(locale.translation("Delete Inheritance Link Between '$1' and '$2'"), [an_ancestor,a_descendant])
+			if not is_non_conforming then
+				Result := locale.formatted_string(locale.translation("Delete Inheritance Link Between '$1' and '$2'"), [an_ancestor,a_descendant])
+			else
+				Result := locale.formatted_string(locale.translation("Delete Non-Conforming Inheritance Link Between '$1' and '$2'"), [an_ancestor,a_descendant])
+			end
+
 		end
 
 	t_Diagram_erase_cluster_cmd (a_name: STRING_GENERAL): STRING_32
@@ -2343,9 +2357,9 @@ feature -- Title part
 	t_bottom_reached: STRING_32 	do Result := locale.translation("Bottom reached.")	end
 	t_go_to_line: STRING_32				do Result := locale.translation ("Go to line") end
 	t_go_to_breakable: STRING_32				do Result := locale.translation ("Go to breakable index") end
-	t_refactoring_feature_rename: STRING_32	do Result := locale.translation("Refactoring: Feature Rename (Compiled Classes)")	end
+	t_refactoring_feature_rename: STRING_32	do Result := locale.translation("Refactor: Feature Rename (Compiled Classes)")	end
 	t_refactoring_class_select: STRING_32 do Result := locale.translation("Select Class")	end
-	t_refactoring_class_rename: STRING_32 do Result := locale.translation("Refactoring: Class Rename")	end
+	t_refactoring_class_rename: STRING_32 do Result := locale.translation("Refactor: Class Rename")	end
 	t_select_working_directory: STRING_32 do Result := locale.translation("Select working directory")	end
 
 	t_Breakpoints_tool: STRING_32				do Result := locale.translation ("Breakpoints")	end
@@ -2381,7 +2395,7 @@ feature -- Title part
 	t_physics_setting: STRING_32					do Result := locale.translation ("Physics settings") end
 	t_Project_toolbar: STRING_32					do Result := locale.translation ("Project Bar") end
 	t_passed: STRING_32							do Result := locale.translation ("Passed") end
-	t_Refactory_toolbar: STRING_32				do Result := locale.translation ("Refactoring Bar") end
+	t_Refactory_toolbar: STRING_32				do Result := locale.translation ("Refactor Bar") end
 
 	t_dialog_title (a_name: STRING_GENERAL): STRING_32
 		do
@@ -2478,7 +2492,7 @@ feature -- Titles translation needless (Title Original) for preference strings.
 	to_Address_toolbar: STRING =				"Address Bar"
 	to_Standard_toolbar: STRING =				"Standard Buttons"
 	to_Project_toolbar: STRING =				"Project Bar"
-	to_Refactory_toolbar: STRING =				"Refactoring Bar"
+	to_Refactory_toolbar: STRING =				"Refactor Bar"
 
 feature -- Description texts
 
@@ -2736,7 +2750,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

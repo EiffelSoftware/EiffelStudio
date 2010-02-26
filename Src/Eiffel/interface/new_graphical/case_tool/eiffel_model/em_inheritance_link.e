@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			create is_non_conforming_changed
 		end
 
-	make_with_classes (a_descendant, an_ancestor: EM_CLASS)
+	make_with_classes (a_descendant, an_ancestor: like descendant)
 			-- Create an EIFFEL_INHERITANCE_LINK connecting `a_descendant' with `an_ancestor'.
 		require
 			a_descendant_not_void: a_descendant /= Void

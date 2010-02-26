@@ -19,7 +19,10 @@ inherit
 			old_make,
 			make,
 			show_flags,
-			is_top_level
+			is_top_level,
+			on_wm_activate,
+			on_wm_ncactivate,
+			on_wm_mouseactivate
 		end
 
 	EV_POPUP_WINDOW_I
@@ -69,6 +72,33 @@ feature -- Status Setting
 		do
 			Precursor
 			set_ex_style (ex_style | ws_ex_topmost)
+		end
+
+	on_wm_mouseactivate (wparam, lparam: POINTER)
+		do
+			--if not is_disconnected_from_window_manager then
+				Precursor (wparam, lparam)
+			--else
+			--	disable_default_processing
+			--end
+		end
+
+	on_wm_activate (wparam: INTEGER_32)
+		do
+			--if not is_disconnected_from_window_manager then
+				Precursor (wparam)
+			--else
+			--	disable_default_processing
+			--end
+		end
+
+	on_wm_ncactivate (hwnd, wparam, lparam: POINTER): POINTER
+		do
+			--if not is_disconnected_from_window_manager then
+				Result := Precursor (hwnd, wparam, lparam)
+			--else
+			--	disable_default_processing
+			--end
 		end
 
 feature {NONE} -- Implementation

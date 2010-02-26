@@ -88,6 +88,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			l_locked: BOOLEAN
 			retried: BOOLEAN
+			l_is_destroyed: BOOLEAN
 		do
 			if not retried then
 				process_underlying_toolkit_event_queue
@@ -111,11 +112,14 @@ feature {EV_ANY_I} -- Implementation
 						-- Reset idle iteration counter if CPU is not relinquished.
 				end
 				if try_lock then
+					l_is_destroyed := is_destroyed
 					l_locked := True
-					idle_actions.call (Void)
+					if not l_is_destroyed then
+						idle_actions.call (Void)
+					end
 					unlock
 					l_locked := False
-					if a_relinquish_cpu then
+					if a_relinquish_cpu and then not l_is_destroyed then
 							-- We only relinquish CPU if requested and a lock for the idle actions has been attained.
 						wait_for_input (cpu_relinquishment_time)
 					end
@@ -418,6 +422,16 @@ feature -- Events
 				idle_actions_internal.extend_kamikaze (an_action)
 			end
 			unlock
+		end
+
+	actions_are_callable: BOOLEAN
+			-- May actions be called
+		do
+				-- If application has been destroyed
+			if not is_destroyed then
+				increase_action_sequence_call_counter
+				Result := True
+			end
 		end
 
 	increase_action_sequence_call_counter

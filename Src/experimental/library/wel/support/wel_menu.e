@@ -326,6 +326,9 @@ feature -- Basic operations
 			window_not_void: window /= Void
 			window_exists: window.exists
 		do
+			if attached window.parent as l_window_parent then
+				l_window_parent.bring_to_top
+			end
 			show_track_with_option (x, y, window, default_track_option, Void)
 		end
 

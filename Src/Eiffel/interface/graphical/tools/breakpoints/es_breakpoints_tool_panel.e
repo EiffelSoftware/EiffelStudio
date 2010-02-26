@@ -1022,7 +1022,7 @@ feature {NONE} -- Dynamic item filling
 			a_row_not_void: a_row /= Void
 		local
 			f: E_FEATURE
-			s: STRING_GENERAL
+			s: STRING_32
 			t: STRING
 			cell: EV_GRID_ITEM
 			lab: EV_GRID_LABEL_ITEM
@@ -1419,7 +1419,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -79,8 +79,15 @@ feature -- Status setting
 			when
 				Ev_pnd_end_transport
 			then
-				end_transport
-					(a_x, a_y, a_button, 0, 0, 0, a_screen_x, a_screen_y)
+				if mode_is_configurable_target_menu then
+					erase_rubber_band
+					application_imp.do_once_on_idle (agent end_transport
+						(a_x, a_y, a_button, 0, 0, 0, a_screen_x, a_screen_y))
+				else
+					end_transport
+						(a_x, a_y, a_button, 0, 0, 0, a_screen_x, a_screen_y)
+				end
+
 			else
 				check
 					disabled: press_action = Ev_pnd_disabled
@@ -263,7 +270,7 @@ feature {EV_ANY_I} -- Implementation
 				if pick_actions_internal /= Void then
 					pick_actions_internal.call ([a_x, a_y])
 				end
-				if mode_is_pick_and_drop then
+				if mode_is_pick_and_drop or mode_is_target_menu then
 					is_pnd_in_transport := True
 						-- Assign `True' to `is_pnd_in_transport'
 				else
@@ -317,99 +324,103 @@ feature {EV_ANY_I} -- Implementation
 			l_pebble: like pebble
 			l_original: detachable like original_top_level_window_imp
 		do
-			l_original := original_top_level_window_imp
-			check l_original /= Void end
-			modify_widget_appearance (False)
-				-- Remove the capture (as soon as possible because we can't
-				-- debug when the capture is enabled)
-			disable_capture
-				-- Return capture type to capture_normal.
-				--| normal capture only works on the current windows thread.
-			application_imp.set_capture_type ({EV_APPLICATION_IMP}.Capture_normal)
+			if press_action = ev_pnd_end_transport then
 
-			release_action := Ev_pnd_disabled
-			motion_action := Ev_pnd_disabled
+				l_original := original_top_level_window_imp
+				check l_original /= Void end
+				modify_widget_appearance (False)
+					-- Remove the capture (as soon as possible because we can't
+					-- debug when the capture is enabled)
+				disable_capture
+					-- Return capture type to capture_normal.
+					--| normal capture only works on the current windows thread.
+				application_imp.set_capture_type ({EV_APPLICATION_IMP}.Capture_normal)
 
-				-- Remove the line drawn from source position to Pointer.
-			erase_rubber_band
+				release_action := Ev_pnd_disabled
+				motion_action := Ev_pnd_disabled
 
-			text_component ?= Current
-				-- Restore the cursor.
-			if attached pnd_stored_cursor as l_cursor then
-					-- Restore the cursor style of `Current' if necessary.
-				internal_set_pointer_style (l_cursor)
-			else
-					-- Restore standard cursor style.
-				if text_component /= Void then
-					internal_set_pointer_style (Default_pixmaps.Ibeam_cursor)
+					-- Remove the line drawn from source position to Pointer.
+				erase_rubber_band
+
+				text_component ?= Current
+					-- Restore the cursor.
+				if attached pnd_stored_cursor as l_cursor then
+						-- Restore the cursor style of `Current' if necessary.
+					internal_set_pointer_style (l_cursor)
 				else
-					internal_set_pointer_style (Default_pixmaps.Standard_cursor)
+						-- Restore standard cursor style.
+					if text_component /= Void then
+						internal_set_pointer_style (Default_pixmaps.Ibeam_cursor)
+					else
+						internal_set_pointer_style (Default_pixmaps.Standard_cursor)
+					end
 				end
-			end
-				-- We must now stop the context menu from appearing, as a result of this click.
-			if attached text_component as l_text_component then
-				l_text_component.disable_context_menu
-			end
+					-- We must now stop the context menu from appearing, as a result of this click.
+				if attached text_component as l_text_component then
+					l_text_component.disable_context_menu
+				end
 
-			application_imp.transport_ended
-			application_imp.set_transport_just_ended
+				application_imp.transport_ended
+				application_imp.set_transport_just_ended
 
-			create env
-			l_pebble := pebble
-			check l_pebble /= Void end
-			if
-				(a_button = 3 and is_pnd_in_transport) or
-				(a_button = 1 and is_dnd_in_transport)
-				-- Check that transport can be ended.
-				--| Drag and drop is always ended with the left button release.+
-				--| Pick and drop is always ended with the right button press.
-				--| Drop actions only need to be called if the transport
-				--| has actually ended correctly.
-			then
-				target := pointed_target
-					-- Retrieve `target'.
-				if target /= Void then
-					if target.drop_actions.accepts_pebble (l_pebble) then
-						application_imp.enable_drop_actions_executing
-						target.drop_actions.call ([l_pebble])
-							-- If there is a target then execute the drop
-							-- actions for `target'.
+				create env
+				l_pebble := pebble
+				check l_pebble /= Void end
+				if
+					(a_button = 3 and is_pnd_in_transport) or
+					(a_button = 1 and is_dnd_in_transport)
+					-- Check that transport can be ended.
+					--| Drag and drop is always ended with the left button release.+
+					--| Pick and drop is always ended with the right button press.
+					--| Drop actions only need to be called if the transport
+					--| has actually ended correctly.
+				then
+					target := pointed_target
+						-- Retrieve `target'.
+					if target /= Void then
+						if target.drop_actions.accepts_pebble (l_pebble) then
+							application_imp.enable_drop_actions_executing
+							target.drop_actions.call ([l_pebble])
+								-- If there is a target then execute the drop
+								-- actions for `target'.
 
-						env.implementation.application_i.drop_actions.call ([l_pebble])
-							-- Execute drop_actions for the application.
-						application_imp.disable_drop_actions_executing
+							env.implementation.application_i.drop_actions.call ([l_pebble])
+								-- Execute drop_actions for the application.
+							application_imp.disable_drop_actions_executing
+						else
+							call_cancel_actions (l_pebble)
+						end
 					else
 						call_cancel_actions (l_pebble)
 					end
 				else
 					call_cancel_actions (l_pebble)
 				end
-			else
-				call_cancel_actions (l_pebble)
-			end
 
-			abstract_pick_and_dropable ?= target
-			check
-				abstract_pick_and_dropable_correct: target /= Void implies abstract_pick_and_dropable /= Void
-			end
-			pick_ended_actions.call ([abstract_pick_and_dropable])
-			enable_transport
-				-- Return state ready for next drag/pick and drop.
+				abstract_pick_and_dropable ?= target
+				check
+					abstract_pick_and_dropable_correct: target /= Void implies abstract_pick_and_dropable /= Void
+				end
+				pick_ended_actions.call ([abstract_pick_and_dropable])
 
-			attached_interface.pointer_motion_actions.resume
-				-- Resume `pointer_motion_actions'.
+				enable_transport
+					-- Return state ready for next drag/pick and drop.
 
-			l_original.allow_movement
-			original_top_level_window_imp := Void
+				attached_interface.pointer_motion_actions.resume
+					-- Resume `pointer_motion_actions'.
 
-				-- Reset internal attributes.
-			is_dnd_in_transport := False
-			is_pnd_in_transport := False
-				-- Assign `Void' to `last_pointed_target'.
-			press_action := Ev_pnd_start_transport
-			if attached pebble_function as l_pebble_function then
-				l_pebble_function.clear_last_result
-				pebble := Void
+				l_original.allow_movement
+				original_top_level_window_imp := Void
+
+					-- Reset internal attributes.
+				is_dnd_in_transport := False
+				is_pnd_in_transport := False
+					-- Assign `Void' to `last_pointed_target'.
+				press_action := Ev_pnd_start_transport
+				if attached pebble_function as l_pebble_function then
+					l_pebble_function.clear_last_result
+					pebble := Void
+				end
 			end
 		ensure then
 			original_window_void: original_top_level_window_imp = Void

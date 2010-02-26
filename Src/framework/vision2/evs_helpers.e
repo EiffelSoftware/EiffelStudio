@@ -63,14 +63,13 @@ feature -- Basic operations
 
 feature -- Query
 
-	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): EV_WINDOW
+	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): detachable EV_WINDOW
 			-- Locates parent window of `a_widget', if the widget has been parented.
 			--
 			-- `a_widget': A widget to locate a top level window for.
 			-- `a_main': True to retrieve the top-most window, which attempts to find the application window.
 		require
 			a_widget_attached: a_widget /= Void
-			a_widget_is_parented: a_widget.has_parent or (({EV_WINDOW}) #? a_widget /= Void)
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		local
 			l_stop_looking: BOOLEAN
@@ -78,7 +77,7 @@ feature -- Query
 		do
 			Result ?= a_widget
 			if a_main and Result /= Void then
-				l_stop_looking := (({EV_TITLED_WINDOW}) #? Result /= Void)
+				l_stop_looking := attached {EV_TITLED_WINDOW} Result
 			else
 				l_stop_looking := Result /= Void
 			end
@@ -91,12 +90,10 @@ feature -- Query
 						Result := widget_top_level_window (l_dialog.blocking_window, a_main)
 					end
 				end
-			else
-				check result_attached: Result /= Void end
 			end
 		end
 
-	parent_window_of_focused_widget: EV_WINDOW
+	parent_window_of_focused_widget: detachable EV_WINDOW
 			-- Parent window of current focused widget
 			-- Result maybe void.
 		local
@@ -330,7 +327,7 @@ feature -- Placement
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

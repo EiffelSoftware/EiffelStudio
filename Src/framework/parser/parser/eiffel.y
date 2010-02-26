@@ -294,13 +294,13 @@ Class_declaration:
 		Formal_generics							-- $5
 		External_name							-- $6
 		Obsolete								-- $7
-		{conforming_inheritance_flag := False; non_conforming_inheritance_flag := False } Inheritance {inheritance_end_position := position; conforming_inheritance_flag := True} Inheritance -- $8 $9 $10 $11
-		Creators								-- $12
-		Convert_clause							-- $13
-		Features End_features_pos				-- $14 $15
-		Class_invariant 						-- $16
-		Indexing								-- $17
-		TE_END									-- $18
+		{conforming_inheritance_flag := False; non_conforming_inheritance_flag := False } Inheritance {conforming_inheritance_end_position := position; conforming_inheritance_flag := True} Inheritance {non_conforming_inheritance_end_position := position} -- $8 $9 $10 $11 $12
+		Creators								-- $13
+		Convert_clause							-- $14
+		Features End_features_pos				-- $15 $16
+		Class_invariant 						-- $17
+		Indexing								-- $18
+		TE_END									-- $19
 			{
 				if $6 /= Void then
 					temp_string_as1 := $6.second
@@ -315,11 +315,10 @@ Class_declaration:
 				
 				root_node := new_class_description ($4, temp_string_as1,
 					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
-					$1, $17, $5, $9, $11, $12, $13, $14, $16, suppliers, temp_string_as2, $18)
+					$1, $18, $5, $9, $11, $13, $14, $15, $17, suppliers, temp_string_as2, $19)
 				if root_node /= Void then
 					root_node.set_text_positions (
-						formal_generics_end_position,
-						inheritance_end_position,
+						formal_generics_end_position,				conforming_inheritance_end_position,	non_conforming_inheritance_end_position,
 						features_end_position)
 						if $6 /= Void then
 							root_node.set_alias_keyword ($6.first)

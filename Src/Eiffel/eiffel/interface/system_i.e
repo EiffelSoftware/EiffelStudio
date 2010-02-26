@@ -929,7 +929,7 @@ end
 				create d1.make_now
 			end
 
-			if equal (universe.new_target, universe.target) then
+			if equal (universe.new_target, universe.target) or else universe.new_target = Void then
 				lace.force_new_target
 				lace.recompile
 			end
@@ -1605,7 +1605,7 @@ feature -- Recompilation
 
 			has_been_changed := is_config_changed
 			lace.check_shared_library_definition_stamp
-			do_recompilation
+			do_recompilation (True, True, True)
 
 			successful := True
 		rescue
@@ -1684,8 +1684,10 @@ feature -- Recompilation
 			missing_classes_void: missing_classes = Void
 		end
 
-	do_recompilation
+	do_recompilation (a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
 			-- Incremental recompilation of the system.
+		require
+			valid_options: (a_generate_code implies a_system_check) and then (a_system_check implies a_syntax_analysis)
 		local
 			l_root_c: CLASS_C
 			d1, d2: DATE_TIME
@@ -1712,7 +1714,7 @@ feature -- Recompilation
 
 				-- Recompilation initialization
 			init_recompilation
-			if Compilation_modes.is_precompiling and il_generation then
+			if a_generate_code and then Compilation_modes.is_precompiling and then il_generation then
 					-- For a precompiled library we require a freeze in non-IL
 					-- code generation.
 				is_freeze_requested := True
@@ -1739,6 +1741,7 @@ feature -- Recompilation
 				-- Syntax analysis: This maybe add new classes to
 				-- the system (degree 5)
 			if
+				a_syntax_analysis or else
 				first_compilation or else freeze or else private_melt or else
 				new_class or else
 				not Degree_5.is_empty or else
@@ -1773,240 +1776,247 @@ debug ("ACTIVITY")
 	io.error.put_boolean (new_class)
 	io.error.put_new_line
 end
-					-- Check generic validity on old classes
-					-- generic parameters cannot be new classes
-				if not first_compilation and then new_class then
-					check_generics
-						-- The association name <==> supplier has been done in pass1
-						-- so even if the compilation fails after this point, the
-						-- check must not be done again if no classes are introduced
-						-- before the recompilation
-				end
-				new_class := False
+				if a_system_check then
+						-- Check generic validity on old classes
+						-- generic parameters cannot be new classes
+					if not first_compilation and then new_class then
+						check_generics
+							-- The association name <==> supplier has been done in pass1
+							-- so even if the compilation fails after this point, the
+							-- check must not be done again if no classes are introduced
+							-- before the recompilation
+					end
+					new_class := False
 
-				if
-					not Compilation_modes.is_precompiling and
-					not Lace.compile_all_classes
-				then
-						-- Check root class is not deferred
-					cs := root_creators.cursor
-					from
-						root_creators.start
-					until
-						root_creators.after
-					loop
-						check
-							root_compiled: root_creators.item_for_iteration.root_class.is_compiled
+					if
+						not Compilation_modes.is_precompiling and
+						not Lace.compile_all_classes
+					then
+							-- Check root class is not deferred
+						cs := root_creators.cursor
+						from
+							root_creators.start
+						until
+							root_creators.after
+						loop
+							check
+								root_compiled: root_creators.item_for_iteration.root_class.is_compiled
+							end
+							l_root_c := root_creators.item_for_iteration.root_class.compiled_class
+							l_root_c.check_that_root_class_is_not_deferred
+							root_creators.forth
 						end
-						l_root_c := root_creators.item_for_iteration.root_class.compiled_class
-						l_root_c.check_that_root_class_is_not_deferred
-						root_creators.forth
+						root_creators.go_to (cs)
+						current_class := Void
+							-- Remove useless classes i.e classes without
+							-- syntactical clients
+						remove_useless_classes
 					end
-					root_creators.go_to (cs)
-					current_class := Void
-						-- Remove useless classes i.e classes without
-						-- syntactical clients
-					remove_useless_classes
-				end
 
-					-- Let's report VTCT errors for classes not found at degree 5
-					-- It cannot be done at degree 5 (see eweasel test incr233 for why).
-				report_vtct_errors
-				report_vtcm_warnings
+						-- Let's report VTCT errors for classes not found at degree 5
+						-- It cannot be done at degree 5 (see eweasel test incr233 for why).
+					report_vtct_errors
+					report_vtcm_warnings
 
-					-- Fill parents.
-				process_post_degree_5
+						-- Fill parents.
+					process_post_degree_5
 
-					-- Let's get rid of the classes that have been really removed.
-				process_removed_classes
-				real_removed_classes.wipe_out
+						-- Let's get rid of the classes that have been really removed.
+					process_removed_classes
+					real_removed_classes.wipe_out
 
-debug ("ACTIVITY")
-	io.error.put_string ("%Tmoved = ")
-	io.error.put_boolean (moved)
-	io.error.put_string ("%N%Tupdate_sort = ")
-	io.error.put_boolean (update_sort)
-	io.error.put_new_line
-end
-					-- Topological sort and building of the conformance
-					-- table (if new classes have been added by first pass)
-				update_sort := update_sort or else moved
-				if update_sort then
-						-- Sort
-					sorter.sort
-						-- Check sum error
-					Error_handler.checksum
-						-- Re-sort the list of classes because the topological
-						-- sort modified the topological ids.
-					classes.sort
+	debug ("ACTIVITY")
+		io.error.put_string ("%Tmoved = ")
+		io.error.put_boolean (moved)
+		io.error.put_string ("%N%Tupdate_sort = ")
+		io.error.put_boolean (update_sort)
+		io.error.put_new_line
+	end
 
-					if not first_compilation then
-							-- Conformance table only needs to be reset upon incremental compilation.
-						reset_conformance_table
+						-- Topological sort and building of the conformance
+						-- table (if new classes have been added by first pass)
+					update_sort := update_sort or else moved
+					if update_sort then
+							-- Sort
+						sorter.sort
+							-- Check sum error
+						Error_handler.checksum
+							-- Re-sort the list of classes because the topological
+							-- sort modified the topological ids.
+						classes.sort
+
+						if not first_compilation then
+								-- Conformance table only needs to be reset upon incremental compilation.
+							reset_conformance_table
+						end
+						build_conformance_table
+
+							-- Clear the topo sorter
+						sorter.clear
+
+						reset_melted_conformance_table
 					end
-					build_conformance_table
 
-						-- Clear the topo sorter
-					sorter.clear
+						-- We need to clean `instantiator' of all the types that do not make sense
+						-- anymore (see eweasel test#incr282).
+					instantiator.clean
 
-					reset_melted_conformance_table
-				end
-
-					-- We need to clean `instantiator' of all the types that do not make sense
-					-- anymore (see eweasel test#incr282).
-				instantiator.clean
-
-					-- Inheritance analysis: `Degree_4' is sorted by class
-					-- topological ids so the parent come first the heirs after.
-				process_degree_4
-				debug ("timing")
-					create d2.make_now
-					print ("Degree 4 duration: ")
-					print (d2.relative_duration (d1).fine_seconds_count)
-					print ("%N")
-					print_memory_statistics
-					create d1.make_now
-				end
-
-					-- Compute the root type
-				compute_root_type
-				if
-					not marked_precompiled_classes and then
-					not Compilation_modes.is_precompiling and then uses_precompiled
-				then
-					mark_only_used_precompiled_classes
-				end
-
-				if
-					not Compilation_modes.is_precompiling and
-					not Lace.compile_all_classes
-				then
-						-- `root_class_c' cannot be used here as `root_type.associated_class' might be changed
-					root_creators.do_all (
-						agent (a_root: SYSTEM_ROOT)
-							do
-								a_root.class_type.associated_class.check_root_class_creators (a_root.procedure_name, a_root.class_type)
-							end)
-				end
-
-					-- Byte code production and type checking
-				process_degree_3
-
-					-- Reset built in processor so that any referenced CLASS_AS object is garbage collected.
-				built_in_processor.reset_all
-
-				debug ("timing")
-					create d2.make_now
-					print ("Degree 3 duration: ")
-					print (d2.relative_duration (d1).fine_seconds_count)
-					print ("%N")
-					print_memory_statistics
-					create d1.make_now
-				end
-
-				if
-					not Compilation_modes.is_precompiling and
-					not Lace.compile_all_classes
-				then
-					is_freeze_requested := is_freeze_requested or else not externals.is_equivalent
-				end
-
-					-- Process the type system
-				process_type_system
-
-					-- Process the skeleton of classes
-				process_skeleton
-
-					-- Reset `disposable_descendants' since they can have changed
-					--| Note: That is important to recompute it, especially if
-					--| someone removed an inheritance link to DISPOSABLE.
-				reset_disposable_descendants
-
-					-- Process the C pattern table
-				pattern_table.process
-
-				debug ("timing")
-					create d2.make_now
-					print ("After degreee 3 duration: ")
-					print (d2.relative_duration (d1).fine_seconds_count)
-					print ("%N")
-					print_memory_statistics
-					create d1.make_now
-				end
-
-					-- Melt the changed features
-				melt
-
-				debug ("timing")
-					create d2.make_now
-					print ("Degree 2 duration: ")
-					print (d2.relative_duration (d1).fine_seconds_count)
-					print ("%N")
-					print_memory_statistics
-					create d1.make_now
-				end
-
-					-- Finalize a successful compilation
-				finish_compilation
-				debug ("timing")
-					create d2.make_now
-					print ("Server storing duration: ")
-					print (d2.relative_duration (d1).fine_seconds_count)
-					print ("%N")
-					print_memory_statistics
-					create d1.make_now
-				end
-
-					-- Produce the update file
-				if not il_generation and then not freeze and then not lace.compile_all_classes then
-					Degree_output.put_melting_changes_message
-
-						-- Create a non-empty melted file
-					make_update (False)
-debug ("VERBOSE")
-	io.error.put_string ("Saving melted.eif%N")
-end
+						-- Inheritance analysis: `Degree_4' is sorted by class
+						-- topological ids so the parent come first the heirs after.
+					process_degree_4
 					debug ("timing")
 						create d2.make_now
-						print ("Melted file generation duration: ")
+						print ("Degree 4 duration: ")
 						print (d2.relative_duration (d1).fine_seconds_count)
 						print ("%N")
 						print_memory_statistics
 						create d1.make_now
 					end
-				end
-			else
-				compute_root_type
-			end
 
-			if System.il_generation then
-					-- Ensure unicity of names
-				check_full_class_name_unicity
-			end
+						-- Compute the root type
+					compute_root_type
+					if
+						not marked_precompiled_classes and then
+						not Compilation_modes.is_precompiling and then uses_precompiled
+					then
+						mark_only_used_precompiled_classes
+					end
 
-			if not il_generation and then freeze then
-				Degree_output.put_freezing_message
-				freeze_system
-				is_freeze_requested := False
-				debug ("timing")
-					create d2.make_now
-					print ("Degree -1 duration: ")
-					print (d2.relative_duration (d1).fine_seconds_count)
-					print ("%N")
-					print_memory_statistics
+					if
+						not Compilation_modes.is_precompiling and
+						not Lace.compile_all_classes
+					then
+							-- `root_class_c' cannot be used here as `root_type.associated_class' might be changed
+						root_creators.do_all (
+							agent (a_root: SYSTEM_ROOT)
+								do
+									a_root.class_type.associated_class.check_root_class_creators (a_root.procedure_name, a_root.class_type)
+								end)
+					end
+
+				end -- if a_system_check
+
+				if a_generate_code then
+						-- Byte code production and type checking
+					process_degree_3
+
+						-- Reset built in processor so that any referenced CLASS_AS object is garbage collected.
+					built_in_processor.reset_all
+
+					debug ("timing")
+						create d2.make_now
+						print ("Degree 3 duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						print_memory_statistics
+						create d1.make_now
+					end
+
+					if
+						not Compilation_modes.is_precompiling and
+						not Lace.compile_all_classes
+					then
+						is_freeze_requested := is_freeze_requested or else not externals.is_equivalent
+					end
+
+						-- Process the type system
+					process_type_system
+
+						-- Process the skeleton of classes
+					process_skeleton
+
+						-- Reset `disposable_descendants' since they can have changed
+						--| Note: That is important to recompute it, especially if
+						--| someone removed an inheritance link to DISPOSABLE.
+					reset_disposable_descendants
+
+						-- Process the C pattern table
+					pattern_table.process
+
+					debug ("timing")
+						create d2.make_now
+						print ("After degreee 3 duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						print_memory_statistics
+						create d1.make_now
+					end
+
+						-- Melt the changed features
+					melt
+
+					debug ("timing")
+						create d2.make_now
+						print ("Degree 2 duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						print_memory_statistics
+						create d1.make_now
+					end
+
+						-- Finalize a successful compilation
+					finish_compilation
+					debug ("timing")
+						create d2.make_now
+						print ("Server storing duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						print_memory_statistics
+						create d1.make_now
+					end
+
+						-- Produce the update file
+					if not il_generation and then not freeze and then not lace.compile_all_classes then
+						Degree_output.put_melting_changes_message
+
+							-- Create a non-empty melted file
+						make_update (False)
+	debug ("VERBOSE")
+		io.error.put_string ("Saving melted.eif%N")
+	end
+						debug ("timing")
+							create d2.make_now
+							print ("Melted file generation duration: ")
+							print (d2.relative_duration (d1).fine_seconds_count)
+							print ("%N")
+							print_memory_statistics
+							create d1.make_now
+						end
+					end
+				else
+					compute_root_type
 				end
-			end
-			if il_generation and then (private_melt or else not degree_minus_1.is_empty) and not il_quick_finalization then
-				generate_il
-				debug ("timing")
-					create d2.make_now
-					print ("Degree 1 duration: ")
-					print (d2.relative_duration (d1).fine_seconds_count)
-					print ("%N")
-					print_memory_statistics
+
+				if System.il_generation then
+						-- Ensure unicity of names
+					check_full_class_name_unicity
 				end
-				Degree_minus_1.wipe_out
-			end
+
+				if not il_generation and then freeze then
+					Degree_output.put_freezing_message
+					freeze_system
+					is_freeze_requested := False
+					debug ("timing")
+						create d2.make_now
+						print ("Degree -1 duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						print_memory_statistics
+					end
+				end
+				if il_generation and then (private_melt or else not degree_minus_1.is_empty) and not il_quick_finalization then
+					generate_il
+					debug ("timing")
+						create d2.make_now
+						print ("Degree 1 duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						print_memory_statistics
+					end
+					Degree_minus_1.wipe_out
+				end
+			end -- if a_generate_code
+
 			reset_cached_class_i_options
 			private_melt := False
 			first_compilation := False

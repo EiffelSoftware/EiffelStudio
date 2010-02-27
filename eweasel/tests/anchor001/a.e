@@ -2,7 +2,7 @@ class A
 
 feature
 
-	b: B
+	b: detachable B
   
 	f (a: like b.c)
 		do

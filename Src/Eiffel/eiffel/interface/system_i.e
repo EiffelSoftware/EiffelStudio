@@ -1741,13 +1741,13 @@ feature -- Recompilation
 				-- Syntax analysis: This maybe add new classes to
 				-- the system (degree 5)
 			if
-				a_syntax_analysis or else
+				a_syntax_analysis and then (
 				first_compilation or else freeze or else private_melt or else
 				new_class or else
 				not Degree_5.is_empty or else
 				not Degree_4.is_empty or else
 				not Degree_3.is_empty or else
-				not Degree_2.is_empty
+				not Degree_2.is_empty)
 			then
 					-- We compiled something we need to save project file.
 				has_been_changed := True
@@ -1881,19 +1881,6 @@ end
 					then
 						mark_only_used_precompiled_classes
 					end
-
-					if
-						not Compilation_modes.is_precompiling and
-						not Lace.compile_all_classes
-					then
-							-- `root_class_c' cannot be used here as `root_type.associated_class' might be changed
-						root_creators.do_all (
-							agent (a_root: SYSTEM_ROOT)
-								do
-									a_root.class_type.associated_class.check_root_class_creators (a_root.procedure_name, a_root.class_type)
-								end)
-					end
-
 				end -- if a_system_check
 
 				if a_generate_code then
@@ -1985,7 +1972,7 @@ end
 					end
 				else
 					compute_root_type
-				end
+				end -- if a_generate_code
 
 				if System.il_generation then
 						-- Ensure unicity of names
@@ -2015,7 +2002,9 @@ end
 					end
 					Degree_minus_1.wipe_out
 				end
-			end -- if a_generate_code
+			else
+				compute_root_type
+			end -- if a_syntax_analysis
 
 			reset_cached_class_i_options
 			private_melt := False
@@ -5896,38 +5885,39 @@ feature {NONE} -- Element change: Root creators
 				root_creators.after
 			loop
 				l_root := root_creators.item_for_iteration
-				if l_root.root_class.is_compiled then
-					l_type ?= type_a_generator.evaluate_type_if_possible (l_root.class_type_as, l_root.root_class.compiled_class)
-				else
+				if not l_root.root_class.is_compiled then
+						-- Class is not part of the system.
 					create l_vd20
 					l_vd20.set_class_name (l_root.root_class.name.as_upper)
 					Error_handler.insert_error (l_vd20)
-					Error_handler.raise_error
-				end
-
-				if 	l_type = Void or else l_type.is_loose then
-						-- Throw an error: type is not valid.
-					create l_vsrt2
-					l_vsrt2.set_class (l_root.root_class.compiled_class)
-					l_vsrt2.set_root_type_name (l_root.root_class.name)
-					l_vsrt2.set_group_name (l_root.root_class.group.name)
-					Error_handler.insert_error (l_vsrt2)
-					Error_handler.raise_error
 				else
-					l_root.set_class_type (l_type)
-				end
-				if not l_type.has_generics and l_type.associated_class.is_generic then
-					create l_vsrt1
-					l_vsrt1.set_class (l_type.associated_class)
-					l_vsrt1.set_root_type (l_type)
-						-- Need duplication otherwise we would change the original FEATURE_I
-						-- object while displaying the error.
-					Error_handler.insert_error (l_vsrt1)
-					Error_handler.raise_error
+					l_type ?= type_a_generator.evaluate_type_if_possible (l_root.class_type_as, l_root.root_class.compiled_class)
+					if l_type = Void or else l_type.is_loose then
+							-- Throw an error: type is not valid.
+						create l_vsrt2
+						l_vsrt2.set_class (l_root.root_class.compiled_class)
+						l_vsrt2.set_root_type_name (l_root.root_class.name)
+						l_vsrt2.set_group_name (l_root.root_class.group.name)
+						Error_handler.insert_error (l_vsrt2)
+					else
+						l_root.set_class_type (l_type)
+						if not l_type.has_generics and l_type.associated_class.is_generic then
+							create l_vsrt1
+							l_vsrt1.set_class (l_type.associated_class)
+							l_vsrt1.set_root_type (l_type)
+							Error_handler.insert_error (l_vsrt1)
+						else
+							if not Compilation_modes.is_precompiling and not Lace.compile_all_classes then
+									-- `root_class_c' cannot be used here as `root_type.associated_class' might be changed
+								l_root.class_type.associated_class.check_root_class_creators (l_root.procedure_name, l_root.class_type)
+							end
+						end
+					end
 				end
 				root_creators.forth
 			end
 			root_creators.go_to (cs)
+			Error_handler.checksum
 		ensure
 			root_type_computed: root_creators.for_all (agent {SYSTEM_ROOT}.is_class_type_set)
 		end

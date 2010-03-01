@@ -179,7 +179,7 @@ static  void    prepare_types (void)
 	}
 
 	count = rlong ();	/* Number of feature table update. */
-	if ((count < 0) || (count >= dtype_size)) {
+	if (count < 0) {
 		panic ();
 	}
 
@@ -270,6 +270,12 @@ static  void    prepare_types (void)
 		(void) ruint32 ();	/* Creation feature ID. */
 		
 		ctype = rlong ();	/* Static ID of class. */
+
+			/* Read Version info if any. */
+		slen = rshort ();
+		while (slen--) {
+			(void) rchar ();
+		}
 
 		if (ctype > ctype_max)
 			ctype_max = ctype;
@@ -461,6 +467,16 @@ static  void    analyze_cnodes (void)
 		ctype = rlong ();
 
 		fprintf (mfp,"Class type         : %ld\n", ctype);
+
+		fprintf (mfp,"Version            : ");
+		slen = rshort ();
+		if (slen) {
+			while (slen--) {
+				fprintf (mfp,"%c", rchar ());
+			}
+		} else {
+			fprintf (mfp, "NULL");
+		}
 
 		print_line ();
 	}

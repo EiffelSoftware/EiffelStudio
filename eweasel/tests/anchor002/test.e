@@ -8,7 +8,7 @@ feature
 
 	make is
 		local
-			a: A
+			a: C
 		do
 			create a
 		end

@@ -5,6 +5,6 @@ inherit
 
 feature
   
-	c: STRING
+	c: detachable STRING
 
 end

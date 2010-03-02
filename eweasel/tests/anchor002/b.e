@@ -12,6 +12,6 @@ feature
 		do
 		end
 
-	b: C
+	b: detachable C
 
 end

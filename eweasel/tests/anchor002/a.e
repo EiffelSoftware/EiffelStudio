@@ -2,7 +2,7 @@ class A
 
 feature
    
-	f (s: STRING)
+	f (s: detachable STRING)
 		do
 		end
 

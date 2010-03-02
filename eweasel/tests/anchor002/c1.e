@@ -5,6 +5,6 @@ inherit
 
 feature
   
-	c: ANY
+	c: detachable ANY
 
 end

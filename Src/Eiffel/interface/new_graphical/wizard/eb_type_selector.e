@@ -43,8 +43,9 @@ feature {NONE} -- Initialization
 			create selector.make_with_strings (initial_strings)
 
 				-- Add Class Completion
-			create text_completion.make (system.any_class.compiled_class, Void)
+			create text_completion.make (system.root_creators.first.root_class.compiled_class, Void)
 			text_completion.set_code_completable (selector)
+			text_completion.set_use_all_classes_in_universe (True)
 
 			selector.set_completion_possibilities_provider (text_completion)
 			selector.set_completing_feature (False)

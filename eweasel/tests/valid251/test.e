@@ -4,7 +4,7 @@ create
 	make
 feature
 	
-	make is
+	make
 		do
 			y := Current
 			try

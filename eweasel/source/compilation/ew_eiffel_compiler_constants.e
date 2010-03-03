@@ -11,7 +11,7 @@ feature {NONE} -- Input prompts
 
 	Resume_prompt: STRING = "Press <Return> to resume compilation or <Q> to quit";
 
-	Missing_precompile_prompt: STRING = "The project needs to use a precompile library, which has not been compiled.";
+	Missing_precompile_prompt: STRING = "The project needs to use a precompiled library, which has not been compiled.";
 
 
 feature {NONE} -- Output constants

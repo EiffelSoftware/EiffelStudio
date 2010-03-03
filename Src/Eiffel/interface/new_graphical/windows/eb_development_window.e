@@ -645,7 +645,7 @@ feature -- Update
 					not l_system.root_creators.is_empty
 				then
 					l_root := l_system.root_creators.first
-					tools.diagram_tool.advanced_set_stone (create {CLUSTER_STONE}.make (l_root.cluster))
+					tools.diagram_tool.set_stone (create {CLUSTER_STONE}.make (l_root.cluster))
 				end
 			end
 

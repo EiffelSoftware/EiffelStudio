@@ -511,7 +511,8 @@ feature {NONE} -- Implementation
 				report_too_long_string (l_str)
 			end
 		ensure
-			last_token_set: last_token = a_token
+			last_token_set: last_token = a_token or else last_token = yyEOF_token
+					-- `last_token' is set to `yyEOF_token' on error (when string is too long)
 		end
 
 feature {NONE} -- Implementation
@@ -651,7 +652,7 @@ invariant
 	filename_not_void: filename /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1417,7 +1417,7 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 			is_link_non_conforming_inheritance := False
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
+feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -- Context tool
 
 	set_focus
 			-- Give the focus to the drawing_area.

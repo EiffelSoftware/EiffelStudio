@@ -1221,7 +1221,7 @@ test	many-locals-deep-recursion	exec066  tcf pass execution
 test	big-expanded-attributes		exec067  tcf pass execution
 test	big-manifest-array-of-strings	exec068  tcf pass execution manual
 test	keep-on-stripping		exec069  tcf pass execution
-test	deep-exception-in-rescue	exec070  tcf pass execution
+test	deep-exception-in-rescue	exec070  tcf pass execution skip
 test	few-locals-deep-recursion	exec071  tcf pass execution
 test	expanded-create-big-string	exec072  tcf pass execution
 test	negate-big-bit-local		exec073  tcf pass execution

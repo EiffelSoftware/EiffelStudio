@@ -224,7 +224,7 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	flags = zone->ov_flags;
 	dtype = zone->ov_dtype;
 	dftype = zone->ov_dftype;
-	result = spmalloc(RT_SPECIAL_CAPACITY(source), RT_SPECIAL_ELEM_SIZE(source), EIF_TEST(!(flags & EO_REF)));
+	result = spmalloc(RT_SPECIAL_COUNT(source), RT_SPECIAL_ELEM_SIZE(source), EIF_TEST(!(flags & EO_REF)));
 
 		/* Keep the reference flag and the composite one and the type */
 	HEADER(result)->ov_flags |= flags & (EO_REF | EO_COMP);
@@ -233,7 +233,7 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 		/* Keep the count and the element size */
 	RT_SPECIAL_COUNT(result) = RT_SPECIAL_COUNT(source);
 	RT_SPECIAL_ELEM_SIZE(result) = RT_SPECIAL_ELEM_SIZE(source);
-	RT_SPECIAL_CAPACITY(result) = RT_SPECIAL_CAPACITY(source);
+	RT_SPECIAL_CAPACITY(result) = RT_SPECIAL_COUNT(source);
 
 	if (!egc_has_old_special_semantic) {
 			/* If by default allocation does not clear the data of a SPECIAL,

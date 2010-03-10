@@ -10,10 +10,6 @@ class REDEF_FEAT
 inherit
 	SHARED_WORKBENCH
 
-feature -- Access
-
-	class_id: INTEGER
-
 feature -- Basic operation
 
 	process (adaptations: LINKED_LIST [FEATURE_ADAPTATION])
@@ -177,7 +173,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

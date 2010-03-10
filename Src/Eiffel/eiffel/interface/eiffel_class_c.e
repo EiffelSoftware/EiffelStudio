@@ -569,7 +569,7 @@ feature -- Third pass: byte code production and type check
 			def_resc := default_rescue_feature
 
 			l_ast_context := ast_context
-			l_ast_context.initialize (Current, actual_type, feature_table)
+			l_ast_context.initialize (Current, actual_type)
 
 			if melted_set /= Void then
 				melted_set.clear_all

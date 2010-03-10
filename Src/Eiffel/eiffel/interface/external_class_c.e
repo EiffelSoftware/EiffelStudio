@@ -589,7 +589,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- Make sure context is initialized for `a_feat_tbl' before calling check_types on the feature_i objects.
-			ast_context.initialize (a_feat_tbl.associated_class, a_feat_tbl.associated_class.actual_type, a_feat_tbl)
+			ast_context.initialize (a_feat_tbl.associated_class, a_feat_tbl.associated_class.actual_type)
 
 			from
 				l_any_tbl.start
@@ -604,7 +604,7 @@ feature {NONE} -- Initialization
 					l_feat := l_feat.twin
 				else
 						-- We only need to check types should feature be instantiated for `Current'
-					l_feat.check_types (a_feat_tbl)
+					l_feat.delayed_check_types (a_feat_tbl)
 				end
 				l_feat.set_feature_id (feature_id_counter.next)
 				l_feat.set_is_origin (False)

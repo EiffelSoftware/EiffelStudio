@@ -873,7 +873,7 @@ end
 				after
 			loop
 				feature_i := item_for_iteration
-				feature_i.update_instantiator2 (a_class)
+				feature_i.delayed_update_instantiator2 (a_class)
 				forth
 			end
 		end

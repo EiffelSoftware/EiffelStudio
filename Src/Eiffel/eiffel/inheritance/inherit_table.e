@@ -95,6 +95,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_DEGREES
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -323,13 +330,13 @@ feature
 
 				-- Check types in the feature table
 			origin_table.check_feature_types (resulting_table)
-
 			if error_handler.error_level /= l_error_level then
 				error_handler.raise_error
 			end
 
 				-- Check the adaptations
 			check_validity3 (resulting_table)
+
 				-- Check useless selections
 			parents.check_validity4
 
@@ -339,7 +346,6 @@ feature
 			if error_handler.error_level /= l_error_level then
 				error_handler.raise_error
 			end
-
 
 			if class_info.convertors /= Void then
 					-- Convertibility processing
@@ -754,7 +760,7 @@ end;
 
 									-- Instantiate then copy if aliased.
 								if l_inherit_info.a_feature_needs_instantiation then
-									l_inherit_info.instantiate_a_feature
+									l_inherit_info.delayed_instantiate_a_feature
 								end
 								l_inherit_info.copy_a_feature_for_feature_table
 
@@ -847,10 +853,13 @@ end;
 
 	add_to_inherit_table (a_inherit_info: INHERIT_INFO)
 			-- Add renamed feature referenced in `a_inherit_info'.
+		local
+			f: FEATURE_I
 		do
-			inherited_features.put (a_inherit_info.a_feature, a_inherit_info.a_feature.feature_name_id, a_inherit_info.a_feature_aliased)
-			if a_inherit_info.a_feature.alias_name_id > 0 then
-				check_alias_name_conflict (a_inherit_info.a_feature)
+			f := a_inherit_info.a_feature
+			inherited_features.put (f, f.feature_name_id, a_inherit_info.a_feature_aliased)
+			if f.alias_name_id > 0 then
+				check_alias_name_conflict (f)
 			end
 		end
 
@@ -1506,8 +1515,8 @@ end;
 			until
 				l_origins.after
 			loop
-				resulting_table.item_id (l_origins.item).process_pattern
-				l_origins.forth;
+				resulting_table.item_id (l_origins.item).delayed_process_pattern
+				l_origins.forth
 			end;
 		end;
 
@@ -1677,7 +1686,7 @@ end;
 		do
 				-- Make sure that inherit info is instantiated if not already done so.
 			if inherit_info.a_feature_needs_instantiation then
-				inherit_info.instantiate_a_feature
+				inherit_info.delayed_instantiate_a_feature
 			end
 
 			if inherit_info.a_feature.is_origin then
@@ -1837,7 +1846,7 @@ end;
 				resulting_table.after
 			loop
 				if resulting_table.item_for_iteration.assigner_name_id /= 0 then
-					resulting_table.item_for_iteration.check_assigner (resulting_table)
+					resulting_table.item_for_iteration.delayed_check_assigner (resulting_table)
 				end
 				resulting_table.forth
 			end

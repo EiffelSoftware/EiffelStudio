@@ -10,6 +10,8 @@ class
 
 inherit
 	AST_FEATURE_CHECKER_GENERATOR
+		export {DEBUGGER_AST_SERVER}
+			set_current_feature
 		redefine
 			reset,
 			process_un_old_as,
@@ -39,7 +41,7 @@ inherit
 			{NONE} all
 		end
 
-feature -- Settings
+feature {NONE} -- Settings
 
 	reset
 			-- Reset all attributes to their default value
@@ -48,7 +50,7 @@ feature -- Settings
 			expression_context := Void
 		end
 
-feature -- Properties
+feature {NONE} -- Properties
 
 	expression_context: AST_CONTEXT
 			-- Saved original Ast context when processing in the ancestor's context.
@@ -170,7 +172,8 @@ feature {NONE} -- Implementation: byte node
 			else
 				l_ta := cl.actual_type
 			end
-			Ast_context.initialize (cl, l_ta, cl.feature_table)
+			Ast_context.initialize (cl, l_ta)
+			feature_table := cl.feature_table
 			if ct /= Void then
 				byte_context.init (ct)
 			end
@@ -302,7 +305,7 @@ feature {NONE} -- Implementation: byte node
 			end
 		end
 
-feature -- Type checking
+feature {NONE} -- Type checking
 
 	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS)
 			-- Type check `an_exp' in the context of `a_feature'.
@@ -371,10 +374,9 @@ feature -- Type checking
 						--| data (after resolving in ancestor's context .. such as formal..)
 						--| then reprocess in current class, note `is_inherited' is set to True
 						--| to avoid recomputing (and lost) data computed in first processing.
-					l_ft := context.current_feature_table
 					l_ctx := context.twin
 					expression_context := l_ctx
-					context.initialize (l_wc, l_wc.actual_type, l_ft)
+					context.initialize (l_wc, l_wc.actual_type)
 					context.init_attribute_scopes
 					context.init_local_scopes
 					type_a_checker.init_for_checking (a_feature, l_wc, Void, error_handler)
@@ -390,6 +392,8 @@ feature -- Type checking
 				an_ast.process (Current)
 			end
 		end
+
+feature -- Type checking
 
 	type_a_from_type_as (a_type_as: TYPE_AS): TYPE_A
 			-- TYPE_A related to `a_type_as'.
@@ -588,7 +592,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

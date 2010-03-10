@@ -56,7 +56,7 @@ feature -- Basic operations
 				a_evaluator_feature.tmp_ast_server.body_force (l_feature, l_body_id)
 
 				l_ast_context := a_evaluator_class.ast_context
-				l_ast_context.initialize (a_evaluator_class, a_evaluator_class.actual_type, a_evaluator_class.feature_table)
+				l_ast_context.initialize (a_evaluator_class, a_evaluator_class.actual_type)
 				l_ast_context.set_current_feature (a_evaluator_feature)
 				l_feature_checker := feature_checker
 				l_feature_checker.init (l_ast_context)
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

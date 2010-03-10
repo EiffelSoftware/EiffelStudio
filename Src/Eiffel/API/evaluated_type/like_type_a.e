@@ -30,6 +30,7 @@ inherit
 			is_explicit,
 			is_attached,
 			is_basic,
+			is_computable_using_ancestors,
 			is_expanded,
 			is_external,
 			is_initialization_required,
@@ -80,6 +81,8 @@ feature -- Properties
 				-- `actual_type' may yield yet another anchored type.
 			Result := actual_type.conformance_type.to_other_attachment (Current)
 		end
+
+feature -- Status report
 
 	has_associated_class: BOOLEAN
 			-- Does Current have an associated class?
@@ -194,6 +197,13 @@ feature -- Properties
 				-- We override the `type' set above since it is `actual_type'
 				-- and we want to see the anchor instead.
 			Result.set_type (Current)
+		end
+
+	is_computable_using_ancestors: BOOLEAN
+			-- <Precursor>
+		do
+				-- False here.
+				-- Should be redefined in `{LIKE_CURRENT}'.
 		end
 
 feature -- Access
@@ -498,7 +508,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

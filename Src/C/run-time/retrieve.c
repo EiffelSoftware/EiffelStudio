@@ -766,7 +766,7 @@ rt_private void set_mismatch_information (
 	EIF_TYPE_INDEX new_dtype = Dtype (object);
 	EIF_TYPE_INDEX new_dftype = Dftype (object);
 	type_descriptor *conv = type_description_for_new (conversions, new_dtype);
-	EIF_REFERENCE class_name;
+	EIF_REFERENCE l_new_version = NULL, l_old_version = NULL;
 	uint32 i;
 
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
@@ -776,13 +776,15 @@ rt_private void set_mismatch_information (
 	mismatch_information_initialize (eif_access (mismatch_information_object));
 
 	/* Store class name in table */
-	class_name = eif_gen_typename_of_type (new_dftype);
-	mismatch_information_add (eif_access (mismatch_information_object), class_name, "class");
+	mismatch_information_add (eif_access (mismatch_information_object), eif_gen_typename_of_type (new_dftype), "_type_name");
 
 	/* Store the storable versions */
-	if (conv->version || System(To_dtype(new_dftype)).cn_version) {
-		mismatch_information_set_versions (eif_access (mismatch_information_object), RTMS(conv->version),
-			RTMS(System(To_dtype(new_dftype)).cn_version));
+	l_old_version = conv->version;
+	l_new_version = System(To_dtype(new_dftype)).cn_version;
+	if (l_old_version || l_new_version) {
+		mismatch_information_set_versions (eif_access (mismatch_information_object),
+			(l_old_version ? RTMS(l_old_version) : NULL),
+			(l_new_version ? RTMS(l_new_version) : NULL));
 	} else {
 			/* No version number we simply set both to Voids */
 		mismatch_information_set_versions (eif_access (mismatch_information_object), NULL, NULL);
@@ -2583,7 +2585,7 @@ static char *type2name (long type)
 		case SK_CHAR:    name = "CHARACTER";      break;
 		case SK_UINT8:   name = "NATURAL_8";      break;
 		case SK_UINT16:  name = "NATURAL_16";     break;
-		case SK_UINT32:  name = "NATURAL_32";     break;
+		case SK_UINT32:  name = "NATURAL_32";     break;	
 		case SK_UINT64:  name = "NATURAL_64";     break;
 		case SK_INT8:    name = "INTEGER_8";      break;
 		case SK_INT16:   name = "INTEGER_16";     break;
@@ -4033,7 +4035,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 				default:
 					eise_io("General retrieve: not an Eiffel object.");
 			}
-		} 
+		}
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count;

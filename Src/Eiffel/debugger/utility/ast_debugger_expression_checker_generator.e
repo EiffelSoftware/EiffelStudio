@@ -356,7 +356,6 @@ feature {NONE} -- Type checking
 			an_ast_not_void: an_ast /= Void
 		local
 			l_cl, l_wc: CLASS_C
-			l_ft: FEATURE_TABLE
 			l_ctx: AST_CONTEXT
 			l_error_level: like error_level
 		do

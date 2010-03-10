@@ -11,9 +11,13 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
+			associated_class,
+			conform_to,
+			evaluated_type_in_descendant,
 			has_associated_class,
-			associated_class, conform_to, internal_is_valid_for_class,
-			evaluated_type_in_descendant, instantiated_in, instantiation_in
+			instantiated_in,
+			instantiation_in,
+			internal_is_valid_for_class
 		end
 
 	SHARED_NAMES_HEAP

@@ -210,7 +210,9 @@ rt_public void run_idr_destroy (void)
 	RT_GET_CONTEXT
 	idrf_destroy(&idrf);
 #ifdef EIF_64_BITS
-	ht_free (idr_ref_table);
+	if (idr_ref_table) {
+		ht_free (idr_ref_table);
+	}
 	idr_ref_table = NULL;
 	idr_ref_table_counter = 0;
 #endif

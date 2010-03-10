@@ -1187,8 +1187,10 @@ end;
 							-- not changed
 						changed_features.extend (feature_name_id)
 					end
-					feature_i.set_is_origin (True);
-					compute_new_rout_id := True;
+					feature_i.set_is_origin (True)
+						-- There are no inherited assertions anymore (if there were any).
+					feature_i.set_assert_id_set (Void)
+					compute_new_rout_id := True
 				end;
 				if compute_new_rout_id then
 					create new_rout_id_set.make

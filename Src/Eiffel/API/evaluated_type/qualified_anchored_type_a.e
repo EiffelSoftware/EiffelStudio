@@ -11,8 +11,11 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			update_dependance, evaluated_type_in_descendant, is_explicit,
-			initialize_info, dispatch_anchors
+			dispatch_anchors,
+			evaluated_type_in_descendant,
+			initialize_info,
+			is_explicit,
+			update_dependance
 		end
 
 	SHARED_NAMES_HEAP

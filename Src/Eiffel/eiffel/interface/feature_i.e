@@ -85,6 +85,8 @@ inherit
 
 	SHARED_INLINE_AGENT_LOOKUP
 
+	SHARED_DEGREES
+
 feature -- Access
 
 	feature_name: STRING
@@ -634,6 +636,25 @@ feature -- Status
 				Result := True
 			end
 		end
+
+	is_type_evaluation_delayed: BOOLEAN = False
+			-- Is evaluation of type information associated with this feature delayed?
+			-- (Usually this happens for types that cannot be evaluated immediately
+			-- because they require information from other classes that have no type
+			-- information yet.)
+--		do
+--			Result := not type.is_computable_using_ancestors
+--			if not Result and then attached arguments as a then
+--				from
+--					a.start
+--				until
+--					Result or else a.after
+--				loop
+--					Result := not a.item.is_computable_using_ancestors
+--					a.forth
+--				end
+--			end
+--		end
 
 	to_melt_in (a_class: CLASS_C): BOOLEAN
 			-- Has current feature to be melted in class `a_class' ?
@@ -1896,7 +1917,6 @@ feature -- Signature instantiation
 			-- Instantiated signature in context of `parent_type'.
 		require
 			good_argument: parent_type /= Void
-			is_solved: type.is_solved
 		local
 			i, nb: INTEGER
 			old_type, new_type: TYPE_A
@@ -1941,7 +1961,6 @@ feature -- Signature instantiation
 			-- Instantiated signature in context of `descendant_type'.
 		require
 			good_argument: descendant_type /= Void
-			is_solved: type.is_solved
 		local
 			i, nb: INTEGER
 			old_type, new_type: TYPE_A
@@ -2044,6 +2063,29 @@ feature -- Signature checking
 			end
 		end
 
+	delayed_check_types (t: FEATURE_TABLE)
+			-- Same as `check_types' except that if one type of the feature signature cannot be evaluated rigth now,
+			-- the corresponding action is recorded for future evaluation.
+		require
+			t_attached: attached t
+			is_context_initialized_for_t: context.current_class = t.associated_class
+		do
+			if is_type_evaluation_delayed then
+				degree_4.put_action (
+					agent
+						require
+							is_context_initialized: attached system.current_class as sc and then attached sc.feature_table as sft and then context.current_class = sft.associated_class
+						do
+							if attached system.current_class as c and then attached c.feature_table as ft then
+								check_types (ft)
+							end
+						end
+				)
+			else
+				check_types (t)
+			end
+		end
+
 	check_types (feat_table: FEATURE_TABLE)
 			-- Check type and arguments types. The objective is
 			-- to deal with anchored types and genericity. All anchored
@@ -2051,7 +2093,9 @@ feature -- Signature checking
 			-- instantiated if possible.
 			-- Make sure that `context' is already initialized for `feat_table' before calling.
 		require
-			context_initialize_for_feat_table: context.current_feature_table = feat_table and then context.current_class = feat_table.associated_class
+			feat_table_attached: attached feat_table
+			is_context_initialized_for_feat_table:
+				context.current_class = feat_table.associated_class
 		local
 			solved_type: TYPE_A
 			vffd5: VFFD5
@@ -2061,9 +2105,6 @@ feature -- Signature checking
 			l_error_level: NATURAL_32
 		do
 			l_class := feat_table.associated_class
-				-- Make sure that context is already initialized for `feat_table' by caller.
-				-- This saves expensive repeated calls to `actual_type'.
-			context.initialize (l_class, l_class.actual_type, feat_table)
 			context.set_current_feature (Current)
 				-- Not that the checks is only done for real `onces'. Constants
 				-- have their checks done through VQMC.
@@ -2225,6 +2266,25 @@ end
 			end
 		end
 
+	delayed_check_signature (old_feature: FEATURE_I; tbl: FEATURE_TABLE)
+			-- Possibly delayed call to `check_signature'.
+		require
+			old_feature_attached: attached old_feature
+			tbl_attached: attached tbl
+		do
+			if is_type_evaluation_delayed or else old_feature.is_type_evaluation_delayed then
+				degree_4.put_action (
+					agent (o: FEATURE_I; t: FEATURE_TABLE)
+						do
+							check_signature (o, t)
+						end
+					(old_feature, tbl)
+				)
+			else
+				check_signature (old_feature, tbl)
+			end
+		end
+
 	check_signature (old_feature: FEATURE_I; tbl: FEATURE_TABLE)
 			-- Check signature conformance beetween Current
 			-- and inherited feature in `inherit_info' from which Current
@@ -2273,8 +2333,7 @@ end
 				Error_handler.insert_error (vdrd7)
 			end
 
-			old_type ?= old_feature.type
-			old_type := old_type.actual_argument_type (special_arguments).actual_type
+			old_type := old_feature.type.actual_argument_type (special_arguments).actual_type
 				-- `new_type' is the actual type of the redefinition already
 				-- instantiated
 			new_type := type.actual_type
@@ -2371,6 +2430,32 @@ end
 			end
 		end
 
+	delayed_check_same_signature (old_feature: FEATURE_I; t: FEATURE_TABLE)
+			-- Check that the signature of the current feature is the same as the signature of `old_feature'
+			-- using the feature table `t'.
+		require
+			old_feature_attached: attached old_feature
+			t_attached: attached t
+		do
+			if is_type_evaluation_delayed or else old_feature.is_type_evaluation_delayed then
+				degree_4.put_action (
+					agent (f: FEATURE_I; ft: FEATURE_TABLE)
+						do
+								-- Evaluate signature of the old feature in the context of the new feature table.
+							f.solve_types (ft)
+								-- Check same signature for different features.
+							check_same_signature (f)
+						end
+					(old_feature, t)
+				)
+			else
+					-- Evaluate signature of the old feature in the context of the new feature table.
+				old_feature.solve_types (t)
+					-- Check same signature for different features.
+				check_same_signature (old_feature)
+			end
+		end
+
 	check_same_signature (old_feature: FEATURE_I)
 			-- Check signature equality beetween Current
 			-- and inherited feature in `inherit_info' from which Current
@@ -2379,7 +2464,6 @@ end
 			good_argument: old_feature /= Void
 			is_deferred
 			old_feature.is_deferred
-			old_feature_is_solved: old_feature.type.is_solved
 		local
 			old_type, new_type: TYPE_A
 			i, arg_count: INTEGER
@@ -2619,6 +2703,26 @@ end
 			end
 		ensure
 			result_attached: (type.is_void or else assigner_name_id /= 0) implies Result /= Void
+		end
+
+	delayed_check_assigner (feature_table: FEATURE_TABLE)
+			-- Possibly delayed call to `check_assigner'.
+		require
+			feature_table_attached: attached feature_table
+			has_assigner: assigner_name_id /= 0
+		local
+			assigner: FEATURE_I
+		do
+			if feature_table.feat_tbl_id = written_in then
+				assigner := feature_table.item_id (assigner_name_id)
+			elseif attached written_class.feature_of_name_id (assigner_name_id) as a then
+				assigner := feature_table.feature_of_rout_id (a.rout_id_set.first)
+			end
+			if attached assigner and then (is_type_evaluation_delayed or else assigner.is_type_evaluation_delayed) then
+				degree_4.put_action (agent check_assigner (feature_table))
+			else
+				check_assigner (feature_table)
+			end
 		end
 
 	check_assigner (feature_table: FEATURE_TABLE)
@@ -2862,6 +2966,19 @@ feature -- Replication
 
 feature -- Genericity
 
+	delayed_update_instantiator2 (a_class: CLASS_C)
+			-- Possibly delayed call to `update_instantiator2' depending on the feature signature.
+		require
+			good_argument: a_class /= Void
+			good_context: a_class.changed
+		do
+			if is_type_evaluation_delayed then
+				degree_4.put_action (agent update_instantiator2 (a_class))
+			else
+				update_instantiator2 (a_class)
+			end
+		end
+
 	update_instantiator2 (a_class: CLASS_C)
 			-- Look for generic/expanded types in result and arguments in order
 			-- to update instantiator.
@@ -2894,8 +3011,18 @@ feature -- Pattern
 			end
 		end
 
+	delayed_process_pattern
+			-- Process pattern of Current feature, possibly with a delay if its signature cannot be computed yet.
+		do
+			if is_type_evaluation_delayed then
+				degree_4.put_action (agent process_pattern)
+			else
+				process_pattern
+			end
+		end
+
 	process_pattern
-			-- Process pattern of Current feature
+			-- Process pattern of Current feature.
 		local
 			p: PATTERN_TABLE
 		do

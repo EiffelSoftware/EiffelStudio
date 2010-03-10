@@ -184,7 +184,7 @@ feature -- Report
 				l_feat_tbl := cl.feature_table --| fi.written_class.feature_table
 
 				l_ast_context.clear_all
-				l_ast_context.initialize (cl, l_cl_type_a, l_feat_tbl)
+				l_ast_context.initialize (cl, l_cl_type_a)
 				l_ast_context.set_current_feature (fi)
 
 				l_type_a_checker := type_a_checker
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			-- current index for FIFO `breakable_feature_info_storage'
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

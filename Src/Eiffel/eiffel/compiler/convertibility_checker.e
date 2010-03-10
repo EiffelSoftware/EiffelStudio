@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEGREES
+		export
+			{NONE} all
+		end
+
 	EQUALITY_TESTER [NAMED_TYPE_A]
 		export
 			{NONE} all
@@ -151,7 +156,9 @@ feature -- Initialization/Checking
 											else
 													-- Check that specified routine argument or return
 													-- type matches conversion type `l_named_type'.
-												check_conversion_type (a_class, a_feat_tbl, l_feat, l_named_type)
+												if attached a_feat_tbl.item_id (l_feat.feature_name.internal_name.name_id) as f then
+													delayed_check_conversion_type (a_class, f, l_feat, l_named_type)
+												end
 											end
 
 											if not has_error then
@@ -564,9 +571,29 @@ feature {NONE} -- Implementation: checking
 			end
 		end
 
+	delayed_check_conversion_type (
+			a_class: CLASS_C;
+			a_feat: FEATURE_I;
+			a_convert_feat: CONVERT_FEAT_AS;
+			a_type: NAMED_TYPE_A)
+			-- Possible delayed call to `check_conversion_type'.
+		require
+			a_class_not_void: a_class /= Void
+			a_feat_not_void: a_feat /= Void
+			a_convert_feat_not_void: a_convert_feat /= Void
+			a_type_not_void: a_type /= Void
+			routine_valid: valid_signature (a_feat)
+		do
+			if a_feat.is_type_evaluation_delayed then
+				degree_4.put_action (agent check_conversion_type (a_class, a_feat, a_convert_feat, a_type))
+			else
+				check_conversion_type (a_class, a_feat, a_convert_feat, a_type)
+			end
+		end
+
 	check_conversion_type (
 			a_class: CLASS_C;
-			a_feat_tbl: FEATURE_TABLE;
+			a_feat: FEATURE_I;
 			a_convert_feat: CONVERT_FEAT_AS;
 			a_type: NAMED_TYPE_A)
 
@@ -575,24 +602,19 @@ feature {NONE} -- Implementation: checking
 			-- conform to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
-			a_feat_tbl_not_void: a_feat_tbl /= Void
-			matching_class_and_feat_tbl: a_class = a_feat_tbl.associated_class
+			a_feat_not_void: a_feat /= Void
 			a_convert_feat_not_void: a_convert_feat /= Void
 			a_type_not_void: a_type /= Void
-			has_routine: a_feat_tbl.has_id (a_convert_feat.feature_name.internal_name.name_id)
-			routine_valid:
-				valid_signature (a_feat_tbl.item_id (a_convert_feat.feature_name.internal_name.name_id))
+			routine_valid: valid_signature (a_feat)
 		local
-			l_feat: FEATURE_I
 			l_vncp: VNCP
 		do
 				-- Check conformance of `a_type' to signature of routine specified in
 				-- `a_convert_feat'.
-			l_feat := a_feat_tbl.item_id (a_convert_feat.feature_name.internal_name.name_id)
 				-- FIXME: Manu 04/28/2003: we do not do yet apply convertibility to check
 				-- for conversion type validity, only conformance
-			if l_feat.has_return_value then
-				if not l_feat.type.conform_to (a_class, a_type) then
+			if a_feat.has_return_value then
+				if not a_feat.type.conform_to (a_class, a_type) then
 					create l_vncp.make ("Return type does not conform to SOURCE.")
 					l_vncp.set_class (a_class)
 					l_vncp.set_location (a_convert_feat.feature_name.start_location)
@@ -600,7 +622,7 @@ feature {NONE} -- Implementation: checking
 					has_error := True
 				end
 			else
-				if not a_type.conform_to (a_class, l_feat.arguments.i_th (1)) then
+				if not a_type.conform_to (a_class, a_feat.arguments.i_th (1)) then
 					create l_vncp.make ("SOURCE does not conform to argument type.")
 					l_vncp.set_class (a_class)
 					l_vncp.set_location (a_convert_feat.feature_name.start_location)
@@ -702,7 +724,7 @@ feature {NONE} -- Implementation: access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

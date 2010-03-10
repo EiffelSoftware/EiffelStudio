@@ -113,8 +113,7 @@ feature
 				l_feature_tbl_id := a_feature_table.feat_tbl_id
 				l_associated_class_non_deferred := not a_feature_table.associated_class.is_deferred
 					-- Initialize AST context before checking types.
-				context.initialize (a_feature_table.associated_class, a_feature_table.associated_class.actual_type, a_feature_table)
-
+				context.initialize (a_feature_table.associated_class, a_feature_table.associated_class.actual_type)
 			until
 				after
 			loop
@@ -133,7 +132,7 @@ feature
 								-- If feature was written directly for currently processed class then we check the arguments.
 							l_selection_list.item.a_feature.check_argument_names (a_feature_table)
 						end
-						l_selection_list.item.a_feature.check_types (a_feature_table)
+						l_selection_list.item.a_feature.delayed_check_types (a_feature_table)
 					end
 					if l_associated_class_non_deferred and then l_selection_list.item.internal_a_feature.is_deferred then
 						-- We have a deferred feature in a non-deferred class, so we raise a VCCH error
@@ -171,7 +170,7 @@ feature
 					l_selection_list.after
 				loop
 					if l_selection_list.item.a_feature_instantiated_for_feature_table then
-						l_selection_list.item.a_feature.update_instantiator2 (l_associated_class)
+						l_selection_list.item.a_feature.delayed_update_instantiator2 (l_associated_class)
 					end
 					l_selection_list.forth
 				end
@@ -269,7 +268,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

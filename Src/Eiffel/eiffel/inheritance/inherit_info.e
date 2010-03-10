@@ -16,6 +16,11 @@ inherit
 			is_equal
 		end
 
+	SHARED_DEGREES
+		undefine
+			is_equal
+		end
+
 create
 	set_with_feature_and_parent
 
@@ -138,6 +143,40 @@ feature -- Settings
 			internal_a_feature_set: internal_a_feature = f
 		end
 
+	delayed_instantiate_a_feature
+			-- Instantiate `a_feature' for `parent_type' with a possible delay.
+		require
+			a_feature_needs_instantiation: a_feature_needs_instantiation
+			parent_type_not_void: parent_type /= Void
+			a_feature_not_void: internal_a_feature /= Void
+		local
+			f: FEATURE_I
+		do
+				-- Record current feature for delayed instantiation.
+			f := internal_a_feature
+			if f.is_type_evaluation_delayed then
+					-- Make a clone of the current feature that will be updated later.
+				internal_a_feature := f.twin
+					-- Register update action.
+				degree_4.put_action (
+					agent (destination: FEATURE_I; source: FEATURE_I; instantiation_type: TYPE_A)
+						local
+							i: FEATURE_I
+						do
+							i := source.instantiated (instantiation_type)
+							destination.set_type (i.type, destination.assigner_name_id)
+							destination.set_arguments (i.arguments)
+							destination.set_pattern_id (i.pattern_id)
+						end
+					(internal_a_feature, f, parent_type)
+				)
+				set_a_feature_instantiated_for_feature_table (True)
+				set_a_feature_needs_instantiation (False)
+			else
+				instantiate_a_feature
+			end
+		end
+
 	instantiate_a_feature
 			-- Instantiate `a_feature' for `parent_type'.
 		require
@@ -149,7 +188,7 @@ feature -- Settings
 		do
 				-- Store previous `internal_a_feature' so that we can check whether a new object is created.
 			l_feature := internal_a_feature
-			internal_a_feature := internal_a_feature.instantiated (parent_type)
+			internal_a_feature := l_feature.instantiated (parent_type)
 			if l_feature /= internal_a_feature then
 				set_a_feature_instantiated_for_feature_table (True)
 			end
@@ -272,7 +311,7 @@ feature -- Debug
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -285,22 +324,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

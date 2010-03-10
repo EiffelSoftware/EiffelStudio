@@ -49,6 +49,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_AST_CONTEXT
+		export
+			{NONE} all
+		end
+
 create
 
 	make
@@ -93,6 +98,7 @@ feature -- Processing
 			l_degree_output: like degree_output
 			l_error_handler: like error_handler
 		do
+			create actions.make (2)
 			l_system := system
 			l_degree_output := degree_output
 			l_error_handler := error_handler
@@ -144,13 +150,16 @@ feature -- Processing
 				if a_class /= Void and then a_class.degree_4_needed then
 					if not a_class.degree_4_processed and then (ignored_classes.count = 0 or else not ignored_classes.has (a_class)) then
 						l_degree_output.put_degree_4 (a_class, count - nb)
+							-- Set current class now.
 						l_system.set_current_class (a_class)
+						put_action_class
 							-- Adds future checks to the `remaining_validity_checking_list'
 						l_error_level := l_error_handler.error_level
 						process_class (a_class)
 						if l_error_handler.error_level = l_error_level then
 								-- We only merge the remaining checks if the class did not produce any other errors
 							merge_remaining_validity_checks_into_global_list
+								-- Mark the class as processed.
 							a_class.set_degree_4_processed
 						else
 								-- We cannot add the temporary added checks so we need to get rid of them
@@ -166,10 +175,36 @@ feature -- Processing
 				i := i + 1
 			end
 
+				-- Run delayed actions.
+			from
+				actions.start
+			until
+				actions.after
+			loop
+				a_class := system.class_of_id (actions.item.class_id)
+				if not ignored_classes.has (a_class) then
+					system.set_current_class (a_class)
+					context.initialize (a_class, a_class.actual_type)
+					l_error_level := l_error_handler.error_level
+					actions.item.actions.do_all (agent {PROCEDURE [ANY, TUPLE]}.call (Void))
+					if l_error_handler.error_level = l_error_level then
+							-- The class is already marked as processed.
+					else
+							-- The class has errors, avoid marking it and its descendants as processed.
+						ignored_classes.put (a_class)
+						remove_descendant_classes_from_processing (a_class)
+					end
+				end
+				actions.forth
+			end
+
 				-- No need to continue if we have found some errors.
 			if l_error_handler.has_error then
 				l_error_handler.raise_error
 			end
+
+				-- Flush features that are computed with a delay.
+			tmp_feature_server.flush_delayed
 
 				-- Check now the validity on creation constraint, i.e. that the
 				-- specified creation procedures are indeed part of the constraint
@@ -194,7 +229,7 @@ feature -- Processing
 			end
 
 				-- We cannot go on here as the creation constraints are not guaranteed to be valid.
-				-- The remaining_validity_check_list will be kept. All checks will be done once we have no mroe errors.
+				-- The remaining_validity_check_list will be kept. All checks will be done once we have no more errors.
 			if l_error_handler.has_error then
 				l_error_handler.raise_error
 			end
@@ -223,6 +258,7 @@ feature -- Processing
 			changed_status.wipe_out
 			l_system.set_current_class (Void)
 			l_degree_output.put_end_degree
+			actions := Void
 		end
 
 feature -- Element change
@@ -347,6 +383,47 @@ feature -- Setting
 			end
 		end
 
+feature -- Actions to be done at the end of degree
+
+	is_action_class_set: BOOLEAN
+			-- Is class to add actions set?
+		do
+			Result :=
+				attached actions as a and then
+				not a.is_empty and then
+				a.last.class_id = system.current_class.class_id
+		end
+
+	put_action_class
+			-- Record the class to add actions using `put_action'.
+		require
+			not is_action_class_set
+			current_class_attached: attached system.current_class
+		do
+			if attached actions as a then
+				a.extend ([create {ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]}.make (1), system.current_class.class_id])
+			end
+		ensure
+			is_action_class_set: is_action_class_set
+		end
+
+	put_action (a: PROCEDURE [ANY, TUPLE])
+			-- Record action `a' to be executed at the end of degree.
+		require
+			a_attached: attached a
+			is_action_class_set: is_action_class_set
+		do
+			if attached actions as l then
+				l.last.actions.extend (a)
+			end
+		ensure
+			a_added_as_last: attached actions as l implies l.last.actions.last = a
+		end
+
+feature {NONE} -- Actions to be done at the end of degree
+
+	actions: ARRAYED_LIST [TUPLE [actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]; class_id: INTEGER_32]]
+			-- Actions to be done at the end of degree for the class identified by class ID
 
 feature {NONE} -- Processing
 
@@ -525,7 +602,13 @@ feature {INHERIT_TABLE} -- Propagation
 					-- Generate skeleton and update seeds of generic attributes
 
 					-- Set the attribute skeleton of `a_class'
-				a_class.set_skeleton (resulting_table.skeleton)
+				degree_4.put_action (
+					agent (c: CLASS_C; t: FEATURE_TABLE)
+						do
+							c.set_skeleton (t.skeleton)
+						end
+					(a_class, resulting_table)
+				)
 
 					-- Instantiate generic parameter in context of current class.
 				a_class.update_generic_features
@@ -728,7 +811,7 @@ invariant
 	ignored_classes_not_void: ignored_classes /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -741,22 +824,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DEGREE_4

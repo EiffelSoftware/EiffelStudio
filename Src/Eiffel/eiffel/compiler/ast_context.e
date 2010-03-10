@@ -65,9 +65,6 @@ feature -- Access
 	current_class_type: LIKE_CURRENT
 			-- Actual type of `current_class'
 
-	current_feature_table: FEATURE_TABLE
-			-- Current feature table
-
 	written_class: CLASS_C
 			-- Class where the code is originally written.
 			-- (Used for checking inherited code in current context.)
@@ -631,11 +628,10 @@ feature -- Status report
 
 feature -- Setting
 
-	initialize (a_class: like current_class; a_type: CL_TYPE_A; a_feat_tbl: like current_feature_table)
+	initialize (a_class: like current_class; a_type: CL_TYPE_A)
 			-- Initialize current context for class analyzis.
 		require
 			a_class_not_void: a_class /= Void
-			a_feat_tbl_not_void: a_feat_tbl /= Void
 			a_type_not_void: a_type /= Void
 		local
 			s: GENERIC_SKELETON
@@ -646,7 +642,6 @@ feature -- Setting
 			current_class_type.set_actual_type (a_type)
 				-- Current is always attached.
 			current_class_type := current_class_type.as_attached_in (current_class)
-			current_feature_table := a_feat_tbl
 			set_written_class (Void)
 			from
 				s := a_class.skeleton
@@ -665,7 +660,6 @@ feature -- Setting
 			current_class_type_set: current_class_type.conformance_type = a_type
 				or else current_class_type.conformance_type.same_as (a_type.as_attached_type)
 				or else current_class_type.conformance_type.same_as (a_type.as_implicitly_attached)
-			current_feature_table_set: current_feature_table = a_feat_tbl
 		end
 
 	set_current_feature (f: FEATURE_I)
@@ -884,7 +878,6 @@ feature -- Managing the type stack
 		do
 			current_class := Void
 			current_class_type := Void
-			current_feature_table := Void
 			attributes.wipe_out
 			clear_feature_context
 		end

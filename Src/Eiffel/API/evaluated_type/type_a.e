@@ -605,11 +605,6 @@ feature -- Properties
 			is_full_named_type_consistent: Result implies is_named_type
 		end
 
-	is_solved: BOOLEAN
-		do
-			Result := True
-		end
-
 	has_like: BOOLEAN
 			-- Has the type anchored type in its definition ?
 		do
@@ -687,6 +682,13 @@ feature -- Properties
 			-- Is type standalone, i.e. does not depend on formal generic or acnhored type?
 		do
 			Result := not is_loose
+		end
+
+	is_computable_using_ancestors: BOOLEAN
+			-- Can type be computed using the type information of ancestor classes only?
+			-- (If yes, the type can be solved immediately if ancestor classes are processed already.)
+		do
+			Result := True
 		end
 
 feature -- Comparison
@@ -1506,7 +1508,7 @@ invariant
 	generics_not_void_implies_generics_not_empty_or_tuple: (generics /= Void implies (not generics.is_empty or is_tuple))
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

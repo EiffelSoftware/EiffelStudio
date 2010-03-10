@@ -96,6 +96,9 @@ inherit
 feature -- Initialization
 
 	init (a_context: AST_CONTEXT)
+		require
+			current_class_is_attached: attached a_context.current_class as c
+			current_class_has_feature_table: c.has_feature_table
 		do
 			if type_a_checker = Void then
 				create type_a_checker
@@ -110,6 +113,7 @@ feature -- Initialization
 				create byte_anchor
 			end
 			context := a_context
+			feature_table := a_context.current_class.feature_table
 		end
 
 feature -- Type checking
@@ -348,15 +352,15 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 				l_written_class := context.written_class
 					-- Initialize AST context before calling `check_types'
 					-- This is an optimization for checking types during degree 4 to avoid repetitive type creation.
-				context.initialize (context.current_feature_table.associated_class, context.current_feature_table.associated_class.actual_type, context.current_feature_table)
-				a_feature.check_types (context.current_feature_table)
+				context.initialize (feature_table.associated_class, feature_table.associated_class.actual_type)
+				a_feature.check_types (feature_table)
 				if error_level = l_error_level then
 					a_feature.check_type_validity (context.current_class)
 					if error_level = l_error_level then
 						context.set_written_class (l_written_class)
 						if not is_inherited and then a_is_for_inline_agent then
 							if a_feature.has_arguments then
-								a_feature.check_argument_names (context.current_feature_table)
+								a_feature.check_argument_names (feature_table)
 							end
 						end
 						if error_level = l_error_level then
@@ -392,7 +396,7 @@ feature {NONE} -- Internal type checking
 			end
 		end
 
-feature -- Status report
+feature -- Access
 
 	byte_code: BYTE_CODE
 			-- Last computed BYTE_CODE instance if any.
@@ -411,6 +415,8 @@ feature -- Status report
 
 	last_byte_node: BYTE_NODE
 			-- Last computed BYTE_NODE after a call to one of the `process_xx' routine
+
+feature {NONE} -- Access
 
 	last_calls_target_type: TYPE_A
 			-- Static type of last feature call.
@@ -501,6 +507,9 @@ feature {NONE} -- Implementation: State
 
 	context: AST_CONTEXT
 			-- Context in which current checking is done
+
+	feature_table: FEATURE_TABLE
+			-- Current feature table
 
 	is_checking_postcondition: BOOLEAN
 			-- Are we currently checking a postcondition.
@@ -656,7 +665,7 @@ feature {NONE} -- Implementation: Access
 	is_last_access_tuple_access: BOOLEAN
 			-- Is last ACCESS_AS node an access to a TUPLE element?
 
-feature -- Settings
+feature {NONE} -- Settings
 
 	reset
 			-- Reset all attributes to their default value
@@ -770,7 +779,7 @@ feature -- Settings
 			is_current_feature_set: current_feature = a_feature
 		end
 
-feature -- Roundtrip
+feature {NONE} -- Roundtrip
 
 	process_keyword_as (l_as: KEYWORD_AS)
 			-- Process `l_as'.
@@ -1022,7 +1031,7 @@ feature -- Roundtrip
 			process_creation_expr_as (l_as)
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS)
 		local
@@ -4836,7 +4845,7 @@ feature -- Implementation
 							-- The local name is an argument name of the
 							-- current analyzed feature
 						error_handler.insert_error (create {VUOT1}.make (context, local_id))
-					elseif context.current_feature_table.has_id (local_name_id) then
+					elseif feature_table.has_id (local_name_id) then
 							-- The local name is a feature name of the
 							-- current analyzed class.
 						error_handler.insert_error (create {VUOT1}.make (context, local_id))
@@ -6848,7 +6857,7 @@ feature -- Implementation
 						-- The local name is an argument name of the
 						-- current analyzed feature.
 					error_handler.insert_error (create {VOIT2}.make (context, local_id))
-				elseif context.current_feature_table.has_id (local_name_id) then
+				elseif feature_table.has_id (local_name_id) then
 						-- The local name is a feature name of the
 						-- current analyzed class.
 					error_handler.insert_error (create {VOIT2}.make (context, local_id))
@@ -9664,7 +9673,7 @@ feature {NONE} -- Implementation: checking locals
 									l_vrle2.set_local_name (l_local_name_id)
 									l_vrle2.set_location (l_as.locals.item.start_location)
 									error_handler.insert_error (l_vrle2)
-								elseif not is_replicated and then context.current_feature_table.has_id (l_local_name_id) then
+								elseif not is_replicated and then feature_table.has_id (l_local_name_id) then
 										-- The local name is a feature name of the
 										-- current analyzed class.
 									create l_vrle1

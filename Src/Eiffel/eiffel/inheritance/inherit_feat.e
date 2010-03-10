@@ -1,9 +1,11 @@
 note
+	description: "[
+		Class for analysis of instances of FEATURE_I inherited under the
+		same final name. Those features are divided into the sublists:
+		the deferred features and the non-deferred features.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Class for analysis of instances of FEATURE_I inherited under the
--- same final name. Those features are divided into the sublists:
--- the deferred features and the non-deferred features.
 
 class INHERIT_FEAT
 
@@ -62,8 +64,24 @@ inherit
 			is_equal
 		end
 
+	SHARED_DEGREES
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 create
 	make
+
+feature {NONE} -- Creation
+
+	make
+			-- Lists creation
+		do
+			create features.make (1)
+			create rout_id_set.make
+		end
 
 feature
 
@@ -77,7 +95,11 @@ feature
 			end
 		end
 
-	deferred_features_internal: like deferred_features
+	deferred_features_internal: detachable like deferred_features
+		note
+			option: stable
+		attribute
+		end
 
 	features: ARRAYED_LIST [INHERIT_INFO]
 			-- List of informations on non-deferred inherited features
@@ -89,13 +111,6 @@ feature
 
 	rout_id_set: ROUT_ID_SET
 			-- Set of routine ids computed for the inherited feature
-
-	make
-			-- Lists creation
-		do
-			create features.make (1)
-			create rout_id_set.make
-		end
 
 --| FIXME IEK: The following two features are currently unused.
 	has_assertion: BOOLEAN
@@ -218,9 +233,25 @@ feature
 						Error_handler.insert_error (vdus2);
 						features.forth;
 					else
+						if info.a_feature_needs_instantiation then
+							info.delayed_instantiate_a_feature
+							a_feature := info.internal_a_feature
+						end
 							-- We initially set parent as Void in 'new_inherit_info' as `new_deferred' is instantiated.
-						new_info := inherit_info_cache.new_inherited_info (info.a_feature.new_deferred, Void, Void)
-						new_info.set_parent (info.parent);
+						new_info := inherit_info_cache.new_inherited_info (a_feature.new_deferred, Void, Void)
+						new_info.set_parent (info.parent)
+						if a_feature.is_type_evaluation_delayed then
+								-- Since type evaluation is delayed, the new deferred feature has to be updated with type information later.
+							degree_4.put_action (
+								agent (destination, source: FEATURE_I)
+									do
+										destination.set_type (source.type, destination.assigner_name_id)
+										destination.set_arguments (source.arguments)
+										destination.set_pattern_id (source.pattern_id)
+									end
+								(new_info.internal_a_feature, a_feature)
+							)
+						end
 						insert (new_info);
 						features.remove;
 					end;
@@ -356,7 +387,7 @@ feature
 							-- generic class
 							-- Check if instantation has an effect.
 						if features.first.a_feature_needs_instantiation then
-							features.first.instantiate_a_feature
+							features.first.delayed_instantiate_a_feature
 						end
 						if features.first.a_feature_instantiated_for_feature_table then
 								-- Instantiation has an effect so we need to check all of the features to make sure they are equivalent
@@ -484,7 +515,7 @@ feature -- Debug
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -497,22 +528,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

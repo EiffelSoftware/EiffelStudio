@@ -45,6 +45,13 @@ inherit
 			is_equal, copy
 		end
 
+	SHARED_DEGREES
+		export {NONE}
+			all
+		undefine
+			is_equal, copy
+		end
+
 create
 	make
 
@@ -87,6 +94,19 @@ feature -- Selection
 						if item.non_conforming then
 							replication.set_from_non_conforming_parent (True)
 						end
+					end
+						-- Check if we need to update replicated feature descriptor.
+					if replication.is_type_evaluation_delayed then
+							-- Replicated feature descriptor should be updated to use types computed with a delay.
+						degree_4.put_action (
+							agent (destination, source: FEATURE_I)
+								do
+									destination.set_type (source.type, destination.assigner_name_id)
+									destination.set_arguments (source.arguments)
+									destination.set_pattern_id (source.pattern_id)
+								end
+							(replication, item.internal_a_feature)
+						)
 					end
 					item.set_a_feature (replication)
 					forth
@@ -378,6 +398,18 @@ end;
 				attribute_i.set_generate_in (new_t.feat_tbl_id)
 			end
 
+			if a_feature.is_type_evaluation_delayed then
+					-- Use post-evaluated types.
+				degree_4.put_action (
+					agent (destination, source: FEATURE_I)
+						do
+							destination.set_type (source.type, destination.assigner_name_id)
+							destination.set_arguments (source.arguments)
+							destination.set_pattern_id (source.pattern_id)
+						end
+					(a_feature, a_info.internal_a_feature)
+				)
+			end
 				-- Set inheritance info object with unselected info so that this can be
 				-- used for replication processing.
 			a_info.set_a_feature (a_feature)

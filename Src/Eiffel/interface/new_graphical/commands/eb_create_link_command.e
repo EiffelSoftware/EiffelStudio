@@ -196,10 +196,8 @@ feature {NONE} -- Implementation
 			-- Show menu to enable selection of link type.
 		local
 			menu: EV_MENU
-			menu_item: EV_CHECK_MENU_ITEM
 		do
 			menu := new_menu
-
 			menu.show_at (current_widget, current_widget.pointer_position.x, button_height)
 		end
 

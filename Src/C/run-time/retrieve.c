@@ -766,7 +766,7 @@ rt_private void set_mismatch_information (
 	EIF_TYPE_INDEX new_dtype = Dtype (object);
 	EIF_TYPE_INDEX new_dftype = Dftype (object);
 	type_descriptor *conv = type_description_for_new (conversions, new_dtype);
-	EIF_REFERENCE l_new_version = NULL, l_old_version = NULL;
+	char *l_new_version = NULL, *l_old_version = NULL;
 	uint32 i;
 
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
@@ -783,8 +783,7 @@ rt_private void set_mismatch_information (
 	l_new_version = System(To_dtype(new_dftype)).cn_version;
 	if (l_old_version || l_new_version) {
 		mismatch_information_set_versions (eif_access (mismatch_information_object),
-			(l_old_version ? RTMS(l_old_version) : NULL),
-			(l_new_version ? RTMS(l_new_version) : NULL));
+			l_old_version, l_new_version);
 	} else {
 			/* No version number we simply set both to Voids */
 		mismatch_information_set_versions (eif_access (mismatch_information_object), NULL, NULL);

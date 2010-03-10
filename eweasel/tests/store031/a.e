@@ -26,10 +26,18 @@ feature -- Mismatch
 		do
 			if mismatch_information.is_version_mismatched then
 				io.put_string ("Original version: ")
-				io.put_string (mismatch_information.stored_version)
+				if mismatch_information.stored_version /= Void then
+					io.put_string (mismatch_information.stored_version)
+				else
+					io.put_string ("None")
+				end
 				io.put_new_line
 				io.put_string ("Current version: ")
-				io.put_string (mismatch_information.current_version)
+				if mismatch_information.current_version /= Void then
+					io.put_string (mismatch_information.current_version)
+				else
+					io.put_string ("None")
+				end
 				io.put_new_line
 			end
 			Precursor

@@ -58,7 +58,7 @@ compile_melted
 compile_result	ok
 execute_work	NONE exec_output_m6 0
 execute_result	ok
-compare		exec_output_m6 output_mismatch
+compare		exec_output_m6 output_mismatch_2
 
 -- Going from one version to no version
 define VERSION	""
@@ -68,7 +68,7 @@ compile_melted
 compile_result	ok
 execute_work	NONE exec_output_m7 0
 execute_result	ok
-compare		exec_output_m7 output_mismatch
+compare		exec_output_m7 output_mismatch_2
 
 
 test_end

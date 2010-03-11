@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 				create l_file.make_create_read_write (a_file.as_string_8)
 				create l_writer.make (l_file)
 				create l_facility
-				l_facility.independent_store (a_config_data, l_writer, True)
+				l_facility.store (a_config_data, l_writer)
 				l_file.close
 				Result := True
 			end
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation attributes
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

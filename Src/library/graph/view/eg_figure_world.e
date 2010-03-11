@@ -382,6 +382,24 @@ feature -- Element change
 			set: factory = a_factory
 		end
 
+	select_displayed_nodes
+			-- Select all displayed nodes on the diagram
+		local
+			i: INTEGER
+		do
+			from
+				i  := nodes.count
+			until
+				i = 0
+			loop
+				if nodes [i].is_show_requested and then not selected_figures.has (nodes [i]) then
+					selected_figures.extend (nodes [i])
+					set_figure_selection_state (nodes [i], True)
+				end
+				i := i - 1
+			end
+		end
+
 	deselect_all
 			-- Deselect all Figures.
 		do

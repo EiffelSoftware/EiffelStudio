@@ -433,9 +433,7 @@ feature {NONE} -- Access
 
 	frozen window_id_counter: CELL [NATURAL_32]
 			-- Counter for generating unique window id's
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.put (1)
 		ensure
 			result_attached: Result /= Void

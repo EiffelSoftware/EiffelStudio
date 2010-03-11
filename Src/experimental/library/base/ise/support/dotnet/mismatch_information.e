@@ -28,7 +28,7 @@ inherit
 create {MISMATCH_CORRECTOR}
 	default_create
 
-create {MISMATCH_INFORMATION, SED_RECOVERABLE_DESERIALIZER}
+create
 	make
 
 feature -- Initialization

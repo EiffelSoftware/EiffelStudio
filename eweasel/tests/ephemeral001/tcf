@@ -1,4 +1,4 @@
-test_name ephemeral-basic
+test_name ephemeral-basics
 test_description Basic testing of ephemeral classes.
 
 copy_sub 	Ace $TEST Ace

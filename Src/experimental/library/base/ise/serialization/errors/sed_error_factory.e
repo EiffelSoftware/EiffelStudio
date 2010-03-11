@@ -1,5 +1,7 @@
 note
 	description: "Objects that provide instances of SED_ERROR"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "Julian Rogers"
 	last_editor: "$Author$"
 	date: "$Date$"
@@ -20,6 +22,22 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	new_invalid_object_error (a_obj: ANY): SED_ERROR
+			-- Object `a_obj' was retrieved but is not valid.
+		do
+			create Result.make_with_string ("Invalid retrieved object of type " + internal.type_name (a_obj))
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	new_object_mismatch_error (a_obj: ANY): SED_ERROR
+			-- Object `a_obj' was retrieved but its content is still mismatched.
+		do
+			create Result.make_with_string ("Unfixable object of type " + internal.type_name (a_obj))
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	new_format_mismatch (a_old_version, a_new_version: NATURAL_32): SED_ERROR
 			-- Return an error when the format is different from what we expected upon retrieval
 		do
@@ -28,12 +46,17 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	new_missing_type_error (a_type: STRING): SED_ERROR
-			-- Return a error representing a missing type `a_type'.
+	new_missing_type_error (a_stored_type, a_adapted_type: STRING): SED_ERROR
+			-- Return a error representing a missing type `a_stored_type' possibly adapted to `a_adapted_type'.
 		require
-			a_type_not_void: a_type /= Void
+			a_stored_type_not_void: a_stored_type /= Void
+			a_adapted_type_not_void: a_adapted_type /= Void
 		do
-			create Result.make_with_string ("Unknown class type" + a_type)
+			if a_stored_type ~ a_adapted_type then
+				create Result.make_with_string ("Unknown class type" + a_stored_type)
+			else
+				create Result.make_with_string ("Unknown class type" + a_stored_type + " and unknown adapted class type " + a_adapted_type)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -47,7 +70,21 @@ feature -- Access
 			l_type: STRING
 		do
 			l_type := internal.class_name_of_type (a_type_id)
-			create Result.make_with_string ("No attribute named '" + a_attribute_name + "' in class " + l_type)
+			create Result.make_with_string ("No attribute named '" + a_attribute_name + "' in type " + l_type)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	new_unknown_attribute_type_error (a_type_id: INTEGER; a_attribute_name: STRING): SED_ERROR
+			-- Return a error representing an attribute whose type is unknown.
+		require
+			a_type_id_non_negative: a_type_id >= 0
+			a_attribute_name_not_void: a_attribute_name /= Void
+		local
+			l_type: STRING
+		do
+			l_type := internal.class_name_of_type (a_type_id)
+			create Result.make_with_string ("Attribute named '" + a_attribute_name + "' in type " + l_type + " has an unknown type")
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -58,7 +95,7 @@ feature -- Access
 			a_type_id_non_negative: a_type_id >= 0
 		local
 			l_type, l_error_msg: STRING
-			l_new_version: detachable STRING
+			l_new_version: detachable IMMUTABLE_STRING_8
 		do
 			l_type := internal.class_name_of_type (a_type_id)
 			l_new_version := internal.storable_version_of_type (a_type_id)
@@ -121,5 +158,17 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
+
+note
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end

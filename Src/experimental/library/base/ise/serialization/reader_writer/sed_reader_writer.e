@@ -110,6 +110,16 @@ feature -- Access
 			read_string_8_not_void: Result /= Void
 		end
 
+	read_immutable_string_8: IMMUTABLE_STRING_8
+			-- Read next 8-bits sequence of character as an IMMUTABLE_STRING_8
+		require
+			is_ready: is_ready_for_reading
+		do
+			create Result.make_from_string (read_string_8)
+		ensure
+			read_immutable_string_8_not_void: Result /= Void
+		end
+
 	read_boolean: BOOLEAN
 			-- Read next boolean
 		require
@@ -272,6 +282,26 @@ feature -- Element change
 		end
 
 	write_string_8 (v: STRING)
+			-- Write `v'.
+		require
+			is_ready: is_ready_for_writing
+			v_not_void: v /= Void
+		local
+			i, nb: INTEGER
+		do
+			write_compressed_natural_32 (v.count.to_natural_32)
+			from
+				i := 1
+				nb := v.count + 1
+			until
+				i = nb
+			loop
+				write_character_8 (v.item (i))
+				i := i + 1
+			end
+		end
+
+	write_immutable_string_8 (v: IMMUTABLE_STRING_8)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing

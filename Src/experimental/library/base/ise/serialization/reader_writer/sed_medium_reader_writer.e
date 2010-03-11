@@ -223,6 +223,7 @@ feature {NONE} -- Buffer update
 		local
 			l_version: NATURAL_32
 			l_is_new_format: BOOLEAN
+			l_failure: SERIALIZATION_FAILURE
 		do
 				-- Read the amount of data we are suppose to read
 			medium.read_to_managed_pointer (buffer, 0, {PLATFORM}.integer_32_bytes)
@@ -260,22 +261,27 @@ feature {NONE} -- Buffer update
 				if buffer_size > {PLATFORM}.integer_32_bytes then
 					medium.read_to_managed_pointer (buffer, buffer_position, buffer_size - buffer_position)
 					if medium.bytes_read /= buffer_size - buffer_position then
-							-- What should we do when we cannot read the expected number of bytes?
-							-- Raise an exception or flag it?
+							-- Invalid data is being read here!!!
 						buffer_position := 0
 						buffer_size := buffer.count
+						create l_failure
+						l_failure.set_message ("Read less than expected number of bytes in buffer.")
+						l_failure.raise
 					end
 				else
-						-- Invalid data is being read here?
-						-- What should we do?
+						-- Invalid data is being read here!!!
 					buffer_position := 0
 					buffer_size := buffer.count
+					create l_failure
+					l_failure.set_message ("Read less than 4 bytes in buffer's header.")
+					l_failure.raise
 				end
 			else
-					-- What should we do when we cannot read the expected number of bytes?
-					-- Raise an exception or flag it?
 				buffer_position := 0
 				buffer_size := buffer.count
+				create l_failure
+				l_failure.set_message ("Cannot read buffer size from header.")
+				l_failure.raise
 			end
 		end
 

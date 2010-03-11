@@ -6,7 +6,7 @@ copy_sub 	Ace $TEST Ace
 copy_sub 	test.e $CLUSTER test.e
 
 compile_melted
-compile_result	syntax_warning RT_EXTENSION 273
+compile_result	ok
 
 c_compile_work
 c_compile_result ok

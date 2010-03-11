@@ -94,7 +94,7 @@ feature -- Retrieve and save
 				create l_file.make_create_read_write (storage_file_name)
 				create l_writer.make (l_file)
 				create l_facility
-				l_facility.independent_store (l_tuple, l_writer, True)
+				l_facility.store (l_tuple, l_writer)
 				l_file.close
 				save_needed := False
 			end
@@ -336,7 +336,7 @@ invariant
 	internal_date_server_attached: internal_date_server /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

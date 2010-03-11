@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			l_med.set_is_pointer_value_stored (True)
 			l_med.set_for_writing
 			create date1.make_now
-			l_serializer.independent_store (an_object, l_med, is_for_fast_retrieval)
+			l_serializer.store (an_object, l_med)
 			create date2.make_now
 			l_file.close
 			print ("New independent storing time: " + date2.relative_duration (date1).fine_seconds_count.out + "%N")

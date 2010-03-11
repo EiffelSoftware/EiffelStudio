@@ -425,6 +425,30 @@ feature -- Access
 			dynamic_type_nonnegative: Result >= 0
 		end
 
+	attached_type (type_id: INTEGER): INTEGER
+			-- Attached version of `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+				-- Currently .NET does not support attachment.
+			fixme ("Take into account attachment marks")
+			Result := type_id
+		ensure
+			unchanged_if_attached: is_attached_type (type_id) implies type_id = Result
+		end
+
+	detachable_type (type_id: INTEGER): INTEGER
+			-- Detachable version of `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+				-- Currently .NET does not support attachment.
+			fixme ("Take into account attachment marks")
+			Result := type_id
+		ensure
+			unchanged_if_detachable: not is_attached_type (type_id) implies type_id = Result
+		end
+
 	generic_count (obj: ANY): INTEGER
 			-- Number of generic parameter in `obj'.
 		require

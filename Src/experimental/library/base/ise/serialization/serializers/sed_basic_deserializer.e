@@ -25,18 +25,14 @@ feature {NONE} -- Implementation: Access
 			-- Mapping between old dynamic types and new ones.
 
 	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER
-			-- Given `a_old_type_id', dynamic type id in stored system, retrieve dynamic
-			-- type id in current system.
-		local
-			t: like dynamic_type_table
+			-- <Precursor>
 		do
-			t := dynamic_type_table
-			if t /= Void then
-				check
-					t.valid_index (a_old_type_id)
-					t.item (a_old_type_id) >= 0
-				end
+			if attached dynamic_type_table as t and then t.valid_index (a_old_type_id) then
 				Result := t.item (a_old_type_id)
+			else
+					-- Mapping was not found, most likely what we are retrieving has been corrupted
+					-- since serialization ensures that this could not happen.
+				Result := -1
 			end
 		end
 
@@ -59,7 +55,7 @@ feature {NONE} -- Implementation
 			check has_version: has_version end
 			version := l_deser.read_compressed_natural_32
 			if version /= {SED_VERSIONS}.basic_version then
-				set_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.basic_version))
+				raise_fatal_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.basic_version))
 			else
 					-- Number of dynamic types in storable
 				nb := l_deser.read_compressed_natural_32.to_integer_32
@@ -75,14 +71,15 @@ feature {NONE} -- Implementation
 					l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
 					l_type_str := l_deser.read_string_8
 					l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
-					if l_new_dtype = -1 then
-						set_error (error_factory.new_missing_type_error (l_type_str))
-						i := nb - 1 -- Jump out of loop
-					else
+					if l_new_dtype >= 0 then
 						if not l_table.valid_index (l_old_dtype) then
 							l_table := l_table.aliased_resized_area_with_default (0, (l_old_dtype + 1).max (l_table.count * 2))
 						end
 						l_table.put (l_new_dtype, l_old_dtype)
+					else
+							-- It is a fatal error, but we still continue to make sure
+							-- we collect all errors.
+						add_error (error_factory.new_missing_type_error (l_type_str, l_type_str))
 					end
 					i := i + 1
 				end

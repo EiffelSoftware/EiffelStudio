@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 				if version >= {SED_VERSIONS}.recoverable_version_6_6 then
 					if attached l_int.storable_version_of_type (l_dtype) as l_version and then not l_version.is_empty then
 						l_ser.write_boolean (True)
-						l_ser.write_string_8 (l_version)
+						l_ser.write_immutable_string_8 (l_version)
 					else
 						l_ser.write_boolean (False)
 					end
@@ -87,7 +87,8 @@ feature {NONE} -- Implementation
 			end
 
 				-- Write mapping dynamic type and their string representation for static type
-				-- of attributes of alive objects.
+				-- of attributes of alive objects. We do not store the version number because
+				-- there is no instances of those types present in the storable.
 			from
 					-- Write number of types being written
 				l_attr_dtype_table := attributes_dynamic_types (l_dtype_table)

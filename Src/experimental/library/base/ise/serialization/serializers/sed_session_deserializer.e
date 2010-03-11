@@ -42,11 +42,21 @@ feature -- Access
 feature -- Status report
 
 	error: detachable SED_ERROR
+			-- Last error encountered during retrieval
+		obsolete
+			"Use `errors' directly to find out errors encountered during retrieval."
+		do
+			if attached errors as l_errors and then not l_errors.is_empty then
+				Result := l_errors.last
+			end
+		end
+
+	errors: detachable ARRAYED_LIST [SED_ERROR]
 
 	has_error: BOOLEAN
 			-- Did we encounter an error during retrieval?
 		do
-			Result := error /= Void
+			Result := attached errors as l_errors and then not l_errors.is_empty
 		end
 
 feature -- Settings
@@ -73,7 +83,7 @@ feature -- Basic operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				set_error (Void)
+				reset_errors
 
 					-- Read number of objects we are retrieving
 				l_count := deserializer.read_compressed_natural_32
@@ -148,12 +158,52 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation: Settings
 
-	set_error (a_error: like error)
+	set_error (a_error: SED_ERROR)
 			-- Assign `a_error' to `error'.
+		obsolete
+			"Use `add_error' instead."
 		do
-			error := a_error
+			add_error (a_error)
 		ensure
 			error_set: error = a_error
+		end
+
+	add_error (a_error: SED_ERROR)
+			-- Assign `a_error' to `error'.
+		local
+			l_new_errors: like errors
+		do
+			if attached errors as l_errors then
+				l_errors.extend (a_error)
+			else
+				create l_new_errors.make (10)
+				l_new_errors.extend (a_error)
+				errors := l_new_errors
+			end
+		ensure
+			error_set: attached errors as l_errors and then l_errors.has (a_error)
+		end
+
+	raise_fatal_error (a_error: SED_ERROR)
+			-- Add `a_error' to `errors' and raise an exception to terminate retrieval
+			-- because the error is beyond recovery.
+		local
+			l_failure: SERIALIZATION_FAILURE
+		do
+			add_error (a_error)
+			create l_failure
+			l_failure.set_message (a_error.error)
+			l_failure.raise
+		ensure
+			error_set: attached errors as l_errors and then l_errors.has (a_error)
+		end
+
+	reset_errors
+			-- Remove all errors for a new retrieval
+		do
+			errors := Void
+		ensure
+			errors_reset: errors = Void
 		end
 
 feature {NONE} -- Cleaning
@@ -176,6 +226,8 @@ feature {NONE} -- Cleaning
 				l.wipe_out
 				list_stack := Void
 			end
+				-- Consume any remaining bytes if any
+			deserializer.cleanup
 		end
 
 feature {NONE} -- Implementation
@@ -186,7 +238,7 @@ feature {NONE} -- Implementation
 			check has_version: has_version end
 			version := deserializer.read_compressed_natural_32
 			if version /= {SED_VERSIONS}.session_version then
-				set_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.session_version))
+				raise_fatal_error (error_factory.new_format_mismatch (version, {SED_VERSIONS}.session_version))
 			else
 				read_object_table (a_count)
 			end
@@ -224,29 +276,34 @@ feature {NONE} -- Implementation
 					end
 						-- Read dynamic type
 					l_dtype := new_dynamic_type_id (l_deser.read_compressed_natural_32.to_integer_32)
-						-- Read reference id
-					l_nat32 := deserializer.read_compressed_natural_32
-					check
-						l_nat32_valid: l_nat32 > 0 and l_nat32 < {INTEGER}.max_value.as_natural_32
-					end
-					l_ref_id := l_nat32.to_integer_32
+					if l_dtype >= 0 then
+							-- Read reference id
+						l_nat32 := deserializer.read_compressed_natural_32
+						check
+							l_nat32_valid: l_nat32 > 0 and l_nat32 < {INTEGER}.max_value.as_natural_32
+						end
+						l_ref_id := l_nat32.to_integer_32
 
-						-- Read object flags
-					inspect
-						l_deser.read_natural_8
-					when is_special_flag then
-							-- We need to first read the `item_type' of the SPECIAL,
-							-- and then its count.
-						l_obj := new_special_instance (l_dtype,
-							l_deser.read_compressed_integer_32,
-							l_deser.read_compressed_integer_32)
-					when is_tuple_flag then
-						l_obj := l_int.new_instance_of (l_dtype)
+							-- Read object flags
+						inspect
+							l_deser.read_natural_8
+						when is_special_flag then
+								-- We need to first read the `item_type' of the SPECIAL,
+								-- and then its count.
+							l_obj := new_special_instance (l_dtype,
+								l_deser.read_compressed_integer_32,
+								l_deser.read_compressed_integer_32)
+						when is_tuple_flag then
+							l_obj := l_int.new_instance_of (l_dtype)
+						else
+							l_obj := l_int.new_instance_of (l_dtype)
+						end
+
+						l_objs.put (l_obj, l_ref_id)
 					else
-						l_obj := l_int.new_instance_of (l_dtype)
+							-- Data is visibly corrupted, stop here.
+						raise_fatal_error (error_factory.new_internal_error ("Cannot read object type. Corrupted data!"))
 					end
-
-					l_objs.put (l_obj, l_ref_id)
 					i := i + 1
 				end
 				if l_is_collecting then
@@ -293,13 +350,13 @@ feature {NONE} -- Implementation
 
 	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER
 			-- Given `a_old_type_id', dynamic type id in stored system, retrieve dynamic
-			-- type id in current system.
+			-- type id in current system. Return -1 if not found.
 		require
 			a_old_type_id_non_negative: a_old_type_id >= 0
 		do
 			Result := a_old_type_id
 		ensure
-			new_dynamic_type_id_non_negative: Result >= 0
+			minus_one_of_non_negative: Result >= -1
 		end
 
 	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER
@@ -341,7 +398,6 @@ feature {NONE} -- Implementation
 			l_dtype: INTEGER
 			l_deser: like deserializer
 			l_int: like internal
-			l_spec_mapping: like special_type_mapping
 			l_obj: detachable ANY
 			l_nat32: NATURAL_32
 			l_index: INTEGER
@@ -350,7 +406,6 @@ feature {NONE} -- Implementation
 		do
 			l_deser := deserializer
 			l_int := internal
-			l_spec_mapping := special_type_mapping
 
 			if is_for_fast_retrieval then
 					-- Read reference ID.
@@ -366,14 +421,7 @@ feature {NONE} -- Implementation
 
 				if l_int.is_special (l_obj) then
 						-- Get the abstract element type of the SPECIAL.
-					l_spec_mapping.search (l_int.generic_dynamic_type_of_type (l_dtype, 1))
-					if l_spec_mapping.found then
-						l_spec_type := l_spec_mapping.found_item
-					else
-						l_spec_type := {INTERNAL}.reference_type
-					end
-
-					decode_special (l_obj, l_index, l_spec_type)
+					decode_special (l_obj, l_index, abstract_type (l_int.generic_dynamic_type_of_type (l_dtype, 1)))
 				elseif l_int.is_tuple (l_obj) then
 					decode_tuple (l_obj, l_dtype, l_index)
 				else
@@ -382,38 +430,42 @@ feature {NONE} -- Implementation
 			else
 					-- Read object dynamic type
 				l_dtype := new_dynamic_type_id (l_deser.read_compressed_natural_32.to_integer_32)
+				if l_dtype >= 0 then
+						-- Read reference ID.
+					l_nat32 := l_deser.read_compressed_natural_32
+					check
+						l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
+					end
+					l_index := l_nat32.to_integer_32
 
-					-- Read reference ID.
-				l_nat32 := l_deser.read_compressed_natural_32
-				check
-					l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
-				end
-				l_index := l_nat32.to_integer_32
+						-- Read object flags.
+					l_flags := l_deser.read_natural_8
 
-					-- Read object flags.
-				l_flags := l_deser.read_natural_8
-
-				inspect l_flags
-				when is_special_flag then
-					l_spec_type := l_deser.read_compressed_integer_32
-					l_spec_count := l_deser.read_compressed_integer_32
-					l_obj := new_special_instance (l_dtype, l_spec_type, l_spec_count)
-					object_references.put (l_obj, l_index)
-						-- Reconnect un-connected object to `l_obj' we found so far.
-					reconnect_object (l_index)
-					decode_special (l_obj, l_index, l_spec_type)
-				when is_tuple_flag then
-					l_obj := l_int.new_instance_of (l_dtype)
-					object_references.put (l_obj, l_index)
-						-- Reconnect un-connected object to `l_obj' we found so far.
-					reconnect_object (l_index)
-					decode_tuple (l_obj, l_dtype, l_index)
+					inspect l_flags
+					when is_special_flag then
+						l_spec_type := l_deser.read_compressed_integer_32
+						l_spec_count := l_deser.read_compressed_integer_32
+						l_obj := new_special_instance (l_dtype, l_spec_type, l_spec_count)
+						object_references.put (l_obj, l_index)
+							-- Reconnect un-connected object to `l_obj' we found so far.
+						reconnect_object (l_index)
+						decode_special (l_obj, l_index, l_spec_type)
+					when is_tuple_flag then
+						l_obj := l_int.new_instance_of (l_dtype)
+						object_references.put (l_obj, l_index)
+							-- Reconnect un-connected object to `l_obj' we found so far.
+						reconnect_object (l_index)
+						decode_tuple (l_obj, l_dtype, l_index)
+					else
+						l_obj := l_int.new_instance_of (l_dtype)
+						object_references.put (l_obj, l_index)
+							-- Reconnect un-connected object to `l_obj' we found so far.
+						reconnect_object (l_index)
+						decode_normal_object (l_obj, l_dtype, l_index)
+					end
 				else
-					l_obj := l_int.new_instance_of (l_dtype)
-					object_references.put (l_obj, l_index)
-						-- Reconnect un-connected object to `l_obj' we found so far.
-					reconnect_object (l_index)
-					decode_normal_object (l_obj, l_dtype, l_index)
+						-- Data is visibly corrupted, stop here.
+					raise_fatal_error (error_factory.new_internal_error ("Cannot read object type. Corrupted data!"))
 				end
 			end
 			if is_root then
@@ -1020,21 +1072,21 @@ feature {NONE} -- Implementation
 				if l_sub_obj /= Void then
 					update_reference (an_obj, l_sub_obj, an_index)
 				else
-			l_missing := missing_references
-			if l_missing = Void then
-				create l_missing.make_filled (Void, object_references.count)
-				missing_references := l_missing
-			end
-					l_list := l_missing.item (l_index)
-			if l_list = Void then
-				l_list := new_list
-						l_missing.put (l_list, l_index)
-			end
-			l_tuple := new_tuple
-					l_tuple.object_index := an_obj_index
-					l_tuple.field_position := an_index
-			l_list.extend (l_tuple)
-		end
+					l_missing := missing_references
+					if l_missing = Void then
+						create l_missing.make_filled (Void, object_references.count)
+						missing_references := l_missing
+					end
+							l_list := l_missing.item (l_index)
+					if l_list = Void then
+						l_list := new_list
+								l_missing.put (l_list, l_index)
+					end
+					l_tuple := new_tuple
+							l_tuple.object_index := an_obj_index
+							l_tuple.field_position := an_index
+					l_list.extend (l_tuple)
+				end
 			elseif attached {SPECIAL [detachable ANY]} an_obj as l_spec then
 				l_spec.force (Void, an_index)
 			end

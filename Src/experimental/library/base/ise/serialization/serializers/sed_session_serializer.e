@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			create object_indexes.make (1)
 			traversable := breadth_first_traversable
 			serializer := a_serializer
-			is_for_fast_retrieval := is_void_safe
 			setup_version
 		ensure
 			serializer_set: serializer = a_serializer
@@ -56,7 +55,12 @@ feature -- Status report
 
 	is_for_fast_retrieval: BOOLEAN
 			-- Is data stored for fast retrieval?
-			-- It is always True for a void-safe system.
+			-- It is always True by default.
+		obsolete
+			"Option is always enabled."
+		do
+			Result := True
+		end
 
 feature {NONE} -- Status report
 
@@ -103,13 +107,9 @@ feature -- Element change
 
 	set_is_for_fast_retrieval (v: like is_for_fast_retrieval)
 			-- Set `is_for_fast_retrieval' with `v'.
+		obsolete
+			"Option `is_for_fast_retrieval' is always enabled now."
 		do
-			if not is_void_safe then
-				is_for_fast_retrieval := v
-			end
-		ensure
-			is_for_fast_retrieval_set: not is_void_safe implies is_for_fast_retrieval = v
-			is_for_fast_retrieval_unchanged: is_void_safe implies is_for_fast_retrieval
 		end
 
 	set_serializer (a_serializer: like serializer)
@@ -230,72 +230,60 @@ feature {NONE} -- Implementation
 			l_int: like internal
 			l_ser: like serializer
 			l_object_indexes: like object_indexes
-			l_spec_mapping: like special_type_mapping
 			i, nb: INTEGER
-			l_dtype, l_spec_item_type: INTEGER
+			l_dtype: INTEGER
 			l_obj: ANY
 			l_area: SPECIAL [ANY]
 		do
 			l_ser := serializer
-			if is_for_fast_retrieval then
-					-- Mark data with information that shows we have a mapping
-					-- between reference IDs and objects.
-				l_ser.write_boolean (True)
-				l_int := internal
-				l_object_indexes := object_indexes
-				l_spec_mapping := special_type_mapping
+				-- Mark data with information that shows we have a mapping
+				-- between reference IDs and objects.
+			l_ser.write_boolean (True)
+			l_int := internal
+			l_object_indexes := object_indexes
 
-				from
-					l_area := a_list.area
-					i := 0
-					nb := a_list.count
-				until
-					i = nb
-				loop
-					l_obj := l_area.item (i)
-					i := i + 1
+			from
+				l_area := a_list.area
+				i := 0
+				nb := a_list.count
+			until
+				i = nb
+			loop
+				l_obj := l_area.item (i)
+				i := i + 1
 
-						-- Get object data.
-					l_dtype := l_int.dynamic_type (l_obj)
+					-- Get object data.
+				l_dtype := l_int.dynamic_type (l_obj)
 
-						-- Write object dtype.
-					l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
+					-- Write object dtype.
+				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 
-						-- Write object reference ID.
-					l_ser.write_compressed_natural_32 (l_object_indexes.index (l_obj))
+					-- Write object reference ID.
+				l_ser.write_compressed_natural_32 (l_object_indexes.index (l_obj))
 
-						-- Write object flags, then data.
-					if l_int.is_special (l_obj) then
-							-- Write special flag.
-						l_ser.write_natural_8 (is_special_flag)
+					-- Write object flags, then data.
+				if l_int.is_special (l_obj) then
+						-- Write special flag.
+					l_ser.write_natural_8 (is_special_flag)
 
-							-- Get the abstract element type of the SPECIAL and write it.
-						l_spec_mapping.search (l_int.generic_dynamic_type_of_type (l_dtype, 1))
-						if l_spec_mapping.found then
-							l_spec_item_type := l_spec_mapping.found_item
-						else
-							l_spec_item_type := {INTERNAL}.reference_type
-						end
-						l_ser.write_compressed_integer_32 (l_spec_item_type)
+						-- Get the abstract element type of the SPECIAL and write it.
+					l_ser.write_compressed_integer_32 (
+						abstract_type (l_int.generic_dynamic_type_of_type (l_dtype, 1)))
 
-							-- Write number of elements in SPECIAL
-						if attached {ABSTRACT_SPECIAL} l_obj as l_abstract_spec then
-							l_ser.write_compressed_integer_32 (l_abstract_spec.count)
-						else
-							check
-								l_abstract_spec_attached: False
-							end
-						end
-
-					elseif l_int.is_tuple (l_obj) then
-						l_ser.write_natural_8 (is_tuple_flag)
+						-- Write number of elements in SPECIAL
+					if attached {ABSTRACT_SPECIAL} l_obj as l_abstract_spec then
+						l_ser.write_compressed_integer_32 (l_abstract_spec.count)
 					else
-						l_ser.write_natural_8 (0)
+						check
+							l_abstract_spec_attached: False
+						end
 					end
+
+				elseif l_int.is_tuple (l_obj) then
+					l_ser.write_natural_8 (is_tuple_flag)
+				else
+					l_ser.write_natural_8 (0)
 				end
-			else
-					-- No mapping here.
-				l_ser.write_boolean (False)
 			end
 		end
 
@@ -334,10 +322,8 @@ feature {NONE} -- Implementation
 		local
 			l_int: like internal
 			l_ser: like serializer
-			l_spec_mapping: like special_type_mapping
 			l_object_indexes: like object_indexes
-			l_is_for_slow_retrieval: BOOLEAN
-			l_dtype, l_spec_item_type: INTEGER
+			l_dtype: INTEGER
 			l_obj: ANY
 			i, nb: INTEGER
 			l_area: SPECIAL [ANY]
@@ -345,9 +331,6 @@ feature {NONE} -- Implementation
 			l_int := internal
 			l_ser := serializer
 			l_object_indexes := object_indexes
-			l_spec_mapping := special_type_mapping
-			l_is_for_slow_retrieval := not is_for_fast_retrieval
-
 			from
 				l_area := a_list.area
 				i := 0
@@ -361,43 +344,14 @@ feature {NONE} -- Implementation
 					-- Get object data.
 				l_dtype := l_int.dynamic_type (l_obj)
 
-				if l_is_for_slow_retrieval then
-						-- Write object dtype
-					l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
-				end
-
 					-- Write object reference ID.
 				l_ser.write_compressed_natural_32 (l_object_indexes.index (l_obj))
 
 					-- Write object flags if in slow retrieval mode, then data.
 				if l_int.is_special (l_obj) then
 						-- Get the abstract element type of the SPECIAL.
-					l_spec_mapping.search (l_int.generic_dynamic_type_of_type (l_dtype, 1))
-					if l_spec_mapping.found then
-						l_spec_item_type := l_spec_mapping.found_item
-					else
-						l_spec_item_type := {INTERNAL}.reference_type
-					end
-
-					if l_is_for_slow_retrieval then
-							-- Store the fact it is a SPECIAL
-						l_ser.write_natural_8 (is_special_flag)
-
-							-- Store the type of special
-						l_ser.write_compressed_integer_32 (l_spec_item_type)
-
-							-- Store count of special
-						if attached {ABSTRACT_SPECIAL} l_obj as l_abstract_spec then
-							l_ser.write_compressed_integer_32 (l_abstract_spec.count)
-						else
-							check l_abstract_spec_attached: False end
-						end
-					end
-					encode_special (l_obj, l_dtype, l_spec_item_type)
+					encode_special (l_obj, l_dtype, abstract_type (l_int.generic_dynamic_type_of_type (l_dtype, 1)))
 				elseif l_int.is_tuple (l_obj) then
-					if l_is_for_slow_retrieval then
-						l_ser.write_natural_8 (is_tuple_flag)
-					end
 					if attached {TUPLE} l_obj as l_tuple then
 						encode_tuple_object (l_tuple)
 					else
@@ -406,9 +360,6 @@ feature {NONE} -- Implementation
 						end
 					end
 				else
-					if l_is_for_slow_retrieval then
-						l_ser.write_natural_8 (0)
-					end
 					encode_normal_object (l_obj, l_dtype)
 				end
 			end
@@ -949,7 +900,6 @@ invariant
 	traversable_not_void: traversable /= Void
 	serializer_not_void: serializer /= Void
 	object_indexes_not_void: object_indexes /= Void
-	fast_retrieval_active: is_void_safe implies is_for_fast_retrieval
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

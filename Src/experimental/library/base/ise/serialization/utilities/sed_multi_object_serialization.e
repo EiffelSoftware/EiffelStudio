@@ -105,7 +105,7 @@ feature -- Basic Operations
 				end
 				create l_writer.make (l_raw_file)
 				l_writer.set_for_writing
-				independent_store (a, l_writer, False)
+				store (a, l_writer)
 				last_file_position := l_raw_file.count
 				successful := True
 			else

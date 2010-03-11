@@ -54,6 +54,8 @@ feature -- Serialization routines
 			-- Serialization of `an_object' using `a_writer' optimized for retrieval
 			-- if `a_optimized_for_retrieval'.
 			-- Object stored can only be retrieved by programs having the same set of types.
+		obsolete
+			"Use `store' instead."
 		require
 			an_object_not_void: an_object /= Void
 			a_writer_not_void: a_writer /= Void
@@ -63,6 +65,26 @@ feature -- Serialization routines
 		do
 			l_serializer := independent_serializer (a_writer)
 			l_serializer.set_is_for_fast_retrieval (a_optimized_for_retrieval)
+			a_writer.write_header
+			a_writer.write_natural_32 (eiffel_independent_store)
+			l_serializer.set_root_object (an_object)
+			l_serializer.encode
+			a_writer.write_footer
+		end
+
+	store (an_object: ANY; a_writer: SED_READER_WRITER)
+			-- Serialization of `an_object' using `a_writer' optimized for retrieval
+			-- if `a_optimized_for_retrieval'.
+			-- Object stored can only be retrieved by programs having the same set of types.
+		require
+			an_object_not_void: an_object /= Void
+			a_writer_not_void: a_writer /= Void
+			a_writer_ready: a_writer.is_ready_for_writing
+		local
+			l_serializer: SED_INDEPENDENT_SERIALIZER
+		do
+			l_serializer := independent_serializer (a_writer)
+			l_serializer.set_is_for_fast_retrieval (True)
 			a_writer.write_header
 			a_writer.write_natural_32 (eiffel_independent_store)
 			l_serializer.set_root_object (an_object)

@@ -735,8 +735,12 @@ feature {NONE} -- Implementation
 			loop
 				l_data := a_tool_bar_data.item
 				check is_hidden_docking: not l_data.is_floating and not l_data.is_visible end
-				if attached l_data.title as l_title_2 then
-					check internal_docking_manager.tool_bar_manager.has (l_title_2) end
+					-- We check that the toolbar still exists in the current version of the application
+					-- before trying to retrieve its state.
+				if
+					attached l_data.title as l_title_2 and then
+					internal_docking_manager.tool_bar_manager.has (l_title_2)
+				then
 					l_content := internal_docking_manager.tool_bar_manager.content_by_title (l_title_2)
 
 					-- Reset texts if original docking vertically
@@ -756,8 +760,6 @@ feature {NONE} -- Implementation
 					if attached {SD_TOOL_BAR_ZONE_STATE} l_state as l_state_3 and then l_state_3.is_docking_state_recorded then
 						l_tool_bar.assistant.set_last_state (l_state_3)
 					end
-				else
-					check False end -- Implied by tool bar title data must not void here
 				end
 
 				a_tool_bar_data.forth
@@ -954,14 +956,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

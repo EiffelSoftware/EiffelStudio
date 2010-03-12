@@ -456,6 +456,12 @@ feature -- Commands
 						missing_class_error := True
 						lace.reset_date_stamp
 						Error_handler.wipe_out
+							-- We are trying to find a missing class.
+							-- This can be done only once, because `missing_class_error' is now set.
+							-- Therefore we have to do our best to figure out whether it is actually present.
+							-- That's why we force the compiler to look into the source code of new files
+							-- instead of using their names to guess the associated class name.
+						system.set_has_potential_class_name_mismatch
 					else
 						Error_handler.trace
 					end
@@ -692,7 +698,7 @@ feature {NONE} -- Implementation
 			-- Was there a problem during running the pre and post compile actions?
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1581,11 +1581,19 @@ feature -- Recompilation
 		end
 
 	reset_has_potential_class_name_mismatch
-			-- Reset `has_potential_class_name_mismatch'
+			-- Reset `has_potential_class_name_mismatch'.
 		do
 			has_potential_class_name_mismatch := False
 		ensure
 			has_potential_class_name_mismatch_set: not has_potential_class_name_mismatch
+		end
+
+	set_has_potential_class_name_mismatch
+			-- Set `has_potential_class_name_mismatch'.
+		do
+			has_potential_class_name_mismatch := True
+		ensure
+			has_potential_class_name_mismatch_set: has_potential_class_name_mismatch
 		end
 
 	recompile

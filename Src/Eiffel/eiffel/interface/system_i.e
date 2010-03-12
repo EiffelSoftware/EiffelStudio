@@ -3922,7 +3922,7 @@ feature -- Generation
 			create l_writer.make (l_mapping_file)
 			l_writer.set_for_writing
 			create l_facility
-			l_facility.independent_store (l_new_old_mapping, l_writer, True)
+			l_facility.store (l_new_old_mapping, l_writer)
 			l_mapping_file.close
 		end
 

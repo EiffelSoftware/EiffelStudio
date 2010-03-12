@@ -237,7 +237,7 @@ feature -- Storage
 
 						-- Encode and emit object
 					a_session.on_begin_store
-					l_sed_util.independent_store (a_session.session_object, l_writer, True)
+					l_sed_util.store (a_session.session_object, l_writer)
 					l_file.flush
 					a_session.on_end_store
 				end
@@ -320,13 +320,13 @@ feature -- Retrieval
 							not l_session.is_per_window
 						then
 							if attached a_extension as l_ext then
-								if 
+								if
 									attached l_session.extension_name as l_other_ext and then
-									l_ext.same_string (l_other_ext) 
+									l_ext.same_string (l_other_ext)
 								then
 									Result := l_session
 								end
-							elseif l_session.extension_name = Void then 
+							elseif l_session.extension_name = Void then
 								Result := l_session
 							end
 						end

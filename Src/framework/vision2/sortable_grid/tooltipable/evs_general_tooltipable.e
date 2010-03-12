@@ -547,30 +547,32 @@ feature {NONE} -- Tooltip show/hide
 			l_show: BOOLEAN
 			l_need_change_owner: BOOLEAN
 		do
-			l_window := tooltip_window
-			if not is_my_tooltip then
-				l_need_change_owner := True
-					-- We only display tooltip of current if other's tooltip is not pined.					
-				l_show := l_window.has_owner implies (not l_window.owner.is_tooltip_pined)
-			elseif not is_my_tooltip_displayed then
-				l_show := True
-			end
-			if l_show then
-				if not before_display_actions.is_empty then
-					before_display_actions.call (Void)
+			if is_pointer_in_current_app then
+				l_window := tooltip_window
+				if not is_my_tooltip then
+					l_need_change_owner := True
+						-- We only display tooltip of current if other's tooltip is not pined.					
+					l_show := l_window.has_owner implies (not l_window.owner.is_tooltip_pined)
+				elseif not is_my_tooltip_displayed then
+					l_show := True
 				end
-				if not is_tooltip_display_vetoed then
-					if is_tooltip_displayed then
-						l_window.hide_tooltip
+				if l_show then
+					if not before_display_actions.is_empty then
+						before_display_actions.call (Void)
 					end
-					if l_need_change_owner then
-						if l_window.has_owner then
-							l_window.detach_owner
+					if not is_tooltip_display_vetoed then
+						if is_tooltip_displayed then
+							l_window.hide_tooltip
 						end
-						l_window.attach_owner (Current)
+						if l_need_change_owner then
+							if l_window.has_owner then
+								l_window.detach_owner
+							end
+							l_window.attach_owner (Current)
+						end
+						l_window.show_tooltip (screen.pointer_position.x, screen.pointer_position.y)
+						setup_timer (tooltip_status_check_time, agent safe_hide_tooltip)
 					end
-					l_window.show_tooltip (screen.pointer_position.x, screen.pointer_position.y)
-					setup_timer (tooltip_status_check_time, agent safe_hide_tooltip)
 				end
 			end
 		end
@@ -768,7 +770,7 @@ invariant
 	pointer_leave_agent_attached: pointer_leave_agent /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

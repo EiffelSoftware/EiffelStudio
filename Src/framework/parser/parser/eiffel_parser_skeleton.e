@@ -166,6 +166,13 @@ feature -- Initialization
 			last_rsqure.wipe_out
 			current_class := Void
 			is_ignoring_attachment_marks := False
+			is_frozen_class := False
+			is_deferred := False
+			is_expanded := False
+			is_separate := False
+			deferred_keyword := Void
+			expanded_keyword := Void
+			separate_keyword := Void
 		end
 
 feature -- Status report

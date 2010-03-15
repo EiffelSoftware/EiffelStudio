@@ -534,71 +534,32 @@ Enable_supplier_recording_only_for_classic:
 	  ;
 
 Header_mark: Frozen_mark External_mark
-			{
-				is_deferred := False
-				is_expanded := False
-				is_separate := False
-
-				deferred_keyword := Void
-				expanded_keyword := Void
-				separate_keyword := Void
-			}
 	|	TE_DEFERRED External_mark
 			{
-				is_frozen_class := False
 				is_deferred := True
-				is_expanded := False
-				is_separate := False
-
-				frozen_keyword := Void
 				deferred_keyword := $1
-				expanded_keyword := Void
-				separate_keyword := Void
 			}
 	|	Frozen_mark TE_EXPANDED External_mark
 			{
-				is_deferred := False
 				is_expanded := True
-				is_separate := False
-				
-				deferred_keyword := Void
 				expanded_keyword := $2
-				separate_keyword := Void
 			}
 	|	Frozen_mark TE_SEPARATE External_mark
 			{
-				is_deferred := False
-				is_expanded := False
 				is_separate := True
-
-				deferred_keyword := Void
-				expanded_keyword := Void
 				separate_keyword := $2
 			}
 	;
 
 Frozen_mark: -- Empty
-			{
-				is_frozen_class := False
-				frozen_keyword := Void
-			}
 	|	TE_FROZEN
 			{
-					-- I'm adding a few comments line
-					-- here because otherwise the generated
-					-- parser is very different from the
-					-- previous one, since line numbers are
-					-- emitted.
 				is_frozen_class := True
 				frozen_keyword := $1
 			}
 	;
 
 External_mark: -- Empty
-			{
-				is_external_class := False
-				external_keyword := Void
-			}
 	|	TE_EXTERNAL
 			{
 				if il_parser then

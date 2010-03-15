@@ -4660,14 +4660,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				is_deferred := False
-				is_expanded := False
-				is_separate := False
 
-				deferred_keyword := Void
-				expanded_keyword := Void
-				separate_keyword := Void
-			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -4685,15 +4678,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				is_frozen_class := False
 				is_deferred := True
-				is_expanded := False
-				is_separate := False
-
-				frozen_keyword := Void
 				deferred_keyword := yyvs10.item (yyvsp10)
-				expanded_keyword := Void
-				separate_keyword := Void
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
@@ -4712,13 +4698,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				is_deferred := False
 				is_expanded := True
-				is_separate := False
-				
-				deferred_keyword := Void
 				expanded_keyword := yyvs12.item (yyvsp12)
-				separate_keyword := Void
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
@@ -4738,12 +4719,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				is_deferred := False
-				is_expanded := False
 				is_separate := True
-
-				deferred_keyword := Void
-				expanded_keyword := Void
 				separate_keyword := yyvs12.item (yyvsp12)
 			
 if yy_parsing_status >= yyContinue then
@@ -4764,9 +4740,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				is_frozen_class := False
-				frozen_keyword := Void
-			
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
@@ -4800,11 +4774,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-					-- I'm adding a few comments line
-					-- here because otherwise the generated
-					-- parser is very different from the
-					-- previous one, since line numbers are
-					-- emitted.
 				is_frozen_class := True
 				frozen_keyword := yyvs12.item (yyvsp12)
 			
@@ -4842,9 +4811,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				is_external_class := False
-				external_keyword := Void
-			
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1

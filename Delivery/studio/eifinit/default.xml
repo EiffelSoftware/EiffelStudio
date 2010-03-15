@@ -135,6 +135,7 @@
 	<PREF NAME="tools.class_browser.class_flat_client_sorting_order" DESCRIPTION="Sorting order of flat clients of class." HIDDEN="True"><STRING>1:1</STRING></PREF>
 
 	<PREF NAME="tools.error_list.expand_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.error_list.show_tooltip" DESCRIPTION="Specifies if rich tooltip window should be shown automatically in the Error List tool."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.error_list.report_c_compiler_errors" DESCRIPTION="Specifies what level of error/warning report to perform on C compiler output."><LIST>none;[errors];errors_and_warnings</LIST></PREF>	
         <PREF NAME="tools.testing_tool.execution.processes" DESCRIPTION="Specifies the number of tests being executed simultaneously."><INTEGER>4</INTEGER></PREF>
 	<PREF NAME="tools.testing_tool.new_tests.prepare_routine" DESCRIPTION="Should new manual tests redefine the preparation routine?"><BOOLEAN>False</BOOLEAN></PREF>

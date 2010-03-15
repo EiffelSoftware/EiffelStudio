@@ -1442,14 +1442,13 @@ feature {NONE} -- Class initialization
 			old_generics: like generics
 			old_is_expanded: BOOLEAN
 			old_is_deferred: BOOLEAN
-			old_is_frozen: BOOLEAN
-			old_parents: like parents_classes
 			l_class: CLASS_C
 			l_eiffel_class: EIFFEL_CLASS_C
-			changed_status, changed_frozen: BOOLEAN
-			is_exp, changed_generics, changed_expanded: BOOLEAN
+			is_first_compilation, changed_status: BOOLEAN
+			changed_generics, changed_expanded: BOOLEAN
 			gens: like generics
 			l_old_storable_version: like storable_version
+			l_is_code_regeneration_needed: BOOLEAN
 		do
 				-- Assign external name clause
 			if System.il_generation then
@@ -1490,14 +1489,16 @@ feature {NONE} -- Class initialization
 			else
 				set_obsolete_message (Void)
 			end
-			old_parents := parents_classes
+
+				-- Find out if this is the first time we compile the current class
+			is_first_compilation := parents_classes = Void
 
 				-- We set `need_new_parents' so that we trigger a
 				-- recomputation of `parents' and `computed_parents' in
 				-- `fill_parents'.
 			need_new_parents := True
 
-			if old_parents /= Void then
+			if not is_first_compilation then
 					-- Class was compiled before so we have to update
 					-- parent/descendant relation.
 					-- [Note that the client/supplier relations will be
@@ -1508,29 +1509,28 @@ feature {NONE} -- Class initialization
 				-- Deferred mark
 			old_is_deferred := is_deferred
 			set_is_deferred (ast_b.is_deferred)
-			if (old_is_deferred /= is_deferred and then old_parents /= Void) then
+			if not is_first_compilation and old_is_deferred /= is_deferred then
 				Degree_4.set_deferred_modified (Current)
 				changed_status := True
 			end
 
 				-- Expanded mark
 			old_is_expanded := is_expanded
-			is_exp := ast_b.is_expanded
-			set_is_expanded (is_exp)
+			set_is_expanded (ast_b.is_expanded)
 
-			if is_exp and not is_basic then
+			if is_expanded and not is_basic then
 					-- Record the fact that an expanded is in the system, but only
 					-- if it is not a known basic type. This is necessary as some
 					-- extra checks must be done after pass2.
 				System.set_has_expanded
 			end
 
-			if (is_exp /= old_is_expanded and then old_parents /= Void) then
+			if not is_first_compilation and old_is_expanded /= is_expanded then
 					-- The expanded status has been modifed
-					-- (`old_parents' is Void only for the first compilation of the class)
 				Degree_4.set_expanded_modified (Current)
 				changed_status := True
 				changed_expanded := True
+				l_is_code_regeneration_needed := True
 			end
 
 				-- Class status
@@ -1539,13 +1539,11 @@ feature {NONE} -- Class initialization
 			else
 				is_external := ast_b.is_external
 			end
-			old_is_frozen := is_frozen
-			is_frozen := ast_b.is_frozen
 
-			if (old_parents /= Void and then old_is_frozen /= is_frozen) then
-				changed_status := True
-				changed_frozen := True
-			end
+				-- Process `frozen' mark.
+			changed_status := changed_status or else
+				(not is_first_compilation and is_frozen /= ast_b.is_frozen)
+			is_frozen := ast_b.is_frozen
 
 			if changed_status then
 				Degree_4.add_changed_status (Current)
@@ -1555,7 +1553,7 @@ feature {NONE} -- Class initialization
 					syntactical_clients.after
 				loop
 					l_class := syntactical_clients.item
-					if changed_expanded then
+					if l_is_code_regeneration_needed then
 							-- `changed' is set to True so that a complete
 							-- pass2 is done on the client. `feature_unit'
 							-- will find the type changes
@@ -1600,7 +1598,7 @@ feature {NONE} -- Class initialization
 				check_generics
 			end
 
-			if old_parents /= Void then
+			if not is_first_compilation then
 				if gens /= Void then
 						-- Sometime we retrieve twice the same `generics' because the
 						-- AST is still in memory, in which case if `gens' and `old_generics'
@@ -1664,24 +1662,6 @@ feature {NONE} -- Class initialization
 					-- We need to get rid of content of `filters' since it may contain
 					-- incorrect data using Formals that are not there anymore.
 				filters.make
-			end
-
-			if changed_frozen then
-					-- Here we do not check the `syntactical_clients' because we
-					-- need to recompile all classes that are using current indirectly
-					-- through a feature call where the type is not mentioned.
-				from
-					clients.start
-				until
-					clients.after
-				loop
-					l_class := clients.item
-					Workbench.add_class_to_recompile (l_class.original_class)
-					l_class.set_changed (True)
-					clients.forth
-				end
-					-- We need to reset its `types' so that they are recomputed.
-				remove_types
 			end
 		end
 

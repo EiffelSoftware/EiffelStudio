@@ -10,7 +10,7 @@ class CL_TYPE_A
 inherit
 	NAMED_TYPE_A
 		redefine
-			is_expanded, is_reference, is_separate, valid_generic,
+			is_expanded, is_reference, is_separate, valid_generic, is_ephemeral,
 			duplicate, meta_type, same_as, good_generics, error_generics,
 			has_expanded, internal_is_valid_for_class, convert_to, description,
 			is_full_named_type, is_external, is_enum, is_conformant_to,
@@ -115,6 +115,12 @@ feature -- Properties
 			-- Is the type expanded?
 		do
 			Result := has_expanded_mark or else (has_no_mark and then associated_class.is_expanded)
+		end
+
+	is_ephemeral: BOOLEAN
+			-- <Precursor>
+		do
+			Result := associated_class.is_ephemeral
 		end
 
 	is_reference: BOOLEAN
@@ -970,7 +976,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

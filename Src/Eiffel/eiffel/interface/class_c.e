@@ -2998,6 +2998,14 @@ feature -- Properties
 			-- Is class an external one?
 			-- If yes, we do not generate it.
 
+	is_ephemeral: BOOLEAN
+			-- Is class ephemeral?
+			--| Currently there is no real definition for it. It can be a class with a
+			--| special qualifier, or an expanded class without attribute.
+		do
+			-- Not implemented yet
+		end
+
 	is_true_external: BOOLEAN
 			-- Is class an instance of EXTERNAL_CLASS_C?
 			-- If yes, we do not generate it.

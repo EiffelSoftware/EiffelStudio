@@ -494,6 +494,11 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	is_ephemeral: BOOLEAN
+			-- Is the current actual type base class ephemeral?
+		do
+		end
+
 	is_enum: BOOLEAN
 			-- Is the current actual type an external enum one?
 		do

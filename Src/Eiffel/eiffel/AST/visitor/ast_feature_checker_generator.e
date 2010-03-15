@@ -1410,7 +1410,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not l_is_last_access_tuple_access then
-						if l_feature /= Void and then (not is_static or else l_feature.has_static_access) then
+						if l_feature /= Void and then (not is_static or else (l_last_class.is_ephemeral or l_feature.has_static_access)) then
 								-- Attachments type check
 							l_formal_count := l_feature.argument_count
 							if is_agent and l_actual_count = 0 and l_formal_count > 0 then

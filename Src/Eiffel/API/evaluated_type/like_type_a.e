@@ -32,6 +32,7 @@ inherit
 			is_basic,
 			is_computable_using_ancestors,
 			is_expanded,
+			is_ephemeral,
 			is_external,
 			is_initialization_required,
 			is_like,
@@ -144,6 +145,12 @@ feature -- Status report
 			-- Is current actual type an expanded one?
 		do
 			Result := attached actual_type as a and then a.is_expanded
+		end
+
+	is_ephemeral: BOOLEAN
+			-- <Precursor>
+		do
+			Result := attached actual_type as a and then a.is_ephemeral
 		end
 
 	is_none: BOOLEAN

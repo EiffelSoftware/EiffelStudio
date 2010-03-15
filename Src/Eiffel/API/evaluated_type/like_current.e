@@ -14,7 +14,7 @@ inherit
 			actual_type, deep_actual_type, context_free_type,
 			associated_class, associated_class_type, conform_to, conformance_type, convert_to,
 			generics, has_associated_class, has_associated_class_type, instantiated_in, duplicate,
-			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
+			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference, is_ephemeral,
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
 			set_attached_mark, set_detachable_mark, set_is_implicitly_attached,
 			unset_is_implicitly_attached, description, c_type, is_explicit, formal_instantiation_in,
@@ -97,6 +97,14 @@ feature -- Properties
 		do
 			if conformance_type /= Void then
 				Result := conformance_type.is_expanded
+			end
+		end
+
+	is_ephemeral: BOOLEAN
+			-- <Precursor>
+		do
+			if attached conformance_type as t then
+				Result := t.is_ephemeral
 			end
 		end
 

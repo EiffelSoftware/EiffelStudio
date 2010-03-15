@@ -26,7 +26,8 @@ inherit
 			on_event_item_added,
 			on_event_item_removed,
 			on_handle_key,
-			create_right_tool_bar_items
+			create_right_tool_bar_items,
+			create_clickable_tooltip
 		end
 
 	ES_ERROR_LIST_COMMANDER_I
@@ -394,6 +395,15 @@ feature {NONE} -- Query
 					end
 				end
 			end
+		end
+
+	should_tooltip_be_displayed: BOOLEAN
+			-- Check preference to see if tooltip should be displayed?
+		local
+			l_preference: EB_SHARED_PREFERENCES
+		do
+			create l_preference
+			Result := l_preference.preferences.error_list_tool_data.show_tooltip
 		end
 
 --feature {NONE} -- Helpers
@@ -1392,6 +1402,23 @@ feature {NONE} -- Factory
 			filter_button_attached: filter_button /= Void
 		end
 
+	create_clickable_tooltip (a_lines: LIST [EIFFEL_EDITOR_LINE]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
+			-- <Precursor>
+		local
+			l_just_created: BOOLEAN
+		do
+			if not attached a_item.data then
+				l_just_created := True
+			end
+			Result := Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}(a_lines, a_item, a_row)
+			if l_just_created then
+				Result.veto_tooltip_display_functions.extend (agent: BOOLEAN
+																do
+																	Result := should_tooltip_be_displayed
+																end)
+			end
+		end
+
 feature {NONE} -- Constants
 
 	category_column: INTEGER = 2
@@ -1417,7 +1444,7 @@ invariant
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

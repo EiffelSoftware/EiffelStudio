@@ -77,8 +77,13 @@ feature -- Miscellaneous
 					text.process_indexing_tag_text ("experimental mode: ")
 					text.process_basic_text ("True")
 					text.add_new_line
+				elseif eiffel_ace.system.is_compatible_mode then
+					text.add_indent
+					text.process_indexing_tag_text ("compatible mode: ")
+					text.process_basic_text ("True")
+					text.add_new_line
 				end
-			end
+ 			end
 
 			text.add_new_line
 			if Eiffel_project.system_defined and then Eiffel_system.workbench.is_already_compiled then

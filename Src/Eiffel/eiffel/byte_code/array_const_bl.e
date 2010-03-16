@@ -179,7 +179,7 @@ feature {NONE} -- C code generation
 			special_info.generate_gen_type_conversion (0)
 			l_special_class_type.generate_creation (buf, special_info, array_area_reg, arg_count_parameter, False, False, False)
 
-			if not target_type.is_true_expanded and then system.is_experimental_mode then
+			if not target_type.is_true_expanded and then system.is_using_new_special then
 				buffer.put_new_line
 				buffer.put_string ("RT_SPECIAL_COUNT(")
 				array_area_reg.print_register
@@ -298,7 +298,7 @@ feature {NONE} -- C code generation
 					end
 				end
 				buf.put_character (';')
-				if system.is_experimental_mode and target_type.is_true_expanded then
+				if system.is_using_new_special and target_type.is_true_expanded then
 						-- Count is already set in `generate_special_creation' for SPECIAL of references and basic types.
 					buf.put_string ("RT_SPECIAL_COUNT(")
 					array_area_reg.print_register
@@ -428,7 +428,7 @@ feature {NONE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

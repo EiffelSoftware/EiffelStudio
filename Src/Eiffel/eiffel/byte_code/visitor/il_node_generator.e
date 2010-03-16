@@ -849,7 +849,7 @@ feature {NONE} -- Visitors
 				-- Call creation procedure `make_empty' or `make' depending on the compilation mode
 			il_generator.duplicate_top
 			il_generator.put_integer_32_constant (a_node.expressions.count)
-			if system.is_experimental_mode then
+			if system.is_using_new_special then
 				l_special_make_feat := l_special_feat_tbl.item_id ({PREDEFINED_NAMES}.make_empty_name_id)
 			else
 				l_special_make_feat := l_special_feat_tbl.item_id ({PREDEFINED_NAMES}.make_name_id)
@@ -858,7 +858,7 @@ feature {NONE} -- Visitors
 				l_special_make_feat.argument_count, l_special_make_feat.has_return_value, True)
 
 				-- Find `put' or `extend' from SPECIAL depending on the compilation mode
-			if system.is_experimental_mode then
+			if system.is_using_new_special then
 				l_put_feat := l_special_feat_tbl.item_id ({PREDEFINED_NAMES}.extend_name_id)
 			else
 				l_put_feat := l_special_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
@@ -878,7 +878,7 @@ feature {NONE} -- Visitors
  					-- Generate expression
  				generate_expression_il_for_type (l_expr, l_target_type)
 
-				if not system.is_experimental_mode then
+				if not system.is_using_new_special then
  					il_generator.put_integer_32_constant (i)
 				end
  				il_generator.generate_feature_access (l_special_info.type, l_put_feat.origin_feature_id,
@@ -4727,10 +4727,7 @@ feature {NONE} -- Implementation: Feature calls
 		local
 			l_label: IL_LABEL
 		do
-			if not system.is_experimental_mode then
-					-- In non-experimental mode `generating_type' return STRING.
-				generate_string_routine (a_node, written_type)
-			else
+			if system.is_using_new_generating_type then
 					-- Check validity of target.
 				generate_call_on_void_target (target_type, True)
 					-- Call feature on this object if its type inherits ANY.
@@ -4744,6 +4741,9 @@ feature {NONE} -- Implementation: Feature calls
 						"Feature {ANY}.generating_type not implemented for .NET class")
 				il_generator.mark_label (l_label)
 				generate_il_normal_call (a_node, written_type, True)
+			else
+					-- In compatibility mode `generating_type' return STRING.
+				generate_string_routine (a_node, written_type)
 			end
 		end
 

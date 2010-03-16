@@ -224,9 +224,9 @@ feature -- Status update
 					-- To avoid having to edit the value of ISE_LIBRARY when compiling against
 					-- a certain compiler profile, we modify the value of the ISE_LIBRARY environment
 					-- variable.
-				if is_experimental_mode and l_value.substring_index ("experimental", 1) = 0 then
+				if is_compatible_mode and l_value.substring_index ("compatible", 1) = 0 then
 					create l_dir_name.make_from_string (l_value)
-					l_dir_name.extend ("experimental")
+					l_dir_name.extend ("compatible")
 					set_environment (l_dir_name, {EIFFEL_ENVIRONMENT_CONSTANTS}.ise_library_env)
 				end
 			end
@@ -1384,10 +1384,10 @@ feature -- Directories (platform independent)
 				Result := install_path.twin
 			end
 			if is_experimental_mode then
-				Result.extend ("experimental")
-			elseif is_compatible_mode then
-					-- In 6.4, there is no compatible mode,
+					-- In 6.6, there is no compatible mode,
 					-- so nothing to be done.
+			elseif is_compatible_mode then
+				Result.extend ("compatible")
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

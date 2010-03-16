@@ -36,7 +36,7 @@ feature -- Validity
 			feat_table := feature_table
 
 				-- Check if class has a feature `make (INTEGER)' or `make_empty (INTEGER)'.
-			if system.is_experimental_mode then
+			if system.is_using_new_special then
 				make_feature := feat_table.item_id ({PREDEFINED_NAMES}.make_empty_name_id)
 				if
 					make_feature = Void or else

@@ -929,7 +929,7 @@ feature -- Plug and Makefile file
 			buffer.put_string (";%N%Tegc_project_version = ")
 			buffer.put_integer (System.project_creation_time)
 
-			if system.is_experimental_mode then
+			if system.is_using_new_special then
 				buffer.put_string (";%N%Tegc_has_old_special_semantic = 0")
 --				buffer.put_string (";%N%Tegc_has_old_copy_semantic = 0")
 			end

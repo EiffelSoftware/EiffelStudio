@@ -473,13 +473,19 @@ feature -- Status setting
 		local
 			l_title: STRING_32
 			l_different: BOOLEAN
+			l_special_option: BOOLEAN
 		do
 			l_different := (not attached title) or else not a_title.same_string (title)
 			Precursor (a_title)
-			if is_experimental_mode and then l_different then
+			l_special_option := not is_default_mode
+			if l_different and l_special_option then
 				create l_title.make (a_title.count + 10)
 				l_title.append_character ('[')
-				l_title.append (locale_formatter.translation (t_experimental))
+				if is_experimental_mode then
+					l_title.append (locale_formatter.translation (t_experimental))
+				else
+					l_title.append (locale_formatter.translation (t_compatible))
+				end
 				l_title.append_character (']')
 				l_title.append_character (' ')
 				l_title.append_string_general (a_title)
@@ -2628,6 +2634,7 @@ feature {NONE} -- Internal implementation cache
 feature {NONE} -- Internationalization
 
 	t_experimental: STRING = "Experimental"
+	t_compatible: STRING = "Compatible"
 
 invariant
 	commands_attached: not is_recycled implies commands /= Void

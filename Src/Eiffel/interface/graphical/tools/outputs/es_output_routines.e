@@ -174,6 +174,15 @@ feature -- Output
 			end
 			a_formatter.add_new_line
 
+			if
+				(l_compiled and then eiffel_ace.system.is_compatible_mode)
+			then
+				a_formatter.process_basic_text (locale_formatter.translation (lb_yes))
+			else
+				a_formatter.process_basic_text (locale_formatter.translation (lb_no))
+			end
+			a_formatter.add_new_line
+
 			a_formatter.add_new_line
 			if l_compiled then
 				if not eiffel_system.system.root_creators.is_empty then

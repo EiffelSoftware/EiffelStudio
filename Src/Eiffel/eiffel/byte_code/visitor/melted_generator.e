@@ -143,7 +143,7 @@ feature {NONE} -- Visitors
 			ba.append_integer (a_node.expressions.count)
 				-- Then create an instance of the SPECIAL.
 			ba.append (bc_spcreate)
-			if system.is_experimental_mode then
+			if system.is_using_new_special then
 					-- We are going to use `make_empty'
 				ba.append_boolean (False)
 				ba.append_boolean (True)
@@ -2433,7 +2433,7 @@ feature -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

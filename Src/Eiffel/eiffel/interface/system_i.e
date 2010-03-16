@@ -194,6 +194,20 @@ feature -- Properties
 	is_rebuild: BOOLEAN
 			-- Do we have to do a full rebuild (because some classes could not be found).
 
+	is_using_new_special: BOOLEAN
+			-- Are we using the new SPECIAL implementation, i.e. with
+			-- `make_empty' as creation procedure?
+		do
+			Result := not is_compatible_mode
+		end
+
+	is_using_new_generating_type: BOOLEAN
+			-- Are we using the new signature of `{ANY}.generating_type' which
+			-- returns an instance of TYPE [like Current]?
+		do
+			Result := not is_compatible_mode
+		end
+
 	rout_info_table: ROUT_INFO_TABLE
 			-- Global routine info table
 			-- rout_id --> (origin/offset)

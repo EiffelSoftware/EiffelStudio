@@ -755,10 +755,6 @@ feature {NONE} -- Event handler
 			loop
 				l_parent := a_parent_list.item
 				l_parent_text := l_parent.type.text (a_match_list)
-				if attached l_parent.type.generics as l_gen then
-					l_parent_text.append_character (' ')
-					l_parent_text.append_string (l_gen.text (a_match_list))
-				end
 
 				l_parent_cname := l_parent.type.class_name.text (a_match_list)
 				if Workbench.universe_defined then

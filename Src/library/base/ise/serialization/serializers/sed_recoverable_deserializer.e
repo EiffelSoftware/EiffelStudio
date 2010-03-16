@@ -279,7 +279,11 @@ feature {NONE} -- Implementation
 				l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
 
 					-- Read attributes description
-				read_attributes (l_table.item (l_old_dtype))
+				if l_table.valid_index (l_old_dtype) then
+					read_attributes (l_table.item (l_old_dtype))
+				else
+					raise_fatal_error (error_factory.new_internal_error ("Cannot read attributes data"))
+				end
 				i := i + 1
 			end
 

@@ -167,6 +167,8 @@ feature -- Initialization
 			current_class := Void
 			is_ignoring_attachment_marks := False
 			is_frozen_class := False
+			is_external_class := False
+			is_partial_class := False
 			is_deferred := False
 			is_expanded := False
 			is_separate := False

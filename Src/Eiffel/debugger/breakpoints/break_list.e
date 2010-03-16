@@ -144,17 +144,17 @@ feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 
 feature -- Element change
 
-	add_breakpoint (bp: BREAKPOINT)
+	add_breakpoint (a_bp: BREAKPOINT)
 			-- Add the new breakpoint `bp' to the list.
 			-- If a breakpoint is already held in the
 			-- list, the breakpoint is set and activated.
 		require else
-			bp_exists: bp /= Void
+			bp_exists: a_bp /= Void
 		do
-			if not has_key (bp) then
-				put (bp, bp)
+			if not has_key (a_bp) then
+				put (a_bp, a_bp)
 			else
-				found_item.enable
+				replace (a_bp, a_bp)
 			end
 		end
 
@@ -195,7 +195,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -35,19 +35,19 @@ all:: exp_lib_dir lib_dir libpng.lib clean
 
 lib_dir: ..$(DIR)..$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 
-..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec:
+..$(DIR)..$(DIR)compatible$(DIR)library$(DIR)vision2$(DIR)spec:
 	$(MKDIR_TARGET)
 
-..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec
+..$(DIR)..$(DIR)compatible$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)..$(DIR)compatible$(DIR)library$(DIR)vision2$(DIR)spec
 	$(MKDIR_TARGET)
 
-..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)
+..$(DIR)..$(DIR)compatible$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)..$(DIR)compatible$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)
 	$(MKDIR_TARGET)
 
-..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
+..$(DIR)..$(DIR)compatible$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)..$(DIR)compatible$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
 	$(MKDIR_TARGET)
 
-exp_lib_dir: ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
+exp_lib_dir: ..$(DIR)..$(DIR)compatible$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 
 
 clean:
@@ -58,4 +58,4 @@ clean:
 libpng.lib: $(OBJECTS)
 	$alib_line
 	$(MV) $@ ..$(DIR)..$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
-	$(MV) $@ ..$(DIR)..$(DIR)experimental$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
+	$(MV) $@ ..$(DIR)..$(DIR)compatible$(DIR)library$(DIR)vision2$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@

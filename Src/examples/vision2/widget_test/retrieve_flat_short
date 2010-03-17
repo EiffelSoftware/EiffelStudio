@@ -2,14 +2,14 @@
 
 rm -rf /tmp/vision2_precompile
 mkdir /tmp/vision2_precompile
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -local -config vision2.ecf -project_path /tmp/vision2_precompile
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ecb -local -config vision2.ecf -project_path /tmp/vision2_precompile
 
 # Create flatshort directory
 rm -rf ./flatshort
 mkdir ./flatshort
 
 # Get the rtf files
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -local -config vision2.ecf -project_path /tmp/vision2_precompile -loop < flatshort_instructions.txt
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ecb -local -config vision2.ecf -project_path /tmp/vision2_precompile -loop < flatshort_instructions.txt
 
 # cleanup
 rm -rf /tmp/vision2_precompile

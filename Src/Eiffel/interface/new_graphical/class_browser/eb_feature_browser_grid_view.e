@@ -381,19 +381,23 @@ feature -- Visiability
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
 			l_grid_row: EV_GRID_ROW
-			l_row: EB_FEATURE_BROWSER_GRID_ROW
+			l_grid_item: EV_GRID_ITEM
 		do
-			l_grid_row := a_item.grid_item.row
-			l_row ?= l_grid_row.data
 			grid.remove_selection
-			if l_row /= Void then
-				if l_row.parent /= Void then
-					if l_row.parent.is_expandable then
-						l_row.parent.expand
+			l_grid_item := a_item.grid_item
+			l_grid_row := l_grid_item.row
+			if attached {EB_FEATURE_BROWSER_GRID_ROW} l_grid_row.data as l_row then
+				if attached l_row.parent as l_parent then
+					if l_parent.is_expandable then
+						l_parent.expand
 					end
 					l_grid_row.ensure_visible
+				else
+					if attached l_grid_item.parent then
+						l_grid_item.ensure_visible
+					end
 				end
-				a_item.grid_item.enable_select
+				l_grid_item.enable_select
 			else
 				l_grid_row.enable_select
 			end
@@ -577,7 +581,7 @@ feature{NONE} -- Implementation/Stone
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

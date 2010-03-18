@@ -130,9 +130,9 @@ fullrd vision2/tutorial
 fullrd vision2/widget_test
 
 remtrace precomp
-safe_md $INSTALL_DIR/experimental/precomp
-safe_md $INSTALL_DIR/experimental/precomp/spec
-cd $INSTALL_DIR/experimental/precomp/spec
+safe_md $INSTALL_DIR/compatible/precomp
+safe_md $INSTALL_DIR/compatible/precomp/spec
+cd $INSTALL_DIR/compatible/precomp/spec
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform platform 
 
 safe_md $INSTALL_DIR/precomp
@@ -231,7 +231,7 @@ if [ ! "$NO_COMPILE" ]; then
 	cd $INIT_DIR
 	. ./update_libraries library $GTK_DIR
 	cd $INIT_DIR
-	. ./update_libraries experimental/library $GTK_DIR
+	. ./update_libraries compatible/library $GTK_DIR
 
 	remtrace Generate needed executables of the bin directory
 	cd $INIT_DIR
@@ -264,8 +264,8 @@ cd $INIT_DIR
 
 remtrace "Putting the Eiffel libraries in the delivery"
 . ./make_libraries $INSTALL_DIR library $GTK_DIR
-safe_md $INSTALL_DIR/experimental
-. ./make_libraries $INSTALL_DIR/experimental experimental/library $GTK_DIR
+safe_md $INSTALL_DIR/compatible
+. ./make_libraries $INSTALL_DIR/compatible compatible/library $GTK_DIR
 cd $INIT_DIR
 
 if [ ! "$NO_INSTALL" ]; then

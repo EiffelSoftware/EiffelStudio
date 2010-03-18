@@ -103,10 +103,19 @@ feature -- Status report
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
-			-- Is `other' attached to an object considered
-			-- equal to current object?
+			-- Is `other' attached to an object considered equal to current object?
 		do
-			Result := other = Current or else (first = other.first and then equal (area, other.area))
+			Result := is_equal_id_list (other)
+		end
+
+	is_equal_id_list (other: ID_LIST): BOOLEAN
+			-- Does `other' represent equal ID_LIST?
+		require
+			other_attached: attached other
+		do
+			Result := other = Current or else (first = other.first and then area ~ other.area)
+		ensure
+			definition: Result = (first = other.first and area ~ other.area)
 		end
 
 	same_as (other: like Current): BOOLEAN
@@ -273,7 +282,7 @@ feature {NONE} -- Implementation
 			-- Special value to show that `first' is not yet set.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

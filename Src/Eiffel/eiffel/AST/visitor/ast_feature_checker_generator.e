@@ -130,6 +130,11 @@ feature -- Type checking
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
+				-- Ensure feature body is in memory if we are processing the class where it comes from
+				-- so that updates to AST (like routine IDs, class IDs, status of an entity, etc.) are saved.
+			if a_feature.written_in = context.current_class.class_id then
+				tmp_ast_server.load (context.current_class)
+			end
 				-- Initialize structures to record attribute scopes.
 			context.init_attribute_scopes
 			is_byte_node_enabled := False
@@ -166,6 +171,11 @@ feature -- Type checking
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
+				-- Ensure feature body is in memory if we are processing the class where it comes from
+				-- so that updates to AST (like routine IDs, class IDs, status of an entity, etc.) are saved.
+			if a_feature.written_in = context.current_class.class_id then
+				tmp_ast_server.load (context.current_class)
+			end
 				-- Initialize structures to record attribute scopes.
 			context.init_attribute_scopes
 			if a_is_safe_to_check_inherited then
@@ -1109,7 +1119,7 @@ feature {NONE} -- Implementation
 					l_error_level := error_level
 					process_call (l_type, Void, l_as.feature_name, l_feature, l_as.parameters, True, False, True, False)
 					if error_level = l_error_level and then not is_inherited then
-						l_as.set_routine_ids (last_routine_id_set)
+						set_routine_ids (last_routine_id_set, l_as)
 						l_as.set_class_id (last_calls_target_type.associated_class.class_id)
 					end
 				end
@@ -2445,7 +2455,7 @@ feature {NONE} -- Implementation
 						check
 							not_is_tuple_access: not is_last_access_tuple_access
 						end
-						l_as.set_routine_ids (last_routine_id_set)
+						set_routine_ids (last_routine_id_set, l_as)
 					else
 						check
 							is_tuple_access: is_last_access_tuple_access
@@ -2509,7 +2519,7 @@ feature {NONE} -- Implementation
 				if error_level = l_error_level and not is_inherited then
 						-- set some type attributes of the node
 					l_as.set_class_id (l_class_id)
-					l_as.set_routine_ids (last_routine_id_set)
+					set_routine_ids (last_routine_id_set, l_as)
 				end
 			end
 		end
@@ -2653,7 +2663,7 @@ feature {NONE} -- Implementation
 						if error_level = l_error_level and not is_inherited then
 								-- set some type attributes of the node
 							l_as.set_class_id (l_last_id)
-							l_as.set_routine_ids (last_routine_id_set)
+							set_routine_ids (last_routine_id_set, l_as)
 						end
 					end
 				end
@@ -2776,7 +2786,7 @@ feature {NONE} -- Implementation
 						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
 						if error_level = l_error_level and not is_inherited then
 								-- set some type attributes of the node
-							l_as.set_routine_ids (last_routine_id_set)
+							set_routine_ids (last_routine_id_set, l_as)
 							l_as.set_class_id (l_last_id)  -- last_type_of_call.associated_class.class_id -- seems to be wrong...
 						end
 					end
@@ -2878,7 +2888,7 @@ feature {NONE} -- Implementation
 							l_parent_class := l_parent_type.associated_class
 							l_feature_i := l_pre_table.item.feat
 							l_as.set_class_id (l_parent_class.class_id)
-							l_as.set_routine_ids (l_feature_i.rout_id_set)
+							set_routine_ids (l_feature_i.rout_id_set, l_as)
 						end
 					end
 				end
@@ -3696,7 +3706,7 @@ feature {NONE} -- Implementation
 									end
 								end
 								if not is_inherited then
-									l_as.set_routine_ids (l_feature.rout_id_set)
+									set_routine_ids (l_feature.rout_id_set, l_as)
 								end
 							end
 						end
@@ -3841,7 +3851,7 @@ feature {NONE} -- Implementation
 							if not is_inherited then
 								l_as.set_class_id (l_class.class_id)
 								if l_feature /= Void then
-									l_as.set_routine_ids (l_feature.rout_id_set)
+									set_routine_ids (l_feature.rout_id_set, l_as)
 								end
 							end
 							l_access ?= last_byte_node
@@ -3990,7 +4000,7 @@ feature {NONE} -- Implementation
 					else
 						if not is_inherited then
 							l_as.set_class_id (l_last_class.class_id)
-							l_as.set_routine_ids (l_prefix_feature.rout_id_set)
+							set_routine_ids (l_prefix_feature.rout_id_set, l_as)
 						end
 
 							-- Export validity
@@ -4341,7 +4351,7 @@ feature {NONE} -- Implementation
 
 							if not is_inherited then
 									-- Set type informations
-								l_as.set_routine_ids (last_infix_feature.rout_id_set)
+								set_routine_ids (last_infix_feature.rout_id_set, l_as)
 								l_as.set_class_id (l_left_id)
 								if context.current_class.is_cat_call_detection then
 									create l_arg_types.make (1, 1)
@@ -4772,7 +4782,7 @@ feature {NONE} -- Implementation
 						if not is_inherited then
 							l_last_class_id := target_class.class_id
 							l_as.set_class_id (l_last_class_id)
-							l_as.set_routine_ids (bracket_feature.rout_id_set)
+							set_routine_ids (bracket_feature.rout_id_set, l_as)
 						else
 							l_last_class_id := l_as.class_id
 						end
@@ -5717,6 +5727,8 @@ feature {NONE} -- Implementation
 						if l_creation_class = Void or else not l_creation_class.is_external then
 							l_orig_call := l_call
 						end
+							-- The AST node is temporary, there is no need to keep track
+							-- of its modification by calling `set_routine_ids'.
 						l_call.set_routine_ids (l_feature.rout_id_set)
 						l_is_default_creation := True
 					else
@@ -5808,7 +5820,7 @@ feature {NONE} -- Implementation
 									-- Note that `last_routine_id_set' could be Void in case it is
 									-- a named tuple access.
 								if last_routine_id_set /= Void then
-									l_call.set_routine_ids (last_routine_id_set)
+									set_routine_ids (last_routine_id_set, l_call)
 								end
 							end
 
@@ -7077,7 +7089,7 @@ feature {NONE} -- Implementation
 				if l_as.has_key_process (l_body) then
 					l_once_byte_code.set_is_process_relative_once
 				elseif l_as.has_key_object then
-					l_once_byte_code.set_is_object_relative_once				
+					l_once_byte_code.set_is_object_relative_once
 				else --| default: if l_as.has_key_thread then
 					l_once_byte_code.set_is_thread_relative_once
 				end
@@ -10158,6 +10170,24 @@ feature {NONE} -- Implementation: catcall check
 		rescue
 			retried := True
 			retry
+		end
+
+feature {INSPECT_CONTROL} -- AST modification
+
+	set_routine_ids (ids: ID_SET; a: ID_SET_ACCESSOR)
+			-- Set routine IDs `ids' for the given AST node `a'
+			-- and register the modification to save modified AST.
+		require
+			ids_attached: attached ids
+			a_attached: attached a
+		do
+			if not ids.is_equal_id_list (a) then
+				a.set_id_set (ids)
+					-- Record that AST node is modified.
+				tmp_ast_server.touch (context.current_class.class_id)
+			end
+		ensure
+			routine_ids_set: ids.is_equal_id_list (a)
 		end
 
 note

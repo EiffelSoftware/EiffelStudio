@@ -23,6 +23,18 @@ inherit
 			copy, is_equal
 		end
 
+	AST_NULL_VISITOR
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		redefine
+			process_class_as,
+			process_eiffel_list,
+			process_feature_as,
+			process_feature_clause_as
+		end
+
 create
 	make
 
@@ -40,6 +52,7 @@ feature {NONE} --  Initialization
 			create useless_body_indexes.make (Chunk)
 			create unique_values.make (Chunk)
 			create invariants_to_remove.make
+			create discardable_classes.make (chunk)
 		end
 
 feature -- AST Element change
@@ -48,9 +61,13 @@ feature -- AST Element change
 			-- Put class `t' in memory.
 		require else
 			t_not_void: t /= Void
+		local
+			i: INTEGER_32
 		do
-			storage.force (t, t.class_id)
-			invariant_info.remove (t.class_id)
+			i := t.class_id
+			storage.force (t, i)
+			invariant_info.remove (i)
+			discardable_classes.remove (i)
 		ensure then
 			has: has (t.class_id)
 		end
@@ -64,6 +81,114 @@ feature -- AST Element change
 			invariant_info.remove (a_class_id)
 		ensure then
 			not_has_invariant: not invariant_info.has (a_class_id)
+		end
+
+	load (c: CLASS_C)
+			-- Ensure AST of a class `c' is in this server as well as the corresponding feature bodies.
+		require
+			c_attached: attached c
+			is_c_present: has (c.class_id) or else system.ast_server.has (c.class_id)
+		local
+			a: detachable CLASS_AS
+			i: INTEGER_32
+		do
+				-- Set `loaded_class' before processing as it is used to collect feature bodies.
+			loaded_class := c
+			i := c.class_id
+			if not storage.has (i) then
+				a := item (i)
+				if a = Void then
+					a := system.ast_server.item (i)
+				end
+				check attached a then
+						-- Ensure AST of a class `c' is in memory.
+					put (a)
+						-- Record that there is no reason to store AST of this class.
+					discardable_classes.put (i, i)
+						-- Put feature bodies in `body_storage'.
+					a.process (Current)
+				end
+			end
+		ensure
+			is_c_loaded: is_loaded (c.class_id)
+			is_loaded_class_set: loaded_class = c
+		end
+
+	touch (class_id: INTEGER_32)
+			-- Record AST of a class identified by `class_id' is modified and needs to be saved.
+		require
+			is_class_id_positive: class_id > 0
+			is_loaded: is_loaded (class_id)
+		do
+			discardable_classes.remove (class_id)
+		ensure
+			not_is_discardable: not discardable_classes.has (class_id)
+		end
+
+feature -- Status report
+
+	is_loaded (class_id: INTEGER): BOOLEAN
+			-- Is class identified by `class_id' loaded into memory?
+		require
+			is_class_id_positive: class_id > 0
+		do
+			Result := storage.has (class_id)
+		end
+
+feature {NONE} -- Access
+
+	discardable_classes: HASH_TABLE [INTEGER, INTEGER]
+			-- IDs of classes that should not be stored by `finalize'
+
+feature {NONE} -- Visitor
+
+	loaded_class: detachable CLASS_C
+			-- Class which is just loaded by `load'
+
+	process_eiffel_list (a: EIFFEL_LIST [AST_EIFFEL])
+			-- <Precursor>
+		local
+			i: INTEGER
+		do
+			from
+				i := a.index
+				a.start
+			until
+				a.after
+			loop
+				a.item.process (Current)
+				a.forth
+			end
+			a.go_i_th (i)
+		end
+
+	process_class_as (a: CLASS_AS)
+			-- <Precursor>
+		do
+			safe_process (a.features)
+		end
+
+	process_feature_clause_as (a: FEATURE_CLAUSE_AS)
+			-- <Precursor>
+		do
+			safe_process (a.features)
+		end
+
+	process_feature_as (a: FEATURE_AS)
+			-- <Precursor>
+		do
+			a.feature_names.do_all (
+				agent (t: FEATURE_AS; n: FEATURE_NAME)
+					do
+						if
+							attached loaded_class as c and then
+							attached c.feature_of_name_id (n.internal_name.name_id) as f
+						then
+							body_force (t, f.body_index)
+						end
+					end
+				(a, ?)
+			)
 		end
 
 feature -- Body element change
@@ -287,7 +412,9 @@ feature -- Finalization
 				storage.after
 			loop
 				current_class_id := storage.item_for_iteration.class_id
-				write (storage.item_for_iteration)
+				if not discardable_classes.has (current_class_id) then
+					write (storage.item_for_iteration)
+				end
 				storage.forth
 			end
 				-- Convert the (read_info/id) touples into (read_info/body_index)
@@ -300,6 +427,7 @@ feature -- Finalization
 				body_storage.forth
 			end
 				-- Remove the stored data from memory
+			discardable_classes.wipe_out
 			storage.wipe_out
 			body_storage.wipe_out
 			tmp_body_info.wipe_out
@@ -479,9 +607,10 @@ invariant
 	invariant_info_not_void: invariant_info /= Void
 	useless_body_indexes_not_void: useless_body_indexes /= Void
 	invariants_to_remove_not_void: invariants_to_remove /= Void
+	discardable_classes_attached: attached discardable_classes
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

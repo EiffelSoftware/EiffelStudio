@@ -1384,8 +1384,7 @@ feature -- Directories (platform independent)
 				Result := install_path.twin
 			end
 			if is_experimental_mode then
-					-- In 6.6, there is no compatible mode,
-					-- so nothing to be done.
+				Result.extend ("experimental")
 			elseif is_compatible_mode then
 				Result.extend ("compatible")
 			end

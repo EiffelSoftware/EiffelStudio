@@ -423,7 +423,11 @@ feature -- Finalization
 			until
 				body_storage.after
 			loop
-				body_info.put (tmp_body_info.item (body_storage.item_for_iteration.id), body_storage.key_for_iteration)
+				if attached tmp_body_info.item (body_storage.item_for_iteration.id) as info then
+						-- Store only present items. Some of items can be missed
+						-- if the AST of the class is not stored. They are ignored.
+					body_info.put (info, body_storage.key_for_iteration)
+				end
 				body_storage.forth
 			end
 				-- Remove the stored data from memory

@@ -1,7 +1,7 @@
 note
 	description: "Server abstract synax tree on temporary file for AST. This server is%
-				%used during the compilation. The goal is to merge the file Tmp_ast_file%
-				%and Ast_file if the compilation is successful. Indexed by class id."
+				 %used during the compilation. The goal is to merge the file Tmp_ast_file%
+				 %and Ast_file if the compilation is successful. Indexed by class id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

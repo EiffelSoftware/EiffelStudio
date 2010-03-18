@@ -19,6 +19,6 @@ compile_result	syntax_warning R_STR 13; STR 12
 copy_raw 	uc_str_rev1.e $CLUSTER uc_str.e
 
 compile_melted
-compile_result	ok
+compile_result	syntax_warning UC_STR 14; UC_STR 24
 
 test_end

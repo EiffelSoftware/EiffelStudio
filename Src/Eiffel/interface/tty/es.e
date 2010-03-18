@@ -336,6 +336,9 @@ feature -- Properties
 	is_gc_stats_enabled: BOOLEAN
 			-- Will compiler display some GC timing at the end of a compilation?
 
+	is_experimental_flag_set, is_compatible_flag_set: BOOLEAN
+			-- Did use specify one of `-experiment' or `-compat' argument?
+
 	help_messages: HASH_TABLE [STRING_GENERAL, STRING]
 			-- Help message table
 		once
@@ -1256,18 +1259,20 @@ feature -- Update
 			elseif option.is_equal ("-compat") then
 					-- This option enables the default set of options of 6.3 and earlier if not specified
 					-- in the ECF file.
-				if is_experimental_mode then
+				if is_experimental_flag_set then
 					option_error := True
 				else
 					set_is_63_compatible (True)
 					set_compatible_mode
+					is_compatible_flag_set := True
 				end
 			elseif option.is_equal ("-experiment") then
 					-- This option enables the new options of the compiler that are not mainstream.
-				if is_compatible_mode then
+				if is_compatible_flag_set then
 					option_error := True
 				else
 					set_experimental_mode
+					is_experimental_flag_set := True
 				end
 			elseif option.is_equal ("-full") then
 					-- This options enables full class checking even if not specified in ECF.

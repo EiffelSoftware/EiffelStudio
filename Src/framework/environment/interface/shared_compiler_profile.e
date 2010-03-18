@@ -111,7 +111,8 @@ feature -- Status report
 	is_experimental_mode: BOOLEAN
 			-- Is the compiler being run in experimental mode?
 		do
-			Result := flags.item & experimental_mode_flag = experimental_mode_flag
+				-- In the 6.6. release, it has no effect.
+--			Result := flags.item & experimental_mode_flag = experimental_mode_flag
 		end
 
 	is_full_class_checking_mode: BOOLEAN
@@ -133,9 +134,10 @@ feature -- Settings
 	set_experimental_mode
 			-- Set compiler in experimental mode.
 		do
-			flags.put (flags.item | experimental_mode_flag)
-		ensure
-			is_experimental_mode: is_experimental_mode
+				-- In the 6.6. release, it has no effect.
+--			flags.put (flags.item | experimental_mode_flag)
+--		ensure
+--			is_experimental_mode: is_experimental_mode
 		end
 
 	set_full_class_checking_mode
@@ -143,7 +145,7 @@ feature -- Settings
 		do
 			flags.put (flags.item | full_mode_flag)
 		ensure
-			is_experimental_mode: is_full_class_checking_mode
+			is_full_class_checking_mode: is_full_class_checking_mode
 		end
 
 	reset
@@ -168,7 +170,7 @@ feature {NONE}
 			-- Various flags.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

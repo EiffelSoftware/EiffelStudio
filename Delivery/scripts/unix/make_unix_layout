@@ -52,19 +52,19 @@ cp -r $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/lib/* $LIB_DIR
 
 # Copy library
 cp -r $ISE_EIFFEL/library $LIB_DIR
-if test -d "$ISE_EIFFEL/experimental/library"; then
-	mkdir $LIB_DIR/experimental
-	cp -r $ISE_EIFFEL/experimental/library $LIB_DIR/experimental
+if test -d "$ISE_EIFFEL/compatible/library"; then
+	mkdir $LIB_DIR/compatible
+	cp -r $ISE_EIFFEL/compatible/library $LIB_DIR/compatible
 fi
 
 # Copy precompile without EIFGENs and remove WEL files
 mkdir -p $LIB_DIR/precomp/spec/$UNIX_PLATFORM
 cp $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/*.ecf $LIB_DIR/precomp/spec/$UNIX_PLATFORM/
 rm -f $LIB_DIR/precomp/spec/$UNIX_PLATFORM/wel*
-if test -d "$ISE_EIFFEL/experimental/precomp/spec/$ISE_PLATFORM"; then
-	mkdir -p $LIB_DIR/experimental/precomp/spec/$UNIX_PLATFORM
-	cp $ISE_EIFFEL/experimental/precomp/spec/$ISE_PLATFORM/*.ecf $LIB_DIR/experimental/precomp/spec/$UNIX_PLATFORM/
-	rm -f $LIB_DIR/experimental/precomp/spec/$UNIX_PLATFORM/wel*
+if test -d "$ISE_EIFFEL/compatible/precomp/spec/$ISE_PLATFORM"; then
+	mkdir -p $LIB_DIR/compatible/precomp/spec/$UNIX_PLATFORM
+	cp $ISE_EIFFEL/compatible/precomp/spec/$ISE_PLATFORM/*.ecf $LIB_DIR/compatible/precomp/spec/$UNIX_PLATFORM/
+	rm -f $LIB_DIR/compatible/precomp/spec/$UNIX_PLATFORM/wel*
 fi
 
 # Copy documentation

@@ -469,6 +469,7 @@ feature -- Environment
 			is_environment_valid: is_environment_valid
 		local
 			i: INTEGER
+			l_single_arg: STRING
 		do
 				--| Compute command line, args, and working directory
 			create {ARRAYED_LIST [STRING]} ec_arguments.make (cmdline_arguments_count + 1)
@@ -476,24 +477,22 @@ feature -- Environment
 
 			if cmdline_arguments_count > 0 then
 					--| And now we get the parameters for EiffelStudio
-				if cmdline_arguments_count = 1 then
-					if not eiffel_layout.is_default_mode then
-						ec_arguments.extend (eiffel_layout.command_line_profile_option)
-					else
-							--| use the required -config argument
-						ec_arguments.extend ("-config")
-							--| `s' is the path to the config file
-						ec_arguments.extend (cmdline_argument (1))
-					end
-				else
-					from
-						i := 1
-					until
-						i > cmdline_arguments_count
-					loop
-						ec_arguments.extend (cmdline_argument (i))
-						i := i + 1
-					end
+				l_single_arg := cmdline_argument (1)
+				if l_single_arg.is_empty then
+					-- Nothing special to do.
+				elseif cmdline_arguments_count = 1 and l_single_arg.item (1) /= '-' then
+						-- Add the required -config argument, we assume that
+						-- argument is the config file. This is for compatibility reason
+						-- with the old version of estudio.
+					ec_arguments.extend ("-config")
+				end
+				from
+					i := 1
+				until
+					i > cmdline_arguments_count
+				loop
+					ec_arguments.extend (cmdline_argument (i))
+					i := i + 1
 				end
 			end
 		end
@@ -580,7 +579,7 @@ feature {NONE} -- File system helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

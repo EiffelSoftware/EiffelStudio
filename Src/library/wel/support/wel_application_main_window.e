@@ -61,9 +61,7 @@ feature {NONE} -- Implementation
 
 	application_main_window_cell: CELL [detachable WEL_COMPOSITE_WINDOW]
 			-- Application's main window cell
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void
@@ -71,9 +69,7 @@ feature {NONE} -- Implementation
 
 	application_cell: CELL [detachable WEL_APPLICATION]
 			-- Application cell
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void

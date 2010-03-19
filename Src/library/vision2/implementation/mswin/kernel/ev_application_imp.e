@@ -255,9 +255,7 @@ feature {NONE} -- Implementation
 	Application_windows_id: ARRAYED_LIST [POINTER]
 			-- All user created windows in the application.
 			--| For internal use only.
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.make (5)
 		ensure
 			not_void: Result /= Void

@@ -56,9 +56,7 @@ feature {NONE} -- Helpers
 feature {NONE} -- Implementation
 
 	internal_is_non_discardable: CELL [BOOLEAN]
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.put (False)
 			if session_manager.is_service_available then
 				if attached {BOOLEAN_REF} session_data [non_discardable_id] as l_non_discardable then
@@ -74,7 +72,7 @@ feature {NONE} -- Constants
 	non_discardable_id: STRING = "com.eiffel.prompts.non-discardable"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

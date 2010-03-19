@@ -377,8 +377,6 @@ feature {NONE} -- Implementation
 			-- Remove `arg' from `argument_list'.
 		require
 			argument_exists: arg /= Void
-		local
-			asc: EB_ARGUMENT_SELECTOR
 		do
 			argument_list.prune (arg)
 			add_argument_button.set_focus

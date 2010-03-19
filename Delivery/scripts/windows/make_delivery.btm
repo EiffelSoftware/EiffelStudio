@@ -126,10 +126,10 @@ fullrd widget_test
 cd ..
 cd ..
 remtrace precomp
-safe_md %STUDIO_DIR\experimental
-safe_md %STUDIO_DIR\experimental\precomp
-safe_md %STUDIO_DIR\experimental\precomp\spec
-cd %STUDIO_DIR\experimental\precomp\spec
+safe_md %STUDIO_DIR\compatible
+safe_md %STUDIO_DIR\compatible\precomp
+safe_md %STUDIO_DIR\compatible\precomp\spec
+cd %STUDIO_DIR\compatible\precomp\spec
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform %ISE_PLATFORM
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
 safe_md %STUDIO_DIR\precomp
@@ -194,17 +194,17 @@ give_time_to organize the delivery and to start filling it
 remtrace Build the normal libraries
 cdd %INIT_DIR
 call make_libraries.btm %STUDIO_DIR library
-remtrace build the experimental libraries
+remtrace build the compatible libraries
 cdd %INIT_DIR
-call make_libraries.btm %STUDIO_DIR\experimental experimental/library
+call make_libraries.btm %STUDIO_DIR\compatible compatible/library
 
 remtrace Build the C_libraries
 cd %STUDIO_DIR\C_library\zlib
 all_makes
 cd %STUDIO_DIR\C_library\libpng
 all_makes
-copy %STUDIO_DIR\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\zlib.lib %STUDIO_DIR\experimental\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\
-copy %STUDIO_DIR\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\libpng.lib %STUDIO_DIR\experimental\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\
+copy %STUDIO_DIR\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\zlib.lib %STUDIO_DIR\compatible\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\
+copy %STUDIO_DIR\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\libpng.lib %STUDIO_DIR\compatible\library\vision2\spec\%ISE_C_COMPILER\%ISE_PLATFORM\lib\
 
 
 cdd %INIT_DIR
@@ -233,9 +233,9 @@ iff not defined NO_COMPILE then
 	remtrace Build the normal libraries
 	cdd %INIT_DIR
 	call update_libraries.btm %EIFFEL_SRC
-	remtrace Build the experimental libraries
+	remtrace Build the compatible libraries
 	cdd %INIT_DIR
-	call update_libraries.btm %EIFFEL_SRC\experimental
+	call update_libraries.btm %EIFFEL_SRC\compatible
 
 	cdd %INIT_DIR
 	give_time_to update libraries

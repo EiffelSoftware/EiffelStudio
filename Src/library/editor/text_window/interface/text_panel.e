@@ -507,7 +507,7 @@ feature -- Query
 			-- Has the content of the editor changed since it was
 			-- loaded or saved?
 		do
-			Result := text_displayed /= Void and then text_displayed.is_modified
+			Result := attached text_displayed as td and then td.is_modified
 		end
 
 	line_numbers_enabled: BOOLEAN
@@ -666,8 +666,8 @@ feature -- Basic Operations
 			-- Reinitialize `Current' so that it can receive a new content.
 		do
 				-- First abort our previous actions.
-			if text_displayed /= Void then
-				text_displayed.reset_text
+			if attached text_displayed as td then
+				td.reset_text
 			end
 			editor_width := 100
 			set_offset (0)

@@ -12,9 +12,7 @@ feature -- Access
 
 	guard: CACHE_MUTEX_GUARD
 			-- singleton guard
-		note
-			once_status: "global"
-		once
+		once ("PROCESS")
 			create Result
 		ensure
 			result_not_void: Result /= Void

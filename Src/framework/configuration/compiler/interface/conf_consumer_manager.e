@@ -281,16 +281,17 @@ feature {NONE} -- Implementation
 			l_name: STRING
 		do
 			l_classes := a_assembly.physical_assembly.classes
-				-- do we have any renamings?
+			l_renamings := a_assembly.renaming
+			l_prefix := a_assembly.name_prefix
+
+				-- Do we have any renamings?
 			if
-				(a_assembly.renaming = Void or else a_assembly.renaming.is_empty) and
-				(a_assembly.prefix_separator = Void or a_assembly.prefix_separator.is_empty)
+				(l_renamings = Void or else l_renamings.is_empty) and
+				(l_prefix = Void or else l_prefix.is_empty)
 			then
 				a_assembly.set_classes (l_classes)
 			else
 				from
-					l_renamings := a_assembly.renaming
-					l_prefix := a_assembly.name_prefix
 					create l_new_classes.make (l_classes.count)
 					l_classes.start
 				until
@@ -876,7 +877,7 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

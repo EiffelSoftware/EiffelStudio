@@ -89,7 +89,7 @@
 			<?endif?>
 			<Directory Id="Dir.Core.examples" Name="examples"/>
 			<Directory Id="Dir.Core.library" Name="library"/>
-			<Directory Id="Dir.Core.experimental" Name="experimental"/>
+			<Directory Id="Dir.Core.compatible" Name="compatible"/>
 		</DirectoryRef>
 
 		<!-- PROGIDS -->
@@ -145,10 +145,10 @@
 							Description="EiffelStudio development environment" Show="normal"
 							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 							/>
-						<Shortcut Id="estudio.exe1" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) (Experimental mode)"
-							Description="EiffelStudio development environment using experimental facilities of EiffelStudio" Show="normal"
+						<Shortcut Id="estudio.exe1" Directory="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) (Compatible mode)"
+							Description="EiffelStudio development environment using compatibility facilities of EiffelStudio" Show="normal"
 							Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
-							Arguments="-experiment"
+							Arguments="-compat"
 							/>
 						<Shortcut Id="estudio.exe2" Directory="DesktopFolder" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))"
 							Description="EiffelStudio development environment" Show="normal"
@@ -243,8 +243,8 @@
 				<ComponentGroupRef Id="Core.library"/>
 			</Feature>
 
-			<Feature Id="Experimental_feature" Title="Experimental" TypicalDefault="install" Level="1" Display="hidden">
-				<ComponentGroupRef Id="Core.experimental"/>
+			<Feature Id="Compatible_feature" Title="Compatible" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.compatible"/>
 			</Feature>
 
 			<Feature Id="gdiplus_feature" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">

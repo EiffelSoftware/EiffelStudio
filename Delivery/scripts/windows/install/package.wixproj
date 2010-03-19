@@ -202,7 +202,7 @@
     <Compile Include="content\eiffelstudio\studio_gdiplus.wxs" />
     <Compile Include="content\eiffelstudio\studio_gpl_ec.wxs" />
     <Compile Include="content\eiffelstudio\studio_libraries.wxs" />
-    <Compile Include="content\eiffelstudio\studio_experimental.wxs" />
+    <Compile Include="content\eiffelstudio\studio_compatible.wxs" />
     <Compile Include="content\eiffelenvision\Redist.wxs" />
     <Compile Include="interface\DialogMaintenanceWelcome.wxs" />
     <Compile Include="interface\DialogMissingMscError.wxs" />

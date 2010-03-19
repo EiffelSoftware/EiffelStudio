@@ -1859,9 +1859,7 @@ feature {NONE} -- Color depth implementation
 
 	init_color_depth
 			-- Initialize all `color_depth' related stuffs.
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			refresh_color_depth
 			register_color_depth_action
 		end
@@ -1881,8 +1879,6 @@ feature {NONE} -- Color depth implementation
 
 	refresh_color_depth
 			-- Screen color depth
-		note
-			once_status: global
 		local
 			l_screen: WEL_SCREEN_DC
 		do
@@ -1894,9 +1890,7 @@ feature {NONE} -- Color depth implementation
 
 	color_depth_cell: CELL [INTEGER]
 			-- Color depth singleton cell
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.put (0)
 		ensure
 			not_void: Result /= Void

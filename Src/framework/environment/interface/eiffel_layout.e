@@ -48,16 +48,14 @@ feature {NONE} -- Implementation
 
 	eiffel_layout_cell: CELL [detachable EIFFEL_ENV]
 			-- Cell to hold the layout.
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

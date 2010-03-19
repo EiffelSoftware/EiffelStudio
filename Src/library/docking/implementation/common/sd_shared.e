@@ -67,9 +67,7 @@ feature -- Access
 
 	widget_factory: SD_WIDGET_FACTORY
 			-- SD_WIDGET_FACTORY instance.
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.make
 		ensure
 			not_void: Result /= Void

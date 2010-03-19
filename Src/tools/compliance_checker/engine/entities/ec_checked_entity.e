@@ -91,9 +91,7 @@ feature {NONE} -- Access
 
 	non_compliant_reasons: EC_CHECKED_REASON_CONSTANTS
 			-- Checked reasons
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result
 		ensure
 			result_not_void: Result /= Void
@@ -254,7 +252,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

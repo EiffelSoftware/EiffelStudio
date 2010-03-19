@@ -61,9 +61,8 @@ feature {NONE} -- Implementation
 			-- Note: Please use `set_checked_entity' to set item data instead of using HASHTABLE
 			--       features directly.
 		note
-			once_status: global
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
-		once
+		once ("PROCESS")
 			create Result.make (1000)
 			add_predefine_checked_entities (Result)
 		ensure
@@ -148,7 +147,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -178,4 +177,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end -- class EC_CHECKED_CACHE

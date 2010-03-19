@@ -235,6 +235,8 @@
 		<!-- Build target delivery, 
 			and install compiled binaries -->
 		<geant target="install_delivery"		/>
+
+		<geant target="_log" arguments="[build_delivery] is completed" />
 	</target>
 
 	<target name="install_delivery" depend="init_deliv" >
@@ -256,7 +258,10 @@
 		<local name="old_TARGET_DELIV_DIR" value="${_TARGET_DELIV_DIR}" />
 		<global name="_TARGET_DELIV_DIR" value="${_TARGET_DELIV_DIR}_eweasel" />
 		<geant target="install_delivery"	/>
-		<replace file="$_TARGET_DELIV_DIR/studio/config/$ISE_PLATFORM/$ISE_C_COMPILER/config.eif" token="windows_flags: &quot;-SUBSYSTEM:WINDOWS&quot;" replace="windows_flags: &quot;-SUBSYSTEM:CONSOLE&quot;" flags="g" if="$is_windows" />
+
+		<replace file="$_TARGET_DELIV_DIR/studio/config/windows/$ISE_C_COMPILER/config.eif" token="windows_flags: &quot;-SUBSYSTEM:WINDOWS&quot;" replace="windows_flags: &quot;-SUBSYSTEM:CONSOLE&quot;" flags="g" if="$is_windows" />
+
+		<geant target="copy_full_tree" arguments="$_TARGET_DELIV_DIR/studio/config/windows,$_TARGET_DELIV_DIR/studio/config/$ISE_PLATFORM" if="${ISE_PLATFORM}=win64" />
 
 		<setenv name="EWEASEL" value="$EIFFEL_SRC${path_separator}..${path_separator}eweasel" />
 		<exec executable="move ec${exe} ecg${exe}" dir="$_TARGET_DELIV_DIR/studio/spec/$ISE_PLATFORM/bin" />
@@ -324,6 +329,9 @@
 		
 		<!-- precomp folder -->
 		<geant target="copy_full_tree" arguments="${_DELIVERY_DIR}${path_separator}precomp${path_separator}spec${path_separator}platform,${a_dir}${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}" />
+
+		<!-- precomp folder -->
+		<geant target="copy_full_tree" arguments="${_DELIVERY_DIR}${path_separator}precomp${path_separator}spec${path_separator}platform,${a_dir}${path_separator}compatible${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}" />
 
 		<!-- platform specific -->
 		<geant target="_make_delivery_windows" arguments="$a_dir" if="${is_windows}" />
@@ -663,6 +671,7 @@
 
 	<target name="compile_library" depend="init">
 		<local name="tmp_headers_available" />
+		<local name="tmp_dir_available" />
 
 		<!-- Compile C_library, library and framework materials -->
 		<!-- We keep a copy of vendors specific header files at EiffelSoftware as they cannot be redistributed freely. -->
@@ -683,13 +692,16 @@
 		<set name="return_code" value="0" />
 
 		<!-- Compile C_library -->
-		<geant target="compile" dir="${EIFFEL_SRC}/C_library"	file="build.eant" fork="true" />
+		<available resource="${EIFFEL_SRC}/C_library" variable="tmp_dir_available" />
+		<geant target="compile" dir="${EIFFEL_SRC}/C_library"	file="build.eant" fork="true" if="$tmp_dir_available=true" />
 
 		<!-- Compile library -->
-		<geant target="compile" dir="${EIFFEL_SRC}/library"		file="build.eant" fork="true" />
+		<available resource="${EIFFEL_SRC}/library" variable="tmp_dir_available" />
+		<geant target="compile" dir="${EIFFEL_SRC}/library"		file="build.eant" fork="true" if="$tmp_dir_available"/>
 
 		<!-- Compile framework -->
-		<geant target="compile" dir="${EIFFEL_SRC}/framework"	file="build.eant" fork="true" />
+		<available resource="${EIFFEL_SRC}/framework" variable="tmp_dir_available" />
+		<geant target="compile" dir="${EIFFEL_SRC}/framework"	file="build.eant" fork="true" if="$tmp_dir_available"/>
 	</target>
 
 	<target name="compile_wizards" depend="init">
@@ -729,7 +741,15 @@
 
 	<target name="install_library" depend="init_deliv" >
 		<geant target="_log" arguments="Installing library into ${_TARGET_DELIV_DIR}" />
+		<geant target="_install_c_library" arguments="${_TARGET_DELIV_DIR}" />
 		<geant target="_install_libs" arguments="${_TARGET_DELIV_DIR}" />
+
+		<geant target="_log" arguments="Installing compatible library into ${_TARGET_DELIV_DIR}${path_separator}compatible" />
+		<local name="old_EIFFEL_SRC" value="$EIFFEL_SRC" />
+		<set name="EIFFEL_SRC" value="$EIFFEL_SRC${path_separator}compatible" />
+		<mkdir directory="compatible" dir="${_TARGET_DELIV_DIR}" />
+		<geant target="_install_libs" arguments="${_TARGET_DELIV_DIR}${path_separator}compatible" />
+		<set name="EIFFEL_SRC" value="$old_EIFFEL_SRC" />
 	</target>
 
 	<target name="install_examples" depend="init_deliv" >
@@ -778,6 +798,16 @@
 		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},reg2wix${exe}" if="${is_windows}" />
 	</target>
 
+	<target name="_install_c_library" depend="init_deliv" >
+		<!-- library and C_library Installation -->
+		<argument name="a_target_dir" />
+
+		<!-- C_library -->
+		<mkdir directory="C_library" dir="${a_target_dir}" />
+		<geant target="_log" arguments=" - Copy C_library to ${a_target_dir}${path_separator}C_library" />
+		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}C_library,${a_target_dir}${path_separator}C_library" />
+
+	</target>
 	<target name="_install_libs" depend="init_deliv" >
 		<!-- library and C_library Installation -->
 		<argument name="a_target_dir" />
@@ -787,6 +817,7 @@
 		<geant target="copy_library_to" arguments="api_wrapper,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="argument_parser,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="base,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="base_extension,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="com,${a_target_dir}" if="${is_windows}" />
 		<geant target="copy_library_to" arguments="diff,${a_target_dir}"/>
 		<geant target="copy_library_to" arguments="docking,${a_target_dir}"/>
@@ -818,16 +849,11 @@
 		<geant target="copy_library_to" arguments="web,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="wel,${a_target_dir}" if="${is_windows}" />
 
-		<!-- C_library -->
-		<mkdir directory="C_library" dir="${a_target_dir}" />
-		<geant target="_log" arguments=" - Copy C_library to ${a_target_dir}${path_separator}C_library" />
-		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}C_library,${a_target_dir}${path_separator}C_library" />
-
 		<!-- ############################################################ -->
 		<!-- Final operations (such as making file executable on unix...) -->
 		<!-- ############################################################ -->
 
-		<!-- Now let's recompile the new library, even if it should be compiled -->
+		<!-- Now let's recompile the new library, even if it was already compiled -->
 		<!-- compile library from $a_dir -->
 		<local name="ISE_LIBRARY_backup" />
 		<set name="ISE_LIBRARY_backup" value="${ISE_LIBRARY}" />

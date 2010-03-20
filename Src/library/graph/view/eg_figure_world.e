@@ -124,6 +124,8 @@ feature {NONE} -- Initialization
 			attached_model.link_remove_actions.extend (agent remove_link)
 			attached_model.node_remove_actions.extend (agent remove_node)
 			attached_model.cluster_remove_actions.extend (agent remove_cluster)
+
+			enable_grid
 		ensure
 			model_set: model = a_model
 			factory_set: factory = a_factory
@@ -1063,7 +1065,6 @@ feature {NONE} -- Implementation
 
 	set_figure_selection_state (a_figure: EG_FIGURE; a_selection_state: BOOLEAN)
 			-- Set `is_selected' state of `a_figure' to `a_selection_state'.
-		local
 		do
 			if a_selection_state then
 				a_figure.enable_selected

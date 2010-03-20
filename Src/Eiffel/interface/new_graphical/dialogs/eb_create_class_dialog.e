@@ -586,7 +586,9 @@ feature {NONE} -- Implementation
 					-- We were rescued.
 				class_entry.remove_text
 				file_entry.remove_text
-				class_entry.set_focus
+				if class_entry.is_displayed then
+					class_entry.set_focus
+				end
 			end
 		rescue
 			retried := True

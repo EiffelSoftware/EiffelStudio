@@ -514,7 +514,10 @@ feature -- Element change
 
 			last_added_class := l_new_class
 
-			system.do_recompilation (True, False, False)
+				-- Perform a quick melt so that class is correctly added to the system as unreferenced.
+			eiffel_project.quick_melt (True, True, False)
+
+				-- Synchronize so that diagram is correctly updated.
 			window_manager.synchronize_all
 		ensure
 			last_added_class_set: last_added_class /= Void

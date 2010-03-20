@@ -296,20 +296,27 @@ feature -- Element change
 		do
 			bbox := world.bounding_box
 
-			border := world_border + autoscroll_border
+			if bbox.width /= 0 or else bbox.height /= 0 then
 
-			if horizontal_scrollbar.value_range.upper > bbox.right + border - drawing_area.width then
-				horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value_range.lower, horizontal_scrollbar.value.max (bbox.right + border - drawing_area.width))
-			end
-			if horizontal_scrollbar.value_range.lower < bbox.left - border then
-				horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value.min (bbox.left - border), horizontal_scrollbar.value_range.upper)
-			end
+				border := world_border + autoscroll_border
 
-			if vertical_scrollbar.value_range.upper > bbox.bottom + border - drawing_area.height then
-				vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value_range.lower, vertical_scrollbar.value.max (bbox.bottom + border - drawing_area.height))
-			end
-			if vertical_scrollbar.value_range.lower < bbox.top - border then
-				vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value.min (bbox.top - border), vertical_scrollbar.value_range.upper)
+				if horizontal_scrollbar.value_range.upper > bbox.right + border - drawing_area.width then
+					is_projection_needed := True
+					horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value_range.lower, horizontal_scrollbar.value.max (bbox.right + border - drawing_area.width))
+				end
+				if horizontal_scrollbar.value_range.lower < bbox.left - border then
+					is_projection_needed := True
+					horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value.min (bbox.left - border), horizontal_scrollbar.value_range.upper)
+				end
+
+				if vertical_scrollbar.value_range.upper > bbox.bottom + border - drawing_area.height then
+					is_projection_needed := True
+					vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value_range.lower, vertical_scrollbar.value.max (bbox.bottom + border - drawing_area.height))
+				end
+				if vertical_scrollbar.value_range.lower < bbox.top - border then
+					is_projection_needed := True
+					vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value.min (bbox.top - border), vertical_scrollbar.value_range.upper)
+				end
 			end
 		end
 
@@ -334,6 +341,9 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	is_projection_needed: BOOLEAN
+			-- Do we need to perform a projection (used for autoscroll timeout)?
 
 	normal_timeout_interval: INTEGER = 1000
 		-- Normal millesecond timeout interval for autoscrolling
@@ -360,6 +370,8 @@ feature {NONE} -- Implementation
 			-- Enable scroll.
 		do
 			if is_resize_enabled then
+					-- Reset projection flag.
+				is_projection_needed := False
 				cut
 				resize_if_necessary
 				if is_scroll then
@@ -370,7 +382,9 @@ feature {NONE} -- Implementation
 				check
 					world.is_show_requested
 				end
-				projector.project
+				if is_projection_needed then
+					projector.project
+				end
 			end
 		end
 
@@ -470,11 +484,13 @@ feature {NONE} -- Implementation
 					bottom := bbox.bottom + border - drawing_area.height
 				end
 				if left /= 0 or else right /= 0 then
+					is_projection_needed := True
 					horizontal_scrollbar.value_range.resize_exactly (
 							left.min (horizontal_scrollbar.value_range.lower),
 							right.max (horizontal_scrollbar.value_range.upper))
 				end
 				if top /= 0 or else bottom /= 0 then
+					is_projection_needed := True
 					vertical_scrollbar.value_range.resize_exactly (
 							top.min (vertical_scrollbar.value_range.lower),
 							bottom.max (vertical_scrollbar.value_range.upper))
@@ -558,19 +574,13 @@ feature {NONE} -- Implementation
 		end
 
 	on_key_pressed_on_drawing_area (a_key: EV_KEY)
-			-- User pressed a key. Turn on grid if shift was pressed.
+			-- User pressed a key.
 		do
-			if ev_application.shift_pressed then
-				world.enable_grid
-			end
 		end
 
 	on_key_released_on_drawing_area (a_key: EV_KEY)
-			-- User released key. Turn off grid.
+			-- User released key.
 		do
-			if world.grid_enabled then
-				world.disable_grid
-			end
 		end
 
 invariant

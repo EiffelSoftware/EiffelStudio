@@ -403,7 +403,7 @@ feature -- Status setting
 
 feature -- Update
 
-	melt (is_for_finalization: BOOLEAN)
+	melt (is_for_finalization, a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
 			-- Incremental recompilation of Eiffel project.
 			-- Raise error messages if necessary if unsuccessful. Otherwize,
 			-- save the project and link driver to precompiled library
@@ -417,7 +417,7 @@ feature -- Update
 			if not Compilation_modes.is_precompiling then
 				is_compiling_ref.put (True)
 				workbench.start_compilation
-				workbench.recompile
+				workbench.recompile (a_syntax_analysis, a_system_check, a_generate_code)
 				if not is_for_finalization then
 					workbench.stop_compilation
 				end
@@ -461,7 +461,7 @@ feature -- Update
 		do
 			if not Compilation_modes.is_precompiling then
 				Compilation_modes.set_is_discover
-				melt (False)
+				melt (False, True, True, True)
 			else
 				Compilation_modes.reset_modes
 				precompile (False)
@@ -472,7 +472,7 @@ feature -- Update
 			error_implies: error_occurred implies save_error
 		end
 
-	quick_melt
+	quick_melt (a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
 			-- Melt eiffel project and then freeze it (i.e generate
 			-- C code for workbench mode).
 		require
@@ -480,7 +480,7 @@ feature -- Update
 		do
 			if not Compilation_modes.is_precompiling then
 				Compilation_modes.set_is_quick_melt
-				melt (False)
+				melt (False, a_syntax_analysis, a_system_check, a_generate_code)
 			else
 				Compilation_modes.reset_modes
 				precompile (False)
@@ -498,7 +498,7 @@ feature -- Update
 		do
 			if not Compilation_modes.is_precompiling then
 				Compilation_modes.set_is_override_scan
-				melt (False)
+				melt (False, True, True, True)
 			else
 				Compilation_modes.reset_modes
 				precompile (False)
@@ -516,7 +516,7 @@ feature -- Update
 			able_to_compile: able_to_compile
 		do
 			Compilation_modes.set_is_freezing
-			melt (False)
+			melt (False, True, True, True)
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
@@ -532,7 +532,7 @@ feature -- Update
 			able_to_compile: able_to_compile
 		do
 			Compilation_modes.set_is_quick_melt
-			melt (True)
+			melt (True, True, True, True)
 			if successful then
 				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)
@@ -626,7 +626,7 @@ feature -- Update
 			Compilation_modes.set_is_precompiling (True)
 			Compilation_modes.set_is_freezing
 			workbench.start_compilation
-			workbench.recompile
+			workbench.recompile (True, True, True)
 			if not is_for_finalization then
 				workbench.stop_compilation
 			end
@@ -1052,7 +1052,7 @@ invariant
 	degree_output_not_void: degree_output /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

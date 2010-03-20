@@ -994,7 +994,7 @@ end
 					Error_handler.insert_error (vd71)
 					l_errors.forth
 				end
-				is_force_rebuild := True
+				set_is_force_rebuild (True)
 				Error_handler.raise_error
 			end
 			l_warnings := l_vis_build.last_warnings
@@ -1133,11 +1133,11 @@ end
 
 			rebuild_configuration_actions.call ([])
 
-			is_force_rebuild := False
+			set_is_force_rebuild (False)
 		rescue
 				-- An exception occur during system analysis, we should force a rebuild
 				-- at next compilation. This addresses bug#12911.
-			is_force_rebuild := True
+			set_is_force_rebuild (True)
 		end
 
 	rebuild_configuration_actions: attached ACTION_SEQUENCE [TUPLE[]]
@@ -1168,7 +1168,7 @@ end
 					if not l_table.has_key (l_name) then
 						l_table.force (l_class, l_name)
 					else
-						is_force_rebuild := True
+						set_is_force_rebuild (True)
 						create l_vd87.make (l_table.found_item, l_class)
 						error_handler.insert_error (l_vd87)
 						error_handler.checksum
@@ -1579,7 +1579,7 @@ feature -- Recompilation
 	force_rebuild
 			-- Force a rebuild
 		do
-			is_force_rebuild := True
+			set_is_force_rebuild (True)
 		end
 
 	set_config_changed (b: BOOLEAN)
@@ -1610,7 +1610,7 @@ feature -- Recompilation
 			has_potential_class_name_mismatch_set: has_potential_class_name_mismatch
 		end
 
-	recompile
+	recompile (a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
 			-- Incremetal recompilation of the system.
 		require
 			no_error: not Error_handler.has_error
@@ -1627,7 +1627,7 @@ feature -- Recompilation
 
 			has_been_changed := is_config_changed
 			lace.check_shared_library_definition_stamp
-			do_recompilation (True, True, True)
+			do_recompilation (a_syntax_analysis, a_system_check, a_generate_code)
 
 			successful := True
 		rescue
@@ -1844,8 +1844,11 @@ end
 					process_post_degree_5
 
 						-- Let's get rid of the classes that have been really removed.
-					process_removed_classes
-					real_removed_classes.wipe_out
+					if a_generate_code then
+						process_removed_classes
+						real_removed_classes.wipe_out
+					end
+
 
 	debug ("ACTIVITY")
 		io.error.put_string ("%Tmoved = ")
@@ -1964,7 +1967,7 @@ end
 					end
 
 						-- Finalize a successful compilation
-					finish_compilation
+					finish_compilation (a_generate_code)
 					debug ("timing")
 						create d2.make_now
 						print ("Server storing duration: ")
@@ -1994,6 +1997,7 @@ end
 					end
 				else
 					compute_root_type
+					finish_compilation (False)
 				end -- if a_generate_code
 
 				if System.il_generation then
@@ -2033,7 +2037,9 @@ end
 			first_compilation := False
 			il_quick_finalization := False
 
- 			display_catcall_statistics
+			if a_generate_code then
+				display_catcall_statistics
+			end
 		end
 
 	reset_cached_class_i_options
@@ -2793,7 +2799,7 @@ end
 			Rout_info_table.melted.store (file)
 		end
 
-	finish_compilation
+	finish_compilation (a_code_generation: BOOLEAN)
 			-- Finish a successful recompilation and update the
 			-- compilation files.
 		local
@@ -2813,17 +2819,20 @@ end
 			from i := 1 until i > nb loop
 				l_class := class_array.item (i)
 				if l_class /= Void then
-					l_class.set_changed (False)
-					l_class.set_changed2 (False)
-					l_class.set_changed3a (False)
-					l_class.set_need_type_check (False)
-					-- FIXME: changed4, changed5, changed6
-					l_class.changed_features.clear_all
-					l_class.propagators.wipe_out
-					l_eiffel_class ?= l_class
-					if l_eiffel_class /= Void then
-						l_eiffel_class.set_new_byte_code_needed (False)
+					if a_code_generation then
+						l_class.set_changed (False)
+						l_class.set_changed2 (False)
+						l_class.set_changed3a (False)
+						l_class.set_need_type_check (False)
+						-- FIXME: changed4, changed5, changed6
+						l_class.changed_features.clear_all
+						l_class.propagators.wipe_out
+						l_eiffel_class ?= l_class
+						if l_eiffel_class /= Void then
+							l_eiffel_class.set_new_byte_code_needed (False)
+						end
 					end
+
 					if l_class.current_feature_table /= Void then
 						l_class.set_previous_feature_table (l_class.current_feature_table)
 						l_class.set_current_feature_table (Void)
@@ -6153,6 +6162,14 @@ feature -- Statistics
 		end
 
 feature {NONE} -- Implementation
+
+	set_is_force_rebuild (b: BOOLEAN)
+			-- Set `is_force_rebuild'.
+		do
+			is_force_rebuild := b
+		ensure
+			is_force_rebuild_set: is_force_rebuild = b
+		end
 
 	is_force_rebuild: BOOLEAN
 			-- Is a rebuild of the configuration system forced?

@@ -406,20 +406,21 @@ feature {EB_FEATURE_EDITOR, EB_TYPE_SELECTOR} -- Access
 		do
 			create l_list.make (2 + initial_strings.count)
 
-
-			l_str := a_supplier_type.name.string
-			if generics_count (l_str) > 0 then
-				l_str.append (" [..]")
-			end
-			l_list.extend (l_str)
-
-			if a_client_type /= a_supplier_type then
-				l_str := a_client_type.name.string
+			if a_client_type /= Void and then a_supplier_type /= Void then
+				l_str := a_supplier_type.name.string
 				if generics_count (l_str) > 0 then
 					l_str.append (" [..]")
 				end
 				l_list.extend (l_str)
+				if a_client_type /= a_supplier_type then
+					l_str := a_client_type.name.string
+					if generics_count (l_str) > 0 then
+						l_str.append (" [..]")
+					end
+					l_list.extend (l_str)
+				end
 			end
+
 			l_list.fill (initial_strings)
 			Result := l_list.to_array
 		end

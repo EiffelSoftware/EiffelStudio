@@ -22,25 +22,31 @@ inherit
 		end
 
 create
-	make
+	make, make_with_context
 
 feature {NONE} -- Initialization
 
 	make
-			-- Initialize the dialog with the manager `a_favorites_manager'
+			-- Initialize the dialog.
 		do
-			default_create
-			prepare
+			make_with_context (Void)
 		end
 
-	prepare
-			-- Create the controls and setup the layout
+	make_with_context (a_class_c: CLASS_C)
+			-- Initialize the dialog using `a_class_c' as context if available.
+		do
+			default_create
+			prepare (a_class_c)
+		end
+
+	prepare (a_class_c: CLASS_C)
+			-- Prepare completion handler for `Current' using `a_class_c' for initial context if available.
 		do
 				-- Add Class Completion
-			create text_completion.make (system.root_creators.first.root_class.compiled_class, Void)
+			create text_completion.make (a_class_c, Void)
 
 			text_completion.set_code_completable (Current)
-			text_completion.set_use_all_classes_in_universe (True)
+			text_completion.set_use_all_classes_in_universe (a_class_c = Void)
 
 			set_completion_possibilities_provider (text_completion)
 			set_completing_feature (False)

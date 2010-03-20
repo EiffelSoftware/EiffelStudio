@@ -38,7 +38,7 @@ feature -- Basic operations
 	compile
 			-- <Precursor>
 		do
-			eiffel_project.quick_melt
+			eiffel_project.quick_melt (True, True, True)
 			if eiffel_project.freezing_occurred then
 				eiffel_project.call_finish_freezing_and_wait (True)
 			end
@@ -56,7 +56,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

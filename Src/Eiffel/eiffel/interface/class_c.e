@@ -4649,14 +4649,16 @@ feature {CLASS_C} -- Implementation
 		do
 			Result := other = Current
 			l_parent_classes := parents_classes
-			from
-				i := 1
-				l_count := l_parent_classes.count
-			until
-				Result or else i > l_count
-			loop
-				Result := l_parent_classes [i].inherits_from_internal (other)
-				i := i + 1
+			if l_parent_classes /= Void and then not l_parent_classes.is_empty then
+				from
+					i := 1
+					l_count := l_parent_classes.count
+				until
+					Result or else i > l_count
+				loop
+					Result := l_parent_classes [i].inherits_from_internal (other)
+					i := i + 1
+				end
 			end
 		end
 

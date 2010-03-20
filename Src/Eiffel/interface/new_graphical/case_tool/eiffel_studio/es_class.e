@@ -400,154 +400,163 @@ feature -- Element change
 			b: BOOLEAN
 			l_persistent_str: STRING
 			l_feature_clause_list: like feature_clause_list
+			l_is_retried: BOOLEAN
 		do
-			l_persistent_str := "persistent"
-			if not class_i.is_valid or else (cluster /= Void and then class_i.group /= cluster.group) then
-				if graph /= Void then
-					graph.remove_links (links)
-					graph.remove_node (Current)
-				end
-			else
-				if not class_i.name.is_equal (name) then
-					-- should never happen (see above)
-					set_name (class_i.name)
-				end
-				set_is_root_class(system.root_creators.there_exists (
-					agent (a_root: SYSTEM_ROOT): BOOLEAN
-						do
-							Result := a_root.root_class.name.is_equal (class_i.name)
-						end))
-				c := class_c
-				if c /= Void then
-					if c.has_ast then
-						if c.ast.generics_as_string = Void or else c.ast.generics_as_string.is_empty then
-							set_generics (Void)
-						else
-							set_generics (c.ast.generics_as_string)
+			if not l_is_retried then
+				l_persistent_str := "persistent"
+				if not class_i.is_valid or else (cluster /= Void and then class_i.group /= cluster.group) then
+					if graph /= Void then
+						graph.remove_links (links)
+						graph.remove_node (Current)
+					end
+				else
+					if not class_i.name.is_equal (name) then
+						-- should never happen (see above)
+						set_name (class_i.name)
+					end
+					set_is_root_class(system.root_creators.there_exists (
+						agent (a_root: SYSTEM_ROOT): BOOLEAN
+							do
+								Result := a_root.root_class.name.is_equal (class_i.name)
+							end))
+					c := class_c
+					if c /= Void then
+						if c.has_ast then
+							if c.ast.generics_as_string = Void or else c.ast.generics_as_string.is_empty then
+								set_generics (Void)
+							else
+								set_generics (c.ast.generics_as_string)
+							end
 						end
-					end
-					b := c.is_deferred
-					if b /= is_deferred then
-						is_deferred := b
-						is_properties_changed := True
-					end
-					b := c.is_used_as_expanded
-					if b /= is_expanded then
-						is_expanded := b
-						is_properties_changed := True
-					end
-					b := c.is_precompiled or else c.group.is_library
-					if b /= is_reused then
-						is_reused := b
-						is_properties_changed := True
-					end
-					-- is_interfaced
-					if c.has_feature_table then
-						f := c.written_in_features
-						from
-							f.start
-							b := False
-						until
-							b or f.after
-						loop
-							b := f.item.is_external
-							f.forth
-						end
-						if b /= is_interfaced then
-							is_interfaced := b
+						b := c.is_deferred
+						if b /= is_deferred then
+							is_deferred := b
 							is_properties_changed := True
 						end
-					end
-					-- is_persistent
-					st := Storable_class
-					b := False
-					if st /= Void then
-						b := c.conform_to (storable_class)
-					end
-					if not b and then c.has_ast then
-						i := c.ast.top_indexes
-						if i /= Void then
+						b := c.is_used_as_expanded
+						if b /= is_expanded then
+							is_expanded := b
+							is_properties_changed := True
+						end
+						b := c.is_precompiled or else c.group.is_library
+						if b /= is_reused then
+							is_reused := b
+							is_properties_changed := True
+						end
+						-- is_interfaced
+						if c.has_feature_table then
+							f := c.written_in_features
 							from
-								i.start
+								f.start
+								b := False
 							until
-								b or i.after
+								b or f.after
 							loop
-								s := i.item.tag.name
-								b := s /= Void and then s.is_equal (l_persistent_str)
-								i.forth
+								b := f.item.is_external
+								f.forth
+							end
+							if b /= is_interfaced then
+								is_interfaced := b
+								is_properties_changed := True
 							end
 						end
-						i := c.ast.bottom_indexes
-						if i /= Void then
-							from
-								i.start
-							until
-								b or i.after
-							loop
-								s := i.item.tag.name
-								b := s /= Void and then s.is_equal (l_persistent_str)
-								i.forth
-							end
-						end
-					end
-					if b /= is_persistent then
-						is_persistent := b
-						is_properties_changed := True
-					end
-					-- is_effective
-					if not c.is_deferred then
+						-- is_persistent
+						st := Storable_class
 						b := False
-						if c.has_ast then
-							l := c.ast.parents
-							if l /= Void then
+						if st /= Void then
+							b := c.conform_to (storable_class)
+						end
+						if not b and then c.has_ast then
+							i := c.ast.top_indexes
+							if i /= Void then
 								from
-									l.start
+									i.start
 								until
-									b or l.after
+									b or i.after
 								loop
-									l_class := clickable_info.associated_eiffel_class (c.lace_class, l.item.type)
-									b := (l_class /= Void and then l_class.is_compiled and then
-										l_class.compiled_class.is_deferred) or else l.item.is_effecting
-									l.forth
+									s := i.item.tag.name
+									b := s /= Void and then s.is_equal (l_persistent_str)
+									i.forth
+								end
+							end
+							i := c.ast.bottom_indexes
+							if i /= Void then
+								from
+									i.start
+								until
+									b or i.after
+								loop
+									s := i.item.tag.name
+									b := s /= Void and then s.is_equal (l_persistent_str)
+									i.forth
 								end
 							end
 						end
+						if b /= is_persistent then
+							is_persistent := b
+							is_properties_changed := True
+						end
+						-- is_effective
+						if not c.is_deferred then
+							b := False
+							if c.has_ast then
+								l := c.ast.parents
+								if l /= Void then
+									from
+										l.start
+									until
+										b or l.after
+									loop
+										l_class := clickable_info.associated_eiffel_class (c.lace_class, l.item.type)
+										b := (l_class /= Void and then l_class.is_compiled and then
+											l_class.compiled_class.is_deferred) or else l.item.is_effecting
+										l.forth
+									end
+								end
+							end
+						end
+						if b /= is_effective then
+							is_effective := b
+							is_properties_changed := True
+						end
+						-- features
+						if class_c.has_ast then
+							l_feature_clause_list := class_c.ast.features
+						end
+						if l_feature_clause_list = Void then
+							create l_feature_clause_list.make (0)
+						end
+						l_feature_clause_list.compare_objects
+						if not l_feature_clause_list.is_equal (feature_clause_list) then
+							feature_clause_list := l_feature_clause_list
+							feature_clause_list_changed_actions.call (Void)
+						end
 					end
-					if b /= is_effective then
-						is_effective := b
+					b := class_i.is_compiled
+					if b /= is_compiled then
+						is_compiled := b
 						is_properties_changed := True
 					end
-					-- features
-					if class_c.has_ast then
-						l_feature_clause_list := class_c.ast.features
+					if class_i.is_compiled then
+						build_queries
+						if cluster /= Void then
+							if cluster.group /= class_i.group then
+								cluster.prune_all (Current)
+							end
+						end
 					end
-					if l_feature_clause_list = Void then
-						create l_feature_clause_list.make (0)
+
+					if is_properties_changed then
+						properties_changed_actions.call (Void)
 					end
-					l_feature_clause_list.compare_objects
-					if not l_feature_clause_list.is_equal (feature_clause_list) then
-						feature_clause_list := l_feature_clause_list
-						feature_clause_list_changed_actions.call (Void)
+					if internal_code_generator /= Void then
+						internal_code_generator.reset_date
 					end
-				end
-				b := class_i.is_compiled
-				if b /= is_compiled then
-					is_compiled := b
-					is_properties_changed := True
-				end
-				build_queries
-				if cluster /= Void then
-					if cluster.group /= class_i.group then
-						cluster.prune_all (Current)
-					end
-				end
-				if is_properties_changed then
-					properties_changed_actions.call (Void)
-				end
-				if internal_code_generator /= Void then
-					internal_code_generator.reset_date
 				end
 			end
+		rescue
+			l_is_retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation

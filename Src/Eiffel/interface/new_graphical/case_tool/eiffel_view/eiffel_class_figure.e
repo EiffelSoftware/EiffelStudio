@@ -596,7 +596,7 @@ feature {NONE} -- Implementation (move)
 					Result := True
 					l_world ?= world
 					if l_world /= Void and then attached {CONF_CLASS} model.class_i as l_conf_class then
-						if not l_class_fig_stone.group.accessible_classes.has_item (l_conf_class) then
+						if not l_class_fig_stone.group.is_valid or else not l_class_fig_stone.group.accessible_classes.has_item (l_conf_class) then
 							Result := False
 						end
 					end

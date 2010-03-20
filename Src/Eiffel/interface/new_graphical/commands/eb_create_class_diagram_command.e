@@ -57,7 +57,7 @@ feature -- Basic operations
 				if l_group /= Void and then not l_group.is_readonly then
 					create dialog.make_default (tool.develop_window, False)
 					dialog.preset_cluster (l_group)
-					dialog.set_stone_when_finished
+--					dialog.set_stone_when_finished
 					dialog.call_default
 				end
 			end

@@ -47,7 +47,7 @@ feature -- Output
 			l_compilation: STRING_32
 			l_multithreaded: STRING_32
 			l_console_application: STRING_32
-			l_experimental_mode: STRING_32
+			l_experimental_mode, l_compatible_mode: STRING_32
 			l_project_location: PROJECT_DIRECTORY
 			l_compiled: BOOLEAN
 			l_lace: LACE_I
@@ -62,6 +62,7 @@ feature -- Output
 			l_multithreaded := locale_formatter.translation (lb_multithreaded)
 			l_console_application := locale_formatter.translation (lb_console_application)
 			l_experimental_mode := locale_formatter.translation (lb_experimental_mode)
+			l_compatible_mode := locale_formatter.translation (lb_compatible_mode)
 			l_max_len := l_name.count.max (l_target.count).max (l_configuration.count).max (l_location.count).max (
 				l_compilation.count).max (l_multithreaded.count) + 1
 
@@ -157,34 +158,30 @@ feature -- Output
 			end
 			a_formatter.add_new_line
 
-			a_formatter.add_indent
-			a_formatter.process_indexing_tag_text (l_experimental_mode)
-			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
-			l_count := l_experimental_mode.count
-			if l_count < l_max_len then
-				a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
-			end
-
-			if
-				(l_compiled and then eiffel_ace.system.is_experimental_mode)
-			then
-				a_formatter.process_basic_text (locale_formatter.translation (lb_yes))
-			else
-				a_formatter.process_basic_text (locale_formatter.translation (lb_no))
-			end
-			a_formatter.add_new_line
-
-			if
-				(l_compiled and then eiffel_ace.system.is_compatible_mode)
-			then
-				a_formatter.process_basic_text (locale_formatter.translation (lb_yes))
-			else
-				a_formatter.process_basic_text (locale_formatter.translation (lb_no))
-			end
-			a_formatter.add_new_line
-
-			a_formatter.add_new_line
 			if l_compiled then
+						-- Display if we are in experimental or compatible mode, otherwise nothing.
+				if eiffel_ace.system.is_experimental_mode then
+					a_formatter.add_indent
+					a_formatter.process_indexing_tag_text (l_experimental_mode)
+					a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
+					l_count := l_experimental_mode.count
+					if l_count < l_max_len then
+						a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
+					end
+					a_formatter.process_basic_text (locale_formatter.translation (lb_yes))
+					a_formatter.add_new_line
+				elseif eiffel_ace.system.is_compatible_mode then
+					a_formatter.add_indent
+					a_formatter.process_indexing_tag_text (l_compatible_mode)
+					a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
+					l_count := l_compatible_mode.count
+					if l_count < l_max_len then
+						a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
+					end
+					a_formatter.process_basic_text (locale_formatter.translation (lb_yes))
+					a_formatter.add_new_line
+				end
+
 				if not eiffel_system.system.root_creators.is_empty then
 					l_root := eiffel_system.system.root_creators.first
 
@@ -244,6 +241,7 @@ feature {NONE} -- Internationalization
 	lb_multithreaded: STRING = "multithreaded"
 	lb_console_application: STRING = "console"
 	lb_experimental_mode: STRING = "experimental"
+	lb_compatible_mode: STRING = "compatible"
 
 	lb_enabled: STRING = "enabled"
 	lb_disabled: STRING = "disabled"

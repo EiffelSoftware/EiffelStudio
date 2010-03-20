@@ -75,8 +75,8 @@ feature {NONE} -- Initialization
 		do
 			create {EB_FUNCTION_EDITOR} feature_editor
 			feature_editor_frame.extend (feature_editor)
-			if not func_button.is_selected then
-				func_button.enable_select
+			if not attr_button.is_selected then
+				attr_button.enable_select
 			end
 		end
 

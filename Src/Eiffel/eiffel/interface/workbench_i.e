@@ -337,7 +337,7 @@ feature -- Commands
 			end
 		end
 
-	recompile
+	recompile (a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
 			-- Incremental recompilation
 		local
 			retried: INTEGER
@@ -387,7 +387,7 @@ feature -- Commands
 					if Lace.has_group_changed or missing_class_error or compilation_modes.is_discover then
 						system.set_rebuild (True)
 					end
-					System.recompile
+					System.recompile (a_syntax_analysis, a_system_check, a_generate_code)
 
 					process_actions (universe.conf_system.all_post_compile_action)
 				else

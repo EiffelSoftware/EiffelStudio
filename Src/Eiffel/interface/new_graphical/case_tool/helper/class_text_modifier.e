@@ -1282,7 +1282,7 @@ feature {NONE} -- Implementation
 			new_code: STRING
 		do
 			editor := context_editor.develop_window.editors_manager.current_editor
-			if not editor.is_empty then
+			if editor /= Void and then not editor.is_empty then
 					-- Wait for the editor to read class text.
 				from
 				until

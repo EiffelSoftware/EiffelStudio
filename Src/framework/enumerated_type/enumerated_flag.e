@@ -41,7 +41,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	has_flag (a_flag: like Current)
+	has_flag (a_flag: like Current): BOOLEAN
 			-- Determines if the Current flag contains a particular flag.
 			--
 			-- `a_flag': Flag to compare Current against.
@@ -80,7 +80,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,6 +9,8 @@ deferred class
 	COMMAND_LINE_BUILDER
 
 inherit
+	ANY
+	
 	COMMAND_LINE_BUILDING_FUNCTIONS
 		export
 			{NONE} all
@@ -19,14 +21,15 @@ feature -- Access
 	command_line_arguments: STRING
 			-- Generates a command line based on set compiler-related properties
 		do
-			Result := internal_command_line
-			if Result = Void then
+			if attached internal_command_line as l_result then
+				Result := l_result
+			else
 				Result := generate_command_line_arguments
 				internal_command_line:= generate_command_line_arguments
 			end
 		ensure
-			result_attached: Result /= Void
-			internal_command_line_set: internal_command_line = Result
+			result_attached: attached Result
+			result_consistent: Result ~ command_line_arguments
 		end
 
 feature {NONE} -- Basic operations
@@ -35,7 +38,7 @@ feature {NONE} -- Basic operations
 			-- Request command-line arguments be generated
 		deferred
 		ensure
-			result_attached: Result /= Void
+			result_attached: attached Result
 		end
 
 feature {NONE} -- Status setting
@@ -47,12 +50,12 @@ feature {NONE} -- Status setting
 		do
 			internal_command_line := Void
 		ensure
-			internal_command_line_unattached: internal_command_line = Void
+			internal_command_line_unattached: not attached internal_command_line
 		end
 
 feature {NONE} -- Implementation
 
-	internal_command_line: STRING;
+	internal_command_line: detachable STRING;
 			-- Cached version of `command_line'
 			-- Note: Do not use directly.
 

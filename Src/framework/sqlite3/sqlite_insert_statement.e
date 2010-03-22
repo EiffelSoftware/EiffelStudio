@@ -14,7 +14,7 @@ inherit
 	SQLITE_MODIFY_STATEMENT
 		redefine
 			on_before_execute,
-			on_after_execute
+			on_after_executed
 		end
 
 create
@@ -34,7 +34,7 @@ feature {NONE} -- Action handlers
 			last_row_id := 0
 		end
 
-	on_after_execute
+	on_after_executed
 			-- <Precursor>
 		do
 			Precursor

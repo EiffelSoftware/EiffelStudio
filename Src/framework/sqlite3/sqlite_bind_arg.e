@@ -84,7 +84,7 @@ feature -- Measurement
 			Result := SQLITE_LIMIT_VARIABLE_NUMBER.as_natural_8
 		end
 
-feature {SQLITE_STATEMENT} -- Basic operations
+feature {SQLITE_STATEMENT, SQLITE_STATEMENT_ITERATION_CURSOR} -- Basic operations
 
 	bind_to_statement (a_statement: SQLITE_STATEMENT; a_index: INTEGER)
 			-- Binds the argument to the statement, at a given index.

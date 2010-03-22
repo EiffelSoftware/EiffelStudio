@@ -25,12 +25,22 @@ feature {NONE} -- Initialization
 			l_modify: SQLITE_MODIFY_STATEMENT
 			l_insert: SQLITE_INSERT_STATEMENT
 			l_query: SQLITE_QUERY_STATEMENT
+			--l_cursor: SQLITE_STATEMENT_ITERATION_CURSOR
 			i: INTEGER
 		do
 			print ("%NOpening Database...%N")
 
 				-- Open/create a Database.
 			create l_db.make_create_read_write ("data.sqlite")
+
+			create l_query.make ("SELECT name FROM sqlite_master ORDER BY name;", l_db)
+			across l_query.execute_new as l_cursor loop
+				print (l_cursor.item.string_value (1) + "%N")
+			end
+
+
+			(create {EXCEPTIONS}).die (0);
+
 
 			print ("Creating Example Table...%N")
 

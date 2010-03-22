@@ -148,6 +148,47 @@ feature -- Access: Error handling
 	last_exception: detachable SQLITE_EXCEPTION
 			-- Last occuring error, set during compilation.
 
+feature -- Access: Cursor
+
+	execute_new: SQLITE_STATEMENT_ITERATION_CURSOR
+			-- <Precursor>
+		require
+			is_compiled: is_compiled
+			is_connected: is_connected
+			not_is_executing: not is_executing
+			is_accessible: is_accessible
+			not_has_arguments: not has_arguments
+		do
+			create Result.make (Current)
+		ensure
+			result_attached: attached Result
+		end
+
+	execute_new_with_arguments (a_arguments: TUPLE): SQLITE_STATEMENT_ITERATION_CURSOR
+			-- Executes the SQLite modification statement with bound set of arguments.
+			--
+			-- `a_arguments': The bound arguments to call the SQLite query statement with.
+			--                Valid arguments are those that descent {SQLITE_BIND_ARG} or
+			--                {READABLE_STRING_8}, or of type {INTEGER_*}, {NATURAL_*} (with the expection
+			--                of {NATURAL_64}), or {MANAGED_POINTER} (for blobs).
+			--                Note: If *not* using {SQLITE_BIND_ARG}, the SQLite statement should use ?NNN
+			--                      arguments and not named arguments.
+			--                      see http://sqlite.org/c3ref/bind_blob.html
+		require
+			is_compiled: is_compiled
+			is_connected: is_connected
+			not_is_executing: not is_executing
+			is_accessible: is_accessible
+			has_arguments: has_arguments
+			a_arguments_attached: attached a_arguments
+			a_arguments_count_correct: a_arguments.count.as_natural_32 = arguments_count
+			a_arguments_is_valid_arguments: is_valid_arguments (a_arguments)
+		do
+			create Result.make_with_bindings (Current, new_binding_argument_array (a_arguments))
+		ensure
+			result_attached: attached Result
+		end
+
 feature {NONE} -- Access
 
 	compile_statement_string: STRING
@@ -471,7 +512,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 				last_exception := l_exception
 
 					-- Notify post execute
-				on_after_execute
+				on_after_executed
 
 				l_exception.raise
 			else
@@ -488,7 +529,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 				end
 
 					-- Notify post execute
-				on_after_execute
+				on_after_executed
 			end
 
 				-- Reset the statement for repeated use.
@@ -630,7 +671,7 @@ feature {NONE} -- Basic operations: Compilation
 			end
 		end
 
-feature {NONE} -- Action handlers
+feature {SQLITE_STATEMENT_ITERATION_CURSOR} -- Action handlers
 
 	on_before_execute
 			-- Called before a statement has been executed.
@@ -642,15 +683,21 @@ feature {NONE} -- Action handlers
 			is_accessible: is_accessible
 			database_is_readable: database.is_readable
 		do
+			is_executing := True
+		ensure
+			is_executing: is_executing
 		end
 
-	on_after_execute
+	on_after_executed
 			-- Called after a statement has been executed, successfully or not.
 		require
 			is_sqlite_available: is_sqlite_available
 			is_interface_usable: is_interface_usable
 			is_accessible: is_accessible
 		do
+			is_executing := False
+		ensure
+			not_is_executing: not is_executing
 		end
 
 feature {SQLITE_INTERNALS} -- Implementation

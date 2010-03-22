@@ -16,7 +16,7 @@ feature -- Externals
 		external
 			"C inline use <sqlite3.h>"
 		alias
-			"return (EIF_INTEGER)sqlite3_config((int)$a_config)"
+			"return (EIF_INTEGER)sqlite3_config((int)$a_config);"
 		end
 
 ;note

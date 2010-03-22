@@ -18,9 +18,23 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes the application.
 		local
-			results: ARRAY [STRING]
 			l_parser: ARGUMENT_PARSER
+			l_tree: ARRAYED_TREE [REAL_64]
+			l_child: ARRAYED_TREE [REAL_64]
 		do
+			create l_tree.make (3, 0.0)
+			l_tree.put_child (create {ARRAYED_TREE [REAL_64]}.make (1, 1.0))
+			l_tree.put_child (create {ARRAYED_TREE [REAL_64]}.make (1, 2.0))
+
+			create l_child.make (1, 3.0)
+			l_child.put_child (create {ARRAYED_TREE [REAL_64]}.make (1, 3.1))
+			l_tree.put_child (l_child)
+
+--			across l_tree as l_cursor loop
+--				print (l_cursor.item.item)
+--				print ("%N")
+--			end
+
 			create l_parser.make
 			l_parser.execute (agent start (l_parser))
 			if not l_parser.is_successful then

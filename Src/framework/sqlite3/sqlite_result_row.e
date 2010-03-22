@@ -30,7 +30,7 @@ inherit
 			{NONE} all
 		end
 
-create {SQLITE_STATEMENT}
+create {SQLITE_STATEMENT, SQLITE_STATEMENT_ITERATION_CURSOR}
 	make
 
 feature {NONE} -- Initialization
@@ -303,9 +303,9 @@ feature -- Query: Value affinity
 			Result := sqlite3_column_double (sqlite_api, statement.internal_stmt, (a_column + 1).as_integer_32)
 		end
 
-invariant
-	statement_mark_positive: statement_mark > 0
-	statement_mark_small_enough: statement_mark <= statement.mark
+--invariant
+	--statement_mark_positive: statement_mark > 0
+	--statement_mark_small_enough: statement_mark <= statement.mark
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

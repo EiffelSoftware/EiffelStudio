@@ -150,17 +150,21 @@ feature -- Application execution
 	application: APPLICATION_EXECUTION
 			-- Application associated to current execution.
 
-	dbg_evaluator: DBG_EVALUATOR
-			-- Debugger expression evaluator.
-
-	dbg_storage: DEBUGGER_STORAGE
-			-- Debugger's storage engine
-
 	is_debugging: BOOLEAN
 			-- Is debugger currently debugging ?
 		do
 			Result := application_launching_in_progress or application_initialized
 		end
+
+feature -- Evaluation
+
+	dbg_evaluator: DBG_EVALUATOR
+			-- Debugger expression evaluator.
+
+feature -- Storage
+
+	dbg_storage: DEBUGGER_STORAGE
+			-- Debugger's storage engine
 
 feature -- Output helpers
 
@@ -1004,6 +1008,23 @@ feature -- Access
 
 feature -- Expression evaluation
 
+	dbg_expression_evaluation (a_expr: STRING): DBG_EXPRESSION_EVALUATION
+			-- Expression evaluation's result for `a_expr' in current context
+			-- (note: Result = Void implies an error occurred)
+		require
+			safe_application_is_stopped: safe_application_is_stopped
+		local
+			exp: DBG_EXPRESSION
+		do
+			create exp.make_with_context (a_expr)
+			create Result.make (exp)
+			if not exp.error_occurred then
+				Result.evaluate
+			end
+		ensure
+			attached_result: Result /= Void
+		end
+
 	expression_evaluation (a_expr: STRING): DUMP_VALUE
 			-- Expression evaluation's result for `a_expr' in current context
 			-- (note: Result = Void implies an error occurred)
@@ -1683,7 +1704,7 @@ invariant
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

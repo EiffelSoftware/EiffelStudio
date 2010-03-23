@@ -17,7 +17,7 @@ feature {NONE} -- Ancestor facade
 
 	build_status do end
 	impl_check_assert (b: BOOLEAN): BOOLEAN do end
-	impl_ignore_current_assertion_violation (b: BOOLEAN): BOOLEAN do end
+	impl_ignore_current_assertion_violation (b: BOOLEAN) do end
 	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL) do end
 	continue_ignoring_kept_objects do end
 	interrupt do end

@@ -331,7 +331,6 @@ feature -- Catcall detection change
 feature {NONE} -- Assertion change Implementation
 
 	impl_check_assert (b: BOOLEAN): BOOLEAN
-			-- `check_assert (b)' on debuggee
 		local
 			s: STRING
 		do
@@ -344,7 +343,7 @@ feature {NONE} -- Assertion change Implementation
 
 feature {NONE} -- Assertion violation processing		
 
-	impl_ignore_current_assertion_violation (a_boolean: BOOLEAN): BOOLEAN
+	impl_ignore_current_assertion_violation (a_boolean: BOOLEAN) 
 			-- <Precursor>
 		do
 			ewb_request.send_rqst_1 (Rqst_ignore_assertion_violation, a_boolean.to_integer)

@@ -602,7 +602,7 @@ feature {NONE} -- Assertion change Implementation
 
 feature {NONE} -- Assertion violation processing		
 
-	impl_ignore_current_assertion_violation (b: BOOLEAN): BOOLEAN
+	impl_ignore_current_assertion_violation (b: BOOLEAN)
 			-- <Precursor/>
 			-- Call the remote `{ISE_RUNTIME}.set_ignore_contract_violation_once (b)' method.
 		local

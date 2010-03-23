@@ -92,8 +92,9 @@
 #define RT_OPERATION		50		/* Invoke an `RT_EXTENSION' operation */
 #define LAST_RTCC_INFO		51		/* Query last RunTime CatCall event's information */
 #define DUMPED_WITH_OFFSET	52		/* A dumped stack item with ref+offset (used for SPECIAL[Expanded].item */
+#define EWB_IGN_ASSERT_VIOLATION 53	/* Change assertion checking on the application being debugged */
 
-#define MAX_REQUEST_TYPE 	52		/* To update with new value of max request type. */
+#define MAX_REQUEST_TYPE 	53		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */

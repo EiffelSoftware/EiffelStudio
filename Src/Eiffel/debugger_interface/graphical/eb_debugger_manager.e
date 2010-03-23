@@ -263,6 +263,8 @@ feature {NONE} -- Initialization
 			create exec_replay_right_cmd.make_right
 			toolbarable_commands.extend (exec_replay_right_cmd)
 
+			create ignore_contract_violation.make
+			toolbarable_commands.extend (ignore_contract_violation)
 
 			toggle_exec_replay_mode_cmd.disable_sensitive
 			exec_replay_back_cmd.disable_sensitive
@@ -473,6 +475,9 @@ feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER, EB_EXEC_FINALIZED_CMD} -
 	restart_cmd: EB_EXEC_RESTART_DEBUG_CMD
 			-- Restart debugging without closing the interface.
 
+	ignore_contract_violation: EB_IGNORE_CONTRACT_VIOLATION_CMD
+			-- Ignore current contract violation command
+
 feature -- tools
 
 	call_stack_tool: ES_CALL_STACK_TOOL
@@ -632,6 +637,10 @@ feature -- tools management
 			a_recycler.auto_recycle (l_item)
 
 			l_item := no_stop_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+			l_item := ignore_contract_violation.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
@@ -1833,6 +1842,7 @@ feature -- Debugging events
 			into_cmd.enable_sensitive
 			set_critical_stack_depth_cmd.enable_sensitive
 			assertion_checking_handler_cmd.enable_sensitive
+			enable_ignore_contract_violation_if_possible
 
  			if rt_extension_available then
 				if is_classic_project then --| For now only classic
@@ -1941,6 +1951,7 @@ feature -- Debugging events
 			toggle_exec_replay_recording_mode_cmd.disable_sensitive
 			toggle_exec_replay_mode_cmd.disable_sensitive
 			object_storage_management_cmd.disable_sensitive
+			ignore_contract_violation.disable_sensitive
 
 			objects_tool.disable_refresh
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
@@ -2417,6 +2428,38 @@ feature {NONE} -- Implementation
 			Result := misc_shortcut_data.shortcuts.item ("show_watch_tool")
 		end
 
+	enable_ignore_contract_violation_if_possible
+			-- Enable/disable ignore contract violation command base on debuggee statues
+		local
+			l_manager_factory: EXCEPTION_MANAGER_FACTORY
+			l_exception: EXCEPTION
+			l_exception_type, l_short_description: STRING
+		do
+			if application_status.exception_occurred then
+				if attached {APPLICATION_STATUS_DOTNET} application_status as l_status then
+					-- Dotnet mode
+					-- Have to update exception info with following two lines. Otherwise the value is void
+					l_status.update_on_stopped_state
+					l_short_description := application_status.exception.short_description
+				end
+				l_exception_type := application_status.exception_type_name
+
+				if l_exception_type ~ ({CHECK_VIOLATION}).out or else
+					l_exception_type ~ ({PRECONDITION_VIOLATION}).out or else
+					l_exception_type ~ ({POSTCONDITION_VIOLATION}).out or else
+					l_exception_type ~ ({INVARIANT_VIOLATION}).out or else
+					l_exception_type ~ ({VARIANT_VIOLATION}).out or else
+					l_exception_type ~ ({LOOP_INVARIANT_VIOLATION}).out
+				then
+					ignore_contract_violation.enable_sensitive
+				else
+					ignore_contract_violation.disable_sensitive
+				end
+			else
+				ignore_contract_violation.disable_sensitive
+			end
+		end
+
 feature {NONE} -- Memory management
 
 	recycle_items_from_window
@@ -2439,7 +2482,7 @@ feature {NONE} -- MSIL system implementation
 			-- DLL type constant for MSIL system
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

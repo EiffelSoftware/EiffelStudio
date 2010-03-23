@@ -199,6 +199,7 @@ RT_LNK EIF_REFERENCE stack_trace_string(EIF_CONTEXT_NOARG);		/* Exception stack 
 RT_LNK EIF_REFERENCE last_exception (EIF_CONTEXT_NOARG);		/* Get `last_exception' of EXCEPTION_MANAGER */
 RT_LNK void oraise(EIF_REFERENCE ex);							/* Called by EXCEPTION_MANAGER to raise an existing exception */
 RT_LNK void draise(long code, char *meaning, char *message);	/* Called by Eiffel code to raise an existing exception object*/
+RT_LNK void ignore_contract_violation_once (EIF_BOOLEAN a_bool);	/* Set if ignore contract violation? called by Eiffel code */
 RT_LNK void set_last_exception (EIF_REFERENCE ex);				/* Set `last_exception' of EXCEPTION_MANAGER with `ex'. */
 RT_LNK void chk_old(EIF_REFERENCE ex);							/* Check if ex is NULL, if not raise an OLD_VIOLATION */
 RT_LNK struct ex_vect *exold(void);								/* Push excution stack at entrance of old expression evaluation */

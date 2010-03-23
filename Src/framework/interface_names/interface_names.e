@@ -529,6 +529,7 @@ feature -- Accelerator, focus label and menu name
 	m_environment_variables: STRING_32		do Result := locale.translation("Environment variables")	end
 	m_Exec_last: STRING_32				do Result := locale.translation("&Out of Routine")	end
 	m_Exec_nostop: STRING_32				do Result := locale.translation("Run &Ignoring Breakpoints")	end
+	m_Exec_ignore_contract_violation: STRING_32	do Result := locale.translation("Ignore &Contract Violation")	end
 	m_Exec_step: STRING_32				do Result := locale.translation("&Step-by-Step")	end
 	m_Exec_into: STRING_32				do Result := locale.translation("Step In&to")	end
 	m_Exit_project: STRING_32			do Result := locale.translation("E&xit")	end
@@ -2548,6 +2549,7 @@ feature -- Description texts
 	e_Exec_kill: STRING_32				do Result := locale.translation("Stop execution")	end
 	e_Exec_into: STRING_32				do Result := locale.translation("Step into a routine")	end
 	e_Exec_no_stop: STRING_32			do Result := locale.translation("Run without stopping at breakpoints")	end
+	e_Exec_ignore_contract_violation: STRING_32	do Result := locale.translation("Ignore current contract violation")	end
 	e_Exec_out: STRING_32				do Result := locale.translation("Step out of a routine")	end
 	e_Exec_step: STRING_32				do Result := locale.translation("Execute execution one step at a time")	end
 	e_Exec_stop: STRING_32				do Result := locale.translation("Pause execution at current point")	end

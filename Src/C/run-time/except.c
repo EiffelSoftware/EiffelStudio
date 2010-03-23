@@ -87,6 +87,11 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 /* For debugging */
 #define dprintf(n)		if (DEBUG & (n)) printf
 
+/*
+doc: If ignore contract violation one time?
+*/
+rt_public EIF_BOOLEAN is_ignore_contract_violation_once = FALSE;
+
 #ifndef EIF_THREADS
 /*
 doc:	<attribute name="eif_stack" return_type="struct xstack" export="public">
@@ -205,6 +210,7 @@ rt_private char *extag(struct ex_vect *trace);			/* Recompute exception tag */
 rt_public void set_last_exception (EIF_REFERENCE ex);	/* Set `last_exception' of EXCEPTION_MANAGER with `ex'. */
 rt_public EIF_REFERENCE last_exception (void);			/* Get `last_exception' of EXCEPTION_MANAGER */
 rt_public void draise(long code, char *meaning, char *message); /* Called by EXCEPTION_MANAGER to raise an existing exception */
+rt_public void ignore_contract_violation_once (EIF_BOOLEAN a_bool); /* Set if ignore contract violation? called by EXCEPTION_MANAGER */
 rt_private struct ex_vect *top_n_call(struct xstack *stk, int n);	/* Get the n-th topest call vector from the stack */
 rt_private struct ex_vect *draise_recipient_call (struct xstack *stk); /* Get the second topest call vector from the stack, used by `draise' */
 rt_private int is_ex_ignored (int ex_code);				/* Check exception of `ex_code' should be ignored or not */
@@ -1548,9 +1554,16 @@ rt_public void eviol(void)
 #ifndef NOHOOK
 	exception(PG_VIOL);		/* Debugger hook -- implicitely raised exception */
 #endif
-	ereturn();				/* Go back to last recorded rescue entry */
-
-	/* NOTREACHED */
+	
+	if (!is_ignore_contract_violation_once)
+		{
+			ereturn();				/* Go back to last recorded rescue entry */
+		}else
+		{
+			is_ignore_contract_violation_once = FALSE;
+			expop(&eif_stack); //Pop exception vector just created in this routine (by exget)
+		}
+		/* NOTREACHED */
 }
 
 rt_shared void ereturn(void)
@@ -3810,6 +3823,12 @@ rt_public void draise(long code, char *meaning, char *message)
 	ereturn();				/* Go back to last recorded rescue entry */
 
 	/* NOTREACHED */
+}
+
+rt_public void ignore_contract_violation_once (EIF_BOOLEAN a_bool) 
+/* Set if ignore contract violation? called by EXCEPTION_MANAGER */
+{
+	is_ignore_contract_violation_once = a_bool;
 }
 
 rt_private void make_exception (long except_code, int signal_code, int eno, char *t_name, char *reci_name, char *eclass, 

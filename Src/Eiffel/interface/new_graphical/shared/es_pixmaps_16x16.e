@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-	
+
 	frozen expanded_normal_icon: EV_PIXMAP
 			-- Access to 'normal' pixmap.
 		require
@@ -3340,6 +3340,26 @@ feature -- Icons
 			Result := named_icon_buffer (execution_object_storage_name)
 		ensure
 			execution_object_storage_icon_buffer_attached: Result /= Void
+		end
+
+	frozen execution_ignore_contract_violation_icon: EV_PIXMAP
+			-- Access to 'ignore contract violation' pixmap.
+		require
+			has_named_icon: has_named_icon (execution_ignore_contract_violation_name)
+		once
+			Result := named_icon (execution_ignore_contract_violation_name)
+		ensure
+			execution_ignore_contract_violation_icon_attached: Result /= Void
+		end
+
+	frozen execution_ignore_contract_violation_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'ignore contract violation' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (execution_ignore_contract_violation_name)
+		once
+			Result := named_icon_buffer (execution_ignore_contract_violation_name)
+		ensure
+			execution_ignore_contract_violation_icon_buffer_attached: Result /= Void
 		end
 
 	frozen general_blank_icon: EV_PIXMAP
@@ -8323,7 +8343,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-	
+
 	frozen run_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'run_animation' pixmap animation items.
 		once
@@ -8549,6 +8569,7 @@ feature -- Constants: Icon names
 	execution_record_name: STRING = "execution record"
 	execution_replay_name: STRING = "execution replay"
 	execution_object_storage_name: STRING = "execution object storage"
+	execution_ignore_contract_violation_name: STRING = "execution ignore contract violation"
 	general_blank_name: STRING = "general blank"
 	general_dialog_name: STRING = "general dialog"
 	general_open_name: STRING = "general open"
@@ -8969,6 +8990,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 8], execution_record_name)
 			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 8], execution_replay_name)
 			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 8], execution_object_storage_name)
+			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 8], execution_ignore_contract_violation_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 9], general_blank_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 9], general_dialog_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 9], general_open_name)
@@ -9221,7 +9243,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

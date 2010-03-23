@@ -54,7 +54,8 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_new_instance: INTEGER 			= 49 -- Create new instance of class
 	Rqst_rt_operation: INTEGER 			= 50 -- Invoke an `RT_EXTENSION' operation	
 	Rqst_last_rtcc_info: INTEGER		= 51 -- Last RunTime CatCall information (if any)
-
+	Rqst_ignore_assertion_violation: INTEGER  = 53 -- Set the assertion checking state. (EWB_IGN_ASSERT_VIOLATION)
+	
 feature {NONE} -- Resume
 
 	Resume_cont: INTEGER				= 0 -- Continue until next breakpoint
@@ -131,7 +132,7 @@ feature {NONE} -- For workbench responses.
 	Rep_notified: INTEGER				= 7
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

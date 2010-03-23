@@ -222,7 +222,7 @@ feature -- Basic operations
 			ini_manager.update_from_ini_file
 		end
 
-feature{ES_CONSOLE_TOOL_PANEL} -- Synchronizing features used by EB_EXTERNAL_OUTPUT_TOOL
+feature{ES_CONSOLE_TOOL_PANEL, EB_DEVELOPMENT_WINDOW} -- Synchronizing features used by EB_EXTERNAL_OUTPUT_TOOL
 
 	refresh_list_from_outside
 			-- Refresh command list from EB_EXTERNAL_OUTPUT_TOOL
@@ -476,7 +476,7 @@ feature {NONE} -- Properties
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -73,7 +73,7 @@ feature -- Update
 		local
 			l_has_changed: BOOLEAN
 		do
-			l_has_changed := text = Void or else not text.is_equal (a_text)
+			l_has_changed := text = Void or else not (text ~ a_text)
 			Precursor {EV_GRID_EDITABLE_ITEM} (a_text)
 			if l_has_changed then
 				change_actions.call (Void)

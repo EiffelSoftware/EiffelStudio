@@ -173,7 +173,7 @@ feature -- Status setting
 		require
 			valid_title: a_title /= Void
 		do
-			if not equal (title, a_title) then
+			if title /~ a_title then
 				title := a_title
 				window.set_title (a_title)
 

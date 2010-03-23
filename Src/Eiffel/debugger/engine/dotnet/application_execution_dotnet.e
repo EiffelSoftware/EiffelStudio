@@ -600,6 +600,38 @@ feature {NONE} -- Assertion change Implementation
 			Result := eifnet_debugger.check_assert_on_debuggee (b)
 		end
 
+feature {NONE} -- Assertion violation processing		
+
+	impl_ignore_current_assertion_violation (b: BOOLEAN): BOOLEAN
+			-- <Precursor/>
+			-- Call the remote `{ISE_RUNTIME}.set_ignore_contract_violation_once (b)' method.
+		local
+			m: ICOR_DEBUG_MODULE
+			f: ICOR_DEBUG_FRAME
+			fct: ICOR_DEBUG_FUNCTION
+			ctok, ftok: NATURAL_32
+		do
+			m := eifnet_debugger.ise_runtime_module
+			if m /= Void then
+				ctok := eifnet_debugger.edv_external_formatter.token_IseRuntime
+				if ctok > 0 then
+					ftok := eifnet_debugger.edv_external_formatter.token_IseRuntime__set_ignore_contract_violation_once
+					if ftok > 0 then
+							--| exception_manager is a static property
+						fct := m.get_function_from_token (ftok)
+						if fct /= Void then
+							f := eifnet_debugger.new_active_frame
+							if f /= Void then
+								eifnet_debugger.eifnet_dbg_evaluator.method_evaluation (f, fct, <<eifnet_debugger.eifnet_dbg_evaluator.new_boolean_evaluation (f, b)>>)
+								f.clean_on_dispose
+							end
+						end
+					end
+				end
+			end
+		end
+
+
 feature {APPLICATION_EXECUTION} -- Launching status
 
 	can_not_launch_system_message: STRING_32
@@ -1577,7 +1609,7 @@ feature {NONE} -- Constants for dotnet interactions
 			-- {EXCEPTION_MANAGER}.wrapped_exception feature name (for dotnet)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -183,6 +183,8 @@ feature {NONE} -- Attributes
 			Result.extend (new_menu_item_unmanaged)
 			if attached eb_debugger_manager as dbg then
 				Result.extend (dbg.no_stop_cmd.new_menu_item_unmanaged)
+				l_item := dbg.ignore_contract_violation.new_menu_item_unmanaged
+				Result.extend (l_item)
 
 				Result.extend (create {EV_MENU_SEPARATOR})
 
@@ -273,7 +275,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

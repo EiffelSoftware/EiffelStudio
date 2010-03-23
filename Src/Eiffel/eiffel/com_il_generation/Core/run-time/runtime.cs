@@ -387,10 +387,64 @@ feature -- Exceptions
 		return l_o as RT_EXCEPTION_MANAGER;
 	}
 
+	[EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+	private static Type getTypeOfAssertionViolation ()
+	{
+		Assembly [] l_assemblies = AppDomain.CurrentDomain.GetAssemblies();
+		Type l_t = null;
+
+		foreach (Assembly l_ass in l_assemblies)
+		{
+			l_t = l_ass.GetType("EiffelSoftware.Library.Base.kernel.exceptions.AssertionViolation");
+			if (l_t == null)
+			{
+				l_t = l_ass.GetType("EiffelSoftware.Library.Base.kernel.exceptions.ASSERTION_VIOLATION");
+			}
+			if (l_t != null)
+			{
+				break;
+			}
+		}
+		return l_t;
+	}
+	
+	[EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+	public static bool is_ignore_contract_violation_once;
+			//Should next/current contract violation be ignored?
+
+	[EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+	public static void set_ignore_contract_violation_once (bool a_bool)
+			//Set `is_ignore_contract_violation_once' with `a_bool'
+	{
+		is_ignore_contract_violation_once = a_bool;
+	}
+
 	public static void raise (Exception e)
 		// Throw an exception `e'.
 	{
-		throw e;
+		try{
+			throw e;
+		}catch (Exception a_e)
+		{
+			if (!is_ignore_contract_violation_once)
+			{
+				throw;
+			}else
+			{	
+				//reset flag first
+				is_ignore_contract_violation_once = false;
+
+				Type l_t = getTypeOfAssertionViolation();
+				if (a_e.GetType().IsSubclassOf(l_t))
+				{
+					// Do nothing, just ignore it
+				}
+				else
+				{
+					throw;
+				}
+			}
+		}
 	}
 
 	public static void generate_call_on_void_target_exception ()

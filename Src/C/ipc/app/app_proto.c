@@ -102,6 +102,7 @@ rt_private rt_uint_ptr dthread_id;
 
 rt_private void set_check_assert (int v) ;	/* Set current assertion checking off/on */
 rt_private void set_catcall_detection_mode (EIF_PSTREAM sp, int a_console, int a_dbg); /* Set catcall_detection mode */
+rt_private void ignore_current_assertion_violation (int v); /* Set ignore current contract violation or not*/
 
 /* debugging macro */
 #ifdef EIF_THREADS
@@ -398,6 +399,9 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case EWB_SET_ASSERTION_CHECK:
 		set_check_assert ((int) arg_1);
+		break;
+	case EWB_IGN_ASSERT_VIOLATION:
+		ignore_current_assertion_violation ((int) arg_1);
 		break;
 	}
 
@@ -835,6 +839,12 @@ rt_private void set_check_assert (int v)
 	} else {
 		app_twrite("false", 5);
 	}
+}
+
+rt_private void ignore_current_assertion_violation (int v) 
+{
+	/* Ignore or not the current assertion violation */
+	ignore_contract_violation_once (v);
 }
 
 rt_private void adopt(EIF_PSTREAM sp, Opaque *what)

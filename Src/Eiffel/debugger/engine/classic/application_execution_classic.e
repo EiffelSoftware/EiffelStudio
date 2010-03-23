@@ -342,6 +342,14 @@ feature {NONE} -- Assertion change Implementation
 			end
 		end
 
+feature {NONE} -- Assertion violation processing		
+
+	impl_ignore_current_assertion_violation (a_boolean: BOOLEAN): BOOLEAN
+			-- <Precursor>
+		do
+			ewb_request.send_rqst_1 (Rqst_ignore_assertion_violation, a_boolean.to_integer)
+		end
+
 feature -- Change
 
 	update_critical_stack_depth (d: INTEGER)
@@ -542,7 +550,7 @@ invariant
 	ipc_engine_not_void: ipc_engine /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

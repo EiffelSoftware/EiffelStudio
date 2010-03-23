@@ -1025,10 +1025,39 @@ feature -- Assertion change
 	last_assertion_check_stack: attached LINKED_STACK [BOOLEAN]
 			-- Last assertion check value when it had been disabled by `disable_assertion_check'.
 
+feature -- Assertion violation processing
+
+	ignore_current_assertion_violation
+			-- Send a message to the application to ignore current assertion violation
+		local
+			b: BOOLEAN
+		do
+			b := impl_ignore_current_assertion_violation (True)
+		end
+
+	unignore_current_assertion_violation
+			-- Send a message to the application to unignore current assertion violation	
+			-- i.e: normal processing of assertion violation (enter rescue if any)
+		local
+			b: BOOLEAN
+		do
+			b := impl_ignore_current_assertion_violation (False)
+		end
+
 feature {NONE} -- Assertion change Implementation
 
 	impl_check_assert (b: BOOLEAN): BOOLEAN
 			-- `check_assert (b)' on debuggee
+			-- return previous assertion checking status
+		deferred
+		end
+
+feature {NONE} -- Assertion violation processing		
+
+	impl_ignore_current_assertion_violation (b: BOOLEAN): BOOLEAN
+			-- `LARRY: add the runtime function here, see previous function' on debuggee
+			-- Tell the debuggee to ignore (or not) current assertion violation
+			-- and return previous ignoring status
 		deferred
 		end
 
@@ -1293,7 +1322,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

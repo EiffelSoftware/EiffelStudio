@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 	build_tools
 			--
 		local
-			c0,c1,c2,c3: SD_CONTENT
+			c0,c1,c2,c3,clog: SD_CONTENT
 			g: EV_GRID
 			t: EV_TEXT
 		do
@@ -167,6 +167,11 @@ feature {NONE} -- Implementation
 			g.enable_tree
 --			g.disable_row_height_fixed
 			g.enable_single_row_selection
+			g.set_column_count_to (4)
+			g.column (cst_name_column).set_title ("name")
+			g.column (cst_written_in_column).set_title ("written")
+			g.column (cst_routine_id_column).set_title ("rout id")
+			g.column (cst_body_id_column).set_title ("body id")
 			bytecode_grid := g
 
 			create c2.make_with_widget (g, "bytecode")
@@ -183,6 +188,14 @@ feature {NONE} -- Implementation
 			docking_manager.contents.extend (c3)
 			c3.set_relative (c2, {SD_ENUMERATION}.right)
 
+			create t
+			log_text := t
+			create clog.make_with_widget (t, "console")
+			clog.set_short_title ("Console ...")
+			clog.set_long_title ("Console ...")
+			docking_manager.contents.extend (clog)
+			clog.set_relative (c3, {SD_ENUMERATION}.bottom)
+			clog.set_auto_hide ({SD_ENUMERATION}.bottom)
 
 			selection_grid.set_row_count_to (0)
 			selection_grid.enable_tree
@@ -205,6 +218,7 @@ feature {NONE} -- Implementation
 	selection_grid: EV_GRID
 	melted_text: EV_TEXT
 	bytecode_text: EV_TEXT
+	log_text: EV_TEXT
 	bytecode_grid: EV_GRID
 
 	on_files_dropped (fns: LIST [STRING_32])
@@ -224,7 +238,7 @@ feature {NONE} -- Implementation
 				loop
 					fn := fns.item
 					create gl.make_with_text (fn)
-					selection_grid.set_item (1, selection_grid.row_count + 1, gl)
+					selection_grid.set_item (cst_name_column, selection_grid.row_count + 1, gl)
 					gl.row.set_data (fn)
 					fns.forth
 				end
@@ -251,6 +265,46 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	clean_result (wd: STRING)
+		do
+			bytecode_grid.set_row_count_to (0)
+			delete_file (bytecode_eif_filename (wd))
+			delete_file (bytecode_txt_filename (wd))
+			delete_file (melted_txt_filename (wd))
+		end
+
+
+	bytecode_eif_filename (wd: STRING): FILE_NAME
+		do
+			create Result.make_from_string (wd)
+			Result.set_file_name ("bytecode")
+			Result.add_extension ("eif")
+		end
+
+	bytecode_txt_filename (wd: STRING): FILE_NAME
+		do
+			create Result.make_from_string (wd)
+			Result.set_file_name ("bytecode")
+			Result.add_extension ("txt")
+		end
+
+	melted_txt_filename (wd: STRING): FILE_NAME
+		do
+			create Result.make_from_string (wd)
+			Result.set_file_name ("melted")
+			Result.add_extension ("txt")
+		end
+
+	delete_file (fn: FILE_NAME)
+		local
+			f: RAW_FILE
+		do
+			create f.make (fn.string)
+			if f.exists then
+				f.delete
+			end
+		end
+
 	process_filename (s: STRING_GENERAL)
 			--
 		local
@@ -266,6 +320,7 @@ feature {NONE} -- Implementation
 				if fn.is_valid then
 					create wd.make_from_string (fn)
 					wd.keep_head (wd.last_index_of (operating_environment.directory_separator, wd.count))
+					clean_result (wd)
 
 					create f.make (fn)
 					if f.exists and then f.is_readable then
@@ -320,8 +375,8 @@ feature {NONE} -- Implementation
 						create b.make_empty
 						e.header := h
 						e.body := b
-						b.append (line)
-						b.append_character ('%N')
+--						b.append (line)
+--						b.append_character ('%N')
 						from
 							f.read_line
 							line.left_adjust
@@ -336,12 +391,18 @@ feature {NONE} -- Implementation
 								e.rout_id := line.substring (line.index_of (':', 1) + 1, line.count).to_integer_32
 							elseif e.body_id = 0 and then string_started_by (line, "Body Id", False) then
 								e.body_id := line.substring (line.index_of (':', 1) + 1,  line.count).to_integer_32
+							elseif e.written_in = 0 and then string_started_by (line, "Written", False) then
+								e.written_in := line.substring (line.index_of (':', 1) + 1,  line.count).to_integer_32
 							elseif e.name = Void and then string_started_by (line, "Routine name", False) then
 								e.name := line.substring (line.index_of (':', 1) + 1, line.count)
 							else
 							end
 							f.read_line
 							line.left_adjust
+						end
+						if line /= Void and then line.item (1).is_digit then
+							b.append (line)
+							b.append_character ('%N')
 						end
 						from
 							f.read_line
@@ -378,7 +439,7 @@ feature {NONE} -- Implementation
 			bytecode_grid.set_row_count_to (0)
 			if analyzes = Void then
 				create glab.make_with_text ("Error during analysis.")
-				bytecode_grid.set_item (1, bytecode_grid.row_count + 1, glab)
+				bytecode_grid.set_item (cst_name_column, bytecode_grid.row_count + 1, glab)
 			else
 				from
 					analyzes.start
@@ -386,39 +447,48 @@ feature {NONE} -- Implementation
 					analyzes.after
 				loop
 					e := analyzes.item
-					create glab.make_with_text (e.name)
-					bytecode_grid.set_item (1, bytecode_grid.row_count + 1, glab)
-					r := bytecode_grid.row (bytecode_grid.row_count)
-					r.set_data (e)
+					if e.name = Void then
+						e.name := "..."
+					end
+					if e.name /= Void then
+						create glab.make_with_text (e.name)
+						bytecode_grid.set_item (cst_name_column, bytecode_grid.row_count + 1, glab)
+						r := bytecode_grid.row (bytecode_grid.row_count)
+						r.set_data (e)
 
-					create glab.make_with_text (e.rout_id.out)
-					r.set_item (2, glab)
-					create glab.make_with_text (e.body_id.out)
-					r.set_item (3, glab)
+						create glab.make_with_text (e.written_in.out)
+						r.set_item (cst_written_in_column, glab)
 
-	--				r.insert_subrows (2, 1)
-	--				create glab.make_with_text (e.header)
-	--				r.subrow (1).set_item (2, glab)
-	--				r.subrow (1).set_height (glab.text_height)
-	--				create glab.make_with_text (e.body)
-	--				r.subrow (2).set_item (2, glab)
-	--				r.subrow (2).set_height (glab.text_height)
+						create glab.make_with_text (e.rout_id.out)
+						r.set_item (cst_routine_id_column, glab)
 
-					r.select_actions.extend (agent (ar: EV_GRID_ROW)
-							local
-								le: like analyzes_entry
-								t: STRING
-							do
-								le ?= ar.data
-								if le /= Void then
-									t := le.header + "%N" + le.body
-									t.prune_all ('%R')
-									bytecode_text.set_text (t)
-								else
-									bytecode_text.remove_text
-								end
-							end(r)
-						)
+						create glab.make_with_text (e.body_id.out)
+						r.set_item (cst_body_id_column, glab)
+
+		--				r.insert_subrows (2, 1)
+		--				create glab.make_with_text (e.header)
+		--				r.subrow (1).set_item (2, glab)
+		--				r.subrow (1).set_height (glab.text_height)
+		--				create glab.make_with_text (e.body)
+		--				r.subrow (2).set_item (2, glab)
+		--				r.subrow (2).set_height (glab.text_height)
+
+						r.select_actions.extend (agent (ar: EV_GRID_ROW)
+								local
+									le: like analyzes_entry
+									t: STRING
+								do
+									le ?= ar.data
+									if le /= Void then
+										t := le.header + "%N" + le.body
+										t.prune_all ('%R')
+										bytecode_text.set_text (t)
+									else
+										bytecode_text.remove_text
+									end
+								end(r)
+							)
+					end
 					analyzes.forth
 				end
 			end
@@ -426,12 +496,12 @@ feature {NONE} -- Implementation
 
 
 	analyzes: LINKED_LIST [like analyzes_entry]
-	analyzes_entry: TUPLE [rout_id: INTEGER; body_id: INTEGER; name: STRING; header: STRING; body: STRING]
+
+	analyzes_entry: TUPLE [written_in, rout_id, body_id: INTEGER; name: STRING; header: STRING; body: STRING]
 			--
 		do
 
 		end
-
 
 	string_started_by (s: STRING_GENERAL; pre: STRING_GENERAL; b: BOOLEAN): BOOLEAN
 			--
@@ -481,12 +551,9 @@ feature {NONE} -- Implementation
 	process_bytedump (fn: FILE_NAME; wd: STRING): FILE_NAME
 			--
 		local
-			pf: PROCESS_FACTORY
-			p: PROCESS
 			exefn: FILE_NAME
 			cmd: STRING
 		do
-			create pf
 			create exefn.make_from_string ((create {EXECUTION_ENVIRONMENT}).get ("EIFFEL_SRC"))
 			exefn.extend ("C")
 			exefn.extend ("bench")
@@ -498,23 +565,16 @@ feature {NONE} -- Implementation
 			create cmd.make_from_string (exefn)
 			cmd.append (" ")
 			cmd.append (fn)
-			create Result.make_from_string (wd)
-			Result.set_file_name ("bytecode")
-			Result.add_extension ("txt")
-			p := pf.process_launcher_with_command_line (cmd, wd)
-			p.set_hidden (True)
-			p.launch
-			p.wait_for_exit
+			Result := bytecode_txt_filename (wd)
+
+			execute_command (cmd, wd)
 		end
 
 	process_meltdump (fn: FILE_NAME; wd: STRING): FILE_NAME
 		local
-			pf: PROCESS_FACTORY
-			p: PROCESS
 			exefn: FILE_NAME
 			cmd: STRING
 		do
-			create pf
 			create exefn.make_from_string ((create {EXECUTION_ENVIRONMENT}).get ("EIFFEL_SRC"))
 			exefn.extend ("C")
 			exefn.extend ("bench")
@@ -525,13 +585,46 @@ feature {NONE} -- Implementation
 			create cmd.make_from_string (exefn)
 			cmd.append (" ")
 			cmd.append (fn)
-			create Result.make_from_string (wd)
-			Result.set_file_name ("melted")
-			Result.add_extension ("txt")
+			Result := melted_txt_filename (wd)
+
+			execute_command (cmd, wd)
+		end
+
+	execute_command (cmd: STRING; wd: STRING)
+		local
+			pf: PROCESS_FACTORY
+			p: PROCESS
+			output: STRING
+		do
+			log_text.append_text ("Execute: " + cmd + "%T in dir: " +  wd + "%N")
+			create pf
 			p := pf.process_launcher_with_command_line (cmd, wd)
+			create output.make_empty
+			p.redirect_output_to_agent (agent execute_command_output_handler (output, ?))
+			p.redirect_error_to_same_as_output
 			p.set_hidden (True)
+			p.set_separate_console (False)
 			p.launch
-			p.wait_for_exit
+			p.wait_for_exit_with_timeout (30 * 1_000)
+			if p.has_exited then
+				log_text.append_text (output)
+			else
+				log_text.append_text (output)
+				log_text.append_text ("%NExecution exited after TIMEOUT%N")
+			end
+			log_text.append_text ("%N")
+		end
+
+	execute_command_output_handler (res: STRING; s: STRING)
+		local
+			t: STRING
+		do
+			if s /= Void then
+				create t.make_from_string (s)
+				t.prune_all ('%R')
+				res.append (t)
+--				log_text.append_text (t)
+			end
 		end
 
 	extension_exe: STRING
@@ -568,6 +661,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
+	cst_name_column: INTEGER = 1
+	cst_written_in_column: INTEGER = 2
+	cst_routine_id_column: INTEGER = 3
+	cst_body_id_column: INTEGER = 4
+
 	Window_title: STRING = "bytecode_tool"
 			-- Title of the window.
 
@@ -578,7 +676,7 @@ feature {NONE} -- Implementation / Constants
 			-- Initial height for this window.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

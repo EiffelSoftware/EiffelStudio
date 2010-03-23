@@ -177,7 +177,7 @@ feature {INI_FAST_PARSER} -- Actions
 			if a_name.is_integer then
 				create l_string.make_from_string (a_value)
 				l_string.left_adjust
-				create l_command.make_from_string (l_string)
+				create l_command.make_from_string (editor, l_string)
 				l_command.setup_managed_shortcut (editor.accelerators)
 				commands.put (l_command, a_name.to_integer)
 			else

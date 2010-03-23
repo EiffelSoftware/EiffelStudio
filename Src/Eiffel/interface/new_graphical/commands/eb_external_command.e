@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			external_output_manager.synchronize_command_list (Current)
 		end
 
-	make_from_new_command_line (w:EV_WINDOW; cmd_line: STRING)
+	make_from_new_command_line (w: EV_WINDOW; cmd_line: STRING)
 			-- Use command line indicated by `cmd_line' to make a new
 			-- external command object.
 		require
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 			external_output_manager.synchronize_command_list (Current)
 		end
 
-	make_from_string (a_command: STRING)
+	make_from_string (a_editor: like editor; a_command: STRING)
 			-- Create with `a_command'
 		require
 			command_not_void: a_command /= Void
@@ -117,6 +117,8 @@ feature {NONE} -- Initialization
 			tok: STRING
 			i, i1 ,i2: INTEGER
 		do
+			editor := a_editor
+
 			i := a_command.index_of (separator, 1)
 			name := a_command.substring (1, i - 1)
 			i1 := a_command.index_of (separator, i + 1)
@@ -163,10 +165,14 @@ feature -- Basic operations
 	write_to_ini
 			-- Write `Current' external command to ini file.
 		do
-			editor.ini_manager.generate_ini
+			if attached editor as e then
+				e.ini_manager.generate_ini
+			else
+				check has_editor: False end
+			end
 		end
 
-feature{NONE} -- Command substitution
+feature {NONE} -- Command substitution
 
 	show_warning_dialog (msg: STRING_GENERAL)
 			-- Show a warning dialog to display `msg'.
@@ -635,8 +641,9 @@ feature {NONE} -- Implementation
 
 	editor: EB_EXTERNAL_COMMANDS_EDITOR
 			-- External commands edtitor
+
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

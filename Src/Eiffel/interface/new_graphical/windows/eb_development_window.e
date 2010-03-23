@@ -301,27 +301,19 @@ feature -- Access
 
 	group: CONF_GROUP
 			-- Group of current class. Void if none.
-		local
-			classi_stone: CLASSI_STONE
-			cluster_stone: CLUSTER_STONE
 		do
-			classi_stone ?= stone
-			if classi_stone /= Void then
+			if attached {CLASSI_STONE} stone as classi_stone then
 				Result := classi_stone.group
 			end
-			cluster_stone ?= stone
-			if cluster_stone /= Void then
+			if attached {CLUSTER_STONE} stone as cluster_stone then
 				Result := cluster_stone.group
 			end
 		end
 
 	class_name: STRING
 			-- Name of the current class, Void if none.
-		local
-			class_stone: CLASSI_STONE
 		do
-			class_stone ?= stone
-			if class_stone /= Void and then class_stone.is_valid then
+			if attached {CLASSI_STONE} stone as class_stone and then class_stone.is_valid then
 				Result := class_stone.class_name
 			end
 		end
@@ -743,10 +735,10 @@ feature -- Stone process
 			-- Change the currently focused stone.
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
-			cv_cst: CLASSI_STONE
-			ef_stone: EXTERNAL_FILE_STONE
+			cv_cst: detachable CLASSI_STONE
+			ef_stone: detachable EXTERNAL_FILE_STONE
 			l: LIST [EB_DEVELOPMENT_WINDOW]
-			l_filename: STRING
+			l_filename: detachable STRING
 		do
 			cv_cst ?= a_stone
 			if cv_cst /= Void then
@@ -907,9 +899,7 @@ feature -- Stone process
 				end
 				l_external_command.forth
 			end
-			if commands.Edit_external_commands_cmd.list_exists then
-				commands.Edit_external_commands_cmd.refresh_list
-			end
+			commands.edit_external_commands_cmd.refresh_list_from_outside
 		end
 
 	quick_refresh_editors

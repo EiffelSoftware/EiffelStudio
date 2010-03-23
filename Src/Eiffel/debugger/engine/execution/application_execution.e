@@ -1029,19 +1029,15 @@ feature -- Assertion violation processing
 
 	ignore_current_assertion_violation
 			-- Send a message to the application to ignore current assertion violation
-		local
-			b: BOOLEAN
 		do
-			b := impl_ignore_current_assertion_violation (True)
+			impl_ignore_current_assertion_violation (True)
 		end
 
 	unignore_current_assertion_violation
 			-- Send a message to the application to unignore current assertion violation	
 			-- i.e: normal processing of assertion violation (enter rescue if any)
-		local
-			b: BOOLEAN
 		do
-			b := impl_ignore_current_assertion_violation (False)
+			impl_ignore_current_assertion_violation (False)
 		end
 
 feature {NONE} -- Assertion change Implementation
@@ -1054,10 +1050,8 @@ feature {NONE} -- Assertion change Implementation
 
 feature {NONE} -- Assertion violation processing		
 
-	impl_ignore_current_assertion_violation (b: BOOLEAN): BOOLEAN
-			-- `LARRY: add the runtime function here, see previous function' on debuggee
+	impl_ignore_current_assertion_violation (b: BOOLEAN)
 			-- Tell the debuggee to ignore (or not) current assertion violation
-			-- and return previous ignoring status
 		deferred
 		end
 

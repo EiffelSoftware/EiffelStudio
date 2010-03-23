@@ -242,7 +242,9 @@ feature -- Values
 
 	exception_short_description: STRING_32
 		do
-			Result := exception.short_description
+			if attached exception as e then
+				Result := e.short_description
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -252,16 +254,16 @@ feature -- Values
 		require
 			exception_occurred: exception_occurred
 		do
-			if exception /= Void then
-				Result := exception.type_name
+			if attached exception as e then
+				Result := e.type_name
 			end
 		end
 
 	exception_meaning: STRING_32
 			-- Exception tag (if any).
 		do
-			if exception /= Void then
-				Result := exception.meaning
+			if attached exception as e then
+				Result := e.meaning
 			end
 		end
 
@@ -270,8 +272,8 @@ feature -- Values
 		require
 			exception_occurred: exception_occurred
 		do
-			if exception /= Void then
-				Result := exception.message
+			if attached exception as e then
+				Result := e.message
 			end
 		end
 
@@ -280,8 +282,8 @@ feature -- Values
 		require
 			exception_occurred: exception_occurred
 		do
-			if exception /= Void then
-				Result := exception.text
+			if attached exception as e then
+				Result := e.text
 			end
 		end
 
@@ -734,7 +736,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

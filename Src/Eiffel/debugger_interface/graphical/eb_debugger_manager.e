@@ -2431,8 +2431,6 @@ feature {NONE} -- Implementation
 	enable_ignore_contract_violation_if_possible
 			-- Enable/disable ignore contract violation command base on debuggee statues
 		local
-			l_manager_factory: EXCEPTION_MANAGER_FACTORY
-			l_exception: EXCEPTION
 			l_exception_type, l_short_description: STRING
 		do
 			if application_status.exception_occurred then

@@ -67,8 +67,6 @@ feature -- Execution
 
 	execute
 			-- <Precursor>
-		local
-			bpm: BREAKPOINTS_MANAGER
 		do
 			if attached {EB_DEBUGGER_MANAGER} debugger_manager as l_debugger then
 				if attached l_debugger.application as l_app  then

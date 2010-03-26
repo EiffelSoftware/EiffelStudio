@@ -303,6 +303,26 @@ feature -- Status report
 			end
 		end
 
+	is_field_expanded (i: INTEGER; object: ANY): BOOLEAN
+			-- Is `i'-th field of `object' a user-defined expanded attribute?
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+		do
+			Result := is_field_expanded_of_type (i, dynamic_type (object))
+		end
+
+	is_field_expanded_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
+			-- Is `i'-th field of type `a_type_id' a user-defined expanded attribute?
+		require
+			a_type_non_negative: a_type_id >= 0
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count_of_type (a_type_id)
+		do
+			Result := field_type_of_type (i, a_type_id) = expanded_type
+		end
+
 feature -- Access
 
 	none_type: INTEGER = -2
@@ -893,11 +913,13 @@ feature -- Access
 	expanded_field_type (i: INTEGER; object: ANY): STRING
 			-- Class name associated with the `i'-th
 			-- expanded field of `object'
+		obsolete
+			"Use `class_name_of_type (field_static_type_of_type (i, dynamic_type (object)))' instead."
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			is_expanded: field_type (i, object) = Expanded_type
+			is_expanded: field_type (i, object) = expanded_type
 		do
 			Result := class_name_of_type (field_static_type_of_type (i, dynamic_type (object)))
 		ensure

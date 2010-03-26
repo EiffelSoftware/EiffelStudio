@@ -649,7 +649,7 @@ static  void    read_byte_code (void)
 	{
 		body_id = rlong ();
 
-		if (fwrite (&body_id, sizeof (long), 1, bfp) != 1)
+		if (fwrite (&body_id, sizeof (int), 1, bfp) != 1)
 		{
 			fprintf (stderr,"Write error\n");
 			panic ();
@@ -667,7 +667,7 @@ static  void    read_byte_code (void)
 
 		melt [body_id] = rbuf ((int) bsize);
 
-		if (fwrite (&bsize, sizeof (long), 1, bfp) != 1)
+		if (fwrite (&bsize, sizeof (int), 1, bfp) != 1)
 		{
 			fprintf (stderr,"Write error\n");
 			panic ();

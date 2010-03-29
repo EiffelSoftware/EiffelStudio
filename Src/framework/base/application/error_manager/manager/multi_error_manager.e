@@ -41,7 +41,7 @@ feature -- Access
 		do
 			Result := internal_errors
 		ensure
-			result_not_void: result /= Void
+			result_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -57,7 +57,7 @@ feature -- Status report
 	has_errors: BOOLEAN
 			-- Does error manager have any errors to report?
 		do
-			Result := not errors.is_empty
+			Result := attached internal_errors as err and then not err.is_empty
 		end
 
 feature -- Query

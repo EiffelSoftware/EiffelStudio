@@ -149,8 +149,14 @@ what tools, such as EiffelStudio, use.
 5.0 Command-Line Options
 ------------------------
 
+To export export all the pixmaps into individual pixmap files, you can use the
+option --slice ; for instance:
+	emcgen 10x10.ini --slice 10x10.png --pngs 10x10_icons
+	(note that the folder 10x10_icons must exists)
+
 There are number of command-line options, please use
 
   emcgen /?
 
 for more information.
+

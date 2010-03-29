@@ -509,6 +509,8 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			when {EV_POINTER_CONSTANTS}.right then
 				select_actions.call (Void)
 				show_right_click_menu (False, a_x, a_y)
+			when {EV_POINTER_CONSTANTS}.middle then
+				close_actions.call (Void)
 			else
 
 			end
@@ -732,7 +734,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

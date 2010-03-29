@@ -657,6 +657,26 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
+	tab_bar_right_blank_area_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to perform when user double click on notebook tab bar right side blank area
+			-- Only work for up-side notebook tab bar
+		local
+			l_actions: like internal_tab_bar_right_blank_area_double_click_actions
+		do
+			if not is_ignore_actions then
+				l_actions := internal_tab_bar_right_blank_area_double_click_actions
+				if not attached l_actions then
+					create l_actions
+					internal_tab_bar_right_blank_area_double_click_actions := l_actions
+				end
+				Result := l_actions
+			else
+				create Result
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 feature -- Command
 
 	close
@@ -967,6 +987,9 @@ feature {NONE}  -- Implemention
 	internal_close_request_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perfrom when close requested
 
+	internal_tab_bar_right_blank_area_double_click_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to perform when user double click on notebook tab bar right side blank area
+
 	internal_clear_docking_manager_property
 			-- Clear stuffs related with Current in {SD_DOCKING_MANAGER_PROPERTY}
 		require
@@ -983,7 +1006,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

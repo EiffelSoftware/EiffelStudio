@@ -40,6 +40,8 @@ feature {NONE} -- Initlization
 			create {EV_CELL_IMP} implementation_upper_zone.make -- For void-safe...not used
 
 			Precursor {SD_TAB_ZONE} (a_content)
+			init
+			
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
 			internal_notebook.minimize_actions.extend (agent on_minimize)
@@ -142,14 +144,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

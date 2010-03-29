@@ -44,6 +44,7 @@ feature {NONE}  -- Initlization
 
 			extend_horizontal_box (tab_box)
 			disable_item_expand (tab_box)
+			pointer_double_press_actions.force_extend (agent on_tab_box_right_side_double_click)
 
 			extend_horizontal_box (internal_tool_bar)
 			disable_item_expand (internal_tool_bar)
@@ -284,6 +285,19 @@ feature -- Query
 			non_negative: Result >= 0
 		end
 
+	right_side_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Double click actions on Current right side blank area
+		local
+			l_actions: like internal_right_side_double_click_actions
+		do
+			l_actions := internal_right_side_double_click_actions
+			if not attached l_actions then
+				create l_actions
+				internal_right_side_double_click_actions := l_actions
+			end
+			Result := l_actions
+		end
+
 feature {NONE}  -- Implementation functions
 
 	on_tab_hide_indicator_selected
@@ -354,6 +368,14 @@ feature {NONE}  -- Implementation functions
 			else
 				-- If veto drop function not set
 				Result := True
+			end
+		end
+
+	on_tab_box_right_side_double_click
+			-- Handle right side double click actions from `tab_box'
+		do
+			if attached internal_right_side_double_click_actions then
+				right_side_double_click_actions.call (void)
 			end
 		end
 
@@ -546,6 +568,9 @@ feature {NONE}  -- Implementation attributes
 	internal_tabs_not_shown: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 			-- Tabs not shown which be not shown
 
+	internal_right_side_double_click_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+			-- Double click actions on Current right side blank area
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to
 
@@ -562,14 +587,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -43,6 +43,18 @@ inherit
 			copy
 		end
 
+feature {NONE} -- Initialization
+
+	init
+			-- Initialization
+		require
+			set: is_notebook_set
+		do
+			if attached internal_notebook as l_notebook then
+				l_notebook.tab_bar_right_blank_area_double_click_actions.extend (agent on_tab_bar_right_blank_area_double_click)
+			end
+		end
+
 feature -- Command
 
 	recover_normal_size_from_minimize
@@ -481,16 +493,26 @@ feature {NONE} -- Implementation
 			end
 		end
 
-note
+	on_tab_bar_right_blank_area_double_click
+			-- Handle `tab_bar_right_blank_area_double_click_actions' of `internal_notebook'
+		do
+			if attached internal_notebook as l_notebook then
+				if attached l_notebook.contents.last as l_content then
+					l_content.tab_bar_right_blank_area_double_click_actions.call (Void)
+				end
+			end
+		end
+
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

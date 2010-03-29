@@ -25,11 +25,11 @@ feature {NONE} -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried and then (create {RAW_FILE}.make (a_file_name)).exists then
-				create raw_buffer
-				raw_buffer.set_with_named_file (a_file_name)
+				create matrix_buffer
+				matrix_buffer.set_with_named_file (a_file_name)
 			else
 					-- Fail safe, use blank pixmap
-				create raw_buffer.make_with_size ((${WIDTH} * ${PIXEL_WIDTH}) + 1,(${HEIGHT} * ${PIXEL_HEIGHT}) + 1)
+				create matrix_buffer.make_with_size ((${WIDTH} * ${PIXEL_WIDTH}) + 1,(${HEIGHT} * ${PIXEL_HEIGHT}) + 1)
 			end
 		rescue
 			retried := True
@@ -57,6 +57,76 @@ feature {NONE} -- Access
 
 	matrix_buffer: EV_PIXEL_BUFFER
 			-- Raw matrix pixel buffer
+
+	frozen icon_coordinates_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING]
+			-- Table of icon coordinates.
+			--
+			-- Key: An icon name.
+			-- Value: Icon matrix coordinates.
+		do
+			if attached {like icon_coordinates_table} internal_icon_coordinates_table as l_result then
+				Result := l_result
+			else
+				create Result.make (10)
+				populate_coordinates_table (Result)
+				internal_icon_coordinates_table := Result
+			end
+		ensure
+			result_consistent: Result = icon_coordinates_table
+		end
+
+feature -- Status report
+
+	has_named_icon (a_name: attached STRING): BOOLEAN
+			-- Indicates if a name icon if availalbe.
+			--
+			-- `a_name': The icon name. (See section Access: Icon name constants)
+			-- `Result': True if the named icon exists for Current; False otherwise.
+		require
+			not_a_name_is_empty: not a_name.is_empty
+		do
+			Result := icon_coordinates_table.has (a_name)
+		ensure
+			icon_coordinates_table_has_a_name: Result implies icon_coordinates_table.has (a_name)
+		end
+
+feature -- Query
+
+	named_icon_buffer (a_name: attached STRING): EV_PIXEL_BUFFER
+			-- Retrieves a icon buffer given a known icon name
+			--
+			-- `a_name':
+			-- `Result':
+		require
+			not_a_name_is_empty: not a_name.is_empty
+			has_named_icon_a_name: has_named_icon (a_name)
+		local
+			l_coords: TUPLE [x: NATURAL_8; y: NATURAL_8]
+		do
+			l_coords := icon_coordinates_table.item (a_name)
+			Result := matrix_buffer.sub_pixel_buffer (pixel_rectangle (l_coords.x, l_coords.y))
+		ensure
+			named_icon_buffer_attached: Result /= Void
+			not_result_is_destroyed: not Result.is_destroyed
+		end
+
+	named_icon (a_name: attached STRING): EV_PIXMAP
+			-- Retrieves a icon buffer given a known icon name
+			--
+			-- `a_name':
+			-- `Result':
+		require
+			not_a_name_is_empty: not a_name.is_empty
+			has_named_icon_a_name: has_named_icon (a_name)
+		local
+			l_coords: TUPLE [x: NATURAL_8; y: NATURAL_8]
+		do
+			l_coords := icon_coordinates_table.item (a_name)
+			Result := matrix_buffer.sub_pixmap (pixel_rectangle (l_coords.x, l_coords.y))
+		ensure
+			named_icon_attached: Result /= Void
+			not_result_is_destroyed: not Result.is_destroyed
+		end
 
 feature -- Icons
 	
@@ -98,6 +168,20 @@ feature {NONE} -- Query
 			Result.set_width (icon_width)
 			Result.set_height (icon_height)
 		end
+
+feature {NONE} -- Basic operation
+
+	populate_coordinates_table (a_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
+			-- <Precursor>
+		do
+${COORDINATES}
+		end
+
+feature {NONE} -- Implementation: cache
+
+	internal_icon_coordinates_table: detachable like icon_coordinates_table
+			-- Cached version of `icon_coordinates_table'
+			-- Note: Do not use directly!
 		
 feature {NONE} -- Implementation: cache
 

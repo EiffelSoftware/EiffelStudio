@@ -205,7 +205,7 @@ feature -- Status setting
 		end
 
 	disable_tooltip
-			-- Enable tooltip.
+			-- Disable tooltip.
 		do
 			if is_tooltip_enabled then
 				if is_my_tooltip then

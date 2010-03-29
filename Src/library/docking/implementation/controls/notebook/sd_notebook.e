@@ -66,6 +66,7 @@ feature {NONE}  -- Initlization
 			create internal_tabs.make (1)
 
 			create internal_tab_box.make (docking_manager)
+			internal_tab_box.right_side_double_click_actions.extend (agent on_tab_box_right_double_click)
 			create l_helper
 
 --			internal_tab_box.set_background_color (internal_shared.non_focused_color_lightness)
@@ -530,6 +531,19 @@ feature -- Query
 	tab_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Tab double click actions
 
+	tab_bar_right_blank_area_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Double click action on tab bar right blank area
+		local
+			l_actions: like internal_tab_bar_right_blank_area_double_click_actions
+		do
+			l_actions := internal_tab_bar_right_blank_area_double_click_actions
+			if not attached l_actions then
+				create l_actions
+				internal_tab_bar_right_blank_area_double_click_actions := l_actions
+			end
+			Result := l_actions
+		end
+
 	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [SD_CONTENT, INTEGER, INTEGER, INTEGER, INTEGER]]
 			-- Tab drag actions. In tuple, 1st parameter is dragged tab, 2nd is x, 3rd is y, 4th is screen_x, 5th is screen_y
 
@@ -656,6 +670,14 @@ feature {NONE}  -- Implementation
 			selection_actions.call (Void)
 		end
 
+	on_tab_box_right_double_click
+			-- Handle `right_side_double_click_actions' of `internal_tab_box'
+		do
+			if attached internal_tab_bar_right_blank_area_double_click_actions then
+				tab_bar_right_blank_area_double_click_actions.call (Void)
+			end
+		end
+
 	notify_tab (a_except: SD_NOTEBOOK_TAB; a_focus: BOOLEAN)
 			-- Disable all tabs selection except `a_except'. Select `a_except'
 		local
@@ -770,6 +792,9 @@ feature {NONE}  -- Implementation
 	internal_border_for_tab_area: SD_CELL_WITH_BORDER
 			-- Border box
 
+	internal_tab_bar_right_blank_area_double_click_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
+			-- Double click action on tab bar right blank area
+
 feature -- Emumeration
 
 	tab_top: INTEGER = 1
@@ -788,14 +813,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

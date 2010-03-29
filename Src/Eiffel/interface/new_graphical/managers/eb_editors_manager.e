@@ -79,7 +79,7 @@ feature -- Initialization
 				docking_manager.tab_drop_actions.set_veto_pebble_function (agent default_veto_func)
 			end
 			create_editor
-			register_action (docking_manager.main_area_drop_action, agent create_editor_beside_content (?, Void))
+			register_action (docking_manager.main_area_drop_action, agent create_editor_beside_content (?, Void, False))
 			if veto_pebble_function_internal = Void then
 				docking_manager.main_area_drop_action.set_veto_pebble_function (agent default_veto_func)
 			end
@@ -670,10 +670,10 @@ feature -- Element change
 	create_editor
 			-- Create a new editor.
 		do
-			create_editor_beside_content (Void, exist_content)
+			create_editor_beside_content (Void, exist_content, False)
 		end
 
-	create_editor_beside_content (a_stone: STONE; a_content: SD_CONTENT)
+	create_editor_beside_content (a_stone: STONE; a_content: SD_CONTENT; a_force_right_side: BOOLEAN)
 			-- Create an editor beside `a_content'. Meanwile set `a_stone' to the editor if `a_stone' is not void.
 			-- Set top if the a_content is void.
 		local
@@ -682,7 +682,7 @@ feature -- Element change
 			check is_all_editors_valid end
 			if editor_with_stone (a_stone) = Void then
 				init_editor
-				l_content := create_docking_content (editor_number_factory.new_editor_name, last_created_editor, a_content)
+				l_content := create_docking_content (editor_number_factory.new_editor_name, last_created_editor, a_content, a_force_right_side)
 				last_created_editor.set_docking_content (l_content)
 			end
 			if a_stone /= Void then
@@ -1331,9 +1331,9 @@ feature {NONE} -- Agents
 
 								create l_stone.make (l_item)
 								if current_editor /= Void then
-									create_editor_beside_content (l_stone, current_editor.docking_content)
+									create_editor_beside_content (l_stone, current_editor.docking_content, False)
 								else
-									create_editor_beside_content (l_stone, void)
+									create_editor_beside_content (l_stone, void, False)
 								end
 
 							end
@@ -1384,7 +1384,7 @@ feature {NONE} -- Agents
 		end
 
 	on_close (a_editor: like current_editor)
-			-- Closing an editor callback.
+			-- Closing an editor callback
 		do
 			if a_editor.changed then
 				if a_editor /= current_editor then
@@ -1406,6 +1406,13 @@ feature {NONE} -- Agents
 			else
 				close_editor_perform (a_editor)
 			end
+		end
+
+	on_tab_bar_right_blank_area_double_click (a_content: SD_CONTENT)
+			-- When users double clicked on notebook tab bar
+		do
+			create_editor_beside_content (Void, a_content, True)
+			development_window.address_manager.set_focus
 		end
 
 feature {NONE} -- Implementation
@@ -1510,7 +1517,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_docking_content (a_unique_title: STRING; a_editor: like current_editor; a_content: SD_CONTENT): SD_CONTENT
+	create_docking_content (a_unique_title: STRING; a_editor: like current_editor; a_content: SD_CONTENT; a_force_right_side: BOOLEAN): SD_CONTENT
 			-- Create a docking content with `a_editor' in it.
 			-- This content is set close to a_content if a_content is not void.
 		require
@@ -1527,10 +1534,15 @@ feature {NONE} -- Implementation
 			docking_manager.contents.extend (Result)
 			register_action (Result.focus_in_actions, agent on_focus (a_editor))
 			register_action (Result.close_request_actions, agent on_close (a_editor))
+			register_action (Result.tab_bar_right_blank_area_double_click_actions, agent on_tab_bar_right_blank_area_double_click (Result))
 			Result.set_type ({SD_ENUMERATION}.editor)
 
 			if a_content /= Void then
-				Result.set_tab_with (a_content, development_window.preferences.editor_data.new_tab_at_left)
+				if a_force_right_side then
+					Result.set_tab_with (a_content, False)
+				else
+					Result.set_tab_with (a_content, development_window.preferences.editor_data.new_tab_at_left)
+				end
 			else
 				Result.set_default_editor_position
 			end
@@ -1557,6 +1569,7 @@ feature {NONE} -- Implementation
 				-- When fake editor first time showing, we change it to a real one.
 			register_action (Result.focus_in_actions, agent on_fake_focus (last_created_editor))
 			register_action (Result.show_actions, agent on_show (last_created_editor))
+			register_action (Result.tab_bar_right_blank_area_double_click_actions, agent on_tab_bar_right_blank_area_double_click (Result))
 			Result.close_request_actions.extend (agent on_close (last_created_editor))
 
 			docking_manager.contents.extend (Result)
@@ -1737,7 +1750,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

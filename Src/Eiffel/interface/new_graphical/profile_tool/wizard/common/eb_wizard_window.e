@@ -175,7 +175,7 @@ feature -- Basic Operations
 				previous_b.enable_sensitive
 			else
 				previous_b.enable_sensitive
-				next_b.set_text(interface_names.b_Next)
+				next_b.set_text(interface_names.b_arrow_next)
 			end
 		end
 
@@ -189,7 +189,7 @@ feature -- Basic Operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -220,4 +220,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class WIZARD_WINDOW
+end

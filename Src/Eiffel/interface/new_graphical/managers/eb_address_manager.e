@@ -1049,6 +1049,35 @@ feature {NONE} -- Execution
 			end
 		end
 
+	open_new_tab_if_possible
+			-- Open a new tab if Ctrl pressed and editor with current class/feature not exists
+		local
+			l_env: EV_ENVIRONMENT
+			l_file_name: detachable FILE_NAME
+			l_class_c: detachable CLASS_C
+		do
+			create l_env
+			if l_env.application.ctrl_pressed then
+				if attached window_manager.last_focused_development_window as l_win then
+					if not choosing_class and then attached current_feature as l_feature then
+						-- The `class_i' maybe not correct, so use `written_class' here
+						-- Such as:
+						-- If user entry is `{INTEGER_16}.out' then, when call `{EB_DEVELOPMENT_WINDOW}.set_stone', editor manger will switch to `{INTEGER_16_REF}.out' automatically.
+						l_class_c := l_feature.written_class
+						if attached l_class_c then
+							create l_file_name.make_from_string (l_class_c.file_name)
+						end
+					elseif attached current_class as l_class_c_2 then
+						create l_file_name.make_from_string (l_class_c_2.file_name)
+					end
+						-- Make sure no editor with current class/feature opened already
+					if attached l_file_name and then not attached l_win.editors_manager.editor_with_class (l_file_name) then
+						l_win.commands.new_tab_cmd.execute
+					end
+				end
+			end
+		end
+
 feature -- Assertions
 
 	known_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
@@ -1449,6 +1478,7 @@ feature {NONE} -- open new class
 				fname.right_adjust
 			end
 			if fname = Void or else fname.is_empty then
+				open_new_tab_if_possible
 				if choosing_class then
 					process_class_feature
 				else
@@ -1462,6 +1492,7 @@ feature {NONE} -- open new class
 					if current_class.has_feature_table then
 						current_feature := get_feature_named (fname)
 					end
+					open_new_tab_if_possible
 					if choosing_class then
 						process_class_feature
 					else

@@ -163,12 +163,12 @@ feature -- Access
 
 feature -- Documentation
 
-	l_Flat: STRING_32					do Result := locale.translation("flat view")	end
+	l_Flat: STRING_32					do Result := locale.translation("Flat view")	end
 	l_chart: STRING_32					do Result := locale.translation("Chart") end
 	l_relations: STRING_32				do Result := locale.translation("Relations")	end
 	l_text: STRING_32					do Result := locale.translation("Text")	end
 	l_contract: STRING_32				do Result := locale.translation("Contract")	end
-	l_Flatshort: STRING_32				do Result := locale.translation("interface view")	end
+	l_Flatshort: STRING_32				do Result := locale.translation("Interface view")	end
 
 feature -- Errors
 
@@ -253,7 +253,7 @@ feature -- Errors
 feature {NONE} -- Implementation
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

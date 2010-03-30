@@ -1227,15 +1227,23 @@ feature {NONE} -- Implementation
 		end
 
 	relative_to_base (rel_filename: STRING_32): STRING_32
+		require
+			rel_filename_not_void: rel_filename /= Void
+		local
+			l_base_path: like base_path
 		do
-			create Result.make_from_string (base_path)
-			if not base_path.is_empty then
+			l_base_path := base_path
+			create Result.make (l_base_path.count + 100)
+			Result.append (l_base_path)
+			if not Result.is_empty then
 				Result.append (os_separator)
 			end
 			Result.append (rel_filename)
 			if not file_separator.is_equal ("%U") then
 				Result.replace_substring_all (os_separator, file_separator)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 invariant

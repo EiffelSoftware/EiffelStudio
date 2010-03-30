@@ -94,10 +94,10 @@ feature {EV_ANY} -- Initialization
 			create cancel_button.make_with_text (interface_names.b_cancel)
 			cancel_button.select_actions.extend (agent cancel)
 			extend_button (button_bar, cancel_button)
-			create previous_button.make_with_text (interface_names.b_previous)
+			create previous_button.make_with_text (interface_names.b_arrow_back)
 			previous_button.select_actions.extend (agent previous)
 			extend_button (button_bar, previous_button)
-			create next_button.make_with_text (interface_names.b_next)
+			create next_button.make_with_text (interface_names.b_arrow_next)
 			next_button.select_actions.extend (agent next)
 			extend_button (button_bar, next_button)
 			create finish_button.make_with_text (interface_names.b_finish)
@@ -895,7 +895,7 @@ feature {NONE} -- Implementation
 		-- Nicest value for height of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

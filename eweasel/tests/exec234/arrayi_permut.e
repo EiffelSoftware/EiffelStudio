@@ -641,6 +641,19 @@ feature -- Resizing
 			no_high_lost: upper = max_index or else upper = old upper
 		end
 
+	trim
+			-- <Precursor>
+		local
+			n: like count
+		do
+			n := count
+			if n < capacity then
+				area := area.aliased_resized_area (n)
+			end
+		ensure then
+			same_items: same_items (old twin)
+		end
+
 feature -- Conversion
 
 	to_c: ANY is

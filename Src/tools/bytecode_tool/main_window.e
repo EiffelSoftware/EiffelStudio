@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 				until
 					f.end_of_file or line = Void
 				loop
-					if line.has_substring (once "1: BC_START") then
+					if line.has_substring (once ": BC_START") then
 						create e
 						analyzes.extend (e)
 						create h.make_empty

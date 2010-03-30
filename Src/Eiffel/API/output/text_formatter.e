@@ -565,14 +565,17 @@ feature {NONE} -- Implementation
 	separate_string (s: STRING_GENERAL; for_comment: BOOLEAN)
 			-- Separate `s' into parts and add them to `Current'.
 			-- Mostly for manifest strings and comments.
+		local
+			l_scanner: like comment_scanner
 		do
+			l_scanner := comment_scanner
 				--| FIXME: s.as_string_8 may cause information lose.
-			comment_scanner.set_input_buffer (create {YY_BUFFER}.make (s.as_string_8))
-			comment_scanner.set_text_formatter (Current)
-			comment_scanner.set_for_comment (for_comment)
-			comment_scanner.set_seperate (seperate_comment)
-			comment_scanner.set_current_class (comment_context_class)
-			comment_scanner.scan
+			l_scanner.set_input_buffer (create {YY_BUFFER}.make (s.as_string_8))
+			l_scanner.set_text_formatter (Current)
+			l_scanner.set_for_comment (for_comment)
+			l_scanner.set_seperate (seperate_comment)
+			l_scanner.set_current_class (comment_context_class)
+			l_scanner.scan
 		end
 
 	comment_scanner: COMMENT_SCANNER

@@ -348,7 +348,10 @@ feature {NONE} -- Implementation
 		require
 			text_not_void: text /= Void
 		do
-			Result := ("`").as_string_32 + text + "%'"
+			create {STRING_32}Result.make (text.count + 2)
+			Result.append ("`")
+			Result.append (text)
+			Result.append ("%'")
 		ensure
 			text_quoted_not_void: Result /= Void
 		end
@@ -652,7 +655,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

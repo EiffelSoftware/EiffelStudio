@@ -204,9 +204,7 @@ feature -- Status setting
 		require
 			a_keyword_not_void: a_keyword /= Void
 		do
-			if keyword_table.has (a_keyword) then
-				keyword_table.remove (a_keyword)
-			end
+			keyword_table.remove (a_keyword)
 			if a_substitute /= Void then
 				keyword_table.put (a_substitute, a_keyword)
 			end

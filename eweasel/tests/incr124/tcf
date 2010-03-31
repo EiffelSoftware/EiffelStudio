@@ -20,7 +20,7 @@ compile_result 	 ok
 
 execute_work 	NONE exec_output1
 execute_result 	ok
-compare		exec_output1 output
+compare		exec_output1 output1
 
 define		 PARENTS "TEST2; TEST1"
 copy_sub 	 test.e  $CLUSTER test.e
@@ -29,6 +29,17 @@ compile_result 	 ok
 
 execute_work 	NONE exec_output2
 execute_result 	ok
-compare		exec_output2 output
+compare		exec_output2 output2
+
+cleanup_compile
+
+compile_melted
+compile_result 	 ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output2
+
+
 
 test_end

@@ -2895,42 +2895,6 @@ feature -- Properties
 	direct_descendants_internal: like direct_descendants
 			-- One per object storage for direct descendants.
 
-	descendents_with_changed_replicated_features (a_changed_class: CLASS_C): LINKED_LIST [CLASS_C]
-			-- Descendents of `Current' that have replicated features.
-		require
-			a_changed_class_not_void: a_changed_class /= Void
-		local
-			l_direct_descendents: like direct_descendants_internal
-			l_result: LINKED_LIST [CLASS_C]
-		do
-			l_direct_descendents := direct_descendants_internal
-
-			if l_direct_descendents /= Void then
-				from
-					l_direct_descendents.start
-				until
-					l_direct_descendents.after
-				loop
-					l_result := l_direct_descendents.item.descendents_with_changed_replicated_features (a_changed_class)
-					if l_result /= Void then
-						if Result = Void then
-							Result := l_result
-						else
-							Result.append (l_result)
-						end
-					end
-					l_direct_descendents.forth
-				end
-			end
-			if replicated_features_list /= Void then
-					--| FIXME Use `a_current_class' to optimize whether replicated features are from there originally.
-				if Result = Void then
-					create Result.make
-				end
-				Result.extend (Current)
-			end
-		end
-
 	clients: ARRAYED_LIST [CLASS_C]
 			-- Clients of the class
 
@@ -4506,6 +4470,47 @@ feature {DEGREE_4, ORIGIN_TABLE, AST_FEATURE_REPLICATION_GENERATOR} -- Used by d
 			replicated_features_list := l
 		ensure
 			replicated_features_list_set: replicated_features_list = l
+		end
+
+feature {CLASS_C, DEGREE_4} -- Degree 3 and 4 recompilation
+
+	recompile_descendants_with_replication (is_degree_4_required: BOOLEAN; c: CLASS_C)
+			-- Recompile descendants that replicate features of class `c', including expanded classes.
+		require
+			c_attached: attached c
+		do
+			if c /= Current and then (replicated_features_list /= Void or else is_expanded) then
+					-- The current class is a descendant of `c' and either replicates features or is expanded.
+					-- Mark it for recompilation.
+				debug ("to_implement")
+					to_implement ("[
+						Use ancestor class `c' and feature to optimize whether
+						replicated feature is from there originally.
+					]")
+				end
+				debug ("fixme")
+					fixme ("[
+						If expanded class types are supported, they need to be
+						recompiled as well even if the base class is reference.
+					]")
+				end
+				if not lace_class.changed then
+					lace_class.set_changed (True)
+				end
+				if is_degree_4_required then
+					degree_4.insert_new_class (Current)
+				end
+				degree_3.insert_new_class (Current)
+				degree_2.insert_new_class (Current)
+					-- Make sure that the class ast gets correctly saved so that any newly replicated
+					-- features get correctly stored in the compiler servers.
+				tmp_ast_server.put (ast)
+			end
+				-- We need to check if any descendents are replicating features of `a_class' during an incremental compilation.
+			if attached direct_descendants_internal as d then
+					-- Process all descendants recursively.
+				d.do_all (agent {CLASS_C}.recompile_descendants_with_replication (is_degree_4_required, c))
+			end
 		end
 
 feature {DEGREE_3} -- Degree 3

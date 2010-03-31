@@ -489,8 +489,6 @@ feature {INHERIT_TABLE} -- Propagation
 			real_pass2, do_pass2: BOOLEAN
 			do_pass3: BOOLEAN
 			chg3a: BOOLEAN
-			l_descendents_with_replicated_features: LINKED_LIST [CLASS_C]
-			l_desc_class: CLASS_C
 		do
 			debug ("ACTIVITY")
 				io.error.put_string ("=============== DEGREE_4.propagate ===============%N")
@@ -539,27 +537,8 @@ feature {INHERIT_TABLE} -- Propagation
 				--| FIXME IEK We could optimize to check if the access_in values relate to the current class
 			if not System.compilation_straight and then a_changed_features /= Void and then a_changed_features.count > 0 then
 					-- We need to check if any descendents are replicating features of `a_class' during an incremental compilation.
-				l_descendents_with_replicated_features := a_class.descendents_with_changed_replicated_features (a_class)
-				if l_descendents_with_replicated_features /= Void and then not l_descendents_with_replicated_features.is_empty then
-					from
-							-- Make sure that all descendents with replicated features get fully recompiled and stored.
-						l_descendents_with_replicated_features.start
-					until
-						l_descendents_with_replicated_features.after
-					loop
-						l_desc_class := l_descendents_with_replicated_features.item
-						if not l_desc_class.lace_class.changed then
-							l_desc_class.lace_class.set_changed (True)
-						end
-						degree_4.insert_new_class (l_desc_class)
-						degree_3.insert_new_class (l_desc_class)
-						degree_2.insert_new_class (l_desc_class)
-							-- Make sure that the class ast gets correctly saved so that any newly replicated
-							-- features get correctly stored in the compiler servers.
-						tmp_ast_server.put (l_desc_class.ast)
-						l_descendents_with_replicated_features.forth
-					end
-				end
+					-- Make sure that all descendents with replicated features get fully recompiled and stored.
+				a_class.recompile_descendants_with_replication (True, a_class)
 			end
 
 				-- Incremetality test: asked the compiler to apply at

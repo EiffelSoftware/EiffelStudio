@@ -844,7 +844,7 @@ rt_private void set_check_assert (int v)
 rt_private void ignore_current_assertion_violation (int v) 
 {
 	/* Ignore or not the current assertion violation */
-	ignore_contract_violation_once (v);
+	ignore_contract_violation_once (EIF_TEST(v));
 }
 
 rt_private void adopt(EIF_PSTREAM sp, Opaque *what)

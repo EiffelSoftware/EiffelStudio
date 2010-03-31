@@ -205,7 +205,7 @@ feature -- Change
 
 feature -- Query
 
-	text_data_for_clipboard: STRING_32
+	text_data_for_clipboard: detachable STRING_32
 		deferred
 		end
 

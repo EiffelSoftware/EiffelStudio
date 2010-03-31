@@ -510,14 +510,11 @@ feature -- Menu
 feature -- Query
 
 	grid_pnd_details_from_row_and_column (a_row: EV_GRID_ROW; a_col: EV_GRID_COLUMN):
-				TUPLE [pebble:ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE]
+				detachable TUPLE [pebble:ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE]
 			-- Return pnd details which may be contained in `a_row' related to `a_col'.
-		local
-			ctler: ES_GRID_ROW_CONTROLLER
 		do
 			if a_row /= Void then
-				ctler ?= a_row.data
-				if ctler /= Void then
+				if attached {ES_GRID_ROW_CONTROLLER} a_row.data as ctler then
 					if a_col /= Void then
 						Result := ctler.item_pebble_details (a_col.index)
 					else
@@ -525,6 +522,10 @@ feature -- Query
 					end
 				end
 			end
+-- Leave this for debug purpose
+--			if Result = Void then
+--				Result := ["empty", Void, Void]
+--			end
 		end
 
 	grid_pebble_from_cell (a_cell: EV_GRID_ITEM): ANY
@@ -1018,7 +1019,7 @@ feature -- Graphical look
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

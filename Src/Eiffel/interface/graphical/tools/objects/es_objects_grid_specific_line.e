@@ -2,7 +2,6 @@ note
 	description: "Objects that represent the data of a objects grid row."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -410,7 +409,7 @@ feature {NONE} -- Implementation
 						parent_grid.grid_cell_set_text (es_glab, l_exception_code.out)
 						r.set_item (2, es_glab)
 					end
-					
+
 						--| Type
 					l_exception_class_detail := exc_dv.type_name
 					if l_exception_class_detail /= Void then
@@ -499,27 +498,39 @@ feature -- Query
 			inspect
 				id
 			when arguments_id then
-				Result := "Arguments"
+				Result := Interface_names.l_arguments
 			when locals_id then
-				Result := "Locals"
+				Result := Interface_names.l_locals
 			when result_id then
-				Result := "Result"
+				Result := Interface_names.l_result
 			when current_object_id then
-				Result := "Current Object"
+				Result := Interface_names.l_current_object
 			when stack_id then
-				Result := "Stack Info"
+				Result := Interface_names.l_stack_information
 			else
 				Result := "..."
 			end
 		end
 
-	text_data_for_clipboard: STRING_32
+	text_data_for_clipboard: detachable STRING_32
 		do
-			Result := Void
+			inspect
+				id
+			when arguments_id then
+				Result := Interface_names.l_arguments
+			when locals_id then
+				Result := Interface_names.l_locals
+			when result_id then
+				Result := Interface_names.l_result
+			when current_object_id then
+				Result := Interface_names.l_current_object
+			when stack_id then
+				Result := Interface_names.l_stack_information
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -532,22 +543,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -236,9 +236,7 @@ feature -- Conversion
 			-- Convert `Current' from a reference value to a basic value, if possible.
 			-- If impossible, return `Current'.
 		local
-			attribs: DS_LIST [ABSTRACT_DEBUG_VALUE]
-			l_attribs_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
-			att: ABSTRACT_DEBUG_VALUE
+			attribs: DEBUG_VALUE_LIST
 		do
 			debug ("debug_recv")
 				print (generator + ".to_basic%N")
@@ -246,18 +244,7 @@ feature -- Conversion
 			if address /= Void and then not address.is_void then
 				attribs := debugger_manager.object_manager.attributes_at_address (address, 0, 0)
 				if attribs /= Void then
-					from
-						l_attribs_cursor := attribs.new_cursor
-						l_attribs_cursor.start
-					until
-						l_attribs_cursor.after
-					loop
-						att := l_attribs_cursor.item
-						if att.name.is_equal ("item") then
-							Result := att.dump_value
-						end
-						l_attribs_cursor.forth
-					end
+					Result := attribs.named_value ("item").dump_value
 				end
 				if Result = Void then
 					Result := Current
@@ -522,7 +509,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			is_classic_system
 		local
 			f: E_FEATURE
-			l_attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			l_attributes: DEBUG_VALUE_LIST
 			l_attributes_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			l_attributes_item: ABSTRACT_DEBUG_VALUE
 			cv_spec: SPECIAL_VALUE
@@ -1094,7 +1081,7 @@ feature {NONE} -- Private Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

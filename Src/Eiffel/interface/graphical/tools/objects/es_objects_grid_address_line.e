@@ -91,7 +91,7 @@ feature -- Query
 			end
 		end
 
-	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	sorted_attributes_values: DEBUG_VALUE_LIST
 		do
 			if attached object_address as oadd and then is_valid_and_known_object_address (oadd) then
 				Result := debugger_manager.object_manager.sorted_attributes_at_address (oadd, object_spec_lower, object_spec_upper)

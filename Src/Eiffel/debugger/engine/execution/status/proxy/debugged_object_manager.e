@@ -75,7 +75,7 @@ feature -- Query
 			Result := dobj.attributes
 		end
 
-	sorted_attributes_at_address (addr: DBG_ADDRESS; sp_lower, sp_upper: INTEGER): DS_LIST [ABSTRACT_DEBUG_VALUE]
+	sorted_attributes_at_address (addr: DBG_ADDRESS; sp_lower, sp_upper: INTEGER): DEBUG_VALUE_LIST
 			-- Sorted attributes for remote object at address `addr'
 		require
 			address_not_void: addr /= Void and then not addr.is_void

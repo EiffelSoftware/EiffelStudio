@@ -71,7 +71,6 @@ feature  -- Initialization
 			check
 				l_dfa_attached: l_dfa /= Void
 				l_categories_attached: l_categories /= Void
-				l_keywords_attached: l_keywords /= Void
 			end
 			l_analyzer.initialize_attributes (l_dfa, l_categories, l_keywords, keywords_case_sensitive)
 		ensure

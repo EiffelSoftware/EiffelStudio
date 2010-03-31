@@ -57,7 +57,7 @@ feature -- Properties
 			--| application for the hector address during the object
 			--| inspection. This should be done latter with `set_hector_addr'.)
 
-	items: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
+	items: DEBUG_VALUE_LIST
 			-- List of SPECIAL items
 
 	count: INTEGER
@@ -73,7 +73,7 @@ feature -- Properties
 
 feature -- Output
 
-	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	sorted_children: DEBUG_VALUE_LIST
 			-- Return items as childrens.
 		do
 			Result := children
@@ -159,7 +159,7 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

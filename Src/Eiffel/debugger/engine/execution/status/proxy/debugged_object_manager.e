@@ -64,7 +64,7 @@ feature -- Query
 			Result := dobj.dynamic_class
 		end
 
-	attributes_at_address (addr: DBG_ADDRESS; sp_lower, sp_upper: INTEGER): DS_LIST [ABSTRACT_DEBUG_VALUE]
+	attributes_at_address (addr: DBG_ADDRESS; sp_lower, sp_upper: INTEGER): DEBUG_VALUE_LIST
 			-- Attributes for remote object at address `addr'
 		require
 			address_not_void: addr /= Void and then not addr.is_void
@@ -209,7 +209,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

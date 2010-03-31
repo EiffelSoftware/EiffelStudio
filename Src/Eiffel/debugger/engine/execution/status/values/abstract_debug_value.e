@@ -157,13 +157,13 @@ feature -- Output
 		deferred
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	children: DEBUG_VALUE_LIST
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		deferred
 		end
 
-	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	sorted_children: DEBUG_VALUE_LIST
 			-- sort `children' and return it.
 		do
 			Result := children
@@ -278,7 +278,7 @@ invariant
 	valid_dynamic_class: attached dynamic_class as cl implies not cl.is_deferred
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

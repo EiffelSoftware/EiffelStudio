@@ -185,7 +185,7 @@ feature {NONE} -- Output
 
 feature -- Output
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	children: DEBUG_VALUE_LIST
 			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -202,7 +202,7 @@ feature -- Output
 			end
 		end
 
-	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	attributes: DEBUG_VALUE_LIST
 
 feature {APPLICATION_EXECUTION} -- Query
 
@@ -236,7 +236,7 @@ feature {APPLICATION_EXECUTION} -- Query
 
 feature {NONE} -- Children implementation
 
-	children_from_eiffel_type: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	children_from_eiffel_type: DEBUG_VALUE_LIST
 			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -254,7 +254,7 @@ feature {NONE} -- Children implementation
 				if l_icd_class /= Void then
 					if dynamic_class /= Void then
 						l_feature_table := dynamic_class.feature_table
-						create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_feature_table.count)
+						create Result.make (l_feature_table.count)
 						from
 							l_feature_table.start
 						until
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 	internal_dynamic_class_type: like dynamic_class_type;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

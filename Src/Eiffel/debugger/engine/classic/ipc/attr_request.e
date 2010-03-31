@@ -70,7 +70,7 @@ feature -- Properites
 	object_address: DBG_ADDRESS;
 			-- Hector address of object being inspected
 
-	attributes: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE];
+	attributes: DEBUG_VALUE_LIST
 			-- Attributes of object being inspected (sorted by name)
 
 	object_type_id: INTEGER
@@ -381,7 +381,7 @@ invariant
 	object_address_attached: object_address /= Void and then not object_address.is_void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

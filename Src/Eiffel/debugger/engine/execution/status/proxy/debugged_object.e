@@ -74,7 +74,7 @@ feature -- Properties
 			-- Is current erroneous ?
 			--| For now only used for classic debugger (when dealing with bad object address)
 
-	attributes: detachable DS_LIST [ABSTRACT_DEBUG_VALUE]
+	attributes: detachable DEBUG_VALUE_LIST
 			-- Attributes of object being inspected (sorted by name)
 		 deferred
 		 end
@@ -150,7 +150,7 @@ invariant
 	non_void_address: attached object_address as i_add and then not i_add.is_void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

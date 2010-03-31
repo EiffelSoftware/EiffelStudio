@@ -1,43 +1,51 @@
 note
-	description: "Objects that ..."
+	description: "Summary description for {DEBUG_VALUE_LIST}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SHARED_ABSTRACT_DEBUG_VALUE_SORTER
+	DEBUG_VALUE_LIST
 
-feature {NONE} -- Implementation
+inherit
+	DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
 
-	Abstract_debug_value_sorter: DS_SORTER [ABSTRACT_DEBUG_VALUE]
-			-- Attributes sorter.
-		local
-			l_comp: KL_COMPARABLE_COMPARATOR [ABSTRACT_DEBUG_VALUE]
-		once
-			create l_comp.make
-			create {DS_QUICK_SORTER [ABSTRACT_DEBUG_VALUE]} Result.make (l_comp)
-		end
+create
+	make, make_equal
 
-	sort_debug_values (lst: DEBUG_VALUE_LIST)
-			-- sort `children' and return it.
+feature -- Access
+
+	named_value (n: STRING): detachable ABSTRACT_DEBUG_VALUE
+			-- Value named `n' if exists.
 		require
-			lst_not_void: lst /= Void
+			not_void: n /= Void
+		local
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_item: ABSTRACT_DEBUG_VALUE
 		do
-			if
-				not lst.sorted (abstract_debug_value_sorter)
-			then
-				lst.sort (abstract_debug_value_sorter)
+			from
+				l_cursor := new_cursor
+				l_cursor.start
+			until
+				l_cursor.after or Result /= Void
+			loop
+				l_item := l_cursor.item
+				if attached l_item.name as l_name and then l_name.is_equal (n) then
+					Result := l_item
+				end
+				l_cursor.forth
 			end
+			l_cursor.go_after
 		ensure
-			lst_sorted: lst.sorted (abstract_debug_value_sorter)
+			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
 		end
+
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -65,5 +73,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

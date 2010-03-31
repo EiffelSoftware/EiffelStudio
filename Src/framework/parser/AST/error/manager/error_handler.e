@@ -43,6 +43,11 @@ feature -- Properties
 			Result := error_list.count.as_natural_32
 		end
 
+	warning_level: NATURAL_32
+		do
+			Result := warning_list.count.as_natural_32
+		end
+
 feature -- Error handling primitives
 
 	insert_error (e: ERROR)
@@ -96,13 +101,6 @@ feature -- Error handling primitives
 			end
 		end
 
-	wipe_out
-			-- Empty `error_list' and `warning_list'.
-		do
-			error_list.wipe_out
-			warning_list.wipe_out
-		end
-
 	save
 			-- Save current errors and warnings for later `restore'.
 		do
@@ -144,6 +142,33 @@ feature -- Error handling primitives
 					end
 				end
 			end
+		end
+
+feature -- Removal
+
+	set_warning_level (w: like warning_level)
+			-- Discard any warnings that were added after given warning level `w'.
+		require
+			w_in_bounds: w >= warning_level
+		do
+			from
+			until
+				w = warning_level
+			loop
+				warning_list.remove
+				warning_list.finish
+			variant
+				warning_level.as_integer_64
+			end
+		ensure
+			warning_level_set: warning_level = w
+		end
+
+	wipe_out
+			-- Empty `error_list' and `warning_list'.
+		do
+			error_list.wipe_out
+			warning_list.wipe_out
 		end
 
 feature -- Status
@@ -262,7 +287,7 @@ invariant
 	warning_list_exists: warning_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -167,7 +167,7 @@ feature -- Bridge to parent ES_OBJECTS_GRID
 
 feature -- Query
 
-	text_data_for_clipboard: STRING_32
+	text_data_for_clipboard: detachable STRING_32
 		local
 			dv: DUMP_VALUE
 		do
@@ -206,7 +206,7 @@ feature -- Query
 		do
 		end
 
-	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	sorted_attributes_values: DEBUG_VALUE_LIST
 			-- Sorted list of attribute values
 		deferred
 		end
@@ -268,10 +268,9 @@ feature {NONE} -- Pick and Drop implementation
 		require
 			not items_stone_properties_computed
 		local
-			clst: CLASSC_STONE
+			st: STONE
 			ost: OBJECT_STONE
 			ostn: STRING_32
-			ocl: CLASS_C
 			t: like internal_item_stone_data_i_th
 		do
 			create internal_items_stone_data.make_filled (Void, row.count + 1) -- FIXME: upper value ?
@@ -283,24 +282,32 @@ feature {NONE} -- Pick and Drop implementation
 				end
 				create ost.make (object_address, ostn, object_dynamic_class)
 				ost.set_associated_ev_item (row)
+				st := ost
+
 				create t
-				t.pebble := ost
-				t.accept_cursor := ost.stone_cursor
-				t.deny_cursor := ost.X_stone_cursor
-					-- When compiler is fixed use: t := [ost, ost.stone_cursor, ost.X_stone_cursor]
+				t.pebble := st
+				t.accept_cursor := st.stone_cursor
+				t.deny_cursor := st.X_stone_cursor
+					-- When compiler is fixed use: t := [st, st.stone_cursor, st.X_stone_cursor]
+
 				internal_items_stone_data.put (t, col_value_index)
 				internal_items_stone_data.put (t, col_type_index)
+			elseif attached {CLASS_C} object_dynamic_class as ocl then
+				st := create {CLASSC_STONE}.make (ocl)
+				create t
+				t.pebble := st
+				t.accept_cursor := st.stone_cursor
+				t.deny_cursor := st.X_stone_cursor
+					-- When compiler is fixed use: t := [st, st.stone_cursor, st.X_stone_cursor]
+				internal_items_stone_data[col_type_index] := t
 			else
-				ocl := object_dynamic_class
-				if ocl /= Void then
-					create clst.make (ocl)
-					create t
-					t.pebble := clst
-					t.accept_cursor := clst.stone_cursor
-					t.deny_cursor := clst.X_stone_cursor
-						-- When compiler is fixed use: t := [clst, clst.stone_cursor, clst.X_stone_cursor]
-					internal_items_stone_data[col_type_index] := t
-				end
+				st := create {DATA_STONE}
+				create t
+				t.pebble := st
+				t.accept_cursor := st.stone_cursor
+				t.deny_cursor := st.X_stone_cursor
+					-- When compiler is fixed use: t := [st, st.stone_cursor, st.X_stone_cursor]
+				internal_items_stone_data[col_type_index] := t
 			end
 
 			check internal_items_stone_data[0] = Void end
@@ -644,6 +651,7 @@ feature {NONE} -- Implementation
 			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_static_icon, {VALUE_TYPES}.Static_external_reference_value)
 			Result.put (pixmaps.icon_pixmaps.debugger_object_static_icon, {VALUE_TYPES}.Static_reference_value)
 			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, {VALUE_TYPES}.Exception_message_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_value_routine_return_icon, {VALUE_TYPES}.Procedure_return_message_value)
 			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, {VALUE_TYPES}.Error_message_value)
 		end
 
@@ -792,12 +800,13 @@ feature {NONE} -- Filling
 			attributes_not_filled_yet: not row_attributes_filled
 		local
 			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
-
+			val: ABSTRACT_DEBUG_VALUE
+			l_is_hidden: BOOLEAN
 			i: INTEGER
 			grid: EV_GRID
 			es_glab: EV_GRID_LABEL_ITEM
 
-			vlist: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			vlist: DEBUG_VALUE_LIST
 			l_row_index: INTEGER
 			dcl: like object_dynamic_class
 		do
@@ -808,62 +817,84 @@ feature {NONE} -- Filling
 				check
 					vlist /= Void
 				end
-				grid := a_row.parent
-
 				from
-					l_row_index := a_row.index
-					a_row.insert_subrows (vlist.count, 1)
-					list_cursor := vlist.new_cursor
-					list_cursor.start
+					vlist.start
 				until
-					list_cursor.after
+					vlist.after
 				loop
-					l_row_index := l_row_index + 1
-					attach_debug_value_from_line_to_grid_row (grid.row (l_row_index), list_cursor.item, Current, Void)
-					list_cursor.forth
-				end
-				if object_is_special_value then
-					if object_spec_lower > 0 then
-						es_glab := slice_label_item (Interface_names.l_More_items)
-						if object_spec_lower > object_spec_count_and_capacity.spec_capacity then
-							es_glab.set_text (es_glab.text + " (" + object_spec_lower.out + ")")
-						end
-						es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)
-						i := a_row.index + 1
-						grid.insert_new_row_parented (i, a_row)
-						grid.set_item (Col_name_index, i, es_glab)
+					val := vlist.item_for_iteration
+					l_is_hidden := attached val.name as l_val_name and then
+								not l_val_name.is_empty and then
+								val.name.item (1) = '_'
+					debug ("debugger_interface")
+						l_is_hidden := False
 					end
-					if
-						0 <= object_spec_upper and then
-						object_spec_upper < object_spec_count_and_capacity.spec_capacity - 1
-					then
-						es_glab := slice_label_item (Interface_names.l_More_items)
-						es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)
-						if onces_row /= Void then
-							i := onces_row.index
-						else
-							i := a_row.index + a_row.subrow_count_recursive + 1
-						end
+					if l_is_hidden then
+						vlist.remove_at
+					else
+						vlist.forth
+					end
+				end
 
-						grid.insert_new_row_parented (i, a_row)
-						grid.set_item (Col_name_index, i, es_glab)
+				if not vlist.is_empty then
+					grid := a_row.parent
+
+					from
+						l_row_index := a_row.index
+						a_row.insert_subrows (vlist.count, 1)
+						list_cursor := vlist.new_cursor
+						list_cursor.start
+					until
+						list_cursor.after
+					loop
+						val := list_cursor.item
+						l_row_index := l_row_index + 1
+						attach_debug_value_from_line_to_grid_row (grid.row (l_row_index), val, Current, Void)
+						list_cursor.forth
 					end
-				end
-				dcl := object_dynamic_class
-				if dcl /= Void then
-					if
-						--| FIXME jfiat [2009-06-03]: check the implementation for dotnet, related to count and capacity
-						debugger_manager.is_classic_project and then
-						dcl.conform_to (debugger_manager.compiler_data.special_class_c)
-					then
-						fill_extra_attributes_for_special (a_row, list_cursor)
-					elseif dcl.conform_to (debugger_manager.compiler_data.tuple_class_c) then
-						fill_extra_attributes_for_tuple (a_row, list_cursor)
-					elseif
-						Eb_debugger_manager.display_agent_details
-						and then dcl.conform_to (debugger_manager.compiler_data.routine_class_c)
-					then
-						fill_extra_attributes_for_agent (a_row, list_cursor)
+					if object_is_special_value then
+						if object_spec_lower > 0 then
+							es_glab := slice_label_item (Interface_names.l_More_items)
+							if object_spec_lower > object_spec_count_and_capacity.spec_capacity then
+								es_glab.set_text (es_glab.text + " (" + object_spec_lower.out + ")")
+							end
+							es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)
+							i := a_row.index + 1
+							grid.insert_new_row_parented (i, a_row)
+							grid.set_item (Col_name_index, i, es_glab)
+						end
+						if
+							0 <= object_spec_upper and then
+							object_spec_upper < object_spec_count_and_capacity.spec_capacity - 1
+						then
+							es_glab := slice_label_item (Interface_names.l_More_items)
+							es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)
+							if onces_row /= Void then
+								i := onces_row.index
+							else
+								i := a_row.index + a_row.subrow_count_recursive + 1
+							end
+
+							grid.insert_new_row_parented (i, a_row)
+							grid.set_item (Col_name_index, i, es_glab)
+						end
+					end
+					dcl := object_dynamic_class
+					if dcl /= Void then
+						if
+							--| FIXME jfiat [2009-06-03]: check the implementation for dotnet, related to count and capacity
+							debugger_manager.is_classic_project and then
+							dcl.conform_to (debugger_manager.compiler_data.special_class_c)
+						then
+							fill_extra_attributes_for_special (a_row, list_cursor)
+						elseif dcl.conform_to (debugger_manager.compiler_data.tuple_class_c) then
+							fill_extra_attributes_for_tuple (a_row, list_cursor)
+						elseif
+							Eb_debugger_manager.display_agent_details
+							and then dcl.conform_to (debugger_manager.compiler_data.routine_class_c)
+						then
+							fill_extra_attributes_for_agent (a_row, list_cursor)
+						end
 					end
 				end
 			end
@@ -1203,7 +1234,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

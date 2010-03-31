@@ -3,7 +3,7 @@ note
 		Automatically generated class for EiffelStudio 16x16 icons.
 	]"
 	generator: "Eiffel Matrix Generator"
-	command_line: "emcgen.exe E:\64dev\Delivery\studio\bitmaps\png\16x16.ini -f frames\studio.e.frame"
+	command_line: "emcgen.exe c:\_dev\trunk\Delivery\studio\bitmaps\png\16x16.ini -f c:\_dev\trunk\src\tools\eiffel_matrix_code_generator\frames\studio.e.frame"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-
+	
 	frozen expanded_normal_icon: EV_PIXMAP
 			-- Access to 'normal' pixmap.
 		require
@@ -3360,6 +3360,26 @@ feature -- Icons
 			Result := named_icon_buffer (execution_ignore_contract_violation_name)
 		ensure
 			execution_ignore_contract_violation_icon_buffer_attached: Result /= Void
+		end
+
+	frozen debugger_value_routine_return_icon: EV_PIXMAP
+			-- Access to 'routine_return' pixmap.
+		require
+			has_named_icon: has_named_icon (debugger_value_routine_return_name)
+		once
+			Result := named_icon (debugger_value_routine_return_name)
+		ensure
+			debugger_value_routine_return_icon_attached: Result /= Void
+		end
+
+	frozen debugger_value_routine_return_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'routine_return' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (debugger_value_routine_return_name)
+		once
+			Result := named_icon_buffer (debugger_value_routine_return_name)
+		ensure
+			debugger_value_routine_return_icon_buffer_attached: Result /= Void
 		end
 
 	frozen general_blank_icon: EV_PIXMAP
@@ -8343,33 +8363,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-
-	frozen run_animation_anim: ARRAY [EV_PIXMAP]
-			-- Access to 'run_animation' pixmap animation items.
-		once
-			create Result.make (1, 5)
-				Result.put (named_icon (run_animation_1_name), 1)
-			Result.put (named_icon (run_animation_2_name), 2)
-			Result.put (named_icon (run_animation_3_name), 3)
-			Result.put (named_icon (run_animation_4_name), 4)
-			Result.put (named_icon (run_animation_5_name), 5)
-		ensure
-			run_animation_anim_attached: Result /= Void
-		end
-
-	frozen run_animation_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
-			-- Access to 'run_animation' pixel buffer animation items.
-		once
-			create Result.make (1, 5)
-				Result.put (named_icon_buffer (run_animation_1_name), 1)
-			Result.put (named_icon_buffer (run_animation_2_name), 2)
-			Result.put (named_icon_buffer (run_animation_3_name), 3)
-			Result.put (named_icon_buffer (run_animation_4_name), 4)
-			Result.put (named_icon_buffer (run_animation_5_name), 5)
-		ensure
-			run_animation_buffer_anim_attached: Result /= Void
-		end
-
+	
 	frozen compile_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'compile_animation' pixmap animation items.
 		once
@@ -8400,6 +8394,32 @@ feature -- Icons: Animations
 			Result.put (named_icon_buffer (compile_animation_8_name), 8)
 		ensure
 			compile_animation_buffer_anim_attached: Result /= Void
+		end
+
+	frozen run_animation_anim: ARRAY [EV_PIXMAP]
+			-- Access to 'run_animation' pixmap animation items.
+		once
+			create Result.make (1, 5)
+				Result.put (named_icon (run_animation_1_name), 1)
+			Result.put (named_icon (run_animation_2_name), 2)
+			Result.put (named_icon (run_animation_3_name), 3)
+			Result.put (named_icon (run_animation_4_name), 4)
+			Result.put (named_icon (run_animation_5_name), 5)
+		ensure
+			run_animation_anim_attached: Result /= Void
+		end
+
+	frozen run_animation_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
+			-- Access to 'run_animation' pixel buffer animation items.
+		once
+			create Result.make (1, 5)
+				Result.put (named_icon_buffer (run_animation_1_name), 1)
+			Result.put (named_icon_buffer (run_animation_2_name), 2)
+			Result.put (named_icon_buffer (run_animation_3_name), 3)
+			Result.put (named_icon_buffer (run_animation_4_name), 4)
+			Result.put (named_icon_buffer (run_animation_5_name), 5)
+		ensure
+			run_animation_buffer_anim_attached: Result /= Void
 		end
 
 feature -- Constants: Icon names
@@ -8570,6 +8590,7 @@ feature -- Constants: Icon names
 	execution_replay_name: STRING = "execution replay"
 	execution_object_storage_name: STRING = "execution object storage"
 	execution_ignore_contract_violation_name: STRING = "execution ignore contract violation"
+	debugger_value_routine_return_name: STRING = "debugger value routine_return"
 	general_blank_name: STRING = "general blank"
 	general_dialog_name: STRING = "general dialog"
 	general_open_name: STRING = "general open"
@@ -8991,6 +9012,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 8], execution_replay_name)
 			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 8], execution_object_storage_name)
 			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 8], execution_ignore_contract_violation_name)
+			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 8], debugger_value_routine_return_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 9], general_blank_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 9], general_dialog_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 9], general_open_name)
@@ -9243,7 +9265,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

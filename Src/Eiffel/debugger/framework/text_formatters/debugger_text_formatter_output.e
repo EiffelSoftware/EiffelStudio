@@ -153,7 +153,7 @@ feature -- Application status
 	append_object (dobj: DEBUGGED_OBJECT; a_name: STRING; st: TEXT_FORMATTER)
 			-- Display `dobj'
 		local
-			l_attr: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			l_attr: DEBUG_VALUE_LIST
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			dc: CLASS_C
 			n: STRING
@@ -524,7 +524,7 @@ feature {NONE} -- append_to implementation
 		local
 			is_special_of_char: BOOLEAN
 			char_value: CHARACTER_VALUE
-			l_items: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			l_items: DEBUG_VALUE_LIST
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			dc: CLASS_C
 			n: STRING

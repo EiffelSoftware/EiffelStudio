@@ -22,6 +22,7 @@ inherit
 			set_value as set_expression_result,
 			set_type as set_expression_info
 		redefine
+			text_data_for_clipboard,
 			set_expression_text,
 			expression_evaluation,
 			reset,
@@ -219,6 +220,8 @@ feature -- Properties
 			-- Associated expression.
 		do
 			Result := expression_evaluation.expression
+		ensure
+			result_attached: Result /= Void
 		end
 
 	expression_evaluation: DBG_EXPRESSION_EVALUATION
@@ -249,6 +252,27 @@ feature -- Properties
 
 feature -- Query
 
+	text_data_for_clipboard: detachable STRING_32
+			-- <Precursor>
+		local
+			e: like expression
+		do
+			Result := Precursor
+			if Result = Void then
+				e := expression
+				create Result.make (10)
+				Result.append (e.text + ": ")
+				if attached expression_evaluation as ee then
+					if ee.disabled then
+						Result.append (interface_names.l_disabled)
+					elseif ee.error_occurred then
+						Result.append (interface_names.l_error)
+					end
+				end
+			end
+		end
+
+
 	has_attributes_values: BOOLEAN
 		do
 			debug ("refactor_fixme")
@@ -257,7 +281,7 @@ feature -- Query
 			Result := True
 		end
 
-	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	sorted_attributes_values: DEBUG_VALUE_LIST
 		local
 			dmp: DUMP_VALUE
 		do

@@ -160,7 +160,7 @@ feature -- Query
 			end
 		end
 
-	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	sorted_attributes_values: DEBUG_VALUE_LIST
 		do
 			Result := object.sorted_children
 		end

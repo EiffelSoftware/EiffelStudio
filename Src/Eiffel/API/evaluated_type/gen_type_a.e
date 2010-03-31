@@ -481,7 +481,6 @@ feature -- CECIL code generation
 		local
 			i, nb: INTEGER
 			l_generics: like generics
-			l_cast: STRING
 		do
 			from
 				l_generics := generics

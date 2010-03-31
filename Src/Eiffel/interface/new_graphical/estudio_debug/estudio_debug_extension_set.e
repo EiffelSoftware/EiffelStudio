@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (m: ESTUDIO_DEBUG_MENU) is
+	make (m: ESTUDIO_DEBUG_MENU)
 			-- Initialize `Current'.
 		do
 			estudio_debug_menu := m

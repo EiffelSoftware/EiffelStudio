@@ -138,6 +138,7 @@ feature -- Type checking
 				-- Initialize structures to record attribute scopes.
 			context.init_attribute_scopes
 			is_byte_node_enabled := False
+			is_ast_modified := False
 			break_point_slot_count := 0
 			if a_is_safe_to_check_inherited then
 				process_inherited_assertions (a_feature, True)
@@ -229,6 +230,7 @@ feature -- Type checking
 			set_is_replicated (False)
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			is_byte_node_enabled := a_generate_code
+			is_ast_modified := False
 			current_feature := a_feature
 			reset
 				-- Initialize structures to record attribute scopes.
@@ -317,6 +319,13 @@ feature -- Type checking
 				end
 			end
 		end
+
+feature -- Status report
+
+	is_ast_modified: BOOLEAN
+			-- Is AST modified as a part of processing?
+			-- The value is reset at the beginning of `type_check_only' and `invariant_type_check'.
+			-- If it is set at the end, AST is modified and the code may need to be regenerated.
 
 feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 
@@ -10185,6 +10194,7 @@ feature {INSPECT_CONTROL} -- AST modification
 				a.set_id_set (ids)
 					-- Record that AST node is modified.
 				tmp_ast_server.touch (context.current_class.class_id)
+				is_ast_modified := True
 			end
 		ensure
 			routine_ids_set: ids.is_equal_id_list (a)

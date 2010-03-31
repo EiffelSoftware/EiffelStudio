@@ -38,7 +38,7 @@ feature {NONE} -- Output
 
 feature -- Output
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	children: DEBUG_VALUE_LIST
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do

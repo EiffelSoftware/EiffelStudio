@@ -1,64 +1,78 @@
 note
-	description: "Objects that represent the special debug menu for eStudio"
+	description: "Misc extension for Estudio debug menu ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESTUDIO_DEBUG_MENU
+	ESTUDIO_DEBUG_EXTENSION_MISC
 
 inherit
-	EV_MENU
-
-	SYSTEM_CONSTANTS
-		undefine
-			default_create, is_equal, copy
-		end
-
-	EB_SHARED_WINDOW_MANAGER
-		undefine
-			default_create, is_equal, copy
+	ESTUDIO_DEBUG_EXTENSION
+		redefine
+			new_menu_item
 		end
 
 create
-	make_with_window
+	make
 
-feature {NONE} -- Initialization
+feature -- Execution
 
-	make_with_window (w: EV_WINDOW)
+	execute
 		do
-			window := w
-			default_create
-			set_text (compiler_version_number.version)
-
-			add_extension_set (create {ESTUDIO_DEBUG_EXTENSION_SET_STANDARD}.make (Current))
-			add_extension_set (create {ESTUDIO_DEBUG_EXTENSION_SET_CUSTOM}.make (Current))
 		end
 
-	add_extension_set (a_ext_set: ESTUDIO_DEBUG_EXTENSION_SET)
+	build_debug_sub_menu (a_menu: EV_MENU)
+			-- Builds the debug submenu
+		require
+			not_a_menu_is_destroyed: not a_menu.is_destroyed
+		local
+			l_menu_item: EV_MENU_ITEM
 		do
-			if a_ext_set.is_valid then
-				a_ext_set.attach_to_menu (Current)
-			end
+			create l_menu_item.make_with_text_and_action ("Replay Backup", agent on_replay_backup)
+			a_menu.extend (l_menu_item)
+			a_menu.extend (create {EV_MENU_SEPARATOR})
+
+				--| Force Call on Void
+			create l_menu_item.make_with_text_and_action ("Force Call on Void target", agent local s: STRING do s.to_lower end)
+			a_menu.extend (l_menu_item)
 		end
 
-	add_extension (a_ext: ESTUDIO_DEBUG_EXTENSION)
+feature -- Actions
+
+	on_replay_backup
+			-- Launch tool that enables us to replay precisely a backup.
 		do
-			if a_ext.is_valid then
-				a_ext.attach_to_menu (Current)
-			end
+			replay_window.window.raise
 		end
 
-feature {ESTUDIO_DEBUG_EXTENSION} -- Access
+feature -- Access
 
-	window: EV_WINDOW;
-			-- Main development window.
+	replay_window: REPLAY_BACKUP_WINDOW
+			-- Replace backup window
+		once
+			create Result.make
+		ensure
+			replay_window_not_void: Result /= Void
+		end
 
+	menu_path: ARRAY [STRING]
+		do
+			Result := <<"Misc">>
+		end
+
+feature {NONE} -- Implementation
+
+	new_menu_item (a_title: STRING): EV_MENU
+		do
+			Result := imp_new_menu_item (a_title)
+			build_debug_sub_menu (Result)
+		end
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -87,5 +101,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

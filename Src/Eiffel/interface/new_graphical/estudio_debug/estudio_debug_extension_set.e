@@ -1,64 +1,69 @@
 note
-	description: "Objects that represent the special debug menu for eStudio"
+	description: "Set of Extensions for Estudio debug menu ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ESTUDIO_DEBUG_MENU
-
-inherit
-	EV_MENU
-
-	SYSTEM_CONSTANTS
-		undefine
-			default_create, is_equal, copy
-		end
-
-	EB_SHARED_WINDOW_MANAGER
-		undefine
-			default_create, is_equal, copy
-		end
-
-create
-	make_with_window
+deferred class
+	ESTUDIO_DEBUG_EXTENSION_SET
 
 feature {NONE} -- Initialization
 
-	make_with_window (w: EV_WINDOW)
+	make (m: ESTUDIO_DEBUG_MENU) is
+			-- Initialize `Current'.
 		do
-			window := w
-			default_create
-			set_text (compiler_version_number.version)
-
-			add_extension_set (create {ESTUDIO_DEBUG_EXTENSION_SET_STANDARD}.make (Current))
-			add_extension_set (create {ESTUDIO_DEBUG_EXTENSION_SET_CUSTOM}.make (Current))
+			estudio_debug_menu := m
 		end
 
-	add_extension_set (a_ext_set: ESTUDIO_DEBUG_EXTENSION_SET)
+	estudio_debug_menu: ESTUDIO_DEBUG_MENU
+
+feature -- Access
+
+	is_valid: BOOLEAN
 		do
-			if a_ext_set.is_valid then
-				a_ext_set.attach_to_menu (Current)
+			Result := not extensions.is_empty
+		end
+
+	extensions: ARRAY [detachable ESTUDIO_DEBUG_EXTENSION]
+		deferred
+		end
+
+feature -- Change
+
+	frozen attach_to_menu (a_menu: EV_MENU)
+		require
+			is_valid: is_valid
+		local
+			m: EV_MENU
+			l_exts: like extensions
+			e: detachable ESTUDIO_DEBUG_EXTENSION
+			i: INTEGER
+		do
+			if a_menu /= Void then
+				m := a_menu
+			else
+				m := estudio_debug_menu
+			end
+			from
+				l_exts := extensions
+				i := l_exts.lower
+			until
+				i > l_exts.upper
+			loop
+				e := l_exts [i]
+				if e /= Void then
+					e.attach_to_menu (m)
+				else
+					m.extend (create {EV_MENU_SEPARATOR})
+				end
+				i := i + 1
 			end
 		end
-
-	add_extension (a_ext: ESTUDIO_DEBUG_EXTENSION)
-		do
-			if a_ext.is_valid then
-				a_ext.attach_to_menu (Current)
-			end
-		end
-
-feature {ESTUDIO_DEBUG_EXTENSION} -- Access
-
-	window: EV_WINDOW;
-			-- Main development window.
-
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -87,5 +92,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

@@ -12,7 +12,7 @@ inherit
 		redefine
 			assigner_name_id, transfer_to, unselected, extension,
 			new_attr_entry, new_rout_entry, melt, access_for_feature, generate, new_rout_id,
-			set_type, type, is_attribute, is_stable, is_transient,
+			set_type, type, is_attribute, is_stable, is_transient, is_hidden,
 			undefinable, check_expanded, transfer_from,
 			assert_id_set, set_assert_id_set
 		end
@@ -31,7 +31,7 @@ inherit
 create
 	make
 
-feature
+feature -- Access
 
 	type: TYPE_A
 			-- Attribute type
@@ -123,6 +123,12 @@ feature -- Status report
 			Result := feature_flags & is_transient_mask = is_transient_mask
 		end
 
+	is_hidden: BOOLEAN
+			-- <Precursor>		
+		do
+			Result := feature_flags & is_hidden_mask = is_hidden_mask
+		end
+
 feature -- Status setting
 
 	set_has_function_origin (b: BOOLEAN)
@@ -155,6 +161,14 @@ feature -- Status setting
 			feature_flags := feature_flags.set_bit_with_mask (v, is_transient_mask)
 		ensure
 			is_transient_set: is_transient = v
+		end
+
+	set_is_hidden (v: BOOLEAN)
+			-- Set `is_hidden' to `v'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, is_hidden_mask)
+		ensure
+			is_hidden_set: is_hidden = v
 		end
 
 feature -- Element Change

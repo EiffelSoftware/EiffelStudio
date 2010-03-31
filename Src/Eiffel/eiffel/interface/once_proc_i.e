@@ -9,8 +9,10 @@ class ONCE_PROC_I
 
 inherit
 	DYN_PROC_I
+		rename
+			is_object_relative_once as is_object_relative
 		redefine
-			is_once,
+			is_once, is_object_relative,
 			is_process_relative,
 			replicated,
 			transfer_to,
@@ -131,6 +133,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {DYN_PROC_I} (f)
 			f.set_once (True)
+			f.set_object_relative_once (is_object_relative)
 		end
 
 invariant

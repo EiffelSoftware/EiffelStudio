@@ -117,7 +117,7 @@ feature -- Access
 			-- Body of the current processec inline agent. Is only valid if the current feature is an inline agent
 
 	old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
-			-- It the processed feature was allready presend, this table gives a mapping from
+			-- If the processed feature was already present, this table gives a mapping from
 			-- original inline_agent_nr to its features.
 		do
 			if old_inline_agents_int = Void then

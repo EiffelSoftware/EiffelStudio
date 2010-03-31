@@ -319,6 +319,22 @@ feature -- Element change
 			position := new_position
 		end
 
+	append_feature_id (a_id: INTEGER)
+			-- Append feature ID `a_id'.
+		require
+			a_id_non_negative: a_id >= 0
+		do
+			append_integer_32 (a_id)
+		end
+
+	append_routine_id (a_id: INTEGER)
+			-- Append routine ID `a_id'.
+		require
+			a_id_non_negative: a_id >= 0
+		do
+			append_integer_32 (a_id)
+		end
+
 	append_type_id (type_id: INTEGER)
 			-- Append type ID `type_id'.
 		require
@@ -589,7 +605,7 @@ invariant
 	integer_32_valid: integer_32_bytes = natural_32_bytes
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

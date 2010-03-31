@@ -1,64 +1,38 @@
 note
-	description: "Objects that represent the special debug menu for eStudio"
+	description: "Standard set of Extensions for Estudio debug menu ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-
 class
-	ESTUDIO_DEBUG_MENU
+	ESTUDIO_DEBUG_EXTENSION_SET_STANDARD
 
 inherit
-	EV_MENU
-
-	SYSTEM_CONSTANTS
-		undefine
-			default_create, is_equal, copy
-		end
-
-	EB_SHARED_WINDOW_MANAGER
-		undefine
-			default_create, is_equal, copy
-		end
+	ESTUDIO_DEBUG_EXTENSION_SET
 
 create
-	make_with_window
+	make
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make_with_window (w: EV_WINDOW)
-		do
-			window := w
-			default_create
-			set_text (compiler_version_number.version)
-
-			add_extension_set (create {ESTUDIO_DEBUG_EXTENSION_SET_STANDARD}.make (Current))
-			add_extension_set (create {ESTUDIO_DEBUG_EXTENSION_SET_CUSTOM}.make (Current))
+	extensions: ARRAY [detachable ESTUDIO_DEBUG_EXTENSION]
+		once
+			Result := <<
+						create {ESTUDIO_DEBUG_EXTENSION_TOOLS}.make (estudio_debug_menu),
+						create {ESTUDIO_DEBUG_EXTENSION_SERVICES}.make (estudio_debug_menu),
+						create {ESTUDIO_DEBUG_EXTENSION_FOUNDATIONS}.make (estudio_debug_menu),
+						create {ESTUDIO_DEBUG_EXTENSION_EDITOR}.make (estudio_debug_menu),
+						Void, -- separator
+						create {ESTUDIO_DEBUG_EXTENSION_PROJECT}.make (estudio_debug_menu),
+						create {ESTUDIO_DEBUG_EXTENSION_COMPILER}.make (estudio_debug_menu),
+						Void, -- separator
+						create {ESTUDIO_DEBUG_EXTENSION_MISC}.make (estudio_debug_menu)
+					  >>
 		end
-
-	add_extension_set (a_ext_set: ESTUDIO_DEBUG_EXTENSION_SET)
-		do
-			if a_ext_set.is_valid then
-				a_ext_set.attach_to_menu (Current)
-			end
-		end
-
-	add_extension (a_ext: ESTUDIO_DEBUG_EXTENSION)
-		do
-			if a_ext.is_valid then
-				a_ext.attach_to_menu (Current)
-			end
-		end
-
-feature {ESTUDIO_DEBUG_EXTENSION} -- Access
-
-	window: EV_WINDOW;
-			-- Main development window.
-
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -87,5 +61,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

@@ -86,9 +86,15 @@ feature -- Project file/directory warnings
 			[dir_name, workbench_name, comp_version, incomp_version, comp_version])
 		end
 
-	w_project_build_precompile: STRING_32 do Result := locale.translation (
+	w_project_build_precompile (a_path: STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (
+							locale.translation (
 			"The project needs to use a precompiled library, which has not been compiled.%N%
-			%Should the precompile be built?")
+			%(precompiled library: %"$1%")%N%
+			%Should the precompile be built?"),
+							[a_path]
+						)
 		end
 
 	w_project_build_precompile_error: STRING_32 do Result := locale.translation ("Could not generate needed precompiled library.") end
@@ -1127,7 +1133,7 @@ feature -- Warning messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

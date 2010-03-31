@@ -207,7 +207,7 @@ feature -- Loading
 								if lace.is_precompile_invalid then
 -- print error message									
 								elseif lace.is_precompilation_needed then
-									ask_compile_precompile
+									ask_compile_precompile (lace.precompile)
 									if is_user_wants_precompile then
 										compile_precompile (lace.precompile)
 										if is_precompilation_error then
@@ -1044,7 +1044,7 @@ feature {NONE} -- User interaction
 			project_location_set: not has_error implies project_location /= Void
 		end
 
-	ask_compile_precompile
+	ask_compile_precompile (a_pre: CONF_PRECOMPILE)
 			-- Should a needed precompile be automatically built?
 		deferred
 		end
@@ -1243,7 +1243,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

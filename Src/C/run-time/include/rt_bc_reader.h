@@ -49,6 +49,14 @@ extern "C" {
 #endif
 
 /*
+ * Macro abstracting the underlying type for common entities such as type_id, feature_id ...
+ */
+
+#define get_type_id(x) get_int16(x)
+#define get_feature_id(x) get_int32(x)
+#define get_routine_id(x) get_int32(x)
+
+/*
 doc:	<routine name="get_char8" return_type="EIF_CHARACTER" export="private">
 doc:		<summary>Read an EIF_CHARACTER from a byte code stream.</summary>
 doc:		<param name="bc" type="unsigned char **">Stream from where data is going to be read.</param>

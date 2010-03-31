@@ -778,7 +778,7 @@ rt_private void cecil_updt(void)
 	short count, i, j, nb_generics, nb_types;
 	long n;
 	struct cecil_info *type_val;
-	int32 *patterns;
+	uint32 *patterns;
 	EIF_TYPE_INDEX *dynamic_types;
 	struct ctable *ce_table = &egc_ce_type;
 
@@ -801,8 +801,8 @@ rt_private void cecil_updt(void)
 				type_val->dynamic_type = wshort();
 				nb_types = wshort();
 				n = nb_generics * nb_types;
-				SAFE_ALLOC(patterns, int32, n + 1);
-				wread((char *) patterns, n * sizeof(int32));	/* Read meta type desc */
+				SAFE_ALLOC(patterns, uint32, n + 1);
+				wread((char *) patterns, n * sizeof(uint32));	/* Read meta type desc */
 				patterns[n] = SK_INVALID;
 				type_val->patterns = patterns;
 				SAFE_ALLOC(dynamic_types, EIF_TYPE_INDEX, nb_types);

@@ -643,8 +643,7 @@ feature -- Formatting
 
 feature -- prototype code generation
 
-	generate_extern_declaration (type: STRING; f_name: STRING;
-					arg_types: ARRAY [STRING])
+	generate_extern_declaration (type: STRING; f_name: STRING; arg_types: ARRAY [STRING])
 			-- Generate the external declaration for a C function
 		require
 			non_void_args: type /= Void and f_name /= Void and arg_types /= Void
@@ -653,8 +652,7 @@ feature -- prototype code generation
 			generate_function_declaration (type, f_name, True, arg_types)
 		end
 
-	generate_static_declaration (type: STRING; f_name: STRING;
-					arg_types: ARRAY [STRING])
+	generate_static_declaration (type: STRING; f_name: STRING; arg_types: ARRAY [STRING])
 			-- Generate the external declaration for a C function
 		require
 			non_void_args: type /= Void and f_name /= Void and arg_types /= Void
@@ -721,8 +719,7 @@ feature -- prototype code generation
 
 feature {GENERATION_BUFFER} -- prototype code generation
 
-	generate_function_declaration (type: STRING; f_name: STRING;
-			extern: BOOLEAN; arg_types: ARRAY [STRING])
+	generate_function_declaration (type: STRING; f_name: STRING; extern: BOOLEAN; arg_types: ARRAY [STRING])
 				-- Generate funtion declaration using macros
 		require
 			type_not_void: type /= Void

@@ -617,7 +617,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.process_string_text (l_as.value.name, Void)
 				l_text_formatter_decorator.process_string_text ("B", Void)
 			end
-			create {BITS_A} last_type.make (l_as.value.name.count)
+			create {BITS_A} last_type.make (l_as.size)
 		end
 
 	process_array_as (l_as: COMPILER_ARRAY_AS)
@@ -4967,7 +4967,7 @@ invariant
 	object_test_locals_for_current_feature_not_void: object_test_locals_for_current_feature /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

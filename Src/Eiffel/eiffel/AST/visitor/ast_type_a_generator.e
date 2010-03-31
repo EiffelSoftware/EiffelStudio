@@ -387,7 +387,7 @@ feature {NONE} -- Visitor implementation
 
 	process_bits_as (l_as: BITS_AS)
 		do
-			create {BITS_A} last_type.make (l_as.bits_value.integer_32_value)
+			create {BITS_A} last_type.make (l_as.size)
 		end
 
 	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)

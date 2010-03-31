@@ -1975,7 +1975,7 @@ feature {NONE} -- Implementation
 
 	process_bit_const_as (l_as: BIT_CONST_AS)
 		do
-			create {BITS_A} last_type.make (l_as.value.name.count)
+			create {BITS_A} last_type.make (l_as.size)
 			if is_byte_node_enabled then
 				create {BIT_CONST_B} last_byte_node.make (l_as.value.name)
 			end

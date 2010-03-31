@@ -483,7 +483,7 @@ feature -- Status
 					bit_desc ?= current_area.item (i)
 					buffer.put_string (" + OVERHEAD + ")
 					l_def_buffer.put_string ("@BITOFF(")
-					l_def_buffer.put_integer (bit_desc.value)
+					l_def_buffer.put_natural_32 (bit_desc.size)
 					l_def_buffer.put_character (')')
 					insert_in_buffer (buffer, l_def_buffer, as_macro)
 					i := i + 1
@@ -551,7 +551,7 @@ feature -- Status
 					i > nb or else current_area.item (i).level /= Bits_level
 				loop
 					bit_desc ?= current_area.item (i)
-					Result := Result + ovhsiz + bitoff(bit_desc.value)
+					Result := Result + ovhsiz + bitoff(bit_desc.size)
 					i := i + 1
 				end
 			end
@@ -814,7 +814,7 @@ feature -- Status
 						buffer.put_string (" + OVERHEAD + ")
 						l_def_buffer.put_string ("@BITOFF(");
 						bit_desc ?= current_area.item (i);
-						l_def_buffer.put_integer (bit_desc.value);
+						l_def_buffer.put_natural_32 (bit_desc.size);
 						l_def_buffer.put_character (')');
 						insert_in_buffer (buffer, l_def_buffer, as_macro)
 						i := i + 1;
@@ -832,7 +832,7 @@ feature -- Status
 							buffer.put_string (" + OVERHEAD + ")
 							l_def_buffer.put_string ("@BITOFF(")
 							bit_desc ?= current_area.item (i)
-							l_def_buffer.put_integer (bit_desc.value)
+							l_def_buffer.put_natural_32 (bit_desc.size)
 							l_def_buffer.put_character (')')
 							insert_in_buffer (buffer, l_def_buffer, as_macro)
 							i := i + 1
@@ -950,7 +950,7 @@ feature -- Status
 						i >= index
 					loop
 						bit_desc ?= current_area.item (i)
-						Result := Result + ovhsiz + bitoff(bit_desc.value);
+						Result := Result + ovhsiz + bitoff(bit_desc.size);
 						i := i + 1
 					end;
 					Result := Result + ovhsiz;
@@ -964,7 +964,7 @@ feature -- Status
 							current_area.item (i).level > Bits_level
 						loop
 							bit_desc ?= current_area.item (i)
-							Result := Result + ovhsiz + bitoff(bit_desc.value)
+							Result := Result + ovhsiz + bitoff(bit_desc.size)
 							i := i + 1
 						end
 					end
@@ -1048,7 +1048,7 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				ba.append_uint32_integer (current_area.item (i).sk_value)
+				ba.append_natural_32 (current_area.item (i).sk_value)
 				i := i + 1
 			end;
 		end;
@@ -1483,7 +1483,7 @@ feature {NONE} -- Externals
 			"C use %"eif_offset.h%""
 		end;
 
-	bitoff (bit_val: INTEGER): INTEGER
+	bitoff (bit_val: NATURAL_32): INTEGER
 			-- Size of a bit object of size `bit_val'
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1567,7 +1567,7 @@ invariant
 	class_type_not_void: class_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

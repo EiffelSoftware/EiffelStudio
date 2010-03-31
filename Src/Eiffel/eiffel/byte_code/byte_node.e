@@ -97,7 +97,7 @@ feature -- Eiffel source line information
 			l_base_class: CLASS_C
 			l_rout_info: ROUT_INFO
 			l_code: INTEGER
-			l_sk_type: INTEGER
+			l_sk_type: NATURAL_32
 			l_offset: INTEGER
 			l_precomp: INTEGER
 			l_expanded: INTEGER
@@ -142,7 +142,7 @@ feature -- Eiffel source line information
 						buf.put_string (gc_comma)
 						buf.put_integer (l_offset)
 						buf.put_string (gc_comma)
-						buf.put_integer (l_sk_type)
+						buf.put_natural_32 (l_sk_type)
 						buf.put_string (gc_comma)
 						buf.put_integer (l_expanded)
 						buf.put_string (gc_rparan_semi_c)
@@ -157,7 +157,7 @@ feature -- Eiffel source line information
 						buf.put_string (gc_comma)
 						buf.put_integer (locb.position)
 						buf.put_string (gc_comma)
-						buf.put_integer (l_sk_type)
+						buf.put_natural_32 (l_sk_type)
 						buf.put_string (gc_comma)
 						if locb.type.is_expanded then
 							buf.put_integer (1)
@@ -178,7 +178,7 @@ feature -- Eiffel source line information
 						buf.put_string (gc_comma)
 						buf.put_integer (0) --| Let's say Result's position = 0
 						buf.put_string (gc_comma)
-						buf.put_integer (l_sk_type)
+						buf.put_natural_32 (l_sk_type)
 						buf.put_string (gc_comma)
 						if resb.type.is_expanded then
 							buf.put_integer (1)
@@ -455,7 +455,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1367,7 +1367,7 @@ feature {NONE} -- Visitors
 
  				-- Call creation procedure of BIT_REF
 			il_generator.duplicate_top
-			il_generator.put_integer_32_constant (l_bit_type.bit_count)
+			il_generator.put_integer_32_constant (l_bit_type.bit_count.to_integer_32)
  			il_generator.generate_feature_access (l_decl_type, l_make_feat.origin_feature_id,
 				l_make_feat.argument_count, l_make_feat.has_return_value, True)
 

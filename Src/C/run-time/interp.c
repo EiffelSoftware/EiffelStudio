@@ -243,9 +243,9 @@ rt_private void reverse_attribute(long offset, uint32 type);						/* Reverse ass
 rt_private void reverse_local(EIF_TYPED_VALUE * it, EIF_TYPE_INDEX type);						/* Reverse assignment to local or result*/
 
 /* Calling protocol */
-rt_private void put_once_result (EIF_TYPED_VALUE * ptr, long int rtype, MTOT OResult); /* Save local result to permanent once storage */
-rt_private void get_once_result (MTOT OResult, long int rtype, EIF_TYPED_VALUE *ptr);   /* Retrieve local result from permanent once storage */
-rt_private void init_var(EIF_TYPED_VALUE *ptr, long int type, EIF_REFERENCE current_ref); /* Initialize to 0 a variable entity */
+rt_private void put_once_result (EIF_TYPED_VALUE * ptr, uint32 rtype, MTOT OResult); /* Save local result to permanent once storage */
+rt_private void get_once_result (MTOT OResult, uint32 rtype, EIF_TYPED_VALUE *ptr);   /* Retrieve local result from permanent once storage */
+rt_private void init_var(EIF_TYPED_VALUE *ptr, uint32 type, EIF_REFERENCE current_ref); /* Initialize to 0 a variable entity */
 rt_private void init_registers(void);			/* Intialize registers in callee */
 rt_private void allocate_registers(void);		/* Allocate the register array */
 rt_shared void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* Resynchronize the register array */
@@ -566,7 +566,7 @@ rt_private void interpret(int flag, int where)
 #endif
 	int volatile assert_type = 0;			/* Assertion type */
 	char volatile pre_success = (char) 0;	/* Flag for precondition success */ 
-	long volatile rtype = 0;				/* Result type */
+	uint32 volatile rtype = 0;				/* Result type */
 	MTOT OResult = (MTOT) 0;				/* Item for once data */
 #ifdef EIF_THREADS
 	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
@@ -619,7 +619,7 @@ rt_private void interpret(int flag, int where)
 #endif
 	 	(void) get_int32(&IC);	/* Get the routine id, currently not used */
 		body_id = (BODY_INDEX) get_int32(&IC);	/* Get the body id */
-		rtype = get_int32(&IC);				/* Get the result type */
+		rtype = get_uint32(&IC);				/* Get the result type */
 		argnum = get_int16(&IC);			/* Get the argument number */
 		locnum = get_int16(&IC);		/* Get the local number */
 		init_registers(MTC);		/* Initialize the registers */
@@ -649,7 +649,7 @@ rt_private void interpret(int flag, int where)
 					if (ref == NULL)
 						xraise(EN_VEXP);	/* Void assigned to expanded */
 					RT_GC_PROTECT(ref);
-					last->it_bit = RTLB((uint16)get_int32(&IC));
+					last->it_bit = RTLB((uint16)get_uint32(&IC));
 					RT_GC_WEAN(ref);
 					b_copy(ref, last->it_bit);
 					break;
@@ -5615,7 +5615,7 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
  * Calling protocol
  */
 
-rt_private void init_var(EIF_TYPED_VALUE *ptr, long int type, EIF_REFERENCE current_ref)
+rt_private void init_var(EIF_TYPED_VALUE *ptr, uint32 type, EIF_REFERENCE current_ref)
 {
 	EIF_GET_CONTEXT
 
@@ -5651,7 +5651,7 @@ rt_private void init_var(EIF_TYPED_VALUE *ptr, long int type, EIF_REFERENCE curr
 	}
 }
 
-rt_private void put_once_result (EIF_TYPED_VALUE *ptr, long int rtype, MTOT OResult)
+rt_private void put_once_result (EIF_TYPED_VALUE *ptr, uint32 rtype, MTOT OResult)
 {
 	REQUIRE("ptr not null", ptr);
 	REQUIRE("OResult not null", OResult);
@@ -5679,7 +5679,7 @@ rt_private void put_once_result (EIF_TYPED_VALUE *ptr, long int rtype, MTOT ORes
 	}
 }
 
-rt_private void get_once_result (MTOT OResult, long int rtype, EIF_TYPED_VALUE *ptr)
+rt_private void get_once_result (MTOT OResult, uint32 rtype, EIF_TYPED_VALUE *ptr)
 {
 	REQUIRE("OResult not null", OResult);
 	REQUIRE("ptr not null", ptr);
@@ -5755,7 +5755,7 @@ rt_private void init_registers(void)
 	reg = iregs + SPECIAL_REG;				/* Start of locals */
 	for (n = 0; n < locnum; n++, reg++) {	/* Pushed in order */
 		last = iget();
-		init_var(last, get_int32(&IC), current);			/* Initialize to zero */
+		init_var(last, get_uint32(&IC), current);			/* Initialize to zero */
 		*reg = last;						/* Save pointer in stack */
 	}
 

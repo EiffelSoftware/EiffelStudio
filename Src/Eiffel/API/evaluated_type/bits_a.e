@@ -93,12 +93,12 @@ feature -- Access
 			Result := associated_class.types.first
 		end
 
-	bit_count: INTEGER
+	bit_count: NATURAL_32
 			-- Bit count
 
 feature -- Settings
 
-	set_bit_count (a_count: INTEGER)
+	set_bit_count (a_count: like bit_count)
 			-- Set `bit_count' with `a_count'.
 		require
 			a_count_positive: a_count > 0
@@ -113,7 +113,7 @@ feature -- Generic conformance
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN; a_context_type: TYPE_A)
 		do
 			Precursor (buffer, final_mode, use_info, a_context_type)
-			buffer.put_integer (bit_count)
+			buffer.put_natural_32 (bit_count)
 			buffer.put_character (',')
 		end
 
@@ -122,7 +122,7 @@ feature -- Generic conformance
 			dummy: INTEGER
 		do
 			Precursor (buffer, final_mode, use_info, idx_cnt, a_context_type)
-			buffer.put_integer (bit_count)
+			buffer.put_natural_32 (bit_count)
 			buffer.put_character (',')
 				-- Increment counter.
 			dummy := idx_cnt.next
@@ -143,7 +143,7 @@ feature -- Generic conformance
 				-- of a BIT to 2^15, therefore when `size' is greater than 2^15
 				-- we have a problem!!!!. It does not only apply to current routine
 				-- but to all the generic conformance stuff.
-			ba.append_short_integer (bit_count)
+			ba.append_short_integer (bit_count.as_integer_32)
 		end
 
 feature -- C code generation
@@ -165,14 +165,14 @@ feature -- Output
 		do
 			create Result.make (10)
 			Result.append ("BIT ")
-			Result.append_integer (bit_count)
+			Result.append_natural_32 (bit_count)
 		end
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_bit_class, Void)
 			st.add_space
-			st.add_int (bit_count)
+			st.add_natural_32 (bit_count)
 		end
 
 feature {TYPE_A} -- Helpers
@@ -214,7 +214,7 @@ invariant
 	bit_count_positive: is_valid implies bit_count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

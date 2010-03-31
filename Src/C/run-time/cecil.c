@@ -193,14 +193,14 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
 }
 
 /*
-doc:	<routine name="eif_dtype_to_sk_type" return_type="int" export="shared">
+doc:	<routine name="eif_dtype_to_sk_type" return_type="uint32" export="shared">
 doc:		<summary>Given a cecil ID, returns the corresponding SK_XX abstract type.</summary>
 doc:		<param name="dtype" type="EIF_TYPE_INDEX">cecil ID.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_shared int32 eif_dtype_to_sk_type (EIF_TYPE_INDEX dtype)
+rt_shared uint32 eif_dtype_to_sk_type (EIF_TYPE_INDEX dtype)
 {
 	if (dtype == egc_char_dtype) {
 		return SK_CHAR;

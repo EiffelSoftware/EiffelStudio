@@ -656,7 +656,7 @@ feature -- Byte code generation
 
 				-- Result SK value
 			l_type := context.real_type (result_type)
-			Temp_byte_code_array.append_integer (l_type.sk_value (context.context_class_type.type))
+			Temp_byte_code_array.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 
 				-- Argument number
 			Temp_byte_code_array.append_short_integer (argument_count)
@@ -702,7 +702,7 @@ feature -- Byte code generation
 					ba.append_short_integer (current_type.static_type_id - 1)
 				end
 					-- Attribute meta-type
-				ba.append_uint32_integer (l_type.sk_value (context.context_class_type.type))
+				ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 				ba.append (bc_void)
 				ba.append (bc_eq)
 				ba.append (bc_jmp_f)
@@ -752,7 +752,7 @@ feature -- Byte code generation
 					ba.append_short_integer (current_type.static_type_id - 1)
 				end
 					-- Attribute meta-type
-				ba.append_uint32_integer (l_type.sk_value (context.context_class_type.type))
+				ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 				ba.append (bc_jmp)
 				ba.mark_forward
 				if create_info /= Void then
@@ -773,7 +773,7 @@ feature -- Byte code generation
 					ba.append_short_integer (current_type.static_type_id - 1)
 				end
 					-- Attribute meta-type
-				ba.append_uint32_integer (l_type.sk_value (context.context_class_type.type))
+				ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 				ba.append (Bc_rassign)
 				ba.write_forward
 			end
@@ -797,7 +797,7 @@ feature -- Byte code generation
 					if l_adapted_type.is_bit then
 						Temp_byte_code_array.append_natural_8 ({SHARED_GEN_CONF_LEVEL}.bit_tuple_code_extension)
 						bit_i ?= l_adapted_type
-						Temp_byte_code_array.append_integer(bit_i.bit_count)
+						Temp_byte_code_array.append_natural_32 (bit_i.bit_count)
 					elseif l_adapted_type.is_true_expanded then
 						Temp_byte_code_array.append_natural_8 ({SHARED_GEN_CONF_LEVEL}.expanded_tuple_code_extension)
 						l_type.make_full_type_byte_code (Temp_byte_code_array, context.context_class_type.type)
@@ -1055,7 +1055,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

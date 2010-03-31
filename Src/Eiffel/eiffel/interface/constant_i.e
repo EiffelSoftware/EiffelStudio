@@ -401,7 +401,7 @@ feature -- Byte code generation
 			ba.append_integer (-1)
 				-- Meta-type of Result
 			result_type := byte_context.real_type (type)
-			ba.append_integer (result_type.sk_value (byte_context.context_class_type.type))
+			ba.append_natural_32 (result_type.sk_value (byte_context.context_class_type.type))
 				-- Argument count
 			ba.append_short_integer (0)
 

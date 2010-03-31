@@ -72,7 +72,7 @@ feature {TYPE_A} -- Visitors
 		do
 			text_formatter.process_keyword_text (ti_bit_class, Void)
 			text_formatter.add_space
-			text_formatter.add_int (a_type.bit_count)
+			text_formatter.add_natural_32 (a_type.bit_count)
 		end
 
 	process_bits_symbol_a (a_type: BITS_SYMBOL_A)

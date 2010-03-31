@@ -24,7 +24,7 @@ create {DBG_EVALUATOR, RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_
 
 feature {NONE} -- Initialization
 
-	make (a_sk_type: INTEGER; v: like value)
+	make (a_sk_type: like sk_type; v: like value)
 			-- 	Set `value' to `v'.
 		require
 			v_not_void: v /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			value_set: value = v
 		end
 
-	make_attribute (a_sk_type: INTEGER; attr_name: like name; a_class: like e_class; v: like value)
+	make_attribute (a_sk_type: like sk_type; attr_name: like name; a_class: like e_class; v: like value)
 			-- Set `attr_name' to `name' and `value' to `v'.
 		require
 			not_attr_name_void: attr_name /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	sk_type: INTEGER
+	sk_type: NATURAL_32
 
 	value: G
 			-- Value of object.

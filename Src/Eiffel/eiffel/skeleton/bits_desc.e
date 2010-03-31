@@ -17,19 +17,19 @@ inherit
 
 feature -- Access
 
-	value: INTEGER
+	size: NATURAL_32
 			-- Bits value
 
 	type_i: TYPE_A
 			-- Correspdonding instance of BIT type.
 		do
-			create {BITS_A} Result.make (value)
+			create {BITS_A} Result.make (size)
 		end
 
-	sk_value: INTEGER
+	sk_value: NATURAL_32
 			-- Sk value
 		do
-			Result := {SK_CONST}.Sk_bit + value
+			Result := {SK_CONST}.Sk_bit + size
 		end
 
 feature -- Status report
@@ -46,20 +46,20 @@ feature -- Comparisons
 		do
 			if Precursor {ATTR_DESC} (other) then
 				other_bits ?= other
-				Result := (other_bits /= Void) and then (other_bits.value = value)
+				Result := (other_bits /= Void) and then (other_bits.size = size)
 			end
 		end
 
 feature -- Settings
 
-	set_value (i: INTEGER)
-			-- Assign `i' to `value'.
+	set_size (i: like size)
+			-- Assign `i' to `size'.
 		require
 			i_positive: i >= 0
 		do
-			value := i
+			size := i
 		ensure
-			value_set: value = i
+			size_set: size = i
 		end
 
 feature -- Code generation
@@ -70,11 +70,11 @@ feature -- Code generation
 		do
 			buffer.put_string ({SK_CONST}.sk_bit_string)
 			buffer.put_three_character (' ', '+', ' ')
-			buffer.put_integer (value)
+			buffer.put_natural_32 (size)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -87,22 +87,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -83,12 +83,12 @@ feature -- Byte code generation
 			if l_param_is_expanded then
 				ba.append_short_integer (gen_param.static_type_id (Void) - 1)
 			else
-				ba.append_uint32_integer (gen_param.sk_value (Void))
+				ba.append_natural_32 (gen_param.sk_value (Void))
 			end
 			if gen_param.is_bit then
 					-- Initialize array of bits with default values
 				l_bit ?= gen_param
-				ba.append_uint32_integer (l_bit.bit_count)
+				ba.append_natural_32 (l_bit.bit_count)
 			end
 		end
 
@@ -209,7 +209,7 @@ feature -- C code generation
 				buffer.put_string ("*((EIF_REFERENCE *) ")
 				target_register.print_register
 				buffer.put_string (" + i) = RTLB(")
-				buffer.put_integer (l_bit.bit_count)
+				buffer.put_natural_32 (l_bit.bit_count)
 				buffer.put_string (");")
 				buffer.put_new_line
 				buffer.put_string ("RTAR(")
@@ -1263,7 +1263,7 @@ feature -- IL code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

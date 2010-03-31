@@ -1424,7 +1424,7 @@ rt_private void rt_create_table (int32 count)
 rt_private uint32 special_generic_type (EIF_TYPE_INDEX dtype)
 {
 	EIF_TYPE_INDEX *dynamic_types;
-	int32 *patterns;
+	uint32 *patterns;
 	int nb_gen;
 	char *vis_name = System (dtype).cn_generator;
 	struct cecil_info *info;
@@ -2462,7 +2462,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 
 		if (nb_gen > 0) {
 			struct cecil_info *info;
-			int32 *t;
+			uint32 *t;
 			int matched;
 			uint32 j, index;
 			long *gtype, sgtype[MAX_GENERICS];
@@ -3264,7 +3264,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 #endif
 			} else {
 				int32 *gtypes = conv->generics;
-				int32 *t;
+				uint32 *t;
 				int matched;
 				int index;
 

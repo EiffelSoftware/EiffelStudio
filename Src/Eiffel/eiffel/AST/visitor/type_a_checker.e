@@ -412,7 +412,7 @@ feature {TYPE_A} -- Visitors
 			vtbt: VTBT
 			l_veen: VEEN
 			constant: CONSTANT_I
-			bits_value: INTEGER
+			l_value: NATURAL_32
 			error: BOOLEAN
 			int_value: INTEGER_CONSTANT
 		do
@@ -436,12 +436,10 @@ feature {TYPE_A} -- Visitors
 				error := constant = Void
 				if not error then
 					int_value ?= constant.value
-					error := int_value = Void
+					error := int_value = Void or else not int_value.has_natural (32)
 					if not error then
-						bits_value := int_value.integer_32_value
-						error :=
-							bits_value <= 0 or else
-							bits_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
+						l_value := int_value.natural_32_value
+						error := l_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
 					end
 				end
 				if error then
@@ -450,12 +448,12 @@ feature {TYPE_A} -- Visitors
 						create vtbt
 						vtbt.set_class (current_feature_table.associated_class)
 						vtbt.set_feature (current_feature)
-						vtbt.set_value (bits_value)
+						vtbt.set_value (l_value)
 						error_handler.insert_error (vtbt)
 					end
 				else
 					a_type.set_rout_id (l_anchor_feature.rout_id_set.first)
-					a_type.set_bit_count (bits_value)
+					a_type.set_bit_count (l_value)
 					last_type := a_type
 				end
 			end
@@ -668,7 +666,7 @@ feature {TYPE_A} -- Visitors
 			l_vtbt: VTBT
 			l_veen: VEEN
 			l_constant: CONSTANT_I
-			l_value: INTEGER
+			l_value: NATURAL_32
 			l_has_error: BOOLEAN
 			l_int_value: INTEGER_CONSTANT
 			l_depend_unit: DEPEND_UNIT
@@ -690,12 +688,10 @@ feature {TYPE_A} -- Visitors
 				l_has_error := l_constant = Void
 				if not l_has_error then
 					l_int_value ?= l_constant.value
-					l_has_error := l_int_value = Void
+					l_has_error := l_int_value = Void or else not l_int_value.has_natural (32)
 					if not l_has_error then
-						l_value := l_int_value.integer_32_value
-						l_has_error :=
-							l_value <= 0 or else
-							l_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
+						l_value := l_int_value.natural_32_value
+						l_has_error := l_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
 					end
 				end
 				if l_has_error then
@@ -711,9 +707,6 @@ feature {TYPE_A} -- Visitors
 						error_handler.insert_error (l_vtbt)
 					end
 				else
-					check
-						positive_bits_value: l_value > 0
-					end
 					create {BITS_SYMBOL_A} last_type.make (l_constant, l_value)
 					if suppliers /= Void then
 						create l_depend_unit.make (current_class.class_id, l_constant)

@@ -487,11 +487,9 @@ feature -- CECIL code generation
 				l_generics := generics
 				i := l_generics.lower
 				nb := l_generics.upper
-				l_cast := "(int32) "
 			until
 				i > nb
 			loop
-				buffer.put_string (l_cast)
 				l_generics.item (i).generate_cecil_value (buffer, a_context_type)
 				buffer.put_two_character (',', '%N')
 				i := i + 1
@@ -519,7 +517,7 @@ feature -- CECIL code generation
 			until
 				i > nb
 			loop
-				ba.append_integer_32 (l_generics.item (i).sk_value (a_context_type))
+				ba.append_natural_32 (l_generics.item (i).sk_value (a_context_type))
 				i := i + 1
 			end
 		end
@@ -1871,7 +1869,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

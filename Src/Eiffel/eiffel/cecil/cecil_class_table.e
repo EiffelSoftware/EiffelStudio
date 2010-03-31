@@ -177,9 +177,9 @@ feature {NONE} -- C code generation
 					l_is_generic := l_class.is_generic
 					if l_is_generic then
 						if for_expanded then
-							buffer.put_string (once "static int32 exp_patterns")
+							buffer.put_string (once "static uint32 exp_patterns")
 						else
-							buffer.put_string (once "static int32 patterns")
+							buffer.put_string (once "static uint32 patterns")
 						end
 						buffer.put_integer (l_class.class_id)
 						buffer.put_string (once " [] = {%N")
@@ -200,14 +200,13 @@ feature {NONE} -- C code generation
 						 			end
 									gen_type.generate_cecil_values (buffer, l_types.item.type)
 								else
-									buffer.put_string (once "(int32) ")
 									l_types.item.type.generate_cecil_value (buffer, l_types.item.type)
 									buffer.put_string (once ",%N")
 								end
 							end
 							l_types.forth
 						end
-						buffer.put_string (once "(int32) SK_INVALID%N};%N%N")
+						buffer.put_string (once "SK_INVALID%N};%N%N")
 
 						if for_expanded then
 							buffer.put_string (once "static EIF_TYPE_INDEX exp_dyn_types")
@@ -422,7 +421,7 @@ feature {NONE} -- Byte code generation
 									end
 									gen_type.make_cecil_values (ba, l_types.item.type)
 								else
-									ba.append_integer_32 (l_types.item.type.sk_value (l_types.item.type))
+									ba.append_natural_32 (l_types.item.type.sk_value (l_types.item.type))
 								end
 							end
 							l_types.forth
@@ -449,7 +448,7 @@ feature {NONE} -- Byte code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -462,22 +461,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -1074,7 +1074,7 @@ feature -- Generation
 				bits_desc ?= skeleton.item; 	-- Cannot fail
 				buffer.put_string ("*(uint32 *) (Current + offset_position")
 				buffer.put_string(") = ")
-				buffer.put_integer (bits_desc.value)
+				buffer.put_natural_32 (bits_desc.size)
 				buffer.put_character (';')
 				skeleton.forth
 			end
@@ -1345,7 +1345,6 @@ feature -- Skeleton generation
 				skeleton.generate_generic_type_arrays
 
 				if byte_context.final_mode then
-
 						-- Generate attribute offset table pointer array
 					buffer.put_string ("static long offsets")
 					buffer.put_integer (type_id)

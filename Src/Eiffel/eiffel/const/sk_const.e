@@ -11,79 +11,79 @@ class SK_CONST
 
 feature -- Access
 
-	sk_exp: INTEGER = 0x80000000
+	sk_exp: NATURAL_32 = 0x80000000
 	sk_exp_string: STRING = "SK_EXP"
 			-- Defined in eif_struct.h as SK_EXP
 
-	sk_bool: INTEGER = 0x04000000
+	sk_bool: NATURAL_32 = 0x04000000
 	sk_bool_string: STRING = "SK_BOOL"
 			-- Defined in eif_struct.h as SK_BOOL
 
-	sk_char: INTEGER = 0x08000000
+	sk_char: NATURAL_32 = 0x08000000
 	sk_char_string: STRING = "SK_CHAR"
 			-- Defined in eif_struct.h as SK_CHAR
 
-	sk_uint8: INTEGER = 0x30000000
+	sk_uint8: NATURAL_32 = 0x30000000
 	sk_uint8_string: STRING = "SK_UINT8"
 			-- Define in eif_struct.h as SK_UINT8
 
-	sk_uint16: INTEGER = 0x34000000
+	sk_uint16: NATURAL_32 = 0x34000000
 	sk_uint16_string: STRING = "SK_UINT16"
 			-- Define in eif_struct.h as SK_UINT16
 
-	sk_uint32: INTEGER = 0x38000000
+	sk_uint32: NATURAL_32 = 0x38000000
 	sk_uint32_string: STRING = "SK_UINT32"
 			-- Define in eif_struct.h as SK_UINT32
 
-	sk_uint64: INTEGER = 0x3c000000
+	sk_uint64: NATURAL_32 = 0x3c000000
 	sk_uint64_string: STRING = "SK_UINT64"
 			-- Define in eif_struct.h as SK_UINT64
 
-	sk_int8: INTEGER = 0x0c000000
+	sk_int8: NATURAL_32 = 0x0c000000
 	sk_int8_string: STRING = "SK_INT8"
 			-- Defined in eif_struct.h as SK_INT8
 
-	sk_int32: INTEGER = 0x10000000
+	sk_int32: NATURAL_32 = 0x10000000
 	sk_int32_string: STRING = "SK_INT32"
 			-- Defined in eif_struct.h as SK_INT32
 
-	sk_int16: INTEGER = 0x14000000
+	sk_int16: NATURAL_32 = 0x14000000
 	sk_int16_string: STRING = "SK_INT16"
 			-- Defined in eif_struct.h as SK_INT16
 
-	sk_real32: INTEGER = 0x18000000
+	sk_real32: NATURAL_32 = 0x18000000
 	sk_real32_string: STRING = "SK_REAL32"
 			-- Defined in eif_struct.h as SK_REAL32
 
-	sk_wchar: INTEGER = 0x1c000000
+	sk_wchar: NATURAL_32 = 0x1c000000
 	sk_wchar_string: STRING = "SK_WCHAR"
 			-- Defined in eif_struct.h as SK_WCHAR
 
-	sk_real64: INTEGER = 0x20000000
+	sk_real64: NATURAL_32 = 0x20000000
 	sk_real64_string: STRING = "SK_REAL64"
 			-- Defined in eif_struct.h as SK_REAL64
 
-	sk_int64: INTEGER = 0x24000000
+	sk_int64: NATURAL_32 = 0x24000000
 	sk_int64_string: STRING = "SK_INT64"
 			-- Defined in eif_struct.h as SK_INT64
 
-	sk_bit: INTEGER = 0x28000000
+	sk_bit: NATURAL_32 = 0x28000000
 	sk_bit_string: STRING = "SK_BIT"
 			-- Defined in eif_struct.h as SK_BIT
 
-	sk_pointer: INTEGER = 0x40000000
+	sk_pointer: NATURAL_32 = 0x40000000
 	sk_pointer_string: STRING = "SK_POINTER"
 			-- Defined in eif_struct.h as SK_POINTER
 
-	sk_ref: INTEGER = 0xf8000000
+	sk_ref: NATURAL_32 = 0xf8000000
 	sk_ref_string: STRING = "SK_REF"
 			-- Defined in eif_struct.h as SK_REF
 
-	sk_void: INTEGER = 0x00000000
+	sk_void: NATURAL_32 = 0x00000000
 	sk_void_string: STRING = "SK_VOID"
 			-- Defined in eif_struct.h as SK_VOID
 
-	sk_dtype: INTEGER = 0x0000ffff
+	sk_dtype: NATURAL_32 = 0x0000ffff
 	sk_dtype_string: STRING = "SK_DTYPE";
 			-- Defined in eif_struct.h as SK_DTYPE
 

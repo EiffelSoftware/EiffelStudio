@@ -949,7 +949,7 @@ feature -- Conversion
 
 feature -- Access
 
-	sk_value (a_context_type: TYPE_A): INTEGER
+	sk_value (a_context_type: TYPE_A): NATURAL_32
 			-- SK value associated to the current type.
 		require
 			context_type_valid: is_valid_context_type (a_context_type)

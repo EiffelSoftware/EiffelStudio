@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	size: INTEGER
+	size: NATURAL_32
 			-- Bit size
 
 	level: INTEGER
@@ -51,7 +51,7 @@ feature -- Access
 			Result := {MD_SIGNATURE_CONSTANTS}.element_type_class
 		end
 
-	sk_value: INTEGER
+	sk_value: NATURAL_32
 		do
 			Result := {SK_CONST}.sk_bit + size
 		end
@@ -65,14 +65,15 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code for current type
 		do
-			Result := {SHARED_HASH_CODE}.bit_code | size
+			Result := {SHARED_HASH_CODE}.bit_code | size.to_integer_32
+			Result := Result.hash_code
 		end
 
 	new_attribute_description: BITS_DESC
 			-- Type description for skeleton
 		do
 			create Result
-			Result.set_value (size)
+			Result.set_size (size)
 		end
 
 feature -- Status report
@@ -90,7 +91,7 @@ feature -- Byte code generation
 		do
 			ba.append ({BYTE_CONST}.Bc_create)
 			ba.append ({BYTE_CONST}.Bc_bit)
-			ba.append_integer (size)
+			ba.append_natural_32 (size)
 		end
 
 feature -- C code generation
@@ -108,14 +109,14 @@ feature -- C code generation
 			buffer.put_string ({SK_CONST}.sk_bit_string)
 			buffer.put_three_character (' ', '+', ' ')
 			buffer.put_string (uint32_string_cast)
-			buffer.put_integer (size)
+			buffer.put_natural_32 (size)
 		end
 
 	generate_default_value (buffer : GENERATION_BUFFER)
 			-- Generate default value associated to current basic type.
 		do
 			buffer.put_string ("RTLB(")
-			buffer.put_integer (size)
+			buffer.put_natural_32 (size)
 			buffer.put_character (')')
 		end
 
@@ -124,7 +125,7 @@ feature {NONE} -- Constants
 	uint32_string_cast: STRING = "(uint32) ";
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -137,22 +138,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

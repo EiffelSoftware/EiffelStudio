@@ -225,12 +225,12 @@ feature -- Access
 			Result := Current
 		end
 
-	sk_value (a_context_type: TYPE_A): INTEGER
+	sk_value (a_context_type: TYPE_A): NATURAL_32
 		do
 			if is_expanded then
-				Result := {SK_CONST}.sk_exp | (type_id (a_context_type) - 1)
+				Result := {SK_CONST}.sk_exp | (type_id (a_context_type) - 1).to_natural_32
 			else
-				Result := {SK_CONST}.sk_ref | (type_id (a_context_type) - 1)
+				Result := {SK_CONST}.sk_ref | (type_id (a_context_type) - 1).to_natural_32
 			end
 		end
 

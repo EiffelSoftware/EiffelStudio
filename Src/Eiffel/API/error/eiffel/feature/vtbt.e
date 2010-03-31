@@ -21,7 +21,7 @@ feature -- Property
 	code: STRING = "VTBT";
 			-- Error code
 
-	value: INTEGER;
+	value: NATURAL_32;
 
 feature -- Output
 
@@ -29,14 +29,14 @@ feature -- Output
 		do
 			if value < 0 then
 				a_text_formatter.add ("Constant: ");
-				a_text_formatter.add_int (value);
+				a_text_formatter.add_natural_32 (value);
 				a_text_formatter.add_new_line;
 			end;
 		end;
 
 feature {COMPILER_EXPORTER}
 
-	set_value (i: INTEGER)
+	set_value (i: like value)
 		do
 			value := i;
 		end;

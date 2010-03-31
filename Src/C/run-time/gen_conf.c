@@ -981,8 +981,8 @@ rt_public EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dftype)
 {
 	EIF_TYPE_INDEX   typearr [4], result, l_type;
 	struct cecil_info *cecil_type;
-	int32 sk_type;			/* Generic information for dftype */
-	int32 *t;				/* To walk through the patterns array */
+	uint32 sk_type;			/* Generic information for dftype */
+	uint32 *t;				/* To walk through the patterns array */
 	int matched = 0;
 	size_t index = 0;
 

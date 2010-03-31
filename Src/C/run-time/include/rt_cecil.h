@@ -49,7 +49,7 @@ extern EIF_CS_TYPE *eif_cecil_mutex;
 #endif
 
 extern char * eif_pre_ecma_mapped_type (char *v);
-extern int32 eif_dtype_to_sk_type (EIF_TYPE_INDEX dtype);
+extern uint32 eif_dtype_to_sk_type (EIF_TYPE_INDEX dtype);
 extern EIF_TYPE_INDEX eif_sk_type_to_dtype (uint32 sk_type);
 
 #ifdef __cplusplus

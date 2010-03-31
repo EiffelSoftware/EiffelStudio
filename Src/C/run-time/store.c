@@ -1231,7 +1231,7 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 			} else {
 				uint32 dgen;
 				EIF_TYPE_INDEX *dynamic_types;
-				int32 *patterns;
+				uint32 *patterns;
 				uint16 nb_gen;
 				struct cecil_info *info;
 
@@ -1457,7 +1457,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 			} else {
 				uint32 dgen, dgen_typ;
 				EIF_TYPE_INDEX *dynamic_types;
-				int32 *patterns;
+				uint32 *patterns;
 				uint16 nb_gen;
 				struct cecil_info *info;
 
@@ -1611,7 +1611,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
 			EIF_TYPE_INDEX *dynamic_types = info->dynamic_types;
-			int32 *patterns;
+			uint32 *patterns;
 			uint16 nb_gen = info->nb_param;
 			int j;
 
@@ -1859,7 +1859,7 @@ rt_private void widr_type_generics (EIF_TYPE_INDEX dtype)
 	} else {
 			/* Generic case */
 		EIF_TYPE_INDEX *dynamic_types = info->dynamic_types;
-		int32 *patterns;
+		uint32 *patterns;
 		uint16 nb_gen = info->nb_param;
 		int32 i;
 
@@ -1874,7 +1874,7 @@ rt_private void widr_type_generics (EIF_TYPE_INDEX dtype)
 					print_generic_names (info, dynamic_types[i]);
 				}
 #endif
-				widr_multi_int32 (patterns, nb_gen);
+				widr_multi_uint32 (patterns, nb_gen);
 				break;	/* Jump out of loop */
 			}
 		}

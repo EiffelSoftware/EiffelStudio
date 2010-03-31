@@ -138,7 +138,7 @@ feature -- Access
 	Maximum_string_character_code: INTEGER = 0xFF
 			-- Maximum value for character code inside a string
 
-	Maximum_bit_constant: INTEGER = 0x7FFF
+	Maximum_bit_constant: NATURAL_32 = 0x7FFF
 			-- Maximum value of Constant in Bit_type declaration
 
 	Maximum_string_length: INTEGER = 0x7FFF

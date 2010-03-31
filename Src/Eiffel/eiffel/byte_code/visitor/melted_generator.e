@@ -294,7 +294,7 @@ feature {NONE} -- Visitors
 						ba.append_integer (a_node.real_feature_id (l_cl_type))
 						ba.append_short_integer (l_cl_type.static_type_id (context.context_class_type.type) - 1)
 					end
-					ba.append_uint32_integer (l_type.sk_value (context.context_class_type.type))
+					ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 				end
 			end
 		end
@@ -1202,7 +1202,7 @@ feature {NONE} -- Visitors
 			l_tmp_ba.append_integer (-1)
 
 				-- Void result type
-			l_tmp_ba.append_integer (Void_type.c_type.sk_value)
+			l_tmp_ba.append_natural_32 (Void_type.c_type.sk_value)
 				-- No arguments
 			l_tmp_ba.append_short_integer (0)
 
@@ -1835,7 +1835,7 @@ feature {NONE} -- Visitors
 				ba.append (bc_tuple_access)
 			end
 			ba.append_integer_32 (a_node.position)
-			ba.append_uint32_integer (l_tuple_type.sk_value (context.context_class_type.type))
+			ba.append_natural_32 (l_tuple_type.sk_value (context.context_class_type.type))
 		end
 
 	process_tuple_const_b (a_node: TUPLE_CONST_B)
@@ -2425,7 +2425,7 @@ feature -- Type information
 			r: TYPE_A
 		do
 			r := context.real_type (t)
-			b.append_integer (r.sk_value (context.context_class_type.type))
+			b.append_natural_32 (r.sk_value (context.context_class_type.type))
 			if r.is_true_expanded and then not r.is_bit then
 					-- Generate full type info.
 				t.make_full_type_byte_code (b, context.context_class_type.type)

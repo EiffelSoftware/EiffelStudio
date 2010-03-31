@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 			attr_name: STRING
-			sk_type: INTEGER
+			sk_type: NATURAL_32
 			i, attr_nb: INTEGER
 			attr: ABSTRACT_DEBUG_VALUE
 			exp_attr: EXPANDED_VALUE
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 					attr_name := c_tread
 					s := c_tread
 					if is_valid_integer_32_string (s) then
-						sk_type := to_integer_32 (s)
+						sk_type := to_natural_32 (s)
 					else
 						sk_type := 0
 					end

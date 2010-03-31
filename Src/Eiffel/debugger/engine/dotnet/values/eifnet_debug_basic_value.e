@@ -16,27 +16,27 @@ inherit
 		redefine
 			dump_value
 		end
-	
+
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		redefine
 			dump_value
 		end
-	
+
 create {DEBUG_VALUE_EXPORTER}
 	make --, make_attribute
-	
+
 feature {NONE} -- Redefinition of make
 
-	make (a_referenced_value: like icd_referenced_value; a_sk_type: INTEGER; v: like value)
+	make (a_referenced_value: like icd_referenced_value; a_sk_type: like sk_type; v: like value)
 		require
 			a_referenced_value_not_void: a_referenced_value /= Void
 		do
 			icd_referenced_value := a_referenced_value
 			dv_make (a_sk_type, v)
 		end
-		
+
 feature -- Access : Redefinition of dump_value
-		
+
 	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 			-- (from ABSTRACT_DEBUG_VALUE)
@@ -46,9 +46,9 @@ feature -- Access : Redefinition of dump_value
 				Result.set_icd_value_dotnet (icd_referenced_value)
 			end
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -61,22 +61,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

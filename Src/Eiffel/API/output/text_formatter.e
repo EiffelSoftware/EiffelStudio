@@ -406,6 +406,12 @@ feature -- Text operator
 			process_local_text (s)
 		end
 
+	add_natural_32 (i: NATURAL_32)
+			-- Put `i' at current position.
+		do
+			process_number_text (i.out)
+		end
+
 	add_int (i: INTEGER)
 			-- Put `i' at current position.
 		do

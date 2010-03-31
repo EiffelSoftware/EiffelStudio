@@ -134,7 +134,7 @@ feature -- Implementation
 		local
 			l_index: INTEGER
 			l_type: TYPE_A
-			l_type_value: INTEGER
+			l_type_value: NATURAL_32
 			l_once_func: ONCE_FUNC_I
 			l_const: CONSTANT_I
 			exc_v: EXCEPTION_DEBUG_VALUE
@@ -176,7 +176,7 @@ feature -- Implementation
 				else
 					l_once_nature := out_data_per_thread
 				end
-				send_rqst_3_integer (Rqst_once, l_once_nature, l_type_value, l_index)
+				send_rqst_3_integer (Rqst_once, l_once_nature, l_type_value.to_integer_32, l_index)
 				last_is_called := c_tread.to_boolean
 			end
 			if last_is_called then
@@ -357,7 +357,7 @@ feature -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

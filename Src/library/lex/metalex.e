@@ -47,7 +47,6 @@ feature -- Initialization
 			check
 				l_dfa_attached: l_dfa /= Void
 				l_categories_table_attached: l_categories_table /= Void
-				l_keyword_h_table_attached: l_keyword_h_table /= Void
 			end
 			l_analyzer.initialize_attributes (l_dfa, l_categories_table, l_keyword_h_table, keywords_case_sensitive);
 			initialized := True

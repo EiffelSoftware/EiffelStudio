@@ -552,13 +552,16 @@ feature {LEXICAL} -- Implementation
 
 feature {LEXICAL, LEX_BUILDER} -- Implementation
 
-	initialize_attributes (d: FIXED_DFA; c: ARRAY [INTEGER];
-					k: HASH_TABLE [INTEGER, STRING]; b: BOOLEAN)
+	initialize_attributes (d: FIXED_DFA; c: ARRAY [INTEGER]; k: detachable HASH_TABLE [INTEGER, STRING]; b: BOOLEAN)
 			-- Set the first four attributes of Current.
 		do
 			dfa := d;
 			categories_table := c;
-			keyword_h_table := k;
+			if k = Void then
+				create keyword_h_table.make (1)
+			else
+				keyword_h_table := k;
+			end
 			keywords_case_sensitive := b
 		end;
 
@@ -648,9 +651,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class LEXICAL
 

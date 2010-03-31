@@ -19,7 +19,8 @@ inherit
 			check_type,
 			feature_with_name_using,
 			match_list_of_class,
-			is_void_safe_call
+			is_void_safe_call,
+			set_routine_ids
 		end
 
 	SHARED_INST_CONTEXT
@@ -587,6 +588,19 @@ feature {NONE} -- Implementation
 				error_handler.insert_error (l_dbg_err)
 			else
 				Precursor {AST_FEATURE_CHECKER_GENERATOR} (l_as)
+			end
+		end
+
+feature {INSPECT_CONTROL} -- AST modification
+
+	set_routine_ids (ids: ID_SET; a: ID_SET_ACCESSOR)
+			-- <Precursor/>
+			--| Redefined to avoid doing the `touch' for expression evaluation
+		do
+			if not ids.is_equal_id_list (a) then
+				a.set_id_set (ids)
+--					-- Record that AST node is modified.
+--				tmp_ast_server.touch (context.current_class.class_id)
 			end
 		end
 

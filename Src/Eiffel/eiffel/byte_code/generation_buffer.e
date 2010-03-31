@@ -379,7 +379,6 @@ feature -- Automatically indented output
 			-- Write string `s'.
 		require
 			s_not_void: s /= Void
-			s_not_void: s /= Void
 		local
 			l_buffer: like current_buffer
 		do
@@ -392,6 +391,15 @@ feature -- Automatically indented output
 			l_buffer.append (s)
 		ensure
 			new_count: count = old count + s.count
+		end
+
+	put_string_and_new_line (s: STRING)
+			-- Write string `s' and append a new line.
+		require
+			s_not_void: s /= Void
+		do
+			put_string (s)
+			put_new_line
 		end
 
 	put_string_array (a: ARRAY [STRING])
@@ -904,7 +912,7 @@ invariant
 	buffers_not_void: buffers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -90,6 +90,13 @@ feature {NONE} -- Actions
 			replay_window.window.raise
 		end
 
+feature -- Access
+
+	menu_path: ARRAY [STRING]
+		do
+			Result := <<"Project">>
+		end
+
 feature {NONE} -- Access
 
 	feature_checker_window: CELL [EB_FEATURE_CHECKER_TOOL]
@@ -114,11 +121,6 @@ feature {NONE} -- Access
 			create Result.make
 		ensure
 			replay_window_not_void: Result /= Void
-		end
-
-	menu_path: ARRAY [STRING]
-		do
-			Result := <<"Project">>
 		end
 
 feature {NONE} -- Implementation

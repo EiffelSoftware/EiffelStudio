@@ -380,7 +380,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_compile_precompile
+	ask_compile_precompile (a_pre: CONF_PRECOMPILE)
 			-- Should a needed precompile be automatically built?
 		local
 			l_answered: BOOLEAN
@@ -393,7 +393,7 @@ feature {NONE} -- User interaction
 				until
 					l_answered
 				loop
-					localized_print (warning_messages.w_project_build_precompile.as_string_32 + ewb_names.yes_or_no)
+					localized_print (warning_messages.w_project_build_precompile (a_pre.location.evaluated_path).as_string_32 + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
 						is_user_wants_precompile := True
@@ -433,7 +433,7 @@ feature {NONE} -- User interaction
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

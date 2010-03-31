@@ -492,38 +492,39 @@ feature {INHERIT_TABLE} -- Propagation
 			l_descendents_with_replicated_features: LINKED_LIST [CLASS_C]
 			l_desc_class: CLASS_C
 		do
-					debug ("ACTIVITY")
-						io.error.put_string ("=============== DEGREE_4.propagate ===============%N")
-						io.error.put_string ("Equivalent tables: ")
-						io.error.put_boolean (equivalent_table)
-						io.error.put_string ("%Nexpanded_modified: ")
-						io.error.put_boolean (a_class.expanded_modified)
-						io.error.put_string ("%Ndeferred_modified: ")
-						io.error.put_boolean (a_class.deferred_modified)
-						if a_class.assert_prop_list /= Void then
-							if a_class.assert_prop_list.is_empty then
-								io.error.put_string ("%Nassert_prop_list: empty")
-							else
-								io.error.put_string ("%Nassert_prop_list: not empty")
-							end
-						else
-							io.error.put_string ("%Nassert_prop_list: Void")
-						end
-						if a_assert_prop_list /= Void then
-							if a_assert_prop_list.is_empty then
-								io.error.put_string ("%Nl: empty")
-							else
-								io.error.put_string ("%Nl: not empty")
-							end
-						else
-							io.error.put_string ("%Nl: Void")
-						end
-						io.error.put_string ("%Npass2_control.propagate_pass3: ")
-						io.error.put_boolean (pass2_control.propagate_pass3)
-						io.error.put_string ("%Npass2_control: ")
-						pass2_control.trace
-						io.error.put_new_line
+			debug ("ACTIVITY")
+				io.error.put_string ("=============== DEGREE_4.propagate ===============%N")
+				io.error.put_string ("Equivalent tables: ")
+				io.error.put_boolean (equivalent_table)
+				io.error.put_string ("%Nexpanded_modified: ")
+				io.error.put_boolean (a_class.expanded_modified)
+				io.error.put_string ("%Ndeferred_modified: ")
+				io.error.put_boolean (a_class.deferred_modified)
+				if a_class.assert_prop_list /= Void then
+					if a_class.assert_prop_list.is_empty then
+						io.error.put_string ("%Nassert_prop_list: empty")
+					else
+						io.error.put_string ("%Nassert_prop_list: not empty")
 					end
+				else
+					io.error.put_string ("%Nassert_prop_list: Void")
+				end
+				if a_assert_prop_list /= Void then
+					if a_assert_prop_list.is_empty then
+						io.error.put_string ("%Nl: empty")
+					else
+						io.error.put_string ("%Nl: not empty")
+					end
+				else
+					io.error.put_string ("%Nl: Void")
+				end
+				io.error.put_string ("%Npass2_control.propagate_pass3: ")
+				io.error.put_boolean (pass2_control.propagate_pass3)
+				io.error.put_string ("%Npass2_control: ")
+				pass2_control.trace
+				io.error.put_new_line
+			end
+
 				-- Propagation of the assertions.
 			if a_class.assert_prop_list = Void then
 				a_class.set_assertion_prop_list (a_assert_prop_list)

@@ -116,7 +116,7 @@ feature -- Special Dotnet status
 
 feature {NONE} -- Special childrens
 
-	children_from_external_type: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	children_from_external_type: DEBUG_VALUE_LIST
 			-- Children list from a Reference which is an external type
 			-- (ie: a dotnet type, not pure Eiffel)
 		local
@@ -125,7 +125,7 @@ feature {NONE} -- Special childrens
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_class_token: NATURAL_32
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			l_values: DEBUG_VALUE_LIST
 		do
 			if icd_value_info.has_object_interface then
 				l_object_value := icd_value_info.new_interface_debug_object_value
@@ -156,7 +156,7 @@ feature {NONE} -- Special childrens
 		end
 
 	field_values_for (l_class_token: NATURAL_32; l_icd_class: ICOR_DEBUG_CLASS; l_object_value: ICOR_DEBUG_OBJECT_VALUE;
-				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE): DS_LIST [ABSTRACT_DEBUG_VALUE]
+				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE): DEBUG_VALUE_LIST
 		local
 			l_md_import: MD_IMPORT
 			l_tokens: LIST [NATURAL_32]
@@ -171,7 +171,7 @@ feature {NONE} -- Special childrens
 			l_md_import := l_icd_module.interface_md_import
 			l_tokens := l_md_import.field_tokens (l_class_token)
 			if not l_tokens.is_empty then
-				create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_tokens.count)
+				create Result.make (l_tokens.count)
 				from
 					l_tokens.start
 				until
@@ -234,7 +234,7 @@ feature {NONE} -- Special childrens
 
 	property_values_for (l_class_token: NATURAL_32; l_icd_class: ICOR_DEBUG_CLASS; a_icd_value: ICOR_DEBUG_VALUE;
 				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE;
-			): DS_LIST [ABSTRACT_DEBUG_VALUE]
+			): DEBUG_VALUE_LIST
 		local
 			l_md_import: MD_IMPORT
 			l_tokens: LIST [NATURAL_32]
@@ -252,7 +252,7 @@ feature {NONE} -- Special childrens
 			l_md_import := l_icd_module.interface_md_import
 			l_tokens := l_md_import.property_tokens (l_class_token)
 			if not l_tokens.is_empty then
-				create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_tokens.count)
+				create Result.make (l_tokens.count)
 				from
 					l_dbg_evaluator := eifnet_debugger.eifnet_dbg_evaluator
 					l_tokens.start
@@ -336,7 +336,7 @@ feature -- Properties
 			-- Value info of object.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -349,22 +349,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

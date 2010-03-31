@@ -245,7 +245,7 @@ feature -- Items
 
 feature -- Output
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	children: DEBUG_VALUE_LIST
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
@@ -295,7 +295,7 @@ invariant
 	items_exists: items_computed implies items /= Void;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

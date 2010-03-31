@@ -91,7 +91,7 @@ feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
 feature -- Properties
 
-	attributes: detachable DS_LIST [ABSTRACT_DEBUG_VALUE]
+	attributes: detachable DEBUG_VALUE_LIST
 			-- Attributes of object being inspected (sorted by name)
 		do
 			Result := internal_attributes
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

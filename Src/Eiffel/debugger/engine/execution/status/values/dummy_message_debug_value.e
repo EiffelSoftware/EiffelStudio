@@ -106,7 +106,7 @@ feature -- Output
 	expandable: BOOLEAN = False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	children: DEBUG_VALUE_LIST
 			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -131,7 +131,7 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

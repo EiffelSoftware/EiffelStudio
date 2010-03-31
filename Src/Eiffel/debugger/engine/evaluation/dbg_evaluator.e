@@ -342,7 +342,7 @@ feature -- Concrete evaluation
 	evaluate_attribute (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I)
 			-- Evaluate attribute feature
 		local
-			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			lst: DEBUG_VALUE_LIST
 			dv: ABSTRACT_DEBUG_VALUE
 			l_address: DBG_ADDRESS
 			cl: CLASS_C
@@ -361,8 +361,9 @@ feature -- Concrete evaluation
 			end
 			if l_address /= Void and then not l_address.is_void then
 				lst := attributes_list_from_object (l_address)
-				dv := find_item_in_list (f.feature_name, lst)
-
+				if lst /= Void then
+					dv := lst.named_value (f.feature_name)
+				end
 				cl := class_c_from_type_a (f.type, c)
 				if dv = Void then
 					if f.feature_name.is_equal (once "Void") then
@@ -594,7 +595,7 @@ feature -- Implementation
 
 feature -- Query
 
-	attributes_list_from_object (a_addr: DBG_ADDRESS): DS_LIST [ABSTRACT_DEBUG_VALUE]
+	attributes_list_from_object (a_addr: DBG_ADDRESS): DEBUG_VALUE_LIST
 		do
 			Result := debugger_manager.object_manager.attributes_at_address (a_addr, 0, 0)
 		end
@@ -649,40 +650,11 @@ feature -- Query
 		do
 		end
 
-feature {NONE} -- List helpers
-
-	find_item_in_list (n: STRING; lst: DS_LIST [ABSTRACT_DEBUG_VALUE]): ABSTRACT_DEBUG_VALUE
-			-- Try to find an item named `n' in list `lst'.
-		require
-			not_void: n /= Void
-		local
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
-			l_item: ABSTRACT_DEBUG_VALUE
-		do
-			if lst /= Void then
-				from
-					l_cursor := lst.new_cursor
-					l_cursor.start
-				until
-					l_cursor.after or Result /= Void
-				loop
-					l_item := l_cursor.item
-					if l_item.name /= Void and then l_item.name.is_equal (n) then
-						Result := l_item
-					end
-					l_cursor.forth
-				end
-				l_cursor.go_after
-			end
-		ensure
-			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
-		end
-
 invariant
 	dbg_handler_attached: dbg_error_handler /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

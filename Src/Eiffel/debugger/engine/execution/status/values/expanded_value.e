@@ -43,7 +43,7 @@ feature {DEBUG_VALUE_EXPORTER}
 
 feature -- Property
 
-	attributes: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
+	attributes: DEBUG_VALUE_LIST
 			-- Attributes of expanded object
 			--| FIXME JFIAT 2004/05/27 : used to be declared SORTED_TWO_WAY_LIST
 			--| should we change that back ?
@@ -90,7 +90,7 @@ feature -- Output
 						dynamic_class /= Void
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	children: DEBUG_VALUE_LIST
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
@@ -144,7 +144,7 @@ invariant
 	attributes_exists: attributes /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

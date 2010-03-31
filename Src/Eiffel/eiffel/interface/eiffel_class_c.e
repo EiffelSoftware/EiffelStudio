@@ -549,6 +549,7 @@ feature -- Third pass: byte code production and type check
 
 			l_class_error_level, l_error_level: NATURAL
 			l_ast_context: AST_CONTEXT
+			warning_level: NATURAL_32
 			i: INTEGER
 		do
 				-- Initialization for actual types evaluation
@@ -772,8 +773,25 @@ feature -- Third pass: byte code production and type check
 						byte_code_generated := False
 
 						if not type_checked and then changed3 and then feature_i.is_routine then
+								-- Record warning level for the case when the warnings should be discarded.
+							warning_level := error_handler.warning_level
 								-- Forced type check on the feature
 							feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, not l_feature_written_in_current, feature_i.is_replicated_directly)
+							if feature_checker.is_ast_modified then
+								if error_handler.error_level = l_error_level then
+										-- Regenerate code for this feature only when there are no errors.
+									changed_features.force (feature_name_id)
+									i := i + 1
+										-- Discard any warnings as they will be reported again at code generation time.
+									error_handler.set_warning_level (warning_level)
+								end
+									-- Regenerate code for descendants that have replicated features.
+								debug ("to_implement")
+									(create {REFACTORING_HELPER}).to_implement
+										("Do finer-grained recompilation based on affected features only.")
+								end
+								recompile_descendants_with_replication (False, Current)
+							end
 							check_local_names_needed := False
 						elseif check_local_names_needed then
 							feature_i.check_local_names (feature_i.real_body)

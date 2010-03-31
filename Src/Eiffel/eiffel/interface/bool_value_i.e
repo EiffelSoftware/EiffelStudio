@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class BOOL_VALUE_I 
+class BOOL_VALUE_I
 
 inherit
 	VALUE_I
@@ -33,7 +33,7 @@ feature -- Comparison
 		do
 			Result := boolean_value = other.boolean_value
 		end
-		
+
 feature -- Access
 
 	boolean_value: BOOLEAN;
@@ -61,27 +61,23 @@ feature -- Access
 	generate_il
 			-- Generate IL code for boolean constant value.
 		do
-			il_generator.put_boolean_constant (boolean_value)	
+			il_generator.put_boolean_constant (boolean_value)
 		end
 
 	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a boolean constant value.
 		do
 			ba.append (Bc_bool);
-			if boolean_value then
-				ba.append ('%/001/');
-			else
-				ba.append ('%U');
-			end;
+			ba.append_boolean (boolean_value)
 		end;
 
 	dump: STRING
 		do
-			Result := boolean_value.out			
+			Result := boolean_value.out
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -94,22 +90,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -28,7 +28,7 @@ feature
 		do
 		end
 
-	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	attributes: DEBUG_VALUE_LIST
 		do
 		end
 

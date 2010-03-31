@@ -20,7 +20,7 @@ feature
 		do
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
+	children: DEBUG_VALUE_LIST
 		do
 		end
 

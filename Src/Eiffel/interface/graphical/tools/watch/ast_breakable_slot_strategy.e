@@ -893,14 +893,14 @@ feature {NONE} -- Implementation
 					l_as.postcondition.process (Current)
 				end
 			end
-				if l_as.rescue_clause /= Void then
-					if not l_as.rescue_clause.is_empty then
-						format_compound (l_as.rescue_clause)
-					end
+			if l_as.rescue_clause /= Void then
+				if not l_as.rescue_clause.is_empty then
+					format_compound (l_as.rescue_clause)
 				end
-				if not l_as.is_deferred and not l_as.is_external then
-					put_breakable (l_as)
-				end
+			end
+			if not l_as.is_deferred and not l_as.is_external then
+				put_breakable (l_as)
+			end
 		end
 
 	process_constant_as (l_as: CONSTANT_AS)

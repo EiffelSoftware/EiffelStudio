@@ -1046,6 +1046,7 @@ feature -- Incrementality
 				and then has_postcondition = other.has_postcondition
 				and then is_once = other.is_once
 				and then is_process_relative = other.is_process_relative
+				and then is_object_relative_once = other.is_object_relative_once
 				and then is_constant = other.is_constant
 				and then is_stable = other.is_stable
 				and then is_transient = other.is_transient
@@ -1069,6 +1070,7 @@ debug ("ACTIVITY")
 			io.error.put_boolean (has_precondition = other.has_precondition) io.error.put_new_line;
 			io.error.put_boolean (has_postcondition = other.has_postcondition) io.error.put_new_line;
 			io.error.put_boolean (is_once = other.is_once) io.error.put_new_line;
+			io.error.put_boolean (is_process_or_thread_relative_once = other.is_process_or_thread_relative_once) io.error.put_new_line;
 	end
 end
 			if Result then
@@ -1173,6 +1175,11 @@ end
 
 				-- Still a once
 			Result := Result and then is_once = other.is_once
+				-- Still the same kind of once
+			Result := Result and then
+						is_process_or_thread_relative_once = other.is_process_or_thread_relative_once and then
+						is_process_relative = other.is_process_relative and then
+						is_object_relative_once = other.is_object_relative_once
 
 				-- Of the same stability
 			Result := Result and then is_stable = other.is_stable
@@ -1283,6 +1290,18 @@ feature -- Conveniences
 			-- Do nothing
 		end
 
+	is_process_or_thread_relative_once: BOOLEAN
+			-- Is current feature a once per thread or per process feature?
+		do
+			Result := is_once and then not is_object_relative_once
+		end
+
+	is_object_relative_once: BOOLEAN
+			-- Is current feature a once per object feature?
+		do
+			-- Do nothing
+		end
+
 	is_do: BOOLEAN
 			-- Is current feature a do one ?
 		do
@@ -1360,6 +1379,14 @@ feature -- Conveniences
 
 	is_transient: BOOLEAN
 			-- Is feature transient, i.e. never stored in storables?
+			-- (Usually applies to attributes.)
+		do
+			-- False by default
+		end
+
+	is_hidden: BOOLEAN
+			-- Is attribute hidden for implementation purpose
+			-- such as once per object's attributes.
 			-- (Usually applies to attributes.)
 		do
 			-- False by default
@@ -2127,7 +2154,7 @@ feature -- Signature checking
 					-- actual type of the class associated to `feat_table'.
 
 				if (is_once and not is_constant) and then solved_type.has_formal_generic then
-						-- A once funtion cannot have a type with formal generics
+						-- A once function cannot have a type with formal generics
 					create vffd7
 					vffd7.set_class (written_class)
 					vffd7.set_feature_name (feature_name)
@@ -3303,33 +3330,34 @@ feature {FEATURE_I} -- Implementation
 			non_void_result: Result /= Void
 		end
 
-	is_frozen_mask: NATURAL_32 = 0x0000_0001
-	is_origin_mask: NATURAL_32 = 0x0000_0002
-	is_empty_mask: NATURAL_32 = 0x0000_0004
-	is_infix_mask: NATURAL_32 = 0x0000_0008
-	is_prefix_mask: NATURAL_32 = 0x0000_0010
-	is_require_else_mask: NATURAL_32 = 0x0000_0020
-	is_ensure_then_mask: NATURAL_32 = 0x0000_0040
-	has_precondition_mask: NATURAL_32 = 0x0000_0080
-	has_postcondition_mask: NATURAL_32 = 0x0000_0100
-	is_bracket_mask: NATURAL_32 = 0x0000_0200
-	is_binary_mask: NATURAL_32 = 0x0000_0400
-	is_unary_mask: NATURAL_32 = 0x0000_0800
-	has_convert_mark_mask: NATURAL_32 = 0x0000_1000
-	has_property_mask: NATURAL_32 = 0x0000_2000
-	has_property_getter_mask: NATURAL_32 = 0x0000_4000
-	has_property_setter_mask: NATURAL_32 = 0x0000_8000
-	is_fake_inline_agent_mask: NATURAL_32 = 0x0001_0000
-	has_rescue_clause_mask: NATURAL_32 = 0x0002_0000
-	is_export_status_none_mask: NATURAL_32 = 0x0004_0000
-	has_function_origin_mask: NATURAL_32 = 0x0008_0000 -- Used in ATTRIBUTE_I
-	has_replicated_ast_mask: NATURAL_32 = 0x0010_0000
-	has_body_mask: NATURAL_32 = 0x0020_0000 -- Used in ATTRIBUTE_I
-	is_replicated_directly_mask: NATURAL_32 = 0x0040_0000
-	from_non_conforming_parent_mask: NATURAL_32 = 0x0080_0000
-	is_selected_mask: NATURAL_32 = 0x0100_0000
-	is_stable_mask: NATURAL_32 = 0x0200_0000 -- Used in ATTRIBUTE_I
-	is_transient_mask: NATURAL_32 = 0x0400_0000 -- Used in ATTRIBUTE_I
+	is_frozen_mask: NATURAL_32 =					0x0000_0001
+	is_origin_mask: NATURAL_32 =					0x0000_0002
+	is_empty_mask: NATURAL_32 =						0x0000_0004
+	is_infix_mask: NATURAL_32 =						0x0000_0008
+	is_prefix_mask: NATURAL_32 =					0x0000_0010
+	is_require_else_mask: NATURAL_32 =				0x0000_0020
+	is_ensure_then_mask: NATURAL_32 =				0x0000_0040
+	has_precondition_mask: NATURAL_32 =				0x0000_0080
+	has_postcondition_mask: NATURAL_32 =			0x0000_0100
+	is_bracket_mask: NATURAL_32 =					0x0000_0200
+	is_binary_mask: NATURAL_32 =					0x0000_0400
+	is_unary_mask: NATURAL_32 =						0x0000_0800
+	has_convert_mark_mask: NATURAL_32 =				0x0000_1000
+	has_property_mask: NATURAL_32 =					0x0000_2000
+	has_property_getter_mask: NATURAL_32 =			0x0000_4000
+	has_property_setter_mask: NATURAL_32 =			0x0000_8000
+	is_fake_inline_agent_mask: NATURAL_32 =			0x0001_0000
+	has_rescue_clause_mask: NATURAL_32 =			0x0002_0000
+	is_export_status_none_mask: NATURAL_32 =		0x0004_0000
+	has_function_origin_mask: NATURAL_32 =			0x0008_0000 -- Used in ATTRIBUTE_I
+	has_replicated_ast_mask: NATURAL_32 =			0x0010_0000
+	has_body_mask: NATURAL_32 =						0x0020_0000 -- Used in ATTRIBUTE_I
+	is_replicated_directly_mask: NATURAL_32 = 		0x0040_0000
+	from_non_conforming_parent_mask: NATURAL_32 = 	0x0080_0000
+	is_selected_mask: NATURAL_32 = 					0x0100_0000
+	is_stable_mask: NATURAL_32 = 					0x0200_0000 -- Used in ATTRIBUTE_I
+	is_transient_mask: NATURAL_32 = 				0x0400_0000 -- Used in ATTRIBUTE_I
+	is_hidden_mask: NATURAL_32 = 					0x0800_0000 -- Used in ATTRIBUTE_I
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

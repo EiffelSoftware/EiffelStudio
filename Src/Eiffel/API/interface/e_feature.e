@@ -182,6 +182,15 @@ feature -- Properties
 			-- Do nothing
 		end;
 
+	is_process_or_thread_relative_once: BOOLEAN
+		do
+			Result := is_once and not is_object_relative_once
+		end
+
+	is_object_relative_once: BOOLEAN
+		do
+		end
+
 	is_deferred: BOOLEAN
 			-- Is current feature a deferred one ?
 		do
@@ -1088,7 +1097,7 @@ invariant
 	written_class_not_void: is_valid implies written_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

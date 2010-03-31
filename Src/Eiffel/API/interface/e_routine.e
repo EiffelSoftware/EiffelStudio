@@ -11,7 +11,7 @@ inherit
 	E_FEATURE
 		redefine
 			has_postcondition, has_precondition,
-			argument_names, arguments, is_once,
+			argument_names, arguments, is_once, is_object_relative_once,
 			is_deferred, locals, object_test_locals, obsolete_message,
 			is_external, associated_feature_i,
 			is_inline_agent, updated_version,
@@ -43,6 +43,9 @@ feature -- Properties
 
 	is_once: BOOLEAN;
 			-- Is the routine declared as a once?
+
+	is_object_relative_once: BOOLEAN
+			-- Is the routine declared as object_relative once?
 
 	is_external: BOOLEAN;
 			-- Is the routine declared as a once?
@@ -158,6 +161,12 @@ feature {FEATURE_I} -- Setting
 			is_once := b;
 		end;
 
+	set_object_relative_once (b: like is_object_relative_once)
+			-- Set `is_object_relative_once' to `b'.
+		do
+			is_object_relative_once := b
+		end
+
 	set_external (b: like is_external)
 			-- Set `is_external' to `b'.
 		do
@@ -228,7 +237,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -35,6 +35,16 @@ feature {DEBUGGER_S} -- Event handlers
 		do
 		end
 
+	on_application_paused (dbg: DEBUGGER_S)
+			-- Called when application has just paused
+			--
+			-- `dbg': The sender service of the event.
+		require
+			is_interface_usable: (attached {USABLE_I} Current as l_usable) implies l_usable.is_interface_usable
+			dbg_is_interface_usable: dbg /= Void and then dbg.is_interface_usable
+		do
+		end
+
 	on_application_stopped (dbg: DEBUGGER_S)
 			-- Called when application has just stopped (paused)
 			--

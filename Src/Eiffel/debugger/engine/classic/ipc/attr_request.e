@@ -172,7 +172,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	recv_attributes (attr_list: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C;
+	recv_attributes (attr_list: DEBUG_VALUE_LIST; e_class: CLASS_C;
 				container_is_special: BOOLEAN)
 			-- Receive `e_class attribute info from application and
 			-- store it in `attr_list'.

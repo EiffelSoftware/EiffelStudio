@@ -254,6 +254,12 @@ feature {TYPE_A} -- Visitors
 			process_cl_type_a (a_type)
 		end
 
+	process_manifest_real_a (a_type: MANIFEST_REAL_A)
+			-- Process `a_type'.
+		do
+			process_cl_type_a (a_type)
+		end
+
 	process_named_tuple_type_a (a_type: NAMED_TUPLE_TYPE_A)
 			-- Process `a_type'.
 		local
@@ -358,13 +364,7 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_real_32_A (a_type: REAL_32_A)
-			-- Process `a_type'.
-		do
-			process_cl_type_a (a_type)
-		end
-
-	process_real_64_a (a_type: REAL_64_A)
+	process_real_a (a_type: REAL_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)

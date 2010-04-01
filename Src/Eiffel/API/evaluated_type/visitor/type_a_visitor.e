@@ -161,6 +161,15 @@ feature {TYPE_A}
 		deferred
 		end
 
+	process_manifest_real_a (a_type: MANIFEST_REAL_A)
+			-- Process `a_type'.
+		require
+			is_valid: is_valid
+			a_type_not_void: a_type /= Void
+			a_type_valid: is_type_valid (a_type)
+		deferred
+		end
+
 	process_multi_formal_a (a_type: MULTI_FORMAL_A)
 			-- Process `a_type'.
 		require
@@ -234,16 +243,7 @@ feature {TYPE_A}
 		deferred
 		end
 
-	process_real_32_A (a_type: REAL_32_A)
-			-- Process `a_type'.
-		require
-			is_valid: is_valid
-			a_type_not_void: a_type /= Void
-			a_type_valid: is_type_valid (a_type)
-		deferred
-		end
-
-	process_real_64_a (a_type: REAL_64_A)
+	process_real_a (a_type: REAL_A)
 			-- Process `a_type'.
 		require
 			is_valid: is_valid

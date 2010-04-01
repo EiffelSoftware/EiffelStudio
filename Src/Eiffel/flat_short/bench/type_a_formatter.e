@@ -154,6 +154,12 @@ feature {TYPE_A} -- Visitors
 			process_cl_type_a (a_type)
 		end
 
+	process_manifest_real_a (a_type: MANIFEST_REAL_A)
+			-- Process `a_type'.
+		do
+			process_cl_type_a (a_type)
+		end
+
 	process_named_tuple_type_a (a_type: NAMED_TUPLE_TYPE_A)
 			-- Process `a_type'.
 		do
@@ -196,13 +202,7 @@ feature {TYPE_A} -- Visitors
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-	process_real_32_a (a_type: REAL_32_A)
-			-- Process `a_type'.
-		do
-			process_cl_type_a (a_type)
-		end
-
-	process_real_64_a (a_type: REAL_64_A)
+	process_real_a (a_type: REAL_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
@@ -245,7 +245,7 @@ feature {TYPE_A} -- Visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -258,21 +258,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

@@ -17,7 +17,7 @@ create
 
 feature
 
-	actual_type: REAL_32_A
+	actual_type: REAL_A
 			-- actual real type
 		once
 			Result := Real_32_type

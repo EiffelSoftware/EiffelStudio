@@ -588,7 +588,7 @@ feature {NONE} -- Implementation
 			end
 
 			if l_as.constant_type = Void then
-				last_type := Real_64_type
+				last_type := manifest_real_type
 			elseif expr_type_visiting then
 				l_as.constant_type.process (Current)
 			else

@@ -1079,8 +1079,8 @@ feature -- Class info
 			external_class_mapping.put (create {INTEGER_A}.make (16), "System.Int16")
 			external_class_mapping.put (create {INTEGER_A}.make (32), "System.Int32")
 			external_class_mapping.put (create {INTEGER_A}.make (64), "System.Int64")
-			external_class_mapping.put (create {REAL_32_A}, "System.Single")
-			external_class_mapping.put (create {REAL_64_A}, "System.Double")
+			external_class_mapping.put (create {REAL_A}.make (32), "System.Single")
+			external_class_mapping.put (create {REAL_A}.make (64), "System.Double")
 			external_class_mapping.put (create {POINTER_A}, "System.IntPtr")
 
 				-- Debug data structure.

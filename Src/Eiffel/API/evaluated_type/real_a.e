@@ -1,28 +1,35 @@
 note
-	description: "Actual type for real 32 bits type."
+	description: "Actual type for real type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class REAL_32_A
+class REAL_A
 
 inherit
 	BASIC_A
+		rename
+			make as cl_make
 		redefine
-			is_real_32, associated_class, same_as, is_numeric,
-			default_create, process, heaviest
+			is_real_32, is_real_64, associated_class, same_as, is_numeric,
+			process, heaviest
 		end
 
 create
-	default_create
+	make
 
 feature {NONE} -- Initialization
 
-	default_create
-			-- Initialize new instance of REAL_32_A.
+	make (n: INTEGER)
+			-- Create instance of INTEGER_A represented by `n' bits.
+		require
+			valid_n: n = 32 or n = 64
 		do
-			make (associated_class.class_id)
+			size := n.to_integer_8
+			cl_make (associated_class.class_id)
+		ensure
+			size_set: size = n
 		end
 
 feature -- Visitor
@@ -30,21 +37,37 @@ feature -- Visitor
 	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
-			v.process_real_32_a (Current)
+			v.process_real_a (Current)
 		end
 
 feature -- Property
 
-	is_real_32: BOOLEAN = True
-			-- Is the current type a real 32 bits type ?
+	is_real_32: BOOLEAN
+			-- Is the current type a real 32-bit type?
+		do
+			Result := size = 32
+		end
+
+	is_real_64: BOOLEAN
+			-- Is the current type a real 64-bit type?
+		do
+			Result := size = 64
+		end
 
 feature -- Access
 
 	associated_class: CLASS_C
 			-- Class REAL
-		once
-			Result := System.real_32_class.compiled_class
+		do
+			if size = 32 then
+				Result := System.real_32_class.compiled_class
+			else
+				Result := System.real_64_class.compiled_class
+			end
 		end
+
+	size: INTEGER_8
+			-- Current is stored on `size' bits.
 
 feature -- IL code generation
 
@@ -64,20 +87,27 @@ feature {COMPILER_EXPORTER}
 	is_numeric: BOOLEAN = True
 			-- Is the current type a numeric type ?
 
-	c_type: REAL_32_I
+	c_type: TYPE_C
 			-- C type
 		do
-			Result := real32_c_type
+			if size = 32 then
+				Result := real32_c_type
+			else
+				Result := real64_c_type
+			end
 		end
 
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
-			Result := same_type (other)
+			Result := attached {REAL_A} other as r and then size = r.size
 		end
 
+invariant
+	correct_size: size = 32 or size = 64
+
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -90,22 +120,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class REAL_32_A

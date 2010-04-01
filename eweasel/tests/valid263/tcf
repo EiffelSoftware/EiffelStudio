@@ -1,0 +1,36 @@
+test_name	 manifest-real-to-real-32-conformance
+test_description For backward compatibility we should allow for the time being conformance of manifest real which are by default of REAL_64 type to be accepted as REAL_32.
+
+copy_sub Ace $TEST Ace
+
+define EXPR	"r_32 := 4.5"
+copy_sub test.e	$CLUSTER test.e
+compile_melted
+compile_result ok
+
+define EXPR	"r_32 := {REAL_32} 4.5"
+copy_sub test.e	$CLUSTER test.e
+compile_melted
+compile_result ok
+
+define EXPR	"r_64 := 4.5"
+copy_sub test.e	$CLUSTER test.e
+compile_melted
+compile_result ok
+
+define EXPR	"r_64 := {REAL_32} 4.5"
+copy_sub test.e	$CLUSTER test.e
+compile_melted
+compile_result ok
+
+define EXPR	"r_64 := {REAL_64} 4.5"
+copy_sub test.e	$CLUSTER test.e
+compile_melted
+compile_result ok
+
+define EXPR	"r_32 := 4.5 * 4.5"
+copy_sub test.e	$CLUSTER test.e
+compile_melted
+compile_result validity_error TEST VJAR
+
+test_end

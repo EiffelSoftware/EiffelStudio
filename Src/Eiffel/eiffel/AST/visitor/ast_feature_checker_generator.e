@@ -1954,7 +1954,7 @@ feature {NONE} -- Implementation
 	process_real_as (l_as: REAL_AS)
 		do
 			if l_as.constant_type = Void then
-				last_type := Real_64_type
+				last_type := manifest_real_type
 			else
 				fixme ("We should check that `constant_type' matches the real `value' and%
 					%possibly remove `constant_type' from REAL_AS.")

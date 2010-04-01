@@ -71,14 +71,23 @@ feature {NONE}
 			create Result.make (True)
 		end
 
-	Real_32_type: REAL_32_A
+	Real_32_type: REAL_A
 			-- Actual real 32 bits type
 		once
-			create Result
+			create Result.make (32)
 		end
 
-	Real_64_type: REAL_64_A
+	Real_64_type: REAL_A
 			-- Actual real 64 bits type
+		once
+			create Result.make (64)
+		end
+
+	manifest_real_type: MANIFEST_REAL_A
+			-- Type for manifest real_type.
+			--| They can be once because at the moment we do not care about the
+			--| actual value of the constant, we assume it will work equally well
+			--| as a REAL_32 and REAL_64.
 		once
 			create Result
 		end
@@ -102,7 +111,7 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -115,22 +124,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

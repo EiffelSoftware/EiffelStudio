@@ -477,17 +477,10 @@ feature {NONE} -- Implementation
 
 	process_real_as (l_as: REAL_AS)
 		do
-			if not expr_type_visiting then
-				if l_as.constant_type /= Void then
-					l_as.constant_type.process (Current)
-				end
-			end
-
-			if l_as.constant_type = Void then
-				last_type := Real_64_type
-			elseif expr_type_visiting then
+			if l_as.constant_type /= Void then
 				l_as.constant_type.process (Current)
-			else
+			elseif expr_type_visiting then
+				last_type := manifest_real_type
 			end
 		end
 

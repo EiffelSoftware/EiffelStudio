@@ -34,8 +34,11 @@ feature -- Access
 			Result := {SK_CONST}.sk_bool
 		end
 
-	c_string: STRING = "EIF_BOOLEAN"
+	c_string: STRING
 			-- String generated for the type.
+		do
+			Result := {C_CONST}.eif_boolean
+		end
 
 	typed_field: STRING = "it_b"
 			-- Value field of a C structure corresponding to this type

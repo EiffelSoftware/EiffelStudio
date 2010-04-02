@@ -107,8 +107,7 @@ feature -- C code generation
 		require
 			good_argument: buffer /= Void
 		do
-			buffer.put_string (C_string)
-			buffer.put_character (' ')
+			buffer.put_string (c_string)
 		end
 
 	generate_cast (buffer: GENERATION_BUFFER)
@@ -117,7 +116,7 @@ feature -- C code generation
 			good_argument: buffer /= Void
 		do
 			buffer.put_character ('(')
-			buffer.put_string (C_string)
+			generate (buffer)
 			buffer.put_character (')')
 			buffer.put_character (' ')
 		end
@@ -129,7 +128,7 @@ feature -- C code generation
 			not_void_type: not is_void
 		do
 			buffer.put_character ('(')
-			buffer.put_string (C_string)
+			generate (buffer)
 			buffer.put_character (' ')
 			buffer.put_character ('*')
 			buffer.put_character (')')
@@ -140,8 +139,9 @@ feature -- C code generation
 		require
 			good_argument: buffer /= Void
 		do
-			buffer.put_string (Sizeof)
-			buffer.put_string (C_string)
+			buffer.put_string ({C_CONST}.sizeof)
+			buffer.put_character ('(')
+			generate (buffer)
 			buffer.put_character (')')
 		end
 
@@ -151,7 +151,7 @@ feature -- C code generation
 			buffer_not_void: buffer /= Void
 		do
 			buffer.put_two_character ('(', '(')
-			buffer.put_string (c_string)
+			generate (buffer)
 			buffer.put_four_character (')', ' ', '0', ')')
 		end
 
@@ -161,12 +161,12 @@ feature -- C code generation
 			good_arguments: buffer /= Void and arg_types /= Void
 			good_array: arg_types.lower = 1
 		do
-			buffer.put_string (function_cast_string)
+			buffer.put_string ({C_CONST}.function_cast)
 			buffer.put_character ('(')
 			if workbench_mode and then not is_void then
-				buffer.put_string (union_string)
+				buffer.put_string ({C_CONST}.eif_typed_value)
 			else
-				buffer.put_string (c_string)
+				generate (buffer)
 			end
 			buffer.put_three_character (',', ' ', '(')
 			buffer.put_string_array (arg_types)
@@ -180,15 +180,15 @@ feature -- C code generation
 			good_array: arg_types.lower = 1
 		do
 			if call_type /= Void then
-				buffer.put_string (function_cast_type_string)
+				buffer.put_string ({C_CONST}.function_cast_type)
 				buffer.put_character ('(')
-				buffer.put_string (c_string)
+				generate (buffer)
 				buffer.put_character (',')
 				buffer.put_string (call_type)
 			else
-				buffer.put_string (function_cast_string)
+				buffer.put_string ({C_CONST}.function_cast)
 				buffer.put_character ('(')
-				buffer.put_string (c_string)
+				generate (buffer)
 			end
 			buffer.put_three_character (',', ' ', '(')
 			buffer.put_string_array (arg_types)
@@ -242,18 +242,6 @@ feature -- C code generation
 			good_argument: buffer /= Void
 		deferred
 		end
-
-feature {NONE} -- Constants
-
-	Sizeof: STRING = "sizeof("
-			-- Used for generation.
-
-	union_string: STRING = "EIF_TYPED_VALUE"
-			-- Name for union structure.
-
-	function_cast_string: STRING = "FUNCTION_CAST"
-	function_cast_type_string: STRING = "FUNCTION_CAST_TYPE";
-			-- Name of different function casts.
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

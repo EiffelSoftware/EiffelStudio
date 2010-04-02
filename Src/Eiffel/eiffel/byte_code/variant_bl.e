@@ -64,12 +64,12 @@ feature
 				buf.put_character ('"')
 				buf.put_string (tag)
 				buf.put_character ('"')
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 			else
 				buf.put_string ("RTCS(")
 			end
 			generate_assertion_code (In_loop_variant)
-			buf.put_string (gc_rparan_semi_c)
+			buf.put_two_character (')', ';')
 			expr.generate
 			buf.put_new_line
 			register.print_register
@@ -111,12 +111,12 @@ feature
 				buf.put_character ('"')
 				buf.put_string (tag)
 				buf.put_character ('"')
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 			else
 				buf.put_string ("RTCS(")
 			end
 			generate_assertion_code (In_loop_variant)
-			buf.put_string (gc_rparan_semi_c)
+			buf.put_two_character (')', ';')
 			expr.generate
 			buf.put_new_line
 			new_register.print_register
@@ -173,7 +173,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -205,12 +205,17 @@ feature -- C code generation
 			if not l_ret_type.is_void then
 				buf.put_new_line
 				l_ret_type.c_type.generate (buf)
-				buf.put_string ("Result;")
+				buf.put_character (' ')
+				buf.put_string ({C_CONST}.result_name)
+				buf.put_character (';')
 			end
 			generate_compound
 			if not result_type.is_void then
 				buf.put_new_line
-				buf.put_string ("return Result;")
+				buf.put_string ({C_CONST}.return)
+				buf.put_character (' ')
+				buf.put_string ({C_CONST}.result_name)
+				buf.put_character (';')
 			end
 			buf.generate_block_close
 			context.inherited_assertion.wipe_out

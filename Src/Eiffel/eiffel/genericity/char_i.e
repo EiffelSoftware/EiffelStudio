@@ -68,9 +68,9 @@ feature -- Access
 			-- String generated for the type.
 		do
 			if is_character_32 then
-				Result := Wide_char_string
+				Result := {C_CONST}.eif_character_32
 			else
-				Result := Character_string
+				Result := {C_CONST}.eif_character_8
 			end
 		end
 

@@ -225,7 +225,8 @@ feature
 				if reg.is_current then
 					context.generate_current_dtype;
 				else
-					buf.put_string (gc_upper_dtype_lparan);
+					buf.put_string ({C_CONST}.dtype);
+					buf.put_character ('(')
 					reg.print_register;
 					buf.put_character (')');
 				end;
@@ -389,7 +390,7 @@ feature
 			buf.put_character ('(')
 			gen_reg.print_register
 			if parameters /= Void and parameters.count > 0 then
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				generate_parameters_list
 			end
 			buf.put_character (')')
@@ -410,7 +411,7 @@ feature
 					parameters.after
 				loop
 					if not first then
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 					else
 						first := False
 					end

@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 					until
 						l_types.after
 					loop
-						generate_class_il (item_for_iteration, l_class, l_types.item, a_for_cpp, buffer)
+						generate_class_il (item_for_iteration, l_class, l_types.item, a_for_cpp, buffer, header_buffer)
 						l_types.forth
 					end
 					buffer.put_new_line
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	generate_class_il (a_s: SEARCH_TABLE [INTEGER]; class_c: CLASS_C; class_type: CLASS_TYPE; a_for_cpp: BOOLEAN; buffer: GENERATION_BUFFER)
+	generate_class_il (a_s: SEARCH_TABLE [INTEGER]; class_c: CLASS_C; class_type: CLASS_TYPE; a_for_cpp: BOOLEAN; buffer, header_buffer: GENERATION_BUFFER)
 			-- Generate C il code
 		require
 			a_s_not_void: a_s /= Void
@@ -313,10 +313,10 @@ feature {NONE} -- Implementation
 						if ext.extension.is_cpp then
 							is_cpp := True
 							if a_for_cpp then
-								ext.generate (class_type, buffer)
+								ext.generate (class_type, buffer, header_buffer)
 							end
 						elseif not a_for_cpp then
-							ext.generate (class_type, buffer)
+							ext.generate (class_type, buffer, header_buffer)
 						end
 					end
 				else

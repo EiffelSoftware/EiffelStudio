@@ -237,7 +237,7 @@ feature -- Byte code generation
 				end
 				rout_info := System.rout_info_table.item (routine_id)
 				buf.put_class_id (rout_info.origin)
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				buf.put_integer (rout_info.offset)
 			else
 				if is_nested and need_invariant then
@@ -246,10 +246,10 @@ feature -- Byte code generation
 					buf.put_string ("RTWF(")
 				end
 				buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				buf.put_integer (real_feature_id (cl_type_i))
 			end
-			buf.put_string (gc_comma)
+			buf.put_string ({C_CONST}.comma_space)
 			if not is_nested then
 				if precursor_type /= Void then
 						-- Use dynamic type of parent instead
@@ -260,10 +260,11 @@ feature -- Byte code generation
 				end
 			elseif need_invariant then
 				buf.put_string_literal (feature_name)
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				reg.print_register
 			else
-				buf.put_string (gc_upper_dtype_lparan)
+				buf.put_string ({C_CONST}.dtype);
+				buf.put_character ('(')
 				reg.print_register
 				buf.put_character (')')
 			end
@@ -506,7 +507,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -519,22 +520,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CALL_ACCESS_B

@@ -185,7 +185,8 @@ end
 				if reg.is_current then
 					context.generate_current_dtype
 				else
-					buf.put_string (gc_upper_dtype_lparan)
+					buf.put_string ({C_CONST}.dtype);
+					buf.put_character ('(')
 					reg.print_register
 					buf.put_character (')')
 				end

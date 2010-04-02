@@ -1787,11 +1787,12 @@ feature -- Access
 			-- Generate the dynamic type of `Current'
 		do
 			if inlined_dt_current > 1 then
-				buffer.put_string (gc_inlined_dtype)
+				buffer.put_string ({C_CONST}.inlined_dtype_name)
 			elseif dt_current > 1 then
-				buffer.put_string (gc_dtype)
+				buffer.put_string ({C_CONST}.dtype_name)
 			else
-				buffer.put_string (gc_upper_dtype_lparan)
+				buffer.put_string ({C_CONST}.dtype)
+				buffer.put_character ('(')
 				Current_register.print_register
 				buffer.put_character (')')
 			end
@@ -1801,11 +1802,12 @@ feature -- Access
 			-- Generate the dynamic type of `Current'
 		do
 			if inlined_dftype_current > 1 then
-				buffer.put_string (gc_inlined_dftype)
+				buffer.put_string ({C_CONST}.inlined_dftype_name)
 			elseif dftype_current > 1 then
-				buffer.put_string (gc_dftype)
+				buffer.put_string ({C_CONST}.dftype_name)
 			else
-				buffer.put_string (gc_upper_dftype_lparan)
+				buffer.put_string ({C_CONST}.dftype)
+				buffer.put_character ('(')
 				Current_register.print_register
 				buffer.put_character (')')
 			end
@@ -1951,7 +1953,7 @@ feature -- Access
 					buf.put_string (once "RTXI(")
 				end
 				buf.put_integer (nb_refs)
-				buf.put_string (gc_rparan_semi_c)
+				buf.put_two_character (')', ';')
 				from
 					l_table := local_index_table
 					associated := associated_register_table
@@ -2290,6 +2292,7 @@ feature -- C code generation: locals
 					end
 					buf.put_new_line
 					type_i.c_type.generate (buf)
+					buf.put_character (' ')
 					if modifier /= Void then
 						buf.put_string (modifier)
 					end
@@ -2856,7 +2859,7 @@ invariant
 	postconditionobject_test_local_offset_attached: postcondition_object_test_local_offset /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

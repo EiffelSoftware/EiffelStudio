@@ -261,9 +261,8 @@ feature {NONE} -- Implementation
 				type_c := l_gen_param.c_type
 				buf.put_string (" + (rt_uint_ptr)")
 				parameters.i_th (1).print_register
-				buf.put_string (" * sizeof(")
-				type_c.generate (buf)
-				buf.put_character (')')
+				buf.put_three_character (' ', '*', ' ')
+				type_c.generate_size (buffer)
 			end
 			buf.put_character (';')
 			buf.put_new_line
@@ -540,7 +539,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

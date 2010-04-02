@@ -179,15 +179,15 @@ feature
 				else
 					buf.put_string ("RTPR(")
 					context.generate_feature_name (buf)
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					if context.workbench_mode then
 						buf.put_static_type_id (context.class_type.static_type_id)
 					else
 						buf.put_type_id (context.class_type.type_id)
 					end
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					context.generate_current_dtype
-					buf.put_string (gc_rparan_semi_c)
+					buf.put_two_character (')', ';')
 				end
 			end
 
@@ -208,20 +208,20 @@ feature
 				buf.put_string ("RTEAINV")
 				buf.put_character ('(')
 				context.generate_feature_name (buf)
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				buf.put_static_type_id (context.class_type.static_type_id)
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				context.current_register.print_register
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				buf.put_integer (context.local_list.count)
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				buf.put_real_body_id (body_index)
-				buf.put_string (gc_rparan_semi_c)
+				buf.put_two_character (')', ';')
 				if l_is_profiler_enabled and context.workbench_mode then
 					buf.put_new_line
 					buf.put_string ("RTSA(")
 					context.generate_current_dtype
-					buf.put_string (gc_rparan_semi_c)
+					buf.put_two_character (')', ';')
 				end
 			end
 
@@ -263,7 +263,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -276,22 +276,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

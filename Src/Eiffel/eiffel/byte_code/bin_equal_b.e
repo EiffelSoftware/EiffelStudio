@@ -90,7 +90,7 @@ feature
 			else
 				left_register.print_register;
 			end;
-			buffer.put_string (gc_comma);
+			buffer.put_string ({C_CONST}.comma_space);
 			if right_register = Void then
 				right.print_register;
 			else

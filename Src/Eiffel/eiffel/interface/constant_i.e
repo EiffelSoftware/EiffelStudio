@@ -197,7 +197,7 @@ feature -- Incrementality
 
 feature -- C code generation
 
-	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
+	generate (class_type: CLASS_TYPE; buffer, header_buffer: GENERATION_BUFFER)
 			-- Generate feature written in `class_type' in `buffer'.
 		require else
 			valid_buffer: buffer /= Void
@@ -209,7 +209,6 @@ feature -- C code generation
 			return_type_name: STRING
 			local_byte_context: BYTE_CONTEXT
 			local_is_once: BOOLEAN
-			header_buffer: GENERATION_BUFFER
 		do
 			if used then
 				local_byte_context := byte_context
@@ -230,7 +229,6 @@ feature -- C code generation
 						buffer.put_new_line
 						buffer.put_new_line
 					elseif not System.has_multithreaded then
-						header_buffer := local_byte_context.header_buffer
 						header_buffer.put_string (once "RTOSHF (EIF_REFERENCE, ")
 						header_buffer.put_integer (body_index)
 						header_buffer.put_character (')')
@@ -246,7 +244,7 @@ feature -- C code generation
 					return_type_name := type_c.c_string
 				end
 				buffer.generate_function_signature (return_type_name,
-						internal_name, True, local_byte_context.header_buffer,
+						internal_name, True, header_buffer,
 						<<"Current">>, <<"EIF_REFERENCE">>)
 
 					-- Function's body

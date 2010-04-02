@@ -183,8 +183,9 @@ end;
 							if return_type.is_void then
 								return_type.generate (buffer)
 							else
-								buffer.put_string ("EIF_TYPED_VALUE ")
+								buffer.put_string ({C_CONST}.eif_typed_value)
 							end
+							buffer.put_character (' ')
 							buffer.put_string (routine_name)
 							buffer.put_three_character ('(', ')', ';')
 							buffer.generate_function_signature (return_type.c_string, routine_name + cecil_suffix, False, Void, arg_names, arg_types)
@@ -352,7 +353,7 @@ feature {NONE} -- Implementation
 			-- Suffix for wrapper functions
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -196,19 +196,19 @@ feature -- C code generation
 				then
 					buffer.put_string ("RTWPCT(")
 					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					rout_info := System.rout_info_table.item (routine_id)
 					buffer.put_class_id (rout_info.origin)
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("RTWCT(")
 					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					buffer.put_integer (feature_id)
 				end
 
-				buffer.put_string (gc_comma)
+				buffer.put_string ({C_CONST}.comma_space)
 				context.Current_register.print_register
 				buffer.put_character (')')
 			end
@@ -339,19 +339,19 @@ feature -- Genericity
 				then
 					buffer.put_string ("RTWPCT(")
 					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					rout_info := System.rout_info_table.item (routine_id)
 					buffer.put_class_id (rout_info.origin)
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("RTWCT(")
 					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					buffer.put_integer (feature_id)
 				end
 
-				buffer.put_string (gc_comma)
+				buffer.put_string ({C_CONST}.comma_space)
 				context.Current_register.print_register
 				buffer.put_character (')')
 				buffer.put_character (',')
@@ -465,19 +465,19 @@ feature -- Genericity
 				then
 					buffer.put_string ("] = RTWPCT(")
 					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					rout_info := System.rout_info_table.item (routine_id)
 					buffer.put_class_id (rout_info.origin)
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					buffer.put_integer (rout_info.offset)
 				else
 					buffer.put_string ("] = RTWCT(")
 					buffer.put_static_type_id (context.context_class_type.static_type_id)
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					buffer.put_integer (feature_id)
 				end
 
-				buffer.put_string (gc_comma)
+				buffer.put_string ({C_CONST}.comma_space)
 				context.Current_register.print_register
 				buffer.put_two_character (')', ';')
 				dummy := idx_cnt.next

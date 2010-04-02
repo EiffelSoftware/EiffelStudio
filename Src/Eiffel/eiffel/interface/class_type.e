@@ -787,7 +787,7 @@ feature -- Generation
 					l_feature_i := l_feature_table_area [i]
 					if l_feature_i.to_generate_in (current_class) then
 							-- Generate the C code of `feature_i'
-						generate_feature (l_feature_i, buffer)
+						generate_feature (l_feature_i, buffer, header_buffer)
 					end
 					i := i + 1
 				end
@@ -800,7 +800,7 @@ feature -- Generation
 						l_inline_agent_table.after
 					loop
 							-- Generate the C code of `feature_i'
-						generate_feature (l_inline_agent_table.item_for_iteration, buffer)
+						generate_feature (l_inline_agent_table.item_for_iteration, buffer, header_buffer)
 						l_inline_agent_table.forth
 					end
 				end
@@ -880,13 +880,14 @@ feature -- Generation
 			shared_include_queue.wipe_out
 		end
 
-	generate_feature (f: FEATURE_I; buffer: GENERATION_BUFFER)
+	generate_feature (f: FEATURE_I; buffer, header_buffer: GENERATION_BUFFER)
 			-- Generate feature `feat' in Current class type
 		require
-			good_argument: buffer /= Void
+			buffer_attached: buffer /= Void
+			header_buffer_attached: header_buffer /= Void
 			to_generate_in: f.to_generate_in (associated_class)
 		do
-			f.generate (Current, buffer)
+			f.generate (Current, buffer, header_buffer)
 		end
 
 	open_generation_file (has_cpp_externals_calls: BOOLEAN): INDENT_FILE

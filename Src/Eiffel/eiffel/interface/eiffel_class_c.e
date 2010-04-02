@@ -790,7 +790,7 @@ feature -- Third pass: byte code production and type check
 									(create {REFACTORING_HELPER}).to_implement
 										("Do finer-grained recompilation based on affected features only.")
 								end
-								recompile_descendants_with_replication (False, Current)
+								recompile_descendants_with_replication (False)
 							end
 							check_local_names_needed := False
 						elseif check_local_names_needed then
@@ -850,18 +850,41 @@ feature -- Third pass: byte code production and type check
 							(System.line_generation or System.il_generation or new_byte_code_needed)
 					end
 					if invariant_changed then
+							-- The invariant will be regenerated.
+					elseif
+						not (f_suppliers = Void
+								or else (propagators.empty_intersection (f_suppliers)
+								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
+					then
+							-- The invariant has to be regenerated.
+						invariant_changed := True
+					elseif invariant_feature /= Void and degree_3_needed then
+							-- Probably the invariant need not be regenerated, but it has to be type checked.
+						invar_clause := Inv_ast_server.item (class_id)
+						l_ast_context.set_written_class (invariant_feature.written_class)
+						l_ast_context.set_current_feature (invariant_feature)
+							-- Record warning level for the case when the invariant will be regenerated.
+						warning_level := error_handler.warning_level
+						feature_checker.invariant_type_check (invariant_feature, invar_clause, False)
+							-- Regenerate code of a class invariant if its AST is modified.
+						if feature_checker.is_ast_modified then
+								-- Code generation is not required if there are errors.
+							if error_handler.error_level = l_error_level then
+									-- Discard warnings that will be reported again during code generation.
+								error_handler.set_warning_level (warning_level)
+									-- Request invariant regeneration.
+								invariant_changed := True
+							end
+								-- Regenerate all descendants.
+							regenerate_descendants
+						end
+					end
+					if invariant_changed then
 						if invariant_feature = Void then
 							create invariant_feature.make (Current)
 							invariant_feature.set_body_index (Body_index_counter.next_id)
 							invariant_feature.set_feature_id (feature_id_counter.next)
 						end
-					end
-					if
-						invariant_changed
-						or else not	(f_suppliers = Void
-									or else (propagators.empty_intersection (f_suppliers)
-									and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
-					then
 						invar_clause := Inv_ast_server.item (class_id)
 						l_error_level := Error_handler.error_level
 
@@ -912,13 +935,6 @@ feature -- Third pass: byte code production and type check
 						end
 							-- Clean context
 						l_ast_context.clear_feature_context
-					elseif invariant_feature /= Void and degree_3_needed then
-							-- we have to type check again to get the types into the ast
-						invar_clause := Inv_ast_server.item (class_id)
-						l_ast_context.set_written_class (invariant_feature.written_class)
-						l_ast_context.set_current_feature (invariant_feature)
-
-						feature_checker.invariant_type_check (invariant_feature, invar_clause, False)
 					end
 				end
 
@@ -994,93 +1010,6 @@ feature -- Third pass: byte code production and type check
 				Tmp_ast_server.cache.wipe_out
 				internal_inline_agent_table := old_inline_agent_table
 			end
-		end
-
-	invariant_pass3 (	dependances: CLASS_DEPENDANCE
-						new_suppliers: like suppliers
-						melt_set: like melted_set)
-			-- Recomputation of invariant clause
---		require
---			good_argument1: dependances /= Void
---			good_argument2: changed implies new_suppliers /= Void
---			good_argument3: melt_set /= Void
---		local
---			invar_clause: INVARIANT_AS
---			invar_byte: INVARIANT_B
---			f_suppliers: FEATURE_DEPENDANCE
---			invariant_changed: BOOLEAN
---			melted_info: INV_MELTED_INFO
---			new_body_index: INTEGER
-		do
---			f_suppliers := dependances.item ("_invariant")
---
---			if propagators.invariant_removed then
---				dependances.remove ("_invariant")
---				new_suppliers.remove_occurrence (f_suppliers)
---				invariant_feature := Void
---			else
---				invariant_changed := propagators.invariant_changed
---				if not (invariant_changed or else f_suppliers = Void) then
---					invariant_changed :=
---						not propagators.melted_empty_intersection (f_suppliers)
---				end
---				if invariant_changed then
---					if invariant_feature = Void then
---						create invariant_feature.make (Current)
---						invariant_feature.set_body_index
---											(Body_index_counter.next_id)
---					end
---					new_body_index := Body_id_counter.next
---					System.body_index_table.force
---								(new_body_index, invariant_feature.body_index)
---				end
---				if	(	invariant_changed
---						or else
---						not	(	f_suppliers = Void
---								or else
---								(propagators.empty_intersection (f_suppliers)
---								and then
---								propagators.changed_status_empty_intersection (f_suppliers.suppliers))
---							)
---					)
---				then
---					invar_clause := Tmp_inv_ast_server.item (class_id)
---					Error_handler.mark
---
---debug ("ACTIVITY")
---	io.error.put_string ("%TType check for invariant%N")
---end
---					invar_clause.type_check
---					--if	invariant_changed
---					--	and then
---					if
---						not Error_handler.new_error
---					then
---						if f_suppliers /= Void then
---							new_suppliers.remove_occurrence (f_suppliers)
---							dependances.remove ("_invariant")
---						end
---						f_suppliers := ast_context.supplier_ids.twin
---						dependances.put (f_suppliers, "_invariant")
---						new_suppliers.add_occurrence (f_suppliers)
---
---debug ("ACTIVITY")
---	io.error.put_string ("%TByte code for invariant%N")
---end
---
---						create invar_byte
---						invar_byte.set_class_id (class_id)
---						invar_byte.set_byte_list (invar_clause.byte_node)
---						Tmp_inv_byte_server.put (invar_byte)
---
---						create melted_info
---						melt_set.put (melted_info)
---
---					end
---						-- Clean context
---					ast_context.clear_feature_context
---				end
---			end
 		end
 
 	process_custom_attributes

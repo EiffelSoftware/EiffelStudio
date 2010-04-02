@@ -82,15 +82,24 @@ feature {EV_ANY_I} -- Implementation
 		-- Number of iterations before forcing Garbage Collector to kick in.
 		-- 30 Seconds = 30 * 1000 / sleep time
 
+	idle_actions_snapshot, kamikaze_idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
+		note
+			option: stable
+		attribute
+		end
+
 	process_event_queue (a_relinquish_cpu: BOOLEAN)
 			-- Process all posted events on the event queue.
 			-- CPU will be relinquished if `a_relinquish_cpu' and idle actions are successfully executed.
 		local
+			l_idle_actions_internal: like idle_actions_internal
 			l_locked: BOOLEAN
-			retried: BOOLEAN
-			l_is_destroyed: BOOLEAN
+			l_retry_count: INTEGER
+			l_idle_actions_snapshot, l_kamikaze_idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
+			l_action: detachable PROCEDURE [ANY, TUPLE]
+			i, l_count: INTEGER
 		do
-			if not retried then
+			if l_retry_count = 0 then
 				process_underlying_toolkit_event_queue
 					-- There are no more events left so call idle actions if read lock can be attained.
 				if user_events_processed_from_underlying_toolkit then
@@ -111,30 +120,94 @@ feature {EV_ANY_I} -- Implementation
 					idle_iteration_count := 1
 						-- Reset idle iteration counter if CPU is not relinquished.
 				end
-				if try_lock then
-					l_is_destroyed := is_destroyed
+				l_idle_actions_internal := idle_actions_internal
+				if not is_destroyed and then l_idle_actions_internal /= Void and then not l_idle_actions_internal.is_empty and then try_lock then
 					l_locked := True
-					if not l_is_destroyed then
-						idle_actions.call (Void)
+						-- Make a snapshot of the idle actions to avoid side effects.
+
+					if attached l_idle_actions_internal.kamikazes_internal as l_kamikazes_internal then
+						if kamikaze_idle_actions_snapshot = Void then
+							kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
+						else
+							kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.aliased_resized_area (l_kamikazes_internal.count)
+							kamikaze_idle_actions_snapshot.copy_data (l_kamikazes_internal.area, 0, 0, l_kamikazes_internal.count)
+						end
+
+						l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
+							-- Wipe out the kamikaze actions from the idle actions as we now have a snapshot.
+						from
+							i := 0
+							l_count := l_kamikaze_idle_actions_snapshot.count
+						until
+							i = l_count
+						loop
+							l_idle_actions_internal.prune_all (l_kamikaze_idle_actions_snapshot @ i)
+							i := i + 1
+						end
+						l_kamikazes_internal.wipe_out
 					end
+
+					if idle_actions_snapshot = Void then
+						idle_actions_snapshot := l_idle_actions_internal.area.twin
+					else
+						idle_actions_snapshot := idle_actions_snapshot.aliased_resized_area (l_idle_actions_internal.count)
+						idle_actions_snapshot.copy_data (l_idle_actions_internal.area, 0, 0, l_idle_actions_internal.count)
+					end
+					l_idle_actions_snapshot := idle_actions_snapshot
+
+						-- We can now unlock the resource as we have our own local copy.
 					unlock
 					l_locked := False
-					if a_relinquish_cpu and then not l_is_destroyed then
+
+					if l_kamikaze_idle_actions_snapshot /= Void then
+						from
+							i := 0
+							l_count := l_kamikaze_idle_actions_snapshot.count
+						until
+							i = l_count or else is_destroyed
+						loop
+							l_action := l_kamikaze_idle_actions_snapshot @ i
+							if l_action /= Void then
+								l_action.call (Void)
+							end
+							i := i + 1
+						end
+						l_kamikaze_idle_actions_snapshot.wipe_out
+					end
+					if l_idle_actions_snapshot /= Void then
+						from
+							l_count := l_idle_actions_snapshot.count
+							i := 0
+						until
+							i = l_count or else is_destroyed
+						loop
+							l_action := l_idle_actions_snapshot @ i
+							if l_action /= Void then
+								l_action.call (Void)
+							end
+							i := i + 1
+						end
+						l_idle_actions_snapshot.wipe_out
+					end
+
+					if a_relinquish_cpu and then not is_destroyed then
 							-- We only relinquish CPU if requested and a lock for the idle actions has been attained.
 						wait_for_input (cpu_relinquishment_time)
 					end
 				end
 			else
-				on_exception_action (new_exception)
+				if l_retry_count = 1 then
+					on_exception_action (new_exception)
+				end
 			end
 		rescue
-			if not retried then
+			if l_retry_count = 0 then
 				if l_locked then
 						-- If a crash occurred whilst calling the idle actions then we must unlock the mutex.
 					unlock
 					l_locked := False
 				end
-				retried := True
+				l_retry_count := l_retry_count + 1
 				retry
 			end
 		end

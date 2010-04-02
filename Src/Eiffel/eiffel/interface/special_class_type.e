@@ -226,7 +226,7 @@ feature -- C code generation
 			end
 		end
 
-	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER)
+	generate_feature (feat: FEATURE_I; buffer, header_buffer: GENERATION_BUFFER)
 			-- Generate feature `feat' in `buffer'.
 		local
 			f_name_id: INTEGER
@@ -267,14 +267,14 @@ feature -- C code generation
 			when {PREDEFINED_NAMES}.clear_all_name_id then
 					-- Generate `clear_all' of class SPECIAL for more efficiency.
 				if first_generic.is_true_expanded then
-					Precursor {CLASS_TYPE} (feat, buffer)
+					Precursor {CLASS_TYPE} (feat, buffer, header_buffer)
 				else
 					generate_clear_all (feat, buffer)
 				end
 
 			else
 					-- Basic generation
-				Precursor {CLASS_TYPE} (feat, buffer);
+				Precursor {CLASS_TYPE} (feat, buffer, header_buffer);
 			end;
 		end;
 
@@ -678,7 +678,7 @@ feature {NONE} -- C code generation
 				l_exp_class_type.generate_expanded_structure_declaration (buffer, "sloc1")
 				buffer.put_new_line
 				type_c.generate (buffer)
-				buffer.put_string ("loc1 = ")
+				buffer.put_string (" loc1 = ")
 				type_c.generate_cast (buffer)
 				buffer.put_string ("sloc1.data")
 				buffer.put_character (';')
@@ -911,10 +911,14 @@ feature {NONE} -- C code generation
 				if basic_i = Void then
 					buffer.put_string ("return ")
 				else
-					buffer.put_string ("EIF_REFERENCE Result;")
+					buffer.put_string ({C_CONST}.eif_reference)
+					buffer.put_character (' ')
+					buffer.put_string ({C_CONST}.result_name)
+					buffer.put_character (';')
 					buffer.put_new_line
 					basic_i.c_type.generate (buffer)
-					buffer.put_string ("r = ")
+					buffer.put_character (' ')
+					buffer.put_four_character ('r', ' ', '=', ' ')
 				end
 				if l_param_is_expanded or else associated_class.assertion_level.is_precondition then
 						-- It's possible to repeat the code above, but it's complex enough.
@@ -1032,9 +1036,9 @@ feature {NONE} -- C code generation
 					buffer.put_string ("OVERHEAD + (rt_uint_ptr) arg1 * (rt_uint_ptr) RT_SPECIAL_ELEM_SIZE(Current));")
 				end
 			else
-				buffer.put_string ("(rt_uint_ptr) arg1 * (rt_uint_ptr) sizeof(")
-				type_c.generate (buffer)
-				buffer.put_string ("));")
+				buffer.put_string ("(rt_uint_ptr) arg1 * (rt_uint_ptr)")
+				type_c.generate_size (buffer)
+				buffer.put_two_character (')', ';')
 			end
 			if l_byte_context.workbench_mode then
 				buffer.put_new_line

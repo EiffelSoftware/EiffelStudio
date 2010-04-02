@@ -279,25 +279,27 @@ extern "C" {
  *   Definitions for once routines   *
  *************************************/
 
+#define EIF_CHARACTER_result EIF_CHARACTER_8_result
+#define EIF_WIDE_CHAR_result EIF_CHARACTER_32_result
 typedef struct tag_EIF_once_value_t {
 	union {
-		EIF_BOOLEAN     EIF_BOOLEAN_result;
-		EIF_CHARACTER   EIF_CHARACTER_result;
-		EIF_WIDE_CHAR   EIF_WIDE_CHAR_result;
-		EIF_INTEGER_8   EIF_INTEGER_8_result;
-		EIF_INTEGER_16  EIF_INTEGER_16_result;
-		EIF_INTEGER     EIF_INTEGER_result;
-		EIF_INTEGER_32  EIF_INTEGER_32_result;
-		EIF_INTEGER_64  EIF_INTEGER_64_result;
-		EIF_NATURAL_8   EIF_NATURAL_8_result;
-		EIF_NATURAL_16  EIF_NATURAL_16_result;
-		EIF_NATURAL     EIF_NATURAL_result;
-		EIF_NATURAL_32  EIF_NATURAL_32_result;
-		EIF_NATURAL_64  EIF_NATURAL_64_result;
-		EIF_REAL_32     EIF_REAL_32_result;
-		EIF_REAL_64     EIF_REAL_64_result;
-		EIF_REFERENCE * EIF_REFERENCE_result;
-		EIF_POINTER     EIF_POINTER_result;
+		EIF_BOOLEAN      EIF_BOOLEAN_result;
+		EIF_CHARACTER_8  EIF_CHARACTER_8_result;
+		EIF_CHARACTER_32 EIF_CHARACTER_32_result;
+		EIF_INTEGER_8    EIF_INTEGER_8_result;
+		EIF_INTEGER_16   EIF_INTEGER_16_result;
+		EIF_INTEGER      EIF_INTEGER_result;
+		EIF_INTEGER_32   EIF_INTEGER_32_result;
+		EIF_INTEGER_64   EIF_INTEGER_64_result;
+		EIF_NATURAL_8    EIF_NATURAL_8_result;
+		EIF_NATURAL_16   EIF_NATURAL_16_result;
+		EIF_NATURAL      EIF_NATURAL_result;
+		EIF_NATURAL_32   EIF_NATURAL_32_result;
+		EIF_NATURAL_64   EIF_NATURAL_64_result;
+		EIF_REAL_32      EIF_REAL_32_result;
+		EIF_REAL_64      EIF_REAL_64_result;
+		EIF_REFERENCE *  EIF_REFERENCE_result;
+		EIF_POINTER      EIF_POINTER_result;
 	} result;                  /* Result of a once function (if any) */
 	EIF_REFERENCE   *exception;    /* Associated exception object (if any) */
 	EIF_BOOLEAN     done;      /* Can result be used?                */

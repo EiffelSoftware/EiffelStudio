@@ -40,7 +40,7 @@ feature -- Access
 	c_string: STRING
 			-- String generated for the type.
 		do
-			 Result := pointer_string
+			 Result := {C_CONST}.eif_pointer
 		end
 
 	typed_field: STRING = "it_p"

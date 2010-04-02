@@ -386,7 +386,8 @@ end
 				if reg.is_current then
 					context.generate_current_dtype
 				else
-					buf.put_string (gc_upper_dtype_lparan)
+					buf.put_string ({C_CONST}.dtype);
+					buf.put_character ('(')
 					reg.print_register
 					buf.put_character (')')
 				end
@@ -474,7 +475,7 @@ end
 					until
 						i = nb
 					loop
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						expr := l_area.item (i);	-- Cannot fail
 						expr.print_register
 						i := i + 1

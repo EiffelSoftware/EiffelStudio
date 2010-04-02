@@ -88,10 +88,10 @@ feature -- Access
 			-- String generated for the type.
 		do
 			inspect size
-			when 8 then Result := String_natural_8
-			when 16 then Result := String_natural_16
-			when 32 then Result := String_natural_32
-			when 64 then Result := String_natural_64
+			when 8 then Result := {C_CONST}.eif_natural_8
+			when 16 then Result := {C_CONST}.eif_natural_16
+			when 32 then Result := {C_CONST}.eif_natural_32
+			when 64 then Result := {C_CONST}.eif_natural_64
 			end
 		end
 

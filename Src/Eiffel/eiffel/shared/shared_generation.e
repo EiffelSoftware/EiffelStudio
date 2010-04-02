@@ -1,34 +1,10 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class SHARED_GENERATION
 
-feature
-
-	gc_equal: STRING = " = "
-
-	gc_comma: STRING = ", "
-
-	gc_rparan_comma: STRING = "), "
-
-	gc_rparan_semi_c: STRING = ");"
-
-	gc_plus: STRING = " + "
-
-	gc_star: STRING = " * "
-
-	gc_if_l_paran: STRING = "if ("
-
-	gc_lacc_else_r_acc: STRING = "} else {"
-
-	gc_dtype: STRING = "dtype"
-	gc_dftype: STRING = "dftype"
-	gc_inlined_dtype: STRING = "inlined_dtype"
-	gc_inlined_dftype: STRING = "inlined_dftype"
-	gc_upper_dtype_lparan: STRING = "Dtype("
-	gc_upper_dftype_lparan: STRING = "Dftype("
-			-- String used to buffer value of current dynamic type and current full
-			-- dynamic type.
+feature -- Buffers
 
 	generation_buffer: GENERATION_BUFFER
 			-- String where all the generation will happen

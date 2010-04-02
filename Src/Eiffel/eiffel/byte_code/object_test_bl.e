@@ -147,7 +147,7 @@ feature -- C code generation
 							-- Call redefined version of `twin'/`cloned'.
 						buf.put_string ("RTRCL(")
 						expression.print_register
-						buf.put_string (gc_rparan_semi_c)
+						buf.put_two_character (')', ';')
 					end
 				end
 					-- If register was propagated, then the assignment was already
@@ -195,15 +195,15 @@ feature -- C code generation
 								buf.put_new_line
 								buf.put_string ("memmove(")
 								target.print_register
-								buf.put_string (gc_comma)
+								buf.put_string ({C_CONST}.comma_space)
 								expression_print_register
-								buf.put_string (gc_comma)
+								buf.put_string ({C_CONST}.comma_space)
 								if context.workbench_mode then
 									target_class_type.associated_class_type (context.context_class_type.type).skeleton.generate_workbench_size (buf)
 								else
 									target_class_type.associated_class_type (context.context_class_type.type).skeleton.generate_size (buf, True)
 								end
-								buf.put_string (gc_rparan_semi_c)
+								buf.put_two_character (')', ';')
 							end
 							result_value := true_constant
 						else
@@ -218,19 +218,19 @@ feature -- C code generation
 							buf.put_string ("RTOB(")
 							buf.put_character ('*')
 							target.c_type.generate_access_cast (buf)
-							buf.put_string (gc_comma)
+							buf.put_string ({C_CONST}.comma_space)
 						else
 								-- Attachment to entity of non-basic expanded type.
 							buf.put_string ("RTOE(")
 						end
 						info.generate_type_id (buf, context.final_mode, 0)
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						expression_print_register
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						target.print_register
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						result_register.print_register
-						buf.put_string (gc_rparan_semi_c)
+						buf.put_two_character (')', ';')
 						result_value := result_variable
 						info.generate_end (buf)
 					end
@@ -285,7 +285,7 @@ feature -- C code generation
 								expression_print_register
 							end
 							result_value := target_variable
-							buf.put_string (gc_rparan_semi_c)
+							buf.put_two_character (')', ';')
 							info.generate_end (buf)
 						end
 					end
@@ -349,7 +349,7 @@ feature {NONE} -- Object test value
 			-- Expression value is stored in a target register
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

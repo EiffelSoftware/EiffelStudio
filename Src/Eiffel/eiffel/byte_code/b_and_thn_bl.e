@@ -106,9 +106,10 @@ feature
 					-- expression is false and the right handside is not evaled.
 				left.generate;
 				buf.put_new_line
-				buf.put_string (gc_if_l_paran);
+				buf.put_string ({C_CONST}.if_conditional)
+				buf.put_two_character (' ', '(')
 				left.print_register;
-				buf.put_string (") {");
+				buf.put_three_character (')', ' ', '{')
 					-- Left handside was true. Value of the expression is the
 					-- value of the right handside.
 				buf.indent;
@@ -127,7 +128,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

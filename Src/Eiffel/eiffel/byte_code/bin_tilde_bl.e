@@ -196,7 +196,7 @@ feature -- C code generation
 					else
 						left_register.print_register
 					end
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					if right_register = Void then
 						right.print_register
 					else

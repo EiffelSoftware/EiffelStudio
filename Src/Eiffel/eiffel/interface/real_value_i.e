@@ -119,11 +119,9 @@ feature -- Code generation
 	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `buffer'.
 		local
-			l_buf: like buffer
 			l_val: STRING
 			l_nb, l_pos: INTEGER
 		do
-			l_buf := buffer
 			if is_real_64 then
 				l_val := real_64_value.out
 			else
@@ -136,17 +134,17 @@ feature -- Code generation
 			if l_pos > 0 then
 					-- Replace the `,' with a `.'.
 				l_val.put ('.', l_pos)
-				l_buf.put_string (l_val)
+				buffer.put_string (l_val)
 			elseif l_val.last_index_of ('.', l_nb) = 0 and l_val.last_index_of ('e', l_nb) = 0 then
 					-- It is an integer value, we need to add the '.'
 					-- as otherwise it is not a valid C identifier.
-				l_buf.put_string (l_val)
-				l_buf.put_character ('.')
+				buffer.put_string (l_val)
+				buffer.put_character ('.')
 			else
-				l_buf.put_string (l_val)
+				buffer.put_string (l_val)
 			end
 			if is_real_32 then
-				l_buf.put_character ('f')
+				buffer.put_character ('f')
 			end
 		end
 

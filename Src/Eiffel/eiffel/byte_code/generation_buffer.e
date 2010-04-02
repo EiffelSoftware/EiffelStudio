@@ -280,7 +280,7 @@ feature -- Automatically indented output
 	put_hex_integer_8 (v: INTEGER_8)
 			-- Write integer `v' as a 16-bit hexadecimal value.
 		do
-			put_hex_natural_8 (v.as_natural_8)
+			put_hex_natural_64 (v.as_natural_8)
 		end
 
 	put_hex_integer_16 (v: INTEGER)
@@ -288,55 +288,46 @@ feature -- Automatically indented output
 		require
 			valid_as_integer_16: v <= {INTEGER_16}.max_value
 		do
-			put_hex_natural_16 (v.as_natural_16)
+			put_hex_natural_64 (v.as_natural_16)
+		end
+
+	put_hex_integer_32 (v: INTEGER_32)
+			-- Write integer `v' as a 32-bit hexadecimal value.
+		do
+			put_hex_natural_64 (v.as_natural_32)
+		end
+
+	put_hex_integer_64 (v: INTEGER_64)
+			-- Write integer `v' as a 32-bit hexadecimal value.
+		do
+			put_hex_natural_64 (v.as_natural_64)
 		end
 
 	put_hex_natural_8 (v: NATURAL_8)
 			-- Write natural `v' as a 16-bit hexadecimal value.
-		local
-			i, nb: INTEGER
-			val, a_digit: NATURAL
-			l_buffer: like current_buffer
 		do
-			l_buffer := current_buffer
-				-- Complicated part: we estimate the required size depending
-				-- on the size of the integer we are given. If it is too big
-				-- to fit the `current_buffer', we resize it. We write the hex
-				-- numbers by pair.
-			nb := 4
-			i := nb + l_buffer.count
-			if i > l_buffer.capacity then
-				buffers.extend (l_buffer)
-				create l_buffer.make (max_chunk_size.max (nb))
-				current_buffer := l_buffer
-				i := nb
-			end
-			l_buffer.set_count (i)
-				-- Now write the hexa decimal number in reverse order.
-			from
-				val := v
-					-- Remove the extra `0x' from `nb'
-				nb := nb - 2
-			until
-				nb = 0
-			loop
-				a_digit := (val & 0xF)
-				l_buffer.put (a_digit.to_hex_character, i)
-				val := val |>> 4
-				i := i - 1
-				nb := nb - 1
-			end
-			l_buffer.put ('x', i)
-			l_buffer.put ('0', i - 1)
+			put_hex_natural_64 (v)
 		end
 
 	put_hex_natural_16 (v: NATURAL)
 			-- Write natural `v' as a 16-bit hexadecimal value.
 		require
 			valid_as_natural_16: v <= {NATURAL_16}.max_value
+		do
+			put_hex_natural_64 (v)
+		end
+
+	put_hex_natural_32 (v: NATURAL_32)
+			-- Write natural `v' as a 32-bit hexadecimal value.
+		do
+			put_hex_natural_64 (v)
+		end
+
+	put_hex_natural_64 (v: NATURAL_64)
+			-- Write natural `v' as a 32-bit hexadecimal value.
 		local
 			i, nb: INTEGER
-			val, a_digit: NATURAL
+			val, a_digit: NATURAL_64
 			l_buffer: like current_buffer
 		do
 			l_buffer := current_buffer
@@ -344,10 +335,28 @@ feature -- Automatically indented output
 				-- on the size of the integer we are given. If it is too big
 				-- to fit the `current_buffer', we resize it. We write the hex
 				-- numbers by pair.
-			if v <= 0xFF then
-				nb := 4
+			if v <= 0xFFFFFFFF then
+				if v <= 0xFFFF then
+					if v <= 0xFF then
+						nb := 4
+					else
+						nb := 6
+					end
+				elseif v <= 0xFFFFFF then
+					nb := 8
+				else
+					nb := 10
+				end
+			elseif v <= 0xFFFFFFFFFFFF then
+				if v <= 0xFFFFFFFFFF then
+					nb := 12
+				else
+					nb := 14
+				end
+			elseif v <= 0xFFFFFFFFFFFFFF then
+				nb := 16
 			else
-				nb := 6
+				nb := 18
 			end
 			i := nb + l_buffer.count
 			if i > l_buffer.capacity then

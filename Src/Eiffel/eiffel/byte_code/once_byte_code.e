@@ -137,7 +137,7 @@ feature {NONE} -- C code generation: implementation
 			buf.put_character ('(')
 			if is_basic_type then
 				buf.put_string (c_type_name)
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 			end
 		end
 
@@ -210,7 +210,7 @@ feature -- C code generation
 					generate_once_result_definition ("RTOTR", "RTOTD")
 				end
 				buf.put_string (generated_c_feature_name)
-				buf.put_string (gc_rparan_semi_c)
+				buf.put_two_character (')', ';')
 			elseif is_object_relative_once then
 				check not_yet_implemented: False end
 			elseif is_thread_relative_once and then System.has_multithreaded then

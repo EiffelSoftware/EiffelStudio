@@ -266,7 +266,7 @@ feature -- Element Change
 			end
 		end
 
-	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
+	generate (class_type: CLASS_TYPE; buffer, header_buffer: GENERATION_BUFFER)
 			-- Generate feature written in `class_type' in `buffer'.
 		require else
 			valid_file: buffer /= Void

@@ -130,22 +130,22 @@ feature -- Eiffel source line information
 						end
 						buf.put_character ('(')
 						context.current_register.print_register
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						context.generate_current_dtype
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 
 						if attb.type.is_expanded then
 							l_expanded := 1
 						end
 
 						buf.put_integer (l_code)
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (l_offset)
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						buf.put_natural_32 (l_sk_type)
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (l_expanded)
-						buf.put_string (gc_rparan_semi_c)
+						buf.put_two_character (')', ';')
 						buf.put_string (" /* ")
 						buf.put_string (attb.attribute_name)
 						buf.put_string (" */")
@@ -154,19 +154,19 @@ feature -- Eiffel source line information
 					if attached {LOCAL_B} a_target as locb then
 						buf.put_string ("RTDBGAL(")
 						context.current_register.print_register
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (locb.position)
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						buf.put_natural_32 (l_sk_type)
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						if locb.type.is_expanded then
 							buf.put_integer (1)
 						else
 							buf.put_integer (0)
 						end
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (0) --| not melted						
-						buf.put_string (gc_rparan_semi_c)
+						buf.put_two_character (')', ';')
 						buf.put_string (" /* ")
 						buf.put_string (locb.register_name)
 						buf.put_string (" */")
@@ -175,18 +175,18 @@ feature -- Eiffel source line information
 					if attached {RESULT_B} a_target as resb then
 						buf.put_string ("RTDBGAL(")
 						context.current_register.print_register
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (0) --| Let's say Result's position = 0
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						buf.put_natural_32 (l_sk_type)
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						if resb.type.is_expanded then
 							buf.put_integer (1)
 						else
 							buf.put_integer (0)
 						end
 						buf.put_two_character (',', '0') --| not melted						
-						buf.put_string (gc_rparan_semi_c)
+						buf.put_two_character (')', ';')
 						buf.put_string (" /* Result */")
 					end
 --| Keep comment for later.					

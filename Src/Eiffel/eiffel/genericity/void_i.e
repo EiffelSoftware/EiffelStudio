@@ -31,8 +31,11 @@ feature -- Access
 			Result := {SK_CONST}.sk_void
 		end
 
-	c_string: STRING = "void"
+	c_string: STRING
 			-- String generated for the type.
+		do
+			Result := {C_CONST}.void_name
+		end
 
 	typed_field: STRING
 			-- Value field of a C structure corresponding to this type

@@ -29,14 +29,14 @@ create
 
 feature -- C code generation
 
-	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER)
+	generate_feature (feat: FEATURE_I; buffer, header_buffer: GENERATION_BUFFER)
 			-- Generate feature `feat' in `buffer'.
 		do
 			inspect feat.feature_name_id
 			when {PREDEFINED_NAMES}.default_name_id then
 				generate_default (feat, buffer)
 			else
-				Precursor (feat, buffer)
+				Precursor (feat, buffer, header_buffer)
 			end
 		end
 
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

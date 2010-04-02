@@ -238,6 +238,7 @@ feature -- Dynamic Library file
 											argument_names.after
 										loop
 											args.i_th (argument_names.index).c_type.generate (buffer)
+											buffer.put_character (' ')
 											buffer.put_string(argument_names.item)
 											if not argument_names.islast then
 												buffer.put_string(", ")

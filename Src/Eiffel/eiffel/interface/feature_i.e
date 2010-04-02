@@ -3143,10 +3143,11 @@ feature {NONE} -- log file
 
 feature -- C code generation
 
-	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
+	generate (class_type: CLASS_TYPE; buffer, header_buffer: GENERATION_BUFFER)
 			-- Generate feature written in `class_type' in `buffer'.
 		require
 			valid_buffer: buffer /= Void
+			header_buffer_attached: header_buffer /= Void
 			written_in_type: class_type.associated_class.class_id = generation_class_id or is_replicated
 			not_deferred: not is_deferred
 		local
@@ -3155,15 +3156,16 @@ feature -- C code generation
 			l_byte_context: like byte_context
 		do
 			if used then
-					-- `generate' from BYTE_CODE will log the feature name
-					-- and encoded name in `used_features_log_file' from SYSTEM_I
-				generate_header (class_type, buffer)
-
 				tmp_body_index := body_index
 				l_byte_code := tmp_opt_byte_server.disk_item (tmp_body_index)
 				if l_byte_code = Void then
 					l_byte_code := byte_server.disk_item (tmp_body_index)
 				end
+
+					-- `generate' from BYTE_CODE will log the feature name
+					-- and encoded name in `used_features_log_file' from SYSTEM_I
+				generate_header (class_type, buffer)
+
 
 					-- Generation of C code for an Eiffel feature written in
 					-- the associated class of the current type.

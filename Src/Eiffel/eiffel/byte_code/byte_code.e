@@ -417,14 +417,9 @@ feature -- Settings
 			l_arg_str := once "arg"
 			if arguments /= Void then
 				count := arguments.count
-				if generate_current then
-					create Result.make (1, count + 1)
-					Result.put (l_current_str, 1)
-					j := 2
-				else
-					create Result.make (1, count)
-					j := 1
-				end
+				create Result.make (1, count + 1)
+				Result.put (l_current_str, 1)
+				j := 2
 				from
 					i := 1
 					l_is_workbench_classic := context.workbench_mode and then not system.il_generation
@@ -441,16 +436,11 @@ feature -- Settings
 					i := i + 1
 					j := j + 1
 				end
-			elseif generate_current then
+			else
 				create Result.make (1, 1)
 				Result.put (l_current_str, 1)
-			else
-				create Result.make (1, 0)
 			end
 		end
-
-	generate_current: BOOLEAN = True
-			-- Is Current included in argument generation?
 
 	argument_types: ARRAY [STRING]
 			-- Declare C parameters, if any, as part of the definition.
@@ -462,14 +452,9 @@ feature -- Settings
 			if arguments /= Void then
 				l_is_workbench := context.workbench_mode
 				count := arguments.count
-				if generate_current then
-					create Result.make (1, count + 1)
-					Result.put (once "EIF_REFERENCE", 1)
-					j := 2
-				else
-					create Result.make (1, count)
-					j := 1
-				end
+				create Result.make (1, count + 1)
+				Result.put (once "EIF_REFERENCE", 1)
+				j := 2
 				from
 					i := 1
 				until
@@ -484,11 +469,9 @@ feature -- Settings
 					i := i + 1
 					j := j + 1
 				end
-			elseif generate_current then
+			else
 				create Result.make (1, 1)
 				Result.put (once "EIF_REFERENCE", 1)
-			else
-				create Result.make (1, 0)
 			end
 		ensure
 			argument_types_not_void: Result /= Void

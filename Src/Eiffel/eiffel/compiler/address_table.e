@@ -949,7 +949,7 @@ feature {NONE} -- Generation
 						until
 							i > args_count
 						loop
-							buffer.put_string (gc_comma)
+							buffer.put_string ({C_CONST}.comma_space)
 							if formal_arg [i] and then not reference_arg [i] then
 								buffer.put_string (l_arg_str)
 								buffer.put_integer (i)
@@ -992,7 +992,7 @@ feature {NONE} -- Generation
 							until
 								i > args_count
 							loop
-								buffer.put_string (gc_comma)
+								buffer.put_string ({C_CONST}.comma_space)
 								if formal_arg [i] and then not reference_arg [i] then
 									buffer.put_string (l_arg_str)
 									buffer.put_integer (i)
@@ -1163,17 +1163,17 @@ feature {NONE} -- Generation
 				l_rout_info := System.rout_info_table.item (l_rout_id)
 				buffer.put_string ("RTVPF(")
 				buffer.put_class_id (l_rout_info.origin)
-				buffer.put_string (gc_comma)
+				buffer.put_string ({C_CONST}.comma_space)
 				buffer.put_integer (l_rout_info.offset)
 			else
 				buffer.put_string ("RTVF(")
 				buffer.put_static_type_id (a_type.static_type_id)
-				buffer.put_string (gc_comma)
+				buffer.put_string ({C_CONST}.comma_space)
 				buffer.put_integer (a_feature.feature_id)
 			end
-			buffer.put_string (gc_comma)
+			buffer.put_string ({C_CONST}.comma_space)
 			buffer.put_string_literal (a_feature.feature_name)
-			buffer.put_string (gc_comma)
+			buffer.put_string ({C_CONST}.comma_space)
 			buffer.put_string (l_current_name)
 			buffer.put_string ("))(")
 		end
@@ -1414,7 +1414,7 @@ feature {NONE}	--implementation
 	new_frozen_age: INTEGER;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

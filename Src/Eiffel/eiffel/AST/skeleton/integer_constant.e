@@ -339,11 +339,11 @@ feature -- Generation
 			buf.put_character ('(')
 			inspect default_type
 			when integer_8_mask then
-				buf.put_string (integer_8_cast)
+				integer_8_type.c_type.generate_cast (buf)
 				buf.put_integer (integer_8_value)
 				buf.put_character ('L')
 			when integer_16_mask then
-				buf.put_string (integer_16_cast)
+				integer_16_type.c_type.generate_cast (buf)
 				buf.put_integer (integer_16_value)
 				buf.put_character ('L')
 			when integer_32_mask then
@@ -352,10 +352,10 @@ feature -- Generation
 					-- as it is therefore an unsigned value we are trying to negate
 					-- and the C compiler warns it is still unsigned, although at
 					-- the end it is ok with the cast.
-				buf.put_string (integer_32_cast)
+				integer_32_type.c_type.generate_cast (buf)
 				l_int := integer_32_value
 				if l_int = {INTEGER}.min_value then
-					buf.put_string ("0x80000000")
+					buf.put_hex_integer_32 (l_int)
 				else
 					buf.put_integer (integer_32_value)
 				end
@@ -366,30 +366,32 @@ feature -- Generation
 					-- as it is therefore an unsigned value we are trying to negate
 					-- and the C compiler warns it is still unsigned, although at
 					-- the end it is ok with the cast.
-				buf.put_string (integer_64_cast)
-				buf.put_string ("RTI64C(")
+				integer_64_type.c_type.generate_cast (buf)
+				buf.put_string ({C_CONST}.rti64c)
+				buf.put_character ('(')
 				l_int64 := integer_64_value
 				if l_int64 = {INTEGER_64}.min_value then
-					buf.put_string ("0x8000000000000000")
+					buf.put_hex_integer_64 (l_int64)
 				else
 					buf.put_integer_64 (integer_64_value)
 				end
 				buf.put_character (')')
 			when natural_8_mask then
-				buf.put_string (natural_8_cast)
+				natural_8_type.c_type.generate_cast (buf)
 				buf.put_natural_8 (natural_8_value)
 				buf.put_character ('U')
 			when natural_16_mask then
-				buf.put_string (natural_16_cast)
+				natural_16_type.c_type.generate_cast (buf)
 				buf.put_natural_16 (natural_16_value)
 				buf.put_character ('U')
 			when natural_32_mask then
-				buf.put_string (natural_32_cast)
+				natural_32_type.c_type.generate_cast (buf)
 				buf.put_natural_32 (natural_32_value)
 				buf.put_character ('U')
 			when natural_64_mask then
-				buf.put_string (natural_64_cast)
-				buf.put_string ("RTU64C(")
+				natural_64_type.c_type.generate_cast (buf)
+				buf.put_string ({C_CONST}.rtu64c)
+				buf.put_character ('(')
 				buf.put_natural_64 (natural_64_value)
 				buf.put_character (')')
 			end
@@ -486,18 +488,6 @@ feature {INTEGER_CONSTANT} -- Operations
 			compute_type
 		end
 
-feature {NONE} -- Code generation string constants
-
-	natural_8_cast: STRING = "(EIF_NATURAL_8) "
-	natural_16_cast: STRING = "(EIF_NATURAL_16) "
-	natural_32_cast: STRING = "(EIF_NATURAL_32) "
-	natural_64_cast: STRING = "(EIF_NATURAL_64) "
-	integer_8_cast: STRING = "(EIF_INTEGER_8) "
-	integer_16_cast: STRING = "(EIF_INTEGER_16) "
-	integer_32_cast: STRING = "(EIF_INTEGER_32) "
-	integer_64_cast: STRING = "(EIF_INTEGER_64) "
-			-- String used to generate a cast.
-
 feature {NONE} -- Implementation
 
 	type_mask (t: TYPE_A): like default_type
@@ -537,7 +527,7 @@ invariant
 		(constant_actual_type.is_integer or constant_actual_type.is_natural)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -550,22 +540,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

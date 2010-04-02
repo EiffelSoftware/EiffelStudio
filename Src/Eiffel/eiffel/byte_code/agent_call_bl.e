@@ -83,7 +83,7 @@ feature -- Code generation
 			buffer.put_new_line
 			closed_operands_b.generate_access_on_type (reg, l_cl_type)
 			generate_parameters_list
-			buffer.put_string (gc_rparan_semi_c)
+			buffer.put_two_character (')', ';')
 			buffer.exdent
 			buffer.put_new_line
 
@@ -98,7 +98,7 @@ feature -- Code generation
 				if register.c_type.is_pointer then
 					buffer.put_string ("RTAR(")
 					reg.print_register
-					buffer.put_string (gc_comma)
+					buffer.put_string ({C_CONST}.comma_space)
 					register.print_register
 					buffer.put_character (')')
 					buffer.put_character (';')
@@ -330,7 +330,7 @@ feature {NONE} --Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

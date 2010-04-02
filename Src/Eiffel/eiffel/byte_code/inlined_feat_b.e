@@ -324,18 +324,24 @@ feature -- Generation
 				if inlined_dftype_current > 1 then
 					context.set_inlined_dftype_current (inlined_dftype_current)
 					buf.put_new_line
-					buf.put_string ("int inlined_dftype = ")
-					buf.put_string (gc_upper_dftype_lparan)
+					buf.put_string ({C_CONST}.eif_type_index)
+					buf.put_character (' ')
+					buf.put_string ("inlined_dftype = ")
+					buf.put_string ({C_CONST}.dftype)
+					buf.put_character ('(')
 					current_reg.print_register
-					buf.put_string (");")
+					buf.put_two_character (')', ';')
 				end
 				if inlined_dt_current > 1 then
 					context.set_inlined_dt_current (inlined_dt_current)
 					buf.put_new_line
-					buf.put_string ("int inlined_dtype = ")
-					buf.put_string (gc_upper_dtype_lparan)
+					buf.put_string ({C_CONST}.eif_type_index)
+					buf.put_character (' ')
+					buf.put_string ("inlined_dtype = ")
+					buf.put_string ({C_CONST}.dtype)
+					buf.put_character ('(')
 					current_reg.print_register
-					buf.put_string (");")
+					buf.put_two_character (')', ';')
 				end
 			end
 
@@ -595,7 +601,7 @@ feature -- Code to inline
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -608,22 +614,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

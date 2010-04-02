@@ -86,9 +86,10 @@ feature -- Code generation
 	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `buffer'.
 		do
-			buffer.put_string ("RTMB(")
+			buffer.put_string ({C_CONST}.rtmb)
+			buffer.put_character ('(')
 			buffer.put_string_literal (bit_value)
-			buffer.put_string (", ")
+			buffer.put_two_character (',', ' ')
 			buffer.put_natural_32 (bit_count)
 			buffer.put_character (')')
 		end

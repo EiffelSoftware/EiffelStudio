@@ -35,8 +35,11 @@ feature -- Access
 			Result := {SK_CONST}.sk_real64
 		end
 
-	c_string: STRING = "EIF_REAL_64"
+	c_string: STRING
 			-- String generated for the type.
+		do
+			Result := {C_CONST}.eif_real_64
+		end
 
 	typed_field: STRING = "it_r8"
 			-- Value field of a C structure corresponding to this type

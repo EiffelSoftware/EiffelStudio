@@ -995,9 +995,11 @@ end
 					buf.put_string ("EIF_VOLATILE ")
 				end
 				ctype.generate (buf)
-				buf.put_string ("Result = ")
-				ctype.generate_cast (buf)
-				buf.put_two_character ('0', ';')
+				buf.put_character (' ')
+				buf.put_string ({C_CONST}.result_name)
+				buf.put_three_character (' ', '=', ' ')
+				ctype.generate_default_value (buffer)
+				buf.put_character (';')
 				buf.put_new_line
 			end
 		end
@@ -1121,7 +1123,7 @@ end
 			buf.put_new_line
 			buf.put_string ("RTSA(")
 			context.generate_current_dtype
-			buf.put_string (gc_rparan_semi_c)
+			buf.put_two_character (')', ';')
 			buf.put_new_line
 			buf.put_string ("RTSC;")
 		end
@@ -1176,7 +1178,7 @@ end
 					buf.put_new_line
 					buf.put_string ("RTXS(")
 					buf.put_integer (nb_refs)
-					buf.put_string (gc_rparan_semi_c)
+					buf.put_two_character (')', ';')
 				end
 				rescue_clause.generate
 				generate_profile_stop
@@ -1275,11 +1277,11 @@ end
 				buf.put_string ("RTDBGEAA")
 				buf.put_character ('(')
 				feature_origin (buf)
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				context.current_register.print_register
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				buf.put_real_body_id (real_body_id)
-				buf.put_string (gc_rparan_semi_c)
+				buf.put_two_character (')', ';')
 			end
 		end
 
@@ -1373,11 +1375,11 @@ end
 			buf.put_string (macro_name)
 			buf.put_character ('(')
 			context.generate_feature_name (buf)
-			buf.put_string (gc_comma)
+			buf.put_string ({C_CONST}.comma_space)
 			feature_origin (buf)
-			buf.put_string (gc_comma)
+			buf.put_string ({C_CONST}.comma_space)
 			buf.put_string (" dtype")
-			buf.put_string (gc_rparan_semi_c)
+			buf.put_two_character (')', ';')
 		end
 
 	generate_stack_macro (macro_name: STRING)
@@ -1394,21 +1396,21 @@ end
 			buf.put_string (macro_name)
 			buf.put_character ('(')
 			context.generate_feature_name (buf)
-			buf.put_string (gc_comma)
+			buf.put_string ({C_CONST}.comma_space)
 			feature_origin (buf)
-			buf.put_string (gc_comma)
+			buf.put_string ({C_CONST}.comma_space)
 			context.Current_register.print_register
-			buf.put_string (gc_comma)
+			buf.put_string ({C_CONST}.comma_space)
 			buf.put_integer (context.local_list.count)
-			buf.put_string (gc_comma)
+			buf.put_string ({C_CONST}.comma_space)
 			if arguments /= Void then
 				buf.put_integer (arguments.count)
 			else
 				buf.put_integer (0)
 			end
-			buf.put_string (gc_comma)
+			buf.put_string ({C_CONST}.comma_space)
 			buf.put_real_body_id (real_body_id)
-			buf.put_string (gc_rparan_semi_c)
+			buf.put_two_character (')', ';')
 		end
 
 	finish_compound

@@ -241,7 +241,7 @@ feature {NONE} -- C code generation
 					if context.workbench_mode then
 						buf.put_string ("ecopy(");
 						item_print_register (expr, target_type)
-						buf.put_string (gc_comma);
+						buf.put_string ({C_CONST}.comma_space);
 						array_area_reg.print_register;
 						buf.put_string (" + OVERHEAD + (rt_uint_ptr) elem_size * (rt_uint_ptr) ");
 						buf.put_integer (position);
@@ -255,7 +255,7 @@ feature {NONE} -- C code generation
 						if l_exp_class_type.skeleton.has_references then
 							buf.put_string ("ecopy(");
 							item_print_register (expr, target_type)
-							buf.put_string (gc_comma);
+							buf.put_string ({C_CONST}.comma_space);
 							array_area_reg.print_register;
 							buf.put_string (" + OVERHEAD + (rt_uint_ptr) elem_size * (rt_uint_ptr) ");
 							buf.put_integer (position);
@@ -379,18 +379,19 @@ feature {NONE} -- C code generation
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
 				buf.put_class_id (rout_info.origin);
-				buf.put_string (gc_comma);
+				buf.put_string ({C_CONST}.comma_space);
 				buf.put_integer (rout_info.offset);
 			else
 				buf.put_string (" RTWF(");
 				buf.put_static_type_id (real_ty.static_type_id (context.context_class_type.type));
-				buf.put_string (gc_comma);
+				buf.put_string ({C_CONST}.comma_space);
 				buf.put_integer (feat_i.feature_id);
 			end;
-			buf.put_string (gc_comma);
-			buf.put_string (gc_upper_dtype_lparan);
+			buf.put_string ({C_CONST}.comma_space);
+			buf.put_string ({C_CONST}.dtype);
+			buf.put_character ('(')
 			array_area_reg.print_register
-			buf.put_string (")))");
+			buf.put_three_character (')', ')', ')')
 			buf.put_character ('(')
 			array_area_reg.print_register
 			buf.put_two_character (')', '.')
@@ -406,7 +407,7 @@ feature {NONE} -- C code generation
 			buf := buffer
 			buf.put_character ('(');
 			print_register;
-			buf.put_string (gc_comma);
+			buf.put_string ({C_CONST}.comma_space);
 			buf.put_string ("1L, ");
 			buf.put_integer (expressions.count);
 			buf.put_string ("L);");

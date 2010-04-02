@@ -459,7 +459,7 @@ feature
 						-- Call redefined version of `twin'/`cloned'.
 					buf.put_string ("RTRCL(")
 					source.print_register
-					buf.put_string (gc_rparan_semi_c)
+					buf.put_two_character (')', ';')
 				end
 			end
 		end
@@ -499,7 +499,7 @@ feature
 					buf.put_new_line
 					buf.put_string ("RTAR(")
 					context.Current_register.print_register
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					print_register
 					buf.put_character (')')
 					buf.put_character (';')
@@ -510,7 +510,7 @@ feature
 						buf.put_new_line
 						buf.put_string ("RTAR(")
 						context.Current_register.print_register
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						source_print_register
 						buf.put_character (')')
 						buf.put_character (';')
@@ -528,7 +528,7 @@ feature
 					end
 					buf.put_character ('(')
 					source.print_register
-					buf.put_string (gc_rparan_semi_c)
+					buf.put_two_character (')', ';')
 				end
 				generate_expanded_assignment
 			elseif how = Unmetamorphose_assignment then
@@ -540,15 +540,15 @@ feature
 					target.c_type.generate_access_cast (buf)
 					buf.put_character ('(')
 					source.print_register
-					buf.put_string (gc_rparan_semi_c)
+					buf.put_two_character (')', ';')
 				else
 						-- Reattachment of reference type to expanded.
 					buf.put_new_line
 					buf.put_string ("RTXA(")
 					source.print_register
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					target.print_register
-					buf.put_string (gc_rparan_semi_c)
+					buf.put_two_character (')', ';')
 				end
 			else
 				if how = Simple_assignment or need_aging_tests then
@@ -571,7 +571,7 @@ feature
 						print_register
 					else
 						if is_bit_assignment then
-							buf.put_string (gc_comma)
+							buf.put_string ({C_CONST}.comma_space)
 							target.print_register
 							buf.put_character (')')
 						else
@@ -608,7 +608,7 @@ feature
 				buf.put_new_line
 				buf.put_string ("RTXA(")
 				source_print_register
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				target.print_register
 				buf.put_character (')')
 				buf.put_character (';')
@@ -621,9 +621,9 @@ feature
 				buf.put_new_line
 				buf.put_string ("memmove(")
 				target.print_register
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				source_print_register
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				if context.workbench_mode then
 					target_type.associated_class_type (context.context_class_type.type).skeleton.generate_workbench_size (buf)
 				else
@@ -744,7 +744,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -757,22 +757,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

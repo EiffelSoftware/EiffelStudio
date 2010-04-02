@@ -371,7 +371,7 @@ feature -- Generation
 					buf.put_new_line
 					buf.put_string ("RTCI2(")
 					register.print_register
-					buf.put_string (gc_rparan_semi_c)
+					buf.put_two_character (')', ';')
 				end
 			end
 		end
@@ -399,7 +399,7 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

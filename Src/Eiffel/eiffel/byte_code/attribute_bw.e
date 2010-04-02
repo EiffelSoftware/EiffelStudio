@@ -60,9 +60,9 @@ feature
 			buf.put_character ('(');
 			reg.print_register;
 			if reg.is_predefined or reg.register /= No_register then
-				buf.put_string (gc_plus);
+				buf.put_three_character (' ', '+', ' ')
 			else
-				buf.put_string (" +");
+				buf.put_two_character (' ', '+')
 				buf.put_new_line;
 				buf.indent;
 			end;
@@ -76,7 +76,7 @@ feature
 				r_id := routine_id
 				rout_info := System.rout_info_table.item (r_id);
 				buf.put_class_id (rout_info.origin)
-				buf.put_string (gc_comma);
+				buf.put_string ({C_CONST}.comma_space);
 				buf.put_integer (rout_info.offset)
 			else
 				if is_nested then
@@ -85,13 +85,13 @@ feature
 					buf.put_string ("RTWA(");
 				end;
 				buf.put_static_type_id (typ.static_type_id (context.context_class_type.type))
-				buf.put_string (gc_comma);
+				buf.put_string ({C_CONST}.comma_space);
 				buf.put_integer (real_feature_id (typ));
 			end;
-			buf.put_string (gc_comma);
+			buf.put_string ({C_CONST}.comma_space);
 			if is_nested then
 				buf.put_string_literal (attribute_name)
-				buf.put_string (gc_comma);
+				buf.put_string ({C_CONST}.comma_space);
 				reg.print_register;
 			else
 				context.generate_current_dtype;
@@ -103,7 +103,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

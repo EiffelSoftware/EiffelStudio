@@ -211,11 +211,11 @@ feature
 					buf.put_new_line
 					buf.put_string ("RTRB(")
 					info.generate_type_id (buf, l_context.final_mode, 0)
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					source_print_register
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					target.print_register
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					buf.put_character ('*')
 					target.c_type.generate_access_cast (buf)
 					buf.put_character (')')
@@ -224,9 +224,9 @@ feature
 					buf.put_new_line
 					buf.put_string ("RTRE(")
 					info.generate_type_id (buf, l_context.final_mode, 0)
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					source_print_register
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					target.print_register
 					buf.put_character (')')
 				end
@@ -240,7 +240,7 @@ feature
 					buf.put_string (" = ")
 					buf.put_string ("RTRV(")
 					info.generate_type_id (buf, l_context.final_mode, 0)
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					print_register
 					buf.put_character (')')
 						-- Perform aging tests when necessary
@@ -249,7 +249,7 @@ feature
 						buf.put_new_line
 						buf.put_string ("RTAR(")
 						l_context.Current_register.print_register
-						buf.put_string (gc_comma)
+						buf.put_string ({C_CONST}.comma_space)
 						print_register
 						buf.put_character (')')
 					end
@@ -258,7 +258,7 @@ feature
 				buf.put_string ("RTRV(eif_non_attached_type(")
 				info.generate_type_id (buf, l_context.final_mode, 0)
 				buf.put_character (')')
-				buf.put_string (gc_comma)
+				buf.put_string ({C_CONST}.comma_space)
 				source_print_register
 				buf.put_character (')')
 					-- Perform aging tests when necessary
@@ -267,7 +267,7 @@ feature
 					buf.put_new_line
 					buf.put_string ("RTAR(")
 					l_context.Current_register.print_register
-					buf.put_string (gc_comma)
+					buf.put_string ({C_CONST}.comma_space)
 					source_print_register
 					buf.put_character (')')
 				end

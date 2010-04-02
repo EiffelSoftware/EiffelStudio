@@ -4459,7 +4459,7 @@ feature {DEGREE_4, DEGREE_3} -- Used by degree 4 and 3 to compute new assertions
 			assert_prop_list_set: assert_prop_list = l
 		end
 
-feature {DEGREE_4, ORIGIN_TABLE, AST_FEATURE_REPLICATION_GENERATOR} -- Used by degree 4 for replication propagation
+feature {DEGREE_4, ORIGIN_TABLE, AST_FEATURE_REPLICATION_GENERATOR, CLASS_C} -- Used by degree 4 for replication propagation
 
 	replicated_features_list: LINKED_LIST [INTEGER]
 			-- List of routine ids that are replicated in `Current'.
@@ -4474,13 +4474,44 @@ feature {DEGREE_4, ORIGIN_TABLE, AST_FEATURE_REPLICATION_GENERATOR} -- Used by d
 
 feature {CLASS_C, DEGREE_4} -- Degree 3 and 4 recompilation
 
-	recompile_descendants_with_replication (is_degree_4_required: BOOLEAN; c: CLASS_C)
+	recompile_descendants_with_replication (is_degree_4_required: BOOLEAN)
 			-- Recompile descendants that replicate features of class `c', including expanded classes.
+		do
+			recompile_descendants_with_condition (
+				agent (c: CLASS_C): BOOLEAN
+					do
+							-- `c' either replicates features or is expanded.
+						Result := c.replicated_features_list /= Void or else c.is_expanded
+						debug ("to_implement")
+							to_implement ("[
+								Use ancestor class `c' and feature to optimize whether
+								replicated feature is from there originally.
+							]")
+						end
+						debug ("fixme")
+							fixme ("[
+								If expanded class types are supported, they need to be
+								recompiled as well even if the base class is reference.
+							]")
+						end
+					end
+				(?),
+				is_degree_4_required,
+				Current
+			)
+		end
+
+feature {CLASS_C} -- Degree 3 and 4 recompilation
+
+	recompile_descendants_with_condition (condition: PREDICATE [CLASS_C, TUPLE [CLASS_C]]; is_degree_4_required: BOOLEAN; c: CLASS_C)
+			-- Mark all descendants of class `c' that match `condition' for complete recompilation,
+			-- including degree 4 when `is_degree_4 = True'.
 		require
+			condition_attached: attached condition
 			c_attached: attached c
 		do
-			if c /= Current and then (replicated_features_list /= Void or else is_expanded) then
-					-- The current class is a descendant of `c' and either replicates features or is expanded.
+			if c /= Current and then condition.item ([c]) then
+					-- The current class is a descendant of `c' and meets the condition.
 					-- Mark it for recompilation.
 				debug ("to_implement")
 					to_implement ("[
@@ -4509,8 +4540,15 @@ feature {CLASS_C, DEGREE_4} -- Degree 3 and 4 recompilation
 				-- We need to check if any descendents are replicating features of `a_class' during an incremental compilation.
 			if attached direct_descendants_internal as d then
 					-- Process all descendants recursively.
-				d.do_all (agent {CLASS_C}.recompile_descendants_with_replication (is_degree_4_required, c))
+				d.do_all (agent {CLASS_C}.recompile_descendants_with_condition (condition, is_degree_4_required, c))
 			end
+		end
+
+	regenerate_descendants
+			-- Mark all descendants of the current class for code generation.
+		do
+			recompile_descendants_with_condition
+				(agent (c: CLASS_C): BOOLEAN do Result := True end, False, Current)
 		end
 
 feature {DEGREE_3} -- Degree 3

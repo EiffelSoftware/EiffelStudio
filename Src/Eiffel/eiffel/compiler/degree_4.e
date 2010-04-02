@@ -538,7 +538,7 @@ feature {INHERIT_TABLE} -- Propagation
 			if not System.compilation_straight and then a_changed_features /= Void and then a_changed_features.count > 0 then
 					-- We need to check if any descendents are replicating features of `a_class' during an incremental compilation.
 					-- Make sure that all descendents with replicated features get fully recompiled and stored.
-				a_class.recompile_descendants_with_replication (True, a_class)
+				a_class.recompile_descendants_with_replication (True)
 			end
 
 				-- Incremetality test: asked the compiler to apply at

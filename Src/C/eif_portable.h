@@ -212,7 +212,9 @@ typedef uintptr_t	rt_uint_ptr;
 /* Maps an Eiffel type on a C type */
 typedef unsigned char	EIF_BOOLEAN;
 typedef unsigned char	EIF_CHARACTER;
+typedef unsigned char	EIF_CHARACTER_8;
 typedef uint32			EIF_WIDE_CHAR;
+typedef uint32			EIF_CHARACTER_32;
 typedef signed char		EIF_INTEGER_8;
 typedef int16			EIF_INTEGER_16;
 typedef int32			EIF_INTEGER;

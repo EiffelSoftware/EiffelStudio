@@ -12,7 +12,9 @@ class
 
 inherit
 	EV_ACTION_SEQUENCE [TUPLE]
-
+		export {EV_APPLICATION_I}
+			kamikazes_internal
+		end
 
 create
 	default_create

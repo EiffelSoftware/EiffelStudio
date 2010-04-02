@@ -244,10 +244,11 @@ feature -- Graphical changes
 						if excdv.has_value then
 							attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value, Void)
 						end
-					when {VALUE_TYPES}.Procedure_return_message_value then
-						set_value (interface_names.l_called)
-						set_type (once "")
-						set_pixmap (Icons @ (dv.kind))
+-- No need to handle this case apart
+--					when {VALUE_TYPES}.Procedure_return_message_value then
+--						set_value (interface_names.l_called)
+--						set_type (once "")
+--						set_pixmap (Icons @ (dv.kind))
 					else
 						last_dump_value := dv.dump_value
 						set_value (last_dump_value.output_for_debugger)
@@ -283,7 +284,7 @@ invariant
 	object_not_void: object /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

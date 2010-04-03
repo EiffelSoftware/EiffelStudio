@@ -121,10 +121,9 @@ feature {EV_ANY_I} -- Implementation
 						-- Reset idle iteration counter if CPU is not relinquished.
 				end
 				l_idle_actions_internal := idle_actions_internal
-				if not is_destroyed and then l_idle_actions_internal /= Void and then not l_idle_actions_internal.is_empty and then try_lock then
+				if not is_destroyed and then l_idle_actions_internal /= Void and then try_lock then
 					l_locked := True
 						-- Make a snapshot of the idle actions to avoid side effects.
-
 					if attached l_idle_actions_internal.kamikazes_internal as l_kamikazes_internal then
 						if kamikaze_idle_actions_snapshot = Void then
 							kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin

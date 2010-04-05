@@ -149,7 +149,7 @@ feature -- Removal
 	set_warning_level (w: like warning_level)
 			-- Discard any warnings that were added after given warning level `w'.
 		require
-			w_in_bounds: w >= warning_level
+			w_in_bounds: w <= warning_level
 		do
 			from
 			until

@@ -500,7 +500,9 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 					else
 						l_drawer.expose_hot (internal_width, info)
 					end
+					is_close_button_pressed := True
 				else
+					is_close_button_pressed := False
 					select_actions.call (Void)
 				end
 
@@ -533,12 +535,14 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 				and internal_width > 0
 				and then l_drawer.close_rectangle_parent_box.has_x_y (a_x, a_y)
 			then
-				if is_selected then
-					redraw_selected
-				else
-					l_drawer.expose_hot (internal_width, info)
+				if is_close_button_pressed then
+					if is_selected then
+						redraw_selected
+					else
+						l_drawer.expose_hot (internal_width, info)
+					end
+					close_actions.call (Void)
 				end
-				close_actions.call (Void)
 			end
 		end
 
@@ -548,6 +552,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			not_destroyed: not is_destroyed
 		do
 			is_hot := True
+			is_close_button_pressed := False
 			on_expose
 		ensure
 			set: is_hot = True
@@ -700,6 +705,9 @@ feature {NONE}  -- Implementation attributes
 
 	is_draw_top_tab: BOOLEAN
 			-- If current draw tab at top?
+
+	is_close_button_pressed: BOOLEAN
+			-- If close button has been just pressed?
 
 	internal_notebook: SD_NOTEBOOK
 			-- Notebook Current belong to

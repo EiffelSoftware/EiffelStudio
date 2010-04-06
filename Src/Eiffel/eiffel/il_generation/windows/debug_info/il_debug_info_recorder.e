@@ -795,6 +795,7 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 			l_class_types: LIST [CLASS_TYPE]
 			l_data_class_token,
 			l_once_done_token, l_once_result_token, l_once_exception_token: NATURAL_32
+			c: CURSOR
 		do
 			debug ("refactor_fixme")
 				fixme ("[
@@ -815,6 +816,7 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 			then
 				from
 					l_class_types := a_class_c.types
+					c := l_class_types.cursor
 					l_class_types.start
 				until
 					l_class_types.after
@@ -824,6 +826,7 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 							a_feature, l_class_types.item)
 					l_class_types.forth
 				end
+				l_class_types.go_to (c)
 			end
 		end
 
@@ -1569,7 +1572,7 @@ feature {NONE} -- Module indexer implementation
 			-- and internal key for module
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

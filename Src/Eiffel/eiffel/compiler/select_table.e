@@ -207,6 +207,7 @@ feature -- Incrementality
 					if not is_freeze_requested and then c.visible_level.is_visible (item_for_iteration, c.class_id) then
 							-- Remove references to the old feature in CECIL data.
 						system.request_freeze
+						is_freeze_requested := True
 					end
 				else
 					check
@@ -217,6 +218,7 @@ feature -- Incrementality
 						if not is_freeze_requested and then c.visible_level.is_visible (f2, c.class_id) then
 								-- Regenerate C code for visible feature so that it can be accessed via CECIL.
 							system.request_freeze
+							is_freeze_requested := True
 						end
 					end
 				end
@@ -394,7 +396,7 @@ invariant
 	is_consistent: is_consistent
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

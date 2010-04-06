@@ -121,18 +121,23 @@ feature {EV_ANY_I} -- Implementation
 						-- Reset idle iteration counter if CPU is not relinquished.
 				end
 				l_idle_actions_internal := idle_actions_internal
-				if not is_destroyed and then l_idle_actions_internal /= Void and then try_lock then
+				if not is_destroyed and then l_idle_actions_internal /= Void then
+					lock
 					l_locked := True
 						-- Make a snapshot of the idle actions to avoid side effects.
 					if attached l_idle_actions_internal.kamikazes_internal as l_kamikazes_internal then
 						if kamikaze_idle_actions_snapshot = Void then
 							kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
+							l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
+						elseif kamikaze_idle_actions_snapshot.count > 0 then
+								-- Events are being called in a nested way so we twin to prevent side effect
+							l_kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
 						else
 							kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.aliased_resized_area (l_kamikazes_internal.count)
 							kamikaze_idle_actions_snapshot.copy_data (l_kamikazes_internal.area, 0, 0, l_kamikazes_internal.count)
+							l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
 						end
 
-						l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
 							-- Wipe out the kamikaze actions from the idle actions as we now have a snapshot.
 						from
 							i := 0
@@ -148,11 +153,15 @@ feature {EV_ANY_I} -- Implementation
 
 					if idle_actions_snapshot = Void then
 						idle_actions_snapshot := l_idle_actions_internal.area.twin
+						l_idle_actions_snapshot := idle_actions_snapshot
+					elseif idle_actions_snapshot.count > 0 then
+							-- Events are being called in a nested way so we twin to prevent side effect.
+						l_idle_actions_snapshot := l_idle_actions_internal.area.twin
 					else
 						idle_actions_snapshot := idle_actions_snapshot.aliased_resized_area (l_idle_actions_internal.count)
 						idle_actions_snapshot.copy_data (l_idle_actions_internal.area, 0, 0, l_idle_actions_internal.count)
+						l_idle_actions_snapshot := idle_actions_snapshot
 					end
-					l_idle_actions_snapshot := idle_actions_snapshot
 
 						-- We can now unlock the resource as we have our own local copy.
 					unlock
@@ -171,6 +180,7 @@ feature {EV_ANY_I} -- Implementation
 							end
 							i := i + 1
 						end
+							-- Wipeout snapshot list to signify that that any nested idle calls do not have to clone the snapshot
 						l_kamikaze_idle_actions_snapshot.wipe_out
 					end
 					if l_idle_actions_snapshot /= Void then
@@ -186,6 +196,7 @@ feature {EV_ANY_I} -- Implementation
 							end
 							i := i + 1
 						end
+							-- Clear snapshot list.
 						l_idle_actions_snapshot.wipe_out
 					end
 

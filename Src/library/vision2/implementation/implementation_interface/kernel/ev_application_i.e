@@ -127,11 +127,15 @@ feature {EV_ANY_I} -- Implementation
 						-- Make a snapshot of the idle actions to avoid side effects.
 					if attached l_idle_actions_internal.kamikazes_internal as l_kamikazes_internal then
 						if kamikaze_idle_actions_snapshot = Void then
-							kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
-							l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
+							if l_kamikazes_internal.count > 0 then
+								kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
+								l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
+							end
 						elseif kamikaze_idle_actions_snapshot.count > 0 then
 								-- Events are being called in a nested way so we twin to prevent side effect
-							l_kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
+							if l_kamikazes_internal.count > 0 then
+								l_kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
+							end
 						else
 							kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.aliased_resized_area (l_kamikazes_internal.count)
 							kamikaze_idle_actions_snapshot.copy_data (l_kamikazes_internal.area, 0, 0, l_kamikazes_internal.count)
@@ -139,24 +143,30 @@ feature {EV_ANY_I} -- Implementation
 						end
 
 							-- Wipe out the kamikaze actions from the idle actions as we now have a snapshot.
-						from
-							i := 0
-							l_count := l_kamikaze_idle_actions_snapshot.count
-						until
-							i = l_count
-						loop
-							l_idle_actions_internal.prune_all (l_kamikaze_idle_actions_snapshot @ i)
-							i := i + 1
+						if l_kamikaze_idle_actions_snapshot /= Void then
+							from
+								i := 0
+								l_count := l_kamikaze_idle_actions_snapshot.count
+							until
+								i = l_count
+							loop
+								l_idle_actions_internal.prune_all (l_kamikaze_idle_actions_snapshot @ i)
+								i := i + 1
+							end
+							l_kamikazes_internal.wipe_out
 						end
-						l_kamikazes_internal.wipe_out
 					end
 
 					if idle_actions_snapshot = Void then
-						idle_actions_snapshot := l_idle_actions_internal.area.twin
-						l_idle_actions_snapshot := idle_actions_snapshot
+						if l_idle_actions_internal.count > 0 then
+							idle_actions_snapshot := l_idle_actions_internal.area.twin
+							l_idle_actions_snapshot := idle_actions_snapshot
+						end
 					elseif idle_actions_snapshot.count > 0 then
 							-- Events are being called in a nested way so we twin to prevent side effect.
-						l_idle_actions_snapshot := l_idle_actions_internal.area.twin
+						if l_idle_actions_internal.count > 0 then
+							l_idle_actions_snapshot := l_idle_actions_internal.area.twin
+						end
 					else
 						idle_actions_snapshot := idle_actions_snapshot.aliased_resized_area (l_idle_actions_internal.count)
 						idle_actions_snapshot.copy_data (l_idle_actions_internal.area, 0, 0, l_idle_actions_internal.count)

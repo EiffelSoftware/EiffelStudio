@@ -1006,7 +1006,7 @@ rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 				/* reset the offset precalculation about this feature */
 				curr_bpinfo->last_offset_list = curr_bpinfo->first_offset;
 			} else {
-				/* this fearture didn't have a breakpoint set for this offset, so
+				/* this feature didn't have a breakpoint set for this offset, so
 				 * the job is already done
 				 */
 			}

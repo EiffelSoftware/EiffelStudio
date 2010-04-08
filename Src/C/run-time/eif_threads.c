@@ -1637,8 +1637,8 @@ rt_public EIF_BOOLEAN eif_thr_wait_with_timeout (EIF_OBJECT Current, EIF_NATURAL
 	res = T_OK;
 	if (eif_thr_context->children_mutex) {
 		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
-		while ((*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) || (res == T_TIMEDOUT)) {
-			res = eif_pthread_cond_wait_with_timeout(eif_thr_context->children_cond, eif_thr_context->children_mutex, a_timeout_ms);
+		while ((*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) && (res == T_OK)) {
+			RT_TRACE_KEEP(res,eif_pthread_cond_wait_with_timeout(eif_thr_context->children_cond, eif_thr_context->children_mutex, a_timeout_ms));
 		}
 		EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_thr_context->children_mutex);
 	}

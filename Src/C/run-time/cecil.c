@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -81,8 +81,8 @@ doc:	</attribute>
 */
 rt_private void *eif_default_pointer = NULL;
 
-/* 
- * Cecil mutex in MT mode. 
+/*
+ * Cecil mutex in MT mode.
  */
 #ifdef EIF_THREADS
 /*
@@ -109,7 +109,7 @@ rt_private EIF_TYPE_INDEX cid_to_dftype(EIF_TYPE_ID cid);		/* Converts a class I
 rt_private int locate(EIF_REFERENCE object, char *name);			/* Locate attribute by name in skeleton */
 rt_public int eiflocate (EIF_OBJECT object, char *name);
 
-/* 
+/*
  * `visible' exception handling
  */
 
@@ -137,13 +137,13 @@ rt_public void eifuvisex (void) {
 	EIF_CECIL_UNLOCK;
 }
 
-/* 
+/*
  * Type checking
  */
 
 rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
 	/* Return type of `routine' defined in class of type `cid' */
-	
+
 	struct cnode *sk;	/* Skeleton entry in system */
 	char **n;	/* Pointer in cn_names array */
 	int nb_attr;	/* Number of attributes */
@@ -170,8 +170,8 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
 			field_type = sk->cn_types[i];
 			switch (field_type & SK_HEAD) {
 				case SK_REF: l_result = EIF_REFERENCE_TYPE;
-				case SK_CHAR: l_result = EIF_CHARACTER_TYPE;
-				case SK_WCHAR: l_result = EIF_WIDE_CHAR_TYPE;
+				case SK_CHAR8: l_result = EIF_CHARACTER_8_TYPE;
+				case SK_CHAR32: l_result = EIF_CHARACTER_32_TYPE;
 				case SK_BOOL: l_result = EIF_BOOLEAN_TYPE;
 				case SK_UINT8: l_result = EIF_NATURAL_8_TYPE;
 				case SK_UINT16: l_result = EIF_NATURAL_16_TYPE;
@@ -203,9 +203,9 @@ doc:	</routine>
 rt_shared uint32 eif_dtype_to_sk_type (EIF_TYPE_INDEX dtype)
 {
 	if (dtype == egc_char_dtype) {
-		return SK_CHAR;
+		return SK_CHAR8;
 	} else if (dtype == egc_wchar_dtype) {
-		return SK_WCHAR;
+		return SK_CHAR32;
 	} else if (dtype == egc_bool_dtype) {
 		return SK_BOOL;
 	} else if (dtype == egc_uint8_dtype) {
@@ -250,8 +250,8 @@ doc:	</routine>
 rt_shared EIF_TYPE_INDEX eif_sk_type_to_dtype (uint32 sk_type)
 {
 	switch (sk_type & SK_HEAD) {
-		case SK_CHAR: return egc_char_dtype;
-		case SK_WCHAR: return egc_wchar_dtype;
+		case SK_CHAR8: return egc_char_dtype;
+		case SK_CHAR32: return egc_wchar_dtype;
 		case SK_BOOL: return egc_bool_dtype;
 		case SK_UINT8: return egc_uint8_dtype;
 		case SK_UINT16: return egc_uint16_dtype;
@@ -286,7 +286,7 @@ rt_public EIF_OBJECT eifcreate(EIF_TYPE_ID cid)
 
 	EIF_REFERENCE object;					/* Eiffel object's physical address */
 	EIF_TYPE_INDEX dtype;						/* Dynamic type associated with class ID */
-	
+
 	dtype = cid_to_dftype(cid);		/* Convert class ID to dynamic type */
 	if (dtype == INVALID_DTYPE)/* Was not a valid reference type */
 		return (EIF_OBJECT) 0;			/* No creation, return null pointer */
@@ -320,7 +320,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 		/* If function is not found and visible exceptions are enabled, raise an exception. */
 	if (!ref) {
 		if (!eif_visible_is_off) {
-			eraise ("Unknown routine (visible?)", EN_PROG);	
+			eraise ("Unknown routine (visible?)", EN_PROG);
 		}
 		return NULL;
 	} else {
@@ -337,11 +337,11 @@ rt_public EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object)
 	/* Return type id of the direct reference "object" */
 	return Dftype (object);
 }
-	
+
 rt_public EIF_TYPE_ID eiftype(EIF_OBJECT object)
 {
 	/* Obsolete. Use "eif_type_by_reference" instead.
-	 * Return the Type id of the specified object. 
+	 * Return the Type id of the specified object.
  	 */
 
 	return Dftype(eif_access(object));
@@ -372,7 +372,7 @@ rt_private EIF_TYPE_INDEX cid_to_dftype(EIF_TYPE_ID cid)
 
 	if ((uint32) cid & SK_SIMPLE)		/* Type is a simple type */
 		return INVALID_DTYPE;						/* No valid dynamic type */
-	
+
 	return (EIF_TYPE_INDEX) (cid & SK_DTYPE);		/* Return the dynamic type part */
 }
 
@@ -383,10 +383,10 @@ rt_private EIF_TYPE_INDEX cid_to_dftype(EIF_TYPE_ID cid)
 
 rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret)
 {
-	/* Like eif_attribute, but perform a type checking between the type	
+	/* Like eif_attribute, but perform a type checking between the type
 	 * given by "type_int" and the actual type of the attribute.
 	 * Return EIF_WRONG_TYPE, if this fails.
-	 * Should be preceded by *(EIF_TYPE*). 
+	 * Should be preceded by *(EIF_TYPE*).
 	 */
 
 	void *addr;
@@ -395,7 +395,7 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 	addr = eifaddr (object, name, ret);
 
 	if (*ret != EIF_CECIL_OK)	/* Was "eifaddr" successfull? */
-		return addr;	/* Return "addr" with error code in "ret". */	
+		return addr;	/* Return "addr" with error code in "ret". */
 
 	tid = eif_type_by_reference (object);	/* Get type id for "eif_attribute_type" */
 	if (tid == EIF_NO_TYPE)	/* No type id? */
@@ -411,7 +411,7 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 
 
 } 	/* eif_field_safe */
-	
+
 
 rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * const ret)
 {
@@ -431,9 +431,9 @@ rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * con
 
 	i = locate(object, name);		/* Locate attribute in skeleton */
 	if (i == EIF_NO_ATTRIBUTE) {					/* Attribute not found */
-		if (!eif_visible_is_off)	
+		if (!eif_visible_is_off)
 			eraise ("Unknown attribute", EN_PROG);
-		if (ret != NULL) 
+		if (ret != NULL)
 			*ret = EIF_NO_ATTRIBUTE;	/* Set "*ret" */
 		return -1;
 	}
@@ -444,9 +444,9 @@ rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * con
 	return (System(Dtype(object)).cn_offsets[i]);
 #else
 	dtype = Dtype(object);
-	rout_id = System(dtype).cn_attr[i]; 
+	rout_id = System(dtype).cn_attr[i];
 	CAttrOffs(offset,rout_id,dtype);
-	
+
 	return offset;
 #endif
 }
@@ -494,10 +494,10 @@ rt_private int locate(EIF_REFERENCE object, char *name)
 
 	/* Obsolete */
 
-rt_public void *old_eifaddr(EIF_REFERENCE object, char *name) 
+rt_public void *old_eifaddr(EIF_REFERENCE object, char *name)
 {
 	/* Old "eif_addr" with previous signature. This function has been
-	 * added for compatibility purpose. 
+	 * added for compatibility purpose.
 	 */
 
 	int ret;
@@ -548,13 +548,13 @@ rt_public void eifsbit(EIF_REFERENCE object, char *name, EIF_BIT bit)
 	/* Sets the bit field 'name' of 'object' to bit. Do nothing if the fields
 	 * is not a bit one or if 'bit' is a void pointer.
 	 */
-	
+
 	EIF_BIT obj_field;				/* Address of the bit field in object */
 	int size;						/* Size of the whole bit field (in bytes) */
 
 	if (bit == (EIF_BIT) 0)			/* Abort on void reference */
 		return;
-	
+
 	obj_field = eifgbit(object, name);	/* Get address of bit field */
 	if (obj_field == EIF_NO_BIT_FIELD)		/* Eh! This is not a bit field! */
 		return;							/* Do nothing */
@@ -578,7 +578,7 @@ rt_public char eifibit(EIF_BIT bit, int i)
 	/* Return the value of the ith bit in 'bit', starting numbering at 1.
 	 * If 'i' is not in the range, return EIF_NO_BIT.
 	 */
-	
+
 	if (bit == (EIF_BIT) 0)			/* Null pointer */
 		return EIF_NO_BIT;			/* No bit then! */
 
@@ -635,7 +635,7 @@ rt_public EIF_BIT eifbcln(EIF_BIT bit)
 
 	if (bit == (EIF_BIT) 0)
 		return (EIF_BIT) 0;
-	
+
 	/* The size of the whole bit field is the size of the long which holds the
 	 * length of the bit field (in bits) plus the size of the field itself.
 	 */
@@ -664,7 +664,7 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 	/* Look for item associated with given key and returns a pointer to its
 	 * location in the value array. Return a null pointer if item is not found.
 	 */
-	
+
 	long pos;		/* Position in H table */
 	int32 hsize;		/* Size of H table */
 	char **hkeys;		/* Array of keys */
@@ -685,7 +685,7 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 	inc = hashcode(key, (long) strlen(key));
 	for (
 		pos = inc % hsize, inc = 1 + (inc % (hsize - 1));
-		tryv < hsize; 
+		tryv < hsize;
 		tryv++, pos = (pos + inc) % hsize
 	) {
 		if (hkeys[pos] == (char *) 0)

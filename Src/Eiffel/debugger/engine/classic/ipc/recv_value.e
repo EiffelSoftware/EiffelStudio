@@ -98,13 +98,13 @@ feature	{} -- Initialization of the C/Eiffel interface
 	set_char (v: CHARACTER)
 			-- Receive a character value.
 		do
-			create {CHARACTER_VALUE} item.make (sk_char, v)
+			create {CHARACTER_VALUE} item.make (sk_char8, v)
 		end
 
 	set_wchar (v: WIDE_CHARACTER)
 			-- Receive a character value.
 		do
-			create {CHARACTER_32_VALUE} item.make (sk_wchar, v)
+			create {CHARACTER_32_VALUE} item.make (sk_char32, v)
 		end
 
 	set_real (v: REAL)

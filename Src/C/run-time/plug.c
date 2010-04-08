@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -155,7 +155,7 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 	sp = *(EIF_REFERENCE *) array;			/* Get the area of the ARRAY */
 	RT_GC_PROTECT (sp);		/* Protect the area */
 
-	/* 
+	/*
 	 * Fill the array
 	 */
 	for (i=0; i<argc; i++) {
@@ -178,7 +178,7 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 
 rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, long int nbr)
 {
-	/* Create an Eiffel ARRAY[ANY] using current object curr. 
+	/* Create an Eiffel ARRAY[ANY] using current object curr.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated array or raises a "No more memory" exception.
 	 * This object will contain all the attributes of curr except for
@@ -259,7 +259,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 		if (!found) {
 			type = types[nbr_attr];
 #ifndef WORKBENCH
-			o_ref = curr + (offsets[nbr_attr]);		
+			o_ref = curr + (offsets[nbr_attr]);
 #else
 			CAttrOffs(offset,rout_ids[nbr_attr],curr_dtype);
 			o_ref = curr + offset;
@@ -268,13 +268,13 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 			case SK_REF:
 				new_obj = *(EIF_REFERENCE *) o_ref;
 				break;
-			case SK_CHAR:
+			case SK_CHAR8:
 				new_obj = RTLN(egc_char_ref_dtype);
-				*(EIF_CHARACTER *) new_obj = * (EIF_CHARACTER *) o_ref;
+				*(EIF_CHARACTER_8 *) new_obj = * (EIF_CHARACTER_8 *) o_ref;
 				break;
-			case SK_WCHAR:
+			case SK_CHAR32:
 				new_obj = RTLN(egc_wchar_ref_dtype);
-				*(EIF_WIDE_CHAR *) new_obj = *(EIF_WIDE_CHAR *) o_ref;
+				*(EIF_CHARACTER_32 *) new_obj = *(EIF_CHARACTER_32 *) o_ref;
 				break;
 			case SK_BOOL:
 				new_obj = RTLN(egc_bool_ref_dtype);
@@ -333,11 +333,11 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 			}
 	/* It might seem heavy to add the offset each time instead
 	 * of taking a pointer which would move from one address
-	 * to the following one. But `array' can move and such a pointer 
+	 * to the following one. But `array' can move and such a pointer
 	 * should be protected. If we push this pointer on the loc_stack,
 	 * it is lost on the first call to the GC. Waiting for a better idea.
 	 * -- Fabrice.
-	 */		
+	 */
 		((EIF_REFERENCE *) sp)[offset_bis++] = new_obj;
 		}
 	}
@@ -450,13 +450,13 @@ rt_private char *inv_mark_tablep = (char * ) 0;
 #endif /* EIF_THREADS */
 
 rt_public void chkinv (EIF_REFERENCE obj, int where)
-		  
+
 		  		/* Invariant is beeing checked before or after compound? */
 {
 	/* Check invariant on object `obj'. Assumes that `obj' is not null */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	
+
 	/* Store the `where' infomation for later use */
 	echentry = !where;
 
@@ -478,8 +478,8 @@ rt_public void chkcinv(EIF_REFERENCE obj)
 }
 
 rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int where)
-		  
-		  
+
+
 		  		/* Invariant is being checked before or after compound? */
 {
 	RT_GET_CONTEXT
@@ -614,12 +614,12 @@ void init_exp (EIF_REFERENCE obj)
 		int32 static_id;               	/* Creation procedure static id */
 
 		feature_id = exp_desc->cn_creation_id;
-		static_id = exp_desc->cn_static_id;	
+		static_id = exp_desc->cn_static_id;
 		if (feature_id) {					/* Call creation routine */
 			wexp(static_id, feature_id, dtype, obj);
 		}
 	} else {							/* precompiled creation routine */
-		int32 origin;					/* Origin class id */       
+		int32 origin;					/* Origin class id */
 		int32 offset;					/* Offset in origin class */
 
 		origin = exp_desc->cn_creation_id;
@@ -721,13 +721,13 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 				int32 static_id;			/* Creation procedure static id */
 
 				feature_id = exp_desc->cn_creation_id;
-				static_id = exp_desc->cn_static_id;	
+				static_id = exp_desc->cn_static_id;
 				if (feature_id)				/* Call creation routine */
 					wexp(static_id, feature_id, orig_exp_dtype, obj + exp_offset);
 			} else {						/* precompiled creation routine */
-				int32 origin;				/* Origin class id */       
+				int32 origin;				/* Origin class id */
 				int32 offset;				/* Offset in origin class */
-		
+
 				origin = exp_desc->cn_creation_id;
 				offset = exp_desc->cn_static_id;
 				if (origin)					/* Call creation routine */
@@ -738,11 +738,11 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 		case SK_BIT:
 			{
 			uint32 offset;					/* Attribute offset */
-		
+
 				/* Current has some expanded objects, we need to make `obj' composite. */
 			has_expanded = 1;
 
-			/* Set dynamic type for bit expanded object */	
+			/* Set dynamic type for bit expanded object */
 			CAttrOffs(offset,cn_attr[i],dtype);
 			zone = HEADER(obj + offset);
 			zone->ov_dftype = egc_bit_dtype;
@@ -750,7 +750,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			zone->ov_flags |= EO_EXP;
 			CHECK("valid offset", (obj - parent) <= 0x7FFFFFFF);
 			zone->ov_size = offset + (uint32) (obj - parent);
-			
+
 			CHECK("valid bit_size", (uint32) (type & SK_BMASK) <= 0x0000FFFF);
 			LENGTH(obj + offset) = (uint16) (type & SK_BMASK); /* Write bit size */
 
@@ -773,7 +773,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 
 #ifndef WORKBENCH
 
-void rt_norout(EIF_REFERENCE dummy) 
+void rt_norout(EIF_REFERENCE dummy)
 {
 	/* Function called when Eiffel is supposed to call a deferred feature
 	 * without any implementation in final mode.

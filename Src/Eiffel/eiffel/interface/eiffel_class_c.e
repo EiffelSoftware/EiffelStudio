@@ -33,6 +33,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_GENERATION
+
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all

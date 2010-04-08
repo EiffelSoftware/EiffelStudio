@@ -70,8 +70,8 @@ RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
 #define	ei_offset(i,object)			(EIF_INTEGER) ((EIF_REFERENCE) ei_oref(i, (EIF_REFERENCE) (object)) - (EIF_REFERENCE) (object))
 
 /* Attribute access */
-#define ei_char_field(i,object)		*(EIF_CHARACTER *) ei_oref(i,(EIF_REFERENCE) (object))
-#define ei_char_32_field(i,object)	*(EIF_WIDE_CHAR *) ei_oref(i,(EIF_REFERENCE) (object))
+#define ei_char_field(i,object)		*(EIF_CHARACTER_8 *) ei_oref(i,(EIF_REFERENCE) (object))
+#define ei_char_32_field(i,object)	*(EIF_CHARACTER_32 *) ei_oref(i,(EIF_REFERENCE) (object))
 #define ei_bool_field(i,object)		*(EIF_BOOLEAN *) ei_oref(i,(EIF_REFERENCE) (object))
 #define ei_uint_8_field(i,object)	*(EIF_NATURAL_8 *) ei_oref(i,(EIF_REFERENCE) (object))
 #define ei_uint_16_field(i,object)	*(EIF_NATURAL_16 *) ei_oref(i,(EIF_REFERENCE) (object))
@@ -87,8 +87,8 @@ RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
 
 /* Attribute setting */
 #define ei_set_reference_field(i,object,value)	RTAR(object,value); *(EIF_REFERENCE *) ei_oref(i,object) = (EIF_REFERENCE) (value)
-#define ei_set_char_field(i,object,value)		*(EIF_CHARACTER *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_CHARACTER) (value)
-#define ei_set_char_32_field(i,object,value)	*(EIF_WIDE_CHAR *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_WIDE_CHAR) (value)
+#define ei_set_char_field(i,object,value)		*(EIF_CHARACTER_8 *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_CHARACTER_8) (value)
+#define ei_set_char_32_field(i,object,value)	*(EIF_CHARACTER_32 *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_CHARACTER_32) (value)
 #define ei_set_boolean_field(i,object,value)	*(EIF_BOOLEAN *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_BOOLEAN) (value)
 #define ei_set_natural_8_field(i,object,value)	*(EIF_NATURAL_8 *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_NATURAL_8) (value)
 #define ei_set_natural_16_field(i,object,value)	*(EIF_NATURAL_16 *) ei_oref(i,(EIF_REFERENCE)(object)) = (EIF_NATURAL_16) (value)

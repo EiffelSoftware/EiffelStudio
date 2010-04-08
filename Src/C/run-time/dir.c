@@ -302,7 +302,7 @@ rt_public EIF_REFERENCE dir_current(void)
 	return cwd_string;
 }
 
-rt_public EIF_CHARACTER eif_dir_separator (void)
+rt_public EIF_CHARACTER_8 eif_dir_separator (void)
 {
 #if defined EIF_WINDOWS
 	return '\\';

@@ -19,9 +19,9 @@ feature -- Access
 	sk_bool_string: STRING = "SK_BOOL"
 			-- Defined in eif_struct.h as SK_BOOL
 
-	sk_char: NATURAL_32 = 0x08000000
-	sk_char_string: STRING = "SK_CHAR"
-			-- Defined in eif_struct.h as SK_CHAR
+	sk_char8: NATURAL_32 = 0x08000000
+	sk_char8_string: STRING = "SK_CHAR8"
+			-- Defined in eif_struct.h as SK_CHAR8
 
 	sk_uint8: NATURAL_32 = 0x30000000
 	sk_uint8_string: STRING = "SK_UINT8"
@@ -55,9 +55,9 @@ feature -- Access
 	sk_real32_string: STRING = "SK_REAL32"
 			-- Defined in eif_struct.h as SK_REAL32
 
-	sk_wchar: NATURAL_32 = 0x1c000000
-	sk_wchar_string: STRING = "SK_WCHAR"
-			-- Defined in eif_struct.h as SK_WCHAR
+	sk_char32: NATURAL_32 = 0x1c000000
+	sk_char32_string: STRING = "SK_CHAR32"
+			-- Defined in eif_struct.h as SK_CHAR32
 
 	sk_real64: NATURAL_32 = 0x20000000
 	sk_real64_string: STRING = "SK_REAL64"
@@ -97,7 +97,7 @@ feature -- Access
 	--| -----------------------------
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -110,22 +110,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

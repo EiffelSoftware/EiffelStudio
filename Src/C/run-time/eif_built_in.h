@@ -152,8 +152,8 @@ extern "C" {
 #define eif_builtin_PLATFORM_is_dotnet					EIF_FALSE
 #endif
 #define eif_builtin_PLATFORM_boolean_bytes 				sizeof(EIF_BOOLEAN)
-#define eif_builtin_PLATFORM_character_bytes 			sizeof(EIF_CHARACTER)
-#define eif_builtin_PLATFORM_wide_character_bytes 		sizeof(EIF_WIDE_CHAR)
+#define eif_builtin_PLATFORM_character_bytes 			sizeof(EIF_CHARACTER_8)
+#define eif_builtin_PLATFORM_wide_character_bytes 		sizeof(EIF_CHARACTER_32)
 #define eif_builtin_PLATFORM_integer_bytes 				sizeof(EIF_INTEGER_32)
 #define eif_builtin_PLATFORM_real_bytes 				sizeof(EIF_REAL_32)
 #define eif_builtin_PLATFORM_double_bytes 				sizeof(EIF_REAL_64)

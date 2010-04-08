@@ -157,7 +157,7 @@ rt_public void console_ps(FILE *f, char *str, EIF_INTEGER len)
 	flush_buffer(f);
 }
 
-rt_public void console_pc(FILE *f, EIF_CHARACTER c)
+rt_public void console_pc(FILE *f, EIF_CHARACTER_8 c)
 {
 #ifdef EIF_WINDOWS
 	eif_show_console ();
@@ -215,7 +215,7 @@ rt_public EIF_REAL_64 console_readdouble(FILE *f)
 #endif
 	return file_gd(f);
 }
-rt_public EIF_CHARACTER console_readchar(FILE *f)
+rt_public EIF_CHARACTER_8 console_readchar(FILE *f)
 {
 	int c;
 
@@ -240,7 +240,7 @@ rt_public EIF_CHARACTER console_readchar(FILE *f)
 	}
 #endif
 
-	return (EIF_CHARACTER) c;
+	return (EIF_CHARACTER_8) c;
 }
 
 rt_public EIF_INTEGER console_readline(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start)
@@ -278,7 +278,7 @@ rt_public EIF_INTEGER console_readword(FILE *f, char *s, EIF_INTEGER bound, EIF_
 	return file_gw (f, s, bound, start);
 }
 
-rt_public EIF_CHARACTER console_separator(FILE *f)
+rt_public EIF_CHARACTER_8 console_separator(FILE *f)
 {
 #ifdef EIF_WINDOWS
 	eif_show_console ();

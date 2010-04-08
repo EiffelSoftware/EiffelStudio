@@ -46,18 +46,18 @@
 extern "C" {
 #endif
 
-RT_LNK EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER *p);
-RT_LNK EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER *p);
-RT_LNK EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER *p);
-RT_LNK EIF_BOOLEAN eif_is_extension_valid (EIF_CHARACTER *p);
-RT_LNK EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER *p);
-RT_LNK EIF_BOOLEAN eif_is_directory_name_valid (EIF_CHARACTER *p);
-RT_LNK EIF_BOOLEAN eif_path_name_compare(EIF_CHARACTER *s, EIF_CHARACTER *t, EIF_INTEGER length);
-RT_LNK void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v);
-RT_LNK void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v);
-RT_LNK void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v);
-RT_LNK EIF_REFERENCE eif_volume_name(EIF_CHARACTER *p);
-RT_LNK EIF_REFERENCE eif_extracted_paths(EIF_CHARACTER *p);
+RT_LNK EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER_8 *p);
+RT_LNK EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER_8 *p);
+RT_LNK EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER_8 *p);
+RT_LNK EIF_BOOLEAN eif_is_extension_valid (EIF_CHARACTER_8 *p);
+RT_LNK EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER_8 *p);
+RT_LNK EIF_BOOLEAN eif_is_directory_name_valid (EIF_CHARACTER_8 *p);
+RT_LNK EIF_BOOLEAN eif_path_name_compare(EIF_CHARACTER_8 *s, EIF_CHARACTER_8 *t, EIF_INTEGER length);
+RT_LNK void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EIF_CHARACTER_8 *v);
+RT_LNK void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EIF_CHARACTER_8 *v);
+RT_LNK void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EIF_CHARACTER_8 *v);
+RT_LNK EIF_REFERENCE eif_volume_name(EIF_CHARACTER_8 *p);
+RT_LNK EIF_REFERENCE eif_extracted_paths(EIF_CHARACTER_8 *p);
 RT_LNK EIF_BOOLEAN eif_case_sensitive_path_names(void);
 RT_LNK EIF_REFERENCE eif_current_dir_representation(void);
 RT_LNK EIF_BOOLEAN eif_home_dir_supported(void);

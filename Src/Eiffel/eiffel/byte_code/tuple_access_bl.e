@@ -131,8 +131,8 @@ feature -- C Code generation
 			inspect
 				real_type (tuple_element_type).c_type.sk_value
 			when {SK_CONST}.sk_bool then Result := once "boolean"
-			when {SK_CONST}.sk_char then Result := once "character_8"
-			when {SK_CONST}.sk_wchar then Result := once "character_32"
+			when {SK_CONST}.sk_char8 then Result := once "character_8"
+			when {SK_CONST}.sk_char32 then Result := once "character_32"
 			when {SK_CONST}.sk_real32 then Result := once "real_32"
 			when {SK_CONST}.sk_real64 then Result := once "real_64"
 			when {SK_CONST}.sk_uint8 then Result := once "natural_8"

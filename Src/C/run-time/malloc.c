@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -129,7 +129,7 @@ doc:	</description>
  * have their own entry in the `hlist'.
  *  E.g.: 0,  8, 16, ...., 504 in case where ALIGNMAX = 8
  *  E.g.: 0, 16, 32, ...., 1008 in case where ALIGNMAX = 16
- 
+
  * Above or at `HLIST_SIZE_LIMIT', the corresponding entry `i' (i >= HLIST_INDEX_LIMIT) has
  * the sizes between 2^(i - HLIST_INDEX_LIMIT + HLIST_DEFAULT_SHIFT) and
  * (2^(i - HLIST_INDEX_LIMIT + HLIST_DEFAULT_SHIFT + 1) - ALIGNMAX).
@@ -186,7 +186,7 @@ rt_shared struct emallinfo rt_m_data = {
 	0,		/* ml_total */
 	0,		/* ml_used */
 	0,		/* ml_over */
-};	
+};
 
 /*
 doc:	<attribute name="rt_c_data" return_type="struct emallinfo" export="shared">
@@ -219,7 +219,7 @@ rt_shared struct emallinfo rt_e_data = { /* Informations on Eiffel memory */
 	0,		/* ml_total */
 	0,		/* ml_used */
 	0,		/* ml_over */
-};	
+};
 
 /*  */
 /*
@@ -703,7 +703,7 @@ rt_public EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX type, 
 #ifdef ISE_GC
 	uint32 mod;							/* Remainder for padding */
 #endif
-	
+
 #ifdef WORKBENCH
 	if (EIF_IS_DEFERRED_TYPE(System(type))) {	/* Cannot create deferred */
 		eraise(System(type).cn_generator, EN_CDEF);
@@ -723,7 +723,7 @@ rt_public EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX type, 
 
 #ifdef ISE_GC
 		/* Objects of tiny size are very expensive to manage in the free-list, thus we make them not tiny. */
-	nbytes = MIN_OBJECT_SIZE(nbytes); 
+	nbytes = MIN_OBJECT_SIZE(nbytes);
 
 		/* We really use at least ALIGNMAX, to avoid alignement problems.
 		 * So even if nbytes is 0, some memory will be used (the header), he he !!
@@ -734,7 +734,7 @@ rt_public EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX type, 
 
 	/* Depending on the optimization chosen, we allocate the object in
 	 * the Generational Scavenge Zone (GSZ) or in the free-list.
-	 * All the objects smaller than `eif_gs_limit' are allocated 
+	 * All the objects smaller than `eif_gs_limit' are allocated
 	 * in the the GSZ, otherwise they are allocated in the free-list.
 	 */
 
@@ -803,7 +803,7 @@ rt_public EIF_REFERENCE emalloc_as_old(EIF_TYPE_INDEX ftype)
 #ifdef ISE_GC
 	uint32 mod;							/* Remainder for padding */
 #endif
-	
+
 #ifdef WORKBENCH
 	if (EIF_IS_DEFERRED_TYPE(System(type))) {	/* Cannot create deferred */
 		eraise(System(type).cn_generator, EN_CDEF);
@@ -881,7 +881,7 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 	EIF_TYPE_INDEX dtype = To_dtype(dftype);
 	void (*cp) (EIF_REFERENCE);
 	void (*init) (EIF_REFERENCE, EIF_REFERENCE);
-	
+
 	REQUIRE ("obj not null", obj != (EIF_REFERENCE) 0);
 	REQUIRE ("Not forwarded", !(HEADER (obj)->ov_size & B_FWD));
 	REQUIRE ("Special object", HEADER (obj)->ov_flags & EO_SPEC);
@@ -1069,7 +1069,7 @@ rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
 	rt_uint_ptr l_array_index;
 
 	REQUIRE("Valid actual generic type", (ftype <= MAX_DTYPE) || (ftype == NONE_TYPE));
-	
+
 		/* The actual offset in the `rt_type_set' array is increased by '1' so that
 		 * we can store TYPE [NONE] at index `0'. */
 	if (ftype != NONE_TYPE) {
@@ -1161,8 +1161,8 @@ rt_public EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 coun
 		for (i = 1; i < count; i++,l_item++) {
 			switch (eif_gen_typecode_with_dftype(ftype, i)) {
 				case EIF_BOOLEAN_CODE:    t = SK_BOOL; break;
-				case EIF_CHARACTER_CODE:  t = SK_CHAR; break;
-				case EIF_WIDE_CHAR_CODE:  t = SK_WCHAR; break;
+				case EIF_CHARACTER_8_CODE:  t = SK_CHAR8; break;
+				case EIF_CHARACTER_32_CODE:  t = SK_CHAR32; break;
 				case EIF_INTEGER_8_CODE:  t = SK_INT8; break;
 				case EIF_INTEGER_16_CODE: t = SK_INT16; break;
 				case EIF_INTEGER_32_CODE: t = SK_INT32; break;
@@ -1209,7 +1209,7 @@ rt_shared EIF_REFERENCE spmalloc(EIF_INTEGER nb, uint32 element_size, EIF_BOOLEA
 	if (((element_size > 0) && (n / (rt_uint_ptr) element_size != (rt_uint_ptr) nb)) || (nbytes < n)) {
 		eraise("Special allocation", EN_MEM);	/* Overflow in calculating memory size. */
 	}
-	
+
 #if defined(BOEHM_GC) || defined(NO_GC)
 		/* No dispose routine associated, therefore `0' for second argument */
 	object = external_allocation (atomic, 0, nbytes);
@@ -1223,7 +1223,7 @@ rt_shared EIF_REFERENCE spmalloc(EIF_INTEGER nb, uint32 element_size, EIF_BOOLEA
 
 #ifdef ISE_GC
 		/* Objects of tiny size are very expensive to manage in the free-list, thus we make them not tiny. */
-	nbytes = MIN_OBJECT_SIZE(nbytes); 
+	nbytes = MIN_OBJECT_SIZE(nbytes);
 
 		/* We really use at least ALIGNMAX, to avoid alignement problems.
 		 * So even if nbytes is 0, some memory will be used (the header), he he !!
@@ -1337,7 +1337,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 			 * GC. Also, this prevents a nasty bug when Eiffel objects share the area.
 			 * When one of this area is resized and moved, the other object still
 			 * references somthing valid (although the area is no longer shared)--RAM.
-			 */	
+			 */
 
 		object = xrealloc (ptr, new_size, GC_ON | GC_FREE);
 #endif
@@ -1440,7 +1440,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 					 */
 				memset (object + old_real_size, 0, new_size - old_real_size);
 			}
-			
+
 			if (zone->ov_flags & EO_COMP)
 					/* Object has been resized and contains expanded objects.
 					 * We need to initialize the newly allocated area. */
@@ -1561,7 +1561,7 @@ rt_public EIF_REFERENCE bmalloc(uint16 size)
 
 		/* As in the memory allocation routines located in eif_malloc.c, a new
 		 * BIT object has to be marked after being allocated in the eif_free
-		 * list. Otherwise the GC will be lost. 
+		 * list. Otherwise the GC will be lost.
 		 * Fixes negate-big-bit-local.
 		 * -- Fabrice
 		 */
@@ -1571,7 +1571,7 @@ rt_public EIF_REFERENCE bmalloc(uint16 size)
 		LENGTH(object) = size;				/* Record size */
 		return object;
 	}
-  
+
 	eraise(MTC "object allocation", EN_MEM);	/* Signals no more memory */
 	return NULL; /* NOTREACHED */
 }
@@ -1608,10 +1608,10 @@ doc:	</routine>
 
 rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes)
 {
-	EIF_REFERENCE result;	
+	EIF_REFERENCE result;
 
 	REQUIRE("nbytes properly padded", (nbytes % ALIGNMAX) == 0);
-	REQUIRE("nbytes not too big (less than 2^27)", !(nbytes & ~B_SIZE)); 
+	REQUIRE("nbytes not too big (less than 2^27)", !(nbytes & ~B_SIZE));
 
 		/* We try to find an empty spot in the free list. If not found, we
 		 * will try `malloc_free_list' which will either allocate more
@@ -1651,7 +1651,7 @@ rt_private EIF_REFERENCE malloc_from_eiffel_list (rt_uint_ptr nbytes)
 	EIF_REFERENCE result;
 
 	REQUIRE("nbytes properly padded", (nbytes % ALIGNMAX) == 0);
-	REQUIRE("nbytes not too big (less than 2^27)", !(nbytes & ~B_SIZE)); 
+	REQUIRE("nbytes not too big (less than 2^27)", !(nbytes & ~B_SIZE));
 
 		/* Perform allocation in free list. If not successful, we try again
 		 * by trying a GC cycle. */
@@ -1806,7 +1806,7 @@ rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist
 			return result;				/* We got it */
 		}
 	}
-	
+
 		/* Call garbage collector if it is not turned off and restart our
 		 * attempt from the beginning. We always call the partial scavenging
 		 * collector to benefit from the memory compaction, if possible.
@@ -2079,10 +2079,10 @@ rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
 	fprintf(stderr, "Total available bytes is %d\n", bytes_available);
 	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
 		fprintf(stderr, "Eiffel free list has %d bytes allocated, %d used and %d free.\n",
-			rt_e_data.ml_total, rt_e_data.ml_used, rt_e_data.ml_total - rt_e_data.ml_used - rt_e_data.ml_over); 
+			rt_e_data.ml_total, rt_e_data.ml_used, rt_e_data.ml_total - rt_e_data.ml_used - rt_e_data.ml_over);
 	} else {
 		fprintf(stderr, "C free list has %d bytes allocated, %d used and %d free.\n",
-			rt_c_data.ml_total, rt_c_data.ml_used, rt_c_data.ml_total - rt_c_data.ml_used - rt_c_data.ml_over); 
+			rt_c_data.ml_total, rt_c_data.ml_used, rt_c_data.ml_total - rt_c_data.ml_used - rt_c_data.ml_over);
 	}
 	flush;
 #endif
@@ -2132,7 +2132,7 @@ rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlis
 	struct chunk *chkbase;		/* Base address of new chunk */
 	EIF_REFERENCE result;
 	int type = CHUNK_TYPE(hlist);
-	
+
 #ifdef DEBUG
 	dprintf(4)("allocate_from_core: requesting %d bytes from %s list\n",
 		nbytes, (type == C_T) ? "C" : "Eiffel");
@@ -2148,7 +2148,7 @@ rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlis
 		SIGRESUME;			/* End of critical section */
 		return (EIF_REFERENCE) 0;				/* Could not obtain enough memory */
 	}
-	
+
 	/* Add_core() returns a pointer of the info zone of the sole block
 	 * currently in the new born chunk. We have to set the "type" of the
 	 * chunk correctly, along with the type of the block held in it (so that
@@ -2268,7 +2268,7 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 			return (union overhead *) 0;
 		}
 	}
-	oldbrk = (union overhead *) eif_malloc (asked); /* Use malloc () */ 
+	oldbrk = (union overhead *) eif_malloc (asked); /* Use malloc () */
 	if (!oldbrk) {
 		return NULL;
 	}
@@ -2309,11 +2309,11 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 		cklst.ck_tail->ck_next = chkstart;		/* Added at the tail */
 		chkstart->ck_prev = cklst.ck_tail;		/* Previous item */
 	}
-		
+
 	cklst.ck_tail = chkstart;					/* New tail */
 	chkstart->ck_next = (struct chunk *) 0;		/* Last block in list */
 	chkstart->ck_length = asked + OVERHEAD;		/* Size of chunk */
-	
+
 	/* Address of new block (skip chunck overhead) */
 	oldbrk = (union overhead *) (chkstart + 1);
 
@@ -2435,7 +2435,7 @@ rt_private void free_chunk(struct chunk *a_chk)
 		/* Now do the same but for the Eiffel list and the C list. */
 	if (a_chk->ck_type == EIFFEL_T) {	/* Chunk was an Eiffel one */
 		rt_e_data.ml_chunk--;
-		rt_e_data.ml_total -= nbytes;	
+		rt_e_data.ml_total -= nbytes;
 		rt_e_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
 		if (a_chk == cklst.eck_head) {
 			cklst.eck_head = a_chk->ck_lnext;
@@ -2455,7 +2455,7 @@ rt_private void free_chunk(struct chunk *a_chk)
 		}
 	} else {							/* Chunk was a C one */
 		rt_c_data.ml_chunk--;
-		rt_c_data.ml_total -= nbytes;	
+		rt_c_data.ml_total -= nbytes;
 		rt_c_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
 		if (a_chk == cklst.cck_head) {
 			cklst.cck_head = a_chk->ck_lnext;
@@ -2517,9 +2517,9 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, size_t nbytes
 	 * Another part of the run-time will overwrite this if Eiffel is
 	 * to ever use this object.
 	 */
-	
+
 	r = selected->ov_size;
-#ifdef EIF_TID 
+#ifdef EIF_TID
 #ifdef EIF_THREADS
     selected->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
 #else
@@ -2691,7 +2691,7 @@ rt_private void xfreeblock(union overhead *zone, rt_uint_ptr r)
 	 * is not the last one in a chunk, we check the next one. If
 	 * it happens to be free, then we do coalescing. And so on...
 	 */
-	
+
 #ifndef EIF_MALLOC_OPTIMIZATION
 	size = coalesc(zone);
 	while (size) {		/* Perform coalescing as long as possible */
@@ -2699,7 +2699,7 @@ rt_private void xfreeblock(union overhead *zone, rt_uint_ptr r)
 		size = coalesc(zone);
 	}
 #endif	/* EIF_MALLOC_OPTIMIZATION */
-		
+
 	/* Now 'zone' points to the block to be freed, and 'r' is the
 	 * size (eventually, this is a coalesced block). Reset all the
 	 * flags but B_LAST and put the block in the free list again.
@@ -2730,7 +2730,7 @@ doc:	</routine>
 
 rt_shared void * crealloc(void * ptr, size_t nbytes)
 {
-	
+
 #ifdef ISE_GC
 	return xrealloc((EIF_REFERENCE) ptr, nbytes, GC_ON);
 #else
@@ -2761,7 +2761,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	union overhead *zone;		/* The to-be-reallocated zone */
 	EIF_REFERENCE safeptr = NULL;		/* GC-safe pointer */
 	size_t size, size_gain;				/* Gain in size brought by coalesc */
-	
+
 	REQUIRE("ptr not null", ptr);
 
 #ifdef LMALLOC_CHECK
@@ -2790,7 +2790,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	 * we won't have to move the block. However, we may have to split
 	 * the block...
 	 */
-	
+
 	r = zone->ov_size & B_SIZE;			/* Size of block */
 	i = (rt_uint_ptr) (nbytes % ALIGNMAX);
 	if (i != 0)
@@ -2817,7 +2817,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 			GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 			return ptr;					/* Leave block unchanged */
 		}
-		
+
 		rt_m_data.ml_used -= r + OVERHEAD;	/* Data we lose in realloc */
 		if (zone->ov_size & B_CTYPE)
 			rt_c_data.ml_used -= r + OVERHEAD;
@@ -2839,12 +2839,12 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 		return ptr;		/* Block address did not change */
 	}
-	
+
 	/* As we would like to avoid moving the block unless it is
 	 * absolutely necessary, we check to see if the block after
 	 * us is not, by extraordinary, free.
 	 */
-	
+
 #ifdef EIF_MALLOC_OPTIMIZATION
 	size_gain = 0;
 #else	/* EIF_MALLOC_OPTIMIZATION */
@@ -2954,7 +2954,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	 */
 
 	if (zone != (union overhead *) 0) {
-		CHECK("Correct size", (r & B_SIZE) <= (HEADER(zone)->ov_size & B_SIZE)); 
+		CHECK("Correct size", (r & B_SIZE) <= (HEADER(zone)->ov_size & B_SIZE));
 		memcpy (zone, ptr, r & B_SIZE);	/* Move to new location */
 		HEADER(zone)->ov_flags = HEADER(ptr)->ov_flags;		/* Keep Eiffel flags */
 		HEADER(zone)->ov_dftype = HEADER(ptr)->ov_dftype;
@@ -2975,7 +2975,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 		}
 	} else if (i == EIFFEL_T)			/* Could not reallocate object */
 		eraise("object reallocation", EN_MEM);	/* No more memory */
-		
+
 
 #ifdef DEBUG
 	if (zone != (union overhead *) 0)
@@ -3012,7 +3012,7 @@ rt_public struct emallinfo *eif_rt_meminfo(int type)
 	case M_EIFFEL:
 		return &rt_e_data;		/* Pointer to static data */
 	}
-	
+
 	return &rt_m_data;		/* Pointer to static data */
 }
 
@@ -3127,7 +3127,7 @@ rt_private rt_uint_ptr coalesc(register union overhead *zone)
 	} else {
 		rt_e_data.ml_over -= OVERHEAD;
 	}
-			
+
 #ifdef DEBUG
 	dprintf(1)("coalesc: coalescing with a %d bytes %s %s block at 0x%lx\n",
 		r, (next->ov_size & B_LAST) ? "last" : "normal",
@@ -3142,7 +3142,7 @@ rt_private rt_uint_ptr coalesc(register union overhead *zone)
 	/* First, compute the position in hash list */
 	i = HLIST_INDEX(r);
 	disconnect_free_list(next, i);		/* Remove block from free list */
-	
+
 	/* Finally, we set the new coalesced block correctly, checking for last
 	 * position. The other flags were kept from the original block.
 	 */
@@ -3160,7 +3160,7 @@ rt_private rt_uint_ptr coalesc(register union overhead *zone)
 
 	return (i & B_SIZE) + OVERHEAD;		/* Number of coalesced free bytes */
 }
-		
+
 /*
 doc:	<routine name="connect_free_list" export="private">
 doc:		<summary>The block 'zone' is inserted in the free list #i. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
@@ -3219,7 +3219,7 @@ rt_private void connect_free_list(register union overhead *zone, register rt_uin
 
 	CHECK("p not null", p);
 
-		/* We have to scan the list to find the right place for inserting our block. 
+		/* We have to scan the list to find the right place for inserting our block.
 		 * With the help of the buffer cache, we may not have to scan all the list. */
 #ifndef EIF_SORTED_FREE_LIST_BACKWARD_TRAVERSAL
 	p = blist [i];
@@ -3555,13 +3555,13 @@ rt_private rt_uint_ptr full_coalesc_unsafe(int chunk_type)
 	default:
 		return (rt_uint_ptr) -1;					/* Invalid request */
 	}
- 
+
 	for (
 		/* empty */;
 		c != (struct chunk *) 0;
 		c = chunk_type == ALL_T ? c->ck_next : c->ck_lnext
 	) {
-	
+
 #ifdef DEBUG
 		dprintf(1+32)("full_coalesc_unsafe: entering %s chunk 0x%lx (%d bytes)\n",
 			c->ck_type == C_T ? "C" : "Eiffel", c, c->ck_length);
@@ -3695,7 +3695,7 @@ rt_private EIF_REFERENCE malloc_from_zone(rt_uint_ptr nbytes)
 	REQUIRE("Scavenging enabled", gen_scavenge == GS_ON);
 	REQUIRE("Has from zone", sc_from.sc_arena);
 	REQUIRE("nbytes properly padded", (nbytes % ALIGNMAX) == 0);
-	
+
 	/* Allocating from a scavenging zone is easy and fast. It's basically a
 	 * pointer update... However, if the level in the 'from' zone reaches
 	 * the watermark GS_WATERMARK, we return NULL immediately, it is up to
@@ -3703,7 +3703,7 @@ rt_private EIF_REFERENCE malloc_from_zone(rt_uint_ptr nbytes)
 	 * The tenuring threshold for the next scavenge is computed to make the level
 	 * of occupation go below the watermark at the next collection so that
 	 * the next call to `malloc_from_zone' is most likely to succeed.
-	 * 
+	 *
 	 * Aslo, if there is not enough space in the scavenge zone, we need to return
 	 * immediately.
 	 */
@@ -3869,7 +3869,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		 * was the last block in the chunk, then this remaining space is the
 		 * last in the chunk too, so set the flags accordingly.
 		 */
-	
+
 		CHECK("new size fits on B_SIZE", ((sc->sc_end - (EIF_REFERENCE) (zone + 1)) & ~B_SIZE) == 0);
 
 		zone->ov_size = size | (sc->sc_end - (EIF_REFERENCE) (zone + 1));
@@ -3958,8 +3958,8 @@ rt_public EIF_REFERENCE eif_box (EIF_TYPED_VALUE v)
 	switch (v.type)
 	{
 		case SK_BOOL:    Result = RTLN(egc_bool_dtype);   *                   Result = v.it_b; break;
-		case SK_CHAR:    Result = RTLN(egc_char_dtype);   *                   Result = v.it_c1; break;
-		case SK_WCHAR:   Result = RTLN(egc_wchar_dtype);  *(EIF_WIDE_CHAR *)  Result = v.it_c4; break;
+		case SK_CHAR8:    Result = RTLN(egc_char_dtype);   *                   Result = v.it_c1; break;
+		case SK_CHAR32:   Result = RTLN(egc_wchar_dtype);  *(EIF_CHARACTER_32 *)  Result = v.it_c4; break;
 		case SK_UINT8:   Result = RTLN(egc_uint8_dtype);  *(EIF_NATURAL_8 *)  Result = v.it_n1; break;
 		case SK_UINT16:  Result = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *) Result = v.it_n2; break;
 		case SK_UINT32:  Result = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *) Result = v.it_n4; break;
@@ -3972,7 +3972,7 @@ rt_public EIF_REFERENCE eif_box (EIF_TYPED_VALUE v)
 		case SK_REAL64:  Result = RTLN(egc_real64_dtype); *(EIF_REAL_64 *)    Result = v.it_r8; break;
 		case SK_POINTER: Result = RTLN(egc_point_dtype);  *(EIF_POINTER *)    Result = v.it_p; break;
 		case SK_REF:     Result = v.it_r; break;
-		default: 
+		default:
 			Result = NULL;	/* To avoid C warnings. */
 			eif_panic("illegal value type");
 	}
@@ -4001,7 +4001,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 	SIGBLOCK;					/* Critical section */
 	memset (object, 0, zone->ov_size & B_SIZE);		/* All set with zeros */
 
-#ifdef EIF_TID 
+#ifdef EIF_TID
 #ifdef EIF_THREADS
     zone->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
 #else
@@ -4082,7 +4082,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 		memset (object, 0, zone->ov_size & B_SIZE);		/* All set with zeros */
 	}
 
-#ifdef EIF_TID 
+#ifdef EIF_TID
 #ifdef EIF_THREADS
     zone->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
 #else

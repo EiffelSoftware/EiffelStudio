@@ -232,10 +232,10 @@ rt_private EIF_INTEGER_32 eif_max_int32 (EIF_INTEGER_32 i, EIF_INTEGER_32 j) {
 rt_private EIF_INTEGER_64 eif_max_int64 (EIF_INTEGER_64 i, EIF_INTEGER_64 j) {
 	return (i > j ? i : j);
 }
-rt_private EIF_CHARACTER eif_max_char (EIF_CHARACTER i, EIF_CHARACTER j) {
+rt_private EIF_CHARACTER_8 eif_max_char (EIF_CHARACTER_8 i, EIF_CHARACTER_8 j) {
 	return (i > j ? i : j);
 }
-rt_private EIF_WIDE_CHAR eif_max_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
+rt_private EIF_CHARACTER_32 eif_max_wide_char (EIF_CHARACTER_32 i, EIF_CHARACTER_32 j) {
 	return (i > j ? i : j);
 }
 rt_private EIF_REAL_32 eif_max_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
@@ -278,10 +278,10 @@ rt_private EIF_INTEGER_32 eif_min_int32 (EIF_INTEGER_32 i, EIF_INTEGER_32 j) {
 rt_private EIF_INTEGER_64 eif_min_int64 (EIF_INTEGER_64 i, EIF_INTEGER_64 j) {
 	return (i < j ? i : j);
 }
-rt_private EIF_CHARACTER eif_min_char (EIF_CHARACTER i, EIF_CHARACTER j) {
+rt_private EIF_CHARACTER_8 eif_min_char (EIF_CHARACTER_8 i, EIF_CHARACTER_8 j) {
 	return (i < j ? i : j);
 }
-rt_private EIF_WIDE_CHAR eif_min_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
+rt_private EIF_CHARACTER_32 eif_min_wide_char (EIF_CHARACTER_32 i, EIF_CHARACTER_32 j) {
 	return (i < j ? i : j);
 }
 rt_private EIF_REAL_32 eif_min_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
@@ -324,10 +324,10 @@ rt_private EIF_INTEGER_32 eif_twc_int32 (EIF_INTEGER_32 i, EIF_INTEGER_32 j) {
 rt_private EIF_INTEGER_32 eif_twc_int64 (EIF_INTEGER_64 i, EIF_INTEGER_64 j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
-rt_private EIF_INTEGER_32 eif_twc_char (EIF_CHARACTER i, EIF_CHARACTER j) {
+rt_private EIF_INTEGER_32 eif_twc_char (EIF_CHARACTER_8 i, EIF_CHARACTER_8 j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
-rt_private EIF_INTEGER_32 eif_twc_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
+rt_private EIF_INTEGER_32 eif_twc_wide_char (EIF_CHARACTER_32 i, EIF_CHARACTER_32 j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
 rt_private EIF_INTEGER_32 eif_twc_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {

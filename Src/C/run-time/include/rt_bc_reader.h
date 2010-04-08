@@ -57,48 +57,48 @@ extern "C" {
 #define get_routine_id(x) get_int32(x)
 
 /*
-doc:	<routine name="get_char8" return_type="EIF_CHARACTER" export="private">
-doc:		<summary>Read an EIF_CHARACTER from a byte code stream.</summary>
+doc:	<routine name="get_char8" return_type="EIF_CHARACTER_8" export="private">
+doc:		<summary>Read an EIF_CHARACTER_8 from a byte code stream.</summary>
 doc:		<param name="bc" type="unsigned char **">Stream from where data is going to be read.</param>
-doc:		<return>The read EIF_CHARACTER value.</return>
+doc:		<return>The read EIF_CHARACTER_8 value.</return>
 doc:		<thread_safety>Safe if `bc' is not used by more than one thread</thread_safety>
 doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_CHARACTER get_char8 (unsigned char **bc)
+rt_private EIF_CHARACTER_8 get_char8 (unsigned char **bc)
 {
-		/* Get EIF_CHARACTER stored at *bc in byte code array.  */
-	EIF_CHARACTER result;
+		/* Get EIF_CHARACTER_8 stored at *bc in byte code array.  */
+	EIF_CHARACTER_8 result;
 
 	REQUIRE("bc_not_null", bc);
 	REQUIRE("bc_data_not_null", *bc);
 
-	memcpy(&result, *bc, sizeof(EIF_CHARACTER));
-	*bc += sizeof(EIF_CHARACTER);
+	memcpy(&result, *bc, sizeof(EIF_CHARACTER_8));
+	*bc += sizeof(EIF_CHARACTER_8);
 	return result;
 }
 
 /*
-doc:	<routine name="get_char32" return_type="EIF_WIDE_CHAR" export="private">
-doc:		<summary>Read an EIF_WIDE_CHAR from a byte code stream.</summary>
+doc:	<routine name="get_char32" return_type="EIF_CHARACTER_32" export="private">
+doc:		<summary>Read an EIF_CHARACTER_32 from a byte code stream.</summary>
 doc:		<param name="bc" type="unsigned char **">Stream from where data is going to be read.</param>
-doc:		<return>The read EIF_WIDE_CHAR value.</return>
+doc:		<return>The read EIF_CHARACTER_32 value.</return>
 doc:		<thread_safety>Safe if `bc' is not used by more than one thread</thread_safety>
 doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_WIDE_CHAR get_char32 (unsigned char **bc)
+rt_private EIF_CHARACTER_32 get_char32 (unsigned char **bc)
 {
-		/* Get EIF_WIDE_CHAR stored at *bc in byte code array.  */
-	EIF_WIDE_CHAR result;
+		/* Get EIF_CHARACTER_32 stored at *bc in byte code array.  */
+	EIF_CHARACTER_32 result;
 
 	REQUIRE("bc_not_null", bc);
 	REQUIRE("bc_data_not_null", *bc);
 
-	memcpy(&result, *bc, sizeof(EIF_WIDE_CHAR));
-	*bc += sizeof(EIF_WIDE_CHAR);
+	memcpy(&result, *bc, sizeof(EIF_CHARACTER_32));
+	*bc += sizeof(EIF_CHARACTER_32);
 	return result;
 }
 
@@ -356,25 +356,25 @@ rt_private EIF_REAL_64 get_real64(unsigned char **bc)
 }
 
 /*
-doc:	<routine name="get_string8" return_type="EIF_CHARACTER *" export="private">
-doc:		<summary>Read a string made of EIF_CHARACTER from a byte code stream.</summary>
+doc:	<routine name="get_string8" return_type="EIF_CHARACTER_8 *" export="private">
+doc:		<summary>Read a string made of EIF_CHARACTER_8 from a byte code stream.</summary>
 doc:		<param name="bc" type="unsigned char **">Stream from where data is going to be read.</param>
 doc:		<param name="requested_length" type="EIF_INTEGER_32">Number of characters to read from string, if -1, we suppose it is a null terminated string.</param>
-doc:		<return>The read EIF_CHARACTER * value.</return>
+doc:		<return>The read EIF_CHARACTER_8 * value.</return>
 doc:		<thread_safety>Safe if `bc' is not used by more than one thread</thread_safety>
 doc:		<synchronization>None required.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_CHARACTER * get_string8(unsigned char **bc, EIF_INTEGER_32 requested_length)
+rt_private EIF_CHARACTER_8 * get_string8(unsigned char **bc, EIF_INTEGER_32 requested_length)
 {
-		/* Get EIF_CHARACTER * stored at *bc in byte code array.  */
-	EIF_CHARACTER * result;
+		/* Get EIF_CHARACTER_8 * stored at *bc in byte code array.  */
+	EIF_CHARACTER_8 * result;
 	
 	REQUIRE("bc_not_null", bc);
 	REQUIRE("bc_data_not_null", *bc);
 
-	result = (EIF_CHARACTER *) *bc;
+	result = (EIF_CHARACTER_8 *) *bc;
 
 	if (requested_length == -1) {
 		*bc += strlen((char *)result) + 1;

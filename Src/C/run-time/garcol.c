@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -43,7 +43,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "eif_eiffel.h"		/* For bcopy/memcpy */
 #include "eif_struct.h"
 #include "rt_globals.h"
-#include "eif_misc.h"	
+#include "eif_misc.h"
 #include "eif_size.h"
 #include "rt_malloc.h"
 #include "rt_garcol.h"
@@ -165,7 +165,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack loc_stack = {			/* Local indirection stack */ 
+rt_public struct stack loc_stack = {			/* Local indirection stack */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -180,7 +180,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack loc_set = {				/* Local variable stack */ 
+rt_public struct stack loc_set = {				/* Local variable stack */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -195,7 +195,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack once_set = {			/* Once functions */ 
+rt_public struct stack once_set = {			/* Once functions */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -209,7 +209,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack oms_set = {			/* Once manifest strings */ 
+rt_public struct stack oms_set = {			/* Once manifest strings */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -224,7 +224,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_global_once_set_mutex'</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack global_once_set = {			/* Once functions */ 
+rt_public struct stack global_once_set = {			/* Once functions */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -351,7 +351,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_set_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private struct stack rem_set = {			/* Remembered set */ 
+rt_private struct stack rem_set = {			/* Remembered set */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -366,7 +366,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_set_mutex</synchronization>
 doc:	</attribute>
 */
-rt_shared struct stack moved_set = {			/* Moved objects set */ 
+rt_shared struct stack moved_set = {			/* Moved objects set */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -381,7 +381,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_set_mutex for insertion, eif_gc_mutex for manipulating it.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack memory_set = 
+rt_public struct stack memory_set =
 {
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -518,7 +518,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */ 
+rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */
 
 /*
 doc:	<attribute name="size_table" return_type="rt_uint_ptr [TENURE_MAX]" export="private">
@@ -528,7 +528,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private rt_uint_ptr size_table[TENURE_MAX];		/* Amount of bytes/age */ 
+rt_private rt_uint_ptr size_table[TENURE_MAX];		/* Amount of bytes/age */
 
 /*
 doc:	<attribute name="tenure" return_type="int" export="shared">
@@ -538,7 +538,7 @@ doc:		<synchronization>None while initialized in `main.c' but use `eif_gc_mutex'
 doc:	</attribute>
 */
 rt_shared int tenure;
-											
+
 /*
 doc:	<attribute name="plsc_per" return_type="long" export="public">
 doc:		<summary>Period of calls to `plsc' in `acollect'.</summary>
@@ -748,7 +748,7 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move);		/*
 #ifdef DEBUG
 static int fdone = 0;	/* Tracing flag to only get the last full collect */
 #define debug_ok(n)	((n) & DEBUG || fdone)
-#define dprintf(n)	if (DEBUG & (n) && debug_ok(n)) printf 
+#define dprintf(n)	if (DEBUG & (n) && debug_ok(n)) printf
 #define flush		fflush(stdout);
 #endif
 
@@ -789,7 +789,7 @@ rt_shared int acollect(void)
 	static rt_uint_ptr eif_total = 0;		/* Total Eiffel memory allocated */
 	int freemem;					/* Amount of free memory */
 	int tau;						/* Mean allocation rate */
-	int half_tau;					
+	int half_tau;
 	int allocated;					/* Memory used since last full collect */
 #endif	/* EIF_CONDITIONAL_COLLECT */
 	if (rt_g_data.status & GC_STOP)
@@ -1043,7 +1043,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 					}
 				} else {
 					plsc_per += 8;
-				}  
+				}
 			} else {
 				plsc_per += 16;
 			}
@@ -1066,7 +1066,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 					}
 				} else {
 					plsc_per -= 8;
-				}  
+				}
 			} else {
 				plsc_per -= 16;
 			}
@@ -1086,7 +1086,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 			}
 		}
 	}
-			
+
 #ifndef NO_GC_STATISTICS
 	if (gc_monitor) {
 		gstat->real_time = elapsed(&realtime, &realtime2);
@@ -1218,7 +1218,7 @@ doc:	</routine>
 rt_shared EIF_REFERENCE ** alloc_oms (void)
 {
 	EIF_REFERENCE ** result;
-	
+
 	result = (EIF_REFERENCE **) eif_calloc (eif_nb_org_routines, sizeof (EIF_REFERENCE *));
 	if (result == (EIF_REFERENCE **) 0) { /* Out of memory */
 		enomem ();
@@ -1304,7 +1304,7 @@ rt_public void reclaim(void)
 			rt_g_data.status = (char) 0;
 				/* Call for the last time the GC through a `full_collect'. It enables
 				 * the call to `dispose' routine of remaining objects which defines
-				 * the dispose routine. 
+				 * the dispose routine.
 				 * Ensures that `root_obj' is cleared.
 				 */
 			root_obj = NULL;
@@ -1341,7 +1341,7 @@ rt_public void reclaim(void)
 			eif_free (starting_working_directory);
 			eif_gen_conf_cleanup ();
 #ifdef EIF_WINDOWS
-			eif_cleanup(); 
+			eif_cleanup();
 			eif_free_dlls();
 #endif /* EIF_WINDOWS */
 
@@ -1349,7 +1349,7 @@ rt_public void reclaim(void)
 			dbreak_free_table ();
 #endif
 
-#ifdef EIF_THREADS 
+#ifdef EIF_THREADS
 			if (eif_thr_is_root ()) {
 				eif_thread_cleanup ();
 			}
@@ -1908,8 +1908,8 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 				case SK_EXP: printf("\t%d: expanded 0x%lx\n", i, lst->it_ref); break;
 				case SK_REF: printf("\t%d: 0x%lx\n", i, lst->it_ref); break;
 				case SK_BOOL: printf("\t%d: bool %s\n", i, lst->it_char ? "true" : "false"); break;
-				case SK_CHAR: printf("\t%d: char %d\n", i, lst->it_char); break;
-				case SK_WCHAR: printf("\t%d: wide char %lu\n", i, lst->it_wchar); break;
+				case SK_CHAR8: printf("\t%d: char %d\n", i, lst->it_char); break;
+				case SK_CHAR32: printf("\t%d: wide char %lu\n", i, lst->it_wchar); break;
 				case SK_UINT8: printf("\t%d: uint8 %ld\n", i, lst->it_uint8); break;
 				case SK_UINT16: printf("\t%d: uint16 %ld\n", i, lst->it_uint16); break;
 				case SK_UINT32: printf("\t%d: uint32 %ld\n", i, lst->it_uint32); break;
@@ -1962,8 +1962,8 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 				case SK_EXP: printf("\t%d: expanded 0x%lx\n", i, lst->it_ref); break;
 				case SK_REF: printf("\t%d: 0x%lx\n", i, lst->it_ref); break;
 				case SK_BOOL: printf("\t%d: bool %s\n", i, lst->it_char ? "true" : "false"); break;
-				case SK_CHAR: printf("\t%d: char %d\n", i, lst->it_char); break;
-				case SK_WCHAR: printf("\t%d: wide char %lu\n", i, lst->it_wchar); break;
+				case SK_CHAR8: printf("\t%d: char %d\n", i, lst->it_char); break;
+				case SK_CHAR32: printf("\t%d: wide char %lu\n", i, lst->it_wchar); break;
 				case SK_UINT8: printf("\t%d: uint8 %ld\n", i, lst->it_uint8); break;
 				case SK_UINT16: printf("\t%d: uint16 %ld\n", i, lst->it_uint16); break;
 				case SK_UINT32: printf("\t%d: uint32 %ld\n", i, lst->it_uint32); break;
@@ -2076,7 +2076,7 @@ rt_private void mark_ex_stack(struct xstack *stk, MARKER marker, int move)
 						(void) mark_expanded(last->ex_oid, marker);
 						break;
 				}
-			
+
 	}
 }
 
@@ -2424,7 +2424,7 @@ marked: /* Goto label needed to avoid code duplication */
 						if (eif_is_reference_tuple_item(l_item)) {
 							(void) hybrid_mark(&eif_reference_tuple_item(l_item));
 						}
-					}		
+					}
 				}
 				if ((count >= 1) && (eif_is_reference_tuple_item(l_item))) {
 						/* If last element of TUPLE is a reference, then we continue the
@@ -2610,9 +2610,9 @@ rt_private void full_sweep(void)
 		}
 	}
 
-	/* The Hector stack has to be traversed to call `dispose' on protected objects 
-	 * Standard dispose traversal checks for Eiffel objects, frozen obj are 
-	 * marked as C obj thus ignored. The other stacks are referencing "moving" 
+	/* The Hector stack has to be traversed to call `dispose' on protected objects
+	 * Standard dispose traversal checks for Eiffel objects, frozen obj are
+	 * marked as C obj thus ignored. The other stacks are referencing "moving"
 	 * objects so there's no problem */
 }
 
@@ -2994,7 +2994,7 @@ rt_private int sweep_from_space(void)
 			 * The C objects do not use the EO_MARK bit so there is no need
 			 * for tests.
 			 */
-			
+
 			zone->ov_flags &= ~EO_MARK;	/* Unconditionally unmark object */
 			zone = next;				/* Advance to next object */
 				/* Go to next header. */
@@ -3011,7 +3011,7 @@ rt_private int sweep_from_space(void)
 
 		if ((EIF_REFERENCE) zone >= end)		/* Seems we reached the end of space */
 			return -1;					/* 'from' holds at least one C block */
-	
+
 #ifdef DEBUG
 		dprintf(8)(
 		"sweep_from_space: %sfound a %s %s%s%sblock (%d bytes) at 0x%lx\n",
@@ -3241,7 +3241,7 @@ rt_private int find_scavenge_spaces(void)
 
 		/* Find next from zone for scavenging. */
 	last_from = find_from_space();
-	
+
 #ifdef DEBUG
 	dprintf(1)("find_scavenge_spaces: from space is now 0x%lx\n", last_from);
 	flush;
@@ -3289,7 +3289,7 @@ rt_private int find_scavenge_spaces(void)
 	 * somewhat low-level malloc routine.
 	 *
 	 * The get_to_from_core replaces the previous call to malloc_from_eiffel_list_no_gc which used
-	 * to get a to_space anywhere in the free list. But we want an 
+	 * to get a to_space anywhere in the free list. But we want an
 	 * empty chunk and if we arrive here, the only way to get a free chunk
 	 * is to get it from the kernel. It does not happen so often. Usually
 	 * it happens the first time partial scavenging is called.
@@ -3300,7 +3300,7 @@ rt_private int find_scavenge_spaces(void)
 	to_space = get_to_from_core ();	/* Allocation from free list */
 	if ((EIF_REFERENCE) 0 == to_space)
 		return -1;			/* Unable to find a 'to' space */
-	
+
 	/* The 'to' space will see its header overwritten, which is basically why
 	 * we have to save the flags associated with the arena. When it's time to
 	 * split the 'to' block, we can always fake the original block by saving the
@@ -3479,19 +3479,19 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 	if (zone->ov_flags & EO_STACK) {
 		CHECK ("EO_STACK not in Generation Scavenge From zone",
 			!((rt_g_data.status & GC_GEN) &&
-			(root > sc_from.sc_arena) && 
+			(root > sc_from.sc_arena) &&
 			(root <= sc_from.sc_end)));
 		CHECK ("EO_STACK not in Generation Scavenge TO zone",
 			!((rt_g_data.status & GC_GEN) &&
-			(root > sc_to.sc_arena) && 
-			(root <= sc_to.sc_end)));				
+			(root > sc_to.sc_arena) &&
+			(root <= sc_to.sc_end)));
 		CHECK ("EO_STACK not in Partial Scavenge From zone.",
 			!((rt_g_data.status & GC_PART) &&
-			(root > ps_from.sc_active_arena) && 
+			(root > ps_from.sc_active_arena) &&
 			(root <= ps_from.sc_end)));
 		CHECK ("EO_STACK not in Partial Scavenge TO zone.",
 			!((rt_g_data.status & GC_PART) &&
-			(root > ps_to.sc_active_arena) && 
+			(root > ps_to.sc_active_arena) &&
 			(root <= ps_to.sc_end)));
 		return root;
 	}
@@ -3524,18 +3524,18 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 		CHECK ("In Generation Scavenge From zone",
 			(rt_g_data.status & GC_PART) ||
 				((rt_g_data.status & (GC_GEN | GC_FAST)) &&
-				(root > sc_from.sc_arena) && 
+				(root > sc_from.sc_arena) &&
 				(root <= sc_from.sc_end)));
 
 		CHECK ("In Partial Scavenge From zone",
 			(rt_g_data.status & (GC_GEN | GC_FAST)) ||
 				((rt_g_data.status & GC_PART) &&
-				(root > ps_from.sc_arena) && 
+				(root > ps_from.sc_arena) &&
 				(root <= ps_from.sc_end)));
 
 		new = container_zone->ov_fwd;			/* Data space of the scavenged object */
 		exp = new + (root - (EIF_REFERENCE) (container_zone + 1));	/* New data space */
-			
+
 		zone->ov_fwd = exp;			/* Leave forwarding pointer */
 		zone->ov_size |= B_FWD;		/* Mark object as forwarded */
 		return exp;					/* This is the new location of expanded */
@@ -3544,23 +3544,23 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 	CHECK ("In Generation Scavenge From zone",
 		(rt_g_data.status & GC_PART) ||
 			((rt_g_data.status & (GC_GEN | GC_FAST)) &&
-			(root > sc_from.sc_arena) && 
+			(root > sc_from.sc_arena) &&
 			(root <= sc_from.sc_end)));
 
 	CHECK ("In Partial Scavenge From zone",
 		(rt_g_data.status & (GC_GEN | GC_FAST)) ||
 			((rt_g_data.status & GC_PART) &&
-			(root > ps_from.sc_arena) && 
+			(root > ps_from.sc_arena) &&
 			(root <= ps_from.sc_end)));
 
 	CHECK ("Not in Generation Scavenge TO zone",
 		!((rt_g_data.status & GC_GEN) &&
-		(root > sc_to.sc_arena) && 
+		(root > sc_to.sc_arena) &&
 		(root <= sc_to.sc_end))
-	);				
+	);
 	CHECK ("Not in Partial Scavenge TO zone.",
 		!((rt_g_data.status & GC_PART) &&
-		(root > ps_to.sc_active_arena) && 
+		(root > ps_to.sc_active_arena) &&
 		(root <= ps_to.sc_end))
 	);
 
@@ -3665,8 +3665,8 @@ rt_private int generational_collect(void)
 
 	if (gen_scavenge == GS_ON) {
 		/* Generation scavenging is on and has not been stopped. If less than
-		 * the watermark is used, set tenure to eif_tenure_max, 
-		 * to avoid tenuring for the next cycle. Otherwise, set it so 
+		 * the watermark is used, set tenure to eif_tenure_max,
+		 * to avoid tenuring for the next cycle. Otherwise, set it so
 		 * that we tenure at least
 		 * 'overused' bytes next cycle. GS_FLOATMARK is set to 40% of the
 		 * scavenge zone size and lets us get some free space to let other
@@ -3678,7 +3678,7 @@ rt_private int generational_collect(void)
 		 * are allocated at a high rate, at the price of more memory usage,
 		 * since this will incur some tenuring.
 		 */
-		
+
 		watermark = cc_for_speed ? sc_from.sc_mark - GS_FLOATMARK : sc_from.sc_mark;
 
 		if (sc_from.sc_top >= watermark) {
@@ -3699,7 +3699,7 @@ rt_private int generational_collect(void)
 	 * of young objects to OBJ_MAX, so that we do not spend a considerable time
 	 * walking through the moved set and the remembered set.
 	 */
-	
+
 	overused = 0;
 	for (age = 0; age < eif_tenure_max; age++)
 		overused += age_table[age];
@@ -3937,7 +3937,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 						if (eif_is_reference_tuple_item(l_item)) {
 							(void) hybrid_gen_mark(&eif_reference_tuple_item(l_item));
 						}
-					}		
+					}
 				}
 				if ((count >= 1) && eif_is_reference_tuple_item(l_item)) {
 						/* If last element of TUPLE is a reference, then we continue the
@@ -4026,7 +4026,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 	uint16 age;				/* Object's age */
 	uint16 flags;				/* Eiffel flags */
 	EIF_TYPE_INDEX dftype, dtype;
-	EIF_REFERENCE new;							/* Address of new object (tenured) */ 
+	EIF_REFERENCE new;							/* Address of new object (tenured) */
 	rt_uint_ptr size;							/* Size of scavenged object */
 	int ret;							/* status returned by "epush" */
 
@@ -4038,7 +4038,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 	if (gen_scavenge & GS_STOP)			/* Generation scavenging was stopped */
 		if (!(flags & EO_NEW))			/* Object inside scavenge zone */
 			return scavenge(root, &sc_to.sc_top);	/* Simple scavenging */
-		
+
 	if (eif_is_nested_expanded(flags)) {				/* Expanded object */
 		if (!(flags & EO_NEW))			/* Object inside scavenge zone */
 			return scavenge(root, &sc_to.sc_top);	/* Update reference pointer */
@@ -4452,7 +4452,7 @@ rt_private void update_rem_set(void)
 	 * the stack, but this raises the chances of being able to shrink the
 	 * process size--RAM.
 	 */
-	
+
 	st_truncate(&rem_set);
 }
 
@@ -4460,7 +4460,7 @@ rt_private void update_memory_set (void)
 	/* Traverse the memory_set which contains all the objects, which have a
 	 * dispose routine. It calls the dispose routine
 	 * on the objects thar are garbage.
-	 * To be compared with "update_rem_set ()". 
+	 * To be compared with "update_rem_set ()".
 	 * -- ET
 	 */
 {
@@ -4494,18 +4494,18 @@ rt_private void update_memory_set (void)
 #endif
 
 	/* Traverse stack.	*/
-	for (; s && !done; s = s->sk_next) 
+	for (; s && !done; s = s->sk_next)
 	{
 		object = s->sk_arena;				/* Start of stack */
 		if (s != memory_set.st_cur)			/* Top is before after 's' */
 			n = s->sk_end - object;			/* Look at the whole chunk */
-		else 
+		else
 		{
 			n = memory_set.st_top - object;	/* Stop at the top */
 			done = 1;						/* Reached end of stack */
 		}
 
-		for (; n > 0; n--, object++) 
+		for (; n > 0; n--, object++)
 		{
 			current = *object;				/* Save that for later perusal */
 			zone = HEADER(current);			/* Object's header */
@@ -4522,11 +4522,11 @@ rt_private void update_memory_set (void)
 #endif	/* DEBUG_UPDATE_MEMORY_SET	*/
 
 			/* We need to call the dispose routine on the objects that
-			 * not alive any longer. 
-			 * If the object holds the B_FWD flag, it has survived the 
+			 * not alive any longer.
+			 * If the object holds the B_FWD flag, it has survived the
 			 * generational collection and we just need to update the proper
-			 * entry in the stack. Otherwise it is garbage: we must call the 
-			 * dispose routine on it and remove it from the stack. 
+			 * entry in the stack. Otherwise it is garbage: we must call the
+			 * dispose routine on it and remove it from the stack.
 			 */
 
 			if (zone->ov_size & B_FWD) {	/* Object survived GS collection. */
@@ -4541,16 +4541,16 @@ rt_private void update_memory_set (void)
 					epush(&new_stack, current);		/* Save it in the stack. */
 			} else {
 					/* Object is dead, we call dispose routine.*/
-				CHECK ("Objects not in GSZ", !(zone->ov_flags & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));	
+				CHECK ("Objects not in GSZ", !(zone->ov_flags & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));
 
-				dtype = zone->ov_dtype;	/* Need it for dispose.	*/ 
+				dtype = zone->ov_dtype;	/* Need it for dispose.	*/
 
 				CHECK ("Has with dispose routine", Disp_rout (dtype));
 
 				gc_status = rt_g_data.status;			/* Save GC status. */
 				rt_g_data.status |= GC_STOP;			/* Stop GC. */
 
-				/* We should disable invariants but not postconditions 
+				/* We should disable invariants but not postconditions
 				 * (see `dispose' from IDENTIFIED).
  				 */
 				saved_in_assertion = in_assertion;	/* Save in_assertion. */
@@ -4586,12 +4586,12 @@ rt_private void update_memory_set (void)
 	memcpy (&memory_set, &new_stack, sizeof(struct stack));
 
 	/* Usually, the memory set shrinks after a collection. The unused chunks
-	 * in the stack are freed. 
+	 * in the stack are freed.
 	 */
-	
+
 	st_truncate(&memory_set);
 
-}	/* update_memory_set() */	
+}	/* update_memory_set() */
 
 
 rt_shared int refers_new_object(register EIF_REFERENCE object)
@@ -4747,7 +4747,7 @@ rt_public void eremb(EIF_REFERENCE obj)
 #endif
 
 	/* If we come here, the object was successfully pushed in the stack */
-	
+
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark it as remembered */
 }
 
@@ -4833,10 +4833,10 @@ rt_shared void gfree(register union overhead *zone)
 	EIF_TYPE_INDEX dtype;		/* Dynamic type of object */
 
 	REQUIRE("Busy", zone->ov_size & B_BUSY);
-							
+
 	if (!(zone->ov_size & B_FWD)) {	/* If object has not been forwarded
 									then call the dispose routine */
-		if (zone->ov_flags & EO_DISP) { 
+		if (zone->ov_flags & EO_DISP) {
 			RT_GET_CONTEXT
 			dtype = zone->ov_dtype;
 			EIF_G_DATA_MUTEX_LOCK;
@@ -4886,7 +4886,7 @@ rt_public EIF_REFERENCE * onceset(void)
 	dprintf(32)("onceset");
 	flush;
 #endif
-	
+
 	if (-1 == epush(&once_set, (EIF_REFERENCE) 0 ))
 		eraise("once function recording", EN_MEM);
 

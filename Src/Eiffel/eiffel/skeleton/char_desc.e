@@ -43,9 +43,9 @@ feature -- Access
 	sk_value: NATURAL_32
 		do
 			if is_wide then
-				Result := {SK_CONST}.Sk_wchar
+				Result := {SK_CONST}.sk_char32
 			else
-				Result := {SK_CONST}.Sk_char
+				Result := {SK_CONST}.sk_char8
 			end
 		end
 
@@ -66,9 +66,9 @@ feature -- Code generation
 			-- `buffer'.
 		do
 			if is_wide then
-				buffer.put_string ({SK_CONST}.sk_wchar_string)
+				buffer.put_string ({SK_CONST}.sk_char32_string)
 			else
-				buffer.put_string ({SK_CONST}.sk_char_string)
+				buffer.put_string ({SK_CONST}.sk_char8_string)
 			end
 		end
 

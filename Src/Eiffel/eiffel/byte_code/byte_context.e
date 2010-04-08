@@ -1067,8 +1067,8 @@ feature {NONE} -- Registers: implementation
 			Result.put ("SK_REAL32", c_real32)
 			Result.put ("SK_REAL64", c_real64)
 			Result.put ("SK_BOOL", c_boolean)
-			Result.put ("SK_CHAR", c_char)
-			Result.put ("SK_WCHAR", c_wide_char)
+			Result.put ("SK_CHAR8", c_char)
+			Result.put ("SK_CHAR32", c_wide_char)
 			Result.put ("SK_POINTER", c_pointer)
 			Result.put ("SK_REF", c_ref)
 				-- Registers for passing typed arguments.
@@ -1083,8 +1083,8 @@ feature {NONE} -- Registers: implementation
 			Result.put ("SK_REAL32", c_nb_types - 1 + c_real32)
 			Result.put ("SK_REAL64", c_nb_types - 1 + c_real64)
 			Result.put ("SK_BOOL", c_nb_types - 1 + c_boolean)
-			Result.put ("SK_CHAR", c_nb_types - 1 + c_char)
-			Result.put ("SK_WCHAR", c_nb_types - 1 + c_wide_char)
+			Result.put ("SK_CHAR8", c_nb_types - 1 + c_char)
+			Result.put ("SK_CHAR32", c_nb_types - 1 + c_wide_char)
 			Result.put ("SK_POINTER", c_nb_types - 1 + c_pointer)
 			Result.put ("SK_REF", c_nb_types - 1 + c_ref)
 		end

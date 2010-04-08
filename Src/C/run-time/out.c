@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -107,8 +107,8 @@ rt_private size_t tagged_len = 0;
 #endif /* EIF_THREADS */
 
 rt_private void write_string(char *str);	/* Write a string in `tagged_out' */
-rt_private void write_char(EIF_CHARACTER c);		/* Write a character */
-rt_private void write_attribute_character(EIF_CHARACTER c);		/* Write a character as an Eiffel attribute */
+rt_private void write_char(EIF_CHARACTER_8 c);		/* Write a character */
+rt_private void write_attribute_character(EIF_CHARACTER_8 c);		/* Write a character as an Eiffel attribute */
 rt_private void write_tab(register int tab);		/* Print tabulations */
 rt_private void rec_write(register EIF_REFERENCE object, int tab);	/* Write object print in `tagged_out' */
 rt_private void rec_swrite(register EIF_REFERENCE object, int tab);		/* Write special object */
@@ -147,13 +147,13 @@ rt_public EIF_REFERENCE c_tagged_out(EIF_REFERENCE object)
 	return result;		/* An Eiffel string */
 }
 
-rt_public char *eif_out (EIF_REFERENCE object) 
+rt_public char *eif_out (EIF_REFERENCE object)
 {
 	/* Like "build_out" but for CECIL programmer. */
 	return build_out (object);	/* Build "tagged_out".*/
 }	/* eif_out */
 
-	
+
 
 rt_shared char *build_out(EIF_REFERENCE object)
 {
@@ -259,13 +259,13 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 				write_string ("False\n");
 			}
 			break;
-		case SK_CHAR:
+		case SK_CHAR8:
 			/* Character attribute */
 			write_attribute_character (*o_ref);
 			break;
-		case SK_WCHAR:
+		case SK_CHAR32:
 			/* Wide character attribute */
-			sprintf(buffero, "WIDE_CHARACTER = U+%x\n", *(EIF_WIDE_CHAR *)o_ref);
+			sprintf(buffero, "CHARACTER_32 = U+%x\n", *(EIF_CHARACTER_32 *)o_ref);
 			write_string(buffero);
 			break;
 		case SK_UINT8:
@@ -322,9 +322,9 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			c_buffero_outr64(*(EIF_REAL_64 *) o_ref);
 			write_string(buffero);
 			write_string("\n");
-			break;	
+			break;
 		case SK_BIT:
-			{		
+			{
 				char *str = b_out(o_ref);
 
 				sprintf(buffero, "BIT %u = ", LENGTH(o_ref));
@@ -350,7 +350,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			sprintf(buffero, "-- end sub-object --\n");
 			write_string(buffero);
 			break;
-		default: 
+		default:
 			/* Object reference */
 			reference = *(EIF_REFERENCE *)o_ref;
 			if (reference) {
@@ -409,8 +409,8 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 	flags = zone->ov_flags;
 	dtype = zone->ov_dtype;
 
-	if (!(flags & EO_REF)) 
-		if (flags & EO_COMP) 
+	if (!(flags & EO_REF))
+		if (flags & EO_COMP)
 			for (o_ref = object + OVERHEAD; count > 0; count--,
 						o_ref += elem_size) {
 				write_tab(tab + 1);
@@ -421,9 +421,9 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				write_tab(tab + 2);
 				sprintf(buffero, "-- begin sub-object --\n");
 				write_string(buffero);
-		
+
 				rec_write(o_ref, tab + 3);
-	
+
 				write_tab(tab + 2);
 				sprintf(buffero, "-- end sub-object --\n");
 				write_string(buffero);
@@ -437,7 +437,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				if (dtype == egc_sp_char) {
 					write_attribute_character (*o_ref);
 				} else if (dtype == egc_sp_wchar) {
-					sprintf(buffero, "WIDE_CHARACTER = U+%x\n", *(EIF_WIDE_CHAR *)o_ref);
+					sprintf(buffero, "CHARACTER_32 = U+%x\n", *(EIF_CHARACTER_32 *)o_ref);
 					write_string(buffero);
 				} else if (dtype == egc_sp_uint8) {
 					sprintf(buffero, "NATURAL_8 = %u\n", *(EIF_NATURAL_8 *)o_ref);
@@ -498,7 +498,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					eif_rt_xfree(str);	/* Allocated by `b_out' */
 				}
 			}
-	else 
+	else
 		for (o_ref = object; count > 0; count--,
 					o_ref = (EIF_REFERENCE) ((EIF_REFERENCE *)o_ref + 1)) {
 			write_tab(tab + 1);
@@ -541,7 +541,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 				}
 				write_char('\n');
 				break;
-			case EIF_CHARACTER_CODE:
+			case EIF_CHARACTER_8_CODE:
 				write_attribute_character (eif_character_item(object,i));
 				break;
 			case EIF_REAL_64_CODE:
@@ -604,22 +604,22 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 					eif_integer_64_item(object,i));
 				write_string(buffero);
 				break;
-			case EIF_WIDE_CHAR_CODE:
-				sprintf(buffero, "WIDE_CHARACTER = U+%x\n", eif_wide_character_item(object,i));
+			case EIF_CHARACTER_32_CODE:
+				sprintf(buffero, "CHARACTER_32 = U+%x\n", eif_wide_character_item(object,i));
 				write_string(buffero);
 				break;
 		}
 	}
 }
 
-rt_private void write_char(EIF_CHARACTER c)
+rt_private void write_char(EIF_CHARACTER_8 c)
 {
 		/* Print `c' in `tagged_out'. */
 	RT_GET_CONTEXT
-	tagged_len += sizeof(EIF_CHARACTER);
+	tagged_len += sizeof(EIF_CHARACTER_8);
 	if (tagged_len >= tagged_max) {
 		/* Reallocation of C string `tagged_out' */
-		do 
+		do
 			tagged_max *= 2;
 		while (tagged_len >= tagged_max);
 		tagged_out = (char *) xrealloc(tagged_out, tagged_max, GC_OFF);
@@ -640,12 +640,12 @@ rt_private void write_tab(register int tab)
 	}
 }
 
-rt_private void write_attribute_character (EIF_CHARACTER c)
+rt_private void write_attribute_character (EIF_CHARACTER_8 c)
 							/* The character */
 		  		/* Where it should be written */
 {
 		/* Write a character in `buffer' */
-	write_string ("CHARACTER = ");
+	write_string ("CHARACTER_8 = ");
 	if (c < ' ') {
 		write_string ("Ctrl-");
 		write_char (c + '@');
@@ -742,7 +742,7 @@ rt_public EIF_REFERENCE c_outr64(EIF_REAL_64 d)
 	return makestr(buffero, len);
 }
 
-rt_public EIF_REFERENCE c_outc(EIF_CHARACTER c)
+rt_public EIF_REFERENCE c_outc(EIF_CHARACTER_8 c)
 {
 	return makestr((char *) &c, 1);
 }

@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -137,7 +137,7 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 				* class. `source' and/or `target' cannot be NULL.
 				* Return a boolean.
 				*/
-		
+
 				/* First condition: same count */
 			if
 				((RT_SPECIAL_COUNT(source) != RT_SPECIAL_COUNT(target)) ||
@@ -158,7 +158,7 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 				return e_field_equal(target, source);
 		}
 	}
-	
+
 	/* Field by field comparison */
 
 	return EIF_FALSE;
@@ -170,7 +170,7 @@ rt_public EIF_BOOLEAN eiso(EIF_REFERENCE target, EIF_REFERENCE source)
 	 * 1/ direct instances should be equal.
 	 * 2/ references should be of the same dynamic type.
 	 * It assumes that dynamic types of `source' and `target' are the
-	 * same. 
+	 * same.
 	 * Return a boolean.
 	 */
 
@@ -191,7 +191,7 @@ rt_public EIF_BOOLEAN eiso(EIF_REFERENCE target, EIF_REFERENCE source)
 		return e_field_iso(target, source);
 	}
 }
-	
+
 rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENCE source)
 {
 	/* Compare two special objects in term of their structures. `source'
@@ -241,7 +241,7 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 		 * In workbench mode, block comparison is only possible on special of basic types. */
 #ifdef WORKBENCH
 	if (!(s_flags & EO_REF) && !(s_flags & EO_COMP)) {
-#else 
+#else
 	if (!(s_flags & EO_REF)) {
 #endif
 		/* Case 1: specials filled with direct instances: block comparison */
@@ -335,7 +335,7 @@ rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 		eif_gc_stop();						/* Stop GC if enabled*/
 #endif
 
-	eif_equality_table = s_create(100);				/* Create search table */	
+	eif_equality_table = s_create(100);				/* Create search table */
 	result = rdeepiso(target,source);	/* Recursive isomorphism test */
 
 #ifdef ISE_GC
@@ -559,12 +559,12 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 		attribute_type = types[index];
 		switch (attribute_type & SK_HEAD) {
 		case SK_BOOL:
-		case SK_CHAR:
+		case SK_CHAR8:
 			if (*t_ref != *s_ref)
 				return EIF_FALSE;
 			break;
-		case SK_WCHAR:
-			if (*(EIF_WIDE_CHAR *) t_ref != *(EIF_WIDE_CHAR *) s_ref)
+		case SK_CHAR32:
+			if (*(EIF_CHARACTER_32 *) t_ref != *(EIF_CHARACTER_32 *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_UINT8:
@@ -636,8 +636,8 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 	return EIF_TRUE;
 }
 
-rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, 
-								register EIF_REFERENCE source) 
+rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
+								register EIF_REFERENCE source)
 {
 	/* Eiffel standard field-by-field equality: since source type
 	 * conforms to source type, we iterate on target attributes which are
@@ -697,12 +697,12 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 		attribute_type = types[index];
 		switch (attribute_type & SK_HEAD) {
 		case SK_BOOL:
-		case SK_CHAR:
+		case SK_CHAR8:
 			if (*t_ref != *s_ref)
 				return EIF_FALSE;
 			break;
-		case SK_WCHAR:
-			if (*(EIF_WIDE_CHAR *) t_ref != *(EIF_WIDE_CHAR *) s_ref)
+		case SK_CHAR32:
+			if (*(EIF_CHARACTER_32 *) t_ref != *(EIF_CHARACTER_32 *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_UINT8:
@@ -759,7 +759,7 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 				 */
 				if (!eiso(t_ref, s_ref))
 					return EIF_FALSE;
-			} else { 
+			} else {
 				/* Check isomorphism of references: either the two
 				* references are Void or they refer object of the.
 				* same dynamic type.

@@ -71,14 +71,14 @@ feature -- Byte code special generation
 				ba.append (Bc_eq)
 			when to_character_8_type then
 				check
-					valid_type: type_of (basic_type) = integer_type or
-						type_of (basic_type) = character_type
+					valid_type: type_of (basic_type) = integer_type_id or
+						type_of (basic_type) = character_type_id
 				end
 				ba.append (bc_cast_char8)
 			when to_character_32_type then
 				check
-					valid_type: type_of (basic_type) = integer_type or
-						type_of (basic_type) = character_type
+					valid_type: type_of (basic_type) = integer_type_id or
+						type_of (basic_type) = character_type_id
 				end
 				ba.append (bc_cast_char32)
 			when as_natural_8_type, to_natural_8_type then
@@ -149,7 +149,7 @@ feature -- Byte code special generation
 				ba.append (Bc_basic_operations)
 				ba.append (Bc_generator)
 			when offset_type then
-				if type_of (basic_type) = pointer_type then
+				if type_of (basic_type) = pointer_type_id then
 					ba.append (Bc_basic_operations)
 					ba.append (Bc_offset)
 				else
@@ -168,7 +168,7 @@ feature -- Byte code special generation
 				ba.append_uint32_integer (1)
 				basic_type.c_type.make_default_byte_code (ba)
 			when bit_and_type..bit_test_type, set_bit_with_mask_type, set_bit_type then
-				check integer_type: type_of (basic_type) = integer_type end
+				check integer_type: type_of (basic_type) = integer_type_id end
 				make_bit_operation_code (ba, function_type)
 			when three_way_comparison_type then
 				ba.append (bc_basic_operations)
@@ -210,10 +210,10 @@ feature -- C special code generation
 			when is_equal_type then
 				generate_equal (buffer, target, parameter)
 			when to_character_8_type then
-				buffer.put_string ("(EIF_CHARACTER) ")
+				buffer.put_string ("(EIF_CHARACTER_8) ")
 				target.print_register
 			when to_character_32_type then
-				buffer.put_string ("(EIF_WIDE_CHAR) ")
+				buffer.put_string ("(EIF_CHARACTER_32) ")
 				target.print_register
 			when as_natural_8_type, to_natural_8_type then
 				buffer.put_string ("(EIF_NATURAL_8) ")
@@ -329,18 +329,18 @@ feature -- C special code generation
 				basic_type.c_type.generate_default_value (buffer)
 			when bit_and_type..bit_test_type then
 				check
-					integer_type: type_of (basic_type) = integer_type
+					integer_type: type_of (basic_type) = integer_type_id
 				end
 				generate_bit_operation (buffer, function_type, target, parameter)
 			when set_bit_with_mask_type then
 				check
-					integer_type: type_of (basic_type) = integer_type
+					integer_type: type_of (basic_type) = integer_type_id
 					parameters_not_void: parameters /= Void
 				end
 				generate_set_bit_with_mask (buffer, target, parameters)
 			when set_bit_type then
 				check
-					integer_type: type_of (basic_type) = integer_type
+					integer_type: type_of (basic_type) = integer_type_id
 					parameters_not_void: parameters /= Void
 				end
 				generate_set_bit (buffer, target, parameters)
@@ -349,7 +349,7 @@ feature -- C special code generation
 			when one_type then
 				generate_one (buffer, type_of (basic_type))
 			when memory_move, memory_copy, memory_set, memory_alloc, memory_free, memory_calloc then
-				check pointer_type: type_of (basic_type) = pointer_type end
+				check pointer_type: type_of (basic_type) = pointer_type_id end
 				generate_memory_routine (buffer, function_type, target, parameters)
 			when twin_type, as_attached_type then
 					-- There is nothing to do, just print the previous value.
@@ -641,13 +641,13 @@ feature {NONE} -- C code generation
 		require
 			buffer_not_void: buffer /= Void
 			target_not_void: target /= Void
-			character_type: type_of (basic_type) = character_type
+			character_type: type_of (basic_type) = character_type_id
 			valid_function_type: f_type = lower_type or f_type = upper_type
 		do
 			if function_type = lower_type then
-				buffer.put_string ("(EIF_CHARACTER) tolower(")
+				buffer.put_string ("(EIF_CHARACTER_8) tolower(")
 			else
-				buffer.put_string ("(EIF_CHARACTER) toupper(")
+				buffer.put_string ("(EIF_CHARACTER_8) toupper(")
 			end
 			target.print_register
 			buffer.put_character (')')
@@ -663,7 +663,7 @@ feature {NONE} -- C code generation
 		require
 			buffer_not_void: buffer /= Void
 			target_not_void: target /= Void
-			character_type: type_of (basic_type) = character_type
+			character_type: type_of (basic_type) = character_type_id
 		do
 			buffer.put_string ("EIF_TEST(isdigit(")
 			target.print_register
@@ -681,7 +681,7 @@ feature {NONE} -- C code generation
 		require
 			buffer_not_void: buffer /= Void
 			target_not_void: target /= Void
-			character_type: type_of (basic_type) = character_type
+			character_type: type_of (basic_type) = character_type_id
 		do
 			buffer.put_string ("EIF_TEST(isspace(")
 			target.print_register
@@ -719,15 +719,15 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when pointer_type then
+			when pointer_type_id then
 				buffer.put_string ("RTPOF(")
 				target.print_register
 				buffer.put_character (',')
-			when character_type then
+			when character_type_id then
 				if is_wide then
-					buffer.put_string ("(EIF_WIDE_CHAR) (((EIF_INTEGER_32) ")
+					buffer.put_string ("(EIF_CHARACTER_32) (((EIF_INTEGER_32) ")
 				else
-					buffer.put_string ("(EIF_CHARACTER) (((EIF_INTEGER_32) ")
+					buffer.put_string ("(EIF_CHARACTER_8) (((EIF_INTEGER_32) ")
 				end
 				target.print_register
 				buffer.put_string (") + ")
@@ -747,7 +747,7 @@ feature {NONE} -- C code generation
 			buffer_not_void: buffer /= Void
 			target_not_void: target /= Void
 		do
-			if type_of_basic = boolean_type then
+			if type_of_basic = boolean_type_id then
 				buffer.put_character ('(');
 				target.print_register
 				buffer.put_string (" ? makestr (%"True%", 4) : makestr (%"False%", 5))")
@@ -757,12 +757,12 @@ feature {NONE} -- C code generation
 			else
 				inspect
 					type_of_basic
-				when character_type then
+				when character_type_id then
 					check
 						not_is_wide: not is_wide
 					end
 					buffer.put_string ("c_outc(")
-				when integer_type then
+				when integer_type_id then
 					if is_signed_integer then
 						inspect
 							integer_size
@@ -776,11 +776,11 @@ feature {NONE} -- C code generation
 						when 64 then buffer.put_string ("c_outu64(")
 						end
 					end
-				when pointer_type then
+				when pointer_type_id then
 					buffer.put_string ("c_outp(")
-				when real_32_type then
+				when real_32_type_id then
 					buffer.put_string ("c_outr32(")
-				when real_64_type then
+				when real_64_type_id then
 					buffer.put_string ("c_outr64(")
 				end
 				target.print_register
@@ -800,9 +800,9 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when boolean_type then
+			when boolean_type_id then
 				buffer.put_string ("1L")
-			when character_type then
+			when character_type_id then
 				buffer.put_string ("(EIF_INTEGER_32) (")
 				target.print_register
 				buffer.put_character(')')
@@ -821,15 +821,15 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when boolean_type then
+			when boolean_type_id then
 				buffer.put_string (" RTMS_EX(%"BOOLEAN%", 7)")
-			when character_type then
+			when character_type_id then
 				if is_wide then
 					buffer.put_string (" RTMS_EX(%"CHARACTER_32%", 12)")
 				else
 					buffer.put_string (" RTMS_EX(%"CHARACTER_8%", 11)")
 				end
-			when integer_type then
+			when integer_type_id then
 				if is_signed_integer then
 					buffer.put_string (" RTMS_EX(%"INTEGER")
 					inspect
@@ -849,11 +849,11 @@ feature {NONE} -- C code generation
 					when 64 then buffer.put_string ("64%", 10)")
 					end
 				end
-			when pointer_type then
+			when pointer_type_id then
 				buffer.put_string (" RTMS_EX(%"POINTER%", 7)")
-			when real_32_type then
+			when real_32_type_id then
 				buffer.put_string (" RTMS_EX(%"REAL_32%", 7)")
-			when real_64_type then
+			when real_64_type_id then
 				buffer.put_string (" RTMS_EX(%"REAL_64%", 7)")
 			end
 		end
@@ -868,13 +868,13 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when character_type then
+			when character_type_id then
 				if is_wide then
 					buffer.put_string ("eif_max_wide_char (")
 				else
 					buffer.put_string ("eif_max_char (")
 				end
-			when integer_type then
+			when integer_type_id then
 				if is_signed_integer then
 					buffer.put_string ("eif_max_")
 				else
@@ -886,9 +886,9 @@ feature {NONE} -- C code generation
 				when 32 then buffer.put_string ("int32 (")
 				when 64 then buffer.put_string ("int64 (")
 				end
-			when real_32_type then
+			when real_32_type_id then
 				buffer.put_string ("eif_max_real32 (")
-			when real_64_type then
+			when real_64_type_id then
 				buffer.put_string ("eif_max_real64 (")
 			end
 
@@ -911,13 +911,13 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when character_type then
+			when character_type_id then
 				if is_wide then
 					buffer.put_string ("eif_min_wide_char (")
 				else
 					buffer.put_string ("eif_min_char (")
 				end
-			when integer_type then
+			when integer_type_id then
 				if is_signed_integer then
 					buffer.put_string ("eif_min_")
 				else
@@ -929,9 +929,9 @@ feature {NONE} -- C code generation
 				when 32 then buffer.put_string ("int32 (")
 				when 64 then buffer.put_string ("int64 (")
 				end
-			when real_32_type then
+			when real_32_type_id then
 				buffer.put_string ("eif_min_real32 (")
-			when real_64_type then
+			when real_64_type_id then
 				buffer.put_string ("eif_min_real64 (")
 			end
 
@@ -954,13 +954,13 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when character_type then
+			when character_type_id then
 				if is_wide then
 					buffer.put_string ("eif_twc_wide_char (")
 				else
 					buffer.put_string ("eif_twc_char (")
 				end
-			when integer_type then
+			when integer_type_id then
 				if is_signed_integer then
 					buffer.put_string ("eif_twc_")
 				else
@@ -972,9 +972,9 @@ feature {NONE} -- C code generation
 				when 32 then buffer.put_string ("int32 (")
 				when 64 then buffer.put_string ("int64 (")
 				end
-			when real_32_type then
+			when real_32_type_id then
 				buffer.put_string ("eif_twc_real32 (")
-			when real_64_type then
+			when real_64_type_id then
 				buffer.put_string ("eif_twc_real64 (")
 			end
 
@@ -996,7 +996,7 @@ feature {NONE} -- C code generation
 		do
 			inspect
 				type_of_basic
-			when integer_type then
+			when integer_type_id then
 				if is_signed_integer then
 					buffer.put_string ("eif_abs_")
 				else
@@ -1008,9 +1008,9 @@ feature {NONE} -- C code generation
 				when 32 then buffer.put_string ("int32 (")
 				when 64 then buffer.put_string ("int64 (")
 				end
-			when real_32_type then
+			when real_32_type_id then
 				buffer.put_string ("eif_abs_real32 (")
-			when real_64_type then
+			when real_64_type_id then
 				buffer.put_string ("eif_abs_real64 (")
 			end
 
@@ -1185,15 +1185,15 @@ feature {NONE} -- C code generation
 			-- REAL and DOUBLE.
 		require
 			buffer_not_void: buffer /= Void
-			valid_type_of_basic: type_of_basic = integer_type or else
-								 type_of_basic = real_32_type or else
-								 type_of_basic = real_64_type
+			valid_type_of_basic: type_of_basic = integer_type_id or else
+								 type_of_basic = real_32_type_id or else
+								 type_of_basic = real_64_type_id
 		do
 			inspect
 				type_of_basic
-			when integer_type then
+			when integer_type_id then
 				buffer.put_string ("0")
-			when real_32_type, real_64_type then
+			when real_32_type_id, real_64_type_id then
 				buffer.put_string ("0.0")
 			end
 		end
@@ -1203,38 +1203,38 @@ feature {NONE} -- C code generation
 			-- REAL and DOUBLE.
 		require
 			buffer_not_void: buffer /= Void
-			valid_type_of_basic: type_of_basic = integer_type or else
-								 type_of_basic = real_32_type or else
-								 type_of_basic = real_64_type
+			valid_type_of_basic: type_of_basic = integer_type_id or else
+								 type_of_basic = real_32_type_id or else
+								 type_of_basic = real_64_type_id
 		do
 			inspect
 				type_of_basic
-			when integer_type then
+			when integer_type_id then
 				buffer.put_string ("1")
-			when real_32_type, real_64_type then
+			when real_32_type_id, real_64_type_id then
 				buffer.put_string ("1.0")
 			end
 		end
 
 feature {NONE} -- Type information
 
-	boolean_type: INTEGER = 1
-	character_type: INTEGER = 2
-	integer_type: INTEGER = 3
-	pointer_type: INTEGER = 4
-	real_32_type: INTEGER = 5
-	real_64_type: INTEGER = 6
+	boolean_type_id: INTEGER = 1
+	character_type_id: INTEGER = 2
+	integer_type_id: INTEGER = 3
+	pointer_type_id: INTEGER = 4
+	real_32_type_id: INTEGER = 5
+	real_64_type_id: INTEGER = 6
 			-- Constant defining type
 
 	integer_size: INTEGER
-			-- Size of datatype when `type_of' returns `integer_type'.
+			-- Size of datatype when `type_of' returns `integer_type_id'.
 
 	is_signed_integer: BOOLEAN
-			-- Is `integer_type' a INTEGER_XX type?
+			-- Is `integer_type_id' a INTEGER_XX type?
 			-- False for NATURAL_XX type.
 
 	is_wide: BOOLEAN
-			-- Is `character_type' returned by `type_of' a WIDE_CHARACTER?
+			-- Is `character_type_id' returned by `type_of' a WIDE_CHARACTER?
 
 	type_of (b: BASIC_A): INTEGER
 			-- Returns corresponding type constants to `b'.
@@ -1247,20 +1247,20 @@ feature {NONE} -- Type information
 			t: TYPED_POINTER_A
 		do
 			inspect b.hash_code
-			when {SHARED_HASH_CODE}.Boolean_code then Result := boolean_type
+			when {SHARED_HASH_CODE}.Boolean_code then Result := boolean_type_id
 			when {SHARED_HASH_CODE}.Character_code then
-				Result := character_type
+				Result := character_type_id
 				is_wide := False
 
 			when {SHARED_HASH_CODE}.Wide_char_code then
-				Result := character_type
+				Result := character_type_id
 				is_wide := True
 
 			when
 				{SHARED_HASH_CODE}.natural_8_code, {SHARED_HASH_CODE}.natural_16_code,
 				{SHARED_HASH_CODE}.natural_32_code, {SHARED_HASH_CODE}.natural_64_code
 			then
-				Result := integer_type
+				Result := integer_type_id
 				is_signed_integer := False
 				l_nat ?= b
 				integer_size := l_nat.size
@@ -1269,25 +1269,25 @@ feature {NONE} -- Type information
 				{SHARED_HASH_CODE}.Integer_8_code, {SHARED_HASH_CODE}.Integer_16_code,
 				{SHARED_HASH_CODE}.Integer_32_code, {SHARED_HASH_CODE}.Integer_64_code
 			then
-				Result := integer_type
+				Result := integer_type_id
 				is_signed_integer := True
 				l_int ?= b
 				integer_size := l_int.size
 
-			when {SHARED_HASH_CODE}.Pointer_code then Result := pointer_type
-			when {SHARED_HASH_CODE}.Real_32_code then Result := real_32_type
-			when {SHARED_HASH_CODE}.Real_64_code then Result := real_64_type
+			when {SHARED_HASH_CODE}.Pointer_code then Result := pointer_type_id
+			when {SHARED_HASH_CODE}.Real_32_code then Result := real_32_type_id
+			when {SHARED_HASH_CODE}.Real_64_code then Result := real_64_type_id
 
 			else
 				t ?= b
 				if t /= Void then
-					Result := pointer_type
+					Result := pointer_type_id
 				end
 			end
 		ensure
-			valid_type: Result = boolean_type or else Result = character_type or else
-						Result = integer_type or else Result = pointer_type or else
-						Result = real_32_type or else Result = real_64_type
+			valid_type_id: Result = boolean_type_id or else Result = character_type_id or else
+						Result = integer_type_id or else Result = pointer_type_id or else
+						Result = real_32_type_id or else Result = real_64_type_id
 		end
 
 note

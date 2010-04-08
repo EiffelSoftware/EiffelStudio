@@ -14,19 +14,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -84,7 +84,7 @@ rt_private struct dump 	*variable_item(int variable_type, uint32 n, uint32 start
 /* Public Routines declarations */
 rt_public void 			send_stack(EIF_PSTREAM s, uint32 elem_nb);	/* Dump the application */
 rt_public EIF_DEBUG_VALUE local_debug_value(uint32 stack_depth, uint32 loc_type, uint32 loc_number);
-rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, 
+rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type,
                                      uint32 loc_number, EIF_TYPED_VALUE *new_value); /* modify a local value */
 rt_public void			send_stack_variables(EIF_PSTREAM s, int where);	/* Dump the locals and arguments of a feature */
 rt_public void 			send_once_result(EIF_PSTREAM s, MTOT OResult, int otype); /* dump the results of onces feature */
@@ -97,10 +97,10 @@ extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n); /* from debug.c - Returns a pointe
  -------------------------*/
 
 
-/************************************************************************** 
- * NAME: send_stack                                                       * 
- * ARGS: s   : the connected socket                                       * 
- *------------------------------------------------------------------------* 
+/**************************************************************************
+ * NAME: send_stack                                                       *
+ * ARGS: s   : the connected socket                                       *
+ *------------------------------------------------------------------------*
  * This is the main routine. It send at most elem_nb elements to the remote*
  * process through the connected socket and via XDR. The end of the dump  *
  * is indicated by a positive acknowledgment.                             *
@@ -109,7 +109,7 @@ extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n); /* from debug.c - Returns a pointe
 {
 	struct dump *dp;			/* Pointer to static data where dump is */
 	uint32 sent = 0;
-	
+
 	save_stacks();				/* Initialize processing */
 	dp = get_next_execution_vector();
 	while (dp && (sent < elem_nb)) {	/* While still some data to send */
@@ -123,11 +123,11 @@ extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n); /* from debug.c - Returns a pointe
 	send_ack(s, AK_OK);			/* End of list -- you got everything */
 }
 
-/************************************************************************** 
- * NAME: send_stack_variables                                             * 
- * ARGS: s    : the connected socket                                      * 
- *       where: level in the stack where the current feature is located   * 
- *------------------------------------------------------------------------* 
+/**************************************************************************
+ * NAME: send_stack_variables                                             *
+ * ARGS: s    : the connected socket                                      *
+ *       where: level in the stack where the current feature is located   *
+ *------------------------------------------------------------------------*
  * Dump the arguments and the locals of the 'where-th' feature down the   *
  * stack. where=1 means dumping the locals of the feature located on top  *
  * of the stack                                                           *
@@ -159,11 +159,11 @@ rt_public void send_stack_variables(EIF_PSTREAM s, int where)
 	send_ack(s, AK_OK);			/* End of list -- you got everything */
 }
 
-/************************************************************************** 
- * NAME: send_dump                                                        * 
- * ARGS: s: the connected socket                                          * 
- *       dp: the item to send                                             * 
- *------------------------------------------------------------------------* 
+/**************************************************************************
+ * NAME: send_dump                                                        *
+ * ARGS: s: the connected socket                                          *
+ *       dp: the item to send                                             *
+ *------------------------------------------------------------------------*
  * Send a packed containing the dump item 'dp'                            *
  **************************************************************************/
 rt_private void send_dump(EIF_PSTREAM s, struct dump *dp)
@@ -176,9 +176,9 @@ rt_private void send_dump(EIF_PSTREAM s, struct dump *dp)
 	send_packet(s, &rqst);			/* Send to network */
 }
 
-/************************************************************************** 
- * NAME: save_stacks                                                      * 
- *------------------------------------------------------------------------* 
+/**************************************************************************
+ * NAME: save_stacks                                                      *
+ *------------------------------------------------------------------------*
  * Save the appropriate stack context, depending on the operations to     *
  * be performed...                                                        *
  **************************************************************************/
@@ -193,10 +193,10 @@ rt_private void save_stacks(void)
 	memcpy (&dstk_context, &db_stack, sizeof(struct dbstack));
 	memcpy (&istk_context, &op_stack, sizeof(struct opstack));
 }
-	
-/************************************************************************** 
- * NAME: restore_stacks                                                   * 
- *------------------------------------------------------------------------* 
+
+/**************************************************************************
+ * NAME: restore_stacks                                                   *
+ *------------------------------------------------------------------------*
  * Restore context of all the stack we had to modify/inspect              *
  **************************************************************************/
 rt_private void restore_stacks(void)
@@ -210,10 +210,10 @@ rt_private void restore_stacks(void)
 	memcpy (&op_stack, &istk_context, sizeof(struct opstack));
 }
 
-/************************************************************************** 
- * NAME: execution_without_variables                                      * 
- * RET : the dump item we should send to EiffelStudio                      * 
- *------------------------------------------------------------------------* 
+/**************************************************************************
+ * NAME: execution_without_variables                                      *
+ * RET : the dump item we should send to EiffelStudio                      *
+ *------------------------------------------------------------------------*
  * Dump the call stack - locals and arguments excluded                    *
  *                                                                        *
  * Get the next execution vector from the top of `a_stack'. Whenever a    *
@@ -249,10 +249,10 @@ rt_private struct dump *get_next_execution_vector(void)
 	top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
 	expop (&eif_stack);
 
-	if ( !( 
-			(	top->ex_type == EX_CALL 
-			 || top->ex_type == EX_RETY 
-			 || top->ex_type == EX_RESC 
+	if ( !(
+			(	top->ex_type == EX_CALL
+			 || top->ex_type == EX_RETY
+			 || top->ex_type == EX_RESC
 			 )
 			&& top->exu.exur.exur_id != NULL
 		  ) ) {
@@ -278,14 +278,14 @@ rt_private struct dump *get_next_execution_vector(void)
 	if (dumped.dmp_vect->ex_type) {
 		dumped.dmp_vect->exu.exur.exur_dtype = Dtype(dumped.dmp_vect->exu.exur.exur_id);
 	}
-	
+
 	return &dumped;			/* Pointer to static data */
 }
 
-/************************************************************************** 
- * NAME: safe_dtop                                                        * 
- * RET : a pointer to the top of the stack                                * 
- *------------------------------------------------------------------------* 
+/**************************************************************************
+ * NAME: safe_dtop                                                        *
+ * RET : a pointer to the top of the stack                                *
+ *------------------------------------------------------------------------*
  * This is a wrapper to the dtop() feature, which tests whether the stack *
  * is empty before calling it: the dtop() routine will raise a eif_panic  *
  * if there is nothing on the stack. Here, we only return a null pointer. *
@@ -304,10 +304,10 @@ rt_private struct dcall *safe_dtop(void)
  * Dumping arguments and/or locals.
  */
 
-/************************************************************************** 
- * NAME: init_var_dump                                                    * 
+/**************************************************************************
+ * NAME: init_var_dump                                                    *
  * ARGS: call: Calling context for "active" feature                       *
- *------------------------------------------------------------------------* 
+ *------------------------------------------------------------------------*
  * Initializes the interpreter registers for dumping variables from       *
  * feature associated with calling context. This has to be done before    *
  * ivalue() can reliably be called to get local variables.                *
@@ -322,12 +322,12 @@ rt_private void init_var_dump(struct dcall *call)
 	sync_registers(call->dc_cur, call->dc_top);
 }
 
-/************************************************************************** 
- * NAME: go_ith_stack_level                                               * 
+/**************************************************************************
+ * NAME: go_ith_stack_level                                               *
  * ARGS: level: where we should go down the stack                         *
  * RET : position of locals/arguments for active feature if it's frozen   *
  *       EIF_NO_ITEM otherwise                                            *
- *------------------------------------------------------------------------* 
+ *------------------------------------------------------------------------*
  * Go down the stack. This is done before dumping the locals and the      *
  * arguments of a feature located on level `level' down the stack         *
  **************************************************************************/
@@ -362,11 +362,11 @@ rt_private uint32 go_ith_stack_level(int level)
 		top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
 		expop (&eif_stack);
 
-		if ( !( 
-				(	top->ex_type == EX_CALL 
-				 || top->ex_type == EX_RETY 
+		if ( !(
+				(	top->ex_type == EX_CALL
+				 || top->ex_type == EX_RETY
 				 || top->ex_type == EX_RESC
-				 ) 
+				 )
 				&& (top->exu.exur.exur_id != NULL)
 			) ) {
 			i--;		/* Rewind - This item should not be taken into account. */
@@ -393,15 +393,15 @@ rt_private uint32 go_ith_stack_level(int level)
 #ifdef DEBUG
 	fprintf(stderr, "go_ith_stack_level (level=%d) -> start=0x%x (%d) locnum=%d argnum=%d \n", level, start, start, copy.ex_locnum, copy.ex_argnum);
 #endif
-	
+
 	return start;			/* Pointer to static data */
 }
 
-/************************************************************************** 
- * NAME: variables                                                        * 
+/**************************************************************************
+ * NAME: variables                                                        *
  * ARGS: start: position of locals/arguments of active feature if it's    *
  *              frozen                                                    *
- *------------------------------------------------------------------------* 
+ *------------------------------------------------------------------------*
  * Dump the locals and the arguments of the active feature (call go_ith_  *
  * stack_level to make a given feature active)                            *
  * (The interpreter registers are supposed to be correctly synchronized)  *
@@ -426,7 +426,7 @@ rt_private struct dump *get_next_variable(uint32 start)
 	} else {
 		dp = variable_item(IV_LOCAL,locn++,start);	/* Get next local then */
 	}
-			
+
 	if (dp == (struct dump *) 0)		/* Finished: reset static vars */
 	{
 		arg_done = 0;
@@ -437,15 +437,15 @@ rt_private struct dump *get_next_variable(uint32 start)
 	return dp;			/* Pointer to static data or null */
 }
 
-/************************************************************************** 
- * NAME: variable_item                                                    * 
+/**************************************************************************
+ * NAME: variable_item                                                    *
  * ARGS: n: number of the argument to get.                                *
  *       variable_type: IV_ARG to get an argument,                        *
  *                      IV_LOCAL to get a local variable                  *
  *       start: position of locals/arguments of active feature if it's    *
  *              frozen                                                    *
  * RET : Return a dumped item containing the asked item or NULL           *
- *------------------------------------------------------------------------* 
+ *------------------------------------------------------------------------*
  * Return the nth argument/local variable, or a void pointer if we        *
  * reached the end of the argument/local variable list.                   *
  **************************************************************************/
@@ -476,12 +476,12 @@ rt_private struct dump *variable_item(int variable_type, uint32 n, uint32 start)
 	return &dumped;			/* Pointer to static data */
 }
 
-/************************************************************************** 
- * NAME: send_once_result                                                 * 
- * ARGS: s      : the connected socket                                    * 
+/**************************************************************************
+ * NAME: send_once_result                                                 *
+ * ARGS: s      : the connected socket                                    *
  *       OResult: data related to a once                                  *
  *       otype: type of the once result (if any)                          *
- *------------------------------------------------------------------------* 
+ *------------------------------------------------------------------------*
  * Ask the debugger for the result of already called once function        *
  * and send the result back to EiffelStudio                                *
  **************************************************************************/
@@ -496,8 +496,8 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 	ip.type = otype;
 	switch (ip.type & SK_HEAD) {
 		case SK_BOOL: ip.it_bool = (EIF_BOOLEAN) OResult->result.EIF_BOOLEAN_result; break;
-		case SK_CHAR: ip.it_char = (EIF_CHARACTER) OResult->result.EIF_CHARACTER_result; break;
-		case SK_WCHAR: ip.it_wchar = (EIF_WIDE_CHAR) OResult->result.EIF_WIDE_CHAR_result; break;
+		case SK_CHAR8: ip.it_char = (EIF_CHARACTER_8) OResult->result.EIF_CHARACTER_8_result; break;
+		case SK_CHAR32: ip.it_wchar = (EIF_CHARACTER_32) OResult->result.EIF_CHARACTER_32_result; break;
 		case SK_UINT8: ip.it_uint8 = (EIF_NATURAL_8) OResult->result.EIF_NATURAL_8_result; break;
 		case SK_UINT16:ip.it_uint16 = (EIF_NATURAL_16) OResult->result.EIF_NATURAL_16_result; break;
 		case SK_UINT32:ip.it_uint32 = (EIF_NATURAL_32) OResult->result.EIF_NATURAL_32_result; break;
@@ -512,7 +512,7 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 		case SK_REF: ip.it_ref = *(EIF_REFERENCE*) OResult->result.EIF_REFERENCE_result; break;
 		case SK_BIT: ip.it_bit = *(EIF_REFERENCE*) OResult->result.EIF_REFERENCE_result; break;
 	}
-	
+
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = &ip;
 
@@ -529,18 +529,18 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 	send_dump(s, &dumped);
 }
 
-/************************************************************************** 
- * NAME: stack_debug_value                                                * 
- * ARGS: stack_depth : Depth where feature is situated inside callstack   * 
- *       loc_type  : Type of the stack. Can be DLT_ARGUMENT=0             * 
- *                   DLT_LOCALVAR=1 or DLT_RESULT=2                       * 
- *       loc_number: number of the argument/local variable on the stack   * 
- * RET:  returns                                                          * 
- *           EIF_DEBUG_VALUE if the stack item was found                  * 
- *           NULL if something went wrong.                                *  
- *------------------------------------------------------------------------* 
- * access the stack debug value of a  local_variable/argument/result      * 
- * of a feature                                                           * 
+/**************************************************************************
+ * NAME: stack_debug_value                                                *
+ * ARGS: stack_depth : Depth where feature is situated inside callstack   *
+ *       loc_type  : Type of the stack. Can be DLT_ARGUMENT=0             *
+ *                   DLT_LOCALVAR=1 or DLT_RESULT=2                       *
+ *       loc_number: number of the argument/local variable on the stack   *
+ * RET:  returns                                                          *
+ *           EIF_DEBUG_VALUE if the stack item was found                  *
+ *           NULL if something went wrong.                                *
+ *------------------------------------------------------------------------*
+ * access the stack debug value of a  local_variable/argument/result      *
+ * of a feature                                                           *
  **************************************************************************/
 
 rt_public EIF_DEBUG_VALUE stack_debug_value(uint32 stack_level, uint32 loc_type, uint32 loc_number)
@@ -557,13 +557,13 @@ rt_public EIF_DEBUG_VALUE stack_debug_value(uint32 stack_level, uint32 loc_type,
 #endif
 
 	if (start != EIF_NO_ITEM) {
-		
+
 		/* get the address of the stack item */
 		switch(loc_type) {
 		case DLT_ARGUMENT:
 			ivalue(&ip, IV_ARG, loc_number-1, start);
 			break;
-		
+
 		case DLT_LOCALVAR:
 			ivalue(&ip, IV_LOCAL, loc_number-1, start);
 			break;
@@ -585,21 +585,21 @@ rt_public EIF_DEBUG_VALUE stack_debug_value(uint32 stack_level, uint32 loc_type,
 	return ip;
 }
 
-/************************************************************************** 
- * NAME: modify_local                                                     * 
- * ARGS: loc_depth : Depth where the feature is situated inside callstack * 
- *       loc_type  : Type of the local. Can be DLT_ARGUMENT=0             * 
- *                   DLT_LOCALVAR=1 or DLT_RESULT=2                       * 
- *       loc_number: number of the argument/local variable on the stack   * 
- *       new_value : new value to assign to the local                     * 
- * RET:  returns                                                          * 
- *           0 if the local item has been successfully modified.          * 
- *           1 if something else went wrong.                              *  
- *           2 if you have tried to modify an expanded reference.         * 
- *           3 if you have passed a bad value for loc_type			      *  
- *------------------------------------------------------------------------* 
- * modify the value of a local variable / an argument / the result        * 
- * of a feature with the given new value                                  * 
+/**************************************************************************
+ * NAME: modify_local                                                     *
+ * ARGS: loc_depth : Depth where the feature is situated inside callstack *
+ *       loc_type  : Type of the local. Can be DLT_ARGUMENT=0             *
+ *                   DLT_LOCALVAR=1 or DLT_RESULT=2                       *
+ *       loc_number: number of the argument/local variable on the stack   *
+ *       new_value : new value to assign to the local                     *
+ * RET:  returns                                                          *
+ *           0 if the local item has been successfully modified.          *
+ *           1 if something else went wrong.                              *
+ *           2 if you have tried to modify an expanded reference.         *
+ *           3 if you have passed a bad value for loc_type			      *
+ *------------------------------------------------------------------------*
+ * modify the value of a local variable / an argument / the result        *
+ * of a feature with the given new value                                  *
  **************************************************************************/
 
 rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE *new_value)
@@ -620,7 +620,7 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 		case DLT_ARGUMENT:
 			ivalue(&ip, IV_ARG, loc_number-1, start);
 			break;
-		
+
 		case DLT_LOCALVAR:
 			ivalue(&ip, IV_LOCAL, loc_number-1, start);
 			break;
@@ -645,8 +645,8 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 		/* modify the local item */
 		switch (new_value->type & SK_HEAD) {
 			case SK_BOOL:
-			case SK_CHAR: *(EIF_CHARACTER *)(ip.address) = new_value->it_char; break;
-			case SK_WCHAR: *(EIF_WIDE_CHAR *)(ip.address) = new_value->it_wchar; break;
+			case SK_CHAR8: *(EIF_CHARACTER_8 *)(ip.address) = new_value->it_char; break;
+			case SK_CHAR32: *(EIF_CHARACTER_32 *)(ip.address) = new_value->it_wchar; break;
 			case SK_UINT8: *(EIF_NATURAL_8 *)(ip.address) = new_value->it_uint8; break;
 			case SK_UINT16: *(EIF_NATURAL_16 *)(ip.address) = new_value->it_uint16; break;
 			case SK_UINT32: *(EIF_NATURAL_32 *)(ip.address) = new_value->it_uint32; break;

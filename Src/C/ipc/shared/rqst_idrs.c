@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -283,13 +283,13 @@ rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext)
 
 		switch (ext -> type & SK_HEAD) {
 		case SK_BOOL:
-		case SK_CHAR:
-			memcpy (idrs->i_ptr, &ext->it_char, sizeof(EIF_CHARACTER));
-			idrs->i_ptr += sizeof(EIF_CHARACTER);
+		case SK_CHAR8:
+			memcpy (idrs->i_ptr, &ext->it_char, sizeof(EIF_CHARACTER_8));
+			idrs->i_ptr += sizeof(EIF_CHARACTER_8);
 			return TRUE;
-		case SK_WCHAR:
-			memcpy (idrs->i_ptr, &ext->it_wchar, sizeof(EIF_WIDE_CHAR));
-			idrs->i_ptr += sizeof(EIF_WIDE_CHAR);
+		case SK_CHAR32:
+			memcpy (idrs->i_ptr, &ext->it_wchar, sizeof(EIF_CHARACTER_32));
+			idrs->i_ptr += sizeof(EIF_CHARACTER_32);
 			return TRUE;
 		case SK_UINT8:
 			memcpy (idrs->i_ptr, &ext->it_uint8, sizeof(EIF_NATURAL_8));
@@ -348,13 +348,13 @@ rt_private bool_t idr_Item (IDR *idrs, EIF_TYPED_VALUE *ext)
 
 		switch (ext -> type & SK_HEAD) {
 		case SK_BOOL:
-		case SK_CHAR:
-			memcpy (&ext->it_char, idrs->i_ptr, sizeof(EIF_CHARACTER));
-			idrs->i_ptr += sizeof(EIF_CHARACTER);
+		case SK_CHAR8:
+			memcpy (&ext->it_char, idrs->i_ptr, sizeof(EIF_CHARACTER_8));
+			idrs->i_ptr += sizeof(EIF_CHARACTER_8);
 			return TRUE;
-		case SK_WCHAR:
-			memcpy (&ext->it_wchar, idrs->i_ptr, sizeof(EIF_WIDE_CHAR));
-			idrs->i_ptr += sizeof(EIF_WIDE_CHAR);
+		case SK_CHAR32:
+			memcpy (&ext->it_wchar, idrs->i_ptr, sizeof(EIF_CHARACTER_32));
+			idrs->i_ptr += sizeof(EIF_CHARACTER_32);
 			return TRUE;
 		case SK_UINT8:
 			memcpy (&ext->it_uint8, idrs->i_ptr, sizeof(EIF_NATURAL_8));

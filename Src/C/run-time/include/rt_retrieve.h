@@ -260,21 +260,21 @@ typedef struct {
 } mismatch_table;
 
 typedef union {
-	EIF_BOOLEAN		vbool;
-	EIF_CHARACTER	vchar;
-	EIF_WIDE_CHAR	vwchar;
-	EIF_NATURAL_8	vuint8;
-	EIF_NATURAL_16	vuint16;
-	EIF_NATURAL_32	vuint32;
-	EIF_NATURAL_64	vuint64;
-	EIF_INTEGER_8	vint8;
-	EIF_INTEGER_16	vint16;
-	EIF_INTEGER_32	vint32;
-	EIF_INTEGER_64	vint64;
-	EIF_REAL_32		vreal;
-	EIF_REAL_64		vdbl;
-	EIF_REFERENCE	vref;
-	EIF_POINTER		vptr;
+	EIF_BOOLEAN			vbool;
+	EIF_CHARACTER_8		vchar;
+	EIF_CHARACTER_32	vwchar;
+	EIF_NATURAL_8		vuint8;
+	EIF_NATURAL_16		vuint16;
+	EIF_NATURAL_32		vuint32;
+	EIF_NATURAL_64		vuint64;
+	EIF_INTEGER_8		vint8;
+	EIF_INTEGER_16		vint16;
+	EIF_INTEGER_32		vint32;
+	EIF_INTEGER_64		vint64;
+	EIF_REAL_32			vreal;
+	EIF_REAL_64			vdbl;
+	EIF_REFERENCE		vref;
+	EIF_POINTER			vptr;
 } multi_value;
 
 #define rt_list 	rtu_data.rtu_cell

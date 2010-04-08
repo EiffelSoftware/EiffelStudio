@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -59,8 +59,8 @@ doc:<file name="rout_obj.c" header="eif_rout_obj.h" version="$Id$" summary="Rout
 /* Create a ROUTINE object of type `dftype'. Use the arguements for */
 /* the call to `set_rout_disp'.									    */
 /*------------------------------------------------------------------*/
-rt_public EIF_REFERENCE rout_obj_create_wb ( EIF_TYPE_INDEX dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, 
-										     EIF_POINTER calc_rout_addr, EIF_INTEGER class_id, EIF_INTEGER feature_id, 
+rt_public EIF_REFERENCE rout_obj_create_wb ( EIF_TYPE_INDEX dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp,
+										     EIF_POINTER calc_rout_addr, EIF_INTEGER class_id, EIF_INTEGER feature_id,
 										     EIF_REFERENCE open_map,
 										     EIF_BOOLEAN is_precompiled, EIF_BOOLEAN is_basic, EIF_BOOLEAN is_target_closed,
 										     EIF_BOOLEAN is_inline_agent, EIF_REFERENCE closed_operands, EIF_INTEGER open_count)
@@ -141,7 +141,7 @@ rt_public EIF_REFERENCE rout_obj_create_wb ( EIF_TYPE_INDEX dftype, EIF_POINTER 
 /* Create a ROUTINE object of type `dftype' in finalized mode.		*/
 /* Use the arguements for the call to `set_rout_disp'.				*/
 /*------------------------------------------------------------------*/
-rt_public EIF_REFERENCE rout_obj_create_fl (EIF_TYPE_INDEX dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, EIF_POINTER calc_rout_addr, 
+rt_public EIF_REFERENCE rout_obj_create_fl (EIF_TYPE_INDEX dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, EIF_POINTER calc_rout_addr,
 											EIF_REFERENCE closed_operands, EIF_BOOLEAN is_target_closed, EIF_INTEGER open_count)
 {
 	EIF_GET_CONTEXT
@@ -158,12 +158,12 @@ rt_public EIF_REFERENCE rout_obj_create_fl (EIF_TYPE_INDEX dftype, EIF_POINTER r
 	nstcall = 0;
 		/* Call 'set_rout_disp' from ROUTINE */
 	(FUNCTION_CAST (void, ( EIF_REFERENCE,
-							EIF_POINTER, 
-							EIF_POINTER, 
-							EIF_POINTER, 
+							EIF_POINTER,
+							EIF_POINTER,
+							EIF_POINTER,
 							EIF_REFERENCE,
 							EIF_BOOLEAN,
-							EIF_INTEGER)) egc_routdisp_fl)( result, rout_disp, encaps_rout_disp, calc_rout_addr, 
+							EIF_INTEGER)) egc_routdisp_fl)( result, rout_disp, encaps_rout_disp, calc_rout_addr,
 														    closed_operands, is_target_closed, open_count);
 
 	RTLE;
@@ -206,8 +206,8 @@ void fill_it (EIF_TYPED_VALUE* it, EIF_TYPED_VALUE* te);
 
 rt_public void rout_obj_call_procedure_dynamic (
 	int stype_id, int feature_id, int is_precompiled, int is_basic_type, int is_inline_agent,
-	EIF_TYPED_VALUE* closed_args, int closed_count, 
-	EIF_TYPED_VALUE* open_args, int open_count, 
+	EIF_TYPED_VALUE* closed_args, int closed_count,
+	EIF_TYPED_VALUE* open_args, int open_count,
 	EIF_REFERENCE open_map)
 {
 	EIF_GET_CONTEXT
@@ -239,10 +239,10 @@ rt_public void rout_obj_call_procedure_dynamic (
 		}
 
 		if (open_count > 0) {
-			open_positions = (EIF_INTEGER*)(*(EIF_REFERENCE*)open_map); 
+			open_positions = (EIF_INTEGER*)(*(EIF_REFERENCE*)open_map);
 			RT_GC_PROTECT(open_args);
 			nb_protected++;
-			RT_GC_PROTECT(open_map);	
+			RT_GC_PROTECT(open_map);
 			nb_protected++;
 			if (open_positions [0] == 1) {
 				first_arg = &(open_args [1]);
@@ -251,7 +251,7 @@ rt_public void rout_obj_call_procedure_dynamic (
 				open_idx = 2;
 				if (open_count > 1) {
 					next_open = open_positions [1];
-				} 
+				}
 			} else  {
 				next_open = open_positions [0];
 			}
@@ -281,7 +281,7 @@ rt_public void rout_obj_call_procedure_dynamic (
 		}
 		fill_it (iget(), first_arg);
 		nb_pushed++;
-		
+
 		RT_GC_WEAN_N(nb_protected);
 		nb_protected = 0;
 
@@ -295,7 +295,7 @@ rt_public void rout_obj_call_procedure_dynamic (
 	}
 }
 
-void fill_it (EIF_TYPED_VALUE* it, EIF_TYPED_VALUE* te) 
+void fill_it (EIF_TYPED_VALUE* it, EIF_TYPED_VALUE* te)
 {
 	REQUIRE("it not null", it);
 	REQUIRE("te not null", te);
@@ -305,21 +305,21 @@ void fill_it (EIF_TYPED_VALUE* it, EIF_TYPED_VALUE* te)
 
 rt_public void rout_obj_call_function_dynamic (
 	int stype_id, int feature_id, int is_precompiled, int is_basic_type, int is_inline_agent,
-	EIF_TYPED_VALUE* closed_args, int closed_count, 
-	EIF_TYPED_VALUE* open_args, int open_count, 
+	EIF_TYPED_VALUE* closed_args, int closed_count,
+	EIF_TYPED_VALUE* open_args, int open_count,
 	EIF_REFERENCE open_map, void* res)
 {
 	EIF_TYPED_VALUE* it = NULL;
 
 	rout_obj_call_procedure_dynamic (stype_id, feature_id, is_precompiled, is_basic_type, is_inline_agent,
 									 closed_args, closed_count, open_args, open_count, open_map);
-	
+
 	it = opop();
 
 	switch (it->type)
 	{
-		case SK_BOOL: *((EIF_CHARACTER *) res) = it->it_bool; break;
-		case SK_CHAR: *((EIF_CHARACTER *) res) = it->it_char; break;
+		case SK_BOOL: *((EIF_BOOLEAN *) res) = it->it_bool; break;
+		case SK_CHAR8: *((EIF_CHARACTER_32 *) res) = it->it_char; break;
 		case SK_REAL64: *((EIF_REAL_64 *)res) = it->it_real64; break;
 		case SK_UINT8: *((EIF_NATURAL_8* )res) = it->it_uint8; break;
 		case SK_UINT16: *((EIF_NATURAL_16 *)res) = it->it_uint16; break;
@@ -331,7 +331,7 @@ rt_public void rout_obj_call_function_dynamic (
 		case SK_INT64: *((EIF_INTEGER_64 *)res) = it->it_int64; break;
 		case SK_POINTER: *((EIF_POINTER *)res) = it->it_ptr; break;
 		case SK_REAL32: *((EIF_REAL_32 *)res) = it->it_real32; break;
-		case SK_WCHAR: *((EIF_WIDE_CHAR* )res) = it->it_wchar; break;
+		case SK_CHAR32: *((EIF_CHARACTER_32* )res) = it->it_wchar; break;
 		default:
 			*((EIF_REFERENCE *)res) = it->it_ref;
 	}
@@ -344,8 +344,8 @@ rt_public char eif_sk_type_to_type_code (uint32 sk_type)
 {
 	switch (sk_type) {
 		case SK_BOOL:    return EIF_BOOLEAN_CODE; break;
-		case SK_CHAR:    return EIF_CHARACTER_CODE; break;
-		case SK_WCHAR:   return EIF_WIDE_CHAR_CODE; break;
+		case SK_CHAR8:    return EIF_CHARACTER_8_CODE; break;
+		case SK_CHAR32:   return EIF_CHARACTER_32_CODE; break;
 		case SK_INT8:    return EIF_INTEGER_8_CODE; break;
 		case SK_INT16:   return EIF_INTEGER_16_CODE; break;
 		case SK_INT32:   return EIF_INTEGER_32_CODE; break;

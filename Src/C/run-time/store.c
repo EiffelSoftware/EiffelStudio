@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -150,7 +150,7 @@ rt_shared size_t buffer_size = 0;
 /*
 doc:	<attribute name="old_store_buffer_size" return_type="size_t" export="private">
 doc:		<summary>Store default version of `buffer_size'.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -241,7 +241,7 @@ rt_private void (*make_header_func)(void);
 /*
 doc:	<attribute name="char_write_func" return_type="int (*)(char *, int)" export="shared">
 doc:		<summary>Action called to write a sequence of characters of a given length to disk. It returns number of bytes written. Only used by `run_idr' which explains why it is `shared' and not `private' to current C module.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -251,7 +251,7 @@ rt_shared int (*char_write_func)(char *, int);
 /*
 doc:	<attribute name="old_store_write_func" return_type="void (*)(size_t)" export="private">
 doc:		<summary>Store default version of `store_write_func'.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -261,7 +261,7 @@ rt_private void (*old_store_write_func)(size_t);
 /*
 doc:	<attribute name="old_char_write_func" return_type="int (*)(char *, int)" export="private">
 doc:		<summary>Store default version of `char_write_func'.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -271,7 +271,7 @@ rt_private int (*old_char_write_func)(char *, int);
 /*
 doc:	<attribute name="old_flush_buffer_func" return_type="void (*)()" export="private">
 doc:		<summary>Store default version of `buffer_write_func'.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -281,7 +281,7 @@ rt_private void (*old_flush_buffer_func)(void);
 /*
 doc:	<attribute name="old_st_write_func" return_type="void (*)(EIF_REFERENCE, int)" export="private">
 doc:		<summary>Store default version of `st_write_func'.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -291,7 +291,7 @@ rt_private void (*old_st_write_func)(EIF_REFERENCE, int);
 /*
 doc:	<attribute name="old_make_header_func" return_type="void (*)()" export="private">
 doc:		<summary>Store default version of `make_header_func'.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -301,7 +301,7 @@ rt_private void (*old_make_header_func)(void);
 /*
 doc:	<attribute name="accounting" return_type="int" export="private">
 doc:		<summary>Do we account for something while traversing first set of objects to be stored? If so, its value tells us what to do (See `eif_traverse.h' for explanation of possible values)</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -311,7 +311,7 @@ rt_private int accounting = 0;
 /*
 doc:	<attribute name="old_accounting" return_type="int" export="private">
 doc:		<summary>Store default version of `accounting'.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -321,7 +321,7 @@ rt_private int old_accounting = 0;
 /*
 doc:	<attribute name="account" return_type="char *" export="shared">
 doc:		<summary>Array of traversed dynamic types during accounting.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<indexing>Dynamic type</indexing>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
@@ -332,7 +332,7 @@ rt_shared char *account = NULL;
 /*
 doc:	<attribute name="sorted_attributes" return_type="unsigned int **" export="shared">
 doc:		<summary>Array of sorted attributes</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<indexing>[Dynamic type, attribute number]</indexing>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
@@ -344,7 +344,7 @@ rt_shared unsigned int **sorted_attributes = NULL;
 /*
 doc:	<attribute name="store_stream_buffer" return_type="char *" export="private">
 doc:		<summary>Buffer used to store output of a storable made on stream.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -354,7 +354,7 @@ rt_private char *store_stream_buffer;
 /*
 doc:	<attribute name="store_stream_buffer_position" return_type="size_t" export="private">
 doc:		<summary>Position in `store_stream_buffer' where next insertion of data will happen.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -364,7 +364,7 @@ rt_private size_t store_stream_buffer_position;
 /*
 doc:	<attribute name="store_stream_buffer_size" return_type="size_t" export="private">
 doc:		<summary>Size of `store_stream_buffer'.</summary>
-doc:		<access>Read/Write</access> 
+doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
@@ -380,7 +380,7 @@ rt_private int stream_write (char *, int);
 /* Convenience functions */
 
 /* Set the default buffer_size to a certain value */
-rt_public void set_buffer_size (EIF_INTEGER new_size) 
+rt_public void set_buffer_size (EIF_INTEGER new_size)
 {
 	RT_GET_CONTEXT
 	buffer_size = new_size;
@@ -534,7 +534,7 @@ rt_public EIF_INTEGER stream_eestore(EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 	store_stream_buffer = *buffer;
 	store_stream_buffer_size = size;
 	store_stream_buffer_position = 0;
-	
+
 	allocate_gen_buffer();
 	internal_store(object);
 	*buffer = store_stream_buffer;
@@ -629,7 +629,7 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 	if (!idr_temp_buf) {
 		xraise (EN_MEM);
 	}
-	
+
 	internal_store(object);
 
 	run_idr_destroy ();
@@ -667,7 +667,7 @@ rt_public EIF_POINTER *stream_malloc (EIF_INTEGER stream_size)	/*08/04/98*/
 	EIF_POINTER *real_buffer = NULL;
 
 	buffer = (char *) eif_malloc(stream_size);
-	if (buffer == (char *) 0) 
+	if (buffer == (char *) 0)
 		xraise(EN_MEM);
 	else {
 		real_buffer = (EIF_POINTER *) eif_malloc (sizeof (char *));
@@ -697,7 +697,7 @@ rt_public void allocate_gen_buffer (void)
 		general_buffer = (char *) eif_rt_xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
 		if (general_buffer == (char *) 0)
 			eraise ("Out of memory for general_buffer creation", EN_PROG);
-	
+
 			/* compression */
 		{
 		  		/* Compute size of a compression block. It has to be the size of
@@ -981,9 +981,9 @@ rt_public void st_write(EIF_REFERENCE object, int has_volatile_attributes)
 						case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
 						case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
 						case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
-						case SK_WCHAR: elem_size = sizeof(EIF_WIDE_CHAR); break;
-						case SK_BOOL:
-						case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
+						case SK_CHAR32: elem_size = sizeof(EIF_CHARACTER_32); break;
+						case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
+						case SK_CHAR8: elem_size = sizeof(EIF_CHARACTER_8); break;
 						case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
 						case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
 						case SK_REF:
@@ -1054,7 +1054,7 @@ rt_public void gst_write(EIF_REFERENCE object, int has_volatile_attributes)
 		}
 		buffer_write((char *)(&count), sizeof(uint32));
 		buffer_write((char *)(&l_extra_data), sizeof(uint32));
-	} 
+	}
 	/* Write the body of the object */
 	gen_object_write(object, flags, Dftype(object));
 
@@ -1097,7 +1097,7 @@ rt_public void ist_write(EIF_REFERENCE object, int has_volatile_attributes)
 		}
 		widr_norm_int(&count);
 		widr_norm_int(&l_extra_data);
-	} 
+	}
 	/* Write the body of the object */
 	object_write(object, flags, Dftype(object));
 
@@ -1185,9 +1185,9 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 				case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
 				case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
 				case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
-				case SK_WCHAR: elem_size = sizeof(EIF_WIDE_CHAR); break;
-				case SK_BOOL:
-				case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
+				case SK_CHAR32: elem_size = sizeof(EIF_CHARACTER_32); break;
+				case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
+				case SK_CHAR8: elem_size = sizeof(EIF_CHARACTER_8); break;
 				case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
 				case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
 				case SK_REF:
@@ -1252,7 +1252,7 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 				patterns = info->patterns + nb_gen * (dynamic_types - info->dynamic_types);
 				dgen = *patterns;
 
-	
+
 				if (!(flags & EO_REF)) {		/* Special of simple types */
 					switch (dgen & SK_HEAD) {
 						case SK_UINT8: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_NATURAL_8)); break;
@@ -1263,9 +1263,9 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 						case SK_INT16: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_16)); break;
 						case SK_INT32: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_32)); break;
 						case SK_INT64: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_64)); break;
-						case SK_WCHAR: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_WIDE_CHAR)); break;
-						case SK_BOOL:
-						case SK_CHAR: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_CHARACTER)); break;
+						case SK_CHAR32: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_CHARACTER_32)); break;
+						case SK_BOOL: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_BOOLEAN)); break;
+						case SK_CHAR8: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_CHARACTER_8)); break;
 						case SK_REAL32: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_REAL_32)); break;
 						case SK_REAL64: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_REAL_64)); break;
 						case SK_POINTER: buffer_write(object, (rt_uint_ptr) count*sizeof(EIF_POINTER)); break;
@@ -1311,7 +1311,7 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 					}
 				}
 			}
-		} 
+		}
 	}
 }
 
@@ -1321,7 +1321,7 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 {
 	EIF_TYPED_VALUE * l_item = (EIF_TYPED_VALUE *) object;
 	unsigned int count = RT_SPECIAL_COUNT(object);
-	EIF_CHARACTER l_type;
+	EIF_CHARACTER_8 l_type;
 
 	REQUIRE ("TUPLE object", HEADER(object)->ov_flags & EO_TUPLE);
 
@@ -1331,8 +1331,8 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 			/* For each tuple element we store its type first, and then the associated value */
 		switch (eif_tuple_item_sk_type(l_item)) {
 			case SK_BOOL:    l_type = EIF_BOOLEAN_CODE; break;
-			case SK_CHAR:    l_type = EIF_CHARACTER_CODE; break;
-			case SK_WCHAR:   l_type = EIF_WIDE_CHAR_CODE; break;
+			case SK_CHAR8:    l_type = EIF_CHARACTER_8_CODE; break;
+			case SK_CHAR32:   l_type = EIF_CHARACTER_32_CODE; break;
 			case SK_INT8:    l_type = EIF_INTEGER_8_CODE; break;
 			case SK_INT16:   l_type = EIF_INTEGER_16_CODE; break;
 			case SK_INT32:   l_type = EIF_INTEGER_32_CODE; break;
@@ -1352,7 +1352,7 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 		switch (l_type) {
 			case EIF_REFERENCE_CODE: widr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
 			case EIF_BOOLEAN_CODE: widr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
-			case EIF_CHARACTER_CODE: widr_multi_char (&eif_character_tuple_item(l_item), 1); break;
+			case EIF_CHARACTER_8_CODE: widr_multi_char (&eif_character_tuple_item(l_item), 1); break;
 			case EIF_REAL_64_CODE: widr_multi_double (&eif_real_64_tuple_item(l_item), 1); break;
 			case EIF_REAL_32_CODE: widr_multi_float (&eif_real_32_tuple_item(l_item), 1); break;
 			case EIF_NATURAL_8_CODE: widr_multi_uint8 (&eif_natural_8_tuple_item(l_item), 1); break;
@@ -1364,7 +1364,7 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 			case EIF_INTEGER_32_CODE: widr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_64_CODE: widr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
 			case EIF_POINTER_CODE: widr_multi_ptr ((char *) &eif_pointer_tuple_item(l_item), 1); break;
-			case EIF_WIDE_CHAR_CODE: widr_multi_uint32 (&eif_wide_character_tuple_item(l_item), 1); break;
+			case EIF_CHARACTER_32_CODE: widr_multi_uint32 (&eif_wide_character_tuple_item(l_item), 1); break;
 			default:
 				eise_io("Independent store: unexpected tuple element type");
 		}
@@ -1408,12 +1408,12 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 					case SK_INT16: widr_multi_int16 ((EIF_INTEGER_16 *)(object + attrib_offset), 1); break;
 					case SK_INT32: widr_multi_int32 ((EIF_INTEGER_32 *)(object + attrib_offset), 1); break;
 					case SK_INT64: widr_multi_int64 ((EIF_INTEGER_64 *)(object + attrib_offset), 1); break;
-					case SK_BOOL:
-					case SK_CHAR: widr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1); break;
-					case SK_WCHAR: widr_multi_uint32 ((EIF_WIDE_CHAR *) (object + attrib_offset), 1); break;
+					case SK_BOOL: widr_multi_char ((EIF_BOOLEAN *) (object + attrib_offset), 1); break;
+					case SK_CHAR8: widr_multi_char ((EIF_CHARACTER_8 *) (object + attrib_offset), 1); break;
+					case SK_CHAR32: widr_multi_uint32 ((EIF_CHARACTER_32 *) (object + attrib_offset), 1); break;
 					case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)(object + attrib_offset), 1); break;
 					case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)(object + attrib_offset), 1); break;
-					case SK_EXP: 
+					case SK_EXP:
 							/* Independent store does not need a value for the second argument since
 							 * we do a field by field store. */
 						ist_write (object + attrib_offset, 0);
@@ -1444,7 +1444,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 						eise_io("Basic store: not an Eiffel object.");
 				}
 			}
-		} 
+		}
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_REFERENCE ref;
@@ -1478,7 +1478,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 				dynamic_types--;
 				patterns = info->patterns + nb_gen * (dynamic_types - info->dynamic_types);
 				dgen = *patterns;
-		
+
 				if (!(flags & EO_REF)) {		/* Special of simple types */
 					switch (dgen & SK_HEAD) {
 							/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
@@ -1493,11 +1493,11 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 						case SK_INT32: widr_multi_int32 (((EIF_INTEGER_32 *)object), count); break;
 						case SK_INT64: widr_multi_int64 (((EIF_INTEGER_64 *)object), count); break;
 						case SK_POINTER: widr_multi_ptr (object, count); break;
-						case SK_WCHAR: widr_multi_uint32 ((EIF_WIDE_CHAR *) object, count); break;
+						case SK_CHAR32: widr_multi_uint32 ((EIF_CHARACTER_32 *) object, count); break;
 						case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)object, count); break;
 						case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)object, count); break;
-						case SK_BOOL:
-						case SK_CHAR: widr_multi_char ((EIF_CHARACTER *) object, count); break;
+						case SK_BOOL: widr_multi_char ((EIF_BOOLEAN *) object, count); break;
+						case SK_CHAR8: widr_multi_char ((EIF_CHARACTER_8 *) object, count); break;
 						case SK_BIT:
 							dgen_typ = dgen & SK_DTYPE;
 							elem_size = RT_SPECIAL_ELEM_SIZE(object);
@@ -1539,7 +1539,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 					}
 				}
 			}
-		} 
+		}
 	}
 }
 
@@ -1579,7 +1579,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 		eise_io("General store: unable to write number of different Eiffel types.");
 	}
 	buffer_write(s_buffer, (strlen (s_buffer)));
-	
+
 
 	for (i=0; i<scount; i++)
 		if (account[i])
@@ -1784,7 +1784,7 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 #endif
 	/* Write name information: "name_length name" */
 	widr_multi_int16 (&name_length, 1);
-	widr_multi_char ((EIF_CHARACTER *) name, strlen (name));
+	widr_multi_char ((EIF_CHARACTER_8 *) name, strlen (name));
 	basic_type = (unsigned char) (((System(dtype).cn_types[attrib_index] & SK_HEAD) >> 24) & 0x000000FF);
 	widr_multi_char (&basic_type, 1);
 
@@ -1850,7 +1850,7 @@ rt_private void widr_type_generics (EIF_TYPE_INDEX dtype)
 {
 	/* Write generic information: "nb_generics {meta_type}*" */
 	struct cecil_info *info;
-	
+
 	info = cecil_info_for_dynamic_type (dtype);
 	if ((info == NULL) || (info->nb_param == 0)) {
 			/* Non-generic case */
@@ -1896,16 +1896,16 @@ rt_private void widr_type (int16 dtype)
 #endif
 	/* Write type information: "name_length name flags dynamic_type" */
 	widr_multi_int16 (&name_length, 1);
-	widr_multi_char ((EIF_CHARACTER *) class_name, name_length);
+	widr_multi_char ((EIF_CHARACTER_8 *) class_name, name_length);
 	widr_multi_int32 (&flags, 1);
 	widr_multi_int16 (&dtype, 1);
-	
+
 	/* Write storable version if any. */
 	if (l_storable_version) {
 		l_length = (uint32) strlen(l_storable_version);
 		REQUIRE("valid l_length", (size_t) l_length == strlen (l_storable_version));
 		widr_multi_uint32 (&l_length, 1);
-		widr_multi_char ((EIF_CHARACTER *) l_storable_version, l_length);
+		widr_multi_char ((EIF_CHARACTER_8 *) l_storable_version, l_length);
 	} else {
 		l_length = 0;
 		widr_multi_uint32 (&l_length, 1);
@@ -2036,7 +2036,7 @@ rt_private int stream_write (char *pointer, int size)
 	memcpy ((store_stream_buffer + store_stream_buffer_position), pointer, size);
 	store_stream_buffer_position += size;
 	return size;
-} 
+}
 
 void store_write(size_t cmps_in_size)
 {
@@ -2053,10 +2053,10 @@ void store_write(size_t cmps_in_size)
 					(unsigned long)cmps_in_size,
 					(unsigned char*)cmps_out_ptr,
 					(unsigned long*)&cmps_out_size);
- 
+
 	CHECK("not too big", (cmps_out_size + EIF_CMPS_HEAD_SIZE) < 0x7FFFFFFF);
 	number_left = (int) (cmps_out_size + EIF_CMPS_HEAD_SIZE);
- 
+
 	while (number_left > 0) {
 		number_written = char_write_func (cmps_out_ptr, number_left);
 		if (number_written <= 0) {

@@ -60,7 +60,7 @@
 
 
 __declspec(dllexport) BOOL  desc_call_dll32_boolean (FARPROC ProcAddress, EIF_INTEGER ArgCount,EIF_INTEGER ArgValues []);
-__declspec(dllexport) EIF_CHARACTER  desc_call_dll32_character (FARPROC ProcAddress, EIF_INTEGER ArgCount, EIF_INTEGER ArgValues []);
+__declspec(dllexport) EIF_CHARACTER_8  desc_call_dll32_character (FARPROC ProcAddress, EIF_INTEGER ArgCount, EIF_INTEGER ArgValues []);
 __declspec(dllexport) EIF_REAL_64  desc_call_dll32_double (FARPROC ProcAddress, EIF_INTEGER ArgCount, EIF_INTEGER ArgValues []);
 __declspec(dllexport) EIF_INTEGER  desc_call_dll32_integer (FARPROC ProcAddress, EIF_INTEGER ArgCount, EIF_INTEGER ArgValues []);
 __declspec(dllexport) LPVOID  desc_call_dll32_pointer (FARPROC ProcAddress, EIF_INTEGER ArgCount, EIF_INTEGER ArgValues []);

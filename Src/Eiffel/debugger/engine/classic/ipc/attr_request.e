@@ -228,9 +228,9 @@ feature {NONE} -- Implementation
 						sk_type
 					when Sk_bool then
 						create {DEBUG_BASIC_VALUE [BOOLEAN]} attr.make_attribute (sk_type, attr_name, e_class, to_boolean (c_tread))
-					when Sk_char then
+					when sk_char8 then
 						create {CHARACTER_VALUE} attr.make_attribute (sk_type, attr_name, e_class, to_character_8 (c_tread))
-					when Sk_wchar then
+					when sk_char32 then
 						create {CHARACTER_32_VALUE} attr.make_attribute (sk_type, attr_name, e_class, to_character_32 (c_tread))
 					when Sk_uint8 then
 						create {DEBUG_BASIC_VALUE [NATURAL_8]} attr.make_attribute (sk_type, attr_name, e_class, to_natural_8 (c_tread))

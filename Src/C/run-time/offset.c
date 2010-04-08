@@ -49,7 +49,7 @@
  * Functions definitions
  */
 
-/* Offset of first EIF_CHARACTER. */
+/* Offset of first EIF_CHARACTER_8. */
 rt_public size_t eif_chroff(size_t nb_ref)
 {
 	size_t to_add = REFACS(nb_ref);

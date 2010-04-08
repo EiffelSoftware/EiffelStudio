@@ -38,13 +38,6 @@ inherit
 			is_equal
 		end
 
-	SHARED_GENERATION
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end
-
 feature -- Status report
 
 	is_il: BOOLEAN

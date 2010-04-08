@@ -58,9 +58,9 @@ feature -- Access
 	sk_value: NATURAL_32
 		do
 			if is_character_32 then
-				Result := {SK_CONST}.sk_wchar
+				Result := {SK_CONST}.sk_char32
 			else
-				Result := {SK_CONST}.sk_char
+				Result := {SK_CONST}.sk_char8
 			end
 		end
 
@@ -125,16 +125,16 @@ feature -- C code generation
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			if is_character_32 then
-				buffer.put_string ({SK_CONST}.sk_wchar_string)
+				buffer.put_string ({SK_CONST}.sk_char32_string)
 			else
-				buffer.put_string ({SK_CONST}.sk_char_string)
+				buffer.put_string ({SK_CONST}.sk_char8_string)
 			end
 		end
 
 feature {NONE} -- Constants
 
-	Character_string: STRING = "EIF_CHARACTER"
-	Wide_char_string: STRING = "EIF_WIDE_CHAR";
+	Character_string: STRING = "EIF_CHARACTER_8"
+	Wide_char_string: STRING = "EIF_CHARACTER_32";
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

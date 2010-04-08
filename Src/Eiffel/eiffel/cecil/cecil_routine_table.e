@@ -10,10 +10,9 @@ class CECIL_ROUTINE_TABLE
 inherit
 	CECIL_TABLE [FEATURE_I]
 
+	SHARED_GENERATION
+
 	SHARED_DECLARATIONS
-		undefine
-			copy, is_equal
-		end
 
 create
 	init

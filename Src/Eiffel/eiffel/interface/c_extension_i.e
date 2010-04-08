@@ -69,10 +69,9 @@ feature {NONE} -- Implementation
 			parameters_valid: parameters /= Void implies parameters.count = nb
 		local
 			i, l_count: INTEGER
-			l_header: like Header_generation_buffer
-			l_buffer: GENERATION_BUFFER
+			l_buffer, l_header: GENERATION_BUFFER
 		do
-			l_header := Header_generation_buffer
+			l_header := context.header_generation_buffer
 			l_buffer := Context.buffer
 
 			if has_include_list then

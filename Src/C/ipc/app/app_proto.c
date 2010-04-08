@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -113,7 +113,7 @@ rt_private EIF_THR_TYPE dthread_id_saved;			/* Thread id used to backup previous
 #define dthread_restore() 														\
 		CHECK("Thread context must be saved", dthread_id_saved != 0); 			\
 		dthread_id_saved = dbg_switch_to_thread(dthread_id_saved); 					\
-		dthread_id_saved = 0;	
+		dthread_id_saved = 0;
 #else
 #define dthread_prepare();
 #define dthread_restore();
@@ -226,11 +226,11 @@ static int curr_modify = NO_CURRMODIF;
 		dthread_restore();
 		break;
 	case DUMP_THREADS:
-		CHECK("DUMP_THREADS: not yet implemented", 0);	
-			/* 
-			 * This is not yet implemented, 
+		CHECK("DUMP_THREADS: not yet implemented", 0);
+			/*
+			 * This is not yet implemented,
 			 * and probably will be removed
-			 * if we don't find a portable way to get thread OS id, name, and priority 
+			 * if we don't find a portable way to get thread OS id, name, and priority
 			 */
 		break;
 	case DUMP_STACK:						/* General stack dump request */
@@ -287,7 +287,7 @@ static int curr_modify = NO_CURRMODIF;
 		modify_object_attribute(arg_3_p, arg_1, NULL);
 		curr_modify = OBJECT_ATTR;
 		break;
-	case DUMPED_WITH_OFFSET:	
+	case DUMPED_WITH_OFFSET:
 		dthread_prepare();
 		opush_ref_offset_item(arg_3_p, (int) arg_2);
 		dthread_restore();
@@ -295,7 +295,7 @@ static int curr_modify = NO_CURRMODIF;
 	case DUMPED:					/* new value for the modified local variable / object / attribute */
 		dthread_prepare();
 		switch (curr_modify) {
-			case LOCAL_ITEM:				
+			case LOCAL_ITEM:
 				modify_local_variable(0,0,0,rqst->rq_dump.dmp_item);
 				break;
 			case OBJECT_ATTR:
@@ -338,7 +338,7 @@ static int curr_modify = NO_CURRMODIF;
 		}
 		dthread_restore();
 		break;
-	case MOVE:			
+	case MOVE:
 			/* Change active routine */
 		 dmove(arg_1);
 		break;
@@ -513,7 +513,7 @@ rt_private void app_send_integer (EIF_PSTREAM sp, EIF_INTEGER val)
 
 rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int a_dmp_type)
 {
-	/* 
+	/*
 	 * Send reference `ref' using dmp_type `a_dmp_type'
 	 *	 `a_dmp_type' is either DMP_ITEM, or DMP_EXCEPTION_ITEM
 	 */
@@ -532,7 +532,7 @@ rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int a_dmp
 
 rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type)
 {
-	/* 
+	/*
 	 * Send EIF_TYPED_VALUE `ip' using dmp_type `a_dmp_type'
 	 *	 `a_dmp_type' is either DMP_ITEM, or DMP_EXCEPTION_ITEM or DMP_VOID
 	 */
@@ -575,7 +575,7 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 	rqst.st_status = d_cxt.pg_status;	/* Why we stopped */
 	rqst.st_excep = 2;					/* Exception occurred ? */
 
-	/* If we stopped because an exception has occurred, 
+	/* If we stopped because an exception has occurred,
 	 * also give the exception data.
 	 */
 	switch (d_cxt.pg_status) {
@@ -593,7 +593,7 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 		rqst.st_wh.wh_offset = 0;				/* Offset in byte code */
 		rqst.st_wh.wh_nested = 0;				/* breakable nested index */
 		rqst.st_wh.wh_thread_id = (rt_int_ptr) 0;			/* Thread id -> rt_int_ptr for XDR */
-	} 
+	}
 	else {
 		rqst.st_wh.wh_name = wh.wh_name;			/* Feature name */
 		rqst.st_wh.wh_obj = (rt_int_ptr) wh.wh_obj;	/* (char *) -> rt_int_ptr for XDR */
@@ -643,18 +643,18 @@ rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, l
 {
 	static long stack_depth = 0;
 	static long loc_type = 0;
-	static long loc_number = 0; 
+	static long loc_number = 0;
 	unsigned char result;
-	
+
 	if (ip == NULL) {
 		/* first call: remember the depth, the type and the number */
 		stack_depth = arg_stack_depth;
 		loc_type = arg_loc_type;
-		loc_number = arg_loc_number;	
+		loc_number = arg_loc_number;
 	} else {
 		/* second call, get the new value and call the function */
 		result = modify_local(stack_depth, loc_type, loc_number, ip);
-		
+
 		/* send the acknowledgement */
 		send_ack(app_sp, result);
 
@@ -671,7 +671,7 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 	static EIF_REFERENCE object = NULL;
 	static long attr_number = 0;
 	unsigned char result;
-	
+
 	if (new_value == NULL) {
 	   if (arg_addr) {
 				/* access the object through its hector address */
@@ -680,12 +680,12 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 #else
 			object = (EIF_REFERENCE) (arg_addr);
 #endif
-			attr_number = arg_attr_number;	
+			attr_number = arg_attr_number;
 		}
 	} else {
 		/* second call, get the new value and call the function */
 		result = modify_attr(object, attr_number, new_value);
-		
+
 		/* send the acknowledgement */
 		send_ack(app_sp, result);
 
@@ -704,7 +704,7 @@ rt_private void inspect(EIF_PSTREAM s, Opaque *what)
 		 */
 	char *addr;				/* Address of EIF_OBJECT */
 	EIF_OBJECT obj;
-	
+
 
 	switch (what->op_1) {		/* First value describes request */
 	case IN_H_ADDR:					/* Hector address inspection */
@@ -767,8 +767,8 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 #define GetOResult(o_index, is_process_once)	\
 		OResult = MTOI(o_index);
 #endif
-	
-	
+
+
 	switch (what->op_1) {			/* First value describes request */
 	case OUT_INDEX:					/* ONCE_INDEX for the once routine */
 	 	b_index = (BODY_INDEX) what->op_3;	/* Body_id of once routine */
@@ -776,7 +776,7 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 		is_process_once = (what->op_2 == OUT_ONCE_PER_PROCESS);
 		if (is_process_once) {
 			o_index = process_once_index (b_index);
-		} else 
+		} else
 #endif
 			o_index = once_index (b_index);
 		sprintf(buf, "%u", o_index);
@@ -820,7 +820,7 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 	}
 }
 
-rt_private void set_catcall_detection_mode (EIF_PSTREAM sp, int a_console, int a_dbg) 
+rt_private void set_catcall_detection_mode (EIF_PSTREAM sp, int a_console, int a_dbg)
 {
 	/* Set current catcall_detection mode off/on */
 	app_send_integer (sp, catcall_detection_console_enabled);
@@ -829,7 +829,7 @@ rt_private void set_catcall_detection_mode (EIF_PSTREAM sp, int a_console, int a
 	set_catcall_detection_debugger(a_dbg);
 }
 
-rt_private void set_check_assert (int v) 
+rt_private void set_check_assert (int v)
 {
 	/* Set current assertion checking off/on */
 	EIF_BOOLEAN old_value;
@@ -841,7 +841,7 @@ rt_private void set_check_assert (int v)
 	}
 }
 
-rt_private void ignore_current_assertion_violation (int v) 
+rt_private void ignore_current_assertion_violation (int v)
 {
 	/* Ignore or not the current assertion violation */
 	ignore_contract_violation_once (EIF_TEST(v));
@@ -961,7 +961,7 @@ rt_private void load_bc(int slots, int amount)
 
 		/* Read BYTECODE request */
 #ifdef EIF_WINDOWS
-		app_recv_packet(sp, &rqst, TRUE);			
+		app_recv_packet(sp, &rqst, TRUE);
 #else
 		app_recv_packet(sp, &rqst);
 #endif
@@ -1020,14 +1020,14 @@ rt_private void obj_inspect(EIF_OBJECT object)
 		return;
 	}
 	flags = HEADER(ref)->ov_flags;
-	is_special = EIF_TEST(flags & EO_SPEC);	
-	is_tuple = EIF_TEST(flags & EO_TUPLE);	
+	is_special = EIF_TEST(flags & EO_SPEC);
+	is_tuple = EIF_TEST(flags & EO_TUPLE);
 	app_twrite (&is_special, sizeof(EIF_BOOLEAN));
 	app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
 		/* Send class dynamic id */
 	dtype = Dtype(ref);
 	app_twrite (&dtype, sizeof(int32));
-					
+
 	if (is_special) {
 			/* Send items recursively */
 		if (is_tuple) {
@@ -1086,8 +1086,8 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 		switch(sk_type) {
 		case SK_POINTER: app_twrite (o_ref, sizeof(EIF_POINTER)); break;
 		case SK_BOOL: app_twrite (o_ref, sizeof(EIF_BOOLEAN)); break;
-		case SK_CHAR: app_twrite (o_ref, sizeof(EIF_CHARACTER)); break;
-		case SK_WCHAR: app_twrite (o_ref, sizeof(EIF_WIDE_CHAR)); break;
+		case SK_CHAR8: app_twrite (o_ref, sizeof(EIF_CHARACTER_8)); break;
+		case SK_CHAR32: app_twrite (o_ref, sizeof(EIF_CHARACTER_32)); break;
 		case SK_UINT8: app_twrite (o_ref, sizeof(EIF_NATURAL_8)); break;
 		case SK_UINT16: app_twrite (o_ref, sizeof(EIF_NATURAL_16)); break;
 		case SK_UINT32: app_twrite (o_ref, sizeof(EIF_NATURAL_32)); break;
@@ -1199,7 +1199,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 			nb_attr = 0;
 		else
 			nb_attr = sp_end - sp_start + 1;
-	  
+
 			/* Send the number of items to be inspected */
 		app_twrite (&nb_attr, sizeof(uint32));
 
@@ -1218,7 +1218,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 					app_twrite (&dtype, sizeof(int32));
 /* For SPECIAL object containing expanded objects
  * we need to send the data right away, since there is no (hector) address associated with
- * the expanded objects, there are known from the SPECIAL object + index, 
+ * the expanded objects, there are known from the SPECIAL object + index,
  * and that's it. So there is no sense to send this "fake" address
  * 					app_twrite (&o_ref, sizeof(EIF_POINTER)); */
 					rec_inspect(o_ref);
@@ -1226,9 +1226,9 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 			} else if (!(flags & EO_REF)) {
 					/* Special of basic types. */
 				if (dtype == egc_sp_char)
-					sk_type = SK_CHAR;
+					sk_type = SK_CHAR8;
 				else if (dtype == egc_sp_wchar)
-					sk_type = SK_WCHAR;
+					sk_type = SK_CHAR32;
 				else if (dtype == egc_sp_uint8)
 					sk_type = SK_UINT8;
 				else if (dtype == egc_sp_uint16)
@@ -1269,8 +1269,8 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 					switch(sk_type) {
 					case SK_POINTER: app_twrite (o_ref, sizeof(EIF_POINTER)); break;
 					case SK_BOOL: app_twrite (o_ref, sizeof(EIF_BOOLEAN)); break;
-					case SK_CHAR: app_twrite (o_ref, sizeof(EIF_CHARACTER)); break;
-					case SK_WCHAR: app_twrite (o_ref, sizeof(EIF_WIDE_CHAR)); break;
+					case SK_CHAR8: app_twrite (o_ref, sizeof(EIF_CHARACTER_8)); break;
+					case SK_CHAR32: app_twrite (o_ref, sizeof(EIF_CHARACTER_32)); break;
 					case SK_UINT8: app_twrite (o_ref, sizeof(EIF_NATURAL_8)); break;
 					case SK_UINT16: app_twrite (o_ref, sizeof(EIF_NATURAL_16)); break;
 					case SK_UINT32: app_twrite (o_ref, sizeof(EIF_NATURAL_32)); break;
@@ -1293,7 +1293,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 				EIF_BOOLEAN is_tuple = EIF_FALSE;
 				uint32 sk_type = SK_REF;
 				for (o_ref = (char *) ((char **)object + sp_start),
-							sp_index = sp_start; sp_index <= sp_end; 
+							sp_index = sp_start; sp_index <= sp_end;
 							sp_index++, o_ref = (char *) ((char **)o_ref + 1)) {
 					sprintf(buffer, "%ld", sp_index);
 					app_twrite (buffer, strlen(buffer));
@@ -1400,9 +1400,9 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_boolean_tuple_item(l_item), sizeof(EIF_BOOLEAN));
 					break;
-				case SK_CHAR:
+				case SK_CHAR8:
 					app_twrite (&sk_type, sizeof(uint32));
-					app_twrite (&eif_character_tuple_item(l_item), sizeof(EIF_CHARACTER));
+					app_twrite (&eif_character_tuple_item(l_item), sizeof(EIF_CHARACTER_8));
 					break;
 				case SK_REAL64:
 					app_twrite (&sk_type, sizeof(uint32));
@@ -1416,9 +1416,9 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 					app_twrite (&sk_type, sizeof(uint32));
 					app_twrite (&eif_pointer_tuple_item(l_item), sizeof(EIF_POINTER));
 					break;
-				case SK_WCHAR:
+				case SK_CHAR32:
 					app_twrite (&sk_type, sizeof(uint32));
-					app_twrite (&eif_wide_character_tuple_item(l_item), sizeof(EIF_WIDE_CHAR));
+					app_twrite (&eif_wide_character_tuple_item(l_item), sizeof(EIF_CHARACTER_32));
 					break;
 				case SK_REF:
 					{
@@ -1530,8 +1530,8 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 			switch(new_value->type & SK_HEAD) {
 				case SK_POINTER: *(char **)o_ref = new_value->it_ptr; break;
 				case SK_BOOL:
-				case SK_CHAR: *(EIF_CHARACTER *)o_ref = new_value->it_char; break;
-				case SK_WCHAR: *(EIF_WIDE_CHAR *)o_ref = new_value->it_wchar; break;
+				case SK_CHAR8: *(EIF_CHARACTER_8 *)o_ref = new_value->it_char; break;
+				case SK_CHAR32: *(EIF_CHARACTER_32 *)o_ref = new_value->it_wchar; break;
 				case SK_UINT8: *(EIF_NATURAL_8 *)o_ref = new_value->it_uint8; break;
 				case SK_UINT16: *(EIF_NATURAL_16 *)o_ref = new_value->it_uint16; break;
 				case SK_UINT32: *(EIF_NATURAL_32 *)o_ref = new_value->it_uint32; break;
@@ -1542,10 +1542,10 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 				case SK_INT64: *(EIF_INTEGER_64 *)o_ref = new_value->it_int64; break;
 				case SK_REAL32: *(EIF_REAL_32 *)o_ref = new_value->it_real32; break;
 				case SK_REAL64: *(EIF_REAL_64 *)o_ref = new_value->it_real64; break;
-				case SK_BIT: 
+				case SK_BIT:
 					/* FIXME ARNAUD: To do... */
 					return 1; /* not yet implemented */
-				default: 
+				default:
 					return 1; /* unexpected value */
 			}
 		}
@@ -1605,11 +1605,11 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 		/* get characteristic of the object */
 		nb_attr = obj_desc->cn_nbattr;
 		cn_attr = obj_desc->cn_attr;
-	
+
 		/* check that the given attribute number is not out-of-bounds */
 		if (attr_number > nb_attr)
 			return 1; /* error */
-		
+
 		CAttrOffs(offset,cn_attr[attr_number],dtype);
 		o_ref = object + offset;
 
@@ -1618,11 +1618,11 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 				*(char **)o_ref = new_value->it_ptr;
 				break;
 			case SK_BOOL: /* Boolean attribute */
-			case SK_CHAR: /* Character attribute */
-				*(EIF_CHARACTER *)o_ref = new_value->it_char;
+			case SK_CHAR8: /* Character attribute */
+				*(EIF_CHARACTER_8 *)o_ref = new_value->it_char;
 				break;
-			case SK_WCHAR: /* Character attribute */
-				*(EIF_WIDE_CHAR *)o_ref = new_value->it_wchar;
+			case SK_CHAR32: /* Character attribute */
+				*(EIF_CHARACTER_32 *)o_ref = new_value->it_wchar;
 				break;
 			case SK_INT8: /* Integer attribute */
 				*(EIF_INTEGER_8 *)o_ref = new_value->it_int8;
@@ -1722,8 +1722,8 @@ rt_private void opush_ref_offset_item(rt_int_ptr a_addr, int a_offset)
 
 rt_private EIF_REFERENCE rt_boxed_expanded_item_at_index (EIF_REFERENCE a_obj, int a_index)
 {
-	/* 
-	 * boxed expanded item referenced by hector address `a_obj' and `a_index' as offset 
+	/*
+	 * boxed expanded item referenced by hector address `a_obj' and `a_index' as offset
 	 */
 
 	REQUIRE("is_special", RT_IS_SPECIAL(a_obj));
@@ -1758,7 +1758,7 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 	Request_Clean (rqst);
 	/* Get request */
 #ifdef EIF_WINDOWS
-	if (-1 == app_recv_packet(sp, &rqst, TRUE)) 
+	if (-1 == app_recv_packet(sp, &rqst, TRUE))
 #else
 	if (-1 == app_recv_packet(sp, &rqst))
 #endif

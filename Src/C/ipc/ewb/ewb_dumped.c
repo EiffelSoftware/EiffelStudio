@@ -14,19 +14,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -63,8 +63,8 @@ rt_private void (* set_integer_16) (EIF_REFERENCE, EIF_INTEGER_16);
 rt_private void (* set_integer_32) (EIF_REFERENCE, EIF_INTEGER_32);
 rt_private void (* set_integer_64) (EIF_REFERENCE, EIF_INTEGER_64);
 rt_private void (* set_bool) (EIF_REFERENCE, EIF_BOOLEAN);
-rt_private void (* set_char) (EIF_REFERENCE, EIF_CHARACTER);
-rt_private void (* set_wchar) (EIF_REFERENCE, EIF_WIDE_CHAR);
+rt_private void (* set_char) (EIF_REFERENCE, EIF_CHARACTER_8);
+rt_private void (* set_wchar) (EIF_REFERENCE, EIF_CHARACTER_32);
 rt_private void (* set_real) (EIF_REFERENCE, EIF_REAL_32);
 rt_private void (* set_double) (EIF_REFERENCE, EIF_REAL_64);
 rt_private void (* set_ref) (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
@@ -190,8 +190,8 @@ rt_public void c_recv_value (EIF_OBJ target)
 					type_flag = item.type;
 					switch (type_flag & SK_HEAD) {
 						case SK_BOOL: set_bool (eif_access (target), item.it_char); return;
-						case SK_CHAR: set_char (eif_access (target), item.it_char); return;
-						case SK_WCHAR: set_wchar (eif_access (target), item.it_wchar); return;
+						case SK_CHAR8: set_char (eif_access (target), item.it_char); return;
+						case SK_CHAR32: set_wchar (eif_access (target), item.it_wchar); return;
 						case SK_UINT8: set_natural_8 (eif_access (target), item.it_uint8); return;
 						case SK_UINT16: set_natural_16 (eif_access (target), item.it_uint16); return;
 						case SK_UINT32: set_natural_32 (eif_access (target), item.it_uint32); return;
@@ -266,8 +266,8 @@ rt_public void c_pass_recv_routines (
 	set_integer_32 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) d_int_32;
 	set_integer_64 = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_64)) d_int_64;
 	set_bool = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN)) d_bool;
-	set_char = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER)) d_char;
-	set_wchar = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_WIDE_CHAR)) d_wchar;
+	set_char = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER_8)) d_char;
+	set_wchar = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER_32)) d_wchar;
 	set_real = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_32)) d_real;
 	set_double = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) d_double;
 	set_ref = FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) d_ref;

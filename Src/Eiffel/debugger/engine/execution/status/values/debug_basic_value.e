@@ -117,10 +117,10 @@ feature -- Access
 			when sk_bool    then
 				bval ?= value
 				Result := d_fact.new_boolean_value (bval.item, Dynamic_class)
-			when sk_char    then
+			when sk_char8    then
 				cval ?= value
 				Result := d_fact.new_character_value (cval.item, Dynamic_class)
-			when sk_wchar   then
+			when sk_char32   then
 				wcval ?= value
 				Result := d_fact.new_character_32_value (wcval.item, Dynamic_class)
 			when sk_real32  then
@@ -181,7 +181,7 @@ feature {NONE} -- Setting
 			valid_sk_type:
 				sk_type = sk_uint8 or sk_type = sk_uint16 or sk_type = sk_uint32 or sk_type = sk_uint64 or
 				sk_type = sk_int8 or sk_type = sk_int16 or sk_type = sk_int32 or sk_type = sk_int64 or
-				sk_type = sk_char or sk_type = sk_wchar or sk_type = sk_real32 or sk_type = sk_real64 or
+				sk_type = sk_char8 or sk_type = sk_char32 or sk_type = sk_real32 or sk_type = sk_real64 or
 				sk_type = sk_bool or sk_type = sk_pointer
 		local
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
@@ -197,8 +197,8 @@ feature {NONE} -- Setting
 			when sk_int32   then dynamic_class := comp_data.Integer_32_class_c
 			when sk_int64   then dynamic_class := comp_data.Integer_64_class_c
 			when sk_bool    then dynamic_class := comp_data.Boolean_class_c
-			when sk_char    then dynamic_class := comp_data.character_8_class_c
-			when sk_wchar   then dynamic_class := comp_data.character_32_class_c
+			when sk_char8    then dynamic_class := comp_data.character_8_class_c
+			when sk_char32   then dynamic_class := comp_data.character_32_class_c
 			when sk_real32  then dynamic_class := comp_data.real_32_class_c
 			when sk_real64  then dynamic_class := comp_data.real_64_class_c
 			when sk_pointer then dynamic_class := comp_data.Pointer_class_c

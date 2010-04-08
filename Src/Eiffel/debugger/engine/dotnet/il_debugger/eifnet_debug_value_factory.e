@@ -46,7 +46,7 @@ feature -- Access
 					create {EIFNET_DEBUG_BASIC_VALUE [BOOLEAN]} Result.make (a_icd, sk_bool,
 								Edv_formatter.prepared_icor_debug_value_as_boolean (l_icd_prepared))
 				when {MD_SIGNATURE_CONSTANTS}.element_type_char then
-					create {EIFNET_DEBUG_CHARACTER_VALUE} Result.make (a_icd, sk_char,
+					create {EIFNET_DEBUG_CHARACTER_VALUE} Result.make (a_icd, sk_char8,
 								Edv_formatter.prepared_icor_debug_value_as_character (l_icd_prepared))
 				when
 					{MD_SIGNATURE_CONSTANTS}.element_type_i,

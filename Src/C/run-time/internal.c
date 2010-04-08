@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -59,12 +59,12 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 
 	o_ref = object + offset;
 	switch (field_type & SK_HEAD) {
-	case SK_CHAR:
+	case SK_CHAR8:
 		{
-			EIF_CHARACTER val = *(EIF_CHARACTER *) o_ref;
+			EIF_CHARACTER_8 val = *(EIF_CHARACTER_8 *) o_ref;
 
 			new_obj = RTLN(egc_char_dtype);
-			*(EIF_CHARACTER *) new_obj = val;
+			*(EIF_CHARACTER_8 *) new_obj = val;
 			return new_obj;
 		}
 	case SK_BOOL:
@@ -75,12 +75,12 @@ rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE objec
 			*(EIF_BOOLEAN *) new_obj = val;
 			return new_obj;
 		}
-	case SK_WCHAR:
+	case SK_CHAR32:
 		{
-			EIF_WIDE_CHAR val = *(EIF_WIDE_CHAR *) o_ref;
+			EIF_CHARACTER_32 val = *(EIF_CHARACTER_32 *) o_ref;
 
 			new_obj = RTLN(egc_wchar_dtype);
-			*(EIF_WIDE_CHAR *) new_obj = val;
+			*(EIF_CHARACTER_32 *) new_obj = val;
 			return new_obj;
 		}
 	case SK_UINT8:
@@ -208,7 +208,7 @@ rt_public long ei_field_static_type_of_type(long i, EIF_INTEGER type_id)
 	 * declared in associated class of `type_id'. */
 
 	EIF_TYPE_INDEX *typearr = System(To_dtype(type_id)).cn_gtypes[i];
-	
+
 	REQUIRE("valid type_id", rt_valid_type_index(type_id));
 	return eif_compound_id ((EIF_TYPE_INDEX) type_id, typearr [1], typearr);
 }
@@ -220,8 +220,8 @@ rt_public long ei_eif_type(uint32 field_type)
 
 	switch (field_type & SK_HEAD) {
 	case SK_REF:	return EIF_REFERENCE_TYPE;
-	case SK_CHAR:	return EIF_CHARACTER_TYPE;
-	case SK_WCHAR:	return EIF_WIDE_CHAR_TYPE;
+	case SK_CHAR8:	return EIF_CHARACTER_8_TYPE;
+	case SK_CHAR32:	return EIF_CHARACTER_32_TYPE;
 	case SK_BOOL:	return EIF_BOOLEAN_TYPE;
 	case SK_UINT8:	return EIF_NATURAL_8_TYPE;
 	case SK_UINT16:	return EIF_NATURAL_16_TYPE;
@@ -263,7 +263,7 @@ rt_public rt_uint_ptr ei_bit_size(long i, EIF_REFERENCE object)
 
 	return (long) (System(Dtype(object)).cn_types[i] - SK_BIT);
 }
-	
+
 rt_public rt_uint_ptr ei_size(EIF_REFERENCE object)
 {
 	REQUIRE ("not expanded", (HEADER(object)->ov_flags & EO_EXP) == 0);

@@ -77,7 +77,7 @@ typedef EIF_INTEGER_32	(*EIF_INTEGER_32_FUNCTION)(EIF_REFERENCE, ...);		/* Retur
 #define EIF_INTEGER_FUNCTION EIF_INTEGER_32_FUNCTION
 typedef EIF_INTEGER_64	(*EIF_INTEGER_64_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Integer 64 bits */
 typedef EIF_BOOLEAN	(*EIF_BOOLEAN_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Boolean */
-typedef EIF_CHARACTER	(*EIF_CHARACTER_FUNCTION)(EIF_REFERENCE, ...);		/* Returns char */
+typedef EIF_CHARACTER_8	(*EIF_CHARACTER_8_FUNCTION)(EIF_REFERENCE, ...);		/* Returns char */
 typedef EIF_REAL_32	(*EIF_REAL_32_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Real */
 typedef EIF_REAL_64	(*EIF_REAL_64_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Double */
 typedef EIF_REFERENCE (*EIF_REFERENCE_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Reference */
@@ -99,7 +99,8 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define eif_integer_32_function(rout,cid)	(EIF_INTEGER_32_FUNCTION) eifref(rout,cid)
 #define eif_integer_function(rout,cid)		(EIF_INTEGER_32_FUNCTION) eifref(rout,cid)
 #define eif_integer_64_function(rout,cid)	(EIF_INTEGER_64_FUNCTION) eifref(rout,cid)
-#define eif_character_function(rout,cid)	(EIF_CHARACTER_FUNCTION) eifref(rout,cid)
+#define eif_character_8_function(rout,cid)	(EIF_CHARACTER_8_FUNCTION) eifref(rout,cid)
+#define eif_character_32_function(rout,cid)	(EIF_CHARACTER_32_FUNCTION) eifref(rout,cid)
 #define eif_real_32_function(rout,cid)		(EIF_REAL_32_FUNCTION) eifref(rout,cid)
 #define eif_real_64_function(rout,cid)		(EIF_REAL_64_FUNCTION) eifref(rout,cid)
 #define eif_reference_function(rout,cid)	(EIF_REFERENCE_FUNCTION) eifref(rout,cid)
@@ -137,7 +138,7 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 
 #define EIF_POINTER_TYPE	0
 #define EIF_REFERENCE_TYPE	1
-#define EIF_CHARACTER_TYPE	2
+#define EIF_CHARACTER_8_TYPE	2
 #define EIF_BOOLEAN_TYPE	3
 #define EIF_INTEGER_TYPE	4
 #define EIF_INTEGER_32_TYPE	4
@@ -148,12 +149,15 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define EIF_INTEGER_8_TYPE	9
 #define EIF_INTEGER_16_TYPE	10
 #define EIF_INTEGER_64_TYPE 11
-#define EIF_WIDE_CHAR_TYPE	12
+#define EIF_CHARACTER_32_TYPE	12
 #define EIF_NATURAL_8_TYPE	13
 #define EIF_NATURAL_16_TYPE	14
 #define EIF_NATURAL_32_TYPE 15
 #define EIF_NATURAL_64_TYPE 16
 
+/* Obsolete code. */
+#define EIF_CHARACTER_TYPE	2
+#define EIF_WIDE_CHAR_TYPE	12
 
 
 /* Accessing an attribute in read/write mode (this is both an lvalue and
@@ -268,7 +272,7 @@ struct cecil_info {
 #define EIF_PROC EIF_PROCEDURE		/* Use EIF_PROCEDURE instead */
 #define EIF_FN_INT EIF_INTEGER_32_FUNCTION		/* Use EIF_INTEGER_32_FUNCTION instead */
 #define EIF_FN_BOOL EIF_BOOLEAN_FUNCTION		/* Use EIF_BOOLEAN_FUNCTION instead*/
-#define EIF_FN_CHAR EIF_CHARACTER_FUNCTION		/* Use EIF_CHARACTER_FUNCTION instead  */
+#define EIF_FN_CHAR EIF_CHARACTER_8_FUNCTION		/* Use EIF_CHARACTER_8_FUNCTION instead  */
 #define EIF_FN_REAL_32 EIF_REAL_32_FUNCTION	/* Use EIF_REAL_32_FUNCTION instead */
 #define EIF_FN_REAL_64 EIF_REAL_64_FUNCTION	/* Use EIF_REAL_64_FUNCTION instead */
 #define EIF_FN_REF EIF_REFERENCE_FUNCTION /* use EIF_REFERENCE_FUNCTION instead */

@@ -72,9 +72,9 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 #endif /* EIF_VMS */
 
 #if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
-rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER *);
-rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_CHARACTER *);
-rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER *);
+rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER_8 *);
+rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_CHARACTER_8 *);
+rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER_8 *);
 #endif
 
 
@@ -91,7 +91,7 @@ rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER *);
 
 /* Validity */
 
-rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER *p)
+rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER_8 *p)
 {
 		/* Test to see if `p' is a well constructed directory path */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -152,7 +152,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER *p)
 	EIF_BOOLEAN result = EIF_FALSE;
 
 	if (p && *p) {
-	    EIF_CHARACTER last = p[strlen((char*)p)-1];
+	    EIF_CHARACTER_8 last = p[strlen((char*)p)-1];
 	    /* first check to see if p includes a ] */
 	    /* in fact, the last character should be ] */
 	    if (last != ']')		/* end with ]; what about > ? */
@@ -172,7 +172,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER *p)
 #endif
 }
 
-rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER *p)
+rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER_8 *p)
 {
 #ifdef EIF_WINDOWS
 	char rootpath[4];
@@ -206,7 +206,7 @@ rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER *p)
 #endif
 }
 
-rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER *p)
+rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER_8 *p)
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 #define MAX_FILE_LEN 256
@@ -250,7 +250,7 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_CHARACTER *p)
 #endif /* platform */
 }
 
-rt_public EIF_BOOLEAN eif_is_extension_valid (EIF_CHARACTER *p)
+rt_public EIF_BOOLEAN eif_is_extension_valid (EIF_CHARACTER_8 *p)
 {
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 		/* Test to see if `p' is a valid extension */
@@ -271,7 +271,7 @@ rt_public EIF_BOOLEAN eif_is_extension_valid (EIF_CHARACTER *p)
 #endif
 }
 
-rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER *p)
+rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER_8 *p)
 {
 		/* Test to see if `p' is a well constructed file name (with directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -307,7 +307,7 @@ rt_public EIF_BOOLEAN eif_is_file_valid (EIF_CHARACTER *p)
 #endif
 }
 
-rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_CHARACTER *p)
+rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_CHARACTER_8 *p)
 {
 		/* Test to see if `p' is a valid directory name (no parent directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -329,7 +329,7 @@ rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_CHARACTER *p)
 #endif
 }
 
-rt_public EIF_BOOLEAN eif_path_name_compare(EIF_CHARACTER *s, EIF_CHARACTER *t, EIF_INTEGER length)
+rt_public EIF_BOOLEAN eif_path_name_compare(EIF_CHARACTER_8 *s, EIF_CHARACTER_8 *t, EIF_INTEGER length)
 {
 		/* Test to see if `s' and `t' represent the same path name */
 #if defined EIF_WINDOWS || defined EIF_OS2
@@ -344,7 +344,7 @@ rt_public EIF_BOOLEAN eif_path_name_compare(EIF_CHARACTER *s, EIF_CHARACTER *t, 
 
 /* Concatenation */
 
-rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v)
+rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EIF_CHARACTER_8 *v)
 {
 #ifdef WORKBENCH
 	EIF_GET_CONTEXT
@@ -422,7 +422,7 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 	RT_STRING_SET_COUNT(string, strlen((char *) p));
 }
 
-rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v)
+rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EIF_CHARACTER_8 *v)
 {
 #ifdef WORKBENCH
 	EIF_GET_CONTEXT
@@ -452,7 +452,7 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHA
 	RT_STRING_SET_COUNT(string, strlen((char *) p));
 }
 
-rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHARACTER *v)
+rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER_8 *p, EIF_CHARACTER_8 *v)
 {
 #ifdef WORKBENCH
 	EIF_GET_CONTEXT
@@ -651,7 +651,7 @@ rt_public EIF_REFERENCE eif_root_directory_name(void)
  
 /* Routines to split a PATH_NAME in its different parts */
  
-rt_public EIF_REFERENCE eif_volume_name(EIF_CHARACTER *p)
+rt_public EIF_REFERENCE eif_volume_name(EIF_CHARACTER_8 *p)
 {
 	/* Returns p's volume name as an EIFFEL string */
  
@@ -666,7 +666,7 @@ rt_public EIF_REFERENCE eif_volume_name(EIF_CHARACTER *p)
 	return (EIF_REFERENCE) 0;
 }
  
-rt_public EIF_REFERENCE eif_extracted_paths(EIF_CHARACTER *p)
+rt_public EIF_REFERENCE eif_extracted_paths(EIF_CHARACTER_8 *p)
 {
 	/* Returns p's directory components as a manifest array */
  

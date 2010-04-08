@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -100,7 +100,7 @@ struct cnode {
  * been especially computed for the interpreter, so it should not be wise
  * modifying them: (value >> 27) - 1 directly yields the corresponding IT_xxxx
  * value--RAM.
- * 
+ *
  * However, if you change (or add) a value, do not forget to update the Eiffel
  * counterpart (class SK_CONST) -- Arnaud.
  *
@@ -113,12 +113,12 @@ struct cnode {
 #define SK_EXP		0x80000000			/* Type is an expanded */
 #define SK_MASK		0x7fffffff			/* Mask to get real type */
 #define SK_BOOL		0x04000000			/* Simple boolean type */
-#define SK_CHAR		0x08000000			/* Simple character type */
+#define SK_CHAR8	0x08000000			/* Simple character type */
 #define SK_INT8		0x0c000000			/* Simple integer 8 type */
 #define SK_INT32	0x10000000			/* Simple integer 32 type */
 #define SK_INT16	0x14000000			/* Simple integer 16 type */
 #define SK_REAL32	0x18000000			/* Simple real type */
-#define SK_WCHAR	0x1c000000			/* Simple unicode character type */
+#define SK_CHAR32	0x1c000000			/* Simple unicode character type */
 #define SK_REAL64	0x20000000			/* Simple double type */
 #define SK_INT64	0x24000000			/* Simple integer 64 types */
 #define SK_BIT		0x28000000			/* Signals bits type */
@@ -139,7 +139,7 @@ struct cnode {
 /* Macros to access `cn_attr_flags'. */
 #define EIF_IS_TRANSIENT_ATTRIBUTE_FLAG	0x0001
 
-#define EIF_IS_TRANSIENT_ATTRIBUTE(node,pos)	(((node).cn_attr_flags [pos]) == EIF_IS_TRANSIENT_ATTRIBUTE_FLAG) 
+#define EIF_IS_TRANSIENT_ATTRIBUTE(node,pos)	(((node).cn_attr_flags [pos]) == EIF_IS_TRANSIENT_ATTRIBUTE_FLAG)
 /*
  * Conformance table
  */

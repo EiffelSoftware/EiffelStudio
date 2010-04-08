@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -41,7 +41,7 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #ifdef WORKBENCH
 
 #include "eif_portable.h"
-#include "eif_confmagic.h"	
+#include "eif_confmagic.h"
 #include "rt_macros.h"
 #include "rt_debug.h"
 #include "rt_hashin.h"
@@ -206,17 +206,17 @@ rt_private EIF_BOOLEAN dbgmtx_trylock(EIF_CS_TYPE *a_mutex) {
 #define DBGMTX_TRYLOCK	dbgmtx_trylock(db_mutex)
 #define DBGMTX_UNLOCK	EIF_ASYNC_SAFE_CS_UNLOCK(db_mutex)
 #else
-#define DBGMTX_CREATE 
-#define DBGMTX_DESTROY 
-#define DBGMTX_LOCK 
-#define DBGMTX_TRYLOCK 
-#define DBGMTX_UNLOCK 
+#define DBGMTX_CREATE
+#define DBGMTX_DESTROY
+#define DBGMTX_LOCK
+#define DBGMTX_TRYLOCK
+#define DBGMTX_UNLOCK
 #endif
 
 /* Context set up */
 rt_public void dstart(void);				/* Beginning of melted feature execution */
 rt_public void drun(BODY_INDEX body_id);			/* Starting execution of debugged feature */
-rt_public void discard_breakpoints(void);	/* discard all breakpoints. used when we don't want to stop */ 
+rt_public void discard_breakpoints(void);	/* discard all breakpoints. used when we don't want to stop */
 rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 
 /* exception trace occurred during debugging evaluation */
@@ -327,11 +327,11 @@ rt_public void discard_breakpoints(void)
 	 * to avoid stopping into `dispose' feature, all breakable lines
 	 * are discarded
 	 */
-	
+
 	/* We remove 1 from current value. So if we have the following scheme,
 	 * the breakpoints remain discarded after the first call to
 	 * undiscard_breakpoints.
-	 * 
+	 *
 	 * discard_breakpoints
 	 * ...
 	 *    discard_breakpoints
@@ -343,7 +343,7 @@ rt_public void discard_breakpoints(void)
 	 */
 
 	EIF_GET_CONTEXT
-	d_data.db_discard_breakpoints++; 
+	d_data.db_discard_breakpoints++;
 	RT_ENTER_EIFFELCODE;
 }
 
@@ -352,11 +352,11 @@ rt_public void undiscard_breakpoints(void)
 	/* This routine is called after a call to discard_breakpoints,
 	 * when we want to re-take breakable line into account
 	 */
-	
+
 	/* We remove 1 from current value. So if we have the following scheme,
 	 * the breakpoints remain discarded after the first call to
 	 * undiscard_breakpoints.
-	 * 
+	 *
 	 * discard_breakpoints
 	 * ...
 	 *    discard_breakpoints
@@ -446,7 +446,7 @@ rt_public void drun(BODY_INDEX body_id)
 	context = dtop();				/* Active execution context */
 	CHECK("context not null", context);
 	context->dc_body_id = body_id;	/* Make sure we know who this is */
-	
+
 	dsync();						/* Initialize cached data */
 }
 
@@ -459,7 +459,7 @@ rt_public void dostk(EIF_CONTEXT_NOARG)
 
 	RT_GET_CONTEXT
 	struct dcall *context;		/* Current calling context */
-	
+
 	context = dtop();
 	CHECK("context not null", context);
 	context->dc_cur = op_stack.st_cur;	/* Value suitable for sync_registers */
@@ -558,7 +558,7 @@ rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
 
 #ifdef EIF_RTDBG_DEBUG
 #define RTDBG_MACRO2(cond,d) d
-#define RTDBG_MACRO(code) 
+#define RTDBG_MACRO(code)
 #else
 #define RTDBG_MACRO2(cond,d) cond
 #define RTDBG_MACRO(code) code
@@ -571,7 +571,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 	/* update execution stack with current line number, i.e. offset */
 	exvect->ex_linenum = break_index;
 	exvect->ex_bpnested = 0;
-			
+
 	if (debug_mode) {
 		RT_GET_CONTEXT
 		EIF_GET_CONTEXT	/* Not declared at the beginning because we only need it here.
@@ -586,7 +586,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 				BODY_INDEX bodyid = exvect->ex_bodyid;
 
 				DBGMTX_LOCK;	/* Enter critical section */
-	 
+
 				if (should_be_interrupted() && dinterrupt()) {	/* Ask daemon whether application should be interrupted here.*/
 						/* update previous value for next call */
 					previous_bodyid = bodyid;
@@ -605,7 +605,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 					previous_bodyid = bodyid;
 					previous_break_index = break_index;
 					stopped = 1;
-				} 
+				}
 				if (already_warned) {
 					if (d_data.db_callstack_depth < critical_stack_depth) {
 						already_warned = 0;
@@ -628,7 +628,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 	/* The debuggee does not always stop on breakpoint (conditional bp)
 	 * then we should not reset `db_callstack_depth_stop' value !!
 	 *
-	 * 				d_data.db_callstack_depth_stop = 0;	
+	 * 				d_data.db_callstack_depth_stop = 0;
 	 */
 					safe_dbreak(PG_BREAK);
 						/* update previous value for next call (if it's a nested call) */
@@ -650,7 +650,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 n
 	/* update execution stack with current line number, i.e. offset */
 	exvect->ex_bpnested = nested_break_index;
 
-	if (debug_mode) {	
+	if (debug_mode) {
 		RT_GET_CONTEXT
 		EIF_GET_CONTEXT	/* Not declared at the beginning because we only need it here.
 	   					* As dstop if called even when the application is not launched
@@ -663,7 +663,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 n
 			if (!BREAKPOINTS_DISCARDED) {
 				BODY_INDEX bodyid = exvect->ex_bodyid;
 				DBGMTX_LOCK;	/* Enter critical section */
-					
+
 				if (previous_bodyid == bodyid && previous_break_index == break_index) {
 					/* We are in a middle of a qualified call, then ignore stop */
 				} else {
@@ -812,8 +812,8 @@ rt_public void dsetbreak(BODY_INDEX body_id, int offset, int what)
 		case DT_SET_STACK:
 			/* set the minimum stack depth.. if the stack depth is below than */
 			/* depth_stop, application  will stop (step by step, step out) */
-			d_data.db_callstack_depth_stop = d_data.db_callstack_depth + offset; 
-				/* offset = (wanted stack depth stop) - (current stack depth) 
+			d_data.db_callstack_depth_stop = d_data.db_callstack_depth + offset;
+				/* offset = (wanted stack depth stop) - (current stack depth)
 					if 0 : step next
 					if -1 : step out
 				*/
@@ -856,7 +856,7 @@ rt_private int is_dbreak_set(BODY_INDEX body_id, uint32 offset)
 
 		/* we have found the good feature, now look for the good offset */
 		for (curr_offset = search_start_offset; (curr_offset != NULL)&&(curr_offset->offset < offset); curr_offset = curr_offset->next) {}
-	
+
 		/* update last_offset & last_offset_list */
 		curr_bpinfo->last_offset = offset;
 
@@ -904,7 +904,7 @@ rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 	if (curr_bpinfo != NULL) {
 		/* we have found the good feature, now look for the good offset */
 		for (curr_offset = curr_bpinfo->first_offset; (curr_offset != NULL)&&(curr_offset->offset < offset); curr_offset = curr_offset->next) {}
-		
+
 		if (curr_offset!=NULL && curr_offset->offset==offset) {
 			/* we have found the good feature & the good offset. seems the breakpoint
 			 * already exists. the job is done !!!
@@ -920,7 +920,7 @@ rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 			} else {
 				new_offset->offset = offset;
 				new_offset->next = curr_offset;
-					
+
 					/* first we go to the previous item in the list, in order to link our */
 					/* new offset to the previous item */
 				old_offset = curr_offset; /* save current offset */
@@ -985,7 +985,7 @@ rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 	if (curr_bpinfo != NULL) {
 		/* we have found the good feature, now look for the good offset */
 		curr_offset = curr_bpinfo->first_offset;
-		
+
 		/* is the first offset in the list the good one ? */
 		if (curr_offset->offset == offset) {
 			/* YEP ! it is */
@@ -997,7 +997,7 @@ rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 		} else {
 			/* no, so let's find it */
 			for (curr_offset = curr_bpinfo->first_offset; (curr_offset->next != NULL)&&(curr_offset->next->offset != offset); curr_offset = curr_offset->next) {}
-			
+
 			if (curr_offset->next != NULL) {
 				old_offset = curr_offset->next; /* that's the one we were looking for */
 				curr_offset->next = old_offset->next; /* remove the offset from the list */
@@ -1037,7 +1037,7 @@ rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset)
 /*------------------------------------------------------------------------*/
 /* clear all breakpoints from the table.                                  */
 /**************************************************************************/
-rt_public void dbreak_clear_table(void) 
+rt_public void dbreak_clear_table(void)
 {
 	struct db_bpinfo 	*curr_bpinfo;
 	int hash_code;
@@ -1071,7 +1071,7 @@ rt_private void dbreak_create_table(void)
 	d_globaldata.db_bpinfo = (struct db_bpinfo **)cmalloc(BP_TABLE_SIZE*sizeof(struct db_bpinfo *));
 	if (d_globaldata.db_bpinfo == NULL)
 		enomem();
-	
+
 	/* wipe out the allocated structure */
 	memset((char *)d_globaldata.db_bpinfo, 0, BP_TABLE_SIZE*sizeof(struct db_bpinfo *));
 }
@@ -1165,7 +1165,7 @@ rt_shared void escontext(EIF_CONTEXT int why)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-		
+
 	memcpy (&d_cxt.pg_debugger, &db_stack, sizeof(struct dbstack));
 	memcpy (&d_cxt.pg_interp, &op_stack, sizeof(struct opstack));
 	memcpy (&d_cxt.pg_stack, &eif_stack, sizeof(struct xstack));
@@ -1199,14 +1199,14 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	struct dcall *context;			/* Current calling context */
 
-	if (!d_cxt.pg_interp.st_top) { 
+	if (!d_cxt.pg_interp.st_top) {
 		/* if st_top is not NULL, there might be a memory leak
 		 * indeed, the op_stack might have allocated more than one chunk
 		 */
 
 		/* we clean the stack allocated in interp.c:opush(..) */
 		opstack_reset (&op_stack);
-	}	
+	}
 
 	memcpy (&db_stack, &d_cxt.pg_debugger, sizeof(struct dbstack));
 	memcpy (&op_stack, &d_cxt.pg_interp, sizeof(struct opstack));
@@ -1319,7 +1319,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 
 	RT_GET_CONTEXT
 	struct dcall *top = db_stack.st_top;	/* Top of stack */
-	
+
 	/* Stack created at initialization time via initdb */
 
 	if (db_stack.st_end == top) {
@@ -1363,7 +1363,7 @@ rt_private int dbstack_extend(register int size)
 	RT_GET_CONTEXT
 	struct dcall *arena;		/* Address for the arena */
 	struct stdchunk *chunk;	/* Address of the chunk */
-	
+
 	size *= CALL_SZ;
 	size += sizeof(*chunk);
 	chunk = (struct stdchunk *) cmalloc(size);
@@ -1392,7 +1392,7 @@ rt_public struct dcall *dpop(void)
 	/* Removes one item from the debugging stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
 	 */
-	
+
 	RT_GET_CONTEXT
 	struct dcall *top = db_stack.st_top;	/* Top of the stack */
 	struct stdchunk *s;			/* To walk through stack chunks */
@@ -1410,7 +1410,7 @@ rt_public struct dcall *dpop(void)
 	}
 
 	/* Unusual case: top is just in the first place of next chunk */
-	
+
 	SIGBLOCK;
 	s = db_stack.st_cur = db_stack.st_cur->sk_prev;
 
@@ -1469,7 +1469,7 @@ rt_private void npop(register int nb_items)
 		else
 			break;						/* We reached the bottom */
 	}
-		
+
 	CHECK("s not null", s);
 
 		/* Update the stack structure */
@@ -1495,7 +1495,7 @@ rt_public struct dcall *dtop(void)
 	last_item = db_stack.st_top - 1;
 	if (last_item >= db_stack.st_cur->sk_arena)
 		return last_item;
-	
+
 	/* It seems the current top of the stack (i.e. the next free location)
 	 * is at the left edge of a chunk. Look for previous chunk then...
 	 */
@@ -1508,7 +1508,7 @@ rt_public struct dcall *dtop(void)
 	if (prev == (struct stdchunk *) 0)
 		eif_panic("debugging stack is empty");
 #endif
-	
+
 	return prev->sk_end - 1;			/* Last item of previous chunk */
 }
 
@@ -1580,7 +1580,7 @@ rt_private void call_down(int level)
 	 */
 
 	RT_GET_CONTEXT
-		
+
 	if (d_cxt.pg_index - level < 1)
 		level = d_cxt.pg_index - 1;
 
@@ -1612,7 +1612,7 @@ rt_private void call_up(int level)
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This will make this "pushing" efficient.
 	 */
-	
+
 	end = db_stack.st_cur->sk_end;
 	top = db_stack.st_top;
 	top += l_level;				/* Hopefully, we remain in current chunk */
@@ -1661,7 +1661,7 @@ rt_shared char *dview(EIF_REFERENCE root)
 	 */
 
 	char *out;					/* Where out form is stored */
-	
+
 	out = build_out (root);
 	return out;		/* To-be-freed pointer to the tagged out representation */
 }
@@ -1683,7 +1683,7 @@ rt_public void drecord_bc(BODY_INDEX old_body_id, BODY_INDEX body_id, unsigned c
 #ifdef DEBUG
 	dprintf(4) ("drecord_bc: recording 0x%lx (%d), idx: %d, id: %d\n", addr, body_id, old_body_id, body_id);
 #endif
-	
+
 	if (egc_frozen[old_body_id]) {			/* The routine was frozen */
 		mpatidtab[body_id] = 				/* Get the pattern id from the */
 			egc_fpatidtab[old_body_id];		/* frozen table of pattern ids */
@@ -1768,7 +1768,7 @@ rt_public EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, regis
 		iget();							/* on the operational stack */
 
 	OLD_IC = IC;				/* IC back up */
-	if (egc_frozen [body_id]) { 
+	if (egc_frozen [body_id]) {
 			/* Frozen feature */
 		pid = (uint32) FPatId(body_id);
 		(pattern[pid].toc)(egc_frozen[body_id]);		/* Call pattern */
@@ -1781,8 +1781,8 @@ rt_public EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, regis
 								/* and remove it from the operational stack */
 }
 
-/************************************************************************ 
- * FILE:    newdebug.c 
+/************************************************************************
+ * FILE:    newdebug.c
  * PURPOSE: functions to handle local variables and arguments recording
  *          and displaying
  * AUTHOR:  Jerome BOUAZIZ - Arnaud PICHERY
@@ -1827,7 +1827,7 @@ rt_public EIF_TYPED_ADDRESS *c_stack_allocate(EIF_CONTEXT register int size)
 rt_public void insert_local_var (uint32 type, void *ptr)
 {
 	EIF_TYPED_ADDRESS *new_local;
-	
+
 	/* insert new local variable/argument on the stack */
 	new_local = c_opush((EIF_TYPED_ADDRESS *)0);
 	new_local->type = type;
@@ -1849,7 +1849,7 @@ rt_public EIF_TYPED_ADDRESS *c_opush(EIF_CONTEXT register EIF_TYPED_ADDRESS *val
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	EIF_TYPED_ADDRESS *top = cop_stack.st_top;	/* Top of stack */
-	
+
 	if (top == (EIF_TYPED_ADDRESS *) 0)	{			/* No stack yet? */
 		top = c_stack_allocate(eif_stack_chunk);	/* Create one */
 		if (top == (EIF_TYPED_ADDRESS *) 0)	 		/* Could not create stack */
@@ -2021,7 +2021,7 @@ rt_public void c_npop(register int nb_items)
 		else
 			break;						/* We reached the bottom */
 	}
-		
+
 	CHECK("s not null", s);
 
 	/* Update the stack structure */
@@ -2047,7 +2047,7 @@ rt_public EIF_TYPED_ADDRESS *c_otop(EIF_CONTEXT_NOARG)
 	 * stack is empty. I assume a value has already been pushed (i.e. the
 	 * stack has been created).
 	 */
-	
+
 	EIF_GET_CONTEXT
 	EIF_TYPED_ADDRESS *last_item;		/* Address of last item stored */
 	struct c_stochunk *prev;		/* Previous chunk in stack */
@@ -2055,7 +2055,7 @@ rt_public EIF_TYPED_ADDRESS *c_otop(EIF_CONTEXT_NOARG)
 	last_item = cop_stack.st_top - 1;
 	if (last_item >= cop_stack.st_cur->sk_arena)
 		return last_item;
-	
+
 	/* It seems the current top of the stack (i.e. the next free location)
 	 * is at the left edge of a chunk. Look for previous chunk then...
 	 */
@@ -2065,13 +2065,13 @@ rt_public EIF_TYPED_ADDRESS *c_otop(EIF_CONTEXT_NOARG)
 	if (prev == (struct c_stochunk *) 0)
 		eif_panic("operational stack is empty");
 #endif
-	
+
 	return prev->sk_end - 1;			/* Last item of previous chunk */
 }
 
 rt_public EIF_TYPED_ADDRESS *c_oitem(uint32 n)
 	{
-	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */ 
+	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */
 	/* stack is empty. It assumes a value has already been pushed (i.e. the stack has been created). */
 	EIF_GET_CONTEXT
 	EIF_TYPED_ADDRESS		*access_item;	/* Address of item we try to access */
@@ -2096,7 +2096,7 @@ rt_public EIF_TYPED_ADDRESS *c_oitem(uint32 n)
 		access_item = prev->sk_end - (curr->sk_arena - access_item);
 		}
 	while (access_item < prev->sk_arena);
-		
+
 	return access_item;
 	}
 
@@ -2174,8 +2174,8 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 
 	if (exec_recording_enabled == 1) {
 		EIF_GET_CONTEXT
-		if (is_inside_rt_eiffel_code == 0 && rt_extension_obj != NULL && ~in_assertion) {	
-			/* Disabled if 
+		if (is_inside_rt_eiffel_code == 0 && rt_extension_obj != NULL && ~in_assertion) {
+			/* Disabled if
 			 * 		- inside rt eiffel code
 			 * 		- rt_extension_obj NULL
 			 * 		- inside assertion
@@ -2195,31 +2195,31 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+1)->it_r  = ((EIF_REFERENCE) ref);
 			RTAR(rtd_arg.it_r,ref);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) i1);
-			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) i2); 
-			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) i3); 
-			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) i2);
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) i3);
+			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);
 			RT_GC_WEAN(rtd_arg.it_r);
 			RT_GC_WEAN(ref);      /* Unprotect `ref'. No more collection is expected. */
 			RTDBG_MACRO(c_check_assert (rtdbg_asserting));
 			}
 			RT_EXIT_EIFFELCODE;
-		};	
-	};	
+		};
+	};
 }
-rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_static_type, int32 a_feat_id, int a_dyn_type,  
+rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_static_type, int32 a_feat_id, int a_dyn_type,
 		uint32 a_rt_type, char a_expanded, char a_precompiled, char a_melted)
 {
 
 	if (exec_recording_enabled == 1) {
 		EIF_GET_CONTEXT
-		if (is_inside_rt_eiffel_code == 0 && rt_extension_obj != NULL && ~in_assertion) {	
-			/* Disabled if 
+		if (is_inside_rt_eiffel_code == 0 && rt_extension_obj != NULL && ~in_assertion) {
+			/* Disabled if
 			 * 		- inside rt eiffel code
 			 * 		- rt_extension_obj NULL
 			 * 		- inside assertion
 			 */
 
-			EIF_TYPED_VALUE rtd_arg;						
+			EIF_TYPED_VALUE rtd_arg;
 			EIF_TYPED_VALUE rtd_op;
 			long l_pos = 0;
 
@@ -2257,17 +2257,17 @@ rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_
 			RTAR(rtd_arg.it_r,ref);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) dep);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) l_pos);
-			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) a_rt_type); 
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) a_rt_type);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+5)->it_i4 = ((EIF_INTEGER_32) (a_expanded + (a_precompiled << 1) + (a_melted << 2)) );
 
-			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
+			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);
 			RT_GC_WEAN(rtd_arg.it_r);
 			RT_GC_WEAN(ref);      /* Unprotect `ref'. No more collection is expected. */
 			RTDBG_MACRO(c_check_assert (rtdbg_asserting));
 			}
 			RT_EXIT_EIFFELCODE;
-		};	
-	};	
+		};
+	};
 }
 
 
@@ -2275,7 +2275,7 @@ extern EIF_DEBUG_VALUE stack_debug_value(uint32 stack_depth, uint32 loc_type, ui
 
 rt_public EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type)
 {
-	/* 
+	/*
 	 * Get value for stack variable of type `loc_type' at position `loc_number', in the stack of depth `stack_depth'
 	 */
 
@@ -2306,18 +2306,18 @@ rt_public EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type,
 				*(EIF_BOOLEAN *) new_obj = val;
 				return new_obj;
 			}
-		case SK_CHAR:
+		case SK_CHAR8:
 			{
-				EIF_CHARACTER val = (EIF_CHARACTER) ip.value.it_c1;
+				EIF_CHARACTER_8 val = (EIF_CHARACTER_8) ip.value.it_c1;
 				new_obj = RTLN(egc_char_dtype);
-				*(EIF_CHARACTER *) new_obj = val;
+				*(EIF_CHARACTER_8 *) new_obj = val;
 				return new_obj;
 			}
-		case SK_WCHAR:
+		case SK_CHAR32:
 			{
-				EIF_WIDE_CHAR val = (EIF_WIDE_CHAR) ip.value.it_c4;
+				EIF_CHARACTER_32 val = (EIF_CHARACTER_32) ip.value.it_c4;
 				new_obj = RTLN(egc_wchar_dtype);
-				*(EIF_WIDE_CHAR *) new_obj = val;
+				*(EIF_CHARACTER_32 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_UINT8:
@@ -2409,7 +2409,7 @@ rt_public EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type,
 
 rt_public int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE* new_value)
 {
-	/* 
+	/*
 	 * Set value for stack variable of type `loc_type' at position `loc_number', in the stack of depth `stack_depth'
 	 */
 
@@ -2441,8 +2441,8 @@ rt_public int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint3
 #endif
 		switch (new_value->type & SK_HEAD) {
 		case SK_BOOL: *(EIF_BOOLEAN *)(ip.address) = new_value->it_bool; break;
-		case SK_CHAR: *(EIF_CHARACTER *)(ip.address) = new_value->it_char; break;
-		case SK_WCHAR: *(EIF_WIDE_CHAR *)(ip.address) = new_value->it_wchar; break;
+		case SK_CHAR8: *(EIF_CHARACTER_8 *)(ip.address) = new_value->it_char; break;
+		case SK_CHAR32: *(EIF_CHARACTER_32 *)(ip.address) = new_value->it_wchar; break;
 		case SK_UINT8: *(EIF_NATURAL_8 *)(ip.address) = new_value->it_uint8; break;
 		case SK_UINT16: *(EIF_NATURAL_16 *)(ip.address) = new_value->it_uint16; break;
 		case SK_UINT32: *(EIF_NATURAL_32 *)(ip.address) = new_value->it_uint32; break;

@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -97,7 +97,7 @@ extern void print_object (EIF_REFERENCE object);
 								   allocated */
 
 /* Constants used for generic conformance in version 5.4 and older. */
-#define OLD_CHARACTER_TYPE		-2
+#define OLD_CHARACTER_8_TYPE	-2
 #define OLD_BOOLEAN_TYPE		-3
 #define OLD_INTEGER_32_TYPE		-4
 #define OLD_REAL_32_TYPE		-5
@@ -108,13 +108,13 @@ extern void print_object (EIF_REFERENCE object);
 #define OLD_INTEGER_8_TYPE		-16
 #define OLD_INTEGER_16_TYPE		-17
 #define OLD_INTEGER_64_TYPE		-18
-#define OLD_WIDE_CHAR_TYPE		-19
+#define OLD_CHARACTER_32_TYPE	-19
 #define OLD_FORMAL_TYPE			-32
 #define OLD_EXPANDED_LEVEL		-256
 
 /* Constants used for TUPLE type identification in version 5.4 and older. */
 #define OLD_EIF_BOOLEAN_CODE	'b'
-#define OLD_EIF_CHARACTER_CODE	'c'
+#define OLD_EIF_CHARACTER_8_CODE	'c'
 #define OLD_EIF_REAL_64_CODE	'd'
 #define OLD_EIF_REAL_32_CODE	'f'
 #define OLD_EIF_INTEGER_CODE	'i'
@@ -124,7 +124,7 @@ extern void print_object (EIF_REFERENCE object);
 #define OLD_EIF_INTEGER_8_CODE	'j'
 #define OLD_EIF_INTEGER_16_CODE	'k'
 #define OLD_EIF_INTEGER_64_CODE	'l'
-#define OLD_EIF_WIDE_CHAR_CODE	'u'
+#define OLD_EIF_CHARACTER_32_CODE	'u'
 
 /* Convenience to extract flags and dtype from stored flags. */
 #define Split_flags_dtype(flags,dtype,store_flags)	\
@@ -467,7 +467,7 @@ rt_shared void eif_retrieve_thread_init (void)
 #endif
 
 /* Initialize retrieve function pointers and globals */
- 
+
 rt_public void rt_init_retrieve(size_t (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size)
 {
 		/* Storing the previous state of the retrieving operation before the new one start */
@@ -483,9 +483,9 @@ rt_public void rt_init_retrieve(size_t (*retrieve_function) (void), int (*char_r
 	if (buf_size)
 		buffer_size = buf_size;
 }
- 
+
 /* Reset retrieve function pointers and globals to their default values */
- 
+
 rt_public void rt_reset_retrieve(void) {
 	RT_GET_CONTEXT
 	retrieve_read_func = old_retrieve_read_func;
@@ -600,7 +600,7 @@ rt_private type_descriptor *type_description (EIF_TYPE_INDEX old_type)
 	type_descriptor *result;
 	EIF_TYPE_INDEX i = type_conversions->type_index[old_type];
 	if (i == TYPE_UNDEFINED)
-		eraise("unknown type", EN_RETR);	
+		eraise("unknown type", EN_RETR);
 	result = type_conversions->descriptions + i;
 	return result;
 }
@@ -616,7 +616,7 @@ rt_private type_descriptor *type_description_for_new (
 			result = conv;
 	}
 	if (result == NULL)
-		eraise("unknown type", EN_RETR);	
+		eraise("unknown type", EN_RETR);
 	return result;
 }
 
@@ -1041,7 +1041,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 			independent_retrieve_init (RETRIEVE_BUFFER_SIZE);
 			break;
 		default: 			/* If not one of the above, error!! */
-			eraise("invalid retrieve type", EN_RETR);	
+			eraise("invalid retrieve type", EN_RETR);
 	}
 
 		/* We read the Store properties which have appeared after revision 6.6 of the storable mechanism. */
@@ -1104,7 +1104,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 #endif
 	nb_recorded = 0;
 	switch (rt_kind) {
-		case GENERAL_STORE: 
+		case GENERAL_STORE:
 			free_sorted_attributes();
 			break;
 		case INDEPENDENT_STORE:
@@ -1135,7 +1135,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 	return retrieved;
 }
 
-rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)) 
+rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int))
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
@@ -1428,7 +1428,7 @@ rt_private uint32 special_generic_type (EIF_TYPE_INDEX dtype)
 	int nb_gen;
 	char *vis_name = System (dtype).cn_generator;
 	struct cecil_info *info;
-	
+
 		/* Special cannot be expanded, thus we only look in `egc_ce_type'. */
 	info = (struct cecil_info *) ct_value (&egc_ce_type, vis_name);
 
@@ -1474,8 +1474,8 @@ rt_private uint32 rt_special_element_size(int is_tuple, EIF_TYPE_INDEX dtype) {
 				case SK_INT16: elm_size = sizeof (EIF_INTEGER_16); break;
 				case SK_INT32: elm_size = sizeof (EIF_INTEGER_32); break;
 				case SK_INT64: elm_size = sizeof (EIF_INTEGER_64); break;
-				case SK_CHAR: elm_size = sizeof (EIF_CHARACTER); break;
-				case SK_WCHAR: elm_size = sizeof (EIF_WIDE_CHAR); break;
+				case SK_CHAR8: elm_size = sizeof (EIF_CHARACTER_8); break;
+				case SK_CHAR32: elm_size = sizeof (EIF_CHARACTER_32); break;
 				case SK_BOOL: elm_size = sizeof (EIF_BOOLEAN); break;
 				case SK_REAL32: elm_size = sizeof (EIF_REAL_32); break;
 				case SK_REAL64: elm_size = sizeof (EIF_REAL_64); break;
@@ -1549,7 +1549,7 @@ rt_shared EIF_REFERENCE rt_nmake(long int objectCount)
 		rt_clean();				/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
 #ifdef ISE_GC
-		rt_g_data.status = g_status;	/* If a crash occurs, since we disable the GC, 
+		rt_g_data.status = g_status;	/* If a crash occurs, since we disable the GC,
 										 * we need to make sure to restore the status
 										 * to what it originally was. */
 #endif
@@ -1614,7 +1614,7 @@ rt_shared EIF_REFERENCE rt_nmake(long int objectCount)
 				xraise(EN_MEM);
 			}
 		}
-		
+
 
 			/* Record the new object in hector table */
 		new_hector = hrecord(newadd);
@@ -1623,7 +1623,7 @@ rt_shared EIF_REFERENCE rt_nmake(long int objectCount)
 			/* Update unsolved references on `newadd' */
 		rt_update1 (oldadd, new_hector);
 
-		if (nb_byte > 0) {		
+		if (nb_byte > 0) {
 				/* Read the object's body */
 			buffer_read(newadd, nb_byte);
 			CHECK("Special attributes preserved", !RT_IS_SPECIAL(newadd) || (((uint32) RT_SPECIAL_COUNT(newadd) == spec_count) && ((uint32)RT_SPECIAL_ELEM_SIZE(newadd) == spec_elem_size) && ((uint32)RT_SPECIAL_CAPACITY(newadd) == spec_capacity)));
@@ -2051,7 +2051,7 @@ rt_private EIF_REFERENCE rrt_nmake (long int objectCount)
 rt_private void rt_clean(void)
 {
 	/* Clean the data structure before raising an exception of code `code'
-	 * after having cleaned the hash table 
+	 * after having cleaned the hash table
 	 * and allocated memory and reset function pointers. */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
@@ -2122,7 +2122,7 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 	struct rt_struct *rt_info, *rt_solved;
 	struct rt_cell *rt_unsolved, *next;
 	EIF_REFERENCE  client = NULL, supplier = NULL;
-	
+
 
 	rt_info = (struct rt_struct *) ht_first(rt_table, key);
 
@@ -2158,7 +2158,7 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 
 		eif_rt_xfree((char *) rt_unsolved);		/* Free reference solving cell */
 		rt_info->rt_list = next;			/* Unlink from list */
-		rt_unsolved = next;	
+		rt_unsolved = next;
 	}
 
 	/* Put the new hector pointer as a solved reference in the hash table */
@@ -2266,8 +2266,8 @@ update:
 					 * to it. */
 				rt_update2(old, reference, parent);	/* Recursion */
 				continue;
-			} 
-		} 
+			}
+		}
 			/* Update reference value to new value in retrieved system */
 		rt_subupdate(old, reference, addr, new_obj, parent);
 	}
@@ -2316,7 +2316,7 @@ rt_private void rt_subupdate (EIF_REFERENCE old, EIF_REFERENCE reference, EIF_RE
 		new_cell->next = old_cell;
 		rt_info->rt_list = new_cell;
 		rt_info->rt_status = UNSOLVED;
-		*(EIF_REFERENCE *) addr = (EIF_REFERENCE) 0; 
+		*(EIF_REFERENCE *) addr = (EIF_REFERENCE) 0;
 				/* Set to zero the unsolved reference
 				 * in order to put the object in a
 				 * stable state. */
@@ -2369,7 +2369,7 @@ rt_private void update_reference (EIF_REFERENCE object, EIF_REFERENCE *location)
 		new_cell->next = old_cell;
 		rt_info->rt_list = new_cell;
 		rt_info->rt_status = UNSOLVED;
-		*location = NULL; 
+		*location = NULL;
 	}
 }
 
@@ -2378,7 +2378,7 @@ rt_private char *next_item (char *ptr)
 	int first_char = 0;
 
 	for (;;) {
-		if (!(isspace(*(unsigned char *) ptr)) && !first_char ) 
+		if (!(isspace(*(unsigned char *) ptr)) && !first_char )
 			first_char = 1;
 		else if (isspace(*(unsigned char *)ptr) && first_char)
 			break;
@@ -2467,7 +2467,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 			uint32 j, index;
 			long *gtype, sgtype[MAX_GENERICS];
 			int32 *itype, sitype[MAX_GENERICS];
-	
+
 			if (nb_gen > MAX_GENERICS) {
 					/* Not enough space we need to allocate dynamically */
 				gtype = (long *) cmalloc (nb_gen * sizeof(long));
@@ -2494,7 +2494,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 				if (sscanf(temp_buf," %ld", &gtype[j]) != 1)
 					eise_io("General retrieve: unable to read generic information.");
 				temp_buf = next_item (temp_buf);
-					
+
 			}
 
 			for (t = info->patterns; /* empty */; /* empty */) {
@@ -2581,17 +2581,17 @@ static char *type2name (long type)
 	switch (type & SK_HEAD) {
 		case SK_EXP:     name = "expanded";       break;
 		case SK_BOOL:    name = "BOOLEAN";        break;
-		case SK_CHAR:    name = "CHARACTER";      break;
+		case SK_CHAR8:    name = "CHARACTER_8";      break;
 		case SK_UINT8:   name = "NATURAL_8";      break;
 		case SK_UINT16:  name = "NATURAL_16";     break;
-		case SK_UINT32:  name = "NATURAL_32";     break;	
+		case SK_UINT32:  name = "NATURAL_32";     break;
 		case SK_UINT64:  name = "NATURAL_64";     break;
 		case SK_INT8:    name = "INTEGER_8";      break;
 		case SK_INT16:   name = "INTEGER_16";     break;
 		case SK_INT32:   name = "INTEGER_32";     break;
 		case SK_INT64:   name = "INTEGER_64";     break;
 		case SK_REAL32:  name = "REAL_32";        break;
-		case SK_WCHAR:   name = "WIDE_CHARACTER"; break;
+		case SK_CHAR32:   name = "CHARACTER_32"; break;
 		case SK_REAL64:  name = "REAL_64";        break;
 		case SK_BIT:     name = "BIT";            break;
 		case SK_POINTER: name = "POINTER";        break;
@@ -2689,7 +2689,7 @@ rt_private void print_attribute_type (EIF_TYPE_INDEX *gtypes)
 {
 	int i = 0;
 	EIF_TYPE_INDEX *typearr = gtypes;
-	
+
 	for (; (*typearr != TERMINATOR); ) {
 		printf ("%s%s", i==0 ? "" : i==1 ? " [" : ", ",
 				name_of_attribute_type (&typearr));
@@ -2719,7 +2719,7 @@ rt_shared char *generic_name (int32 gtype, int old_types)
 				result = type_description ((EIF_TYPE_INDEX) (gtype & SK_DTYPE))->name;
 			break;
 		case SK_BOOL:    result = "BOOLEAN";        break;
-		case SK_CHAR:    result = "CHARACTER";      break;
+		case SK_CHAR8:    result = "CHARACTER_8";      break;
 		case SK_UINT8:   result = "NATURAL_8";      break;
 		case SK_UINT16:  result = "NATURAL_16";     break;
 		case SK_UINT32:  result = "NATURAL_32";     break;
@@ -2729,7 +2729,7 @@ rt_shared char *generic_name (int32 gtype, int old_types)
 		case SK_INT32:   result = "INTEGER_32";     break;
 		case SK_INT64:   result = "INTEGER_64";     break;
 		case SK_REAL32:  result = "REAL_32";        break;
-		case SK_WCHAR:   result = "WIDE_CHARACTER"; break;
+		case SK_CHAR32:   result = "CHARACTER_32"; break;
 		case SK_REAL64:  result = "REAL_64";        break;
 		case SK_POINTER: result = "POINTER";        break;
 		case SK_REF:     result = "REFERENCE";      break;
@@ -2737,7 +2737,7 @@ rt_shared char *generic_name (int32 gtype, int old_types)
 			sprintf (buffer, "UNKNOWN (0x%08x)", gtype);
 			result = buffer;
 			break;
-						 
+
 	}
 	return result;
 }
@@ -2854,7 +2854,7 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 		} else if (aftype < 0) {
 				/* Former encoding has a special encoding for basic types, new one doesn't need it. */
 			switch (aftype) {
-				case OLD_CHARACTER_TYPE: result = (dftype == egc_char_dtype); break;
+				case OLD_CHARACTER_8_TYPE: result = (dftype == egc_char_dtype); break;
 				case OLD_BOOLEAN_TYPE: result = (dftype == egc_bool_dtype); break;
 				case OLD_INTEGER_8_TYPE: result = (dftype == egc_int8_dtype); break;
 				case OLD_INTEGER_16_TYPE: result = (dftype == egc_int16_dtype); break;
@@ -2863,7 +2863,7 @@ rt_private int old_attribute_type_matched (EIF_TYPE_INDEX **gtype, EIF_TYPE_INDE
 				case OLD_REAL_32_TYPE: result = (dftype == egc_real32_dtype); break;
 				case OLD_REAL_64_TYPE: result = (dftype == egc_real64_dtype); break;
 				case OLD_POINTER_TYPE: result = (dftype == egc_point_dtype); break;
-				case OLD_WIDE_CHAR_TYPE: result = (dftype == egc_wchar_dtype); break;
+				case OLD_CHARACTER_32_TYPE: result = (dftype == egc_wchar_dtype); break;
 				default:
 					result = 0;
 			}
@@ -2976,7 +2976,7 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 				} else {
 					if (aftype == FORMAL_TYPE) {
 						EIF_TYPE_INDEX l_pos;
-						
+
 							/* Get the formal position in the stored system. */
 						(*atype)++;
 						l_pos = **atype;
@@ -3023,7 +3023,7 @@ rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_p
 					/* Reallocate array to allow ranges between `0' and `(i + 1) + 1'. */
 				if (l_count >= CIDARR_SIZE) {
 						/* Let's resize our existing allocated `l_cid' array by 1.5 times. */
-					l_count = (2 * (i + 3)) / 2; 
+					l_count = (2 * (i + 3)) / 2;
 					l_cid = (EIF_TYPE_INDEX *) realloc (l_cid, l_count * sizeof(EIF_TYPE_INDEX));
 					if (!l_cid) {
 						xraise(EN_MEM);
@@ -3443,7 +3443,7 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 	int result = 0;
 	char *l_storable_version, *l_new_storable_version;
 	char *name = class_translation_lookup (conv->name);
-	struct cecil_info *ginfo = cecil_info (conv, name); 
+	struct cecil_info *ginfo = cecil_info (conv, name);
 	if (ginfo != NULL && ginfo->nb_param == conv->generic_count) {
 		if (ginfo->nb_param > 0) {
 			/* Generic class in storing and retrieving systems */
@@ -3625,11 +3625,11 @@ rt_private void rread_attribute (attribute_detail *a)
 	a->name = (char *) eif_rt_xmalloc (name_length + 1, C_T, GC_OFF);
 	if (a->name == NULL)
 		xraise (EN_MEM);
-	ridr_multi_char ((EIF_CHARACTER *) a->name, name_length);
+	ridr_multi_char ((EIF_CHARACTER_8 *) a->name, name_length);
 	a->name[name_length] = '\0';
 
 	/* Reader attribute basic type */
-	ridr_multi_char ((EIF_CHARACTER *) &basic_type, 1);
+	ridr_multi_char ((EIF_CHARACTER_8 *) &basic_type, 1);
 	a->basic_type = ((uint32) basic_type << 24);
 	if (a->basic_type == SK_BIT)
 		eraise ("BIT type unsupported", EN_RETR);
@@ -3666,7 +3666,7 @@ rt_private void rread_type (EIF_TYPE_INDEX type_index)
 	vis_name = (char *) eif_rt_xmalloc (name_length + 1, C_T, GC_OFF);
 	if (vis_name == NULL)
 		xraise (EN_MEM);
-	ridr_multi_char ((EIF_CHARACTER *) vis_name, name_length);
+	ridr_multi_char ((EIF_CHARACTER_8 *) vis_name, name_length);
 	vis_name[name_length] = '\0';
 	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
 		ridr_multi_int32 (&flags, 1);
@@ -3686,7 +3686,7 @@ rt_private void rread_type (EIF_TYPE_INDEX type_index)
 			l_storable_version = (char *) eif_rt_xmalloc (l_length + 1, C_T, GC_OFF);
 			if (l_storable_version == NULL)
 				xraise (EN_MEM);
-			ridr_multi_char ((EIF_CHARACTER *) l_storable_version, l_length);
+			ridr_multi_char ((EIF_CHARACTER_8 *) l_storable_version, l_length);
 			l_storable_version[l_length] = '\0';
 		} else {
 			l_storable_version = NULL;
@@ -3838,7 +3838,7 @@ rt_private size_t readline (register char *ptr, size_t maxlen)
 	*ptr = '\0';
 	return num_char;
 }
-		
+
 rt_private void buffer_read (register char *ptr, size_t size)
 {
 	RT_GET_CONTEXT
@@ -3909,7 +3909,7 @@ rt_public size_t retrieve_read_with_compression (void)
 	char* ptr = (char *)0;
 	int read_size = 0;
 	int part_read = 0;
-	
+
 	if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < (int) EIF_CMPS_HEAD_SIZE)
 		eise_io("Retrieve: compression header mismatch.");
 	pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
@@ -3919,7 +3919,7 @@ rt_public size_t retrieve_read_with_compression (void)
 	memcpy(ptr, cmps_head, EIF_CMPS_HEAD_SIZE);
 	ptr += EIF_CMPS_HEAD_SIZE;
 	read_size = dcmps_in_size;
-	
+
 	while (read_size > 0) {
 		part_read = char_read_func (ptr, read_size);
 		if (part_read <= 0) {
@@ -3930,15 +3930,15 @@ rt_public size_t retrieve_read_with_compression (void)
 		read_size -= part_read;
 		ptr += part_read;
 	}
-	
+
 	dcmps_in_ptr = cmps_general_buffer;
 	dcmps_out_ptr = general_buffer;
-	
+
 	eif_decompress ((unsigned char*)dcmps_in_ptr,
 					(unsigned long)dcmps_in_size,
 					(unsigned char*)dcmps_out_ptr,
 					(unsigned long*)&dcmps_out_size);
-	
+
 	CHECK("dcmps_out_size_positive", dcmps_out_size > 0);
 	return (size_t) dcmps_out_size;
 }
@@ -3981,12 +3981,12 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 				case SK_INT16: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_16)); break;
 				case SK_INT32: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_32)); break;
 				case SK_INT64: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_64)); break;
-				case SK_WCHAR: buffer_read(object + attrib_offset, sizeof(EIF_WIDE_CHAR)); break;
+				case SK_CHAR32: buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER_32)); break;
 				case SK_REAL32: buffer_read(object + attrib_offset, sizeof(EIF_REAL_32)); break;
 				case SK_REAL64: buffer_read(object + attrib_offset, sizeof(EIF_REAL_64)); break;
 				case SK_BOOL:
-				case SK_CHAR:
-					buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER));
+				case SK_CHAR8:
+					buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER_8));
 					break;
 				case SK_BIT:
 						{
@@ -4058,10 +4058,10 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 					case SK_INT32: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_32)); break;
 					case SK_INT64: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_INTEGER_64)); break;
 					case SK_BOOL:
-					case SK_CHAR:
-						buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_CHARACTER));
+					case SK_CHAR8:
+						buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_CHARACTER_8));
 						break;
-					case SK_WCHAR: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_WIDE_CHAR)); break;
+					case SK_CHAR32: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_CHARACTER_32)); break;
 					case SK_REAL32: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_REAL_32)); break;
 					case SK_REAL64: buffer_read(object, (rt_uint_ptr) count*sizeof(EIF_REAL_64)); break;
 					case SK_EXP: {
@@ -4127,7 +4127,7 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 					}
 				}
 			}
-		} 
+		}
 	}
 }
 
@@ -4326,28 +4326,28 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_BOOLEAN *) old_value = value.vbool;
 				}
 				break;
-			case SK_CHAR:
+			case SK_CHAR8:
 				ridr_multi_char (&value.vchar, 1);
 				if (attr_address != NULL)
-					*(EIF_CHARACTER *) attr_address = value.vchar;
+					*(EIF_CHARACTER_8 *) attr_address = value.vchar;
 				if (mismatched) {
 					old_value = RTLN (egc_char_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
-					*(EIF_CHARACTER *) old_value = value.vchar;
+					*(EIF_CHARACTER_8 *) old_value = value.vchar;
 				}
 				break;
-			case SK_WCHAR:
+			case SK_CHAR32:
 				ridr_multi_uint32 (&value.vwchar, 1);
 				if (attr_address != NULL)
-					*(EIF_WIDE_CHAR *) attr_address = value.vwchar;
+					*(EIF_CHARACTER_32 *) attr_address = value.vwchar;
 				if (mismatched) {
 					old_value = RTLN (egc_wchar_dtype);
 					if (!old_value) {
 						xraise(EN_MEM);
 					}
-					*(EIF_WIDE_CHAR *) old_value = value.vwchar;
+					*(EIF_CHARACTER_32 *) old_value = value.vwchar;
 				}
 				break;
 			case SK_REAL32:
@@ -4585,8 +4585,8 @@ rt_private EIF_REFERENCE object_rread_special (
 			case SK_INT32:  ridr_multi_int32  ((EIF_INTEGER_32 *) addr, count); break;
 			case SK_INT64:  ridr_multi_int64  ((EIF_INTEGER_64 *) addr, count); break;
 			case SK_BOOL:
-			case SK_CHAR:   ridr_multi_char   ((EIF_CHARACTER  *) addr, count); break;
-			case SK_WCHAR:  ridr_multi_uint32  ((EIF_WIDE_CHAR *) addr, count); break;
+			case SK_CHAR8:   ridr_multi_char   ((EIF_CHARACTER_8  *) addr, count); break;
+			case SK_CHAR32:  ridr_multi_uint32  ((EIF_CHARACTER_32 *) addr, count); break;
 			case SK_REAL32:  ridr_multi_float  ((EIF_REAL_32 *) addr, count); break;
 			case SK_REAL64: ridr_multi_double ((EIF_REAL_64     *) addr, count); break;
 
@@ -4625,7 +4625,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 
 	EIF_REFERENCE addr, trash = NULL;
 	EIF_TYPED_VALUE *l_item;
-	EIF_CHARACTER l_type;
+	EIF_CHARACTER_8 l_type;
 
 	REQUIRE ("TUPLE object", (!object) || (HEADER(object)->ov_flags & EO_TUPLE));
 
@@ -4653,8 +4653,8 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 #ifdef EIF_ASSERTIONS
 			switch (eif_tuple_item_sk_type(l_item)) {
 				case SK_BOOL:    CHECK("Same type", l_type == EIF_BOOLEAN_CODE); break;
-				case SK_CHAR:    CHECK("Same type", l_type == EIF_CHARACTER_CODE); break;
-				case SK_WCHAR:   CHECK("Same type", l_type == EIF_WIDE_CHAR_CODE); break;
+				case SK_CHAR8:    CHECK("Same type", l_type == EIF_CHARACTER_8_CODE); break;
+				case SK_CHAR32:   CHECK("Same type", l_type == EIF_CHARACTER_32_CODE); break;
 				case SK_INT8:    CHECK("Same type", l_type == EIF_INTEGER_8_CODE); break;
 				case SK_INT16:   CHECK("Same type", l_type == EIF_INTEGER_16_CODE); break;
 				case SK_INT32:   CHECK("Same type", l_type == EIF_INTEGER_32_CODE); break;
@@ -4674,7 +4674,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 			switch (l_type) {
 				case EIF_REFERENCE_CODE: ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
 				case EIF_BOOLEAN_CODE: ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
-				case EIF_CHARACTER_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
+				case EIF_CHARACTER_8_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
 				case EIF_REAL_64_CODE: ridr_multi_double (&eif_real_64_tuple_item(l_item), 1); break;
 				case EIF_REAL_32_CODE: ridr_multi_float (&eif_real_32_tuple_item(l_item), 1); break;
 				case EIF_NATURAL_8_CODE: ridr_multi_uint8 (&eif_natural_8_tuple_item(l_item), 1); break;
@@ -4686,7 +4686,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 				case EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
 				case EIF_INTEGER_64_CODE: ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
 				case EIF_POINTER_CODE: ridr_multi_ptr ((char *) &eif_pointer_tuple_item(l_item), 1); break;
-				case EIF_WIDE_CHAR_CODE: ridr_multi_uint32 (&eif_wide_character_tuple_item(l_item), 1); break;
+				case EIF_CHARACTER_32_CODE: ridr_multi_uint32 (&eif_wide_character_tuple_item(l_item), 1); break;
 				default:
 					eise_io ("Recoverable retrieve: unsupported tuple element type.");
 			}
@@ -4697,7 +4697,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 			switch (l_type) {
 				case OLD_EIF_REFERENCE_CODE: ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
 				case OLD_EIF_BOOLEAN_CODE: ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
-				case OLD_EIF_CHARACTER_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
+				case OLD_EIF_CHARACTER_8_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
 				case OLD_EIF_REAL_64_CODE: ridr_multi_double (&eif_real_64_tuple_item(l_item), 1); break;
 				case OLD_EIF_REAL_32_CODE: ridr_multi_float (&eif_real_32_tuple_item(l_item), 1); break;
 				case OLD_EIF_INTEGER_8_CODE: ridr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
@@ -4705,7 +4705,7 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 				case OLD_EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
 				case OLD_EIF_INTEGER_64_CODE: ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
 				case OLD_EIF_POINTER_CODE: ridr_multi_ptr ((char *) &eif_pointer_tuple_item(l_item), 1); break;
-				case OLD_EIF_WIDE_CHAR_CODE: ridr_multi_uint32 (&eif_wide_character_tuple_item(l_item), 1); break;
+				case OLD_EIF_CHARACTER_32_CODE: ridr_multi_uint32 (&eif_wide_character_tuple_item(l_item), 1); break;
 				default:
 					eise_io ("Recoverable retrieve: unsupported tuple element type.");
 			}
@@ -4731,7 +4731,7 @@ rt_private int stream_read(char *pointer, int size)
 		if (!stream_buffer) {
 			xraise(EN_MEM);
 		}
-	}	
+	}
 
 	memcpy (pointer, (stream_buffer + stream_buffer_position), size);
 	stream_buffer_position += size;
@@ -4866,7 +4866,7 @@ rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 	EIF_TYPE_INDEX *ip, *l_cid;
 	int i;
 
-	ridr_norm_int (&count);    
+	ridr_norm_int (&count);
 
 	if (count >= 2) {
 			/* We now read the generic parameters' type. */
@@ -4939,7 +4939,7 @@ rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 					l_real_count++;
 				} else {
 					switch (old_dftype) {
-						case OLD_CHARACTER_TYPE: ip[l_real_count] = egc_char_dtype; l_real_count++; break;
+						case OLD_CHARACTER_8_TYPE: ip[l_real_count] = egc_char_dtype; l_real_count++; break;
 						case OLD_BOOLEAN_TYPE: ip[l_real_count] = egc_bool_dtype; l_real_count++; break;
 						case OLD_INTEGER_8_TYPE: ip[l_real_count] = egc_int8_dtype; l_real_count++; break;
 						case OLD_INTEGER_16_TYPE: ip[l_real_count] = egc_int16_dtype; l_real_count++; break;
@@ -4948,7 +4948,7 @@ rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 						case OLD_REAL_32_TYPE: ip[l_real_count] = egc_real32_dtype; l_real_count++; break;
 						case OLD_REAL_64_TYPE: ip[l_real_count] = egc_real64_dtype; l_real_count++; break;
 						case OLD_POINTER_TYPE: ip[l_real_count] = egc_point_dtype; l_real_count++; break;
-						case OLD_WIDE_CHAR_TYPE: ip[l_real_count] = egc_wchar_dtype; l_real_count++; break;
+						case OLD_CHARACTER_32_TYPE: ip[l_real_count] = egc_wchar_dtype; l_real_count++; break;
 						case OLD_BIT_TYPE:
 							ip[l_real_count] = egc_bit_dtype;
 							l_real_count++;

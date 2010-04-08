@@ -123,7 +123,7 @@ void eif_console_cleanup (EIF_BOOLEAN crashed)
 		{
 #ifdef WORKBENCH
 			if (debug_mode) {
-				EIF_CHARACTER c;
+				EIF_CHARACTER_8 c;
 				printf ("\nPress Return to finish the execution...");
 				fflush(stdout);
 				scanf ("%c", &c);

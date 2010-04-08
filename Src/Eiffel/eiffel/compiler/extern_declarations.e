@@ -151,7 +151,9 @@ feature -- Settings
 			until
 				local_routines.after
 			loop
-				buffer.put_string ("%Nextern ")
+				buffer.put_new_line
+				buffer.put_string ({C_CONST}.extern)
+				buffer.put_character (' ')
 				buffer.put_string (local_routines.item_for_iteration)
 				local_routines.forth
 			end
@@ -162,7 +164,9 @@ feature -- Settings
 			until
 				local_routines.after
 			loop
-				buffer.put_string ("%Nstatic ")
+				buffer.put_new_line
+				buffer.put_string ({C_CONST}.static)
+				buffer.put_character (' ')
 				buffer.put_string (local_routines.item_for_iteration)
 				local_routines.forth
 			end
@@ -293,7 +297,7 @@ feature {NONE} -- Attributes
 			-- Once names
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,19 +11,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -135,7 +135,7 @@ struct exprint {
 };
 
 /* Improved string structure (with number of bytes used and length)
- * for the exception trace string 
+ * for the exception trace string
  */
 typedef struct _smart_string {
 	char *area;			/* Pointer to zone where data is stored */
@@ -224,26 +224,26 @@ struct stchunk {
 	/*---------------------*/
 
 typedef union tag_EIF_VALUE {
-	EIF_REFERENCE  r;  /* SK_REF     - reference                */
-	EIF_POINTER    p;  /* SK_POINTER - pointer                  */
-	EIF_BOOLEAN    b;  /* SK_BOOL    - boolean                  */
-	EIF_CHARACTER  c1; /* SK_CHAR    - character                */
-	EIF_WIDE_CHAR  c4; /* SK_WCHAR   - unicode character        */
-	EIF_INTEGER_8  i1; /* SK_INT8    - 8 bits integer           */
-	EIF_INTEGER_16 i2; /* SK_INT16   - 16 bits integer          */
-	EIF_INTEGER_32 i4; /* SK_INT32   - 32 bits integer          */
-	EIF_INTEGER_64 i8; /* SK_INT64   - 64 bits integer          */
-	EIF_NATURAL_8  n1; /* SK_UINT8   - 8 bits unsigned integer  */
-	EIF_NATURAL_16 n2; /* SK_UINT16  - 16 bits unsigned integer */
-	EIF_NATURAL_32 n4; /* SK_UINT32  - 32 bits unsigned integer */
-	EIF_NATURAL_64 n8; /* SK_UINT64  - 64 bits unsigned integer */
-	EIF_REAL_32    r4; /* SK_REAL32  - 32 bits real             */
-	EIF_REAL_64    r8; /* SK_REAL64  - 64 bits real             */
+	EIF_REFERENCE    r;  /* SK_REF     - reference                */
+	EIF_POINTER      p;  /* SK_POINTER - pointer                  */
+	EIF_BOOLEAN      b;  /* SK_BOOL    - boolean                  */
+	EIF_CHARACTER_8  c1; /* SK_CHAR8   - character                */
+	EIF_CHARACTER_32 c4; /* SK_CHAR32  - unicode character        */
+	EIF_INTEGER_8    i1; /* SK_INT8    - 8 bits integer           */
+	EIF_INTEGER_16   i2; /* SK_INT16   - 16 bits integer          */
+	EIF_INTEGER_32   i4; /* SK_INT32   - 32 bits integer          */
+	EIF_INTEGER_64   i8; /* SK_INT64   - 64 bits integer          */
+	EIF_NATURAL_8    n1; /* SK_UINT8   - 8 bits unsigned integer  */
+	EIF_NATURAL_16   n2; /* SK_UINT16  - 16 bits unsigned integer */
+	EIF_NATURAL_32   n4; /* SK_UINT32  - 32 bits unsigned integer */
+	EIF_NATURAL_64   n8; /* SK_UINT64  - 64 bits unsigned integer */
+	EIF_REAL_32      r4; /* SK_REAL32  - 32 bits real             */
+	EIF_REAL_64      r8; /* SK_REAL64  - 64 bits real             */
 } EIF_VALUE;
-	
+
 typedef struct tag_EIF_TYPED_VALUE {
 	EIF_VALUE item; /* Associated value                     */
-	uint32 type;    /* Type of item (SK_BOOL, SK_CHAR, ...) */
+	uint32 type;    /* Type of item (SK_BOOL, SK_CHAR8, ...) */
 } EIF_TYPED_VALUE;
 
 /* Shortcuts to access typed value */
@@ -441,8 +441,8 @@ struct dbinfo {
                                         /* destroys objects                                         	*/
 	struct {
 		struct {
-			int pos; 
-			EIF_TYPE_INDEX expect; 
+			int pos;
+			EIF_TYPE_INDEX expect;
 			EIF_TYPE_INDEX actual;
 		} rtcc;							/* RunTime CatCall detection data 	*/
 	} rtdata;
@@ -450,7 +450,7 @@ struct dbinfo {
 };
 
 /* List of offset. It tells where the breakpoint inside a feature are */
-struct offset_list { 
+struct offset_list {
 	uint32 offset;
 	struct offset_list *next;
 };

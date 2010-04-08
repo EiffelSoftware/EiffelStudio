@@ -56,12 +56,12 @@ rt_private void rv_failure (char *a_msg) {
 }
 
 struct align_test {
-	EIF_CHARACTER a;
+	EIF_CHARACTER_8 a;
 	EIF_REAL_64 d;
 };
 
 struct align_test2 {
-	EIF_CHARACTER a;
+	EIF_CHARACTER_8 a;
 	EIF_REAL_32 r;
 };
 

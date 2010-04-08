@@ -92,7 +92,7 @@ __declspec(dllexport) BOOL desc_call_dll32_boolean
 	return x;
 }
 
-__declspec(dllexport) EIF_CHARACTER  desc_call_dll32_character
+__declspec(dllexport) EIF_CHARACTER_8  desc_call_dll32_character
 (
 	FARPROC ProcAddress,
 	EIF_INTEGER ArgCount,
@@ -100,8 +100,8 @@ __declspec(dllexport) EIF_CHARACTER  desc_call_dll32_character
 )
 {
 	/* See `desc_call_dll32_boolean' routine comment. */
-	typedef EIF_CHARACTER  (* FN) (void);
-	EIF_CHARACTER x;
+	typedef EIF_CHARACTER_8  (* FN) (void);
+	EIF_CHARACTER_8 x;
 
 	/* Push all the arguments */
 	PUSH_ALL
@@ -312,8 +312,8 @@ __declspec(dllexport) int desc_get_size (int type)
 	switch (type)
 	{
 		case T_array: return sizeof (LPVOID);
-		case T_boolean: return sizeof (EIF_CHARACTER)*4;
-		case T_character: return sizeof (EIF_CHARACTER)*4;
+		case T_boolean: return sizeof (EIF_BOOLEAN)*4;
+		case T_character: return sizeof (EIF_CHARACTER_8)*4;
 		case T_real64: return sizeof (EIF_REAL_64);
 		case T_integer: return sizeof (EIF_INTEGER);
 		case T_no_type: return 0;

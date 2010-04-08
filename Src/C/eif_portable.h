@@ -284,6 +284,8 @@ typedef EIF_INTEGER_64	rt_int64;
 #define SK_REAL		SK_REAL32
 #define	SK_DOUBLE	SK_REAL64
 #define SK_INT		SK_INT32
+#define SK_CHAR		SK_CHAR8
+#define SK_WCHAR	SK_CHAR32
 
 /* eif_portable.h */
 #define EIF_REAL	EIF_REAL_32
@@ -309,8 +311,8 @@ typedef EIF_INTEGER_64	rt_int64;
 
 #define c_outd	c_outr64
 #define c_outr	c_outr32
-#define chupper(c) ((EIF_CHARACTER) toupper(c))
-#define chlower(c) ((EIF_CHARACTER) tolower(c))
+#define chupper(c) ((EIF_CHARACTER_8) toupper(c))
+#define chlower(c) ((EIF_CHARACTER_8) tolower(c))
 #define chis_upper(c) (EIF_TEST(isupper(c)))
 #define chis_lower(c) (EIF_TEST(islower(c)))
 #define chis_digit(c) (EIF_TEST(isdigit(c)))

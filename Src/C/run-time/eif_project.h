@@ -110,8 +110,8 @@ extern "C" {
 	RT_LNK EIF_TYPE_INDEX egc_any_dtype;			/* Dynamic type of ANY */
 
 	RT_LNK EIF_TYPE_INDEX egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
-	RT_LNK EIF_TYPE_INDEX egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
-	RT_LNK EIF_TYPE_INDEX egc_sp_wchar;		/* Dynamic type of SPECIAL[WIDE_CHARACTER] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER_8] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_wchar;		/* Dynamic type of SPECIAL[CHARACTER_32] */
 	RT_LNK EIF_TYPE_INDEX egc_sp_uint8;			/* Dynamic type of SPECIAL[NATURAL_8] */
 	RT_LNK EIF_TYPE_INDEX egc_sp_uint16;		/* Dynamic type of SPECIAL[NATURAL_16] */
 	RT_LNK EIF_TYPE_INDEX egc_sp_uint32;		/* Dynamic type of SPECIAL[NATURAL_32] */
@@ -136,8 +136,8 @@ extern "C" {
 	RT_LNK EIF_TYPE_INDEX egc_bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
 	RT_LNK EIF_TYPE_INDEX egc_real32_ref_dtype;	/* Dynamic type of REAL_32_REF */
 	RT_LNK EIF_TYPE_INDEX egc_real64_ref_dtype;	/* Dynamic type of REAL_64_REF */
-	RT_LNK EIF_TYPE_INDEX egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
-	RT_LNK EIF_TYPE_INDEX egc_wchar_ref_dtype;	/* Dynamic type of WIDE_CHARACTER_REF */
+	RT_LNK EIF_TYPE_INDEX egc_char_ref_dtype;	/* Dynamic type of CHARACTER_8_REF */
+	RT_LNK EIF_TYPE_INDEX egc_wchar_ref_dtype;	/* Dynamic type of CHARACTER_32_REF */
 	RT_LNK EIF_TYPE_INDEX egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
 	
 	RT_LNK EIF_TYPE_INDEX egc_uint8_dtype;	/* Dynamic type of NATURAL_8 */
@@ -151,8 +151,8 @@ extern "C" {
 	RT_LNK EIF_TYPE_INDEX egc_bool_dtype;	/* Dynamic type of BOOLEAN */
 	RT_LNK EIF_TYPE_INDEX egc_real32_dtype;	/* Dynamic type of REAL_32 */
 	RT_LNK EIF_TYPE_INDEX egc_real64_dtype;	/* Dynamic type of REAL_64 */
-	RT_LNK EIF_TYPE_INDEX egc_char_dtype;	/* Dynamic type of CHARACTER */
-	RT_LNK EIF_TYPE_INDEX egc_wchar_dtype;	/* Dynamic type of WIDE_CHARACTER */
+	RT_LNK EIF_TYPE_INDEX egc_char_dtype;	/* Dynamic type of CHARACTER_8 */
+	RT_LNK EIF_TYPE_INDEX egc_wchar_dtype;	/* Dynamic type of CHARACTER_32 */
 	RT_LNK EIF_TYPE_INDEX egc_point_dtype;	/* Dynamic type of POINTER */
 
 	RT_LNK EIF_TYPE_INDEX egc_except_emnger_dtype;	/* Dynamic type of EXCEPTION_MANAGER */

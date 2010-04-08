@@ -463,10 +463,10 @@ rt_private bool_t run_int(IDR *idrs, int op, uint32 *ip, size_t len)
 }
 
 
-rt_public void ridr_multi_char (EIF_CHARACTER *obj, size_t num)
+rt_public void ridr_multi_char (EIF_CHARACTER_8 *obj, size_t num)
 {
 	RT_GET_CONTEXT
-	size_t cap = idrf_buffer_size / sizeof (EIF_CHARACTER);
+	size_t cap = idrf_buffer_size / sizeof (EIF_CHARACTER_8);
 
 	if (num <= cap) {
 		check_capacity (&idrf.i_decode, num);
@@ -489,10 +489,10 @@ rt_public void ridr_multi_char (EIF_CHARACTER *obj, size_t num)
 	}
 }
 
-rt_public void widr_multi_char (EIF_CHARACTER *obj, size_t num)
+rt_public void widr_multi_char (EIF_CHARACTER_8 *obj, size_t num)
 {
 	RT_GET_CONTEXT
-	size_t cap = idrf_buffer_size / sizeof (EIF_CHARACTER);
+	size_t cap = idrf_buffer_size / sizeof (EIF_CHARACTER_8);
 
 	if (num <= cap) {
 		check_capacity (&idrf.i_encode, num);
@@ -1070,7 +1070,7 @@ rt_public int idr_read_line (char *bu, size_t max_size)
 	size_t i;
 
 	for (i = 1; i < max_size; i++) {
-		ridr_multi_char ((EIF_CHARACTER *) ptr, 1);
+		ridr_multi_char ((EIF_CHARACTER_8 *) ptr, 1);
 		if (*(ptr++) == '\n')
 			break;
 	}

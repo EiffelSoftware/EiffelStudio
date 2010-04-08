@@ -740,7 +740,7 @@ rt_public EIF_REAL_64 file_gdb(FILE *f)
 	return d;
 }
 
-rt_public EIF_CHARACTER file_gc(FILE *f)
+rt_public EIF_CHARACTER_8 file_gc(FILE *f)
 {
 	/* Get a character from `f' */
 
@@ -751,7 +751,7 @@ rt_public EIF_CHARACTER file_gc(FILE *f)
 	if (c == EOF && ferror(f))
 		eise_io("FILE: unable to read CHARACTER value.");
 
-	return (EIF_CHARACTER) c;
+	return (EIF_CHARACTER_8) c;
 }
 
 rt_public EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start)
@@ -881,7 +881,7 @@ rt_public EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER s
 	return bound - start + 1;			/* Error condition */
 }
 
-rt_public EIF_CHARACTER file_lh(FILE *f)
+rt_public EIF_CHARACTER_8 file_lh(FILE *f)
 {
 	/* Look ahead one character. If EOF, return 0 */
 
@@ -895,7 +895,7 @@ rt_public EIF_CHARACTER file_lh(FILE *f)
 	if (c != EOF && EOF == ungetc(c, f))
 		eise_io("FILE: error when reading a character ahead.");
 
-	return (EIF_CHARACTER) (c == EOF ? (char) 0 : (char) c);
+	return (EIF_CHARACTER_8) (c == EOF ? (char) 0 : (char) c);
 }
 
 /*

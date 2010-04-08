@@ -20,44 +20,54 @@ feature -- Access
 		require
 			good_argument: buffer /= Void;
 		local
-			l: SORTED_TWO_WAY_LIST [STRING];
+			l: SORTED_TWO_WAY_LIST [STRING]
 		do
 			if tags /= Void then
-				buffer.put_string ("static char *keys");
-				buffer.put_integer (id);
-				buffer.put_string ("[] = {");
+				buffer.put_string ({C_CONST}.static)
+				buffer.put_character (' ')
+				buffer.put_string ({C_CONST}.char)
+				buffer.put_two_character (' ', '*')
+				buffer.put_string ({C_CONST}.keys_name)
+				buffer.put_integer (id)
+				buffer.put_two_character ('[', ']')
+				buffer.put_four_character (' ', '=', ' ', '{')
 				from
-					l := tags;
+					l := tags
 					l.start
 				until
 					l.after
 				loop
-					buffer.put_character ('"');
+					buffer.put_character ('"')
 					buffer.put_escaped_string (l.item)
-					buffer.put_string ("%", ");
-					l.forth;
-				end;
-				buffer.put_string ("};%N%N");
+					buffer.put_three_character ('"', ',', ' ')
+					l.forth
+				end
+				buffer.put_four_character ('}', ';', '%N', '%N')
 			end
-		end;
+		end
 
 	generate (buffer: GENERATION_BUFFER; id: INTEGER)
 			-- Generate assertion value in `buffer'.
 		require
 			good_argument: buffer /= Void;
 		do
+			buffer.put_character ('{')
+			buffer.put_string ({C_CONST}.opt_all)
 			if has_unnamed then
-				buffer.put_string ("{OPT_ALL | OPT_UNNAMED, (int16) ");
-			else
-				buffer.put_string ("{OPT_ALL, (int16) ");
+				buffer.put_three_character (' ', '|', ' ')
+				buffer.put_string ({C_CONST}.opt_unnamed)
 			end
+			buffer.put_two_character (',', ' ')
 			if tags /= Void then
 				buffer.put_integer (tags.count);
-				buffer.put_string (", keys");
+				buffer.put_two_character (',', ' ')
+				buffer.put_string ({C_CONST}.keys_name)
 				buffer.put_integer (id);
-				buffer.put_string ("}");
+				buffer.put_character ('}');
 			else
-				buffer.put_string ("0, (char **) 0}")
+				buffer.put_three_character ('0', ',', ' ')
+				buffer.put_string ({C_CONST}.null)
+				buffer.put_character ('}')
 			end
 		end
 
@@ -122,7 +132,7 @@ invariant
 	tags_not_empty: tags /= Void implies not tags.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -135,22 +145,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

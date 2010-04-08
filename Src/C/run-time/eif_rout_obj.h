@@ -103,8 +103,8 @@ RT_LNK char eif_sk_type_to_type_code (uint32 sk_type);
 #define rout_obj_call_agent(r,a, val) ((val(*)(EIF_TYPED_VALUE *))(r))(0, (EIF_TYPED_VALUE *)(a))
 
 #define RBVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? EIF_FALSE : *((EIF_BOOLEAN *)v))
-#define RCVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_CHARACTER) 0 : *((EIF_CHARACTER *)v))
-#define RWCVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_WIDE_CHAR) 0 : *((EIF_WIDE_CHAR *)v))
+#define RCVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_CHARACTER_8) 0 : *((EIF_CHARACTER_8 *)v))
+#define RWCVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_CHARACTER_32) 0 : *((EIF_CHARACTER_32 *)v))
 #define RDVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_REAL_64) 0.0 : *((EIF_REAL_64 *)v))
 #define RFVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_REAL_32) 0.0 : *((EIF_REAL_32 *)v))
 #define RU8VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_NATURAL_8) 0 : *((EIF_NATURAL_8 *)v))
@@ -221,8 +221,8 @@ RT_LNK char eif_sk_type_to_type_code (uint32 sk_type);
 /* Macro for setting tuple element value from a reference object
  * `val' should not be Void */
 #define eif_put_boolean_item_with_object(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_b = *(EIF_BOOLEAN *)(val)
-#define eif_put_character_8_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = *(EIF_CHARACTER *)(val)
-#define eif_put_character_32_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = *(EIF_WIDE_CHAR *)(val)
+#define eif_put_character_8_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = *(EIF_CHARACTER_8 *)(val)
+#define eif_put_character_32_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = *(EIF_CHARACTER_32 *)(val)
 #define eif_put_real_64_item_with_object(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_r8 = *(EIF_REAL_64 *)(val)
 #define eif_put_natural_8_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_n1 = *(EIF_NATURAL_8 *)(val)
 #define eif_put_natural_16_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_n2 = *(EIF_NATURAL_16 *)(val)
@@ -238,8 +238,8 @@ RT_LNK char eif_sk_type_to_type_code (uint32 sk_type);
 
 /* Macro for setting tuple element value */
 #define eif_put_boolean_item(tuple,pos,val)			((EIF_TYPED_VALUE *) (tuple) + pos)->it_b = (EIF_BOOLEAN)(val)
-#define eif_put_character_8_item(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = (EIF_CHARACTER)(val)
-#define eif_put_character_32_item(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = (EIF_WIDE_CHAR)(val)
+#define eif_put_character_8_item(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = (EIF_CHARACTER_8)(val)
+#define eif_put_character_32_item(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = (EIF_CHARACTER_32)(val)
 #define eif_put_real_64_item(tuple,pos,val)			((EIF_TYPED_VALUE *) (tuple) + pos)->it_r8 = (EIF_REAL_64)(val)
 #define eif_put_natural_8_item(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_n1 = (EIF_NATURAL_8)(val)
 #define eif_put_natural_16_item(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_n2 = (EIF_NATURAL_16)(val)
@@ -260,10 +260,10 @@ RT_LNK char eif_sk_type_to_type_code (uint32 sk_type);
 #define eif_wide_character_item(tuple,pos)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4
 #define EIF_CHARACTER_ITEM eif_character_item
 #define EIF_WIDE_CHARACTER_ITEM eif_wide_character_item
-#define eif_put_character_item_with_object(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = *(EIF_CHARACTER *)(val)
-#define eif_put_wide_character_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = *(EIF_WIDE_CHAR *)(val)
-#define eif_put_character_item(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = (EIF_CHARACTER)(val)
-#define eif_put_wide_character_item(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = (EIF_WIDE_CHAR)(val)
+#define eif_put_character_item_with_object(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = *(EIF_CHARACTER_8 *)(val)
+#define eif_put_wide_character_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = *(EIF_CHARACTER_32 *)(val)
+#define eif_put_character_item(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = (EIF_CHARACTER_8)(val)
+#define eif_put_wide_character_item(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = (EIF_CHARACTER_32)(val)
 
 #ifdef __cplusplus
 }

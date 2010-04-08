@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -305,9 +305,9 @@ static  BODY_INDEX      body_id;
 static  long            body_size;
 static  unsigned char   *ip;
 static  unsigned char   code;
-static  EIF_CHARACTER   **dtype_names;
+static  EIF_CHARACTER_8 **dtype_names;
 static  int             dtype_max;
-static  EIF_CHARACTER   **ctype_names;
+static  EIF_CHARACTER_8 **ctype_names;
 static  int             ctype_max;
 
 /*------------------------------------------------------------------*/
@@ -327,7 +327,7 @@ static  void    panic (void);
 static  EIF_INTEGER_32 rlong (void);
 static  BODY_INDEX rbody_index (void);
 static  unsigned char *rbuf (int);
-static  EIF_CHARACTER * rstr (void);
+static  EIF_CHARACTER_8 * rstr (void);
 
 /*------------------------------------------------------------------*/
 
@@ -363,7 +363,7 @@ int main (int argc, char **argv)
 
 	dtype_max = rlong ();
 
-	dtype_names = (EIF_CHARACTER **) malloc ((dtype_max + 1) * sizeof (char *));
+	dtype_names = (EIF_CHARACTER_8 **) malloc ((dtype_max + 1) * sizeof (char *));
 
 	if (dtype_names == NULL)
 	{
@@ -378,7 +378,7 @@ int main (int argc, char **argv)
 
 	ctype_max = rlong ();
 
-	ctype_names = (EIF_CHARACTER **) malloc ((ctype_max + 1) * sizeof (char *));
+	ctype_names = (EIF_CHARACTER_8 **) malloc ((ctype_max + 1) * sizeof (char *));
 
 	if (ctype_names == NULL)
 	{
@@ -509,7 +509,7 @@ static  void    print_byte_code (void)
 		case EIF_BOOLEAN_CODE:
 			fprintf (ofp,"BOOLEAN");
 			break;
-		case EIF_CHARACTER_CODE:
+		case EIF_CHARACTER_8_CODE:
 			fprintf (ofp,"CHARACTER_8");
 			break;
 		case EIF_REAL_64_CODE:
@@ -545,7 +545,7 @@ static  void    print_byte_code (void)
 		case EIF_NATURAL_64_CODE:
 			fprintf (ofp,"NATURAL_64");
 			break;
-		case EIF_WIDE_CHAR_CODE:
+		case EIF_CHARACTER_32_CODE:
 			fprintf (ofp,"CHARACTER_32");
 			break;
 		}
@@ -560,7 +560,7 @@ static  void    print_byte_code (void)
 
 	NEWL;
 
-	/* If the routine id is zero it's a class invariant 
+	/* If the routine id is zero it's a class invariant
 	 * but we get anyway the name and type */
 
 	fprintf (ofp,"Routine name : %s\n", get_string8(&ip, -1));
@@ -613,8 +613,8 @@ static  void    print_instructions (void)
 
 	advance (4);
 
-	while ((code != BC_NULL)     && 
-		   (code != BC_INV_NULL) && 
+	while ((code != BC_NULL)     &&
+		   (code != BC_INV_NULL) &&
 		   (code != BC_END_RESCUE))
 	{
 		switch (code)
@@ -651,7 +651,7 @@ static  void    print_instructions (void)
 				fprintf (ofp,"nr_keys %d ", (lval = get_int32(&ip)));
 
 				/* The keys - if any */
-				
+
 				while (lval--)
 				{
 					fprintf (ofp,"\"%s\"", get_string8(&ip, get_int32(&ip)));
@@ -813,7 +813,7 @@ static  void    print_instructions (void)
 				fprintf (ofp, " Is_inline_agent:%d ", get_bool(&ip));
 				open_count = get_int32(&ip);
 				fprintf (ofp, " Open_count: %d ", open_count);
-			
+
 				break;
 				}
 
@@ -825,7 +825,7 @@ static  void    print_instructions (void)
 				cval = get_char8(&ip);
 
 				if (cval == BC_BIT) {
-					fprintf (ofp, " (BC_BIT %d)", get_int32(&ip));	
+					fprintf (ofp, " (BC_BIT %d)", get_int32(&ip));
 					break;
 				} else if (cval == (char) 1) {
 					fprintf (ofp," dup_top_object ");
@@ -880,7 +880,7 @@ static  void    print_instructions (void)
 					/* Type of access/assign in TUPLE. */
 				print_dtype(0, get_uint32(&ip));
 				break;
-					
+
 			case BC_TUPLE:
 			case BC_PTUPLE:
 					/* Dynamic type of tuple */
@@ -1088,9 +1088,9 @@ static  void    print_instructions (void)
 				break;
 			case  BC_UMINUS :
 				break;
-			case  BC_NOT :             
+			case  BC_NOT :
 				break;
-			case BC_LT :              
+			case BC_LT :
 				break;
 			case  BC_GT :
 				break;
@@ -1349,13 +1349,13 @@ static  void    print_dtype (int cid, uint32 type)
 
 	dtype = (int) (type & SK_DTYPE);
 
-	if ((type & SK_HEAD) != SK_VOID) 
+	if ((type & SK_HEAD) != SK_VOID)
 	{
-		switch (type & SK_HEAD) 
+		switch (type & SK_HEAD)
 		{
 			case SK_BOOL:   fprintf (ofp," [BOOLEAN]"); break;
-			case SK_CHAR:   fprintf (ofp," [CHARACTER]"); break;
-			case SK_WCHAR:   fprintf (ofp," [WIDE_CHARACTER]"); break;
+			case SK_CHAR8:   fprintf (ofp," [CHARACTER_8]"); break;
+			case SK_CHAR32:   fprintf (ofp," [CHARACTER_32]"); break;
 			case SK_UINT8:   fprintf (ofp," [NATURAL_8]"); break;
 			case SK_UINT16:   fprintf (ofp," [NATURAL_16]"); break;
 			case SK_UINT32:   fprintf (ofp," [NATURAL_32]"); break;
@@ -1527,12 +1527,12 @@ static  unsigned char *rbuf (int size)
 }
 /*------------------------------------------------------------------*/
 
-static  EIF_CHARACTER * rstr (void)
+static  EIF_CHARACTER_8 * rstr (void)
 {
 	static char buf [1024];
-	EIF_CHARACTER * result;
+	EIF_CHARACTER_8 * result;
 	int i;
-	EIF_CHARACTER c;
+	EIF_CHARACTER_8 c;
 
 	c = '?';
 	i = 0;

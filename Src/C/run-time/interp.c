@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -268,7 +268,7 @@ rt_public void idump(FILE *, char *);						/* Byte code dumping */
 rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumping */
 #endif
 
-/* Those macros are used to save and restore the ``x'' stack context to/from 
+/* Those macros are used to save and restore the ``x'' stack context to/from
  * ``y'' and ``z'', which are respectively the current chunk and the current
  * top pointer on the stack. The STACK_PRESERVE declares the variables ``dcur''
  * and ``dtop'' for the debbuger stack and ``scur'' / ``stop'' for the
@@ -305,7 +305,7 @@ rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumpin
 		(stack).st_cur = (stack).st_hd; \
 		(stack).st_top = (stack).st_cur->sk_arena; \
 		(stack).st_end = (stack).st_cur->sk_end; \
-	} 
+	}
 
 /* Macros to handle exceptions in routine body:
  * SET_RESCUE - set rescue handler (if any)
@@ -333,7 +333,7 @@ rt_public void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volati
 	uint32 head_type;
 	EIF_TYPED_VALUE * last;	/* Last pushed value */
 	unsigned long stagval;
-	
+
 	last = otop();
 	CHECK("last not null", last);
 	if ((last->type & SK_HEAD) == SK_EXP)
@@ -344,8 +344,8 @@ rt_public void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volati
 	if (head_type != SK_BIT) {
 		switch (head_type) {
 		case SK_BOOL: new_obj = RTLN(egc_bool_dtype); *new_obj = last->it_char; break;
-		case SK_CHAR:	new_obj = RTLN(egc_char_dtype); *new_obj = last->it_char; break;
-		case SK_WCHAR:	new_obj = RTLN(egc_wchar_dtype); *(EIF_WIDE_CHAR *) new_obj = last->it_wchar; break;
+		case SK_CHAR8:	new_obj = RTLN(egc_char_dtype); *new_obj = last->it_char; break;
+		case SK_CHAR32:	new_obj = RTLN(egc_wchar_dtype); *(EIF_CHARACTER_32 *) new_obj = last->it_wchar; break;
 		case SK_UINT8: new_obj = RTLN(egc_uint8_dtype); *(EIF_NATURAL_8 *) new_obj = last->it_uint8; break;
 		case SK_UINT16: new_obj = RTLN(egc_uint16_dtype); *(EIF_NATURAL_16 *) new_obj = last->it_uint16; break;
 		case SK_UINT32: new_obj = RTLN(egc_uint32_dtype); *(EIF_NATURAL_32 *) new_obj = last->it_uint32; break;
@@ -360,7 +360,7 @@ rt_public void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volati
 		case SK_REF:			/* Had to do this for bit operations */
 			new_obj = last->it_ref;
 			break;
-		default: 
+		default:
 			eif_panic("illegal metamorphose type");
 		}
 		last = iget();
@@ -434,7 +434,7 @@ rt_public void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed)
 			eif_wean (se);
 		}
 		dpop();							/* Pop off our own record */
-		ereturn(MTC_NOARG);						/* Propagate exception */			
+		ereturn(MTC_NOARG);						/* Propagate exception */
 	}
 
 #ifdef DEBUG
@@ -464,7 +464,7 @@ rt_public void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed)
 }
 
 rt_public void xiinv(unsigned char *icval, int where)
-			
+
 				/* Invariant checked after or before ? */
 {
 	/* Starts interpretation of invariant at IC = icval. */
@@ -565,7 +565,7 @@ rt_private void interpret(int flag, int where)
 	struct stchunk * h_cur = NULL;	/* Current hector stack chunk */
 #endif
 	int volatile assert_type = 0;			/* Assertion type */
-	char volatile pre_success = (char) 0;	/* Flag for precondition success */ 
+	char volatile pre_success = (char) 0;	/* Flag for precondition success */
 	uint32 volatile rtype = 0;				/* Result type */
 	MTOT OResult = (MTOT) 0;				/* Item for once data */
 #ifdef EIF_THREADS
@@ -580,7 +580,7 @@ rt_private void interpret(int flag, int where)
 	int  volatile create_result = 1;			/* Should result be created? */
 	RTSN;							/* Save nested flag */
 	STACK_PRESERVE_FOR_OLD;
- 
+
 	saved_assertion = in_assertion;
 	exvect = NULL;
 	db_cstack = 0;
@@ -661,10 +661,10 @@ rt_private void interpret(int flag, int where)
 						last -> type = SK_BOOL;
 					}
 					break;
-				case EIF_CHARACTER_CODE:
+				case EIF_CHARACTER_8_CODE:
 					if ((last->type & SK_HEAD) == SK_REF) {
-						last -> it_char = *(EIF_CHARACTER *) ref;
-						last -> type = SK_CHAR;
+						last -> it_char = *(EIF_CHARACTER_8 *) ref;
+						last -> type = SK_CHAR8;
 					}
 					break;
 				case EIF_REAL_64_CODE:
@@ -733,10 +733,10 @@ rt_private void interpret(int flag, int where)
 						last -> type = SK_UINT64;
 					}
 					break;
-				case EIF_WIDE_CHAR_CODE:
+				case EIF_CHARACTER_32_CODE:
 					if ((last->type & SK_HEAD) == SK_REF) {
-						last -> it_wchar = *(EIF_WIDE_CHAR *) ref;
-						last -> type = SK_WCHAR;
+						last -> it_wchar = *(EIF_CHARACTER_32 *) ref;
+						last -> type = SK_CHAR32;
 					}
 					break;
 				}
@@ -956,7 +956,7 @@ rt_private void interpret(int flag, int where)
 						eif_panic ("Illegal type");
 				}
 				break;
-			case SK_CHAR:
+			case SK_CHAR8:
 				switch (offset) {
 					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_char; break;
 					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_char; break;
@@ -966,7 +966,7 @@ rt_private void interpret(int flag, int where)
 						eif_panic ("Illegal type");
 				}
 				break;
-			case SK_WCHAR:
+			case SK_CHAR32:
 				switch (offset) {
 					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_wchar; break;
 					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_wchar; break;
@@ -984,7 +984,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_uint8; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_UINT16:
 				switch (offset) {
@@ -994,7 +994,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_uint16; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_UINT32:
 				switch (offset) {
@@ -1004,7 +1004,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_uint32; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_UINT64:
 				switch (offset) {
@@ -1014,7 +1014,7 @@ rt_private void interpret(int flag, int where)
 					case 64: break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_INT8:
 				switch (offset) {
@@ -1024,7 +1024,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_int8; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_INT16:
 				switch (offset) {
@@ -1034,7 +1034,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_int16; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_INT32:
 				switch (offset) {
@@ -1044,7 +1044,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_int32; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_INT64:
 				switch (offset) {
@@ -1054,7 +1054,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_int64; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_REAL32:
 				switch (offset) {
@@ -1064,7 +1064,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_uint64 = (EIF_NATURAL_64) ((EIF_INTEGER_64) last->it_real32); break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_REAL64:
 				switch (offset) {
@@ -1074,7 +1074,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_uint64 = (EIF_NATURAL_64) ((EIF_INTEGER_64) last->it_real64); break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_POINTER:
 				switch (offset) {
@@ -1084,7 +1084,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) (rt_uint_ptr) last->it_ptr; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 
 			default:
@@ -1118,7 +1118,7 @@ rt_private void interpret(int flag, int where)
 						eif_panic ("Illegal type");
 				}
 				break;
-			case SK_CHAR:
+			case SK_CHAR8:
 				switch (offset) {
 					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_char; break;
 					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_char; break;
@@ -1128,7 +1128,7 @@ rt_private void interpret(int flag, int where)
 						eif_panic ("Illegal type");
 				}
 				break;
-			case SK_WCHAR:
+			case SK_CHAR32:
 				switch (offset) {
 					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_wchar; break;
 					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_wchar; break;
@@ -1146,7 +1146,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_uint8; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_UINT16:
 				switch (offset) {
@@ -1156,7 +1156,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_uint16; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_UINT32:
 				switch (offset) {
@@ -1166,7 +1166,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_uint32; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_UINT64:
 				switch (offset) {
@@ -1176,7 +1176,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_uint64; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_INT8:
 				switch (offset) {
@@ -1186,7 +1186,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_int8; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_INT16:
 				switch (offset) {
@@ -1196,7 +1196,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_int16; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_INT32:
 				switch (offset) {
@@ -1206,7 +1206,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_int32; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_INT64:
 				switch (offset) {
@@ -1216,7 +1216,7 @@ rt_private void interpret(int flag, int where)
 					case 64: break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_REAL32:
 				switch (offset) {
@@ -1226,7 +1226,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_real32; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_REAL64:
 				switch (offset) {
@@ -1236,7 +1236,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_real64; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 			case SK_POINTER:
 				switch (offset) {
@@ -1246,7 +1246,7 @@ rt_private void interpret(int flag, int where)
 					case 64: last->it_int64 = (EIF_INTEGER_64) (rt_uint_ptr) last->it_ptr; break;
 					default:
 						eif_panic ("Illegal type");
-				}	
+				}
 				break;
 
 			default:
@@ -1317,43 +1317,43 @@ rt_private void interpret(int flag, int where)
 	/*
 	 * Cast to CHARACTER_8
 	 */
-	
+
 	case BC_CAST_CHAR8:
 		last = otop();
 		switch (last->type & SK_HEAD) {
-			case SK_UINT8: last->it_char = (EIF_CHARACTER) last->it_uint8; break;
-			case SK_UINT16: last->it_char = (EIF_CHARACTER) last->it_uint16; break;
-			case SK_UINT32: last->it_char = (EIF_CHARACTER) last->it_uint32; break;
-			case SK_UINT64: last->it_char = (EIF_CHARACTER) last->it_uint64; break;
-			case SK_INT8: last->it_char = (EIF_CHARACTER) last->it_int8; break;
-			case SK_INT16: last->it_char = (EIF_CHARACTER) last->it_int16; break;
-			case SK_INT32: last->it_char = (EIF_CHARACTER) last->it_int32; break;
-			case SK_INT64: last->it_char = (EIF_CHARACTER) last->it_int64; break;
-			case SK_CHAR: break;
-			case SK_WCHAR: last->it_char = (EIF_CHARACTER) last->it_wchar; break;
+			case SK_UINT8: last->it_char = (EIF_CHARACTER_8) last->it_uint8; break;
+			case SK_UINT16: last->it_char = (EIF_CHARACTER_8) last->it_uint16; break;
+			case SK_UINT32: last->it_char = (EIF_CHARACTER_8) last->it_uint32; break;
+			case SK_UINT64: last->it_char = (EIF_CHARACTER_8) last->it_uint64; break;
+			case SK_INT8: last->it_char = (EIF_CHARACTER_8) last->it_int8; break;
+			case SK_INT16: last->it_char = (EIF_CHARACTER_8) last->it_int16; break;
+			case SK_INT32: last->it_char = (EIF_CHARACTER_8) last->it_int32; break;
+			case SK_INT64: last->it_char = (EIF_CHARACTER_8) last->it_int64; break;
+			case SK_CHAR8: break;
+			case SK_CHAR32: last->it_char = (EIF_CHARACTER_8) last->it_wchar; break;
 			}
-		last->type = SK_CHAR;
+		last->type = SK_CHAR8;
 		break;
 
 	/*
 	 * Cast to CHARACTER_32
 	 */
-	
+
 	case BC_CAST_CHAR32:
 		last = otop();
 		switch (last->type & SK_HEAD) {
-			case SK_UINT8: last->it_wchar = (EIF_WIDE_CHAR) last->it_uint8; break;
-			case SK_UINT16: last->it_wchar = (EIF_WIDE_CHAR) last->it_uint16; break;
-			case SK_UINT32: last->it_wchar = (EIF_WIDE_CHAR) last->it_uint32; break;
-			case SK_UINT64: last->it_wchar = (EIF_WIDE_CHAR) last->it_uint64; break;
-			case SK_INT8: last->it_wchar = (EIF_WIDE_CHAR) last->it_int8; break;
-			case SK_INT16: last->it_wchar = (EIF_WIDE_CHAR) last->it_int16; break;
-			case SK_INT32: last->it_wchar = (EIF_WIDE_CHAR) last->it_int32; break;
-			case SK_INT64: last->it_wchar = (EIF_WIDE_CHAR) last->it_int64; break;
-			case SK_CHAR: last->it_wchar = (EIF_WIDE_CHAR) last->it_char; break;
-			case SK_WCHAR: break;
+			case SK_UINT8: last->it_wchar = (EIF_CHARACTER_32) last->it_uint8; break;
+			case SK_UINT16: last->it_wchar = (EIF_CHARACTER_32) last->it_uint16; break;
+			case SK_UINT32: last->it_wchar = (EIF_CHARACTER_32) last->it_uint32; break;
+			case SK_UINT64: last->it_wchar = (EIF_CHARACTER_32) last->it_uint64; break;
+			case SK_INT8: last->it_wchar = (EIF_CHARACTER_32) last->it_int8; break;
+			case SK_INT16: last->it_wchar = (EIF_CHARACTER_32) last->it_int16; break;
+			case SK_INT32: last->it_wchar = (EIF_CHARACTER_32) last->it_int32; break;
+			case SK_INT64: last->it_wchar = (EIF_CHARACTER_32) last->it_int64; break;
+			case SK_CHAR8: last->it_wchar = (EIF_CHARACTER_32) last->it_char; break;
+			case SK_CHAR32: break;
 			}
-		last->type = SK_WCHAR;
+		last->type = SK_CHAR32;
 		break;
 
 
@@ -1397,7 +1397,7 @@ rt_private void interpret(int flag, int where)
 				switch (rtype & SK_HEAD) {	/* Result type held in rtype */
 				case SK_BIT:
 				case SK_EXP:
-				case SK_REF:	/* See below */ 
+				case SK_REF:	/* See below */
 					CHECK("OResult not null", OResult);
 					*(OResult->result.EIF_REFERENCE_result) = last->it_ref;
 					break;
@@ -1430,7 +1430,7 @@ rt_private void interpret(int flag, int where)
 		if ((last->type & SK_HEAD) != SK_BIT)
 			/*
 			 * This was necessary because the resulting type of operations
-			 * on bits was SK_REF. 
+			 * on bits was SK_REF.
 			 */
 			last->type = SK_BIT;
 		b_copy(last->it_bit, loc(code)->it_bit);
@@ -1495,7 +1495,7 @@ rt_private void interpret(int flag, int where)
 		}
 		break;
 
-	/* 
+	/*
 	 * Attachment to an expanded attribute
 	 */
 	case BC_EXP_ASSIGN:
@@ -1520,7 +1520,7 @@ rt_private void interpret(int flag, int where)
 		}
 		break;
 
-	/* 
+	/*
 	 * Attachment to a precompiled expanded attribute
 	 */
 	case BC_PEXP_ASSIGN:
@@ -1595,7 +1595,7 @@ rt_private void interpret(int flag, int where)
 			last->it_ref = (EIF_REFERENCE) 0;
 		reverse_local (loc(code), type);
 		break;
-	
+
 	/*
 	 * Reverse assignment to an attribute.
 	 */
@@ -1672,7 +1672,7 @@ rt_private void interpret(int flag, int where)
 			last->it_char = EIF_FALSE;
 		}
 		break;
-	
+
 	/*
 	 * Object test to an object test local.
 	 */
@@ -1693,7 +1693,7 @@ rt_private void interpret(int flag, int where)
 			last->it_char = EIF_FALSE;
 		}
 		break;
-	
+
 	/*
 	 * Clone of a reference
 	 */
@@ -1723,7 +1723,7 @@ rt_private void interpret(int flag, int where)
 			}
 		}
 		break;
-	
+
 	/*
 	 * Conditional clone of an object if it is expanded
 	 */
@@ -1733,7 +1733,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		{	EIF_REFERENCE ref;
 			unsigned long stagval;
-	
+
 			stagval = tagval;
 			last = otop();
 			CHECK("last not null", last);
@@ -1751,7 +1751,7 @@ rt_private void interpret(int flag, int where)
 			}
 		}
 		break;
-	
+
 	/*
 	 * Exception "Void assigned to expanded"
 	 */
@@ -1773,7 +1773,7 @@ rt_private void interpret(int flag, int where)
 			last->type = SK_REF;
 		}
 		break;
-	
+
 	/*
 	 * Check instruction.
 	 */
@@ -1818,7 +1818,7 @@ rt_private void interpret(int flag, int where)
 			eif_panic(MTC "invalid assertion code");
 			/* NOTREADCHED */
 		}
-		switch (*IC++) {				
+		switch (*IC++) {
 		case BC_TAG:				/* Assertion tag */
 			string = get_string8(&IC, -1);
 			if ((assert_type == EX_CINV) || (assert_type == EX_INVC))
@@ -1846,8 +1846,8 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_END_ASSERT\n");
 #endif
-		code = (int) opop()->it_char;	/* Get the assertion 
-										 * boolean result 
+		code = (int) opop()->it_char;	/* Get the assertion
+										 * boolean result
 										 */
 		if (code) {
 			RTCK;				/* Assertion success */
@@ -1870,7 +1870,7 @@ rt_private void interpret(int flag, int where)
 		code = (int) opop()->it_char;
 									/* Get the assertion boolean result */
 		if (!code) {
-			pre_success = '\0'; 
+			pre_success = '\0';
 			IC += offset;
 		} else {
 			RTCK;
@@ -1878,7 +1878,7 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
-	 * Raise exception. 
+	 * Raise exception.
 	 */
 	case BC_RAISE_PREC:
 #ifdef DEBUG
@@ -1891,17 +1891,17 @@ rt_private void interpret(int flag, int where)
 		/* break; */
 
 	/*
-	 * Go to the body of the routine 
+	 * Go to the body of the routine
 	 */
 	case BC_GOTO_BODY:
 #ifdef DEBUG
 		dprintf(2)("BC_GOTO_BODY\n");
 #endif
 		{
-			offset = get_int32(&IC); 	/* Get offset to skip remaining 
+			offset = get_int32(&IC); 	/* Get offset to skip remaining
 									 * chained assertions.
 									 */
-			if (pre_success){ 
+			if (pre_success){
 				IC += offset;		/* Go to the body of routine */
 			}
 			else {
@@ -1999,8 +1999,8 @@ rt_private void interpret(int flag, int where)
 			has_closed = get_bool(&IC); /* Do we have an closed operands tuple? */
 			type = get_int16(&IC);
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
-			
-			class_id = get_int32(&IC);	
+
+			class_id = get_int32(&IC);
 			feature_id = get_int32(&IC);
 			is_precompiled = get_bool(&IC);
 			is_basic = get_bool(&IC);
@@ -2011,7 +2011,7 @@ rt_private void interpret(int flag, int where)
 			if (open_count > 0) {
 				aopen_map = opop();
 				open_map = (EIF_REFERENCE) (aopen_map->it_ref);
-			} 
+			}
 			if (has_closed) {
 				aclosed_operands = opop();
 				closed_operands = (EIF_REFERENCE) (aclosed_operands->it_ref);
@@ -2019,9 +2019,9 @@ rt_private void interpret(int flag, int where)
 			stagval = tagval;
 			OLD_IC = IC;
 				/* Create new object */
-			new_obj = RTLNRW(type, NULL, NULL, NULL, class_id, feature_id, open_map, is_precompiled, 
+			new_obj = RTLNRW(type, NULL, NULL, NULL, class_id, feature_id, open_map, is_precompiled,
 							 is_basic, is_target_closed, is_inline_agent, closed_operands, open_count);
-			
+
 			IC = OLD_IC;
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
@@ -2032,7 +2032,7 @@ rt_private void interpret(int flag, int where)
 										 * creation routine.
 										 * Also if the creation causes melted
 										 * Dispose to be called then sync_regs
-										 * has to be called. 
+										 * has to be called.
 										 */
 				sync_registers(MTC scur, stop);
 			}
@@ -2090,7 +2090,7 @@ rt_private void interpret(int flag, int where)
 				new_obj = RTLNSMART(type);	/* Create new object */
 			}
 			last = iget();				/* Push a new value onto the stack */
-			last->type = SK_REF;	
+			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
 			opush (last);				/* We need to push object on stack to check invariants */
 			if (need_push == (char) 1)
@@ -2102,7 +2102,7 @@ rt_private void interpret(int flag, int where)
 										 * creation routine.
 										 * Also if the creation causes melted
 										 * Dispose to be called then sync_regs
-										 * has to be called. 
+										 * has to be called.
 										 */
 				sync_registers(MTC scur, stop);
 		}
@@ -2135,8 +2135,8 @@ rt_private void interpret(int flag, int where)
 			} else {
 				spec_type = get_uint32(&IC);
 				switch (spec_type & SK_HEAD) {
-					case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
-					case SK_WCHAR: elem_size = sizeof(EIF_WIDE_CHAR); break;
+					case SK_CHAR8: elem_size = sizeof(EIF_CHARACTER_8); break;
+					case SK_CHAR32: elem_size = sizeof(EIF_CHARACTER_32); break;
 					case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
 					case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
 					case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
@@ -2173,7 +2173,7 @@ rt_private void interpret(int flag, int where)
 			}
 			new_obj = special_malloc (flags, type, nb, elem_size, is_basic);	/* Create new object */
 			last = iget();				/* Push a new value onto the stack */
-			last->type = SK_REF;	
+			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
 			opush (last);				/* We need to push object on stack to check invariants */
 
@@ -2223,8 +2223,8 @@ rt_private void interpret(int flag, int where)
 			case SK_INT16: if (lower->it_int32 <= (EIF_INTEGER_32) last->it_int16 && (EIF_INTEGER_32) last->it_int16 <= upper->it_int32) { IC += offset; } break;
 			case SK_INT32: if (lower->it_int32 <= (EIF_INTEGER_32) last->it_int32 && (EIF_INTEGER_32) last->it_int32 <= upper->it_int32) { IC += offset; } break;
 			case SK_INT64: if (lower->it_int64 <= last->it_int64 && last->it_int64 <= upper->it_int64) { IC += offset; } break;
-			case SK_CHAR: if (lower->it_wchar <= (EIF_WIDE_CHAR) last->it_char && (EIF_WIDE_CHAR) last->it_char <= upper->it_wchar) { IC += offset; } break;
-			case SK_WCHAR: if (lower->it_wchar <= last->it_wchar && last->it_wchar <= upper->it_wchar) { IC += offset; } break;
+			case SK_CHAR8: if (lower->it_wchar <= (EIF_CHARACTER_32) last->it_char && (EIF_CHARACTER_32) last->it_char <= upper->it_wchar) { IC += offset; } break;
+			case SK_CHAR32: if (lower->it_wchar <= last->it_wchar && last->it_wchar <= upper->it_wchar) { IC += offset; } break;
 			default:
 				eif_panic(MTC "invalid inspect type");
 				/* NOTREACHED */
@@ -2236,7 +2236,7 @@ rt_private void interpret(int flag, int where)
 			}
 		}
 		break;
-	
+
 	/*
 	 * Unmatched inspect value.
 	 */
@@ -2255,7 +2255,7 @@ rt_private void interpret(int flag, int where)
 	case BC_METAMORPHOSE:
 #ifdef DEBUG
 		dprintf(2)("BC_METAMORPHOSE\n");
-#endif 	
+#endif
 		metamorphose_top(scur, stop);
 		break;
 
@@ -2265,7 +2265,7 @@ rt_private void interpret(int flag, int where)
 	case BC_BOX:
 #ifdef DEBUG
 		dprintf(2)("BC_BOX\n");
-#endif 	
+#endif
 		type = get_int16(&IC);
 			/* GENERIC CONFORMANCE */
 		type = get_compound_id(MTC icurrent->it_ref,(short)type);
@@ -2405,7 +2405,7 @@ rt_private void interpret(int flag, int where)
 			interp_access((int)offset, code, type);
 		}
 		break;
-			
+
 	/*
 	 * Accessing a precompiled attribute in a nested expression
 	 * (need void ref. check).
@@ -2427,7 +2427,7 @@ rt_private void interpret(int flag, int where)
 			interp_paccess(origin, ooffset, type);
 		}
 		break;
-			
+
 	/*
 	 * Rotate the operational stack.
 	 */
@@ -2470,7 +2470,7 @@ rt_private void interpret(int flag, int where)
 		last->type = SK_REF;
 		last->it_ref = icurrent->it_ref;
 		break;
-	
+
 	/*
 	 * Character constant.
 	 */
@@ -2479,7 +2479,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_CHAR\n");
 #endif
 		last = iget();
-		last->type = SK_CHAR;
+		last->type = SK_CHAR8;
 		last->it_char = *IC++;
 		break;
 
@@ -2488,8 +2488,8 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_WCHAR\n");
 #endif
 		last = iget();
-		last->type = SK_WCHAR;
-		last->it_wchar = (EIF_WIDE_CHAR) get_int32(&IC);
+		last->type = SK_CHAR32;
+		last->it_wchar = (EIF_CHARACTER_32) get_int32(&IC);
 		break;
 
 	/*
@@ -2615,7 +2615,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		(void) opush(iresult);
 		break;
-		
+
 	/*
 	 * Access to a local variable.
 	 */
@@ -2715,7 +2715,7 @@ rt_private void interpret(int flag, int where)
 	/*
 	 * Bit operations on INTEGER
 	 */
-	
+
 	case BC_INT_BIT_OP:
 		eif_interp_bit_operations();
 		break;
@@ -2734,7 +2734,7 @@ rt_private void interpret(int flag, int where)
 		CHECK("double_type", last->type == SK_REAL64)
 		last->it_double = floor(last->it_double);
 		break;
-	
+
 	/*
 	 * Expanded comparison
  	 */
@@ -2832,7 +2832,7 @@ rt_private void interpret(int flag, int where)
 		last->it_char = '\0';
 		break;
 
-	/*	
+	/*
 	 * Address operator.
 	 */
 	case BC_ADDR:
@@ -2914,8 +2914,8 @@ rt_private void interpret(int flag, int where)
 
 				switch (pointed_object->type & SK_HEAD) {
 					case SK_BOOL:
-					case SK_CHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_char)); break;
-					case SK_WCHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_wchar)); break;
+					case SK_CHAR8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_char)); break;
+					case SK_CHAR32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_wchar)); break;
 					case SK_UINT8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint8)); break;
 					case SK_UINT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint16)); break;
 					case SK_UINT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint32)); break;
@@ -2938,7 +2938,7 @@ rt_private void interpret(int flag, int where)
 	/*
 	 * Expression address: $(s.to_c)
 	 */
-	case BC_OBJECT_EXPR_ADDR: 
+	case BC_OBJECT_EXPR_ADDR:
 #ifdef DEBUG
 	dprintf(2)("BC_OBJECT_EXPR_ADDR\n");
 #endif
@@ -2957,8 +2957,8 @@ rt_private void interpret(int flag, int where)
 
 		switch (pointed_object->type & SK_HEAD) {
 			case SK_BOOL:
-			case SK_CHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_char)); break;
-			case SK_WCHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_wchar)); break;
+			case SK_CHAR8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_char)); break;
+			case SK_CHAR32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_wchar)); break;
 			case SK_UINT8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint8)); break;
 			case SK_UINT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint16)); break;
 			case SK_UINT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_uint32)); break;
@@ -2994,7 +2994,7 @@ rt_private void interpret(int flag, int where)
 	/*
 	 * Manifest array
 	 */
- 
+
 	case BC_ARRAY:
 	case BC_PARRAY:
 #ifdef DEBUG
@@ -3011,7 +3011,7 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval;
 			EIF_TYPED_VALUE new_obj;
 			unsigned char *OLD_IC;
- 
+
 				/* Pop SPECIAL from stack. */
 			sp_area = opop()->it_ref;
 
@@ -3025,14 +3025,14 @@ rt_private void interpret(int flag, int where)
 			} else {
 				stype = get_int16(&IC);			/* Get the static type */
 				feat_id = get_int16(&IC);		  	/* Get the feature id */
-	 
+
 				stagval = tagval;
 				OLD_IC = IC;					/* Save IC counter */
 				new_obj = ((EIF_TYPED_VALUE (*)(EIF_REFERENCE)) RTWF(stype, feat_id, Dtype(sp_area))) (sp_area);
 			}
 			IC = OLD_IC;
 			if (tagval != stagval) {
-				sync_registers(MTC scur, stop); /* If calls melted make of array */ 
+				sync_registers(MTC scur, stop); /* If calls melted make of array */
 			}
 			last = iget();
 			last->type = SK_REF;
@@ -3058,8 +3058,8 @@ rt_private void interpret(int flag, int where)
 
 			switch (it->type & SK_HEAD) {
 				case SK_BOOL:
-				case SK_CHAR: *((EIF_CHARACTER *) sp_area + l_index) = it->it_char; break;
-				case SK_WCHAR: *((EIF_WIDE_CHAR *) sp_area + l_index) = it->it_wchar; break;
+				case SK_CHAR8: *((EIF_CHARACTER_8 *) sp_area + l_index) = it->it_char; break;
+				case SK_CHAR32: *((EIF_CHARACTER_32 *) sp_area + l_index) = it->it_wchar; break;
 				case SK_BIT: *((EIF_REFERENCE *) sp_area + l_index) = it->it_bit; break;
 				case SK_UINT8: *((EIF_NATURAL_8 *) sp_area + l_index) = it->it_uint8; break;
 				case SK_UINT16: *((EIF_NATURAL_16 *) sp_area + l_index) = it->it_uint16; break;
@@ -3102,8 +3102,8 @@ rt_private void interpret(int flag, int where)
 			last->type = type;	/* Stored type of accessed tuple element. */
 			switch (type & SK_HEAD) {
 				case SK_BOOL: last->it_char = eif_boolean_item (last->it_ref, pos); break;
-				case SK_CHAR: last->it_char = eif_character_item (last->it_ref, pos); break;
-				case SK_WCHAR: last->it_wchar = eif_wide_character_item (last->it_ref, pos); break;
+				case SK_CHAR8: last->it_char = eif_character_item (last->it_ref, pos); break;
+				case SK_CHAR32: last->it_wchar = eif_wide_character_item (last->it_ref, pos); break;
 				case SK_UINT8: last->it_uint8 = eif_natural_8_item (last->it_ref, pos); break;
 				case SK_UINT16: last->it_uint16 = eif_natural_16_item (last->it_ref, pos); break;
 				case SK_UINT32: last->it_uint32 = eif_natural_32_item (last->it_ref, pos); break;
@@ -3132,8 +3132,8 @@ rt_private void interpret(int flag, int where)
 			(void) RTCV(tuple->it_ref);	/* Check that TUPLE is not Void. */
 			switch (type & SK_HEAD) {
 				case SK_BOOL: eif_put_boolean_item (tuple->it_ref, pos, source->it_char); break;
-				case SK_CHAR: eif_put_character_item (tuple->it_ref, pos, source->it_char); break;
-				case SK_WCHAR: eif_put_wide_character_item (tuple->it_ref, pos, source->it_wchar); break;
+				case SK_CHAR8: eif_put_character_item (tuple->it_ref, pos, source->it_char); break;
+				case SK_CHAR32: eif_put_wide_character_item (tuple->it_ref, pos, source->it_wchar); break;
 				case SK_UINT8: eif_put_natural_8_item (tuple->it_ref, pos, source->it_uint8); break;
 				case SK_UINT16: eif_put_natural_16_item (tuple->it_ref, pos, source->it_uint16); break;
 				case SK_UINT32: eif_put_natural_32_item (tuple->it_ref, pos, source->it_uint32); break;
@@ -3151,7 +3151,7 @@ rt_private void interpret(int flag, int where)
 		}
 
 		break;
-		
+
 	case BC_TUPLE:
 	case BC_PTUPLE:
 #ifdef DEBUG
@@ -3170,7 +3170,7 @@ rt_private void interpret(int flag, int where)
 			EIF_TYPED_VALUE *it;
 			unsigned char *OLD_IC;
 			EIF_BOOLEAN is_atomic;
- 
+
 			dtype = get_int16(&IC);			/* Get the static type */
 
 				/*GENERIC CONFORMANCE */
@@ -3180,22 +3180,22 @@ rt_private void interpret(int flag, int where)
 			is_atomic = EIF_TEST(get_int32(&IC));
 			stagval = tagval;
 			OLD_IC = IC;					/* Save IC counter */
-	 
+
 			new_obj = RTLNTS(dtype, nbr_of_items, is_atomic);	/* Create new object */
 			RT_GC_PROTECT(new_obj);   /* Protect new_obj */
 
 			IC = OLD_IC;
 			if (tagval != stagval)
-				sync_registers(MTC scur, stop); /* If calls melted make of tuple */ 
-		
+				sync_registers(MTC scur, stop); /* If calls melted make of tuple */
+
 			while (curr_pos < nbr_of_items) {
 				/* Fill the tuple with the expressions for the manifest tuple. */
 
 				it = opop();		/* Pop expression off stack */
 				switch (it->type & SK_HEAD) {
 					case SK_BOOL: eif_put_boolean_item(new_obj, curr_pos, it->it_char); break;
-					case SK_CHAR: eif_put_character_item(new_obj, curr_pos, it->it_char); break;
-					case SK_WCHAR: eif_put_wide_character_item(new_obj, curr_pos, it->it_wchar); break;
+					case SK_CHAR8: eif_put_character_item(new_obj, curr_pos, it->it_char); break;
+					case SK_CHAR32: eif_put_wide_character_item(new_obj, curr_pos, it->it_wchar); break;
 					case SK_BIT: eif_put_reference_item(new_obj, curr_pos, it->it_bit); break;
 					case SK_UINT8: eif_put_natural_8_item(new_obj, curr_pos, it->it_uint8); break;
 					case SK_UINT16: eif_put_natural_16_item(new_obj, curr_pos, it->it_uint16); break;
@@ -3243,7 +3243,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_START_EVAL_OLD\n");
 #endif
-		
+
 		offset = get_int32(&IC);		/* Get offset for skipping old evaluation block */
 		if (~in_assertion & WASC(icur_dtype) & CK_ENSURE) {
 			in_assertion = ~0;
@@ -3259,13 +3259,13 @@ rt_private void interpret(int flag, int where)
 					RESTORE(db_stack,dcur_o,dtop_o);
 					saved_except_for_old = RTLA;
 					exold (); /* Push an empty vector to pair the following poping */
-					sync_registers(MTC scur_o, stop_o); 
+					sync_registers(MTC scur_o, stop_o);
 					IC = IC_O + offset_o; /* Jump to the next BC_OLD */
 				}
 			}
 		} else {
 			IC += offset;			/* Skip old evaulation */
-		}	
+		}
 		break;
 
 	/*
@@ -3286,7 +3286,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_OLD\n");
 #endif
-		if (!saved_except_for_old) 
+		if (!saved_except_for_old)
 			/* If there was an exception, op_stack was not pushed the old value */
 			/* Only read the position forward in IC */
 		{
@@ -3323,14 +3323,14 @@ rt_private void interpret(int flag, int where)
 				RESTORE(db_stack,dcur_o,dtop_o);
 				saved_except_for_old = RTLA;
 				exold (); /* Push an empty vector to pair the following poping */
-				sync_registers(MTC scur_o, stop_o); 
+				sync_registers(MTC scur_o, stop_o);
 				IC = IC_O + offset_o; /* Jump to the next BC_OLD */
 			}
 		}
 		break;
 
 	/*
-	 * Add attribute name to be stripped. 
+	 * Add attribute name to be stripped.
 	 */
 	case BC_ADD_STRIP:
 #ifdef DEBUG
@@ -3343,7 +3343,7 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
-	 * End strip execution 
+	 * End strip execution
 	 */
 	case BC_END_STRIP:
 #ifdef DEBUG
@@ -3364,7 +3364,7 @@ rt_private void interpret(int flag, int where)
 				enomem(MTC_NOARG);
 			while (nbr_of_items--) {
 				last = opop();
-				stripped[nbr_of_items] = last->it_ref; 
+				stripped[nbr_of_items] = last->it_ref;
 			}
 			array = striparr(icurrent->it_ref, d_type, stripped, temp);
 			if (tagval != stagval)
@@ -3389,7 +3389,7 @@ rt_private void interpret(int flag, int where)
 			int32 body_index;	/* routine body index */
 			int32 number;	/* number of the once manifest string in routine body */
 			int32 length;	/* length of once manifest string */
- 
+
 			stagval = tagval;
 			body_index = get_int32(&IC);	/* Get routine body index */
 			number = get_int32(&IC);	/* Get number of the once manifest string in the routine body */
@@ -3407,7 +3407,7 @@ rt_private void interpret(int flag, int where)
 			}
 			break;
 		}
- 
+
 	/*
 	 * Allocate space to store once manifest strings.
 	 */
@@ -3419,7 +3419,7 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval;
 			int32 body_index;	/* routine body index */
 			int32 count;	/* total number of the once manifest strings in routine body */
- 
+
 			stagval = tagval;
 			body_index = get_int32(&IC);	/* Get routine body index */
 			count = get_int32(&IC);	/* Get total number of the once manifest string in the routine body */
@@ -3430,7 +3430,7 @@ rt_private void interpret(int flag, int where)
 			}
 			break;
 		}
- 
+
 	/*
 	 * Manifest string.
 	 */
@@ -3443,13 +3443,13 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval;
 			unsigned char *OLD_IC;
 			int32 length;
- 
+
 			stagval = tagval;
 			length = get_int32(&IC);
 			string = get_string8(&IC, length);	/* Get string of specified length. */
 			last = iget();
 			last->type = SK_INT32;		/* Protect empty cell from GC */
- 
+
 			/* We have to use the str_obj temporary variable instead of doing
 			 * the assignment directly into last->it_ref because the GC might
 			 * run a cycle when makestr() is called...
@@ -3458,14 +3458,14 @@ rt_private void interpret(int flag, int where)
 			OLD_IC = IC;
 			str_obj = RTMS_EX((char *) string, length);
 			IC = OLD_IC;
- 
+
 			last->type = SK_REF;
 			last->it_ref = str_obj;
 			if (tagval != stagval)
 				sync_registers(MTC scur,stop);
 			break;
 		}
- 
+
 
 	/*
 	 * Manifest bit
@@ -3487,13 +3487,13 @@ rt_private void interpret(int flag, int where)
 			new_obj = RTLB((uint16)realcount);			/* Creation */
 			addr = ARENA(new_obj);
 			nb_uint32 = BIT_NBPACK(bcount);
-			while (nb_uint32--)	/* Write bit count and value in `new_obj' */ 
+			while (nb_uint32--)	/* Write bit count and value in `new_obj' */
 				*addr++ = get_uint32(&IC);
 			last->type = SK_BIT + bcount; /* bcount or realcount ??*/
 			last->it_bit = new_obj;
 		}
 		break;
-			
+
 	/*
 	 * Jump if top of stack is false (value is poped).
 	 */
@@ -3799,7 +3799,7 @@ rt_private void interpret(int flag, int where)
 	/* NOTREACHED */
 }
 
-rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where)          
+rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where)
 					  		/* Current chunk (stack context) */
 							/* To save stack context */
 		  					/* Invariant after or before */
@@ -3827,8 +3827,8 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_V
 }
 
 rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where)
-		  
-		  
+
+
 					  		/* Current chunk (stack context) */
 				  			/* To save stack context */
 		  					/* Invariant after or before */
@@ -3880,17 +3880,17 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 		BODY_INDEX body_id;
 		EIF_TYPED_VALUE *last;
 
-		CBodyId(body_id,INVARIANT_ID,dtype);	
+		CBodyId(body_id,INVARIANT_ID,dtype);
 		if (body_id != INVALID_ID) {
 			if (egc_frozen [body_id]) {		/* Frozen invariant */
 				unsigned long stagval = tagval;	/* Tag value backup */
-	
+
 				((void (*)(EIF_REFERENCE, int)) egc_frozen[body_id])(obj, where);
-	
+
 				if (tagval != stagval)			/* Resynchronize registers */
 					sync_registers(MTC scur, stop);
-	
-			} else 
+
+			} else
 			{				/* Melted invariant */
 				last = iget();					/* Push `obj' */
 				last->type = SK_REF;
@@ -3898,7 +3898,7 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 					/* The proper way to start the interpretation of a melted
 					* invariant code is to call `xiinv' in order to initialize the
 					* calling context (which is not done by `interpret').
-					* `tagval' will therefore be set, but we have to 
+					* `tagval' will therefore be set, but we have to
 					* resynchronize the registers anyway. --ericb
 					*/
 				xiinv(MTC melt[body_id], where);
@@ -3987,7 +3987,7 @@ rt_private void diadic_op(int code)
 
 	EIF_TYPED_VALUE *second;		/* Second operand */
 	EIF_TYPED_VALUE *first;			/* First operand */
-	
+
 #define f first
 #define s second
 
@@ -4048,10 +4048,10 @@ rt_private void diadic_op(int code)
 	case BC_MINUS: {
 		uint32 sk_type = s->type & SK_HEAD;
 			/* Special case for `-' from CHARACTER_8 and CHARACTER_32 class. */
-		if ((f->type & SK_HEAD) == SK_CHAR) {
+		if ((f->type & SK_HEAD) == SK_CHAR8) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
-			f->it_char = f->it_char - (EIF_CHARACTER) s->it_int32;
-		} else if ((f->type & SK_HEAD) == SK_WCHAR) {
+			f->it_char = f->it_char - (EIF_CHARACTER_8) s->it_int32;
+		} else if ((f->type & SK_HEAD) == SK_CHAR32) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
 			f->it_wchar = f->it_wchar - s->it_int32;
 		} else {
@@ -4078,10 +4078,10 @@ rt_private void diadic_op(int code)
 	case BC_PLUS: {
 		uint32 sk_type = s->type & SK_HEAD;
 			/* Special case for `+' from CHARACTER_8 and CHARACTER_32 class. */
-		if ((f->type & SK_HEAD) == SK_CHAR) {
+		if ((f->type & SK_HEAD) == SK_CHAR8) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
-			f->it_char = f->it_char + (EIF_CHARACTER) s->it_int32;
-		} else if ((f->type & SK_HEAD) == SK_WCHAR) {
+			f->it_char = f->it_char + (EIF_CHARACTER_8) s->it_int32;
+		} else if ((f->type & SK_HEAD) == SK_CHAR32) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
 			f->it_wchar = f->it_wchar + s->it_int32;
 		} else {
@@ -4216,8 +4216,8 @@ rt_private void diadic_op(int code)
 
 rt_private void eif_interp_gt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	switch(f->type & SK_HEAD) {
-		case SK_CHAR: f->it_char = EIF_TEST(f->it_char > s->it_char); break;
-		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar > s->it_wchar); break;
+		case SK_CHAR8: f->it_char = EIF_TEST(f->it_char > s->it_char); break;
+		case SK_CHAR32: f->it_char = EIF_TEST(f->it_wchar > s->it_wchar); break;
 		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 > s->it_uint8); break;
 		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 > s->it_uint16); break;
 		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 > s->it_uint32); break;
@@ -4247,8 +4247,8 @@ rt_private void eif_interp_gt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 
 rt_private void eif_interp_ge(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	switch(f->type & SK_HEAD) {
-		case SK_CHAR: f->it_char = EIF_TEST(f->it_char >= s->it_char); break;
-		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar >= s->it_wchar); break;
+		case SK_CHAR8: f->it_char = EIF_TEST(f->it_char >= s->it_char); break;
+		case SK_CHAR32: f->it_char = EIF_TEST(f->it_wchar >= s->it_wchar); break;
 		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 >= s->it_uint8); break;
 		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 >= s->it_uint16); break;
 		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 >= s->it_uint32); break;
@@ -4278,8 +4278,8 @@ rt_private void eif_interp_ge(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 
 rt_private void eif_interp_lt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	switch(f->type & SK_HEAD) {
-		case SK_CHAR: f->it_char = EIF_TEST(f->it_char < s->it_char); break;
-		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar < s->it_wchar); break;
+		case SK_CHAR8: f->it_char = EIF_TEST(f->it_char < s->it_char); break;
+		case SK_CHAR32: f->it_char = EIF_TEST(f->it_wchar < s->it_wchar); break;
 		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 < s->it_uint8); break;
 		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 < s->it_uint16); break;
 		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 < s->it_uint32); break;
@@ -4309,8 +4309,8 @@ rt_private void eif_interp_lt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 
 rt_private void eif_interp_le(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	switch(f->type & SK_HEAD) {
-		case SK_CHAR: f->it_char = EIF_TEST(f->it_char <= s->it_char); break;
-		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar <= s->it_wchar); break;
+		case SK_CHAR8: f->it_char = EIF_TEST(f->it_char <= s->it_char); break;
+		case SK_CHAR32: f->it_char = EIF_TEST(f->it_wchar <= s->it_wchar); break;
 		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 <= s->it_uint8); break;
 		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 <= s->it_uint16); break;
 		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 <= s->it_uint32); break;
@@ -4341,8 +4341,8 @@ rt_private void eif_interp_le(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	switch(f->type & SK_HEAD) {
 		case SK_BOOL:
-		case SK_CHAR: f->it_char = EIF_TEST(f->it_char == s->it_char); break;
-		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar == s->it_wchar); break;
+		case SK_CHAR8: f->it_char = EIF_TEST(f->it_char == s->it_char); break;
+		case SK_CHAR32: f->it_char = EIF_TEST(f->it_wchar == s->it_wchar); break;
 		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 == s->it_uint8); break;
 		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 == s->it_uint16); break;
 		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 == s->it_uint32); break;
@@ -4386,13 +4386,13 @@ rt_private void eif_interp_generator (struct stochunk *stack_cur, EIF_TYPED_VALU
 	unsigned long stagval = tagval;	/* Tag value backup */
 
 	OLD_IC = IC;
-	
+
 	first = otop();				/* First operand will be replace by result */
 	CHECK("first not null", first);
 	switch (first->type & SK_HEAD) {
 		case SK_BOOL: first->it_ref = RTMS_EX("BOOLEAN", 7); break;
-		case SK_CHAR: first->it_ref = RTMS_EX("CHARACTER_8", 11); break;
-		case SK_WCHAR: first->it_ref = RTMS_EX("CHARACTER_32", 12); break;
+		case SK_CHAR8: first->it_ref = RTMS_EX("CHARACTER_8", 11); break;
+		case SK_CHAR32: first->it_ref = RTMS_EX("CHARACTER_32", 12); break;
 		case SK_UINT8: first->it_ref = RTMS_EX("NATURAL_8", 9); break;
 		case SK_UINT16: first->it_ref = RTMS_EX("NATURAL_16", 10); break;
 		case SK_UINT32: first->it_ref = RTMS_EX("NATURAL_32", 10); break;
@@ -4430,7 +4430,7 @@ rt_private void eif_interp_min_max (int code)
 
 	EIF_TYPED_VALUE *second;		/* Second operand */
 	EIF_TYPED_VALUE *first;			/* First operand */
-	
+
 	second = opop();			/* Fetch second operand */
 	first = otop();				/* First operand will be replace by result */
 	CHECK("first not null", first);
@@ -4438,8 +4438,8 @@ rt_private void eif_interp_min_max (int code)
 	switch (code) {				/* Execute operation */
 		case BC_MAX:
 			switch(first->type & SK_HEAD) {
-				case SK_CHAR: first->it_char = (EIF_CHARACTER) EIF_MAX(first->it_char, second->it_char); break;
-				case SK_WCHAR: first->it_wchar = (EIF_CHARACTER) EIF_MAX(first->it_wchar, second->it_wchar); break;
+				case SK_CHAR8: first->it_char = (EIF_CHARACTER_8) EIF_MAX(first->it_char, second->it_char); break;
+				case SK_CHAR32: first->it_wchar = (EIF_CHARACTER_8) EIF_MAX(first->it_wchar, second->it_wchar); break;
 				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) EIF_MAX(first->it_uint8, second->it_uint8); break;
 				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) EIF_MAX(first->it_uint16, second->it_uint16); break;
 				case SK_UINT32: first->it_uint32 = (EIF_NATURAL_32) EIF_MAX(first->it_uint32, second->it_uint32); break;
@@ -4467,8 +4467,8 @@ rt_private void eif_interp_min_max (int code)
 			break;
 		case BC_MIN:
 			switch(first->type & SK_HEAD) {
-				case SK_CHAR: first->it_char = (EIF_CHARACTER) EIF_MIN(first->it_char, second->it_char); break;
-				case SK_WCHAR: first->it_wchar = (EIF_CHARACTER) EIF_MIN(first->it_wchar, second->it_wchar); break;
+				case SK_CHAR8: first->it_char = (EIF_CHARACTER_8) EIF_MIN(first->it_char, second->it_char); break;
+				case SK_CHAR32: first->it_wchar = (EIF_CHARACTER_8) EIF_MIN(first->it_wchar, second->it_wchar); break;
 				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) EIF_MIN(first->it_uint8, second->it_uint8); break;
 				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) EIF_MIN(first->it_uint16, second->it_uint16); break;
 				case SK_UINT32: first->it_uint32 = (EIF_NATURAL_32) EIF_MIN(first->it_uint32, second->it_uint32); break;
@@ -4513,7 +4513,7 @@ rt_private void eif_three_way_comparison (void)
 
 	EIF_TYPED_VALUE *second;		/* Second operand */
 	EIF_TYPED_VALUE *first;			/* First operand */
-	
+
 	second = opop();			/* Fetch second operand */
 	first = otop();				/* First operand will be replace by result */
 	CHECK("first not null", first);
@@ -4521,8 +4521,8 @@ rt_private void eif_three_way_comparison (void)
 	REQUIRE("Same type", (first->type & SK_HEAD) == (second->type & SK_HEAD));
 
 	switch(first->type & SK_HEAD) {
-		case SK_CHAR: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_char, second->it_char); break;
-		case SK_WCHAR: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_wchar, second->it_wchar); break;
+		case SK_CHAR8: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_char, second->it_char); break;
+		case SK_CHAR32: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_wchar, second->it_wchar); break;
 		case SK_UINT8: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_uint8, second->it_uint8); break;
 		case SK_UINT16: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_uint16, second->it_uint16); break;
 		case SK_UINT32: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_uint32, second->it_uint32); break;
@@ -4567,13 +4567,13 @@ rt_private void eif_interp_offset(void)
 
 	EIF_TYPED_VALUE *second;		/* Second operand */
 	EIF_TYPED_VALUE *first;			/* First operand */
-	
+
 	second = opop();			/* Fetch second operand */
 	first = otop();				/* First operand will be replace by result */
 	CHECK("first not null", first);
 	switch(first->type & SK_HEAD) {
-		case SK_CHAR:
-			first->it_char = (EIF_CHARACTER) (((EIF_INTEGER_32) first->it_char) + second->it_int32);
+		case SK_CHAR8:
+			first->it_char = (EIF_CHARACTER_8) (((EIF_INTEGER_32) first->it_char) + second->it_int32);
 			break;
 		case SK_POINTER:
 			first->it_ptr = RTPOF(first->it_ptr, second->it_int32);
@@ -4630,7 +4630,7 @@ rt_private void eif_interp_builtins (struct stochunk *stack_cur, EIF_TYPED_VALUE
 			iresult->type = SK_REF;
 			iresult->it_ref = eif_builtin_TYPE_generic_parameter_type(icurrent->it_ref,arg(1)->it_int32);
 			break;
-	
+
 		case BC_BUILTIN_TYPE__GENERIC_PARAMETER_COUNT:
 			iresult->type = SK_INT32;
 			iresult->it_int32 = eif_builtin_TYPE_generic_parameter_count(icurrent->it_ref);
@@ -4678,7 +4678,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 		case BC_OFFSET:
 			eif_interp_offset();
 			break;
-	
+
 			/* Call to `zero' */
 		case BC_ZERO:
 			first = otop();	/* First operand will be replace by result */
@@ -4963,13 +4963,13 @@ rt_shared void dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtyp
 		dynamic_eval (fid_or_offset, stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, 0, nb_pushed);
 		last = otop();
 		if (last != NULL && last != previous_otop) { /* a result has been pushed on the stack */
-			memcpy(result, opop(), sizeof(EIF_TYPED_VALUE)); 
+			memcpy(result, opop(), sizeof(EIF_TYPED_VALUE));
 			type = result->type & SK_HEAD;
 			if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL)) {
 				result->type = type | Dtype(result->it_ref);
 			}
 		} else {
-			result->type = SK_VOID; 
+			result->type = SK_VOID;
 		}
 		debug_mode = saved_debug_mode;
 		expop(&eif_stack);
@@ -4986,7 +4986,7 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 						/* Is it an external or an Eiffel feature */
 						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
-						/* Does dynamic_eval catch the exception or pass it to caller ? 
+						/* Does dynamic_eval catch the exception or pass it to caller ?
 						 * when called by debugger, pass it to the debugger                */
 	{
 	RT_GET_CONTEXT
@@ -5027,7 +5027,7 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 				/* We need to create a reference to the basic type on the fly */
 			metamorphose_top(scur, stop);
 		}
-		
+
 		if (! is_precompiled) {
 			int stype = stype_or_origin;
 			rout_id = Routids(stype)[fid_or_offset];
@@ -5038,7 +5038,7 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 			} else {
 				last = otop();
 				CHECK("last not null", last);
-				CBodyId(body_id,rout_id,Dtype(last->it_ref));		
+				CBodyId(body_id,rout_id,Dtype(last->it_ref));
 			}
 		} else {
 			int origin = stype_or_origin;
@@ -5056,7 +5056,7 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 			pid = (uint32) FPatId(body_id);
 			(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
 		} else {
-			/* The proper way to start the interpretation of a melted feature is to call `xinterp' 
+			/* The proper way to start the interpretation of a melted feature is to call `xinterp'
 			 * in order to initialize the calling context (which is not done by `interpret').
 			 * `tagval' will therefore be set, but we have to resynchronize the registers anyway.
 			 */
@@ -5092,7 +5092,7 @@ rt_private int icall(int fid, int stype, int ptype)
 	int result = 0;					/* A priori, no need for sync_registers */
 	uint32 pid;						/* Pattern id of the frozen feature */
 	int32 rout_id;
-	EIF_TYPED_VALUE *last;	
+	EIF_TYPED_VALUE *last;
 
 	rout_id = Routids(stype)[fid];
 
@@ -5114,11 +5114,11 @@ rt_private int icall(int fid, int stype, int ptype)
 		/* The proper way to start the interpretation of a melted
 		 * feature is to call `xinterp' in order to initialize the
 		 * calling context (which is not done by `interpret').
-		 * `tagval' will therefore be set, but we have to 
+		 * `tagval' will therefore be set, but we have to
 		 * resynchronize the registers anyway. --ericb
 		 */
 		xinterp(MTC melt[body_id], 0);
-	
+
 		result = 1;							/* Compulsory synchronisation */
 	}
 	IC = OLD_IC;					/* Restore IC back-up */
@@ -5166,11 +5166,11 @@ rt_private int ipcall(int32 origin, int32 offset, int ptype)
 			/* The proper way to start the interpretation of a melted
 			 * feature is to call `xinterp' in order to initialize the
 			 * calling context (which is not done by `interpret').
-			 * `tagval' will therefore be set, but we have to 
+			 * `tagval' will therefore be set, but we have to
 			 * resynchronize the registers anyway. --ericb
 			 */
 		xinterp(MTC melt[body_id], 0);
-	
+
 		result = 1;							/* Compulsory synchronisation */
 	}
 	IC = OLD_IC;					/* Restore IC back-up */
@@ -5200,8 +5200,8 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	last->type = type;			/* Store type of accessed attribute */
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
-	case SK_CHAR: last->it_char = *(current + offset); break;
-	case SK_WCHAR: last->it_wchar = *(EIF_WIDE_CHAR *) (current + offset); break;
+	case SK_CHAR8: last->it_char = *(current + offset); break;
+	case SK_CHAR32: last->it_wchar = *(EIF_CHARACTER_32 *) (current + offset); break;
 	case SK_UINT8: last->it_uint8 = *(EIF_NATURAL_8 *) (current + offset); break;
 	case SK_UINT16: last->it_uint16 = *(EIF_NATURAL_16 *) (current + offset); break;
 	case SK_UINT32: last->it_uint32 = *(EIF_NATURAL_32 *) (current + offset); break;
@@ -5245,8 +5245,8 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	last->type = type;			/* Store type of accessed attribute */
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
-	case SK_CHAR: last->it_char = *(current + offset); break;
-	case SK_WCHAR: last->it_wchar = *(EIF_WIDE_CHAR *) (current + offset); break;
+	case SK_CHAR8: last->it_char = *(current + offset); break;
+	case SK_CHAR32: last->it_wchar = *(EIF_CHARACTER_32 *) (current + offset); break;
 	case SK_UINT8: last->it_uint8 = *(EIF_NATURAL_8 *) (current + offset); break;
 	case SK_UINT16: last->it_uint16 = *(EIF_NATURAL_16 *) (current + offset); break;
 	case SK_UINT32: last->it_uint32 = *(EIF_NATURAL_32 *) (current + offset); break;
@@ -5274,7 +5274,7 @@ rt_private void assign(long offset, uint32 type)
 {
 	/* Assign the value on top of the stack to the attribute described by its
 	 * offset. */
-	
+
 	RT_GET_CONTEXT
 	EIF_TYPED_VALUE *last;				/* Value on top of the stack */
 	EIF_REFERENCE ref;
@@ -5295,8 +5295,8 @@ rt_private void assign(long offset, uint32 type)
 
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
-	case SK_CHAR: *(i->it_ref + offset) = l->it_char; break;
-	case SK_WCHAR: *(EIF_WIDE_CHAR *) (i->it_ref + offset) = l->it_wchar; break;
+	case SK_CHAR8: *(i->it_ref + offset) = l->it_char; break;
+	case SK_CHAR32: *(EIF_CHARACTER_32 *) (i->it_ref + offset) = l->it_wchar; break;
 	case SK_UINT8: *(EIF_NATURAL_8 *)(i->it_ref + offset) = l->it_uint8; break;
 	case SK_UINT16: *(EIF_NATURAL_16 *)(i->it_ref + offset) = l->it_uint16; break;
 	case SK_UINT64: *(EIF_NATURAL_64 *)(i->it_ref + offset) = l->it_uint64; break;
@@ -5334,7 +5334,7 @@ rt_private void reverse_attribute(long offset, uint32 type)
 {
 	/* Assign the value on top of the stack to the attribute described by its
 	 * offset. */
-	
+
 	RT_GET_CONTEXT
 	EIF_TYPED_VALUE *last;				/* Value on top of the stack */
 	EIF_REFERENCE ref;
@@ -5355,8 +5355,8 @@ rt_private void reverse_attribute(long offset, uint32 type)
 
 		switch (type & SK_HEAD) {
 		case SK_BOOL:    *(EIF_BOOLEAN    *) (i->it_ref + offset) = * (EIF_BOOLEAN    *) last->it_ref; break;
-		case SK_CHAR:    *(EIF_CHARACTER  *) (i->it_ref + offset) = * (EIF_CHARACTER  *) last->it_ref; break;
-		case SK_WCHAR:   *(EIF_WIDE_CHAR  *) (i->it_ref + offset) = * (EIF_WIDE_CHAR  *) last->it_ref; break;
+		case SK_CHAR8:    *(EIF_CHARACTER_8  *) (i->it_ref + offset) = * (EIF_CHARACTER_8  *) last->it_ref; break;
+		case SK_CHAR32:   *(EIF_CHARACTER_32  *) (i->it_ref + offset) = * (EIF_CHARACTER_32  *) last->it_ref; break;
 		case SK_UINT8:   *(EIF_NATURAL_8  *) (i->it_ref + offset) = * (EIF_NATURAL_8  *) last->it_ref; break;
 		case SK_UINT16:  *(EIF_NATURAL_16 *) (i->it_ref + offset) = * (EIF_NATURAL_16 *) last->it_ref; break;
 		case SK_UINT32:  *(EIF_NATURAL_32 *) (i->it_ref + offset) = * (EIF_NATURAL_32 *) last->it_ref; break;
@@ -5400,8 +5400,8 @@ rt_private void reverse_local(EIF_TYPED_VALUE * it, EIF_TYPE_INDEX type) {
 		if (last->it_ref != (EIF_REFERENCE) 0) {
 			switch (it->type & SK_HEAD) {
 			case SK_BOOL: 	 it->it_char   = * (EIF_BOOLEAN    *) last->it_ref; break;
-			case SK_CHAR:	 it->it_char   = * (EIF_CHARACTER  *) last->it_ref; break;
-			case SK_WCHAR:	 it->it_wchar  = * (EIF_WIDE_CHAR  *) last->it_ref; break;
+			case SK_CHAR8:	 it->it_char   = * (EIF_CHARACTER_8  *) last->it_ref; break;
+			case SK_CHAR32:	 it->it_wchar  = * (EIF_CHARACTER_32  *) last->it_ref; break;
 			case SK_UINT8: 	 it->it_uint8  = * (EIF_NATURAL_8  *) last->it_ref; break;
 			case SK_UINT16:  it->it_uint16 = * (EIF_NATURAL_16 *) last->it_ref; break;
 			case SK_UINT32:  it->it_uint32 = * (EIF_NATURAL_32 *) last->it_ref; break;
@@ -5487,7 +5487,7 @@ rt_private void address(int32 aid)
 	last->it_ptr = (EIF_POINTER) RTWPP(aid);
 }
 
-rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current) 
+rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 	/* Compute next element of currently traversed compound_id. */
 {
 	RT_GET_CONTEXT
@@ -5554,7 +5554,7 @@ rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current, EIF_TYPE_INDEX d
 		/* If not generic then return dtype */
 	if (cnt <= 2)
 		return dtype;
-	
+
 	return eif_compound_id (Dftype (Current), dtype, gen_types);
 }
 
@@ -5565,7 +5565,7 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 	EIF_TYPE_INDEX type;/* Often used to hold type values */
 	EIF_TYPE_INDEX code;			/* Current intepreted byte code */
 	long offset;		/* Offset for jumps and al */
-	
+
 	switch (*IC++) {
 	case BC_CTYPE:				/* Hardcoded creation type */
 		type = get_int16(&IC);
@@ -5626,8 +5626,8 @@ rt_private void init_var(EIF_TYPED_VALUE *ptr, uint32 type, EIF_REFERENCE curren
 
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
-	case SK_CHAR:		ptr->it_char = (EIF_CHARACTER) 0; break;
-	case SK_WCHAR:		ptr->it_wchar = (EIF_WIDE_CHAR) 0; break;
+	case SK_CHAR8:		ptr->it_char = (EIF_CHARACTER_8) 0; break;
+	case SK_CHAR32:		ptr->it_wchar = (EIF_CHARACTER_32) 0; break;
 	case SK_UINT8:		ptr->it_uint8 = (EIF_NATURAL_8) 0; break;
 	case SK_UINT16:		ptr->it_uint16 = (EIF_NATURAL_16) 0; break;
 	case SK_UINT32:		ptr->it_uint32 = (EIF_NATURAL_32) 0; break;
@@ -5656,11 +5656,11 @@ rt_private void put_once_result (EIF_TYPED_VALUE *ptr, uint32 rtype, MTOT OResul
 	REQUIRE("ptr not null", ptr);
 	REQUIRE("OResult not null", OResult);
 
-	switch (rtype & SK_HEAD) 
+	switch (rtype & SK_HEAD)
 	{
 	case SK_BOOL:    MTOP(EIF_BOOLEAN,    OResult, ptr->it_char);   break;
-	case SK_CHAR:    MTOP(EIF_CHARACTER,  OResult, ptr->it_char);   break;
-	case SK_WCHAR:   MTOP(EIF_WIDE_CHAR,  OResult, ptr->it_wchar);  break;
+	case SK_CHAR8:    MTOP(EIF_CHARACTER_8,  OResult, ptr->it_char);   break;
+	case SK_CHAR32:   MTOP(EIF_CHARACTER_32,  OResult, ptr->it_wchar);  break;
 	case SK_UINT8:   MTOP(EIF_NATURAL_8,  OResult, ptr->it_uint8);  break;
 	case SK_UINT16:  MTOP(EIF_NATURAL_16, OResult, ptr->it_uint16); break;
 	case SK_UINT32:  MTOP(EIF_NATURAL_32, OResult, ptr->it_uint32); break;
@@ -5684,11 +5684,11 @@ rt_private void get_once_result (MTOT OResult, uint32 rtype, EIF_TYPED_VALUE *pt
 	REQUIRE("OResult not null", OResult);
 	REQUIRE("ptr not null", ptr);
 
-	switch (rtype & SK_HEAD) 
+	switch (rtype & SK_HEAD)
 	{
 	case SK_BOOL:
-	case SK_CHAR:    ptr->it_char   = MTOR(EIF_CHARACTER,  OResult); break;
-	case SK_WCHAR:   ptr->it_wchar  = MTOR(EIF_WIDE_CHAR,  OResult); break;
+	case SK_CHAR8:    ptr->it_char   = MTOR(EIF_CHARACTER_8,  OResult); break;
+	case SK_CHAR32:   ptr->it_wchar  = MTOR(EIF_CHARACTER_32,  OResult); break;
 	case SK_UINT8:   ptr->it_uint8  = MTOR(EIF_NATURAL_8,  OResult); break;
 	case SK_UINT16:  ptr->it_uint16 = MTOR(EIF_NATURAL_16, OResult); break;
 	case SK_UINT32:  ptr->it_uint32 = MTOR(EIF_NATURAL_32, OResult); break;
@@ -5837,7 +5837,7 @@ rt_shared void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack
 	uint32 n;				/* Loop index */
 	EIF_TYPED_VALUE **reg;	/* Address in register's array */
 	struct opstack op_context;		/* To save stack's context */
-	
+
 	memcpy (&op_context, &op_stack, sizeof(struct opstack));
 
 	/* Restore the context the stack was in just after we had initialized the
@@ -5874,7 +5874,7 @@ rt_shared void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack
 	 * certainly means we have called another interpreted feature and the
 	 * debugging cached information have been disturbed.
 	 */
-	
+
 	dsync();						/* Resynchronize cached status */
 }
 
@@ -5954,7 +5954,7 @@ rt_private void create_expanded_locals (
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop);
 			break;
-		}							
+		}
 	}
 	if (create_result) {
 		last = iresult;
@@ -6034,7 +6034,7 @@ rt_public EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val)
 	 */
 	RT_GET_CONTEXT
 	EIF_TYPED_VALUE *top = op_stack.st_top;	/* Top of stack */
-	
+
 	if (top == (EIF_TYPED_VALUE *) 0)	{			/* No stack yet? */
 		top = stack_allocate (eif_stack_chunk);		/* Create one */
 		if (top == (EIF_TYPED_VALUE *) 0) {	 		/* Could not create stack */
@@ -6185,7 +6185,7 @@ rt_private void npop(rt_uint_ptr nb)
 			}
 		}
 	}
-		
+
 	CHECK("s not null", s);
 
 	/* Update the stack structure */
@@ -6211,7 +6211,7 @@ rt_public EIF_TYPED_VALUE *otop(void)
 	 * stack is empty. I assume a value has already been pushed (i.e. the
 	 * stack has been created).
 	 */
-	
+
 	RT_GET_CONTEXT
 	EIF_TYPED_VALUE *last_item;		/* Address of last item stored */
 	struct stochunk *prev;		/* Previous chunk in stack */
@@ -6222,7 +6222,7 @@ rt_public EIF_TYPED_VALUE *otop(void)
 	last_item = op_stack.st_top - 1;
 	if (last_item >= op_stack.st_cur->sk_arena)
 		return last_item;
-	
+
 	/* It seems the current top of the stack (i.e. the next free location)
 	 * is at the left edge of a chunk. Look for previous chunk then...
 	 */
@@ -6236,7 +6236,7 @@ rt_public EIF_TYPED_VALUE *otop(void)
 
 rt_private EIF_TYPED_VALUE *oitem(uint32 n)
 	{
-	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */ 
+	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */
 	/* stack is empty. It assumes a value has already been pushed (i.e. the stack has been created). */
 	RT_GET_CONTEXT
 	EIF_TYPED_VALUE	*access_item;	/* Address of item we try to access */
@@ -6261,7 +6261,7 @@ rt_private EIF_TYPED_VALUE *oitem(uint32 n)
 		access_item = prev->sk_end - (curr->sk_arena - access_item);
 		}
 	while (access_item < prev->sk_arena);
-		
+
 	return access_item;
 	}
 
@@ -6307,8 +6307,8 @@ rt_private void wipe_out(register struct stochunk *chunk)
 	chunk->sk_prev->sk_next = (struct stochunk *) 0;	/* Previous is last */
 
 	for (
-			next = chunk->sk_next; 
-			chunk != (struct stochunk *) 0; 
+			next = chunk->sk_next;
+			chunk != (struct stochunk *) 0;
 			chunk = next, next = chunk ? chunk->sk_next : chunk
 	)
 		eif_rt_xfree((EIF_REFERENCE) chunk);
@@ -6357,7 +6357,7 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 	EIF_TYPED_ADDRESS * result_item = NULL;
 
 	if (egc_frozen[exvect->ex_bodyid] == NULL) {
-		/* if the feature is melted or super melted, 
+		/* if the feature is melted or super melted,
 		 * we look in the registers of the interpreter
 		 */
 		switch (code) {
@@ -6394,17 +6394,17 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 			value -> value = * arg(num + 1);		/* Arguments from 1 to iargnum */
 			value -> address = & (arg(num + 1) -> item);
 			return;
-			
+
 		case IV_CURRENT:							/* Current */
 			value -> value = * icurrent;
 			value -> address = & (icurrent -> item);
 			return;
-			
+
 		case IV_RESULT:								/* Result */
 			value -> value = * iresult;
 			value -> address = & (iresult -> item);
 			return;
-				
+
 		default:
 			eif_panic(MTC "illegal value request");
 		}
@@ -6450,7 +6450,7 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 			/* NOT REACHED */
 			break;
 		}
-		
+
 		/* transform the 'c_item' into an regular item (like the one used with melted features) */
 		if (result_item == (EIF_TYPED_ADDRESS *)0) {
 			value -> value.type = SK_VOID;
@@ -6461,8 +6461,8 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 			value -> address = result_item -> it_addr;
 			switch (value -> value.type & SK_HEAD) {
 			case SK_BOOL:
-			case SK_CHAR: value->value.it_char = *((EIF_CHARACTER *)(value -> address)); break;
-			case SK_WCHAR: value->value.it_wchar = *((EIF_WIDE_CHAR *)(value -> address)); break;
+			case SK_CHAR8: value->value.it_char = *((EIF_CHARACTER_8 *)(value -> address)); break;
+			case SK_CHAR32: value->value.it_wchar = *((EIF_CHARACTER_32 *)(value -> address)); break;
 			case SK_UINT8: value->value.it_uint8 = *((EIF_NATURAL_8 *)(value -> address)); break;
 			case SK_UINT16: value->value.it_uint16 = *((EIF_NATURAL_16 *)(value -> address)); break;
 			case SK_UINT32: value->value.it_uint32 = *((EIF_NATURAL_32 *)(value -> address)); break;
@@ -6509,7 +6509,7 @@ rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsi
 {
 	unsigned char *bcode;
 	rt_uint_ptr old_count;
-	
+
 	REQUIRE("valid body_id", body_id >= 0);
 	REQUIRE("valid pattern_id", pattern_id >= 0);
 	REQUIRE ("valid byte_code", bc);
@@ -6555,7 +6555,7 @@ rt_public void eif_override_byte_code_of_body (int body_id, int pattern_id, unsi
 	if (bcode != NULL) {
 			/* Let's free the previously allocated byte code. */
 		eif_rt_xfree (bcode);
-	}	
+	}
 		/* Allocate a new area for the new byte code to store. */
 	bcode = (unsigned char *) cmalloc (count * sizeof(unsigned char));
 	if (!bcode) {

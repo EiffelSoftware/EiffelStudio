@@ -54,13 +54,6 @@ inherit
 			copy, is_equal
 		end
 
-	SHARED_GENERATION
-		export
-			{NONE} all
-		undefine
-			copy, is_equal
-		end
-
 create
 	make
 
@@ -231,7 +224,7 @@ feature {NONE} -- Implementation
 				headers.put_string ("#include %"eif_eiffel.h%"%N")
 				headers.put_string ("#include %"" + l_file_name + ".h%"%N")
 
-				ext_inline_buffer := generation_ext_inline_buffer
+				ext_inline_buffer := context.generation_ext_inline_buffer
 				ext_inline_buffer.clear_all
 				ext_inline_buffer.start_c_specific_code
 				context.clear_class_type_data

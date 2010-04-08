@@ -29,8 +29,6 @@ inherit
 
 	COMPILER_EXPORTER
 
-	SHARED_GENERATION
-
 	COMPARABLE
 		undefine
 			is_equal

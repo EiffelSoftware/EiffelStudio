@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -208,7 +208,7 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	/* Clone an of Eiffel object `source'. Assumes that source
 	 * is a special object.
 	 */
-	
+
 	EIF_GET_CONTEXT
 	EIF_REFERENCE result;		/* Clone pointer */
 	union overhead *zone;		/* Pointer on source header */
@@ -254,7 +254,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	 * object and returns a pointer to the top of the new tree.
 	 */
 	RT_GET_CONTEXT
-	EIF_GET_CONTEXT	
+	EIF_GET_CONTEXT
 	EIF_REFERENCE root = (EIF_REFERENCE)  0;		/* Root of the deep cloned object */
 	jmp_buf exenv;					/* Environment saving */
 	struct {
@@ -431,9 +431,9 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 		return clone;					/* No further action necessary */
 	else
 		erembq(enclosing);				/* Then remember the enclosing object */
-		
+
 #endif /* ISE_GC */
-	
+
 	return clone;
 }
 
@@ -528,10 +528,10 @@ rt_public void eif_xcopy(EIF_REFERENCE source, EIF_REFERENCE target)
 	/* Copy 'source' into expanded object 'target' if 'source' is not void,
 	 * or raise a "Void assigned to expanded" exception.
 	 */
-	
+
 	if (source == (EIF_REFERENCE)  0)
 		xraise(MTC EN_VEXP);			/* Void assigned to expanded */
-	
+
 	eif_std_ref_copy(source, target);
 }
 
@@ -577,8 +577,8 @@ rt_private void eif_std_field_copy (EIF_REFERENCE source, EIF_REFERENCE target)
 #endif
 		switch (skeleton->cn_types[index] & SK_HEAD) {
 		case SK_BOOL:
-		case SK_CHAR: *t_ref = *s_ref; break;
-		case SK_WCHAR: *(EIF_WIDE_CHAR *) t_ref = *(EIF_WIDE_CHAR *) s_ref; break;
+		case SK_CHAR8: *t_ref = *s_ref; break;
+		case SK_CHAR32: *(EIF_CHARACTER_32 *) t_ref = *(EIF_CHARACTER_32 *) s_ref; break;
 		case SK_UINT8: *(EIF_NATURAL_8 *) t_ref = *(EIF_NATURAL_8 *) s_ref; break;
 		case SK_UINT16: *(EIF_NATURAL_16 *) t_ref = *(EIF_NATURAL_16 *) s_ref; break;
 		case SK_UINT32: *(EIF_NATURAL_32 *) t_ref = *(EIF_NATURAL_32 *) s_ref; break;
@@ -601,7 +601,7 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 {
 	/* Copy Eiffel object `source' into Eiffel object `target'.
 	 * Dynamic type of `source' is supposed to be the same as dynamic type
-	 * of `target'. It assumes also that `source' and `target' are not 
+	 * of `target'. It assumes also that `source' and `target' are not
 	 * references on special objects.
 	 * Problem: updating intra-references on expanded object
 	 * because the garbage collector needs to explore those references.
@@ -618,7 +618,7 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 	s_zone = HEADER(source);
 	flags = s_zone->ov_flags;
 	t_zone = HEADER(target);
-	
+
 	if (s_zone->ov_dftype == t_zone->ov_dftype) {
 
 		if (flags & EO_COMP) {
@@ -767,7 +767,7 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 	for (
 		/* empty */;
 		nb_ref > 0;
-		nb_ref--, t_offset += REFSIZ, s_offset += REFSIZ 
+		nb_ref--, t_offset += REFSIZ, s_offset += REFSIZ
 	) {
 		t_reference = *(EIF_REFERENCE *) (t_enclosing + t_offset);
 		if (t_reference == NULL)
@@ -793,10 +793,10 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 
 									/* Corresponding expanded in target object */
 			t_expanded = t_enclosing + offset2 + temp_offset;
-									/* Update reference point to sub-object */ 
+									/* Update reference point to sub-object */
 			*(EIF_REFERENCE *) (t_enclosing + t_offset) = t_expanded;
 			t_reference = *(EIF_REFERENCE *) (t_enclosing + t_offset);
-									/* Update offset in header */ 
+									/* Update offset in header */
 			zone = HEADER(t_reference);
 			zone->ov_size = offset2 + temp_offset;
 
@@ -822,7 +822,7 @@ rt_public EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
 {
 
 	/*
-	 * Set `in_assertion' to `b', and return the previous value 
+	 * Set `in_assertion' to `b', and return the previous value
 	 * of `in_assertion' (needed for the `clone feature in class
 	 * GENERAL to turn assertion checking of before the call to
 	 * `setup'

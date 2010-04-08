@@ -145,9 +145,9 @@ feature -- Access
 				elseif a_value_i.is_character then
 					if attached {CHAR_VALUE_I} a_value_i as l_char then
 						if l_char.is_character_32 then
-							create {DEBUG_BASIC_VALUE[CHARACTER_32]} Result.make ({SK_CONST}.sk_wchar, l_char.character_value)
+							create {DEBUG_BASIC_VALUE[CHARACTER_32]} Result.make ({SK_CONST}.sk_char32, l_char.character_value)
 						else
-							create {DEBUG_BASIC_VALUE[CHARACTER_8]} Result.make ({SK_CONST}.sk_char, l_char.character_value.to_character_8)
+							create {DEBUG_BASIC_VALUE[CHARACTER_8]} Result.make ({SK_CONST}.sk_char8, l_char.character_value.to_character_8)
 						end
 					end
 				elseif a_value_i.is_real then

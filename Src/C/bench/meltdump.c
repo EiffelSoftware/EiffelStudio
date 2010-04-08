@@ -10,19 +10,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -79,7 +79,7 @@ static void panic (void);
 
 /*------------------------------------------------------------------*/
 
-static  EIF_CHARACTER rchar (void);
+static  EIF_CHARACTER_8 rchar (void);
 static  EIF_INTEGER_32 rlong (void);
 static  EIF_INTEGER_16 rshort (void);
 static  uint32  ruint32 (void);
@@ -199,7 +199,7 @@ static  void    prepare_types (void)
 		}
 
 		i = 0;
-		
+
 		while (slen--)
 		{
 			dname [i] = rchar ();
@@ -259,7 +259,7 @@ static  void    prepare_types (void)
 		}
 
 		(void) rshort(); /* Skeleton flags */
-		
+
 		i = acount;
 			/* Read attribute routine ID array. */
 		while (i--)
@@ -268,7 +268,7 @@ static  void    prepare_types (void)
 		(void) rlong ();	/* Number of references. */
 		(void) rlong ();	/* Size of node. */
 		(void) ruint32 ();	/* Creation feature ID. */
-		
+
 		ctype = rlong ();	/* Static ID of class. */
 
 			/* Read Version info if any. */
@@ -312,7 +312,7 @@ static  void    analyze_file (void)
 		return;
 	}
 
-	
+
 	print_line ();
 
 	if (rchar ()) {
@@ -377,7 +377,7 @@ static  void    analyze_cnodes (void)
 		}
 
 		i = 0;
-		
+
 		while (slen--)
 		{
 			dname [i] = rchar ();
@@ -456,7 +456,7 @@ static  void    analyze_cnodes (void)
 
 		while (i--)
 		{
-			fprintf (mfp,"    Id             : %d\n", ruint32 ());                
+			fprintf (mfp,"    Id             : %d\n", ruint32 ());
 		}
 
 		fprintf (mfp,"Reference number   : %d\n", rlong ());
@@ -644,7 +644,7 @@ static  void    read_byte_code (void)
 		else
 			fprintf (bfp, "%c", '\0');
 	}
-	
+
 	for (;;)
 	{
 		body_id = rlong ();
@@ -967,13 +967,13 @@ static void analyze_root (void)
 
 /*------------------------------------------------------------------*/
 
-static EIF_CHARACTER rchar (void)
+static EIF_CHARACTER_8 rchar (void)
 {
-	EIF_CHARACTER    result = 0;
+	EIF_CHARACTER_8    result = 0;
 
-	if (fread (&result, sizeof (EIF_CHARACTER), 1, ifp) != 1)
+	if (fread (&result, sizeof (EIF_CHARACTER_8), 1, ifp) != 1)
 	{
-		fprintf (stderr,"Read error (EIF_CHARACTER)\n");
+		fprintf (stderr,"Read error (EIF_CHARACTER_8)\n");
 		panic ();
 	}
 
@@ -1086,13 +1086,13 @@ static  void    print_dtype (uint32 type)
 
 	dtype = (int) (type & SK_DTYPE);
 
-	if ((type & SK_HEAD) != SK_VOID) 
+	if ((type & SK_HEAD) != SK_VOID)
 	{
-		switch (type & SK_HEAD) 
+		switch (type & SK_HEAD)
 		{
 			case SK_BOOL:   fprintf (mfp," [BOOLEAN]"); break;
-			case SK_CHAR:   fprintf (mfp," [CHARACTER]"); break;
-			case SK_WCHAR:   fprintf (mfp," [WIDE_CHARACTER]"); break;
+			case SK_CHAR8:   fprintf (mfp," [CHARACTER_8]"); break;
+			case SK_CHAR32:   fprintf (mfp," [CHARACTER_32]"); break;
 			case SK_UINT8:   fprintf (mfp," [NATURAL_8]"); break;
 			case SK_UINT16:   fprintf (mfp," [NATURAL_16]"); break;
 			case SK_UINT32:   fprintf (mfp," [NATURAL_32]"); break;

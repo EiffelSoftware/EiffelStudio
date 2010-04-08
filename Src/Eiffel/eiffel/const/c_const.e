@@ -20,6 +20,8 @@ feature -- Various names used for registers during code generation.
 	dftype_name: STRING = "dftype"
 	inlined_dtype_name: STRING = "inlined_dtype"
 	inlined_dftype_name: STRING = "inlined_dftype"
+	keys_name: STRING = "keys"
+	where_name: STRING = "where"
 
 feature -- Skeleton
 
@@ -29,10 +31,10 @@ feature -- Skeleton
 
 feature -- Function definitions
 
-	static: STRING = "static "
-	stdcall: STRING = " __stdcall "
-	rtil: STRING = "RT_IL "
-	extern: STRING = "extern "
+	static: STRING = "static"
+	stdcall: STRING = " __stdcall"
+	rtil: STRING = "RT_IL"
+	extern: STRING = "extern"
 
 	function_cast: STRING = "FUNCTION_CAST"
 	function_cast_type: STRING = "FUNCTION_CAST_TYPE"
@@ -47,6 +49,19 @@ feature -- Macros
 	rtms_ex_h: STRING = "RTMS_EX_H"
 	dtype: STRING = "Dtype"
 	dftype: STRING = "Dftype"
+
+feature -- C constants
+
+	opt_all: STRING = "OPT_ALL"
+	opt_unnamed: STRING = "OPT_UNNAMED"
+
+	ex_pre: STRING = "EX_PRE"
+	ex_post: STRING = "EX_POST"
+	ex_check: STRING = "EX_CHECK"
+	ex_linv: STRING = "EX_LINV"
+	ex_var: STRING = "EX_VAR"
+	ex_cinv: STRING = "EX_CINV"
+	ex_invc: STRING = "EX_INVC"
 
 feature -- Typing
 
@@ -73,10 +88,12 @@ feature -- Typing
 
 feature -- C language
 
+	char: STRING = "char"
+	else_conditional: STRING = "else"
+	if_conditional: STRING = "if"
 	sizeof: STRING = "sizeof"
 	return: STRING = "return"
-	if_conditional: STRING = "if"
-	else_conditional: STRING = "else"
+	null: STRING = "NULL"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

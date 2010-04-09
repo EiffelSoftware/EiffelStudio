@@ -481,14 +481,14 @@ rt_shared void exitprf(void)
 		if (meltpath != NULL) {
 			l_chdir_res = chdir (meltpath);
 		}
-		if (l_chdir_res == -1) {
+		if ((l_chdir_res == -1) && (starting_working_directory)) {
 			l_chdir_res = chdir (starting_working_directory);
 		}
 #else
 			/* change the current directory to EIFGEN/F_code
 			 * before creating the profile_output_file */
 		l_chdir_res = chdir (egc_system_location);
-		if (l_chdir_res == -1) {
+		if ((l_chdir_res == -1) && (starting_working_directory)) {
 				/* If we could not change to EIFGEN/F_code, we
 				 * set it to the starting working directory */
 			l_chdir_res = chdir (starting_working_directory);	

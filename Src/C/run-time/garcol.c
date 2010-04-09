@@ -1339,6 +1339,7 @@ rt_public void reclaim(void)
 			FREE_OMS (EIF_oms); /* Free array of once manifest strings */
 
 			eif_free (starting_working_directory);
+			starting_working_directory = NULL;
 			eif_gen_conf_cleanup ();
 #ifdef EIF_WINDOWS
 			eif_cleanup();

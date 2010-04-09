@@ -233,8 +233,6 @@ feature -- Basic operations
 				index := 1
 			invariant
 				index >= old_index
-			variant
-				count + 1 - index
 			until
 			 	index > count
 			loop
@@ -261,6 +259,8 @@ feature -- Basic operations
 						index := index + 1
 					end
 				end
+			variant
+				count + 1 - index
 			end
 			if l_new_string /= Void then
 				if old_index <= count then

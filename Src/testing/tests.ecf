@@ -7,6 +7,7 @@
 			<exclude>/\.svn</exclude>
 			<exclude>/tests</exclude>
 			<exclude>/EIFGENs</exclude>
+			<exclude>/eweasel</exclude>
 		</file_rule>
 		<option warning="true" namespace="EiffelSoftware.Library">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
@@ -18,16 +19,24 @@
 		<library name="editor-tests" location="$ISE_LIBRARY\library\editor\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="encoding-tests" location="$ISE_LIBRARY\library\encoding\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="i18n-tests" location="$ISE_LIBRARY\library\i18n\tests\tests.ecf" readonly="false" use_application_options="true"/>
-		<library name="pattern-tests" location="$EIFFEL_SRC\framework\patterns\tests.ecf" readonly="false" use_application_options="true"/>
+		<!--pattern tests currently cause crash (see problem report #16542) -->
+		<!--library name="pattern-tests" location="$EIFFEL_SRC\framework\patterns\tests.ecf" readonly="false" use_application_options="true"/-->
 		<library name="process-tests" location="$ISE_LIBRARY\library\process\tests\tests.ecf" readonly="false" use_application_options="true"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" readonly="false"/>
 		<library name="testing-tests" location="$ISE_LIBRARY\library\testing\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="thread-tests" location="$ISE_LIBRARY\library\thread\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="time-tests" location="$ISE_LIBRARY\library\time\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="uuid-tests" location="$ISE_LIBRARY\library\uuid\tests\tests.ecf" readonly="false" use_application_options="true"/>
-		<tests name="tests" location=".\" recursive="true">
+		<precompile name="vision2-mt-precomp" location="$ISE_PRECOMP\vision2-mt.ecf"/>
+		<cluster name="tests" location=".\" recursive="true">
 			<option namespace="Tests">
 			</option>
-		</tests>
+		</cluster>
+	</target>
+	<target name="eiffelstudio-tests-eweasel" extends="eiffelstudio-tests">
+		<cluster name="eweasel-tests" location=".\eweasel" recursive="true">
+			<option namespace="Tests"/>
+		</cluster>
+		<library name="testing_eweasel" location="$ISE_LIBRARY\library\testing_eweasel\compilation\testing_eweasel.ecf" readonly="false"/>
 	</target>
 </system>

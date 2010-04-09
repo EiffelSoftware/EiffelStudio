@@ -260,7 +260,7 @@ void ora_exec_immediate (int no_desc, text order[1024])
 /*      warning message for the SQL statement;                   */
 /*   2. DESCRIBE the SQL statement and get enough information to */
 /*      allocate enough memory space for the corresponding       */
-/*      oraSQLDA.                                               */
+/*      oraSQLDA.                                                */
 /*   3. return error number.                                     */
 /*                                                               */
 /*****************************************************************/

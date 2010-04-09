@@ -56,7 +56,6 @@ feature -- Status report
 			-- Name of the `index'-th column.
 		local
 			l_select_name: like select_name
-			l_result: detachable like column_name
 		do
 			l_select_name := select_name
 			if l_select_name /= Void and then l_select_name.valid_index (index) then

@@ -135,7 +135,7 @@ feature -- Basic operations
 
 				s4.append("%T%T%TResult.append (" + col_name + ".out + %"%%N%")%N")
 
-				s1.append(s2+") is%N%T%T%T--Set the value of "+col_name)
+				s1.append(s2+") is%N%T%T%T-- Set the value of "+col_name)
 				s1.append("%N%T%Trequire")
 				s1.append("%N%T%T%Tvalue_exists: a_"+col_name+" /= Void")
 				s1.append("%N%T%Tdo")

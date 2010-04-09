@@ -587,6 +587,8 @@ feature -- External features
 
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER
 			-- Function used to get data from structure SQLDA filled  by FETCH clause.
+			--| FIXME
+			--| This description really does not explain a thing...
 		deferred
 		end
 

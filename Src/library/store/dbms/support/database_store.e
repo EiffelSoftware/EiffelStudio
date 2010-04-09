@@ -189,7 +189,8 @@ feature {NONE} -- Status setting
 			not_void_object: object /= Void
 			not_void_repository: repository /= Void
 		local
-			f, g, ind, idx, colind: INTEGER
+			f, g, ind, idx: INTEGER
+--			colind: INTEGER
 			searched_name: detachable STRING
 			l_repository: like repository
 			l_map_table: like map_table

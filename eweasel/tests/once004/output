@@ -1,0 +1,21 @@
+[1]  [Execute procedure] procedure=done
+[1]  [Get numeric] numeric=123
+[1]  [Get string] string=a_string
+[1]  [Get current] current=A
+[2] procedure=done
+[2] numeric=123
+[2] string=a_string
+[2] current=A
+[3] procedure=done
+[3] numeric=123
+[3] string=a_string
+[3] current=A
+[4] procedure=done
+[4] numeric=123
+[4] string=a_string
+[4] current=A
+[5] procedure=done
+[5] numeric=123
+[5] string=a_string
+[5] current=A
+Execution completed

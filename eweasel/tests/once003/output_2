@@ -1,0 +1,15 @@
+Execute `f'
+In once rescue
+True
+Retried 1
+Saving exception
+f
+FOO
+my_check
+In g rescue
+Retried 2
+True
+f
+FOO
+my_check
+Execution completed

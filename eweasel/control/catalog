@@ -1479,6 +1479,12 @@ test	ieee-arithmetic					exec322 tcf pass execution ieee
 test	eiffel-ieee-comparison			exec323 tcf pass execution ieee
 test	do-nothing-optimization			exec324 tcf pass execution
 
+-- Once specific
+
+test once-per-object-exec once001 tcf pass once
+test once-per-object-exec-with-exception once002 tcf pass once exception
+test once-per-object-redefinition once003 tcf pass once redefine
+test once-per-object-removal once004 tcf pass once redefine
 
 -- Compiler termination (exception trace, panic, etc.)
 

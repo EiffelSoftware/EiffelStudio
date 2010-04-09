@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option full_class_checking="true" cat_call_detection="false" is_attached_by_default="true" void_safety="all">
+		<option warning="true" full_class_checking="true" cat_call_detection="false" is_attached_by_default="true" void_safety="all">
 		</option>
 		<external_include location="$(ISE_LIBRARY)\library\store\dbms\rdbms\odbc\Clib">
 			<condition>

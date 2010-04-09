@@ -342,8 +342,12 @@ feature {NONE} -- Action handlers
 						l_description.append_character ('%N')
 					end
 				end
+				if attached development_window as l_win then
+					if attached l_win.status_bar as l_status_bar then
+						l_message := l_status_bar.message
+					end
+				end
 
-				l_message := development_window.status_bar.message
 				if attached l_message and then not l_message.is_empty then
 					l_description.append (locale_formatter.formatted_translation (lb_status_bar_text, [l_message]))
 					l_description.append_character ('%N')
@@ -394,7 +398,7 @@ invariant
 	support_login_attached: is_interface_usable implies support_login /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

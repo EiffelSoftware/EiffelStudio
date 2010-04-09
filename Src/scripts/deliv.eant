@@ -257,7 +257,7 @@
 
 		<local name="old_TARGET_DELIV_DIR" value="${_TARGET_DELIV_DIR}" />
 		<global name="_TARGET_DELIV_DIR" value="${_TARGET_DELIV_DIR}_eweasel" />
-		<geant target="install_delivery"	/>
+		<geant target="install_minimal_delivery" />
 
 		<replace file="$_TARGET_DELIV_DIR/studio/config/windows/$ISE_C_COMPILER/config.eif" token="windows_flags: &quot;-SUBSYSTEM:WINDOWS&quot;" replace="windows_flags: &quot;-SUBSYSTEM:CONSOLE&quot;" flags="g" if="$is_windows" />
 
@@ -281,6 +281,7 @@
 		<geant target="clean_delivery_structure"	/>
 		<geant target="make_delivery_structure"	/>
 		<geant target="install_binaries"			/>
+		<geant target="install_minimal_library"			/>
 	</target>
 
 	<target name="make_delivery_structure" depend="init_deliv" >
@@ -742,14 +743,35 @@
 	<target name="install_library" depend="init_deliv" >
 		<geant target="_log" arguments="Installing library into ${_TARGET_DELIV_DIR}" />
 		<geant target="_install_c_library" arguments="${_TARGET_DELIV_DIR}" />
-		<geant target="_install_libs" arguments="${_TARGET_DELIV_DIR}" />
+		<geant target="_install_libs" arguments="${_TARGET_DELIV_DIR},False" />
 
+		<!--
 		<geant target="_log" arguments="Installing compatible library into ${_TARGET_DELIV_DIR}${path_separator}compatible" />
 		<local name="old_EIFFEL_SRC" value="$EIFFEL_SRC" />
 		<set name="EIFFEL_SRC" value="$EIFFEL_SRC${path_separator}compatible" />
 		<mkdir directory="compatible" dir="${_TARGET_DELIV_DIR}" />
-		<geant target="_install_libs" arguments="${_TARGET_DELIV_DIR}${path_separator}compatible" />
+		<geant target="_install_libs" arguments="${_TARGET_DELIV_DIR}${path_separator}compatible,False" />
 		<set name="EIFFEL_SRC" value="$old_EIFFEL_SRC" />
+		-->
+	</target>
+
+	<target name="install_minimal_library" depend="init_deliv" >
+		<geant target="_log" arguments="Installing minimal library into ${_TARGET_DELIV_DIR}" />
+		<!--
+			<geant target="_install_c_library" arguments="${_TARGET_DELIV_DIR}" />
+		-->
+		<geant target="_install_libs" arguments="${_TARGET_DELIV_DIR},True" />
+
+		<geant target="_log" arguments="Minimal library installed into ${_TARGET_DELIV_DIR}" />
+
+		<!--
+		<geant target="_log" arguments="Installing compatible library into ${_TARGET_DELIV_DIR}${path_separator}compatible" />
+		<local name="old_EIFFEL_SRC" value="$EIFFEL_SRC" />
+		<set name="EIFFEL_SRC" value="$EIFFEL_SRC${path_separator}compatible" />
+		<mkdir directory="compatible" dir="${_TARGET_DELIV_DIR}" />
+		<geant target="_install_libs" arguments="${_TARGET_DELIV_DIR}${path_separator}compatible,True" />
+		<set name="EIFFEL_SRC" value="$old_EIFFEL_SRC" />
+		-->
 	</target>
 
 	<target name="install_examples" depend="init_deliv" >
@@ -811,43 +833,47 @@
 	<target name="_install_libs" depend="init_deliv" >
 		<!-- library and C_library Installation -->
 		<argument name="a_target_dir" />
+		<argument name="a_core_only" />
 
 		<mkdir directory="library" dir="${a_target_dir}" />
 		<geant target="_log" arguments=" - Copy library.. to ${a_target_dir}${path_separator}library" />
-		<geant target="copy_library_to" arguments="api_wrapper,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="argument_parser,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="base,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="base_extension,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="com,${a_target_dir}" if="${is_windows}" />
-		<geant target="copy_library_to" arguments="diff,${a_target_dir}"/>
-		<geant target="copy_library_to" arguments="docking,${a_target_dir}"/>
-		<geant target="copy_library_to" arguments="Eiffel2Java,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="encoding,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="event,${a_target_dir}"/>
-		<geant target="copy_library_to" arguments="gobo,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="gobo_extension,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="graph,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="i18n,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="lex,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="mel,${a_target_dir}" if="${is_unix}" />
-		<geant target="copy_library_to" arguments="memory_analyzer,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="net,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="obsolete,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="parse,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="preferences,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="thread,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="time,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="process,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="store,${a_target_dir}" />
 		<geant target="copy_library_to" arguments="testing,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="thread,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="time,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="uuid,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="vision2,${a_target_dir}" />
-		<geant target="clean_folder" arguments="gtk" dir="$a_target_dir/library/vision2/implementation" unless="${is_unix}" />
-		<geant target="clean_folder" arguments="mswin" dir="$a_target_dir/library/vision2/implementation" unless="${is_windows}" />
-		<geant target="clean_folder" arguments="carbon" dir="$a_target_dir/library/vision2/implementation" />
-		<geant target="copy_library_to" arguments="vision2_extension,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="web,${a_target_dir}" />
-		<geant target="copy_library_to" arguments="wel,${a_target_dir}" if="${is_windows}" />
+		<geant target="copy_library_to" arguments="net,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="diff,${a_target_dir}"/>
+		<geant target="copy_library_to" arguments="argument_parser,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="wel,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="encoding,${a_target_dir}" />
+		<geant target="copy_library_to" arguments="gobo,${a_target_dir}" />
+
+		<group unless="$a_core_only=True">
+			<geant target="copy_library_to" arguments="api_wrapper,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="com,${a_target_dir}" if="${is_windows}" />
+			<geant target="copy_library_to" arguments="docking,${a_target_dir}"/>
+			<geant target="copy_library_to" arguments="Eiffel2Java,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="event,${a_target_dir}"/>
+			<geant target="copy_library_to" arguments="gobo_extension,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="graph,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="i18n,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="lex,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="mel,${a_target_dir}" if="${is_unix}" />
+			<geant target="copy_library_to" arguments="memory_analyzer,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="obsolete,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="parse,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="preferences,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="uuid,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="vision2,${a_target_dir}" />
+			<geant target="clean_folder" arguments="gtk" dir="$a_target_dir/library/vision2/implementation" unless="${is_unix}" />
+			<geant target="clean_folder" arguments="mswin" dir="$a_target_dir/library/vision2/implementation" unless="${is_windows}" />
+			<geant target="clean_folder" arguments="carbon" dir="$a_target_dir/library/vision2/implementation" />
+			<geant target="copy_library_to" arguments="vision2_extension,${a_target_dir}" />
+			<geant target="copy_library_to" arguments="web,${a_target_dir}" />
+		</group>
 
 		<!-- ############################################################ -->
 		<!-- Final operations (such as making file executable on unix...) -->
@@ -861,16 +887,17 @@
 		<geant target="compile_library" />
 		<geant target="_fail" arguments=" -> Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0"  />
 		<set name="return_code" value="0" />
+		<echo message=" - Compile library: completed"/>
 
-		<setenv name="ISE_LIBRARY" value="${ISE_LIBRARY_backup}" />
+		<group unless="$a_core_only=True">
+			<!-- Vision2 Scripts -->
+			<geant target="made_file_executable" arguments="vision2-gtk-config" dir="${a_target_dir}/library/vision2/implementation/gtk/Clib" unless="$is_windows" />
+			<!-- Gobo binaries -->
+			<local name="tmp_gobo_bin_available" />
+			<available resource="gobo/spec/${ISE_PLATFORM}/bin" dir="$a_target_dir/library" variable="tmp_gobo_bin_available" />
+			<geant target="made_file_executable" arguments="*" dir="$a_target_dir/library/gobo/spec/${ISE_PLATFORM}/bin" if="$tmp_gobo_bin_available=true" />
+		</group>
 
-		<!-- Vision2 Scripts -->
-		<geant target="made_file_executable" arguments="vision2-gtk-config" dir="${a_target_dir}/library/vision2/implementation/gtk/Clib" unless="$is_windows" />
-
-		<!-- Gobo binaries -->
-		<local name="tmp_gobo_bin_available" />
-		<available resource="gobo/spec/${ISE_PLATFORM}/bin" dir="$a_target_dir/library" variable="tmp_gobo_bin_available" />
-		<geant target="made_file_executable" arguments="*" dir="$a_target_dir/library/gobo/spec/${ISE_PLATFORM}/bin" if="$tmp_gobo_bin_available=true" />
 	</target>
 
 	<target name="_install_examples" depend="init_deliv" >

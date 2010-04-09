@@ -12,21 +12,16 @@ class IPC_SHARED
 feature {IPC_ENGINE} -- Request constants
 
 		-- Same as in file /ipc/shared/rqst_const.h
-
 	Rqst_hello: INTEGER 				= 4 -- Application's handshake with ewb
 	Rqst_inspect: INTEGER 				= 7 -- Object inspection
-	Rqst_dump_threads: INTEGER 			= 8 -- Notification from Application.
 	Rqst_dump_stack: INTEGER 			= 9 -- A general stack dump request
 	Rqst_dump_variables: INTEGER 		= 10 -- Dump variable for the current feature on stack.
 											 -- Defined as DUMP_VARIABLE in run-time
 	Rqst_dumped_with_offset: INTEGER 	= 52 -- DUMPED_WITH_OFFSET
-	Rqst_move: INTEGER 					= 12 -- Change active routine pointer
 	Rqst_break: INTEGER 				= 13 -- Add/delete breakpoint
 	Rqst_resume: INTEGER 				= 14 -- Resume execution
 	Rqst_quit: INTEGER 					= 15 -- Application must die immediately
 	Rqst_application: INTEGER 			= 17 -- Start up application (for ised)
-	Rqst_load: INTEGER 					= 22 -- Load byte code information
-	Rqst_bc: INTEGER 					= 23 -- Byte code transfer
 	Rqst_kill: INTEGER 					= 24 -- Kill application asynchronously
 	Rqst_adopt: INTEGER 				= 25 -- Adopt object
 	Rqst_access: INTEGER 				= 26 -- Access object through hector
@@ -37,9 +32,6 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_metamorphose: INTEGER 			= 34 -- Convert the top-level item on the operational stack from a basic type to a reference type.
 	Rqst_update_breakpoints: INTEGER 	= 36 -- Debugger asking interruption of application in
 											 -- order to take new breakpoint(s) into account.
-	Rqst_modify_local: INTEGER 			= 37 -- Debugger asking modification of a local item
-											 -- (argument/local variable/result).
-	Rqst_modify_attr: INTEGER 			= 38 -- Debugger asking modification of an object attribute.
 	Rqst_dynamic_eval: INTEGER 			= 39 -- Debugger asking the application to evaluate a
 											 -- given feature with the given parameters.
 	Rqst_application_cwd: INTEGER 		= 40 -- Set current directory for application.
@@ -47,7 +39,6 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_overflow_detection: INTEGER 	= 41 -- Set the call stack depth at which we warn the user.
 	Rqst_change_thread: INTEGER 		= 42 -- Set the thread id to inspect.
 	Rqst_set_assertion_check: INTEGER 	= 43 -- Set the assertion checking state.
-	Rqst_close_debugger: INTEGER 		= 44 -- Close the debugger daemon.
 	Rqst_set_ipc_param: INTEGER 		= 45 -- Set IPC parameters.
 	Rqst_clear_breakpoints: INTEGER 	= 46 -- Clear breakpoints table from debuggee.
 	Rqst_last_exception: INTEGER 		= 47 -- get Last exception value.	
@@ -55,7 +46,17 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_rt_operation: INTEGER 			= 50 -- Invoke an `RT_EXTENSION' operation	
 	Rqst_last_rtcc_info: INTEGER		= 51 -- Last RunTime CatCall information (if any)
 	Rqst_ignore_assertion_violation: INTEGER  = 53 -- Set the assertion checking state. (EWB_IGN_ASSERT_VIOLATION)
-	
+
+feature {IPC_ENGINE} -- Unused request constants
+
+	Rqst_dump_threads: INTEGER 			= 8 -- Notification from Application.
+	Rqst_move: INTEGER 					= 12 -- Change active routine pointer
+	Rqst_load: INTEGER 					= 22 -- Load byte code information
+	Rqst_bc: INTEGER 					= 23 -- Byte code transfer
+	Rqst_modify_local: INTEGER 			= 37 -- Debugger asking modification of a local item
+	Rqst_modify_attr: INTEGER 			= 38 -- Debugger asking modification of an object attribute.
+	Rqst_close_debugger: INTEGER 		= 44 -- Close the debugger daemon.	
+
 feature {NONE} -- Resume
 
 	Resume_cont: INTEGER				= 0 -- Continue until next breakpoint

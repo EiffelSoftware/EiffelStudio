@@ -74,7 +74,7 @@ feature -- For DATABASE_CHANGE
 					Result := False
 					l_descriptor_index := 1
 				until
-					Result  or else l_descriptor_index = 20
+					Result or else l_descriptor_index = 20
 				loop
 					if descriptors.item (l_descriptor_index) = Void then
 						Result := True
@@ -347,6 +347,7 @@ feature -- External features
 		local
 			l_db_result: POINTER
 			l_c_string: C_STRING
+			l_descriptor: STRING
 		do
 			if attached descriptors.item (no_descriptor) as l_descriptor then
 				create l_c_string.make (l_descriptor)
@@ -543,7 +544,7 @@ feature -- External features
 				no_descriptor = last_date_data_descriptor and
 				ind = last_date_data_ind
 			then
-				Result := last_date_data.substring (12, 2).to_integer
+				Result := last_date_data.substring (12, 13).to_integer
 			else
 				Result := get_date_data (no_descriptor, ind)
 				Result := get_hour (no_descriptor, ind)
@@ -558,7 +559,7 @@ feature -- External features
 				no_descriptor = last_date_data_descriptor and
 				ind = last_date_data_ind
 			then
-				Result := last_date_data.substring (18, 2).to_integer
+				Result := last_date_data.substring (18, 19).to_integer
 			else
 				Result := get_date_data (no_descriptor, ind)
 				Result := get_sec (no_descriptor, ind)
@@ -573,7 +574,7 @@ feature -- External features
 				no_descriptor = last_date_data_descriptor and
 				ind = last_date_data_ind
 			then
-				Result := last_date_data.substring (15, 2).to_integer
+				Result := last_date_data.substring (15, 16).to_integer
 			else
 				Result := get_date_data (no_descriptor, ind)
 				Result := get_min (no_descriptor, ind)
@@ -603,7 +604,7 @@ feature -- External features
 				no_descriptor = last_date_data_descriptor and
 				ind = last_date_data_ind
 			then
-				Result := last_date_data.substring (9, 2).to_integer
+				Result := last_date_data.substring (9, 10).to_integer
 				if Result = 0 then
 					Result := 1
 				end
@@ -621,7 +622,7 @@ feature -- External features
 				no_descriptor = last_date_data_descriptor and
 				ind = last_date_data_ind
 			then
-				Result := last_date_data.substring (6, 2).to_integer
+				Result := last_date_data.substring (6, 7).to_integer
 				if Result = 0 then
 					Result := 1
 				end
@@ -673,17 +674,28 @@ feature -- External features
 	connect (user_name, user_passwd, data_source, application, hostname,
 		roleId, rolePassWd, groupId: STRING)
 		local
-			l_user: C_STRING
-			l_pass: C_STRING
-			l_host: C_STRING
 			l_base: C_STRING
+			l_colon_position: INTEGER
+			l_host: C_STRING
+			l_pass: C_STRING
+			l_port: INTEGER
+			l_user: C_STRING
 		do
 			create l_user.make (user_name)
 			create l_pass.make (user_passwd)
-			create l_host.make (hostname)
+			l_colon_position := hostname.index_of (':', 1)
+			if l_colon_position > 0 then
+				create l_host.make (hostname.substring (1,
+					l_colon_position - 1))
+				l_port := hostname.substring (l_colon_position + 1,
+					hostname.count).to_integer
+			else
+				create l_host.make (hostname)
+				l_port := 3306
+			end
 			create l_base.make (application)
 			mysql_pointer := eif_mysql_connect (l_user.item, l_pass.item,
-				l_host.item, l_base.item)
+				l_host.item, l_port, l_base.item)
 			is_error_updated := False
        	end
 
@@ -815,7 +827,7 @@ feature {NONE} -- C Externals
 			"C | %"eif_mysql.h%""
 		end
 
-	eif_mysql_connect (user_name, user_passwd, hostname,
+	eif_mysql_connect (user_name, user_passwd, hostname: POINTER; port: INTEGER
 		application: POINTER): POINTER
 		external
 			"C | %"eif_mysql.h%""
@@ -891,5 +903,18 @@ feature {NONE} -- C Externals
 			"C | %"eif_mysql.h%""
 		end
 
-end
+note
+	copyright:	"Copyright (c) 2010, ITPassion Ltd, Eiffel Software and others"
+	license:	"[
+					Eiffel Forum License v2
+					(see http://www.eiffel.com/licensing/forum.txt)
+				]"
+	source:		"[
+				ITPassion Ltd
+				5 Anstice Close, Chiswick, Middlesex, W4 2RJ, United Kingdom
+				Telephone 0044-208-742-3422, Fax 0044-208-742-3468
+				Website http://www.itpassion.com
+				Customer support http://powerdesk.itpassion.com
+				]"
 
+end

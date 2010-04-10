@@ -381,7 +381,7 @@ feature -- Basic operations
 
 			l_ht := ht
 			check l_ht /= Void end -- FIXME: implied by ... bug?
-			l_ht.clear_all
+			l_ht.wipe_out
 		ensure
 			container_is_empty: attached container as le_container implies le_container.is_empty
 			object_model_void: object = Void

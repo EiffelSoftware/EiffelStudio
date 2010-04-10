@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="mysql" uuid="42078327-FFEB-4A2A-94C6-05166F2DDFCD" library_target="db">
+	<target name="db">
+		<description>MySQL access library for EiffelStore.
+      Copyright (c) 2008-2010, ITPassion Ltd and others
+      GNU Public License v3 (see http://www.gnu.org/licenses/licenses.html#GPL).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" cat_call_detection="false" is_attached_by_default="true" void_safety="all">
+		</option>
+		<external_include location="$(ISE_LIBRARY)/library/store/dbms/rdbms/mysql/Clib">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="$(ISE_LIBRARY)\library\store\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mysql_store.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="$(MYSQL)\lib\mysql.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="-L$(ISE_LIBRARY)/library/store/spec/$(ISE_PLATFORM)/lib">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="-lmysql_store">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="-L/usr/lib64/mysql">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="-lmysqlclient_r">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<cluster name="db" location=".\"/>
+	</target>
+</system>

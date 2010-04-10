@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <mysql/mysql.h>
+#include <mysql.h>
 
 /* Project Include File */
 #include "eif_except.h"
@@ -134,33 +134,32 @@ int eif_mysql_column_type(MYSQL_RES *result_ptr, int ind)
 			break;
 	}
 
-fprintf(stderr, "eif_mysql_column_type returning Eiffel type %d for MySQL "
-	"type %d\n", result, type);
-
 	return result;
 }
 
 /*
- * Function:	eif_mysql_connect
+ * Function:	eif_mysql_connect(const char *user, const char *pass,
+ *					const char *host, int port, const char *base)
  * Description:	Connect to the given MySQL server, using the user and password
  *				information, and select the database, so that querying etc
  *				is immediately available
  * Arguments:	const char *user:	Username to connect as
  *				const char *pass:	Password for identification
  *				const char *host:	MySQL Server hostname
+ *				int port:			Port to connect to MySQL Server
  *				const char *base:	Database to be selected
  * Returns:		Pointer to MYSQL structure as returned by mysql_init(...)
  */
 MYSQL *eif_mysql_connect(const char *user, const char *pass, const char *host,
-	const char *base)
+	int port, const char *base)
 {
 	MYSQL *res1 = (MYSQL *) 0;
 	MYSQL *res2 = (MYSQL *) 0;
 
 	res1 = mysql_init((MYSQL *) 0);
 
-	res2 = mysql_real_connect(res1, host, user, pass, base, 0, (const char *) 0,
-		CLIENT_REMEMBER_OPTIONS | CLIENT_MULTI_RESULTS);
+	res2 = mysql_real_connect(res1, host, user, pass, base, port,
+		(const char *) 0, CLIENT_REMEMBER_OPTIONS | CLIENT_MULTI_RESULTS);
 
 	/* It is determined, that, in case mysql_real_connect a NULL pointer
 	 * returns, res1 is the actual object through which the errors can
@@ -244,8 +243,6 @@ MYSQL_RES *eif_mysql_execute(MYSQL *mysql_ptr, const char *command)
 	res = mysql_real_query(mysql_ptr, command, c_len + 1);
 	if(res == 0) {
 		result = mysql_store_result(mysql_ptr);
-		fprintf(stderr, "eif_mysql_execute: mysql_store_result returned %p\n",
-			result);
 		if(result == (MYSQL_RES *) 0) {
 			fprintf(stderr, "MySQL error code: %d; MySQL error msg: '%s'\n",
 				mysql_errno(mysql_ptr), mysql_error(mysql_ptr));
@@ -380,7 +377,6 @@ int eif_mysql_num_fields(MYSQL_RES *result_ptr)
 {
 	int result = 0;
 
-	fprintf(stderr, "eif_mysql_num_fields(result_ptr: %p)\n", result_ptr);
 	result = mysql_num_fields(result_ptr);
 
 	return result;

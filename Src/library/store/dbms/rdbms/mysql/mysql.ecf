@@ -8,22 +8,34 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+
+		<!-- Windows specific external stuff -->
+		<!-- You need to have $(MYSQL) in your environment, set to the
+			directory where the MySQL C Connector is installed -->
 		<external_object location="$(ISE_LIBRARY)\library\store\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mysql_store.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<!-- The below is likely not portable... -->
-		<external_object location="$(MYSQL)\lib\mysql.lib">
+		<external_object location="$(MYSQL)\lib\opt\mysqlclient.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_include location="$(ISE_LIBRARY)/library/store/dbms/rdbms/mysql/Clib">
+		<external_include location="$(MYSQL)\include">
 			<condition>
-				<platform excluded_value="windows"/>
+				<platform value="windows" />
 			</condition>
-		</external_include>
+		</external>
+
+		<!-- Shared between platforms -->
+		<external_include location="$(ISE_LIBRARY)/library/store/dbms/rdbms/mysql/Clib" />
+
+		<!-- Unix specific external stuff -->
+		<!-- You need to have $(MYSQLINC) in your environment, set to the
+			directory where mysql.h is located -->
+		<!-- You need to have $(MYSQLLIB) in tour environment, set to the
+			directory where libmysqlclient_r.a is location -->
 		<external_object location="-L$(ISE_LIBRARY)/library/store/spec/$(ISE_PLATFORM)/lib">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -34,8 +46,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_object>
-		<!-- Again, this is not very portable... -->
-		<external_object location="-L/usr/lib64/mysql">
+		<external_object location="-L$(MYSQLLIB)">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
@@ -45,6 +56,11 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_object>
+		<external_include location="$(MYSQLINC)">
+			<condition>
+				<platform excluded_value="windows" />
+			</condition>
+		</external>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

@@ -303,7 +303,7 @@ feature -- Status setting
 			l_queue: like queue_for_test
 		do
 			if is_test_running (a_test) then
-				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_aborted_tag, e_test_aborted_details, [a_test.name]))
+				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_aborted_tag, e_test_aborted_details, e_test_aborted_details, [a_test.name]))
 			else
 				remove_queued_test (a_test)
 			end
@@ -452,13 +452,13 @@ feature {NONE} -- Basic operations
 						running_tests.do_all (
 							agent (a_test: TEST_I)
 								do
-									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_aborted_tag, e_test_aborted_details, [a_test.name]))
+									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_aborted_tag, e_test_aborted_details, e_test_aborted_details, [a_test.name]))
 								end)
 					else
 						running_tests.do_all (
 							agent (a_test: TEST_I)
 								do
-									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_executor_failure_tag, e_executor_failure_details, [a_test.generating_type, a_test.name]))
+									remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_executor_failure_tag, e_executor_failure_details, e_executor_failure_details, [a_test.generating_type, a_test.name]))
 								end)
 					end
 					check running_test_map_empty: running_test_map.is_empty end
@@ -505,7 +505,7 @@ feature {TEST_SUITE_S} -- Events
 			-- <Precursor>
 		do
 			if is_test_running (a_test) then
-				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_removed_tag, e_test_removed_details, [a_test.name]))
+				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_removed_tag, e_test_removed_details, e_test_removed_details, [a_test.name]))
 			elseif is_test_queued (a_test) then
 				remove_queued_test (a_test)
 			end

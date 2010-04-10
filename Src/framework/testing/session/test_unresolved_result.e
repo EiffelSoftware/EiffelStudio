@@ -20,16 +20,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag, a_details: like tag; a_token_values: like token_values)
+	make (a_tag, a_details, a_verbose_details: like tag; a_token_values: like token_values)
 			-- Initialize `Current'.
 			--
 			-- `a_tag': Tag describing state.
 			-- `a_details': Detailed information about `Current'
 			-- `a_token_values': Token values used for translation of `details'
+		require
+			a_tag_attached: a_tag /= Void
+			a_details_attached: a_details /= Void
+			a_verbose_details_attached: a_verbose_details /= Void
 		do
 			create start_date.make_now
 			original_tag := a_tag.to_string_8
 			details := a_details.to_string_8
+			verbose_details := a_verbose_details.to_string_8
 			token_values := a_token_values
 		end
 
@@ -62,6 +67,11 @@ feature {NONE} -- Access
 			--
 			-- Note: before printing the tag will first be translated through `locale'.
 
+	verbose_details: STRING_8
+			-- Verbose detailed information about `Current'
+			--
+			-- Note: before printing the tag will first be translated through `locale'.
+
 	token_values: TUPLE
 			-- Token values used for translation of `details'
 
@@ -77,8 +87,15 @@ feature -- Basic operations
 
 	print_details_indented (a_formatter: TEXT_FORMATTER; a_verbose: BOOLEAN; an_indent: NATURAL_32)
 			-- <Precursor>
+		local
+			l_translation: STRING_32
 		do
-			print_multiline_string (locale.formatted_string (details, token_values), a_formatter, an_indent)
+			if a_verbose then
+				l_translation := locale.formatted_string (verbose_details, token_values)
+			else
+				l_translation := locale.formatted_string (details, token_values)
+			end
+			print_multiline_string (l_translation, a_formatter, an_indent)
 			a_formatter.add_new_line
 		end
 

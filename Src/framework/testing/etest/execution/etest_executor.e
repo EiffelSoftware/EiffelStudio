@@ -247,6 +247,10 @@ feature {NONE} -- Status setting
 					attached evaluate_type_if_possible (l_type, l_evaluator) as l_evaluator_type
 				then
 						-- Create byte code
+						--
+						-- Note: we generate the byte code twice as for the very first time it does not replace
+						--       the default routine body (Arno 4/10/2010)
+					l_byte_code := byte_code_factory.execute_test_code (l_test, l_evaluator, l_evaluator_routine)
 					l_byte_code := byte_code_factory.execute_test_code (l_test, l_evaluator, l_evaluator_routine)
 
 						-- Set breakpoint if debugging
@@ -269,10 +273,10 @@ feature {NONE} -- Status setting
 					end
 					l_controller.launch_test ([l_byte_code, l_test.name.as_string_8], l_evaluator, l_evaluator_routine)
 				else
-					test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make (e_no_bytecode_tag, e_no_bytecode_details, [l_test.name]))
+					test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make (e_no_bytecode_tag, e_no_bytecode_details, e_no_bytecode_details, [l_test.name]))
 				end
 			else
-				test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_not_compiled_tag, e_test_not_compiled_details, [l_test.name, l_test.class_name]))
+				test_execution.report_result (l_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_not_compiled_tag, e_test_not_compiled_details, e_test_not_compiled_details, [l_test.name, l_test.class_name]))
 			end
 		end
 
@@ -294,7 +298,7 @@ feature {NONE} -- Status setting
 
 				-- Try to retrieve result from controller
 			if not l_controller.is_running then
-				create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_launch_tag, e_evaluator_launch_details, [l_test.name])
+				create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_launch_tag, e_evaluator_launch_details, e_evaluator_launch_details, [l_test.name])
 			else
 				delete_directory_safe (l_test)
 				if l_controller.has_result then
@@ -302,9 +306,9 @@ feature {NONE} -- Status setting
 				else
 					l_last_output := l_controller.last_output
 					if l_last_output.is_empty then
-						create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, [l_test.name, l_controller.last_exit_code])
+						create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, e_evaluator_died_details, [l_test.name, l_controller.last_exit_code])
 					else
-						create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details + "%N%N$3", [l_test.name, l_controller.last_exit_code, l_last_output])
+						create {TEST_UNRESOLVED_RESULT} l_result.make (e_evaluator_died_tag, e_evaluator_died_details, e_evaluator_died_details + "%N%N$3", [l_test.name, l_controller.last_exit_code, l_last_output])
 					end
 				end
 			end

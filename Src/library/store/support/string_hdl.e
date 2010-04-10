@@ -19,7 +19,7 @@ feature -- Status setting
 		do
 			l_ht := ht
 			check l_ht /= Void end -- implied by precondition `ht_not_void'
-			l_ht.clear_all
+			l_ht.wipe_out
 
 			l_ht_order := ht_order
 			check l_ht_order /= Void end -- FIXME: implied by ...? bug?

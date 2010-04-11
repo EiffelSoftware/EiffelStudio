@@ -247,10 +247,6 @@ feature {NONE} -- Status setting
 					attached evaluate_type_if_possible (l_type, l_evaluator) as l_evaluator_type
 				then
 						-- Create byte code
-						--
-						-- Note: we generate the byte code twice as for the very first time it does not replace
-						--       the default routine body (Arno 4/10/2010)
-					l_byte_code := byte_code_factory.execute_test_code (l_test, l_evaluator, l_evaluator_routine)
 					l_byte_code := byte_code_factory.execute_test_code (l_test, l_evaluator, l_evaluator_routine)
 
 						-- Set breakpoint if debugging

@@ -49,12 +49,20 @@ feature -- Basic operations
 			l_ast_context: AST_CONTEXT
 			l_body_id: INTEGER
 			l_old_ast: detachable FEATURE_AS
+			l_tmp_server: TMP_AST_SERVER
 		do
 			if attached create_feature (a_test, a_evaluator_class) as l_feature then
+
+					-- As {AST_FEATURE_CHACKER_GENERATOR}.type_check_and_code will call `load' and overrite the
+					-- new routine, we perform an initial load before setting the new routine body
+				l_tmp_server := a_evaluator_feature.tmp_ast_server
+				if l_tmp_server.has (a_evaluator_class.class_id) or else l_tmp_server.system.ast_server.has (a_evaluator_class.class_id) then
+					l_tmp_server.load (a_evaluator_class)
+				end
+
 				l_body_id := a_evaluator_feature.body_index
 				l_old_ast := a_evaluator_feature.body
-				a_evaluator_feature.tmp_ast_server.body_force (l_feature, l_body_id)
-
+				l_tmp_server.body_force (l_feature, l_body_id)
 				l_ast_context := a_evaluator_class.ast_context
 				l_ast_context.initialize (a_evaluator_class, a_evaluator_class.actual_type)
 				l_ast_context.set_current_feature (a_evaluator_feature)

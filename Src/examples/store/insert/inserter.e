@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			else
 					--  The Eiffel program is now connected to the database
 				create book.make
-					-- Does the table `db_book' exit?
+					-- Does the table `DB_BOOK' exit?
 				if not table_exists (Table_name) then
 					io.putstring ("Table `DB_BOOK' does not exist...")
 					l_repository := repository
@@ -134,6 +134,14 @@ feature {NONE} -- Implementation
 				check l_laststring /= Void end -- implied by `readline' postcondition
 				set_data_source(l_laststring.twin)
  			end
+
+			if db_spec.database_handle_name.is_case_insensitive_equal ("mysql") then
+				io.putstring ("Schema Name: ")
+				io.readline
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				set_application(l_laststring.twin)
+			end
 
 				-- Ask for user's name and password
 			io.putstring ("Name: ")

@@ -11,6 +11,12 @@
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 	</target>
+	<target name="select_mysql" extends="common">
+		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql.ecf"/>
+		<cluster name="handle" location="..\Utilities\mysql\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
 	<target name="select_ingres" extends="common">
 		<library name="ingres" location="$ISE_LIBRARY\library\store\dbms\rdbms\ingres\ingres.ecf"/>
 		<cluster name="handle" location="..\Utilities\ingres\"/>

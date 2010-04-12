@@ -4,7 +4,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class RUNNER_ING
+class RUNNER_MYSQL
 
 inherit
 	RDB_HANDLE
@@ -35,20 +35,22 @@ feature
 			l_repository: like repository
 		do
 			io.putstring ("Database user authentication:%N")
-			io.putstring ("Database name: ")
+
+			io.putstring ("Schema Name: ")
 			io.readline
 			l_laststring := io.laststring
-			check l_laststring /= Void end -- implie by `readline' postcondition
-			set_data_source (l_laststring)
+			check l_laststring /= Void end -- implied by `readline' postcondition
+			set_application(l_laststring.twin)
+
 			io.putstring ("Name: ")
 			io.readline
 			l_laststring := io.laststring
-			check l_laststring /= Void end -- implie by `readline' postcondition
+			check l_laststring /= Void end -- implied by `readline' postcondition
 			tmp_string := l_laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 			l_laststring := io.laststring
-			check l_laststring /= Void end -- implie by `readline' postcondition
+			check l_laststring /= Void end -- implied by `readline' postcondition
 			login (tmp_string, l_laststring)
 			set_base
 
@@ -68,6 +70,7 @@ feature
 				l_repository.load
 				if l_repository.exists then
 					make_change_ing
+					session_control.commit
 					session_control.disconnect
 				else
 					io.putstring ("Table not found!");
@@ -82,18 +85,18 @@ feature {NONE}
 			author: STRING
 			price: REAL
 			pub_date: DATE_TIME
-			l_laststring: detachable STRING
 			l_proc: like proc
+			l_laststring: detachable STRING
 		do
 			create author.make (10)
-			price := 51
+			price := 222
 			create pub_date.make_now
 
 			create l_proc.make (Proc_name)
 			proc := l_proc
 			l_proc.load
-				l_proc.set_arguments (<<"author", "price", "pub_date">>,
-							<<author, price, pub_date >>)
+			l_proc.set_arguments (<<"new_author", "new_price", "new_date">>,
+						<<author, price, pub_date >>)
 
 			if l_proc.exists then
 				io.putstring ("Stored procedure text: ")
@@ -114,20 +117,20 @@ feature {NONE}
 				l_laststring := io.laststring
 				check l_laststring /= Void end -- implied by `readline' postcondition
 				author := l_laststring.twin
-				io.putstring ("Seeking for books whose author's name match: ")
+				io.putstring ("Updating books whose author's name match: ")
 				io.putstring (author)
 				io.new_line
 				io.new_line
 
-				base_change.set_map_name (pub_date, "pub_date")
-				base_change.set_map_name (price, "price")
-				base_change.set_map_name (author, "author")
+				base_change.set_map_name (pub_date, "new_date")
+				base_change.set_map_name (price, "new_price")
+				base_change.set_map_name (author, "new_author")
 
 				l_proc.execute (base_change)
 
-				base_change.unset_map_name ("author")
-				base_change.unset_map_name ("price")
-				base_change.unset_map_name ("pub_date")
+				base_change.unset_map_name ("new_author")
+				base_change.unset_map_name ("new_price")
+				base_change.unset_map_name ("new_date")
 
 				io.new_line
 				io.putstring ("Author? ('exit' to terminate):")
@@ -137,8 +140,7 @@ feature {NONE}
 
 feature {NONE}
 
-	Select_text: STRING =
-		"update DB_BOOK set author = author, price = :price, year = :pub_date where author = :author"
+	Select_text: STRING = "update DB_BOOK set price = new_price, year = new_date where author = new_author"
 
 	Table_name: STRING = "DB_BOOK"
 

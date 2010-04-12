@@ -62,7 +62,7 @@ feature
 			if not session_control.is_connected then
 				session_control.raise_error
 					-- Something went wrong, and the connection failed
-				io.putstring ("Can't connect to database.%N")
+				io.putstring ("%NCan't connect to database.%N")
 			else
 					-- A 'repository' is used to store objects, and to access
 					-- them as Eiffel objects, or DB tuples.
@@ -101,6 +101,14 @@ feature {NONE}
 				l_laststring := io.laststring
 				check l_laststring /= Void end -- implied by `readline' postcondition
 				set_data_source(l_laststring.twin)
+			end
+
+			if db_spec.database_handle_name.is_case_insensitive_equal ("mysql") then
+				io.putstring ("Schema Name: ")
+				io.readline
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				set_application(l_laststring.twin)
 			end
 
 				-- Ask for user's name and password
@@ -148,8 +156,6 @@ feature {NONE}
 					io.putstring (l_laststring)
 					io.new_line
 						-- Insert objects in the table "DB_BOOK"
-					l_laststring := l_data_file.laststring
-					check l_laststring /= Void end -- implied by `readline' postcondition						
 					base_update.modify (l_laststring.twin)
 				end
 			end

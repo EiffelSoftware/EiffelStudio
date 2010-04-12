@@ -11,14 +11,14 @@ class SUPPORT_CLASS
 
 feature
 
-	is_supported_container (some: ANY): BOOLEAN
-			-- `some' is a supported container?
+	is_supported_container (r_any: ANY): BOOLEAN
+			-- `r_any' is a supported container?
 		require
-			some_not_void: some /= Void
+			r_any_not_void: r_any /= Void
 		do
-			Result := is_array (some) or else is_traversable (some)
+			Result := is_array (r_any) or else is_traversable (r_any)
 		ensure
-			Result = (is_array (some) or else is_traversable (some))
+			Result = (is_array (r_any) or else is_traversable (r_any))
 		end;
 
 	contents (any: ANY): ANY
@@ -48,20 +48,20 @@ feature
 
 feature {NONE}
 
-	is_array (some: ANY): BOOLEAN
-			-- `some' is an array?
+	is_array (r_any: ANY): BOOLEAN
+			-- `r_any' is an array?
 		require
-			some_not_void: some /= Void
+			r_any_not_void: r_any /= Void
 		do
-			Result := attached {ARRAY [ANY]} some
+			Result := attached {ARRAY [ANY]} r_any
 		end;
 
-	is_traversable (some: ANY): BOOLEAN
-			-- `some' is a traversable object?
+	is_traversable (r_any: ANY): BOOLEAN
+			-- `r_any' is a traversable object?
 		require
-			some_not_void: some /= Void
+			r_any_not_void: r_any /= Void
 		do
-			Result := attached {TRAVERSABLE [ANY]} some
+			Result := attached {TRAVERSABLE [ANY]} r_any
 		end;
 
 	array_contents (array: ARRAY [ANY]): ANY

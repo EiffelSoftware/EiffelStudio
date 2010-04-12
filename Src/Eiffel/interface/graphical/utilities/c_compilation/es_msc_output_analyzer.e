@@ -33,7 +33,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	process_line (a_line: READABLE_STRING_8; a_number: NATURAL_32)
+	process_line (a_line: READABLE_STRING_32; a_number: NATURAL_32)
 			-- <Precursor>
 		local
 			l_exp: like function_name_regexp
@@ -118,7 +118,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

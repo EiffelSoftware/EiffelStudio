@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_formatter: ES_NOTIFIER_FORMATTER)
@@ -34,13 +39,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	file_name: detachable STRING
+	file_name: detachable STRING_32
 			-- Last processed file name.
 
-	message: detachable STRING
+	message: detachable STRING_32
 			-- Last message string
 
-	function_name: detachable STRING
+	function_name: detachable STRING_32
 			-- Last processed function name.
 
 	line_number: INTEGER
@@ -102,6 +107,7 @@ feature {NONE} -- Basic operations
 		local
 			l_error: detachable C_COMPILER_ERROR
 			l_item: detachable EVENT_LIST_ERROR_ITEM_I
+			l_msg: like message
 		do
 			if
 				event_list.is_service_available and then
@@ -109,16 +115,16 @@ feature {NONE} -- Basic operations
 				attached message as l_message and then
 				not l_message.is_empty
 			then
-				l_message.put (l_message.item (1).as_upper, 1)
+				l_msg := first_character_as_upper (l_message)
 
 					-- Create the error/warning object
 				if is_error then
-					l_error := new_c_compiler_error (l_message, l_file_name, line_number)
-					create {EVENT_LIST_ERROR_ITEM} l_item.make ({ENVIRONMENT_CATEGORIES}.compilation, l_message, l_error)
+					l_error := new_c_compiler_error (l_msg, l_file_name, line_number)
+					create {EVENT_LIST_ERROR_ITEM} l_item.make ({ENVIRONMENT_CATEGORIES}.compilation, l_msg, l_error)
 				else
 					if is_reporting_c_warnings then
-						l_error := new_c_compiler_warning (l_message, l_file_name, line_number)
-						create {EVENT_LIST_WARNING_ITEM} l_item.make ({ENVIRONMENT_CATEGORIES}.compilation, l_message, l_error)
+						l_error := new_c_compiler_warning (l_msg, l_file_name, line_number)
+						create {EVENT_LIST_WARNING_ITEM} l_item.make ({ENVIRONMENT_CATEGORIES}.compilation, l_msg, l_error)
 					end
 				end
 
@@ -126,7 +132,7 @@ feature {NONE} -- Basic operations
 				if attached l_error and attached l_item then
 					if
 						attached function_name as l_fname and then
-						attached function_mapper.feature_from_function_name (l_fname) as l_feature
+						attached function_mapper.feature_from_function_name (l_fname.as_string_8) as l_feature
 					then
 							-- Set an associated Eiffel feature.
 						l_error.associated_feature := l_feature
@@ -164,7 +170,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_c_compiler_error (a_message: READABLE_STRING_8; a_file_name: detachable READABLE_STRING_8; a_line: INTEGER): C_COMPILER_ERROR
+	new_c_compiler_error (a_message: READABLE_STRING_32; a_file_name: detachable READABLE_STRING_32; a_line: INTEGER): C_COMPILER_ERROR
 			-- Creates a new C compiler error.
 			--
 			-- `a_message': A C compiler error message.
@@ -177,15 +183,15 @@ feature {NONE} -- Factory
 			a_line_non_negative: a_line >= 0
 		do
 			if attached a_file_name then
-				create Result.make_with_file (a_message.as_string_8, a_file_name.as_string_8, a_line, 1)
+				create Result.make_with_file (a_message, a_file_name, a_line, 1)
 			else
-				create Result.make (a_message.as_string_8)
+				create Result.make (a_message)
 			end
 		ensure
 			result_attached: attached Result
 		end
 
-	new_c_compiler_warning (a_message: READABLE_STRING_8; a_file_name: detachable READABLE_STRING_8; a_line: INTEGER): C_COMPILER_WARNING
+	new_c_compiler_warning (a_message: READABLE_STRING_32; a_file_name: detachable READABLE_STRING_32; a_line: INTEGER): C_COMPILER_WARNING
 			-- Creates a new C compiler warning.
 			--
 			-- `a_message': A C compiler warning message.
@@ -197,9 +203,9 @@ feature {NONE} -- Factory
 			a_line_non_negative: a_line >= 0
 		do
 			if attached a_file_name then
-				create Result.make_with_file (a_message.as_string_8, a_file_name.as_string_8, a_line, 1)
+				create Result.make_with_file (a_message, a_file_name, a_line, 1)
 			else
-				create Result.make (a_message.as_string_8)
+				create Result.make (a_message)
 			end
 		ensure
 			result_attached: attached Result
@@ -222,7 +228,7 @@ invariant
 	error_list_preferences_attached: attached error_list_preferences
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

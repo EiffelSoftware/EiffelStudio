@@ -103,7 +103,7 @@ feature -- Code generation
 
 	register_acces (buf: GENERATION_BUFFER; id: INTEGER)
 		do
-			if context.byte_code.is_once and then id = 0 then
+			if context.byte_code.is_process_or_thread_relative_once and then id = 0 then
 				buf.put_string ("Result")
 			else
 				buf.put_string (internal_reg_name (id));

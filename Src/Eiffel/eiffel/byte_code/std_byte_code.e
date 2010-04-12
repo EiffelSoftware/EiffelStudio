@@ -48,13 +48,6 @@ feature -- Status
 			-- False
 		end
 
-	is_object_relative_once: BOOLEAN
-			-- Is current once compiled as once per object?
-		do
-			-- False
-		end
-
-
 	is_thread_relative_once: BOOLEAN
 			-- Is current once to be generated in multithreaded mode has a once per thread (default)?
 		do
@@ -184,7 +177,7 @@ feature -- Analyzis
 					-- Look for all instances of assignments in Result
 					-- in last instructions and set `last_in_result' if
 					-- all were such assignments.
-				if not result_type.is_void and not is_once then
+				if not result_type.is_void and (not is_process_or_thread_relative_once) then
 					compound.finish
 					compound.item.find_assign_result
 					compound.item.mark_last_instruction
@@ -268,7 +261,7 @@ feature -- Analyzis
 			name: STRING
 			extern: BOOLEAN
 			buf: GENERATION_BUFFER
-			l_is_once: BOOLEAN
+			l_is_process_or_thread_relative_once: BOOLEAN
 			return_type_name: STRING
 			args: like argument_names
 			i: INTEGER
@@ -276,7 +269,7 @@ feature -- Analyzis
 			l_context: like context
 		do
 			buf := buffer
-			l_is_once := is_once
+			l_is_process_or_thread_relative_once := is_process_or_thread_relative_once
 			l_context := context
 			keep := l_context.workbench_mode or else l_context.system.keep_assertions
 
@@ -290,7 +283,7 @@ feature -- Analyzis
 			add_in_log (internal_name)
 
 				-- If it is a once, performs once declaration.
-			if l_is_once then
+			if l_is_process_or_thread_relative_once then
 				generate_once_declaration (internal_name, type_c)
 			end
 
@@ -308,7 +301,8 @@ feature -- Analyzis
 			extern := True
 			name := internal_name
 			if
-				l_is_once and then l_context.is_once_call_optimized or else
+				l_is_process_or_thread_relative_once and then
+				l_context.is_once_call_optimized or else
 				context.current_feature.is_attribute
 			then
 					-- Once routines should be protected against exceptions.
@@ -467,7 +461,7 @@ feature -- Analyzis
 			context.generate_temporary_ref_macro_undefintion
 
 				-- End of C function
-			if l_is_once then
+			if l_is_process_or_thread_relative_once then
 				buf.put_new_line_only
 				buf.put_string ("#undef Result")
 			end
@@ -496,7 +490,7 @@ feature -- Analyzis
 				-- Leave a blank line after function definition
 			buf.put_new_line
 
-			if l_is_once and then l_context.is_once_call_optimized then
+			if l_is_process_or_thread_relative_once and then l_context.is_once_call_optimized then
 					-- Generate optimized stub for once routine.
 				buf.generate_function_signature
 					(return_type_name, internal_name, True,
@@ -507,8 +501,7 @@ feature -- Analyzis
 				if not type_c.is_void then
 					buf.put_string ("return ")
 				end
-				--FIXME:2010-02-10:jfiat: check about once per object
-				l_context.generate_once_optimized_call_start (type_c, body_index, is_process_relative_once, buf)
+				l_context.generate_once_optimized_call_start (type_c, body_index, is_process_relative_once, is_object_relative_once, buf)
 				buf.put_string (name)
 				buf.put_string (",(")
 				from
@@ -863,13 +856,13 @@ end
 			buf: GENERATION_BUFFER
 			wkb_mode: BOOLEAN
 			has_rescue: BOOLEAN
-			l_is_once: BOOLEAN
+			l_is_process_or_thread_relative_once: BOOLEAN
 		do
 				-- Cache accessed attributes
 			buf := buffer
 			wkb_mode := context.workbench_mode
 			has_rescue := rescue_clause /= Void
-			l_is_once := is_once
+			l_is_process_or_thread_relative_once := is_process_or_thread_relative_once
 
 			context.generate_local_declaration (local_count, has_rescue)
 
@@ -885,6 +878,12 @@ end
 				-- Generate temporary locals under the control of the GC
 			context.generate_temporary_ref_variables
 
+			if is_object_relative_once then
+					-- We need at least twice the dtype
+				context.add_dt_current
+				context.add_dt_current
+			end
+
 				-- Result is declared only if needed. For onces, it is
 				-- accessed via a key allowing us to have them per thread.
 			if (not result_type.is_void) and then (wkb_mode or else context.result_used) then
@@ -892,7 +891,7 @@ end
 			end
 
 				-- Generate dynamic type of Current.
-			context.generate_dtype_declaration (l_is_once)
+			context.generate_dtype_declaration (l_is_process_or_thread_relative_once)
 
 			if wkb_mode or else context.system.keep_assertions then
 					-- Generate the int local variable saving the global `nstcall'.
@@ -986,7 +985,7 @@ end
 			type_i: TYPE_A
 			buf: GENERATION_BUFFER
 		do
-			if not is_once then
+			if not is_process_or_thread_relative_once then
 				buf := buffer
 				type_i := real_type (result_type)
 				ctype := type_i.c_type

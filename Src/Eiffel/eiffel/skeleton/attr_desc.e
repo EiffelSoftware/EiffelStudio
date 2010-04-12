@@ -38,6 +38,11 @@ inherit
 			{NONE} all
 		end
 
+	DEBUG_OUTPUT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	feature_id: INTEGER
@@ -61,6 +66,24 @@ feature -- Access
 
 	is_transient: BOOLEAN
 			-- Is Current attribute transient, i.e. not persisted via storable?
+
+	is_hidden: BOOLEAN
+			-- Is current attribute hidden? i.e used for implementation purpose
+			-- such as once per object
+
+feature -- Status report
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_from_string ("fid=" + feature_id.out)
+			if attached names_heap.item (attribute_name_id) as n then
+				Result.append_character (' ')
+				Result.append_character (''')
+				Result.append (n)
+				Result.append_character (''')
+			end
+		end
 
 feature -- Settings
 
@@ -92,6 +115,14 @@ feature -- Settings
 			is_transient := v
 		ensure
 			is_transient_set: is_transient = v
+		end
+
+	set_is_hidden (v: BOOLEAN)
+			-- Assign `v' to `is_hidden'.
+		do
+			is_hidden := v
+		ensure
+			is_hidden_set: is_hidden = v
 		end
 
 feature -- Status report

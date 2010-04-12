@@ -127,7 +127,7 @@ feature -- Status report
 	error_occurred: BOOLEAN
 			-- Error occurred during evaluation?
 
-	has_potential_side_effect: BOOLEAN
+	has_potential_side_effect: BOOLEAN assign set_has_potential_side_effect
 			-- Evaluation of `text' has potential side effect?
 			--| such as routine evaluation (except once routine which is not evaluated by retrieved)
 			--| WARNING: unused for now
@@ -209,6 +209,12 @@ feature -- Status setting
 			disabled := b
 		end
 
+	set_has_potential_side_effect (b: BOOLEAN)
+			-- Set `has_potential_side_effect' to `b'
+		do
+			has_potential_side_effect := b
+		end
+
 feature -- Basic operations: Evaluation
 
 	update
@@ -257,6 +263,7 @@ feature -- Basic operations: Evaluation
 						evaluated := True
 						if ev /= Void then
 							error_occurred := ev.dbg_error_handler.error_occurred
+							has_potential_side_effect := ev.potential_side_effect_detected
 							if not error_occurred then
 								if attached ev.final_result as r then
 									value := r.value

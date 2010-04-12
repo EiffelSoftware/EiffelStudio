@@ -349,10 +349,9 @@ feature {NONE} -- Implementation
 	effective_evaluate_once_function (f: FEATURE_I)
 		local
 			l_class_c, l_statcl: CLASS_C
-			l_icd_value: ICOR_DEBUG_VALUE
-			l_adv: ABSTRACT_DEBUG_VALUE
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
 			exc_dv: EXCEPTION_DEBUG_VALUE
+			l_once_data: TUPLE [called: BOOLEAN; exc: ICOR_DEBUG_VALUE; res: ICOR_DEBUG_VALUE]
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".effective_evaluate_once : ")
@@ -368,21 +367,18 @@ feature {NONE} -- Implementation
 				--| FIXME: JFIAT: 2004-01-05 : Does not support once evalution on generic
 				--| this is related to dialog and issue to provide derivation selection
 
-			l_icd_value := eifnet_debugger.once_function_value (Void, l_class_c, f)
-
-			if l_icd_value /= Void then
-				l_adv := debug_value_from_icdv (l_icd_value, l_statcl)
-			end
-
-			if last_once_available then
-				if not last_once_already_called then
+			l_once_data := eifnet_debugger.once_function_data (Void, l_class_c, f)
+			if l_once_data = Void then
+				dbg_error_handler.notify_error_evaluation ("Once feature " + f.feature_name + ": Could not get information")
+			else
+				if not l_once_data.called then
 					create err_dv.make_with_name (f.feature_name)
 					err_dv.set_message ("Once feature [" + f.feature_name + "]: not yet called")
 					create last_result.make_with_value (err_dv.dump_value)
 
 					dbg_error_handler.notify_error_evaluation ("Once feature [" + f.feature_name + "]: not yet called")
-				elseif last_once_failed then
-					if attached {ABSTRACT_REFERENCE_VALUE} l_adv as arv then
+				elseif l_once_data.exc /= Void then
+					if attached {ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (l_once_data.exc, l_statcl) as arv then
 						create exc_dv.make_with_value (arv)
 					else
 						create exc_dv.make_without_any_value
@@ -392,14 +388,12 @@ feature {NONE} -- Implementation
 					create last_result.make_with_value (exc_dv.dump_value)
 
 					dbg_error_handler.notify_error_exception_during_evaluation ("Once feature [" + f.feature_name + "]: an exception occurred")
-				elseif l_adv = Void then
+				elseif l_once_data.res /= Void then
+					create last_result.make_with_value (debug_value_from_icdv (l_once_data.res, l_statcl).dump_value)
+				else
 						--| Is it possible ???
 					dbg_error_handler.notify_error_evaluation ("Once feature [" + f.feature_name + "]: Default value (i.e: Void ...)")
-				else
-					create last_result.make_with_value (l_adv.dump_value)
 				end
-			else
-				dbg_error_handler.notify_error_evaluation ("Once feature " + f.feature_name + ": Could not get information")
 			end
 			if last_result /= Void and l_statcl /= Void then
 				last_result.suggest_static_class (l_statcl)
@@ -663,21 +657,6 @@ feature {NONE} -- Properties
 			-- Feature evaluator
 
 feature {NONE} -- Bridge
-
-	last_once_available: BOOLEAN
-		do
-			Result := eifnet_debugger.last_once_available
-		end
-
-	last_once_failed: BOOLEAN
-		do
-			Result := eifnet_debugger.last_once_failed
-		end
-
-	last_once_already_called: BOOLEAN
-		do
-			Result := eifnet_debugger.last_once_already_called
-		end
 
 	current_icor_debug_frame: ICOR_DEBUG_FRAME
 			-- Current shared ICorDebugFrame encapsulated instance
@@ -1060,7 +1039,7 @@ feature {NONE} -- Debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

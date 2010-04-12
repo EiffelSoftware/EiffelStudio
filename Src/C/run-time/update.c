@@ -390,6 +390,7 @@ rt_public void update(char ignore_updt, char *argv0)
 			write_long ((char *) (bcode + 1), process_once_index (once_body_id));
 			break;
 #endif
+		case ONCE_MARK_OBJECT_RELATIVE:
 		case ONCE_MARK_NONE:
 		case ONCE_MARK_ATTRIBUTE:
 			break;

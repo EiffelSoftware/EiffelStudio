@@ -334,9 +334,59 @@ feature -- Concrete evaluation
 			no_error_occurred: not error_occurred
 		do
 			check
-				f_is_once: f.is_once
+				f_is_once: f.is_process_or_thread_relative_once
 			end
 			effective_evaluate_once_function (f)
+		end
+
+	evaluate_object_relative_once (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I)
+			-- Evaluate once feature
+		require
+			feature_not_void: f /= Void
+			no_error_occurred: not error_occurred
+		local
+			l_address: DBG_ADDRESS
+			res: ABSTRACT_DEBUG_VALUE
+		do
+			check
+				f_is_once: f.is_object_relative_once
+			end
+
+			if a_target /= Void then
+				l_address := a_target.address
+			end
+			if l_address = Void or else l_address.is_void then
+				l_address := a_addr
+			end
+			if (l_address = Void or else l_address.is_void) and a_target /= Void then
+					--| cannot evaluate attribute on manifest value
+					--| (such as "foo", 1 or True .. in the expression)
+					-- but let's try to improve this ...
+				l_address := address_from_dump_value (a_target)
+			end
+
+			if attached debugger_manager.application.object_relative_once_data (f, l_address, c) as l_once_data then
+				if l_once_data.called then
+					if l_once_data.exc /= Void then
+						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, l_once_data.exc.long_description))
+					elseif f.has_return_value then
+						res := l_once_data.res
+						if res = Void then
+							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, "no result value !"))
+						else
+							create last_result.make_with_value (res.dump_value)
+							if attached f.type.associated_class as cl then
+								last_result.suggest_static_class (cl)
+							end
+						end
+					else
+						create {PROCEDURE_RETURN_DEBUG_VALUE} res.make_with_name (f.feature_name)
+						create last_result.make_with_value (res.dump_value)
+					end
+				else
+					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_once_routine_not_yet_called (f.feature_name))
+				end
+			end
 		end
 
 	evaluate_attribute (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I)
@@ -436,7 +486,7 @@ feature -- Concrete evaluation
 					elseif l_target_dynclass = Void then
 						l_target_dynclass := l_dyntype.associated_class
 					end
-				elseif f.is_once then
+				elseif f.is_process_or_thread_relative_once then
 						--| Useless for once
 					l_target_dynclass := Void
 					l_dyntype := Void
@@ -447,7 +497,7 @@ feature -- Concrete evaluation
 			else
 				check l_target_dynclass /= Void and then l_target_dynclass.types.count = 0 end
 			end
-			if f.is_once then
+			if f.is_process_or_thread_relative_once then
 				effective_evaluate_once_function (f)
 				if last_result_value = Void then
 					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_once_call (f.written_class.name_in_upper, f.feature_name))
@@ -477,7 +527,7 @@ feature -- Concrete evaluation
 					end
 					check
 						valid_dyn_type: l_dyntype /= Void
-						f_is_not_once: not f.is_once
+						f_is_not_once: not f.is_process_or_thread_relative_once
 					end
 					if realf.is_deferred and f.is_deferred then
 						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_deferred_call (f.written_class.name_in_upper, f.feature_name))
@@ -541,6 +591,7 @@ feature -- Concrete evaluation
 			feature_not_void: f /= Void
 			f.written_class.types.count <= 1
 			f_is_once: f.is_once
+			f_is_process_or_thread_relative_once: f.is_process_or_thread_relative_once
 			no_error_occurred: not error_occurred
 		deferred
 		end

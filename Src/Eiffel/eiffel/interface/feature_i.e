@@ -1296,6 +1296,12 @@ feature -- Conveniences
 			Result := is_once and then not is_object_relative_once
 		end
 
+	is_thread_relative_once: BOOLEAN
+			-- Is current feature a once per object feature?
+		do
+			Result := is_process_or_thread_relative_once and not is_process_relative
+		end
+
 	is_object_relative_once: BOOLEAN
 			-- Is current feature a once per object feature?
 		do

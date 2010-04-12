@@ -732,10 +732,6 @@ Feature_declaration: Add_counter New_feature_list Remove_counter Declaration_bod
 				then
 					if l_once_as.has_key_conflict ($$) then
 						report_one_error (create {SYNTAX_ERROR}.make (token_line (l_once_as), token_column (l_once_as), filename, once "Conflict in once's keys"))
-					elseif l_once_as.has_key_object then
-						report_one_error (
-							create {SYNTAX_ERROR}.make (token_line (l_once_as), token_column (l_once_as), filename,
-							once "Once per object is not yet implemented."))
 					end
 				end
 

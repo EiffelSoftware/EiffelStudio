@@ -270,6 +270,9 @@ feature {NONE} -- Access
 	once_generation: BOOLEAN
 			-- Are we currently generating a once feature?
 
+	object_relative_once_generation: BOOLEAN
+			-- Are we currently generating a once per object feature?
+
 feature {NONE} -- Debug info
 
 	dbg_writer: DBG_WRITER
@@ -431,6 +434,14 @@ feature -- Settings
 			once_generation := v
 		ensure
 			once_generation_set: once_generation = v
+		end
+
+	set_object_relative_once_generation (v: BOOLEAN)
+			-- Set `object_relative_once_generation' to `v'.
+		do
+			object_relative_once_generation := v
+		ensure
+			object_relative_once_generation_set: object_relative_once_generation = v
 		end
 
 	set_current_module_for_class (class_c: CLASS_C)
@@ -1993,6 +2004,26 @@ feature -- Features info
 		local
 			l_feat: FEATURE_I
 			l_class_type: CLASS_TYPE
+		do
+			l_class_type := class_types.item (a_type_id)
+			l_feat := l_class_type.associated_class.feature_of_feature_id (a_feature_id)
+			check
+				same_feature_id: l_feat.feature_id = a_feature_id
+			end
+
+			define_feature_i_reference (a_type_id, l_feat, in_interface, is_static, is_override)
+		end
+
+	define_feature_i_reference (a_type_id: INTEGER; a_feature_i: FEATURE_I;
+			in_interface, is_static, is_override: BOOLEAN)
+
+			-- Define reference to feature `a_feature_i' defined in `a_type_id'.
+		require
+			type_id_valid: a_type_id > 0
+			feature_id_valid: a_feature_i /= Void
+		local
+			l_feature_id: INTEGER
+			l_class_type: CLASS_TYPE
 			l_meth_sig: like method_sig
 			l_field_sig: like field_sig
 			l_name: STRING
@@ -2013,18 +2044,16 @@ feature -- Features info
 			l_declaration_class: CLASS_C
 		do
 			l_class_type := class_types.item (a_type_id)
+			l_feature_id := a_feature_i.feature_id
+
 			l_class_token := actual_class_type_token (a_type_id)
-			l_feat := l_class_type.associated_class.feature_of_feature_id (a_feature_id)
-			check
-				same_feature_id: l_feat.feature_id = a_feature_id
-			end
 			l_is_single_class := l_class_type.is_generated_as_single_type
 
-			l_is_attribute := l_feat.is_attribute
-			l_is_c_external := l_feat.is_c_external
+			l_is_attribute := a_feature_i.is_attribute
+			l_is_c_external := a_feature_i.is_c_external
 
-			if l_feat.is_il_external then
-				l_ext ?= l_feat.extension
+			if a_feature_i.is_il_external then
+				l_ext ?= a_feature_i.extension
 				check
 					has_extension: l_ext /= Void
 				end
@@ -2035,11 +2064,11 @@ feature -- Features info
 				l_is_static := is_static
 			end
 
-			l_parameter_count := l_feat.argument_count
-			l_return_type := result_type_in (l_feat, l_class_type)
+			l_parameter_count := a_feature_i.argument_count
+			l_return_type := result_type_in (a_feature_i, l_class_type)
 			l_is_attribute_generated_as_field := l_is_attribute and (l_is_single_class or (not in_interface and l_is_static))
 
-			if not l_feat.is_type_feature then
+			if not a_feature_i.is_type_feature then
 					-- Only for not automatically generated feature do we use the
 					-- naming convention chosen by user.
 				l_naming_convention := l_class_type.is_dotnet_name
@@ -2050,45 +2079,45 @@ feature -- Features info
 			if l_ext /= Void then
 				l_name := l_ext.alias_name
 			else
-				if l_feat.is_type_feature then
-					l_name := l_feat.feature_name
+				if a_feature_i.is_type_feature then
+					l_name := a_feature_i.feature_name
 				else
 					if l_is_static then
 						if l_is_c_external then
 							l_name := encoder.feature_name (l_class_type.type_id,
-								l_feat.body_index)
+								a_feature_i.body_index)
 						else
 							if l_is_attribute then
 								l_name := "$$" + il_casing.camel_casing (
-									l_naming_convention, l_feat.feature_name)
+									l_naming_convention, a_feature_i.feature_name)
 							else
 								l_name := "$$" + il_casing.pascal_casing (
-									l_naming_convention, l_feat.feature_name,
+									l_naming_convention, a_feature_i.feature_name,
 									{IL_CASING_CONVERSION}.lower_case)
 							end
 						end
 					else
 						l_name := il_casing.pascal_casing (
-							l_naming_convention, l_feat.feature_name,
+							l_naming_convention, a_feature_i.feature_name,
 							{IL_CASING_CONVERSION}.lower_case)
-						if l_feat.has_property_getter then
-							prepare_property_getter (l_feat, l_class_type, l_name, l_return_type, l_class_type)
+						if a_feature_i.has_property_getter then
+							prepare_property_getter (a_feature_i, l_class_type, l_name, l_return_type, l_class_type)
 							current_module.insert_property_getter (md_emit.define_member_ref
-								(uni_string, l_class_token, method_sig), a_type_id, a_feature_id)
+								(uni_string, l_class_token, method_sig), a_type_id, l_feature_id)
 						end
-						if l_feat.has_property_setter then
+						if a_feature_i.has_property_setter then
 							l_type_i := l_return_type
 							if l_type_i.is_void then
-								l_type_i := argument_actual_type_in (l_feat.arguments.first, l_class_type)
+								l_type_i := argument_actual_type_in (a_feature_i.arguments.first, l_class_type)
 							end
-							prepare_property_setter (l_feat, l_class_type, l_name, l_type_i, l_class_type)
+							prepare_property_setter (a_feature_i, l_class_type, l_name, l_type_i, l_class_type)
 							current_module.insert_property_setter (md_emit.define_member_ref
-								(uni_string, l_class_token, method_sig), a_type_id, a_feature_id)
+								(uni_string, l_class_token, method_sig), a_type_id, l_feature_id)
 						end
-						if l_feat.has_property and then l_is_single_class and then not is_override then
+						if a_feature_i.has_property and then l_is_single_class and then not is_override then
 								-- Use a field name different from the property name.
 							if l_is_attribute_generated_as_field then
-								l_name := "$$" + il_casing.camel_casing (l_naming_convention, l_feat.feature_name)
+								l_name := "$$" + il_casing.camel_casing (l_naming_convention, a_feature_i.feature_name)
 							end
 						end
 						check l_name_attached: l_name /= Void end
@@ -2103,10 +2132,10 @@ feature -- Features info
 				l_field_sig := field_sig
 				l_field_sig.reset
 				set_signature_type (l_field_sig, l_return_type, l_class_type)
-				if l_feat.origin_class_id = 0 then
-					l_declaration_class := system.class_of_id (l_feat.access_in)
+				if a_feature_i.origin_class_id = 0 then
+					l_declaration_class := system.class_of_id (a_feature_i.access_in)
 				else
-					l_declaration_class := system.class_of_id (l_feat.origin_class_id)
+					l_declaration_class := system.class_of_id (a_feature_i.origin_class_id)
 				end
 				if
 					l_declaration_class.is_external or else
@@ -2118,14 +2147,14 @@ feature -- Features info
 					end
 					l_meth_token := attribute_token (l_class_type.type.implemented_type
 						(l_declaration_class.class_id).associated_class_type (l_class_type.type).static_type_id,
-						l_declaration_class.feature_of_rout_id (l_feat.rout_id_set.first).feature_id)
+						l_declaration_class.feature_of_rout_id (a_feature_i.rout_id_set.first).feature_id)
 				else
 					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
 						l_field_sig)
 				end
-				insert_attribute (l_meth_token, a_type_id, a_feature_id)
+				insert_attribute (l_meth_token, a_type_id, l_feature_id)
 				if l_is_single_class then
-					insert_signature ([l_class_type, l_feat.rout_id_set.first], a_type_id, a_feature_id)
+					insert_signature ([l_class_type, a_feature_i.rout_id_set.first], a_type_id, l_feature_id)
 				end
 			else
 					-- Normal method.
@@ -2144,11 +2173,11 @@ feature -- Features info
 					l_meth_sig.set_parameter_count (l_parameter_count)
 				end
 
-				if l_feat.is_type_feature then
+				if a_feature_i.is_type_feature then
 					l_meth_sig.set_return_type (
 						{MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						current_module.ise_type_token)
-				elseif l_feat.is_function or l_is_attribute or l_feat.is_constant then
+				elseif a_feature_i.is_function or l_is_attribute or a_feature_i.is_constant then
 					set_method_return_type (l_meth_sig, l_return_type, l_class_type)
 				else
 					l_meth_sig.set_return_type (
@@ -2159,9 +2188,9 @@ feature -- Features info
 					set_signature_type (l_meth_sig, l_class_type.type, l_class_type)
 				end
 
-				if l_feat.has_arguments then
+				if a_feature_i.has_arguments then
 					from
-						l_feat_arg := l_feat.arguments
+						l_feat_arg := a_feature_i.arguments
 						l_feat_arg.start
 						i := 0
 					until
@@ -2188,26 +2217,26 @@ feature -- Features info
 					l_setter_token := md_emit.define_member_ref (uni_string,
 						l_class_token, l_meth_sig)
 
-					insert_setter (l_setter_token, a_type_id, a_feature_id)
+					insert_setter (l_setter_token, a_type_id, l_feature_id)
 				end
 
 				if not is_override then
 					if l_is_single_class then
-						insert_implementation_feature (l_meth_token, a_type_id, a_feature_id)
-						insert_implementation_signature ([l_class_type, l_feat.rout_id_set.first],
-							a_type_id, a_feature_id)
-						insert_feature (l_meth_token, a_type_id, a_feature_id)
-						insert_signature ([l_class_type, l_feat.rout_id_set.first],
-							a_type_id, a_feature_id)
+						insert_implementation_feature (l_meth_token, a_type_id, l_feature_id)
+						insert_implementation_signature ([l_class_type, a_feature_i.rout_id_set.first],
+							a_type_id, l_feature_id)
+						insert_feature (l_meth_token, a_type_id, l_feature_id)
+						insert_signature ([l_class_type, a_feature_i.rout_id_set.first],
+							a_type_id, l_feature_id)
 					else
 						if l_is_static then
-							insert_implementation_feature (l_meth_token, a_type_id, a_feature_id)
-							insert_implementation_signature ([l_class_type, l_feat.rout_id_set.first],
-								a_type_id, a_feature_id)
+							insert_implementation_feature (l_meth_token, a_type_id, l_feature_id)
+							insert_implementation_signature ([l_class_type, a_feature_i.rout_id_set.first],
+								a_type_id, l_feature_id)
 						else
-							insert_feature (l_meth_token, a_type_id, a_feature_id)
-							insert_signature ([l_class_type, l_feat.rout_id_set.first],
-								a_type_id, a_feature_id)
+							insert_feature (l_meth_token, a_type_id, l_feature_id)
+							insert_signature ([l_class_type, a_feature_i.rout_id_set.first],
+								a_type_id, l_feature_id)
 						end
 					end
 				else
@@ -2232,7 +2261,7 @@ feature -- Features info
 			feat_not_void: feat /= Void
 			signature_declaration_type_not_void: signature_declaration_type /= Void
 			found_feature_in_declaration_type:
-				not feat.is_inline_agent implies
+				(not feat.is_inline_agent and not feat.is_hidden) implies
 				signature_declaration_type.associated_class.feature_of_rout_id (feat.rout_id_set.first) /= Void
 		local
 			is_override_or_c_external: BOOLEAN
@@ -3261,7 +3290,7 @@ feature -- IL Generation
 
 	generate_feature_code (feat: FEATURE_I; is_implementation: BOOLEAN)
 			-- Generate IL code for feature `feat' using its implementation
-			-- token iff `is_implementation' is true.
+			-- token if `is_implementation' is true.
 		require
 			feat_not_void: feat /= Void
 		local
@@ -5223,7 +5252,10 @@ feature -- Once management
 				feature_table.after
 			loop
 				feature_i := feature_table.item_for_iteration
-				if feature_i.is_once and then feature_i.access_in = class_c.class_id then
+				if
+					feature_i.is_once and then feature_i.is_process_or_thread_relative_once and then
+					feature_i.access_in = class_c.class_id
+				then
 					if current_class_token = 0 then
 						current_class_token := current_module.class_data_token (class_c)
 					end
@@ -5356,22 +5388,49 @@ feature -- Once management
 			class_data_token: INTEGER
 			name: STRING
 			l_sig: like field_sig
+			cl_token: INTEGER
+			l_once_info: detachable OBJECT_RELATIVE_ONCE_INFO
 		do
 			name := feature_i.feature_name
-			class_data_token := current_module.class_data_token (system.class_of_id (feature_i.access_in))
-			uni_string.set_string (once_done_name (name))
-			done_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
-			uni_string.set_string (once_exception_name (name))
-			exception_token := md_emit.define_member_ref (uni_string, class_data_token, exception_sig)
-			if feature_i.has_return_value then
-				l_sig := field_sig
-				l_sig.reset
-				set_signature_type (l_sig, result_type_in (feature_i, current_class_type), current_class_type)
-				uni_string.set_string (once_result_name (name))
-				result_token := md_emit.define_member_ref (uni_string, class_data_token, l_sig)
+			if feature_i.is_object_relative_once then
+				cl_token := current_class_token
+				l_once_info := current_class.object_relative_once_info (feature_i.rout_id_set.first)
+				check has_obj_relative_once_info: l_once_info /= Void end
+
+				uni_string.set_string (l_once_info.called_name)
+				done_token := md_emit.define_field (uni_string, cl_token, {MD_FIELD_ATTRIBUTES}.Private, done_sig)
+
+				uni_string.set_string (l_once_info.exception_name)
+				exception_token := md_emit.define_field (uni_string, cl_token, {MD_FIELD_ATTRIBUTES}.Private, exception_sig)
+
+				if l_once_info.has_result then
+					l_sig := field_sig
+					l_sig.reset
+					set_signature_type (l_sig, l_once_info.result_type_a, current_class_type)
+					uni_string.set_string (l_once_info.result_name)
+					result_token := md_emit.define_field (uni_string, cl_token, {MD_FIELD_ATTRIBUTES}.Private, l_sig)
+				else
+					result_token := 0
+				end
+				Il_debug_info_recorder.record_once_info_for_class (current_class_token, done_token, result_token, exception_token, feature_i, current_class)
 			else
-				result_token := 0
+				class_data_token := current_module.class_data_token (system.class_of_id (feature_i.access_in))
+
+				uni_string.set_string (once_done_name (name))
+				done_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
+				uni_string.set_string (once_exception_name (name))
+				exception_token := md_emit.define_member_ref (uni_string, class_data_token, exception_sig)
+				if feature_i.has_return_value then
+					l_sig := field_sig
+					l_sig.reset
+					set_signature_type (l_sig, result_type_in (feature_i, current_class_type), current_class_type)
+					uni_string.set_string (once_result_name (name))
+					result_token := md_emit.define_member_ref (uni_string, class_data_token, l_sig)
+				else
+					result_token := 0
+				end
 			end
+
 			if feature_i.is_process_relative then
 				uni_string.set_string (once_ready_name (name))
 				ready_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
@@ -5397,6 +5456,8 @@ feature -- Once management
 --		require
 			-- current_feature_not_void: byte_context.current_feature /= Void
 			-- current_feature_is_once: byte_context.current_feature.is_once
+		local
+			l_once_info: detachable OBJECT_RELATIVE_ONCE_INFO
 		do
 				-- Body of a once feature is guarded by try/fault blocks
 				-- to avoid storing invalid result in case of exception:
@@ -5437,8 +5498,23 @@ feature -- Once management
 				--    end
 				--    return result -- if required
 
+				-- Object-relative code
+				--    if not done then
+				--       guarded_body -- see above
+				--    end
+				--    if exception /= Void then
+				--       raise (exception)
+				--    end
+				--    return result -- if required				
+
 				-- Initialize once code generation
 			set_once_generation (True)
+			if byte_context.current_feature.is_object_relative_once then
+				set_object_relative_once_generation (True)
+				l_once_info := current_class.object_relative_once_info (byte_context.current_feature.rout_id_set.first)
+			else
+				set_object_relative_once_generation (False)
+			end
 			generate_once_access_info (byte_context.current_feature)
 
 			if ready_token /= 0 then
@@ -5460,11 +5536,24 @@ feature -- Once management
 				--    if not done then
 				--       done := True
 				--       try {
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, done_token)
+			if l_once_info /= Void then
+				generate_current
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldfld, done_token)
+				put_boolean_constant (True)
+				method_body.put_opcode ({MD_OPCODES}.ceq)
+			else
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, done_token)
+			end
 			once_done_label := create_label
 			branch_on_true (once_done_label)
-			put_boolean_constant (True)
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, done_token)
+			if l_once_info /= Void then
+				generate_current
+				put_boolean_constant (True)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, done_token)
+			else
+				put_boolean_constant (True)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, done_token)
+			end
 			method_body.once_catch_block.set_try_offset (method_body.count)
 		ensure then
 			once_generation: once_generation
@@ -5486,7 +5575,13 @@ feature -- Once management
 			return_label: IL_LABEL
 			is_process_relative: BOOLEAN
 			has_result: BOOLEAN
+			l_once_info: detachable OBJECT_RELATIVE_ONCE_INFO
+			local_number: INTEGER
 		do
+
+			if byte_context.current_feature.is_object_relative_once then
+				l_once_info := current_class.object_relative_once_info (byte_context.current_feature.rout_id_set.first)
+			end
 				-- Close try block and start fault block
 				--       }
 				--       catch (Object e) {
@@ -5500,7 +5595,20 @@ feature -- Once management
 			method_body.once_catch_block.set_class_token (current_module.object_type_token)
 			method_body.update_stack_depth (1)
 			method_body.once_catch_block.set_handler_offset (method_body.count)
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, exception_token)
+
+			if l_once_info /= Void then
+					-- Store value
+				byte_context.add_local (System_object_type)
+				local_number := byte_context.local_list.count
+				put_dummy_local_info (System_object_type, local_number)
+				generate_local_assignment (local_number)
+				generate_current
+				generate_local (local_number)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, exception_token)
+				-- FIXME:jfiat: should we reset the "result" value? to avoid memory leaks?
+			else
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, exception_token)
+			end
 			if ready_token /= 0 then
 					-- Notify other threads that result is ready:
 					--          volatile ready := True
@@ -5551,9 +5659,23 @@ feature -- Once management
 				--       raise (exception)
 				--    end
 			return_label := create_label
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, exception_token)
+			if l_once_info /= Void then
+				generate_current
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, exception_token)
+				put_void
+				method_body.put_opcode ({MD_OPCODES}.ceq)
+				put_boolean_constant (False)
+				method_body.put_opcode ({MD_OPCODES}.ceq)
+			else
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, exception_token)
+			end
 			branch_on_false (return_label)
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, exception_token)
+			if l_once_info /= Void then
+				generate_current
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, exception_token)
+			else
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, exception_token)
+			end
 				-- Only System.Exception can be saved. The type saved exception object could be changed to System.Exception.
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass, current_module.system_exception_token)
 			method_body.put_throw
@@ -5575,14 +5697,16 @@ feature -- Once management
 			once_done_label := Void
 			once_ready_label := Void
 			set_once_generation (False)
+			set_object_relative_once_generation (False)
 		ensure then
-			not_once_generation: not once_generation
 			done_token_unset: done_token = 0
 			result_token_unset: result_token = 0
 			ready_token_unset: ready_token = 0
 			sync_token_unset: sync_token = 0
 			once_done_label_unset: once_done_label = Void
 			once_ready_label_unset: once_ready_label = Void
+			not_once_generation: not once_generation
+			not_object_relative_once_generation: not object_relative_once_generation
 		end
 
 	generate_once_result_address
@@ -5599,14 +5723,31 @@ feature -- Once management
 --		require
 --			result_token_set: result_token /= 0
 		do
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, result_token)
+			if object_relative_once_generation then
+				generate_current
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, result_token)
+			else
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, result_token)
+			end
 		end
 
 	generate_once_store_result
 			-- Generate setting of static `result' variable corresponding
 			-- to current processed once function.
+		local
+			local_number: INTEGER
 		do
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, result_token)
+			if object_relative_once_generation then
+				byte_context.add_local (System_object_type)
+				local_number := byte_context.local_list.count
+				put_dummy_local_info (System_object_type, local_number)
+				generate_local_assignment (local_number)
+				generate_current
+				generate_local (local_number)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, result_token)
+			else
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, result_token)
+			end
 		end
 
 feature -- Once manifest string manipulation
@@ -7264,6 +7405,12 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			-- Type of string object
 		once
 			Result := System.system_string_class.compiled_class.types.first.type
+		end
+
+	System_object_type: TYPE_A
+			-- Type of Object object
+		once
+			Result := System.system_object_class.compiled_class.types.first.type
 		end
 
 	string_type: TYPE_A

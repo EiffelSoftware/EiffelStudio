@@ -620,6 +620,31 @@ end
 			end
 		end
 
+feature -- Access: object relative once
+
+	create_object_relative_once_infos (n: INTEGER)
+			-- Create a new `object_relative_once_infos' table
+		do
+			create object_relative_once_infos.make (n)
+		end
+
+	reset_object_relative_once_infos
+			-- Reset `object_relative_once_infos' to Void .
+		do
+			object_relative_once_infos := Void
+		end
+
+	object_relative_once_infos: detachable HASH_TABLE [OBJECT_RELATIVE_ONCE_INFO, INTEGER]
+			-- List of info about object relative onces associated with Current
+
+	object_relative_once_info (a_once_routine_id: INTEGER): detachable OBJECT_RELATIVE_ONCE_INFO
+			-- Info about object relative once associated with Current and `a_once_routine_id'
+		do
+			if attached object_relative_once_infos as l_infos then
+				Result := l_infos.item (a_once_routine_id)
+			end
+		end
+
 feature -- Third pass: byte code production and type check
 
 	record_suppliers (feature_i: FEATURE_I; dependances: CLASS_DEPENDANCE)
@@ -3515,35 +3540,9 @@ feature -- Access
 			end
 		end
 
-	once_functions: SORTED_TWO_WAY_LIST [E_FEATURE]
-			-- List of once functions.
-		local
-			f_table: FEATURE_TABLE
-			feat: FEATURE_I
-			cid: INTEGER
-		do
-			cid := class_id
-			create Result.make
-			f_table := feature_table
-			from
-				f_table.start
-			until
-				f_table.after
-			loop
-				feat := f_table.item_for_iteration
-				if feat.is_once and then feat.is_function then
-					Result.put_front (feat.api_feature (cid))
-				end
-				f_table.forth
-			end
-			Result.sort
-		ensure
-			non_void_result: Result /= Void
-			result_sorted: Result.sorted
-		end
-
 	once_routines: SORTED_TWO_WAY_LIST [E_FEATURE]
 			-- List of once features (functions and procedures).
+			-- Be sure to handle correctly object relative once !
 		local
 			f_table: FEATURE_TABLE
 			feat: FEATURE_I
@@ -4798,12 +4797,3 @@ note
 		]"
 
 end -- class CLASS_C
-
-
-
-
-
-
-
-
-

@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			routine_id := f.rout_id_set.first
 			is_once := f.is_once
 			is_process_relative := f.is_process_relative
+			is_object_relative := f.is_object_relative_once
 			precursor_type := p_type
 			type := t
 			if System.il_generation then
@@ -122,6 +123,15 @@ feature -- Access
 
 	is_process_relative: BOOLEAN
 			-- Is current feature process-relative?
+
+	is_object_relative: BOOLEAN
+			-- Is current feature object-relative?
+
+	is_thread_relative: BOOLEAN
+			-- Is current feature thread-relative?
+		do
+			Result := not (is_process_relative or is_object_relative)
+		end
 
 	parameters: BYTE_LIST [PARAMETER_B]
 			-- Feature parameters: can be Void
@@ -594,7 +604,7 @@ feature {NONE} -- Normalization of types
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

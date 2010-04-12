@@ -40,13 +40,11 @@ feature -- Initialization
 			init_recv_c
 		end
 
-	address: STRING
-
 	already_called (once_routine: FEATURE_I): BOOLEAN
 			-- Has `once_routine' already been called?
 		require
 			exists: once_routine /= Void
-			is_once: once_routine.is_once
+			is_once: once_routine.is_process_or_thread_relative_once
 		local
 			l_index: INTEGER
 			s: STRING
@@ -61,6 +59,9 @@ feature -- Initialization
 				if once_routine.is_process_relative then
 					send_rqst_3_integer (Rqst_once, Out_called, Out_once_per_process, l_index)
 				else
+					check 
+						is_thread_relative_once: once_routine.is_thread_relative_once
+					end
 					send_rqst_3_integer (Rqst_once, Out_called, Out_once_per_thread, l_index)
 				end
 				debug ("debugger_ipc")
@@ -107,7 +108,7 @@ end
 			-- Result of `once_routine'
 		require
 			exists: once_routine /= Void
-			is_once: once_routine.is_once
+			is_once: once_routine.is_process_or_thread_relative_once
 			result_exists: already_called (once_routine)
 		do
 			debug ("debugger_ipc")
@@ -130,7 +131,7 @@ feature -- Implementation
 			-- and then the result if available.
 		require
 			exists: once_routine /= Void
-			is_once: once_routine.is_once
+			is_once: once_routine.is_process_or_thread_relative_once
 		local
 			l_index: INTEGER
 			l_type: TYPE_A

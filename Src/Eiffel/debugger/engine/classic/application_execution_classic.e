@@ -369,6 +369,7 @@ feature -- Query
 			odv: ABSTRACT_DEBUG_VALUE
 			l_feat: FEATURE_I
 			l_class: CLASS_C
+			l_called: BOOLEAN
 			once_r: ONCE_REQUEST
 		do
 			l_class := a_cl
@@ -381,29 +382,99 @@ feature -- Query
 				flist.after
 			loop
 				l_feat := flist.item.associated_feature_i
-				if once_r.already_called (l_feat) then
-					odv := once_r.once_result (l_feat)
-					if odv /= Void then
-						odv.set_name (l_feat.feature_name)
+				l_called := False
+				if l_feat.is_object_relative_once then
+					if attached object_relative_once_data (l_feat, a_addr, a_cl) as l_once_data then
+						if l_once_data.called then
+							odv := l_once_data.exc
+							if odv /= Void then
+								odv.set_name (l_feat.feature_name)
+							else
+								odv := l_once_data.res
+								if odv /= Void then
+									odv.set_name (l_feat.feature_name)
+								else
+									create err_dv.make_with_name  (l_feat.feature_name)
+									err_dv.set_message (debugger_names.m_Could_not_retrieve_once_information)
+									odv := err_dv
+								end
+							end
+						else
+							create err_dv.make_with_name  (l_feat.feature_name)
+							err_dv.set_message (debugger_names.m_Not_yet_called)
+							if l_feat.is_function then
+								err_dv.set_display_kind (Void_value)
+							else
+								err_dv.set_display_kind (Procedure_return_message_value)
+							end
+							odv := err_dv
+						end
 					else
 						create err_dv.make_with_name  (l_feat.feature_name)
 						err_dv.set_message (debugger_names.m_Could_not_retrieve_once_information)
 						odv := err_dv
 					end
 				else
-					create err_dv.make_with_name  (l_feat.feature_name)
-					err_dv.set_message (debugger_names.m_Not_yet_called)
-					if l_feat.is_function then
-						err_dv.set_display_kind (Void_value)
+					l_called := once_r.already_called (l_feat)
+					if l_called then
+						odv := once_r.once_result (l_feat)
+						if odv /= Void then
+							odv.set_name (l_feat.feature_name)
+						else
+							create err_dv.make_with_name  (l_feat.feature_name)
+							err_dv.set_message (debugger_names.m_Could_not_retrieve_once_information)
+							odv := err_dv
+						end
 					else
-						err_dv.set_display_kind (Procedure_return_message_value)
+						create err_dv.make_with_name  (l_feat.feature_name)
+						err_dv.set_message (debugger_names.m_Not_yet_called)
+						if l_feat.is_function then
+							err_dv.set_display_kind (Void_value)
+						else
+							err_dv.set_display_kind (Procedure_return_message_value)
+						end
+						odv := err_dv
 					end
-					odv := err_dv
 				end
 				Result.put (odv, i)
 				i := i + 1
 				flist.forth
 			end
+		end
+
+	object_relative_once_data (a_feat: FEATURE_I; a_addr: DBG_ADDRESS; a_cl: CLASS_C): TUPLE [called: BOOLEAN; exc: EXCEPTION_DEBUG_VALUE; res: ABSTRACT_DEBUG_VALUE]
+		local
+			l_info: detachable OBJECT_RELATIVE_ONCE_INFO
+			dv: ABSTRACT_DEBUG_VALUE
+			l_called: BOOLEAN
+			l_exc: EXCEPTION_DEBUG_VALUE
+			l_res: ABSTRACT_DEBUG_VALUE
+			lst: DEBUG_VALUE_LIST
+		do
+			l_info := a_cl.object_relative_once_info (a_feat.rout_id_set.first)
+			lst := debugger_manager.object_manager.attributes_at_address (a_addr, 0, 0)
+			dv := lst.named_value (l_info.called_attribute_i.feature_name)
+			if
+				dv /= Void and then
+				attached dv.dump_value as dump and then
+				dump.is_type_boolean and then
+				dump.as_dump_value_basic.value_boolean = True
+			then
+				l_called := True
+
+				if
+					attached {REFERENCE_VALUE} lst.named_value (l_info.exception_attribute_i.feature_name) as e and then
+					not e.is_null
+				then
+					create l_exc.make_with_value (e)
+				elseif l_info.has_result then
+					dv := lst.named_value (l_info.result_attribute_i.feature_name)
+					l_res := dv
+				else
+					create {PROCEDURE_RETURN_DEBUG_VALUE} l_res.make_with_name (a_feat.feature_name)
+				end
+			end
+			Result := [l_called, l_exc, l_res]
 		end
 
 	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE

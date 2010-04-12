@@ -471,9 +471,10 @@ feature -- C code generation: once features
 			Result := onces.item (code_index).second
 		end
 
-	generate_once_optimized_call_start (type_c: TYPE_C; code_index: INTEGER; is_process_relative: BOOLEAN; buf: like buffer)
+	generate_once_optimized_call_start (type_c: TYPE_C; code_index: INTEGER; is_process_relative, is_object_relative: BOOLEAN; buf: like buffer)
 			-- Generate beginning of optimized direct call to once routine of type `type_c' with given `code_index'
 		require
+			not_is_object_relative_once: not is_object_relative
 			is_once_call_optimized: is_once_call_optimized
 			type_not_void: type_c /= Void
 			buffer_not_void: buf /= Void
@@ -496,7 +497,7 @@ feature -- C code generation: once features
 					buf.put_string ("RTOPCF(")
 				end
 				buf.put_integer (code_index)
-			else
+			else --| default: is_thread_relative
 				if type_c.is_void then
 						-- It is a once procedure
 					buf.put_string ("RTOUCP(")
@@ -1517,7 +1518,7 @@ feature -- Access
 				if
 					not result_used and
 					real_type (byte_code.result_type).c_type.is_pointer and
-					not byte_code.is_once
+					(not byte_code.is_process_or_thread_relative_once)
 				then
 					set_local_index ("Result", Result_register)
 				end
@@ -1752,7 +1753,7 @@ feature -- Access
 			postcondition_object_test_local_offset := saved_context.postcondition_object_test_local_offset
 		end
 
-	generate_dtype_declaration (is_once: BOOLEAN)
+	generate_dtype_declaration (is_process_or_thread_relative_once: BOOLEAN)
 			-- Declare the 'dtype' variable which holds the pre-computed
 			-- dynamic type of current. To avoid unnecssary computations,
 			-- this is not done in case of a once, before we know we have
@@ -1765,7 +1766,7 @@ feature -- Access
 					-- There has to be more than one usage of the dynamic type
 					-- of current in order to have this variable generated.
 				buf.put_new_line
-				if is_once then
+				if is_process_or_thread_relative_once then
 					buf.put_string ("RTCFDD;")
 				else
 					buf.put_string ("RTCFDT;")
@@ -1775,7 +1776,7 @@ feature -- Access
 					-- There has to be more than one usage of the full dynamic type
 					-- of current in order to have this variable generated.
 				buf.put_new_line
-				if is_once then
+				if is_process_or_thread_relative_once then
 					buf.put_string ("RTCDD;")
 				else
 					buf.put_string ("RTCDT;")

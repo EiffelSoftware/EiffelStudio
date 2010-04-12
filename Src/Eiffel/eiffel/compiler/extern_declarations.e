@@ -49,12 +49,16 @@ feature -- Settings
 			attribute_tables.put (attr_table.string)
 		end
 
-	add_once (type: TYPE_C; code_index: INTEGER; is_process_relative: BOOLEAN)
+	add_once (type: TYPE_C; code_index: INTEGER; is_process_relative, is_object_relative: BOOLEAN)
 			-- Add `once_name' to current extern declarations.
 		require
 			type__not_void: type /= Void
+			is_not_object_relative: not is_object_relative
 		do
-			if not system.has_multithreaded or else is_process_relative then
+			if
+				not system.has_multithreaded -- ie: single threaded
+				or else is_process_relative -- ie: multi threaded and process relative once
+			then
 				onces_table.put (type, code_index)
 			end
 		end

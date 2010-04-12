@@ -73,7 +73,7 @@ feature -- C code generation
 				if (feat = Void) or else feat.is_external or else feat.is_deferred then
 					buffer.put_string ("(char *(*)()) 0");
 				else
-					if is_final and then feat.is_constant and then not feat.is_once then
+					if is_final and then feat.is_constant and then not feat.is_process_or_thread_relative_once then
 							-- A non-string constant has always its feature generated in
 							-- visible class.
 						written_class := System.class_of_id (a_class_type.associated_class.class_id)

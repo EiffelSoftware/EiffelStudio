@@ -61,6 +61,9 @@ feature	{NONE} -- Initlization
 			window.title_bar.set_show_normal_max (False)
 			window.close_request_actions.extend (agent on_close_request)
 			window.stick_actions.extend (agent stick)
+			window.drag_actions.extend (agent on_drag_title_bar)
+			pointer_button_release_actions.extend (agent on_pointer_release)
+			pointer_motion_actions.extend (agent on_pointer_motion)
 			if attached a_content.mini_toolbar as l_mini_toolbar then
 				if attached l_mini_toolbar.parent as l_parent then
 					l_parent.prune (l_mini_toolbar)
@@ -143,7 +146,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {SD_AUTO_HIDE_STATE} -- For user docking
+feature {SD_AUTO_HIDE_STATE} -- Docking features
 
 	on_focus_in (a_content: SD_CONTENT)
 			-- <Precursor>
@@ -157,6 +160,57 @@ feature {SD_AUTO_HIDE_STATE} -- For user docking
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}
 			window.set_focus_color (False)
+		end
+
+	on_drag_title_bar (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
+			-- Handle title bar drag action
+			-- FIXME: same as {SD_DOCKING_ZONE}.on_drag_started, merge?
+		local
+			l_docker_mediator: like docker_mediator
+		do
+			debug ("docking")
+				io.put_string ("%N ******** draging window in SD_AUTO_HIDE_ZONE " + a_screen_x.out + " " + a_screen_y.out + "and window width height is: " + width.out + " " + height.out)
+			end
+			-- We should check if `docker_mediator' is void since `on_drag_started' will be called multi times when starting dragging on GTK
+			l_docker_mediator := docker_mediator
+			if l_docker_mediator = Void then
+				l_docker_mediator := docking_manager.query.docker_mediator (Current, docking_manager)
+				docker_mediator := l_docker_mediator
+				l_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
+				l_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
+				internal_shared.setter.before_enable_capture
+				enable_capture
+			end
+		end
+
+	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
+			-- Forward pointer motion data to SD_DOCKER_MEDIATOR
+			-- FIXME: same as {SD_DOCKING_ZONE}.on_pointer_motion, merge?
+		do
+			if attached docker_mediator as l_docker_mediator then
+				l_docker_mediator.on_pointer_motion (a_screen_x,  a_screen_y)
+			end
+		end
+
+	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
+			-- Stop SD_DOCKER_MEDIATOR
+			-- FIXME: same as {SD_DOCKING_ZONE}.on_pointer_release, merge?
+		do
+			if attached docker_mediator as l_docker_mediator then
+				disable_capture
+				internal_shared.setter.after_disable_capture
+				l_docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
+				docker_mediator := Void
+			end
+		end
+
+	on_cancel_dragging
+			-- Handle cancel dragging from SD_DOCKER_MEDIATOR
+			-- FIXME: same as {SD_DOCKING_ZONE}.on_cancel_dragging, merge?
+		do
+			disable_capture
+			internal_shared.setter.after_disable_capture
+			docker_mediator := Void
 		end
 
 feature -- Query
@@ -214,20 +268,25 @@ feature -- Command
 			internal_pointer_enter_actions := Void
 		end
 
+feature {NONE} -- Implementation
+
+	docker_mediator: detachable SD_DOCKER_MEDIATOR
+			-- Mediator perform dock
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

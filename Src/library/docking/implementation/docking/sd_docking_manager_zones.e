@@ -180,7 +180,15 @@ feature -- Zones managements
 			-- Prune a zone which was managed by docking manager.
 		require
 			a_zone_not_void: a_zone /= Void
+		local
+			l_has_child: BOOLEAN
 		do
+			if attached {EV_CONTAINER} a_zone as l_container then
+				-- Maybe we are moving from {SD_AUTO_HIDE_STATE} to {SD_DOCKING_STATE}
+				-- {SD_CONTENT}.user_widget's parent already changed, no need to prune later
+				l_has_child := l_container.has_recursive (a_zone.content.user_widget)
+			end
+
 			if attached {EV_WIDGET} a_zone as lt_widget then
 				if attached lt_widget.parent as l_parent then
 					l_parent.prune (lt_widget)
@@ -193,7 +201,7 @@ feature -- Zones managements
 			zones.start
 			zones.prune (a_zone)
 
-			if attached {EV_CONTAINER} a_zone.content.user_widget.parent as l_parent then
+			if l_has_child and then attached {EV_CONTAINER} a_zone.content.user_widget.parent as l_parent then
 				l_parent.prune (a_zone.content.user_widget)
 			end
 		ensure
@@ -291,14 +299,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

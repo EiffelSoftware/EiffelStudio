@@ -48,7 +48,7 @@ feature {NONE} -- Measurement
 
 feature {NONE} -- Basic operations
 
-	process_line (a_line: READABLE_STRING_8; a_number: NATURAL_32)
+	process_line (a_line: READABLE_STRING_32; a_number: NATURAL_32)
 			-- Processes a line.
 			--
 			-- `a_line': A line to process/parse.
@@ -88,7 +88,7 @@ feature {NONE} -- Action handlers
 			l_next_position: INTEGER
 			l_position: INTEGER
 			l_string: STRING_32
-			l_line: STRING
+			l_line: STRING_32
 		do
 			l_string := a_formatter.string
 			l_position := position + 1
@@ -111,7 +111,7 @@ feature {NONE} -- Action handlers
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

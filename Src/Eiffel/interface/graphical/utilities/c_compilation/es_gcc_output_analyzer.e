@@ -18,14 +18,15 @@ create
 
 feature {NONE} -- Basic operations
 
-	process_line (a_line: READABLE_STRING_8; a_number: NATURAL_32)
+	process_line (a_line: READABLE_STRING_32; a_number: NATURAL_32)
 			-- <Precursor>
 		local
 			l_exp: like function_name_regexp
-			l_file_name: STRING
-			l_position: STRING
-			l_message_type: STRING
-			l_message: STRING
+			l_file_name: STRING_32
+			l_position: STRING_32
+			l_position_8: STRING_8
+			l_message_type: STRING_32
+			l_message: STRING_32
 			l_line: INTEGER
 			i, j: INTEGER
 		do
@@ -34,8 +35,8 @@ feature {NONE} -- Basic operations
 			if i > 1 then
 					-- File name
 				l_file_name := a_line.substring (1, i - 1)
-				l_file_name.right_adjust
-				l_file_name.left_adjust
+				string_general_left_adjust (l_file_name)
+				string_general_right_adjust (l_file_name)
 				if l_file_name /~ file_name and then l_file_name.substring (1, dot_text_offset.count.min (l_file_name.count)) /~ dot_text_offset then
 					process_last_error
 					file_name := l_file_name
@@ -46,11 +47,12 @@ feature {NONE} -- Basic operations
 				if i > j then
 						-- Line number/warning
 					l_position := a_line.substring (j, i - 1)
-					l_position.right_adjust
-					l_position.left_adjust
-					if l_position.is_integer_32 or else l_position.substring (1, dot_text_offset.count.min (l_position.count)) ~ dot_text_offset then
-						if l_position.is_integer_32 then
-							l_line := l_position.to_integer_32
+					string_general_left_adjust (l_position)
+					string_general_right_adjust (l_position)
+					l_position_8 := l_position.as_string_8
+					if l_position_8.is_integer_32 or else l_position.substring (1, dot_text_offset.count.min (l_position.count)) ~ dot_text_offset then
+						if l_position_8.is_integer_32 then
+							l_line := l_position_8.to_integer_32
 							if l_line /= line_number then
 								if line_number > 0 then
 									process_last_error
@@ -66,23 +68,24 @@ feature {NONE} -- Basic operations
 						if i > j then
 								-- Message type
 							l_message_type := a_line.substring (j, i - 1)
-							l_message_type.right_adjust
-							l_message_type.left_adjust
-
-							if l_message_type.as_lower.substring_index (once "warning", 1) > 0 then
+							string_general_left_adjust (l_message_type)
+							string_general_right_adjust (l_message_type)
+								-- Before looking for "warning", converting to STRING_8 is fine.
+							if l_message_type.as_string_8.as_lower.substring_index (once "warning", 1) > 0 then
 								is_error := False
 							end
 						end
 					else
 						line_number := 0
-
-						if l_position.as_lower.substring_index (once "warning", 1) > 0 then
+							-- Before looking for "warning", converting to STRING_8 is fine.
+						if l_position.as_string_8.as_lower.substring_index (once "warning", 1) > 0 then
 							is_error := False
 						end
 
 							-- Not a line number.
 						l_exp := function_name_regexp
-						l_exp.match (l_position)
+							-- Before looking for "F[0-9]+_[0-9]+", converting to STRING_8 is fine.
+						l_exp.match (l_position.as_string_8)
 						if l_exp.has_matched then
 							function_name := l_exp.captured_substring (0)
 						else
@@ -95,8 +98,8 @@ feature {NONE} -- Basic operations
 							-- Message
 						j := i + 1
 						l_message := a_line.substring (j , a_line.count)
-						l_message.right_adjust
-						l_message.left_adjust
+						string_general_left_adjust (l_message)
+						string_general_right_adjust (l_message)
 
 						if not l_message.is_empty then
 							if not attached message then
@@ -118,10 +121,13 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Constants
 
-	dot_text_offset: STRING = "(.text+"
+	dot_text_offset: STRING_32
+		once
+			Result := "(.text+"
+		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

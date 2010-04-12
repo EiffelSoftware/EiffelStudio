@@ -15,7 +15,8 @@ inherit
 		redefine
 			on_after_initialized,
 			is_tool_bar_bottom_aligned,
-			new_right_tool_bar_items
+			new_right_tool_bar_items,
+			on_locale_changed
 		end
 
 	KL_SHARED_FILE_SYSTEM
@@ -546,6 +547,13 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+	on_locale_changed
+			-- Called when the locale changes.
+		do
+			encoding := locale_manager.console_encoding
+			editor.set_encoding (encoding)
+		end
+
 feature {NONE} -- Factory
 
 	new_right_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -661,7 +669,7 @@ feature {NONE} -- Internationalization
 	lb_finalized: STRING = "Finalized Compiler Folder"
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

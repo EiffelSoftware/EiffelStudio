@@ -76,7 +76,7 @@ feature -- Access
 	help_file_name: STRING = "C_COMPILER_ERROR"
 			-- Help file name
 
-	message: STRING
+	message: STRING_32
 			-- Message from C compiler.
 
 	file_name: detachable STRING
@@ -182,7 +182,7 @@ feature {NONE} -- Output
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

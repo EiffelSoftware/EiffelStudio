@@ -28,7 +28,7 @@
 			<condition>
 				<platform value="windows" />
 			</condition>
-		</external>
+		</external_include>
 
 		<!-- Shared between platforms -->
 		<external_include location="$(ISE_LIBRARY)/library/store/dbms/rdbms/mysql/Clib" />
@@ -62,7 +62,7 @@
 			<condition>
 				<platform excluded_value="windows" />
 			</condition>
-		</external>
+		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

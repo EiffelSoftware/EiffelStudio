@@ -1,0 +1,22 @@
+test_name 	svalid-conversion-forget
+test_description Some code is compiled using a conversion, then we change the signature of the routine so that the conversion is not needed. However the compiler reports a VUAR(2) error when non should have been reported.
+copy_sub 	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+define TYPE	"B"
+copy_sub 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	ok
+
+define TYPE	"A"
+copy_sub 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	ok
+
+
+test_end

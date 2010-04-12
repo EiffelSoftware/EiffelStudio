@@ -15,24 +15,24 @@ class TRANSLATE inherit
 
 feature
 
-	to_sql (some: ANY): STRING
-			-- Convert `some' type on a SQL type.
+	to_sql (r_any: ANY): STRING
+			-- Convert `r_any' type on a SQL type.
 		require
-			some_not_void: some /= Void
+			r_any_not_void: r_any /= Void
 		do
-			if is_integer (some) then
+			if is_integer (r_any) then
 				Result := "integer"
-			elseif is_real (some) then
+			elseif is_real (r_any) then
 				Result := "float"
-			elseif is_double (some) then
+			elseif is_double (r_any) then
 				Result := "float"
-			elseif is_boolean (some) then
+			elseif is_boolean (r_any) then
 				Result := "varchar (1)"
-			elseif is_character (some) then
+			elseif is_character (r_any) then
 				Result := "varchar (1)"
-			elseif is_string (some) then
+			elseif is_string (r_any) then
 				Result := "varchar (255)"
-			elseif is_date (some) then
+			elseif is_date (r_any) then
 				Result := "date"
 			else
 				Result := "UNKNOW TYPE"
@@ -41,28 +41,28 @@ feature
 			result_not_void: Result /= Void
 		end;
 
-	is_simple_type (some: ANY): BOOLEAN
-			-- `some' is a simple type?
+	is_simple_type (r_any: ANY): BOOLEAN
+			-- `r_any' is a simple type?
 		require
-			some_not_void: some /= Void
+			r_any_not_void: r_any /= Void
 		do
 			Result := 
-			is_integer (some) or else
-			is_real (some) or else
-			is_double (some) or else
-			is_boolean (some) or else
-			is_character (some) or else
-			is_string (some) or else
-			is_date (some)
+			is_integer (r_any) or else
+			is_real (r_any) or else
+			is_double (r_any) or else
+			is_boolean (r_any) or else
+			is_character (r_any) or else
+			is_string (r_any) or else
+			is_date (r_any)
 		ensure
 			Result = (
-			is_integer (some) or else
-			is_real (some) or else
-			is_double (some) or else
-			is_boolean (some) or else
-			is_character (some) or else
-			is_string (some) or else
-			is_date (some))
+			is_integer (r_any) or else
+			is_real (r_any) or else
+			is_double (r_any) or else
+			is_boolean (r_any) or else
+			is_character (r_any) or else
+			is_string (r_any) or else
+			is_date (r_any))
 		end;
 			
 note

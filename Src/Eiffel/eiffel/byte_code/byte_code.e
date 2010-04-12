@@ -176,6 +176,18 @@ feature -- Access
 			-- Do nothing
 		end
 
+	is_process_or_thread_relative_once: BOOLEAN
+			-- Is current byte code relateive to a once per thread or per process feature?
+		do
+			Result := is_once and then not is_object_relative_once
+		end
+
+	is_object_relative_once: BOOLEAN
+			-- Is the current byte code relative to a once per object feature ?
+		do
+			-- Do nothing
+		end
+
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings in immediate (i.e., not inherited)
 			-- precondition, body, postcondition and rescue clause
@@ -722,6 +734,7 @@ feature -- Byte code generation
 			generate_melted_end_debugger_hook (ba)
 
 			if feat.is_attribute then
+					--    <attribute> := Result
 				ba.append (bc_result)
 				if current_type.associated_class.is_precompiled then
 					ba.append (bc_passign)
@@ -881,6 +894,9 @@ end
 
 	once_mark_process_relative: CHARACTER = '%/2/'
 			-- Byte code mark for process-relative once feature
+
+	once_mark_object_relative: CHARACTER = '%/3/'
+			-- Byte code mark for object-relative once feature			
 
 	once_mark_attribute: CHARACTER = '%/4/'
 			-- Byte code mark for attribute

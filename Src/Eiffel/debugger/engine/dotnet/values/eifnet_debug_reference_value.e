@@ -369,9 +369,9 @@ feature -- Once request
 			l_class_c: CLASS_C
 			l_origin_clc: CLASS_C
 
-			l_icd_dv_result: ICOR_DEBUG_VALUE
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_eifnet_debugger: EIFNET_DEBUGGER
+			l_once_data: TUPLE [called: BOOLEAN; exc: ICOR_DEBUG_VALUE; res: ICOR_DEBUG_VALUE]
 		do
 				--| In case the once is attached to an ancestor
 			l_origin_clc := a_feat.written_class
@@ -384,15 +384,19 @@ feature -- Once request
 
 			if l_class_c /= Void then
 				l_icd_frame := eifnet_debugger.current_stack_icor_debug_frame
-				l_icd_dv_result := l_eifnet_debugger.once_function_value (l_icd_frame, l_class_c, a_feat.associated_feature_i)
-				if l_eifnet_debugger.last_once_available then
-					if not l_eifnet_debugger.last_once_already_called then
+				if a_feat.is_object_relative_once then
+					l_once_data := l_eifnet_debugger.object_relative_once_function_data (l_icd_frame, address, l_class_c, a_feat.associated_feature_i)
+				else
+					l_once_data := l_eifnet_debugger.once_function_data (l_icd_frame, l_class_c, a_feat.associated_feature_i)
+				end
+				if l_once_data /= Void then
+					if not l_once_data.called then
 						Result := error_value (a_feat.name , "Not yet called")
-					elseif l_eifnet_debugger.last_once_failed then
-						Result := exception_value (a_feat.name , "Exception occurred", debug_value_from_icdv (l_icd_dv_result, Void))
+					elseif l_once_data.exc /= Void then
+						Result := exception_value (a_feat.name , "Exception occurred", debug_value_from_icdv (l_once_data.exc, Void))
 					else
-						if l_icd_dv_result /= Void then
-							Result := debug_value_from_icdv (l_icd_dv_result, a_feat.type.associated_class)
+						if l_once_data.res /= Void then
+							Result := debug_value_from_icdv (l_once_data.res, a_feat.type.associated_class)
 							Result.set_name (a_feat.name)
 						end
 					end

@@ -10,7 +10,6 @@ class
 	EIFNET_DEBUGGER
 
 inherit
-
 	WEL_PROCESS_LAUNCHER
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
@@ -2198,28 +2197,26 @@ feature -- Specific function evaluation
 			end
 		end
 
-	once_function_value (a_icd_frame: ICOR_DEBUG_FRAME; a_class_c: CLASS_C;
-								a_feat: FEATURE_I): ICOR_DEBUG_VALUE
+	once_function_data (a_icd_frame: ICOR_DEBUG_FRAME; a_class_c: CLASS_C;
+								a_feat: FEATURE_I): TUPLE [called: BOOLEAN; exc: ICOR_DEBUG_VALUE; res: ICOR_DEBUG_VALUE]
 			-- ICorDebugValue object representing the once value.
 			-- This will also set `last_once_available' and `last_once_failed'.
 		require
 			a_class_c_not_void: a_class_c /= Void
 			a_feat_not_void: a_feat /= Void
+			a_feat.is_process_or_thread_relative_once
 		local
 			l_once_info_tokens: TUPLE [cl: NATURAL_32; done: NATURAL_32; res: NATURAL_32; ex: NATURAL_32]
 			l_data_class_token, l_done_token, l_result_token, l_exception_token: NATURAL_32
 			l_icd_debug_value: ICOR_DEBUG_VALUE
 			l_prepared_icd_debug_value: ICOR_DEBUG_VALUE
-			l_once_already_called: BOOLEAN
 			l_once_not_available: BOOLEAN
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_data_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
+			l_once_available, l_once_already_called, l_once_failed: BOOLEAN
+			exc, res: ICOR_DEBUG_VALUE
 		do
-			last_once_failed := False
-			last_once_available := False
-			last_once_already_called := False
-
 				--| Set related frame
 			if a_icd_frame = Void and then icor_debug_thread /= Void then
 					--| just in case icd_frame is not set
@@ -2270,20 +2267,20 @@ feature -- Specific function evaluation
 
 				--| if already called then get the value (_result)
 			if l_once_not_available then
-				last_once_available := False
+				l_once_available := False
 			else
-				last_once_available := True
+				l_once_available := True
 				if l_once_already_called then
-					last_once_already_called := True
+					l_once_already_called := True
 					l_icd_debug_value := l_data_icd_class.get_static_field_value (l_exception_token, l_icd_frame)
 					if l_icd_debug_value /= Void then
 						l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
-						last_once_failed := not Edv_formatter.prepared_icor_debug_value_is_null (l_prepared_icd_debug_value)
+						l_once_failed := not Edv_formatter.prepared_icor_debug_value_is_null (l_prepared_icd_debug_value)
 						if l_prepared_icd_debug_value /= l_icd_debug_value then
 							l_prepared_icd_debug_value.clean_on_dispose
 						end
-						if last_once_failed then
-							Result := l_icd_debug_value
+						if l_once_failed then
+							exc := l_icd_debug_value
 						else
 							l_icd_debug_value.clean_on_dispose
 						end
@@ -2297,41 +2294,141 @@ feature -- Specific function evaluation
 										]")
 						end
 					else
-						last_once_failed := True
+						l_once_failed := True
 					end
 
 					if
 						(a_feat.is_function or a_feat.is_constant)
-						and then not last_once_failed
+						and then not l_once_failed
 						and then l_result_token /= 0
 					then
-						Result := l_data_icd_class.get_static_field_value (l_result_token, l_icd_frame)
+						res := l_data_icd_class.get_static_field_value (l_result_token, l_icd_frame)
 					end
 				else
-					last_once_already_called := False
+					l_once_already_called := False
 				end
 			end
-			debug ("debugger_trace_eval")
-				print ("Last once feature          = " + a_class_c.name_in_upper + "." + a_feat.feature_name + "%N")
-				print ("  last_once_already_called = " + last_once_already_called.out + "%N")
-				print ("  last_once_available      = " + last_once_available.out + "%N")
-				print ("  last_once_failed         = " + last_once_failed.out + "%N")
+			if l_once_available then
+				Result := [l_once_already_called, exc, res]
 			end
 		end
 
-	last_once_available: BOOLEAN
-			-- Last once request show the once is available
-			-- if False, this mean the debugger had issue to get information
+	object_relative_once_function_data (a_icd_frame: ICOR_DEBUG_FRAME; a_addr: DBG_ADDRESS; a_class_c: CLASS_C; a_feat: FEATURE_I): TUPLE [called: BOOLEAN; exc: ICOR_DEBUG_VALUE; res: ICOR_DEBUG_VALUE]
+			-- Data representing the once per object's values.
+		require
+			a_class_c_not_void: a_class_c /= Void
+			a_feat_not_void: a_feat /= Void
+			a_feat_is_object_relative_once: a_feat.is_object_relative_once
+		local
+			l_once_info_tokens: TUPLE [cl: NATURAL_32; done: NATURAL_32; res: NATURAL_32; ex: NATURAL_32]
+			l_data_class_token, l_done_token, l_result_token, l_exception_token: NATURAL_32
+			l_prepared_icd_debug_value: ICOR_DEBUG_VALUE
+			l_once_already_called: BOOLEAN
+			l_once_not_available: BOOLEAN
+			l_once_exc, l_once_res: detachable ICOR_DEBUG_VALUE
+			l_icd_frame: ICOR_DEBUG_FRAME
+			l_data_icd_class: ICOR_DEBUG_CLASS
+			l_icd_module: ICOR_DEBUG_MODULE
+			v: ABSTRACT_DEBUG_VALUE
+			l_icdv_tmp, l_prepared_icdv_tmp: detachable ICOR_DEBUG_VALUE
+		do
+				--| Set related frame
+			if a_icd_frame = Void and then icor_debug_thread /= Void then
+					--| just in case icd_frame is not set
+				l_icd_frame := current_stack_icor_debug_frame
+			else
+				l_icd_frame := a_icd_frame
+			end
 
-	last_once_already_called: BOOLEAN
-			-- Last once request show the once has already been called
-			-- thus the value is available
-			-- ps: relevant only if last_once_available = True
+				--| Get related tokens
+			l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class (a_feat, a_class_c)
+			if l_once_info_tokens /= Void then
+				l_data_class_token := l_once_info_tokens.cl
+				l_done_token := l_once_info_tokens.done
+				l_result_token := l_once_info_tokens.res
+				l_exception_token := l_once_info_tokens.ex
+			end
 
-	last_once_failed: BOOLEAN
-			-- Last once request show the once has failed
-			-- if True, this mean the once had an exception
-			-- ps: relevant only if last_once_available = True
+				--| Get ICorDebugClass
+			if l_data_class_token /= 0 then
+				l_icd_module := icor_debug_module_for_class (a_class_c)
+				l_data_icd_class := l_icd_module.get_class_from_token (l_data_class_token)
+			end
+
+			if
+				l_data_icd_class /= Void
+				and then l_done_token /= 0
+				and then l_icd_frame /= Void
+			then
+				if know_about_kept_object (a_addr) then
+					v := kept_object_item (a_addr)
+					if
+						attached {EIFNET_ABSTRACT_DEBUG_VALUE} v as dv and then
+						attached dv.icd_value as icdv and then not icdv.is_null_reference
+					then
+						l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (icdv)
+						if attached {ICOR_DEBUG_OBJECT_VALUE} l_prepared_icd_debug_value.query_interface_icor_debug_object_value as icdov then
+							l_icdv_tmp := icdov.get_field_value (l_data_icd_class, l_done_token)
+							if l_icdv_tmp /= Void then
+								l_prepared_icdv_tmp := edv_formatter.prepared_debug_value (l_icdv_tmp)
+								l_once_already_called := edv_formatter.prepared_icor_debug_value_as_boolean (l_prepared_icdv_tmp)
+								if l_prepared_icdv_tmp /= l_icdv_tmp then
+									l_prepared_icdv_tmp.clean_on_dispose
+								end
+								l_icdv_tmp.clean_on_dispose
+								if l_once_already_called then
+									l_icdv_tmp := icdov.get_field_value (l_data_icd_class, l_exception_token)
+									if l_icdv_tmp /= Void then
+										l_prepared_icdv_tmp := edv_formatter.prepared_debug_value (l_icdv_tmp)
+										if not l_prepared_icdv_tmp.is_null_reference then
+											l_once_exc := l_icdv_tmp--l_prepared_icdv_tmp
+										else
+											if l_prepared_icdv_tmp /= l_icdv_tmp then
+												l_prepared_icdv_tmp.clean_on_dispose
+											end
+										end
+									end
+									if l_once_exc = Void and then a_feat.has_return_value then
+										l_icdv_tmp := icdov.get_field_value (l_data_icd_class, l_result_token)
+										if l_icdv_tmp /= Void then
+											l_prepared_icdv_tmp := edv_formatter.prepared_debug_value (l_icdv_tmp)
+											if not l_prepared_icd_debug_value.is_null_reference then
+												l_once_res := l_icdv_tmp--l_prepared_icdv_tmp
+											else
+												if l_prepared_icdv_tmp /= l_icdv_tmp then
+													l_prepared_icdv_tmp.clean_on_dispose
+												end
+											end
+										end
+									end
+								end
+							end
+							icdov.clean_on_dispose
+						else
+							l_once_not_available := True
+						end
+						if l_prepared_icd_debug_value /= icdv then
+							l_prepared_icd_debug_value.clean_on_dispose
+						end
+					else
+						l_once_not_available := True
+					end
+				end
+			else
+				l_once_not_available := True
+			end
+
+			if not l_once_not_available then
+				Result := [l_once_already_called, l_once_exc, l_once_res]
+			end
+
+			debug ("debugger_trace_eval")
+				print ("Last once feature          = " + a_class_c.name_in_upper + "." + a_feat.feature_name + "%N")
+				print ("  last_once_already_called = " + l_once_already_called.out + "%N")
+				print ("  last_once_available      = " + (not l_once_not_available).out + "%N")
+				print ("  last_once_failed         = " + (l_once_exc /= Void).out + "%N")
+			end
+		end
 
 --| NOTA jfiat [2004/03/19] : not yet ready, to be continued
 --

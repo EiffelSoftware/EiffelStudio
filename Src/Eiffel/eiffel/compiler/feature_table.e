@@ -251,9 +251,13 @@ feature -- HASH_TABLE like feature
 			end
 			tmp_feature_server.put (new, new_is_aliased)
 			internal_table_put (new.id, key)
-			if not found and then new.is_attribute then
-					-- We are adding a new attribute so we update the attribute count.
-				attribute_count := attribute_count + 1
+			if not found then
+				if new.is_attribute then
+						-- We are adding a new attribute so we update the attribute count.
+					attribute_count := attribute_count + 1
+				elseif new.is_object_relative_once then
+					once_per_object_count := once_per_object_count + 1
+				end
 			end
 				-- Update alias table
 			alias_name_id := new.alias_name_id
@@ -299,6 +303,8 @@ feature {NONE} -- HASH_TABLE like features
 					-- Remove feature from temporary feature server
 				if old_feature.is_attribute then
 					attribute_count := attribute_count - 1
+				elseif old_feature.is_object_relative_once then
+					once_per_object_count := once_per_object_count - 1
 				end
 				l_id := old_feature.id
 				if l_id > 0 then
@@ -443,6 +449,10 @@ feature -- Status report
 
 	attribute_count: INTEGER
 			-- Number of attributes held within `Current'.
+			--| Used for optimizing skeleton creation and generic seed update.
+
+	once_per_object_count: INTEGER
+			-- Number of once per object held within `Current'.
 			--| Used for optimizing skeleton creation and generic seed update.
 
 feature -- Settings
@@ -881,14 +891,185 @@ end
 	skeleton: GENERIC_SKELETON
 			-- Skeleton of the associated class
 		local
+			l_associated_class: like associated_class
+			l_written_class: CLASS_C
 			feature_i: FEATURE_I
 			desc: ATTR_DESC
+			ref_desc: REFERENCE_DESC
 			l_ext: IL_EXTENSION_I
+			l_opo_counter, l_opo_count: INTEGER
+			rid: INTEGER
 			l_attribute_counter, l_attribute_count: INTEGER
+			opo_info_table, old_opo_info_table: detachable HASH_TABLE [OBJECT_RELATIVE_ONCE_INFO, INTEGER]
+			opo_info: OBJECT_RELATIVE_ONCE_INFO
+			opo_reused: BOOLEAN
+			l_ancestor_once_info: detachable OBJECT_RELATIVE_ONCE_INFO
 		do
+			l_associated_class := associated_class
+			check l_associated_class_attached: l_associated_class /= Void end
 			l_attribute_count := attribute_count
+			l_opo_count := once_per_object_count
+			if l_attribute_count + l_opo_count > 0 then
+				create Result.make (l_attribute_count + l_opo_count * 3)
+			else
+				Result := empty_skeleton
+			end
+			opo_info_table := l_associated_class.object_relative_once_infos
+			if opo_info_table /= Void then
+				old_opo_info_table := opo_info_table
+				l_associated_class.reset_object_relative_once_infos
+			end
+			if l_opo_count > 0 then
+				l_associated_class.create_object_relative_once_infos (l_opo_count)
+				opo_info_table := l_associated_class.object_relative_once_infos -- Fresh empty table
+				from
+					start
+				until
+					l_opo_counter = l_opo_count or after
+				loop
+					feature_i := item_for_iteration
+					if feature_i.is_object_relative_once then
+							-- Increase attribute counter so we only iterate the number of once per object available						
+						l_opo_counter := l_opo_counter + 1
+						if attached {ONCE_PROC_I} feature_i as l_once_i then
+							check once_is_object_relative: l_once_i.is_object_relative end
+
+							rid := l_once_i.rout_id_set.first
+							opo_info := Void
+							opo_reused := False
+							if old_opo_info_table /= Void then
+								opo_info := old_opo_info_table.item (rid)
+								old_opo_info_table.remove (rid)
+							end
+							if opo_info /= Void then
+								-- we need to clean previous extra attributes
+								opo_info.reuse (l_once_i)
+								opo_reused := opo_info.is_set
+								check is_set: opo_info.is_set end
+							else
+								create opo_info.make (l_once_i)
+								check is_not_set: not opo_info.is_set end
+							end
+							opo_info_table.force (opo_info, rid)
+
+
+							l_written_class := l_once_i.written_class
+
+							l_ancestor_once_info := Void
+							if l_written_class /= associated_class then
+									--| Reuse ancestor's routine ids.
+								l_ancestor_once_info := l_written_class.object_relative_once_info (opo_info.once_routine_id)
+								check l_ancestor_once_info_attached: l_ancestor_once_info /= Void end
+							end
+
+								--| called?
+							if not opo_reused then
+								opo_info.set_called_feature_id (l_associated_class.feature_id_counter.next)
+								if l_ancestor_once_info /= Void then
+									opo_info.set_called_routine_id (l_ancestor_once_info.called_routine_id)
+								else
+									opo_info.set_called_routine_id (l_associated_class.routine_id_counter.next_rout_id)
+								end
+								names_heap.put ("_" + l_once_i.feature_name + "__called")
+								opo_info.set_called_name_id (names_heap.found_item)
+							end
+
+							create {BOOLEAN_DESC} desc
+							desc.set_attribute_name_id (opo_info.called_name_id)
+							desc.set_feature_id (opo_info.called_feature_id)
+							desc.set_rout_id (opo_info.called_routine_id)
+							desc.set_is_transient (l_once_i.is_transient)
+							desc.set_is_hidden (True)
+							Result.extend (desc)
+							system.rout_info_table.put (desc.rout_id, l_associated_class)
+
+								--| Exception?
+							if not opo_reused then
+								opo_info.set_exception_feature_id (l_associated_class.feature_id_counter.next)
+								if l_ancestor_once_info /= Void then
+									opo_info.set_exception_routine_id (l_ancestor_once_info.exception_routine_id)
+								else
+									opo_info.set_exception_routine_id (l_associated_class.routine_id_counter.next_rout_id)
+								end
+								names_heap.put ("_" + l_once_i.feature_name + "__exception")
+								opo_info.set_exception_name_id (names_heap.found_item)
+							end
+
+							create ref_desc
+							if
+								attached system.exception_class as l_exception_class
+								and then l_exception_class.is_compiled
+							then
+								ref_desc.set_type_i (create {CL_TYPE_A}.make (system.exception_class_id))
+							else
+								ref_desc.set_type_i (system.any_type)
+							end
+							desc := ref_desc
+							desc.set_attribute_name_id (opo_info.exception_name_id)
+							desc.set_feature_id (opo_info.exception_feature_id)
+							desc.set_rout_id (opo_info.exception_routine_id)
+							desc.set_is_transient (l_once_i.is_transient)
+							desc.set_is_hidden (True)
+							Result.extend (desc)
+							system.rout_info_table.put (desc.rout_id, l_associated_class)
+
+								--| Result?
+							if opo_info.has_result then
+								if not opo_reused then
+									opo_info.set_result_feature_id (l_associated_class.feature_id_counter.next)
+									if l_ancestor_once_info /= Void then
+										opo_info.set_result_routine_id (l_ancestor_once_info.result_routine_id)
+									else
+										opo_info.set_result_routine_id (l_associated_class.routine_id_counter.next_rout_id)
+									end
+									names_heap.put ("_" + l_once_i.feature_name + "__result")
+									opo_info.set_result_name_id (names_heap.found_item)
+								end
+
+								desc := l_once_i.type.description
+								desc.set_attribute_name_id (opo_info.result_name_id)
+								desc.set_feature_id (opo_info.result_feature_id)
+								desc.set_rout_id (opo_info.result_routine_id)
+								desc.set_is_transient (l_once_i.is_transient)
+								desc.set_is_hidden (True)
+								Result.extend (desc)
+
+								system.rout_info_table.put (desc.rout_id, l_associated_class)
+							end
+
+							debug ("ONCE_PER_OBJECT")
+								opo_info.debug_output_info (l_once_i, "from " + l_associated_class.name_in_upper)
+							end
+
+							opo_info.update
+						end
+					end
+					if l_opo_counter < l_opo_count then
+							-- If we have reached the attribute count then we don't need to do
+							-- an unnecessary forth
+						forth
+					end
+				end
+				check
+					all_object_relative_onces_added: attached l_associated_class.object_relative_once_infos as l_opo_infos and then l_opo_infos.count = l_opo_count
+				end
+			end
+			if old_opo_info_table /= Void and then not old_opo_info_table.is_empty then
+				from
+					old_opo_info_table.start
+				until
+					old_opo_info_table.after
+				loop
+					opo_info := old_opo_info_table.item_for_iteration
+					print ("CLEANING OLD Once per object info: ")
+					print (opo_info.once_routine.feature_name)
+					print ("%N")
+					opo_info.clean
+					old_opo_info_table.forth
+				end
+				print ("%N")
+			end
 			if l_attribute_count > 0 then
-				create Result.make (l_attribute_count)
 				from
 					start
 				until
@@ -917,8 +1098,6 @@ end
 						forth
 					end
 				end
-			else
-				Result := empty_skeleton
 			end
 		end
 
@@ -1071,6 +1250,22 @@ end
 					feature_i := l_feature_table.item_for_iteration
 					Result.put (feature_i, feature_i.feature_id)
 					l_feature_table.forth
+				end
+			end
+			if attached associated_class.object_relative_once_infos as l_once_infos then
+				from
+					l_once_infos.start
+				until
+					l_once_infos.after
+				loop
+					if attached l_once_infos.item_for_iteration as l_once_info then
+						Result.put (l_once_info.called_attribute_i, l_once_info.called_feature_id)
+						Result.put (l_once_info.exception_attribute_i, l_once_info.exception_feature_id)
+						if l_once_info.has_result then
+							Result.put (l_once_info.result_attribute_i, l_once_info.result_feature_id)
+						end
+					end
+					l_once_infos.forth
 				end
 			end
 		end

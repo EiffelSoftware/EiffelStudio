@@ -57,6 +57,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define ONCE_MARK_NONE             0	/* Do-routine */
 #define ONCE_MARK_THREAD_RELATIVE  1	/* Thread-relative once routine */
 #define ONCE_MARK_PROCESS_RELATIVE 2	/* Process-relative once routine */
+#define ONCE_MARK_OBJECT_RELATIVE  3	/* Object-relative once routine */
 #define ONCE_MARK_ATTRIBUTE        4	/* Attribute */
 
 /*

@@ -655,9 +655,9 @@ feature -- Query
 			exc_dv: EXCEPTION_DEBUG_VALUE
 			proc_dv: PROCEDURE_RETURN_DEBUG_VALUE
 			odv: ABSTRACT_DEBUG_VALUE
-			icdv: ICOR_DEBUG_VALUE
 			l_icdframe: ICOR_DEBUG_FRAME
 			l_eifnet_debugger: like eifnet_debugger
+			l_once_data: detachable TUPLE [called: BOOLEAN; exc: ICOR_DEBUG_VALUE; res: ICOR_DEBUG_VALUE]
 		do
 			l_eifnet_debugger := Eifnet_debugger
 			l_icdframe := l_eifnet_debugger.current_stack_icor_debug_frame
@@ -668,13 +668,20 @@ feature -- Query
 			until
 				flist.after
 			loop
+					--| Resert loop's value
+				odv := Void
+
 					--| Get the once's value
 				l_feat := flist.item.associated_feature_i
 				check l_feat.type /= Void end
 				l_class := l_feat.written_class
-				icdv := l_eifnet_debugger.once_function_value (l_icdframe, l_class, l_feat)
-				if l_eifnet_debugger.last_once_available then
-					if not l_eifnet_debugger.last_once_already_called then
+				if l_feat.is_process_or_thread_relative_once then
+					l_once_data := l_eifnet_debugger.once_function_data (l_icdframe, l_class, l_feat)
+				else
+					l_once_data := l_eifnet_debugger.object_relative_once_function_data (l_icdframe, a_addr, l_class, l_feat)
+				end
+				if l_once_data /= Void then
+					if not l_once_data.called then
 						create err_dv.make_with_name (l_feat.feature_name)
 						err_dv.set_message (debugger_names.m_Not_yet_called)
 						err_dv.set_display_kind (Void_value)
@@ -684,8 +691,8 @@ feature -- Query
 							err_dv.set_display_kind (Procedure_return_message_value)
 						end
 						odv := err_dv
-					elseif l_eifnet_debugger.last_once_failed then
-						if attached {ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) as arv then
+					elseif l_once_data.exc /= Void then
+						if attached {ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (l_once_data.exc, Void) as arv then
 							create exc_dv.make_with_value (arv)
 						else
 							check should_not_occur: False end
@@ -694,8 +701,8 @@ feature -- Query
 						exc_dv.set_name (l_feat.feature_name)
 						exc_dv.set_user_meaning ("An exception occurred during the once execution")
 						odv := exc_dv
-					elseif icdv /= Void then
-						odv := debug_value_from_icdv (icdv, l_feat.type.associated_class)
+					elseif l_once_data.res /= Void then
+						odv := debug_value_from_icdv (l_once_data.res, l_feat.type.associated_class)
 						odv.set_name (l_feat.feature_name)
 					elseif not l_feat.is_function then
 						create proc_dv.make_with_name (l_feat.feature_name)
@@ -717,8 +724,7 @@ feature -- Query
 					end
 				else
 					create err_dv.make_with_name  (l_feat.feature_name)
-					err_dv.set_message (debugger_names.m_Not_yet_called)
-					err_dv.set_display_kind (Void_value)
+					err_dv.set_message ("Once feature " + l_feat.feature_name + ": Could not get information")
 					if l_feat.is_function then
 						err_dv.set_display_kind (Void_value)
 					else
@@ -729,6 +735,70 @@ feature -- Query
 				Result.put (odv, i)
 				i := i + 1
 				flist.forth
+			end
+		end
+
+	object_relative_once_data (a_feat: FEATURE_I; a_addr: DBG_ADDRESS; a_cl: CLASS_C): TUPLE [called: BOOLEAN; exc: EXCEPTION_DEBUG_VALUE; res: ABSTRACT_DEBUG_VALUE]
+		local
+			l_icdframe: ICOR_DEBUG_FRAME
+			l_eifnet_debugger: like eifnet_debugger
+			l_once_data: detachable TUPLE [called: BOOLEAN; exc: ICOR_DEBUG_VALUE; res: ICOR_DEBUG_VALUE]
+		do
+			l_eifnet_debugger := Eifnet_debugger
+			l_icdframe := l_eifnet_debugger.current_stack_icor_debug_frame
+			Result := converted_once_data (a_feat, l_eifnet_debugger.object_relative_once_function_data (l_icdframe, a_addr, a_cl, a_feat))
+		end
+
+	converted_once_data (a_feat: FEATURE_I; a_once_data: TUPLE [called: BOOLEAN; exc: ICOR_DEBUG_VALUE; res: ICOR_DEBUG_VALUE]): TUPLE [called: BOOLEAN; exc: EXCEPTION_DEBUG_VALUE; res: ABSTRACT_DEBUG_VALUE]
+			-- Data converted from ICOR_DEBUG_VALUE variant to DEBUG_VALUE format
+		local
+			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
+			exc_dv: EXCEPTION_DEBUG_VALUE
+			proc_dv: PROCEDURE_RETURN_DEBUG_VALUE
+			res_dv: ABSTRACT_DEBUG_VALUE
+		do
+			if a_once_data /= Void then
+				if not a_once_data.called then
+					create err_dv.make_with_name (a_feat.feature_name)
+					err_dv.set_message (debugger_names.m_Not_yet_called)
+					err_dv.set_display_kind (Void_value)
+					if a_feat.is_function then
+						err_dv.set_display_kind (Void_value)
+					else
+						err_dv.set_display_kind (Procedure_return_message_value)
+					end
+					res_dv := err_dv
+				elseif a_once_data.exc /= Void then
+					if attached {ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (a_once_data.exc, Void) as arv then
+						create exc_dv.make_with_value (arv)
+					else
+						check should_not_occur: False end
+						create exc_dv.make_without_any_value
+					end
+					exc_dv.set_name (a_feat.feature_name)
+					exc_dv.set_user_meaning ("An exception occurred during the once execution")
+				elseif a_once_data.res /= Void then
+					res_dv := debug_value_from_icdv (a_once_data.res, a_feat.type.associated_class)
+					res_dv.set_name (a_feat.feature_name)
+				elseif not a_feat.is_function then
+					create proc_dv.make_with_name (a_feat.feature_name)
+					res_dv := proc_dv
+				else
+						--| This case occurs when we enter into the once's code
+						--| then the once is Called
+						--| but the once's data are not yet initialized and set
+						--| then the once' value is not yet available
+					create err_dv.make_with_name  (a_feat.feature_name)
+					err_dv.set_message ("Could not retrieve information (once is being called)")
+					err_dv.set_display_kind (Void_value)
+					if a_feat.is_function then
+						err_dv.set_display_kind (Void_value)
+					else
+						err_dv.set_display_kind (Procedure_return_message_value)
+					end
+					res_dv := err_dv
+				end
+				Result := [a_once_data.called, exc_dv, res_dv]
 			end
 		end
 

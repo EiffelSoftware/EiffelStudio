@@ -901,10 +901,16 @@ feature {BYTE_NODE} -- Visitor
 						fi := feature_i_from_call_access_b_in_context (cl, a_node)
 					end
 					if fi /= Void then
-						if fi.is_once then
+						if fi.is_process_or_thread_relative_once then
 							evaluate_once (fi)
 						elseif fi.is_constant then
 							evaluate_constant (fi)
+						elseif fi.is_object_relative_once then
+							if tmp_target_dump_value /= Void then
+								evaluate_object_relative_once (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi)
+							else
+								evaluate_object_relative_once (context.address, Void, cl, fi)
+							end
 						elseif fi.is_routine then
 								--| parameters ...
 							params := parameter_values_from_parameters_b (a_node.parameters)
@@ -1897,6 +1903,7 @@ feature {NONE} -- Evaluation: implementation
 			if side_effect_forbidden then
 				dbg_error_handler.notify_error_evaluation_side_effect_forbidden
 			else
+				notify_potential_side_effect
 				prepare_dbg_evaluation
 				Dbg_evaluator.evaluate_static_function (f, cl, params)
 				retrieve_dbg_evaluation
@@ -1909,9 +1916,23 @@ feature {NONE} -- Evaluation: implementation
 			--| Do not force the evaluation
 		require
 			feature_not_void: f /= Void
+			f_is_process_or_thread_relative_once: f.is_process_or_thread_relative_once
 		do
 			prepare_dbg_evaluation
 			Dbg_evaluator.evaluate_once (f)
+			retrieve_dbg_evaluation
+		end
+
+	evaluate_object_relative_once (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I)
+			-- Evaluate once per object `f'
+			--| in fact, get once function data
+			--| Do not force the evaluation
+		require
+			feature_not_void: f /= Void
+			f_is_object_relative_once: f.is_object_relative_once
+		do
+			prepare_dbg_evaluation
+			Dbg_evaluator.evaluate_object_relative_once (a_addr, a_target, c, f)
 			retrieve_dbg_evaluation
 		end
 
@@ -1952,9 +1973,10 @@ feature {NONE} -- Evaluation: implementation
 			if side_effect_forbidden then
 				dbg_error_handler.notify_error_evaluation_side_effect_forbidden
 			else
+				notify_potential_side_effect
 				if a_target /= Void and then a_target.is_void then
 					dbg_error_handler.notify_error_evaluation_call_on_void (f.feature_name)
-				elseif on_class and then not f.is_once then
+				elseif on_class and then not f.is_process_or_thread_relative_once then
 					dbg_error_handler.notify_error_evaluation_VST1_on_class_context (cl.name_in_upper, f.feature_name)
 				else
 					prepare_dbg_evaluation
@@ -1973,6 +1995,7 @@ feature {NONE} -- Evaluation: implementation
 			if side_effect_forbidden then
 				dbg_error_handler.notify_error_evaluation_side_effect_forbidden
 			else
+				notify_potential_side_effect
 				if a_target /= Void and then a_target.is_void then
 					dbg_error_handler.notify_error_evaluation_call_on_void (f.feature_name)
 				else
@@ -1996,6 +2019,7 @@ feature {NONE} -- Evaluation: implementation
 			if side_effect_forbidden then
 				dbg_error_handler.notify_error_evaluation_side_effect_forbidden
 			else
+				notify_potential_side_effect
 				if debugger_manager.is_dotnet_project then
 						-- FIXME: What about static ? check ...
 					if a_target /= Void then
@@ -2375,7 +2399,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -113,6 +113,15 @@ feature {DBG_EXPRESSION_EVALUATION} -- Evaluation: Access
 			-- Final result of evaluation
 			-- contains static_class, dynamic_class, dynamic_type, and value if any
 
+	potential_side_effect_detected: BOOLEAN
+			-- Potential side effect detected
+
+	notify_potential_side_effect
+			-- Notify a potential side effect
+		do
+			potential_side_effect_detected := True
+		end
+
 feature -- Settings
 
 	context: DBG_EXPRESSION_EVALUATION_CONTEXT
@@ -188,6 +197,7 @@ feature {NONE} -- Evaluation
 
 				--| Clean evaluation.
 			final_result := Void
+			potential_side_effect_detected := False
 		end
 
 	process_evaluation (keep_assertion_checking: BOOLEAN)
@@ -225,7 +235,7 @@ invariant
 	error_handler_initialized: dbg_error_handler /= Void and then dbg_error_handler.initialized
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

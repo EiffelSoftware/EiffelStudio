@@ -43,6 +43,7 @@ feature {NONE} --Initialisation
 			body_index := f.body_index
 			is_once := f.is_once
 			is_process_relative := f.is_process_relative
+			is_object_relative := f.is_object_relative
 			multi_constraint_static := f.multi_constraint_static
 			enlarge_parameters
 		end
@@ -413,12 +414,13 @@ end
 
 					entry := rout_table.item
 					index := entry.body_index
+
 					f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
-					if f.is_once and then context.is_once_call_optimized then
+					if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
 							-- Routine contracts (require, ensure, invariant) should not be checked
 							-- and value of already called once routine can be retrieved from memory
 						is_direct_once.put (True)
-						context.generate_once_optimized_call_start (type_c, index, is_process_relative, buf)
+						context.generate_once_optimized_call_start (type_c, index, is_process_relative, is_object_relative, buf)
 					end
 
 					local_argument_types := argument_types
@@ -431,8 +433,8 @@ end
 						end
 						Extern_declarations.add_routine_with_signature (return_type_string,
 								internal_name, local_argument_types)
-						if f.is_once and then context.is_once_call_optimized then
-							Extern_declarations.add_once (type_c, index, is_process_relative)
+						if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
+							Extern_declarations.add_once (type_c, index, is_process_relative, is_object_relative)
 						end
 					end
 				else

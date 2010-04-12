@@ -181,6 +181,23 @@ feature -- Final mode
 					l_features.forth
 				end
 			end
+
+			if attached a_class.object_relative_once_infos as l_obj_once_infos then
+				from
+					l_obj_once_infos.start
+				until
+					l_obj_once_infos.after
+				loop
+					if attached l_obj_once_infos.item_for_iteration as l_once_info then
+						add_feature_unit (a_class.class_id, l_once_info.called_attribute_i)
+						add_feature_unit (a_class.class_id, l_once_info.exception_attribute_i)
+						if l_once_info.has_result then
+							add_feature_unit (a_class.class_id, l_once_info.result_attribute_i)
+						end
+					end
+					l_obj_once_infos.forth
+				end
+			end
 		end
 
 feature -- Incrementality
@@ -242,6 +259,7 @@ feature -- Generation
 			l_inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER_32]
 			l_area: SPECIAL [FEATURE_I]
 			l_features: HASH_TABLE [FEATURE_I, INTEGER_32]
+			l_once_info: OBJECT_RELATIVE_ONCE_INFO
 		do
 			create Result.make (c)
 			if c.has_invariant then
@@ -298,6 +316,22 @@ feature -- Generation
 					l_feature_i := l_features.item_for_iteration
 					Result.put (l_feature_i.rout_id_set.first, l_feature_i)
 					l_features.forth
+				end
+			end
+
+			if attached c.object_relative_once_infos as l_once_infos then
+				from
+					l_once_infos.start
+				until
+					l_once_infos.after
+				loop
+					l_once_info := l_once_infos.item_for_iteration
+					Result.put (l_once_info.called_routine_id, l_once_info.called_attribute_i)
+					Result.put (l_once_info.exception_routine_id, l_once_info.exception_attribute_i)
+					if l_once_info.has_result then
+						Result.put (l_once_info.result_routine_id, l_once_info.result_attribute_i)
+					end
+					l_once_infos.forth
 				end
 			end
 		end
@@ -386,6 +420,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
 invariant
 	feature_table_not_void: feature_table /= Void
 		-- Test below is because while in the creation procedure of FEATURE_TABLE

@@ -319,6 +319,14 @@ feature -- Element change
 			position := new_position
 		end
 
+	append_offset (a_offset: INTEGER)
+			-- Append offset `a_offset'.
+		require
+			a_offset_non_negative: a_offset >= 0
+		do
+			append_integer_32 (a_offset)
+		end
+		
 	append_feature_id (a_id: INTEGER)
 			-- Append feature ID `a_id'.
 		require

@@ -1,8 +1,10 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- List of attribute sorted by category or skeleton of a class type (instance
--- of CLASS_TYPE).
+	description: "[
+			List of attribute sorted by category or skeleton of a class type (instance
+			 of CLASS_TYPE).
+			]"
 
 class SKELETON
 
@@ -1153,7 +1155,9 @@ feature -- Skeleton byte code
 		local
 			buffer: GENERATION_BUFFER
 			current_area: SPECIAL [ATTR_DESC]
+			d: ATTR_DESC
 			i, nb: INTEGER
+			l_flag: NATURAL_16
 		do
 			buffer := generation_buffer
 			buffer.put_character ('{')
@@ -1164,11 +1168,18 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				if current_area.item (i).is_transient then
-					buffer.put_natural_32 (1)
-				else
-					buffer.put_natural_32 (0)
+				l_flag := 0
+				d := current_area.item (i)
+				if d.is_transient then
+						--| cf: eif_struct.h: EIF_IS_TRANSIENT_ATTRIBUTE_FLAG = 0x0001
+					l_flag := l_flag | 0x0001
 				end
+				if d.is_hidden then
+						--| cf: eif_struct.h: EIF_IS_HIDDEN_ATTRIBUTE_FLAG = 0x0002
+					l_flag := l_flag | 0x0002
+				end
+
+				buffer.put_natural_16 (l_flag)
 				buffer.put_character (',')
 				i := i + 1
 			end

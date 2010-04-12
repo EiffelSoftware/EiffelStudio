@@ -5581,10 +5581,6 @@ end
 				then
 					if l_once_as.has_key_conflict (yyval55) then
 						report_one_error (create {SYNTAX_ERROR}.make (token_line (l_once_as), token_column (l_once_as), filename, once "Conflict in once's keys"))
-					elseif l_once_as.has_key_object then
-						report_one_error (
-							create {SYNTAX_ERROR}.make (token_line (l_once_as), token_column (l_once_as), filename,
-							once "Once per object is not yet implemented."))
 					end
 				end
 

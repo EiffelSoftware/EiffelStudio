@@ -793,8 +793,10 @@ feature -- Expression evaluation
 				dbg_eval := debugger_manager.dbg_evaluator
 				dbg_eval.reset
 				disable_assertion_check
-				if f.is_once then
+				if f.is_process_or_thread_relative_once then
 					dbg_eval.evaluate_once (f)
+				elseif f.is_object_relative_once then
+					dbg_eval.evaluate_object_relative_once (Void, tgt, cl, f)
 				else
 					if tgt = Void then
 						dbg_eval.evaluate_static_function (f, cl, params)
@@ -815,7 +817,7 @@ feature -- Expression evaluation
 
 	routine_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]): BOOLEAN
 			-- Evaluation's result for `a_expr' in current context
-			-- (note: Result = Void implies an error occurred)
+			-- (note: Result = False implies an error occurred)
 		require
 			is_stopped: is_stopped
 			f_is_routine: f.is_routine
@@ -839,8 +841,11 @@ feature -- Expression evaluation
 				dbg_eval := debugger_manager.dbg_evaluator
 				dbg_eval.reset
 				disable_assertion_check
-				if f.is_once then
+				if f.is_process_or_thread_relative_once then
 					dbg_eval.evaluate_once (f)
+				elseif f.is_object_relative_once then
+					dbg_eval.evaluate_object_relative_once (Void, tgt, cl, f)
+					Result := not dbg_eval.error_occurred
 				else
 					if tgt = Void then
 						dbg_eval.evaluate_static_function (f, cl, params)
@@ -1058,8 +1063,19 @@ feature {NONE} -- Assertion violation processing
 feature -- Query
 
 	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE]
+			-- List of onces' value 
 		require
 			flist_not_empty: flist /= Void and then not flist.is_empty
+		deferred
+		end
+
+	object_relative_once_data (a_feat: FEATURE_I; a_addr: DBG_ADDRESS; a_cl: CLASS_C): TUPLE [called: BOOLEAN; exc: EXCEPTION_DEBUG_VALUE; res: ABSTRACT_DEBUG_VALUE]
+			-- Data related to object relative once
+		require
+			feat_attached: a_feat /= Void
+			cl_attached: a_cl /= Void
+			is_object_relative_once: a_feat.is_object_relative_once
+			addr_not_void: a_addr /= Void and then not a_addr.is_void
 		deferred
 		end
 

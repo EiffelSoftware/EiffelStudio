@@ -170,7 +170,11 @@ feature {NONE} -- Implementation
 				if f.is_function or else f.is_constant then
 					res := once_r.once_result (f)
 					if once_r.last_failed then
-						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, once_r.last_exception_meaning))
+						if attached {EXCEPTION_DEBUG_VALUE} res as e then
+							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, e.long_description))
+						else
+							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, "exception occurred"))
+						end
 					else
 						if res /= Void then
 							create last_result.make_with_value (res.dump_value)
@@ -343,7 +347,7 @@ feature -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

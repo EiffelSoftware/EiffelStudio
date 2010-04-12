@@ -55,6 +55,7 @@ extern "C" {
 #define get_type_id(x) get_int16(x)
 #define get_feature_id(x) get_int32(x)
 #define get_routine_id(x) get_int32(x)
+#define get_offset(x) get_int32(x)
 
 /*
 doc:	<routine name="get_char8" return_type="EIF_CHARACTER_8" export="private">

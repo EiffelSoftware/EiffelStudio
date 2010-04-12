@@ -57,7 +57,7 @@ feature -- IL Generation
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]];
 			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]];
 			inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
-		
+
 			-- Generate IL code for feature in `class_c'.
 		local
 			class_interface: CLASS_INTERFACE
@@ -182,7 +182,7 @@ feature -- IL Generation
 
 	generate_il_type_features (class_c: CLASS_C; class_type: CLASS_TYPE;
 			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]])
-		
+
 			-- Generate IL code for feature that represents type information of `class_c'.
 		require
 			class_c_not_void: class_c /= Void
@@ -204,7 +204,7 @@ feature -- IL Generation
 			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
 			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]])
-		
+
 			-- Generate IL code for feature in `class_c'.
 		require
 			class_interface_not_void: class_interface /= Void
@@ -240,7 +240,7 @@ feature -- IL Generation
 			class_type: CLASS_TYPE;
 			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]])
-		
+
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
 			class_c_not_void: class_c /= Void
@@ -265,7 +265,7 @@ feature -- IL Generation
 
 					-- Generate code for current class only.
 				if not feat.is_deferred then
-					if feat.written_in = l_class_id or feat.is_attribute then
+					if feat.written_in = l_class_id or feat.is_attribute or feat.is_object_relative_once then
 						local_feature_processor.call ([feat, Void, class_type, False])
 					elseif feat.is_replicated and feat.is_unselected then
 						local_feature_processor.call ([feat, Void, class_type, True])
@@ -294,7 +294,7 @@ feature -- IL Generation
 			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
 			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]])
-		
+
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
 			class_c_not_void: class_c /= Void
@@ -600,7 +600,7 @@ feature -- IL Generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -613,22 +613,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class INTERFACE_IL_CODE_GENERATOR

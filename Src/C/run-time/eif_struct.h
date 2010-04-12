@@ -140,8 +140,8 @@ struct cnode {
 #define EIF_IS_TRANSIENT_ATTRIBUTE_FLAG	0x0001
 #define EIF_IS_HIDDEN_ATTRIBUTE_FLAG	0x0002
 
-#define EIF_IS_TRANSIENT_ATTRIBUTE(node,pos)	(((node).cn_attr_flags [pos]) & EIF_IS_TRANSIENT_ATTRIBUTE_FLAG == EIF_IS_TRANSIENT_ATTRIBUTE_FLAG) 
-#define EIF_IS_HIDDEN_ATTRIBUTE(node,pos)	(((node).cn_attr_flags [pos]) & EIF_IS_HIDDEN_ATTRIBUTE_FLAG == EIF_IS_HIDDEN_ATTRIBUTE_FLAG) 
+#define EIF_IS_TRANSIENT_ATTRIBUTE(node,pos)	((((node).cn_attr_flags [pos]) & EIF_IS_TRANSIENT_ATTRIBUTE_FLAG) == EIF_IS_TRANSIENT_ATTRIBUTE_FLAG) 
+#define EIF_IS_HIDDEN_ATTRIBUTE(node,pos)	((((node).cn_attr_flags [pos]) & EIF_IS_HIDDEN_ATTRIBUTE_FLAG) == EIF_IS_HIDDEN_ATTRIBUTE_FLAG) 
 /*
  * Conformance table
  */

@@ -889,11 +889,11 @@
 		<set name="return_code" value="0" />
 		<echo message=" - Compile library: completed"/>
 
+		<local name="tmp_gobo_bin_available" />
 		<group unless="$a_core_only=True">
 			<!-- Vision2 Scripts -->
 			<geant target="made_file_executable" arguments="vision2-gtk-config" dir="${a_target_dir}/library/vision2/implementation/gtk/Clib" unless="$is_windows" />
 			<!-- Gobo binaries -->
-			<local name="tmp_gobo_bin_available" />
 			<available resource="gobo/spec/${ISE_PLATFORM}/bin" dir="$a_target_dir/library" variable="tmp_gobo_bin_available" />
 			<geant target="made_file_executable" arguments="*" dir="$a_target_dir/library/gobo/spec/${ISE_PLATFORM}/bin" if="$tmp_gobo_bin_available=true" />
 		</group>

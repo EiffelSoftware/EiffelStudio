@@ -14,6 +14,7 @@ inherit
 			show,
 			close,
 			stick,
+			float,
 			change_short_title,
 			change_long_title,
 			change_pixmap,
@@ -142,6 +143,28 @@ feature -- Redefine
 			docking_manager.command.unlock_update
 			l_retried := True
 			retry
+		end
+
+	float (a_x, a_y: INTEGER)
+			-- <Precursor>
+		local
+			l_floating_state: SD_FLOATING_STATE
+			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
+		do
+			docking_manager.command.lock_update (Void, True)
+			create l_floating_state.make (a_x, a_y, docking_manager, True)
+			l_floating_state.set_size (last_floating_width, last_floating_height)
+			dock_at_top_level (l_floating_state.inner_container)
+			l_floating_state.update_title_bar
+			docking_manager.command.remove_empty_split_area
+			docking_manager.command.unlock_update
+
+			docking_manager.command.update_title_bar
+
+			docking_manager.query.inner_container_main.recover_normal_for_only_one
+			-- After floating, left minmized editor zones in SD_MULTI_DOCK_AREA, then we
+			-- have to resize
+			docking_manager.command.resize (True)
 		end
 
  	change_short_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
@@ -531,14 +554,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

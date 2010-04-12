@@ -282,22 +282,59 @@ feature -- String
 			Identity: Result /= a_s
 		end
 
-	string_general_as_left_adjusted (a_s: STRING_GENERAL): STRING_GENERAL
+	string_general_left_adjust (a_str: STRING_GENERAL)
+			-- Make all possible char in `a_str' to upper.
+			-- |FIXME: We need real Unicode as upper.
+			-- |For the moment, only ANSII code are concerned.
 		require
-			a_s_not_void: a_s /= Void
+			a_str_not_void: a_str /= Void
 		local
-			l_str: STRING
+			i, nb: INTEGER_32
+			l_str: STRING_32
 		do
-			if a_s.is_valid_as_string_8 then
-				l_str := a_s.as_string_8
-				l_str.left_adjust
-				Result := l_str
+			if a_str.is_string_32 then
+				l_str := a_str.as_string_32
+				from
+					i := 1
+					nb := l_str.count
+				until
+					i > nb or else (not l_str.item (i).is_character_8 or else not l_str.item (i).is_space)
+				loop
+					i := i + 1
+				end
+				if i > 1 then
+					l_str.keep_tail (nb - i + 1)
+				end
 			else
-				Result := a_s.twin
+				a_str.as_string_8.left_adjust
 			end
-		ensure
-			Result_not_void: Result /= Void
-			Identity: Result /= a_s
+		end
+
+	string_general_right_adjust (a_str: STRING_GENERAL)
+			-- Remove leading whitespace.
+			-- |FIXME: Only take ASCII into consideration.
+		require
+			a_str_not_void: a_str /= Void
+		local
+			i, nb: INTEGER_32
+			l_str: STRING_32
+		do
+			if a_str.is_string_32 then
+				l_str := a_str.as_string_32
+				from
+					nb := l_str.count
+					i := nb
+				until
+					i < 1 or else (not l_str.item (i).is_character_8 or else not l_str.item (i).is_space)
+				loop
+					i := i - 1
+				end
+				if i < nb then
+					l_str.keep_head (i)
+				end
+			else
+				a_str.as_string_8.right_adjust
+			end
 		end
 
 	is_string_general_lower (a_str: STRING_GENERAL): BOOLEAN
@@ -327,7 +364,7 @@ feature -- String
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

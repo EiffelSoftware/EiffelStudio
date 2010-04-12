@@ -405,6 +405,9 @@ feature -- Commands
 							l_parent_parent.prune (l_editor_parent)
 
 							l_minimized_editor_area := internal_shared.widget_factory.docking_zone (docking_manager.zones.place_holder_content)
+							if not l_minimized_editor_area.is_docking_manager_attached then
+								l_minimized_editor_area.set_docking_manager (docking_manager)
+							end
 							minimized_editor_area := l_minimized_editor_area
 							l_parent_parent.extend (l_minimized_editor_area)
 							if attached {SD_PLACE_HOLDER_ZONE} l_minimized_editor_area as lt_upper_zone  then
@@ -763,14 +766,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

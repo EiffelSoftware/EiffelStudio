@@ -108,7 +108,11 @@ feature {NONE} -- Basic operations
 							file_name := l_file_name
 							line_number := l_line_number
 							is_error := l_is_error
-							function_name := l_function_name
+							if l_function_name /= Void then
+								function_name := l_function_name
+							else
+								function_name := Void
+							end
 							message := l_line
 							process_last_error
 						end

@@ -1,10 +1,10 @@
-
 This examples illustrates the use of stored procedure.
 
 ODBC does not support creating stored procedure, so in order to run the
 example on ODBC, you should use the host DBMS to create a stored procedure
-"sel_proc" which has one STRING parameter and is equivalent to the following
-SQL statement:
-
-select * from DB_BOOK where author = :author
-
+"sel_proc" which should expect three parameters:
+* new_date
+* new_price
+* new_author
+and execute the following SQL statement:
+UPDATE DB_BOOK SET price = :new_price, date = :new_date WHERE author = :new_author

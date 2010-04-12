@@ -10,6 +10,12 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 	</target>
+	<target name="rm2oom_mysql" extends="common">
+		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql.ecf"/>
+		<cluster name="handle" location="..\Utilities\mysql\"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
+	</target>
 	<target name="rm2oom_ingres" extends="common">
 		<library name="ingres" location="$ISE_LIBRARY\library\store\dbms\rdbms\ingres\ingres.ecf"/>
 		<cluster name="handle" location="..\Utilities\ingres\"/>

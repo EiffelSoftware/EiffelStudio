@@ -31,6 +31,14 @@ feature
 				set_data_source(l_laststring.twin)
  			end
 
+			if db_spec.database_handle_name.is_case_insensitive_equal ("mysql") then
+				io.putstring ("Schema Name: ")
+				io.readline
+				l_laststring := io.laststring
+				check l_laststring /= Void end -- implied by `readline' postcondition
+				set_application(l_laststring.twin)
+			end
+
 			io.putstring ("Name: ")
 			io.readline;
 			l_laststring := io.laststring
@@ -124,7 +132,8 @@ feature
 				repository.generate_class (fi)
 				fi.close
 			else
-				io.putstring ("Cannot create file " + repository.repository_name)
+				io.putstring ("Cannot create file " + fn + 
+					" for repository " + repository.repository_name)
 			end
 		rescue
 			rescued := True

@@ -37,12 +37,13 @@ feature {NONE} -- Basic operations
 			-- <Precursor>
 		local
 			l_exp: like function_name_regexp
-			l_line: STRING
-			l_project_location: STRING
-			l_file_name: STRING
-			l_function_name: STRING
-			l_position: STRING
-			l_line_string: STRING
+			l_line: STRING_32
+			l_project_location: STRING_32
+			l_file_location: STRING_32
+			l_file_name: STRING_32
+			l_function_name: STRING_32
+			l_position: STRING_32
+			l_line_string: STRING_32
 			l_line_number: INTEGER
 			l_is_error: BOOLEAN
 			l_count: INTEGER
@@ -56,14 +57,14 @@ feature {NONE} -- Basic operations
 						-- Filename
 					l_file_name := a_line.substring (1, i - 1)
 					l_line := a_line.substring (i + 3, l_count)
-					l_line.left_adjust
+					string_general_left_adjust (l_line)
 
 					i := l_file_name.last_index_of ('(', l_file_name.count)
 					if i > 0 then
 							-- Line/column
 						l_position := l_file_name.substring (i, l_file_name.count)
-						l_position.left_adjust
-						l_position.right_adjust
+						string_general_left_adjust (l_position)
+						string_general_right_adjust (l_position)
 						l_position.prune_all_leading ('(')
 						l_position.prune_all_trailing (')')
 
@@ -72,27 +73,30 @@ feature {NONE} -- Basic operations
 						i := l_position.index_of (',', 1)
 						if i > 1 and then i > l_position.count then
 							l_line_string := l_position.substring (1, i - 1)
-							l_line_string.right_adjust
+							string_general_right_adjust (l_line_string)
 							--l_column_string := l_position.substring (i + 1, l_position.count)
 							--l_column_string.left_adjust
 						else
 							l_line_string := l_position
 						end
-						if l_line_string.is_integer then
+							-- Safe to use `as_string_8' for line numbers.
+						if l_line_string.as_string_8.is_integer then
 							l_line_number := l_line_string.to_integer
 						end
 					end
-					l_file_name.left_adjust
-					l_file_name.right_adjust
+					string_general_left_adjust (l_file_name)
+					string_general_right_adjust (l_file_name)
 
 						-- Error status
 					i := l_line.index_of (':', 1)
 					if i > 0 then
-						l_is_error := l_line.substring_index_in_bounds (once "error", 1, i) > 0
+							-- Before looking for "error", converting to STRING_8 is safe.
+						l_is_error := l_line.as_string_8.substring_index_in_bounds (once "error", 1, i) > 0
 
 						if attached l_file_name then
 							l_exp := function_name_regexp
-							l_exp.match (l_line)
+								-- Before looking for "F[0-9]+_[0-9]+", converting to STRING_8 is safe.
+							l_exp.match (l_line.as_string_8)
 							if l_exp.has_matched then
 								l_function_name := l_exp.captured_substring (0)
 							end
@@ -101,18 +105,19 @@ feature {NONE} -- Basic operations
 							l_count := l_project_location.count
 							if l_file_name.count > l_count then
 									-- Attempt to make path relative.
-								if l_file_name.substring (1, l_count).is_case_insensitive_equal (l_project_location) then
+								l_file_location := l_file_name.substring (1, l_count)
+								if
+									l_project_location.is_valid_as_string_8 and then
+									l_file_location.is_valid_as_string_8 and then
+								 	l_file_location.is_case_insensitive_equal (l_project_location)
+								then
 									l_file_name.replace_substring (".", 1, l_count)
 								end
 							end
 							file_name := l_file_name
 							line_number := l_line_number
 							is_error := l_is_error
-							if l_function_name /= Void then
-								function_name := l_function_name
-							else
-								function_name := Void
-							end
+							function_name := l_function_name
 							message := l_line
 							process_last_error
 						end

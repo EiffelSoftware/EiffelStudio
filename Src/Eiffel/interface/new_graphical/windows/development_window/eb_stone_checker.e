@@ -109,7 +109,7 @@ feature {NONE} -- Implementation functions
 		end
 
 	handle_break_error_ace_external_file_stone (a_stone: STONE)
-			-- Handle `conv_brkstone', `conv_errst', `ef_stone' and `target_stone' if eixst.
+			-- Handle `conv_brkstone', `conv_errst', `ef_stone' and `target_stone' if exist.
 		local
 			bpm: BREAKPOINTS_MANAGER
 		do
@@ -131,9 +131,34 @@ feature {NONE} -- Implementation functions
 					current_editor.load_text (f.last_string)
 				end
 			elseif target_stone /= Void and then target_stone.is_valid then
-				develop_window.tools.properties_tool.set_stone (target_stone)
+				handle_target_stone (target_stone)
 			else
 				handle_all_class_stones (a_stone)
+			end
+		end
+
+	handle_target_stone (a_target_stone: TARGET_STONE)
+			-- Handle TARGET_STONE
+		local
+			s: STRING_32
+		do
+				-- Remember previous stone.
+			old_stone := develop_window.stone
+
+			develop_window.tools.properties_tool.set_stone (a_target_stone)
+
+				-- Update the title of the window
+			if a_target_stone /= Void then
+				if develop_window.changed then
+					create s.make_from_string (a_target_stone.header.as_string_32)
+					s.prepend_character (' ')
+					s.prepend_character ('*')
+					develop_window.set_title (s)
+				else
+					develop_window.set_title (a_target_stone.header.as_string_32)
+				end
+			else
+				develop_window.set_title (develop_window.Interface_names.t_empty_development_window)
 			end
 		end
 
@@ -142,10 +167,10 @@ feature {NONE} -- Implementation functions
 			-- `a_stone' can be new class stone or exists class stone.
 		local
 			l_stonable: ES_STONABLE_I
+			s: STRING_32
 		do
 				-- Remember previous stone.
 			old_stone := develop_window.stone
-			old_cluster_st ?= develop_window.stone
 
 			develop_window.commands.new_feature_cmd.disable_sensitive
 
@@ -163,9 +188,10 @@ feature {NONE} -- Implementation functions
 				-- Update the title of the window
 			if a_stone /= Void then
 				if develop_window.changed then
-					str := a_stone.header.twin.as_string_32
-					str.prepend ("* ")
-					develop_window.set_title (str)
+					create s.make_from_string (a_stone.header.as_string_32)
+					s.prepend_character (' ')
+					s.prepend_character ('*')
+					develop_window.set_title (s)
 				else
 					develop_window.set_title (a_stone.header.as_string_32)
 				end
@@ -367,7 +393,7 @@ feature {NONE} -- Implementation functions
 								new_class_stone_not_void: new_class_stone /= Void
 							end
 							if new_class_stone.class_i.is_read_only and then current_editor /= Void then
-								 current_editor.set_read_only (true)
+								 current_editor.set_read_only (True)
 							end
 						end
 						if current_editor /= Void then
@@ -1021,9 +1047,6 @@ feature {NONE} -- Implementation attributes
 	cluster_st: CLUSTER_STONE
 			-- Cluster stone.
 
-	old_cluster_st: CLUSTER_STONE
-			-- Old cluster stone.
-
 	feature_stone: FEATURE_STONE
 			-- Feature stone.
 
@@ -1065,9 +1088,6 @@ feature {NONE} -- Implementation attributes
 
 	external_cons: CONSUMED_TYPE
 			-- External consumed type.
-
-	str: STRING_32
-			-- String that describe current stone.
 
 	dotnet_class: BOOLEAN
 			-- .Net class
@@ -1130,7 +1150,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

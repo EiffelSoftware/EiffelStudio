@@ -365,7 +365,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 	value_class_name: STRING
 			-- class name for this ICorDebugObjectValue value
 		require
-			has_object_interface
+			has_object_interface: has_object_interface
 		local
 			l_ct: NATURAL_32
 		do
@@ -545,7 +545,7 @@ invariant
 	icd_referenced_and_prepared_value_not_void : icd_referenced_value = Void implies icd_prepared_value = Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="class_structure_editor" uuid="033E433F-5A38-4F90-9AA8-F8E2A0DE990E">
+	<target name="class_structure_editor">
+		<root class="CLASS_STRUCTURE_EDITOR" feature="make"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" syntax="transitional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="exception_trace" value="true"/>
+		<setting name="executable_name" value="cse"/>
+		<setting name="inlining" value="true"/>
+		<setting name="inlining_size" value="0"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>
+		<cluster name="root_cluster" location=".\"/>
+	</target>
+	<target name="graphical_class_structure_editor" extends="class_structure_editor">
+		<root class="CLASS_STRUCTURE_EDITOR_APPLICATION" feature="make_and_launch"/>
+		<setting name="console_application" value="false"/>
+		<setting name="executable_name" value="cse"/>
+		<setting name="multithreaded" value="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<cluster name="gui" location="gui\" recursive="true"/>
+	</target>
+</system>

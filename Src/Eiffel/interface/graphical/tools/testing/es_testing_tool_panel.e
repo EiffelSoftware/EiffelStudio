@@ -131,7 +131,10 @@ feature {NONE} -- Initialization: widget status
 
 			if session_manager.is_service_available then
 				window_session_data.session_connection.connect_events (Current)
-				if attached {BOOLEAN} window_session_data.value_or_default (auto_retrieve_id, False) as l_bool then
+				if
+					attached {BOOLEAN} window_session_data.value_or_default ({TEST_SESSION_CONSTANTS}.auto_retrieve,
+						{TEST_SESSION_CONSTANTS}.auto_retrieve_default) as l_bool
+				then
 					if l_bool then
 						auto_retrieve_menu.enable_select
 						if not etest_suite.is_auto_retrieving then
@@ -406,7 +409,7 @@ feature {NONE} -- Events: test execution
 				etest_suite.set_auto_retrieve (l_auto_retrieve)
 			end
 			if session_manager.is_service_available then
-				window_session_data.set_value (l_auto_retrieve, auto_retrieve_id)
+				window_session_data.set_value (l_auto_retrieve, {TEST_SESSION_CONSTANTS}.auto_retrieve)
 			end
 		end
 
@@ -474,7 +477,7 @@ feature {SESSION_I} -- Events: session
 	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
 			-- <Precursor>
 		do
-			if a_id.same_string (auto_retrieve_id) then
+			if a_id.same_string ({TEST_SESSION_CONSTANTS}.auto_retrieve) then
 				if attached {BOOLEAN} a_session.value (a_id) as l_bool and then l_bool then
 					auto_retrieve_menu.enable_select
 				else
@@ -622,11 +625,6 @@ feature {NONE} -- Internationalization
 	tt_debug_filtered: STRING = "Debug filtered tests"
 	tt_debug_selected: STRING = "Run selected tests"
 	m_auto_retrieve: STRING = "Refresh after compilation"
-
-feature {NONE} -- Constants
-
-	auto_retrieve_id: STRING = "com.eiffel.testing_tool.auto_retrieve"
-			-- Auto retrieve ID for session manager
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

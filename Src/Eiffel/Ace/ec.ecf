@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 	<target name="common">
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -48,7 +48,7 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="false"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="false"/>
-		<library name="xml" location="$EIFFEL_SRC\framework\xml\xml.ecf" readonly="false"/>
+		<library name="xml_utility" location="$EIFFEL_SRC\framework\xml_utility\xml_utility.ecf" readonly="false"/>
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
@@ -231,9 +231,9 @@
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<file_rule>
 				<exclude>/preferences$</exclude>
-				<exclude>/overrides$</exclude>
-				<exclude>/lite$</exclude>
 				<exclude>^/tty$</exclude>
+				<exclude>/lite$</exclude>
+				<exclude>/overrides$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/mswin$</exclude>

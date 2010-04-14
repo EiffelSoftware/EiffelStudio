@@ -19,6 +19,6 @@ compile_result 	ok
 define		FROZEN "frozen"
 copy_sub 	test2.e $CLUSTER test2.e
 compile_melted
-compile_result 	validity_error TEST VIFI
+compile_result 	validity_error TEST VIFI(1)
 
 test_end

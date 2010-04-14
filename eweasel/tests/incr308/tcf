@@ -11,9 +11,8 @@ compile_melted
 compile_result ok
 
 copy_raw test1_rev1.e $CLUSTER test1.e
-
 compile_melted
-compile_result validity_error TEST2 VEVI
+compile_result validity_error TEST2 VJAR
 
 copy_raw test1_rev2.e $CLUSTER test1.e
 resume_compile

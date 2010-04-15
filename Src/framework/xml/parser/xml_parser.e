@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 			-- Instanciate Current
 		do
 			create {XML_CALLBACKS_NULL} callbacks
+			cr_character_ignored := True
 			buffer := empty_buffer
 			initialize_entity_mapping
 		end
@@ -91,6 +92,20 @@ feature -- Access
 			-- Entities mapping
 			-- You can provide your own extended mapping with `set_entity_mapping'
 			--| such as &amp; &gt; &lt; &quot; ...
+
+feature -- Settings
+
+	cr_character_ignored: BOOLEAN
+			-- Ignore CR  '%R' characters
+			-- By default: True
+
+feature -- Settings change
+
+	set_cr_character_ignored (b: BOOLEAN)
+			-- Set `cr_character_ignored' to `b'
+		do
+			cr_character_ignored := b
+		end
 
 feature -- Status
 
@@ -169,7 +184,7 @@ feature {NONE} -- Implementation: parse
 					c
 				when '<' then
 					if not l_content.is_empty then
-						callbacks.on_content (l_content)
+						callbacks.on_content (l_content.string)
 						l_content.wipe_out
 					end
 					c := next_character
@@ -469,10 +484,22 @@ feature {NONE} -- Query
 	next_character: CHARACTER
 			-- Return next character
 			-- move index
+		local
+			buf: like buffer
 		do
-			if not buffer.end_of_input then
-				buffer.read_character
-				Result := buffer.last_character
+			buf := buffer
+			if not buf.end_of_input then
+				buf.read_character
+				Result := buf.last_character
+				if cr_character_ignored and Result = '%R' then
+					from
+					until
+						Result /= '%R'
+					loop
+						buf.read_character
+						Result := buf.last_character
+					end
+				end
 			else
 				report_error ("no more character")
 			end
@@ -757,7 +784,7 @@ feature {NONE} -- Query
 feature {NONE} -- Factory
 
 	empty_buffer: XML_STRING_INPUT_STREAM
-			-- Empty buffer 
+			-- Empty buffer
 			-- (void-safety: keep `buffer' always attached)
 		once
 			create Result.make_empty
@@ -790,28 +817,28 @@ feature {NONE} -- Factory
 feature {NONE} -- Factory: cache
 
 	tmp_string_tag: STRING
-			-- Cached string for `new_string_tag' 
+			-- Cached string for `new_string_tag'
 			-- to limit GC work
 		once
 			create Result.make (25)
 		end
 
 	tmp_string_attribute_name: STRING
-			-- Cached string for `new_string_attribute_name' 
+			-- Cached string for `new_string_attribute_name'
 			-- to limit GC work
 		once
 			create Result.make (20)
 		end
 
 	tmp_string_attribute_value: STRING
-			-- Cached string for `new_string_attribute_value' 
+			-- Cached string for `new_string_attribute_value'
 			-- to limit GC work
 		once
 			create Result.make (50)
 		end
 
 	tmp_string_comment_value: STRING
-			-- Cached string for `new_string_comment_value' 
+			-- Cached string for `new_string_comment_value'
 			-- to limit GC work
 		once
 			create Result.make (100)

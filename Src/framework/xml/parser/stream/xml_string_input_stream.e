@@ -32,7 +32,7 @@ feature -- Status report
 
 	end_of_input: BOOLEAN
 		do
-			Result := source_index = count
+			Result := source_index = count - 1
 		end
 
 	is_open_read: BOOLEAN

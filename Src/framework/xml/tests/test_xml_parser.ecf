@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="test_xml_parser" uuid="40FBC226-EDFE-4C19-B0C0-8AD8AF17AD05">
+	<target name="common">
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option debug="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+	</target>
+	<target name="xml_parser" extends="common">
+		<root class="TEST_XML_PARSER" feature="make"/>
+		<setting name="executable_name" value="test_xml"/>
+		<library name="xml_dom" location="..\dom\xml_dom.ecf" readonly="false">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<library name="xml_parser" location="..\parser\xml_parser.ecf" readonly="false"/>
+		<cluster name="test" location=".\"/>
+	</target>
+	<target name="gobo_xml_parser" extends="common">
+		<root class="TEST_GOBO_XML_PARSER" feature="make"/>
+		<setting name="executable_name" value="test_gobo_xml"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
+		<library name="xml_dom" location="..\dom\xml_dom.ecf" readonly="false">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<library name="xml_parser" location="..\parser\xml_parser.ecf" readonly="false"/>
+		<override name="gobo" location=".\gobo\"/>
+		<cluster name="test" location=".\"/>
+	</target>
+</system>

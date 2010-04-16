@@ -31,6 +31,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEGREES
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
 	has_error_reporting: BOOLEAN
@@ -854,9 +859,16 @@ feature {NONE} -- Implementation
 				not attached q or else i >= t.chain.count
 			loop
 				q := q.actual_type
-				if attached q.associated_class.feature_table.item_id (t.chain [i]) as f then
+				if
+					attached q.associated_class as c and then
+					attached c.feature_table.item_id (t.chain [i]) as f
+				then
 					process_anchor (f, t)
 					q := last_type
+					if attached q then
+							-- Record supplier for recompilation.
+						degree_4.add_qualified_supplier (f, c, current_class)
+					end
 				elseif has_error_reporting then
 					create l_veen
 					l_veen.set_class (current_class)
@@ -901,7 +913,7 @@ feature {NONE} -- Implementation
 				l_like_control.put_routine_id (l_rout_id)
 					-- Process type referenced by anchor.
 				f.type.process (Current)
-				-- Update anchored type controler
+					-- Update anchored type controler
 				l_like_control.remove_routine_id
 				if not attached last_type as a then
 						-- Nothing to be done, error if any was already reported.

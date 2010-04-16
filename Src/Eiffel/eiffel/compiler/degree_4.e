@@ -99,6 +99,7 @@ feature -- Processing
 			l_error_handler: like error_handler
 		do
 			create actions.make (2)
+			initialize_qualified_suppliers
 			l_system := system
 			l_degree_output := degree_output
 			l_error_handler := error_handler
@@ -141,66 +142,97 @@ feature -- Processing
 				l_error_handler.raise_error
 			end
 
-			nb := 0
 
 			empty_temp_remaining_validity_checking_list
 
-			from i := 1 until nb = count loop
-				a_class := classes.item (i)
-				if a_class /= Void and then a_class.degree_4_needed then
-					if not a_class.degree_4_processed and then (ignored_classes.count = 0 or else not ignored_classes.has (a_class)) then
-						l_degree_output.put_degree_4 (a_class, count - nb)
-							-- Set current class now.
-						l_system.set_current_class (a_class)
-						put_action_class
-							-- Adds future checks to the `remaining_validity_checking_list'
-						l_error_level := l_error_handler.error_level
-						process_class (a_class)
+				-- Process classes until there are no more.
+				-- Since number of classes can be changed, `count' is not cached.
+			from
+				nb := 0
+			until
+				nb = count
+			loop
+					-- Run over all classes in the system.
+					-- If new classes are added for recompilation,
+					-- they will be processed at the next iteration.
+				from
+					i := 1
+				until
+					nb = count or else i > classes.upper
+				loop
+					a_class := classes.item (i)
+					if a_class /= Void and then a_class.degree_4_needed then
+						if not a_class.degree_4_processed and then (ignored_classes.count = 0 or else not ignored_classes.has (a_class)) then
+							l_degree_output.put_degree_4 (a_class, count - nb)
+								-- Set current class now.
+							l_system.set_current_class (a_class)
+							put_action_class
+								-- Adds future checks to the `remaining_validity_checking_list'
+							l_error_level := l_error_handler.error_level
+							process_class (a_class)
+							if l_error_handler.error_level = l_error_level then
+									-- We only merge the remaining checks if the class did not produce any other errors
+								merge_remaining_validity_checks_into_global_list
+									-- Mark the class as processed.
+								a_class.set_degree_4_processed
+							else
+									-- We cannot add the temporary added checks so we need to get rid of them
+									-- we will process them at the next compilation when user will have fix the
+									-- errors reported by the user.
+								empty_temp_remaining_validity_checking_list
+								ignored_classes.put (a_class)
+								remove_descendant_classes_from_processing (a_class)
+							end
+						end
+						nb := nb + 1
+					end
+					i := i + 1
+				end
+					-- No need to continue if we have found some errors.
+				if l_error_handler.has_error then
+					l_error_handler.raise_error
+				end
+					-- Run delayed actions.
+				from
+					actions.start
+				until
+					actions.after
+				loop
+					a_class := system.class_of_id (actions.item.class_id)
+					if not ignored_classes.has (a_class) then
+						system.set_current_class (a_class)
+						context.initialize (a_class, a_class.actual_type)
+						across
+							actions.item.actions as a
+						from
+								-- Stop processing of the current class as soon as there is an error.
+							l_error_level := l_error_handler.error_level
+						until
+							l_error_level /= l_error_handler.error_level
+						loop
+							a.item.call (Void)
+						end
 						if l_error_handler.error_level = l_error_level then
-								-- We only merge the remaining checks if the class did not produce any other errors
-							merge_remaining_validity_checks_into_global_list
-								-- Mark the class as processed.
-							a_class.set_degree_4_processed
+								-- The class is already marked as processed.
+							if attached qualified_suppliers as q then
+									-- Record new qualified suppliers if any.
+								a_class.set_qualified_suppliers (qualified_suppliers.item (a_class.class_id))
+							else
+									-- Record that there are no qualified suppliers in class `a_class'.
+								a_class.set_qualified_suppliers (Void)
+							end
 						else
-								-- We cannot add the temporary added checks so we need to get rid of them
-								-- we will process them at the next compilation when user will have fix the
-								-- errors reported by the user.
-							empty_temp_remaining_validity_checking_list
+								-- The class has errors, avoid marking it and its descendants as processed.
 							ignored_classes.put (a_class)
 							remove_descendant_classes_from_processing (a_class)
 						end
 					end
-					nb := nb + 1
+					actions.forth
 				end
-				i := i + 1
-			end
-
-				-- Run delayed actions.
-			from
-				actions.start
-			until
-				actions.after
-			loop
-				a_class := system.class_of_id (actions.item.class_id)
-				if not ignored_classes.has (a_class) then
-					system.set_current_class (a_class)
-					context.initialize (a_class, a_class.actual_type)
-					l_error_level := l_error_handler.error_level
-					actions.item.actions.do_all (agent {PROCEDURE [ANY, TUPLE]}.call (Void))
-					if l_error_handler.error_level = l_error_level then
-							-- The class is already marked as processed.
-					else
-							-- The class has errors, avoid marking it and its descendants as processed.
-						ignored_classes.put (a_class)
-						remove_descendant_classes_from_processing (a_class)
-					end
+					-- No need to continue if we have found some errors.
+				if l_error_handler.has_error then
+					l_error_handler.raise_error
 				end
-				actions.forth
-			end
-
-				-- No need to continue if we have found some errors.
-			if l_error_handler.has_error then
-				l_error_handler.raise_error
 			end
 
 				-- Flush features that are computed with a delay.
@@ -259,6 +291,7 @@ feature -- Processing
 			l_system.set_current_class (Void)
 			l_degree_output.put_end_degree
 			actions := Void
+			clear_qualified_suppliers
 		end
 
 feature -- Element change
@@ -783,6 +816,124 @@ feature {NONE} -- Generic checking
 				-- creation constraint genericity clause of a class.
 			if error_handler.has_error then
 				error_handler.raise_error
+			end
+		end
+
+feature {NONE} -- Qualified suppliers: access
+
+	qualified_suppliers: HASH_TABLE [LIST [QUALIFIED_SUPPLIER], INTEGER]
+			-- Qualified suppliers collected during this degree indexed by client class ID
+
+	qualified_clients: HASH_TABLE [ARRAYED_SET [INTEGER], QUALIFIED_SUPPLIER]
+			-- Clients of qualified suppliers
+
+feature {NONE} -- Qualified suppliers: removal
+
+	clear_qualified_suppliers
+			-- Remove all qualified suppliers.
+		do
+			qualified_suppliers := Void
+			qualified_clients := Void
+		ensure
+			removed_qualified_suppliers: qualified_suppliers = Void
+			removed_qualified_clients: qualified_clients = Void
+		end
+
+feature -- Qualified suppliers: initialization
+
+	initialize_qualified_suppliers
+			-- Initialize data to recompile clients of qualified suppliers.
+		local
+			t: detachable like qualified_clients
+			l: detachable ARRAYED_SET [INTEGER]
+		do
+				-- Process all classes that have qualified suppliers.
+			across
+				system.classes as c
+			loop
+				if
+					system.classes.has (c.target_index) and then
+					attached c.item.qualified_suppliers as q
+				then
+						-- Record all clients of the given qualified supplier.
+					across
+						q as s
+					loop
+						t := qualified_clients
+						if attached t then
+							l := t.item (s.item)
+						else
+							create t.make (1)
+							qualified_clients := t
+						end
+						if not attached l then
+							create {ARRAYED_SET [INTEGER]} l.make (1)
+							t.force (l, s.item)
+						end
+						l.extend (c.item.class_id)
+					end
+				end
+			end
+		end
+
+feature -- Qualified suppliers: modification
+
+	add_qualified_supplier (f: FEATURE_I; s: CLASS_C; c: CLASS_C)
+			-- Register a qualified supplier `[f, s]' of class `c'.
+		require
+			f_attached: f /= Void
+			s_attached: s /= Void
+			valid_f: attached s.feature_of_name_id (f.feature_name_id)
+			c_attached: c /= Void
+		local
+			t: like qualified_suppliers
+			q: LIST [QUALIFIED_SUPPLIER]
+		do
+			t := qualified_suppliers
+			if not attached t then
+				create t.make (1)
+				qualified_suppliers := t
+			else
+				q := t.item (c.class_id)
+			end
+			if not attached q then
+				create {ARRAYED_LIST [QUALIFIED_SUPPLIER]} q.make (1)
+				t.force (q, c.class_id)
+			end
+			q.extend (create {QUALIFIED_SUPPLIER}.make (f, s))
+		end
+
+feature {NONE} -- Qualified suppliers: optimization
+
+	qualified_supplier: detachable QUALIFIED_SUPPLIER
+			-- Temporary cell to optimize `touch_feature_type'
+
+feature -- Qualified suppliers: recompilation
+
+	touch_feature_type (f: FEATURE_I; c: CLASS_C)
+			-- Register that the type of feature `f' from class `c' is changed.
+		require
+			f_attached: attached f
+			c_attached: attached c
+			valid_f: attached c.feature_of_name_id (f.feature_name_id)
+		local
+			q: like qualified_supplier
+		do
+			if attached qualified_clients as t then
+				q := qualified_supplier
+				if not attached q then
+					create q.make (f, c)
+				else
+					q.set (f, c)
+				end
+				if attached t.item (q) as clients then
+						-- Recompile clients.
+					across
+						clients as i
+					loop
+						workbench.add_class_to_recompile (system.class_of_id (i.item).lace_class)
+					end
+				end
 			end
 		end
 

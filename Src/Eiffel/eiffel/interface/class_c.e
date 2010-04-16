@@ -1769,6 +1769,22 @@ feature -- Propagation
 			end
 		end
 
+feature -- Qualified suppliers: access
+
+	qualified_suppliers: LIST [QUALIFIED_SUPPLIER]
+			-- List of suppliers this class depends on.
+			-- Used during recompilation at degree 4.
+
+feature {DEGREE_4} -- Qualified suppliers: modification
+
+	set_qualified_suppliers (q: like qualified_suppliers)
+			-- Set `qualified_suppliers' to `q'.
+		do
+			qualified_suppliers := q
+		ensure
+			qualified_suppliers_set: qualified_suppliers = q
+		end
+
 feature -- Status Settings
 
 	set_changed (b: BOOLEAN)

@@ -91,7 +91,7 @@ feature -- Processing
 			if attached att.namespace as ns and then not ns.uri.is_empty then
 				s.append_string (" (" + ns.uri + ")")
 			end
-			print (offset (att.level) + "+ attribute: " + s + "=" + att.value + "%N")
+			print (offset (att.level) + "+ attribute: " + s + "=%"" + att.value + "%"%N")
 		end
 
 feature {NONE} -- Formatter

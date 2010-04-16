@@ -17,13 +17,21 @@ feature {NONE} -- Initialization
 
 	make (a_file: FILE)
 			-- Create current stream for file `a_file'
+		require
+			a_file_attached: a_file /= Void
 		do
+			name := a_file.name			
 			create previous_chunk.make_empty
 			current_chunk := previous_chunk
 			chunk_size := default_chunk_size
 			count := a_file.count
 			source := a_file
 		end
+
+feature -- Access
+
+	name: STRING
+			-- Name of current stream
 
 feature -- Status report
 
@@ -94,6 +102,7 @@ feature -- Basic operation
 			index := 0
 			line := 1
 			column := 0
+			previous_line_count := 0
 		end
 
 	close
@@ -133,11 +142,11 @@ feature -- Basic operation
 
 			if last_character = '%N' then
 				line := line + 1
+				previous_line_count := column
 				column := 0
 			else
 				column := column + 1
 			end
-			column := 0
 
 			last_character := c
 		end
@@ -150,6 +159,13 @@ feature -- Basic operation
 				last_character := previous_chunk.item (1 + index - chunk_source_lower + chunk_size)
 			else
 				last_character := current_chunk.item (1 + index - chunk_source_lower)
+			end
+			if last_character = '%N' then
+				line := line - 1
+				column := previous_line_count
+				previous_line_count := 0 --| if we rewind more than one line, too bad
+			else
+				column := column - 1
 			end
 		end
 
@@ -166,6 +182,10 @@ feature {NONE} -- Implementation
 
 	previous_chunk: STRING
 			-- Previous chunk
+
+	previous_line_count: INTEGER
+			-- Keep previous line's length
+			-- to set the `column' during `rewind'			
 
 	default_chunk_size: INTEGER = 4096
 			-- default chunk_size

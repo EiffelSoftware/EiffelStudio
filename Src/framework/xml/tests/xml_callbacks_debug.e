@@ -55,7 +55,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
@@ -72,7 +72,7 @@ feature -- Tag
 			print ("[debug] on_start_tag:" + s + " local=" + a_local_part + "%N")
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
@@ -99,7 +99,7 @@ feature -- Tag
 			print ("[debug] on_start_tag_finish%N")
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- End tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local

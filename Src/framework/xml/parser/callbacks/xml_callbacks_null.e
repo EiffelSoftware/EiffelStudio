@@ -31,7 +31,7 @@ feature -- Document
 		do
 		end
 
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: STRING; an_encoding: detachable STRING; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
 		end
@@ -58,12 +58,12 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 		do
 		end
@@ -73,7 +73,7 @@ feature -- Tag
 		do
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- End tag.
 		do
 		end

@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 	make_null
 		do
-			set_next (create {XML_CALLBACKS_NULL})
+			set_next (create {XML_CALLBACKS_NULL}.make)
 		end
 
 	set_next (a_next: like next)

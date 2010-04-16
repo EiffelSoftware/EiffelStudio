@@ -21,26 +21,7 @@ feature {NONE} -- Initialization
 			-- Instanciate Current
 		do
 			create {XML_CALLBACKS_NULL} callbacks.make
-			cr_character_ignored := True
 			buffer := empty_buffer
-			initialize_entity_mapping
-		end
-
-	initialize_entity_mapping
-			-- Initialize entity mapping with predefined values
-			--| cf: http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references
-		local
-			map: like entity_mapping
-		do
-			create map.make (5)
-				-- entities in XML
-			map.force ('"', "&quot;")  -- 34
-			map.force ('&', "&amp;")   -- 38		
-			map.force ('%'', "&apos;") -- 39
-			map.force ('<', "&lt;")    -- 60
-			map.force ('>', "&gt;")    -- 62
-
-			entity_mapping := map
 		end
 
 feature -- Basic operation
@@ -88,29 +69,34 @@ feature -- Access
 	callbacks: XML_CALLBACKS
 			-- XML callbacks
 
-	entity_mapping: HASH_TABLE [CHARACTER, STRING]
-			-- Entities mapping
-			-- You can provide your own extended mapping with `set_entity_mapping'
-			--| such as &amp; &gt; &lt; &quot; ...
+feature -- Parsing status
 
-feature -- Settings
-
-	cr_character_ignored: BOOLEAN
-			-- Ignore CR  '%R' characters
-			-- By default: True
-
-feature -- Settings change
-
-	set_cr_character_ignored (b: BOOLEAN)
-			-- Set `cr_character_ignored' to `b'
-		do
-			cr_character_ignored := b
-		end
-
-feature -- Status
+	parsing_stopped: BOOLEAN
+			-- Parsing stopped?
+			--| by `stop_request' or `error_occurred'
 
 	error_occurred: BOOLEAN
 			-- Error occurred?
+		do
+			Result := error_position /= Void
+		end
+
+feature -- Status		
+
+	error_position: detachable XML_POSITION
+			-- Position when error occurred
+
+	position: XML_POSITION
+			-- XML position in buffer
+		do
+			create Result.make (buffer.name, byte_index, column, line)
+		end
+
+	byte_index: INTEGER
+			-- Byte index
+		do
+			Result := buffer.index
+		end
 
 	line: INTEGER
 			-- Last line number
@@ -134,33 +120,35 @@ feature -- Element change
 			callbacks_set: callbacks = a_callbacks
 		end
 
-	set_entity_mapping (a_map: like entity_mapping)
-			-- Set `entity_mapping' to `a_map'
-		do
-			if a_map = Void then
-				initialize_entity_mapping
-			else
-				entity_mapping := a_map
-			end
-		ensure
-			entity_mapping_set: a_map /= Void implies entity_mapping = a_map
-		end
-
 	reset
 			-- Reset parser states
 		do
-			error_occurred := False
+			parsing_stopped := False
+			error_position := Void
+		ensure
+			error_position_void: error_position = Void
+			error_occurred_unset: not error_occurred
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	buffer: XML_INPUT_STREAM
 			-- Internal buffer
 
-	buffer_index: INTEGER
-			-- Internal buffer index
+feature {NONE} -- Implementation
+
+	checkpoint_position: detachable XML_POSITION
 		do
-			Result := buffer.index
+		end
+
+	set_checkpoint_position
+		do
+			-- do nothing, can be used to improve error positioning
+		end
+
+	unset_checkpoint_position
+		do
+			-- do nothing, can be used to improve error positioning
 		end
 
 feature {NONE} -- Implementation: parse
@@ -170,21 +158,25 @@ feature {NONE} -- Implementation: parse
 		local
 			c: CHARACTER
 			l_content: STRING
+			buf: like buffer
+			l_callbacks: like callbacks
 		do
 			reset
+			buf := buffer
+			l_callbacks := callbacks
 
-			callbacks.on_start
+			l_callbacks.on_start
 			from
 				create l_content.make_empty
 			until
-				buffer.end_of_input or error_occurred
+				parsing_stopped or buf.end_of_input
 			loop
 				c := next_character
 				inspect
 					c
 				when '<' then
 					if not l_content.is_empty then
-						callbacks.on_content (l_content.string)
+						l_callbacks.on_content (l_content.string)
 						l_content.wipe_out
 					end
 					c := next_character
@@ -208,7 +200,7 @@ feature {NONE} -- Implementation: parse
 --					end
 				end
 			end
-			callbacks.on_finish
+			l_callbacks.on_finish
 		end
 
 	parse_start_tag
@@ -218,9 +210,11 @@ feature {NONE} -- Implementation: parse
 			c: CHARACTER
 			att: like next_attribute_data
 			done: BOOLEAN
+			l_callbacks: like callbacks
 		do
 			t := next_tag
-			callbacks.on_start_tag (Void, Void, t)
+			l_callbacks := callbacks
+			l_callbacks.on_start_tag (Void, Void, t)
 			c := current_character
 			if c.is_space then
 				c := next_non_space_character
@@ -228,13 +222,13 @@ feature {NONE} -- Implementation: parse
 			inspect
 				c
 			when '>' then
-				callbacks.on_start_tag_finish
+				l_callbacks.on_start_tag_finish
 			when '/' then
 				c := next_character
 --				c := next_non_space_character -- less strict?
 				if c = '>' then
-					callbacks.on_start_tag_finish
-					callbacks.on_end_tag (Void, Void, t)
+					l_callbacks.on_start_tag_finish
+					l_callbacks.on_end_tag (Void, Void, t)
 				else
 					report_error ("unexpected character after closing / in start tag")
 				end
@@ -243,24 +237,24 @@ feature {NONE} -- Implementation: parse
 				from
 					done := False
 				until
-					done or error_occurred
+					done or parsing_stopped
 				loop
 					att := next_attribute_data
 					if att /= Void then
-						callbacks.on_attribute (Void, att.prefix_part, att.local_part, att.value)
+						l_callbacks.on_attribute (Void, att.prefix_part, att.local_part, att.value)
 						rewind_character
 					else
 						c := current_character
 						inspect c
 						when '>' then
-							callbacks.on_start_tag_finish
+							l_callbacks.on_start_tag_finish
 						when '/' then
 							c := next_character
 --							c := next_non_space_character -- less strict?							
 							if c = '>' then
 								done := True
-								callbacks.on_start_tag_finish
-								callbacks.on_end_tag (Void, Void, t)
+								l_callbacks.on_start_tag_finish
+								l_callbacks.on_end_tag (Void, Void, t)
 							else
 								report_error ("unexpected character after closing / in start tag")
 							end
@@ -306,7 +300,7 @@ feature {NONE} -- Implementation: parse
 			if not t.is_case_insensitive_equal ("xml") then
 				report_error ("unsupported declaration <?" + t + " ...")
 			end
-			if not error_occurred then
+			if not parsing_stopped then
 				c := current_character
 				if c.is_space then
 					c := next_non_space_character
@@ -314,7 +308,8 @@ feature {NONE} -- Implementation: parse
 				inspect
 					c
 				when '?' then
-					c := next_non_space_character
+--					c := next_non_space_character
+					c := next_character
 					if c = '>' then
 						if l_version /= Void then
 							callbacks.on_xml_declaration (l_version, l_encoding, l_standalone)
@@ -329,17 +324,16 @@ feature {NONE} -- Implementation: parse
 					from
 						done := False
 					until
-						done or error_occurred
+						done or parsing_stopped
 					loop
 						att := next_attribute_data
 						if att /= Void then
 							l_name := att.local_part
-							l_name.to_lower
-							if l_name ~ "version" then
+							if case_insensitive_same_string (l_name, str_version) then
 								l_version := att.value
-							elseif l_name ~ "encoding" then
+							elseif case_insensitive_same_string (l_name, str_encoding) then
 								l_encoding := att.value
-							elseif l_name ~ "standalone" then
+							elseif case_insensitive_same_string (l_name, str_standalone) then
 								l_standalone := True
 							else
 								report_error ("unknown xml declaration attribute [" + l_name + "]")
@@ -390,7 +384,7 @@ feature {NONE} -- Implementation: parse
 					from
 						c := next_character
 					until
-						done or error_occurred
+						done or parsing_stopped
 					loop
 						if c = '-' then
 							c := next_character
@@ -420,7 +414,7 @@ feature {NONE} -- Implementation: parse
 							c := next_character
 						end
 					end
-					if error_occurred then
+					if parsing_stopped then
 						report_error ("could not find end of comment")
 					else
 						callbacks.on_comment (s.string)
@@ -438,25 +432,31 @@ feature {NONE} -- Implementation: parse
 			a_message_attached: a_message /= Void
 		local
 			s: STRING
+			p: like position
 		do
-			error_occurred := True
+			if attached checkpoint_position as checkpoint then
+				p := checkpoint
+				unset_checkpoint_position
+			else
+				p := position
+			end
 
 			create s.make_from_string (a_message)
 			s.append_character (' ')
 			s.append_character ('(')
 			s.append_string ("position=")
-			s.append_integer (buffer.index)
+			s.append_string (p.out)
+			print (s + "%N")
 
-			s.append_character (' ')
-			s.append_string ("line=")
-			s.append_integer (line)
-
-			s.append_character (' ')
-			s.append_string ("column=")
-			s.append_integer (column)
-			s.append_character (')')
+			if error_position = Void then
+					-- record only first error's position
+				error_position := p
+			end
+			parsing_stopped := True
 
 			callbacks.on_error (s)
+		ensure
+			error_occurred: error_occurred
 		end
 
 feature {XML_CALLBACKS} -- Error
@@ -491,7 +491,7 @@ feature {NONE} -- Query
 			if not buf.end_of_input then
 				buf.read_character
 				Result := buf.last_character
-				if cr_character_ignored and Result = '%R' then
+				if Result = '%R' then
 					from
 					until
 						Result /= '%R'
@@ -607,11 +607,8 @@ feature {NONE} -- Query
 						Result := s
 					end
 				else
-					s.to_lower
-					s.prepend_character ('&')
-					s.append_character (';')
-					create Result.make (1)
-					Result.append_character (entity_mapping.item (s))
+					resolve_entity (s)
+					Result := s
 				end
 			else
 				s.prepend_character ('&')
@@ -665,20 +662,21 @@ feature {NONE} -- Query
 				c := next_character
 			elseif c.is_space then
 				report_error ("unexpected space after = in attribute declaration")
+			else
+				--| We could be more strict, but let's allow attrib=value .. in addition to attrib="value"
 			end
 
-			if not error_occurred then
+			if not parsing_stopped then
 				from
 					done := False
 				until
-					done or error_occurred
+					done or parsing_stopped
 				loop
 					if not l_in_double_quote and c.is_space then
 						done := True
 					else
 						inspect c
 						when '&' then
-							-- next amperand value... not yet supported
 							s.append_string (next_entity)
 						when '"' then
 							if l_in_double_quote then
@@ -693,10 +691,10 @@ feature {NONE} -- Query
 					end
 				end
 			end
-			if not error_occurred then
-				Result := s.string
-			else
+			if parsing_stopped then
 				create Result.make_empty
+			else
+				Result := s.string
 			end
 			s.wipe_out
 		ensure
@@ -719,25 +717,33 @@ feature {NONE} -- Query
 			if n.is_empty then
 			else
 				c := current_character
+				set_checkpoint_position --| record potential error position
 				if c.is_space then
 					l_was_space := True
 					c := next_non_space_character -- FIXME: strict?
 				end
 				if c = '=' then
 					-- now looking for value
+					unset_checkpoint_position
 				elseif l_was_space then
 					-- no value FIXME: strict?
+					-- we do not allow attribute without value
+					report_error ("Attribute without any value are forbidden")
 					Result := [p, n, ""]
 				else -- not l_was_space
 					report_error ("unexpected character in attribute name")
 				end
-				if not error_occurred and Result = Void then
+				if Result = Void and not parsing_stopped then
 					check
 						c_is_equal_sign: c = '='
 					end
+					set_checkpoint_position
 					v := next_attribute_value
 					if v = Void then
+						report_error ("attribute '" + n + "' without value")
 						create v.make_empty
+					else
+						unset_checkpoint_position
 					end
 					Result := [p, n, v]
 				end
@@ -746,7 +752,72 @@ feature {NONE} -- Query
 			current_character.is_space or current_character = '>' or current_character = '/' or current_character = '?'
 		end
 
-feature {NONE} -- Query
+feature {NONE} -- Implementation
+
+	resolve_entity (s: STRING)
+			-- Resolve `s' as an entity
+			--| Hardcoding the xml entities &quot; &amp; &apos; &lt; and &gt;
+		require
+			s_attached: s /= Void
+		local
+			l_resolved: BOOLEAN
+		do
+			inspect s.item (1).as_lower
+			when 'a' then
+				if
+					s.count = 3 and then
+					s.item (2).as_lower = 'm' and then
+					s.item (3).as_lower = 'p'
+				then -- &amp;
+					l_resolved := True
+					s.wipe_out
+					s.append_character ('&')
+				elseif -- &apos;
+					s.count = 4 and then
+					s.item (2).as_lower = 'p' and then
+					s.item (3).as_lower = 'o' and then
+					s.item (4).as_lower = 's'
+				then
+					l_resolved := True
+					s.wipe_out
+					s.append_character ('%'')
+				end
+			when 'q' then
+				if
+					s.count = 4 and then
+					s.item (2).as_lower = 'u' and then
+					s.item (3).as_lower = 'o' and then
+					s.item (4).as_lower = 't'
+				then -- &quot;
+					l_resolved := True
+					s.wipe_out
+					s.append_character ('%"')
+				end
+			when 'l' then
+				if
+					s.count = 2 and then
+					s.item (2).as_lower = 't'
+				then -- &quot;
+					l_resolved := True
+					s.wipe_out
+					s.append_character ('<')
+				end
+			when 'g' then
+				if
+					s.count = 2 and then
+					s.item (2).as_lower = 't'
+				then -- &quot;
+					l_resolved := True
+					s.wipe_out
+					s.append_character ('>')
+				end
+			else
+			end
+			if not l_resolved then
+				s.prepend_character ('&')
+				s.append_character (';')
+			end
+		end
 
 	valid_name_character, valid_tag_character (c: CHARACTER): BOOLEAN
 			-- Is `c' a valid character for name or tag value?
@@ -783,6 +854,24 @@ feature {NONE} -- Query
 
 feature {NONE} -- Factory
 
+	case_insensitive_same_string (a,b: STRING): BOOLEAN
+			-- `a' and `b' are the same string regardless of casing?
+		local
+			i,n: INTEGER
+		do
+			n := a.count
+			if n = b.count then
+				from
+					Result := True
+				until
+					not Result or i > n
+				loop
+					Result := a[i].as_lower = b[i].as_lower
+					i := i + 1
+				end
+			end
+		end
+
 	empty_buffer: XML_STRING_INPUT_STREAM
 			-- Empty buffer
 			-- (void-safety: keep `buffer' always attached)
@@ -813,6 +902,12 @@ feature {NONE} -- Factory
 		do
 			Result := tmp_string_comment_value
 		end
+
+feature {NONE} -- Constants
+
+	str_version: STRING = "version"
+	str_encoding: STRING = "encoding"
+	str_standalone: STRING = "standalone"
 
 feature {NONE} -- Factory: cache
 

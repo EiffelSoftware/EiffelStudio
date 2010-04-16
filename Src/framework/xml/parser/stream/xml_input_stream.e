@@ -6,6 +6,13 @@ note
 deferred class
 	XML_INPUT_STREAM
 
+feature -- Access
+
+	name: STRING
+			-- Name of current stream
+		deferred
+		end
+
 feature -- Status report
 
 	count: INTEGER

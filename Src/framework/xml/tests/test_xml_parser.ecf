@@ -9,6 +9,7 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="inlining_size" value="0"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 	</target>
@@ -34,7 +35,7 @@
 			</option>
 		</library>
 		<library name="xml_parser" location="..\parser\xml_parser.ecf" readonly="false"/>
-		<override name="gobo" location=".\gobo\"/>
 		<cluster name="test" location=".\"/>
+		<override name="gobo" location=".\gobo\"/>
 	</target>
 </system>

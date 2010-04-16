@@ -528,7 +528,11 @@ feature -- Comparison
 						check
 							f1.feature_name_id = f2.feature_name_id
 						end
-						if f1.equiv (f2) then
+						if
+							not f1.is_type_evaluation_delayed and then
+							not f2.is_type_evaluation_delayed and then
+							f1.equiv (f2)
+						then
 							f1.set_code_id (f2.code_id)
 						else
 	debug ("ACTIVITY")
@@ -541,7 +545,11 @@ feature -- Comparison
 									-- export status. We need to freeze only if the
 									-- information specific to EXTERNAL_I is not equiv
 								ext_i ?= f1
-								if not is_freeze_requested and then not ext_i.freezing_equiv (f2) then
+								if not is_freeze_requested and then
+									(f1.is_type_evaluation_delayed or else
+									f2.is_type_evaluation_delayed or else
+									not ext_i.freezing_equiv (f2))
+								then
 										-- The external definition has changed
 									System.request_freeze
 									is_freeze_requested := True

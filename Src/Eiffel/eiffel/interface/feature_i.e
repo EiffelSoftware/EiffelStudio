@@ -637,24 +637,14 @@ feature -- Status
 			end
 		end
 
-	is_type_evaluation_delayed: BOOLEAN = False
+	is_type_evaluation_delayed: BOOLEAN
 			-- Is evaluation of type information associated with this feature delayed?
 			-- (Usually this happens for types that cannot be evaluated immediately
 			-- because they require information from other classes that have no type
 			-- information yet.)
---		do
---			Result := not type.is_computable_using_ancestors
---			if not Result and then attached arguments as a then
---				from
---					a.start
---				until
---					Result or else a.after
---				loop
---					Result := not a.item.is_computable_using_ancestors
---					a.forth
---				end
---			end
---		end
+		do
+			Result := feature_flags & is_type_evaluation_delayed_mask /= 0
+		end
 
 	to_melt_in (a_class: CLASS_C): BOOLEAN
 			-- Has current feature to be melted in class `a_class' ?
@@ -1023,6 +1013,31 @@ feature -- Setting
 		do
 			inline_agent_nr := a_inline_agent_nr
 			enclosing_body_id := a_enclosing_body_id
+		end
+
+	set_is_type_evaluation_delayed (v: BOOLEAN)
+			-- Set `is_type_evaluation_delayed' to `v'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, is_type_evaluation_delayed_mask)
+		end
+
+	calculate_is_type_evaluation_delayed
+			-- Calculate `is_type_evaluation_delayed'.
+		local
+			v: BOOLEAN
+		do
+			v := not type.is_computable_using_ancestors
+			if not v and then attached arguments as a then
+				from
+					a.start
+				until
+					v or else a.after
+				loop
+					v := not a.item.is_computable_using_ancestors
+					a.forth
+				end
+			end
+			set_is_type_evaluation_delayed (v)
 		end
 
 feature -- Incrementality
@@ -2103,7 +2118,9 @@ feature -- Signature checking
 			t_attached: attached t
 			is_context_initialized_for_t: context.current_class = t.associated_class
 		do
+			calculate_is_type_evaluation_delayed
 			if is_type_evaluation_delayed then
+				tmp_feature_server.delay (Current)
 				degree_4.put_action (
 					agent
 						require
@@ -2849,6 +2866,7 @@ feature -- Undefinition
 			Result.set_is_unary (is_unary)
 			Result.set_has_convert_mark (has_convert_mark)
 			Result.set_has_rescue_clause (has_rescue_clause)
+			Result.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
 
 			if is_external then
 				ext ?= Current
@@ -2970,6 +2988,7 @@ feature -- Replication
 			other.set_is_unary (is_unary)
 			other.set_has_convert_mark (has_convert_mark)
 			other.set_body_index (body_index)
+			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
 		end
 
 	transfer_from (other: FEATURE_I)
@@ -3366,6 +3385,7 @@ feature {FEATURE_I} -- Implementation
 	is_stable_mask: NATURAL_32 = 					0x0200_0000 -- Used in ATTRIBUTE_I
 	is_transient_mask: NATURAL_32 = 				0x0400_0000 -- Used in ATTRIBUTE_I
 	is_hidden_mask: NATURAL_32 = 					0x0800_0000 -- Used in ATTRIBUTE_I
+	is_type_evaluation_delayed_mask: NATURAL_32 =	0x1000_0000
 			-- Mask used for each feature property.
 
 	internal_export_status: like export_status

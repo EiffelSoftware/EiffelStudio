@@ -1,5 +1,4 @@
 note
-
 	description: "[
 			XML callback interface that resolves namespaces
 
@@ -11,7 +10,16 @@ note
 class XML_NAMESPACE_RESOLVER
 
 inherit
-	XML_CALLBACKS
+	XML_CALLBACKS_FILTER
+		redefine
+			set_next,
+			on_finish,
+			on_start,
+			on_start_tag,
+			on_attribute,
+			on_start_tag_finish,
+			on_end_tag
+		end
 
 create
 	make_null,
@@ -19,16 +27,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make_null
-		do
-			set_next (create {XML_CALLBACKS_NULL})
-		end
-
 	set_next (a_next: like next)
-		require
-			a_next_attached: a_next /= Void
 		do
-			next := a_next
+			Precursor (a_next)
 			initialize
 		end
 
@@ -44,35 +45,6 @@ feature {NONE} -- Initialization
 			attributes_prefix.wipe_out
 			attributes_local_part.wipe_out
 			attributes_value.wipe_out
-		end
-
-	next: XML_CALLBACKS
-
-feature -- Next
-
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
-		do
-			next.on_xml_declaration (a_version, an_encoding, a_standalone)
-		end
-
-	on_error (a_message: STRING)
-		do
-			next.on_error (a_message)
-		end
-
-	on_processing_instruction (a_name: STRING; a_content: STRING)
-		do
-			next.on_processing_instruction (a_name, a_content)
-		end
-
-	on_comment (a_content: STRING)
-		do
-			next.on_comment (a_content)
-		end
-
-	on_content (a_content: STRING)
-		do
-			next.on_content (a_content)
 		end
 
 feature -- Document
@@ -106,7 +78,7 @@ feature -- Forwarding policy
 
 feature -- Element
 
-	on_start_tag (a_namespace: STRING; a_prefix: detachable STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Process start of start tag.
 		do
 			context.push
@@ -116,7 +88,7 @@ feature -- Element
 			element_local_part := a_local_part
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Process attribute.
 		do
 			if not has_prefix (a_prefix) and is_xmlns (a_local_part) then
@@ -181,7 +153,7 @@ feature -- Element
 			next.on_start_tag_finish
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: detachable STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Process end tag.
 		do
 			if a_prefix /= Void and then has_prefix (a_prefix) then

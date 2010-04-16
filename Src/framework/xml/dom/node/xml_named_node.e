@@ -26,9 +26,9 @@ feature -- Status report
 			-- Has a prefix been used to define the namespace?
 			-- (It could also be that the namespace used was the default namespace)
 		do
-			Result := (ns_prefix /= Void and then ns_prefix.count > 0)
+			Result := (attached ns_prefix as p and then p.count > 0)
 		ensure
-			definition: Result = (ns_prefix /= Void and then ns_prefix.count > 0)
+			definition: Result = (attached ns_prefix as p and then p.count > 0)
 		end
 
 	same_namespace (other: XML_NAMED_NODE): BOOLEAN
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Access
 
-	ns_prefix: STRING
+	ns_prefix: detachable STRING
 			-- Namespace prefix used to declare the namespace of the
 			-- name of current node
 		require

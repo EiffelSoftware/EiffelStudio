@@ -132,7 +132,7 @@ feature -- Access
 
 	char (c: INTEGER): CHARACTER
 		do
-			Result := c.to_character
+			Result := c.to_character_8
 		end
 
 	html_entity_mapping: HASH_TABLE [CHARACTER, STRING]

@@ -8,7 +8,8 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XML_CALLBACKS
+deferred class
+	XML_CALLBACKS
 
 feature -- Document
 

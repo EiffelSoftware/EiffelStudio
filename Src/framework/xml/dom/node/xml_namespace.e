@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ns_prefix: STRING
+	ns_prefix: detachable STRING
 			-- Prefix of current namespace
 
 	uri: STRING
@@ -71,9 +71,9 @@ feature -- Status report
 			-- Is there an explicit prefix?
 			-- (not a default namespace declaration)
 		do
-			Result := (ns_prefix /= Void and then ns_prefix.count > 0)
+			Result := (attached ns_prefix as p and then p.count > 0)
 		ensure
-			definition: Result = (ns_prefix /= Void and then ns_prefix.count > 0)
+			definition: Result = (attached ns_prefix as p and then p.count > 0)
 		end
 
 invariant

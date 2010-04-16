@@ -9,6 +9,16 @@ class
 inherit
 	XML_CALLBACKS
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Do nothing.
+		do
+		end
+
 feature -- Document
 
 	on_start

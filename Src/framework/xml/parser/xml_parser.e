@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make
 			-- Instanciate Current
 		do
-			create {XML_CALLBACKS_NULL} callbacks
+			create {XML_CALLBACKS_NULL} callbacks.make
 			cr_character_ignored := True
 			buffer := empty_buffer
 			initialize_entity_mapping

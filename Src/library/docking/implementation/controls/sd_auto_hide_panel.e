@@ -468,7 +468,9 @@ feature {NONE} -- Implementation functions
 				end
 
 				tab_groups.forth
-				tab_groups_max_size.forth
+				if not tab_groups_max_size.after then
+					tab_groups_max_size.forth
+				end
 			end
 		end
 

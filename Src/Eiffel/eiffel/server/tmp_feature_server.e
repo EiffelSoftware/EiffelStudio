@@ -71,14 +71,29 @@ feature -- Element change
 			if t_is_aliased then
 					-- If the feature is aliased then we do not add to 'storage'
 				aliased_features.force (t, t.id)
-			elseif t.is_type_evaluation_delayed then
-				delayed_storage.force (t, t.id)
 			else
 				storage.force (t, t.id)
 			end
 		ensure
 			has: has (t.id)
 		end
+
+	delay (t: FEATURE_I)
+			-- Delay previously recorded feature `t', so that it is not flushed
+			-- when `flush' is called, but only when `flush_delayed' is called.
+		require
+			attached_t: attached t
+			has_t: has (t.id)
+		do
+			if storage.has (t.id) then
+				storage.remove (t.id)
+				delayed_storage.force (t, t.id)
+			end
+		ensure
+			has_t: has (t.id)
+		end
+
+feature -- Removal
 
 	remove (an_id: INTEGER_32)
 			-- <Precursor>

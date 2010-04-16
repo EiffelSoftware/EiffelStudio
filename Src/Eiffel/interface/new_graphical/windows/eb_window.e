@@ -173,7 +173,7 @@ feature -- Status setting
 		require
 			valid_title: a_title /= Void
 		do
-			if title /~ a_title then
+			if title = Void or else not a_title.same_string (title) then
 				title := a_title
 				window.set_title (a_title)
 
@@ -187,8 +187,14 @@ feature -- Status setting
 
 	set_minimized_title (a_title: like title)
 			-- Set `minimized_title' to `a_title'.
+		require
+			valid_title: a_title /= Void
 		do
-			if not equal (minimized_title, a_title) then
+			if 
+				minimized_title = Void
+				or else not a_title.same_string (minimized_title)
+			then
+
 				minimized_title := a_title
 				window.set_icon_name (a_title)
 
@@ -479,7 +485,7 @@ invariant
 	lock_level_nonnegative: lock_level >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

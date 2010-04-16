@@ -19,13 +19,13 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		local
-			xml_tree: XML_CALLBACKS_TREE
-			xml_resolver: XML_NAMESPACE_RESOLVER
+			xml_tree: detachable XML_CALLBACKS_TREE
+			xml_resolver: detachable XML_NAMESPACE_RESOLVER
 
-			resolver: XM_NAMESPACE_RESOLVER
-			tree: XM_CALLBACKS_TO_TREE_FILTER
+			resolver: detachable XM_NAMESPACE_RESOLVER
+			tree: detachable XM_CALLBACKS_TO_TREE_FILTER
 			parser: XM_EIFFEL_PARSER
-			vis: XML_NODE_VISITOR_PRINT
+			vis: detachable XML_NODE_VISITOR_PRINT
 		do
 			create parser.make
 			parser.set_string_mode_mixed
@@ -51,7 +51,11 @@ feature {NONE} -- Initialization
 			end
 
 			if attached filename as fn then
-				test_file (fn, parser)
+				if file_as_string_mode then
+					test_file_content (fn, parser)
+				else
+					test_file (fn, parser)
+				end
 			end
 
 			if
@@ -62,15 +66,28 @@ feature {NONE} -- Initialization
 				create vis
 				vis.process_document (doc)
 			end
+
+			print ("%N")
+
+			if attached last_error_position as pos then
+				print ("Error occurred: ")
+				print (pos)
+				print ("%N")
+			end
+			
 			report_chrono
 
 		end
+
+	last_error_position: detachable XM_POSITION
 
 	test_file (fn: STRING; a_parser: XM_PARSER)
 		local
 			f: RAW_FILE
 			l_xml_file: KL_BINARY_INPUT_FILE
 		do
+			last_error_position := Void
+
 			print ("Parsing " + fn + "%N")
 			create l_xml_file.make (fn)
 			l_xml_file.open_read
@@ -80,7 +97,30 @@ feature {NONE} -- Initialization
 			stop_chrono
 			print ("End%N")
 			l_xml_file.close
+
+			if a_parser.last_error > 0 then
+				last_error_position := a_parser.position
+			end
 		end
+
+	test_file_content (fn: STRING; a_parser: XM_PARSER)
+		local
+			s: STRING
+		do
+
+			s := file_content (fn)
+
+			print ("Parsing " + fn + " as string%N")
+			print ("Start%N")
+			start_chrono
+			a_parser.parse_from_string (s)
+			stop_chrono
+			print ("End%N")
+			if a_parser.last_error > 0 then
+				last_error_position := a_parser.position
+			end
+		end
+		
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"

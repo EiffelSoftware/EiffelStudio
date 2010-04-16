@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			parser: XML_PARSER
 			vis: detachable XML_NODE_VISITOR_PRINT
 		do
-			create parser.make
+			create {XML_CUSTOM_PARSER} parser.make
 
 			get_parser_mode
 
@@ -49,9 +49,12 @@ feature {NONE} -- Initialization
 
 --			parser.set_entity_mapping (html_entity_mapping)
 			if attached filename as fn then
-				test_file (fn, parser)
+				if file_as_string_mode then
+					test_file_content (fn, parser)
+				else
+					test_file (fn, parser)
+				end
 			end
-
 
 			if
 				parser_mode = xml_tree_vis_mode and then
@@ -62,29 +65,59 @@ feature {NONE} -- Initialization
 				vis.process_document (doc)
 			end
 
+			print ("%N")
+
+			if attached last_error_position as pos then
+				print ("Error occurred: ")
+				print (pos)
+				print ("%N")
+			end
+
 			report_chrono
 
---			parser.parse_from_string (text_entity)
---			parser.parse_from_string (text_ecf)
-
---			doc := tree.document
---			create vis
---			doc.process (vis)
 		end
+
+	last_error_position: detachable XML_POSITION
 
 	test_file (fn: STRING; a_parser: XML_PARSER)
 		local
 			f: RAW_FILE
 		do
+			last_error_position := Void
+
 			print ("Parsing " + fn + "%N")
 			create f.make (fn)
 			f.open_read
 			print ("Start%N")
 			start_chrono
+--			a_parser.set_error_ignored (True)
 			a_parser.parse_from_file (f)
 			stop_chrono
 			print ("End%N")
+			if a_parser.error_occurred then
+				last_error_position := a_parser.error_position
+			end
 			f.close
+		end
+
+	test_file_content (fn: STRING; a_parser: XML_PARSER)
+		local
+			s: STRING
+		do
+			last_error_position := Void
+
+			s := file_content (fn)
+
+			print ("Parsing " + fn + " as string%N")
+			print ("Start%N")
+			start_chrono
+--			a_parser.set_error_ignored (True)
+			a_parser.parse_from_string (s)
+			stop_chrono
+			print ("End%N")
+			if a_parser.error_occurred then
+				last_error_position := a_parser.error_position
+			end
 		end
 
 

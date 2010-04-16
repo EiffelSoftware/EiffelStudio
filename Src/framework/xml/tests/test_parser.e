@@ -11,8 +11,15 @@ inherit
 
 feature -- Access
 
+	file_as_string_mode: BOOLEAN
+		do
+			Result := attached get ("TEST_XML_PARSER_KIND") as e and then e.is_case_insensitive_equal ("string")
+		end
+
 	get_parser_mode
 		do
+			print ("Executing: " + command_line.command_line + "%N")
+
 			parser_mode := null_mode
 			if attached get ("TEST_XML_PARSER") as m then
 				m.to_lower
@@ -28,8 +35,58 @@ feature -- Access
 			end
 			print ("Test xml Parser mode: " + parser_mode_meaning + "%N")
 			print ("%TSet environment variable TEST_XML_PARSER to change behavior.%N")
-			print ("%Tavailable values: null, debug, tree, xml_tree, xml_tree_vis%N")
+			print ("%Tavailable values: null (default), debug, tree, xml_tree, xml_tree_vis%N")
+
+			print ("Xml Parser kind: " + file_as_string_mode_meaning + "%N")
+			print ("%TSet environment variable TEST_XML_PARSER_KIND to change behavior.%N")
+			print ("%Tavailable values: string, file (default)%N")
 			print ("%N")
+		end
+
+	short_description: STRING
+		local
+			s: STRING
+		do
+			create Result.make_empty
+			s := command_line.command_name.string
+			Result.append_string (s)
+			Result.append_character (':')
+			Result.append_character (' ')
+
+			if file_as_string_mode then
+				s := "STRING"
+			else
+				s := "FILE"
+			end
+
+			Result.append_string (s)
+			Result.append_character ('+')
+
+			inspect
+				parser_mode
+			when null_mode then
+				s := "NULL"
+			when debug_mode then
+				s := "DEBUG"
+			when tree_mode then
+				s := "TREE"
+			when xml_tree_mode then
+				s := "XML_TREE"
+			when xml_tree_vis_mode then
+				s := "XML_TREE_VIS"
+			else
+				s := "NULL"
+			end
+			Result.append_string (s)
+		end
+
+	file_as_string_mode_meaning: STRING
+		do
+			if file_as_string_mode then
+				Result := "string: read content of file, then parse string"
+			else
+				Result := "file: parse file directly"
+			end
 		end
 
 	parser_mode: INTEGER
@@ -108,12 +165,29 @@ feature -- Access
 			end
 		end
 
+	file_content (fn: STRING): STRING
+		local
+			f: RAW_FILE
+			p: INTEGER
+		do
+			create f.make (fn)
+			f.open_read
+			f.read_stream (f.count)
+			Result := f.last_string
+			f.close
+			p := Result.index_of ('<', 1)
+			Result := Result.substring (p, Result.count)
+		end
+
 	t1, t2: detachable TIME
 
 	report_chrono
+		local
+			duration: TIME_DURATION
 		do
 			if attached t1 as l_t1 and attached t2 as l_t2 then
-				print ("time=" + l_t2.relative_duration (l_t1).out + "%N")
+				duration := l_t2.relative_duration (l_t1)
+				print ("CHRONO " + short_description + " " + duration.minute.out + " minutes " + duration.fine_second.out + " fine seconds.%N")
 			end
 		end
 

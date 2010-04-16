@@ -7,9 +7,19 @@ class
 	XML_CALLBACKS_TREE
 
 inherit
-	XML_CALLBACKS
+	XML_CALLBACKS_FILTER
+		rename
+			make_null as make
 		redefine
-			has_resolved_namespaces
+			make,
+			has_resolved_namespaces,
+			on_start,
+			on_start_tag,
+			on_attribute,
+			on_content,
+			on_end_tag,
+			on_processing_instruction,
+			on_comment
 		end
 
 create
@@ -18,7 +28,9 @@ create
 feature {NONE} -- Initialization
 
 	make
+			-- Instanciate current tree builder.
 		do
+			Precursor
 			create document.make
 			create namespace_cache.make (0)
 		end
@@ -46,29 +58,6 @@ feature -- Document
 
 			namespace_cache.wipe_out
 			namespace_cache.compare_objects
-		end
-
-	on_finish
-			-- Called when parsing finished.
-		do
-		end
-
-	on_xml_declaration (a_version: STRING; a_encoding: detachable STRING; a_standalone: BOOLEAN)
-			-- XML declaration.
-		do
-			debug
-				print ("[debug] on_xml_declaration: version=" + a_version + " encoding=" + text (a_encoding, "") + "%N")
-			end
-		end
-
-feature -- Errors
-
-	on_error (a_message: STRING)
-			-- Event producer detected an error.
-		do
-			debug
-				print ("[debug] on_error: message=" + a_message + "%N")
-			end
 		end
 
 feature -- Meta
@@ -101,7 +90,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_ns_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_ns_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 		local
 			an_element: XML_ELEMENT
@@ -119,12 +108,18 @@ feature -- Tag
 			element_not_void: current_element /= Void
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 		local
 			xml: XML_ATTRIBUTE
 		do
 			if attached current_element as curr then
+				check
+						--| Implied by precondition `unresolved_namespace_is_void' and
+						--| `unresolved_namespace_is_void' = True
+					a_namespace_attached: a_namespace /= Void
+				end
+
 				create xml.make_last (a_local_part, new_namespace (a_namespace, a_prefix), a_value, curr)
 				handle_position (xml)
 			else
@@ -132,12 +127,7 @@ feature -- Tag
 			end
 		end
 
-	on_start_tag_finish
-			-- End of start tag.
-		do
-		end
-
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			if attached current_element as curr then
@@ -171,11 +161,8 @@ feature -- Content
 
 feature -- Events mode
 
-	has_resolved_namespaces: BOOLEAN
+	has_resolved_namespaces: BOOLEAN = True
 			-- Namespaces required
-		do
-			Result := True
-		end
 
 feature {NONE} -- Formatter
 
@@ -220,10 +207,16 @@ feature {NONE} -- Implementation
 			-- Not Yet Implemented
 		end
 
-	new_namespace (a_uri, a_prefix: STRING): XML_NAMESPACE
+	new_namespace (a_uri, a_prefix: detachable STRING): XML_NAMESPACE
 			-- Create namespace object.	
 		do
-			create Result.make (a_prefix, a_uri)
+			if a_uri /= Void then
+				create Result.make (a_prefix, a_uri)
+			else
+				--| Should not occur since `has_resolved_namespaces' is True
+				create Result.make (a_prefix, "")
+			end
+
 
 			-- share namespace nodes
 			check cache_initialised: namespace_cache /= Void end

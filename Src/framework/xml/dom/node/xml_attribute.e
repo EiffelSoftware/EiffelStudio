@@ -63,8 +63,8 @@ feature -- Status report
 	is_namespace_declaration: BOOLEAN
 			-- Is current attribute a namespace declaration?
 		do
-			if has_prefix then
-				Result := same_string (Xmlns, ns_prefix)
+			if attached ns_prefix as p and then has_prefix then
+				Result := same_string (Xmlns, p)
 			else
 				Result := same_string (Xmlns, name)
 			end

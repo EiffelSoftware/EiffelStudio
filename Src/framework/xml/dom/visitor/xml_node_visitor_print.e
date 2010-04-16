@@ -16,9 +16,17 @@ inherit
 
 feature -- Processing
 
-	process_nodes (elts: LIST [XML_NODE])
+	process_nodes (nodes: LIST [XML_NODE])
+			-- Process list of nodes `nodes'.
 		do
-			across elts as e loop e.item.process (Current) end
+			from
+				nodes.start
+			until
+				nodes.after
+			loop
+				nodes.item.process (Current)
+				nodes.forth
+			end
 		end
 
 	process_element (e: XML_ELEMENT)

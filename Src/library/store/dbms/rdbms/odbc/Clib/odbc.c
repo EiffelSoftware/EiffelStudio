@@ -896,7 +896,7 @@ int odbc_next_row (int no_des)
 							(tmpSQLSTATE[3] == '0') && (tmpSQLSTATE[4] == '4'))
 						{
 							size_t additional_length = odbc_indicator[no_des][i];
-							size_t old_length = GetDbColLength(dap, i);
+							size_t old_length = GetDbColLength(dap, i) + 1;
 							char *l_buffer = GetDbColPtr(dap,i);
 							ODBC_SAFE_ALLOC(l_buffer, (char *) realloc (l_buffer, old_length + additional_length));
 							SetDbColPtr(dap, i, l_buffer);

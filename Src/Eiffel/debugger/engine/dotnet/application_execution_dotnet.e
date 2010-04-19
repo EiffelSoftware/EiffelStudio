@@ -742,7 +742,6 @@ feature -- Query
 		local
 			l_icdframe: ICOR_DEBUG_FRAME
 			l_eifnet_debugger: like eifnet_debugger
-			l_once_data: detachable TUPLE [called: BOOLEAN; exc: ICOR_DEBUG_VALUE; res: ICOR_DEBUG_VALUE]
 		do
 			l_eifnet_debugger := Eifnet_debugger
 			l_icdframe := l_eifnet_debugger.current_stack_icor_debug_frame

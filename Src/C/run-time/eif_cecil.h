@@ -77,6 +77,7 @@ typedef EIF_INTEGER_32	(*EIF_INTEGER_32_FUNCTION)(EIF_REFERENCE, ...);		/* Retur
 #define EIF_INTEGER_FUNCTION EIF_INTEGER_32_FUNCTION
 typedef EIF_INTEGER_64	(*EIF_INTEGER_64_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Integer 64 bits */
 typedef EIF_BOOLEAN	(*EIF_BOOLEAN_FUNCTION)(EIF_REFERENCE, ...);		/* Returns an Eiffel Boolean */
+#define EIF_CHARACTER_FUNCTION EIF_CHARACTER_8_FUNCTION
 typedef EIF_CHARACTER_8	(*EIF_CHARACTER_8_FUNCTION)(EIF_REFERENCE, ...);		/* Returns char */
 typedef EIF_REAL_32	(*EIF_REAL_32_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Real */
 typedef EIF_REAL_64	(*EIF_REAL_64_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Double */
@@ -99,6 +100,7 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define eif_integer_32_function(rout,cid)	(EIF_INTEGER_32_FUNCTION) eifref(rout,cid)
 #define eif_integer_function(rout,cid)		(EIF_INTEGER_32_FUNCTION) eifref(rout,cid)
 #define eif_integer_64_function(rout,cid)	(EIF_INTEGER_64_FUNCTION) eifref(rout,cid)
+#define eif_character_function				eif_character_8_function
 #define eif_character_8_function(rout,cid)	(EIF_CHARACTER_8_FUNCTION) eifref(rout,cid)
 #define eif_character_32_function(rout,cid)	(EIF_CHARACTER_32_FUNCTION) eifref(rout,cid)
 #define eif_real_32_function(rout,cid)		(EIF_REAL_32_FUNCTION) eifref(rout,cid)
@@ -260,7 +262,7 @@ struct cecil_info {
 
 #define eif_proc		eif_procedure			/* Use `eif_procedure' instead */
 #define eif_fn_int		eif_integer_32_function			/* Use `eif_integer_32_function' instead */
-#define eif_fn_char		eif_character_function	/* Use `eif_character_function' instead */
+#define eif_fn_char		eif_character_8_function	/* Use `eif_character_8_function' instead */
 #define eif_fn_float	eif_real_function	/* Use `eif_real_function' instead */
 #define eif_fn_double	eif_double_function	/* Use `eif_double_function' instead */
 #define eif_fn_ref		eif_reference_function	/* Use `eif_reference_function' instead */

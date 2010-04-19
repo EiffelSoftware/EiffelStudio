@@ -2354,7 +2354,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
   SAFEARRAYBOUND * array_bound = 0;
   SAFEARRAY * c_safe_array = 0;
 
-  static EIF_CHARACTER_FUNCTION f_array_item = 0;
+  static EIF_CHARACTER_8_FUNCTION f_array_item = 0;
   static EIF_PROCEDURE p_array_create = 0;
   long * c_index = 0;
   char an_element = 0;
@@ -2407,7 +2407,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
   };
 
   if (0 == f_array_item)
-    f_array_item = eif_character_function ("item", ecom_array_tid);
+    f_array_item = eif_character_8_function ("item", ecom_array_tid);
   if (p_array_create)
     p_array_create = eif_procedure ("make", int_array_tid);
 

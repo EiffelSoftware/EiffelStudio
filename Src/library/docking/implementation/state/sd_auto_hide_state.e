@@ -149,7 +149,6 @@ feature -- Redefine
 			-- <Precursor>
 		local
 			l_floating_state: SD_FLOATING_STATE
-			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
 			docking_manager.command.lock_update (Void, True)
 			create l_floating_state.make (a_x, a_y, docking_manager, True)

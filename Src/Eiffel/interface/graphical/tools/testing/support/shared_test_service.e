@@ -135,6 +135,265 @@ feature {NONE} -- Basic operations
 			end
 		end
 
+	launch_test_generation (a_generator: TEST_GENERATOR; a_test_suite: TEST_SUITE_S; a_manager: SESSION_MANAGER_S; a_use_temporary: BOOLEAN)
+			-- Launch given generator with the settings stored in `a_session'.
+			--
+			-- Note: if `a_use_temporary' is true, the temporary types in the session settings are used.
+		require
+			a_generator_usable: a_generator.is_interface_usable
+			a_test_suite_usable: a_test_suite.is_interface_usable
+			a_manager_usable: a_manager.is_interface_usable
+			not_launched_yet: not a_generator.has_next_step
+		local
+			l_session, l_global_session: SESSION_I
+			l_value: ANY
+			l_list: LIST [STRING]
+		do
+			l_session := a_manager.retrieve (True)
+			l_global_session := a_manager.retrieve (False)
+			if a_use_temporary then
+				l_value := l_session.value_or_default ({TEST_SESSION_CONSTANTS}.temporary_types, {TEST_SESSION_CONSTANTS}.temporary_types_default)
+			else
+				l_value := l_session.value_or_default ({TEST_SESSION_CONSTANTS}.types, {TEST_SESSION_CONSTANTS}.types_default)
+			end
+			if attached {STRING} l_value as l_types then
+				l_list := l_types.split (',')
+				from
+					l_list.start
+				until
+					l_list.after
+				loop
+					if not l_list.item_for_iteration.is_empty then
+						a_generator.add_class_name (l_list.item_for_iteration)
+					end
+					l_list.forth
+				end
+			end
+
+			if
+				attached {NATURAL} l_global_session.value_or_default ({TEST_SESSION_CONSTANTS}.time_out,
+					{TEST_SESSION_CONSTANTS}.time_out_default) as l_timeout
+			then
+				a_generator.set_time_out (l_timeout)
+			end
+
+			if
+				attached {NATURAL} l_global_session.value_or_default ({TEST_SESSION_CONSTANTS}.invocation_count,
+					{TEST_SESSION_CONSTANTS}.invocation_count_default) as l_count
+			then
+				a_generator.set_test_count (l_count)
+			end
+
+			if
+				attached {BOOLEAN} l_global_session.value_or_default ({TEST_SESSION_CONSTANTS}.enable_slicing,
+					{TEST_SESSION_CONSTANTS}.enable_slicing_default) as l_enable
+			then
+				if l_enable then
+					a_generator.enable_slicing
+				end
+			end
+
+			if
+				attached {BOOLEAN} l_global_session.value_or_default ({TEST_SESSION_CONSTANTS}.enable_html_statistics,
+					{TEST_SESSION_CONSTANTS}.enable_html_statistics_default) as l_enable
+			then
+				a_generator.set_html_statistics (l_enable)
+			end
+				-- We always generate text statistics
+			a_generator.set_text_statistics (True)
+
+			if
+				attached {NATURAL} l_global_session.value_or_default ({TEST_SESSION_CONSTANTS}.proxy_time_out,
+					{TEST_SESSION_CONSTANTS}.proxy_time_out_default) as l_timeout
+			then
+				a_generator.set_proxy_timeout (l_timeout)
+			end
+
+			if
+				attached {NATURAL} l_global_session.value_or_default ({TEST_SESSION_CONSTANTS}.seed,
+					{TEST_SESSION_CONSTANTS}.seed_default) as l_seed
+			then
+				a_generator.set_seed (l_seed)
+			end
+
+			if
+				attached {BOOLEAN} l_global_session.value_or_default ({TEST_SESSION_CONSTANTS}.debugging,
+					{TEST_SESSION_CONSTANTS}.debugging_default) as l_debug
+			then
+				a_generator.set_debugging (l_debug)
+			end
+
+				-- Enable when developing
+			a_generator.set_debugging (False)
+
+			launch_test_creation (a_generator, a_test_suite, a_manager)
+		end
+
+	launch_default_test_extraction (a_creation: ETEST_EXTRACTION;
+	                                a_test_suite: TEST_SUITE_S;
+	                                a_manager: SESSION_MANAGER_S;
+	                                a_debugger: DEBUGGER_MANAGER)
+			-- Launch given extraction with the settings stored in `a_session'.
+		require
+			a_creation_usable: a_creation.is_interface_usable
+			a_test_suite_usable: a_test_suite.is_interface_usable
+			a_manager_usable: a_manager.is_interface_usable
+			not_launched_yet: not a_creation.has_next_step
+			a_debugger_valid: a_debugger.application_is_executing and then a_debugger.application_is_stopped
+		local
+			l_session: SESSION_I
+			l_count: INTEGER
+			l_stack: detachable EIFFEL_CALL_STACK
+			l_cse: CALL_STACK_ELEMENT
+			l_list: SEARCH_TABLE [INTEGER]
+		do
+			l_session := a_manager.retrieve (False)
+			if
+				attached {NATURAL} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.stack_frames,
+					{TEST_SESSION_CONSTANTS}.stack_frames_default) as l_frames
+			then
+				l_count := l_frames.as_integer_32
+			else
+				l_count := {TEST_SESSION_CONSTANTS}.stack_frames_default.as_integer_32
+			end
+
+			create l_list.make (l_count)
+			l_stack := a_debugger.application_status.current_call_stack
+			if l_stack /= Void then
+				from
+					l_stack.start
+				until
+					l_stack.after or l_list.count >= l_count
+				loop
+					l_cse := l_stack.item
+					if a_creation.is_valid_call_stack_element (l_cse.level_in_stack) then
+						l_list.force (l_cse.level_in_stack)
+					end
+					l_stack.forth
+				end
+			end
+
+			launch_test_extraction (a_creation, a_test_suite, a_manager, l_list)
+		end
+
+	launch_test_extraction (a_creation: ETEST_EXTRACTION;
+	                        a_test_suite: TEST_SUITE_S;
+	                        a_manager: SESSION_MANAGER_S;
+	                        a_stack_frame_list: SEARCH_TABLE [INTEGER])
+			-- Launch given extraction with the settings stored in `a_session'.
+		require
+			a_creation_usable: a_creation.is_interface_usable
+			a_test_suite_usable: a_test_suite.is_interface_usable
+			a_manager_usable: a_manager.is_interface_usable
+			not_launched_yet: not a_creation.has_next_step
+		local
+			l_stack_frame: INTEGER
+		do
+			from
+				a_stack_frame_list.start
+			until
+				a_stack_frame_list.after
+			loop
+				l_stack_frame := a_stack_frame_list.item_for_iteration
+				if a_creation.is_valid_call_stack_element (l_stack_frame) then
+					a_creation.add_call_stack_level (l_stack_frame)
+				end
+				a_stack_frame_list.forth
+			end
+			launch_test_creation (a_creation, a_test_suite, a_manager)
+		end
+
+	launch_manual_test_creation (a_creation: ETEST_MANUAL_CREATION; a_test_suite: TEST_SUITE_S; a_manager: SESSION_MANAGER_S)
+			-- Launch given creation with the settings stored in `a_session'.
+		require
+			a_creation_usable: a_creation.is_interface_usable
+			a_test_suite_usable: a_test_suite.is_interface_usable
+			a_manager_usable: a_manager.is_interface_usable
+			not_launched_yet: not a_creation.has_next_step
+		local
+			l_session: SESSION_I
+		do
+			l_session := a_manager.retrieve (True)
+
+			if
+				attached {STRING} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.routine_name,
+					{TEST_SESSION_CONSTANTS}.routine_name_default) as l_routine_name
+			then
+				a_creation.set_test_routine_name (l_routine_name)
+			end
+
+			if
+				attached {BOOLEAN} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.has_prepare,
+					{TEST_SESSION_CONSTANTS}.has_prepare_default) as l_has_prepare
+			then
+				a_creation.set_has_prepare (l_has_prepare)
+			end
+
+			if
+				attached {BOOLEAN} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.has_clean,
+					{TEST_SESSION_CONSTANTS}.has_clean_default) as l_has_clean
+			then
+				a_creation.set_has_clean (l_has_clean)
+			end
+
+			launch_test_creation (a_creation, a_test_suite, a_manager)
+		end
+
+	launch_test_creation (a_creation: ETEST_CREATION; a_test_suite: TEST_SUITE_S; a_manager: SESSION_MANAGER_S)
+			-- Launch given creation with the settings stored in `a_session'.
+		require
+			a_creation_usable: a_creation.is_interface_usable
+			a_test_suite_usable: a_test_suite.is_interface_usable
+			a_manager_usable: a_manager.is_interface_usable
+			not_launched_yet: not a_creation.has_next_step
+		local
+			l_session: SESSION_I
+			l_list: LIST [STRING]
+			l_tag: STRING
+		do
+			l_session := a_manager.retrieve (True)
+
+			if
+				attached {STRING} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.cluster_name,
+					{TEST_SESSION_CONSTANTS}.cluster_name_default) as l_cluster
+			then
+				a_creation.set_cluster_name (l_cluster)
+				if
+					attached {STRING} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.path,
+						{TEST_SESSION_CONSTANTS}.path_default) as l_path
+				then
+					a_creation.set_path_name (l_path)
+				end
+			end
+
+			if
+				attached {STRING} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.class_name,
+					{TEST_SESSION_CONSTANTS}.class_name_default) as l_name and then not l_name.is_empty
+			then
+				a_creation.set_class_name (l_name)
+			end
+
+			if
+				attached {STRING} l_session.value_or_default ({TEST_SESSION_CONSTANTS}.tags,
+					{TEST_SESSION_CONSTANTS}.tags_default) as l_tags
+			then
+				l_list := l_tags.split (',')
+				from
+					l_list.start
+				until
+					l_list.after
+				loop
+					l_tag := l_list.item_for_iteration
+					if not l_tag.is_empty then
+						a_creation.add_tag (l_tag)
+					end
+					l_list.forth
+				end
+			end
+
+			a_test_suite.launch_session (a_creation)
+		end
+
 feature {NONE} -- Events
 
 	on_session_launch_error (a_error: STRING_32)

@@ -187,7 +187,7 @@ feature {NONE} -- Access: widgets
 
 feature {NONE} -- Access: buttons
 
-	wizard_button: SD_TOOL_BAR_BUTTON
+	creation_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button for launching test wizard
 
 	run_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
@@ -207,7 +207,8 @@ feature {NONE} -- Access: menus
 	run_all_menu,
 	run_failing_menu,
 	run_selected_menu,
-	run_filtered_menu: EV_MENU_ITEM
+	run_filtered_menu,
+	run_preferences_menu: EV_MENU_ITEM
 			-- Menu items for running tests in background
 
 	debug_all_menu,
@@ -218,6 +219,56 @@ feature {NONE} -- Access: menus
 
 	auto_retrieve_menu: EV_CHECK_MENU_ITEM
 			-- Menu item for turning on/off automatic test retrieval
+
+feature {NONE} -- Access: test creation
+
+	test_creation_menu: EV_MENU
+			-- Menu for `creation_button'.
+		local
+			l_item: EV_MENU_ITEM
+			l_launch_wizard: BOOLEAN
+			l_suffix: STRING_32
+		do
+			create Result
+
+			l_launch_wizard := True
+			if session_manager.is_service_available then
+				if attached {BOOLEAN} session_data.value ({TEST_SESSION_CONSTANTS}.launch_wizard) as l_bool then
+					l_launch_wizard := l_bool
+				end
+			end
+			if l_launch_wizard then
+				l_suffix := "..."
+			else
+				l_suffix := ""
+			end
+
+			create l_item.make_with_text_and_action (locale.translation (create_manual_text) + l_suffix,
+				agent on_create_manual_test (l_launch_wizard))
+			Result.extend (l_item)
+
+			Result.extend (create {EV_MENU_SEPARATOR})
+
+			create l_item.make_with_text_and_action (locale.translation (generate_all_text) + l_suffix,
+				agent on_generate_test (l_launch_wizard))
+			Result.extend (l_item)
+
+			create l_item.make_with_text_and_action (locale.translation (generate_custom_text) + l_suffix,
+				agent on_generate_custom_test (l_launch_wizard))
+			Result.extend (l_item)
+
+			Result.extend (create {EV_MENU_SEPARATOR})
+
+			create l_item.make_with_text_and_action (locale.translation (extract_text) + l_suffix,
+				agent on_extract_test (l_launch_wizard))
+			Result.extend (l_item)
+
+			Result.extend (create {EV_MENU_SEPARATOR})
+
+			create l_item.make_with_text_and_action (locale.translation (preferences_text) + "...",
+				agent on_launch_creation_preferences)
+			Result.extend (l_item)
+		end
 
 feature {NONE} -- Status setting: stones
 
@@ -264,14 +315,52 @@ feature -- Basic operations
 			test_tree.set_filter (a_filter)
 		end
 
-feature {NONE} -- Events: wizard
+feature {NONE} -- Events: test creation
 
 	on_launch_wizard
-			-- Called when user_widget click on `wizard_button'.
+			-- Called when user_widget click on `creation_button'.
 		local
 			l_wizard: ES_TEST_WIZARD_MANAGER
 		do
 			create l_wizard.make (develop_window)
+		end
+
+	on_create_manual_test (a_launch_wizard: BOOLEAN)
+			-- Launch manual test creation.
+			--
+			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
+		do
+
+		end
+
+	on_generate_test (a_launch_wizard: BOOLEAN)
+			-- Launch test generation for open classes.
+			--
+			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
+		do
+
+		end
+
+	on_generate_custom_test (a_launch_wizard: BOOLEAN)
+			-- Launch test generation for custom type list.
+			--
+			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
+		do
+
+		end
+
+	on_extract_test (a_launch_wizard: BOOLEAN)
+			-- Launch test extraction.
+			--
+			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
+		do
+
+		end
+
+	on_launch_creation_preferences
+			-- Launch creation preferences wizard.
+		do
+
 		end
 
 feature {NONE} -- Events: test execution
@@ -517,13 +606,15 @@ feature {NONE} -- Factory
 		do
 			create Result.make (7)
 
-			create wizard_button.make
-			wizard_button.set_tooltip (locale_formatter.translation (tt_wizard))
-			wizard_button.set_pixmap (test_creation_pixmap)
-			wizard_button.set_pixel_buffer (test_creation_pixel_buffer)
-			register_action (wizard_button.select_actions, agent on_launch_wizard)
-			Result.force_last (wizard_button)
+			create creation_button.make
+			creation_button.set_tooltip (locale_formatter.translation ("Create new test"))
+			creation_button.set_pixmap (test_creation_pixmap)
+			creation_button.set_pixel_buffer (test_creation_pixel_buffer)
+			creation_button.set_menu_function (agent test_creation_menu)
+			register_action (creation_button.select_actions, agent on_launch_wizard)
+			Result.force_last (creation_button)
 
+				-- Test generation button	
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Create run button
@@ -546,6 +637,35 @@ feature {NONE} -- Factory
 			create run_selected_menu.make_with_text (locale_formatter.translation (m_run_selected))
 			register_action (run_selected_menu.select_actions, agent on_run_selected (False))
 			l_menu.extend (run_selected_menu)
+
+			l_menu.extend (create {EV_MENU_SEPARATOR})
+
+			l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Wizard%T...", agent
+				local
+					l_comp: ES_TEST_WIZARD_COMPOSITION
+					l_wizard: ES_TEST_LAUNCH_WIZARD
+				do
+					create l_comp.make ("Create something", <<
+						create {ES_TEST_GENERAL_WIZARD_PAGE},
+						create {ES_TEST_GENERATION_WIZARD_PAGE},
+						create {ES_TEST_MANUAL_WIZARD_PAGE} >>)
+					create l_wizard.make (l_comp, develop_window.window)
+				end))
+
+			l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Preferences%T...", agent
+				local
+					l_comp: ES_TEST_WIZARD_COMPOSITION
+					l_wizard: ES_TEST_PREFERENCE_WIZARD
+				do
+					create l_comp.make ("Creation settings", <<
+						create {ES_TEST_GENERAL_WIZARD_PAGE},
+						create {ES_TEST_TAGS_WIZARD_PAGE},
+						create {ES_TEST_GENERATION_WIZARD_PAGE},
+						create {ES_TEST_EXTRACTION_WIZARD_PAGE}.make,
+						create {ES_TEST_MANUAL_WIZARD_PAGE}>>)
+					create l_wizard.make (l_comp, develop_window.window)
+				end))
+
 			run_button.set_menu (l_menu)
 
 			Result.force_last (run_button)
@@ -570,6 +690,17 @@ feature {NONE} -- Factory
 			create debug_selected_menu.make_with_text (locale_formatter.translation (m_debug_selected))
 			register_action (debug_selected_menu.select_actions, agent on_run_selected (True))
 			l_menu.extend (debug_selected_menu)
+
+			l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Wizard%T...", agent
+				local
+					l_comp: ES_TEST_WIZARD_COMPOSITION
+					l_wizard: ES_TEST_PREFERENCE_WIZARD
+				do
+					create l_comp.make ("Execution settings", <<
+						create {ES_TEST_EXECUTION_WIZARD_PAGE} >>)
+					create l_wizard.make (l_comp, develop_window.window)
+				end))
+
 			debug_button.set_menu (l_menu)
 
 			Result.force_last (debug_button)
@@ -606,7 +737,12 @@ feature {NONE} -- Internationalization
 	t_execution: STRING = "Execution"
 	t_creation: STRING = "Creation"
 
-	tt_wizard: STRING = "Create new tests"
+	create_manual_text: STRING = "Create manual test"
+	generate_all_text: STRING = "Generate tests for all open classes"
+	generate_custom_text: STRING = "Generate tests for custom types"
+	extract_text: STRING = "Extract tests from debugger"
+	preferences_text: STRING = "Preferences"
+
 	f_run_button: STRING = "Run all tests in background"
 	f_debug_button: STRING = "Debug all tests in EiffelStudio"
 	f_stop_button: STRING = "Stop all test related tasks"

@@ -65,7 +65,7 @@ feature
 			-- Mark local as used
 		do
 			context.mark_local_used (position)
-			if c_type.is_pointer then
+			if c_type.is_reference then
 				context.set_local_index (register_name, Current)
 			end
 		end

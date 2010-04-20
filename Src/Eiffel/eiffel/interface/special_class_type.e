@@ -332,7 +332,7 @@ feature {NONE} -- C code generation
 			buffer.put_gtcx
 
 			if not final_mode then
-				if not type_c.is_pointer then
+				if not type_c.is_reference then
 					buffer.put_new_line
 					buffer.put_string ("if (arg1x.type == SK_REF) arg1x.")
 					type_c.generate_typed_field (buffer)
@@ -355,7 +355,7 @@ feature {NONE} -- C code generation
 			end
 
 			if not final_mode or else system.check_for_catcall_at_runtime then
-				if gen_param.c_type.is_pointer then
+				if gen_param.c_type.is_reference then
 					byte_context.set_byte_code (byte_server.disk_item (feat.body_index))
 					byte_context.set_current_feature (feat)
 					if l_param_is_expanded then
@@ -505,7 +505,7 @@ feature {NONE} -- C code generation
 
 			if not final_mode then
 				buffer.put_new_line
-				if not type_c.is_pointer then
+				if not type_c.is_reference then
 					buffer.put_new_line
 					buffer.put_string ("if (arg1x.type == SK_REF) arg1x.")
 					type_c.generate_typed_field (buffer)
@@ -524,7 +524,7 @@ feature {NONE} -- C code generation
 			end
 
 			if not final_mode or else system.check_for_catcall_at_runtime then
-				if gen_param.c_type.is_pointer then
+				if gen_param.c_type.is_reference then
 					byte_context.set_byte_code (byte_server.disk_item (feat.body_index))
 					byte_context.set_current_feature (feat)
 					if l_param_is_expanded then

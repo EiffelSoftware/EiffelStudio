@@ -802,7 +802,7 @@ feature {NONE} -- Generation
 					until
 						i <= 0
 					loop
-						if solved_type (l_type, args.i_th (i)).is_pointer then
+						if solved_type (l_type, args.i_th (i)).is_reference then
 							reference_arg.put (True, i)
 							reference_arg_count := reference_arg_count + 1
 						else
@@ -928,7 +928,7 @@ feature {NONE} -- Generation
 						-- It is pretty important that we use `actual_type.is_formal' and not
 						-- just `is_formal' because otherwise if you have `like x' and `x: G'
 						-- then we would fail to detect that.
-					if final_mode and then seed /= Void and then seed.type.actual_type.is_formal and then not c_return_type.is_pointer then
+					if final_mode and then seed /= Void and then seed.type.actual_type.is_formal and then not c_return_type.is_reference then
 						buffer.put_character ('*')
 						c_return_type.generate_access_cast (buffer)
 					end

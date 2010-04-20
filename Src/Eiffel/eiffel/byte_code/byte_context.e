@@ -501,7 +501,7 @@ feature -- C code generation: once features
 				if type_c.is_void then
 						-- It is a once procedure
 					buf.put_string ("RTOUCP(")
-				elseif type_c.is_pointer then
+				elseif type_c.is_reference then
 						-- It is a once function returning reference
 					buf.put_string ("RTOUCR(")
 				else
@@ -1517,7 +1517,7 @@ feature -- Access
 			if not in_inlined_code then
 				if
 					not result_used and
-					real_type (byte_code.result_type).c_type.is_pointer and
+					real_type (byte_code.result_type).c_type.is_reference and
 					(not byte_code.is_process_or_thread_relative_once)
 				then
 					set_local_index ("Result", Result_register)
@@ -1966,7 +1966,7 @@ feature -- Access
 					reg := associated.item (rname)
 
 					check
-						reference_type: not reg.is_current implies reg.c_type.is_pointer
+						reference_type: not reg.is_current implies reg.c_type.is_reference
 					end
 
 					buf.put_local_registration (position, rname)
@@ -2010,7 +2010,7 @@ feature -- Access
 			l_optimized: BOOLEAN
 			l_if_required: BOOLEAN
 		do
-			if a_type.c_type.is_pointer and not a_type.is_none then
+			if a_type.c_type.is_reference and not a_type.is_none then
 				buf := buffer
 					-- If the type is not attached, we have an optimization to not compute the dynamic
 					-- type of the expected type. However when the expected type is a formal, or an anchor
@@ -2103,7 +2103,7 @@ feature -- Access
 		local
 			l_name: STRING
 		do
-			if a_type.c_type.is_pointer and not a_type.is_none then
+			if a_type.c_type.is_reference and not a_type.is_none then
 				ba.append ({BYTE_CONST}.bc_catcall)
 
 					-- Special handling of routines taking `like Current' in non-generic classes as long

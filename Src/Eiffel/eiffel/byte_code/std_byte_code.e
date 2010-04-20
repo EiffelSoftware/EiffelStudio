@@ -947,7 +947,7 @@ end
 					loop
 						c_type := context.real_type (types [i]).c_type
 						buf.put_new_line_only
-						if not c_type.is_pointer then
+						if not c_type.is_reference then
 								-- The argument type is not reference, so it might be boxed.
 							buf.put_indentation
 							buf.put_string ("if (arg")
@@ -1466,7 +1466,7 @@ end
 							l_type := l_argument_types [i]
 								-- We instantiate `l_type' in current context to see if it is
 								-- really a reference
-							if context.real_type (l_type).c_type.is_pointer then
+							if context.real_type (l_type).c_type.is_reference then
 								l_any_type ?= l_type
 									-- Only generate a catcall detection if the expected argument is different
 									-- than ANY since ANY is the ancestor to all types.

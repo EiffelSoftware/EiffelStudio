@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 				until
 					i > nb
 				loop
-					if real_type (arguments.item (i)).c_type.is_pointer then
+					if real_type (arguments.item (i)).c_type.is_reference then
 						has_hector_variables := True
 						create l_arg
 						l_arg.set_position (i)
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 				i > nb
 			loop
 				l_buf.put_new_line
-				if real_type (arguments.item (i)).c_type.is_pointer then
+				if real_type (arguments.item (i)).c_type.is_reference then
 					l_buf.put_string ("EIF_OBJECT larg")
 					l_buf.put_integer (i)
 					l_buf.put_string (" = RTHP(")
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 			until
 				i > nb
 			loop
-				if real_type (arguments.item (i)).c_type.is_pointer then
+				if real_type (arguments.item (i)).c_type.is_reference then
 					Result := Result + 1
 				end
 				i := i + 1

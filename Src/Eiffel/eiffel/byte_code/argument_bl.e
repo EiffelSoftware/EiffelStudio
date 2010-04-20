@@ -52,7 +52,7 @@ feature
 	analyze
 			-- Compute an index in the local variable array if type is pointer
 		do
-			if c_type.is_pointer then
+			if c_type.is_reference then
 				context.set_local_index (register_name, Current);
 			end;
 		end;

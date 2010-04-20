@@ -77,7 +77,7 @@ feature -- C Code generation
 				source.generate
 				if context.workbench_mode or system.check_for_catcall_at_runtime then
 					l_target_type := real_type (tuple_element_type)
-					if l_target_type.c_type.is_pointer then
+					if l_target_type.c_type.is_reference then
 						context.generate_catcall_check (source, l_target_type, position, False)
 					end
 				end
@@ -107,7 +107,7 @@ feature -- C Code generation
 			buf: like buffer
 		do
 			buf := buffer
-			if real_type (tuple_element_type).c_type.is_pointer then
+			if real_type (tuple_element_type).c_type.is_reference then
 					-- It's possible that the actual item is of a basic type, it should be boxed before use then.
 					-- The check that  TUPLE is not Void is included in "eif_boxed_item" macro, so RTCV is not generated.
 				buf.put_string ("eif_boxed_item(")

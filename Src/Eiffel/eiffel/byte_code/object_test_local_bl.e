@@ -82,7 +82,7 @@ feature -- Code generation
 	analyze
 			-- Register object test local.
 		do
-			if c_type.is_pointer then
+			if c_type.is_reference then
 				context.set_local_index (register_name, Current)
 			end
 		end

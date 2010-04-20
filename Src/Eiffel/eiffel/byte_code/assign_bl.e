@@ -256,11 +256,11 @@ feature
 							--     we have to do the same for basic types, but this time is to ensure
 							--     that target is actually evaluated after source. This is only needed
 							--     if source allocates some memory.
-						if not source.allocates_memory and not target.c_type.is_pointer  then
+						if not source.allocates_memory and not target.c_type.is_reference  then
 							source.propagate (No_register)
 						end
 					end
-					if target.c_type.is_pointer then
+					if target.c_type.is_reference then
 							-- Mark current as used for RTAP.
 						context.mark_current_used
 					end
@@ -485,7 +485,7 @@ feature
 				-- aging test for references within the expanded
 			need_aging_tests :=
 				how /= copy_assignment and
-				not target.is_predefined and target_c_type.is_pointer
+				not target.is_predefined and target_c_type.is_reference
 			if need_aging_tests then
 					-- For strings constants, we have to be careful. Put its
 					-- address in a temporary register before RTAR can
@@ -600,7 +600,7 @@ feature
 			target_type: CL_TYPE_A
 		do
 			buf := buffer
-			if not target.is_predefined and target.c_type.is_pointer then
+			if not target.is_predefined and target.c_type.is_reference then
 					-- Assignment on attribute. We need aging test, thus we use RTXA.
 					-- FIXME: Optimization for attributes which are known to not have
 					-- references in final mode, we should just do a `memmove' which

@@ -58,7 +58,7 @@ feature
 			-- Get a register for C type `c_type'
 		do
 			regnum := context.register_server.get_register (level)
-			if c_type.is_pointer then
+			if c_type.is_reference then
 				context.set_local_index (register_name, Current)
 			end
 		ensure then

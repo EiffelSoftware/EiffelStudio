@@ -76,7 +76,7 @@ feature -- Comparison
 
 feature -- Status Report
 
-	is_pointer: BOOLEAN
+	is_reference: BOOLEAN
 			-- Is C type a reference type
 		do
 		end

@@ -10,7 +10,7 @@ class REFERENCE_I
 inherit
 	TYPE_C
 		redefine
-			is_pointer
+			is_reference
 		end
 
 feature -- Access
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_pointer: BOOLEAN = True
+	is_reference: BOOLEAN = True
 			-- The C type is a reference type.
 
 feature -- C code generation

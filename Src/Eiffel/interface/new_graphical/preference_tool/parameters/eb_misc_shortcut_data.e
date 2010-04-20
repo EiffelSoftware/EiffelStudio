@@ -248,6 +248,8 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([False, True, False, key_strings.item (key_f5).twin.as_string_8], "run_ignore_breakpoints")
 			l_hash.put ([False, True, True, key_strings.item (key_f5).twin.as_string_8], "pause_application")
 			l_hash.put ([False, False, True, key_strings.item (key_f5).twin.as_string_8], "stop_application")
+			l_hash.put ([True, True, False, key_strings.item (key_f5).twin.as_string_8], "run_workbench_outside")
+			l_hash.put ([True, True, True, key_strings.item (key_f5).twin.as_string_8], "run_finalized_outside")
 
 			l_hash.put ([True, True, False, key_strings.item (Key_s).twin.as_string_8], "show_call_stack_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_p).twin.as_string_8], "show_threads_tool")
@@ -261,7 +263,7 @@ invariant
 	preferences_not_void: preferences /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

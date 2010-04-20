@@ -15,6 +15,11 @@ inherit
 			new_sd_toolbar_item
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -23,6 +28,11 @@ feature -- Initialization
 	make
 			-- Initialize `Current'.
 		do
+			if attached preferences.misc_shortcut_data.shortcuts.item ("run_finalized_outside") as l_shortcut then
+				create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+				set_referred_shortcut (l_shortcut)
+				accelerator.actions.extend (agent execute)
+			end
 		end
 
 feature -- Execution
@@ -136,3 +146,4 @@ note
 		]"
 
 end -- class EB_EXEC_FINALIZED_CMD
+

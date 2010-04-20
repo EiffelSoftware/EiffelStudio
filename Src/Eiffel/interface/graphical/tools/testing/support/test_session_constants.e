@@ -117,7 +117,6 @@ feature -- Access: Creation (Extraction)
 	stack_frames: STRING = "com.eiffel.autotest.stack_frames"
 	stack_frames_default: NATURAL = 5
 			-- Number of stack frames extracted by default (global)
-
 feature -- Access: Tool
 
 	auto_retrieve: STRING = "com.eiffel.testing_tool.auto_retrieve"

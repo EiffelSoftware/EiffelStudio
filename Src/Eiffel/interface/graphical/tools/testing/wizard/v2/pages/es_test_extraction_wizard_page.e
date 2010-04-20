@@ -10,6 +10,17 @@ class
 inherit
 	ES_TEST_WIZARD_PAGE
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Initialize `Current'.
+		do
+			create call_stack_elements.make (10)
+		end
+
 feature -- Access
 
 	title: STRING_32
@@ -18,12 +29,15 @@ feature -- Access
 			Result := locale.translation (t_title)
 		end
 
+	call_stack_elements: SEARCH_TABLE [INTEGER]
+			-- Call stack items selected by user
+
 feature {NONE} -- Factory
 
 	new_panel (a_composition: ES_TEST_WIZARD_COMPOSITION): ES_TEST_EXTRACTION_WIZARD_PAGE_PANEL
 			-- <Precursor>
 		do
-			create Result.make (a_composition)
+			create Result.make (a_composition, call_stack_elements)
 		end
 
 feature {NONE} -- Internationalization

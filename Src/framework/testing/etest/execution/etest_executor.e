@@ -52,6 +52,9 @@ feature {NONE} -- Initialization
 		require
 			an_execution_attached: an_execution /= Void
 			an_etest_suite_attached: an_etest_suite /= Void
+		local
+			l_service: SERVICE_CONSUMER [SESSION_MANAGER_S]
+			l_session: SESSION_I
 		do
 			test_execution := an_execution
 			etest_suite := an_etest_suite
@@ -60,7 +63,14 @@ feature {NONE} -- Initialization
 			create occupied_controllers.make (10)
 			tasks := empty_tasks
 			create byte_code_factory
-			max_controller_count := etest_suite.preferences.evaluator_count.value
+			create l_service
+			max_controller_count := 1
+			if l_service.is_service_available then
+				l_session := l_service.service.retrieve (False)
+				if attached {NATURAL} l_session.value ("com.eiffel.autotest.concurrent_executors") as l_count then
+					max_controller_count := l_count.as_integer_32
+				end
+			end
 		ensure
 			test_execution_set: test_execution = an_execution
 			etest_suite_set: etest_suite = an_etest_suite

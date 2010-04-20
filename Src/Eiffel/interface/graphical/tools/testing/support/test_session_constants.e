@@ -60,6 +60,12 @@ feature -- Access: Creation (Manual)
 
 feature -- Access: Creation (Generation)
 
+	temporary_types: STRING = "com.eiffel.autotest.temporary_types"
+	temporary_types_default: STRING = ""
+			-- Types test generation will test in the next run
+			--
+			-- Note: currently not providing any types makes test generationtest all classes in the system.
+
 	types: STRING = "com.eiffel.autotest.types"
 	types_default: STRING = ""
 			-- Types test generation should test by default if no other type is provided (project)
@@ -83,7 +89,7 @@ feature -- Access: Creation (Generation)
 			-- Should generated tests be minimized using slicing? (global)
 
 	enable_ddmin: STRING = "com.eiffel.autotest.ddmin"
-	enable_ddmin_default: BOOLEAN = True
+	enable_ddmin_default: BOOLEAN = False
 			-- Should generated tests be minimized using ddmin? (global)
 
 	enable_text_statistics: STRING = "com.eiffel.autotest.text_statistics"
@@ -108,12 +114,19 @@ feature -- Access: Creation (Generation)
 
 feature -- Access: Creation (Extraction)
 
+	stack_frames: STRING = "com.eiffel.autotest.stack_frames"
+	stack_frames_default: NATURAL = 5
+			-- Number of stack frames extracted by default (global)
 
 feature -- Access: Tool
 
 	auto_retrieve: STRING = "com.eiffel.testing_tool.auto_retrieve"
 	auto_retrieve_default: BOOLEAN = False
 			-- Auto retrieve ID for session manager
+
+	launch_wizard: STRING = "com.eiffel.testing_tool.launch_wizard"
+	launch_wizard_default: BOOLEAN = True
+			-- Should wizard always be shown before launching a test creation?
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

@@ -194,7 +194,7 @@ feature -- Byte code generation
 			-- Generate feature call in a `typ' context
 			-- in workbench mode.
 		require
-			result_register_attached: c_type.is_pointer implies result_register /= Void
+			result_register_attached: c_type.is_reference implies result_register /= Void
 		local
 			is_nested: BOOLEAN
 			rout_info: ROUT_INFO
@@ -218,7 +218,7 @@ feature -- Byte code generation
 			if not return_type.is_void then
 				buf.put_character ('(')
 				buf.put_character ('(')
-				if return_type.is_pointer then
+				if return_type.is_reference then
 					context.print_argument_register (result_register, buf)
 					buf.put_string (" = ")
 				end
@@ -274,7 +274,7 @@ feature -- Byte code generation
 	generate_workbench_end (result_register: REGISTER)
 			-- Generate final portion of C code in workbench mode.
 		require
-			result_register_attached: c_type.is_pointer implies result_register /= Void
+			result_register_attached: c_type.is_reference implies result_register /= Void
 		local
 			buf: GENERATION_BUFFER
 			return_type: TYPE_C
@@ -283,7 +283,7 @@ feature -- Byte code generation
 			buf := buffer
 			l_context := context
 			return_type := c_type
-			if return_type.is_pointer then
+			if return_type.is_reference then
 					-- Return value might be unboxed.
 					-- It should be boxed now.
 					-- The type of the result register has to be preserved.

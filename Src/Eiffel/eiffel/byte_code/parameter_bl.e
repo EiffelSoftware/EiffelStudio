@@ -67,7 +67,7 @@ feature -- Settings
 			-- Propagate a register in expression.
 		do
 			expression.propagate (r);
-			if r /= No_register and then r.c_type.is_pointer then
+			if r /= No_register and then r.c_type.is_reference then
 				register := r;
 			end;
 		end;

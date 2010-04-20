@@ -47,7 +47,7 @@ feature -- C code generation
 		do
 			Precursor (reg)
 			return_type := c_type
-			if return_type.is_pointer then
+			if return_type.is_reference then
 					-- Do not use reference type because this register should not be tracked by GC.
 				result_register := context.get_argument_register (pointer_type.c_type)
 			end

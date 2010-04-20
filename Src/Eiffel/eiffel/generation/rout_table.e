@@ -524,7 +524,7 @@ feature {NONE} -- Implementation
 						-- and the current type a basic type but we could easily change
 						-- that in the future if the language rules were to change.
 					check
-						different_types: l_seed_type.is_pointer and not l_type.is_pointer
+						different_types: l_seed_type.is_reference and not l_type.is_reference
 					end
 						-- In this case, we need to box the result type and for that we need
 						-- to store the boxed result in `Result' and the actual result in `r'.
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 						-- and the current type a basic type but we could easily change
 						-- that in the future if the language rules were to change.
 					check
-						different_types: l_seed_type.is_pointer and not l_type.is_pointer
+						different_types: l_seed_type.is_reference and not l_type.is_reference
 					end
 						-- Unbox the value
 					buffer.put_character ('*')

@@ -449,7 +449,7 @@ feature
 					parameters.replace (expr_b.enlarged);
 					if
 						not l_encapsulated and then
-						(not expr_b.is_hector and real_type (expr_b.type).c_type.is_pointer)
+						(not expr_b.is_hector and real_type (expr_b.type).c_type.is_reference)
 					then
 							-- We are handling an external whose parameter's type is not an
 							-- Eiffel basic type. We will need to call the encapsulated version as

@@ -90,7 +90,7 @@ feature
 				-- Current needed in the access if target is not predefined
 				-- or if target is generic.
 
-			if not target.is_predefined and target.c_type.is_pointer then
+			if not target.is_predefined and target.c_type.is_reference then
 				l_context.mark_current_used
 			end
 			if gen_type /= Void then

@@ -113,14 +113,14 @@ feature -- Status
 			l_area: SPECIAL [EXPR_B]
 		do
 			is_in_register := register /= Void and register /= No_register
-			if is_in_register and register.c_type.is_pointer then
+			if is_in_register and register.c_type.is_reference then
 					-- Access is stored in a pointer register
 				Result := True
 			else
 				if parent = Void or else parent.target.is_current then
 						-- True access: we may need Current.
 					Result := (current_needed_for_access and not is_in_register)
-						or (is_result and c_type.is_pointer)
+						or (is_result and c_type.is_reference)
 				end
 					-- Check the parameters if needed, i.e. if there are
 					-- any and if the access is not already stored in a

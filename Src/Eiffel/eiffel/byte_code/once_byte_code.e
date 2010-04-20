@@ -151,7 +151,7 @@ feature {NONE} -- C code generation: implementation
 				else
 					c_type_name := type_i.c_type.c_string
 				end
-				if type_i.c_type.is_pointer then
+				if type_i.c_type.is_reference then
 						-- Reference result type
 				else
 						-- Basic result type
@@ -197,7 +197,7 @@ feature {NONE} -- C code generation: implementation
 				else
 					c_type_name := type_i.c_type.c_string
 				end
-				if type_i.c_type.is_pointer then
+				if type_i.c_type.is_reference then
 						-- Reference result type
 					data_macro_suffix := 'R'
 				else
@@ -244,7 +244,7 @@ feature {NONE} -- C code generation: implementation
 				else
 					c_type_name := type_i.c_type.c_string
 				end
-				if type_i.c_type.is_pointer then
+				if type_i.c_type.is_reference then
 						-- Reference result type
 					data_macro_suffix := 'R'
 				else
@@ -382,7 +382,7 @@ feature -- C code generation
 						buf.put_new_line
 						buf.put_string ("RTOQP;")
 						if context.result_used then
-							if real_type(result_type).c_type.is_pointer then
+							if real_type(result_type).c_type.is_reference then
 								buf.put_new_line
 								buf.put_string ("RTOC_GLOBAL(Result);")
 							end
@@ -403,7 +403,7 @@ feature -- C code generation
 						buf.put_string ("#define Result RTOPR(")
 						buf.put_integer (body_index)
 						buf.put_character (')')
-						if real_type(result_type).c_type.is_pointer then
+						if real_type(result_type).c_type.is_reference then
 							buf.put_new_line
 							buf.put_string ("RTOC_GLOBAL(Result);")
 						end
@@ -424,7 +424,7 @@ feature -- C code generation
 							buf.put_string ("#define Result RTOSR(")
 							buf.put_integer (body_index)
 							buf.put_character (')')
-							if real_type(result_type).c_type.is_pointer then
+							if real_type(result_type).c_type.is_reference then
 								buf.put_new_line
 								buf.put_string ("RTOC_NEW(Result);")
 							end

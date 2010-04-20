@@ -126,12 +126,12 @@ feature -- Pattern generation
 			until
 				i > nb
 			loop
-				if argument_types.item (i).is_pointer then
+				if argument_types.item (i).is_reference then
 					Result := Result + 1;
 				end;
 				i := i + 1;
 			end;
-			if result_type.is_pointer then
+			if result_type.is_reference then
 				Result := Result + 1;
 			end;
 		end;
@@ -141,7 +141,7 @@ feature -- Pattern generation
 		require
 			index_small_enough: j <= argument_count;
 			index_large_enough: j >= 1;
-			consistency: argument_types.item (j).is_pointer;
+			consistency: argument_types.item (j).is_reference;
 		local
 			i: INTEGER;
 		do
@@ -150,7 +150,7 @@ feature -- Pattern generation
 			until
 				i > j
 			loop
-				if argument_types.item (i).is_pointer then
+				if argument_types.item (i).is_reference then
 					Result := Result + 1;
 				end;
 				i := i + 1
@@ -278,7 +278,7 @@ feature -- Pattern generation
 				buffer.put_new_line
 				buffer.put_string (once "it = iget();")
 				buffer.put_new_line
-				if result_type.is_pointer then
+				if result_type.is_reference then
 						-- Result might need to be boxed.
 					buffer.put_string (
 						once "[
@@ -330,7 +330,7 @@ feature -- Pattern generation
 			buffer.put_string ("xinterp(IC, ")
 			buffer.put_integer (argument_count + 1)
 			buffer.put_two_character (')', ';')
-			if result_type.is_pointer then
+			if result_type.is_reference then
 					-- Mask type-specific bits of the type tag
 					-- because they are not expected on the C side.
 				buffer.put_new_line
@@ -366,7 +366,7 @@ feature -- Pattern generation
 			loop
 				arg := argument_types.item (i);
 				buffer.put_new_line
-				if arg.is_pointer then
+				if arg.is_reference then
 						-- Reference value can be used as it is.
 					buffer.put_string ("*iget() = arg")
 					buffer.put_integer (i)

@@ -860,7 +860,7 @@ end
 						l_type := l_argument_types [i]
 							-- We instantiate `l_type' in current context to see if it is
 							-- really a reference
-						if context.real_type (l_type).c_type.is_pointer then
+						if context.real_type (l_type).c_type.is_reference then
 							l_any_type ?= l_type
 								-- Only generate a catcall detection if the expected argument is different
 								-- than ANY since ANY is the ancestor to all types.

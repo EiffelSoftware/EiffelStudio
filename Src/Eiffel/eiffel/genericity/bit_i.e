@@ -11,7 +11,7 @@ inherit
 	BASIC_I
 		redefine
 			is_bit,
-			is_pointer,
+			is_reference,
 			generate_typed_tag,
 			generate_default_value
 		end
@@ -84,7 +84,7 @@ feature -- Status report
 	is_bit: BOOLEAN = True
 			-- Is the type a long type ?
 
-	is_pointer: BOOLEAN = True
+	is_reference: BOOLEAN = True
 			-- Is the type a pointer type ?
 
 feature -- Byte code generation

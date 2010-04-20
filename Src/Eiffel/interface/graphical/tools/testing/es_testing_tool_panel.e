@@ -111,6 +111,7 @@ feature {NONE} -- Initialization: widget status
 				agent (a_test_suite: TEST_SUITE_S)
 					do
 						a_test_suite.test_suite_connection.connect_events (Current)
+						register_factories (a_test_suite)
 					end)
 			propagate_drop_actions (Void)
 
@@ -151,6 +152,13 @@ feature {NONE} -- Initialization: widget status
 			l_app.add_idle_action_kamikaze (agent split_area.set_proportion ({REAL_32} 0.5))
 		end
 
+	register_factories (a_test_suite: TEST_SUITE_S)
+			-- Register {ETEST_*} factories in test suite service.
+		once
+			a_test_suite.register_factory (create {ETEST_DEFAULT_SESSION_FACTORY [ETEST_MANUAL_CREATION]})
+			a_test_suite.register_factory (create {ETEST_DEFAULT_SESSION_FACTORY [TEST_GENERATOR]})
+			a_test_suite.register_factory (create {ETEST_DEFAULT_SESSION_FACTORY [ETEST_EXTRACTION]})
+		end
 
 feature -- Access: help
 
@@ -317,50 +325,144 @@ feature -- Basic operations
 
 feature {NONE} -- Events: test creation
 
-	on_launch_wizard
-			-- Called when user_widget click on `creation_button'.
-		local
-			l_wizard: ES_TEST_WIZARD_MANAGER
-		do
-			create l_wizard.make (develop_window)
-		end
-
 	on_create_manual_test (a_launch_wizard: BOOLEAN)
 			-- Launch manual test creation.
 			--
 			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
+		local
+			l_composition: ES_TEST_WIZARD_COMPOSITION
+			l_wizard: ES_TEST_LAUNCH_WIZARD
+			l_launch: BOOLEAN
 		do
-
+			if a_launch_wizard then
+				create l_composition.make (locale.translation ("Create manual test"), <<
+					create {ES_TEST_MANUAL_WIZARD_PAGE},
+					create {ES_TEST_TAGS_WIZARD_PAGE},
+					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
+				create l_wizard.make (l_composition, develop_window.window)
+				l_launch := l_wizard.is_launch_requested
+			else
+				l_launch := True
+			end
+			if l_launch and session_manager.is_service_available then
+				launch_session_type ({ETEST_MANUAL_CREATION}, agent launch_manual_test_creation (?, session_manager.service))
+			end
 		end
 
 	on_generate_test (a_launch_wizard: BOOLEAN)
 			-- Launch test generation for open classes.
 			--
 			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
+		local
+			l_composition: ES_TEST_WIZARD_COMPOSITION
+			l_wizard: ES_TEST_LAUNCH_WIZARD
+			l_launch: BOOLEAN
+			l_types: STRING
 		do
-
+			create l_types.make (200)
+			if attached window_manager.windows as l_windows then
+				if attached {EB_DEVELOPMENT_WINDOW} l_windows.item as l_window and then l_window.is_interface_usable then
+					if attached l_window.editors_manager.editors as l_editors then
+						from l_editors.start until l_editors.after loop
+							if
+								attached l_editors.item as l_editor and then
+								l_editor.is_interface_usable and then
+								attached {CLASSI_STONE} l_editor.stone as l_class
+							then
+									-- We have the class stone
+								if attached l_class.class_i as l_class_i then
+									if l_class_i.is_compiled then
+										if not l_types.is_empty then
+											l_types.append_character (',')
+										end
+										l_types.append (l_class_i.name)
+									end
+								end
+							end
+							l_editors.forth
+						end
+					end
+				end
+			end
+			if not l_types.is_empty and session_manager.is_service_available then
+				session_manager.service.retrieve (True).set_value (l_types, {TEST_SESSION_CONSTANTS}.temporary_types)
+				if a_launch_wizard then
+					create l_composition.make (locale.translation ("Generate tests"), <<
+						create {ES_TEST_GENERATION_WIZARD_PAGE}.make_using_temporary_types,
+						create {ES_TEST_TAGS_WIZARD_PAGE},
+						create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
+					create l_wizard.make (l_composition, develop_window.window)
+					l_launch := l_wizard.is_launch_requested
+				else
+					l_launch := True
+				end
+				if l_launch and session_manager.is_service_available then
+					launch_session_type ({TEST_GENERATOR}, agent launch_test_generation (?, session_manager.service, True))
+				end
+			end
 		end
 
 	on_generate_custom_test (a_launch_wizard: BOOLEAN)
 			-- Launch test generation for custom type list.
 			--
 			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
+		local
+			l_composition: ES_TEST_WIZARD_COMPOSITION
+			l_wizard: ES_TEST_LAUNCH_WIZARD
+			l_launch: BOOLEAN
 		do
-
+			if a_launch_wizard then
+				create l_composition.make (locale.translation ("Generate tests"), <<
+					create {ES_TEST_GENERATION_WIZARD_PAGE},
+					create {ES_TEST_TAGS_WIZARD_PAGE},
+					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
+				create l_wizard.make (l_composition, develop_window.window)
+				l_launch := l_wizard.is_launch_requested
+			else
+				l_launch := True
+			end
+			if l_launch and session_manager.is_service_available then
+				launch_session_type ({TEST_GENERATOR}, agent launch_test_generation (?, session_manager.service, False))
+			end
 		end
 
 	on_extract_test (a_launch_wizard: BOOLEAN)
 			-- Launch test extraction.
 			--
 			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
+		local
+			l_page: ES_TEST_EXTRACTION_WIZARD_PAGE
+			l_composition: ES_TEST_WIZARD_COMPOSITION
+			l_wizard: ES_TEST_LAUNCH_WIZARD
 		do
-
+			if a_launch_wizard then
+				create l_page.make
+				create l_composition.make (locale.translation ("Extract test"), <<
+					l_page,
+					create {ES_TEST_TAGS_WIZARD_PAGE},
+					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
+				create l_wizard.make (l_composition, develop_window.window)
+				if l_wizard.is_launch_requested and session_manager.is_service_available then
+					launch_session_type ({ETEST_EXTRACTION}, agent launch_test_extraction (?, session_manager.service, l_page.call_stack_elements))
+				end
+			elseif session_manager.is_service_available then
+				launch_session_type ({ETEST_EXTRACTION}, agent launch_default_test_extraction (?, session_manager.service, Void))
+			end
 		end
 
 	on_launch_creation_preferences
 			-- Launch creation preferences wizard.
+		local
+			l_composition: ES_TEST_WIZARD_COMPOSITION
+			l_wizard: ES_TEST_PREFERENCE_WIZARD
 		do
-
+			create l_composition.make (locale.translation ("Test creation settings"), <<
+				create {ES_TEST_GENERAL_WIZARD_PAGE},
+				create {ES_TEST_TAGS_WIZARD_PAGE},
+				create {ES_TEST_MANUAL_WIZARD_PAGE},
+				create {ES_TEST_GENERATION_WIZARD_PAGE},
+				create {ES_TEST_EXTRACTION_WIZARD_PAGE}.make >>)
+			create l_wizard.make (l_composition, develop_window.window)
 		end
 
 feature {NONE} -- Events: test execution
@@ -611,7 +713,7 @@ feature {NONE} -- Factory
 			creation_button.set_pixmap (test_creation_pixmap)
 			creation_button.set_pixel_buffer (test_creation_pixel_buffer)
 			creation_button.set_menu_function (agent test_creation_menu)
-			register_action (creation_button.select_actions, agent on_launch_wizard)
+			register_action (creation_button.select_actions, agent on_create_manual_test (True))
 			Result.force_last (creation_button)
 
 				-- Test generation button	
@@ -640,29 +742,13 @@ feature {NONE} -- Factory
 
 			l_menu.extend (create {EV_MENU_SEPARATOR})
 
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Wizard%T...", agent
-				local
-					l_comp: ES_TEST_WIZARD_COMPOSITION
-					l_wizard: ES_TEST_LAUNCH_WIZARD
-				do
-					create l_comp.make ("Create something", <<
-						create {ES_TEST_GENERAL_WIZARD_PAGE},
-						create {ES_TEST_GENERATION_WIZARD_PAGE},
-						create {ES_TEST_MANUAL_WIZARD_PAGE} >>)
-					create l_wizard.make (l_comp, develop_window.window)
-				end))
-
-			l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Preferences%T...", agent
+			l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action (locale.translation (preferences_text) + "...", agent
 				local
 					l_comp: ES_TEST_WIZARD_COMPOSITION
 					l_wizard: ES_TEST_PREFERENCE_WIZARD
 				do
 					create l_comp.make ("Creation settings", <<
-						create {ES_TEST_GENERAL_WIZARD_PAGE},
-						create {ES_TEST_TAGS_WIZARD_PAGE},
-						create {ES_TEST_GENERATION_WIZARD_PAGE},
-						create {ES_TEST_EXTRACTION_WIZARD_PAGE}.make,
-						create {ES_TEST_MANUAL_WIZARD_PAGE}>>)
+						create {ES_TEST_EXECUTION_WIZARD_PAGE}>>)
 					create l_wizard.make (l_comp, develop_window.window)
 				end))
 

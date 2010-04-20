@@ -135,13 +135,12 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	launch_test_generation (a_generator: TEST_GENERATOR; a_test_suite: TEST_SUITE_S; a_manager: SESSION_MANAGER_S; a_use_temporary: BOOLEAN)
+	launch_test_generation (a_generator: TEST_GENERATOR; a_manager: SESSION_MANAGER_S; a_use_temporary: BOOLEAN)
 			-- Launch given generator with the settings stored in `a_session'.
 			--
 			-- Note: if `a_use_temporary' is true, the temporary types in the session settings are used.
 		require
 			a_generator_usable: a_generator.is_interface_usable
-			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_manager_usable: a_manager.is_interface_usable
 			not_launched_yet: not a_generator.has_next_step
 		local
@@ -226,17 +225,15 @@ feature {NONE} -- Basic operations
 				-- Enable when developing
 			a_generator.set_debugging (False)
 
-			launch_test_creation (a_generator, a_test_suite, a_manager)
+			launch_test_creation (a_generator, a_manager)
 		end
 
 	launch_default_test_extraction (a_creation: ETEST_EXTRACTION;
-	                                a_test_suite: TEST_SUITE_S;
 	                                a_manager: SESSION_MANAGER_S;
 	                                a_debugger: DEBUGGER_MANAGER)
 			-- Launch given extraction with the settings stored in `a_session'.
 		require
 			a_creation_usable: a_creation.is_interface_usable
-			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_manager_usable: a_manager.is_interface_usable
 			not_launched_yet: not a_creation.has_next_step
 			a_debugger_valid: a_debugger.application_is_executing and then a_debugger.application_is_stopped
@@ -273,17 +270,15 @@ feature {NONE} -- Basic operations
 				end
 			end
 
-			launch_test_extraction (a_creation, a_test_suite, a_manager, l_list)
+			launch_test_extraction (a_creation, a_manager, l_list)
 		end
 
 	launch_test_extraction (a_creation: ETEST_EXTRACTION;
-	                        a_test_suite: TEST_SUITE_S;
 	                        a_manager: SESSION_MANAGER_S;
 	                        a_stack_frame_list: SEARCH_TABLE [INTEGER])
 			-- Launch given extraction with the settings stored in `a_session'.
 		require
 			a_creation_usable: a_creation.is_interface_usable
-			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_manager_usable: a_manager.is_interface_usable
 			not_launched_yet: not a_creation.has_next_step
 		local
@@ -300,14 +295,13 @@ feature {NONE} -- Basic operations
 				end
 				a_stack_frame_list.forth
 			end
-			launch_test_creation (a_creation, a_test_suite, a_manager)
+			launch_test_creation (a_creation, a_manager)
 		end
 
-	launch_manual_test_creation (a_creation: ETEST_MANUAL_CREATION; a_test_suite: TEST_SUITE_S; a_manager: SESSION_MANAGER_S)
+	launch_manual_test_creation (a_creation: ETEST_MANUAL_CREATION; a_manager: SESSION_MANAGER_S)
 			-- Launch given creation with the settings stored in `a_session'.
 		require
 			a_creation_usable: a_creation.is_interface_usable
-			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_manager_usable: a_manager.is_interface_usable
 			not_launched_yet: not a_creation.has_next_step
 		local
@@ -336,14 +330,13 @@ feature {NONE} -- Basic operations
 				a_creation.set_has_clean (l_has_clean)
 			end
 
-			launch_test_creation (a_creation, a_test_suite, a_manager)
+			launch_test_creation (a_creation, a_manager)
 		end
 
-	launch_test_creation (a_creation: ETEST_CREATION; a_test_suite: TEST_SUITE_S; a_manager: SESSION_MANAGER_S)
+	launch_test_creation (a_creation: ETEST_CREATION; a_manager: SESSION_MANAGER_S)
 			-- Launch given creation with the settings stored in `a_session'.
 		require
 			a_creation_usable: a_creation.is_interface_usable
-			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_manager_usable: a_manager.is_interface_usable
 			not_launched_yet: not a_creation.has_next_step
 		local
@@ -390,8 +383,6 @@ feature {NONE} -- Basic operations
 					l_list.forth
 				end
 			end
-
-			a_test_suite.launch_session (a_creation)
 		end
 
 feature {NONE} -- Events

@@ -44,6 +44,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -52,6 +57,11 @@ feature -- Initialization
 	make
 			-- Initialize `Current'.
 		do
+			if attached preferences.misc_shortcut_data.shortcuts.item ("run_workbench_outside") as l_shortcut then
+				create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+				set_referred_shortcut (l_shortcut)
+				accelerator.actions.extend (agent execute)
+			end
 		end
 
 feature -- Execution
@@ -59,13 +69,17 @@ feature -- Execution
 	execute
 			-- Execute Current.
 		do
-			debugger_manager.controller.start_workbench_application (debugger_manager.current_execution_parameters)
+			if attached debugger_manager as dbg then
+				dbg.controller.start_workbench_application (dbg.current_execution_parameters)
+			end
 		end
 
 	execute_with_parameters (params: DEBUGGER_EXECUTION_PROFILE)
 			-- Execute Current with parameters.
 		do
-			debugger_manager.controller.start_workbench_application (debugger_manager.resolved_execution_parameters (params))
+			if attached debugger_manager as dbg then
+				dbg.controller.start_workbench_application (dbg.resolved_execution_parameters (params))
+			end
 		end
 
 feature -- Properties

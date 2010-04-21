@@ -39,21 +39,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project_helper: like project_helper; a_preferences: like preferences)
+	make (a_project_helper: like project_helper)
 			-- Initialize `Current'.
 			--
 			-- `a_project_helper': Project helper for compiling, debugging and adding new classes.
-			-- `a_preferences': Preferences containing test specific settings.
 		require
 			a_project_helper_attached: a_project_helper /= Void
-			a_preferences_attached: a_preferences /= Void
 		local
 			l_manager: EB_PROJECT_MANAGER
 			l_test_suite: TEST_SUITE_S
 			l_project_loaded: BOOLEAN
 		do
 			project_helper := a_project_helper
-			preferences := a_preferences
 			class_map := new_class_map
 
 			l_project_loaded := project_access.is_initialized
@@ -85,9 +82,6 @@ feature -- Access
 
 	project_helper: TEST_PROJECT_HELPER_I
 			-- Project helper for compiling, debugging and adding new classes.
-
-	preferences: TEST_PREFERENCES
-			-- Test specific preferences
 
 	library: detachable CONF_LIBRARY
 			-- {CONF_LIBRARY} instance representing testing library, Void if library not included or not

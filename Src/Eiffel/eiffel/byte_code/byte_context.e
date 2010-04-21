@@ -19,10 +19,16 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_GENERATION
+		export {C_EXTENSION_I, EXTERNALS, INLINE_EXTENSION_I}
+			generation_buffer,
+			generation_ext_inline_buffer,
+			header_generation_buffer
+		end
+
 	ASSERT_TYPE
 	SHARED_ARRAY_BYTE
 	SHARED_SERVER
-	SHARED_GENERATION
 	COMPILER_EXPORTER
 	REFACTORING_HELPER
 

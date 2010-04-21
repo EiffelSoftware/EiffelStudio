@@ -29,7 +29,6 @@
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
-		<library name="preferences" location="$EIFFEL_SRC\framework\testing_preferences\testing.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>

@@ -238,6 +238,10 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (out_cmd)
 			create debug_cmd.make
 			toolbarable_commands.extend (debug_cmd)
+			create exec_workbench_cmd.make
+			toolbarable_commands.extend (exec_workbench_cmd)
+			create exec_finalized_cmd.make
+			toolbarable_commands.extend (exec_finalized_cmd)
 			create no_stop_cmd.make
 			toolbarable_commands.extend (no_stop_cmd)
 			create ignore_breakpoints_cmd.make
@@ -276,6 +280,8 @@ feature {NONE} -- Initialization
 			into_cmd.enable_sensitive
 			out_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
+			exec_workbench_cmd.enable_sensitive
+			exec_finalized_cmd.enable_sensitive
 			no_stop_cmd.enable_sensitive
 			stop_cmd.disable_sensitive
 			quit_cmd.disable_sensitive
@@ -286,10 +292,6 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (Melt_project_cmd)
 			toolbarable_commands.extend (Freeze_project_cmd)
 			toolbarable_commands.extend (Finalize_project_cmd)
-			run_finalized_cmd.enable_sensitive
-			toolbarable_commands.extend (run_finalized_cmd)
-			run_workbench_cmd.enable_sensitive
-			toolbarable_commands.extend (run_workbench_cmd)
 			toolbarable_commands.extend (override_scan_cmd)
 			toolbarable_commands.extend (discover_melt_cmd)
 
@@ -440,7 +442,7 @@ feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
 	object_storage_management_cmd: ES_DBG_OBJECT_STORAGE_MANAGEMENT_COMMAND
 			-- Command controlling the remove object storage operation
 
-feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER, EB_EXEC_FINALIZED_CMD} -- Command
+feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER, ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND} -- Command
 
 	bkpt_info_cmd: EB_STANDARD_CMD
 			-- Command that can display info concerning the breakpoints in the system.
@@ -471,6 +473,12 @@ feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER, EB_EXEC_FINALIZED_CMD} -
 
 	debug_cmd: EB_EXEC_DEBUG_CMD
 			-- Run with stop points command.
+
+	exec_workbench_cmd: EB_EXEC_WORKBENCH_CMD
+			-- Run workbench outside environment.
+
+	exec_finalized_cmd: EB_EXEC_FINALIZED_CMD
+			-- Run finalized outside environment.			
 
 	restart_cmd: EB_EXEC_RESTART_DEBUG_CMD
 			-- Restart debugging without closing the interface.
@@ -627,6 +635,17 @@ feature -- tools management
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
+				-- Separator.
+			create sep
+			Result.extend (sep)
+
+			l_item := exec_workbench_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+			l_item := exec_finalized_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
 
 				-- Separator.
 			create sep
@@ -1250,6 +1269,8 @@ feature -- Change
 			out_cmd.update (w)
 			into_cmd.update (w)
 			debug_cmd.update (w)
+			exec_workbench_cmd.update (w)
+			exec_finalized_cmd.update (w)
 			restart_cmd.update (w)
 			no_stop_cmd.update (w)
 			ignore_breakpoints_cmd.update (w)
@@ -1426,6 +1447,8 @@ feature -- Status setting
 			end
 			no_stop_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
+			exec_workbench_cmd.disable_sensitive
+			exec_finalized_cmd.disable_sensitive
 			step_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
@@ -1443,6 +1466,8 @@ feature -- Status setting
 				if not process_manager.is_freezing_running then
 					step_cmd.enable_sensitive
 					into_cmd.enable_sensitive
+					exec_workbench_cmd.enable_sensitive
+					exec_finalized_cmd.enable_sensitive
 					no_stop_cmd.enable_sensitive
 					debug_cmd.enable_sensitive
 					ignore_breakpoints_cmd.enable_sensitive
@@ -1805,6 +1830,8 @@ feature -- Debugging events
 			no_stop_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
 			debug_cmd.set_launched (True)
+			exec_workbench_cmd.enable_sensitive
+			exec_finalized_cmd.enable_sensitive
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
@@ -1837,6 +1864,8 @@ feature -- Debugging events
 			stop_cmd.disable_sensitive
 			no_stop_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
+			exec_workbench_cmd.enable_sensitive
+			exec_finalized_cmd.enable_sensitive
 			step_cmd.enable_sensitive
 			out_cmd.enable_sensitive
 			into_cmd.enable_sensitive
@@ -1942,6 +1971,8 @@ feature -- Debugging events
 			stop_cmd.enable_sensitive
 			no_stop_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
+			exec_workbench_cmd.disable_sensitive
+			exec_finalized_cmd.disable_sensitive
 			step_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
@@ -2021,6 +2052,8 @@ feature -- Debugging events
 			restart_cmd.disable_sensitive
 			debug_cmd.enable_sensitive
 			debug_cmd.set_launched (False)
+			exec_workbench_cmd.enable_sensitive
+			exec_finalized_cmd.enable_sensitive
 			no_stop_cmd.enable_sensitive
 
 			step_cmd.enable_sensitive
@@ -2232,6 +2265,9 @@ feature {NONE} -- Implementation
 				exception_handler_cmd.enable_sensitive
 
 				debug_cmd.enable_sensitive
+				exec_workbench_cmd.enable_sensitive
+				exec_finalized_cmd.enable_sensitive
+
 				no_stop_cmd.enable_sensitive
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
@@ -2247,6 +2283,8 @@ feature {NONE} -- Implementation
 			disable_bkpt.disable_sensitive
 			bkpt_info_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
+			exec_workbench_cmd.disable_sensitive
+			exec_finalized_cmd.disable_sensitive
 			no_stop_cmd.disable_sensitive
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
@@ -2272,6 +2310,8 @@ feature {NONE} -- Implementation
 			toggle_exec_replay_recording_mode_cmd.disable_sensitive
 
 			debug_cmd.disable_sensitive
+			exec_workbench_cmd.disable_sensitive
+			exec_finalized_cmd.disable_sensitive
 			no_stop_cmd.disable_sensitive
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive

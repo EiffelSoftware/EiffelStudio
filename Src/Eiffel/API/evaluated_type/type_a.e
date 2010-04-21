@@ -758,6 +758,14 @@ feature -- Comparison
 			definition: (Result and then current_type = Void) implies generic_derivation.same_as (other.generic_derivation)
 		end
 
+	is_syntactically_equal (other: TYPE_A): BOOLEAN
+			-- Does `other' represent the same syntax construct as `Current'?
+		require
+			other_attached: attached other
+		do
+			Result := same_as (other)
+		end
+
 feature -- Access
 
 	associated_class: CLASS_C

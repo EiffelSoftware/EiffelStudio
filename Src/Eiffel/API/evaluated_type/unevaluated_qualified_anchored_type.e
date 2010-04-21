@@ -17,7 +17,8 @@ inherit
 			has_associated_class,
 			instantiated_in,
 			instantiation_in,
-			internal_is_valid_for_class
+			internal_is_valid_for_class,
+			is_syntactically_equal
 		end
 
 	SHARED_NAMES_HEAP
@@ -84,6 +85,19 @@ feature -- Comparison
 				equivalent (qualifier, other.qualifier) and then
 				chain ~ other.chain and then
 				has_same_attachment_marks (other)
+		end
+
+	is_syntactically_equal (other: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			if attached {like Current} other then
+				Result := same_as (other)
+			elseif attached {QUALIFIED_ANCHORED_TYPE_A} other as o then
+				Result :=
+					qualifier.is_syntactically_equal (o.qualifier) and then
+					chain ~ o.chain and then
+					has_same_attachment_marks (o)
+			end
 		end
 
 feature -- Output

@@ -1,34 +1,49 @@
 note
-	description: "Summary description for {ES_TEST_GENERATION_WIZARD_PAGE}."
+	description: "Summary description for {ES_TEST_CALL_STACK_WIZARD_PAGE}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_TEST_EXTRACTION_WIZARD_PAGE
+	ES_TEST_CALL_STACK_WIZARD_PAGE
 
 inherit
-	ES_TEST_WIZARD_PAGE
+	ES_TEST_EXTRACTION_WIZARD_PAGE
+		redefine
+			new_panel
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (an_app_status: like application_status)
+			-- Initialize `Current'.
+		do
+			application_status := an_app_status
+			create call_stack_elements.make (0)
+			default_create
+		end
 
 feature -- Access
 
-	title: STRING_32
-			-- <Precursor>
-		do
-			Result := locale.translation (t_title)
-		end
+	call_stack_elements: SEARCH_TABLE [INTEGER]
+			-- Call stack items selected by user
+
+feature {NONE} -- Access
+
+	application_status: APPLICATION_STATUS
+			-- Current application status for which a test should be extracted
 
 feature {NONE} -- Factory
 
-	new_panel (a_composition: ES_TEST_WIZARD_COMPOSITION): ES_TEST_EXTRACTION_WIZARD_PAGE_PANEL
+	new_panel (a_composition: ES_TEST_WIZARD_COMPOSITION): ES_TEST_CALL_STACK_WIZARD_PAGE_PANEL
 			-- <Precursor>
 		do
-			create Result.make (a_composition)
+			create Result.make (a_composition, application_status)
+			call_stack_elements := Result.call_stack_elements
 		end
-
-feature {NONE} -- Internationalization
-
-	t_title: STRING = "Test extraction"
 
 note
 	copyright: "Copyright (c) 1984-2010, Eiffel Software"

@@ -49,6 +49,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEBUGGER_MANAGER
+		export
+			{NONE} all
+		end
+
 create {ES_TESTING_TOOL}
 	make
 
@@ -267,8 +272,13 @@ feature {NONE} -- Access: test creation
 
 			Result.extend (create {EV_MENU_SEPARATOR})
 
-			create l_item.make_with_text_and_action (locale.translation (extract_text) + l_suffix,
-				agent on_extract_test (l_launch_wizard))
+			if debugger_manager.application_is_executing and then debugger_manager.application_is_stopped then
+				create l_item.make_with_text_and_action (locale.translation (extract_text) + l_suffix,
+					agent on_extract_test (l_launch_wizard, debugger_manager.application_status))
+			else
+				create l_item.make_with_text (locale.translation (extract_text) + l_suffix)
+				l_item.disable_sensitive
+			end
 			Result.extend (l_item)
 
 			Result.extend (create {EV_MENU_SEPARATOR})
@@ -426,17 +436,17 @@ feature {NONE} -- Events: test creation
 			end
 		end
 
-	on_extract_test (a_launch_wizard: BOOLEAN)
+	on_extract_test (a_launch_wizard: BOOLEAN; an_app_status: APPLICATION_STATUS)
 			-- Launch test extraction.
 			--
 			-- `a_launch_wizard': True if wizard should be launched in advance, False otherwise.
 		local
-			l_page: ES_TEST_EXTRACTION_WIZARD_PAGE
+			l_page: ES_TEST_CALL_STACK_WIZARD_PAGE
 			l_composition: ES_TEST_WIZARD_COMPOSITION
 			l_wizard: ES_TEST_LAUNCH_WIZARD
 		do
 			if a_launch_wizard then
-				create l_page.make
+				create l_page.make (an_app_status)
 				create l_composition.make (locale.translation ("Extract test"), <<
 					l_page,
 					create {ES_TEST_TAGS_WIZARD_PAGE},
@@ -461,7 +471,7 @@ feature {NONE} -- Events: test creation
 				create {ES_TEST_TAGS_WIZARD_PAGE},
 				create {ES_TEST_MANUAL_WIZARD_PAGE},
 				create {ES_TEST_GENERATION_WIZARD_PAGE},
-				create {ES_TEST_EXTRACTION_WIZARD_PAGE}.make >>)
+				create {ES_TEST_EXTRACTION_WIZARD_PAGE} >>)
 			create l_wizard.make (l_composition, develop_window.window)
 		end
 

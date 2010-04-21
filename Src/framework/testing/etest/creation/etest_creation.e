@@ -45,11 +45,14 @@ feature -- Access
 			-- Note: we do not store the cluster object directly since that might change after compiling.
 		local
 			l_universe: UNIVERSE_I
+			l_name: like cluster_name
 		do
-			if attached cluster_name as l_name then
-				l_universe := etest_suite.project_access.project.universe
-				Result := l_universe.cluster_of_name (l_name)
+			l_name := cluster_name
+			if l_name = Void or else l_name.is_empty then
+				l_name := "internal_eifgen_cluster"
 			end
+			l_universe := etest_suite.project_access.project.universe
+			Result := l_universe.cluster_of_name (l_name)
 		end
 
 	path: IMMUTABLE_STRING_8
@@ -177,72 +180,79 @@ feature {NONE} -- Basic operations
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
 			l_class_name: STRING
+			l_retry: BOOLEAN
 		do
 			l_cluster := cluster
-			if l_cluster /= Void and then not l_cluster.is_readonly then
+			if l_cluster /= Void then
 				create l_location.make_from_string (l_cluster.location.build_path (path.as_string_8, ""))
-				create l_directory.make (l_location)
-				if l_directory.exists and l_directory.is_writable then
-					from until
-						l_filename /= Void
-					loop
-						create l_path.make_from_string (l_location)
-						l_class_name := class_name.as_string_8
-						l_class_name.to_lower
-						if creates_multiple_classes then
-							create l_filename.make (l_class_name.count + 6)
-							l_filename.append (l_class_name)
-							l_filename.append_character ('_')
-							if class_name_counter < 10 then
-								l_filename.append ("00")
-							elseif class_name_counter < 100 then
-								l_filename.append ("0")
-							end
-							l_filename.append_natural_32 (class_name_counter)
-						else
-							l_filename := l_class_name
+			else
+				l_location := etest_suite.project_access.project.project_directory.eifgens_cluster_path
+			end
+			create l_directory.make (l_location)
+			if not l_directory.exists then
+				l_directory.recursive_create_dir
+			end
+
+			if l_directory.exists and l_directory.is_writable then
+				from until
+					l_filename /= Void
+				loop
+					create l_path.make_from_string (l_location)
+					l_class_name := class_name.as_string_8
+					l_class_name.to_lower
+					if creates_multiple_classes or l_retry then
+						create l_filename.make (l_class_name.count + 6)
+						l_filename.append (l_class_name)
+						l_filename.append_character ('_')
+						if class_name_counter < 10 then
+							l_filename.append ("00")
+						elseif class_name_counter < 100 then
+							l_filename.append ("0")
 						end
-						l_filename.append (".e")
-						l_path.set_file_name (l_filename)
-						create l_file.make (l_path)
-						if creates_multiple_classes then
-							if l_file.exists then
-								class_name_counter := class_name_counter + 1
-								if class_name_counter <= 999 then
-									l_filename := Void
-								end
-							end
+						l_filename.append_natural_32 (class_name_counter)
+					else
+						l_filename := l_class_name
+					end
+					l_filename.append (".e")
+					l_path.set_file_name (l_filename)
+					create l_file.make (l_path)
+
+					if l_file.exists then
+						class_name_counter := class_name_counter + 1
+						if class_name_counter <= 999 then
+							l_filename := Void
 						end
 					end
+					l_retry := True
+				end
 
-					if not l_file.exists then
-						l_file.open_write
+				if not l_file.exists then
+					l_file.open_write
+					if l_file.is_open_write then
+						l_class_name := l_filename.substring (1, l_filename.count - 2)
+						check l_class_name /= Void end
+						l_class_name.to_upper
+						print_new_class (l_file, l_class_name)
 						if l_file.is_open_write then
-							l_class_name := l_filename.substring (1, l_filename.count - 2)
-							check l_class_name /= Void end
-							l_class_name.to_upper
-							print_new_class (l_file, l_class_name)
-							if l_file.is_open_write then
-								l_file.close
-							end
-							if l_file.exists and then l_file.count > 0 then
-								etest_suite.project_helper.add_class (l_cluster, path, l_filename, l_class_name)
-							end
+							l_file.close
+						end
+						if l_file.exists and then l_file.count > 0 then
+							etest_suite.project_helper.add_class (l_cluster, path, l_filename, l_class_name)
 						else
-							error_event.publish ([Current, locale.formatted_string (e_file_not_creatable, [l_location, l_filename])])
+							etest_suite.project_helper.compile
 						end
 					else
-						error_event.publish ([Current, locale.formatted_string (e_file_already_exists, [l_location, l_filename])])
+						error_event.publish ([Current, locale.formatted_string (e_file_not_creatable, [l_location, l_filename])])
 					end
 				else
-					if l_directory.exists then
-						error_event.publish ([Current, locale.formatted_string (e_directory_not_writable, [l_location])])
-					else
-						error_event.publish ([Current, locale.formatted_string (e_directory_does_not_exist, [l_location])])
-					end
+					error_event.publish ([Current, locale.formatted_string (e_file_already_exists, [l_location, l_filename])])
 				end
 			else
-				error_event.publish ([Current, locale.formatted_string (e_cluster_read_only, [l_location])])
+				if l_directory.exists then
+					error_event.publish ([Current, locale.formatted_string (e_directory_not_writable, [l_location])])
+				else
+					error_event.publish ([Current, locale.formatted_string (e_directory_does_not_exist, [l_location])])
+				end
 			end
 		end
 
@@ -265,11 +275,6 @@ feature {NONE} -- Constants
 feature {NONE} -- Internationalization
 
 	e_can_not_create_new_class_file: STRING = "Can not create new class file in $1:%N%N"
-	e_cluster_read_only: STRING
-		do
-			Result := e_can_not_create_new_class_file.twin
-			Result.append ("Cluster is read only.")
-		end
 	e_directory_does_not_exist: STRING
 		do
 			Result := e_can_not_create_new_class_file.twin
@@ -295,7 +300,7 @@ invariant
 	class_name_not_empty: not class_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

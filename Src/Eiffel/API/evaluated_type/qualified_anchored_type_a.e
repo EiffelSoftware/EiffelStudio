@@ -15,6 +15,7 @@ inherit
 			evaluated_type_in_descendant,
 			initialize_info,
 			is_explicit,
+			is_syntactically_equal,
 			update_dependance
 		end
 
@@ -280,6 +281,19 @@ feature -- Comparison
 				equivalent (qualifier, other.qualifier) and then
 				chain ~ other.chain and then
 				has_same_attachment_marks (other)
+		end
+
+	is_syntactically_equal (other: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			if attached {like Current} other then
+				Result := same_as (other)
+			elseif attached {UNEVALUATED_QUALIFIED_ANCHORED_TYPE} other as o then
+				Result :=
+					qualifier.is_syntactically_equal (o.qualifier) and then
+					chain ~ o.chain and then
+					has_same_attachment_marks (o)
+			end
 		end
 
 note

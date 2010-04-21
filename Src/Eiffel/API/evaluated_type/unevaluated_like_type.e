@@ -11,9 +11,14 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
+			associated_class,
+			conform_to,
+			evaluated_type_in_descendant,
 			has_associated_class,
-			associated_class, conform_to, internal_is_valid_for_class,
-			evaluated_type_in_descendant, instantiated_in, instantiation_in
+			instantiated_in,
+			instantiation_in,
+			internal_is_valid_for_class,
+			is_syntactically_equal
 		end
 
 	SHARED_NAMES_HEAP
@@ -76,6 +81,16 @@ feature -- Comparison
 			Result := anchor_name_id = other.anchor_name_id and then
 				has_attached_mark = other.has_attached_mark and then
 				has_detachable_mark = other.has_detachable_mark
+		end
+
+	is_syntactically_equal (other: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			if attached {like Current} other then
+				Result := same_as (other)
+			elseif attached {LIKE_FEATURE} other as o then
+				Result := anchor_name_id = o.feature_name_id and then has_same_attachment_marks (o)
+			end
 		end
 
 feature -- Output

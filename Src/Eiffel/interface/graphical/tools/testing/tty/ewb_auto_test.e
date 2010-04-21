@@ -71,10 +71,10 @@ feature -- Execution
 			l_error_handler: AUT_ERROR_HANDLER
 
 				-- Using wizard information to create AutoTest configuration
-			l_shared_prefs: EC_SHARED_PREFERENCES
-			l_prefs: TEST_PREFERENCES
-			l_conf: TEST_GENERATOR_CONF
-			l_type: STRING
+			l_session: SERVICE_CONSUMER [SESSION_MANAGER_S]
+			l_manager: SESSION_MANAGER_S
+			l_generator: TEST_GENERATOR
+			l_type, l_types: STRING
 			l_root_group: CONF_GROUP
 			l_project: E_PROJECT
 		do
@@ -85,51 +85,61 @@ feature -- Execution
 				create l_ap.make_with_arguments (l_args, l_error_handler)
 				--l_ap.process_arguments (l_args)
 
-				create l_shared_prefs
-				l_prefs := l_shared_prefs.preferences.testing_tool_data
-				create l_conf.make (l_prefs)
+				create l_generator.make (a_test_suite, etest_suite)
 
 					-- Types
+				create l_types.make (200)
 				from
 					l_ap.class_names.start
 				until
 					l_ap.class_names.after
 				loop
 					l_type := l_ap.class_names.item_for_iteration
-					if l_type /= Void then
-						l_conf.types_cache.force (l_type)
+					if not l_types.is_empty then
+						l_types.append_character (',')
 					end
+					l_types.append (l_types)
 					l_ap.class_names.forth
+				end
+
+				create l_session
+				if l_session.is_service_available then
+					l_manager := l_session.service
+					l_manager.retrieve (True).set_value (l_types, {TEST_SESSION_CONSTANTS}.temporary_types)
+					launch_test_generation (l_generator, l_manager, True)
 				end
 
 					-- Timing
 				if l_ap.time_out /= Void then
-					l_conf.set_time_out ((l_ap.time_out.second_count // 60).as_natural_32)
+					l_generator.set_time_out ((l_ap.time_out.second_count // 60).as_natural_32)
 				end
-				l_conf.set_test_count (l_ap.test_count)
+				l_generator.set_test_count (l_ap.test_count)
 				if l_ap.proxy_time_out > 0 then
-					l_conf.set_proxy_time_out (l_ap.proxy_time_out.to_natural_32)
+					l_generator.set_proxy_timeout (l_ap.proxy_time_out.to_natural_32)
 				end
 
 					-- Minimization
-				l_conf.set_slicing_enabled (l_ap.is_slicing_enabled)
-				l_conf.set_ddmin_enabled (l_ap.is_ddmin_enabled)
+				if l_ap.is_slicing_enabled then
+					l_generator.enable_slicing
+				end
+				if l_ap.is_ddmin_enabled then
+					l_generator.enable_ddmin
+				end
 
 					-- Output
-				l_conf.set_html_output (l_ap.is_html_statistics_format_enabled)
+				l_generator.set_html_statistics (l_ap.is_html_statistics_format_enabled)
 				l_root_group := l_project.system.system.root_creators.first.cluster
 
 				if l_root_group.is_cluster then
 					if attached {CONF_CLUSTER} l_root_group as l_cluster then
-						l_conf.set_cluster (l_cluster)
-						l_conf.set_path ("")
+						l_generator.set_cluster_name (l_cluster.name)
+						l_generator.set_path_name ("")
 					end
 				end
-				l_conf.set_new_class_name("NEW_AUTO_TEST")
-				l_conf.set_debugging (l_ap.is_debugging)
+				l_generator.set_class_name ("NEW_AUTO_TEST")
+				l_generator.set_debugging (l_ap.is_debugging)
 
-				-- TODO: use new {TEST_CREATION_I} model for launching test generation
-				--launch_ewb_processor (a_test_suite, generator_factory_type, l_conf)
+				a_test_suite.launch_session (l_generator)
 			else
 
 			end
@@ -176,7 +186,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

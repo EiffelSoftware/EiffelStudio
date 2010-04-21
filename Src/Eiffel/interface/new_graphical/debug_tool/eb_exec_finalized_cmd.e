@@ -31,11 +31,17 @@ feature -- Initialization
 			if attached preferences.misc_shortcut_data.shortcuts.item ("run_finalized_outside") as l_shortcut then
 				create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 				set_referred_shortcut (l_shortcut)
-				accelerator.actions.extend (agent execute)
+				accelerator.actions.extend (agent execute_from_accelerator)
 			end
 		end
 
 feature -- Execution
+
+	execute_from_accelerator
+			-- Execute from accelerator
+		do
+			execute
+		end
 
 	execute
 			-- Execute Current.
@@ -114,7 +120,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1241,6 +1241,8 @@ feature -- Events
 				Export_cmd.disable_sensitive
 				Document_cmd.disable_sensitive
 				Run_project_cmd.disable_sensitive
+				Run_workbench_cmd.disable_sensitive
+				Run_finalized_cmd.disable_sensitive
 				override_scan_cmd.disable_sensitive
 				discover_melt_cmd.disable_sensitive
 			end
@@ -1677,7 +1679,7 @@ feature{NONE} -- Implementation
 			-- Implementation of `compile_start_actions'
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

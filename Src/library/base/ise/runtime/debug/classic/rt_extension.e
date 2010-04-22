@@ -103,7 +103,7 @@ feature -- Notification
 			retry
 		end
 
-	cached_arguments: ARRAY [TUPLE]
+	cached_arguments: ARRAY [detachable TUPLE]
 			-- Cached argument to use less temporary objects
 		once
 				--| Make sure, the id are contigus, and in this range !

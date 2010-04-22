@@ -3166,7 +3166,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 								-- If the row at this index was not displayed, then we start a re-compute from the row at index 1. We could
 								-- find the next visible row before the one we wanted, but there is no way to determine this without iterating
 								-- so we simply start from the top.
-							if l_row_indexes_to_visible_indexes.i_th (index) > 0 and then l_visible_indexes_to_row_indexes.i_th (l_row_indexes_to_visible_indexes.i_th (index)) + 1 = index then
+							if
+								row_indexes_to_visible_indexes.i_th (index) > 0 and then
+								row_indexes_to_visible_indexes.i_th (index) <= l_visible_row_count and then
+								visible_indexes_to_row_indexes.i_th	(row_indexes_to_visible_indexes.i_th (index)) + 1 = index
+							then
 								visible_count := l_row_indexes_to_visible_indexes.i_th (index)
 							else
 								index := 1

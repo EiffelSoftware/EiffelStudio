@@ -530,8 +530,8 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			is_flat: is_flat
 		local
 			ot: ARRAYED_LIST [ANY] -- indexed by `oi'
-			ort: ARRAY [LIST [RT_DBG_VALUE_RECORD]] -- indexed by `oi'
-			orcds: detachable LIST [RT_DBG_VALUE_RECORD]
+			ort: ARRAY [detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]] -- indexed by `oi'
+			orcds: detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			rec: RT_DBG_VALUE_RECORD
 			o: detachable ANY
 			oi: INTEGER
@@ -551,7 +551,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 					loop
 						rec := vals.item_for_iteration
 						check is_not_local_record: not rec.is_local_record end
-						if attached {ANY} rec.associated_object as rec_obj then
+						if attached rec.associated_object as rec_obj then
 							if o /= rec_obj then
 								o := rec_obj
 								ot.search (o)
@@ -562,7 +562,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 									ot.force (o)
 									ot.finish
 									oi := ot.index
-									create {ARRAYED_LIST [RT_DBG_VALUE_RECORD]} orcds.make (10)
+									create orcds.make (10)
 									ort.force (orcds, oi)
 								end
 							--else-- use previous values (ie: index)
@@ -610,13 +610,15 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 						oi := ot.index
 						o := ot.item_for_iteration
 						orcds := ort.item (oi)
-						from
-							orcds.start
-						until
-							orcds.after
-						loop
-							vals.force (orcds.item_for_iteration)
-							orcds.forth
+						if orcds /= Void then
+							from
+								orcds.start
+							until
+								orcds.after
+							loop
+								vals.force (orcds.item_for_iteration)
+								orcds.forth
+							end
 						end
 						ot.forth
 					end

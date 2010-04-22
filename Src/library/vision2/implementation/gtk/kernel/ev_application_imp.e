@@ -463,7 +463,7 @@ feature {EV_ANY_I} -- Implementation
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 							l_text_field_imp.on_change_actions
 						end
-						l_widget_imp := Void						
+						l_widget_imp := Void
 					when GDK_CLIENT_EVENT then
 						debug ("GDK_EVENT")
 							print ("GDK_CLIENT_EVENT%N")
@@ -1272,44 +1272,30 @@ feature -- Thread Handling.
 			-- Initialize thread support.
 		do
 			if {PLATFORM}.is_thread_capable then
-				if not {EV_GTK_EXTERNALS}.g_thread_supported then
-					{EV_GTK_EXTERNALS}.g_thread_init
-				end
-				check
-					threading_supported: {EV_GTK_EXTERNALS}.g_thread_supported
-				end
-					-- Initialize the recursive mutex.
-				static_mutex := {EV_GTK_EXTERNALS}.new_g_static_rec_mutex
-				{EV_GTK_EXTERNALS}.g_static_rec_mutex_init (static_mutex)
+				create idle_action_mutex.make
 			end
 		end
 
 	lock
 			-- Lock the Mutex.
 		do
-			if {PLATFORM}.is_thread_capable then
-				{EV_GTK_EXTERNALS}.g_static_rec_mutex_lock (static_mutex)
-			end
-		end
-
-	try_lock: BOOLEAN
-			-- Try to see if we can lock, False means no lock could be attained
-		do
-			if {PLATFORM}.is_thread_capable then
-				Result := {EV_GTK_EXTERNALS}.g_static_rec_mutex_trylock (static_mutex)
-			else
-					-- If we are not thread capable then always return true.
-				Result := True
+			if idle_action_mutex /= Void then
+				idle_action_mutex.lock
 			end
 		end
 
 	unlock
 			-- Unlock the Mutex.
 		do
-			if {PLATFORM}.is_thread_capable then
-				{EV_GTK_EXTERNALS}.g_static_rec_mutex_unlock (static_mutex)
+			if idle_action_mutex /= Void then
+				idle_action_mutex.unlock
 			end
 		end
+
+feature {NONE} -- Thread implementation
+
+	idle_action_mutex: detachable MUTEX note option: stable attribute end
+			-- Mutex used to access idle_actions.
 
 feature {NONE} -- External implementation
 

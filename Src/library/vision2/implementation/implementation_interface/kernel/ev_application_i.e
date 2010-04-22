@@ -121,20 +121,15 @@ feature {EV_ANY_I} -- Implementation
 						-- Reset idle iteration counter if CPU is not relinquished.
 				end
 				l_idle_actions_internal := idle_actions_internal
-				if not is_destroyed and then l_idle_actions_internal /= Void then
+				if not is_destroyed and then l_idle_actions_internal /= Void and then not is_locked then
 					lock
-					l_locked := True
+					is_locked := True
 						-- Make a snapshot of the idle actions to avoid side effects.
 					if attached l_idle_actions_internal.kamikazes_internal as l_kamikazes_internal then
 						if kamikaze_idle_actions_snapshot = Void then
 							if l_kamikazes_internal.count > 0 then
 								kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
 								l_kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot
-							end
-						elseif kamikaze_idle_actions_snapshot.count > 0 then
-								-- Events are being called in a nested way so we twin to prevent side effect
-							if l_kamikazes_internal.count > 0 then
-								l_kamikaze_idle_actions_snapshot := l_kamikazes_internal.area.twin
 							end
 						else
 							kamikaze_idle_actions_snapshot := kamikaze_idle_actions_snapshot.aliased_resized_area (l_kamikazes_internal.count)
@@ -162,11 +157,6 @@ feature {EV_ANY_I} -- Implementation
 							idle_actions_snapshot := l_idle_actions_internal.area.twin
 							l_idle_actions_snapshot := idle_actions_snapshot
 						end
-					elseif idle_actions_snapshot.count > 0 then
-							-- Events are being called in a nested way so we twin to prevent side effect.
-						if l_idle_actions_internal.count > 0 then
-							l_idle_actions_snapshot := l_idle_actions_internal.area.twin
-						end
 					else
 						idle_actions_snapshot := idle_actions_snapshot.aliased_resized_area (l_idle_actions_internal.count)
 						idle_actions_snapshot.copy_data (l_idle_actions_internal.area, 0, 0, l_idle_actions_internal.count)
@@ -175,7 +165,8 @@ feature {EV_ANY_I} -- Implementation
 
 						-- We can now unlock the resource as we have our own local copy.
 					unlock
-					l_locked := False
+					is_locked := False
+
 
 					if l_kamikaze_idle_actions_snapshot /= Void then
 						from
@@ -222,15 +213,17 @@ feature {EV_ANY_I} -- Implementation
 			end
 		rescue
 			if l_retry_count = 0 then
-				if l_locked then
+				if is_locked then
 						-- If a crash occurred whilst calling the idle actions then we must unlock the mutex.
 					unlock
-					l_locked := False
+					is_locked := False
 				end
 				l_retry_count := l_retry_count + 1
 				retry
 			end
 		end
+
+	is_locked: BOOLEAN
 
 feature {NONE} -- Implementation
 
@@ -492,11 +485,6 @@ feature -- Basic operation
 
 	lock
 			-- Lock the Mutex.
-		deferred
-		end
-
-	try_lock: BOOLEAN
-			-- Try to see if we can lock, False means no lock could be attained
 		deferred
 		end
 

@@ -189,7 +189,7 @@ feature {NONE} -- C code generation
 					-- For arrays of basic type we initialize them in workbench mode
 					-- in case the debugger would show the SPECIAL content and we don't
 					-- want users to see garbage there.
-				if not target_type.is_basic or else context.workbench_mode then
+				if expressions.count > 0 and then (not target_type.is_basic or else context.workbench_mode) then
 					buffer.put_new_line
 					buffer.put_string ("memset(")
 					array_area_reg.print_register

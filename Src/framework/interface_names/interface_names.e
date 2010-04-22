@@ -524,8 +524,8 @@ feature -- Accelerator, focus label and menu name
 	m_Editor: STRING_32					do Result := locale.translation("&Editor")	end
 	m_Editor_area: STRING_32				do Result := locale.translation("&Editor Area")	end
 	m_Eiffel_introduction: STRING_32		do Result := locale.translation("&Introduction to Eiffel")	end
-	f_Enable_stop_points: STRING_32		do Result := locale.translation("Enable all breakpoints")	end
-	m_Enable_stop_points: STRING_32		do Result := locale.translation("&Enable All Breakpoints")	end
+	f_Enable_stop_points: STRING_32		do Result := locale.translation("Enable all (disabled) breakpoints")	end
+	m_Enable_stop_points: STRING_32		do Result := locale.translation("&Enable All (Disabled) Breakpoints")	end
 	m_environment_variables: STRING_32		do Result := locale.translation("Environment variables")	end
 	m_Exec_last: STRING_32				do Result := locale.translation("&Out of Routine")	end
 	m_Exec_nostop: STRING_32				do Result := locale.translation("Run &Ignoring Breakpoints")	end

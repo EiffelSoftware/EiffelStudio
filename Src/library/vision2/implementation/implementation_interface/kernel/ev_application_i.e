@@ -93,10 +93,10 @@ feature {EV_ANY_I} -- Implementation
 			-- CPU will be relinquished if `a_relinquish_cpu' and idle actions are successfully executed.
 		local
 			l_idle_actions_internal: like idle_actions_internal
-			l_locked: BOOLEAN
+			l_is_locked: BOOLEAN
 			l_retry_count: INTEGER
 			l_idle_actions_snapshot, l_kamikaze_idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
-			l_action: detachable PROCEDURE [ANY, TUPLE]
+			l_action, l_kamikaze_action: detachable PROCEDURE [ANY, TUPLE]
 			i, l_count: INTEGER
 		do
 			if l_retry_count = 0 then
@@ -121,9 +121,9 @@ feature {EV_ANY_I} -- Implementation
 						-- Reset idle iteration counter if CPU is not relinquished.
 				end
 				l_idle_actions_internal := idle_actions_internal
-				if not is_destroyed and then l_idle_actions_internal /= Void and then not is_locked then
+				if not is_destroyed and then l_idle_actions_internal /= Void and then not idle_actions_executing then
 					lock
-					is_locked := True
+					l_is_locked := True
 						-- Make a snapshot of the idle actions to avoid side effects.
 					if attached l_idle_actions_internal.kamikazes_internal as l_kamikazes_internal then
 						if kamikaze_idle_actions_snapshot = Void then
@@ -164,10 +164,12 @@ feature {EV_ANY_I} -- Implementation
 					end
 
 						-- We can now unlock the resource as we have our own local copy.
+					l_is_locked := False
 					unlock
-					is_locked := False
 
 
+						-- Set `idle_actions_executing' flag to avoid recursive idle actions execution.
+					idle_actions_executing := True
 					if l_kamikaze_idle_actions_snapshot /= Void then
 						from
 							i := 0
@@ -175,12 +177,13 @@ feature {EV_ANY_I} -- Implementation
 						until
 							i = l_count or else is_destroyed
 						loop
-							l_action := l_kamikaze_idle_actions_snapshot @ i
-							if l_action /= Void then
-								l_action.call (Void)
+							l_kamikaze_action := l_kamikaze_idle_actions_snapshot @ i
+							if l_kamikaze_action /= Void then
+								l_kamikaze_action.call (Void)
 							end
 							i := i + 1
 						end
+						l_kamikaze_action := Void
 							-- Wipeout snapshot list to signify that that any nested idle calls do not have to clone the snapshot
 						l_kamikaze_idle_actions_snapshot.wipe_out
 					end
@@ -197,9 +200,11 @@ feature {EV_ANY_I} -- Implementation
 							end
 							i := i + 1
 						end
+						l_action := Void
 							-- Clear snapshot list.
 						l_idle_actions_snapshot.wipe_out
 					end
+					idle_actions_executing := False
 
 					if a_relinquish_cpu and then not is_destroyed then
 							-- We only relinquish CPU if requested and a lock for the idle actions has been attained.
@@ -212,18 +217,20 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 		rescue
+			idle_actions_executing := False
+			if l_is_locked then
+				l_is_locked := False
+				unlock
+			end
 			if l_retry_count = 0 then
-				if is_locked then
-						-- If a crash occurred whilst calling the idle actions then we must unlock the mutex.
-					unlock
-					is_locked := False
-				end
 				l_retry_count := l_retry_count + 1
 				retry
 			end
 		end
 
-	is_locked: BOOLEAN
+	idle_actions_executing: BOOLEAN
+		-- Are the idle actions currently being executed?
+		-- We need this flag to prevent recursive calls to idle actions from the GUI thread.
 
 feature {NONE} -- Implementation
 

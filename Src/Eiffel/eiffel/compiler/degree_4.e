@@ -188,10 +188,6 @@ feature -- Processing
 					end
 					i := i + 1
 				end
-					-- No need to continue if we have found some errors.
-				if l_error_handler.has_error then
-					l_error_handler.raise_error
-				end
 					-- Run delayed actions.
 				from
 					actions.start

@@ -30,7 +30,9 @@ feature -- Status report
 		do
 			Result := attached {G} a_info
 		ensure
-			non_generic_cat_call: Result implies attached {G} a_info
+-- FIXME 2010/04/23: This code is commented out because it causes the compiler to crash
+-- when the code of descendants is generated at degree -1.
+--			non_generic_cat_call: Result implies attached {G} a_info
 		end
 
 	is_valid_start_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
@@ -98,7 +100,7 @@ feature {NONE} -- Basic operation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

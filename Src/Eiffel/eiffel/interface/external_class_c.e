@@ -576,6 +576,7 @@ feature {NONE} -- Initialization
 			l_any_tbl: like feature_table
 			l_feat, l_table_feat: FEATURE_I
 			any_parent_type: LIKE_CURRENT
+			is_type_checking_required: BOOLEAN
 		do
 			l_any_tbl := system.any_class.compiled_class.feature_table
 			create any_parent_type
@@ -598,13 +599,32 @@ feature {NONE} -- Initialization
 			loop
 					-- Update `l_feat' in context of current class.
 				l_table_feat := l_any_tbl.item_for_iteration
-				l_feat := l_table_feat.instantiated (any_parent_type)
+				if l_table_feat.is_type_evaluation_delayed then
+						-- Make a clone of the current feature that will be updated later.
+					l_feat := l_table_feat.twin
+						-- Register update action.
+					degree_4.put_action (
+						agent (destination: FEATURE_I; source: FEATURE_I; instantiation_type: TYPE_A)
+							local
+								i: FEATURE_I
+							do
+								i := source.instantiated (instantiation_type)
+								destination.set_type (i.type, destination.assigner_name_id)
+								destination.set_arguments (i.arguments)
+								destination.set_pattern_id (i.pattern_id)
+							end
+						(l_feat, l_table_feat, any_parent_type)
+					)
+				else
+					l_feat := l_table_feat.instantiated (any_parent_type)
+				end
+
+				is_type_checking_required := True
 				if l_feat = l_table_feat then
 						-- If the instantiation didn't return a new object then we twin.
 					l_feat := l_feat.twin
-				else
-						-- We only need to check types should feature be instantiated for `Current'
-					l_feat.delayed_check_types (a_feat_tbl)
+						-- We only need to check types should feature be instantiated for `Current'.
+					is_type_checking_required := False
 				end
 				l_feat.set_feature_id (feature_id_counter.next)
 				l_feat.set_is_origin (False)
@@ -612,6 +632,14 @@ feature {NONE} -- Initialization
 
 					-- Insert modified `l_feat' in current feature table.
 				insert_feature (l_feat, a_feat_tbl)
+
+					-- Check types after insertion since we do not know if the feature
+					-- type checks will be delayed or not and when this decision is made
+					-- the feature has to be registered already.
+				if is_type_checking_required then
+					l_feat.delayed_check_types (a_feat_tbl)
+				end
+
 				l_any_tbl.forth
 			end
 		end

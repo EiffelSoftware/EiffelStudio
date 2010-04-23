@@ -1,0 +1,165 @@
+#!/bin/bash
+
+CHECK_DIR=`pwd`
+
+check_report_init() {
+	echo $1 > $CHECK_LOG_DIR/check.log
+}
+check_report() {
+	echo $@
+	echo $@ &>> $CHECK_LOG_DIR/check.log
+}
+
+check_svn_update() {
+    ### Update source code
+    if [ -d $EIFFEL_SRC ];
+        then 
+            check_report "Update source code"
+            svn update $EIFFEL_SRC &> $CHECK_LOG_DIR/svn.log
+        else
+            check_report "Checkout source code from https://svn.eiffel.com/eiffelstudio/trunk/Src"
+            svn checkout https://svn.eiffel.com/eiffelstudio/trunk/Src $EIFFEL_SRC &> $CHECK_LOG_DIR/svn.log
+    fi
+}
+
+check_prepare_source() {
+    ### cleaned and recompile runtime, Clibs ...
+    check_report "Prepare runtime and clibs"
+    cd $EIFFEL_SRC
+    geant clobber &> $CHECK_LOG_DIR/prepare_source.log
+    geant prepare &>> $CHECK_LOG_DIR/prepare_source.log
+    cd $CHECK_DIR
+}
+
+check_eiffel_compilation() {
+    ### Compile ec_bench, and ec_batch in "compile/check"
+    TMP_ECF=$1
+    TMP_TARGET=$2
+    TMP_EXENAME=$3
+    if [ $CHECK_OP_MELTED_ONLY = "yes" ]; 
+        then TMP_MELT="yes" 
+        else 
+            if [ $TMP_TARGET = "bench_windows" ];
+    	        then TMP_MELT="yes";
+    	        else TMP_MELT="no";
+            fi
+    fi
+
+    check_report "Check eiffel compilation $TMP_TARGET (output=$TMP_EXENAME) ($TMP_ECF)"
+
+    if [ $TMP_MELT = "yes" ]; 
+        then
+            TMP_CMD="ecb -config $TMP_ECF -target $TMP_TARGET $CHECK_ISE_EC_FLAGS -melt"
+        else
+            TMP_CMD="ecb -config $TMP_ECF -target $TMP_TARGET $CHECK_ISE_EC_FLAGS -freeze -c_compile"
+    fi
+    check_report "$TMP_CMD"
+    $TMP_CMD &> $CHECK_LOG_DIR/compile_$TMP_TARGET.log
+
+    TMP_PROOF=`grep "System Recompiled" $CHECK_LOG_DIR/compile_$TMP_TARGET.log`
+
+    if [ "$TMP_PROOF" = "System Recompiled." ];
+        then
+            check_report "REPORT: Eiffel compilation of $TMP_TARGET: SUCCEED"
+            if [ $TMP_MELT = "yes" ]; 
+                then
+        	    #TMP_PROOF=`tail -1 $CHECK_LOG_DIR/compile_$TMP_TARGET.log`
+                    #if [ "$TMP_PROOF" = "System Recompiled." ]; 
+                    #if [ -f $CHECK_COMP_DIR/EIFGENs/$TMP_TARGET/W_code/$TMP_EXENAME.melted ]
+                        #then check_report "REPORT: $TMP_TARGET: SUCCEED"
+                        #else check_report "REPORT: $TMP_TARGET: FAILED"
+                    #fi
+                    check_report "REPORT: C compilation of $TMP_TARGET: NONE"
+                else
+        	    TMP_PROOF=`grep "C compilation completed" $CHECK_LOG_DIR/compile_$TMP_TARGET.log`
+                    if [ "$TMP_PROOF" = "C compilation completed" ]; 
+                    #if [ -f $CHECK_COMP_DIR/EIFGENs/$TMP_TARGET/W_code/$TMP_EXENAME ]
+                        then check_report "REPORT: C compilation of $TMP_TARGET: SUCCEED"
+                        else check_report "REPORT: C compilation of $TMP_TARGET: FAILED"
+                    fi
+            fi
+        else
+            check_report "REPORT: Eiffel compilation of $TMP_TARGET: FAILED"
+    fi
+}
+
+
+##########################################################
+### Set environment
+CHECK_LOG_DIR=$CHECK_DIR/_check
+CHECK_COMP_DIR=$CHECK_DIR/_check
+mkdir -p $CHECK_LOG_DIR
+mkdir -p $CHECK_COMP_DIR
+
+check_report_init "Check $@"
+
+check_report "Eiffel environment"
+check_report " - ISE_EIFFEL=$ISE_EIFFEL"
+check_report " - ISE_PLATFORM=$ISE_PLATFORM"
+check_report " - EIFFEL_SRC=$EIFFEL_SRC"
+
+if [ "$ISE_EIFFEL" = "" ]; then echo "Missing ISE_EIFFEL"; exit; fi
+if [ "$EIFFEL_SRC" = "" ]; then echo "Missing EIFFEL_SRC"; exit; fi
+if [ ! -d $ISE_EIFFEL ]; then echo "Invalid ISE_EIFFEL=$ISE_EIFFEL"; exit; fi
+
+EC_VERSION=`ecb -version`
+check_report " - EC VERSION=$EC_VERSION"
+
+CHECK_ISE_EC_FLAGS=" -full -project_path $CHECK_COMP_DIR "
+
+CHECK_OP_CLOBBER=no
+CHECK_OP_CLEAN=no
+CHECK_OP_SVN=yes
+CHECK_OP_PREPARE=yes
+CHECK_OP_ALL=yes
+CHECK_OP_BATCH=no
+CHECK_OP_BENCH=no
+CHECK_OP_BENCH_WIN=no
+CHECK_OP_MELTED_ONLY=no
+for arg in "$@"
+do
+    if [ ${arg} == "-only" ]; then 
+        CHECK_OP_SVN=no
+        CHECK_OP_PREPARE=no
+    fi
+    if [ ${arg} == "-fast" ]; then 
+        CHECK_OP_PREPARE=no
+    fi
+    if [ ${arg} == "-clobber" ]; then CHECK_OP_CLOBBER=yes ; fi
+    if [ ${arg} == "-clean" ]; then CHECK_OP_CLEAN=yes ; fi
+    if [ ${arg} == "-nosvn" ]; then CHECK_OP_SVN=no ; fi
+    if [ ${arg} == "-noprepare" ]; then CHECK_OP_PREPARE=no ; fi
+    if [ ${arg} == "-melt" ]; then CHECK_OP_MELTED_ONLY=yes ; fi
+    if [ ${arg} == "batch" ]; then
+        CHECK_OP_ALL=no
+        CHECK_OP_BATCH=yes
+    fi
+    if [ ${arg} == "bench" ]; then
+        CHECK_OP_ALL=no
+        CHECK_OP_BENCH=yes
+    fi
+    if [ ${arg} == "bench_windows" ]; then
+        CHECK_OP_ALL=no
+        CHECK_OP_BENCH_WIN=yes
+    fi
+    
+done
+if [ $CHECK_OP_CLOBBER == "yes" ]; then 
+    check_report "CLOBBER: remove EIFGENs"
+    rm -rf $CHECK_COMP_DIR
+fi
+if [ $CHECK_OP_CLEAN == "yes" ]; then 
+    CHECK_ISE_EC_FLAGS="$CHECK_ISE_EC_FLAGS -clean "
+fi
+
+if [ $CHECK_OP_SVN == "yes" ]; then check_svn_update ; fi
+if [ $CHECK_OP_PREPARE == "yes" ]; then check_prepare_source ; fi
+if [ $CHECK_OP_ALL == "yes" ]; then
+        CHECK_OP_BATCH=yes
+        CHECK_OP_BENCH=yes
+        CHECK_OP_BENCH_WIN=yes
+fi
+if [ $CHECK_OP_BATCH == "yes" ]; then check_eiffel_compilation $EIFFEL_SRC/Eiffel/Ace/ec.ecf batch ecb ; fi
+if [ $CHECK_OP_BENCH == "yes" ]; then check_eiffel_compilation $EIFFEL_SRC/Eiffel/Ace/ec.ecf bench ec  ; fi
+if [ $CHECK_OP_BENCH_WIN == "yes" ]; then check_eiffel_compilation $EIFFEL_SRC/Eiffel/Ace/ec.ecf bench_windows ec ; fi
+

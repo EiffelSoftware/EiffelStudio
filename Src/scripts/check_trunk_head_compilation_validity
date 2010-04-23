@@ -26,7 +26,10 @@ check_prepare_source() {
     ### cleaned and recompile runtime, Clibs ...
     check_report "Prepare runtime and clibs"
     cd $EIFFEL_SRC
-    geant clobber &> $CHECK_LOG_DIR/prepare_source.log
+    echo "Prepare runtime and Clibs" &> $CHECK_LOG_DIR/prepare_source.log
+    if [ $CHECK_OP_CLEAN == "yes" ]; then 
+        geant clobber &>> $CHECK_LOG_DIR/prepare_source.log
+    fi
     geant prepare &>> $CHECK_LOG_DIR/prepare_source.log
     cd $CHECK_DIR
 }

@@ -187,6 +187,7 @@ do
     
 done
 if [ $CHECK_OP_CLOBBER == "yes" ]; then 
+	CHECK_OP_CLEAN=yes
     check_report "CLOBBER: remove EIFGENs"
     rm -rf $CHECK_COMP_DIR
 fi

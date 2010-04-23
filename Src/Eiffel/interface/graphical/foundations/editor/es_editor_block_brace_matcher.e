@@ -31,7 +31,7 @@ inherit
 
 feature -- Access
 
-	opening_brace_map: attached HASH_TABLE [attached STRING_32, attached STRING_32]
+	opening_brace_map: HASH_TABLE [STRING_32, STRING_32]
 			-- <Precursor>
 		once
 			create Result.make (20)
@@ -41,28 +41,28 @@ feature -- Access
 
 feature -- Status report
 
-	is_opening_brace (a_token: attached EDITOR_TOKEN): BOOLEAN
+	is_opening_brace (a_token: EDITOR_TOKEN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token) or else
 				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token)
 		end
 
-	is_opening_match_exception (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_opening_match_exception (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token, a_line) or else
 				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token, a_line)
 		end
 
-	is_closing_brace (a_token: attached EDITOR_TOKEN): BOOLEAN
+	is_closing_brace (a_token: EDITOR_TOKEN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token) or else
 				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token)
 		end
 
-	is_closing_match_exception (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_closing_match_exception (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {ES_EDITOR_BRACE_MATCHER} (a_token, a_line) or else
@@ -70,7 +70,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -83,22 +83,22 @@ feature -- Status report
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

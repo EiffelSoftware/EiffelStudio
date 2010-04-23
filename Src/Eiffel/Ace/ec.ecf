@@ -260,8 +260,12 @@
 		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>
 		<override name="graphical_overrides" location="$EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\" recursive="true"/>
 	</target>
-	<target name="bench_unix" extends="bench">
+	<target name="bench_windows" extends="bench">
 		<description>Compiling UNIX bench compiler on other platforms than Windows</description>
+		<setting name="platform" value="windows"/>
+	</target>
+	<target name="bench_unix" extends="bench">
+		<description>Compiling UNIX bench compiler on other platforms than Unices</description>
 		<setting name="platform" value="unix"/>
 	</target>
 	<target name="bench_cocoa" extends="bench">

@@ -1,5 +1,36 @@
 #!/bin/bash
 
+################################################################################################
+# Quick documentation:
+#
+#   This script is to check the trunk@head of EiffelStudio still compiles fine after commits
+#	it is designed to be run on unices  (under /bin/bash)
+#
+#	options:
+#		-nosvn     : do not update the working copy
+#		-noprepare : do not recompile runtime and Clibs
+#		-fast      : -noprepare
+#		-only      : -noprepare + -nosvn
+#
+#		-clobber   : remove the EIFGENs
+#                  : and also clobber the runtime + Clibs if (not -noprepare)
+#		-clean     : clean the runtime + Clibs if (not -noprepare)
+#
+#		-melt      : check only the Eiffel compilation (no c compilation)
+#
+#		all           : check all following targets
+#		batch         : check "batch" target
+#		bench         : check "bench" target
+#		bench_windows : check "bench_windows" target
+#
+#   Note: you can change the location of logs, and the compilation folder 
+#         by setting the environment variables: CHECK_LOG_DIR and CHECK_COMP_DIR
+#
+#	Requirement: you must set before the ISE_EIFFEL, EIFFEL_SRC variables
+#
+# Provided by Jocelyn Fiat
+################################################################################################
+
 CHECK_DIR=`pwd`
 
 check_report_init() {
@@ -28,7 +59,12 @@ check_prepare_source() {
     cd $EIFFEL_SRC
     echo "Prepare runtime and Clibs" &> $CHECK_LOG_DIR/prepare_source.log
     if [ $CHECK_OP_CLEAN == "yes" ]; then 
-        geant clobber &>> $CHECK_LOG_DIR/prepare_source.log
+		if [ $CHECK_OP_CLOBBER == "yes" ]; 
+			then 
+				geant clobber &>> $CHECK_LOG_DIR/prepare_source.log
+			else
+				geant clean &>> $CHECK_LOG_DIR/prepare_source.log
+		fi
     fi
     geant prepare &>> $CHECK_LOG_DIR/prepare_source.log
     cd $CHECK_DIR
@@ -89,8 +125,8 @@ check_eiffel_compilation() {
 
 ##########################################################
 ### Set environment
-CHECK_LOG_DIR=$CHECK_DIR/_check
-CHECK_COMP_DIR=$CHECK_DIR/_check
+if [ "$CHECK_LOG_DIR" = "" ]; then CHECK_LOG_DIR=$CHECK_DIR/_check; fi
+if [ "$CHECK_COMP_DIR" = "" ]; then CHECK_COMP_DIR=$CHECK_DIR/_check; fi
 mkdir -p $CHECK_LOG_DIR
 mkdir -p $CHECK_COMP_DIR
 
@@ -133,6 +169,9 @@ do
     if [ ${arg} == "-nosvn" ]; then CHECK_OP_SVN=no ; fi
     if [ ${arg} == "-noprepare" ]; then CHECK_OP_PREPARE=no ; fi
     if [ ${arg} == "-melt" ]; then CHECK_OP_MELTED_ONLY=yes ; fi
+    if [ ${arg} == "all" ]; then
+        CHECK_OP_ALL=yes
+    fi
     if [ ${arg} == "batch" ]; then
         CHECK_OP_ALL=no
         CHECK_OP_BATCH=yes

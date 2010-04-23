@@ -18,8 +18,8 @@ inherit
 
 feature -- Status report
 
-	is_valid_start_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
-			-- Determines if a given token is valid as the state's start token.
+	is_valid_start_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
+			-- <Precursor>
 		do
 			Result := Precursor (a_token, a_line) and then (a_token.is_text or else
 				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword))
@@ -27,20 +27,20 @@ feature -- Status report
 
 feature {NONE} -- Basic operation
 
-	process_next_tokens (a_info: attached ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_end_token: detachable EDITOR_TOKEN)
+	process_next_tokens (a_info: ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_end_token: detachable EDITOR_TOKEN)
 			-- <Precursor>
 		local
-			l_current_frame: attached ES_EDITOR_ANALYZER_FRAME
-			l_matcher: attached like brace_matcher
-			l_next: detachable like next_text_token
-			l_type_start: detachable like next_text_token
-			l_type_end: detachable like next_text_token
-			l_context_class: attached CLASS_C
-			l_token: attached EDITOR_TOKEN
-			l_line: attached EDITOR_LINE
-			l_token_text: attached STRING_32
-			l_state: attached ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_FEATURE_STATE_INFO]
-			l_local_list_state: attached like local_list_state
+			l_current_frame: ES_EDITOR_ANALYZER_FRAME
+			l_matcher: like brace_matcher
+			l_next: like next_text_token
+			l_type_start: like next_text_token
+			l_type_end: like next_text_token
+			l_context_class: CLASS_C
+			l_token: EDITOR_TOKEN
+			l_line: EDITOR_LINE
+			l_token_text: STRING_32
+			l_state: ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_FEATURE_STATE_INFO]
+			l_local_list_state: like local_list_state
 		do
 				-- Fetch the most relivant information.
 			l_context_class := a_info.context_class
@@ -80,13 +80,13 @@ feature {NONE} -- Basic operation
 							end
 							l_next := [a_info.current_token, a_info.current_line]
 						end
-						if l_next = Void then
-								-- Failed to find the arguments, fallback to last stored position.
-							l_next := [a_info.current_token, a_info.current_line]
-						else
+						if l_next /= Void then
 							a_info.set_current_line (l_next.line, l_next.token)
 								-- Move to the next token, because we found a full argument list.
 							l_next := next_text_token (l_next.token, l_next.line, True, a_end_token)
+						else
+								-- Failed to find the arguments, fallback to last stored position.
+							l_next := [a_info.current_token, a_info.current_line]
 						end
 					end
 
@@ -101,10 +101,10 @@ feature {NONE} -- Basic operation
 							a_info.has_runout := l_type_start = Void
 							if l_type_start /= Void then
 								l_token := l_type_start.token
-								if l_token /= a_end_token then
+								if l_token /~ a_end_token then
 									l_line := l_type_start.line
 									l_type_end := scan_for_type (l_type_start.token, l_type_start.line, a_end_token)
-									if l_type_end /= Void then
+									if l_type_end /~ Void then
 											-- A type completed, set the current token/line.
 										a_info.set_current_line (l_type_end.line, l_type_end.token)
 										l_next := l_type_end
@@ -130,7 +130,7 @@ feature {NONE} -- Basic operation
 						if l_next /= Void then
 								-- Check for local declaration.
 							l_next := next_token (l_next.token, l_next.line, True, a_end_token,
-								agent (ia_token: attached EDITOR_TOKEN; ia_line: attached EDITOR_LINE): BOOLEAN
+								agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE): BOOLEAN
 										-- Search for the attribute, do, once, deferred, external or local words
 									do
 										Result := is_feature_body_token (ia_token, ia_line) or else
@@ -178,7 +178,7 @@ feature {NONE} -- Basic operation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -191,22 +191,22 @@ feature {NONE} -- Basic operation
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

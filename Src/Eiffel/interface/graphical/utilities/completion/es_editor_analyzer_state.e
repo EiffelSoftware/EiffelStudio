@@ -20,22 +20,27 @@ inherit
 
 feature -- Status report
 
-	is_valid_state_info (a_info: attached ES_EDITOR_ANALYZER_STATE_INFO): BOOLEAN
+	is_valid_state_info (a_info: ES_EDITOR_ANALYZER_STATE_INFO): BOOLEAN
 			-- Detemines if a given state info object is valid for Current.
 			--
 			-- `a_info': The info object to test for validity.
 			-- `Result': True if the given object was valid; False otherwise.
+		require
+			a_info_attached: a_info /= Void
 		do
-			Result := (({detachable G}) #? a_info) /= Void
+			Result := attached {G} a_info
 		ensure
-			non_generic_cat_call: Result implies (({detachable G}) #? a_info) /= Void
+			non_generic_cat_call: Result implies attached {G} a_info
 		end
 
-	is_valid_start_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_valid_start_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- Determines if a given token is valid as the state's start token.
 			--
 			-- `a_token': The editor token to test to applicablity for use as the state's starting token.
 			-- `Result' : True if the given token is a valid start token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 		do
 			Result := True
 		end
@@ -46,17 +51,20 @@ feature {NONE} -- Helpers
 			-- Parser wrapper used to protect the parser for persisting syntax errors
 		once
 			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Basic operation
 
-	frozen process (a_info: attached G; a_end_token: detachable EDITOR_TOKEN)
+	frozen process (a_info: G; a_end_token: detachable EDITOR_TOKEN)
 			-- Processes a token for the next state.
 			--
 			-- `a_info'     : The state information to use when processing the tokens.
 			-- `a_end_token': The token to stop processing at, or Void to process to the end of the
 			--                document.
 		require
+			a_info_attached: a_info /= Void
 			a_info_is_valid_state_info: is_valid_state_info (a_info)
 			result_has_valid_start_token: is_valid_start_token (a_info.current_token, a_info.current_line)
 		do
@@ -70,13 +78,14 @@ feature -- Basic operation
 
 feature {NONE} -- Basic operation
 
-	process_next_tokens (a_info: attached G; a_end_token: detachable EDITOR_TOKEN)
+	process_next_tokens (a_info: G; a_end_token: detachable EDITOR_TOKEN)
 			-- Processes a token for the current state.
 			--
 			-- `a_info'     : The state information to use when processing the tokens.
 			-- `a_end_token': The token to stop processing at, or Void to process to the end of the
 			--                document.
 		require
+			a_info_attached: a_info /= Void
 			a_info_is_valid_state_info: is_valid_state_info (a_info)
 			a_start_token_is_valid_start_token: is_valid_start_token (a_info.current_token, a_info.current_line)
 			a_info_current_token_not_a_end_token: a_info.current_token /~ a_end_token

@@ -16,13 +16,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: attached like context_class; a_token: attached like current_token; a_line: attached like current_line)
+	make (a_class: like context_class; a_token: like current_token; a_line: like current_line)
 			-- Initialize a state result using a context class and an initial editor token and hosting line.
 			--
 			-- `a_class': The context class, used to resolve any type or feature information.
 			-- `a_token': The state's current token.
 			-- `a_line' : The state's current line, where the supplied token is resident.
 		require
+			a_class_attached: a_class /= Void
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 			a_line_has_a_token: a_line.has_token (a_token)
 		do
 			create frames.make (1)
@@ -34,7 +37,7 @@ feature {NONE} -- Initialization
 			current_token_set: current_token ~ a_token
 		end
 
-	make_with_feature (a_class: attached like context_class; a_feature: attached like context_feature; a_token: attached like current_token; a_line: attached like current_line)
+	make_with_feature (a_class: like context_class; a_feature: like context_feature; a_token: like current_token; a_line: like current_line)
 			-- Initialize a state result using a context class and an initial editor token and hosting line.
 			--
 			-- `a_class'  : The context class, used to resolve any type or feature information.
@@ -42,6 +45,10 @@ feature {NONE} -- Initialization
 			-- `a_token'  : The state's current token.
 			-- `a_line'   : The state's current line, where the supplied token is resident.
 		require
+			a_class_attached: a_class /= Void
+			a_feature_attached: a_feature /= Void
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 			a_line_has_a_token: a_line.has_token (a_token)
 		do
 			context_feature := a_feature
@@ -55,40 +62,43 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context_class: attached CLASS_C
+	context_class: CLASS_C
 			-- The context class
 
 	context_feature: detachable FEATURE_I
 			-- The context feature
 
-	current_token: attached EDITOR_TOKEN assign set_current_token
+	current_token: EDITOR_TOKEN assign set_current_token
 			-- Last editor token processed.
 
-	current_line: attached EDITOR_LINE
+	current_line: EDITOR_LINE
 			-- Last editor line processed.
 
-	current_frame: attached ES_EDITOR_ANALYZER_FRAME
+	current_frame: ES_EDITOR_ANALYZER_FRAME
 			-- Current class context frame, used for local entity storage.
 		require
 			has_current_frame: has_current_frame
 		do
 			Result := frames.item
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Access
 
-	frames: attached ARRAYED_STACK [attached ES_EDITOR_ANALYZER_FRAME]
+	frames: ARRAYED_STACK [ES_EDITOR_ANALYZER_FRAME]
 			-- Stack of context frames used for local entity storage.
 
 feature -- Element change
 
-	set_current_token (a_token: attached like current_token)
+	set_current_token (a_token: like current_token)
 			-- Sets the current token.
 			-- Note: Setting the current token in this fashion assumes the token belongs to the current
 			--       line. Use `set_current_line' when changing lines and tokens.
 			--
 			-- `a_token': The new token to set on the state result.
 		require
+			a_token_attached: a_token /= Void
 			current_line_has_a_token: current_line.has_token (a_token)
 		do
 			current_token := a_token
@@ -96,12 +106,14 @@ feature -- Element change
 			current_token_set: current_token ~ a_token
 		end
 
-	set_current_line (a_line: attached like current_line; a_initial_token: attached like current_token)
+	set_current_line (a_line: like current_line; a_initial_token: like current_token)
 			-- Stets the current line and current token
 			--
 			-- `a_line'         : The new line to set on the state result.
 			-- `a_initial_token': The initial line token to set on the state result.
 		require
+			a_line_attached: a_line /= Void
+			a_initial_token_attached: a_initial_token /= Void
 			a_line_has_a_initial_token: a_line.has_token (a_initial_token)
 		do
 			current_line := a_line
@@ -125,6 +137,8 @@ feature -- Status report
 			-- Indicates if there is a current frame.
 		do
 			Result := not frames.is_empty
+		ensure
+			not_frames_is_empty: Result implies not frames.is_empty
 		end
 
 	has_runout: BOOLEAN assign set_has_runout
@@ -183,10 +197,14 @@ feature -- Basic operation
 		end
 
 invariant
+	context_class_attached: context_class /= Void
+	current_token_attached: current_token /= Void
+	current_line_attached: current_line /= Void
+	frames_attached: frames /= Void
 	current_line_has_current_token: current_line.has_token (current_token)
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -199,22 +217,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

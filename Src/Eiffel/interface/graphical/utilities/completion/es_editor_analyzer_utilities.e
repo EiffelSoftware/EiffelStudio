@@ -20,11 +20,15 @@ inherit
 
 feature -- Status report
 
-	is_attachment_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_attachment_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- Determines if a token is an attached/detachable marker token
 			--
 			-- `a_token' : The token to determine if to be an attachment token.
 			-- `Result'  : True if the supplied token is an atachment token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
+			a_line_has_a_token: a_line.has_token (a_token)
 		do
 			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.detachable_keyword) or else
 					is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword) or else
@@ -32,11 +36,15 @@ feature -- Status report
 					is_text_token (a_token, "!", False)
 		end
 
-	is_identifier_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_identifier_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- Determines if a token is an Eiffel identifier token
 			--
 			-- `a_token' : The token to determine if to be an identifier token.
 			-- `Result'  : True if the supplied token is an identifier token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
+			a_line_has_a_token: a_line.has_token (a_token)
 		local
 			l_image: STRING_32
 			i, l_count: INTEGER
@@ -45,7 +53,7 @@ feature -- Status report
 		do
 			if is_text_token (a_token, Void, False) and then not is_keyword_token (a_token, Void) then
 				l_image := a_token.wide_image
-				check attached l_image end
+				check l_image /= Void end
 				if not l_image.is_empty then
 					Result := True
 					l_count := l_image.count
@@ -68,22 +76,24 @@ feature -- Status report
 
 feature -- Basic operations
 
-	scan_for_type (a_start_token: attached EDITOR_TOKEN; a_start_line: attached EDITOR_LINE; a_end_token: detachable EDITOR_TOKEN): detachable TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE]
+	scan_for_type (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: detachable EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
 			-- Scans for a type.
 			--
 			-- `a_start_token': A token to commence scanning.
 			-- `a_line'       : The line where the supplied token is resident.
 			-- `Result'       : A resulting token and resident line, or Void if no previous token exists.
 		require
+			a_start_token_attached: a_start_token /= Void
+			a_start_line_attached: a_start_line /= Void
 			a_start_token_has_a_token: a_start_line.has_token (a_start_token)
 			a_end_token_different_to_a_start_token: a_start_token /~ a_end_token
 			a_start_token_is_text: a_start_token.is_text
 		local
-			l_image: attached STRING
-			l_token: attached EDITOR_TOKEN
-			l_line: attached EDITOR_LINE
-			l_next: detachable like next_text_token
-			l_match: detachable like next_text_token
+			l_image: STRING
+			l_token: EDITOR_TOKEN
+			l_line: EDITOR_LINE
+			l_next: like next_text_token
+			l_match: like next_text_token
 		do
 			if is_attachment_token (a_start_token, a_start_line) then
 					-- Start of the type, using an attachment mark
@@ -123,22 +133,28 @@ feature -- Basic operations
 				end
 			end
 		ensure
+			result_token_attached: Result /= Void implies Result.token /= Void
+			result_line_attached: Result /= Void implies Result.line /= Void
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_token_is_text: Result /= Void implies Result.token.is_text
 		end
 
 feature {NONE} -- Helpers
 
-	brace_matcher: attached ES_EDITOR_BRACE_MATCHER
+	brace_matcher: ES_EDITOR_BRACE_MATCHER
 			-- Shared access to a brace matcher to match expressions and signature braces.
 		once
 			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
-	block_matcher: attached ES_EDITOR_BLOCK_BRACE_MATCHER
+	block_matcher: ES_EDITOR_BLOCK_BRACE_MATCHER
 			-- Shared access to a block/brace matcher to match expressions and signature braces.
 		once
 			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 ;note

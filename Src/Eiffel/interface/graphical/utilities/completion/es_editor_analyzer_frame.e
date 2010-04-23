@@ -29,11 +29,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: attached like context_class; a_feature: attached like context_feature)
+	make (a_class: like context_class; a_feature: like context_feature)
 			-- Initialize a new context frame.
 			--
 			-- `a_class'  : A context class to use to resolve type information from.
 			-- `a_feature': A context feature used to resolve type information.
+		require
+			a_class_attached: a_class /= Void
+			a_feature_attached: a_feature /= Void
 		do
 			context_class := a_class
 			context_feature := a_feature
@@ -42,13 +45,16 @@ feature {NONE} -- Initialization
 			context_feature_set: context_feature = a_feature
 		end
 
-	make_parented (a_class: attached like context_class; a_feature: attached like context_feature; a_parent: attached like parent)
+	make_parented (a_class: like context_class; a_feature: like context_feature; a_parent: like parent)
 			-- Initialize a context frame with a parent frame.
 			--
 			-- `a_class'  : A context class to use to resolve type information from.
 			-- `a_feature': A context feature used to resolve type information.
 			-- `a_parent' : A parent frame, used for merging local entities.
 		require
+			a_class_attached: a_class /= Void
+			a_feature_attached: a_feature /= Void
+			a_parent_attached: a_parent /= Void
 			non_circular_parent: not is_parented_to_current (a_parent)
 		do
 			parent := a_parent
@@ -60,57 +66,53 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context_class: attached CLASS_C
+	context_class: CLASS_C
 			-- The context class of the current frame, used to resolve type information.
 
-	context_feature: attached FEATURE_I
+	context_feature: FEATURE_I
 			-- The context feature of the current frame, used to resolve type information.
 
 feature {ES_EDITOR_ANALYZER_FRAME} -- Access
 
-	parent: ES_EDITOR_ANALYZER_FRAME
+	parent: detachable ES_EDITOR_ANALYZER_FRAME
 			-- A parent context frame.
 
 feature {NONE} -- Access
 
-	string_local_declarations: attached HASH_TABLE [attached STRING_32, attached STRING_32]
+	string_local_declarations: HASH_TABLE [STRING_32, STRING_32]
 			-- Table of raw string local declarations, ones the were added through `add_local'
 			--
 			-- value: Class type description.
 			-- key: Entity name.
-		local
-			l_result: detachable like internal_string_local_declarations
 		do
-			l_result := internal_string_local_declarations
-			if l_result = Void then
+			if attached internal_string_local_declarations as l_result then
+				Result := l_result
+			else
 				create Result.make (1)
 				Result.compare_objects
 				internal_string_local_declarations := Result
-			else
-				Result := l_result
 			end
 		ensure
+			result_attached: Result /= Void
 			result_consistent: Result = string_local_declarations
 			result_compares_objects: Result.object_comparison
 		end
 
-	ast_local_declarations: attached HASH_TABLE [attached TYPE_AS, attached STRING_32]
+	ast_local_declarations: HASH_TABLE [TYPE_AS, STRING_32]
 			-- Table of AST local declarations, ones the were added through `add_local'
 			--
 			-- value: Class type description.
 			-- key: Entity name.
-		local
-			l_result: detachable like internal_ast_local_declarations
 		do
-			l_result := internal_ast_local_declarations
-			if l_result = Void then
+			if attached internal_ast_local_declarations as l_result then
+				Result := l_result
+			else
 				create Result.make (1)
 				Result.compare_objects
 				internal_ast_local_declarations := Result
-			else
-				Result := l_result
 			end
 		ensure
+			result_attached: Result /= Void
 			result_consistent: Result = ast_local_declarations
 			result_compares_objects: Result.object_comparison
 		end
@@ -138,7 +140,7 @@ feature -- Status report
 			has_parent: not Result implies has_parent
 		end
 
-	is_parented_to_current (a_parent: attached ES_EDITOR_ANALYZER_FRAME): BOOLEAN
+	is_parented_to_current (a_parent: ES_EDITOR_ANALYZER_FRAME): BOOLEAN
 			-- Determines if a parent has Current has a parent.
 		local
 			l_next_parent: detachable like parent
@@ -166,35 +168,31 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	locals: attached HASH_TABLE [TYPE_A, attached STRING_32]
+	locals: HASH_TABLE [TYPE_A, STRING_32]
 			-- Type evaluated local entities of the Current frame.
 			--
 			-- value: Class type description.
 			-- key: Local entity name.
 		local
-			l_result: detachable like internal_locals
-			l_class: attached like context_class
-			l_feature: attached like context_feature
-			l_ast_locals: detachable like internal_ast_local_declarations
-			l_string_locals: detachable like internal_string_local_declarations
-			l_parsed_locals: attached HASH_TABLE [attached TYPE_AS, attached STRING_32]
-			l_locals: attached HASH_TABLE [attached TYPE_AS, attached STRING_32]
+			l_class: like context_class
+			l_feature: like context_feature
+			l_parsed_locals: HASH_TABLE [TYPE_AS, STRING_32]
+			l_locals: HASH_TABLE [TYPE_AS, STRING_32]
 			l_generator: like type_a_generator
 			l_checker: like type_a_checker
-			l_name: attached STRING_32
+			l_name: STRING_32
 			l_type: TYPE_A
 		do
-			create Result.make (7)
+			if attached internal_locals as l_result then
+				Result := l_result
+			else
+				create Result.make (7)
 
-			l_result := internal_locals
-			if l_result = Void then
 				create l_locals.make (13)
-				l_ast_locals := internal_ast_local_declarations
-				if l_ast_locals /= Void and then not l_ast_locals.is_empty then
+				if attached internal_ast_local_declarations as l_ast_locals and then not l_ast_locals.is_empty then
 					l_locals.merge (l_ast_locals)
 				end
-				l_string_locals := internal_string_local_declarations
-				if l_string_locals /= Void and then not l_string_locals.is_empty then
+				if attached internal_string_local_declarations as l_string_locals and then not l_string_locals.is_empty then
 					l_parsed_locals := parsed_string_local_declarations
 					if not l_parsed_locals.is_empty then
 						l_locals.merge (l_parsed_locals)
@@ -221,14 +219,13 @@ feature -- Query
 				end
 
 				internal_locals := Result
-			else
-				Result := l_result
 			end
 		ensure
+			result_attached: Result /= Void
 			result_is_consitent: Result = locals
 		end
 
-	all_locals: attached HASH_TABLE [TYPE_A, attached STRING_32]
+	all_locals: HASH_TABLE [TYPE_A, STRING_32]
 			-- Complete list of entities, including parent frames.
 			--
 			-- value: Class type description.
@@ -242,11 +239,13 @@ feature -- Query
 			if not is_empty then
 				Result.merge (locals)
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Query
 
-	parsed_string_local_declarations: attached HASH_TABLE [attached TYPE_AS, attached STRING_32]
+	parsed_string_local_declarations: HASH_TABLE [TYPE_AS, STRING_32]
 			-- Parses the string local declarations to retrieve a list of parsed AST declarations, similar
 			-- to `ast_local_declarations'.
 			--
@@ -256,16 +255,16 @@ feature {NONE} -- Query
 			internal_string_local_declarations_attached: internal_string_local_declarations /= Void
 			not_internal_string_local_declarations_is_empty: not internal_string_local_declarations.is_empty
 		local
-			l_string_locals: attached like string_local_declarations
-			l_local_string: attached STRING_32
+			l_string_locals: like string_local_declarations
+			l_local_string: STRING_32
 			l_context_class: like context_class
 			l_option: CONF_OPTION
 			l_parser: EIFFEL_PARSER
 			l_parser_wrapper: like eiffel_parser_wrapper
 			l_declarations: ARRAYED_LIST [TYPE_DEC_AS]
-			l_entity_name_map: attached HASH_TABLE [attached STRING_32, attached STRING_32]
-			l_entity_name: attached STRING_32
-			l_prefix: attached STRING_32
+			l_entity_name_map: HASH_TABLE [STRING_32, STRING_32]
+			l_entity_name: STRING_32
+			l_prefix: STRING_32
 			l_type_dec: TYPE_DEC_AS
 			l_type: TYPE_AS
 			l_ids: IDENTIFIER_LIST
@@ -331,7 +330,7 @@ feature {NONE} -- Query
 				end
 			else
 				l_declarations := l_parser.entity_declaration_node
-				check l_declarations_attached: attached l_declarations end
+				check l_declarations_attached: l_declarations /= Void end
 			end
 
 				-- Build result, assigning the type declartation to an index local entity name.
@@ -348,7 +347,7 @@ feature {NONE} -- Query
 							if l_type /= Void and then l_name /= Void and then not l_name.is_empty then
 								l_name := l_entity_name_map.item (l_name)
 								check
-										-- If this fails then conver the name to local case, the compiler must have changed.
+										-- If this fails then convert the name to lower case, the compiler must have changed.
 										-- Or remove the two `l_entity_name.to_lower' called when extending `l_entity_name_map'.
 									l_entity_name_map_has_l_name: l_name /= Void
 								end
@@ -363,6 +362,8 @@ feature {NONE} -- Query
 				end
 				l_declarations.forth
 			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Helpers
@@ -371,18 +372,22 @@ feature {NONE} -- Helpers
 			-- Parser wrapper used to protect the parser for persisting syntax errors
 		once
 			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Extension
 
-	add_local (a_type: attached TYPE_DEC_AS)
+	add_local (a_type: TYPE_DEC_AS)
 			-- Adds a local entity to the frame, from an AST local declaration.
 			--
 			-- `a_type': The local type declaration.
+		require
+			a_type_attached: a_type /= Void
 		local
-			l_ids: IDENTIFIER_LIST
-			l_name: STRING_32
-			l_type: TYPE_AS
+			l_ids: detachable IDENTIFIER_LIST
+			l_name: detachable STRING_32
+			l_type: detachable TYPE_AS
 		do
 			l_ids := a_type.id_list
 			if l_ids /= Void then
@@ -405,13 +410,15 @@ feature -- Extension
 			not_is_empty: not is_empty
 		end
 
-	add_local_string (a_name: attached STRING_32; a_type_name: attached STRING_32)
+	add_local_string (a_name: STRING_32; a_type_name: STRING_32)
 			-- Adds a local entity to the frame.
 			--
 			-- `a_name'     : The name of the local entity.
 			-- `a_type_name': The name of type for the local entity.
 		require
+			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
+			a_type_name_attached: a_type_name /= Void
 			not_a_type_name_is_empty: not a_type_name.is_empty
 		do
 			string_local_declarations.force (a_type_name, a_name)
@@ -437,6 +444,8 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 invariant
+	context_class_attached: context_class /= Void
+	context_feature: context_feature /= Void
 	--non_circular_parent: has_parent implies parent /= Void and then not is_parented_to_current (parent)
 
 note

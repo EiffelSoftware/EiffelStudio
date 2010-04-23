@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_valid_state_info (a_info: attached ES_EDITOR_ANALYZER_STATE_INFO): BOOLEAN
+	is_valid_state_info (a_info: ES_EDITOR_ANALYZER_STATE_INFO): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_info)
@@ -27,21 +27,24 @@ feature -- Status report
 			end
 		ensure then
 			a_info_has_current_frame: Result implies (
-					({detachable ES_EDITOR_ANALYZER_FEATURE_STATE_INFO}) #? a_info /= Void and then
-					(({detachable ES_EDITOR_ANALYZER_FEATURE_STATE_INFO}) #? a_info).has_current_frame
+					attached {ES_EDITOR_ANALYZER_FEATURE_STATE_INFO} a_info as l_info and then
+					l_info.has_current_frame
 				)
 		end
 
 feature {NONE} -- Status report
 
-	is_feature_body_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_feature_body_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- Determines if a token represents a feature body keyword token.
 			--
 			-- `a_token': Token to check as a feature body token.
 			-- `a_line' : The line where the supplied token is resident.
 			-- `Result' : True if the token is a feature body token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 		local
-			l_next: detachable like next_token
+			l_next: like next_token
 		do
 			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.do_keyword) or else
 				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword)
@@ -53,21 +56,23 @@ feature {NONE} -- Status report
 				elseif is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.once_keyword) then
 						-- Make sure there is no string keyword after the once
 					l_next := next_token (a_token, a_line, True, Void, Void)
-					Result := l_next = Void or else not attached {EDITOR_TOKEN_STRING} l_next.token as l_string
+					Result := l_next = Void or else not attached {EDITOR_TOKEN_STRING} l_next.token
 				end
 			end
 		end
 
 feature {NONE} -- Helpers
 
-	local_list_state: attached ES_EDITOR_ANALYZER_LOCAL_LIST_STATE
+	local_list_state: ES_EDITOR_ANALYZER_LOCAL_LIST_STATE
 			-- Access to the local list state.
 		once
 			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -80,22 +85,22 @@ feature {NONE} -- Helpers
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

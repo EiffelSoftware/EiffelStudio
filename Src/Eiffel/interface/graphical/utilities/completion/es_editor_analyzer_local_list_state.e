@@ -28,7 +28,7 @@ inherit
 
 feature -- Status report
 
-	is_valid_start_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_valid_start_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_token, a_line) and then is_local_token (a_token)
@@ -36,30 +36,34 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_local_token (a_token: attached EDITOR_TOKEN): BOOLEAN
+	is_local_token (a_token: EDITOR_TOKEN): BOOLEAN
 			-- Determines if a token marks the beginning of a local declaration list.
 			--
 			-- `a_token': The token to determine local declaration block start status.
-			-- `Result' : True if the token is a local's block terminating token; False otherwise.			
+			-- `Result' : True if the token is a local's block terminating token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
 		do
 			Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword) or else
 					is_text_token (a_token, "(", False) or else
 					is_text_token (a_token, "{", False)
 		end
 
-	is_local_terminating_token (a_token: attached EDITOR_TOKEN): BOOLEAN
+	is_local_terminating_token (a_token: EDITOR_TOKEN): BOOLEAN
 			-- Determines if a token is considered a terminating token when scanning for a locals
 			-- declaration list.
 			--
 			-- `a_token': The token to determine termination status of.
 			-- `Result' : True if the token is a local's block terminating token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
 		local
-			l_image: detachable STRING
+			l_image: STRING
 		do
 			if attached {EDITOR_TOKEN_KEYWORD} a_token as l_keyword then
 					-- Is a keyword token, check if it's not a keyword used in a local declaration.
-				l_image := l_keyword.wide_image.as_string_8
-				if l_image /= Void and then not l_image.is_empty then
+				l_image := token_text_8 (l_keyword)
+				if not l_image.is_empty then
 						-- The only accepted keywords are 'Current' and 'like'.
 					Result := not (l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.current_keyword) or else
 						l_image.is_case_insensitive_equal ({EIFFEL_KEYWORD_CONSTANTS}.like_keyword) or else
@@ -68,8 +72,8 @@ feature {NONE} -- Status report
 				end
 			elseif attached {EDITOR_TOKEN_TEXT} a_token as l_text then
 					-- Check for end braces, the local could be an object test or argument list.
-				l_image := l_text.wide_image.as_string_8
-				if l_image /= Void and then not l_image.is_empty then
+				l_image := token_text_8 (l_text)
+				if not l_image.is_empty then
 					Result := l_image.is_equal (once ")") or else
 						l_image.is_equal (once "}")
 				end
@@ -78,17 +82,17 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Basic operation
 
-	process_next_tokens (a_info: attached ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_end_token: detachable EDITOR_TOKEN)
+	process_next_tokens (a_info: ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_end_token: detachable EDITOR_TOKEN)
 			-- <Precursor>
 		local
-			l_result: attached STRING_32
+			l_result: STRING_32
 			l_next: detachable like next_token
-			l_token: attached EDITOR_TOKEN
-			l_line: attached EDITOR_LINE
+			l_token: EDITOR_TOKEN
+			l_line: EDITOR_LINE
 			l_stop: BOOLEAN
 			l_wrapper: like eiffel_parser_wrapper
 			l_type_dec: detachable TYPE_DEC_AS
-			l_current_frame: attached ES_EDITOR_ANALYZER_FRAME
+			l_current_frame: ES_EDITOR_ANALYZER_FRAME
 		do
 			check
 				not_is_scanning_comments: not is_scanning_comments

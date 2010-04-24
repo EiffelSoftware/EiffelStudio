@@ -6,7 +6,7 @@ creation
 
 feature
 
-	make is
+	make
 		local
 			a: A
 		do

@@ -173,8 +173,6 @@ feature -- Processing
 							if l_error_handler.error_level = l_error_level then
 									-- We only merge the remaining checks if the class did not produce any other errors
 								merge_remaining_validity_checks_into_global_list
-									-- Mark the class as processed.
-								a_class.set_degree_4_processed
 							else
 									-- We cannot add the temporary added checks so we need to get rid of them
 									-- we will process them at the next compilation when user will have fix the
@@ -209,7 +207,8 @@ feature -- Processing
 							a.item.call (Void)
 						end
 						if l_error_handler.error_level = l_error_level then
-								-- The class is already marked as processed.
+								-- Mark the class as processed.
+							a_class.set_degree_4_processed
 							if attached qualified_suppliers as q then
 									-- Record new qualified suppliers if any.
 								a_class.set_qualified_suppliers (qualified_suppliers.item (a_class.class_id))

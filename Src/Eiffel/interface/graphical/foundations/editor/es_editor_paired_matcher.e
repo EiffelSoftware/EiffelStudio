@@ -136,7 +136,7 @@ feature -- Status report
 
 feature -- Query
 
-	match_brace (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+	match_brace (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: detachable EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
 			-- Searches for a matching brace, automatically navigating backwards/forwards based on the brace symbol.
 			--
 			-- `a_start_token': The token on the supplied line to find the previous token to.
@@ -146,7 +146,6 @@ feature -- Query
 		require
 			a_start_token_attached: a_start_token /= Void
 			a_start_line_attached: a_start_line /= Void
-			a_end_token_attached: a_end_token /= Void
 			a_start_line_has_a_start_token: a_start_line.has_token (a_start_token)
 			a_start_token_is_brace: is_brace (a_start_token)
 		do
@@ -164,7 +163,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-	match_opening_brace (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+	match_opening_brace (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: detachable EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
 			-- Searches for a next open matching (closing) brace.
 			--
 			-- `a_start_token': The token on the supplied line to find the previous token to.
@@ -174,7 +173,6 @@ feature -- Query
 		require
 			a_start_token_attached: a_start_token /= Void
 			a_start_line_attached: a_start_line /= Void
-			a_end_token_attached: a_end_token /= Void
 			a_start_line_has_a_start_token: a_start_line.has_token (a_start_token)
 			a_start_token_is_opening_brace: is_opening_brace (a_start_token)
 		local

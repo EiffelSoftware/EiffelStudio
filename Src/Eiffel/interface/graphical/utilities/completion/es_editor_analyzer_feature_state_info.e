@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_feature_name (a_name: detachable like feature_name)
+	set_feature_name (a_name: like feature_name)
 			-- Set the current state result's feature name
 			--
 			-- `a_name': The name of the feature.
@@ -35,9 +35,9 @@ feature -- Element change
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			feature_name := a_name.twin
+			create feature_name.make_from_string (a_name)
 		ensure
-			feature_name_set: feature_name.is_equal (a_name)
+			feature_name_set: feature_name ~ a_name
 		end
 
 feature -- Status report
@@ -58,7 +58,7 @@ feature -- Status setting
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -71,22 +71,22 @@ feature -- Status setting
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -241,7 +241,7 @@ feature -- Query
 				(a_start_token.wide_image.as_attached).is_equal (Result.token.wide_image.as_attached)
 		end
 
-	match_closing_brace (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
+	match_closing_brace (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: detachable EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
 			-- Searches for a previous closing matching (opening) brace.
 			--
 			-- `a_start_token': The token on the supplied line to find the previous token to.
@@ -251,7 +251,6 @@ feature -- Query
 		require
 			a_start_token_attached: a_start_token /= Void
 			a_start_line_attached: a_start_line /= Void
-			a_end_token_attached: a_end_token /= Void
 			a_start_line_has_a_start_token: a_start_line.has_token (a_start_token)
 			a_start_token_is_closing_brace: is_closing_brace (a_start_token)
 		local

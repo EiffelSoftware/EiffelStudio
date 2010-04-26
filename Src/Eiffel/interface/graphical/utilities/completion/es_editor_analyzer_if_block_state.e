@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_valid_start_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_valid_start_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_token, a_line) and then is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.if_keyword)
@@ -26,12 +26,15 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_if_or_elseif_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_if_or_elseif_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- Determines if a token is an if or elseif keyword token.
 			--
 			-- `a_token': Token to check for an if/elseif token.
 			-- `a_line' : The line where the supplied token is resident.
 			-- `Result' : True if the token is an if or elseif token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 		do
 			if attached {EDITOR_TOKEN_KEYWORD} a_token as l_keyword then
 				Result := is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.if_keyword) or else
@@ -42,14 +45,17 @@ feature {NONE} -- Status report
 				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.elseif_keyword))
 		end
 
-	is_then_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_then_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- Determines if a token is a single then keyword token.
 			--
 			-- `a_token': Token to check for a then token.
 			-- `a_line' : The line where the supplied token is resident.
 			-- `Result' : True if the token is an if or elseif token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 		local
-			l_prev: detachable like previous_text_token
+			l_prev: like previous_text_token
 		do
 			if attached {EDITOR_TOKEN_KEYWORD} a_token as l_keyword then
 				if is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.then_keyword) then
@@ -64,12 +70,15 @@ feature {NONE} -- Status report
 			is_if_or_elseif: Result implies is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.then_keyword)
 		end
 
-	is_object_test_start_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_object_test_start_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- Determines if a token is an object test start token.
 			--
 			-- `a_token': Token to check for an object test token.
 			-- `a_line' : The line where the supplied token is resident.
 			-- `Result' : True if the token is an object test start token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 		do
 			Result := is_text_token (a_token, "{", False) or else
 				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword)
@@ -81,22 +90,22 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Basic operation
 
-	process_next_tokens (a_info: attached ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_end_token: detachable EDITOR_TOKEN)
+	process_next_tokens (a_info: ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_end_token: detachable EDITOR_TOKEN)
 			-- <Precursor>
 		local
-			l_start_token: attached EDITOR_TOKEN
-			l_start_line: attached EDITOR_LINE
-			l_current_frame: attached ES_EDITOR_ANALYZER_FRAME
+			l_start_token: EDITOR_TOKEN
+			l_start_line: EDITOR_LINE
+			l_current_frame: ES_EDITOR_ANALYZER_FRAME
 			l_then_token: detachable EDITOR_TOKEN
-			l_block_matcher: attached like block_matcher
-			l_brace_matcher: attached like brace_matcher
-			l_match: detachable like next_token
-			l_next: detachable like next_token
-			l_next_as: detachable like next_token
-			l_next_then: detachable like next_token
-			l_type: detachable like next_token
-			l_prev: detachable like previous_token
-			l_local_list_state: attached like local_list_state
+			l_block_matcher: like block_matcher
+			l_brace_matcher: like brace_matcher
+			l_match: like next_token
+			l_next: like next_token
+			l_next_as: like next_token
+			l_next_then: like next_token
+			l_type: like next_token
+			l_prev: like previous_token
+			l_local_list_state: like local_list_state
 			l_type_string: STRING_32
 			l_expression_string: STRING_32
 			l_stop: BOOLEAN
@@ -145,7 +154,7 @@ feature {NONE} -- Basic operation
 
 										-- We only need to examine the attached expression if there is an 'as' assignment.
 									l_next_as := next_token (l_next.token, l_next.line, True, l_then_token,
-										agent (ia_token: attached EDITOR_TOKEN; ia_line: attached EDITOR_LINE): BOOLEAN
+										agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE): BOOLEAN
 											do
 												Result := is_keyword_token (ia_token, {EIFFEL_KEYWORD_CONSTANTS}.as_keyword)
 											end)
@@ -191,7 +200,6 @@ feature {NONE} -- Basic operation
 													l_type_string.append_character (' ')
 													l_type_string.append (l_expression_string)
 												end
-
 
 													-- Add local
 												a_info.current_frame.add_local_string (l_next.token.wide_image.as_attached, l_type_string)

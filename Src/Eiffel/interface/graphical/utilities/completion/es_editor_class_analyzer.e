@@ -25,32 +25,37 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: attached like context_class)
+	make (a_class: like context_class)
 			-- Initialize the class context analyzer.
 			--
 			-- `a_class': The context class to analyze the class for.
+		require
+			a_class_attached: a_class /= Void
 		do
 			context_class := a_class
 		ensure
-			context_class_set: context_class ~ a_class
+			context_class_set: context_class = a_class
 		end
 
-	make_with_feature (a_class: attached like context_class; a_feature: attached like context_feature)
+	make_with_feature (a_class: like context_class; a_feature: like context_feature)
 			-- Initialize the class context analyzer.
 			--
 			-- `a_class': The context class to analyze the class for.
 			-- `a_feature': The context feature to analyze in context to.
+		require
+			a_class_attached: a_class /= Void
+			a_feature_attached: a_feature /= Void
 		do
 			context_feature := a_feature
 			make (a_class)
 		ensure
-			context_class_set: context_class ~ a_class
-			context_feature_set: context_feature ~ a_feature
+			context_class_set: context_class = a_class
+			context_feature_set: context_feature = a_feature
 		end
 
 feature -- Access
 
-	context_class: attached CLASS_C
+	context_class: CLASS_C
 			-- The class analyzer's context class.
 
 	context_feature: detachable FEATURE_I
@@ -58,12 +63,15 @@ feature -- Access
 
 feature {NONE} -- Status report
 
-	is_feature_body_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): BOOLEAN
+	is_feature_body_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- Determines if a token represents a feature body keyword token.
 			--
 			-- `a_token': Token to check as a feature body token.
 			-- `a_line' : The line where the supplied token is resident.
 			-- `Result' : True if the token is a feature body token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 		local
 			l_next: detachable like next_token
 		do
@@ -84,7 +92,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Query
 
-	token_context_state (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): detachable TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE; state: attached ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]]
+	token_context_state (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE; state: ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]]
 			-- Evalues a token and returns a state processing object.
 			--
 			-- `a_token': The token on the supplied line to start the upward locating scan on.
@@ -93,14 +101,16 @@ feature {NONE} -- Query
 			--            When attached the token and line represent that actual start of the block, which
 			--            differs from the passed tokens that represent the context location.
 		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 			a_line_has_a_token: a_line.has_token (a_token)
 			not_is_scanning_comments: not is_scanning_comments
 		local
 			l_matcher: detachable like brace_matcher
 			l_prev: detachable like previous_text_token
 			l_peek: detachable like previous_text_token
-			l_token: attached EDITOR_TOKEN
-			l_line: attached EDITOR_LINE
+			l_token: EDITOR_TOKEN
+			l_line: EDITOR_LINE
 			l_stop: BOOLEAN
 			l_feature_state: detachable like new_feature_state
 		do
@@ -155,9 +165,11 @@ feature {NONE} -- Query
 					l_stop := l_prev = Void
 				end
 			end
+		ensure
+			result_valid: Result /= Void implies (Result.token /= Void and Result.line /= Void and Result.state /= Void)
 		end
 
-	feature_start_token (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): detachable TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE]
+	feature_start_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
 			-- Searches to what is considered to be a "start" token, which represents where the context
 			-- scanner will start its scan from.
 			-- The function takes into consideration in line agents, routines, feature clauses and class
@@ -168,15 +180,17 @@ feature {NONE} -- Query
 			-- `Result': A resulting token and resident line of a determined starting token, or Void if no
 			--           valid start location was found.
 		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 			a_line_has_a_token: a_line.has_token (a_token)
 			not_is_scanning_comments: not is_scanning_comments
 		local
 			l_matcher: detachable like brace_matcher
 			l_prev: detachable like previous_text_token
 			l_peek: detachable like previous_text_token
-			l_token: attached EDITOR_TOKEN
-			l_line: attached EDITOR_LINE
-			l_top_feature_keyword_token: attached TUPLE [token: attached EDITOR_TOKEN; line: attached EDITOR_LINE]
+			l_token: EDITOR_TOKEN
+			l_line: EDITOR_LINE
+			l_top_feature_keyword_token: TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
 			l_stop: BOOLEAN
 		do
 			l_matcher := brace_matcher
@@ -304,25 +318,28 @@ feature {NONE} -- Query
 				end
 			end
 		ensure
+			result_valid: Result /= Void implies (Result.token /= Void and Result.line /= Void)
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
 feature -- Basic operation
 
-	scan (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): detachable ES_EDITOR_ANALYZER_STATE_INFO
+	scan (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): detachable ES_EDITOR_ANALYZER_STATE_INFO
 			-- Scans the editor content for a context given the token.
 			--
 			-- `a_token': The start token to begin scanning at.
 			-- `a_line' : The start line which the start token is resident on.
 			-- `Result' : A result describing the result of the analysis.
 		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 			a_line_has_a_token: a_line.has_token (a_token)
 		local
 			l_context_state: detachable like token_context_state
-			l_info: attached like new_state_info_for_state
-			l_state: attached ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]
-			l_token: attached EDITOR_TOKEN
-			l_line: attached EDITOR_LINE
+			l_info: like new_state_info_for_state
+			l_state: ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]
+			l_token: EDITOR_TOKEN
+			l_line: EDITOR_LINE
 		do
 			reset
 			l_context_state := token_context_state (a_token, a_line)
@@ -351,19 +368,21 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Factory
 
-	new_feature_state (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE): detachable ES_EDITOR_ANALYZER_FEATURE_STATE
+	new_feature_state (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): detachable ES_EDITOR_ANALYZER_FEATURE_STATE
 			-- Create a new feature level state object using the supplied feature tokens.
 			--
 			-- `a_token': The token to start processing the state at.
 			-- `a_line' : The line where the supplied start token is resident.
 			-- `Result' : A state object to use to process the tokens.
 		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 			a_line_has_a_token: a_line.has_token (a_token)
 		do
 			create Result
 		end
 
-	new_state_info_for_state (a_token: attached EDITOR_TOKEN; a_line: attached EDITOR_LINE; a_state: attached ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]): attached ES_EDITOR_ANALYZER_STATE_INFO
+	new_state_info_for_state (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_state: ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]): ES_EDITOR_ANALYZER_STATE_INFO
 			-- Create a new state info object for a given editor analyzer's state.
 			--
 			-- `a_token': The token to start processing the state at.
@@ -371,6 +390,9 @@ feature {NONE} -- Factory
 			-- `a_state': The state object to create an information result object for.
 			-- `Result' : A state information object compabile with the supplied state.
 		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
+			a_state_attached: a_state /= Void
 			a_line_has_a_token: a_line.has_token (a_token)
 			a_token_is_valid_start_token: a_state.is_valid_start_token (a_token, a_line)
 		local
@@ -390,11 +412,15 @@ feature {NONE} -- Factory
 				end
 			end
 		ensure
+			result_attached: Result /= Void
 			result_is_valid_state_info: a_state.is_valid_state_info (Result)
 		end
 
+invariant
+	context_class_attached: context_class /= Void
+
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2010, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -418,11 +444,11 @@ feature {NONE} -- Factory
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -117,13 +117,13 @@ feature -- Status report
 						if a_ignore_case then
 							Result := token_text (a_token).is_case_insensitive_equal (l_wide_string)
 						else
-							Result := token_text (a_token) ~ l_wide_string
+							Result := token_text (a_token).same_string (l_wide_string)
 						end
 					else
 						if a_ignore_case then
 							Result := token_text_8 (a_token).is_case_insensitive_equal (a_text.as_string_8)
 						else
-							Result := token_text_8 (a_token) ~ a_text.as_string_8
+							Result := token_text_8 (a_token).same_string_general (a_text)
 						end
 					end
 				end
@@ -457,7 +457,7 @@ feature -- Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

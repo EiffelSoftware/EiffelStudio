@@ -114,16 +114,16 @@ feature -- Generic conformance
 
 	initialize_info (an_info: like shared_create_info)
 		do
-			-- TODO
+			an_info.make (Current)
 		end
 
-	create_info: CREATE_FEAT
+	create_info: CREATE_QUALIFIED
 		do
 			initialize_info (shared_create_info)
 			Result := shared_create_info.twin
 		end
 
-	shared_create_info: CREATE_FEAT
+	shared_create_info: CREATE_QUALIFIED
 		once
 			create Result
 		end
@@ -237,31 +237,36 @@ feature -- Primitives
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): QUALIFIED_ANCHORED_TYPE_A
 		local
-			c: CLASS_C
-			f: FEATURE_I
 			i: INTEGER
-			n: like chain
-			q: TYPE_A
+			current_chain: like chain
+			written_call_type: TYPE_A
+			current_call_type: TYPE_A
 		do
 			if a_ancestor /= a_descendant then
 					-- Compute new feature names.
-				create n.make_filled (0, chain.count)
+				create current_chain.make_filled (0, chain.count)
 				from
-					c := qualifier.associated_class
-					q := qualifier.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
+					written_call_type := qualifier
+					current_call_type := qualifier.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
+					create Result.make (current_call_type, current_chain)
 				until
 					i >= chain.count
 				loop
-					if attached c then
-						f := c.feature_table.item_id (chain [i])
-						if attached f then
-							n [i] := q.associated_class.feature_of_rout_id (f.rout_id_set.first).feature_name_id
-							c := f.type.associated_class
-						end
+						-- Find a corresponding feature in the current class and in the descendant.
+					if
+						attached written_call_type.associated_class as c and then
+						attached c.feature_table.item_id (chain [i]) as f and then
+						attached current_call_type.associated_class.feature_of_rout_id (f.rout_id_set.first) as g
+					then
+							-- Record new feature name.
+						current_chain [i] := g.feature_name_id
+							-- Advance to the next element in both written and current context.
+						current_call_type := g.type
+						written_call_type := f.type
 					end
 					i := i + 1
 				end
-				create Result.make (q, n)
+				Result.set_actual_type (current_call_type)
 				if has_attached_mark then
 					Result.set_attached_mark
 				elseif has_detachable_mark then

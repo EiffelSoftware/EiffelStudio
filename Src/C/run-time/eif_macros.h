@@ -2,7 +2,7 @@
 	description: "Macros used by C code at run time."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1327,6 +1327,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTWPT(x,y,z) fetches the creation type of a precompiled feature
  *  RTWCT(x,y,z) fetches the creation type of a generic features
  *  RTWPCT(st,x,y,z) fetches the creation type of a precompiled generic feature
+ *  RTWCTT(x,y,z) same as RTWCT but takes dftype instead of object
+ *  RTWPCTT(x,y,z) same as RTWPCT but takes dftype instead of object
  *  RTWPP(x) returns the feature address ($ or agent operator) of id x. The ids are assigned int ADDRESS_TABLE.
  *  RTWO(x) stores in a list the body id of the just called once routine
  */
@@ -1342,6 +1344,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTWPT(x,y,z)		wptype(x,y,z)
 #define RTWCT(x,y,z)		wtype_gen(x,y,z)
 #define RTWPCT(st,x,y,z)	wptype_gen(st,x,y,z)
+#define RTWCTT(x,y,z)		wttype_gen(x,y,z)
+#define RTWPCTT(st,x,y,z)	wtptype_gen(st,x,y,z)
 #define RTWPP(x)			(egc_address_table[x])
 #define RTWO(x)
 

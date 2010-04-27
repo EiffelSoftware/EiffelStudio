@@ -2,7 +2,7 @@
 	description: "Constants used for generic conformance."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -59,6 +59,8 @@ extern "C" {
 #define TUPLE_TYPE				0xFFF9
 #define FORMAL_TYPE				0xFFF8
 #define PARENT_TYPE_SEPARATOR	0xFFF7
+#define QUALIFIED_PFEATURE_TYPE		0xFFF6
+#define QUALIFIED_FEATURE_TYPE		0xFFF5
 
 /* Currently we only support up to 4 annotations which can be read at once. */
 #define ATTACHED_TYPE			0xFF11

@@ -2,7 +2,7 @@
 	description: "Traversal of objects. Useful for storing objects and/or recursively coying them."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -249,8 +249,12 @@ rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
 				 * type.
 				 */
 			CHECK ("No special type",
-				(dtype != LIKE_CURRENT_TYPE) && (dtype != LIKE_ARG_TYPE) &&
-				(dtype != LIKE_FEATURE_TYPE) && (dtype != LIKE_PFEATURE_TYPE) &&
+				(dtype != LIKE_CURRENT_TYPE) &&
+				(dtype != LIKE_ARG_TYPE) &&
+				(dtype != LIKE_FEATURE_TYPE) &&
+				(dtype != LIKE_PFEATURE_TYPE) &&
+				(dtype != QUALIFIED_PFEATURE_TYPE) &&
+				(dtype != QUALIFIED_FEATURE_TYPE) &&
 				(dtype != FORMAL_TYPE));
 
 			if (dtype <= MAX_DTYPE) {

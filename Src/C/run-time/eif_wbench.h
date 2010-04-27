@@ -2,7 +2,7 @@
 	description: "Definitions for workbench calls."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -60,6 +60,8 @@ RT_LNK long wattr_inv(int static_type, int32 feature_id, char *name, EIF_REFEREN
 RT_LNK long wpattr_inv(int32 origin, int32 offset, char *name, EIF_REFERENCE object);				/* Nested precompiled attribute access*/
 RT_LNK EIF_TYPE_INDEX wtype_gen(EIF_TYPE_INDEX static_type, int32 feature_id, EIF_REFERENCE object);						/* Creation type (generic) */
 RT_LNK EIF_TYPE_INDEX wptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_REFERENCE object);						/* Creation type of a precomp generic feature */
+RT_LNK EIF_TYPE_INDEX wttype_gen(EIF_TYPE_INDEX static_type, int32 feature_id, EIF_TYPE_INDEX dftype);						/* Creation type (generic) */
+RT_LNK EIF_TYPE_INDEX wtptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_TYPE_INDEX dftype);						/* Creation type of a precomp generic feature */
 
 
 RT_LNK void init_desc(void);				/* Call structure initialization */

@@ -2,7 +2,7 @@
 	description: "Workbench primitives."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -65,6 +65,8 @@ doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbenc
  * `wpattr_inv (origin, offset, name, object)'
  * `wtype_gen (static_type, feature_id, object)'
  * `wptype_gen (origin, offset, object)'
+ * `wttype_gen (static_type, feature_id, dftype)'
+ * `wtptype_gen (origin, offset, dftype)'
  * `wdisp (dyn_type)'
  */
 
@@ -364,6 +366,28 @@ rt_public EIF_TYPE_INDEX wtype_gen(EIF_TYPE_INDEX static_type, int32 feature_id,
 	return eif_compound_id (Dftype (object), type, gen_type);
 }
 
+rt_public EIF_TYPE_INDEX wttype_gen(EIF_TYPE_INDEX static_type, int32 feature_id, EIF_TYPE_INDEX dftype)
+{
+	/* Type of a generic feature of routine id `rout_id' in the class of
+	 * dynamic type `dftype'. Replaces formal generics by actual gen.
+	 * Returns an integer.
+	 */ 
+
+	int32   rout_id;
+	EIF_TYPE_INDEX dyn_type;
+	EIF_TYPE_INDEX type, *gen_type;
+
+	dyn_type = To_dtype(dftype);
+	rout_id = Routids(static_type)[feature_id];
+	CGENFeatType(type,gen_type,rout_id,dyn_type);
+
+	if (gen_type) {
+		*gen_type = dyn_type;
+	}
+
+	return eif_compound_id (dftype, type, gen_type);
+}
+
 rt_public EIF_TYPE_INDEX wptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_REFERENCE object)
 {
 	/* Type of a generic feature of routine identified by `offset' in 
@@ -382,6 +406,26 @@ rt_public EIF_TYPE_INDEX wptype_gen(EIF_TYPE_INDEX static_type, int32 origin, in
 	}
 
 	return eif_compound_id (Dftype (object), desc->type, desc->gen_type);
+}
+
+rt_public EIF_TYPE_INDEX wtptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_TYPE_INDEX dftype)
+{
+	/* Type of a generic feature of routine identified by `offset' in 
+	 * its origin class `origin' and to be applied on type `dftype'. Replaces
+	 * formal generics by actual gen. Returns an integer.
+	 */ 
+
+	struct desc_info *desc;
+	EIF_TYPE_INDEX dyn_type;
+
+	dyn_type = To_dtype(dftype);
+	desc = desc_tab[origin][dyn_type] + offset;
+
+	if (desc->gen_type) {
+		*(desc->gen_type) = dyn_type;
+	}
+
+	return eif_compound_id (dftype, desc->type, desc->gen_type);
 }
 
 rt_public EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type)

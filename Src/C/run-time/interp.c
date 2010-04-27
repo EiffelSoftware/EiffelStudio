@@ -2,7 +2,7 @@
 	description: "The byte code interpreter."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -5664,6 +5664,31 @@ rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current)
 				result = RTWCT(code, offset, Current);
 			}
 			break;
+		case QUALIFIED_PFEATURE_TYPE: /* like feature - see BC_PQLIKE */
+			{
+				short stype;
+				int32 origin, ooffset;
+				EIF_TYPE_INDEX dftype;
+
+				dftype = get_next_compound_id(Current);
+				stype = get_int16(&IC);			/* Get static type of caller */
+				origin = get_int32(&IC);			/* Get the origin class id */
+				ooffset = get_int32(&IC);			/* Get the offset in origin */
+				result = RTWPCTT(stype, origin, ooffset, dftype);
+			}
+			break;
+		case QUALIFIED_FEATURE_TYPE: /* like feature - see BC_QLIKE */
+			{
+				short code;
+				long  offset;
+				EIF_TYPE_INDEX dftype;
+
+				dftype = get_next_compound_id(Current);
+				code = get_int16(&IC);		/* Get the static type first */
+				offset = get_int32(&IC);	/* Get the feature id of the anchor */
+				result = RTWCTT(code, offset, dftype);
+			}
+			break;
 		default:
 			break;
 	}
@@ -5700,7 +5725,7 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
 	EIF_TYPE_INDEX type;/* Often used to hold type values */
-	EIF_TYPE_INDEX code;			/* Current intepreted byte code */
+	EIF_TYPE_INDEX code;	/* Current intepreted byte code */
 	long offset;		/* Offset for jumps and al */
 
 	switch (*IC++) {
@@ -5720,6 +5745,15 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 /* GENERIC CONFORMANCE */
 		type = RTWCT(code, offset, icurrent->it_ref);
 		break;
+	case BC_QLIKE:				/* Qualified anchored creation type */
+		{
+		EIF_TYPE_INDEX dftype; /* Current dftype */
+		dftype = get_creation_type(for_creation); /* Evaluate type of qualifier */
+		code = get_int16(&IC);                    /* Get the static type first */
+		offset = get_int32(&IC);                  /* Get the feature id of the anchor */
+		type = RTWCTT(code, offset, dftype);      /* GENERIC CONFORMANCE */
+		}
+		break;
 	case BC_PCLIKE:				/* Like feature creation type */
 		{
 		EIF_TYPE_INDEX stype;
@@ -5730,6 +5764,19 @@ rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
 		ooffset = get_int32(&IC);			/* Get the offset in origin */
 /* GENERIC CONFORMANCE */
 		type = RTWPCT(stype, origin, ooffset, icurrent->it_ref);
+		break;
+		}
+	case BC_PQLIKE:				/* Qualified anchored creation type */
+		{
+		EIF_TYPE_INDEX dftype; /* Current dftype */
+		EIF_TYPE_INDEX stype;
+		int32 origin, ooffset;
+
+		dftype = get_creation_type(for_creation); /* Evaluate type of qualifier */
+		stype = get_int16(&IC);                   /* Get static type of caller */
+		origin = get_int32(&IC);                  /* Get the origin class id */
+		ooffset = get_int32(&IC);                 /* Get the offset in origin */
+		type = RTWPCTT(stype, origin, ooffset, dftype); /* GENERIC CONFORMANCE */
 		break;
 		}
 	case BC_CCUR:				/* Like Current creation type */

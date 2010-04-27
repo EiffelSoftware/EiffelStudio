@@ -2,7 +2,7 @@
 	description: "Interpreter declarations and definitions."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2008, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -272,8 +272,8 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_END_CATCALL		(unsigned char) 158
 #define BC_IS_ATTACHED		(unsigned char) 159
 #define BC_SPECIAL_EXTEND	(unsigned char) 160
-#define BC_NOTUSED_161		(unsigned char) 161
-#define BC_NOTUSED_162		(unsigned char) 162
+#define BC_QLIKE		(unsigned char) 161
+#define BC_PQLIKE		(unsigned char) 162
 #define BC_NOTUSED_163		(unsigned char) 163
 #define BC_NOTUSED_164		(unsigned char) 164
 #define BC_NOTUSED_165		(unsigned char) 165

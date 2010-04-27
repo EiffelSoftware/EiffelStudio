@@ -2,7 +2,7 @@
 	description: "Eiffel retrieve mechanism."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -2631,8 +2631,13 @@ rt_shared char *name_of_attribute_type (EIF_TYPE_INDEX **type)
 		dftype = **type;
 		sprintf (buffer, "G#%d", dftype);
 	} else {
-		CHECK ("Not an anchor", (dftype != LIKE_CURRENT_TYPE) && (dftype != LIKE_PFEATURE_TYPE) &&
-			(dftype != LIKE_FEATURE_TYPE) && (dftype != LIKE_ARG_TYPE));
+		CHECK ("Not an anchor",
+			(dftype != LIKE_CURRENT_TYPE) &&
+			(dftype != LIKE_PFEATURE_TYPE) &&
+			(dftype != LIKE_FEATURE_TYPE) &&
+			(dftype != QUALIFIED_PFEATURE_TYPE) &&
+			(dftype != QUALIFIED_FEATURE_TYPE) &&
+			(dftype != LIKE_ARG_TYPE));
 	}
 	return buffer;
 }
@@ -2666,8 +2671,13 @@ rt_private char *name_of_old_attribute_type (EIF_TYPE_INDEX **type)
 		dftype = **type;
 		sprintf (buffer, "G#%d", dftype);
 	} else {
-		CHECK ("Not an anchor", (dftype != LIKE_CURRENT_TYPE) && (dftype != LIKE_PFEATURE_TYPE) &&
-			(dftype != LIKE_FEATURE_TYPE) && (dftype != LIKE_ARG_TYPE));
+		CHECK ("Not an anchor",
+			(dftype != LIKE_CURRENT_TYPE) &&
+			(dftype != LIKE_PFEATURE_TYPE) &&
+			(dftype != LIKE_FEATURE_TYPE) &&
+			(dftype != QUALIFIED_PFEATURE_TYPE) &&
+			(dftype != QUALIFIED_FEATURE_TYPE) &&
+			(dftype != LIKE_ARG_TYPE));
 	}
 	return buffer;
 }

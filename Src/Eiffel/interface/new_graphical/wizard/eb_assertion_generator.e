@@ -27,6 +27,8 @@ feature -- Access
 				end
 			elseif is_integer (a_type) then
 				Result := integer_assertions (a_id)
+			elseif is_natural (a_type) then
+				Result := natural_assertions (a_id)
 			elseif is_pointer (a_type) then
 				Result := pointer_assertions (a_id)
 			elseif is_character (a_type) then
@@ -62,8 +64,18 @@ feature {NONE} -- Implementation
 			l: STRING
 		do
 			l := a_type.as_lower
-			Result := l.is_equal ("integer_16") or l.is_equal ("integer_8") or
-				l.is_equal ("integer") or l.is_equal ("integer_64")
+			Result := l.is_equal ("integer_8") or l.is_equal ("integer_16") or l.is_equal ("integer_32") or l.is_equal ("integer_64")
+				or l.is_equal ("integer") -- legacy
+		end
+
+	is_natural (a_type: STRING): BOOLEAN
+			-- Is `a_type' a natural type?
+		local
+			l: STRING
+		do
+			l := a_type.as_lower
+			Result := l.is_equal ("natural_8") or l.is_equal ("natural_16") or l.is_equal ("natural_32") or l.is_equal ("natural_64")
+				or l.is_equal ("natural") -- legacy
 		end
 
 	is_pointer (a_type: STRING): BOOLEAN
@@ -81,7 +93,8 @@ feature {NONE} -- Implementation
 			l: STRING
 		do
 			l := a_type.as_lower
-			Result := l.is_equal ("character") or l.is_equal ("wide_character")
+			Result := l.is_equal ("character_8") or else l.is_equal ("character_32")
+			 or else l.is_equal ("character") or else l.is_equal ("wide_character") -- legacy
 		end
 
 	is_real (a_type: STRING): BOOLEAN
@@ -90,7 +103,8 @@ feature {NONE} -- Implementation
 			l: STRING
 		do
 			l := a_type.as_lower
-			Result := l.is_equal ("real") or l.is_equal ("double")
+			Result := l.is_equal ("real_32") or l.is_equal ("real_64")
+				or else l.is_equal ("real") or else l.is_equal ("double") -- legacy
 		end
 
 	is_string (a_type: STRING): BOOLEAN
@@ -99,7 +113,8 @@ feature {NONE} -- Implementation
 			l: STRING
 		do
 			l := a_type.as_lower
-			Result := l.is_equal ("string")
+			Result := l.is_equal ("string_8") or else l.is_equal ("string_32")
+				or else l.is_equal ("string") -- legacy
 		end
 
 	reference_assertions (a_attribute: STRING): LINKED_LIST [STRING]
@@ -108,7 +123,7 @@ feature {NONE} -- Implementation
 			a_attribute_not_void: a_attribute /= Void
 		do
 			create Result.make
-			Result.extend (a_attribute + "_not_void: " + a_attribute + " /= Void")
+			Result.extend (a_attribute + "_attached: " + a_attribute + " /= Void")
 		ensure
 			not_void: Result /= Void
 		end
@@ -119,7 +134,7 @@ feature {NONE} -- Implementation
 			a_attribute_not_void: a_attribute /= Void
 		do
 			create Result.make
-			Result.extend (a_attribute + "_not_null: " + a_attribute + " /= Default_pointer")
+			Result.extend (a_attribute + "_not_null: " + a_attribute + " /= default_pointer")
 		ensure
 			not_void: Result /= Void
 		end
@@ -133,6 +148,18 @@ feature {NONE} -- Implementation
 			Result.extend (a_attribute + "_positive: " + a_attribute + " > 0")
 			Result.extend (a_attribute + "_non_negative: " + a_attribute + " >= 0")
 			Result.extend (a_attribute + "_negative: " + a_attribute + " < 0")
+			Result.extend (a_attribute + "_within_bounds: " + a_attribute + " > 0 and " + a_attribute + " <= 1")
+		ensure
+			not_void: Result /= Void
+		end
+
+	natural_assertions (a_attribute: STRING): LINKED_LIST [STRING]
+			-- Possible assertions for NATURAL(_*).
+		require
+			a_attribute_not_void: a_attribute /= Void
+		do
+			create Result.make
+			Result.extend (a_attribute + "_positive: " + a_attribute + " > 0")
 			Result.extend (a_attribute + "_within_bounds: " + a_attribute + " > 0 and " + a_attribute + " <= 1")
 		ensure
 			not_void: Result /= Void
@@ -171,14 +198,14 @@ feature {NONE} -- Implementation
 			a_attribute_not_void: a_attribute /= Void
 		do
 			create Result.make
-			Result.extend (a_attribute + "_not_void: " + a_attribute + " /= Void")
+			Result.extend (a_attribute + "_attached: " + a_attribute + " /= Void")
 			Result.extend (a_attribute + "_not_empty: " + a_attribute + " /= Void and then not " + a_attribute + ".is_empty")
 		ensure
 			not_void: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -191,22 +218,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_ASSERTION_GENERATOR

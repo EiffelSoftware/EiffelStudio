@@ -54,7 +54,7 @@ feature {NONE} -- Basic operation
 				l_local_list_state := local_list_state
 
 					-- Set the feature name.
-				a_info.set_feature_name (l_next.token.wide_image)
+				a_info.set_feature_name (token_text (l_next.token))
 				l_current_frame := a_info.current_frame
 
 					-- Check for routine arguments.
@@ -94,7 +94,7 @@ feature {NONE} -- Basic operation
 							-- Because the argument list was completely analyzed, set the state results.
 
 							-- Check for the return type.
-						if (":").is_equal (token_text_8 (l_next.token)) then
+						if (":").same_string (token_text_8 (l_next.token)) then
 								-- A return type is possible.
 							l_type_start := next_text_token (l_next.token, l_next.line, True, a_end_token)
 							l_next := l_type_start
@@ -178,7 +178,7 @@ feature {NONE} -- Basic operation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

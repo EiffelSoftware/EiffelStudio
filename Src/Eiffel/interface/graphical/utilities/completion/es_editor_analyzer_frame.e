@@ -205,7 +205,7 @@ feature -- Query
 				l_checker := type_a_checker
 				l_checker.init_with_feature_table (l_feature, l_class.feature_table, Void, Void)
 				from l_locals.start until l_locals.after loop
-					l_name := l_locals.key_for_iteration.as_attached
+					l_name := l_locals.key_for_iteration
 					l_type := l_generator.evaluate_type_if_possible (l_locals.item_for_iteration, l_class)
 					if l_type /= Void then
 						l_type := l_checker.solved (l_type, l_locals.item_for_iteration)
@@ -297,7 +297,7 @@ feature {NONE} -- Query
 				-- Parse local string declaration
 			l_context_class := context_class
 			l_option := l_context_class.group.options
-			l_parser := entity_declaration_parser.as_attached
+			l_parser := entity_declaration_parser
 			l_parser_wrapper := eiffel_parser_wrapper
 			l_parser_wrapper.parse_with_option (l_parser, l_local_string, l_option, True, l_context_class)
 
@@ -386,20 +386,23 @@ feature -- Extension
 			a_type_attached: a_type /= Void
 		local
 			l_ids: detachable IDENTIFIER_LIST
-			l_name: detachable STRING_32
 			l_type: detachable TYPE_AS
+			l_ast_local_declarations: like ast_local_declarations
 		do
 			l_ids := a_type.id_list
 			if l_ids /= Void then
 				l_type := a_type.type
 				if l_type /= Void then
+					l_ast_local_declarations := ast_local_declarations
 					from l_ids.start until l_ids.after loop
-						l_name := a_type.item_name (l_ids.index)
-						if l_name /= Void and then not l_name.is_empty then
-							ast_local_declarations.force (l_type, l_name)
+						if
+							attached a_type.item_name (l_ids.index) as l_name and then
+							not l_name.is_empty
+						then
+							l_ast_local_declarations.force (l_type, l_name)
 							internal_locals := Void
 						else
-							check False end
+							check item_name_not_empty: False end
 						end
 						l_ids.forth
 					end
@@ -449,7 +452,7 @@ invariant
 	--non_circular_parent: has_parent implies parent /= Void and then not is_parented_to_current (parent)
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -96,7 +96,7 @@ feature {NONE} -- Basic operation
 		do
 			check
 				not_is_scanning_comments: not is_scanning_comments
-				not_error_hadler_has_error: not error_handler.has_error
+				not_error_handler_has_error: not error_handler.has_error
 			end
 
 			l_next := next_text_token (a_info.current_token, a_info.current_line, True, a_end_token)
@@ -113,10 +113,10 @@ feature {NONE} -- Basic operation
 						l_stop := True
 					else
 							-- Append the image data.
-						l_result.append (l_token.wide_image)
+						l_result.append (token_text (l_token))
 							-- We are skipping whitespace tokens, so add space characters to allow successful parsing.
 							-- The result string isn't pretty but it parses.
-						l_result.append_character (' ')
+						l_result.append_character ({CHARACTER_32} ' ')
 
 							-- Fetch next token data.
 						l_next := next_text_token (l_token, l_line, True, a_end_token)
@@ -135,10 +135,10 @@ feature {NONE} -- Basic operation
 				l_result.right_adjust
 				if not l_result.is_empty then
 						-- Parse local declaration block.
-					l_result.prepend_character (' ')
+					l_result.prepend_character ({CHARACTER_32} ' ')
 					l_result.prepend ({EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
 					l_wrapper := eiffel_parser_wrapper
-					l_wrapper.parse_with_option (entity_declaration_parser.as_attached, l_result, a_info.context_class.group.options, True, a_info.context_class)
+					l_wrapper.parse_with_option (entity_declaration_parser, l_result, a_info.context_class.group.options, True, a_info.context_class)
 					if attached {EIFFEL_LIST [TYPE_DEC_AS]} l_wrapper.ast_node as l_declarations then
 						l_current_frame := a_info.current_frame
 						from l_declarations.start until l_declarations.after loop
@@ -155,7 +155,7 @@ feature {NONE} -- Basic operation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_ec_bench_windows" default="help">
+	<description>
+		description: "ec bench windows compilation"
+	</description>
+	<inherit>
+		<parent location="${PROJECT_ec_bench_windows.absdir}/_inc/_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<setenv name="EC_NAME" value="$ISE_EIFFEL${path_separator}studio${path_separator}spec${path_separator}$ISE_PLATFORM${path_separator}bin${path_separator}ec${exe}" />
+		<geant target="set_ECF" arguments="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace${path_separator}ec.ecf" />
+		<geant target="set_TARGET" arguments="bench_windows" />
+		<geant target="set_NAME" arguments="ec" />
+
+		<geant target="set_SKIP" arguments="true" unless="${is_windows}"/>
+		<geant target="set_SKIP_MESSAGE" arguments="Skipped: [ec_bench_windows] is for Unices usage" if="${is_windows}"/>
+	</target>
+
+</project>

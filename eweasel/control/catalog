@@ -2321,6 +2321,7 @@ test	conversion-from-cap-attached				attach068 tcf pass void_safe attached_types
 test	attached-special-creation						attach069 tcf pass attached_types special
 test	stable-attribute-in-rescue				attach070 tcf pass void_safe validity stable attribute scope
 test	self-init-attribute-non-void-safe			attach071 tcf fail attached_types self_init void_safe
+test	default-create-missing-check			attach072 tcf pass attached_types void_safe
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

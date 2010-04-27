@@ -1,0 +1,11 @@
+test_name 	 default-create-missing-check
+test_description An attached attribute not created by `default_create' does not trigger a validity error when the code is compiled in void-safe mode causing a call on void-target at runtime.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error TEST1 VEVI
+
+test_end

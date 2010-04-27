@@ -467,7 +467,8 @@ feature {NONE} -- Implementation
 				buf.put_character (')')
 				buf.put_character (';')
 			else
-				if l_gen_param.is_reference then
+				type_c := l_gen_param.c_type
+				if type_c.level = C_ref then
 						-- Because we need to do the aging test in case `source' and `target' are
 						-- not the same SPECIAL, we call the run-time helper function `sp_copy_data'.
 					buf.put_string ("sp_copy_data(")
@@ -481,7 +482,6 @@ feature {NONE} -- Implementation
 					buf.put_character (',')
 					parameters.i_th (4).print_register
 				else
-					type_c := l_gen_param.c_type
 					buf.put_string ("memmove(")
 					type_c.generate_access_cast (buf)
 					gen_reg.print_register

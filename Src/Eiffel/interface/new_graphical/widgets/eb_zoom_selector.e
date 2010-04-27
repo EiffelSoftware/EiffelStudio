@@ -86,20 +86,22 @@ feature {NONE} -- Implementation
 	initial_strings: ARRAY [STRING_8]
 			-- Initial list items.
 		once
-			create Result.make (1, 9)
+			create Result.make (1, 11)
 			Result.put ("1000%%", 1)
 			Result.put ("500%%", 2)
 			Result.put ("250%%", 3)
 			Result.put ("200%%", 4)
-			Result.put ("100%%", 5)
-			Result.put ("75%%", 6)
-			Result.put ("50%%", 7)
-			Result.put ("25%%", 8)
-			Result.put ("10%%", 9)
+			Result.put ("150%%", 5)
+			Result.put ("125%%", 6)
+			Result.put ("100%%", 7)
+			Result.put ("75%%", 8)
+			Result.put ("50%%", 9)
+			Result.put ("25%%", 10)
+			Result.put ("10%%", 11)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

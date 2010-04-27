@@ -116,6 +116,17 @@ feature -- Access
 	once_routine_id: INTEGER
 			-- Routine id of the associated ONCE_PROC_I
 
+	is_transient: BOOLEAN
+			-- Is related once per object's extra attribute transient?
+		do
+--			Result := once_routine.is_transient
+
+			--| FIXME 2010-04-27: Until there is a clear decision (ECMA?)
+			--| let's consider the once per object as transient (by default)
+			--| without anyway to make it non transient for now (Version 6.6)
+			Result := True
+		end
+
 feature -- Access: attribute
 
 	called_attribute_i: ATTRIBUTE_I

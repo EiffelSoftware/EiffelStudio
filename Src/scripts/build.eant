@@ -35,6 +35,7 @@
 		<geant target="_help_tpl" arguments="ec_bench" reuse_variables="true" />
 		<geant target="_help_tpl" arguments="ec_batch" reuse_variables="true" />
 		<geant target="_help_tpl" arguments="ec_bench_unix" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="ec_bench_windows" reuse_variables="true" />
 		<geant target="_help_tpl" arguments="estudio" reuse_variables="true" />
 		<geant target="_help_tpl" arguments="finish_freezing" reuse_variables="true" />
 		<geant target="_help_tpl" arguments="h2e" reuse_variables="true" />
@@ -145,6 +146,17 @@
 	</target>
 	<target name="finalize_ec_bench_unix" depend="init">
 		<geant target="_tpl_process_" arguments="ec_bench_unix,finalize,$cwd" />
+	</target>
+
+	<!-- ec_bench_windows -->
+	<target name="clean_ec_bench_windows" depend="init" >
+		<geant target="_tpl_process_" arguments="ec_bench_windows,clean,$cwd" />
+	</target>
+	<target name="compile_ec_bench_windows" depend="init">
+		<geant target="_tpl_process_" arguments="ec_bench_windows,compile,$cwd" />
+	</target>
+	<target name="finalize_ec_bench_windows" depend="init">
+		<geant target="_tpl_process_" arguments="ec_bench_windows,finalize,$cwd" />
 	</target>
 
 	<!-- estudio -->

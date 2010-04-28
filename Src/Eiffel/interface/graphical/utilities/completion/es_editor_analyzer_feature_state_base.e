@@ -61,6 +61,45 @@ feature {NONE} -- Status report
 			end
 		end
 
+	is_object_test_start_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
+			-- Determines if a token is an object test start token.
+			--
+			-- `a_token': Token to check for an object test token.
+			-- `a_line' : The line where the supplied token is resident.
+			-- `Result' : True if the token is an object test start token; False otherwise.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
+		do
+			Result := is_text_token (a_token, "{", False) or else
+				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword)
+		ensure
+			is_object_test_start_token: Result implies (
+				is_text_token (a_token, "{", False) or else
+				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword))
+		end
+
+feature {NONE} -- Implementation
+
+	expression_type_name_from_string (a_info: ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_expr: READABLE_STRING_8): STRING
+			-- The expression `a_expr' is an attached factored expression, which requires an expression
+			-- evaluation. This does not work for agent expression yet.
+		do
+			if attached editor_expression_analyzer.expression_type_from_string (a_info, a_expr) as l_expr_type then
+				Result := l_expr_type.name
+			else
+				Result := once "ANY"
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	editor_expression_analyzer: ES_EDITOR_EXPRESSION_ANALYZER
+			-- Analyzer a series of editor tokens for evaluation expressions.
+		once
+			create Result
+		end
+
 feature {NONE} -- Helpers
 
 	local_list_state: ES_EDITOR_ANALYZER_LOCAL_LIST_STATE
@@ -72,7 +111,7 @@ feature {NONE} -- Helpers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

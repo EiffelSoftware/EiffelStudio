@@ -50,7 +50,7 @@ feature {NONE} -- Status report
 			--
 			-- `a_token': Token to check for a then token.
 			-- `a_line' : The line where the supplied token is resident.
-			-- `Result' : True if the token is an if or elseif token; False otherwise.
+			-- `Result' : True if the token is a then token (and not `and then' or `ensure then'; False otherwise.
 		require
 			a_token_attached: a_token /= Void
 			a_line_attached: a_line /= Void
@@ -63,29 +63,14 @@ feature {NONE} -- Status report
 						-- like 'and' or 'ensure'.
 					l_prev := previous_text_token (a_token, a_line, True, Void)
 						-- There is another keyword, which means it's not a single 'then' end token.
-					Result := l_prev = Void or else not is_keyword_token (l_prev.token, {EIFFEL_KEYWORD_CONSTANTS}.and_keyword)
+					Result := l_prev = Void or else (
+								not is_keyword_token (l_prev.token, {EIFFEL_KEYWORD_CONSTANTS}.and_keyword)
+								and not is_keyword_token (l_prev.token, {EIFFEL_KEYWORD_CONSTANTS}.ensure_keyword)
+							)
 				end
 			end
 		ensure
-			is_if_or_elseif: Result implies is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.then_keyword)
-		end
-
-	is_object_test_start_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
-			-- Determines if a token is an object test start token.
-			--
-			-- `a_token': Token to check for an object test token.
-			-- `a_line' : The line where the supplied token is resident.
-			-- `Result' : True if the token is an object test start token; False otherwise.
-		require
-			a_token_attached: a_token /= Void
-			a_line_attached: a_line /= Void
-		do
-			Result := is_text_token (a_token, "{", False) or else
-				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword)
-		ensure
-			is_object_test_start_token: Result implies (
-				is_text_token (a_token, "{", False) or else
-				is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.attached_keyword))
+			is_then: Result implies is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.then_keyword)
 		end
 
 feature {NONE} -- Basic operation
@@ -177,7 +162,7 @@ feature {NONE} -- Basic operation
 													if l_type /= Void then
 															-- Add local
 														a_info.current_frame.add_local_string (
-															l_next.token.wide_image.as_attached,
+															token_text (l_next.token),
 															token_range_text (l_start_token, l_start_line, l_type.token))
 													end
 												end
@@ -188,21 +173,19 @@ feature {NONE} -- Basic operation
 
 													-- build the 'like' type string.
 												l_expression_string := token_range_text (l_start_token, l_start_line, l_prev.token)
-												if l_expression_string.has ('.') then
-														-- HACK
+												if l_expression_string.has ({CHARACTER_32} '.') then
 														-- The expression is an attached factored expression, which requires an expression
-														-- evaluation (not yet ready). Remove this hack when anchored evaluator is able
-														-- to process factored expressions.
-													l_type_string := "ANY"
+														-- evaluation. This does not work for agent expression yet.
+													l_type_string := expression_type_name_from_string (a_info, l_expression_string)
 												else
 													create l_type_string.make (30)
 													l_type_string.append_string_general ({EIFFEL_KEYWORD_CONSTANTS}.like_keyword)
-													l_type_string.append_character (' ')
+													l_type_string.append_character ({CHARACTER_32} ' ')
 													l_type_string.append (l_expression_string)
 												end
 
 													-- Add local
-												a_info.current_frame.add_local_string (l_next.token.wide_image.as_attached, l_type_string)
+												a_info.current_frame.add_local_string (token_text (l_next.token), l_type_string)
 											end
 										end
 									else
@@ -260,7 +243,7 @@ feature {NONE} -- Basic operation
 									-- Recurse into next if.
 								a_info.increment_current_frame (False)
 									-- Duplicate current so we are using the same state processing type.
-								Current.twin.process (a_info, a_end_token)
+								twin.process (a_info, a_end_token)
 								l_start_token := a_info.current_token
 								l_start_line := a_info.current_line
 								if not a_info.has_runout then
@@ -288,7 +271,7 @@ feature {NONE} -- Basic operation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

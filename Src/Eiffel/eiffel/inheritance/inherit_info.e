@@ -61,6 +61,14 @@ feature -- Access
 			Result := internal_a_feature
 		end
 
+	a_feature_alias_name_id: INTEGER
+			-- Alias name ID of `a_feature'.
+		do
+				-- There is no need to instantiate the feature just to get its name since it
+				-- does not change via instantiation.
+			Result := internal_a_feature.alias_name_id
+		end
+
 	internal_a_feature: like a_feature
 
 	parent: PARENT_C

@@ -1,0 +1,15 @@
+test_name	delayed-check-failure-with-infix
+test_description When a class is using an infix routine and the class has some routines with an anchor, it crashes the compiler.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw	my_linear.e $CLUSTER my_linear.e
+copy_raw	my_linear_cursor.e $CLUSTER my_linear_cursor.e
+copy_raw	my_linear_2.e $CLUSTER my_linear_2.e
+copy_raw	my_linear_proxy.e $CLUSTER my_linear_proxy.e
+copy_raw	my_linear_array.e $CLUSTER my_linear_array.e
+
+compile_melted
+compile_result	ok
+
+test_end

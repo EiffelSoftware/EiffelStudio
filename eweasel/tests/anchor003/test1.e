@@ -7,6 +7,6 @@ feature
 		local
 			test: like io.default_pointer
 		do
-
+			test := test
 		end
 end

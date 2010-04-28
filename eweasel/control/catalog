@@ -2346,6 +2346,7 @@ test	storable-version-data			reflection006 tcf pass reflection storable
 test	qat-evaluation-order			anchor001 tcf pass anchored_type
 test	qat-redeclaration-check			anchor002 tcf pass anchored_type redeclaration validity conformance
 test	inherited-qat-failure			anchor003 tcf pass anchored_type system-validity
+test	delayed-check-failure-with-infix	anchor004 tcf pass anchored_type termination
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

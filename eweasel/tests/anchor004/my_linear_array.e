@@ -1,4 +1,4 @@
-class
+deferred class
 	MY_LINEAR_ARRAY [G]
 
 inherit

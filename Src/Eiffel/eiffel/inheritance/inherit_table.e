@@ -1146,7 +1146,7 @@ end;
 						until
 							l_features.after or else inherit_feat /= Void
 						loop
-							if l_features.item.a_feature.alias_name_id = feature_name_id then
+							if l_features.item.a_feature_alias_name_id = feature_name_id then
 								inherit_feat := item_for_iteration
 							end
 							l_features.forth

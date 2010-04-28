@@ -26,10 +26,10 @@ feature -- Initialization
 		do
 			Precursor {MARGIN_WIDGET}
 			margin_area.set_pebble_function (agent pebble_from_x_y)
+			margin_area.set_drag_and_drop_mode
 			margin_area.drop_actions.extend (agent on_breakable_stone_dropped)
 
-			margin_area.pointer_button_press_actions.extend (agent on_mouse_button_event (True, ?, ?, ?, ?, ?, ?, ?, ?))
-			margin_area.pointer_button_release_actions.extend (agent on_mouse_button_event (False, ?, ?, ?, ?, ?, ?, ?, ?))
+			margin_area.pointer_button_release_actions.extend (agent on_mouse_button_release_event (?, ?, ?, ?, ?, ?, ?, ?))
 			hide_breakpoints
 		end
 
@@ -86,43 +86,48 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 		end
 
 	on_breakable_stone_dropped (a_bp: BREAKABLE_STONE)
+		local
+			l_line: INTEGER
 		do
---			if ev_application.ctrl_pressed then
-				if attached {BREAKABLE_STONE} breakable_stone_at (0, margin_viewport.pointer_position.y_abs + margin_viewport.y_offset) as bp then
-					bp.drop_bkpt (a_bp)
-					refresh_now
-				end
---			end
+			l_line := line_at (margin_viewport.pointer_position.y_abs + margin_viewport.y_offset)
+			if attached breakable_stone_at_line (l_line) as bp then
+				bp.drop_bkpt (a_bp)
+				ignore_mouse_button_release_event_at_line (l_line)
+				refresh_now
+			else
+				reset_mouse_button_release_event_ignored_state
+			end
 		end
 
 	pebble_from_x_y (x_pos_with_margin, abs_y_pos: INTEGER): STONE
 			-- Stone on (`x_pos', `y_pos').
 			-- Process single click on mouse buttons.			
 		local
-			bpst: like breakable_stone_at
+			bpst: like breakable_stone_at_line
 		do
 			-- The context menu has to be displayed on button release otherwise it may disappear straight away on mouse click.
-			if ev_application.ctrl_pressed then
-				bpst := breakable_stone_at (0, abs_y_pos)
-				if bpst.has_associated_user_breakpoint then
-					Result := bpst
-				end
+			bpst := breakable_stone_at_line (line_at (abs_y_pos))
+			if bpst /= Void and then bpst.has_associated_user_breakpoint then
+				Result := bpst
 			end
 		end
 
-	breakable_stone_at (a_abs_x, a_abs_y: INTEGER): BREAKABLE_STONE
+	line_at (a_abs_y: INTEGER): INTEGER
+			-- Line number at position `(0, a_abs_y)'
+		do
+			Result := (a_abs_y - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
+		end
+
+	breakable_stone_at_line (a_line: INTEGER): detachable BREAKABLE_STONE
 			-- Breakable stone at position `(a_x, a_y)'
-		local
-			ln: EIFFEL_EDITOR_LINE
-			l_number: INTEGER
 		do
 			debug
-				print ("breakable_stone_at (..," + a_abs_y.out + ")%N")
+				print ("breakable_stone_at_line (" + a_line.out + ")%N")
 			end
-			l_number := (a_abs_y - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
-			if l_number <= text_panel.number_of_lines then
-				ln ?= text_panel.text_displayed.line (l_number)
-				Result ?= ln.real_first_token.pebble
+			if a_line <= text_panel.number_of_lines then
+				if attached {EIFFEL_EDITOR_LINE} text_panel.text_displayed.line (a_line) as ln then
+					Result ?= ln.real_first_token.pebble
+				end
 			end
 		end
 
@@ -194,25 +199,45 @@ feature {NONE} -- Implementation
 			margin_area.set_background_color (editor_preferences.margin_background_color)
 		end
 
+feature {NONE} -- Events control
+
+	mouse_button_release_event_ignored_line: INTEGER
+			-- line where mouse button release event should be ignored
+
+	mouse_button_release_event_ignored_at_line (a_line: INTEGER): BOOLEAN
+			-- Ignore mouse button release event if `a_line' is same as `next_mouse_button_release_event_ignored_line'
+		do
+			Result := mouse_button_release_event_ignored_line = a_line
+		end
+
+	ignore_mouse_button_release_event_at_line (a_line: INTEGER)
+			-- Ignore mouse button release event at line `a_line'
+		do
+			mouse_button_release_event_ignored_line := a_line
+		end
+
+	reset_mouse_button_release_event_ignored_state
+			-- Reset any ignore state of mouse button release event (on any line)
+		do
+			mouse_button_release_event_ignored_line := 0
+		end
+
 feature {NONE} -- Events
 
-	on_mouse_button_event (a_press: BOOLEAN; abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+	on_mouse_button_release_event (abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Process single click on mouse buttons.			
 		local
-			ln: EIFFEL_EDITOR_LINE
-			l_number: INTEGER
+			l_line: INTEGER
 			bkstn: BREAKABLE_STONE
 		do
 				-- The context menu has to be displayed on button release otherwise it may disappear straight away on mouse click.
 			if
-				not ev_application.ctrl_pressed and then  --| To avoid conflict with bp move feature
 				abs_x_pos <= margin_viewport.width + 3    --| a tolerance of 3 pixel is ok
 			then
-				if (button = 1 and then a_press) or else (button = 3 and then not a_press) then
-					l_number := (y_pos - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
-					if l_number <= text_panel.number_of_lines then
-						ln ?= text_panel.text_displayed.line (l_number)
-						bkstn ?= ln.real_first_token.pebble
+				if button = 1 or else button = 3 then
+					l_line := line_at (y_pos)
+					if not mouse_button_release_event_ignored_at_line (l_line) then
+						bkstn := breakable_stone_at_line (l_line)
 						if bkstn /= Void then
 							if button = 1 then
 								bkstn.toggle_bkpt
@@ -224,6 +249,7 @@ feature {NONE} -- Events
 					end
 				end
 			end
+			reset_mouse_button_release_event_ignored_state
 		end
 
 feature {NONE} -- Implementation

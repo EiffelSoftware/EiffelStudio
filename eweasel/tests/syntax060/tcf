@@ -1,0 +1,11 @@
+test_name object-test-expression
+test_description Verify that an object test expression is valid if detachable.
+
+copy_sub Ace $TEST Ace
+
+define OBJECT_TEST "attached 1"
+copy_sub test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+
+test_end

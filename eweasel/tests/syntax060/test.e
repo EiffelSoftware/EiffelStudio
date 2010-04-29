@@ -7,11 +7,12 @@ feature
 
 	make
 		do
-			if $OBJECT_TEST then
-			end
 		end
 
 
-	object: ANY
+	test1: TEST1
+	test2: TEST2
+	test3: TEST3
+	test4: TEST4
 
 end

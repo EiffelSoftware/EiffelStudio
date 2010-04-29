@@ -2485,12 +2485,13 @@ feature {NONE} -- Implementation
 				end
 				l_exception_type := application_status.exception_type_name
 
-				if l_exception_type ~ ({CHECK_VIOLATION}).out or else
-					l_exception_type ~ ({PRECONDITION_VIOLATION}).out or else
-					l_exception_type ~ ({POSTCONDITION_VIOLATION}).out or else
-					l_exception_type ~ ({INVARIANT_VIOLATION}).out or else
-					l_exception_type ~ ({VARIANT_VIOLATION}).out or else
-					l_exception_type ~ ({LOOP_INVARIANT_VIOLATION}).out
+				if attached l_exception_type and then
+					(l_exception_type.same_string (({CHECK_VIOLATION}).out) or else
+					l_exception_type.same_string (({PRECONDITION_VIOLATION}).out) or else
+					l_exception_type.same_string (({POSTCONDITION_VIOLATION}).out) or else
+					l_exception_type.same_string (({INVARIANT_VIOLATION}).out) or else
+					l_exception_type.same_string (({VARIANT_VIOLATION}).out) or else
+					l_exception_type.same_string (({LOOP_INVARIANT_VIOLATION}).out))
 				then
 					ignore_contract_violation.enable_sensitive
 

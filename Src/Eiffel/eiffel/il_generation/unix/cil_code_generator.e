@@ -213,6 +213,11 @@ feature -- Variables access
 		do
 		end
 
+	generate_type_feature_call_on_type (f: TYPE_FEATURE_I; t: CL_TYPE_A)
+			-- <Precursor>
+		do
+		end
+
 	generate_type_feature_call (f: TYPE_FEATURE_I)
 			-- Generate a call to a type feature `f' on current.
 		do

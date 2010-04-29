@@ -2723,11 +2723,13 @@ Expression:
 		-- The following rules adds many shift reduce/conflicts (309 vs 151 without them).
 	|	TE_ATTACHED Expression %prec TE_NOT
 			{
+				check_object_test_expression ($2)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, Void, Void)
 				has_type := True
 			}
 	|	TE_ATTACHED Expression TE_AS Identifier_as_lower
 			{
+				check_object_test_expression ($2)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), Void, $2, $3, $4)
 				has_type := True
 			}
@@ -2737,6 +2739,7 @@ Expression:
 					$3.set_lcurly_symbol ($2)
 					$3.set_rcurly_symbol ($4)
 				end
+				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, Void, Void)
 				has_type := True
 			}
@@ -2746,6 +2749,7 @@ Expression:
 					$3.set_lcurly_symbol ($2)
 					$3.set_rcurly_symbol ($4)
 				end
+				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, $6, $7)
 				has_type := True
 				if object_test_locals = Void then
@@ -2755,6 +2759,7 @@ Expression:
 			}
 	|	TE_LCURLY Identifier_as_lower TE_COLON Type TE_RCURLY Expression %prec TE_NOT
 			{
+				check_object_test_expression ($6)
 				$$ := ast_factory.new_old_syntax_object_test_as ($1, $2, $4, $6)
 				has_type := True
 				if object_test_locals = Void then

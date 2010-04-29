@@ -17118,6 +17118,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				check_object_test_expression (yyvs27.item (yyvsp27))
 				yyval27 := ast_factory.new_object_test_as (extract_keyword (yyvs15.item (yyvsp15)), Void, yyvs27.item (yyvsp27), Void, Void)
 				has_type := True
 			
@@ -17138,6 +17139,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				check_object_test_expression (yyvs27.item (yyvsp27))
 				yyval27 := ast_factory.new_object_test_as (extract_keyword (yyvs15.item (yyvsp15)), Void, yyvs27.item (yyvsp27), yyvs12.item (yyvsp12), yyvs2.item (yyvsp2))
 				has_type := True
 			
@@ -17164,6 +17166,7 @@ end
 					yyvs81.item (yyvsp81).set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
 					yyvs81.item (yyvsp81).set_rcurly_symbol (yyvs4.item (yyvsp4))
 				end
+				check_object_test_expression (yyvs27.item (yyvsp27))
 				yyval27 := ast_factory.new_object_test_as (extract_keyword (yyvs15.item (yyvsp15)), yyvs81.item (yyvsp81), yyvs27.item (yyvsp27), Void, Void)
 				has_type := True
 			
@@ -17190,6 +17193,7 @@ end
 					yyvs81.item (yyvsp81).set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
 					yyvs81.item (yyvsp81).set_rcurly_symbol (yyvs4.item (yyvsp4))
 				end
+				check_object_test_expression (yyvs27.item (yyvsp27))
 				yyval27 := ast_factory.new_object_test_as (extract_keyword (yyvs15.item (yyvsp15)), yyvs81.item (yyvsp81), yyvs27.item (yyvsp27), yyvs12.item (yyvsp12), yyvs2.item (yyvsp2))
 				has_type := True
 				if object_test_locals = Void then
@@ -17218,6 +17222,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				check_object_test_expression (yyvs27.item (yyvsp27))
 				yyval27 := ast_factory.new_old_syntax_object_test_as (yyvs4.item (yyvsp4 - 2), yyvs2.item (yyvsp2), yyvs81.item (yyvsp81), yyvs27.item (yyvsp27))
 				has_type := True
 				if object_test_locals = Void then

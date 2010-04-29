@@ -19,7 +19,8 @@ inherit
 		redefine
 			is_id,
 			is_equivalent,
-			is_equal
+			is_equal,
+			is_detachable_expression
 		end
 
 	SHARED_NAMES_HEAP
@@ -176,6 +177,9 @@ feature -- Properties
 	is_id: BOOLEAN = True
 			-- Is the current atomic node an id?
 
+	is_detachable_expression: BOOLEAN = True
+			-- <Precursor>
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
@@ -198,7 +202,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

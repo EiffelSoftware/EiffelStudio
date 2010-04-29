@@ -9,6 +9,9 @@ deferred class BINARY_AS
 
 inherit
 	EXPR_AS
+		redefine
+			is_detachable_expression
+		end
 
 	ID_SET_ACCESSOR
 		rename
@@ -66,6 +69,11 @@ feature -- Roundtrip
 				Result := a_list.i_th (i)
 			end
 		end
+
+feature -- Status report
+
+	is_detachable_expression: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Location
 
@@ -170,7 +178,7 @@ invariant
 	right_not_void: right /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,6 +11,7 @@ feature {NONE} -- Creation
 			a: ANY
 			b: BOOLEAN
 			c: CHARACTER_8
+			s: STRING
 			e: E
 			x: X
 		do
@@ -71,7 +72,8 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_r2: ")
-			if {ot_r2: !COMPARABLE} "OK" then
+			s := "OK"
+			if {ot_r2: !COMPARABLE} s then
 				io.put_string (ot_r2.out)
 			else
 				io.put_string ("FAILED")
@@ -97,7 +99,8 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_b4: ")
-			if {ot_b4: BOOLEAN} "FAILED" then
+			s := "FAILED"
+			if {ot_b4: BOOLEAN} s then
 				io.put_boolean (ot_b4)
 			else
 				io.put_string ("OK")
@@ -121,7 +124,8 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_e5: ")
-			if {ot_e5: BOOLEAN} "FAILED" then
+			s := "FAILED"
+			if {ot_e5: BOOLEAN} s then
 				io.put_string (ot_e5.out)
 			else
 				io.put_string ("OK")
@@ -145,7 +149,8 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_r5: ")
-			if {ot_r5: !NUMERIC} "FAILED" then
+			s := "FAILED"
+			if {ot_r5: !NUMERIC} s then
 				io.put_string (ot_r5.out)
 			else
 				io.put_string ("OK")

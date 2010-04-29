@@ -21,18 +21,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: like file_name; m: STRING)
+	make (l, c: INTEGER; f: like file_name; m: STRING)
 			-- Create a new SYNTAX_ERROR.
 		require
 			f_not_void: f /= Void
 			m_not_void: m /= Void
 		do
-			set_position (s, e)
+			set_position (l, c)
 			file_name := f
 			error_message := m
 		ensure
-			line_set: line = s
-			column_set: column = e
+			line_set: line = l
+			column_set: column = c
 			file_name_set: file_name = f
 			error_message_set: error_message = m
 		end
@@ -84,7 +84,7 @@ invariant
 	attached_error_message: error_message /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

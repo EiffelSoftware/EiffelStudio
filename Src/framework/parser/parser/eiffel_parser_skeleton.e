@@ -705,6 +705,15 @@ feature {NONE} -- Actions
 			end
 		end
 
+	check_object_test_expression (a_expr: EXPR_AS)
+			-- Check if `a_expr' is a valid expression for an object test.
+		do
+			if a_expr /= Void and then not a_expr.is_detachable_expression then
+				report_one_error (create {SYNTAX_ERROR}.make (token_line (a_expr), token_column (a_expr), filename,
+					"Expression used in object test should be `Detachable_expression'."))
+			end
+		end
+
 feature {NONE} -- ID factory
 
 	new_none_id: NONE_ID_AS

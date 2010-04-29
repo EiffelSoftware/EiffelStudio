@@ -288,6 +288,15 @@ feature -- Variables access
 		deferred
 		end
 
+	generate_type_feature_call_on_type (f: TYPE_FEATURE_I; t: CL_TYPE_A)
+			-- Generate a call to a type feature `f' on the type `t'
+			-- assuming the target object is on the stack.
+		require
+			f_attached: attached f
+			t_attached: attached t
+		deferred
+		end
+
 	generate_type_feature_call (f: TYPE_FEATURE_I)
 			-- Generate a call to a type feature `f' on current.
 		require

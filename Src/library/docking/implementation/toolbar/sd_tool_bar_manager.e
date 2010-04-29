@@ -66,16 +66,18 @@ feature -- Query
 			has: has (a_title)
 		local
 			l_result: detachable like content_by_title
+			l_content: like contents
 		do
 			from
-				contents.start
+				l_content := contents
+				l_content.start
 			until
-				contents.after or l_result /= Void
+				l_content.after or l_result /= Void
 			loop
-				if contents.item.unique_title.as_string_32 ~ (a_title.as_string_32) then
-					l_result := contents.item
+				if l_content.item.unique_title.same_string (a_title) then
+					l_result := l_content.item
 				end
-				contents.forth
+				l_content.forth
 			end
 
 			check l_result /= Void end -- Implied by precondition `has'
@@ -666,7 +668,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

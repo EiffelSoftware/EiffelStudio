@@ -3790,6 +3790,7 @@ feature -- IL Generation
 			l_token: INTEGER
 			l_method_sig: like method_sig
 			nb: INTEGER
+			m: INTEGER
 		do
 			if attached {BUILT_IN_EXTENSION_I} a_feature.extension as l_ext then
 				l_method_sig := method_sig
@@ -3797,11 +3798,13 @@ feature -- IL Generation
 				l_method_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 
 				nb := a_feature.argument_count
+				m := nb
 				if l_ext.is_static then
 					l_method_sig.set_parameter_count (nb)
 				else
 					generate_current
-					l_method_sig.set_parameter_count (nb + 1)
+					m := nb + 1
+					l_method_sig.set_parameter_count (m)
 				end
 				if a_feature.has_return_value then
 					set_method_return_type (l_method_sig, a_feature.type, current_class_type)
@@ -3819,7 +3822,7 @@ feature -- IL Generation
 				end
 				uni_string.set_string ("builtin_" + a_feature.written_class.name + "_" + a_feature.feature_name)
 				l_token := md_emit.define_member_ref (uni_string, current_module.ise_runtime_type_token, l_method_sig)
-				method_body.put_static_call (l_token, nb, a_feature.has_return_value)
+				method_body.put_static_call (l_token, m, a_feature.has_return_value)
 				generate_return (a_feature.has_return_value)
 			end
 		end
@@ -4526,18 +4529,17 @@ feature -- Variables access
 				nb, is_function)
 		end
 
-	generate_type_feature_call (f: TYPE_FEATURE_I)
-			-- Generate a call to a type feature `f' on current.
+	generate_type_feature_call_on_type (f: TYPE_FEATURE_I; t: CL_TYPE_A)
+			-- <Precursor>
 		local
 			target_type: CL_TYPE_A
 			target_feature_id: INTEGER
 			target_routine_id: INTEGER
 			anchored_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
 		do
-			generate_current
-			target_type := current_class_type.type
-			if target_type.is_expanded then
+			if t.is_expanded then
 					-- Call feature directly.
+				target_type := t
 				target_routine_id := f.rout_id_set.first
 				anchored_features := target_type.associated_class.anchored_features
 				anchored_features.search (target_routine_id)
@@ -4548,10 +4550,17 @@ feature -- Variables access
 				end
 			else
 					-- Call feature using parent type.
-				target_type := target_type.implemented_type (f.origin_class_id)
+				target_type := t.implemented_type (f.origin_class_id)
 				target_feature_id := f.origin_feature_id
 			end
 			generate_feature_access (target_type, target_feature_id, 0, True, True)
+		end
+
+	generate_type_feature_call (f: TYPE_FEATURE_I)
+			-- Generate a call to a type feature `f' on current.
+		do
+			generate_current
+			generate_type_feature_call_on_type (f, current_class_type.type)
 		end
 
 	generate_type_feature_call_for_formal (a_position: INTEGER)

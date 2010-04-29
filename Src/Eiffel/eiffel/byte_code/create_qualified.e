@@ -212,10 +212,10 @@ feature -- IL code generation
 			generate_il_type
 
 				-- Evaluate the computed type and create a corresponding object type.
-			il_generator.generate_current_as_reference
+			qualifier_creation.generate_il
 			il_generator.create_type
 
-			target_type := context.real_type (context.context_class_type.associated_class.anchored_features.item
+			target_type := context.real_type (qualifier.associated_class.anchored_features.item
 				(routine_id).type)
 			if target_type.is_expanded then
 					-- Load value of a value type object.
@@ -227,9 +227,14 @@ feature -- IL code generation
 
 	generate_il_type
 			-- Generate IL code to load type of anchored creation type.
+		local
+			c: CL_TYPE_A
 		do
+				-- Create qualifier object.
+			qualifier_creation.generate_il
+			c := qualifier.associated_class_type (context.context_class_type.type).type
 				-- Generate call to feature that will give the type we want to create.
-			il_generator.generate_type_feature_call (context.context_class_type.associated_class.anchored_features.item (routine_id))
+			il_generator.generate_type_feature_call_on_type (c.associated_class.anchored_features.item (routine_id), c)
 		end
 
 feature -- Byte code generation

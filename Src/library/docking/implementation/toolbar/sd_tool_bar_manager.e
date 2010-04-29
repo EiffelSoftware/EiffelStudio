@@ -74,7 +74,7 @@ feature -- Query
 			until
 				l_content.after or l_result /= Void
 			loop
-				if l_content.item.unique_title.same_string (a_title) then
+				if a_title.same_string (l_content.item.unique_title) then
 					l_result := l_content.item
 				end
 				l_content.forth
@@ -86,6 +86,8 @@ feature -- Query
 
 	has (a_unique_title: STRING_GENERAL): BOOLEAN
 			-- If `content' has item which unique title is `a_unique_title'?
+		require
+			a_unique_title_not_void: a_unique_title /= Void
 		local
 			l_contents: like contents
 		do
@@ -95,8 +97,7 @@ feature -- Query
 			until
 				l_contents.after or Result
 			loop
-				Result := contents.item.unique_title ~ (a_unique_title.as_string_32)
-
+				Result := a_unique_title.same_string (l_contents.item.unique_title)
 				l_contents.forth
 			end
 		end
@@ -116,17 +117,19 @@ feature -- Command
 			not_destroyed: not is_destroyed
 		local
 			l_zone: detachable SD_TOOL_BAR_ZONE
+			l_contents: like contents
 		do
 			from
-				contents.start
+				l_contents := contents
+				l_contents.start
 			until
-				contents.after
+				l_contents.after
 			loop
-				l_zone := contents.item.zone
+				l_zone := l_contents.item.zone
 				if l_zone /= Void then
 					l_zone.disable_drag_area
 				end
-				contents.forth
+				l_contents.forth
 			end
 			docking_manager.command.resize (True)
 			is_locked := True
@@ -141,17 +144,19 @@ feature -- Command
 			not_destroyed: not is_destroyed
 		local
 			l_zone: detachable SD_TOOL_BAR_ZONE
+			l_contents: like contents
 		do
 			from
-				contents.start
+				l_contents := contents
+				l_contents.start
 			until
-				contents.after
+				l_contents.after
 			loop
-				l_zone := contents.item.zone
+				l_zone := l_contents.item.zone
 				if l_zone /= Void then
 					l_zone.enable_drag_area
 				end
-				contents.forth
+				l_contents.forth
 			end
 			docking_manager.command.resize (True)
 			is_locked := False
@@ -181,9 +186,11 @@ feature -- Command
 				ev_application.pointer_button_release_actions.prune_all (application_right_click_agent)
 			end
 
-			contents.do_all (agent (a_content: SD_TOOL_BAR_CONTENT)
+			contents.do_all (agent (ia_content: SD_TOOL_BAR_CONTENT)
+										require
+											ia_content_attached: ia_content /= Void
 										do
-											a_content.destroy
+											ia_content.destroy
 										end)
 			contents.wipe_out
 			clear_docking_manager
@@ -254,15 +261,18 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			-- If floating tool bar zones hidden?
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_floating_tool_bars: like floating_tool_bars
 		do
 			from
 				Result := True
-				floating_tool_bars.start
+				l_floating_tool_bars := floating_tool_bars
+				l_floating_tool_bars.start
 			until
-				floating_tool_bars.after or not Result
+				l_floating_tool_bars.after or not Result
 			loop
-				Result := floating_tool_bars.item.is_displayed
-				floating_tool_bars.forth
+				Result := l_floating_tool_bars.item.is_displayed
+				l_floating_tool_bars.forth
 			end
 		end
 
@@ -514,7 +524,7 @@ feature {NONE} -- Implementation
 				until
 					floating_tool_bars.after or Result
 				loop
-					Result := floating_tool_bars.item.has_recursive (a_widget) or Result
+					Result := floating_tool_bars.item.has_recursive (a_widget)
 					floating_tool_bars.forth
 				end
 			end
@@ -524,16 +534,19 @@ feature {NONE} -- Implementation
 			-- If SD_TOOL_BAR_BUTTON at `a_screen_x', `a_screen_y' has pointer button actions?
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_contents: like contents
 		do
 			from
-				contents.start
+				l_contents := contents
+				l_contents.start
 			until
-				contents.after or Result
+				l_contents.after or Result
 			loop
-				if attached contents.item.zone as l_zone then
+				if attached l_contents.item.zone as l_zone then
 					Result := l_zone.has_right_click_action (a_screen_x, a_screen_y)
 				end
-				contents.forth
+				l_contents.forth
 			end
 		end
 
@@ -541,16 +554,19 @@ feature {NONE} -- Implementation
 			-- If SD_TOOL_BAR_ITEM at `a_screen_x', `a_screen_y' had pebble function?
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_contents: like contents
 		do
 			from
-				contents.start
+				l_contents := contents
+				l_contents.start
 			until
-				contents.after or Result
+				l_contents.after or Result
 			loop
-				if attached contents.item.zone as l_zone then
+				if attached l_contents.item.zone as l_zone then
 					Result := l_zone.has_pebble_function (a_screen_x, a_screen_y)
 				end
-				contents.forth
+				l_contents.forth
 			end
 		end
 
@@ -558,16 +574,19 @@ feature {NONE} -- Implementation
 			-- If SD_TOOL_BAR_ITEM at `a_screen_x', `a_screen_y' had pebble function?
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_contents: like contents
 		do
 			from
-				contents.start
+				l_contents := contents
+				l_contents.start
 			until
-				contents.after or Result
+				l_contents.after or Result
 			loop
-				if attached contents.item.zone as l_zone then
+				if attached l_contents.item.zone as l_zone then
 					Result := l_zone.has_drop_function (a_screen_x, a_screen_y)
 				end
-				contents.forth
+				l_contents.forth
 			end
 		end
 
@@ -580,34 +599,36 @@ feature {NONE} -- Implementation
 			l_separator: EV_MENU_SEPARATOR
 			l_custom_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
 			l_string: STRING_GENERAL
+			l_contents: like contents
 		do
 			create Result
 			from
-				contents.start
+				l_contents := contents
+				l_contents.start
 			until
-				contents.after
+				l_contents.after
 			loop
-				create l_menu_item.make_with_text (contents.item.title)
-				if contents.item.is_visible then
+				create l_menu_item.make_with_text (l_contents.item.title)
+				if l_contents.item.is_visible then
 					l_menu_item.enable_select
-					l_menu_item.select_actions.extend (agent (a_content: SD_TOOL_BAR_CONTENT)
+					l_menu_item.select_actions.extend (agent (ia_content: SD_TOOL_BAR_CONTENT)
 															require
-																not_void: a_content /= Void
+																not_void: ia_content /= Void
 															do
-																a_content.close_request_actions.call ([])
-															end (contents.item))
+																ia_content.close_request_actions.call ([])
+															end (l_contents.item))
 				else
 					l_menu_item.disable_select
-					l_menu_item.select_actions.extend (agent (a_content: SD_TOOL_BAR_CONTENT)
+					l_menu_item.select_actions.extend (agent (ia_content: SD_TOOL_BAR_CONTENT)
 															require
-																not_void: a_content /= Void
+																not_void: ia_content /= Void
 															do
-																a_content.show_request_actions.call ([])
-															end (contents.item))
+																ia_content.show_request_actions.call ([])
+															end (l_contents.item))
 				end
 
 				Result.extend (l_menu_item)
-				contents.forth
+				l_contents.forth
 			end
 
 			create l_separator
@@ -615,17 +636,17 @@ feature {NONE} -- Implementation
 			-- Customize menu items
 
 			from
-				contents.start
+				l_contents.start
 			until
-				contents.after
+				l_contents.after
 			loop
-				if attached contents.item.zone as l_zone then
+				if attached l_contents.item.zone as l_zone then
 					create l_custom_dialog.make_for_menu (l_zone)
-					l_string := internal_shared.interface_names.tool_bar_right_click_customize (contents.item.title)
+					l_string := internal_shared.interface_names.tool_bar_right_click_customize (l_contents.item.title)
 					create l_menu_item.make_with_text_and_action (l_string, agent l_custom_dialog.on_customize)
 					Result.extend (l_menu_item)
 				end
-				contents.forth
+				l_contents.forth
 			end
 
 		end

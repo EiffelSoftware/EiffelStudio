@@ -54,8 +54,11 @@ feature -- Access
 
 	test_e: !STRING
 			-- Object test assignment
+		local
+			s: STRING
 		attribute
-			if {l_result: like test_e} "E" then
+			s := "E"
+			if {l_result: like test_e} s then
 				Result := l_result
 			else
 				create Result.make_empty

@@ -17,20 +17,26 @@ feature -- Initialization
 		local
 			atta: ANY
 			deta: detachable ANY
+			i: INTEGER
 		do
+			agent_f := agent f
 			if attached deta then print ("1%N") end
-			if attached {INTEGER_32} 1 then print ("2%N") end
+			i := 1
+			if attached {INTEGER_32} i then print ("2%N") end
 			if attached {INTEGER_32}.max_value then print ("3%N") end
 
 			if attached deta as y then print ("4%N") end
-			if attached {INTEGER_32} 2 as y then print ("5%N") end
+			i := 2
+			if attached {INTEGER_32} i as y then print ("5%N") end
 			if attached {INTEGER_32}.max_value as y then print ("6%N") end
 
 			if attached {STRING} deta then print ("7%N") end
 			if attached {STRING} deta as w then print ("8%N") end
-			if attached {STRING} 1 as w then print ("9%N") end
+			i := 1
+			if attached {STRING} i as w then print ("9%N") end
 
-			if attached {STRING} {INTEGER_32} 1 as w then print ("10%N") end
+			i := {INTEGER_32} 1
+			if attached {STRING} i as w then print ("10%N") end
 			if attached {STRING} {INTEGER_32}.max_value as w then print ("11%N") end
 
 			deta := f
@@ -43,6 +49,8 @@ feature -- Initialization
 			if attached deta as y then print ("17 - " + y.out + "%N") end
 			if attached deta as w then print ("18 - " + w.out + "%N") end
 		end
+
+	agent_f: ROUTINE [ANY, TUPLE]
 
 	is_equal (o: like Current): BOOLEAN
 		do
@@ -123,10 +131,10 @@ $COMMENT			e3: attached {STRING} old u + old u
 			e1: attached {STRING} o /= u
 			e1: attached {STRING} o /~ u
 
-			a1: attached agent f
-			a1: attached agent f as p1
-			a1: attached {STRING} agent f
-			a1: attached {STRING} agent f as p2
+			a1: attached agent_f
+			a1: attached agent_f as p1
+			a1: attached {STRING} agent_f
+			a1: attached {STRING} agent_f as p2
 
 			e1: attached g ([attached o, attached u, attached i, attached b], "", 4, True)
 			e1: attached g ([attached o, attached u, attached i, attached b], "", 4, True) as bool1
@@ -167,25 +175,6 @@ $COMMENT			e3: attached {STRING} old u + old u
 			e1: not attached u as wc or else wc.is_empty
 			e1: not attached {STRING} u or else u.is_empty
 			e1: not attached {STRING} u as wd or else wd.is_empty
-
-			e1: attached attached o
-			e2: attached attached o as x
-			e3: attached attached {STRING} o
-			e4: attached attached {STRING} o as x
-			e5: attached attached old o
-			e6: attached attached old o as x
-			e7: attached attached {STRING} old o
-			e8: attached attached {STRING} old o as x
-
-			e1: attached attached (o)
-			e2: attached attached (o) as x
-			e3: attached attached {STRING} (o)
-			e4: attached attached {STRING} (o) as x
-			e5: attached attached (old o)
-			e6: attached attached (old o) as x
-			e7: attached attached {STRING} (old o)
-			e8: attached attached {STRING} (old o) as x
-
 		end
 
 end

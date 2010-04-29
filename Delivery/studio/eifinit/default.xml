@@ -156,6 +156,7 @@
 	<PREF NAME="interface.dialogs.confirm_finalize_assertions" DESCRIPTION="Display confirmation dialog for assertions on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_clear_breakpoints" DESCRIPTION="Display confirmation dialog on clearing breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_ignore_all_breakpoints" DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.confirm_ignore_contract_violation" DESCRIPTION="Display confirmation dialog when debugged application just stopped at a contract violation."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_convert_project" DESCRIPTION="Display confirmation dialog before converting an old project."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_build_precompile" DESCRIPTION="Display confirmation dialog before building a needed precompile."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_delete_eis_entries" DESCRIPTION="Display confirmation dialog before deleting EIS entries."><BOOLEAN>True</BOOLEAN></PREF>

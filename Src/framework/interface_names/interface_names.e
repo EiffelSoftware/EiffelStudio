@@ -1213,6 +1213,7 @@ feature -- Label texts
 	l_Discard_finalize_assertions: STRING_32 	do Result := locale.translation("always discard assertions when finalizing.")	end
 	l_Discard_finalize_precompile_dialog: STRING_32 do Result := locale.translation("always finalize.")	end
 	l_Discard_freeze_dialog: STRING_32			do Result := locale.translation("always compile C/++ code.")	end
+	l_Discard_ignore_contract_violation_dialog: STRING_32 do Result := locale.translation("always do not ignore contract violation.")	end
 	l_Discard_save_before_compile_dialog: STRING_32	do Result := locale.translation("always save files before compiling.")	end
 	l_Discard_starting_dialog: STRING_32			do Result := locale.translation("Hide this dialog at startup")	end
 	l_Discard_replace_all_warning_dialog: STRING_32 do Result := locale.translation("always replace all.")	end
@@ -2549,7 +2550,7 @@ feature -- Description texts
 	e_Exec_kill: STRING_32				do Result := locale.translation("Stop execution")	end
 	e_Exec_into: STRING_32				do Result := locale.translation("Step into a routine")	end
 	e_Exec_no_stop: STRING_32			do Result := locale.translation("Run without stopping at breakpoints")	end
-	e_Exec_ignore_contract_violation: STRING_32	do Result := locale.translation("Ignore current contract violation")	end
+	e_Exec_ignore_contract_violation: STRING_32	do Result := locale.translation("Execution stopped because of a contract violation. Do you want to ignore the violation and continue the execution as if it was not violated? %N%NNote: You can always ignore contract violation using the drop down menu from %"Run%" button.")	end
 	e_Exec_out: STRING_32				do Result := locale.translation("Step out of a routine")	end
 	e_Exec_step: STRING_32				do Result := locale.translation("Execute execution one step at a time")	end
 	e_Exec_stop: STRING_32				do Result := locale.translation("Pause execution at current point")	end

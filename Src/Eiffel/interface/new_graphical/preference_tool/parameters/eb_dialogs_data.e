@@ -104,6 +104,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := confirm_ignore_all_breakpoints_preference.value
 		end
 
+	confirm_ignore_contract_violation: BOOLEAN
+			-- Should we display a dialog when debuggee just stopped at a contract violation ?
+		do
+			Result := confirm_ignore_contract_violation_preference.value
+		end
+
 	confirm_always_compile_before_executing: BOOLEAN
 			-- Should we display a dialog when asked for execution ?
 		do
@@ -272,6 +278,9 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 			-- Should we display a dialog when clicking on "Run application without
 			-- stopping at breakpoints"?
 
+	confirm_ignore_contract_violation_preference: BOOLEAN_PREFERENCE
+			-- Should we display a dialog when debuggee just stopped at a contract violation ?
+
 	confirm_always_apply_debugger_profiles_before_closing_preference: BOOLEAN_PREFERENCE
 			-- Should we always apply execution profile changes when closing the related dialog ?
 
@@ -351,6 +360,7 @@ feature -- Preference strings
 	confirm_finalize_assertions_string: STRING = "interface.dialogs.confirm_finalize_assertions"
 	confirm_clear_breakpoints_string: STRING = "interface.dialogs.confirm_clear_breakpoints"
 	confirm_ignore_all_breakpoints_string: STRING = "interface.dialogs.confirm_ignore_all_breakpoints"
+	confirm_ignore_contract_violation_string: STRING = "interface.dialogs.confirm_ignore_contract_violation"
 	confirm_always_apply_debugger_profiles_before_closing_string: STRING = "interface.dialogs.confirm_always_apply_debugger_profiles_before_closing"
 	confirm_always_compile_before_executing_string: STRING = "interface.dialogs.confirm_always_compile_before_executing"
 	confirm_convert_project_string: STRING = "interface.dialogs.confirm_convert_project"
@@ -417,6 +427,7 @@ feature {NONE} -- Implementation
 			confirm_finalize_assertions_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_assertions_string, True)
 			confirm_clear_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_clear_breakpoints_string, True)
 			confirm_ignore_all_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_ignore_all_breakpoints_string, True)
+			confirm_ignore_contract_violation_preference := l_manager.new_boolean_preference_value (l_manager, confirm_ignore_contract_violation_string, True)
 			confirm_always_apply_debugger_profiles_before_closing_preference := l_manager.new_boolean_preference_value (l_manager, confirm_always_apply_debugger_profiles_before_closing_string, True)
 			confirm_always_compile_before_executing_preference := l_manager.new_boolean_preference_value (l_manager, confirm_always_compile_before_executing_string, True)
 			confirm_convert_project_preference := l_manager.new_boolean_preference_value (l_manager, confirm_convert_project_string, True)
@@ -475,6 +486,7 @@ invariant
 	confirm_finalize_assertions_preference_not_void: confirm_finalize_assertions_preference /= Void
 	confirm_clear_breakpoints_preference_not_void: confirm_clear_breakpoints_preference /= Void
 	confirm_ignore_all_breakpoints_preference_not_void: confirm_ignore_all_breakpoints_preference /= Void
+	confirm_ignore_contract_violation_preference_not_void: confirm_ignore_contract_violation_preference /= Void
 	confirm_always_apply_debugger_profiles_before_closing_preference_not_void: confirm_always_apply_debugger_profiles_before_closing_preference /= Void
 
 
@@ -502,7 +514,7 @@ invariant
 	open_project_dialog_height_preference_not_void: open_project_dialog_height_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

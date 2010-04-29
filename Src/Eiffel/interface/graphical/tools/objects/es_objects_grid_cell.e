@@ -41,19 +41,26 @@ feature -- Access
 		-- Text label used to display particular view of `Current' on `activate'.
 		-- Void when `Current' isn't being activated.
 
+feature -- Status report
+
+	is_activated: BOOLEAN
+			-- Is the property activated?		
+
 feature -- Action
 
 	deactivate
 			-- Cleanup from previous call to activate.
 		do
-			if text_label /= Void then
-				text_label.focus_out_actions.wipe_out
+			is_activated := False
+			if attached text_label as tlab then
+				tlab.focus_out_actions.wipe_out
 				Precursor {EV_GRID_LABEL_ITEM}
-				if text_label /= Void then
-					text_label.destroy
-					text_label := Void
+				if not tlab.is_destroyed then
+					tlab.destroy
 				end
+				text_label := Void
 			end
+			check is_not_activated:	not is_activated end
 		end
 
 feature {NONE} -- Implementation
@@ -131,6 +138,8 @@ feature {NONE} -- Implementation
 			update_popup_dimensions (popup_window)
 
 			popup_window.show_actions.extend (agent initialize_actions)
+
+			is_activated := True
 		end
 
 	initialize_actions
@@ -138,10 +147,35 @@ feature {NONE} -- Implementation
 		do
 			user_cancelled_activation := False
 			text_label.key_press_actions.extend (agent handle_key)
+			text_label.focus_out_actions.wipe_out
+			text_label.focus_out_actions.extend (agent focus_lost)
+			text_label.set_focus
+		end
+
+feature {NONE} -- Impl
+
+	focus_lost
+			-- Check if no other element in the popup has the focus.
+		do
+			if
+				is_activated and then
+				not has_focus and then
+				is_parented
+			then
+				deactivate
+			end
+		end
+
+	has_focus: BOOLEAN
+			-- Does this property have the focus?
+		require
+			is_activated
+		do
+			Result := text_label.has_focus
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -13,10 +13,16 @@ inherit
 		redefine
 			initialize,
 			activate_action, deactivate,
-			initialize_actions
+			initialize_actions,
+			has_focus
 		end
 
 	EB_SHARED_PIXMAPS
+		undefine
+			copy, default_create
+		end
+
+	EV_SHARED_APPLICATION
 		undefine
 			copy, default_create
 		end
@@ -39,12 +45,13 @@ feature -- Query
 			-- Setup the actions sequences when the item is shown.
 		do
 			Precursor
-			text_label.focus_out_actions.wipe_out
-			text_label.focus_out_actions.extend (agent focus_lost)
+--			text_label.focus_out_actions.wipe_out
+--			text_label.focus_out_actions.extend (agent focus_lost)
 			if attached button as but then
 				but.focus_out_actions.extend (agent focus_lost)
 				but.select_actions.extend (button_action)
 				but.select_actions.extend (agent deactivate)
+				but.set_focus
 			end
 		end
 
@@ -76,23 +83,21 @@ feature -- Query
 			-- Cleanup from previous call to activate.
 		do
 			Precursor
-			is_activated := True
 			if attached button as but then
-				if but.parent /= Void then
-					but.parent.destroy
+				but.focus_out_actions.wipe_out
+				if attached but.parent as p then
+					p.destroy
 				end
 				but.destroy
 				button := Void
 			end
+			check is_not_activated:	not is_activated end
 		end
 
 feature -- Properties
 
 	button_action: PROCEDURE [ANY, TUPLE]
 			-- Actions called if the button is pressed.	
-
-	is_activated: BOOLEAN
-			-- Is the property activated?
 
 	button: EV_BUTTON
 
@@ -105,24 +110,14 @@ feature -- Change
 
 feature {NONE} -- Impl
 
-	focus_lost
-			-- Check if no other element in the popup has the focus.
-		do
-			if is_activated and then not has_focus and then is_parented then
-				deactivate
-			end
-		end
-
 	has_focus: BOOLEAN
 			-- Does this property have the focus?
-		require
-			is_activated
 		do
-			Result := text_label.has_focus or (button /= Void and then button.has_focus)
+			Result := Precursor or (attached button as but and then but.has_focus)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

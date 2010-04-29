@@ -15,7 +15,6 @@ feature -- Initialization
 		local
 			file : RAW_FILE
 			manu: MANU [STRING]
-			a: ARRAY [expanded A]
 		do
 			create manu.make ("Fdsfds", 123, 1)
 			create file.make_open_write ("stored")
@@ -29,4 +28,6 @@ feature -- Initialization
 			print (manu = Void); io.new_line
 		end 
 		
+	a: ARRAY [expanded A]
+
 end

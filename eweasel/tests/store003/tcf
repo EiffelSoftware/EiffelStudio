@@ -15,7 +15,7 @@ copy_raw 	test.e $CLUSTER test.e
 copy_raw 	a.e $CLUSTER a.e
 copy_sub 	manu.e $CLUSTER manu.e
 compile_frozen
-compile_result 	validity_warning TEST Unused_local_warning
+compile_result 	ok
 
 c_compile_work
 c_compile_result ok

@@ -124,7 +124,9 @@ feature -- Observer Pattern
 		require
 			an_observer_not_void: an_observer /= Void
 		do
-			observer_list.extend (an_observer)
+			if not observer_list.has (an_observer) then
+				observer_list.extend (an_observer)
+			end
 		end
 
 	remove_observer (an_observer: EB_CLUSTER_MANAGER_OBSERVER)
@@ -353,7 +355,7 @@ feature -- Element change
 
 				-- Mark `a_class' as invalid
 			a_class.config_class.invalidate
-			system.remove_unref_class (a_class)
+			system.set_melt
 				-- we need to rebuild and then the rest will be done during rebuild
 			system.force_rebuild
 		end

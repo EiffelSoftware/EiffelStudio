@@ -182,17 +182,6 @@ feature -- Basic operation
 			end
 		end
 
-	try_lock: BOOLEAN
-			-- Try to see if we can lock, False means no lock could be attained
-		do
-			if idle_action_mutex /= Void then
-				Result := idle_action_mutex.try_lock
-			else
-					-- Return true if mono-threaded.
-				Result := True
-			end
-		end
-
 	unlock
 			-- Unlock the Mutex.
 		do

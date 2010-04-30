@@ -482,6 +482,9 @@ feature {NONE} -- Implementation
 
 feature -- Environment related
 
+	environment_variable_unset_prefix: STRING = "&-"
+			-- Prefix to mark an environment variable unset
+
 	environment_variables_updated_with (env: detachable HASH_TABLE [STRING_32, STRING_32];
 										return_void_if_unchanged: BOOLEAN
 				): detachable HASH_TABLE [STRING_32, STRING_32]
@@ -506,14 +509,11 @@ feature -- Environment related
 					k := env.key_for_iteration
 					v := env.item_for_iteration
 					if k /= Void then
-						if
-							k.count > 2 and then
-							(k.item (1) = '&' and k.item (2) = '-')
-						then
+						if k.substring (1,2).same_string (environment_variable_unset_prefix) then
 								--| Environment variable removal if started by "&-" such as "&-FOOBAR"
 								--| this is an internal representation to precise "removal"
 							n := k.substring (3, k.count)
-							if n ~ "*" then
+							if n.same_string ("*") then
 								Result.wipe_out
 							else
 								Result.remove (n)

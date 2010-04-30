@@ -1410,6 +1410,8 @@ feature {NONE} -- Environment actions
 			s: STRING
 			m, mmi: EV_MENU
 			mi: EV_MENU_ITEM
+			cmi: EV_CHECK_MENU_ITEM
+			k_is_unset: BOOLEAN
 		do
 			if
 				abut = 3
@@ -1427,6 +1429,10 @@ feature {NONE} -- Environment actions
 					mi.select_actions.extend (agent safe_remove_env_row (a_row))
 					m.extend (mi)
 				else
+					if k.substring (1, 2).same_string ({DEBUGGER_CONTROLLER}.environment_variable_unset_prefix) then
+						k := k.substring (3, k.count)
+						k_is_unset := True
+					end
 					create mmi.make_with_text (k)
 					s := execution_env.get (k)
 					if s /= Void then
@@ -1435,6 +1441,17 @@ feature {NONE} -- Environment actions
 						create mi.make_with_text_and_action (interface_names.m_use_current_environment_value, agent gti.set_text (s))
 						mmi.extend (mi)
 					end
+
+					if k_is_unset then
+						create cmi.make_with_text (interface_names.b_unset_command)
+						cmi.enable_select
+						cmi.select_actions.extend (agent gei.set_text (k))
+					else
+						create cmi.make_with_text (interface_names.b_unset_command)
+						cmi.select_actions.extend (agent gei.set_text ({DEBUGGER_CONTROLLER}.environment_variable_unset_prefix + k))
+					end
+					mmi.extend (cmi)
+
 					create mi.make_with_text (interface_names.b_delete_command)
 					mi.select_actions.extend (agent safe_remove_env_row (a_row))
 					mmi.extend (mi)
@@ -1670,7 +1687,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

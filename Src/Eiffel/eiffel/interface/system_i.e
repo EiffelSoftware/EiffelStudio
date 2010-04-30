@@ -2275,11 +2275,13 @@ end
 			until
 				unref_classes.after
 			loop
-				check
-					unref_class_compiled:
-						unref_classes.item.compiled_class /= Void
+				if unref_classes.item.is_valid then
+					check
+						unref_class_compiled:
+							unref_classes.item.compiled_class /= Void
+					end
+					unref_classes.item.compiled_class.mark_class (marked_classes)
 				end
-				unref_classes.item.compiled_class.mark_class (marked_classes)
 				unref_classes.forth
 			end
 

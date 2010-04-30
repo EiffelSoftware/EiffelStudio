@@ -78,8 +78,6 @@ feature {NONE} -- Initialization
 		local
 			i_cluster: EG_CLUSTER
 		do
-			default_create
-
 			model := a_model
 			set_factory (a_factory)
 			default_create
@@ -1151,7 +1149,7 @@ feature {NONE} -- Implementation
 	on_pointer_motion_on_world (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Pointer was moved in world.
 		local
-			l_bbox: EV_RECTANGLE
+			l_bbox, l_tmp_bbox: EV_RECTANGLE
 			l_rect: like multi_select_rectangle
 		do
 			if is_multiselection_mode then
@@ -1159,6 +1157,7 @@ feature {NONE} -- Implementation
 				check l_rect /= Void end -- Implied by `is_multiselection_mode'
 				l_rect.set_point_b_position (ax, ay)
 				l_bbox := l_rect.bounding_box
+				create l_tmp_bbox
 				if not ev_application.ctrl_pressed then
 					deselect_all
 				end
@@ -1167,11 +1166,14 @@ feature {NONE} -- Implementation
 				until
 					nodes.after
 				loop
-					if nodes.item.bounding_box.intersects (l_bbox) then
-						if not selected_figures.has (nodes.item) then
-							selected_figures.extend (nodes.item)
-							set_figure_selection_state (nodes.item, True)
-							figure_was_selected := True
+					if nodes.item.is_show_requested then
+						nodes.item.update_rectangle_to_bounding_box (l_tmp_bbox)
+						if l_tmp_bbox.intersects (l_bbox) then
+							if not nodes.item.is_selected then
+								selected_figures.extend (nodes.item)
+								set_figure_selection_state (nodes.item, True)
+								figure_was_selected := True
+							end
 						end
 					end
 					nodes.forth

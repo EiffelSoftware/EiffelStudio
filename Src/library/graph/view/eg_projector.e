@@ -15,13 +15,14 @@ inherit
 			full_project,
 			project
 		end
-	
+
 create
-	make_with_buffer
-	
+	make, make_with_buffer
+
 feature -- Access
 
 	world: EG_FIGURE_WORLD
+		-- <Precursor>
 
 feature -- Display updates
 
@@ -29,14 +30,14 @@ feature -- Display updates
 			-- Project entire area.
 		do
 			world.update
-			Precursor {EV_MODEL_BUFFER_PROJECTOR}
+			Precursor
 		end
-		
+
 	project
 			-- Make a standard projection of world on device.
 		do
 			world.update
-			Precursor {EV_MODEL_BUFFER_PROJECTOR}
+			Precursor
 		end
 
 note

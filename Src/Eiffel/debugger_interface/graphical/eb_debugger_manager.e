@@ -1394,7 +1394,9 @@ feature -- Status setting
 					toggle_exec_replay_recording_mode_cmd.enable_sensitive
 					toggle_exec_replay_mode_cmd.enable_sensitive
 				end
-				call_stack_tool.activate_execution_replay_mode (b, levlim)
+				if call_stack_tool /= Void then
+					call_stack_tool.activate_execution_replay_mode (b, levlim)
+				end
 				update_execution_replay
 			end
 		end

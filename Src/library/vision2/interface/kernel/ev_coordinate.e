@@ -18,7 +18,7 @@ create
 	make,
 	make_with_position,
 	make_precise
-	
+
 feature -- Initialization
 
 	make, set, make_with_position, set_position (a_x: like x; a_y: like y)
@@ -30,7 +30,7 @@ feature -- Initialization
 			x_set: x = a_x
 			y_set: y = a_y
 		end
-		
+
 	make_precise, set_precise (a_x: like x_precise; a_y: like y_precise)
 			-- Create an EV_COORDINATE at position (`a_x', `a_y')
 		do
@@ -38,9 +38,9 @@ feature -- Initialization
 			y_precise := a_y
 		ensure
 			x_set: x_precise = a_x
-			y_set: y_precise = a_y			
+			y_set: y_precise = a_y
 		end
-		
+
 
 feature -- Access
 
@@ -53,7 +53,7 @@ feature -- Access
 				Result := (x_precise - 0.5).truncated_to_integer
 			end
 		end
-			
+
 	y, y_abs: INTEGER
 			-- Vertical position.
 		do
@@ -63,10 +63,10 @@ feature -- Access
 				Result := (y_precise - 0.5).truncated_to_integer
 			end
 		end
-			
+
 	x_precise: DOUBLE
 			-- The precise horizontal position.
-	
+
 	y_precise: DOUBLE
 			-- The precise vertival position.
 
@@ -87,7 +87,7 @@ feature -- Element change
 		ensure
 			y_set: y = a_y
 		end
-		
+
 	set_x_precise (a_x: like x_precise)
 			-- Assign `a_x' to `x'.
 		do
@@ -103,7 +103,7 @@ feature -- Element change
 		ensure
 			y_set: y_precise = a_y
 		end
-		
+
 feature -- Output
 
 	debug_output: STRING

@@ -201,14 +201,17 @@ feature {DOCUMENTATION} -- Basic operations
 			ptf.put_string (str)
 			ptf.close
 
-			minimum_pixmap := projector.world_as_pixmap (border)
-			if projector.is_world_too_large then
-				prompts.show_warning_prompt (Warning_messages.W_cannot_generate_png.as_string_32 + " " + cluster.name, Void, Void)
-				create minimum_pixmap.make_with_size (1, 1)
+			if attached {EV_MODEL_BUFFER_PROJECTOR} projector as l_buffer_projector then
+				minimum_pixmap := l_buffer_projector.world_as_pixmap (border)
+				if l_buffer_projector.is_world_too_large then
+					prompts.show_warning_prompt (Warning_messages.W_cannot_generate_png.as_string_32 + " " + cluster.name, Void, Void)
+					create minimum_pixmap.make_with_size (1, 1)
+				end
+				minimum_pixmap.save_to_named_file (png_format, png_file)
+					-- Remove references.
+				minimum_pixmap.destroy
 			end
-			minimum_pixmap.save_to_named_file (png_format, png_file)
-				-- Remove references.
-			minimum_pixmap.destroy
+
 			projector.widget.pointer_motion_actions.wipe_out
 			projector.widget.pointer_button_press_actions.wipe_out
 			projector.widget.pointer_double_press_actions.wipe_out
@@ -410,7 +413,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -423,22 +426,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_DIAGRAM_HTML_GENERATOR

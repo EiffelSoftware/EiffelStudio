@@ -57,7 +57,6 @@ feature -- Basic operations
 				if l_group /= Void and then not l_group.is_readonly then
 					create dialog.make_default (tool.develop_window, False)
 					dialog.preset_cluster (l_group)
---					dialog.set_stone_when_finished
 					dialog.call_default
 				end
 			end
@@ -130,9 +129,9 @@ feature {NONE} -- Implementation
 			-- Pixmap representing the command.
 		do
 			if add_existing_class then
-				Result := pixmaps.icon_pixmaps.new_class_icon
+				Result := pixmaps.icon_pixmaps.class_readonly_icon
 			else
-				Result := pixmaps.icon_pixmaps.class_uncompiled_icon
+				Result := pixmaps.icon_pixmaps.new_class_icon
 			end
 		end
 
@@ -140,9 +139,9 @@ feature {NONE} -- Implementation
 			-- Pixel buffer representing the command.
 		do
 			if add_existing_class then
-				Result := pixmaps.icon_pixmaps.new_class_icon_buffer
+				Result := pixmaps.icon_pixmaps.class_readonly_icon_buffer
 			else
-				Result := pixmaps.icon_pixmaps.class_uncompiled_icon_buffer
+				Result := pixmaps.icon_pixmaps.new_class_icon_buffer
 			end
 		end
 

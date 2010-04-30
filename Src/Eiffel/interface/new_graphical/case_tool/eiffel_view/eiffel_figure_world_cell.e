@@ -12,13 +12,14 @@ class
 inherit
 	EV_MODEL_WORLD_CELL
 		redefine
-			projector,
 			on_pointer_button_press_on_drawing_area,
 			on_pointer_button_release_on_drawing_area,
 			initialize,
 			on_mouse_wheel_on_drawing_area,
 			world,
-			set_world
+			set_world,
+			new_projector,
+			projector
 		end
 
 	EB_RECYCLABLE
@@ -77,7 +78,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	projector: EIFFEL_PROJECTOR
-			-- The projector used to project the `world'.
+		-- The projector used to project the `world'.
 
 	tool: ES_DIAGRAM_TOOL_PANEL
 			-- Tool the `world' is displayed in.
@@ -109,6 +110,12 @@ feature {NONE} -- Recycling
 		end
 
 feature {NONE} -- Implementation
+
+	new_projector: EIFFEL_PROJECTOR
+			-- The projector used to project the `world'.
+		do
+			create Result.make (world, drawing_area)
+		end
 
 	on_pointer_button_press_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 			-- Pointer button was pressed in `drawing_area'.
@@ -221,7 +228,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -234,22 +241,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_FIGURE_WORLD_CELL

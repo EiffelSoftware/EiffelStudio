@@ -71,6 +71,8 @@ feature {NONE} -- Initialization
 			create ellipse
 			extend (ellipse)
 
+
+
 			create anchor
 			create circl.make_with_positions (-2, -2, 18, 18)
 			circl.set_foreground_color (default_colors.black)
@@ -427,24 +429,6 @@ feature -- Element change
 			p.set_precise (cx + ax, cy - ay)
 		end
 
-	fade_out
-			-- Fade out `Current'.
-		do
-			if is_high_quality and then background_color /= Void then
-				ellipse.set_background_color (faded_color (background_color))
-			end
-			is_faded := True
-		end
-
-	fade_in
-			-- Fade in `Current'.
-		do
-			if is_high_quality and then background_color /= Void then
-				ellipse.set_background_color (background_color)
-			end
-			is_faded := False
-		end
-
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 	update
@@ -488,7 +472,7 @@ feature {NONE} -- Implementation
 			if is_selected /= an_is_selected then
 				is_selected := an_is_selected
 				if is_selected then
-					ellipse.set_line_width (bon_class_line_width * 3)
+					ellipse.set_line_width (bon_class_line_width * 2)
 				else
 					ellipse.set_line_width (bon_class_line_width)
 				end
@@ -535,24 +519,30 @@ feature {NONE} -- Implementation
 			icon_figures.set_point_position (0, 0)
 			if model.is_deferred then
 				create icon.make_with_identified_pixmap (bon_deferred_icon)
-				icon.set_point_position (0, 0)
 				icon_figures.extend (icon)
 			end
 			if model.is_effective then
 				create icon.make_with_identified_pixmap (bon_effective_icon)
-				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
+				if icon_figures.count > 0 then
+					icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
+				end
 				icon_figures.extend (icon)
 			end
 			if model.is_persistent then
 				create icon.make_with_identified_pixmap (bon_persistent_icon)
-				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
+				if icon_figures.count > 0 then
+					icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
+				end
 				icon_figures.extend (icon)
 			end
 			if model.is_interfaced then
 				create icon.make_with_identified_pixmap (bon_interfaced_icon)
-				icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
+				if icon_figures.count > 0 then
+					icon.set_point_position (icon_figures.bounding_box.width + icon_spacing, 0)
+				end
 				icon_figures.extend (icon)
 			end
+
 			from
 				hw := as_integer (icon_figures.bounding_box.width / 2)
 				icon_figures.start
@@ -562,6 +552,7 @@ feature {NONE} -- Implementation
 				icon_figures.item.set_x (icon_figures.item.x - hw)
 				icon_figures.forth
 			end
+
 			if world /= Void then
 				icon_figures.scale (world.scale_factor)
 			end
@@ -593,12 +584,8 @@ feature {NONE} -- Implementation
 			name_labels.set_point_position (0, 0)
 			if a_text.count > max_class_name_length then
 				from
-					s := ""
 					rest := a_text
 					i := a_text.last_index_of ('_', max_class_name_length)
-					if i = 0 then
-						i := max_class_name_length
-					end
 				until
 					i = 0 or else rest.count <= max_class_name_length
 				loop
@@ -606,9 +593,9 @@ feature {NONE} -- Implementation
 					rest := rest.substring (i + 1, rest.count)
 					if rest.count > max_class_name_length then
 						i := rest.last_index_of ('_', max_class_name_length)
-						if i = 0 then
-							i := max_class_name_length
-						end
+--						if i = 0 then
+--							i := max_class_name_length
+--						end
 					end
 					create part_text.make_with_text (s)
 					assign_class_name_properties_to_text (part_text)
@@ -739,50 +726,43 @@ feature {NONE} -- Implementation
 	update_information_positions
 			-- Set positions of `name_labels', `bon_icons' and `generics_label'.
 		local
-			ibbox, nbbox, gbbox: EV_RECTANGLE
-			cur_pos, cur_y_pos: INTEGER
-			h, w: INTEGER
+			cur_pos: INTEGER
+			h: INTEGER
+			l_ibbox_height, l_nbbox_height, l_gbbox_height: INTEGER
+			l_bbox: EV_RECTANGLE
 		do
 			if is_high_quality then
-				ibbox := icon_figures.bounding_box
-				nbbox := name_labels.bounding_box
-				gbbox := generics_label.bounding_box
-
-				if model.generics /= Void and then model.generics.count + model.name.count <= max_class_name_length  then
-					-- on one line
-					h := ibbox.height + nbbox.height
-
-					cur_pos := port_y - as_integer (h / 2)
-
-					icon_figures.set_point_position (port_x, cur_pos)
-					cur_pos := cur_pos + ibbox.height
-
-					w := as_integer (gbbox.width / 2)
-
-					cur_y_pos := port_x - w
-
-					name_labels.set_point_position (cur_y_pos, cur_pos)
-					cur_y_pos := cur_y_pos + as_integer (nbbox.width / 2) + w
-					generics_label.set_point_position (cur_y_pos, cur_pos)
-				else
-					h := ibbox.height + nbbox.height + gbbox.height
-
-					cur_pos := port_y - as_integer (h / 2)
-
-					icon_figures.set_point_position (port_x, cur_pos)
-					cur_pos := cur_pos + ibbox.height
-
-					name_labels.set_point_position (port_x, cur_pos)
-					cur_pos := cur_pos + nbbox.height
-
-					generics_label.set_point_position (port_x, cur_pos)
+				create l_bbox
+				if icon_figures.is_show_requested and then icon_figures.count > 0 then
+					icon_figures.update_rectangle_to_bounding_box (l_bbox)
+					l_ibbox_height := l_bbox.height
 				end
+				if generics_label.is_show_requested and then generics_label.count > 0 then
+					generics_label.update_rectangle_to_bounding_box (l_bbox)
+					l_gbbox_height := l_bbox.height
+				end
+				name_labels.update_rectangle_to_bounding_box (l_bbox)
+				l_nbbox_height := l_bbox.height
+
+				h := l_ibbox_height + l_nbbox_height + l_gbbox_height
+
+				cur_pos := port_y - as_integer (h / 2)
+
+				icon_figures.set_point_position (port_x, cur_pos)
+				cur_pos := cur_pos + l_ibbox_height
+
+				name_labels.set_point_position (port_x, cur_pos)
+				cur_pos := cur_pos + l_nbbox_height
+
+				generics_label.set_point_position (port_x, cur_pos)
 			else
 				name_labels.set_x_y (port_x, port_y)
 			end
 
 			update_radius
 		end
+
+	names_label_scale: REAL_32 = 1.2
 
 	update_radius
 			-- Update `ellipse_radius_1' and `ellipse_radius_2'.
@@ -798,7 +778,7 @@ feature {NONE} -- Implementation
 					w := l_min_size.width
 					h := l_min_size.height
 					if icon_figures.bounding_box.height = 0 then
-						h := as_integer (h * 1.5)
+						h := as_integer (h * names_label_scale)
 					end
 				else
 					l_min_size := minimum_size
@@ -806,7 +786,7 @@ feature {NONE} -- Implementation
 					w := l_min_size.width
 					h := l_min_size.height
 					if icon_figures.bounding_box.height = 0 and then generics_label.bounding_box.height = 0 and then name_labels.count = 1 then
-						h := as_integer (h * 1.5)
+						h := as_integer (h * names_label_scale)
 					end
 				end
 			else
@@ -815,7 +795,7 @@ feature {NONE} -- Implementation
 				w := l_min_size.width
 				h := l_min_size.height
 				if name_labels.count = 1 then
-					h := as_integer (h * 1.5)
+					h := as_integer (h * names_label_scale)
 				end
 			end
 

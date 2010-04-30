@@ -38,9 +38,7 @@ feature -- Basic operations
 			-- Perform operation.
 		do
 			if selected_type = conforming_inheritance then
-				tool.on_new_conforming_inheritance_click
-			elseif selected_type = non_conforming_inheritance then
-				tool.on_new_non_conforming_inheritance_click
+				tool.on_new_inheritance_click
 			elseif selected_type = Supplier then
 				tool.on_new_client_click
 			end
@@ -65,15 +63,13 @@ feature -- Status report
 
 	supplier: INTEGER = 1
 	conforming_inheritance: INTEGER = 2
-	non_conforming_inheritance: INTEGER = 3
-			-- Possible values for `selected_type'.
 
 feature -- Status setting
 
 	select_type (a_type: INTEGER)
-			-- Set current type of link to `Supplier', `conforming_inheritance' or `non_conforming_inheritance'.
+			-- Set current type of link to `Supplier', `conforming_inheritance'.
 		require
-			valid_type: a_type = conforming_inheritance or else a_type = non_conforming_inheritance or else a_type = Supplier
+			valid_type: a_type = conforming_inheritance or else a_type = Supplier
 		local
 			l_sd_button: like new_sd_toolbar_item
 			tt: STRING_GENERAL
@@ -114,8 +110,6 @@ feature {NONE} -- Implementation
 		do
 			if selected_type = conforming_inheritance then
 				Result := pixmaps.icon_pixmaps.new_inheritance_link_icon
-			elseif selected_type = non_conforming_inheritance then
-				Result := pixmaps.icon_pixmaps.new_aggregate_supplier_link_icon
 			elseif selected_type = Supplier then
 				Result := pixmaps.icon_pixmaps.new_supplier_link_icon
 			end
@@ -126,8 +120,6 @@ feature {NONE} -- Implementation
 		do
 			if selected_type = conforming_inheritance then
 				Result := pixmaps.icon_pixmaps.new_inheritance_link_icon_buffer
-			elseif selected_type = non_conforming_inheritance then
-				Result := pixmaps.icon_pixmaps.new_aggregate_supplier_link_icon
 			elseif selected_type = Supplier then
 				Result := pixmaps.icon_pixmaps.new_supplier_link_icon_buffer
 			end
@@ -137,9 +129,7 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			if selected_type = conforming_inheritance then
-				Result := Interface_names.f_diagram_create_conforming_inheritance_links
-			elseif selected_type = non_conforming_inheritance then
-				Result := Interface_names.f_diagram_create_non_conforming_inheritance_links
+				Result := Interface_names.f_diagram_create_inheritance_links
 			elseif selected_type = Supplier then
 				Result := Interface_names.f_diagram_create_supplier_links
 			end
@@ -176,19 +166,11 @@ feature {NONE} -- Implementation
 			menu_item.select_actions.extend (agent select_type (Supplier))
 
 			create menu_item
-			menu_item.set_text (Interface_names.f_diagram_create_conforming_inheritance_links)
+			menu_item.set_text (Interface_names.f_diagram_create_inheritance_links)
 			if selected_type = conforming_inheritance then
 				menu_item.enable_select
 			end
 			menu_item.select_actions.extend (agent select_type (conforming_inheritance))
-			Result.extend (menu_item)
-
-			create menu_item
-			menu_item.set_text (Interface_names.f_diagram_create_non_conforming_inheritance_links)
-			if selected_type = non_conforming_inheritance then
-				menu_item.enable_select
-			end
-			menu_item.select_actions.extend (agent select_type (non_conforming_inheritance))
 			Result.extend (menu_item)
 		end
 

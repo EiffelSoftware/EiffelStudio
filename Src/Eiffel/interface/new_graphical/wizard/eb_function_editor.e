@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		do
 			Result := Precursor
 			if (once_button.is_selected or do_button.is_selected) and then type_selector.detachable_check_box.is_sensitive and then not type_selector.detachable_check_box.is_selected then
-				Result.append ("%T%T%TResult := ({like " + feature_name_field.text + "}).default -- Remove line when function is implemented.%N")
+				Result.append ("%T%T%TResult := ({like " + feature_name_field.text + "}).default -- Remove line when Void Safety is properly set.%N")
 			end
 		end
 

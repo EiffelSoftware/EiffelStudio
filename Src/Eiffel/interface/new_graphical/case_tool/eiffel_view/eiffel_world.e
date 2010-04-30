@@ -212,9 +212,6 @@ feature -- Element change.
 				update_statistic
 			end
 			Precursor {EG_FIGURE_WORLD}
-			if is_cluster_shown then
-				update_fade
-			end
 		end
 
 	scale (a_scale: DOUBLE)
@@ -342,33 +339,15 @@ feature -- Element change.
 		do
 			is_cluster_shown := True
 			set_is_cluster_shown (True)
-			update_fade
 		ensure
 			is_cluster_shown: is_cluster_shown
 		end
 
 	hide_clusters
 			-- Hide cluster figures.
-		local
-			l_c_fig: EIFFEL_CLASS_FIGURE
-			l_linkables: like classes
-			i, nb: INTEGER
 		do
 			is_cluster_shown := False
 			set_is_cluster_shown (False)
-			from
-				l_linkables := classes
-				i := 1
-				nb := l_linkables.count
-			until
-				i > nb
-			loop
-				l_c_fig ?= l_linkables.i_th (i)
-				if l_c_fig /= Void then
-					l_c_fig.fade_in
-				end
-				i := i + 1
-			end
 		ensure
 			not_is_cluster_shown: not is_cluster_shown
 		end
@@ -380,7 +359,7 @@ feature -- Element change.
 		do
 			cluster_legend.update
 			cluster_legend.hide
-			bbox := bounding_box
+			bbox := calculated_bounding_box
 			cluster_legend.set_point_position (bbox.left, bbox.top)
 			cluster_legend.show
 			cluster_legend.enable_sensitive
@@ -645,8 +624,8 @@ feature -- Store/Retrive
 				loop
 					node ?= a_cursor.item
 					if node /= Void then
-						if node.name.is_equal ("VIEW") then
-							view_name := node.attribute_by_name ("NAME").value
+						if node.name.is_equal (once "VIEW") then
+							view_name := node.attribute_by_name (once "NAME").value
 							available_views.extend (view_name)
 						end
 					end
@@ -1378,7 +1357,9 @@ feature {NONE} -- Implementation
 			-- Pointer button was pressed on `figure'.
 		do
 			Precursor {EG_FIGURE_WORLD} (figure, ax, ay, button, x_tilt, y_tilt, pressure, screen_x, screen_y)
-			bring_to_front (cluster_legend)
+			if cluster_legend /= Void and then cluster_legend.is_show_requested then
+				bring_to_front (cluster_legend)
+			end
 		end
 
 	on_linkable_move (figure: EG_LINKABLE_FIGURE; ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
@@ -1387,10 +1368,12 @@ feature {NONE} -- Implementation
 		local
 			l_selected_figures: like selected_figures
 			l_item: EG_FIGURE
-			i, nb: INTEGER
+			i, nb, l_index: INTEGER
 			cf: EG_CLUSTER_FIGURE
 			l_linkable: EG_LINKABLE_FIGURE
+			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
 			e_c_fig: EIFFEL_CLASS_FIGURE
+			l_edge_list: LIST [EG_EDGE]
 		do
 			cf ?= figure
 			if cf = Void and then not selected_figures.is_empty then
@@ -1406,11 +1389,41 @@ feature {NONE} -- Implementation
 				loop
 					l_item := l_selected_figures.i_th (i)
 					if l_item /= figure then
-						l_item.set_point_position (l_item.point_x + ax, l_item.point_y + ay)
 						l_linkable ?= l_item
 						if l_linkable /= Void then
 							l_linkable.set_is_fixed (True)
+							l_links := l_linkable.internal_links
+							if not is_right_angles and then l_links /= Void and then l_links.count > 0 then
+									-- Here we check if both `source' and `target' of a link figure are selected, if so then we must force a transition of the links' edges.
+								from
+									l_index := 1
+								until
+									l_index > l_links.count
+								loop
+									if
+										l_links [l_index].source.is_selected and then
+										l_links [l_index].target.is_selected and then
+										l_links [l_index].source /= l_links [l_index].target and then
+										attached {EG_POLYLINE_LINK_FIGURE} l_links [l_index] as l_polyline_link
+									then
+										l_edge_list := l_polyline_link.edge_move_handlers
+										if l_edge_list /= Void and then l_edge_list.count > 0 then
+											from
+												l_edge_list.start
+											until
+												l_edge_list.after
+											loop
+												l_edge_list.item.set_point_position (l_edge_list.item.point_x + ax, l_edge_list.item.point_y + ay)
+												l_edge_list.item.move_actions.call ([ax, ay, x_tilt, y_tilt, pressure, screen_x, screen_y])
+												l_edge_list.forth
+											end
+										end
+									end
+									l_index := l_index + 1
+								end
+							end
 						end
+						l_item.set_point_position (l_item.point_x + ax, l_item.point_y + ay)
 					end
 					e_c_fig ?= l_item
 					if e_c_fig /= Void then
@@ -1440,28 +1453,6 @@ feature {NONE} -- Implementation
 				if lpd.value < lpd.range.upper then
 					lpd.set_value (lpd.value + 1)
 				end
-			end
-		end
-
-	update_fade
-			-- Fade out classes with cluster on top fade in otherwise.
-		local
-			l_c_fig: EIFFEL_CLASS_FIGURE
-			l_linkables: like classes
-			i, nb: INTEGER
-		do
-			from
-				l_linkables := classes
-				i := 1
-				nb := l_linkables.count
-			until
-				i > nb
-			loop
-				l_c_fig ?= l_linkables.i_th (i)
-				if l_c_fig /= Void then
-					l_c_fig.update_fade
-				end
-				i := i + 1
 			end
 		end
 

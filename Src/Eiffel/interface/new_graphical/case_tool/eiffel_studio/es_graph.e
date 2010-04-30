@@ -651,7 +651,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 				if cf.is_needed_on_diagram and then cf.has_supplier (a_class) then
 					cs_link ?= client_supplier_link_connecting (cf, a_class)
 					if cs_link = Void then
-						create cs_link.make (cf, a_class, True)
+						create cs_link.make (cf, a_class)
 						add_link (cs_link)
 					elseif not cs_link.is_needed_on_diagram then
 						cs_link.enable_needed_on_diagram
@@ -678,7 +678,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 				if cf.is_needed_on_diagram and then a_class.has_supplier (cf) then
 					cs_link ?= client_supplier_link_connecting (a_class, cf)
 					if cs_link = Void then
-						create cs_link.make (a_class, cf, True)
+						create cs_link.make (a_class, cf)
 						add_link (cs_link)
 					elseif not cs_link.is_needed_on_diagram then
 						cs_link.enable_needed_on_diagram

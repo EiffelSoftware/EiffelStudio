@@ -170,6 +170,9 @@ feature -- Status report
 	extend_from_diagram_successful: BOOLEAN
 			-- Was last call to `extend_feature_from_diagram_with_wizard' successful?
 
+	new_parent_non_conforming: BOOLEAN
+			-- Did last call to `new_parent_from_diagram' create a non-conforming relationship?
+
 	class_modified_outside_diagram: BOOLEAN
 
 feature -- Status setting
@@ -386,6 +389,7 @@ feature -- Modification (Add/Remove feature)
 			end
 			prepare_for_modification
 			if valid_syntax then
+
 				if not is_non_conforming then
 						-- Conforming inheritance
 					if class_as.conforming_parents = Void then
@@ -568,6 +572,51 @@ feature -- Modification (Add/Remove feature)
 					data.back
 				end
 				commit_modification
+			end
+		end
+
+	new_parent_from_diagram (child_type, parent_type: ES_CLASS; x_pos, y_pos, screen_w, screen_h: INTEGER)
+		local
+			l_inh_dlg: EB_INHERITANCE_DIALOG
+			l_error: ES_ERROR_PROMPT
+			x, y: INTEGER
+		do
+			context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Wait_cursor)
+			last_feature_as := Void
+			prepare_for_modification
+			if valid_syntax then
+				create l_inh_dlg.make
+
+				l_inh_dlg.set_child_type (child_type)
+				l_inh_dlg.set_parent_type (parent_type)
+				if x_pos + l_inh_dlg.width > screen_w then
+					x := screen_w - l_inh_dlg.width - 150
+				else
+					x := (x_pos - 150).max (0)
+				end
+				if y_pos + l_inh_dlg.height > screen_h then
+					y := screen_h - l_inh_dlg.height - 180
+				else
+					y := (y_pos - 150).max (0)
+				end
+				l_inh_dlg.set_position (x, y)
+				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
+				l_inh_dlg.show_modal_to_window (context_editor.develop_window.window)
+				if l_inh_dlg.ok_clicked then
+					extend_from_diagram_successful := True
+					new_parent_non_conforming := l_inh_dlg.is_non_conforming
+					add_ancestor (l_inh_dlg.type, new_parent_non_conforming)
+				else
+					extend_from_diagram_successful := False
+					new_parent_non_conforming := False
+				end
+			else
+				create l_error.make_standard (Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
+				l_error.show_on_active_window
+				extend_from_diagram_successful := False
+				new_parent_non_conforming := False
+				invalidate_text
+				context_editor.develop_window.window.set_pointer_style (context_editor.default_pixmaps.Standard_cursor)
 			end
 		end
 

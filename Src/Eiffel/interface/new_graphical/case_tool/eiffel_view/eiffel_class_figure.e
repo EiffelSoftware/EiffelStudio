@@ -63,11 +63,6 @@ feature {NONE} -- Initialization
 			model.needed_on_diagram_changed_actions.extend (agent on_needed_on_diagram_changed)
 		end
 
-feature -- Status report
-
-	is_faded: BOOLEAN
-			-- Is `Current' faded out?
-
 feature -- Access
 
 	model: ES_CLASS
@@ -114,34 +109,6 @@ feature -- Element change
 					l_item.apply_right_angles
 				end
 				i := i + 1
-			end
-		end
-
-	fade_out
-			-- Fade out `Current'.
-		deferred
-		ensure
-			is_faded: is_faded
-		end
-
-	fade_in
-			-- Fade in `Current'.
-		deferred
-		ensure
-			not_is_faded: not is_faded
-		end
-
-	update_fade
-			-- Fade out if `is_cluster_above'.
-		do
-			if is_cluster_above then
-				if not is_faded then
-					fade_out
-				end
-			else
-				if is_faded then
-					fade_in
-				end
 			end
 		end
 
@@ -400,10 +367,10 @@ feature {NONE} -- Implementation (adding relations)
 				else
 						-- We are adding an inheritance link.
 					if drop_allowed (a_stone) then
-						add_inheritance_relation (a_stone.source, world.context_editor.is_link_non_conforming_inheritance)
+						add_inheritance_relation (a_stone.source)
 					else
 						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
-							interface_names.l_inheritance_cycle_was_created, world.context_editor.develop_window.window, agent add_inheritance_relation (a_stone.source, world.context_editor.is_link_non_conforming_inheritance), Void)
+							interface_names.l_inheritance_cycle_was_created, world.context_editor.develop_window.window, agent add_inheritance_relation (a_stone.source), Void)
 					end
 				end
 			else
@@ -412,28 +379,43 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	add_inheritance_relation (other: EIFFEL_CLASS_FIGURE; is_non_conforming: BOOLEAN)
+	add_inheritance_relation (other: EIFFEL_CLASS_FIGURE)
 			-- Add `Current' to others inheritance clause.
 		local
 			es_link: ES_INHERITANCE_LINK
 			other_model: ES_CLASS
+			screen: EB_STUDIO_SCREEN
+			x_pos, y_pos, screen_w, screen_h: INTEGER
+			cg: CLASS_TEXT_MODIFIER
+			added_code: LIST [TUPLE [STRING, INTEGER]]
+			l_is_non_conforming: BOOLEAN
 		do
 			if world.model.has_node (other.model) then
 				other_model := other.model
-				other_model.code_generator.add_ancestor (model.class_i.name, is_non_conforming)
-				if not other_model.code_generator.class_modified_outside_diagram then
-					es_link ?= model.graph.inheritance_link_connecting (other_model, model, is_non_conforming)
+				-- Call wizard.
+				create screen
+				screen_w := screen.virtual_right
+				screen_h := screen.virtual_bottom
+				x_pos := (port_x + other.port_x) // 2 + world.context_editor.widget.screen_x - world.bounding_box.x
+				y_pos := (port_y + other.port_y) // 2 + world.context_editor.widget.screen_y - world.bounding_box.y
+
+				cg := other_model.code_generator
+				cg.new_parent_from_diagram (other_model, model, x_pos, y_pos, screen_w, screen_h)
+				if cg.extend_from_diagram_successful and then not cg.class_modified_outside_diagram then
+					added_code := cg.last_added_code.twin
+					l_is_non_conforming := cg.new_parent_non_conforming
+					es_link ?= model.graph.inheritance_link_connecting (other_model, model, l_is_non_conforming)
 					if es_link = Void then
 						create es_link.make (other_model, model, False)
-						es_link.set_is_non_conforming (is_non_conforming)
+						es_link.set_is_non_conforming (l_is_non_conforming)
 						model.graph.add_link (es_link)
 					elseif not es_link.is_needed_on_diagram then
 						es_link.enable_needed_on_diagram
 					end
 					world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_add_inh_link_cmd (es_link.ancestor.name, es_link.descendant.name, is_non_conforming),
-						agent add_ancestor (other_model, es_link, is_non_conforming),
-						agent remove_ancestor (other_model, es_link, is_non_conforming))
+						interface_names.t_diagram_add_inh_link_cmd (es_link.ancestor.name, es_link.descendant.name, l_is_non_conforming),
+						agent add_ancestor (other_model, es_link, l_is_non_conforming),
+						agent remove_ancestor (other_model, es_link, l_is_non_conforming))
 				end
 			end
 		end
@@ -490,7 +472,7 @@ feature {NONE} -- Implementation (adding relations)
 						es_link ?= model.graph.client_supplier_link_connecting (client_model, model)
 						if es_link = Void or else not es_link.is_needed_on_diagram then
 							if es_link = Void then
-								create es_link.make (client_model, model, False)
+								create es_link.make (client_model, model)
 								model.graph.add_link (es_link)
 							else
 								es_link.enable_needed_on_diagram
@@ -692,18 +674,6 @@ feature {NONE} -- Implementation (move)
 			-- User ended to move `Current'.
 		do
 			set_is_fixed (was_fixed)
-		end
-
-	faded_color (a_color: EV_COLOR): EV_COLOR
-			-- Return brighter color then `a_color'
-		require
-			a_color_exists: a_color /= Void
-		do
-			create Result.make_with_rgb ((a_color.red - (a_color.red / 2)).max ({REAL_32} 0.0),
-										 (a_color.green - (a_color.green / 2)).max ({REAL_32} 0.0),
-										 (a_color.blue - (a_color.blue / 2)).max ({REAL_32} 0.0))
-		ensure
-			Result_exists: Result /= Void
 		end
 
 note

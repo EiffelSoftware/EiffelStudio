@@ -101,7 +101,7 @@ feature -- Access
 			Result.append (comments_code)
 
 			if type_selector.detachable_check_box.is_sensitive and then not type_selector.detachable_check_box.is_selected then
-				Result.append ("%T%Tattribute Result := ({like " + feature_name_field.text + "}).default end --| Remove line when attached attribute is correctly assigned%N")
+				Result.append ("%T%Tattribute Result := ({like " + feature_name_field.text + "}).default end --| Remove line when Void Safety is properly set%N")
 			end
 			Result.append ("%N")
 		end
@@ -205,8 +205,15 @@ feature {NONE} -- Implementation
 			pc: LIST [STRING]
 			li: EV_LIST_ITEM
 			inv, f_name: STRING
+			l_selected_index: INTEGER
+			l_text: STRING
 		do
 			f_name := feature_name_field.text
+			if b.selected_item /= Void then
+				l_selected_index := b.index_of (b.selected_item, 1)
+			end
+					-- We have custom text so we must restore it afterwards
+			l_text := b.text
 			b.wipe_out
 			create li.make_with_text (pc_None)
 			b.extend (li)
@@ -240,6 +247,12 @@ feature {NONE} -- Implementation
 			end
 				-- Get rid of the focus_in_actions since it can interfere
 				-- with the expected behavior of the combo-box.
+
+			if l_selected_index = 0 then
+				b.set_text (l_text)
+			elseif l_selected_index <= b.count then
+				b.i_th (l_selected_index).enable_select
+			end
 			b.focus_in_actions.wipe_out
 		end
 

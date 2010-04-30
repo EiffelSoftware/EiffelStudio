@@ -30,7 +30,7 @@ feature -- Element change
 			if a_type.is_empty then
 				type_selector.selector.remove_text
 			else
-				type_selector.set_initial_types (client_type, supplier_type)
+				type_selector.set_initial_types (client_type, supplier_type, False)
 				type_selector.selector.set_text (a_type)
 				type_selector.update_list_strings (True)
 			end

@@ -55,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_client, a_supplier: ES_CLASS; a_synchronize: BOOLEAN)
+	make (a_client, a_supplier: ES_CLASS)
 			-- Create a ES_CLIENT_SUPPLIER_LINK connecting `a_client' with `a_supplier'.
 		require
 			a_client_not_void: a_client /= Void
@@ -63,9 +63,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_classes_and_name (a_client, a_supplier, "")
 			create {ARRAYED_LIST [FEATURE_AS]} features.make (0)
-			if a_synchronize then
-				synchronize
-			end
+			synchronize
 			is_needed_on_diagram := True
 		end
 
@@ -84,8 +82,6 @@ feature -- Element change
 
 	synchronize
 			-- Set `features', `name' and `is_aggregated' or remove if no `features'.
-		local
-			a_name: STRING
 		do
 			if client.is_queries_changed then
 				features := client.suppliers_with_class (supplier)
@@ -95,21 +91,29 @@ feature -- Element change
 					end
 					graph.remove_link (Current)
 				else
-					a_name := full_name (features.first)
-					a_name.replace_substring_all ("[", "[ ")
-					a_name.replace_substring_all (" " + supplier.class_i.name, " ...")
-					if a_name.substring (a_name.count - 4, a_name.count).is_equal (": ...") then
-						a_name.replace_substring_all (": ...", "")
-					end
-					if features.count > 1 then
-						a_name.append (", ...")
-					end
-					a_name.replace_substring_all ("[ ", "[")
-					set_name (a_name)
-					is_aggregated := is_expanded (features.first)
+					set_name_from_feature_as_list (features)
 				end
 			end
 			set_is_aggregated (is_aggregated or else supplier.is_expanded)
+		end
+
+	set_name_from_feature_as_list (a_feature_as_list: LIST [FEATURE_AS])
+			-- Set full name for `Current' based on `a_feature_as_list'.
+		local
+			a_name: STRING
+		do
+			a_name := full_name (a_feature_as_list.first)
+			a_name.replace_substring_all ("[", "[ ")
+			a_name.replace_substring_all (" " + supplier.class_i.name, " ...")
+			if a_name.substring (a_name.count - 4, a_name.count).is_equal (": ...") then
+				a_name.replace_substring_all (": ...", "")
+			end
+			if a_feature_as_list.count > 1 then
+				a_name.append (", ...")
+			end
+			a_name.replace_substring_all ("[ ", "[")
+			set_name (a_name)
+			is_aggregated := is_expanded (a_feature_as_list.first)
 		end
 
 feature {NONE} -- Implementation

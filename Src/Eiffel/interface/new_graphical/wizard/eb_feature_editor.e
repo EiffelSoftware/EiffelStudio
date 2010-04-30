@@ -252,7 +252,7 @@ feature -- Adaptation
 			end
 		end
 
-feature {EB_FEATURE_EDITOR, EB_FEATURE_COMPOSITION_WIZARD} -- Access
+feature {EB_FEATURE_EDITOR, EB_FEATURE_COMPOSITION_WIZARD, EB_INHERITANCE_DIALOG} -- Access
 
 	feature_clause_selector: EB_FEATURE_CLAUSE_SELECTOR
 

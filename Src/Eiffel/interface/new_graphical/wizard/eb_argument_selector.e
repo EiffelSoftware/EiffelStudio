@@ -149,9 +149,7 @@ feature {EV_ANY} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := (
-				not is_homogeneous and
-				border_width = 0 and
-				padding = 0
+				not is_homogeneous
 			)
 		end
 

@@ -131,8 +131,11 @@ feature {NONE} -- Initialization
 			create creation_check.make_with_text (Interface_names.l_generate_creation)
 			creation_check.select_actions.extend (agent on_creation_check)
 			create parents_list.make (agent compute_group)
-			parents_list.text_field.focus_in_actions.extend (agent on_focus_in)
-			parents_list.text_field.focus_out_actions.extend (agent on_focus_out)
+--			parents_list.text_field.focus_in_actions.extend (agent on_focus_in)
+--			parents_list.text_field.focus_out_actions.extend (agent on_focus_out)
+
+			parents_list.add_actions.extend (agent on_parent_add)
+			parents_list.modify_actions.extend (agent on_parent_modify)
 
 				-- Build the frames
 			create properties_frame.make_with_text (Interface_names.l_general)
@@ -737,6 +740,33 @@ feature {NONE} -- Implementation
 				-- we get called while destroying the dialog.
 			if not is_destroyed then
 				set_default_push_button (create_button)
+			end
+		end
+
+	on_parent_add
+		local
+			l_item: EV_LIST_ITEM
+			l_inh_dlg: EB_INHERITANCE_DIALOG
+		do
+			if not is_destroyed then
+				l_item := parents_list.list.last
+				if l_item /= Void then
+					create l_inh_dlg.make
+					l_inh_dlg.show_modal_to_window (Current)
+					if l_inh_dlg.ok_clicked and then l_inh_dlg.valid_content then
+						l_item.set_text (l_inh_dlg.type_selector.code)
+						l_item.set_data (l_inh_dlg.code)
+					end
+				end
+			end
+		end
+
+	on_parent_modify
+		local
+			l_item: EV_LIST_ITEM
+		do
+			if not is_destroyed then
+				l_item := parents_list.list.selected_item
 			end
 		end
 

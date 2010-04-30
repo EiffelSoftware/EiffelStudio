@@ -536,43 +536,55 @@ feature {NONE} -- Implementation
 			-- Perform the actual placement.
 		local
 			cur_x, cur_y: INTEGER
-			l_row_height, max_width: INTEGER
+			l_row_height, max_width, i, l_count: INTEGER
 			r: like row
+			l_is_grid_enabled: BOOLEAN
 		do
 			max_width := 0
+			l_is_grid_enabled := world.grid_enabled
+			l_count := table.count
 			from
-				table.start
+				i := 1
 			until
-				table.after
+				i > l_count
 			loop
-				max_width := max_width.max (row_width (table.item))
-				table.forth
+				max_width := max_width.max (row_width (table [i]))
+				i := i + 1
 			end
-			cur_y := vertical_scaled_spacing
+			cur_x := horizontal_scaled_spacing // 2
+			cur_y := vertical_scaled_spacing // 2
 			from
-				table.start
+				i := 1
 			until
-				table.after
+				i > l_count
 			loop
-				r := table.item
+				r := table [i]
 				if r /= Void then
-					cur_x := max_width // 2 - row_width (r) // 2 + horizontal_scaled_spacing
+					cur_x := (max_width // 2) - (row_width (r) // 2) + horizontal_scaled_spacing
 					l_row_height := row_height (r)
-					cur_y := cur_y + l_row_height // 2
+
+					if l_is_grid_enabled then
+						cur_y := world.y_to_grid (cur_y)
+					end
 
 					from
 						r.start
 					until
 						r.after
 					loop
-						r.item.set_port_position (cur_x + r.item.width // 2, cur_y)
-						cur_x := cur_x + r.item.width + horizontal_scaled_spacing
-
+						if r.index > 1 then
+							cur_x := cur_x + r.item.width
+						end
+						if l_is_grid_enabled then
+							cur_x := world.x_to_grid (cur_x)
+						end
+						r.item.set_point_position (cur_x, cur_y)
+						cur_x := cur_x + horizontal_scaled_spacing
 						r.forth
 					end
-					cur_y := cur_y + l_row_height // 2 + vertical_scaled_spacing
+					cur_y := cur_y + l_row_height + vertical_scaled_spacing
 				end
-				table.forth
+				i := i + 1
 			end
 		end
 
@@ -618,7 +630,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -631,22 +643,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_INHERITANCE_LAYOUT
